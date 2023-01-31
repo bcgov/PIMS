@@ -1,5 +1,4 @@
 import Adapter from '@cfaester/enzyme-adapter-react-18';
-import { useKeycloak } from '@react-keycloak/web';
 import { cleanup, render } from '@testing-library/react';
 import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
@@ -8,10 +7,16 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
+import useKeycloakWrapper from './useKeycloakWrapper';
 import { useMyAgencies } from './useMyAgencies';
 
-jest.mock('@react-keycloak/web');
+const userRoles: string[] | Claims[] = [];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
 Enzyme.configure({ adapter: new Adapter() });
 
 const mockStore = configureMockStore([thunk]);
@@ -46,15 +51,13 @@ describe('UseMyAgencies', () => {
   });
 
   it('Is SRES user, should return all agencies', () => {
-    (useKeycloak as jest.Mock).mockReturnValue({
-      keycloak: {
-        userInfo: {
-          agencies: ['1'],
-          roles: [Claims.PROJECT_VIEW, Claims.ADMIN_PROJECTS],
-        },
-        subject: 'test',
-      },
-    });
+    (useKeycloakWrapper as jest.Mock).mockReturnValue(
+      new (useKeycloakMock as any)(
+        [Claims.PROJECT_VIEW, Claims.ADMIN_PROJECTS],
+        userAgencies,
+        userAgency,
+      ),
+    );
 
     const { getByTestId } = render(
       <Provider store={store}>
@@ -68,15 +71,9 @@ describe('UseMyAgencies', () => {
   });
 
   it('Belongs to Sub Agency, should return one agencies', () => {
-    (useKeycloak as jest.Mock).mockReturnValue({
-      keycloak: {
-        userInfo: {
-          agencies: ['41'],
-          roles: [],
-        },
-        subject: 'test',
-      },
-    });
+    (useKeycloakWrapper as jest.Mock).mockReturnValue(
+      new (useKeycloakMock as any)(userRoles, [41], 41),
+    );
 
     const { getByTestId } = render(
       <Provider store={store}>
@@ -88,15 +85,9 @@ describe('UseMyAgencies', () => {
   });
 
   it('Belongs to Parent Agency, should return parent agency and child agency', () => {
-    (useKeycloak as jest.Mock).mockReturnValue({
-      keycloak: {
-        userInfo: {
-          agencies: ['8'],
-          roles: [],
-        },
-        subject: 'test',
-      },
-    });
+    (useKeycloakWrapper as jest.Mock).mockReturnValue(
+      new (useKeycloakMock as any)(userRoles, [8], 8),
+    );
 
     const { getByTestId } = render(
       <Provider store={store}>

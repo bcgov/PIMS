@@ -1,5 +1,7 @@
 using FluentAssertions;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using Pims.Core.Comparers;
 using Pims.Core.Extensions;
 using Pims.Core.Test;
@@ -13,6 +15,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 using Entity = Pims.Dal.Entities;
+using Model = Pims.Api.Models.User;
 
 namespace Pims.Dal.Test.Services
 {
@@ -28,7 +31,7 @@ namespace Pims.Dal.Test.Services
             {
                 new object[] { new BuildingFilter(48.571155, -123.657596, 48.492947, -123.731803), 1 },
                 new object[] { new BuildingFilter(48.821333, -123.795017, 48.763431, -123.959783), 0 },
-                new object[] { new BuildingFilter() { Agencies = new int[] { 3 } }, 1 },
+                new object[] { new BuildingFilter() { Agencies = new int[] { 3 } }, 10 },
                 new object[] { new BuildingFilter() { ClassificationId = 2 }, 1 },
                 new object[] { new BuildingFilter() { Description = "DescriptionTest" }, 1 },
                 new object[] { new BuildingFilter() { Tenancy = "BuildingTenancy" }, 1 },
@@ -156,7 +159,7 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             Assert.IsAssignableFrom<IEnumerable<Entity.Building>>(result);
-            result.Should().HaveCount(1);
+            result.Should().HaveCount(25);
         }
 
         [Theory]
@@ -350,7 +353,7 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             Assert.IsAssignableFrom<IEnumerable<Entity.Building>>(result);
-            result.Should().HaveCount(1);
+            result.Should().HaveCount(10);
         }
 
         [Theory]
@@ -451,6 +454,11 @@ namespace Pims.Dal.Test.Services
 
             var service = helper.CreateService<BuildingService>(user);
 
+            // activate the User
+            var userService = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            userService.Setup(m => m.User.Activate());
+
             // Act
             // Assert
             Assert.Throws<KeyNotFoundException>(() =>
@@ -498,6 +506,11 @@ namespace Pims.Dal.Test.Services
             var service = helper.CreateService<BuildingService>(user);
             var context = helper.GetService<PimsContext>();
 
+            // activate the User
+            var userService = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            userService.Setup(m => m.User.Activate());
+
             // Act
             // Assert
             Assert.Throws<KeyNotFoundException>(() =>
@@ -514,7 +527,12 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.SensitiveView);
             using var init = helper.InitializeDatabase(user);
-            var parcel = init.CreateParcel(1);
+            var agency = new Entity.Agency("TEST", "Test Agency")
+            {
+                Id = 111,
+                RowVersion = new byte[] { 12, 13, 14 }
+            };
+            var parcel = init.CreateParcel(1, agency);
             var building = init.CreateBuilding(parcel, 2);
             building.IsSensitive = true;
             init.SaveChanges();
@@ -545,6 +563,11 @@ namespace Pims.Dal.Test.Services
             var service = helper.CreateService<BuildingService>(user);
             var context = helper.GetService<PimsContext>();
 
+            // activate the User
+            var userService = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            userService.Setup(m => m.User.Activate());
+
             // Act
             var result = service.Get(2);
 
@@ -571,7 +594,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties);
             using var init = helper.InitializeDatabase(user);
             var parcel = init.CreateParcel(1);
             var building = init.CreateBuilding(parcel, 2);
@@ -579,6 +602,11 @@ namespace Pims.Dal.Test.Services
 
             var service = helper.CreateService<BuildingService>(user);
             var context = helper.GetService<PimsContext>();
+
+            // activate the User
+            var userService = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            userService.Setup(m => m.User.Activate());
 
             // Act
             var result = service.Get(2);
@@ -614,6 +642,15 @@ namespace Pims.Dal.Test.Services
 
             var service = helper.CreateService<BuildingService>(user);
             var context = helper.GetService<PimsContext>();
+
+            // activate the User
+            var userService = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            userService.Setup(m => m.User.Activate());
+            //var agency = EntityHelper.CreateAgency();
+            //context.Add()
+            //userService.Setup(m => m.Role.Update(It.IsAny<Entity.Role>()));
+            //var model = mapper.Map<Model.RoleModel>(role);
 
             // Act
             var result = service.Get(2);
@@ -653,6 +690,11 @@ namespace Pims.Dal.Test.Services
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<BuildingService>(user, options);
 
+            // activate the User
+            var userService = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            userService.Setup(m => m.User.Activate());
+
             // Act
             building.Name = "change";
 
@@ -686,10 +728,20 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit);
             var init = helper.InitializeDatabase(user);
-            var building = init.CreateBuilding(1);
+            var agency = new Entity.Agency("TEST", "Test Agency")
+            {
+                Id = 111,
+                RowVersion = new byte[] { 12, 13, 14 }
+            };
+            var building = init.CreateBuilding(1, null, null, 0, 0, agency);
             init.SaveChanges();
 
             var service = helper.CreateService<BuildingService>();
+
+            // activate the User
+            var userService = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            userService.Setup(m => m.User.Activate());
 
             // Act
             building.Description = "a new description.";
@@ -735,6 +787,11 @@ namespace Pims.Dal.Test.Services
 
             var service = helper.CreateService<BuildingService>();
 
+            // activate the User
+            var userService = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            userService.Setup(m => m.User.Activate());
+
             // Assert
             Assert.Throws<NotAuthorizedException>(() =>
                 service.Update(parcel));
@@ -745,7 +802,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit).AddAgency(1);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit, Permissions.AdminProperties).AddAgency(1);
             var init = helper.InitializeDatabase(user);
             var parcel = init.CreateParcel(3);
             var building = init.CreateBuilding(parcel, 4);
@@ -753,6 +810,13 @@ namespace Pims.Dal.Test.Services
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
             var service = helper.CreateService<BuildingService>(user, options);
+
+            // activate the User
+            var userService = helper.GetService<Mock<IPimsService>>();
+            var mapper = helper.GetService<IMapper>();
+            var userAgency = EntityHelper.CreateAgency();
+            var model = mapper.Map<Model.AgencyModel>(userAgency);
+            userService.Setup(m => m.User.Activate());
 
             // Act
             building.Evaluations.Add(new Entity.BuildingEvaluation(building, DateTime.Now, Entity.EvaluationKeys.Assessed, 1000));
