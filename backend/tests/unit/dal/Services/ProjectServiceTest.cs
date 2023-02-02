@@ -33,7 +33,7 @@ namespace Pims.Dal.Test.Services
             {
                 new object[] { new ProjectFilter() { ProjectNumber = "ProjectNumber" }, 1 },
                 new object[] { new ProjectFilter() { Name = "Name" }, 1 },
-                new object[] { new ProjectFilter() { Agencies = new int[] { 3 } }, 1 },
+                new object[] { new ProjectFilter() { Agencies = new int[] { 3 } }, 6 },
                 new object[] { new ProjectFilter() { TierLevelId = 2 }, 1 },
                 new object[] { new ProjectFilter() { StatusId = new int[] { 2 } }, 1 }
             };
@@ -99,14 +99,19 @@ namespace Pims.Dal.Test.Services
             using var init = helper.InitializeDatabase(user);
             var projects = init.CreateProjects(1, 20);
             projects.Next(0).Name = "-Name-";
+            projects.Next(0).AgencyId = 3;
             projects.Next(1).Agency = init.Agencies.Find(3);
             projects.Next(1).AgencyId = 3;
             projects.Next(2).TierLevel = init.TierLevels.Find(2);
             projects.Next(2).TierLevelId = 2;
+            projects.Next(2).AgencyId = 3;
             projects.Next(3).Description = "-Description-";
+            projects.Next(3).AgencyId = 3;
             projects.Next(4).Status = init.ProjectStatus.Find(2);
             projects.Next(4).StatusId = 2;
+            projects.Next(4).AgencyId = 3;
             projects.Next(5).ProjectNumber = "-ProjectNumber-";
+            projects.Next(5).AgencyId = 3;
             init.SaveChanges();
 
             var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { DraftFormat = "TEST-{0:00000}" } });
@@ -132,14 +137,19 @@ namespace Pims.Dal.Test.Services
             using var init = helper.InitializeDatabase(user);
             var projects = init.CreateProjects(1, 20);
             projects.Next(0).Name = "-Name-";
+            projects.Next(0).AgencyId = 3;
             projects.Next(1).Agency = init.Agencies.Find(3);
             projects.Next(1).AgencyId = 3;
             projects.Next(2).TierLevel = init.TierLevels.Find(2);
             projects.Next(2).TierLevelId = 2;
+            projects.Next(2).AgencyId = 3;
             projects.Next(3).Description = "-Description-";
+            projects.Next(3).AgencyId = 3;
             projects.Next(4).Status = init.ProjectStatus.Find(2);
             projects.Next(4).StatusId = 2;
+            projects.Next(4).AgencyId = 3;
             projects.Next(5).ProjectNumber = "-ProjectNumber-";
+            projects.Next(5).AgencyId = 3;
             init.SaveChanges();
 
             var options = Options.Create(new PimsOptions() { Project = new ProjectOptions() { DraftFormat = "TEST-{0:00000}" } });
