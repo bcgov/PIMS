@@ -29,10 +29,14 @@ const lCodes = {
 const store = mockStore({
   lookupCode: lCodes,
   parcel: { properties: [], draftProperties: [] },
+  usersAgencies: [
+    { id: '1', name: 'agencyVal' },
+    { id: '2', name: 'disabledAgency' },
+  ],
 });
 
 const userRoles: string[] | Claims[] = ['admin-properties'];
-const userAgencies: number[] = [1];
+const userAgencies: number[] = [1, 2];
 const userAgency: number = 1;
 
 jest.mock('hooks/useKeycloakWrapper');

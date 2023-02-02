@@ -12,8 +12,8 @@ import useKeycloakMock from 'useKeycloakWrapperMock';
 import useKeycloakWrapper from './useKeycloakWrapper';
 import { useMyAgencies } from './useMyAgencies';
 
-const userRoles: string[] | Claims[] = [];
-const userAgencies: number[] = [1];
+const userRoles: string[] | Claims[] = [Claims.PROJECT_VIEW, Claims.ADMIN_PROJECTS];
+const userAgencies: number[] = [1, 8, 41];
 const userAgency: number = 1;
 
 jest.mock('hooks/useKeycloakWrapper');
@@ -26,9 +26,14 @@ const store = mockStore({
     lookupCodes: [
       { type: 'Agency', code: 'BCA', parentId: 8, id: 41, name: 'BC Assessment' },
       { type: 'Agency', code: 'BAC', id: 8, name: 'B Assessment C' },
-      { type: 'Agency', code: 'ABC', id: 1, name: ' Assessment BC' },
+      { type: 'Agency', code: 'ABC', id: 1, name: 'Assessment BC' },
     ],
   },
+  usersAgencies: [
+    { id: '1', name: 'Assessment BC' },
+    { id: '8', name: 'B Assessment C' },
+    { id: '41', name: 'BC Assessment' },
+  ],
 });
 
 const MyAgencies = () => {
@@ -52,11 +57,7 @@ describe('UseMyAgencies', () => {
 
   it('Is SRES user, should return all agencies', () => {
     (useKeycloakWrapper as jest.Mock).mockReturnValue(
-      new (useKeycloakMock as any)(
-        [Claims.PROJECT_VIEW, Claims.ADMIN_PROJECTS],
-        userAgencies,
-        userAgency,
-      ),
+      new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
     );
 
     const { getByTestId } = render(

@@ -42,7 +42,7 @@ const selectedUser = {
   username: 'tester',
   firstName: 'firstName',
   lastName: 'lastName',
-  email: '',
+  email: 'test@test.com',
   isDisabled: false,
   emailVerified: false,
   agencies: [1],
@@ -95,9 +95,11 @@ describe('Edit user page', () => {
     cleanup();
     jest.clearAllMocks();
   });
+
   beforeEach(() => {
     mockAxios.onAny().reply(200, {});
   });
+
   it('EditUserPage renders', () => {
     const { container } = render(
       <Provider store={noDateStore}>
@@ -140,11 +142,10 @@ describe('Edit user page', () => {
   describe('appropriate fields are autofilled', () => {
     it('autofills  email, username, first and last name', () => {
       const { getByTestId } = renderEditUserPage();
-      expect(getByTestId('email').getAttribute('value')).toEqual('test@user.com');
-      expect(getByTestId('username').getAttribute('value')).toEqual('test.user');
-      expect(getByTestId('firstName').getAttribute('value')).toEqual('Test');
-      expect(getByTestId('lastName').getAttribute('value')).toEqual('User');
-      expect(getByTestId('lastName').getAttribute('value')).toEqual('User');
+      expect(getByTestId('email').getAttribute('value')).toEqual('test@test.com');
+      expect(getByTestId('username').getAttribute('value')).toEqual('tester');
+      expect(getByTestId('firstName').getAttribute('value')).toEqual('firstName');
+      expect(getByTestId('lastName').getAttribute('value')).toEqual('lastName');
     });
   });
 

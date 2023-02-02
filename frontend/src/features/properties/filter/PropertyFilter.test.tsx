@@ -94,6 +94,10 @@ const getStore = (filter: any) =>
     [reducerTypes.FILTER]: filter,
     [reducerTypes.PROPERTY_NAMES]: ['test'],
     [reducerTypes.LOOKUP_CODE]: lCodes,
+    usersAgencies: [
+      { id: '1', name: 'agencyVal' },
+      { id: '2', name: 'disabledAgency' },
+    ],
   });
 
 const defaultFilter: IPropertyFilter = {

@@ -44,6 +44,7 @@ const lCodes = {
 
 const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
+  usersAgencies: [{ id: '1', name: 'agencyVal' }],
 });
 
 const history = createMemoryHistory();

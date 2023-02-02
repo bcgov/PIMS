@@ -38,7 +38,9 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
           >
             Email
           </label>
-          <h5 />
+          <h5>
+            test@test.com
+          </h5>
         </div>
       </div>
       <div

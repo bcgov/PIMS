@@ -120,7 +120,7 @@ describe('AccessRequestPage functionality', () => {
         rowVersion: undefined,
         user: {
           displayName: 'displayName',
-          email: undefined,
+          email: 'test@test.com',
           firstName: 'firstName',
           id: 'test',
           lastName: 'lastName',
