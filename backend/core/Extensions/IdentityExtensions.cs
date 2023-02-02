@@ -42,16 +42,16 @@ namespace Pims.Core.Extensions
                 string value = user.Claims.First(c => c.Type == "idir_username")?.Value.ToString().ToLower() + "@idir";
                 return value;
             }
-            else if (identity_provider == "bceidbusiness")
+            else if (identity_provider == "bceidbusiness" || identity_provider == "bceidboth")
             {
                 string value = user.Claims.First(c => c.Type == "bceid_username")?.Value.ToString().ToLower() + "@bceid";
                 return value;
-            } 
+            }
             else if (identity_provider == "unit_testing")
             {
                 string value = user.Claims.First(c => c.Type == "test_username")?.Value.ToString().ToLower();
                 return value;
-            } 
+            }
             return "";
         }
 
