@@ -62,6 +62,10 @@ const lCodes = {
 const store = mockStore({
   lookupCode: lCodes,
   parcel: { propeties: [], draftProperties: [] },
+  usersAgencies: [
+    { id: '1', name: 'agencyVal' },
+    { id: '2', name: 'disabledAgency' },
+  ],
 });
 
 const promise = Promise.resolve();

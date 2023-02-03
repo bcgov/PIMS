@@ -33,6 +33,7 @@ const lCodes = {
 const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
   [reducerTypes.NETWORK]: { requests: {} },
+  usersAgencies: [{ id: '1', name: 'agencyVal' }],
 });
 
 test('header renders correctly', () => {
@@ -80,7 +81,7 @@ describe('UserProfile user name display', () => {
         </MemoryRouter>
       </Provider>,
     );
-    fireEvent.click(getByText(/displayName/i));
+    fireEvent.click(getByText('displayName'));
     expect(getByText(/agencyVal/i)).toBeInTheDocument();
   });
 });

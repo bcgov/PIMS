@@ -49,13 +49,13 @@ const UserRoleSelector = ({ options }: IUserRoleSelector) => {
   const { addRole, deleteRole } = useEditUserService();
 
   // Only allow the user to add roles that the user does not already have
-  const roleOptions = useMemo(
-    () =>
-      options
-        .map(r => ({ label: r, value: r } as SelectOption))
-        .filter(r => !roles.includes(r.value.toString())),
-    [roles, options],
-  );
+  const roleOptions = useMemo(() => {
+    return roles !== undefined
+      ? options
+          .map(r => ({ label: r, value: r } as SelectOption))
+          .filter(r => !roles.includes(r.value.toString()))
+      : [];
+  }, [roles, options]);
 
   // Once the component has been populated with data, disable loading
   useEffect(() => {
@@ -99,12 +99,29 @@ const UserRoleSelector = ({ options }: IUserRoleSelector) => {
         ></Select>
       </Col>
       <Col>
-        {roles.map(r => (
-          <Badge key={r} bg="secondary" className="m-1">
-            {r}
-            <FaRegTrashAlt size={15} onClick={handleDeleteClick(r)} className="m-1" role="button" />
-          </Badge>
-        ))}
+        {roles
+          ? roles.map(r => (
+              <Badge key={r} bg="secondary" className="m-1">
+                {r}
+                <FaRegTrashAlt
+                  size={15}
+                  onClick={handleDeleteClick(r)}
+                  className="m-1"
+                  role="button"
+                />
+              </Badge>
+            ))
+          : options.map(r => (
+              <Badge key={r} bg="secondary" className="m-1">
+                {r}
+                <FaRegTrashAlt
+                  size={15}
+                  onClick={handleDeleteClick(r)}
+                  className="m-1"
+                  role="button"
+                />
+              </Badge>
+            ))}
       </Col>
       <Row>
         <Col>

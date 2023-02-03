@@ -5,8 +5,8 @@ import { Roles } from 'constants/roles';
 
 interface IKeycloakMock {
   roles: string[] | Claims[];
-  agencies: number[];
-  agency?: number;
+  agencyIds: number[];
+  agencyId?: number;
   authenticated?: boolean;
   hasClaim: (claim?: Claims | Array<Claims>) => boolean;
   hasRole: (role?: Roles | Array<Roles>) => boolean;
@@ -56,8 +56,8 @@ function useKeycloakMock(
   authenticated?: boolean,
 ) {
   this.roles = roles ?? [];
-  this.agencies = agencies ?? [];
-  this.agency = agency;
+  this.agencyIds = agencies ?? [];
+  this.agencyId = agency;
   this.authenticated = authenticated ?? false;
 
   // hasClaim
@@ -82,7 +82,7 @@ function useKeycloakMock(
 
   // hasAgency
   this.hasAgency = (agency?: number): boolean => {
-    return agency !== undefined && agency !== null && this.agencies?.includes?.(agency);
+    return agency !== undefined && agency !== null && this.agencyIds?.includes?.(agency);
   };
 
   // getSystemRoles
@@ -99,6 +99,7 @@ function useKeycloakMock(
   this.preferred_username = 'tester';
   this.firstName = 'firstName';
   this.lastName = 'lastName';
+  this.email = 'test@test.com';
   this.idir_user_guid = 'test';
 
   // Is Admin

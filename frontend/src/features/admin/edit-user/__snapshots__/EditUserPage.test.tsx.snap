@@ -43,7 +43,7 @@ exports[`Edit user page EditUserPage renders 1`] = `
                 name="username"
                 readonly=""
                 type="text"
-                value="test.user"
+                value="tester"
               />
             </div>
           </div>
@@ -97,9 +97,9 @@ exports[`Edit user page EditUserPage renders 1`] = `
                     class="form-control"
                     data-testid="firstName"
                     name="firstName"
-                    placeholder="Test"
+                    placeholder="firstName"
                     type="text"
-                    value="Test"
+                    value="firstName"
                   />
                 </div>
               </div>
@@ -126,9 +126,9 @@ exports[`Edit user page EditUserPage renders 1`] = `
                     class="form-control"
                     data-testid="lastName"
                     name="lastName"
-                    placeholder="User"
+                    placeholder="lastName"
                     type="text"
-                    value="User"
+                    value="lastName"
                   />
                 </div>
               </div>
@@ -153,9 +153,9 @@ exports[`Edit user page EditUserPage renders 1`] = `
                 class="form-control"
                 data-testid="email"
                 name="email"
-                placeholder="test@user.com"
+                placeholder="test@test.com"
                 type="email"
-                value="test@user.com"
+                value="test@test.com"
               />
             </div>
           </div>
@@ -185,11 +185,6 @@ exports[`Edit user page EditUserPage renders 1`] = `
               required=""
               style="width: 450px;"
             >
-              <option
-                value=""
-              >
-                Please Select
-              </option>
               <option
                 class="option"
                 value="1"
@@ -221,53 +216,6 @@ exports[`Edit user page EditUserPage renders 1`] = `
                 type="text"
                 value=""
               />
-            </div>
-          </div>
-        </div>
-        <div
-          class="check-roles"
-        >
-          <label
-            class="form-label"
-          >
-            Roles
-             
-            <a
-              href="https://github.com/bcgov/PIMS/wiki/Architecture-Security"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Role Descriptions
-            </a>
-          </label>
-          <div>
-            <div
-              class="required row"
-              controlid="input-roles"
-              style="align-items: center;"
-            >
-              <div
-                class="col-md-auto"
-              />
-              <div
-                class="col-md-auto"
-                style="padding: 0px;"
-              >
-                <select
-                  class="form-select form-control"
-                  data-testid="role"
-                  multiple=""
-                  name="roles"
-                  required=""
-                >
-                  <option
-                    class="option"
-                    value="1"
-                  >
-                    roleVal
-                  </option>
-                </select>
-              </div>
             </div>
           </div>
         </div>
@@ -334,6 +282,83 @@ exports[`Edit user page EditUserPage renders 1`] = `
             >
               Save
             </button>
+          </div>
+        </div>
+        <hr />
+        <div
+          class="row"
+          style="pointer-events: none; opacity: 0.4; position: relative;"
+        >
+          <div
+            class="col"
+          >
+            <div
+              class="row"
+              controlid="input-Roles"
+              style="align-items: center;"
+            >
+              <div
+                class="col-md-auto"
+              >
+                <label
+                  class="form-label"
+                >
+                  Role Management
+                </label>
+              </div>
+              <div
+                class="col-md-auto"
+                style="padding: 0px;"
+              >
+                <select
+                  class="form-select form-control"
+                  name="Roles"
+                >
+                  <option
+                    value=""
+                  >
+                    Add Roles...
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div
+            class="col"
+          >
+            <span
+              class="m-1 badge bg-secondary"
+            >
+              roleVal
+              <svg
+                class="m-1"
+                fill="currentColor"
+                height="15"
+                role="button"
+                size="15"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 448 512"
+                width="15"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M268 416h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12zM432 80h-82.41l-34-56.7A48 48 0 0 0 274.41 0H173.59a48 48 0 0 0-41.16 23.3L98.41 80H16A16 16 0 0 0 0 96v16a16 16 0 0 0 16 16h16v336a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128h16a16 16 0 0 0 16-16V96a16 16 0 0 0-16-16zM171.84 50.91A6 6 0 0 1 177 48h94a6 6 0 0 1 5.15 2.91L293.61 80H154.39zM368 464H80V128h288zm-212-48h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12z"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="row"
+          >
+            <div
+              class="col"
+            >
+              <div
+                class="spinner-border"
+                style="position: absolute; top: 50%; left: 50%;"
+              />
+            </div>
           </div>
         </div>
       </form>
