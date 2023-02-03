@@ -169,7 +169,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         public IActionResult AddRoleToUser(string username, [FromBody] Dictionary<string, string> role)
         {
             var user = _pimsAdminService.User.Get(username);
-            var preferred_username = _pimsAdminService.User.GetUsersPreferredUsername(user.Email, user.Username.Split("@").Last()).Result;
+            var preferred_username = _pimsAdminService.User.GetUsersPreferredUsername(user.KeycloakUserId ?? Guid.Empty, user.Username.Split("@").Last()).Result;
             var res = _pimsAdminService.User.AddRoleToUser(preferred_username, role.GetValueOrDefault("name")).Result;
             return new JsonResult(res);
 
@@ -189,7 +189,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         public IActionResult DeleteRoleFromUser(string username, [FromBody] Dictionary<string, string> role)
         {
             var user = _pimsAdminService.User.Get(username);
-            var preferred_username = _pimsAdminService.User.GetUsersPreferredUsername(user.Email, user.Username.Split("@").Last()).Result;
+            var preferred_username = _pimsAdminService.User.GetUsersPreferredUsername(user.KeycloakUserId ?? Guid.Empty, user.Username.Split("@").Last()).Result;
             var res = _pimsAdminService.User.DeleteRoleFromUser(preferred_username, role.GetValueOrDefault("name")).Result;
             return new JsonResult(res);
         }

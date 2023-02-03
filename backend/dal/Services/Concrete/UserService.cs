@@ -100,7 +100,7 @@ namespace Pims.Dal.Services
             bool exists = user != null;
             if (!exists)
             {
-                Guid guid = Guid.NewGuid();
+                Guid guid = this.User.GetGuid();
                 string givenName = this.User.GetFirstName() ??
                     throw new ConfigurationException($"Configuration 'Pims:ServiceAccount:FirstName' is invalid or missing.");
                 string surname = this.User.GetLastName() ??
@@ -116,6 +116,7 @@ namespace Pims.Dal.Services
             else
             {
                 user.LastLogin = DateTime.UtcNow;
+                user.KeycloakUserId = this.User.GetGuid();
                 this.Context.Entry(user).State = EntityState.Modified;
             }
 

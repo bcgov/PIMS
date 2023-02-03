@@ -52,13 +52,13 @@ const AccessRequestPage = (): JSX.Element => {
 
   const initialValues: IAccessRequestForm = {
     id: accessRequest?.id ?? 0,
-    userId: convertToGuidFormat(keycloakWrapper.idir_user_guid),
+    userId: convertToGuidFormat(keycloakWrapper.userId),
     user: {
-      id: keycloakWrapper.idir_user_guid,
+      id: keycloakWrapper.userId,
       username: keycloakWrapper.username,
-      displayName: keycloakWrapper.displayName,
-      firstName: keycloakWrapper.firstName,
-      lastName: keycloakWrapper.lastName,
+      displayName: keycloakWrapper.displayName ?? '',
+      firstName: keycloakWrapper.firstName ?? '',
+      lastName: keycloakWrapper.lastName ?? 'test',
       email: keycloakWrapper.email,
       position: accessRequest?.user?.position ?? keycloakWrapper.obj?.position ?? '',
     },
@@ -123,119 +123,123 @@ const AccessRequestPage = (): JSX.Element => {
             validationSchema={AccessRequestSchema}
             onSubmit={handleFormSubmit}
           >
-            <>
-              {inProgress}
+            {({ handleSubmit }) => (
+              <form onSubmit={handleSubmit}>
+                {inProgress}
+                {/* 
               {/* 
+                {/* 
                 Displaying the user's autofilled data 
               */}
-              <Row>
-                <Col xs={4}>
-                  <Form.Label>IDIR/BCeID</Form.Label>
-                  <h5>{initialValues.user.username}</h5>
-                </Col>
+                <Row>
+                  <Col xs={4}>
+                    <Form.Label>IDIR/BCeID</Form.Label>
+                    <h5>{initialValues.user.username}</h5>
+                  </Col>
 
-                <Col xs={{ span: 4, offset: 4 }}>
-                  <Form.Label>Email</Form.Label>
-                  <h5>{initialValues.user.email}</h5>
-                </Col>
-              </Row>
+                  <Col xs={{ span: 4, offset: 4 }}>
+                    <Form.Label>Email</Form.Label>
+                    <h5>{initialValues.user.email}</h5>
+                  </Col>
+                </Row>
 
-              <Row>
-                <Col xs={4}>
-                  <Form.Label>First Name</Form.Label>
-                  <h5>{initialValues.user.firstName}</h5>
-                </Col>
+                <Row>
+                  <Col xs={4}>
+                    <Form.Label>First Name</Form.Label>
+                    <h5>{initialValues.user.firstName}</h5>
+                  </Col>
 
-                <Col xs={{ span: 4, offset: 4 }}>
-                  <Form.Label>Last Name</Form.Label>
-                  <h5>{initialValues.user.lastName}</h5>
-                </Col>
-              </Row>
+                  <Col xs={{ span: 4, offset: 4 }}>
+                    <Form.Label>Last Name</Form.Label>
+                    <h5>{initialValues.user.lastName}</h5>
+                  </Col>
+                </Row>
 
-              {/* Start of user input */}
+                {/* Start of user input */}
 
-              <Form.Group as={Row}>
-                <Col xs={12}>
-                  <Form.Label>Agency</Form.Label>
-                  <Select
-                    className="agency-selector"
-                    outerClassName="mx-0"
-                    field="agency"
-                    required={true}
-                    options={selectAgencies}
-                    placeholder={
-                      initialValues?.agencies?.length > 0 ? undefined : 'Select an agency'
-                    }
+                <Form.Group as={Row}>
+                  <Col xs={12}>
+                    <Form.Label>Agency</Form.Label>
+                    <Select
+                      className="agency-selector"
+                      outerClassName="mx-0"
+                      field="agency"
+                      required={true}
+                      options={selectAgencies}
+                      placeholder={
+                        initialValues?.agencies?.length > 0 ? undefined : 'Select an agency'
+                      }
+                    />
+                  </Col>
+                </Form.Group>
+
+                <Row>
+                  <Col xs={12}>
+                    <Form.Label>Position</Form.Label>
+                    <Input
+                      field="user.position"
+                      placeholder="e.g Director, Real Estate and Stakeholder Engagement"
+                      type="text"
+                      outerClassName="position-input mx-0"
+                    />
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col xs={12}>
+                    <Form.Label>
+                      Role&nbsp;
+                      <a target="_blank" rel="noopener noreferrer" href={AUTHORIZATION_URL}>
+                        Role Descriptions
+                      </a>
+                    </Form.Label>
+                    <Select
+                      outerClassName="mx-0 roles-input"
+                      field="role"
+                      required={true}
+                      options={selectRoles}
+                      placeholder={initialValues?.roles?.length > 0 ? undefined : 'Select a role'}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={12}>
+                    <Form.Label>Notes</Form.Label>
+                    <TextArea
+                      field="note"
+                      placeholder="Please specify why you need access to PIMS and include your manager's name."
+                      required={true}
+                      outerClassName="notes-input mx-0"
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <p>
+                    By clicking request, you agree to our{' '}
+                    <a href={DISCLAIMER_URL}>Terms and Conditions</a> and that you have read our{' '}
+                    <a href={PRIVACY_POLICY_URL}>Privacy Policy</a>.
+                  </p>
+                </Row>
+
+                {alert.show && (
+                  <Snackbar
+                    show={alert.show}
+                    message={alert.message}
+                    variant={alert.variant}
+                    onClose={() => setAlert({})}
                   />
-                </Col>
-              </Form.Group>
-
-              <Row>
-                <Col xs={12}>
-                  <Form.Label>Position</Form.Label>
-                  <Input
-                    field="user.position"
-                    placeholder="e.g Director, Real Estate and Stakeholder Engagement"
-                    type="text"
-                    outerClassName="position-input mx-0"
-                  />
-                </Col>
-              </Row>
-
-              <Row>
-                <Col xs={12}>
-                  <Form.Label>
-                    Role&nbsp;
-                    <a target="_blank" rel="noopener noreferrer" href={AUTHORIZATION_URL}>
-                      Role Descriptions
-                    </a>
-                  </Form.Label>
-                  <Select
-                    outerClassName="mx-0 roles-input"
-                    field="role"
-                    required={true}
-                    options={selectRoles}
-                    placeholder={initialValues?.roles?.length > 0 ? undefined : 'Select a role'}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col xs={12}>
-                  <Form.Label>Notes</Form.Label>
-                  <TextArea
-                    field="note"
-                    placeholder="Please specify why you need access to PIMS and include your manager's name."
-                    required={true}
-                    outerClassName="notes-input mx-0"
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <p>
-                  By clicking request, you agree to our{' '}
-                  <a href={DISCLAIMER_URL}>Terms and Conditions</a> and that you have read our{' '}
-                  <a href={PRIVACY_POLICY_URL}>Privacy Policy</a>.
-                </p>
-              </Row>
-
-              {alert.show && (
-                <Snackbar
-                  show={alert.show}
-                  message={alert.message}
-                  variant={alert.variant}
-                  onClose={() => setAlert({})}
-                />
-              )}
-              <Row>
-                <Col xs={12}>
-                  <ButtonToolbar className="cancelSave pt-0 pb-0">
-                    <Button type="submit" className="w-100">
-                      {button}
-                    </Button>
-                  </ButtonToolbar>
-                </Col>
-              </Row>
-            </>
+                )}
+                <Row>
+                  <Col xs={12}>
+                    <ButtonToolbar className="cancelSave pt-0 pb-0">
+                      <Button type="submit" className="w-100">
+                        {button}
+                      </Button>
+                    </ButtonToolbar>
+                  </Col>
+                </Row>
+              </form>
+            )}
           </Formik>
         </Row>
       </Container>

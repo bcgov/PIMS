@@ -159,8 +159,35 @@ namespace Pims.Dal.Services.Admin
 
             if (user == null) throw new KeyNotFoundException();
             GoldUser gUser = new GoldUser(user);
-            string preferred_username = GetUsersPreferredUsername(gUser.Email, gUser.Username.Split("@").Last()).Result;
-            gUser.GoldUserRoles = GetGoldUsersRolesAsync(preferred_username).Result;
+            string identityProvider = gUser.Username.Split("@").Last();
+
+            if (identityProvider == "idir")
+            {
+                try
+                {
+                    string preferred_username = GetUsersPreferredUsername(gUser.Email, identityProvider).Result;
+                    gUser.GoldUserRoles = GetGoldUsersRolesAsync(preferred_username).Result;
+                }
+                catch
+                {
+                    return gUser;
+                }
+
+
+            }
+            else if (identityProvider.Contains("bceid"))
+            {
+                try
+                {
+                    string preferred_username = GetUsersPreferredUsername(gUser.KeycloakUserId ?? Guid.Empty, identityProvider).Result;
+                    gUser.GoldUserRoles = GetGoldUsersRolesAsync(preferred_username).Result;
+                }
+                catch
+                {
+                    return gUser;
+                }
+
+            }
             return gUser;
 
         }
@@ -185,7 +212,7 @@ namespace Pims.Dal.Services.Admin
 
             if (user == null) throw new KeyNotFoundException();
             GoldUser gUser = new GoldUser(user);
-            string preferred_username = GetUsersPreferredUsername(gUser.Email, gUser.Username.Split("@").Last()).Result;
+            string preferred_username = GetUsersPreferredUsername(gUser.KeycloakUserId ?? Guid.Empty, gUser.Username.Split("@").Last()).Result;
             gUser.GoldUserRoles = GetGoldUsersRolesAsync(preferred_username).Result;
             return gUser;
 
@@ -243,6 +270,9 @@ namespace Pims.Dal.Services.Admin
                 .FirstOrDefault(u => u.Id == user.Id) ?? throw new KeyNotFoundException();
 
             this.Context.SetOriginalRowVersion(existingUser);
+
+            //This is bad, but it's such an edge case where it would cause a big issue...
+            user.RowVersion = existingUser.RowVersion;
 
             if (!existingUser.Agencies.Any())
             {
@@ -317,15 +347,45 @@ namespace Pims.Dal.Services.Admin
         /// </summary>
         /// <param name="email"></param>
         /// <param name="identityProvider">Rather @idir or @bceid</param>
-        public async Task<string> GetUsersPreferredUsername(string email, string identityProvider)
+        public async Task<string> GetUsersPreferredUsername(Guid keycloakGuid, string identityProvider)
         {
+            string idp = identityProvider == "idir" ? "idir" : "basic-business-bceid";
+            string guid = keycloakGuid.ToString().Replace("-", "");
+
             // TODO: Iterate on the following to make this D.R.Y.
             HttpClient _httpClient = new HttpClient();
             string token = await GetToken();
 
             // Keycloak Gold only wants the clientID as a number, which is always at the end of the id, after a "-"
             string frontendId = this.configuration["Keycloak:FrontendClientId"].Split("-").Last();
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"https://api.loginproxy.gov.bc.ca/api/v1/{getEnv()}/{identityProvider}/users?email={email}");
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"https://api.loginproxy.gov.bc.ca/api/v1/{getEnv()}/{idp}/users?guid={guid}");
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            HttpResponseMessage response = await _httpClient.SendAsync(request);
+            if (!response.IsSuccessStatusCode) throw new Exception("Unable to get user's username from Keycloak Gold");
+            string payload = await response.Content.ReadAsStringAsync();
+
+            JsonDocument json = JsonDocument.Parse(payload);
+            string username = json.RootElement.GetProperty("data").EnumerateArray().First().GetProperty("username").GetString();
+
+            return username;
+        }
+
+        /// <summary>
+        /// Get the given user's preferred username, which is required for subsequent Keycloak Gold API calls
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="identityProvider">Rather @idir or @bceid</param>
+        public async Task<string> GetUsersPreferredUsername(string email, string identityProvider)
+        {
+            string idp = identityProvider == "idir" ? "idir" : "basic-business-bceid";
+
+            // TODO: Iterate on the following to make this D.R.Y.
+            HttpClient _httpClient = new HttpClient();
+            string token = await GetToken();
+
+            // Keycloak Gold only wants the clientID as a number, which is always at the end of the id, after a "-"
+            string frontendId = this.configuration["Keycloak:FrontendClientId"].Split("-").Last();
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"https://api.loginproxy.gov.bc.ca/api/v1/{getEnv()}/{idp}/users?email={email}");
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             HttpResponseMessage response = await _httpClient.SendAsync(request);
             if (!response.IsSuccessStatusCode) throw new Exception("Unable to get user's username from Keycloak Gold");

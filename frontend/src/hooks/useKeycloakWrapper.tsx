@@ -29,6 +29,7 @@ export interface IUserInfo {
   idir_username: string;
   bceid_username: string;
   idir_user_guid: string;
+  bceid_user_guid: string;
 }
 
 /**
@@ -38,6 +39,7 @@ export interface IKeycloak {
   obj: any;
   displayName?: string;
   username: string;
+  userId: string;
   name?: string;
   preferred_username?: string;
   firstName?: string;
@@ -123,10 +125,23 @@ export function useKeycloakWrapper(): IKeycloak {
     if (userInfo?.identity_provider === 'idir') {
       return userInfo?.idir_username + '@idir';
     }
-    if (userInfo?.identity_provider === 'bceid') {
+    if (userInfo?.identity_provider === 'bceidbusiness') {
+      return userInfo?.bceid_username + '@bceid';
+    }
+    if (userInfo?.identity_provider === 'bceidboth') {
       return userInfo?.bceid_username + '@bceid';
     }
     return userInfo?.username;
+  };
+
+  const userId = (): string => {
+    if (userInfo?.identity_provider === 'idir') {
+      return userInfo?.idir_user_guid;
+    }
+    if (userInfo?.identity_provider.includes('bceid')) {
+      return userInfo?.bceid_user_guid;
+    }
+    return '';
   };
 
   /**
@@ -207,6 +222,7 @@ export function useKeycloakWrapper(): IKeycloak {
     () => ({
       obj: { ...keycloakInstance, authenticated: !!keycloakInstance.token },
       username: username(),
+      userId: userId(),
       displayName: displayName(),
       firstName: firstName(),
       lastName: lastName(),

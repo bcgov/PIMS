@@ -40,9 +40,11 @@ interface UserRoleSelectorFormikValues {
 const UserRoleSelector = ({ options }: IUserRoleSelector) => {
   let { values } = useFormikContext<UserRoleSelectorFormikValues>();
   // State to manage the current user's roles
-  const [roles, setRoles] = useState<string[]>(values.goldRoles);
+  const [roles, setRoles] = useState<string[]>(values.goldRoles ?? []);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const [isUnableToLoadRoles, setIsUnableToLoadRoles] = useState<boolean>(false);
 
   const { addRole, deleteRole } = useEditUserService();
 
@@ -57,8 +59,9 @@ const UserRoleSelector = ({ options }: IUserRoleSelector) => {
 
   // Once the component has been populated with data, disable loading
   useEffect(() => {
-    if (values.goldRoles?.length > 1) {
-      setRoles(values.goldRoles);
+    if (values.username) {
+      setRoles(values.goldRoles ?? []);
+      setIsUnableToLoadRoles(!values.goldRoles);
       setIsLoading(false);
     }
   }, [values.goldRoles]);
@@ -77,7 +80,9 @@ const UserRoleSelector = ({ options }: IUserRoleSelector) => {
     setIsLoading(false);
   };
 
-  return (
+  return isUnableToLoadRoles ? (
+    <p>Unable to load user's roles</p>
+  ) : (
     <Row
       style={{
         ...(isLoading ? { pointerEvents: 'none', opacity: '0.4' } : {}),
