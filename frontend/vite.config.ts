@@ -1,6 +1,7 @@
 /// <reference types="vitest" />
 import react from '@vitejs/plugin-react';
 import dotenv from 'dotenv';
+import path from 'path';
 import { defineConfig } from 'vite';
 import svgrPlugin from 'vite-plugin-svgr';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
@@ -11,6 +12,11 @@ export default defineConfig({
   plugins: [react(), viteTsconfigPaths(), svgrPlugin()],
   build: {
     outDir: 'build',
+  },
+  resolve: {
+    alias: {
+      '@node_modules': path.resolve(__dirname, 'node_modules'),
+    },
   },
   server: {
     host: true,
