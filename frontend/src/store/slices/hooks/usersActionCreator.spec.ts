@@ -166,7 +166,7 @@ describe('User action tests', () => {
     it('Request successful, dispatch success, store response', async () => {
       const mockResponse = { data: {} };
       mockAxios
-        .onPut(ENVIRONMENT.apiUrl + API.KEYCLOAK_USER_UPDATE(filter), user)
+        .onPut(ENVIRONMENT.apiUrl + API.ADMIN_USER_UPDATE(filter), user)
         .reply(200, mockResponse);
 
       await getUpdateUserAction(filter, user)(store.dispatch);
@@ -180,7 +180,7 @@ describe('User action tests', () => {
     it('Request failure, dispatch error', async () => {
       const mockResponse = {};
       mockAxios
-        .onPut(ENVIRONMENT.apiUrl + API.KEYCLOAK_USER_UPDATE(filter), user)
+        .onPut(ENVIRONMENT.apiUrl + API.ADMIN_USER_UPDATE(filter), user)
         .reply(500, mockResponse);
 
       await getUpdateUserAction(filter, user)(store.dispatch);

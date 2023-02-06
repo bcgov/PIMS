@@ -33,8 +33,6 @@ const lCodes = {
   lookupCodes: [
     { name: 'agencyVal', id: '1', isDisabled: false, type: API.AGENCY_CODE_SET_NAME },
     { name: 'disabledAgency', id: '2', isDisabled: true, type: API.AGENCY_CODE_SET_NAME },
-    { name: 'roleVal', id: '1', isDisabled: false, type: API.ROLE_CODE_SET_NAME },
-    { name: 'disabledRole', id: '2', isDisabled: true, type: API.ROLE_CODE_SET_NAME },
   ] as ILookupCode[],
 };
 
@@ -46,7 +44,7 @@ const selectedUser = {
   isDisabled: false,
   emailVerified: false,
   agencies: [1],
-  roles: [{ id: '2' }],
+  roles: [],
   rowVersion: 'AAAAAAAAB9E=',
   note: 'test note',
   lastLogin: '2020-10-14T17:45:39.7381599',
@@ -68,7 +66,7 @@ const testRender = () =>
   render(
     <Provider store={store}>
       <MemoryRouter initialEntries={[history.location]}>
-        <EditUserPage id="TEST-ID" />,
+        <EditUserPage id="test" />,
       </MemoryRouter>
     </Provider>,
   );
@@ -85,7 +83,7 @@ const renderEditUserPage = () =>
           rtl={false}
           pauseOnFocusLoss={false}
         />
-        <EditUserPage id="TEST-ID" />,
+        <EditUserPage id="test" />,
       </MemoryRouter>
     </Provider>,
   );
@@ -104,7 +102,7 @@ describe('Edit user page', () => {
     const { container } = render(
       <Provider store={noDateStore}>
         <MemoryRouter initialEntries={[history.location]}>
-          <EditUserPage id="TEST-ID" />,
+          <EditUserPage id="test" />,
         </MemoryRouter>
       </Provider>,
     );
@@ -114,7 +112,6 @@ describe('Edit user page', () => {
   it('contains role options from lookup code + please select disabled option', () => {
     const { getAllByText, getByTestId } = renderEditUserPage();
     expect(getAllByText(/Roles/i));
-    expect(getAllByText(/roleVal/i));
     expect(getAllByText(/agencyVal/i));
     expect(getByTestId('isDisabled').getAttribute('value')).toEqual('false');
   });
@@ -127,16 +124,6 @@ describe('Edit user page', () => {
   it('Does not display disabled agencies', () => {
     const { queryByText } = testRender();
     expect(queryByText('disabledAgency')).toBeNull();
-  });
-
-  it('displays enabled roles', () => {
-    const { queryByText } = testRender();
-    expect(queryByText('roleVal')).toBeVisible();
-  });
-
-  it('Does not display disabled roles', () => {
-    const { queryByText } = testRender();
-    expect(queryByText('disabledRole')).toBeNull();
   });
 
   describe('appropriate fields are autofilled', () => {

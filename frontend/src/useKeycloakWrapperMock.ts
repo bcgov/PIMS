@@ -20,6 +20,7 @@ interface IKeycloakMock {
   lastName?: string;
   email?: string;
   isAdmin: boolean;
+  userId: string;
   idir_user_guid: string;
   canUserEditProperty: (property: IProperty | null) => boolean;
   canUserDeleteProperty: (property: IProperty | null) => boolean;
@@ -101,6 +102,7 @@ function useKeycloakMock(
   this.lastName = 'lastName';
   this.email = 'test@test.com';
   this.idir_user_guid = 'test';
+  this.userId = 'test';
 
   // Is Admin
   this.isAdmin =
