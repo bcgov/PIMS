@@ -118,14 +118,13 @@
   "overrides": {
     "@svgr/webpack": "6.3.1",
     "svgo@<3.0.2": "3.0.2",
-    "scss-tokenizer": "0.4.3",
-    "autoprefixer": "10.4.5",
     "minimatch@<3.0.8": "3.0.8",
     "decode-uri-component@^0.2.0": "0.2.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "@types/react": "18.0.26",
-    "react-test-renderer": "18.2.0"
+    "react-test-renderer": "18.2.0",
+    "http-cache-semantics@<4.1.1": "4.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
