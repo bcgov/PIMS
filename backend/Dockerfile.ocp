@@ -3,7 +3,6 @@ FROM image-registry.apps.silver.devops.gov.bc.ca/354028-tools/dotnet-50:5.0-39 A
 WORKDIR /app
 EXPOSE 443 8080
 
-WORKDIR /src
 COPY *.sln .
 COPY api/*.csproj api/
 COPY entities/*.csproj entities/
@@ -24,11 +23,13 @@ RUN dotnet tool install --global dotnet-ef --version 5.0.17
 
 # Copy everything else and build
 COPY . .
-WORKDIR /src/api
+WORKDIR /app/api
 RUN dotnet build "Pims.Api.csproj" -c "$BUILD_CONFIGURATION" -o /app/build
 RUN dotnet publish "Pims.Api.csproj" -c "$BUILD_CONFIGURATION" -o /app/publish
 
+FROM dotnet as final
 WORKDIR /app
+COPY --from=dotnet /app/publish .
 COPY entrypoint.sh .
 RUN chmod +x /app/entrypoint.sh
 ENTRYPOINT ["/app/entrypoint.sh"]
