@@ -1,10 +1,8 @@
 ARG BUILD_CONFIGURATION=Release
-FROM image-registry.apps.silver.devops.gov.bc.ca/354028-tools/dotnet-aspnet:5.0 AS base
+FROM image-registry.apps.silver.devops.gov.bc.ca/354028-tools/dotnet-50:5.0-39 AS dotnet
 WORKDIR /app
 EXPOSE 443 8080
 
-# Copy csproj and restore as distinct layers
-FROM image-registry.apps.silver.devops.gov.bc.ca/354028-tools/dotnet-sdk:5.0 AS build
 WORKDIR /src
 COPY *.sln .
 COPY api/*.csproj api/
@@ -23,18 +21,14 @@ COPY core/*.csproj core/
 RUN dotnet restore
 ENV PATH="$PATH:/root/.dotnet/tools"
 RUN dotnet tool install --global dotnet-ef --version 5.0.17
+
 # Copy everything else and build
 COPY . .
 WORKDIR /src/api
 RUN dotnet build "Pims.Api.csproj" -c "$BUILD_CONFIGURATION" -o /app/build
-
-FROM build AS publish
 RUN dotnet publish "Pims.Api.csproj" -c "$BUILD_CONFIGURATION" -o /app/publish
 
-# Runtime image
-FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
 COPY entrypoint.sh .
 RUN chmod +x /app/entrypoint.sh
 ENTRYPOINT ["/app/entrypoint.sh"]
