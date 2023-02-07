@@ -1258,7 +1258,7 @@ namespace Pims.Dal.Test.Services
 
             // Assert
             Assert.NotNull(result);
-            result.Responses.Should().HaveCount(2);
+            result.Responses.Should().HaveCount(1);
             mockQueueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
             mockQueueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
             mockQueueService.Verify(m => m.NotificationQueue.GenerateNotification(It.IsAny<Project>(), It.IsAny<ProjectStatusNotification>(), It.IsAny<Agency>(), It.IsAny<DateTime?>()), Times.Once());
