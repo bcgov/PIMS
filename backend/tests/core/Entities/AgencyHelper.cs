@@ -15,7 +15,7 @@ namespace Pims.Core.Test
         /// <param name="code"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static Entity.Agency CreateAgency(int id = 1, string code = "AG", string name = "Agency")
+        public static Entity.Agency CreateAgency(int id = 3, string code = "AG", string name = "Agency")
         {
             var agency = new Entity.Agency(code, name)
             {
@@ -35,9 +35,10 @@ namespace Pims.Core.Test
             return new List<Entity.Agency>()
             {
                 // Parent agencies
-                new Entity.Agency("AEST", "Ministry of Advanced Education, Skills & Training") { Id = 1, RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.Agency("CITZ", "Ministry of Citizens Service") { Id = 2, RowVersion = new byte[] { 12, 13, 14 } },
-                new Entity.Agency("CSNR", "Ministry of Corporate Services for the Natural Resources Sector") { Id = 3, RowVersion = new byte[] { 12, 13, 14 } },
+                // commenting out agency id's for 1 & 3 to avoid System.InvalidOperationException : The instance of entity type 'Agency' cannot be tracked because another instance with the key value '{Id: 1}' is already being tracked. When attaching existing entities, ensure that only one entity instance with a given key value is attached.
+                //new Entity.Agency("AEST", "Ministry of Advanced Education, Skills & Training") { Id = 1, RowVersion = new byte[] { 12, 13, 14 } },
+                //new Entity.Agency("CITZ", "Ministry of Citizens Service") { Id = 2, RowVersion = new byte[] { 12, 13, 14 } },
+                //new Entity.Agency("CSNR", "Ministry of Corporate Services for the Natural Resources Sector") { Id = 3, RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.Agency("EDUC", "Ministry of Education") { Id = 4, RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.Agency("FIN", "Ministry of Financ") { Id = 5, RowVersion = new byte[] { 12, 13, 14 } },
                 new Entity.Agency("FLNR", "Ministry of Forests, Lands, Natural Resources") { Id = 6 },

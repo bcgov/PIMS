@@ -29,7 +29,7 @@ namespace Pims.Dal.Test.Services
             {
                 new object[] { new ParcelFilter(48.571155, -123.657596, 48.492947, -123.731803), new[] { 1, 3 }, 1 },
                 new object[] { new ParcelFilter(48.821333, -123.795017, 48.763431, -123.959783), new[] { 1, 3 }, 0 },
-                new object[] { new ParcelFilter() { Agencies = new int[] { 3 } }, new[] { 1, 3 }, 1 },
+                new object[] { new ParcelFilter() { Agencies = new int[] { 3 } }, new[] { 1, 3 }, 7 },
                 new object[] { new ParcelFilter() { ClassificationId = 2 }, new[] { 1, 3 }, 1 },
                 new object[] { new ParcelFilter() { Description = "DescriptionTest" }, new[] { 1, 3 }, 1 },
                 new object[] { new ParcelFilter() { AdministrativeArea = "AdministrativeArea" }, new[] { 1, 3 }, 1 },
@@ -92,13 +92,20 @@ namespace Pims.Dal.Test.Services
             var parcels = init.CreateParcels(1, 20);
             parcels.Next(0).Location.X = -123.720810;
             parcels.Next(0).Location.Y = 48.529338;
+            parcels.Next(0).AgencyId = 3;
+            parcels.Next(1).AgencyId = 3;
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
+            parcels.Next(2).AgencyId = 3;
             parcels.Next(3).Description = "-DescriptionTest-";
+            parcels.Next(3).AgencyId = 3;
             parcels.Next(4).Address.AdministrativeArea = "-AdministrativeArea-";
+            parcels.Next(4).AgencyId = 3;
             parcels.Next(5).Zoning = "-Zoning-";
+            parcels.Next(5).AgencyId = 3;
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
+            parcels.Next(6).AgencyId = 3;
             init.SaveChanges();
 
             var service = helper.CreateService<ParcelService>(user);
@@ -157,13 +164,19 @@ namespace Pims.Dal.Test.Services
             var parcels = init.CreateParcels(1, 20);
             parcels.Next(0).Location.X = -123.720810;
             parcels.Next(0).Location.Y = 48.529338;
+            parcels.Next(0).AgencyId = 3;
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
+            parcels.Next(2).AgencyId = 3;
             parcels.Next(3).Description = "-DescriptionTest-";
+            parcels.Next(3).AgencyId = 3;
             parcels.Next(4).Address.AdministrativeArea = "-AdministrativeArea-";
+            parcels.Next(4).AgencyId = 3;
             parcels.Next(5).Zoning = "-Zoning-";
+            parcels.Next(5).AgencyId = 3;
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
+            parcels.Next(6).AgencyId = 3;
             init.SaveChanges();
 
             var service = helper.CreateService<ParcelService>(user);
@@ -259,14 +272,21 @@ namespace Pims.Dal.Test.Services
             var parcels = init.CreateParcels(1, 20);
             parcels.Next(0).Location.X = -123.720810;
             parcels.Next(0).Location.Y = 48.529338;
+            parcels.Next(0).AgencyId = 3;
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
+            parcels.Next(2).AgencyId = 3;
             parcels.Next(3).Description = "-DescriptionTest-";
+            parcels.Next(3).AgencyId = 3;
             parcels.Next(4).Address.AdministrativeArea = "-AdministrativeArea-";
+            parcels.Next(4).AgencyId = 3;
             parcels.Next(5).Zoning = "-Zoning-";
+            parcels.Next(5).AgencyId = 3;
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
+            parcels.Next(6).AgencyId = 3;
             init.SaveChanges();
+            helper.CreatePimsContext(user, true).AddAndSaveRange(parcels);
 
             var service = helper.CreateService<ParcelService>(user);
 
@@ -324,13 +344,19 @@ namespace Pims.Dal.Test.Services
             var parcels = init.CreateParcels(1, 20);
             parcels.Next(0).Location.X = -123.720810;
             parcels.Next(0).Location.Y = 48.529338;
+            parcels.Next(0).AgencyId = 3;
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
+            parcels.Next(2).AgencyId = 3;
             parcels.Next(3).Description = "-DescriptionTest-";
+            parcels.Next(3).AgencyId = 3;
             parcels.Next(4).Address.AdministrativeArea = "-AdministrativeArea-";
+            parcels.Next(4).AgencyId = 3;
             parcels.Next(5).Zoning = "-Zoning-";
+            parcels.Next(5).AgencyId = 3;
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
+            parcels.Next(6).AgencyId = 3;
             init.SaveChanges();
 
             var service = helper.CreateService<ParcelService>(user);
@@ -468,8 +494,10 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView);
-            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
+
+            using var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            init.SaveChanges();
 
             var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
@@ -502,8 +530,10 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.AdminProperties);
-            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
+
+            using var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            init.SaveChanges();
 
             var service = helper.CreateService<ParcelService>(user);
             var context = helper.GetService<PimsContext>();
@@ -569,7 +599,10 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.SensitiveView).AddAgency(1);
-            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+
+            using var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            init.SaveChanges();
             parcel.IsSensitive = true;
             helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
@@ -595,12 +628,10 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.SensitiveView).AddAgency(1);
-
             using var init = helper.InitializeDatabase(user);
             var agency = init.Agencies.Find(1);
             var parcel = init.CreateParcel(1, agency);
             parcel.IsSensitive = true;
-            init.CreateBuilding(parcel, 2);
             var building1 = init.CreateBuilding(parcel, 3);
             building1.IsSensitive = true;
             var building2 = init.CreateBuilding(parcel, 4, "13", "l4", 1, 1, init.Agencies.Find(2));
@@ -619,7 +650,7 @@ namespace Pims.Dal.Test.Services
             Assert.Equal(parcel, result, new ShallowPropertyCompare());
             Assert.Equal(2, result.Buildings.Count());
             Assert.True(result.IsSensitive);
-            Assert.Equal(1, result.Buildings.Count(b => b.Building.IsSensitive));
+            Assert.Equal(2, result.Buildings.Count(b => b.Building.IsSensitive));
         }
 
         /// <summary>
@@ -631,7 +662,9 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.AdminProperties, Permissions.PropertyView);
-            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            using var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            init.SaveChanges();
             parcel.IsSensitive = true;
             helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
@@ -974,7 +1007,12 @@ namespace Pims.Dal.Test.Services
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit);
             var init = helper.InitializeDatabase(user);
-            var parcel = init.CreateParcel(1);
+            var agency = new Entity.Agency("TEST", "Test Agency")
+            {
+                Id = 111,
+                RowVersion = new byte[] { 12, 13, 14 }
+            };
+            var parcel = init.CreateParcel(1, agency);
             init.SaveChanges();
 
             var service = helper.CreateService<ParcelService>();
@@ -1177,7 +1215,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd, Permissions.PropertyEdit).AddAgency(10);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd, Permissions.PropertyEdit, Permissions.AdminProperties).AddAgency(10);
             var init = helper.InitializeDatabase(user);
             var parcel = EntityHelper.CreateParcel(1);
 
@@ -1207,7 +1245,7 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd, Permissions.PropertyEdit).AddAgency(10);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyAdd, Permissions.PropertyEdit, Permissions.AdminProperties).AddAgency(10);
             var init = helper.InitializeDatabase(user);
             var parcel = EntityHelper.CreateParcel(1);
 
@@ -1237,13 +1275,13 @@ namespace Pims.Dal.Test.Services
         {
             // Arrange
             var helper = new TestHelper();
-            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit, Permissions.PropertyAdd).AddAgency(10);
+            var user = PrincipalHelper.CreateForPermission(Permissions.PropertyView, Permissions.PropertyEdit, Permissions.PropertyAdd, Permissions.AdminProperties).AddAgency(10);
             var init = helper.InitializeDatabase(user);
-            var originalParcel = init.CreateParcel(1);
-            var updatedParcel = init.CreateParcel(3);
+            var originalParcel = init.CreateParcel(1, 3);
+            var updatedParcel = init.CreateParcel(3, 3);
             originalParcel.PIN = 1;
             init.SaveChanges();
-            var parcel = EntityHelper.CreateParcel(2);
+            var parcel = EntityHelper.CreateParcel(2, 3);
             var dividedParcel = new Entity.ParcelParcel() { ParcelId = 1, SubdivisionId = 2, Parcel = originalParcel };
             parcel.Parcels.Add(dividedParcel);
 
@@ -1298,7 +1336,9 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission();
-            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            using var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            init.SaveChanges();
             helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
             var service = helper.CreateService<ParcelService>(user);
@@ -1318,7 +1358,9 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete).AddAgency(1);
-            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            using var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            init.SaveChanges();
             parcel.ProjectNumbers = "[SPP-10000]";
             helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
@@ -1339,7 +1381,9 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete).AddAgency(1);
-            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            using var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            init.SaveChanges();
             parcel.IsSensitive = true;
             helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
@@ -1360,7 +1404,9 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete, Permissions.AdminProperties).AddAgency(1);
-            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            using var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            init.SaveChanges();
             parcel.IsSensitive = true;
             helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
@@ -1384,10 +1430,16 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete);
-            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
-            helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
-
-            var service = helper.CreateService<ParcelService>(user);
+            using var init = helper.InitializeDatabase(user);
+            var differentAgency = new Entity.Agency("TEST", "Test Agency")
+            {
+                Id = 111,
+                RowVersion = new byte[] { 12, 13, 14 }
+            };
+            var parcel = init.CreateParcel(1, differentAgency);
+            init.SaveChanges();
+            var options = ControllerHelper.CreateDefaultPimsOptions();
+            var service = helper.CreateService<ParcelService>(user, options);
 
             // Act
             // Assert
@@ -1404,7 +1456,9 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete, Permissions.AdminProperties);
-            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            using var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            init.SaveChanges();
             helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -1427,7 +1481,9 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete, Permissions.SensitiveView).AddAgency(1);
-            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            using var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            init.SaveChanges();
             parcel.IsSensitive = true;
             helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
@@ -1451,7 +1507,9 @@ namespace Pims.Dal.Test.Services
             // Arrange
             var helper = new TestHelper();
             var user = PrincipalHelper.CreateForPermission(Permissions.PropertyDelete).AddAgency(1);
-            var parcel = EntityHelper.CreateParcel(1, 1, 1, 1);
+            using var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            init.SaveChanges();
             helper.CreatePimsContext(user, true).AddAndSaveChanges(parcel);
 
             var options = ControllerHelper.CreateDefaultPimsOptions();

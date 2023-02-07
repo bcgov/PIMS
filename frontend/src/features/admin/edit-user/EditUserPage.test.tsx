@@ -1,10 +1,11 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { act, cleanup, render } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import * as API from 'constants/API';
+import Claims from 'constants/claims';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import moment from 'moment-timezone';
 import React from 'react';
 import { Provider } from 'react-redux';
@@ -12,19 +13,18 @@ import { MemoryRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import EditUserPage from './EditUserPage';
 
-jest.mock('@react-keycloak/web');
-(useKeycloak as jest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: [1],
-      roles: [],
-    },
-    subject: 'test',
-  },
-});
+const userRoles: string[] | Claims[] = [];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+(useKeycloakWrapper as jest.Mock).mockReturnValue(
+  new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+);
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -33,20 +33,18 @@ const lCodes = {
   lookupCodes: [
     { name: 'agencyVal', id: '1', isDisabled: false, type: API.AGENCY_CODE_SET_NAME },
     { name: 'disabledAgency', id: '2', isDisabled: true, type: API.AGENCY_CODE_SET_NAME },
-    { name: 'roleVal', id: '1', isDisabled: false, type: API.ROLE_CODE_SET_NAME },
-    { name: 'disabledRole', id: '2', isDisabled: true, type: API.ROLE_CODE_SET_NAME },
   ] as ILookupCode[],
 };
 
 const selectedUser = {
-  username: 'test.user',
-  firstName: 'Test',
-  lastName: 'User',
-  email: 'test@user.com',
+  username: 'tester',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  email: 'test@test.com',
   isDisabled: false,
   emailVerified: false,
-  agencies: [],
-  roles: [{ id: '2' }],
+  agencies: [1],
+  roles: [],
   rowVersion: 'AAAAAAAAB9E=',
   note: 'test note',
   lastLogin: '2020-10-14T17:45:39.7381599',
@@ -68,7 +66,7 @@ const testRender = () =>
   render(
     <Provider store={store}>
       <MemoryRouter initialEntries={[history.location]}>
-        <EditUserPage id="TEST-ID" />,
+        <EditUserPage id="test" />,
       </MemoryRouter>
     </Provider>,
   );
@@ -85,7 +83,7 @@ const renderEditUserPage = () =>
           rtl={false}
           pauseOnFocusLoss={false}
         />
-        <EditUserPage id="TEST-ID" />,
+        <EditUserPage id="test" />,
       </MemoryRouter>
     </Provider>,
   );
@@ -95,14 +93,16 @@ describe('Edit user page', () => {
     cleanup();
     jest.clearAllMocks();
   });
+
   beforeEach(() => {
     mockAxios.onAny().reply(200, {});
   });
+
   it('EditUserPage renders', () => {
     const { container } = render(
       <Provider store={noDateStore}>
         <MemoryRouter initialEntries={[history.location]}>
-          <EditUserPage id="TEST-ID" />,
+          <EditUserPage id="test" />,
         </MemoryRouter>
       </Provider>,
     );
@@ -112,7 +112,6 @@ describe('Edit user page', () => {
   it('contains role options from lookup code + please select disabled option', () => {
     const { getAllByText, getByTestId } = renderEditUserPage();
     expect(getAllByText(/Roles/i));
-    expect(getAllByText(/roleVal/i));
     expect(getAllByText(/agencyVal/i));
     expect(getByTestId('isDisabled').getAttribute('value')).toEqual('false');
   });
@@ -127,24 +126,13 @@ describe('Edit user page', () => {
     expect(queryByText('disabledAgency')).toBeNull();
   });
 
-  it('displays enabled roles', () => {
-    const { queryByText } = testRender();
-    expect(queryByText('roleVal')).toBeVisible();
-  });
-
-  it('Does not display disabled roles', () => {
-    const { queryByText } = testRender();
-    expect(queryByText('disabledRole')).toBeNull();
-  });
-
   describe('appropriate fields are autofilled', () => {
     it('autofills  email, username, first and last name', () => {
       const { getByTestId } = renderEditUserPage();
-      expect(getByTestId('email').getAttribute('value')).toEqual('test@user.com');
-      expect(getByTestId('username').getAttribute('value')).toEqual('test.user');
-      expect(getByTestId('firstName').getAttribute('value')).toEqual('Test');
-      expect(getByTestId('lastName').getAttribute('value')).toEqual('User');
-      expect(getByTestId('lastName').getAttribute('value')).toEqual('User');
+      expect(getByTestId('email').getAttribute('value')).toEqual('test@test.com');
+      expect(getByTestId('username').getAttribute('value')).toEqual('tester');
+      expect(getByTestId('firstName').getAttribute('value')).toEqual('firstName');
+      expect(getByTestId('lastName').getAttribute('value')).toEqual('lastName');
     });
   });
 

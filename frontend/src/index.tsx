@@ -10,13 +10,13 @@ import { ReactKeycloakProvider } from '@react-keycloak/web';
 import { AuthStateContextProvider } from 'contexts/authStateContext';
 import { LoginLoading } from 'features/account';
 import Keycloak from 'keycloak-js';
-import { EmptyLayout } from 'layouts';
+import { keycloakInstance } from 'keycloakInstance';
+import EmptyLayout from 'layouts/EmptyLayout';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import { createKeycloakInstance } from 'utils';
 import getKeycloakEventHandler from 'utils/KeycloakEventHandler';
 
 import css from './_variables.module.scss';
@@ -33,17 +33,8 @@ const Index = () => {
   const [keycloak, setKeycloak] = React.useState(Keycloak);
 
   React.useEffect(() => {
-    createKeycloakInstance()
-      .then(instance => {
-        setKeycloak(instance);
-        setLoading(false);
-      })
-      .catch(() => {
-        // Ignore the error and apply the default config.
-        //@ts-ignore
-        setKeycloak(new Keycloak('./keycloak.json'));
-        setLoading(false);
-      });
+    setKeycloak(keycloakInstance);
+    setLoading(false);
   }, []);
 
   return loading ? (
@@ -60,6 +51,7 @@ const Index = () => {
           </EmptyLayout>
         }
         onEvent={getKeycloakEventHandler(keycloak)}
+        initOptions={{ pkceMethod: 'S256', onLoad: 'check-sso' }}
       >
         <Provider store={store}>
           <AuthStateContextProvider>

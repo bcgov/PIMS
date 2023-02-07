@@ -9,5 +9,6 @@ COPY . /usr/config
 # RUN chmod +x ./setup.sh
 
 EXPOSE 1433
+
 VOLUME ["/var/opt/mssql"]
 ENTRYPOINT ["./entrypoint.sh"]

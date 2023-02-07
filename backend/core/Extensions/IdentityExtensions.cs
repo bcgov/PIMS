@@ -1,3 +1,5 @@
+using System.ComponentModel;
+using System.Globalization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,63 +18,52 @@ namespace Pims.Core.Extensions
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public static Guid GetKeycloakUserId(this ClaimsPrincipal user)
+        public static Guid GetGuid(this ClaimsPrincipal user)
         {
-            var value = user?.FindFirstValue(ClaimTypes.NameIdentifier);
-            return String.IsNullOrWhiteSpace(value) ? Guid.Empty : new Guid(value);
-        }
+            string sub = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier)?.Value?.ToString();
+            string guid = sub.Split("@")[0];
 
-        /// <summary>
-        /// Get the user's list of agencies they have access to.
-        /// Return 'null' if no agencies are found.
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="delimiter"></param>
-        /// <returns></returns>
-        public static int[] GetAgencies(this ClaimsPrincipal user, string delimiter = ",")
-        {
-            var agencies = user?.FindAll("agencies");
-            var results = new List<int>();
-
-            agencies?.ForEach(c =>
-            {
-                var split = c.Value.Split(delimiter);
-                results.AddRange(split.Select(v => Int32.Parse(v)));
-            });
-
-            return results.ToArray();
-        }
-
-        /// <summary>
-        /// Get the user's list of agencies they have access to.
-        /// Return 'null' if no agencies are found.
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="delimiter"></param>
-        /// <returns></returns>
-        public static int?[] GetAgenciesAsNullable(this ClaimsPrincipal user, string delimiter = ",")
-        {
-            var agencies = user?.FindAll("agencies");
-            var results = new List<int?>();
-
-            agencies?.ForEach(c =>
-            {
-                var split = c.Value.Split(delimiter);
-                results.AddRange(split.Select(v => (int?)Int32.Parse(v)));
-            });
-
-            return results.ToArray();
+            return String.IsNullOrWhiteSpace(guid) ? Guid.Empty : new Guid(guid);
         }
 
         /// <summary>
         /// Get the user's username.
         /// </summary>
         /// <param name="user"></param>
-        /// <returns></returns>
+        /// <returns>String username</returns>
         public static string GetUsername(this ClaimsPrincipal user)
         {
-            var value = user?.FindFirstValue("username");
-            return value;
+            // The BCeID and IDIR JWTs have different property names for some values, we must first get the identity provider
+            string identity_provider = user.GetIdentityProvider();
+            // Get the username by using the correct field name, dependent on the identity_provider
+            // TODO: Make an enum/array of identity providers to keep it D.R.Y.
+            if (identity_provider == "idir")
+            {
+                string value = user.Claims.First(c => c.Type == "idir_username")?.Value.ToString().ToLower() + "@idir";
+                return value;
+            }
+            else if (identity_provider == "bceidbusiness" || identity_provider == "bceidboth")
+            {
+                string value = user.Claims.First(c => c.Type == "bceid_username")?.Value.ToString().ToLower() + "@bceid";
+                return value;
+            }
+            else if (identity_provider == "unit_testing")
+            {
+                string value = user.Claims.First(c => c.Type == "test_username")?.Value.ToString().ToLower();
+                return value;
+            }
+            return "";
+        }
+
+        /// <summary>
+        /// Get the user's preferred username. 
+        /// Preferred username is a Keycloak Gold claim which contains the user's GUID followed by @ + the identity provider they used.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>String preferred_username</returns>
+        public static string GetPreferredUsername(this ClaimsPrincipal user)
+        {
+            return user.Claims.First(c => c.Type == "preferred_username").Value;
         }
 
         /// <summary>
@@ -147,6 +138,16 @@ namespace Pims.Core.Extensions
             var count = user.Claims.Count(c => c.Type == ClaimTypes.Role && role.Contains(c.Value));
 
             return count == role.Length;
+        }
+        /// <summary>
+        /// Get the identity provider from the given user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public static string GetIdentityProvider(this ClaimsPrincipal user)
+        {
+            string identity_provider = user.Claims.First(c => c.Type == "identity_provider")?.Value.ToString();
+            return identity_provider;
         }
     }
 }

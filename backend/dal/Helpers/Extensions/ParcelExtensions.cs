@@ -25,7 +25,7 @@ namespace Pims.Dal.Helpers.Extensions
         /// <exception type="DbUpdateException">The PID and PIN must be unique.</exception>
         public static void ThrowIfNotUnique(this DbSet<Entity.Parcel> parcels, Entity.Parcel parcel)
         {
-            if(parcel.PropertyTypeId == (int)Entity.PropertyTypes.Subdivision)
+            if (parcel.PropertyTypeId == (int)Entity.PropertyTypes.Subdivision)
             {
                 return;
             }
@@ -45,8 +45,13 @@ namespace Pims.Dal.Helpers.Extensions
             filter.ThrowIfNull(nameof(user));
             filter.ThrowIfNull(nameof(filter));
 
+            //Fetching user's agencies from database
+            Guid? userId = context.Users.FirstOrDefault(u => u.Username == user.GetUsername())?.Id;
+            int[] userAgencies = context.UserAgencies.Where(ua => ua.UserId == userId).Select(ua => ua.AgencyId).ToArray<int>();
+            int[] subAgencies = context.Agencies.Where(a => a.ParentId != null && userAgencies.Contains(a.ParentId.Value)).Select(a => a.Id).ToArray<int>();
+            userAgencies = userAgencies.Concat(subAgencies).ToArray();
+
             // Check if user has the ability to view sensitive properties.
-            var userAgencies = user.GetAgenciesAsNullable();
             var viewSensitive = user.HasPermission(Permissions.SensitiveView);
             var isAdmin = user.HasPermission(Permissions.AdminProperties);
 
@@ -64,7 +69,7 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p =>
                     p.IsVisibleToOtherAgencies
                     || ((!p.IsSensitive || viewSensitive)
-                        && userAgencies.Contains(p.AgencyId)));
+                        && userAgencies.Contains(p.AgencyId.Value)));
             }
 
             if (filter.NELatitude.HasValue && filter.NELongitude.HasValue && filter.SWLatitude.HasValue && filter.SWLongitude.HasValue)
@@ -210,7 +215,7 @@ namespace Pims.Dal.Helpers.Extensions
         /// <param name="parcel"></param>
         /// <param name="parcelEvaluations"></param>
         /// <param name="parcelFiscals"></param>
-        public static void UpdateParcelFinancials(this PimsContext context,  Entity.Parcel parcel,
+        public static void UpdateParcelFinancials(this PimsContext context, Entity.Parcel parcel,
             ICollection<Entity.ParcelEvaluation> parcelEvaluations, ICollection<Entity.ParcelFiscal> parcelFiscals)
         {
             foreach (var parcelEvaluation in parcelEvaluations)

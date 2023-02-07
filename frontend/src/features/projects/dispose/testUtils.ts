@@ -1,4 +1,3 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { ProjectActions } from 'constants/actionTypes';
 import * as API from 'constants/API';
 import { DisposeWorkflowStatus, SPPApprovalTabs } from 'features/projects/constants';
@@ -9,18 +8,6 @@ import thunk from 'redux-thunk';
 import { getCurrentFiscalYear } from 'utils';
 
 import { NoteTypes, PropertyTypes } from '../../../constants';
-
-export const mockKeycloak = (claims: string[], agencies: number[]) => {
-  (useKeycloak as jest.Mock).mockReturnValue({
-    keycloak: {
-      userInfo: {
-        agencies: agencies,
-        roles: claims,
-      },
-      subject: 'test',
-    },
-  });
-};
 
 export const mockTasks: IProjectTask[] = [
   {
