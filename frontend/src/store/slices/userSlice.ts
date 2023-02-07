@@ -29,6 +29,7 @@ export interface IUserDetail {
   lastLogin?: string;
   createdOn: string;
   rowVersion: string;
+  goldUserRoles: string[];
 }
 
 export interface IUsersState {
@@ -54,6 +55,7 @@ export const initialUserState: IUsersState = {
     roles: [],
     createdOn: '',
     rowVersion: '',
+    goldUserRoles: [],
   },
   pagedUsers: { page: 1, pageIndex: 0, total: 0, quantity: 0, items: [] },
   rowsPerPage: DEFAULT_PAGE_SIZE,

@@ -1,17 +1,19 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import axios from 'axios';
 import { IGeoSearchParams } from 'constants/API';
 import * as API from 'constants/API';
+import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import * as MOCK from 'mocks/filterDataMock';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import { PropertyFilter } from './';
 import { IPropertyFilter } from './IPropertyFilter';
@@ -19,21 +21,20 @@ import { IPropertyFilter } from './IPropertyFilter';
 const onFilterChange = jest.fn<void, [IPropertyFilter]>();
 //prevent web calls from being made during tests.
 jest.mock('axios');
-jest.mock('@react-keycloak/web');
+jest.mock('hooks/useKeycloakWrapper');
 jest.mock('hooks/useApi');
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
-const mockKeycloak = (claims: string[]) => {
-  (useKeycloak as jest.Mock).mockReturnValue({
-    keycloak: {
-      subject: 'test',
-      userInfo: {
-        roles: claims,
-        agencies: ['1'],
-      },
-    },
-  });
+
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+const mockKeycloak = (userRoles: string[] | Claims[]) => {
+  (useKeycloakWrapper as jest.Mock).mockReturnValue(
+    new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+  );
 };
+
 const mockStore = configureMockStore([thunk]);
 let history = createMemoryHistory();
 
@@ -93,6 +94,10 @@ const getStore = (filter: any) =>
     [reducerTypes.FILTER]: filter,
     [reducerTypes.PROPERTY_NAMES]: ['test'],
     [reducerTypes.LOOKUP_CODE]: lCodes,
+    usersAgencies: [
+      { id: '1', name: 'agencyVal' },
+      { id: '2', name: 'disabledAgency' },
+    ],
   });
 
 const defaultFilter: IPropertyFilter = {

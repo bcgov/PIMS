@@ -43,7 +43,7 @@ exports[`Edit user page EditUserPage renders 1`] = `
                 name="username"
                 readonly=""
                 type="text"
-                value="test.user"
+                value="tester"
               />
             </div>
           </div>
@@ -97,9 +97,9 @@ exports[`Edit user page EditUserPage renders 1`] = `
                     class="form-control"
                     data-testid="firstName"
                     name="firstName"
-                    placeholder="Test"
+                    placeholder="firstName"
                     type="text"
-                    value="Test"
+                    value="firstName"
                   />
                 </div>
               </div>
@@ -126,9 +126,9 @@ exports[`Edit user page EditUserPage renders 1`] = `
                     class="form-control"
                     data-testid="lastName"
                     name="lastName"
-                    placeholder="User"
+                    placeholder="lastName"
                     type="text"
-                    value="User"
+                    value="lastName"
                   />
                 </div>
               </div>
@@ -153,9 +153,9 @@ exports[`Edit user page EditUserPage renders 1`] = `
                 class="form-control"
                 data-testid="email"
                 name="email"
-                placeholder="test@user.com"
+                placeholder="test@test.com"
                 type="email"
-                value="test@user.com"
+                value="test@test.com"
               />
             </div>
           </div>
@@ -185,11 +185,6 @@ exports[`Edit user page EditUserPage renders 1`] = `
               required=""
               style="width: 450px;"
             >
-              <option
-                value=""
-              >
-                Please Select
-              </option>
               <option
                 class="option"
                 value="1"
@@ -221,53 +216,6 @@ exports[`Edit user page EditUserPage renders 1`] = `
                 type="text"
                 value=""
               />
-            </div>
-          </div>
-        </div>
-        <div
-          class="check-roles"
-        >
-          <label
-            class="form-label"
-          >
-            Roles
-             
-            <a
-              href="https://github.com/bcgov/PIMS/wiki/Architecture-Security"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Role Descriptions
-            </a>
-          </label>
-          <div>
-            <div
-              class="required row"
-              controlid="input-roles"
-              style="align-items: center;"
-            >
-              <div
-                class="col-md-auto"
-              />
-              <div
-                class="col-md-auto"
-                style="padding: 0px;"
-              >
-                <select
-                  class="form-select form-control"
-                  data-testid="role"
-                  multiple=""
-                  name="roles"
-                  required=""
-                >
-                  <option
-                    class="option"
-                    value="1"
-                  >
-                    roleVal
-                  </option>
-                </select>
-              </div>
             </div>
           </div>
         </div>
@@ -336,6 +284,10 @@ exports[`Edit user page EditUserPage renders 1`] = `
             </button>
           </div>
         </div>
+        <hr />
+        <p>
+          Unable to load user's roles
+        </p>
       </form>
     </div>
   </div>

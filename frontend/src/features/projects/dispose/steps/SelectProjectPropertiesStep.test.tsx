@@ -3,19 +3,29 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { ProjectActions } from 'constants/actionTypes';
 import * as API from 'constants/API';
+import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { mockFlatProperty } from 'mocks/filterDataMock';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { act } from 'react-test-renderer';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
-import { mockKeycloak, mockProject } from '../testUtils';
+import { mockProject } from '../testUtils';
 import SelectProjectProperties from './SelectProjectPropertiesStep';
-jest.mock('@react-keycloak/web');
+
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+const mockKeycloak = (userRoles: string[] | Claims[], userAgencies: number[] = [1]) => {
+  (useKeycloakWrapper as jest.Mock).mockReturnValue(
+    new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, true),
+  );
+};
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();

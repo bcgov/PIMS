@@ -99,7 +99,7 @@ namespace Pims.Dal.Entities
         /// get - A collection of agencies this user belongs to.
         /// </summary>
         /// <typeparam name="UserAgency"></typeparam>
-        public ICollection<UserAgency> Agencies { get; } = new List<UserAgency>();
+        public ICollection<UserAgency> Agencies { get; set; } = new List<UserAgency>();
 
         /// <summary>
         /// get - A collection of roles this user belongs to.

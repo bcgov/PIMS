@@ -1,20 +1,21 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { cleanup, fireEvent, render } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import * as API from 'constants/API';
 import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import Header from './Header';
 
-jest.mock('@react-keycloak/web');
+jest.mock('hooks/useKeycloakWrapper');
 afterEach(() => {
   cleanup();
 });
@@ -32,10 +33,13 @@ const lCodes = {
 const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
   [reducerTypes.NETWORK]: { requests: {} },
+  usersAgencies: [{ id: '1', name: 'agencyVal' }],
 });
 
 test('header renders correctly', () => {
-  (useKeycloak as jest.Mock).mockReturnValue({ keycloak: { authenticated: false } });
+  (useKeycloakWrapper as jest.Mock).mockReturnValue(
+    new (useKeycloakMock as any)([], [1], 1, false),
+  );
   const tree = renderer
     .create(
       <Provider store={store}>
@@ -48,41 +52,11 @@ test('header renders correctly', () => {
   expect(tree).toMatchSnapshot();
 });
 
-it('User displays default if no user name information found', () => {
-  (useKeycloak as jest.Mock).mockReturnValue({
-    keycloak: {
-      subject: 'test',
-      authenticated: true,
-      userInfo: {
-        roles: [Claims.PROJECT_ADD],
-      },
-    },
-  });
-
-  const { getByText } = render(
-    <Provider store={store}>
-      <MemoryRouter initialEntries={[history.location]}>
-        <Header />
-      </MemoryRouter>
-    </Provider>,
-  );
-  const name = getByText('default');
-  expect(name).toBeVisible();
-});
-
 describe('UserProfile user name display', () => {
   it('Displays keycloak display name if available', () => {
-    (useKeycloak as jest.Mock).mockReturnValue({
-      keycloak: {
-        subject: 'test',
-        authenticated: true,
-        userInfo: {
-          name: 'display name',
-          firstName: 'name',
-          roles: [Claims.PROJECT_ADD],
-        },
-      },
-    });
+    (useKeycloakWrapper as jest.Mock).mockReturnValue(
+      new (useKeycloakMock as any)([Claims.PROJECT_ADD], [], 0, true),
+    );
 
     const { getByText } = render(
       <Provider store={store}>
@@ -91,46 +65,15 @@ describe('UserProfile user name display', () => {
         </MemoryRouter>
       </Provider>,
     );
-    const name = getByText('display name');
-    expect(name).toBeVisible();
-  });
-
-  it('Displays first last name if no display name', () => {
-    (useKeycloak as jest.Mock).mockReturnValue({
-      keycloak: {
-        subject: 'test',
-        authenticated: true,
-        userInfo: {
-          roles: [Claims.PROJECT_ADD],
-          firstName: 'firstName',
-          lastName: 'lastName',
-        },
-      },
-    });
-
-    const { getByText } = render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={[history.location]}>
-          <Header />
-        </MemoryRouter>
-      </Provider>,
-    );
-    const name = getByText('firstName lastName');
+    const name = getByText('displayName');
     expect(name).toBeVisible();
   });
 
   it('displays appropriate agency', () => {
-    (useKeycloak as jest.Mock).mockReturnValue({
-      keycloak: {
-        subject: 'test',
-        authenticated: true,
-        userInfo: {
-          agencies: ['1'],
-          firstName: 'test',
-          lastName: 'user',
-        },
-      },
-    });
+    (useKeycloakWrapper as jest.Mock).mockReturnValue(
+      new (useKeycloakMock as any)([], [1], 1, true),
+    );
+
     const { getByText } = render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[history.location]}>
@@ -138,7 +81,7 @@ describe('UserProfile user name display', () => {
         </MemoryRouter>
       </Provider>,
     );
-    fireEvent.click(getByText(/test user/i));
+    fireEvent.click(getByText('displayName'));
     expect(getByText(/agencyVal/i)).toBeInTheDocument();
   });
 });

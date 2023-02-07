@@ -1,11 +1,11 @@
 import './EditUserPage.scss';
 
 import { ILookupCode } from 'actions/ILookupCode';
+import UserRoleSelector from 'components/common/form/UserRoleSelector';
 import { Label } from 'components/common/Label';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { IUserDetailParams } from 'constants/API';
 import * as API from 'constants/API';
-import { AUTHORIZATION_URL } from 'constants/strings';
 import { Field, Formik } from 'formik';
 import useCodeLookups from 'hooks/useLookupCodes';
 import React, { useEffect } from 'react';
@@ -45,35 +45,10 @@ const EditUserPage = (props: IEditUserPageProps) => {
   });
 
   const selectAgencies = agencies.map(c => mapLookupCode(c));
-  const selectRoles = roles.map(c => mapLookupCode(c));
 
   // Arrays below are used to add the role/agency from the dropdown later in code
   let agenciesToUpdate: any[];
   let rolesToUpdate: any[];
-
-  const checkRoles = (
-    <Form.Group className={'check-roles'}>
-      <Form.Label>
-        Roles{' '}
-        <a target="_blank" rel="noopener noreferrer" href={AUTHORIZATION_URL}>
-          Role Descriptions
-        </a>
-      </Form.Label>
-      <TooltipWrapper
-        toolTipId="select-roles-tip"
-        toolTip="To select multiple roles, hold Ctrl and click options."
-      >
-        <Select
-          field="roles"
-          data-testid="role"
-          multiple={true}
-          required={true}
-          options={selectRoles}
-          placeholder={user?.roles?.length > 0 ? undefined : 'Please Select'}
-        />
-      </TooltipWrapper>
-    </Form.Group>
-  );
 
   const goBack = () => {
     navigate(-1);
@@ -91,6 +66,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
     emailVerified: false,
     agencies: user.agencies,
     roles: user.roles.map(x => x.id),
+    goldRoles: user.goldUserRoles,
     note: user.note,
     agency: user.agencies && user.agencies.length !== 0 ? user.agencies[0].id : '',
     role: user.roles && user.roles.length !== 0 ? user.roles[0].id : '',
@@ -203,7 +179,6 @@ const EditUserPage = (props: IEditUserPageProps) => {
                   options={selectAgencies}
                   placeholder={user?.agencies?.length > 0 ? undefined : 'Please Select'}
                 />
-
                 <Label>Position</Label>
                 <Input
                   field="position"
@@ -211,8 +186,6 @@ const EditUserPage = (props: IEditUserPageProps) => {
                   type="text"
                   data-testid="position"
                 />
-
-                {checkRoles}
 
                 <Label>Notes</Label>
                 <Input
@@ -246,6 +219,8 @@ const EditUserPage = (props: IEditUserPageProps) => {
                     <Button type="submit">Save</Button>
                   </ButtonToolbar>
                 </Row>
+                <hr></hr>
+                <UserRoleSelector options={roles.map(r => r.name)} />
               </Form>
             )}
           </Formik>

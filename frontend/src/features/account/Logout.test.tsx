@@ -1,12 +1,17 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { cleanup, render } from '@testing-library/react';
+import Claims from 'constants/claims';
 import { useConfiguration } from 'hooks/useConfiguration';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import * as Router from 'react-router';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import { Logout } from './Logout';
 
-jest.mock('@react-keycloak/web');
+const userRoles: string[] | Claims[] = [];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+jest.mock('hooks/useKeycloakWrapper');
 jest.mock('hooks/useConfiguration');
 
 describe('logout', () => {
@@ -21,7 +26,9 @@ describe('logout', () => {
   });
 
   it('should redirect to login page', () => {
-    (useKeycloak as jest.Mock).mockReturnValue({ keycloak: { authenticated: false } });
+    (useKeycloakWrapper as jest.Mock).mockReturnValue(
+      new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, false),
+    );
     (useConfiguration as jest.Mock).mockReturnValue({ siteMinderLogoutUrl: undefined });
 
     render(
@@ -34,7 +41,9 @@ describe('logout', () => {
   });
 
   it('should redirect to siteminder logout page', () => {
-    (useKeycloak as jest.Mock).mockReturnValue({ keycloak: { authenticated: false } });
+    (useKeycloakWrapper as jest.Mock).mockReturnValue(
+      new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, false),
+    );
     (useConfiguration as jest.Mock).mockReturnValue({
       siteMinderLogoutUrl: 'http://fakesiteminder.com',
     });

@@ -975,7 +975,7 @@ exports[`Land Form component renders correctly 1`] = `
                                   name="data.agencyId"
                                   role="combobox"
                                   type="text"
-                                  value="agencyVal"
+                                  value=""
                                 />
                                 <input
                                   aria-hidden="true"
