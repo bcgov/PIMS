@@ -48,7 +48,7 @@ const Login = () => {
   const networkState: INetworkState = useAppSelector(state => state.network);
 
   useEffect(() => {
-    const activateRequest: IRequest = networkState.requests[actionTypes.ADD_ACTIVATE_USER];
+    const activateRequest: IRequest = networkState?.requests?.[actionTypes.ADD_ACTIVATE_USER];
 
     const isWaitingOnActivateRequest: boolean = activateRequest?.isFetching ?? false;
     const isUserLoggedIn: boolean = keycloak?.authenticated;
