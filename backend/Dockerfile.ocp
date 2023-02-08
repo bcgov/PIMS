@@ -1,5 +1,5 @@
 ARG BUILD_CONFIGURATION=Release
-FROM image-registry.apps.silver.devops.gov.bc.ca/354028-tools/dotnet-aspnet:5.0 AS base
+FROM image-registry.apps.silver.devops.gov.bc.ca/354028-tools/dotnet-aspnet-runtime:5.0 AS base
 WORKDIR /app
 EXPOSE 443 8080
 

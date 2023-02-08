@@ -149,6 +149,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
             onRowClick={onRowClick}
             onPageSizeChange={onPageSizeChanged}
             loading={loading}
+            noRowsMessage="No rows to display. Try searching by a specific agency."
           />
           <Container fluid className="TableToolbar">
             <strong className="align-self-center" style={{ marginRight: 10 }}>

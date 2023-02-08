@@ -64,7 +64,7 @@ const UserRoleSelector = ({ options }: IUserRoleSelector) => {
       setIsUnableToLoadRoles(!values.goldRoles);
       setIsLoading(false);
     }
-  }, [values.goldRoles]);
+  }, [values.goldRoles, values.username]);
 
   const handleSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsLoading(true);
