@@ -10,7 +10,7 @@ import { ReactKeycloakProvider } from '@react-keycloak/web';
 import { AuthStateContextProvider } from 'contexts/authStateContext';
 import { LoginLoading } from 'features/account';
 import Keycloak from 'keycloak-js';
-import { keycloakInstance } from 'keycloakInstance';
+import { useKeycloakInstance } from 'keycloakInstance';
 import EmptyLayout from 'layouts/EmptyLayout';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
@@ -31,6 +31,7 @@ import { store } from './store';
 const Index = () => {
   const [loading, setLoading] = React.useState(true);
   const [keycloak, setKeycloak] = React.useState(Keycloak);
+  const keycloakInstance = useKeycloakInstance();
 
   React.useEffect(() => {
     setKeycloak(keycloakInstance);
