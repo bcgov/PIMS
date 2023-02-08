@@ -9,10 +9,10 @@ export interface IConfiguration {
 }
 
 export const useConfiguration = (): IConfiguration => {
-  const isTest: boolean = process.env.NODE_ENV === 'test';
-  const isDevelopment: boolean = process.env.NODE_ENV === 'development';
-  const isProduction: boolean = process.env.NODE_ENV === 'production';
-  //TODO: Update codebase to allow NODE_ENV to be 'local'
+  //TODO: Change codebase to have NODE_ENV represent the current environment
+  const isTest: boolean = window.location.href.includes('pims-test');
+  const isDevelopment: boolean = window.location.href.includes('pims-dev');
+  const isProduction: boolean = window.location.href.includes('pims.gov.bc.ca');
   const isLocal: boolean = window.location.href.includes('localhost');
 
   const getKeycloakAuthURL = (): string => {
