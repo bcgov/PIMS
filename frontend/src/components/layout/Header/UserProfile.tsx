@@ -63,7 +63,7 @@ export const UserProfile: React.FC = () => {
   const configuration = useConfiguration();
   const lookupCodes = useCodeLookups();
   const agencyOptions = lookupCodes.getByType(API.AGENCY_CODE_SET_NAME);
-  const roles = keycloak.roles.join(', ');
+  const roles = keycloak.systemRoles?.join(', ') ?? '';
 
   return (
     <>

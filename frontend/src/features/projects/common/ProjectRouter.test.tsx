@@ -1,14 +1,15 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { render } from '@testing-library/react';
 import * as actionTypes from 'constants/actionTypes';
 import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import { Provider } from 'react-redux';
 import * as Router from 'react-router';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import useProject from '../common/hooks/useProject';
 import { mockWorkflow } from '../dispose/testUtils';
@@ -23,18 +24,14 @@ jest.mock('components/Table/Table', () => ({
   default: () => <></>,
 }));
 
-jest.mock('@react-keycloak/web');
-const mockKeycloak = (claims: string[]) => {
-  (useKeycloak as jest.Mock).mockReturnValue({
-    keycloak: {
-      userInfo: {
-        agencies: [1],
-        roles: claims,
-      },
-      subject: 'test',
-      authenticated: true,
-    },
-  });
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+const mockKeycloak = (userRoles: string[] | Claims[]) => {
+  (useKeycloakWrapper as jest.Mock).mockReturnValue(
+    new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, true),
+  );
 };
 
 const search = '?projectNumber=TEST-10001';

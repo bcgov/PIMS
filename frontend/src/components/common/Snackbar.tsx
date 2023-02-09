@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 const ToastContainer = styled(Toast)`
   max-width: 100%;
+  width: 100%;
 `;
 
 const AlertMessage = styled(Alert)`

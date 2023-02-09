@@ -135,7 +135,7 @@ describe('User action tests', () => {
       mockAxios.onGet(ENVIRONMENT.apiUrl + API.USER_DETAIL(filter)).reply(200, mockResponse);
 
       await fetchUserDetail(filter)(store.dispatch);
-      expect(dispatchSpy).toHaveBeenCalledTimes(6);
+      expect(dispatchSpy).toHaveBeenCalledTimes(7);
       expect(requestSpy).toHaveBeenCalledTimes(1);
       expect(successSpy).toHaveBeenCalledTimes(1);
       expect(errorSpy).toHaveBeenCalledTimes(0);
@@ -166,7 +166,7 @@ describe('User action tests', () => {
     it('Request successful, dispatch success, store response', async () => {
       const mockResponse = { data: {} };
       mockAxios
-        .onPut(ENVIRONMENT.apiUrl + API.KEYCLOAK_USER_UPDATE(filter), user)
+        .onPut(ENVIRONMENT.apiUrl + API.ADMIN_USER_UPDATE(filter), user)
         .reply(200, mockResponse);
 
       await getUpdateUserAction(filter, user)(store.dispatch);
@@ -180,7 +180,7 @@ describe('User action tests', () => {
     it('Request failure, dispatch error', async () => {
       const mockResponse = {};
       mockAxios
-        .onPut(ENVIRONMENT.apiUrl + API.KEYCLOAK_USER_UPDATE(filter), user)
+        .onPut(ENVIRONMENT.apiUrl + API.ADMIN_USER_UPDATE(filter), user)
         .reply(500, mockResponse);
 
       await getUpdateUserAction(filter, user)(store.dispatch);

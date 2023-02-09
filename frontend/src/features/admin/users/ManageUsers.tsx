@@ -97,7 +97,7 @@ export const ManageUsers = () => {
       lastName: u.lastName,
       isDisabled: u.isDisabled,
       roles: u.roles ? u.roles.map(r => r.name).join(', ') : '',
-      agency: u.agencies && u.agencies.length > 0 ? u.agencies[0].name : '',
+      agency: u.agencies && u.agencies.length > 0 ? u.agencies[0]?.name : '',
       position: u.position ?? '',
       lastLogin: formatApiDateTime(u.lastLogin),
       createdOn: formatApiDateTime(u.createdOn),

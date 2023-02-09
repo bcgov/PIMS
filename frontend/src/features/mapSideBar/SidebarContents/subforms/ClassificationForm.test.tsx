@@ -1,4 +1,3 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import axios from 'axios';
@@ -8,17 +7,18 @@ import { Classifications } from 'constants/classifications';
 import * as reducerTypes from 'constants/reducerTypes';
 import { Formik } from 'formik';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { noop } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import { ClassificationForm } from './ClassificationForm';
 
 jest.mock('axios');
-jest.mock('@react-keycloak/web');
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 const mockClassifications = [
@@ -27,17 +27,16 @@ const mockClassifications = [
   { value: Classifications.SurplusEncumbered, label: 'Surplus Encumbered' } as SelectOption,
 ] as SelectOptions;
 
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
 const mockKeycloak = (claims: string[]) => {
-  (useKeycloak as jest.Mock).mockReturnValue({
-    keycloak: {
-      subject: 'test',
-      userInfo: {
-        roles: claims,
-        agencies: ['1'],
-      },
-    },
-  });
+  (useKeycloakWrapper as jest.Mock).mockReturnValue(
+    new (useKeycloakMock as any)(claims, userAgencies, userAgency),
+  );
 };
+
 const mockStore = configureMockStore([thunk]);
 let history = createMemoryHistory();
 

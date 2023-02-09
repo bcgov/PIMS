@@ -36,6 +36,7 @@ namespace Pims.Core.Http.Configuration
         /// <value></value>
         [Required(ErrorMessage = "Configuration 'Client' is required.")]
         public string Client { get; set; }
+        public string FrontendClientId { get; set; }
         #endregion
 
         #region Methods

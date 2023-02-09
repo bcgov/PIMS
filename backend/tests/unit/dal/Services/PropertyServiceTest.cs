@@ -25,13 +25,13 @@ namespace Pims.Dal.Test.Services
             {
                 new object[] { new AllPropertyFilter(48.571155, -123.657596, 48.492947, -123.731803) { PropertyType = Entity.PropertyTypes.Land }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter(48.821333, -123.795017, 48.763431, -123.959783) { PropertyType = Entity.PropertyTypes.Land }, new[] { 1, 3 }, 0, 0 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, Agencies = new int[] { 3 } }, new[] { 1, 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, Agencies = new int[] { 3 } }, new[] { 1, 3 }, 7, 7 },
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, ClassificationId = 2 }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, Description = "DescriptionTest" }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, AdministrativeArea = "AdministrativeArea" }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, Zoning = "Zoning" }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, ZoningPotential = "ZoningPotential" }, new[] { 1, 3 }, 1, 1 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land }, new[] { 3 }, 1, 1 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land }, new[] { 3 }, 7, 7 },
             };
 
         public static IEnumerable<object[]> BuildingFilters =>
@@ -39,16 +39,16 @@ namespace Pims.Dal.Test.Services
             {
                 new object[] { new AllPropertyFilter(48.571155, -123.657596, 48.492947, -123.731803) { PropertyType = Entity.PropertyTypes.Building }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter(48.821333, -123.795017, 48.763431, -123.959783) { PropertyType = Entity.PropertyTypes.Building }, new[] { 1, 3 }, 0, 0 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, Agencies = new int[] { 3 } }, new[] { 1, 3 }, 6, 6 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, Agencies = new int[] { 3 } }, new[] { 1, 3 }, 10, 10 },
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, ClassificationId = 2 }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, Description = "DescriptionTest" }, new[] { 1, 3 }, 1, 1 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, AdministrativeArea = "AdministrativeArea" }, new[] { 1, 3 }, 10, 10 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building, AdministrativeArea = "AdministrativeArea" }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { Tenancy = "BuildingTenancy" }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { ConstructionTypeId = 2 }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { PredominateUseId = 2 }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { MinRentableArea = 100 }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { MinRentableArea = 50, MaxRentableArea = 50 }, new[] { 1, 3 }, 1, 1 },
-                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building }, new[] { 3 }, 6, 6 },
+                new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Building }, new[] { 3 }, 10, 10 },
             };
 
         public static IEnumerable<object[]> AllPropertyFilters =>
@@ -56,10 +56,10 @@ namespace Pims.Dal.Test.Services
             {
                 new object[] { new AllPropertyFilter(48.571155, -123.657596, 48.492947, -123.731803), new[] { 1, 3 }, 2, 2 },
                 new object[] { new AllPropertyFilter(48.821333, -123.795017, 48.763431, -123.959783), new[] { 1, 3 }, 0, 0 },
-                new object[] { new AllPropertyFilter() { Agencies = new int[] { 3 } }, new[] { 1, 3 }, 7, 7 },
+                new object[] { new AllPropertyFilter() { Agencies = new int[] { 3 } }, new[] { 1, 3 }, 29, 10 },
                 new object[] { new AllPropertyFilter() { ClassificationId = 2 }, new[] { 1, 3 }, 2, 2 },
                 new object[] { new AllPropertyFilter() { Page = 1, Quantity = 10, Description = "DescriptionTest" }, new[] { 1, 3 }, 2, 2 },
-                new object[] { new AllPropertyFilter() { AdministrativeArea = "AdministrativeArea" }, new[] { 1, 3 }, 11, 10 },
+                new object[] { new AllPropertyFilter() { AdministrativeArea = "AdministrativeArea" }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { Tenancy = "BuildingTenancy" }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { Zoning = "Zoning" }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { ZoningPotential = "ZoningPotential" }, new[] { 1, 3 }, 1, 1 },
@@ -71,7 +71,7 @@ namespace Pims.Dal.Test.Services
                 new object[] { new AllPropertyFilter() { PropertyType = Entity.PropertyTypes.Land, ClassificationId = 3 }, new[] { 1, 3 }, 1, 1 },
                 new object[] { new AllPropertyFilter() { Quantity = 5, MinLandArea = 5000, MaxLandArea = 10000 }, new[] { 1, 3 }, 11, 5 },
                 new object[] { new AllPropertyFilter() { Quantity = 2, ClassificationId = 3 }, new[] { 1, 3 }, 11, 2 },
-                new object[] { new AllPropertyFilter(), new[] { 3 }, 7, 7 },
+                new object[] { new AllPropertyFilter(), new[] { 3 }, 29, 10 },
             };
         #endregion
 
@@ -130,13 +130,19 @@ namespace Pims.Dal.Test.Services
             var parcels = init.CreateParcels(1, 20);
             parcels.Next(0).Location.X = -123.720810;
             parcels.Next(0).Location.Y = 48.529338;
+            parcels.Next(0).AgencyId = 3;
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
+            parcels.Next(2).AgencyId = 3;
             parcels.Next(3).Description = "-DescriptionTest-";
+            parcels.Next(3).AgencyId = 3;
             parcels.Next(4).Address.AdministrativeArea = "-AdministrativeArea-";
+            parcels.Next(4).AgencyId = 3;
             parcels.Next(5).Zoning = "-Zoning-";
+            parcels.Next(5).AgencyId = 3;
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
+            parcels.Next(6).AgencyId = 3;
 
             var buildings = init.CreateBuildings(parcels.First(), 50, 5);
             buildings.Next(0).Location.X = -123.720810;
@@ -194,17 +200,24 @@ namespace Pims.Dal.Test.Services
             var buildings = init.CreateBuildings(parcels.First(), 50, 5);
             buildings.Next(0).Location.X = -123.720810;
             buildings.Next(0).Location.Y = 48.529338;
+            buildings.Next(0).AgencyId = 3;
             buildings.Next(1).Agency = init.Agencies.Find(3);
             buildings.Next(1).AgencyId = 3;
             buildings.Next(2).ClassificationId = 2;
+            buildings.Next(2).AgencyId = 3;
             buildings.Next(3).Description = "-DescriptionTest-";
+            buildings.Next(3).AgencyId = 3;
             buildings.Next(4).BuildingTenancy = "-BuildingTenancy-";
+            buildings.Next(4).AgencyId = 3;
 
             buildings.AddRange(init.CreateBuildings(parcels.Next(1), 56, 5));
             buildings.Next(5).BuildingConstructionTypeId = 2;
+            buildings.Next(5).AgencyId = 3;
             buildings.Next(6).BuildingPredominateUseId = 2;
             buildings.Next(7).RentableArea = 100;
             buildings.Next(8).RentableArea = 50;
+            buildings.Next(8).Address.AdministrativeArea = "-AdministrativeArea-";
+            buildings.Next(8).AgencyId = 3;
 
             buildings.AddRange(init.CreateBuildings(parcels.Next(4), 61, 10));
 
@@ -236,33 +249,49 @@ namespace Pims.Dal.Test.Services
             var parcels = init.CreateParcels(1, 20);
             parcels.Next(0).Location.X = -123.720810;
             parcels.Next(0).Location.Y = 48.529338;
+            parcels.Next(0).AgencyId = 3;
             parcels.Next(1).Agency = init.Agencies.Find(3);
             parcels.Next(1).AgencyId = 3;
             parcels.Next(2).ClassificationId = 2;
+            parcels.Next(2).AgencyId = 3;
             parcels.Next(3).Description = "-DescriptionTest-";
+            parcels.Next(3).AgencyId = 3;
             parcels.Next(4).Address.AdministrativeArea = "-AdministrativeArea-";
+            parcels.Next(4).AgencyId = 3;
             parcels.Next(5).Zoning = "-Zoning-";
+            parcels.Next(5).AgencyId = 3;
             parcels.Next(6).ZoningPotential = "-ZoningPotential-";
+            parcels.Next(6).AgencyId = 3;
             parcels.Next(7).LandArea = 5500.55f;
+            parcels.Next(7).AgencyId = 3;
 
             var classification = init.PropertyClassifications.Find(3);
             parcels.Next(8).Classification = classification;
+            parcels.Next(8).AgencyId = 3;
             parcels.Next(8).ClassificationId = classification.Id;
 
             var buildings = init.CreateBuildings(parcels.First(), 50, 5);
             buildings.Next(0).Location.X = -123.720810;
             buildings.Next(0).Location.Y = 48.529338;
+            buildings.Next(0).AgencyId = 3;
             buildings.Next(1).Agency = init.Agencies.Find(3);
             buildings.Next(1).AgencyId = 3;
             buildings.Next(2).ClassificationId = 2;
+            buildings.Next(2).AgencyId = 3;
             buildings.Next(3).Description = "-DescriptionTest-";
+            buildings.Next(3).AgencyId = 3;
             buildings.Next(4).BuildingTenancy = "-BuildingTenancy-";
+            buildings.Next(4).AgencyId = 3;
 
             buildings.AddRange(init.CreateBuildings(parcels.Next(1), 56, 5));
             buildings.Next(5).BuildingConstructionTypeId = 2;
+            buildings.Next(5).AgencyId = 3;
             buildings.Next(6).BuildingPredominateUseId = 2;
+            buildings.Next(6).AgencyId = 3;
             buildings.Next(7).RentableArea = 100;
+            buildings.Next(7).AgencyId = 3;
             buildings.Next(8).RentableArea = 50;
+            buildings.Next(8).AgencyId = 3;
 
             buildings.AddRange(init.CreateBuildings(parcels.Next(4), 61, 10));
 
@@ -271,6 +300,7 @@ namespace Pims.Dal.Test.Services
             {
                 b.Classification = classification;
                 b.ClassificationId = classification.Id;
+                b.AgencyId = 3;
             });
             buildings.AddRange(buildings01);
 

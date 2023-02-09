@@ -7,7 +7,15 @@ import * as pimsToasts from 'constants/toasts';
 import CustomAxios, { LifecycleToasts } from 'customAxios';
 import { hideLoading, showLoading } from 'react-redux-loading-bar';
 import { AnyAction, Dispatch } from 'redux';
-import { storeError, storeRequest, storeSuccess, storeUser, storeUsers, updateUser } from 'store';
+import {
+  saveAgencies,
+  storeError,
+  storeRequest,
+  storeSuccess,
+  storeUser,
+  storeUsers,
+  updateUser,
+} from 'store';
 import { handleAxiosResponse } from 'utils/utils';
 
 import { error, request, success } from '.';
@@ -78,9 +86,26 @@ export const fetchUserDetail = (id: API.IUserDetailParams) => async (
     .then((response: AxiosResponse) => {
       dispatch(storeSuccess(success(reducerTypes.GET_USER_DETAIL)));
       dispatch(storeUser(response.data));
+      dispatch(saveAgencies(response.data));
       dispatch(hideLoading());
     })
     .catch(() => dispatch(storeError(error(reducerTypes.GET_USER_DETAIL))))
+    .finally(() => dispatch(hideLoading()));
+};
+
+export const fetchUserAgencies = (username: API.IUserAgenciesParams) => async (
+  dispatch: Dispatch<AnyAction>,
+) => {
+  dispatch(storeRequest(request(reducerTypes.GET_USER_AGENCIES)));
+  dispatch(showLoading());
+  return await CustomAxios()
+    .get(ENVIRONMENT.apiUrl + API.USERS_AGENCIES(username))
+    .then((response: AxiosResponse) => {
+      dispatch(storeSuccess(success(reducerTypes.GET_USER_AGENCIES)));
+      dispatch(saveAgencies(response.data ?? []));
+      dispatch(hideLoading());
+    })
+    .catch(() => dispatch(storeError(error(reducerTypes.GET_USER_AGENCIES))))
     .finally(() => dispatch(hideLoading()));
 };
 
@@ -89,7 +114,7 @@ export const getUpdateUserAction = (id: API.IUserDetailParams, updatedUser: any)
   dispatch: Dispatch<AnyAction>,
 ) => {
   const axiosPromise = CustomAxios({ lifecycleToasts: userToasts })
-    .put(ENVIRONMENT.apiUrl + API.KEYCLOAK_USER_UPDATE(id), updatedUser)
+    .put(ENVIRONMENT.apiUrl + API.ADMIN_USER_UPDATE(id), updatedUser)
     .then((response: AxiosResponse) => {
       dispatch(updateUser(response.data));
       return Promise.resolve(response);

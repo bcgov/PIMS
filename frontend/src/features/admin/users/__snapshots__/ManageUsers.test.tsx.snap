@@ -757,7 +757,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               <a
                 href="/admin/user/1"
               >
-                testername1
+                tester
               </a>
             </div>
             <div
@@ -767,7 +767,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="Click IDIR/BCeID link to view User Information page"
             >
-              testUserFirst1
+              firstName
             </div>
             <div
               class="td clickable"
@@ -776,7 +776,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
               style="box-sizing: border-box; flex: 100 0 auto; min-width: 30px; width: 100px; justify-content: flex-start; text-align: left; align-items: flex-start; display: flex;"
               title="Click IDIR/BCeID link to view User Information page"
             >
-              testUserLast1
+              lastName
             </div>
             <div
               class="td clickable"
