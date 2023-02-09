@@ -223,7 +223,6 @@ namespace Pims.Dal.Keycloak
                         });
                     }
                 });
-                await UpdateUserAsync(user);
             }
 
             return _pimsAdminService.User.UpdateAccessRequest(accessRequest);
