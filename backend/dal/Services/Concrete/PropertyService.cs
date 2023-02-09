@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities.Models;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace Pims.Dal.Services
 {
@@ -141,7 +143,14 @@ namespace Pims.Dal.Services
                 filter.PropertyType = Entities.PropertyTypes.Building;
             }
 
-            var query = this.Context.GenerateAllPropertyQuery(this.User, filter);
+            IQueryable<Property> query = this.Context.GenerateAllPropertyQuery(this.User, filter);
+            var user = this.Context.Users
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .ThenInclude(a => a.Children)
+                .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
+            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
+
             var properties = query.Select(p => new[] { Entities.PropertyTypes.Land, Entities.PropertyTypes.Subdivision }.Contains(p.PropertyTypeId) ? new ParcelModel(p, this.User) as PropertyModel : new BuildingModel(p, this.User)).ToArray();
 
             var projectNumbers = properties.SelectMany(p => JsonSerializer.Deserialize<IEnumerable<string>>(p.ProjectNumbers ?? "[]")).Distinct().ToArray();
@@ -157,10 +166,56 @@ namespace Pims.Dal.Services
                 }
             }
 
-            // TODO: Add optional paging ability to query.
+            //Conditionally removing values from each property object before returning; Ensuring that the user has the correct permissions for each property.
+            return properties.Select(p =>
+            {
+                if (userAgencies.Contains((int)p.AgencyId) || this.User.HasClaim(c => c.Value == "admin-properties"))
+                {
+                    return p;
+                }
 
-            return properties;
+                p.Name = null;
+                p.Description = null;
+                p.IsSensitive = true;
+                p.AgencyId = null;
+                p.AgencyCode = null;
+                p.Agency = null;
+                p.SubAgencyCode = null;
+                p.SubAgency = null;
+                p.Market = null;
+                p.MarketFiscalYear = null;
+                p.NetBook = null;
+                p.NetBookFiscalYear = null;
+
+                if (p.PropertyTypeId == Entities.PropertyTypes.Land)
+                {
+                    (p as ParcelModel).Zoning = null;
+                    (p as ParcelModel).ZoningPotential = null;
+                    (p as ParcelModel).AssessedLand = null;
+                    (p as ParcelModel).AssessedLandDate = null;
+                    (p as ParcelModel).AssessedBuilding = null;
+                    (p as ParcelModel).AssessedBuildingDate = null;
+
+                    return p;
+                }
+
+                if (p.PropertyTypeId == Entities.PropertyTypes.Building)
+                {
+                    (p as BuildingModel).LeaseExpiry = null;
+                    (p as BuildingModel).OccupantName = null;
+                    (p as BuildingModel).TransferLeaseOnSale = null;
+                    (p as BuildingModel).Assessed = null;
+                    (p as BuildingModel).AssessedDate = null;
+
+                    return p;
+                }
+
+                return p;
+            });
+
         }
+
+
 
         /// <summary>
         /// Get a page with an array of properties within the specified filters.

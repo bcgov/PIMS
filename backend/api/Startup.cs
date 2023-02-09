@@ -158,10 +158,10 @@ namespace Pims.Api
                 })
                 .AddJwtBearer(options =>
                 {
-                    var key = Encoding.ASCII.GetBytes(Configuration["Keycloak:Secret"]);
+                    var key = Encoding.ASCII.GetBytes(this.Configuration["Keycloak:Secret"]);
                     options.RequireHttpsMetadata = false;
-                    options.Authority = Configuration["Keycloak:Authority"];
-                    options.Audience = Configuration["Keycloak:Audience"];
+                    options.Authority = this.Configuration["Keycloak:Authority"];
+                    options.Audience = this.Configuration["Keycloak:Audience"];
                     options.SaveToken = true;
                     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
                     {
@@ -210,6 +210,7 @@ namespace Pims.Api
             services.AddChesService(this.Configuration.GetSection("Ches"));
             services.AddNotificationsService(this.Configuration.GetSection("Notifications"));
             services.AddSingleton<IAuthorizationHandler, RealmAccessRoleHandler>();
+            services.AddSingleton<IConfiguration>(this.Configuration);
             services.AddTransient<IClaimsTransformation, KeycloakClaimTransformer>();
             services.AddHttpContextAccessor();
             services.AddTransient<ClaimsPrincipal>(s => s.GetService<IHttpContextAccessor>().HttpContext.User);

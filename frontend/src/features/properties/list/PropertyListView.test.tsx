@@ -1,4 +1,3 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import axios from 'axios';
@@ -6,12 +5,14 @@ import MockAdapter from 'axios-mock-adapter';
 import * as API from 'constants/API';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { mockFlatProperty } from 'mocks/filterDataMock';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import service from '../service';
 import { IProperty } from '.';
@@ -19,7 +20,11 @@ import PropertyListView from './PropertyListView';
 
 // Set all module functions to jest.fn
 jest.mock('../service');
-jest.mock('@react-keycloak/web');
+
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
 
 const mockedService = service as jest.Mocked<typeof service>;
 
@@ -39,6 +44,7 @@ const lCodes = {
 
 const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
+  usersAgencies: [{ id: '1', name: 'agencyVal' }],
 });
 
 const history = createMemoryHistory();
@@ -54,15 +60,9 @@ const setupTests = (items?: IProperty[]) => {
     pageIndex: 0,
     items: items ?? [],
   });
-  (useKeycloak as jest.Mock).mockReturnValue({
-    keycloak: {
-      subject: 'test',
-      userInfo: {
-        roles: ['property-edit', 'property-view'],
-        agencies: [1],
-      },
-    },
-  });
+  (useKeycloakWrapper as jest.Mock).mockReturnValue(
+    new (useKeycloakMock as any)(['property-edit', 'property-view'], userAgencies, userAgency),
+  );
 };
 
 describe('Property list view', () => {

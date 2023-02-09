@@ -4,6 +4,9 @@ import { Claims } from 'constants/claims';
 import { PropertyTypes } from 'constants/propertyTypes';
 import { Roles } from 'constants/roles';
 import _ from 'lodash';
+import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { convertToGuidFormat } from 'utils/formatGuid';
 
 /**
  * IUserInfo interface, represents the userinfo provided by keycloak.
@@ -21,6 +24,12 @@ export interface IUserInfo {
   given_name?: string;
   family_name?: string;
   agencies: number[];
+  client_roles: string[];
+  identity_provider: string;
+  idir_username: string;
+  bceid_username: string;
+  idir_user_guid: string;
+  bceid_user_guid: string;
 }
 
 /**
@@ -30,12 +39,14 @@ export interface IKeycloak {
   obj: any;
   displayName?: string;
   username: string;
+  userId: string;
   name?: string;
   preferred_username?: string;
   firstName?: string;
   lastName?: string;
   email?: string;
   roles: string[];
+  systemRoles: string[];
   agencyId?: number;
   isAdmin: boolean;
   hasRole(role?: string | Array<string>): boolean;
@@ -45,41 +56,41 @@ export interface IKeycloak {
   canUserEditProperty: (property: IProperty | null) => boolean;
   canUserViewProperty: (property: IProperty | null) => boolean;
   canUserDeleteProperty: (property: IProperty | null) => boolean;
+  idir_user_guid: string;
 }
 
 /**
  * Provides extension methods to interact with the `keycloak` object.
  */
 export function useKeycloakWrapper(): IKeycloak {
-  const { keycloak } = useKeycloak();
-  const userInfo = keycloak?.userInfo as IUserInfo;
-
+  const { keycloak: keycloakInstance } = useKeycloak();
+  const userInfo = useKeycloak().keycloak.tokenParsed as IUserInfo;
+  //@ts-ignore
+  const usersAgencies: number[] = useSelector(state => state.usersAgencies);
   /**
    * Determine if the user has the specified 'claim'
    * @param claim - The name of the claim
    */
-  const hasClaim = (claim?: string | Array<string>): boolean => {
-    return (
-      claim !== undefined &&
-      claim !== null &&
-      (typeof claim === 'string'
-        ? userInfo?.roles?.includes(claim)
-        : claim.some(c => userInfo?.roles?.includes(c)))
-    );
+  const hasClaim = (claim?: Claims | Array<Claims>): boolean => {
+    if (!claim) {
+      return false;
+    }
+    return typeof claim === 'string'
+      ? userInfo?.client_roles?.some(role => role === claim)
+      : claim.some(c => userInfo?.client_roles?.some(role => role === c));
   };
 
   /**
    * Determine if the user belongs to the specified 'role'
    * @param role - The role name or an array of role name
    */
-  const hasRole = (role?: string | Array<string>): boolean => {
-    return (
-      role !== undefined &&
-      role !== null &&
-      (typeof role === 'string'
-        ? userInfo?.groups?.includes(role)
-        : role.some(r => userInfo?.groups?.includes(r)))
-    );
+  const hasRole = (role?: Roles | Array<Roles>): boolean => {
+    if (!role) {
+      return false;
+    }
+    return typeof role === 'string'
+      ? userInfo?.client_roles?.includes(role)
+      : role.some(r => userInfo?.client_roles?.includes(r));
   };
 
   /**
@@ -87,28 +98,57 @@ export function useKeycloakWrapper(): IKeycloak {
    * @param agency - The agency name
    */
   const hasAgency = (agency?: number): boolean => {
-    return agency !== undefined && agency !== null && userInfo?.agencies?.includes(agency);
+    return agency !== undefined && agency !== null && usersAgencies?.includes?.(agency);
   };
 
   /**
    * Return an array of roles the user belongs to
    */
   const roles = (): Array<string> => {
-    return userInfo?.groups ? [...userInfo?.groups] : [];
+    return userInfo?.client_roles ? [...userInfo?.client_roles] : [];
+  };
+
+  /**
+   * Return an array of only system roles from Keycloak (where the role name begins with a captial letter)
+   * that the user belongs to
+   */
+  const getSystemRoles = (): Array<string> => {
+    let systemRoles: string[] = userInfo?.client_roles ?? [];
+    systemRoles = systemRoles.filter(s => s.charAt(0) === s.charAt(0).toUpperCase());
+    return systemRoles ?? [];
   };
 
   /**
    * Return the user's username
    */
   const username = (): string => {
+    if (userInfo?.identity_provider === 'idir') {
+      return userInfo?.idir_username + '@idir';
+    }
+    if (userInfo?.identity_provider === 'bceidbusiness') {
+      return userInfo?.bceid_username + '@bceid';
+    }
+    if (userInfo?.identity_provider === 'bceidboth') {
+      return userInfo?.bceid_username + '@bceid';
+    }
     return userInfo?.username;
   };
 
+  const userId = (): string => {
+    if (userInfo?.identity_provider === 'idir') {
+      return userInfo?.idir_user_guid;
+    }
+    if (userInfo?.identity_provider.includes('bceid')) {
+      return userInfo?.bceid_user_guid;
+    }
+    return '';
+  };
+
   /**
-   * Return the user's display name
+   * Return the user's display name using the first and last name from Keycloak
    */
   const displayName = (): string | undefined => {
-    return userInfo?.name ?? userInfo?.preferred_username;
+    return userInfo?.given_name + ' ' + userInfo?.family_name ?? userInfo?.preferred_username;
   };
 
   /**
@@ -130,6 +170,10 @@ export function useKeycloakWrapper(): IKeycloak {
    */
   const email = (): string | undefined => {
     return userInfo?.email;
+  };
+
+  const agencies = (): number[] => {
+    return usersAgencies;
   };
 
   const isAdmin = hasClaim(Claims.ADMIN_PROPERTIES);
@@ -174,24 +218,31 @@ export function useKeycloakWrapper(): IKeycloak {
     );
   };
 
-  return {
-    obj: keycloak,
-    username: username(),
-    displayName: displayName(),
-    firstName: firstName(),
-    lastName: lastName(),
-    email: email(),
-    isAdmin: hasRole(Roles.SYSTEM_ADMINISTRATOR) || hasRole(Roles.AGENCY_ADMINISTRATOR),
-    roles: roles(),
-    agencyId: userInfo?.agencies?.find(x => x),
-    hasRole: hasRole,
-    hasClaim: hasClaim,
-    hasAgency: hasAgency,
-    agencyIds: userInfo?.agencies,
-    canUserEditProperty,
-    canUserDeleteProperty,
-    canUserViewProperty,
-  };
+  return useMemo(
+    () => ({
+      obj: { ...keycloakInstance, authenticated: !!keycloakInstance.token },
+      username: username(),
+      userId: userId(),
+      displayName: displayName(),
+      firstName: firstName(),
+      lastName: lastName(),
+      email: email(),
+      isAdmin: hasRole(Roles.SYSTEM_ADMINISTRATOR) || hasRole(Roles.AGENCY_ADMINISTRATOR),
+      roles: roles(),
+      systemRoles: getSystemRoles(),
+      agencyId: agencies()[0],
+      hasRole,
+      hasClaim,
+      hasAgency,
+      agencyIds: agencies(),
+      canUserEditProperty,
+      canUserDeleteProperty,
+      canUserViewProperty,
+      idir_user_guid: userInfo?.idir_user_guid && convertToGuidFormat(userInfo.idir_user_guid),
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [keycloakInstance, usersAgencies.length],
+  );
 }
 
 export default useKeycloakWrapper;

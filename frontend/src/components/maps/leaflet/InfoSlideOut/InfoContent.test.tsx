@@ -1,23 +1,29 @@
 import 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-import { useKeycloak } from '@react-keycloak/web';
 import { render } from '@testing-library/react';
 import { IBuilding, IParcel } from 'actions/parcelsActions';
 import * as API from 'constants/API';
+import Claims from 'constants/claims';
 import { PropertyTypes } from 'constants/propertyTypes';
 import * as reducerTypes from 'constants/reducerTypes';
 import { Workflows } from 'constants/workflows';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import InfoContent from './InfoContent';
 
-jest.mock('@react-keycloak/web');
+const userRoles: string[] | Claims[] = [];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
 
 const mockParcelNoSub = {
   id: 1,
@@ -224,15 +230,9 @@ describe('InfoContent View', () => {
     jest.clearAllMocks();
   });
   beforeEach(() => {
-    (useKeycloak as jest.Mock).mockReturnValue({
-      keycloak: {
-        userInfo: {
-          agencies: [1],
-          roles: [],
-        },
-        subject: 'test',
-      },
-    });
+    (useKeycloakWrapper as jest.Mock).mockReturnValue(
+      new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+    );
   });
 
   it('InfoContent renders correctly', () => {

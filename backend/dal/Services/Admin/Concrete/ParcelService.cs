@@ -44,7 +44,13 @@ namespace Pims.Dal.Services.Admin
             if (filter.Quantity < 1) throw new ArgumentException("Argument must be greater than or equal to 1.", nameof(filter.Quantity));
 
             // Check if user has the ability to view sensitive properties.
-            var userAgencies = this.User.GetAgenciesAsNullable();
+            var user = this.Context.Users
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .ThenInclude(a => a.Children)
+                .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
+            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
+
             var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);
 
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.

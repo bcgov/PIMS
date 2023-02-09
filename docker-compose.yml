@@ -1,21 +1,4 @@
-version: '3.5'
-
 services:
-  ####################### Keycloak #######################
-  keycloak:
-    restart: 'no'
-    container_name: pims-keycloak
-    build:
-      context: ./auth/keycloak
-    env_file:
-      - auth/keycloak/.env
-    volumes:
-      - ./auth/keycloak/config/realm-export.json:/tmp/realm-export.json
-    ports:
-      - ${KEYCLOAK_PORT:-8080}:8080
-    networks:
-      - pims
-
   ####################### Database #######################
   database:
     restart: 'no'
@@ -45,7 +28,6 @@ services:
       - ${API_HTTP_PORT:-5000}:8080
     depends_on:
       - database
-      - keycloak
     networks:
       - pims
 

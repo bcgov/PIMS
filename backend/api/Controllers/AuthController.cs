@@ -23,6 +23,7 @@ namespace Pims.Api.Controllers
         #region Variables
         private readonly Keycloak.Configuration.KeycloakOptions _optionsKeycloak;
         private readonly IPimsService _pimsService;
+
         #endregion
 
         #region Constructors
@@ -53,8 +54,8 @@ namespace Pims.Api.Controllers
         [SwaggerOperation(Tags = new[] { "auth" })]
         public IActionResult Activate()
         {
-            var keycloakUserId = this.User.GetKeycloakUserId();
-            var exists = _pimsService.User.UserExists(keycloakUserId);
+            string username = this.User.GetUsername();
+            var exists = _pimsService.User.UserExists(username);
 
             var user = _pimsService.User.Activate();
             if (!exists)

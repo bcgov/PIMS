@@ -148,7 +148,6 @@ namespace Pims.Core.Http
                 throw new ConfigurationException($"Configuration 'OpenIdConnect:Secret' is missing or invalid.");
             var audience = this.AuthClientOptions.Audience ??
                 throw new ConfigurationException($"Configuration 'OpenIdConnect:Audience' is missing or invalid.");
-
             // Use the configuration settings if available, or make a request to Keycloak for the appropriate endpoint URL.
             var keycloakTokenUrl = this.OpenIdConnectOptions.Token;
             if (String.IsNullOrWhiteSpace(keycloakTokenUrl))
