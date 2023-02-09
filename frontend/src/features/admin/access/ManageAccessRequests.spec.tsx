@@ -17,8 +17,7 @@ import { create, ReactTestInstance } from 'react-test-renderer';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import useKeycloakMock from 'useKeycloakWrapperMock';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 
 import ManageAccessRequests from './ManageAccessRequests';
 
@@ -27,22 +26,9 @@ const userAgencies: number[] = [1];
 const userAgency = 1;
 
 vi.mock('hooks/useKeycloakWrapper');
-(useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+(useKeycloakWrapper as Mock).mockReturnValue(
   new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
 );
-
-Enzyme.configure({ adapter: new Adapter() });
-
-const history = createMemoryHistory();
-history.push('admin');
-const mockStore = configureMockStore([thunk]);
-
-const lCodes = {
-  lookupCodes: [
-    { name: 'agencyVal', id: '1', isDisabled: false, type: API.AGENCY_CODE_SET_NAME },
-    { name: 'roleVal', id: '1', isDisabled: false, type: API.ROLE_CODE_SET_NAME },
-  ] as ILookupCode[],
-};
 
 Enzyme.configure({ adapter: new Adapter() });
 

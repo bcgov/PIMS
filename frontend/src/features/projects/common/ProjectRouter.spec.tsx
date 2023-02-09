@@ -10,8 +10,7 @@ import * as Router from 'react-router';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import useKeycloakMock from 'useKeycloakWrapperMock';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 
 import useProject from '../common/hooks/useProject';
 import { mockWorkflow } from '../dispose/testUtils';
@@ -31,7 +30,7 @@ const userAgency = 1;
 
 vi.mock('hooks/useKeycloakWrapper');
 const mockKeycloak = (userRoles: string[] | Claims[]) => {
-  (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+  (useKeycloakWrapper as Mock).mockReturnValue(
     new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, true),
   );
 };
@@ -73,7 +72,7 @@ describe('project router', () => {
    * NAVIGATES to dispose/projects/review
    */
   it('navigates to dispose/projects/review', () => {
-    (useProject as Vitest.Mock).mockReturnValue({
+    (useProject as Mock).mockReturnValue({
       project: {
         projectNumber: 'TEST-10001',
         statusCode: 'DR-RE',
@@ -98,7 +97,7 @@ describe('project router', () => {
    * NAVIGATES to assess/properties
    */
   it('navigates to assess/properties', () => {
-    (useProject as Vitest.Mock).mockReturnValue({
+    (useProject as Mock).mockReturnValue({
       project: {
         projectNumber: 'TEST-10001',
         statusCode: 'AS-I',
@@ -123,7 +122,7 @@ describe('project router', () => {
    * NAVIGATES to assess/properties/update
    */
   it('navigates to assess/properties/update', () => {
-    (useProject as Vitest.Mock).mockReturnValue({
+    (useProject as Mock).mockReturnValue({
       project: {
         projectNumber: 'TEST-10001',
         statusCode: 'AS-I',
@@ -148,7 +147,7 @@ describe('project router', () => {
    * NAVIGATES to summary
    */
   it('navigates to summary', () => {
-    (useProject as Vitest.Mock).mockReturnValue({
+    (useProject as Mock).mockReturnValue({
       project: {
         projectNumber: 'TEST-10001',
       },

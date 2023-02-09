@@ -15,8 +15,7 @@ import VisibilitySensor from 'react-visibility-sensor';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import useKeycloakMock from 'useKeycloakWrapperMock';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 
 import MapSideBarContainer from './MapSideBarContainer';
 
@@ -73,7 +72,7 @@ const renderContainer = ({ store }: any) =>
 describe('Parcel Detail MapSideBarContainer', () => {
   // clear mocks before each test
   beforeEach(() => {
-    (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+    (useKeycloakWrapper as Mock).mockReturnValue(
       new (useKeycloakMock as any)([Claims.PROPERTY_EDIT], [1], 1),
     );
     mockAxios.onAny().reply(200, {});

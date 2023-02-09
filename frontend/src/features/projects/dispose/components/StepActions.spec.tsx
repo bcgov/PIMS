@@ -2,17 +2,17 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { noop } from 'lodash';
 import React from 'react';
 import renderer from 'react-test-renderer';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 
 import { StepActions } from './StepActions';
 
 vi.mock('hooks/useKeycloakWrapper');
-(useKeycloakWrapper as Vitest.Mock).mockReturnValue({ hasClaim: () => true });
+(useKeycloakWrapper as Mock).mockReturnValue({ hasClaim: () => true });
 
 const renderComponent = (
   nextDisabled?: boolean,
   saveDisabled?: boolean,
+  // eslint-disable-next-line @typescript-eslint/ban-types
   getNextStep?: Function,
 ) => {
   return renderer.create(
@@ -47,7 +47,7 @@ describe('Approval Confirmation', () => {
   });
 
   it('Next & Save buttons are disabled if permission missing on milestone steps', () => {
-    (useKeycloakWrapper as Vitest.Mock).mockReturnValue({ hasClaim: (val: any) => false });
+    (useKeycloakWrapper as Mock).mockReturnValue({ hasClaim: (val: any) => false });
     const component = renderComponent(false, false, () => ({
       isMilestone: true,
     }));

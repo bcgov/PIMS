@@ -6,8 +6,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mocked, vi } from 'vitest';
 
 import { useProjectSnapshotApi } from './useProjectSnapshotApi';
 
@@ -15,15 +14,19 @@ const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
 
 const getStore = () => mockStore({});
-const mockedAxios = axios as Vitest.Mocked<typeof axios>;
+const mockedAxios = axios as Mocked<typeof axios>;
 vi.mock('axios');
 mockedAxios.create = vi.fn(() => mockedAxios);
 
-const getWrapper = (store: any) => ({ children }: any) => (
-  <Provider store={store}>
-    <MemoryRouter initialEntries={[history.location]}>{children}</MemoryRouter>
-  </Provider>
-);
+const getWrapper =
+  (store: any) =>
+  // eslint-disable-next-line react/display-name
+  ({ children }: any) =>
+    (
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>{children}</MemoryRouter>
+      </Provider>
+    );
 
 describe('useProjectSnapshotApi hook tests', () => {
   beforeEach(() => {

@@ -11,7 +11,7 @@ declare global {
 
 expect.extend(matchers);
 
-const localStorageMock = (function () {
+const localStorageMock = (() => {
   let store: any = {};
 
   return {
@@ -32,6 +32,7 @@ const localStorageMock = (function () {
     },
   };
 })();
+
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
 });

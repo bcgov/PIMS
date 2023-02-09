@@ -13,8 +13,7 @@ import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import useKeycloakMock from 'useKeycloakWrapperMock';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mock, Mocked, vi } from 'vitest';
 
 import service from '../service';
 import { IProperty } from '.';
@@ -27,7 +26,7 @@ vi.mock('hooks/useKeycloakWrapper');
 const userAgencies: number[] = [1];
 const userAgency = 1;
 
-const mockedService = service as Vitest.Mocked<typeof service>;
+const mockedService = service as Mocked<typeof service>;
 const mockStore = configureMockStore([thunk]);
 
 const lCodes = {
@@ -60,7 +59,7 @@ const setupTests = (items?: IProperty[]) => {
     pageIndex: 0,
     items: items ?? [],
   });
-  (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+  (useKeycloakWrapper as Mock).mockReturnValue(
     new (useKeycloakMock as any)(['property-edit', 'property-view'], userAgencies, userAgency),
   );
 };

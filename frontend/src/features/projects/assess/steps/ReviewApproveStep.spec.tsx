@@ -21,8 +21,7 @@ import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import useKeycloakMock from 'useKeycloakWrapperMock';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 
 import { ReviewApproveStep } from '..';
 
@@ -33,7 +32,7 @@ const userAgency = 1;
 
 vi.mock('hooks/useKeycloakWrapper');
 const mockKeycloak = (userRoles: string[] | Claims[]) => {
-  (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+  (useKeycloakWrapper as Mock).mockReturnValue(
     new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
   );
 };

@@ -57,9 +57,6 @@ exports[`login > login renders correctly 1`] = `
           className="row"
         />
       </div>
-      <div
-        className="col-md-3 col-1"
-      />
     </div>
   </div>
 </div>

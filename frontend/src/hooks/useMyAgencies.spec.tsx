@@ -8,8 +8,7 @@ import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import useKeycloakMock from 'useKeycloakWrapperMock';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 
 import useKeycloakWrapper from './useKeycloakWrapper';
 import { useMyAgencies } from './useMyAgencies';
@@ -58,7 +57,7 @@ describe('UseMyAgencies', () => {
   });
 
   it('Is SRES user, should return all agencies', () => {
-    (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+    (useKeycloakWrapper as Mock).mockReturnValue(
       new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
     );
 
@@ -74,9 +73,7 @@ describe('UseMyAgencies', () => {
   });
 
   it('Belongs to Sub Agency, should return one agencies', () => {
-    (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
-      new (useKeycloakMock as any)(userRoles, [41], 41),
-    );
+    (useKeycloakWrapper as Mock).mockReturnValue(new (useKeycloakMock as any)(userRoles, [41], 41));
 
     const { getByTestId } = render(
       <Provider store={store}>
@@ -88,9 +85,7 @@ describe('UseMyAgencies', () => {
   });
 
   it('Belongs to Parent Agency, should return parent agency and child agency', () => {
-    (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
-      new (useKeycloakMock as any)(userRoles, [8], 8),
-    );
+    (useKeycloakWrapper as Mock).mockReturnValue(new (useKeycloakMock as any)(userRoles, [8], 8));
 
     const { getByTestId } = render(
       <Provider store={store}>

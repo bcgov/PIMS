@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { Formik } from 'formik';
 import { useApi } from 'hooks/useApi';
 import React from 'react';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 
 import { PropertyFilterOptions } from '.';
 import { IPropertyFilter } from './IPropertyFilter';
@@ -11,7 +11,7 @@ import { IPropertyFilter } from './IPropertyFilter';
 vi.mock('axios');
 vi.mock('@react-keycloak/web');
 vi.mock('hooks/useApi');
-(useApi as Vitest.Mock).mockReturnValue({
+(useApi as Mock).mockReturnValue({
   searchAddress: vi.fn((val: string) => {
     return Promise.resolve([]);
   }),

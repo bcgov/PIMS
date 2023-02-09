@@ -14,8 +14,7 @@ import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import useKeycloakMock from 'useKeycloakWrapperMock';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 
 import AppNavBar from './AppNavBar';
 
@@ -26,7 +25,7 @@ const userAgencies: number[] = [1];
 const userAgency = 1;
 
 vi.mock('hooks/useKeycloakWrapper');
-(useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+(useKeycloakWrapper as Mock).mockReturnValue(
   new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
 );
 
@@ -56,7 +55,7 @@ describe('AppNavBar', () => {
   describe('AppNavBar Links Based on Security', () => {
     describe('AppNavBar Administation Dropdown', () => {
       it('AppNavBar include Administration Dropdown', () => {
-        (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+        (useKeycloakWrapper as Mock).mockReturnValue(
           new (useKeycloakMock as any)([Roles.SYSTEM_ADMINISTRATOR], []),
         );
         const { getByText } = render(
@@ -72,7 +71,7 @@ describe('AppNavBar', () => {
       });
 
       it('AppNavBar include Admin Users Link', () => {
-        (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+        (useKeycloakWrapper as Mock).mockReturnValue(
           new (useKeycloakMock as any)([Roles.SYSTEM_ADMINISTRATOR], []),
         );
         const { getByText } = render(
@@ -89,7 +88,7 @@ describe('AppNavBar', () => {
         expect(element).toBeVisible();
       });
       it('AppNavBar include Admin Access Requests Link', () => {
-        (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+        (useKeycloakWrapper as Mock).mockReturnValue(
           new (useKeycloakMock as any)([Roles.SYSTEM_ADMINISTRATOR], []),
         );
         const { getByText } = render(
@@ -106,7 +105,7 @@ describe('AppNavBar', () => {
       });
 
       it('AppNavBar include Admin Agencies link', () => {
-        (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+        (useKeycloakWrapper as Mock).mockReturnValue(
           new (useKeycloakMock as any)([Roles.SYSTEM_ADMINISTRATOR], []),
         );
         const { getByText } = render(
@@ -124,7 +123,7 @@ describe('AppNavBar', () => {
     });
 
     it('AppNavBar include Submit Property Link', () => {
-      (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+      (useKeycloakWrapper as Mock).mockReturnValue(
         new (useKeycloakMock as any)([Claims.PROPERTY_ADD, Claims.PROPERTY_VIEW], []),
       );
       const { getByText } = render(
@@ -139,7 +138,7 @@ describe('AppNavBar', () => {
     });
 
     it('AppNavBar include View Inventory Link', () => {
-      (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+      (useKeycloakWrapper as Mock).mockReturnValue(
         new (useKeycloakMock as any)([Claims.PROPERTY_ADD, Claims.PROPERTY_VIEW], []),
       );
       const { getByText } = render(
@@ -157,7 +156,7 @@ describe('AppNavBar', () => {
 
     describe('AppNavBar Disposal Projects dropdown', () => {
       it('AppNavBar include Disposal Projects dropdown for Approval requests only', () => {
-        (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+        (useKeycloakWrapper as Mock).mockReturnValue(
           new (useKeycloakMock as any)([Claims.DISPOSE_APPROVE], []),
         );
         const { getByText } = render(
@@ -173,7 +172,7 @@ describe('AppNavBar', () => {
       });
 
       it('AppNavBar include Create Disposal Project Link', () => {
-        (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+        (useKeycloakWrapper as Mock).mockReturnValue(
           new (useKeycloakMock as any)([Claims.ADMIN_PROPERTIES, Claims.ADMIN_PROJECTS], []),
         );
         const { getByText } = render(
@@ -190,7 +189,7 @@ describe('AppNavBar', () => {
       });
 
       it('AppNavBar include View Projects Link', () => {
-        (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+        (useKeycloakWrapper as Mock).mockReturnValue(
           new (useKeycloakMock as any)([Claims.ADMIN_PROPERTIES, Claims.ADMIN_PROJECTS], []),
         );
         const { getByText } = render(
@@ -207,7 +206,7 @@ describe('AppNavBar', () => {
       });
 
       it('AppNavBar include Approval Requests Link', () => {
-        (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+        (useKeycloakWrapper as Mock).mockReturnValue(
           new (useKeycloakMock as any)([Claims.DISPOSE_APPROVE], []),
         );
         const { getByText } = render(
@@ -226,7 +225,7 @@ describe('AppNavBar', () => {
 
     describe('AppNavBar Reports Dropdown', () => {
       it('AppNavBar include Reports Dropdown', () => {
-        (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+        (useKeycloakWrapper as Mock).mockReturnValue(
           new (useKeycloakMock as any)([Claims.REPORTS_VIEW, Claims.REPORTS_SPL], []),
         );
         const { getByText } = render(
@@ -241,7 +240,7 @@ describe('AppNavBar', () => {
       });
 
       it('AppNavBar include SPL Reports link', () => {
-        (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+        (useKeycloakWrapper as Mock).mockReturnValue(
           new (useKeycloakMock as any)([Claims.REPORTS_VIEW, Claims.REPORTS_SPL], []),
         );
         const { getByText } = render(

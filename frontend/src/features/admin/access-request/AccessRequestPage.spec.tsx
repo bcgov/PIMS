@@ -18,8 +18,7 @@ import thunk from 'redux-thunk';
 import { IGenericNetworkAction, initialAccessRequestState } from 'store';
 import useKeycloakMock from 'useKeycloakWrapperMock';
 import { fillInput } from 'utils/testUtils';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 
 import { Select } from '../../../components/common/form';
 import AccessRequestPage from './AccessRequestPage';
@@ -29,7 +28,7 @@ const userAgencies: number[] = [1];
 const userAgency = 1;
 
 vi.mock('hooks/useKeycloakWrapper');
-(useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+(useKeycloakWrapper as Mock).mockReturnValue(
   new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
 );
 
