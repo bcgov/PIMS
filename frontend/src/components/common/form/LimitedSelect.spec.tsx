@@ -4,15 +4,14 @@ import Enzyme from 'enzyme';
 import { getIn, useFormikContext } from 'formik';
 import React from 'react';
 import renderer from 'react-test-renderer';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 
 import { FastSelect } from './FastSelect';
 
 vi.mock('formik');
 Enzyme.configure({ adapter: new Adapter() });
 
-(useFormikContext as Vitest.Mock).mockReturnValue({
+(useFormikContext as Mock).mockReturnValue({
   values: {
     classificationId: 0,
     classification: 'zero',
@@ -20,7 +19,7 @@ Enzyme.configure({ adapter: new Adapter() });
   registerField: vi.fn(),
   unregisterField: vi.fn(),
 });
-(getIn as Vitest.Mock).mockReturnValue(0);
+(getIn as Mock).mockReturnValue(0);
 
 const options = [
   {

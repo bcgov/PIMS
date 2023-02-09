@@ -15,14 +15,13 @@ import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import useKeycloakMock from 'useKeycloakWrapperMock';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mock, Mocked, vi } from 'vitest';
 
 import { ClassificationForm } from './ClassificationForm';
 
 vi.mock('axios');
 
-const mockedAxios = axios as Vitest.Mocked<typeof axios>;
+const mockedAxios = axios as Mocked<typeof axios>;
 const mockClassifications = [
   { value: Classifications.CoreOperational, label: 'Core Operational' } as SelectOption,
   { value: Classifications.CoreStrategic, label: 'Core Strategic' } as SelectOption,
@@ -34,7 +33,7 @@ const userAgency = 1;
 
 vi.mock('hooks/useKeycloakWrapper');
 const mockKeycloak = (claims: string[]) => {
-  (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+  (useKeycloakWrapper as Mock).mockReturnValue(
     new (useKeycloakMock as any)(claims, userAgencies, userAgency),
   );
 };

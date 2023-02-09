@@ -10,8 +10,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import { MemoryRouter } from 'react-router-dom';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 
 import { ReviewApproveActions } from './ReviewApproveActions';
 
@@ -20,7 +19,7 @@ const history = createMemoryHistory();
 
 vi.mock('formik');
 vi.mock('hooks/useKeycloakWrapper');
-(useKeycloakWrapper as Vitest.Mock).mockReturnValue({ hasClaim: () => true });
+(useKeycloakWrapper as Mock).mockReturnValue({ hasClaim: () => true });
 
 const mockSubmit = vi.fn();
 afterEach(() => {
@@ -38,12 +37,13 @@ const element = (
 );
 
 describe('approve exemption review actions', () => {
-  (useFormikContext as Vitest.Mock).mockReturnValue({
+  (useFormikContext as Mock).mockReturnValue({
     values: {
       exemptionRequested: true,
     },
     submitForm: () => Promise.resolve(),
     validateForm: () => ({
+      // eslint-disable-next-line @typescript-eslint/ban-types
       then: (func: Function) => func({}),
     }),
   });
@@ -70,7 +70,7 @@ describe('approve exemption review actions', () => {
 });
 
 describe('deny exemption review actions', () => {
-  (useFormikContext as Vitest.Mock).mockReturnValue({
+  (useFormikContext as Mock).mockReturnValue({
     values: {
       exemptionRequested: true,
     },

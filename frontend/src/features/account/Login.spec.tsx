@@ -12,8 +12,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { IGenericNetworkAction } from 'store';
 import useKeycloakMock from 'useKeycloakWrapperMock';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 
 import Login from './Login';
 
@@ -55,7 +54,7 @@ describe('login', () => {
   });
 
   it('login renders correctly', () => {
-    (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+    (useKeycloakWrapper as Mock).mockReturnValue(
       new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, false),
     );
     const tree = renderer
@@ -71,7 +70,7 @@ describe('login', () => {
   });
 
   it('authenticated users are redirected to the mapview', () => {
-    (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+    (useKeycloakWrapper as Mock).mockReturnValue(
       new (useKeycloakMock as any)([Roles.SYSTEM_ADMINISTRATOR], userAgencies, userAgency, true),
     );
 
@@ -80,7 +79,7 @@ describe('login', () => {
   });
 
   it('new users are sent to the guest page', () => {
-    (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+    (useKeycloakWrapper as Mock).mockReturnValue(
       new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, true),
     );
     const activatedAction: IGenericNetworkAction = {
@@ -107,7 +106,7 @@ describe('login', () => {
   });
 
   it('unAuthenticated users are shown the login screen', () => {
-    (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+    (useKeycloakWrapper as Mock).mockReturnValue(
       new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, false),
     );
     const { getAllByRole } = renderLogin();
@@ -120,7 +119,7 @@ describe('login', () => {
   });
 
   it('a spinner is displayed if keycloak has not yet been initialized', () => {
-    (useKeycloakWrapper as Vitest.Mock).mockReturnValue({});
+    (useKeycloakWrapper as Mock).mockReturnValue({});
     const { container } = renderLogin();
     expect(container.firstChild).toHaveClass('spinner-border');
   });

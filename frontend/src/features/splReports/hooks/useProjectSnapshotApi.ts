@@ -36,25 +36,26 @@ export interface PimsAPI extends AxiosInstance {
   deleteProjectSnapshot: (id: number) => void;
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 const getAxios = (dispatch: Function, toasts?: LifecycleToasts) => {
   const axios = CustomAxios({ lifecycleToasts: toasts }) as PimsAPI;
 
   axios.defaults.baseURL = baseUrl;
 
   axios.interceptors.request.use(
-    config => {
+    (config) => {
       dispatch(showLoading());
       return config;
     },
-    error => dispatch(hideLoading()),
+    (error) => dispatch(hideLoading()),
   );
 
   axios.interceptors.response.use(
-    config => {
+    (config) => {
       dispatch(hideLoading());
       return config;
     },
-    error => dispatch(hideLoading()),
+    (error) => dispatch(hideLoading()),
   );
   return axios;
 };
@@ -88,7 +89,6 @@ const snapshotToasts: LifecycleToasts = {
  */
 export const useProjectSnapshotApi = () => {
   const dispatch = useAppDispatch();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const defaultAxios = useCallback(
     getAxios(dispatch, { errorToast: () => toast.error('Failed to load reports') }),
     [dispatch],

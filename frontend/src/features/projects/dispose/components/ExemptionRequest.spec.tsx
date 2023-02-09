@@ -2,13 +2,12 @@ import { render } from '@testing-library/react';
 import { getIn, useFormikContext } from 'formik';
 import { noop } from 'lodash';
 import * as React from 'react';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 
 import ExemptionRequest from './ExemptionRequest';
 
 vi.mock('formik');
-(useFormikContext as Vitest.Mock).mockReturnValue({
+(useFormikContext as Mock).mockReturnValue({
   values: {
     exemptionRequested: false,
     handleChange: noop,
@@ -69,13 +68,13 @@ describe('Exemption Request test', () => {
 
   describe('rationale functionality', () => {
     it('displays rationale field when clicked', () => {
-      (getIn as Vitest.Mock).mockReturnValue(true);
+      (getIn as Mock).mockReturnValue(true);
       const { getByText } = renderComponent();
       expect(getByText('Rationale')).toBeInTheDocument();
     });
     it('renders props when provided', () => {
-      (getIn as Vitest.Mock).mockReturnValue(true);
-      (useFormikContext as Vitest.Mock).mockReturnValue({
+      (getIn as Mock).mockReturnValue(true);
+      (useFormikContext as Mock).mockReturnValue({
         values: {
           exemptionRequested: false,
         },

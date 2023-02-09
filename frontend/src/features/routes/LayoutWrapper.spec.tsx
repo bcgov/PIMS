@@ -8,8 +8,7 @@ import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 import useKeycloakMock from 'useKeycloakWrapperMock';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 
 const history = createMemoryHistory();
 
@@ -18,7 +17,7 @@ const userAgency = 1;
 
 vi.mock('hooks/useKeycloakWrapper');
 const mockKeycloak = (userRoles: string[] | Claims[]) => {
-  (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+  (useKeycloakWrapper as Mock).mockReturnValue(
     new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
   );
 };

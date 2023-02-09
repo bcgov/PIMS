@@ -5,25 +5,25 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { fillInput } from 'utils/testUtils';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 
 import PidPinForm from './PidPinForm';
 
-vi.mock('lodash/debounce', () => vi.fn(fn => fn));
+vi.mock('lodash/debounce', () => vi.fn((fn) => fn));
 vi.mock('hooks/useKeycloakWrapper');
-(useKeycloakWrapper as Vitest.Mock).mockReturnValue({ hasClaim: () => true });
+(useKeycloakWrapper as Mock).mockReturnValue({ hasClaim: () => true });
 
 describe('PidPin sub-form', () => {
   let form: JSX.Element;
-  let handlePidChange = vi.fn();
-  let handlePinChange = vi.fn();
+  const handlePidChange = vi.fn();
+  const handlePinChange = vi.fn();
   beforeEach(() => {
     form = (
       <Formik<Partial<IParcel>>
         initialValues={{ pid: '', pin: '', projectNumbers: [] }}
         initialTouched={{ pid: true, pin: true }}
         validateOnChange={false}
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         onSubmit={() => {}}
       >
         {() => (

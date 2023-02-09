@@ -12,8 +12,7 @@ import { mockFlatProperty } from 'mocks/filterDataMock';
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import { MemoryRouter } from 'react-router-dom';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 
 import { ReviewApproveActions } from './ReviewApproveActions';
 
@@ -22,7 +21,7 @@ const history = createMemoryHistory();
 
 vi.mock('formik');
 vi.mock('hooks/useKeycloakWrapper');
-(useKeycloakWrapper as Vitest.Mock).mockReturnValue({ hasClaim: () => true });
+(useKeycloakWrapper as Mock).mockReturnValue({ hasClaim: () => true });
 
 const mockSubmit = vi.fn();
 afterEach(() => {
@@ -40,13 +39,14 @@ const element = (
 );
 describe('Review Approve actions', () => {
   describe('approval button', () => {
-    (useFormikContext as Vitest.Mock).mockReturnValue({
+    (useFormikContext as Mock).mockReturnValue({
       values: {
         properties: [{ ...mockFlatProperty, propertyTypeId: 2 }],
         statusCode: WorkflowStatus.PropertyReview,
       },
       submitForm: () => Promise.resolve(),
       validateForm: () => ({
+        // eslint-disable-next-line @typescript-eslint/ban-types
         then: (func: Function) => func({}),
       }),
     });
@@ -79,7 +79,7 @@ describe('Review Approve actions', () => {
   });
 
   describe('denial button', () => {
-    (useFormikContext as Vitest.Mock).mockReturnValue({
+    (useFormikContext as Mock).mockReturnValue({
       values: {
         properties: [{ ...mockFlatProperty, propertyTypeId: 2 }],
         statusCode: WorkflowStatus.PropertyReview,
@@ -123,7 +123,7 @@ describe('Review Approve actions', () => {
   });
 
   describe('buttons state when project pending approval', () => {
-    (useFormikContext as Vitest.Mock).mockReturnValue({
+    (useFormikContext as Mock).mockReturnValue({
       values: {
         properties: [{ ...mockFlatProperty, propertyTypeId: 2 }],
         statusCode: WorkflowStatus.PropertyReview,
@@ -160,7 +160,7 @@ describe('Review Approve actions', () => {
   });
 
   describe('buttons state when project denied', () => {
-    (useFormikContext as Vitest.Mock).mockReturnValue({
+    (useFormikContext as Mock).mockReturnValue({
       values: {
         statusCode: WorkflowStatus.Denied,
         properties: [{ ...mockFlatProperty, propertyTypeId: 2 }],
@@ -197,7 +197,7 @@ describe('Review Approve actions', () => {
   });
 
   describe('buttons state when project approved', () => {
-    (useFormikContext as Vitest.Mock).mockReturnValue({
+    (useFormikContext as Mock).mockReturnValue({
       values: {
         statusCode: WorkflowStatus.ApprovedForErp,
         properties: [{ ...mockFlatProperty, propertyTypeId: 2 }],

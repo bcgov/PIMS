@@ -5,8 +5,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import * as Router from 'react-router';
 import useKeycloakMock from 'useKeycloakWrapperMock';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 
 import { Logout } from './Logout';
 
@@ -29,10 +28,10 @@ describe('logout', () => {
   });
 
   it('should redirect to login page', () => {
-    (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+    (useKeycloakWrapper as Mock).mockReturnValue(
       new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, false),
     );
-    (useConfiguration as Vitest.Mock).mockReturnValue({ siteMinderLogoutUrl: undefined });
+    (useConfiguration as Mock).mockReturnValue({ siteMinderLogoutUrl: undefined });
 
     render(
       <Router.MemoryRouter>
@@ -44,10 +43,10 @@ describe('logout', () => {
   });
 
   it('should redirect to siteminder logout page', () => {
-    (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+    (useKeycloakWrapper as Mock).mockReturnValue(
       new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, false),
     );
-    (useConfiguration as Vitest.Mock).mockReturnValue({
+    (useConfiguration as Mock).mockReturnValue({
       siteMinderLogoutUrl: 'http://fakesiteminder.com',
     });
 

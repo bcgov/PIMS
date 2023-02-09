@@ -10,8 +10,7 @@ import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import useKeycloakMock from 'useKeycloakWrapperMock';
-import * as Vitest from 'vitest';
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 
 import useProject from '../common/hooks/useProject';
 import useStepForm from '../common/hooks/useStepForm';
@@ -24,7 +23,7 @@ const userAgencies: number[] = [1];
 const userAgency = 1;
 
 vi.mock('hooks/useKeycloakWrapper');
-(useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+(useKeycloakWrapper as Mock).mockReturnValue(
   new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
 );
 
@@ -65,7 +64,7 @@ describe('dispose project draft step display', () => {
   const onSave = vi.fn();
 
   beforeAll(() => {
-    (useStepper as Vitest.Mock).mockReturnValue({
+    (useStepper as Mock).mockReturnValue({
       currentStatus: mockWorkflow[4],
       project: {
         projectNumber: '',
@@ -83,10 +82,10 @@ describe('dispose project draft step display', () => {
       getNextStep: () => mockWorkflow[5],
       workflowStatuses: mockWorkflow,
     });
-    (useProject as Vitest.Mock).mockReturnValue({
+    (useProject as Mock).mockReturnValue({
       project: { projectNumber: '', statusId: 5 },
     });
-    (useStepForm as Vitest.Mock).mockReturnValue({
+    (useStepForm as Mock).mockReturnValue({
       noFetchingProjectRequests: true,
       canUserEditForm: () => true,
       canUserSubmitForm: () => true,
