@@ -15,6 +15,7 @@ import LayersControl from './LayersControl';
 vi.mock('axios');
 
 // component under test
+// eslint-disable-next-line react/prop-types
 function Template({ openByDefault = false }) {
   const [open, setOpen] = useState(openByDefault);
   return <LayersControl open={open} setOpen={() => setOpen(!open)} />;
@@ -35,9 +36,9 @@ function setup(ui = <Template />, setMap = noop) {
 
 function isLayerVisible(key: string, leaflet: any) {
   return Object.keys(leaflet._layers)
-    .map(k => leaflet._layers[k])
-    .map(x => x.options)
-    .find(options => options?.key === key);
+    .map((k) => leaflet._layers[k])
+    .map((x) => x.options)
+    .find((options) => options?.key === key);
 }
 
 describe('LayersControl View', () => {

@@ -1,15 +1,16 @@
 import { useFormikContext } from 'formik';
+import { Mock, vi } from 'vitest';
 
 import { PropertyColumns } from './PropertyColumns';
 
-jest.mock('formik', () => ({
-  useFormikContext: jest.fn(),
+vi.mock('formik', () => ({
+  useFormikContext: vi.fn(),
 }));
 
 describe('PropertyColumns', () => {
   beforeEach(() => {
-    (useFormikContext as jest.Mock).mockReturnValue({
-      setFieldValue: jest.fn(),
+    (useFormikContext as Mock).mockReturnValue({
+      setFieldValue: vi.fn(),
     });
   });
 

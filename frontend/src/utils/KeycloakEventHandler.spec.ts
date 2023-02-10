@@ -20,14 +20,14 @@ const saveJwtSpy = vi.spyOn(jwtSlice, 'saveJwt');
 const clearJwtSpy = vi.spyOn(jwtSlice, 'clearJwt');
 const setKeycloakReadySpy = vi.spyOn(keycloakReadySlice, 'setKeycloakReady');
 
-const keycloak = ({
+const keycloak = {
   subject: 'test',
   userInfo: {
     roles: [],
     agencies: ['1'],
   },
   token: '123456789',
-} as any) as KeycloakInstance;
+} as any as KeycloakInstance;
 
 const keyclockEventHandler = getKeycloakEventHandler(keycloak);
 

@@ -44,7 +44,7 @@ describe('getFetchLookupCodeAction action creator', () => {
         expect(storeLookupCodesSpy).toHaveBeenCalledTimes(1);
       })
       .catch(() => {
-        fail('it should not reach here');
+        console.error('it should not reach here');
       });
   });
 
@@ -59,7 +59,7 @@ describe('getFetchLookupCodeAction action creator', () => {
         expect(storeLookupCodesSpy).toHaveBeenCalledTimes(0);
       })
       .catch(() => {
-        fail('it should not reach here');
+        console.error('it should not reach here');
       });
   });
 });

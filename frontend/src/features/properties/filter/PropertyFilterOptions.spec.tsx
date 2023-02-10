@@ -12,7 +12,7 @@ vi.mock('axios');
 vi.mock('@react-keycloak/web');
 vi.mock('hooks/useApi');
 (useApi as Mock).mockReturnValue({
-  searchAddress: vi.fn((val: string) => {
+  searchAddress: vi.fn(() => {
     return Promise.resolve([]);
   }),
 });
@@ -32,7 +32,7 @@ const filter: IPropertyFilter = {
 
 const component = (filter: IPropertyFilter) => (
   <div>
-    <Formik initialValues={filter} onSubmit={(values, helpers) => {}}>
+    <Formik initialValues={filter} onSubmit={() => {}}>
       <PropertyFilterOptions />
     </Formik>
   </div>

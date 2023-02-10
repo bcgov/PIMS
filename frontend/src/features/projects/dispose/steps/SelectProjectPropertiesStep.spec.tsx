@@ -179,7 +179,7 @@ describe('Select Project Properties Step', () => {
     const propertyNameText = await findAllByText('Test Property');
     const selectedText = getByText('1 Selected');
     expect(selectedText).toBeInTheDocument();
-    waitFor(() => {
+    await waitFor(() => {
       expect(propertyNameText).toHaveLength(2);
     });
   });

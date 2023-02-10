@@ -12,19 +12,10 @@
     "editor.formatOnSave": true
   },
   "eslint.alwaysShowStatus": true,
-  "jest.jestCommandLine": "npm run test:watch --",
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
   "typescript.tsdk": "node_modules\\typescript\\lib",
-  "jest.autoRun": {
-    "onStartup": ["all-tests"]
-  },
-  "cSpell.words": [
-    "bbox",
-    "Formik",
-    "PIMS",
-    "siteminder"
-  ]
+  "cSpell.words": ["bbox", "Formik", "PIMS", "siteminder"]
 }

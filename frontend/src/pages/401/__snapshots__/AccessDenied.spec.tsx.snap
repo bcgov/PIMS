@@ -1,34 +1,4 @@
 // Vitest Snapshot v1
-<<<<<<<< HEAD:frontend/src/pages/401/__snapshots__/AccessDenied.spec.tsx.snap
-========
-
-exports[`AccessDenied > renders correctly 1`] = `
-<div
-  className="container-fluid"
->
-  <div
-    className="row"
-  >
-    <div
-      className="col"
-    >
-      <h1>
-        Access Denied
-      </h1>
-      <h2>
-        You do not have permission to view this page
-      </h2>
-      <a
-        href="/mapview"
-        onClick={[Function]}
-      >
-        Go back to the map
-      </a>
-    </div>
-  </div>
-</div>
-`;
->>>>>>>> ef22e273 (Changed jest to vitest, 17 tests failing):frontend/src/pages/401/__snapshots__/AccessDenied.test.tsx.snap
 
 exports[`AccessDenied > renders correctly 1`] = `
 <div

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { AccessRequestStatus } from 'constants/accessStatus';
 import Enzyme, { mount } from 'enzyme';

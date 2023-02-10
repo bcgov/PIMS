@@ -100,7 +100,7 @@ describe('SteppedForm', () => {
       fireEvent.click(jumpTo);
     });
 
-    let currentStep = await findByText('STEP: 3');
+    const currentStep = await findByText('STEP: 3');
     expect(currentStep).toBeInTheDocument();
   });
 });

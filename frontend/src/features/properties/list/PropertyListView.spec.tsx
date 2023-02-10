@@ -19,7 +19,7 @@ import service from '../service';
 import { IProperty } from '.';
 import PropertyListView from './PropertyListView';
 
-// Set all module functions to jest.fn
+// Set all module functions to vi.fn
 vi.mock('../service');
 vi.mock('hooks/useKeycloakWrapper');
 
