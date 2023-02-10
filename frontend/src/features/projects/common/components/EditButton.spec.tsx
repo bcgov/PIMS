@@ -5,6 +5,7 @@ import renderer from 'react-test-renderer';
 
 import EditButton from './EditButton';
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 const getEditButton = (setFormDisabled?: Function, formDisabled?: boolean) => {
   return <EditButton {...{ formDisabled, setFormDisabled }} />;
 };

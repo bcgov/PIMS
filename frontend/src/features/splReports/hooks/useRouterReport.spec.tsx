@@ -13,11 +13,15 @@ const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
 const getStore = () => mockStore({});
 
-const getWrapper = (store: any) => ({ children }: any) => (
-  <Provider store={store}>
-    <MemoryRouter initialEntries={[history.location]}>{children}</MemoryRouter>
-  </Provider>
-);
+const getWrapper =
+  (store: any) =>
+  // eslint-disable-next-line react/display-name
+  ({ children }: any) =>
+    (
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>{children}</MemoryRouter>
+      </Provider>
+    );
 
 const reports: IReport[] = [
   {

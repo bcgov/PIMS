@@ -39,13 +39,14 @@ interface IKeycloakMock {
  * import { Claims } from 'constants/claims';
  * import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
  * import useKeycloakMock from 'useKeycloakWrapperMock';
+ * import { Mock, vi } from 'vitest';
  *
  * const userRoles: string[] | Claims[] = [];
  * const userAgencies: number[] = [1];
  * const userAgency: number = 1;
  *
- * jest.mock('hooks/useKeycloakWrapper');
- *  (useKeycloakWrapper as jest.Mock).mockReturnValue(
+ * vi.mock('hooks/useKeycloakWrapper');
+ *  (useKeycloakWrapper as Mock).mockReturnValue(
  *    new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
  * );
  */
@@ -68,7 +69,7 @@ function useKeycloakMock(
     }
     return typeof claim === 'string'
       ? this.roles?.includes(claim)
-      : claim.some(c => this.roles?.includes(c));
+      : claim.some((c) => this.roles?.includes(c));
   };
 
   // hasRole
@@ -77,8 +78,8 @@ function useKeycloakMock(
       return false;
     }
     return typeof role === 'string'
-      ? this.roles.includes((role as unknown) as Claims)
-      : role.some(r => this.roles.includes((r as unknown) as Claims));
+      ? this.roles.includes(role as unknown as Claims)
+      : role.some((r) => this.roles.includes(r as unknown as Claims));
   };
 
   // hasAgency
@@ -89,7 +90,7 @@ function useKeycloakMock(
   // getSystemRoles
   this.getSystemRoles = (): Array<string> => {
     let systemRoles: string[] = this.roles ?? [];
-    systemRoles = systemRoles.filter(s => s.charAt(0) === s.charAt(0).toUpperCase());
+    systemRoles = systemRoles.filter((s) => s.charAt(0) === s.charAt(0).toUpperCase());
     return systemRoles ?? [];
   };
 

@@ -47,7 +47,7 @@ describe('Approval Confirmation', () => {
   });
 
   it('Next & Save buttons are disabled if permission missing on milestone steps', () => {
-    (useKeycloakWrapper as Mock).mockReturnValue({ hasClaim: (val: any) => false });
+    (useKeycloakWrapper as Mock).mockReturnValue({ hasClaim: () => false });
     const component = renderComponent(false, false, () => ({
       isMilestone: true,
     }));

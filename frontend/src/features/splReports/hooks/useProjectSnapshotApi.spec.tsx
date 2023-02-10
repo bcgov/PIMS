@@ -12,11 +12,11 @@ import { useProjectSnapshotApi } from './useProjectSnapshotApi';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
-
 const getStore = () => mockStore({});
+
 const mockedAxios = axios as Mocked<typeof axios>;
-vi.mock('axios');
 mockedAxios.create = vi.fn(() => mockedAxios);
+vi.mock('axios', () => mockedAxios);
 
 const getWrapper =
   (store: any) =>

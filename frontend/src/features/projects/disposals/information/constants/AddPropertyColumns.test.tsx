@@ -1,8 +1,10 @@
+import { vi } from 'vitest';
+
 import { AddPropertyColumns } from './AddPropertyColumns';
 
 describe('AddPropertyColumns', () => {
   it('should render the add property columns correctly', () => {
-    const onAddProperty = jest.fn();
+    const onAddProperty = vi.fn();
     const props = { onAddProperty };
     const columns = AddPropertyColumns(props);
 

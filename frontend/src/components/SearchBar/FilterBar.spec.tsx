@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import Adapter from '@cfaester/enzyme-adapter-react-18';
 import Enzyme from 'enzyme';
 import React from 'react';
@@ -8,7 +9,7 @@ import FilterBar from './FilterBar';
 Enzyme.configure({ adapter: new Adapter() });
 
 const componentRender = () => {
-  let component = create(
+  const component = create(
     <div>
       <FilterBar initialValues={{ username: 'test', firstName: 'user' }} onChange={() => {}} />
     </div>,

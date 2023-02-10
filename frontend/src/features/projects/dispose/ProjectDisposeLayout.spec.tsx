@@ -98,11 +98,9 @@ describe('dispose project draft step display', () => {
     });
   });
 
-  afterAll(() => {
-    vi.clearAllMocks();
-  });
   afterEach(() => {
     goToNextStep.mockReset();
+    vi.clearAllMocks();
   });
 
   it('stepper renders correctly based off of workflow', () => {
