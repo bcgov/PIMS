@@ -60,7 +60,6 @@ export const UserProfile: React.FC = () => {
     (!!keycloak.firstName && !!keycloak.lastName
       ? `${keycloak.firstName} ${keycloak.lastName}`
       : 'default');
-  const configuration = useConfiguration();
   const lookupCodes = useCodeLookups();
   const agencyOptions = lookupCodes.getByType(API.AGENCY_CODE_SET_NAME);
   const roles = keycloak.systemRoles?.join(', ') ?? '';
