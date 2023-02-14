@@ -521,6 +521,7 @@ const PropertyListView: React.FC = () => {
         buildingId: row.propertyTypeId === PropertyTypes.BUILDING ? row.id : undefined,
       })}`,
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const submitTableChanges = async (
