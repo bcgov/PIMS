@@ -2,7 +2,6 @@ import variables from '_variables.module.scss';
 import { ILookupCode } from 'actions/ILookupCode';
 import profileUrl from 'assets/images/profile.svg';
 import * as API from 'constants/API';
-import { useConfiguration } from 'hooks/useConfiguration';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import React from 'react';
@@ -60,7 +59,6 @@ export const UserProfile: React.FC = () => {
     (!!keycloak.firstName && !!keycloak.lastName
       ? `${keycloak.firstName} ${keycloak.lastName}`
       : 'default');
-  const configuration = useConfiguration();
   const lookupCodes = useCodeLookups();
   const agencyOptions = lookupCodes.getByType(API.AGENCY_CODE_SET_NAME);
   const roles = keycloak.systemRoles?.join(', ') ?? '';
@@ -89,7 +87,7 @@ export const UserProfile: React.FC = () => {
         </RolesBox>
         <NavDropdown.Item
           onClick={() => {
-            keycloak.obj!.logout({ redirectUri: `${configuration.baseUrl}/logout` });
+            keycloak.obj!.logout({ redirectUri: window.location.origin });
           }}
         >
           <LogoutText>
