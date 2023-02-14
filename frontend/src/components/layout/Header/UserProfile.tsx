@@ -2,6 +2,7 @@ import variables from '_variables.module.scss';
 import { ILookupCode } from 'actions/ILookupCode';
 import profileUrl from 'assets/images/profile.svg';
 import * as API from 'constants/API';
+import { useConfiguration } from 'hooks/useConfiguration';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import React from 'react';
