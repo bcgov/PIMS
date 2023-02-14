@@ -53,7 +53,11 @@ const Index = () => {
           </EmptyLayout>
         }
         onEvent={getKeycloakEventHandler(keycloak)}
-        initOptions={{ pkceMethod: 'S256', onLoad: 'check-sso' }}
+        initOptions={{
+          pkceMethod: 'S256',
+          onLoad: 'check-sso',
+          redirectUri: window.location.origin,
+        }}
       >
         <Provider store={store}>
           <AuthStateContextProvider>
