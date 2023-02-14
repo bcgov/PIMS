@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ReactKeycloakProvider } from '@react-keycloak/web';
 import { AuthStateContextProvider } from 'contexts/authStateContext';
 import { LoginLoading } from 'features/account';
+import { useConfiguration } from 'hooks/useConfiguration';
 import Keycloak from 'keycloak-js';
 import { useKeycloakInstance } from 'keycloakInstance';
 import EmptyLayout from 'layouts/EmptyLayout';
@@ -32,6 +33,7 @@ const Index = () => {
   const [loading, setLoading] = React.useState(true);
   const [keycloak, setKeycloak] = React.useState(Keycloak);
   const keycloakInstance = useKeycloakInstance();
+  const configuration = useConfiguration();
 
   React.useEffect(() => {
     setKeycloak(keycloakInstance);
@@ -56,7 +58,7 @@ const Index = () => {
         initOptions={{
           pkceMethod: 'S256',
           onLoad: 'check-sso',
-          redirectUri: window.location.origin,
+          redirectUri: configuration.keycloakRedirectURI,
         }}
       >
         <Provider store={store}>

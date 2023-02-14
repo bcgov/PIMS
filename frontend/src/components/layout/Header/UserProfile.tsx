@@ -2,6 +2,7 @@ import variables from '_variables.module.scss';
 import { ILookupCode } from 'actions/ILookupCode';
 import profileUrl from 'assets/images/profile.svg';
 import * as API from 'constants/API';
+import { useConfiguration } from 'hooks/useConfiguration';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import React from 'react';
@@ -53,6 +54,7 @@ const LogoutButton = styled(FaSignOutAlt)`
 
 /** Component that allows the user to logout, and gives information on current user's agency/roles */
 export const UserProfile: React.FC = () => {
+  const configuration = useConfiguration();
   const keycloak = useKeycloakWrapper();
   const displayName =
     keycloak.displayName ??
@@ -87,7 +89,7 @@ export const UserProfile: React.FC = () => {
         </RolesBox>
         <NavDropdown.Item
           onClick={() => {
-            keycloak.obj!.logout({ redirectUri: window.location.origin });
+            keycloak.obj!.logout({ redirectUri: configuration.keycloakRedirectURI });
           }}
         >
           <LogoutText>

@@ -6,6 +6,8 @@ export interface IConfiguration {
   keycloakId: string;
   siteMinderLogoutUrl: string | undefined;
   baseUrl: string;
+  keycloakRedirectURI: string;
+  validRefreshEndpoints: string[];
 }
 
 export const useConfiguration = (): IConfiguration => {
@@ -31,6 +33,22 @@ export const useConfiguration = (): IConfiguration => {
     return isLocal ? 'pims-local-test-4292' : 'pims-frontend-4391';
   };
 
+  const validRefreshEndpoints: string[] = [
+    '/admin/users',
+    '/admin/access/requests',
+    '/admin/administrativeAreas',
+    '/properties/list',
+    '/dispose/projects/draft',
+    '/projects/list',
+    '/projects/spl',
+    '/projects/approval/requests',
+    '/login',
+  ];
+
+  const keycloakRedirectURI: string = validRefreshEndpoints.includes(window.location.pathname)
+    ? window.location.origin + window.location.pathname
+    : window.location.origin;
+
   return {
     siteMinderLogoutUrl: process.env.REACT_APP_SITEMINDER_LOGOUT_URL,
     isTest,
@@ -39,5 +57,7 @@ export const useConfiguration = (): IConfiguration => {
     keycloakAuthUrl: getKeycloakAuthURL(),
     keycloakId: getKeycloakId(),
     baseUrl: window.location.href.split(window.location.pathname)[0],
+    keycloakRedirectURI,
+    validRefreshEndpoints,
   };
 };
