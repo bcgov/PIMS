@@ -108,7 +108,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                     dest.ExemptionApprovedOn = metadata.ExemptionApprovedOn;
                     dest.DisposedOn = metadata.DisposedOn;
                     dest.SalesCost = metadata.SalesCost;
-                    dest.NetProceeds = metadata.NetProceeds;
+                    dest.NetProceeds = metadata.NetProceeds; 
                     dest.ProgramCost = metadata.ProgramCost;
                     dest.GainLoss = metadata.GainLoss;
                     dest.SppCapitalization = metadata.SppCapitalization;
@@ -181,7 +181,7 @@ namespace Pims.Api.Areas.Project.Mapping.Dispose
                         ExemptionApprovedOn = src.ExemptionApprovedOn,
                         DisposedOn = src.DisposedOn,
                         SalesCost = src.SalesCost,
-                        NetProceeds = src.NetProceeds,
+                        NetProceeds = src.Market - src.SalesCost - src.ProgramCost - src.NetBook,
                         ProgramCost = src.ProgramCost,
                         GainLoss = src.GainLoss,
                         SppCapitalization = src.SppCapitalization,

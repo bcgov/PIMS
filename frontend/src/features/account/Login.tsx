@@ -88,7 +88,7 @@ const Login = () => {
             </p>
             <Button
               variant="primary"
-              onClick={() => keycloak.login({ redirectUri: window.location.href })}
+              onClick={() => keycloak.login({ redirectUri: window.location.origin })}
             >
               Sign In
             </Button>

@@ -1,6 +1,6 @@
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
-import { Navigate, Outlet, RouteProps, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, RouteProps } from 'react-router-dom';
 
 interface IPrivateRouteProps extends RouteProps {
   role?: string | Array<string>;
@@ -12,7 +12,6 @@ interface IPrivateRouteProps extends RouteProps {
  * @param props - Properties to pass { component, role, claim }
  */
 export const PrivateRoute = ({ role, claim, ...rest }: IPrivateRouteProps) => {
-  const location = useLocation();
   const keycloak = useKeycloakWrapper();
   if (!!keycloak.obj?.authenticated) {
     if ((!role && !claim) || keycloak.hasRole(role) || keycloak.hasClaim(claim)) {
@@ -21,8 +20,7 @@ export const PrivateRoute = ({ role, claim, ...rest }: IPrivateRouteProps) => {
       return <Navigate to="/forbidden" state={{ referer: rest.path }} />;
     }
   }
-  const redirectTo = encodeURI(`${location.pathname}${location.search}`);
-  return <Navigate to={`/login?redirect=${redirectTo}`} />;
+  return <Navigate to={`/login`} />;
 };
 
 export default PrivateRoute;
