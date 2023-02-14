@@ -3,6 +3,7 @@ import './Login.scss';
 import PIMSlogo from 'assets/images/PIMSlogo/logo_with_text.png';
 import { Jumbotron } from 'components/bootstrap';
 import * as actionTypes from 'constants/actionTypes';
+import { useConfiguration } from 'hooks/useConfiguration';
 import { IKeycloak, useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Row, Spinner } from 'react-bootstrap';
@@ -30,6 +31,7 @@ const isUsingIE = (): boolean =>
  */
 const Login = () => {
   const navigate: NavigateFunction = useNavigate();
+  const configuration = useConfiguration();
 
   if (isUsingIE()) {
     navigate('/ienotsupported');
@@ -88,7 +90,7 @@ const Login = () => {
             </p>
             <Button
               variant="primary"
-              onClick={() => keycloak.login({ redirectUri: window.location.origin })}
+              onClick={() => keycloak.login({ redirectUri: configuration.keycloakRedirectURI })}
             >
               Sign In
             </Button>
