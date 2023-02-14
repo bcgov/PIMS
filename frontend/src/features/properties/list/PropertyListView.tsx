@@ -29,6 +29,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import { FaEdit, FaFileExport, FaFolder, FaFolderOpen } from 'react-icons/fa';
 import { FaFileAlt, FaFileExcel } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAppDispatch } from 'store';
 import styled from 'styled-components';
@@ -278,6 +279,7 @@ const DirtyRowsTracker: React.FC<{ setDirtyRows: (changes: IChangedRow[]) => voi
 };
 
 const PropertyListView: React.FC = () => {
+  const navigate = useNavigate();
   const lookupCodes = useCodeLookups();
   const { updateBuilding, updateParcel } = useApi();
   const [editable, setEditable] = useState(false);
@@ -508,7 +510,7 @@ const PropertyListView: React.FC = () => {
   }
 
   const onRowClick = useCallback((row: IProperty) => {
-    window.open(
+    navigate(
       `/mapview?${queryString.stringify({
         sidebar: true,
         disabled: true,
@@ -518,8 +520,8 @@ const PropertyListView: React.FC = () => {
           : undefined,
         buildingId: row.propertyTypeId === PropertyTypes.BUILDING ? row.id : undefined,
       })}`,
-      '_blank',
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const submitTableChanges = async (

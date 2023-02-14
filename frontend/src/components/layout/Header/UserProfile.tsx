@@ -53,6 +53,7 @@ const LogoutButton = styled(FaSignOutAlt)`
 
 /** Component that allows the user to logout, and gives information on current user's agency/roles */
 export const UserProfile: React.FC = () => {
+  const configuration = useConfiguration();
   const keycloak = useKeycloakWrapper();
   const displayName =
     keycloak.displayName ??
@@ -87,7 +88,7 @@ export const UserProfile: React.FC = () => {
         </RolesBox>
         <NavDropdown.Item
           onClick={() => {
-            keycloak.obj!.logout({ redirectUri: window.location.origin });
+            keycloak.obj!.logout({ redirectUri: configuration.keycloakRedirectURI });
           }}
         >
           <LogoutText>
