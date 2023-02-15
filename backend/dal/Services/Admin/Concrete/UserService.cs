@@ -479,7 +479,7 @@ namespace Pims.Dal.Services.Admin
             {
                 return "prod";
             }
-            else if (envName == "Test")
+            else if (envName == "Testing")
             {
                 return "test";
             }
