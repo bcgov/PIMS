@@ -33,7 +33,7 @@ namespace Pims.Dal.Helpers.Extensions
             int[] userAgencies = context.UserAgencies.Where(ua => ua.UserId == userId).Select(ua => ua.AgencyId).ToArray<int>();
             int[] subAgencies = context.Agencies.Where(a => a.ParentId != null && userAgencies.Contains(a.ParentId.Value)).Select(a => a.Id).ToArray<int>();
             userAgencies = userAgencies.Concat(subAgencies).ToArray();
-
+            
             // Check if user has the ability to view sensitive properties.
             var viewSensitive = user.HasPermission(Permissions.SensitiveView);
             var isAdmin = user.HasPermission(Permissions.AdminProperties);
@@ -91,7 +91,8 @@ namespace Pims.Dal.Helpers.Extensions
                 }
                 if (filterAgencies.Any())
                 {
-                    query = query.Where(p => filterAgencies.AsEnumerable().Contains(p.AgencyId));
+                    var agencies = filterAgencies.Concat(context.Agencies.AsNoTracking().Where(a => filterAgencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => (int?)ac.Id)).ToArray()).Distinct();
+                    query = query.Where(p => agencies.Contains(p.AgencyId));
                 }
             }
             if (filter.ParcelId.HasValue)
