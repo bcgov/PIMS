@@ -13,7 +13,7 @@ export const AuthStateContext = React.createContext<IAuthState>({
 export const AuthStateContextProvider = (props: { children?: any }) => {
   const keycloak = useKeycloakWrapper();
   const [userInfo, setUserInfo] = React.useState<any>(null);
-  const keycloakReady: boolean = useAppSelector(store => store.keycloakReady);
+  const keycloakReady: boolean = useAppSelector((store) => store.keycloakReady);
 
   React.useEffect(() => {
     const loadUserInfo = async () => {
@@ -27,7 +27,6 @@ export const AuthStateContextProvider = (props: { children?: any }) => {
       // this error isn't recoverable, so just log it for debugging purposes.
       console.error(err);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keycloak.obj.token]);
 
   return (

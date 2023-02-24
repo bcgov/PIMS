@@ -53,7 +53,7 @@ test('header renders correctly', () => {
   expect(tree).toMatchSnapshot();
 });
 
-describe('UserProfile user name display', () => {
+describe.concurrent('UserProfile user name display', () => {
   it('Displays keycloak display name if available', () => {
     (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
       new (useKeycloakMock as any)([Claims.PROJECT_ADD], [], 0, true),

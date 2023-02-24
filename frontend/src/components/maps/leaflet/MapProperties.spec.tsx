@@ -26,15 +26,18 @@ import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMar
 const { ResizeObserver } = window;
 const mockAxios = new MockAdapter(axios);
 
-vi.mock('hooks/useKeycloakWrapper');
-vi.mock('hooks/useApi');
-
 Enzyme.configure({ adapter: new Adapter() });
+
 const mockStore = configureMockStore([thunk]);
 
 const userRoles: string[] | Claims[] = [];
 const userAgencies: number[] = [0];
 const userAgency = 0;
+
+vi.mock('hooks/useKeycloakWrapper');
+(useKeycloakWrapper as Vitest.Mock).mockReturnValue(
+  new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, true),
+);
 
 // This mocks the parcels of land a user can see - should be able to see 2 markers
 const mockParcels = [
@@ -42,6 +45,7 @@ const mockParcels = [
   { id: 2, latitude: 53.917065, longitude: -122.749672, propertyTypeId: 0 },
 ] as IProperty[];
 
+vi.mock('hooks/useApi');
 (useApi as unknown as Vitest.Mock<Array<Partial<PimsAPI>>>).mockReturnValue({
   loadProperties: vi.fn(async () => {
     return createPoints(mockParcels);
@@ -107,10 +111,6 @@ const noParcels = [] as IProperty[];
 
 let history = createMemoryHistory();
 describe('MapProperties View', () => {
-  (useKeycloakWrapper as Vitest.Mock).mockReturnValue(
-    new (useKeycloakMock as Vitest.Mock)(userRoles, userAgencies, userAgency),
-  );
-
   beforeEach(() => {
     window.ResizeObserver = vi.fn().mockImplementation(() => ({
       observe: vi.fn(),

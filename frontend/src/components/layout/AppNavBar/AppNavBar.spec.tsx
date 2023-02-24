@@ -36,7 +36,7 @@ const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
 });
 
-describe('AppNavBar', () => {
+describe.concurrent('AppNavBar', () => {
   afterEach(() => {
     cleanup();
   });

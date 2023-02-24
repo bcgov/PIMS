@@ -5,16 +5,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Tool-Keycloak-Sync",
-      "type": "coreclr",
-      "request": "launch",
-      "console": "internalConsole",
-      "preLaunchTask": "build",
-      "program": "${workspaceRoot}/tools/keycloak/sync/bin/Debug/net5.0/Pims.Tools.Keycloak.Sync.dll",
-      "cwd": "${workspaceRoot}/tools/keycloak/sync",
-      "stopAtEntry": false
-    },
-    {
       "name": "Tool-Converter",
       "type": "coreclr",
       "request": "launch",
@@ -22,16 +12,6 @@
       "preLaunchTask": "build",
       "program": "${workspaceRoot}/tools/converters/excel/bin/Debug/net5.0/Pims.Tools.Converters.ExcelConverter.dll",
       "cwd": "${workspaceRoot}/tools/converters/excel",
-      "stopAtEntry": false
-    },
-    {
-      "name": "Tool-Import",
-      "type": "coreclr",
-      "request": "launch",
-      "console": "internalConsole",
-      "preLaunchTask": "build",
-      "program": "${workspaceRoot}/tools/import/bin/Debug/net5.0/Pims.Tools.Import.dll",
-      "cwd": "${workspaceRoot}/tools/import",
       "stopAtEntry": false
     },
     {
