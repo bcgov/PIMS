@@ -157,7 +157,7 @@ function useKeycloakMock(
   };
 
   // Keycloak obj
-  this.obj = { authenticated: this.authenticated };
+  this.obj = { authenticated: this.authenticated, token: 'test' };
 
   return this;
 }

@@ -66,7 +66,7 @@ export function useKeycloakWrapper(): IKeycloak {
   const { keycloak: keycloakInstance } = useKeycloak();
   const userInfo = useKeycloak().keycloak.tokenParsed as IUserInfo;
   //@ts-ignore
-  const usersAgencies: number[] = useSelector(state => state.usersAgencies);
+  const usersAgencies: number[] = useSelector((state) => state.usersAgencies);
   /**
    * Determine if the user has the specified 'claim'
    * @param claim - The name of the claim
@@ -76,8 +76,8 @@ export function useKeycloakWrapper(): IKeycloak {
       return false;
     }
     return typeof claim === 'string'
-      ? userInfo?.client_roles?.some(role => role === claim)
-      : claim.some(c => userInfo?.client_roles?.some(role => role === c));
+      ? userInfo?.client_roles?.some((role) => role === claim)
+      : claim.some((c) => userInfo?.client_roles?.some((role) => role === c));
   };
 
   /**
@@ -90,7 +90,7 @@ export function useKeycloakWrapper(): IKeycloak {
     }
     return typeof role === 'string'
       ? userInfo?.client_roles?.includes(role)
-      : role.some(r => userInfo?.client_roles?.includes(r));
+      : role.some((r) => userInfo?.client_roles?.includes(r));
   };
 
   /**
@@ -114,7 +114,7 @@ export function useKeycloakWrapper(): IKeycloak {
    */
   const getSystemRoles = (): Array<string> => {
     let systemRoles: string[] = userInfo?.client_roles ?? [];
-    systemRoles = systemRoles.filter(s => s.charAt(0) === s.charAt(0).toUpperCase());
+    systemRoles = systemRoles.filter((s) => s.charAt(0) === s.charAt(0).toUpperCase());
     return systemRoles ?? [];
   };
 
@@ -240,7 +240,6 @@ export function useKeycloakWrapper(): IKeycloak {
       canUserViewProperty,
       idir_user_guid: userInfo?.idir_user_guid && convertToGuidFormat(userInfo.idir_user_guid),
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [keycloakInstance, usersAgencies.length],
   );
 }

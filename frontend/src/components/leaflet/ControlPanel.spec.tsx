@@ -20,7 +20,7 @@ const setup = (ui = <Template />) => {
   return { component, ready: promise };
 };
 
-describe('React Leaflet ControlPanel', () => {
+describe.concurrent('React Leaflet ControlPanel', () => {
   afterEach(cleanup);
 
   it('renders correctly', () => {

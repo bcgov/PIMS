@@ -1,14 +1,18 @@
 import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { fireEvent } from '@testing-library/dom';
 import { act, render } from '@testing-library/react';
+import { Persist } from 'components/common/FormikPersist';
 import Enzyme from 'enzyme';
 import React from 'react';
 import { Button, Container } from 'react-bootstrap';
+import { vi } from 'vitest';
 
 import { Input } from '..';
 import { SteppedForm, useFormStepper } from '.';
 
 Enzyme.configure({ adapter: new Adapter() });
+
+vi.mock('components/common/FormikPersist');
 
 const FormContentComponent = () => {
   const stepper = useFormStepper();
@@ -59,11 +63,12 @@ const Component = () => {
   );
 };
 
-describe('SteppedForm', () => {
+describe.concurrent('SteppedForm', () => {
   it('component renders correctly', () => {
     const { container } = render(<Component />);
     expect(container.firstChild).toMatchSnapshot();
   });
+
   it('back on step 0 doesnt throw an error', () => {
     const { getByText } = render(<Component />);
     const backButton = getByText('Back');
@@ -73,6 +78,7 @@ describe('SteppedForm', () => {
     const currentStep = getByText('STEP: 0');
     expect(currentStep).toBeInTheDocument();
   });
+
   it('goes to the next page', async () => {
     const { getByText, findByText } = render(<Component />);
     const nextButton = getByText('Next Step');
@@ -82,6 +88,7 @@ describe('SteppedForm', () => {
     const currentStep = await findByText('STEP: 1');
     expect(currentStep).toBeInTheDocument();
   });
+
   it('does not change page if next and back are clicked', async () => {
     const { findByText, getByText } = render(<Component />);
     const nextButton = getByText('Next Step');
@@ -93,6 +100,7 @@ describe('SteppedForm', () => {
     const currentStep = getByText('STEP: 0');
     expect(currentStep).toBeInTheDocument();
   });
+
   it('jumps to a step', async () => {
     const { getByText, findByText } = render(<Component />);
     const jumpTo = getByText('Go to');

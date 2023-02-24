@@ -399,7 +399,7 @@ const getParcels = (initialValues: IAssociatedLand): IParcel[] => {
   const parcels: IParcel[] = [];
   let parcelIndex = 0;
   if (initialValues?.leasedLandMetadata?.length) {
-    initialValues?.leasedLandMetadata?.forEach(llm => {
+    initialValues?.leasedLandMetadata?.forEach((llm) => {
       if (llm.type === LeasedLandTypes.owned && parcelIndex < initialValues.parcels.length) {
         parcels.push(initialValues.parcels[parcelIndex++]);
       } else {
@@ -430,7 +430,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
   const [numParcels, setNumParcels] = useState(1);
   const [progress, setProgress] = useState(0);
   const parcels =
-    getParcels(props.initialValues as any)?.map(p => ({
+    getParcels(props.initialValues as any)?.map((p) => ({
       ...p,
       fiscals: getMergedFinancials(p?.fiscals ?? [], Object.values(FiscalKeys)),
       evaluations: getMergedFinancials(p?.evaluations ?? [], Object.values(EvaluationKeys)),
@@ -566,7 +566,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
             <p>2</p>
             <Button
               onClick={() => {
-                const parcels = [...Array(numParcels)].map(n => ({
+                const parcels = [...Array(numParcels)].map((n) => ({
                   ...getInitialLandValues(),
                   agencyId: keycloak.agencyId,
                 }));
@@ -574,7 +574,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
                 const incrementProgress = () =>
                   setTimeout(() => {
                     let currentProgess = 0;
-                    setProgress(p => {
+                    setProgress((p) => {
                       currentProgess = p;
                       return ++p;
                     });
@@ -684,7 +684,7 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
           validateOnChange={false}
           validateOnBlur={true}
           formikRef={props.formikRef}
-          onSubmit={async (values, actions) => {
+          onSubmit={async (values) => {
             submit(values, true);
           }}
           tabLineHeader={'Parcels: '}
