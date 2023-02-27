@@ -424,6 +424,29 @@ namespace Pims.Dal.Services.Admin
         }
 
         /// <summary>
+        /// Get user roles from Keycloak
+        /// </summary>
+        public async Task<IEnumerable<string>> GetRolesAsync()
+        {
+            // TODO: Iterate on the following to make this D.R.Y.
+            HttpClient _httpClient = new HttpClient();
+            string token = await GetToken();
+
+            string frontendId = this.configuration["Keycloak:FrontendClientId"].Split("-").Last();
+
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"https://api.loginproxy.gov.bc.ca/api/v1/integrations/{frontendId}/{getEnv()}/roles");
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            HttpResponseMessage response = await _httpClient.SendAsync(request);
+            if (!response.IsSuccessStatusCode) throw new Exception("Unable to get roles from Keycloak Gold");
+            string payload = await response.Content.ReadAsStringAsync();
+
+            JsonDocument json = JsonDocument.Parse(payload);
+            IEnumerable<string> roles = json.RootElement.GetProperty("data").EnumerateArray().Select(r => r.GetProperty("name").GetString());
+
+            return roles;
+        }
+
+        /// <summary>
         /// Add a role to the given user in Keycloak Gold
         /// </summary>
         /// <param name="preferred_username"></param>

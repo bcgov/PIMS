@@ -8,11 +8,15 @@ import { IUserDetailParams } from 'constants/API';
 import * as API from 'constants/API';
 import { Field, Formik } from 'formik';
 import useCodeLookups from 'hooks/useLookupCodes';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, ButtonToolbar, Col, Container, Navbar, Row } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchUserDetail, getUpdateUserAction } from 'store/slices/hooks/usersActionCreator';
+import {
+  fetchUserDetail,
+  getRoles,
+  getUpdateUserAction,
+} from 'store/slices/hooks/usersActionCreator';
 import { formatApiDateTime } from 'utils';
 import { UserUpdateSchema } from 'utils/YupSchema';
 
@@ -28,13 +32,17 @@ const EditUserPage = (props: IEditUserPageProps) => {
   const userId = params.id ? JSON.stringify(params.id).slice(1, -1) : '';
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [keycloakRoles, setKeycloakRoles] = useState<string[]>([]);
+
   useEffect(() => {
     fetchUserDetail({ id: userId })(dispatch);
+    getRoles().then(data => {
+      setKeycloakRoles(data);
+    });
   }, [dispatch, userId]);
 
   const { getByType } = useCodeLookups();
   const agencies = getByType(API.AGENCY_CODE_SET_NAME);
-  const roles = getByType(API.ROLE_CODE_SET_NAME);
 
   const user = useAppSelector(store => store.users.user);
   const mapLookupCode = (code: ILookupCode): SelectOption => ({
@@ -220,7 +228,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
                   </ButtonToolbar>
                 </Row>
                 <hr></hr>
-                <UserRoleSelector options={roles.map(r => r.name)} />
+                <UserRoleSelector options={keycloakRoles.map(r => r)} />
               </Form>
             )}
           </Formik>

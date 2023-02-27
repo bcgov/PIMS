@@ -176,6 +176,22 @@ namespace Pims.Api.Areas.Admin.Controllers
         }
 
         /// <summary>
+        /// POST - Get all roles from the Keycloak Gold API.
+        /// </summary>
+        /// <returns>JSON Array of the user roles.</returns>
+        [HttpGet("getroles")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.UserModel), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "admin-user" })]
+        public IActionResult GetRoles()
+        {
+            var res = _pimsAdminService.User.GetRolesAsync().Result;
+            return new JsonResult(res);
+
+        }
+
+        /// <summary>
         /// DELETE - Remove a role from the user by calling the Keycloak Gold API.
         /// </summary>
         /// <param name="username">The user's username</param>

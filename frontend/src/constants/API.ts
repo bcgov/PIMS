@@ -104,6 +104,7 @@ export const KEYCLOAK_USER_UPDATE = (params: IUserDetailParams) => `/keycloak/us
 export const ADMIN_USER_UPDATE = (params: IUserDetailParams) => `/admin/users/${params.id}`;
 export const USERS_AGENCIES = (params: IUserAgenciesParams) => `/users/agencies/${params.username}`;
 export const UPDATE_ROLE = (username: string) => `/admin/users/role/${username}`;
+export const GET_KEYCLOAK_ROLES = () => `/admin/users/getroles`;
 export interface IBuildingDetailParams {
   id: number;
 }
