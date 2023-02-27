@@ -26,7 +26,8 @@ export const useMyAgencies = (): SelectOption[] => {
     return (
       keycloak.hasClaim(Claims.PROJECT_VIEW) ||
       keycloak.hasClaim(Claims.DISPOSE_APPROVE) ||
-      keycloak.hasClaim(Claims.ADMIN_PROJECTS)
+      keycloak.hasClaim(Claims.ADMIN_PROJECTS) ||
+      keycloak.hasClaim(Claims.VIEW_ONLY_PROPERTIES)
     );
   }, [keycloak]);
 
