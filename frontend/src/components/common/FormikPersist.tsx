@@ -46,12 +46,12 @@ class PersistImpl extends React.Component<
     if (this.props.isSessionStorage) {
       window.sessionStorage.setItem(
         this.props.name,
-        AES.encrypt(JSON.stringify(versionedStorage), this.props.secret).toString(),
+        AES.encrypt(JSON.stringify(versionedStorage), this.props.secret ?? '').toString(),
       );
     } else {
       window.localStorage.setItem(
         this.props.name,
-        AES.encrypt(JSON.stringify(versionedStorage), this.props.secret).toString(),
+        AES.encrypt(JSON.stringify(versionedStorage), this.props.secret ?? '').toString(),
       );
     }
   }, this.props.debounce);
@@ -62,7 +62,7 @@ class PersistImpl extends React.Component<
       : window.localStorage.getItem(this.props.name);
     if (maybeState && maybeState !== null) {
       try {
-        const bytes = AES.decrypt(maybeState, this.props.secret);
+        const bytes = AES.decrypt(maybeState, this.props.secret ?? '');
         const decryptedData: VersionedStorage = JSON.parse(bytes.toString(enc.Utf8));
         if (decryptedData.version !== packageJson.version) {
           this.discardForm();
@@ -112,24 +112,26 @@ class PersistImpl extends React.Component<
   render() {
     return (
       <>
-        {/** normally not required, this bypasses a snapshot test rendering issue */
-        this.state.showLoadDraftDialog && (
-          <GenericModal
-            title="Load Draft?"
-            message="You have an unsaved draft, would you like to resume editing it?"
-            cancelButtonText="Discard"
-            okButtonText="Resume Editing"
-            display={this.state.showLoadDraftDialog}
-            handleOk={() => {
-              this.setState({ showLoadDraftDialog: false });
-              this.props.persistCallback(this.loadForm());
-            }}
-            handleCancel={() => {
-              this.setState({ showLoadDraftDialog: false });
-              this.discardForm();
-            }}
-          />
-        )}
+        {
+          /** normally not required, this bypasses a snapshot test rendering issue */
+          this.state.showLoadDraftDialog && (
+            <GenericModal
+              title="Load Draft?"
+              message="You have an unsaved draft, would you like to resume editing it?"
+              cancelButtonText="Discard"
+              okButtonText="Resume Editing"
+              display={this.state.showLoadDraftDialog}
+              handleOk={() => {
+                this.setState({ showLoadDraftDialog: false });
+                this.props.persistCallback(this.loadForm());
+              }}
+              handleCancel={() => {
+                this.setState({ showLoadDraftDialog: false });
+                this.discardForm();
+              }}
+            />
+          )
+        }
       </>
     );
   }

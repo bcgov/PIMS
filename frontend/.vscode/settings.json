@@ -16,6 +16,5 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "typescript.tsdk": "node_modules\\typescript\\lib",
-  "cSpell.words": ["bbox", "Formik", "PIMS", "siteminder"]
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }
