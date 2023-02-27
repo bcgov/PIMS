@@ -13,6 +13,7 @@ export enum Claims {
   ADMIN_ROLES = 'admin-roles',
   ADMIN_PROPERTIES = 'admin-properties',
   ADMIN_PROJECTS = 'admin-projects',
+  VIEW_ONLY_PROPERTIES = 'view-only-properties',
   PROJECT_VIEW = 'project-view',
   PROJECT_EDIT = 'project-edit',
   PROJECT_ADD = 'project-add',
