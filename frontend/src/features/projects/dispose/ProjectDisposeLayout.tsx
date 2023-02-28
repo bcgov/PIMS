@@ -12,7 +12,8 @@ import { Container, Spinner } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'store';
 
-import { clearProject, SresManual, updateWorkflowStatus, useStepForm } from '../common';
+import { SresManual, updateWorkflowStatus, useStepForm } from '../common';
+import { clearProject } from '../common/slices/projectSlice';
 import { GeneratedDisposeStepper, StepActions, useStepper } from '.';
 
 /**
@@ -24,20 +25,10 @@ const ProjectDisposeLayout = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const formikRef = useRef<FormikValues>();
-  const {
-    goToNextStep,
-    project,
-    getNextStep,
-    currentStatus,
-    setCurrentStatus,
-    workflowStatuses,
-  } = useStepper();
-  const {
-    onSave,
-    addOrUpdateProject,
-    noFetchingProjectRequests,
-    getProjectRequest,
-  } = useStepForm();
+  const { goToNextStep, project, getNextStep, currentStatus, setCurrentStatus, workflowStatuses } =
+    useStepper();
+  const { onSave, addOrUpdateProject, noFetchingProjectRequests, getProjectRequest } =
+    useStepForm();
   const projectNumber = queryString.parse(location?.search).projectNumber;
 
   const updateProjectStatus = (
@@ -69,7 +60,7 @@ const ProjectDisposeLayout = () => {
         });
     } else {
       //if we are updating a previous step, just update the project with no status change.
-      return addOrUpdateProject(project, formikRef).then(project => {
+      return addOrUpdateProject(project, formikRef).then((project) => {
         goToNextStep(project);
         return project;
       });
@@ -103,7 +94,7 @@ const ProjectDisposeLayout = () => {
         if (values.id === undefined) {
           promise = addOrUpdateProject(values, formikRef);
         }
-        return promise.then(project => {
+        return promise.then((project) => {
           return updateProjectStatus(project as IProject, nextStepCode!, workflowStatusCode);
         });
       }
@@ -115,7 +106,9 @@ const ProjectDisposeLayout = () => {
   };
 
   useEffect(() => {
-    let statusAtRoute = _.find(workflowStatuses, ({ route }) => location.pathname.includes(route));
+    const statusAtRoute = _.find(workflowStatuses, ({ route }) =>
+      location.pathname.includes(route),
+    );
     if (setCurrentStatus && noFetchingProjectRequests) setCurrentStatus(statusAtRoute);
   }, [
     location.pathname,
@@ -148,7 +141,7 @@ const ProjectDisposeLayout = () => {
           ) : null}
           {getProjectRequest?.isFetching !== true ? (
             <Container fluid className="step-content">
-              {projectWorkflowComponents.map(wfc =>
+              {projectWorkflowComponents.map((wfc) =>
                 getComponentPath(wfc) === window.location.pathname ? (
                   <div key={wfc.workflowStatus}>
                     <>

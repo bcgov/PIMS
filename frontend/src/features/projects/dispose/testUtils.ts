@@ -5,7 +5,7 @@ import { INotification, IProject, IProjectTask, ITask } from 'features/projects/
 import { WorkflowStatus } from 'hooks/api/projects';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { getCurrentFiscalYear } from 'utils';
+import { getCurrentFiscalYear } from 'utils/utils';
 
 import { NoteTypes, PropertyTypes } from '../../../constants';
 

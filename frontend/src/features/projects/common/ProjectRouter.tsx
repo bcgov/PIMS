@@ -11,7 +11,9 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'store';
 
-import { clearProject, fetchProject, fetchProjectWorkflow, useProject } from '../common';
+import { useProject } from '../common';
+import { clearProject } from '../common/slices/projectSlice';
+import { fetchProject, fetchProjectWorkflow } from './projectsActionCreator';
 
 /**
  * Top level component ensures proper context provided to child assessment form pages.
@@ -23,7 +25,7 @@ export const ProjectRouter = () => {
   const keycloak = useKeycloakWrapper();
   const { project } = useProject();
   const getProjectRequest = useAppSelector(
-    store => (store.network.requests as any)[ProjectActions.GET_PROJECT_WORKFLOW],
+    (store) => (store.network.requests as any)[ProjectActions.GET_PROJECT_WORKFLOW],
   );
   const location = useLocation();
   const query = location?.search ?? {};
