@@ -17,7 +17,7 @@ import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import useKeycloakMock from 'useKeycloakWrapperMock';
-import Vitest, { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 
 import Map from './Map';
 import { createPoints } from './mapUtils';
@@ -35,9 +35,6 @@ const userAgencies: number[] = [0];
 const userAgency = 0;
 
 vi.mock('hooks/useKeycloakWrapper');
-(useKeycloakWrapper as Vitest.Mock).mockReturnValue(
-  new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, true),
-);
 
 // This mocks the parcels of land a user can see - should be able to see 2 markers
 const mockParcels = [
@@ -46,7 +43,7 @@ const mockParcels = [
 ] as IProperty[];
 
 vi.mock('hooks/useApi');
-(useApi as unknown as Vitest.Mock<Array<Partial<PimsAPI>>>).mockReturnValue({
+(useApi as unknown as Mock<Array<Partial<PimsAPI>>>).mockReturnValue({
   loadProperties: vi.fn(async () => {
     return createPoints(mockParcels);
   }),
@@ -117,6 +114,10 @@ describe('MapProperties View', () => {
       unobserve: vi.fn(),
       disconnect: vi.fn(),
     }));
+
+    (useKeycloakWrapper as Mock).mockReturnValue(
+      new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, false),
+    );
 
     mockAxios.reset();
     vi.clearAllMocks();
@@ -197,7 +198,7 @@ describe('MapProperties View', () => {
     mount(getMap(mapRef, noParcels, emptyDetails));
 
     const { loadProperties } = useApi();
-    const bbox = (loadProperties as Vitest.Mock).mock.calls.map((call) => call[0].bbox);
+    const bbox = (loadProperties as Mock).mock.calls.map((call) => call[0].bbox);
     const expectedBbox = [
       '-146.25,-135,55.77657301866769,61.60639637138628',
       '-146.25,-135,48.922499263758255,55.77657301866769',
@@ -229,7 +230,7 @@ describe('MapProperties View', () => {
 
     const { loadProperties } = useApi();
     await waitFor(() => expect(loadProperties).toHaveBeenCalledTimes(18), { timeout: 500 });
-    expect((loadProperties as Vitest.Mock).mock.calls[9][0].name).toBe('testname');
+    expect((loadProperties as Mock).mock.calls[9][0].name).toBe('testname');
   });
 
   test.skip('filter will fire everytime the search button is clicked', async () => {
@@ -266,6 +267,6 @@ describe('MapProperties View', () => {
     fireEvent.click(resetButton!);
     await waitFor(() => expect(loadProperties).toHaveBeenCalledTimes(18), { timeout: 500 });
 
-    expect((loadProperties as Vitest.Mock).mock.calls[18][0].name).toBe('');
+    expect((loadProperties as Mock).mock.calls[18][0].name).toBe('');
   });
 });
