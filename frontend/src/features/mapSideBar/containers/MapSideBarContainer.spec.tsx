@@ -19,12 +19,11 @@ import { Mock, vi } from 'vitest';
 
 import MapSideBarContainer from './MapSideBarContainer';
 
-vi.mock('react-visibility-sensor', (): typeof VisibilitySensor =>
-  // eslint-disable-next-line react/display-name
-  ({ children, ...rest }: any) => (
+vi.mock('react-visibility-sensor', (): { default: typeof VisibilitySensor } => ({
+  default: ({ children, ...rest }: any) => (
     <div {...rest}>{typeof children === 'function' ? children({ isVisible: true }) : children}</div>
   ),
-);
+}));
 const mockAxios = new MockAdapter(axios);
 
 vi.mock('hooks/useKeycloakWrapper');

@@ -14,10 +14,6 @@ const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
 const getStore = () => mockStore({});
 
-const mockedAxios = axios as Mocked<typeof axios>;
-mockedAxios.create = vi.fn(() => mockedAxios);
-vi.mock('axios', () => mockedAxios);
-
 const getWrapper =
   (store: any) =>
   // eslint-disable-next-line react/display-name
@@ -29,12 +25,19 @@ const getWrapper =
     );
 
 describe('useProjectSnapshotApi hook tests', () => {
+  let mockedAxios: Mocked<typeof axios>;
+
   beforeEach(() => {
+    mockedAxios = axios as Mocked<typeof axios>;
+    mockedAxios.create = vi.fn(() => mockedAxios);
+    vi.mock('axios', () => mockedAxios);
+
     mockedAxios.get.mockReset();
     mockedAxios.post.mockReset();
     mockedAxios.put.mockReset();
     mockedAxios.delete.mockReset();
   });
+
   it('It will call /reports when getProjectReports called', () => {
     mockedAxios.get.mockResolvedValue({ data: [] });
     renderHook(() => useProjectSnapshotApi().getProjectReports(), {
@@ -42,6 +45,7 @@ describe('useProjectSnapshotApi hook tests', () => {
     });
     expect(mockedAxios.get).toHaveBeenCalledWith<[string]>('');
   });
+
   it('It will call /reports/snapshots/{id} when getProjectReportSnapshotsById called', () => {
     mockedAxios.get.mockResolvedValue({ data: {} });
     renderHook(() => useProjectSnapshotApi().getProjectReportSnapshotsById(1), {
@@ -49,6 +53,7 @@ describe('useProjectSnapshotApi hook tests', () => {
     });
     expect(mockedAxios.get).toHaveBeenCalledWith('snapshots/1');
   });
+
   it('It will call /reports/snapshots/{snapshot} when getProjectReportSnapshots called', () => {
     mockedAxios.post.mockResolvedValue({ data: [] });
     renderHook(() => useProjectSnapshotApi().getProjectReportSnapshots({ id: 1 } as any), {
@@ -56,6 +61,7 @@ describe('useProjectSnapshotApi hook tests', () => {
     });
     expect(mockedAxios.post).toHaveBeenCalledWith('snapshots/1', { id: 1 });
   });
+
   it('It will call /reports/refresh/{report.id} when refreshProjectReportSnapshots called', () => {
     mockedAxios.get.mockResolvedValue({ data: [] });
     renderHook(() => useProjectSnapshotApi().refreshProjectReportSnapshots({ id: 1 } as any), {
@@ -63,6 +69,7 @@ describe('useProjectSnapshotApi hook tests', () => {
     });
     expect(mockedAxios.get).toHaveBeenCalledWith('refresh/1');
   });
+
   it('It will call HTTP DELETE /reports/{report.id} when deleteProjectReport called', () => {
     mockedAxios.delete.mockResolvedValue({ data: {} });
     renderHook(() => useProjectSnapshotApi().deleteProjectReport({ id: 1 } as any), {
@@ -70,6 +77,7 @@ describe('useProjectSnapshotApi hook tests', () => {
     });
     expect(mockedAxios.delete).toHaveBeenCalledWith('/1', { data: { id: 1 } });
   });
+
   it('It will call HTTP POST /reports/{report.id} when addProjectReport called', () => {
     mockedAxios.post.mockResolvedValue({ data: {} });
     renderHook(() => useProjectSnapshotApi().addProjectReport({ id: 1 } as any), {
@@ -77,6 +85,7 @@ describe('useProjectSnapshotApi hook tests', () => {
     });
     expect(mockedAxios.post).toHaveBeenCalledWith('', { data: { id: 1 } });
   });
+
   it('It will call HTTP PUT /reports/{report.id} when updateProjectReport called', () => {
     mockedAxios.put.mockResolvedValue({ data: {} });
     renderHook(() => useProjectSnapshotApi().updateProjectReport({ id: 1 } as any), {

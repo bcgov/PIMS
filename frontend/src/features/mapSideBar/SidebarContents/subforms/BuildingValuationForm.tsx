@@ -16,6 +16,7 @@ export const BuildingValuationForm: React.FC<ITenancyProps> = ({
   nameSpace,
   disabled,
 }) => {
+  // eslint-disable-next-line @typescript-eslint/ban-types
   const withNameSpace: Function = React.useCallback(
     (name?: string) => {
       return [nameSpace ?? '', name].filter((x) => x).join('.');

@@ -16,6 +16,23 @@ import { Mock, vi } from 'vitest';
 
 import ReviewProjectStep from './ReviewProjectStep';
 
+vi.mock('react-text-mask', () => {
+  type MockedMaskedInputProps = {
+    mask?: any;
+    guide?: boolean;
+    value?: string;
+    placeholder?: string;
+    render?: any;
+  };
+
+  return {
+    __esModule: true,
+    default: ({ render, ...otherProps }: MockedMaskedInputProps) =>
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      render ? render(() => {}, otherProps) : <input {...otherProps} />,
+  };
+});
+
 const userRoles: string[] | Claims[] = [];
 const userAgencies: number[] = [1];
 const userAgency = 1;

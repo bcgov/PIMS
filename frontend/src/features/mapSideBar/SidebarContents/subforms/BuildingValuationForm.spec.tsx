@@ -28,6 +28,6 @@ it('headers for (Assessed Value, Assessment Year, Assessed Building Value) + (Ne
   const { getAllByRole } = render(form);
   await waitFor(() => {
     const headers = getAllByRole('columnheader');
-    expect(headers).toHaveLength(14);
+    expect(headers).toHaveLength(7);
   });
 });

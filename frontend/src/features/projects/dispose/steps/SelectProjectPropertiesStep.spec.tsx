@@ -176,10 +176,10 @@ describe('Select Project Properties Step', () => {
     const backPageButton = getByLabelText('Page 1');
     fireEvent.click(backPageButton);
     //ensure that the property is in both tables.
-    const propertyNameText = await findAllByText('Test Property');
     const selectedText = getByText('1 Selected');
     expect(selectedText).toBeInTheDocument();
-    await waitFor(() => {
+    await waitFor(async () => {
+      const propertyNameText = await findAllByText('Test Property');
       expect(propertyNameText).toHaveLength(2);
     });
   });
