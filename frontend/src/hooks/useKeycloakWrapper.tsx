@@ -187,7 +187,11 @@ export function useKeycloakWrapper(): IKeycloak {
   const canUserEditProperty = (property: IProperty | null): boolean => {
     const ownsProperty = !!property?.agencyId && hasAgency(property.agencyId);
     const notInProject = !_.some(property?.projectNumbers ?? '', _.method('includes', 'SPP'));
-    return !!property && (isAdmin || (canEdit && ownsProperty && notInProject));
+    return (
+      !!property &&
+      (isAdmin || (canEdit && ownsProperty && notInProject)) &&
+      !hasClaim(Claims.VIEW_ONLY_PROPERTIES)
+    );
   };
 
   /**
@@ -202,7 +206,8 @@ export function useKeycloakWrapper(): IKeycloak {
       !!property &&
       (isAdmin ||
         (canDelete && ownsProperty && notInProject) ||
-        (isSubdivision && canEdit && ownsProperty && notInProject))
+        (isSubdivision && canEdit && ownsProperty && notInProject)) &&
+      !hasClaim(Claims.VIEW_ONLY_PROPERTIES)
     );
   };
 
