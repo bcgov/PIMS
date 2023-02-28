@@ -11,7 +11,7 @@ import * as API from 'constants/API';
 import { ENVIRONMENT } from 'constants/environment';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
-import { PropertyTypes } from 'constants/index';
+import { Claims, PropertyTypes } from 'constants/index';
 import { Roles } from 'constants/roles';
 import {
   getCurrentFiscal,
@@ -680,7 +680,7 @@ const PropertyListView: React.FC = () => {
           )}
           <VerticalDivider />
 
-          {!editable && (
+          {!editable && !keycloak.hasClaim(Claims.VIEW_ONLY_PROPERTIES) && (
             <TooltipWrapper toolTipId="edit-financial-values" toolTip={'Edit financial values'}>
               <EditIconButton>
                 <FaEdit data-testid="edit-icon" size={36} onClick={() => setEditable(!editable)} />
