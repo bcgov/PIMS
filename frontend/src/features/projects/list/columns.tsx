@@ -39,21 +39,54 @@ export const columns = (
       width: spacing.small,
       minWidth: 65,
       Cell: (props: CellProps<IProject>) => {
+        /**
+         * @description This function dictates whether or not to display the Trash Icon in the View Disposal Projects table.
+         *              If the current environment is not production, the app will allow the user to delete a project that has been approved,
+         *              granted that they have the correct permissions. The deletion of approved projects in non-production environments is helpful when testing.
+         *
+         * @author Zach Bourque <Zachary.Bourque@gov.bc.ca>
+         * @returns {boolean} - Whether or not to display the delete disposal project trash icon
+         *
+         * @example
+         * return showTrashIcon() ? <TrashIcon /> : "";
+         */
+
+        const isTrashIconVisible = (): boolean => {
+          /* 
+            If the current environment is production, only show the icon if one of the following is true:
+            - The project is owned by the user
+            - The user is an admin
+            - The user has the projcetEditClaim
+             AND IF the project is in review
+          */
+          if (process.env.NODE_ENV === 'production') {
+            return (
+              !!onDelete &&
+              props.row.original.workflowCode === Workflows.SUBMIT_DISPOSAL &&
+              (projectEditClaim || isAdmin || user === props.row.original.createdBy)
+            );
+          }
+          // Otherwise show the delete icon as long as the user has the correct permissions
+          return (
+            (props.row.original.workflowCode === Workflows.SUBMIT_DISPOSAL && projectEditClaim) ||
+            isAdmin ||
+            user === props.row.original.createdBy
+          );
+        };
         return (
           <div>
-            {/* delete icon will be shown only if the project is still in draft and they have the edit claim, or an admin claim, or they created the project */}
-            {!!onDelete &&
-              props.row.original.workflowCode === Workflows.SUBMIT_DISPOSAL &&
-              (projectEditClaim || isAdmin || user === props.row.original.createdBy) && (
-                <FaTrash
-                  data-testid={`trash-icon-${props.row.original.projectNumber}`}
-                  style={{ marginRight: 10, cursor: 'pointer' }}
-                  onClick={(e: any) => {
-                    e.stopPropagation();
-                    onDelete(props.row.original.projectNumber);
-                  }}
-                />
-              )}
+            {isTrashIconVisible() ? (
+              <FaTrash
+                data-testid={`trash-icon-${props.row.original.projectNumber}`}
+                style={{ marginRight: 10, cursor: 'pointer' }}
+                onClick={(e: any) => {
+                  e.stopPropagation();
+                  onDelete?.(props.row.original.projectNumber);
+                }}
+              />
+            ) : (
+              ''
+            )}
             <span>{props.row.original.projectNumber}</span>
           </div>
         );
