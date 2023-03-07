@@ -1,4 +1,5 @@
 using System.Collections;
+using System.ComponentModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
@@ -543,6 +544,24 @@ namespace Pims.Dal.Services
                 .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
             var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
             bool isAdmin = this.User.HasPermission(Permissions.AdminProjects);
+            
+            // Only add functionality for removing Approved Disposal Projects if the current environment is not production
+            string env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            if (!env.IsProduction())
+            {
+                // If the project has been submitted, we need to remove any reference to the project 
+                // from the notification queue table before deleting the project itself
+                IQueryable<NotificationQueue> notifications = this.Context.NotificationQueue.Where(n => n.ProjectId == project.Id || n.ProjectId.ToString() == project.ProjectNumber);
+
+                // NotificationQueue stores several records for each approved project. This is due to the number of people needing to be CC'd
+                notifications.ForEach(n =>
+                {
+                  /*  this.Context.NotificationQueue.Remove(n);
+                    _notifyService.CancelAsync(n); */
+                });
+
+            }
+
             var originalProject = this.Context.Projects
                 .Include(p => p.Status)
                 .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Parcels)
@@ -551,7 +570,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Properties).ThenInclude(p => p.Building)
                 .Include(p => p.Tasks)
                 .Include(p => p.Workflow)
-                .SingleOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
+                .SingleOrDefault(p => p.Id == project.Id || p.ProjectNumber == project.ProjectNumber) ?? throw new KeyNotFoundException();
 
             if (!originalProject.IsProjectInDraft(_options.Project))
             {
