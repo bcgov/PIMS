@@ -1,5 +1,6 @@
 import { ColumnWithProps } from 'components/Table';
 import { Workflows } from 'constants/workflows';
+import { useConfiguration } from 'hooks/useConfiguration';
 import React from 'react';
 import { FaTrash } from 'react-icons/fa';
 import { CellProps } from 'react-table';
@@ -23,12 +24,13 @@ const spacing = {
   xxlarge: unit * 8,
 };
 
-export const columns = (
+export const Columns = (
   onDelete?: (id: string) => void,
   isAdmin?: boolean,
   projectEditClaim?: boolean,
   user?: string,
 ): ColumnWithProps<IProject>[] => {
+  const { isProduction } = useConfiguration();
   return [
     {
       Header: 'Project No.',
@@ -59,7 +61,7 @@ export const columns = (
             - The user has the projcetEditClaim
              AND IF the project is in review
           */
-          if (process.env.NODE_ENV === 'production') {
+          if (isProduction) {
             return (
               !!onDelete &&
               props.row.original.workflowCode === Workflows.SUBMIT_DISPOSAL &&
@@ -68,9 +70,8 @@ export const columns = (
           }
           // Otherwise show the delete icon as long as the user has the correct permissions
           return (
-            (props.row.original.workflowCode === Workflows.SUBMIT_DISPOSAL && projectEditClaim) ||
-            isAdmin ||
-            user === props.row.original.createdBy
+            /* props.row.original.workflowCode === Workflows.SUBMIT_DISPOSAL &&*/
+            projectEditClaim || isAdmin || user === props.row.original.createdBy
           );
         };
         return (

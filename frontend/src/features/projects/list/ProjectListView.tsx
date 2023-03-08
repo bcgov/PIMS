@@ -38,7 +38,7 @@ import {
 } from '../common';
 import { toFlatProject } from '../common/projectConverter';
 import { IProject, IProjectFilter } from '.';
-import { columns as cols } from './columns';
+import { Columns as cols } from './columns';
 import { Properties } from './properties';
 
 interface IProjectFilterState {
