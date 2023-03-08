@@ -8,7 +8,7 @@ objects:
 - kind: RoleBinding
   apiVersion: rbac.authorization.k8s.io/v1
   metadata:
-    name: citz-imb-developers-edit
+    name: citz-imb-developers-github-edit
     namespace: ${LICENSE_PLATE}-${ENVIRONMENT}
   subjects:
     - kind: User
@@ -40,4 +40,4 @@ parameters:
     displayName: License Plate
     name: LICENSE_PLATE
     required: true
-    value: 354028
+    value: "354028"
