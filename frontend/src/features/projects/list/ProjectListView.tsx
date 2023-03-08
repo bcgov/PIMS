@@ -23,6 +23,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Container } from 'react-bootstrap';
 import { Col } from 'react-bootstrap';
 import { FaFileAlt, FaFileExcel, FaFolder, FaFolderOpen } from 'react-icons/fa';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import styled from 'styled-components';
@@ -37,7 +38,7 @@ import {
 } from '../common';
 import { toFlatProject } from '../common/projectConverter';
 import { IProject, IProjectFilter } from '.';
-import { columns as cols } from './columns';
+import { Columns as cols } from './columns';
 import { Properties } from './properties';
 
 interface IProjectFilterState {
@@ -221,7 +222,9 @@ export const ProjectListView: React.FC<IProps> = ({
     const project = data?.find(p => p.projectNumber === deleteProjectNumber);
     if (project) {
       project.status = projectStatuses.find((x: any) => x.name === project.status)!;
+      dispatch(showLoading());
       const deletedProject = await service.deleteProject(project);
+      dispatch(hideLoading());
       setData(data?.filter(p => p.projectNumber !== project.projectNumber));
       setDeleteProjectNumber(undefined);
       setDeletedProject(toFlatProject(deletedProject));
