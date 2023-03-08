@@ -1,6 +1,6 @@
 # Redhat Certified Container Image
-# https://catalog.redhat.com/software/containers/ubi8/nodejs-16/615aee9fc739c0a4123a87e1
-FROM registry.access.redhat.com/ubi8/nodejs-16:1-68.1666660386 as node
+# https://catalog.redhat.com/software/containers/ubi8/nodejs-18/6278e5c078709f5277f26998
+FROM registry.access.redhat.com/ubi8/nodejs-18:1-32 as node
 
 WORKDIR /usr/app
 
