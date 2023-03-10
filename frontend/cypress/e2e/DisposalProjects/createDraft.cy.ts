@@ -1,38 +1,69 @@
 const PROJECT_NAME = 'Cypress Test Disposal Project';
 
+/**
+ * @author Braden Mitchell <braden.mitchell@gov.bc.ca || braden.jr.mitch@gmail.com>
+ * @description Tests the creation of disposal projects.
+ * @components ProjectDraftForm, ProjectDisposeLayout
+ * @page Disposal Projects > Create Disposal Project
+ * @route /dispose/projects/draft
+ * @tests Create project with DRAFT status.
+ */
+
 describe('Create a disposal project', () => {
   beforeEach(function() {
     cy.kcLogout();
-    cy.kcLogin('admin');
-    // CLEAN UP
-    cy.visit(`/projects/list`);
-    cy.get('.tbody').then($tbody => {
-      const firstTableRow = $tbody
-        .children()
-        .eq(0)
-        .children()
-        .eq(0);
-      const projectNameCell = firstTableRow.children().eq(2);
-      const projectStatusCell = firstTableRow.children().eq(3);
-      // If table row for Cypress test project exists in DRAFT status
-      if (projectNameCell.text() === PROJECT_NAME && projectStatusCell.text() === 'Review') {
-        cy.get('[role="cell"]')
-          .contains(PROJECT_NAME)
-          .then($projectNameField => {
-            // Get the project number from the sibling table row cell that contains PROJECT_NAME
-            const projectNumber = $projectNameField
-              .siblings()
-              .eq(1)
-              .children()
-              .children('span')
-              .text();
-            // Remove project
-            cy.get(`[data-testid="trash-icon-${projectNumber}"]`).click();
-            cy.get('[data-testid="modal-footer-ok-btn"]').click();
-          });
-      }
+    cy.kcLogin(Cypress.env('keycloak_user'));
+
+    /* ---------------------------------------------------------------------
+                          CLEAN UP: Run before tests.
+      * --------------------------------------------------------------------- */
+
+    cy.visit(`/projects/list`).then(() => {
+      cy.url().should('include', '/projects/list');
+      /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+          If Test Project Exists in 
+          Table Body (tbody), delete it. 
+      * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+      const PROJECT_NAME = 'Cypress Test Disposal Project';
+
+      cy.get('.tbody').then($tbody => {
+        const firstTableRow = $tbody
+          .children()
+          .eq(0)
+          .children()
+          .eq(0);
+        const projectNameCell = firstTableRow.children().eq(2);
+        const projectStatusCell = firstTableRow.children().eq(3);
+        // If table row for Cypress test project exists in DRAFT status
+        if (projectNameCell.text() === PROJECT_NAME && projectStatusCell.text() === 'Review') {
+          cy.get('[role="cell"]')
+            .contains(PROJECT_NAME)
+            .then($projectNameField => {
+              // Get the project number from the sibling table row cell that contains PROJECT_NAME
+              const projectNumber = $projectNameField
+                .siblings()
+                .eq(1)
+                .children()
+                .children('span')
+                .text();
+              // Remove project
+              cy.get(`[data-testid="trash-icon-${projectNumber}"]`).click();
+              cy.get('[data-testid="modal-footer-ok-btn"]').click();
+            });
+        }
+      });
     });
   });
+
+  /* ---------------------------------------------------------------------
+                TEST CASE: Create project with DRAFT status.
+  * --------------------------------------------------------------------- */
+
+  /**
+   * @title Create project with DRAFT status
+   * @description Tests creating a disposal project as a draft, going through steps 1-6 but not submitting it.
+   */
 
   it('Create project with DRAFT status', () => {
     cy.visit(`/dispose/projects/draft`);
@@ -53,7 +84,7 @@ describe('Create a disposal project', () => {
      * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
     // Stepper 1 btn (Step 2/6) should be disabled.
-    cy.get('[data-target="stepper-1"]')
+    cy.get('[data-target="stepper-1"]', { timeout: 10000 })
       .children()
       .first()
       .should('be.disabled');
@@ -67,14 +98,17 @@ describe('Create a disposal project', () => {
       .should('be.visible')
       .should('be.enabled')
       .type(inputs.description);
+    // Next button.
     cy.get('[data-testid="next-submit-btn"]').click();
 
     /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             [2/6] Select Properties 
      * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
+    // TODO: Test search filter, and Remove Selected button.
+
     // Stepper 0 btn (Step 1/6) should be enabled.
-    cy.get('[data-target="stepper-0"]')
+    cy.get('[data-target="stepper-0"]', { timeout: 10000 })
       .children()
       .first()
       .should('be.enabled');
@@ -103,11 +137,28 @@ describe('Create a disposal project', () => {
     cy.get('[data-testid="add-to-project-btn"]').click();
     // Reset filter.
     cy.get('[data-testid="reset-btn"]').click();
+    // Next button.
     cy.get('[data-testid="next-submit-btn"]').click();
 
     /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             [3/6] Update Information 
     * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+    // TODO: Test...
+    // - Assign Tier dropdown.
+    // - Editable Fields in Properties in the Project.
+    // - Add More Properties button.
+    // - Remove Properties button.
+
+    // Check Required Fields > Next button.
+    cy.get('[data-testid="next-submit-btn"]', { timeout: 10000 }).click();
+    // Required text should be visible.
+    cy.get('[data-testid="error-message"]').should('not.have.property', 'display', 'none');
+    // Check Required Fields > Stepper 3 btn (Step 4/6) should be disabled.
+    cy.get('[data-target="stepper-3"]')
+      .children()
+      .first()
+      .should('be.disabled');
 
     // Stepper 1 btn (Step 2/6) should be enabled.
     cy.get('[data-target="stepper-1"]')
@@ -131,11 +182,24 @@ describe('Create a disposal project', () => {
     cy.get('[data-testid="market"]')
       .should('be.enabled')
       .type(inputs.estimatedMarketValue);
+    // Next button.
     cy.get('[data-testid="next-submit-btn"]').click();
 
     /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             [4/6] Required Documentation 
     * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+    // TODO: Test Exemption request.
+
+    // Check Required Fields > Next button.
+    cy.get('[data-testid="next-submit-btn"]', { timeout: 10000 }).click();
+    // Required text should be visible.
+    cy.contains('Required').should('be.visible');
+    // Check Required Fields > Stepper 4 btn (Step 5/6) should be disabled.
+    cy.get('[data-target="stepper-4"]')
+      .children()
+      .first()
+      .should('be.disabled');
 
     // Stepper 2 btn (Step 3/6) should be enabled.
     cy.get('[data-target="stepper-2"]')
@@ -158,11 +222,22 @@ describe('Create a disposal project', () => {
       .should('not.be.checked')
       .click()
       .should('be.checked');
+    // Next button.
     cy.get('[data-testid="next-submit-btn"]').click();
 
     /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             [5/6] Approval 
     * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+    // Check Required Fields > Next button.
+    cy.get('[data-testid="next-submit-btn"]', { timeout: 10000 }).click();
+    // Required text should be visible.
+    cy.contains('You must confirm approval before continuing.').should('be.visible');
+    // Check Required Fields > Stepper 5 btn (Step 6/6) should be disabled.
+    cy.get('[data-target="stepper-5"]')
+      .children()
+      .first()
+      .should('be.disabled');
 
     // Stepper 3 btn (Step 4/6) should be enabled.
     cy.get('[data-target="stepper-3"]')
@@ -180,16 +255,25 @@ describe('Create a disposal project', () => {
       .should('not.be.checked')
       .click()
       .should('be.checked');
+    // Next button.
     cy.get('[data-testid="next-submit-btn"]').click();
     /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             [6/6] Review
     * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
+    // TODO: Test Edit button.
+
     // Description Field
-    cy.get('[data-testid="project-description"]')
+    cy.get('[data-testid="project-description"]', { timeout: 10000 })
       .should('be.visible')
       .should('be.disabled');
-    // Return to project list.
+
+    /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+          Return to Projects List
+    * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
     cy.visit(`/projects/list`);
+
+    // Verify project is there.
+    cy.contains(PROJECT_NAME).should('be.visible');
   });
 });
