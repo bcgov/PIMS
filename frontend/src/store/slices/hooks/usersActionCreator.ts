@@ -79,7 +79,7 @@ export const getUsersPaginationAction = (params: API.IGetUsersParams) => async (
 export const getRoles = async () => {
   var roles: string[] = [];
   try {
-    roles = await (
+    roles = (
       await CustomAxios()
         .get('/api' + API.GET_KEYCLOAK_ROLES())
         .then(val => val)
@@ -89,6 +89,21 @@ export const getRoles = async () => {
   }
   roles = Object.values(roles).filter(s => s.charAt(0) === s.charAt(0).toUpperCase());
   return roles;
+};
+
+export const getUserRoles = async (username: string | undefined) => {
+  var roles: string[] = [];
+  try {
+    roles = (
+      await CustomAxios()
+        .get('/api' + API.GET_USER_ROLES(username))
+        .then(val => val)
+    ).data;
+  } catch (e) {
+    // TODO - add error handling -- not sure if having nested awaits is an issue....
+  }
+  roles = Object.values(roles).filter(s => s.charAt(0) === s.charAt(0).toUpperCase());
+  return roles.toString();
 };
 
 export const fetchUserDetail = (id: API.IUserDetailParams) => async (

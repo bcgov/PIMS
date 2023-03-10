@@ -1,4 +1,3 @@
-import useEditUserService from 'features/admin/edit-user/useEditUserService';
 import { useFormikContext } from 'formik';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Badge, Col, Row, Spinner } from 'react-bootstrap';
@@ -14,6 +13,9 @@ import { Select, SelectOption } from './Select';
  */
 interface IUserRoleSelector {
   options: string[];
+  allUserRoles: string[];
+  handleAddRole: (role: string) => void;
+  handleDeleteRole: (role: string) => void;
 }
 
 /**
@@ -25,6 +27,8 @@ interface IUserRoleSelector {
 interface UserRoleSelectorFormikValues {
   goldRoles: string[];
   username: string;
+  rolesToRemove: string[];
+  rolesToAdd: string[];
 }
 
 /**
@@ -37,16 +41,18 @@ interface UserRoleSelectorFormikValues {
  * @example
  * <UserRoleSelector options={["Admin", "SRES"]} />
  */
-const UserRoleSelector = ({ options }: IUserRoleSelector) => {
+const UserRoleSelector = ({
+  options,
+  allUserRoles,
+  handleAddRole,
+  handleDeleteRole,
+}: IUserRoleSelector) => {
+  const { setFieldValue } = useFormikContext();
   let { values } = useFormikContext<UserRoleSelectorFormikValues>();
   // State to manage the current user's roles
   const [roles, setRoles] = useState<string[]>(values.goldRoles ?? []);
-
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
   const [isUnableToLoadRoles, setIsUnableToLoadRoles] = useState<boolean>(false);
-
-  const { addRole, deleteRole } = useEditUserService();
 
   // Only allow the user to add roles that the user does not already have
   const roleOptions = useMemo(() => {
@@ -66,18 +72,21 @@ const UserRoleSelector = ({ options }: IUserRoleSelector) => {
     }
   }, [values.goldRoles, values.username]);
 
+  useEffect(() => {
+    setFieldValue('goldRoles', roles);
+  }, [roles, setFieldValue]);
+
   const handleSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsLoading(true);
-    setRoles(prev => [...prev, e.target.value]);
-    await addRole(values.username, e.target.value);
-    setIsLoading(false);
+    handleAddRole(e.target.value);
+    setRoles(prevRoles => {
+      const newRoles = [...prevRoles, e.target.value];
+      return newRoles;
+    });
   };
 
   const handleDeleteClick = (roleName: string) => async () => {
-    setIsLoading(true);
+    handleDeleteRole(roleName);
     setRoles(prev => prev.filter(r => r !== roleName));
-    await deleteRole(values.username, roleName);
-    setIsLoading(false);
   };
 
   return isUnableToLoadRoles ? (
@@ -91,6 +100,7 @@ const UserRoleSelector = ({ options }: IUserRoleSelector) => {
     >
       <Col>
         <Select
+          style={{ marginLeft: '15px' }}
           field="Roles"
           options={roleOptions}
           onChange={handleSelect}

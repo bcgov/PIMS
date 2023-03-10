@@ -6,44 +6,40 @@ import { Label } from 'components/common/Label';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { IUserDetailParams } from 'constants/API';
 import * as API from 'constants/API';
-import { Field, Formik } from 'formik';
+import { Field, FieldArray, Formik } from 'formik';
 import useCodeLookups from 'hooks/useLookupCodes';
 import React, { useEffect, useState } from 'react';
-import { Button, ButtonToolbar, Col, Container, Navbar, Row } from 'react-bootstrap';
+import { Button, ButtonToolbar, Col, Container, Navbar, Row, Spinner } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
-import {
-  fetchUserDetail,
-  getRoles,
-  getUpdateUserAction,
-} from 'store/slices/hooks/usersActionCreator';
+import { fetchUserDetail, getUpdateUserAction } from 'store/slices/hooks/usersActionCreator';
 import { formatApiDateTime } from 'utils';
 import { UserUpdateSchema } from 'utils/YupSchema';
 
 import { Form, Input, Select, SelectOption } from '../../../components/common/form';
+import useEditUserService from './useEditUserService';
 
 interface IEditUserPageProps extends IUserDetailParams {
   match?: any;
 }
-
+interface IRole {
+  name: string;
+  id: string;
+}
 const EditUserPage = (props: IEditUserPageProps) => {
   const params = useParams();
   // removing the double quotes surrounding the id from useParams() as stringify isn't removing those double quotes surrounding the id.
   const userId = params.id ? JSON.stringify(params.id).slice(1, -1) : '';
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [keycloakRoles, setKeycloakRoles] = useState<string[]>([]);
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   useEffect(() => {
     fetchUserDetail({ id: userId })(dispatch);
-    getRoles().then(data => {
-      setKeycloakRoles(data);
-    });
   }, [dispatch, userId]);
 
   const { getByType } = useCodeLookups();
   const agencies = getByType(API.AGENCY_CODE_SET_NAME);
-
+  const roles = getByType(API.ROLE_CODE_SET_NAME);
   const user = useAppSelector(store => store.users.user);
   const mapLookupCode = (code: ILookupCode): SelectOption => ({
     label: code.name,
@@ -51,16 +47,10 @@ const EditUserPage = (props: IEditUserPageProps) => {
     selected: !!user.roles.find(x => x.id === code.id.toString()),
     parent: '',
   });
-
-  const selectAgencies = agencies.map(c => mapLookupCode(c));
-
-  // Arrays below are used to add the role/agency from the dropdown later in code
-  let agenciesToUpdate: any[];
-  let rolesToUpdate: any[];
-
-  const goBack = () => {
-    navigate(-1);
-  };
+  const mapRoleLookupCodes = (code: ILookupCode) => ({
+    name: code.name,
+    id: code.id.toString(),
+  });
 
   const initialValues = {
     keycloakUserId: user.keycloakUserId,
@@ -82,6 +72,123 @@ const EditUserPage = (props: IEditUserPageProps) => {
     lastLogin: formatApiDateTime(user.lastLogin),
   };
 
+  const [allUserRoles, setAllUserRoles] = useState<string[]>(initialValues.roles);
+  const [rolesToAdd, setRolesToAdd] = useState<string[]>([]);
+  const [rolesToRemove, setRolesToRemove] = useState<string[]>([]);
+
+  /**
+   * This function takes in a role (as a string) and adds it to the user's roles.
+   * It updates the state to reflect the change by adding the role to the allUserRoles and rolesToAdd arrays.
+   * @param {string} role - The role to add to the user's roles.
+   */
+  const handleAddRole = (role: string) => {
+    // If the role to add is in the roles to remove array, remove it from that array
+    if (rolesToRemove.includes(role)) {
+      setRolesToRemove(rolesToRemove.filter(r => r !== role));
+    }
+    // Add the role to the all user roles array
+    setAllUserRoles([...allUserRoles, role]);
+    // Add the role to the roles to add array
+    setRolesToAdd([...rolesToAdd, role]);
+  };
+
+  /**
+   * This function takes in a role (as a string) and removes it from the user's roles.
+   * It updates the state to reflect the change by removing the role from the allUserRoles array and adding it to the rolesToRemove array.
+   * @param {string} role - The role to remove from the user's roles.
+   */
+  const handleDeleteRole = (role: string) => {
+    // If the role to remove is in the roles to add array, remove it from that array
+    if (rolesToAdd.includes(role)) {
+      setRolesToAdd(rolesToAdd.filter(r => r !== role));
+    }
+    // Remove the role from the all user roles array
+    setAllUserRoles(allUserRoles.filter(r => r !== role));
+    // Add the role to the roles to remove array
+    setRolesToRemove([...rolesToRemove, role]);
+  };
+  const selectAgencies = agencies.map(c => mapLookupCode(c));
+
+  // Arrays below are used to add the role/agency from the dropdown later in code
+  let agenciesToUpdate: any[];
+
+  const goBack = () => {
+    navigate(-1);
+  };
+
+  const updateAgenciesOnSubmit = (values: typeof initialValues) => {
+    if (values.agency !== '') {
+      agenciesToUpdate = [{ id: Number(values.agency) }];
+    } else {
+      agenciesToUpdate = user.agencies;
+    }
+  };
+
+  // add the selected roles to Keycloak when clicking save button
+  const addKeyCloakRolesOnSubmit = async (values: typeof initialValues) => {
+    if (rolesToAdd.length >= 1) {
+      await addRole(values.username, rolesToAdd);
+      setRolesToAdd([]);
+    }
+  };
+
+  // remove the selected roles to Keycloak when clicking save button
+  const removeKeyCloakRolesOnSubmit = async (values: typeof initialValues) => {
+    if (rolesToRemove.length >= 1) {
+      await deleteRole(values.username, rolesToRemove);
+      setRolesToRemove([]);
+    }
+  };
+
+  // get the roles from Keycloak as well as the role ids to save to the database
+  const formatUserRoles = (values: typeof initialValues) => {
+    var allRoles: IRole[] = roles.map(r => mapRoleLookupCodes(r));
+    return allRoles.filter(function(role) {
+      return values.goldRoles.some(goldRole => {
+        return goldRole === role.name;
+      });
+    });
+  };
+
+  /**
+   * Handles the form submission when editing a user's roles in Keycloak and synchronizes the user roles in the database with the roles in Keycloak.
+   * Adds any roles that were added and removes any roles that were deleted then updates the user in the database
+   */
+  const onSubmitUserChanges = async (values: typeof initialValues, setSubmitting: any) => {
+    setIsLoading(true);
+    updateAgenciesOnSubmit(values);
+    let userRolesWithIDs;
+    if (values.goldRoles) {
+      await addKeyCloakRolesOnSubmit(values);
+      await removeKeyCloakRolesOnSubmit(values);
+      userRolesWithIDs = formatUserRoles(values);
+    }
+
+    await getUpdateUserAction(
+      { id: userId },
+      {
+        id: user.id,
+        keycloakUserId: user.keycloakUserId,
+        username: user.username,
+        displayName: values.displayName,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        isDisabled: values.isDisabled,
+        rowVersion: values.rowVersion,
+        emailVerified: values.emailVerified,
+        agencies: agenciesToUpdate,
+        roles: userRolesWithIDs,
+        position: values.position,
+        note: values.note,
+      },
+    )(dispatch);
+    setSubmitting(false);
+    setIsLoading(false);
+  };
+
+  const { addRole, deleteRole } = useEditUserService();
+
   return (
     <div>
       <Navbar className="navBar" expand="sm" variant="light" bg="light">
@@ -95,39 +202,8 @@ const EditUserPage = (props: IEditUserPageProps) => {
             enableReinitialize
             initialValues={initialValues}
             validationSchema={UserUpdateSchema}
-            onSubmit={(values, { setSubmitting }) => {
-              if (values.agency !== '') {
-                agenciesToUpdate = [{ id: Number(values.agency) }];
-              } else {
-                agenciesToUpdate = user.agencies;
-              }
-
-              if (values.roles) {
-                rolesToUpdate = values.roles.map(r => ({ id: r }));
-              } else {
-                rolesToUpdate = user.roles;
-              }
-
-              getUpdateUserAction(
-                { id: userId },
-                {
-                  id: user.id,
-                  keycloakUserId: user.keycloakUserId,
-                  username: user.username,
-                  displayName: values.displayName,
-                  firstName: values.firstName,
-                  lastName: values.lastName,
-                  email: values.email,
-                  isDisabled: values.isDisabled,
-                  rowVersion: values.rowVersion,
-                  emailVerified: values.emailVerified,
-                  agencies: agenciesToUpdate,
-                  roles: rolesToUpdate,
-                  position: values.position,
-                  note: values.note,
-                },
-              )(dispatch);
-              setSubmitting(false);
+            onSubmit={async (values, { setSubmitting }) => {
+              await onSubmitUserChanges(values, setSubmitting);
             }}
           >
             {props => (
@@ -179,7 +255,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
                 />
 
                 <Select
-                  style={{ width: '450px' }}
+                  style={{ width: '450px', marginTop: '10px' }}
                   label="Agency"
                   field="agency"
                   data-testid="agency"
@@ -187,6 +263,28 @@ const EditUserPage = (props: IEditUserPageProps) => {
                   options={selectAgencies}
                   placeholder={user?.agencies?.length > 0 ? undefined : 'Please Select'}
                 />
+
+                <Row style={{ marginTop: '10px' }}>
+                  <Col>
+                    <FieldArray name="roles">
+                      {arrayHelpers => (
+                        <UserRoleSelector
+                          options={roles.map(r => r.name)}
+                          allUserRoles={allUserRoles}
+                          handleAddRole={role => {
+                            arrayHelpers.push(role);
+                            handleAddRole(role);
+                          }}
+                          handleDeleteRole={role => {
+                            arrayHelpers.remove(allUserRoles.findIndex(r => r === role));
+                            handleDeleteRole(role);
+                          }}
+                        />
+                      )}
+                    </FieldArray>
+                  </Col>
+                </Row>
+
                 <Label>Position</Label>
                 <Input
                   field="position"
@@ -215,20 +313,25 @@ const EditUserPage = (props: IEditUserPageProps) => {
                 </Form.Group>
 
                 <Row className="justify-content-md-center">
-                  <ButtonToolbar className="cancelSave">
-                    <Button
-                      style={{ marginRight: '10px' }}
-                      variant="secondary"
-                      type="button"
-                      onClick={goBack}
-                    >
-                      Cancel
-                    </Button>
-                    <Button type="submit">Save</Button>
-                  </ButtonToolbar>
+                  <Col>
+                    <ButtonToolbar className="cancelSave">
+                      <Button
+                        style={{ marginRight: '10px' }}
+                        variant="secondary"
+                        type="button"
+                        onClick={goBack}
+                        disabled={isLoading}
+                      >
+                        Cancel
+                      </Button>
+                      <Button disabled={isLoading} type="submit">
+                        Save
+                      </Button>
+                    </ButtonToolbar>
+                  </Col>
+                  <Col>{isLoading ? <Spinner animation="border" /> : ''}</Col>
                 </Row>
                 <hr></hr>
-                <UserRoleSelector options={keycloakRoles.map(r => r)} />
               </Form>
             )}
           </Formik>

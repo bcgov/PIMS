@@ -276,12 +276,13 @@ namespace Pims.Dal.Services.Admin
 
             if (!existingUser.Agencies.Any())
             {
-                string username = this.User.GetUsername();
+                var username = this.User.GetUsername();
                 user.ApprovedById = this.Context.Users.Where(u => u.Username == username).Select(u => u.Id).FirstOrDefault();
                 user.ApprovedOn = DateTime.UtcNow;
             }
+            GoldUser gUser = this.Get(this.User.GetUsername());
 
-            var addRoles = user.Roles.Except(existingUser.Roles, new UserRoleRoleIdComparer());
+            var addRoles =  user.Roles.Except(existingUser.Roles, new UserRoleRoleIdComparer()); //gUser.GoldUserRoles; //.Except(user.Roles, new UserRoleRoleIdComparer());
             addRoles.ForEach(r => this.Context.Entry(r).State = EntityState.Added);
             var removeRoles = existingUser.Roles.Except(user.Roles, new UserRoleRoleIdComparer());
             removeRoles.ForEach(r => this.Context.Entry(r).State = EntityState.Deleted);
@@ -330,7 +331,7 @@ namespace Pims.Dal.Services.Admin
 
             // Keycloak Gold only wants the clientID as a number, which is always at the end of the id, after a "-"
             string frontendId = this.configuration["Keycloak:FrontendClientId"].Split("-").Last();
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"https://api.loginproxy.gov.bc.ca/api/v1/integrations/{frontendId}/{getEnv()}/users/{preferred_username}/roles");
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, this.configuration["Keycloak:BaseURL"] + $"integrations/{frontendId}/{getEnv()}/users/{preferred_username}/roles");
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             HttpResponseMessage response = await _httpClient.SendAsync(request);
             if (!response.IsSuccessStatusCode) throw new Exception("Unable to fetch roles from Keycloak Gold");
@@ -410,7 +411,7 @@ namespace Pims.Dal.Services.Admin
 
             string frontendId = this.configuration["Keycloak:FrontendClientId"].Split("-").Last();
 
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, $"https://api.loginproxy.gov.bc.ca/api/v1/integrations/{frontendId}/{getEnv()}/users/{preferred_username}/roles");
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, this.configuration["Keycloak:BaseURL"] + $"integrations/{frontendId}/{getEnv()}/users/{preferred_username}/roles");
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var serializableRoles = roles.Select(role => new { name = role });
             string json = JsonSerializer.Serialize(serializableRoles);
@@ -434,7 +435,7 @@ namespace Pims.Dal.Services.Admin
 
             string frontendId = this.configuration["Keycloak:FrontendClientId"].Split("-").Last();
 
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"https://api.loginproxy.gov.bc.ca/api/v1/integrations/{frontendId}/{getEnv()}/roles");
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, this.configuration["Keycloak:BaseURL"] + $"integrations/{frontendId}/{getEnv()}/roles");
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             HttpResponseMessage response = await _httpClient.SendAsync(request);
             if (!response.IsSuccessStatusCode) throw new Exception("Unable to get roles from Keycloak Gold");
@@ -459,7 +460,7 @@ namespace Pims.Dal.Services.Admin
 
             string frontendId = this.configuration["Keycloak:FrontendClientId"].Split("-").Last();
 
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, $"https://api.loginproxy.gov.bc.ca/api/v1/integrations/{frontendId}/{getEnv()}/users/{preferred_username}/roles");
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, this.configuration["Keycloak:BaseURL"] + $"integrations/{frontendId}/{getEnv()}/users/{preferred_username}/roles");
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var serializableRole = new object[] { new { name = roleName } };
             string json = JsonSerializer.Serialize(serializableRole);
@@ -485,11 +486,10 @@ namespace Pims.Dal.Services.Admin
 
             string frontendId = this.configuration["Keycloak:FrontendClientId"].Split("-").Last();
 
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Delete, $"https://api.loginproxy.gov.bc.ca/api/v1/integrations/{frontendId}/{getEnv()}/users/{preferred_username}/roles/{roleName}");
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Delete, this.configuration["Keycloak:BaseURL"] + $"integrations/{frontendId}/{getEnv()}/users/{preferred_username}/roles/{roleName}");
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             HttpResponseMessage response = await _httpClient.SendAsync(request);
             if (!response.IsSuccessStatusCode) throw new Exception("Unable to delete role from user in Keycloak Gold");
-            // JObject payload = JObject.Parse(await response.Content.ReadAsStringAsync());
 
             return response.Content.ReadAsStringAsync().Result;
         }

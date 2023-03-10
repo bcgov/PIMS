@@ -14,6 +14,11 @@ using Model = Pims.Api.Areas.Admin.Models.User;
 using GoldModel = Pims.Api.Areas.Admin.Models.GoldUser;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {
@@ -32,6 +37,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IPimsAdminService _pimsAdminService;
         private readonly IMapper _mapper;
+        private object res;
         #endregion
 
         #region Constructors
@@ -154,26 +160,12 @@ namespace Pims.Api.Areas.Admin.Controllers
             var user = _mapper.Map<Model.UserModel>(entity);
             return new JsonResult(user);
         }
-
-        /// <summary>
-        /// POST - Add a role to the user by calling the Keycloak Gold API.
-        /// </summary>
-        /// <param name="username">The user's username</param>
-        /// <param name="role">A JSON object with the name of the role to add.</param>
-        /// <returns>JSON Array of the users roles, updated with the one just added.</returns>
-        [HttpPost("role/{username}")]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(Model.UserModel), 200)]
-        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
-        [SwaggerOperation(Tags = new[] { "admin-user" })]
-        public IActionResult AddRoleToUser(string username, [FromBody] Dictionary<string, string> role)
-        {
-            var user = _pimsAdminService.User.Get(username);
-            var preferred_username = _pimsAdminService.User.GetUsersPreferredUsername(user.KeycloakUserId ?? Guid.Empty, user.Username.Split("@").Last()).Result;
-            var res = _pimsAdminService.User.AddRoleToUser(preferred_username, role.GetValueOrDefault("name")).Result;
-            return new JsonResult(res);
-
+        public class AddRolesToUserRequest{
+            public string[] Roles { get; set; }
         }
+        public class RemoveRolesToUserRequest{
+            public string[] Roles { get; set; }
+        }        
 
         /// <summary>
         /// POST - Get all roles from the Keycloak Gold API.
@@ -195,21 +187,61 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// DELETE - Remove a role from the user by calling the Keycloak Gold API.
         /// </summary>
         /// <param name="username">The user's username</param>
-        /// <param name="role">A JSON object with the name of the role to remove.</param>
+        /// <param name="request"></param>
         /// <returns>JSON Array of the users roles, updated with the one just added.</returns>
-        [HttpDelete("role/{username}")]
+        [HttpDelete("roles/{username}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.UserModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-user" })]
-        public IActionResult DeleteRoleFromUser(string username, [FromBody] Dictionary<string, string> role)
+        public IActionResult DeleteRoleFromUser(string username, [FromBody] RemoveRolesToUserRequest request)
         {
             var user = _pimsAdminService.User.Get(username);
             var preferred_username = _pimsAdminService.User.GetUsersPreferredUsername(user.KeycloakUserId ?? Guid.Empty, user.Username.Split("@").Last()).Result;
-            var res = _pimsAdminService.User.DeleteRoleFromUser(preferred_username, role.GetValueOrDefault("name")).Result;
+            foreach (var role in request.Roles)
+            {
+                var res = _pimsAdminService.User.DeleteRoleFromUser(preferred_username, role).Result;
+            }
             return new JsonResult(res);
         }
 
+
+        /// <summary>
+        /// POST - Add a role to the user by calling the Keycloak Gold API.
+        /// </summary>
+        /// <param name="username">The user's username</param>
+        /// <param name="request"></param>
+        /// <returns>JSON Array of the users roles, updated with the one just added.</returns>
+        [HttpPost("roles/{username}")][Produces("application/json")]
+        [ProducesResponseType(typeof(Model.UserModel), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "admin-user" })]
+        public IActionResult AddRoleToUser(string username, [FromBody] AddRolesToUserRequest request)
+        {
+            var user = _pimsAdminService.User.Get(username);
+            var preferred_username = _pimsAdminService.User.GetUsersPreferredUsername(user.KeycloakUserId ?? Guid.Empty, user.Username.Split("@").Last()).Result;
+            foreach (var role in request.Roles)
+            {
+                var res = _pimsAdminService.User.AddRoleToUser(preferred_username, role).Result;
+            }
+            return new JsonResult(res);
+        }
+
+        /// <summary>
+        /// POST - Get roles for a specific user from the Keycloak Gold API.
+        /// </summary>
+        /// <returns>JSON Array of the user's roles.</returns>
+        [HttpGet("roles/{username}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.UserModel), 200)]
+        [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
+        [SwaggerOperation(Tags = new[] { "admin-user" })]
+        public IActionResult UserRoles(string username)
+        {
+            var res = _pimsAdminService.User.GetGoldUsersRolesAsync(username).Result;
+            return new JsonResult(res);
+
+        }
 
         /// <summary>
         /// DELETE - Delete the user from the datasource.
