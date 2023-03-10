@@ -8,10 +8,13 @@ export default defineConfig({
     baseUrl: `http://localhost:${process.env.APP_HTTP_PORT || 3000}`,
     viewportHeight: 850,
     viewportWidth: 1400,
+    chromeWebSecurity: false,
+    experimentalSessionAndOrigin: true,
     env: {
-      auth_base_url: `http://localhost:${process.env.KEYLCOAK_PORT || 8080}/auth`,
-      auth_realm: 'pims',
-      auth_client_id: 'pims-app',
+      auth_base_url: `https://dev.loginproxy.gov.bc.ca/auth`,
+      auth_realm: 'standard',
+      auth_client_id: 'pims-local-test-4292',
+      keycloak_user: 'testUser',
     },
     setupNodeEvents(on, config) {
       // implement node event listeners here
