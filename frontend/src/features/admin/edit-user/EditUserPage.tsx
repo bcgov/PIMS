@@ -28,18 +28,21 @@ interface IRole {
 }
 const EditUserPage = (props: IEditUserPageProps) => {
   const params = useParams();
-  // removing the double quotes surrounding the id from useParams() as stringify isn't removing those double quotes surrounding the id.
-  const userId = params.id ? JSON.stringify(params.id).slice(1, -1) : '';
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  useEffect(() => {
-    fetchUserDetail({ id: userId })(dispatch);
-  }, [dispatch, userId]);
+  const { addRole, deleteRole } = useEditUserService();
 
   const { getByType } = useCodeLookups();
   const agencies = getByType(API.AGENCY_CODE_SET_NAME);
   const roles = getByType(API.ROLE_CODE_SET_NAME);
+
+  // Fetch user details.
+  const userId = params.id?.toString() ?? '';
+  useEffect(() => {
+    fetchUserDetail({ id: userId })(dispatch);
+  }, [dispatch, userId]);
+
+  // Redux state store.
   const user = useAppSelector(store => store.users.user);
   const mapLookupCode = (code: ILookupCode): SelectOption => ({
     label: code.name,
@@ -52,6 +55,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
     id: code.id.toString(),
   });
 
+  // Formik initialValues.
   const initialValues = {
     keycloakUserId: user.keycloakUserId,
     username: user.username,
@@ -72,9 +76,11 @@ const EditUserPage = (props: IEditUserPageProps) => {
     lastLogin: formatApiDateTime(user.lastLogin),
   };
 
+  // State.
   const [allUserRoles, setAllUserRoles] = useState<string[]>(initialValues.roles);
   const [rolesToAdd, setRolesToAdd] = useState<string[]>([]);
   const [rolesToRemove, setRolesToRemove] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   /**
    * This function takes in a role (as a string) and adds it to the user's roles.
@@ -85,6 +91,9 @@ const EditUserPage = (props: IEditUserPageProps) => {
     // If the role to add is in the roles to remove array, remove it from that array
     if (rolesToRemove.includes(role)) {
       setRolesToRemove(rolesToRemove.filter(r => r !== role));
+      // Add the role to the all user roles array
+      setAllUserRoles([...allUserRoles, role]);
+      return;
     }
     // Add the role to the all user roles array
     setAllUserRoles([...allUserRoles, role]);
@@ -101,20 +110,22 @@ const EditUserPage = (props: IEditUserPageProps) => {
     // If the role to remove is in the roles to add array, remove it from that array
     if (rolesToAdd.includes(role)) {
       setRolesToAdd(rolesToAdd.filter(r => r !== role));
+      // Remove the role from the all user roles array
+      setAllUserRoles(allUserRoles.filter(r => r !== role));
+      return;
     }
     // Remove the role from the all user roles array
     setAllUserRoles(allUserRoles.filter(r => r !== role));
     // Add the role to the roles to remove array
     setRolesToRemove([...rolesToRemove, role]);
   };
-  const selectAgencies = agencies.map(c => mapLookupCode(c));
-
-  // Arrays below are used to add the role/agency from the dropdown later in code
-  let agenciesToUpdate: any[];
 
   const goBack = () => {
-    navigate(-1);
+    navigate('/admin/users');
   };
+
+  let agenciesToUpdate: any[];
+  const selectAgencies = agencies.map(c => mapLookupCode(c));
 
   const updateAgenciesOnSubmit = (values: typeof initialValues) => {
     if (values.agency !== '') {
@@ -124,7 +135,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
     }
   };
 
-  // add the selected roles to Keycloak when clicking save button
+  // Add the selected roles to Keycloak when clicking save button.
   const addKeyCloakRolesOnSubmit = async (values: typeof initialValues) => {
     if (rolesToAdd.length >= 1) {
       await addRole(values.username, rolesToAdd);
@@ -132,7 +143,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
     }
   };
 
-  // remove the selected roles to Keycloak when clicking save button
+  // Remove the selected roles to Keycloak when clicking save button.
   const removeKeyCloakRolesOnSubmit = async (values: typeof initialValues) => {
     if (rolesToRemove.length >= 1) {
       await deleteRole(values.username, rolesToRemove);
@@ -140,7 +151,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
     }
   };
 
-  // get the roles from Keycloak as well as the role ids to save to the database
+  // Get the roles from Keycloak as well as the role ids to save to the database.
   const formatUserRoles = (values: typeof initialValues) => {
     var allRoles: IRole[] = roles.map(r => mapRoleLookupCodes(r));
     return allRoles.filter(function(role) {
@@ -186,8 +197,6 @@ const EditUserPage = (props: IEditUserPageProps) => {
     setSubmitting(false);
     setIsLoading(false);
   };
-
-  const { addRole, deleteRole } = useEditUserService();
 
   return (
     <div>
@@ -270,7 +279,6 @@ const EditUserPage = (props: IEditUserPageProps) => {
                       {arrayHelpers => (
                         <UserRoleSelector
                           options={roles.map(r => r.name)}
-                          allUserRoles={allUserRoles}
                           handleAddRole={role => {
                             arrayHelpers.push(role);
                             handleAddRole(role);

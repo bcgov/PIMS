@@ -8,12 +8,11 @@ import { Select, SelectOption } from './Select';
 /**
  * @description This interface represents the props for the UserRoleSelector component.
  *
- * @author Zach Bourque <Zachary.Bourque@gov.bc.ca>
+ * @author Zach Bourque
  * @interface
  */
 interface IUserRoleSelector {
   options: string[];
-  allUserRoles: string[];
   handleAddRole: (role: string) => void;
   handleDeleteRole: (role: string) => void;
 }
@@ -21,7 +20,7 @@ interface IUserRoleSelector {
 /**
  * @description This interface represents the needed values for the UserRoleSelector component from the useFormikContext cook.
  *
- * @author Zach Bourque <Zachary.Bourque@gov.bc.ca>
+ * @author Zach Bourque
  * @interface
  */
 interface UserRoleSelectorFormikValues {
@@ -34,19 +33,16 @@ interface UserRoleSelectorFormikValues {
 /**
  * @description This component renders input for, and displaying of Keycloak Gold Roles
  *
- * @author Zach Bourque <Zachary.Bourque@gov.bc.ca>
+ * @author Zach Bourque
  * @param {IUserRoleSelector} props - The props for the component
- * @param {string[]} props.options - The array of roles to give/remove from the user.
+ * @param {string[]} props.options - An array of strings representing the available options for roles.
+ * @param {Function} props.handleAddRole - A callback function that is called when a user clicks the "Add" button. It is passed the role that was added as a string.
+ * @param {Function} props.handleDeleteRole - A callback function that is called when a user clicks the "Delete" button. It is passed the role that was deleted as a string.
  *
  * @example
  * <UserRoleSelector options={["Admin", "SRES"]} />
  */
-const UserRoleSelector = ({
-  options,
-  allUserRoles,
-  handleAddRole,
-  handleDeleteRole,
-}: IUserRoleSelector) => {
+const UserRoleSelector = ({ options, handleAddRole, handleDeleteRole }: IUserRoleSelector) => {
   const { setFieldValue } = useFormikContext();
   let { values } = useFormikContext<UserRoleSelectorFormikValues>();
   // State to manage the current user's roles
@@ -54,7 +50,7 @@ const UserRoleSelector = ({
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isUnableToLoadRoles, setIsUnableToLoadRoles] = useState<boolean>(false);
 
-  // Only allow the user to add roles that the user does not already have
+  // Roles that the user does not already have.
   const roleOptions = useMemo(() => {
     return roles !== undefined
       ? options
@@ -70,22 +66,43 @@ const UserRoleSelector = ({
       setIsUnableToLoadRoles(!values.goldRoles);
       setIsLoading(false);
     }
-  }, [values.goldRoles, values.username]);
+  }, []);
 
   useEffect(() => {
+    // Update formik values goldRoles of parent component EditUserPage.
     setFieldValue('goldRoles', roles);
   }, [roles, setFieldValue]);
 
+  /**
+   * Handles the selection of a role from the dropdown.
+   * Adds the role to the user's rolesToAdd state in the parent component,
+   * and updates the state for the Select options.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object triggered by the role selection.
+   */
   const handleSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleAddRole(e.target.value);
+    const roleName = e.target.value;
+    if (!roleName || roleName === '') return;
+
+    // Add role to parent component state in EditUserPage.
+    handleAddRole(roleName);
+
+    // Set state for Select options.
     setRoles(prevRoles => {
-      const newRoles = [...prevRoles, e.target.value];
+      const newRoles = [...prevRoles, roleName];
       return newRoles;
     });
   };
 
+  /**
+   * Handles deleting a role from user's roles.
+   * Adds the role to the user's rolesToRemove state in the parent component,
+   * and updates the state for the Select options.
+   * @param {string} roleName - The name of the role to be removed.
+   */
   const handleDeleteClick = (roleName: string) => async () => {
+    // Add role to parent component state in EditUserPage.
     handleDeleteRole(roleName);
+    // Set state for Select options.
     setRoles(prev => prev.filter(r => r !== roleName));
   };
 
