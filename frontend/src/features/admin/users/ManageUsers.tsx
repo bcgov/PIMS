@@ -5,6 +5,7 @@ import * as actionTypes from 'constants/actionTypes';
 import * as API from 'constants/API';
 import { IPaginateParams } from 'constants/API';
 import { ENVIRONMENT } from 'constants/environment';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { IUser, IUsersFilter } from 'interfaces';
 import { isEmpty } from 'lodash';
@@ -61,6 +62,9 @@ export const ManageUsers = () => {
   const roles = useMemo(() => getByType(API.ROLE_CODE_SET_NAME), [getByType]);
   const columns = useMemo(() => columnDefinitions, []);
 
+  const keycloak = useKeycloakWrapper();
+  const roles2 = keycloak.systemRoles?.join(', ') ?? '';
+  console.log('roles: ' + roles2);
   const pagedUsers = useAppSelector(store => store.users.pagedUsers);
   const pageSize = useAppSelector(store => store.users.rowsPerPage);
   const pageIndex = useAppSelector(store => store.users.pageIndex);
@@ -96,7 +100,7 @@ export const ManageUsers = () => {
       firstName: u.firstName,
       lastName: u.lastName,
       isDisabled: u.isDisabled,
-      roles: u.roles ? u.roles.map(r => r.name).join(', ') : '',
+      roles: u.roles ? u.roles.map(r => r?.name).join(', ') : '',
       agency: u.agencies && u.agencies.length > 0 ? u.agencies[0]?.name : '',
       position: u.position ?? '',
       lastLogin: formatApiDateTime(u.lastLogin),

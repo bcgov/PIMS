@@ -10,8 +10,8 @@ import { toast } from 'react-toastify';
  * @interface
  */
 interface IEditUserService {
-  addRole: (username: string, roleName: string) => Promise<void>;
-  deleteRole: (username: string, roleName: string) => Promise<void>;
+  addRole: (username: string, roles: string[]) => Promise<void>;
+  deleteRole: (username: string, roleName: string[]) => Promise<void>;
 }
 
 /**
@@ -35,13 +35,19 @@ const useEditUserService = (): IEditUserService => {
    * @example
    * await addRole("pparker@idir", "Admin")
    */
-  const addRole = async (username: string, roleName: string) => {
+  const addRole = async (username: string, roles: string[]) => {
     try {
-      await axios.post('/api' + UPDATE_ROLE(username), {
-        name: roleName,
+      const requestBody = {
+        roles: roles,
+      };
+      console.log('test: ', requestBody);
+      await axios.post('/api' + UPDATE_ROLE(username), requestBody, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
     } catch (e) {
-      toast.error(`Unable to add role: "${roleName}"`);
+      toast.error(`Unable to add roles: "${roles.join(', ')}"`);
     }
   };
 
@@ -54,13 +60,19 @@ const useEditUserService = (): IEditUserService => {
    * @example
    * await deleteRole("loki@idir", "Admin")
    */
-  const deleteRole = async (username: string, roleName: string) => {
+  const deleteRole = async (username: string, roles: string[]) => {
     try {
-      await axios.delete('/api' + UPDATE_ROLE(username), {
-        data: { name: roleName },
+      const requestBody = {
+        roles: roles,
+      };
+      await axios.delete(`/api${UPDATE_ROLE(username)}`, {
+        data: requestBody,
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
     } catch (e) {
-      toast.error(`Unable to remove role: "${roleName}"`);
+      toast.error(`Unable to remove roles: ${roles.join(', ')}`);
     }
   };
 

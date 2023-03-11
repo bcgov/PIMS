@@ -146,8 +146,8 @@ describe('Project list view tests', () => {
 
     act(() => {
       // default table message when there is no data to display
-      const noResults = findByText('No rows to display');
       waitFor(() => {
+        const noResults = findByText('No rows to display');
         expect(noResults).toBeVisible();
       });
       expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
