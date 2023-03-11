@@ -183,7 +183,7 @@ exports[`Edit user page EditUserPage renders 1`] = `
               data-testid="agency"
               name="agency"
               required=""
-              style="width: 450px;"
+              style="width: 450px; margin-top: 10px;"
             >
               <option
                 class="option"
@@ -192,6 +192,18 @@ exports[`Edit user page EditUserPage renders 1`] = `
                 agencyVal
               </option>
             </select>
+          </div>
+        </div>
+        <div
+          class="row"
+          style="margin-top: 10px;"
+        >
+          <div
+            class="col"
+          >
+            <p>
+              Unable to load user's roles
+            </p>
           </div>
         </div>
         <label
@@ -266,28 +278,32 @@ exports[`Edit user page EditUserPage renders 1`] = `
           class="justify-content-md-center row"
         >
           <div
-            class="cancelSave btn-toolbar"
-            role="toolbar"
+            class="col"
           >
-            <button
-              class="btn btn-secondary"
-              style="margin-right: 10px;"
-              type="button"
+            <div
+              class="cancelSave btn-toolbar"
+              role="toolbar"
             >
-              Cancel
-            </button>
-            <button
-              class="btn btn-primary"
-              type="submit"
-            >
-              Save
-            </button>
+              <button
+                class="btn btn-secondary"
+                style="margin-right: 10px;"
+                type="button"
+              >
+                Cancel
+              </button>
+              <button
+                class="btn btn-primary"
+                type="submit"
+              >
+                Save
+              </button>
+            </div>
           </div>
+          <div
+            class="col"
+          />
         </div>
         <hr />
-        <p>
-          Unable to load user's roles
-        </p>
       </form>
     </div>
   </div>

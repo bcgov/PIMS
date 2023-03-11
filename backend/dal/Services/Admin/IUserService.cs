@@ -18,6 +18,7 @@ namespace Pims.Dal.Services.Admin
         GoldUser Get(string username);
         User GetForKeycloakUserId(Guid keycloakUserId);
         Task<IEnumerable<string>> GetGoldUsersRolesAsync(string preferred_username);
+        Task<IEnumerable<string>> GetRolesAsync();
         Task<string> GetUsersPreferredUsername(Guid keycloakGuid, string identityProvider);
         Task<string> GetUsersPreferredUsername(string email, string identityProvider);
         Task<string> UpdateGoldRolesAsync(string preferred_username, IEnumerable<string> roles);
