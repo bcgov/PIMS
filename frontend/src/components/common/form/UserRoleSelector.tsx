@@ -67,7 +67,7 @@ const UserRoleSelector = ({ options, handleAddRole, handleDeleteRole }: IUserRol
       setIsLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [values.username]);
 
   useEffect(() => {
     // Update formik values goldRoles of parent component EditUserPage.

@@ -62,9 +62,6 @@ export const ManageUsers = () => {
   const roles = useMemo(() => getByType(API.ROLE_CODE_SET_NAME), [getByType]);
   const columns = useMemo(() => columnDefinitions, []);
 
-  const keycloak = useKeycloakWrapper();
-  const roles2 = keycloak.systemRoles?.join(', ') ?? '';
-  console.log('roles: ' + roles2);
   const pagedUsers = useAppSelector(store => store.users.pagedUsers);
   const pageSize = useAppSelector(store => store.users.rowsPerPage);
   const pageIndex = useAppSelector(store => store.users.pageIndex);
