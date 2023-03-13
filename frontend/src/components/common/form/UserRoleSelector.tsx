@@ -59,7 +59,7 @@ const UserRoleSelector = ({ options, handleAddRole, handleDeleteRole }: IUserRol
       : [];
   }, [roles, options]);
 
-  // Once the component has been populated with data, disable loading
+  // Once the component has been populated with data, disable loading.
   useEffect(() => {
     if (values.username) {
       setRoles(values.goldRoles ?? []);

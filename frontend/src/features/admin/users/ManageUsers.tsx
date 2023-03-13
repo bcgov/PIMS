@@ -5,7 +5,6 @@ import * as actionTypes from 'constants/actionTypes';
 import * as API from 'constants/API';
 import { IPaginateParams } from 'constants/API';
 import { ENVIRONMENT } from 'constants/environment';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { IUser, IUsersFilter } from 'interfaces';
 import { isEmpty } from 'lodash';
