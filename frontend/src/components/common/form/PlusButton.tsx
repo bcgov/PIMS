@@ -15,11 +15,11 @@ interface IPlusButtonProps extends ButtonProps {
  * PlusButton displaying a plus button, used to add new items.
  * @param param0
  */
-const PlusButton: React.FC<IPlusButtonProps> = props => {
+const PlusButton: React.FC<IPlusButtonProps> = (props) => {
   const disabled = props.disabled || false;
   return (
     <TooltipWrapper toolTipId={props.toolId} toolTip={props.toolText}>
-      <div className="primary" onClick={disabled ? props.onClick : () => {}}>
+      <div className="primary" onClick={disabled ? () => {} : props.onClick}>
         <FaPlus size={20} />
       </div>
     </TooltipWrapper>

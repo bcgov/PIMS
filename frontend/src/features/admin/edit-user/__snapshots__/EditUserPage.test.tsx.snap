@@ -1,0 +1,311 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Edit user page EditUserPage renders 1`] = `
+<div>
+  <nav
+    class="navBar navbar navbar-expand-sm navbar-light bg-light"
+  >
+    <a
+      class="navbar-brand"
+      href="#"
+      style="margin-left: 10px;"
+    >
+      User Information
+    </a>
+  </nav>
+  <div
+    class="container-fluid"
+  >
+    <div
+      class="user-edit-form-container row"
+    >
+      <form
+        class="userInfo"
+        novalidate=""
+      >
+        <label
+          class="label"
+        >
+          IDIR/BCeID
+        </label>
+        <div
+          class="row"
+          controlid="input-username"
+          style="align-items: center;"
+        >
+          <div
+            class="col-md-auto"
+          >
+            <div>
+              <input
+                class="form-control"
+                data-testid="username"
+                name="username"
+                readonly=""
+                type="text"
+                value="tester"
+              />
+            </div>
+          </div>
+        </div>
+        <label
+          class="label"
+        >
+          Last Login
+        </label>
+        <div
+          class="row"
+          controlid="input-lastLogin"
+          style="align-items: center;"
+        >
+          <div
+            class="col-md-auto"
+          >
+            <div>
+              <input
+                class="form-control"
+                data-testid="lastLogin"
+                name="lastLogin"
+                readonly=""
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="row"
+        >
+          <div
+            class="col"
+          >
+            <label
+              class="label"
+            >
+              First Name
+            </label>
+            <div
+              class="row"
+              controlid="input-firstName"
+              style="align-items: center;"
+            >
+              <div
+                class="col-md-auto"
+              >
+                <div>
+                  <input
+                    class="form-control"
+                    data-testid="firstName"
+                    name="firstName"
+                    placeholder="firstName"
+                    type="text"
+                    value="firstName"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="col"
+          >
+            <label
+              class="label"
+            >
+              Last Name
+            </label>
+            <div
+              class="row"
+              controlid="input-lastName"
+              style="align-items: center;"
+            >
+              <div
+                class="col-md-auto"
+              >
+                <div>
+                  <input
+                    class="form-control"
+                    data-testid="lastName"
+                    name="lastName"
+                    placeholder="lastName"
+                    type="text"
+                    value="lastName"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <label
+          class="label"
+        >
+          Email
+        </label>
+        <div
+          class="row"
+          controlid="input-email"
+          style="align-items: center;"
+        >
+          <div
+            class="col-md-auto"
+          >
+            <div>
+              <input
+                class="form-control"
+                data-testid="email"
+                name="email"
+                placeholder="test@test.com"
+                type="email"
+                value="test@test.com"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="required row"
+          controlid="input-agency"
+          style="align-items: center;"
+        >
+          <div
+            class="col-md-auto"
+          >
+            <label
+              class="form-label"
+            >
+              Agency
+            </label>
+          </div>
+          <div
+            class="col-md-auto"
+            style="padding: 0px;"
+          >
+            <select
+              class="form-select form-control"
+              data-testid="agency"
+              name="agency"
+              required=""
+              style="width: 450px; margin-top: 10px;"
+            >
+              <option
+                class="option"
+                value="1"
+              >
+                agencyVal
+              </option>
+            </select>
+          </div>
+        </div>
+        <div
+          class="row"
+          style="margin-top: 10px;"
+        >
+          <div
+            class="col"
+          >
+            <p>
+              Unable to load user's roles
+            </p>
+          </div>
+        </div>
+        <label
+          class="label"
+        >
+          Position
+        </label>
+        <div
+          class="row"
+          controlid="input-position"
+          style="align-items: center;"
+        >
+          <div
+            class="col-md-auto"
+          >
+            <div>
+              <input
+                class="form-control"
+                data-testid="position"
+                name="position"
+                placeholder="e.g) Director, Real Estate and Stakeholder Engagement"
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <label
+          class="label"
+        >
+          Notes
+        </label>
+        <div
+          class="row"
+          controlid="input-note"
+          style="align-items: center;"
+        >
+          <div
+            class="col-md-auto"
+          >
+            <div>
+              <textarea
+                class="form-control"
+                data-testid="note"
+                name="note"
+                placeholder="A note about this user"
+                type="text"
+              >
+                test note
+              </textarea>
+            </div>
+          </div>
+        </div>
+        <div
+          class="is-disabled"
+        >
+          <label
+            class="form-label"
+          >
+            Disable Account? 
+          </label>
+          <div>
+            <input
+              data-testid="isDisabled"
+              name="isDisabled"
+              type="checkbox"
+              value="false"
+            />
+          </div>
+        </div>
+        <div
+          class="justify-content-md-center row"
+        >
+          <div
+            class="col"
+          >
+            <div
+              class="cancelSave btn-toolbar"
+              role="toolbar"
+            >
+              <button
+                class="btn btn-secondary"
+                style="margin-right: 10px;"
+                type="button"
+              >
+                Cancel
+              </button>
+              <button
+                class="btn btn-primary"
+                type="submit"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+          <div
+            class="col"
+          />
+        </div>
+        <hr />
+      </form>
+    </div>
+  </div>
+</div>
+`;

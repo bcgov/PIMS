@@ -10,7 +10,7 @@ coverage/
 test-report.xml
 cypress/videos
 cypress/screenshots
-bradmitc.json
+testUser.json
 
 # production
 build/
