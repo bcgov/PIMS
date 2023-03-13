@@ -59,7 +59,7 @@ const UserRoleSelector = ({ options, handleAddRole, handleDeleteRole }: IUserRol
       : [];
   }, [roles, options]);
 
-  // Once the component has been populated with data, disable loading
+  // Once the component has been populated with data, disable loading.
   useEffect(() => {
     if (values.username) {
       setRoles(values.goldRoles ?? []);
@@ -67,7 +67,7 @@ const UserRoleSelector = ({ options, handleAddRole, handleDeleteRole }: IUserRol
       setIsLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [values.username]);
 
   useEffect(() => {
     // Update formik values goldRoles of parent component EditUserPage.
