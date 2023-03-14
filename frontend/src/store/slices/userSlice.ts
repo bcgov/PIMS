@@ -11,6 +11,7 @@ export const storeUserFilter = createAction<IUsersFilter>('storeUserFilter');
 export const storeUserSort = createAction<TableSort<IUserRecord>>('storeUserSort');
 export const storeUserPageIndex = createAction<number>('storeUserPageIndex');
 export const storeUserPageQuantity = createAction<number>('storeUserPageQuantity');
+export const clearUser = createAction('clearUser');
 
 export interface IUserDetail {
   id: string;
@@ -71,6 +72,9 @@ export const userSlice = createSlice({
   extraReducers: (builder: any) => {
     builder.addCase(storeUser, (state: IUsersState, action: PayloadAction<IUserDetail>) => {
       return { ...state, user: action.payload };
+    });
+    builder.addCase(clearUser, (state: IUsersState, action: PayloadAction<IUserDetail>) => {
+      return { ...state, user: initialUserState.user };
     });
     builder.addCase(updateUser, (state: IUsersState, action: PayloadAction<IUser>) => {
       return {

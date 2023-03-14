@@ -1,6 +1,7 @@
 import './EditUserPage.scss';
 
 import { ILookupCode } from 'actions/ILookupCode';
+import { Form, Input, Select, SelectOption } from 'components/common/form';
 import UserRoleSelector from 'components/common/form/UserRoleSelector';
 import { Label } from 'components/common/Label';
 import TooltipWrapper from 'components/common/TooltipWrapper';
@@ -14,10 +15,10 @@ import { Button, ButtonToolbar, Col, Container, Navbar, Row, Spinner } from 'rea
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchUserDetail, getUpdateUserAction } from 'store/slices/hooks/usersActionCreator';
+import { clearUser } from 'store/slices/userSlice';
 import { formatApiDateTime } from 'utils';
 import { UserUpdateSchema } from 'utils/YupSchema';
 
-import { Form, Input, Select, SelectOption } from '../../../components/common/form';
 import useEditUserService from './useEditUserService';
 
 interface IEditUserPageProps extends IUserDetailParams {
@@ -36,6 +37,14 @@ const EditUserPage = (props: IEditUserPageProps) => {
   const { getByType } = useCodeLookups();
   const agencies = getByType(API.AGENCY_CODE_SET_NAME);
   const roles = getByType(API.ROLE_CODE_SET_NAME);
+
+  useEffect(() => {
+    return () => {
+      // Clear user on component unmount.
+      dispatch(clearUser());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Fetch user details.
   const userId = params.id?.toString() ?? '';
