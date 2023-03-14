@@ -48,7 +48,7 @@ const selectedUser = {
   roles: [],
   rowVersion: 'AAAAAAAAB9E=',
   note: 'test note',
-  lastLogin: '2020-10-14T17:45:39.7381599',
+  lastLogin: '2023-02-28T17:45:39.7381599',
 };
 
 const store = mockStore({
@@ -169,7 +169,7 @@ describe('Edit user page', () => {
 
     it('Displays the correct last login time', () => {
       const dateTime = moment
-        .utc('2020-10-14T17:45:39.7381599')
+        .utc('2023-02-28T17:45:39.7381599')
         .local()
         .format('YYYY-MM-DD hh:mm a');
       const { getByTestId } = renderEditUserPage();
