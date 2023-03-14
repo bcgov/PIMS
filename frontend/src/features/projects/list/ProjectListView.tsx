@@ -436,5 +436,11 @@ export const getServerQuery = (state: {
   return query;
 };
 
-const projectListView = () => <ProjectListView title="My Agency's Projects" filterable={true} />;
+const projectListView = () => (
+  <ProjectListView
+    data-testid="project-list-view-page-title"
+    title="My Agency's Projects"
+    filterable={true}
+  />
+);
 export default projectListView;
