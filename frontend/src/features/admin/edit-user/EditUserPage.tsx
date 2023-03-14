@@ -8,6 +8,7 @@ import { IUserDetailParams } from 'constants/API';
 import * as API from 'constants/API';
 import { Field, FieldArray, Formik } from 'formik';
 import useCodeLookups from 'hooks/useLookupCodes';
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Button, ButtonToolbar, Col, Container, Navbar, Row, Spinner } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -80,7 +81,21 @@ const EditUserPage = (props: IEditUserPageProps) => {
   const [allUserRoles, setAllUserRoles] = useState<string[]>(initialValues.roles);
   const [rolesToAdd, setRolesToAdd] = useState<string[]>([]);
   const [rolesToRemove, setRolesToRemove] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSaveLoading, setIsSaveLoading] = useState<boolean>(false);
+  const [loggedInSinceGold, setLoggedInSinceGold] = useState<boolean>(true);
+
+  // Has the user logged in since gold changes.
+  const hasLoggedInSinceGold = (lastLogin: string | undefined | null) => {
+    if (!lastLogin) setLoggedInSinceGold(false);
+    const lastLoginDate = moment(lastLogin);
+    const keycloakGoldUpdateDate = moment('2023-02-15 16:20:00'); // Feb 15th 4:20pm 2023
+    setLoggedInSinceGold(lastLoginDate.isSameOrAfter(keycloakGoldUpdateDate));
+  };
+
+  // Update if user has logged in since gold changes.
+  useEffect(() => {
+    hasLoggedInSinceGold(user.lastLogin);
+  }, [user.lastLogin]);
 
   /**
    * This function takes in a role (as a string) and adds it to the user's roles.
@@ -166,7 +181,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
    * Adds any roles that were added and removes any roles that were deleted then updates the user in the database
    */
   const onSubmitUserChanges = async (values: typeof initialValues, setSubmitting: any) => {
-    setIsLoading(true);
+    setIsSaveLoading(true);
     updateAgenciesOnSubmit(values);
     let userRolesWithIDs;
     if (values.goldRoles) {
@@ -195,7 +210,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
       },
     )(dispatch);
     setSubmitting(false);
-    setIsLoading(false);
+    setIsSaveLoading(false);
   };
 
   return (
@@ -217,108 +232,121 @@ const EditUserPage = (props: IEditUserPageProps) => {
           >
             {props => (
               <Form className="userInfo">
-                <Label>IDIR/BCeID</Label>
-                <Input
-                  data-testid="username"
-                  field="username"
-                  value={props.values.username}
-                  readOnly={true}
-                  type="text"
-                />
-                <Label>Last Login</Label>
-                <Input
-                  data-testid="lastLogin"
-                  field="lastLogin"
-                  value={props.values.lastLogin}
-                  readOnly={true}
-                  type="text"
-                />
-
-                <Row>
-                  <Col>
-                    <Label>First Name</Label>
+                {loggedInSinceGold ? (
+                  <>
+                    <Label>Username</Label>
                     <Input
-                      data-testid="firstName"
-                      field="firstName"
-                      placeholder={props.values.firstName}
+                      data-testid="username"
+                      field="username"
+                      value={props.values.username}
+                      readOnly={true}
                       type="text"
                     />
-                  </Col>
-                  <Col>
-                    <Label>Last Name</Label>
+                    <Label>Last Login</Label>
                     <Input
-                      data-testid="lastName"
-                      field="lastName"
-                      placeholder={props.values.lastName}
+                      data-testid="lastLogin"
+                      field="lastLogin"
+                      value={props.values.lastLogin}
+                      readOnly={true}
                       type="text"
                     />
-                  </Col>
-                </Row>
 
-                <Label>Email</Label>
-                <Input
-                  data-testid="email"
-                  field="email"
-                  placeholder={props.values.email}
-                  type="email"
-                />
-
-                <Select
-                  style={{ width: '450px', marginTop: '10px' }}
-                  label="Agency"
-                  field="agency"
-                  data-testid="agency"
-                  required={true}
-                  options={selectAgencies}
-                  placeholder={user?.agencies?.length > 0 ? undefined : 'Please Select'}
-                />
-
-                <Row style={{ marginTop: '10px' }}>
-                  <Col>
-                    <FieldArray name="roles">
-                      {arrayHelpers => (
-                        <UserRoleSelector
-                          options={roles.map(r => r.name)}
-                          handleAddRole={role => {
-                            arrayHelpers.push(role);
-                            handleAddRole(role);
-                          }}
-                          handleDeleteRole={role => {
-                            arrayHelpers.remove(allUserRoles.findIndex(r => r === role));
-                            handleDeleteRole(role);
-                          }}
+                    <Row>
+                      <Col>
+                        <Label>First Name</Label>
+                        <Input
+                          data-testid="firstName"
+                          field="firstName"
+                          placeholder={props.values.firstName}
+                          type="text"
                         />
-                      )}
-                    </FieldArray>
-                  </Col>
-                </Row>
+                      </Col>
+                      <Col>
+                        <Label>Last Name</Label>
+                        <Input
+                          data-testid="lastName"
+                          field="lastName"
+                          placeholder={props.values.lastName}
+                          type="text"
+                        />
+                      </Col>
+                    </Row>
 
-                <Label>Position</Label>
-                <Input
-                  field="position"
-                  placeholder="e.g) Director, Real Estate and Stakeholder Engagement"
-                  type="text"
-                  data-testid="position"
-                />
+                    <Label>Email</Label>
+                    <Input
+                      data-testid="email"
+                      field="email"
+                      placeholder={props.values.email}
+                      type="email"
+                    />
 
-                <Label>Notes</Label>
-                <Input
-                  as="textarea"
-                  field="note"
-                  placeholder="A note about this user"
-                  type="text"
-                  data-testid="note"
-                />
+                    <Select
+                      style={{ width: '450px', marginTop: '10px' }}
+                      label="Agency"
+                      field="agency"
+                      data-testid="agency"
+                      required={true}
+                      options={selectAgencies}
+                      placeholder={user?.agencies?.length > 0 ? undefined : 'Please Select'}
+                    />
 
-                <Form.Group className={'is-disabled'}>
-                  <Form.Label>Disable Account?&nbsp;</Form.Label>
-                  <TooltipWrapper
-                    toolTipId="is-disabled-tooltip"
-                    toolTip={'Click to change account status then click Save.'}
-                  >
-                    <Field data-testid="isDisabled" type="checkbox" name="isDisabled" />
-                  </TooltipWrapper>
-                </Form.Group>
+                    <Row style={{ marginTop: '10px' }}>
+                      <Col>
+                        <FieldArray name="roles">
+                          {arrayHelpers => (
+                            <UserRoleSelector
+                              options={roles.map(r => r.name)}
+                              handleAddRole={role => {
+                                arrayHelpers.push(role);
+                                handleAddRole(role);
+                              }}
+                              handleDeleteRole={role => {
+                                arrayHelpers.remove(allUserRoles.findIndex(r => r === role));
+                                handleDeleteRole(role);
+                              }}
+                            />
+                          )}
+                        </FieldArray>
+                      </Col>
+                    </Row>
+
+                    <Label>Position</Label>
+                    <Input
+                      field="position"
+                      placeholder="e.g) Director, Real Estate and Stakeholder Engagement"
+                      type="text"
+                      data-testid="position"
+                    />
+
+                    <Label>Notes</Label>
+                    <Input
+                      as="textarea"
+                      field="note"
+                      placeholder="A note about this user"
+                      type="text"
+                      data-testid="note"
+                    />
+
+                    <Form.Group className={'is-disabled'}>
+                      <Form.Label>Disable Account?&nbsp;</Form.Label>
+                      <TooltipWrapper
+                        toolTipId="is-disabled-tooltip"
+                        toolTip={'Click to change account status then click Save.'}
+                      >
+                        <Field data-testid="isDisabled" type="checkbox" name="isDisabled" />
+                      </TooltipWrapper>
+                    </Form.Group>
+                  </>
+                ) : (
+                  <>
+                    <br />
+                    <p>User has not logged in since the upgrade from Keycloak Silver to Gold.</p>
+                    <p>
+                      Last login was: <b>{props.values.lastLogin}</b>
+                    </p>
+                    <p>User must log in before changes can be made!</p>
+                  </>
+                )}
 
                 <Row className="justify-content-md-center">
                   <Col>
@@ -328,16 +356,18 @@ const EditUserPage = (props: IEditUserPageProps) => {
                         variant="secondary"
                         type="button"
                         onClick={goBack}
-                        disabled={isLoading}
+                        disabled={isSaveLoading}
                       >
                         Cancel
                       </Button>
-                      <Button disabled={isLoading} type="submit">
-                        Save
-                      </Button>
+                      {loggedInSinceGold && (
+                        <Button disabled={isSaveLoading} type="submit">
+                          Save
+                        </Button>
+                      )}
                     </ButtonToolbar>
                   </Col>
-                  <Col>{isLoading ? <Spinner animation="border" /> : ''}</Col>
+                  <Col>{isSaveLoading ? <Spinner animation="border" /> : ''}</Col>
                 </Row>
                 <hr></hr>
               </Form>
