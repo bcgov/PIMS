@@ -347,7 +347,9 @@ export const ProjectListView: React.FC<IProps> = ({
           />
         )}
         <Container fluid className="TableToolbar">
-          <h3 className="mr-4">{title}</h3>
+          <h3 className="mr-4" data-testid="project-list-view-page-title">
+            {title}
+          </h3>
           <h6 className="ProjectCountHeader">Found {projectCount} projects.</h6>
           {keycloak.hasClaim(Claims.REPORTS_VIEW) && (
             <>
@@ -436,11 +438,5 @@ export const getServerQuery = (state: {
   return query;
 };
 
-const projectListView = () => (
-  <ProjectListView
-    data-testid="project-list-view-page-title"
-    title="My Agency's Projects"
-    filterable={true}
-  />
-);
+const projectListView = () => <ProjectListView title="My Agency's Projects" filterable={true} />;
 export default projectListView;

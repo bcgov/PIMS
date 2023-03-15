@@ -27,19 +27,33 @@ describe('Create a disposal project', () => {
 
       const PROJECT_NAME = 'Cypress Test Disposal Project';
 
-      // Wait for the spinner to disappear.
-      cy.get('.table-loading', { timeout: 10000 }).should('not.exist');
+      // Wait for page title.
+      cy.get('[data-testid="project-list-view-page-title"]', { timeout: 10000 }).should('exist');
 
-      cy.get('.tbody').then($tbody => {
+      // Wait for the spinner to disappear.
+      cy.get('.table-loading', { timeout: 10000 })
+        .should('not.exist')
+        .wait(2000);
+
+      // Search for project
+      cy.get('[name="name"]').click({ force: true });
+      cy.get('[name="name"]').type(PROJECT_NAME);
+      cy.get('[id="search-button"]').click({ force: true });
+
+      // Wait for the spinner to disappear.
+      cy.get('.table-loading', { timeout: 10000 })
+        .should('not.exist')
+        .wait(2000);
+
+      cy.get('.tbody', { timeout: 10000 }).then($tbody => {
         const firstTableRow = $tbody
           .children()
           .eq(0)
           .children()
           .eq(0);
         const projectNameCell = firstTableRow.children().eq(2);
-        const projectStatusCell = firstTableRow.children().eq(3);
-        // If table row for Cypress test project exists in DRAFT status
-        if (projectNameCell.text() === PROJECT_NAME && projectStatusCell.text() === 'Review') {
+        // If table row for Cypress test project exists.
+        if (projectNameCell.text() === PROJECT_NAME) {
           cy.get('[role="cell"]')
             .contains(PROJECT_NAME)
             .then($projectNameField => {
@@ -86,6 +100,14 @@ describe('Create a disposal project', () => {
             [1/6] Draft 
      * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
+    // Stepper 0 btn (Step 1/6) should be selected.
+    cy.get('[data-target="stepper-0"]', { timeout: 10000 })
+      .children()
+      .first()
+      .children('.bs-stepper-circle')
+      .first()
+      .should('have.css', 'background-color', 'rgb(0, 123, 255)');
+
     // Wait for the spinner to disappear.
     cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
 
@@ -107,13 +129,21 @@ describe('Create a disposal project', () => {
       .click({ force: true });
     cy.get('[data-testid="project-description"]').type(inputs.description);
     // Next button.
-    cy.get('[data-testid="next-submit-btn"]').click();
+    cy.get('[data-testid="next-submit-btn"]').click({ force: true });
 
     /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             [2/6] Select Properties 
      * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
     // TODO: Test search filter, and Remove Selected button.
+
+    // Stepper 1 btn (Step 2/6) should be selected.
+    cy.get('[data-target="stepper-1"]', { timeout: 10000 })
+      .children()
+      .first()
+      .children('.bs-stepper-circle')
+      .first()
+      .should('have.css', 'background-color', 'rgb(0, 123, 255)');
 
     // Wait for the spinner to disappear.
     cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
@@ -150,7 +180,7 @@ describe('Create a disposal project', () => {
     // Reset filter.
     cy.get('[data-testid="reset-btn"]').click();
     // Next button.
-    cy.get('[data-testid="next-submit-btn"]').click();
+    cy.get('[data-testid="next-submit-btn"]').click({ force: true });
 
     /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             [3/6] Update Information 
@@ -162,6 +192,14 @@ describe('Create a disposal project', () => {
     // - Editable Fields in Properties in the Project.
     // - Add More Properties button.
     // - Remove Properties button.
+
+    // Stepper 2 btn (Step 3/6) should be selected.
+    cy.get('[data-target="stepper-2"]', { timeout: 10000 })
+      .children()
+      .first()
+      .children('.bs-stepper-circle')
+      .first()
+      .should('have.css', 'background-color', 'rgb(0, 123, 255)');
 
     // Wait for the spinner to disappear.
     cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
@@ -202,13 +240,22 @@ describe('Create a disposal project', () => {
       .click({ force: true });
     cy.get('[data-testid="market"]').type(inputs.estimatedMarketValue);
     // Next button.
-    cy.get('[data-testid="next-submit-btn"]').click();
+    cy.get('[data-testid="next-submit-btn"]').click({ force: true });
+    cy.get('[data-testid="next-submit-btn"]').click({ force: true });
 
     /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             [4/6] Required Documentation 
     * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
     // TODO: Test Exemption request.
+
+    // Stepper 3 btn (Step 4/6) should be selected.
+    cy.get('[data-target="stepper-3"]', { timeout: 10000 })
+      .children()
+      .first()
+      .children('.bs-stepper-circle')
+      .first()
+      .should('have.css', 'background-color', 'rgb(0, 123, 255)');
 
     // Wait for the spinner to disappear.
     cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
@@ -244,12 +291,31 @@ describe('Create a disposal project', () => {
       .should('not.be.checked')
       .click({ force: true });
     cy.get('[data-testid="taskform-check-1"]').should('be.checked');
+    cy.get('[id="input-exemptionRequested"]')
+      .should('be.enabled')
+      .should('not.be.checked')
+      .click({ force: true });
+    cy.get('[id="input-exemptionRequested"]').should('be.checked');
+    // Type exemption rationale.
+    cy.get('[name="exemptionRationale"]')
+      .should('be.enabled')
+      .click({ force: true });
+    cy.get('[name="exemptionRationale"]').type('testing');
     // Next button.
-    cy.get('[data-testid="next-submit-btn"]').click();
+    cy.get('[data-testid="next-submit-btn"]').click({ force: true });
+    cy.get('[data-testid="next-submit-btn"]').click({ force: true });
 
     /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             [5/6] Approval 
     * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+    // Stepper 4 btn (Step 5/6) should be selected.
+    cy.get('[data-target="stepper-4"]', { timeout: 10000 })
+      .children()
+      .first()
+      .children('.bs-stepper-circle')
+      .first()
+      .should('have.css', 'background-color', 'rgb(0, 123, 255)');
 
     // Wait for the spinner to disappear.
     cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
@@ -281,12 +347,20 @@ describe('Create a disposal project', () => {
       .click({ force: true });
     cy.get('[data-testid="approval-check"]').should('be.checked');
     // Next button.
-    cy.get('[data-testid="next-submit-btn"]').click();
+    cy.get('[data-testid="next-submit-btn"]').click({ force: true });
     /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             [6/6] Review
     * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
     // TODO: Test Edit button.
+
+    // Stepper 5 btn (Step 6/6) should be selected.
+    cy.get('[data-target="stepper-5"]', { timeout: 10000 })
+      .children()
+      .first()
+      .children('.bs-stepper-circle')
+      .first()
+      .should('have.css', 'background-color', 'rgb(0, 123, 255)');
 
     // Wait for the spinner to disappear.
     cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
