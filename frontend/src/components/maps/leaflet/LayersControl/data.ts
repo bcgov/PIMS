@@ -30,6 +30,7 @@ export const layersTree: ILayerItem[] = [
         format: 'image/png',
         zIndex: 21,
         id: 'moti',
+        color: ['#E4D597', '#F4EF75', '#E6C46D'],
       },
       {
         key: 'municipalities',
@@ -43,7 +44,7 @@ export const layersTree: ILayerItem[] = [
         zIndex: 20,
         id: 'municipalityLayer',
         opacity: 0.5,
-        color: '#b39ddb',
+        color: '#f2b3ff',
       },
       {
         key: 'regionalDistricts ',
@@ -89,6 +90,8 @@ export const layersTree: ILayerItem[] = [
         format: 'image/png',
         zIndex: 10,
         id: 'firstNationTreatyAreas',
+        color: ['#0C5577', '#115C06', '#838383', '#A87002', '#2092B0'],
+        outline: true,
       },
       {
         key: 'firstNationTreatyLands',
@@ -125,7 +128,7 @@ export const layersTree: ILayerItem[] = [
         format: 'image/png',
         zIndex: 10,
         id: 'firstNationTreatySideAgreement',
-        color: '#ffc5ae',
+        color: '#F8D5D2',
       },
     ],
   },
@@ -145,7 +148,9 @@ export const layersTree: ILayerItem[] = [
         zIndex: 7,
         id: 'crownLeases',
         opacity: 0.5,
-        color: '#8dc2d5',
+        color: 'transparent',
+        outline: true,
+        strikes: '#1F6182',
       },
       {
         key: 'crownInventory',
@@ -183,6 +188,9 @@ export const layersTree: ILayerItem[] = [
         zIndex: 5,
         id: 'crownLandLicenses',
         opacity: 0.5,
+        color: 'transparent',
+        outline: true,
+        strikes: '#12387E',
       },
       {
         key: 'crownTenures',
@@ -228,6 +236,7 @@ export const layersTree: ILayerItem[] = [
         id: 'agriculturalLandReserveLines',
         opacity: 0.5,
         color: '#00b300',
+        outline: true,
       },
     ],
   },
