@@ -1,7 +1,7 @@
 import './ProjectDisposalSubmitted.scss';
 
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { Container } from 'react-bootstrap';
 
 import StepStatusIcon from '../common/components/StepStatusIcon';
@@ -11,6 +11,13 @@ import StepStatusIcon from '../common/components/StepStatusIcon';
  */
 export const ProjectDisposalSubmitted = () => {
   const keycloak = useKeycloakWrapper();
+
+  useEffect(() => {
+    // Track <a/> tag clicks in Snowplow Analytics.
+    // @ts-ignore
+    window.snowplow('refreshLinkClickTracking');
+  }, []);
+
   return (
     <Container className="ProjectDisposalSubmitted">
       <StepStatusIcon

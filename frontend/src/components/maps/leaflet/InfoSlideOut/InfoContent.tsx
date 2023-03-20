@@ -5,7 +5,7 @@ import { IBuilding, IParcel } from 'actions/parcelsActions';
 import { BuildingSvg, LandSvg, SubdivisionSvg } from 'components/common/Icons';
 import { Label } from 'components/common/Label';
 import { PropertyTypes } from 'constants/propertyTypes';
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { ListGroup, Row } from 'react-bootstrap';
 import styled from 'styled-components';
@@ -114,6 +114,13 @@ export const InfoContent: React.FC<IInfoContent> = ({
     [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(propertyTypeId);
 
   const [privateProject, setPrivateProject] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Track <a/> tag clicks in Snowplow Analytics.
+    // @ts-ignore
+    window.snowplow('refreshLinkClickTracking');
+  }, []);
+
   return (
     <>
       <ListGroup>
