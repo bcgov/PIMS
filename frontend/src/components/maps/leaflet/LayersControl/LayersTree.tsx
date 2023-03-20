@@ -67,22 +67,34 @@ const FormGroup = styled(Form.Group)`
 `;
 
 interface ILayerColor {
-  color: string;
-  outline?: boolean | undefined;
-  strikes?: string | undefined;
+  color: string | string[];
+  outline?: string | undefined;
+  stripes?: string | undefined;
 }
 
 const LayerColor = (props: ILayerColor) => {
-  const { color, outline, strikes } = props;
-
-  if (!strikes) {
+  const { color, outline, stripes } = props;
+  if (!!stripes) {
     return (
       <div
         style={{
           width: '14px',
           height: '14px',
-          backgroundColor: `${outline ? 'transparent' : color}`,
-          border: `${outline ? `solid 3px ${color}` : 'none'}`,
+          backgroundSize: '5px 5px',
+          backgroundImage: `linear-gradient(45deg, ${color} 25%, ${stripes} 25%, ${stripes} 50%, ${color} 50%, ${color} 75%, ${stripes} 75%, ${stripes} 100%`,
+          border: `solid 2px ${outline}`,
+          marginRight: '1px',
+        }}
+      />
+    );
+  } else if (Array.isArray(color)) {
+    return (
+      <div
+        style={{
+          width: '14px',
+          height: '14px',
+          background: `linear-gradient(to right, ${color.join(', ')})`,
+          border: `solid 2px ${outline}`,
           marginRight: '1px',
         }}
       />
@@ -93,9 +105,8 @@ const LayerColor = (props: ILayerColor) => {
         style={{
           width: '14px',
           height: '14px',
-          backgroundSize: '5px 5px',
-          backgroundImage: `linear-gradient(45deg, ${color} 25%, ${strikes} 25%, ${strikes} 50%, ${color} 50%, ${color} 75%, ${strikes} 75%, ${strikes} 100%`,
-          border: `${outline ? `solid 3px ${strikes}` : 'none'}`,
+          backgroundColor: color,
+          border: `solid 2px ${outline}`,
           marginRight: '1px',
         }}
       />
@@ -137,67 +148,35 @@ const LayerNodeCheckbox: React.FC<{
   name: string;
   label: string;
   color: string | string[];
-  outline: boolean;
-  strikes?: string | undefined;
-}> = ({ name, label, color, outline, strikes }) => {
+  outline?: string | undefined;
+  stripes?: string | undefined;
+}> = ({ name, label, color, outline, stripes }) => {
   const { values, setFieldValue } = useFormikContext();
 
   const onChange = () => {
     setFieldValue(name, !getIn(values, name));
   };
 
-  if (!!color && Array.isArray(color)) {
-    return (
-      <FormGroup>
-        <Form.Check
-          type="checkbox"
-          checked={getIn(values, name)}
-          onChange={onChange}
-          label={
-            <>
-              <div style={{ marginLeft: '5px' }} />
-              {color.map(c => (
-                <div>
-                  <LayerColor
-                    color={c}
-                    outline={outline ? true : false}
-                    strikes={!!strikes ? strikes : undefined}
-                  />
-                </div>
-              ))}
-              <div style={{ marginRight: '4px' }} />
-              {label}
-            </>
-          }
-        />
-      </FormGroup>
-    );
-  } else {
-    return (
-      <FormGroup>
-        <Form.Check
-          type="checkbox"
-          checked={getIn(values, name)}
-          onChange={onChange}
-          label={
-            <>
-              {!!color && (
-                <div style={{ marginLeft: '5px' }}>
-                  <LayerColor
-                    color={color}
-                    outline={outline ? true : false}
-                    strikes={strikes!! ? strikes : undefined}
-                  />
-                </div>
-              )}
-              <div style={{ marginRight: '4px' }} />
-              {label}
-            </>
-          }
-        />
-      </FormGroup>
-    );
-  }
+  return (
+    <FormGroup>
+      <Form.Check
+        type="checkbox"
+        checked={getIn(values, name)}
+        onChange={onChange}
+        label={
+          <>
+            {!!color && (
+              <div style={{ marginLeft: '5px' }}>
+                <LayerColor color={color} outline={outline} stripes={stripes} />
+              </div>
+            )}
+            <div style={{ marginRight: '4px' }} />
+            {label}
+          </>
+        }
+      />
+    </FormGroup>
+  );
 };
 
 const featureGroup = new L.FeatureGroup();
@@ -296,8 +275,8 @@ const LayersTree: React.FC<{ items: TreeMenuItem[] }> = ({ items }) => {
                   values.layers as any,
                 )}].on`}
                 color={node.color}
-                outline={node.outline ?? false}
-                strikes={node.strikes ?? undefined}
+                outline={node.outline}
+                stripes={node.stripes}
               />
             </LayerNode>
           );
