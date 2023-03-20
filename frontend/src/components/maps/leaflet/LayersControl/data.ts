@@ -221,4 +221,26 @@ export const layersTree: ILayerItem[] = [
       },
     ],
   },
+  {
+    key: 'disturbances',
+    label: 'Disturbances',
+    on: false,
+    nodes: [
+      {
+        key: 'environmentalRemediationSites',
+        label: 'Environmental Remediation Sites',
+        on: false,
+        layers: 'pub:WHSE_WASTE.SITE_ENV_RMDTN_SITES_SVW',
+        url: 'https://openmaps.gov.bc.ca/geo/pub/WHSE_WASTE.SITE_ENV_RMDTN_SITES_SVW/ows?',
+        transparent: true,
+        format: 'image/png',
+        zIndex: 4,
+        id: 'environmentalRemediationSites',
+        opacity: 0.5,
+        color: '#DC0000',
+        outline: 'black',
+        circle: true,
+      },
+    ],
+  },
 ];

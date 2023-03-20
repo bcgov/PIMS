@@ -70,10 +70,11 @@ interface ILayerColor {
   color: string | string[];
   outline?: string | undefined;
   stripes?: string | undefined;
+  circle: boolean;
 }
 
 const LayerColor = (props: ILayerColor) => {
-  const { color, outline, stripes } = props;
+  const { color, outline, stripes, circle } = props;
   if (!!stripes) {
     // Stripes, does not support multicolor background.
     return (
@@ -110,6 +111,7 @@ const LayerColor = (props: ILayerColor) => {
           height: '14px',
           backgroundColor: color,
           border: `solid 2px ${outline}`,
+          borderRadius: circle ? '7px' : 'none',
           marginRight: '1px',
         }}
       />
@@ -139,7 +141,12 @@ const ParentCheckbox: React.FC<{ name: string; label: string; index: number }> =
 
   return (
     <FormGroup>
-      <Form.Check type="checkbox" checked={getIn(values, name)} onChange={onChange} label={label} />
+      <Form.Check
+        type="checkbox"
+        checked={getIn(values, name)}
+        onChange={onChange}
+        label={` ${label}`}
+      />
     </FormGroup>
   );
 };
@@ -153,7 +160,8 @@ const LayerNodeCheckbox: React.FC<{
   color: string | string[];
   outline?: string | undefined;
   stripes?: string | undefined;
-}> = ({ name, label, color, outline, stripes }) => {
+  circle: boolean;
+}> = ({ name, label, color, outline, stripes, circle }) => {
   const { values, setFieldValue } = useFormikContext();
 
   const onChange = () => {
@@ -170,7 +178,7 @@ const LayerNodeCheckbox: React.FC<{
           <>
             {!!color && (
               <div style={{ marginLeft: '5px' }}>
-                <LayerColor color={color} outline={outline} stripes={stripes} />
+                <LayerColor color={color} outline={outline} stripes={stripes} circle={circle} />
               </div>
             )}
             <div style={{ marginRight: '4px' }} />
@@ -280,6 +288,7 @@ const LayersTree: React.FC<{ items: TreeMenuItem[] }> = ({ items }) => {
                 color={node.color}
                 outline={node.outline}
                 stripes={node.stripes}
+                circle={node.circle ?? false}
               />
             </LayerNode>
           );

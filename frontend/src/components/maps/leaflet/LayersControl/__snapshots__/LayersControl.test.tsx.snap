@@ -126,7 +126,7 @@ exports[`LayersControl View renders correctly 1`] = `
         >
           <div
             class="leaflet-layer "
-            style="z-index: 15;"
+            style="z-index: 9;"
           >
             <div
               class="leaflet-tile-container leaflet-zoom-animated"
@@ -272,7 +272,7 @@ exports[`LayersControl View renders correctly 1`] = `
                               class="form-check-label"
                               title=""
                             >
-                              Administrative Boundaries
+                               Administrative Boundaries
                             </label>
                           </div>
                         </div>
@@ -309,7 +309,7 @@ exports[`LayersControl View renders correctly 1`] = `
                               class="form-check-label"
                               title=""
                             >
-                              First Nations
+                               First Nations
                             </label>
                           </div>
                         </div>
@@ -346,7 +346,7 @@ exports[`LayersControl View renders correctly 1`] = `
                               class="form-check-label"
                               title=""
                             >
-                              Land Ownership
+                               Land Ownership
                             </label>
                           </div>
                         </div>
@@ -383,7 +383,44 @@ exports[`LayersControl View renders correctly 1`] = `
                               class="form-check-label"
                               title=""
                             >
-                              Zoning
+                               Zoning
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="c4 list-group-item"
+                        id="disturbances"
+                      >
+                        <svg
+                          class="c5"
+                          fill="currentColor"
+                          height="1em"
+                          stroke="currentColor"
+                          stroke-width="0"
+                          viewBox="0 0 256 512"
+                          width="1em"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"
+                          />
+                        </svg>
+                        <div
+                          class="c6"
+                        >
+                          <div
+                            class="form-check"
+                          >
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                            />
+                            <label
+                              class="form-check-label"
+                              title=""
+                            >
+                               Disturbances
                             </label>
                           </div>
                         </div>
