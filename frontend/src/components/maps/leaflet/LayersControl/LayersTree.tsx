@@ -75,6 +75,7 @@ interface ILayerColor {
 const LayerColor = (props: ILayerColor) => {
   const { color, outline, stripes } = props;
   if (!!stripes) {
+    // Stripes, does not support multicolor background.
     return (
       <div
         style={{
@@ -88,6 +89,7 @@ const LayerColor = (props: ILayerColor) => {
       />
     );
   } else if (Array.isArray(color)) {
+    // Multicolor background
     return (
       <div
         style={{
@@ -100,6 +102,7 @@ const LayerColor = (props: ILayerColor) => {
       />
     );
   } else {
+    // Basic background color and/or outline
     return (
       <div
         style={{

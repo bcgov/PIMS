@@ -135,7 +135,7 @@ exports[`LayersControl View renders correctly 1`] = `
               <img
                 alt=""
                 class="leaflet-tile"
-                src="https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/ows?&service=WMS&request=GetMap&layers=pub%3AWHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW&styles=&format=image%2Fpng&transparent=true&version=1.1.1&key=parcelBoundaries&label=Parcel%20Boundaries&on=true&url=https%3A%2F%2Fopenmaps.gov.bc.ca%2Fgeo%2Fpub%2FWHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW%2Fows%3F&id=parcelLayer&color=%23ff9800&width=256&height=256&srs=EPSG%3A3857&bbox=-13734205.24228047,6178557.870347368,-13731759.257375345,6181003.855252495"
+                src="https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/ows?&service=WMS&request=GetMap&layers=pub%3AWHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW&styles=&format=image%2Fpng&transparent=true&version=1.1.1&key=parcelBoundaries&label=Parcel%20Boundaries&on=true&url=https%3A%2F%2Fopenmaps.gov.bc.ca%2Fgeo%2Fpub%2FWHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW%2Fows%3F&id=parcelLayer&color=transparent&outline=%23E6A018&width=256&height=256&srs=EPSG%3A3857&bbox=-13734205.24228047,6178557.870347368,-13731759.257375345,6181003.855252495"
                 style="width: 256px; height: 256px; left: -75px; top: -242px;"
               />
             </div>
