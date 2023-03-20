@@ -25,8 +25,7 @@ namespace Pims.Api.Areas.Reports.Mapping.User
                 .Map(dest => dest.Roles, src => String.Join(",", src.Roles.Select(a => a.Role.Name)))
                 .Map(dest => dest.LastLogin, src => src.LastLogin)
                 .Map(dest => dest.ApprovedBy, src => src.ApprovedBy != null ? src.ApprovedBy.DisplayName : null)
-                .Map(dest => dest.ApprovedOn, src => src.ApprovedOn)
-                .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
+                .Map(dest => dest.ApprovedOn, src => src.ApprovedOn);
         }
     }
 }
