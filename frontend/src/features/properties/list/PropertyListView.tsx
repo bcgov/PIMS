@@ -511,7 +511,6 @@ const PropertyListView: React.FC = () => {
 
   const onRowClick = useCallback((row: IProperty) => {
     // Track row click in Snowplow Analytics.
-    // @ts-ignore
     window.snowplow('trackSelfDescribingEvent', {
       schema: 'iglu:ca.bc.gov.pims/listing_click/jsonschema/1-0-0',
       data: {

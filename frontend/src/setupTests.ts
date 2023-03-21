@@ -5,10 +5,8 @@
 import '@testing-library/jest-dom/extend-expect';
 import 'jest-styled-components';
 
-// @ts-ignore
-window.snowplow = {
-  track: jest.fn(),
-};
+// Mock window.snowplow
+window.snowplow = jest.fn();
 
 var localStorageMock = (function() {
   var store: any = {};
