@@ -117,7 +117,6 @@ export const InfoContent: React.FC<IInfoContent> = ({
 
   useEffect(() => {
     // Track <a/> tag clicks in Snowplow Analytics.
-    // @ts-ignore
     window.snowplow('refreshLinkClickTracking');
   }, []);
 

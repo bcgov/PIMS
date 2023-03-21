@@ -25,7 +25,6 @@ const EmailText = styled.div`
 const DocumentationForm = ({ isReadOnly, tasks, showNote = false }: IDocumentationFormProps) => {
   useEffect(() => {
     // Track <a/> tag clicks in Snowplow Analytics.
-    // @ts-ignore
     window.snowplow('refreshLinkClickTracking');
   }, []);
 

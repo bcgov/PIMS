@@ -14,7 +14,6 @@ export const ProjectDisposalExemptionSubmitted = () => {
 
   useEffect(() => {
     // Track <a/> tag clicks in Snowplow Analytics.
-    // @ts-ignore
     window.snowplow('refreshLinkClickTracking');
   }, []);
 
