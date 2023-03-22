@@ -171,7 +171,7 @@ const ProjectDisposeLayout = () => {
             </Container>
           ) : (
             <Container fluid style={{ textAlign: 'center' }}>
-              <Spinner animation="border"></Spinner>
+              <Spinner className="loading-spinner" animation="border"></Spinner>
             </Container>
           )}
         </Container>
