@@ -66,12 +66,58 @@ const FormGroup = styled(Form.Group)`
   }
 `;
 
-const LayerColor = styled.div<{ color: string }>`
-  width: 14px;
-  height: 14px;
-  background-color: ${({ color }) => color};
-  margin-right: 5px;
-`;
+interface ILayerColor {
+  color: string | string[];
+  outline?: string | undefined;
+  stripes?: string | undefined;
+  circle: boolean;
+}
+
+const LayerColor = (props: ILayerColor) => {
+  const { color, outline, stripes, circle } = props;
+  if (!!stripes) {
+    // Stripes, does not support multicolor background.
+    return (
+      <div
+        style={{
+          width: '14px',
+          height: '14px',
+          backgroundSize: '5px 5px',
+          backgroundImage: `linear-gradient(45deg, ${color} 25%, ${stripes} 25%, ${stripes} 50%, ${color} 50%, ${color} 75%, ${stripes} 75%, ${stripes} 100%`,
+          border: `solid 2px ${outline}`,
+          marginRight: '1px',
+        }}
+      />
+    );
+  } else if (Array.isArray(color)) {
+    // Multicolor background
+    return (
+      <div
+        style={{
+          width: '14px',
+          height: '14px',
+          background: `linear-gradient(to right, ${color.join(', ')})`,
+          border: `solid 2px ${outline}`,
+          marginRight: '1px',
+        }}
+      />
+    );
+  } else {
+    // Basic background color and/or outline
+    return (
+      <div
+        style={{
+          width: '14px',
+          height: '14px',
+          backgroundColor: color,
+          border: `solid 2px ${outline}`,
+          borderRadius: circle ? '7px' : 'none',
+          marginRight: '1px',
+        }}
+      />
+    );
+  }
+};
 
 /**
  * Component to display Group Node as a formik field
@@ -95,7 +141,12 @@ const ParentCheckbox: React.FC<{ name: string; label: string; index: number }> =
 
   return (
     <FormGroup>
-      <Form.Check type="checkbox" checked={getIn(values, name)} onChange={onChange} label={label} />
+      <Form.Check
+        type="checkbox"
+        checked={getIn(values, name)}
+        onChange={onChange}
+        label={` ${label}`}
+      />
     </FormGroup>
   );
 };
@@ -103,11 +154,14 @@ const ParentCheckbox: React.FC<{ name: string; label: string; index: number }> =
 /**
  * Component to display Layer Node as a formik field
  */
-const LayerNodeCheckbox: React.FC<{ name: string; label: string; color: string }> = ({
-  name,
-  label,
-  color,
-}) => {
+const LayerNodeCheckbox: React.FC<{
+  name: string;
+  label: string;
+  color: string | string[];
+  outline?: string | undefined;
+  stripes?: string | undefined;
+  circle: boolean;
+}> = ({ name, label, color, outline, stripes, circle }) => {
   const { values, setFieldValue } = useFormikContext();
 
   const onChange = () => {
@@ -122,8 +176,13 @@ const LayerNodeCheckbox: React.FC<{ name: string; label: string; color: string }
         onChange={onChange}
         label={
           <>
-            {' '}
-            {!!color && <LayerColor color={color} />} {label}
+            {!!color && (
+              <div style={{ marginLeft: '5px' }}>
+                <LayerColor color={color} outline={outline} stripes={stripes} circle={circle} />
+              </div>
+            )}
+            <div style={{ marginRight: '4px' }} />
+            {label}
           </>
         }
       />
@@ -227,6 +286,9 @@ const LayersTree: React.FC<{ items: TreeMenuItem[] }> = ({ items }) => {
                   values.layers as any,
                 )}].on`}
                 color={node.color}
+                outline={node.outline}
+                stripes={node.stripes}
+                circle={node.circle ?? false}
               />
             </LayerNode>
           );
