@@ -18,6 +18,21 @@ namespace Pims.Api.Areas.Reports.Models.Project
         /// <summary>
         /// get/set - The name to identify the project.
         /// </summary>
+         public string Location { get; set; }
+
+        /// <summary>
+        /// get/set - The name to identify the project.
+        /// </summary>
+        public string PID { get; set; }
+
+        /// <summary>
+        /// get/set - The name to identify the project.
+        /// </summary>
+         public float LotSize { get; set; }
+
+        /// <summary>
+        /// get/set - The name to identify the project.
+        /// </summary>
         public string Name { get; set; }
 
         /// <summary>
