@@ -15,6 +15,7 @@ exports[`Project Approval Request list view Matches snapshot 1`] = `
     >
       <h3
         class="mr-4"
+        data-testid="project-list-view-page-title"
       >
         Surplus Property Program Projects - Approval Requests
       </h3>
