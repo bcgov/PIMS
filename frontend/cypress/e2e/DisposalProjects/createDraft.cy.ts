@@ -45,29 +45,34 @@ describe('Create a disposal project', () => {
         .should('not.exist')
         .wait(2000);
 
-      cy.get('.tbody', { timeout: 10000 }).then($tbody => {
-        const firstTableRow = $tbody
-          .children()
-          .eq(0)
-          .children()
-          .eq(0);
-        const projectNameCell = firstTableRow.children().eq(2);
-        // If table row for Cypress test project exists.
-        if (projectNameCell.text() === PROJECT_NAME) {
-          cy.get('[role="cell"]')
-            .contains(PROJECT_NAME)
-            .then($projectNameField => {
-              // Get the project number from the sibling table row cell that contains PROJECT_NAME
-              const projectNumber = $projectNameField
-                .siblings()
-                .eq(1)
-                .children()
-                .children('span')
-                .text();
-              // Remove project
-              cy.get(`[data-testid="trash-icon-${projectNumber}"]`).click();
-              cy.get('[data-testid="modal-footer-ok-btn"]').click();
-            });
+      cy.get('.table', { timeout: 10000 }).then($table => {
+        const secondChild = $table.children().eq(1);
+        if (secondChild.text() !== 'No rows to display') {
+          cy.get('.tbody', { timeout: 10000 }).then($tbody => {
+            const firstTableRow = $tbody
+              .children()
+              .eq(0)
+              .children()
+              .eq(0);
+            const projectNameCell = firstTableRow.children().eq(2);
+            // If table row for Cypress test project exists.
+            if (projectNameCell.text() === PROJECT_NAME) {
+              cy.get('[role="cell"]')
+                .contains(PROJECT_NAME)
+                .then($projectNameField => {
+                  // Get the project number from the sibling table row cell that contains PROJECT_NAME
+                  const projectNumber = $projectNameField
+                    .siblings()
+                    .eq(1)
+                    .children()
+                    .children('span')
+                    .text();
+                  // Remove project
+                  cy.get(`[data-testid="trash-icon-${projectNumber}"]`).click();
+                  cy.get('[data-testid="modal-footer-ok-btn"]').click();
+                });
+            }
+          });
         }
       });
     });
