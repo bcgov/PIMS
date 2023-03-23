@@ -152,8 +152,8 @@ namespace Pims.Dal.Helpers.Extensions
                 .Include(p => p.Notes)
                 .Include(p => p.Properties).ThenInclude(prop => prop.Parcel).ThenInclude(p => p.Address)
                 .Include(p => p.Properties).ThenInclude(prop => prop.Building).ThenInclude(b => b.Address)
-                // .Include(p => p.Properties).ThenInclude(prop => prop.Parcel).Where(prop => prop.Properties.Count > 0)           
                 .AsNoTracking();
+
 
             if (filter.SPLWorkflow == true)
             {
@@ -380,12 +380,44 @@ namespace Pims.Dal.Helpers.Extensions
         }
 
         /// <summary>  ///      
+        /// Get the Property Location for a project.       
+        /// /// </summary>       
+        /// /// <param name="project"></param>      
+        /// /// <returns></returns>       
+
+        public static string GetPropertyLocation(this Project project)
+        {
+            var adminArea = "";
+
+            if (project == null)
+            {
+                throw new ArgumentNullException(nameof(project));
+            }
+            if (project.Properties == null)
+            {
+                return "";
+            }
+
+            var properties = project.Properties.FirstOrDefault();
+            if (properties == null)
+            {
+                return "";
+            }
+
+            adminArea = properties.PropertyType == Entity.PropertyTypes.Land ?
+                properties.Parcel.Address.AdministrativeArea :
+                properties.Building.Address.AdministrativeArea;
+
+            return adminArea;
+        }
+
+        /// <summary>  ///      
         /// Get the PIDs for a project.       
         /// /// </summary>       
         /// /// <param name="project"></param>      
         /// /// <returns></returns>       
 
-        public static string GetParcelPIDs(this Project project, Project src)
+        public static string GetParcelPIDs(this Project project)
         {
             if (project == null)
             {
@@ -411,7 +443,7 @@ namespace Pims.Dal.Helpers.Extensions
         /// /// <param name="project"></param>      
         /// /// <returns></returns>       
 
-        public static float GetParcelLotsize(this Project project, Project src)
+        public static float GetParcelLotsize(this Project project)
         {
             if (project == null)
             {

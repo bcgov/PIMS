@@ -33,10 +33,9 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
         {
             config.NewConfig<Entity.Project, Model.ProjectModelExcel>()
                 .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
-                .Map(dest => dest.Location, src => src.Properties.All(p => (int?)p.ParcelId > 0) ? src.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land).FirstOrDefault(p => (int?)p.Parcel.PID > 0).Parcel.Address.AdministrativeArea : src.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).FirstOrDefault(b => (int?)b.BuildingId > 0).Building.Address.AdministrativeArea)
-                .Map(dest => dest.Name, src => src.Name)
-                .Map(dest => dest.PID, src => src.GetParcelPIDs(src))
-                .Map(dest => dest.LotSize, src => src.GetParcelLotsize(src))
+                .Map(dest => dest.Location, src => src.GetPropertyLocation())
+                .Map(dest => dest.PID, src => src.GetParcelPIDs())
+                .Map(dest => dest.LotSize, src => src.GetParcelLotsize())
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.ReportedFiscalYearString, src => src.ReportedFiscalYear.FiscalYear())
                 .Map(dest => dest.ActualFiscalYearString, src => src.ActualFiscalYear.FiscalYear())
