@@ -108,6 +108,9 @@ export const ProjectListView: React.FC<IProps> = ({
   const [pageCount, setPageCount] = useState(1);
   const [projectCount, setProjectCount] = useState(0);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const location = useLocation();
+  const route = location.pathname;
 
   // const [loading, setLoading] = useState(false);
   const fetchIdRef = useRef(0);
@@ -187,13 +190,23 @@ export const ProjectListView: React.FC<IProps> = ({
         );
         setProjectCount(data.total);
         setPageCount(Math.ceil(data.total / pageSize));
+
+        // Send data to SnowPlow.
+        window.snowplow('trackSelfDescribingEvent', {
+          schema: 'iglu:ca.bc.gov.pims/search/jsonschema/1-0-0',
+          data: {
+            view: location.pathname.includes('/spl') ? 'spl_projects' : 'agency_projects',
+            agency: filter.agencyId ?? '',
+            project_name_number: filter.name ?? '',
+            fiscal_year: filter.fiscalYear ?? '',
+            statuses: filter.statusId?.join(',') ?? '',
+          },
+        });
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [defaultFilter.statusId],
   );
-  const dispatch = useAppDispatch();
-  const location = useLocation();
-  const route = location.pathname;
 
   // Listen for changes in pagination and use the state to fetch our new data
   useDeepCompareEffect(() => {
