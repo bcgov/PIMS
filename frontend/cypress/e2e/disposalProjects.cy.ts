@@ -14,6 +14,8 @@ const inputs = {
   estimatedMarketDisplayedValue: '$16,465',
 };
 
+// TODO: Add cy.log to sections to detail whats happening.
+
 /**
  * @author Braden Mitchell <braden.mitchell@gov.bc.ca || braden.jr.mitch@gmail.com>
  * @description Tests the creation of disposal projects.
@@ -390,33 +392,38 @@ describe('Create a disposal project', () => {
     * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
     cy.visit(`/projects/list`);
 
-    // TODO: Check status of project.
-
     // Wait for page title.
     cy.get('[data-testid="project-list-view-page-title"]', { timeout: 10000 }).should('exist');
 
     // Wait for the spinner to disappear.
     cy.get('.table-loading', { timeout: 10000 }).should('not.exist');
 
-    // Verify project is there.
-    cy.contains(PROJECT_NAME).should('be.visible');
+    cy.contains(PROJECT_NAME)
+      .should('be.visible')
+      .siblings()
+      .should('contain', 'Submitted Exemption');
   });
 
   /* ---------------------------------------------------------------------
-                      TEST CASE: Approve project.
+        TEST CASE: Approve project to APPROVED FOR EXEMPTION status.
   * --------------------------------------------------------------------- */
 
   /**
-   * @title Approve project
+   * @title Approve project to APPROVED FOR EXEMPTION status.
    * @description Tests approving a disposal project.
    * @components ProjectDraftForm, ReviewApproveForm
    */
 
-  it('Approve project', () => {
+  it('Approve project to APPROVED FOR EXEMPTION status', () => {
     /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
                Select Project
     * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
     cy.visit(`/projects/list`);
+
+    // TODO: Test...
+    // Required fields
+    // Edit, Save, Deny
+    // Add and remove properties
 
     // Wait for page title.
     cy.get('[data-testid="project-list-view-page-title"]', { timeout: 10000 }).should('exist');
@@ -603,5 +610,104 @@ describe('Create a disposal project', () => {
     // Approve button.
     cy.get('[data-testid="review-approve-action-approve-btn"]').click({ force: true });
     cy.get('[data-testid="modal-footer-ok-btn"]').click({ force: true });
+
+    /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                  Approved
+    * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+    cy.contains('Approved for Exemption', { timeout: 10000 }).should('be.visible');
+
+    cy.visit(`/projects/list`);
+
+    // Wait for page title.
+    cy.get('[data-testid="project-list-view-page-title"]', { timeout: 10000 }).should('exist');
+
+    // Wait for the spinner to disappear.
+    cy.get('.table-loading', { timeout: 10000 }).should('not.exist');
+
+    // Search for project
+    cy.get('[name="name"]').click({ force: true });
+    cy.get('[name="name"]').type(PROJECT_NAME);
+    cy.get('[id="search-button"]').click({ force: true });
+
+    // Wait for the spinner to disappear.
+    cy.get('.table-loading', { timeout: 10000 })
+      .should('not.exist')
+      .wait(2000);
+
+    // Check project has correct status.
+    cy.contains(PROJECT_NAME)
+      .should('be.visible')
+      .siblings()
+      .should('contain', 'Approved for Exemption');
+  });
+
+  /* ---------------------------------------------------------------------
+                                CLEAN UP
+  * --------------------------------------------------------------------- */
+
+  /**
+   * @title Clean up
+   * @description Removes the test project.
+   */
+
+  it('Clean up', () => {
+    cy.visit(`/projects/list`).then(() => {
+      cy.url().should('include', '/projects/list');
+      /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+          If Test Project Exists in
+          Table Body (tbody), delete it.
+      * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+      const PROJECT_NAME = 'Cypress Test Disposal Project';
+
+      // Wait for page title.
+      cy.get('[data-testid="project-list-view-page-title"]', { timeout: 10000 }).should('exist');
+
+      // Wait for the spinner to disappear.
+      cy.get('.table-loading', { timeout: 10000 })
+        .should('not.exist')
+        .wait(2000);
+
+      // Search for project
+      cy.get('[name="name"]').click({ force: true });
+      cy.get('[name="name"]').type(PROJECT_NAME);
+      cy.get('[id="search-button"]').click({ force: true });
+
+      // Wait for the spinner to disappear.
+      cy.get('.table-loading', { timeout: 10000 })
+        .should('not.exist')
+        .wait(2000);
+
+      cy.get('.table', { timeout: 10000 }).then($table => {
+        const secondChild = $table.children().eq(1);
+        if (secondChild.text() !== 'No rows to display') {
+          cy.get('.tbody', { timeout: 10000 }).then($tbody => {
+            const firstTableRow = $tbody
+              .children()
+              .eq(0)
+              .children()
+              .eq(0);
+            const projectNameCell = firstTableRow.children().eq(2);
+            // If table row for Cypress test project exists.
+            if (projectNameCell.text() === PROJECT_NAME) {
+              cy.get('[role="cell"]')
+                .contains(PROJECT_NAME)
+                .then($projectNameField => {
+                  // Get the project number from the sibling table row cell that contains PROJECT_NAME
+                  const projectNumber = $projectNameField
+                    .siblings()
+                    .eq(1)
+                    .children()
+                    .children('span')
+                    .text();
+                  // Remove project
+                  cy.get(`[data-testid="trash-icon-${projectNumber}"]`).click();
+                  cy.get('[data-testid="modal-footer-ok-btn"]').click();
+                });
+            }
+          });
+        }
+      });
+    });
   });
 });
