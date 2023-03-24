@@ -18,6 +18,21 @@ namespace Pims.Api.Areas.Reports.Models.Project
         /// <summary>
         /// get/set - The name to identify the project.
         /// </summary>
+        public string Location { get; set; }
+
+        /// <summary>
+        /// get/set - The name to identify the project.
+        /// </summary>
+        public string PID { get; set; }
+
+        /// <summary>
+        /// get/set - The name to identify the project.
+        /// </summary>
+        public float LotSize { get; set; }
+
+        /// <summary>
+        /// get/set - The name to identify the project.
+        /// </summary>
         public string Name { get; set; }
 
         /// <summary>
@@ -28,7 +43,7 @@ namespace Pims.Api.Areas.Reports.Models.Project
         /// <summary>
         /// get/set - The reported fiscal year this project.
         /// </summary>
-        
+
         [DisplayName("Reported Fiscal Year")]
         [CsvHelper.Configuration.Attributes.Name("Reported Fiscal Year")]
         public string ReportedFiscalYearString { get; set; }
@@ -36,7 +51,7 @@ namespace Pims.Api.Areas.Reports.Models.Project
         /// <summary>
         /// get/set - The actual or forecasted fiscal year.
         /// </summary>
-        
+
         [DisplayName("Actual Fiscal Year")]
         [CsvHelper.Configuration.Attributes.Name("Actual Fiscal Year")]
         public string ActualFiscalYearString { get; set; }
