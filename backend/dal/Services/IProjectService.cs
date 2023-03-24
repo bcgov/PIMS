@@ -13,6 +13,7 @@ namespace Pims.Dal.Services
     {
         int Count();
         Paged<Project> GetPage(ProjectFilter filter);
+        Paged<Project> GetExcelPage(ProjectFilter filter);
         Project Get(int id);
         Project Get(string projectNumber);
         Paged<NotificationQueue> GetNotificationsInQueue(ProjectNotificationFilter filter);
