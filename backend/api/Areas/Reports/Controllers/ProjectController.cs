@@ -89,7 +89,7 @@ namespace Pims.Api.Areas.Reports.Controllers
                 throw new BadRequestException($"Invalid HTTP request header 'Accept:{accept}'.");
 
             filter.Quantity = all ? _pimsService.Project.Count() : filter.Quantity;
-            var page = _pimsService.Project.GetPage(filter);
+            var page = _pimsService.Project.GetExcelPage(filter);
             var report = _mapper.Map<Api.Models.PageModel<ProjectModelExcel>>(page);
 
             return accept.ToString() switch
