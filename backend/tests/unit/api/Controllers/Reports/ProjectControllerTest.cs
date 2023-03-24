@@ -86,7 +86,7 @@ namespace Pims.Api.Test.Controllers.Reports
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var page = new Entity.Models.Paged<Entity.Project>(projects, filter.Page, filter.Quantity);
-            service.Setup(m => m.Project.GetPage(It.IsAny<Entity.Models.ProjectFilter>())).Returns(page);
+            service.Setup(m => m.Project.GetExcelPage(It.IsAny<Entity.Models.ProjectFilter>())).Returns(page);
 
             // Act
             var result = controller.ExportProjects(filter);
@@ -95,7 +95,7 @@ namespace Pims.Api.Test.Controllers.Reports
             var actionResult = Assert.IsType<ContentResult>(result);
             var actualResult = Assert.IsType<string>(actionResult.Content);
             Assert.Equal(ContentTypes.CONTENT_TYPE_CSV, actionResult.ContentType);
-            service.Verify(m => m.Project.GetPage(It.IsAny<Entity.Models.ProjectFilter>()), Times.Once());
+            service.Verify(m => m.Project.GetExcelPage(It.IsAny<Entity.Models.ProjectFilter>()), Times.Once());
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Pims.Api.Test.Controllers.Reports
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var page = new Paged<Entity.Project>(projects);
-            service.Setup(m => m.Project.GetPage(It.IsAny<Entity.Models.ProjectFilter>())).Returns(page);
+            service.Setup(m => m.Project.GetExcelPage(It.IsAny<Entity.Models.ProjectFilter>())).Returns(page);
 
             // Act
             var result = controller.ExportProjects();
@@ -126,7 +126,7 @@ namespace Pims.Api.Test.Controllers.Reports
             var actionResult = Assert.IsType<ContentResult>(result);
             var actualResult = Assert.IsType<string>(actionResult.Content);
             Assert.Equal(ContentTypes.CONTENT_TYPE_CSV, actionResult.ContentType);
-            service.Verify(m => m.Project.GetPage(It.IsAny<Entity.Models.ProjectFilter>()), Times.Once());
+            service.Verify(m => m.Project.GetExcelPage(It.IsAny<Entity.Models.ProjectFilter>()), Times.Once());
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace Pims.Api.Test.Controllers.Reports
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var page = new Paged<Entity.Project>(projects, filter.Page, filter.Quantity);
-            service.Setup(m => m.Project.GetPage(It.IsAny<Entity.Models.ProjectFilter>())).Returns(page);
+            service.Setup(m => m.Project.GetExcelPage(It.IsAny<Entity.Models.ProjectFilter>())).Returns(page);
 
             // Act
             var result = controller.ExportProjects(filter);
@@ -159,7 +159,7 @@ namespace Pims.Api.Test.Controllers.Reports
             Assert.Equal(ContentTypes.CONTENT_TYPE_EXCELX, actionResult.ContentType);
             Assert.NotNull(actionResult.FileDownloadName);
             Assert.True(actionResult.FileStream.Length > 0);
-            service.Verify(m => m.Project.GetPage(It.IsAny<Entity.Models.ProjectFilter>()), Times.Once());
+            service.Verify(m => m.Project.GetExcelPage(It.IsAny<Entity.Models.ProjectFilter>()), Times.Once());
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace Pims.Api.Test.Controllers.Reports
             var service = helper.GetService<Mock<IPimsService>>();
             var mapper = helper.GetService<IMapper>();
             var page = new Paged<Entity.Project>(projects);
-            service.Setup(m => m.Project.GetPage(It.IsAny<Entity.Models.ProjectFilter>())).Returns(page);
+            service.Setup(m => m.Project.GetExcelPage(It.IsAny<Entity.Models.ProjectFilter>())).Returns(page);
 
             // Act
             var result = controller.ExportProjects();
@@ -192,7 +192,7 @@ namespace Pims.Api.Test.Controllers.Reports
             Assert.Equal(ContentTypes.CONTENT_TYPE_EXCELX, actionResult.ContentType);
             Assert.NotNull(actionResult.FileDownloadName);
             Assert.True(actionResult.FileStream.Length > 0);
-            service.Verify(m => m.Project.GetPage(It.IsAny<Entity.Models.ProjectFilter>()), Times.Once());
+            service.Verify(m => m.Project.GetExcelPage(It.IsAny<Entity.Models.ProjectFilter>()), Times.Once());
         }
 
         /// <summary>

@@ -6,6 +6,8 @@ using Pims.Core.Extensions;
 using System.Text.Json;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Reports.Models.Project;
+using System.Linq;
+using System;
 
 namespace Pims.Api.Areas.Reports.Mapping.Project
 {
@@ -31,7 +33,9 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
         {
             config.NewConfig<Entity.Project, Model.ProjectModelExcel>()
                 .Map(dest => dest.ProjectNumber, src => src.ProjectNumber)
-                .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.Location, src => src.GetPropertyLocation())
+                .Map(dest => dest.PID, src => src.GetParcelPIDs())
+                .Map(dest => dest.LotSize, src => src.GetParcelLotsize())
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.ReportedFiscalYearString, src => src.ReportedFiscalYear.FiscalYear())
                 .Map(dest => dest.ActualFiscalYearString, src => src.ActualFiscalYear.FiscalYear())
