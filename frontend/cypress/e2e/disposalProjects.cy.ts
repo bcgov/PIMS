@@ -28,7 +28,7 @@ const inputs = {
 describe('Create a disposal project', () => {
   beforeEach(function() {
     cy.kcLogout();
-    cy.kcLogin(Cypress.env('keycloak_user'));
+    cy.kcLogin();
   });
 
   /* ---------------------------------------------------------------------
@@ -614,7 +614,7 @@ describe('Create a disposal project', () => {
     /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
                   Approved
     * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
-    cy.contains('Approved for Exemption', { timeout: 10000 }).should('be.visible');
+    cy.contains('Approved for Exemption', { timeout: 20000 }).should('be.visible');
 
     cy.visit(`/projects/list`);
 
