@@ -29,7 +29,7 @@ interface ISplReportLayoutProps {
 /**
  * Top level layout component. Provides layout css and structure for the SPL Reports component.
  */
-const SplReportLayout: React.FunctionComponent<ISplReportLayoutProps> = ({
+const SplReportLayout: React.FunctionComponent<React.PropsWithChildren<ISplReportLayoutProps>> = ({
   showSidebar,
   setShowSidebar,
   onOpen,
@@ -59,7 +59,7 @@ const SplReportLayout: React.FunctionComponent<ISplReportLayoutProps> = ({
           </button>
         </div>
       </ClickAwayListener>
-      <div className="ml-4 report-content">
+      <div className="report-content" style={{ marginLeft: '20px' }}>
         <ReportControls
           reports={reports}
           currentReport={currentReport}

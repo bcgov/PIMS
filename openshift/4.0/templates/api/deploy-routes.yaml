@@ -60,6 +60,8 @@ objects:
         app: ${APP_NAME}
         role: ${ROLE_NAME}
         env: ${ENV_NAME}
+      annotations:
+        haproxy.router.openshift.io/timeout: 60s
     spec:
       host: ${APP_DOMAIN}
       path: ${API_PATH}

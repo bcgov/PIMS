@@ -11,8 +11,8 @@
   overflow-y: auto;
   background-color: $form-background-color;
   color: $text-color;
-  padding-left: 10rem;
-  padding-right: 10rem;
+  padding-left: 5rem;
+  padding-right: 5rem;
 
   .ProjectDisposeLayout {
     min-width: fit-content;
@@ -93,7 +93,6 @@
 
   .step-content {
     padding: 0;
-    overflow-x: auto;
   }
 
   .edit {
@@ -143,6 +142,11 @@
     background-color: transparent;
     border: none;
     padding: 0;
+  }
+
+  input[type='checkbox']:disabled {
+    border: solid 1px rgb(95, 95, 95);
+    background-color: rgb(170, 169, 169);
   }
 
   .tooltip-icon {

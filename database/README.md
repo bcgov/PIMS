@@ -5,7 +5,6 @@ The API requires a database for storing PIMS data. Currently the choice is to us
 Refer to documentation for the database type.
 
 - [MSSQL](mssql/README.md)
-- [PostgreSQL](postgres/README.md)
 
 ## Issues
 
@@ -16,7 +15,6 @@ Windows doesn't support mounting volumes locally. You may have to add a `.env` f
 To get the database running and initialized do one of the following;
 
 - Follow the MSSQL steps here - [README](./mssql/README.md)
-- Follow the PostgreSQL steps here - [README](./postgres/README.md)
 
 ## Remoting into OpenShift Database
 

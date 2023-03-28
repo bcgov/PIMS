@@ -1,4 +1,25 @@
 import { IProperty } from 'actions/parcelsActions';
+import buildingErpPng from 'assets/images/pins/building-erp.png';
+import buildingErpHighlightPng from 'assets/images/pins/building-erp-highlight.png';
+import buildingIconPng from 'assets/images/pins/building-reg.png';
+import buildingSelectedIconPng from 'assets/images/pins/building-reg-highlight.png';
+import buildingSplPng from 'assets/images/pins/building-spl.png';
+import buildingSplHighlightPng from 'assets/images/pins/building-spl-highlight.png';
+import landErpPng from 'assets/images/pins/land-erp.png';
+import landErpHighlightPng from 'assets/images/pins/land-erp-highlight.png';
+import parcelIconPng from 'assets/images/pins/land-reg.png';
+import parcelSelectedIconPng from 'assets/images/pins/land-reg-highlight.png';
+import landSplPng from 'assets/images/pins/land-spl.png';
+import landSplHighlightPng from 'assets/images/pins/land-spl-highlight.png';
+import markerBluePng from 'assets/images/pins/marker-blue.png';
+import markerGreenPng from 'assets/images/pins/marker-green.png';
+import markerShadowPng from 'assets/images/pins/marker-shadow.png';
+import subdivErpPng from 'assets/images/pins/subdiv-erp.png';
+import subdivErpHighlightPng from 'assets/images/pins/subdiv-erp-highlight.png';
+import subdivRegPng from 'assets/images/pins/subdiv-reg.png';
+import subdivRegHighlightPng from 'assets/images/pins/subdiv-reg-highlight.png';
+import subdivSplPng from 'assets/images/pins/subdiv-spl.png';
+import subdivSplHighlightPng from 'assets/images/pins/subdiv-spl-highlight.png';
 import { Classifications, PropertyTypes, Workflows } from 'constants/index';
 import L, { DivIcon, GeoJSON, LatLngExpression, Layer, Map, Marker } from 'leaflet';
 import Supercluster from 'supercluster';
@@ -7,8 +28,8 @@ import { ICluster, PointFeature } from '../types';
 
 // parcel icon (green)
 export const parcelIcon = L.icon({
-  iconUrl: require('assets/images/pins/land-reg.png').default ?? 'assets/images/pins/land-reg.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: parcelIconPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -17,10 +38,8 @@ export const parcelIcon = L.icon({
 
 // parcel icon (green) highlighted
 export const parcelIconSelect = L.icon({
-  iconUrl:
-    require('assets/images/pins/land-reg-highlight.png').default ??
-    'assets/images/pins/land-reg-highlight.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: parcelSelectedIconPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -29,9 +48,8 @@ export const parcelIconSelect = L.icon({
 
 // building icon (blue)
 export const buildingIcon = L.icon({
-  iconUrl:
-    require('assets/images/pins/building-reg.png').default ?? 'assets/images/pins/building-reg.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: buildingIconPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -40,10 +58,8 @@ export const buildingIcon = L.icon({
 
 // building icon (blue) highlighted
 export const buildingIconSelect = L.icon({
-  iconUrl:
-    require('assets/images/pins/building-reg-highlight.png').default ??
-    'assets/images/pins/building-reg-highlight.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: buildingSelectedIconPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -52,9 +68,8 @@ export const buildingIconSelect = L.icon({
 
 // subdivision icon (green)
 export const subdivisionIcon = L.icon({
-  iconUrl:
-    require('assets/images/pins/subdiv-reg.png').default ?? 'assets/images/pins/subdiv-reg.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: subdivRegPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -63,10 +78,17 @@ export const subdivisionIcon = L.icon({
 
 // subdivision icon (green) highlighted
 export const subdivisionIconSelect = L.icon({
-  iconUrl:
-    require('assets/images/pins/subdiv-reg-highlight.png').default ??
-    'assets/images/pins/subdiv-reg-highlight.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: subdivRegHighlightPng,
+  shadowUrl: markerShadowPng,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+export const geocoderIcon = L.icon({
+  iconUrl: markerGreenPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -75,9 +97,8 @@ export const subdivisionIconSelect = L.icon({
 
 // draft parcel icon (green)
 export const draftParcelIcon = L.icon({
-  iconUrl:
-    require('assets/images/pins/marker-green.png').default ?? 'assets/images/pins/marker-green.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: markerGreenPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -87,9 +108,8 @@ export const draftParcelIcon = L.icon({
 
 // draft building icon (blue)
 export const draftBuildingIcon = L.icon({
-  iconUrl:
-    require('assets/images/pins/marker-blue.png').default ?? 'assets/images/pins/marker-blue.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: markerBluePng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -99,8 +119,8 @@ export const draftBuildingIcon = L.icon({
 
 // spp icon (purple)
 export const landSppIcon = L.icon({
-  iconUrl: require('assets/images/pins/land-spl.png').default ?? 'assets/images/pins/land-spl.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: landSplPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -109,10 +129,8 @@ export const landSppIcon = L.icon({
 
 // spp icon (purple) highlighted
 export const landSppIconSelect = L.icon({
-  iconUrl:
-    require('assets/images/pins/land-spl-highlight.png').default ??
-    'assets/images/pins/land-spl-highlight.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: landSplHighlightPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -121,8 +139,8 @@ export const landSppIconSelect = L.icon({
 
 // erp icon (red)
 export const landErpIcon = L.icon({
-  iconUrl: require('assets/images/pins/land-erp.png').default ?? 'assets/images/pins/land-erp.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: landErpPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -131,10 +149,8 @@ export const landErpIcon = L.icon({
 
 // erp icon (red) highlight
 export const landErpIconSelect = L.icon({
-  iconUrl:
-    require('assets/images/pins/land-erp-highlight.png').default ??
-    'assets/images/pins/land-erp-highlight.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: landErpHighlightPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -143,9 +159,8 @@ export const landErpIconSelect = L.icon({
 
 // spp icon (purple)
 export const buildingSppIcon = L.icon({
-  iconUrl:
-    require('assets/images/pins/building-spl.png').default ?? 'assets/images/pins/building-spl.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: buildingSplPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -154,10 +169,8 @@ export const buildingSppIcon = L.icon({
 
 // spp icon (purple) highlight
 export const buildingSppIconSelect = L.icon({
-  iconUrl:
-    require('assets/images/pins/building-spl-highlight.png').default ??
-    'assets/images/pins/building-spl-highlight.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: buildingSplHighlightPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -166,9 +179,8 @@ export const buildingSppIconSelect = L.icon({
 
 // erp icon (red)
 export const buildingErpIcon = L.icon({
-  iconUrl:
-    require('assets/images/pins/building-erp.png').default ?? 'assets/images/pins/building-erp.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: buildingErpPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -177,10 +189,8 @@ export const buildingErpIcon = L.icon({
 
 // erp icon (red) highlighted
 export const buildingErpIconSelect = L.icon({
-  iconUrl:
-    require('assets/images/pins/building-erp-highlight.png').default ??
-    'assets/images/pins/building-erp-highlight.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: buildingErpHighlightPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -189,9 +199,8 @@ export const buildingErpIconSelect = L.icon({
 
 // spp icon (purple)
 export const subdivisionSppIcon = L.icon({
-  iconUrl:
-    require('assets/images/pins/subdiv-spl.png').default ?? 'assets/images/pins/subdiv-spl.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: subdivSplPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -200,10 +209,8 @@ export const subdivisionSppIcon = L.icon({
 
 // spp icon (purple) highlighted
 export const subdivisionSppIconSelect = L.icon({
-  iconUrl:
-    require('assets/images/pins/subdiv-spl-highlight.png').default ??
-    'assets/images/pins/subdiv-spl-highlight.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: subdivSplHighlightPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -212,9 +219,8 @@ export const subdivisionSppIconSelect = L.icon({
 
 // erp icon (red)
 export const subdivisionErpIcon = L.icon({
-  iconUrl:
-    require('assets/images/pins/subdiv-erp.png').default ?? 'assets/images/pins/subdiv-erp.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: subdivErpPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -223,10 +229,8 @@ export const subdivisionErpIcon = L.icon({
 
 // erp icon (red) highlight
 export const subdivisionErpIconSelect = L.icon({
-  iconUrl:
-    require('assets/images/pins/subdiv-erp-highlight.png').default ??
-    'assets/images/pins/subdiv-erp-highlight.png',
-  shadowUrl: require('assets/images/pins/marker-shadow.png').default ?? 'marker-shadow.png',
+  iconUrl: subdivErpHighlightPng,
+  shadowUrl: markerShadowPng,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -305,6 +309,8 @@ export const getMarkerIcon = (feature: ICluster, selected?: boolean) => {
       return parcelIconSelect;
     } else if (propertyTypeId === PropertyTypes.SUBDIVISION) {
       return subdivisionIconSelect;
+    } else if (propertyTypeId === PropertyTypes.GEOCODER) {
+      return geocoderIcon;
     } else {
       return buildingIconSelect;
     }
@@ -336,6 +342,8 @@ export const getMarkerIcon = (feature: ICluster, selected?: boolean) => {
       return parcelIcon;
     } else if (propertyTypeId === PropertyTypes.SUBDIVISION) {
       return subdivisionIcon;
+    } else if (propertyTypeId === PropertyTypes.GEOCODER) {
+      return geocoderIcon;
     } else {
       return buildingIcon;
     }

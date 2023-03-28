@@ -1,33 +1,33 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import { IParcel } from 'actions/parcelsActions';
 import { mockParcel } from 'components/maps/leaflet/InfoSlideOut/InfoContent.test';
 import * as API from 'constants/API';
+import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import { Formik } from 'formik';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { noop } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 import { fillInput } from 'utils/testUtils';
 
 import AddParentParcelsForm from './AddParentParcelsForm';
 
-jest.mock('@react-keycloak/web');
-(useKeycloak as jest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: [1],
-      roles: [],
-    },
-    subject: 'test',
-  },
-});
+const userRoles: string[] | Claims[] = [];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+(useKeycloakWrapper as jest.Mock).mockReturnValue(
+  new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+);
 
 const mockStore = configureMockStore([thunk]);
 const lCodes = {
@@ -47,7 +47,7 @@ const history = createMemoryHistory();
 
 const testRender = (parcels?: IParcel[]) => (
   <Provider store={store}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <ToastContainer
         autoClose={5000}
         hideProgressBar
@@ -62,7 +62,7 @@ const testRender = (parcels?: IParcel[]) => (
       >
         {() => <AddParentParcelsForm findMatchingPid={findMatchingPid} />}
       </Formik>
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 

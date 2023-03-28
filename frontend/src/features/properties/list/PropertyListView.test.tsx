@@ -1,4 +1,3 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import axios from 'axios';
@@ -6,12 +5,14 @@ import MockAdapter from 'axios-mock-adapter';
 import * as API from 'constants/API';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { mockFlatProperty } from 'mocks/filterDataMock';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import service from '../service';
 import { IProperty } from '.';
@@ -19,7 +20,11 @@ import PropertyListView from './PropertyListView';
 
 // Set all module functions to jest.fn
 jest.mock('../service');
-jest.mock('@react-keycloak/web');
+
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
 
 const mockedService = service as jest.Mocked<typeof service>;
 
@@ -39,6 +44,7 @@ const lCodes = {
 
 const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
+  usersAgencies: [{ id: '1', name: 'agencyVal' }],
 });
 
 const history = createMemoryHistory();
@@ -54,15 +60,9 @@ const setupTests = (items?: IProperty[]) => {
     pageIndex: 0,
     items: items ?? [],
   });
-  (useKeycloak as jest.Mock).mockReturnValue({
-    keycloak: {
-      subject: 'test',
-      userInfo: {
-        roles: ['property-edit', 'property-view'],
-        agencies: [1],
-      },
-    },
-  });
+  (useKeycloakWrapper as jest.Mock).mockReturnValue(
+    new (useKeycloakMock as any)(['property-edit', 'property-view'], userAgencies, userAgency),
+  );
 };
 
 describe('Property list view', () => {
@@ -82,9 +82,9 @@ describe('Property list view', () => {
     await act(async () => {
       const { container } = render(
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <PropertyListView />,
-          </Router>
+          </MemoryRouter>
         </Provider>,
       );
       expect(container.firstChild).toMatchSnapshot();
@@ -105,9 +105,9 @@ describe('Property list view', () => {
 
     const { findByText } = render(
       <Provider store={store}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <PropertyListView />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
 
@@ -119,14 +119,14 @@ describe('Property list view', () => {
   it('Displays export buttons', async () => {
     setupTests();
 
+    const { getByTestId, container } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <PropertyListView />
+        </MemoryRouter>
+      </Provider>,
+    );
     await act(async () => {
-      const { getByTestId, container } = render(
-        <Provider store={store}>
-          <Router history={history}>
-            <PropertyListView />
-          </Router>
-        </Provider>,
-      );
       expect(getByTestId('excel-icon')).toBeInTheDocument();
       expect(getByTestId('csv-icon')).toBeInTheDocument();
       expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
@@ -136,14 +136,14 @@ describe('Property list view', () => {
   it('Displays edit button', async () => {
     setupTests();
 
+    const { getByTestId } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <PropertyListView />
+        </MemoryRouter>
+      </Provider>,
+    );
     await act(async () => {
-      const { getByTestId } = render(
-        <Provider store={store}>
-          <Router history={history}>
-            <PropertyListView />
-          </Router>
-        </Provider>,
-      );
       expect(getByTestId('edit-icon')).toBeInTheDocument();
     });
   });
@@ -151,20 +151,20 @@ describe('Property list view', () => {
   it('Displays save edit button, when edit is enabled', async () => {
     setupTests();
 
-    await act(async () => {
-      const { getByTestId } = render(
-        <Provider store={store}>
-          <Router history={history}>
-            <PropertyListView />
-          </Router>
-        </Provider>,
-      );
+    const { getByTestId } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <PropertyListView />
+        </MemoryRouter>
+      </Provider>,
+    );
+    act(() => {
       expect(getByTestId('edit-icon')).toBeInTheDocument();
       fireEvent(
         getByTestId('edit-icon'),
         new MouseEvent('click', { bubbles: true, cancelable: true }),
       );
-      await waitFor(() => expect(getByTestId('save-changes')).toBeInTheDocument(), {
+      waitFor(() => expect(getByTestId('save-changes')).toBeInTheDocument(), {
         timeout: 500,
       });
     });
@@ -172,21 +172,21 @@ describe('Property list view', () => {
 
   it('Displays save edit button, when edit is enabled', async () => {
     setupTests();
+    const { getByTestId } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <PropertyListView />
+        </MemoryRouter>
+      </Provider>,
+    );
 
-    await act(async () => {
-      const { getByTestId } = render(
-        <Provider store={store}>
-          <Router history={history}>
-            <PropertyListView />
-          </Router>
-        </Provider>,
-      );
+    act(() => {
       expect(getByTestId('edit-icon')).toBeInTheDocument();
       fireEvent(
         getByTestId('edit-icon'),
         new MouseEvent('click', { bubbles: true, cancelable: true }),
       );
-      await waitFor(() => expect(getByTestId('save-changes')).toBeInTheDocument(), {
+      waitFor(() => expect(getByTestId('save-changes')).toBeInTheDocument(), {
         timeout: 500,
       });
     });
@@ -194,21 +194,21 @@ describe('Property list view', () => {
 
   it('Enables edit on property rows that the user has the same agency as the property', async () => {
     setupTests([{ ...mockFlatProperty }]);
+    const { getByTestId, container } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <PropertyListView />
+        </MemoryRouter>
+      </Provider>,
+    );
 
-    await act(async () => {
-      const { getByTestId, container } = render(
-        <Provider store={store}>
-          <Router history={history}>
-            <PropertyListView />
-          </Router>
-        </Provider>,
-      );
+    act(() => {
       expect(getByTestId('edit-icon')).toBeInTheDocument();
       fireEvent(
         getByTestId('edit-icon'),
         new MouseEvent('click', { bubbles: true, cancelable: true }),
       );
-      await waitFor(
+      waitFor(
         () => {
           expect(getByTestId('save-changes')).toBeInTheDocument();
           expect(getByTestId('cancel-changes')).toBeInTheDocument();
@@ -221,21 +221,21 @@ describe('Property list view', () => {
 
   it('Disables property rows that the user does not have edit permissions for', async () => {
     setupTests([{ ...mockFlatProperty, agencyId: 2 }]);
+    const { getByTestId, container } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <PropertyListView />
+        </MemoryRouter>
+      </Provider>,
+    );
 
-    await act(async () => {
-      const { getByTestId, container } = render(
-        <Provider store={store}>
-          <Router history={history}>
-            <PropertyListView />
-          </Router>
-        </Provider>,
-      );
+    act(() => {
       expect(getByTestId('edit-icon')).toBeInTheDocument();
       fireEvent(
         getByTestId('edit-icon'),
         new MouseEvent('click', { bubbles: true, cancelable: true }),
       );
-      await waitFor(
+      waitFor(
         () => {
           expect(getByTestId('save-changes')).toBeInTheDocument();
           expect(container.querySelector(`input[name="properties.0.market"]`)).toBeNull();
@@ -247,21 +247,21 @@ describe('Property list view', () => {
 
   it('Disables property rows that are in an active project', async () => {
     setupTests([{ ...mockFlatProperty, projectNumbers: ['SPP-10000'] }]);
+    const { container, getByTestId } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <PropertyListView />
+        </MemoryRouter>
+      </Provider>,
+    );
 
-    await act(async () => {
-      const { container, getByTestId } = render(
-        <Provider store={store}>
-          <Router history={history}>
-            <PropertyListView />
-          </Router>
-        </Provider>,
-      );
+    act(() => {
       expect(getByTestId('edit-icon')).toBeInTheDocument();
       fireEvent(
         getByTestId('edit-icon'),
         new MouseEvent('click', { bubbles: true, cancelable: true }),
       );
-      await waitFor(
+      waitFor(
         () => {
           expect(getByTestId('save-changes')).toBeInTheDocument();
           expect(container.querySelector(`input[name="properties.0.market"]`)).toBeNull();
@@ -361,9 +361,9 @@ describe('Property list view', () => {
 
     const { findAllByRole } = render(
       <Provider store={store}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <PropertyListView />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
 

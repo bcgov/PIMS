@@ -1,29 +1,29 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { fireEvent, render } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import * as API from 'constants/API';
+import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router';
+import { MemoryRouter } from 'react-router';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import ManageAdminAreas from './ManageAdminAreas';
 
-jest.mock('@react-keycloak/web');
-(useKeycloak as jest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: [1],
-      roles: [],
-    },
-    subject: 'test',
-  },
-});
+const userRoles: string[] | Claims[] = [];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+(useKeycloakWrapper as jest.Mock).mockReturnValue(
+  new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+);
 const mockStore = configureMockStore([thunk]);
 const mockAxios = new MockAdapter(axios);
 
@@ -53,9 +53,9 @@ it('renders correctly', () => {
   mockAxios.onAny().reply(200, { items: [{ name: 'test' }] });
   const { asFragment } = render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <ManageAdminAreas />
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
   expect(asFragment()).toMatchSnapshot();
@@ -95,9 +95,9 @@ xit('displays items in table', () => {
 
   const { getByText } = render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <ManageAdminAreas />
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
   expect(getByText('Test 1')).toBeInTheDocument();
@@ -107,9 +107,9 @@ xit('displays items in table', () => {
 it('admin areas populated correctly as filter option', () => {
   const { container, getByText } = render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <ManageAdminAreas />
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
   const nameFilter = container.querySelector('input[name="id"]');
@@ -121,9 +121,9 @@ it('admin areas populated correctly as filter option', () => {
 it('displays tooltip corrrectly', () => {
   const { container, getByText } = render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <ManageAdminAreas />
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
   const toolTip = container.querySelector('svg[class="tooltip-icon"]');

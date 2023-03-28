@@ -18,10 +18,10 @@ export function HelpContainer() {
   const handleCancel = useCallback(() => setShowHelp(false), []);
 
   return keycloak.obj.authenticated ? (
-    <Nav.Item>
+    <Nav.Item style={{ paddingRight: 140 }}>
       <TooltipWrapper toolTipId="help-tooltip" toolTip="Ask for Help">
         <FaQuestionCircle
-          style={{ cursor: 'pointer', color: '#fff', marginLeft: -145 }}
+          style={{ cursor: 'pointer', color: '#fff' }}
           onClick={() => setShowHelp(true)}
         />
       </TooltipWrapper>

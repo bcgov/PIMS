@@ -31,8 +31,13 @@ namespace Pims.Dal.Helpers.Extensions
             filter.ThrowIfNull(nameof(user));
             filter.ThrowIfNull(nameof(filter));
 
+            //Fetching user's agencies from database
+            Guid? userId = context.Users.FirstOrDefault(u => u.Username == user.GetUsername())?.Id;
+            int[] userAgencies = context.UserAgencies.Where(ua => ua.UserId == userId).Select(ua => ua.AgencyId).ToArray<int>();
+            int[] subAgencies = context.Agencies.Where(a => a.ParentId != null && userAgencies.Contains(a.ParentId.Value)).Select(a => a.Id).ToArray<int>();
+            userAgencies = userAgencies.Concat(subAgencies).ToArray();
+
             // Check if user has the ability to view sensitive properties.
-            var userAgencies = user.GetAgencies();
             var isAdmin = user.HasPermission(Permissions.AdminProjects);
 
             // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
@@ -61,8 +66,7 @@ namespace Pims.Dal.Helpers.Extensions
                 query = query.Where(p => p.TierLevelId == filter.TierLevelId);
             if (filter.CreatedByMe.HasValue && filter.CreatedByMe.Value)
             {
-                var keycloakUserId = user.GetKeycloakUserId();
-                var userId = context.Users.Where(u => u.KeycloakUserId == keycloakUserId).Select(u => u.Id).FirstOrDefault(); // TODO: Add User.Id to claims to speed up query.
+                var keycloakUserId = context.Users.FirstOrDefault(u => u.Username == user.GetUsername())?.Id; ;
                 query = query.Where(p => p.CreatedById.Equals(userId));
             }
 
@@ -120,6 +124,109 @@ namespace Pims.Dal.Helpers.Extensions
 
             return query;
         }
+
+        public static IQueryable<Entity.Project> GenerateExcelQuery(this PimsContext context, ClaimsPrincipal user, Entity.Models.ProjectFilter filter, ProjectOptions options)
+        {
+            filter.ThrowIfNull(nameof(user));
+            filter.ThrowIfNull(nameof(filter));
+
+            //Fetching user's agencies from database
+            Guid? userId = context.Users.FirstOrDefault(u => u.Username == user.GetUsername())?.Id;
+            int[] userAgencies = context.UserAgencies.Where(ua => ua.UserId == userId).Select(ua => ua.AgencyId).ToArray<int>();
+            int[] subAgencies = context.Agencies.Where(a => a.ParentId != null && userAgencies.Contains(a.ParentId.Value)).Select(a => a.Id).ToArray<int>();
+            userAgencies = userAgencies.Concat(subAgencies).ToArray();
+
+            // Check if user has the ability to view sensitive properties.
+            var isAdmin = user.HasPermission(Permissions.AdminProjects);
+
+            // Users may only view sensitive properties if they have the `sensitive-view` claim and belong to the owning agency.
+            var query = context.Projects
+                .Include(p => p.CreatedBy)
+                .Include(p => p.UpdatedBy)
+                .Include(p => p.Status)
+                .Include(p => p.TierLevel)
+                .Include(p => p.Risk)
+                .Include(p => p.Agency)
+                .Include(p => p.Workflow)
+                .Include(p => p.Agency).ThenInclude(a => a.Parent)
+                .Include(p => p.Notes)
+                .Include(p => p.Properties).ThenInclude(prop => prop.Parcel).ThenInclude(p => p.Address)
+                .Include(p => p.Properties).ThenInclude(prop => prop.Building).ThenInclude(b => b.Address)
+                .AsNoTracking();
+
+
+            if (filter.SPLWorkflow == true)
+            {
+                query = query.Where(p => p.Workflow.Code == "SPL" && p.Status.Code != "CA" && p.Status.Code != "T-GRE");
+            }
+
+            if (!String.IsNullOrWhiteSpace(filter.ProjectNumber))
+                query = query.Where(p => EF.Functions.Like(p.ProjectNumber, $"%{filter.ProjectNumber}%"));
+            if (!String.IsNullOrWhiteSpace(filter.Name))
+                query = query.Where(p => EF.Functions.Like(p.Name, $"%{filter.Name}%") || EF.Functions.Like(p.ProjectNumber, $"%{filter.Name}%"));
+            if (filter.TierLevelId.HasValue)
+                query = query.Where(p => p.TierLevelId == filter.TierLevelId);
+            if (filter.CreatedByMe.HasValue && filter.CreatedByMe.Value)
+            {
+                var keycloakUserId = context.Users.FirstOrDefault(u => u.Username == user.GetUsername())?.Id; ;
+                query = query.Where(p => p.CreatedById.Equals(userId));
+            }
+
+            if (filter.WorkflowId.HasValue)
+            {
+                query = query.Where(p => p.WorkflowId == filter.WorkflowId);
+            }
+
+            if (filter.FiscalYear.HasValue)
+            {
+                query = query.Where(p => p.ActualFiscalYear == filter.FiscalYear);
+            }
+
+            if (filter.Active.HasValue && filter.Active.Value)
+            {
+                query = query.Where(p => !p.Status.IsTerminal);
+            }
+
+            if (filter.StatusId?.Any() == true)
+            {
+                query = query.Where(p => filter.StatusId.Contains(p.StatusId));
+            }
+
+            if (filter.NotStatusId?.Any() == true)
+            {
+                query = query.Where(p => !filter.NotStatusId.Contains(p.StatusId));
+            }
+
+            if (filter.Agencies?.Any() == true)
+            {
+                // Get list of sub-agencies for any agency selected in the filter.
+                var agencies = filter.Agencies.Concat(context.Agencies.AsNoTracking().Where(a => filter.Agencies.Contains(a.Id)).SelectMany(a => a.Children.Select(ac => ac.Id)).ToArray()).Distinct();
+                query = query.Where(p => agencies.Contains(p.AgencyId));
+            }
+
+            if (filter.Workflows?.Any() == true)
+            {
+                query = query.Where(p => p.Status.Workflows.Any(w => filter.Workflows.Contains(w.Workflow.Code)));
+            }
+
+            if (filter.ReportId.HasValue)
+            {
+                query = query.Include(p => p.Snapshots);
+            }
+            // Only admins can view all agency projects.
+            if (!isAdmin)
+            {
+                query = query.Where(p => userAgencies.Contains(p.AgencyId));
+            }
+
+            if (filter.Sort?.Any() == true)
+                query = query.OrderByProperty(filter.Sort);
+            else
+                query = query.OrderByDescending(p => p.ActualFiscalYear).OrderByDescending(p => p.ReportedFiscalYear).OrderByDescending(p => p.ProjectNumber).OrderByDescending(p => p.CreatedOn);
+
+            return query;
+        }
+
 
         /// Generate a new project number in the database.
         /// NOTE - this saves current changes to the datasource and should be called before other changes.
@@ -271,6 +378,91 @@ namespace Pims.Dal.Helpers.Extensions
                 ?? project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Building).Select(p => p.Building).SelectMany(p => p.Fiscals).Max(b => (DateTime?)new DateTime(b.FiscalYear, 1, 1))
                 ?? DateTime.UtcNow;
         }
+
+        /// <summary>  ///      
+        /// Get the Property Location for a project.       
+        /// /// </summary>       
+        /// /// <param name="project"></param>      
+        /// /// <returns></returns>       
+
+        public static string GetPropertyLocation(this Project project)
+        {
+            var adminArea = "";
+
+            if (project == null)
+            {
+                throw new ArgumentNullException(nameof(project));
+            }
+            if (project.Properties == null)
+            {
+                return "";
+            }
+
+            var properties = project.Properties.FirstOrDefault();
+            if (properties == null)
+            {
+                return "";
+            }
+
+            adminArea = properties.PropertyType == Entity.PropertyTypes.Land ?
+                properties.Parcel.Address.AdministrativeArea :
+                properties.Building.Address.AdministrativeArea;
+
+            return adminArea;
+        }
+
+        /// <summary>  ///      
+        /// Get the PIDs for a project.       
+        /// /// </summary>       
+        /// /// <param name="project"></param>      
+        /// /// <returns></returns>       
+
+        public static string GetParcelPIDs(this Project project)
+        {
+            if (project == null)
+            {
+                throw new ArgumentNullException(nameof(project));
+            }
+            if (project.Properties == null)
+            {
+                return "";
+            }
+            var parcels = project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land)
+                                          .Select(p => p.Parcel);
+            var PIDs = "";
+            foreach (var parcel in parcels)
+            {
+                PIDs = PIDs + parcel.PID + ", ";
+            }
+            return PIDs.Length > 0 ? PIDs.Substring(0, (PIDs.Length) - 2) : "";
+        }
+
+        /// <summary>  ///      
+        /// Get the Lotsize for a project.       
+        /// /// </summary>       
+        /// /// <param name="project"></param>      
+        /// /// <returns></returns>       
+
+        public static float GetParcelLotsize(this Project project)
+        {
+            if (project == null)
+            {
+                throw new ArgumentNullException(nameof(project));
+            }
+            if (project.Properties == null)
+            {
+                return 0;
+            }
+            var parcels = project.Properties.Where(p => p.PropertyType == Entity.PropertyTypes.Land)
+                                          .Select(p => p.Parcel);
+            float LotSize = 0;
+            foreach (var parcel in parcels)
+            {
+                LotSize = LotSize + parcel.LandArea;
+            }
+            return LotSize;
+        }
+
 
         /// <summary>
         /// Release properties from project, such as during the deny or cancelled statuses

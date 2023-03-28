@@ -1,9 +1,14 @@
+using System.Linq;
+using System.Globalization;
+using Newtonsoft.Json.Linq;
 using Pims.Core.Extensions;
 using Pims.Keycloak.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Pims.Keycloak
 {
@@ -142,6 +147,8 @@ namespace Pims.Keycloak
 
             return response.HandleResponse(userId);
         }
+
+
         #endregion
     }
 }

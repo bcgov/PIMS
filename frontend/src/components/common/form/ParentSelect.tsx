@@ -5,6 +5,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Highlighter, Menu, MenuItem } from 'react-bootstrap-typeahead';
 import styled from 'styled-components';
 
+import { Label } from '../Label';
 import { SelectOption, SelectOptions } from './Select';
 import { TypeaheadField } from './Typeahead';
 
@@ -63,11 +64,9 @@ export const ParentSelect: React.FC<IParentSelect> = ({
   selectClosest,
   convertValue = value => value,
 }) => {
-  const { values, setFieldValue } = useFormikContext();
-  const selected = getIn(values, field) as [];
+  const { setFieldValue } = useFormikContext();
   /** used to trigger onBlur so menu disappears on custom header click */
   const [clear, setClear] = useState(false);
-
   /** controls the multi selections displayed to the user */
   const [multiSelections, setMultiSelections] = React.useState<any>([]);
   /** parent id used to identify parent agencies with no children */
@@ -78,11 +77,6 @@ export const ParentSelect: React.FC<IParentSelect> = ({
     clearSelected && setMultiSelections([]);
     setClearSelected && setClearSelected(false);
   }, [clearSelected, setClearSelected]);
-
-  React.useEffect(() => {
-    if (selected && !!selected.length && selected.some)
-      setMultiSelections(options.filter(o => selected?.some(f => o.value === f)));
-  }, [selected, options]);
 
   /** function that gets called when menu header is clicked */
   const handleMenuHeaderClick = (vals: SelectOption) => {
@@ -117,8 +111,8 @@ export const ParentSelect: React.FC<IParentSelect> = ({
 
   return (
     <>
+      {label && <Label required={required}>{label}</Label>}
       <TypeaheadField
-        label={label}
         disabled={disabled}
         clearMenu={clear}
         selectClosest={selectClosest}
@@ -140,7 +134,6 @@ export const ParentSelect: React.FC<IParentSelect> = ({
         multiple={enableMultiple}
         options={options}
         maxResults={options.length}
-        bsSize={'large'}
         filterBy={filterBy}
         getOptionByValue={enableMultiple ? (value: any) => value : getOptionByValue}
         multiSelections={multiSelections}

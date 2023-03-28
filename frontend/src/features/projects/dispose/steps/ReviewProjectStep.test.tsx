@@ -1,28 +1,28 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { ProjectActions } from 'constants/actionTypes';
+import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import { DisposeWorkflowStatus } from 'features/projects/constants';
 import { IProject, IProjectTask, ITask } from 'features/projects/interfaces';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import ReviewProjectStep from './ReviewProjectStep';
 
-jest.mock('@react-keycloak/web');
-(useKeycloak as jest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: [1],
-      roles: [],
-    },
-    subject: 'test',
-  },
-});
+const userRoles: string[] | Claims[] = [];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+(useKeycloakWrapper as jest.Mock).mockReturnValue(
+  new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+);
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -104,9 +104,9 @@ const store = mockStore({
 
 const uiElement = (
   <Provider store={store}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <ReviewProjectStep />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 

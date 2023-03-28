@@ -1,13 +1,8 @@
 import * as React from 'react';
 import { Container } from 'react-bootstrap';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import {
-  PrivateNotes,
-  ProjectDraftForm,
-  ProjectNotes,
-  UpdateInfoForm,
-  useProject,
-} from '../../common';
+import { PrivateNotes, ProjectDraftForm, ProjectNotes, UpdateInfoForm } from '../../common';
 import { PublicNotes } from '../components/ProjectNotes';
 import AdditionalPropertyInformationForm from '../forms/AdditionalPropertyInformationForm';
 
@@ -18,7 +13,8 @@ interface IProjectInformationTabProps {
 const ProjectInformationTab: React.FunctionComponent<IProjectInformationTabProps> = ({
   isReadOnly,
 }: IProjectInformationTabProps) => {
-  const { goToDisposePath } = useProject();
+  const navigate = useNavigate();
+  const location = useLocation();
   return (
     <Container fluid>
       <ProjectDraftForm isReadOnly={isReadOnly} title="" />
@@ -27,7 +23,7 @@ const ProjectInformationTab: React.FunctionComponent<IProjectInformationTabProps
       <UpdateInfoForm
         isReadOnly={isReadOnly}
         showRisk={true}
-        goToAddProperties={() => goToDisposePath('assess/properties/update')}
+        goToAddProperties={() => navigate(`/projects/assess/properties/update${location.search}`)}
         title="Property Information"
       />
 

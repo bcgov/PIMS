@@ -122,6 +122,7 @@ namespace Pims.Core.Test
         public static PimsContext InitializeDatabase(this TestHelper helper, string dbName, ClaimsPrincipal user)
         {
             var context = helper.CreatePimsContext(dbName, user, true);
+            context.AddRange(EntityHelper.CreateUser("sresfm"));
             context.AddRange(EntityHelper.CreateDefaultPropertyClassifications());
             context.AddRange(EntityHelper.CreateDefaultProvinces());
             context.AddRange(EntityHelper.CreateDefaultAdministrativeAreas());

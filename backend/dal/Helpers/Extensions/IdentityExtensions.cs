@@ -3,6 +3,7 @@ using Pims.Core.Extensions;
 using Pims.Dal.Entities;
 using Pims.Dal.Exceptions;
 using Pims.Dal.Security;
+using Pims.Dal.Services;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -22,11 +23,12 @@ namespace Pims.Dal.Helpers.Extensions
         /// <returns>True if the user has any of the permission.</returns>
         public static bool HasPermission(this ClaimsPrincipal user, params Permissions[] permission)
         {
+            string[] usersRoles = user.Claims.Where(c => c.Type == "client_roles").Select(c => c.Value).ToArray();
             if (permission == null) throw new ArgumentNullException(nameof(permission));
             if (permission.Length == 0) throw new ArgumentOutOfRangeException(nameof(permission));
 
             var roles = permission.Select(r => r.GetName()).ToArray();
-            return user.Claims.Any(c => c.Type == ClaimTypes.Role && roles.Contains(c.Value));
+            return usersRoles.Any(c => roles.Contains(c));
         }
 
         /// <summary>
@@ -40,8 +42,9 @@ namespace Pims.Dal.Helpers.Extensions
             if (permission == null) throw new ArgumentNullException(nameof(permission));
             if (permission.Length == 0) throw new ArgumentOutOfRangeException(nameof(permission));
 
-            var roles = permission.Select(r => r.GetName()).ToArray();
-            return user.Claims.Where(c => c.Type == ClaimTypes.Role).All(c => roles.Contains(c.Value));
+            string[] roles = permission.Select(r => r.GetName()).ToArray();
+            string[] usersRoles = user.Claims.Where(c => c.Type == "client_roles").Select(c => c.Value).ToArray();
+            return usersRoles.All(c => roles.Contains(c));
         }
 
         /// <summary>
@@ -192,7 +195,11 @@ namespace Pims.Dal.Helpers.Extensions
         /// <returns></returns>
         public static Agency GetAgency(this ClaimsPrincipal user, PimsContext context)
         {
-            var agencyIds = user.GetAgencies();
+            //Fetching user's agencies from database
+            Guid? userId = context.Users.FirstOrDefault(u => u.Username == user.GetUsername())?.Id;
+            int[] agencyIds = context.UserAgencies.Where(ua => ua.UserId == userId).Select(ua => ua.AgencyId).ToArray<int>();
+            int[] subAgencies = context.Agencies.Where(a => a.ParentId != null && agencyIds.Contains(a.ParentId.Value)).Select(a => a.Id).ToArray<int>();
+            agencyIds = agencyIds.Concat(subAgencies).ToArray();
 
             if (agencyIds == null || !agencyIds.Any()) return null;
 

@@ -1,14 +1,20 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { fireEvent } from '@testing-library/dom';
 import { act, render, waitFor } from '@testing-library/react';
+import Claims from 'constants/claims';
 import { Formik } from 'formik';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { noop } from 'lodash';
 import React from 'react';
 import { Form } from 'react-bootstrap';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import ApprovalConfirmationForm from '../../common/forms/ApprovalConfirmationForm';
 
-jest.mock('@react-keycloak/web');
+const userRoles: string[] | Claims[] = [];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
 
 const renderComponent = (isReadOnly: boolean, onSubmit?: (values: any) => void) => {
   return render(
@@ -23,14 +29,9 @@ const renderComponent = (isReadOnly: boolean, onSubmit?: (values: any) => void) 
 
 describe('Approval Confirmation', () => {
   beforeEach(() => {
-    (useKeycloak as jest.Mock).mockReturnValue({
-      keycloak: {
-        userInfo: {
-          agencies: ['1'],
-        },
-        subject: 'test',
-      },
-    });
+    (useKeycloakWrapper as jest.Mock).mockReturnValue(
+      new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+    );
   });
   afterEach(() => {
     jest.clearAllMocks();
@@ -52,10 +53,9 @@ describe('Approval Confirmation', () => {
 
   it('formik submitted values as expected', () => {
     const submitFn = jest.fn();
+    const { getByLabelText } = renderComponent(true, submitFn);
+    const input = getByLabelText('has approval/authority', { exact: false });
     act(() => {
-      const { getByLabelText } = renderComponent(true, submitFn);
-      const input = getByLabelText('has approval/authority', { exact: false });
-
       fireEvent.click(input);
     });
     waitFor(() => {

@@ -6,7 +6,7 @@ import React, { useMemo, useState } from 'react';
 import { useEffect } from 'react';
 import { useCallback } from 'react';
 import { Container, Spinner } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'store';
 import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
 import styled from 'styled-components';
@@ -42,14 +42,14 @@ const StyledTable = styled(Table)`
 
 /** Component used to list the administrative areas present in the application. User's can select corresponding administrative area they wish to edit here. */
 export const ManageAdminAreas = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const lookupCodes = useCodeLookups();
   const columns = useMemo(() => adminAreasColumnDefinistions, []);
   const administrativeAreas = lookupCodes.getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME);
 
   const onRowClick = (row: IAdministrativeArea) => {
-    history.push(`/admin/administrativeArea/${row.id}`);
+    navigate(`/admin/administrativeArea/${row.id}`);
   };
 
   const [areas, setAreas] = useState(undefined);
@@ -72,11 +72,11 @@ export const ManageAdminAreas = () => {
   /** make sure lookup codes are updated when administrative area is added or deleted */
   useEffect(() => {
     getFetchLookupCodeAction()(dispatch);
-  }, [history, dispatch]);
+  }, [navigate, dispatch]);
 
   const [filter, setFilter] = useState<IAdminAreaFilter>({});
   const onRequestData = useCallback(
-    async ({ pageIndex }) => {
+    async ({ pageIndex }: { pageIndex: number }) => {
       if (!!filter) {
         const response = await api.getAdminAreas({
           page: filter.id ? 0 : pageIndex + 1,
@@ -95,7 +95,7 @@ export const ManageAdminAreas = () => {
     <Container fluid style={{ padding: 0 }}>
       <AdminAreaToolbarContainer fluid className="admin-area-toolbar">
         <AdminAreaFilterBar
-          handleAdd={() => history.push('/admin/administrativeArea/new')}
+          handleAdd={() => navigate('/admin/administrativeArea/new')}
           onChange={value => {
             if ((value as any).id) {
               setFilter({ ...filter, id: (value as any).id });

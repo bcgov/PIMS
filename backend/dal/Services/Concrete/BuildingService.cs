@@ -53,8 +53,14 @@ namespace Pims.Dal.Services
         public IEnumerable<Building> Get(double neLat, double neLong, double swLat, double swLong)
         {
             this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
-            // Check if user has the ability to view sensitive properties.
-            var userAgencies = this.User.GetAgenciesAsNullable();
+
+            // Check if user has the ability to view sensitive properties. 
+            var user = this.Context.Users
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .ThenInclude(a => a.Children)
+                .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
+            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
@@ -64,7 +70,7 @@ namespace Pims.Dal.Services
                 .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel)
                 .AsNoTracking()
                 .Where(b =>
-                (isAdmin || b.IsVisibleToOtherAgencies || !b.IsSensitive || (viewSensitive && userAgencies.Contains(b.AgencyId))));
+                (isAdmin || b.IsVisibleToOtherAgencies || !b.IsSensitive || (viewSensitive && userAgencies.Contains((int)b.AgencyId))));
 
             var pfactory = new NetTopologySuite.Geometries.GeometryFactory();
             var ring = new NetTopologySuite.Geometries.LinearRing(
@@ -122,7 +128,13 @@ namespace Pims.Dal.Services
         {
             this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
             // Check if user has the ability to view sensitive properties.
-            var userAgencies = this.User.GetAgenciesAsNullable(); ;
+            var user = this.Context.Users
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .ThenInclude(a => a.Children)
+                .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
+            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
+
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
@@ -147,7 +159,7 @@ namespace Pims.Dal.Services
                     && (isAdmin
                         || b.IsVisibleToOtherAgencies
                         || ((!b.IsSensitive || viewSensitive)
-                            && userAgencies.Contains(b.AgencyId)))) ?? throw new KeyNotFoundException();
+                            && userAgencies.Contains((int)b.AgencyId)))) ?? throw new KeyNotFoundException();
 
             return building;
         }
@@ -162,7 +174,7 @@ namespace Pims.Dal.Services
             building.ThrowIfNull(nameof(building));
             this.User.ThrowIfNotAuthorized(Permissions.PropertyAdd);
 
-            var agency = this.User.GetAgency(this.Context) ??
+            Agency agency = User.GetAgency(Context) ??
                 throw new NotAuthorizedException("User must belong to an agency before adding buildings.");
 
             // A building should have a unique name within the parcel it is located on.
@@ -224,8 +236,14 @@ namespace Pims.Dal.Services
                 .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Address).ThenInclude(a => a.Province)
                 .FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
 
-            var userAgencies = this.User.GetAgenciesAsNullable();
-            if (!isAdmin && !userAgencies.Contains(existingBuilding.AgencyId)) throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
+             var user = this.Context.Users
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .ThenInclude(a => a.Children)
+                .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
+            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
+
+            if (!isAdmin && !userAgencies.Contains((int)existingBuilding.AgencyId)) throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
 
             existingBuilding.ThrowIfPropertyInSppProject(this.User);
 
@@ -244,7 +262,7 @@ namespace Pims.Dal.Services
             // Only administrators can set property to subdivided
             if (building.ClassificationId == (int)ClassificationTypes.Subdivided && !isAdmin) throw new NotAuthorizedException("Building classification cannot be changed to subdivided.");
 
-            var allowEdit = isAdmin || userAgencies.Contains(existingBuilding.AgencyId);
+            var allowEdit = isAdmin || userAgencies.Contains((int)existingBuilding.AgencyId);
             // A building should have a unique name within the parcel it is located on.
             existingBuilding.Parcels.ForEach(pb => this.Context.ThrowIfNotUnique(pb.Parcel, building));
 
@@ -364,13 +382,19 @@ namespace Pims.Dal.Services
                 .FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
             this.ThrowIfNotAllowedToUpdate(existingBuilding, _options.Project);
 
-            var userAgencies = this.User.GetAgenciesAsNullable();
-            if (!isAdmin && !userAgencies.Contains(existingBuilding.AgencyId))
+             var user = this.Context.Users
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .ThenInclude(a => a.Children)
+                .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
+            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
+
+            if (!isAdmin && !userAgencies.Contains((int)existingBuilding.AgencyId))
                 throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
 
             existingBuilding.ThrowIfPropertyInSppProject(this.User);
 
-            var allowEdit = isAdmin || userAgencies.Contains(existingBuilding.AgencyId);
+            var allowEdit = isAdmin || userAgencies.Contains((int)existingBuilding.AgencyId);
             if (allowEdit)
             {
                 this.Context.SetOriginalRowVersion(existingBuilding);
@@ -395,7 +419,8 @@ namespace Pims.Dal.Services
 
             var existingBuilding = this.Context.Buildings.Include(b => b.Evaluations).Include(b => b.Fiscals).Include(b => b.Parcels).FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
 
-            var agency_ids = this.User.GetAgenciesAsNullable(); ;
+            IEnumerable<int?> agency_ids = this.Self.User.GetAgencies(this.User.GetUsername()).Select(a => (int?)a);
+
             if (!isAdmin && !agency_ids.Contains(existingBuilding.AgencyId)) throw new NotAuthorizedException("User may not remove buildings outside of their agency.");
 
             existingBuilding.ThrowIfPropertyInSppProject(this.User);

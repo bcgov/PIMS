@@ -1,24 +1,38 @@
 import { FastCurrencyInput, FastDatePicker, Input, TextArea } from 'components/common/form';
 import { Col, Row } from 'components/flex';
 import { useFormikContext } from 'formik';
+import { Claim } from 'hooks/api';
 import { WorkflowStatus } from 'hooks/api/projects';
-import React from 'react';
+import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
+import React, { useEffect, useState } from 'react';
 
 import { IProjectForm } from '../interfaces';
 import * as styled from './styled';
 
-interface IProjectNotSPLProps {
-  disabled?: boolean;
-}
-
-export const ProjectNotSPL: React.FC<IProjectNotSPLProps> = ({ disabled = false }) => {
+export const ProjectNotSPL: React.FC = () => {
   const formik = useFormikContext<IProjectForm>();
   const {
-    values: { statusCode },
-  } = formik;
+    values: { workflowCode, statusCode },
+  } = useFormikContext();
 
   const showTransferredWithinGRE =
     statusCode === WorkflowStatus.NotInSpl || statusCode === WorkflowStatus.TransferredGRE;
+
+  // Disabled prop
+  const keycloak = useKeycloakWrapper();
+  const [disabled, setDisabled] = useState(false);
+  const isAdmin = keycloak.hasClaim(Claim.ReportsSplAdmin);
+
+  useEffect(() => {
+    setDisabled(
+      [
+        WorkflowStatus.Disposed,
+        WorkflowStatus.Cancelled,
+        WorkflowStatus.TransferredGRE,
+        WorkflowStatus.Denied,
+      ].includes(statusCode) && !isAdmin,
+    );
+  }, [isAdmin, workflowCode, statusCode]);
 
   return (
     <styled.ProjectNotSPL>

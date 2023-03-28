@@ -1,16 +1,18 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import { IParcel } from 'actions/parcelsActions';
 import * as API from 'constants/API';
+import Claims from 'constants/claims';
 import { Classifications } from 'constants/classifications';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import noop from 'lodash/noop';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 import { fillInput } from 'utils/testUtils';
 
 import { LandForm } from '.';
@@ -60,20 +62,22 @@ const lCodes = {
 const store = mockStore({
   lookupCode: lCodes,
   parcel: { propeties: [], draftProperties: [] },
+  usersAgencies: [
+    { id: '1', name: 'agencyVal' },
+    { id: '2', name: 'disabledAgency' },
+  ],
 });
 
 const promise = Promise.resolve();
 
-jest.mock('@react-keycloak/web');
-(useKeycloak as jest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: ['1'],
-      roles: ['admin-properties'],
-    },
-    subject: 'test',
-  },
-});
+const userRoles: string[] | Claims[] = ['admin-properties'];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+(useKeycloakWrapper as jest.Mock).mockReturnValue(
+  new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+);
 
 const defaultInitialValues: IParcel = {
   id: 1,
@@ -107,7 +111,7 @@ const defaultInitialValues: IParcel = {
 
 const getLandForm = (disabled?: boolean, initialValues?: IParcel) => (
   <Provider store={store}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <LandForm
         handleGeocoderChanges={() => (promise as unknown) as Promise<void>}
         setMovingPinNameSpace={noop}
@@ -120,7 +124,7 @@ const getLandForm = (disabled?: boolean, initialValues?: IParcel) => (
         setLandUpdateComplete={noop}
         findMatchingPid={noop as any}
       />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 

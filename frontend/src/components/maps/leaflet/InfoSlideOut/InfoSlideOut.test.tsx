@@ -1,52 +1,52 @@
 import 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-import { useKeycloak } from '@react-keycloak/web';
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { waitFor } from '@testing-library/dom';
+import Claims from 'constants/claims';
 import Enzyme, { mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { Map as LeafletMap } from 'leaflet';
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
-import { Map as ReactLeafletMap, MapProps } from 'react-leaflet';
+import { MapContainer as ReactLeafletMap } from 'react-leaflet';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import InfoSlideOut from './InfoSlideOut';
 
-jest.mock('@react-keycloak/web');
-(useKeycloak as jest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: [1],
-      roles: [],
-    },
-    subject: 'test',
-  },
-});
+const userRoles: string[] | Claims[] = [];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+(useKeycloakWrapper as jest.Mock).mockReturnValue(
+  new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+);
 
 Enzyme.configure({ adapter: new Adapter() });
 const history = createMemoryHistory();
 const mockStore = configureMockStore([thunk]);
 const store = mockStore({});
 
-let mapRef: React.RefObject<ReactLeafletMap<MapProps, LeafletMap>> | undefined;
+let mapRef: React.RefObject<LeafletMap> | undefined;
 
 const MapComponent = () => {
   const [open, setOpen] = React.useState(false);
   mapRef = React.useRef<any>();
   return (
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <div id="mapid" style={{ width: 500, height: 500 }}>
           <ReactLeafletMap ref={mapRef} center={[48.423078, -123.360956]} zoom={18}>
             <InfoSlideOut open={open} setOpen={() => setOpen(!open)} />
           </ReactLeafletMap>
         </div>
-      </Router>
+      </MemoryRouter>
     </Provider>
   );
 };

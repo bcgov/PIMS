@@ -1,38 +1,37 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { act, cleanup, render } from '@testing-library/react';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import * as actionTypes from 'constants/actionTypes';
+import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
-import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { noop } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
 import * as redux from 'react-redux';
-import { match as Match, Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import useStepper from './hooks/useStepper';
 import ProjectDisposeView from './ProjectDisposeView';
 
-jest.mock('@react-keycloak/web');
-(useKeycloak as jest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: [1],
-      roles: [],
-    },
-    subject: 'test',
-  },
-});
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+const mockKeycloak = (userRoles: string[] | Claims[]) => {
+  (useKeycloakWrapper as jest.Mock).mockReturnValue(
+    new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, true),
+  );
+};
 
 const useDispatchSpy = jest.spyOn(redux, 'useDispatch');
 const mockDispatchFn = jest.fn().mockReturnValue({ then: jest.fn() });
 useDispatchSpy.mockReturnValue(mockDispatchFn);
 
 const mockStore = configureMockStore([thunk]);
-const history = createMemoryHistory();
 
 jest.mock('./hooks/useStepper');
 jest.mock('./hooks/useStepper');
@@ -42,19 +41,6 @@ jest.mock('./hooks/useStepper');
   projectStatusCompleted: noop,
   canGoToStatus: noop,
 });
-
-const match: Match = {
-  path: '/dispose',
-  url: '/dispose',
-  isExact: false,
-  params: {},
-};
-
-const loc = {
-  pathname: '/dispose/projects/draft',
-  search: '?projectNumber=SPP-10001',
-  hash: '',
-} as Location;
 
 const mockWorkflow = [
   {
@@ -97,9 +83,9 @@ const errorStore = mockStore({
 
 const renderElement = (store: any) => (
   <Provider store={store}>
-    <Router history={history}>
-      <ProjectDisposeView match={match} location={loc} />
-    </Router>
+    <MemoryRouter initialEntries={['/dispose?projectNumber=SPP-10001']}>
+      <ProjectDisposeView />
+    </MemoryRouter>
   </Provider>
 );
 
@@ -108,10 +94,16 @@ describe('Project Dispose View', () => {
     cleanup();
     jest.clearAllMocks();
   });
+
+  beforeAll(() => {
+    mockKeycloak([Claims.PROJECT_ADD]);
+  });
+
   beforeEach(() => {
     const mockAxios = new MockAdapter(axios);
     mockAxios.onAny().reply(200, {});
   });
+
   it('renders', () => {
     act(() => {
       const { container } = render(renderElement(store));

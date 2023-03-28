@@ -8,15 +8,16 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { ReactKeycloakProvider } from '@react-keycloak/web';
 import { AuthStateContextProvider } from 'contexts/authStateContext';
-import LoginLoading from 'features/account/LoginLoading';
+import { LoginLoading } from 'features/account';
+import { useConfiguration } from 'hooks/useConfiguration';
 import Keycloak from 'keycloak-js';
+import { useKeycloakInstance } from 'keycloakInstance';
 import EmptyLayout from 'layouts/EmptyLayout';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import { createKeycloakInstance } from 'utils';
 import getKeycloakEventHandler from 'utils/KeycloakEventHandler';
 
 import css from './_variables.module.scss';
@@ -31,19 +32,13 @@ import { store } from './store';
 const Index = () => {
   const [loading, setLoading] = React.useState(true);
   const [keycloak, setKeycloak] = React.useState(Keycloak);
+  const keycloakInstance = useKeycloakInstance();
+  const configuration = useConfiguration();
 
   React.useEffect(() => {
-    createKeycloakInstance()
-      .then(instance => {
-        setKeycloak(instance);
-        setLoading(false);
-      })
-      .catch(() => {
-        // Ignore the error and apply the default config.
-        //@ts-ignore
-        setKeycloak(new Keycloak('./keycloak.json'));
-        setLoading(false);
-      });
+    setKeycloak(keycloakInstance);
+    setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return loading ? (
@@ -60,6 +55,11 @@ const Index = () => {
           </EmptyLayout>
         }
         onEvent={getKeycloakEventHandler(keycloak)}
+        initOptions={{
+          pkceMethod: 'S256',
+          onLoad: 'check-sso',
+          redirectUri: configuration.keycloakRedirectURI,
+        }}
       >
         <Provider store={store}>
           <AuthStateContextProvider>
@@ -73,7 +73,8 @@ const Index = () => {
   );
 };
 
-ReactDOM.render(<Index />, document.getElementById('root'));
+const root = createRoot(document.getElementById('root')!);
+root.render(<Index />);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

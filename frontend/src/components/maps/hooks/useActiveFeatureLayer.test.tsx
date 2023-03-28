@@ -1,28 +1,28 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { waitFor } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
 import { useLayerQuery } from 'components/maps/leaflet/LayerPopup';
+import Claims from 'constants/claims';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { geoJSON } from 'leaflet';
 import { noop } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import useActiveFeatureLayer from './useActiveFeatureLayer';
 
-jest.mock('@react-keycloak/web');
-(useKeycloak as jest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: [1],
-      roles: [],
-    },
-    subject: 'test',
-  },
-});
+const userRoles: string[] | Claims[] = [];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+(useKeycloakWrapper as jest.Mock).mockReturnValue(
+  new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+);
 
 const mapRef = { current: { leafletMap: {} } };
 jest.mock('leaflet');
@@ -43,7 +43,7 @@ const history = createMemoryHistory();
 const getStore = (values?: any) => mockStore(values ?? { parcel: { draftProperties: [] } });
 const getWrapper = (store: any) => ({ children }: any) => (
   <Provider store={store}>
-    <Router history={history}>{children}</Router>
+    <MemoryRouter initialEntries={[history.location]}>{children}</MemoryRouter>
   </Provider>
 );
 

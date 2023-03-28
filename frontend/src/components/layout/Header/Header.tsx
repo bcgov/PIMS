@@ -6,7 +6,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React, { useState } from 'react';
 import { Button, Col, Modal, Nav, Navbar, Row } from 'react-bootstrap';
 import { FaBomb } from 'react-icons/fa';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { IGenericNetworkAction, useAppSelector } from 'store';
 import { useNetworkStore } from 'store/slices/hooks';
 import styled from 'styled-components';
@@ -21,15 +21,22 @@ const VerticalBar = styled.span`
 `;
 
 const Header = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const keycloak = useKeycloakWrapper();
   const network = useNetworkStore();
   const { requests } = useAppSelector(store => store.network);
 
+  // Change styling based on environment
+  let environment = 'production';
+  if (window.location.href.includes('localhost')) environment = 'local';
+  else if (window.location.href.includes('pims-dev')) environment = 'development';
+  else if (window.location.href.includes('pims-test')) environment = 'testing';
+
   const [errors, setErrors] = React.useState<IGenericNetworkAction[]>([]);
 
-  if (history.location.pathname === '/') {
-    history.replace('/mapview');
+  if (location.pathname === '/') {
+    navigate('/mapview', { replace: true });
   }
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -75,7 +82,7 @@ const Header = () => {
                     {error.error?.response?.config?.url?.substr(0, 20)}
                   </abbr>
                   : ({error.error?.response?.statusText ?? 'unknown'}){' '}
-                  {error.error?.response?.data?.error}
+                  {JSON.stringify(error.error?.response?.data)}
                 </Col>
               )}
             </Row>
@@ -105,10 +112,38 @@ const Header = () => {
         <VerticalBar />
         <img className="pims-logo" src={PIMSlogo} height="50" alt="PIMS logo" />
       </Navbar.Brand>
-      <Nav className="title mr-auto">
+      <Nav className="title">
         <Nav.Item>
-          <h1 className="longAppName">Property Inventory Management System</h1>
-          <h1 className="shortAppName">PIMS</h1>
+          {environment === 'production' && (
+            <>
+              <h1 className="longAppName">Property Inventory Management System</h1>
+              <h1 className="shortAppName">PIMS</h1>
+            </>
+          )}
+          {environment === 'development' && (
+            <>
+              <h1 className="longAppName" style={{ marginRight: '330px' }}>
+                PIMS - Development Environment
+              </h1>
+              <h1 className="shortAppName">PIMS</h1>
+            </>
+          )}
+          {environment === 'testing' && (
+            <>
+              <h1 className="longAppName" style={{ marginRight: '400px' }}>
+                PIMS - Testing Environment
+              </h1>
+              <h1 className="shortAppName">PIMS</h1>
+            </>
+          )}
+          {environment === 'local' && (
+            <>
+              <h1 className="longAppName" style={{ marginRight: '420px' }}>
+                PIMS - Local Development
+              </h1>
+              <h1 className="shortAppName">PIMS</h1>
+            </>
+          )}
         </Nav.Item>
       </Nav>
       {keycloak.obj.authenticated && <UserProfile />}

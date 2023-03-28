@@ -3,8 +3,11 @@ import { IBuilding, IParcel, IProperty } from 'actions/parcelsActions';
 import GenericModal, { ModalSize } from 'components/common/GenericModal';
 import { BuildingSvg, LandSvg, SubdivisionSvg } from 'components/common/Icons';
 import { fireMapRefreshEvent } from 'components/maps/hooks/useMapRefreshEvent';
-import { handleParcelDataLayerResponse, useLayerQuery } from 'components/maps/leaflet/LayerPopup';
-import { useBoundaryLayer } from 'components/maps/leaflet/LayerPopup/hooks/useBoundaryLayer';
+import {
+  handleParcelDataLayerResponse,
+  PARCELS_PUBLIC_LAYER_URL,
+  useLayerQuery,
+} from 'components/maps/leaflet/LayerPopup';
 import { Claims, EvaluationKeys, FiscalKeys, PropertyTypes } from 'constants/index';
 import { getMergedFinancials } from 'features/properties/components/forms/subforms/EvaluationForm';
 import useGeocoder from 'features/properties/hooks/useGeocoder';
@@ -18,8 +21,6 @@ import { useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { FaCheckCircle, FaEdit } from 'react-icons/fa';
 import { FaTrash } from 'react-icons/fa';
-import { Map as LeafletMap } from 'react-leaflet';
-import { Prompt } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'store';
 import { deleteBuilding } from 'store/slices/hooks/buildingActionCreator';
@@ -41,10 +42,8 @@ import { valuesToApiFormat, ViewOnlyBuildingForm } from '../SidebarContents/Buil
 import { getInitialValues, ISearchFields, ViewOnlyLandForm } from '../SidebarContents/LandForm';
 
 interface IMapSideBarContainerProps {
-  refreshParcels: Function;
   properties: IProperty[];
   movingPinNameSpaceProp?: string;
-  map?: LeafletMap | null;
 }
 
 const FloatCheck = styled(FaCheckCircle)`
@@ -85,7 +84,6 @@ const DeleteButton = styled(FaTrash)`
  */
 const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = ({
   movingPinNameSpaceProp,
-  map,
 }) => {
   const keycloak = useKeycloakWrapper();
   const formikRef = React.useRef<FormikValues>();
@@ -104,7 +102,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     addContext,
     disabled,
     setDisabled,
-    handleLocationChange,
+    // handleLocationChange,
   } = useParamSideBar(formikRef);
 
   const { parcelDetail } = useSideBarParcelLoader({
@@ -139,8 +137,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   const [showDelete, setShowDelete] = useState(false);
   const { createBuilding, updateBuilding } = useBuildingApi();
 
-  const layerUrl = useBoundaryLayer();
-  const parcelLayerService = useLayerQuery(layerUrl);
+  const parcelLayerService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
 
   /**
    * Populate the formik form using the passed parcel.
@@ -209,7 +206,6 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
           landLegalDescription: matchingParcel.landLegalDescription,
           landArea: matchingParcel.landArea,
         });
-        map?.leafletElement.setView([+matchingParcel.latitude, +matchingParcel.longitude], 20);
         formikDataPopulateCallback(matchingParcel, nameSpace);
         return matchingParcel;
       } else {
@@ -567,7 +563,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
       propertyName={buildingDetail?.name ?? parcelDetail?.name}
     >
       {render()}
-      <Prompt message={handleLocationChange as any}></Prompt>
+      {/* <Prompt message={handleLocationChange}></Prompt> */}
       <GenericModal
         message="Are you sure you want to permanently delete the property from inventory?"
         size={ModalSize.SMALL}

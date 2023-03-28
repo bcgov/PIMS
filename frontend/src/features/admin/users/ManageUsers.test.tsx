@@ -1,35 +1,35 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import * as actionTypes from 'constants/actionTypes';
 import * as API from 'constants/API';
+import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import { Formik } from 'formik';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { noop } from 'lodash';
 import moment from 'moment-timezone';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 import { fillInput } from 'utils/testUtils';
 
 import { ManageUsers } from './ManageUsers';
 
-jest.mock('@react-keycloak/web');
-(useKeycloak as jest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: [1],
-      roles: [],
-    },
-    subject: 'test',
-  },
-});
+const userRoles: string[] | Claims[] = [];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+(useKeycloakWrapper as jest.Mock).mockReturnValue(
+  new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+);
 
 const history = createMemoryHistory();
 history.push('admin');
@@ -59,9 +59,9 @@ const getStore = (includeDate?: boolean) =>
         items: [
           {
             id: '1',
-            username: 'testername1',
-            firstName: 'testUserFirst1',
-            lastName: 'testUserLast1',
+            username: 'tester',
+            firstName: 'firstName',
+            lastName: 'lastName',
             isDisabled: false,
             position: 'tester position',
             agencies: [{ id: '1', name: 'HLTH' }],
@@ -106,9 +106,9 @@ describe('Manage Users Component', () => {
     render(
       <Formik initialValues={{}} onSubmit={noop}>
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <ManageUsers />
-          </Router>
+          </MemoryRouter>
         </Provider>
       </Formik>,
     );
@@ -172,7 +172,7 @@ describe('Manage Users Component', () => {
 
   it('can search for users', async () => {
     const { container } = testRender(getStore());
-    fillInput(container, 'firstName', 'testUserFirst1');
+    fillInput(container, 'firstName', 'firstName');
     const searchButton = container.querySelector('#search-button');
     mockAxios.onPost().reply(200);
     act(() => {

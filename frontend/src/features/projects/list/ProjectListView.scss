@@ -10,6 +10,13 @@ $contentheading-height: 60px;
   flex-direction: column;
   padding: 0;
 
+  .ProjectCountHeader {
+    margin-top: 5px;
+    margin-right: 15px;
+    align-self: center;
+    color: #898989;
+  }
+
   .filter-container {
     padding: 0;
     background-color: var(--light);
@@ -19,6 +26,11 @@ $contentheading-height: 60px;
         .form-group {
           padding: 0;
           margin: 0;
+        }
+        // Typeahead remove button
+        .rbt-token-remove-button {
+          border: 0;
+          background: transparent;
         }
       }
 

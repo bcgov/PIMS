@@ -275,6 +275,10 @@ objects:
                 claimName: ${APP_NAME}-${ROLE_NAME}-${BACKUP_ROLE_NAME}
           containers:
             - name: ${APP_NAME}-${ROLE_NAME}${INSTANCE}
+              securityContext:
+                capabilities:
+                  add:
+                    - NET_BIND_SERVICE
               image: ""
               ports:
                 - containerPort: ${{MSSQL_PORT}}

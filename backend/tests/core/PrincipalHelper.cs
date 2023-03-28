@@ -29,7 +29,7 @@ namespace Pims.Core.Test
 
             foreach (var claim in role)
             {
-                claims.Add(new Claim(ClaimTypes.Role, claim ?? "none"));
+                claims.Add(new Claim("client_roles", claim ?? "none"));
             }
             var user = new ClaimsPrincipal(new ClaimsIdentity(claims, "mock"));
 
@@ -62,12 +62,16 @@ namespace Pims.Core.Test
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Email, "test@test.com")
-            };
+                new Claim(ClaimTypes.Email, "test@test.com"),
+                new Claim("test_username", "sresfm"),
+                new Claim("Id", "6C384423-C113-46C5-B23A-14680F4E7B78"),
+                new Claim("identity_provider", "unit_testing")
+        };
 
             foreach (var claim in permission)
             {
-                claims.Add(new Claim(ClaimTypes.Role, claim.GetName()));
+                claims.Add(new Claim("client_roles", claim.GetName()));
+                claims.Add(new Claim("identity_provider", "testIDP"));
             }
             var user = new ClaimsPrincipal(new ClaimsIdentity(claims, "mock"));
 

@@ -1,4 +1,4 @@
-import { useKeycloak } from '@react-keycloak/web';
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { render, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
@@ -8,34 +8,32 @@ import { Claims } from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import { mount } from 'enzyme';
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import { ReviewWorkflowStatus } from 'features/projects/constants';
 import { IProject, IProjectTask, ITask } from 'features/projects/interfaces';
 import { IProperty } from 'features/properties/list/interfaces';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import { ReviewApproveStep } from '..';
 
 Enzyme.configure({ adapter: new Adapter() });
 
-jest.mock('@react-keycloak/web');
-const mockKeycloak = (claims: string[]) => {
-  (useKeycloak as jest.Mock).mockReturnValue({
-    keycloak: {
-      userInfo: {
-        agencies: [1],
-        roles: claims,
-      },
-      subject: 'test',
-    },
-  });
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+const mockKeycloak = (userRoles: string[] | Claims[]) => {
+  (useKeycloakWrapper as jest.Mock).mockReturnValue(
+    new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+  );
 };
 
 const mockStore = configureMockStore([thunk]);
@@ -199,9 +197,9 @@ const store = (project: IProject) => {
 
 const getReviewApproveStep = (storeOverride?: any) => (
   <Provider store={storeOverride ?? store(mockProject(mockTasks))}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <ReviewApproveStep />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 
@@ -221,8 +219,8 @@ describe('Review Approve Step', () => {
   });
   it('edit button is visible when user has correct claims', () => {
     mockKeycloak([Claims.ADMIN_PROJECTS]);
+    const { getByText } = render(getReviewApproveStep());
     act(() => {
-      const { getByText } = render(getReviewApproveStep());
       const editButton = getByText(/Edit/);
       expect(editButton).toBeTruthy();
     });
@@ -237,15 +235,7 @@ describe('Review Approve Step', () => {
 
   it('Review step submits correctly', async () => {
     mockAxios.reset();
-    (useKeycloak as jest.Mock).mockReturnValue({
-      keycloak: {
-        userInfo: {
-          agencies: [1],
-          roles: Claims.ADMIN_PROJECTS,
-        },
-        subject: 'test',
-      },
-    });
+    mockKeycloak([Claims.ADMIN_PROJECTS]);
     let component: any;
     await waitFor(async () => {
       component = mount(getReviewApproveStep(store(mockProject(mockTasks))));
@@ -261,17 +251,9 @@ describe('Review Approve Step', () => {
 
 describe('Review approve modal behaviour', () => {
   it('confirmation popup does not appear when there are incomplete tasks', async () => {
-    (useKeycloak as jest.Mock).mockReturnValue({
-      keycloak: {
-        userInfo: {
-          agencies: [1],
-          roles: Claims.ADMIN_PROJECTS,
-        },
-        subject: 'test',
-      },
-    });
+    mockKeycloak([Claims.ADMIN_PROJECTS]);
+    const component = mount(getReviewApproveStep(store(mockProject(incompleteTask))));
     await act(async () => {
-      const component = mount(getReviewApproveStep(store(mockProject(incompleteTask))));
       const button = component.findWhere((node: { type: () => any; text: () => string }) => {
         return node.type() === Button && node.text() === 'Approve';
       });

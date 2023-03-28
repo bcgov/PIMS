@@ -74,7 +74,7 @@ interface ModalProps {
  * @param props customize the component with custom text, and an operation to take when the component is closed.
  */
 const GenericModal = (props: ModalProps) => {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
   useEffect(() => {
     if (props.display !== undefined) {
       setShow(props.display);
@@ -112,7 +112,11 @@ const GenericModal = (props: ModalProps) => {
         <Modal.Body style={{ maxHeight: '500px' }}>{props.message}</Modal.Body>
 
         <Modal.Footer>
-          <Button variant={props.okButtonVariant ?? 'primary'} onClick={ok}>
+          <Button
+            data-testid="modal-footer-ok-btn"
+            variant={props.okButtonVariant ?? 'primary'}
+            onClick={ok}
+          >
             {props.okButtonText ?? 'Ok'}
           </Button>
           {props.cancelButtonText && (

@@ -4,13 +4,13 @@ import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
 import { ReactComponent as SubdivisionSvg } from 'assets/images/project-diagram-solid.svg';
 import { PropertyTypes } from 'constants/propertyTypes';
 import React from 'react';
-import { CellProps } from 'react-table';
+import { CellProps, Renderer } from 'react-table';
 
 /**
  * Display an icon based on the property type.
  * @param {CellProps<IProperty, number>} param0
  */
-export const PropertyTypeCell = ({ cell: { value } }: CellProps<IProperty, number>) => {
+export const PropertyTypeCell: Renderer<CellProps<IProperty, number>> = ({ cell: { value } }) => {
   switch (value) {
     case PropertyTypes.SUBDIVISION:
       return <SubdivisionSvg className="svg" />;

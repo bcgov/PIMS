@@ -4,7 +4,7 @@ import { Feature, FeatureCollection } from 'geojson';
 import * as L from 'leaflet';
 import * as React from 'react';
 import { useEffect } from 'react';
-import { useLeaflet } from 'react-leaflet';
+import { useMap } from 'react-leaflet';
 require('leaflet-draw');
 
 interface ILeafletDrawProps {
@@ -53,7 +53,7 @@ export const LeafletDraw: React.FC<ILeafletDrawProps> = ({
   canAdd,
   color = '#fcba19',
 }) => {
-  const { map } = useLeaflet();
+  const map = useMap();
 
   useEffect(() => {
     if (!!map) {

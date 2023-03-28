@@ -1,4 +1,4 @@
-import deepEqual from 'dequal';
+import { dequal } from 'dequal';
 import { BBox, GeoJsonProperties } from 'geojson';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { useRef, useState } from 'react';
@@ -33,7 +33,7 @@ const useSupercluster = <
 
   // use deep-equals to avoid infinite re-rendering when objects have same data but are different JS instances
   useDeepCompareEffect(() => {
-    if (!superclusterRef.current || !deepEqual(pointsRef.current, points)) {
+    if (!superclusterRef.current || !dequal(pointsRef.current, points)) {
       superclusterRef.current = new Supercluster(options);
       superclusterRef.current.load(points);
     }

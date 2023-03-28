@@ -3,7 +3,7 @@ import { Col, Row } from 'components/flex';
 import { Form, Formik } from 'formik';
 import { IProjectModel } from 'hooks/api/projects/disposals';
 import React from 'react';
-import { Route, Switch, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useProjectDisposal } from 'store';
 import { useProjectStore } from 'store/slices/hooks';
 
@@ -96,11 +96,12 @@ export const DisposalProject: React.FC<IDisposalProjectProps> = props => {
         }}
       >
         <Form className="project">
-          <Switch>
-            <Route exact path="/projects/disposal/:id/transfer/within/gre">
-              {!!project && <GreTransferStep project={project} onUpdate={handleUpdate} />}
-            </Route>
-            <Route>
+          {!!project &&
+          location.pathname.includes('transfer/within/gre') &&
+          !location.pathname.includes('spl') ? (
+            <GreTransferStep project={project} onUpdate={handleUpdate} />
+          ) : (
+            <>
               <Row nowrap>
                 <Col>
                   <h1>Surplus Property Program Project</h1>
@@ -124,6 +125,7 @@ export const DisposalProject: React.FC<IDisposalProjectProps> = props => {
               <ProjectTabs project={project} isLoading={isSubmitting} />
               <Row className="project-footer">
                 <Button
+                  data-testid="disposal-project-save-btn"
                   variant="primary"
                   type="submit"
                   isSubmitting={isSubmitting}
@@ -132,8 +134,8 @@ export const DisposalProject: React.FC<IDisposalProjectProps> = props => {
                   Save
                 </Button>
               </Row>
-            </Route>
-          </Switch>
+            </>
+          )}
         </Form>
       </Formik>
     </styled.DisposalProject>

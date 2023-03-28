@@ -1,3 +1,5 @@
+using System.Collections;
+using System.ComponentModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
@@ -86,6 +88,35 @@ namespace Pims.Dal.Services
             return new Paged<Project>(items, filter.Page, filter.Quantity, total);
         }
 
+ /// <summary>
+        /// Get an Excel page with an array of projects within the specified filters.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <exception cref="ArgumentNullException">Argument 'project' is required.</exception>
+        /// <exception cref="NotAuthorizedException">User does not have permission to view projects.</exception>
+        /// <returns></returns>
+        
+public Paged<Project> GetExcelPage(ProjectFilter filter)
+        {
+            filter.ThrowIfNull(nameof(filter));
+            this.User.ThrowIfNotAuthorized(Permissions.ProjectView);
+            if (!filter.IsValid()) throw new ArgumentException("Argument must have a valid filter", nameof(filter));
+
+            var query = this.Context.GenerateExcelQuery(this.User, filter, _options.Project);
+            var total = query.Count();
+            var items = query
+                .Skip((filter.Page - 1) * filter.Quantity)
+                .Take(filter.Quantity)
+                .ToArray();
+
+            if (filter.ReportId != null)
+            {
+                var report = this.Context.ProjectReports.FirstOrDefault(r => r.Id == filter.ReportId);
+                items.ForEach(p => p.Snapshots.RemoveAll(s => s.SnapshotOn != report?.To));
+            }
+
+            return new Paged<Project>(items, filter.Page, filter.Quantity, total);
+        }
         /// <summary>
         /// Get the project for the specified 'id'.
         /// Will not return sensitive properties unless the user has the `sensitive-view` claim and belongs to the owning agency.
@@ -100,7 +131,12 @@ namespace Pims.Dal.Services
             this.User.ThrowIfNotAuthorized(Permissions.ProjectView);
 
             // Check if user has the ability to view sensitive properties.
-            var userAgencies = this.User.GetAgencies();
+            var user = this.Context.Users
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .ThenInclude(a => a.Children)
+                .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
+            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
 
@@ -181,7 +217,12 @@ namespace Pims.Dal.Services
             this.User.ThrowIfNotAuthorized(Permissions.ProjectView);
 
             // Check if user has the ability to view sensitive properties.
-            var userAgencies = this.User.GetAgencies();
+            var user = this.Context.Users
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .ThenInclude(a => a.Children)
+                .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
+            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
 
@@ -297,9 +338,13 @@ namespace Pims.Dal.Services
         {
             project.ThrowIfNull(nameof(project));
             this.User.ThrowIfNotAuthorized(Permissions.ProjectAdd);
+            var user = this.Context.Users
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .ThenInclude(a => a.Children)
+                .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
 
-            var agency = this.User.GetAgency(this.Context) ??
-                throw new NotAuthorizedException("User must belong to an agency before adding projects.");
+            int agency = user.Agencies.Select(a => a.AgencyId).ToList().ElementAt(0);
 
             if (String.IsNullOrWhiteSpace(project.Name)) throw new ArgumentException("Project name is required and cannot be null, empty or whitespace.", nameof(project));
 
@@ -314,7 +359,9 @@ namespace Pims.Dal.Services
 
             if (project.AgencyId != 0)
             {
-                var canCreateAProjectForAgency = User.GetAgenciesAsNullable().Contains(project.AgencyId) ||
+                var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
+
+                var canCreateAProjectForAgency = userAgencies.Contains(project.AgencyId) ||
                                                  this.User.HasPermission(Permissions.AdminProjects);
                 if (!canCreateAProjectForAgency)
                 {
@@ -326,8 +373,7 @@ namespace Pims.Dal.Services
             }
             else
             {
-                project.AgencyId = agency.Id; // Always assign the current user's agency to the project.
-                project.Agency = agency;
+                project.AgencyId = agency; // Always assign the current user's agency to the project.
             }
 
             project.TierLevel = this.Context.TierLevels.Find(project.TierLevelId);
@@ -435,7 +481,12 @@ namespace Pims.Dal.Services
                 }
             }
 
-            var userAgencies = this.User.GetAgencies();
+            var user = this.Context.Users
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .ThenInclude(a => a.Children)
+                .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
+            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
             var originalAgencyId = (int)this.Context.Entry(originalProject).OriginalValues[nameof(Project.AgencyId)];
             if (!isAdmin && !userAgencies.Contains(originalAgencyId)) throw new NotAuthorizedException("User may not edit projects outside of their agency.");
 
@@ -515,9 +566,31 @@ namespace Pims.Dal.Services
         public async System.Threading.Tasks.Task<Project> RemoveAsync(Project project)
         {
             project.ThrowIfNotAllowedToEdit(nameof(project), this.User, new[] { Permissions.ProjectDelete, Permissions.AdminProjects });
+            var user = this.Context.Users
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .ThenInclude(a => a.Children)
+                .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
+            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
+            bool isAdmin = this.User.HasPermission(Permissions.AdminProjects);
+            
+            // Only add functionality for removing Approved Disposal Projects if the current environment is not production
+            string env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            if (!env.IsProduction())
+            {
+                // If the project has been submitted, we need to remove any reference to the project 
+                // from the notification queue table before deleting the project itself
+                IQueryable<NotificationQueue> notifications = this.Context.NotificationQueue.Where(n => n.ProjectId == project.Id || n.ProjectId.ToString() == project.ProjectNumber);
 
-            var userAgencies = this.User.GetAgencies();
-            var isAdmin = this.User.HasPermission(Permissions.AdminProjects);
+                // NotificationQueue stores several records for each approved project. This is due to the number of people needing to be CC'd
+                notifications.ForEach(n =>
+                {
+                  /*  this.Context.NotificationQueue.Remove(n);
+                    _notifyService.CancelAsync(n); */
+                });
+
+            }
+
             var originalProject = this.Context.Projects
                 .Include(p => p.Status)
                 .Include(p => p.Properties).ThenInclude(p => p.Parcel).ThenInclude(p => p.Parcels)
@@ -526,7 +599,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Properties).ThenInclude(p => p.Building)
                 .Include(p => p.Tasks)
                 .Include(p => p.Workflow)
-                .SingleOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
+                .SingleOrDefault(p => p.Id == project.Id || p.ProjectNumber == project.ProjectNumber) ?? throw new KeyNotFoundException();
 
             if (!originalProject.IsProjectInDraft(_options.Project))
             {
@@ -629,8 +702,12 @@ namespace Pims.Dal.Services
                 .Include(p => p.Responses)
                 .Include(p => p.Notes)
                 .FirstOrDefault(p => p.Id == project.Id) ?? throw new KeyNotFoundException();
-
-            var userAgencies = this.User.GetAgencies();
+            var user = this.Context.Users
+                .Include(u => u.Agencies)
+                .ThenInclude(a => a.Agency)
+                .ThenInclude(a => a.Children)
+                .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
+            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
             if (!isAdmin && !userAgencies.Contains(originalProject.AgencyId)) throw new NotAuthorizedException("User may not edit projects outside of their agency.");
 
             // Only allow valid project status transitions.

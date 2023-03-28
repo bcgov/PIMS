@@ -1,14 +1,16 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import * as API from 'constants/API';
+import Claims from 'constants/claims';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import noop from 'lodash/noop';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import { BuildingForm } from '.';
 
@@ -27,23 +29,25 @@ const lCodes = {
 const store = mockStore({
   lookupCode: lCodes,
   parcel: { properties: [], draftProperties: [] },
+  usersAgencies: [
+    { id: '1', name: 'agencyVal' },
+    { id: '2', name: 'disabledAgency' },
+  ],
 });
 
-jest.mock('@react-keycloak/web');
-(useKeycloak as jest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: ['1'],
-      roles: ['admin-properties'],
-    },
-    subject: 'test',
-  },
-});
+const userRoles: string[] | Claims[] = ['admin-properties'];
+const userAgencies: number[] = [1, 2];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+(useKeycloakWrapper as jest.Mock).mockReturnValue(
+  new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+);
 
 const getBuildingForm = (disabled: boolean) => {
   return (
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <BuildingForm
           setBuildingToAssociateLand={noop}
           goToAssociatedLand={noop}
@@ -51,21 +55,21 @@ const getBuildingForm = (disabled: boolean) => {
           nameSpace="building"
           disabled={disabled}
         />
-      </Router>
+      </MemoryRouter>
     </Provider>
   );
 };
 
 const buildingForm = (
   <Provider store={store}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <BuildingForm
         setBuildingToAssociateLand={noop}
         goToAssociatedLand={noop}
         setMovingPinNameSpace={noop}
         nameSpace="building"
       />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 

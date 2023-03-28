@@ -5,30 +5,51 @@ import {
   ParentSelect,
   TextArea,
 } from 'components/common/form';
+import { Label } from 'components/common/Label';
 import { Col, Row } from 'components/flex';
 import { useFormikContext } from 'formik';
-import React from 'react';
+import { Claim } from 'hooks/api';
+import { WorkflowStatus } from 'hooks/api/projects';
+import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
+import React, { useEffect, useState } from 'react';
 import { LookupType, useLookups } from 'store/hooks';
 
 import { IProjectForm } from '../interfaces';
 import * as styled from './styled';
 
-interface IProjectInformationProps {
-  disabled?: boolean;
-}
-
-export const ProjectInformation: React.FC<IProjectInformationProps> = ({ disabled = false }) => {
+export const ProjectInformation: React.FC = () => {
   const formik = useFormikContext<IProjectForm>();
   const { controller } = useLookups();
 
   const agencies = controller.getOptionsWithParents(LookupType.Agency);
 
+  // Disabled prop
+  const {
+    values: { workflowCode, statusCode },
+  } = useFormikContext();
+  const keycloak = useKeycloakWrapper();
+  const [disabled, setDisabled] = useState(false);
+  const isAdmin = keycloak.hasClaim(Claim.ReportsSplAdmin);
+
+  useEffect(() => {
+    setDisabled(
+      [
+        WorkflowStatus.Disposed,
+        WorkflowStatus.Cancelled,
+        WorkflowStatus.TransferredGRE,
+        WorkflowStatus.Denied,
+      ].includes(statusCode) && !isAdmin,
+    );
+  }, [isAdmin, workflowCode, statusCode]);
+
   return (
     <styled.ProjectInformation className="project-details">
       <Row>
         <Col>
-          <Input label="Project No." field="projectNumber" disabled={true} />
-          <Input label="Name" field="name" required disabled={disabled} />
+          <Label>Project No.</Label>
+          <Input field="projectNumber" disabled={true} />
+          <Label>Name</Label>
+          <Input field="name" required disabled={disabled} />
           <ParentSelect
             label="Project Agency"
             field="agencyId"
@@ -39,7 +60,10 @@ export const ProjectInformation: React.FC<IProjectInformationProps> = ({ disable
             disabled={disabled}
           />
         </Col>
-        <TextArea label="Description" field="description" disabled={disabled} />
+        <Col style={{ height: '50px' }}>
+          <Label>Description</Label>
+          <TextArea field="description" disabled={disabled} />
+        </Col>
       </Row>
       <Row>
         <Col>
@@ -59,7 +83,8 @@ export const ProjectInformation: React.FC<IProjectInformationProps> = ({ disable
           />
         </Col>
         <Col>
-          <Input label="Manager Name" field="manager" />
+          <Label>Manager Name</Label>
+          <Input field="manager" />
           <FastFiscalYearInput
             label="Actual or Forecasted Fiscal Year of Sale"
             field="actualFiscalYear"

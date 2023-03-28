@@ -1,17 +1,24 @@
 import { useConfiguration } from 'hooks/useConfiguration';
-import React from 'react';
-import { Redirect } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export const LogoutPage = () => {
+export const Logout = () => {
   const configuration = useConfiguration();
+  const navigate = useNavigate();
 
-  React.useEffect(() => {
-    if (configuration.siteMinderLogoutUrl) {
-      window.location.replace(
+  // On component mount
+  useEffect(() => {
+    if (!configuration.siteMinderLogoutUrl) {
+      navigate('/login');
+    } else {
+      navigate(
         `${configuration.siteMinderLogoutUrl}?returl=${configuration.baseUrl}/login&retnow=1`,
       );
     }
-  }, [configuration]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  return !configuration.siteMinderLogoutUrl ? <Redirect to="/login" /> : null;
+  return <></>;
 };
+
+export default Logout;

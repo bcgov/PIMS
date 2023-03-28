@@ -2,6 +2,7 @@ import { SelectOption } from 'components/common/form';
 import * as API from 'constants/API';
 import { Claims } from 'constants/claims';
 import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
 import useKeycloakWrapper from './useKeycloakWrapper';
 import useCodeLookups from './useLookupCodes';
@@ -18,13 +19,15 @@ export const useMyAgencies = (): SelectOption[] => {
 
   const keycloak = useKeycloakWrapper();
   const agencies = getOptionsByType(API.AGENCY_CODE_SET_NAME);
-  const userAgency = agencies.find(a => Number(a.value) === Number(keycloak.agencyId));
+  //@ts-ignore
+  const userAgencyIds: number[] = useSelector(state => state.usersAgencies);
 
   const isSRES = useMemo(() => {
     return (
       keycloak.hasClaim(Claims.PROJECT_VIEW) ||
       keycloak.hasClaim(Claims.DISPOSE_APPROVE) ||
-      keycloak.hasClaim(Claims.ADMIN_PROJECTS)
+      keycloak.hasClaim(Claims.ADMIN_PROJECTS) ||
+      keycloak.hasClaim(Claims.VIEW_ONLY_PROPERTIES)
     );
   }, [keycloak]);
 
@@ -32,11 +35,11 @@ export const useMyAgencies = (): SelectOption[] => {
     return agencies.filter(a => {
       return (
         isSRES ||
-        Number(a.value) === Number(userAgency?.value) ||
-        Number(a.parentId) === Number(userAgency?.value)
+        userAgencyIds.includes(Number(a.value)) ||
+        userAgencyIds.includes(Number(a.parentId))
       );
     });
-  }, [userAgency, agencies, isSRES]);
+  }, [userAgencyIds, agencies, isSRES]);
 
   return agencyOptions;
 };

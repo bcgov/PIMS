@@ -1,32 +1,33 @@
-import { useKeycloak } from '@react-keycloak/web';
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { ProjectActions } from 'constants/actionTypes';
+import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import { DisposeWorkflowStatus } from 'features/projects/constants';
 import { IProjectTask } from 'features/projects/interfaces';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import DocumentationStep from './DocumentationStep';
 
 const mockAxios = new MockAdapter(axios);
 mockAxios.onAny().reply(200, {});
-jest.mock('@react-keycloak/web');
-(useKeycloak as jest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: [1],
-      roles: [],
-    },
-    subject: 'test',
-  },
-});
+
+const userRoles: string[] | Claims[] = [];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+(useKeycloakWrapper as jest.Mock).mockReturnValue(
+  new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+);
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -70,9 +71,9 @@ const store = mockStore({
 
 const uiElement = (
   <Provider store={store}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <DocumentationStep />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 
@@ -91,12 +92,14 @@ describe('Documentation Step', () => {
     expect(getByText('Task #2')).toBeInTheDocument();
   });
 
-  it('documentation validation works', async () => {
+  it('documentation validation works', () => {
     const { getAllByText, container } = render(uiElement);
     const form = container.querySelector('form');
-    await waitFor(() => {
+    act(() => {
       fireEvent.submit(form!);
     });
-    expect(getAllByText('Required')).toHaveLength(2);
+    waitFor(() => {
+      expect(getAllByText('Required')).toHaveLength(2);
+    });
   });
 });
