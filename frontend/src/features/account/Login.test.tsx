@@ -1,53 +1,67 @@
-import { useKeycloak } from '@react-keycloak/web';
-import { cleanup, fireEvent, render } from '@testing-library/react';
+import { cleanup, render } from '@testing-library/react';
 import { ADD_ACTIVATE_USER } from 'constants/actionTypes';
+import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
-import { createMemoryHistory } from 'history';
+import Roles from 'constants/roles';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import * as Router from 'react-router';
 import renderer from 'react-test-renderer';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { IGenericNetworkAction } from 'store';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import Login from './Login';
 
 jest.mock('axios');
-jest.mock('@react-keycloak/web');
+
+const userRoles: string[] | Claims[] = [];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+jest.mock('hooks/useKeycloakWrapper');
+
 const mockStore = configureMockStore([thunk]);
 
 const store = mockStore({
   [reducerTypes.NETWORK]: {
-    requests: { [ADD_ACTIVATE_USER]: {} },
+    [ADD_ACTIVATE_USER]: {},
   },
 });
 
 //boilerplate function used by most tests to wrap the Login component with a router.
 const renderLogin = () => {
-  const history = createMemoryHistory();
   return render(
     <Provider store={store}>
-      <Router history={history}>
+      <Router.MemoryRouter initialEntries={['/login']}>
         <Login />
-      </Router>
+      </Router.MemoryRouter>
     </Provider>,
   );
 };
 
 describe('login', () => {
+  // Mock react-router Navigate
+  const navigate = jest.fn();
+  beforeEach(() => {
+    jest.spyOn(Router, 'useNavigate').mockImplementation(() => navigate);
+  });
+
   afterEach(() => {
     cleanup();
   });
+
   it('login renders correctly', () => {
-    (useKeycloak as jest.Mock).mockReturnValue({ keycloak: { authenticated: false } });
-    const history = createMemoryHistory();
+    (useKeycloakWrapper as jest.Mock).mockReturnValue(
+      new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, false),
+    );
     const tree = renderer
       .create(
         <Provider store={store}>
-          <Router history={history}>
-            <Login></Login>
-          </Router>
+          <Router.MemoryRouter initialEntries={['/login']}>
+            <Login />
+          </Router.MemoryRouter>
         </Provider>,
       )
       .toJSON();
@@ -55,26 +69,18 @@ describe('login', () => {
   });
 
   it('authenticated users are redirected to the mapview', () => {
-    (useKeycloak as jest.Mock).mockReturnValue({
-      keycloak: { authenticated: true, userInfo: { groups: ['System Administrator'] } },
-    });
-    const history = createMemoryHistory();
-
-    render(
-      <Provider store={store}>
-        <Router history={history}>
-          <Login />
-        </Router>
-      </Provider>,
+    (useKeycloakWrapper as jest.Mock).mockReturnValue(
+      new (useKeycloakMock as any)([Roles.SYSTEM_ADMINISTRATOR], userAgencies, userAgency, true),
     );
-    expect(history.location.pathname).toBe('/mapview');
+
+    renderLogin();
+    expect(navigate).toHaveBeenCalledWith('/mapview');
   });
 
   it('new users are sent to the guest page', () => {
-    (useKeycloak as jest.Mock).mockReturnValue({
-      keycloak: { authenticated: true, realmAccess: { roles: [{}] } },
-    });
-    const history = createMemoryHistory();
+    (useKeycloakWrapper as jest.Mock).mockReturnValue(
+      new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, true),
+    );
     const activatedAction: IGenericNetworkAction = {
       isFetching: false,
       name: 'test',
@@ -83,22 +89,25 @@ describe('login', () => {
     };
     const store = mockStore({
       [reducerTypes.NETWORK]: {
-        requests: { activateUser: activatedAction },
+        activateUser: activatedAction,
       },
     });
 
     render(
       <Provider store={store}>
-        <Router history={history}>
+        <Router.MemoryRouter initialEntries={['/login']}>
           <Login />
-        </Router>
+        </Router.MemoryRouter>
       </Provider>,
     );
-    expect(history.location.pathname).toBe('/access/request');
+
+    expect(navigate).toHaveBeenCalledWith('/access/request');
   });
 
   it('unAuthenticated users are shown the login screen', () => {
-    (useKeycloak as jest.Mock).mockReturnValue({ keycloak: { authenticated: false } });
+    (useKeycloakWrapper as jest.Mock).mockReturnValue(
+      new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, false),
+    );
     const { getAllByRole } = renderLogin();
     expect(getAllByRole('heading')[0]).toHaveTextContent(
       'Search and visualize government property information',
@@ -109,20 +118,8 @@ describe('login', () => {
   });
 
   it('a spinner is displayed if keycloak has not yet been initialized', () => {
-    (useKeycloak as jest.Mock).mockReturnValue({ keycloak: undefined });
+    (useKeycloakWrapper as jest.Mock).mockReturnValue({});
     const { container } = renderLogin();
     expect(container.firstChild).toHaveClass('spinner-border');
-  });
-
-  it('the login button calls keycloaks login() method', () => {
-    const login = jest.fn();
-    (useKeycloak as jest.Mock).mockReturnValue({
-      keycloak: { login: login, authenticated: false },
-    });
-
-    const { getByText } = renderLogin();
-    fireEvent.click(getByText(/Sign In/));
-
-    expect(login.mock.calls.length).toBe(1);
   });
 });

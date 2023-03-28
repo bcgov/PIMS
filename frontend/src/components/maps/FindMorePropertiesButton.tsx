@@ -56,13 +56,13 @@ export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({
     );
     return (
       <StyledPopover id="popover-basic">
-        <Popover.Title>
+        <Popover.Header>
           {' '}
           <TitleContent />{' '}
-        </Popover.Title>
-        <Popover.Content>
+        </Popover.Header>
+        <Popover.Body>
           <FindMorePropertiesForm />
-        </Popover.Content>
+        </Popover.Body>
       </StyledPopover>
     );
   }, [buttonText]);

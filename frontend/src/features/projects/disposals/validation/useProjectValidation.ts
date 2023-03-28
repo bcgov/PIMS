@@ -1,6 +1,6 @@
 import { FormikErrors, setIn } from 'formik';
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { AnyObject } from 'yup/lib/types';
 
@@ -30,7 +30,7 @@ interface IProjectValidationProps {
  * @returns Formik errors.
  */
 export const useProjectValidation = ({ id }: IProjectValidationProps) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return async (values: IProjectForm): Promise<FormikErrors<IProjectForm>> => {
     let errors: FormikErrors<IProjectForm> = {};
@@ -40,7 +40,7 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
     errors = {
       ...errors,
       ...(await handleErrors(values, errors, informationProjectSchema, () => {
-        history.push(`/projects/disposal/${id}/information`);
+        navigate(`/projects/disposal/${id}/information`);
         hasErrors = true;
       })),
     };
@@ -49,7 +49,7 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
     errors = {
       ...errors,
       ...(await handleErrors(values, errors, informationPropertiesSchema, () => {
-        history.push(`/projects/disposal/${id}/information/properties`);
+        navigate(`/projects/disposal/${id}/information/properties`);
         hasErrors = true;
       })),
     };
@@ -98,7 +98,7 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
 
       await documentationSchema.validate(values, { abortEarly: false });
       if (hasErrors) {
-        history.push(`/projects/disposal/${id}/documentation`);
+        navigate(`/projects/disposal/${id}/documentation`);
         return errors;
       }
     } catch (err) {
@@ -109,14 +109,14 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
         }, {}),
       };
 
-      history.push(`/projects/disposal/${id}/documentation`);
+      navigate(`/projects/disposal/${id}/documentation`);
       return errors;
     }
 
     errors = {
       ...errors,
       ...(await handleErrors(values, errors, erpExemptionSchema, () => {
-        history.push(`/projects/disposal/${id}/erp/exemption`);
+        navigate(`/projects/disposal/${id}/erp/exemption`);
         hasErrors = true;
       })),
     };
@@ -124,7 +124,7 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
     errors = {
       ...errors,
       ...(await handleErrors(values, errors, erpCompleteSchema, () => {
-        history.push(`/projects/disposal/${id}/erp/complete`);
+        navigate(`/projects/disposal/${id}/erp/complete`);
         hasErrors = true;
       })),
     };
@@ -139,7 +139,7 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
       errors = {
         ...errors,
         ...(await handleErrors(values, errors, erpDisposedSchema, () => {
-          history.push(`/projects/disposal/${id}/erp/disposed`);
+          navigate(`/projects/disposal/${id}/erp/disposed`);
           hasErrors = true;
         })),
       };
@@ -153,7 +153,7 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
       errors = {
         ...errors,
         ...(await handleErrors(values, errors, notSplSchema, () => {
-          history.push(`/projects/disposal/${id}/not/spl`);
+          navigate(`/projects/disposal/${id}/not/spl`);
           hasErrors = true;
         })),
       };
@@ -164,7 +164,7 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
       errors = {
         ...errors,
         ...(await handleErrors(values, errors, splApprovalSchema, () => {
-          history.push(`/projects/disposal/${id}/spl`);
+          navigate(`/projects/disposal/${id}/spl`);
           hasErrors = true;
         })),
       };
@@ -173,7 +173,7 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
       errors = {
         ...errors,
         ...(await handleErrors(values, errors, splMarketingSchema, () => {
-          history.push(`/projects/disposal/${id}/spl/marketing`);
+          navigate(`/projects/disposal/${id}/spl/marketing`);
           hasErrors = true;
         })),
       };
@@ -182,7 +182,7 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
       errors = {
         ...errors,
         ...(await handleErrors(values, errors, splContractInPlaceSchema, () => {
-          history.push(`/projects/disposal/${id}/spl/contract/in/place`);
+          navigate(`/projects/disposal/${id}/spl/contract/in/place`);
           hasErrors = true;
         })),
       };
@@ -191,7 +191,7 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
       errors = {
         ...errors,
         ...(await handleErrors(values, errors, splTransferWithinGRESchema, () => {
-          history.push(`/projects/disposal/${id}/spl/transfer/within/gre`);
+          navigate(`/projects/disposal/${id}/spl/transfer/within/gre`);
           hasErrors = true;
         })),
       };

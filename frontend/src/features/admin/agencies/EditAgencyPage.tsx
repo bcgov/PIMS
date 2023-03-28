@@ -10,9 +10,9 @@ import { Formik } from 'formik';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { IAgencyDetail } from 'interfaces';
 import React, { useEffect, useState } from 'react';
-import { Button, ButtonToolbar, Container, Navbar, Row } from 'react-bootstrap';
+import { Button, ButtonToolbar, Col, Container, Navbar, Row } from 'react-bootstrap';
 import { FaArrowAltCircleLeft } from 'react-icons/fa';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   createAgency,
@@ -32,10 +32,14 @@ interface IEditAgencyPageProps {
 
 /** This page is used to either add a new agency or edit the and agency's details */
 const EditAgencyPage = (props: IEditAgencyPageProps) => {
-  const agencyId = props?.match?.params?.id || props.id;
-  const history = useHistory();
+  const params = useParams();
+  // removing the double quotes surrounding the id from useParams() as stringify isn't removing those double quotes surrounding the id.
+  const agencyId = params.id ? JSON.stringify(params.id).slice(1, -1) : '';
+
+  const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useAppDispatch();
-  const newAgency = history.location.pathname.includes('/new');
+  const newAgency = location.pathname.includes('/new');
   const [showDelete, setShowDelete] = useState(false);
   const [showFailed, setShowFailed] = useState(false);
   useEffect(() => {
@@ -56,18 +60,9 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
   });
   //
   const selectAgencies = agencies.map(c => mapLookupCode(c));
-  const checkAgencies = (
-    <Select
-      label="Parent Agency - If applicable"
-      field="parentId"
-      options={selectAgencies}
-      disabled={!agency.parentId && !newAgency}
-      placeholder={newAgency ? 'Please select if applicable' : 'No parent'}
-    />
-  );
 
   const goBack = () => {
-    history.push('/admin/agencies');
+    navigate('/admin/agencies');
   };
 
   const newValues: any = {
@@ -89,11 +84,10 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
 
   return (
     <div>
-      {showDelete && <DeleteModal {...{ showDelete, setShowDelete, history, dispatch, agency }} />}
+      {showDelete && <DeleteModal {...{ showDelete, setShowDelete, navigate, dispatch, agency }} />}
       {showFailed && <FailedDeleteModal {...{ showFailed, setShowFailed }} />}
       <Navbar className="navBar" expand="sm" variant="light" bg="light">
-        <Navbar.Brand>
-          {' '}
+        <Navbar.Brand style={{ marginLeft: '10px' }}>
           <TooltipWrapper toolTipId="back" toolTip="Back to Agency list">
             <FaArrowAltCircleLeft onClick={goBack} size={20} />
           </TooltipWrapper>
@@ -136,10 +130,10 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                     parentId: Number(values.parentId),
                     description: values.description,
                   })(dispatch);
-                  history.replace(`/admin/agency/${data.id}`);
+                  navigate(`/admin/agency/${data.id}`);
                 }
               } catch (error) {
-                const err = error as AxiosError;
+                const err = error as AxiosError<any>;
                 const msg: string =
                   err?.response?.data?.error ?? 'Error saving property data, please try again.';
                 setStatus({ msg });
@@ -150,47 +144,72 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
           >
             {props => (
               <Form className="agencyInfo">
-                <Input label="Agency" required field="name" value={props.values.name} type="text" />
+                <Input
+                  label="Agency"
+                  aria-label="Agency"
+                  required
+                  field="name"
+                  value={props.values.name}
+                  type="text"
+                />
                 <Input
                   label="Short Name (Code)"
+                  aria-label="Short Name (Code)"
                   field="code"
                   value={props.values.code}
                   type="text"
                   required
                 />
-                {checkAgencies}
+                <Select
+                  style={{ marginBottom: '10px', width: '250px' }}
+                  label="Parent Agency - If applicable"
+                  field="parentId"
+                  options={selectAgencies}
+                  disabled={!agency.parentId && !newAgency}
+                  placeholder={newAgency ? 'Please select if applicable' : 'No parent'}
+                />
                 <Input label="Description" field="description" type="text" />
-                <Input label="Email address" field="email" type="text" />
+                <Input label="Email address" aria-label="Email address" field="email" type="text" />
                 <Input label="Addressed To" field="addressTo" type="text" />
                 <Input label="CC Email address" field="ccEmail" type="text" />
 
-                <Form.Group className="checkboxes">
-                  <TooltipWrapper
-                    toolTip="Click to change Agency status then click Save Changes."
-                    toolTipId="is-disabled-tooltip"
-                  >
-                    <Check field="isDisabled" label="Disable Agency?" />
-                  </TooltipWrapper>
-                  <TooltipWrapper
-                    toolTip="Click to enable to email notifications for Agency then click Save Changes."
-                    toolTipId="email-tooltip"
-                  >
-                    <Check field="sendEmail" label="Email Notifications?" />
-                  </TooltipWrapper>
-                </Form.Group>
-
                 <hr></hr>
-                <Row className="buttons">
-                  <ButtonToolbar className="cancelSave">
+
+                <Row className="checkboxes">
+                  <Col md="auto">
+                    <TooltipWrapper
+                      toolTip="Click to change Agency status then click Save Changes."
+                      toolTipId="is-disabled-tooltip"
+                    >
+                      <Check field="isDisabled" label="Disable Agency?" />
+                    </TooltipWrapper>
+                  </Col>
+                  <Col md="auto">
+                    <TooltipWrapper
+                      toolTip="Click to enable email notifications for Agency then click Save Changes."
+                      toolTipId="email-tooltip"
+                    >
+                      <Check
+                        field="sendEmail"
+                        label="Email Notifications?"
+                        aria-label="Email Notifications?"
+                      />
+                    </TooltipWrapper>
+                  </Col>
+                </Row>
+
+                <Row>
+                  <ButtonToolbar>
                     {!newAgency ? (
                       <Button
-                        className="bg-danger mr-5"
+                        className="bg-danger"
+                        style={{ marginLeft: '20px', marginRight: '40px' }}
                         type="button"
                         onClick={async () => {
                           const data = await service.getPropertyList({
                             page: 1,
                             quantity: 10,
-                            agencies: agencyId,
+                            agencies: parseInt(agencyId),
                           });
                           if (data.total === 0) {
                             setShowDelete(true);
@@ -202,14 +221,17 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
                         Delete Agency
                       </Button>
                     ) : (
-                      <Button className="bg-danger mr-5" type="button" onClick={() => goBack()}>
+                      <Button
+                        style={{ marginRight: '40px' }}
+                        className="bg-danger"
+                        type="button"
+                        onClick={() => goBack()}
+                      >
                         Cancel
                       </Button>
                     )}
 
-                    <Button className="mr-5" type="submit">
-                      {newAgency ? 'Submit Agency' : 'Save Changes'}
-                    </Button>
+                    <Button type="submit">{newAgency ? 'Submit Agency' : 'Save Changes'}</Button>
                   </ButtonToolbar>
                 </Row>
               </Form>
@@ -223,22 +245,25 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
 
 export default EditAgencyPage;
 
-const DeleteModal = ({ showDelete, setShowDelete, history, dispatch, agency }: any) => (
-  <GenericModal
-    message="Are you sure you want to permanently delete the agency?"
-    cancelButtonText="Cancel"
-    okButtonText="Delete"
-    display={showDelete}
-    handleOk={() => {
-      dispatch(deleteAgency(agency)).then(() => {
-        history.push('/admin/agencies');
-      });
-    }}
-    handleCancel={() => {
-      setShowDelete(false);
-    }}
-  />
-);
+const DeleteModal = ({ showDelete, setShowDelete, dispatch, agency }: any) => {
+  const navigate = useNavigate();
+  return (
+    <GenericModal
+      message="Are you sure you want to permanently delete the agency?"
+      cancelButtonText="Cancel"
+      okButtonText="Delete"
+      display={showDelete}
+      handleOk={() => {
+        dispatch(deleteAgency(agency)).then(() => {
+          navigate('/admin/agencies');
+        });
+      }}
+      handleCancel={() => {
+        setShowDelete(false);
+      }}
+    />
+  );
+};
 
 const FailedDeleteModal = ({ showFailed, setShowFailed }: any) => (
   <GenericModal

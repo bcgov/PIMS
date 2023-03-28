@@ -1,6 +1,6 @@
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { mount } from 'enzyme';
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import { getIn, useFormikContext } from 'formik';
 import React from 'react';
 import renderer from 'react-test-renderer';

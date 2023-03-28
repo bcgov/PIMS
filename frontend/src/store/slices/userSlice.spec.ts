@@ -46,6 +46,7 @@ describe('User Slice tests', () => {
       roles: [],
       createdOn: Date.UTC.toString(),
       rowVersion: 'version',
+      goldUserRoles: [],
     };
     expect(reducer(undefined, storeUser(detail))).toEqual({ ...initialUserState, user: detail });
   });

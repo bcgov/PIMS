@@ -8,6 +8,7 @@ exports[`Edit user page EditUserPage renders 1`] = `
     <a
       class="navbar-brand"
       href="#"
+      style="margin-left: 10px;"
     >
       User Information
     </a>
@@ -22,246 +23,41 @@ exports[`Edit user page EditUserPage renders 1`] = `
         class="userInfo"
         novalidate=""
       >
-        <label
-          class="label"
-        >
-          IDIR/BCeID
-        </label>
-        <div
-          class="form-group"
-        >
-          <input
-            class="form-control"
-            data-testid="username"
-            id="input-username"
-            name="username"
-            readonly=""
-            type="text"
-            value="test.user"
-          />
-        </div>
-        <label
-          class="label"
-        >
-          Last Login
-        </label>
-        <div
-          class="form-group"
-        >
-          <input
-            class="form-control"
-            data-testid="lastLogin"
-            id="input-lastLogin"
-            name="lastLogin"
-            readonly=""
-            type="text"
-            value=""
-          />
-        </div>
-        <div
-          class="row"
-        >
-          <div
-            class="col"
-          >
-            <label
-              class="label"
-            >
-              First Name
-            </label>
-            <div
-              class="form-group"
-            >
-              <input
-                class="form-control"
-                data-testid="firstName"
-                id="input-firstName"
-                name="firstName"
-                placeholder="Test"
-                type="text"
-                value="Test"
-              />
-            </div>
-          </div>
-          <div
-            class="col"
-          >
-            <label
-              class="label"
-            >
-              Last Name
-            </label>
-            <div
-              class="form-group"
-            >
-              <input
-                class="form-control"
-                data-testid="lastName"
-                id="input-lastName"
-                name="lastName"
-                placeholder="User"
-                type="text"
-                value="User"
-              />
-            </div>
-          </div>
-        </div>
-        <label
-          class="label"
-        >
-          Email
-        </label>
-        <div
-          class="form-group"
-        >
-          <input
-            class="form-control"
-            data-testid="email"
-            id="input-email"
-            name="email"
-            placeholder="test@user.com"
-            type="email"
-            value="test@user.com"
-          />
-        </div>
-        <div
-          class="required form-group"
-        >
-          <label
-            class="form-label"
-            for="input-agency"
-          >
-            Agency
-          </label>
-          <select
-            class="form-select form-control"
-            data-testid="agency"
-            id="input-agency"
-            name="agency"
-            required=""
-          >
-            <option
-              value=""
-            >
-              Please Select
-            </option>
-            <option
-              class="option"
-              value="1"
-            >
-              agencyVal
-            </option>
-          </select>
-        </div>
-        <label
-          class="label"
-        >
-          Position
-        </label>
-        <div
-          class="form-group"
-        >
-          <input
-            class="form-control"
-            data-testid="position"
-            id="input-position"
-            name="position"
-            placeholder="e.g) Director, Real Estate and Stakeholder Engagement"
-            type="text"
-            value=""
-          />
-        </div>
-        <div
-          class="check-roles form-group"
-        >
-          <label
-            class="form-label"
-          >
-            Roles
-             
-            <a
-              href="https://github.com/bcgov/PIMS/wiki/Architecture-Security"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Role Descriptions
-            </a>
-          </label>
-          <div
-            class="required form-group"
-          >
-            <select
-              class="form-select form-control"
-              data-testid="role"
-              id="input-roles"
-              multiple=""
-              name="roles"
-              required=""
-            >
-              <option
-                class="option"
-                value="1"
-              >
-                roleVal
-              </option>
-            </select>
-          </div>
-        </div>
-        <label
-          class="label"
-        >
-          Notes
-        </label>
-        <div
-          class="form-group"
-        >
-          <textarea
-            class="form-control"
-            data-testid="note"
-            id="input-note"
-            name="note"
-            placeholder="A note about this user"
-            type="text"
-          >
-            test note
-          </textarea>
-        </div>
-        <div
-          class="is-disabled form-group"
-        >
-          <label
-            class="form-label"
-          >
-            Disable Account? 
-          </label>
-          <input
-            data-testid="isDisabled"
-            name="isDisabled"
-            type="checkbox"
-            value="false"
-          />
-        </div>
+        <br />
+        <p>
+          User has not logged in since the upgrade from Keycloak Silver to Gold.
+        </p>
+        <p>
+          Last login was: 
+          <b />
+        </p>
+        <p>
+          User must log in before changes can be made!
+        </p>
         <div
           class="justify-content-md-center row"
         >
           <div
-            class="cancelSave btn-toolbar"
-            role="toolbar"
+            class="col"
           >
-            <button
-              class="mr-5 btn btn-secondary"
-              type="button"
+            <div
+              class="cancelSave btn-toolbar"
+              role="toolbar"
             >
-              Cancel
-            </button>
-            <button
-              class="mr-5 btn btn-primary"
-              type="submit"
-            >
-              Save
-            </button>
+              <button
+                class="btn btn-secondary"
+                style="margin-right: 10px;"
+                type="button"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
+          <div
+            class="col"
+          />
         </div>
+        <hr />
       </form>
     </div>
   </div>

@@ -55,13 +55,11 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
   const lookupCodes = useCodeLookups();
   const { values, setFieldValue } = useFormikContext<any>();
   const existingProperties: IProperty[] = getIn(values, field);
-
   const agencies = useMemo(() => lookupCodes.getByType(API.AGENCY_CODE_SET_NAME), [lookupCodes]);
   const { project } = useProject();
   const filterByParent = useCodeLookups().filterByParent;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const filteredAgencies = useMemo(() => filterByParent(agencies, project.agencyId), [agencies]);
-
   const agencyIds = useMemo(() => filteredAgencies.map(x => parseInt(x.id, 10)), [
     filteredAgencies,
   ]);
@@ -69,12 +67,10 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
     throw Error('unable to load project data');
   }
   const columns = useMemo(() => getPropertyColumns({ project: project }), [project]);
-
   // We'll start our table without any data
   const [data, setData] = useState<IProperty[]>([]);
-
   const [pageSize, setPageSize] = useState(5);
-  const [pageCount, setPageCount] = useState(0);
+  const [pageCount, setPageCount] = useState(1);
   const [selectedProperties, setSelectedProperties] = useState([] as IProperty[]);
   const [removedProperties, setRemovedProperties] = useState([] as IProperty[]);
   const [properties, setProjectProperties] = useState(existingProperties);
@@ -83,14 +79,14 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
     [project],
   );
 
-  const onPageSizeChanged = useCallback(size => {
+  const onPageSizeChanged = useCallback((size: number) => {
     setPageSize(size);
   }, []);
 
   const [loading, setLoading] = useState(false);
+  const isMountedRef = useRef(true);
   const fetchIdRef = useRef(0);
   const fetchData = useTable({ fetchIdRef, setData, setPageCount, setLoading });
-
   // This will get called when the table needs new data
   const handleRequestData = useCallback(
     async ({ pageIndex, pageSize }: { pageIndex: number; pageSize: number }) => {
@@ -101,10 +97,18 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
     [setPageSize, setPageIndex],
   );
 
-  //Listen for changes in pagination and use the state to fetch our new data
+  // Listen for changes in pagination and use the state to fetch our new data
   useDeepCompareEffect(() => {
+    if (!isMountedRef.current) return;
     fetchData({ pageIndex, pageSize, filter, agencyIds });
   }, [agencyIds, fetchData, filter, pageIndex, pageSize]);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   useEffect(() => {
     setFieldValue(field, properties);
@@ -145,13 +149,15 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
             onRowClick={onRowClick}
             onPageSizeChange={onPageSizeChanged}
             loading={loading}
+            noRowsMessage="No rows to display. Try searching by a specific agency."
           />
           <Container fluid className="TableToolbar">
-            <strong className="align-self-center mr-2">
+            <strong className="align-self-center" style={{ marginRight: 10 }}>
               {!!selectedProperties.length ? `${selectedProperties.length} Selected` : ''}
             </strong>
             <Button
               variant="secondary"
+              data-testid="add-to-project-btn"
               onClick={() => {
                 setProjectProperties(
                   _.uniqWith(
@@ -168,7 +174,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
       )}
       <div className="ScrollContainer">
         <Container fluid className="TableToolbar">
-          <h2 className="mr-auto">Properties in the Project</h2>
+          <h2 style={{ marginRight: 'auto' }}>Properties in the Project</h2>
           <Button
             onClick={() => {
               setRemovedProperties([]);

@@ -1,7 +1,7 @@
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import GenericModal from 'components/common/GenericModal';
 import { mount } from 'enzyme';
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import { deletePotentialSubdivisionParcels } from 'features/projects/common';
 import { DisposeWorkflowStatus } from 'features/projects/constants';
 import { useFormikContext } from 'formik';
@@ -11,7 +11,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { mockFlatProperty } from 'mocks/filterDataMock';
 import React from 'react';
 import { Button } from 'react-bootstrap';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import { ReviewApproveActions } from './ReviewApproveActions';
 
@@ -28,13 +28,13 @@ afterEach(() => {
 });
 
 const element = (
-  <Router history={history}>
+  <MemoryRouter initialEntries={[history.location]}>
     <ReviewApproveActions
       submitStatusCode={DisposeWorkflowStatus.Draft}
       setSubmitStatusCode={mockSubmit}
       isSubmitting={false}
     />
-  </Router>
+  </MemoryRouter>
 );
 describe('Review Approve actions', () => {
   describe('approval button', () => {

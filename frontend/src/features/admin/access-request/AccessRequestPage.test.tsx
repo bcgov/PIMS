@@ -1,35 +1,35 @@
-import { useKeycloak } from '@react-keycloak/web';
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import * as API from 'constants/API';
+import Claims from 'constants/claims';
 import { mount } from 'enzyme';
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import { Formik } from 'formik';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { IGenericNetworkAction, initialAccessRequestState } from 'store';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 import { fillInput } from 'utils/testUtils';
 
 import { Select } from '../../../components/common/form';
 import AccessRequestPage from './AccessRequestPage';
 
-jest.mock('@react-keycloak/web');
-(useKeycloak as jest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: [1],
-      roles: [],
-    },
-    subject: 'test',
-  },
-});
+const userRoles: string[] | Claims[] = [];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+(useKeycloakWrapper as jest.Mock).mockReturnValue(
+  new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+);
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -80,9 +80,9 @@ describe('AccessRequestPage functionality', () => {
   const testRender = () =>
     render(
       <Provider store={successStore}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <AccessRequestPage />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
   it('renders RequestAccessPage correctly', () => {
@@ -93,9 +93,9 @@ describe('AccessRequestPage functionality', () => {
   describe('component functionality when requestAccess status is 200 and fetching is false', () => {
     const componentRender = mount(
       <Provider store={successStore}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <AccessRequestPage />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
 
@@ -119,15 +119,15 @@ describe('AccessRequestPage functionality', () => {
         roles: [],
         rowVersion: undefined,
         user: {
-          displayName: undefined,
-          email: undefined,
-          firstName: undefined,
-          id: undefined,
-          lastName: undefined,
+          displayName: 'displayName',
+          email: 'test@test.com',
+          firstName: 'firstName',
+          id: 'test',
+          lastName: 'lastName',
           position: '',
-          username: undefined,
+          username: 'tester',
         },
-        userId: undefined,
+        userId: '',
       });
     });
 
@@ -170,9 +170,9 @@ describe('AccessRequestPage functionality', () => {
   it('does not show success message by default', () => {
     const component = mount(
       <Provider store={store}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <AccessRequestPage />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
     expect(component.find('div.alert').isEmpty).toBeTruthy();

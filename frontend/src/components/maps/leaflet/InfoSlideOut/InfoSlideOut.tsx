@@ -4,6 +4,7 @@ import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
 import clsx from 'classnames';
 import { LandSvg } from 'components/common/Icons';
 import TooltipWrapper from 'components/common/TooltipWrapper';
+import { ControlPanel } from 'components/leaflet';
 import { PropertyPopUpContext } from 'components/maps/providers/PropertyPopUpProvider';
 import { PropertyTypes } from 'constants/propertyTypes';
 import { MAX_ZOOM } from 'constants/strings';
@@ -15,8 +16,7 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { FaInfo, FaPlusSquare } from 'react-icons/fa';
-import { useLeaflet } from 'react-leaflet';
-import Control from 'react-leaflet-control';
+import { useMap } from 'react-leaflet';
 import { Link, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAppDispatch } from 'store';
@@ -64,7 +64,6 @@ const InfoMain = styled.div`
   padding-left: 10px;
   padding: 0px 10px 5px 10px;
   position: relative;
-
   &.open {
     overflow-y: scroll;
     max-height: calc(100vh - 380px);
@@ -140,18 +139,18 @@ export type InfoControlProps = {
 const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderActionClick }) => {
   const popUpContext = React.useContext(PropertyPopUpContext);
   const { getParcel, getBuilding } = useApi();
-  const leaflet = useLeaflet();
+  const mapInstance = useMap();
   const { propertyInfo } = popUpContext;
   const location = useLocation();
   const jumpToView = () =>
-    leaflet.map?.setView(
+    mapInstance?.setView(
       [propertyInfo?.latitude as number, propertyInfo?.longitude as number],
-      Math.max(MAX_ZOOM, leaflet.map.getZoom()),
+      Math.max(MAX_ZOOM, mapInstance.getZoom()),
     );
   const zoomToView = () =>
-    leaflet.map?.flyTo(
+    mapInstance?.flyTo(
       [propertyInfo?.latitude as number, propertyInfo?.longitude as number],
-      Math.max(MAX_ZOOM, leaflet.map.getZoom()),
+      Math.max(MAX_ZOOM, mapInstance.getZoom()),
       { animate: false },
     );
 
@@ -238,7 +237,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
   };
 
   return (
-    <Control position="topright">
+    <ControlPanel position="topright">
       <InfoContainer id="infoContainer" className={clsx({ closed: !open })}>
         {open && (
           <InfoHeader>
@@ -323,7 +322,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
         )}
         {open && <InfoMain className={clsx({ open })}>{renderContent()}</InfoMain>}
       </InfoContainer>
-    </Control>
+    </ControlPanel>
   );
 };
 export default InfoControl;

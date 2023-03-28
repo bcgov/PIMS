@@ -1,23 +1,29 @@
 import 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-import { useKeycloak } from '@react-keycloak/web';
 import { render } from '@testing-library/react';
 import { IBuilding, IParcel } from 'actions/parcelsActions';
 import * as API from 'constants/API';
+import Claims from 'constants/claims';
 import { PropertyTypes } from 'constants/propertyTypes';
 import * as reducerTypes from 'constants/reducerTypes';
 import { Workflows } from 'constants/workflows';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import InfoContent from './InfoContent';
 
-jest.mock('@react-keycloak/web');
+const userRoles: string[] | Claims[] = [];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
 
 const mockParcelNoSub = {
   id: 1,
@@ -208,13 +214,13 @@ const ContentComponent = (
 ) => {
   return (
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <InfoContent
           propertyInfo={propertyInfo}
           propertyTypeId={propertyTypeId}
           canViewDetails={canViewDetails}
         />
-      </Router>
+      </MemoryRouter>
     </Provider>
   );
 };
@@ -224,15 +230,9 @@ describe('InfoContent View', () => {
     jest.clearAllMocks();
   });
   beforeEach(() => {
-    (useKeycloak as jest.Mock).mockReturnValue({
-      keycloak: {
-        userInfo: {
-          agencies: [1],
-          roles: [],
-        },
-        subject: 'test',
-      },
-    });
+    (useKeycloakWrapper as jest.Mock).mockReturnValue(
+      new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+    );
   });
 
   it('InfoContent renders correctly', () => {
@@ -269,7 +269,6 @@ describe('InfoContent View', () => {
 
   it('Shows project status if can view and property is in project', () => {
     const { getByText } = render(ContentComponent(mockParcel, PropertyTypes.PARCEL, true));
-    expect(getByText('Property is in Enhanced Referral Process')).toBeVisible();
     expect(getByText('In ERP')).toBeVisible();
   });
 
@@ -312,7 +311,6 @@ describe('InfoContent View', () => {
     expect(getByText('University/College')).toBeVisible();
     expect(getByText('100%')).toBeVisible();
     //Project status block
-    expect(getByText('Property is on the Surplus Properties List')).toBeVisible();
     expect(getByText('On Market')).toBeVisible();
   });
 

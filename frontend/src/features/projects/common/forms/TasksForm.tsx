@@ -21,14 +21,15 @@ const TasksForm = ({ tasks, isReadOnly, className }: ITaskFormParams) => {
     <Fragment>
       {tasks !== undefined &&
         tasks.map((task: any) => (
-          <Form.Row key={task.name} className={classNames('tasksForm', className)}>
+          <Form.Group key={task.name} className={classNames('tasksForm', className)}>
             <Check
+              datatestid={`taskform-check-${_.findIndex(values.tasks, { taskId: task.taskId })}`}
               field={`tasks.${_.findIndex(values.tasks, { taskId: task.taskId })}.isCompleted`}
               postLabel={task.description}
               required={!task.isOptional}
               disabled={isReadOnly}
             />
-          </Form.Row>
+          </Form.Group>
         ))}
     </Fragment>
   );

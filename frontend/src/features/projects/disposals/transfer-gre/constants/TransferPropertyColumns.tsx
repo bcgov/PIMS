@@ -7,6 +7,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { CellProps, Renderer } from 'react-table';
 import { LookupType, useLookups } from 'store/hooks';
 import { mapLookupCode } from 'utils';
 
@@ -83,14 +84,14 @@ export const TransferPropertyColumns = (): ColumnWithProps<IProjectPropertyForm>
       accessor: 'netBook',
       align: 'left',
       clickable: false,
-      Cell: MoneyCell,
+      Cell: MoneyCell as Renderer<CellProps<IProjectPropertyForm, number | ''>>,
     },
     {
       Header: 'Assessed Land',
       accessor: 'assessedLand',
       align: 'left',
       clickable: false,
-      Cell: MoneyCell,
+      Cell: MoneyCell as Renderer<CellProps<IProjectPropertyForm, number | ''>>,
     },
     {
       Header: 'Assessed Year',
@@ -103,7 +104,7 @@ export const TransferPropertyColumns = (): ColumnWithProps<IProjectPropertyForm>
       accessor: 'assessedImprovements',
       align: 'left',
       clickable: false,
-      Cell: MoneyCell,
+      Cell: MoneyCell as Renderer<CellProps<IProjectPropertyForm, number | ''>>,
     },
     {
       Header: 'Type',

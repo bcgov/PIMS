@@ -8,4 +8,5 @@ export interface IUserInfo {
   Groups: any[];
   agencies: number[];
   position?: string;
+  idir_user_guid?: string;
 }

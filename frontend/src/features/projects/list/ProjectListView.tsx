@@ -23,7 +23,8 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Container } from 'react-bootstrap';
 import { Col } from 'react-bootstrap';
 import { FaFileAlt, FaFileExcel, FaFolder, FaFolderOpen } from 'react-icons/fa';
-import { useHistory } from 'react-router-dom';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import styled from 'styled-components';
 import { mapLookupCodeWithParentString, mapStatuses } from 'utils';
@@ -37,7 +38,7 @@ import {
 } from '../common';
 import { toFlatProject } from '../common/projectConverter';
 import { IProject, IProjectFilter } from '.';
-import { columns as cols } from './columns';
+import { Columns as cols } from './columns';
 import { Properties } from './properties';
 
 interface IProjectFilterState {
@@ -104,8 +105,9 @@ export const ProjectListView: React.FC<IProps> = ({
   const [clearSelected, setClearSelected] = useState(false);
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
-  const [pageCount, setPageCount] = useState(0);
-  const history = useHistory();
+  const [pageCount, setPageCount] = useState(1);
+  const [projectCount, setProjectCount] = useState(0);
+  const navigate = useNavigate();
 
   // const [loading, setLoading] = useState(false);
   const fetchIdRef = useRef(0);
@@ -130,17 +132,20 @@ export const ProjectListView: React.FC<IProps> = ({
       (value as any).agencies
         ? setFilter({ ...value, agencies: (value as any)?.agencies })
         : setFilter({ ...value });
-      if ((value as any).statusId) {
-        setFilter({ ...value, statusId: (value as any).statusId?.map((x: any) => x) });
-      } else {
+      if ((value as any).statusId.length === 0) {
         setFilter({ ...value });
-        setClearSelected(!clearSelected);
+      } else if ((value as any).statusId) {
+        setFilter({
+          ...value,
+          statusId: (value as any).statusId?.map((x: any) => x),
+          notStatusId: [],
+        });
       }
       setPageIndex(0); // Go to first page of results when filter changes
     },
-    [setFilter, setPageIndex, clearSelected],
+    [setFilter, setPageIndex],
   );
-  const onPageSizeChanged = useCallback(size => {
+  const onPageSizeChanged = useCallback((size: number) => {
     setPageSize(size);
   }, []);
 
@@ -180,13 +185,15 @@ export const ProjectListView: React.FC<IProps> = ({
             return project;
           }),
         );
+        setProjectCount(data.total);
         setPageCount(Math.ceil(data.total / pageSize));
       }
     },
     [defaultFilter.statusId],
   );
   const dispatch = useAppDispatch();
-  const route = history.location.pathname;
+  const location = useLocation();
+  const route = location.pathname;
 
   // Listen for changes in pagination and use the state to fetch our new data
   useDeepCompareEffect(() => {
@@ -215,7 +222,9 @@ export const ProjectListView: React.FC<IProps> = ({
     const project = data?.find(p => p.projectNumber === deleteProjectNumber);
     if (project) {
       project.status = projectStatuses.find((x: any) => x.name === project.status)!;
+      dispatch(showLoading());
       const deletedProject = await service.deleteProject(project);
+      dispatch(hideLoading());
       setData(data?.filter(p => p.projectNumber !== project.projectNumber));
       setDeleteProjectNumber(undefined);
       setDeletedProject(toFlatProject(deletedProject));
@@ -237,12 +246,12 @@ export const ProjectListView: React.FC<IProps> = ({
       (DisposalStatuses.includes(row.statusCode) || ReviewStatuses.includes(row.statusCode)) &&
       row.statusCode !== WorkflowStatus.Disposed
     ) {
-      history.push(`/projects?projectNumber=${row.projectNumber}`);
+      navigate(`/projects?projectNumber=${row.projectNumber}`);
     } else {
       if (keycloak.hasClaim(Claims.ADMIN_PROJECTS)) {
-        history.push(`/projects/disposal/${row.id}`);
+        navigate(`/projects/disposal/${row.id}`);
       } else {
-        history.push(`/projects/summary?projectNumber=${row.projectNumber}`);
+        navigate(`/projects/summary?projectNumber=${row.projectNumber}`);
       }
     }
   };
@@ -283,10 +292,14 @@ export const ProjectListView: React.FC<IProps> = ({
       <div className="filter-container">
         {filterable && (
           <FilterBar<IProjectFilterState> initialValues={filter} onChange={handleFilterChange}>
-            <Col xs={2} className="bar-item">
-              <Input field="name" placeholder="Search by project name or number" />
+            <Col md="auto" className="bar-item">
+              <Input
+                style={{ width: '280px' }}
+                field="name"
+                placeholder="Search by project name or number"
+              />
             </Col>
-            <Col xs={2} className="bar-item">
+            <Col md="auto" className="bar-item" style={{ width: '350px' }}>
               <ParentSelect
                 field={'statusId'}
                 options={statuses}
@@ -297,7 +310,7 @@ export const ProjectListView: React.FC<IProps> = ({
                 placeholder="Enter a Status"
               />
             </Col>
-            <Col xs={2} className="bar-item">
+            <Col md="auto" className="bar-item" style={{ marginRight: '-25px' }}>
               <ParentSelect
                 field="agencies"
                 options={agencyOptions}
@@ -305,7 +318,7 @@ export const ProjectListView: React.FC<IProps> = ({
                 placeholder="Enter an Agency"
               />
             </Col>
-            <Col xs={1} className="bar-item">
+            <Col md="auto" className="bar-item" style={{ marginLeft: '13px', marginRight: '8px' }}>
               <Select field="fiscalYear" options={fiscalYears} placeholder="Fiscal Year" />
             </Col>
           </FilterBar>
@@ -334,7 +347,10 @@ export const ProjectListView: React.FC<IProps> = ({
           />
         )}
         <Container fluid className="TableToolbar">
-          <h3 className="mr-4">{title}</h3>
+          <h3 className="mr-4" data-testid="project-list-view-page-title">
+            {title}
+          </h3>
+          <h6 className="ProjectCountHeader">Found {projectCount} projects.</h6>
           {keycloak.hasClaim(Claims.REPORTS_VIEW) && (
             <>
               <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">

@@ -1,49 +1,77 @@
 import './Login.scss';
 
 import PIMSlogo from 'assets/images/PIMSlogo/logo_with_text.png';
+import { Jumbotron } from 'components/bootstrap';
 import * as actionTypes from 'constants/actionTypes';
-import { useQuery } from 'hooks/use-query';
-import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import React, { useState } from 'react';
-import { Button, Col, Container, Jumbotron, Row, Spinner } from 'react-bootstrap';
+import { useConfiguration } from 'hooks/useConfiguration';
+import { IKeycloak, useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
+import React, { useEffect, useState } from 'react';
+import { Button, Col, Container, Row, Spinner } from 'react-bootstrap';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import { Redirect } from 'react-router-dom';
-import { useAppSelector } from 'store';
-import { IGenericNetworkAction } from 'store';
+import { Location, NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
+import { INetworkState, IRequest, useAppSelector } from 'store';
 import { NEW_PIMS_USER } from 'store/slices/hooks/usersActionCreator';
 
-//check to see if user is using Internet Explorer
-//as their browser
-const usingIE = () => {
-  const userAgent = window.navigator.userAgent;
-  const isOldIE = userAgent.indexOf('MSIE '); //tag used for IE 10 or older
-  const isIE11 = userAgent.indexOf('Trident/'); //tag used for IE11
-  if (isOldIE > 0 || isIE11 > 0) return true;
-  return false;
-};
+/**
+ * @author Zach Bourque <Zachary.Bourque@gov.bc.ca>
+ * @description Check if the user is using Internet Explorer.
+ * @returns A boolean value indicating whether the user is using Internet Explorer.
+ */
+const isUsingIE = (): boolean =>
+  navigator.userAgent.indexOf('MSIE ') > -1 || navigator.userAgent.indexOf('Trident/') > -1;
 
+/**
+ * @description This component works as the initial landing page for the application.
+ * This component will also redirect the user to the /ienotsupported page, if the user is using Internet Explorer.
+ *
+ * @author Zach Bourque <Zachary.Bourque@gov.bc.ca>
+ *
+ * @example
+ * <Login />
+ */
 const Login = () => {
-  const { redirect } = useQuery();
-  const [showInstruction, setShowInstruction] = useState(false);
-  const keyCloakWrapper = useKeycloakWrapper();
+  const navigate: NavigateFunction = useNavigate();
+  const configuration = useConfiguration();
+
+  if (isUsingIE()) {
+    navigate('/ienotsupported');
+  }
+
+  const location: Location = useLocation();
+  const redirect: string =
+    location.pathname && location.pathname !== '/login'
+      ? `${location.pathname}${location.search ? '?' + location.search : ''}`
+      : '/mapview';
+
+  const keyCloakWrapper: IKeycloak = useKeycloakWrapper();
   const keycloak = keyCloakWrapper.obj;
-  const isIE = usingIE();
-  const activated = useAppSelector(
-    store =>
-      (store.network.requests as any)[actionTypes.ADD_ACTIVATE_USER] as IGenericNetworkAction,
-  );
+  const [showInstruction, setShowInstruction] = useState(false);
+
+  const networkState: INetworkState = useAppSelector(state => state.network);
+
+  useEffect(() => {
+    const activateRequest: IRequest = networkState?.requests?.[actionTypes.ADD_ACTIVATE_USER];
+
+    const isWaitingOnActivateRequest: boolean = activateRequest?.isFetching ?? false;
+    const isUserLoggedIn: boolean = keycloak?.authenticated;
+
+    if (isUserLoggedIn && !isWaitingOnActivateRequest) {
+      const isNewUser: boolean =
+        activateRequest?.status === NEW_PIMS_USER || !keyCloakWrapper?.roles?.length;
+
+      if (isNewUser) {
+        navigate('/access/request');
+      } else {
+        navigate(redirect || 'mapview');
+      }
+    }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [networkState]);
+
   if (!keycloak) {
     return <Spinner animation="border"></Spinner>;
   }
-  if (keycloak?.authenticated) {
-    if (activated?.status === NEW_PIMS_USER || !keyCloakWrapper?.roles?.length) {
-      return <Redirect to={{ pathname: '/access/request' }} />;
-    }
-    return <Redirect to={redirect || '/mapview'} />;
-  }
-  if (isIE) {
-    return <Redirect to={{ pathname: '/ienotsupported' }} />;
-  }
+
   return (
     <Container className="login" fluid={true}>
       <Container className="unauth" fluid={true}>
@@ -60,7 +88,10 @@ const Login = () => {
               decisions on the optimal use of real property assets on behalf of the people and
               priorities of British Columbia.
             </p>
-            <Button variant="primary" onClick={() => keycloak.login()}>
+            <Button
+              variant="primary"
+              onClick={() => keycloak.login({ redirectUri: configuration.keycloakRedirectURI })}
+            >
               Sign In
             </Button>
             <p>Sign into PIMS with your government issued IDIR or with your Business BCeID.</p>
@@ -98,7 +129,6 @@ const Login = () => {
               )}
             </Row>
           </Col>
-          <Col xs={1} md={3} />
         </Row>
       </Container>
     </Container>

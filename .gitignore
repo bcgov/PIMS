@@ -11,3 +11,6 @@ auth/keycloak/config/*.log
 .DS_Store
 /backups
 **/node_modules
+database/mssql/data
+docker-compose.override.yml
+-docker-compose.override.yml

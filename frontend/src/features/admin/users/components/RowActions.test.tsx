@@ -5,7 +5,8 @@ import MockAdapter from 'axios-mock-adapter';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import * as Router from 'react-router';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -18,9 +19,9 @@ const mockAxios = new MockAdapter(axios);
 const getItems = (disabled?: boolean) => [
   {
     id: '1',
-    username: 'testername1',
-    firstName: 'testUserFirst1',
-    lastName: 'testUserLast1',
+    username: 'tester',
+    firstName: 'firstName',
+    lastName: 'lastName',
     isDisabled: !!disabled,
     position: 'tester position',
     agencies: [{ id: '1', name: 'HLTH' }],
@@ -46,13 +47,17 @@ const props = { data: getItems(), row: { original: { id: '1', isDisabled: false 
 const testRender = (store: any, props: any) =>
   render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <RowActions {...{ ...(props as any) }} />
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
 
 describe('rowAction functions', () => {
+  const navigate = jest.fn();
+  beforeEach(() => {
+    jest.spyOn(Router, 'useNavigate').mockImplementation(() => navigate);
+  });
   beforeEach(() => {
     mockAxios.resetHistory();
   });
@@ -68,7 +73,7 @@ describe('rowAction functions', () => {
     const enableButton = await findByText('Enable');
     fireEvent.click(enableButton);
     await waitFor(() => expect(mockAxios.history.put).toHaveLength(1));
-    await waitFor(() => expect(mockAxios.history.put[0].url).toBe('/api/keycloak/users/1'));
+    await waitFor(() => expect(mockAxios.history.put[0].url).toBe('/api/admin/users/1'));
   });
   it('disable button', async () => {
     const tempProps = { ...props };
@@ -79,7 +84,7 @@ describe('rowAction functions', () => {
     const disableButton = await findByText('Disable');
     fireEvent.click(disableButton);
     await waitFor(() => expect(mockAxios.history.put).toHaveLength(1));
-    await waitFor(() => expect(mockAxios.history.put[0].url).toBe('/api/keycloak/users/1'));
+    await waitFor(() => expect(mockAxios.history.put[0].url).toBe('/api/admin/users/1'));
   });
   it('open button', async () => {
     const { container, findByText } = testRender(getStore(), props);
@@ -87,6 +92,6 @@ describe('rowAction functions', () => {
     fireEvent.click(container);
     const openButton = await findByText('Open');
     fireEvent.click(openButton);
-    await waitFor(() => expect(history.location.pathname).toBe('/admin/user/1'));
+    await waitFor(() => expect(navigate).toHaveBeenCalledWith('/admin/user/1'));
   });
 });

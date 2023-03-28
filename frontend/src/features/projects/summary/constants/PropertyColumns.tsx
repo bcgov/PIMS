@@ -4,6 +4,7 @@ import { ColumnWithProps, MoneyCell } from 'components/Table';
 import { PropertyTypeName } from 'hooks/api';
 import { IProjectPropertyModel } from 'hooks/api/projects/disposals';
 import React from 'react';
+import { CellProps, Renderer } from 'react-table';
 import { formatAddress } from 'utils';
 
 export const PropertyColumns = (): ColumnWithProps<IProjectPropertyModel>[] => {
@@ -63,7 +64,7 @@ export const PropertyColumns = (): ColumnWithProps<IProjectPropertyModel>[] => {
       },
       align: 'right',
       clickable: false,
-      Cell: MoneyCell,
+      Cell: MoneyCell as Renderer<CellProps<IProjectPropertyModel, string | undefined>>,
     },
     {
       Header: 'Assessed Land',
@@ -72,7 +73,7 @@ export const PropertyColumns = (): ColumnWithProps<IProjectPropertyModel>[] => {
       },
       align: 'right',
       clickable: false,
-      Cell: MoneyCell,
+      Cell: MoneyCell as Renderer<CellProps<IProjectPropertyModel, string | undefined>>,
     },
     {
       Header: 'Assessed Year',
@@ -89,7 +90,7 @@ export const PropertyColumns = (): ColumnWithProps<IProjectPropertyModel>[] => {
       },
       align: 'right',
       clickable: false,
-      Cell: MoneyCell,
+      Cell: MoneyCell as Renderer<CellProps<IProjectPropertyModel, string | undefined>>,
     },
     {
       Header: 'Type',

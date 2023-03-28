@@ -67,7 +67,7 @@ it('changes to corresponding child value on click', async () => {
   );
   const childElement = getByRole('option');
   await waitFor(() => fireEvent.click(childElement));
-  expect(test).toHaveValue('parent');
+  expect(test).toHaveValue('child');
 });
 
 it('changes to corresponding parent value on click', async () => {

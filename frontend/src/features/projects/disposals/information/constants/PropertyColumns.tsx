@@ -7,6 +7,7 @@ import { Classification } from 'hooks/api';
 import _ from 'lodash';
 import React from 'react';
 import { FaTrash } from 'react-icons/fa';
+import { CellProps, Renderer } from 'react-table';
 
 import { IProjectForm, IProjectPropertyForm } from '../../interfaces';
 
@@ -25,6 +26,7 @@ export const PropertyColumns = (
         <TooltipWrapper toolTipId="project-property" toolTip="Remove Property from Project">
           {!disabled ? (
             <FaTrash
+              data-testid="trash-icon"
               className="remove"
               size={16}
               onClick={() => {
@@ -94,14 +96,14 @@ export const PropertyColumns = (
       accessor: 'netBook',
       align: 'right',
       clickable: false,
-      Cell: MoneyCell,
+      Cell: MoneyCell as Renderer<CellProps<IProjectPropertyForm, number | ''>>,
     },
     {
       Header: 'Assessed Land',
       accessor: 'assessedLand',
       align: 'right',
       clickable: false,
-      Cell: MoneyCell,
+      Cell: MoneyCell as Renderer<CellProps<IProjectPropertyForm, number | ''>>,
     },
     {
       Header: 'Assessed Year',
@@ -114,7 +116,7 @@ export const PropertyColumns = (
       accessor: 'assessedImprovements',
       align: 'right',
       clickable: false,
-      Cell: MoneyCell,
+      Cell: MoneyCell as Renderer<CellProps<IProjectPropertyForm, number | ''>>,
     },
     {
       Header: 'Type',

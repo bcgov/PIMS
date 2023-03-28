@@ -1,30 +1,31 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import * as API from 'constants/API';
+import Claims from 'constants/claims';
 import { Formik } from 'formik';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { noop } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import { IFilterBarState } from '../../common/components/FilterBar';
 import { PropertyListViewSelect } from '../../common/components/PropertyListViewSelect';
 
-jest.mock('@react-keycloak/web');
-(useKeycloak as jest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: [1],
-    },
-    subject: 'test',
-  },
-});
+const userRoles: string[] | Claims[] = [];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+(useKeycloakWrapper as jest.Mock).mockReturnValue(
+  new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+);
 
 const mockAxios = new MockAdapter(axios);
 
@@ -113,41 +114,59 @@ const store = mockStore({
 
 const setPageIndex = jest.fn().mockReturnValue(0);
 
-const getComponent = () => {
-  return (
-    <Provider store={store}>
-      <Router history={history}>
-        <Formik initialValues={{ properties: testData.items }} onSubmit={noop}>
-          <PropertyListViewSelect
-            setPageIndex={setPageIndex}
-            pageIndex={0}
-            filter={filter}
-            field="properties"
-          />
-        </Formik>
-      </Router>
-    </Provider>
-  );
-};
-
 describe('Property List View Select', () => {
   afterEach(() => {
     cleanup();
   });
+
   it('renders correctly', () => {
     act(() => {
-      const { container } = render(getComponent());
+      const { container } = render(
+        <Provider store={store}>
+          <MemoryRouter initialEntries={[history.location]}>
+            <Formik initialValues={{ properties: testData.items }} onSubmit={noop}>
+              <PropertyListViewSelect
+                setPageIndex={setPageIndex}
+                pageIndex={0}
+                filter={filter}
+                field="properties"
+              />
+            </Formik>
+          </MemoryRouter>
+        </Provider>,
+      );
       expect(container.firstChild).toMatchSnapshot();
     });
   });
 
-  it('removes property from project', async () => {
-    const { container, queryByText, getByText } = render(getComponent());
-    expect(queryByText('Test, Alert Bay')).toBeInTheDocument();
+  it('removes property from project', () => {
+    const { container, queryByText, getByText } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <Formik initialValues={{ properties: testData.items }} onSubmit={noop}>
+            <PropertyListViewSelect
+              setPageIndex={setPageIndex}
+              pageIndex={0}
+              filter={filter}
+              field="properties"
+            />
+          </Formik>
+        </MemoryRouter>
+      </Provider>,
+    );
     const checkbox = container.querySelector('input[title="Toggle Row Selected"]');
     const remove = getByText('Remove Selected');
-    await waitFor(() => fireEvent.click(checkbox!));
-    await waitFor(() => fireEvent.click(remove!));
-    expect(queryByText('Test, Alert Bay')).toBeNull();
+    act(() => {
+      waitFor(() => {
+        expect(queryByText('Test, Alert Bay')).toBeInTheDocument();
+      });
+
+      waitFor(() => fireEvent.click(checkbox!));
+      waitFor(() => fireEvent.click(remove!));
+
+      waitFor(() => {
+        expect(queryByText('Test, Alert Bay')).toBeNull();
+      });
+    });
   });
 });

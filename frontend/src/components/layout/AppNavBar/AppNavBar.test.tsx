@@ -1,31 +1,33 @@
-import { useKeycloak } from '@react-keycloak/web';
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 import { cleanup, fireEvent, render } from '@testing-library/react';
 import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import Roles from 'constants/roles';
 import { mount } from 'enzyme';
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import { mountToJson } from 'enzyme-to-json';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import AppNavBar from './AppNavBar';
 
-jest.mock('@react-keycloak/web');
 Enzyme.configure({ adapter: new Adapter() });
-(useKeycloak as jest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: ['1'],
-    },
-    subject: 'test',
-  },
-});
+
+const userRoles: string[] | Claims[] = [];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+(useKeycloakWrapper as jest.Mock).mockReturnValue(
+  new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+);
+
 const mockStore = configureMockStore([thunk]);
 
 const history = createMemoryHistory();
@@ -41,9 +43,9 @@ describe('AppNavBar', () => {
   it('AppNavBar snapshot test.', () => {
     const tree = mount(
       <Provider store={store}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <AppNavBar />
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
     expect(mountToJson(tree.find(AppNavBar))).toMatchSnapshot();
@@ -52,19 +54,14 @@ describe('AppNavBar', () => {
   describe('AppNavBar Links Based on Security', () => {
     describe('AppNavBar Administation Dropdown', () => {
       it('AppNavBar include Administration Dropdown', () => {
-        (useKeycloak as jest.Mock).mockReturnValue({
-          keycloak: {
-            subject: 'test',
-            userInfo: {
-              groups: [Roles.SYSTEM_ADMINISTRATOR],
-            },
-          },
-        });
+        (useKeycloakWrapper as jest.Mock).mockReturnValue(
+          new (useKeycloakMock as any)([Roles.SYSTEM_ADMINISTRATOR], []),
+        );
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
         const element = getByText('Administration');
@@ -73,19 +70,14 @@ describe('AppNavBar', () => {
       });
 
       it('AppNavBar include Admin Users Link', () => {
-        (useKeycloak as jest.Mock).mockReturnValue({
-          keycloak: {
-            subject: 'test',
-            userInfo: {
-              groups: [Roles.SYSTEM_ADMINISTRATOR],
-            },
-          },
-        });
+        (useKeycloakWrapper as jest.Mock).mockReturnValue(
+          new (useKeycloakMock as any)([Roles.SYSTEM_ADMINISTRATOR], []),
+        );
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
 
@@ -95,19 +87,14 @@ describe('AppNavBar', () => {
         expect(element).toBeVisible();
       });
       it('AppNavBar include Admin Access Requests Link', () => {
-        (useKeycloak as jest.Mock).mockReturnValue({
-          keycloak: {
-            subject: 'test',
-            userInfo: {
-              groups: [Roles.SYSTEM_ADMINISTRATOR],
-            },
-          },
-        });
+        (useKeycloakWrapper as jest.Mock).mockReturnValue(
+          new (useKeycloakMock as any)([Roles.SYSTEM_ADMINISTRATOR], []),
+        );
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
         fireEvent.click(getByText('Administration'));
@@ -117,19 +104,14 @@ describe('AppNavBar', () => {
       });
 
       it('AppNavBar include Admin Agencies link', () => {
-        (useKeycloak as jest.Mock).mockReturnValue({
-          keycloak: {
-            subject: 'test',
-            userInfo: {
-              groups: [Roles.SYSTEM_ADMINISTRATOR],
-            },
-          },
-        });
+        (useKeycloakWrapper as jest.Mock).mockReturnValue(
+          new (useKeycloakMock as any)([Roles.SYSTEM_ADMINISTRATOR], []),
+        );
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
         fireEvent.click(getByText('Administration'));
@@ -140,19 +122,14 @@ describe('AppNavBar', () => {
     });
 
     it('AppNavBar include Submit Property Link', () => {
-      (useKeycloak as jest.Mock).mockReturnValue({
-        keycloak: {
-          subject: 'test',
-          userInfo: {
-            roles: [Claims.PROPERTY_ADD, Claims.PROPERTY_VIEW],
-          },
-        },
-      });
+      (useKeycloakWrapper as jest.Mock).mockReturnValue(
+        new (useKeycloakMock as any)([Claims.PROPERTY_ADD, Claims.PROPERTY_VIEW], []),
+      );
       const { getByText } = render(
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <AppNavBar />
-          </Router>
+          </MemoryRouter>
         </Provider>,
       );
       const link = getByText('Submit Property');
@@ -160,19 +137,14 @@ describe('AppNavBar', () => {
     });
 
     it('AppNavBar include View Inventory Link', () => {
-      (useKeycloak as jest.Mock).mockReturnValue({
-        keycloak: {
-          subject: 'test',
-          userInfo: {
-            roles: [Claims.PROPERTY_ADD, Claims.PROPERTY_VIEW],
-          },
-        },
-      });
+      (useKeycloakWrapper as jest.Mock).mockReturnValue(
+        new (useKeycloakMock as any)([Claims.PROPERTY_ADD, Claims.PROPERTY_VIEW], []),
+      );
       const { getByText } = render(
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <AppNavBar />
-          </Router>
+          </MemoryRouter>
         </Provider>,
       );
 
@@ -182,40 +154,15 @@ describe('AppNavBar', () => {
     });
 
     describe('AppNavBar Disposal Projects dropdown', () => {
-      it('AppNavBar include Disposal Projects dropdown for admin', () => {
-        (useKeycloak as jest.Mock).mockReturnValue({
-          keycloak: {
-            subject: 'test',
-            userInfo: {
-              roles: [Claims.ADMIN_PROPERTIES, Claims.ADMIN_PROJECTS],
-            },
-          },
-        });
-        const { getByText } = render(
-          <Provider store={store}>
-            <Router history={history}>
-              <AppNavBar />
-            </Router>
-          </Provider>,
-        );
-        const element = getByText('Disposal Projects');
-
-        expect(element).toBeVisible();
-      });
       it('AppNavBar include Disposal Projects dropdown for Approval requests only', () => {
-        (useKeycloak as jest.Mock).mockReturnValue({
-          keycloak: {
-            subject: 'test',
-            userInfo: {
-              roles: [Claims.DISPOSE_APPROVE],
-            },
-          },
-        });
+        (useKeycloakWrapper as jest.Mock).mockReturnValue(
+          new (useKeycloakMock as any)([Claims.DISPOSE_APPROVE], []),
+        );
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
         const element = getByText('Disposal Projects');
@@ -223,19 +170,14 @@ describe('AppNavBar', () => {
         expect(element).toBeVisible();
       });
       it('AppNavBar include Create Disposal Project Link', () => {
-        (useKeycloak as jest.Mock).mockReturnValue({
-          keycloak: {
-            subject: 'test',
-            userInfo: {
-              roles: [Claims.ADMIN_PROPERTIES, Claims.ADMIN_PROJECTS],
-            },
-          },
-        });
+        (useKeycloakWrapper as jest.Mock).mockReturnValue(
+          new (useKeycloakMock as any)([Claims.ADMIN_PROPERTIES, Claims.ADMIN_PROJECTS], []),
+        );
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
         fireEvent.click(getByText('Disposal Projects'));
@@ -245,19 +187,14 @@ describe('AppNavBar', () => {
       });
 
       it('AppNavBar include View Projects Link', () => {
-        (useKeycloak as jest.Mock).mockReturnValue({
-          keycloak: {
-            subject: 'test',
-            userInfo: {
-              roles: [Claims.ADMIN_PROPERTIES, Claims.ADMIN_PROJECTS],
-            },
-          },
-        });
+        (useKeycloakWrapper as jest.Mock).mockReturnValue(
+          new (useKeycloakMock as any)([Claims.ADMIN_PROPERTIES, Claims.ADMIN_PROJECTS], []),
+        );
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
         fireEvent.click(getByText('Disposal Projects'));
@@ -267,19 +204,14 @@ describe('AppNavBar', () => {
       });
 
       it('AppNavBar include Approval Requests Link', () => {
-        (useKeycloak as jest.Mock).mockReturnValue({
-          keycloak: {
-            subject: 'test',
-            userInfo: {
-              roles: [Claims.DISPOSE_APPROVE],
-            },
-          },
-        });
+        (useKeycloakWrapper as jest.Mock).mockReturnValue(
+          new (useKeycloakMock as any)([Claims.DISPOSE_APPROVE], []),
+        );
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
         fireEvent.click(getByText('Disposal Projects'));
@@ -291,19 +223,14 @@ describe('AppNavBar', () => {
 
     describe('AppNavBar Reports Dropdown', () => {
       it('AppNavBar include Reports Dropdown', () => {
-        (useKeycloak as jest.Mock).mockReturnValue({
-          keycloak: {
-            subject: 'test',
-            userInfo: {
-              roles: [Claims.REPORTS_VIEW, Claims.REPORTS_SPL],
-            },
-          },
-        });
+        (useKeycloakWrapper as jest.Mock).mockReturnValue(
+          new (useKeycloakMock as any)([Claims.REPORTS_VIEW, Claims.REPORTS_SPL], []),
+        );
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
         const link = getByText('Reports');
@@ -311,19 +238,14 @@ describe('AppNavBar', () => {
       });
 
       it('AppNavBar include SPL Reports link', () => {
-        (useKeycloak as jest.Mock).mockReturnValue({
-          keycloak: {
-            subject: 'test',
-            userInfo: {
-              roles: [Claims.REPORTS_VIEW, Claims.REPORTS_SPL],
-            },
-          },
-        });
+        (useKeycloakWrapper as jest.Mock).mockReturnValue(
+          new (useKeycloakMock as any)([Claims.REPORTS_VIEW, Claims.REPORTS_SPL], []),
+        );
         const { getByText } = render(
           <Provider store={store}>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[history.location]}>
               <AppNavBar />
-            </Router>
+            </MemoryRouter>
           </Provider>,
         );
         fireEvent.click(getByText('Reports'));

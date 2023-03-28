@@ -6,13 +6,22 @@ export interface IGenericNetworkAction {
   isFetching: boolean;
   name: string;
   type: string;
-  error?: AxiosError;
+  error?: AxiosError<any>;
   status?: number;
   data?: any;
 }
 
 export interface INetworkState {
-  requests: {};
+  requests: { [key: string]: IRequest };
+}
+
+export interface IRequest {
+  data: any | undefined;
+  error: any | undefined;
+  isFetching: boolean;
+  name: string;
+  status: number | undefined;
+  type: string;
 }
 
 export const initialNetworkState: INetworkState = {
@@ -31,6 +40,7 @@ export const networkSlice = createSlice({
           isFetching: true,
           status: undefined,
           error: undefined,
+          data: undefined,
           type: ActionTypes.REQUEST,
         },
       };
@@ -56,6 +66,7 @@ export const networkSlice = createSlice({
           isFetching: false,
           status: action.payload.status,
           error: action.payload.error,
+          data: undefined,
           type: ActionTypes.ERROR,
         },
       };
@@ -68,6 +79,7 @@ export const networkSlice = createSlice({
           isFetching: false,
           status: undefined,
           error: undefined,
+          data: undefined,
           type: ActionTypes.CLEAR,
         },
       };

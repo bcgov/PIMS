@@ -1,32 +1,32 @@
-import { useKeycloak } from '@react-keycloak/web';
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { ProjectActions } from 'constants/actionTypes';
+import { Claims } from 'constants/claims';
 import { Classifications } from 'constants/classifications';
 import * as reducerTypes from 'constants/reducerTypes';
 import { Formik } from 'formik';
 import { createMemoryHistory } from 'history';
+import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import { Form } from 'react-bootstrap';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import { UpdateInfoStepYupSchema } from '../../dispose';
 import UpdateInfoForm from './UpdateInfoForm';
 
-jest.mock('@react-keycloak/web');
-(useKeycloak as jest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: [1],
-      roles: [],
-    },
-    subject: 'test',
-  },
-});
+const userRoles: string[] | Claims[] = [];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+(useKeycloakWrapper as jest.Mock).mockReturnValue(
+  new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+);
 
 const mockStore = configureMockStore([thunk]);
 const mockProject = {
@@ -97,7 +97,7 @@ const initialTouched: any = {
 const getUpdateInfoForm = () => {
   return (
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <Formik
           onSubmit={() => {}}
           initialValues={initialValues}
@@ -108,7 +108,7 @@ const getUpdateInfoForm = () => {
             <UpdateInfoForm />
           </Form>
         </Formik>
-      </Router>
+      </MemoryRouter>
     </Provider>
   );
 };
@@ -132,13 +132,15 @@ describe('Update Info Form', () => {
     const classificationId = container.querySelector(
       'select[name="properties.0.classificationId"]',
     );
-    await waitFor(() => {
+    act(() => {
       fireEvent.change(classificationId!, {
         target: {
           value: Classifications.CoreOperational,
         },
       });
     });
-    expect(getByText('Must select Surplus Active or Surplus Encumbered')).toBeVisible();
+    waitFor(() => {
+      expect(getByText('Must select Surplus Active or Surplus Encumbered')).toBeVisible();
+    });
   });
 });

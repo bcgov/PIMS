@@ -1,30 +1,30 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { cleanup, render, waitFor } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import * as API from 'constants/API';
+import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import { Formik } from 'formik';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { noop } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
 import service from '../apiService';
 import { SPLProjectListView } from './SPLProjectListView';
 
-jest.mock('@react-keycloak/web');
-(useKeycloak as jest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: [1],
-      roles: [],
-    },
-    subject: 'test',
-  },
-});
+const userRoles: string[] | Claims[] = [];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+(useKeycloakWrapper as jest.Mock).mockReturnValue(
+  new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+);
 
 const testData = {
   items: [
@@ -148,16 +148,21 @@ describe('Project Approval Request list view', () => {
     const { container } = render(
       <Formik initialValues={{}} onSubmit={noop}>
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <SPLProjectListView />
-          </Router>
+          </MemoryRouter>
         </Provider>
       </Formik>,
     );
     await waitFor(() => expect(service.getProjectList).toHaveBeenCalledTimes(1), { timeout: 500 });
     expect(container.firstChild).toMatchSnapshot();
-    expect(container.firstChild).toHaveTextContent('SPP-10015');
-    expect(container.firstChild).toHaveTextContent('SPP-10016');
+
+    waitFor(() => {
+      expect(container.firstChild).toHaveTextContent('SPP-10015');
+    });
+    waitFor(() => {
+      expect(container.firstChild).toHaveTextContent('SPP-10016');
+    });
   });
 
   it('Displays message for empty list', async () => {
@@ -172,9 +177,9 @@ describe('Project Approval Request list view', () => {
     const { findByText } = render(
       <Formik initialValues={{}} onSubmit={noop}>
         <Provider store={store}>
-          <Router history={history}>
+          <MemoryRouter initialEntries={[history.location]}>
             <SPLProjectListView />
-          </Router>
+          </MemoryRouter>
         </Provider>
       </Formik>,
     );

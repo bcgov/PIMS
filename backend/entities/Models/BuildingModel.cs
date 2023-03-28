@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -83,6 +85,7 @@ namespace Pims.Dal.Entities.Models
         /// get/set - When the assessment was completed.
         /// </summary>
         public DateTime? AssessedDate { get; set; }
+
         #endregion
         #endregion
 
@@ -110,18 +113,14 @@ namespace Pims.Dal.Entities.Models
             this.BuildingTenancy = property.BuildingTenancy;
             this.RentableArea = property.RentableArea;
 
-            var userAgencies = user.GetAgenciesAsNullable();
-
-            // The property belongs to the user's agency or sub-agency, so include these properties.
-            // TODO: Shuffle code around so that this can use the user.HasPermission(Permissions.AdminProperties).
-            if (userAgencies.Contains(property.AgencyId) || user.HasClaim(c => c.Value == "admin-properties"))
-            {
-                this.LeaseExpiry = property.LeaseExpiry;
-                this.OccupantName = property.OccupantName;
-                this.TransferLeaseOnSale = property.TransferLeaseOnSale;
-                this.Assessed = property.AssessedBuilding;
-                this.AssessedDate = property.AssessedBuildingDate;
-            }
+            // The following values are conditionally removed in PropertyService.cs.
+            // These values are only to be included in the object if the user has the "admin-properties" claim,
+            // or the user belongs to the agency of the building.
+            this.LeaseExpiry = property.LeaseExpiry;
+            this.OccupantName = property.OccupantName;
+            this.TransferLeaseOnSale = property.TransferLeaseOnSale;
+            this.Assessed = property.AssessedBuilding;
+            this.AssessedDate = property.AssessedBuildingDate;
         }
         #endregion
     }

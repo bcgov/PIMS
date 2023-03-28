@@ -4,7 +4,7 @@ import { createMemoryHistory } from 'history';
 import queryString from 'query-string';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -19,7 +19,7 @@ const getStore = (filter: any) =>
 
 const getWrapper = (store: any) => ({ children }: any) => (
   <Provider store={store}>
-    <Router history={history}>{children}</Router>
+    <MemoryRouter initialEntries={[history.location]}>{children}</MemoryRouter>
   </Provider>
 );
 
@@ -43,23 +43,23 @@ const emptyFilter = {
 };
 
 const defaultFilter = {
-  searchBy: 'address',
-  pid: '1',
   address: '2',
   administrativeArea: '3',
-  projectNumber: '4',
   agencies: '5',
   classificationId: '6',
-  minLotSize: '7',
-  maxLotSize: '8',
-  parcelId: '9',
-  propertyType: '10',
-  rentableArea: '',
   includeAllProperties: '',
   maxAssessedValue: '',
+  maxLotSize: '8',
   maxMarketValue: '',
   maxNetBookValue: '',
+  minLotSize: '7',
   name: '',
+  parcelId: '9',
+  pid: '1',
+  projectNumber: '4',
+  propertyType: '10',
+  rentableArea: '',
+  searchBy: 'address',
 };
 
 let filter: any = defaultFilter;
@@ -86,14 +86,14 @@ describe('useRouterFilter hook tests', () => {
     const expectedFilter = { ...defaultFilter, pid: '2' };
     history.push({ search: new URLSearchParams(expectedFilter).toString() });
 
-    const filterWithValues: any = { ...expectedFilter };
-    Object.keys(filterWithValues).forEach(
-      k => filterWithValues[k] === '' && delete filterWithValues[k],
-    );
+    let filterWithValues: any = { ...expectedFilter };
+    Object.keys(filterWithValues).forEach(key => {
+      if (filterWithValues[key] === '') delete filterWithValues.key;
+    });
 
     const wrapper = getWrapper(getStore({}));
     renderHook(() => useRouterFilter({ filter, setFilter, key: 'test' }), { wrapper });
-    expect(history.location.search).toEqual(queryString.stringify(filterWithValues));
+    expect(history.location.search).toEqual(`${queryString.stringify(filterWithValues)}`);
   });
 
   it('will not set the filter based on an invalid query string', () => {
@@ -120,14 +120,16 @@ describe('useRouterFilter hook tests', () => {
   });
 
   it('will set the location based on a passed filter', () => {
+    history.push({ search: new URLSearchParams(defaultFilter).toString() });
+
     const wrapper = getWrapper(getStore({ test: defaultFilter }));
     renderHook(() => useRouterFilter({ filter: defaultFilter, setFilter, key: 'mismatch' }), {
       wrapper,
     });
     const filterWithValues: any = { ...defaultFilter };
-    Object.keys(filterWithValues).forEach(
-      k => filterWithValues[k] === '' && delete filterWithValues[k],
-    );
-    expect(history.location.search).toEqual(queryString.stringify(filterWithValues));
+    Object.keys(filterWithValues).forEach(key => {
+      if (filterWithValues[key] === '') delete filterWithValues.key;
+    });
+    expect(history.location.search).toEqual(`${queryString.stringify(filterWithValues)}`);
   });
 });

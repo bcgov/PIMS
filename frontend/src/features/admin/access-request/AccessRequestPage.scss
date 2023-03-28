@@ -4,11 +4,42 @@
   height: calc(100vh - #{$header-height} - #{$navbar-height} - #{$footer-height});
 }
 
+.accessRequestPage-header {
+  font-size: xx-large;
+  margin: 20px 0 25px 0;
+}
+
 .userInfo {
-  width: 40%;
-  vertical-align: middle;
+  max-width: 500px;
+  margin: auto;
+}
+
+/*
+  The Access Request form consists of rows of user info, 
+  this selector adds spacing between the rows so that they are easily readable. 
+*/
+.userInfo > * > div.row,
+div.hstack {
+  margin-top: 12.5px;
   text-align: left;
-  display: table;
+}
+
+/*
+
+*/
+
+.roles-input > div {
+  width: 100%;
+}
+
+.position-input > div {
+  width: 100%;
+  padding: 0;
+}
+
+.notes-input > div {
+  width: 100%;
+  padding: 0;
 }
 
 .success {

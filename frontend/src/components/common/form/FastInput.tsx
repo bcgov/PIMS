@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { FormikProps, getIn } from 'formik';
 import React, { CSSProperties, memo, useEffect } from 'react';
-import { Form, FormControlProps } from 'react-bootstrap';
+import { Col, Form, FormControlProps, Row } from 'react-bootstrap';
 import { formikFieldMemo } from 'utils';
 
 import TooltipIcon from '../TooltipIcon';
@@ -98,12 +98,20 @@ export const FastInput: React.FC<FastInputProps> = memo(
         as={'div'}
       >
         {!!label && (
-          <Form.Label>
-            {label}
-            {!!tooltip && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
-          </Form.Label>
+          <Row style={{ alignItems: 'center' }}>
+            <Col md="auto">
+              <Form.Label style={{ minWidth: '100px', maxWidth: '500px' }}>{label}</Form.Label>
+            </Col>
+            <Col md="auto">
+              {!!tooltip && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
+            </Col>
+          </Row>
         )}
-        {!!tooltip && !label && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
+        {!!tooltip && !label && (
+          <Col md="auto">
+            <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />
+          </Col>
+        )}
 
         <TooltipWrapper toolTipId={`${field}-error-tooltip}`} toolTip={errorTooltip}>
           <Form.Control
@@ -115,7 +123,7 @@ export const FastInput: React.FC<FastInputProps> = memo(
             custom={custom}
             isInvalid={!!touch && !!error}
             isValid={!!touch && !error && value && !disabled}
-            value={value}
+            value={value ?? ''}
             placeholder={placeholder}
             onBlur={(e: any) => {
               if (onBlurFormatter) {

@@ -24,6 +24,7 @@ namespace Pims.Dal
         #region Properties
         #region Tables
         public DbSet<AccessRequest> AccessRequests { get; set; }
+        public DbSet<UserAgency> UserAgencies { get; set; }
         public DbSet<Agency> Agencies { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -162,9 +163,9 @@ namespace Pims.Dal
             // get entries that are being Added or Updated
             var modifiedEntries = ChangeTracker.Entries()
                     .Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified));
-
-            var keycloakUserId = _httpContextAccessor.HttpContext.User.GetKeycloakUserId();
-            var userId = this.Users.Where(u => u.KeycloakUserId == keycloakUserId).Select(u => u.Id).FirstOrDefault(); // TODO: Should add the User.Id to a claim so that it can be easily returned.
+            var username = _httpContextAccessor.HttpContext.User != null ?_httpContextAccessor.HttpContext.User.GetUsername() : "sresfm";
+            
+            var userId = this.Users.Where(u => u.Username == username).Select(u => u.Id).FirstOrDefault(); // TODO: Should add the User.Id to a claim so that it can be easily returned.
             foreach (var entry in modifiedEntries)
             {
                 if (entry.Entity is BaseEntity entity)

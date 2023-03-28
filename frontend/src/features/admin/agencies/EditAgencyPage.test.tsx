@@ -1,31 +1,31 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import * as API from 'constants/API';
+import Claims from 'constants/claims';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { initialAgencyState } from 'store';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 import { fillInput } from 'utils/testUtils';
 
 import EditAgencyPage from './EditAgencyPage';
 
-jest.mock('@react-keycloak/web');
-(useKeycloak as jest.Mock).mockReturnValue({
-  keycloak: {
-    userInfo: {
-      agencies: [1],
-      roles: [],
-    },
-    subject: 'test',
-  },
-});
+const userRoles: string[] | Claims[] = [];
+const userAgencies: number[] = [1];
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+(useKeycloakWrapper as jest.Mock).mockReturnValue(
+  new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
+);
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -57,7 +57,7 @@ const mockAxios = new MockAdapter(axios);
 const renderEditAgencyPage = () =>
   render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter initialEntries={[history.location]}>
         <ToastContainer
           autoClose={5000}
           hideProgressBar
@@ -67,7 +67,7 @@ const renderEditAgencyPage = () =>
           pauseOnFocusLoss={false}
         />
         <EditAgencyPage id={111} />,
-      </Router>
+      </MemoryRouter>
     </Provider>,
   );
 
@@ -82,9 +82,9 @@ describe('Edit agency page', () => {
   it('EditAgencyPage renders', () => {
     const { container } = render(
       <Provider store={store}>
-        <Router history={history}>
+        <MemoryRouter initialEntries={[history.location]}>
           <EditAgencyPage id={111} />,
-        </Router>
+        </MemoryRouter>
       </Provider>,
     );
     expect(container.firstChild).toMatchSnapshot();
@@ -157,7 +157,7 @@ describe('Edit agency page', () => {
     });
 
     it('can delete agencies with no properties', async () => {
-      history.push('');
+      history.push('/');
       const { getByText, container } = renderEditAgencyPage();
       mockAxios.reset();
       mockAxios.onAny().reply(200, {});
@@ -179,7 +179,7 @@ describe('Edit agency page', () => {
     });
 
     it('can not delete agencies with properties', async () => {
-      history.push('');
+      history.push('/');
       const { getByText, container } = renderEditAgencyPage();
       mockAxios.reset();
       mockAxios.onAny().reply(200, {});

@@ -7,20 +7,19 @@ exports[`Approval Confirmation Matches Snapshot 1`] = `
   <h3>
     Approval
   </h3>
-  <div
-    class="form-row"
-  >
+  <div>
     <div
-      class="required form-group"
+      class="required"
     >
       <div
         class="check-field"
       >
         <div
-          class="form-check"
+          class=""
         >
           <input
-            class="form-check-input position-static"
+            class="form-check-input"
+            data-testid="approval-check"
             id="input-confirmation"
             name="confirmation"
             required=""

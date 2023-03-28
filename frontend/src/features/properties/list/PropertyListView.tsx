@@ -11,7 +11,7 @@ import * as API from 'constants/API';
 import { ENVIRONMENT } from 'constants/environment';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
-import { PropertyTypes } from 'constants/index';
+import { Claims, PropertyTypes } from 'constants/index';
 import { Roles } from 'constants/roles';
 import {
   getCurrentFiscal,
@@ -29,6 +29,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import { FaEdit, FaFileExport, FaFolder, FaFolderOpen } from 'react-icons/fa';
 import { FaFileAlt, FaFileExcel } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAppDispatch } from 'store';
 import styled from 'styled-components';
@@ -278,6 +279,7 @@ const DirtyRowsTracker: React.FC<{ setDirtyRows: (changes: IChangedRow[]) => voi
 };
 
 const PropertyListView: React.FC = () => {
+  const navigate = useNavigate();
   const lookupCodes = useCodeLookups();
   const { updateBuilding, updateParcel } = useApi();
   const [editable, setEditable] = useState(false);
@@ -359,7 +361,8 @@ const PropertyListView: React.FC = () => {
 
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
-  const [pageCount, setPageCount] = useState(0);
+  const [pageCount, setPageCount] = useState(1);
+  const [propertyCount, setPropertyCount] = useState(0);
 
   const fetchIdRef = useRef(0);
 
@@ -431,6 +434,7 @@ const PropertyListView: React.FC = () => {
         // For now we'll just calculate it.
         if (fetchId === fetchIdRef.current && data?.items) {
           setData(data.items);
+          setPropertyCount(data.total);
           setPageCount(Math.ceil(data.total / pageSize));
         }
 
@@ -506,7 +510,20 @@ const PropertyListView: React.FC = () => {
   }
 
   const onRowClick = useCallback((row: IProperty) => {
-    window.open(
+    // Track row click in Snowplow Analytics.
+    window.snowplow('trackSelfDescribingEvent', {
+      schema: 'iglu:ca.bc.gov.pims/listing_click/jsonschema/1-0-0',
+      data: {
+        view: 'property_inventory',
+        property_name: row.name ?? '',
+        pid: row.pid ?? '',
+        pin: row.pin ?? '',
+        agency: row.subAgency ?? row.agency ?? '',
+        classification: row.classification ?? '',
+      },
+    });
+
+    navigate(
       `/mapview?${queryString.stringify({
         sidebar: true,
         disabled: true,
@@ -516,8 +533,8 @@ const PropertyListView: React.FC = () => {
           : undefined,
         buildingId: row.propertyTypeId === PropertyTypes.BUILDING ? row.id : undefined,
       })}`,
-      '_blank',
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const submitTableChanges = async (
@@ -652,6 +669,7 @@ const PropertyListView: React.FC = () => {
               </TooltipWrapper>
             </div>
           </div>
+          <h6 className="PropertyCountHeader">Found {propertyCount} properties.</h6>
           <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
             <FileIcon>
               <FaFileExcel data-testid="excel-icon" size={36} onClick={() => fetch('excel')} />
@@ -675,7 +693,7 @@ const PropertyListView: React.FC = () => {
           )}
           <VerticalDivider />
 
-          {!editable && (
+          {!editable && !keycloak.hasClaim(Claims.VIEW_ONLY_PROPERTIES) && (
             <TooltipWrapper toolTipId="edit-financial-values" toolTip={'Edit financial values'}>
               <EditIconButton>
                 <FaEdit data-testid="edit-icon" size={36} onClick={() => setEditable(!editable)} />

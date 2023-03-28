@@ -27,7 +27,7 @@ export const ProjectNotifications: React.FC<IProjectNotificationsProps> = props 
   const api = useDisposalApi(projectId);
 
   const onRequestData = React.useCallback(
-    async ({ pageIndex }) => {
+    async ({ pageIndex }: { pageIndex: number }) => {
       const response = await api.getNotificationsPage({
         ...filter,
         page: pageIndex + 1,

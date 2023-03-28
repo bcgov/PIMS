@@ -1,5 +1,10 @@
 import './Legend.scss';
 
+import buildingRegPng from 'assets/images/pins/building-reg.png';
+import landRegPng from 'assets/images/pins/land-reg.png';
+import markerPurplePng from 'assets/images/pins/marker-purple.png';
+import markerRedPng from 'assets/images/pins/marker-red.png';
+import subdivRegPng from 'assets/images/pins/subdiv-reg.png';
 import * as React from 'react';
 import { Card, Col, Image, Row } from 'react-bootstrap';
 
@@ -7,23 +12,23 @@ export const Legend = () => {
   const keys = React.useMemo(() => {
     return [
       {
-        pin: require('assets/images/pins/land-reg.png').default,
+        pin: landRegPng,
         label: 'Parcel',
       },
       {
-        pin: require('assets/images/pins/building-reg.png').default,
+        pin: buildingRegPng,
         label: 'Building',
       },
       {
-        pin: require('assets/images/pins/subdiv-reg.png').default,
+        pin: subdivRegPng,
         label: 'Proposed Subdivision',
       },
       {
-        pin: require('assets/images/pins/marker-red.png').default,
+        pin: markerRedPng,
         label: 'Enhanced Referral Process',
       },
       {
-        pin: require('assets/images/pins/marker-purple.png').default,
+        pin: markerPurplePng,
         label: 'Surplus Properties List',
       },
     ];

@@ -1,4 +1,5 @@
 export * from './accessRequestSlice';
+export * from './agenciesSlice';
 export * from './agencySlice';
 export * from './filterSlice';
 export * from './jwtSlice';

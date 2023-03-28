@@ -3,19 +3,29 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { ProjectActions } from 'constants/actionTypes';
 import * as API from 'constants/API';
+import Claims from 'constants/claims';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { mockFlatProperty } from 'mocks/filterDataMock';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { act } from 'react-test-renderer';
+import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import useKeycloakMock from 'useKeycloakWrapperMock';
 
-import { mockKeycloak, mockProject } from '../testUtils';
+import { mockProject } from '../testUtils';
 import SelectProjectProperties from './SelectProjectPropertiesStep';
-jest.mock('@react-keycloak/web');
+
+const userAgency: number = 1;
+
+jest.mock('hooks/useKeycloakWrapper');
+const mockKeycloak = (userRoles: string[] | Claims[], userAgencies: number[] = [1]) => {
+  (useKeycloakWrapper as jest.Mock).mockReturnValue(
+    new (useKeycloakMock as any)(userRoles, userAgencies, userAgency, true),
+  );
+};
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -33,9 +43,9 @@ const store = mockStore({
 
 const uiElement = (
   <Provider store={store}>
-    <Router history={history}>
+    <MemoryRouter initialEntries={[history.location]}>
       <SelectProjectProperties />
-    </Router>
+    </MemoryRouter>
   </Provider>
 );
 
@@ -49,8 +59,8 @@ describe('Select Project Properties Step', () => {
   });
   it('renders correctly', async () => {
     mockAxios.onAny().reply(200, { items: [mockFlatProperty] });
-    await act(async () => {
-      const { container, findByText } = render(uiElement);
+    const { container, findByText } = render(uiElement);
+    await waitFor(async () => {
       expect(container.firstChild).toMatchSnapshot();
       await findByText('Test Property');
     });
@@ -158,7 +168,9 @@ describe('Select Project Properties Step', () => {
     const propertyNameText = await findAllByText('Test Property');
     const selectedText = getByText('1 Selected');
     expect(selectedText).toBeInTheDocument();
-    expect(propertyNameText).toHaveLength(2);
+    waitFor(() => {
+      expect(propertyNameText).toHaveLength(2);
+    });
   });
 
   it('selected properties are still checked even if the page changes.', async () => {

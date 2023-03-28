@@ -28,8 +28,13 @@ namespace Pims.Dal.Helpers.Extensions
             filter.ThrowIfNull(nameof(filter));
             filter.ThrowIfNull(nameof(user));
 
+            //Fetching user's agencies from database
+            Guid? userId = context.Users.FirstOrDefault(u => u.Username == user.GetUsername())?.Id;
+            int[] userAgencies = context.UserAgencies.Where(ua => ua.UserId == userId).Select(ua => ua.AgencyId).ToArray<int>();
+            int[] subAgencies = context.Agencies.Where(a => a.ParentId != null && userAgencies.Contains(a.ParentId.Value)).Select(a => a.Id).ToArray<int>();
+            userAgencies = userAgencies.Concat(subAgencies).ToArray();
+            
             // Check if user has the ability to view sensitive properties.
-            var userAgencies = user.GetAgenciesAsNullable();
             var viewSensitive = user.HasPermission(Permissions.SensitiveView);
             var isAdmin = user.HasPermission(Permissions.AdminProperties);
 
@@ -228,8 +233,12 @@ namespace Pims.Dal.Helpers.Extensions
             var isAdmin = user.HasPermission(Permissions.AdminProperties);
             if (!isAdmin)
             {
-                var userAgencies = user.GetAgenciesAsNullable();
-                query = query.Where(p => userAgencies.Contains(p.AgencyId));
+                //Fetching user's agencies from database
+                Guid? userId = context.Users.FirstOrDefault(u => u.Username == user.GetUsername())?.Id;
+                int[] userAgencies = context.UserAgencies.Where(ua => ua.UserId == userId).Select(ua => ua.AgencyId).ToArray<int>();
+                int[] subAgencies = context.Agencies.Where(a => a.ParentId != null && userAgencies.Contains(a.ParentId.Value)).Select(a => a.Id).ToArray<int>();
+                userAgencies = userAgencies.Concat(subAgencies).ToArray();
+                query = query.Where(p => userAgencies.Contains(p.AgencyId.Value));
             }
 
             query = context.GenerateCommonQuery(query, user, filter);
@@ -256,8 +265,12 @@ namespace Pims.Dal.Helpers.Extensions
             // Only return properties owned by user's agency or sub-agencies.
             if (!filter.IncludeAllProperties)
             {
-                var userAgencies = user.GetAgenciesAsNullable();
-                query = query.Where(p => userAgencies.Contains(p.AgencyId));
+                //Fetching user's agencies from database
+                Guid? userId = context.Users.FirstOrDefault(u => u.Username == user.GetUsername())?.Id;
+                int[] userAgencies = context.UserAgencies.Where(ua => ua.UserId == userId).Select(ua => ua.AgencyId).ToArray<int>();
+                int[] subAgencies = context.Agencies.Where(a => a.ParentId != null && userAgencies.Contains(a.ParentId.Value)).Select(a => a.Id).ToArray<int>();
+                userAgencies = userAgencies.Concat(subAgencies).ToArray();
+                query = query.Where(p => userAgencies.Contains(p.AgencyId.Value));
             }
 
             query = context.GenerateCommonQuery(query, user, filter);

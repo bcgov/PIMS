@@ -47,6 +47,7 @@ type OptionalAttributes = {
   toolTipId?: string;
   /** Event when the value changes. */
   onChange?: (checked: boolean) => void;
+  datatestid?: string;
 };
 
 // only "field" is required for <Check>, the rest are optional
@@ -73,6 +74,7 @@ export const Check: React.FC<CheckProps> = ({
   toolTipId,
   checkedState,
   setCheckedState,
+  datatestid,
   onChange,
   ...rest
 }) => {
@@ -108,13 +110,14 @@ export const Check: React.FC<CheckProps> = ({
     >
       <div className="check-field">
         {!!label && (
-          <Form.Label>
+          <Form.Label style={{ marginRight: '10px' }}>
             {label}
             {!!toolTip && <TooltipIcon toolTipId={toolTipId!} toolTip={toolTip} />}
           </Form.Label>
         )}
         <>
           <Form.Check
+            data-testid={datatestid}
             label={radioLabelOne}
             as={asElement}
             name={field}
@@ -125,7 +128,7 @@ export const Check: React.FC<CheckProps> = ({
             isInvalid={!!touch && !!error}
             type={type}
             {...rest}
-            value={setCheckedState ? checked === true || checkedState : checked === true}
+            value={setCheckedState ? `${checked === true || checkedState}` : `${checked === true}`}
             placeholder={placeholder}
             checked={setCheckedState ? checkedState : checked === true}
             onChange={() => {
@@ -153,7 +156,7 @@ export const Check: React.FC<CheckProps> = ({
               type={type}
               id={`input-${field}-2`}
               {...rest}
-              value={checked === false}
+              value={`${checked === false}`}
               placeholder={placeholder}
               checked={checked === false}
               onChange={(e: any) => {

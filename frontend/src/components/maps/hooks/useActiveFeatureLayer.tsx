@@ -3,17 +3,19 @@ import { GeoJsonObject } from 'geojson';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { GeoJSON, geoJSON, LatLng, Map as LeafletMap } from 'leaflet';
 import { useState } from 'react';
-import { Map as ReactLeafletMap, MapProps as LeafletMapProps } from 'react-leaflet';
 import { useAppSelector } from 'store';
 
-import { parcelLayerPopupConfig, useLayerQuery } from '../leaflet/LayerPopup';
-import { useBoundaryLayer } from '../leaflet/LayerPopup/hooks/useBoundaryLayer';
+import {
+  parcelLayerPopupConfig,
+  PARCELS_PUBLIC_LAYER_URL,
+  useLayerQuery,
+} from '../leaflet/LayerPopup';
 import { LayerPopupInformation } from '../leaflet/Map';
 import { PointFeature } from '../types';
 
 interface IUseActiveParcelMapLayer {
   /** the current leaflet map reference. This hook will add layers to this map reference. */
-  mapRef: React.RefObject<ReactLeafletMap<LeafletMapProps, LeafletMap>>;
+  mapRef: React.RefObject<LeafletMap>;
   /** The currently selected property on the map */
   selectedProperty?: IPropertyDetail | null;
   /** the currently displayed layer popup information */
@@ -36,11 +38,10 @@ const useActiveFeatureLayer = ({
   parcelLayerFeature,
 }: IUseActiveParcelMapLayer) => {
   const [activeFeatureLayer, setActiveFeatureLayer] = useState<GeoJSON>();
-  const layerUrl = useBoundaryLayer();
-  const parcelsService = useLayerQuery(layerUrl);
+  const parcelsService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
   const draftProperties: PointFeature[] = useAppSelector(store => store.parcel.draftProperties);
   if (!!mapRef.current && !activeFeatureLayer) {
-    setActiveFeatureLayer(geoJSON().addTo(mapRef.current.leafletElement));
+    setActiveFeatureLayer(geoJSON().addTo(mapRef.current));
   }
   /**
    * if the layerPopup is currently being displayed, set the active feature to be the data displayed by the layerPopup.
@@ -69,7 +70,7 @@ const useActiveFeatureLayer = ({
           .getBounds()
           .getCenter();
 
-        mapRef.current?.leafletElement.panTo(latLng);
+        mapRef.current?.panTo(latLng);
         setLayerPopup({
           title: 'Parcel Information',
           data: (parcelLayerFeature as any).properties,

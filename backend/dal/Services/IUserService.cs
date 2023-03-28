@@ -10,8 +10,13 @@ namespace Pims.Dal.Services
     public interface IUserService : IService
     {
         bool UserExists(Guid KeycloakUserId);
+        bool UserExists(string username);
+        User GetUserForUsername(string username);
+        User GetUserForKeycloakId(Guid keycloakUserId);
         User Activate();
         IEnumerable<int> GetAgencies(Guid userId);
+        IEnumerable<int> GetAgencies(string username);
+        IEnumerable<int> GetUsersAgencies(Guid id);
         AccessRequest GetAccessRequest();
         AccessRequest GetAccessRequest(int id);
         AccessRequest DeleteAccessRequest(AccessRequest accessRequest);

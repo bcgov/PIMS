@@ -38,7 +38,7 @@ exports[`header renders correctly 1`] = `
     />
   </span>
   <div
-    className="title mr-auto navbar-nav"
+    className="title navbar-nav"
     onKeyDown={[Function]}
   >
     <div
@@ -46,8 +46,13 @@ exports[`header renders correctly 1`] = `
     >
       <h1
         className="longAppName"
+        style={
+          Object {
+            "marginRight": "420px",
+          }
+        }
       >
-        Property Inventory Management System
+        PIMS - Local Development
       </h1>
       <h1
         className="shortAppName"

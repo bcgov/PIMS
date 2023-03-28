@@ -1,4 +1,3 @@
-export * from './createKeycloakInstance';
 export * from './formatAddress';
 export * from './fromQueryString';
 export * from './mapLookupCode';

@@ -9,7 +9,7 @@ import _ from 'lodash';
 import queryString from 'query-string';
 import React, { useEffect, useRef } from 'react';
 import { Container, Spinner } from 'react-bootstrap';
-import { match as Match, Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'store';
 
 import { clearProject, SresManual, updateWorkflowStatus, useStepForm } from '../common';
@@ -19,8 +19,9 @@ import { GeneratedDisposeStepper, StepActions, useStepper } from '.';
  * Top level component facilitates 'wizard' style multi-step form for disposing of projects.
  * @param param0 default react router props
  */
-const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Location }) => {
-  const history = useHistory();
+const ProjectDisposeLayout = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const formikRef = useRef<FormikValues>();
   const {
@@ -37,9 +38,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     noFetchingProjectRequests,
     getProjectRequest,
   } = useStepForm();
-  const query = location?.search ?? {};
-  const projectNumber = queryString.parse(query).projectNumber;
-  const historyReplace = history.replace;
+  const projectNumber = queryString.parse(location?.search).projectNumber;
 
   const updateProjectStatus = (
     project: IProject,
@@ -56,9 +55,9 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
         .then((project: IProject) => {
           if (goToNextStep(project) === undefined) {
             if (project.statusCode === 'AS-EXE') {
-              history.push('/project/exemption/submitted');
+              navigate('/project/exemption/submitted', { replace: true });
             } else {
-              history.push('/project/submitted');
+              navigate('/project/submitted', { replace: true });
             }
           }
           return project;
@@ -81,6 +80,12 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     formikRef.current?.submitForm().then(() => {
       const values = formikRef?.current?.values;
       const errors = formikRef?.current?.errors;
+
+      // Scroll to required fields
+      const firstRequiredInputName = Object.keys(errors)[0];
+      const element = document.querySelector(`input[name='${firstRequiredInputName}']`);
+      if (element) element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
       // do not go to the next step if the form has validation errors.
       if (errors === undefined || !Object.keys(errors).length) {
         let nextStepCode = getNextStep(currentStatus)?.code;
@@ -106,7 +111,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
   };
 
   const getComponentPath = (wfc: IProjectWorkflowComponent) => {
-    return `${match.url}${_.find(workflowStatuses, { code: wfc.workflowStatus })?.route}`;
+    return `/dispose${_.find(workflowStatuses, { code: wfc.workflowStatus })?.route}`;
   };
 
   useEffect(() => {
@@ -114,7 +119,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
     if (setCurrentStatus && noFetchingProjectRequests) setCurrentStatus(statusAtRoute);
   }, [
     location.pathname,
-    historyReplace,
+    navigate,
     workflowStatuses,
     setCurrentStatus,
     project.projectNumber,
@@ -125,9 +130,9 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
   useEffect(() => {
     if (location.pathname === '/dispose' && workflowStatuses?.length > 0) {
       dispatch(clearProject());
-      historyReplace(`/dispose${workflowStatuses[0].route}`);
+      navigate(`/dispose${workflowStatuses[0].route}`);
     }
-  }, [historyReplace, workflowStatuses, location.pathname, dispatch, projectNumber]);
+  }, [navigate, workflowStatuses, location.pathname, dispatch, projectNumber]);
 
   return (
     <>
@@ -138,30 +143,24 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
           {currentStatus !== undefined ? (
             <GeneratedDisposeStepper
               activeStep={currentStatus?.sortOrder ?? 0}
-              basePath={match.url}
+              basePath="/dispose"
             />
           ) : null}
           {getProjectRequest?.isFetching !== true ? (
             <Container fluid className="step-content">
-              <Switch>
-                {projectWorkflowComponents.map(wfc => (
-                  <Route
-                    key={wfc.workflowStatus.toString()}
-                    path={getComponentPath(wfc)}
-                    render={() => <wfc.component formikRef={formikRef} />}
-                  />
-                ))}
-                <Route
-                  exact
-                  path="/dispose"
-                  component={() => <Redirect to="/dispose/projects/draft" />}
-                />
-                <Route
-                  exact
-                  path="/dispose/*"
-                  component={() => <Redirect to="/page-not-found" />}
-                />
-              </Switch>
+              {projectWorkflowComponents.map(wfc =>
+                getComponentPath(wfc) === window.location.pathname ? (
+                  <div key={wfc.workflowStatus}>
+                    <>
+                      <wfc.component formikRef={formikRef} />
+                      {/* Scroll to the top of the page every time the current step of the form changes */}
+                      {document.querySelector('.ProjectDisposeView')?.scrollTo?.(0, 0)}
+                    </>
+                  </div>
+                ) : (
+                  ''
+                ),
+              )}
               <StepActions
                 getNextStep={getNextStep}
                 onSave={() => onSave(formikRef)}
@@ -172,7 +171,7 @@ const ProjectDisposeLayout = ({ match, location }: { match: Match; location: Loc
             </Container>
           ) : (
             <Container fluid style={{ textAlign: 'center' }}>
-              <Spinner animation="border"></Spinner>
+              <Spinner className="loading-spinner" animation="border"></Spinner>
             </Container>
           )}
         </Container>
