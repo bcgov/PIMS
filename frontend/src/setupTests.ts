@@ -1,4 +1,5 @@
 import matchers, { TestingLibraryMatchers } from '@testing-library/jest-dom/matchers';
+import { vi } from 'vitest';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -10,6 +11,9 @@ declare global {
 }
 
 expect.extend(matchers);
+
+// Mock window.snowplow
+window.snowplow = vi.fn();
 
 const localStorageMock = (() => {
   let store: any = {};

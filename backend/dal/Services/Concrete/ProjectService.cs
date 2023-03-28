@@ -88,6 +88,35 @@ namespace Pims.Dal.Services
             return new Paged<Project>(items, filter.Page, filter.Quantity, total);
         }
 
+ /// <summary>
+        /// Get an Excel page with an array of projects within the specified filters.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <exception cref="ArgumentNullException">Argument 'project' is required.</exception>
+        /// <exception cref="NotAuthorizedException">User does not have permission to view projects.</exception>
+        /// <returns></returns>
+        
+public Paged<Project> GetExcelPage(ProjectFilter filter)
+        {
+            filter.ThrowIfNull(nameof(filter));
+            this.User.ThrowIfNotAuthorized(Permissions.ProjectView);
+            if (!filter.IsValid()) throw new ArgumentException("Argument must have a valid filter", nameof(filter));
+
+            var query = this.Context.GenerateExcelQuery(this.User, filter, _options.Project);
+            var total = query.Count();
+            var items = query
+                .Skip((filter.Page - 1) * filter.Quantity)
+                .Take(filter.Quantity)
+                .ToArray();
+
+            if (filter.ReportId != null)
+            {
+                var report = this.Context.ProjectReports.FirstOrDefault(r => r.Id == filter.ReportId);
+                items.ForEach(p => p.Snapshots.RemoveAll(s => s.SnapshotOn != report?.To));
+            }
+
+            return new Paged<Project>(items, filter.Page, filter.Quantity, total);
+        }
         /// <summary>
         /// Get the project for the specified 'id'.
         /// Will not return sensitive properties unless the user has the `sensitive-view` claim and belongs to the owning agency.

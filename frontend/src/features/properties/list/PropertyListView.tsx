@@ -124,8 +124,9 @@ export const flattenParcel = (apiProperty: IParcel): IProperty => {
     classification: apiProperty.classification ?? '',
     classificationId: apiProperty.classificationId,
     addressId: apiProperty.address?.id as number,
-    address: `${apiProperty.address?.line1 ?? ''} , ${apiProperty.address?.administrativeArea ??
-      ''}`,
+    address: `${apiProperty.address?.line1 ?? ''} , ${
+      apiProperty.address?.administrativeArea ?? ''
+    }`,
     administrativeArea: apiProperty.address?.administrativeArea ?? '',
     province: apiProperty.address?.province ?? '',
     postal: apiProperty.address?.postal ?? '',
@@ -167,8 +168,9 @@ export const flattenBuilding = (apiProperty: IBuilding): IProperty => {
     classification: apiProperty.classification ?? '',
     classificationId: apiProperty.classificationId,
     addressId: apiProperty.address?.id as number,
-    address: `${apiProperty.address?.line1 ?? ''} , ${apiProperty.address?.administrativeArea ??
-      ''}`,
+    address: `${apiProperty.address?.line1 ?? ''} , ${
+      apiProperty.address?.administrativeArea ?? ''
+    }`,
     administrativeArea: apiProperty.address?.administrativeArea ?? '',
     province: apiProperty.address?.province ?? '',
     postal: apiProperty.address?.postal ?? '',
@@ -267,7 +269,7 @@ const DirtyRowsTracker: React.FC<{ setDirtyRows: (changes: IChangedRow[]) => voi
 
   React.useEffect(() => {
     if (!!touched && !isEmpty(touched) && !isSubmitting) {
-      const changed = Object.keys(getIn(touched, 'properties')).map(key => ({
+      const changed = Object.keys(getIn(touched, 'properties')).map((key) => ({
         rowId: Number(key),
         ...getIn(touched, 'properties')[key],
       }));
@@ -294,18 +296,19 @@ const PropertyListView: React.FC = () => {
   );
   const agencies = useMemo(() => lookupCodes.getByType(API.AGENCY_CODE_SET_NAME), [lookupCodes]);
 
-  const agenciesList = agencies.filter(a => !a.parentId).map(mapLookupCode);
-  const subAgencies = agencies.filter(a => !!a.parentId).map(mapLookupCode);
+  const agenciesList = agencies.filter((a) => !a.parentId).map(mapLookupCode);
+  const subAgencies = agencies.filter((a) => !!a.parentId).map(mapLookupCode);
 
-  const propertyClassifications = useMemo(() => lookupCodes.getPropertyClassificationOptions(), [
-    lookupCodes,
-  ]);
+  const propertyClassifications = useMemo(
+    () => lookupCodes.getPropertyClassificationOptions(),
+    [lookupCodes],
+  );
   const administrativeAreas = useMemo(
     () => lookupCodes.getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME),
     [lookupCodes],
   );
 
-  const agencyIds = useMemo(() => agencies.map(x => parseInt(x.id, 10)), [agencies]);
+  const agencyIds = useMemo(() => agencies.map((x) => parseInt(x.id, 10)), [agencies]);
   const [sorting, setSorting] = useState<TableSort<IProperty>>({ description: 'asc' });
 
   // We'll start our table without any data
@@ -476,7 +479,7 @@ const PropertyListView: React.FC = () => {
   const loadBuildings = async (expandedRows: IProperty[]) => {
     if (expandedRows.length > 0) {
       await Promise.all(
-        expandedRows.map(async property => {
+        expandedRows.map(async (property) => {
           if (property.propertyTypeId === 0) {
             if (expandData[property.id] === undefined) {
               setExpandData({
@@ -493,7 +496,7 @@ const PropertyListView: React.FC = () => {
   const changePropertyType = (type: PropertyTypeNames) => {
     setPropertyType(type);
     setPageIndex(0);
-    setFilter(state => {
+    setFilter((state) => {
       return {
         ...state,
         propertyType: type,
@@ -506,10 +509,23 @@ const PropertyListView: React.FC = () => {
     const agencySelections = agencies.map(mapLookupCode);
     appliedFilter.agencies = filter.agencies
       .split(',')
-      .map(value => agencySelections.find(agency => agency.value === value) || '') as any;
+      .map((value) => agencySelections.find((agency) => agency.value === value) || '') as any;
   }
 
   const onRowClick = useCallback((row: IProperty) => {
+    // Track row click in Snowplow Analytics.
+    window.snowplow('trackSelfDescribingEvent', {
+      schema: 'iglu:ca.bc.gov.pims/listing_click/jsonschema/1-0-0',
+      data: {
+        view: 'property_inventory',
+        property_name: row.name ?? '',
+        pid: row.pid ?? '',
+        pin: row.pin ?? '',
+        agency: row.subAgency ?? row.agency ?? '',
+        classification: row.classification ?? '',
+      },
+    });
+
     navigate(
       `/mapview?${queryString.stringify({
         sidebar: true,
@@ -532,21 +548,21 @@ const PropertyListView: React.FC = () => {
     const editableColumnKeys = ['assessedLand', 'assessedBuilding', 'netBook'];
 
     const changedRows = dirtyRows
-      .map(change => {
+      .map((change) => {
         const data = { ...values.properties![change.rowId] };
         return { data, ...change } as any;
       })
-      .filter(c => intersection(keys(c), editableColumnKeys).length > 0);
+      .filter((c) => intersection(keys(c), editableColumnKeys).length > 0);
 
     let errors: any[] = fill(range(nextProperties.length), undefined);
     let touched: any[] = fill(range(nextProperties.length), undefined);
     if (changedRows.length > 0) {
-      const changedRowIds = changedRows.map(x => x.rowId);
+      const changedRowIds = changedRows.map((x) => x.rowId);
       // Manually validate the table form
       const currentErrors = await actions.validateForm();
       const errorRowIds = keys(currentErrors.properties)
         .map(Number)
-        .filter(i => !!currentErrors.properties![i]);
+        .filter((i) => !!currentErrors.properties![i]);
       const foundRowErrorsIndexes = intersection(changedRowIds, errorRowIds);
       if (foundRowErrorsIndexes.length > 0) {
         for (const index of foundRowErrorsIndexes) {
@@ -583,8 +599,9 @@ const PropertyListView: React.FC = () => {
 
             touched[change.rowId] = pick(change, ['assessedLand', 'netBook']);
             toast.error(
-              `Failed to save changes for ${apiProperty.name ||
-                apiProperty.address?.line1}. ${errorMessage}`,
+              `Failed to save changes for ${
+                apiProperty.name || apiProperty.address?.line1
+              }. ${errorMessage}`,
             );
             errors[change.rowId] = {
               assessedLand: change.assessedland && (errorMessage || 'Save request failed.'),
@@ -595,7 +612,7 @@ const PropertyListView: React.FC = () => {
       }
 
       setDirtyRows([]);
-      if (!errors.find(x => !!x)) {
+      if (!errors.find((x) => !!x)) {
         actions.setTouched({ properties: [] });
         setData(nextProperties);
         actions.resetForm({ values: { properties: nextProperties } });
@@ -762,7 +779,7 @@ const PropertyListView: React.FC = () => {
             }
           }}
           detailsPanel={{
-            render: val => {
+            render: (val) => {
               if (expandData[val.id]) {
                 return (
                   <Buildings
@@ -778,12 +795,12 @@ const PropertyListView: React.FC = () => {
               open: <FaFolderOpen color="black" size={20} />,
               closed: <FaFolder color="black" size={20} />,
             },
-            checkExpanded: (row, state) => !!state.find(x => checkExpanded(x, row)),
+            checkExpanded: (row, state) => !!state.find((x) => checkExpanded(x, row)),
             onExpand: loadBuildings,
-            getRowId: row => row.id,
+            getRowId: (row) => row.id,
           }}
           filter={appliedFilter}
-          onFilterChange={values => {
+          onFilterChange={(values) => {
             setFilter({ ...filter, ...values });
           }}
           renderBodyComponent={({ body }) => (
