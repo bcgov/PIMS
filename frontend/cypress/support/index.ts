@@ -2,7 +2,7 @@
 
 declare namespace Cypress {
   interface Chainable {
-    kcLogin(user: string): Chainable<Element>;
+    kcLogin(): Chainable<Element>;
     kcLogout(): Chainable<any>;
   }
 }
