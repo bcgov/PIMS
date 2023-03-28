@@ -432,8 +432,9 @@ namespace Pims.Dal.Helpers.Extensions
             var PIDs = "";
             foreach (var parcel in parcels)
             {
-                PIDs = PIDs + parcel.PID + ", ";
+                PIDs = PIDs + $"{parcel.PID: 000-000-000}" + ", ";
             }
+
             return PIDs.Length > 0 ? PIDs.Substring(0, (PIDs.Length) - 2) : "";
         }
 
