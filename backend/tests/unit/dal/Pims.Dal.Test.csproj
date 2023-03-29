@@ -1,18 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <ProjectGuid>412BF533-2759-4FBE-B4C6-B89DB44FB6B5</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.NetTopologySuite" Version="5.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.NetTopologySuite" Version="7.0.4" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
     <PackageReference Include="Moq" Version="4.16.1" />
-    <PackageReference Include="NetTopologySuite" Version="2.2.0" />
+    <PackageReference Include="NetTopologySuite" Version="2.5.0" />
     <PackageReference Include="NExpect" Version="1.0.212" />
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
     <PackageReference Include="xunit" Version="2.4.1" />
