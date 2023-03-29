@@ -73,6 +73,7 @@ exports[`AppNavBar AppNavBar snapshot test. 1`] = `
                     >
                       <div
                         class="home-button nav-item"
+                        data-testid="navbar-home-btn"
                       >
                         <svg
                           fill="currentColor"
@@ -121,10 +122,12 @@ exports[`AppNavBar AppNavBar snapshot test. 1`] = `
                     >
                       <NavItem
                         className="home-button"
+                        data-testid="navbar-home-btn"
                         onClick={[Function]}
                       >
                         <div
                           className="home-button nav-item"
+                          data-testid="navbar-home-btn"
                           onClick={[Function]}
                         >
                           <FaHome

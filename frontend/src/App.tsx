@@ -10,6 +10,7 @@ import PublicLayout from 'layouts/PublicLayout';
 import OnLoadActions from 'OnLoadActions';
 import React, { useEffect } from 'react';
 import { Col } from 'react-bootstrap';
+import { useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { useAppDispatch } from 'store';
 import { getFetchLookupCodeAction } from 'store/slices/hooks/lookupCodeActionCreator';
@@ -19,6 +20,13 @@ const App = () => {
   const keycloakWrapper: IKeycloak = useKeycloakWrapper();
   const keycloak: KeycloakInstance = keycloakWrapper.obj;
   const dispatch = useAppDispatch();
+  const location = useLocation();
+
+  useEffect(() => {
+    // Track page view in Snowplow Analytics.
+    // @ts-ignore
+    window.snowplow('trackPageView');
+  }, [location.pathname]);
 
   useEffect(() => {
     if (keycloak?.authenticated) {

@@ -40,7 +40,7 @@ namespace Pims.Core.Test
             {
                 Id = id,
                 Name = name,
-                To = toDate,
+                To = DateTime.UtcNow.Date,
                 From = fromDate,
                 IsFinal = isFinal,
                 ReportType = 0,
