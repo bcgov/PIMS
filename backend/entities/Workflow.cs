@@ -42,6 +42,7 @@ namespace Pims.Dal.Entities
             if (String.IsNullOrWhiteSpace(code)) throw new ArgumentException("Argument cannot be null, empty or whitespace.", nameof(code));
             this.Name = name;
             this.Code = code;
+            this.Description = "";
         }
         #endregion
     }
