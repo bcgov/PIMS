@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { Alert, Toast } from 'react-bootstrap';
 import styled from 'styled-components';
 
@@ -22,6 +22,19 @@ interface ISnackbar extends ISnackbarState {
 }
 
 export const Snackbar: React.FC<ISnackbar> = ({ onClose, message, show, variant }) => {
+  useEffect(() => {
+    // Send data to Snowplow.
+    if (variant === 'danger') {
+      window.snowplow('trackSelfDescribingEvent', {
+        schema: 'iglu:ca.bc.gov.pims/error/jsonschema/1-0-0',
+        data: {
+          error_message: `Snackbar Error: ${message}`,
+        },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <ToastContainer show={show} delay={5000} autohide={true} onClose={onClose}>
       {show && <AlertMessage variant={variant}>{message}</AlertMessage>}
