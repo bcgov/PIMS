@@ -91,7 +91,7 @@ namespace Pims.Api
             services.AddSerilogging(this.Configuration);
             var jsonSerializerOptions = new JsonSerializerOptions()
             {
-                IgnoreNullValues = !String.IsNullOrWhiteSpace(this.Configuration["Serialization:Json:IgnoreNullValues"]) && Boolean.Parse(this.Configuration["Serialization:Json:IgnoreNullValues"]),
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 PropertyNameCaseInsensitive = !String.IsNullOrWhiteSpace(this.Configuration["Serialization:Json:PropertyNameCaseInsensitive"]) && Boolean.Parse(this.Configuration["Serialization:Json:PropertyNameCaseInsensitive"]),
                 PropertyNamingPolicy = this.Configuration["Serialization:Json:PropertyNamingPolicy"] == "CamelCase" ? JsonNamingPolicy.CamelCase : null,
                 WriteIndented = !string.IsNullOrWhiteSpace(this.Configuration["Serialization:Json:WriteIndented"]) && Boolean.Parse(this.Configuration["Serialization:Json:WriteIndented"])
@@ -109,7 +109,7 @@ namespace Pims.Api
             });
             services.Configure<JsonSerializerOptions>(options =>
             {
-                options.IgnoreNullValues = jsonSerializerOptions.IgnoreNullValues;
+                options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
                 options.PropertyNameCaseInsensitive = jsonSerializerOptions.PropertyNameCaseInsensitive;
                 options.PropertyNamingPolicy = jsonSerializerOptions.PropertyNamingPolicy;
                 options.WriteIndented = jsonSerializerOptions.WriteIndented;
@@ -125,7 +125,7 @@ namespace Pims.Api
             services.AddControllers()
                 .AddJsonOptions(options =>
                 {
-                    options.JsonSerializerOptions.IgnoreNullValues = jsonSerializerOptions.IgnoreNullValues;
+                    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
                     options.JsonSerializerOptions.PropertyNameCaseInsensitive = jsonSerializerOptions.PropertyNameCaseInsensitive;
                     options.JsonSerializerOptions.PropertyNamingPolicy = jsonSerializerOptions.PropertyNamingPolicy;
                     options.JsonSerializerOptions.WriteIndented = jsonSerializerOptions.WriteIndented;
@@ -137,7 +137,7 @@ namespace Pims.Api
             services.AddMvcCore()
                 .AddJsonOptions(options =>
                 {
-                    options.JsonSerializerOptions.IgnoreNullValues = jsonSerializerOptions.IgnoreNullValues;
+                    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
                     options.JsonSerializerOptions.PropertyNameCaseInsensitive = jsonSerializerOptions.PropertyNameCaseInsensitive;
                     options.JsonSerializerOptions.PropertyNamingPolicy = jsonSerializerOptions.PropertyNamingPolicy;
                     options.JsonSerializerOptions.WriteIndented = jsonSerializerOptions.WriteIndented;

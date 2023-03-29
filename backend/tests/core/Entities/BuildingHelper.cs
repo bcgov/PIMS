@@ -147,6 +147,7 @@ namespace Pims.Core.Test
                 BuildingConstructionTypeId = constructionType.Id,
                 BuildingOccupantType = occupantType,
                 BuildingOccupantTypeId = occupantType.Id,
+                BuildingTenancy = "full",
                 CreatedById = Guid.NewGuid(),
                 CreatedOn = DateTime.UtcNow,
                 UpdatedById = Guid.NewGuid(),
