@@ -34,19 +34,17 @@ const sha256 = async plain => {
   return hashHex;
 };
 
-interface UserData {
-  username: string;
-  password: string;
-}
-
-Cypress.Commands.add('kcLogin', (user: string) => {
+Cypress.Commands.add('kcLogin', () => {
   Cypress.log({ name: 'Login' });
 
-  cy.fixture(`users/${user}`).then(async (userData: UserData) => {
+  cy.log('Keyloak Login').then(async () => {
     const authBaseUrl = Cypress.env('auth_base_url');
     const realm = Cypress.env('auth_realm');
     const client_id = Cypress.env('auth_client_id');
     const redirect_uri = Cypress.config('baseUrl') + '/login';
+
+    const username = Cypress.env('keycloak_user');
+    const password = Cypress.env('keycloak_password');
 
     const scope = 'openid';
     const state = '123456';
@@ -86,9 +84,9 @@ Cypress.Commands.add('kcLogin', (user: string) => {
       // Log in the user and obtain an authorization code.
       cy.contains('idir').click();
       cy.get('[name="user"]').click();
-      cy.get('[name="user"]').type(userData.username);
+      cy.get('[name="user"]').type(username);
       cy.get('[name="password"]').click();
-      cy.get('[name="password"]').type(userData.password);
+      cy.get('[name="password"]').type(password);
       cy.get('[name="btnSubmit"]').click();
 
       cy.wait(10000);
