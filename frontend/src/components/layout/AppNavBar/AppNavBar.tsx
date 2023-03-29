@@ -20,7 +20,11 @@ function AppNavBar() {
       <Navbar.Toggle aria-controls="collapse" className="navbar-dark mr-auto" />
       <Navbar.Collapse className="links mr-auto">
         <Nav>
-          <Nav.Item className="home-button" onClick={() => navigate('/mapview')}>
+          <Nav.Item
+            className="home-button"
+            data-testid="navbar-home-btn"
+            onClick={() => navigate('/mapview')}
+          >
             <FaHome size={20} />
           </Nav.Item>
           <AdminDropdown />
@@ -50,6 +54,7 @@ function SubmitProperty() {
           ? 'active'
           : 'idle'
       }
+      data-testid="navbar-submit-property"
       onClick={() =>
         navigate({
           pathname: '/mapview',
@@ -83,6 +88,7 @@ function ViewInventory() {
     <Nav.Link
       className={location.pathname.includes('properties/list') ? 'active' : 'idle'}
       onClick={() => navigate('/properties/list')}
+      data-testid="navbar-view-inventory"
     >
       View Property Inventory
     </Nav.Link>
@@ -101,13 +107,27 @@ function AdminDropdown() {
       className={location.pathname.includes('admin') ? 'active' : 'idle'}
       title="Administration"
       id="administration"
+      data-testid="navbar-admin-dropdown"
     >
-      <NavDropdown.Item onClick={() => navigate('/admin/users')}>Users</NavDropdown.Item>
-      <NavDropdown.Item onClick={() => navigate('/admin/access/requests')}>
+      <NavDropdown.Item data-testid="navbar-admin-users" onClick={() => navigate('/admin/users')}>
+        Users
+      </NavDropdown.Item>
+      <NavDropdown.Item
+        data-testid="navbar-admin-access-requests"
+        onClick={() => navigate('/admin/access/requests')}
+      >
         Access Requests
       </NavDropdown.Item>
-      <NavDropdown.Item onClick={() => navigate('/admin/agencies')}>Agencies</NavDropdown.Item>
-      <NavDropdown.Item onClick={() => navigate('/admin/administrativeAreas')}>
+      <NavDropdown.Item
+        data-testid="navbar-admin-agencies"
+        onClick={() => navigate('/admin/agencies')}
+      >
+        Agencies
+      </NavDropdown.Item>
+      <NavDropdown.Item
+        data-testid="navbar-admin-administrative-areas"
+        onClick={() => navigate('/admin/administrativeAreas')}
+      >
         Administrative Areas
       </NavDropdown.Item>
     </NavDropdown>
@@ -132,24 +152,37 @@ function DisposeProjectsDropdown() {
       }
       title="Disposal Projects"
       id="dispose"
+      data-testid="navbar-disposal-projects-dropdown"
     >
       {(keycloak.hasClaim(Claims.PROJECT_ADD) || keycloak.hasClaim(Claims.ADMIN_PROJECTS)) && (
-        <NavDropdown.Item onClick={() => navigate('/dispose')}>
+        <NavDropdown.Item
+          data-testid="navbar-disposal-projects-create"
+          onClick={() => navigate('/dispose')}
+        >
           Create Disposal Project
         </NavDropdown.Item>
       )}
       {(keycloak.hasClaim(Claims.PROJECT_VIEW) || keycloak.hasClaim(Claims.ADMIN_PROJECTS)) && (
-        <NavDropdown.Item onClick={() => navigate('/projects/list')}>
+        <NavDropdown.Item
+          data-testid="navbar-disposal-projects-view"
+          onClick={() => navigate('/projects/list')}
+        >
           View Projects
         </NavDropdown.Item>
       )}
       {(keycloak.hasClaim(Claims.PROJECT_VIEW) || keycloak.hasClaim(Claims.ADMIN_PROJECTS)) && (
-        <NavDropdown.Item onClick={() => navigate('/projects/spl')}>
+        <NavDropdown.Item
+          data-testid="navbar-disposal-projects-view-spl"
+          onClick={() => navigate('/projects/spl')}
+        >
           View SPL Projects
         </NavDropdown.Item>
       )}
       {keycloak.hasClaim(Claims.DISPOSE_APPROVE) && (
-        <NavDropdown.Item onClick={() => navigate('/projects/approval/requests')}>
+        <NavDropdown.Item
+          data-testid="navbar-disposal-projects-approval-requests"
+          onClick={() => navigate('/projects/approval/requests')}
+        >
           Approval Requests
         </NavDropdown.Item>
       )}
@@ -169,9 +202,12 @@ function ReportsDropdown() {
       className={location.pathname.includes('reports') ? 'active' : 'idle'}
       title="Reports"
       id="reports"
+      data-testid="navbar-reports-dropdown"
     >
       {keycloak.hasClaim(Claims.REPORTS_SPL) && (
-        <NavDropdown.Item onClick={() => navigate('/reports/spl')}>SPL Report</NavDropdown.Item>
+        <NavDropdown.Item data-testid="navbar-spl-reports" onClick={() => navigate('/reports/spl')}>
+          SPL Report
+        </NavDropdown.Item>
       )}
     </NavDropdown>
   ) : null;

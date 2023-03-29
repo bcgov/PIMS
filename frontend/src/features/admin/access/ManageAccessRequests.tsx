@@ -68,7 +68,7 @@ const ManageAccessRequests = () => {
   };
 
   return (
-    <div className="manage-access-requests">
+    <div className="manage-access-requests" data-testid="admin-access-requests-page">
       <div className="ScrollContainer">
         <Container fluid className="TableToolbar">
           <span className="title mr-auto">PIMS Guests (Pending Approval)</span>

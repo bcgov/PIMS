@@ -288,7 +288,17 @@ export const ProjectListView: React.FC<IProps> = ({
   }, []);
 
   return (
-    <Container fluid className="ProjectListView">
+    <Container
+      fluid
+      className="ProjectListView"
+      data-testid={
+        title.includes('SPL Projects')
+          ? 'disposal-projects-spl-project-list-view'
+          : title.includes('Approval Requests')
+          ? 'disposal-projects-project-approval-request-list-view'
+          : 'disposal-projects-project-list-view'
+      }
+    >
       <div className="filter-container">
         {filterable && (
           <FilterBar<IProjectFilterState> initialValues={filter} onChange={handleFilterChange}>
