@@ -1,6 +1,6 @@
 import variables from '_variables.module.scss';
 import { ExemptionRequest } from 'features/projects/dispose';
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { IProjectTask, IStepProps } from '../../interfaces';
@@ -23,6 +23,11 @@ const EmailText = styled.div`
  * @param param0 isReadOnly disable editing
  */
 const DocumentationForm = ({ isReadOnly, tasks, showNote = false }: IDocumentationFormProps) => {
+  useEffect(() => {
+    // Track <a/> tag clicks in Snowplow Analytics.
+    window.snowplow('refreshLinkClickTracking');
+  }, []);
+
   return (
     <Fragment>
       <h3>Documentation</h3>

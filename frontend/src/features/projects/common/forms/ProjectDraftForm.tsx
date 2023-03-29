@@ -74,7 +74,7 @@ const ProjectDraftForm = ({
   const myAgencies = useMyAgencies();
 
   return (
-    <Container fluid className="ProjectDraftForm">
+    <Container fluid className="ProjectDraftForm" data-testid="disposal-projects-draft-form">
       <Row>
         <h3 className="col-md-8">{title ?? 'Review'}</h3>
         <span className="col-md-4">

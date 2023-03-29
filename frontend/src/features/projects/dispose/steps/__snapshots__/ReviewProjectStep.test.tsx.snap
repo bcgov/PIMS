@@ -18,6 +18,7 @@ exports[`renders correctly 1`] = `
   >
     <div
       className="ProjectDraftForm container-fluid"
+      data-testid="disposal-projects-draft-form"
     >
       <div
         className="row"

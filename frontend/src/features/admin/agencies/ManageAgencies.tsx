@@ -82,7 +82,7 @@ const ManageAgencies: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <Container fluid className="ManageAgencies">
+    <Container fluid className="ManageAgencies" data-testid="admin-agencies-page">
       <Container fluid className="agency-toolbar">
         <AgencyFilterBar
           value={{ ...initialValues }}
