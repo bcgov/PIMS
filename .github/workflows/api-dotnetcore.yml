@@ -97,9 +97,9 @@ jobs:
           # Specify whether or not CI build should fail if Codecov runs into an error during upload
           fail_ci_if_error: true
 
-      - name: SonarScanner for .NET 5 with pull request decoration support
+      - name: SonarScanner for .NET 6 with pull request decoration support
         id: scan
-        uses: highbyte/sonarscan-dotnet@2.0
+        uses: highbyte/sonarscan-dotnet@2.1.3
         if: github.event_name == 'push'
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
