@@ -2,6 +2,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0
 
 ENV DOTNET_CLI_HOME=/tmp
+ENV XDG_DATA_HOME=/tmp
 ENV PATH="$PATH:/tmp/.dotnet/tools"
 
 # Switch to root for package installs
