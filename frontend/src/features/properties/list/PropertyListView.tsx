@@ -623,7 +623,7 @@ const PropertyListView: React.FC = () => {
   };
 
   return (
-    <Container fluid className="PropertyListView">
+    <Container fluid className="PropertyListView" data-testid="property-list-view">
       <Container fluid className="filter-container border-bottom">
         <Container className="px-0">
           <PropertyFilter
