@@ -39,7 +39,7 @@ namespace Pims.Dal.Configuration.Views
                 // This is required to support unit-testing the view in the InMemory database.
                 builder
                     .HasNoKey()
-                    .ToQuery(() => (
+                    .ToInMemoryQuery(() => (
                         from b in this.Context.Buildings
                         select new Entities.Views.Property()
                         {

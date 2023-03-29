@@ -15,7 +15,7 @@ COPY --from=mcr.microsoft.com/dotnet/aspnet:5.0-buster-slim /usr/share/dotnet /u
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends libc6-dev libgdiplus
 
-RUN su vscode -c "dotnet tool install --global dotnet-ef --version 5.0.17"
+RUN su vscode -c "dotnet tool install --global dotnet-ef --version 6.0.15"
 # RUN dotnet tool update --global dotnet-ef
 ENV PATH="$PATH:/home/vscode/.dotnet/tools"
 
