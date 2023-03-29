@@ -33,6 +33,7 @@ exports[`Manage Users Component Snapshot matches 1`] = `
 
 <div
   class="users-management-page"
+  data-testid="admin-users-page"
 >
   <form
     class=""

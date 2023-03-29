@@ -99,7 +99,7 @@ const SubmitPropertySelector: React.FC<ISubmitPropertySelectorProps> = ({
   addSubdivision,
 }) => {
   return (
-    <SidebarContent>
+    <SidebarContent data-testid="submit-property-selector">
       <p>
         This will allow you to submit a property to the PIMS inventory. At any time during this
         process you can read the Inventory Policy by clicking on the icon that looks like this:

@@ -69,6 +69,7 @@ namespace Pims.Dal.Entities
             this.Name = name;
             this.Code = code;
             this.IsMilestone = isMilestone;
+            this.Route = "";
         }
         #endregion
     }
