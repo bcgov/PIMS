@@ -524,6 +524,19 @@ const PropertyListView: React.FC = () => {
   }
 
   const onRowClick = useCallback((row: IProperty) => {
+    // Track row click in Snowplow Analytics.
+    window.snowplow('trackSelfDescribingEvent', {
+      schema: 'iglu:ca.bc.gov.pims/listing_click/jsonschema/1-0-0',
+      data: {
+        view: 'property_inventory',
+        property_name: row.name ?? '',
+        pid: row.pid ?? '',
+        pin: row.pin ?? '',
+        agency: row.subAgency ?? row.agency ?? '',
+        classification: row.classification ?? '',
+      },
+    });
+
     navigate(
       `/mapview?${queryString.stringify({
         sidebar: true,
@@ -624,7 +637,7 @@ const PropertyListView: React.FC = () => {
   };
 
   return (
-    <Container fluid className="PropertyListView">
+    <Container fluid className="PropertyListView" data-testid="property-list-view">
       <Container fluid className="filter-container border-bottom">
         <Container className="px-0">
           <PropertyFilter

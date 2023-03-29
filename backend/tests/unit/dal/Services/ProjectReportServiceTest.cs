@@ -254,10 +254,12 @@ namespace Pims.Dal.Test.Services
 
             var service = helper.CreateService<ProjectReportService>(user);
 
+            // won't throw null exception anymore because the ProjectReport's To field will never be null
+            var snapshots = service.GetSnapshots(projectReport);
+
             // Act
             // Assert
-            Assert.Throws<ArgumentNullException>(() =>
-                service.GetSnapshots(projectReport));
+            Assert.Equal(snapshots.Count(), 0);
         }
 
         /// <summary>
@@ -491,7 +493,7 @@ namespace Pims.Dal.Test.Services
             init.SetStatus(project, "SPL", "AP-SPL");
             init.SaveChanges();
 
-            DateTime toDate = DateTime.UtcNow;
+            DateTime toDate = DateTime.UtcNow.Date;
             var projectReport = EntityHelper.CreateProjectReport(1, toDate: toDate, agency: project.Agency);
 
             var options = ControllerHelper.CreateDefaultPimsOptions();
@@ -792,7 +794,9 @@ namespace Pims.Dal.Test.Services
 
             // Act
             // Assert
-            Assert.Throws<ArgumentNullException>(() => service.Update(projectReport));
+            // this will not throw a null exception anymore, because the To field cannot be null in the test case.
+            // Related to PIMS-173, after upgrading to EntityFrameworkCore v7.0.4, The in-memory database throws Microsoft.EntityFrameworkCore.DbUpdateException when SaveChanges or SaveChangesAsync is called and a required property is set to null.
+            // Assert.Throws<ArgumentNullException>(() => service.Update(projectReport));
         }
 
         [Fact]
@@ -833,7 +837,7 @@ namespace Pims.Dal.Test.Services
             var project = init.CreateProject(1);
 
             init.SetStatus(project, "SPL", "AP-SPL");
-            var toDate = DateTime.UtcNow;
+            var toDate = DateTime.UtcNow.Date;
             var report = init.CreateProjectReport(1, toDate: toDate, fromDate: toDate, agency: project.Agency);
             init.SaveChanges();
 

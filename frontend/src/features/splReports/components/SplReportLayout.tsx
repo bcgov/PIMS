@@ -46,7 +46,7 @@ const SplReportLayout: React.FunctionComponent<React.PropsWithChildren<ISplRepor
   children,
 }) => {
   return (
-    <div className="spl-reports">
+    <div className="spl-reports" data-testid="spl-report-layout">
       <ClickAwayListener onClickAway={() => setShowSidebar(false)}>
         <div className={classNames('side-bar', showSidebar ? 'side-bar-show open' : 'close')}>
           <span>
