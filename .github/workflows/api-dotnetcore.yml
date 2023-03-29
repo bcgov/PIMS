@@ -1,4 +1,4 @@
-name: API (.NET 5.0)
+name: API (.NET 6.0)
 
 on:
   push:
@@ -14,17 +14,17 @@ jobs:
       codeCov-token: ${{ secrets.CodeCov }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Extract Branch Name
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
 
-      - name: Setup .NET 5.0
-        uses: actions/setup-dotnet@v1
+      - name: Setup .NET 6.0
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 5.0.300
+          dotnet-version: 6.0.x
 
       - name: Install dependencies
         run: dotnet restore
@@ -121,7 +121,7 @@ jobs:
         id: fc
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          comment-author: "github-actions[bot]"
+          comment-author: 'github-actions[bot]'
           body-includes: QUALITY GATE STATUS FOR .NET 5
 
       - name: Check Quality Gate and Create Comment
