@@ -278,7 +278,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 // Assumption we'll need to add all tasks from Submit to SPL.
                 var tasks = _service.Task.GetForWorkflow("SUBMIT-DISPOSAL");
                 tasks = tasks.Concat(_service.Task.GetForWorkflow("ASSESS-DISPOSAL"));
-                var distinctTasks = tasks.DistinctBy(t => t.Id).ToArray();
+                var distinctTasks = tasks.GetDistinctBy(t => t.Id).ToArray();
                 project.AddTask(distinctTasks);
                 project.Tasks.ForEach(t =>
                 {
@@ -288,7 +288,7 @@ namespace Pims.Api.Areas.Tools.Helpers
 
                 var erpTasks = _service.Task.GetForWorkflow("ERP");
                 var splTasks = erpTasks.Concat(_service.Task.GetForWorkflow("SPL"));
-                distinctTasks = splTasks.Where(t => !distinctTasks.Any(dt => dt.Id == t.Id)).DistinctBy(t => t.Id).ToArray();
+                distinctTasks = splTasks.Where(t => !distinctTasks.Any(dt => dt.Id == t.Id)).GetDistinctBy(t => t.Id).ToArray();
                 project.AddTask(distinctTasks);
                 project.Tasks.ForEach(t =>
                 {
