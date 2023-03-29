@@ -4,7 +4,7 @@ import { TypeaheadField } from 'components/common/form/Typeahead';
 import * as API from 'constants/API';
 import { getIn, useFormikContext } from 'formik';
 import useCodeLookups from 'hooks/useLookupCodes';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Container, Form, Row } from 'react-bootstrap';
 import styled from 'styled-components';
 import { mapLookupCode } from 'utils';
@@ -94,6 +94,11 @@ const FindMorePropertiesForm = (props: any) => {
       setDisplayError(true);
     }
   };
+
+  useEffect(() => {
+    // Track <a/> tag clicks in Snowplow Analytics.
+    window.snowplow('refreshLinkClickTracking');
+  }, []);
 
   return (
     <>
