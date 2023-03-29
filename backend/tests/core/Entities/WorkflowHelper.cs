@@ -23,6 +23,7 @@ namespace Pims.Core.Test
         public static Entity.Workflow CreateWorkflow(int id, string name, string code = null, IEnumerable<Entity.ProjectStatus> status = null)
         {
             var workflow = new Entity.Workflow(name, code ?? name) { Id = id, RowVersion = new byte[] { 12, 13, 14 } };
+            workflow.Description = "test workflow";
             if (status?.Any() == true)
             {
                 var i = 1;
