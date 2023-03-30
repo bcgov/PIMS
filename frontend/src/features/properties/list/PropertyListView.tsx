@@ -378,6 +378,20 @@ const PropertyListView: React.FC = () => {
         : [parseInt(data.agencies, 10)];
     }
 
+    // Send data to SnowPlow.
+    window.snowplow('trackSelfDescribingEvent', {
+      schema: 'iglu:ca.bc.gov.pims/search/jsonschema/1-0-0',
+      data: {
+        view: 'property_inventory',
+        agency: data.agencies ?? '',
+        location: data.administrativeArea ?? '',
+        address: data.address ?? '',
+        pid_pin: data.pid ?? '',
+        property_name: data.name ?? '',
+        classification: data.classificationId ?? '',
+      },
+    });
+
     return data;
   }, [filter]);
 
