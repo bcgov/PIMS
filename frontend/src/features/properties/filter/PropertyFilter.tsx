@@ -111,6 +111,25 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
       : values.agencies;
     setPropertyFilter({ ...values, agencies: agencyIds });
     onChange?.({ ...values, agencies: agencyIds });
+
+    // Send data to SnowPlow.
+    if (values.surplusFilter) {
+      window.snowplow('trackSelfDescribingEvent', {
+        schema: 'iglu:ca.bc.gov.pims/search/jsonschema/1-0-0',
+        data: {
+          view: 'surplus_properties',
+          erp_properties: values.inEnhancedReferralProcess ?? false,
+          spl_properties: values.inSurplusPropertyProgram ?? false,
+          location: values.administrativeArea ?? '',
+          project_name_number: values.projectNumber ?? '',
+          lot_min: values.minLotSize ?? '',
+          lot_max: values.maxLotSize ?? '',
+          land_only: values.bareLandOnly ?? false,
+          predominate_use: values.predominateUseId ?? '',
+          net_usable: values.rentableArea ?? '',
+        },
+      });
+    }
   };
 
   const resetFilter = () => {

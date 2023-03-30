@@ -268,6 +268,20 @@ const Map: React.FC<MapProps> = ({
       setChanged(true);
       setTriggerFilterChanged(false);
     }
+
+    // Send data to SnowPlow.
+    window.snowplow('trackSelfDescribingEvent', {
+      schema: 'iglu:ca.bc.gov.pims/search/jsonschema/1-0-0',
+      data: {
+        view: 'map',
+        agency: filter.agencies ?? '',
+        location: filter.administrativeArea ?? '',
+        address: filter.address ?? '',
+        pid_pin: filter.pid ?? '',
+        property_name: filter.name ?? '',
+        classification: filter.classificationId ?? '',
+      },
+    });
   };
 
   const handleBasemapToggle = (e: BasemapToggleEvent) => {

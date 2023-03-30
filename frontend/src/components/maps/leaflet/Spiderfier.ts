@@ -10,7 +10,6 @@ import {
 } from 'leaflet';
 import { cloneDeep } from 'lodash';
 import { AnyProps } from 'supercluster';
-import invariant from 'tiny-invariant';
 
 import { ICluster, PointFeature } from '../types';
 
@@ -61,9 +60,10 @@ export class Spiderfier {
     this.options = { ...defaultOptions, ...options };
     // check required values - throws an error if callbacks are null
     const { getClusterId, getClusterPoints, pointToLayer } = this.options;
-    invariant(getClusterId, 'Must supply getClusterId callback');
-    invariant(getClusterPoints, 'Must supply getClusterPoints callback');
-    invariant(pointToLayer, 'Must supply pointToLayer callback');
+    if (getClusterId === null || undefined) throw new Error('Must supply getClusterId callback');
+    if (getClusterPoints === null || undefined)
+      throw new Error('Must supply getClusterPoints callback');
+    if (pointToLayer === null || undefined) throw new Error('Must supply pointToLayer callback');
   }
 
   // expand a cluster (spiderfy)
