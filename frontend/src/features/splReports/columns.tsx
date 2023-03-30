@@ -103,8 +103,8 @@ export const columns = (agencyOptions: SelectOption[]): any[] => [
     accessor: 'project.status.name',
     align: 'left',
     responsive: true,
-    width: spacing.small,
-    minWidth: 130,
+    width: spacing.large,
+    minWidth: 100,
   },
   {
     Header: 'CMV',
