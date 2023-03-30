@@ -161,6 +161,22 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
     }
   });
 
+  useEffect(() => {
+    // Send data to Snowplow.
+    if (propertyInfo) {
+      window.snowplow('trackSelfDescribingEvent', {
+        schema: 'iglu:ca.bc.gov.pims/listing_click/jsonschema/1-0-0',
+        data: {
+          view: 'map',
+          property_name: propertyInfo.name ?? '',
+          agency: propertyInfo.agency ?? '',
+          pid: propertyInfo.pid ?? '',
+          classification: propertyInfo.classification ?? '',
+        },
+      });
+    }
+  }, [propertyInfo]);
+
   //whether the general info is open
   const [generalInfoOpen, setGeneralInfoOpen] = React.useState<boolean>(true);
 
