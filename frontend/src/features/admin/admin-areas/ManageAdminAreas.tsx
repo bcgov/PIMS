@@ -92,11 +92,11 @@ export const ManageAdminAreas = () => {
     id: undefined,
   };
   return (
-    <Container fluid style={{ padding: 0 }}>
+    <Container fluid style={{ padding: 0 }} data-testid="admin-administrative-areas-page">
       <AdminAreaToolbarContainer fluid className="admin-area-toolbar">
         <AdminAreaFilterBar
           handleAdd={() => navigate('/admin/administrativeArea/new')}
-          onChange={value => {
+          onChange={(value) => {
             if ((value as any).id) {
               setFilter({ ...filter, id: (value as any).id });
             } else {

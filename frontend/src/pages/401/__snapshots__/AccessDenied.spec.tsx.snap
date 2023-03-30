@@ -14,7 +14,7 @@ exports[`AccessDenied > renders correctly 1`] = `
         Access Denied
       </h1>
       <h2>
-        You do not have permission to view this page
+        You do not have permission to view
       </h2>
       <a
         href="/mapview"

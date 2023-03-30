@@ -2,7 +2,7 @@
 
 exports[`HeaderActions View > HeaderActions renders correctly 1`] = `
 <div
-  class="sc-bdvvtL cQOnwW row"
+  class="sc-beySbM iionSp row"
 >
   Actions:
   <a
@@ -12,7 +12,7 @@ exports[`HeaderActions View > HeaderActions renders correctly 1`] = `
     View details
   </a>
   <div
-    class="sc-gsDKAQ cCUvaa"
+    class="sc-guDLRT kyleGm"
   />
   <a
     href="/mapview?disabled=false&loadDraft=false&parcelId=1&sidebar=true"
@@ -21,7 +21,7 @@ exports[`HeaderActions View > HeaderActions renders correctly 1`] = `
     Update
   </a>
   <div
-    class="sc-gsDKAQ cCUvaa"
+    class="sc-guDLRT kyleGm"
   />
   <a
     href="/"
@@ -91,13 +91,13 @@ exports[`InfoContent View > InfoContent renders correctly 1`] = `
     Parcel Identification
   </label>
   <div
-    class="sc-bBHxTw fWeleG row"
+    class="sc-bBkKQz jWwVHV row"
   >
     <div
-      class="sc-dkPtRN jXDfWR row"
+      class="sc-dmyDGi fQjmTz row"
     >
       <div
-        class="sc-hKwDye bGCBVZ col"
+        class="sc-hLQRIN zKIWi col"
       >
         <div
           class="left-side list-group-item"
@@ -110,10 +110,10 @@ exports[`InfoContent View > InfoContent renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="sc-eCImPb crsPDr col"
+        class="sc-eDLJxc fXQgOI col"
       />
       <div
-        class="sc-jRQBWg ewEyRQ col"
+        class="sc-jTQDnj dkCZDf col"
       >
         <div
           class="list-group-item"
@@ -124,13 +124,13 @@ exports[`InfoContent View > InfoContent renders correctly 1`] = `
     </div>
   </div>
   <div
-    class="sc-bBHxTw fWeleG row"
+    class="sc-bBkKQz jWwVHV row"
   >
     <div
-      class="sc-dkPtRN jXDfWR row"
+      class="sc-dmyDGi fQjmTz row"
     >
       <div
-        class="sc-hKwDye bGCBVZ col"
+        class="sc-hLQRIN zKIWi col"
       >
         <div
           class="left-side list-group-item"
@@ -143,10 +143,10 @@ exports[`InfoContent View > InfoContent renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="sc-eCImPb crsPDr col"
+        class="sc-eDLJxc fXQgOI col"
       />
       <div
-        class="sc-jRQBWg ewEyRQ col"
+        class="sc-jTQDnj dkCZDf col"
       >
         <div
           class="list-group-item"
@@ -156,10 +156,10 @@ exports[`InfoContent View > InfoContent renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="sc-dkPtRN jXDfWR row"
+      class="sc-dmyDGi fQjmTz row"
     >
       <div
-        class="sc-hKwDye bGCBVZ col"
+        class="sc-hLQRIN zKIWi col"
       >
         <div
           class="left-side list-group-item"
@@ -172,10 +172,10 @@ exports[`InfoContent View > InfoContent renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="sc-eCImPb crsPDr col"
+        class="sc-eDLJxc fXQgOI col"
       />
       <div
-        class="sc-jRQBWg ewEyRQ col"
+        class="sc-jTQDnj dkCZDf col"
       >
         <div
           class="list-group-item"
@@ -185,10 +185,10 @@ exports[`InfoContent View > InfoContent renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="sc-dkPtRN jXDfWR row"
+      class="sc-dmyDGi fQjmTz row"
     >
       <div
-        class="sc-hKwDye bGCBVZ col"
+        class="sc-hLQRIN zKIWi col"
       >
         <div
           class="left-side list-group-item"
@@ -201,10 +201,10 @@ exports[`InfoContent View > InfoContent renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="sc-eCImPb crsPDr col"
+        class="sc-eDLJxc fXQgOI col"
       />
       <div
-        class="sc-jRQBWg ewEyRQ col"
+        class="sc-jTQDnj dkCZDf col"
       >
         <div
           class="list-group-item"
@@ -214,10 +214,10 @@ exports[`InfoContent View > InfoContent renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="sc-dkPtRN jXDfWR row"
+      class="sc-dmyDGi fQjmTz row"
     >
       <div
-        class="sc-hKwDye bGCBVZ col"
+        class="sc-hLQRIN zKIWi col"
       >
         <div
           class="left-side list-group-item"
@@ -230,10 +230,10 @@ exports[`InfoContent View > InfoContent renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="sc-eCImPb crsPDr col"
+        class="sc-eDLJxc fXQgOI col"
       />
       <div
-        class="sc-jRQBWg ewEyRQ col"
+        class="sc-jTQDnj dkCZDf col"
       >
         <div
           class="list-group-item"
@@ -243,10 +243,10 @@ exports[`InfoContent View > InfoContent renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="sc-dkPtRN jXDfWR row"
+      class="sc-dmyDGi fQjmTz row"
     >
       <div
-        class="sc-hKwDye bGCBVZ col"
+        class="sc-hLQRIN zKIWi col"
       >
         <div
           class="left-side list-group-item"
@@ -259,10 +259,10 @@ exports[`InfoContent View > InfoContent renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="sc-eCImPb crsPDr col"
+        class="sc-eDLJxc fXQgOI col"
       />
       <div
-        class="sc-jRQBWg ewEyRQ col"
+        class="sc-jTQDnj dkCZDf col"
       >
         <div
           class="list-group-item"
@@ -274,7 +274,7 @@ exports[`InfoContent View > InfoContent renders correctly 1`] = `
     </div>
   </div>
   <div
-    class="sc-iwjdpV esoAzE row"
+    class="sc-iuOPfm glvvYV row"
   >
     <em>
       For more information on this property, contact

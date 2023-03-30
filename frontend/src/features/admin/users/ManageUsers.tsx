@@ -125,7 +125,7 @@ export const ManageUsers = () => {
   };
 
   return (
-    <div className="users-management-page">
+    <div className="users-management-page" data-testid="admin-users-page">
       <UsersFilterBar
         value={filter}
         agencyLookups={agencies}

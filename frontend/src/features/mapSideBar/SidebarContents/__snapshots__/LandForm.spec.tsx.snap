@@ -2,11 +2,11 @@
 
 exports[`Land Form > component renders correctly 1`] = `
 <div
-  class="sc-gWXbKe xrqiw landForm"
+  class="sc-gYrpUN eVBVeE landForm"
 >
   <form
     action="#"
-    class="sc-bdvvtL gewGMl"
+    class="sc-beySbM keAknq"
   >
     <ul
       class="hideTabs nav nav-tabs"
@@ -193,10 +193,10 @@ exports[`Land Form > component renders correctly 1`] = `
           </div>
         </div>
         <div
-          class="sc-cCcXHH gpUFJa"
+          class="sc-cCzKKE faERKd"
         >
           <div
-            class="sc-cidDSM kXxmco"
+            class="sc-ckdFjP jCqBhD"
           >
             <div
               class="parcel-identification"
@@ -372,7 +372,7 @@ exports[`Land Form > component renders correctly 1`] = `
                         class="col-md-auto"
                       >
                         <div
-                          class="sc-hGPBjI fowYiR GeocoderAutoComplete"
+                          class="sc-hIPCAL GxVqr GeocoderAutoComplete"
                         >
                           <div
                             class=""
@@ -442,7 +442,7 @@ exports[`Land Form > component renders correctly 1`] = `
                         class="marker-svg col"
                       >
                         <button
-                          class="sc-ikJyIC bRqHNf"
+                          class="sc-ilxdoh fdAYtt"
                           type="button"
                         >
                           <svg
@@ -590,7 +590,7 @@ exports[`Land Form > component renders correctly 1`] = `
                         class="col-md-auto"
                       >
                         <div
-                          class="sc-hGPBjI fowYiR GeocoderAutoComplete"
+                          class="sc-hIPCAL GxVqr GeocoderAutoComplete"
                         >
                           <div
                             class="required"
@@ -1031,10 +1031,10 @@ exports[`Land Form > component renders correctly 1`] = `
             </div>
           </div>
           <div
-            class="sc-jcFjpl djYUuH"
+            class="sc-jdHJyC maBaL"
           >
             <div
-              class="sc-iwjdpV elTPvu"
+              class="sc-iuOPfm eGBebj"
             >
               <div
                 class="SresManual"
@@ -1062,13 +1062,13 @@ exports[`Land Form > component renders correctly 1`] = `
                 </div>
               </div>
               <small
-                class="sc-cxpSdN csRfDj p-1 mr-2"
+                class="sc-cyZbSi iCcqRa p-1 mr-2"
               >
                 Inventory Policy
               </small>
             </div>
             <span
-              class="sc-caiLqq fRclYl"
+              class="sc-cbCZAZ kiFRsu"
             />
             <button
               class="btn btn-primary btn-sm"

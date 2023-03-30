@@ -2,16 +2,17 @@
 
 exports[`SubmitPropertySelector > component renders correctly 1`] = `
 <div
-  className="sc-hGPBjI fNgyjO"
+  className="sc-hIPCAL cMemko"
+  data-testid="submit-property-selector"
 >
   <p>
     This will allow you to submit a property to the PIMS inventory. At any time during this process you can read the Inventory Policy by clicking on the icon that looks like this:
   </p>
   <div
-    className="sc-dlVxhl ewbbKb"
+    className="sc-dmXXqC fa-DgFh"
   >
     <div
-      className="sc-ieecCq eKcPHI"
+      className="sc-ifyqMZ conXCf"
     >
       <div
         className="SresManual"
@@ -45,7 +46,7 @@ exports[`SubmitPropertySelector > component renders correctly 1`] = `
         </div>
       </div>
       <small
-        className="sc-dJjYzT hQNxsK p-1 mr-2"
+        className="sc-dJGLCQ ePtKfp p-1 mr-2"
       >
         Inventory Policy
       </small>
@@ -55,14 +56,14 @@ exports[`SubmitPropertySelector > component renders correctly 1`] = `
     To get started, choose the type of property to add to the PIMS inventory.
   </p>
   <div
-    className="sc-kfPuZi kRjhAW"
+    className="sc-khjJjR koOnSJ"
   >
     <div
-      className="sc-fKVqWL guqgz"
+      className="sc-fLsdZI hXRXcn"
       onClick={[Function]}
     >
       <svg
-        className="sc-iwjdpV fdqVum svg"
+        className="sc-iuOPfm bJxTXv svg"
         height={30}
         id="Layer_1_1588194074809"
         overflow="visible"
@@ -227,21 +228,21 @@ exports[`SubmitPropertySelector > component renders correctly 1`] = `
         </g>
       </svg>
       <div
-        className="sc-bBHxTw fDrGKY"
+        className="sc-bBkKQz peFjn"
       >
         <p
-          className="sc-iJKOTD laMOxK"
+          className="sc-iKOlBE kLeHYs"
         >
           Add a building
         </p>
       </div>
     </div>
     <div
-      className="sc-fKVqWL guqgz"
+      className="sc-fLsdZI hXRXcn"
       onClick={[Function]}
     >
       <svg
-        className="sc-cxpSdN LmxDu svg"
+        className="sc-cyZbSi gpSUUr svg"
         height={30}
         id="Layer_1_1588194077504"
         overflow="visible"
@@ -289,27 +290,27 @@ exports[`SubmitPropertySelector > component renders correctly 1`] = `
         </g>
       </svg>
       <div
-        className="sc-bBHxTw fDrGKY"
+        className="sc-bBkKQz peFjn"
       >
         <p
-          className="sc-iJKOTD laMOxK"
+          className="sc-iKOlBE kLeHYs"
         >
           Add Land
         </p>
         <p
-          className="sc-giYglK gyJYjd"
+          className="sc-gjLKRp lhSIHV"
         >
           PID or PIN
         </p>
       </div>
     </div>
     <div
-      className="sc-fKVqWL guqgz"
+      className="sc-fLsdZI hXRXcn"
       onClick={[Function]}
     >
       <svg
         aria-hidden="true"
-        className="sc-llYSUQ jgqVpt svg"
+        className="sc-lnskGP gMZaEp svg"
         data-icon="project-diagram"
         data-prefix="fas"
         focusable="false"
@@ -325,15 +326,15 @@ exports[`SubmitPropertySelector > component renders correctly 1`] = `
         />
       </svg>
       <div
-        className="sc-bBHxTw fDrGKY"
+        className="sc-bBkKQz peFjn"
       >
         <p
-          className="sc-iJKOTD laMOxK"
+          className="sc-iKOlBE kLeHYs"
         >
           Add Potential Subdivision
         </p>
         <p
-          className="sc-giYglK gyJYjd"
+          className="sc-gjLKRp lhSIHV"
         >
           PID
         </p>

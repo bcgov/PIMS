@@ -10,6 +10,7 @@ exports[`Project Draft Step > renders correctly 1`] = `
   >
     <div
       class="ProjectDraftForm container-fluid"
+      data-testid="disposal-projects-draft-form"
     >
       <div
         class="row"

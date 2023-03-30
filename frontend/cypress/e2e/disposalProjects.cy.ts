@@ -27,8 +27,7 @@ const inputs = {
 
 describe('Create a disposal project', () => {
   beforeEach(function () {
-    cy.kcLogout();
-    cy.kcLogin();
+    cy.kcLogout().kcLogin();
   });
 
   /* ---------------------------------------------------------------------

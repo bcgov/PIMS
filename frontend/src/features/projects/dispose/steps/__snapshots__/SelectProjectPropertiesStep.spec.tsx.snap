@@ -254,7 +254,7 @@ exports[`Select Project Properties Step > renders correctly 1`] = `
       Show
        
       <button
-        class="sc-pVTFL dgejQe btn btn-link"
+        class="sc-qZqnM llMhxA btn btn-link"
         style="color: rgb(26, 90, 150);"
         type="button"
       >
@@ -264,7 +264,7 @@ exports[`Select Project Properties Step > renders correctly 1`] = `
       |
        
       <button
-        class="sc-pVTFL dgejQe btn btn-link"
+        class="sc-qZqnM llMhxA btn btn-link"
         type="button"
       >
         All

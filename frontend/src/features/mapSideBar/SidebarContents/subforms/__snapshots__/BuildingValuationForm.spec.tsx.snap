@@ -761,7 +761,7 @@ exports[`renders correctly 1`] = `
         class="table-toolbar"
       />
       <div
-        class="sc-dJjYzT fVMWQb row"
+        class="sc-dJGLCQ kbVAMo row"
       >
         <h5>
           Assessed value
@@ -810,7 +810,7 @@ exports[`renders correctly 1`] = `
                 <div>
                   <div>
                     <svg
-                      class="tooltip-icon sc-ieecCq gxSTfP"
+                      class="tooltip-icon sc-ifyqMZ flVGLA"
                       fill="currentColor"
                       height="1em"
                       stroke="currentColor"

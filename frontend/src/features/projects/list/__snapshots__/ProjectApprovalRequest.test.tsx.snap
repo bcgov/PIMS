@@ -3,6 +3,7 @@
 exports[`Project Approval Request list view Matches snapshot 1`] = `
 <div
   class="ProjectListView container-fluid"
+  data-testid="disposal-projects-project-approval-request-list-view"
 >
   <div
     class="filter-container"

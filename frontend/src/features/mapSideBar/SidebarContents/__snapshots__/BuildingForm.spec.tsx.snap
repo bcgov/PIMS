@@ -2,11 +2,11 @@
 
 exports[`Building Form > component renders correctly 1`] = `
 <div
-  class="sc-dPiLbb bgcOMl buildingForm"
+  class="sc-dQmhJc jwyIQy buildingForm"
 >
   <form
     action="#"
-    class="sc-bdvvtL gewGMl"
+    class="sc-beySbM keAknq"
   >
     <ul
       class="hideTabs nav nav-tabs"
@@ -193,10 +193,10 @@ exports[`Building Form > component renders correctly 1`] = `
           </div>
         </div>
         <div
-          class="sc-bBHHxi dcurRA"
+          class="sc-bCvmcN bjOMA-d"
         >
           <div
-            class="sc-cNKqjZ daYevb"
+            class="sc-cPtzYu elQQGy"
           >
             <div
               class="identification"
@@ -524,7 +524,7 @@ exports[`Building Form > component renders correctly 1`] = `
                   style="text-align: left;"
                 >
                   <h4
-                    class="sc-iJKOTD dBucaG"
+                    class="sc-iKOlBE beHfUY"
                   >
                     Strategic Real Estate Classification
                   </h4>
@@ -578,7 +578,7 @@ exports[`Building Form > component renders correctly 1`] = `
                     class="col-md-6"
                   >
                     <div
-                      class="sc-giYglK kKjfxu"
+                      class="sc-gjLKRp dkwKRO"
                     >
                       <p
                         style="font-size: 11px;"
@@ -622,7 +622,7 @@ exports[`Building Form > component renders correctly 1`] = `
                         class="col-md-auto"
                       >
                         <div
-                          class="sc-hGPBjI fowYiR GeocoderAutoComplete"
+                          class="sc-hIPCAL GxVqr GeocoderAutoComplete"
                         >
                           <div
                             class="required"
@@ -801,7 +801,7 @@ exports[`Building Form > component renders correctly 1`] = `
                           class="marker-svg col"
                         >
                           <button
-                            class="sc-iAKWXU jrWWfc"
+                            class="sc-iCKYoX coQTwt"
                           >
                             <svg
                               height="40"
@@ -893,10 +893,10 @@ exports[`Building Form > component renders correctly 1`] = `
             </div>
           </div>
           <div
-            class="sc-AjmGg cIoRxY"
+            class="sc-BCEsf fuHJqc"
           >
             <div
-              class="sc-iwjdpV elTPvu"
+              class="sc-iuOPfm eGBebj"
             >
               <div
                 class="SresManual"
@@ -924,13 +924,13 @@ exports[`Building Form > component renders correctly 1`] = `
                 </div>
               </div>
               <small
-                class="sc-cxpSdN csRfDj p-1 mr-2"
+                class="sc-cyZbSi iCcqRa p-1 mr-2"
               >
                 Inventory Policy
               </small>
             </div>
             <span
-              class="sc-khQegj ipWNCE"
+              class="sc-kiTAOk hTmJWm"
             />
             <button
               class="btn btn-primary btn-sm"

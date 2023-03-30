@@ -3,6 +3,7 @@
 exports[`Manage Agencies Component > Snapshot matches 1`] = `
 <div
   class="ManageAgencies container-fluid"
+  data-testid="admin-agencies-page"
 >
   <div
     class="agency-toolbar container-fluid"

@@ -3,6 +3,7 @@
 exports[`Manage Users Component > Snapshot matches 1`] = `
 <div
   class="users-management-page"
+  data-testid="admin-users-page"
 >
   <form
     class=""
@@ -276,7 +277,7 @@ exports[`Manage Users Component > Snapshot matches 1`] = `
   >
     <div>
       <button
-        class="sc-dJjYzT lcZUVt btn btn-primary"
+        class="sc-dJGLCQ gPrscO btn btn-primary"
         type="button"
       >
         <svg
@@ -298,7 +299,7 @@ exports[`Manage Users Component > Snapshot matches 1`] = `
     </div>
   </div>
   <div
-    class="sc-ieecCq hMdxtc container-fluid"
+    class="sc-ifyqMZ indmYf container-fluid"
   >
     <div
       class="table"
@@ -324,7 +325,7 @@ exports[`Manage Users Component > Snapshot matches 1`] = `
               IDIR/BCeID
               <span />
               <div
-                class="sc-ksdxgE fRSfXY"
+                class="sc-ktwOSD ikngPx"
               >
                 <svg
                   fill="currentColor"
@@ -368,7 +369,7 @@ exports[`Manage Users Component > Snapshot matches 1`] = `
               First name
               <span />
               <div
-                class="sc-ksdxgE fRSfXY"
+                class="sc-ktwOSD ikngPx"
               >
                 <svg
                   fill="currentColor"
@@ -412,7 +413,7 @@ exports[`Manage Users Component > Snapshot matches 1`] = `
               Last name
               <span />
               <div
-                class="sc-ksdxgE fRSfXY"
+                class="sc-ktwOSD ikngPx"
               >
                 <svg
                   fill="currentColor"
@@ -456,7 +457,7 @@ exports[`Manage Users Component > Snapshot matches 1`] = `
               Email
               <span />
               <div
-                class="sc-ksdxgE fRSfXY"
+                class="sc-ktwOSD ikngPx"
               >
                 <svg
                   fill="currentColor"
@@ -500,7 +501,7 @@ exports[`Manage Users Component > Snapshot matches 1`] = `
               Position
               <span />
               <div
-                class="sc-ksdxgE fRSfXY"
+                class="sc-ktwOSD ikngPx"
               >
                 <svg
                   fill="currentColor"
@@ -544,7 +545,7 @@ exports[`Manage Users Component > Snapshot matches 1`] = `
               Active
               <span />
               <div
-                class="sc-ksdxgE fRSfXY"
+                class="sc-ktwOSD ikngPx"
               >
                 <svg
                   fill="currentColor"
@@ -588,7 +589,7 @@ exports[`Manage Users Component > Snapshot matches 1`] = `
               Agency
               <span />
               <div
-                class="sc-ksdxgE fRSfXY"
+                class="sc-ktwOSD ikngPx"
               >
                 <svg
                   fill="currentColor"
@@ -658,7 +659,7 @@ exports[`Manage Users Component > Snapshot matches 1`] = `
               Created On
               <span />
               <div
-                class="sc-ksdxgE fRSfXY"
+                class="sc-ktwOSD ikngPx"
               >
                 <svg
                   fill="currentColor"
@@ -1134,7 +1135,7 @@ exports[`Manage Users Component > Snapshot matches 1`] = `
             style="display: flex;"
           >
             <span
-              class="sc-fFeiMQ bVXUcA"
+              class="sc-fHekdT DWcuz"
             >
               Show
             </span>
@@ -1145,7 +1146,7 @@ exports[`Manage Users Component > Snapshot matches 1`] = `
               value="10"
             />
             <span
-              class="sc-fFeiMQ bVXUcA"
+              class="sc-fHekdT DWcuz"
             >
               Entries
             </span>

@@ -70,7 +70,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
   const [initialLoad, setInitialLoad] = useState(false);
   useRouterFilter({
     filter: propertyFilter,
-    setFilter: filter => {
+    setFilter: (filter) => {
       onChange(filter);
       setPropertyFilter(filter);
     },
@@ -79,18 +79,20 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
     setSorting: onSorting,
   });
 
-  const agencies = (agencyLookupCodes ?? []).map(c =>
+  const agencies = (agencyLookupCodes ?? []).map((c) =>
     mapLookupCodeWithParentString(c, agencyLookupCodes),
   );
   const classifications = lookupCodes.getPropertyClassificationOptions();
-  const adminAreas = (adminAreaLookupCodes ?? []).map(c => mapLookupCode(c));
+  const adminAreas = (adminAreaLookupCodes ?? []).map((c) => mapLookupCode(c));
   const [clear, setClear] = useState(false);
   const [options, setOptions] = useState([]);
 
   const initialValues = useMemo(() => {
     const values = { ...defaultFilter, ...propertyFilter };
     if (typeof values.agencies === 'string') {
-      const agency = agencies.find(x => x.value.toString() === values.agencies?.toString()) as any;
+      const agency = agencies.find(
+        (x) => x.value.toString() === values.agencies?.toString(),
+      ) as any;
       if (agency) {
         values.agencies = agency;
       }
@@ -111,6 +113,25 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
       : values.agencies;
     setPropertyFilter({ ...values, agencies: agencyIds });
     onChange?.({ ...values, agencies: agencyIds });
+
+    // Send data to SnowPlow.
+    if (values.surplusFilter) {
+      window.snowplow('trackSelfDescribingEvent', {
+        schema: 'iglu:ca.bc.gov.pims/search/jsonschema/1-0-0',
+        data: {
+          view: 'surplus_properties',
+          erp_properties: values.inEnhancedReferralProcess ?? false,
+          spl_properties: values.inSurplusPropertyProgram ?? false,
+          location: values.administrativeArea ?? '',
+          project_name_number: values.projectNumber ?? '',
+          lot_min: values.minLotSize ?? '',
+          lot_max: values.maxLotSize ?? '',
+          land_only: values.bareLandOnly ?? false,
+          predominate_use: values.predominateUseId ?? '',
+          net_usable: values.rentableArea ?? '',
+        },
+      });
+    }
   };
 
   const resetFilter = () => {
@@ -165,7 +186,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                   <div style={{ paddingTop: '24px' }}>
                     <ParentSelect
                       field="agencies"
-                      options={myAgencies.map(c => mapSelectOptionWithParent(c, myAgencies))}
+                      options={myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies))}
                       filterBy={['code', 'label', 'parent']}
                       placeholder="My Agencies"
                       selectClosest
@@ -186,7 +207,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                   placeholder="Property name"
                   onSearch={() => {
                     setInitialLoad(true);
-                    fetchPropertyNames(keycloak.agencyId!)(dispatch).then(results => {
+                    fetchPropertyNames(keycloak.agencyId!)(dispatch).then((results) => {
                       setOptions(results);
                       setInitialLoad(false);
                     });
@@ -208,7 +229,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                   placeholder="Location"
                   selectClosest
                   hideValidation={true}
-                  options={adminAreas.map(x => x.label)}
+                  options={adminAreas.map((x) => x.label)}
                   onChange={(vals: any) => {
                     setFieldValue('administrativeArea', getIn(vals[0], 'name') ?? vals[0]);
                   }}

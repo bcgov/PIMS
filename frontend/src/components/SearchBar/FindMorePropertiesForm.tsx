@@ -4,7 +4,7 @@ import { TypeaheadField } from 'components/common/form/Typeahead';
 import * as API from 'constants/API';
 import { getIn, useFormikContext } from 'formik';
 import useCodeLookups from 'hooks/useLookupCodes';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Container, Form, Row } from 'react-bootstrap';
 import styled from 'styled-components';
 import { mapLookupCode } from 'utils';
@@ -22,12 +22,12 @@ const StyledRow = styled(Row)`
 `;
 
 /** input used to display small number values in this form */
-const NumberInput = styled(props => <Input {...props} />)`
+const NumberInput = styled((props) => <Input {...props} />)`
   width: 86px;
 `;
 
 /** controlling the width of the select component used in this form */
-const StyledSelect = styled(props => <Select {...props} />)`
+const StyledSelect = styled((props) => <Select {...props} />)`
   width: 250px;
 `;
 
@@ -40,23 +40,23 @@ const VerticalLine = styled.span`
 `;
 
 /** styled component used for project number */
-const ProjectNumber = styled(props => <Input {...props} />)`
+const ProjectNumber = styled((props) => <Input {...props} />)`
   width: 129px;
   margin-right: 10px;
 `;
 
 /** styled container with grey background to contain form contents */
-const FormSection = styled(props => <Container {...props} />)`
+const FormSection = styled((props) => <Container {...props} />)`
   margin-top: 20px;
   background-color: ${variables.tableHeaderColor};
   border-radius: 5px;
 `;
 
-const SearchButton = styled(props => <Button {...props} />)`
+const SearchButton = styled((props) => <Button {...props} />)`
   margin-top: 10px;
 `;
 
-const StyledLocation = styled(props => <TypeaheadField {...props} />)`
+const StyledLocation = styled((props) => <TypeaheadField {...props} />)`
   width: 250px;
   margin-left: 60px;
 `;
@@ -85,7 +85,7 @@ const FindMorePropertiesForm = (props: any) => {
     .map(mapLookupCode);
   const adminAreas = lookupCodes
     .getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME)
-    .map(c => mapLookupCode(c, null));
+    .map((c) => mapLookupCode(c, null));
 
   /** attempt submission of search, display errors if present */
   const handleSearch = () => {
@@ -94,6 +94,11 @@ const FindMorePropertiesForm = (props: any) => {
       setDisplayError(true);
     }
   };
+
+  useEffect(() => {
+    // Track <a/> tag clicks in Snowplow Analytics.
+    window.snowplow('refreshLinkClickTracking');
+  }, []);
 
   return (
     <>

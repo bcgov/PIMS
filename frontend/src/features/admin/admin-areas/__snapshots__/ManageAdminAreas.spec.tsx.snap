@@ -4,10 +4,11 @@ exports[`renders correctly 1`] = `
 <DocumentFragment>
   <div
     class="container-fluid"
+    data-testid="admin-administrative-areas-page"
     style="padding: 0px;"
   >
     <div
-      class="sc-ieecCq RUNOa admin-area-toolbar container-fluid"
+      class="sc-ifyqMZ jvLxlh admin-area-toolbar container-fluid"
     >
       <form
         class=""

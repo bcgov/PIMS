@@ -10,7 +10,6 @@ import {
 } from 'leaflet';
 import { cloneDeep } from 'lodash';
 import { AnyProps } from 'supercluster';
-import invariant from 'tiny-invariant';
 
 import { ICluster, PointFeature } from '../types';
 
@@ -61,9 +60,10 @@ export class Spiderfier {
     this.options = { ...defaultOptions, ...options };
     // check required values - throws an error if callbacks are null
     const { getClusterId, getClusterPoints, pointToLayer } = this.options;
-    invariant(getClusterId, 'Must supply getClusterId callback');
-    invariant(getClusterPoints, 'Must supply getClusterPoints callback');
-    invariant(pointToLayer, 'Must supply pointToLayer callback');
+    if (getClusterId === null || undefined) throw new Error('Must supply getClusterId callback');
+    if (getClusterPoints === null || undefined)
+      throw new Error('Must supply getClusterPoints callback');
+    if (pointToLayer === null || undefined) throw new Error('Must supply pointToLayer callback');
   }
 
   // expand a cluster (spiderfy)
@@ -81,7 +81,7 @@ export class Spiderfier {
     const centerLatlng = GeoJSON.coordsToLatLng(cluster?.geometry?.coordinates as [number, number]);
     const centerXY = this.map.latLngToLayerPoint(centerLatlng); // screen coordinates
     const clusterId = getClusterId(cluster);
-    const children = getClusterPoints(clusterId).map(p => cloneDeep(p)); // work with a copy of the data
+    const children = getClusterPoints(clusterId).map((p) => cloneDeep(p)); // work with a copy of the data
 
     let positions: LeafletPoint[];
     if (children.length >= this.circleSpiralSwitchover) {
@@ -94,7 +94,7 @@ export class Spiderfier {
     const results = this.addToMap(centerXY, children, positions);
 
     // dim cluster icon
-    this.map.eachLayer(layer => {
+    this.map.eachLayer((layer) => {
       if (this.layerMatchesCluster(layer, this.cluster)) {
         const clusterMarker = layer as Marker;
         if (clusterMarker.setOpacity) {

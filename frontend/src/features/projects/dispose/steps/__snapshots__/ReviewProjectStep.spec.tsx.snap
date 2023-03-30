@@ -9,6 +9,7 @@ exports[`renders correctly 1`] = `
   >
     <div
       className="ProjectDraftForm container-fluid"
+      data-testid="disposal-projects-draft-form"
     >
       <div
         className="row"
@@ -243,7 +244,7 @@ exports[`renders correctly 1`] = `
           className="col-md-auto"
         >
           <div
-            className="sc-fotOHu efiPXc"
+            className="sc-fmKESZ iuehUM"
           >
             <small>
               Tier 1: Properties with a value less than $1M.

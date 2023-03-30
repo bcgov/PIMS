@@ -3,6 +3,7 @@
 exports[`Manage access requests > Snapshot matches 1`] = `
 <div
   className="manage-access-requests"
+  data-testid="admin-access-requests-page"
 >
   <div
     className="ScrollContainer"
@@ -888,7 +889,7 @@ exports[`Manage access requests > Snapshot matches 1`] = `
             }
           >
             <span
-              className="sc-fFeiMQ bVXUcA"
+              className="sc-fHekdT DWcuz"
             >
               Show
             </span>
@@ -906,7 +907,7 @@ exports[`Manage access requests > Snapshot matches 1`] = `
               value="10"
             />
             <span
-              className="sc-fFeiMQ bVXUcA"
+              className="sc-fHekdT DWcuz"
             >
               Entries
             </span>

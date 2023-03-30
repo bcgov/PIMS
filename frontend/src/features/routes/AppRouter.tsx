@@ -44,8 +44,8 @@ const AccessRequestPage = lazy(() => import('features/admin/access-request/Acces
 const EditUserPage = lazy(() => import('features/admin/edit-user/EditUserPage'));
 const ManageAccessRequests = lazy(() => import('features/admin/access/ManageAccessRequests'));
 const ProjectListView = lazy(() => import('features/projects/list/ProjectListView'));
-const ProjectApprovalRequestListView = lazy(() =>
-  import('features/projects/list/ProjectApprovalRequestListView'),
+const ProjectApprovalRequestListView = lazy(
+  () => import('features/projects/list/ProjectApprovalRequestListView'),
 );
 const ProjectRouter = lazy(() => import('features/projects/common/ProjectRouter'));
 const SPLProjectListView = lazy(() => import('features/projects/list/SPLProjectListView'));
@@ -399,6 +399,7 @@ export const AppRouter: React.FC = () => {
                   <LayoutWrapper
                     title={getTitle('Page Not Found')}
                     component={NotFoundPage}
+                    componentProps={{ failedRoute: location.pathname }}
                     layout={PublicLayout}
                   />
                 )
@@ -600,6 +601,7 @@ export const AppRouter: React.FC = () => {
             <LayoutWrapper
               title={getTitle('Page Not Found')}
               component={NotFoundPage}
+              componentProps={{ failedRoute: location.pathname }}
               layout={PublicLayout}
             />
           }

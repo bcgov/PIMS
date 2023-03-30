@@ -20,7 +20,7 @@ exports[`Page size selector > Snapshot matches 1`] = `
         }
       >
         <span
-          className="sc-bdvvtL jAQfhW"
+          className="sc-beySbM fVsQKR"
         >
           Show
         </span>
@@ -38,7 +38,7 @@ exports[`Page size selector > Snapshot matches 1`] = `
           value="1"
         />
         <span
-          className="sc-bdvvtL jAQfhW"
+          className="sc-beySbM fVsQKR"
         >
           Entries
         </span>

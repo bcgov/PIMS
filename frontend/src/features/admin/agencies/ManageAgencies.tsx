@@ -26,12 +26,12 @@ const ManageAgencies: React.FC = () => {
   const agencyLookupCodes = lookupCodes.getByType('Agency');
   const navigate = useNavigate();
 
-  const pagedAgencies = useAppSelector(store => store.agencies.pagedAgencies);
-  const pageSize = useAppSelector(store => store.agencies.rowsPerPage);
-  const pageIndex = useAppSelector(store => store.agencies.pageIndex);
-  const sort = useAppSelector(store => store.agencies.sort);
+  const pagedAgencies = useAppSelector((store) => store.agencies.pagedAgencies);
+  const pageSize = useAppSelector((store) => store.agencies.rowsPerPage);
+  const pageIndex = useAppSelector((store) => store.agencies.pageIndex);
+  const sort = useAppSelector((store) => store.agencies.sort);
   const agencies = useAppSelector(
-    store => (store.network.requests as any)[actionTypes.GET_AGENCIES] as IGenericNetworkAction,
+    (store) => (store.network.requests as any)[actionTypes.GET_AGENCIES] as IGenericNetworkAction,
   );
 
   const onRowClick = (row: IAgencyRecord) => {
@@ -45,7 +45,7 @@ const ManageAgencies: React.FC = () => {
       description: a.description,
       parentId: a.parentId,
       id: a.id,
-      parent: agencyLookupCodes.find(x => x.id === a.parentId)?.name,
+      parent: agencyLookupCodes.find((x) => x.id === a.parentId)?.name,
     }),
   );
 
@@ -55,7 +55,7 @@ const ManageAgencies: React.FC = () => {
     };
     const values = { ...defaultValue, ...filter };
     if (typeof values.id === 'number') {
-      const agency = agencyLookupCodes.find(x => Number(x.id) === values?.id) as any;
+      const agency = agencyLookupCodes.find((x) => Number(x.id) === values?.id) as any;
       if (agency) {
         values.id = agency;
       }
@@ -82,11 +82,11 @@ const ManageAgencies: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <Container fluid className="ManageAgencies">
+    <Container fluid className="ManageAgencies" data-testid="admin-agencies-page">
       <Container fluid className="agency-toolbar">
         <AgencyFilterBar
           value={{ ...initialValues }}
-          onChange={value => {
+          onChange={(value) => {
             if ((value as any).id) {
               setFilter({ ...filter, id: Number((value as any).id) });
             } else {

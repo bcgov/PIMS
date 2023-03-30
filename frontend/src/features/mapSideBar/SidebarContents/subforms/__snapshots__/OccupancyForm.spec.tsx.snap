@@ -14,7 +14,7 @@ exports[`occupancy form functionality > renders correctly 1`] = `
     </h4>
   </div>
   <div
-    class="sc-ieecCq kbzAgp"
+    class="sc-ifyqMZ bTLoZi"
   >
     <div
       class="row"
@@ -121,7 +121,7 @@ exports[`occupancy form functionality > renders correctly 1`] = `
     </h4>
   </div>
   <div
-    class="sc-ieecCq kbzAgp"
+    class="sc-ifyqMZ bTLoZi"
   >
     <div
       class="row"
@@ -141,7 +141,7 @@ exports[`occupancy form functionality > renders correctly 1`] = `
         <div>
           <div>
             <svg
-              class="tooltip-icon sc-dJjYzT cRTzZf"
+              class="tooltip-icon sc-dJGLCQ ifVWvA"
               fill="currentColor"
               height="1em"
               stroke="currentColor"
