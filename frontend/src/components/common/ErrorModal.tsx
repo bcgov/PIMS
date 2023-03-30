@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import GenericModal from './GenericModal';
@@ -13,6 +13,18 @@ import GenericModal from './GenericModal';
  */
 const ErrorModal = (props: any) => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Send data to Snowplow.
+    window.snowplow('trackSelfDescribingEvent', {
+      schema: 'iglu:ca.bc.gov.pims/error/jsonschema/1-0-0',
+      data: {
+        error_message: `Error Modal: ${props.error.message}`,
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <GenericModal
       title="App Error"
