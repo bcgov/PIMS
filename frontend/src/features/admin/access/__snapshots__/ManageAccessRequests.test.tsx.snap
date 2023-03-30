@@ -7,6 +7,7 @@ exports[`Manage access requests Snapshot matches 1`] = `
 
 <div
   className="manage-access-requests"
+  data-testid="admin-access-requests-page"
 >
   <div
     className="ScrollContainer"

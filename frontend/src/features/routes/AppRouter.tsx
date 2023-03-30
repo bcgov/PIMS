@@ -399,6 +399,7 @@ export const AppRouter: React.FC = () => {
                   <LayoutWrapper
                     title={getTitle('Page Not Found')}
                     component={NotFoundPage}
+                    componentProps={{ failedRoute: location.pathname }}
                     layout={PublicLayout}
                   />
                 )
@@ -600,6 +601,7 @@ export const AppRouter: React.FC = () => {
             <LayoutWrapper
               title={getTitle('Page Not Found')}
               component={NotFoundPage}
+              componentProps={{ failedRoute: location.pathname }}
               layout={PublicLayout}
             />
           }

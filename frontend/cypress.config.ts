@@ -12,6 +12,7 @@ export default defineConfig({
     viewportWidth: 1400,
     chromeWebSecurity: false,
     experimentalSessionAndOrigin: true,
+    defaultCommandTimeout: 8000,
     env: {
       auth_base_url: `https://dev.loginproxy.gov.bc.ca/auth`,
       auth_realm: 'standard',

@@ -30,7 +30,7 @@ namespace Pims.Core.Test
         /// <returns></returns>
         public static Entity.User CreateUser(Guid id, string username, string firstName = "given name", string lastName = "surname", Entity.Role role = null, Entity.Agency agency = null)
         {
-            var user = new Entity.User(id, username, $"{firstName}.{lastName}@email.com")
+            var user = new Entity.User(id, username, $"{firstName}.{lastName}@email.com", firstName, lastName)
             {
                 DisplayName = $"{lastName}, {firstName}",
                 RowVersion = new byte[] { 12, 13, 14 }

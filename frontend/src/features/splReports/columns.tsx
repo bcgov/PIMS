@@ -104,7 +104,7 @@ export const columns = (agencyOptions: SelectOption[]): any[] => [
     align: 'left',
     responsive: true,
     width: spacing.small,
-    minWidth: 80,
+    minWidth: 130,
   },
   {
     Header: 'CMV',
