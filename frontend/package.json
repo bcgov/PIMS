@@ -68,7 +68,7 @@
     "react-text-mask": "5.5.0",
     "react-toastify": "6.2.0",
     "react-visibility-sensor": "5.1.1",
-    "redux": "4.2.0",
+    "redux": "4.2.1",
     "redux-logger": "3.0.6",
     "redux-thunk": "2.4.2",
     "retry-axios": "2.4.0",
