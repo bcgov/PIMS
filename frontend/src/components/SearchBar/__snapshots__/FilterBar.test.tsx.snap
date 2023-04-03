@@ -47,7 +47,6 @@ exports[`Filter Bar Snapshot matches 1`] = `
                 <svg
                   fill="currentColor"
                   height={20}
-                  size={20}
                   stroke="currentColor"
                   strokeWidth="0"
                   style={
@@ -89,7 +88,6 @@ exports[`Filter Bar Snapshot matches 1`] = `
                 <svg
                   fill="currentColor"
                   height={20}
-                  size={20}
                   stroke="currentColor"
                   strokeWidth="0"
                   style={
