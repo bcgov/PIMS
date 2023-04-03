@@ -240,7 +240,6 @@ exports[`Land Form component renders correctly 1`] = `
               data-testid="delete-parcel-1"
               fill="currentColor"
               height="15"
-              size="15"
               stroke="currentColor"
               stroke-width="0"
               viewBox="0 0 512 512"
@@ -274,7 +273,6 @@ exports[`Land Form component renders correctly 1`] = `
               <svg
                 fill="currentColor"
                 height="20"
-                size="20"
                 stroke="currentColor"
                 stroke-width="0"
                 viewBox="0 0 448 512"
@@ -483,7 +481,6 @@ exports[`Land Form component renders correctly 1`] = `
                               <svg
                                 fill="currentColor"
                                 height="20"
-                                size="20"
                                 stroke="currentColor"
                                 stroke-width="0"
                                 viewBox="0 0 512 512"
@@ -545,7 +542,6 @@ exports[`Land Form component renders correctly 1`] = `
                               <svg
                                 fill="currentColor"
                                 height="20"
-                                size="20"
                                 stroke="currentColor"
                                 stroke-width="0"
                                 viewBox="0 0 512 512"
@@ -612,7 +608,6 @@ exports[`Land Form component renders correctly 1`] = `
                               <svg
                                 fill="currentColor"
                                 height="20"
-                                size="20"
                                 stroke="currentColor"
                                 stroke-width="0"
                                 viewBox="0 0 512 512"
@@ -1237,7 +1232,6 @@ exports[`Land Form component renders correctly 1`] = `
                   <svg
                     fill="none"
                     height="28"
-                    size="28"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
