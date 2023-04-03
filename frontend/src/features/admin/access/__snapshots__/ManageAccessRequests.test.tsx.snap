@@ -198,7 +198,6 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   <svg
                     fill="currentColor"
                     height={25}
-                    size={25}
                     stroke="currentColor"
                     strokeWidth="0"
                     style={
@@ -235,7 +234,6 @@ exports[`Manage access requests Snapshot matches 1`] = `
                   <svg
                     fill="currentColor"
                     height={25}
-                    size={25}
                     stroke="currentColor"
                     strokeWidth="0"
                     style={
