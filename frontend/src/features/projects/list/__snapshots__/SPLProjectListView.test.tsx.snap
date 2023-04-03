@@ -257,7 +257,6 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
                   <svg
                     fill="currentColor"
                     height="20"
-                    size="20"
                     stroke="currentColor"
                     stroke-width="0"
                     viewBox="0 0 512 512"
@@ -287,7 +286,6 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
                   <svg
                     fill="currentColor"
                     height="20"
-                    size="20"
                     stroke="currentColor"
                     stroke-width="0"
                     viewBox="0 0 512 512"

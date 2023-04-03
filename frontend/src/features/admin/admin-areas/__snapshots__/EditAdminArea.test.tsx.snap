@@ -21,7 +21,6 @@ exports[`renders correctly 1`] = `
           <svg
             fill="currentColor"
             height="20"
-            size="20"
             stroke="currentColor"
             stroke-width="0"
             style="margin-bottom: 0.5rem; cursor: pointer;"
