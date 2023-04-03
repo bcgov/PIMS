@@ -254,7 +254,6 @@ exports[`Manage Users Component Snapshot matches 1`] = `
                 <svg
                   fill="currentColor"
                   height="20"
-                  size="20"
                   stroke="currentColor"
                   stroke-width="0"
                   viewBox="0 0 512 512"
@@ -284,7 +283,6 @@ exports[`Manage Users Component Snapshot matches 1`] = `
                 <svg
                   fill="currentColor"
                   height="20"
-                  size="20"
                   stroke="currentColor"
                   stroke-width="0"
                   viewBox="0 0 512 512"
@@ -314,7 +312,6 @@ exports[`Manage Users Component Snapshot matches 1`] = `
           data-testid="excel-icon"
           fill="currentColor"
           height="36"
-          size="36"
           stroke="currentColor"
           stroke-width="0"
           viewBox="0 0 384 512"

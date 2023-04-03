@@ -93,7 +93,6 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
                   <svg
                     fill="currentColor"
                     height="20"
-                    size="20"
                     stroke="currentColor"
                     stroke-width="0"
                     viewBox="0 0 512 512"
@@ -123,7 +122,6 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
                   <svg
                     fill="currentColor"
                     height="20"
-                    size="20"
                     stroke="currentColor"
                     stroke-width="0"
                     viewBox="0 0 512 512"
@@ -155,7 +153,6 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
                 <svg
                   fill="currentColor"
                   height="20"
-                  size="20"
                   stroke="currentColor"
                   stroke-width="0"
                   viewBox="0 0 448 512"

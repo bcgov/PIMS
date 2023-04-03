@@ -22,7 +22,6 @@ exports[`dispose project draft step display stepper renders correctly based off 
       <svg
         fill="none"
         height="28"
-        size="28"
         stroke="currentColor"
         stroke-linecap="round"
         stroke-linejoin="round"
