@@ -22,7 +22,8 @@
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json,css,scss}\"",
     "check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,css,scss}\"",
-    "docu:server": "npx styleguidist server"
+    "docu:server": "npx styleguidist server",
+    "dep-versions": "node checkDepVersions"
   },
   "dependencies": {
     "@babel/core": "7.21.0",
