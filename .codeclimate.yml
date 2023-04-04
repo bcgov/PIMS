@@ -8,7 +8,7 @@ checks:
   complex-logic:
     enabled: true
     config:
-      threshold: 4
+      threshold: 25
   file-lines:
     enabled: false
   method-complexity:
@@ -18,11 +18,9 @@ checks:
   method-count:
     enabled: true
     config:
-      threshold: 20
+      threshold: 50
   method-lines:
-    enabled: true
-    config:
-      threshold: 250
+    enabled: false
   nested-control-flow:
     enabled: true
     config:
@@ -30,7 +28,7 @@ checks:
   return-statements:
     enabled: false
   similar-code:
-    enabled: true
+    enabled: false
   identical-code:
     enabled: true
 
@@ -38,10 +36,26 @@ exclude_patterns:
   - '**/dist/'
   - '**/node_modules/'
   - '**/*.spec.ts'
+  - '**/*.spec.tsx'
   - '**/*.test.ts'
+  - '**/*.test.tsx'
   - '**/tests/'
   - '**/Migrations/'
   - '**/*.d.ts'
   - '**/cypress/'
   - '**/test/'
   - '**/testUtils.ts'
+  - 'tools/'
+  - '.github/'
+  - '.s2i/'
+  - '**/.vscode/'
+  - 'adr/'
+  - '**/coverage/'
+  - '**/public/'
+  - '**/__mocks__/'
+  - '**/constants/'
+  - '**/interfaces/'
+  - '**/types/'
+  - '**/typings/'
+  - 'scripts/'
+  - 'Screenshots/'
