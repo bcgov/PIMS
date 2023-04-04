@@ -37,8 +37,11 @@ checks:
 exclude_patterns:
   - '**/dist/'
   - '**/node_modules/'
-  - '**/spec.ts'
-  - '**/test.ts'
+  - '**/*.spec.ts'
+  - '**/*.test.ts'
   - '**/tests/'
   - '**/Migrations/'
   - '**/*.d.ts'
+  - '**/cypress/'
+  - '**/test/'
+  - '**/testUtils.ts'
