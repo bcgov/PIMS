@@ -50,7 +50,7 @@
     "react-app-polyfill": "3.0.0",
     "react-bootstrap": "2.7.2",
     "react-bootstrap-typeahead": "5.2.2",
-    "react-click-away-listener": "2.2.2",
+    "react-click-away-listener": "2.2.3",
     "react-datepicker": "4.11.0",
     "react-dom": "18.2.0",
     "react-draggable": "4.4.5",
