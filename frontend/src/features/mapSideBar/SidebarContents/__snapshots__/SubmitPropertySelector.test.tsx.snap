@@ -183,7 +183,6 @@ exports[`SubmitPropertySelector component renders correctly 1`] = `
           <svg
             fill="none"
             height={28}
-            size={28}
             stroke="currentColor"
             strokeLinecap="round"
             strokeLinejoin="round"

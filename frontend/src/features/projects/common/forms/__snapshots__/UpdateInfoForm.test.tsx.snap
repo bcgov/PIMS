@@ -574,7 +574,6 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                     <svg
                       fill="currentColor"
                       height="16"
-                      size="16"
                       stroke="currentColor"
                       stroke-width="0"
                       style="cursor: pointer;"
