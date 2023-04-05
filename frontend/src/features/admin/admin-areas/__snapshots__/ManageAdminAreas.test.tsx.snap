@@ -50,7 +50,6 @@ exports[`renders correctly 1`] = `
                     class="tooltip-icon"
                     fill="currentColor"
                     height="25"
-                    size="25"
                     stroke="currentColor"
                     stroke-width="0"
                     style="margin-top: 0.25rem; margin-right: 0.5rem;"
@@ -139,7 +138,6 @@ exports[`renders correctly 1`] = `
                     <svg
                       fill="currentColor"
                       height="20"
-                      size="20"
                       stroke="currentColor"
                       stroke-width="0"
                       viewBox="0 0 512 512"
@@ -169,7 +167,6 @@ exports[`renders correctly 1`] = `
                     <svg
                       fill="currentColor"
                       height="20"
-                      size="20"
                       stroke="currentColor"
                       stroke-width="0"
                       viewBox="0 0 512 512"
@@ -201,7 +198,6 @@ exports[`renders correctly 1`] = `
                   <svg
                     fill="currentColor"
                     height="20"
-                    size="20"
                     stroke="currentColor"
                     stroke-width="0"
                     viewBox="0 0 448 512"

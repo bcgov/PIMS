@@ -200,7 +200,6 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   <svg
                     fill="currentColor"
                     height="20"
-                    size="20"
                     stroke="currentColor"
                     stroke-width="0"
                     viewBox="0 0 512 512"
@@ -231,7 +230,6 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                   <svg
                     fill="currentColor"
                     height="20"
-                    size="20"
                     stroke="currentColor"
                     stroke-width="0"
                     viewBox="0 0 512 512"
