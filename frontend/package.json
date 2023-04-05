@@ -30,7 +30,6 @@
     "@react-keycloak/web": "3.4.0",
     "@react-leaflet/core": "1.1.1",
     "@reduxjs/toolkit": "1.9.3",
-    "ajv": "8.11.2",
     "axios": "0.27.2",
     "bootstrap": "5.2.2",
     "classnames": "2.3.2",
