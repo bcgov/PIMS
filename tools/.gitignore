@@ -46,9 +46,6 @@ TestResults/
 # Visual Studio 2015
 .vs/
 
-# SonarQube
-.sonarqube/
-
 # NET Core Healthchecks UI
 healthchecksdb
 healthchecksdb-shm

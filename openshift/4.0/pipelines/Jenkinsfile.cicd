@@ -31,11 +31,6 @@ pipeline {
     MAINTENANCE_DIRECTORY = 'maintenance'
     DEVOPS_DIRECTORY = 'openshift/4.0'
 
-    // SonarQube configuration
-    SONARQUBE_URL_INT = 'http://sonarqube:9000'
-    SONARQUBE_TOKEN_SECRET = 'sonarqube-token'
-    SONARQUBE_TOKEN_KEY = 'token'
-
     // Rocket.Chat Configuration
     ROCKET_CHAT_SECRET = 'rocket-chat-secrets'
     ROCKET_CHAT_WEBHOOK_KEY = 'rocket-deploy-webhook'
@@ -80,7 +75,6 @@ pipeline {
           // ensure required secrets and credentials are available in the CI environment
           // [add more secrets here if needed...]
           env.ROCKET_DEPLOY_WEBHOOK = sh(script: "oc extract --to=- --keys=${ROCKET_CHAT_WEBHOOK_KEY} secret/${ROCKET_CHAT_SECRET} 2>&1 | sed -n 2p", returnStdout: true).trim()
-          env.SONAR_TOKEN = sh(script: "oc extract --to=- --keys=${SONARQUBE_TOKEN_KEY} secret/${SONARQUBE_TOKEN_SECRET} 2>&1 | sed -n 2p", returnStdout: true).trim()
 
           // initialize CI environment values
           env.CHANGELOG = commonPipeline.getChangeLog()

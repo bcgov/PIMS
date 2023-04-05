@@ -13,12 +13,6 @@ objects:
   subjects:
     - kind: User
       apiGroup: rbac.authorization.k8s.io
-      name: braden.mitchell@gov.bc.ca
-    - kind: User
-      apiGroup: rbac.authorization.k8s.io
-      name: lawrence.lau@gov.bc.ca
-    - kind: User
-      apiGroup: rbac.authorization.k8s.io
       name: sharala.perumal@gov.bc.ca
     - kind: User
       apiGroup: rbac.authorization.k8s.io
