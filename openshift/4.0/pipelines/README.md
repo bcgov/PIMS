@@ -28,23 +28,6 @@ This manually triggered pipeline promotes deployments from the `test` environmen
 
 # 2 Quality Gates and General Tooling
 
-### SonarQube (`sonarqube-pipeline`)
-
-> :bulb: This section is in progress
-
-This GitHub webhook triggered pipeline is the **static** code quality pipeline for the project. It is triggered by each commit to the `master` branch of the [Property Inventory Management System](https://github.com/bcgov/PIMS) GitHub repository.
-
-This pipeline performs the following operations in sequential order;
-
-- Performs a static code analysis on the latest source code, providing measures of;
-  - Reliability
-  - Security
-  - Maintainability
-  - Duplications
-- Uploads the results to the project's SonarQube server.
-
-The results can be found here; [PIMS - Code Quality](#)
-
 ## ZAP (`zap-pipeline`)
 
 > :bulb: This section is in progress

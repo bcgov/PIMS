@@ -15,14 +15,15 @@
     "cypress:e2e-dev": "cypress run --e2e --browser chrome --config baseUrl=\"https://pims-dev.apps.silver.devops.gov.bc.ca\" --env auth_client_id=\"pims-frontend-4391\"",
     "cypress:e2e-test": "cypress run --e2e --browser chrome --config baseUrl=\"https://pims-test.apps.silver.devops.gov.bc.ca\" --env auth_base_url=\"https://test.loginproxy.gov.bc.ca/auth\",auth_client_id=\"pims-frontend-4391\"",
     "cypress:e2e-prod": "cypress run --e2e --browser chrome --config baseUrl=\"https://pims.gov.bc.ca\" --env auth_base_url=\"https://loginproxy.gov.bc.ca/auth\",auth_client_id=\"pims-frontend-4391\"",
-    "coverage": "react-scripts test --ci --coverage --testResultsProcessor jest-sonar-reporter --watchAll=false --runInBand",
+    "coverage": "react-scripts test --ci --coverage --watchAll=false --runInBand",
     "update-snapshots": "react-scripts test --updateSnapshot",
     "eject": "react-scripts eject",
     "lint": "eslint src/ --ext .jsx,.js,.ts,.tsx --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json,css,scss}\"",
     "check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,css,scss}\"",
-    "docu:server": "npx styleguidist server"
+    "docu:server": "npx styleguidist server",
+    "dep-versions": "node checkDepVersions"
   },
   "dependencies": {
     "@babel/core": "7.21.4",
@@ -124,7 +125,6 @@
     "eslint-plugin-prettier": "3.1.1",
     "eslint-plugin-simple-import-sort": "7.0.0",
     "husky": "4.3.8",
-    "jest-sonar-reporter": "2.0.0",
     "jest-styled-components": "7.1.1",
     "node-sass": "8.0.0",
     "prettier": "1.19.1",
