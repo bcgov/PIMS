@@ -82,7 +82,7 @@ const checkVersions = async dependencyList => {
     const isDevDeps = dependencyList === devDependencies;
     // Output the npm install command with all the new versions.
     console.log(
-      `\n\nRun ${CYAN}npm i${isDevDeps ? ' -D' : ''} ${dependenciesToUpdate.join(
+      `\nRun ${CYAN}npm i${isDevDeps ? ' -D' : ''} ${dependenciesToUpdate.join(
         ' ',
       )}${RESET} to update the dependencies.`,
     );
