@@ -2,9 +2,9 @@ name: APP (React)
 
 on:
   push:
-    branches: [master, dev, dev-alpha]
+    branches: [master, dev]
   pull_request:
-    branches: [master, dev, dev-alpha]
+    branches: [master, dev]
 
 jobs:
   build:
@@ -20,11 +20,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: Extract Branch Name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -55,65 +50,3 @@ jobs:
           env_vars: javascript
           # Specify whether or not CI build should fail if Codecov runs into an error during upload
           fail_ci_if_error: true
-
-      - name: SonarQube Scan
-        id: scan
-        uses: sonarsource/sonarqube-scan-action@master
-        if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_URL }}
-          PROJECT_KEY: ${{secrets.PROJECT_KEY_APP}}
-          PROJECT_NAME: PIMS-APP
-        with:
-          projectBaseDir: ${{env.working-directory}}
-          args: >
-            -Dsonar.projectKey=${{env.PROJECT_KEY}}
-            -Dsonar.projectName=${{env.PROJECT_NAME}}
-            -Dsonar.qualitygate.wait=true
-
-      - name: Find Comment
-        if: failure() && steps.scan.outcome == 'failure' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
-        uses: peter-evans/find-comment@v1
-        id: fc
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-author: 'github-actions[bot]'
-          body-includes: QUALITY GATE STATUS FOR APP-REACT
-
-      - name: Check Quality Gate and Create Comment
-        uses: peter-evans/create-or-update-comment@v1
-        if: failure() && steps.scan.outcome == 'failure' && github.event_name == 'pull_request' && steps.fc.outputs.comment-id == '' && github.event.pull_request.head.repo.full_name == github.repository
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_URL }}
-          PROJECT_KEY: ${{secrets.PROJECT_KEY_APP}}
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            QUALITY GATE STATUS FOR APP-REACT: FAILED.
-
-            [View and resolve details on][1]
-
-            [1]: ${{env.SONAR_HOST_URL}}/dashboard?id=${{env.PROJECT_KEY}}
-          reactions: confused
-
-      - name: Check Quality Gate and Update Comment
-        if: failure() && steps.scan.outcome == 'failure' && github.event_name == 'pull_request' && steps.fc.outputs.comment-id != '' && github.event.pull_request.head.repo.full_name == github.repository
-        uses: peter-evans/create-or-update-comment@v1
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_URL }}
-          PROJECT_KEY: ${{secrets.PROJECT_KEY_APP}}
-        with:
-          comment-id: ${{ steps.fc.outputs.comment-id }}
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            QUALITY GATE STATUS FOR APP-REACT: FAILED.
-
-            [View and resolve details on][1]
-
-            [1]: ${{env.SONAR_HOST_URL}}/dashboard?id=${{env.PROJECT_KEY}}
-          edit-mode: replace
-          reactions: eyes
