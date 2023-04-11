@@ -15,9 +15,6 @@ case "${1:-}" in
     backup)
         ./oc-backup.sh ${ARGV}
         ;;
-    restore)
-        echo "Not implemented yet"
-        ;;
     migrate)
         ./oc-migrate.sh ${ARGV}
         ;;
@@ -26,15 +23,6 @@ case "${1:-}" in
         ;;
     deploy)
         ./oc-deploy.sh ${ARGV}
-        ;;
-    scan)
-        ./oc-sonar-scan.sh ${ARGV}
-        ;;
-    scan-dotnet)
-        ./oc-sonar-dotnet.sh ${ARGV}
-        ;;
-    clean)
-        echo "Not implemented yet"
         ;;
     *)
     echo "You are doing it wrong..."
