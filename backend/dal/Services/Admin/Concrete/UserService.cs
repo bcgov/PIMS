@@ -16,8 +16,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.ComponentModel;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -282,7 +282,7 @@ namespace Pims.Dal.Services.Admin
             }
             GoldUser gUser = this.Get(this.User.GetUsername());
 
-            var addRoles =  user.Roles.Except(existingUser.Roles, new UserRoleRoleIdComparer()); //gUser.GoldUserRoles; //.Except(user.Roles, new UserRoleRoleIdComparer());
+            var addRoles = user.Roles.Except(existingUser.Roles, new UserRoleRoleIdComparer()); //gUser.GoldUserRoles; //.Except(user.Roles, new UserRoleRoleIdComparer());
             addRoles.ForEach(r => this.Context.Entry(r).State = EntityState.Added);
             var removeRoles = existingUser.Roles.Except(user.Roles, new UserRoleRoleIdComparer());
             removeRoles.ForEach(r => this.Context.Entry(r).State = EntityState.Deleted);
@@ -532,8 +532,8 @@ namespace Pims.Dal.Services.Admin
             request.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/x-www-form-urlencoded");
             HttpResponseMessage response = await _httpClient.SendAsync(request);
             if (!response.IsSuccessStatusCode) throw new Exception("Unable to get token from Keycloak Gold");
-            JObject payload = JObject.Parse(await response.Content.ReadAsStringAsync());
-            string token = payload.Value<string>("access_token");
+            JsonNode payload = JsonNode.Parse(await response.Content.ReadAsStringAsync());
+            string token = payload["access_token"].ToString();
             this.access_token = token;
             return token;
         }

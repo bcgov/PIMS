@@ -5,7 +5,7 @@ import { SortDirection, TableSort } from 'components/Table/TableSort';
 import { IStatus } from 'features/projects/interfaces';
 import { FormikProps, getIn } from 'formik';
 import { isEmpty, isNull, isUndefined, keys, lowerFirst, startCase } from 'lodash';
-import moment from 'moment-timezone';
+import moment from 'moment';
 import { hideLoading, showLoading } from 'react-redux-loading-bar';
 import { AnyAction, Dispatch } from 'redux';
 import { storeError, storeRequest, storeSuccess } from 'store';

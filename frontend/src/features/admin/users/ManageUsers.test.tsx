@@ -10,7 +10,7 @@ import { Formik } from 'formik';
 import { createMemoryHistory } from 'history';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { noop } from 'lodash';
-import moment from 'moment-timezone';
+import moment from 'moment';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
