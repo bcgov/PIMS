@@ -6,7 +6,7 @@ import * as API from 'constants/API';
 import Claims from 'constants/claims';
 import { createMemoryHistory } from 'history';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import moment from 'moment-timezone';
+import moment from 'moment';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
