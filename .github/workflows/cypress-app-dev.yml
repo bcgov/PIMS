@@ -28,5 +28,5 @@ jobs:
           config: baseUrl=https://pims-dev.apps.silver.devops.gov.bc.ca
         env:
           auth_client_id: pims-frontend-4391
-          keycloak_user: ${{ secrets.CYPRESS_KEYCLOAK_USER }}
+          keycloak_user: ${{ secrets.TEST_IDIR_USERNAME }}
           keycloak_password: ${{ secrets.CYPRESS_KEYCLOAK_PASSWORD }}
