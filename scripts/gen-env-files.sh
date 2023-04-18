@@ -48,9 +48,7 @@ if test -f "./backend/dal/.env"; then
     echo "./backend/dal/.env exists"
 else
 echo \
-
 "ConnectionStrings__PIMS=Server=localhost,5433;Database=pims;User Id=admin;
-
 DB_PASSWORD=MWIxZWFlNTZiOTU3YTZmODEyZDUxYA8!" >> ./backend/dal/.env
 fi
 
