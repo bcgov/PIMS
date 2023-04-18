@@ -142,7 +142,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         }
 
         /// <summary>
-        /// PUT - Update the user in the datasource.
+        /// PUT /api/admin/user/{id} - Update the user in the datasource.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="model">The user model.</param>
