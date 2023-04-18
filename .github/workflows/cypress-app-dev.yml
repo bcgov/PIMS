@@ -29,4 +29,4 @@ jobs:
         env:
           auth_client_id: pims-frontend-4391
           keycloak_user: ${{ secrets.TEST_IDIR_USERNAME }}
-          keycloak_password: ${{ secrets.CYPRESS_KEYCLOAK_PASSWORD }}
+          keycloak_password: ${{ secrets.TEST_IDIR_PASSWORD }}
