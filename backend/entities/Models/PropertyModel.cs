@@ -1,9 +1,6 @@
-using System.Collections.Generic;
 using System;
-using System.Linq;
 using System.Security.Claims;
 using NetTopologySuite.Geometries;
-using Pims.Core.Extensions;
 
 namespace Pims.Dal.Entities.Models
 {

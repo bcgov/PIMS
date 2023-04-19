@@ -7,18 +7,11 @@ using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
-using System.ComponentModel;
 using EModel = Pims.Dal.Entities.Models;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Admin.Models.User;
 using GoldModel = Pims.Api.Areas.Admin.Models.GoldUser;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Microsoft.AspNetCore.Http;
 
 namespace Pims.Api.Areas.Admin.Controllers
 {

@@ -1,7 +1,4 @@
-using System.Collections;
-using System.ComponentModel;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pims.Core.Extensions;
@@ -13,7 +10,6 @@ using Pims.Dal.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Security.Claims;
 
 namespace Pims.Dal.Services

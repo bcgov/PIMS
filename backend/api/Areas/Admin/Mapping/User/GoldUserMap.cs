@@ -1,9 +1,6 @@
-using System;
 using Mapster;
 using Pims.Core.Extensions;
 using System.Linq;
-using Pims.Dal.Entities;
-using Pims.Api.Areas.Admin.Models.GoldUser;
 
 namespace Pims.Api.Areas.Admin.Mapping.GoldUser
 {
