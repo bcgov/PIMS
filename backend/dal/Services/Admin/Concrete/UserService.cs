@@ -289,6 +289,12 @@ namespace Pims.Dal.Services.Admin
             var removeAgencies = existingUser.Agencies.Except(user.Agencies, new UserAgencyAgencyIdComparer());
             removeAgencies.ForEach(a => this.Context.Entry(a).State = EntityState.Deleted);
 
+            user.ApprovedById = existingUser.ApprovedById;
+            user.ApprovedOn = existingUser.ApprovedOn;
+            user.CreatedById = existingUser.CreatedById;
+            user.CreatedOn = existingUser.CreatedOn;
+            user.LastLogin = existingUser.LastLogin;
+
             base.Update(user);
             this.Context.Detach(user);
         }

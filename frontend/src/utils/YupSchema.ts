@@ -22,6 +22,8 @@ export const AccessRequestSchema = Yup.object().shape({
     .required('Required'),
   note: Yup.string().max(1000, 'Note must be less than 1000 characters'),
   user: Yup.object().shape({
+    firstName: Yup.string().required('Required'),
+    lastName: Yup.string().required('Required'),
     position: Yup.string().max(100, 'Note must be less than 100 characters'),
   }),
 });
