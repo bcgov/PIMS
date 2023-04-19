@@ -1,9 +1,5 @@
 using Pims.Dal.Helpers.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Text.RegularExpressions;
 
 namespace Pims.Dal.Entities
 {

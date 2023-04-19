@@ -1,5 +1,3 @@
-using System;
-
 namespace Pims.Dal.Helpers
 {
     /// <summary>
