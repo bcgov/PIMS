@@ -155,14 +155,20 @@ export function useKeycloakWrapper(): IKeycloak {
    * Return the user's first name
    */
   const firstName = (): string | undefined => {
-    return userInfo?.firstName ?? userInfo?.given_name;
+    if (userInfo?.identity_provider.includes('bceid')) {
+      return userInfo?.displayName?.slice(2).split(' ')[0];
+    }
+    return userInfo?.given_name;
   };
 
   /**
    * Return the user's last name
    */
   const lastName = (): string | undefined => {
-    return userInfo?.lastName ?? userInfo?.family_name;
+    if (userInfo?.identity_provider.includes('bceid')) {
+      return userInfo?.displayName?.slice(2).split(' ')[1];
+    }
+    return userInfo?.family_name;
   };
 
   /**
