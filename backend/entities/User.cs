@@ -145,6 +145,8 @@ namespace Pims.Dal.Entities
             this.FirstName = firstName;
             this.LastName = lastName;
             this.DisplayName = $"{lastName}, {firstName}";
+            this.LastLogin = DateTime.UtcNow;
+            this.CreatedOn = DateTime.UtcNow;
         }
         #endregion
     }
