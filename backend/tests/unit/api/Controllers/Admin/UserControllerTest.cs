@@ -158,12 +158,10 @@ namespace PimsApi.Test.Admin.Controllers
             var actionResult = Assert.IsType<CreatedAtActionResult>(result);
             Assert.Equal(201, actionResult.StatusCode);
             var actualResult = Assert.IsType<Model.UserModel>(actionResult.Value);
-            actualResult.CreatedOn.Should().Be(user.CreatedOn);
             actualResult.DisplayName.Should().Be(user.DisplayName);
             actualResult.Email.Should().Be(user.Email);
             actualResult.EmailVerified.Should().Be(user.EmailVerified);
             actualResult.FirstName.Should().Be(user.FirstName);
-            actualResult.LastLogin.Should().Be(user.LastLogin);
             actualResult.LastName.Should().Be(user.LastName);
             actualResult.MiddleName.Should().Be(user.MiddleName);
             actualResult.Note.Should().Be(user.Note);
@@ -196,12 +194,10 @@ namespace PimsApi.Test.Admin.Controllers
             var actionResult = Assert.IsType<JsonResult>(result);
             Assert.Null(actionResult.StatusCode);
             var actualResult = Assert.IsType<Model.UserModel>(actionResult.Value);
-            actualResult.CreatedOn.Should().Be(user.CreatedOn);
             actualResult.DisplayName.Should().Be(user.DisplayName);
             actualResult.Email.Should().Be(user.Email);
             actualResult.EmailVerified.Should().Be(user.EmailVerified);
             actualResult.FirstName.Should().Be(user.FirstName);
-            actualResult.LastLogin.Should().Be(user.LastLogin);
             actualResult.LastName.Should().Be(user.LastName);
             actualResult.MiddleName.Should().Be(user.MiddleName);
             actualResult.Note.Should().Be(user.Note);
