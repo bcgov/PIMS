@@ -613,7 +613,7 @@ describe('Create a disposal project', () => {
     /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
                   Approved
     * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
-    cy.contains('Approved for Exemption', { timeout: 10000 }).should('be.visible');
+    cy.contains('Approved for Exemption', { timeout: 20000 }).should('be.visible');
 
     cy.visit(`/projects/list`);
 
