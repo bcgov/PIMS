@@ -132,8 +132,6 @@ describe('Navigation/routing of NavBar links', () => {
    */
 
   it('Submit Property links to correct route', () => {
-    cy.visit('/');
-
     // Go to Submit Property page.
     cy.get('[data-testid="navbar-submit-property"]')
       .should('be.visible')
