@@ -116,19 +116,22 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
     setFieldValue(field, properties);
   }, [properties, setFieldValue, field]);
 
-  const onRowClick = useCallback((row: IProperty) => {
-    navigate(
-      `/mapview?${queryString.stringify({
-        sidebar: true,
-        disabled: true,
-        loadDraft: false,
-        parcelId: [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
-          ? row.id
-          : undefined,
-        buildingId: row.propertyTypeId === PropertyTypes.BUILDING ? row.id : undefined,
-      })}`,
-    );
-  }, []);
+  const onRowClick = useCallback(
+    (row: IProperty) => {
+      navigate(
+        `/mapview?${queryString.stringify({
+          sidebar: true,
+          disabled: true,
+          loadDraft: false,
+          parcelId: [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
+            ? row.id
+            : undefined,
+          buildingId: row.propertyTypeId === PropertyTypes.BUILDING ? row.id : undefined,
+        })}`,
+      );
+    },
+    [navigate],
+  );
 
   return (
     <Container className="col-md-12 PropertyListViewSelect">

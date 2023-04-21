@@ -30,19 +30,22 @@ export const ProjectProperties: React.FC = () => {
     if (!exists) setFieldValue('properties', [...properties, toProjectProperty(values, property)]);
   };
 
-  const handleRowClick = useCallback((row: IProjectPropertyForm) => {
-    navigate(
-      `/mapview?${queryString.stringify({
-        sidebar: true,
-        disabled: true,
-        loadDraft: false,
-        parcelId: [PropertyType.Parcel, PropertyType.Subdivision].includes(row.propertyTypeId)
-          ? row.propertyId
-          : undefined,
-        buildingId: row.propertyTypeId === PropertyType.Building ? row.propertyId : undefined,
-      })}`,
-    );
-  }, []);
+  const handleRowClick = useCallback(
+    (row: IProjectPropertyForm) => {
+      navigate(
+        `/mapview?${queryString.stringify({
+          sidebar: true,
+          disabled: true,
+          loadDraft: false,
+          parcelId: [PropertyType.Parcel, PropertyType.Subdivision].includes(row.propertyTypeId)
+            ? row.propertyId
+            : undefined,
+          buildingId: row.propertyTypeId === PropertyType.Building ? row.propertyId : undefined,
+        })}`,
+      );
+    },
+    [navigate],
+  );
 
   // Disabled prop
   const {
