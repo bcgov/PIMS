@@ -9,6 +9,7 @@ import { ISearchPropertyModel } from 'hooks/api/properties/search';
 import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
 import queryString from 'query-string';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { IProjectForm, IProjectPropertyForm } from '../interfaces';
 import { DisplayError } from './../../../../components/common/form/DisplayError';
@@ -19,6 +20,7 @@ import * as styled from './styled';
 import { toProjectProperty } from './utils';
 
 export const ProjectProperties: React.FC = () => {
+  const navigate = useNavigate();
   const { values, setFieldValue, errors } = useFormikContext<IProjectForm>();
   const [showAdd, setShowAdd] = useState(false);
   const properties = values.properties;
@@ -29,7 +31,7 @@ export const ProjectProperties: React.FC = () => {
   };
 
   const handleRowClick = useCallback((row: IProjectPropertyForm) => {
-    window.open(
+    navigate(
       `/mapview?${queryString.stringify({
         sidebar: true,
         disabled: true,
@@ -39,14 +41,13 @@ export const ProjectProperties: React.FC = () => {
           : undefined,
         buildingId: row.propertyTypeId === PropertyType.Building ? row.propertyId : undefined,
       })}`,
-      '_blank',
     );
   }, []);
 
   // Disabled prop
   const {
     values: { workflowCode, statusCode },
-  } = useFormikContext();
+  }: any = useFormikContext();
   const keycloak = useKeycloakWrapper();
   const [disabled, setDisabled] = useState(false);
   const isAdmin = keycloak.hasClaim(Claim.ReportsSplAdmin);
