@@ -111,7 +111,8 @@ namespace Pims.Api.Controllers
         }
 
         /// <summary>
-        /// Provides a way for a user to submit an access request to the system, associating a role and agency to their user.
+        /// POST /api/users/access/requests/${id} - Provides a way for a user to submit
+        /// an access request to the system, associating a role and agency to their user.
         /// </summary>
         /// <returns></returns>
         [HttpPost("access/requests")]
@@ -163,6 +164,7 @@ namespace Pims.Api.Controllers
         }
 
         /// <summary>
+        /// PUT /api/users/access/requests/${id}
         /// Provides a way for a user to update their access request.
         /// </summary>
         /// <returns></returns>
