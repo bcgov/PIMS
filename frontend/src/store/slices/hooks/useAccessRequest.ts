@@ -107,6 +107,7 @@ export const useAccessRequest = () => {
       dispatch(storeRequest(request(actionTypes.ADD_REQUEST_ACCESS)));
       dispatch(showLoading());
 
+      // POST || PUT /api/users/access/requests/${id}
       return await CustomAxios()
         .request({
           url: ENVIRONMENT.apiUrl + API.REQUEST_ACCESS(accessRequest.id),
