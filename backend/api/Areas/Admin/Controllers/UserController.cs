@@ -105,7 +105,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         }
 
         /// <summary>
-        /// GET - Returns a user for the specified 'id' from the datasource.
+        /// GET /api/admin/users/${id} - Returns a user for the specified 'id' from the datasource.
         /// </summary>
         /// <param name="id">The unique 'id' for the user to return.</param>
         /// <returns>The user requested.</returns>
