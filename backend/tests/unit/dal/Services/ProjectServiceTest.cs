@@ -1429,8 +1429,8 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             result.Properties.Should().HaveCount(1);
-            result.Properties.First().PropertyType.Should().Equals(Entity.PropertyTypes.Building);
-            result.Properties.First().Building.Description.Should().Equals("description-20");
+            result.Properties.First().PropertyType.Should().Be(Entity.PropertyTypes.Building);
+            result.Properties.First().Building.Description.Should().Be("description-20");
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
@@ -1473,8 +1473,8 @@ namespace Pims.Dal.Test.Services
             // Assert
             Assert.NotNull(result);
             result.Properties.Should().HaveCount(1);
-            result.Properties.First().PropertyType.Should().Equals(Entity.PropertyTypes.Building);
-            result.Properties.First().Building.ClassificationId.Should().Equals((int)ClassificationTypes.SurplusActive);
+            result.Properties.First().PropertyType.Should().Be(Entity.PropertyTypes.Building);
+            result.Properties.First().Building.ClassificationId.Should().Be((int)ClassificationTypes.SurplusActive);
             result.Properties.First().Building.Evaluations.Should().HaveCount(2);
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
