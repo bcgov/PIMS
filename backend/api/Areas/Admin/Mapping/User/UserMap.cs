@@ -24,6 +24,7 @@ namespace Pims.Api.Areas.Admin.Mapping.User
                 .Map(dest => dest.Note, src => src.Note)
                 .Map(dest => dest.Agencies, src => src.Agencies.Select(a => a.Agency))
                 .Map(dest => dest.Roles, src => src.Roles.Select(a => a.Role))
+                .Map(dest => dest.LastLogin, src => src.LastLogin)
                 .Inherits<Entity.BaseEntity, Api.Models.BaseModel>();
 
             config.NewConfig<Model.UserModel, Entity.User>()
@@ -40,6 +41,7 @@ namespace Pims.Api.Areas.Admin.Mapping.User
                 .Map(dest => dest.Note, src => src.Note)
                 .Map(dest => dest.Agencies, src => src.Agencies)
                 .Map(dest => dest.Roles, src => src.Roles)
+                .Map(dest => dest.LastLogin, src => src.LastLogin)
                 .AfterMappingInline((m, e) => UpdateUser(m, e))
                 .Inherits<Api.Models.BaseModel, Entity.BaseEntity>();
         }
