@@ -111,6 +111,7 @@ export const fetchUserDetail = (id: API.IUserDetailParams) => async (
 ) => {
   dispatch(storeRequest(request(reducerTypes.GET_USER_DETAIL)));
   dispatch(showLoading());
+  // GET /api/admin/users/${id}
   return await CustomAxios()
     .get(ENVIRONMENT.apiUrl + API.USER_DETAIL(id))
     .then((response: AxiosResponse) => {

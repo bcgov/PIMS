@@ -105,7 +105,7 @@ namespace Pims.Dal.Entities
         /// get - A collection of roles this user belongs to.
         /// </summary>
         /// <typeparam name="Role"></typeparam>
-        public ICollection<UserRole> Roles { get; } = new List<UserRole>();
+        public ICollection<UserRole> Roles { get; set; } = new List<UserRole>();
         #endregion
 
         #region Constructors
