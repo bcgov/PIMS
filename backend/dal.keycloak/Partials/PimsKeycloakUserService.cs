@@ -186,7 +186,8 @@ namespace Pims.Dal.Keycloak
         }
 
         /// <summary>
-        /// Updates the specified access request in the datasource. if the request is granted, update the associated user as well.
+        /// Updates the specified access request in the datasource. if the request is granted, 
+        /// update the associated user as well.
         /// </summary>
         /// <param name="accessRequest"></param>
         /// <exception type="KeyNotFoundException">Entity does not exist in the datasource.</exception>
@@ -196,11 +197,16 @@ namespace Pims.Dal.Keycloak
             accessRequest.ThrowIfNull(nameof(accessRequest));
             accessRequest.ThrowIfNull(nameof(accessRequest.UserId));
 
+            // User approving/denying the request must be authorized to do so.
             _user.ThrowIfNotAuthorized(Permissions.AdminUsers, Permissions.AgencyAdmin);
+
             var existingAccessRequest = _pimsAdminService.User.GetAccessRequest(accessRequest.Id);
+            // If user is being granted access.
             if (existingAccessRequest.Status != Entity.AccessRequestStatus.Approved && accessRequest.Status == Entity.AccessRequestStatus.Approved)
             {
                 var user = _pimsAdminService.User.Get(existingAccessRequest.UserId);
+
+                // Add Agency to user to update.
                 accessRequest.Agencies.ForEach((accessRequestAgency) =>
                 {
                     if (!user.Agencies.Any(a => a.AgencyId == accessRequestAgency.AgencyId))
@@ -212,19 +218,28 @@ namespace Pims.Dal.Keycloak
                         });
                     }
                 });
-                accessRequest.Roles.ForEach((accessRequestRole) =>
+
+                // Add role to user to update, and add role in keycloak.
+                var preferred_username = _pimsAdminService.User.GetUsersPreferredUsername(user.KeycloakUserId ?? Guid.Empty, user.Username.Split("@").Last()).Result;
+                accessRequest.Roles.ForEach(async (accessRequestRole) =>
                 {
                     if (!user.Roles.Any(r => r.RoleId == accessRequestRole.RoleId))
                     {
-                        user.Roles.Add(new Entity.UserRole()
-                        {
-                            User = user,
-                            RoleId = accessRequestRole.RoleId
-                        });
+                      var roleEntity = _pimsAdminService.Role.Get(accessRequestRole.RoleId);
+                      await _pimsAdminService.User.AddRoleToUser(preferred_username, roleEntity.Name);
+                      user.Roles.Add(new Entity.UserRole()
+                      {
+                          User = user,
+                          RoleId = accessRequestRole.RoleId
+                      });
                     }
                 });
+
+                // Update user in datasource.
+                _pimsAdminService.User.Update(user);
             }
 
+            // Update Access Request and approvedById + approvedOn.
             return _pimsAdminService.User.UpdateAccessRequest(accessRequest);
         }
     }
