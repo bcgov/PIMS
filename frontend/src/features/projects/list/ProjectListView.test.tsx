@@ -144,13 +144,13 @@ describe('Project list view tests', () => {
     });
     const { findByText, container } = testRender();
 
-    act(() => {
+    act(async () => {
       // default table message when there is no data to display
-      waitFor(() => {
+      await waitFor(() => {
         const noResults = findByText('No rows to display');
         expect(noResults).toBeVisible();
+        expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
       });
-      expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
     });
   });
 
@@ -163,11 +163,14 @@ describe('Project list view tests', () => {
       items: [],
     });
 
-    await act(async () => {
-      const { queryByTestId, container } = testRender();
-      expect(queryByTestId('excel-icon')).not.toBeInTheDocument();
-      expect(queryByTestId('csv-icon')).not.toBeInTheDocument();
-      expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
+    const { queryByTestId, container } = testRender();
+
+    act(async () => {
+      await waitFor(() => {
+        expect(queryByTestId('excel-icon')).not.toBeInTheDocument();
+        expect(queryByTestId('csv-icon')).not.toBeInTheDocument();
+        expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
+      });
     });
   });
 
@@ -182,10 +185,12 @@ describe('Project list view tests', () => {
     });
     const { getByTestId, container } = testRender();
 
-    await act(async () => {
-      expect(getByTestId('excel-icon')).toBeInTheDocument();
-      expect(getByTestId('csv-icon')).toBeInTheDocument();
-      expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
+    act(async () => {
+      await waitFor(() => {
+        expect(getByTestId('excel-icon')).toBeInTheDocument();
+        expect(getByTestId('csv-icon')).toBeInTheDocument();
+        expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
+      });
     });
   });
 });

@@ -1,6 +1,5 @@
 import { IParcel } from 'actions/parcelsActions';
 import { Label } from 'components/common/Label';
-import queryString from 'query-string';
 import * as React from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
@@ -31,13 +30,13 @@ export const AssociatedParcelsList: React.FC<IAssociatedParcels> = ({ parcels })
                 className="styled-link"
                 to={{
                   pathname: `/mapview`,
-                  search: queryString.stringify({
-                    ...queryString.parse(location.search),
-                    sidebar: true,
-                    disabled: true,
-                    loadDraft: false,
-                    parcelId: parcel.id,
-                  }),
+                  search: new URLSearchParams({
+                    ...Object.fromEntries(new URLSearchParams(location.search)),
+                    sidebar: 'true',
+                    disabled: 'true',
+                    loadDraft: 'false',
+                    parcelId: `${parcel.id}`,
+                  }).toString(),
                 }}
               >
                 {parcel.pid ? parcel.pid : parcel.pin}

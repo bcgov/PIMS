@@ -1,7 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks';
 import * as reducerTypes from 'constants/reducerTypes';
 import { createMemoryHistory } from 'history';
-import queryString from 'query-string';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
@@ -93,7 +92,11 @@ describe('useRouterFilter hook tests', () => {
 
     const wrapper = getWrapper(getStore({}));
     renderHook(() => useRouterFilter({ filter, setFilter, key: 'test' }), { wrapper });
-    expect(history.location.search).toEqual(`${queryString.stringify(filterWithValues)}`);
+    const queryParams = new URLSearchParams();
+    for (const [key, value] of Object.entries(filterWithValues ?? {})) {
+      queryParams.set(key, String(value));
+    }
+    expect(history.location.search).toEqual(`${queryParams.toString()}`);
   });
 
   it('will not set the filter based on an invalid query string', () => {
@@ -130,6 +133,10 @@ describe('useRouterFilter hook tests', () => {
     Object.keys(filterWithValues).forEach(key => {
       if (filterWithValues[key] === '') delete filterWithValues.key;
     });
-    expect(history.location.search).toEqual(`${queryString.stringify(filterWithValues)}`);
+    const queryParams = new URLSearchParams();
+    for (const [key, value] of Object.entries(filterWithValues ?? {})) {
+      queryParams.set(key, String(value));
+    }
+    expect(history.location.search).toEqual(`${queryParams.toString()}`);
   });
 });

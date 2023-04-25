@@ -3,10 +3,9 @@ import { Table } from 'components/Table';
 import { ProjectLayout } from 'features/projects/common';
 import { LayoutWrapper } from 'features/routes';
 import { IProjectModel, IProjectPropertyModel } from 'hooks/api/projects/disposals';
-import queryString from 'query-string';
 import React from 'react';
 import { Form } from 'react-bootstrap';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useProjectDisposal } from 'store/hooks';
 import { formatDate, formatFiscalYear, formatMoney } from 'utils';
 
@@ -14,12 +13,13 @@ import { PropertyColumns } from './constants';
 import * as styled from './styled';
 
 export const ProjectSummary: React.FC = () => {
+  const navigate = useNavigate();
   const api = useProjectDisposal();
   const [project, setProject] = React.useState<IProjectModel>();
   const location = useLocation();
-
-  const query = location?.search ?? {};
-  const projectNumber = queryString.parse(query).projectNumber as string | undefined;
+  const queryParams = new URLSearchParams(location.search);
+  let projectNumber: string | null | undefined = queryParams.get('projectNumber');
+  if (projectNumber === '') projectNumber = undefined;
   const properties = project?.properties ?? [];
 
   const fetch = React.useCallback(
@@ -42,18 +42,21 @@ export const ProjectSummary: React.FC = () => {
     }
   }, [projectNumber, fetch, project?.projectNumber]);
 
-  const handleRowClick = React.useCallback((row: IProjectPropertyModel) => {
-    window.open(
-      `/mapview?${queryString.stringify({
-        sidebar: true,
-        disabled: true,
-        loadDraft: false,
-        parcelId: row.parcelId,
-        buildingId: row.buildingId,
-      })}`,
-      '_blank',
-    );
-  }, []);
+  const handleRowClick = React.useCallback(
+    (row: IProjectPropertyModel) => {
+      const queryParams = new URLSearchParams();
+      queryParams.set('sidebar', 'true');
+      queryParams.set('disabled', 'true');
+      queryParams.set('loadDraft', 'false');
+      queryParams.set('buildingId', `${row.buildingId}`);
+      queryParams.set('parcelId', `${row.parcelId}`);
+      navigate({
+        pathname: '/mapview',
+        search: '',
+      });
+    },
+    [navigate],
+  );
 
   const ProjectSummaryContent = () => {
     return (
