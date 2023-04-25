@@ -10,6 +10,7 @@ import _ from 'lodash';
 import queryString from 'query-string';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Container, FormControlProps } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 import { clickableTooltip, IFilterBarState, useProject } from '../../common';
 import useTable from '../../dispose/hooks/useTable';
@@ -52,6 +53,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
   pageIndex,
   setPageIndex,
 }) => {
+  const navigate = useNavigate();
   const lookupCodes = useCodeLookups();
   const { values, setFieldValue } = useFormikContext<any>();
   const existingProperties: IProperty[] = getIn(values, field);
@@ -114,20 +116,22 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
     setFieldValue(field, properties);
   }, [properties, setFieldValue, field]);
 
-  const onRowClick = useCallback((row: IProperty) => {
-    window.open(
-      `/mapview?${queryString.stringify({
-        sidebar: true,
-        disabled: true,
-        loadDraft: false,
-        parcelId: [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
-          ? row.id
-          : undefined,
-        buildingId: row.propertyTypeId === PropertyTypes.BUILDING ? row.id : undefined,
-      })}`,
-      '_blank',
-    );
-  }, []);
+  const onRowClick = useCallback(
+    (row: IProperty) => {
+      navigate(
+        `/mapview?${queryString.stringify({
+          sidebar: true,
+          disabled: true,
+          loadDraft: false,
+          parcelId: [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
+            ? row.id
+            : undefined,
+          buildingId: row.propertyTypeId === PropertyTypes.BUILDING ? row.id : undefined,
+        })}`,
+      );
+    },
+    [navigate],
+  );
 
   return (
     <Container className="col-md-12 PropertyListViewSelect">

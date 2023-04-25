@@ -142,15 +142,16 @@ describe('Project list view tests', () => {
       pageIndex: 0,
       items: [],
     });
+
     const { findByText, container } = testRender();
+    const noResults = findByText('No rows to display');
 
     act(() => {
       // default table message when there is no data to display
       waitFor(() => {
-        const noResults = findByText('No rows to display');
         expect(noResults).toBeVisible();
+        expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
       });
-      expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
     });
   });
 

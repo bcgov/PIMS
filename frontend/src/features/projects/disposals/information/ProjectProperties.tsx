@@ -9,6 +9,7 @@ import { ISearchPropertyModel } from 'hooks/api/properties/search';
 import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
 import queryString from 'query-string';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { IProjectForm, IProjectPropertyForm } from '../interfaces';
 import { DisplayError } from './../../../../components/common/form/DisplayError';
@@ -19,6 +20,7 @@ import * as styled from './styled';
 import { toProjectProperty } from './utils';
 
 export const ProjectProperties: React.FC = () => {
+  const navigate = useNavigate();
   const { values, setFieldValue, errors } = useFormikContext<IProjectForm>();
   const [showAdd, setShowAdd] = useState(false);
   const properties = values.properties;
@@ -28,25 +30,27 @@ export const ProjectProperties: React.FC = () => {
     if (!exists) setFieldValue('properties', [...properties, toProjectProperty(values, property)]);
   };
 
-  const handleRowClick = useCallback((row: IProjectPropertyForm) => {
-    window.open(
-      `/mapview?${queryString.stringify({
-        sidebar: true,
-        disabled: true,
-        loadDraft: false,
-        parcelId: [PropertyType.Parcel, PropertyType.Subdivision].includes(row.propertyTypeId)
-          ? row.propertyId
-          : undefined,
-        buildingId: row.propertyTypeId === PropertyType.Building ? row.propertyId : undefined,
-      })}`,
-      '_blank',
-    );
-  }, []);
+  const handleRowClick = useCallback(
+    (row: IProjectPropertyForm) => {
+      navigate(
+        `/mapview?${queryString.stringify({
+          sidebar: true,
+          disabled: true,
+          loadDraft: false,
+          parcelId: [PropertyType.Parcel, PropertyType.Subdivision].includes(row.propertyTypeId)
+            ? row.propertyId
+            : undefined,
+          buildingId: row.propertyTypeId === PropertyType.Building ? row.propertyId : undefined,
+        })}`,
+      );
+    },
+    [navigate],
+  );
 
   // Disabled prop
   const {
     values: { workflowCode, statusCode },
-  } = useFormikContext();
+  }: any = useFormikContext();
   const keycloak = useKeycloakWrapper();
   const [disabled, setDisabled] = useState(false);
   const isAdmin = keycloak.hasClaim(Claim.ReportsSplAdmin);
