@@ -73,7 +73,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         }
 
         /// <summary>
-        /// GET - Returns a paged array of users from the datasource.
+        /// POST - Returns a paged array of users from the datasource.
         /// </summary>
         /// <param name="filter"></param>
         /// <returns>Paged object with an array of users.</returns>
@@ -90,7 +90,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         }
 
         /// <summary>
-        /// GET - Returns a paged array of users from the datasource that belong to the same agency (or sub-agency) as the current user.
+        /// POST /api/admin/users/my/agency - Returns a paged array of users from the datasource that belong to the same agency (or sub-agency) as the current user.
         /// </summary>
         /// <param name="filter"></param>
         /// <returns>Paged object with an array of users.</returns>
@@ -105,7 +105,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         }
 
         /// <summary>
-        /// GET - Returns a user for the specified 'id' from the datasource.
+        /// GET /api/admin/users/${id} - Returns a user for the specified 'id' from the datasource.
         /// </summary>
         /// <param name="id">The unique 'id' for the user to return.</param>
         /// <returns>The user requested.</returns>
@@ -142,7 +142,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         }
 
         /// <summary>
-        /// PUT - Update the user in the datasource.
+        /// PUT /api/admin/user/{id} - Update the user in the datasource.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="model">The user model.</param>
