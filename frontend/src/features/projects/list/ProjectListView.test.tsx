@@ -142,6 +142,7 @@ describe('Project list view tests', () => {
       pageIndex: 0,
       items: [],
     });
+
     const { findByText, container } = testRender();
 
     act(async () => {
