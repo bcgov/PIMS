@@ -11,10 +11,12 @@ Openshift:
 - openshift/*
 
 Docker:
-- any: ['docker-compose.yml', '**/Dockerfile']
+- docker-compose.yml
+- '**/Dockerfile'
 
 Dependencies:
-- any: ['frontend/package.json', 'backend/**/*.csproj']
+- frontend/package.json
+- backend/**/*.csproj
 
 Documentation:
 - '**/*.md'
@@ -33,12 +35,15 @@ React:
 - frontend/*
 
 Styles:
-- any: ['frontend/**/*.css', 'frontend/**/*.scss']
+- frontend/**/*.css
+- frontend/**/*.scss
 
 #################
 # Testing
 Test:
-- any: ['frontend/**/*.test.*', 'frontend/**/*.spec.*', 'backend/**/*.Test.*']
+- frontend/**/*.test.*
+- frontend/**/*.spec.*
+- backend/**/*.Test.*
 
 Cypress:
 - any: ['frontend/cypress/*', 'frontend/cypress.*']
