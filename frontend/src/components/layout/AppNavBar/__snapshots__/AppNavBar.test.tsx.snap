@@ -4,7 +4,6 @@ exports[`AppNavBar AppNavBar snapshot test. 1`] = `
 <AppNavBar>
   <Navbar
     className="map-nav"
-    collapseOnSelect={false}
     expand="lg"
     variant="dark"
   >
@@ -14,7 +13,6 @@ exports[`AppNavBar AppNavBar snapshot test. 1`] = `
       <NavbarToggle
         aria-controls="collapse"
         className="navbar-dark mr-auto"
-        label="Toggle navigation"
       >
         <button
           aria-controls="collapse"
@@ -32,13 +30,8 @@ exports[`AppNavBar AppNavBar snapshot test. 1`] = `
         className="links mr-auto"
       >
         <ForwardRef
-          appear={false}
           className="links mr-auto"
-          getDimensionValue={[Function]}
           in={false}
-          mountOnEnter={false}
-          timeout={300}
-          unmountOnExit={false}
         >
           <ForwardRef
             addEndListener={[Function]}
@@ -106,10 +99,7 @@ exports[`AppNavBar AppNavBar snapshot test. 1`] = `
                 aria-expanded={null}
                 className="links mr-auto navbar-collapse collapse"
               >
-                <Nav
-                  fill={false}
-                  justify={false}
-                >
+                <Nav>
                   <Nav
                     as="div"
                     className="navbar-nav"
