@@ -9,6 +9,8 @@ import { useDeepCompareMemoize } from './useDeepCompareMemoize';
  * Usage note: only use this if `deps` are objects or arrays that contain
  * objects. Otherwise you should just use React.useEffect.
  *
+ * This is because useEffect will not trigger a change by a
+ * change in the object or array properties of a dependency.
  */
 const useDeepCompareEffect = (callback: EffectCallback, dependencies: DependencyList) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
