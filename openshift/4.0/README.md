@@ -86,11 +86,3 @@ Setup Kibana and Elasticsearch - [README](./templates/logging/README.md)
 ### Monitoring Performance
 
 Setup Grafana and Prometheus - [README](./templates/monitor/README.md)
-
-### Jenkins Pipeline
-
-Setup Jenkins CICD - [README](./templates/jenkins/README.md)
-
-### Jenkins Agents Pipeline
-
-Setup Jenkins CICD - [README](./templates/jenkins-slaves/README.md)
