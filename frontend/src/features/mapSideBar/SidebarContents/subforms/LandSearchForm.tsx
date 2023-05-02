@@ -1,3 +1,5 @@
+import { ContentPaste as PasteIcon } from '@mui/icons-material';
+import { Box, IconButton, Tab, Tabs, Tooltip } from '@mui/material';
 import { IParcel } from 'actions/parcelsActions';
 import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-icon.svg';
 import { FastInput, Input } from 'components/common/form';
@@ -8,7 +10,7 @@ import { pidFormatter } from 'features/properties/components/forms/subforms/PidP
 import { GeocoderAutoComplete } from 'features/properties/components/GeocoderAutoComplete';
 import { getIn, useFormikContext } from 'formik';
 import { IGeocoderResponse } from 'hooks/useApi';
-import React, { useState } from 'react';
+import React, { SyntheticEvent, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import ClickAwayListener from 'react-click-away-listener';
 import styled from 'styled-components';
@@ -50,139 +52,185 @@ const LandSearchForm = ({
   ...props
 }: ISearchFormProps) => {
   const [geocoderResponse, setGeocoderResponse] = useState<IGeocoderResponse | undefined>();
+  const [tab, setTab] = useState<number>(0);
+
+  const handleTabChange = (event: SyntheticEvent, newValue: number) => {
+    setTab(newValue);
+  };
 
   const formikProps = useFormikContext<ISteppedFormValues<IParcel & ISearchFields>>();
   const { searchPin, searchPid, searchAddress } = getIn(
     formikProps.values,
     withNameSpace(nameSpace),
   );
+
+  const handlePasteFromClipboard = (field: string) => {
+    navigator.clipboard
+      .readText()
+      .then(text => {
+        formikProps.setFieldValue(withNameSpace(nameSpace, field), text);
+        const input: unknown = document.getElementsByName(`data.${field}`)[0];
+        if ((input as HTMLInputElement).type === 'text') (input as HTMLInputElement).value = text;
+      })
+      .catch(err => {
+        console.error('Failed to read clipboard contents: ', err);
+      });
+  };
+
   return (
     <Row className="section g-0">
       <Col md={12}>
-        <h5>Search for Parcel</h5>
-      </Col>
-      <Col md={6}>
-        <Row style={{ alignItems: 'center' }}>
-          <Col style={{ width: '110px' }}>
-            <Label>PID</Label>
-          </Col>
-          <Col md="auto" style={{ marginRight: '-11px' }}>
-            <Input
-              displayErrorTooltips
-              className="input-small"
-              disabled={false}
-              pattern={RegExp(/^[\d\- ]*$/)}
-              onBlurFormatter={(pid: string) => {
-                if (pid?.length > 0) {
-                  return pid.replace(pid, pidFormatter(pid));
-                }
-                return '';
-              }}
-              field={withNameSpace(nameSpace, 'searchPid')}
-            />
-          </Col>
-          <Col md="auto">
-            <SearchButton
-              onClick={(e: any) => {
-                e.preventDefault();
-                handlePidChange(searchPid, nameSpace);
-              }}
-            />
-          </Col>
-        </Row>
-        <Row style={{ alignItems: 'center' }}>
-          <Col style={{ width: '110px' }}>
-            <Label>PIN</Label>
-          </Col>
-          <Col md="auto">
-            <FastInput
-              formikProps={formikProps}
-              displayErrorTooltips
-              className="input-small"
-              disabled={false}
-              field={withNameSpace(nameSpace, 'searchPin')}
-              onBlurFormatter={(pin: number) => {
-                if (pin > 0) {
-                  return pin;
-                }
-                return '';
-              }}
-              type="number"
-            />
-          </Col>
-          <Col md="auto">
-            <SearchButton
-              onClick={(e: any) => {
-                e.preventDefault();
-                handlePinChange(searchPin, nameSpace);
-              }}
-            />
-          </Col>
-        </Row>
-        <Row style={{ alignItems: 'center' }}>
-          <Col style={{ width: '110px' }}>
-            <Label>Street Address</Label>
-          </Col>
-          <Col md="auto">
-            <GeocoderAutoComplete
-              value={searchAddress}
-              field={withNameSpace(nameSpace, 'searchAddress')}
-              onSelectionChanged={selection => {
-                formikProps.setFieldValue(
-                  withNameSpace(nameSpace, 'searchAddress'),
-                  selection.fullAddress,
-                );
-                setGeocoderResponse(selection);
-              }}
-              onTextChange={value => {
-                if (value !== geocoderResponse?.address1) {
-                  setGeocoderResponse(undefined);
-                }
-                formikProps.setFieldValue(withNameSpace(nameSpace, 'searchAddress'), value);
-              }}
-              error={getIn(formikProps.errors, withNameSpace(nameSpace, 'searchAddress'))}
-              touch={getIn(formikProps.touched, withNameSpace(nameSpace, 'searchAddress'))}
-              displayErrorTooltips
-            />
-          </Col>
-          <Col md="auto">
-            <SearchButton
-              disabled={!geocoderResponse}
-              onClick={(e: any) => {
-                e.preventDefault();
-                geocoderResponse && handleGeocoderChanges(geocoderResponse, nameSpace);
-              }}
-            />
-          </Col>
-        </Row>
-      </Col>
-      <Col md={1}>
-        <h5>OR</h5>
-      </Col>
-      <Col md={5} className="instruction">
-        <p>
-          Click on the pin, and then click your desired location on the map to pull the parcel
-          details.
-        </p>
-        <Row>
-          <Col className="marker-svg">
-            <ClickAwayListener
-              onClickAway={() => {
-                setMovingPinNameSpace(undefined);
-              }}
-            >
-              <SearchMarkerButton
-                type="button"
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs value={tab} onChange={handleTabChange} aria-label="basic tabs example">
+            <Tab label="Search for Property" id="parcel-search-tab" />
+            <Tab label="Drop a Pin" id="parcel-marker-tab" />
+          </Tabs>
+        </Box>
+
+        {/* Search Tab */}
+        <Box role="tabpanel" hidden={tab !== 0} id="parcel-tabpanel-search" sx={{ p: 3 }}>
+          <Row style={{ alignItems: 'center', marginBottom: 5 }}>
+            <Col md={2} style={{ textAlign: 'left' }}>
+              <Label>PID</Label>
+            </Col>
+            <Col md="auto" style={{ marginLeft: '-11px' }}>
+              <Input
+                displayErrorTooltips
+                className="input-small"
+                disabled={false}
+                pattern={RegExp(/^[\d\- ]*$/)}
+                onBlurFormatter={(pid: string) => {
+                  if (pid?.length > 0) {
+                    return pid.replace(pid, pidFormatter(pid));
+                  }
+                  return '';
+                }}
+                field={withNameSpace(nameSpace, 'searchPid')}
+              />
+            </Col>
+            <Col md="auto" style={{ marginLeft: '-40px' }}>
+              <IconButton onClick={() => handlePasteFromClipboard('searchPid')}>
+                <Tooltip title="Paste From Clipboard">
+                  <PasteIcon />
+                </Tooltip>
+              </IconButton>
+            </Col>
+            <Col md="auto" style={{ marginLeft: '-13px' }}>
+              <SearchButton
                 onClick={(e: any) => {
-                  setMovingPinNameSpace(nameSpace ?? '');
                   e.preventDefault();
+                  handlePidChange(searchPid, nameSpace);
+                }}
+              />
+            </Col>
+          </Row>
+          <Row style={{ alignItems: 'center', marginBottom: 5 }}>
+            <Col md={2} style={{ textAlign: 'left' }}>
+              <Label>PIN</Label>
+            </Col>
+            <Col md="auto">
+              <FastInput
+                formikProps={formikProps}
+                displayErrorTooltips
+                className="input-small"
+                disabled={false}
+                field={withNameSpace(nameSpace, 'searchPin')}
+                onBlurFormatter={(pin: number) => {
+                  if (pin > 0) {
+                    return pin;
+                  }
+                  return '';
+                }}
+                type="number"
+              />
+            </Col>
+            <Col md="auto" style={{ marginLeft: '-27px' }}>
+              <IconButton onClick={() => handlePasteFromClipboard('searchPin')}>
+                <Tooltip title="Paste From Clipboard">
+                  <PasteIcon />
+                </Tooltip>
+              </IconButton>
+            </Col>
+            <Col md="auto" style={{ marginLeft: '-13px' }}>
+              <SearchButton
+                onClick={(e: any) => {
+                  e.preventDefault();
+                  handlePinChange(searchPin, nameSpace);
+                }}
+              />
+            </Col>
+          </Row>
+          <Row style={{ alignItems: 'center' }}>
+            <Col md={2} style={{ textAlign: 'left' }}>
+              <Label>Street Address</Label>
+            </Col>
+            <Col md="auto">
+              <GeocoderAutoComplete
+                value={searchAddress}
+                field={withNameSpace(nameSpace, 'searchAddress')}
+                onSelectionChanged={selection => {
+                  formikProps.setFieldValue(
+                    withNameSpace(nameSpace, 'searchAddress'),
+                    selection.fullAddress,
+                  );
+                  setGeocoderResponse(selection);
+                }}
+                onTextChange={value => {
+                  if (value !== geocoderResponse?.address1) {
+                    setGeocoderResponse(undefined);
+                  }
+                  formikProps.setFieldValue(withNameSpace(nameSpace, 'searchAddress'), value);
+                }}
+                error={getIn(formikProps.errors, withNameSpace(nameSpace, 'searchAddress'))}
+                touch={getIn(formikProps.touched, withNameSpace(nameSpace, 'searchAddress'))}
+                displayErrorTooltips
+              />
+            </Col>
+            <Col md="auto" style={{ marginLeft: '-27px' }}>
+              <IconButton onClick={() => handlePasteFromClipboard('searchAddress')}>
+                <Tooltip title="Paste From Clipboard">
+                  <PasteIcon />
+                </Tooltip>
+              </IconButton>
+            </Col>
+            <Col md="auto" style={{ marginLeft: '-13px' }}>
+              <SearchButton
+                disabled={!geocoderResponse}
+                onClick={(e: any) => {
+                  e.preventDefault();
+                  geocoderResponse && handleGeocoderChanges(geocoderResponse, nameSpace);
+                }}
+              />
+            </Col>
+          </Row>
+        </Box>
+
+        {/* Marker Tab */}
+        <Box role="tabpanel" hidden={tab !== 1} id="parcel-tabpanel-marker" sx={{ p: 3 }}>
+          <Row style={{ alignItems: 'center' }}>
+            <Col md="auto">
+              Click on the pin, and then click your desired location on the map to pull the parcel
+              details.
+            </Col>
+            <Col className="marker-svg">
+              <ClickAwayListener
+                onClickAway={() => {
+                  setMovingPinNameSpace(undefined);
                 }}
               >
-                <ParcelDraftIcon className="parcel-icon" />
-              </SearchMarkerButton>
-            </ClickAwayListener>
-          </Col>
-        </Row>
+                <SearchMarkerButton
+                  type="button"
+                  onClick={(e: any) => {
+                    setMovingPinNameSpace(nameSpace ?? '');
+                    e.preventDefault();
+                  }}
+                >
+                  <ParcelDraftIcon className="parcel-icon" />
+                </SearchMarkerButton>
+              </ClickAwayListener>
+            </Col>
+          </Row>
+        </Box>
       </Col>
     </Row>
   );
