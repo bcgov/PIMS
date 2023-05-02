@@ -28,6 +28,10 @@
   "dependencies": {
     "@babel/core": "7.21.4",
     "@bcgov/bc-sans": "1.0.1",
+    "@emotion/react": "11.10.8",
+    "@emotion/styled": "11.10.8",
+    "@mui/icons-material": "5.11.16",
+    "@mui/material": "5.12.2",
     "@react-keycloak/web": "3.4.0",
     "@react-leaflet/core": "1.1.1",
     "@reduxjs/toolkit": "1.9.5",
