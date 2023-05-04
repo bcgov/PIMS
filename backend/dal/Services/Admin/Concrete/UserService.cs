@@ -1,6 +1,4 @@
-using System.Collections;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Pims.Core.Extensions;
 using Pims.Dal.Entities;
@@ -18,7 +16,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.ComponentModel;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace Pims.Dal.Services.Admin
@@ -555,7 +552,7 @@ namespace Pims.Dal.Services.Admin
                 var decodedToken = handler.ReadJwtToken(this.access_token);
                 return decodedToken.ValidTo >= DateTime.UtcNow;
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }

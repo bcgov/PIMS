@@ -1,13 +1,10 @@
 using Mapster;
 using Microsoft.Extensions.Options;
-using Pims.Api.Mapping.Converters;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Core.Extensions;
 using System.Text.Json;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Reports.Models.Project;
-using System.Linq;
-using System;
 
 namespace Pims.Api.Areas.Reports.Mapping.Project
 {
