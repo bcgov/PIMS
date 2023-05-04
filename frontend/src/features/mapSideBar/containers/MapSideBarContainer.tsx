@@ -16,7 +16,7 @@ import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { LatLng } from 'leaflet';
 import _, { cloneDeep, noop } from 'lodash';
-import * as React from 'react';
+import React, { FunctionComponent, useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { FaCheckCircle, FaEdit } from 'react-icons/fa';
@@ -82,11 +82,17 @@ const DeleteButton = styled(FaTrash)`
 /**
  * container responsible for logic related to map sidebar display. Synchronizes the state of the parcel detail forms with the corresponding query parameters (push/pull).
  */
-const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = ({
+const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
   movingPinNameSpaceProp,
 }) => {
+  // Hooks.
   const keycloak = useKeycloakWrapper();
-  const formikRef = React.useRef<FormikValues>();
+  const dispatch = useAppDispatch();
+  const { createBuilding, updateBuilding } = useBuildingApi();
+  const parcelLayerService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
+  const formikRef = useRef<FormikValues>();
+
+  // State of the sidebar based on query params.
   const {
     showSideBar,
     setShowSideBar,
@@ -102,9 +108,9 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     addContext,
     disabled,
     setDisabled,
-    // handleLocationChange,
   } = useParamSideBar(formikRef);
 
+  // Parcel and building loaders.
   const { parcelDetail } = useSideBarParcelLoader({
     parcelId,
     setSideBarContext: addContext,
@@ -124,7 +130,8 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     showSideBar,
     disabled,
   });
-  const dispatch = useAppDispatch();
+
+  // State.
   const [movingPinNameSpace, setMovingPinNameSpace] = useState<string | undefined>(
     movingPinNameSpaceProp,
   );
@@ -135,9 +142,6 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [showUpdatedModal, setShowUpdatedModal] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
-  const { createBuilding, updateBuilding } = useBuildingApi();
-
-  const parcelLayerService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
 
   /**
    * Populate the formik form using the passed parcel.
@@ -216,7 +220,9 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   };
   const { handleGeocoderChanges } = useGeocoder({ formikRef, fetchPimsOrLayerParcel });
 
-  /** query pims for the given pid, set data within the form if match found. Fallback to querying the parcel data layer. */
+  /* Query pims for the given pid, set data within the form if match found.
+   * Fallback to querying the parcel data layer.
+   */
   const handlePidChange = (pid: string, nameSpace?: string) => {
     const parcelLayerSearchCallback = () => {
       const response = parcelLayerService.findByPid(pid);
@@ -225,7 +231,7 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     fetchPimsOrLayerParcel({ pid }, parcelLayerSearchCallback, nameSpace);
   };
 
-  /** make a parcel layer request by pid and store the response. */
+  // Make a parcel layer request by pid and store the response.
   const handlePinChange = (pin: string, nameSpace?: string) => {
     const parcelLayerSearchCallback = () => {
       const response = parcelLayerService.findByPin(pin);
@@ -284,30 +290,23 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
     handleParcelDataLayerResponse(response, dispatch, latLng);
   };
 
-  React.useEffect(() => {
-    if (!showSideBar) {
-      document.body.className = '';
-    }
-    if (movingPinNameSpace !== undefined) {
+  useEffect(() => {
+    if (!showSideBar) document.body.className = '';
+    if (movingPinNameSpace !== undefined)
       document.body.className = propertyType === 'building' ? 'building-cursor' : 'parcel-cursor';
-    }
+
     return () => {
       //make sure to reset the cursor when this component is disposed.
       document.body.className = '';
     };
   }, [propertyType, movingPinNameSpace, context, showSideBar]);
 
-  //Add a pin to the map where the user has clicked.
+  // Add a pin to the map where the user has clicked.
   useDeepCompareEffect(() => {
-    //If we click on the map, create a new pin at the click location.
-    if (
-      movingPinNameSpace !== undefined &&
-      !!formikRef?.current &&
-      isMouseEventRecent(leafletMouseEvent?.originalEvent)
-    ) {
-      let nameSpace = (movingPinNameSpace?.length ?? 0) > 0 ? `${movingPinNameSpace}.` : '';
-      formikRef.current.setFieldValue(`${nameSpace}latitude`, leafletMouseEvent?.latlng.lat || 0);
-      formikRef.current.setFieldValue(`${nameSpace}longitude`, leafletMouseEvent?.latlng.lng || 0);
+    // If we click on the map, create a new pin at the click location.
+    if (!!formikRef?.current && isMouseEventRecent(leafletMouseEvent?.originalEvent)) {
+      formikRef.current.setFieldValue(`data.latitude`, leafletMouseEvent?.latlng.lat || 0);
+      formikRef.current.setFieldValue(`data.longitude`, leafletMouseEvent?.latlng.lng || 0);
       const isParcel = [
         SidebarContextType.VIEW_BARE_LAND,
         SidebarContextType.UPDATE_DEVELOPED_LAND,
@@ -315,13 +314,14 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
         SidebarContextType.ADD_ASSOCIATED_LAND,
         SidebarContextType.ADD_BARE_LAND,
       ].includes(context);
-      droppedMarkerSearch(movingPinNameSpace, leafletMouseEvent?.latlng, isParcel);
+      droppedMarkerSearch('data', leafletMouseEvent?.latlng, isParcel);
       setMovingPinNameSpace(undefined);
     }
   }, [dispatch, leafletMouseEvent, showSideBar]);
 
   /**
-   * Only display the edit button if the user has the correct claim and the property is owned by their agency.
+   * Only display the edit button if the user has the correct claim and the property
+   * is owned by their agency.
    */
   const ConditionalEditButton = () => (
     <>
@@ -332,7 +332,8 @@ const MapSideBarContainer: React.FunctionComponent<IMapSideBarContainerProps> = 
   );
 
   /**
-   * Only display the delete button if the user has the correct claim and the property is owned by their agency.
+   * Only display the delete button if the user has the correct claim and the property
+   * is owned by their agency.
    */
   const ConditionalDeleteButton = () => (
     <>

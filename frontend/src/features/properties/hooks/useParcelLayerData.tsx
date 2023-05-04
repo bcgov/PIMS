@@ -113,6 +113,11 @@ const setParcelFieldsFromLayerData = (
         getIn(values, `${nameSpace}.searchPid`),
       );
       newValues = setIn(newValues, `${nameSpace}.searchAddress`, searchAddress);
+      newValues = setIn(
+        newValues,
+        `${nameSpace}.landLegalDescription`,
+        layerParcelData.LEGAL_DESCRIPTION ?? '',
+      );
     }
     setValues({ ...values, ...newValues });
   }
