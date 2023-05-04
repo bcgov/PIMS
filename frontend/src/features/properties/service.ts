@@ -3,7 +3,6 @@ import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { IPagedItems } from 'interfaces';
 import { isEmpty } from 'lodash';
-import queryString from 'query-string';
 import { generateMultiSortCriteria } from 'utils';
 
 import { IProperty, IPropertyQueryParams } from './list/interfaces';
@@ -11,10 +10,20 @@ import { IProperty, IPropertyQueryParams } from './list/interfaces';
 const { apiUrl: basePath } = ENVIRONMENT;
 
 const API_ENDPOINTS = {
-  propertiesSearch: (filter: IPropertyQueryParams) =>
-    `${basePath}/properties/search/page?${filter ? queryString.stringify(filter) : ''}`,
-  propertiesReport: (filter: IPropertyQueryParams) =>
-    `${basePath}/reports/properties?${filter ? queryString.stringify(filter) : ''}`,
+  propertiesSearch: (filter: IPropertyQueryParams) => {
+    const queryParams = new URLSearchParams();
+    for (const [key, value] of Object.entries(filter ?? {})) {
+      queryParams.set(key, String(value));
+    }
+    return `${basePath}/properties/search/page?${queryParams.toString()}`;
+  },
+  propertiesReport: (filter: IPropertyQueryParams) => {
+    const queryParams = new URLSearchParams();
+    for (const [key, value] of Object.entries(filter ?? {})) {
+      queryParams.set(key, String(value));
+    }
+    return `${basePath}/reports/properties?${queryParams.toString()}`;
+  },
 };
 
 const getPropertyList = async (

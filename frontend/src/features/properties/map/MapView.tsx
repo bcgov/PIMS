@@ -9,7 +9,6 @@ import * as API from 'constants/API';
 import MapSideBarContainer from 'features/mapSideBar/containers/MapSideBarContainer';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { LeafletMouseEvent } from 'leaflet';
-import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -64,7 +63,11 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   }, [dispatch]);
 
   const location = useLocation();
-  const urlParsed = queryString.parse(location.search);
+  const queryParams = new URLSearchParams(location.search);
+  let urlParsed: any = {};
+  for (const [key, value] of queryParams.entries()) {
+    urlParsed[key] = value;
+  }
   const disableFilter = urlParsed.sidebar === 'true' ? true : false;
   return (
     <div className={classNames(showSideBar ? 'side-bar' : '', 'd-flex')}>

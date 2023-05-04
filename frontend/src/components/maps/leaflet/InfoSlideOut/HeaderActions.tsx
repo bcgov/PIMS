@@ -1,7 +1,6 @@
 import variables from '_variables.module.scss';
 import { IBuilding, IParcel } from 'actions/parcelsActions';
 import { PropertyTypes } from 'constants/propertyTypes';
-import queryString from 'query-string';
 import * as React from 'react';
 import { Row } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
@@ -67,6 +66,23 @@ const HeaderActions: React.FC<IHeaderActions> = ({
   )
     ? propertyInfo?.id
     : undefined;
+
+  // View Details link query params
+  const viewDetailsQueryParams = new URLSearchParams(location.search);
+  viewDetailsQueryParams.set('sidebar', 'true');
+  viewDetailsQueryParams.set('disabled', 'true');
+  viewDetailsQueryParams.set('loadDraft', 'false');
+  viewDetailsQueryParams.set('buildingId', `${buildingId}`);
+  viewDetailsQueryParams.set('parcelId', `${parcelId}`);
+
+  // Update link query params
+  const updateQueryParams = new URLSearchParams(location.search);
+  updateQueryParams.set('sidebar', 'true');
+  updateQueryParams.set('disabled', 'false');
+  updateQueryParams.set('loadDraft', 'false');
+  updateQueryParams.set('buildingId', `${buildingId}`);
+  updateQueryParams.set('parcelId', `${parcelId}`);
+
   return (
     <LinkMenu>
       Actions:
@@ -81,14 +97,7 @@ const HeaderActions: React.FC<IHeaderActions> = ({
             }}
             to={{
               pathname: `/mapview`,
-              search: queryString.stringify({
-                ...queryString.parse(location.search),
-                sidebar: true,
-                disabled: true,
-                loadDraft: false,
-                buildingId: buildingId,
-                parcelId: parcelId,
-              }),
+              search: viewDetailsQueryParams.toString(),
             }}
           >
             View details
@@ -105,14 +114,7 @@ const HeaderActions: React.FC<IHeaderActions> = ({
                 }}
                 to={{
                   pathname: `/mapview`,
-                  search: queryString.stringify({
-                    ...queryString.parse(location.search),
-                    disabled: false,
-                    sidebar: true,
-                    loadDraft: false,
-                    buildingId: buildingId,
-                    parcelId: parcelId,
-                  }),
+                  search: updateQueryParams.toString(),
                 }}
               >
                 Update
