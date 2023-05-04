@@ -1,6 +1,7 @@
 import './ParcelIdentificationForm.scss';
 
 import { IParcel } from 'actions/parcelsActions';
+import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-icon.svg';
 import classNames from 'classnames';
 import { Check, FastInput, InputGroup, SelectOptions, TextArea } from 'components/common/form';
 import { ParentSelect } from 'components/common/form/ParentSelect';
@@ -29,7 +30,6 @@ import { withNameSpace } from 'utils/formUtils';
 import { sensitiveTooltip } from '../../../../../src/features/properties/components/forms/strings';
 import AddParentParcelsForm from './AddParentParcelsForm';
 import LandSearchForm from './LandSearchForm';
-import MovePinForm from './MovePinForm';
 
 interface IIdentificationProps {
   /** used for changign the agency - note that only select users will be able to edit this field */
@@ -112,7 +112,22 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
       {!disabled && (
         <>
           {isViewOrUpdate || propertyTypeId === PropertyTypes.SUBDIVISION ? (
-            <MovePinForm {...{ setMovingPinNameSpace, nameSpace }} />
+            <Row className="section g-0">
+              <Col md={12}>
+                <h5>Update Parcel Location</h5>
+              </Col>
+              <Col md={12} className="instruction">
+                <p style={{ textAlign: 'center' }}>
+                  Find a parcel on the map for the new location and click it to populate the Parcel
+                  Details below.
+                </p>
+                <Row>
+                  <Col className="marker-svg">
+                    <ParcelDraftIcon className="parcel-icon" />
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
           ) : (
             <LandSearchForm
               {...{
