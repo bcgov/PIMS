@@ -448,7 +448,7 @@ exports[`Land Form component renders correctly 1`] = `
                               tabindex="-1"
                               type="button"
                             >
-                              Drop a Pin
+                              Select a Parcel from the Map
                               <span
                                 class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
                               />

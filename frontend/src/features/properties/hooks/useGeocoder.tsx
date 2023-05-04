@@ -126,6 +126,12 @@ const useGeocoder = ({ formikRef, fetchPimsOrLayerParcel }: IUseGeocoderProps) =
               } else if (response?.features?.length > 0) {
                 saveParcelDataLayerResponse(response, dispatch);
               } else {
+                // Clear fields.
+                newValues.pid = '';
+                newValues.pin = '';
+                newValues.landLegalDescription = '';
+                newValues.landArea = '';
+
                 const updatedValues = setIn(
                   formikRef?.current?.values ?? {},
                   nameSpace || '',
