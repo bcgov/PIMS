@@ -115,7 +115,7 @@ exports[`Land Form component renders correctly 1`] = `
   color: #fff;
 }
 
-.c7 {
+.c6 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -129,7 +129,7 @@ exports[`Land Form component renders correctly 1`] = `
   align-content: center;
 }
 
-.c8 {
+.c7 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -146,17 +146,6 @@ exports[`Land Form component renders correctly 1`] = `
   -ms-flex-pack: center;
   justify-content: center;
   font-weight: bold;
-}
-
-.c5 {
-  top: 20px;
-  right: 20px;
-  border: 0px;
-  background-color: none;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c0 {
@@ -185,7 +174,7 @@ exports[`Land Form component renders correctly 1`] = `
   min-height: 100px;
 }
 
-.c6 {
+.c5 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -202,7 +191,7 @@ exports[`Land Form component renders correctly 1`] = `
   bottom: -20px;
 }
 
-.c9 {
+.c8 {
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
@@ -423,236 +412,362 @@ exports[`Land Form component renders correctly 1`] = `
                   <div
                     class="col-md-12"
                   >
-                    <h5>
-                      Search for Parcel
-                    </h5>
-                  </div>
-                  <div
-                    class="col-md-6"
-                  >
                     <div
-                      class="row"
-                      style="align-items: center;"
+                      class="MuiBox-root css-1gsv261"
                     >
                       <div
-                        class="col"
-                        style="width: 110px;"
-                      >
-                        <label
-                          class="label"
-                        >
-                          PID
-                        </label>
-                      </div>
-                      <div
-                        class="col-md-auto"
-                        style="margin-right: -11px;"
+                        class="MuiTabs-root css-1ujnqem-MuiTabs-root"
                       >
                         <div
-                          class="row"
-                          controlid="input-data.searchPid"
-                          style="align-items: center;"
+                          class="MuiTabs-scroller MuiTabs-fixed css-jpln7h-MuiTabs-scroller"
+                          style="overflow: hidden; margin-bottom: 0px;"
                         >
                           <div
-                            class="col-md-auto"
+                            aria-label="basic tabs example"
+                            class="MuiTabs-flexContainer css-heg063-MuiTabs-flexContainer"
+                            role="tablist"
                           >
-                            <div>
-                              <input
-                                class="input-small form-control"
-                                name="data.searchPid"
-                                value=""
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        class="col-md-auto"
-                      >
-                        <div>
-                          <button
-                            class="Button Button--icon-only bg-warning btn btn-primary"
-                            id="search-button"
-                            type="submit"
-                          >
-                            <div
-                              class="Button__icon"
+                            <button
+                              aria-selected="true"
+                              class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected css-1h9z7r5-MuiButtonBase-root-MuiTab-root"
+                              id="parcel-search-tab"
+                              role="tab"
+                              tabindex="0"
+                              type="button"
                             >
-                              <svg
-                                fill="currentColor"
-                                height="20"
-                                stroke="currentColor"
-                                stroke-width="0"
-                                viewBox="0 0 512 512"
-                                width="20"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
-                                />
-                              </svg>
-                            </div>
-                          </button>
+                              Search for Property
+                              <span
+                                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                              />
+                            </button>
+                            <button
+                              aria-selected="false"
+                              class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary css-1h9z7r5-MuiButtonBase-root-MuiTab-root"
+                              id="parcel-marker-tab"
+                              role="tab"
+                              tabindex="-1"
+                              type="button"
+                            >
+                              Drop a Pin
+                              <span
+                                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                              />
+                            </button>
+                          </div>
+                          <span
+                            class="MuiTabs-indicator css-1aquho2-MuiTabs-indicator"
+                            style="left: 0px; width: 0px;"
+                          />
                         </div>
                       </div>
                     </div>
                     <div
-                      class="row"
-                      style="align-items: center;"
+                      class="MuiBox-root css-19kzrtu"
+                      id="parcel-tabpanel-search"
+                      role="tabpanel"
                     >
                       <div
-                        class="col"
-                        style="width: 110px;"
-                      >
-                        <label
-                          class="label"
-                        >
-                          PIN
-                        </label>
-                      </div>
-                      <div
-                        class="col-md-auto"
+                        class="row"
+                        style="align-items: center; margin-bottom: 5px;"
                       >
                         <div
-                          class=""
+                          class="col-md-2"
+                          style="text-align: left;"
+                        >
+                          <label
+                            class="label"
+                          >
+                            PID
+                          </label>
+                        </div>
+                        <div
+                          class="col-md-auto"
+                          style="margin-left: -11px;"
+                        >
+                          <div
+                            class="row"
+                            controlid="input-data.searchPid"
+                            style="align-items: center;"
+                          >
+                            <div
+                              class="col-md-auto"
+                            >
+                              <div>
+                                <input
+                                  class="input-small form-control"
+                                  name="data.searchPid"
+                                  value=""
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="col-md-auto"
+                          style="margin-left: -40px;"
+                        >
+                          <button
+                            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-78trlr-MuiButtonBase-root-MuiIconButton-root"
+                            tabindex="0"
+                            type="button"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              aria-label="Paste From Clipboard"
+                              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                              data-mui-internal-clone-element="true"
+                              data-testid="ContentPasteIcon"
+                              focusable="false"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M19 2h-4.18C14.4.84 13.3 0 12 0c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm7 18H5V4h2v3h10V4h2v16z"
+                              />
+                            </svg>
+                            <span
+                              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                            />
+                          </button>
+                        </div>
+                        <div
+                          class="col-md-auto"
+                          style="margin-left: -13px;"
                         >
                           <div>
-                            <input
-                              class="input-small form-control"
-                              id="input-data.searchPin"
-                              name="data.searchPin"
-                              type="number"
-                              value=""
-                            />
+                            <button
+                              class="Button Button--icon-only bg-warning btn btn-primary"
+                              id="search-button"
+                              type="submit"
+                            >
+                              <div
+                                class="Button__icon"
+                              >
+                                <svg
+                                  fill="currentColor"
+                                  height="20"
+                                  stroke="currentColor"
+                                  stroke-width="0"
+                                  viewBox="0 0 512 512"
+                                  width="20"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
+                                  />
+                                </svg>
+                              </div>
+                            </button>
                           </div>
                         </div>
                       </div>
                       <div
-                        class="col-md-auto"
-                      >
-                        <div>
-                          <button
-                            class="Button Button--icon-only bg-warning btn btn-primary"
-                            id="search-button"
-                            type="submit"
-                          >
-                            <div
-                              class="Button__icon"
-                            >
-                              <svg
-                                fill="currentColor"
-                                height="20"
-                                stroke="currentColor"
-                                stroke-width="0"
-                                viewBox="0 0 512 512"
-                                width="20"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
-                                />
-                              </svg>
-                            </div>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="row"
-                      style="align-items: center;"
-                    >
-                      <div
-                        class="col"
-                        style="width: 110px;"
-                      >
-                        <label
-                          class="label"
-                        >
-                          Street Address
-                        </label>
-                      </div>
-                      <div
-                        class="col-md-auto"
+                        class="row"
+                        style="align-items: center; margin-bottom: 5px;"
                       >
                         <div
-                          class="c4 GeocoderAutoComplete"
+                          class="col-md-2"
+                          style="text-align: left;"
+                        >
+                          <label
+                            class="label"
+                          >
+                            PIN
+                          </label>
+                        </div>
+                        <div
+                          class="col-md-auto"
                         >
                           <div
                             class=""
                           >
                             <div>
                               <input
-                                class="form-control"
-                                field="data.searchAddress"
-                                id="input-data.searchAddress"
-                                name="data.searchAddress"
+                                class="input-small form-control"
+                                id="input-data.searchPin"
+                                name="data.searchPin"
+                                type="number"
                                 value=""
                               />
                             </div>
                           </div>
                         </div>
+                        <div
+                          class="col-md-auto"
+                          style="margin-left: -27px;"
+                        >
+                          <button
+                            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-78trlr-MuiButtonBase-root-MuiIconButton-root"
+                            tabindex="0"
+                            type="button"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              aria-label="Paste From Clipboard"
+                              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                              data-mui-internal-clone-element="true"
+                              data-testid="ContentPasteIcon"
+                              focusable="false"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M19 2h-4.18C14.4.84 13.3 0 12 0c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm7 18H5V4h2v3h10V4h2v16z"
+                              />
+                            </svg>
+                            <span
+                              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                            />
+                          </button>
+                        </div>
+                        <div
+                          class="col-md-auto"
+                          style="margin-left: -13px;"
+                        >
+                          <div>
+                            <button
+                              class="Button Button--icon-only bg-warning btn btn-primary"
+                              id="search-button"
+                              type="submit"
+                            >
+                              <div
+                                class="Button__icon"
+                              >
+                                <svg
+                                  fill="currentColor"
+                                  height="20"
+                                  stroke="currentColor"
+                                  stroke-width="0"
+                                  viewBox="0 0 512 512"
+                                  width="20"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
+                                  />
+                                </svg>
+                              </div>
+                            </button>
+                          </div>
+                        </div>
                       </div>
                       <div
-                        class="col-md-auto"
+                        class="row"
+                        style="align-items: center;"
                       >
-                        <div>
-                          <button
-                            class="Button Button--disabled Button--icon-only bg-warning btn btn-primary"
-                            disabled=""
-                            id="search-button"
-                            type="submit"
+                        <div
+                          class="col-md-2"
+                          style="text-align: left;"
+                        >
+                          <label
+                            class="label"
+                          >
+                            Street Address
+                          </label>
+                        </div>
+                        <div
+                          class="col-md-auto"
+                        >
+                          <div
+                            class="c4 GeocoderAutoComplete"
                           >
                             <div
-                              class="Button__icon"
+                              class=""
                             >
-                              <svg
-                                fill="currentColor"
-                                height="20"
-                                stroke="currentColor"
-                                stroke-width="0"
-                                viewBox="0 0 512 512"
-                                width="20"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
+                              <div>
+                                <input
+                                  class="form-control"
+                                  field="data.searchAddress"
+                                  id="input-data.searchAddress"
+                                  name="data.searchAddress"
+                                  value=""
                                 />
-                              </svg>
+                              </div>
                             </div>
+                          </div>
+                        </div>
+                        <div
+                          class="col-md-auto"
+                          style="margin-left: -27px;"
+                        >
+                          <button
+                            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-78trlr-MuiButtonBase-root-MuiIconButton-root"
+                            tabindex="0"
+                            type="button"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              aria-label="Paste From Clipboard"
+                              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                              data-mui-internal-clone-element="true"
+                              data-testid="ContentPasteIcon"
+                              focusable="false"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M19 2h-4.18C14.4.84 13.3 0 12 0c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm7 18H5V4h2v3h10V4h2v16z"
+                              />
+                            </svg>
+                            <span
+                              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                            />
                           </button>
+                        </div>
+                        <div
+                          class="col-md-auto"
+                          style="margin-left: -13px;"
+                        >
+                          <div>
+                            <button
+                              class="Button Button--disabled Button--icon-only bg-warning btn btn-primary"
+                              disabled=""
+                              id="search-button"
+                              type="submit"
+                            >
+                              <div
+                                class="Button__icon"
+                              >
+                                <svg
+                                  fill="currentColor"
+                                  height="20"
+                                  stroke="currentColor"
+                                  stroke-width="0"
+                                  viewBox="0 0 512 512"
+                                  width="20"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
+                                  />
+                                </svg>
+                              </div>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="col-md-1"
-                  >
-                    <h5>
-                      OR
-                    </h5>
-                  </div>
-                  <div
-                    class="instruction col-md-5"
-                  >
-                    <p>
-                      Click on the pin, and then click your desired location on the map to pull the parcel details.
-                    </p>
                     <div
-                      class="row"
+                      class="MuiBox-root css-19kzrtu"
+                      hidden=""
+                      id="parcel-tabpanel-marker"
+                      role="tabpanel"
                     >
                       <div
-                        class="marker-svg col"
+                        class="row"
+                        style="align-items: center;"
                       >
-                        <button
-                          class="c5"
-                          type="button"
+                        <div
+                          class="col-md-auto"
+                        >
+                          Find a parcel on the map and click it to populate the Parcel Details below.
+                        </div>
+                        <div
+                          class="marker-svg col"
                         >
                           <svg
                             class="parcel-icon"
                           >
                             draft-parcel-icon.svg
                           </svg>
-                        </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1220,10 +1335,10 @@ exports[`Land Form component renders correctly 1`] = `
             </div>
           </div>
           <div
-            class="c6"
+            class="c5"
           >
             <div
-              class="c7"
+              class="c6"
             >
               <div
                 class="SresManual"
@@ -1250,13 +1365,13 @@ exports[`Land Form component renders correctly 1`] = `
                 </div>
               </div>
               <small
-                class="c8 p-1 mr-2"
+                class="c7 p-1 mr-2"
               >
                 Inventory Policy
               </small>
             </div>
             <span
-              class="c9"
+              class="c8"
             />
             <button
               class="btn btn-primary btn-sm"
