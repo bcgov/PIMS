@@ -3,7 +3,6 @@ import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { IProperty as IRowProperty, IPropertyFilter } from 'features/projects/interfaces';
 import { IPagedItems } from 'interfaces';
-import queryString from 'query-string';
 import React, { useCallback } from 'react';
 import { decimalOrUndefined } from 'utils';
 
@@ -59,8 +58,13 @@ const getServerQuery = (state: {
   return query;
 };
 
-const getPropertyListUrl = (filter: IPropertyFilter) =>
-  `${ENVIRONMENT.apiUrl}/properties/search/page?${filter ? queryString.stringify(filter) : ''}`;
+const getPropertyListUrl = (filter: IPropertyFilter) => {
+  const queryParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(filter ?? {})) {
+    queryParams.set(key, String(value));
+  }
+  return `${ENVIRONMENT.apiUrl}/properties/search/page?${queryParams.toString()}`;
+};
 
 interface UseTableProps {
   fetchIdRef: React.MutableRefObject<number>;
