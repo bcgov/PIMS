@@ -1,7 +1,6 @@
 import { SidebarContextType } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 import { LatLng, LatLngBounds } from 'leaflet';
 import { keys } from 'lodash';
-import queryString from 'query-string';
 import * as React from 'react';
 import { Col, ListGroup, Row } from 'react-bootstrap';
 import { useMap } from 'react-leaflet';
@@ -67,7 +66,7 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({
 }) => {
   const rows = React.useMemo(() => keys(config), [config]);
   const location = useLocation();
-  const urlParsed = queryString.parse(location.search);
+  const queryParams = new URLSearchParams(location.search);
   const isEditing = [
     SidebarContextType.ADD_BUILDING,
     SidebarContextType.UPDATE_BUILDING,
@@ -75,12 +74,18 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({
     SidebarContextType.ADD_BARE_LAND,
     SidebarContextType.UPDATE_BARE_LAND,
     SidebarContextType.UPDATE_DEVELOPED_LAND,
-  ].includes(urlParsed.sidebarContext as any);
-  const populateDetails = urlParsed.sidebar === 'true' && isEditing ? true : false;
+  ].includes(queryParams.get('sidebarContext') as any);
+  const populateDetails = queryParams.get('sidebar') === 'true' && isEditing ? true : false;
 
   const leaflet = useMap();
   const curZoom = leaflet.getZoom();
   const boundZoom = leaflet.getBoundsZoom(bounds!);
+
+  // Populate Property Details link query params
+  const propertyDetailsQueryParams = new URLSearchParams(location.search);
+  propertyDetailsQueryParams.set('sidebar', 'true');
+  propertyDetailsQueryParams.set('disabled', 'false');
+  propertyDetailsQueryParams.set('loadDraft', 'false');
 
   return (
     <>
@@ -97,12 +102,7 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({
             <StyledLink
               onClick={(e: any) => onAddToParcel(e, { ...data, CENTER: center })}
               to={{
-                search: queryString.stringify({
-                  ...queryString.parse(location.search),
-                  sidebar: true,
-                  disabled: false,
-                  loadDraft: false,
-                }),
+                search: propertyDetailsQueryParams.toString(),
               }}
             >
               Populate property details

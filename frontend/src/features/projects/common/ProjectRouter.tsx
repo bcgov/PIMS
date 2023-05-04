@@ -4,7 +4,6 @@ import { DisposeWorkflowStatus, ReviewWorkflowStatus } from 'features/projects/c
 import { IProject } from 'features/projects/interfaces';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import queryString from 'query-string';
 import React, { useEffect } from 'react';
 import { Container, Spinner } from 'react-bootstrap';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -26,11 +25,11 @@ export const ProjectRouter = () => {
     store => (store.network.requests as any)[ProjectActions.GET_PROJECT_WORKFLOW],
   );
   const location = useLocation();
-  const query = location?.search ?? {};
-  const projectNumber = queryString.parse(query).projectNumber;
+  const queryParams = new URLSearchParams(location.search);
+  const projectNumber = queryParams.get('projectNumber');
 
   useEffect(() => {
-    if (projectNumber !== null && projectNumber !== undefined) {
+    if (projectNumber !== 'null' && projectNumber !== 'undefined') {
       dispatch(clearProject());
       fetchProject(projectNumber as string)(dispatch)
         .then((project: IProject) => {

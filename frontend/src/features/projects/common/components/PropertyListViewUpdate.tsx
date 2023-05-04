@@ -5,9 +5,9 @@ import { PropertyTypes } from 'constants/propertyTypes';
 import { useStepper } from 'features/projects/dispose';
 import { IProperty } from 'features/projects/interfaces';
 import { getIn, useFormikContext } from 'formik';
-import queryString from 'query-string';
 import React, { useCallback, useMemo } from 'react';
 import { Container, FormControlProps } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 import { clickableTooltip } from '../../common';
 import { getColumnsWithRemove, getPropertyColumns } from './columns';
@@ -61,6 +61,7 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
   classificationLimitLabels,
   useReviewApproveStyles,
 }) => {
+  const navigate = useNavigate();
   const { values, setFieldValue } = useFormikContext<any>();
   const existingProperties: IProperty[] = getIn(values, field);
   const { project } = useStepper();
@@ -93,20 +94,31 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
     ],
   );
 
-  const onRowClick = useCallback((row: IProperty) => {
-    window.open(
-      `/mapview?${queryString.stringify({
-        sidebar: true,
-        disabled: true,
-        loadDraft: false,
-        parcelId: [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
-          ? row.id
-          : undefined,
-        buildingId: row.propertyTypeId === PropertyTypes.BUILDING ? row.id : undefined,
-      })}`,
-      '_blank',
-    );
-  }, []);
+  const onRowClick = useCallback(
+    (row: IProperty) => {
+      const queryParams = new URLSearchParams();
+      queryParams.set('sidebar', 'true');
+      queryParams.set('disabled', 'true');
+      queryParams.set('loadDraft', 'false');
+      queryParams.set(
+        'buildingId',
+        `${row.propertyTypeId === PropertyTypes.BUILDING ? row.id : undefined}`,
+      );
+      queryParams.set(
+        'parcelId',
+        `${
+          [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
+            ? row.id
+            : undefined
+        }`,
+      );
+      navigate({
+        pathname: '/mapview',
+        search: queryParams.toString(),
+      });
+    },
+    [navigate],
+  );
 
   return (
     <Container fluid>

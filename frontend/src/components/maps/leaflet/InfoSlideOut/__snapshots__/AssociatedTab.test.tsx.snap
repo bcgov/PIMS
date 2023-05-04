@@ -20,7 +20,7 @@ exports[`Associated Buildings/Parcels view Associated buildings list renders cor
   >
     <a
       class="styled-link"
-      href="/mapview?buildingId=100&disabled=true&loadDraft=false&sidebar=true"
+      href="/mapview?sidebar=true&disabled=true&loadDraft=false&buildingId=100"
     >
       test name
     </a>
@@ -48,7 +48,7 @@ exports[`Associated Buildings/Parcels view Associated parcels list renders corre
   >
     <a
       class="styled-link"
-      href="/mapview?disabled=true&loadDraft=false&parcelId=1&sidebar=true"
+      href="/mapview?sidebar=true&disabled=true&loadDraft=false&parcelId=1"
     >
       000-000-000
     </a>

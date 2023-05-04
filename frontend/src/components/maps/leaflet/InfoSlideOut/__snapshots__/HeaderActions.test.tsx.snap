@@ -27,7 +27,7 @@ exports[`HeaderActions View HeaderActions renders correctly 1`] = `
 >
   Actions:
   <a
-    href="/mapview?disabled=true&loadDraft=false&parcelId=1&sidebar=true"
+    href="/mapview?sidebar=true&disabled=true&loadDraft=false&buildingId=undefined&parcelId=1"
     style="width: 95px;"
   >
     View details
@@ -36,7 +36,7 @@ exports[`HeaderActions View HeaderActions renders correctly 1`] = `
     class="c1"
   />
   <a
-    href="/mapview?disabled=false&loadDraft=false&parcelId=1&sidebar=true"
+    href="/mapview?sidebar=true&disabled=false&loadDraft=false&buildingId=undefined&parcelId=1"
     style="width: 63px;"
   >
     Update

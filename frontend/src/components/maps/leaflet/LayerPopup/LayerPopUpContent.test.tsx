@@ -2,7 +2,6 @@ import { cleanup, render } from '@testing-library/react';
 import { SidebarContextType } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 import { createMemoryHistory } from 'history';
 import { LatLng, LatLngBounds } from 'leaflet';
-import queryString from 'query-string';
 import React from 'react';
 import { MapContainer } from 'react-leaflet';
 import { MemoryRouter } from 'react-router-dom';
@@ -81,14 +80,16 @@ describe('Layer Popup Content', () => {
   });
 
   it('Populate details link appears when sideBar open', () => {
-    history.push(
-      `/mapview?${queryString.stringify({
-        disabled: false,
-        loadDraft: false,
-        sidebar: true,
-        sidebarContext: SidebarContextType.ADD_BUILDING,
-      })}`,
-    );
+    const queryParams = new URLSearchParams();
+    queryParams.set('disabled', 'false');
+    queryParams.set('loadDraft', 'false');
+    queryParams.set('sidebar', 'true');
+    queryParams.set('sidebarContext', SidebarContextType.ADD_BUILDING);
+
+    history.push({
+      pathname: '/mapview',
+      search: queryParams.toString(),
+    });
     const { getByText } = render(
       <MemoryRouter initialEntries={[history.location]}>
         <MapContainer>

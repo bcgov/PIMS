@@ -11,7 +11,6 @@ import { MAX_ZOOM } from 'constants/strings';
 import { useApi } from 'hooks/useApi';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import * as L from 'leaflet';
-import queryString from 'query-string';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { Button } from 'react-bootstrap';
@@ -182,6 +181,15 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
 
   const isBuilding = popUpContext.propertyTypeID === PropertyTypes.BUILDING;
 
+  // Building link query params
+  const buildingQueryParams = new URLSearchParams(location.search);
+  buildingQueryParams.set('sidebar', 'true');
+  buildingQueryParams.set('disabled', 'true');
+  buildingQueryParams.set('loadDraft', 'false');
+  buildingQueryParams.set('buildingId', '0');
+  buildingQueryParams.set('associatedParcelId', `${propertyInfo?.id}`);
+  buildingQueryParams.set('parcelId', 'undefined');
+
   const addAssociatedBuildingLink = (
     <>
       <FaPlusSquare color="#1a5a96" className="mr-1" />
@@ -189,15 +197,7 @@ const InfoControl: React.FC<InfoControlProps> = ({ open, setOpen, onHeaderAction
         style={{ color: variables.slideOutBlue }}
         to={{
           pathname: `/mapview`,
-          search: queryString.stringify({
-            ...queryString.parse(location.search),
-            sidebar: true,
-            disabled: true,
-            loadDraft: false,
-            buildingId: 0,
-            associatedParcelId: propertyInfo?.id,
-            parcelId: undefined,
-          }),
+          search: buildingQueryParams.toString(),
         }}
       >
         Add a new Building
