@@ -47,16 +47,14 @@ const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) =>
           <div className="instruction" style={{ display: 'flex' }}>
             {props.building && (
               <p>
-                Click on the pin, and then click your desired location on the map to mark the
-                location of this building, or if you already have the coordinates, you can enter
-                them in the fields below.
+                Click your desired location on the map to mark the location of this building, or if
+                you already have the coordinates, you can enter them in the fields below.
               </p>
             )}
             {!props.building && (
               <p>
-                Click on the pin, and then click your desired location on the map to pull the parcel
-                details. Or if you already have the coordinates, you can enter them manually in the
-                fields below.
+                Click your desired location on the map to pull the parcel details. Or if you already
+                have the coordinates, you can enter them manually in the fields below.
               </p>
             )}
           </div>
