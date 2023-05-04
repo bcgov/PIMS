@@ -99,20 +99,14 @@ const setParcelFieldsFromLayerData = (
 
       newValues = setIn(newValues, `${nameSpace}.agencyId`, agencyId);
       const searchAddress = getIn(values, `${nameSpace}.searchAddress`);
-      if (searchAddress && getIn(newValues, `${nameSpace}.address.line1`) === '') {
+      if (searchAddress) {
         newValues = setIn(newValues, `${nameSpace}.address.line1`, searchAddress);
+      } else {
+        newValues = setIn(newValues, `${nameSpace}.address.line1`, '');
       }
-      newValues = setIn(
-        newValues,
-        `${nameSpace}.searchPin`,
-        getIn(values, `${nameSpace}.searchPin`),
-      );
-      newValues = setIn(
-        newValues,
-        `${nameSpace}.searchPid`,
-        getIn(values, `${nameSpace}.searchPid`),
-      );
-      newValues = setIn(newValues, `${nameSpace}.searchAddress`, searchAddress);
+      newValues = setIn(newValues, `${nameSpace}.searchPin`, '');
+      newValues = setIn(newValues, `${nameSpace}.searchPid`, '');
+      newValues = setIn(newValues, `${nameSpace}.searchAddress`, '');
       newValues = setIn(
         newValues,
         `${nameSpace}.landLegalDescription`,

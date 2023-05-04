@@ -73,7 +73,7 @@ const LandSearchForm = ({
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={tab} onChange={handleTabChange} aria-label="basic tabs example">
             <Tab label="Search for Property" id="parcel-search-tab" />
-            <Tab label="Drop a Pin" id="parcel-marker-tab" />
+            <Tab label="Select a Parcel from the Map" id="parcel-marker-tab" />
           </Tabs>
         </Box>
 
