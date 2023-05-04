@@ -7,7 +7,6 @@ import { Claim } from 'hooks/api';
 import { WorkflowStatus } from 'hooks/api/projects';
 import { ISearchPropertyModel } from 'hooks/api/properties/search';
 import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
-import queryString from 'query-string';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -32,17 +31,26 @@ export const ProjectProperties: React.FC = () => {
 
   const handleRowClick = useCallback(
     (row: IProjectPropertyForm) => {
-      navigate(
-        `/mapview?${queryString.stringify({
-          sidebar: true,
-          disabled: true,
-          loadDraft: false,
-          parcelId: [PropertyType.Parcel, PropertyType.Subdivision].includes(row.propertyTypeId)
-            ? row.propertyId
-            : undefined,
-          buildingId: row.propertyTypeId === PropertyType.Building ? row.propertyId : undefined,
-        })}`,
+      const queryParams = new URLSearchParams();
+      queryParams.set('sidebar', 'true');
+      queryParams.set('disabled', 'true');
+      queryParams.set('loadDraft', 'false');
+      queryParams.set(
+        'buildingId',
+        `${row.propertyTypeId === PropertyType.Building ? row.propertyId : undefined}`,
       );
+      queryParams.set(
+        'parcelId',
+        `${
+          [PropertyType.Parcel, PropertyType.Subdivision].includes(row.propertyTypeId)
+            ? row.propertyId
+            : undefined
+        }`,
+      );
+      navigate({
+        pathname: '/mapview',
+        search: queryParams.toString(),
+      });
     },
     [navigate],
   );

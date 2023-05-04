@@ -18,7 +18,6 @@ import { WorkflowStatus } from 'hooks/api/projects';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
-import queryString from 'query-string';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Container } from 'react-bootstrap';
 import { Col } from 'react-bootstrap';
@@ -425,13 +424,21 @@ export const ProjectListView: React.FC<IProps> = ({
   );
 };
 
-const getProjectReportUrl = (filter: IProjectFilter) =>
-  `${ENVIRONMENT.apiUrl}/reports/projects?${filter ? queryString.stringify(filter) : ''}`;
+const getProjectReportUrl = (filter: IProjectFilter) => {
+  const queryParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(filter ?? {})) {
+    queryParams.set(key, String(value));
+  }
+  return `${ENVIRONMENT.apiUrl}/reports/projects?${queryParams.toString()}`;
+};
 
-export const getProjectFinancialReportUrl = (filter?: IProjectFilter) =>
-  `${ENVIRONMENT.apiUrl}/reports/projects/surplus/properties/list?${
-    filter ? queryString.stringify(filter) : ''
-  }`;
+export const getProjectFinancialReportUrl = (filter?: IProjectFilter) => {
+  const queryParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(filter ?? {})) {
+    queryParams.set(key, String(value));
+  }
+  return `${ENVIRONMENT.apiUrl}/reports/projects/surplus/properties/list?${queryParams.toString()}`;
+};
 
 const FileIcon = styled(Button)`
   background-color: white !important;

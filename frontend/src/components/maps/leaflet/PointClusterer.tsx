@@ -8,7 +8,6 @@ import { useApi } from 'hooks/useApi';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import L from 'leaflet';
-import queryString from 'query-string';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FeatureGroup, Marker, Polyline, useMap } from 'react-leaflet';
 import { useDispatch } from 'react-redux';
@@ -111,7 +110,9 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   const draftFeatureGroupRef = useRef<L.FeatureGroup>(null);
   const filterState = useFilterContext();
   const location = useLocation();
-  const { parcelId, buildingId } = queryString.parse(location.search);
+  const queryParams = new URLSearchParams(location.search);
+  const parcelId = queryParams.get('parcelId');
+  const buildingId = queryParams.get('buildingId');
 
   const [currentSelected, setCurrentSelected] = useState(selected);
   const [currentCluster, setCurrentCluster] = useState<

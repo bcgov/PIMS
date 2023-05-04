@@ -4,8 +4,8 @@ import { Table } from 'components/Table';
 import { useFormikContext } from 'formik';
 import { PropertyType } from 'hooks/api';
 import { ISearchPropertyModel } from 'hooks/api/properties/search';
-import queryString from 'query-string';
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useProperties } from 'store/hooks';
 
 import { defaultFilter } from '../constants';
@@ -23,6 +23,7 @@ export const ProjectAddProperties: React.FC<IProjectAddPropertiesProps> = ({
   onAddProperty,
   onHide,
 }) => {
+  const navigate = useNavigate();
   const api = useProperties();
   const { values } = useFormikContext<IProjectForm>();
   const { filter } = values;
@@ -69,20 +70,31 @@ export const ProjectAddProperties: React.FC<IProjectAddPropertiesProps> = ({
     if (size !== paging.pageSize) setPaging(paging => ({ ...paging, pageSize: size }));
   };
 
-  const handleRowClick = React.useCallback((row: ISearchPropertyModel) => {
-    window.open(
-      `/mapview?${queryString.stringify({
-        sidebar: true,
-        disabled: true,
-        loadDraft: false,
-        parcelId: [PropertyType.Parcel, PropertyType.Subdivision].includes(row.propertyTypeId)
-          ? row.id
-          : undefined,
-        buildingId: row.propertyTypeId === PropertyType.Building ? row.id : undefined,
-      })}`,
-      '_blank',
-    );
-  }, []);
+  const handleRowClick = useCallback(
+    (row: ISearchPropertyModel) => {
+      const queryParams = new URLSearchParams();
+      queryParams.set('sidebar', 'true');
+      queryParams.set('disabled', 'true');
+      queryParams.set('loadDraft', 'false');
+      queryParams.set(
+        'buildingId',
+        `${row.propertyTypeId === PropertyType.Building ? row.id : undefined}`,
+      );
+      queryParams.set(
+        'parcelId',
+        `${
+          [PropertyType.Parcel, PropertyType.Subdivision].includes(row.propertyTypeId)
+            ? row.id
+            : undefined
+        }`,
+      );
+      navigate({
+        pathname: '/mapview',
+        search: queryParams.toString(),
+      });
+    },
+    [navigate],
+  );
 
   return (
     <styled.ProjectAddProperties>

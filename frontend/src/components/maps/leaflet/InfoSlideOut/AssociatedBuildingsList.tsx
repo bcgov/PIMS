@@ -1,6 +1,5 @@
 import { IParcel } from 'actions/parcelsActions';
 import { Label } from 'components/common/Label';
-import queryString from 'query-string';
 import * as React from 'react';
 import { ReactElement } from 'react';
 import { ListGroup } from 'react-bootstrap';
@@ -28,6 +27,7 @@ export const AssociatedBuildingsList: React.FC<IAssociatedBuildings> = ({
   canEditDetails,
 }) => {
   const location = useLocation();
+
   return (
     <>
       <ListGroup>
@@ -42,13 +42,13 @@ export const AssociatedBuildingsList: React.FC<IAssociatedBuildings> = ({
                 className="styled-link"
                 to={{
                   pathname: `/mapview`,
-                  search: queryString.stringify({
-                    ...queryString.parse(location.search),
-                    sidebar: true,
-                    disabled: true,
-                    loadDraft: false,
-                    buildingId: building.id,
-                  }),
+                  search: new URLSearchParams({
+                    ...Object.fromEntries(new URLSearchParams(location.search)),
+                    sidebar: 'true',
+                    disabled: 'true',
+                    loadDraft: 'false',
+                    buildingId: `${building.id}`,
+                  }).toString(),
                 }}
               >
                 {building.name}

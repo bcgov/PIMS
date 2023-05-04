@@ -29,7 +29,7 @@ export const GeocoderAutoCompleteStyled = styled.div`
     position: absolute;
     overflow-y: auto;
     z-index: 999;
-    top: 0px;
+    top: 50px;
     left: -50px;
   }
 
