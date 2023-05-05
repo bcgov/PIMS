@@ -1,7 +1,6 @@
 import './ProjectDisposeView.scss';
 
 import { ProjectActions } from 'constants/actionTypes';
-import queryString from 'query-string';
 import React, { useEffect } from 'react';
 import { Container } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
@@ -18,7 +17,8 @@ import ProjectDisposeLayout from './ProjectDisposeLayout';
 
 const ProjectDisposeView = () => {
   const location = useLocation();
-  const projectNumber = queryString.parse(location?.search).projectNumber;
+  const queryParams = new URLSearchParams(location.search);
+  const projectNumber = queryParams.get('projectNumber');
   const dispatch = useAppDispatch();
   const getProjectRequest = useAppSelector(
     store => (store.network.requests as any)[ProjectActions.GET_PROJECT],

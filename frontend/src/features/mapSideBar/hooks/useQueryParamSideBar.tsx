@@ -1,7 +1,6 @@
 import { dequal } from 'dequal';
 import * as H from 'history';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
-import queryString from 'query-string';
 import { useCallback, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -64,40 +63,58 @@ export const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const searchParams = useMemo(() => queryString.parse(location.search), [location.search]);
+  const searchParams = useMemo(() => {
+    const queryParams = new URLSearchParams(location.search);
+    let searchParams: any = {};
+    for (const [key, value] of queryParams.entries()) {
+      searchParams[key] = value;
+    }
+    return searchParams;
+  }, [location.search]);
+
   useDeepCompareEffect(() => {
     setShowSideBar(searchParams.sidebar === 'true');
-    setParcelId(searchParams.parcelId ? +searchParams.parcelId || undefined : undefined);
+    setParcelId(searchParams.parcelId ? Number(searchParams.parcelId) || undefined : undefined);
     setBuildingId(
-      searchParams.buildingId !== undefined && searchParams.buildingId !== null
-        ? +searchParams.buildingId
+      searchParams.buildingId !== 'undefined' && searchParams.buildingId !== 'null'
+        ? Number(searchParams.buildingId)
         : undefined,
     );
     setAssociatedParcelId(
-      searchParams.associatedParcelId ? +searchParams.associatedParcelId || undefined : undefined,
+      searchParams.associatedParcelId
+        ? Number(searchParams.associatedParcelId) || undefined
+        : undefined,
     );
     setSideBarSize(searchParams.sidebarSize as SidebarSize);
     setContextName(searchParams.sidebarContext as SidebarContextType);
+
     if (searchParams?.new === 'true') {
-      const queryParams: any = { ...searchParams, new: false };
-      queryParams.parcelId = undefined;
-      queryParams.buildingId = undefined;
-      queryParams.sidebarContext = SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR;
-      navigate(
-        { pathname: '/mapview', search: queryString.stringify(queryParams) },
-        { replace: true },
-      );
+      const queryParams = new URLSearchParams();
+      for (const [key, value] of Object.entries(searchParams ?? {})) {
+        queryParams.set(key, String(value));
+      }
+      queryParams.set('new', 'false');
+      queryParams.set('parcelId', 'undefined');
+      queryParams.set('buildingId', 'undefined');
+      queryParams.set('sidebarContext', SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR);
+
+      navigate({ pathname: '/mapview', search: queryParams.toString() }, { replace: true });
     } else if (
       searchParams.sidebar === 'false' &&
       (searchParams.parcelId || searchParams.buildingId || searchParams.associatedParcelId)
     ) {
-      searchParams.parcelId = null;
-      searchParams.buildingId = null;
-      searchParams.associatedParcelId = null;
+      const queryParams = new URLSearchParams();
+      for (const [key, value] of Object.entries(searchParams ?? {})) {
+        queryParams.set(key, String(value));
+      }
+      queryParams.set('parcelId', 'null');
+      queryParams.set('buildingId', 'null');
+      queryParams.set('associatedParcelId', 'null');
+
       navigate(
         {
           pathname: '/mapview',
-          search: queryString.stringify(searchParams),
+          search: queryParams.toString(),
         },
         { replace: true },
       );
@@ -110,15 +127,17 @@ export const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
         throw new Error('"contextName" is required when "show" is true');
       }
 
-      const search = {
-        ...(searchParams as any),
-        sidebar: show,
-        sidebarSize: show ? size : undefined,
-        sidebarContext: show ? contextName : undefined,
-        parcelId: resetIds ? undefined : searchParams.parcelId,
-        buildingId: resetIds ? undefined : searchParams.buildingId,
-      };
-      navigate({ search: queryString.stringify(search) });
+      const queryParams = new URLSearchParams();
+      for (const [key, value] of Object.entries(searchParams ?? {})) {
+        queryParams.set(key, String(value));
+      }
+      queryParams.set('sidebar', `${show}`);
+      queryParams.set('sidebarSize', `${show ? size : undefined}`);
+      queryParams.set('sidebarContext', `${show ? contextName : undefined}`);
+      queryParams.set('parcelId', `${resetIds ? undefined : searchParams.parcelId}`);
+      queryParams.set('buildingId', `${resetIds ? undefined : searchParams.buildingId}`);
+
+      navigate({ search: queryParams.toString() });
     },
     [navigate, searchParams],
   );
@@ -147,7 +166,11 @@ export const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
   );
 
   const handleLocationChange = (location: H.Location, action: 'PUSH' | 'POP' | 'REPLACE') => {
-    const parsedChangedLocation = queryString.parse(location.search);
+    const queryParams = new URLSearchParams(location.search);
+    let parsedChangedLocation: any = {};
+    for (const [key, value] of queryParams.entries()) {
+      parsedChangedLocation[key] = value;
+    }
     return (searchParams.sidebarContext !== parsedChangedLocation.sidebarContext ||
       searchParams.parcelId !== parsedChangedLocation.parcelId ||
       searchParams.buildingId !== parsedChangedLocation.buildingId ||
@@ -174,16 +197,11 @@ export const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
     addSubdivision,
     addContext,
     setDisabled: disabled => {
-      const queryParams = {
-        ...queryString.parse(location.search),
-        loadDraft: true,
-        disabled: disabled,
-      };
+      const queryParams = new URLSearchParams(location.search);
+      queryParams.set('loadDraft', 'true');
+      queryParams.set('disabled', `${disabled}`);
       const pathName = '/mapview';
-      navigate(
-        { pathname: pathName, search: queryString.stringify(queryParams) },
-        { replace: true },
-      );
+      navigate({ pathname: pathName, search: queryParams.toString() }, { replace: true });
     },
     handleLocationChange,
   };

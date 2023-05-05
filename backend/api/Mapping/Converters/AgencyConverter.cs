@@ -1,6 +1,5 @@
 using Entity = Pims.Dal.Entities;
 
-
 namespace Pims.Api.Mapping.Converters
 {
     /// <summary>

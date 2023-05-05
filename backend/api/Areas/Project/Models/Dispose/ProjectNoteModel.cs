@@ -1,5 +1,3 @@
-using Pims.Dal.Entities;
-
 namespace Pims.Api.Areas.Project.Models.Dispose
 {
     /// <summary>

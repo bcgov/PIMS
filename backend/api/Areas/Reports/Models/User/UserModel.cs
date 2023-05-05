@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace Pims.Api.Areas.Reports.Models.User
 {

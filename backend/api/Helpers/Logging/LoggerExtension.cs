@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System.Diagnostics.CodeAnalysis;

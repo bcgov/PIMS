@@ -97,7 +97,7 @@ exports[`Building Form component renders correctly 1`] = `
   position: absolute;
   overflow-y: auto;
   z-index: 999;
-  top: 0px;
+  top: 50px;
   left: -50px;
 }
 
@@ -1010,7 +1010,7 @@ exports[`Building Form component renders correctly 1`] = `
                             style="display: flex;"
                           >
                             <p>
-                              Click on the pin, and then click your desired location on the map to mark the location of this building, or if you already have the coordinates, you can enter them in the fields below.
+                              Click your desired location on the map to mark the location of this building, or if you already have the coordinates, you can enter them in the fields below.
                             </p>
                           </div>
                         </div>

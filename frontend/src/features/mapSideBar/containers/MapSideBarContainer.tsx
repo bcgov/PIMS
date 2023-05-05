@@ -304,14 +304,9 @@ const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
   // Add a pin to the map where the user has clicked.
   useDeepCompareEffect(() => {
     // If we click on the map, create a new pin at the click location.
-    if (
-      movingPinNameSpace !== undefined &&
-      !!formikRef?.current &&
-      isMouseEventRecent(leafletMouseEvent?.originalEvent)
-    ) {
-      let nameSpace = (movingPinNameSpace?.length ?? 0) > 0 ? `${movingPinNameSpace}.` : '';
-      formikRef.current.setFieldValue(`${nameSpace}latitude`, leafletMouseEvent?.latlng.lat || 0);
-      formikRef.current.setFieldValue(`${nameSpace}longitude`, leafletMouseEvent?.latlng.lng || 0);
+    if (!!formikRef?.current && isMouseEventRecent(leafletMouseEvent?.originalEvent)) {
+      formikRef.current.setFieldValue(`data.latitude`, leafletMouseEvent?.latlng.lat || 0);
+      formikRef.current.setFieldValue(`data.longitude`, leafletMouseEvent?.latlng.lng || 0);
       const isParcel = [
         SidebarContextType.VIEW_BARE_LAND,
         SidebarContextType.UPDATE_DEVELOPED_LAND,
@@ -319,7 +314,7 @@ const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
         SidebarContextType.ADD_ASSOCIATED_LAND,
         SidebarContextType.ADD_BARE_LAND,
       ].includes(context);
-      droppedMarkerSearch(movingPinNameSpace, leafletMouseEvent?.latlng, isParcel);
+      droppedMarkerSearch('data', leafletMouseEvent?.latlng, isParcel);
       setMovingPinNameSpace(undefined);
     }
   }, [dispatch, leafletMouseEvent, showSideBar]);
