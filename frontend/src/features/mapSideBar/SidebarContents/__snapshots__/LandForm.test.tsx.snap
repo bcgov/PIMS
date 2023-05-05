@@ -97,7 +97,7 @@ exports[`Land Form component renders correctly 1`] = `
   position: absolute;
   overflow-y: auto;
   z-index: 999;
-  top: 0px;
+  top: 50px;
   left: -50px;
 }
 
@@ -115,7 +115,7 @@ exports[`Land Form component renders correctly 1`] = `
   color: #fff;
 }
 
-.c7 {
+.c6 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -129,7 +129,7 @@ exports[`Land Form component renders correctly 1`] = `
   align-content: center;
 }
 
-.c8 {
+.c7 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -146,17 +146,6 @@ exports[`Land Form component renders correctly 1`] = `
   -ms-flex-pack: center;
   justify-content: center;
   font-weight: bold;
-}
-
-.c5 {
-  top: 20px;
-  right: 20px;
-  border: 0px;
-  background-color: none;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c0 {
@@ -185,7 +174,7 @@ exports[`Land Form component renders correctly 1`] = `
   min-height: 100px;
 }
 
-.c6 {
+.c5 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -202,7 +191,7 @@ exports[`Land Form component renders correctly 1`] = `
   bottom: -20px;
 }
 
-.c9 {
+.c8 {
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
@@ -459,7 +448,7 @@ exports[`Land Form component renders correctly 1`] = `
                               tabindex="-1"
                               type="button"
                             >
-                              Drop a Pin
+                              Select a Parcel from the Map
                               <span
                                 class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
                               />
@@ -768,21 +757,16 @@ exports[`Land Form component renders correctly 1`] = `
                         <div
                           class="col-md-auto"
                         >
-                          Click on the pin, and then click your desired location on the map to pull the parcel details.
+                          Find a parcel on the map and click it to populate the Parcel Details below.
                         </div>
                         <div
                           class="marker-svg col"
                         >
-                          <button
-                            class="c5"
-                            type="button"
+                          <svg
+                            class="parcel-icon"
                           >
-                            <svg
-                              class="parcel-icon"
-                            >
-                              draft-parcel-icon.svg
-                            </svg>
-                          </button>
+                            draft-parcel-icon.svg
+                          </svg>
                         </div>
                       </div>
                     </div>
@@ -1351,10 +1335,10 @@ exports[`Land Form component renders correctly 1`] = `
             </div>
           </div>
           <div
-            class="c6"
+            class="c5"
           >
             <div
-              class="c7"
+              class="c6"
             >
               <div
                 class="SresManual"
@@ -1381,13 +1365,13 @@ exports[`Land Form component renders correctly 1`] = `
                 </div>
               </div>
               <small
-                class="c8 p-1 mr-2"
+                class="c7 p-1 mr-2"
               >
                 Inventory Policy
               </small>
             </div>
             <span
-              class="c9"
+              class="c8"
             />
             <button
               class="btn btn-primary btn-sm"

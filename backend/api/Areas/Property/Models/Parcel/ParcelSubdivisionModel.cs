@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Model = Pims.Api.Models;
 
 namespace Pims.Api.Areas.Property.Models.Parcel

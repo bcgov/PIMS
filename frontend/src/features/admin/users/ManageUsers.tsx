@@ -9,7 +9,6 @@ import useCodeLookups from 'hooks/useLookupCodes';
 import { IUser, IUsersFilter } from 'interfaces';
 import { isEmpty } from 'lodash';
 import _ from 'lodash';
-import queryString from 'query-string';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import { FaFileExcel } from 'react-icons/fa';
@@ -42,10 +41,14 @@ const FileIcon = styled(Button)`
   padding: 6px 5px;
 `;
 
-const downloadUsers = (filter: IPaginateParams) =>
-  `${ENVIRONMENT.apiUrl}/reports/users?${
-    filter ? queryString.stringify({ ...filter, all: true }) : ''
-  }`;
+const downloadUsers = (filter: IPaginateParams) => {
+  const queryParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(filter ?? {})) {
+    queryParams.set(key, String(value));
+  }
+  queryParams.set('all', 'true');
+  return `${ENVIRONMENT.apiUrl}/reports/users?${queryParams.toString()}`;
+};
 
 /**
  * Component to manage the user accounts.

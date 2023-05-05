@@ -6,7 +6,6 @@ import {
 import { IProject, IProjectWorkflowComponent } from 'features/projects/interfaces';
 import { FormikValues } from 'formik';
 import _ from 'lodash';
-import queryString from 'query-string';
 import React, { useEffect, useRef } from 'react';
 import { Container, Spinner } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -38,7 +37,8 @@ const ProjectDisposeLayout = () => {
     noFetchingProjectRequests,
     getProjectRequest,
   } = useStepForm();
-  const projectNumber = queryString.parse(location?.search).projectNumber;
+  const queryParams = new URLSearchParams(location.search);
+  const projectNumber = queryParams.get('projectNumber');
 
   const updateProjectStatus = (
     project: IProject,

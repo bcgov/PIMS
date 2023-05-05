@@ -1,7 +1,6 @@
 import { TableSort } from 'components/Table/TableSort';
 import { PropertyTypeNames } from 'constants/propertyTypeNames';
 import _ from 'lodash';
-import queryString from 'query-string';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -92,7 +91,11 @@ export const useRouterFilter = <T extends object>({
   // This will only occur the first time the component loads to ensure the URL query parameters are applied.
   useEffect(() => {
     if (setFilter) {
-      const params = queryString.parse(location.search);
+      const queryParams = new URLSearchParams(location.search);
+      let params: any = {};
+      for (const [key, value] of queryParams.entries()) {
+        params[key] = value;
+      }
       // Check if query contains filter params.
       const filterProps = Object.keys(filter);
       if (_.intersection(Object.keys(params), filterProps).length) {
@@ -133,14 +136,36 @@ export const useRouterFilter = <T extends object>({
     if (loaded) {
       const filterParams = new URLSearchParams(filter as any);
       const sorting = generateMultiSortCriteria(sort!);
+
+      // Original query params parsed.
+      const queryParams = new URLSearchParams(location.search);
+      let originalParamsParsed: any = {};
+      for (const [key, value] of queryParams.entries()) {
+        originalParamsParsed[key] = value;
+      }
+
+      // Filtered query params parsed.
+      const filteredQueryParams = new URLSearchParams(filterParams.toString());
+      let filteredParamsParsed: any = {};
+      for (const [key, value] of filteredQueryParams.entries()) {
+        filteredParamsParsed[key] = value;
+      }
+
       const allParams = {
-        ...queryString.parse(location.search),
-        ...queryString.parse(filterParams.toString()),
+        ...originalParamsParsed,
+        ...filteredParamsParsed,
         sorting,
       };
+      const allQueryParams = new URLSearchParams();
+      for (const [key, value] of Object.entries(allParams ?? {})) {
+        allQueryParams.set(key, String(value));
+      }
+      allQueryParams.set('skipEmptyString', 'true');
+      allQueryParams.set('skipNull', 'true');
+
       navigate({
         pathname: location.pathname,
-        search: queryString.stringify(allParams, { skipEmptyString: true, skipNull: true }),
+        search: allQueryParams.toString(),
       });
       const keyedFilter = { [key]: filter };
       dispatch(saveFilter({ ...savedFilter, ...keyedFilter }));
@@ -161,14 +186,36 @@ export const useRouterFilter = <T extends object>({
     (newFilter: T) => {
       const filterParams = new URLSearchParams(newFilter as any);
       const sorting = generateMultiSortCriteria(sort!);
+
+      // Original query params parsed.
+      const queryParams = new URLSearchParams(location.search);
+      let originalParamsParsed: any = {};
+      for (const [key, value] of queryParams.entries()) {
+        originalParamsParsed[key] = value;
+      }
+
+      // Filtered query params parsed.
+      const filteredQueryParams = new URLSearchParams(filterParams.toString());
+      let filteredParamsParsed: any = {};
+      for (const [key, value] of filteredQueryParams.entries()) {
+        filteredParamsParsed[key] = value;
+      }
+
       const allParams = {
-        ...queryString.parse(location.search),
-        ...queryString.parse(filterParams.toString()),
-        sort: sorting,
+        ...originalParamsParsed,
+        ...filteredParamsParsed,
+        sorting,
       };
+      const allQueryParams = new URLSearchParams();
+      for (const [key, value] of Object.entries(allParams ?? {})) {
+        allQueryParams.set(key, String(value));
+      }
+      allQueryParams.set('skipEmptyString', 'true');
+      allQueryParams.set('skipNull', 'true');
+
       navigate({
         pathname: location.pathname,
-        search: queryString.stringify(allParams, { skipEmptyString: true, skipNull: true }),
+        search: queryParams.toString(),
       });
       const keyedFilter = { [key]: newFilter };
       dispatch(saveFilter({ ...savedFilter, ...keyedFilter }));

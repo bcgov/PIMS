@@ -4,7 +4,6 @@ using Pims.Api.Models;
 using Pims.Dal.Entities;
 using Pims.Dal.Entities.Helpers.Extensions;
 using Pims.Dal.Helpers.Extensions;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Pims.Api.Areas.Reports.Mapping.Project

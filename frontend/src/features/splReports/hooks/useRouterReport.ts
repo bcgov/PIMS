@@ -1,6 +1,5 @@
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import _ from 'lodash';
-import queryString from 'query-string';
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'store';
@@ -30,7 +29,11 @@ export const useRouterReport = ({
   //When this hook loads, override the value of the filter with the search params. Should run once as originalSearch should never change.
   useDeepCompareEffect(() => {
     if (reports?.length && currentReport?.id === undefined) {
-      const filterFromParams = queryString.parse(originalSearch);
+      const queryParams = new URLSearchParams(originalSearch);
+      let filterFromParams: any = {};
+      for (const [key, value] of queryParams.entries()) {
+        filterFromParams[key] = value;
+      }
       if (filterFromParams.reportId) {
         const report = _.find(reports, { id: +filterFromParams.reportId });
         setCurrentReport(report ?? reports[0]);

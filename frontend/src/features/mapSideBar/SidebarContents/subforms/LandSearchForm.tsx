@@ -12,19 +12,9 @@ import { getIn, useFormikContext } from 'formik';
 import { IGeocoderResponse } from 'hooks/useApi';
 import React, { SyntheticEvent, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import ClickAwayListener from 'react-click-away-listener';
-import styled from 'styled-components';
 import { withNameSpace } from 'utils/formUtils';
 
 import { ISearchFields } from '../LandForm';
-
-const SearchMarkerButton = styled.button`
-  top: 20px;
-  right: 20px;
-  border: 0px;
-  background-color: none;
-  display: flex;
-`;
 
 interface ISearchFormProps {
   /** used for determining nameSpace of field */
@@ -83,7 +73,7 @@ const LandSearchForm = ({
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={tab} onChange={handleTabChange} aria-label="basic tabs example">
             <Tab label="Search for Property" id="parcel-search-tab" />
-            <Tab label="Drop a Pin" id="parcel-marker-tab" />
+            <Tab label="Select a Parcel from the Map" id="parcel-marker-tab" />
           </Tabs>
         </Box>
 
@@ -209,25 +199,10 @@ const LandSearchForm = ({
         <Box role="tabpanel" hidden={tab !== 1} id="parcel-tabpanel-marker" sx={{ p: 3 }}>
           <Row style={{ alignItems: 'center' }}>
             <Col md="auto">
-              Click on the pin, and then click your desired location on the map to pull the parcel
-              details.
+              Find a parcel on the map and click it to populate the Parcel Details below.
             </Col>
             <Col className="marker-svg">
-              <ClickAwayListener
-                onClickAway={() => {
-                  setMovingPinNameSpace(undefined);
-                }}
-              >
-                <SearchMarkerButton
-                  type="button"
-                  onClick={(e: any) => {
-                    setMovingPinNameSpace(nameSpace ?? '');
-                    e.preventDefault();
-                  }}
-                >
-                  <ParcelDraftIcon className="parcel-icon" />
-                </SearchMarkerButton>
-              </ClickAwayListener>
+              <ParcelDraftIcon className="parcel-icon" />
             </Col>
           </Row>
         </Box>
