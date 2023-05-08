@@ -44,6 +44,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="5.0.0" />
+    <PackageReference Include="NETStandard.Library" Version="2.0.3" />
     <PackageReference Include="System.CommandLine.DragonFruit" Version="0.3.0-alpha.20070.2" />
     <PackageReference Include="System.Data.OleDb" Version="7.0.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.29.0" />
