@@ -11,6 +11,10 @@ export const Logout = () => {
     if (!configuration.siteMinderLogoutUrl) {
       navigate('/login');
     } else {
+      // Delete cookie - will not work in localhost because domain of cookie is
+      // .gov.bc.ca which differs from localhost.
+      document.cookie = 'SMSESSION=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+
       navigate(
         `${configuration.siteMinderLogoutUrl}?returl=${configuration.baseUrl}/login&retnow=1`,
       );
