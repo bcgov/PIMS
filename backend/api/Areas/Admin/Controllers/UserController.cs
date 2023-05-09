@@ -30,7 +30,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IPimsAdminService _pimsAdminService;
         private readonly IMapper _mapper;
-        private object res;
+        private readonly object res;
         #endregion
 
         #region Constructors
