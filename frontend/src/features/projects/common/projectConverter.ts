@@ -261,6 +261,7 @@ export const toApiProperty = (
     latitude: property.latitude,
     longitude: property.longitude,
     classificationId: property.classificationId,
+    buildingTenancy: property.tenancy,
     name: property.name,
     description: property.description,
     address: {

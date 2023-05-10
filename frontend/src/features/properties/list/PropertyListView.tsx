@@ -134,7 +134,8 @@ export const flattenParcel = (apiProperty: IParcel): IProperty => {
     address: `${apiProperty.address?.line1 ?? ''} , ${apiProperty.address?.administrativeArea ??
       ''}`,
     administrativeArea: apiProperty.address?.administrativeArea ?? '',
-    province: apiProperty.address?.province ?? '',
+    province: apiProperty.address?.province,
+    provinceId: apiProperty.address?.province ?? '',
     postal: apiProperty.address?.postal ?? '',
     assessedLand: (assessedLand?.value as number) ?? 0,
     assessedLandDate: assessedLand?.date,
@@ -177,7 +178,8 @@ export const flattenBuilding = (apiProperty: IBuilding): IProperty => {
     address: `${apiProperty.address?.line1 ?? ''} , ${apiProperty.address?.administrativeArea ??
       ''}`,
     administrativeArea: apiProperty.address?.administrativeArea ?? '',
-    province: apiProperty.address?.province ?? '',
+    province: apiProperty.address?.province,
+    provinceId: apiProperty.address?.province ?? '',
     postal: apiProperty.address?.postal ?? '',
     assessedBuilding: (assessedBuilding?.value as number) ?? 0,
     assessedBuildingDate: assessedBuilding?.date,
@@ -261,6 +263,7 @@ interface IChangedRow {
   assessedLand?: boolean;
   assessedBuilding?: boolean;
   netBook?: boolean;
+  classificationId: number;
 }
 
 /**
@@ -574,8 +577,7 @@ const PropertyListView: React.FC = () => {
     actions: FormikProps<{ properties: IProperty[] }>,
   ) => {
     let nextProperties = [...values.properties];
-    const editableColumnKeys = ['assessedLand', 'assessedBuilding', 'netBook'];
-
+    const editableColumnKeys = ['assessedLand', 'assessedBuilding', 'netBook', 'classificationId'];
     const changedRows = dirtyRows
       .map(change => {
         const data = { ...values.properties![change.rowId] };

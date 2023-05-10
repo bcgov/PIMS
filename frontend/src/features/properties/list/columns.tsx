@@ -5,6 +5,7 @@ import { ColumnWithProps } from 'components/Table';
 import { AsterixMoneyCell, EditableMoneyCell, MoneyCell } from 'components/Table/MoneyCell';
 import { PropertyTypeCell } from 'components/Table/PropertyTypeCell';
 import { PropertyTypes } from 'constants/index';
+import { getEditableClassificationCell } from 'features/projects/common/components/columns';
 import _, { isEqual } from 'lodash';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -133,7 +134,7 @@ export const columns = (
     responsive: false,
     width: spacing.small,
     minWidth: 90,
-    clickable: true,
+    Cell: editable ? getEditableClassificationCell() : (cellInfo: any) => cellInfo.value,
     sortable: true,
     filterable: true,
     filter: {
@@ -402,7 +403,7 @@ export const buildingColumns = (
     responsive: false,
     width: spacing.small,
     minWidth: 90,
-    clickable: true,
+    Cell: editable ? getEditableClassificationCell() : (cellInfo: any) => cellInfo.value,
     sortable: true,
     filterable: true,
     filter: {

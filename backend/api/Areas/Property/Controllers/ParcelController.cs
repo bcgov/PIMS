@@ -192,7 +192,7 @@ namespace Pims.Api.Areas.Property.Controllers
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
 
-            var parcel = _pimsService.Parcel.UpdateFinancials(entity);
+            var parcel = _pimsService.Parcel.Update(entity);
             return new JsonResult(_mapper.Map<Model.ParcelModel>(parcel));
         }
 
