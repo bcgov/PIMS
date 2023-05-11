@@ -47,6 +47,7 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("sync")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<Model.RoleModel>), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
@@ -110,6 +111,7 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         /// <exception type="KeyNotFoundException">The role does not exist for the specified 'id'.</exception>
         /// <returns></returns>
         [HttpPut("{id}")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.RoleModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]

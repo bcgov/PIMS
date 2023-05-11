@@ -64,6 +64,7 @@ namespace Pims.Api.Areas.Tools.Controllers
         /// <param name="models">An array of property models.</param>
         /// <returns>The properties added.</returns>
         [HttpPost("properties")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<Model.ParcelModel>), 200)]
         [ProducesResponseType(typeof(Pims.Api.Models.ErrorResponseModel), 400)]
@@ -88,6 +89,7 @@ namespace Pims.Api.Areas.Tools.Controllers
         /// <param name="models">An array of property models.</param>
         /// <returns>The properties added.</returns>
         [HttpPost("properties/financials")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<Model.ParcelModel>), 200)]
         [ProducesResponseType(typeof(Pims.Api.Models.ErrorResponseModel), 400)]
@@ -111,6 +113,7 @@ namespace Pims.Api.Areas.Tools.Controllers
         /// <param name="updatedBefore">Only allow deletes to properties updated before this date.</param>
         /// <returns>The properties added.</returns>
         [HttpDelete("properties")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<Model.ParcelModel>), 200)]
         [ProducesResponseType(typeof(Pims.Api.Models.ErrorResponseModel), 400)]
@@ -140,6 +143,7 @@ namespace Pims.Api.Areas.Tools.Controllers
         /// <param name="defaults">A semi-colon separated list of key=value pairs of default values for properties if they are null or not provided.</param>
         /// <returns>The properties added.</returns>
         [HttpPost("projects")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<Model.ProjectModel>), 200)]
         [ProducesResponseType(typeof(Pims.Api.Models.ErrorResponseModel), 400)]
