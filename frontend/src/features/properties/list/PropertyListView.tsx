@@ -728,7 +728,7 @@ const PropertyListView: React.FC = () => {
           <VerticalDivider />
 
           {!editable && !keycloak.hasClaim(Claims.VIEW_ONLY_PROPERTIES) && (
-            <TooltipWrapper toolTipId="edit-financial-values" toolTip={'Edit financial values'}>
+            <TooltipWrapper toolTipId="edit-values" toolTip={'Edit values'}>
               <EditIconButton>
                 <FaEdit data-testid="edit-icon" size={36} onClick={() => setEditable(!editable)} />
               </EditIconButton>
@@ -736,10 +736,7 @@ const PropertyListView: React.FC = () => {
           )}
           {editable && (
             <>
-              <TooltipWrapper
-                toolTipId="cancel-edited-financial-values"
-                toolTip={'Cancel unsaved edits'}
-              >
+              <TooltipWrapper toolTipId="cancel-edited-values" toolTip={'Cancel unsaved edits'}>
                 <Button
                   data-testid="cancel-changes"
                   variant="outline-primary"
@@ -754,10 +751,7 @@ const PropertyListView: React.FC = () => {
                   Cancel
                 </Button>
               </TooltipWrapper>
-              <TooltipWrapper
-                toolTipId="save-edited-financial-values"
-                toolTip={'Save financial values'}
-              >
+              <TooltipWrapper toolTipId="save-edited-values" toolTip={'Save values'}>
                 <Button
                   data-testid="save-changes"
                   onClick={async () => {
@@ -766,6 +760,7 @@ const PropertyListView: React.FC = () => {
                       const actions = tableFormRef.current;
                       await submitTableChanges(values, actions);
                     }
+                    setEditable(false);
                   }}
                 >
                   Save edits
