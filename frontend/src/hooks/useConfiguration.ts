@@ -34,10 +34,9 @@ export const useConfiguration = (): IConfiguration => {
       : isTest
       ? 'https://logontest7.gov.bc.ca/clp-cgi/logoff.cgi?retnow=1&returl='
       : 'https://logondev7.gov.bc.ca/clp-cgi/logoff.cgi?retnow=1&returl=';
-    const keycloakLogoutURL = `${getKeycloakAuthURL()}/realms/standard/protocol/openid-connect/logout?client_id=${getKeycloakId()}&redirect_uri=`;
-    const logoutRedirectURL = encodeURIComponent(`${baseUrl}/login`);
+    const keycloakLogoutURL = `${getKeycloakAuthURL()}/realms/standard/protocol/openid-connect/logout`;
 
-    return `${siteMinderLogoutUrl}${keycloakLogoutURL}${logoutRedirectURL}`;
+    return `${siteMinderLogoutUrl}${keycloakLogoutURL}`;
   };
 
   const validRefreshEndpoints: string[] = [
