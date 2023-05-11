@@ -1,10 +1,10 @@
 ARG BUILD_CONFIGURATION=Release
-FROM image-registry.apps.silver.devops.gov.bc.ca/354028-tools/dotnet-aspnet-runtime:6.0 AS base
+FROM image-registry.apps.silver.devops.gov.bc.ca/354028-tools/dotnet-aspnet-runtime:7.0 AS base
 WORKDIR /app
 EXPOSE 443 8080
 
 # Copy csproj and restore as distinct layers
-FROM image-registry.apps.silver.devops.gov.bc.ca/354028-tools/dotnet-sdk:6.0 AS build
+FROM image-registry.apps.silver.devops.gov.bc.ca/354028-tools/dotnet-sdk:7.0 AS build
 WORKDIR /src
 COPY *.sln .
 COPY api/*.csproj api/
@@ -22,7 +22,7 @@ COPY core/*.csproj core/
 
 RUN dotnet restore
 ENV PATH="$PATH:/root/.dotnet/tools"
-RUN dotnet tool install --global dotnet-ef --version 6.0.15
+RUN dotnet tool install --global dotnet-ef --version 7.0.5
 # Copy everything else and build
 COPY . .
 WORKDIR /src/api

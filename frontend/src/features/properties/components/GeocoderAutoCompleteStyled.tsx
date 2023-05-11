@@ -27,9 +27,8 @@ export const GeocoderAutoCompleteStyled = styled.div`
     margin: 0;
     padding: 0;
     position: absolute;
-    overflow-y: auto;
     z-index: 999;
-    top: 50px;
+    top: 40px;
     left: -50px;
   }
 
