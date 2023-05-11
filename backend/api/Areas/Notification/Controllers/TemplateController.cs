@@ -86,6 +86,7 @@ namespace Pims.Api.Areas.Notification.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.SystemAdmin)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(NotificationTemplateModel), 201)]
@@ -103,6 +104,7 @@ namespace Pims.Api.Areas.Notification.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
+        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.SystemAdmin)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(NotificationTemplateModel), 200)]
@@ -120,6 +122,7 @@ namespace Pims.Api.Areas.Notification.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
+        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.SystemAdmin)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(NotificationTemplateModel), 200)]
@@ -141,6 +144,7 @@ namespace Pims.Api.Areas.Notification.Controllers
         /// <param name="projectId"></param>
         /// <returns></returns>
         [HttpPost("{templateId}/projects/{projectId}")]
+        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.SystemAdmin)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Models.Queue.NotificationQueueModel), 201)]

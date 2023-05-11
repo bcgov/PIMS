@@ -71,6 +71,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="filter"></param>
         /// <returns>Paged object with an array of users.</returns>
         [HttpPost("filter")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Api.Models.PageModel<Model.UserModel>), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
@@ -88,6 +89,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="filter"></param>
         /// <returns>Paged object with an array of users.</returns>
         [HttpPost("my/agency")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Api.Models.PageModel<Model.UserModel>), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
@@ -120,6 +122,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The user model.</param>
         /// <returns>The user added.</returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.UserModel), 201)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
@@ -141,6 +144,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The user model.</param>
         /// <returns>The user updated.</returns>
         [HttpPut("{id}")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.UserModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
@@ -183,6 +187,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="request"></param>
         /// <returns>JSON Array of the users roles, updated with the one just added.</returns>
         [HttpDelete("roles/{username}")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.UserModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
@@ -206,6 +211,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="request"></param>
         /// <returns>JSON Array of the users roles, updated with the one just added.</returns>
         [HttpPost("roles/{username}")][Produces("application/json")]
+        [ValidateAntiForgeryToken]
         [ProducesResponseType(typeof(Model.UserModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "admin-user" })]
@@ -243,6 +249,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The user model.</param>
         /// <returns>The user who was deleted.</returns>
         [HttpDelete("{id}")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.UserModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
