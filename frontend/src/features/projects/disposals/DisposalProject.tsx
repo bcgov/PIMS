@@ -47,10 +47,10 @@ export const DisposalProject: React.FC<IDisposalProjectProps> = props => {
   );
 
   React.useEffect(() => {
-    if (!!id && values.id !== id) {
+    if ((!!id && values.id !== id) || project === undefined) {
       fetch(id);
     }
-  }, [id, values.id, fetch]);
+  }, [id, values.id, fetch, project]);
 
   const updateProject = async (values: IProjectForm) => {
     setIsSubmitting(true);
