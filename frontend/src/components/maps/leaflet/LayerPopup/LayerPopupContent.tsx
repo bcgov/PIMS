@@ -1,4 +1,3 @@
-import { SidebarContextType } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 import { LatLng, LatLngBounds } from 'leaflet';
 import { keys } from 'lodash';
 import * as React from 'react';
@@ -66,26 +65,10 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({
 }) => {
   const rows = React.useMemo(() => keys(config), [config]);
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const isEditing = [
-    SidebarContextType.ADD_BUILDING,
-    SidebarContextType.UPDATE_BUILDING,
-    SidebarContextType.ADD_ASSOCIATED_LAND,
-    SidebarContextType.ADD_BARE_LAND,
-    SidebarContextType.UPDATE_BARE_LAND,
-    SidebarContextType.UPDATE_DEVELOPED_LAND,
-  ].includes(queryParams.get('sidebarContext') as any);
-  const populateDetails = queryParams.get('sidebar') === 'true' && isEditing ? true : false;
 
   const leaflet = useMap();
   const curZoom = leaflet.getZoom();
   const boundZoom = leaflet.getBoundsZoom(bounds!);
-
-  // Populate Property Details link query params
-  const propertyDetailsQueryParams = new URLSearchParams(location.search);
-  propertyDetailsQueryParams.set('sidebar', 'true');
-  propertyDetailsQueryParams.set('disabled', 'false');
-  propertyDetailsQueryParams.set('loadDraft', 'false');
 
   return (
     <>
@@ -98,16 +81,6 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({
       </ListGroup>
       <MenuRow>
         <Col>
-          {populateDetails && (data.PID !== undefined || data.PIN !== undefined) ? (
-            <StyledLink
-              onClick={(e: any) => onAddToParcel(e, { ...data, CENTER: center })}
-              to={{
-                search: propertyDetailsQueryParams.toString(),
-              }}
-            >
-              Populate property details
-            </StyledLink>
-          ) : null}
           {bounds && curZoom! !== boundZoom ? (
             <StyledLink
               to={{ ...location }}
