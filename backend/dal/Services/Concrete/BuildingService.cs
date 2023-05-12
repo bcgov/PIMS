@@ -236,11 +236,11 @@ namespace Pims.Dal.Services
                 .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Address).ThenInclude(a => a.Province)
                 .FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
 
-             var user = this.Context.Users
-                .Include(u => u.Agencies)
-                .ThenInclude(a => a.Agency)
-                .ThenInclude(a => a.Children)
-                .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
+            var user = this.Context.Users
+               .Include(u => u.Agencies)
+               .ThenInclude(a => a.Agency)
+               .ThenInclude(a => a.Children)
+               .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
             var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
 
             if (!isAdmin && !userAgencies.Contains((int)existingBuilding.AgencyId)) throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
@@ -381,12 +381,12 @@ namespace Pims.Dal.Services
                 .Include(b => b.Fiscals)
                 .FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
             this.ThrowIfNotAllowedToUpdate(existingBuilding, _options.Project);
-
-             var user = this.Context.Users
-                .Include(u => u.Agencies)
-                .ThenInclude(a => a.Agency)
-                .ThenInclude(a => a.Children)
-                .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
+            existingBuilding.Classification = building.Classification;
+            var user = this.Context.Users
+               .Include(u => u.Agencies)
+               .ThenInclude(a => a.Agency)
+               .ThenInclude(a => a.Children)
+               .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
             var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
 
             if (!isAdmin && !userAgencies.Contains((int)existingBuilding.AgencyId))

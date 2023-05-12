@@ -209,8 +209,9 @@ export const useApi = (props?: IApiProps): PimsAPI => {
     async (id: number, building: IApiProperty) => {
       const { data } = await axios.put<IBuilding>(
         `${ENVIRONMENT.apiUrl}/properties/buildings/${id}/financials`,
-        { ...building, totalArea: building.landArea },
+        { ...building, totalArea: building.landArea, buildingTenancy: building.buildingTenancy },
       );
+      console.log('Tenancy:' + building.buildingTenancy);
       return data;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
