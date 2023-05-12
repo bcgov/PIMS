@@ -6,6 +6,7 @@ export interface IApiProperty {
   id: number;
   parcelId?: number;
   buildingId?: number;
+  buildingTenancy?: string;
   propertyTypeId: number;
   pid?: string;
   pin?: number | '';
