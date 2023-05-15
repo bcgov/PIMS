@@ -29,7 +29,7 @@ const sumFinancialRows = (properties: IProperty[], key: string): string => {
   return sum === 'NaN' ? '$0' : `$${sum}`;
 };
 
-const getEditableClassificationCell = (limitLabels?: string[]) => (cellInfo: any) => {
+export const getEditableClassificationCell = (limitLabels?: string[]) => (cellInfo: any) => {
   const classifications = useCodeLookups().getPropertyClassificationOptions();
   const context = useFormikContext();
   return (

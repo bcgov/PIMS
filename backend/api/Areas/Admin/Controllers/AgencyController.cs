@@ -84,6 +84,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="filter"></param>
         /// <returns>Paged object with an array of agencies.</returns>
         [HttpPost("filter")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Api.Models.PageModel<Model.AgencyModel>), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
@@ -101,6 +102,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The agency model.</param>
         /// <returns>The agency added.</returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.AgencyModel), 201)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
@@ -128,6 +130,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The agency model.</param>
         /// <returns>The agency updated.</returns>
         [HttpPut("{id}")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.AgencyModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
@@ -154,6 +157,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The agency model.</param>
         /// <returns>The agency who was deleted.</returns>
         [HttpDelete("{id}")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.AgencyModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]

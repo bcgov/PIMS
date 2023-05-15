@@ -134,7 +134,8 @@ export const flattenParcel = (apiProperty: IParcel): IProperty => {
     address: `${apiProperty.address?.line1 ?? ''} , ${apiProperty.address?.administrativeArea ??
       ''}`,
     administrativeArea: apiProperty.address?.administrativeArea ?? '',
-    province: apiProperty.address?.province ?? '',
+    province: apiProperty.address?.province,
+    provinceId: apiProperty.address?.province ?? '',
     postal: apiProperty.address?.postal ?? '',
     assessedLand: (assessedLand?.value as number) ?? 0,
     assessedLandDate: assessedLand?.date,
@@ -177,7 +178,8 @@ export const flattenBuilding = (apiProperty: IBuilding): IProperty => {
     address: `${apiProperty.address?.line1 ?? ''} , ${apiProperty.address?.administrativeArea ??
       ''}`,
     administrativeArea: apiProperty.address?.administrativeArea ?? '',
-    province: apiProperty.address?.province ?? '',
+    province: apiProperty.address?.province,
+    provinceId: apiProperty.address?.province ?? '',
     postal: apiProperty.address?.postal ?? '',
     assessedBuilding: (assessedBuilding?.value as number) ?? 0,
     assessedBuildingDate: assessedBuilding?.date,
@@ -261,6 +263,7 @@ interface IChangedRow {
   assessedLand?: boolean;
   assessedBuilding?: boolean;
   netBook?: boolean;
+  classificationId: number;
 }
 
 /**
@@ -574,8 +577,7 @@ const PropertyListView: React.FC = () => {
     actions: FormikProps<{ properties: IProperty[] }>,
   ) => {
     let nextProperties = [...values.properties];
-    const editableColumnKeys = ['assessedLand', 'assessedBuilding', 'netBook'];
-
+    const editableColumnKeys = ['assessedLand', 'assessedBuilding', 'netBook', 'classificationId'];
     const changedRows = dirtyRows
       .map(change => {
         const data = { ...values.properties![change.rowId] };
@@ -726,7 +728,7 @@ const PropertyListView: React.FC = () => {
           <VerticalDivider />
 
           {!editable && !keycloak.hasClaim(Claims.VIEW_ONLY_PROPERTIES) && (
-            <TooltipWrapper toolTipId="edit-financial-values" toolTip={'Edit financial values'}>
+            <TooltipWrapper toolTipId="edit-values" toolTip={'Edit values'}>
               <EditIconButton>
                 <FaEdit data-testid="edit-icon" size={36} onClick={() => setEditable(!editable)} />
               </EditIconButton>
@@ -734,10 +736,7 @@ const PropertyListView: React.FC = () => {
           )}
           {editable && (
             <>
-              <TooltipWrapper
-                toolTipId="cancel-edited-financial-values"
-                toolTip={'Cancel unsaved edits'}
-              >
+              <TooltipWrapper toolTipId="cancel-edited-values" toolTip={'Cancel unsaved edits'}>
                 <Button
                   data-testid="cancel-changes"
                   variant="outline-primary"
@@ -752,10 +751,7 @@ const PropertyListView: React.FC = () => {
                   Cancel
                 </Button>
               </TooltipWrapper>
-              <TooltipWrapper
-                toolTipId="save-edited-financial-values"
-                toolTip={'Save financial values'}
-              >
+              <TooltipWrapper toolTipId="save-edited-values" toolTip={'Save values'}>
                 <Button
                   data-testid="save-changes"
                   onClick={async () => {
@@ -764,6 +760,7 @@ const PropertyListView: React.FC = () => {
                       const actions = tableFormRef.current;
                       await submitTableChanges(values, actions);
                     }
+                    setEditable(false);
                   }}
                 >
                   Save edits

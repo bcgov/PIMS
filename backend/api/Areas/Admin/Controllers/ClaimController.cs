@@ -87,6 +87,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The claim model.</param>
         /// <returns>The claim added.</returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ClaimModel), 201)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
@@ -107,6 +108,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The claim model.</param>
         /// <returns>The claim updated.</returns>
         [HttpPut("{id}")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ClaimModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
@@ -128,6 +130,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The claim model.</param>
         /// <returns>The claim who was deleted.</returns>
         [HttpDelete("{id}")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ClaimModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]

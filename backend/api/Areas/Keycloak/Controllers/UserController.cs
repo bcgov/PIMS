@@ -54,6 +54,7 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         /// <exception type="KeyNotFoundException">The user does not exist in keycloak.</exception>
         /// <returns></returns>
         [HttpPost("sync/{id}")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.UserModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
@@ -117,6 +118,7 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         /// <exception type="KeyNotFoundException">The user does not exist in Keycloak or PIMS.</exception>
         /// <returns></returns>
         [HttpPut("{id}")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(AdminModels.UserModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
@@ -137,6 +139,7 @@ namespace Pims.Api.Areas.Keycloak.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPut("access/request")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.AccessRequestModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]

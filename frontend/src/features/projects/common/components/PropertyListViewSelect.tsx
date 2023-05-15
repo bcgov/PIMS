@@ -67,7 +67,17 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
   if (project === undefined) {
     throw Error('unable to load project data');
   }
-  const columns = useMemo(() => getPropertyColumns({ project: project }), [project]);
+  const columns = useMemo(
+    () =>
+      getPropertyColumns({
+        project: project,
+        editableClassification: false,
+        editableFinancials: false,
+        editableZoning: false,
+        limitLabels: ['Surplus Active', 'Surplus Encumbered'],
+      }),
+    [project],
+  );
   // We'll start our table without any data
   const [data, setData] = useState<IProperty[]>([]);
   const [pageSize, setPageSize] = useState(5);

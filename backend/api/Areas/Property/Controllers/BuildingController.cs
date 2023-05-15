@@ -65,6 +65,7 @@ namespace Pims.Api.Areas.Property.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.PropertyAdd)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.BuildingModel), 201)]
@@ -88,6 +89,7 @@ namespace Pims.Api.Areas.Property.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
+        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.PropertyEdit)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.BuildingModel), 200)]
@@ -112,6 +114,7 @@ namespace Pims.Api.Areas.Property.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{id}/financials")]
+        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.PropertyEdit)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.BuildingModel), 200)]
@@ -123,7 +126,7 @@ namespace Pims.Api.Areas.Property.Controllers
         {
             var entity = _mapper.Map<Entity.Building>(model);
 
-            var updatedEntity = _pimsService.Building.UpdateFinancials(entity);
+            var updatedEntity = _pimsService.Building.Update(entity);
             var building = _mapper.Map<Model.BuildingModel>(updatedEntity);
 
             return new JsonResult(building);
@@ -136,6 +139,7 @@ namespace Pims.Api.Areas.Property.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
+        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.PropertyDelete)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.BuildingModel), 200)]

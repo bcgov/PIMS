@@ -28,6 +28,7 @@ export interface IProperty {
   address: string;
   administrativeArea: string;
   province: string;
+  provinceId?: string;
   postal: string;
 
   // Financial Values
