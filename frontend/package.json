@@ -74,7 +74,7 @@
     "redux-logger": "3.0.6",
     "redux-thunk": "2.4.2",
     "retry-axios": "2.4.0",
-    "styled-components": "5.3.9",
+    "styled-components": "5.3.10",
     "supercluster": "7.1.5",
     "text-mask-addons": "3.8.0",
     "tiles-in-bbox": "1.0.2",
