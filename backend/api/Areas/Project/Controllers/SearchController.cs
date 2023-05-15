@@ -68,6 +68,7 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="filter"></param>
         /// <returns></returns>
         [HttpPost("page")]
+        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.ProjectView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(PageModel<ProjectModel>), 200)]

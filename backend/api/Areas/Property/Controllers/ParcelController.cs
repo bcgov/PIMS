@@ -91,6 +91,7 @@ namespace Pims.Api.Areas.Property.Controllers
         /// <param name="filter"></param>
         /// <returns></returns>
         [HttpPost("filter")]
+        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<Model.PropertyModel>), 200)]
@@ -142,6 +143,7 @@ namespace Pims.Api.Areas.Property.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.PropertyAdd)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
@@ -163,6 +165,7 @@ namespace Pims.Api.Areas.Property.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
+        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.PropertyEdit)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
@@ -183,6 +186,7 @@ namespace Pims.Api.Areas.Property.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{id}/financials")]
+        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.PropertyEdit)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
@@ -192,7 +196,7 @@ namespace Pims.Api.Areas.Property.Controllers
         {
             var entity = _mapper.Map<Entity.Parcel>(model);
 
-            var parcel = _pimsService.Parcel.UpdateFinancials(entity);
+            var parcel = _pimsService.Parcel.Update(entity);
             return new JsonResult(_mapper.Map<Model.ParcelModel>(parcel));
         }
 
@@ -203,6 +207,7 @@ namespace Pims.Api.Areas.Property.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
+        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.PropertyDelete, Permissions.PropertyEdit)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]

@@ -70,6 +70,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="filter"></param>
         /// <returns>Paged object with an array of administrative areas.</returns>
         [HttpPost("filter")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Api.Models.PageModel<Model.AdministrativeAreaModel>), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
@@ -103,6 +104,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The administrative area model.</param>
         /// <returns>The administrative area updated.</returns>
         [HttpPut("{id}")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.AdministrativeAreaModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
@@ -134,6 +136,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The administrative area model.</param>
         /// <returns>The administrative area added.</returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.AdministrativeAreaModel), 201)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
@@ -167,6 +170,7 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The administrative area model.</param>
         /// <returns>The administrative area that was deleted.</returns>
         [HttpDelete("{id}")]
+        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.AdministrativeAreaModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
