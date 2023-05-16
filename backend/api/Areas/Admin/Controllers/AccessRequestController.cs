@@ -85,7 +85,6 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="id"></param>
         /// <param name="accessRequestModel"></param>
         [HttpDelete("{id}")]
-        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.AccessRequestModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]

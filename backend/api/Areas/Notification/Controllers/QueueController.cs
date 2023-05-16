@@ -74,13 +74,12 @@ namespace Pims.Api.Areas.Notification.Controllers
         /// <param name="filter"></param>
         /// <returns></returns>
         [HttpPost("filter")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.SystemAdmin)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(PageModel<NotificationQueueModel>), 200)]
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "notification" })]
-        public IActionResult GetNotificationsPage([FromBody]NotificationQueueFilter filter)
+        public IActionResult GetNotificationsPage([FromBody] NotificationQueueFilter filter)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
             if (!filter.IsValid()) throw new BadRequestException("Projects filter must contain valid values.");
@@ -112,7 +111,6 @@ namespace Pims.Api.Areas.Notification.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.SystemAdmin)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(NotificationQueueModel), 200)]
@@ -134,7 +132,6 @@ namespace Pims.Api.Areas.Notification.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPut("{id}/resend")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.SystemAdmin)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(NotificationQueueModel), 200)]
@@ -153,7 +150,6 @@ namespace Pims.Api.Areas.Notification.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPut("{id}/cancel")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.SystemAdmin)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(NotificationQueueModel), 200)]
