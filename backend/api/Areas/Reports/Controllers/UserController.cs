@@ -76,7 +76,6 @@ namespace Pims.Api.Areas.Reports.Controllers
         /// <param name="all"></param>
         /// <returns></returns>
         [HttpPost("filter")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.AdminUsers)]
         [Produces(ContentTypes.CONTENT_TYPE_CSV, ContentTypes.CONTENT_TYPE_EXCELX)]
         [ProducesResponseType(typeof(Api.Models.PageModel<Models.User.UserModel>), 200)]

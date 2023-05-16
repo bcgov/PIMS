@@ -72,7 +72,6 @@ namespace Pims.Api.Areas.Property.Controllers
         /// <param name="filter"></param>
         /// <returns></returns>
         [HttpPost("filter")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<Models.Search.PropertyModel>), 200)]
@@ -129,7 +128,6 @@ namespace Pims.Api.Areas.Property.Controllers
         /// <param name="filter"></param>
         /// <returns></returns>
         [HttpPost("wfs/filter")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<GeoJson<Models.Search.PropertyModel>>), 200)]
@@ -171,7 +169,6 @@ namespace Pims.Api.Areas.Property.Controllers
         /// <param name="filter"></param>
         /// <returns></returns>
         [HttpPost("page/filter")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(BModel.PageModel<Models.Search.PropertyModel>), 200)]

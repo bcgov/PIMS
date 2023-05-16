@@ -628,6 +628,7 @@ const PropertyListView: React.FC = () => {
             toast.info(
               `Successfully saved changes for ${apiProperty.name || apiProperty.address?.line1}`,
             );
+            setEditable(false);
           } catch (error) {
             const errorMessage = (error as Error).message;
 
@@ -764,7 +765,6 @@ const PropertyListView: React.FC = () => {
                       const actions = tableFormRef.current;
                       await submitTableChanges(values, actions);
                     }
-                    setEditable(false);
                   }}
                 >
                   Save edits
