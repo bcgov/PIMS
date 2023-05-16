@@ -21,11 +21,8 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           browser: chrome
-          project: ./frontend
-          install: false
-          build: |
-            npm install
-            npm run build
+          working-directory: frontend
+          build: npm run build
           start: npm run start
           command: npm run cypress:e2e
           config-file: cypress.config.ts

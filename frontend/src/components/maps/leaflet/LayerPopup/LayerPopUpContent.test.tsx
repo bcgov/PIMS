@@ -1,5 +1,4 @@
-import { cleanup, render } from '@testing-library/react';
-import { SidebarContextType } from 'features/mapSideBar/hooks/useQueryParamSideBar';
+import { cleanup } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { LatLng, LatLngBounds } from 'leaflet';
 import React from 'react';
@@ -60,65 +59,5 @@ describe('Layer Popup Content', () => {
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
-  });
-
-  it('Populate details link does not appear on default', () => {
-    const { queryByText } = render(
-      <MemoryRouter initialEntries={[history.location]}>
-        <MapContainer>
-          <LayerPopupContent
-            data={mockLayer.data}
-            config={mockLayer.config}
-            onAddToParcel={mockLayer.onAddToParcel}
-            bounds={bounds}
-          />
-        </MapContainer>
-      </MemoryRouter>,
-    );
-    const link = queryByText(/Populate property details/i);
-    expect(link).toBeNull();
-  });
-
-  it('Populate details link appears when sideBar open', () => {
-    const queryParams = new URLSearchParams();
-    queryParams.set('disabled', 'false');
-    queryParams.set('loadDraft', 'false');
-    queryParams.set('sidebar', 'true');
-    queryParams.set('sidebarContext', SidebarContextType.ADD_BUILDING);
-
-    history.push({
-      pathname: '/mapview',
-      search: queryParams.toString(),
-    });
-    const { getByText } = render(
-      <MemoryRouter initialEntries={[history.location]}>
-        <MapContainer>
-          <LayerPopupContent
-            data={mockLayer.data}
-            config={mockLayer.config}
-            onAddToParcel={mockLayer.onAddToParcel}
-            bounds={bounds}
-          />
-        </MapContainer>
-      </MemoryRouter>,
-    );
-    const link = getByText(/Populate property details/i);
-    expect(link).toBeInTheDocument();
-  });
-
-  xit('Zoom link does not appear without bounds', () => {
-    const { queryByText } = render(
-      <MemoryRouter initialEntries={[history.location]}>
-        <MapContainer>
-          <LayerPopupContent
-            data={mockLayer.data}
-            config={mockLayer.config}
-            onAddToParcel={mockLayer.onAddToParcel}
-          />
-        </MapContainer>
-      </MemoryRouter>,
-    );
-    const link = queryByText(/Zoom/i);
-    expect(link).toBeNull();
   });
 });

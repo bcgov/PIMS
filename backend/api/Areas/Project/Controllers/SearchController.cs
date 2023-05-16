@@ -73,7 +73,7 @@ namespace Pims.Api.Areas.Project.Controllers
         [ProducesResponseType(typeof(PageModel<ProjectModel>), 200)]
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "project" })]
-        public IActionResult GetProjectsPage([FromBody]ProjectFilter filter)
+        public IActionResult GetProjectsPage([FromBody] ProjectFilter filter)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
             if (!filter.IsValid()) throw new BadRequestException("Projects filter must contain valid values.");
