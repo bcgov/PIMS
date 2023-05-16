@@ -75,7 +75,6 @@ namespace Pims.Api.Areas.Reports.Controllers
         /// <param name="all"></param>
         /// <returns></returns>
         [HttpPost("filter")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.ReportsView)]
         [Produces(ContentTypes.CONTENT_TYPE_CSV, ContentTypes.CONTENT_TYPE_EXCELX)]
         [ProducesResponseType(200)]
@@ -128,7 +127,6 @@ namespace Pims.Api.Areas.Reports.Controllers
         /// <param name="filter"></param>
         /// <returns></returns>
         [HttpPost("surplus/properties/list/filter")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.ReportsSpl)]
         [Produces(ContentTypes.CONTENT_TYPE_CSV, ContentTypes.CONTENT_TYPE_EXCELX)]
         [ProducesResponseType(200)]

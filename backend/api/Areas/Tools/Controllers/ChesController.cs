@@ -64,7 +64,6 @@ namespace Pims.Api.Areas.Tools.Controllers
         /// <param name="filter">An object to filter the results.</param>
         /// <returns>A response containing the message status.</returns>
         [HttpPost("status")]
-        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<Model.StatusResponseModel>), 200)]
         [ProducesResponseType(typeof(Pims.Api.Models.ErrorResponseModel), 400)]
@@ -82,7 +81,6 @@ namespace Pims.Api.Areas.Tools.Controllers
         /// <param name="messageId">The unique message ID to identify the message you want to cancel.</param>
         /// <returns>A response containing the message status.</returns>
         [HttpDelete("cancel/{messageId}")]
-        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.StatusResponseModel), 200)]
         [ProducesResponseType(typeof(Pims.Api.Models.ErrorResponseModel), 400)]
@@ -100,7 +98,6 @@ namespace Pims.Api.Areas.Tools.Controllers
         /// <param name="filter">An object to filter the messages that are cancelled.</param>
         /// <returns>A response containing the message status.</returns>
         [HttpDelete("cancel")]
-        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<Model.StatusResponseModel>), 200)]
         [ProducesResponseType(typeof(Pims.Api.Models.ErrorResponseModel), 400)]

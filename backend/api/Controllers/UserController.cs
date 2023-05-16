@@ -116,7 +116,6 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("access/requests")]
-        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.AccessRequestModel), 201)]
         [ProducesResponseType(typeof(Models.ErrorResponseModel), 400)]
@@ -170,7 +169,6 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPut("access/requests/{id}")]
-        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.AccessRequestModel), 200)]
         [ProducesResponseType(typeof(Models.ErrorResponseModel), 400)]
