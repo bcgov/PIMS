@@ -98,7 +98,6 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.ProjectAdd)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ProjectModel), 201)]
@@ -117,7 +116,6 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{projectNumber}")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.ProjectEdit)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ProjectModel), 200)]
@@ -137,7 +135,6 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpDelete("{projectNumber}")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.ProjectDelete)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ProjectModel), 200)]
@@ -157,7 +154,6 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("workflows")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.ProjectEdit)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ProjectModel), 200)]
@@ -187,7 +183,6 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("workflows/{workflowCode}/{statusCode}")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.ProjectEdit)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ProjectModel), 200)]
@@ -211,7 +206,6 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("workflows/{workflowCode}/{statusId:int}")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.ProjectEdit)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ProjectModel), 200)]
@@ -253,7 +247,6 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="filter"></param>
         /// <returns></returns>
         [HttpPost("notifications")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.ProjectView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(PageModel<NModel.NotificationQueueModel>), 200)]
@@ -278,7 +271,6 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPut("{id}/notifications/cancel")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.ProjectEdit)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<NModel.NotificationQueueModel>), 200)]

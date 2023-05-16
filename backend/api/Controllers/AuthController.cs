@@ -49,7 +49,6 @@ namespace Pims.Api.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpPost("activate")]
-        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.UserModel), 200)]
         [SwaggerOperation(Tags = new[] { "auth" })]
@@ -100,7 +99,6 @@ namespace Pims.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("logout")]
-        [ValidateAntiForgeryToken]
         [SwaggerOperation(Tags = new[] { "auth" })]
         public IActionResult Logout(string redirect_uri)
         {

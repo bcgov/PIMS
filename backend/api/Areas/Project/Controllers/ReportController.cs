@@ -87,7 +87,6 @@ namespace Pims.Api.Areas.Project.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("snapshots/{reportId:int}")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.ReportsSpl)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ProjectSnapshotModel[]), 200)]
@@ -122,7 +121,6 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.ReportsSpl)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ProjectReportModel), 201)]
@@ -150,7 +148,6 @@ namespace Pims.Api.Areas.Project.Controllers
         /// /// <param name="id"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.ReportsSpl)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ProjectReportModel), 200)]
@@ -187,7 +184,6 @@ namespace Pims.Api.Areas.Project.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.ReportsSpl)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ProjectReportModel), 200)]
