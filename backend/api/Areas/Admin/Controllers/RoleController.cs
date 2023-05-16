@@ -108,7 +108,6 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The role model.</param>
         /// <returns>The role added.</returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.RoleModel), 201)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
@@ -129,7 +128,6 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The role model.</param>
         /// <returns>The role updated.</returns>
         [HttpPut("{id}")]
-        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.RoleModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
@@ -151,7 +149,6 @@ namespace Pims.Api.Areas.Admin.Controllers
         /// <param name="model">The role model.</param>
         /// <returns>The role who was deleted.</returns>
         [HttpDelete("{id}")]
-        [ValidateAntiForgeryToken]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.RoleModel), 200)]
         [ProducesResponseType(typeof(Api.Models.ErrorResponseModel), 400)]
