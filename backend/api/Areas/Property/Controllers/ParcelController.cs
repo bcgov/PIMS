@@ -91,7 +91,6 @@ namespace Pims.Api.Areas.Property.Controllers
         /// <param name="filter"></param>
         /// <returns></returns>
         [HttpPost("filter")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IEnumerable<Model.PropertyModel>), 200)]
@@ -143,7 +142,6 @@ namespace Pims.Api.Areas.Property.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.PropertyAdd)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
@@ -165,7 +163,6 @@ namespace Pims.Api.Areas.Property.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.PropertyEdit)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
@@ -186,7 +183,6 @@ namespace Pims.Api.Areas.Property.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{id}/financials")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.PropertyEdit)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
@@ -207,7 +203,6 @@ namespace Pims.Api.Areas.Property.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        [ValidateAntiForgeryToken]
         [HasPermission(Permissions.PropertyDelete, Permissions.PropertyEdit)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.ParcelModel), 200)]
