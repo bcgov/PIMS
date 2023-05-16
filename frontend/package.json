@@ -150,7 +150,8 @@
     "react-test-renderer": "18.2.0",
     "http-cache-semantics@<4.1.1": "4.1.1",
     "webpack": "5.76.0",
-    "sass-loader@<13.2.2": "13.2.2"
+    "sass-loader@<13.2.2": "13.2.2",
+    "yaml@<2.2.2": "2.2.2"
   },
   "jest": {
     "transform": {
