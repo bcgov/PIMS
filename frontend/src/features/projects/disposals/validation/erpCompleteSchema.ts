@@ -21,7 +21,7 @@ export const erpCompleteSchema = yup.object({
         .string()
         .typeError('On hold notification required')
         .required('On hold notification required')
-        .test('isDate', 'On hold notification required', value => {
+        .test('isDate', 'On hold notification required', (value) => {
           return moment(value).isValid();
         }),
     }),
@@ -43,7 +43,7 @@ export const erpCompleteSchema = yup.object({
       .string()
       .typeError('Transferred within GRE on required')
       .required('Transferred within GRE on required')
-      .test('isDate', 'Transferred within GRE on required', value => {
+      .test('isDate', 'Transferred within GRE on required', (value) => {
         return moment(value).isValid();
       }),
   }),
@@ -62,7 +62,7 @@ export const erpCompleteSchema = yup.object({
       .string()
       .typeError('Clearance notification required')
       .required('Clearance notification required')
-      .test('isDate', 'Clearance notification required', value => {
+      .test('isDate', 'Clearance notification required', (value) => {
         return moment(value).isValid();
       }),
   }),
@@ -74,7 +74,7 @@ export const erpCompleteSchema = yup.object({
       .string()
       .typeError('Request for SPL received on required')
       .required('Request for SPL received on required')
-      .test('isDate', 'Request for SPL received on required', value => {
+      .test('isDate', 'Request for SPL received on required', (value) => {
         return moment(value).isValid();
       }),
   }),
@@ -86,7 +86,7 @@ export const erpCompleteSchema = yup.object({
       .string()
       .typeError('SPL addition approved on required')
       .required('SPL addition approved on required')
-      .test('isDate', 'SPL addition approved on required', value => {
+      .test('isDate', 'SPL addition approved on required', (value) => {
         return moment(value).isValid();
       }),
   }),

@@ -17,7 +17,7 @@ export const DisposalProject = styled.div`
   }
 
   .form-section {
-    border: solid ${props => props.theme.css?.formBorderColor} 1px;
+    border: solid ${(props) => props.theme.css?.formBorderColor} 1px;
     margin: 0.25em;
     padding: 0.25em;
   }

@@ -149,10 +149,7 @@ describe('Manage Users Component', () => {
   });
 
   it('Displays the correct last login time', () => {
-    const dateTime = moment
-      .utc('2020-10-14T17:45:39.7381599')
-      .local()
-      .format('YYYY-MM-DD hh:mm a');
+    const dateTime = moment.utc('2020-10-14T17:45:39.7381599').local().format('YYYY-MM-DD hh:mm a');
     const { getByText } = testRender(getStore(true));
     expect(getByText(dateTime)).toBeVisible();
   });

@@ -11,7 +11,7 @@ export const splTransferWithinGRESchema = yup.object({
       .string()
       .typeError('Transferred within GRE on required')
       .required('Transferred within GRE on required')
-      .test('isDate', 'Transferred within GRE on required', value => {
+      .test('isDate', 'Transferred within GRE on required', (value) => {
         return moment(value).isValid();
       }),
   }),

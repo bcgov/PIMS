@@ -8,7 +8,7 @@ import { TablePageSizeSelector } from './PageSizeSelector';
 Enzyme.configure({ adapter: new Adapter() });
 
 const componentRender = () => {
-  let component = create(
+  const component = create(
     <div>
       <TablePageSizeSelector
         value={1}

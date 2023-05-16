@@ -149,16 +149,12 @@ describe('projectConverter function tests', () => {
             {
               key: EvaluationKeys.Assessed,
               value: 200,
-              date: moment()
-                .add(-1, 'years')
-                .toDate(),
+              date: moment().add(-1, 'years').toDate(),
             },
             {
               key: EvaluationKeys.Improvements,
               value: 300,
-              date: moment()
-                .add(-1, 'years')
-                .toDate(),
+              date: moment().add(-1, 'years').toDate(),
             },
           ] as IEvaluation[],
         };
@@ -173,16 +169,12 @@ describe('projectConverter function tests', () => {
             {
               key: EvaluationKeys.Assessed,
               value: 200,
-              date: moment()
-                .add(-1, 'years')
-                .toDate(),
+              date: moment().add(-1, 'years').toDate(),
             },
             {
               key: EvaluationKeys.Improvements,
               value: 300,
-              date: moment()
-                .add(-1, 'years')
-                .toDate(),
+              date: moment().add(-1, 'years').toDate(),
             },
           ] as IEvaluation[],
         };
@@ -238,16 +230,12 @@ describe('projectConverter function tests', () => {
             {
               key: FiscalKeys.Market,
               value: 200,
-              fiscalYear: moment()
-                .add(-1, 'years')
-                .year(),
+              fiscalYear: moment().add(-1, 'years').year(),
             },
             {
               key: FiscalKeys.NetBook,
               value: 300,
-              fiscalYear: moment()
-                .add(-1, 'years')
-                .year(),
+              fiscalYear: moment().add(-1, 'years').year(),
             },
           ] as IFiscal[],
         };
@@ -263,16 +251,12 @@ describe('projectConverter function tests', () => {
             {
               key: FiscalKeys.Market,
               value: 200,
-              fiscalYear: moment()
-                .add(-1, 'years')
-                .year(),
+              fiscalYear: moment().add(-1, 'years').year(),
             },
             {
               key: FiscalKeys.NetBook,
               value: 300,
-              fiscalYear: moment()
-                .add(-1, 'years')
-                .year(),
+              fiscalYear: moment().add(-1, 'years').year(),
             },
           ] as IFiscal[],
         };

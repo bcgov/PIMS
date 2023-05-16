@@ -34,16 +34,16 @@ const wfsAxios = () => {
   };
   rax.attach(instance);
 
-  instance.interceptors.request.use(config => {
+  instance.interceptors.request.use((config) => {
     layerData.LAYER_DATA_LOADING();
     return config;
   });
 
   instance.interceptors.response.use(
-    response => {
+    (response) => {
       return response;
     },
-    error => {
+    (error) => {
       if (axios.isCancel(error)) {
         return Promise.resolve(error.message);
       }
@@ -93,15 +93,15 @@ export const saveParcelDataLayerResponse = (
   latLng?: LatLng,
 ) => {
   if (resp?.features?.length > 0) {
-    var coordinates;
+    let coordinates;
     resp.features[0].geometry.type === 'MultiPolygon'
       ? (coordinates = (resp.features[0].geometry as MultiPolygon).coordinates[0])
       : (coordinates = (resp.features[0].geometry as Polygon).coordinates);
     // Polylabel seems to return long/lat instead of lat/long
-    var centerCoords = polylabel(coordinates, 0.00001).reverse();
-    var latitude = Number(centerCoords[0]);
-    var longitude = Number(centerCoords[1]);
-    var pinPosition = new LatLng(latitude, longitude);
+    const centerCoords = polylabel(coordinates, 0.00001).reverse();
+    const latitude = Number(centerCoords[0]);
+    const longitude = Number(centerCoords[1]);
+    const pinPosition = new LatLng(latitude, longitude);
     //save with a synthetic event to timestamp the relevance of this data.
     dispatch(
       saveParcelLayerData({
@@ -148,7 +148,7 @@ export const handleParcelDataLayerResponse = (
  * @param geometry the name of the geometry in the feature collection
  */
 export const useLayerQuery = (url: string, geometryName: string = 'SHAPE'): IUserLayerQuery => {
-  const parcelLayerData = useAppSelector(store => store.parcelLayerData?.parcelLayerData);
+  const parcelLayerData = useAppSelector((store) => store.parcelLayerData?.parcelLayerData);
   const baseUrl = `${url}&srsName=EPSG:4326&count=1`;
 
   const findOneWhereContains = useCallback(

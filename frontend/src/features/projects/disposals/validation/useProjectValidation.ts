@@ -84,10 +84,10 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
         values.originalStatusCode !== WorkflowStatus.NotInSpl
       ) {
         const tasks = values.tasks.filter(
-          t => t.statusCode === WorkflowStatus.Disposed && !t.isOptional && !t.isCompleted,
+          (t) => t.statusCode === WorkflowStatus.Disposed && !t.isOptional && !t.isCompleted,
         );
-        tasks.forEach(t => {
-          const index = values.tasks.findIndex(ti => ti.name === t.name);
+        tasks.forEach((t) => {
+          const index = values.tasks.findIndex((ti) => ti.name === t.name);
           errors = {
             ...errors,
             ...setIn(errors, `tasks.${index}.isCompleted`, `${t.name} required`),

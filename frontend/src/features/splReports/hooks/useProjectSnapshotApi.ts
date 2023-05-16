@@ -42,19 +42,21 @@ const getAxios = (dispatch: Function, toasts?: LifecycleToasts) => {
   axios.defaults.baseURL = baseUrl;
 
   axios.interceptors.request.use(
-    config => {
+    (config) => {
       dispatch(showLoading());
       return config;
     },
-    error => dispatch(hideLoading()),
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    (error) => dispatch(hideLoading()),
   );
 
   axios.interceptors.response.use(
-    config => {
+    (config) => {
       dispatch(hideLoading());
       return config;
     },
-    error => dispatch(hideLoading()),
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    (error) => dispatch(hideLoading()),
   );
   return axios;
 };
@@ -88,7 +90,6 @@ const snapshotToasts: LifecycleToasts = {
  */
 export const useProjectSnapshotApi = () => {
   const dispatch = useAppDispatch();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const defaultAxios = useCallback(
     getAxios(dispatch, { errorToast: () => toast.error('Failed to load reports') }),
     [dispatch],

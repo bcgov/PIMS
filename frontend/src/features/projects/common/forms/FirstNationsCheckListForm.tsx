@@ -16,7 +16,9 @@ interface IFirstNationsCheckListFormProps {
  * Displays a checklist for each task within the first nations review status.
  * @param props
  */
-const FirstNationsCheckListForm: React.FunctionComponent<IFirstNationsCheckListFormProps> = props => {
+const FirstNationsCheckListForm: React.FunctionComponent<IFirstNationsCheckListFormProps> = (
+  props,
+) => {
   const { project } = useProject();
   const tasks = _.filter(project?.tasks ?? [], {
     statusCode: ReviewWorkflowStatus.FirstNationConsultation,

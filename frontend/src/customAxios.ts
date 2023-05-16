@@ -39,7 +39,7 @@ export const CustomAxios = ({
       'Access-Control-Allow-Origin': '*',
     },
   });
-  instance.interceptors.request.use(config => {
+  instance.interceptors.request.use((config) => {
     config.headers!.Authorization = `Bearer ${store.getState().jwt}`;
     if (selector !== undefined) {
       const state = store.getState();
@@ -56,7 +56,7 @@ export const CustomAxios = ({
   });
 
   instance.interceptors.response.use(
-    response => {
+    (response) => {
       if (lifecycleToasts?.successToast && response.status < 300) {
         loadingToastId && toast.dismiss(loadingToastId);
         lifecycleToasts.successToast();
@@ -65,7 +65,7 @@ export const CustomAxios = ({
       }
       return response;
     },
-    error => {
+    (error) => {
       if (axios.isCancel(error)) {
         return Promise.resolve(error.message);
       }

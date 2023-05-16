@@ -14,7 +14,7 @@ export const notSplSchema = yup.object({
       .string()
       .typeError('Disposal date required')
       .required('Disposal date required')
-      .test('isDate', 'Disposal date required', value => {
+      .test('isDate', 'Disposal date required', (value) => {
         return moment(value).isValid();
       }),
   }),
@@ -26,7 +26,7 @@ export const notSplSchema = yup.object({
       .string()
       .typeError('Transferred within GRE on required')
       .required('Transferred within GRE on required')
-      .test('isDate', 'Transferred within GRE on required', value => {
+      .test('isDate', 'Transferred within GRE on required', (value) => {
         return moment(value).isValid();
       }),
   }),

@@ -8,8 +8,9 @@ interface ILabelProps {
 }
 
 /** Generic inline label element */
-export const Label: React.FunctionComponent<ILabelProps &
-  React.HTMLAttributes<HTMLLabelElement>> = ({ required, ...rest }) => {
+export const Label: React.FunctionComponent<
+  ILabelProps & React.HTMLAttributes<HTMLLabelElement>
+> = ({ required, ...rest }) => {
   return (
     <label {...rest} className={classNames('label', rest.className)}>
       {required && <span className="req">*</span>}

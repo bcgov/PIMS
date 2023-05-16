@@ -10,7 +10,7 @@ import React, { PropsWithChildren } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { CSSProperties } from 'styled-components';
 
-interface IProps<T extends object = {}> {
+interface IProps<T extends object> {
   initialValues: T;
   onChange: (value: any) => void;
   /** controls the className of the search button */
@@ -41,7 +41,7 @@ interface IProps<T extends object = {}> {
   headerTooltipPlacement?: 'top' | 'bottom' | 'right' | 'left';
 }
 
-const FilterBar = <T extends object = {}>(props: PropsWithChildren<IProps<T>>) => {
+const FilterBar = <T extends object>(props: PropsWithChildren<IProps<T>>) => {
   return (
     <Formik<T>
       initialValues={props.initialValues}

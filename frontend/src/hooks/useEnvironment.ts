@@ -14,17 +14,17 @@ export const useEnvironment = () => {
 
   React.useEffect(() => {
     const call = async () => {
-      var response = await fetch('/environment.json');
-      var data = await response.json();
+      const response = await fetch('/environment.json');
+      const data = await response.json();
       return data;
     };
 
     call()
-      .then(data => {
+      .then((data) => {
         // Update state with the file data.
         setEnv(data);
       })
-      .catch(error => {
+      .catch(() => {
         // File doesn't exist, assume development.
         setEnv({ env: 'development' });
       });

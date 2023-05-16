@@ -11,14 +11,14 @@ export const PropertyColumns = (): ColumnWithProps<IProjectPropertyModel>[] => {
   return [
     {
       Header: 'Agency',
-      accessor: row => row.building?.agency ?? row.parcel?.agency,
+      accessor: (row) => row.building?.agency ?? row.parcel?.agency,
       align: 'left',
       clickable: false,
       maxWidth: 50,
     },
     {
       Header: 'Name',
-      accessor: row => row.building?.name ?? row.parcel?.name,
+      accessor: (row) => row.building?.name ?? row.parcel?.name,
       align: 'left',
       clickable: false,
       Cell: (cell: any) => {
@@ -31,7 +31,7 @@ export const PropertyColumns = (): ColumnWithProps<IProjectPropertyModel>[] => {
     },
     {
       Header: 'Civic Address',
-      accessor: row => {
+      accessor: (row) => {
         const address = row.building?.address ?? row.parcel?.address;
         return address ? formatAddress(address) : '';
       },
@@ -47,19 +47,19 @@ export const PropertyColumns = (): ColumnWithProps<IProjectPropertyModel>[] => {
     },
     {
       Header: 'Classification',
-      accessor: row => row.building?.classification ?? row.parcel?.classification,
+      accessor: (row) => row.building?.classification ?? row.parcel?.classification,
       align: 'left',
       clickable: false,
     },
     {
       Header: 'Other Projects',
-      accessor: row => row.building?.projectNumbers ?? row.parcel?.projectNumbers,
+      accessor: (row) => row.building?.projectNumbers ?? row.parcel?.projectNumbers,
       align: 'left',
       clickable: false,
     },
     {
       Header: 'Net Book Value',
-      accessor: row => {
+      accessor: () => {
         return '';
       },
       align: 'right',
@@ -68,7 +68,7 @@ export const PropertyColumns = (): ColumnWithProps<IProjectPropertyModel>[] => {
     },
     {
       Header: 'Assessed Land',
-      accessor: row => {
+      accessor: () => {
         return '';
       },
       align: 'right',
@@ -77,7 +77,7 @@ export const PropertyColumns = (): ColumnWithProps<IProjectPropertyModel>[] => {
     },
     {
       Header: 'Assessed Year',
-      accessor: row => {
+      accessor: () => {
         return '';
       },
       clickable: false,
@@ -85,7 +85,7 @@ export const PropertyColumns = (): ColumnWithProps<IProjectPropertyModel>[] => {
     },
     {
       Header: 'Assessed Building',
-      accessor: row => {
+      accessor: () => {
         return '';
       },
       align: 'right',
@@ -97,7 +97,7 @@ export const PropertyColumns = (): ColumnWithProps<IProjectPropertyModel>[] => {
       accessor: 'propertyType',
       clickable: false,
       maxWidth: 40,
-      Cell: cell => {
+      Cell: (cell) => {
         return cell.value === PropertyTypeName.Land ||
           cell.value === PropertyTypeName.Subdivision ? (
           <LandSvg className="svg" />

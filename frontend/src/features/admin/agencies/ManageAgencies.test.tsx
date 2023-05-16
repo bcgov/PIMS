@@ -84,7 +84,7 @@ const getStore = () =>
 describe('Manage Agencies Component', () => {
   beforeAll(() => {
     const { getComputedStyle } = window;
-    window.getComputedStyle = elt => getComputedStyle(elt);
+    window.getComputedStyle = (elt) => getComputedStyle(elt);
   });
   afterEach(() => {
     cleanup();

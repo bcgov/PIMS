@@ -63,7 +63,7 @@ const EmptyParcel = ({ index }: any) => {
  * Component to display for a parcel that should not be added to PIMS.
  * @param param0 index of the parcel on the review form
  */
-const OtherParcel = ({ index }: any) => {
+const OtherParcel = () => {
   return (
     <div className="parcel-content" style={{ padding: '40px' }}>
       <p>This parcel is leased externally and will not be added to PIMS.</p>
@@ -137,7 +137,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
     if (
       getIn(formikProps.values.data, `leasedLandMetadata.${index}.type`) === LeasedLandTypes.other
     ) {
-      return <OtherParcel index={index} />;
+      return <OtherParcel />;
     } else if (stepper.getTabCurrentStep(index) !== AssociatedLandSteps.REVIEW) {
       return <EmptyParcel index={index} />;
     } else {

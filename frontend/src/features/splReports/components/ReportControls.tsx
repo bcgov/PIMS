@@ -44,7 +44,7 @@ const getOtherOlderReports = (reports: IReport[], currentReport?: IReport) => {
   return currentReport !== undefined
     ? _.filter(
         reports,
-        report => !!report.id && report.id !== currentReport.id && currentReport.to > report.to,
+        (report) => !!report.id && report.id !== currentReport.id && currentReport.to > report.to,
       )
     : [];
 };
@@ -89,7 +89,7 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
 }) => {
   const otherReports = getOtherOlderReports(reports, currentReport);
   const reportOptions = reportsToOptions(otherReports);
-  let reportOn = formatApiDateTime(currentReport?.to);
+  const reportOn = formatApiDateTime(currentReport?.to);
   const fromId = _.find(reports, { to: currentReport?.from })?.id;
   const originalReport = _.find(reports, { id: currentReport?.id });
   const keycloak = useKeycloakWrapper();
@@ -99,10 +99,10 @@ const ReportControls: React.FunctionComponent<IReportControlsProps> = ({
     <>
       <Formik
         initialValues={{ ...defaultReport, ...currentReport }}
-        onSubmit={values => onSave(values)}
+        onSubmit={(values) => onSave(values)}
         enableReinitialize
       >
-        {({ dirty, values, submitForm, isSubmitting, setSubmitting }) => (
+        {({ dirty, values, submitForm, setSubmitting }) => (
           <>
             <Form className="report-form m-0 flex-nowrap">
               <AddReportControl onAdd={onAdd} />

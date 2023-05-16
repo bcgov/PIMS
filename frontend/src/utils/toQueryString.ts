@@ -6,7 +6,7 @@
 export const toQueryString = (params: object) => {
   if (params === undefined || params === null) return '';
   return Object.keys(params)
-    .filter(key => (params as any)[key] !== undefined)
-    .map(key => `${encodeURIComponent(key)}=${encodeURIComponent((params as any)[key])}`)
+    .filter((key) => (params as any)[key] !== undefined)
+    .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent((params as any)[key])}`)
     .join('&');
 };

@@ -24,7 +24,7 @@ const PaginatedFormErrors: React.FC<PaginatedFormErrorsProps> = ({
       pagingRef.current.querySelectorAll(`li[class*="error"]`).forEach((node: any) => {
         node.className = node.className.replace('error', '');
       });
-      errors.forEach(error => {
+      errors.forEach((error) => {
         const pageInError = pagingRef.current.querySelector(`li [aria-label*="Page ${error}"]`);
         if (pageInError?.parentNode && !pageInError.parentNode.className.includes('error')) {
           pageInError.parentNode.className += ' error';

@@ -90,7 +90,7 @@ const HeaderActions: React.FC<IHeaderActions> = ({
         <>
           <Link
             style={{ width: 95 }}
-            onClick={e => {
+            onClick={(e) => {
               jumpToView();
               if (onLinkClick) onLinkClick();
               e.stopPropagation();

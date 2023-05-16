@@ -10,7 +10,7 @@ export const getMostRecentFiscal = (
   key: FiscalKeyName,
 ): IFiscalModel | undefined => {
   const result = fiscals
-    .filter(f => f.key === key)
+    .filter((f) => f.key === key)
     .sort((a, b) => {
       if (a.fiscalYear < b.fiscalYear) return 1;
       if (a.fiscalYear > b.fiscalYear) return -1;

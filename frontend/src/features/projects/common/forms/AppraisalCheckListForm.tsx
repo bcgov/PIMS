@@ -19,7 +19,7 @@ interface IAppraisalCheckListFormProps {
  * Displays a checklist for every task within the AppraisalReview status.
  * @param props
  */
-const AppraisalCheckListForm: React.FunctionComponent<IAppraisalCheckListFormProps> = props => {
+const AppraisalCheckListForm: React.FunctionComponent<IAppraisalCheckListFormProps> = (props) => {
   const { project } = useProject();
   const tasks = _.filter(project.tasks, {
     statusCode: props.taskStatusCode ?? ReviewWorkflowStatus.AppraisalReview,

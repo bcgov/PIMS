@@ -26,8 +26,8 @@ export const PropertyFilterAgencyOptions: React.FC<IPropertyFilterAgencyOptions>
       { label: 'All Government', value: true },
     ],
   };
+  const { setFieldValue } = useFormikContext<IPropertyFilter>();
   let {
-    setFieldValue,
     values: { includeAllProperties },
   } = useFormikContext<IPropertyFilter>();
   const keycloak = useKeycloakWrapper();

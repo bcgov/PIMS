@@ -68,9 +68,8 @@ export const Input: React.FC<InputProps> = ({
   errorPrompt,
   ...rest
 }) => {
-  const { handleChange, handleBlur, errors, touched, values, setFieldValue } = useFormikContext<
-    any
-  >();
+  const { handleChange, handleBlur, errors, touched, values, setFieldValue } =
+    useFormikContext<any>();
   const error = getIn(errors, field);
   const touch = getIn(touched, field);
   const value = getIn(values, field);
@@ -78,7 +77,7 @@ export const Input: React.FC<InputProps> = ({
   const asElement: any = is || 'input';
   const [restricted, setRestricted] = useState(value);
   const handleRestrictedChange = (event: any) => {
-    let val = event.target.value;
+    const val = event.target.value;
     pattern?.test(val) && setRestricted(val);
     handleChange(event);
   };

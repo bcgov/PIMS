@@ -61,7 +61,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onChange, defaultFilter }) => {
   //restrict available agencies to user agencies.
   const agencies = lookupCode.getOptionsByType(API.AGENCY_CODE_SET_NAME);
   const classifications = lookupCode.getPropertyClassificationOptions(
-    c =>
+    (c) =>
       +c.value !== Classifications.Demolished &&
       +c.value !== Classifications.Disposed &&
       +c.value !== Classifications.Subdivided,
@@ -69,7 +69,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onChange, defaultFilter }) => {
   const lookupCodes = useCodeLookups();
   const adminAreas = lookupCodes
     .getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME)
-    .map(c => mapLookupCode(c));
+    .map((c) => mapLookupCode(c));
   const [clear, setClear] = useState(false);
 
   return (
@@ -111,7 +111,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onChange, defaultFilter }) => {
                 placeholder="Location"
                 selectClosest
                 hideValidation={true}
-                options={adminAreas.map(x => x.label)}
+                options={adminAreas.map((x) => x.label)}
                 onChange={(vals: any) => {
                   setFieldValue('administrativeArea', getIn(vals[0], 'name') ?? vals[0]);
                 }}

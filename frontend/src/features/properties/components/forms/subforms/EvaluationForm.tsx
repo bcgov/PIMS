@@ -62,7 +62,7 @@ export const indexOfFinancial = (financials: IFinancial[], type: string, year?: 
  * get a list of defaultEvaluations, generating one for NUMBER_OF_GENERATED_EVALUATIONS
  */
 export const defaultFinancials: any = _.flatten(
-  yearsArray.map(year => {
+  yearsArray.map((year) => {
     return _.reduce(
       Object.values(keyTypes) as string[],
       (acc, type) => [
@@ -114,7 +114,7 @@ export const getMergedFinancials = (
 };
 
 export const filterEmptyFinancials = (evaluations: IFinancial[]) =>
-  _.filter(evaluations, evaluation => {
+  _.filter(evaluations, (evaluation) => {
     evaluation.createdOn = undefined;
     evaluation.updatedOn = undefined;
     if (evaluation.date === '') {
@@ -127,7 +127,7 @@ export const filterEmptyFinancials = (evaluations: IFinancial[]) =>
   });
 
 export const filterFutureAssessedValues = (evaluations: IFinancial[]) =>
-  _.filter(evaluations, evaluation => {
+  _.filter(evaluations, (evaluation) => {
     return (
       evaluation.key !== EvaluationKeys.Assessed ||
       (evaluation.key === EvaluationKeys.Assessed && evaluation.year! <= moment().year())
@@ -137,7 +137,7 @@ export const filterFutureAssessedValues = (evaluations: IFinancial[]) =>
 /**
  * Subform Component intended to be embedded in a higher level formik component.
  */
-const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) => {
+const EvaluationForm = <T,>(props: EvaluationProps & FormikProps<T>) => {
   const assessedCols: any = useMemo(
     () =>
       getAssessedCols(
@@ -149,10 +149,10 @@ const EvaluationForm = <T extends any>(props: EvaluationProps & FormikProps<T>) 
       ),
     [props.disabled, props.isParcel, props.nameSpace, props.showImprovements],
   );
-  const netbookCols: any = useMemo(() => getNetbookCols(props.disabled, props.nameSpace), [
-    props.disabled,
-    props.nameSpace,
-  ]);
+  const netbookCols: any = useMemo(
+    () => getNetbookCols(props.disabled, props.nameSpace),
+    [props.disabled, props.nameSpace],
+  );
   const { values } = useFormikContext();
   const assessedEvaluations = getMergedFinancials(
     getIn(values, `${props.nameSpace}.evaluations`)?.filter(

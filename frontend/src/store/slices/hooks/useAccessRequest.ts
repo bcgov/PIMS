@@ -205,7 +205,7 @@ export const useAccessRequest = () => {
           url: ENVIRONMENT.apiUrl + API.REQUEST_ACCESS_DELETE(id),
           data,
         })
-        .then(response => {
+        .then((response) => {
           dispatch(storeSuccess(success(actionTypes.DELETE_REQUEST_ACCESS_ADMIN, response.status)));
           dispatch(deleteAccessRequest(id));
         })

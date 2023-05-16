@@ -66,7 +66,7 @@ const renderEditAgencyPage = () =>
           rtl={false}
           pauseOnFocusLoss={false}
         />
-        <EditAgencyPage id={111} />,
+        <EditAgencyPage />,
       </MemoryRouter>
     </Provider>,
   );
@@ -83,7 +83,7 @@ describe('Edit agency page', () => {
     const { container } = render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[history.location]}>
-          <EditAgencyPage id={111} />,
+          <EditAgencyPage />,
         </MemoryRouter>
       </Provider>,
     );

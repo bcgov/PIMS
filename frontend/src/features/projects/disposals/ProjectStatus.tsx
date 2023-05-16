@@ -36,13 +36,13 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({
   const [options, setOptions] = React.useState<IProjectStatusModel[]>([]);
   const workflowCode = project?.workflowCode;
   const status = options.find(
-    o => o.workflowCode === project?.workflowCode && o.code === project?.statusCode,
+    (o) => o.workflowCode === project?.workflowCode && o.code === project?.statusCode,
   );
 
   React.useEffect(() => {
     if (workflowCode && (workflowCode !== workflow || options.length === 0)) {
       setWorkflow(workflowCode);
-      apiWorkflow.getStatusFor(workflowCode).then(response => {
+      apiWorkflow.getStatusFor(workflowCode).then((response) => {
         setOptions(response?.data ?? []);
       });
     }
@@ -87,7 +87,7 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({
       if (a.sortOrder < b.sortOrder) return 1;
       return 0;
     })
-    .map(status => {
+    .map((status) => {
       return (
         <Button
           data-testid={`project-status-${status?.name}-btn`}
