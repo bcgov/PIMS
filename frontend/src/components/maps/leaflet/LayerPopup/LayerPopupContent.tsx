@@ -1,7 +1,5 @@
-import { SidebarContextType } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 import { LatLng, LatLngBounds } from 'leaflet';
 import { keys } from 'lodash';
-import queryString from 'query-string';
 import * as React from 'react';
 import { Col, ListGroup, Row } from 'react-bootstrap';
 import { useMap } from 'react-leaflet';
@@ -67,16 +65,6 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({
 }) => {
   const rows = React.useMemo(() => keys(config), [config]);
   const location = useLocation();
-  const urlParsed = queryString.parse(location.search);
-  const isEditing = [
-    SidebarContextType.ADD_BUILDING,
-    SidebarContextType.UPDATE_BUILDING,
-    SidebarContextType.ADD_ASSOCIATED_LAND,
-    SidebarContextType.ADD_BARE_LAND,
-    SidebarContextType.UPDATE_BARE_LAND,
-    SidebarContextType.UPDATE_DEVELOPED_LAND,
-  ].includes(urlParsed.sidebarContext as any);
-  const populateDetails = urlParsed.sidebar === 'true' && isEditing ? true : false;
 
   const leaflet = useMap();
   const curZoom = leaflet.getZoom();
@@ -93,21 +81,6 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({
       </ListGroup>
       <MenuRow>
         <Col>
-          {populateDetails && (data.PID !== undefined || data.PIN !== undefined) ? (
-            <StyledLink
-              onClick={(e: any) => onAddToParcel(e, { ...data, CENTER: center })}
-              to={{
-                search: queryString.stringify({
-                  ...queryString.parse(location.search),
-                  sidebar: true,
-                  disabled: false,
-                  loadDraft: false,
-                }),
-              }}
-            >
-              Populate property details
-            </StyledLink>
-          ) : null}
           {bounds && curZoom! !== boundZoom ? (
             <StyledLink
               to={{ ...location }}

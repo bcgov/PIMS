@@ -1,6 +1,4 @@
 // Network URL's
-import queryString from 'query-string';
-
 import { AccessRequestStatus } from './accessStatus';
 
 // Generic Params
@@ -49,8 +47,14 @@ export interface IPropertySearchParams {
   inSurplusPropertyProgram?: boolean;
   inEnhancedReferralProcess?: boolean;
 }
-export const PROPERTIES = (params: IPropertySearchParams | null) =>
-  `/properties/search?${params ? queryString.stringify(params) : ''}`; // get filtered properties or all if not specified.
+export const PROPERTIES = (params: IPropertySearchParams | null) => {
+  const queryParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(params ?? {})) {
+    queryParams.set(key, String(value));
+  }
+  // Get filtered properties or all if not specified.
+  return `/properties/search?${queryParams.toString()}`;
+};
 
 export interface IGeoSearchParams {
   bbox?: string;
@@ -74,7 +78,12 @@ export interface IGeoSearchParams {
   includeAllProperties?: boolean;
 }
 export const PARCELS_DETAIL = (params: IPropertySearchParams | null) => {
-  return `/properties/parcels?${params ? queryString.stringify(params) : ''}`; // get filtered properties or all if not specified.
+  const queryParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(params ?? {})) {
+    queryParams.set(key, String(value));
+  }
+  // Get filtered properties or all if not specified.
+  return `/properties/parcels?${queryParams.toString()}`;
 };
 export interface IParcelDetailParams {
   id: number;
@@ -133,8 +142,14 @@ export const ACTIVATE_USER = () => `/auth/activate`; // get filtered properties 
 // User Service
 export const REQUEST_ACCESS = (id?: number) => `/users/access/requests${id ? '/' + id : ''}`; //request access url.
 export const REQUEST_ACCESS_ADMIN = () => `/keycloak/users/access/request`; //request access admin url.
-export const REQUEST_ACCESS_LIST = (params: IPaginateAccessRequests) =>
-  `/admin/access/requests?${queryString.stringify(params)}`; // get paged access requests
+export const REQUEST_ACCESS_LIST = (params: IPaginateAccessRequests) => {
+  const queryParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(params ?? {})) {
+    queryParams.set(key, String(value));
+  }
+  // Get paged access requests.
+  return `/admin/access/requests?${queryParams.toString()}`;
+};
 export const REQUEST_ACCESS_DELETE = (id: number) => `/admin/access/requests/${id}`; // delete an access request
 export const POST_USERS = () => `/admin/users/my/agency`; // get paged list of users
 

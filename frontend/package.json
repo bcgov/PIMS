@@ -28,6 +28,10 @@
   "dependencies": {
     "@babel/core": "7.21.4",
     "@bcgov/bc-sans": "1.0.1",
+    "@emotion/react": "11.10.8",
+    "@emotion/styled": "11.10.8",
+    "@mui/icons-material": "5.11.16",
+    "@mui/material": "5.12.2",
     "@react-keycloak/web": "3.4.0",
     "@react-leaflet/core": "1.1.1",
     "@reduxjs/toolkit": "1.9.5",
@@ -44,7 +48,6 @@
     "lodash": "4.17.21",
     "moment": "2.29.4",
     "polylabel": "1.1.0",
-    "query-string": "8.1.0",
     "react": "18.2.0",
     "react-app-polyfill": "3.0.0",
     "react-bootstrap": "2.7.4",
@@ -71,7 +74,7 @@
     "redux-logger": "3.0.6",
     "redux-thunk": "2.4.2",
     "retry-axios": "2.4.0",
-    "styled-components": "5.3.9",
+    "styled-components": "5.3.10",
     "supercluster": "7.1.5",
     "text-mask-addons": "3.8.0",
     "tiles-in-bbox": "1.0.2",
@@ -147,7 +150,8 @@
     "react-test-renderer": "18.2.0",
     "http-cache-semantics@<4.1.1": "4.1.1",
     "webpack": "5.76.0",
-    "sass-loader@<13.2.2": "13.2.2"
+    "sass-loader@<13.2.2": "13.2.2",
+    "yaml@<2.2.2": "2.2.2"
   },
   "jest": {
     "transform": {

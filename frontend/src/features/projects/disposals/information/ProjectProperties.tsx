@@ -1,26 +1,21 @@
 import { Button } from 'components/common/form';
 import { Col, Row } from 'components/flex';
-import { Table } from 'components/Table';
 import { useFormikContext } from 'formik';
-import { PropertyType } from 'hooks/api';
 import { Claim } from 'hooks/api';
 import { WorkflowStatus } from 'hooks/api/projects';
 import { ISearchPropertyModel } from 'hooks/api/properties/search';
 import { useKeycloakWrapper } from 'hooks/useKeycloakWrapper';
-import queryString from 'query-string';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 
-import { IProjectForm, IProjectPropertyForm } from '../interfaces';
+import { IProjectForm } from '../interfaces';
 import { DisplayError } from './../../../../components/common/form/DisplayError';
+import { PropertyListViewUpdate } from './../../common/components/PropertyListViewUpdate';
 import { ProjectAddProperties } from '.';
-import { PropertyColumns } from './constants';
 import { ProjectPropertyInformation } from './ProjectPropertyInformation';
 import * as styled from './styled';
 import { toProjectProperty } from './utils';
 
 export const ProjectProperties: React.FC = () => {
-  const navigate = useNavigate();
   const { values, setFieldValue, errors } = useFormikContext<IProjectForm>();
   const [showAdd, setShowAdd] = useState(false);
   const properties = values.properties;
@@ -30,23 +25,7 @@ export const ProjectProperties: React.FC = () => {
     if (!exists) setFieldValue('properties', [...properties, toProjectProperty(values, property)]);
   };
 
-  const handleRowClick = useCallback(
-    (row: IProjectPropertyForm) => {
-      navigate(
-        `/mapview?${queryString.stringify({
-          sidebar: true,
-          disabled: true,
-          loadDraft: false,
-          parcelId: [PropertyType.Parcel, PropertyType.Subdivision].includes(row.propertyTypeId)
-            ? row.propertyId
-            : undefined,
-          buildingId: row.propertyTypeId === PropertyType.Building ? row.propertyId : undefined,
-        })}`,
-      );
-    },
-    [navigate],
-  );
-
+  const classificationLimitLabels = ['Surplus Active', 'Surplus Encumbered'];
   // Disabled prop
   const {
     values: { workflowCode, statusCode },
@@ -80,13 +59,13 @@ export const ProjectProperties: React.FC = () => {
           )}
         </Col>
       </Row>
-      <Table<IProjectPropertyForm>
-        name="projectProperties"
-        columns={PropertyColumns(disabled)}
-        data={properties}
-        footer={false}
-        onRowClick={handleRowClick}
-      />
+      <PropertyListViewUpdate
+        field="properties"
+        editableClassification
+        editableZoning
+        classificationLimitLabels={classificationLimitLabels}
+        properties={properties}
+      ></PropertyListViewUpdate>
       {showAdd && !disabled && (
         <ProjectAddProperties onAddProperty={handleAddProperty} onHide={() => setShowAdd(false)} />
       )}

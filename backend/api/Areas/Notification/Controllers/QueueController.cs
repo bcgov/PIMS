@@ -79,7 +79,7 @@ namespace Pims.Api.Areas.Notification.Controllers
         [ProducesResponseType(typeof(PageModel<NotificationQueueModel>), 200)]
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "notification" })]
-        public IActionResult GetNotificationsPage([FromBody]NotificationQueueFilter filter)
+        public IActionResult GetNotificationsPage([FromBody] NotificationQueueFilter filter)
         {
             filter.ThrowBadRequestIfNull($"The request must include a filter.");
             if (!filter.IsValid()) throw new BadRequestException("Projects filter must contain valid values.");

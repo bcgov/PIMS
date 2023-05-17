@@ -2,7 +2,6 @@ import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { IApiProject, IProperty } from 'features/projects/interfaces';
 import { IPagedItems } from 'interfaces';
-import queryString from 'query-string';
 
 import { toFlatProject } from './common/projectConverter';
 import { IProject, IProjectFilter } from './list/interfaces';
@@ -10,8 +9,13 @@ import { IProject, IProjectFilter } from './list/interfaces';
 const { apiUrl: basePath } = ENVIRONMENT;
 
 const API_ENDPOINTS = {
-  search: (filter: IProjectFilter) =>
-    `${basePath}/projects/search/page?${filter ? queryString.stringify(filter) : ''}`,
+  search: (filter: IProjectFilter) => {
+    const queryParams = new URLSearchParams();
+    for (const [key, value] of Object.entries(filter ?? {})) {
+      queryParams.set(key, String(value));
+    }
+    return `${basePath}/projects/search/page?${queryParams.toString()}`;
+  },
   delete: (projectNumber: string) => `${basePath}/projects/disposal/${projectNumber}`,
   properties: (projectNumber: string) => `${basePath}/projects/disposal/${projectNumber}`,
 };
