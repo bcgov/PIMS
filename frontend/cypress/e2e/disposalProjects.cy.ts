@@ -4,7 +4,7 @@ const inputs = {
   projectName: PROJECT_NAME,
   description: 'A test description.',
   searchFilter: {
-    address: '750 6th Ave.',
+    address: '4099 Pat Bay Hwy',
   },
   assessedValue: '10350',
   assessedDisplayedValue: '$10,350',
@@ -178,11 +178,11 @@ describe('Create a disposal project', () => {
     // Confirm search.
     cy.get('.td').contains(inputs.searchFilter.address);
     // Select property.
-    cy.get('[data-testid="selectrow-3959"]')
+    cy.get('[title="Toggle Row Selected"]')
       .should('be.enabled')
       .should('not.be.checked')
       .click({ force: true });
-    cy.get('[data-testid="selectrow-3959"]').should('be.checked');
+    cy.get('[title="Toggle Row Selected"]').should('be.checked');
     cy.contains('1 Selected');
     // Add to project.
     cy.get('[data-testid="add-to-project-btn"]').click();
@@ -389,7 +389,7 @@ describe('Create a disposal project', () => {
     /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
           Return to Projects List
     * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
-    cy.visit(`/projects/list`);
+    cy.visit(`/projects/list`).wait(2000);
 
     // Wait for page title.
     cy.get('[data-testid="project-list-view-page-title"]', { timeout: 10000 }).should('exist');
