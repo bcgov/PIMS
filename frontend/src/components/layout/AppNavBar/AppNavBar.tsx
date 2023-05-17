@@ -4,7 +4,6 @@ import { Claims } from 'constants/claims';
 import { HelpContainer } from 'features/help/containers/HelpContainer';
 import { SidebarContextType } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import queryString from 'query-string';
 import React from 'react';
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { FaHome } from 'react-icons/fa';
@@ -46,11 +45,26 @@ function SubmitProperty() {
   const keycloak = useKeycloakWrapper();
   const navigate = useNavigate();
   const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+
+  // Submit Property link query params
+  const submitPropertyQueryParams = new URLSearchParams(location.search);
+  submitPropertyQueryParams.set('sidebar', 'true');
+  submitPropertyQueryParams.set('disabled', 'false');
+  submitPropertyQueryParams.set('loadDraft', 'false');
+  submitPropertyQueryParams.set('buildingId', 'undefined');
+  submitPropertyQueryParams.set('parcelId', 'undefined');
+  submitPropertyQueryParams.set('new', 'true');
+  submitPropertyQueryParams.set(
+    'sidebarContext',
+    `${SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR}`,
+  );
+  submitPropertyQueryParams.set('sidebarSize', 'narrow');
+
   return keycloak.hasClaim(Claims.PROPERTY_ADD) ? (
     <Nav.Link
       className={
-        location.pathname.includes('mapview') &&
-        queryString.parse(location.search).sidebar === 'true'
+        location.pathname.includes('mapview') && queryParams.get('sidebar') === 'true'
           ? 'active'
           : 'idle'
       }
@@ -58,17 +72,7 @@ function SubmitProperty() {
       onClick={() =>
         navigate({
           pathname: '/mapview',
-          search: queryString.stringify({
-            ...queryString.parse(location.search),
-            sidebar: true,
-            disabled: false,
-            loadDraft: false,
-            parcelId: undefined,
-            buildingId: undefined,
-            new: true,
-            sidebarContext: SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR,
-            sidebarSize: 'narrow',
-          }),
+          search: submitPropertyQueryParams.toString(),
         })
       }
     >

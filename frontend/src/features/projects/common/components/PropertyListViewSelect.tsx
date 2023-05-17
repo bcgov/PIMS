@@ -7,7 +7,6 @@ import { getIn, useFormikContext } from 'formik';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import useCodeLookups from 'hooks/useLookupCodes';
 import _ from 'lodash';
-import queryString from 'query-string';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Container, FormControlProps } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
@@ -68,7 +67,17 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
   if (project === undefined) {
     throw Error('unable to load project data');
   }
-  const columns = useMemo(() => getPropertyColumns({ project: project }), [project]);
+  const columns = useMemo(
+    () =>
+      getPropertyColumns({
+        project: project,
+        editableClassification: false,
+        editableFinancials: false,
+        editableZoning: false,
+        limitLabels: ['Surplus Active', 'Surplus Encumbered'],
+      }),
+    [project],
+  );
   // We'll start our table without any data
   const [data, setData] = useState<IProperty[]>([]);
   const [pageSize, setPageSize] = useState(5);
@@ -118,17 +127,26 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
 
   const onRowClick = useCallback(
     (row: IProperty) => {
-      navigate(
-        `/mapview?${queryString.stringify({
-          sidebar: true,
-          disabled: true,
-          loadDraft: false,
-          parcelId: [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
-            ? row.id
-            : undefined,
-          buildingId: row.propertyTypeId === PropertyTypes.BUILDING ? row.id : undefined,
-        })}`,
+      const queryParams = new URLSearchParams();
+      queryParams.set('sidebar', 'true');
+      queryParams.set('disabled', 'true');
+      queryParams.set('loadDraft', 'false');
+      queryParams.set(
+        'buildingId',
+        `${row.propertyTypeId === PropertyTypes.BUILDING ? row.id : undefined}`,
       );
+      queryParams.set(
+        'parcelId',
+        `${
+          [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
+            ? row.id
+            : undefined
+        }`,
+      );
+      navigate({
+        pathname: '/mapview',
+        search: queryParams.toString(),
+      });
     },
     [navigate],
   );

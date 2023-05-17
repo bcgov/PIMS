@@ -6,7 +6,6 @@ import CustomAxios, { LifecycleToasts } from 'customAxios';
 import { IApiProperty } from 'features/projects/interfaces';
 import { GeoJsonObject } from 'geojson';
 import * as _ from 'lodash';
-import queryString from 'query-string';
 import { useCallback } from 'react';
 import { hideLoading, showLoading } from 'react-redux-loading-bar';
 import { useAppDispatch } from 'store';
@@ -134,10 +133,12 @@ export const useApi = (props?: IApiProps): PimsAPI => {
   axios.loadProperties = useCallback(
     async (params?: IGeoSearchParams): Promise<GeoJsonObject[]> => {
       try {
+        const queryParams = new URLSearchParams();
+        for (const [key, value] of Object.entries(params ?? {})) {
+          queryParams.set(key, String(value));
+        }
         const { data } = await axios.get<GeoJsonObject[]>(
-          `${ENVIRONMENT.apiUrl}/properties/search/wfs?${
-            params ? queryString.stringify(params) : ''
-          }`,
+          `${ENVIRONMENT.apiUrl}/properties/search/wfs?${queryParams.toString()}`,
         );
         return data;
       } catch (error) {
@@ -208,8 +209,9 @@ export const useApi = (props?: IApiProps): PimsAPI => {
     async (id: number, building: IApiProperty) => {
       const { data } = await axios.put<IBuilding>(
         `${ENVIRONMENT.apiUrl}/properties/buildings/${id}/financials`,
-        { ...building, totalArea: building.landArea },
+        { ...building, totalArea: building.landArea, buildingTenancy: building.buildingTenancy },
       );
+      console.log('Tenancy:' + building.buildingTenancy);
       return data;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

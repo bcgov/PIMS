@@ -2,12 +2,14 @@ import classNames from 'classnames';
 import { DisplayError } from 'components/common/form';
 import { Table } from 'components/Table';
 import { PropertyTypes } from 'constants/propertyTypes';
+import { SidebarContextType } from 'features/mapSideBar/hooks/useQueryParamSideBar';
+import { IProjectPropertyForm } from 'features/projects/disposals/interfaces';
 import { useStepper } from 'features/projects/dispose';
 import { IProperty } from 'features/projects/interfaces';
 import { getIn, useFormikContext } from 'formik';
-import queryString from 'query-string';
 import React, { useCallback, useMemo } from 'react';
 import { Container, FormControlProps } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 import { clickableTooltip } from '../../common';
 import { getColumnsWithRemove, getPropertyColumns } from './columns';
@@ -42,6 +44,8 @@ type OptionalAttributes = {
   classificationLimitLabels?: string[];
   /** styles specific to ReviewApproveForm.tsx */
   useReviewApproveStyles?: boolean;
+  /** used by ProjectProperties  */
+  properties?: IProjectPropertyForm[];
 };
 
 // only "field" is required for <Input>, the rest are optional
@@ -59,10 +63,12 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
   editableFinancials,
   editableZoning,
   classificationLimitLabels,
+  properties,
   useReviewApproveStyles,
 }) => {
   const { values, setFieldValue } = useFormikContext<any>();
   const existingProperties: IProperty[] = getIn(values, field);
+  const navigate = useNavigate();
   const { project } = useStepper();
   const columns = useMemo(
     () =>
@@ -92,21 +98,36 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
       setFieldValue,
     ],
   );
-
-  const onRowClick = useCallback((row: IProperty) => {
-    window.open(
-      `/mapview?${queryString.stringify({
-        sidebar: true,
-        disabled: true,
-        loadDraft: false,
-        parcelId: [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
-          ? row.id
-          : undefined,
-        buildingId: row.propertyTypeId === PropertyTypes.BUILDING ? row.id : undefined,
-      })}`,
-      '_blank',
-    );
-  }, []);
+  const onRowClick = useCallback(
+    (row: IProperty) => {
+      const queryParams = new URLSearchParams();
+      const propertyInfo = properties
+        ? properties.find((p: IProjectPropertyForm) => p.id === row.id)
+        : undefined;
+      queryParams.set('sidebar', 'true');
+      queryParams.set('disabled', 'true');
+      queryParams.set('loadDraft', 'false');
+      queryParams.set(
+        'buildingId',
+        `${row.propertyTypeId === PropertyTypes.BUILDING ? propertyInfo?.propertyId : undefined}`,
+      );
+      queryParams.set(
+        'parcelId',
+        `${
+          [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
+            ? propertyInfo?.propertyId
+            : undefined
+        }`,
+      );
+      queryParams.set('sidebarContext', `${SidebarContextType.ADD_PROPERTY_TYPE_SELECTOR}`);
+      queryParams.set('sidebarSize', 'wide');
+      navigate({
+        pathname: '/mapview',
+        search: queryParams.toString(),
+      });
+    },
+    [properties, navigate],
+  );
 
   return (
     <Container fluid>

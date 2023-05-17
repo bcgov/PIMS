@@ -24,7 +24,6 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { useRouterFilter } from 'hooks/useRouterFilter';
 import { fill, intersection, isEmpty, keys, noop, pick, range } from 'lodash';
-import queryString from 'query-string';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import { FaEdit, FaFileExport, FaFolder, FaFolderOpen } from 'react-icons/fa';
@@ -46,13 +45,21 @@ import { Buildings } from './buildings';
 import { buildingColumns as buildingCols, columns as cols } from './columns';
 import { toApiProperty } from './toApiProperty';
 
-const getPropertyReportUrl = (filter: IPropertyQueryParams) =>
-  `${ENVIRONMENT.apiUrl}/reports/properties?${filter ? queryString.stringify(filter) : ''}`;
+const getPropertyReportUrl = (filter: IPropertyQueryParams) => {
+  const queryParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(filter ?? {})) {
+    queryParams.set(key, String(value));
+  }
+  return `${ENVIRONMENT.apiUrl}/reports/properties?${queryParams.toString()}`;
+};
 
-const getAllFieldsPropertyReportUrl = (filter: IPropertyQueryParams) =>
-  `${ENVIRONMENT.apiUrl}/reports/properties/all/fields?${
-    filter ? queryString.stringify(filter) : ''
-  }`;
+const getAllFieldsPropertyReportUrl = (filter: IPropertyQueryParams) => {
+  const queryParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(filter ?? {})) {
+    queryParams.set(key, String(value));
+  }
+  return `${ENVIRONMENT.apiUrl}/reports/properties/all/fields?${queryParams.toString()}`;
+};
 
 const FileIcon = styled(Button)`
   background-color: #fff !important;
@@ -127,7 +134,8 @@ export const flattenParcel = (apiProperty: IParcel): IProperty => {
     address: `${apiProperty.address?.line1 ?? ''} , ${apiProperty.address?.administrativeArea ??
       ''}`,
     administrativeArea: apiProperty.address?.administrativeArea ?? '',
-    province: apiProperty.address?.province ?? '',
+    province: apiProperty.address?.province,
+    provinceId: apiProperty.address?.province ?? '',
     postal: apiProperty.address?.postal ?? '',
     assessedLand: (assessedLand?.value as number) ?? 0,
     assessedLandDate: assessedLand?.date,
@@ -170,7 +178,8 @@ export const flattenBuilding = (apiProperty: IBuilding): IProperty => {
     address: `${apiProperty.address?.line1 ?? ''} , ${apiProperty.address?.administrativeArea ??
       ''}`,
     administrativeArea: apiProperty.address?.administrativeArea ?? '',
-    province: apiProperty.address?.province ?? '',
+    province: apiProperty.address?.province,
+    provinceId: apiProperty.address?.province ?? '',
     postal: apiProperty.address?.postal ?? '',
     assessedBuilding: (assessedBuilding?.value as number) ?? 0,
     assessedBuildingDate: assessedBuilding?.date,
@@ -254,6 +263,7 @@ interface IChangedRow {
   assessedLand?: boolean;
   assessedBuilding?: boolean;
   netBook?: boolean;
+  classificationId: number;
 }
 
 /**
@@ -523,41 +533,51 @@ const PropertyListView: React.FC = () => {
       .map(value => agencySelections.find(agency => agency.value === value) || '') as any;
   }
 
-  const onRowClick = useCallback((row: IProperty) => {
-    // Track row click in Snowplow Analytics.
-    window.snowplow('trackSelfDescribingEvent', {
-      schema: 'iglu:ca.bc.gov.pims/listing_click/jsonschema/1-0-0',
-      data: {
-        view: 'property_inventory',
-        property_name: row.name ?? '',
-        pid: row.pid ?? '',
-        pin: row.pin ?? '',
-        agency: row.subAgency ?? row.agency ?? '',
-        classification: row.classification ?? '',
-      },
-    });
+  const onRowClick = useCallback(
+    (row: IProperty) => {
+      // Track row click in Snowplow Analytics.
+      window.snowplow('trackSelfDescribingEvent', {
+        schema: 'iglu:ca.bc.gov.pims/listing_click/jsonschema/1-0-0',
+        data: {
+          view: 'property_inventory',
+          property_name: row.name ?? '',
+          pid: row.pid ?? '',
+          pin: row.pin ?? '',
+          agency: row.subAgency ?? row.agency ?? '',
+          classification: row.classification ?? '',
+        },
+      });
 
-    navigate(
-      `/mapview?${queryString.stringify({
-        sidebar: true,
-        disabled: true,
-        loadDraft: false,
-        parcelId: [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
-          ? row.id
-          : undefined,
-        buildingId: row.propertyTypeId === PropertyTypes.BUILDING ? row.id : undefined,
-      })}`,
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+      const queryParams = new URLSearchParams();
+      queryParams.set('sidebar', 'true');
+      queryParams.set('disabled', 'true');
+      queryParams.set('loadDraft', 'false');
+      queryParams.set(
+        'buildingId',
+        `${row.propertyTypeId === PropertyTypes.BUILDING ? row.id : undefined}`,
+      );
+      queryParams.set(
+        'parcelId',
+        `${
+          [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
+            ? row.id
+            : undefined
+        }`,
+      );
+      navigate({
+        pathname: '/mapview',
+        search: queryParams.toString(),
+      });
+    },
+    [navigate],
+  );
 
   const submitTableChanges = async (
     values: { properties: IProperty[] },
     actions: FormikProps<{ properties: IProperty[] }>,
   ) => {
     let nextProperties = [...values.properties];
-    const editableColumnKeys = ['assessedLand', 'assessedBuilding', 'netBook'];
-
+    const editableColumnKeys = ['assessedLand', 'assessedBuilding', 'netBook', 'classificationId'];
     const changedRows = dirtyRows
       .map(change => {
         const data = { ...values.properties![change.rowId] };
@@ -605,6 +625,7 @@ const PropertyListView: React.FC = () => {
             toast.info(
               `Successfully saved changes for ${apiProperty.name || apiProperty.address?.line1}`,
             );
+            setEditable(false);
           } catch (error) {
             const errorMessage = (error as Error).message;
 
@@ -708,7 +729,7 @@ const PropertyListView: React.FC = () => {
           <VerticalDivider />
 
           {!editable && !keycloak.hasClaim(Claims.VIEW_ONLY_PROPERTIES) && (
-            <TooltipWrapper toolTipId="edit-financial-values" toolTip={'Edit financial values'}>
+            <TooltipWrapper toolTipId="edit-values" toolTip={'Edit values'}>
               <EditIconButton>
                 <FaEdit data-testid="edit-icon" size={36} onClick={() => setEditable(!editable)} />
               </EditIconButton>
@@ -716,10 +737,7 @@ const PropertyListView: React.FC = () => {
           )}
           {editable && (
             <>
-              <TooltipWrapper
-                toolTipId="cancel-edited-financial-values"
-                toolTip={'Cancel unsaved edits'}
-              >
+              <TooltipWrapper toolTipId="cancel-edited-values" toolTip={'Cancel unsaved edits'}>
                 <Button
                   data-testid="cancel-changes"
                   variant="outline-primary"
@@ -734,10 +752,7 @@ const PropertyListView: React.FC = () => {
                   Cancel
                 </Button>
               </TooltipWrapper>
-              <TooltipWrapper
-                toolTipId="save-edited-financial-values"
-                toolTip={'Save financial values'}
-              >
+              <TooltipWrapper toolTipId="save-edited-values" toolTip={'Save values'}>
                 <Button
                   data-testid="save-changes"
                   onClick={async () => {

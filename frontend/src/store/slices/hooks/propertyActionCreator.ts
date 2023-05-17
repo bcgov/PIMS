@@ -2,14 +2,18 @@ import { IGeoSearchParams } from 'constants/API';
 import { ENVIRONMENT } from 'constants/environment';
 import CustomAxios from 'customAxios';
 import { savePropertyNames } from 'features/properties/common/slices/propertyNameSlice';
-import queryString from 'query-string';
 import { AnyAction, Dispatch } from 'redux';
 import { handleAxiosResponse } from 'utils';
 
 import { STORE_PROPERTY_NAMES } from '../../../constants/actionTypes';
 
-const getPropertyNames = (filter: IGeoSearchParams) =>
-  `/properties/search/names?${filter ? queryString.stringify(filter) : ''}`;
+const getPropertyNames = (filter: IGeoSearchParams) => {
+  const queryParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(filter ?? {})) {
+    queryParams.set(key, String(value));
+  }
+  return `/properties/search/names?${queryParams.toString()}`;
+};
 
 export const fetchPropertyNames = (agencyId: number) => async (dispatch: Dispatch<AnyAction>) => {
   const axiosResponse = CustomAxios()

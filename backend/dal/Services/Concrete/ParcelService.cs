@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pims.Core.Extensions;
@@ -54,11 +53,11 @@ namespace Pims.Dal.Services
             this.User.ThrowIfNotAuthorized(Permissions.PropertyView);
 
             // Check if user has the ability to view sensitive properties.
-             var user = this.Context.Users
-                .Include(u => u.Agencies)
-                .ThenInclude(a => a.Agency)
-                .ThenInclude(a => a.Children)
-                .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
+            var user = this.Context.Users
+               .Include(u => u.Agencies)
+               .ThenInclude(a => a.Agency)
+               .ThenInclude(a => a.Children)
+               .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
             var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
             var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
@@ -276,7 +275,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Evaluations)
                 .Include(p => p.Fiscals)
                 .SingleOrDefault(p => p.Id == parcel.Id) ?? throw new KeyNotFoundException();
-
+            originalParcel.Classification = parcel.Classification;
             var user = this.Context.Users
                 .Include(u => u.Agencies)
                 .ThenInclude(a => a.Agency)
@@ -472,24 +471,26 @@ namespace Pims.Dal.Services
                     var updateBuilding = parcel.Buildings.FirstOrDefault(pb => pb.BuildingId == parcelBuilding.BuildingId);
 
                     // The building may have evaluations or fiscals that need to be deleted.
-                    foreach (var buildingEvaluation in parcelBuilding.Building.Evaluations)
+                    if (updateBuilding != null)
                     {
-                        // Delete the evaluations that have been removed.
-                        if (!updateBuilding.Building.Evaluations.Any(e => (e.BuildingId == buildingEvaluation.BuildingId && e.Date == buildingEvaluation.Date && e.Key == buildingEvaluation.Key)))
+                        foreach (var buildingEvaluation in parcelBuilding.Building.Evaluations)
                         {
-                            this.Context.BuildingEvaluations.Remove(buildingEvaluation);
+                            // Delete the evaluations that have been removed.
+                            if (!updateBuilding.Building.Evaluations.Any(e => (e.BuildingId == buildingEvaluation.BuildingId && e.Date == buildingEvaluation.Date && e.Key == buildingEvaluation.Key)))
+                            {
+                                this.Context.BuildingEvaluations.Remove(buildingEvaluation);
+                            }
                         }
-                    }
-                    foreach (var buildingFiscal in parcelBuilding.Building.Fiscals)
-                    {
-                        // Delete the fiscals that have been removed.
-                        if (!updateBuilding.Building.Fiscals.Any(e => (e.BuildingId == buildingFiscal.BuildingId && e.FiscalYear == buildingFiscal.FiscalYear && e.Key == buildingFiscal.Key)))
+                        foreach (var buildingFiscal in parcelBuilding.Building.Fiscals)
                         {
-                            this.Context.BuildingFiscals.Remove(buildingFiscal);
+                            // Delete the fiscals that have been removed.
+                            if (!updateBuilding.Building.Fiscals.Any(e => (e.BuildingId == buildingFiscal.BuildingId && e.FiscalYear == buildingFiscal.FiscalYear && e.Key == buildingFiscal.Key)))
+                            {
+                                this.Context.BuildingFiscals.Remove(buildingFiscal);
+                            }
                         }
                     }
                 }
-
                 foreach (var parcelEvaluation in originalParcel.Evaluations)
                 {
                     // Delete the evaluations from the parcel that have been removed.
