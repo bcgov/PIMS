@@ -103,18 +103,18 @@ export const toForm = (model: IProjectModel): IProjectForm => {
     documentationNote: model.documentationNote ?? '',
     salesHistoryNote: model.salesHistoryNote ?? '',
     comments: model.comments ?? '',
-    notes: model.notes.map(n => {
+    notes: model.notes.map((n) => {
       return {
         id: n.id,
         noteType: n.noteType,
         note: n.note,
       };
     }),
-    tasks: model.tasks.map(task => {
+    tasks: model.tasks.map((task) => {
       // There are duplicate tasks in disposal that must match those in appraisal.
       if (task.statusCode === ReviewWorkflowStatus.DisposalProcess) {
         const appraisalTask = model.tasks.find(
-          t => t.statusCode === ReviewWorkflowStatus.AppraisalReview && t.name === task.name,
+          (t) => t.statusCode === ReviewWorkflowStatus.AppraisalReview && t.name === task.name,
         );
         if (!!appraisalTask) task.isCompleted = appraisalTask?.isCompleted;
       }
@@ -131,7 +131,7 @@ export const toForm = (model: IProjectModel): IProjectForm => {
         statusCode: task.statusCode ?? '',
       };
     }),
-    projectAgencyResponses: model.projectAgencyResponses.map(p => {
+    projectAgencyResponses: model.projectAgencyResponses.map((p) => {
       return {
         agencyId: p.agencyId,
         agencyCode: p.agencyCode ?? '',
@@ -142,6 +142,6 @@ export const toForm = (model: IProjectModel): IProjectForm => {
         offerAmount: p.offerAmount,
       };
     }),
-    properties: model.properties.map(p => toPropertyForm(p)),
+    properties: model.properties.map((p) => toPropertyForm(p)),
   };
 };

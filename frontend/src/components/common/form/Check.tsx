@@ -78,15 +78,8 @@ export const Check: React.FC<CheckProps> = ({
   onChange,
   ...rest
 }) => {
-  const {
-    values,
-    initialValues,
-    setFieldValue,
-    setFieldTouched,
-    errors,
-    touched,
-    handleBlur,
-  } = useFormikContext();
+  const { values, initialValues, setFieldValue, setFieldTouched, errors, touched, handleBlur } =
+    useFormikContext();
   const initialChecked = getIn(initialValues, field);
   const touch = getIn(touched, field);
   const checked = getIn(values, field);
@@ -159,7 +152,7 @@ export const Check: React.FC<CheckProps> = ({
               value={`${checked === false}`}
               placeholder={placeholder}
               checked={checked === false}
-              onChange={(e: any) => {
+              onChange={() => {
                 setFieldValue(field, false);
               }}
               onBlur={handleBlur}

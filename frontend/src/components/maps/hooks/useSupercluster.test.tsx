@@ -51,10 +51,7 @@ describe('useSupercluster hook', () => {
     ];
 
     const bounds: BBox = [
-      -1.2411810957931664,
-      52.61208435908725,
-      -1.0083656811012531,
-      52.64495957533833,
+      -1.2411810957931664, 52.61208435908725, -1.0083656811012531, 52.64495957533833,
     ];
 
     const zoom = 10;
@@ -66,7 +63,7 @@ describe('useSupercluster hook', () => {
 
       return (
         <ul>
-          {clusters.map(point => {
+          {clusters.map((point) => {
             const properties = point.properties || {};
             if (properties.cluster) {
               return <li key={point.id}>points: {properties.point_count}</li>;

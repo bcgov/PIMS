@@ -55,7 +55,7 @@ export const AdminAreaFilterBar: React.FC<IAdminAreaFilterProps> = ({
             options={adminAreas}
             placeholder="Enter name"
             filterBy={['name']}
-            labelKey={option => `${option.name}`}
+            labelKey={(option) => `${option.name}`}
           />
         </Col>
       </FilterBar>

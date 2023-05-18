@@ -41,7 +41,7 @@ class PersistImpl extends React.Component<
 
   //Encrypt the formdata before saving.
   //TODO: in the event the security of this data becomes a concern, this data should be persisted server-side.
-  saveForm = debounce((data: FormikProps<{}>) => {
+  saveForm = debounce((data: FormikProps<object>) => {
     const versionedStorage: VersionedStorage = { version: packageJson.version, data: data };
     if (this.props.isSessionStorage) {
       window.sessionStorage.setItem(
@@ -112,24 +112,26 @@ class PersistImpl extends React.Component<
   render() {
     return (
       <>
-        {/** normally not required, this bypasses a snapshot test rendering issue */
-        this.state.showLoadDraftDialog && (
-          <GenericModal
-            title="Load Draft?"
-            message="You have an unsaved draft, would you like to resume editing it?"
-            cancelButtonText="Discard"
-            okButtonText="Resume Editing"
-            display={this.state.showLoadDraftDialog}
-            handleOk={() => {
-              this.setState({ showLoadDraftDialog: false });
-              this.props.persistCallback(this.loadForm());
-            }}
-            handleCancel={() => {
-              this.setState({ showLoadDraftDialog: false });
-              this.discardForm();
-            }}
-          />
-        )}
+        {
+          /** normally not required, this bypasses a snapshot test rendering issue */
+          this.state.showLoadDraftDialog && (
+            <GenericModal
+              title="Load Draft?"
+              message="You have an unsaved draft, would you like to resume editing it?"
+              cancelButtonText="Discard"
+              okButtonText="Resume Editing"
+              display={this.state.showLoadDraftDialog}
+              handleOk={() => {
+                this.setState({ showLoadDraftDialog: false });
+                this.props.persistCallback(this.loadForm());
+              }}
+              handleCancel={() => {
+                this.setState({ showLoadDraftDialog: false });
+                this.discardForm();
+              }}
+            />
+          )
+        }
       </>
     );
   }

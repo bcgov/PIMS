@@ -49,7 +49,7 @@ const getDraftMarkers = (values: any, initialValues: any, nameSpace: string) => 
  */
 const useDraftMarkerSynchronizer = (nameSpace: string) => {
   const { values, initialValues } = useFormikContext();
-  const properties = useAppSelector(store => [...store.parcel.draftProperties]);
+  const properties = useAppSelector((store) => [...store.parcel.draftProperties]);
   const dispatch = useAppDispatch();
   const nonDraftProperties = React.useMemo(
     () =>
@@ -85,7 +85,7 @@ const useDraftMarkerSynchronizer = (nameSpace: string) => {
           (draftMarker: PointFeature) =>
             _.find(
               dbProperties,
-              dbProperty =>
+              (dbProperty) =>
                 dbProperty.geometry.coordinates[0] === draftMarker.geometry.coordinates[0] &&
                 dbProperty.geometry.coordinates[1] === draftMarker.geometry.coordinates[1],
             ) === undefined,

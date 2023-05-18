@@ -17,7 +17,7 @@ export const generateAgencyResponseRows = (
     return [];
   }
   const responses = _.cloneDeep(projectAgencyResponses);
-  agencies.forEach(agency => {
+  agencies.forEach((agency) => {
     if (!_.find(projectAgencyResponses, { agencyId: agency.id })) {
       responses.push({
         agencyId: parseInt(agency.id, 10),

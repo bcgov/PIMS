@@ -126,7 +126,7 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
             }
             setFieldTouched(field);
           }}
-          onChange={(val: any, e) => {
+          onChange={(val: any) => {
             setFieldValue(field, val ? moment(val).format('YYYY-MM-DD') : '');
           }}
         />
@@ -137,7 +137,7 @@ const FormikDatePicker: FunctionComponent<FastDatePickerProps> = ({
           display={!!oldDate}
           cancelButtonText={`Use ${moment(oldDate).format('MM/DD/YYYY')}`}
           okButtonText={`Use ${moment(initialValue).format('MM/DD/YYYY')}`}
-          handleOk={(e: any) => {
+          handleOk={() => {
             setFieldValue(field, moment(initialValue).format('YYYY-MM-DD'));
             setOldDate(undefined);
           }}

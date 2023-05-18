@@ -39,9 +39,8 @@ const AddParentParcelsForm = ({
   findMatchingPid,
   disabled,
 }: IAddParentParcelsFormProps) => {
-  const { values, initialValues, touched, setFieldValue, setFieldTouched } = useFormikContext<
-    ISteppedFormValues<IParcel & ISearchFields>
-  >();
+  const { values, initialValues, touched, setFieldValue, setFieldTouched } =
+    useFormikContext<ISteppedFormValues<IParcel & ISearchFields>>();
   const location = useLocation();
   const parcels = getIn(values, withNameSpace(nameSpace, 'parcels'));
   const initialParcels = getIn(initialValues, withNameSpace(nameSpace, 'parcels'));
@@ -49,27 +48,25 @@ const AddParentParcelsForm = ({
 
   const linkListItems = useMemo<ILinkListItem[]>(
     () =>
-      parcels.map(
-        (parcel: IParcel): ILinkListItem => {
-          const queryParams = new URLSearchParams(location.search);
-          queryParams.set('sidebar', 'true');
-          queryParams.set('disabled', 'true');
-          queryParams.set('loadDraft', 'false');
-          queryParams.set('parcelId', `${parcel.id}`);
-          return {
-            key: parcel.id,
-            label: `PID ${pidFormatter(parcel.pid ?? '')}`,
-            pathName: '/mapview',
-            onRemoveItemClick: () =>
-              setFieldValue(
-                withNameSpace(nameSpace, 'parcels'),
-                parcels.filter((p: IParcel) => p.id !== parcel.id),
-              ),
-            removeItemTitle: 'Click to remove Parent Parcel Association',
-            search: queryParams.toString(),
-          };
-        },
-      ),
+      parcels.map((parcel: IParcel): ILinkListItem => {
+        const queryParams = new URLSearchParams(location.search);
+        queryParams.set('sidebar', 'true');
+        queryParams.set('disabled', 'true');
+        queryParams.set('loadDraft', 'false');
+        queryParams.set('parcelId', `${parcel.id}`);
+        return {
+          key: parcel.id,
+          label: `PID ${pidFormatter(parcel.pid ?? '')}`,
+          pathName: '/mapview',
+          onRemoveItemClick: () =>
+            setFieldValue(
+              withNameSpace(nameSpace, 'parcels'),
+              parcels.filter((p: IParcel) => p.id !== parcel.id),
+            ),
+          removeItemTitle: 'Click to remove Parent Parcel Association',
+          search: queryParams.toString(),
+        };
+      }),
     [location.search, nameSpace, parcels, setFieldValue],
   );
 

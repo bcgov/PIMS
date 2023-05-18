@@ -175,7 +175,7 @@ export const ProjectSummary: React.FC = () => {
           </Col>
         </Row>
         <Row>
-          <Table<IProjectPropertyModel>
+          <Table<IProjectPropertyModel, any>
             name="properties"
             columns={PropertyColumns()}
             data={properties}

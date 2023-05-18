@@ -82,9 +82,13 @@ const EditableInputCell = (cellInfo: any) => {
  * This information is only editable if this cell belongs to a parcel row.
  * @param cellInfo provided by react table
  */
-export const getEditableTextAreaCell = (namespace: string = 'properties') => (cellInfo: any) => {
-  return <TextArea fast field={`${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`}></TextArea>;
-};
+export const getEditableTextAreaCell =
+  (namespace: string = 'properties') =>
+  (cellInfo: any) => {
+    return (
+      <TextArea fast field={`${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`}></TextArea>
+    );
+  };
 
 /**
  * Create a formik date picker using the passed cellinfo to get the associated data.
@@ -93,27 +97,25 @@ export const getEditableTextAreaCell = (namespace: string = 'properties') => (ce
  * @param minDate restrict the minimum date that can be selected
  * @param oldDateWarning warn if the user selects an old date
  */
-export const getEditableDatePickerCell = (
-  namespace: string = 'properties',
-  minDate: boolean = false,
-  oldDateWarning?: boolean,
-) => (cellInfo: any) => {
-  const formikProps = useFormikContext();
-  return (
-    <FastDatePicker
-      formikProps={formikProps}
-      oldDateWarning={oldDateWarning}
-      field={`${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`}
-      minDate={
-        minDate
-          ? getIn(formikProps.values, `${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`)
-          : undefined
-      }
-    ></FastDatePicker>
-  );
-};
+export const getEditableDatePickerCell =
+  (namespace: string = 'properties', minDate: boolean = false, oldDateWarning?: boolean) =>
+  (cellInfo: any) => {
+    const formikProps = useFormikContext();
+    return (
+      <FastDatePicker
+        formikProps={formikProps}
+        oldDateWarning={oldDateWarning}
+        field={`${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`}
+        minDate={
+          minDate
+            ? getIn(formikProps.values, `${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`)
+            : undefined
+        }
+      ></FastDatePicker>
+    );
+  };
 
-export const getProjectLinkCell = (namespace: string = 'properties') => (cellInfo: any) => {
+export const getProjectLinkCell = () => (cellInfo: any) => {
   const { values } = useFormikContext<IProject>();
   const projectNumbers = _.filter(cellInfo.value, (p: string) => values.projectNumber !== p);
   return (
@@ -133,16 +135,18 @@ const responseOptions: SelectOption[] = [
   { label: 'Send Notifications', value: AgencyResponses.Subscribe, parent: '' },
 ];
 
-export const getEditableSelectCell = (namespace: string = 'properties') => (cellInfo: any) => {
-  const formikProps = useFormikContext();
-  return (
-    <FastSelect
-      formikProps={formikProps}
-      options={responseOptions}
-      field={`${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`}
-    />
-  );
-};
+export const getEditableSelectCell =
+  (namespace: string = 'properties') =>
+  (cellInfo: any) => {
+    const formikProps = useFormikContext();
+    return (
+      <FastSelect
+        formikProps={formikProps}
+        options={responseOptions}
+        field={`${namespace}.${cellInfo.row.id}.${cellInfo.column.id}`}
+      />
+    );
+  };
 
 export interface IDisposeColumnOptions {
   project: IProject;
@@ -205,7 +209,6 @@ export const defaultPropertyColumns: any[] = [
 ];
 
 export const getPropertyColumns = ({
-  project,
   editableClassification,
   editableFinancials,
   editableZoning,

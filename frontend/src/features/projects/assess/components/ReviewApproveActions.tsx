@@ -43,7 +43,6 @@ export const ReviewApproveActions = ({
     if (submitStatusCode !== undefined) {
       submitForm().then(() => setSubmitStatusCode(undefined));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submitForm, submitStatusCode]);
   return (
     <>

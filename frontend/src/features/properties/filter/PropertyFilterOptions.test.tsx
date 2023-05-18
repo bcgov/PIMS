@@ -9,8 +9,8 @@ import { IPropertyFilter } from './IPropertyFilter';
 jest.mock('axios');
 jest.mock('@react-keycloak/web');
 jest.mock('hooks/useApi');
-((useApi as unknown) as jest.Mock<Partial<PimsAPI>>).mockReturnValue({
-  searchAddress: jest.fn((val: string) => {
+(useApi as unknown as jest.Mock<Partial<PimsAPI>>).mockReturnValue({
+  searchAddress: jest.fn(() => {
     return Promise.resolve([]);
   }),
 });
@@ -30,7 +30,7 @@ const filter: IPropertyFilter = {
 
 const component = (filter: IPropertyFilter) => (
   <div>
-    <Formik initialValues={filter} onSubmit={(values, helpers) => {}}>
+    <Formik initialValues={filter} onSubmit={() => {}}>
       <PropertyFilterOptions />
     </Formik>
   </div>

@@ -32,7 +32,7 @@ const DraftMarkerButton = styled.button`
   display: flex;
 `;
 
-const LatLongForm = <T extends any>(props: LatLongFormProps & FormikProps<T>) => {
+const LatLongForm = <T,>(props: LatLongFormProps & FormikProps<T>) => {
   const withNameSpace: Function = useCallback(
     (fieldName: string) => {
       return props.nameSpace ? `${props.nameSpace}.${fieldName}` : fieldName;

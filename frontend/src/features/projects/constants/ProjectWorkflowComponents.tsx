@@ -17,27 +17,27 @@ import {
  */
 export const projectWorkflowComponents: IProjectWorkflowComponent[] = [
   {
-    component: props => <ProjectDraftStep {...props} />,
+    component: (props) => <ProjectDraftStep {...props} />,
     workflowStatus: DisposeWorkflowStatus.Draft,
   },
   {
-    component: props => <SelectProjectPropertiesStep {...props} />,
+    component: (props) => <SelectProjectPropertiesStep {...props} />,
     workflowStatus: DisposeWorkflowStatus.SelectProperties,
   },
   {
-    component: props => <UpdateInfoStep {...props} />,
+    component: (props) => <UpdateInfoStep {...props} />,
     workflowStatus: DisposeWorkflowStatus.UpdateInformation,
   },
   {
-    component: props => <DocumentationStep {...props} />,
+    component: (props) => <DocumentationStep {...props} />,
     workflowStatus: DisposeWorkflowStatus.RequiredDocumentation,
   },
   {
-    component: props => <ApprovalConfirmationStep {...props} />,
+    component: (props) => <ApprovalConfirmationStep {...props} />,
     workflowStatus: DisposeWorkflowStatus.Approval,
   },
   {
-    component: props => <ReviewProjectStep {...props} />,
+    component: (props) => <ReviewProjectStep {...props} />,
     workflowStatus: DisposeWorkflowStatus.Review,
   },
 ];

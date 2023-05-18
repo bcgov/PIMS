@@ -24,9 +24,8 @@ export const ReviewApproveStepSchema = UpdateInfoStepYupSchema.concat(
   ProjectDraftStepYupSchema,
 ).concat(SelectProjectPropertiesStepYupSchema);
 
-export const ReviewExemptionRequestSchema = ApproveExemptionRequestSchema.concat(
-  ReviewApproveStepSchema,
-);
+export const ReviewExemptionRequestSchema =
+  ApproveExemptionRequestSchema.concat(ReviewApproveStepSchema);
 
 /**
  * Validate the project status tasks that are required.
@@ -36,18 +35,18 @@ export const validateTasks = (project: IProject) => {
   const statusTasks = !project.exemptionRequested
     ? _.filter(
         project.tasks,
-        task =>
+        (task) =>
           task.statusCode === WorkflowStatus.PropertyReview ||
           task.statusCode === WorkflowStatus.DocumentReview,
       )
     : _.filter(
         project.tasks,
-        task =>
+        (task) =>
           task.statusCode === WorkflowStatus.ExemptionProcess ||
           task.statusCode === WorkflowStatus.DocumentReview ||
           task.statusCode === WorkflowStatus.ExemptionReview,
       );
-  return statusTasks.reduce((errors: any, task: IProjectTask, index: number) => {
+  return statusTasks.reduce((errors: any, task: IProjectTask) => {
     if (!task.isCompleted && !task.isOptional) {
       errors = setIn(errors, `tasks.${project.tasks.indexOf(task)}.isCompleted`, 'Required');
     }
@@ -73,7 +72,7 @@ export const validateDeny = async (project: IProject) => {
  * @param project The project to validate.
  */
 export const validateApprove = async (project: IProject) => {
-  let taskErrors = validateTasks(project);
+  const taskErrors = validateTasks(project);
 
   // Scroll to required fields
   if (taskErrors.tasks && taskErrors.tasks.length > 0) {

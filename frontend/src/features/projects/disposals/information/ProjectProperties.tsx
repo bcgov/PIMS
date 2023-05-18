@@ -21,7 +21,7 @@ export const ProjectProperties: React.FC = () => {
   const properties = values.properties;
 
   const handleAddProperty = (property: ISearchPropertyModel) => {
-    const exists = !!properties.find(p => p.propertyId === property.id);
+    const exists = !!properties.find((p) => p.propertyId === property.id);
     if (!exists) setFieldValue('properties', [...properties, toProjectProperty(values, property)]);
   };
 

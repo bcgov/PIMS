@@ -85,8 +85,8 @@ export const LeafletDraw: React.FC<ILeafletDrawProps> = ({
           weight: 3,
           opacity: 1,
         },
-        filter: feature => feature.properties.editable,
-      }).eachLayer(layer => {
+        filter: (feature) => feature.properties.editable,
+      }).eachLayer((layer) => {
         featureGroup.addLayer(layer);
       });
 

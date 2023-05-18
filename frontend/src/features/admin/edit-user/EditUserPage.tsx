@@ -5,7 +5,6 @@ import { Form, Input, Select, SelectOption } from 'components/common/form';
 import UserRoleSelector from 'components/common/form/UserRoleSelector';
 import { Label } from 'components/common/Label';
 import TooltipWrapper from 'components/common/TooltipWrapper';
-import { IUserDetailParams } from 'constants/API';
 import * as API from 'constants/API';
 import { Field, FieldArray, Formik } from 'formik';
 import useCodeLookups from 'hooks/useLookupCodes';
@@ -21,14 +20,12 @@ import { UserUpdateSchema } from 'utils/YupSchema';
 
 import useEditUserService from './useEditUserService';
 
-interface IEditUserPageProps extends IUserDetailParams {
-  match?: any;
-}
 interface IRole {
   name: string;
   id: string;
 }
-const EditUserPage = (props: IEditUserPageProps) => {
+
+const EditUserPage = () => {
   const params = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -43,7 +40,6 @@ const EditUserPage = (props: IEditUserPageProps) => {
       // Clear user on component unmount.
       dispatch(clearUser());
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Fetch user details.
@@ -53,11 +49,11 @@ const EditUserPage = (props: IEditUserPageProps) => {
   }, [dispatch, userId]);
 
   // Redux state store.
-  const user = useAppSelector(store => store.users.user);
+  const user = useAppSelector((store) => store.users.user);
   const mapLookupCode = (code: ILookupCode): SelectOption => ({
     label: code.name,
     value: code.id.toString(),
-    selected: !!user.roles.find(x => x.id === code.id.toString()),
+    selected: !!user.roles.find((x) => x.id === code.id.toString()),
     parent: '',
   });
   const mapRoleLookupCodes = (code: ILookupCode) => ({
@@ -77,7 +73,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
     rowVersion: user.rowVersion,
     emailVerified: false,
     agencies: user.agencies,
-    roles: user.roles.map(x => x.id),
+    roles: user.roles.map((x) => x.id),
     goldRoles: user.goldUserRoles,
     note: user.note,
     agency: user.agencies && user.agencies.length !== 0 ? user.agencies[0].id : '',
@@ -114,7 +110,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
   const handleAddRole = (role: string) => {
     // If the role to add is in the roles to remove array, remove it from that array
     if (rolesToRemove.includes(role)) {
-      setRolesToRemove(rolesToRemove.filter(r => r !== role));
+      setRolesToRemove(rolesToRemove.filter((r) => r !== role));
       // Add the role to the all user roles array
       setAllUserRoles([...allUserRoles, role]);
       return;
@@ -133,13 +129,13 @@ const EditUserPage = (props: IEditUserPageProps) => {
   const handleDeleteRole = (role: string) => {
     // If the role to remove is in the roles to add array, remove it from that array
     if (rolesToAdd.includes(role)) {
-      setRolesToAdd(rolesToAdd.filter(r => r !== role));
+      setRolesToAdd(rolesToAdd.filter((r) => r !== role));
       // Remove the role from the all user roles array
-      setAllUserRoles(allUserRoles.filter(r => r !== role));
+      setAllUserRoles(allUserRoles.filter((r) => r !== role));
       return;
     }
     // Remove the role from the all user roles array
-    setAllUserRoles(allUserRoles.filter(r => r !== role));
+    setAllUserRoles(allUserRoles.filter((r) => r !== role));
     // Add the role to the roles to remove array
     setRolesToRemove([...rolesToRemove, role]);
   };
@@ -149,7 +145,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
   };
 
   let agenciesToUpdate: any[];
-  const selectAgencies = agencies.map(c => mapLookupCode(c));
+  const selectAgencies = agencies.map((c) => mapLookupCode(c));
 
   const updateAgenciesOnSubmit = (values: typeof initialValues) => {
     if (values.agency !== '') {
@@ -177,9 +173,9 @@ const EditUserPage = (props: IEditUserPageProps) => {
 
   // Get the roles from Keycloak as well as the role ids to save to the database.
   const formatUserRoles = (values: typeof initialValues) => {
-    var allRoles: IRole[] = roles.map(r => mapRoleLookupCodes(r));
-    return allRoles.filter(function(role) {
-      return values.goldRoles.some(goldRole => {
+    const allRoles: IRole[] = roles.map((r) => mapRoleLookupCodes(r));
+    return allRoles.filter(function (role) {
+      return values.goldRoles.some((goldRole) => {
         return goldRole === role.name;
       });
     });
@@ -239,7 +235,7 @@ const EditUserPage = (props: IEditUserPageProps) => {
               await onSubmitUserChanges(values, setSubmitting);
             }}
           >
-            {props => (
+            {(props) => (
               <Form className="userInfo">
                 {loggedInSinceGold ? (
                   <>
@@ -302,15 +298,15 @@ const EditUserPage = (props: IEditUserPageProps) => {
                     <Row style={{ marginTop: '10px' }}>
                       <Col>
                         <FieldArray name="roles">
-                          {arrayHelpers => (
+                          {(arrayHelpers) => (
                             <UserRoleSelector
-                              options={roles.map(r => r.name)}
-                              handleAddRole={role => {
+                              options={roles.map((r) => r.name)}
+                              handleAddRole={(role) => {
                                 arrayHelpers.push(role);
                                 handleAddRole(role);
                               }}
-                              handleDeleteRole={role => {
-                                arrayHelpers.remove(allUserRoles.findIndex(r => r === role));
+                              handleDeleteRole={(role) => {
+                                arrayHelpers.remove(allUserRoles.findIndex((r) => r === role));
                                 handleDeleteRole(role);
                               }}
                             />

@@ -59,11 +59,11 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
   const agencies = useMemo(() => lookupCodes.getByType(API.AGENCY_CODE_SET_NAME), [lookupCodes]);
   const { project } = useProject();
   const filterByParent = useCodeLookups().filterByParent;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const filteredAgencies = useMemo(() => filterByParent(agencies, project.agencyId), [agencies]);
-  const agencyIds = useMemo(() => filteredAgencies.map(x => parseInt(x.id, 10)), [
-    filteredAgencies,
-  ]);
+  const agencyIds = useMemo(
+    () => filteredAgencies.map((x) => parseInt(x.id, 10)),
+    [filteredAgencies],
+  );
   if (project === undefined) {
     throw Error('unable to load project data');
   }
@@ -156,7 +156,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
       {!disabled && (
         <div className="ScrollContainer">
           <h2>Available Properties</h2>
-          <Table<IProperty>
+          <Table<IProperty, any>
             name="SelectPropertiesTable"
             columns={columns}
             data={data}
@@ -206,7 +206,7 @@ export const PropertyListViewSelect: React.FC<InputProps> = ({
             Remove Selected
           </Button>
         </Container>
-        <Table<IProperty>
+        <Table<IProperty, any>
           name="ProjectPropertiesTable"
           columns={columnsWithRemove}
           data={properties ?? []}

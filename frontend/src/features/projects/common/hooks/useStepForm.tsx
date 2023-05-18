@@ -18,16 +18,16 @@ const useStepForm = () => {
   const dispatch = useAppDispatch();
   const keycloak = useKeycloakWrapper();
   const getProjectRequest = useAppSelector(
-    store => (store.network.requests as any)[ProjectActions.GET_PROJECT],
+    (store) => (store.network.requests as any)[ProjectActions.GET_PROJECT],
   );
   const addProjectRequest = useAppSelector(
-    store => (store.network.requests as any)[ProjectActions.ADD_PROJECT],
+    (store) => (store.network.requests as any)[ProjectActions.ADD_PROJECT],
   );
   const updateProjectRequest = useAppSelector(
-    store => (store.network.requests as any)[ProjectActions.UPDATE_PROJECT],
+    (store) => (store.network.requests as any)[ProjectActions.UPDATE_PROJECT],
   );
   const updateWorflowStatusRequest = useAppSelector(
-    store => (store.network.requests as any)[ProjectActions.UPDATE_WORKFLOW_STATUS],
+    (store) => (store.network.requests as any)[ProjectActions.UPDATE_WORKFLOW_STATUS],
   );
   const noFetchingProjectRequests =
     getProjectRequest?.isFetching !== true &&
@@ -38,7 +38,7 @@ const useStepForm = () => {
   //TODO: There is a known issue in formik preventing submitForm()
   // from returning promises. For the time being the higher level
   // functions will need to handle all chained promises.
-  const onSubmit = (values: any, _actions: any) => Promise.resolve(values);
+  const onSubmit = (values: any) => Promise.resolve(values);
 
   const onSubmitReview = async (
     values: IProject,

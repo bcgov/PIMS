@@ -11,9 +11,8 @@ interface IProjectERPTabsProps {
 }
 
 export const ProjectERPTabs: React.FC<IProjectERPTabsProps> = ({ project }) => {
-  const {
-    values: { workflowCode, statusCode },
-  } = useFormikContext();
+  const { values }: any = useFormikContext();
+  const { workflowCode, statusCode } = values;
   const location = useLocation();
   const id = location.pathname.split('/')[3];
 
@@ -23,8 +22,8 @@ export const ProjectERPTabs: React.FC<IProjectERPTabsProps> = ({ project }) => {
     const tabs = [<Tab key={1} label="Approval" path={`/projects/disposal/${id}/erp`} exact />];
 
     if (
-      project?.statusHistory?.some(s => s.workflow === Workflow.ASSESS_EX_DISPOSAL) ||
-      !project?.statusHistory?.some(s => s.workflow === Workflow.SUBMIT_DISPOSAL) ||
+      project?.statusHistory?.some((s) => s.workflow === Workflow.ASSESS_EX_DISPOSAL) ||
+      !project?.statusHistory?.some((s) => s.workflow === Workflow.SUBMIT_DISPOSAL) ||
       statusCode === WorkflowStatus.ApprovedForExemption
     )
       tabs.push(

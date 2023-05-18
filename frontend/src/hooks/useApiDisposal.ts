@@ -10,7 +10,7 @@ export interface DisposalAPI extends AxiosInstance {
   getNotificationsPage: (params: INotificationFilter) => Promise<IPagedItems<INotification>>;
 }
 
-export const useDisposalApi = (id: number): DisposalAPI => {
+export const useDisposalApi = (): DisposalAPI => {
   const axios = CustomAxios() as DisposalAPI;
 
   /**
@@ -18,17 +18,12 @@ export const useDisposalApi = (id: number): DisposalAPI => {
    * @param filter The filter which to apply to the notifications.
    * @returns A promise containing the notifications.
    */
-  axios.getNotificationsPage = useCallback(
-    async (filter: INotificationFilter) => {
-      const { data } = await axios.post<IPagedItems<INotification>>(
-        `${ENVIRONMENT.apiUrl}/projects/disposal/notifications`,
-        filter,
-      );
-      return data;
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  axios.getNotificationsPage = useCallback(async (filter: INotificationFilter) => {
+    const { data } = await axios.post<IPagedItems<INotification>>(
+      `${ENVIRONMENT.apiUrl}/projects/disposal/notifications`,
+      filter,
+    );
+    return data;
+  }, []);
   return React.useMemo(() => axios, []);
 };

@@ -47,7 +47,7 @@ const Login = () => {
   const keycloak = keyCloakWrapper.obj;
   const [showInstruction, setShowInstruction] = useState(false);
 
-  const networkState: INetworkState = useAppSelector(state => state.network);
+  const networkState: INetworkState = useAppSelector((state) => state.network);
 
   useEffect(() => {
     const activateRequest: IRequest = networkState?.requests?.[actionTypes.ADD_ACTIVATE_USER];
@@ -65,7 +65,6 @@ const Login = () => {
         navigate(redirect || 'mapview');
       }
     }
-    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [networkState]);
 
   if (!keycloak) {

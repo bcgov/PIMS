@@ -8,23 +8,23 @@ import 'jest-styled-components';
 // Mock window.snowplow
 window.snowplow = jest.fn();
 
-var localStorageMock = (function() {
-  var store: any = {};
+const localStorageMock = (function () {
+  let store: any = {};
 
   return {
-    getKeys: function() {
+    getKeys: function () {
       return store;
     },
-    getItem: function(key: string) {
+    getItem: function (key: string) {
       return store[key] || null;
     },
-    setItem: function(key: string, value: any) {
+    setItem: function (key: string, value: any) {
       store[key] = value.toString();
     },
-    removeItem: function(key: string) {
+    removeItem: function (key: string) {
       store[key] = undefined;
     },
-    clear: function() {
+    clear: function () {
       store = {};
     },
   };

@@ -11,8 +11,9 @@ interface IAbbreviateTextProps {
  * Component that conditionally displays a p or abbr if the passed in text is too long.
  * @param {IAbbreviateTextProps} param0
  */
-const AbbreviatedText: React.FunctionComponent<IAbbreviateTextProps &
-  React.HTMLAttributes<HTMLDivElement>> = ({ text, maxLength, ...rest }) => {
+const AbbreviatedText: React.FunctionComponent<
+  IAbbreviateTextProps & React.HTMLAttributes<HTMLDivElement>
+> = ({ text, maxLength, ...rest }) => {
   return text.length < maxLength ? (
     <p {...rest}>{text}</p>
   ) : (

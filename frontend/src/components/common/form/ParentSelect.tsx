@@ -62,7 +62,7 @@ export const ParentSelect: React.FC<IParentSelect> = ({
   label,
   onChange,
   selectClosest,
-  convertValue = value => value,
+  convertValue = (value) => value,
 }) => {
   const { setFieldValue } = useFormikContext();
   /** used to trigger onBlur so menu disappears on custom header click */
@@ -103,7 +103,7 @@ export const ParentSelect: React.FC<IParentSelect> = ({
     }
     if (value !== undefined && !_.isEmpty(value?.toString())) {
       /** select appropriate agency to set the field value to when present */
-      const option = options.find(x => x.value === value?.toString() || x.value === value);
+      const option = options.find((x) => x.value === value?.toString() || x.value === value);
       return option ? [option] : [];
     }
     return [];
@@ -118,7 +118,7 @@ export const ParentSelect: React.FC<IParentSelect> = ({
         selectClosest={selectClosest}
         setClear={setClear}
         name={field}
-        labelKey={option => `${option.label}`}
+        labelKey={(option) => `${option.label}`}
         onChange={(vals: any) => {
           if (enableMultiple) {
             setMultiSelections(vals);
@@ -142,32 +142,32 @@ export const ParentSelect: React.FC<IParentSelect> = ({
         hideValidation
         required={required}
         renderMenu={(results, menuProps) => {
-          const parents = results.filter(x => !x.parentId);
+          const parents = results.filter((x) => !x.parentId);
           const childless = parents.filter(
-            p => !results.find(r => Number(r.parentId) === Number(p.value)),
+            (p) => !results.find((r) => Number(r.parentId) === Number(p.value)),
           );
 
           // This assigns a specific id to childless parent agencies
           // Headers will not be displayed for these childless parent agencies but they will be displayed as regular options and grouped
-          results = results.map(x => {
+          results = results.map((x) => {
             return {
               ...x,
-              parentId: !!childless.find(c => Number(c.value) === Number(x.value))
+              parentId: !!childless.find((c) => Number(c.value) === Number(x.value))
                 ? CHILDLESS_PARENT_ID
                 : x.parentId,
-              parent: !!childless.find(c => Number(c.value) === Number(x.value))
+              parent: !!childless.find((c) => Number(c.value) === Number(x.value))
                 ? 'Childless'
                 : x.parent,
             };
           });
 
           /** group the results by their desired parents */
-          const resultGroup = groupBy(results, x => x.parentId);
+          const resultGroup = groupBy(results, (x) => x.parentId);
 
           const items = Object.keys(resultGroup)
             .sort()
             .reverse()
-            .map(parentId => (
+            .map((parentId) => (
               <Fragment key={parentId}>
                 {!!results.find((x: SelectOption) => x.parentId === +parentId) &&
                   +parentId !== CHILDLESS_PARENT_ID && (
@@ -175,13 +175,13 @@ export const ParentSelect: React.FC<IParentSelect> = ({
                       onClick={() =>
                         enableMultiple
                           ? handleMultiSelectHeaderClick(
-                              results.filter(x => x.parentId === +parentId),
+                              results.filter((x) => x.parentId === +parentId),
                             )
-                          : handleMenuHeaderClick(options.find(x => x.value === parentId)!)
+                          : handleMenuHeaderClick(options.find((x) => x.value === parentId)!)
                       }
                     >
                       <b style={{ cursor: 'pointer' }}>
-                        {results.find(x => x.parentId === +parentId)?.parent}
+                        {results.find((x) => x.parentId === +parentId)?.parent}
                       </b>
                     </Menu.Header>
                   )}

@@ -57,7 +57,7 @@ const ProjectDraftForm = ({
   const { getOptionsByType } = useCodeLookups();
   const keycloak = useKeycloakWrapper();
   const agencies = getOptionsByType(API.AGENCY_CODE_SET_NAME);
-  const userAgency = agencies.find(a => Number(a.value) === Number(keycloak.agencyId));
+  const userAgency = agencies.find((a) => Number(a.value) === Number(keycloak.agencyId));
 
   const isUserAgencyAParent = useMemo(() => {
     return !!userAgency && !userAgency.parentId;
@@ -109,7 +109,7 @@ const ProjectDraftForm = ({
           <AgencyCol className="col-md-5">
             <ParentSelect
               field={'agencyId'}
-              options={myAgencies.map(c => mapSelectOptionWithParent(c, myAgencies))}
+              options={myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies))}
               filterBy={['code', 'label', 'parent']}
               convertValue={Number}
             />

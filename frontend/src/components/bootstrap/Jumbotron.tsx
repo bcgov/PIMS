@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Jumbotron: React.FC<React.PropsWithChildren> = props => {
+export const Jumbotron: React.FC<React.PropsWithChildren> = (props) => {
   return (
     <div className="p-5 mb-4 bg-light border rounded-3">
       {props.children}

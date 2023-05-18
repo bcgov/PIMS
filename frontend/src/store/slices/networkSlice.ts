@@ -85,7 +85,8 @@ export const networkSlice = createSlice({
       };
     },
   },
-  extraReducers: builder => {},
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  extraReducers: (builder) => {},
 });
 
 export const { storeRequest, storeSuccess, storeError, clearRequest } = networkSlice.actions;

@@ -15,16 +15,16 @@ interface IProjectNotificationsProps {
   notifications?: [];
 }
 
-export const ProjectNotifications: React.FC<IProjectNotificationsProps> = props => {
+export const ProjectNotifications: React.FC<IProjectNotificationsProps> = () => {
   const { values } = useFormikContext<IProjectForm>();
 
-  var projectId = values.id ?? 0;
-  var projectNumber = values.projectNumber;
+  const projectId = values.id ?? 0;
+  const projectNumber = values.projectNumber;
   const [total, setTotal] = React.useState(0);
   const [notifications, setNotifications] = React.useState<INotification[]>([]);
   const [filter] = React.useState<INotificationFilter>({ page: 1, projectId });
 
-  const api = useDisposalApi(projectId);
+  const api = useDisposalApi();
 
   const onRequestData = React.useCallback(
     async ({ pageIndex }: { pageIndex: number }) => {
@@ -38,7 +38,7 @@ export const ProjectNotifications: React.FC<IProjectNotificationsProps> = props 
     [filter, api],
   );
 
-  let notificationsList = notifications.map(
+  const notificationsList = notifications.map(
     (a: INotification): INotification => ({
       to: a.to,
       subject: a.subject.replace('ACTION REQUIRED - Notification of Surplus Real Property - ', ''),
@@ -56,7 +56,7 @@ export const ProjectNotifications: React.FC<IProjectNotificationsProps> = props 
     <styled.ProjectNotifications>
       <h3>Notifications: {total}</h3>
       <div>
-        <Table<INotification>
+        <Table<INotification, any>
           name="notificationsTable"
           columns={columns}
           pageCount={Math.ceil(total / 10)}

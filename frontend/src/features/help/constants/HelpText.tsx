@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 import { ReactNode } from 'react';
 import React from 'react';
 
@@ -94,9 +95,9 @@ export enum TicketTypes {
  * A map between a ticket type and a corresponding form to display when that ticket is active.
  */
 export const helpTickets = new Map<string, (props: any) => ReactNode>([
-  [TicketTypes.QUESTION, props => <QuestionForm {...props} />],
-  [TicketTypes.BUG, props => <BugForm {...props} />],
-  [TicketTypes.FEATURE_REQUEST, props => <FeatureRequestForm {...props} />],
+  [TicketTypes.QUESTION, (props) => <QuestionForm {...props} />],
+  [TicketTypes.BUG, (props) => <BugForm {...props} />],
+  [TicketTypes.FEATURE_REQUEST, (props) => <FeatureRequestForm {...props} />],
 ]);
 
 /**

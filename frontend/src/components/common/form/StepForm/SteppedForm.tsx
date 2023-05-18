@@ -87,7 +87,7 @@ export const MAX_STEPPED_TABS = 5;
  * @component
  * @example ./SteppedForm.md
  */
-export const SteppedForm = function<T extends object = {}>({
+export const SteppedForm = function <T extends object>({
   steps: formSteps,
   children,
   initialValues,

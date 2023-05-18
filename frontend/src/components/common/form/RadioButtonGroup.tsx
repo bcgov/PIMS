@@ -45,12 +45,9 @@ export type RadioGroupProps = FormCheckProps & OptionalAttributes & RequiredAttr
 export const RadioButtonGroup: React.FC<RadioGroupProps> = ({
   field,
   label,
-  className,
   outerClassName,
   required,
   disabled,
-  type,
-  custom,
   toolTip,
   toolTipId,
   options,

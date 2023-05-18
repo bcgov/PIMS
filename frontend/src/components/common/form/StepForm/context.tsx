@@ -29,7 +29,8 @@ export const StepperFormProvider: React.FC<React.PropsWithChildren<IStepperFormP
   steps,
   tabs,
 }) => {
-  const { values, setFieldValue, setErrors, setTouched } = useFormikContext<ISteppedFormValues>();
+  const { values, setFieldValue, setErrors, setTouched } =
+    useFormikContext<ISteppedFormValues<any>>();
 
   const activeTab = values.activeTab;
 

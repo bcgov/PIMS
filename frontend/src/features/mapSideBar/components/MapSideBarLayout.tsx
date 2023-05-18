@@ -50,9 +50,9 @@ const Title = styled.span`
  * SideBar layout with control bar and then form content passed as child props.
  * @param param0
  */
-const MapSideBarLayout: React.FunctionComponent<React.PropsWithChildren<
-  IMapSideBarLayoutProps
->> = ({ show, setShowSideBar, hidePolicy, title, size, propertyName, ...props }) => {
+const MapSideBarLayout: React.FunctionComponent<
+  React.PropsWithChildren<IMapSideBarLayoutProps>
+> = ({ show, setShowSideBar, hidePolicy, title, size, propertyName, ...props }) => {
   return (
     <div
       className={classNames('map-side-drawer', show ? 'show' : null, {

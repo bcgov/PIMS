@@ -19,7 +19,7 @@ interface ILandUsageProps {
  * Display land classification and municipality fields.
  * @param {ILandUsageProps} props
  */
-export const LandUsageForm = <T extends any>(props: ILandUsageProps & FormikProps<T>) => {
+export const LandUsageForm = <T,>(props: ILandUsageProps & FormikProps<T>) => {
   const { values, initialValues } = useFormikContext();
   const [showSurplusActiveWarning, setShowSurplusActiveWarning] = useState(false);
   const withNameSpace: Function = useCallback(

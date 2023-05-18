@@ -30,7 +30,7 @@ export const AgencyInterest = ({ disabled = false }: IAgencyInterestProps) => {
   const onAddAgency = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     event.preventDefault();
     const selectedAgency = getIn(values, 'addAgencyResponse');
-    const agency = agencies.find(a => ((a.id as unknown) as number) === parseInt(selectedAgency));
+    const agency = agencies.find((a) => (a.id as unknown as number) === parseInt(selectedAgency));
     if (agency !== undefined) {
       const project = addAgency({
         project: values,
@@ -50,7 +50,9 @@ export const AgencyInterest = ({ disabled = false }: IAgencyInterestProps) => {
    */
   const onAgencySelected = (rows: any) => {
     if (!!rows?.length) {
-      const found = values.projectAgencyResponses.find(r => r.agencyId === parseInt(rows[0].value));
+      const found = values.projectAgencyResponses.find(
+        (r) => r.agencyId === parseInt(rows[0].value),
+      );
       setEnableAdd(found === undefined);
     } else {
       setEnableAdd(false);

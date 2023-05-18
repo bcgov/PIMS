@@ -25,7 +25,7 @@ export const useApiGeocoder = () => {
           baseURL: 'https://geocoder.api.gov.bc.ca',
         });
         // TODO: Figure out how to only return good results, Geocoder returns a ton of junk.
-        var params: any = {
+        const params: any = {
           ver: '1.2',
           addressString: `"${address}"`,
           outputSRS: 4326,

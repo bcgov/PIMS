@@ -10,7 +10,7 @@ export const getMostRecentEvaluation = (
   key: EvaluationKeyName,
 ): IEvaluationModel | undefined => {
   const result = evaluations
-    .filter(f => f.key === key)
+    .filter((f) => f.key === key)
     .sort((a, b) => {
       if (a.date < b.date) return 1;
       if (a.date > b.date) return -1;

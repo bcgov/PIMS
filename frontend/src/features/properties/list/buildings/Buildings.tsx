@@ -29,7 +29,7 @@ export const Buildings: React.FC<IProps> = ({
   onRowClick,
 }) => {
   return (
-    <Table<IProperty>
+    <Table<IProperty, any>
       hideHeaders={hideHeaders}
       name="nestedPropertiesTable"
       columns={externalColumns}
