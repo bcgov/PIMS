@@ -22,7 +22,7 @@ export const getNextWorkflowStatus = (
   if (!currentStatus) {
     return workflowStatuses[0];
   }
-  var requiredStatuses = workflowStatuses.filter(s => !s.isOptional);
+  const requiredStatuses = workflowStatuses.filter((s) => !s.isOptional);
   // return undefined to indicate all steps have been completed.
   if (currentStatus.sortOrder >= requiredStatuses.length - 1) {
     return undefined;
@@ -112,16 +112,16 @@ const useStepper = () => {
     }),
     [keycloak],
   );
-  const project: IProject = useAppSelector(store => store.project.project) || initialProject;
-  const workflowTasks: IProjectTask[] = useAppSelector(store => store.tasks) || {
+  const project: IProject = useAppSelector((store) => store.project.project) || initialProject;
+  const workflowTasks: IProjectTask[] = useAppSelector((store) => store.tasks) || {
     ...defaultProject(),
     agencyId: keycloak.agencyId!,
   };
   const getProjectRequest = useAppSelector(
-    store => (store.network.requests as any)[ProjectActions.GET_PROJECT],
+    (store) => (store.network.requests as any)[ProjectActions.GET_PROJECT],
   );
   const updateWorkflowStatusRequest = useAppSelector(
-    store => (store.network.requests as any)[ProjectActions.UPDATE_WORKFLOW_STATUS],
+    (store) => (store.network.requests as any)[ProjectActions.UPDATE_WORKFLOW_STATUS],
   );
 
   useEffect(() => {

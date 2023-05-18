@@ -21,7 +21,7 @@ const ProjectDisposeView = () => {
   const projectNumber = queryParams.get('projectNumber');
   const dispatch = useAppDispatch();
   const getProjectRequest = useAppSelector(
-    store => (store.network.requests as any)[ProjectActions.GET_PROJECT],
+    (store) => (store.network.requests as any)[ProjectActions.GET_PROJECT],
   );
   useEffect(() => {
     if (projectNumber !== null && projectNumber !== undefined) {

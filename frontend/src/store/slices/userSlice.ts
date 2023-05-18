@@ -73,6 +73,7 @@ export const userSlice = createSlice({
     builder.addCase(storeUser, (state: IUsersState, action: PayloadAction<IUserDetail>) => {
       return { ...state, user: action.payload };
     });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     builder.addCase(clearUser, (state: IUsersState, action: PayloadAction<IUserDetail>) => {
       return { ...state, user: initialUserState.user };
     });

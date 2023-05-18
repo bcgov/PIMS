@@ -13,7 +13,7 @@ export const filterSlice = createSlice({
     builder.addCase(saveFilter, (_state: any, action: PayloadAction<any>) => {
       return action.payload;
     });
-    builder.addCase(clearFilter, (_state: any) => {
+    builder.addCase(clearFilter, () => {
       return '';
     });
   },

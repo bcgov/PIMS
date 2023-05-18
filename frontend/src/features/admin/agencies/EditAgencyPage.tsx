@@ -24,14 +24,8 @@ import { AgencyEditSchema } from 'utils/YupSchema';
 
 import { Check, Form, Input, Select, SelectOption } from '../../../components/common/form';
 
-interface IEditAgencyPageProps {
-  /** id prop to identify which agency to edit */
-  id: number;
-  match?: any;
-}
-
 /** This page is used to either add a new agency or edit the and agency's details */
-const EditAgencyPage = (props: IEditAgencyPageProps) => {
+const EditAgencyPage = () => {
   const params = useParams();
   // removing the double quotes surrounding the id from useParams() as stringify isn't removing those double quotes surrounding the id.
   const agencyId = params.id ? JSON.stringify(params.id).slice(1, -1) : '';
@@ -49,9 +43,9 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
   }, [dispatch, agencyId, newAgency]);
 
   const { getByType } = useCodeLookups();
-  const agencies = getByType(API.AGENCY_CODE_SET_NAME).filter(x => !x.parentId);
+  const agencies = getByType(API.AGENCY_CODE_SET_NAME).filter((x) => !x.parentId);
 
-  const agency = useAppSelector(store => store.agencies.agencyDetail);
+  const agency = useAppSelector((store) => store.agencies.agencyDetail);
   const mapLookupCode = (code: ILookupCode): SelectOption => ({
     label: code.name,
     value: code.id.toString(),
@@ -59,7 +53,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
     parent: '',
   });
   //
-  const selectAgencies = agencies.map(c => mapLookupCode(c));
+  const selectAgencies = agencies.map((c) => mapLookupCode(c));
 
   const goBack = () => {
     navigate('/admin/agencies');
@@ -142,7 +136,7 @@ const EditAgencyPage = (props: IEditAgencyPageProps) => {
               }
             }}
           >
-            {props => (
+            {(props) => (
               <Form className="agencyInfo">
                 <Input
                   label="Agency"

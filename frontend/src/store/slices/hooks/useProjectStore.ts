@@ -10,7 +10,7 @@ interface IProjectController {
 
 export const useProjectStore = (): [IProjectState, IProjectController] => {
   const dispatch = useAppDispatch();
-  const state = useAppSelector(store => store.disposal);
+  const state = useAppSelector((store) => store.disposal);
 
   const controller = React.useMemo(
     () => ({

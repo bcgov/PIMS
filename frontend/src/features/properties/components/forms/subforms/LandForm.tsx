@@ -20,7 +20,7 @@ export const defaultLandValues: ILandFormValues = {
   zoningPotential: '',
 };
 
-const LandForm = <T extends any>(props: LandProps & FormikProps<T>) => {
+const LandForm = <T,>(props: LandProps & FormikProps<T>) => {
   const withNameSpace: Function = useCallback(
     (fieldName: string) => {
       return props.nameSpace ? `${props.nameSpace}.${fieldName}` : fieldName;

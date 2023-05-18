@@ -25,7 +25,7 @@ export const convertToGuidFormat: Function = (input: string): string => {
   }
 
   // Split the input string into groups of 8, 4, 4, 4, and 12 characters
-  var groups = [
+  const groups = [
     input.substring(0, 8),
     input.substring(8, 12),
     input.substring(12, 16),

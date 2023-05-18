@@ -30,7 +30,7 @@ export const useRouterReport = ({
   useDeepCompareEffect(() => {
     if (reports?.length && currentReport?.id === undefined) {
       const queryParams = new URLSearchParams(originalSearch);
-      let filterFromParams: any = {};
+      const filterFromParams: any = {};
       for (const [key, value] of queryParams.entries()) {
         filterFromParams[key] = value;
       }

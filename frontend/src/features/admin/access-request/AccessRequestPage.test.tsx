@@ -104,12 +104,7 @@ describe('AccessRequestPage functionality', () => {
     });
 
     it('initializes form with null for agencies and roles', () => {
-      expect(
-        componentRender
-          .find(Formik)
-          .first()
-          .prop('initialValues'),
-      ).toEqual({
+      expect(componentRender.find(Formik).first().prop('initialValues')).toEqual({
         agencies: [],
         agency: undefined,
         id: 0,

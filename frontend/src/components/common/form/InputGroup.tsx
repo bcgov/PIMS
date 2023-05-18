@@ -56,11 +56,9 @@ export const InputGroup: React.FC<InputGroupProps> = ({
   field,
   label,
   style,
-  as: is, // `as` is reserved in typescript
   placeholder,
   disabled,
   required,
-  custom,
   preText,
   prepend: PrependComponent,
   postText,
@@ -68,8 +66,6 @@ export const InputGroup: React.FC<InputGroupProps> = ({
   className,
   fast,
   formikProps,
-  options,
-  autoComplete,
   displayErrorTooltips,
   ...rest
 }) => {

@@ -11,7 +11,6 @@ export const AccessDenied = () => {
         error_message: 'Access Denied at last path',
       },
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

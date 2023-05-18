@@ -32,7 +32,7 @@ export const Tab: React.FC<ITabProps> = ({
 
   const handleClick = !!onClick
     ? onClick
-    : (e: any) => {
+    : () => {
         navigate(path);
       };
   return (

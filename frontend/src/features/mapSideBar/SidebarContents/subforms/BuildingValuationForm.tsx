@@ -18,7 +18,7 @@ export const BuildingValuationForm: React.FC<ITenancyProps> = ({
 }) => {
   const withNameSpace: Function = React.useCallback(
     (name?: string) => {
-      return [nameSpace ?? '', name].filter(x => x).join('.');
+      return [nameSpace ?? '', name].filter((x) => x).join('.');
     },
     [nameSpace],
   );

@@ -10,8 +10,8 @@ const LeafControl = L.Control.extend({
     handleOff: function noop() {},
   },
 
-  onAdd(map: L.Map) {
-    var div = L.DomUtil.create('div', this.options.className);
+  onAdd() {
+    const div = L.DomUtil.create('div', this.options.className);
     // clicks and scroll events for this control will NOT send events to map behind it
     L.DomEvent.disableClickPropagation(div);
     L.DomEvent.disableScrollPropagation(div);
@@ -27,7 +27,7 @@ const LeafControl = L.Control.extend({
   },
 });
 
-export const ControlPanel: React.FC<React.PropsWithChildren<L.ControlOptions>> = props => {
+export const ControlPanel: React.FC<React.PropsWithChildren<L.ControlOptions>> = (props) => {
   const map = useMap();
   const elementRef = useRef(new LeafControl(props));
   const instance = elementRef.current;
@@ -64,7 +64,7 @@ export const ControlPanel: React.FC<React.PropsWithChildren<L.ControlOptions>> =
     // until this is called. We need to now force a render so that the
     // portal and children are actually rendered.
 
-    setValue(value => value + 1); // update the state to force render
+    setValue((value) => value + 1); // update the state to force render
   }, []);
 
   // after control has been added to the map, render its children

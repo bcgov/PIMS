@@ -27,8 +27,8 @@ const getStatusTransitionWorkflow = (
  * Provides a way to find a transition
  */
 const useProject = () => {
-  const project = useAppSelector(store => store.project.project);
-  const workflowStatuses = useAppSelector(store => store.projectWorkflow);
+  const project = useAppSelector((store) => store.project.project);
+  const workflowStatuses = useAppSelector((store) => store.projectWorkflow);
   const navigate = useNavigate();
 
   return {

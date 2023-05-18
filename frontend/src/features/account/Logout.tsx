@@ -13,7 +13,6 @@ export const Logout = () => {
     } else {
       window.location.href = `${configuration.keycloakLogoutUrl}`;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <></>;

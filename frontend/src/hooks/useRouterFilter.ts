@@ -17,8 +17,8 @@ import { generateMultiSortCriteria, resolveSortCriteriaFromUrl } from 'utils';
  * @returns A new object composed of the extracted properties.
  */
 const extractProps = (props: string[], source: any): any => {
-  var dest = {} as any;
-  props.forEach(p => {
+  const dest = {} as any;
+  props.forEach((p) => {
     if (source[p] !== undefined) {
       if (source[p] === 'true') {
         dest[p] = true;
@@ -83,7 +83,7 @@ export const useRouterFilter = <T extends object>({
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
-  const reduxSearch = useAppSelector(store => store.filter);
+  const reduxSearch = useAppSelector((store) => store.filter);
   const [savedFilter] = useState(reduxSearch);
   const [loaded, setLoaded] = useState(false);
 
@@ -92,7 +92,7 @@ export const useRouterFilter = <T extends object>({
   useEffect(() => {
     if (setFilter) {
       const queryParams = new URLSearchParams(location.search);
-      let params: any = {};
+      const params: any = {};
       for (const [key, value] of queryParams.entries()) {
         params[key] = value;
       }
@@ -128,7 +128,6 @@ export const useRouterFilter = <T extends object>({
       }
       setLoaded(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
   // If the 'filter' changes save it to redux store and update the URL.
@@ -139,14 +138,14 @@ export const useRouterFilter = <T extends object>({
 
       // Original query params parsed.
       const queryParams = new URLSearchParams(location.search);
-      let originalParamsParsed: any = {};
+      const originalParamsParsed: any = {};
       for (const [key, value] of queryParams.entries()) {
         originalParamsParsed[key] = value;
       }
 
       // Filtered query params parsed.
       const filteredQueryParams = new URLSearchParams(filterParams.toString());
-      let filteredParamsParsed: any = {};
+      const filteredParamsParsed: any = {};
       for (const [key, value] of filteredQueryParams.entries()) {
         filteredParamsParsed[key] = value;
       }
@@ -189,14 +188,14 @@ export const useRouterFilter = <T extends object>({
 
       // Original query params parsed.
       const queryParams = new URLSearchParams(location.search);
-      let originalParamsParsed: any = {};
+      const originalParamsParsed: any = {};
       for (const [key, value] of queryParams.entries()) {
         originalParamsParsed[key] = value;
       }
 
       // Filtered query params parsed.
       const filteredQueryParams = new URLSearchParams(filterParams.toString());
-      let filteredParamsParsed: any = {};
+      const filteredParamsParsed: any = {};
       for (const [key, value] of filteredQueryParams.entries()) {
         filteredParamsParsed[key] = value;
       }

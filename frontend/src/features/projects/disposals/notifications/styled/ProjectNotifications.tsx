@@ -13,7 +13,7 @@ export const ProjectNotifications = styled.div`
     li {
       padding: 0;
       margin: 0;
-      color: ${props => props.theme.css?.textColor};
+      color: ${(props) => props.theme.css?.textColor};
       background-color: inherit;
       border-top-left-radius: 0;
       border-top-right-radius: 0;

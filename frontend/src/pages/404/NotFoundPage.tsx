@@ -17,7 +17,6 @@ export const NotFoundPage = (props: INotFoundProps) => {
         error_message: `Page not found at ${failedRoute}`,
       },
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

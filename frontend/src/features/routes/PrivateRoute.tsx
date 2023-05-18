@@ -12,7 +12,7 @@ interface IPrivateRouteProps extends PathRouteProps {
  * A PrivateRoute only allows a user who is authenticated and has the appropriate role(s) or claim(s).
  * @param props - Properties to pass { component, role, claim }
  */
-export const PrivateRoute = ({ role, claim, path, ...rest }: IPrivateRouteProps) => {
+export const PrivateRoute = ({ role, claim, path }: IPrivateRouteProps) => {
   const keycloak = useKeycloakWrapper();
   if (!!keycloak.obj?.authenticated) {
     if ((!role && !claim) || keycloak.hasRole(role) || keycloak.hasClaim(claim)) {

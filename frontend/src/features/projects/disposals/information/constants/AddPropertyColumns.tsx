@@ -22,7 +22,7 @@ export const AddPropertyColumns = (
       accessor: 'id',
       clickable: false,
       maxWidth: 30,
-      Cell: cell => {
+      Cell: (cell) => {
         return (
           <TooltipWrapper toolTipId="add-property" toolTip="Add Property to Project">
             <FaPlus
@@ -45,7 +45,7 @@ export const AddPropertyColumns = (
       accessor: 'name',
       align: 'left',
       clickable: false,
-      Cell: row => {
+      Cell: (row) => {
         return (
           <TooltipWrapper toolTipId="add-property" toolTip={row.value}>
             <div>{row.value}</div>
@@ -58,7 +58,7 @@ export const AddPropertyColumns = (
       accessor: 'address',
       align: 'left',
       clickable: true,
-      Cell: row => {
+      Cell: (row) => {
         return (
           <TooltipWrapper toolTipId="add-property" toolTip={row.value}>
             <div>{row.value}</div>
@@ -68,7 +68,7 @@ export const AddPropertyColumns = (
     },
     {
       Header: 'Classification',
-      accessor: row => row.classification,
+      accessor: (row) => row.classification,
       align: 'left',
       clickable: false,
     },
@@ -77,7 +77,7 @@ export const AddPropertyColumns = (
       accessor: 'projectNumbers',
       align: 'left',
       clickable: false,
-      Cell: cell => {
+      Cell: (cell) => {
         const projectNumbers = _.filter(cell.value, (p: string) => !p.includes('DRAFT'));
         return (
           <div>
@@ -106,7 +106,7 @@ export const AddPropertyColumns = (
     },
     {
       Header: 'Assessed Year',
-      accessor: row =>
+      accessor: (row) =>
         row.assessedLandDate ?? row.assessedBuildingDate
           ? moment(row.assessedLandDate ?? row.assessedBuildingDate).year()
           : '',
@@ -125,7 +125,7 @@ export const AddPropertyColumns = (
       accessor: 'propertyTypeId',
       clickable: false,
       maxWidth: 40,
-      Cell: cell => {
+      Cell: (cell) => {
         return cell.value === PropertyType.Parcel || cell.value === PropertyType.Subdivision ? (
           <LandSvg className="svg" />
         ) : (

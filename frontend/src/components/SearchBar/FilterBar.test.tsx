@@ -8,7 +8,7 @@ import FilterBar from './FilterBar';
 Enzyme.configure({ adapter: new Adapter() });
 
 const componentRender = () => {
-  let component = create(
+  const component = create(
     <div>
       <FilterBar initialValues={{ username: 'test', firstName: 'user' }} onChange={() => {}} />
     </div>,

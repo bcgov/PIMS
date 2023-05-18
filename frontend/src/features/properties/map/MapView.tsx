@@ -2,7 +2,7 @@ import './MapView.scss';
 
 import { IProperty, IPropertyDetail } from 'actions/parcelsActions';
 import classNames from 'classnames';
-import Map, { MapViewportChangeEvent } from 'components/maps/leaflet/Map';
+import Map from 'components/maps/leaflet/Map';
 import { FilterProvider } from 'components/maps/providers/FIlterProvider';
 import { PropertyPopUpContextProvider } from 'components/maps/providers/PropertyPopUpProvider';
 import * as API from 'constants/API';
@@ -41,9 +41,9 @@ interface MapViewProps {
 const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   const lookupCodes = useCodeLookups();
   const dispatch = useAppDispatch();
-  const properties = useAppSelector(store => store.parcel.properties);
+  const properties = useAppSelector((store) => store.parcel.properties);
   const [loadedProperties, setLoadedProperties] = useState(false);
-  const propertyDetail = useAppSelector(state => state.parcel.propertyDetail);
+  const propertyDetail = useAppSelector((state) => state.parcel.propertyDetail);
   const agencies = lookupCodes.getByType(API.AGENCY_CODE_SET_NAME);
   const administrativeAreas = lookupCodes.getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME);
 
@@ -64,7 +64,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  let urlParsed: any = {};
+  const urlParsed: any = {};
   for (const [key, value] of queryParams.entries()) {
     urlParsed[key] = value;
   }
@@ -86,7 +86,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
             onMarkerPopupClose={() => {
               dispatch(storePropertyDetail(null));
             }}
-            onViewportChanged={(mapFilterModel: MapViewportChangeEvent) => {
+            onViewportChanged={() => {
               if (!loadedProperties) {
                 setLoadedProperties(true);
               }

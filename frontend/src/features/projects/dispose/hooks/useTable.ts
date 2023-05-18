@@ -74,7 +74,7 @@ interface UseTableProps {
 }
 
 function transformData(data: IRowProperty[]) {
-  data.forEach(property => {
+  data.forEach((property) => {
     property.address = `${property.address}, ${property.administrativeArea}`;
   });
   return data;

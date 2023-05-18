@@ -22,7 +22,6 @@ const FormikTable: React.FC<IFormikTableProps> = ({
   columns,
   field,
   name,
-  disabled,
   onRowClick,
   clickableTooltip,
 }: IFormikTableProps) => {
@@ -34,7 +33,7 @@ const FormikTable: React.FC<IFormikTableProps> = ({
       <div className="ScrollContainer">
         {useMemo(
           () => (
-            <Table<any>
+            <Table<any, any>
               name={name}
               columns={columns}
               data={data}
@@ -46,7 +45,6 @@ const FormikTable: React.FC<IFormikTableProps> = ({
             />
           ),
           // TODO: This is almost guaranteed to be an invalid list of dependencies for this Memo.
-          // eslint-disable-next-line react-hooks/exhaustive-deps
           [data.length, name],
         )}
       </div>

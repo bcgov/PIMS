@@ -7,7 +7,7 @@ export interface IProjectPropertyModel extends IBaseModel {
   id: number;
   projectId: number;
   propertyType: PropertyTypeName;
-  parcelId?: Number;
+  parcelId?: number;
   parcel?: IProjectParcelModel;
   buildingId?: number;
   building?: IProjectBuildingModel;

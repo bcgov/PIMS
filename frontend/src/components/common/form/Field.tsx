@@ -24,7 +24,6 @@ export const Field: React.FC<React.PropsWithChildren<FieldProps>> = ({
   className,
   required,
   children,
-  ...rest
 }) => {
   // dynamically add CSS class "required" to form group
   const cssClassNames = classnames({

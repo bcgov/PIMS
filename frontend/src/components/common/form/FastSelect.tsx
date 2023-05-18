@@ -71,7 +71,6 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
     outerClassName,
     custom,
     type,
-    errorPrompt,
     tooltip,
     displayErrorTooltips,
     style,
@@ -79,10 +78,8 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
       values,
       errors,
       touched,
-      handleChange,
       handleBlur,
       setFieldValue,
-      setFieldTouched,
       registerField,
       unregisterField,
     },
@@ -130,13 +127,13 @@ export const FastSelect: React.FC<FastSelectProps> = memo(
 
     const renderOptions = () => {
       if (!limitLabels) {
-        return options.map(option => (
+        return options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>
         ));
       } else {
-        return limitedOptions.map(option => (
+        return limitedOptions.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>

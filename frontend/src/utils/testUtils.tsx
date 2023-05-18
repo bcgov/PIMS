@@ -43,7 +43,7 @@ export function createMapContainer(
 
 export const deferred = () => {
   let resolve: (value?: unknown) => void = noop;
-  const promise = new Promise(_resolve => {
+  const promise = new Promise((_resolve) => {
     resolve = _resolve;
   });
   return {

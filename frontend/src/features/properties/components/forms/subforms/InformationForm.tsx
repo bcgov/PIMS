@@ -40,8 +40,8 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
   };
   const formikProps = useFormikContext();
   const keycloak = useKeycloakWrapper();
-  const agencies = (props.agencies ?? []).map(c => mapSelectOptionWithParent(c, props.agencies));
-  const userAgency = agencies.find(a => Number(a.value) === Number(keycloak.agencyId));
+  const agencies = (props.agencies ?? []).map((c) => mapSelectOptionWithParent(c, props.agencies));
+  const userAgency = agencies.find((a) => Number(a.value) === Number(keycloak.agencyId));
 
   const isUserAgencyAParent = useMemo(() => {
     return !!userAgency && !userAgency.parentId;
@@ -91,7 +91,7 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
         <Col md="auto" style={{ marginRight: '10px' }}>
           <ParentSelect
             field={withNameSpace('agencyId')}
-            options={myAgencies.map(c => mapSelectOptionWithParent(c, myAgencies))}
+            options={myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies))}
             filterBy={['code', 'label', 'parent']}
             disabled={props.disabled || (!props.isPropertyAdmin && !isUserAgencyAParent)}
             convertValue={Number}

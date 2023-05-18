@@ -47,7 +47,7 @@ const AccessRequestPage = (): JSX.Element => {
 
   // Fetch the user's accessRequest if it exists
   const accessRequest: IAccessRequest | null = useAppSelector(
-    store => store.accessRequest.accessRequest,
+    (store) => store.accessRequest.accessRequest,
   );
 
   const initialValues: IAccessRequestForm = {
@@ -66,13 +66,15 @@ const AccessRequestPage = (): JSX.Element => {
     status: accessRequest?.status || AccessRequestStatus.OnHold,
     roles: accessRequest?.roles ?? [],
     note: accessRequest?.note ?? '',
-    agency: accessRequest?.agencies?.find(x => x).id,
-    role: accessRequest?.roles?.find(x => x).id,
+    agency: accessRequest?.agencies?.find((x) => x).id,
+    role: accessRequest?.roles?.find((x) => x).id,
     rowVersion: accessRequest?.rowVersion,
   };
 
-  const selectAgencies: SelectOption[] = agencies.map(c => mapLookupCode(c, initialValues.agency));
-  const selectRoles: SelectOption[] = roles.map(c => mapLookupCode(c, initialValues.role));
+  const selectAgencies: SelectOption[] = agencies.map((c) =>
+    mapLookupCode(c, initialValues.agency),
+  );
+  const selectRoles: SelectOption[] = roles.map((c) => mapLookupCode(c, initialValues.role));
 
   const button = initialValues.id === 0 ? 'Submit' : 'Update';
   const inProgress = React.useMemo(

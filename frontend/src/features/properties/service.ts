@@ -53,7 +53,7 @@ const loadBuildings = async (parcelId: number): Promise<IPagedItems<IProperty>> 
 };
 
 // TODO: Refactor later
-const getPropertyReport = async (filter: IPropertyQueryParams): Promise<any> => {
+const getPropertyReport = async (): Promise<any> => {
   return Promise.reject('Not implemented yet');
 };
 

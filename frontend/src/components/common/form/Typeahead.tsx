@@ -53,7 +53,6 @@ export function TypeaheadField<T extends TypeaheadModel>({
   multiSelections,
   onChange,
   setClear,
-  selected,
   clearSelected,
   outerClassName,
   selectClosest,
