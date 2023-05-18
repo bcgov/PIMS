@@ -23,7 +23,11 @@ jobs:
       - name: Run Node.js script
         id: check_versions
         run: |
-          echo "::set-output name=results::$(node .github/helpers/check-npm-dependency-versions.js ../../${{ env.PATH_TO_PACKAGE_JSON }})"
+          OUTPUT=$(node .github/helpers/check-npm-dependency-versions.js ../../${{ env.PATH_TO_PACKAGE_JSON }})
+          OUTPUT="${OUTPUT//'%'/'%25'}"
+          OUTPUT="${OUTPUT//$'\n'/'%0A'}"
+          OUTPUT="${OUTPUT//$'\r'/'%0D'}"
+          echo "::set-output name=results::$OUTPUT"
 
       # Create GitHub Issue.
       - name: Create GitHub issue
@@ -32,7 +36,7 @@ jobs:
           script: |
             const body = `${{ steps.check_versions.outputs.results }}`;
             const title = `${{ env.ISSUE_TITLE }}`;
-            
+
             const issue = await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
