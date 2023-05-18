@@ -1,0 +1,41 @@
+name: Frontend NPM Dependency Updates
+
+on:
+  schedule:
+    - cron: '0 9 * * 1' # Every Monday at 9:00am.
+
+jobs:
+  check-versions:
+    runs-on: ubuntu-22.04
+    container:
+      image: node:20.2-bullseye-slim # Lightweight node js image.
+    env:
+      PATH_TO_PACKAGE_JSON: 'frontend/package.json'
+      ISSUE_TITLE: 'Frontend NPM Dependency Updates'
+
+    steps:
+      # Checkout pull request branch.
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Run NodeJS script to check for latest npm dependency versions and capture output.
+      - name: Run Node.js script
+        id: check-versions
+        run: |
+          echo "::set-output name=results::$(node .github/helpers/check-npm-dependency-versions.js ../../${{ env.PATH_TO_PACKAGE_JSON }}
+
+      # Create GitHub Issue.
+      - name: Create GitHub issue
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issueBody = ${{ steps.check-versions.outputs.results }};
+            const issue = await github.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: ${{ env.ISSUE_TITLE }},
+              body: issueBody,
+            });
+            console.log(`Created issue: ${issue.data.html_url}`);
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
