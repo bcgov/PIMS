@@ -28,6 +28,7 @@ jobs:
           OUTPUT="${OUTPUT//$'\n'/'%0A'}"
           OUTPUT="${OUTPUT//$'\r'/'%0D'}"
           echo "::set-output name=results::$OUTPUT"
+        shell: bash
 
       # Create GitHub Issue.
       - name: Create GitHub issue
