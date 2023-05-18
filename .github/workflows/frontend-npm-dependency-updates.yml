@@ -23,10 +23,11 @@ jobs:
       - name: Run Node.js script
         id: check_versions
         run: |
-          OUTPUT=$(node .github/helpers/check-npm-dependency-versions.js ../../${{ env.PATH_TO_PACKAGE_JSON }})
+          OUTPUT=$(node .github/helpers/check-npm-dependency-versions.js ../../frontend/package.json)
           OUTPUT="${OUTPUT//'%'/'%25'}"
           OUTPUT="${OUTPUT//$'\n'/'%0A'}"
           OUTPUT="${OUTPUT//$'\r'/'%0D'}"
+          OUTPUT="${OUTPUT//\`/'\\\`'}"  # This line escapes backticks
           echo "::set-output name=results::$OUTPUT"
         shell: bash
 
