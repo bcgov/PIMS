@@ -30,11 +30,13 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const issueBody = $$`${{ steps.check-versions.outputs.results }}`;
+            const body = `${{ steps.check-versions.outputs.results }}`;
+            const title = `${{ env.ISSUE_TITLE }}`;
+            
             const issue = await github.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: ${{ env.ISSUE_TITLE }},
-              body: issueBody,
+              title,
+              body,
             });
             console.log(`Created issue: ${issue.data.html_url}`);
