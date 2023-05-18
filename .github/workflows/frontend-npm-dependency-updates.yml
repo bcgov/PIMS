@@ -23,7 +23,7 @@ jobs:
       - name: Run Node.js script
         id: check-versions
         run: |
-          echo "::set-output name=results::$(node .github/helpers/check-npm-dependency-versions.js ../../${{ env.PATH_TO_PACKAGE_JSON }}
+          echo "::set-output name=results::$(node .github/helpers/check-npm-dependency-versions.js ../../${{ env.PATH_TO_PACKAGE_JSON }})"
 
       # Create GitHub Issue.
       - name: Create GitHub issue
