@@ -21,7 +21,7 @@ jobs:
 
       # Run NodeJS script to check for latest npm dependency versions and capture output.
       - name: Run Node.js script
-        id: check-versions
+        id: check_versions
         run: |
           echo "::set-output name=results::$(node .github/helpers/check-npm-dependency-versions.js ../../${{ env.PATH_TO_PACKAGE_JSON }})"
 
@@ -30,10 +30,10 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const body = `${{ steps.check-versions.outputs.results }}`;
+            const body = `${{ steps.check_versions.outputs.results }}`;
             const title = `${{ env.ISSUE_TITLE }}`;
             
-            const issue = await github.issues.create({
+            const issue = await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title,
