@@ -39,16 +39,7 @@ const FiscalYearInput = ({
   value,
   disabled,
   required,
-  formikProps: {
-    handleBlur,
-    handleChange,
-    values,
-    setFieldValue,
-    errors,
-    touched,
-    registerField,
-    unregisterField,
-  },
+  formikProps: { values, setFieldValue, errors, touched, registerField, unregisterField },
 }: RequiredAttributes & OptionalAttributes) => {
   value = value ? value : getIn(values, field);
   const error = getIn(errors, field);
@@ -68,7 +59,7 @@ const FiscalYearInput = ({
     <Form.Group className={classNames(!!required ? 'required' : '', outerClassName)}>
       {!!label && <Form.Label>{label}</Form.Label>}
       <MaskedInput
-        value={value >= 0 ? formatDateFiscal(value.toString()) : value}
+        value={Number(value) >= 0 ? formatDateFiscal(value.toString()) : value}
         mask={[/\d/, /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
         name={field}
         onChange={(e: any) => {

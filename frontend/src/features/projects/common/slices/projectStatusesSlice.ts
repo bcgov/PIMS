@@ -14,7 +14,7 @@ const projectStatusesSlice = createSlice({
     builder.addCase(saveProjectStatuses, (state: any, action: any) => {
       return action.payload;
     });
-    builder.addCase(clearProjectStatuses, (state: any) => {
+    builder.addCase(clearProjectStatuses, () => {
       return '';
     });
   },

@@ -13,19 +13,17 @@ interface INotificationTabProps {
   notifications?: [];
 }
 
-const NotificationTab: React.FunctionComponent<INotificationTabProps> = ({
-  isReadOnly,
-}: INotificationTabProps) => {
+const NotificationTab: React.FunctionComponent<INotificationTabProps> = () => {
   const columns = useMemo(() => columnDefinitions, []);
   const { values } = useFormikContext<IProject>();
   const [notifications, setNotifications] = useState<INotification[]>([]);
   const [total, setTotal] = useState(0);
 
-  var projectId = values.id ?? 0;
-  var projectNumber = values.projectNumber;
+  const projectId = values.id ?? 0;
+  const projectNumber = values.projectNumber;
   const [filter] = useState<INotificationFilter>({ page: 1, projectId });
 
-  const api = useDisposalApi(projectId);
+  const api = useDisposalApi();
 
   const onRequestData = useCallback(
     async ({ pageIndex }: { pageIndex: number }) => {
@@ -36,11 +34,10 @@ const NotificationTab: React.FunctionComponent<INotificationTabProps> = ({
       setNotifications(response.items);
       setTotal(response.total);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [filter, api],
   );
 
-  let notificationsList = notifications.map(
+  const notificationsList = notifications.map(
     (a: INotification): INotification => ({
       to: a.to,
       subject: a.subject.replace('ACTION REQUIRED - Notification of Surplus Real Property - ', ''),
@@ -58,7 +55,7 @@ const NotificationTab: React.FunctionComponent<INotificationTabProps> = ({
     <div>
       <h3>Notifications: {total}</h3>
       <div>
-        <Table<INotification>
+        <Table<INotification, any>
           name="notificationsTable"
           columns={columns}
           pageCount={Math.ceil(total / 10)}

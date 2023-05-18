@@ -66,7 +66,7 @@ const testRender = () =>
   render(
     <Provider store={store}>
       <MemoryRouter initialEntries={[history.location]}>
-        <EditUserPage id="test" />,
+        <EditUserPage />,
       </MemoryRouter>
     </Provider>,
   );
@@ -83,7 +83,7 @@ const renderEditUserPage = () =>
           rtl={false}
           pauseOnFocusLoss={false}
         />
-        <EditUserPage id="test" />,
+        <EditUserPage />,
       </MemoryRouter>
     </Provider>,
   );
@@ -102,7 +102,7 @@ describe('Edit user page', () => {
     const { container } = render(
       <Provider store={noDateStore}>
         <MemoryRouter initialEntries={[history.location]}>
-          <EditUserPage id="test" />,
+          <EditUserPage />,
         </MemoryRouter>
       </Provider>,
     );

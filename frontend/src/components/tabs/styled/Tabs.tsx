@@ -11,11 +11,11 @@ export const Tabs = styled.div`
     padding-left: 0.5em;
     padding-right: 0.5em;
     column-gap: 0.5em;
-    border-bottom: solid 1px ${props => props.theme.css?.primaryColor};
+    border-bottom: solid 1px ${(props) => props.theme.css?.primaryColor};
 
     li {
-      background-color: ${props => props.theme.css?.primaryLightColor};
-      color: ${props => props.theme.css?.primaryTextColor};
+      background-color: ${(props) => props.theme.css?.primaryLightColor};
+      color: ${(props) => props.theme.css?.primaryTextColor};
       padding: 0.5em;
       border-top-left-radius: 0.25em;
       border-top-right-radius: 0.25em;
@@ -24,7 +24,7 @@ export const Tabs = styled.div`
     }
 
     li.active {
-      background-color: ${props => props.theme.css?.secondaryVariantColor};
+      background-color: ${(props) => props.theme.css?.secondaryVariantColor};
     }
   }
 
@@ -33,13 +33,13 @@ export const Tabs = styled.div`
     border-bottom-left-radius: 0.25em;
     border-bottom-right-radius: 0.25em;
     padding: 0.5em;
-    box-shadow: 2px 2px ${props => props.theme.css?.formBackground};
-    border-left: solid 1px ${props => props.theme.css?.formBackground};
+    box-shadow: 2px 2px ${(props) => props.theme.css?.formBackground};
+    border-left: solid 1px ${(props) => props.theme.css?.formBackground};
   }
 
   hr {
     width: 100%;
-    border: solid 1px ${props => props.theme.css?.formBackground};
+    border: solid 1px ${(props) => props.theme.css?.formBackground};
     margin: 0;
     padding: 0;
   }

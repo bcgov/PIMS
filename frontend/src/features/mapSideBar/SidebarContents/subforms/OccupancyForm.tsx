@@ -38,7 +38,7 @@ export const OccupancyForm: React.FC<IOccupancyProps> = ({
 }) => {
   const withNameSpace: Function = React.useCallback(
     (name?: string) => {
-      return [nameSpace ?? '', name].filter(x => x).join('.');
+      return [nameSpace ?? '', name].filter((x) => x).join('.');
     },
     [nameSpace],
   );

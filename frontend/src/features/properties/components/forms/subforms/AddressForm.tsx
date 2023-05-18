@@ -44,8 +44,8 @@ export const defaultAddressValues: IAddress = {
   provinceId: 'BC',
   postal: '',
 };
-const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
-  const lookupCodes = useAppSelector(store => store.lookupCode.lookupCodes);
+const AddressForm = <T,>(props: AddressProps & FormikProps<T>) => {
+  const lookupCodes = useAppSelector((store) => store.lookupCode.lookupCodes);
   const provinces = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.PROVINCE_CODE_SET_NAME;
   }).map(mapLookupCode);
@@ -111,7 +111,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
               disabled={props.disableStreetAddress || props.disabled}
               field={withNameSpace('line1')}
               onSelectionChanged={handleGeocoderChanges}
-              onTextChange={value => props.setFieldValue(withNameSpace('line1'), value)}
+              onTextChange={(value) => props.setFieldValue(withNameSpace('line1'), value)}
               error={getIn(props.errors, withNameSpace('line1'))}
               touch={getIn(props.touched, withNameSpace('line1'))}
               displayErrorTooltips
@@ -144,7 +144,7 @@ const AddressForm = <T extends any>(props: AddressProps & FormikProps<T>) => {
         )}
         <Col md="auto">
           <TypeaheadField
-            options={administrativeAreas.map(x => x.label)}
+            options={administrativeAreas.map((x) => x.label)}
             name={withNameSpace('administrativeArea')}
             disabled={props.disabled}
             hideValidation={props.disableCheckmark}

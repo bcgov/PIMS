@@ -79,21 +79,23 @@ export const ProjectListView: React.FC<IProps> = ({
 }) => {
   const lookupCodes = useCodeLookups();
   const agencies = useMemo(() => lookupCodes.getByType(API.AGENCY_CODE_SET_NAME), [lookupCodes]);
-  const projectStatuses = useAppSelector(store => store.statuses);
+  const projectStatuses = useAppSelector((store) => store.statuses);
   const keycloak = useKeycloakWrapper();
   const [deleteProjectNumber, setDeleteProjectNumber] = React.useState<string | undefined>();
   const [deletedProject, setDeletedProject] = React.useState<IProjectDetail | undefined>();
-  const agencyIds = useMemo(() => (agencies ?? []).map(x => parseInt(x.id, 10)), [agencies]);
-  const agencyOptions = (agencies ?? []).map(c => mapLookupCodeWithParentString(c, agencies ?? []));
+  const agencyIds = useMemo(() => (agencies ?? []).map((x) => parseInt(x.id, 10)), [agencies]);
+  const agencyOptions = (agencies ?? []).map((c) =>
+    mapLookupCodeWithParentString(c, agencies ?? []),
+  );
   const statuses = statusOptions
-    ? (statusOptions ?? []).map(s => mapStatuses(s))
-    : (projectStatuses ?? []).map(c => mapStatuses(c));
+    ? (statusOptions ?? []).map((s) => mapStatuses(s))
+    : (projectStatuses ?? []).map((c) => mapStatuses(c));
   const columns = useMemo(() => cols, []);
 
   // We'll start our table without any data
   const [data, setData] = useState<IProject[] | undefined>(undefined);
   const hasSubdivisions = deletedProject?.properties?.some(
-    p => p.propertyTypeId === PropertyTypes.SUBDIVISION,
+    (p) => p.propertyTypeId === PropertyTypes.SUBDIVISION,
   );
 
   // Filtering and pagination state
@@ -203,7 +205,6 @@ export const ProjectListView: React.FC<IProps> = ({
         });
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [defaultFilter.statusId],
   );
 
@@ -231,13 +232,13 @@ export const ProjectListView: React.FC<IProps> = ({
   };
 
   const handleDelete = async () => {
-    const project = data?.find(p => p.projectNumber === deleteProjectNumber);
+    const project = data?.find((p) => p.projectNumber === deleteProjectNumber);
     if (project) {
       project.status = projectStatuses.find((x: any) => x.name === project.status)!;
       dispatch(showLoading());
       const deletedProject = await service.deleteProject(project);
       dispatch(hideLoading());
-      setData(data?.filter(p => p.projectNumber !== project.projectNumber));
+      setData(data?.filter((p) => p.projectNumber !== project.projectNumber));
       setDeleteProjectNumber(undefined);
       setDeletedProject(toFlatProject(deletedProject));
     }
@@ -270,9 +271,9 @@ export const ProjectListView: React.FC<IProps> = ({
 
   const lazyLoadProperties = async (expandedRows: IProject[]) => {
     if (expandedRows.length > 0) {
-      expandedRows = expandedRows.filter(x => x.properties.length === 0);
+      expandedRows = expandedRows.filter((x) => x.properties.length === 0);
       const properties = await Promise.all(
-        expandedRows.map(async project => await service.loadProperties(project.projectNumber)),
+        expandedRows.map(async (project) => await service.loadProperties(project.projectNumber)),
       );
       const projectPropertiesMap = properties.reduce((map: any, current: any) => {
         const ids = Object.keys(current);
@@ -280,7 +281,7 @@ export const ProjectListView: React.FC<IProps> = ({
         return { ...map, [projectId]: current[projectId] };
       }, {});
       setData(
-        data?.map(d => {
+        data?.map((d) => {
           return !!projectPropertiesMap[d.projectNumber]
             ? { ...d, properties: projectPropertiesMap[d.projectNumber] }
             : d;
@@ -292,8 +293,8 @@ export const ProjectListView: React.FC<IProps> = ({
   const fiscalYears = React.useMemo(() => {
     const startYear = new Date().getFullYear() - 10;
     return Array.from(Array(12).keys())
-      .map(i => {
-        var year = startYear + i;
+      .map((i) => {
+        const year = startYear + i;
         return { label: `${year - 1} / ${year}`, value: year, parent: '' };
       })
       .reverse();
@@ -396,7 +397,7 @@ export const ProjectListView: React.FC<IProps> = ({
             </>
           )}
         </Container>
-        <Table<IProject>
+        <Table<IProject, any>
           name="projectsTable"
           clickableTooltip="View Disposal Project details"
           columns={columns(initiateDelete, isAdmin, projectEditClaim, user)}
@@ -408,14 +409,15 @@ export const ProjectListView: React.FC<IProps> = ({
           pageIndex={pageIndex}
           onRowClick={onRowClick}
           detailsPanel={{
-            render: project => <Properties data={project.properties} />,
+            render: (project) => <Properties data={project.properties} />,
             icons: {
               open: <FaFolderOpen color="black" size={20} />,
               closed: <FaFolder color="black" size={20} />,
             },
-            checkExpanded: (row, state) => !!state.find(x => x.projectNumber === row.projectNumber),
+            checkExpanded: (row, state) =>
+              !!state.find((x) => x.projectNumber === row.projectNumber),
             onExpand: lazyLoadProperties,
-            getRowId: row => row.projectNumber,
+            getRowId: (row) => row.projectNumber,
           }}
           onPageSizeChange={onPageSizeChanged}
         />

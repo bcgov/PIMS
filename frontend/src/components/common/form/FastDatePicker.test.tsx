@@ -10,7 +10,7 @@ import { FastDatePicker } from './FastDatePicker';
 const testRender = (props?: any, formikProps?: any) =>
   render(
     <Formik initialValues={formikProps?.initialValues ?? {}} onSubmit={noop}>
-      {formikProps => (
+      {(formikProps) => (
         <FastDatePicker
           field="test"
           {...{ ...(props ?? {}) }}

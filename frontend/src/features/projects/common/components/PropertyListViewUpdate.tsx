@@ -133,7 +133,7 @@ export const PropertyListViewUpdate: React.FC<InputProps> = ({
     <Container fluid>
       <div className={classNames('ScrollContainer', outerClassName)}>
         <div style={{ marginLeft: useReviewApproveStyles ? '-25px' : 0 }}>
-          <Table<IProperty>
+          <Table<IProperty, any>
             name="UpdatePropertiesTable"
             columns={columns}
             data={existingProperties}

@@ -28,7 +28,7 @@ const EditAdminAreaContainer = styled(Container)`
 `;
 
 /** component used to edit specific administrative area selected from the ManageAdminArea component */
-const EditAdminArea = (props: IEditAdminAreaProps) => {
+const EditAdminArea = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { getAdminArea, updateAdminArea, deleteAdminArea, addAdminArea } = useAdminAreaApi();
@@ -91,7 +91,7 @@ const EditAdminArea = (props: IEditAdminAreaProps) => {
       </Navbar>
       <Formik
         enableReinitialize
-        onSubmit={async values => {
+        onSubmit={async (values) => {
           if (!newAdminArea && activeArea) {
             try {
               await updateAdminArea(adminAreaId, toApiAdminArea(activeArea, values.name));

@@ -20,7 +20,7 @@ export const useMyAgencies = (): SelectOption[] => {
   const keycloak = useKeycloakWrapper();
   const agencies = getOptionsByType(API.AGENCY_CODE_SET_NAME);
   //@ts-ignore
-  const userAgencyIds: number[] = useSelector(state => state.usersAgencies);
+  const userAgencyIds: number[] = useSelector((state) => state.usersAgencies);
 
   const isSRES = useMemo(() => {
     return (
@@ -32,7 +32,7 @@ export const useMyAgencies = (): SelectOption[] => {
   }, [keycloak]);
 
   const agencyOptions = useMemo(() => {
-    return agencies.filter(a => {
+    return agencies.filter((a) => {
       return (
         isSRES ||
         userAgencyIds.includes(Number(a.value)) ||

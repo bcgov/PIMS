@@ -5,5 +5,5 @@
  * @param index optional index to append to the namespace and name, used for formik arrays.
  */
 export const withNameSpace: Function = (nameSpace?: string, name?: string, index?: number) => {
-  return [nameSpace ?? '', `${index ?? ''}`, name].filter(x => x).join('.');
+  return [nameSpace ?? '', `${index ?? ''}`, name].filter((x) => x).join('.');
 };

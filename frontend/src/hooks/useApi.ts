@@ -54,23 +54,23 @@ export const useApi = (props?: IApiProps): PimsAPI => {
   const axios = CustomAxios({ lifecycleToasts: props?.lifecycleToasts }) as PimsAPI;
 
   axios.interceptors.request.use(
-    config => {
+    (config) => {
       config.headers!.Authorization = `Bearer ${store.getState().jwt}`;
       dispatch(showLoading());
       return config;
     },
-    error => {
+    (error) => {
       dispatch(hideLoading());
       return Promise.reject(error);
     },
   );
 
   axios.interceptors.response.use(
-    config => {
+    (config) => {
       dispatch(hideLoading());
       return config;
     },
-    error => {
+    (error) => {
       dispatch(hideLoading());
       return Promise.reject(error);
     },
@@ -78,57 +78,41 @@ export const useApi = (props?: IApiProps): PimsAPI => {
 
   axios.isPidAvailable = useCallback(
     async (parcelId: number | '' | undefined, pid: string | undefined) => {
-      const pidParam = `pid=${Number(
-        pid
-          ?.split('-')
-          .join('')
-          .split(',')
-          .join(''),
-      )}`;
-      let params = parcelId ? `${pidParam}&parcelId=${parcelId}` : pidParam;
+      const pidParam = `pid=${Number(pid?.split('-').join('').split(',').join(''))}`;
+      const params = parcelId ? `${pidParam}&parcelId=${parcelId}` : pidParam;
       const { data } = await axios.get(
         `${ENVIRONMENT.apiUrl}/properties/parcels/check/pid-available?${params}`,
       );
       return data;
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
 
   axios.isPinAvailable = useCallback(
     async (parcelId: number | '' | undefined, pin: number | '' | undefined) => {
       const pinParam = `pin=${Number(pin)}`;
-      let params = parcelId ? `${pinParam}&parcelId=${parcelId}` : pinParam;
+      const params = parcelId ? `${pinParam}&parcelId=${parcelId}` : pinParam;
       const { data } = await axios.get(
         `${ENVIRONMENT.apiUrl}/properties/parcels/check/pin-available?${params}`,
       );
       return data;
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
 
-  axios.searchAddress = useCallback(
-    async (address: string): Promise<IGeocoderResponse[]> => {
-      const { data } = await axios.get<IGeocoderResponse[]>(
-        `${ENVIRONMENT.apiUrl}/tools/geocoder/addresses?address=${address}+BC`,
-      );
-      return _.orderBy(data, (r: IGeocoderResponse) => r.score, ['desc']);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
+  axios.searchAddress = useCallback(async (address: string): Promise<IGeocoderResponse[]> => {
+    const { data } = await axios.get<IGeocoderResponse[]>(
+      `${ENVIRONMENT.apiUrl}/tools/geocoder/addresses?address=${address}+BC`,
+    );
+    return _.orderBy(data, (r: IGeocoderResponse) => r.score, ['desc']);
+  }, []);
 
-  axios.getSitePids = useCallback(
-    async (siteId: string): Promise<IGeocoderPidsResponse> => {
-      const { data } = await axios.get<IGeocoderPidsResponse>(
-        `${ENVIRONMENT.apiUrl}/tools/geocoder/parcels/pids/${siteId}`,
-      );
-      return data;
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
+  axios.getSitePids = useCallback(async (siteId: string): Promise<IGeocoderPidsResponse> => {
+    const { data } = await axios.get<IGeocoderPidsResponse>(
+      `${ENVIRONMENT.apiUrl}/tools/geocoder/parcels/pids/${siteId}`,
+    );
+    return data;
+  }, []);
 
   axios.loadProperties = useCallback(
     async (params?: IGeoSearchParams): Promise<GeoJsonObject[]> => {
@@ -147,7 +131,6 @@ export const useApi = (props?: IApiProps): PimsAPI => {
         );
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
 
@@ -156,30 +139,20 @@ export const useApi = (props?: IApiProps): PimsAPI => {
    * @param id The building primary key 'id' value.
    * @returns A promise containing the building.
    */
-  axios.getBuilding = useCallback(
-    async (id: number) => {
-      const { data } = await axios.get<IBuilding>(
-        `${ENVIRONMENT.apiUrl}/properties/buildings/${id}`,
-      );
-      return data;
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
+  axios.getBuilding = useCallback(async (id: number) => {
+    const { data } = await axios.get<IBuilding>(`${ENVIRONMENT.apiUrl}/properties/buildings/${id}`);
+    return data;
+  }, []);
 
   /**
    * Make an AJAX request to fetch the specified parcel.
    * @param id The parcel primary key 'id' value.
    * @returns A promise containing the parcel.
    */
-  axios.getParcel = useCallback(
-    async (id: number) => {
-      const { data } = await axios.get<IParcel>(`${ENVIRONMENT.apiUrl}/properties/parcels/${id}`);
-      return data;
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
+  axios.getParcel = useCallback(async (id: number) => {
+    const { data } = await axios.get<IParcel>(`${ENVIRONMENT.apiUrl}/properties/parcels/${id}`);
+    return data;
+  }, []);
 
   /**
    * Make an AJAX request to update the specified parcel financials.
@@ -187,17 +160,13 @@ export const useApi = (props?: IApiProps): PimsAPI => {
    * @param parcel - the parcel data to be update
    * @returns A promise containing the parcel.
    */
-  axios.updateParcel = useCallback(
-    async (id: number, parcel: IApiProperty) => {
-      const { data } = await axios.put<IParcel>(
-        `${ENVIRONMENT.apiUrl}/properties/parcels/${id}/financials`,
-        parcel,
-      );
-      return data;
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
+  axios.updateParcel = useCallback(async (id: number, parcel: IApiProperty) => {
+    const { data } = await axios.put<IParcel>(
+      `${ENVIRONMENT.apiUrl}/properties/parcels/${id}/financials`,
+      parcel,
+    );
+    return data;
+  }, []);
 
   /**
    * Make an AJAX request to update the specified building financials.
@@ -205,18 +174,14 @@ export const useApi = (props?: IApiProps): PimsAPI => {
    * @param building - the building data to be update
    * @returns A promise containing the building.
    */
-  axios.updateBuilding = useCallback(
-    async (id: number, building: IApiProperty) => {
-      const { data } = await axios.put<IBuilding>(
-        `${ENVIRONMENT.apiUrl}/properties/buildings/${id}/financials`,
-        { ...building, totalArea: building.landArea, buildingTenancy: building.buildingTenancy },
-      );
-      console.log('Tenancy:' + building.buildingTenancy);
-      return data;
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
+  axios.updateBuilding = useCallback(async (id: number, building: IApiProperty) => {
+    const { data } = await axios.put<IBuilding>(
+      `${ENVIRONMENT.apiUrl}/properties/buildings/${id}/financials`,
+      { ...building, totalArea: building.landArea, buildingTenancy: building.buildingTenancy },
+    );
+    console.log('Tenancy:' + building.buildingTenancy);
+    return data;
+  }, []);
 
   return axios;
 };

@@ -36,10 +36,8 @@ interface ISearchFormProps {
 const LandSearchForm = ({
   nameSpace,
   handleGeocoderChanges,
-  setMovingPinNameSpace,
   handlePidChange,
   handlePinChange,
-  ...props
 }: ISearchFormProps) => {
   const [geocoderResponse, setGeocoderResponse] = useState<IGeocoderResponse | undefined>();
   const [tab, setTab] = useState<number>(0);
@@ -57,12 +55,12 @@ const LandSearchForm = ({
   const handlePasteFromClipboard = (field: string) => {
     navigator.clipboard
       .readText()
-      .then(text => {
+      .then((text) => {
         formikProps.setFieldValue(withNameSpace(nameSpace, field), text);
         const input: unknown = document.getElementsByName(`data.${field}`)[0];
         if ((input as HTMLInputElement).type === 'text') (input as HTMLInputElement).value = text;
       })
-      .catch(err => {
+      .catch((err) => {
         console.error('Failed to read clipboard contents: ', err);
       });
   };
@@ -158,14 +156,14 @@ const LandSearchForm = ({
               <GeocoderAutoComplete
                 value={searchAddress}
                 field={withNameSpace(nameSpace, 'searchAddress')}
-                onSelectionChanged={selection => {
+                onSelectionChanged={(selection) => {
                   formikProps.setFieldValue(
                     withNameSpace(nameSpace, 'searchAddress'),
                     selection.fullAddress,
                   );
                   setGeocoderResponse(selection);
                 }}
-                onTextChange={value => {
+                onTextChange={(value) => {
                   if (value !== geocoderResponse?.address1) {
                     setGeocoderResponse(undefined);
                   }

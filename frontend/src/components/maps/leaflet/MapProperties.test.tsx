@@ -38,7 +38,7 @@ const mockParcels = [
   { id: 1, latitude: 48.455059, longitude: -123.496452, propertyTypeId: 1 },
   { id: 2, latitude: 53.917065, longitude: -122.749672, propertyTypeId: 0 },
 ] as IProperty[];
-((useApi as unknown) as jest.Mock<Partial<PimsAPI>>).mockReturnValue({
+(useApi as unknown as jest.Mock<Partial<PimsAPI>>).mockReturnValue({
   loadProperties: jest.fn(async () => {
     return createPoints(mockParcels);
   }),
@@ -193,7 +193,7 @@ describe('MapProperties View', () => {
     mount(getMap(mapRef, noParcels, emptyDetails));
 
     const { loadProperties } = useApi();
-    const bbox = (loadProperties as jest.Mock).mock.calls.map(call => call[0].bbox);
+    const bbox = (loadProperties as jest.Mock).mock.calls.map((call) => call[0].bbox);
     const expectedBbox = [
       '-146.25,-135,55.77657301866769,61.60639637138628',
       '-146.25,-135,48.922499263758255,55.77657301866769',

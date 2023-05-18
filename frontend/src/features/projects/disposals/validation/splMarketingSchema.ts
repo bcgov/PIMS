@@ -11,7 +11,7 @@ export const splMarketingSchema = yup.object({
       .string()
       .typeError('Date entered market on required')
       .required('Date entered market on required')
-      .test('isDate', 'Date entered market on required', value => {
+      .test('isDate', 'Date entered market on required', (value) => {
         return moment(value).isValid();
       }),
   }),

@@ -14,9 +14,10 @@ import { ProjectNote } from '../notes';
 import * as styled from './styled';
 import { calcGainBeforeSpl, calcNetProceeds, getNumber } from './utils';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProjectCloseOutProps {}
 
-export const ProjectCloseOut: React.FC<IProjectCloseOutProps> = props => {
+export const ProjectCloseOut: React.FC<IProjectCloseOutProps> = () => {
   const formik = useFormikContext<IProjectForm>();
   const { values, setFieldValue } = useFormikContext<IProjectForm>();
 

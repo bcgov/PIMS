@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useProperties } from 'store/hooks';
 
 import { defaultFilter } from '../constants';
-import { IProjectForm, IProjectPropertyFilter } from '../interfaces';
+import { IProjectForm } from '../interfaces';
 import { ProjectPropertyFilter } from '.';
 import { AddPropertyColumns } from './constants';
 import * as styled from './styled';
@@ -46,28 +46,27 @@ export const ProjectAddProperties: React.FC<IProjectAddPropertiesProps> = ({
   };
 
   React.useEffect(() => {
-    fetch().then(data => {
+    fetch().then((data) => {
       setProperties(data?.items ?? []);
       setSearching(false);
     });
     // Only automatically call this when the paging changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paging]);
 
-  const handleFilterChange = async (filter: IProjectPropertyFilter) => {
+  const handleFilterChange = async () => {
     // The filter is automatically changed because it is managed by formik.
     // Not my design, but too much work to change at this point.
     setSearching(true);
-    setPaging(paging => ({ ...paging, pageIndex: 0 }));
+    setPaging((paging) => ({ ...paging, pageIndex: 0 }));
   };
 
   const handleRequestData = async (props: any) => {
     if (props.pageIndex !== paging.pageIndex && !searching)
-      setPaging(paging => ({ ...paging, pageIndex: props.pageIndex }));
+      setPaging((paging) => ({ ...paging, pageIndex: props.pageIndex }));
   };
 
   const handlePageSizeChange = async (size: number) => {
-    if (size !== paging.pageSize) setPaging(paging => ({ ...paging, pageSize: size }));
+    if (size !== paging.pageSize) setPaging((paging) => ({ ...paging, pageSize: size }));
   };
 
   const handleRowClick = useCallback(
@@ -107,7 +106,7 @@ export const ProjectAddProperties: React.FC<IProjectAddPropertiesProps> = ({
         </Col>
       </Row>
       <ProjectPropertyFilter filter={defaultFilter} onChange={handleFilterChange} />
-      <Table<ISearchPropertyModel>
+      <Table<ISearchPropertyModel, any>
         name="findProperties"
         columns={AddPropertyColumns({ onAddProperty })}
         data={properties}

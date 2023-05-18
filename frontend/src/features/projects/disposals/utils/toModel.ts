@@ -84,8 +84,8 @@ export const toModel = (model: IProjectModel | undefined, values: IProjectForm):
       values.priorYearAdjustmentAmount !== '' ? values.priorYearAdjustmentAmount : undefined,
     realtorCommission: values.realtorCommission !== '' ? values.realtorCommission : undefined,
 
-    notes: values.notes.map(n => {
-      const note = model?.notes.find(i => i.id === n.id);
+    notes: values.notes.map((n) => {
+      const note = model?.notes.find((i) => i.id === n.id);
       return {
         ...note,
         projectId: values.id,
@@ -93,8 +93,8 @@ export const toModel = (model: IProjectModel | undefined, values: IProjectForm):
         note: n.note,
       } as IProjectNoteModel;
     }),
-    tasks: values.tasks.map(t => {
-      const task = model?.tasks.find(i => i.taskId === t.taskId);
+    tasks: values.tasks.map((t) => {
+      const task = model?.tasks.find((i) => i.taskId === t.taskId);
 
       return {
         ...task,
@@ -103,7 +103,7 @@ export const toModel = (model: IProjectModel | undefined, values: IProjectForm):
         completedOn: t.completedOn ? t.completedOn : undefined,
       } as IProjectTaskModel;
     }),
-    projectAgencyResponses: values.projectAgencyResponses.map(p => {
+    projectAgencyResponses: values.projectAgencyResponses.map((p) => {
       return {
         ...p,
         projectId: values.id,
@@ -114,8 +114,8 @@ export const toModel = (model: IProjectModel | undefined, values: IProjectForm):
         offerAmount: p.offerAmount,
       } as IProjectAgencyResponseModel;
     }),
-    properties: values.properties.map(p => {
-      const existingProperty = model?.properties.find(i => i.id === p.id);
+    properties: values.properties.map((p) => {
+      const existingProperty = model?.properties.find((i) => i.id === p.id);
       return toPropertyModel(p, existingProperty);
     }),
   };

@@ -26,9 +26,8 @@ export const ProjectSPLApproval: React.FC = () => {
   const showNotInSpl = [Workflow.SPL].includes(workflowCode as Workflow);
 
   // Disabled prop
-  const {
-    values: { statusCode },
-  } = useFormikContext();
+  const { values }: any = useFormikContext();
+  const { statusCode } = values;
   const keycloak = useKeycloakWrapper();
   const [disabled, setDisabled] = useState(false);
   const isAdmin = keycloak.hasClaim(Claim.ReportsSplAdmin);

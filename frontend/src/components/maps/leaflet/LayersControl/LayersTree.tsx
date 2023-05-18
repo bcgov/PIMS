@@ -208,12 +208,12 @@ const LeafletListenerComp = () => {
   React.useEffect(() => {
     if (!!map) {
       const currentLayers = Object.keys((featureGroup as any)._layers)
-        .map(k => (featureGroup as any)._layers[k])
-        .map(l => l.options)
-        .filter(x => !!x);
-      const layers = flatten(values.layers.map(l => l.nodes)).filter((x: any) => x.on);
+        .map((k) => (featureGroup as any)._layers[k])
+        .map((l) => l.options)
+        .filter((x) => !!x);
+      const layers = flatten(values.layers.map((l) => l.nodes)).filter((x: any) => x.on);
       const layersToAdd = layers.filter(
-        (layer: any) => !currentLayers.find(x => x.key === layer.key),
+        (layer: any) => !currentLayers.find((x) => x.key === layer.key),
       );
       const layersToRemove = currentLayers.filter(
         (layer: any) => !layers.find((x: any) => x.key === layer.key),
@@ -225,7 +225,7 @@ const LeafletListenerComp = () => {
       });
 
       featureGroup.eachLayer((layer: any) => {
-        if (layersToRemove.find(l => l.key === layer?.options?.key)) {
+        if (layersToRemove.find((l) => l.key === layer?.options?.key)) {
           featureGroup.removeLayer(layer);
         }
       });
@@ -242,18 +242,18 @@ const LayersTree: React.FC<{ items: TreeMenuItem[] }> = ({ items }) => {
   const { values } = useFormikContext<any>();
 
   const getParentIndex = (key: string, layers: TreeNode[]) => {
-    return layers.findIndex(node => node.key === key);
+    return layers.findIndex((node) => node.key === key);
   };
 
   const getLayerNodeIndex = (nodeKey: string, parentKey: string, layers: TreeNode[]) => {
-    const parent = layers.find(node => node.key === parentKey);
+    const parent = layers.find((node) => node.key === parentKey);
 
     return (parent!.nodes as any).findIndex((node: TreeNode) => node.key === nodeKey);
   };
 
   return (
     <ListGroup>
-      {items.map(node => {
+      {items.map((node) => {
         if (node.level === 0) {
           if (!node.hasNodes) {
             return null;
@@ -315,7 +315,7 @@ const layers = layersTree.map((parent, parentIndex) => {
 const LayersMenu: React.FC = () => {
   return (
     <Formik initialValues={{ layers }} onSubmit={noop}>
-      {({ values }) => (
+      {() => (
         <FormikForm>
           <LeafletListenerComp />
           <TreeMenu hasSearch={false} data={layersTree}>

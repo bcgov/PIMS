@@ -63,7 +63,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
   const [overrideData, setOverrideData] = useState<IBuilding>();
   const withNameSpace: Function = React.useCallback(
     (name?: string) => {
-      return [nameSpace ?? '', name].filter(x => x).join('.');
+      return [nameSpace ?? '', name].filter((x) => x).join('.');
     },
     [nameSpace],
   );
@@ -202,7 +202,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
             buildingInformationStyles
             onGeocoderChange={(selection: IGeocoderResponse) => {
               const administrativeArea = selection.administrativeArea
-                ? lookupCodes.find(code => {
+                ? lookupCodes.find((code) => {
                     return (
                       code.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME &&
                       code.name === selection.administrativeArea

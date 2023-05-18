@@ -26,7 +26,7 @@ export const TablePageSizeSelector: React.FC<IProps> = ({ options, value, onChan
     }
   };
 
-  const pageSizeOptions: IMenuItemProps[] = options.map(option => ({
+  const pageSizeOptions: IMenuItemProps[] = options.map((option) => ({
     label: option,
     value: option,
     onClick: () => handleValueChange(option),

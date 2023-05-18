@@ -11,9 +11,8 @@ interface IProjectSPLTabsProps {
 }
 
 export const ProjectSPLTabs: React.FC<IProjectSPLTabsProps> = ({ project }) => {
-  const {
-    values: { workflowCode, statusCode },
-  } = useFormikContext();
+  const { values }: any = useFormikContext();
+  const { workflowCode, statusCode } = values;
   const location = useLocation();
   const id = location.pathname.split('/')[3];
 
@@ -23,8 +22,8 @@ export const ProjectSPLTabs: React.FC<IProjectSPLTabsProps> = ({ project }) => {
     const tabs = [<Tab key={1} label="Approval" path={`/projects/disposal/${id}/spl`} exact />];
     if (
       workflowCode === Workflow.SPL ||
-      project?.statusHistory?.some(s => s.status === WorkflowStatus.PreMarketing) ||
-      !project?.statusHistory?.some(s => s.workflow === Workflow.SUBMIT_DISPOSAL)
+      project?.statusHistory?.some((s) => s.status === WorkflowStatus.PreMarketing) ||
+      !project?.statusHistory?.some((s) => s.workflow === Workflow.SUBMIT_DISPOSAL)
     )
       tabs.push(
         <Tab key={2} label="Marketing" path={`/projects/disposal/${id}/spl/marketing`} exact />,
@@ -32,8 +31,8 @@ export const ProjectSPLTabs: React.FC<IProjectSPLTabsProps> = ({ project }) => {
 
     if (
       workflowCode === Workflow.SPL ||
-      project?.statusHistory?.some(s => s.status === WorkflowStatus.OnMarket) ||
-      !project?.statusHistory?.some(s => s.workflow === Workflow.SUBMIT_DISPOSAL)
+      project?.statusHistory?.some((s) => s.status === WorkflowStatus.OnMarket) ||
+      !project?.statusHistory?.some((s) => s.workflow === Workflow.SUBMIT_DISPOSAL)
     )
       tabs.push(
         <Tab

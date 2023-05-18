@@ -13,7 +13,6 @@ import { useDeepCompareMemoize } from './useDeepCompareMemoize';
  * change in the object or array properties of a dependency.
  */
 const useDeepCompareEffect = (callback: EffectCallback, dependencies: DependencyList) => {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(callback, useDeepCompareMemoize(dependencies));
 };
 
