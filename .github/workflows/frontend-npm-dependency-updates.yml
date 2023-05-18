@@ -38,13 +38,10 @@ jobs:
           INPUT_BODY: ${{ steps.check_versions.outputs.results }}
         with:
           script: |
-            const body = JSON.parse(process.env.INPUT_BODY);
-            const title = process.env.INPUT_TITLE;
-
             const issue = await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title,
-              body,
+              title: process.env.INPUT_TITLE,
+              body: process.env.INPUT_BODY,
             });
             console.log(`Created issue: ${issue.data.html_url}`);
