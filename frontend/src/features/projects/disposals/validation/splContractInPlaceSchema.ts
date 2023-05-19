@@ -25,7 +25,7 @@ export const splContractInPlaceSchema = yup.object({
     then: yup
       .string()
       .required('Offer amount required')
-      .test('isValue', 'Offer amount required', value => {
+      .test('isValue', 'Offer amount required', (value) => {
         return !isNaN(toInteger(value));
       })
       .min(0, 'Minimum amount is $0.00'),
@@ -42,7 +42,7 @@ export const splContractInPlaceSchema = yup.object({
       .string()
       .typeError('Offer accepted on required')
       .required('Offer accepted on required')
-      .test('isDate', 'Offer accepted on required', value => {
+      .test('isDate', 'Offer accepted on required', (value) => {
         return moment(value).isValid();
       }),
   }),
@@ -54,7 +54,7 @@ export const splContractInPlaceSchema = yup.object({
       .string()
       .typeError('Disposal date required')
       .required('Disposal date required')
-      .test('isDate', 'Disposal date required', value => {
+      .test('isDate', 'Disposal date required', (value) => {
         return moment(value).isValid();
       }),
   }),

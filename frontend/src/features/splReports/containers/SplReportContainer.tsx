@@ -11,6 +11,7 @@ import { useProjectSnapshotApi } from '../hooks/useProjectSnapshotApi';
 import { useRouterReport } from '../hooks/useRouterReport';
 import { IReport, ISnapshot, ISnapshotFilter } from '../interfaces';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface ISplReportContainerProps {}
 
 const SplReportContainerContext = React.createContext<{
@@ -60,7 +61,7 @@ const SplReportContainer: React.FunctionComponent<ISplReportContainerProps> = ()
       if (id) {
         let snapshots = await getProjectReportSnapshotsById(id);
         snapshots = snapshots.map(
-          s =>
+          (s) =>
             ({
               ...s,
               project: { ...s.project, agencyName: s.project?.agency || s.project?.subAgency },
@@ -69,25 +70,25 @@ const SplReportContainer: React.FunctionComponent<ISplReportContainerProps> = ()
         snapshots = _.orderBy(
           snapshots,
           _.keys(snapshotFilter.sortBy),
-          _.keys(snapshotFilter.sortBy).map(k => snapshotFilter.sortBy[k]) as ('asc' | 'desc')[],
+          _.keys(snapshotFilter.sortBy).map((k) => snapshotFilter.sortBy[k]) as ('asc' | 'desc')[],
         );
 
         if (snapshotFilter.projectNumber) {
           snapshots = _.filter(
             snapshots,
-            snapshot => snapshot.project?.projectNumber === snapshotFilter.projectNumber,
+            (snapshot) => snapshot.project?.projectNumber === snapshotFilter.projectNumber,
           );
         }
         if (snapshotFilter.agency) {
           snapshots = _.filter(
             snapshots,
-            snapshot => snapshot.project?.agencyId === snapshotFilter.agency,
+            (snapshot) => snapshot.project?.agencyId === snapshotFilter.agency,
           );
         }
         if (snapshotFilter.fiscalYear) {
           snapshots = _.filter(
             snapshots,
-            snapshot =>
+            (snapshot) =>
               Number(snapshot.project?.actualFiscalYear) === Number(snapshotFilter.fiscalYear),
           );
         }
@@ -100,7 +101,7 @@ const SplReportContainer: React.FunctionComponent<ISplReportContainerProps> = ()
   const getReports = React.useCallback(
     async (currentReport?: IReport) => {
       const data = await getProjectReports();
-      var report = data.find(r => r.id === currentReport?.id);
+      const report = data.find((r) => r.id === currentReport?.id);
       if (!!report && !!currentReport) {
         setCurrentReport({ ...currentReport });
       }
@@ -109,7 +110,6 @@ const SplReportContainer: React.FunctionComponent<ISplReportContainerProps> = ()
         setShowSidebar(true);
         setSnapshots([]);
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
     [getProjectReports],
   );
@@ -171,7 +171,7 @@ const SplReportContainer: React.FunctionComponent<ISplReportContainerProps> = ()
     }
   };
   const onSave = (report: IReport) => {
-    if (!report.isFinal && reports.find(r => r.id === report.id)?.isFinal) {
+    if (!report.isFinal && reports.find((r) => r.id === report.id)?.isFinal) {
       setReportToSave(report);
     } else {
       updateReport(report);
@@ -189,7 +189,7 @@ const SplReportContainer: React.FunctionComponent<ISplReportContainerProps> = ()
       <SplReportLayout
         showSidebar={showSidebar}
         setShowSidebar={setShowSidebar}
-        onOpen={report => setCurrentReport(report)}
+        onOpen={(report) => setCurrentReport(report)}
         onDelete={onDelete}
         onFinal={onFinal}
         onRefresh={refreshSnapshots}

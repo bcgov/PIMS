@@ -17,11 +17,14 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 jest.mock('axios');
 mockedAxios.create = jest.fn(() => mockedAxios);
 
-const getWrapper = (store: any) => ({ children }: any) => (
-  <Provider store={store}>
-    <MemoryRouter initialEntries={[history.location]}>{children}</MemoryRouter>
-  </Provider>
-);
+const getWrapper =
+  (store: any) =>
+  ({ children }: any) =>
+    (
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>{children}</MemoryRouter>
+      </Provider>
+    );
 
 describe('useProjectSnapshotApi hook tests', () => {
   beforeEach(() => {

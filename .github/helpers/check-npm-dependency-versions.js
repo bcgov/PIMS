@@ -14,7 +14,7 @@ let dependencyResults = [];
 let devDependencyResults = [];
 
 // Check the latest version of each dependency.
-const checkVersions = async dependencyList => {
+const checkVersions = async (dependencyList) => {
   // For each dependency in the dependencyList.
   for (let key in dependencyList) {
     const [dependency, version] = dependencyList[key];
@@ -23,15 +23,15 @@ const checkVersions = async dependencyList => {
     try {
       // Make an http request to the npm registry.
       const data = await new Promise((resolve, reject) => {
-        https.get(url, res => {
+        https.get(url, (res) => {
           let data = '';
-          res.on('data', chunk => {
+          res.on('data', (chunk) => {
             data += chunk;
           });
           res.on('end', () => {
             resolve(data);
           });
-          res.on('error', error => {
+          res.on('error', (error) => {
             reject(error);
           });
         });
@@ -82,8 +82,8 @@ const checkVersions = async dependencyList => {
 };
 
 // GitHub Markdown Formatting.
-const heading2 = text => `## ${text}`;
-const heading3 = text => `### ${text}`;
+const heading2 = (text) => `## ${text}`;
+const heading3 = (text) => `### ${text}`;
 const codeBlock = (text, language) => `\n\`\`\` ${language}\n${text}\n\`\`\`\n`;
 
 // Run checkVersions and create comment.
@@ -151,7 +151,7 @@ const codeBlock = (text, language) => `\n\`\`\` ${language}\n${text}\n\`\`\`\n`;
     for (let key in devDependencyResults) {
       const { dependency, version, latestVersion, versionChange } = devDependencyResults[key];
       console.log(
-        `- \`${dependency}\` Update by running \`npm install ${dependency}@${latestVersion}\``,
+        `- \`${dependency}\` Update by running \`npm install -D ${dependency}@${latestVersion}\``,
       );
       console.log(`  - Current version is \`${version}\` (${versionChange} update).`);
     }

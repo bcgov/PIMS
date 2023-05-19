@@ -65,7 +65,7 @@ describe('User Slice tests', () => {
     };
     expect(reducer({ ...initialUserState, pagedUsers: users }, updateUser(data))).toEqual({
       ...initialUserState,
-      pagedUsers: { ...users, items: users.items.map(u => (u.id === data.id ? data : u)) },
+      pagedUsers: { ...users, items: users.items.map((u) => (u.id === data.id ? data : u)) },
     });
   });
 

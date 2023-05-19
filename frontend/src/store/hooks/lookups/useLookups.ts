@@ -10,7 +10,7 @@ export const useLookups = () => {
   const dispatch = useAppDispatch();
   const network = useNetwork();
   const api = useApiLookups();
-  const state = useAppSelector(store => store.lookupCode);
+  const state = useAppSelector((store) => store.lookupCode);
   const { lookupCodes } = state;
 
   const controller = {
@@ -20,17 +20,17 @@ export const useLookups = () => {
       return response?.data;
     },
     getType: (type: LookupType, onlyEnabled: boolean = true) =>
-      lookupCodes.filter(code => code.type === type && code.isDisabled !== onlyEnabled),
+      lookupCodes.filter((code) => code.type === type && code.isDisabled !== onlyEnabled),
     getOptions: (type: LookupType, onlyEnabled: boolean = true) =>
       lookupCodes
-        .filter(code => code.type === type && code.isDisabled !== onlyEnabled)
-        .map(i => mapLookupCode(i)),
+        .filter((code) => code.type === type && code.isDisabled !== onlyEnabled)
+        .map((i) => mapLookupCode(i)),
     getOptionsWithParents: (type: LookupType, onlyEnabled: boolean = true) => {
       const options = lookupCodes
-        .filter(code => code.type === type && code.isDisabled !== onlyEnabled)
-        .map(i => mapLookupCode(i));
+        .filter((code) => code.type === type && code.isDisabled !== onlyEnabled)
+        .map((i) => mapLookupCode(i));
 
-      return options.map(i => mapSelectOptionWithParent(i, options));
+      return options.map((i) => mapSelectOptionWithParent(i, options));
     },
   };
 
@@ -39,7 +39,6 @@ export const useLookups = () => {
     if (lookupCodes.length === 0) {
       controller.fetch();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lookupCodes]);
 
   return { state, controller };

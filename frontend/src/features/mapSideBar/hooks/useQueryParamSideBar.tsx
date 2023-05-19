@@ -65,7 +65,7 @@ export const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
 
   const searchParams = useMemo(() => {
     const queryParams = new URLSearchParams(location.search);
-    let searchParams: any = {};
+    const searchParams: any = {};
     for (const [key, value] of queryParams.entries()) {
       searchParams[key] = value;
     }
@@ -165,9 +165,9 @@ export const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
     [setShow, showSideBar],
   );
 
-  const handleLocationChange = (location: H.Location, action: 'PUSH' | 'POP' | 'REPLACE') => {
+  const handleLocationChange = (location: H.Location) => {
     const queryParams = new URLSearchParams(location.search);
-    let parsedChangedLocation: any = {};
+    const parsedChangedLocation: any = {};
     for (const [key, value] of queryParams.entries()) {
       parsedChangedLocation[key] = value;
     }
@@ -196,7 +196,7 @@ export const useQueryParamSideBar = (formikRef?: any): IMapSideBar => {
     addAssociatedLand,
     addSubdivision,
     addContext,
-    setDisabled: disabled => {
+    setDisabled: (disabled) => {
       const queryParams = new URLSearchParams(location.search);
       queryParams.set('loadDraft', 'true');
       queryParams.set('disabled', `${disabled}`);

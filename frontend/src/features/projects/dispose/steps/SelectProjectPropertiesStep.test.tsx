@@ -151,9 +151,8 @@ describe('Select Project Properties Step', () => {
   });
   it('selected properties are maintained even if the page changes.', async () => {
     mockAxios.onAny().reply(200, { items: [mockFlatProperty], total: 6 });
-    const { findByTestId, findByText, findAllByText, getByLabelText, getByText } = render(
-      uiElement,
-    );
+    const { findByTestId, findByText, findAllByText, getByLabelText, getByText } =
+      render(uiElement);
 
     //select a property
     const selectRowCheck = await findByTestId('selectrow-0');

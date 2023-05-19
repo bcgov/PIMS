@@ -22,7 +22,7 @@ export const ProjectRouter = () => {
   const keycloak = useKeycloakWrapper();
   const { project } = useProject();
   const getProjectRequest = useAppSelector(
-    store => (store.network.requests as any)[ProjectActions.GET_PROJECT_WORKFLOW],
+    (store) => (store.network.requests as any)[ProjectActions.GET_PROJECT_WORKFLOW],
   );
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);

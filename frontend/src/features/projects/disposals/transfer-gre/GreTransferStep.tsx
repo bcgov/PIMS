@@ -37,7 +37,7 @@ export const GreTransferStep: React.FC<IGreTransferStepProps> = ({ project, onUp
   const eUpdate =
     values.transferToAgencyId !== project.agencyId &&
     values.transferToAgencyId !== 0 &&
-    properties.every(p => p.classificationId <= 1);
+    properties.every((p) => p.classificationId <= 1);
 
   React.useEffect(() => {
     if (transferred) navigate(`/projects/disposal/${project?.id}`);
@@ -73,12 +73,12 @@ export const GreTransferStep: React.FC<IGreTransferStepProps> = ({ project, onUp
         options={agencies}
         filterBy={['code', 'label']}
         convertValue={Number}
-        onChange={values => {
+        onChange={(values) => {
           setFieldValue('transferToAgencyId', !!values.length ? Number(values[0].value) : 0);
         }}
         required
       />
-      <Table<IProjectPropertyForm>
+      <Table<IProjectPropertyForm, any>
         columns={TransferPropertyColumns()}
         name="properties"
         data={properties}
@@ -107,7 +107,7 @@ export const GreTransferStep: React.FC<IGreTransferStepProps> = ({ project, onUp
           okButtonText="Update PIMS"
           handleOk={async () => {
             // Switch all property agencies.
-            project.properties = project.properties.map(p => {
+            project.properties = project.properties.map((p) => {
               if (p.building) {
                 p.building.agency = undefined;
                 p.building.agencyId = values.transferToAgencyId;

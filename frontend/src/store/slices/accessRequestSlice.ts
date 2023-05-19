@@ -36,7 +36,7 @@ export const accessRequestSlice = createSlice({
   name: 'accessRequest',
   initialState: initialAccessRequestState,
   reducers: {},
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder.addCase(
       storeAccessRequests,
       (state: IAccessRequestState, action: PayloadAction<IPagedItems<IAccessRequest>>) => {
@@ -67,7 +67,7 @@ export const accessRequestSlice = createSlice({
           ...state,
           pagedAccessRequests: {
             ...state.pagedAccessRequests,
-            items: state.pagedAccessRequests.items.filter(x => x.id !== action.payload),
+            items: state.pagedAccessRequests.items.filter((x) => x.id !== action.payload),
           },
         };
       },
@@ -76,7 +76,7 @@ export const accessRequestSlice = createSlice({
       updateAccessRequest,
       (state: IAccessRequestState, action: PayloadAction<IAccessRequest>) => {
         const items = [
-          ...state.pagedAccessRequests.items.filter(req => req.id !== action.payload.id),
+          ...state.pagedAccessRequests.items.filter((req) => req.id !== action.payload.id),
           action.payload,
         ];
         return { ...state, pagedAccessRequests: { ...state.pagedAccessRequests, items: items } };

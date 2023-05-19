@@ -14,9 +14,7 @@ export const informationProjectSchema = Yup.object({
       .min(1),
   }),
   approvedOn: Yup.date().required('Project approved on required'),
-  reportedFiscalYear: Yup.number()
-    .min(1)
-    .required('Project reported fiscal year required'),
+  reportedFiscalYear: Yup.number().min(1).required('Project reported fiscal year required'),
   actualFiscalYear: Yup.number()
     .min(1)
     .required('Project actual or forecasted fiscal year required'),

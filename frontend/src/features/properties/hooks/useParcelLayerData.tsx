@@ -126,7 +126,7 @@ const getAdminAreaFromLayerData = (
   administrativeAreas: ILookupCode[],
   layerMunicipality: string,
 ) => {
-  let administrativeArea = _.find(administrativeAreas, { name: layerMunicipality });
+  const administrativeArea = _.find(administrativeAreas, { name: layerMunicipality });
   if (administrativeArea) {
     return administrativeArea;
   }
@@ -152,7 +152,7 @@ const useParcelLayerData = ({
   nameSpace,
   agencyId,
 }: IUseParcelLayerDataProps) => {
-  const parcelLayerData = useAppSelector(store => store.parcelLayerData?.parcelLayerData);
+  const parcelLayerData = useAppSelector((store) => store.parcelLayerData?.parcelLayerData);
   const { getByType } = useCodeLookups();
   const [showOverwriteDialog, setShowOverwriteDialog] = useState(false);
   const dispatch = useAppDispatch();

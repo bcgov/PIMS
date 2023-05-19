@@ -3,6 +3,7 @@ name: Frontend NPM Dependency Updates
 on:
   schedule:
     - cron: '0 9 * * 1' # Every Monday at 9:00am.
+  workflow_dispatch:
 
 jobs:
   check-versions:
@@ -20,22 +21,27 @@ jobs:
 
       # Run NodeJS script to check for latest npm dependency versions and capture output.
       - name: Run Node.js script
-        id: check-versions
+        id: check_versions
         run: |
-          echo "::set-output name=results::$(node .github/helpers/check-npm-dependency-versions.js ../../${{ env.PATH_TO_PACKAGE_JSON }}
+          OUTPUT=$(node .github/helpers/check-npm-dependency-versions.js ../../frontend/package.json)
+          OUTPUT="${OUTPUT//'%'/'%25'}"
+          OUTPUT="${OUTPUT//$'\n'/'%0A'}"
+          OUTPUT="${OUTPUT//$'\r'/'%0D'}"
+          echo "::set-output name=results::$OUTPUT"
+        shell: bash
 
       # Create GitHub Issue.
       - name: Create GitHub issue
         uses: actions/github-script@v6
+        env:
+          INPUT_TITLE: ${{ env.ISSUE_TITLE }}
+          INPUT_BODY: ${{ steps.check_versions.outputs.results }}
         with:
           script: |
-            const issueBody = ${{ steps.check-versions.outputs.results }};
-            const issue = await github.issues.create({
+            const issue = await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: ${{ env.ISSUE_TITLE }},
-              body: issueBody,
+              title: process.env.INPUT_TITLE,
+              body: process.env.INPUT_BODY,
             });
             console.log(`Created issue: ${issue.data.html_url}`);
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -7,7 +7,7 @@ import { IProjectNoteProps, ProjectNote } from '.';
 
 export const ErpNotificationNote: React.FC<IProjectNoteProps> = ({ label, tooltip, ...rest }) => {
   const { values, setFieldValue } = useFormikContext<IProjectForm>();
-  let indexOfNote = values.notes.findIndex(n => n.noteType === NoteType.ErpNotification);
+  let indexOfNote = values.notes.findIndex((n) => n.noteType === NoteType.ErpNotification);
 
   indexOfNote = values.notes.length;
   useEffect(() => {

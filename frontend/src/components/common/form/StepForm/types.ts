@@ -13,7 +13,7 @@ export interface IStepperFormContextProps {
   isSubmit: (step: number) => boolean;
 }
 
-export interface ISteppedFormValues<T extends object = {}> {
+export interface ISteppedFormValues<T extends object> {
   activeStep: number;
   activeTab: number;
   data: T;
@@ -28,7 +28,7 @@ export interface IPersistProps {
   persistCallback: (values: any) => void;
 }
 
-export interface ISteppedFormProps<T extends {}> {
+export interface ISteppedFormProps<T extends object> {
   steps: IStep[];
   getTabs?: (values: T) => IStepperTab[];
   // set to true to make to the form persist to localstorage

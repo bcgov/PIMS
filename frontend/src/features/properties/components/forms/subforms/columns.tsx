@@ -36,7 +36,7 @@ const getEditableMoneyCell = (disabled: boolean | undefined, namespace: string, 
     const context = useFormikContext();
     const { values } = context;
     const data = getIn(values, namespace);
-    let financialIndex = indexOfFinancial(data, type, desiredYear);
+    const financialIndex = indexOfFinancial(data, type, desiredYear);
 
     if (disabled && financialIndex >= 0) {
       const value = getIn(values, `${namespace}.${financialIndex}.value`);
@@ -58,26 +58,23 @@ const getEditableMoneyCell = (disabled: boolean | undefined, namespace: string, 
  * This information is only editable if this cell belongs to a parcel row.
  * @param cellInfo provided by react table
  */
-const getEditableDatePickerCell = (
-  namespace: string = 'properties',
-  field: string,
-  type: string,
-  disabled?: boolean,
-) => (cellInfo: any) => {
-  //get the desired year using the current year - the offset
-  const desiredYear = currentYear - cellInfo.row.index;
-  const context = useFormikContext();
-  const { values } = context;
-  const data = getIn(values, namespace);
-  let financialIndex = indexOfFinancial(data, type, desiredYear);
-  return (
-    <FastDatePicker
-      formikProps={context}
-      disabled={disabled}
-      field={`${namespace}.${financialIndex}.${field}`}
-    ></FastDatePicker>
-  );
-};
+const getEditableDatePickerCell =
+  (namespace: string = 'properties', field: string, type: string, disabled?: boolean) =>
+  (cellInfo: any) => {
+    //get the desired year using the current year - the offset
+    const desiredYear = currentYear - cellInfo.row.index;
+    const context = useFormikContext();
+    const { values } = context;
+    const data = getIn(values, namespace);
+    const financialIndex = indexOfFinancial(data, type, desiredYear);
+    return (
+      <FastDatePicker
+        formikProps={context}
+        disabled={disabled}
+        field={`${namespace}.${financialIndex}.${field}`}
+      ></FastDatePicker>
+    );
+  };
 
 const getFiscalYear = () => {
   return (cellInfo: any) => {

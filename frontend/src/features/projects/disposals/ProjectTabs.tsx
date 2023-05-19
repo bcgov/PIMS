@@ -16,9 +16,8 @@ export interface IProjectTabProps {
 }
 
 export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) => {
-  const {
-    values: { workflowCode, statusCode },
-  } = useFormikContext();
+  const { values }: any = useFormikContext();
+  const { workflowCode, statusCode } = values;
   const keycloak = useKeycloakWrapper();
   const location = useLocation();
   const id = location.pathname.split('/')[3];
@@ -37,9 +36,9 @@ export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) 
       workflowCode === Workflow.ERP ||
       workflowCode === Workflow.ASSESS_EXEMPTION ||
       workflowCode === Workflow.ASSESS_EX_DISPOSAL ||
-      !project?.statusHistory?.some(s => s.workflow === Workflow.SUBMIT_DISPOSAL) ||
-      project?.statusHistory?.some(s => s.workflow === Workflow.ERP) ||
-      project?.statusHistory?.some(s => s.workflow === Workflow.ASSESS_EX_DISPOSAL)
+      !project?.statusHistory?.some((s) => s.workflow === Workflow.SUBMIT_DISPOSAL) ||
+      project?.statusHistory?.some((s) => s.workflow === Workflow.ERP) ||
+      project?.statusHistory?.some((s) => s.workflow === Workflow.ASSESS_EX_DISPOSAL)
     )
       tabs.push(
         <Tab key={3} label="Enhanced Referral Program" path={`/projects/disposal/${id}/erp`} />,
@@ -47,15 +46,15 @@ export const ProjectTabs: React.FC<IProjectTabProps> = ({ project, isLoading }) 
 
     if (
       statusCode === WorkflowStatus.NotInSpl ||
-      !project?.statusHistory?.some(s => s.workflow === Workflow.SUBMIT_DISPOSAL) ||
-      project?.statusHistory?.some(s => s.status === WorkflowStatus.NotInSpl)
+      !project?.statusHistory?.some((s) => s.workflow === Workflow.SUBMIT_DISPOSAL) ||
+      project?.statusHistory?.some((s) => s.status === WorkflowStatus.NotInSpl)
     )
       tabs.push(<Tab key={4} label="Not in SPL" path={`/projects/disposal/${id}/not/spl`} />);
 
     if (
       workflowCode === Workflow.SPL ||
-      !project?.statusHistory?.some(s => s.workflow === Workflow.SUBMIT_DISPOSAL) ||
-      project?.statusHistory?.some(s => s.workflow === Workflow.SPL)
+      !project?.statusHistory?.some((s) => s.workflow === Workflow.SUBMIT_DISPOSAL) ||
+      project?.statusHistory?.some((s) => s.workflow === Workflow.SPL)
     ) {
       tabs.push(
         <Tab key={5} label="Surplus Properties List" path={`/projects/disposal/${id}/spl`} />,

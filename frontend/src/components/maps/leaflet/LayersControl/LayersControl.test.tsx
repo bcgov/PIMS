@@ -34,9 +34,9 @@ function setup(ui = <Template />, setMap = noop) {
 
 function isLayerVisible(key: string, leaflet: any) {
   return Object.keys(leaflet._layers)
-    .map(k => leaflet._layers[k])
-    .map(x => x.options)
-    .find(options => options?.key === key);
+    .map((k) => leaflet._layers[k])
+    .map((x) => x.options)
+    .find((options) => options?.key === key);
 }
 
 describe('LayersControl View', () => {

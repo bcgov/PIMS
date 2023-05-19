@@ -16,7 +16,7 @@ interface IProps {
 export const AgencyFilterBar: React.FC<IProps> = ({ value, onChange, handleAdd }) => {
   const lookupCodes = useCodeLookups();
   const agencyOptions = lookupCodes.getByType('Agency');
-  const agencyWithParent = (agencyOptions ?? []).map(c =>
+  const agencyWithParent = (agencyOptions ?? []).map((c) =>
     mapLookupCodeWithParentString(c, agencyOptions),
   );
   return (

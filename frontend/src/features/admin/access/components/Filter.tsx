@@ -27,14 +27,14 @@ export const AccessRequestFilter = (props: IProps) => {
     getFetchLookupCodeAction()(dispatch);
   }, [dispatch]);
 
-  const agencies: IMenuItemProps[] = lookupCodes.getByType('Agency').map(value => {
+  const agencies: IMenuItemProps[] = lookupCodes.getByType('Agency').map((value) => {
     return {
       label: value.name,
       onClick: () => setFilterState({ ...filterState, agency: value.name }),
     };
   });
 
-  const roles: IMenuItemProps[] = lookupCodes.getByType('Role').map(value => {
+  const roles: IMenuItemProps[] = lookupCodes.getByType('Role').map((value) => {
     return {
       label: value.name,
       onClick: () => setFilterState({ ...filterState, role: value.name }),

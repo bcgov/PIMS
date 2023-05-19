@@ -11,7 +11,7 @@ export interface IProps {
 
 export const Properties: React.FC<IProps> = ({ data, hideHeaders }) => {
   return (
-    <Table<IProperty>
+    <Table<IProperty, any>
       hideHeaders={hideHeaders}
       name="nestedPropertiesTable"
       columns={columns}

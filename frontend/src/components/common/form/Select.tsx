@@ -101,7 +101,7 @@ export const Select: React.FC<SelectProps> = ({
   };
 
   const renderOptions = () => {
-    return options.map(option => (
+    return options.map((option) => (
       <option key={option.value} value={option.value} className="option">
         {option.label}
       </option>

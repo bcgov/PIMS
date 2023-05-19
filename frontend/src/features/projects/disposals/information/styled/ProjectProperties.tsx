@@ -17,12 +17,12 @@ export const ProjectProperties = styled(Col)`
 
       .remove:hover {
         cursor: pointer;
-        color: ${props => props.theme.css?.dangerColor};
+        color: ${(props) => props.theme.css?.dangerColor};
       }
     }
 
     .clickable {
-      color: ${props => props.theme.css?.activeColor};
+      color: ${(props) => props.theme.css?.activeColor};
       text-decoration: underline;
     }
   }

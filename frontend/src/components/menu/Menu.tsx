@@ -77,7 +77,7 @@ export const Menu: React.FC<React.PropsWithChildren<IProps>> = ({
   const menuItems =
     !filter || !filterText
       ? options
-      : options.filter(option =>
+      : options.filter((option) =>
           (option.label as string).toLowerCase().includes(filterText.toLowerCase()),
         );
 

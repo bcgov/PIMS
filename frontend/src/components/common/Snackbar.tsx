@@ -32,7 +32,6 @@ export const Snackbar: React.FC<ISnackbar> = ({ onClose, message, show, variant 
         },
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

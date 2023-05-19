@@ -44,7 +44,7 @@ interface UserRoleSelectorFormikValues {
  */
 const UserRoleSelector = ({ options, handleAddRole, handleDeleteRole }: IUserRoleSelector) => {
   const { setFieldValue } = useFormikContext();
-  let { values } = useFormikContext<UserRoleSelectorFormikValues>();
+  const { values } = useFormikContext<UserRoleSelectorFormikValues>();
   // State to manage the current user's roles
   const [roles, setRoles] = useState<string[]>(values.goldRoles ?? []);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -54,8 +54,8 @@ const UserRoleSelector = ({ options, handleAddRole, handleDeleteRole }: IUserRol
   const roleOptions = useMemo(() => {
     return roles !== undefined
       ? options
-          .map(r => ({ label: r, value: r } as SelectOption))
-          .filter(r => !roles.includes(r.value.toString()))
+          .map((r) => ({ label: r, value: r } as SelectOption))
+          .filter((r) => !roles.includes(r.value.toString()))
       : [];
   }, [roles, options]);
 
@@ -66,7 +66,6 @@ const UserRoleSelector = ({ options, handleAddRole, handleDeleteRole }: IUserRol
       setIsUnableToLoadRoles(!values.goldRoles);
       setIsLoading(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values.username]);
 
   useEffect(() => {
@@ -88,7 +87,7 @@ const UserRoleSelector = ({ options, handleAddRole, handleDeleteRole }: IUserRol
     handleAddRole(roleName);
 
     // Set state for Select options.
-    setRoles(prevRoles => {
+    setRoles((prevRoles) => {
       const newRoles = [...prevRoles, roleName];
       return newRoles;
     });
@@ -104,7 +103,7 @@ const UserRoleSelector = ({ options, handleAddRole, handleDeleteRole }: IUserRol
     // Add role to parent component state in EditUserPage.
     handleDeleteRole(roleName);
     // Set state for Select options.
-    setRoles(prev => prev.filter(r => r !== roleName));
+    setRoles((prev) => prev.filter((r) => r !== roleName));
   };
 
   return isUnableToLoadRoles ? (
@@ -128,7 +127,7 @@ const UserRoleSelector = ({ options, handleAddRole, handleDeleteRole }: IUserRol
       </Col>
       <Col>
         {roles
-          ? roles.map(r => (
+          ? roles.map((r) => (
               <Badge key={r} bg="secondary" className="m-1">
                 {r}
                 <FaRegTrashAlt
@@ -139,7 +138,7 @@ const UserRoleSelector = ({ options, handleAddRole, handleDeleteRole }: IUserRol
                 />
               </Badge>
             ))
-          : options.map(r => (
+          : options.map((r) => (
               <Badge key={r} bg="secondary" className="m-1">
                 {r}
                 <FaRegTrashAlt

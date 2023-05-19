@@ -113,7 +113,7 @@ export const Columns = (
     },
     {
       Header: 'Agency',
-      accessor: item => (item.subAgency ? `${item.subAgency} (${item.agency})` : item.agency),
+      accessor: (item) => (item.subAgency ? `${item.subAgency} (${item.agency})` : item.agency),
       align: 'left',
       responsive: true,
       clickable: true,
