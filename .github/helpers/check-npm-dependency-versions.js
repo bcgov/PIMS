@@ -151,7 +151,7 @@ const codeBlock = (text, language) => `\n\`\`\` ${language}\n${text}\n\`\`\`\n`;
     for (let key in devDependencyResults) {
       const { dependency, version, latestVersion, versionChange } = devDependencyResults[key];
       console.log(
-        `- \`${dependency}\` Update by running \`npm install ${dependency}@${latestVersion}\``,
+        `- \`${dependency}\` Update by running \`npm install -D ${dependency}@${latestVersion}\``,
       );
       console.log(`  - Current version is \`${version}\` (${versionChange} update).`);
     }
