@@ -1,6 +1,6 @@
-# Redhat Certified Container Image
-# https://catalog.redhat.com/software/containers/ubi8/nodejs-18/6278e5c078709f5277f26998
-FROM registry.access.redhat.com/ubi8/nodejs-18:1-32 as node
+# Docker Hub offical image for node:18-bullseye-slim image
+# https://hub.docker.com/layers/library/node/18-bullseye-slim/images/sha256-48a99b923315db4ddc4800557af85dd2f6fefd7659877d586548fd4fd9768dec?context=explore
+FROM node:18-bullseye-slim
 
 WORKDIR /usr/app
 
