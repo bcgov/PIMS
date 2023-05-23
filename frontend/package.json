@@ -153,7 +153,8 @@
     "webpack": "5.76.0",
     "sass-loader@<13.2.2": "13.2.2",
     "typescript@<5.0.4": "5.0.4",
-    "yaml@<2.2.2": "2.2.2"
+    "yaml@<2.2.2": "2.2.2",
+    "fork-ts-checker-webpack-plugin@<6.5.3": "6.5.3"
   },
   "jest": {
     "transform": {
