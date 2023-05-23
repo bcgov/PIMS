@@ -2,7 +2,7 @@ name: Frontend NPM Dependency Updates
 
 on:
   schedule:
-    - cron: '0 9 * * 1' # Every Monday at 9:00am.
+    - cron: '0 8 * * 1' # Every Monday at 8:00am UTC - roughly midnight Pacific Time.
   workflow_dispatch:
 
 jobs:

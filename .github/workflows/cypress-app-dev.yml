@@ -1,9 +1,9 @@
 name: PIMS APP Cypress Tests - Dev
 
 on:
-  push:
-    branches: [dev]
-    paths: ['frontend/**']
+  schedule:
+    - cron: '0 20 * * *' # Every day at 8:00pm UTC - roughly noon Pacific Time.
+  workflow_dispatch:
 
 jobs:
   PIMS-App-Cypress-Tests-Dev:
