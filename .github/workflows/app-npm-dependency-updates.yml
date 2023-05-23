@@ -1,4 +1,4 @@
-name: Frontend NPM Dependency Updates
+name: App NPM Dependency Updates
 
 on:
   schedule:
@@ -7,9 +7,10 @@ on:
 
 jobs:
   check-versions:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-23.10
     container:
-      image: node:20.2-bullseye-slim # Lightweight node js image.
+      # Lightweight NodeJS Image - v20.2.x
+      image: node:20.2-bullseye-slim
     env:
       PATH_TO_PACKAGE_JSON: 'frontend/package.json'
       ISSUE_TITLE: 'Frontend NPM Dependency Updates'
