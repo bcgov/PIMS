@@ -122,7 +122,6 @@ describe('MapProperties View', () => {
   });
 
   afterEach(() => {
-    window.ResizeObserver = ResizeObserver;
     jest.restoreAllMocks();
   });
 
