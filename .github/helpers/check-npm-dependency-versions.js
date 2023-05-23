@@ -1,8 +1,11 @@
 const https = require('https');
+const path = require('path');
 
 // Get package.json file.
 const cmdLineArgument = process.argv.slice(2)[0];
-const packageJsonPath = cmdLineArgument.startsWith('./') ? cmdLineArgument : `./${cmdLineArgument}`;
+const packageJsonPath = cmdLineArgument.startsWith('./')
+  ? path.resolve(cmdLineArgument)
+  : path.resolve(`./${cmdLineArgument}`);
 const packageJson = require(packageJsonPath);
 
 // Read the package.json file and get the list of dependencies and devDependencies.
@@ -90,6 +93,9 @@ const codeBlock = (text, language) => `\n\`\`\` ${language}\n${text}\n\`\`\`\n`;
 (async () => {
   const check = '✔️';
   const attention = '⚠️';
+  const patch = '🟢';
+  const minor = '🔵';
+  const major = '🔴';
 
   await checkVersions(dependencies);
   await checkVersions(devDependencies);
@@ -115,45 +121,50 @@ const codeBlock = (text, language) => `\n\`\`\` ${language}\n${text}\n\`\`\`\n`;
     console.log(`${attention} - ${devDependencyResults.length} Dev dependencies are out-of-date.`);
   }
 
-  // List dependencies to update.
-  if (dependencyResults.length !== 0) {
-    console.log(' ');
-    console.log(heading3('Standard Dependencies to Update:'));
+  if (dependencyResults.length > 0 || devDependencyResults.length > 0)
     console.log(
       codeBlock(
-        '- Run all install commands from the directory where the package.json is located.',
+        `- Run all install commands from the directory where the package.json is located.
+        \n ${patch} is used to display a patch upgrade - typically indicates the release of bug fixes
+        or small improvements that don't introduce major changes or new features.
+        \n ${minor} is used to display a minor upgrade - usually introduces new features or enhancements
+        that are not disruptive to the overall system but may require some attention or testing.
+        \n ${major} is used to display a major upgrade - typically involves substantial changes, 
+        such as breaking changes, architectural modifications, or the introduction of 
+        new functionalities that may require significant adaptations or testing.`,
         'Diff',
       ),
     );
+
+  // List dependencies to update.
+  if (dependencyResults.length > 0) {
+    console.log(' ');
+    console.log(heading3('Standard Dependencies to Update:'));
 
     // Loop through each dependency to update.
     for (let key in dependencyResults) {
       const { dependency, version, latestVersion, versionChange } = dependencyResults[key];
+      const versionChangeColor =
+        versionChange === 'Major' ? major : versionChange === 'Minor' ? minor : patch;
       console.log(
-        `- \`${dependency}\` Update by running \`npm install ${dependency}@${latestVersion}\``,
+        `- ${versionChangeColor} \`${dependency}\` Update from version \`${version}\` by running \`npm install ${dependency}@${latestVersion}\``,
       );
-      console.log(`  - Current version is \`${version}\` (${versionChange} update).`);
     }
   }
 
   // List devDependencies to update.
-  if (devDependencyResults.length !== 0) {
+  if (devDependencyResults.length > 0) {
     console.log(' ');
     console.log(heading3('Dev Dependencies to Update:'));
-    console.log(
-      codeBlock(
-        '- Run all install commands from the directory where the package.json is located.',
-        'Diff',
-      ),
-    );
 
     // Loop through each devDependency to update.
     for (let key in devDependencyResults) {
       const { dependency, version, latestVersion, versionChange } = devDependencyResults[key];
+      const versionChangeColor =
+        versionChange === 'Major' ? major : versionChange === 'Minor' ? minor : patch;
       console.log(
-        `- \`${dependency}\` Update by running \`npm install -D ${dependency}@${latestVersion}\``,
+        `- ${versionChangeColor} \`${dependency}\` Update from version \`${version}\` by running \`npm install -D ${dependency}@${latestVersion}\``,
       );
-      console.log(`  - Current version is \`${version}\` (${versionChange} update).`);
     }
   }
 })();
