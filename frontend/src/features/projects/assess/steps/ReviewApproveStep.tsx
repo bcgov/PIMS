@@ -1,12 +1,14 @@
 import ProjectLayout from 'features/projects/common/ProjectLayout';
 import { IProject, IProjectTask, IStepProps } from 'features/projects/interfaces';
 import { LayoutWrapper } from 'features/routes';
-import { Formik, FormikValues, setIn, validateYupSchema, yupToFormErrors } from 'formik';
+import { Formik, FormikValues, setIn, validateYupSchema } from 'formik';
 import { WorkflowStatus } from 'hooks/api/projects';
 import _ from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 import { Container, Form } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { zodToFormikErrors } from 'utils';
+import { ZodError } from 'zod';
 
 import { StepErrorSummary, useProject, useStepForm } from '../../common';
 import { fetchProjectTasks } from '../../common/projectsActionCreator';
@@ -63,7 +65,7 @@ export const validateDeny = async (project: IProject) => {
     await validateYupSchema(project, DenyProjectYupSchema);
     return Promise.resolve({});
   } catch (errors) {
-    return Promise.resolve(yupToFormErrors(errors));
+    return Promise.resolve(zodToFormikErrors(errors as ZodError));
   }
 };
 
@@ -92,7 +94,7 @@ export const validateApprove = async (project: IProject) => {
     );
     return Promise.resolve(taskErrors);
   } catch (errors) {
-    return _.merge(yupToFormErrors(errors), taskErrors);
+    return _.merge(zodToFormikErrors(errors as ZodError), taskErrors);
   }
 };
 

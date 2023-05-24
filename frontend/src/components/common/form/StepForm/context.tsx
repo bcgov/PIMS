@@ -1,9 +1,11 @@
-import { getIn, setIn, useFormikContext, yupToFormErrors } from 'formik';
+import { getIn, setIn, useFormikContext } from 'formik';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import { noop } from 'lodash';
 import _ from 'lodash';
 import * as React from 'react';
 import { useCallback } from 'react';
+import { zodToFormikErrors } from 'utils';
+import { ZodError } from 'zod';
 
 import { ISteppedFormValues, IStepperFormContextProps, IStepperFormProviderProps } from './types';
 
@@ -93,7 +95,7 @@ export const StepperFormProvider: React.FC<React.PropsWithChildren<IStepperFormP
         schema.validateSync(validationValues, { abortEarly: false });
         completeStep(index);
       } catch (e) {
-        const errors = setIn({}, nameSpace, yupToFormErrors(e));
+        const errors = setIn({}, nameSpace, zodToFormikErrors(e as ZodError));
         setErrors(errors);
         setTouched(errors);
         return false;

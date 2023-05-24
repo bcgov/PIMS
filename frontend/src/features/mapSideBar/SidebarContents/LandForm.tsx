@@ -25,7 +25,7 @@ import { defaultPidPinFormValues } from 'features/properties/components/forms/su
 import LastUpdatedBy from 'features/properties/components/LastUpdatedBy';
 import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
-import { useFormikContext, yupToFormErrors } from 'formik';
+import { useFormikContext } from 'formik';
 import { IGeocoderResponse, useApi } from 'hooks/useApi';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
@@ -37,6 +37,7 @@ import { Button } from 'react-bootstrap';
 import { useAppDispatch } from 'store';
 import { createParcel, updateParcel } from 'store/slices/hooks/parcelsActionCreator';
 import styled from 'styled-components';
+import { zodToFormikErrors } from 'utils';
 import { stringToNull } from 'utils';
 import {
   LandIdentificationSchema,
@@ -393,15 +394,15 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
     : keycloak.agencyId ?? '';
 
   /**
-   * Combines yup validation with manual validation of financial data for performance reasons.
-   * Large forms can take 3-4 seconds to validate with an all-yup validation schema.
+   * Combines zod validation with manual validation of financial data for performance reasons.
+   * Large forms can take 3-4 seconds to validate with an all-zod validation schema.
    * This validation is significantly faster.
    * @param values formik form values to validate.
    */
   const handleValidate = async (values: ISteppedFormValues<IParcel>) => {
-    const yupErrors: any = ParcelSchema.validate(values.data, { abortEarly: false }).then(
+    const zodErrors: any = ParcelSchema.validate(values.data, { abortEarly: false }).then(
       () => ({}),
-      (err: any) => yupToFormErrors(err),
+      (err: any) => zodToFormikErrors(err),
     );
 
     let pidDuplicated = false;
@@ -425,7 +426,7 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
       pinDuplicated = !(await isPinAvailable(values.data));
     }
 
-    let errors = await yupErrors;
+    let errors = await zodErrors;
     if (pidDuplicated) {
       errors = { ...errors, pid: 'This PID is already in use.' };
     }

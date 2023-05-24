@@ -14,7 +14,7 @@ import {
 } from 'features/properties/components/forms/subforms/EvaluationForm';
 import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
-import { getIn, setIn, useFormikContext, yupToFormErrors } from 'formik';
+import { getIn, setIn, useFormikContext } from 'formik';
 import { IGeocoderResponse, useApi } from 'hooks/useApi';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
@@ -25,6 +25,7 @@ import { useState } from 'react';
 import { Button, Form as BSForm } from 'react-bootstrap';
 import { useAppDispatch } from 'store';
 import styled from 'styled-components';
+import { zodToFormikErrors } from 'utils';
 import { stringToNull } from 'utils';
 import {
   AssociatedLandOwnershipSchema,
@@ -451,8 +452,8 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
     : keycloak.agencyId ?? '';
 
   /**
-   * Combines yup validation with manual validation of financial data for performance reasons.
-   * Large forms can take 3-4 seconds to validate with an all-yup validation schema.
+   * Combines zod validation with manual validation of financial data for performance reasons.
+   * Large forms can take 3-4 seconds to validate with an all-zod validation schema.
    * This validation is significantly faster.
    * @param values formik form values to validate.
    */
@@ -468,14 +469,14 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
     await Promise.all(
       ownedParcels.map(async (p: any) => {
         const index = values.data.parcels.indexOf(p);
-        const yupErrors: any = await LandSchema.validate(p, {
+        const zodErrors: any = await LandSchema.validate(p, {
           abortEarly: false,
         }).then(
           () => ({}),
-          (err: any) => yupToFormErrors(err),
+          (err: any) => zodToFormikErrors(err),
         );
-        if (Object.keys(yupErrors).length > 0) {
-          errors = setIn(errors, `data.parcels.${index}`, yupErrors);
+        if (Object.keys(zodErrors).length > 0) {
+          errors = setIn(errors, `data.parcels.${index}`, zodErrors);
         }
 
         let pidDuplicated = false;

@@ -77,7 +77,9 @@
     "supercluster": "7.1.5",
     "text-mask-addons": "3.8.0",
     "tiles-in-bbox": "1.0.2",
-    "yup": "0.32.11"
+    "yup": "0.32.11",
+    "zod": "3.21.4",
+    "zod-formik-adapter": "1.2.0"
   },
   "devDependencies": {
     "@babel/preset-typescript": "7.21.5",

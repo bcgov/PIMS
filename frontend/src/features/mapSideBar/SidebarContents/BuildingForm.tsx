@@ -22,7 +22,7 @@ import {
 import LastUpdatedBy from 'features/properties/components/LastUpdatedBy';
 import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
 import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
-import { useFormikContext, yupToFormErrors } from 'formik';
+import { useFormikContext } from 'formik';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { noop } from 'lodash';
@@ -31,6 +31,7 @@ import * as React from 'react';
 import { Button } from 'react-bootstrap';
 import { useAppDispatch } from 'store';
 import styled from 'styled-components';
+import { zodToFormikErrors } from 'utils';
 import { stringToNull } from 'utils';
 import {
   BuildingInformationSchema,
@@ -414,18 +415,18 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
     : keycloak.agencyId ?? '';
 
   /**
-   * Combines yup validation with manual validation of financial data for performance reasons.
-   * Large forms can take 3-4 seconds to validate with an all-yup validation schema.
+   * Combines zod validation with manual validation of financial data for performance reasons.
+   * Large forms can take 3-4 seconds to validate with an all-zod validation schema.
    * This validation is significantly faster.
    * @param values formik form values to validate.
    */
   const handleValidate = async (values: ISteppedFormValues<IBuilding>) => {
-    const yupErrors: any = BuildingSchema.validate(values.data, { abortEarly: false }).then(
+    const zodErrors: any = BuildingSchema.validate(values.data, { abortEarly: false }).then(
       () => ({}),
-      (err: any) => yupToFormErrors(err),
+      (err: any) => zodToFormikErrors(err),
     );
 
-    const errors = await yupErrors;
+    const errors = await zodErrors;
     return Object.keys(errors).length ? Promise.resolve({ data: errors }) : Promise.resolve({});
   };
   return (
