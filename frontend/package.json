@@ -155,8 +155,8 @@
     "typescript@<5.0.4": "5.0.4",
     "yaml@<2.2.2": "2.2.2",
     "fork-ts-checker-webpack-plugin@<6.5.3": "6.5.3",
-    "nth-check": "2.0.1",
-    "css-what": "5.0.1"
+    "nth-checkt@<2.0.1": "2.0.1",
+    "css-whatt@<5.0.1": "5.0.1"
   },
   "jest": {
     "transform": {
