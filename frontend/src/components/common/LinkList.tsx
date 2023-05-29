@@ -24,8 +24,9 @@ interface ILinkedListProps {
  * Generic component that displays a list of links that open in a new tab. Requires input to be formatted into a list of {@link ILinkListItem}.
  * @param {ILinkedListProps} param0
  */
-export const LinkList: React.FunctionComponent<ILinkedListProps &
-  React.HTMLAttributes<HTMLDivElement>> = ({ disabled, listItems, noItemsMessage, ...rest }) => {
+export const LinkList: React.FunctionComponent<
+  ILinkedListProps & React.HTMLAttributes<HTMLDivElement>
+> = ({ listItems, noItemsMessage }) => {
   return (
     <>
       {listItems.length ? (

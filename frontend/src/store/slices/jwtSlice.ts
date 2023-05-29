@@ -13,7 +13,7 @@ export const jwtSlice = createSlice({
     builder.addCase(saveJwt, (_state: any, action: PayloadAction<any>) => {
       return action.payload;
     });
-    builder.addCase(clearJwt, (_state: any) => {
+    builder.addCase(clearJwt, () => {
       return '';
     });
   },

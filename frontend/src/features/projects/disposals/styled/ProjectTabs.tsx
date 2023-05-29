@@ -11,13 +11,13 @@ export const ProjectTabs = styled.div`
     top: 0;
     left: 0;
     z-index: 100;
-    background-color: ${props => props.theme.css?.darkVariantColor};
+    background-color: ${(props) => props.theme.css?.darkVariantColor};
     opacity: 0.35;
     border-radius: 0.25em;
 
     & > div {
       margin: auto;
-      color: ${props => props.theme.css?.accentColor};
+      color: ${(props) => props.theme.css?.accentColor};
     }
   }
 `;

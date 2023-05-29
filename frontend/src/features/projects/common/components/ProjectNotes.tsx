@@ -100,7 +100,6 @@ export const PublicNotes = ({
 export const ErpNotificationNotes = ({
   label,
   tooltip,
-  field,
   className,
   outerClassName,
   disabled,

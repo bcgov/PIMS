@@ -1,4 +1,3 @@
-# Redhat Certified Container Image
 # https://catalog.redhat.com/software/containers/ubi8/nodejs-18/6278e5c078709f5277f26998
 FROM registry.access.redhat.com/ubi8/nodejs-18:1-32 as node
 

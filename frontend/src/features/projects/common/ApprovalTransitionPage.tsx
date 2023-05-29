@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { updateWorkflowStatus, useProject } from '.';
 import { fetchProjectWorkflow } from './projectsActionCreator';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IApprovalTransitionPageProps {}
 
 const transitionFunction = (promise: any, navigate: any, toStatusCode: string) => {
@@ -36,10 +37,10 @@ const ErrorMessage = () => {
   );
 };
 
-export const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransitionPageProps> = props => {
+export const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransitionPageProps> = () => {
   const { workflowStatuses } = useProject();
   const dispatch = useAppDispatch();
-  const project = useAppSelector(store => store.project.project);
+  const project = useAppSelector((store) => store.project.project);
   const [isTransitioned, setIsTransitioned] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -47,7 +48,7 @@ export const ApprovalTransitionPage: React.FunctionComponent<IApprovalTransition
   const [error, setError] = React.useState(false);
 
   const queryParams = new URLSearchParams(location.search);
-  let searchParams: any = {};
+  const searchParams: any = {};
   for (const [key, value] of queryParams.entries()) {
     searchParams[key] = value;
   }

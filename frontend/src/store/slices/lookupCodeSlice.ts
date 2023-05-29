@@ -15,7 +15,7 @@ export const lookupCodeSlice = createSlice({
   name: 'lookupCode',
   initialState: initialLookupCodeState,
   reducers: {},
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder.addCase(
       storeLookupCodes,
       (state: ILookupCodeState, action: PayloadAction<ILookupCode[]>) => {

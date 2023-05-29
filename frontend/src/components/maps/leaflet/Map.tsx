@@ -170,9 +170,7 @@ const Map: React.FC<MapProps> = ({
   zoom: zoomProp = DEFAULT_MAP_ZOOM,
   agencies,
   administrativeAreas,
-  lotSizes,
   selectedProperty,
-  onMarkerClick,
   onMapClick,
   disableMapFilterBar,
   interactive = true,
@@ -186,7 +184,7 @@ const Map: React.FC<MapProps> = ({
   const parcelsService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
   const { setChanged } = useFilterContext();
   const popUpContext = React.useContext(PropertyPopUpContext);
-  const parcelLayerFeature = useAppSelector(store => store.parcelLayerData?.parcelLayerFeature);
+  const parcelLayerFeature = useAppSelector((store) => store.parcelLayerData?.parcelLayerFeature);
 
   const [baseLayers, setBaseLayers] = React.useState<BaseLayer[]>([]);
   const [showFilterBackdrop, setShowFilterBackdrop] = React.useState(true);
@@ -203,7 +201,7 @@ const Map: React.FC<MapProps> = ({
   });
   const [infoOpen, setInfoOpen] = React.useState(false);
   const [layersOpen, setLayersOpen] = React.useState(false);
-  const zoom = useAppSelector(store => store.mapViewZoom) ?? zoomProp;
+  const zoom = useAppSelector((store) => store.mapViewZoom) ?? zoomProp;
 
   useActiveFeatureLayer({
     selectedProperty,
@@ -215,7 +213,7 @@ const Map: React.FC<MapProps> = ({
 
   React.useEffect(() => {
     // fetch GIS base layers configuration from /public folder
-    axios.get('/basemaps.json')?.then(result => {
+    axios.get('/basemaps.json')?.then((result) => {
       setBaseLayers(result.data?.basemaps);
       setActiveBasemap(result.data?.basemaps?.[0]);
     });
@@ -287,7 +285,7 @@ const Map: React.FC<MapProps> = ({
   const handleBasemapToggle = (e: BasemapToggleEvent) => {
     const { previous, current } = e;
     setBaseLayers([current, previous]);
-    var tileLayer = L.tileLayer(current.url, {});
+    const tileLayer = L.tileLayer(current.url, {});
     mapRef.current?.addLayer(tileLayer);
     tileLayer.setUrl(current.url);
     setActiveBasemap(current);
@@ -337,13 +335,13 @@ const Map: React.FC<MapProps> = ({
 
   function MapEvents() {
     useMapEvents({
-      click: e => {
+      click: (e) => {
         showLocationDetails(e);
       },
-      moveend: e => {
+      moveend: (e) => {
         handleMoveEnd(e);
       },
-      zoomend: e => {
+      zoomend: (e) => {
         dispatch(setMapViewZoom(e.sourceTarget.getZoom()));
       },
     });
@@ -408,7 +406,7 @@ const Map: React.FC<MapProps> = ({
             center={center}
             zoom={zoom}
             closePopupOnClick={interactive}
-            whenCreated={mapInstance => setMapRef({ current: mapInstance })}
+            whenCreated={(mapInstance) => setMapRef({ current: mapInstance })}
           >
             {activeBasemap && (
               <TileLayer

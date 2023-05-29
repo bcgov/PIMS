@@ -86,7 +86,7 @@ const successStore = mockStore({
 });
 
 const componentRender = (store: any) => {
-  let component = create(
+  const component = create(
     <Formik initialValues={{}} onSubmit={noop}>
       <MemoryRouter initialEntries={[history.location]}>
         <Provider store={store}>

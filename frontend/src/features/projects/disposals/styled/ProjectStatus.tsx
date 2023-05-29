@@ -15,7 +15,7 @@ export const ProjectStatus = styled(Row)`
   }
 
   .status {
-    background-color: ${props => props.theme.css?.filterBackgroundColor};
+    background-color: ${(props) => props.theme.css?.filterBackgroundColor};
     padding: 0.5em;
     border-radius: 0.5em;
 
@@ -24,7 +24,7 @@ export const ProjectStatus = styled(Row)`
     }
 
     .btn-secondary:hover {
-      background-color: ${props => props.theme.css?.dropdownBackgroundColor};
+      background-color: ${(props) => props.theme.css?.dropdownBackgroundColor};
     }
   }
 

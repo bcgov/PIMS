@@ -38,7 +38,6 @@ const Index = () => {
   React.useEffect(() => {
     setKeycloak(keycloakInstance);
     setLoading(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return loading ? (

@@ -145,7 +145,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
     try {
       const points =
         supercluster?.getLeaves(currentCluster?.properties?.cluster_id, Infinity) ?? [];
-      return points.map(p => p.properties.id);
+      return points.map((p) => p.properties.id);
     } catch (error) {
       return [];
     }
@@ -170,8 +170,8 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
   const componentDidMount = useCallback(() => {
     if (!spiderfierRef.current) {
       spiderfierRef.current = new Spiderfier(mapInstance, {
-        getClusterId: cluster => cluster?.properties?.cluster_id as number,
-        getClusterPoints: clusterId => supercluster?.getLeaves(clusterId, Infinity) ?? [],
+        getClusterId: (cluster) => cluster?.properties?.cluster_id as number,
+        getClusterPoints: (clusterId) => supercluster?.getLeaves(clusterId, Infinity) ?? [],
         pointToLayer: pointToLayer,
       });
     }
@@ -263,7 +263,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
       popUpContext.setLoading(true);
       if ([PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(propertyTypeId)) {
         getParcel(id as number)
-          .then(parcel => {
+          .then((parcel) => {
             popUpContext.setPropertyInfo(parcel);
           })
           .catch(() => {
@@ -274,7 +274,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
           });
       } else if (propertyTypeId === PropertyTypes.BUILDING) {
         getBuilding(id as number)
-          .then(building => {
+          .then((building) => {
             popUpContext.setPropertyInfo(building);
             if (!!building.parcels.length) {
               dispatch(
@@ -322,7 +322,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                 key={index}
                 position={[latitude, longitude]}
                 eventHandlers={{
-                  click: e => {
+                  click: (e) => {
                     zoomOrSpiderfy(cluster);
                     e.target.closePopup();
                   },

@@ -1,0 +1,48 @@
+name: App NPM Dependency Updates
+
+on:
+  schedule:
+    - cron: '0 8 * * 1' # Every Monday at 8:00am UTC - roughly midnight Pacific Time.
+  workflow_dispatch:
+
+jobs:
+  check-versions:
+    runs-on: ubuntu-22.04
+    container:
+      # Lightweight NodeJS Image - v20.2.x
+      image: node:20.2-bullseye-slim
+    env:
+      PATH_TO_PACKAGE_JSON: 'frontend/package.json'
+      ISSUE_TITLE: 'Frontend NPM Dependency Updates'
+
+    steps:
+      # Checkout pull request branch.
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Run NodeJS script to check for latest npm dependency versions and capture output.
+      - name: Run Node.js script
+        id: check_versions
+        run: |
+          OUTPUT=$(node .github/helpers/check-npm-dependency-versions.js frontend/package.json)
+          OUTPUT="${OUTPUT//'%'/'%25'}"
+          OUTPUT="${OUTPUT//$'\n'/'%0A'}"
+          OUTPUT="${OUTPUT//$'\r'/'%0D'}"
+          echo "::set-output name=results::$OUTPUT"
+        shell: bash
+
+      # Create GitHub Issue.
+      - name: Create GitHub issue
+        uses: actions/github-script@v6
+        env:
+          INPUT_TITLE: ${{ env.ISSUE_TITLE }}
+          INPUT_BODY: ${{ steps.check_versions.outputs.results }}
+        with:
+          script: |
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: process.env.INPUT_TITLE,
+              body: process.env.INPUT_BODY,
+            });
+            console.log(`Created issue: ${issue.data.html_url}`);

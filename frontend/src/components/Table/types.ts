@@ -17,8 +17,8 @@ interface IExtraColumnProps {
 }
 
 // Typings for configuration sent to `react-table`
-export type ColumnWithProps<D extends object = {}> = Column<D> & IExtraColumnProps;
+export type ColumnWithProps<D extends object> = Column<D> & IExtraColumnProps;
 
 // Typings for object instances - as returned by `react-table`
-export type ColumnInstanceWithProps<D extends object = {}> = ColumnInstance<D> & IExtraColumnProps;
-export type CellWithProps<D extends object = {}> = Cell<D> & { column: ColumnInstanceWithProps<D> };
+export type ColumnInstanceWithProps<D extends object> = ColumnInstance<D> & IExtraColumnProps;
+export type CellWithProps<D extends object> = Cell<D> & { column: ColumnInstanceWithProps<D> };

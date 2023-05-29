@@ -13,7 +13,7 @@ describe('FastCurrencyInput', () => {
   it('fast currency input renders correctly', () => {
     const { container } = render(
       <Formik initialValues={{ assessedLand: '' }} onSubmit={noop}>
-        {props => (
+        {(props) => (
           <Form>
             <FastCurrencyInput formikProps={props} field={'assessedLand'} tooltip={'Tooltip'} />
           </Form>
@@ -26,7 +26,7 @@ describe('FastCurrencyInput', () => {
   it('fast currency input should not show tooltip', () => {
     const { container } = render(
       <Formik initialValues={{ assessedLand: '' }} onSubmit={noop}>
-        {props => (
+        {(props) => (
           <Form>
             <FastCurrencyInput formikProps={props} field={'assessedLand'} />
           </Form>
@@ -40,7 +40,7 @@ describe('FastCurrencyInput', () => {
   it('fast currency input should show tooltip', () => {
     const { container } = render(
       <Formik initialValues={{ assessedLand: '' }} onSubmit={noop}>
-        {props => (
+        {(props) => (
           <Form>
             <FastCurrencyInput formikProps={props} field={'assessedLand'} tooltip="Test tooltip" />
           </Form>
@@ -54,7 +54,7 @@ describe('FastCurrencyInput', () => {
   it('fast currency input custom placeholder', async () => {
     const component = render(
       <Formik initialValues={{ assessedLand: '' }} onSubmit={noop}>
-        {props => (
+        {(props) => (
           <Form>
             <FastCurrencyInput
               formikProps={props}

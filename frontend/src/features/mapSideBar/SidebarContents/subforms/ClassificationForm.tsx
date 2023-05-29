@@ -95,18 +95,18 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
 
   const formikRef = React.useRef<FormikValues>();
   const { context } = useQueryParamSideBar(formikRef);
-  let surplusActiveOrEncumbered =
+  const surplusActiveOrEncumbered =
     getIn(formikProps.values, field) === Classifications.SurplusEncumbered ||
     getIn(formikProps.values, field) === Classifications.SurplusActive;
 
   /** classId based on current formik values to determine which classsification information box to display */
-  let classId = getIn(formikProps.values, field);
+  const classId = getIn(formikProps.values, field);
 
   /**
    * determine how to filter the classifications
    * @param id - The classification id.
    */
-  const determineFilter = (id: Number) => {
+  const determineFilter = (id: number) => {
     switch (context) {
       case SidebarContextType.ADD_BUILDING:
       case SidebarContextType.VIEW_BUILDING:
@@ -135,7 +135,7 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
   let filteredClassifications = classifications;
   /** users not allowed to select disposed, but display these values if one of these classifications has already been selected. */
   filteredClassifications = classifications.filter(
-    c => determineFilter(+c.value) || +c.value === +classId,
+    (c) => determineFilter(+c.value) || +c.value === +classId,
   );
 
   const renderInfo = () => {

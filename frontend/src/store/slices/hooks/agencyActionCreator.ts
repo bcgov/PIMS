@@ -12,41 +12,39 @@ import { handleAxiosResponse } from 'utils';
 
 import { error, request, success } from '.';
 
-export const getAgenciesAction = (params: API.IPaginateParams) => async (
-  dispatch: Dispatch<AnyAction>,
-) => {
-  dispatch(storeRequest(request(actionTypes.GET_AGENCIES)));
-  dispatch(showLoading());
-  return await CustomAxios()
-    .post(ENVIRONMENT.apiUrl + API.POST_AGENCIES(), params)
-    .then((response: AxiosResponse) => {
-      dispatch(storeSuccess(success(actionTypes.GET_AGENCIES, response.status)));
-      dispatch(storeAgencies(response.data));
-      dispatch(hideLoading());
-    })
-    .catch((axiosError: AxiosError) =>
-      dispatch(
-        storeError(error(actionTypes.GET_AGENCIES, axiosError?.response?.status, axiosError)),
-      ),
-    )
-    .finally(() => dispatch(hideLoading()));
-};
+export const getAgenciesAction =
+  (params: API.IPaginateParams) => async (dispatch: Dispatch<AnyAction>) => {
+    dispatch(storeRequest(request(actionTypes.GET_AGENCIES)));
+    dispatch(showLoading());
+    return await CustomAxios()
+      .post(ENVIRONMENT.apiUrl + API.POST_AGENCIES(), params)
+      .then((response: AxiosResponse) => {
+        dispatch(storeSuccess(success(actionTypes.GET_AGENCIES, response.status)));
+        dispatch(storeAgencies(response.data));
+        dispatch(hideLoading());
+      })
+      .catch((axiosError: AxiosError) =>
+        dispatch(
+          storeError(error(actionTypes.GET_AGENCIES, axiosError?.response?.status, axiosError)),
+        ),
+      )
+      .finally(() => dispatch(hideLoading()));
+  };
 
-export const fetchAgencyDetail = (id: API.IAgencyDetailParams) => async (
-  dispatch: Dispatch<AnyAction>,
-) => {
-  dispatch(storeRequest(request(actionTypes.GET_AGENCY_DETAILS)));
-  dispatch(showLoading());
-  return await CustomAxios()
-    .get(ENVIRONMENT.apiUrl + API.AGENCY_DETAIL(id))
-    .then((response: AxiosResponse) => {
-      dispatch(storeSuccess(success(actionTypes.GET_AGENCY_DETAILS)));
-      dispatch(storeAgencyDetail(response.data));
-      dispatch(hideLoading());
-    })
-    .catch(() => dispatch(storeError(error(actionTypes.GET_AGENCY_DETAILS))))
-    .finally(() => dispatch(hideLoading()));
-};
+export const fetchAgencyDetail =
+  (id: API.IAgencyDetailParams) => async (dispatch: Dispatch<AnyAction>) => {
+    dispatch(storeRequest(request(actionTypes.GET_AGENCY_DETAILS)));
+    dispatch(showLoading());
+    return await CustomAxios()
+      .get(ENVIRONMENT.apiUrl + API.AGENCY_DETAIL(id))
+      .then((response: AxiosResponse) => {
+        dispatch(storeSuccess(success(actionTypes.GET_AGENCY_DETAILS)));
+        dispatch(storeAgencyDetail(response.data));
+        dispatch(hideLoading());
+      })
+      .catch(() => dispatch(storeError(error(actionTypes.GET_AGENCY_DETAILS))))
+      .finally(() => dispatch(hideLoading()));
+  };
 
 const agencyToasts: LifecycleToasts = {
   loadingToast: pimsToasts.agency.AGENCY_UPDATING,
@@ -54,21 +52,20 @@ const agencyToasts: LifecycleToasts = {
   errorToast: pimsToasts.agency.AGENCY_ERROR,
 };
 
-export const getUpdateAgencyAction = (
-  id: API.IAgencyDetailParams,
-  updatedAgency: IAgencyDetail,
-) => async (dispatch: Dispatch<AnyAction>) => {
-  const axiosPromise = CustomAxios({ lifecycleToasts: agencyToasts })
-    .put(ENVIRONMENT.apiUrl + API.AGENCY_DETAIL(id), updatedAgency)
-    .then((response: AxiosResponse) => {
-      dispatch(storeAgencyDetail(response.data));
-      return Promise.resolve(response);
-    });
-  return await handleAxiosResponse(
-    actionTypes.PUT_AGENCY_DETAILS,
-    axiosPromise,
-  )(dispatch).catch(() => {});
-};
+export const getUpdateAgencyAction =
+  (id: API.IAgencyDetailParams, updatedAgency: IAgencyDetail) =>
+  async (dispatch: Dispatch<AnyAction>) => {
+    const axiosPromise = CustomAxios({ lifecycleToasts: agencyToasts })
+      .put(ENVIRONMENT.apiUrl + API.AGENCY_DETAIL(id), updatedAgency)
+      .then((response: AxiosResponse) => {
+        dispatch(storeAgencyDetail(response.data));
+        return Promise.resolve(response);
+      });
+    return await handleAxiosResponse(
+      actionTypes.PUT_AGENCY_DETAILS,
+      axiosPromise,
+    )(dispatch).catch(() => {});
+  };
 
 export const createAgency = (agency: IAddAgency) => async (dispatch: Dispatch<AnyAction>) => {
   dispatch(storeRequest(request(actionTypes.ADD_AGENCY)));

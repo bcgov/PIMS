@@ -8,9 +8,7 @@ export const ApprovalConfirmationStepSchema = Yup.object().shape({
 });
 
 export const DocumentationStepSchema = Yup.object().shape({
-  email: Yup.string()
-    .email()
-    .max(100, 'Email must be less than 100 characters'),
+  email: Yup.string().email().max(100, 'Email must be less than 100 characters'),
   firstName: Yup.string().max(100, 'First Name must be less than 100 characters'),
   middleName: Yup.string().max(100, 'Middle Name must be less than 100 characters'),
   lastName: Yup.string().max(100, 'Last Name must be less than 100 characters'),
@@ -60,9 +58,7 @@ export const SelectProjectPropertiesStepYupSchema = Yup.object().shape({
 });
 
 export const ProjectDraftStepYupSchema = Yup.object().shape({
-  name: Yup.string()
-    .max(100, 'Name allows a maximum of 100 characters.')
-    .required('Required'),
+  name: Yup.string().max(100, 'Name allows a maximum of 100 characters.').required('Required'),
   description: Yup.string().max(1000, 'Description allows a maximum of 1000 characters.'),
   note: Yup.string().max(2000, 'Note allows a maximum of 2000 characters.'),
 });

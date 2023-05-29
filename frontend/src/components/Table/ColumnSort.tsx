@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import { ColumnInstanceWithProps } from '.';
 
-interface IColumnSortProps<T extends object = {}> {
+interface IColumnSortProps<T extends object> {
   column: ColumnInstanceWithProps<T>;
   onSort: () => void;
 }
@@ -25,7 +25,7 @@ const AscIcon = styled(IoMdArrowDropup)`
   color: ${variables.activeColor};
 `;
 
-function ColumnSort<T extends object = {}>({ column, onSort }: IColumnSortProps<T>) {
+function ColumnSort<T extends object>({ column, onSort }: IColumnSortProps<T>) {
   if (!column.sortable) {
     return null;
   }

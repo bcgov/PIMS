@@ -12,7 +12,7 @@ export const agenciesSlice = createSlice({
     builder.addCase(saveAgencies, (_state: any, action: PayloadAction<any>) => {
       return action.payload;
     });
-    builder.addCase(clearAgencies, (_state: any) => {
+    builder.addCase(clearAgencies, () => {
       return [];
     });
   },

@@ -13,24 +13,26 @@ export const AccessRequestActions = (props: IAccessRequestActionsProps) => {
 
   const approveRequests = async () => {
     const items = props.selections.map(
-      x => ({ ...x, status: AccessRequestStatus.Approved } as IAccessRequest),
+      (x) => ({ ...x, status: AccessRequestStatus.Approved } as IAccessRequest),
     );
     await submit(items);
   };
 
   const declineRequests = async () => {
     const items = props.selections.map(
-      x => ({ ...x, status: AccessRequestStatus.Declined } as IAccessRequest),
+      (x) => ({ ...x, status: AccessRequestStatus.Declined } as IAccessRequest),
     );
     await submit(items);
   };
 
   const deleteRequests = async () => {
-    await Promise.all(props.selections.map(req => api.getAccessRequestsDeleteAction(req.id, req)));
+    await Promise.all(
+      props.selections.map((req) => api.getAccessRequestsDeleteAction(req.id, req)),
+    );
   };
 
   const submit = async (items: IAccessRequest[]) => {
-    await Promise.all(items.map(req => api.getSubmitAdminAccessRequestAction(req)));
+    await Promise.all(items.map((req) => api.getSubmitAdminAccessRequestAction(req)));
   };
 
   const disabled = props.selections.length === 0;

@@ -27,9 +27,9 @@ jest.mock('hooks/useKeycloakWrapper');
 const mapRef = { current: { leafletMap: {} } };
 jest.mock('leaflet');
 jest.mock('components/maps/leaflet/LayerPopup');
-let clearLayers = jest.fn();
-let addData = jest.fn();
-let findOneWhereContains = jest.fn();
+const clearLayers = jest.fn();
+const addData = jest.fn();
+const findOneWhereContains = jest.fn();
 
 (geoJSON as jest.Mock).mockReturnValue({
   addTo: () => ({ clearLayers, addData } as any),
@@ -41,11 +41,14 @@ let findOneWhereContains = jest.fn();
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
 const getStore = (values?: any) => mockStore(values ?? { parcel: { draftProperties: [] } });
-const getWrapper = (store: any) => ({ children }: any) => (
-  <Provider store={store}>
-    <MemoryRouter initialEntries={[history.location]}>{children}</MemoryRouter>
-  </Provider>
-);
+const getWrapper =
+  (store: any) =>
+  ({ children }: any) =>
+    (
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>{children}</MemoryRouter>
+      </Provider>
+    );
 
 describe('useActiveFeatureLayer hook tests', () => {
   beforeEach(() => {

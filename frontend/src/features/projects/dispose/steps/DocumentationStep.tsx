@@ -53,7 +53,7 @@ const DocumentationStep = ({ isReadOnly, formikRef }: IStepProps) => {
         validate={handleValidate}
         validateOnChange={false}
         enableReinitialize={true}
-        onSubmit={(values, actions) => {
+        onSubmit={(values) => {
           // set the completed on dates during submission.
           values.tasks.forEach((task: any, index: any) => {
             const existingTask = project.tasks[index];
@@ -63,7 +63,7 @@ const DocumentationStep = ({ isReadOnly, formikRef }: IStepProps) => {
               task.completedOn = new Date();
             }
           });
-          return onSubmit(values, actions);
+          return onSubmit(values);
         }}
       >
         {() => (

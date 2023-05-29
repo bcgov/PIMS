@@ -6,8 +6,8 @@ export const Username = () => {
 };
 
 export const FindUserType = (username: string) => {
-  let isIDIRUser = username.includes('idir');
-  let isBCeIDUser = username.includes('bceid');
+  const isIDIRUser = username.includes('idir');
+  const isBCeIDUser = username.includes('bceid');
 
   if (isIDIRUser) {
     return 'idir';

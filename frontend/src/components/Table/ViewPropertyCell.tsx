@@ -8,7 +8,7 @@ import { CellProps, Renderer } from 'react-table';
  * A cell that provides a clickable link to view a given IProperty
  * @param {CellProps<IProperty, number>} props
  */
-const ViewPropertyCell: Renderer<CellProps<IProperty, number>> = props => {
+const ViewPropertyCell: Renderer<CellProps<IProperty, number>> = (props) => {
   const location = useLocation();
   const property = props.row.original;
 

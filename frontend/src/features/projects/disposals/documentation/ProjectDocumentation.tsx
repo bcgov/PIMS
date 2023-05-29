@@ -16,42 +16,43 @@ export const ProjectDocumentation: React.FC = () => {
   const { setFieldValue } = formik;
 
   const projectTasks = formik.values.tasks
-    .filter(t => t.statusCode === DisposeWorkflowStatus.RequiredDocumentation)
+    .filter((t) => t.statusCode === DisposeWorkflowStatus.RequiredDocumentation)
     .map((t, i) => (
       <Check
         key={i}
-        field={`tasks.${formik.values.tasks.findIndex(ft => ft.taskId === t.taskId)}.isCompleted`}
+        field={`tasks.${formik.values.tasks.findIndex((ft) => ft.taskId === t.taskId)}.isCompleted`}
         postLabel={t.description}
         required={!t.isOptional}
         disabled={disabled}
       />
     ));
   const firstNationTasks = formik.values.tasks
-    .filter(t => t.statusCode === ReviewWorkflowStatus.FirstNationConsultation)
+    .filter((t) => t.statusCode === ReviewWorkflowStatus.FirstNationConsultation)
     .map((t, i) => (
       <Check
         key={i}
-        field={`tasks.${formik.values.tasks.findIndex(ft => ft.taskId === t.taskId)}.isCompleted`}
+        field={`tasks.${formik.values.tasks.findIndex((ft) => ft.taskId === t.taskId)}.isCompleted`}
         postLabel={t.description}
         required={!t.isOptional}
         disabled={disabled}
       />
     ));
   const appraisalTasks = formik.values.tasks
-    .filter(t => t.statusCode === ReviewWorkflowStatus.AppraisalReview)
+    .filter((t) => t.statusCode === ReviewWorkflowStatus.AppraisalReview)
     .map((t, i) => (
       <Check
         key={i}
-        field={`tasks.${formik.values.tasks.findIndex(ft => ft.taskId === t.taskId)}.isCompleted`}
+        field={`tasks.${formik.values.tasks.findIndex((ft) => ft.taskId === t.taskId)}.isCompleted`}
         postLabel={t.description}
         required={!t.isOptional}
         disabled={disabled}
-        onChange={checked => {
+        onChange={(checked) => {
           // There are essentially duplicate tasks in the disposal process that match the appraisal tasks.
           // We need to copy the value over.
-          const appraisalName = formik.values.tasks.find(ft => ft.taskId === t.taskId)?.name;
+          const appraisalName = formik.values.tasks.find((ft) => ft.taskId === t.taskId)?.name;
           const field = `tasks.${formik.values.tasks.findIndex(
-            t => t.statusCode === ReviewWorkflowStatus.DisposalProcess && t.name === appraisalName,
+            (t) =>
+              t.statusCode === ReviewWorkflowStatus.DisposalProcess && t.name === appraisalName,
           )}.isCompleted`;
           setFieldValue(field, checked);
         }}
@@ -59,9 +60,8 @@ export const ProjectDocumentation: React.FC = () => {
     ));
 
   // Disabled prop
-  const {
-    values: { workflowCode, statusCode },
-  } = useFormikContext();
+  const { values }: any = useFormikContext();
+  const { workflowCode, statusCode } = values;
   const keycloak = useKeycloakWrapper();
   const [disabled, setDisabled] = useState(false);
   const isAdmin = keycloak.hasClaim(Claim.ReportsSplAdmin);

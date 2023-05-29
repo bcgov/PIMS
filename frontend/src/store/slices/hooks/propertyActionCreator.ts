@@ -15,9 +15,9 @@ const getPropertyNames = (filter: IGeoSearchParams) => {
   return `/properties/search/names?${queryParams.toString()}`;
 };
 
-export const fetchPropertyNames = (agencyId: number) => async (dispatch: Dispatch<AnyAction>) => {
+export const fetchPropertyNames = () => async (dispatch: Dispatch<AnyAction>) => {
   const axiosResponse = CustomAxios()
     .get(ENVIRONMENT.apiUrl + getPropertyNames({}))
-    .then(response => dispatch(savePropertyNames(response.data)));
+    .then((response) => dispatch(savePropertyNames(response.data)));
   return await handleAxiosResponse(STORE_PROPERTY_NAMES, axiosResponse)(dispatch);
 };

@@ -22,7 +22,7 @@ export const PropertyColumns = (
       align: 'left',
       clickable: false,
       maxWidth: 30,
-      Cell: cell => (
+      Cell: (cell) => (
         <TooltipWrapper toolTipId="project-property" toolTip="Remove Property from Project">
           {!disabled ? (
             <FaTrash
@@ -52,7 +52,7 @@ export const PropertyColumns = (
       accessor: 'name',
       align: 'left',
       clickable: false,
-      Cell: cell => {
+      Cell: (cell) => {
         return (
           <TooltipWrapper toolTipId="project-property" toolTip={cell.value}>
             <div>{cell.value}</div>
@@ -65,7 +65,7 @@ export const PropertyColumns = (
       accessor: 'address',
       align: 'left',
       clickable: true,
-      Cell: cell => {
+      Cell: (cell) => {
         return (
           <TooltipWrapper toolTipId="project-property" toolTip={cell.value}>
             <div>{cell.value}</div>
@@ -75,7 +75,7 @@ export const PropertyColumns = (
     },
     {
       Header: 'Classification',
-      accessor: row => Classification[row.classificationId],
+      accessor: (row) => Classification[row.classificationId],
       align: 'left',
       clickable: false,
     },
@@ -123,7 +123,7 @@ export const PropertyColumns = (
       accessor: 'propertyTypeId',
       clickable: false,
       maxWidth: 40,
-      Cell: cell => {
+      Cell: (cell) => {
         return cell.value === PropertyType.Parcel || cell.value === PropertyType.Subdivision ? (
           <LandSvg className="svg" />
         ) : (

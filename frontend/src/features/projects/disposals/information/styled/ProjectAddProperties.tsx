@@ -17,12 +17,12 @@ export const ProjectAddProperties = styled(Col)`
 
       .add:hover {
         cursor: pointer;
-        color: ${props => props.theme.css?.activeColor};
+        color: ${(props) => props.theme.css?.activeColor};
       }
     }
 
     .clickable {
-      color: ${props => props.theme.css?.activeColor};
+      color: ${(props) => props.theme.css?.activeColor};
       text-decoration: underline;
     }
   }
@@ -39,7 +39,7 @@ export const ProjectAddProperties = styled(Col)`
     li {
       padding: 0;
       margin: 0;
-      color: ${props => props.theme.css?.textColor};
+      color: ${(props) => props.theme.css?.textColor};
       background-color: inherit;
       border-top-left-radius: 0;
       border-top-right-radius: 0;
