@@ -14,8 +14,8 @@ export const RowActions = (props: CellProps<IAccessRequestModel>) => {
 
   const isStatusMatch = (value: AccessRequestStatus) => accessRequest.status === value;
 
-  const originalAccessRequest = useAppSelector(store =>
-    store.accessRequest.pagedAccessRequests.items.find(ar => ar.id === accessRequest.id),
+  const originalAccessRequest = useAppSelector((store) =>
+    store.accessRequest.pagedAccessRequests.items.find((ar) => ar.id === accessRequest.id),
   );
 
   const approve = () => {

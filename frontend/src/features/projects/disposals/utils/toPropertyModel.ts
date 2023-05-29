@@ -30,7 +30,7 @@ export const toPropertyModel = (
 
   if (values.propertyTypeId === PropertyType.Building) {
     if (assessed) assessed.value = Number(values.assessedImprovements);
-    const building = ({
+    const building = {
       ...model?.building,
       id: values.propertyId,
       propertyTypeId: values.propertyTypeId,
@@ -40,7 +40,7 @@ export const toPropertyModel = (
       name: values.name,
       evaluations: assessed ? [assessed] : [],
       fiscals: netBook ? [netBook] : [],
-    } as unknown) as IProjectBuildingModel;
+    } as unknown as IProjectBuildingModel;
 
     return {
       id: values.id,
@@ -62,7 +62,7 @@ export const toPropertyModel = (
     assessedLand.push(improvements);
   }
 
-  const parcel = ({
+  const parcel = {
     ...model?.parcel,
     id: values.propertyId,
     propertyTypeId: values.propertyTypeId,
@@ -72,7 +72,7 @@ export const toPropertyModel = (
     name: values.name,
     evaluations: assessedLand,
     fiscals: netBook ? [netBook] : [],
-  } as unknown) as IProjectParcelModel;
+  } as unknown as IProjectParcelModel;
 
   return {
     id: values.id,

@@ -483,6 +483,7 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
             fireMapRefreshEvent();
             actions.resetForm({ values: { ...values, data: response as any } });
           } catch (error) {
+            // empty
           } finally {
             actions.setSubmitting(false);
           }

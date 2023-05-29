@@ -19,7 +19,7 @@ export interface UseSuperclusterProps<P, C> {
 
 const useSupercluster = <
   P extends GeoJsonProperties = Supercluster.AnyProps,
-  C extends GeoJsonProperties = Supercluster.AnyProps
+  C extends GeoJsonProperties = Supercluster.AnyProps,
 >({
   points,
   bounds,

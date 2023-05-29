@@ -14,7 +14,7 @@ export const ProjectSummary = styled(Col)`
   .col {
     display: flex;
     flex-direction: column;
-    background-color: ${props => props.theme.css?.filterBackgroundColor};
+    background-color: ${(props) => props.theme.css?.filterBackgroundColor};
     border-radius: 0.25em;
   }
 
@@ -25,8 +25,8 @@ export const ProjectSummary = styled(Col)`
   }
 
   .section {
-    border: solid 1px ${props => props.theme.css?.formBorderColor};
-    background-color: ${props => props.theme.css?.formBackground};
+    border: solid 1px ${(props) => props.theme.css?.formBorderColor};
+    background-color: ${(props) => props.theme.css?.formBackground};
     border-radius: 0.5em;
     padding: 0.5em;
   }

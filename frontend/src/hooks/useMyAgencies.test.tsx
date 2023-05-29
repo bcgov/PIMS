@@ -41,7 +41,7 @@ const MyAgencies = () => {
 
   return (
     <>
-      {agencies.map(agency => (
+      {agencies.map((agency) => (
         <h6 key={agency.value} data-testid={`agency-${agency.value}`}>
           {agency.label}
         </h6>

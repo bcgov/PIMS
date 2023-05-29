@@ -12,7 +12,7 @@ export const documentationSchema = yup.object({
     then: yup
       .string()
       .required('Appraisal value required')
-      .test('isValue', 'Appraisal value required', value => {
+      .test('isValue', 'Appraisal value required', (value) => {
         return !isNaN(toInteger(value));
       })
       .min(0, 'Minimum amount is $0.00'),

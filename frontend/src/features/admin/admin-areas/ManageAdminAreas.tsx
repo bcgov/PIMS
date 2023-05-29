@@ -85,7 +85,6 @@ export const ManageAdminAreas = () => {
         setAreas(response.items);
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [filter],
   );
   const initialValues = {
@@ -96,7 +95,7 @@ export const ManageAdminAreas = () => {
       <AdminAreaToolbarContainer fluid className="admin-area-toolbar">
         <AdminAreaFilterBar
           handleAdd={() => navigate('/admin/administrativeArea/new')}
-          onChange={value => {
+          onChange={(value) => {
             if ((value as any).id) {
               setFilter({ ...filter, id: (value as any).id });
             } else {

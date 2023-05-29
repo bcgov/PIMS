@@ -65,7 +65,6 @@ const StyledProjectNumbers = styled.div`
 
 export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   nameSpace,
-  index,
   handleGeocoderChanges,
   setMovingPinNameSpace,
   handlePidChange,
@@ -78,7 +77,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
 }) => {
   const [overrideData, setOverrideData] = useState<IParcel>();
 
-  const agencies = (props.agencies ?? []).map(c => mapSelectOptionWithParent(c, props.agencies));
+  const agencies = (props.agencies ?? []).map((c) => mapSelectOptionWithParent(c, props.agencies));
   const formikProps = useFormikContext<ISteppedFormValues<IParcel>>();
   const { lookupCodes } = useCodeLookups();
   const { propertyTypeId, latitude, longitude } = getIn(formikProps.values, nameSpace);
@@ -87,7 +86,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   const [privateProject, setPrivateProject] = useState(false);
 
   const keycloak = useKeycloakWrapper();
-  const userAgency = agencies.find(a => Number(a.value) === Number(keycloak.agencyId));
+  const userAgency = agencies.find((a) => Number(a.value) === Number(keycloak.agencyId));
 
   const isUserAgencyAParent = useMemo(() => {
     return !!userAgency && !userAgency.parentId;
@@ -162,7 +161,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
             parcelInformationStyles
             onGeocoderChange={(selection: IGeocoderResponse) => {
               const administrativeArea = selection.administrativeArea
-                ? lookupCodes.find(code => {
+                ? lookupCodes.find((code) => {
                     return (
                       code.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME &&
                       code.name === selection.administrativeArea
@@ -207,7 +206,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
               <ParentSelect
                 required
                 field={withNameSpace(nameSpace, 'agencyId')}
-                options={myAgencies.map(c => mapSelectOptionWithParent(c, myAgencies))}
+                options={myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies))}
                 filterBy={['code', 'label', 'parent']}
                 disabled={(!isPropertyAdmin && !isUserAgencyAParent) || disabled}
               />

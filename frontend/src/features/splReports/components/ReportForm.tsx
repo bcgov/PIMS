@@ -17,12 +17,12 @@ interface IReportFormProps {
 /**
  * Wrapper component for a table displaying read only snapshot data.
  */
-const ReportForm: React.FunctionComponent<IReportFormProps> = ({ currentReport, snapshots }) => {
+const ReportForm: React.FunctionComponent<IReportFormProps> = ({ snapshots }) => {
   const data: ISnapshot[] = snapshots ?? [];
   const { getOptionsByType } = useCodeLookups();
   const agencyItems = getOptionsByType(API.AGENCY_CODE_SET_NAME);
   const agencyFilterOptions = React.useMemo(
-    () => (agencyItems || []).map(c => mapSelectOptionWithParent(c, agencyItems || [])),
+    () => (agencyItems || []).map((c) => mapSelectOptionWithParent(c, agencyItems || [])),
     [agencyItems],
   );
   const { snapshotFilter, setSnapshotFilter } = useSplReportContext();
@@ -33,7 +33,7 @@ const ReportForm: React.FunctionComponent<IReportFormProps> = ({ currentReport, 
       noRowsMessage="No Reports Available"
       filterable
       filter={snapshotFilter}
-      onFilterChange={filter => setSnapshotFilter({ ...snapshotFilter, ...filter })}
+      onFilterChange={(filter) => setSnapshotFilter({ ...snapshotFilter, ...filter })}
       onSortChange={(field: string, direction: SortDirection) => {
         setSnapshotFilter({ ...snapshotFilter, sortBy: { [field]: direction } });
       }}

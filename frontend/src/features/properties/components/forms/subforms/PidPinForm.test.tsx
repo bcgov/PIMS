@@ -8,14 +8,14 @@ import { fillInput } from 'utils/testUtils';
 
 import PidPinForm from './PidPinForm';
 
-jest.mock('lodash/debounce', () => jest.fn(fn => fn));
+jest.mock('lodash/debounce', () => jest.fn((fn) => fn));
 jest.mock('hooks/useKeycloakWrapper');
 (useKeycloakWrapper as jest.Mock<Partial<IKeycloak>>).mockReturnValue({ hasClaim: () => true });
 
 describe('PidPin sub-form', () => {
   let form: JSX.Element;
-  let handlePidChange = jest.fn();
-  let handlePinChange = jest.fn();
+  const handlePidChange = jest.fn();
+  const handlePinChange = jest.fn();
   beforeEach(() => {
     form = (
       <Formik<Partial<IParcel>>

@@ -22,8 +22,8 @@ export const TransferPropertyColumns = (): ColumnWithProps<IProjectPropertyForm>
 
   const classifications = controller
     .getType(LookupType.PropertyClassification, true)
-    .filter(o => Number(o.id) <= 1)
-    .map(o => mapLookupCode(o));
+    .filter((o) => Number(o.id) <= 1)
+    .map((o) => mapLookupCode(o));
 
   return [
     {
@@ -31,7 +31,7 @@ export const TransferPropertyColumns = (): ColumnWithProps<IProjectPropertyForm>
       accessor: 'name',
       align: 'left',
       clickable: false,
-      Cell: row => {
+      Cell: (row) => {
         return <div>{row.value}</div>;
       },
     },
@@ -40,7 +40,7 @@ export const TransferPropertyColumns = (): ColumnWithProps<IProjectPropertyForm>
       accessor: 'address',
       align: 'left',
       clickable: true,
-      Cell: cell => {
+      Cell: (cell) => {
         return <div>{cell.value}</div>;
       },
     },
@@ -50,7 +50,7 @@ export const TransferPropertyColumns = (): ColumnWithProps<IProjectPropertyForm>
       align: 'left',
       clickable: false,
       minWidth: 200,
-      Cell: cell => {
+      Cell: (cell) => {
         return (
           <FastSelect
             placeholder="Must select one"
@@ -66,7 +66,7 @@ export const TransferPropertyColumns = (): ColumnWithProps<IProjectPropertyForm>
       accessor: 'projectNumbers',
       align: 'left',
       clickable: false,
-      Cell: cell => {
+      Cell: (cell) => {
         const projectNumbers = _.filter(cell.value, (p: string) => !p.includes('DRAFT'));
         return (
           <div>
@@ -95,7 +95,7 @@ export const TransferPropertyColumns = (): ColumnWithProps<IProjectPropertyForm>
     },
     {
       Header: 'Assessed Year',
-      accessor: row => (row.assessedLandYear ? moment(row.assessedLandYear).year() : ''),
+      accessor: (row) => (row.assessedLandYear ? moment(row.assessedLandYear).year() : ''),
       clickable: false,
       maxWidth: 50,
     },
@@ -111,7 +111,7 @@ export const TransferPropertyColumns = (): ColumnWithProps<IProjectPropertyForm>
       accessor: 'propertyTypeId',
       clickable: false,
       maxWidth: 40,
-      Cell: cell => {
+      Cell: (cell) => {
         return cell.value === PropertyType.Parcel || cell.value === PropertyType.Subdivision ? (
           <LandSvg className="svg" />
         ) : (

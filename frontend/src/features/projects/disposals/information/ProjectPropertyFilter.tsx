@@ -28,7 +28,7 @@ export const ProjectPropertyFilter: React.FC<IProjectPropertyFilterProps> = ({
 
   const agencies = controller
     .getOptions(LookupType.Agency)
-    .filter(a => !!keycloak.agencyIds.find(id => `${a.value}` === `${id}`));
+    .filter((a) => !!keycloak.agencyIds.find((id) => `${a.value}` === `${id}`));
   const classifications = controller.getOptions(LookupType.PropertyClassification);
   const adminAreas = controller.getOptions(LookupType.AdministrativeArea);
 
@@ -81,8 +81,8 @@ export const ProjectPropertyFilter: React.FC<IProjectPropertyFilterProps> = ({
           placeholder="Location"
           selectClosest
           hideValidation={true}
-          options={adminAreas.map(x => x.label)}
-          onChange={items => {
+          options={adminAreas.map((x) => x.label)}
+          onChange={(items) => {
             if (!!items.length)
               setFieldValue('filter', { ...filter, administrativeArea: items[0] });
             else setFieldValue('filter', { ...filter, administrativeArea: '' });

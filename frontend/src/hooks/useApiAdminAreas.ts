@@ -42,23 +42,23 @@ export const useAdminAreaApi = (): AdminAreaAPI => {
   const axios = CustomAxios() as AdminAreaAPI;
 
   axios.interceptors.request.use(
-    config => {
+    (config) => {
       config.headers!.Authorization = `Bearer ${store.getState().jwt}`;
       dispatch(showLoading());
       return config;
     },
-    error => {
+    (error) => {
       dispatch(hideLoading());
       return Promise.reject(error);
     },
   );
 
   axios.interceptors.response.use(
-    config => {
+    (config) => {
       dispatch(hideLoading());
       return config;
     },
-    error => {
+    (error) => {
       dispatch(hideLoading());
       return Promise.reject(error);
     },
@@ -88,49 +88,40 @@ export const useAdminAreaApi = (): AdminAreaAPI => {
    * @param filter The filter which to apply to the admin areas.
    * @returns A promise containing the admin areas.
    */
-  axios.getAdminAreas = useCallback(
-    async (filter: IAdminAreaFilter) => {
-      const { data } = await axios.post<IAdministrativeArea[]>(
-        `${ENVIRONMENT.apiUrl}/admin/administrative/areas/filter`,
-        filter,
-      );
-      return data;
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
+  axios.getAdminAreas = useCallback(async (filter: IAdminAreaFilter) => {
+    const { data } = await axios.post<IAdministrativeArea[]>(
+      `${ENVIRONMENT.apiUrl}/admin/administrative/areas/filter`,
+      filter,
+    );
+    return data;
+  }, []);
 
   /**
    * Make an AJAX request to fetch the specified admin area.
    * @param id The admin area key 'id' value.
    * @returns A promise containing the admin area.
    */
-  axios.getAdminArea = useCallback(
-    async (id: number) => {
-      const { data } = await axios.get<IAdministrativeArea>(
-        `${ENVIRONMENT.apiUrl}/admin/administrative/areas/${id}`,
-      );
-      return data;
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
+  axios.getAdminArea = useCallback(async (id: number) => {
+    const { data } = await axios.get<IAdministrativeArea>(
+      `${ENVIRONMENT.apiUrl}/admin/administrative/areas/${id}`,
+    );
+    return data;
+  }, []);
 
   /**
    * Make an AJAX request to delete the specified admin area.
    * @param adminArea The admin area model in which to delete.
    * @returns A promise containing the deleted admin area.
    */
-  axios.deleteAdminArea = useCallback(
-    async (adminArea: IApiAdminArea) => {
-      const { data } = await CustomAxios({ lifecycleToasts: deleteToasts }).delete<
-        IAdministrativeArea
-      >(`${ENVIRONMENT.apiUrl}/admin/administrative/areas/${adminArea.id}`, { data: adminArea });
-      return data;
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
+  axios.deleteAdminArea = useCallback(async (adminArea: IApiAdminArea) => {
+    const { data } = await CustomAxios({
+      lifecycleToasts: deleteToasts,
+    }).delete<IAdministrativeArea>(
+      `${ENVIRONMENT.apiUrl}/admin/administrative/areas/${adminArea.id}`,
+      { data: adminArea },
+    );
+    return data;
+  }, []);
 
   /**
    * Make an AJAX request to update the specified admin area.
@@ -138,32 +129,27 @@ export const useAdminAreaApi = (): AdminAreaAPI => {
    * @param adminArea The model containing the information in which to updated with
    * @returns A promise containing the updated admin area.
    */
-  axios.updateAdminArea = useCallback(
-    async (id: number, adminArea: IApiAdminArea) => {
-      const { data } = await CustomAxios({ lifecycleToasts: updateToasts }).put<
-        IAdministrativeArea
-      >(`${ENVIRONMENT.apiUrl}/admin/administrative/areas/${id}`, adminArea);
-      return data;
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
+  axios.updateAdminArea = useCallback(async (id: number, adminArea: IApiAdminArea) => {
+    const { data } = await CustomAxios({
+      lifecycleToasts: updateToasts,
+    }).put<IAdministrativeArea>(
+      `${ENVIRONMENT.apiUrl}/admin/administrative/areas/${id}`,
+      adminArea,
+    );
+    return data;
+  }, []);
 
   /**
    * Make an AJAX request to delete the specified admin area.
    * @param adminArea The admin area model in which to add.
    * @returns A promise containing the added admin area.
    */
-  axios.addAdminArea = useCallback(
-    async (adminArea: IAddAdminArea) => {
-      const { data } = await CustomAxios({ lifecycleToasts: addToasts }).post<IAdministrativeArea>(
-        `${ENVIRONMENT.apiUrl}/admin/administrative/areas`,
-        adminArea,
-      );
-      return data;
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
+  axios.addAdminArea = useCallback(async (adminArea: IAddAdminArea) => {
+    const { data } = await CustomAxios({ lifecycleToasts: addToasts }).post<IAdministrativeArea>(
+      `${ENVIRONMENT.apiUrl}/admin/administrative/areas`,
+      adminArea,
+    );
+    return data;
+  }, []);
   return axios;
 };

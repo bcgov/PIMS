@@ -40,7 +40,7 @@ it('renders correctly', () => {
   const { asFragment } = render(
     <Provider store={store}>
       <MemoryRouter initialEntries={[history.location]}>
-        <EditAdminArea name="test" />
+        <EditAdminArea />
       </MemoryRouter>
     </Provider>,
   );

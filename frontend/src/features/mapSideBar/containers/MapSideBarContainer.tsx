@@ -135,7 +135,7 @@ const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
   const [movingPinNameSpace, setMovingPinNameSpace] = useState<string | undefined>(
     movingPinNameSpaceProp,
   );
-  const leafletMouseEvent = useAppSelector(store => store.leafletClickEvent?.mapClickEvent);
+  const leafletMouseEvent = useAppSelector((store) => store.leafletClickEvent?.mapClickEvent);
   const [buildingToAssociateLand, setBuildingToAssociateLand] = useState<IBuilding | undefined>();
   const [showAssociateLandModal, setShowAssociateLandModal] = useState(false);
   const [propertyType, setPropertyType] = useState('');
@@ -192,7 +192,7 @@ const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
       nameSpace?: string,
     ) => void = formikParcelDataPopulateCallback,
   ) => {
-    return fetchParcelsDetail(pidOrPin)(dispatch).then(resp => {
+    return fetchParcelsDetail(pidOrPin)(dispatch).then((resp) => {
       const matchingParcel: (IParcel & ISearchFields) | undefined = resp?.data?.length
         ? _.first(
             _.filter(
@@ -253,7 +253,7 @@ const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
     if (!latLng) {
       return;
     }
-    parcelLayerService.findOneWhereContains(latLng).then(resp => {
+    parcelLayerService.findOneWhereContains(latLng).then((resp) => {
       const properties = getIn(resp, 'features.0.properties');
       if (!properties?.PIN && !properties?.PID) {
         toast.warning('Unable to find any details for the clicked location.');
@@ -431,7 +431,7 @@ const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
               setBuildingToAssociateLand(building);
               setShowAssociateLandModal(true);
             }}
-            goToAssociatedLand={async (building: IBuilding) => {
+            goToAssociatedLand={async () => {
               if (!!formikRef?.current) {
                 const values = formikRef.current.values;
                 const apiValues = valuesToApiFormat(cloneDeep(values));

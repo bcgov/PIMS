@@ -103,8 +103,7 @@ interface DetailsOptions<T extends object> {
   getRowId: (row: T) => any;
 }
 
-export interface TableProps<T extends object = {}, TFilter extends object = {}>
-  extends TableOptions<T> {
+export interface TableProps<T extends object, TFilter extends object> extends TableOptions<T> {
   name: string;
   hideHeaders?: boolean;
   onRequestData?: (props: { pageIndex: number; pageSize: number }) => void;
@@ -175,7 +174,7 @@ const IndeterminateCheckbox = React.forwardRef(
       if (isHeaderCheck) {
         setSelected([]);
       } else {
-        if (currentSelected.find(selected => selected.id === row.original.id)) {
+        if (currentSelected.find((selected) => selected.id === row.original.id)) {
           _.remove(currentSelected, row.original);
         } else {
           currentSelected.push(row.original);
@@ -210,7 +209,7 @@ interface IIdentifiedObject {
  * A table component. Supports sorting, filtering and paging.
  * Uses `react-table` to handle table logic.
  */
-const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
+const Table = <T extends IIdentifiedObject, TFilter extends object>(
   props: PropsWithChildren<TableProps<T, TFilter>>,
 ): ReactElement => {
   const filterFormRef = useRef<FormikProps<any>>();
@@ -258,7 +257,9 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
   }, [filterFormRef, props.filter]);
 
   const sortBy = useMemo(() => {
-    return !!sort ? keys(sort).map(key => ({ id: key, desc: (sort as any)[key] === 'desc' })) : [];
+    return !!sort
+      ? keys(sort).map((key) => ({ id: key, desc: (sort as any)[key] === 'desc' }))
+      : [];
   }, [sort]);
   // Use the useTable hook to create your table configuration
 
@@ -282,8 +283,8 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
     useSortBy,
     usePagination,
     useRowSelect,
-    hooks => {
-      hooks.visibleColumns.push(columns => {
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => {
         return setExternalSelectedRows
           ? [
               {
@@ -354,8 +355,8 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
   }, [onRequestData, pageIndex, pageSize]);
 
   useDeepCompareEffect(() => {
-    page.forEach(r => {
-      toggleRowSelected(r.id, !!externalSelectedRows?.find(s => s.id === r.original.id));
+    page.forEach((r) => {
+      toggleRowSelected(r.id, !!externalSelectedRows?.find((s) => s.id === r.original.id));
     });
   }, [page, externalSelectedRows]);
 
@@ -373,12 +374,12 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
     return (
       <div className="sortable-column">
         <ColumnFilter
-          onFilter={values => {
+          onFilter={() => {
             if (filterFormRef.current?.dirty) {
               filterFormRef.current.submitForm();
             }
           }}
-          column={column}
+          column={column as ColumnInstanceWithProps<any>}
         >
           {column.render('Header')}
         </ColumnFilter>
@@ -430,6 +431,7 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
           </div>
         )}
         {headerGroup.headers.map((column: ColumnInstanceWithProps<T>) => (
+          // eslint-disable-next-line react/jsx-key
           <div
             {...(props.hideHeaders
               ? column.getHeaderProps(noHeaders)
@@ -515,7 +517,7 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
         props.detailsPanel.checkExpanded(data, expandedRows)
       ) {
         expanded = expandedRows.filter(
-          x => props.detailsPanel?.getRowId(x) !== props.detailsPanel?.getRowId(data),
+          (x) => props.detailsPanel?.getRowId(x) !== props.detailsPanel?.getRowId(data),
         );
       } else {
         expanded = [...expandedRows, data];
@@ -536,7 +538,7 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
               renderExpandRowStateButton(
                 props.detailsPanel && props.detailsPanel.checkExpanded(row.original, expandedRows),
                 'td expander',
-                e => handleExpandClick(e, row.original),
+                (e) => handleExpandClick(e, row.original),
               )}
             {props.canRowExpand && !props.canRowExpand(row) ? (
               <div className="td">
@@ -553,9 +555,10 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
               renderExpandRowStateButton(
                 props.detailsPanel && props.detailsPanel.checkExpanded(row.original, expandedRows),
                 'td expander',
-                e => handleExpandClick(e, row.original),
+                (e) => handleExpandClick(e, row.original),
               )}
             {row.cells.map((cell: CellWithProps<T>) => (
+              // eslint-disable-next-line react/jsx-key
               <div
                 data-testid={`cell-${cell.column.id}`}
                 {...cell.getCellProps(cellProps)}
@@ -565,7 +568,7 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
                   props.onRowClick && cell.column.clickable && props.onRowClick(row.original)
                 }
               >
-                <TableCell cell={cell} />
+                <TableCell cell={cell as CellWithProps<any>} />
               </div>
             ))}
           </div>
@@ -614,19 +617,20 @@ const Table = <T extends IIdentifiedObject, TFilter extends object = {}>(
         className={classNames('table', props.className ?? '')}
       >
         <div className="thead thead-light">
-          {headerGroups.map(headerGroup => (
+          {headerGroups.map((headerGroup) => (
+            // eslint-disable-next-line react/jsx-key
             <div {...headerGroup.getHeaderGroupProps()} className="tr">
               {filterable ? (
                 <Formik
                   initialValues={props.filter || {}}
-                  onSubmit={values => {
+                  onSubmit={(values) => {
                     if (!!props.onFilterChange) {
                       props.onFilterChange(values);
                     }
                   }}
                   innerRef={filterFormRef as any}
                 >
-                  {actions => (
+                  {(actions) => (
                     <Form style={{ display: 'flex', width: '100%' }}>
                       {renderTableHeader(headerGroup, actions)}
                     </Form>

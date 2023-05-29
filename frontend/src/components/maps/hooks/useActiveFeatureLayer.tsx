@@ -39,7 +39,7 @@ const useActiveFeatureLayer = ({
 }: IUseActiveParcelMapLayer) => {
   const [activeFeatureLayer, setActiveFeatureLayer] = useState<GeoJSON>();
   const parcelsService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
-  const draftProperties: PointFeature[] = useAppSelector(store => store.parcel.draftProperties);
+  const draftProperties: PointFeature[] = useAppSelector((store) => store.parcel.draftProperties);
   if (!!mapRef.current && !activeFeatureLayer) {
     setActiveFeatureLayer(geoJSON().addTo(mapRef.current));
   }
@@ -60,7 +60,7 @@ const useActiveFeatureLayer = ({
     if (!!activeFeatureLayer && !!parcelLayerFeature) {
       activeFeatureLayer.clearLayers();
       activeFeatureLayer.addData(parcelLayerFeature);
-      let coords = (parcelLayerFeature as any)?.geometry?.coordinates;
+      const coords = (parcelLayerFeature as any)?.geometry?.coordinates;
       if (coords && coords.length === 1 && coords[0].length > 1 && coords[0][0].length > 1) {
         const latLng = {
           lat: (parcelLayerFeature as any)?.geometry?.coordinates[0][0][1],
@@ -105,7 +105,7 @@ const useActiveFeatureLayer = ({
         lng: selectedProperty.parcelDetail?.longitude as number,
       } as LatLng);
       if (!!selectedProperty.parcelDetail?.parcels?.length) {
-        selectedProperty.parcelDetail.parcels.forEach(parcel => {
+        selectedProperty.parcelDetail.parcels.forEach((parcel) => {
           if (!!parcel?.longitude && !!parcel.latitude) {
             highlightSelectedProperty({
               lat: parcel?.latitude as number,

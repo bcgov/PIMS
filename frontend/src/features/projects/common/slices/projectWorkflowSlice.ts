@@ -16,7 +16,7 @@ const projectWorkflowSlice = createSlice({
     builder.addCase(saveProjectStatus, (_state: IStatus[], action: PayloadAction<IStatus[]>) => {
       return action.payload;
     });
-    builder.addCase(clearProjectStatus, (_state: IStatus[]) => {
+    builder.addCase(clearProjectStatus, () => {
       return [];
     });
   },

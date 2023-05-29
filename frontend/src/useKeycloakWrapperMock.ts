@@ -68,7 +68,7 @@ function useKeycloakMock(
     }
     return typeof claim === 'string'
       ? this.roles?.includes(claim)
-      : claim.some(c => this.roles?.includes(c));
+      : claim.some((c) => this.roles?.includes(c));
   };
 
   // hasRole
@@ -77,8 +77,8 @@ function useKeycloakMock(
       return false;
     }
     return typeof role === 'string'
-      ? this.roles.includes((role as unknown) as Claims)
-      : role.some(r => this.roles.includes((r as unknown) as Claims));
+      ? this.roles.includes(role as unknown as Claims)
+      : role.some((r) => this.roles.includes(r as unknown as Claims));
   };
 
   // hasAgency
@@ -89,7 +89,7 @@ function useKeycloakMock(
   // getSystemRoles
   this.getSystemRoles = (): Array<string> => {
     let systemRoles: string[] = this.roles ?? [];
-    systemRoles = systemRoles.filter(s => s.charAt(0) === s.charAt(0).toUpperCase());
+    systemRoles = systemRoles.filter((s) => s.charAt(0) === s.charAt(0).toUpperCase());
     return systemRoles ?? [];
   };
 

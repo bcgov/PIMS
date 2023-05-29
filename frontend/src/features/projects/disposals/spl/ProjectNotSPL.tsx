@@ -11,9 +11,8 @@ import * as styled from './styled';
 
 export const ProjectNotSPL: React.FC = () => {
   const formik = useFormikContext<IProjectForm>();
-  const {
-    values: { workflowCode, statusCode },
-  } = useFormikContext();
+  const { values }: any = useFormikContext();
+  const { workflowCode, statusCode } = values;
 
   const showTransferredWithinGRE =
     statusCode === WorkflowStatus.NotInSpl || statusCode === WorkflowStatus.TransferredGRE;

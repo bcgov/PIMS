@@ -4,26 +4,26 @@ import * as yup from 'yup';
 
 export const splApprovalSchema = yup.object({
   requestForSplReceivedOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode: Workflow, statusCode: any) => {
+    is: (workflowCode: Workflow) => {
       return workflowCode === Workflow.SPL;
     },
     then: yup
       .string()
       .typeError('Request for SPL received on required')
       .required('Request for SPL received on required')
-      .test('isDate', 'Request for SPL received on required', value => {
+      .test('isDate', 'Request for SPL received on required', (value) => {
         return moment(value).isValid();
       }),
   }),
   approvedForSplOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode: Workflow, statusCode: any) => {
+    is: (workflowCode: Workflow) => {
       return workflowCode === Workflow.SPL;
     },
     then: yup
       .string()
       .typeError('SPL addition approved on required')
       .required('SPL addition approved on required')
-      .test('isDate', 'SPL addition approved on required', value => {
+      .test('isDate', 'SPL addition approved on required', (value) => {
         return moment(value).isValid();
       }),
   }),
@@ -40,7 +40,7 @@ export const splApprovalSchema = yup.object({
       .string()
       .typeError('Remove from SPL requested date required')
       .required('Remove from SPL requested date require')
-      .test('isDate', 'Remove from SPL requested date require', value => {
+      .test('isDate', 'Remove from SPL requested date require', (value) => {
         return moment(value).isValid();
       }),
   }),
@@ -57,7 +57,7 @@ export const splApprovalSchema = yup.object({
       .string()
       .typeError('Remove from SPL approved on date required')
       .required('Remove from SPL approved on date require')
-      .test('isDate', 'Remove from SPL approved on date require', value => {
+      .test('isDate', 'Remove from SPL approved on date require', (value) => {
         return moment(value).isValid();
       }),
   }),

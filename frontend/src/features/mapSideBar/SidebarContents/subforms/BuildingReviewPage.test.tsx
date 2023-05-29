@@ -40,7 +40,7 @@ const form = (
     }}
     onSubmit={noop}
   >
-    {(props: any) => (
+    {() => (
       <Provider store={store}>
         <BuildingReviewPage
           classifications={[]}

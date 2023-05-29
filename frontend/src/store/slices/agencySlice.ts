@@ -49,7 +49,7 @@ export const agencySlice = createSlice({
   name: 'agencies',
   initialState: initialAgencyState,
   reducers: {},
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder.addCase(storeAgency, (state: IAgenciesState, action: PayloadAction<IAgency>) => {
       return { ...state, agency: action.payload };
     });

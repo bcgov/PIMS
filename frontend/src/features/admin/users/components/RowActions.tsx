@@ -12,7 +12,7 @@ import { IUserRecord } from '../interfaces/IUserRecord';
 export const RowActions = (props: CellProps<IUserRecord>) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const user = useAppSelector(store =>
+  const user = useAppSelector((store) =>
     store.users.pagedUsers.items.find((user: IUser) => user.id === props.row.original.id),
   );
 

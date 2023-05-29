@@ -12,9 +12,8 @@ export const ProjectSPLTransferWithinGRE: React.FC = () => {
   const formik = useFormikContext<IProjectForm>();
 
   // Disabled prop
-  const {
-    values: { workflowCode, statusCode },
-  } = useFormikContext();
+  const { values }: any = useFormikContext();
+  const { workflowCode, statusCode } = values;
   const keycloak = useKeycloakWrapper();
   const [disabled, setDisabled] = useState(false);
   const isAdmin = keycloak.hasClaim(Claim.ReportsSplAdmin);

@@ -14,7 +14,7 @@ export const mapViewZoomSlice = createSlice({
     builder.addCase(setMapViewZoom, (_state: number, action: PayloadAction<number>) => {
       return action.payload;
     });
-    builder.addCase(resetMapViewZoom, (_state: number, _action: PayloadAction<number>) => {
+    builder.addCase(resetMapViewZoom, () => {
       return DEFAULT_MAP_ZOOM;
     });
   },

@@ -15,7 +15,7 @@ const projectTasksSlice = createSlice({
     builder.addCase(saveProjectTasks, (state: any, action: any) => {
       return action.payload;
     });
-    builder.addCase(clearProjectTasks, (state: any) => {
+    builder.addCase(clearProjectTasks, () => {
       return '';
     });
   },

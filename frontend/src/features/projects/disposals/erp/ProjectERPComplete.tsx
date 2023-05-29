@@ -12,10 +12,9 @@ import * as styled from './styled';
 
 export const ProjectERPComplete: React.FC = () => {
   const formik = useFormikContext<IProjectForm>();
-  const { values, setFieldTouched } = formik;
-  const {
-    values: { workflowCode, statusCode },
-  } = useFormikContext();
+  const { setFieldTouched } = formik;
+  const { values }: any = useFormikContext();
+  const { workflowCode, statusCode } = values;
 
   const eRequestForSplReceived =
     !!values.clearanceNotificationSentOn || !!values.requestForSplReceivedOn;

@@ -12,7 +12,7 @@ const AuthLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   return (
     <AuthStateContext.Consumer>
-      {context => {
+      {(context) => {
         if (!context.ready) {
           return <Spinner animation="border"></Spinner>;
         }

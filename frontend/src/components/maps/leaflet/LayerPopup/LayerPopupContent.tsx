@@ -56,13 +56,7 @@ export interface IPopupContentProps {
  * A component to display the layer details in a popup
  * @param param0
  */
-export const LayerPopupContent: React.FC<IPopupContentProps> = ({
-  data,
-  config,
-  center,
-  onAddToParcel,
-  bounds,
-}) => {
+export const LayerPopupContent: React.FC<IPopupContentProps> = ({ data, config, bounds }) => {
   const rows = React.useMemo(() => keys(config), [config]);
   const location = useLocation();
 
@@ -73,7 +67,7 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({
   return (
     <>
       <ListGroup>
-        {rows.map(key => (
+        {rows.map((key) => (
           <ListGroup.Item key={key}>
             <b>{config[key].label}</b> {config[key].display(data)}
           </ListGroup.Item>

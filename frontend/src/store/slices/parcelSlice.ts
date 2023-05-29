@@ -30,7 +30,7 @@ export const parcelSlice = createSlice({
   name: 'parcel',
   initialState: initialParcelState,
   reducers: {},
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder.addCase(storeProperties, (state: IParcelState, action: PayloadAction<IProperty[]>) => {
       return { ...state, properties: action.payload };
     });
