@@ -5,6 +5,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "cross-env CI=true react-scripts build",
+    "build-ocp": "react-scripts build",
     "test": "react-scripts test --ci --watchAll=false --runInBand",
     "test:output": "react-scripts test --ci --watchAll=false --runInBand --json --outputFile=./jest/latestTestRun.json",
     "test:summary": "node ./jest/summarizeLatestTestRun.mjs",

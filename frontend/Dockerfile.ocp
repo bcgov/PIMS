@@ -18,7 +18,7 @@ USER 1001
 EXPOSE 8080
 
 # Build the project.
-RUN npm run build
+RUN npm run build-ocp
 
 # # ================================= #
 # # 🐳🐳   [2/2] PROD NGINX    🐳🐳 #
