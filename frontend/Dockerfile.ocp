@@ -5,7 +5,6 @@ FROM image-registry.apps.silver.devops.gov.bc.ca/354028-tools/nodejs:18.16-bulls
 
 # Set the working directory to /app
 WORKDIR /app
-ENV NODE_ENV=production
 
 # Copy the frontend build artifacts into the container
 COPY . .
