@@ -1,0 +1,18 @@
+FROM image-registry.apps.silver.devops.gov.bc.ca/354028-tools/nodejs:latest
+
+WORKDIR /usr/app
+
+COPY . .
+
+# Disable npm progress bar
+RUN npm set progress=false
+
+# Install dependencies
+RUN npm i
+
+# Run as non-root user
+USER 1001
+
+EXPOSE 8080
+
+CMD ["npm", "start"]
