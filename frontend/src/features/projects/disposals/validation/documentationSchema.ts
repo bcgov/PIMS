@@ -1,26 +1,44 @@
 import { WorkflowStatus } from 'hooks/api/projects';
 import { toInteger } from 'lodash';
-import * as yup from 'yup';
+import { z } from 'zod';
 
-// TODO: I was unable to figure out how to to a Yup array schema to support
-// only specific array values and provide custom errors for each..
-export const documentationSchema = yup.object({
-  appraised: yup.string().when(['tasks'], {
-    is: (tasks: { isCompleted: any }[]) => {
-      return tasks[6].isCompleted;
+const AppraisalValue = z
+  .string()
+  .refine((value) => !isNaN(toInteger(value)), {
+    message: 'Appraisal value required',
+    path: ['appraised'],
+  })
+  .refine((value) => toInteger(value) >= 0, {
+    message: 'Minimum amount is $0.00',
+    path: ['appraised'],
+  });
+
+export const documentationSchema = z
+  .object({
+    appraised: z.string(),
+    publicNote: z.string(),
+    tasks: z.array(
+      z.object({
+        isCompleted: z.boolean(),
+      }),
+    ),
+    statusCode: z.enum([WorkflowStatus.Cancelled /* Other status codes... */]), // make sure to include all possible status codes here
+  })
+  .refine((data) => {
+    if (data.tasks[6]?.isCompleted) {
+      return AppraisalValue.parse(data.appraised);
+    }
+    return true;
+  })
+  .refine(
+    (data) => {
+      if (data.statusCode === WorkflowStatus.Cancelled) {
+        return z.string().parse(data.publicNote);
+      }
+      return true;
     },
-    then: yup
-      .string()
-      .required('Appraisal value required')
-      .test('isValue', 'Appraisal value required', (value) => {
-        return !isNaN(toInteger(value));
-      })
-      .min(0, 'Minimum amount is $0.00'),
-  }),
-  publicNote: yup.string().when(['statusCode'], {
-    is: (statusCode: WorkflowStatus) => {
-      return statusCode === WorkflowStatus.Cancelled;
+    {
+      message: 'Reason for cancelling required',
+      path: ['publicNote'],
     },
-    then: yup.string().required('Reason for cancelling required'),
-  }),
-});
+  );

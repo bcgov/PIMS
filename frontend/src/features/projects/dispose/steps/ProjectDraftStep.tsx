@@ -5,10 +5,12 @@ import { Formik } from 'formik';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
 import { Container } from 'react-bootstrap';
+import { zodToFormikErrors } from 'utils';
+import { ZodError } from 'zod';
 
 import { ProjectDraftForm, StepErrorSummary, useStepForm } from '../../common';
 import ProjectNotes from '../../common/components/ProjectNotes';
-import { ProjectDraftStepYupSchema, useStepper } from '..';
+import { ProjectDraftStepZodSchema, useStepper } from '..';
 
 /**
  * Initial Project creation step - allows entry of high level project information.
@@ -32,7 +34,13 @@ const ProjectDraftStep = ({ isReadOnly, formikRef }: IStepProps) => {
     <Container fluid>
       <Formik
         initialValues={draftFormValues}
-        validationSchema={ProjectDraftStepYupSchema}
+        validate={(values) => {
+          try {
+            ProjectDraftStepZodSchema.parse(values);
+          } catch (errors) {
+            return zodToFormikErrors(errors as ZodError);
+          }
+        }}
         innerRef={formikRef}
         onSubmit={onSubmit}
         enableReinitialize={true}

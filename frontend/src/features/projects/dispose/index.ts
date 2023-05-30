@@ -2,7 +2,7 @@ export * from '../assess/components/ReviewApproveActions';
 export { default as ExemptionRequest } from './components/ExemptionRequest';
 export { default as GeneratedDisposeStepper } from './components/GeneratedDisposeStepper';
 export * from './components/StepActions';
-export * from './forms/disposalYupSchema';
+export * from './forms/disposalZodSchema';
 export { default as ReviewProjectForm } from './forms/ReviewProjectForm';
 export * from './hooks/stepperContext';
 export { default as useStepper } from './hooks/useStepper';

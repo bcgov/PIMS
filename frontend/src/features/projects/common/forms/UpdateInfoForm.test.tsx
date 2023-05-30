@@ -15,8 +15,10 @@ import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import useKeycloakMock from 'useKeycloakWrapperMock';
+import { zodToFormikErrors } from 'utils';
+import { ZodError } from 'zod';
 
-import { UpdateInfoStepYupSchema } from '../../dispose';
+import { UpdateInfoStepZodSchema } from '../../dispose';
 import UpdateInfoForm from './UpdateInfoForm';
 
 const userRoles: string[] | Claims[] = [];
@@ -101,7 +103,13 @@ const getUpdateInfoForm = () => {
         <Formik
           onSubmit={() => {}}
           initialValues={initialValues}
-          validationSchema={UpdateInfoStepYupSchema}
+          validate={(values) => {
+            try {
+              UpdateInfoStepZodSchema.parse(values);
+            } catch (errors) {
+              return zodToFormikErrors(errors as ZodError);
+            }
+          }}
           initialTouched={initialTouched}
         >
           <Form>

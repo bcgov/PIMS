@@ -34,7 +34,8 @@ import {
   LandSchema,
   LandUsageSchema,
   ValuationSchema,
-} from 'utils/YupSchema';
+} from 'utils/ZodSchema';
+import { ZodError } from 'zod';
 
 import { InventoryPolicy } from '../components/InventoryPolicy';
 import { useBuildingApi } from '../hooks/useBuildingApi';
@@ -469,12 +470,12 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
     await Promise.all(
       ownedParcels.map(async (p: any) => {
         const index = values.data.parcels.indexOf(p);
-        const zodErrors: any = await LandSchema.validate(p, {
-          abortEarly: false,
-        }).then(
-          () => ({}),
-          (err: any) => zodToFormikErrors(err),
-        );
+
+        const zodResult = LandSchema.safeParse(p);
+        let zodErrors: any = {};
+        if (!zodResult.success) {
+          zodErrors = zodToFormikErrors(zodResult.error);
+        }
         if (Object.keys(zodErrors).length > 0) {
           errors = setIn(errors, `data.parcels.${index}`, zodErrors);
         }

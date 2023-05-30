@@ -44,7 +44,8 @@ import {
   LandUsageSchema,
   ParcelSchema,
   ValuationSchema,
-} from 'utils/YupSchema';
+} from 'utils/ZodSchema';
+import { ZodError } from 'zod';
 
 import { InventoryPolicy } from '../components/InventoryPolicy';
 import { LandReviewPage } from './subforms/LandReviewPage';
@@ -400,10 +401,13 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
    * @param values formik form values to validate.
    */
   const handleValidate = async (values: ISteppedFormValues<IParcel>) => {
-    const zodErrors: any = ParcelSchema.validate(values.data, { abortEarly: false }).then(
-      () => ({}),
-      (err: any) => zodToFormikErrors(err),
-    );
+    const zodResult = ParcelSchema.safeParse(values.data);
+
+    let errors: any = {};
+
+    if (!zodResult.success) {
+      errors = zodToFormikErrors(zodResult.error);
+    }
 
     let pidDuplicated = false;
     if (
@@ -426,14 +430,15 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
       pinDuplicated = !(await isPinAvailable(values.data));
     }
 
-    let errors = await zodErrors;
     if (pidDuplicated) {
       errors = { ...errors, pid: 'This PID is already in use.' };
     }
     if (pinDuplicated) {
       errors = { ...errors, pin: 'This PIN is already in use.' };
     }
-    return Object.keys(errors).length ? Promise.resolve({ data: errors }) : Promise.resolve({});
+    console.log(Object.keys(errors).length);
+
+    return Object.keys(errors).length ? { data: errors } : {};
   };
 
   const isPidAvailable = async (values: IParcel): Promise<boolean> => {

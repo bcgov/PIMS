@@ -6,9 +6,11 @@ import { Formik } from 'formik';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import styled from 'styled-components';
+import { zodToFormikErrors } from 'utils';
+import { ZodError } from 'zod';
 
 import { FilterBar, IFilterBarState, SelectProjectPropertiesForm, useStepForm } from '../../common';
-import { SelectProjectPropertiesStepYupSchema, useStepper } from '..';
+import { SelectProjectPropertiesStepZodSchema, useStepper } from '..';
 
 /** contains the link text for Show Surplus and Show All classification filter */
 const LinkButton = styled(Button)`
@@ -117,7 +119,13 @@ const SelectProjectPropertiesStep = ({ isReadOnly, formikRef }: IStepProps) => {
         onSubmit={onSubmit}
         validateOnChange={false}
         validateOnBlur={true}
-        validationSchema={SelectProjectPropertiesStepYupSchema}
+        validate={(values) => {
+          try {
+            SelectProjectPropertiesStepZodSchema.parse(values);
+          } catch (errors) {
+            return zodToFormikErrors(errors as ZodError);
+          }
+        }}
         enableReinitialize={true}
       >
         <SelectProjectPropertiesForm

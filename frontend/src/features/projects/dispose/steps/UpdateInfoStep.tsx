@@ -2,10 +2,12 @@ import { Form } from 'components/common/form';
 import { Formik } from 'formik';
 import React from 'react';
 import { Container } from 'react-bootstrap';
+import { zodToFormikErrors } from 'utils';
+import { ZodError } from 'zod';
 
 import { ProjectNotes, StepErrorSummary, UpdateInfoForm, useStepForm } from '../../common';
 import { IStepProps } from '../../interfaces';
-import { UpdateInfoStepYupSchema, useStepper } from '..';
+import { UpdateInfoStepZodSchema, useStepper } from '..';
 
 /**
  * Update property information already associated to this project on a property list view.
@@ -23,7 +25,13 @@ const UpdateInfoStep = ({ isReadOnly, formikRef }: IStepProps) => {
     <Container fluid>
       <Formik
         initialValues={project}
-        validationSchema={UpdateInfoStepYupSchema}
+        validate={(values) => {
+          try {
+            UpdateInfoStepZodSchema.parse(values);
+          } catch (errors) {
+            return zodToFormikErrors(errors as ZodError);
+          }
+        }}
         validateOnBlur={true}
         validateOnChange={false}
         innerRef={formikRef}

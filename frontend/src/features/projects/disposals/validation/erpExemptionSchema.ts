@@ -1,9 +1,16 @@
-import * as yup from 'yup';
+import { z } from 'zod';
 
-export const erpExemptionSchema = yup.object({
-  exemptionRequested: yup.boolean(),
-  exemptionRationale: yup.string().when('exemptionRequested', {
-    is: true,
-    then: yup.string().required('Exemption rationale required'),
-  }),
-});
+export const erpExemptionSchema = z
+  .object({
+    exemptionRequested: z.boolean(),
+    exemptionRationale: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      // If exemptionRequested is true, exemptionRationale is required
+      return !(data.exemptionRequested === true && !data.exemptionRationale);
+    },
+    {
+      message: 'Exemption rationale required',
+    },
+  );

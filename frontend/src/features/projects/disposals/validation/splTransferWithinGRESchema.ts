@@ -1,18 +1,27 @@
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
 import moment from 'moment';
-import * as yup from 'yup';
+import { z } from 'zod';
 
-export const splTransferWithinGRESchema = yup.object({
-  transferredWithinGreOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
-      return workflowCode === Workflow.SPL && statusCode === WorkflowStatus.TransferredGRE;
+const dateCheck = (val: any) => typeof val === 'string' && moment(val).isValid();
+
+export const splTransferWithinGRESchema = z
+  .object({
+    workflowCode: z.nativeEnum(Workflow),
+    statusCode: z.nativeEnum(WorkflowStatus),
+    transferredWithinGreOn: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (
+        data.workflowCode === Workflow.SPL &&
+        data.statusCode === WorkflowStatus.TransferredGRE &&
+        !dateCheck(data.transferredWithinGreOn)
+      ) {
+        return false;
+      }
+      return true;
     },
-    then: yup
-      .string()
-      .typeError('Transferred within GRE on required')
-      .required('Transferred within GRE on required')
-      .test('isDate', 'Transferred within GRE on required', (value) => {
-        return moment(value).isValid();
-      }),
-  }),
-});
+    {
+      message: 'Transferred within GRE on required',
+    },
+  );

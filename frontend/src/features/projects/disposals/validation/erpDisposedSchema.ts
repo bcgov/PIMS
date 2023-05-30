@@ -1,49 +1,61 @@
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
-import { toInteger } from 'lodash';
 import moment from 'moment';
-import * as yup from 'yup';
+import { z } from 'zod';
 
-export const erpDisposedSchema = yup.object({
-  purchaser: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
-      return workflowCode === Workflow.ERP && statusCode === WorkflowStatus.Disposed;
-    },
-    then: yup.string().required('Purchaser required'),
-  }),
-  offerAmount: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
-      return workflowCode === Workflow.ERP && statusCode === WorkflowStatus.Disposed;
-    },
-    then: yup
-      .string()
-      .required('Offer amount required')
-      .test('isValue', 'Offer amuont required', (value) => {
-        return !isNaN(toInteger(value));
-      })
-      .min(0, 'Minimum amount is $0.00'),
-  }),
-  offerAcceptedOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
-      return workflowCode === Workflow.ERP && statusCode === WorkflowStatus.Disposed;
-    },
-    then: yup
-      .string()
-      .typeError('Offer accepted on required')
-      .required('Offer accepted on required')
-      .test('isDate', 'Offer accepted on required', (value) => {
-        return moment(value).isValid();
-      }),
-  }),
-  disposedOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
-      return workflowCode === Workflow.ERP && statusCode === WorkflowStatus.Disposed;
-    },
-    then: yup
-      .string()
-      .typeError('Disposal date required')
-      .required('Disposal date required')
-      .test('isDate', 'Disposal date required', (value) => {
-        return moment(value).isValid();
-      }),
-  }),
+const workflowEnum = z.enum(Object.keys(Workflow) as any);
+const workflowStatusEnum = z.enum(Object.keys(WorkflowStatus) as any);
+
+const OfferAmount = z
+  .string()
+  .refine((value) => !isNaN(parseInt(value)), {
+    message: 'Offer amount required',
+  })
+  .refine((value) => parseInt(value) >= 0, {
+    message: 'Minimum amount is $0.00',
+  });
+
+const OfferAcceptedOn = z.string().refine((value) => moment(value).isValid(), {
+  message: 'Offer accepted on required',
 });
+
+const DisposedOn = z.string().refine((value) => moment(value).isValid(), {
+  message: 'Disposal date required',
+});
+
+export const erpDisposedSchema = z
+  .object({
+    purchaser: z.string().optional(),
+    offerAmount: z.string().optional(),
+    offerAcceptedOn: z.string().optional(),
+    disposedOn: z.string().optional(),
+    workflowCode: workflowEnum,
+    statusCode: workflowStatusEnum,
+  })
+  .refine(
+    (data) => {
+      if (data.workflowCode === Workflow.ERP && data.statusCode === WorkflowStatus.Disposed) {
+        // Here we use the parse method to check if the data is valid
+        // We only care if it throws an error, so we ignore the result
+        try {
+          z.object({
+            purchaser: z.string(),
+            offerAmount: OfferAmount,
+            offerAcceptedOn: OfferAcceptedOn,
+            disposedOn: DisposedOn,
+          }).parse({
+            purchaser: data.purchaser,
+            offerAmount: data.offerAmount,
+            offerAcceptedOn: data.offerAcceptedOn,
+            disposedOn: data.disposedOn,
+          });
+        } catch {
+          // If the parse method throws an error, the data is invalid
+          return false;
+        }
+      }
+      return true;
+    },
+    {
+      message: 'Invalid data',
+    },
+  );

@@ -1,8 +1,6 @@
 import { FormikErrors, setIn } from 'formik';
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
 import { useNavigate } from 'react-router-dom';
-import * as Yup from 'yup';
-import { AnyObject } from 'yup/lib/types';
 
 import { IProjectForm } from '../interfaces';
 import {
@@ -96,7 +94,7 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
         if (tasks.length) hasErrors = true;
       }
 
-      await documentationSchema.validate(values, { abortEarly: false });
+      documentationSchema.parse(values);
       if (hasErrors) {
         navigate(`/projects/disposal/${id}/documentation`);
         return errors;
@@ -205,7 +203,7 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
 const handleErrors = async (
   values: IProjectForm,
   errors: FormikErrors<IProjectForm>,
-  schema: Yup.ObjectSchema<AnyObject>,
+  schema: any,
   redirect: () => void,
 ) => {
   try {

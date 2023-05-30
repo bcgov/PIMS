@@ -1,18 +1,27 @@
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
 import moment from 'moment';
-import * as yup from 'yup';
+import { z } from 'zod';
 
-export const splMarketingSchema = yup.object({
-  marketedOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
-      return workflowCode === Workflow.SPL && statusCode === WorkflowStatus.OnMarket;
+const dateCheck = (val: any) => typeof val === 'string' && moment(val).isValid();
+
+export const splMarketingSchema = z
+  .object({
+    workflowCode: z.nativeEnum(Workflow),
+    statusCode: z.nativeEnum(WorkflowStatus),
+    marketedOn: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (
+        data.workflowCode === Workflow.SPL &&
+        data.statusCode === WorkflowStatus.OnMarket &&
+        !dateCheck(data.marketedOn)
+      ) {
+        return false;
+      }
+      return true;
     },
-    then: yup
-      .string()
-      .typeError('Date entered market on required')
-      .required('Date entered market on required')
-      .test('isDate', 'Date entered market on required', (value) => {
-        return moment(value).isValid();
-      }),
-  }),
-});
+    {
+      message: 'Date entered market on required',
+    },
+  );

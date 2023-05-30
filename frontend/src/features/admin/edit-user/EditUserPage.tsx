@@ -15,8 +15,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchUserDetail, getUpdateUserAction } from 'store/slices/hooks/usersActionCreator';
 import { clearUser } from 'store/slices/userSlice';
-import { formatApiDateTime } from 'utils';
-import { UserUpdateSchema } from 'utils/YupSchema';
+import { formatApiDateTime, zodToFormikErrors } from 'utils';
+import { UserUpdateSchema } from 'utils/ZodSchema';
+import { ZodError } from 'zod';
 
 import useEditUserService from './useEditUserService';
 
@@ -230,7 +231,13 @@ const EditUserPage = () => {
           <Formik
             enableReinitialize
             initialValues={initialValues}
-            validationSchema={UserUpdateSchema}
+            validate={(values) => {
+              try {
+                UserUpdateSchema.parse(values);
+              } catch (errors) {
+                return zodToFormikErrors(errors as ZodError);
+              }
+            }}
             onSubmit={async (values, { setSubmitting }) => {
               await onSubmitUserChanges(values, setSubmitting);
             }}

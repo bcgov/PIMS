@@ -20,7 +20,9 @@ import {
   fetchAgencyDetail,
   getUpdateAgencyAction,
 } from 'store/slices/hooks/agencyActionCreator';
-import { AgencyEditSchema } from 'utils/YupSchema';
+import { zodToFormikErrors } from 'utils';
+import { AgencyEditSchema } from 'utils/ZodSchema';
+import { ZodError } from 'zod';
 
 import { Check, Form, Input, Select, SelectOption } from '../../../components/common/form';
 
@@ -93,7 +95,13 @@ const EditAgencyPage = () => {
           <Formik
             enableReinitialize
             initialValues={newAgency ? newValues : initialValues}
-            validationSchema={AgencyEditSchema}
+            validate={(values) => {
+              try {
+                AgencyEditSchema.parse(values);
+              } catch (errors) {
+                return zodToFormikErrors(errors as ZodError);
+              }
+            }}
             onSubmit={async (values, { setSubmitting, setStatus }) => {
               try {
                 if (!newAgency) {

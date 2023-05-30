@@ -1,61 +1,41 @@
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
-import { toInteger } from 'lodash';
 import moment from 'moment';
-import * as yup from 'yup';
+import { z } from 'zod';
 
-export const splContractInPlaceSchema = yup.object({
-  purchaser: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
-      return (
-        workflowCode === Workflow.SPL &&
-        (statusCode === WorkflowStatus.ContractInPlaceConditional ||
-          statusCode === WorkflowStatus.ContractInPlaceUnconditional)
-      );
+const dateCheck = (val: any) => typeof val === 'string' && moment(val).isValid();
+
+const numberCheck = (val: any) => !isNaN(parseInt(val)) && parseInt(val) >= 0;
+
+export const splContractInPlaceSchema = z
+  .object({
+    workflowCode: z.nativeEnum(Workflow),
+    statusCode: z.nativeEnum(WorkflowStatus),
+    purchaser: z.string().optional(),
+    offerAmount: z.string().optional(),
+    offerAcceptedOn: z.string().optional(),
+    disposedOn: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (
+        data.workflowCode === Workflow.SPL &&
+        (data.statusCode === WorkflowStatus.ContractInPlaceConditional ||
+          data.statusCode === WorkflowStatus.ContractInPlaceUnconditional)
+      ) {
+        if (!data.purchaser || !numberCheck(data.offerAmount) || !dateCheck(data.offerAcceptedOn)) {
+          return false;
+        }
+      }
+
+      if (data.workflowCode === Workflow.SPL && data.statusCode === WorkflowStatus.Disposed) {
+        if (!dateCheck(data.disposedOn)) {
+          return false;
+        }
+      }
+
+      return true;
     },
-    then: yup.string().required('Purchaser required'),
-  }),
-  offerAmount: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
-      return (
-        workflowCode === Workflow.SPL &&
-        (statusCode === WorkflowStatus.ContractInPlaceConditional ||
-          statusCode === WorkflowStatus.ContractInPlaceUnconditional)
-      );
+    {
+      message: 'Required field missing or invalid',
     },
-    then: yup
-      .string()
-      .required('Offer amount required')
-      .test('isValue', 'Offer amount required', (value) => {
-        return !isNaN(toInteger(value));
-      })
-      .min(0, 'Minimum amount is $0.00'),
-  }),
-  offerAcceptedOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
-      return (
-        workflowCode === Workflow.SPL &&
-        (statusCode === WorkflowStatus.ContractInPlaceConditional ||
-          statusCode === WorkflowStatus.ContractInPlaceUnconditional)
-      );
-    },
-    then: yup
-      .string()
-      .typeError('Offer accepted on required')
-      .required('Offer accepted on required')
-      .test('isDate', 'Offer accepted on required', (value) => {
-        return moment(value).isValid();
-      }),
-  }),
-  disposedOn: yup.string().when(['workflowCode', 'statusCode'], {
-    is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
-      return workflowCode === Workflow.SPL && statusCode === WorkflowStatus.Disposed;
-    },
-    then: yup
-      .string()
-      .typeError('Disposal date required')
-      .required('Disposal date required')
-      .test('isDate', 'Disposal date required', (value) => {
-        return moment(value).isValid();
-      }),
-  }),
-});
+  );

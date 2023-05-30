@@ -1,35 +1,29 @@
-import * as Yup from 'yup';
+import { z } from 'zod';
 
-export const informationPropertiesSchema = Yup.object({
-  tierLevelId: Yup.number()
-    .typeError('Project tier level required')
-    .required('Project tier level required')
-    .min(1)
-    .max(4),
-  riskId: Yup.number()
-    .typeError('Project risk required')
-    .required('Project risk required')
-    .min(1)
-    .max(3),
-  assessed: Yup.number()
-    .required('Project assessed value required')
-    .typeError('Project assessed value required')
-    .min(0, 'Minimum value is $0.00'),
-  market: Yup.number()
-    .required('Project estimated market value required')
-    .typeError('Project estimated market value required')
-    .min(0, 'Minimum value is $0.00'),
-  netBook: Yup.number()
-    .required('Project net book value required')
-    .typeError('Project net book value required')
-    .min(0, 'Minimum value is $0.00'),
-  properties: Yup.array()
-    .of(
-      Yup.object().shape({
-        name: Yup.string(),
-        address: Yup.string().required(),
+export const informationPropertiesSchema = z.object({
+  tierLevelId: z.number().refine((n) => n >= 1 && n <= 4, {
+    message: 'Project tier level required',
+  }),
+  riskId: z.number().refine((n) => n >= 1 && n <= 3, {
+    message: 'Project risk required',
+  }),
+  assessed: z.number().refine((n) => n >= 0, {
+    message: 'Project assessed value required. Minimum value is $0.00',
+  }),
+  market: z.number().refine((n) => n >= 0, {
+    message: 'Project estimated market value required. Minimum value is $0.00',
+  }),
+  netBook: z.number().refine((n) => n >= 0, {
+    message: 'Project net book value required. Minimum value is $0.00',
+  }),
+  properties: z
+    .array(
+      z.object({
+        name: z.string().optional(),
+        address: z.string(),
       }),
     )
-    .required()
-    .min(1, 'At least one property must be associated with this project'),
+    .refine((arr) => arr.length > 0, {
+      message: 'At least one property must be associated with this project',
+    }),
 });

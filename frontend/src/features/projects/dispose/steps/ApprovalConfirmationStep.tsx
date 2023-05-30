@@ -3,6 +3,8 @@ import { IStepProps } from 'features/projects/interfaces';
 import { Formik } from 'formik';
 import React from 'react';
 import { Container, Form } from 'react-bootstrap';
+import { zodToFormikErrors } from 'utils';
+import { ZodError } from 'zod';
 
 import { ApprovalConfirmationForm, StepErrorSummary, useStepForm } from '../../common';
 import { ApprovalConfirmationStepSchema, useStepper } from '..';
@@ -23,7 +25,13 @@ const ApprovalConfirmationStep = ({ isReadOnly, formikRef }: IStepProps) => {
     <Container fluid className="ApprovalConfirmationStep">
       <Formik
         initialValues={initialValues}
-        validationSchema={ApprovalConfirmationStepSchema}
+        validate={(values) => {
+          try {
+            ApprovalConfirmationStepSchema.parse(values);
+          } catch (errors) {
+            return zodToFormikErrors(errors as ZodError);
+          }
+        }}
         innerRef={formikRef}
         onSubmit={onSubmit}
         enableReinitialize={true}

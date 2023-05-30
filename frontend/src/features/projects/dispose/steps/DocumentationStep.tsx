@@ -1,10 +1,12 @@
 import { Form } from 'components/common/form';
 import { DisposeWorkflowStatus } from 'features/projects/constants';
 import { IProject, IProjectTask, IStepProps } from 'features/projects/interfaces';
-import { Formik, setIn, yupToFormErrors } from 'formik';
+import { Formik, setIn } from 'formik';
 import _ from 'lodash';
 import React from 'react';
 import { Container } from 'react-bootstrap';
+import { zodToFormikErrors } from 'utils';
+import { ZodError } from 'zod';
 
 import { DocumentationForm, ProjectNotes, StepErrorSummary, useStepForm } from '../../common';
 import { EnhancedReferralExemptionSchema, useStepper } from '..';
@@ -19,11 +21,9 @@ const handleValidate = (project: IProject) => {
       errors = setIn(errors, `tasks.${index}.isCompleted`, 'Required');
     }
     try {
-      EnhancedReferralExemptionSchema.validateSync(project, {
-        abortEarly: false,
-      });
+      EnhancedReferralExemptionSchema.parse(project);
     } catch (schemaErrors) {
-      return _.merge(errors, yupToFormErrors(schemaErrors));
+      return _.merge(errors, zodToFormikErrors(schemaErrors as ZodError));
     }
 
     return errors;

@@ -18,9 +18,10 @@ import { Col, Container, Row } from 'react-bootstrap';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { useAppDispatch } from 'store';
 import { fetchPropertyNames } from 'store/slices/hooks/propertyActionCreator';
-import { mapLookupCode, mapLookupCodeWithParentString } from 'utils';
+import { mapLookupCode, mapLookupCodeWithParentString, zodToFormikErrors } from 'utils';
 import { mapSelectOptionWithParent } from 'utils';
-import { FilterBarSchema } from 'utils/YupSchema';
+import { FilterBarSchema } from 'utils/ZodSchema';
+import { ZodError } from 'zod';
 
 import { Form, Select } from '../../../components/common/form';
 import { PropertyFilterOptions } from './';
@@ -147,7 +148,13 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
     <Formik<IPropertyFilter>
       initialValues={{ ...initialValues }}
       enableReinitialize
-      validationSchema={FilterBarSchema}
+      validate={(values) => {
+        try {
+          FilterBarSchema.parse(values);
+        } catch (errors) {
+          return zodToFormikErrors(errors as ZodError);
+        }
+      }}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
         changeFilter(values);

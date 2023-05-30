@@ -38,7 +38,8 @@ import {
   BuildingSchema,
   OccupancySchema,
   ValuationSchema,
-} from 'utils/YupSchema';
+} from 'utils/ZodSchema';
+import { ZodError } from 'zod';
 
 import { InventoryPolicy } from '../components/InventoryPolicy';
 import { useBuildingApi } from '../hooks/useBuildingApi';
@@ -421,14 +422,17 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
    * @param values formik form values to validate.
    */
   const handleValidate = async (values: ISteppedFormValues<IBuilding>) => {
-    const zodErrors: any = BuildingSchema.validate(values.data, { abortEarly: false }).then(
-      () => ({}),
-      (err: any) => zodToFormikErrors(err),
-    );
+    const zodResult = BuildingSchema.safeParse(values.data);
 
-    const errors = await zodErrors;
-    return Object.keys(errors).length ? Promise.resolve({ data: errors }) : Promise.resolve({});
+    let errors: any = {};
+
+    if (!zodResult.success) {
+      errors = zodToFormikErrors(zodResult.error);
+    }
+
+    return Object.keys(errors).length ? { data: errors } : {};
   };
+
   return (
     <Container className="buildingForm">
       <SteppedForm

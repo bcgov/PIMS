@@ -15,9 +15,10 @@ import React, { useEffect } from 'react';
 import { Alert, Button, ButtonToolbar, Col, Container, Row } from 'react-bootstrap';
 import { useAppSelector } from 'store';
 import { toAccessRequest, useAccessRequest } from 'store/slices/hooks';
-import { mapLookupCode } from 'utils';
+import { mapLookupCode, zodToFormikErrors } from 'utils';
 import { convertToGuidFormat } from 'utils/formatGuid';
-import { AccessRequestSchema } from 'utils/YupSchema';
+import { AccessRequestSchema } from 'utils/ZodSchema';
+import { ZodError } from 'zod';
 
 interface IAccessRequestForm extends IAccessRequest {
   agency: number;
@@ -122,7 +123,13 @@ const AccessRequestPage = (): JSX.Element => {
           <Formik
             enableReinitialize={true}
             initialValues={initialValues}
-            validationSchema={AccessRequestSchema}
+            validate={(values) => {
+              try {
+                AccessRequestSchema.parse(values);
+              } catch (errors) {
+                return zodToFormikErrors(errors as ZodError);
+              }
+            }}
             onSubmit={handleFormSubmit}
           >
             {({ handleSubmit }) => (

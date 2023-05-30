@@ -10,8 +10,9 @@ import { FaArrowAltCircleLeft } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { isAxiosError } from 'utils';
-import { AdministrativeAreaSchema } from 'utils/YupSchema';
+import { isAxiosError, zodToFormikErrors } from 'utils';
+import { AdministrativeAreaSchema } from 'utils/ZodSchema';
+import { ZodError } from 'zod';
 
 import { IAdministrativeArea } from './interfaces';
 import { toApiAdminArea } from './utils/utils';
@@ -116,7 +117,13 @@ const EditAdminArea = () => {
         initialValues={{
           name: activeArea?.name ?? '',
         }}
-        validationSchema={AdministrativeAreaSchema}
+        validate={(values) => {
+          try {
+            AdministrativeAreaSchema.parse(values);
+          } catch (errors) {
+            return zodToFormikErrors(errors as ZodError);
+          }
+        }}
       >
         <EditAdminAreaContainer>
           {showDeleteModal && (

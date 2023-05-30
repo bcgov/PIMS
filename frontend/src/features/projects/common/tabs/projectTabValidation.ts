@@ -1,6 +1,6 @@
 import { ValidationGroup } from 'components/common/tabValidation';
 import { IProject, IProjectTask } from 'features/projects/interfaces';
-import { setIn, validateYupSchema } from 'formik';
+import { setIn } from 'formik';
 import _ from 'lodash';
 import { zodToFormikErrors } from 'utils';
 
@@ -52,7 +52,7 @@ export const validateTab = async (
   }
   _.merge(errors, taskErrors);
 
-  return await validateYupSchema(values, schema).then(
+  return await schema.parse(values).then(
     () => {
       return errors;
     },

@@ -2,15 +2,17 @@ import { IStepProps } from 'features/projects/interfaces';
 import { Formik } from 'formik';
 import React from 'react';
 import { Container, Form } from 'react-bootstrap';
+import { zodToFormikErrors } from 'utils';
+import { z, ZodError } from 'zod';
 
 import { ProjectNotes, PublicNotes, useStepForm } from '../../common';
 import { ReviewProjectForm, useStepper } from '..';
 import {
-  EnhancedReferralExemptionSchema,
-  ProjectDraftStepYupSchema,
-  SelectProjectPropertiesStepYupSchema,
-  UpdateInfoStepYupSchema,
-} from '../forms/disposalYupSchema';
+  ProjectDraftStepZodSchema,
+  SelectProjectPropertiesStepZodSchema,
+  UpdateInfoStepZodSchema,
+} from '../forms/disposalZodSchema';
+
 /**
  * Read only version of all step components. TODO: provide ability to update fields on this form.
  * {isReadOnly formikRef} formikRef allow remote formik access, isReadOnly toggle to prevent updates.
@@ -21,6 +23,19 @@ const ReviewProjectStep = ({ formikRef }: IStepProps) => {
   const initialValues = { ...project, confirmation: true };
   const canEdit = canUserEditForm(project.agencyId);
   const canSubmit = canUserSubmitForm();
+  const validationSchema = z
+    .object({
+      ...ProjectDraftStepZodSchema.shape,
+      ...UpdateInfoStepZodSchema.shape,
+      ...SelectProjectPropertiesStepZodSchema.shape,
+      exemptionRationale: z.string().optional(),
+      exemptionRequested: z.boolean(),
+    })
+    .refine((data) => !(data.exemptionRequested && !data.exemptionRationale), {
+      message: 'Rationale is required when applying for an exemption.',
+      path: ['exemptionRationale'],
+    });
+
   return (
     <Container fluid className="ReviewProjectStep">
       <Formik
@@ -28,9 +43,13 @@ const ReviewProjectStep = ({ formikRef }: IStepProps) => {
         innerRef={formikRef}
         onSubmit={onSubmit}
         enableReinitialize={true}
-        validationSchema={ProjectDraftStepYupSchema.concat(UpdateInfoStepYupSchema)
-          .concat(SelectProjectPropertiesStepYupSchema)
-          .concat(EnhancedReferralExemptionSchema)}
+        validate={(values) => {
+          try {
+            validationSchema.parse(values);
+          } catch (errors) {
+            return zodToFormikErrors(errors as ZodError);
+          }
+        }}
       >
         <Form>
           <ReviewProjectForm canEdit={canEdit} />

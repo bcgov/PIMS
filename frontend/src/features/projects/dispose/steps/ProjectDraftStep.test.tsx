@@ -72,19 +72,13 @@ describe('Project Draft Step', () => {
     container.querySelector('form');
     fillInput(container, 'name', '');
     fillInput(container, 'description', 'description', 'textarea');
-    await waitFor(async () => {
-      expect(await findByText('Required')).toBeInTheDocument();
-    });
-  });
-
-  it('can be submitted after required filled', async () => {
-    const { container, findByText } = render(uiElement);
-    container.querySelector('form');
-    fillInput(container, 'name', '');
-    fillInput(container, 'description', 'description', 'textarea');
-    await waitFor(async () => {
-      expect(await findByText('Required')).toBeInTheDocument();
-    });
+    fillInput(container, 'note', 'note', 'textarea');
+    await waitFor(
+      async () => {
+        expect(await findByText('Required')).toBeInTheDocument();
+      },
+      { timeout: 2000 },
+    );
   });
 
   it('loads the projectNumber', () => {

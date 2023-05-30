@@ -32,9 +32,9 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAppDispatch } from 'store';
 import styled from 'styled-components';
-import { decimalOrUndefined, mapLookupCode } from 'utils';
+import { decimalOrUndefined, mapLookupCode, zodToFormikErrors } from 'utils';
 import download from 'utils/download';
-import * as Yup from 'yup';
+import { z, ZodError } from 'zod';
 
 import { PropertyTypeNames } from '../../../constants/propertyTypeNames';
 import { PropertyFilter } from '../filter';
@@ -661,6 +661,17 @@ const PropertyListView: React.FC = () => {
     }
   };
 
+  const validationSchema = z.object({
+    properties: z.array(
+      z.object({
+        netBook: z
+          .number()
+          .min(0, 'Minimum value is $0')
+          .max(1000000000, 'Maximum value is $1,000,000,000'),
+      }),
+    ),
+  });
+
   return (
     <Container fluid className="PropertyListView" data-testid="property-list-view">
       <Container fluid className="filter-container border-bottom">
@@ -836,16 +847,13 @@ const PropertyListView: React.FC = () => {
             <Formik
               innerRef={tableFormRef as any}
               initialValues={{ properties: data || [] }}
-              validationSchema={Yup.object().shape({
-                properties: Yup.array().of(
-                  Yup.object().shape({
-                    netBook: Yup.number()
-                      .min(0, 'Minimum value is $0')
-                      .max(1000000000, 'Maximum value is $1,000,000,000')
-                      .required('Required'),
-                  }),
-                ),
-              })}
+              validate={(values) => {
+                try {
+                  validationSchema.parse(values);
+                } catch (errors) {
+                  return zodToFormikErrors(errors as ZodError);
+                }
+              }}
               onSubmit={noop}
             >
               <Form>

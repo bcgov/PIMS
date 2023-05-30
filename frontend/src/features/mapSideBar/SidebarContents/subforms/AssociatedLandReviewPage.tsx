@@ -29,7 +29,7 @@ import { FaEdit } from 'react-icons/fa';
 import styled from 'styled-components';
 import { formatFiscalYear } from 'utils';
 import { formatMoney } from 'utils/numberFormatUtils';
-import { LandSchema } from 'utils/YupSchema';
+import { LandSchema } from 'utils/ZodSchema';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -108,7 +108,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
     const isParcelValid =
       leasedLandMetadataType === LeasedLandTypes.other ||
       (leasedLandMetadataType === LeasedLandTypes.owned &&
-        LandSchema.isValidSync(getIn(formikProps.values.data, `parcels.${index}`)));
+        LandSchema.safeParse(getIn(formikProps.values.data, `parcels.${index}`)).success);
     const parcelEditInfo = {
       identification: editInfo.identification && isParcelValid,
       usage: editInfo.usage && isParcelValid,

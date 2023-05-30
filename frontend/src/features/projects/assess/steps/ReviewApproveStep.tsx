@@ -1,7 +1,7 @@
 import ProjectLayout from 'features/projects/common/ProjectLayout';
 import { IProject, IProjectTask, IStepProps } from 'features/projects/interfaces';
 import { LayoutWrapper } from 'features/routes';
-import { Formik, FormikValues, setIn, validateYupSchema } from 'formik';
+import { Formik, FormikValues, setIn } from 'formik';
 import { WorkflowStatus } from 'hooks/api/projects';
 import _ from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
@@ -15,19 +15,20 @@ import { fetchProjectTasks } from '../../common/projectsActionCreator';
 import { ReviewApproveActions } from '../../dispose';
 import {
   ApproveExemptionRequestSchema,
-  DenyProjectYupSchema,
-  ProjectDraftStepYupSchema,
-  SelectProjectPropertiesStepYupSchema,
-  UpdateInfoStepYupSchema,
-} from '../../dispose/forms/disposalYupSchema';
+  DenyProjectZodSchema,
+  ProjectDraftStepZodSchema,
+  SelectProjectPropertiesStepZodSchema,
+  UpdateInfoStepZodSchema,
+} from '../../dispose/forms/disposalZodSchema';
 import { ReviewApproveForm } from '..';
 
-export const ReviewApproveStepSchema = UpdateInfoStepYupSchema.concat(
-  ProjectDraftStepYupSchema,
-).concat(SelectProjectPropertiesStepYupSchema);
+export const ReviewApproveStepSchema = UpdateInfoStepZodSchema.extend(
+  ProjectDraftStepZodSchema.shape,
+).extend(SelectProjectPropertiesStepZodSchema.shape);
 
-export const ReviewExemptionRequestSchema =
-  ApproveExemptionRequestSchema.concat(ReviewApproveStepSchema);
+export const ReviewExemptionRequestSchema = ApproveExemptionRequestSchema.extend(
+  ReviewApproveStepSchema.shape,
+);
 
 /**
  * Validate the project status tasks that are required.
@@ -62,7 +63,7 @@ export const validateTasks = (project: IProject) => {
  */
 export const validateDeny = async (project: IProject) => {
   try {
-    await validateYupSchema(project, DenyProjectYupSchema);
+    DenyProjectZodSchema.parse(project);
     return Promise.resolve({});
   } catch (errors) {
     return Promise.resolve(zodToFormikErrors(errors as ZodError));
@@ -88,10 +89,9 @@ export const validateApprove = async (project: IProject) => {
   }
 
   try {
-    await validateYupSchema(
-      project,
-      project.exemptionRequested ? ReviewExemptionRequestSchema : ReviewApproveStepSchema,
-    );
+    project.exemptionRequested
+      ? ReviewExemptionRequestSchema.parse(project)
+      : ReviewApproveStepSchema.parse(project);
     return Promise.resolve(taskErrors);
   } catch (errors) {
     return _.merge(zodToFormikErrors(errors as ZodError), taskErrors);
