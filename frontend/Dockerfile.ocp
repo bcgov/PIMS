@@ -14,11 +14,12 @@ COPY . .
 RUN npm set progress=false
 RUN npm i
 
-USER 1001
 EXPOSE 8080
 
 # Build the project.
 RUN npm run build-ocp
+
+USER 1001
 
 # # ================================= #
 # # 🐳🐳   [2/2] PROD NGINX    🐳🐳 #
