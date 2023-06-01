@@ -1,4 +1,4 @@
-FROM node:18.16-bullseye-slim
+FROM image-registry.apps.silver.devops.gov.bc.ca/354028-tools/nodejs:18.16-bullseye-slim
 
 # Set the working directory to /app
 WORKDIR /app
