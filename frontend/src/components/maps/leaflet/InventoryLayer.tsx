@@ -1,4 +1,4 @@
-import { IBuilding, IParcel, IPropertyDetail } from 'actions/parcelsActions';
+import { IPropertyDetail } from 'actions/parcelsActions';
 import { IGeoSearchParams } from 'constants/API';
 import { PropertyTypes } from 'constants/propertyTypes';
 import { BBox, Point } from 'geojson';
@@ -233,16 +233,10 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
         (point) => `${point?.properties.id}-${point?.properties.propertyTypeId}`,
       );
 
-      /**
-       * Whether the land has buildings on it.
-       * @param property PIMS property
-       */
-      const hasBuildings = (property: IParcel | IBuilding) => false;
-
       const results = items.filter(({ properties }: any) => {
         return (
           properties.propertyTypeId === PropertyTypes.BUILDING ||
-          !hasBuildings(properties) ||
+          properties.propertyTypeId === PropertyTypes.PARCEL ||
           (properties.propertyTypeId === PropertyTypes.SUBDIVISION &&
             keycloak.canUserEditProperty(properties))
         );
