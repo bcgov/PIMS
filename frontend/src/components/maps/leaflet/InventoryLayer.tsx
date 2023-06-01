@@ -1,4 +1,4 @@
-import { IPropertyDetail } from 'actions/parcelsActions';
+import { IBuilding, IParcel, IPropertyDetail } from 'actions/parcelsActions';
 import { IGeoSearchParams } from 'constants/API';
 import { PropertyTypes } from 'constants/propertyTypes';
 import { BBox, Point } from 'geojson';
@@ -147,7 +147,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const geocoder = useApiGeocoder();
 
-  const draftProperties: PointFeature[] = useAppSelector((store) => store.parcel.draftProperties);
+  const draftProperties: PointFeature[] = useAppSelector(store => store.parcel.draftProperties);
 
   if (!map) {
     throw new Error('<InventoryLayer /> must be used under a <Map> leaflet component');
@@ -167,7 +167,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   const params = useMemo((): any => {
     const tiles = getTiles(defaultBounds, 5);
 
-    return tiles.map((tile) => ({
+    return tiles.map(tile => ({
       bbox: tile.bbox,
       address: filter?.address,
       administrativeArea: filter?.administrativeArea,
@@ -196,8 +196,8 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
     if (!!filter.address) {
       const geo = await geocoder.addresses(filter.address, filter.bbox, filter.administrativeArea);
       const features = geo.data.features
-        .filter((f) => f?.properties?.locationDescriptor !== 'provincePoint')
-        .map((f) => ({
+        .filter(f => f?.properties?.locationDescriptor !== 'provincePoint')
+        .map(f => ({
           ...f,
           properties: {
             id: !!f.properties?.blockID ? f.properties?.blockID : counter++,
@@ -222,7 +222,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   const search = async (filters: IGeoSearchParams[]) => {
     try {
       onRequestData(true);
-      const data = flatten(await Promise.all(filters.map((x) => loadTile(x)))).map((f) => {
+      const data = flatten(await Promise.all(filters.map(x => loadTile(x)))).map(f => {
         return {
           ...f,
         } as PointFeature;
@@ -230,12 +230,19 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
 
       const items = uniqBy(
         data,
-        (point) => `${point?.properties.id}-${point?.properties.propertyTypeId}`,
+        point => `${point?.properties.id}-${point?.properties.propertyTypeId}`,
       );
+
+      /**
+       * Whether the land has buildings on it.
+       * @param property PIMS property
+       */
+      const hasBuildings = (property: IParcel | IBuilding) => false;
 
       const results = items.filter(({ properties }: any) => {
         return (
           properties.propertyTypeId === PropertyTypes.BUILDING ||
+          !hasBuildings(properties) ||
           (properties.propertyTypeId === PropertyTypes.SUBDIVISION &&
             keycloak.canUserEditProperty(properties))
         );
