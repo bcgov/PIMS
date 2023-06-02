@@ -7,9 +7,6 @@ import viteTsconfigPaths from 'vite-tsconfig-paths';
 export default defineConfig({
   plugins: [react(), viteTsconfigPaths(), svgrPlugin()],
   build: {
-    rollupOptions: {
-      input: '/public/index.html',
-    },
     outDir: 'build',
   },
 });
