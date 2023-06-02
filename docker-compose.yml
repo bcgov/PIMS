@@ -39,7 +39,7 @@ services:
     container_name: pims-app
     build:
       context: frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.ocp
     volumes:
       - ./frontend/src:/app/src
       - ./frontend/public:/app/public
