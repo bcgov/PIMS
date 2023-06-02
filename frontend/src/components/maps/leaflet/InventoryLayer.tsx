@@ -236,6 +236,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
       const results = items.filter(({ properties }: any) => {
         return (
           properties.propertyTypeId === PropertyTypes.BUILDING ||
+          properties.propertyTypeId === PropertyTypes.PARCEL ||
           (properties.propertyTypeId === PropertyTypes.SUBDIVISION &&
             keycloak.canUserEditProperty(properties))
         );
