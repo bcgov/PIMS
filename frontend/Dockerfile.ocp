@@ -7,13 +7,14 @@ ENV NODE_ENV=production
 # Copy files
 COPY ./src ./src
 COPY ./public ./public
-COPY esbuild.config.mjs .
 COPY package.json .
 COPY styleguide.config.js .
 COPY tsconfig.json .
+COPY vite.config.js .
 
 # Npm install packages. Omits dev dependencies when NODE_ENV=production
 RUN npm set progress=false
+RUN npm i sass vite @vitejs/plugin-react vite-plugin-svgr vite-tsconfig-paths
 RUN npm i
 
 EXPOSE 8080
