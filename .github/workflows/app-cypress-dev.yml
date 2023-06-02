@@ -2,12 +2,12 @@ name: App Cypress Tests - Dev
 
 on:
   schedule:
-    - cron: '0 20 * * *' # Every day at 8:00pm UTC - roughly noon Pacific Time.
+    - cron: '0 20 * * 1-5' # Every weekday at 8:00pm UTC - roughly noon Pacific Time.
   workflow_dispatch:
 
 jobs:
   e2e-tests-dev:
-    runs-on: ubuntu-23.10
+    runs-on: ubuntu-22.04
     # Cypress Docker Image
     # - with Chrome, Firefox, and Edge v113 pre-installed.
     # - Node v18.16.0
@@ -24,6 +24,7 @@ jobs:
         with:
           browser: chrome
           working-directory: frontend
+          install-command: npm install
           command: npm run cypress:e2e
           config-file: cypress.config.ts
           config: baseUrl=https://pims-dev.apps.silver.devops.gov.bc.ca

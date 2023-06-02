@@ -37,8 +37,8 @@ import download from 'utils/download';
 import { z, ZodError } from 'zod';
 
 import { PropertyTypeNames } from '../../../constants/propertyTypeNames';
-import { PropertyFilter } from '../filter';
 import { IPropertyFilter } from '../filter/IPropertyFilter';
+import { PropertyFilter } from '../filter/PropertyFilter';
 import service from '../service';
 import { IProperty, IPropertyQueryParams } from '.';
 import { Buildings } from './buildings';
