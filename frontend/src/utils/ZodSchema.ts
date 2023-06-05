@@ -103,8 +103,12 @@ const FinancialYear = z.object({
 
 export const OccupancySchema = z
   .object({
-    rentableArea: z.number().min(1, 'Net Usable Area must be greater than 0').optional(),
-    totalArea: z.number().optional(),
+    rentableArea: z
+      .number()
+      .min(1, 'Net Usable Area must be greater than 0')
+      .or(z.string())
+      .optional(),
+    totalArea: z.number().or(z.string()).optional(),
     buildingTenancy: z.string().max(100, 'Tenancy must be less than 100 characters').optional(),
     buildingTenancyUpdatedOn: z.string().nullable().optional(),
   })
@@ -131,28 +135,43 @@ export const BuildingInformationSchema = z
       .max(2000, 'Description must be less than 2000 characters')
       .nullable()
       .optional(),
-    latitude: z.number().min(-90, 'Invalid Latitude').max(90, 'Invalid Latitude').optional(),
-    longitude: z.number().min(-180, 'Invalid Longitude').max(180, 'Invalid Longitude').optional(),
+    latitude: z
+      .number()
+      .min(-90, 'Invalid Latitude')
+      .max(90, 'Invalid Latitude')
+      .or(z.string().nonempty('Required')),
+    longitude: z
+      .number()
+      .min(-180, 'Invalid Longitude')
+      .max(180, 'Invalid Longitude')
+      .or(z.string().nonempty('Required')),
     buildingConstructionTypeId: z
       .string()
+      .nonempty('Required')
       .regex(/\d*/, 'Invalid Building Construction Type')
-      .nullable()
-      .optional(),
+      .nullable(),
     buildingPredominateUseId: z
       .string()
+      .nonempty('Required')
       .regex(/\d*/, 'Invalid Building Predominate Use')
-      .nullable()
-      .optional(),
+      .nullable(),
     classificationId: z
       .string()
+      .nonempty('Required')
       .regex(/\d*/, 'Invalid Building Classification Id')
       .or(z.number())
-      .nullable()
+      .nullable(),
+    buildingFloorCount: z
+      .number()
+      .min(0, 'Floor Count must be a valid number')
+      .or(z.string())
       .optional(),
-    buildingFloorCount: z.number().min(0, 'Floor Count must be a valid number').optional(),
     address: Address,
-    agencyId: z.number().optional(),
-    isSensitive: z.boolean().or(z.string()).nullable().optional(),
+    agencyId: z.number().or(z.string()).optional(),
+    isSensitive: z
+      .boolean()
+      .or(z.string().nonempty('Required'))
+      .refine((value) => value !== undefined, 'Required'),
   })
   .refine(
     (data) =>
@@ -177,33 +196,34 @@ export const BuildingInformationSchema = z
     },
   );
 
-export const BuildingSchema = z.object({
-  transferLeaseOnSale: z.boolean().optional(),
-  leaseExpiry: z.string().nullable().optional(),
-  financials: z
-    .array(
-      FinancialYear.refine(
-        (financial) =>
-          financial.assessed.year !== currentYear &&
-          financial.appraised.year !== currentYear &&
-          financial.netbook.year !== currentYear &&
-          financial.market.year !== currentYear,
-        { message: 'Year must not be the current year.' },
-      ),
-    )
-    .optional(),
-});
+export const BuildingSchema = z
+  .object({
+    transferLeaseOnSale: z.boolean().optional(),
+    leaseExpiry: z.string().nullable().optional(),
+    financials: z
+      .array(
+        FinancialYear.refine(
+          (financial) =>
+            financial.assessed.year !== currentYear &&
+            financial.appraised.year !== currentYear &&
+            financial.netbook.year !== currentYear &&
+            financial.market.year !== currentYear,
+          { message: 'Year must not be the current year.' },
+        ),
+      )
+      .optional(),
+  })
+  .and(OccupancySchema)
+  .and(BuildingInformationSchema);
 
 export const LandSchema = z.object({
   classificationId: z
     .string()
-    .nonempty({ message: 'Required' })
     .refine((value) => /\d*/.test(value), {
       message: 'Invalid Classification',
     })
     .or(z.number())
-    .nullable()
-    .optional(),
+    .nullable(),
   address: Address,
   name: z.string().max(150, 'Name must be less than 150 characters').nullable().optional(),
   description: z
@@ -239,9 +259,8 @@ export const LandSchema = z.object({
     .refine((value) => !isNaN(value), 'Required'),
   landArea: z
     .number()
-    .min(0, 'Land Area must be a positive number')
-    .refine((value) => !isNaN(value) && value < 200000, 'Please enter a valid number')
-    .or(z.string().nonempty('Required')),
+    .or(z.string().nonempty('Required'))
+    .refine((value) => Number(value) >= 0 && Number(value) < 200000, 'Please enter a valid number'),
   lotSize: z.number().optional(),
   isSensitive: z
     .boolean()
@@ -250,35 +269,39 @@ export const LandSchema = z.object({
   parcels: z.array(z.unknown()),
 });
 
-// TODO
-/**
- * ^^
- * parcels: z.array(z.unknown()).refine((parcels) => {
-    // This needs to be moved to where the schema is used.
-    if (propertyTypeId === PropertyTypes.SUBDIVISION && parcels.length === 0) {
-      return false;
-    }
-    return true;
-  }, 'You must add at least one parent parcel'),
- */
-
 export const ParcelSchema = z
   .object({
-    pid: z.string().optional(),
-    pin: z.string().or(z.number()).optional(),
+    pid: z
+      .string()
+      .refine(
+        (value) => {
+          if (value === '') return true; // Allow empty string
+          return value.match(/\d\d\d[\s-]?\d\d\d[\s-]?\d\d\d/);
+        },
+        {
+          message: 'PID must be in the format ###-###-###',
+          path: ['pid'],
+        },
+      )
+      .optional(),
+    pin: z
+      .string()
+      .or(z.number())
+      .refine(
+        (value) => {
+          if (value === '') return true; // Allow empty string
+          return value && String(value).length <= 9;
+        },
+        {
+          message: 'PIN must be less or equal than 9 characters',
+          path: ['pin'],
+        },
+      )
+      .optional(),
     buildings: z.array(z.unknown()),
     financials: z.array(FinancialYear).optional(),
     agencyId: z.number(),
   })
-  .refine(
-    (data) =>
-      (data.pid && data.pid.match(/\d\d\d[\s-]?\d\d\d[\s-]?\d\d\d/)) ||
-      (data.pin && String(data.pin).length <= 9),
-    {
-      message: 'PID or PIN Required',
-      path: ['pid', 'pin'],
-    },
-  )
   .and(LandSchema);
 
 export const FilterBarSchema = z
@@ -287,7 +310,7 @@ export const FilterBarSchema = z
     maxLotSize: z.number().positive().max(200000).or(z.string()).optional(),
     inEnhancedReferralProcess: z.boolean().optional(),
     inSurplusPropertyProgram: z.boolean().optional(),
-    surplusFilter: z.unknown().optional(), // replace with actual schema
+    surplusFilter: z.unknown().optional(),
   })
   .refine(
     (data) => {
@@ -353,7 +376,8 @@ export const ValuationSchema = z.object({
             financial.market.year !== currentYear,
         ),
       'Financial year must not be the current year.',
-    ),
+    )
+    .optional(),
 });
 
 export const LandIdentificationSchema = z.object({
@@ -378,7 +402,7 @@ export const LandIdentificationSchema = z.object({
   landLegalDescription: z.string().max(500).nullable().optional(),
   latitude: z.number().min(-90).max(90).nullable().optional(),
   longitude: z.number().min(-180).max(180).nullable().optional(),
-  landArea: z.number().min(0).max(200000).nullable().optional(),
+  landArea: z.number().min(0).max(200000).or(z.string()).nullable().optional(),
   agencyId: z.number().nullable().optional(),
   lotSize: z.number().nullable().optional(),
   isSensitive: z.boolean().or(z.string()).nullable().optional(),

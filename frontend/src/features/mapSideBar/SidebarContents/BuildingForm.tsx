@@ -429,6 +429,9 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
       errors = zodToFormikErrors(zodResult.error);
     }
 
+    console.log('values', values.data);
+    console.log('errors', errors);
+
     return Object.keys(errors).length ? { data: errors } : {};
   };
 

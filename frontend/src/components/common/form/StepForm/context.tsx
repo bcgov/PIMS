@@ -92,13 +92,16 @@ export const StepperFormProvider: React.FC<React.PropsWithChildren<IStepperFormP
       const schema = currentStep.validation.schema;
       const validationValues = getIn(values, nameSpace);
       try {
-        schema.validateSync(validationValues, { abortEarly: false });
+        schema.parse(validationValues);
         completeStep(index);
       } catch (e) {
-        const errors = setIn({}, nameSpace, zodToFormikErrors(e as ZodError));
-        setErrors(errors);
-        setTouched(errors);
-        return false;
+        if (e instanceof ZodError) {
+          const errors = setIn({}, nameSpace, zodToFormikErrors(e));
+          console.log(errors);
+          setErrors(errors);
+          setTouched(errors);
+          return false;
+        }
       }
     } else {
       completeStep(index);

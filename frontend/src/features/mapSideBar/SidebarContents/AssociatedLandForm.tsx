@@ -7,6 +7,7 @@ import * as API from 'constants/API';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { AssociatedLandSteps } from 'constants/propertySteps';
+import { PropertyTypes } from 'constants/propertyTypes';
 import DebouncedValidation from 'features/properties/components/forms/subforms/DebouncedValidation';
 import {
   filterEmptyFinancials,
@@ -509,6 +510,15 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
         }
       }),
     );
+
+    // Must Add at Least One Parent Parcel
+    if (
+      values.data.propertyTypeId === PropertyTypes.SUBDIVISION &&
+      values.data.parcels.length === 0
+    ) {
+      errors = { ...errors, parcels: 'You must add at least one parent parcel' };
+    }
+
     return Promise.resolve(errors);
   };
 

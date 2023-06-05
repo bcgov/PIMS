@@ -408,6 +408,7 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
       errors = zodToFormikErrors(zodResult.error);
     }
 
+    // Duplicate PID
     let pidDuplicated = false;
     if (
       values.data.pid &&
@@ -417,7 +418,9 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
     ) {
       pidDuplicated = !(await isPidAvailable(values.data));
     }
+    if (pidDuplicated) errors = { ...errors, pid: 'This PID is already in use.' };
 
+    // Duplicate PIN
     let pinDuplicated = false;
     if (
       values.data.pin &&
@@ -428,14 +431,20 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
     ) {
       pinDuplicated = !(await isPinAvailable(values.data));
     }
+    if (pinDuplicated) errors = { ...errors, pin: 'This PIN is already in use.' };
 
-    if (pidDuplicated) {
-      errors = { ...errors, pid: 'This PID is already in use.' };
+    // Must Include PID or PIN
+    const emptyPin = !values.data.pin || String(values.data.pin) === '';
+    const emptyPid = !values.data.pid || String(values.data.pid) === '';
+    if (emptyPin && emptyPid) errors = { ...errors, pid: 'Either PID or PIN is required' };
+
+    // Must Add at Least One Parent Parcel
+    if (
+      values.data.propertyTypeId === PropertyTypes.SUBDIVISION &&
+      values.data.parcels.length === 0
+    ) {
+      errors = { ...errors, parcels: 'You must add at least one parent parcel' };
     }
-    if (pinDuplicated) {
-      errors = { ...errors, pin: 'This PIN is already in use.' };
-    }
-    console.log(Object.keys(errors).length);
 
     return Object.keys(errors).length ? { data: errors } : {};
   };
