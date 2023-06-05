@@ -1,8 +1,7 @@
 import variables from '_variables.module.scss';
 import { IBuilding, IParcel } from 'actions/parcelsActions';
-import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
 import clsx from 'classnames';
-import { LandSvg } from 'components/common/Icons';
+import { BuildingSvg, LandSvg } from 'components/common/Icons';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { ControlPanel } from 'components/leaflet';
 import { PropertyPopUpContext } from 'components/maps/providers/PropertyPopUpProvider';

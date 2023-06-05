@@ -64,7 +64,7 @@ local-build: ## Builds the frontend app on local filesystem
 
 local-run: ## Serves the frontend via webpack-dev-server
 	@echo -e "\n$(P) Removing frontend docker container and building local dev version..."
-	@docker-compose rm -f -v -s frontend
+	@docker compose rm -f -v -s frontend
 	@npm run start
 
 needs-rebase:
@@ -92,24 +92,24 @@ restart: | stop build run rebuild-all-local-friendly-message ## Rebuilds the doc
 
 build-all: ## Rebuilds all docker containers for this project
 	@echo -e "\n$(P) Building images..."
-	@docker-compose build --force-rm --no-cache
+	@docker compose build --force-rm --no-cache
 
 build: ## Builds the frontend container
 	@echo -e "\n$(P) Building images..."
-	@docker-compose build --force-rm --no-cache frontend
+	@docker compose build --force-rm --no-cache frontend
 
 run: ## Runs the frontend docker container
 	@echo -e "\n$(P) Running client and server..."
-	@docker-compose up -d
+	@docker compose up -d
 
 stop: ## Tears down the docker development containers
 	@echo -e "\n$(P) Stopping client and server..."
-	@docker-compose down
+	@docker compose down
 
 clean: ## Removes local docker containers, images, volumes, etc
 	@echo -e "\n$(P) Removing containers, images, volumes etc..."
 	@echo "$(P) Note: does not clear image cache."
-	@docker-compose rm -f -v -s frontend
+	@docker compose rm -f -v -s frontend
 	@docker volume rm -f pims-frontend-node-cache
 
 rebuild-all-local-friendly-message:
