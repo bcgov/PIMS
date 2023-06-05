@@ -5,6 +5,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "cross-env CI=true react-scripts build",
+    "build-ocp": "vite build --mode production",
     "test": "react-scripts test --ci --watchAll=false --runInBand",
     "test:output": "react-scripts test --ci --watchAll=false --runInBand --json --outputFile=./jest/latestTestRun.json",
     "test:summary": "node ./jest/summarizeLatestTestRun.mjs",
@@ -33,6 +34,7 @@
     "@mui/material": "5.13.1",
     "@react-keycloak/web": "3.4.0",
     "@react-leaflet/core": "1.1.1",
+    "@redux-devtools/extension": "3.2.5",
     "@reduxjs/toolkit": "1.9.5",
     "axios": "0.27.2",
     "bootstrap": "5.2.3",
@@ -82,7 +84,6 @@
   "devDependencies": {
     "@babel/preset-typescript": "7.21.5",
     "@cfaester/enzyme-adapter-react-18": "0.7.0",
-    "@redux-devtools/extension": "3.2.5",
     "@testing-library/dom": "9.3.0",
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "14.0.0",
