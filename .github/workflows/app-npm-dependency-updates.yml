@@ -2,7 +2,7 @@ name: App NPM Dependency Updates
 
 on:
   schedule:
-    - cron: '0 16 * * 2' # Every Tuesday at 7:00-8:00am Pacific Time.
+    - cron: '0 16 * * 2' # Every Tuesday at 8:00-9:00am Pacific Time.
   workflow_dispatch:
 
 jobs:
