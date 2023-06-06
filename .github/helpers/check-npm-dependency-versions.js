@@ -2,7 +2,7 @@ const https = require('https');
 const path = require('path');
 
 // Get package.json file.
-const cmdLineArgument = process.argv.slice(2)[0];
+const cmdLineArgument = process.env.PACKAGE_JSON;
 const packageJsonPath = cmdLineArgument.startsWith('./')
   ? path.resolve(cmdLineArgument)
   : path.resolve(`./${cmdLineArgument}`);
