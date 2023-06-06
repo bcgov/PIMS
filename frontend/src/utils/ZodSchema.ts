@@ -8,7 +8,7 @@ const AccessRequestUserSchema = z.object({
 });
 
 export const AccessRequestSchema = z.object({
-  agency: z.number().min(1, 'Invalid Agency').nonnegative('Required'),
+  agency: z.number().min(1, 'Invalid Agency').nonnegative('Required').or(z.string()),
   role: z.string().min(1, 'Invalid Role').nonempty('Required'),
   note: z.string().max(1000, 'Note must be less than 1000 characters'),
   user: AccessRequestUserSchema,
@@ -23,28 +23,20 @@ export const UserUpdateSchema = z.object({
   lastName: z.string().max(100, 'Last Name must be less than 100 characters'),
 });
 
-export const AgencyEditSchema = z
-  .object({
-    email: z
-      .string()
-      .max(100, 'Email must be less than 100 characters')
-      .email('Please enter a valid email.')
-      .optional(),
-    name: z
-      .string()
-      .max(100, 'Agency name must be less than 100 characters')
-      .nonempty('An agency name is required.'),
-    addressTo: z
-      .string()
-      .max(100, 'Email addressed to must be less than 100 characters')
-      .optional(),
-    code: z.string().nonempty('An agency code is required.'),
-    sendEmail: z.boolean(),
-  })
-  .refine((data) => !(data.sendEmail && (!data.email || !data.addressTo)), {
-    message: 'Email address and addressTo are required',
-    path: ['email', 'addressTo'],
-  });
+export const AgencyEditSchema = z.object({
+  email: z
+    .string()
+    .max(100, 'Email must be less than 100 characters')
+    .email('Please enter a valid email.')
+    .optional(),
+  name: z
+    .string()
+    .max(100, 'Agency name must be less than 100 characters')
+    .nonempty('An agency name is required.'),
+  addressTo: z.string().max(100, 'Email addressed to must be less than 100 characters').optional(),
+  code: z.string().nonempty('An agency code is required.'),
+  sendEmail: z.boolean(),
+});
 
 export const AdministrativeAreaSchema = z.object({
   name: z.string().nonempty('A name is required for administrative areas'),
@@ -101,100 +93,63 @@ const FinancialYear = z.object({
   market: Financial,
 });
 
-export const OccupancySchema = z
-  .object({
-    rentableArea: z
-      .number()
-      .min(1, 'Net Usable Area must be greater than 0')
-      .or(z.string())
-      .optional(),
-    totalArea: z.number().or(z.string()).optional(),
-    buildingTenancy: z.string().max(100, 'Tenancy must be less than 100 characters').optional(),
-    buildingTenancyUpdatedOn: z.string().nullable().optional(),
-  })
-  .refine(
-    (data) =>
-      (!data.rentableArea ||
-        !data.totalArea ||
-        (data.rentableArea <= data.totalArea &&
-          (data.totalArea === null || data.totalArea >= data.rentableArea))) &&
-      (data.buildingTenancy === undefined ||
-        data.buildingTenancy.length === 0 ||
-        data.buildingTenancyUpdatedOn !== null),
-    {
-      message: 'Invalid data',
-      path: ['rentableArea', 'totalArea', 'buildingTenancyUpdatedOn'],
-    },
-  );
+export const OccupancySchema = z.object({
+  rentableArea: z
+    .number()
+    .min(1, 'Net Usable Area must be greater than 0')
+    .or(z.string().nonempty('Required')),
+  totalArea: z.number().or(z.string().nonempty('Required')),
+  buildingTenancy: z.string().max(100, 'Tenancy must be less than 100 characters').optional(),
+  buildingTenancyUpdatedOn: z.string().nullable().optional(),
+});
 
-export const BuildingInformationSchema = z
-  .object({
-    name: z.string().max(150, 'Name must be less than 150 characters').nullable().optional(),
-    description: z
-      .string()
-      .max(2000, 'Description must be less than 2000 characters')
-      .nullable()
-      .optional(),
-    latitude: z
-      .number()
-      .min(-90, 'Invalid Latitude')
-      .max(90, 'Invalid Latitude')
-      .or(z.string().nonempty('Required')),
-    longitude: z
-      .number()
-      .min(-180, 'Invalid Longitude')
-      .max(180, 'Invalid Longitude')
-      .or(z.string().nonempty('Required')),
-    buildingConstructionTypeId: z
-      .string()
-      .nonempty('Required')
-      .regex(/\d*/, 'Invalid Building Construction Type')
-      .nullable(),
-    buildingPredominateUseId: z
-      .string()
-      .nonempty('Required')
-      .regex(/\d*/, 'Invalid Building Predominate Use')
-      .nullable(),
-    classificationId: z
-      .string()
-      .nonempty('Required')
-      .regex(/\d*/, 'Invalid Building Classification Id')
-      .or(z.number())
-      .nullable(),
-    buildingFloorCount: z
-      .number()
-      .min(0, 'Floor Count must be a valid number')
-      .or(z.string())
-      .optional(),
-    address: Address,
-    agencyId: z.number().or(z.string()).optional(),
-    isSensitive: z
-      .boolean()
-      .or(z.string().nonempty('Required'))
-      .refine((value) => value !== undefined, 'Required'),
-  })
-  .refine(
-    (data) =>
-      data.latitude !== undefined &&
-      data.longitude !== undefined &&
-      data.buildingConstructionTypeId !== null &&
-      data.buildingPredominateUseId !== null &&
-      data.classificationId !== null &&
-      data.agencyId !== undefined &&
-      data.isSensitive !== null,
-    {
-      message: 'Required',
-      path: [
-        'latitude',
-        'longitude',
-        'buildingConstructionTypeId',
-        'buildingPredominateUseId',
-        'classificationId',
-        'agencyId',
-        'isSensitive',
-      ],
-    },
-  );
+export const BuildingInformationSchema = z.object({
+  name: z.string().max(150, 'Name must be less than 150 characters').nullable().optional(),
+  description: z
+    .string()
+    .max(2000, 'Description must be less than 2000 characters')
+    .nullable()
+    .optional(),
+  latitude: z
+    .number()
+    .min(-90, 'Invalid Latitude')
+    .max(90, 'Invalid Latitude')
+    .or(z.string().nonempty('Required')),
+  longitude: z
+    .number()
+    .min(-180, 'Invalid Longitude')
+    .max(180, 'Invalid Longitude')
+    .or(z.string().nonempty('Required')),
+  buildingConstructionTypeId: z
+    .string()
+    .nonempty('Required')
+    .regex(/\d*/, 'Invalid Building Construction Type')
+    .or(z.number())
+    .nullable(),
+  buildingPredominateUseId: z
+    .string()
+    .nonempty('Required')
+    .regex(/\d*/, 'Invalid Building Predominate Use')
+    .or(z.number())
+    .nullable(),
+  classificationId: z
+    .string()
+    .nonempty('Required')
+    .regex(/\d*/, 'Invalid Building Classification Id')
+    .or(z.number())
+    .nullable(),
+  buildingFloorCount: z
+    .number()
+    .min(0, 'Floor Count must be a valid number')
+    .or(z.string())
+    .optional(),
+  address: Address,
+  agencyId: z.number().or(z.string()).optional(),
+  isSensitive: z
+    .boolean()
+    .or(z.string().nonempty('Required'))
+    .refine((value) => value !== undefined, 'Required'),
+});
 
 export const BuildingSchema = z
   .object({
@@ -208,7 +163,7 @@ export const BuildingSchema = z
             financial.appraised.year !== currentYear &&
             financial.netbook.year !== currentYear &&
             financial.market.year !== currentYear,
-          { message: 'Year must not be the current year.' },
+          'Year must not be the current year.',
         ),
       )
       .optional(),
@@ -219,9 +174,7 @@ export const BuildingSchema = z
 export const LandSchema = z.object({
   classificationId: z
     .string()
-    .refine((value) => /\d*/.test(value), {
-      message: 'Invalid Classification',
-    })
+    .refine((value) => /\d*/.test(value), 'Invalid Classification')
     .or(z.number())
     .nullable(),
   address: Address,
@@ -259,8 +212,8 @@ export const LandSchema = z.object({
     .refine((value) => !isNaN(value), 'Required'),
   landArea: z
     .number()
-    .or(z.string().nonempty('Required'))
-    .refine((value) => Number(value) >= 0 && Number(value) < 200000, 'Please enter a valid number'),
+    .refine((value) => Number(value) >= 0 && Number(value) < 200000, 'Please enter a valid number')
+    .or(z.string().nonempty('Required')),
   lotSize: z.number().optional(),
   isSensitive: z
     .boolean()
@@ -273,30 +226,18 @@ export const ParcelSchema = z
   .object({
     pid: z
       .string()
-      .refine(
-        (value) => {
-          if (value === '') return true; // Allow empty string
-          return value.match(/\d\d\d[\s-]?\d\d\d[\s-]?\d\d\d/);
-        },
-        {
-          message: 'PID must be in the format ###-###-###',
-          path: ['pid'],
-        },
-      )
+      .refine((value) => {
+        if (value === '') return true; // Allow empty string
+        return value.match(/\d\d\d[\s-]?\d\d\d[\s-]?\d\d\d/);
+      }, 'PID must be in the format ###-###-###')
       .optional(),
     pin: z
       .string()
       .or(z.number())
-      .refine(
-        (value) => {
-          if (value === '') return true; // Allow empty string
-          return value && String(value).length <= 9;
-        },
-        {
-          message: 'PIN must be less or equal than 9 characters',
-          path: ['pin'],
-        },
-      )
+      .refine((value) => {
+        if (value === '') return true; // Allow empty string
+        return value && String(value).length <= 9;
+      }, 'PIN must be less or equal than 9 characters')
       .optional(),
     buildings: z.array(z.unknown()),
     financials: z.array(FinancialYear).optional(),
@@ -336,14 +277,12 @@ export const FilterBarSchema = z
     },
   );
 
-export const AssociatedLandOwnershipSchema = z
-  .object({
-    type: z.number().int(),
-  })
-  .refine((data) => data.type !== undefined, {
-    message: 'Choose an option',
-    path: ['type'],
-  });
+export const AssociatedLandOwnershipSchema = z.object({
+  type: z
+    .number()
+    .int()
+    .refine((value) => value !== undefined, 'Choose an option'),
+});
 
 export const LandUsageSchema = z.object({
   zoning: z.string().max(250).nullable().optional(),
@@ -352,14 +291,8 @@ export const LandUsageSchema = z.object({
     .string()
     .nullable()
     .optional()
-    .refine((id) => id && /^\d*$/.test(id), {
-      message: 'Invalid Classification',
-      path: ['classificationId'],
-    })
-    .refine((id) => id !== undefined && id !== null, {
-      message: 'Required',
-      path: ['classificationId'],
-    })
+    .refine((id) => id && /^\d*$/.test(id), 'Invalid Classification')
+    .refine((id) => id !== undefined && id !== null, 'Required')
     .or(z.number()),
 });
 
@@ -384,18 +317,18 @@ export const LandIdentificationSchema = z.object({
   pid: z
     .string()
     .optional()
-    .refine((pid) => pid === undefined || /\d\d\d-\d\d\d-\d\d\d/.test(pid), {
-      message: 'PID must be in the format ###-###-###',
-      path: ['pid'],
-    }),
+    .refine(
+      (pid) => pid === undefined || /\d\d\d-\d\d\d-\d\d\d/.test(pid),
+      'PID must be in the format ###-###-###',
+    ),
   pin: z
     .string()
     .or(z.number())
     .optional()
-    .refine((pin) => pin === undefined || (typeof pin !== 'number' && pin.length <= 9), {
-      message: 'Please enter a valid PIN no longer than 9 digits.',
-      path: ['pin'],
-    }),
+    .refine(
+      (pin) => pin === undefined || (typeof pin !== 'number' && pin.length <= 9),
+      'Please enter a valid PIN no longer than 9 digits.',
+    ),
   address: Address,
   name: z.string().max(150).nullable().optional(),
   description: z.string().max(2000).nullable().optional(),
@@ -408,14 +341,6 @@ export const LandIdentificationSchema = z.object({
   isSensitive: z.boolean().or(z.string()).nullable().optional(),
   parcels: z.array(ParcelSchema),
 });
-
-// TODO
-/** ^^
- * .refine(
-      (parcels) => propertyTypeId !== PropertyTypes.SUBDIVISION || parcels.length > 0,
-      'You must add at least one parent parcel',
-    )
- */
 
 export const AssociatedLandSchema = z.object({
   data: z.object({

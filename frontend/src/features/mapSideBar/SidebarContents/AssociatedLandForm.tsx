@@ -473,18 +473,22 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
 
         const zodResult = LandSchema.safeParse(p);
         let zodErrors: any = {};
-        if (!zodResult.success) {
-          zodErrors = zodToFormikErrors(zodResult.error);
-        }
-        if (Object.keys(zodErrors).length > 0) {
-          errors = setIn(errors, `data.parcels.${index}`, zodErrors);
-        }
+        if (!zodResult.success) zodErrors = zodToFormikErrors(zodResult.error);
 
+        if (Object.keys(zodErrors).length > 0)
+          errors = setIn(errors, `data.parcels.${index}`, zodErrors);
+
+        let parcelErrors = getIn(errors, `parcels.${index}`) || {};
+        if (!parcelErrors) setIn(errors, `parcels.${index}`, parcelErrors);
+
+        // Duplicate PID
         let pidDuplicated = false;
         if (p.pid && getIn(initialValues.data, `parcels.${index}.pid`) !== p.pid && !p.id) {
           pidDuplicated = !(await isPidAvailable(p));
         }
+        if (pidDuplicated) parcelErrors = { ...parcelErrors, pid: 'This PID is already in use.' };
 
+        // Duplicate PIN
         let pinDuplicated = false;
         if (
           p.pin &&
@@ -494,17 +498,16 @@ const AssociatedLandForm: React.FC<IAssociatedLandParentForm> = (
         ) {
           pinDuplicated = !(await isPinAvailable(p));
         }
+        if (pinDuplicated) parcelErrors = { ...parcelErrors, pin: 'This PIN is already in use.' };
 
-        let parcelErrors = getIn(errors, `parcels.${index}`) || {};
-        if (!parcelErrors) {
-          setIn(errors, `parcels.${index}`, parcelErrors);
+        // Must Add at Least One Parent Parcel
+        if (
+          values.data.propertyTypeId === PropertyTypes.SUBDIVISION &&
+          values.data.parcels.length === 0
+        ) {
+          errors = { ...errors, parcels: 'You must add at least one parent parcel' };
         }
-        if (pidDuplicated) {
-          parcelErrors = { ...parcelErrors, pid: 'This PID is already in use.' };
-        }
-        if (pinDuplicated) {
-          parcelErrors = { ...parcelErrors, pin: 'This PIN is already in use.' };
-        }
+
         if (Object.keys(parcelErrors).length) {
           errors = setIn(errors, `data.parcels.${index}`, parcelErrors);
         }

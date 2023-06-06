@@ -97,7 +97,6 @@ export const StepperFormProvider: React.FC<React.PropsWithChildren<IStepperFormP
       } catch (e) {
         if (e instanceof ZodError) {
           const errors = setIn({}, nameSpace, zodToFormikErrors(e));
-          console.log(errors);
           setErrors(errors);
           setTouched(errors);
           return false;

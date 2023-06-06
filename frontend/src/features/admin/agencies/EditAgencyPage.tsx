@@ -96,11 +96,27 @@ const EditAgencyPage = () => {
             enableReinitialize
             initialValues={newAgency ? newValues : initialValues}
             validate={(values) => {
+              let zodErrors = {};
               try {
                 AgencyEditSchema.parse(values);
               } catch (errors) {
-                return zodToFormikErrors(errors as ZodError);
+                zodErrors = zodToFormikErrors(errors as ZodError);
               }
+
+              // If sendEmail, email is required.
+              const emailIsEmpty = !values.email || values.email === '';
+              if (values.sendEmail && values.sendEmail === true && emailIsEmpty)
+                zodErrors = { ...zodErrors, email: 'Required' };
+
+              // If sendEmail, addressTo is required.
+              const addressToIsEmpty = !values.addressTo || values.addressTo === '';
+              if (values.sendEmail && values.sendEmail === true && addressToIsEmpty)
+                zodErrors = {
+                  ...zodErrors,
+                  addressTo: 'Email addressed to is required (i.e. Good Morning)',
+                };
+
+              return zodErrors;
             }}
             onSubmit={async (values, { setSubmitting, setStatus }) => {
               try {

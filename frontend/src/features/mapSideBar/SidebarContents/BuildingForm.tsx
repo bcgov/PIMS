@@ -429,8 +429,8 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
       errors = zodToFormikErrors(zodResult.error);
     }
 
-    console.log('values', values.data);
-    console.log('errors', errors);
+    if (Number(values.data.totalArea) < Number(values.data.rentableArea))
+      errors = { ...errors, totalArea: 'Total Area must not be smaller than Net Usable Area' };
 
     return Object.keys(errors).length ? { data: errors } : {};
   };

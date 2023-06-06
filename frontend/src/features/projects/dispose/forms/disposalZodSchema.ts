@@ -56,7 +56,7 @@ export const DenyProjectZodSchema = z.object({
 });
 
 export const ApproveExemptionRequestSchema = z.object({
-  exemptionApprovedOn: z.date(),
+  exemptionApprovedOn: z.date().or(z.string()),
 });
 
 export const GreTransferStepZodSchema = z.object({
