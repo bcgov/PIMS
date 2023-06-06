@@ -16,7 +16,7 @@ jobs:
       ISSUE_TITLE: 'Frontend NPM Dependency Updates'
 
     steps:
-      # Checkout pull request branch.
+      # Checkout branch.
       - name: Checkout repository
         uses: actions/checkout@v3
 
