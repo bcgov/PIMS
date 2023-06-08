@@ -27,13 +27,11 @@ jobs:
       # Run Cypress E2E Tests.
       - name: Cypress Run E2E Tests
         uses: cypress-io/github-action@v5
+        env:
+          CYPRESS_KEYCLOAK_USER: ${{ secrets.TEST_IDIR_USERNAME }}
+          CYPRESS_KEYCLOAK_PASSWORD: ${{ secrets.TEST_IDIR_PASSWORD }}
         with:
           browser: chrome
           working-directory: frontend
-          command: npm run cypress:e2e
+          command: npm run cypress:e2e-dev
           config-file: cypress.config.ts
-          config: baseUrl=https://pims-dev.apps.silver.devops.gov.bc.ca
-        env:
-          auth_client_id: pims-frontend-4391
-          keycloak_user: ${{ secrets.TEST_IDIR_USERNAME }}
-          keycloak_password: ${{ secrets.TEST_IDIR_PASSWORD }}
