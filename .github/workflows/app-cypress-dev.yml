@@ -30,9 +30,8 @@ jobs:
         with:
           browser: chrome
           working-directory: frontend
-          command: npm run cypress:e2e
+          command: npm run cypress:e2e-dev
           config-file: cypress.config.ts
-          config: baseUrl=https://pims-dev.apps.silver.devops.gov.bc.ca
         env:
           auth_client_id: pims-frontend-4391
           keycloak_user: ${{ secrets.TEST_IDIR_USERNAME }}
