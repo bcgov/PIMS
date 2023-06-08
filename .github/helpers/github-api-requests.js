@@ -1,22 +1,58 @@
+/**
+ * Reusable functions for making requests to the GitHub REST API.
+ * @author Brady Mitchell <braden.jr.mitch@gmail.com | braden.mitchell@gov.bc.ca>
+ * API Documentation: https://octokit.github.io/rest.js/v19#usage
+ *
+ * - Be sure to include these env variables.
+ *
+ * @example GitHub Actions Workflow:
+ * jobs:
+ *   github-api:
+ *     runs-on: ubuntu-22.04
+ *     container:
+ *       image: node:20.2-bullseye-slim
+ *
+ *     steps:
+ *       # Checkout branch.
+ *       - name: Checkout repository
+ *         uses: actions/checkout@v3
+ *
+ *       # Get Repo Owner and Repo Name.
+ *       - name: Set repo information
+ *         run: |
+ *           echo "REPO_OWNER=$(echo ${{ github.repository }} | cut -d / -f 1)" >> $GITHUB_ENV
+ *           echo "REPO_NAME=$(echo ${{ github.repository }} | cut -d / -f 2)" >> $GITHUB_ENV
+ *
+ *       # Install @octokit/rest npm package for making GitHub rest API requests.
+ *       - name: Install @octokit/rest npm
+ *         run: npm i @octokit/rest
+ *
+ *       # Run Node Script that calls functions from github-api-requests.js.
+ *       - name: Node Script
+ *         env:
+ *           GITHUB_OWNER: ${{ env.REPO_OWNER }}
+ *           GITHUB_REPO: ${{ env.REPO_NAME }}
+ *           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+ *         run: node .github/helpers/script.js
+ */
+const { GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO } = process.env;
 const { Octokit } = require('@octokit/rest');
 
 // Create a personal access token at https://github.com/settings/tokens/new?scopes=repo
-const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
 /**
  * Create an Issue with the GitHub REST API.
- * @param {string} owner - The GitHub username of the repository owner.
- * @param {string} repo - The name of the repository where the issue should be created.
  * @param {string} title - The title for the new issue.
  * @param {string} body - The content body for the new issue.
  * @returns request.data - Data returned by the request.
  * @example
- * createIssue(context.repo.owner, context.repo.repo, 'My Issue', 'An example issue');
+ * createIssue('My Issue', 'An example issue');
  */
-async function createIssue(owner, repo, title, body) {
+async function createIssue(title, body) {
   const request = await octokit.rest.issues.create({
-    owner,
-    repo,
+    owner: GITHUB_OWNER,
+    repo: GITHUB_REPO,
     title,
     body,
   });
@@ -26,17 +62,15 @@ async function createIssue(owner, repo, title, body) {
 
 /**
  * Close an Issue with the GitHub REST API.
- * @param {string} owner - The GitHub username of the repository owner.
- * @param {string} repo - The name of the repository where the issue should be created.
  * @param {number} issue_number - The id for a GitHub Issue.
  * @returns request.data - Data returned by the request.
  * @example
- * closeIssue(context.repo.owner, context.repo.repo, 1044);
+ * closeIssue(1044);
  */
-async function closeIssue(owner, repo, issue_number) {
+async function closeIssue(issue_number) {
   const request = await octokit.rest.issues.update({
-    owner,
-    repo,
+    owner: GITHUB_OWNER,
+    repo: GITHUB_REPO,
     issue_number,
     state: 'closed',
   });
@@ -46,18 +80,16 @@ async function closeIssue(owner, repo, issue_number) {
 
 /**
  * Find an Issue's ID number with the GitHub REST API, given a title.
- * @param {string} owner - The GitHub username of the repository owner.
- * @param {string} repo - The name of the repository where the issue should be created.
  * @param {string} title - The title of the issue to search for.
  * @param {string} state - (optional, default=open) Search for all, open, or closed issues.
  * @returns issue.number or null
  * @example
- * findIssueByTitle(context.repo.owner, context.repo.repo, 'My Issue');
+ * findIssueByTitle('My Issue');
  */
-async function findIssueByTitle(owner, repo, title, state = 'open') {
+async function findIssueByTitle(title, state = 'open') {
   const { data: issues } = await octokit.rest.issues.listForRepo({
-    owner,
-    repo,
+    owner: GITHUB_OWNER,
+    repo: GITHUB_REPO,
     state, // Get issues that are 'open', 'closed' or 'all'.
   });
 
