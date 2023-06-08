@@ -48,7 +48,7 @@ jobs:
         env:
           GITHUB_OWNER: ${{ env.REPO_OWNER }}
           GITHUB_REPO: ${{ env.REPO_NAME }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_TITLE: ${{ env.ISSUE_TITLE }}
           ISSUE_BODY: ${{ steps.check_versions.outputs.results }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node .github/helpers/npm-dependencies-create-issue.js
