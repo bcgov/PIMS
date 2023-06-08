@@ -32,7 +32,4 @@ jobs:
           working-directory: frontend
           command: npm run cypress:e2e-dev
           config-file: cypress.config.ts
-        env:
-          auth_client_id: pims-frontend-4391
-          keycloak_user: ${{ secrets.TEST_IDIR_USERNAME }}
-          keycloak_password: ${{ secrets.TEST_IDIR_PASSWORD }}
+          env: keycloak_user=${{ secrets.TEST_IDIR_USERNAME }},keycloak_password=${{ secrets.TEST_IDIR_PASSWORD }}
