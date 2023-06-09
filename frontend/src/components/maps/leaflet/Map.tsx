@@ -279,7 +279,8 @@ const Map: React.FC<MapProps> = ({
         address: filter.address ?? '',
         pid_pin: filter.pid ?? '',
         property_name: filter.name ?? '',
-        classification: filter.classificationId ?? '',
+        classification:
+          lookupCodes.getClassificationNameById(Number(filter.classificationId)) ?? '',
       },
     });
   };

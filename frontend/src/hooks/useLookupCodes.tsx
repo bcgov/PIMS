@@ -76,12 +76,24 @@ export function useCodeLookups() {
   /**
    * Returns the full name of an agency or the short code if
    * the full name is not found
-   * @param agencyCode the short code for the agency
+   * @param agencyId the id for the agency
    */
   const getAgencyFullNameById = (agencyId?: number) => {
     const agencies = getByType(API.AGENCY_CODE_SET_NAME);
     const agencyItem = agencies.find((listItem) => Number(listItem.id) === agencyId);
     return agencyItem ? agencyItem.name : agencyId;
+  };
+
+  /**
+   * Returns the full name of a classification
+   * @param classficationId the id for the classification
+   */
+  const getClassificationNameById = (classficationId?: number) => {
+    const classfications = getByType(API.PROPERTY_CLASSIFICATION_CODE_SET_NAME);
+    const classification = classfications.find(
+      (listItem) => Number(listItem.id) === classficationId,
+    );
+    return classification ? classification.name : '';
   };
 
   return {
@@ -92,6 +104,7 @@ export function useCodeLookups() {
     getPublicByType,
     filterByParent,
     getAgencyFullNameById,
+    getClassificationNameById,
     lookupCodes,
   };
 }
