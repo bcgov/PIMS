@@ -78,10 +78,10 @@ export function useCodeLookups() {
    * the full name is not found
    * @param agencyCode the short code for the agency
    */
-  const getAgencyFullName = (agencyCode?: string) => {
+  const getAgencyFullNameById = (agencyId?: number) => {
     const agencies = getByType(API.AGENCY_CODE_SET_NAME);
-    const agencyItem = agencies.find((listItem) => listItem.code === agencyCode);
-    return agencyItem ? agencyItem.name : agencyCode;
+    const agencyItem = agencies.find((listItem) => Number(listItem.id) === agencyId);
+    return agencyItem ? agencyItem.name : agencyId;
   };
 
   return {
@@ -91,7 +91,7 @@ export function useCodeLookups() {
     getByType,
     getPublicByType,
     filterByParent,
-    getAgencyFullName,
+    getAgencyFullNameById,
     lookupCodes,
   };
 }

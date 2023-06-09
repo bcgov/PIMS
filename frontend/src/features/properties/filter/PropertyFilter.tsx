@@ -124,11 +124,11 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
           spl_properties: values.inSurplusPropertyProgram ?? false,
           location: values.administrativeArea ?? '',
           project_name_number: values.projectNumber ?? '',
-          lot_min: values.minLotSize ?? '',
-          lot_max: values.maxLotSize ?? '',
+          lot_min: Number(values.minLotSize) ?? '',
+          lot_max: Number(values.maxLotSize) ?? '',
           land_only: values.bareLandOnly ?? false,
           predominate_use: values.predominateUseId ?? '',
-          net_usable: values.rentableArea ?? '',
+          net_usable: Number(values.rentableArea) ?? '',
         },
       });
     }
