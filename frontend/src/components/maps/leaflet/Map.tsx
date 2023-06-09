@@ -12,6 +12,7 @@ import { PropertyFilter } from 'features/properties/filter';
 import { IPropertyFilter } from 'features/properties/filter/IPropertyFilter';
 import { Feature } from 'geojson';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
+import useCodeLookups from 'hooks/useLookupCodes';
 import L, { geoJSON, LatLng, LatLngBounds, LeafletMouseEvent, Map as LeafletMap } from 'leaflet';
 import { isEmpty, isEqual, isEqualWith } from 'lodash';
 import React from 'react';
@@ -185,6 +186,7 @@ const Map: React.FC<MapProps> = ({
   const { setChanged } = useFilterContext();
   const popUpContext = React.useContext(PropertyPopUpContext);
   const parcelLayerFeature = useAppSelector((store) => store.parcelLayerData?.parcelLayerFeature);
+  const lookupCodes = useCodeLookups();
 
   const [baseLayers, setBaseLayers] = React.useState<BaseLayer[]>([]);
   const [showFilterBackdrop, setShowFilterBackdrop] = React.useState(true);
@@ -272,12 +274,13 @@ const Map: React.FC<MapProps> = ({
       schema: 'iglu:ca.bc.gov.pims/search/jsonschema/1-0-0',
       data: {
         view: 'map',
-        agency: filter.agencies ?? '',
+        agency: lookupCodes.getAgencyFullNameById(Number(filter.agencies)) ?? '',
         location: filter.administrativeArea ?? '',
         address: filter.address ?? '',
         pid_pin: filter.pid ?? '',
         property_name: filter.name ?? '',
-        classification: filter.classificationId ?? '',
+        classification:
+          lookupCodes.getClassificationNameById(Number(filter.classificationId)) ?? '',
       },
     });
   };
