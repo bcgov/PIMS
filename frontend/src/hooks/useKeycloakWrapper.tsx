@@ -155,6 +155,7 @@ export function useKeycloakWrapper(): IKeycloak {
    * Return the user's first name
    */
   const firstName = (): string | undefined => {
+    if (userInfo?.given_name === '') return userInfo?.displayName?.slice(2).split(' ')[0];
     return userInfo?.given_name ?? userInfo?.displayName?.slice(2).split(' ')[0];
   };
 
@@ -162,6 +163,7 @@ export function useKeycloakWrapper(): IKeycloak {
    * Return the user's last name
    */
   const lastName = (): string | undefined => {
+    if (userInfo?.family_name === '') return userInfo?.displayName?.slice(2).split(' ')[1];
     return userInfo?.family_name ?? userInfo?.displayName?.slice(2).split(' ')[1];
   };
 
