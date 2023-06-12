@@ -15,6 +15,13 @@ export const ProjectDocumentation: React.FC = () => {
   const formik = useFormikContext<IProjectForm>();
   const { setFieldValue } = formik;
 
+  // Disabled prop
+  const { values }: any = useFormikContext();
+  const { workflowCode, statusCode } = values;
+  const keycloak = useKeycloakWrapper();
+  const [disabled, setDisabled] = useState(false);
+  const isAdmin = keycloak.hasClaim(Claim.ReportsSplAdmin);
+
   const projectTasks = formik.values.tasks
     .filter((t) => t.statusCode === DisposeWorkflowStatus.RequiredDocumentation)
     .map((t, i) => (
@@ -58,13 +65,6 @@ export const ProjectDocumentation: React.FC = () => {
         }}
       />
     ));
-
-  // Disabled prop
-  const { values }: any = useFormikContext();
-  const { workflowCode, statusCode } = values;
-  const keycloak = useKeycloakWrapper();
-  const [disabled, setDisabled] = useState(false);
-  const isAdmin = keycloak.hasClaim(Claim.ReportsSplAdmin);
 
   useEffect(() => {
     setDisabled(
