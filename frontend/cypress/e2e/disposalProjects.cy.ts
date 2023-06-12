@@ -4,7 +4,7 @@ const inputs = {
   projectName: PROJECT_NAME,
   description: 'A test description.',
   searchFilter: {
-    address: '1006 2nd Ave',
+    address: '4099 Pat Bay Hwy',
   },
   assessedValue: '10350',
   assessedDisplayedValue: '$10,350',
@@ -26,7 +26,7 @@ const inputs = {
  */
 
 describe('Create a disposal project', () => {
-  beforeEach(function () {
+  beforeEach(function() {
     cy.kcLogout().kcLogin();
   });
 
@@ -57,7 +57,9 @@ describe('Create a disposal project', () => {
       cy.get('[data-testid="project-list-view-page-title"]', { timeout: 10000 }).should('exist');
 
       // Wait for the spinner to disappear.
-      cy.get('.table-loading', { timeout: 10000 }).should('not.exist').wait(2000);
+      cy.get('.table-loading', { timeout: 10000 })
+        .should('not.exist')
+        .wait(2000);
 
       // Search for project
       cy.get('[name="name"]').click({ force: true });
@@ -65,19 +67,25 @@ describe('Create a disposal project', () => {
       cy.get('[id="search-button"]').click({ force: true });
 
       // Wait for the spinner to disappear.
-      cy.get('.table-loading', { timeout: 10000 }).should('not.exist').wait(2000);
+      cy.get('.table-loading', { timeout: 10000 })
+        .should('not.exist')
+        .wait(2000);
 
-      cy.get('.table', { timeout: 10000 }).then(($table) => {
+      cy.get('.table', { timeout: 10000 }).then($table => {
         const secondChild = $table.children().eq(1);
         if (secondChild.text() !== 'No rows to display') {
-          cy.get('.tbody', { timeout: 10000 }).then(($tbody) => {
-            const firstTableRow = $tbody.children().eq(0).children().eq(0);
+          cy.get('.tbody', { timeout: 10000 }).then($tbody => {
+            const firstTableRow = $tbody
+              .children()
+              .eq(0)
+              .children()
+              .eq(0);
             const projectNameCell = firstTableRow.children().eq(2);
             // If table row for Cypress test project exists.
             if (projectNameCell.text() === PROJECT_NAME) {
               cy.get('[role="cell"]')
                 .contains(PROJECT_NAME)
-                .then(($projectNameField) => {
+                .then($projectNameField => {
                   // Get the project number from the sibling table row cell that contains PROJECT_NAME
                   const projectNumber = $projectNameField
                     .siblings()
@@ -113,7 +121,10 @@ describe('Create a disposal project', () => {
     cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
 
     // Stepper 1 btn (Step 2/6) should be disabled.
-    cy.get('[data-target="stepper-1"]').children().first().should('be.disabled');
+    cy.get('[data-target="stepper-1"]')
+      .children()
+      .first()
+      .should('be.disabled');
     // Input project name.
     cy.get('[data-testid="project-name"]')
       .should('be.visible')
@@ -147,9 +158,15 @@ describe('Create a disposal project', () => {
     cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
 
     // Stepper 0 btn (Step 1/6) should be enabled.
-    cy.get('[data-target="stepper-0"]').children().first().should('be.enabled');
+    cy.get('[data-target="stepper-0"]')
+      .children()
+      .first()
+      .should('be.enabled');
     // Stepper 2 btn (Step 3/6) should be disabled.
-    cy.get('[data-target="stepper-2"]').children().first().should('be.disabled');
+    cy.get('[data-target="stepper-2"]')
+      .children()
+      .first()
+      .should('be.disabled');
     // FILTER BAR: Input address.
     cy.get('[data-testid="address"]')
       .should('be.visible')
@@ -162,7 +179,6 @@ describe('Create a disposal project', () => {
     cy.get('.td').contains(inputs.searchFilter.address);
     // Select property.
     cy.get('[title="Toggle Row Selected"]')
-      .first()
       .should('be.enabled')
       .should('not.be.checked')
       .click({ force: true });
@@ -208,17 +224,29 @@ describe('Create a disposal project', () => {
     //   .should('be.disabled');
 
     // Stepper 1 btn (Step 2/6) should be enabled.
-    cy.get('[data-target="stepper-1"]').children().first().should('be.enabled');
+    cy.get('[data-target="stepper-1"]')
+      .children()
+      .first()
+      .should('be.enabled');
     // Stepper 3 btn (Step 4/6) should be disabled.
-    cy.get('[data-target="stepper-3"]').children().first().should('be.disabled');
+    cy.get('[data-target="stepper-3"]')
+      .children()
+      .first()
+      .should('be.disabled');
     // Input accessed value.
-    cy.get('[data-testid="assessed"]').should('be.enabled').click({ force: true });
+    cy.get('[data-testid="assessed"]')
+      .should('be.enabled')
+      .click({ force: true });
     cy.get('[data-testid="assessed"]').type(inputs.assessedValue);
     // Input netBook value.
-    cy.get('[data-testid="netBook"]').should('be.enabled').click({ force: true });
+    cy.get('[data-testid="netBook"]')
+      .should('be.enabled')
+      .click({ force: true });
     cy.get('[data-testid="netBook"]').type(inputs.netBookValue);
     // Input estimated market value.
-    cy.get('[data-testid="market"]').should('be.enabled').click({ force: true });
+    cy.get('[data-testid="market"]')
+      .should('be.enabled')
+      .click({ force: true });
     cy.get('[data-testid="market"]').type(inputs.estimatedMarketValue);
     // Next button.
     cy.get('[data-testid="next-submit-btn"]').click({ force: true });
@@ -246,12 +274,21 @@ describe('Create a disposal project', () => {
     // Required text should be visible.
     cy.contains('Required').should('be.visible');
     // Check Required Fields > Stepper 4 btn (Step 5/6) should be disabled.
-    cy.get('[data-target="stepper-4"]').children().first().should('be.disabled');
+    cy.get('[data-target="stepper-4"]')
+      .children()
+      .first()
+      .should('be.disabled');
 
     // Stepper 2 btn (Step 3/6) should be enabled.
-    cy.get('[data-target="stepper-2"]').children().first().should('be.enabled');
+    cy.get('[data-target="stepper-2"]')
+      .children()
+      .first()
+      .should('be.enabled');
     // Stepper 4 btn (Step 5/6) should be disabled.
-    cy.get('[data-target="stepper-4"]').children().first().should('be.disabled');
+    cy.get('[data-target="stepper-4"]')
+      .children()
+      .first()
+      .should('be.disabled');
     // CHECK inputs.
     cy.get('[data-testid="taskform-check-0"]')
       .should('be.enabled')
@@ -269,7 +306,9 @@ describe('Create a disposal project', () => {
       .click({ force: true });
     cy.get('[id="input-exemptionRequested"]').should('be.checked');
     // Type exemption rationale.
-    cy.get('[name="exemptionRationale"]').should('be.enabled').click({ force: true });
+    cy.get('[name="exemptionRationale"]')
+      .should('be.enabled')
+      .click({ force: true });
     cy.get('[name="exemptionRationale"]').type('testing');
     // Next button.
     cy.get('[data-testid="next-submit-btn"]').click({ force: true });
@@ -303,9 +342,15 @@ describe('Create a disposal project', () => {
     //   .should('be.disabled');
 
     // Stepper 3 btn (Step 4/6) should be enabled.
-    cy.get('[data-target="stepper-3"]').children().first().should('be.enabled');
+    cy.get('[data-target="stepper-3"]')
+      .children()
+      .first()
+      .should('be.enabled');
     // Stepper 5 btn (Step 6/6) should be disabled.
-    cy.get('[data-target="stepper-5"]').children().first().should('be.disabled');
+    cy.get('[data-target="stepper-5"]')
+      .children()
+      .first()
+      .should('be.disabled');
     // CHECK input.
     cy.get('[data-testid="approval-check"]')
       .should('be.enabled')
@@ -334,7 +379,9 @@ describe('Create a disposal project', () => {
     cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
 
     // Description Field
-    cy.get('[data-testid="project-description"]').should('be.visible').should('be.disabled');
+    cy.get('[data-testid="project-description"]')
+      .should('be.visible')
+      .should('be.disabled');
 
     // Submit button.
     cy.get('[data-testid="next-submit-btn"]').click({ force: true });
@@ -389,10 +436,14 @@ describe('Create a disposal project', () => {
     cy.get('[id="search-button"]').click({ force: true });
 
     // Wait for the spinner to disappear.
-    cy.get('.table-loading', { timeout: 10000 }).should('not.exist').wait(2000);
+    cy.get('.table-loading', { timeout: 10000 })
+      .should('not.exist')
+      .wait(2000);
 
     // Select Project from table.
-    cy.contains(PROJECT_NAME).should('be.visible').click({ force: true });
+    cy.contains(PROJECT_NAME)
+      .should('be.visible')
+      .click({ force: true });
 
     // Wait for page.
     cy.url().should('include', '/projects/assess/properties');
@@ -405,7 +456,9 @@ describe('Create a disposal project', () => {
     * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
     // Check project name.
-    cy.get('[data-testid="project-name"').should('be.visible').should('have.value', PROJECT_NAME);
+    cy.get('[data-testid="project-name"')
+      .should('be.visible')
+      .should('have.value', PROJECT_NAME);
 
     // Check project description.
     cy.get('[data-testid="project-description"')
@@ -450,7 +503,9 @@ describe('Create a disposal project', () => {
     * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
     // Check exemption rationale value.
-    cy.get('[name="exemptionRationale"').first().should('have.text', 'testing');
+    cy.get('[name="exemptionRationale"')
+      .first()
+      .should('have.text', 'testing');
 
     // CHECK input - ADM has been notified of request for exemption.
     cy.get('[data-testid="taskform-check-10"]')
@@ -467,7 +522,9 @@ describe('Create a disposal project', () => {
     cy.get('[data-testid="taskform-check-11"]').should('be.checked');
 
     // Type date - ADM Approved Exemption On.
-    cy.get('[name="exemptionApprovedOn"]').should('be.enabled').click({ force: true });
+    cy.get('[name="exemptionApprovedOn"]')
+      .should('be.enabled')
+      .click({ force: true });
     cy.get('[name="exemptionApprovedOn"]').type('03/08/2023');
 
     /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -475,17 +532,23 @@ describe('Create a disposal project', () => {
     * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
     // Check input - Surplus Declaration & Readiness Checklist document emailed to SRES.
-    cy.get('[data-testid="taskform-check-0"]').should('be.disabled').should('be.checked');
+    cy.get('[data-testid="taskform-check-0"]')
+      .should('be.disabled')
+      .should('be.checked');
 
     // Check input - Triple Bottom Line document emailed to SRES OR Project is in Tier 1.
-    cy.get('[data-testid="taskform-check-1"]').should('be.disabled').should('be.checked');
+    cy.get('[data-testid="taskform-check-1"]')
+      .should('be.disabled')
+      .should('be.checked');
 
     /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
       Enhanced Referral Process Exemption
     * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
     // Check input - Apply for Enhanced Referral Process exemption.
-    cy.get('[name="exemptionRequested"]').should('be.disabled').should('be.checked');
+    cy.get('[name="exemptionRequested"]')
+      .should('be.disabled')
+      .should('be.checked');
 
     // CHECK input - Documents have been received, reviewed and approved.
     cy.get('[data-testid="taskform-check-4"]')
@@ -499,23 +562,33 @@ describe('Create a disposal project', () => {
     * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
     // Check input - An appraisal has been ordered.
-    cy.get('[data-testid="taskform-check-5"]').should('be.enabled').should('not.be.checked');
+    cy.get('[data-testid="taskform-check-5"]')
+      .should('be.enabled')
+      .should('not.be.checked');
 
     // Check input - An appraisal has been received.
-    cy.get('[data-testid="taskform-check-6"]').should('be.enabled').should('not.be.checked');
+    cy.get('[data-testid="taskform-check-6"]')
+      .should('be.enabled')
+      .should('not.be.checked');
 
     /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
       Review First Nations Consultation
     * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
     // Check input - First Nations consultation preparation and due diligence.
-    cy.get('[data-testid="taskform-check-7"]').should('be.enabled').should('not.be.checked');
+    cy.get('[data-testid="taskform-check-7"]')
+      .should('be.enabled')
+      .should('not.be.checked');
 
     // Check input - First Nations consultation is underway.
-    cy.get('[data-testid="taskform-check-8"]').should('be.enabled').should('not.be.checked');
+    cy.get('[data-testid="taskform-check-8"]')
+      .should('be.enabled')
+      .should('not.be.checked');
 
     // Check input - First Nations consultation is complete.
-    cy.get('[data-testid="taskform-check-9"]').should('be.enabled').should('not.be.checked');
+    cy.get('[data-testid="taskform-check-9"]')
+      .should('be.enabled')
+      .should('not.be.checked');
 
     /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
                   Approval
@@ -523,7 +596,9 @@ describe('Create a disposal project', () => {
 
     // Check input -
     // My Ministry/Agency has approval/authority to submit the Disposal Project to SRES for review.
-    cy.get('[data-testid="approval-check"]').should('be.disabled').should('be.checked');
+    cy.get('[data-testid="approval-check"]')
+      .should('be.disabled')
+      .should('be.checked');
 
     // Check inputs - Notes.
     cy.get('[id="input-note"]').should('be.disabled');
@@ -554,7 +629,9 @@ describe('Create a disposal project', () => {
     cy.get('[id="search-button"]').click({ force: true });
 
     // Wait for the spinner to disappear.
-    cy.get('.table-loading', { timeout: 10000 }).should('not.exist').wait(2000);
+    cy.get('.table-loading', { timeout: 10000 })
+      .should('not.exist')
+      .wait(2000);
 
     // Check project has correct status.
     cy.contains(PROJECT_NAME)
@@ -586,7 +663,9 @@ describe('Create a disposal project', () => {
       cy.get('[data-testid="project-list-view-page-title"]', { timeout: 10000 }).should('exist');
 
       // Wait for the spinner to disappear.
-      cy.get('.table-loading', { timeout: 10000 }).should('not.exist').wait(2000);
+      cy.get('.table-loading', { timeout: 10000 })
+        .should('not.exist')
+        .wait(2000);
 
       // Search for project
       cy.get('[name="name"]').click({ force: true });
@@ -594,19 +673,25 @@ describe('Create a disposal project', () => {
       cy.get('[id="search-button"]').click({ force: true });
 
       // Wait for the spinner to disappear.
-      cy.get('.table-loading', { timeout: 10000 }).should('not.exist').wait(2000);
+      cy.get('.table-loading', { timeout: 10000 })
+        .should('not.exist')
+        .wait(2000);
 
-      cy.get('.table', { timeout: 10000 }).then(($table) => {
+      cy.get('.table', { timeout: 10000 }).then($table => {
         const secondChild = $table.children().eq(1);
         if (secondChild.text() !== 'No rows to display') {
-          cy.get('.tbody', { timeout: 10000 }).then(($tbody) => {
-            const firstTableRow = $tbody.children().eq(0).children().eq(0);
+          cy.get('.tbody', { timeout: 10000 }).then($tbody => {
+            const firstTableRow = $tbody
+              .children()
+              .eq(0)
+              .children()
+              .eq(0);
             const projectNameCell = firstTableRow.children().eq(2);
             // If table row for Cypress test project exists.
             if (projectNameCell.text() === PROJECT_NAME) {
               cy.get('[role="cell"]')
                 .contains(PROJECT_NAME)
-                .then(($projectNameField) => {
+                .then($projectNameField => {
                   // Get the project number from the sibling table row cell that contains PROJECT_NAME
                   const projectNumber = $projectNameField
                     .siblings()
@@ -615,8 +700,8 @@ describe('Create a disposal project', () => {
                     .children('span')
                     .text();
                   // Remove project
-                  cy.get(`[data-testid="trash-icon-${projectNumber}"]`).click({ force: true });
-                  cy.get('[data-testid="modal-footer-ok-btn"]').click({ force: true });
+                  cy.get(`[data-testid="trash-icon-${projectNumber}"]`).click();
+                  cy.get('[data-testid="modal-footer-ok-btn"]').click();
                 });
             }
           });

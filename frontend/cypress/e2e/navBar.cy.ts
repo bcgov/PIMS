@@ -6,7 +6,7 @@
  */
 
 describe('Navigation/routing of NavBar links', () => {
-  beforeEach(function () {
+  beforeEach(function() {
     cy.kcLogout().kcLogin();
   });
 
@@ -23,14 +23,19 @@ describe('Navigation/routing of NavBar links', () => {
     cy.visit('/');
 
     // Go to another page.
-    cy.get('[data-testid="navbar-view-inventory"]').should('be.visible').click({ force: true });
+    cy.get('[data-testid="navbar-view-inventory"]')
+      .should('be.visible')
+      .click({ force: true });
 
     // Wait for the spinner to disappear.
     cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
 
     cy.url().should('include', '/properties/list');
     // Click home button.
-    cy.get('[data-testid="navbar-home-btn"]').first().should('be.visible').click({ force: true });
+    cy.get('[data-testid="navbar-home-btn"]')
+      .first()
+      .should('be.visible')
+      .click({ force: true });
 
     // Wait for the spinner to disappear.
     cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
@@ -52,10 +57,14 @@ describe('Navigation/routing of NavBar links', () => {
     cy.visit('/');
 
     // Open Administration dropdown.
-    cy.get('[data-testid="navbar-admin-dropdown"]').should('be.visible').click();
+    cy.get('[data-testid="navbar-admin-dropdown"]')
+      .should('be.visible')
+      .click();
 
     // Go to Administration > Users page.
-    cy.get('[data-testid="navbar-admin-users"]').should('be.visible').click({ force: true });
+    cy.get('[data-testid="navbar-admin-users"]')
+      .should('be.visible')
+      .click({ force: true });
 
     // Wait for the spinner to disappear.
     cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
@@ -64,7 +73,9 @@ describe('Navigation/routing of NavBar links', () => {
     cy.get('[data-testid="admin-users-page"]').should('exist');
 
     // Open Administration dropdown.
-    cy.get('[data-testid="navbar-admin-dropdown"]').should('be.visible').click();
+    cy.get('[data-testid="navbar-admin-dropdown"]')
+      .should('be.visible')
+      .click();
 
     // Go to Administration > Access Requests page.
     cy.get('[data-testid="navbar-admin-access-requests"]')
@@ -78,10 +89,14 @@ describe('Navigation/routing of NavBar links', () => {
     cy.get('[data-testid="admin-access-requests-page"]').should('exist');
 
     // Open Administration dropdown.
-    cy.get('[data-testid="navbar-admin-dropdown"]').should('be.visible').click();
+    cy.get('[data-testid="navbar-admin-dropdown"]')
+      .should('be.visible')
+      .click();
 
     // Go to Administration > Agencies page.
-    cy.get('[data-testid="navbar-admin-agencies"]').should('be.visible').click({ force: true });
+    cy.get('[data-testid="navbar-admin-agencies"]')
+      .should('be.visible')
+      .click({ force: true });
 
     // Wait for the spinner to disappear.
     cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
@@ -90,7 +105,9 @@ describe('Navigation/routing of NavBar links', () => {
     cy.get('[data-testid="admin-agencies-page"]').should('exist');
 
     // Open Administration dropdown.
-    cy.get('[data-testid="navbar-admin-dropdown"]').should('be.visible').click();
+    cy.get('[data-testid="navbar-admin-dropdown"]')
+      .should('be.visible')
+      .click();
 
     // Go to Administration > Administrative Areas page.
     cy.get('[data-testid="navbar-admin-administrative-areas"]')
@@ -116,7 +133,9 @@ describe('Navigation/routing of NavBar links', () => {
 
   it('Submit Property links to correct route', () => {
     // Go to Submit Property page.
-    cy.get('[data-testid="navbar-submit-property"]').should('be.visible').click({ force: true });
+    cy.get('[data-testid="navbar-submit-property"]')
+      .should('be.visible')
+      .click({ force: true });
 
     // Wait for the spinner to disappear.
     cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
@@ -139,7 +158,9 @@ describe('Navigation/routing of NavBar links', () => {
     cy.visit('/');
 
     // Go to View Property Inventory page.
-    cy.get('[data-testid="navbar-view-inventory"]').should('be.visible').click({ force: true });
+    cy.get('[data-testid="navbar-view-inventory"]')
+      .should('be.visible')
+      .click({ force: true });
 
     // Wait for the spinner to disappear.
     cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
@@ -162,7 +183,9 @@ describe('Navigation/routing of NavBar links', () => {
     cy.visit('/');
 
     // Open Disposal Projects dropdown.
-    cy.get('[data-testid="navbar-disposal-projects-dropdown"]').should('be.visible').click();
+    cy.get('[data-testid="navbar-disposal-projects-dropdown"]')
+      .should('be.visible')
+      .click();
 
     // Go to Disposal Projects > Create Disposal Project page.
     cy.get('[data-testid="navbar-disposal-projects-create"]')
@@ -176,7 +199,9 @@ describe('Navigation/routing of NavBar links', () => {
     cy.get('[data-testid="disposal-projects-draft-form"]').should('exist');
 
     // Open Disposal Projects dropdown.
-    cy.get('[data-testid="navbar-disposal-projects-dropdown"]').should('be.visible').click();
+    cy.get('[data-testid="navbar-disposal-projects-dropdown"]')
+      .should('be.visible')
+      .click();
 
     // Go to Disposal Projects > View Projects page.
     cy.get('[data-testid="navbar-disposal-projects-view"]')
@@ -190,7 +215,9 @@ describe('Navigation/routing of NavBar links', () => {
     cy.get('[data-testid="disposal-projects-project-list-view"]').should('exist');
 
     // Open Disposal Projects dropdown.
-    cy.get('[data-testid="navbar-disposal-projects-dropdown"]').should('be.visible').click();
+    cy.get('[data-testid="navbar-disposal-projects-dropdown"]')
+      .should('be.visible')
+      .click();
 
     // Go to Disposal Projects > View SPL Projects page.
     cy.get('[data-testid="navbar-disposal-projects-view-spl"]')
@@ -204,7 +231,9 @@ describe('Navigation/routing of NavBar links', () => {
     cy.get('[data-testid="disposal-projects-spl-project-list-view"]').should('exist');
 
     // Open Disposal Projects dropdown.
-    cy.get('[data-testid="navbar-disposal-projects-dropdown"]').should('be.visible').click();
+    cy.get('[data-testid="navbar-disposal-projects-dropdown"]')
+      .should('be.visible')
+      .click();
 
     // Go to Disposal Projects > Approval Requests page.
     cy.get('[data-testid="navbar-disposal-projects-approval-requests"]')
@@ -232,10 +261,14 @@ describe('Navigation/routing of NavBar links', () => {
     cy.visit('/');
 
     // Open Reports dropdown.
-    cy.get('[data-testid="navbar-reports-dropdown"]').should('be.visible').click();
+    cy.get('[data-testid="navbar-reports-dropdown"]')
+      .should('be.visible')
+      .click();
 
     // Go to SPL Reports page.
-    cy.get('[data-testid="navbar-spl-reports"]').should('be.visible').click({ force: true });
+    cy.get('[data-testid="navbar-spl-reports"]')
+      .should('be.visible')
+      .click({ force: true });
 
     // Wait for the spinner to disappear.
     cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
