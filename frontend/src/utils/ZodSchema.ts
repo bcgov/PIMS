@@ -2,8 +2,6 @@ import moment from 'moment';
 import { z } from 'zod';
 
 const AccessRequestUserSchema = z.object({
-  firstName: z.string().nonempty('Required'),
-  lastName: z.string().nonempty('Required'),
   position: z.string().max(100, 'Note must be less than 100 characters'),
 });
 
