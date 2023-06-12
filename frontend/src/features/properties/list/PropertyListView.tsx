@@ -396,7 +396,7 @@ const PropertyListView: React.FC = () => {
       schema: 'iglu:ca.bc.gov.pims/search/jsonschema/1-0-0',
       data: {
         view: 'property_inventory',
-        agency: data.agencies ?? '',
+        agency: lookupCodes.getAgencyFullNameById(Number(data.agencies[0])) ?? '',
         location: data.administrativeArea ?? '',
         address: data.address ?? '',
         pid_pin: data.pid ?? '',
