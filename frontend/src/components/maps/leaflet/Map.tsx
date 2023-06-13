@@ -279,8 +279,9 @@ const Map: React.FC<MapProps> = ({
         address: filter.address ?? '',
         pid_pin: filter.pid ?? '',
         property_name: filter.name ?? '',
-        classification:
-          lookupCodes.getClassificationNameById(Number(filter.classificationId)) ?? '',
+        classification: filter.classificationId
+          ? lookupCodes.getClassificationNameById(Number(filter.classificationId))
+          : '',
       },
     });
   };
