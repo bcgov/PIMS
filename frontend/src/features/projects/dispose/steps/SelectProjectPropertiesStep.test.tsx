@@ -50,6 +50,9 @@ const uiElement = (
 );
 
 describe('Select Project Properties Step', () => {
+  beforeAll(() => {
+    (global as any).IS_REACT_ACT_ENVIRONMENT = false;
+  });
   beforeEach(() => {
     mockAxios.reset();
     mockKeycloak([], [1]);
