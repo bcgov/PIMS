@@ -18,12 +18,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # Install NPM Dependencies.
-      - name: Install Dependencies
-        run: |
-          cd ./frontend
-          npm i
-
       # Run Cypress E2E Tests.
       - name: Cypress Run E2E Tests
         uses: cypress-io/github-action@v5
@@ -31,6 +25,7 @@ jobs:
           CYPRESS_KEYCLOAK_USER: ${{ secrets.TEST_IDIR_USERNAME }}
           CYPRESS_KEYCLOAK_PASSWORD: ${{ secrets.TEST_IDIR_PASSWORD }}
         with:
+          install-command: npm install
           browser: chrome
           working-directory: frontend
           command: npm run cypress:e2e-dev
