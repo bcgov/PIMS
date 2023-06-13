@@ -198,7 +198,7 @@ export const ProjectListView: React.FC<IProps> = ({
           data: {
             view: location.pathname.includes('/spl') ? 'spl_projects' : 'agency_projects',
             agency:
-              filter.agencies?.length == 0
+              filter.agencies?.length === 0
                 ? ''
                 : lookupCodes.getAgencyFullNameById(Number(filter.agencies)),
             project_name_number: filter.name ?? '',

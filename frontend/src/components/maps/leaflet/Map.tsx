@@ -281,7 +281,7 @@ const Map: React.FC<MapProps> = ({
         property_name: filter.name ?? '',
         classification: filter.classificationId
           ? lookupCodes.getClassificationNameById(Number(filter.classificationId))
-          : 'nothing',
+          : '',
       },
     });
   };
