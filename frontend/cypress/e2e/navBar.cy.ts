@@ -26,14 +26,14 @@ describe('Navigation/routing of NavBar links', () => {
     cy.get('[data-testid="navbar-view-inventory"]').should('be.visible').click({ force: true });
 
     // Wait for the spinner to disappear.
-    cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
+    cy.get('.loading-spinner').should('not.exist');
 
     cy.url().should('include', '/properties/list');
     // Click home button.
     cy.get('[data-testid="navbar-home-btn"]').first().should('be.visible').click({ force: true });
 
     // Wait for the spinner to disappear.
-    cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
+    cy.get('.loading-spinner').should('not.exist');
 
     cy.url().should('include', '/mapview');
   });
@@ -58,7 +58,7 @@ describe('Navigation/routing of NavBar links', () => {
     cy.get('[data-testid="navbar-admin-users"]').should('be.visible').click({ force: true });
 
     // Wait for the spinner to disappear.
-    cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
+    cy.get('.loading-spinner').should('not.exist');
 
     cy.url().should('include', '/admin/users');
     cy.get('[data-testid="admin-users-page"]').should('exist');
@@ -72,7 +72,7 @@ describe('Navigation/routing of NavBar links', () => {
       .click({ force: true });
 
     // Wait for the spinner to disappear.
-    cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
+    cy.get('.loading-spinner').should('not.exist');
 
     cy.url().should('include', '/admin/access/requests');
     cy.get('[data-testid="admin-access-requests-page"]').should('exist');
@@ -84,7 +84,7 @@ describe('Navigation/routing of NavBar links', () => {
     cy.get('[data-testid="navbar-admin-agencies"]').should('be.visible').click({ force: true });
 
     // Wait for the spinner to disappear.
-    cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
+    cy.get('.loading-spinner').should('not.exist');
 
     cy.url().should('include', '/admin/agencies');
     cy.get('[data-testid="admin-agencies-page"]').should('exist');
@@ -98,7 +98,7 @@ describe('Navigation/routing of NavBar links', () => {
       .click({ force: true });
 
     // Wait for the spinner to disappear.
-    cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
+    cy.get('.loading-spinner').should('not.exist');
 
     cy.url().should('include', '/admin/administrativeAreas');
     cy.get('[data-testid="admin-administrative-areas-page"]').should('exist');
@@ -119,7 +119,7 @@ describe('Navigation/routing of NavBar links', () => {
     cy.get('[data-testid="navbar-submit-property"]').should('be.visible').click({ force: true });
 
     // Wait for the spinner to disappear.
-    cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
+    cy.get('.loading-spinner').should('not.exist');
 
     cy.url().should('include', '/mapview');
     cy.get('[data-testid="submit-property-selector"]').should('exist');
@@ -142,7 +142,7 @@ describe('Navigation/routing of NavBar links', () => {
     cy.get('[data-testid="navbar-view-inventory"]').should('be.visible').click({ force: true });
 
     // Wait for the spinner to disappear.
-    cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
+    cy.get('.loading-spinner').should('not.exist');
 
     cy.url().should('include', '/properties/list');
     cy.get('[data-testid="property-list-view"]').should('exist');
@@ -170,7 +170,7 @@ describe('Navigation/routing of NavBar links', () => {
       .click({ force: true });
 
     // Wait for the spinner to disappear.
-    cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
+    cy.get('.loading-spinner').should('not.exist');
 
     cy.url().should('include', '/dispose/projects/draft');
     cy.get('[data-testid="disposal-projects-draft-form"]').should('exist');
@@ -184,7 +184,7 @@ describe('Navigation/routing of NavBar links', () => {
       .click({ force: true });
 
     // Wait for the spinner to disappear.
-    cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
+    cy.get('.loading-spinner').should('not.exist');
 
     cy.url().should('include', '/projects/list');
     cy.get('[data-testid="disposal-projects-project-list-view"]').should('exist');
@@ -198,7 +198,7 @@ describe('Navigation/routing of NavBar links', () => {
       .click({ force: true });
 
     // Wait for the spinner to disappear.
-    cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
+    cy.get('.loading-spinner').should('not.exist');
 
     cy.url().should('include', '/projects/spl');
     cy.get('[data-testid="disposal-projects-spl-project-list-view"]').should('exist');
@@ -212,7 +212,7 @@ describe('Navigation/routing of NavBar links', () => {
       .click({ force: true });
 
     // Wait for the spinner to disappear.
-    cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
+    cy.get('.loading-spinner').should('not.exist');
 
     cy.url().should('include', '/approval/requests');
     cy.get('[data-testid="disposal-projects-project-approval-request-list-view"]').should('exist');
@@ -238,7 +238,7 @@ describe('Navigation/routing of NavBar links', () => {
     cy.get('[data-testid="navbar-spl-reports"]').should('be.visible').click({ force: true });
 
     // Wait for the spinner to disappear.
-    cy.get('.loading-spinner', { timeout: 10000 }).should('not.exist');
+    cy.get('.loading-spinner').should('not.exist');
 
     cy.url().should('include', '/reports/spl');
     cy.get('[data-testid="spl-report-layout"]').should('exist');
