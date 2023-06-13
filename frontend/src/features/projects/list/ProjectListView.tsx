@@ -197,7 +197,10 @@ export const ProjectListView: React.FC<IProps> = ({
           schema: 'iglu:ca.bc.gov.pims/search/jsonschema/1-0-0',
           data: {
             view: location.pathname.includes('/spl') ? 'spl_projects' : 'agency_projects',
-            agency: lookupCodes.getAgencyFullNameById(Number(filter.agencies)) ?? '',
+            agency:
+              filter.agencies?.length === 0
+                ? ''
+                : lookupCodes.getAgencyFullNameById(Number(filter.agencies)),
             project_name_number: filter.name ?? '',
             fiscal_year: filter.fiscalYear ?? '',
             statuses: filter.statusId?.join(',') ?? '',
