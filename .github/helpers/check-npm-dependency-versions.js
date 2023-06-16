@@ -91,7 +91,8 @@ const codeBlock = (text, language) => `\`\`\` ${language}\n${text}\n\`\`\``;
 const breakLine = () => console.log(`\n<br />\n`);
 
 // Log Dependencies in an array.
-const logDeps = (dependencies, headerTag, header, color) => {
+const logDeps = (dependencies, header, isDevDep, color) => {
+  const headerTag = isDevDep ? `${header_dev}` : `${header}`;
   if (dependencies.length > 0) {
     breakLine();
     console.log(`![${headerTag}]`); // Header
@@ -102,7 +103,7 @@ const logDeps = (dependencies, headerTag, header, color) => {
       console.log(
         `- \`${dependency}\` Update from version \`${version}\` to \`${latestVersion}\` by running`,
       );
-      console.log(codeBlock(`npm install ${dependency}@${latestVersion}`, ''));
+      console.log(codeBlock(`npm install${isDevDep && ' -D'} ${dependency}@${latestVersion}`, ''));
     }
 
     // Add Header text
