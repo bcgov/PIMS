@@ -39,6 +39,7 @@ services:
     container_name: pims-app
     build:
       context: frontend
+      target: dev
       dockerfile: Dockerfile
     volumes:
       - ./frontend/src:/app/src
