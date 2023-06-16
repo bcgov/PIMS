@@ -160,9 +160,9 @@ const logDeps = (dependencies, header, isDevDep, color) => {
     const minorDependencies = dependencyResults.filter((dep) => dep.versionChange === 'Minor');
     const majorDependencies = dependencyResults.filter((dep) => dep.versionChange === 'Major');
 
-    logDeps(patchDependencies, 'PATCH', 'patch', 'darkgreen');
-    logDeps(minorDependencies, 'MINOR', 'minor', 'blue');
-    logDeps(majorDependencies, 'MAJOR', 'major', 'orange');
+    logDeps(patchDependencies, 'patch', false, 'darkgreen');
+    logDeps(minorDependencies, 'minor', false, 'blue');
+    logDeps(majorDependencies, 'major', false, 'orange');
   }
 
   // DEV DEPENDENCIES
@@ -175,8 +175,8 @@ const logDeps = (dependencies, header, isDevDep, color) => {
     const minorDependencies = devDependencyResults.filter((dep) => dep.versionChange === 'Minor');
     const majorDependencies = devDependencyResults.filter((dep) => dep.versionChange === 'Major');
 
-    logDeps(patchDependencies, 'PATCH_DEV', 'patch', 'darkgreen');
-    logDeps(minorDependencies, 'MINOR_DEV', 'minor', 'blue');
-    logDeps(majorDependencies, 'MAJOR_DEV', 'major', 'orange');
+    logDeps(patchDependencies, 'patch', true, 'darkgreen');
+    logDeps(minorDependencies, 'minor', true, 'blue');
+    logDeps(majorDependencies, 'major', true, 'orange');
   }
 })();
