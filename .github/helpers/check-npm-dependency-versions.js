@@ -103,7 +103,7 @@ const logDeps = (dependencies, header, isDevDep, color) => {
       console.log(
         `- \`${dependency}\` Update from version \`${version}\` to \`${latestVersion}\` by running`,
       );
-      console.log(codeBlock(`npm install${isDevDep && ' -D'} ${dependency}@${latestVersion}`, ''));
+      console.log(codeBlock(`npm install${isDevDep ? ' -D' : ''} ${dependency}@${latestVersion}`, ''));
     }
 
     // Add Header text
