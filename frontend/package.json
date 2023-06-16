@@ -82,6 +82,7 @@
     "yup": "0.32.11"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "7.21.11",
     "@babel/preset-typescript": "7.21.5",
     "@cfaester/enzyme-adapter-react-18": "0.7.0",
     "@testing-library/dom": "9.3.0",

@@ -1,4 +1,4 @@
-import { act, cleanup, render } from '@testing-library/react';
+import { cleanup, render } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
@@ -89,6 +89,9 @@ const renderEditUserPage = () =>
   );
 
 describe('Edit user page', () => {
+  beforeAll(() => {
+    (global as any).IS_REACT_ACT_ENVIRONMENT = false;
+  });
   afterEach(() => {
     cleanup();
     jest.clearAllMocks();
@@ -140,19 +143,17 @@ describe('Edit user page', () => {
     it('displays a loading toast', async () => {
       const { getByText, findByText } = renderEditUserPage();
       const saveButton = getByText('Save');
-      act(() => {
-        saveButton.click();
-      });
+      saveButton.click();
       await findByText('Updating User...');
     });
 
     it('displays a success toast if the request passes', async () => {
       const { getByText, findByText } = renderEditUserPage();
       const saveButton = getByText('Save');
-      act(() => {
-        saveButton.click();
-      });
-      await findByText('User updated');
+
+      saveButton.click();
+
+      findByText('User updated');
     });
 
     it('displays an error toast if the request fails', async () => {
@@ -160,10 +161,10 @@ describe('Edit user page', () => {
       const saveButton = getByText('Save');
       mockAxios.reset();
       mockAxios.onAny().reply(500, {});
-      act(() => {
-        saveButton.click();
-      });
-      await findByText('Failed to update User');
+
+      saveButton.click();
+
+      findByText('Failed to update User');
     });
 
     it('Displays the correct last login time', () => {
