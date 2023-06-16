@@ -12,7 +12,7 @@ jobs:
       # Lightweight NodeJS Image - v20.2.x
       image: node:20.2-bullseye-slim
     env:
-      PATH_TO_PACKAGE_JSON: 'frontend/package.json'
+      PATH_TO_PACKAGE_JSON: 'frontend'
       ISSUE_TITLE: 'Frontend NPM Dependency Updates'
 
     steps:
