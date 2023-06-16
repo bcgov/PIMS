@@ -4,8 +4,8 @@ const path = require('path');
 // Get package.json file.
 const cmdLineArgument = process.env.PACKAGE_JSON;
 const packageJsonPath = cmdLineArgument.startsWith('./')
-  ? path.resolve(cmdLineArgument)
-  : path.resolve(`./${cmdLineArgument}`);
+  ? path.resolve(`${cmdLineArgument}/package.json`)
+  : path.resolve(`./${cmdLineArgument}/package.json`);
 const packageJson = require(packageJsonPath);
 
 // Read the package.json file and get the list of dependencies and devDependencies.
@@ -13,8 +13,8 @@ const dependencies = Object.entries(packageJson.dependencies) ?? undefined;
 const devDependencies = Object.entries(packageJson.devDependencies) ?? undefined;
 
 // Results from running checkVersions.
-let dependencyResults = [];
-let devDependencyResults = [];
+const dependencyResults = [];
+const devDependencyResults = [];
 
 // Check the latest version of each dependency.
 const checkVersions = async (dependencyList) => {
@@ -87,15 +87,35 @@ const checkVersions = async (dependencyList) => {
 // GitHub Markdown Formatting.
 const heading2 = (text) => `## ${text}`;
 const heading3 = (text) => `### ${text}`;
-const codeBlock = (text, language) => `\n\`\`\` ${language}\n${text}\n\`\`\`\n`;
+const codeBlock = (text, language) => `\`\`\` ${language}\n${text}\n\`\`\``;
+const breakLine = () => console.log(`\n<br />\n`);
+
+// Log Dependencies in an array.
+const logDeps = (dependencies, headerTag, header, color) => {
+  if (dependencies.length > 0) {
+    breakLine();
+    console.log(`![${headerTag}]`); // Header
+
+    // List dependency updates.
+    for (let key in dependencies) {
+      const { dependency, version, latestVersion } = dependencies[key];
+      console.log(
+        `- \`${dependency}\` Update from version \`${version}\` to \`${latestVersion}\` by running`,
+      );
+      console.log(codeBlock(`npm install ${dependency}@${latestVersion}`, ''));
+    }
+
+    // Add Header text
+    console.log(
+      `[${headerTag}]: https://img.shields.io/badge/${header}_updates_(${dependencies.length})-${color}?style=for-the-badge \n`,
+    );
+  }
+};
 
 // Run checkVersions and create comment.
 (async () => {
   const check = '✔️';
   const attention = '⚠️';
-  const patch = '🟢';
-  const minor = '🔵';
-  const major = '🔴';
 
   await checkVersions(dependencies);
   await checkVersions(devDependencies);
@@ -121,50 +141,41 @@ const codeBlock = (text, language) => `\n\`\`\` ${language}\n${text}\n\`\`\`\n`;
     console.log(`${attention} - ${devDependencyResults.length} Dev dependencies are out-of-date.`);
   }
 
-  if (dependencyResults.length > 0 || devDependencyResults.length > 0)
+  // Remind to change directory before installing updates.
+  if (dependencyResults.length > 0 || devDependencyResults.length > 0) {
     console.log(
-      codeBlock(
-        `- Run all install commands from the directory where the package.json is located.
-        \n ${patch} is used to display a patch upgrade - typically indicates the release of bug fixes
-        or small improvements that don't introduce major changes or new features.
-        \n ${minor} is used to display a minor upgrade - usually introduces new features or enhancements
-        that are not disruptive to the overall system but may require some attention or testing.
-        \n ${major} is used to display a major upgrade - typically involves substantial changes, 
-        such as breaking changes, architectural modifications, or the introduction of 
-        new functionalities that may require significant adaptations or testing.`,
-        'Diff',
-      ),
+      `\n**Make sure to change directory to where the package.json is located using...**`,
     );
-
-  // List dependencies to update.
-  if (dependencyResults.length > 0) {
-    console.log(' ');
-    console.log(heading3('Standard Dependencies to Update:'));
-
-    // Loop through each dependency to update.
-    for (let key in dependencyResults) {
-      const { dependency, version, latestVersion, versionChange } = dependencyResults[key];
-      const versionChangeColor =
-        versionChange === 'Major' ? major : versionChange === 'Minor' ? minor : patch;
-      console.log(
-        `- ${versionChangeColor} \`${dependency}\` Update from version \`${version}\` by running \`npm install ${dependency}@${latestVersion}\``,
-      );
-    }
+    console.log(codeBlock(`cd ${process.env.PACKAGE_JSON}`, ''));
   }
 
-  // List devDependencies to update.
+  // STANDARD DEPENDENCIES
+  if (dependencyResults.length > 0) {
+    breakLine();
+    console.log(heading3('Standard Dependencies to Update:'));
+
+    // Seperate by patch, minor and major.
+    const patchDependencies = dependencyResults.filter((dep) => dep.versionChange === 'Patch');
+    const minorDependencies = dependencyResults.filter((dep) => dep.versionChange === 'Minor');
+    const majorDependencies = dependencyResults.filter((dep) => dep.versionChange === 'Major');
+
+    logDeps(patchDependencies, 'PATCH', 'patch', 'darkgreen');
+    logDeps(minorDependencies, 'MINOR', 'minor', 'blue');
+    logDeps(majorDependencies, 'MAJOR', 'major', 'orange');
+  }
+
+  // DEV DEPENDENCIES
   if (devDependencyResults.length > 0) {
-    console.log(' ');
+    breakLine();
     console.log(heading3('Dev Dependencies to Update:'));
 
-    // Loop through each devDependency to update.
-    for (let key in devDependencyResults) {
-      const { dependency, version, latestVersion, versionChange } = devDependencyResults[key];
-      const versionChangeColor =
-        versionChange === 'Major' ? major : versionChange === 'Minor' ? minor : patch;
-      console.log(
-        `- ${versionChangeColor} \`${dependency}\` Update from version \`${version}\` by running \`npm install -D ${dependency}@${latestVersion}\``,
-      );
-    }
+    // Seperate by patch, minor and major.
+    const patchDependencies = devDependencyResults.filter((dep) => dep.versionChange === 'Patch');
+    const minorDependencies = devDependencyResults.filter((dep) => dep.versionChange === 'Minor');
+    const majorDependencies = devDependencyResults.filter((dep) => dep.versionChange === 'Major');
+
+    logDeps(patchDependencies, 'PATCH_DEV', 'patch', 'darkgreen');
+    logDeps(minorDependencies, 'MINOR_DEV', 'minor', 'blue');
+    logDeps(majorDependencies, 'MAJOR_DEV', 'major', 'orange');
   }
 })();
