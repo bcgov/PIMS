@@ -401,7 +401,8 @@ const PropertyListView: React.FC = () => {
         address: data.address ?? '',
         pid_pin: data.pid ?? '',
         property_name: data.name ?? '',
-        classification: data.classificationId ?? '',
+        classification:
+          lookupCodes.getClassificationNameById(Number(filter.classificationId)) ?? '',
       },
     });
 
