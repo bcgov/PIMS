@@ -92,7 +92,7 @@ const breakLine = () => console.log(`\n<br />\n`);
 
 // Log Dependencies in an array.
 const logDeps = (dependencies, header, isDevDep, color) => {
-  const headerTag = isDevDep ? `${header_dev}` : `${header}`;
+  const headerTag = isDevDep ? `${header}_dev` : `${header}`;
   if (dependencies.length > 0) {
     breakLine();
     console.log(`![${headerTag}]`); // Header
