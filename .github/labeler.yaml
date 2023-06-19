@@ -40,7 +40,7 @@ Styles:
 
 #################
 # Testing
-Test:
+Tests:
 - frontend/**/*.test.*
 - frontend/**/*.spec.*
 - backend/**/*.Test.*
