@@ -16,6 +16,35 @@ const devDependencies = Object.entries(packageJson.devDependencies) ?? undefined
 const dependencyResults = [];
 const devDependencyResults = [];
 
+// Save information on the dependency including latestVersion to the above results arrays.
+const saveDependencyResults = (dependencyList, dependency, version, latestVersion) => {
+  // Create arrays of version triplets  ie. 2.7.4  >>  [2, 7, 4]
+  const versionTriplet = version.split('.');
+  const latestVersionTriplet = latestVersion.split('.');
+
+  // Determine version change.
+  let versionChange = 'Patch';
+  if (versionTriplet[0] !== latestVersionTriplet[0]) {
+    versionChange = 'Major';
+  } else if (versionTriplet[1] !== latestVersionTriplet[1]) {
+    versionChange = 'Minor';
+  }
+
+  // Save results.
+  const isDevDependencies = dependencyList === devDependencies;
+  const saveInfo = {
+    dependency,
+    version,
+    latestVersion,
+    versionChange,
+  };
+  if (isDevDependencies) {
+    devDependencyResults.push(saveInfo); // DevDependency.
+  } else {
+    dependencyResults.push(saveInfo); // Dependency.
+  }
+};
+
 // Check the latest version of each dependency.
 const checkVersions = async (dependencyList) => {
   // For each dependency in the dependencyList.
@@ -44,38 +73,32 @@ const checkVersions = async (dependencyList) => {
       const latestVersion = JSON.parse(data).version;
 
       // Check if theres a difference in version and latestVersion.
-      if (
-        latestVersion &&
-        latestVersion !== '0.0.0' &&
-        latestVersion !== version &&
-        !latestVersion.includes('-')
-      ) {
-        // Create arrays of version triplets  ie. 2.7.4  >>  [2, 7, 4]
-        const versionTriplet = version.split('.');
-        const latestVersionTriplet = latestVersion.split('.');
+      if (latestVersion && latestVersion !== '0.0.0' && latestVersion !== version) {
+        if (!latestVersion.includes('-'))
+          saveDependencyResults(dependencyList, dependency, version, latestVersion);
+        else {
+          // Latest version includes '-'.
+          const data = await new Promise((resolve, reject) => {
+            https.get(`https://registry.npmjs.org/${dependency}`, (res) => {
+              let data = '';
+              res.on('data', (chunk) => {
+                data += chunk;
+              });
+              res.on('end', () => {
+                resolve(data);
+              });
+              res.on('error', (error) => {
+                reject(error);
+              });
+            });
+          });
 
-        // Determine version change.
-        let versionChange = 'Patch';
-        if (versionTriplet[0] !== latestVersionTriplet[0]) {
-          versionChange = 'Major';
-        } else if (versionTriplet[1] !== latestVersionTriplet[1]) {
-          versionChange = 'Minor';
-        }
+          const versions = Object.keys(JSON.parse(data).versions);
+          // Remove all versions containing '-' and select the last item in the array.
+          const filteredLatestVersions = versions.filter((item) => !item.includes('-'));
+          const latestVersion = filteredLatestVersions[filteredLatestVersions.length - 1];
 
-        // Save results.
-        const isDevDependencies = dependencyList === devDependencies;
-        const saveInfo = {
-          dependency,
-          version,
-          latestVersion,
-          versionChange,
-        };
-        if (isDevDependencies) {
-          // DevDependency.
-          devDependencyResults.push(saveInfo);
-        } else {
-          // Dependency.
-          dependencyResults.push(saveInfo);
+          saveDependencyResults(dependencyList, dependency, version, latestVersion);
         }
       }
     } catch (error) {
@@ -103,7 +126,9 @@ const logDeps = (dependencies, header, isDevDep, color) => {
       console.log(
         `- \`${dependency}\` Update from version \`${version}\` to \`${latestVersion}\` by running`,
       );
-      console.log(codeBlock(`npm install${isDevDep ? ' -D' : ''} ${dependency}@${latestVersion}`, ''));
+      console.log(
+        codeBlock(`npm install${isDevDep ? ' -D' : ''} ${dependency}@${latestVersion}`, ''),
+      );
     }
 
     // Add Header text
