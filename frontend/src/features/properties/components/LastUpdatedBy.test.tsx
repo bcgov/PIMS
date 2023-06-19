@@ -1,6 +1,5 @@
-import { cleanup, fireEvent, render } from '@testing-library/react';
+import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
-import { act } from 'react-test-renderer';
 import { formatApiDateTime } from 'utils';
 
 import LastUpdatedBy from './LastUpdatedBy';
@@ -15,6 +14,9 @@ const getLastUpdatedBy = (
 };
 
 describe('Last Updated By Component', () => {
+  beforeAll(() => {
+    (global as any).IS_REACT_ACT_ENVIRONMENT = false;
+  });
   afterEach(() => {
     cleanup();
   });
@@ -48,10 +50,8 @@ describe('Last Updated By Component', () => {
 
   it('Displays the email of the user that performed the update', () => {
     const { findByText, getByText } = render(getLastUpdatedBy(undefined, date, user, email));
-    act(async () => {
-      const tooltip = await findByText(email);
-      fireEvent.mouseOver(getByText(user));
-      expect(tooltip).toBeInTheDocument();
-    });
+    const tooltip = findByText(email);
+    fireEvent.mouseOver(getByText(user));
+    waitFor(() => expect(tooltip).toBeInTheDocument());
   });
 });

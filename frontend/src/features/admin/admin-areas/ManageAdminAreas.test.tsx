@@ -49,86 +49,93 @@ const lCodes = {
 const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: lCodes,
 });
-it('renders correctly', () => {
-  mockAxios.onAny().reply(200, { items: [{ name: 'test' }] });
-  const { asFragment } = render(
-    <Provider store={store}>
-      <MemoryRouter initialEntries={[history.location]}>
-        <ManageAdminAreas />
-      </MemoryRouter>
-    </Provider>,
-  );
-  expect(asFragment()).toMatchSnapshot();
-});
 
-xit('displays items in table', () => {
-  mockAxios.onGet().reply(200, {
-    items: [
-      {
-        abbreviation: '2',
-        createdOn: '2021-09-16T23:33:06.1766667',
-        groupName: 'Group Name 1',
-        id: 2,
-        isDisabled: false,
-        name: 'Test 1',
-        rowVersion: 'AAAAAAAADLg=',
-        sortOrder: 0,
-        type: 'AdministrativeArea',
-        updatedByEmail: 'unknown',
-        updatedByName: 'unknown',
-      },
-      {
-        abbreviation: '3',
-        createdOn: '2021-09-16T23:33:06.1766667',
-        groupName: 'Group Name 2',
-        id: 2,
-        isDisabled: false,
-        name: 'Test 2',
-        rowVersion: 'AAAAAAAADLg=',
-        sortOrder: 0,
-        type: 'AdministrativeArea',
-        updatedByEmail: 'unknown',
-        updatedByName: 'unknown',
-      },
-    ],
+describe('Edit Admin Areas', () => {
+  beforeAll(() => {
+    (global as any).IS_REACT_ACT_ENVIRONMENT = false;
   });
 
-  const { getByText } = render(
-    <Provider store={store}>
-      <MemoryRouter initialEntries={[history.location]}>
-        <ManageAdminAreas />
-      </MemoryRouter>
-    </Provider>,
-  );
-  expect(getByText('Test 1')).toBeInTheDocument();
-  expect(getByText('Test 2')).toBeInTheDocument();
-});
+  it('renders correctly', () => {
+    mockAxios.onAny().reply(200, { items: [{ name: 'test' }] });
+    const { asFragment } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <ManageAdminAreas />
+        </MemoryRouter>
+      </Provider>,
+    );
+    expect(asFragment()).toMatchSnapshot();
+  });
 
-it('admin areas populated correctly as filter option', () => {
-  const { container, getByText } = render(
-    <Provider store={store}>
-      <MemoryRouter initialEntries={[history.location]}>
-        <ManageAdminAreas />
-      </MemoryRouter>
-    </Provider>,
-  );
-  const nameFilter = container.querySelector('input[name="id"]');
-  fireEvent.change(nameFilter!, { target: { value: 'Test 2' } });
-  const option = getByText('Test 2');
-  expect(option).toBeInTheDocument();
-});
+  xit('displays items in table', () => {
+    mockAxios.onGet().reply(200, {
+      items: [
+        {
+          abbreviation: '2',
+          createdOn: '2021-09-16T23:33:06.1766667',
+          groupName: 'Group Name 1',
+          id: 2,
+          isDisabled: false,
+          name: 'Test 1',
+          rowVersion: 'AAAAAAAADLg=',
+          sortOrder: 0,
+          type: 'AdministrativeArea',
+          updatedByEmail: 'unknown',
+          updatedByName: 'unknown',
+        },
+        {
+          abbreviation: '3',
+          createdOn: '2021-09-16T23:33:06.1766667',
+          groupName: 'Group Name 2',
+          id: 2,
+          isDisabled: false,
+          name: 'Test 2',
+          rowVersion: 'AAAAAAAADLg=',
+          sortOrder: 0,
+          type: 'AdministrativeArea',
+          updatedByEmail: 'unknown',
+          updatedByName: 'unknown',
+        },
+      ],
+    });
 
-it('displays tooltip corrrectly', () => {
-  const { container, getByText } = render(
-    <Provider store={store}>
-      <MemoryRouter initialEntries={[history.location]}>
-        <ManageAdminAreas />
-      </MemoryRouter>
-    </Provider>,
-  );
-  const toolTip = container.querySelector('svg[class="tooltip-icon"]');
-  fireEvent.mouseOver(toolTip!);
-  expect(
-    getByText('Click the corresponding row to edit the administrative area'),
-  ).toBeInTheDocument();
+    const { getByText } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <ManageAdminAreas />
+        </MemoryRouter>
+      </Provider>,
+    );
+    expect(getByText('Test 1')).toBeInTheDocument();
+    expect(getByText('Test 2')).toBeInTheDocument();
+  });
+
+  it('admin areas populated correctly as filter option', () => {
+    const { container, getByText } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <ManageAdminAreas />
+        </MemoryRouter>
+      </Provider>,
+    );
+    const nameFilter = container.querySelector('input[name="id"]');
+    fireEvent.change(nameFilter!, { target: { value: 'Test 2' } });
+    const option = getByText('Test 2');
+    expect(option).toBeInTheDocument();
+  });
+
+  it('displays tooltip corrrectly', () => {
+    const { container, getByText } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <ManageAdminAreas />
+        </MemoryRouter>
+      </Provider>,
+    );
+    const toolTip = container.querySelector('svg[class="tooltip-icon"]');
+    fireEvent.mouseOver(toolTip!);
+    expect(
+      getByText('Click the corresponding row to edit the administrative area'),
+    ).toBeInTheDocument();
+  });
 });

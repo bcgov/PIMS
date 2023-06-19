@@ -13,6 +13,9 @@ jest.mock('hooks/useKeycloakWrapper');
 (useKeycloakWrapper as jest.Mock<Partial<IKeycloak>>).mockReturnValue({ hasClaim: () => true });
 
 describe('PidPin sub-form', () => {
+  beforeAll(() => {
+    (global as any).IS_REACT_ACT_ENVIRONMENT = false;
+  });
   let form: JSX.Element;
   const handlePidChange = jest.fn();
   const handlePinChange = jest.fn();
