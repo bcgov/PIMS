@@ -1,0 +1,70 @@
+name: App NPM Dependency Updates
+
+on:
+  schedule:
+    - cron: '0 16 * * 2' # Every Tuesday at 8:00-9:00am Pacific Time.
+  workflow_dispatch:
+
+env:
+  PATH_TO_PACKAGE_JSON: 'frontend' # Directory of package.json relative to root.
+  ISSUE_TITLE: 'Frontend NPM Dependency Updates' # Title of Issue displayed in Issues tab in GitHub.
+
+jobs:
+  check-versions:
+    runs-on: ubuntu-22.04
+    container:
+      # Lightweight NodeJS Image - v20.2.x
+      image: node:20.2-bullseye-slim
+
+    steps:
+      # Checkout branch.
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Run NodeJS script to check for latest npm dependency versions and capture output.
+      - name: Run NPM DEP Check Node.js script
+        id: check_versions
+        env:
+          PACKAGE_JSON: ${{ env.PATH_TO_PACKAGE_JSON }}
+        run: |
+          node .github/helpers/check-npm-dependencies.js > output.txt
+
+      # Upload the output as an artifact
+      - name: Upload output
+        uses: actions/upload-artifact@v3
+        with:
+          name: output
+          path: output.txt
+
+  create-issue:
+    needs: check-versions
+    runs-on: ubuntu-22.04
+    container:
+      # Lightweight NodeJS Image - v20.2.x
+      image: node:20.2-bullseye-slim
+
+    steps:
+      # Download the output artifact
+      - name: Download output
+        uses: actions/download-artifact@v3
+        with:
+          name: output
+
+      # Checkout branch.
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Install @octokit/rest npm package for making GitHub rest API requests.
+      - name: Install @octokit/rest npm
+        run: npm i @octokit/rest
+
+      # Run Node Script to Create GitHub Issue.
+      - name: Create GitHub Issue
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: ${{ env.ISSUE_TITLE }}
+          ISSUE_BODY: ${{ steps.check_versions.outputs.results }}
+        run: |
+          ISSUE_BODY=$(cat output.txt)
+          node .github/helpers/github-api/create-and-close-existing-issue.js
