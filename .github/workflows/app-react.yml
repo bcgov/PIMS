@@ -13,6 +13,7 @@ on:
       - '!frontend/Dockerfile*'
       - '!frontend/nginx.conf'
       - '!frontend/vite.config.*'
+      - '!frontend/package.json'
 
 jobs:
   build:
