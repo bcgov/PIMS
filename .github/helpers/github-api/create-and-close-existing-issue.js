@@ -11,5 +11,5 @@ const { ISSUE_TITLE, ISSUE_BODY } = process.env;
   }
 
   // Create new Issue.
-  await createIssue(ISSUE_TITLE, ISSUE_BODY);
+  await createIssue(ISSUE_TITLE, decodeURIComponent(ISSUE_BODY));
 })();
