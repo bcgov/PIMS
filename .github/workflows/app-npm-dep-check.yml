@@ -50,11 +50,6 @@ jobs:
         with:
           name: output
           path: .
-          
-      # Set ISSUE_BODY env.
-      - name: Set Issue Body env from output.txt
-        run: |
-          echo "ISSUE_BODY=$(cat output.txt)" >> $GITHUB_ENV
 
       # Checkout branch.
       - name: Checkout repository
@@ -70,6 +65,5 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_TITLE: ${{ env.ISSUE_TITLE }}
-          ISSUE_BODY: ${{ env.ISSUE_BODY }}
         run: |
           node .github/helpers/github-api/create-and-close-existing-issue.js
