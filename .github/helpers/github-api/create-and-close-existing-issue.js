@@ -1,5 +1,6 @@
 const { createIssue, closeIssue, findIssueByTitle } = require('./github-api-requests');
-const { ISSUE_TITLE, ISSUE_BODY } = process.env;
+const ISSUE_BODY = require('../../../output.txt');
+const { ISSUE_TITLE } = process.env;
 
 (async () => {
   // Check for existing Issue.
