@@ -53,6 +53,7 @@ jobs:
           
       # Encode and set ISSUE_BODY env.
       - name: Set ISSUE_BODY env
+        shell: bash
         run: |
           OUTPUT=$(cat output.txt)
           OUTPUT="${OUTPUT//'%'/'%25'}"
