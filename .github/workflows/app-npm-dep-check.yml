@@ -28,6 +28,7 @@ jobs:
           PACKAGE_JSON: ${{ env.PATH_TO_PACKAGE_JSON }}
         run: |
           node .github/helpers/check-npm-dependencies.js > output.txt
+          ls -la
 
       # Upload the output as an artifact
       - name: Upload output
