@@ -13,3 +13,4 @@ auth/keycloak/config/*.log
 database/mssql/data
 docker-compose.override.yml
 -docker-compose.override.yml
+frontend/package-lock.json
