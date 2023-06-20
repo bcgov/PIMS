@@ -28,7 +28,11 @@ jobs:
         env:
           PACKAGE_JSON: ${{ env.PATH_TO_PACKAGE_JSON }}
         run: |
-          docker run --rm -v "${PWD}:/app" -w /app -e PACKAGE_JSON=${{ env.PATH_TO_PACKAGE_JSON }} node:20.2-bullseye-slim bash -c "node .github/helpers/check-npm-dependencies.js > output.txt"
+          node .github/helpers/check-npm-dependencies.js > output.txt
+          
+      - name: Check
+        run: |
+          ls -la
 
       # Upload the output as an artifact
       - name: Upload output
@@ -51,6 +55,10 @@ jobs:
         with:
           name: output
           path: .
+          
+      - name: Check
+        run: |
+          ls -la
 
       # Checkout branch.
       - name: Checkout repository
