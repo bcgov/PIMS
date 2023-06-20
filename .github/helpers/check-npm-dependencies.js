@@ -151,6 +151,33 @@ const logDeps = (dependencies, header, isDevDep, color) => {
     'Versions of npm packages have been checked against their latest versions from the npm registry.\n',
   );
 
+  // Badge color codes (checked for WCAG standards).
+  const red = '701807'; // White text.
+  const orange = '9e3302'; // White text.
+  const yellow = 'f5c60c'; // Black text.
+  const green = '0B6018'; // White text.
+  const blue = '0859A1'; // White text.
+
+  // Percentage of packages up to date.
+  const dependenciesUpToDate = dependencies.length - dependencyResults.length;
+  const devDependenciesUpToDate = devDependencies.length - devDependencyResults.length;
+  const totalDependenciesUpToDate = dependenciesUpToDate + devDependenciesUpToDate;
+
+  const totalPercentageUpToDate = Math.round(
+    (totalDependenciesUpToDate / (dependencies.length + devDependencies.length)) * 100,
+  );
+
+  let percentageColor = green;
+  if (totalPercentageUpToDate <= 50) percentageColor = red;
+  else if (totalPercentageUpToDate <= 70) percentageColor = orange;
+  else if (totalPercentageUpToDate <= 90) percentageColor = yellow;
+
+  // Log percentage
+  console.log('![COVERAGE_PERCENTAGE]');
+  console.log(
+    `\n[COVERAGE_PERCENTAGE]: https://img.shields.io/badge/percentage_of_dependencies_up_to_date-${totalPercentageUpToDate}-${percentageColor}?style=for-the-badge \n`,
+  );
+
   // Summarize dependency updates.
   if (dependencyResults.length === 0) {
     console.log(`${check} - Standard dependencies are all up-to-date.`);
@@ -185,9 +212,9 @@ const logDeps = (dependencies, header, isDevDep, color) => {
     const minorDependencies = dependencyResults.filter((dep) => dep.versionChange === 'Minor');
     const majorDependencies = dependencyResults.filter((dep) => dep.versionChange === 'Major');
 
-    logDeps(patchDependencies, 'patch', false, 'darkgreen');
-    logDeps(minorDependencies, 'minor', false, 'blue');
-    logDeps(majorDependencies, 'major', false, 'orange');
+    logDeps(patchDependencies, 'patch', false, green);
+    logDeps(minorDependencies, 'minor', false, blue);
+    logDeps(majorDependencies, 'major', false, orange);
   }
 
   // DEV DEPENDENCIES
@@ -200,8 +227,8 @@ const logDeps = (dependencies, header, isDevDep, color) => {
     const minorDependencies = devDependencyResults.filter((dep) => dep.versionChange === 'Minor');
     const majorDependencies = devDependencyResults.filter((dep) => dep.versionChange === 'Major');
 
-    logDeps(patchDependencies, 'patch', true, 'darkgreen');
-    logDeps(minorDependencies, 'minor', true, 'blue');
-    logDeps(majorDependencies, 'major', true, 'orange');
+    logDeps(patchDependencies, 'patch', true, green);
+    logDeps(minorDependencies, 'minor', true, blue);
+    logDeps(majorDependencies, 'major', true, orange);
   }
 })();
