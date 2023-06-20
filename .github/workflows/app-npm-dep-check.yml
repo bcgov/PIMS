@@ -22,17 +22,12 @@ jobs:
         uses: actions/checkout@v3
 
       # Run NodeJS script to check for latest npm dependency versions and capture output.
-      # Mount volume so files created in container can be accessed by upload artifact step.
       - name: Run NPM DEP Check Node.js script
         id: check_versions
         env:
           PACKAGE_JSON: ${{ env.PATH_TO_PACKAGE_JSON }}
         run: |
           node .github/helpers/check-npm-dependencies.js > output.txt
-          
-      - name: Check
-        run: |
-          ls -la
 
       # Upload the output as an artifact
       - name: Upload output
@@ -56,9 +51,10 @@ jobs:
           name: output
           path: .
           
-      - name: Check
+      # Set ISSUE_BODY env.
+      - name: Set Issue Body env from output.txt
         run: |
-          ls -la
+          echo "ISSUE_BODY=$(cat output.txt)" >> $GITHUB_ENV
 
       # Checkout branch.
       - name: Checkout repository
@@ -74,6 +70,6 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_TITLE: ${{ env.ISSUE_TITLE }}
+          ISSUE_BODY: ${{ env.ISSUE_BODY }}
         run: |
-          ISSUE_BODY=$(cat ./output/output.txt)
           node .github/helpers/github-api/create-and-close-existing-issue.js
