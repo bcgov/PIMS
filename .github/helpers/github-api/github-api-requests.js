@@ -35,7 +35,9 @@
  *           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
  *         run: node .github/helpers/script.js
  */
-const { GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO } = process.env;
+
+const { GITHUB_TOKEN, GITHUB_REPOSITORY } = process.env;
+const [GITHUB_OWNER, GITHUB_REPO] = GITHUB_REPOSITORY.split('/');
 const { Octokit } = require('@octokit/rest');
 
 // Create a personal access token at https://github.com/settings/tokens/new?scopes=repo
