@@ -40,6 +40,9 @@ function isLayerVisible(key: string, leaflet: any) {
 }
 
 describe('LayersControl View', () => {
+  beforeAll(() => {
+    (global as any).IS_REACT_ACT_ENVIRONMENT = false;
+  });
   afterEach(cleanup);
 
   it('renders correctly', () => {

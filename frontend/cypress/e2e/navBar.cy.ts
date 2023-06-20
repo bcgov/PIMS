@@ -139,7 +139,7 @@ describe('Navigation/routing of NavBar links', () => {
     cy.visit('/');
 
     // Go to View Property Inventory page.
-    cy.get('[data-testid="navbar-view-inventory"]').should('be.visible').click({ force: true });
+    cy.get('[data-testid="navbar-view-inventory"]').should('be.visible').click();
 
     // Wait for the spinner to disappear.
     cy.get('.loading-spinner').should('not.exist');
