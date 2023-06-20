@@ -29,7 +29,7 @@ jobs:
         run: |
           node .github/helpers/check-npm-dependencies.js > output.txt
 
-      # Upload the output as an artifact
+      # Upload the output as an artifact.
       - name: Upload output
         uses: actions/upload-artifact@v3
         with:
@@ -44,12 +44,21 @@ jobs:
       image: node:20.2-bullseye-slim
 
     steps:
-      # Download the output artifact
+      # Download the output artifact.
       - name: Download output
         uses: actions/download-artifact@v3
         with:
           name: output
           path: .
+          
+      # Encode and set ISSUE_BODY env.
+      - name: Set ISSUE_BODY env
+        run: |
+          OUTPUT=$(cat output.txt)
+          OUTPUT="${OUTPUT//'%'/'%25'}"
+          OUTPUT="${OUTPUT//$'\n'/'%0A'}"
+          OUTPUT="${OUTPUT//$'\r'/'%0D'}"
+          echo "ISSUE_BODY=${OUTPUT}" >> $GITHUB_ENV
 
       # Checkout branch.
       - name: Checkout repository
@@ -65,5 +74,6 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_TITLE: ${{ env.ISSUE_TITLE }}
+          ISSUE_BODY: ${{ env.ISSUE_BODY }}
         run: |
           node .github/helpers/github-api/create-and-close-existing-issue.js
