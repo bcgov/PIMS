@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Pims.Api.Policies;
 using Pims.Dal;
 using Pims.Dal.Security;
+using Pims.Ltsa;
 using Swashbuckle.AspNetCore.Annotations;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Property.Models.Parcel;
@@ -15,6 +16,7 @@ using Pims.Api.Helpers.Extensions;
 using Pims.Api.Helpers.Exceptions;
 using EModel = Pims.Dal.Entities.Models;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Pims.Api.Areas.Property.Controllers
 {
@@ -32,6 +34,7 @@ namespace Pims.Api.Areas.Property.Controllers
         #region Variables
         private readonly ILogger<ParcelController> _logger;
         private readonly IPimsService _pimsService;
+        private readonly ILtsaService _ltsaService;
         private readonly IMapper _mapper;
         #endregion
 
@@ -42,15 +45,33 @@ namespace Pims.Api.Areas.Property.Controllers
         /// <param name="logger"></param>
         /// <param name="pimsService"></param>
         /// <param name="mapper"></param>
-        public ParcelController(ILogger<ParcelController> logger, IPimsService pimsService, IMapper mapper)
+        /// <param name="ltsaService"></param>
+        public ParcelController(ILogger<ParcelController> logger, IPimsService pimsService, IMapper mapper, ILtsaService ltsaService)
         {
             _logger = logger;
             _pimsService = pimsService;
             _mapper = mapper;
+            _ltsaService = ltsaService;
         }
         #endregion
 
         #region Endpoints
+
+        /// <summary>
+        /// Authenticate and get token for LTSA API.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("ltsa/auth")]
+        [HasPermission(Permissions.PropertyView)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.LtsaTokenModel), 200)]
+        [SwaggerOperation(Tags = new[] { "parcel" })]
+        public async Task<IActionResult> AuthenticateWithLTSAAsync(string pid)
+        {
+            var token = await _ltsaService.GetTokenAsync(pid);
+            return new JsonResult(token);
+        }
+
         /// <summary>
         /// Get the parcel from the datasource if the user is allowed.
         /// </summary>
