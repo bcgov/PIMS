@@ -141,15 +141,15 @@ describe('Land Form', () => {
 
   it('goes to corresponding steps', async () => {
     const { getByText, queryByText, getAllByText } = render(getLandForm(true));
-    await waitFor(() => {
+    waitFor(() => {
       fireEvent.click(getByText(/continue/i));
     });
     expect(getByText(/Strategic Real Estate Classification/i)).toBeInTheDocument();
-    await waitFor(() => {
+    waitFor(() => {
       fireEvent.click(getByText(/Continue/i));
     });
     expect(getAllByText(/Net Book Value/i)).toHaveLength(2);
-    await waitFor(() => {
+    waitFor(() => {
       fireEvent.click(getByText(/Continue/i));
     });
     expect(getByText(/Review your land info/i)).toBeInTheDocument();
@@ -160,7 +160,7 @@ describe('Land Form', () => {
     const { getByText, container } = render(
       getLandForm(false, { ...defaultInitialValues, id: 0, buildings: [{} as any] }),
     );
-    await waitFor(() => {
+    waitFor(() => {
       fireEvent.click(getByText(/continue/i));
     });
     expect(getByText(/Strategic Real Estate Classification/i)).toBeInTheDocument();
@@ -172,7 +172,7 @@ describe('Land Form', () => {
     const { getByText, container } = render(
       getLandForm(false, { ...defaultInitialValues, id: 0, buildings: [] }),
     );
-    await waitFor(() => {
+    waitFor(() => {
       fireEvent.click(getByText(/continue/i));
     });
     expect(getByText(/Strategic Real Estate Classification/i)).toBeInTheDocument();
@@ -182,7 +182,7 @@ describe('Land Form', () => {
 
   xit('review has appropriate subforms', async () => {
     const { getByText } = render(getLandForm());
-    await waitFor(() => {
+    waitFor(() => {
       fireEvent.click(getByText(/Review/i));
     });
     expect(getByText(/parcel identification/i)).toBeInTheDocument();

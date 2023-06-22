@@ -27,6 +27,9 @@ const testRender = (props?: any, formikProps?: any) =>
   );
 
 describe('fast date picker old date functionality', () => {
+  beforeAll(() => {
+    (global as any).IS_REACT_ACT_ENVIRONMENT = false;
+  });
   it('handles an empty value', () => {
     const { container } = testRender(
       { oldDateWarning: true },
