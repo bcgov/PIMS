@@ -1,14 +1,13 @@
 import { WorkflowStatus } from 'hooks/api/projects';
-import { toInteger } from 'lodash';
 import { z } from 'zod';
 
 const AppraisalValue = z
   .string()
-  .refine((value) => !isNaN(toInteger(value)), {
+  .refine((value) => !Number.isNaN(Number(value)), {
     message: 'Appraisal value required',
     path: ['appraised'],
   })
-  .refine((value) => toInteger(value) >= 0, {
+  .refine((value) => Number(value) >= 0, {
     message: 'Minimum amount is $0.00',
     path: ['appraised'],
   });
@@ -22,7 +21,7 @@ export const documentationSchema = z
         isCompleted: z.boolean(),
       }),
     ),
-    statusCode: z.enum([WorkflowStatus.Cancelled /* Other status codes... */]), // make sure to include all possible status codes here
+    statusCode: z.enum([Object.values(WorkflowStatus) as any]),
   })
   .refine((data) => {
     if (data.tasks[6]?.isCompleted) {
