@@ -2,25 +2,19 @@ import { Workflow, WorkflowStatus } from 'hooks/api/projects';
 import moment from 'moment';
 import { z } from 'zod';
 
-const workflowEnum = z.enum(Object.keys(Workflow) as any);
-const workflowStatusEnum = z.enum(Object.keys(WorkflowStatus) as any);
+const workflowEnum = z.enum(Object.values(Workflow) as any);
+const workflowStatusEnum = z.enum(Object.values(WorkflowStatus) as any);
 
 const OfferAmount = z
   .string()
-  .refine((value) => !isNaN(parseInt(value)), {
-    message: 'Offer amount required',
-  })
-  .refine((value) => parseInt(value) >= 0, {
-    message: 'Minimum amount is $0.00',
-  });
+  .refine((value) => !isNaN(parseInt(value)), 'Offer amount required')
+  .refine((value) => parseInt(value) >= 0, 'Minimum amount is $0.00');
 
-const OfferAcceptedOn = z.string().refine((value) => moment(value).isValid(), {
-  message: 'Offer accepted on required',
-});
+const OfferAcceptedOn = z
+  .string()
+  .refine((value) => moment(value).isValid(), 'Offer accepted on required');
 
-const DisposedOn = z.string().refine((value) => moment(value).isValid(), {
-  message: 'Disposal date required',
-});
+const DisposedOn = z.string().refine((value) => moment(value).isValid(), 'Disposal date required');
 
 export const erpDisposedSchema = z
   .object({

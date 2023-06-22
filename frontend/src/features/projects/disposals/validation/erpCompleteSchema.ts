@@ -2,28 +2,8 @@ import { Workflow, WorkflowStatus } from 'hooks/api/projects';
 import moment from 'moment';
 import { z } from 'zod';
 
-const workflowEnum = z.enum(Object.keys(Workflow) as any);
-const workflowStatusEnum = z.enum(Object.keys(WorkflowStatus) as any);
-
-const OnHoldNotification = z.string().refine((value) => moment(value).isValid(), {
-  message: 'On hold notification required',
-});
-
-const TransferredWithinGreOn = z.string().refine((value) => moment(value).isValid(), {
-  message: 'Transferred within GRE on required',
-});
-
-const ClearanceNotification = z.string().refine((value) => moment(value).isValid(), {
-  message: 'Clearance notification required',
-});
-
-const RequestForSplReceivedOn = z.string().refine((value) => moment(value).isValid(), {
-  message: 'Request for SPL received on required',
-});
-
-const ApprovedForSplOn = z.string().refine((value) => moment(value).isValid(), {
-  message: 'SPL addition approved on required',
-});
+const workflowEnum = z.enum(Object.values(Workflow) as any);
+const workflowStatusEnum = z.enum(Object.values(WorkflowStatus) as any);
 
 export const erpCompleteSchema = z
   .object({
@@ -36,51 +16,49 @@ export const erpCompleteSchema = z
     statusCode: workflowStatusEnum,
     originalStatusCode: workflowStatusEnum,
   })
-  .refine((data) => {
+  .superRefine((data, ctx) => {
+    const isErpWorkflow = data.workflowCode === Workflow.ERP;
+    const isAssessExemptionWorkflow = data.workflowCode === Workflow.ASSESS_EXEMPTION;
+    const isAssessExDisposalWorkflow = data.workflowCode === Workflow.ASSESS_EX_DISPOSAL;
+    const isSplWorkflow = data.workflowCode === Workflow.SPL;
+
     if (
-      data.workflowCode === Workflow.ERP &&
+      isErpWorkflow &&
       (data.statusCode === WorkflowStatus.OnHold ||
         data.statusCode === WorkflowStatus.TransferredGRE) &&
       data.originalStatusCode !== WorkflowStatus.NotInSpl
     ) {
-      return OnHoldNotification.safeParse(data.onHoldNotificationSentOn).success;
+      validateDate(data.onHoldNotificationSentOn, 'On hold notification required');
     }
-    return true;
-  })
-  .refine((data) => {
+
     if (
-      (data.workflowCode === Workflow.ERP ||
-        data.workflowCode === Workflow.ASSESS_EXEMPTION ||
-        data.workflowCode === Workflow.ASSESS_EX_DISPOSAL) &&
+      (isErpWorkflow || isAssessExemptionWorkflow || isAssessExDisposalWorkflow) &&
       data.statusCode === WorkflowStatus.TransferredGRE &&
       data.originalStatusCode !== WorkflowStatus.NotInSpl
     ) {
-      return TransferredWithinGreOn.safeParse(data.transferredWithinGreOn).success;
+      validateDate(data.transferredWithinGreOn, 'Transferred within GRE on required');
     }
-    return true;
-  })
-  .refine((data) => {
+
     if (
-      ((data.workflowCode === Workflow.ERP ||
-        data.workflowCode === Workflow.ASSESS_EXEMPTION ||
-        data.workflowCode === Workflow.ASSESS_EX_DISPOSAL) &&
+      ((isErpWorkflow || isAssessExemptionWorkflow || isAssessExDisposalWorkflow) &&
         data.statusCode === WorkflowStatus.NotInSpl) ||
-      data.workflowCode === Workflow.SPL ||
+      isSplWorkflow ||
       data.statusCode === WorkflowStatus.ApprovedForSpl
     ) {
-      return ClearanceNotification.safeParse(data.clearanceNotificationSentOn).success;
+      validateDate(data.clearanceNotificationSentOn, 'Clearance notification required');
     }
-    return true;
-  })
-  .refine((data) => {
-    if (data.workflowCode === Workflow.SPL && data.statusCode === WorkflowStatus.ApprovedForSpl) {
-      return RequestForSplReceivedOn.safeParse(data.requestForSplReceivedOn).success;
+
+    if (isSplWorkflow && data.statusCode === WorkflowStatus.ApprovedForSpl) {
+      validateDate(data.requestForSplReceivedOn, 'Request for SPL received on required');
+      validateDate(data.approvedForSplOn, 'SPL addition approved on required');
     }
-    return true;
-  })
-  .refine((data) => {
-    if (data.workflowCode === Workflow.SPL && data.statusCode === WorkflowStatus.ApprovedForSpl) {
-      return ApprovedForSplOn.safeParse(data.approvedForSplOn).success;
+
+    function validateDate(date: string, message: string) {
+      if (!moment(date).isValid()) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.invalid_date,
+          message,
+        });
+      }
     }
-    return true;
   });
