@@ -392,12 +392,6 @@ const PropertyListView: React.FC = () => {
     }
 
     // Send data to SnowPlow.
-    console.log(
-      'Classification:',
-      data.classificationId
-        ? lookupCodes.getClassificationNameById(Number(data.classificationId))
-        : '',
-    );
     window.snowplow('trackSelfDescribingEvent', {
       schema: 'iglu:ca.bc.gov.pims/search/jsonschema/1-0-0',
       data: {
