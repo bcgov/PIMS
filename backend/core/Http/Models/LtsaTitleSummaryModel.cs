@@ -1,26 +1,53 @@
-using System;
-using System.Text.Json;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Pims.Core.Http.Models
 {
     /// <summary>
-    /// LtsaOrderModel class, provides a model that represents a response for requesting an LTSA Title summary in order to make another request to get the order.
+    /// Represents the response structure for LTSA Title summaries.
+    /// </summary>
+    public class LtsaTitleSummaryResponse
+    {
+        /// <summary>
+        /// Gets or sets the list of title summaries.
+        /// </summary>
+        [JsonPropertyName("titleSummaries")]
+        public List<LtsaTitleSummaryModel> TitleSummaries { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a single LTSA Title summary.
     /// </summary>
     public class LtsaTitleSummaryModel
     {
-        #region Properties
         /// <summary>
-        /// get/set - The access token.
+        /// Gets or sets the title number.
         /// </summary>
         [JsonPropertyName("titleNumber")]
         public string TitleNumber { get; set; }
 
         /// <summary>
-        /// get/set - The refresh token.
+        /// Gets or sets the land title district code.
         /// </summary>
         [JsonPropertyName("landTitleDistrictCode")]
         public string LandTitleDistrictCode { get; set; }
-        #endregion
+
+        /// <summary>
+        /// Gets or sets the parcel identifier.
+        /// </summary>
+        [JsonPropertyName("parcelIdentifier")]
+        public string ParcelIdentifier { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status.
+        /// </summary>
+        [JsonPropertyName("status")]
+        public string Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets the first owner.
+        /// </summary>
+        [JsonPropertyName("firstOwner")]
+        public string FirstOwner { get; set; }
     }
 }

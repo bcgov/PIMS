@@ -66,10 +66,10 @@ namespace Pims.Api.Areas.Property.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(Model.LtsaTokenModel), 200)]
         [SwaggerOperation(Tags = new[] { "parcel" })]
-        public async Task<IActionResult> AuthenticateWithLTSAAsync(string pid)
+        public async Task<IActionResult> GetLandTitleInfo(string pid)
         {
-            var token = await _ltsaService.GetTokenAsync(pid);
-            return new JsonResult(token);
+            var landTitle = await _ltsaService.ProcessLTSARequest(pid);
+            return new JsonResult(landTitle);
         }
 
         /// <summary>
