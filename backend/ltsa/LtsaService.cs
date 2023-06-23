@@ -10,13 +10,14 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Pims.Ltsa
 {
     public class LtsaService : ILtsaService
     {
         #region Variables
-        private LtsaTokenModel _token = null;
+        // private LtsaTokenModel _token = null;  <---- TODO - may not need a refresh token
         private readonly JwtSecurityTokenHandler _tokenHandler;
         private readonly ILogger<ILtsaService> _logger;
         private readonly IConfiguration _configuration;
@@ -92,7 +93,37 @@ namespace Pims.Ltsa
         // }
 
         /// <summary>
-        /// Make an HTTP request to LTSA to get an access token for the specified 'username' and 'password'.
+        /// Process the LTSA request by retrieving an access token, title summary information, and creating an order.
+        /// </summary>
+        /// <param name="pid">The parcel identifier.</param>
+        /// <returns>The LTSA order model.</returns>
+        public async Task<LtsaOrderModel> ProcessLTSARequest(string pid)
+        {
+            // make a request to get an access token from LTSA
+            LtsaTokenModel ltsaToken = await GetTokenAsync(pid);
+
+            // make a request to get title summary info from LTSA
+            LtsaTitleSummaryResponse titleSummaryResponse = await GetTitleSummary(ltsaToken.AccessToken, pid);
+
+            // Access the first title summary in the list
+            LtsaTitleSummaryModel titleSummary = titleSummaryResponse.TitleSummaries[0];
+
+            // variables for making order request
+            string titleNumber = "";
+            string landTitleDistrictCode = "";
+
+            // Retrieve the titleNumber
+            titleNumber = titleSummary.TitleNumber;
+            landTitleDistrictCode = titleSummary.LandTitleDistrictCode;
+
+            // make a request to get the LTSA Order
+            LtsaOrderModel order = await CreateOrderAsync(ltsaToken.AccessToken, titleNumber, landTitleDistrictCode);
+
+            return order;
+        }
+
+        /// <summary>
+        /// Make an HTTP request to LTSA to get an access token for the specified parcel id.
         /// </summary>
         /// <returns></returns>
         public async Task<LtsaTokenModel> GetTokenAsync(string pid)
@@ -135,9 +166,6 @@ namespace Pims.Ltsa
                     AccessToken = accessToken,
                     RefreshToken = refreshToken
                 };
-
-                Task<string> titleSummaryResponse = GetTitleSummary(accessToken, pid);
-
                 return ltsaToken;
             }
         }
@@ -148,7 +176,7 @@ namespace Pims.Ltsa
         /// <param name="accessToken">The access token for authentication.</param>
         /// <param name="parcelIdentifier">The parcel identifier for filtering the results.</param>
         /// <returns>The response content as a string.</returns>
-        private async Task<string> GetTitleSummary(string accessToken, string parcelIdentifier)
+        private async Task<LtsaTitleSummaryResponse> GetTitleSummary(string accessToken, string parcelIdentifier)
         {
             // Set the API endpoint URL
             var apiUrl = HostUri() + "titleSummaries";
@@ -167,7 +195,8 @@ namespace Pims.Ltsa
                     response.EnsureSuccessStatusCode();
 
                     string responseContent = await response.Content.ReadAsStringAsync();
-                    return responseContent;
+                    LtsaTitleSummaryResponse responseSummary = JsonSerializer.Deserialize<LtsaTitleSummaryResponse>(responseContent);
+                    return responseSummary;
                 }
                 catch (Exception ex)
                 {
@@ -183,7 +212,7 @@ namespace Pims.Ltsa
         /// </summary>
         /// <param name="accessToken">The access token for authentication.</param>
         /// <returns>The response content as a string.</returns>
-        public async Task<string> CreateOrderAsync(string accessToken)
+        public async Task<LtsaOrderModel> CreateOrderAsync(string accessToken, string titleNumber, string landTitleDistrictCode)
         {
             var apiUrl = HostUri() + "orders";
             var requestUrl = apiUrl;
@@ -199,8 +228,8 @@ namespace Pims.Ltsa
                     fileReference = "Test",
                     productOrderParameters = new
                     {
-                        titleNumber = " ",
-                        landTitleDistrictCode = " ",
+                        titleNumber = titleNumber,
+                        landTitleDistrictCode = landTitleDistrictCode,
                         includeCancelledInfo = false
                     }
                 };
@@ -219,7 +248,8 @@ namespace Pims.Ltsa
                     response.EnsureSuccessStatusCode();
 
                     string responseContent = await response.Content.ReadAsStringAsync();
-                    return responseContent;
+                    LtsaOrderModel responseSummary = JsonSerializer.Deserialize<LtsaOrderModel>(responseContent);
+                    return responseSummary;
                 }
                 catch (Exception ex)
                 {
