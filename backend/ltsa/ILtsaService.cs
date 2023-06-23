@@ -8,5 +8,6 @@ namespace Pims.Ltsa
     public interface ILtsaService
     {
         Task<LtsaTokenModel> GetTokenAsync(string pid);
+        Task<LtsaOrderModel> ProcessLTSARequest(string pid);
     }
 }
