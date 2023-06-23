@@ -11,6 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Net;
 
 namespace Pims.Ltsa
 {
@@ -49,16 +50,6 @@ namespace Pims.Ltsa
 
 
         #region Methods
-        /// <summary>
-        /// Generates the full URL including the host.
-        /// </summary>
-        /// <param name="endpoint"></param>
-        /// <param name="outputFormat"></param>
-        /// <returns></returns>
-        private string GenerateUrl(string endpoint)
-        {
-            return $"{this.Options.HostUri}{endpoint}";
-        }
 
         /// <summary>
         /// Generates the URL for authentication.
@@ -91,6 +82,21 @@ namespace Pims.Ltsa
         //         _token = await GetTokenAsync();
         //     }
         // }
+        // Custom exception class for LTSAApi errors
+        public class LTSAApiException : Exception
+        {
+            public LTSAApiException(string message) : base(message)
+            {
+            }
+        }
+
+        // Custom exception class for parcel not found
+        public class ParcelNotFoundException : Exception
+        {
+            public ParcelNotFoundException(string message) : base(message)
+            {
+            }
+        }
 
         /// <summary>
         /// Process the LTSA request by retrieving an access token, title summary information, and creating an order.
@@ -108,13 +114,9 @@ namespace Pims.Ltsa
             // Access the first title summary in the list
             LtsaTitleSummaryModel titleSummary = titleSummaryResponse.TitleSummaries[0];
 
-            // variables for making order request
-            string titleNumber = "";
-            string landTitleDistrictCode = "";
-
-            // Retrieve the titleNumber
-            titleNumber = titleSummary.TitleNumber;
-            landTitleDistrictCode = titleSummary.LandTitleDistrictCode;
+            // titleNumber and district code for making order request
+            string titleNumber = titleSummary.TitleNumber;
+            string landTitleDistrictCode = titleSummary.LandTitleDistrictCode;
 
             // make a request to get the LTSA Order
             LtsaOrderModel order = await CreateOrderAsync(ltsaToken.AccessToken, titleNumber, landTitleDistrictCode);
@@ -132,17 +134,17 @@ namespace Pims.Ltsa
             var headers = new HttpRequestMessage().Headers;
             string integratorUsername = _configuration.GetValue<string>("Ltsa_Integrator_Username");
             string integratorPassword = _configuration.GetValue<string>("Ltsa_Integrator_Password");
-            string ltsaUserName = _configuration.GetValue<string>("Ltsa_UserName");
-            string ltsaUserPassword = _configuration.GetValue<string>("Ltsa_UserPassword");
+            string myLtsaUserName = _configuration.GetValue<string>("Ltsa_UserName");
+            string myLtsaUserPassword = _configuration.GetValue<string>("Ltsa_UserPassword");
 
             using (HttpClient client = new HttpClient())
             {
                 var jsonObject = new
                 {
-                    integratorUsername = integratorUsername,
-                    integratorPassword = integratorPassword,
-                    myLtsaUserName = ltsaUserName,
-                    myLtsaUserPassword = ltsaUserPassword
+                    integratorUsername,
+                    integratorPassword,
+                    myLtsaUserName,
+                    myLtsaUserPassword
                 };
 
                 // Convert the request body to JSON
@@ -192,17 +194,26 @@ namespace Pims.Ltsa
                 try
                 {
                     HttpResponseMessage response = await client.GetAsync(requestUrl);
-                    response.EnsureSuccessStatusCode();
-
-                    string responseContent = await response.Content.ReadAsStringAsync();
-                    LtsaTitleSummaryResponse responseSummary = JsonSerializer.Deserialize<LtsaTitleSummaryResponse>(responseContent);
-                    return responseSummary;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseContent = await response.Content.ReadAsStringAsync();
+                        LtsaTitleSummaryResponse responseSummary = JsonSerializer.Deserialize<LtsaTitleSummaryResponse>(responseContent);
+                        return responseSummary;
+                    }
+                    else if (response.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        throw new ParcelNotFoundException("Parcel Id was not found");
+                    }
+                    else
+                    {
+                        throw new LTSAApiException($"Failed to retrieve title summary. Status code: {response.StatusCode}");
+                    }
                 }
                 catch (Exception ex)
                 {
                     // Handle the exception here
                     Console.WriteLine($"An error occurred: {ex.Message}");
-                    throw; // Optionally rethrow the exception
+                    throw;
                 }
             }
         }
@@ -255,7 +266,7 @@ namespace Pims.Ltsa
                 {
                     // Handle the exception here
                     Console.WriteLine($"An error occurred: {ex.Message}");
-                    throw; // Optionally rethrow the exception
+                    throw;
                 }
             }
         }
