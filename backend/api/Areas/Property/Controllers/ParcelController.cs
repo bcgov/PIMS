@@ -11,6 +11,7 @@ using Pims.Ltsa;
 using Swashbuckle.AspNetCore.Annotations;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Property.Models.Parcel;
+using LtsaModel = Pims.Core.Http.Models;
 using Microsoft.AspNetCore.Http.Extensions;
 using Pims.Api.Helpers.Extensions;
 using Pims.Api.Helpers.Exceptions;
@@ -58,13 +59,15 @@ namespace Pims.Api.Areas.Property.Controllers
         #region Endpoints
 
         /// <summary>
-        /// Authenticate and get token for LTSA API.
+        /// Retrieves land title information from LTSA for a specific PID.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="pid">The PID (Parcel Identifier) for which land title information is requested.</param>
+        /// <returns>The land title information as a <see cref="LtsaModel.LtsaOrderModel"/>.</returns>
+
         [HttpGet("ltsa/auth")]
         [HasPermission(Permissions.PropertyView)]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Model.LtsaTokenModel), 200)]
+        [ProducesResponseType(typeof(LtsaModel.LtsaOrderModel), 200)]
         [SwaggerOperation(Tags = new[] { "parcel" })]
         public async Task<IActionResult> GetLandTitleInfo(string pid)
         {
