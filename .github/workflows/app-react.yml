@@ -1,10 +1,29 @@
-name: APP (React)
+name: APP (React 18)
 
 on:
   push:
-    branches: [master, dev]
+    branches: [dev]
+    paths:
+      - 'frontend/**' # Triggers on changes to files in the frontend/ directory.
+      - '!frontend/cypress/**' # Will not trigger on changes to the following.
+      - '!frontend/cypress.config.*'
+      - '!frontend/.eslintrc.*'
+      - '!frontend/.prettierrc.*'
+      - '!frontend/Dockerfile*'
+      - '!frontend/nginx.conf'
+      - '!frontend/vite.config.*'
   pull_request:
-    branches: [master, dev]
+    types: [opened, synchronize] # Triggered by opened or changed pull requests.
+    branches: [dev]
+    paths:
+      - 'frontend/**' # Triggers on changes to files in the frontend/ directory.
+      - '!frontend/cypress/**' # Will not trigger on changes to the following.
+      - '!frontend/cypress.config.*'
+      - '!frontend/.eslintrc.*'
+      - '!frontend/.prettierrc.*'
+      - '!frontend/Dockerfile*'
+      - '!frontend/nginx.conf'
+      - '!frontend/vite.config.*'
 
 jobs:
   build:
