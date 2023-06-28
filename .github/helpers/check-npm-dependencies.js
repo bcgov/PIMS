@@ -98,7 +98,8 @@ const checkVersions = async (dependencyList) => {
           const filteredLatestVersions = versions.filter((item) => !item.includes('-'));
           const latestVersion = filteredLatestVersions[filteredLatestVersions.length - 1];
 
-          saveDependencyResults(dependencyList, dependency, version, latestVersion);
+          if (latestVersion !== version)
+            saveDependencyResults(dependencyList, dependency, version, latestVersion);
         }
       }
     } catch (error) {
