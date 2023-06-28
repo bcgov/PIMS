@@ -28,7 +28,7 @@
   "dependencies": {
     "@babel/core": "7.22.5",
     "@bcgov/bc-sans": "1.0.1",
-    "@emotion/react": "11.11.0",
+    "@emotion/react": "11.11.1",
     "@emotion/styled": "11.11.0",
     "@mui/icons-material": "5.11.16",
     "@mui/material": "5.13.1",
