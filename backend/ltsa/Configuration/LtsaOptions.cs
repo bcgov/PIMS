@@ -29,12 +29,12 @@ namespace Pims.Ltsa.Configuration
         /// <summary>
         /// get/set - The LTSA integrator username.
         /// </summary>
-        public string Integrator_Username { get; set; }
+        public string IntegratorUsername { get; set; }
 
         /// <summary>
         /// get/set - The API integrator password.
         /// </summary>
-        public string Integrator_Password { get; set; }
+        public string IntegratorPassword { get; set; }
         #endregion
     }
 }

@@ -2,7 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <OutputType>Library</OutputType>
+    <Version>1.0.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <ProjectGuid>4DB543FF-19CF-4FA8-B772-2AE7E6721F86</ProjectGuid>
   </PropertyGroup>
 
     <ItemGroup>

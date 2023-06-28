@@ -1,26 +1,20 @@
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pims.Ltsa.Configuration;
-using Pims.Core.Exceptions;
-using Pims.Core.Extensions;
 using Pims.Core.Http;
 using Pims.Core.Http.Models;
 using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using System.Net;
+using System.Net.Http;
 
 namespace Pims.Ltsa
 {
     public class LtsaService : ILtsaService
     {
         #region Variables
-        // private LtsaTokenModel _token = null;  <---- TODO - may not need a refresh token
-        private readonly JwtSecurityTokenHandler _tokenHandler;
-        private readonly ILogger<ILtsaService> _logger;
         private readonly IConfiguration _configuration;
         #endregion
 
@@ -36,13 +30,10 @@ namespace Pims.Ltsa
         /// <param name="options"></param>
         /// <param name="client"></param>
         /// <param name="tokenHandler"></param>
-        /// <param name="logger"></param>
-        public LtsaService(IOptions<LtsaOptions> options, IHttpRequestClient client, JwtSecurityTokenHandler tokenHandler, ILogger<ILtsaService> logger, IConfiguration configuration)
+        public LtsaService(IOptions<LtsaOptions> options, IHttpRequestClient client, IConfiguration configuration)
         {
             this.Options = options.Value;
             this.Client = client;
-            _tokenHandler = tokenHandler;
-            _logger = logger;
             _configuration = configuration;
         }
         #endregion
@@ -69,19 +60,6 @@ namespace Pims.Ltsa
             return $"{this.Options.HostUri}";
         }
 
-        /// <summary>
-        /// Ensure we have an active access token.
-        /// Make an HTTP request if one is needed.
-        /// </summary>
-        /// <returns></returns>
-        // private async Task RefreshAccessTokenAsync()
-        // {
-        //     // Check if token has expired.  If it has refresh it.
-        //     if (_token == null || String.IsNullOrWhiteSpace(_token.AccessToken) || _tokenHandler.ReadJwtToken(_token.AccessToken).ValidTo <= DateTime.UtcNow)
-        //     {
-        //         _token = await GetTokenAsync();
-        //     }
-        // }
         // Custom exception class for LTSAApi errors
         public class LTSAApiException : Exception
         {
@@ -125,52 +103,51 @@ namespace Pims.Ltsa
         }
 
         /// <summary>
-        /// Make an HTTP request to LTSA to get an access token for the specified parcel id.
+        /// Makes an HTTP request to LTSA to get an access token for the specified parcel id.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="pid">The parcel id for which to retrieve the access token.</param>
+        /// <returns>The access token as a LtsaTokenModel.</returns>
         public async Task<LtsaTokenModel> GetTokenAsync(string pid)
         {
             var url = AuthenticateUrl();
-            var headers = new HttpRequestMessage().Headers;
-            string integratorUsername = _configuration.GetValue<string>("Ltsa_Integrator_Username");
-            string integratorPassword = _configuration.GetValue<string>("Ltsa_Integrator_Password");
-            string myLtsaUserName = _configuration.GetValue<string>("Ltsa_UserName");
-            string myLtsaUserPassword = _configuration.GetValue<string>("Ltsa_UserPassword");
+            string integratorUsername = _configuration["Ltsa:IntegratorUsername"];
+            string integratorPassword = _configuration["Ltsa:IntegratorPassword"];
+            string myLtsaUserName = _configuration["Ltsa:UserName"];
+            string myLtsaUserPassword = _configuration["Ltsa:UserPassword"];
+            LtsaTokenModel token;
 
-            using (HttpClient client = new HttpClient())
+            var credentials = new
             {
-                var jsonObject = new
+                integratorUsername,
+                integratorPassword,
+                myLtsaUserName,
+                myLtsaUserPassword
+            };
+
+            string json = JsonSerializer.Serialize(credentials);
+
+            try
+            {
+                using var content = new StringContent(json, Encoding.UTF8, "application/json");
+                using HttpResponseMessage response = await this.Client.SendAsync(url, HttpMethod.Post, content);
+                if (!response.IsSuccessStatusCode)
                 {
-                    integratorUsername,
-                    integratorPassword,
-                    myLtsaUserName,
-                    myLtsaUserPassword
-                };
+                    throw new HttpRequestException("Unable to get token from LTSA. Status code: " + response.StatusCode);
+                }
 
-                // Convert the request body to JSON
-                string json = JsonSerializer.Serialize(jsonObject);
-
-                // Create the HttpContent with JSON
-                HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                // Send the POST request
-                HttpResponseMessage response = await client.PostAsync(url, content);
-                // Read the response content as string
                 string responseContent = await response.Content.ReadAsStringAsync();
-                LtsaTokenModel token = JsonSerializer.Deserialize<LtsaTokenModel>(responseContent);
-
-                string accessToken = token.AccessToken;
-                string refreshToken = token.RefreshToken;
-
-                // Create a new instance of LtsaTokenModel
-                var ltsaToken = new LtsaTokenModel
-                {
-                    AccessToken = accessToken,
-                    RefreshToken = refreshToken
-                };
-                return ltsaToken;
+                token = JsonSerializer.Deserialize<LtsaTokenModel>(responseContent);
             }
+            catch (Exception ex)
+            {
+                // Handle the exception here
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                throw;
+            }
+
+            return token;
         }
+
 
         /// <summary>
         /// Retrieves title summaries from the API using the provided access token and parcel identifier.
@@ -186,35 +163,45 @@ namespace Pims.Ltsa
             var queryParams = $"filter=parcelIdentifier:{parcelIdentifier}";
             var requestUrl = $"{apiUrl}?{queryParams}";
 
-            using (HttpClient client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Add("Accept", "application/vnd.ltsa.astra.titleSummaries+json");
-                client.DefaultRequestHeaders.Add("X-Authorization", $"Bearer {accessToken}");
+            var headers = new HttpRequestMessage().Headers;
+            headers.Add("Accept", "application/vnd.ltsa.astra.titleSummaries+json");
+            headers.Add("X-Authorization", $"Bearer {accessToken}");
 
-                try
+            try
+            {
+                HttpResponseMessage response = await this.Client.SendAsync(requestUrl, HttpMethod.Get, headers);
+                if (response.IsSuccessStatusCode)
                 {
-                    HttpResponseMessage response = await client.GetAsync(requestUrl);
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string responseContent = await response.Content.ReadAsStringAsync();
-                        LtsaTitleSummaryResponse responseSummary = JsonSerializer.Deserialize<LtsaTitleSummaryResponse>(responseContent);
-                        return responseSummary;
-                    }
-                    else if (response.StatusCode == HttpStatusCode.NotFound)
-                    {
-                        throw new ParcelNotFoundException("Parcel Id was not found");
-                    }
-                    else
-                    {
-                        throw new LTSAApiException($"Failed to retrieve title summary. Status code: {response.StatusCode}");
-                    }
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                    LtsaTitleSummaryResponse responseSummary = JsonSerializer.Deserialize<LtsaTitleSummaryResponse>(responseContent);
+                    return responseSummary;
                 }
-                catch (Exception ex)
+                else if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    // Handle the exception here
-                    Console.WriteLine($"An error occurred: {ex.Message}");
-                    throw;
+                    throw new ParcelNotFoundException("Parcel Id was not found");
                 }
+                else
+                {
+                    throw new LTSAApiException($"Failed to retrieve title summary. Status code: {response.StatusCode}");
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                // Handle specific HTTP-related exceptions
+                Console.WriteLine($"An HTTP error occurred: {ex.Message}");
+                throw;
+            }
+            catch (LTSAApiException ex)
+            {
+                // Handle specific LTSA API exceptions
+                Console.WriteLine($"An LTSA API error occurred: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                // Handle any other unexpected exceptions
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                throw;
             }
         }
 
@@ -222,52 +209,51 @@ namespace Pims.Ltsa
         /// Makes a POST request to the API to create an order.
         /// </summary>
         /// <param name="accessToken">The access token for authentication.</param>
+        /// <param name="titleNumber">The title number for the order.</param>
+        /// <param name="landTitleDistrictCode">The land title district code for the order.</param>
         /// <returns>The response content as a string.</returns>
         public async Task<LtsaOrderModel> CreateOrderAsync(string accessToken, string titleNumber, string landTitleDistrictCode)
         {
             var apiUrl = HostUri() + "orders";
-            var requestUrl = apiUrl;
 
-            using (HttpClient client = new HttpClient())
+            var headers = new HttpRequestMessage().Headers;
+            headers.Add("Accept", "application/vnd.ltsa.astra.orders+json");
+            headers.Add("X-Authorization", $"Bearer {accessToken}");
+
+            var order = new
             {
-                client.DefaultRequestHeaders.Add("Accept", "application/vnd.ltsa.astra.orders+json");
-                client.DefaultRequestHeaders.Add("X-Authorization", $"Bearer {accessToken}");
-
-                var order = new
+                productType = "title",
+                fileReference = "Test",
+                productOrderParameters = new
                 {
-                    productType = "title",
-                    fileReference = "Test",
-                    productOrderParameters = new
-                    {
-                        titleNumber = titleNumber,
-                        landTitleDistrictCode = landTitleDistrictCode,
-                        includeCancelledInfo = false
-                    }
-                };
-
-                var requestBody = new
-                {
-                    order = order
-                };
-
-                var json = JsonSerializer.Serialize(requestBody);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                try
-                {
-                    HttpResponseMessage response = await client.PostAsync(requestUrl, content);
-                    response.EnsureSuccessStatusCode();
-
-                    string responseContent = await response.Content.ReadAsStringAsync();
-                    LtsaOrderModel responseSummary = JsonSerializer.Deserialize<LtsaOrderModel>(responseContent);
-                    return responseSummary;
+                    titleNumber,
+                    landTitleDistrictCode,
+                    includeCancelledInfo = false
                 }
-                catch (Exception ex)
-                {
-                    // Handle the exception here
-                    Console.WriteLine($"An error occurred: {ex.Message}");
-                    throw;
-                }
+            };
+
+            var requestBody = new
+            {
+                order
+            };
+
+            var json = JsonSerializer.Serialize(requestBody);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            try
+            {
+                HttpResponseMessage response = await this.Client.SendAsync(apiUrl, HttpMethod.Post, headers, content);
+                response.EnsureSuccessStatusCode();
+
+                string responseContent = await response.Content.ReadAsStringAsync();
+                LtsaOrderModel responseSummary = JsonSerializer.Deserialize<LtsaOrderModel>(responseContent);
+                return responseSummary;
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception here
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                throw;
             }
         }
         #endregion
