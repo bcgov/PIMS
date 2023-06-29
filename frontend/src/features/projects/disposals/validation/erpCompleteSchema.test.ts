@@ -98,7 +98,6 @@ describe('erpCompleteSchema', () => {
     const result = erpCompleteSchema.safeParse(data);
     expect(result.success).toBe(false);
     if (!result.success) {
-      console.log('HERE', result.error?.errors);
       expect(result.error?.errors[0].message).toBe('On hold notification required');
     }
   });
