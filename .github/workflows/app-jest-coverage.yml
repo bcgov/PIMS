@@ -19,7 +19,7 @@ jobs:
   codeclimate-jest-coverage:
     runs-on: ubuntu-latest
     env:
-      GIT_BRANCH: ${{ github.head.ref }}
+      GIT_BRANCH: ${{ github.event.pull_request.head.ref }}
       GIT_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
       CC_TEST_REPORTER_ID: 37fdb6f058122c17fc2419b78b02b1d5582694f7cd84a2b735de8eec235e9c5b
 
@@ -33,6 +33,8 @@ jobs:
       # Checkout code from Repo.
       - name: Checkout Repo
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       # Import Code Climate test reporter.
       - name: Import Code Climate
