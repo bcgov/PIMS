@@ -63,6 +63,12 @@ jobs:
         run: |
           npm run coverage
           
+      - name: Echo
+        run: |
+          echo ${{ github.workspace }}
+          cd ${{ github.workspace }}/frontend/coverage
+          ls
+          
       # Use lcov to format coverage for Code Climate.
       # -t is for coverage type
       - name: Format Test Coverage
