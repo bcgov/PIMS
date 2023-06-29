@@ -63,12 +63,14 @@ jobs:
         run: |
           npm run coverage
 
+      # Use lcov to format coverage for Code Climate
+      # -t is for coverage type
+      - name: Format Test Coverage
+        run: |
+          ./cc-test-reporter format-coverage ${{ github.workspace }}/frontend/coverage/lcov.info -t lcov --output ${{ github.workspace }}/frontend/coverage/coverage.json
+
       # Upload coverage to Code Climate.
       # -i is for input, -d for detached
       - name: Upload Coverage
-        env:
-          GIT_BRANCH: ${{ env.GIT_BRANCH }}
-          GIT_COMMIT_SHA: ${{ env.GIT_COMMIT_SHA }}
-          CC_TEST_REPORTER_ID: ${{ env.CC_TEST_REPORTER_ID }}
         run: |
-          ./cc-test-reporter upload-coverage -d -i ${{ github.workspace }}/frontend/coverage/coverage-final.json
+          ./cc-test-reporter upload-coverage -d -i ${{ github.workspace }}/frontend/coverage/coverage.json
