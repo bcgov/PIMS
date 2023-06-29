@@ -118,7 +118,7 @@
     "@types/supercluster": "7.1.0",
     "@types/text-mask-addons": "3.8.1",
     "@typescript-eslint/eslint-plugin": "5.60.0",
-    "@typescript-eslint/parser": "5.59.6",
+    "@typescript-eslint/parser": "5.60.1",
     "axios-mock-adapter": "1.21.5",
     "babel-jest": "29.5.0",
     "cross-env": "7.0.3",
