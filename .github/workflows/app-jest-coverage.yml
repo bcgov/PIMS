@@ -67,8 +67,8 @@ jobs:
       # -i is for input, -d for detached
       - name: Upload Coverage
         env:
-          GIT_BRANCH: ${{ GIT_BRANCH }}
-          GIT_COMMIT_SHA: ${{ GIT_COMMIT_SHA }}
-          CC_TEST_REPORTER_ID: ${{ CC_TEST_REPORTER_ID }}
+          GIT_BRANCH: ${{ env.GIT_BRANCH }}
+          GIT_COMMIT_SHA: ${{ env.GIT_COMMIT_SHA }}
+          CC_TEST_REPORTER_ID: ${{ env.CC_TEST_REPORTER_ID }}
         run: |
           ./cc-test-reporter upload-coverage -d -i ${{ github.workspace }}/frontend/coverage/coverage-final.json
