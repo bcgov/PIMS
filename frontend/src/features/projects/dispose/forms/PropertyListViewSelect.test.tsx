@@ -1,4 +1,4 @@
-import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
@@ -115,28 +115,31 @@ const store = mockStore({
 const setPageIndex = jest.fn().mockReturnValue(0);
 
 describe('Property List View Select', () => {
+  beforeAll(() => {
+    (global as any).IS_REACT_ACT_ENVIRONMENT = false;
+  });
   afterEach(() => {
     cleanup();
   });
 
   it('renders correctly', () => {
-    act(() => {
-      const { container } = render(
-        <Provider store={store}>
-          <MemoryRouter initialEntries={[history.location]}>
-            <Formik initialValues={{ properties: testData.items }} onSubmit={noop}>
-              <PropertyListViewSelect
-                setPageIndex={setPageIndex}
-                pageIndex={0}
-                filter={filter}
-                field="properties"
-              />
-            </Formik>
-          </MemoryRouter>
-        </Provider>,
-      );
-      expect(container.firstChild).toMatchSnapshot();
-    });
+    //act(() => {
+    const { container } = render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[history.location]}>
+          <Formik initialValues={{ properties: testData.items }} onSubmit={noop}>
+            <PropertyListViewSelect
+              setPageIndex={setPageIndex}
+              pageIndex={0}
+              filter={filter}
+              field="properties"
+            />
+          </Formik>
+        </MemoryRouter>
+      </Provider>,
+    );
+    expect(container.firstChild).toMatchSnapshot();
+    //});
   });
 
   it('removes property from project', () => {
@@ -156,17 +159,17 @@ describe('Property List View Select', () => {
     );
     const checkbox = container.querySelector('input[title="Toggle Row Selected"]');
     const remove = getByText('Remove Selected');
-    act(() => {
-      waitFor(() => {
-        expect(queryByText('Test, Alert Bay')).toBeInTheDocument();
-      });
-
-      waitFor(() => fireEvent.click(checkbox!));
-      waitFor(() => fireEvent.click(remove!));
-
-      waitFor(() => {
-        expect(queryByText('Test, Alert Bay')).toBeNull();
-      });
+    //act(() => {
+    waitFor(() => {
+      expect(queryByText('Test, Alert Bay')).toBeInTheDocument();
     });
+
+    waitFor(() => fireEvent.click(checkbox!));
+    waitFor(() => fireEvent.click(remove!));
+
+    waitFor(() => {
+      expect(queryByText('Test, Alert Bay')).toBeNull();
+    });
+    //});
   });
 });
