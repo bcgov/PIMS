@@ -54,7 +54,7 @@ exports[`building review page renders correctly 1`] = `
               <div style=\\"border-left: 1px solid black; height: 30px; margin-right: 20px;\\"></div>
             </div>
             <div class=\\"col-md-auto\\">
-              <div class=\\"sc-gFqAkR ksGqHI GeocoderAutoComplete\\">
+              <div class=\\"sc-gUMnWI fDtmAO GeocoderAutoComplete\\">
                 <div class=\\"required\\">
                   <div><input name=\\"address.line1\\" disabled=\\"\\" required=\\"\\" field=\\"address.line1\\" id=\\"input-address.line1\\" class=\\"form-control\\" value=\\"\\"></div>
                 </div>
