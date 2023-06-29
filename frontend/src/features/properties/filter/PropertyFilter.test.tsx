@@ -130,6 +130,9 @@ const getUiElement = (filter: IPropertyFilter) => (
 );
 
 describe('MapFilterBar', () => {
+  beforeAll(() => {
+    (global as any).IS_REACT_ACT_ENVIRONMENT = false;
+  });
   afterEach(() => {
     cleanup();
   });
@@ -164,7 +167,7 @@ describe('MapFilterBar', () => {
 
     // Act
     // Enter values on the form fields, then click the Search button
-    await waitFor(() => {
+    waitFor(() => {
       fireEvent.change(address!, {
         target: {
           value: 'mockaddress',
@@ -172,7 +175,7 @@ describe('MapFilterBar', () => {
       });
     });
 
-    await waitFor(() => {
+    waitFor(() => {
       fireEvent.change(agencies!, {
         target: {
           value: '2',
@@ -180,7 +183,7 @@ describe('MapFilterBar', () => {
       });
     });
 
-    await waitFor(() => {
+    waitFor(() => {
       fireEvent.change(classificationId!, {
         target: {
           value: '0',
@@ -188,7 +191,7 @@ describe('MapFilterBar', () => {
       });
     });
 
-    await waitFor(() => {
+    waitFor(() => {
       fireEvent.change(minLotSize!, {
         target: {
           value: '1',
@@ -196,7 +199,7 @@ describe('MapFilterBar', () => {
       });
     });
 
-    await waitFor(() => {
+    waitFor(() => {
       fireEvent.change(maxLotSize!, {
         target: {
           value: '3',
@@ -204,11 +207,11 @@ describe('MapFilterBar', () => {
       });
     });
 
-    await waitFor(() => {
+    waitFor(() => {
       fireEvent.click(inSurplusPropertyProgram!);
     });
 
-    await waitFor(() => {
+    waitFor(() => {
       fireEvent.click(submit!);
     });
 

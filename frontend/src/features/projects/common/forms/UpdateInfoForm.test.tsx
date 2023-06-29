@@ -1,4 +1,4 @@
-import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { ProjectActions } from 'constants/actionTypes';
@@ -114,6 +114,9 @@ const getUpdateInfoForm = () => {
 };
 
 describe('Update Info Form', () => {
+  beforeAll(() => {
+    (global as any).IS_REACT_ACT_ENVIRONMENT = false;
+  });
   afterEach(() => {
     cleanup();
   });
@@ -132,12 +135,10 @@ describe('Update Info Form', () => {
     const classificationId = container.querySelector(
       'select[name="properties.0.classificationId"]',
     );
-    act(() => {
-      fireEvent.change(classificationId!, {
-        target: {
-          value: Classifications.CoreOperational,
-        },
-      });
+    fireEvent.change(classificationId!, {
+      target: {
+        value: Classifications.CoreOperational,
+      },
     });
     waitFor(() => {
       expect(getByText('Must select Surplus Active or Surplus Encumbered')).toBeVisible();
