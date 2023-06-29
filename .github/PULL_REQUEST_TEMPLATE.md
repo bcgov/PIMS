@@ -9,11 +9,11 @@ Example: PIMS-700: A great ticket
 <!-- EDIT JIRA LINK BELOW -->  
 [PIMS-###: ](https://apps.itsm.gov.bc.ca/jira/browse/PIMS-###)
 
-<!-- PROVIDE BELOW an explaination of your changes -->
+<!-- PROVIDE BELOW an explanation of your changes -->
 
-<!-- PROVIDE ABOVE an explaination of your changes -->
+<!-- PROVIDE ABOVE an explanation of your changes -->
 
-## 📝 Checklist
+## ☑️ Checklist
 
 - [ ] I have read and agree with the following checklist and am following the guidelines in our [Code of Conduct](CODE_OF_CONDUCT.md) document.
 
