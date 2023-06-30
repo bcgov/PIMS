@@ -8,14 +8,11 @@ export const informationProjectSchema = z
   .object({
     projectNumber: z.string().refine((value) => value.length > 0, 'Project Number required'),
     name: z.string().refine((value) => value.length > 0, 'Project name required'),
-    agencyId: z.string().optional(),
+    agencyId: z.string().or(z.number()).optional(),
     statusCode: workflowStatusEnum,
     approvedOn: z
       .string()
-      .refine(
-        (value) => moment(value, 'YYYY-MM-DD', true).isValid(),
-        'Project approved on required',
-      ),
+      .refine((value) => moment(value, 'YYYY/MM/DD').isValid(), 'Project approved on required'),
     reportedFiscalYear: z
       .number()
       .refine((value) => value >= 1, 'Project reported fiscal year required'),

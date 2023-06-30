@@ -17,6 +17,7 @@ export const erpCompleteSchema = z
     originalStatusCode: workflowStatusEnum,
   })
   .superRefine((data, ctx) => {
+    console.log('HERE', data.clearanceNotificationSentOn);
     const isErpWorkflow = data.workflowCode === Workflow.ERP;
     const isAssessExemptionWorkflow = data.workflowCode === Workflow.ASSESS_EXEMPTION;
     const isAssessExDisposalWorkflow = data.workflowCode === Workflow.ASSESS_EX_DISPOSAL;

@@ -3,7 +3,7 @@ import moment from 'moment';
 import { z } from 'zod';
 
 export const dateCheck = (val: any) =>
-  val !== 'invalid-date' && typeof val === 'string' && moment(val, moment.ISO_8601, true).isValid();
+  val !== 'invalid-date' && typeof val === 'string' && moment(val).isValid();
 
 export const splApprovalSchema = z
   .object({

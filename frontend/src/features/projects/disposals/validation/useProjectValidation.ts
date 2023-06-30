@@ -32,26 +32,23 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
 
   return async (values: IProjectForm): Promise<FormikErrors<IProjectForm>> => {
     let errors: FormikErrors<IProjectForm> = {};
-    let hasErrors = false;
     const { workflowCode, statusCode, originalWorkflowCode, originalStatusCode } = values;
 
     errors = {
       ...errors,
       ...(await handleErrors(values, errors, informationProjectSchema, () => {
         navigate(`/projects/disposal/${id}/information`);
-        hasErrors = true;
       })),
     };
-    if (hasErrors) return errors;
+    if (Object.keys(errors).length > 0) return errors;
 
     errors = {
       ...errors,
       ...(await handleErrors(values, errors, informationPropertiesSchema, () => {
         navigate(`/projects/disposal/${id}/information/properties`);
-        hasErrors = true;
       })),
     };
-    if (hasErrors) return errors;
+    if (Object.keys(errors).length > 0) return errors;
 
     try {
       if (!values.tasks[0].isCompleted) {
@@ -63,7 +60,6 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
             'Surplus Declaration & Readiness Checklist document required',
           ),
         };
-        hasErrors = true;
       }
       if (!values.tasks[1].isCompleted) {
         errors = {
@@ -74,7 +70,6 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
             'Triple Bottom Line document emailed to SRES required',
           ),
         };
-        hasErrors = true;
       }
       // When disposing an appraisal is required.
       if (
@@ -91,18 +86,17 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
             ...setIn(errors, `tasks.${index}.isCompleted`, `${t.name} required`),
           };
         });
-        if (tasks.length) hasErrors = true;
       }
 
       documentationSchema.parse(values);
-      if (hasErrors) {
+      if (Object.keys(errors).length > 0) {
         navigate(`/projects/disposal/${id}/documentation`);
         return errors;
       }
     } catch (err) {
       errors = {
         ...errors,
-        ...(err as any).inner.reduce((formError: any, innerError: any) => {
+        ...(err as any).inner?.reduce((formError: any, innerError: any) => {
           return setIn(formError, innerError.path, innerError.message);
         }, {}),
       };
@@ -115,7 +109,6 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
       ...errors,
       ...(await handleErrors(values, errors, erpExemptionSchema, () => {
         navigate(`/projects/disposal/${id}/erp/exemption`);
-        hasErrors = true;
       })),
     };
 
@@ -123,10 +116,9 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
       ...errors,
       ...(await handleErrors(values, errors, erpCompleteSchema, () => {
         navigate(`/projects/disposal/${id}/erp/complete`);
-        hasErrors = true;
       })),
     };
-    if (hasErrors) return errors;
+    if (Object.keys(errors).length > 0) return errors;
 
     if (
       (workflowCode === Workflow.ERP ||
@@ -138,10 +130,9 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
         ...errors,
         ...(await handleErrors(values, errors, erpDisposedSchema, () => {
           navigate(`/projects/disposal/${id}/erp/disposed`);
-          hasErrors = true;
         })),
       };
-      if (hasErrors) return errors;
+      if (Object.keys(errors).length > 0) return errors;
     }
 
     if (
@@ -152,10 +143,9 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
         ...errors,
         ...(await handleErrors(values, errors, notSplSchema, () => {
           navigate(`/projects/disposal/${id}/not/spl`);
-          hasErrors = true;
         })),
       };
-      if (hasErrors) return errors;
+      if (Object.keys(errors).length > 0) return errors;
     }
 
     if (originalWorkflowCode === Workflow.SPL) {
@@ -163,39 +153,34 @@ export const useProjectValidation = ({ id }: IProjectValidationProps) => {
         ...errors,
         ...(await handleErrors(values, errors, splApprovalSchema, () => {
           navigate(`/projects/disposal/${id}/spl`);
-          hasErrors = true;
         })),
       };
-      if (hasErrors) return errors;
+      if (Object.keys(errors).length > 0) return errors;
 
       errors = {
         ...errors,
         ...(await handleErrors(values, errors, splMarketingSchema, () => {
           navigate(`/projects/disposal/${id}/spl/marketing`);
-          hasErrors = true;
         })),
       };
-      if (hasErrors) return errors;
+      if (Object.keys(errors).length > 0) return errors;
 
       errors = {
         ...errors,
         ...(await handleErrors(values, errors, splContractInPlaceSchema, () => {
           navigate(`/projects/disposal/${id}/spl/contract/in/place`);
-          hasErrors = true;
         })),
       };
-      if (hasErrors) return errors;
+      if (Object.keys(errors).length > 0) return errors;
 
       errors = {
         ...errors,
         ...(await handleErrors(values, errors, splTransferWithinGRESchema, () => {
           navigate(`/projects/disposal/${id}/spl/transfer/within/gre`);
-          hasErrors = true;
         })),
       };
-      if (hasErrors) return errors;
+      if (Object.keys(errors).length > 0) return errors;
     }
-
     return errors;
   };
 };
@@ -207,7 +192,7 @@ const handleErrors = async (
   redirect: () => void,
 ) => {
   try {
-    await schema.validate(values, { abortEarly: false });
+    schema.parse(values);
   } catch (err) {
     errors = {
       ...errors,
@@ -215,14 +200,16 @@ const handleErrors = async (
     };
 
     if (typeof redirect === 'function') redirect();
-    return errors;
   }
-
   return errors;
 };
 
 const applyErrors = (exception: any) => {
-  return exception.inner.reduce((formError: any, innerError: any) => {
-    return setIn(formError, innerError.path, innerError.message);
+  if (!exception.errors) {
+    return {};
+  }
+
+  return exception.errors?.reduce((formError: any, error: any) => {
+    return setIn(formError, error.path.join('.'), error.message);
   }, {});
 };
