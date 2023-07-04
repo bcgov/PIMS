@@ -21,7 +21,7 @@
     "docu:server": "npx styleguidist server"
   },
   "dependencies": {
-    "@babel/core": "7.22.5",
+    "@babel/core": "7.22.6",
     "@bcgov/bc-sans": "1.0.1",
     "@emotion/react": "11.11.0",
     "@emotion/styled": "11.11.0",
