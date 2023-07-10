@@ -1,31 +1,24 @@
-![DESCRIPTION]
-<!-- Please include a summary of the changes. -->
+<!--  
+PR Title format:  
+JIRA_BOARD_ABBREVIATION-JIRA_TASK_NUMBER: TITLE_OF_JIRA_TASK  
+Example: PIMS-700: A great ticket                                       
+-->  
 
-I have made changes to...
+## 🎯 Summary
 
-<br />
+<!-- EDIT JIRA LINK BELOW -->  
+[PIMS-###: ](https://apps.itsm.gov.bc.ca/jira/browse/PIMS-###)
 
-![TICKETS_AND_ISSUES]
-<!-- Please list all jira tickets and github issues associated with this pull request. -->
+<!-- PROVIDE BELOW an explanation of your changes -->
 
-- [PIMS-000: Ticket Title Goes Here](https://apps.itsm.gov.bc.ca/jira/browse/PIMS-000)
+<!-- PROVIDE ABOVE an explanation of your changes -->
 
+## ☑️ Checklist
 
-<br />
+- [ ] I have read and agree with the following checklist and am following the guidelines in our [Code of Conduct](CODE_OF_CONDUCT.md) document.
 
-![CHECKLIST]
-
-- [ ] I have read and agree with the following checklist:
-
-```
-- I have performed a self-review of my own code.  
-- I have commented my code, particularly in hard-to-understand areas.  
-- I have made corresponding changes to the documentation where required.  
-- I have tested my changes.  
-- My changes generate no new warnings.  
-```
-
-<!-- REFERENCES -->
-[DESCRIPTION]: https://img.shields.io/badge/description-orange?style=for-the-badge
-[TICKETS_AND_ISSUES]: https://img.shields.io/badge/tickets_&_issues-blue?style=for-the-badge
-[CHECKLIST]: https://img.shields.io/badge/checklist-gold?style=for-the-badge
+> - I have performed a self-review of my code.
+> - I have commented my code, particularly in hard-to-understand areas.
+> - I have made corresponding changes to the documentation where required.
+> - I have tested my changes to the best of my ability.
+> - My changes generate no new warnings.
