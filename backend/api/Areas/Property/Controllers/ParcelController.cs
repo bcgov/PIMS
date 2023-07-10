@@ -10,7 +10,6 @@ using Pims.Dal.Security;
 using Swashbuckle.AspNetCore.Annotations;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Property.Models.Parcel;
-using LtsaModel = Pims.Core.Http.Models;
 using Microsoft.AspNetCore.Http.Extensions;
 using Pims.Api.Helpers.Extensions;
 using Pims.Api.Helpers.Exceptions;
