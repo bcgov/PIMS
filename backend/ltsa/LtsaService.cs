@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Pims.Ltsa.Configuration;
+using Pims.Core.Exceptions;
 using Pims.Core.Http;
 using Pims.Core.Http.Models;
 using System;
@@ -15,7 +16,7 @@ namespace Pims.Ltsa
     public class LtsaService : ILtsaService
     {
         #region Variables
-        private readonly IConfiguration _configuration;
+        //private readonly IConfiguration _configuration;
         #endregion
 
         #region Properties
@@ -30,11 +31,11 @@ namespace Pims.Ltsa
         /// <param name="options"></param>
         /// <param name="client"></param>
         /// <param name="tokenHandler"></param>
-        public LtsaService(IOptions<LtsaOptions> options, IHttpRequestClient client, IConfiguration configuration)
+        public LtsaService(IOptions<LtsaOptions> options, IHttpRequestClient client) //, IConfiguration configuration)
         {
             this.Options = options.Value;
             this.Client = client;
-            _configuration = configuration;
+            //_configuration = configuration;
         }
         #endregion
 
@@ -110,11 +111,11 @@ namespace Pims.Ltsa
         public async Task<LtsaTokenModel> GetTokenAsync(string pid)
         {
             var url = AuthenticateUrl();
-            string integratorUsername = _configuration["Ltsa:IntegratorUsername"];
-            string integratorPassword = _configuration["Ltsa:IntegratorPassword"];
-            string myLtsaUserName = _configuration["Ltsa:UserName"];
-            string myLtsaUserPassword = _configuration["Ltsa:UserPassword"];
-            LtsaTokenModel token;
+            string integratorUsername = this.Options.IntegratorUsername; // _configuration["Ltsa:IntegratorUsername"];
+            string integratorPassword = this.Options.IntegratorPassword; // _configuration["Ltsa:IntegratorPassword"];
+            string myLtsaUserName = this.Options.UserName; // _configuration["Ltsa:UserName"];
+            string myLtsaUserPassword = this.Options.UserPassword; // _configuration["Ltsa:UserPassword"];
+            //LtsaTokenModel token;
 
             var credentials = new
             {
@@ -125,27 +126,17 @@ namespace Pims.Ltsa
             };
 
             string json = JsonSerializer.Serialize(credentials);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             try
             {
-                using var content = new StringContent(json, Encoding.UTF8, "application/json");
-                using HttpResponseMessage response = await this.Client.SendAsync(url, HttpMethod.Post, content);
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new HttpRequestException("Unable to get token from LTSA. Status code: " + response.StatusCode);
-                }
-
-                string responseContent = await response.Content.ReadAsStringAsync();
-                token = JsonSerializer.Deserialize<LtsaTokenModel>(responseContent);
+                return await this.Client.SendAsync<LtsaTokenModel>(url, HttpMethod.Post, content);
             }
-            catch (Exception ex)
+            catch (HttpClientRequestException ex)
             {
-                // Handle the exception here
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                throw;
+                Console.WriteLine($"Unable to get token from LTSA: {ex.Message}");
+                throw new LTSAApiException(ex.Message);
             }
-
-            return token;
         }
 
 
@@ -155,7 +146,7 @@ namespace Pims.Ltsa
         /// <param name="accessToken">The access token for authentication.</param>
         /// <param name="parcelIdentifier">The parcel identifier for filtering the results.</param>
         /// <returns>The response content as a string.</returns>
-        private async Task<LtsaTitleSummaryResponse> GetTitleSummary(string accessToken, string parcelIdentifier)
+        public async Task<LtsaTitleSummaryResponse> GetTitleSummary(string accessToken, string parcelIdentifier)
         {
             // Set the API endpoint URL
             var apiUrl = HostUri() + "titleSummaries";
@@ -169,39 +160,12 @@ namespace Pims.Ltsa
 
             try
             {
-                HttpResponseMessage response = await this.Client.SendAsync(requestUrl, HttpMethod.Get, headers);
-                if (response.IsSuccessStatusCode)
-                {
-                    string responseContent = await response.Content.ReadAsStringAsync();
-                    LtsaTitleSummaryResponse responseSummary = JsonSerializer.Deserialize<LtsaTitleSummaryResponse>(responseContent);
-                    return responseSummary;
-                }
-                else if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    throw new ParcelNotFoundException("Parcel Id was not found");
-                }
-                else
-                {
-                    throw new LTSAApiException($"Failed to retrieve title summary. Status code: {response.StatusCode}");
-                }
+                return await this.Client.SendAsync<LtsaTitleSummaryResponse>(requestUrl, HttpMethod.Get, headers);
             }
-            catch (HttpRequestException ex)
+            catch (HttpClientRequestException ex)
             {
-                // Handle specific HTTP-related exceptions
-                Console.WriteLine($"An HTTP error occurred: {ex.Message}");
-                throw;
-            }
-            catch (LTSAApiException ex)
-            {
-                // Handle specific LTSA API exceptions
-                Console.WriteLine($"An LTSA API error occurred: {ex.Message}");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                // Handle any other unexpected exceptions
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                throw;
+                Console.WriteLine($"An HttpClientRequestException occurred: {ex.Message}");
+                throw new LTSAApiException($"Failed to retrieve title summary. Status code: {ex.Message}");
             }
         }
 
