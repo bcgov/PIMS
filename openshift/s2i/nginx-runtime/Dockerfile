@@ -1,5 +1,5 @@
 # Use the offical nginx (based on debian)
-FROM nginx:stable-alpine-slim
+FROM nginx:1-alpine3.17-slim
 
 ENV STI_SCRIPTS_PATH=/usr/libexec/s2i
 
