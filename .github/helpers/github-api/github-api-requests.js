@@ -3,7 +3,10 @@
  * @author Brady Mitchell <braden.jr.mitch@gmail.com | braden.mitchell@gov.bc.ca>
  * API Documentation: https://octokit.github.io/rest.js/v19#usage
  *
- * - Be sure to include these env variables.
+ * THIS FILE DOES NOT NEED TO BE EDITED, but you can add more functions if desired.
+ * Place within .github/helpers/github-api/
+ *
+ * - Be sure to include the env variables from below!
  *
  * @example GitHub Actions Workflow:
  * jobs:
