@@ -13,7 +13,7 @@ Example: PIMS-700: A great ticket
 
 <!-- PROVIDE ABOVE an explanation of your changes -->
 
-## ☑️ Checklist
+## 🔰 Checklist
 
 - [ ] I have read and agree with the following checklist and am following the guidelines in our [Code of Conduct](CODE_OF_CONDUCT.md) document.
 
