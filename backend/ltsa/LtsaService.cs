@@ -96,10 +96,10 @@ namespace Pims.Ltsa
         public async Task<LtsaTokenModel> GetTokenAsync(string pid)
         {
             var url = AuthenticateUrl();
-            string integratorUsername = this.Options.IntegratorUsername; 
+            string integratorUsername = this.Options.IntegratorUsername;
             string integratorPassword = this.Options.IntegratorPassword;
-            string myLtsaUserName = this.Options.UserName; 
-            string myLtsaUserPassword = this.Options.UserPassword; 
+            string myLtsaUserName = this.Options.UserName;
+            string myLtsaUserPassword = this.Options.UserPassword;
 
             var credentials = new
             {

@@ -360,7 +360,7 @@ namespace Pims.Dal.Test.Libraries.Ltsa
         {
             // Arrange
             var helper = new TestHelper();
-           // var controller = helper.CreateController<LtsaController>(Permissions.PropertyEdit);
+            // var controller = helper.CreateController<LtsaController>(Permissions.PropertyEdit);
 
             var user = PrincipalHelper.CreateForPermission();
 
@@ -527,7 +527,7 @@ namespace Pims.Dal.Test.Libraries.Ltsa
 
             // Assert
             result.Should().NotBeNull();
-          //  result.Should().BeEquivalentTo(expectedOrder);
+            //  result.Should().BeEquivalentTo(expectedOrder);
         }
         #endregion
         #region
