@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Pims.Ltsa.Configuration;
 using Pims.Core.Exceptions;
@@ -8,17 +7,12 @@ using System;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Net;
 using System.Net.Http;
 
 namespace Pims.Ltsa
 {
     public class LtsaService : ILtsaService
     {
-        #region Variables
-        //private readonly IConfiguration _configuration;
-        #endregion
-
         #region Properties
         protected IHttpRequestClient Client { get; }
         public LtsaOptions Options { get; }
@@ -35,7 +29,6 @@ namespace Pims.Ltsa
         {
             this.Options = options.Value;
             this.Client = client;
-            //_configuration = configuration;
         }
         #endregion
 
@@ -65,14 +58,6 @@ namespace Pims.Ltsa
         public class LTSAApiException : Exception
         {
             public LTSAApiException(string message) : base(message)
-            {
-            }
-        }
-
-        // Custom exception class for parcel not found
-        public class ParcelNotFoundException : Exception
-        {
-            public ParcelNotFoundException(string message) : base(message)
             {
             }
         }
@@ -111,11 +96,10 @@ namespace Pims.Ltsa
         public async Task<LtsaTokenModel> GetTokenAsync(string pid)
         {
             var url = AuthenticateUrl();
-            string integratorUsername = this.Options.IntegratorUsername; // _configuration["Ltsa:IntegratorUsername"];
-            string integratorPassword = this.Options.IntegratorPassword; // _configuration["Ltsa:IntegratorPassword"];
-            string myLtsaUserName = this.Options.UserName; // _configuration["Ltsa:UserName"];
-            string myLtsaUserPassword = this.Options.UserPassword; // _configuration["Ltsa:UserPassword"];
-            //LtsaTokenModel token;
+            string integratorUsername = this.Options.IntegratorUsername; 
+            string integratorPassword = this.Options.IntegratorPassword;
+            string myLtsaUserName = this.Options.UserName; 
+            string myLtsaUserPassword = this.Options.UserPassword; 
 
             var credentials = new
             {
@@ -164,8 +148,8 @@ namespace Pims.Ltsa
             }
             catch (HttpClientRequestException ex)
             {
-                Console.WriteLine($"An HttpClientRequestException occurred: {ex.Message}");
-                throw new LTSAApiException($"Failed to retrieve title summary. Status code: {ex.Message}");
+                Console.WriteLine($"Failed to retrieve title summary for parcel id: {parcelIdentifier}. Status code: {ex.Message}");
+                throw new LTSAApiException($"Failed to retrieve title summary for parcel id: {parcelIdentifier}. Status code: {ex.Message}");
             }
         }
 
@@ -206,18 +190,13 @@ namespace Pims.Ltsa
 
             try
             {
-                HttpResponseMessage response = await this.Client.SendAsync(apiUrl, HttpMethod.Post, headers, content);
-                response.EnsureSuccessStatusCode();
-
-                string responseContent = await response.Content.ReadAsStringAsync();
-                LtsaOrderModel responseSummary = JsonSerializer.Deserialize<LtsaOrderModel>(responseContent);
-                return responseSummary;
+                return await this.Client.SendAsync<LtsaOrderModel>(apiUrl, HttpMethod.Post, headers, content);
             }
-            catch (Exception ex)
+            catch (HttpClientRequestException ex)
             {
                 // Handle the exception here
                 Console.WriteLine($"An error occurred: {ex.Message}");
-                throw;
+                throw new LTSAApiException($"Failed to create an order. An error occurred during the HTTP request. {ex.Message}");
             }
         }
         #endregion
