@@ -44,6 +44,7 @@ export const defaultAddressValues: IAddress = {
   provinceId: 'BC',
   postal: '',
 };
+
 const AddressForm = <T,>(props: AddressProps & FormikProps<T>) => {
   const lookupCodes = useAppSelector((store) => store.lookupCode.lookupCodes);
   const provinces = _.filter(lookupCodes, (lookupCode: ILookupCode) => {

@@ -76,10 +76,12 @@ const FormFooter = styled.div`
   display: flex;
   width: 100%;
   height: 70px;
+  padding-left: 10px;
   align-items: center;
   position: sticky;
   background-color: ${variables.filterBackgroundColor};
   bottom: -20px;
+  border-top: 10px solid white;
 `;
 
 const FillRemainingSpace = styled.span`

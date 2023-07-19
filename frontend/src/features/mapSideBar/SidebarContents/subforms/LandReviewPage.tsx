@@ -1,5 +1,7 @@
 import './LandReviewPage.scss';
 
+import { Box, Divider, Grid, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { ILookupCode } from 'actions/ILookupCode';
 import { IBuilding } from 'actions/parcelsActions';
 import {
   Check,
@@ -8,26 +10,30 @@ import {
   FastSelect,
   Input,
   InputGroup,
+  Select,
   TextArea,
 } from 'components/common/form';
 import { ParentSelect } from 'components/common/form/ParentSelect';
+import { TypeaheadField } from 'components/common/form/Typeahead';
 import { BuildingSvg, LandSvg } from 'components/common/Icons';
 import { Label } from 'components/common/Label';
 import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectNumberLink';
+import * as API from 'constants/API';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { FormikTable } from 'features/projects/common';
-import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
 import { getAssociatedBuildingsCols } from 'features/properties/components/forms/subforms/columns';
 import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
+import { GeocoderAutoComplete } from 'features/properties/components/GeocoderAutoComplete';
 import { getIn, useFormikContext } from 'formik';
-import { noop } from 'lodash';
+import _ from 'lodash';
 import moment from 'moment';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { SyntheticEvent, useCallback, useMemo, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { FaEdit } from 'react-icons/fa';
+import { useAppSelector } from 'store';
 import styled from 'styled-components';
-import { formatFiscalYear } from 'utils';
+import { formatFiscalYear, mapLookupCode } from 'utils';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -45,6 +51,10 @@ const StyledProjectNumbers = styled.div`
   flex-direction: column;
   display: flex;
 `;
+
+const HeaderDivider = () => (
+  <Divider sx={{ mt: '5px', mb: '5px', height: '1px', background: '#1a57c7', opacity: '100%' }} />
+);
 
 export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
   const withNameSpace: Function = useCallback(
@@ -73,6 +83,12 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
   const agencyId = getIn(formikProps.values, withNameSpace('agencyId'));
   const [privateProject, setPrivateProject] = useState(false);
 
+  // Tabs.
+  const [tab, setTab] = useState<number>(0);
+  const handleTabChange = (event: SyntheticEvent, newValue: number) => {
+    setTab(newValue);
+  };
+
   const currentYear = moment().year();
   const evaluationIndex = indexOfFinancial(
     getIn(formikProps.values, withNameSpace('evaluations')),
@@ -87,29 +103,62 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
   const netBookYear = getIn(formikProps.values, withNameSpace(`fiscals.${fiscalIndex}.fiscalYear`));
 
   const buildings = getIn(formikProps.values, withNameSpace('buildings'));
+
+  // Address form:
+  const lookupCodes = useAppSelector((store) => store.lookupCode.lookupCodes);
+  const provinces = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
+    return lookupCode.type === API.PROVINCE_CODE_SET_NAME;
+  }).map(mapLookupCode);
+  const administrativeAreas = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
+    return lookupCode.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME;
+  }).map(mapLookupCode);
+
+  /**
+   * postalCodeFormatter takes the specified postal code and formats it with a space in the middle
+   * @param {string} postal The target postal to be formatted
+   */
+  const postalCodeFormatter = (postal: string) => {
+    const regex = /([a-zA-z][0-9][a-zA-z])[\s-]?([0-9][a-zA-z][0-9])/;
+    const format = postal.match(regex);
+    if (format !== null && format.length === 3) {
+      postal = `${format[1]} ${format[2]}`;
+    }
+    return postal.toUpperCase();
+  };
+
   return (
     <Container className="review-section">
       <Row className="review-steps">
         <h4>Review your land info</h4>
         <p>
-          Please review the information you have entered. You can edit it by clicking on the edit
-          icon for each section. When you are satisfied that the infomation provided is correct,
-          click the submit button to save this information to the PIMS inventory.
+          You can edit some information by clicking on the edit icon for each section. When you are
+          satisfied that the infomation provided is correct, click the submit button to save to the
+          PIMS inventory.
         </p>
       </Row>
-      <Row>
-        <Col md={6}>
-          <Row style={{ marginRight: '15px' }}>
-            <div className="identification">
-              <Row className="section-header">
-                <Col md="auto">
-                  <span>
-                    <LandSvg className="svg" />
-                    <h5>Parcel Identification</h5>
-                  </span>
-                </Col>
+
+      <Box>
+        {/* TABS */}
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs value={tab} onChange={handleTabChange} aria-label="property review tabs">
+            <Tab label="Parcel Details" id="parcel-details-tab" />
+            <Tab label="Usage & Valuation" id="usage-valuation-tab" />
+            <Tab label="Title & Ownership Details" id="title-ownership-tab" />
+            <Tab label="Associated Buildings" id="associated-buildings-tab" />
+          </Tabs>
+        </Box>
+
+        {/* PARCEL DETAILS TAB */}
+        <Box role="tabpanel" hidden={tab !== 0} id="parcel-details-tabpanel">
+          <div className="identification">
+            <Box sx={{ p: 2, background: 'white' }}>
+              {/* HEADER */}
+              <Stack direction="row" spacing={1}>
+                <Typography text-align="left" sx={{ fontWeight: 700, color: '#1a57c7' }}>
+                  Parcel Identification
+                </Typography>
                 {!props.disabled && (
-                  <Col md="auto">
+                  <Box sx={{ pl: 1 }}>
                     <FaEdit
                       size={20}
                       className="edit"
@@ -120,14 +169,18 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                         })
                       }
                     />
-                  </Col>
+                  </Box>
                 )}
-              </Row>
-              <Row className="content-item">
-                <Col md="auto">
-                  <Label>Agency</Label>
-                </Col>
-                <Col md="auto">
+              </Stack>
+              <HeaderDivider />
+
+              {/* CONTENT */}
+              <Grid container sx={{ textAlign: 'left' }} rowSpacing={0.5}>
+                {/* AGENCY FIELD */}
+                <Grid item xs={5}>
+                  <Typography fontSize={14}>Agency:</Typography>
+                </Grid>
+                <Grid item xs={7}>
                   <ParentSelect
                     required
                     field={withNameSpace('agencyId')}
@@ -135,54 +188,32 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                     filterBy={['code', 'label', 'parent']}
                     disabled={true}
                   />
-                </Col>
-              </Row>
-              <Row className="content-item">
-                <Col md="auto">
-                  <Label>Name</Label>
-                </Col>
-                <Col md="auto">
+                </Grid>
+
+                {/* NAME FIELD */}
+                <Grid item xs={5}>
+                  <Typography fontSize={14}>Name:</Typography>
+                </Grid>
+                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
                   <Input disabled={editInfo.identification} field={withNameSpace('name')} />
-                </Col>
-              </Row>
-              <Row className="content-item resizable">
-                <Col md="auto">
-                  <Label>Description</Label>
-                </Col>
-                <Col md="auto">
+                </Grid>
+
+                {/* DESCRIPTION FIELD */}
+                <Grid item xs={5}>
+                  <Typography fontSize={14}>Description:</Typography>
+                </Grid>
+                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
                   <TextArea
                     disabled={editInfo.identification}
                     field={withNameSpace('description')}
                   />
-                </Col>
-              </Row>
-              <Row
-                className="content-item resizable"
-                style={{ marginTop: '5px', marginBottom: '5px' }}
-              >
-                <Col md="auto">
-                  <Label>Legal Description</Label>
-                </Col>
-                <Col md="auto">
-                  <TextArea disabled={true} field={withNameSpace('landLegalDescription')} />
-                </Col>
-              </Row>
+                </Grid>
 
-              <AddressForm
-                onGeocoderChange={noop}
-                {...formikProps}
-                disabled={true}
-                nameSpace={withNameSpace('address')}
-                disableCheckmark
-                disableStreetAddress
-                landReviewStyles
-              />
-              <p className="break"></p>
-              <Row className="content-item">
-                <Col md="auto">
-                  <Label>PID</Label>
-                </Col>
-                <Col md="auto">
+                {/* PID FIELD */}
+                <Grid item xs={5}>
+                  <Typography fontSize={14}>PID:</Typography>
+                </Grid>
+                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
                   <Input
                     displayErrorTooltips
                     className="input-small"
@@ -190,13 +221,13 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                     required={true}
                     field={withNameSpace('pid')}
                   />
-                </Col>
-              </Row>
-              <Row className="content-item">
-                <Col md="auto">
-                  <Label>PIN</Label>
-                </Col>
-                <Col md="auto">
+                </Grid>
+
+                {/* PIN FIELD */}
+                <Grid item xs={5}>
+                  <Typography fontSize={14}>PIN:</Typography>
+                </Grid>
+                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
                   <Input
                     displayErrorTooltips
                     className="input-small"
@@ -204,13 +235,13 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                     required={true}
                     field={withNameSpace('pin')}
                   />
-                </Col>
-              </Row>
-              <Row className="content-item">
-                <Col md="auto">
-                  <Label>Lot Size</Label>
-                </Col>
-                <Col md="auto">
+                </Grid>
+
+                {/* LOT SIZE FIELD */}
+                <Grid item xs={5}>
+                  <Typography fontSize={14}>Lot Size:</Typography>
+                </Grid>
+                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
                   <InputGroup
                     displayErrorTooltips
                     fast={true}
@@ -220,29 +251,28 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                     formikProps={formikProps}
                     postText="Hectares"
                   />
-                </Col>
-              </Row>
-              <Row className="content-item">
-                <Col md="auto">
-                  <Label>Latitude</Label>
-                </Col>
-                <Col md="auto">
+                </Grid>
+
+                {/* LATITUDE FIELD */}
+                <Grid item xs={5}>
+                  <Typography fontSize={14}>Latitude:</Typography>
+                </Grid>
+                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
                   <FastInput
                     className="input-medium"
                     displayErrorTooltips
-                    // tooltip={latitudeTooltip}
                     formikProps={formikProps}
                     disabled={true}
                     type="number"
                     field={withNameSpace('latitude')}
                   />
-                </Col>
-              </Row>
-              <Row className="content-item">
-                <Col md="auto">
-                  <Label>Longitude</Label>
-                </Col>
-                <Col md="auto">
+                </Grid>
+
+                {/* LONGITUDE FIELD */}
+                <Grid item xs={5}>
+                  <Typography fontSize={14}>Longitude:</Typography>
+                </Grid>
+                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
                   <FastInput
                     className="input-medium"
                     displayErrorTooltips
@@ -251,47 +281,138 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                     type="number"
                     field={withNameSpace('longitude')}
                   />
-                </Col>
-              </Row>
-              {!!projectNumbers?.length && (
-                <Row style={{ marginTop: '1rem' }}>
-                  <Col md="auto">
-                    <Label>Project Number(s)</Label>
-                  </Col>
-                  <Col md="auto">
-                    <StyledProjectNumbers>
-                      {projectNumbers.map((projectNum: string) => (
-                        <ProjectNumberLink
-                          projectNumber={projectNum}
-                          key={projectNum}
-                          agencyId={agencyId}
-                          setPrivateProject={setPrivateProject}
-                          privateProject={privateProject}
-                        />
-                      ))}
-                    </StyledProjectNumbers>
-                  </Col>
-                </Row>
-              )}
-              <br></br>
-              <Row className="harmful">
-                <Col md="auto">
-                  <Label>Harmful info if released?</Label>
-                </Col>
-                <Col md="auto">
-                  <Check
-                    type="radio"
-                    field={withNameSpace('isSensitive')}
-                    radioLabelOne="Yes"
-                    radioLabelTwo="No"
-                    disabled={editInfo.identification}
+                </Grid>
+
+                {/* STREET ADDRESS FIELD */}
+                <Grid item xs={5}>
+                  <Typography fontSize={14}>Street Address:</Typography>
+                </Grid>
+                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
+                  <GeocoderAutoComplete
+                    tooltip={undefined}
+                    value={getIn(formikProps.values, withNameSpace('address.line1'))}
+                    disabled={true}
+                    field={withNameSpace('line1')}
+                    onSelectionChanged={() => {}}
+                    onTextChange={(value) =>
+                      formikProps.setFieldValue(withNameSpace('address.line1'), value)
+                    }
+                    error={getIn(formikProps.errors, withNameSpace('address.line1'))}
+                    touch={getIn(formikProps.touched, withNameSpace('address.line1'))}
+                    displayErrorTooltips
+                    required={true}
                   />
-                </Col>
-              </Row>
-            </div>
-          </Row>
-        </Col>
-        <Col md={6}>
+                </Grid>
+
+                {/* LOCATION FIELD */}
+                <Grid item xs={5}>
+                  <Typography fontSize={14}>Location:</Typography>
+                </Grid>
+                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
+                  <TypeaheadField
+                    options={administrativeAreas.map((x) => x.label)}
+                    name={withNameSpace('address.administrativeArea')}
+                    disabled={true}
+                    hideValidation={true}
+                    paginate={false}
+                    required
+                    displayErrorTooltips
+                  />
+                </Grid>
+
+                {/* PROVINCE FIELD */}
+                <Grid item xs={5}>
+                  <Typography fontSize={14}>Province:</Typography>
+                </Grid>
+                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
+                  <Select
+                    disabled={true}
+                    placeholder="Must Select One"
+                    field={withNameSpace('address.provinceId')}
+                    options={provinces}
+                  />
+                </Grid>
+
+                {/* POSTAL CODE FIELD */}
+                <Grid item xs={5}>
+                  <Typography fontSize={14}>Postal Code:</Typography>
+                </Grid>
+                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
+                  <FastInput
+                    className="input-small"
+                    formikProps={formikProps}
+                    style={{ width: '120px' }}
+                    disabled={true}
+                    onBlurFormatter={(postal: string) =>
+                      postal.replace(postal, postalCodeFormatter(postal))
+                    }
+                    field={withNameSpace('address.postal')}
+                    displayErrorTooltips
+                  />
+                </Grid>
+
+                {/* LEGAL DESCRIPTION FIELD */}
+                <Grid item xs={5}>
+                  <Typography fontSize={14}>Legal Description:</Typography>
+                </Grid>
+                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
+                  <TextArea
+                    style={{ width: '400px', height: '80px' }}
+                    disabled={true}
+                    field={withNameSpace('landLegalDescription')}
+                  />
+                </Grid>
+
+                {/* PROJECT NUMBERS */}
+                {!!projectNumbers?.length && (
+                  <>
+                    <Grid item xs={5}>
+                      <Typography fontSize={14}>Project Number(s):</Typography>
+                    </Grid>
+                    <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
+                      <StyledProjectNumbers>
+                        {projectNumbers.map((projectNum: string) => (
+                          <ProjectNumberLink
+                            projectNumber={projectNum}
+                            key={projectNum}
+                            agencyId={agencyId}
+                            setPrivateProject={setPrivateProject}
+                            privateProject={privateProject}
+                          />
+                        ))}
+                      </StyledProjectNumbers>
+                    </Grid>
+                  </>
+                )}
+              </Grid>
+            </Box>
+
+            {/* Harmful if released? */}
+            <Box
+              sx={{
+                mt: '15px',
+                p: 2,
+                background: 'white',
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <Stack direction="row" spacing={1}>
+                <Typography sx={{ fontWeight: 700 }}>Harmful info if released?</Typography>
+                <Check
+                  type="radio"
+                  field={withNameSpace('isSensitive')}
+                  radioLabelOne="Yes"
+                  radioLabelTwo="No"
+                  disabled={editInfo.identification}
+                />
+              </Stack>
+            </Box>
+          </div>
+        </Box>
+
+        {/* USAGE & VALUATION TAB */}
+        <Box role="tabpanel" hidden={tab !== 1} id="usage-valuation-tabpanel" sx={{ p: 3 }}>
           <Row>
             <div className="usage">
               <Row className="section-header">
@@ -425,31 +546,38 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
               </Row>
             </div>
           </Row>
-        </Col>
-        {buildings?.length > 0 && (
-          <Col md={12}>
-            <Row>
-              <div className="associated-buildings">
-                <Row className="section-header">
-                  <span>
-                    <BuildingSvg className="svg" />
-                    <h5>Associated Buildings</h5>
-                  </span>
-                </Row>
-                <Row>
-                  <FormikTable
-                    field="data.buildings"
-                    name="buildings"
-                    columns={getAssociatedBuildingsCols()}
-                    clickableTooltip="Click to view building details"
-                    onRowClick={onRowClick}
-                  />
-                </Row>
-              </div>
-            </Row>
-          </Col>
-        )}
-      </Row>
+        </Box>
+
+        {/* TITLE & OWNERSHIP TAB */}
+        <Box role="tabpanel" hidden={tab !== 2} id="title-ownership-tabpanel" sx={{ p: 3 }}></Box>
+
+        {/* ASSOCIATED BUILDINGS TAB */}
+        <Box role="tabpanel" hidden={tab !== 3} id="associated-buildings-tabpanel" sx={{ p: 3 }}>
+          {buildings?.length > 0 && (
+            <Col md={12}>
+              <Row>
+                <div className="associated-buildings">
+                  <Row className="section-header">
+                    <span>
+                      <BuildingSvg className="svg" />
+                      <h5>Associated Buildings</h5>
+                    </span>
+                  </Row>
+                  <Row>
+                    <FormikTable
+                      field="data.buildings"
+                      name="buildings"
+                      columns={getAssociatedBuildingsCols()}
+                      clickableTooltip="Click to view building details"
+                      onRowClick={onRowClick}
+                    />
+                  </Row>
+                </div>
+              </Row>
+            </Col>
+          )}
+        </Box>
+      </Box>
     </Container>
   );
 };

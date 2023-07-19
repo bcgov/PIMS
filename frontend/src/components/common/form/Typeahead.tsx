@@ -121,7 +121,12 @@ export function TypeaheadField<T extends TypeaheadModel>({
         <Typeahead<T>
           {...rest}
           options={options}
-          inputProps={{ ...rest.inputProps, name: name, id: `${name}-field` }}
+          inputProps={{
+            ...rest.inputProps,
+            name: name,
+            id: `${name}-field`,
+            style: { width: '100%' },
+          }}
           isInvalid={hasError as any}
           highlightOnlyResult
           isValid={!hideValidation && isValid}
