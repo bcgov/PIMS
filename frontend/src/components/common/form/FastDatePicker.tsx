@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import { appraisalDateWarning } from 'features/projects/common';
 import { ErrorMessage, FormikProps, getIn } from 'formik';
 import moment from 'moment';
-import * as Popper from 'popper.js';
 import React, { FunctionComponent, memo, useEffect, useState } from 'react';
 import { Form, FormControlProps, FormGroup } from 'react-bootstrap';
 import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
