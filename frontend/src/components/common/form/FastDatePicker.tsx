@@ -30,14 +30,19 @@ type OptionalAttributes = {
   label?: string;
   /** Whether the field is required. Makes the field border blue. */
   required?: boolean;
-  /** optional popper modifiers to pass to the datepicker */
-  popperModifiers?: Popper.Modifiers | undefined;
+};
+
+type PopperModifiers = {
+  [key: string]: boolean;
 };
 
 export type FastDatePickerProps = FormControlProps &
   RequiredAttributes &
   OptionalAttributes &
-  Partial<ReactDatePickerProps>;
+  Partial<ReactDatePickerProps> & {
+    // Update the type definition for popperModifiers prop
+    popperModifiers?: PopperModifiers;
+  };
 
 /**
  * Formik connected react-datepicker. Uses memo and cleanup inspired by
