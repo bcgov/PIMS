@@ -53,7 +53,7 @@ const StyledProjectNumbers = styled.div`
 `;
 
 const HeaderDivider = () => (
-  <Divider sx={{ mt: '5px', mb: '5px', height: '1px', background: '#1a57c7', opacity: '100%' }} />
+  <Divider sx={{ mt: '5px', mb: '10px', height: '1px', background: '#1a57c7', opacity: '100%' }} />
 );
 
 export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
@@ -178,7 +178,9 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
               <Grid container sx={{ textAlign: 'left' }} rowSpacing={0.5}>
                 {/* AGENCY FIELD */}
                 <Grid item xs={5}>
-                  <Typography fontSize={14}>Agency:</Typography>
+                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
+                    Agency:
+                  </Typography>
                 </Grid>
                 <Grid item xs={7}>
                   <ParentSelect
@@ -192,54 +194,94 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
 
                 {/* NAME FIELD */}
                 <Grid item xs={5}>
-                  <Typography fontSize={14}>Name:</Typography>
+                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
+                    Name:
+                  </Typography>
                 </Grid>
                 <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
-                  <Input disabled={editInfo.identification} field={withNameSpace('name')} />
+                  <Input
+                    style={{ width: '100%' }}
+                    disabled={editInfo.identification}
+                    field={withNameSpace('name')}
+                  />
+                </Grid>
+
+                {/* PID PIN FIELD */}
+                <Grid item xs={5}>
+                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
+                    PID/PIN:
+                  </Typography>
+                </Grid>
+                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
+                  <Stack direction="row" spacing={1}>
+                    {getIn(formikProps.values, withNameSpace('pid')) ? (
+                      <Input
+                        customRowStyle={{ width: '33%' }}
+                        displayErrorTooltips
+                        className="input-small"
+                        disabled={true}
+                        required={true}
+                        field={withNameSpace('pid')}
+                      />
+                    ) : (
+                      <Typography
+                        sx={{
+                          fontWeight: 700,
+                          fontSize: 13,
+                          alignSelf: 'center',
+                          width: '33%',
+                        }}
+                      >
+                        none
+                      </Typography>
+                    )}
+                    <Typography sx={{ fontWeight: 700, alignSelf: 'center', textAlign: 'center' }}>
+                      /
+                    </Typography>
+                    {getIn(formikProps.values, withNameSpace('pin')) ? (
+                      <Input
+                        customRowStyle={{ width: '33%' }}
+                        style={{ textAlign: 'center' }}
+                        displayErrorTooltips
+                        className="input-small"
+                        disabled={true}
+                        required={true}
+                        field={withNameSpace('pin')}
+                      />
+                    ) : (
+                      <Typography
+                        sx={{
+                          fontWeight: 700,
+                          fontSize: 13,
+                          alignSelf: 'center',
+                          textAlign: 'center',
+                        }}
+                      >
+                        none
+                      </Typography>
+                    )}
+                  </Stack>
                 </Grid>
 
                 {/* DESCRIPTION FIELD */}
                 <Grid item xs={5}>
-                  <Typography fontSize={14}>Description:</Typography>
+                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
+                    Description:
+                  </Typography>
                 </Grid>
                 <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
                   <TextArea
+                    style={{ width: '400px', height: '80px' }}
                     disabled={editInfo.identification}
                     field={withNameSpace('description')}
                   />
                 </Grid>
 
-                {/* PID FIELD */}
-                <Grid item xs={5}>
-                  <Typography fontSize={14}>PID:</Typography>
-                </Grid>
-                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
-                  <Input
-                    displayErrorTooltips
-                    className="input-small"
-                    disabled={true}
-                    required={true}
-                    field={withNameSpace('pid')}
-                  />
-                </Grid>
-
-                {/* PIN FIELD */}
-                <Grid item xs={5}>
-                  <Typography fontSize={14}>PIN:</Typography>
-                </Grid>
-                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
-                  <Input
-                    displayErrorTooltips
-                    className="input-small"
-                    disabled={true}
-                    required={true}
-                    field={withNameSpace('pin')}
-                  />
-                </Grid>
-
                 {/* LOT SIZE FIELD */}
                 <Grid item xs={5}>
-                  <Typography fontSize={14}>Lot Size:</Typography>
+                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
+                    Lot Size:
+                  </Typography>
                 </Grid>
                 <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
                   <InputGroup
@@ -255,7 +297,9 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
 
                 {/* LATITUDE FIELD */}
                 <Grid item xs={5}>
-                  <Typography fontSize={14}>Latitude:</Typography>
+                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
+                    Latitude:
+                  </Typography>
                 </Grid>
                 <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
                   <FastInput
@@ -270,7 +314,9 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
 
                 {/* LONGITUDE FIELD */}
                 <Grid item xs={5}>
-                  <Typography fontSize={14}>Longitude:</Typography>
+                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
+                    Longitude:
+                  </Typography>
                 </Grid>
                 <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
                   <FastInput
@@ -285,7 +331,9 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
 
                 {/* STREET ADDRESS FIELD */}
                 <Grid item xs={5}>
-                  <Typography fontSize={14}>Street Address:</Typography>
+                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
+                    Street Address:
+                  </Typography>
                 </Grid>
                 <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
                   <GeocoderAutoComplete
@@ -306,7 +354,9 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
 
                 {/* LOCATION FIELD */}
                 <Grid item xs={5}>
-                  <Typography fontSize={14}>Location:</Typography>
+                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
+                    Location:
+                  </Typography>
                 </Grid>
                 <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
                   <TypeaheadField
@@ -322,7 +372,9 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
 
                 {/* PROVINCE FIELD */}
                 <Grid item xs={5}>
-                  <Typography fontSize={14}>Province:</Typography>
+                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
+                    Province:
+                  </Typography>
                 </Grid>
                 <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
                   <Select
@@ -335,7 +387,9 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
 
                 {/* POSTAL CODE FIELD */}
                 <Grid item xs={5}>
-                  <Typography fontSize={14}>Postal Code:</Typography>
+                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
+                    Postal Code:
+                  </Typography>
                 </Grid>
                 <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
                   <FastInput
@@ -353,7 +407,9 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
 
                 {/* LEGAL DESCRIPTION FIELD */}
                 <Grid item xs={5}>
-                  <Typography fontSize={14}>Legal Description:</Typography>
+                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
+                    Legal Description:
+                  </Typography>
                 </Grid>
                 <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
                   <TextArea
@@ -367,7 +423,9 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 {!!projectNumbers?.length && (
                   <>
                     <Grid item xs={5}>
-                      <Typography fontSize={14}>Project Number(s):</Typography>
+                      <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
+                        Project Number(s):
+                      </Typography>
                     </Grid>
                     <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
                       <StyledProjectNumbers>
