@@ -101,7 +101,7 @@
     "@types/react-datepicker": "3.1.8",
     "@types/react-dom": "18.2.6",
     "@types/react-leaflet": "3.0.0",
-    "@types/react-paginate": "6.2.1",
+    "@types/react-paginate": "7.1.1",
     "@types/react-redux": "7.1.25",
     "@types/react-router-dom": "5.3.3",
     "@types/react-table": "7.7.14",
