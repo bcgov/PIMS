@@ -58,7 +58,7 @@
     "react-redux": "7.2.9",
     "react-redux-loading-bar": "5.0.4",
     "react-resize-detector": "9.1.0",
-    "react-router-dom": "6.13.0",
+    "react-router-dom": "6.14.1",
     "react-scripts": "5.0.1",
     "react-simple-tree-menu": "1.1.18",
     "react-table": "7.8.0",
