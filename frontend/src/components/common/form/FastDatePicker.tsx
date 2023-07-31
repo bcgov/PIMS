@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import { appraisalDateWarning } from 'features/projects/common';
 import { ErrorMessage, FormikProps, getIn } from 'formik';
 import moment from 'moment';
-import * as Popper from 'popper.js';
 import React, { FunctionComponent, memo, useEffect, useState } from 'react';
 import { Form, FormControlProps, FormGroup } from 'react-bootstrap';
 import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
@@ -30,14 +29,19 @@ type OptionalAttributes = {
   label?: string;
   /** Whether the field is required. Makes the field border blue. */
   required?: boolean;
-  /** optional popper modifiers to pass to the datepicker */
-  popperModifiers?: Popper.Modifiers | undefined;
+};
+
+type PopperModifiers = {
+  [key: string]: boolean;
 };
 
 export type FastDatePickerProps = FormControlProps &
   RequiredAttributes &
   OptionalAttributes &
-  Partial<ReactDatePickerProps>;
+  Partial<ReactDatePickerProps> & {
+    // Update the type definition for popperModifiers prop
+    popperModifiers?: PopperModifiers;
+  };
 
 /**
  * Formik connected react-datepicker. Uses memo and cleanup inspired by
