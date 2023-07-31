@@ -1,6 +1,11 @@
 const https = require('https');
 const path = require('path');
 
+/**
+ * THIS FILE DOES NOT REQUIRE ANY EDITING.
+ * Place within .github/helpers/
+ */
+
 // Get package.json file.
 const cmdLineArgument = process.env.PACKAGE_JSON;
 const packageJsonPath = cmdLineArgument.startsWith('./')
@@ -181,10 +186,10 @@ const logDeps = (dependencies, header, isDevDep, color) => {
 
   // Summarize dependency updates.
   if (dependencyResults.length === 0) {
-    console.log(`${check} - Standard dependencies are all up-to-date.`);
+    console.log(`${check} - Production dependencies are all up-to-date.`);
   } else {
     console.log(
-      `${attention} - ${dependencyResults.length} Standard dependencies are out-of-date.`,
+      `${attention} - ${dependencyResults.length} Production dependencies are out-of-date.`,
     );
   }
 
@@ -206,7 +211,7 @@ const logDeps = (dependencies, header, isDevDep, color) => {
   // STANDARD DEPENDENCIES
   if (dependencyResults.length > 0) {
     breakLine();
-    console.log(heading3('Standard Dependencies to Update:'));
+    console.log(heading3('Production Dependencies to Update:'));
 
     // Seperate by patch, minor and major.
     const patchDependencies = dependencyResults.filter((dep) => dep.versionChange === 'Patch');
