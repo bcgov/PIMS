@@ -21,7 +21,7 @@
       "request": "launch",
       "console": "internalConsole",
       "preLaunchTask": "build",
-      "program": "${workspaceRoot}/tools/converters/excel/bin/Debug/net6.0/Pims.Tools.Converters.ExcelConverter.dll",
+      "program": "${workspaceRoot}/tools/converters/excel/bin/Debug/net7.0/Pims.Tools.Converters.ExcelConverter.dll",
       "cwd": "${workspaceRoot}/tools/converters/excel",
       "stopAtEntry": false
     },
@@ -31,7 +31,7 @@
       "request": "launch",
       "console": "internalConsole",
       "preLaunchTask": "build",
-      "program": "${workspaceRoot}/tools/import/bin/Debug/net6.0/Pims.Tools.Import.dll",
+      "program": "${workspaceRoot}/tools/import/bin/Debug/net7.0/Pims.Tools.Import.dll",
       "cwd": "${workspaceRoot}/tools/import",
       "stopAtEntry": false
     },
@@ -40,7 +40,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/backend/api/bin/Debug/net6.0/Pims.Api.dll",
+      "program": "${workspaceFolder}/backend/api/bin/Debug/net7.0/Pims.Api.dll",
       "args": [],
       "cwd": "${workspaceFolder}/backend/api",
       "stopAtEntry": false,
