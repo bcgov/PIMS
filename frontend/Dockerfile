@@ -32,7 +32,6 @@ ENV NODE_ENV=production
 COPY ./src ./src
 COPY ./public ./public
 COPY package.json .
-COPY styleguide.config.js .
 COPY tsconfig.json .
 COPY vite.config.js .
 COPY ./public/index.html .
