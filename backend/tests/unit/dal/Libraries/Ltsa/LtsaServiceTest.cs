@@ -117,70 +117,12 @@ namespace Pims.Dal.Test.Libraries.Ltsa
         }
         #endregion
 
-        // #region getTitleSummary
-        // [Fact]
-        // public async void GetTitleSummary_Success()
-        // {
-        //     // Arrange
-        //     var helper = new TestHelper();
-        //     var user = PrincipalHelper.CreateForPermission();
-
-        //     var options = Options.Create(new LtsaOptions()
-        //     {
-        //         AuthUrl = "https://test.com",
-        //         HostUri = "https://host.com",
-        //         IntegratorPassword = "password",
-        //         IntegratorUsername = "username",
-        //         UserName = "user",
-        //         UserPassword = "password"
-        //     });
-        //     var service = helper.Create<LtsaService>(options, user);
-
-        //     var token = new LtsaTokenModel();
-        //     var client = helper.GetService<Mock<IHttpRequestClient>>();
-        //     client.Setup(m => m.SendAsync<LtsaTokenModel>(It.IsAny<string>(), It.IsAny<HttpMethod>(), It.IsAny<HttpContent>(), It.IsAny<Func<HttpResponseMessage, bool>>())).ReturnsAsync(token);
-
-        //     // Set up the expected access token and parcel identifier
-        //     var accessToken = "access_token";
-        //     var parcelIdentifier = "parcel_id";
-
-        //     // Set up the expected title summary response
-        //     var expectedTitleSummary = new LtsaTitleSummaryResponse
-        //     {
-        //         TitleSummaries = new[]
-        //         {
-        //             new LtsaTitleSummaryModel
-        //             {
-        //                 TitleNumber = "title_number",
-        //                 LandTitleDistrictCode = "district_code"
-        //             }
-        //         }
-        //     };
-
-        //     // Configure the response for getting the title summary
-        //     var titleSummaryResponse = new HttpResponseMessage(HttpStatusCode.OK)
-        //     {
-        //         Content = new StringContent(expectedTitleSummary.ToJson(), Encoding.UTF8, "application/json")
-        //     };
-        //     client.Setup(c => c.SendAsync(It.IsAny<string>(), HttpMethod.Get, It.IsAny<HttpRequestHeaders>(), null))
-        //         .ReturnsAsync(titleSummaryResponse);
-
-        //     // Act
-        //     var result = await service.GetTitleSummary(accessToken, parcelIdentifier);
-
-        //     // Assert
-        //     result.Should().NotBeNull();
-        //     result.Should().BeEquivalentTo(expectedTitleSummary);
-        // }
-        // #endregion
-
         [Fact]
         public async void GetTitleSummary_ReturnsTitleSummaryResponse()
         {
             // Arrange
             var accessToken = "testAccessToken";
             var parcelIdentifier = "testParcelIdentifier";
-            var expectedUrl = "https://host.com/titleSummaries?filter=parcelIdentifier:testParcelIdentifier";
             var expectedResponse = new LtsaTitleSummaryResponse
             {
                 TitleSummaries = new List<LtsaTitleSummaryModel>
