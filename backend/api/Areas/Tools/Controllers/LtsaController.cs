@@ -4,6 +4,7 @@ using Pims.Api.Policies;
 using Pims.Dal.Security;
 using Pims.Ltsa;
 using Swashbuckle.AspNetCore.Annotations;
+using System;
 using System.Threading.Tasks;
 using LtsaModel = Pims.Core.Http.Models;
 
@@ -35,8 +36,15 @@ namespace Pims.Api.Areas.Tools.Controllers
         [SwaggerOperation(Tags = new[] { "ltsa" })]
         public async Task<IActionResult> GetLandTitleInfo(string pid)
         {
-            var landTitle = await _ltsaService.ProcessLTSARequest(pid);
-            return new JsonResult(landTitle);
+            try
+            {
+                var landTitle = await _ltsaService.ProcessLTSARequest(pid);
+                return new JsonResult(landTitle);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(404, new { Message = $"Unable to find title summary for parcel id: {pid}", Exception = ex.Message });
+            }
         }
     }
 }
