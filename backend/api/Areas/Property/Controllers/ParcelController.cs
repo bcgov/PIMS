@@ -51,6 +51,7 @@ namespace Pims.Api.Areas.Property.Controllers
         #endregion
 
         #region Endpoints
+
         /// <summary>
         /// Get the parcel from the datasource if the user is allowed.
         /// </summary>
