@@ -15,8 +15,8 @@ Docker:
 - '**/Dockerfile'
 
 Dependencies:
-- frontend/package.json
-- backend/**/*.csproj
+- '**/package.json'
+- '**/*.csproj'
 
 Documentation:
 - '**/*.md'
