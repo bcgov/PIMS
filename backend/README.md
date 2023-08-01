@@ -2,7 +2,7 @@
 
 The PIMS API provides an RESTful interface to interact with the configured data-source.
 
-The API is configured to run in a Docker container and has the following dependencies with other containers; database, keycloak.
+The API is configured to run in a Docker container and has the following dependencies with other containers; database.
 
 For more information refer to documentation [here](https://github.com/bcgov/PIMS/wiki/api/API.md).
 
@@ -24,43 +24,42 @@ When running the solution it applies the configuration setting in the following 
 To run the solution with docker-compose create a `.env` file within the `/api` directory and populate with the following;
 
 ```conf
+ConnectionStrings__PIMS={connection string} # For local debugging in VSCode
+
 ASPNETCORE_ENVIRONMENT=Development
-ASPNETCORE_URLS=http://*:8080
-ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
+ASPNETCORE_URLS=http://*:8080 #http://*:8081 for debugging
 DB_PASSWORD={password}
-ConnectionStrings__PIMS={connection string}
+
 Keycloak__Secret={secret}
 Keycloak__ServiceAccount__Secret={secret}
+Keycloak__FrontendClientId={client id}
+
+Ches__Username={secret}
+Ches__Password={password}
+Ches__OverrideTo={email}
+
+Ltsa__IntegratorUsername={username}
+Ltsa__IntegratorPassword={password}
+Ltsa__UserName={username}
+Ltsa__UserPassword={password}
 ```
 
 | Key                                 | Required | Value                              | Description                                                                                                                                                 |
 | ----------------------------------- | :------: | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | ASPNETCORE_ENVIRONMENT              |    x     | [Development\|Staging\|Production] | The environment name to run under. This will result in apply different configuration settings.                                                              |
 | ASPNETCORE_URLS                     |    x     | {http://*:8080}                    | The host addresses with ports and protocols that the server will listen to.                                                                                 |
-| ASPNETCORE_FORWARDEDHEADERS_ENABLED |          | [true\|false]                      | Whether to include forwarder headers.                                                                                                                       |
-| DB_PASSWORD                         |    x     | {password}                         | The password to the database. If using MSSQL it will require a complex password. Needs to be the same value found in the `/database/.../.env` file.         |
+| DB_PASSWORD                         |    x     | {password}                         | The password to the database. If using MSSQL it will require a complex password. Needs to be the same value found in the `/database/mssql/.env` file.       |
 | ConnectionStrings\_\_PIMS           |          | {connection string}                | To override the `appsettings.[environment].json` configuration files you can set the connection string value here.                                          |
-| Keycloak\_\_Secret                  |    x     | {secret}                           | Should be the value provided by KeyCloak (_Currently this value can remain blank_)                                                                          |
-| Keycloak\_\_ServiceAccout\_\_Secret |    x     | {secret}                           | Should be the value provided by KeyCloak for the _pims-service-account_ client. This is required for administrative endpoints that integrate with Keycloak. |
 
-## Secret Management
-
-If you want to keep private keys and user secrets out of source code use the **user-secrets** management tool.
-Please note this will only work if the _environment=Development_, and it does not appear to be currently working all the time within vscode.
-
-```bash
-dotnet user-secrets init
-dotnet user-secrets set "ConnectionStrings:PIMS" "Server=localhost,<port>;User ID=sa;Database=<database name>"
-```
 
 ## Running Locally
 
-to run the API locally with vscode, comment out the following lines, and add the `ConnectionStrings__PIMS` value in your `.env` file;
+To run the API locally with vscode, comment out the following lines, and add the `ConnectionStrings__PIMS` value in your `.env` file;
 
 ```conf
 # ASPNETCORE_ENVIRONMENT=Development
 # ASPNETCORE_URLS=http://*:8080
-ConnectionStrings__PIMS=Server=localhost,5433;Database=pims;User Id=sa;
+ConnectionStrings__PIMS=Server=localhost,5433;Database=pims;User ID=admin;Encrypt=False
 ```
 
 This is so that the `/.vscode/launch.json` configured environment variables are used instead. Specifically it will run with the following;
