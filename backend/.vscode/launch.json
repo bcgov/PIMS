@@ -9,7 +9,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/api/bin/Debug/net6.0/Pims.Api.dll",
+      "program": "${workspaceFolder}/api/bin/Debug/net7.0/Pims.Api.dll",
       "args": [],
       "cwd": "${workspaceFolder}/api",
       "stopAtEntry": false,
