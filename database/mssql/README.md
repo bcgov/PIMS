@@ -1,23 +1,5 @@
 # MSSQL DB
 
-If you want to use a MSSQL DB change the _database_ service in the _docker-compose.yml_ file with the following;
-
-```yaml
-database:
-  restart: on-failure
-  container_name: api-db
-  build:
-    context: database/mssql
-  env_file:
-    - database/mssql/.env
-  ports:
-    - "5433:1433"
-  volumes:
-    - api-db-data:/var/opt/mssql
-  networks:
-    - pims
-```
-
 ## MSSQL Environment Variables
 
 To get the database running and initialized do the following;
@@ -34,6 +16,7 @@ TZ=America/Los_Angeles
 DB_NAME=pims
 DB_USER=admin
 DB_PASSWORD={password}
+TIMEOUT_LENGTH=120
 ```
 
 | Key               | Value               | Description                                                                                                                                         |
@@ -92,4 +75,3 @@ Once inside the container, connect locally with sqlcmd. Note that sqlcmd is not 
 
 - Configuration details [here](https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-configure-docker?view=sql-server-ver15)
 - Running Scripts remotely [here](https://portworx.com/run-ha-sql-server-red-hat-openshift/)
--
