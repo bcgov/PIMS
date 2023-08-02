@@ -272,7 +272,7 @@ export const generateUtcNowDateTime = () =>
  */
 export const isMouseEventRecent = (e?: MouseEvent | null) =>
   e === null ||
-  (!!e?.timeStamp && e.timeStamp >= ((document?.timeline?.currentTime ?? 0) as number) - 500);
+  (!!e?.timeStamp && e.timeStamp >= ((document?.timeline?.currentTime as number) ?? 0) - 500);
 
 /**
  * Convert the passed square meter value to hectares.

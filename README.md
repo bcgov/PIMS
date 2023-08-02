@@ -2,9 +2,7 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/bcgov/pims/issues)
 ![API (.Net Core)](<https://github.com/bcgov/PIMS/workflows/API%20(.NET%20Core)/badge.svg?branch=dev>)
 ![APP (React)](<https://github.com/bcgov/PIMS/workflows/APP%20(React)/badge.svg?branch=dev>)
-[![codecov](https://codecov.io/gh/bcgov/PIMS/branch/dev/graph/badge.svg)](https://codecov.io/gh/bcgov/PIMS)
 
-![Uptime Robot status](https://img.shields.io/uptimerobot/status/m784832378-1d844c019bc2900c17c826cb)
 [![img](https://img.shields.io/badge/Lifecycle-Stable-97ca00)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
 
 # PIMS
@@ -51,10 +49,6 @@ Objectives include:
 - Allow for portals for clients to add, edit, and report on properties in the system
 - Accurate, customizable, instant financial reporting
 - Seamless data migration from clients to PIMS
-
-## Project Status
-
-> **IN DEVELOPMENT**
 
 ## Development
 

@@ -28,6 +28,7 @@ using Pims.Dal;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Keycloak;
 using Pims.Geocoder;
+using Pims.Ltsa;
 using Pims.Notifications;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
@@ -208,6 +209,7 @@ namespace Pims.Api
             services.AddPimsKeycloakService();
             services.AddGeocoderService(this.Configuration.GetSection("Geocoder")); // TODO: Determine if a default value could be used instead.
             services.AddChesService(this.Configuration.GetSection("Ches"));
+            services.AddLtsaService(this.Configuration.GetSection("Ltsa"));
             services.AddNotificationsService(this.Configuration.GetSection("Notifications"));
             services.AddSingleton<IAuthorizationHandler, RealmAccessRoleHandler>();
             services.AddSingleton<IConfiguration>(this.Configuration);
