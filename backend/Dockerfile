@@ -19,6 +19,7 @@ COPY geocoder/*.csproj geocoder/
 COPY ches/*.csproj ches/
 COPY notifications/*.csproj notifications/
 COPY core/*.csproj core/
+COPY ltsa/*.csproj ltsa/
 
 RUN dotnet restore
 ENV PATH="$PATH:/root/.dotnet/tools"

@@ -6,10 +6,6 @@ Refer to documentation for the database type.
 
 - [MSSQL](mssql/README.md)
 
-## Issues
-
-Windows doesn't support mounting volumes locally. You may have to add a `.env` file to the same directory as the `docker-compose.yml` file. Within that file the `COMPOSE_CONVERT_WINDOWS_PATHS=true` setting.
-
 ## Initialize Database
 
 To get the database running and initialized do one of the following;
