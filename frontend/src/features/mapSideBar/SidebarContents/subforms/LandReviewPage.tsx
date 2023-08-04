@@ -1,39 +1,22 @@
 import './LandReviewPage.scss';
 
-import { Box, Divider, Grid, Stack, Tab, Tabs, Typography } from '@mui/material';
-import { ILookupCode } from 'actions/ILookupCode';
+import { Box, Tab, Tabs } from '@mui/material';
 import { IBuilding } from 'actions/parcelsActions';
-import {
-  Check,
-  FastCurrencyInput,
-  FastInput,
-  FastSelect,
-  Input,
-  InputGroup,
-  Select,
-  TextArea,
-} from 'components/common/form';
-import { ParentSelect } from 'components/common/form/ParentSelect';
-import { TypeaheadField } from 'components/common/form/Typeahead';
+import { FastCurrencyInput, FastInput, FastSelect } from 'components/common/form';
 import { BuildingSvg, LandSvg } from 'components/common/Icons';
 import { Label } from 'components/common/Label';
-import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectNumberLink';
-import * as API from 'constants/API';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
+import { ParcelDetails } from 'features/mapSideBar/components/tabs/ParcelDetails';
 import { FormikTable } from 'features/projects/common';
 import { getAssociatedBuildingsCols } from 'features/properties/components/forms/subforms/columns';
 import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
-import { GeocoderAutoComplete } from 'features/properties/components/GeocoderAutoComplete';
 import { getIn, useFormikContext } from 'formik';
-import _ from 'lodash';
 import moment from 'moment';
-import React, { CSSProperties, SyntheticEvent, useCallback, useMemo, useState } from 'react';
+import React, { SyntheticEvent, useCallback, useMemo, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { FaEdit } from 'react-icons/fa';
-import { useAppSelector } from 'store';
-import styled from 'styled-components';
-import { formatFiscalYear, mapLookupCode } from 'utils';
+import { formatFiscalYear } from 'utils';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -46,22 +29,6 @@ interface IReviewProps {
   handlePinChange: (pin: string) => void;
   isPropertyAdmin: boolean;
 }
-
-const StyledProjectNumbers = styled.div`
-  flex-direction: column;
-  display: flex;
-`;
-
-const HeaderDivider = () => (
-  <Divider sx={{ mt: '5px', mb: '10px', height: '1px', background: '#1a57c7', opacity: '100%' }} />
-);
-
-// Style Constants
-const leftColumnWidth = 3;
-const rightColumnWidth = 12 - leftColumnWidth;
-const boldFontWeight = 700;
-const fontSize = 14;
-const rightColumnStyle: CSSProperties = { display: 'flex', justifyContent: 'left' };
 
 export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
   const withNameSpace: Function = useCallback(
@@ -86,10 +53,6 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
   );
   const [editInfo, setEditInfo] = useState(defaultEditValues);
 
-  const projectNumbers = getIn(formikProps.values, withNameSpace('projectNumbers'));
-  const agencyId = getIn(formikProps.values, withNameSpace('agencyId'));
-  const [privateProject, setPrivateProject] = useState(false);
-
   // Tabs.
   const [tab, setTab] = useState<number>(0);
   const handleTabChange = (event: SyntheticEvent, newValue: number) => {
@@ -110,28 +73,6 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
   const netBookYear = getIn(formikProps.values, withNameSpace(`fiscals.${fiscalIndex}.fiscalYear`));
 
   const buildings = getIn(formikProps.values, withNameSpace('buildings'));
-
-  // Address form:
-  const lookupCodes = useAppSelector((store) => store.lookupCode.lookupCodes);
-  const provinces = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.PROVINCE_CODE_SET_NAME;
-  }).map(mapLookupCode);
-  const administrativeAreas = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
-    return lookupCode.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME;
-  }).map(mapLookupCode);
-
-  /**
-   * postalCodeFormatter takes the specified postal code and formats it with a space in the middle
-   * @param {string} postal The target postal to be formatted
-   */
-  const postalCodeFormatter = (postal: string) => {
-    const regex = /([a-zA-z][0-9][a-zA-z])[\s-]?([0-9][a-zA-z][0-9])/;
-    const format = postal.match(regex);
-    if (format !== null && format.length === 3) {
-      postal = `${format[1]} ${format[2]}`;
-    }
-    return postal.toUpperCase();
-  };
 
   return (
     <Container className="review-section">
@@ -157,300 +98,11 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
 
         {/* PARCEL DETAILS TAB */}
         <Box role="tabpanel" hidden={tab !== 0} id="parcel-details-tabpanel">
-          <div className="identification">
-            <Box sx={{ p: 2, background: 'white' }}>
-              {/* HEADER */}
-              <Stack direction="row" spacing={1}>
-                <Typography text-align="left" sx={{ fontWeight: boldFontWeight, color: '#1a57c7' }}>
-                  Parcel Identification
-                </Typography>
-                {!props.disabled && (
-                  <Box sx={{ pl: 1 }}>
-                    <FaEdit
-                      size={20}
-                      className="edit"
-                      onClick={() =>
-                        setEditInfo({
-                          ...editInfo,
-                          identification: formikProps.isValid && !editInfo.identification,
-                        })
-                      }
-                    />
-                  </Box>
-                )}
-              </Stack>
-              <HeaderDivider />
-
-              {/* CONTENT */}
-              <Grid container sx={{ textAlign: 'left' }} rowSpacing={0.5}>
-                {/* AGENCY FIELD */}
-                <Grid item xs={leftColumnWidth}>
-                  <Typography fontSize={fontSize}>Agency:</Typography>
-                </Grid>
-                <Grid item xs={rightColumnWidth}>
-                  <ParentSelect
-                    required
-                    field={withNameSpace('agencyId')}
-                    options={props.agencies}
-                    filterBy={['code', 'label', 'parent']}
-                    disabled={true}
-                  />
-                </Grid>
-
-                {/* NAME FIELD */}
-                <Grid item xs={leftColumnWidth}>
-                  <Typography fontSize={fontSize}>Name:</Typography>
-                </Grid>
-                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
-                  <Input
-                    style={{ width: '100%' }}
-                    disabled={editInfo.identification}
-                    field={withNameSpace('name')}
-                  />
-                </Grid>
-
-                {/* PID PIN FIELD */}
-                <Grid item xs={leftColumnWidth}>
-                  <Typography fontSize={14}>PID/PIN:</Typography>
-                </Grid>
-                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
-                  <Stack direction="row" spacing={1}>
-                    {getIn(formikProps.values, withNameSpace('pid')) ? (
-                      <Input
-                        customRowStyle={{ width: '33%' }}
-                        displayErrorTooltips
-                        className="input-small"
-                        disabled={true}
-                        required={true}
-                        field={withNameSpace('pid')}
-                      />
-                    ) : (
-                      <Typography
-                        sx={{
-                          fontWeight: boldFontWeight,
-                          fontSize: fontSize - 1,
-                          alignSelf: 'center',
-                          width: '33%',
-                        }}
-                      >
-                        none
-                      </Typography>
-                    )}
-                    <Typography
-                      sx={{ fontWeight: boldFontWeight, alignSelf: 'center', textAlign: 'center' }}
-                    >
-                      &nbsp;/&nbsp;
-                    </Typography>
-                    {getIn(formikProps.values, withNameSpace('pin')) ? (
-                      <Input
-                        customRowStyle={{ width: '33%' }}
-                        style={{ textAlign: 'center' }}
-                        displayErrorTooltips
-                        className="input-small"
-                        disabled={true}
-                        required={true}
-                        field={withNameSpace('pin')}
-                      />
-                    ) : (
-                      <Typography
-                        sx={{
-                          fontWeight: boldFontWeight,
-                          fontSize: fontSize - 1,
-                          alignSelf: 'center',
-                          textAlign: 'center',
-                        }}
-                      >
-                        none
-                      </Typography>
-                    )}
-                  </Stack>
-                </Grid>
-
-                {/* DESCRIPTION FIELD */}
-                <Grid item xs={leftColumnWidth}>
-                  <Typography fontSize={fontSize}>Description:</Typography>
-                </Grid>
-                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
-                  <TextArea
-                    style={{ width: '30em', height: '6em' }}
-                    disabled={editInfo.identification}
-                    field={withNameSpace('description')}
-                  />
-                </Grid>
-
-                {/* LOT SIZE FIELD */}
-                <Grid item xs={leftColumnWidth}>
-                  <Typography fontSize={fontSize}>Lot Size:</Typography>
-                </Grid>
-                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
-                  <InputGroup
-                    displayErrorTooltips
-                    fast={true}
-                    disabled={true}
-                    type="number"
-                    field={withNameSpace('landArea')}
-                    formikProps={formikProps}
-                    postText="Hectares"
-                  />
-                </Grid>
-
-                {/* LATITUDE FIELD */}
-                <Grid item xs={leftColumnWidth}>
-                  <Typography fontSize={fontSize}>Latitude:</Typography>
-                </Grid>
-                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
-                  <FastInput
-                    className="input-medium"
-                    displayErrorTooltips
-                    formikProps={formikProps}
-                    disabled={true}
-                    type="number"
-                    field={withNameSpace('latitude')}
-                  />
-                </Grid>
-
-                {/* LONGITUDE FIELD */}
-                <Grid item xs={leftColumnWidth}>
-                  <Typography fontSize={fontSize}>Longitude:</Typography>
-                </Grid>
-                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
-                  <FastInput
-                    className="input-medium"
-                    displayErrorTooltips
-                    formikProps={formikProps}
-                    disabled={true}
-                    type="number"
-                    field={withNameSpace('longitude')}
-                  />
-                </Grid>
-
-                {/* STREET ADDRESS FIELD */}
-                <Grid item xs={leftColumnWidth}>
-                  <Typography fontSize={fontSize}>Street Address:</Typography>
-                </Grid>
-                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
-                  <GeocoderAutoComplete
-                    tooltip={undefined}
-                    value={getIn(formikProps.values, withNameSpace('address.line1'))}
-                    disabled={true}
-                    field={withNameSpace('line1')}
-                    onSelectionChanged={() => {}}
-                    onTextChange={(value) =>
-                      formikProps.setFieldValue(withNameSpace('address.line1'), value)
-                    }
-                    error={getIn(formikProps.errors, withNameSpace('address.line1'))}
-                    touch={getIn(formikProps.touched, withNameSpace('address.line1'))}
-                    displayErrorTooltips
-                    required={true}
-                  />
-                </Grid>
-
-                {/* LOCATION FIELD */}
-                <Grid item xs={leftColumnWidth}>
-                  <Typography fontSize={fontSize}>Location:</Typography>
-                </Grid>
-                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
-                  <TypeaheadField
-                    options={administrativeAreas.map((x) => x.label)}
-                    name={withNameSpace('address.administrativeArea')}
-                    disabled={true}
-                    hideValidation={true}
-                    paginate={false}
-                    required
-                    displayErrorTooltips
-                  />
-                </Grid>
-
-                {/* PROVINCE FIELD */}
-                <Grid item xs={leftColumnWidth}>
-                  <Typography fontSize={fontSize}>Province:</Typography>
-                </Grid>
-                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
-                  <Select
-                    disabled={true}
-                    placeholder="Must Select One"
-                    field={withNameSpace('address.provinceId')}
-                    options={provinces}
-                  />
-                </Grid>
-
-                {/* POSTAL CODE FIELD */}
-                <Grid item xs={leftColumnWidth}>
-                  <Typography fontSize={fontSize}>Postal Code:</Typography>
-                </Grid>
-                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
-                  <FastInput
-                    className="input-small"
-                    formikProps={formikProps}
-                    disabled={true}
-                    onBlurFormatter={(postal: string) =>
-                      postal.replace(postal, postalCodeFormatter(postal))
-                    }
-                    field={withNameSpace('address.postal')}
-                    displayErrorTooltips
-                  />
-                </Grid>
-
-                {/* LEGAL DESCRIPTION FIELD */}
-                <Grid item xs={leftColumnWidth}>
-                  <Typography fontSize={fontSize}>Legal Description:</Typography>
-                </Grid>
-                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
-                  <TextArea
-                    style={{ width: '30em', height: '6em' }}
-                    disabled={true}
-                    field={withNameSpace('landLegalDescription')}
-                  />
-                </Grid>
-
-                {/* PROJECT NUMBERS */}
-                {!!projectNumbers?.length && (
-                  <>
-                    <Grid item xs={leftColumnWidth}>
-                      <Typography fontSize={fontSize}>Project Number(s):</Typography>
-                    </Grid>
-                    <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
-                      <StyledProjectNumbers>
-                        {projectNumbers.map((projectNum: string) => (
-                          <ProjectNumberLink
-                            projectNumber={projectNum}
-                            key={projectNum}
-                            agencyId={agencyId}
-                            setPrivateProject={setPrivateProject}
-                            privateProject={privateProject}
-                          />
-                        ))}
-                      </StyledProjectNumbers>
-                    </Grid>
-                  </>
-                )}
-              </Grid>
-            </Box>
-
-            {/* Harmful if released? */}
-            <Box
-              sx={{
-                mt: '15px',
-                p: 2,
-                background: 'white',
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-            >
-              <Stack direction="row" spacing={1}>
-                <Typography sx={{ fontWeight: boldFontWeight }}>
-                  Harmful info if released?
-                </Typography>
-                <Check
-                  type="radio"
-                  field={withNameSpace('isSensitive')}
-                  radioLabelOne="Yes"
-                  radioLabelTwo="No"
-                  disabled={editInfo.identification}
-                />
-              </Stack>
-            </Box>
-          </div>
+          <ParcelDetails
+            disabled={props.disabled}
+            agencies={props.agencies}
+            {...{ withNameSpace, editInfo, setEditInfo }}
+          />
         </Box>
 
         {/* USAGE & VALUATION TAB */}
