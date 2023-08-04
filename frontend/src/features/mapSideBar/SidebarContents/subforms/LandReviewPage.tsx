@@ -28,7 +28,7 @@ import { GeocoderAutoComplete } from 'features/properties/components/GeocoderAut
 import { getIn, useFormikContext } from 'formik';
 import _ from 'lodash';
 import moment from 'moment';
-import React, { SyntheticEvent, useCallback, useMemo, useState } from 'react';
+import React, { CSSProperties, SyntheticEvent, useCallback, useMemo, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { FaEdit } from 'react-icons/fa';
 import { useAppSelector } from 'store';
@@ -55,6 +55,13 @@ const StyledProjectNumbers = styled.div`
 const HeaderDivider = () => (
   <Divider sx={{ mt: '5px', mb: '10px', height: '1px', background: '#1a57c7', opacity: '100%' }} />
 );
+
+// Style Constants
+const leftColumnWidth = 3;
+const rightColumnWidth = 12 - leftColumnWidth;
+const boldFontWeight = 700;
+const fontSize = 14;
+const rightColumnStyle: CSSProperties = { display: 'flex', justifyContent: 'left' };
 
 export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
   const withNameSpace: Function = useCallback(
@@ -154,7 +161,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
             <Box sx={{ p: 2, background: 'white' }}>
               {/* HEADER */}
               <Stack direction="row" spacing={1}>
-                <Typography text-align="left" sx={{ fontWeight: 700, color: '#1a57c7' }}>
+                <Typography text-align="left" sx={{ fontWeight: boldFontWeight, color: '#1a57c7' }}>
                   Parcel Identification
                 </Typography>
                 {!props.disabled && (
@@ -177,12 +184,10 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
               {/* CONTENT */}
               <Grid container sx={{ textAlign: 'left' }} rowSpacing={0.5}>
                 {/* AGENCY FIELD */}
-                <Grid item xs={5}>
-                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
-                    Agency:
-                  </Typography>
+                <Grid item xs={leftColumnWidth}>
+                  <Typography fontSize={fontSize}>Agency:</Typography>
                 </Grid>
-                <Grid item xs={7}>
+                <Grid item xs={rightColumnWidth}>
                   <ParentSelect
                     required
                     field={withNameSpace('agencyId')}
@@ -193,12 +198,10 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 </Grid>
 
                 {/* NAME FIELD */}
-                <Grid item xs={5}>
-                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
-                    Name:
-                  </Typography>
+                <Grid item xs={leftColumnWidth}>
+                  <Typography fontSize={fontSize}>Name:</Typography>
                 </Grid>
-                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
+                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
                   <Input
                     style={{ width: '100%' }}
                     disabled={editInfo.identification}
@@ -207,12 +210,10 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 </Grid>
 
                 {/* PID PIN FIELD */}
-                <Grid item xs={5}>
-                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
-                    PID/PIN:
-                  </Typography>
+                <Grid item xs={leftColumnWidth}>
+                  <Typography fontSize={14}>PID/PIN:</Typography>
                 </Grid>
-                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
+                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
                   <Stack direction="row" spacing={1}>
                     {getIn(formikProps.values, withNameSpace('pid')) ? (
                       <Input
@@ -226,8 +227,8 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                     ) : (
                       <Typography
                         sx={{
-                          fontWeight: 700,
-                          fontSize: 13,
+                          fontWeight: boldFontWeight,
+                          fontSize: fontSize - 1,
                           alignSelf: 'center',
                           width: '33%',
                         }}
@@ -235,8 +236,10 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                         none
                       </Typography>
                     )}
-                    <Typography sx={{ fontWeight: 700, alignSelf: 'center', textAlign: 'center' }}>
-                      /
+                    <Typography
+                      sx={{ fontWeight: boldFontWeight, alignSelf: 'center', textAlign: 'center' }}
+                    >
+                      &nbsp;/&nbsp;
                     </Typography>
                     {getIn(formikProps.values, withNameSpace('pin')) ? (
                       <Input
@@ -251,8 +254,8 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                     ) : (
                       <Typography
                         sx={{
-                          fontWeight: 700,
-                          fontSize: 13,
+                          fontWeight: boldFontWeight,
+                          fontSize: fontSize - 1,
                           alignSelf: 'center',
                           textAlign: 'center',
                         }}
@@ -264,26 +267,22 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 </Grid>
 
                 {/* DESCRIPTION FIELD */}
-                <Grid item xs={5}>
-                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
-                    Description:
-                  </Typography>
+                <Grid item xs={leftColumnWidth}>
+                  <Typography fontSize={fontSize}>Description:</Typography>
                 </Grid>
-                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
+                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
                   <TextArea
-                    style={{ width: '400px', height: '80px' }}
+                    style={{ width: '30em', height: '6em' }}
                     disabled={editInfo.identification}
                     field={withNameSpace('description')}
                   />
                 </Grid>
 
                 {/* LOT SIZE FIELD */}
-                <Grid item xs={5}>
-                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
-                    Lot Size:
-                  </Typography>
+                <Grid item xs={leftColumnWidth}>
+                  <Typography fontSize={fontSize}>Lot Size:</Typography>
                 </Grid>
-                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
+                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
                   <InputGroup
                     displayErrorTooltips
                     fast={true}
@@ -296,12 +295,10 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 </Grid>
 
                 {/* LATITUDE FIELD */}
-                <Grid item xs={5}>
-                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
-                    Latitude:
-                  </Typography>
+                <Grid item xs={leftColumnWidth}>
+                  <Typography fontSize={fontSize}>Latitude:</Typography>
                 </Grid>
-                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
+                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
                   <FastInput
                     className="input-medium"
                     displayErrorTooltips
@@ -313,12 +310,10 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 </Grid>
 
                 {/* LONGITUDE FIELD */}
-                <Grid item xs={5}>
-                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
-                    Longitude:
-                  </Typography>
+                <Grid item xs={leftColumnWidth}>
+                  <Typography fontSize={fontSize}>Longitude:</Typography>
                 </Grid>
-                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
+                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
                   <FastInput
                     className="input-medium"
                     displayErrorTooltips
@@ -330,12 +325,10 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 </Grid>
 
                 {/* STREET ADDRESS FIELD */}
-                <Grid item xs={5}>
-                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
-                    Street Address:
-                  </Typography>
+                <Grid item xs={leftColumnWidth}>
+                  <Typography fontSize={fontSize}>Street Address:</Typography>
                 </Grid>
-                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
+                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
                   <GeocoderAutoComplete
                     tooltip={undefined}
                     value={getIn(formikProps.values, withNameSpace('address.line1'))}
@@ -353,12 +346,10 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 </Grid>
 
                 {/* LOCATION FIELD */}
-                <Grid item xs={5}>
-                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
-                    Location:
-                  </Typography>
+                <Grid item xs={leftColumnWidth}>
+                  <Typography fontSize={fontSize}>Location:</Typography>
                 </Grid>
-                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
+                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
                   <TypeaheadField
                     options={administrativeAreas.map((x) => x.label)}
                     name={withNameSpace('address.administrativeArea')}
@@ -371,12 +362,10 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 </Grid>
 
                 {/* PROVINCE FIELD */}
-                <Grid item xs={5}>
-                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
-                    Province:
-                  </Typography>
+                <Grid item xs={leftColumnWidth}>
+                  <Typography fontSize={fontSize}>Province:</Typography>
                 </Grid>
-                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
+                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
                   <Select
                     disabled={true}
                     placeholder="Must Select One"
@@ -386,16 +375,13 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 </Grid>
 
                 {/* POSTAL CODE FIELD */}
-                <Grid item xs={5}>
-                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
-                    Postal Code:
-                  </Typography>
+                <Grid item xs={leftColumnWidth}>
+                  <Typography fontSize={fontSize}>Postal Code:</Typography>
                 </Grid>
-                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
+                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
                   <FastInput
                     className="input-small"
                     formikProps={formikProps}
-                    style={{ width: '120px' }}
                     disabled={true}
                     onBlurFormatter={(postal: string) =>
                       postal.replace(postal, postalCodeFormatter(postal))
@@ -406,14 +392,12 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 </Grid>
 
                 {/* LEGAL DESCRIPTION FIELD */}
-                <Grid item xs={5}>
-                  <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
-                    Legal Description:
-                  </Typography>
+                <Grid item xs={leftColumnWidth}>
+                  <Typography fontSize={fontSize}>Legal Description:</Typography>
                 </Grid>
-                <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
+                <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
                   <TextArea
-                    style={{ width: '400px', height: '80px' }}
+                    style={{ width: '30em', height: '6em' }}
                     disabled={true}
                     field={withNameSpace('landLegalDescription')}
                   />
@@ -422,12 +406,10 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
                 {/* PROJECT NUMBERS */}
                 {!!projectNumbers?.length && (
                   <>
-                    <Grid item xs={5}>
-                      <Typography fontSize={14} sx={{ alignSelf: 'center' }}>
-                        Project Number(s):
-                      </Typography>
+                    <Grid item xs={leftColumnWidth}>
+                      <Typography fontSize={fontSize}>Project Number(s):</Typography>
                     </Grid>
-                    <Grid item xs={7} sx={{ display: 'flex', alignItems: 'left' }}>
+                    <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
                       <StyledProjectNumbers>
                         {projectNumbers.map((projectNum: string) => (
                           <ProjectNumberLink
@@ -456,7 +438,9 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
               }}
             >
               <Stack direction="row" spacing={1}>
-                <Typography sx={{ fontWeight: 700 }}>Harmful info if released?</Typography>
+                <Typography sx={{ fontWeight: boldFontWeight }}>
+                  Harmful info if released?
+                </Typography>
                 <Check
                   type="radio"
                   field={withNameSpace('isSensitive')}
