@@ -22,7 +22,7 @@
   "dependencies": {
     "@babel/core": "7.22.8",
     "@bcgov/bc-sans": "1.0.1",
-    "@emotion/react": "11.11.0",
+    "@emotion/react": "^11.11.1",
     "@emotion/styled": "11.11.0",
     "@mui/icons-material": "5.13.7",
     "@mui/material": "5.13.7",
