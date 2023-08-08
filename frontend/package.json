@@ -45,7 +45,7 @@
     "polylabel": "1.1.0",
     "react": "18.2.0",
     "react-app-polyfill": "3.0.0",
-    "react-bootstrap": "2.7.4",
+    "react-bootstrap": "^2.8.0",
     "react-bootstrap-typeahead": "5.2.2",
     "react-click-away-listener": "2.2.3",
     "react-datepicker": "4.15.0",
