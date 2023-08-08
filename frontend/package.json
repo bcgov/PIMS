@@ -98,7 +98,7 @@
     "@types/react": "18.2.6",
     "@types/react-bootstrap-typeahead": "5.1.9",
     "@types/react-datepicker": "4.11.2",
-    "@types/react-dom": "18.2.6",
+    "@types/react-dom": "^18.2.7",
     "@types/react-leaflet": "3.0.0",
     "@types/react-paginate": "7.1.1",
     "@types/react-redux": "7.1.25",
