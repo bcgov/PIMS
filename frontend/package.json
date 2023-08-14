@@ -52,7 +52,7 @@
     "react-dom": "18.2.0",
     "react-draggable": "4.4.5",
     "react-error-boundary": "3.1.4",
-    "react-icons": "^4.10.1",
+    "react-icons": "4.10.1",
     "react-leaflet": "3.2.5",
     "react-paginate": "8.2.0",
     "react-redux": "7.2.9",
