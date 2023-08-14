@@ -61,7 +61,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
         <h4>Review your land info</h4>
         <p>
           You can edit some information by clicking on the edit icon for each section. When you are
-          satisfied that the infomation provided is correct, click the submit button to save to the
+          satisfied that the information provided is correct, click the submit button to save to the
           PIMS inventory.
         </p>
       </Row>
