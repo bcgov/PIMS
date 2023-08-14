@@ -27,7 +27,7 @@
     "@mui/icons-material": "5.13.7",
     "@mui/material": "5.13.7",
     "@react-keycloak/web": "3.4.0",
-    "@react-leaflet/core": "^2.1.0",
+    "@react-leaflet/core": "2.1.0",
     "@redux-devtools/extension": "3.2.5",
     "@reduxjs/toolkit": "1.9.5",
     "axios": "0.27.2",
