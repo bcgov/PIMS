@@ -373,13 +373,6 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
                       formikProps={formikProps}
                       disabled={editInfo.tenancy}
                       field={withNameSpace('buildingTenancyUpdatedOn')}
-                      popperModifiers={{
-                        preventOverflow: {
-                          enabled: true,
-                          escapeWithReference: false,
-                          boundariesElement: 'scrollParent',
-                        },
-                      }}
                     />
                   </span>
                 </Col>
