@@ -83,7 +83,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
         </Box>
 
         {/* USAGE & VALUATION TAB */}
-        <Box role="tabpanel" hidden={tab !== 1} id="usage-valuation-tabpanel" sx={{ p: 3 }}>
+        <Box role="tabpanel" hidden={tab !== 1} id="usage-valuation-tabpanel">
           <UsageValuation
             {...{ withNameSpace, editInfo, setEditInfo, disabled, classifications }}
           />

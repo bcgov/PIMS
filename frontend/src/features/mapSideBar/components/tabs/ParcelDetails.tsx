@@ -45,6 +45,7 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
     flex-direction: column;
     display: flex;
   `;
+  const headerColour = '#1a57c7';
 
   // Address form:
   const lookupCodes = useAppSelector((store) => store.lookupCode.lookupCodes);
@@ -73,7 +74,7 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
       <Box sx={{ p: 2, background: 'white' }}>
         {/* HEADER */}
         <Stack direction="row" spacing={1}>
-          <Typography text-align="left" sx={{ fontWeight: boldFontWeight, color: '#1a57c7' }}>
+          <Typography text-align="left" sx={{ fontWeight: boldFontWeight, color: headerColour }}>
             Parcel Identification
           </Typography>
           {!disabled && (
