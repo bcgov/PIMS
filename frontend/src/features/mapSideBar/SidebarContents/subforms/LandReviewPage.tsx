@@ -2,21 +2,14 @@ import './LandReviewPage.scss';
 
 import { Box, Tab, Tabs } from '@mui/material';
 import { IBuilding } from 'actions/parcelsActions';
-import { FastCurrencyInput, FastInput, FastSelect } from 'components/common/form';
-import { BuildingSvg, LandSvg } from 'components/common/Icons';
-import { Label } from 'components/common/Label';
-import { EvaluationKeys } from 'constants/evaluationKeys';
-import { FiscalKeys } from 'constants/fiscalKeys';
+import { BuildingSvg } from 'components/common/Icons';
 import { ParcelDetails } from 'features/mapSideBar/components/tabs/ParcelDetails';
+import { UsageValuation } from 'features/mapSideBar/components/tabs/UsageValuation';
 import { FormikTable } from 'features/projects/common';
 import { getAssociatedBuildingsCols } from 'features/properties/components/forms/subforms/columns';
-import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
 import { getIn, useFormikContext } from 'formik';
-import moment from 'moment';
 import React, { SyntheticEvent, useCallback, useMemo, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import { FaEdit } from 'react-icons/fa';
-import { formatFiscalYear } from 'utils';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -31,11 +24,12 @@ interface IReviewProps {
 }
 
 export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
+  const { agencies, disabled, classifications, nameSpace } = props;
   const withNameSpace: Function = useCallback(
     (fieldName: string) => {
-      return props.nameSpace ? `${props.nameSpace}.${fieldName}` : fieldName;
+      return nameSpace ? `${nameSpace}.${fieldName}` : fieldName;
     },
-    [props.nameSpace],
+    [nameSpace],
   );
   const formikProps = useFormikContext();
 
@@ -45,11 +39,11 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
 
   const defaultEditValues = useMemo(
     () => ({
-      identification: props.disabled || formikProps.isValid,
-      usage: props.disabled || formikProps.isValid,
-      valuation: props.disabled || formikProps.isValid,
+      identification: disabled || formikProps.isValid,
+      usage: disabled || formikProps.isValid,
+      valuation: disabled || formikProps.isValid,
     }),
-    [formikProps.isValid, props.disabled],
+    [formikProps.isValid, disabled],
   );
   const [editInfo, setEditInfo] = useState(defaultEditValues);
 
@@ -58,19 +52,6 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
   const handleTabChange = (event: SyntheticEvent, newValue: number) => {
     setTab(newValue);
   };
-
-  const currentYear = moment().year();
-  const evaluationIndex = indexOfFinancial(
-    getIn(formikProps.values, withNameSpace('evaluations')),
-    EvaluationKeys.Assessed,
-    currentYear,
-  );
-  const fiscalIndex = indexOfFinancial(
-    getIn(formikProps.values, withNameSpace('fiscals')),
-    FiscalKeys.NetBook,
-    currentYear,
-  );
-  const netBookYear = getIn(formikProps.values, withNameSpace(`fiscals.${fiscalIndex}.fiscalYear`));
 
   const buildings = getIn(formikProps.values, withNameSpace('buildings'));
 
@@ -98,148 +79,14 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
 
         {/* PARCEL DETAILS TAB */}
         <Box role="tabpanel" hidden={tab !== 0} id="parcel-details-tabpanel">
-          <ParcelDetails
-            disabled={props.disabled}
-            agencies={props.agencies}
-            {...{ withNameSpace, editInfo, setEditInfo }}
-          />
+          <ParcelDetails {...{ withNameSpace, editInfo, setEditInfo, agencies, disabled }} />
         </Box>
 
         {/* USAGE & VALUATION TAB */}
         <Box role="tabpanel" hidden={tab !== 1} id="usage-valuation-tabpanel" sx={{ p: 3 }}>
-          <Row>
-            <div className="usage">
-              <Row className="section-header">
-                <Col md="auto">
-                  <span>
-                    <LandSvg className="svg" />
-                    <h5>Usage</h5>
-                  </span>
-                </Col>
-                {!props.disabled && (
-                  <Col md="auto">
-                    <FaEdit
-                      size={20}
-                      className="edit"
-                      onClick={() =>
-                        setEditInfo({
-                          ...editInfo,
-                          usage: formikProps.isValid && !editInfo.usage,
-                        })
-                      }
-                    />
-                  </Col>
-                )}
-              </Row>
-              <Row className="classification field-row">
-                <Col md="auto" style={{ marginLeft: '20px' }}>
-                  <Label>Classification</Label>
-                </Col>
-                <Col md="auto">
-                  <FastSelect
-                    formikProps={formikProps}
-                    disabled={editInfo.usage}
-                    type="number"
-                    placeholder="Must Select One"
-                    field={withNameSpace('classificationId')}
-                    options={props.classifications}
-                    required={true}
-                  />
-                </Col>
-              </Row>
-              <Row className="field-row">
-                <Col md="auto" style={{ marginLeft: '7px' }}>
-                  <Label>Current Zoning</Label>
-                </Col>
-                <Col md="auto">
-                  <FastInput
-                    formikProps={formikProps}
-                    disabled={editInfo.usage}
-                    field={withNameSpace('zoning')}
-                  />
-                </Col>
-              </Row>
-              <Row className="field-row">
-                <Col md="auto">
-                  <Label style={{ marginLeft: '-0.5px' }}>Potential Zoning</Label>
-                </Col>
-                <Col md="auto">
-                  <FastInput
-                    formikProps={formikProps}
-                    disabled={editInfo.usage}
-                    field={withNameSpace('zoningPotential')}
-                  />
-                </Col>
-              </Row>
-            </div>
-          </Row>
-          <Row className="content-item">
-            <div className="valuation">
-              <Row className="section-header">
-                <Col md="auto">
-                  <span>
-                    <LandSvg className="svg" />
-                    <h5>Valuation</h5>
-                  </span>
-                </Col>
-                {!props.disabled && (
-                  <Col md="auto">
-                    <FaEdit
-                      size={20}
-                      className="edit"
-                      onClick={() =>
-                        setEditInfo({
-                          ...editInfo,
-                          valuation: formikProps.isValid && !editInfo.valuation,
-                        })
-                      }
-                    />
-                  </Col>
-                )}
-              </Row>
-              <Row className="val-row">
-                <Col md="auto">
-                  <Label>Net Book Value</Label>
-                </Col>
-                <Col md="auto">
-                  <FastCurrencyInput
-                    formikProps={formikProps}
-                    field={withNameSpace(`fiscals.${fiscalIndex}.value`)}
-                    disabled={editInfo.valuation}
-                  />
-                </Col>
-                <Col md="auto">
-                  <FastInput
-                    formikProps={formikProps}
-                    field="netBookYearDisplay"
-                    value={formatFiscalYear(netBookYear)}
-                    disabled
-                    style={{ width: 50, fontSize: 11 }}
-                  />
-                </Col>
-              </Row>
-              <Row className="val-row">
-                <Col md="auto" style={{ marginLeft: '2px' }}>
-                  <Label>Assessed Value</Label>
-                </Col>
-                <Col md="auto">
-                  <FastCurrencyInput
-                    formikProps={formikProps}
-                    field={withNameSpace(`evaluations.${evaluationIndex}.value`)}
-                    disabled={editInfo.valuation}
-                  />
-                </Col>
-                <Col md="auto">
-                  <FastInput
-                    formikProps={formikProps}
-                    field={withNameSpace(`evaluations.${evaluationIndex}.year`)}
-                    disabled
-                    style={{ width: 50, fontSize: 11 }}
-                  />
-                </Col>
-              </Row>
-            </div>
-          </Row>
+          <UsageValuation
+            {...{ withNameSpace, editInfo, setEditInfo, disabled, classifications }}
+          />
         </Box>
 
         {/* TITLE & OWNERSHIP TAB */}
