@@ -68,7 +68,7 @@
     "redux": "4.2.1",
     "redux-logger": "3.0.6",
     "redux-thunk": "2.4.2",
-    "retry-axios": "^3.0.0",
+    "retry-axios": "3.0.0",
     "sass": "1.63.6",
     "styled-components": "5.3.11",
     "supercluster": "8.0.1",
