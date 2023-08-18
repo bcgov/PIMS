@@ -158,7 +158,7 @@ export const useApi = (props?: IApiProps): PimsAPI => {
   /**
    * Make an AJAX request to obtain LTSA information on a parcel.
    * @param {string} id The parcel primary id (PID).
-   * @returns {ILTSAOrderModel} An object matching ILTSAOrderModel interface.
+   * @returns A promise containing the LTSA order info.
    */
   axios.getLTSA = useCallback(async (id: string) => {
     const { data } = await axios.get<ILTSAOrderModel>(

@@ -4,6 +4,7 @@ import { Box, Tab, Tabs } from '@mui/material';
 import { IBuilding } from 'actions/parcelsActions';
 import { BuildingSvg } from 'components/common/Icons';
 import { ParcelDetails } from 'features/mapSideBar/components/tabs/ParcelDetails';
+import { TitleOwnership } from 'features/mapSideBar/components/tabs/TitleOwnership';
 import { UsageValuation } from 'features/mapSideBar/components/tabs/UsageValuation';
 import { FormikTable } from 'features/projects/common';
 import { getAssociatedBuildingsCols } from 'features/properties/components/forms/subforms/columns';
@@ -90,10 +91,12 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
         </Box>
 
         {/* TITLE & OWNERSHIP TAB */}
-        <Box role="tabpanel" hidden={tab !== 2} id="title-ownership-tabpanel" sx={{ p: 3 }}></Box>
+        <Box role="tabpanel" hidden={tab !== 2} id="title-ownership-tabpanel">
+          <TitleOwnership {...{ withNameSpace }} />
+        </Box>
 
         {/* ASSOCIATED BUILDINGS TAB */}
-        <Box role="tabpanel" hidden={tab !== 3} id="associated-buildings-tabpanel" sx={{ p: 3 }}>
+        <Box role="tabpanel" hidden={tab !== 3} id="associated-buildings-tabpanel">
           {buildings?.length > 0 && (
             <Col md={12}>
               <Row>

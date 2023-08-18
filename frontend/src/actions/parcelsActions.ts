@@ -205,8 +205,8 @@ export interface ILTSAOrderModel {
           landTitleDistrict: string;
         };
         tombstone: {
-          applicationReceivedDate: Date;
-          enteredDate: Date;
+          applicationReceivedDate: string;
+          enteredDate: string;
           titleRemarks: string;
           rootOfTitle: string;
           marketValueAmount: number;
@@ -253,13 +253,13 @@ export interface ILTSAOrderModel {
           {
             chargeNumber: string;
             status: string;
-            enteredDate: Date;
+            enteredDate: string;
             interAlia: string;
             chargeRemarks: string;
             charge: {
               chargeNumber: string;
               transactionType: string;
-              applicationReceivedDate: Date;
+              applicationReceivedDate: string;
               chargeOwnershipGroups: [
                 {
                   jointTenancyIndication: boolean;
