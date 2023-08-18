@@ -2,7 +2,6 @@ import './LandReviewPage.scss';
 
 import { Box, Tab, Tabs } from '@mui/material';
 import { IBuilding } from 'actions/parcelsActions';
-import { BuildingSvg } from 'components/common/Icons';
 import { ParcelDetails } from 'features/mapSideBar/components/tabs/ParcelDetails';
 import { TitleOwnership } from 'features/mapSideBar/components/tabs/TitleOwnership';
 import { UsageValuation } from 'features/mapSideBar/components/tabs/UsageValuation';
@@ -10,7 +9,7 @@ import { FormikTable } from 'features/projects/common';
 import { getAssociatedBuildingsCols } from 'features/properties/components/forms/subforms/columns';
 import { getIn, useFormikContext } from 'formik';
 import React, { SyntheticEvent, useCallback, useMemo, useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Container, Row } from 'react-bootstrap';
 
 interface IReviewProps {
   nameSpace?: string;

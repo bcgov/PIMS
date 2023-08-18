@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { ChargesTable } from '../tables/ChargeTable';
 import { OwnershipTable } from '../tables/OwnershipTable';
 import { HeaderDivider } from './HeaderDivider';
+import { tabStyles } from './TabStyles';
 
 interface ITitleOwnershipProps {
   withNameSpace: Function;
@@ -25,11 +26,7 @@ export const TitleOwnership: React.FC<any> = (props: ITitleOwnershipProps) => {
   }, [formikProps]);
 
   // Style Constants
-  const leftColumnWidth = 3;
-  const rightColumnWidth = 12 - leftColumnWidth;
-  const boldFontWeight = 700;
-  const fontSize = 14;
-  const headerColour = '#1a57c7';
+  const { leftColumnWidth, rightColumnWidth, boldFontWeight, fontSize, headerColour } = tabStyles;
 
   return (
     <>

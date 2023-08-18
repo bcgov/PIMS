@@ -15,6 +15,8 @@ import { useAppSelector } from 'store';
 import styled from 'styled-components';
 import { mapLookupCode } from 'utils';
 
+import { tabStyles } from './TabStyles';
+
 interface IParcelDetailsProps {
   withNameSpace: Function;
   disabled?: boolean;
@@ -36,16 +38,12 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
   const [privateProject, setPrivateProject] = useState(false);
 
   // Style Constants
-  const leftColumnWidth = 3;
-  const rightColumnWidth = 12 - leftColumnWidth;
-  const boldFontWeight = 700;
-  const fontSize = 14;
+  const { leftColumnWidth, rightColumnWidth, boldFontWeight, fontSize, headerColour } = tabStyles;
   const rightColumnStyle: CSSProperties = { display: 'flex', justifyContent: 'left' };
   const StyledProjectNumbers = styled.div`
     flex-direction: column;
     display: flex;
   `;
-  const headerColour = '#1a57c7';
 
   // Address form:
   const lookupCodes = useAppSelector((store) => store.lookupCode.lookupCodes);

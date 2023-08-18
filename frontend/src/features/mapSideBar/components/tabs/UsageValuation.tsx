@@ -10,6 +10,7 @@ import { FaEdit } from 'react-icons/fa';
 import { formatFiscalYear } from 'utils';
 
 import { HeaderDivider } from './HeaderDivider';
+import { tabStyles } from './TabStyles';
 
 interface IUsageValuationProps {
   withNameSpace: Function;
@@ -44,11 +45,7 @@ export const UsageValuation: React.FC<any> = (props: IUsageValuationProps) => {
   const netBookYear = getIn(formikProps.values, withNameSpace(`fiscals.${fiscalIndex}.fiscalYear`));
 
   // Style Constants
-  const leftColumnWidth = 3;
-  const rightColumnWidth = 12 - leftColumnWidth;
-  const boldFontWeight = 700;
-  const fontSize = 14;
-  const headerColour = '#1a57c7';
+  const { leftColumnWidth, rightColumnWidth, boldFontWeight, fontSize, headerColour } = tabStyles;
 
   return (
     <>
