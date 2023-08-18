@@ -53,8 +53,8 @@ const Row = (props: IRowProps) => {
     >
       <TableCell>{row.chargeNumber}</TableCell>
       <TableCell>{row.status}</TableCell>
-      <TableCell>{row.enteredDate}</TableCell>
-      <TableCell>{row.charge.applicationReceivedDate}</TableCell>
+      <TableCell>{new Date(row.enteredDate).toLocaleDateString()}</TableCell>
+      <TableCell>{new Date(row.charge.applicationReceivedDate).toLocaleDateString()}</TableCell>
       <TableCell>{row.charge.transactionType}</TableCell>
       <TableCell>{row.chargeRemarks}</TableCell>
     </TableRow>

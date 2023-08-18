@@ -34,14 +34,16 @@ const Row = (props: IRowProps) => {
         backgroundColor: index % 2 === 0 ? 'white' : '#F2F2F2',
       }}
     >
-      <TableCell align="center">{`${row.interestFractionNumerator}/${row.interestFractionDenominator}`}</TableCell>
+      <TableCell align="center" sx={{ width: '7em' }}>
+        {parseInt(row.interestFractionNumerator) / parseInt(row.interestFractionDenominator)}
+      </TableCell>
       <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
         <Box sx={{ margin: 1 }}>
           <Table size="small" aria-label="purchases">
             <TableHead>
               <TableRow>
-                <TableCell>Owner(s) / Corporation(s)</TableCell>
-                <TableCell>Incorporation #</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>Owner(s) / Corporation(s)</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>Incorporation #</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
