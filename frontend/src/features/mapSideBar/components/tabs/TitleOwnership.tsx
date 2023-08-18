@@ -1,4 +1,4 @@
-import { Box, Grid, Stack, Table, TableHead, Typography } from '@mui/material';
+import { Box, Grid, Stack, Typography } from '@mui/material';
 import { ILTSAOrderModel } from 'actions/parcelsActions';
 import { getIn, useFormikContext } from 'formik';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -35,6 +35,7 @@ export const TitleOwnership: React.FC<any> = (props: ITitleOwnershipProps) => {
   const { leftColumnWidth, rightColumnWidth, boldFontWeight, fontSize, headerColour } = tabStyles;
 
   const calculateCurrency = (value: number | string | undefined) => {
+    console.log(value);
     if (!value) {
       return '';
     }
@@ -42,6 +43,9 @@ export const TitleOwnership: React.FC<any> = (props: ITitleOwnershipProps) => {
     let cleanedValue = 0;
     if (typeof value === 'string') {
       cleanedValue = parseFloat(value.replace(',', '').replace('$', ''));
+      if (Number.isNaN(cleanedValue)) {
+        return '';
+      }
     } else if (typeof value === 'number') {
       cleanedValue = value;
     }
@@ -52,7 +56,7 @@ export const TitleOwnership: React.FC<any> = (props: ITitleOwnershipProps) => {
     }).format(cleanedValue);
   };
 
-  return (
+  return ltsa ? (
     <>
       <p
         style={{
@@ -184,5 +188,16 @@ export const TitleOwnership: React.FC<any> = (props: ITitleOwnershipProps) => {
         </Box>
       </div>
     </>
+  ) : (
+    <p
+      style={{
+        display: 'flex',
+        margin: '1em',
+        color: 'GrayText',
+        fontSize: '11pt',
+      }}
+    >
+      No LTSA information available for this PID.
+    </p>
   );
 };
