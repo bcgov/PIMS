@@ -35,7 +35,6 @@ export const TitleOwnership: React.FC<any> = (props: ITitleOwnershipProps) => {
   const { leftColumnWidth, rightColumnWidth, boldFontWeight, fontSize, headerColour } = tabStyles;
 
   const calculateCurrency = (value: number | string | undefined) => {
-    console.log(value);
     if (!value) {
       return '';
     }
