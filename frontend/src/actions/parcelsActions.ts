@@ -174,114 +174,116 @@ export interface IBuildingDetail {
 }
 
 export interface ILTSAOrderModel {
-  productType: string;
-  fileReference: string;
-  productOrderParameters: {
-    titleNumber: number;
-    landTitleDistrictCode: string;
-    includeCancelledInfo: boolean;
-  };
-  orderId: string;
-  status: string;
-  billingInfo: {
-    billingModel: string;
-    productName: string;
-    productCode: string;
-    feeExempted: boolean;
-    productFee: number;
-    serviceCharge: number;
-    subtotalFee: number;
-    productFeeTax: number;
-    serviceChargeTax: number;
-    totalTax: number;
-    totalFee: number;
-  };
-  orderedProduct: {
-    fieldedData: {
-      titleStatus: string;
-      titleIdentifier: {
-        titleNumber: string;
-        landTitleDistrict: string;
-      };
-      tombstone: {
-        applicationReceivedDate: Date;
-        enteredDate: Date;
-        titleRemarks: string;
-        rootOfTitle: string;
-        marketValueAmount: number;
-        fromTitles: [];
-        natureOfTransfers: [transferReason: string];
-      };
-      ownershipGroups: [
-        {
-          jointTenancyIndication: boolean;
-          interestFractionNumerator: string;
-          interestFractionDenominator: string;
-          ownershipRemarks: string;
-          titleOwners: {
-            lastNameOrCorpName1: string;
-            givenName: string;
-            incorporationNumber: string;
-            occupationDescription: string;
-            address: {
-              addressLine1: string;
-              addressLine2: string;
-              city: string;
-              province: string;
-              provinceName: string;
-              country: string;
-              postalCode: string;
-            };
-          };
-        },
-      ];
-      taxAuthorities: [
-        {
-          authorityName: string;
-        },
-      ];
-      descriptionsOfLand: [
-        {
-          parcelIdentifier: string;
-          fullLegalDescription: string;
-          parcelStatus: string;
-        },
-      ];
-      legalNotationsOnTitle: [];
-      chargesOnTitle: [
-        {
-          chargeNumber: string;
-          status: string;
+  order: {
+    productType: string;
+    fileReference: string;
+    productOrderParameters: {
+      titleNumber: number;
+      landTitleDistrictCode: string;
+      includeCancelledInfo: boolean;
+    };
+    orderId: string;
+    status: string;
+    billingInfo: {
+      billingModel: string;
+      productName: string;
+      productCode: string;
+      feeExempted: boolean;
+      productFee: number;
+      serviceCharge: number;
+      subtotalFee: number;
+      productFeeTax: number;
+      serviceChargeTax: number;
+      totalTax: number;
+      totalFee: number;
+    };
+    orderedProduct: {
+      fieldedData: {
+        titleStatus: string;
+        titleIdentifier: {
+          titleNumber: string;
+          landTitleDistrict: string;
+        };
+        tombstone: {
+          applicationReceivedDate: Date;
           enteredDate: Date;
-          interAlia: string;
-          chargeRemarks: string;
-          charge: {
+          titleRemarks: string;
+          rootOfTitle: string;
+          marketValueAmount: number;
+          fromTitles: [];
+          natureOfTransfers: [transferReason: string];
+        };
+        ownershipGroups: [
+          {
+            jointTenancyIndication: boolean;
+            interestFractionNumerator: string;
+            interestFractionDenominator: string;
+            ownershipRemarks: string;
+            titleOwners: {
+              lastNameOrCorpName1: string;
+              givenName: string;
+              incorporationNumber: string;
+              occupationDescription: string;
+              address: {
+                addressLine1: string;
+                addressLine2: string;
+                city: string;
+                province: string;
+                provinceName: string;
+                country: string;
+                postalCode: string;
+              };
+            };
+          },
+        ];
+        taxAuthorities: [
+          {
+            authorityName: string;
+          },
+        ];
+        descriptionsOfLand: [
+          {
+            parcelIdentifier: string;
+            fullLegalDescription: string;
+            parcelStatus: string;
+          },
+        ];
+        legalNotationsOnTitle: [];
+        chargesOnTitle: [
+          {
             chargeNumber: string;
-            transactionType: string;
-            applicationReceivedDate: Date;
-            chargeOwnershipGroups: [
-              {
-                jointTenancyIndication: boolean;
-                interestFractionNumerator: string;
-                interestFractionDenominator: string;
-                ownershipRemarks: string;
-                chargeOwners: [
-                  {
-                    lastNameOrCorpName1: string;
-                    incorporationNumber: string;
-                  },
-                ];
-              },
-            ];
-            certificatesOfCharge: [];
-            correctionsAltos1: [];
-            corrections: [];
-          };
-          chargeRelease: object;
-        },
-      ];
-      duplicateCertificatesOfTitle: [];
-      titleTransfersOrDispositions: [];
+            status: string;
+            enteredDate: Date;
+            interAlia: string;
+            chargeRemarks: string;
+            charge: {
+              chargeNumber: string;
+              transactionType: string;
+              applicationReceivedDate: Date;
+              chargeOwnershipGroups: [
+                {
+                  jointTenancyIndication: boolean;
+                  interestFractionNumerator: string;
+                  interestFractionDenominator: string;
+                  ownershipRemarks: string;
+                  chargeOwners: [
+                    {
+                      lastNameOrCorpName1: string;
+                      incorporationNumber: string;
+                    },
+                  ];
+                },
+              ];
+              certificatesOfCharge: [];
+              correctionsAltos1: [];
+              corrections: [];
+            };
+            chargeRelease: object;
+          },
+        ];
+        duplicateCertificatesOfTitle: [];
+        titleTransfersOrDispositions: [];
+      };
     };
   };
 }
