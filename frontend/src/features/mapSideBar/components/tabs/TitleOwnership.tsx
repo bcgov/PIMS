@@ -3,6 +3,7 @@ import { ILTSAOrderModel } from 'actions/parcelsActions';
 import { getIn, useFormikContext } from 'formik';
 import React, { useEffect, useState } from 'react';
 
+import { ChargesTable } from '../tables/ChargeTable';
 import { OwnershipTable } from '../tables/OwnershipTable';
 import { HeaderDivider } from './HeaderDivider';
 
@@ -89,10 +90,14 @@ export const TitleOwnership: React.FC<any> = (props: ITitleOwnershipProps) => {
             </Grid>
             <Grid item xs={rightColumnWidth}>
               <Typography fontSize={fontSize}>
-                {new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: 'CAD',
-                }).format(ltsa?.order.orderedProduct.fieldedData.tombstone.marketValueAmount || 0)}
+                {ltsa?.order.orderedProduct.fieldedData.tombstone.marketValueAmount
+                  ? new Intl.NumberFormat('en-US', {
+                      style: 'currency',
+                      currency: 'CAD',
+                    }).format(
+                      ltsa?.order.orderedProduct.fieldedData.tombstone.marketValueAmount || 0,
+                    )
+                  : ''}
               </Typography>
             </Grid>
 
@@ -157,7 +162,9 @@ export const TitleOwnership: React.FC<any> = (props: ITitleOwnershipProps) => {
           <HeaderDivider />
 
           {/* CONTENT */}
-          <Grid container sx={{ textAlign: 'left' }} rowSpacing={0.5}></Grid>
+          <Grid container sx={{ textAlign: 'left' }} rowSpacing={0.5}>
+            <ChargesTable {...{ ltsa }} />
+          </Grid>
         </Box>
       </div>
     </>

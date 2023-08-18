@@ -65,6 +65,10 @@ interface IOwnershipTableProps {
 
 export const OwnershipTable = (props: IOwnershipTableProps) => {
   const { ltsa } = props;
+
+  if (!ltsa?.order.orderedProduct.fieldedData.ownershipGroups) {
+    return <p>No available ownership information.</p>;
+  }
   return (
     <TableContainer component={Paper}>
       <Table size="small" aria-label="collapsible table">
