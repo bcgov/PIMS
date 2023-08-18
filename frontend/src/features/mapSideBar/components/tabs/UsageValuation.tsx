@@ -5,9 +5,8 @@ import { FiscalKeys } from 'constants/fiscalKeys';
 import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
 import { getIn, useFormikContext } from 'formik';
 import moment from 'moment';
-import React, { CSSProperties, Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { FaEdit } from 'react-icons/fa';
-import styled from 'styled-components';
 import { formatFiscalYear } from 'utils';
 
 import { HeaderDivider } from './HeaderDivider';
@@ -49,11 +48,6 @@ export const UsageValuation: React.FC<any> = (props: IUsageValuationProps) => {
   const rightColumnWidth = 12 - leftColumnWidth;
   const boldFontWeight = 700;
   const fontSize = 14;
-  const rightColumnStyle: CSSProperties = { display: 'flex', justifyContent: 'left' };
-  const StyledProjectNumbers = styled.div`
-    flex-direction: column;
-    display: flex;
-  `;
   const headerColour = '#1a57c7';
 
   return (
