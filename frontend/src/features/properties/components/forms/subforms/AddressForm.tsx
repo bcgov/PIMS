@@ -11,7 +11,7 @@ import { useCallback } from 'react';
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { useAppSelector } from 'store';
-import { mapLookupCode } from 'utils';
+import { mapLookupCode, postalCodeFormatter } from 'utils';
 
 import { GeocoderAutoComplete } from '../../GeocoderAutoComplete';
 import { streetAddressTooltip } from '../strings';
@@ -65,19 +65,6 @@ const AddressForm = <T,>(props: AddressProps & FormikProps<T>) => {
     if (data && props.onGeocoderChange) {
       props.onGeocoderChange(data);
     }
-  };
-
-  /**
-   * postalCodeFormatter takes the specified postal code and formats it with a space in the middle
-   * @param {string} postal The target postal to be formatted
-   */
-  const postalCodeFormatter = (postal: string) => {
-    const regex = /([a-zA-z][0-9][a-zA-z])[\s-]?([0-9][a-zA-z][0-9])/;
-    const format = postal.match(regex);
-    if (format !== null && format.length === 3) {
-      postal = `${format[1]} ${format[2]}`;
-    }
-    return postal.toUpperCase();
   };
 
   return (
