@@ -96,29 +96,22 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
         </Box>
 
         {/* ASSOCIATED BUILDINGS TAB */}
-        <Box role="tabpanel" hidden={tab !== 3} id="associated-buildings-tabpanel">
-          {buildings?.length > 0 && (
-            <Col md={12}>
-              <Row>
-                <div className="associated-buildings">
-                  <Row className="section-header">
-                    <span>
-                      <BuildingSvg className="svg" />
-                      <h5>Associated Buildings</h5>
-                    </span>
-                  </Row>
-                  <Row>
-                    <FormikTable
-                      field="data.buildings"
-                      name="buildings"
-                      columns={getAssociatedBuildingsCols()}
-                      clickableTooltip="Click to view building details"
-                      onRowClick={onRowClick}
-                    />
-                  </Row>
-                </div>
-              </Row>
-            </Col>
+        <Box
+          role="tabpanel"
+          hidden={tab !== 3}
+          id="associated-buildings-tabpanel"
+          sx={{ paddingTop: '1em' }}
+        >
+          {buildings?.length > 0 ? (
+            <FormikTable
+              field="data.buildings"
+              name="buildings"
+              columns={getAssociatedBuildingsCols()}
+              clickableTooltip="Click to view building details"
+              onRowClick={onRowClick}
+            />
+          ) : (
+            <p>No associated buildings.</p>
           )}
         </Box>
       </Box>
