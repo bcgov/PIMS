@@ -1,4 +1,4 @@
-import { IBuilding, IParcel } from 'actions/parcelsActions';
+import { IBuilding, ILTSAOrderModel, IParcel } from 'actions/parcelsActions';
 import { AxiosInstance } from 'axios';
 import { IGeoSearchParams } from 'constants/API';
 import { ENVIRONMENT } from 'constants/environment';
@@ -41,6 +41,7 @@ export interface PimsAPI extends AxiosInstance {
   loadProperties: (params?: IGeoSearchParams) => Promise<GeoJsonObject[]>;
   getBuilding: (id: number) => Promise<IBuilding>;
   getParcel: (id: number) => Promise<IParcel>;
+  getLTSA: (id: string) => Promise<ILTSAOrderModel>;
   updateBuilding: (id: number, data: IApiProperty) => Promise<IBuilding>;
   updateParcel: (id: number, data: IApiProperty) => Promise<IParcel>;
 }
@@ -151,6 +152,18 @@ export const useApi = (props?: IApiProps): PimsAPI => {
    */
   axios.getParcel = useCallback(async (id: number) => {
     const { data } = await axios.get<IParcel>(`${ENVIRONMENT.apiUrl}/properties/parcels/${id}`);
+    return data;
+  }, []);
+
+  /**
+   * Make an AJAX request to obtain LTSA information on a parcel.
+   * @param {string} id The parcel primary id (PID).
+   * @returns A promise containing the LTSA order info.
+   */
+  axios.getLTSA = useCallback(async (id: string) => {
+    const { data } = await axios.get<ILTSAOrderModel>(
+      `${ENVIRONMENT.apiUrl}/ltsa/land/title?pid=${id}`,
+    );
     return data;
   }, []);
 
