@@ -1,7 +1,7 @@
 import { Box, Grid, Stack, Table, TableHead, Typography } from '@mui/material';
 import { ILTSAOrderModel } from 'actions/parcelsActions';
 import { getIn, useFormikContext } from 'formik';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { ChargesTable } from '../tables/ChargeTable';
 import { OwnershipTable } from '../tables/OwnershipTable';
@@ -18,11 +18,17 @@ export const TitleOwnership: React.FC<any> = (props: ITitleOwnershipProps) => {
   const [ltsa, setLTSA] = useState<ILTSAOrderModel | undefined>(undefined);
 
   useEffect(() => {
-    const ltsaInfo: Promise<ILTSAOrderModel> = getIn(formikProps.values, withNameSpace('ltsa'));
-    ltsaInfo.then((value) => {
-      setLTSA(value);
-      console.log(value);
-    });
+    getLTSAInfo();
+  }, [formikProps]);
+
+  const getLTSAInfo = useCallback(async () => {
+    const ltsaInfo: ILTSAOrderModel | undefined = await getIn(
+      formikProps.values,
+      withNameSpace('ltsa'),
+    );
+    if (ltsaInfo) {
+      setLTSA(ltsaInfo);
+    }
   }, [formikProps]);
 
   // Style Constants
