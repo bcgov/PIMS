@@ -34,6 +34,24 @@ export const TitleOwnership: React.FC<any> = (props: ITitleOwnershipProps) => {
   // Style Constants
   const { leftColumnWidth, rightColumnWidth, boldFontWeight, fontSize, headerColour } = tabStyles;
 
+  const calculateCurrency = (value: number | string | undefined) => {
+    if (!value) {
+      return '';
+    }
+
+    let cleanedValue = 0;
+    if (typeof value === 'string') {
+      cleanedValue = parseFloat(value.replace(',', '').replace('$', ''));
+    } else if (typeof value === 'number') {
+      cleanedValue = value;
+    }
+
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'CAD',
+    }).format(cleanedValue);
+  };
+
   return (
     <>
       <p
@@ -93,14 +111,9 @@ export const TitleOwnership: React.FC<any> = (props: ITitleOwnershipProps) => {
             </Grid>
             <Grid item xs={rightColumnWidth}>
               <Typography fontSize={fontSize}>
-                {ltsa?.order.orderedProduct.fieldedData.tombstone.marketValueAmount
-                  ? new Intl.NumberFormat('en-US', {
-                      style: 'currency',
-                      currency: 'CAD',
-                    }).format(
-                      ltsa?.order.orderedProduct.fieldedData.tombstone.marketValueAmount || 0,
-                    )
-                  : ''}
+                {calculateCurrency(
+                  ltsa?.order.orderedProduct.fieldedData.tombstone.marketValueAmount,
+                )}
               </Typography>
             </Grid>
 
