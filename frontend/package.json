@@ -55,7 +55,7 @@
     "react-icons": "4.9.0",
     "react-leaflet": "3.2.5",
     "react-paginate": "8.2.0",
-    "react-redux": "7.2.9",
+    "react-redux": "8.1.2",
     "react-redux-loading-bar": "5.0.4",
     "react-resize-detector": "9.1.0",
     "react-router-dom": "6.14.1",
