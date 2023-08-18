@@ -35,7 +35,10 @@ const Row = (props: IRowProps) => {
       }}
     >
       <TableCell align="center" sx={{ width: '7em' }}>
-        {parseInt(row.interestFractionNumerator) / parseInt(row.interestFractionDenominator)}
+        {`${
+          (parseInt(row.interestFractionNumerator) / parseInt(row.interestFractionDenominator)) *
+          100
+        }%`}
       </TableCell>
       <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
         <Box sx={{ margin: 1 }}>
@@ -65,6 +68,11 @@ interface IOwnershipTableProps {
   ltsa: ILTSAOrderModel | undefined;
 }
 
+/**
+ * @description Displays ownership information from LTSA API data.
+ * @param {IOwnershipTableProps} props
+ * @returns A MUI table with LTSA ownership.
+ */
 export const OwnershipTable = (props: IOwnershipTableProps) => {
   const { ltsa } = props;
 

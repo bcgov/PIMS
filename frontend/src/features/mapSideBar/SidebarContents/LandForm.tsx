@@ -376,7 +376,11 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
   ];
 
   const getLTSA = async (id: string) => {
-    return await api.getLTSA(id);
+    try {
+      return await api.getLTSA(id);
+    } catch (e) {
+      return undefined;
+    }
   };
 
   const initialValues = {
@@ -391,7 +395,7 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
         Object.values(EvaluationKeys),
       ),
       fiscals: getMergedFinancials(props.initialValues?.fiscals ?? [], Object.values(FiscalKeys)),
-      ltsa: getLTSA(props.initialValues?.pid ?? ''),
+      ltsa: props.initialValues?.pid ? getLTSA(props.initialValues.pid) : undefined,
     },
   };
 

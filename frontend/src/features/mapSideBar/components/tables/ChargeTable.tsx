@@ -65,6 +65,11 @@ interface IChargesTableProps {
   ltsa: ILTSAOrderModel | undefined;
 }
 
+/**
+ * @description Displays charges information from LTSA API data.
+ * @param {IChargesTableProps} props
+ * @returns A MUI table with LTSA charges.
+ */
 export const ChargesTable = (props: IChargesTableProps) => {
   const { ltsa } = props;
 
