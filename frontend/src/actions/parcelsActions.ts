@@ -219,21 +219,23 @@ export interface ILTSAOrderModel {
             interestFractionNumerator: string;
             interestFractionDenominator: string;
             ownershipRemarks: string;
-            titleOwners: {
-              lastNameOrCorpName1: string;
-              givenName: string;
-              incorporationNumber: string;
-              occupationDescription: string;
-              address: {
-                addressLine1: string;
-                addressLine2: string;
-                city: string;
-                province: string;
-                provinceName: string;
-                country: string;
-                postalCode: string;
-              };
-            };
+            titleOwners: [
+              {
+                lastNameOrCorpName1: string;
+                givenName: string;
+                incorporationNumber: string;
+                occupationDescription: string;
+                address: {
+                  addressLine1: string;
+                  addressLine2: string;
+                  city: string;
+                  province: string;
+                  provinceName: string;
+                  country: string;
+                  postalCode: string;
+                };
+              },
+            ];
           },
         ];
         taxAuthorities: [

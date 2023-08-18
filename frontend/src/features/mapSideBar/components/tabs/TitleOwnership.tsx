@@ -3,6 +3,7 @@ import { ILTSAOrderModel } from 'actions/parcelsActions';
 import { getIn, useFormikContext } from 'formik';
 import React, { useEffect, useState } from 'react';
 
+import { OwnershipTable } from '../tables/OwnershipTable';
 import { HeaderDivider } from './HeaderDivider';
 
 interface ITitleOwnershipProps {
@@ -132,13 +133,15 @@ export const TitleOwnership: React.FC<any> = (props: ITitleOwnershipProps) => {
           {/* HEADER */}
           <Stack direction="row" spacing={1}>
             <Typography text-align="left" sx={{ fontWeight: boldFontWeight, color: headerColour }}>
-              Ownership Information
+              Ownership Information by Interest Fraction
             </Typography>
           </Stack>
           <HeaderDivider />
 
           {/* CONTENT */}
-          <Grid container sx={{ textAlign: 'left' }} rowSpacing={0.5}></Grid>
+          <Grid container sx={{ textAlign: 'left' }} rowSpacing={0.5}>
+            <OwnershipTable {...{ ltsa }} />
+          </Grid>
         </Box>
       </div>
 
