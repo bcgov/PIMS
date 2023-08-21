@@ -62,6 +62,7 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
                       name="id"
                       placeholder="Enter an Agency"
                       role="combobox"
+                      style="width: 100%;"
                       type="text"
                       value=""
                     />

@@ -20,9 +20,9 @@
     "check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,css,scss}\""
   },
   "dependencies": {
+    "@babel/core": "7.22.9",
     "@bcgov/bc-sans": "2.0.0",
     "@emotion/react": "11.11.1",
-    "@babel/core": "7.22.9",
     "@emotion/styled": "11.11.0",
     "@mui/icons-material": "5.14.3",
     "@mui/material": "5.14.5",
@@ -111,8 +111,8 @@
     "@types/styled-components": "5.1.26",
     "@types/supercluster": "7.1.0",
     "@types/text-mask-addons": "3.8.1",
-    "@typescript-eslint/eslint-plugin": "5.60.0",
-    "@typescript-eslint/parser": "5.60.1",
+    "@typescript-eslint/eslint-plugin": "6.2.1",
+    "@typescript-eslint/parser": "6.2.1",
     "axios-mock-adapter": "1.21.5",
     "babel-jest": "29.6.2",
     "cross-env": "7.0.3",
