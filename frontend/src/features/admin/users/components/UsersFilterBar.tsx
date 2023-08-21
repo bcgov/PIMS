@@ -26,7 +26,7 @@ export const UsersFilterBar: React.FC<IProps> = ({
     mapLookupCodeWithParentString(c, agencyLookups),
   );
   const roleOptions = rolesLookups.map(
-    (rl) => ({ label: rl.name, value: rl.name } as SelectOption),
+    (rl) => ({ label: rl.name, value: rl.name }) as SelectOption,
   );
 
   return (
