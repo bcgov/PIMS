@@ -20,9 +20,9 @@
     "check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,css,scss}\""
   },
   "dependencies": {
-    "@babel/core": "7.22.8",
     "@bcgov/bc-sans": "2.0.0",
     "@emotion/react": "11.11.1",
+    "@babel/core": "7.22.9",
     "@emotion/styled": "11.11.0",
     "@mui/icons-material": "5.14.3",
     "@mui/material": "5.14.5",
@@ -39,7 +39,7 @@
     "history": "5.3.0",
     "http-proxy-middleware": "2.0.6",
     "keycloak-js": "21.1.1",
-    "leaflet": "1.9.3",
+    "leaflet": "1.9.4",
     "lodash": "4.17.21",
     "moment": "2.29.4",
     "polylabel": "1.1.0",
