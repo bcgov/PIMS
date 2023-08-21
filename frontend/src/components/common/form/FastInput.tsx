@@ -40,6 +40,7 @@ type OptionalAttributes = {
   displayErrorTooltips?: boolean;
   /** Determine style of input if needed */
   style?: CSSProperties;
+  formGroupStyle?: CSSProperties;
   /** Display error even if field hasn't been touched */
   errorPrompt?: boolean;
 };
