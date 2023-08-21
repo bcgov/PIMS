@@ -78,11 +78,7 @@
   .associated-buildings,
   .associated-land,
   .PropertyListView.container-fluid {
-    margin: 10px;
     width: 100%;
-    padding: 20px;
-    background-color: $filter-background-color;
-    border-radius: 10px;
     font-size: small;
     .form-control,
     .GeocoderAutoComplete,

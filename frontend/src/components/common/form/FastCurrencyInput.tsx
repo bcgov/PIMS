@@ -123,7 +123,7 @@ const CurrencyInput = ({
           data-testid={testid}
           style={{
             width: customInputWidth ?? '85%',
-            border: required ? 'solid 2px #063970' : 'solid 1px grey',
+            border: disabled ? 'none' : 'solid 1px var(--bs-border-color)',
           }}
           value={value}
           mask={currencyMask}
