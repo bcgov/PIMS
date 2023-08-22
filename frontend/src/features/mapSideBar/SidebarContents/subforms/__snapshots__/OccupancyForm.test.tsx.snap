@@ -207,13 +207,8 @@ exports[`occupancy form functionality renders correctly 1`] = `
               class="react-datepicker-wrapper"
             >
               <div
-                class="react-datepicker__input-container "
+                class="react-datepicker__input-container"
               >
-                <span
-                  aria-live="polite"
-                  class="react-datepicker__aria-live"
-                  role="alert"
-                />
                 <input
                   autocomplete="off"
                   class="form-control date-picker"

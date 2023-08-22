@@ -125,6 +125,7 @@ exports[`Project Approval Request list view Displays a SPL project 1`] = `
                       name="agencies"
                       placeholder="Enter an Agency"
                       role="combobox"
+                      style="width: 100%;"
                       type="text"
                       value=""
                     />

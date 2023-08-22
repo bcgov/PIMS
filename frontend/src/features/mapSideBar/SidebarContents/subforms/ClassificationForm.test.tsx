@@ -38,7 +38,7 @@ const mockKeycloak = (claims: string[]) => {
 };
 
 const mockStore = configureMockStore([thunk]);
-let history = createMemoryHistory();
+const history = createMemoryHistory();
 
 const lCodes = {
   lookupCodes: [

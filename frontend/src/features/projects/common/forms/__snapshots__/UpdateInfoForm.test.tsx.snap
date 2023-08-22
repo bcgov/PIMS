@@ -142,7 +142,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   name="assessed"
                   placeholder=""
                   required=""
-                  style="width: 200px; border: 2px solid #063970;"
+                  style="width: 200px;"
                   value=""
                 />
               </div>
@@ -172,7 +172,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   name="netBook"
                   placeholder=""
                   required=""
-                  style="width: 200px; border: 2px solid #063970;"
+                  style="width: 200px;"
                   value=""
                 />
               </div>
@@ -206,7 +206,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   name="market"
                   placeholder=""
                   required=""
-                  style="width: 200px; border: 2px solid #063970;"
+                  style="width: 200px;"
                   value=""
                 />
               </div>
@@ -235,7 +235,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   data-testid="appraised"
                   name="appraised"
                   placeholder=""
-                  style="width: 200px; border: 1px solid grey;"
+                  style="width: 200px;"
                   value=""
                 />
               </div>
@@ -268,7 +268,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   data-testid="salesCost"
                   name="salesCost"
                   placeholder=""
-                  style="width: 200px; border: 1px solid grey;"
+                  style="width: 200px;"
                   value=""
                 />
               </div>
@@ -297,7 +297,7 @@ exports[`Update Info Form Matches Snapshot 1`] = `
                   data-testid="programCost"
                   name="programCost"
                   placeholder=""
-                  style="width: 200px; border: 1px solid grey;"
+                  style="width: 200px;"
                   value=""
                 />
               </div>
