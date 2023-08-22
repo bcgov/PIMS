@@ -134,13 +134,8 @@ exports[`renders correctly 1`] = `
                       class="react-datepicker-wrapper"
                     >
                       <div
-                        class="react-datepicker__input-container "
+                        class="react-datepicker__input-container"
                       >
-                        <span
-                          aria-live="polite"
-                          class="react-datepicker__aria-live"
-                          role="alert"
-                        />
                         <input
                           autocomplete="off"
                           class="form-control date-picker"
@@ -172,7 +167,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".fiscals.-1.value"
                       placeholder=""
-                      style="width: 85%; border: 1px solid grey;"
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -212,13 +207,8 @@ exports[`renders correctly 1`] = `
                       class="react-datepicker-wrapper"
                     >
                       <div
-                        class="react-datepicker__input-container "
+                        class="react-datepicker__input-container"
                       >
-                        <span
-                          aria-live="polite"
-                          class="react-datepicker__aria-live"
-                          role="alert"
-                        />
                         <input
                           autocomplete="off"
                           class="form-control date-picker"
@@ -250,7 +240,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".fiscals.-1.value"
                       placeholder=""
-                      style="width: 85%; border: 1px solid grey;"
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -290,13 +280,8 @@ exports[`renders correctly 1`] = `
                       class="react-datepicker-wrapper"
                     >
                       <div
-                        class="react-datepicker__input-container "
+                        class="react-datepicker__input-container"
                       >
-                        <span
-                          aria-live="polite"
-                          class="react-datepicker__aria-live"
-                          role="alert"
-                        />
                         <input
                           autocomplete="off"
                           class="form-control date-picker"
@@ -328,7 +313,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".fiscals.-1.value"
                       placeholder=""
-                      style="width: 85%; border: 1px solid grey;"
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -368,13 +353,8 @@ exports[`renders correctly 1`] = `
                       class="react-datepicker-wrapper"
                     >
                       <div
-                        class="react-datepicker__input-container "
+                        class="react-datepicker__input-container"
                       >
-                        <span
-                          aria-live="polite"
-                          class="react-datepicker__aria-live"
-                          role="alert"
-                        />
                         <input
                           autocomplete="off"
                           class="form-control date-picker"
@@ -406,7 +386,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".fiscals.-1.value"
                       placeholder=""
-                      style="width: 85%; border: 1px solid grey;"
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -446,13 +426,8 @@ exports[`renders correctly 1`] = `
                       class="react-datepicker-wrapper"
                     >
                       <div
-                        class="react-datepicker__input-container "
+                        class="react-datepicker__input-container"
                       >
-                        <span
-                          aria-live="polite"
-                          class="react-datepicker__aria-live"
-                          role="alert"
-                        />
                         <input
                           autocomplete="off"
                           class="form-control date-picker"
@@ -484,7 +459,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".fiscals.-1.value"
                       placeholder=""
-                      style="width: 85%; border: 1px solid grey;"
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -524,13 +499,8 @@ exports[`renders correctly 1`] = `
                       class="react-datepicker-wrapper"
                     >
                       <div
-                        class="react-datepicker__input-container "
+                        class="react-datepicker__input-container"
                       >
-                        <span
-                          aria-live="polite"
-                          class="react-datepicker__aria-live"
-                          role="alert"
-                        />
                         <input
                           autocomplete="off"
                           class="form-control date-picker"
@@ -562,7 +532,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".fiscals.-1.value"
                       placeholder=""
-                      style="width: 85%; border: 1px solid grey;"
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -602,13 +572,8 @@ exports[`renders correctly 1`] = `
                       class="react-datepicker-wrapper"
                     >
                       <div
-                        class="react-datepicker__input-container "
+                        class="react-datepicker__input-container"
                       >
-                        <span
-                          aria-live="polite"
-                          class="react-datepicker__aria-live"
-                          role="alert"
-                        />
                         <input
                           autocomplete="off"
                           class="form-control date-picker"
@@ -640,7 +605,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".fiscals.-1.value"
                       placeholder=""
-                      style="width: 85%; border: 1px solid grey;"
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -680,13 +645,8 @@ exports[`renders correctly 1`] = `
                       class="react-datepicker-wrapper"
                     >
                       <div
-                        class="react-datepicker__input-container "
+                        class="react-datepicker__input-container"
                       >
-                        <span
-                          aria-live="polite"
-                          class="react-datepicker__aria-live"
-                          role="alert"
-                        />
                         <input
                           autocomplete="off"
                           class="form-control date-picker"
@@ -718,7 +678,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".fiscals.-1.value"
                       placeholder=""
-                      style="width: 85%; border: 1px solid grey;"
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -758,13 +718,8 @@ exports[`renders correctly 1`] = `
                       class="react-datepicker-wrapper"
                     >
                       <div
-                        class="react-datepicker__input-container "
+                        class="react-datepicker__input-container"
                       >
-                        <span
-                          aria-live="polite"
-                          class="react-datepicker__aria-live"
-                          role="alert"
-                        />
                         <input
                           autocomplete="off"
                           class="form-control date-picker"
@@ -796,7 +751,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".fiscals.-1.value"
                       placeholder=""
-                      style="width: 85%; border: 1px solid grey;"
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -953,7 +908,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".evaluations.-1.value"
                       placeholder=""
-                      style="width: 85%; border: 1px solid grey;"
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -995,7 +950,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".evaluations.-1.value"
                       placeholder=""
-                      style="width: 85%; border: 1px solid grey;"
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -1037,7 +992,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".evaluations.-1.value"
                       placeholder=""
-                      style="width: 85%; border: 1px solid grey;"
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -1079,7 +1034,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".evaluations.-1.value"
                       placeholder=""
-                      style="width: 85%; border: 1px solid grey;"
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -1121,7 +1076,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".evaluations.-1.value"
                       placeholder=""
-                      style="width: 85%; border: 1px solid grey;"
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -1163,7 +1118,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".evaluations.-1.value"
                       placeholder=""
-                      style="width: 85%; border: 1px solid grey;"
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -1205,7 +1160,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".evaluations.-1.value"
                       placeholder=""
-                      style="width: 85%; border: 1px solid grey;"
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -1247,7 +1202,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".evaluations.-1.value"
                       placeholder=""
-                      style="width: 85%; border: 1px solid grey;"
+                      style="width: 85%;"
                       value=""
                     />
                   </div>
@@ -1289,7 +1244,7 @@ exports[`renders correctly 1`] = `
                       class="form-control input-number"
                       name=".evaluations.-1.value"
                       placeholder=""
-                      style="width: 85%; border: 1px solid grey;"
+                      style="width: 85%;"
                       value=""
                     />
                   </div>

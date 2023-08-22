@@ -60,7 +60,7 @@ const ManageAccessRequests = () => {
         position: ar.user.position,
         agency: ar.agencies && ar.agencies.length !== 0 ? ar.agencies[0].name : ('' as string),
         role: ar.roles && ar.roles.length !== 0 ? ar.roles[0].name : '',
-      } as IAccessRequestModel),
+      }) as IAccessRequestModel,
   );
 
   const showDetails = (req: IAccessRequestModel) => {

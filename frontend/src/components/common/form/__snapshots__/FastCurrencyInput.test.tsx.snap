@@ -14,7 +14,7 @@ exports[`FastCurrencyInput fast currency input renders correctly 1`] = `
         class="form-control input-number"
         name="assessedLand"
         placeholder=""
-        style="width: 85%; border: 1px solid grey;"
+        style="width: 85%;"
         value=""
       />
       <div>
