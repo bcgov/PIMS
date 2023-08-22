@@ -15,12 +15,11 @@ const getStore = () => mockStore({});
 
 const getWrapper =
   (store: any) =>
-  ({ children }: any) =>
-    (
-      <Provider store={store}>
-        <MemoryRouter initialEntries={[history.location]}>{children}</MemoryRouter>
-      </Provider>
-    );
+  ({ children }: any) => (
+    <Provider store={store}>
+      <MemoryRouter initialEntries={[history.location]}>{children}</MemoryRouter>
+    </Provider>
+  );
 
 const reports: IReport[] = [
   {

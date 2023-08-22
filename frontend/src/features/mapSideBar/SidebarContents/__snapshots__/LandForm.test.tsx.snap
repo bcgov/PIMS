@@ -180,6 +180,7 @@ exports[`Land Form component renders correctly 1`] = `
   display: flex;
   width: 100%;
   height: 70px;
+  padding-left: 10px;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -188,6 +189,7 @@ exports[`Land Form component renders correctly 1`] = `
   position: sticky;
   background-color: filterBackgroundColor;
   bottom: -20px;
+  border-top: 10px solid white;
 }
 
 .c8 {
@@ -422,7 +424,7 @@ exports[`Land Form component renders correctly 1`] = `
                           style="overflow: hidden; margin-bottom: 0px;"
                         >
                           <div
-                            aria-label="basic tabs example"
+                            aria-label="property search tabs"
                             class="MuiTabs-flexContainer css-heg063-MuiTabs-flexContainer"
                             role="tablist"
                           >
@@ -950,6 +952,7 @@ exports[`Land Form component renders correctly 1`] = `
                                   id="data.address.administrativeArea-field"
                                   name="data.address.administrativeArea"
                                   role="combobox"
+                                  style="width: 100%;"
                                   type="text"
                                   value=""
                                 />
@@ -1083,6 +1086,7 @@ exports[`Land Form component renders correctly 1`] = `
                                   id="data.agencyId-field"
                                   name="data.agencyId"
                                   role="combobox"
+                                  style="width: 100%;"
                                   type="text"
                                   value=""
                                 />

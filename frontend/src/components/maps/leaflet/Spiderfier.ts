@@ -56,7 +56,10 @@ export class Spiderfier {
 
   options: SpiderfierOptions;
 
-  constructor(public map: Map, options: Partial<SpiderfierOptions> = {}) {
+  constructor(
+    public map: Map,
+    options: Partial<SpiderfierOptions> = {},
+  ) {
     this.options = { ...defaultOptions, ...options };
     // check required values - throws an error if callbacks are null
     const { getClusterId, getClusterPoints, pointToLayer } = this.options;
