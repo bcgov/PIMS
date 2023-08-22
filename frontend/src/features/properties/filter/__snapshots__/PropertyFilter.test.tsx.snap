@@ -133,6 +133,7 @@ exports[`MapFilterBar renders correctly 1`] = `
                       name="agencies"
                       placeholder="Agency"
                       role="combobox"
+                      style="width: 100%;"
                       type="text"
                       value="AEST"
                     />
@@ -212,6 +213,7 @@ exports[`MapFilterBar renders correctly 1`] = `
                   name="administrativeArea"
                   placeholder="Location"
                   role="combobox"
+                  style="width: 100%;"
                   type="text"
                   value=""
                 />

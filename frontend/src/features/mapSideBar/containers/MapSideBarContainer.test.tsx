@@ -21,9 +21,12 @@ import MapSideBarContainer from './MapSideBarContainer';
 
 jest.mock(
   'react-visibility-sensor',
-  (): typeof VisibilitySensor => ({ children, partialVisibility, ...rest }: any) => (
-    <div {...rest}>{typeof children === 'function' ? children({ isVisible: true }) : children}</div>
-  ),
+  (): typeof VisibilitySensor =>
+    ({ children, partialVisibility, ...rest }: any) => (
+      <div {...rest}>
+        {typeof children === 'function' ? children({ isVisible: true }) : children}
+      </div>
+    ),
 );
 const mockAxios = new MockAdapter(axios);
 
