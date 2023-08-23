@@ -9,18 +9,19 @@ export const documentationSchema = yup.object({
     is: (tasks: { isCompleted: any }[]) => {
       return tasks[6].isCompleted;
     },
-    then: yup
-      .string()
-      .required('Appraisal value required')
-      .test('isValue', 'Appraisal value required', (value) => {
-        return !isNaN(toInteger(value));
-      })
-      .min(0, 'Minimum amount is $0.00'),
+    then: () =>
+      yup
+        .string()
+        .required('Appraisal value required')
+        .test('isValue', 'Appraisal value required', (value) => {
+          return !isNaN(toInteger(value));
+        })
+        .min(0, 'Minimum amount is $0.00'),
   }),
   publicNote: yup.string().when(['statusCode'], {
     is: (statusCode: WorkflowStatus) => {
       return statusCode === WorkflowStatus.Cancelled;
     },
-    then: yup.string().required('Reason for cancelling required'),
+    then: () => yup.string().required('Reason for cancelling required'),
   }),
 });

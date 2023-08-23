@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import React, { Fragment } from 'react';
 import { FaCheck } from 'react-icons/fa';
 import { ObjectSchema } from 'yup';
-import { AnyObject } from 'yup/lib/types';
+import { AnyObject } from 'yup';
 export interface IStep {
   title: string;
   route: string;
