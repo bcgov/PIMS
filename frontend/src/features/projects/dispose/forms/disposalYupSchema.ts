@@ -20,7 +20,7 @@ export const UpdateInfoStepYupSchema = Yup.object({
   market: Yup.number().required('Required'),
   assessed: Yup.number().required('Required'),
   properties: Yup.array().of(
-    Yup.object().shape({
+    Yup.object({
       classificationId: Yup.number().test(
         'is-valid',
         'Must select Surplus Active or Surplus Encumbered',
@@ -41,7 +41,7 @@ export const ApproveExemptionRequestSchema = Yup.object({
 
 export const GreTransferStepYupSchema = Yup.object({
   properties: Yup.array().of(
-    Yup.object().shape({
+    Yup.object({
       classificationId: Yup.number().test(
         'is-valid',
         'Must select Core Operational or Core Strategic',
