@@ -110,7 +110,7 @@ export const TitleOwnership: React.FC<any> = (props: ITitleOwnershipProps) => {
 
             {/* MARKET VALUE */}
             <Grid item xs={leftColumnWidth}>
-              <Typography fontSize={fontSize}>Market Value:</Typography>
+              <Typography fontSize={fontSize}>Sales History:</Typography>
             </Grid>
             <Grid item xs={rightColumnWidth}>
               <Typography fontSize={fontSize}>
