@@ -44,6 +44,7 @@ module.exports = {
     '@typescript-eslint/no-empty-function': 'off', // ie. {}
     '@typescript-eslint/no-non-null-assertion': 'off', // Allow use of non-null assertion operator (!).
     '@typescript-eslint/no-explicit-any': 'off', // Warn if 'any' type is used.
+    '@typescript-eslint/no-duplicate-enum-values': 'warn', // TODO: Review whether we need those duplicate enum values.
     '@typescript-eslint/ban-types': [
       'error',
       {
