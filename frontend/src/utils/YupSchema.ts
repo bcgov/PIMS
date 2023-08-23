@@ -2,6 +2,7 @@ import { PropertyTypes } from 'constants/propertyTypes';
 import moment from 'moment';
 import { emptyStringToNull } from 'utils';
 import * as Yup from 'yup';
+import { ObjectSchema } from 'yup';
 
 Yup.addMethod(Yup.string, 'optional', function optional() {
   return this.transform((value) => {
@@ -13,45 +14,47 @@ Yup.addMethod(Yup.string, 'optional', function optional() {
   });
 });
 
-export const AccessRequestSchema = Yup.object().shape({
+export const AccessRequestSchema = Yup.object({
   agency: Yup.number().min(1, 'Invalid Agency').required('Required'),
   role: Yup.string().min(1, 'Invalid Role').required('Required'),
   note: Yup.string().max(1000, 'Note must be less than 1000 characters'),
-  user: Yup.object().shape({
+  user: Yup.object({
     position: Yup.string().max(100, 'Note must be less than 100 characters'),
   }),
 });
 
-export const UserUpdateSchema = Yup.object().shape({
+export const UserUpdateSchema = Yup.object({
   email: Yup.string().email().max(100, 'Email must be less than 100 characters'),
   firstName: Yup.string().max(100, 'First Name must be less than 100 characters'),
   middleName: Yup.string().max(100, 'Middle Name must be less than 100 characters'),
   lastName: Yup.string().max(100, 'Last Name must be less than 100 characters'),
 });
 
-export const AgencyEditSchema = Yup.object().shape({
+export const AgencyEditSchema = Yup.object({
   email: Yup.string()
     .email('Please enter a valid email.')
     .max(100, 'Email must be less than 100 characters')
-    .when('sendEmail', (sendEmail: boolean, schema: any) =>
-      sendEmail ? schema.required('Email address is required') : schema,
-    ),
+    .when('sendEmail', ((sendEmail: boolean, schema: ObjectSchema<any>) =>
+      sendEmail
+        ? schema.required('Email address is required')
+        : schema) as () => ObjectSchema<any>),
   name: Yup.string()
     .max(100, 'Agency name must be less than 100 characters')
     .required('An agency name is required.'),
   addressTo: Yup.string()
     .max(100, 'Email addressed to must be less than 100 characters')
-    .when('sendEmail', (sendEmail: boolean, schema: any) =>
-      sendEmail ? schema.required('Email addressed to is required (i.e. Good Morning)') : schema,
-    ),
+    .when('sendEmail', ((sendEmail: boolean, schema: ObjectSchema<any>) =>
+      sendEmail
+        ? schema.required('Email addressed to is required (i.e. Good Morning)')
+        : schema) as () => ObjectSchema<any>),
   code: Yup.string().required('An agency code is required.'),
 });
 
-export const AdministrativeAreaSchema = Yup.object().shape({
+export const AdministrativeAreaSchema = Yup.object({
   name: Yup.string().required('A name is required for administrative areas'),
 });
 
-export const UserSchema = Yup.object().shape({
+export const UserSchema = Yup.object({
   email: Yup.string()
     .email()
     .max(100, 'Email must be less than 100 characters')
@@ -67,7 +70,7 @@ export const UserSchema = Yup.object().shape({
   agency: Yup.number().min(1, 'Invalid Agency').nullable(),
 });
 
-export const Address = Yup.object().shape({
+export const Address = Yup.object({
   line1: Yup.string().max(150, 'Address must be less then 150 characters').required('Required'),
   line2: Yup.string().max(150, 'Address must be less then 150 characters'),
   administrativeArea: Yup.string()
@@ -81,7 +84,7 @@ export const Address = Yup.object().shape({
 });
 
 const currentYear = moment().year();
-export const Financial = Yup.object().shape({
+export const Financial = Yup.object({
   year: Yup.number(),
   date: Yup.string().nullable(),
   key: Yup.string().nullable(),
@@ -89,14 +92,14 @@ export const Financial = Yup.object().shape({
     .nullable()
     .matches(/\d+(\.\d{1,2})?/, 'Only two decimal places are allowed'),
 });
-export const FinancialYear = Yup.object().shape({
+export const FinancialYear = Yup.object({
   assessed: Financial.required(),
   appraised: Financial.required(),
   netbook: Financial.required(),
   market: Financial.required(),
 });
 
-export const OccupancySchema = Yup.object().shape({
+export const OccupancySchema = Yup.object({
   rentableArea: Yup.number()
     .min(1, 'Net Usable Area must be greater than 0')
     .max(Yup.ref('totalArea'), 'Net Usable Area cannot be larger than Total Area')
@@ -109,12 +112,12 @@ export const OccupancySchema = Yup.object().shape({
   buildingTenancy: Yup.string().max(100, 'Tenancy must be less then 100 characters'),
   buildingTenancyUpdatedOn: Yup.string().when('buildingTenancy', {
     is: (val: string) => val && val.length > 0,
-    then: Yup.string().required('Required'),
-    otherwise: Yup.string().nullable(),
+    then: () => Yup.string().required('Required'),
+    otherwise: () => Yup.string().nullable(),
   }),
 });
 
-export const BuildingInformationSchema = Yup.object().shape({
+export const BuildingInformationSchema = Yup.object({
   name: Yup.string().max(150, 'Name must be less then 150 characters').nullable(),
   description: Yup.string().max(2000, 'Description must be less than 2000 characters').nullable(),
   latitude: Yup.number()
@@ -150,18 +153,17 @@ export const BuildingInformationSchema = Yup.object().shape({
   isSensitive: Yup.boolean().nullable().transform(emptyStringToNull).required('Required'),
 });
 
-export const BuildingSchema = Yup.object()
-  .shape({
-    transferLeaseOnSale: Yup.boolean(),
-    leaseExpiry: Yup.string().nullable(),
-    financials: Yup.array()
-      .compact((financial: any) => financial.year !== currentYear)
-      .of(FinancialYear),
-  })
+export const BuildingSchema = Yup.object({
+  transferLeaseOnSale: Yup.boolean(),
+  leaseExpiry: Yup.string().nullable(),
+  financials: Yup.array()
+    .compact((financial: any) => financial.year !== currentYear)
+    .of(FinancialYear),
+})
   .concat(OccupancySchema)
   .concat(BuildingInformationSchema);
 
-export const LandSchema = Yup.object().shape({
+export const LandSchema = Yup.object({
   classificationId: Yup.string()
     .required('Required')
     .matches(/\d*/, 'Invalid Classification')
@@ -196,27 +198,30 @@ export const LandSchema = Yup.object().shape({
   isSensitive: Yup.boolean().transform(emptyStringToNull).required('Required'),
   parcels: Yup.array().when('propertyTypeId', {
     is: (val: PropertyTypes) => val === PropertyTypes.SUBDIVISION,
-    then: Yup.array().required('You must add at least one parent parcel'),
-    otherwise: Yup.array(),
+    then: () => Yup.array().required('You must add at least one parent parcel'),
+    otherwise: () => Yup.array(),
   }),
 });
+
 export const ParcelSchema = Yup.object()
   .shape(
     {
       pid: Yup.string().when('pin', {
         is: (val: string) => val && val.length > 0,
-        then: Yup.string().nullable(),
-        otherwise: Yup.string()
-          .matches(/\d\d\d[\s-]?\d\d\d[\s-]?\d\d\d/, 'PID must be in the format ###-###-###')
-          .required('PID or PIN Required'),
+        then: () => Yup.string().nullable(),
+        otherwise: () =>
+          Yup.string()
+            .matches(/\d\d\d[\s-]?\d\d\d[\s-]?\d\d\d/, 'PID must be in the format ###-###-###')
+            .required('PID or PIN Required'),
       }),
       pin: Yup.string().when('pid', {
         is: (val: string) => val && /\d\d\d-\d\d\d-\d\d\d/.test(val),
-        then: Yup.string().nullable(),
-        otherwise: Yup.string()
-          .nullable()
-          .required('PID or PIN Required')
-          .max(9, 'Please enter a valid PIN no longer than 9 digits.'),
+        then: () => Yup.string().nullable(),
+        otherwise: () =>
+          Yup.string()
+            .nullable()
+            .required('PID or PIN Required')
+            .max(9, 'Please enter a valid PIN no longer than 9 digits.'),
       }),
       buildings: Yup.array(),
       financials: Yup.array()
@@ -227,7 +232,7 @@ export const ParcelSchema = Yup.object()
         .typeError('Selection from list required.')
         .required('Required'),
     },
-    [['pin', 'pid']],
+    [['pin', 'pid']], // These values are for the 'noSortEdges' parameter, because pin and pid are co-reliant.
   )
   .concat(LandSchema);
 
@@ -252,10 +257,14 @@ export const FilterBarSchema = Yup.object().shape(
           return true;
         }
       },
-      then: Yup.boolean().nullable(),
-      otherwise: Yup.boolean()
-        .required()
-        .oneOf([true], 'ERP or SPL Properties required when using the Surplus Properties filter.'),
+      then: () => Yup.boolean().nullable(),
+      otherwise: () =>
+        Yup.boolean()
+          .required()
+          .oneOf(
+            [true],
+            'ERP or SPL Properties required when using the Surplus Properties filter.',
+          ),
     }),
     inSurplusPropertyProgram: Yup.boolean().when(['inEnhancedReferralProcess', 'surplusFilter'], {
       is: (inEnhancedReferralProcess: boolean, surplusFilter: any) => {
@@ -266,20 +275,24 @@ export const FilterBarSchema = Yup.object().shape(
           return true;
         }
       },
-      then: Yup.boolean().nullable(),
-      otherwise: Yup.boolean()
-        .required()
-        .oneOf([true], 'ERP or SPL Properties required when using the Surplus Properties filter.'),
+      then: () => Yup.boolean().nullable(),
+      otherwise: () =>
+        Yup.boolean()
+          .required()
+          .oneOf(
+            [true],
+            'ERP or SPL Properties required when using the Surplus Properties filter.',
+          ),
     }),
   },
   [['inSurplusPropertyProgram', 'inEnhancedReferralProcess']],
 );
 
-export const AssociatedLandOwnershipSchema = Yup.object().shape({
+export const AssociatedLandOwnershipSchema = Yup.object({
   type: Yup.number().required('Choose an option'),
 });
 
-export const LandUsageSchema = Yup.object().shape({
+export const LandUsageSchema = Yup.object({
   zoning: Yup.string().max(250, 'Zoning must be less than 250 characters').nullable(),
   zoningPotential: Yup.string()
     .max(250, 'Zoning Potential must be less than 250 characters')
@@ -290,7 +303,7 @@ export const LandUsageSchema = Yup.object().shape({
     .nullable(),
 });
 
-export const ValuationSchema = Yup.object().shape({
+export const ValuationSchema = Yup.object({
   financials: Yup.array()
     .compact((financial: any) => financial.year !== currentYear)
     .of(FinancialYear),
@@ -300,18 +313,20 @@ export const LandIdentificationSchema = Yup.object().shape(
   {
     pid: Yup.string().when('pin', {
       is: (val: string) => val && val.length > 0,
-      then: Yup.string().nullable(),
-      otherwise: Yup.string()
-        .matches(/\d\d\d[\s-]?\d\d\d[\s-]?\d\d\d/, 'PID must be in the format ###-###-###')
-        .required('PID or PIN Required'),
+      then: () => Yup.string().nullable(),
+      otherwise: () =>
+        Yup.string()
+          .matches(/\d\d\d[\s-]?\d\d\d[\s-]?\d\d\d/, 'PID must be in the format ###-###-###')
+          .required('PID or PIN Required'),
     }),
     pin: Yup.string().when('pid', {
       is: (val: string) => val && /\d\d\d-\d\d\d-\d\d\d/.test(val),
-      then: Yup.string().nullable(),
-      otherwise: Yup.string()
-        .nullable()
-        .required('PID or PIN Required')
-        .max(9, 'Please enter a valid PIN no longer than 9 digits.'),
+      then: () => Yup.string().nullable(),
+      otherwise: () =>
+        Yup.string()
+          .nullable()
+          .required('PID or PIN Required')
+          .max(9, 'Please enter a valid PIN no longer than 9 digits.'),
     }),
     address: Address.required(),
     name: Yup.string().max(150, 'Name must be less then 150 characters').nullable(),
@@ -342,13 +357,13 @@ export const LandIdentificationSchema = Yup.object().shape(
     isSensitive: Yup.boolean().nullable().transform(emptyStringToNull).required('Required'),
     parcels: Yup.array().when('propertyTypeId', {
       is: (val: PropertyTypes) => val === PropertyTypes.SUBDIVISION,
-      then: Yup.array().required('You must add at least one parent parcel'),
-      otherwise: Yup.array(),
+      then: () => Yup.array().required('You must add at least one parent parcel'),
+      otherwise: () => Yup.array(),
     }),
   },
   [['pin', 'pid']],
 );
 
-export const AssociatedLandSchema = Yup.object().shape({
-  data: Yup.object().shape({ parcels: Yup.array().of(ParcelSchema) }),
+export const AssociatedLandSchema = Yup.object({
+  data: Yup.object({ parcels: Yup.array().of(ParcelSchema) }),
 });
