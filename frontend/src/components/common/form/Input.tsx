@@ -1,8 +1,7 @@
 import classNames from 'classnames';
 import { getIn, useFormikContext } from 'formik';
-import React, { useEffect, useState } from 'react';
+import React, { CSSProperties, useEffect, useState } from 'react';
 import { Col, Form, FormControlProps, Row } from 'react-bootstrap';
-import { CSSProperties } from 'styled-components';
 
 import TooltipIcon from '../TooltipIcon';
 import TooltipWrapper from '../TooltipWrapper';
