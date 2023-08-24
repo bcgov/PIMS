@@ -7,12 +7,13 @@ export const splTransferWithinGRESchema = yup.object({
     is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
       return workflowCode === Workflow.SPL && statusCode === WorkflowStatus.TransferredGRE;
     },
-    then: yup
-      .string()
-      .typeError('Transferred within GRE on required')
-      .required('Transferred within GRE on required')
-      .test('isDate', 'Transferred within GRE on required', (value) => {
-        return moment(value).isValid();
-      }),
+    then: () =>
+      yup
+        .string()
+        .typeError('Transferred within GRE on required')
+        .required('Transferred within GRE on required')
+        .test('isDate', 'Transferred within GRE on required', (value) => {
+          return moment(value).isValid();
+        }),
   }),
 });

@@ -65,7 +65,7 @@ const reportsToOptions = (reports: IReport[]) => {
       ({
         value: report.id,
         label: report.name?.length ? report.name : formatApiDateTime(report.to),
-      } as SelectOption),
+      }) as SelectOption,
   );
   options.unshift({
     value: '',

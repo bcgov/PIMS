@@ -540,6 +540,7 @@ exports[`Building Form component renders correctly 1`] = `
                                   id="building.agencyId-field"
                                   name="building.agencyId"
                                   role="combobox"
+                                  style="width: 100%;"
                                   type="text"
                                   value=""
                                 />
@@ -895,6 +896,7 @@ exports[`Building Form component renders correctly 1`] = `
                                   id="building.address.administrativeArea-field"
                                   name="building.address.administrativeArea"
                                   role="combobox"
+                                  style="width: 100%;"
                                   type="text"
                                   value=""
                                 />

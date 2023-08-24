@@ -17,13 +17,14 @@ export const erpCompleteSchema = yup.object({
           originalStatusCode !== WorkflowStatus.NotInSpl
         );
       },
-      then: yup
-        .string()
-        .typeError('On hold notification required')
-        .required('On hold notification required')
-        .test('isDate', 'On hold notification required', (value) => {
-          return moment(value).isValid();
-        }),
+      then: () =>
+        yup
+          .string()
+          .typeError('On hold notification required')
+          .required('On hold notification required')
+          .test('isDate', 'On hold notification required', (value) => {
+            return moment(value).isValid();
+          }),
     }),
   transferredWithinGreOn: yup.string().when(['workflowCode', 'statusCode', 'originalStatusCode'], {
     is: (
@@ -39,13 +40,14 @@ export const erpCompleteSchema = yup.object({
         originalStatusCode !== WorkflowStatus.NotInSpl
       );
     },
-    then: yup
-      .string()
-      .typeError('Transferred within GRE on required')
-      .required('Transferred within GRE on required')
-      .test('isDate', 'Transferred within GRE on required', (value) => {
-        return moment(value).isValid();
-      }),
+    then: () =>
+      yup
+        .string()
+        .typeError('Transferred within GRE on required')
+        .required('Transferred within GRE on required')
+        .test('isDate', 'Transferred within GRE on required', (value) => {
+          return moment(value).isValid();
+        }),
   }),
   clearanceNotificationSentOn: yup.string().when(['workflowCode', 'statusCode'], {
     is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
@@ -58,36 +60,39 @@ export const erpCompleteSchema = yup.object({
         statusCode === WorkflowStatus.ApprovedForSpl
       );
     },
-    then: yup
-      .string()
-      .typeError('Clearance notification required')
-      .required('Clearance notification required')
-      .test('isDate', 'Clearance notification required', (value) => {
-        return moment(value).isValid();
-      }),
+    then: () =>
+      yup
+        .string()
+        .typeError('Clearance notification required')
+        .required('Clearance notification required')
+        .test('isDate', 'Clearance notification required', (value) => {
+          return moment(value).isValid();
+        }),
   }),
   requestForSplReceivedOn: yup.string().when(['workflowCode', 'statusCode'], {
     is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
       return workflowCode === Workflow.SPL && statusCode === WorkflowStatus.ApprovedForSpl;
     },
-    then: yup
-      .string()
-      .typeError('Request for SPL received on required')
-      .required('Request for SPL received on required')
-      .test('isDate', 'Request for SPL received on required', (value) => {
-        return moment(value).isValid();
-      }),
+    then: () =>
+      yup
+        .string()
+        .typeError('Request for SPL received on required')
+        .required('Request for SPL received on required')
+        .test('isDate', 'Request for SPL received on required', (value) => {
+          return moment(value).isValid();
+        }),
   }),
   approvedForSplOn: yup.string().when(['workflowCode', 'statusCode'], {
     is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
       return workflowCode === Workflow.SPL && statusCode === WorkflowStatus.ApprovedForSpl;
     },
-    then: yup
-      .string()
-      .typeError('SPL addition approved on required')
-      .required('SPL addition approved on required')
-      .test('isDate', 'SPL addition approved on required', (value) => {
-        return moment(value).isValid();
-      }),
+    then: () =>
+      yup
+        .string()
+        .typeError('SPL addition approved on required')
+        .required('SPL addition approved on required')
+        .test('isDate', 'SPL addition approved on required', (value) => {
+          return moment(value).isValid();
+        }),
   }),
 });

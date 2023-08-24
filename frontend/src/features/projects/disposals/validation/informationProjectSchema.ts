@@ -8,10 +8,8 @@ export const informationProjectSchema = Yup.object({
     is: (statusCode: WorkflowStatus) => {
       return statusCode !== WorkflowStatus.TransferredGRE;
     },
-    then: Yup.string()
-      .typeError('Project agency required')
-      .required('Project agency required')
-      .min(1),
+    then: () =>
+      Yup.string().typeError('Project agency required').required('Project agency required').min(1),
   }),
   approvedOn: Yup.date().required('Project approved on required'),
   reportedFiscalYear: Yup.number().min(1).required('Project reported fiscal year required'),

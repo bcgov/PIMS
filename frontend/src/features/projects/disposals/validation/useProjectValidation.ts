@@ -2,7 +2,7 @@ import { FormikErrors, setIn } from 'formik';
 import { Workflow, WorkflowStatus } from 'hooks/api/projects';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
-import { AnyObject } from 'yup/lib/types';
+import { AnyObject } from 'yup';
 
 import { IProjectForm } from '../interfaces';
 import {
