@@ -74,7 +74,7 @@
     "supercluster": "8.0.1",
     "text-mask-addons": "3.8.0",
     "tiles-in-bbox": "1.0.2",
-    "yup": "0.32.11"
+    "yup": "1.2.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "7.21.11",
@@ -111,6 +111,7 @@
     "@types/styled-components": "5.1.26",
     "@types/supercluster": "7.1.0",
     "@types/text-mask-addons": "3.8.1",
+    "@types/yup": "0.32.0",
     "@typescript-eslint/eslint-plugin": "6.2.1",
     "@typescript-eslint/parser": "6.2.1",
     "axios-mock-adapter": "1.21.5",

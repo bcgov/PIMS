@@ -10,24 +10,26 @@ export const notSplSchema = yup.object({
         statusCode === WorkflowStatus.Disposed
       );
     },
-    then: yup
-      .string()
-      .typeError('Disposal date required')
-      .required('Disposal date required')
-      .test('isDate', 'Disposal date required', (value) => {
-        return moment(value).isValid();
-      }),
+    then: () =>
+      yup
+        .string()
+        .typeError('Disposal date required')
+        .required('Disposal date required')
+        .test('isDate', 'Disposal date required', (value) => {
+          return moment(value).isValid();
+        }),
   }),
   transferredWithinGreOn: yup.string().when(['workflowCode', 'statusCode'], {
     is: (workflowCode: string, statusCode: WorkflowStatus) => {
       return statusCode === WorkflowStatus.TransferredGRE;
     },
-    then: yup
-      .string()
-      .typeError('Transferred within GRE on required')
-      .required('Transferred within GRE on required')
-      .test('isDate', 'Transferred within GRE on required', (value) => {
-        return moment(value).isValid();
-      }),
+    then: () =>
+      yup
+        .string()
+        .typeError('Transferred within GRE on required')
+        .required('Transferred within GRE on required')
+        .test('isDate', 'Transferred within GRE on required', (value) => {
+          return moment(value).isValid();
+        }),
   }),
 });
