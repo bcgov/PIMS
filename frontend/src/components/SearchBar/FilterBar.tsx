@@ -6,9 +6,8 @@ import ResetButton from 'components/common/form/ResetButton';
 import SearchButton from 'components/common/form/SearchButton';
 import TooltipIcon from 'components/common/TooltipIcon';
 import { Formik } from 'formik';
-import React, { PropsWithChildren } from 'react';
+import React, { CSSProperties, PropsWithChildren } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import { CSSProperties } from 'styled-components';
 
 interface IProps<T extends object> {
   initialValues: T;
