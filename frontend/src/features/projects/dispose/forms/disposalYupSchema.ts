@@ -1,5 +1,4 @@
 import { Classifications } from 'constants/classifications';
-import { ObjectSchema } from 'yup';
 import * as Yup from 'yup';
 
 export const ApprovalConfirmationStepSchema = Yup.object({
