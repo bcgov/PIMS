@@ -1,3 +1,4 @@
+import { erpExemptionSchema } from 'features/projects/disposals/validation';
 import { IStepProps } from 'features/projects/interfaces';
 import { Formik } from 'formik';
 import React from 'react';
@@ -6,7 +7,6 @@ import { Container, Form } from 'react-bootstrap';
 import { ProjectNotes, PublicNotes, useStepForm } from '../../common';
 import { ReviewProjectForm, useStepper } from '..';
 import {
-  EnhancedReferralExemptionSchema,
   ProjectDraftStepYupSchema,
   SelectProjectPropertiesStepYupSchema,
   UpdateInfoStepYupSchema,
@@ -30,7 +30,7 @@ const ReviewProjectStep = ({ formikRef }: IStepProps) => {
         enableReinitialize={true}
         validationSchema={ProjectDraftStepYupSchema.concat(UpdateInfoStepYupSchema)
           .concat(SelectProjectPropertiesStepYupSchema)
-          .concat(EnhancedReferralExemptionSchema)}
+          .concat(erpExemptionSchema)}
       >
         <Form>
           <ReviewProjectForm canEdit={canEdit} />
