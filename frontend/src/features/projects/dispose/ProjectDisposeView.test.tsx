@@ -8,7 +8,6 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { noop } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
-import * as redux from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -27,13 +26,8 @@ const mockKeycloak = (userRoles: string[] | Claims[]) => {
   );
 };
 
-const useDispatchSpy = jest.spyOn(redux, 'useDispatch');
-const mockDispatchFn = jest.fn().mockReturnValue({ then: jest.fn() });
-useDispatchSpy.mockReturnValue(mockDispatchFn);
-
 const mockStore = configureMockStore([thunk]);
 
-jest.mock('./hooks/useStepper');
 jest.mock('./hooks/useStepper');
 (useStepper as jest.Mock).mockReturnValue({
   currentStatus: {},
