@@ -2,12 +2,7 @@
 
 exports[`Update Info Form Matches Snapshot 1`] = `
 .c1 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-flow: column;
-  -ms-flex-flow: column;
   flex-flow: column;
 }
 
