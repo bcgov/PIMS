@@ -54,7 +54,7 @@ const UserRoleSelector = ({ options, handleAddRole, handleDeleteRole }: IUserRol
   const roleOptions = useMemo(() => {
     return roles !== undefined
       ? options
-          .map((r) => ({ label: r, value: r } as SelectOption))
+          .map((r) => ({ label: r, value: r }) as SelectOption)
           .filter((r) => !roles.includes(r.value.toString()))
       : [];
   }, [roles, options]);

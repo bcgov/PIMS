@@ -69,7 +69,7 @@ const LandSearchForm = ({
     <Row className="section g-0">
       <Col md={12}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={tab} onChange={handleTabChange} aria-label="basic tabs example">
+          <Tabs value={tab} onChange={handleTabChange} aria-label="property search tabs">
             <Tab label="Search for Property" id="parcel-search-tab" />
             <Tab label="Select a Parcel from the Map" id="parcel-marker-tab" />
           </Tabs>

@@ -31,7 +31,7 @@ import { store } from './store';
  */
 const Index = () => {
   const [loading, setLoading] = React.useState(true);
-  const [keycloak, setKeycloak] = React.useState(Keycloak);
+  const [keycloak, setKeycloak] = React.useState(new Keycloak());
   const keycloakInstance = useKeycloakInstance();
   const configuration = useConfiguration();
 

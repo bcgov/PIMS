@@ -204,6 +204,7 @@ exports[`Property list view Matches snapshot 1`] = `
                           name="agencies"
                           placeholder="My Agencies"
                           role="combobox"
+                          style="width: 100%;"
                           type="text"
                           value=""
                         />
@@ -282,6 +283,7 @@ exports[`Property list view Matches snapshot 1`] = `
                         name="administrativeArea"
                         placeholder="Location"
                         role="combobox"
+                        style="width: 100%;"
                         type="text"
                         value=""
                       />
