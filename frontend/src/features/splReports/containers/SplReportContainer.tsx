@@ -65,7 +65,7 @@ const SplReportContainer: React.FunctionComponent<ISplReportContainerProps> = ()
             ({
               ...s,
               project: { ...s.project, agencyName: s.project?.agency || s.project?.subAgency },
-            } as ISnapshot),
+            }) as ISnapshot,
         );
         snapshots = _.orderBy(
           snapshots,

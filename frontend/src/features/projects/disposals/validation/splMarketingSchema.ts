@@ -7,12 +7,13 @@ export const splMarketingSchema = yup.object({
     is: (workflowCode: Workflow, statusCode: WorkflowStatus) => {
       return workflowCode === Workflow.SPL && statusCode === WorkflowStatus.OnMarket;
     },
-    then: yup
-      .string()
-      .typeError('Date entered market on required')
-      .required('Date entered market on required')
-      .test('isDate', 'Date entered market on required', (value) => {
-        return moment(value).isValid();
-      }),
+    then: () =>
+      yup
+        .string()
+        .typeError('Date entered market on required')
+        .required('Date entered market on required')
+        .test('isDate', 'Date entered market on required', (value) => {
+          return moment(value).isValid();
+        }),
   }),
 });

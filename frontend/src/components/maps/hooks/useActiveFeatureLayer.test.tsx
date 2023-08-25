@@ -32,7 +32,7 @@ const addData = jest.fn();
 const findOneWhereContains = jest.fn();
 
 (geoJSON as jest.Mock).mockReturnValue({
-  addTo: () => ({ clearLayers, addData } as any),
+  addTo: () => ({ clearLayers, addData }) as any,
 });
 (useLayerQuery as jest.Mock).mockReturnValue({
   findOneWhereContains: findOneWhereContains,
@@ -43,12 +43,11 @@ const history = createMemoryHistory();
 const getStore = (values?: any) => mockStore(values ?? { parcel: { draftProperties: [] } });
 const getWrapper =
   (store: any) =>
-  ({ children }: any) =>
-    (
-      <Provider store={store}>
-        <MemoryRouter initialEntries={[history.location]}>{children}</MemoryRouter>
-      </Provider>
-    );
+  ({ children }: any) => (
+    <Provider store={store}>
+      <MemoryRouter initialEntries={[history.location]}>{children}</MemoryRouter>
+    </Provider>
+  );
 
 describe('useActiveFeatureLayer hook tests', () => {
   beforeEach(() => {

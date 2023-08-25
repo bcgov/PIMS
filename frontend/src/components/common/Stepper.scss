@@ -31,7 +31,9 @@
   background-color: transparent;
   border: none;
   border-radius: 0.25rem;
-  transition: background-color 0.15s ease-out, color 0.15s ease-out;
+  transition:
+    background-color 0.15s ease-out,
+    color 0.15s ease-out;
 }
 
 h6 {

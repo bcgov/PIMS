@@ -76,10 +76,12 @@ const FormFooter = styled.div`
   display: flex;
   width: 100%;
   height: 70px;
+  padding-left: 10px;
   align-items: center;
   position: sticky;
   background-color: ${variables.filterBackgroundColor};
   bottom: -20px;
+  border-top: 10px solid white;
 `;
 
 const FillRemainingSpace = styled.span`
@@ -373,6 +375,14 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
     },
   ];
 
+  const getLTSA = async (id: string) => {
+    try {
+      return await api.getLTSA(id);
+    } catch (e) {
+      return undefined;
+    }
+  };
+
   const initialValues = {
     activeStep: props.initialValues?.id ? steps.length - 1 : 0,
     activeTab: 0,
@@ -385,8 +395,10 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
         Object.values(EvaluationKeys),
       ),
       fiscals: getMergedFinancials(props.initialValues?.fiscals ?? [], Object.values(FiscalKeys)),
+      ltsa: props.initialValues?.pid ? getLTSA(props.initialValues.pid) : undefined,
     },
   };
+
   const isViewOrUpdate = !!initialValues?.data?.id;
   initialValues.data.agencyId = initialValues.data.agencyId
     ? initialValues.data.agencyId

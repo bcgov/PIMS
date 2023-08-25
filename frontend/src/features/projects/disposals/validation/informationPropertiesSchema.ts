@@ -25,7 +25,7 @@ export const informationPropertiesSchema = Yup.object({
     .min(0, 'Minimum value is $0.00'),
   properties: Yup.array()
     .of(
-      Yup.object().shape({
+      Yup.object({
         name: Yup.string(),
         address: Yup.string().required(),
       }),

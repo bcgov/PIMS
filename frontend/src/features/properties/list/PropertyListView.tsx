@@ -838,9 +838,9 @@ const PropertyListView: React.FC = () => {
             <Formik
               innerRef={tableFormRef as any}
               initialValues={{ properties: data || [] }}
-              validationSchema={Yup.object().shape({
+              validationSchema={Yup.object({
                 properties: Yup.array().of(
-                  Yup.object().shape({
+                  Yup.object({
                     netBook: Yup.number()
                       .min(0, 'Minimum value is $0')
                       .max(1000000000, 'Maximum value is $1,000,000,000')

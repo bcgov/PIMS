@@ -107,6 +107,7 @@ exports[`Edit Admin Areas renders correctly 1`] = `
                         name="id"
                         placeholder="Enter name"
                         role="combobox"
+                        style="width: 100%;"
                         type="text"
                         value=""
                       />

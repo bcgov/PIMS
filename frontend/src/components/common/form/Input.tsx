@@ -1,8 +1,7 @@
 import classNames from 'classnames';
 import { getIn, useFormikContext } from 'formik';
-import React, { useEffect, useState } from 'react';
+import React, { CSSProperties, useEffect, useState } from 'react';
 import { Col, Form, FormControlProps, Row } from 'react-bootstrap';
-import { CSSProperties } from 'styled-components';
 
 import TooltipIcon from '../TooltipIcon';
 import TooltipWrapper from '../TooltipWrapper';
@@ -42,6 +41,7 @@ type OptionalAttributes = {
   errorPrompt?: boolean;
   /** add inline style to the input component */
   style?: CSSProperties;
+  customRowStyle?: CSSProperties;
 };
 
 // only "field" is required for <Input>, the rest are optional
@@ -59,6 +59,7 @@ export const Input: React.FC<InputProps> = ({
   outerClassName,
   pattern,
   style,
+  customRowStyle,
   required,
   disabled,
   custom,
@@ -98,7 +99,7 @@ export const Input: React.FC<InputProps> = ({
     <Row
       controlid={`input-${field}`}
       className={classNames(!!required ? 'required' : '', outerClassName)}
-      style={{ alignItems: 'center' }}
+      style={customRowStyle || { alignItems: 'center' }}
     >
       {!!label && (
         <Col md="auto">

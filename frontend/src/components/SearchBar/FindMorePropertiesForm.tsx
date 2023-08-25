@@ -22,12 +22,12 @@ const StyledRow = styled(Row)`
 `;
 
 /** input used to display small number values in this form */
-const NumberInput = styled((props) => <Input {...props} />)`
+const NumberInput = styled((props: any) => <Input {...props} />)`
   width: 86px;
 `;
 
 /** controlling the width of the select component used in this form */
-const StyledSelect = styled((props) => <Select {...props} />)`
+const StyledSelect = styled((props: any) => <Select {...props} />)`
   width: 250px;
 `;
 
@@ -40,23 +40,23 @@ const VerticalLine = styled.span`
 `;
 
 /** styled component used for project number */
-const ProjectNumber = styled((props) => <Input {...props} />)`
+const ProjectNumber = styled((props: any) => <Input {...props} />)`
   width: 129px;
   margin-right: 10px;
 `;
 
 /** styled container with grey background to contain form contents */
-const FormSection = styled((props) => <Container {...props} />)`
+const FormSection = styled((props: any) => <Container {...props} />)`
   margin-top: 20px;
   background-color: ${variables.tableHeaderColor};
   border-radius: 5px;
 `;
 
-const SearchButton = styled((props) => <Button {...props} />)`
+const SearchButton = styled((props: any) => <Button {...props} />)`
   margin-top: 10px;
 `;
 
-const StyledLocation = styled((props) => <TypeaheadField {...props} />)`
+const StyledLocation = styled((props: any) => <TypeaheadField {...props} />)`
   width: 250px;
   margin-left: 60px;
 `;

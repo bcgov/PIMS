@@ -168,6 +168,7 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                       name="administrativeArea"
                       placeholder="Location"
                       role="combobox"
+                      style="width: 100%;"
                       type="text"
                       value=""
                     />

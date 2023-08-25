@@ -19,14 +19,14 @@ const saveJwtSpy = jest.spyOn(jwtSlice, 'saveJwt');
 const clearJwtSpy = jest.spyOn(jwtSlice, 'clearJwt');
 const setKeycloakReadySpy = jest.spyOn(keycloakReadySlice, 'setKeycloakReady');
 
-const keycloak = ({
+const keycloak = {
   subject: 'test',
   userInfo: {
     roles: [],
     agencies: ['1'],
   },
   token: '123456789',
-} as any) as KeycloakInstance;
+} as any as KeycloakInstance;
 
 const keyclockEventHandler = getKeycloakEventHandler(keycloak);
 
