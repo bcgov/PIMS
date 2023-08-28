@@ -1,5 +1,6 @@
 import { Form } from 'components/common/form';
 import { DisposeWorkflowStatus } from 'features/projects/constants';
+import { erpExemptionSchema } from 'features/projects/disposals/validation';
 import { IProject, IProjectTask, IStepProps } from 'features/projects/interfaces';
 import { Formik, setIn, yupToFormErrors } from 'formik';
 import _ from 'lodash';
@@ -7,7 +8,7 @@ import React from 'react';
 import { Container } from 'react-bootstrap';
 
 import { DocumentationForm, ProjectNotes, StepErrorSummary, useStepForm } from '../../common';
-import { EnhancedReferralExemptionSchema, useStepper } from '..';
+import { useStepper } from '..';
 
 const handleValidate = (project: IProject) => {
   return project.tasks.reduce((errors: any, task: IProjectTask, index: number) => {
@@ -19,7 +20,7 @@ const handleValidate = (project: IProject) => {
       errors = setIn(errors, `tasks.${index}.isCompleted`, 'Required');
     }
     try {
-      EnhancedReferralExemptionSchema.validateSync(project, {
+      erpExemptionSchema.validateSync(project, {
         abortEarly: false,
       });
     } catch (schemaErrors) {
