@@ -6,12 +6,12 @@ exports[`SteppedForm component renders correctly 1`] = `
   display: none;
 }
 
-.c0 .nav-tabs > .nav-item:last-child {
+.c0 .nav-tabs>.nav-item:last-child {
   border: 0;
   padding: 0;
 }
 
-.c0 .nav-tabs > .nav-item:last-child svg {
+.c0 .nav-tabs>.nav-item:last-child svg {
   position: relative;
   color: white;
 }
@@ -41,9 +41,6 @@ exports[`SteppedForm component renders correctly 1`] = `
   background-color: white;
   color: black;
   position: relative;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   position: relative;
 }
