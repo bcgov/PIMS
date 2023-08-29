@@ -102,12 +102,13 @@ describe('Edit agency page', () => {
 
   describe('when the agency edit form is submitted', () => {
     it('displays a loading toast', async () => {
+      mockAxios.onAny().replyOnce(500, {});
       const { getByText, findByText } = renderEditAgencyPage();
       const saveButton = getByText(/save/i);
       act(() => {
         saveButton.click();
       });
-      await findByText('Updating Agency...');
+      findByText('Updating Agency...');
     });
 
     it('displays a success toast if the request passes', async () => {

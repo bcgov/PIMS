@@ -1,5 +1,4 @@
 import { Classifications } from 'constants/classifications';
-import { ObjectSchema } from 'yup';
 import * as Yup from 'yup';
 
 export const ApprovalConfirmationStepSchema = Yup.object({
@@ -62,14 +61,4 @@ export const ProjectDraftStepYupSchema = Yup.object({
   name: Yup.string().max(100, 'Name allows a maximum of 100 characters.').required('Required'),
   description: Yup.string().max(1000, 'Description allows a maximum of 1000 characters.'),
   note: Yup.string().max(2000, 'Note allows a maximum of 2000 characters.'),
-});
-
-export const EnhancedReferralExemptionSchema = Yup.object({
-  exemptionRationale: Yup.string().when('exemptionRequested', ((
-    exemptionRequested: boolean,
-    schema: ObjectSchema<any>,
-  ) =>
-    exemptionRequested
-      ? schema.required('Rationale is required when applying for an exemption.')
-      : schema) as () => ObjectSchema<any>),
 });

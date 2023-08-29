@@ -3,13 +3,7 @@
 exports[`LayersControl View renders correctly 1`] = `
 <DocumentFragment>
   .c4 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
   padding-left: 0px;
   border: none;
@@ -33,13 +27,7 @@ exports[`LayersControl View renders correctly 1`] = `
 }
 
 .c6 .form-check {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
 }
 
@@ -48,13 +36,7 @@ exports[`LayersControl View renders correctly 1`] = `
 }
 
 .c6 .form-check label {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
 }
 
@@ -67,7 +49,7 @@ exports[`LayersControl View renders correctly 1`] = `
   background-color: #fff;
   position: relative;
   border-radius: 4px;
-  box-shadow: -2px 1px 4px rgba(0,0,0,0.2);
+  box-shadow: -2px 1px 4px rgba(0, 0, 0, 0.2);
   z-index: 1000;
 }
 
@@ -99,7 +81,7 @@ exports[`LayersControl View renders correctly 1`] = `
   background-color: #fff;
   color: slideOutBlue;
   border-color: slideOutBlue;
-  box-shadow: -2px 1px 4px rgba(0,0,0,0.2);
+  box-shadow: -2px 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 .c1.open {

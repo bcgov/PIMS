@@ -12,19 +12,20 @@ const mockStore = configureMockStore([thunk]);
 const getStore = (values?: any) => mockStore(values ?? { parcel: { draftParcels: [] } });
 const getWrapper =
   (store: any) =>
-  ({ children }: any) => (
-    <Provider store={store}>
-      <ToastContainer
-        autoClose={5000}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss={false}
-      />
-      {children}
-    </Provider>
-  );
+  ({ children }: any) =>
+    (
+      <Provider store={store}>
+        <ToastContainer
+          autoClose={5000}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss={false}
+        />
+        {children}
+      </Provider>
+    );
 const mockAxios = new MockAdapter(axios);
 const toastErrorSpy = jest.spyOn(toast, 'error');
 
