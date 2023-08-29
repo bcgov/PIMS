@@ -3,9 +3,6 @@
 exports[`renders correctly 1`] = `
 <DocumentFragment>
   .c0 {
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
 }
 

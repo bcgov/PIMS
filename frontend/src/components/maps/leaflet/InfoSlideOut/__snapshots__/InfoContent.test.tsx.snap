@@ -16,7 +16,7 @@ exports[`InfoContent View InfoContent renders correctly 1`] = `
 .c3 {
   max-width: 1px;
   padding: 0px;
-  background-color: rgba(96,96,96,0.2);
+  background-color: rgba(96, 96, 96, 0.2);
 }
 
 .c4 {
