@@ -1,7 +1,6 @@
 import { fireEvent } from '@testing-library/react';
-import { Map as LeafletMap } from 'leaflet';
 import { noop } from 'lodash';
-import React, { Ref } from 'react';
+import React from 'react';
 import { MapContainer, useMap } from 'react-leaflet';
 
 /**
