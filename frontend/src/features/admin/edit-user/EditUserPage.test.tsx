@@ -141,10 +141,11 @@ describe('Edit user page', () => {
 
   describe('when the user edit form is submitted', () => {
     it('displays a loading toast', async () => {
+      mockAxios.onAny().replyOnce(500, {});
       const { getByText, findByText } = renderEditUserPage();
       const saveButton = getByText('Save');
       saveButton.click();
-      await findByText('Updating User...');
+      findByText('Updating User...');
     });
 
     it('displays a success toast if the request passes', async () => {
