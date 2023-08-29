@@ -99,7 +99,7 @@ describe('LayersControl View', () => {
     const { ready } = setup(<Template />, setMap);
     await waitFor(() => ready);
     await waitFor(() => expect(mapInstance).toBeDefined());
-    console.log(mapInstance)
+
     expect(isLayerVisible('parcelBoundaries', mapInstance)).toBeDefined();
     expect(isLayerVisible('municipalities', mapInstance)).toBeUndefined();
   });

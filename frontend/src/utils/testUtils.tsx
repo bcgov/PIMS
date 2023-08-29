@@ -2,7 +2,7 @@ import { fireEvent } from '@testing-library/react';
 import { Map as LeafletMap } from 'leaflet';
 import { noop } from 'lodash';
 import React, { Ref } from 'react';
-import { MapContainer } from 'react-leaflet';
+import { MapContainer, useMap } from 'react-leaflet';
 
 /**
  * Utility type for generic props of component testing
@@ -27,20 +27,21 @@ export function createMapContainer(
   whenCreated: (map: L.Map | null) => void = noop,
 ) {
   return function Container({ children }: PropsWithChildren) {
-    const mapRef = React.useRef<LeafletMap>(null);
+    const MapController = () => {
+      const map = useMap();
+      React.useEffect(() => {
+        whenCreated(map || null);
+        done();
+      }, []);
 
-    React.useEffect(() => {
-      whenCreated(mapRef.current);
-    }, []);
+      return <></>;
+    };
+
     return (
       <div id="mapid" style={{ width: 500, height: 500 }}>
-        <MapContainer
-          center={[48.43, -123.37]}
-          zoom={14}
-          whenReady={done}
-          ref={mapRef as Ref<LeafletMap>}
-        >
+        <MapContainer center={[48.43, -123.37]} zoom={14}>
           {children}
+          <MapController />
         </MapContainer>
       </div>
     );
