@@ -1,6 +1,7 @@
 import { fireEvent } from '@testing-library/react';
+import { Map as LeafletMap } from 'leaflet';
 import { noop } from 'lodash';
-import React from 'react';
+import React, { Ref } from 'react';
 import { MapContainer } from 'react-leaflet';
 
 /**
@@ -23,16 +24,21 @@ export interface PropsWithChildren {
  */
 export function createMapContainer(
   done: () => void = noop,
-  whenCreated: (map: L.Map) => void = noop,
+  whenCreated: (map: L.Map | null) => void = noop,
 ) {
   return function Container({ children }: PropsWithChildren) {
+    const mapRef = React.useRef<LeafletMap>(null);
+
+    React.useEffect(() => {
+      whenCreated(mapRef.current);
+    }, []);
     return (
       <div id="mapid" style={{ width: 500, height: 500 }}>
         <MapContainer
           center={[48.43, -123.37]}
           zoom={14}
           whenReady={done}
-          whenCreated={whenCreated}
+          ref={mapRef as Ref<LeafletMap>}
         >
           {children}
         </MapContainer>
