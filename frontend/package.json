@@ -20,7 +20,7 @@
     "check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,css,scss}\""
   },
   "dependencies": {
-    "@babel/core": "7.22.10",
+    "@babel/core": "7.22.11",
     "@bcgov/bc-sans": "2.0.0",
     "@emotion/react": "11.11.1",
     "@emotion/styled": "11.11.0",
@@ -68,8 +68,8 @@
     "redux": "4.2.1",
     "redux-logger": "3.0.6",
     "redux-thunk": "2.4.2",
-    "sass": "1.66.1",
     "retry-axios": "3.0.0",
+    "sass": "1.66.1",
     "styled-components": "6.0.7",
     "supercluster": "8.0.1",
     "text-mask-addons": "3.8.0",
