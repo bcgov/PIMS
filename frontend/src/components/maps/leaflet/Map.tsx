@@ -79,6 +79,7 @@ export type LayerPopupInformation = PopupContentConfig & {
   center?: LatLng;
   bounds?: LatLngBounds;
   feature: Feature;
+  isOpen?: boolean;
 };
 
 const displayMessage = (
@@ -179,7 +180,7 @@ const Map: React.FC<MapProps> = ({
 }) => {
   const keycloak = useKeycloakWrapper();
   const dispatch = useAppDispatch();
-  const [mapRef, setMapRef] = React.useState(React.useRef<LeafletMap>(null));
+  const mapRef = React.useRef<LeafletMap>(null);
   const [triggerFilterChanged, setTriggerFilterChanged] = React.useState(true);
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const parcelsService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
@@ -212,6 +213,18 @@ const Map: React.FC<MapProps> = ({
     parcelLayerFeature,
     setLayerPopup,
   });
+
+  /* 
+    This replaces the onClose attribute that was removed from react-leaflet with v4.
+  */
+  const popupRef = React.useRef(null); // A reference to the popup. Assigned in the popup component.
+  React.useEffect(() => {
+    // If the popup isn't open, reset values.
+    if (!layerPopup?.isOpen) {
+      setLayerPopup(undefined);
+      dispatch(storePropertyDetail(null));
+    }
+  }, [layerPopup?.isOpen, popupRef]);
 
   React.useEffect(() => {
     // fetch GIS base layers configuration from /public folder
@@ -333,6 +346,7 @@ const Map: React.FC<MapProps> = ({
         center,
         bounds,
         feature,
+        isOpen: true,
       } as any);
     }
   };
@@ -406,12 +420,7 @@ const Map: React.FC<MapProps> = ({
               handleOk={() => popUpContext.setBCEIDWarning(false)}
             />
           )}
-          <MapContainer
-            center={center}
-            zoom={zoom}
-            closePopupOnClick={interactive}
-            whenCreated={(mapInstance) => setMapRef({ current: mapInstance })}
-          >
+          <MapContainer center={center} zoom={zoom} closePopupOnClick={interactive} ref={mapRef}>
             {activeBasemap && (
               <TileLayer
                 attribution={activeBasemap.attribution}
@@ -423,12 +432,9 @@ const Map: React.FC<MapProps> = ({
               <Popup
                 position={layerPopup.latlng}
                 offset={[0, -25]}
-                onClose={() => {
-                  setLayerPopup(undefined);
-                  dispatch(storePropertyDetail(null));
-                }}
                 closeButton={interactive}
                 autoPan={false}
+                ref={popupRef}
               >
                 <LayerPopupTitle>{layerPopup.title}</LayerPopupTitle>
                 <LayerPopupContent
