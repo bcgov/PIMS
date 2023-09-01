@@ -57,7 +57,13 @@ const Row = (props: IRowProps) => {
                       ? `${owner.lastNameOrCorpName1}, ${owner.givenName}`
                       : owner.lastNameOrCorpName1}
                   </TableCell>
-                  <TableCell>{owner.incorporationNumber || 'N/A'}</TableCell>
+                  <TableCell
+                    sx={{
+                      width: '10em',
+                    }}
+                  >
+                    {owner.incorporationNumber || 'N/A'}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

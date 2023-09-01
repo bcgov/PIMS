@@ -63,6 +63,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
     getLTSAInfo();
   }, [formikProps]);
 
+  // Pulls information from formik state (set when sidebar is opened)
   const getLTSAInfo = useCallback(async () => {
     const ltsaInfo: ILTSAOrderModel | undefined = await getIn(
       formikProps.values,
