@@ -6,11 +6,28 @@ import React from 'react';
 
 interface ITitleOwnershipProps {
   ltsa: ILTSAOrderModel;
+  pid?: string;
 }
 
 export const TitleOwnership: React.FC<any> = (props: ITitleOwnershipProps) => {
-  const { ltsa } = props;
-  return ltsa ? (
+  const { ltsa, pid } = props;
+
+  // Needed a way to check if the current LTSA info stored matches PID of parcel requested.
+  // There is a brief period when selecting a new parcel before the LTSA response is received where
+  // the old LTSA info is still populated. This is the workaround.
+  const finishedLoading = () => {
+    if (pid && ltsa) {
+      return (
+        ltsa.order.orderedProduct.fieldedData.descriptionsOfLand[0].parcelIdentifier.replace(
+          /-/g,
+          '',
+        ) === pid
+      );
+    }
+    return !!ltsa; // Confirmation that LTSA is defined.
+  };
+
+  return finishedLoading() ? (
     <>
       <p
         style={{

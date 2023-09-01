@@ -14,11 +14,11 @@ interface ILTSADialogProps {
   ltsaInfoOpen: boolean;
   setLtsaInfoOpen: Dispatch<SetStateAction<boolean>>;
   ltsa: ILTSAOrderModel | undefined;
-  setLtsa: Dispatch<SetStateAction<ILTSAOrderModel | undefined>>;
+  pid: string;
 }
 
 export const LTSADialog = (props: ILTSADialogProps) => {
-  const { ltsaInfoOpen, setLtsaInfoOpen, ltsa, setLtsa } = props;
+  const { ltsaInfoOpen, setLtsaInfoOpen, ltsa, pid } = props;
 
   return (
     <Dialog
@@ -31,14 +31,13 @@ export const LTSADialog = (props: ILTSADialogProps) => {
       <DialogTitle id="scroll-dialog-title">LTSA Information</DialogTitle>
       <DialogContent>
         <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
-          <TitleOwnership {...{ ltsa }} />
+          <TitleOwnership {...{ ltsa, pid }} />
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button
           onClick={() => {
             setLtsaInfoOpen(false);
-            setLtsa(undefined);
           }}
         >
           Close

@@ -115,7 +115,7 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({ data, config, 
           >
             LTSA Info
           </StyledLink>
-          <LTSADialog {...{ ltsa, setLtsa, ltsaInfoOpen, setLtsaInfoOpen }} />
+          <LTSADialog pid={data.PID} {...{ ltsa, ltsaInfoOpen, setLtsaInfoOpen }} />
         </Col>
       </MenuRow>
     </>
