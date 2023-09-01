@@ -2,13 +2,14 @@ import './LandReviewPage.scss';
 
 import { Box, Tab, Tabs } from '@mui/material';
 import { IBuilding } from 'actions/parcelsActions';
+import { ILTSAOrderModel } from 'actions/parcelsActions';
 import { ParcelDetails } from 'features/mapSideBar/components/tabs/ParcelDetails';
 import { TitleOwnership } from 'features/mapSideBar/components/tabs/TitleOwnership';
 import { UsageValuation } from 'features/mapSideBar/components/tabs/UsageValuation';
 import { FormikTable } from 'features/projects/common';
 import { getAssociatedBuildingsCols } from 'features/properties/components/forms/subforms/columns';
 import { getIn, useFormikContext } from 'formik';
-import React, { SyntheticEvent, useCallback, useMemo, useState } from 'react';
+import React, { SyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { Container, Row } from 'react-bootstrap';
 
 interface IReviewProps {
@@ -55,6 +56,23 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
 
   const buildings = getIn(formikProps.values, withNameSpace('buildings'));
 
+  // Get LTSA Info and store in state
+  const [ltsa, setLTSA] = useState<ILTSAOrderModel | undefined>(undefined);
+
+  useEffect(() => {
+    getLTSAInfo();
+  }, [formikProps]);
+
+  const getLTSAInfo = useCallback(async () => {
+    const ltsaInfo: ILTSAOrderModel | undefined = await getIn(
+      formikProps.values,
+      withNameSpace('ltsa'),
+    );
+    if (ltsaInfo) {
+      setLTSA(ltsaInfo);
+    }
+  }, [formikProps]);
+
   return (
     <Container className="review-section">
       <Row className="review-steps">
@@ -91,7 +109,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
 
         {/* TITLE & OWNERSHIP TAB */}
         <Box role="tabpanel" hidden={tab !== 2} id="title-ownership-tabpanel">
-          <TitleOwnership {...{ withNameSpace }} />
+          <TitleOwnership {...{ ltsa }} />
         </Box>
 
         {/* ASSOCIATED BUILDINGS TAB */}
