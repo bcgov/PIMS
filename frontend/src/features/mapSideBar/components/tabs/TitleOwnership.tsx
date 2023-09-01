@@ -40,7 +40,7 @@ export const TitleOwnership: React.FC<any> = (props: ITitleOwnershipProps) => {
         fontSize: '11pt',
       }}
     >
-      No LTSA information available for this PID.
+      No LTSA information available for this PID or information still loading.
     </p>
   );
 };
