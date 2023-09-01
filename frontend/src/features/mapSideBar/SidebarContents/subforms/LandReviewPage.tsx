@@ -95,12 +95,7 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
         </Box>
 
         {/* ASSOCIATED BUILDINGS TAB */}
-        <Box
-          role="tabpanel"
-          hidden={tab !== 3}
-          id="associated-buildings-tabpanel"
-          sx={{ paddingTop: '1em' }}
-        >
+        <Box role="tabpanel" hidden={tab !== 3} id="associated-buildings-tabpanel">
           {buildings?.length > 0 ? (
             <FormikTable
               field="data.buildings"
@@ -110,7 +105,16 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
               onRowClick={onRowClick}
             />
           ) : (
-            <p>No associated buildings.</p>
+            <p
+              style={{
+                display: 'flex',
+                margin: '1em',
+                color: 'GrayText',
+                fontSize: '11pt',
+              }}
+            >
+              No associated buildings.
+            </p>
           )}
         </Box>
       </Box>
