@@ -19,20 +19,16 @@ interface IRowProps {
       chargeNumber: string;
       transactionType: string;
       applicationReceivedDate: string;
-      chargeOwnershipGroups: [
-        {
-          jointTenancyIndication: boolean;
-          interestFractionNumerator: string;
-          interestFractionDenominator: string;
-          ownershipRemarks: string;
-          chargeOwners: [
-            {
-              lastNameOrCorpName1: string;
-              incorporationNumber: string;
-            },
-          ];
-        },
-      ];
+      chargeOwnershipGroups: {
+        jointTenancyIndication: boolean;
+        interestFractionNumerator: string;
+        interestFractionDenominator: string;
+        ownershipRemarks: string;
+        chargeOwners: {
+          lastNameOrCorpName1: string;
+          incorporationNumber: string;
+        }[];
+      }[];
       certificatesOfCharge: [];
       correctionsAltos1: [];
       corrections: [];
