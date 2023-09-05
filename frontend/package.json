@@ -20,7 +20,7 @@
     "check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,css,scss}\""
   },
   "dependencies": {
-    "@babel/core": "7.22.11",
+    "@babel/core": "7.22.15",
     "@bcgov/bc-sans": "2.0.0",
     "@emotion/react": "11.11.1",
     "@emotion/styled": "11.11.0",
