@@ -1,4 +1,4 @@
-import { cleanup } from '@testing-library/react';
+import { cleanup, render } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { LatLng, LatLngBounds } from 'leaflet';
 import React from 'react';
@@ -59,5 +59,23 @@ describe('Layer Popup Content', () => {
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
+  });
+
+  it('Contains LTSA link', () => {
+    const tree = (
+      <MemoryRouter initialEntries={[history.location]}>
+        <MapContainer>
+          <LayerPopupContent
+            data={mockLayer.data}
+            config={mockLayer.config}
+            onAddToParcel={mockLayer.onAddToParcel}
+            bounds={bounds}
+          />
+        </MapContainer>
+      </MemoryRouter>
+    );
+    const { container } = render(tree);
+    const ltsaLink = container.innerHTML.includes('LTSA Info');
+    expect(ltsaLink).toBe(true);
   });
 });
