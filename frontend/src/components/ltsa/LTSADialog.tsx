@@ -1,11 +1,4 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { ILTSAOrderModel } from 'actions/parcelsActions';
 import { TitleOwnership } from 'features/mapSideBar/components/tabs/TitleOwnership';
 import React, { Dispatch, SetStateAction } from 'react';
@@ -30,9 +23,7 @@ export const LTSADialog = (props: ILTSADialogProps) => {
     >
       <DialogTitle id="scroll-dialog-title">LTSA Information</DialogTitle>
       <DialogContent>
-        <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
-          <TitleOwnership {...{ ltsa, pid }} />
-        </DialogContentText>
+        <TitleOwnership {...{ ltsa, pid }} />
       </DialogContent>
       <DialogActions>
         <Button
