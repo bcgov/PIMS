@@ -29,6 +29,11 @@ interface IParcelDetailsProps {
   setEditInfo: Dispatch<SetStateAction<object>>;
 }
 
+/**
+ * @description For parcels, shows details with parcel information.
+ * @param {IParcelDetailsProps} props
+ * @returns React component.
+ */
 export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
   const { withNameSpace, disabled, agencies, editInfo, setEditInfo } = props;
   const formikProps = useFormikContext();

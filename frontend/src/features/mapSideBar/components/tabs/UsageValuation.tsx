@@ -24,6 +24,11 @@ interface IUsageValuationProps {
   setEditInfo: Dispatch<SetStateAction<object>>;
 }
 
+/**
+ * @description For parcels, shows usage and valuation information.
+ * @param {IUsageValuationProps} props
+ * @returns React component.
+ */
 export const UsageValuation: React.FC<any> = (props: IUsageValuationProps) => {
   const { setEditInfo, editInfo, withNameSpace, classifications, disabled } = props;
   const formikProps = useFormikContext();
