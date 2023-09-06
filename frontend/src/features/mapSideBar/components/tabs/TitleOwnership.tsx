@@ -27,16 +27,16 @@ export const TitleOwnership: React.FC<any> = (props: ITitleOwnershipProps) => {
     return !!ltsa; // Confirmation that LTSA is defined.
   };
 
+  const noInfoParagraphStyle = {
+    display: 'flex',
+    margin: '1em',
+    color: 'GrayText',
+    fontSize: '11pt',
+  };
+
   return finishedLoading() ? (
     <>
-      <p
-        style={{
-          display: 'flex',
-          margin: '1em',
-          color: 'GrayText',
-          fontSize: '11pt',
-        }}
-      >
+      <p style={noInfoParagraphStyle}>
         This information was retrieved from the Land Title & Service Authority (LTSA).
       </p>
       {/* TITLE */}
@@ -49,14 +49,7 @@ export const TitleOwnership: React.FC<any> = (props: ITitleOwnershipProps) => {
       <Charges {...{ ltsa }} />
     </>
   ) : (
-    <p
-      style={{
-        display: 'flex',
-        margin: '1em',
-        color: 'GrayText',
-        fontSize: '11pt',
-      }}
-    >
+    <p style={noInfoParagraphStyle}>
       No LTSA information available for this PID or information still loading.
     </p>
   );

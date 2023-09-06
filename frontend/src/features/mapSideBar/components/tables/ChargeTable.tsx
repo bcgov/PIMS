@@ -52,7 +52,13 @@ const Row = (props: IRowProps) => {
       <TableCell>{new Date(row.enteredDate).toLocaleDateString()}</TableCell>
       <TableCell>{new Date(row.charge.applicationReceivedDate).toLocaleDateString()}</TableCell>
       <TableCell>{row.charge.transactionType}</TableCell>
-      <TableCell>{row.chargeRemarks}</TableCell>
+      <TableCell
+        sx={{
+          maxWidth: '15em',
+        }}
+      >
+        {row.chargeRemarks}
+      </TableCell>
     </TableRow>
   );
 };
@@ -73,16 +79,22 @@ export const ChargesTable = (props: IChargesTableProps) => {
     return <p>No available charges information.</p>;
   }
 
+  const headerStyle: React.CSSProperties = {
+    fontWeight: 600,
+  };
+
   return (
     <TableContainer component={Paper}>
       <Table size="small" aria-label="collapsible table">
         <TableHead>
-          <TableCell>Charge #</TableCell>
-          <TableCell>Status</TableCell>
-          <TableCell>Entered Date</TableCell>
-          <TableCell>Received Date</TableCell>
-          <TableCell>Transaction Type</TableCell>
-          <TableCell>Remarks</TableCell>
+          <TableRow>
+            <TableCell sx={headerStyle}>Charge #</TableCell>
+            <TableCell sx={headerStyle}>Status</TableCell>
+            <TableCell sx={headerStyle}>Entered Date</TableCell>
+            <TableCell sx={headerStyle}>Received Date</TableCell>
+            <TableCell sx={headerStyle}>Transaction Type</TableCell>
+            <TableCell sx={headerStyle}>Remarks</TableCell>
+          </TableRow>
         </TableHead>
         <TableBody>
           {ltsa?.order.orderedProduct.fieldedData.chargesOnTitle.map((row, index) => (

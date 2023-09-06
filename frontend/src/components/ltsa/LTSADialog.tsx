@@ -39,6 +39,14 @@ export const LTSADialog = (props: ILTSADialogProps) => {
           onClick={() => {
             setLtsaInfoOpen(false);
           }}
+          sx={{
+            backgroundColor: '#003366',
+            color: '#F2F2F2',
+            fontWeight: 600,
+            '&:hover': {
+              backgroundColor: '#1A5A96',
+            },
+          }}
         >
           Close
         </Button>

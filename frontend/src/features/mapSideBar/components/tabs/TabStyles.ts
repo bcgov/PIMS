@@ -4,5 +4,5 @@ export const tabStyles = {
   rightColumnWidth: 9,
   boldFontWeight: 700,
   fontSize: 14,
-  headerColour: '#1a57c7',
+  headerColour: '#003366',
 };
