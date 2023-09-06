@@ -1,6 +1,10 @@
+import { ILTSAOrderModel } from 'actions/parcelsActions';
+import { LTSADialog } from 'components/ltsa/LTSADialog';
+import { useApi } from 'hooks/useApi';
 import { LatLng, LatLngBounds } from 'leaflet';
 import { keys } from 'lodash';
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { Col, ListGroup, Row } from 'react-bootstrap';
 import { useMap } from 'react-leaflet';
 import { Link, useLocation } from 'react-router-dom';
@@ -64,6 +68,23 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({ data, config, 
   const curZoom = leaflet.getZoom();
   const boundZoom = leaflet.getBoundsZoom(bounds!);
 
+  // Get LTSA information
+  const [ltsaInfoOpen, setLtsaInfoOpen] = React.useState<boolean>(false);
+  const [ltsa, setLtsa] = useState<ILTSAOrderModel | undefined>(undefined);
+  const api = useApi();
+
+  useEffect(() => {
+    getLTSAData();
+  }, [data]);
+
+  const getLTSAData = async () => {
+    try {
+      setLtsa(await api.getLTSA(data.PID));
+    } catch (e) {
+      setLtsa(undefined);
+    }
+  };
+
   return (
     <>
       <ListGroup>
@@ -74,15 +95,27 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({ data, config, 
         ))}
       </ListGroup>
       <MenuRow>
-        <Col>
-          {bounds && curZoom! !== boundZoom ? (
+        {bounds && curZoom! !== boundZoom ? (
+          <Col>
             <StyledLink
               to={{ ...location }}
               onClick={() => leaflet.flyToBounds(bounds, { animate: false })}
             >
               Zoom
             </StyledLink>
-          ) : null}
+          </Col>
+        ) : null}
+
+        <Col>
+          <StyledLink
+            to={{ ...location }}
+            onClick={() => {
+              setLtsaInfoOpen(true);
+            }}
+          >
+            LTSA Info
+          </StyledLink>
+          <LTSADialog pid={data.PID} {...{ ltsa, ltsaInfoOpen, setLtsaInfoOpen }} />
         </Col>
       </MenuRow>
     </>
