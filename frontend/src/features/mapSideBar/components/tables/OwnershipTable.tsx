@@ -51,13 +51,19 @@ const Row = (props: IRowProps) => {
             </TableHead>
             <TableBody>
               {row.titleOwners.map((owner) => (
-                <TableRow key={owner.lastNameOrCorpName1}>
+                <TableRow key={`${owner.lastNameOrCorpName1}, ${owner.givenName}`}>
                   <TableCell>
                     {owner.givenName
                       ? `${owner.lastNameOrCorpName1}, ${owner.givenName}`
                       : owner.lastNameOrCorpName1}
                   </TableCell>
-                  <TableCell>{owner.incorporationNumber || 'N/A'}</TableCell>
+                  <TableCell
+                    sx={{
+                      width: '10em',
+                    }}
+                  >
+                    {owner.incorporationNumber || 'N/A'}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
