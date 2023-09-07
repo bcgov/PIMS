@@ -137,7 +137,7 @@ export const BuildingDetails: React.FC<any> = (props: IBuildingDetailsProps) => 
           </Grid>
           <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
             <Typography fontWeight={fieldFontWeight} fontSize={fieldFontSize}>
-              {address.line1}
+              {address?.line1 ?? ''}
             </Typography>
           </Grid>
 
@@ -147,7 +147,7 @@ export const BuildingDetails: React.FC<any> = (props: IBuildingDetailsProps) => 
           </Grid>
           <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
             <Typography fontWeight={fieldFontWeight} fontSize={fieldFontSize}>
-              {address.administrativeArea}
+              {address?.administrativeArea ?? ''}
             </Typography>
           </Grid>
 
@@ -157,7 +157,7 @@ export const BuildingDetails: React.FC<any> = (props: IBuildingDetailsProps) => 
           </Grid>
           <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
             <Typography fontWeight={fieldFontWeight} fontSize={fieldFontSize}>
-              {address.province}
+              {address?.province ?? ''}
             </Typography>
           </Grid>
 
@@ -167,7 +167,7 @@ export const BuildingDetails: React.FC<any> = (props: IBuildingDetailsProps) => 
           </Grid>
           <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
             <Typography fontWeight={fieldFontWeight} fontSize={fieldFontSize}>
-              {address.postal}
+              {address?.postal ?? ''}
             </Typography>
           </Grid>
 

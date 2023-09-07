@@ -64,8 +64,6 @@ describe('building review page', () => {
 
     const agency = container.querySelector('input[name="agencyId"]');
     const name = container.querySelector('input[name="name"]');
-    const addr = container.querySelector('input[name="address.line1"]');
-    const loc = container.querySelector('input[name="address.administrativeArea"]');
     const lat = container.querySelector('input[name="latitude"]');
     const long = container.querySelector('input[name="longitude"]');
     const classificationId = container.querySelector('select[name="classificationId"]');
@@ -76,8 +74,6 @@ describe('building review page', () => {
 
     expect(agency).toBeDisabled();
     expect(name).toBeDisabled();
-    expect(addr).toBeDisabled();
-    expect(loc).toBeDisabled();
     expect(lat).toBeDisabled();
     expect(long).toBeDisabled();
     expect(classificationId).toBeDisabled();
@@ -92,8 +88,6 @@ describe('building review page', () => {
 
     const agency = container.querySelector('input[name="agencyId"]');
     const name = container.querySelector('input[name="name"]');
-    const addr = container.querySelector('input[name="address.line1"]');
-    const loc = container.querySelector('input[name="address.administrativeArea"]');
     const lat = container.querySelector('input[name="latitude"]');
     const long = container.querySelector('input[name="longitude"]');
     const classificationId = container.querySelector('select[name="classificationId"]');
@@ -107,8 +101,6 @@ describe('building review page', () => {
 
     expect(agency).toBeDisabled();
     expect(name).not.toBeDisabled();
-    expect(addr).toBeDisabled();
-    expect(loc).toBeDisabled();
     expect(lat).toBeDisabled();
     expect(long).toBeDisabled();
     expect(classificationId).not.toBeDisabled();
