@@ -1,3 +1,6 @@
+import './../../SidebarContents/subforms/LandReviewPage.scss';
+
+import { Box, Grid, Stack, Typography } from '@mui/material';
 import {
   FastCurrencyInput,
   FastDatePicker,
@@ -5,17 +8,17 @@ import {
   Input,
   InputGroup,
 } from 'components/common/form';
-import { BuildingSvg } from 'components/common/Icons';
-import { Label } from 'components/common/Label';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
 import { getIn, useFormikContext } from 'formik';
 import moment from 'moment';
 import React, { Dispatch, SetStateAction } from 'react';
-import { Col, Row } from 'react-bootstrap';
 import { FaEdit } from 'react-icons/fa';
 import { formatFiscalYear } from 'utils';
+
+import { HeaderDivider } from './HeaderDivider';
+import { tabStyles } from './TabStyles';
 
 interface IOccupancyValuation {
   withNameSpace: Function;
@@ -50,156 +53,173 @@ export const OccupancyValuation: React.FC<any> = (props: IOccupancyValuation) =>
     currentYear,
   );
   const netBookYear = getIn(formikProps.values, withNameSpace(`fiscals.${fiscalIndex}.fiscalYear`));
+  // Style Constants
+  const { leftColumnWidth, rightColumnWidth, boldFontWeight, fontSize, headerColour } = tabStyles;
 
   return (
-    <Col md={6} style={{ paddingLeft: '10px' }}>
-      <Row>
-        <div className="tenancy">
-          <Row className="section-header">
-            <Col md="auto">
-              <span>
-                <BuildingSvg className="svg" />
-                <h5>Occupancy</h5>
-              </span>
-            </Col>
+    <>
+      {/* OCCUPANCY */}
+      <div className="occupancy">
+        <Box sx={{ p: 2, background: 'white' }}>
+          {/* HEADER */}
+          <Stack direction="row" spacing={1}>
+            <Typography text-align="left" sx={{ fontWeight: boldFontWeight, color: headerColour }}>
+              Occupancy
+            </Typography>
             {!disabled && (
-              <Col md="auto">
+              <Box sx={{ pl: 1 }}>
                 <FaEdit
                   size={20}
                   className="edit"
-                  onClick={() =>
+                  onClick={() => {
                     setEditInfo({
                       ...editInfo,
                       tenancy: formikProps.isValid && !editInfo.tenancy,
-                    })
-                  }
+                    });
+                  }}
                 />
-              </Col>
+              </Box>
             )}
-          </Row>
-          <Row className="content-item">
-            <Col md="auto">
-              <Label>Total Area</Label>
-            </Col>
-            <Col md="auto">
-              <InputGroup
-                displayErrorTooltips
-                fast={true}
-                formikProps={formikProps}
-                disabled={editInfo.tenancy}
-                type="number"
-                field={withNameSpace('totalArea')}
-                postText="Sq. M"
-                style={{ border: 0 }}
-                required
-              />
-            </Col>
-          </Row>
-          <Row className="content-item">
-            <Col md="auto">
-              <Label>Net Usable Area</Label>
-            </Col>
-            <Col md="auto">
-              <InputGroup
-                displayErrorTooltips
-                fast={true}
-                formikProps={formikProps}
-                disabled={editInfo.tenancy}
-                type="number"
-                field={withNameSpace('rentableArea')}
-                postText="Sq. M"
-                style={{ border: 0 }}
-                required
-              />
-            </Col>
-          </Row>
-          <Row className="content-item">
-            <Col md="auto">
-              <Label>Tenancy %</Label>
-            </Col>
-            <Col md="auto">
-              <span className="tenancy-fields">
-                <FastInput
+          </Stack>
+          <HeaderDivider />
+
+          {/* CONTENT */}
+          <Grid container sx={{ textAlign: 'left' }} rowSpacing={0.5}>
+            {/* TOTAL AREA */}
+            <Grid item container>
+              <Grid item xs={leftColumnWidth}>
+                <Typography fontSize={fontSize}>Total Area:</Typography>
+              </Grid>
+              <Grid item xs={rightColumnWidth} className="tenancy-fields">
+                <InputGroup
                   displayErrorTooltips
+                  fast={true}
                   formikProps={formikProps}
                   disabled={editInfo.tenancy}
-                  field={withNameSpace('buildingTenancy')}
+                  type="number"
+                  field={withNameSpace('totalArea')}
+                  postText="Sq. M"
+                  style={{ border: 0 }}
+                  required
                 />
-                <FastDatePicker
+              </Grid>
+            </Grid>
+
+            {/* NET USABLE AREA */}
+            <Grid item container>
+              <Grid item xs={leftColumnWidth}>
+                <Typography fontSize={fontSize}>Net Usable Area:</Typography>
+              </Grid>
+              <Grid item xs={rightColumnWidth} className="tenancy-fields">
+                <InputGroup
+                  displayErrorTooltips
+                  fast={true}
                   formikProps={formikProps}
                   disabled={editInfo.tenancy}
-                  field={withNameSpace('buildingTenancyUpdatedOn')}
+                  type="number"
+                  field={withNameSpace('rentableArea')}
+                  postText="Sq. M"
+                  style={{ border: 'solid' }}
+                  required
                 />
-              </span>
-            </Col>
-          </Row>
-        </div>
-      </Row>
-      <Row>
-        <div className="valuation">
-          <Row className="section-header">
-            <Col md="auto">
-              <span>
-                <BuildingSvg className="svg" />
-                <h5>Valuation</h5>
-              </span>
-            </Col>
+              </Grid>
+            </Grid>
+
+            {/* TENANCY % */}
+            <Grid item container>
+              <Grid item xs={leftColumnWidth}>
+                <Typography fontSize={fontSize}>Tenancy %:</Typography>
+              </Grid>
+              <Grid item xs={rightColumnWidth} className="content-item">
+                <span className="tenancy-fields">
+                  <FastInput
+                    displayErrorTooltips
+                    formikProps={formikProps}
+                    disabled={editInfo.tenancy}
+                    field={withNameSpace('buildingTenancy')}
+                  />
+                  <FastDatePicker
+                    formikProps={formikProps}
+                    disabled={editInfo.tenancy}
+                    field={withNameSpace('buildingTenancyUpdatedOn')}
+                  />
+                </span>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Box>
+      </div>
+      {/* VALUATION */}
+      <div className="valuation">
+        <Box sx={{ p: 2, background: 'white' }}>
+          {/* HEADER */}
+          <Stack direction="row" spacing={1}>
+            <Typography text-align="left" sx={{ fontWeight: boldFontWeight, color: headerColour }}>
+              Valuation
+            </Typography>
             {!disabled && (
-              <Col md="auto">
+              <Box sx={{ pl: 1 }}>
                 <FaEdit
                   size={20}
                   className="edit"
-                  onClick={() =>
+                  onClick={() => {
                     setEditInfo({
                       ...editInfo,
                       valuation: formikProps.isValid && !editInfo.valuation,
-                    })
-                  }
+                    });
+                  }}
                 />
-              </Col>
+              </Box>
             )}
-          </Row>
-          <Row className="val-item" style={{ display: 'flex' }}>
-            <Col md="auto">
-              <Label>Net Book Value</Label>
-            </Col>
-            <Col md="auto">
-              <FastCurrencyInput
-                formikProps={formikProps}
-                field={`data.fiscals.${fiscalIndex}.value`}
-                disabled={editInfo.valuation}
-              />
-            </Col>
-            <Col md="auto">
-              <Input
-                field="netbookYearDisplay"
-                value={formatFiscalYear(netBookYear)}
-                disabled
-                style={{ width: 50, fontSize: 11 }}
-              />
-            </Col>
-          </Row>
-          <Row className="val-item" style={{ display: 'flex' }}>
-            <Col md="auto" style={{ paddingLeft: '2px' }}>
-              <Label>Assessed Value</Label>
-            </Col>
-            <Col md="auto">
-              <FastCurrencyInput
-                formikProps={formikProps}
-                field={`data.evaluations.${evaluationIndex}.value`}
-                disabled={editInfo.valuation}
-              />
-            </Col>
-            <Col md="auto">
-              <Input
-                field={`data.evaluations.${evaluationIndex}.year`}
-                disabled
-                style={{ width: 50, fontSize: 11 }}
-              />
-            </Col>
-          </Row>
-        </div>
-      </Row>
-    </Col>
+          </Stack>
+          <HeaderDivider />
+
+          {/* CONTENT */}
+          <Grid container sx={{ textAlign: 'left' }} rowSpacing={0.5}>
+            {/* NET BOOK VALUE */}
+            <Grid item xs={leftColumnWidth}>
+              <Typography fontSize={fontSize}>Net Book Value:</Typography>
+            </Grid>
+            <Grid item container xs={rightColumnWidth} className="val-item">
+              <Grid item>
+                <FastCurrencyInput
+                  formikProps={formikProps}
+                  field={`data.fiscals.${fiscalIndex}.value`}
+                  disabled={editInfo.valuation}
+                />
+              </Grid>
+              <Grid item>
+                <Input
+                  field="netbookYearDisplay"
+                  value={formatFiscalYear(netBookYear)}
+                  disabled
+                  style={{ width: 50, fontSize: 11 }}
+                />
+              </Grid>
+            </Grid>
+            {/* ASSESSED VALUE */}
+            <Grid item xs={leftColumnWidth}>
+              <Typography fontSize={fontSize}>Assessed Value:</Typography>
+            </Grid>
+            <Grid item container xs={rightColumnWidth} className="val-item">
+              <Grid item>
+                <FastCurrencyInput
+                  formikProps={formikProps}
+                  field={`data.evaluations.${evaluationIndex}.value`}
+                  disabled={editInfo.valuation}
+                />
+              </Grid>
+              <Grid item>
+                <Input
+                  field={`data.evaluations.${evaluationIndex}.year`}
+                  disabled
+                  style={{ width: 50, fontSize: 11 }}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Box>
+      </div>
+    </>
   );
 };

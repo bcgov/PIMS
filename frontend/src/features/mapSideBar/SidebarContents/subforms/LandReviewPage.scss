@@ -107,12 +107,16 @@
     max-width: 200px;
     .form-control {
       width: 100px;
+      font-size: small;
     }
     .react-datepicker-wrapper {
       max-width: fit-content;
       & :disabled {
         padding: 0px 5px;
       }
+    }
+    .react-datepicker {
+      font-size: small;
     }
   }
   .valuation .form-group {
@@ -136,5 +140,9 @@
   .edit {
     cursor: pointer;
     color: $slide-out-blue;
+  }
+  #associated-land-tabpanel,
+  #associated-buildings-tabpanel {
+    margin-top: 1em;
   }
 }
