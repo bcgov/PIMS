@@ -12,7 +12,7 @@ const LinkMenu = styled(Row)`
   width: 322px;
   margin: 0px 0px 5px -10px;
   font-size: 14px;
-  padding: 10px;
+  padding: 1px;
   a {
     padding: 0px 10px;
     color: ${variables.slideOutBlue};
@@ -119,9 +119,9 @@ const HeaderActions: React.FC<IHeaderActions> = ({
               >
                 Update
               </Link>
+              <VerticalBar />
             </>
           )}
-          <VerticalBar />
         </>
       )}
       <Link style={{ width: 90 }} to={{ ...location }} onClick={zoomToView}>
