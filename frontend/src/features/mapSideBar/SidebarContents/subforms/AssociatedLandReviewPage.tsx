@@ -15,10 +15,10 @@ interface IReviewProps {
   classifications: any;
   agencies: any;
   /** handle the pid formatting on change */
-  handlePidChange: (pid: string) => void;
+  handlePidChange?: (pid: string) => void;
   /** handle the pin formatting on change */
-  handlePinChange: (pin: string) => void;
-  isPropertyAdmin: boolean;
+  handlePinChange?: (pin: string) => void;
+  isPropertyAdmin?: boolean;
 }
 
 /**
