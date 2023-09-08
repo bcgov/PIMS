@@ -1,5 +1,5 @@
 import { Box, Grid, Stack, Typography } from '@mui/material';
-import { FastCurrencyInput, FastInput, FastSelect } from 'components/common/form';
+import { FastCurrencyInput, FastInput } from 'components/common/form';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
@@ -22,10 +22,11 @@ interface IUsageValuationProps {
     valuation: boolean;
   };
   setEditInfo: Dispatch<SetStateAction<object>>;
+  index?: number;
 }
 
 export const UsageValuation: React.FC<any> = (props: IUsageValuationProps) => {
-  const { setEditInfo, editInfo, withNameSpace, classifications, disabled } = props;
+  const { setEditInfo, editInfo, withNameSpace, disabled } = props;
   const formikProps = useFormikContext();
 
   const currentYear = moment().year();
@@ -81,7 +82,7 @@ export const UsageValuation: React.FC<any> = (props: IUsageValuationProps) => {
               <Typography fontSize={fontSize}>Classification:</Typography>
             </Grid>
             <Grid item xs={rightColumnWidth}>
-              <FastSelect
+              {/* <FastSelect
                 formikProps={formikProps}
                 disabled={editInfo.usage}
                 type="number"
@@ -89,7 +90,7 @@ export const UsageValuation: React.FC<any> = (props: IUsageValuationProps) => {
                 field={withNameSpace('classificationId')}
                 options={classifications}
                 required={true}
-              />
+              /> */}
             </Grid>
 
             {/* CURRENT ZONING */}

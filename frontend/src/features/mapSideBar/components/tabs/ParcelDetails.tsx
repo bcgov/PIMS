@@ -27,10 +27,11 @@ interface IParcelDetailsProps {
     valuation: boolean;
   };
   setEditInfo: Dispatch<SetStateAction<object>>;
+  index?: number;
 }
 
 export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
-  const { withNameSpace, disabled, agencies, editInfo, setEditInfo } = props;
+  const { withNameSpace, disabled, agencies, editInfo, setEditInfo, index } = props;
   const formikProps = useFormikContext();
 
   const projectNumbers = getIn(formikProps.values, withNameSpace('projectNumbers'));
@@ -53,6 +54,8 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
   const administrativeAreas = _.filter(lookupCodes, (lookupCode: ILookupCode) => {
     return lookupCode.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME;
   }).map(mapLookupCode);
+
+  console.log(withNameSpace('isSensitive', index));
 
   return (
     <div className="identification">
@@ -88,7 +91,7 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
           <Grid item xs={rightColumnWidth}>
             <ParentSelect
               required
-              field={withNameSpace('agencyId')}
+              field={withNameSpace('agencyId', index)}
               options={agencies}
               filterBy={['code', 'label', 'parent']}
               disabled={true}
@@ -103,7 +106,7 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
             <Input
               style={{ width: '100%' }}
               disabled={editInfo.identification}
-              field={withNameSpace('name')}
+              field={withNameSpace('name', index)}
             />
           </Grid>
 
@@ -113,14 +116,14 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
           </Grid>
           <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
             <Stack direction="row" spacing={1}>
-              {getIn(formikProps.values, withNameSpace('pid')) ? (
+              {getIn(formikProps.values, withNameSpace('pid', index)) ? (
                 <Input
                   customRowStyle={{ width: '33%' }}
                   displayErrorTooltips
                   className="input-small"
                   disabled={true}
                   required={true}
-                  field={withNameSpace('pid')}
+                  field={withNameSpace('pid', index)}
                 />
               ) : (
                 <Typography
@@ -139,7 +142,7 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
               >
                 &nbsp;/&nbsp;
               </Typography>
-              {getIn(formikProps.values, withNameSpace('pin')) ? (
+              {getIn(formikProps.values, withNameSpace('pin', index)) ? (
                 <Input
                   customRowStyle={{ width: '33%' }}
                   style={{ textAlign: 'center' }}
@@ -147,7 +150,7 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
                   className="input-small"
                   disabled={true}
                   required={true}
-                  field={withNameSpace('pin')}
+                  field={withNameSpace('pin', index)}
                 />
               ) : (
                 <Typography
@@ -172,7 +175,7 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
             <TextArea
               style={{ width: '30em', height: '6em' }}
               disabled={editInfo.identification}
-              field={withNameSpace('description')}
+              field={withNameSpace('description', index)}
             />
           </Grid>
 
@@ -186,7 +189,7 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
               fast={true}
               disabled={true}
               type="number"
-              field={withNameSpace('landArea')}
+              field={withNameSpace('landArea', index)}
               formikProps={formikProps}
               postText="Hectares"
             />
@@ -203,7 +206,7 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
               formikProps={formikProps}
               disabled={true}
               type="number"
-              field={withNameSpace('latitude')}
+              field={withNameSpace('latitude', index)}
             />
           </Grid>
 
@@ -218,7 +221,7 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
               formikProps={formikProps}
               disabled={true}
               type="number"
-              field={withNameSpace('longitude')}
+              field={withNameSpace('longitude', index)}
             />
           </Grid>
 
@@ -229,15 +232,15 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
           <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
             <GeocoderAutoComplete
               tooltip={undefined}
-              value={getIn(formikProps.values, withNameSpace('address.line1'))}
+              value={getIn(formikProps.values, withNameSpace('address.line1', index))}
               disabled={true}
-              field={withNameSpace('line1')}
+              field={withNameSpace('line1', index)}
               onSelectionChanged={() => {}}
               onTextChange={(value) =>
-                formikProps.setFieldValue(withNameSpace('address.line1'), value)
+                formikProps.setFieldValue(withNameSpace('address.line1', index), value)
               }
-              error={getIn(formikProps.errors, withNameSpace('address.line1'))}
-              touch={getIn(formikProps.touched, withNameSpace('address.line1'))}
+              error={getIn(formikProps.errors, withNameSpace('address.line1', index))}
+              touch={getIn(formikProps.touched, withNameSpace('address.line1', index))}
               displayErrorTooltips
               required={true}
             />
@@ -250,7 +253,7 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
           <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
             <TypeaheadField
               options={administrativeAreas.map((x) => x.label)}
-              name={withNameSpace('address.administrativeArea')}
+              name={withNameSpace('address.administrativeArea', index)}
               disabled={true}
               hideValidation={true}
               paginate={false}
@@ -267,7 +270,7 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
             <Select
               disabled={true}
               placeholder="Must Select One"
-              field={withNameSpace('address.provinceId')}
+              field={withNameSpace('address.provinceId', index)}
               options={provinces}
             />
           </Grid>
@@ -284,7 +287,7 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
               onBlurFormatter={(postal: string) =>
                 postal.replace(postal, postalCodeFormatter(postal))
               }
-              field={withNameSpace('address.postal')}
+              field={withNameSpace('address.postal', index)}
               displayErrorTooltips
             />
           </Grid>
@@ -297,7 +300,7 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
             <TextArea
               style={{ width: '30em', height: '6em' }}
               disabled={true}
-              field={withNameSpace('landLegalDescription')}
+              field={withNameSpace('landLegalDescription', index)}
             />
           </Grid>
 
@@ -328,18 +331,17 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
       {/* Harmful if released? */}
       <Box
         sx={{
-          mt: '15px',
           p: 2,
           background: 'white',
           display: 'flex',
           justifyContent: 'center',
         }}
       >
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" className="harmful" spacing={1}>
           <Typography sx={{ fontWeight: boldFontWeight }}>Harmful info if released?</Typography>
           <Check
             type="radio"
-            field={withNameSpace('isSensitive')}
+            field={withNameSpace('isSensitive', index)}
             radioLabelOne="Yes"
             radioLabelTwo="No"
             disabled={editInfo.identification}

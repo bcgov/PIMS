@@ -1,32 +1,21 @@
 import './AssociatedLandReviewPage.scss';
 
 import { LeasedLandTypes } from 'actions/parcelsActions';
-import {
-  Check,
-  FastCurrencyInput,
-  FastInput,
-  FastSelect,
-  Input,
-  InputGroup,
-  TextArea,
-} from 'components/common/form';
-import { ParentSelect } from 'components/common/form/ParentSelect';
+import { FastCurrencyInput, FastInput, FastSelect } from 'components/common/form';
 import { useFormStepper } from 'components/common/form/StepForm';
 import { LandSvg } from 'components/common/Icons';
 import { Label } from 'components/common/Label';
-import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectNumberLink';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { AssociatedLandSteps } from 'constants/propertySteps';
-import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
+import { ParcelDetails } from 'features/mapSideBar/components/tabs/ParcelDetails';
+import { UsageValuation } from 'features/mapSideBar/components/tabs/UsageValuation';
 import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
 import { getIn, useFormikContext } from 'formik';
-import { noop } from 'lodash';
 import moment from 'moment';
 import React, { useCallback, useState } from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import { FaEdit } from 'react-icons/fa';
-import styled from 'styled-components';
 import { formatFiscalYear } from 'utils';
 import { formatMoney } from 'utils/numberFormatUtils';
 import { LandSchema } from 'utils/YupSchema';
@@ -71,11 +60,6 @@ const OtherParcel = () => {
   );
 };
 
-const StyledProjectNumbers = styled.div`
-  flex-direction: column;
-  display: flex;
-`;
-
 /**
  * The Review page that displays all parcels associate to the building.
  * Will display an empty box with a link if an owned parcel has not been completed.
@@ -83,8 +67,8 @@ const StyledProjectNumbers = styled.div`
  * @param {IReviewProps} props {IReviewProps}
  */
 export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => {
+  const { disabled, agencies, nameSpace, classifications } = props;
   const formikProps = useFormikContext<any>();
-  const [privateProject, setPrivateProject] = useState(false);
 
   const defaultEditValues = {
     identification: true,
@@ -95,9 +79,9 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
   const [editInfo, setEditInfo] = useState(defaultEditValues);
   const withNameSpace: Function = useCallback(
     (fieldName: string, index: number) => {
-      return props.nameSpace ? `${props.nameSpace}.${index}.${fieldName}` : fieldName;
+      return nameSpace ? `${nameSpace}.${index}.${fieldName}` : fieldName;
     },
-    [props.nameSpace],
+    [nameSpace],
   );
 
   const getParcelContents = (index: number) => {
@@ -131,9 +115,6 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
       currentYear,
     );
 
-    const projectNumbers = getIn(formikProps.values, withNameSpace('projectNumbers', index));
-    const agencyId = getIn(formikProps.values, withNameSpace('agencyId', index));
-
     if (
       getIn(formikProps.values.data, `leasedLandMetadata.${index}.type`) === LeasedLandTypes.other
     ) {
@@ -143,132 +124,10 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
     } else {
       return (
         <div className="parcel-content">
-          <Row>
-            <Col className="identification">
-              <Row>
-                <Col md={12}>
-                  <Row className="section-header">
-                    <span>
-                      <LandSvg className="svg" />
-                      <h5>Parcel identification</h5>
-                    </span>
-                    {!props.disabled && (
-                      <FaEdit
-                        size={20}
-                        className="edit"
-                        onClick={() =>
-                          setEditInfo({
-                            ...editInfo,
-                            identification: isParcelValid && !parcelEditInfo.identification,
-                          })
-                        }
-                      />
-                    )}
-                  </Row>
-                </Col>
-                <Col md={6}>
-                  <Row className="content-item">
-                    <Label>Agency</Label>
-                    <ParentSelect
-                      required
-                      field={withNameSpace('agencyId', index)}
-                      options={props.agencies}
-                      filterBy={['code', 'label', 'parent']}
-                      disabled={true}
-                    />
-                  </Row>
-                  <Row className="content-item">
-                    <Label>Land Name</Label>
-                    <Input
-                      disabled={parcelEditInfo.identification}
-                      field={withNameSpace('name', index)}
-                    />
-                  </Row>
-                  <Row className="content-item resizable">
-                    <Label>Description</Label>
-                    <TextArea
-                      fast={true}
-                      disabled={parcelEditInfo.identification}
-                      field={withNameSpace('description', index)}
-                    />
-                  </Row>
-                  <Row className="content-item resizable">
-                    <Label>Legal Description</Label>
-                    <TextArea
-                      fast={true}
-                      disabled={true}
-                      field={withNameSpace('landLegalDescription', index)}
-                    />
-                  </Row>
-
-                  <AddressForm
-                    onGeocoderChange={noop}
-                    {...formikProps}
-                    disabled={true}
-                    nameSpace={withNameSpace('address', index)}
-                    disableStreetAddress
-                  />
-                </Col>
-                <Col md={6}>
-                  <p className="break"></p>
-                  <Row className="content-item">
-                    <Label>PID/PIN</Label>
-                    <Input
-                      required={true}
-                      displayErrorTooltips
-                      className="input-small"
-                      disabled={true}
-                      field={
-                        getIn(formikProps.values, withNameSpace('pid', index))
-                          ? withNameSpace('pid', index)
-                          : withNameSpace('pin', index)
-                      }
-                    />
-                  </Row>
-                  <Row className="content-item">
-                    <Label>Lot Size</Label>
-
-                    <InputGroup
-                      displayErrorTooltips
-                      fast={true}
-                      disabled={true}
-                      type="number"
-                      field={withNameSpace('landArea', index)}
-                      formikProps={formikProps}
-                      postText="Hectares"
-                    />
-                  </Row>
-                  {!!projectNumbers?.length && (
-                    <Row style={{ marginTop: '1rem' }}>
-                      <Label>Project Number(s)</Label>
-                      <StyledProjectNumbers>
-                        {projectNumbers.map((projectNum: string) => (
-                          <ProjectNumberLink
-                            projectNumber={projectNum}
-                            key={projectNum}
-                            agencyId={agencyId}
-                            setPrivateProject={setPrivateProject}
-                            privateProject={privateProject}
-                          />
-                        ))}
-                      </StyledProjectNumbers>
-                    </Row>
-                  )}
-                  <br></br>
-                  <Row className="harmful">
-                    <Label>Harmful info if released?</Label>
-                    <Check
-                      type="radio"
-                      field={withNameSpace('isSensitive', index)}
-                      radioLabelOne="Yes"
-                      radioLabelTwo="No"
-                      disabled={parcelEditInfo.identification}
-                    />
-                  </Row>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
+          <ParcelDetails {...{ withNameSpace, editInfo, setEditInfo, agencies, disabled, index }} />
+          <UsageValuation
+            {...{ withNameSpace, editInfo, setEditInfo, agencies, disabled, index }}
+          />
           <Row>
             <Col md={6}>
               <Row>
@@ -278,7 +137,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       <LandSvg className="svg" />
                       <h5>Usage</h5>
                     </span>
-                    {!props.disabled && (
+                    {!disabled && (
                       <FaEdit
                         size={20}
                         className="edit"
@@ -299,7 +158,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       type="number"
                       placeholder="Must Select One"
                       field={withNameSpace('classificationId', index)}
-                      options={props.classifications}
+                      options={classifications}
                       required={true}
                     />
                   </Row>
@@ -330,7 +189,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
                       <LandSvg className="svg" />
                       <h5>Valuation</h5>
                     </span>
-                    {!props.disabled && (
+                    {!disabled && (
                       <FaEdit
                         size={20}
                         className="edit"
