@@ -1,24 +1,13 @@
 import './AssociatedLandReviewPage.scss';
 
 import { LeasedLandTypes } from 'actions/parcelsActions';
-import { FastCurrencyInput, FastInput, FastSelect } from 'components/common/form';
 import { useFormStepper } from 'components/common/form/StepForm';
-import { LandSvg } from 'components/common/Icons';
-import { Label } from 'components/common/Label';
-import { EvaluationKeys } from 'constants/evaluationKeys';
-import { FiscalKeys } from 'constants/fiscalKeys';
 import { AssociatedLandSteps } from 'constants/propertySteps';
 import { ParcelDetails } from 'features/mapSideBar/components/tabs/ParcelDetails';
 import { UsageValuation } from 'features/mapSideBar/components/tabs/UsageValuation';
-import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
 import { getIn, useFormikContext } from 'formik';
-import moment from 'moment';
 import React, { useCallback, useState } from 'react';
-import { Button, Col, Container, Form, Row } from 'react-bootstrap';
-import { FaEdit } from 'react-icons/fa';
-import { formatFiscalYear } from 'utils';
-import { formatMoney } from 'utils/numberFormatUtils';
-import { LandSchema } from 'utils/YupSchema';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -85,36 +74,6 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
   );
 
   const getParcelContents = (index: number) => {
-    const leasedLandMetadataType = getIn(
-      formikProps.values.data,
-      `leasedLandMetadata.${index}.type`,
-    );
-    const isParcelValid =
-      leasedLandMetadataType === LeasedLandTypes.other ||
-      (leasedLandMetadataType === LeasedLandTypes.owned &&
-        LandSchema.isValidSync(getIn(formikProps.values.data, `parcels.${index}`)));
-    const parcelEditInfo = {
-      identification: editInfo.identification && isParcelValid,
-      usage: editInfo.usage && isParcelValid,
-      valuation: editInfo.valuation && isParcelValid,
-    };
-    const currentYear = moment().year();
-    const assessedIndex = indexOfFinancial(
-      getIn(formikProps.values, withNameSpace('evaluations', index)),
-      EvaluationKeys.Assessed,
-      currentYear,
-    );
-    const improvementsIndex = indexOfFinancial(
-      getIn(formikProps.values, withNameSpace('evaluations', index)),
-      EvaluationKeys.Improvements,
-      currentYear,
-    );
-    const fiscalIndex = indexOfFinancial(
-      getIn(formikProps.values, withNameSpace('fiscals', index)),
-      FiscalKeys.NetBook,
-      currentYear,
-    );
-
     if (
       getIn(formikProps.values.data, `leasedLandMetadata.${index}.type`) === LeasedLandTypes.other
     ) {
@@ -126,156 +85,15 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
         <div className="parcel-content">
           <ParcelDetails {...{ withNameSpace, editInfo, setEditInfo, agencies, disabled, index }} />
           <UsageValuation
-            {...{ withNameSpace, editInfo, setEditInfo, agencies, disabled, index }}
+            {...{
+              withNameSpace,
+              editInfo,
+              setEditInfo,
+              classifications,
+              disabled,
+              index,
+            }}
           />
-          <Row>
-            <Col md={6}>
-              <Row>
-                <div className="usage">
-                  <Row className="section-header">
-                    <span>
-                      <LandSvg className="svg" />
-                      <h5>Usage</h5>
-                    </span>
-                    {!disabled && (
-                      <FaEdit
-                        size={20}
-                        className="edit"
-                        onClick={() =>
-                          setEditInfo({
-                            ...editInfo,
-                            usage: isParcelValid && !parcelEditInfo.usage,
-                          })
-                        }
-                      />
-                    )}
-                  </Row>
-                  <Row className="classification field-row">
-                    <Label>Classification</Label>
-                    <FastSelect
-                      formikProps={formikProps}
-                      disabled={parcelEditInfo.usage}
-                      type="number"
-                      placeholder="Must Select One"
-                      field={withNameSpace('classificationId', index)}
-                      options={classifications}
-                      required={true}
-                    />
-                  </Row>
-                  <Row className="field-row">
-                    <Label>Current Zoning</Label>
-                    <FastInput
-                      formikProps={formikProps}
-                      disabled={parcelEditInfo.usage}
-                      field={withNameSpace('zoning', index)}
-                    />
-                  </Row>
-                  <Row className="field-row">
-                    <Label>Potential Zoning</Label>
-                    <FastInput
-                      formikProps={formikProps}
-                      disabled={parcelEditInfo.usage}
-                      field={withNameSpace('zoningPotential', index)}
-                    />
-                  </Row>
-                </div>
-              </Row>
-            </Col>
-            <Col md={6}>
-              <Row>
-                <div className="valuation">
-                  <Row className="section-header">
-                    <span>
-                      <LandSvg className="svg" />
-                      <h5>Valuation</h5>
-                    </span>
-                    {!disabled && (
-                      <FaEdit
-                        size={20}
-                        className="edit"
-                        onClick={() =>
-                          setEditInfo({
-                            ...editInfo,
-                            valuation: isParcelValid && !parcelEditInfo.valuation,
-                          })
-                        }
-                      />
-                    )}
-                  </Row>
-                  <Row className="val-row">
-                    <Label>Net Book Value</Label>
-                    <FastCurrencyInput
-                      formikProps={formikProps}
-                      field={withNameSpace(`fiscals.${fiscalIndex}.value`, index)}
-                      disabled={parcelEditInfo.valuation}
-                    />
-                    <p
-                      style={{
-                        width: 50,
-                        fontSize: 11,
-                        textAlign: 'left',
-                        fontWeight: 700,
-                        color: '#495057',
-                      }}
-                    >
-                      {formatFiscalYear(
-                        getIn(
-                          formikProps.values,
-                          withNameSpace(`fiscals.${fiscalIndex}.fiscalYear`, index),
-                        ),
-                      )}
-                    </p>
-                  </Row>
-                  <Row className="val-row">
-                    <Label>Land value</Label>
-                    <FastCurrencyInput
-                      formikProps={formikProps}
-                      field={withNameSpace(`evaluations.${assessedIndex}.value`, index)}
-                      disabled={parcelEditInfo.valuation}
-                    />
-                    <FastInput
-                      formikProps={formikProps}
-                      field={withNameSpace(`evaluations.${assessedIndex}.year`, index)}
-                      disabled
-                      style={{ width: 50, fontSize: 11 }}
-                    />
-                  </Row>
-                  <Row className="val-row">
-                    <Label>Building Value</Label>
-                    <FastCurrencyInput
-                      formikProps={formikProps}
-                      field={withNameSpace(`evaluations.${improvementsIndex}.value`, index)}
-                      disabled={parcelEditInfo.valuation}
-                    />
-                    <FastInput
-                      formikProps={formikProps}
-                      field={withNameSpace(`evaluations.${improvementsIndex}.year`, index)}
-                      disabled
-                      style={{ width: 50, fontSize: 11 }}
-                    />
-                  </Row>
-                  <Row className="val-row">
-                    <Label>Total Assessed Value</Label>
-                    <Form.Group>
-                      <Form.Control
-                        value={formatMoney(
-                          (getIn(
-                            formikProps.values,
-                            withNameSpace(`evaluations.${improvementsIndex}.value`, index),
-                          ) || 0) +
-                            (getIn(
-                              formikProps.values,
-                              withNameSpace(`evaluations.${assessedIndex}.value`, index),
-                            ) || 0),
-                        )}
-                        disabled={true}
-                      />
-                    </Form.Group>
-                  </Row>
-                </div>
-              </Row>
-            </Col>
-          </Row>
         </div>
       );
     }
@@ -287,7 +105,7 @@ export const AssociatedLandReviewPage: React.FC<any> = (props: IReviewProps) => 
         <h4>Review associated land information</h4>
         <p>
           Please review the information you have entered. You can edit it by clicking on the edit
-          icon for each section. When you are satisfied that the infomation provided is correct,
+          icon for each section. When you are satisfied that the information provided is correct,
           click the submit button to save this information to the PIMS inventory.
         </p>
       </Row>

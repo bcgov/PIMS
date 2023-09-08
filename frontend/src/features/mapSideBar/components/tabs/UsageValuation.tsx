@@ -1,5 +1,5 @@
 import { Box, Grid, Stack, Typography } from '@mui/material';
-import { FastCurrencyInput, FastInput } from 'components/common/form';
+import { FastCurrencyInput, FastInput, FastSelect } from 'components/common/form';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
@@ -26,24 +26,27 @@ interface IUsageValuationProps {
 }
 
 export const UsageValuation: React.FC<any> = (props: IUsageValuationProps) => {
-  const { setEditInfo, editInfo, withNameSpace, disabled } = props;
+  const { setEditInfo, editInfo, withNameSpace, disabled, classifications, index } = props;
   const formikProps = useFormikContext();
 
   const currentYear = moment().year();
 
   const fiscalIndex = indexOfFinancial(
-    getIn(formikProps.values, withNameSpace('fiscals')),
+    getIn(formikProps.values, withNameSpace('fiscals', index)),
     FiscalKeys.NetBook,
     currentYear,
   );
 
   const evaluationIndex = indexOfFinancial(
-    getIn(formikProps.values, withNameSpace('evaluations')),
+    getIn(formikProps.values, withNameSpace('evaluations', index)),
     EvaluationKeys.Assessed,
     currentYear,
   );
 
-  const netBookYear = getIn(formikProps.values, withNameSpace(`fiscals.${fiscalIndex}.fiscalYear`));
+  const netBookYear = getIn(
+    formikProps.values,
+    withNameSpace(`fiscals.${fiscalIndex}.fiscalYear`, index),
+  );
 
   // Style Constants
   const { leftColumnWidth, rightColumnWidth, boldFontWeight, fontSize, headerColour } = tabStyles;
@@ -82,15 +85,15 @@ export const UsageValuation: React.FC<any> = (props: IUsageValuationProps) => {
               <Typography fontSize={fontSize}>Classification:</Typography>
             </Grid>
             <Grid item xs={rightColumnWidth}>
-              {/* <FastSelect
+              <FastSelect
                 formikProps={formikProps}
                 disabled={editInfo.usage}
                 type="number"
                 placeholder="Must Select One"
-                field={withNameSpace('classificationId')}
+                field={withNameSpace('classificationId', index)}
                 options={classifications}
                 required={true}
-              /> */}
+              />
             </Grid>
 
             {/* CURRENT ZONING */}
@@ -101,7 +104,7 @@ export const UsageValuation: React.FC<any> = (props: IUsageValuationProps) => {
               <FastInput
                 formikProps={formikProps}
                 disabled={editInfo.usage}
-                field={withNameSpace('zoning')}
+                field={withNameSpace('zoning', index)}
               />
             </Grid>
 
@@ -113,7 +116,7 @@ export const UsageValuation: React.FC<any> = (props: IUsageValuationProps) => {
               <FastInput
                 formikProps={formikProps}
                 disabled={editInfo.usage}
-                field={withNameSpace('zoningPotential')}
+                field={withNameSpace('zoningPotential', index)}
               />
             </Grid>
           </Grid>
@@ -155,7 +158,7 @@ export const UsageValuation: React.FC<any> = (props: IUsageValuationProps) => {
               <Grid item xs={4}>
                 <FastCurrencyInput
                   formikProps={formikProps}
-                  field={withNameSpace(`fiscals.${fiscalIndex}.value`)}
+                  field={withNameSpace(`fiscals.${fiscalIndex}.value`, index)}
                   disabled={editInfo.valuation}
                 />
               </Grid>
@@ -178,14 +181,14 @@ export const UsageValuation: React.FC<any> = (props: IUsageValuationProps) => {
               <Grid item xs={4}>
                 <FastCurrencyInput
                   formikProps={formikProps}
-                  field={withNameSpace(`evaluations.${evaluationIndex}.value`)}
+                  field={withNameSpace(`evaluations.${evaluationIndex}.value`, index)}
                   disabled={editInfo.valuation}
                 />
               </Grid>
               <Grid item xs={3}>
                 <FastInput
                   formikProps={formikProps}
-                  field={withNameSpace(`evaluations.${evaluationIndex}.year`)}
+                  field={withNameSpace(`evaluations.${evaluationIndex}.year`, index)}
                   disabled
                   style={{ width: 50, fontSize: 11 }}
                 />

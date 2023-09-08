@@ -55,8 +55,6 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
     return lookupCode.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME;
   }).map(mapLookupCode);
 
-  console.log(withNameSpace('isSensitive', index));
-
   return (
     <div className="identification">
       <Box sx={{ p: 2, background: 'white' }}>
