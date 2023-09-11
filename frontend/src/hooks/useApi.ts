@@ -215,9 +215,15 @@ export const useApi = (props?: IApiProps): PimsAPI => {
     );
     // Find all properties that were in the original but not returned from the POST.
     // This should determine which properties were not added for some reason.
-    const rejectedProperties = properties.filter(
-      (property, index) => data[index].pid !== property.pid,
-    );
+    const rejectedProperties: IPropertyModel[] = [];
+    if (data.length !== properties.length) {
+      properties.forEach((property) => {
+        if (!data.some((returnedProperty) => returnedProperty['pid'] === property['pid'])) {
+          rejectedProperties.push(property);
+        }
+      });
+    }
+
     return {
       responseCode: status,
       acceptedProperties: data,
