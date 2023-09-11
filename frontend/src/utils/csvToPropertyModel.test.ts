@@ -1,8 +1,8 @@
 import {
+  csvFileToPropertyModel,
   csvFileToString,
   parseCSVString,
   populateHeaderMap,
-  csvFileToPropertyModel,
 } from './csvToPropertyModel';
 
 const csvString =
