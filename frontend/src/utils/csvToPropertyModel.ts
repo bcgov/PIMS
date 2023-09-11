@@ -33,7 +33,7 @@ export interface IPropertyModel {
 /**
  * @description Takes a string representing CSV content of a file and converts it to a 2D array.
  * @param {string} csvContent Content of CSV file
- * @returns 2D array of file contents
+ * @returns {Promise<IPropertyModel[]>} Promise of 2D array of Property Models
  */
 export const parseCSVString = async (csvContent: string): Promise<IPropertyModel[]> => {
   return new Promise<IPropertyModel[]>((resolve, reject) => {
@@ -91,6 +91,11 @@ export const parseCSVString = async (csvContent: string): Promise<IPropertyModel
   });
 };
 
+/**
+ * @description Takes a comma delimited header row from CSV and determines where each field's index is
+ * @param {string | string[]} headerRow The incoming header
+ * @returns {Record<string, number>[]}An object with keys matching headers and an index indicating their order.
+ */
 export const populateHeaderMap = (headerRow: string | string[]) => {
   let headerList;
   if (headerRow && typeof headerRow === typeof 'string') {
@@ -138,6 +143,11 @@ export const populateHeaderMap = (headerRow: string | string[]) => {
   };
 };
 
+/**
+ * @description Takes a CSV file and converts it into a string for processing.
+ * @param {File} file The incoming CSV file.
+ * @returns {Promise<string>} A promise of the converted string.
+ */
 export const csvFileToString = (file: File): Promise<string> => {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
@@ -159,6 +169,11 @@ export const csvFileToString = (file: File): Promise<string> => {
   });
 };
 
+/**
+ * @description Combines each step in CSV utils to convert from CSV to Property Model.
+ * @param {File} file The incoming CSV file.
+ * @returns {IPropertyModel[]} An array of Property Model objects.
+ */
 export const csvFileToPropertyModel = async (file: File) => {
   const string = await csvFileToString(file);
   const objects = await parseCSVString(string);
