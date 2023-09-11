@@ -15,7 +15,7 @@
         white-space: nowrap;
     }
     .VerticalBar {
-        border-left: 2px solid rgba(96, 96, 96, 0.2);
+        border-left: 2px solid colors.$filter-background-text-color;
         height: 18px;
         width: 0;
         padding: 0;
