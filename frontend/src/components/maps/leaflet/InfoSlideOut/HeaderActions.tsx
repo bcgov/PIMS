@@ -1,30 +1,9 @@
-import variables from '_variables.module.scss';
+import './HeaderActions.scss';
+
 import { IBuilding, IParcel } from 'actions/parcelsActions';
 import { PropertyTypes } from 'constants/propertyTypes';
 import * as React from 'react';
-import { Row } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
-import styled from 'styled-components';
-
-const LinkMenu = styled(Row)`
-  background-color: ${variables.filterBackgroundColor};
-  height: 35px;
-  width: 322px;
-  margin: 0px 0px 5px -10px;
-  font-size: 14px;
-  padding: 10px;
-  a {
-    padding: 0px 10px;
-    color: ${variables.slideOutBlue};
-  }
-`;
-
-const VerticalBar = styled.div`
-  border-left: 2px solid rgba(96, 96, 96, 0.2);
-  height: 18px;
-  width: 0;
-  padding: 0;
-`;
 
 interface IHeaderActions {
   /** The selected property */
@@ -84,12 +63,12 @@ const HeaderActions: React.FC<IHeaderActions> = ({
   updateQueryParams.set('parcelId', `${parcelId}`);
 
   return (
-    <LinkMenu>
+    <div className="link-menu">
       Actions:
       {canViewDetails && (
         <>
           <Link
-            style={{ width: 95 }}
+            className="header-link"
             onClick={(e) => {
               jumpToView();
               if (onLinkClick) onLinkClick();
@@ -105,9 +84,9 @@ const HeaderActions: React.FC<IHeaderActions> = ({
 
           {canEditDetails && (
             <>
-              <VerticalBar />
+              <div className="vertical-bar" />
               <Link
-                style={{ width: 63 }}
+                className="header-link"
                 onClick={() => {
                   jumpToView();
                   if (onLinkClick) onLinkClick();
@@ -121,13 +100,13 @@ const HeaderActions: React.FC<IHeaderActions> = ({
               </Link>
             </>
           )}
-          <VerticalBar />
         </>
       )}
-      <Link style={{ width: 90 }} to={{ ...location }} onClick={zoomToView}>
+      <div className="vertical-bar" />
+      <Link className="header-link" to={{ ...location }} onClick={zoomToView}>
         Zoom map
       </Link>
-    </LinkMenu>
+    </div>
   );
 };
 
