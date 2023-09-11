@@ -35,7 +35,7 @@ export interface IPropertyModel {
  * @param {string} csvContent Content of CSV file
  * @returns 2D array of file contents
  */
-export async function parseCSV(csvContent: string): Promise<IPropertyModel[]> {
+export const parseCSVString = async (csvContent: string): Promise<IPropertyModel[]> => {
   return new Promise<IPropertyModel[]>((resolve, reject) => {
     const results: IPropertyModel[] = [];
     let headerMap: Record<string, number> = {};
@@ -80,10 +80,16 @@ export async function parseCSV(csvContent: string): Promise<IPropertyModel[]> {
         }
         lineCounter++;
       })
-      .on('end', () => resolve(results))
+      .on('end', () => {
+        if (lineCounter < 2) {
+          reject('CSV file is incomplete.');
+        } else {
+          resolve(results);
+        }
+      })
       .on('error', (error: Error) => reject(error));
   });
-}
+};
 
 export const populateHeaderMap = (headerRow: string | string[]) => {
   let headerList;
@@ -132,20 +138,29 @@ export const populateHeaderMap = (headerRow: string | string[]) => {
   };
 };
 
-// export const csvToJson = (csvFile: File) => {
-//   const reader = new FileReader();
+export const csvFileToString = (file: File): Promise<string> => {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
 
-//   reader.onload = async () => {
-//     try {
-//       const fileData = reader.result as string;
-//       console.log(fileData);
-//       const parsedData = await parseCSV(fileData);
-//       console.log('parsedData', parsedData);
-//       return parsedData;
-//     } catch (error) {
-//       console.error('Error parsing CSV:', error);
-//     }
-//   };
+    reader.onload = (event) => {
+      if (event.target && event.target.result) {
+        const csvData = event.target.result as string;
+        resolve(csvData);
+      } else {
+        reject(new Error('Failed to read file.'));
+      }
+    };
 
-//   reader.readAsText(csvFile);
-// };
+    reader.onerror = (event) => {
+      reject(new Error('Error reading file: ' + (event.target?.error?.message || 'Unknown error')));
+    };
+
+    reader.readAsText(file);
+  });
+};
+
+export const csvFileToPropertyModel = async (file: File) => {
+  const string = await csvFileToString(file);
+  const objects = await parseCSVString(string);
+  return objects;
+};

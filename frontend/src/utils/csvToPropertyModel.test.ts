@@ -1,4 +1,9 @@
-import { parseCSV, populateHeaderMap } from './csvToJson';
+import {
+  csvFileToString,
+  parseCSVString,
+  populateHeaderMap,
+  csvFileToPropertyModel,
+} from './csvToPropertyModel';
 
 const csvString =
   'parcelId,pid,pin,status,fiscalYear,agency,agencyCode,subAgency,propertyType,localId,name,description,classification,civicAddress,city,postal,latitude,longitude,landArea,landLegalDescription,buildingFloorCount,buildingConstructionType,buildingPredominateUse,buildingTenancy,buildingRentableArea,assessed,netBook\n\
@@ -16,15 +21,26 @@ const headerString =
   'parcelId,pid,pin,status,fiscalYear,agency,agencyCode,subAgency,propertyType,localId,name,description,classification,civicAddress,city,postal,latitude,longitude,landArea,landLegalDescription,buildingFloorCount,buildingConstructionType,buildingPredominateUse,buildingTenancy,buildingRentableArea,assessed,netBook';
 
 describe('Testing CSV to JSON Utilities', () => {
+  const blob = new Blob([csvString], { type: 'text/csv' });
+  const file = new File([blob], 'test.csv', { type: 'text/csv' });
+
+  // Happy Path Tests
   it('Headers are mapped as expected', () => {
+    // From string
     const headerMap = populateHeaderMap(headerString);
     expect(headerMap).toBeDefined();
     expect(headerMap!['parcelId']).toBe(0);
     expect(headerMap!['netBook']).toBe(26);
+
+    // From string[]
+    const headerMapFromArray = populateHeaderMap(headerString.split(','));
+    expect(headerMapFromArray).toBeDefined();
+    expect(headerMapFromArray!['parcelId']).toBe(0);
+    expect(headerMapFromArray!['netBook']).toBe(26);
   });
 
   it('CSV string is parsed correctly', async () => {
-    const parsedCSV = await parseCSV(csvString);
+    const parsedCSV = await parseCSVString(csvString);
     expect(parsedCSV).toBeDefined();
     const { parcelId, pid, description, civicAddress } = parsedCSV.at(0)!;
     expect(parcelId).toBe('000-118-397');
@@ -33,12 +49,38 @@ describe('Testing CSV to JSON Utilities', () => {
     expect(civicAddress).toBe('123 Test St');
   });
 
-  // it('CSV file is parsed and returned as array of objects', () => {
-  //   const rows = csvString.split('/n');
-  //   const csvContent = 'data:text/csv;charset=utf-8,' + rows.join('\n');
-  //   console.log(csvContent);
-  //   const result = csvToJson(csvContent as unknown as File);
-  //   console.log(result);
-  //   expect(true).toBeTruthy();
-  // });
+  it('CSV file is parsed and returned as string of content', async () => {
+    const result = await csvFileToString(file);
+    expect(result).toBeDefined();
+    expect(result).toBe(csvString);
+  });
+
+  it('CSV file is parsed and returned as array of objects', async () => {
+    const result = await csvFileToPropertyModel(file);
+    expect(result).toBeDefined();
+    const { parcelId, pid, description, civicAddress } = result.at(0)!;
+    expect(parcelId).toBe('000-118-397');
+    expect(pid).toBe('000-118-397');
+    expect(description).toBe('PIMS Testing');
+    expect(civicAddress).toBe('123 Test St');
+  });
+
+  // Unhappy Path Tests
+  it('Cannot parse headers if invalid type passed', () => {
+    expect(() => {
+      populateHeaderMap(123 as unknown as string);
+    }).toThrowError(
+      'populateHeaderMap only accepts string or string[] types as its argument. Type number is not accepted.',
+    );
+  });
+
+  it('Cannot parse headers if header cannot be delimited', () => {
+    expect(() => {
+      populateHeaderMap('hello');
+    }).toThrowError('populateHeaderMap requires a list of at least 2 headers. Check the input.');
+  });
+
+  it('CSV string cannot be parsed if not delimited', async () => {
+    expect(parseCSVString('hello')).rejects.toEqual('CSV file is incomplete.');
+  });
 });
