@@ -1,0 +1,17 @@
+@use '../../../../colors';
+
+.LinkMenu {
+    background-color: colors.$filter-background-color;
+    height: 35px;
+    width: 322px;
+    margin: 0px 0px 5px -10px;
+    font-size: 14px;
+    padding: 10px;
+}
+
+.VerticalBar {
+    border-left: 2px solid rgba(96, 96, 96, 0.2);
+    height: 18px;
+    width: 0;
+    padding: 0;
+}
