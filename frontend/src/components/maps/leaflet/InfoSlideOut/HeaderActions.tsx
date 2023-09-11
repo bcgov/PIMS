@@ -1,9 +1,9 @@
+import './HeaderActions.scss';
+
 import { IBuilding, IParcel } from 'actions/parcelsActions';
 import { PropertyTypes } from 'constants/propertyTypes';
 import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import './HeaderActions.scss';
-
 
 interface IHeaderActions {
   /** The selected property */
@@ -63,12 +63,12 @@ const HeaderActions: React.FC<IHeaderActions> = ({
   updateQueryParams.set('parcelId', `${parcelId}`);
 
   return (
-    <div className="LinkMenu">
+    <div className="link-menu">
       Actions:
       {canViewDetails && (
         <>
           <Link
-            //style={{ width: 95 }}
+            className="header-link"
             onClick={(e) => {
               jumpToView();
               if (onLinkClick) onLinkClick();
@@ -84,9 +84,9 @@ const HeaderActions: React.FC<IHeaderActions> = ({
 
           {canEditDetails && (
             <>
-              <div className="VerticalBar" />
+              <div className="vertical-bar" />
               <Link
-                style={{ width: 63 }}
+                className="header-link"
                 onClick={() => {
                   jumpToView();
                   if (onLinkClick) onLinkClick();
@@ -98,12 +98,12 @@ const HeaderActions: React.FC<IHeaderActions> = ({
               >
                 Update
               </Link>
-              <div className="VerticalBar" />
             </>
           )}
         </>
       )}
-      <Link style={{ width: 90 }} to={{ ...location }} onClick={zoomToView}>
+      <div className="vertical-bar" />
+      <Link className="header-link" to={{ ...location }} onClick={zoomToView}>
         Zoom map
       </Link>
     </div>
