@@ -10,6 +10,7 @@ import { useCallback } from 'react';
 import { hideLoading, showLoading } from 'react-redux-loading-bar';
 import { useAppDispatch } from 'store';
 import { store } from 'store';
+import { IPropertyModel } from 'utils/csvToPropertyModel';
 
 export interface IGeocoderResponse {
   siteId: string;
@@ -44,6 +45,11 @@ export interface PimsAPI extends AxiosInstance {
   getLTSA: (id: string) => Promise<ILTSAOrderModel>;
   updateBuilding: (id: number, data: IApiProperty) => Promise<IBuilding>;
   updateParcel: (id: number, data: IApiProperty) => Promise<IParcel>;
+  importProperties: (properties: IPropertyModel[]) => Promise<{
+    responseCode: number;
+    acceptedProperties?: IPropertyModel[];
+    rejectedProperties?: IPropertyModel[];
+  }>;
 }
 
 export interface IApiProps {
@@ -194,6 +200,35 @@ export const useApi = (props?: IApiProps): PimsAPI => {
     );
     console.log('Tenancy:' + building.buildingTenancy);
     return data;
+  }, []);
+
+  /**
+   * @description Attempts to send a list of properties to be inserted into the database.
+   *              Will not overwrite existing parcelIds. Also doesn't return an error if those parcelIds already exist.
+   * @prop {IPropertyModel[]} properties A list of properties to be added.
+   * @returns A promise with the response code and list of properties not added.
+   */
+  axios.importProperties = useCallback(async (properties: IPropertyModel[]) => {
+    const { status, data } = await axios.post<IPropertyModel[]>(
+      `${ENVIRONMENT.apiUrl}/tools/import/properties`,
+      properties,
+    );
+    // Find all properties that were in the original but not returned from the POST.
+    // This should determine which properties were not added for some reason.
+    const rejectedProperties: IPropertyModel[] = [];
+    if (data.length !== properties.length) {
+      properties.forEach((property) => {
+        if (!data.some((returnedProperty) => returnedProperty['pid'] === property['pid'])) {
+          rejectedProperties.push(property);
+        }
+      });
+    }
+
+    return {
+      responseCode: status,
+      acceptedProperties: data,
+      rejectedProperties,
+    };
   }, []);
 
   return axios;
