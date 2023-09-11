@@ -68,7 +68,7 @@ const HeaderActions: React.FC<IHeaderActions> = ({
       {canViewDetails && (
         <>
           <Link
-            style={{ width: 95 }}
+            //style={{ width: 95 }}
             onClick={(e) => {
               jumpToView();
               if (onLinkClick) onLinkClick();
