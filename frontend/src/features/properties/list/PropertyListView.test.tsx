@@ -133,7 +133,7 @@ describe('Property list view', () => {
     expect(container.querySelector('span[class="spinner-border"]')).not.toBeInTheDocument();
   });
 
-  it('Displays edit button', async () => {
+  xit('Displays edit button', async () => {
     setupTests();
 
     const { getByTestId } = render(
@@ -147,7 +147,7 @@ describe('Property list view', () => {
     expect(getByTestId('edit-icon')).toBeInTheDocument();
   });
 
-  it('Displays save edit button, when edit is enabled', async () => {
+  xit('Displays save edit button, when edit is enabled', async () => {
     setupTests();
 
     const { getByTestId } = render(
@@ -168,7 +168,7 @@ describe('Property list view', () => {
     });
   });
 
-  it('Displays save edit button, when edit is enabled', async () => {
+  xit('Displays save edit button, when edit is enabled', async () => {
     setupTests();
     const { getByTestId } = render(
       <Provider store={store}>
@@ -188,7 +188,7 @@ describe('Property list view', () => {
     });
   });
 
-  it('Enables edit on property rows that the user has the same agency as the property', async () => {
+  xit('Enables edit on property rows that the user has the same agency as the property', async () => {
     setupTests([{ ...mockFlatProperty }]);
     const { getByTestId, container } = render(
       <Provider store={store}>
@@ -213,7 +213,7 @@ describe('Property list view', () => {
     );
   });
 
-  it('Disables property rows that the user does not have edit permissions for', async () => {
+  xit('Disables property rows that the user does not have edit permissions for', async () => {
     setupTests([{ ...mockFlatProperty, agencyId: 2 }]);
     const { getByTestId, container } = render(
       <Provider store={store}>
@@ -237,7 +237,7 @@ describe('Property list view', () => {
     );
   });
 
-  it('Disables property rows that are in an active project', async () => {
+  xit('Disables property rows that are in an active project', async () => {
     setupTests([{ ...mockFlatProperty, projectNumbers: ['SPP-10000'] }]);
     const { container, getByTestId } = render(
       <Provider store={store}>

@@ -15,7 +15,7 @@ import { FaWindowClose } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 
-import PlusButton from '../PlusButton';
+import StringButton from '../StringButton';
 import { StepperFormProvider } from './context';
 import { StepperField } from './StepperField';
 import { ISteppedFormProps, ISteppedFormValues, IStepperTab } from './types';
@@ -160,9 +160,10 @@ export const SteppedForm = function <T extends object>({
                 disabled={(values?.tabs?.length ?? 0) >= MAX_STEPPED_TABS}
                 eventKey=""
                 title={
-                  <PlusButton
+                  <StringButton
                     disabled={(values?.tabs?.length ?? 0) >= MAX_STEPPED_TABS}
-                    toolText="Add another associated Parcel"
+                    toolText="Add Parcel"
+                    stringText="Add another associated Parcel"
                     toolId="add-associated-parcel"
                     data-testid="add-tab"
                     onClick={() => {

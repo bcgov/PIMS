@@ -11,7 +11,8 @@ import * as API from 'constants/API';
 import { ENVIRONMENT } from 'constants/environment';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
-import { Claims, PropertyTypes } from 'constants/index';
+import { PropertyTypes } from 'constants/index';
+// import { Claims, PropertyTypes } from 'constants/index';
 import { Roles } from 'constants/roles';
 import {
   getCurrentFiscal,
@@ -26,7 +27,8 @@ import { useRouterFilter } from 'hooks/useRouterFilter';
 import { fill, intersection, isEmpty, keys, noop, pick, range } from 'lodash';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Button, Container } from 'react-bootstrap';
-import { FaEdit, FaFileExport, FaFolder, FaFolderOpen } from 'react-icons/fa';
+import { FaFileExport, FaFolder, FaFolderOpen } from 'react-icons/fa';
+// import { FaEdit, FaFileExport, FaFolder, FaFolderOpen } from 'react-icons/fa';
 import { FaFileAlt, FaFileExcel } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -67,17 +69,17 @@ const FileIcon = styled(Button)`
   padding: 6px 5px;
 `;
 
-const EditIconButton = styled(FileIcon)`
-  margin-right: 12px;
-`;
+// const EditIconButton = styled(FileIcon)`
+//   margin-right: 12px;
+// `;
 
-const VerticalDivider = styled.div`
-  border-left: 6px solid rgba(96, 96, 96, 0.2);
-  height: 40px;
-  margin-left: 1%;
-  margin-right: 1%;
-  border-width: 2px;
-`;
+// const VerticalDivider = styled.div`
+//   border-left: 6px solid rgba(96, 96, 96, 0.2);
+//   height: 40px;
+//   margin-left: 1%;
+//   margin-right: 1%;
+//   border-width: 2px;
+// `;
 
 const initialQuery: IPropertyQueryParams = {
   page: 1,
@@ -732,15 +734,16 @@ const PropertyListView: React.FC = () => {
               </FileIcon>
             </TooltipWrapper>
           )}
+          {/*
           <VerticalDivider />
 
-          {!editable && !keycloak.hasClaim(Claims.VIEW_ONLY_PROPERTIES) && (
+           {!editable && !keycloak.hasClaim(Claims.VIEW_ONLY_PROPERTIES) && (
             <TooltipWrapper toolTipId="edit-values" toolTip={'Edit values'}>
               <EditIconButton>
                 <FaEdit data-testid="edit-icon" size={36} onClick={() => setEditable(!editable)} />
               </EditIconButton>
             </TooltipWrapper>
-          )}
+          )} */}
           {editable && (
             <>
               <TooltipWrapper toolTipId="cancel-edited-values" toolTip={'Cancel unsaved edits'}>
