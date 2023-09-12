@@ -1,5 +1,13 @@
+import './../../SidebarContents/subforms/LandReviewPage.scss';
+
 import { Box, Grid, Stack, Typography } from '@mui/material';
-import { FastCurrencyInput, FastInput, FastSelect } from 'components/common/form';
+import {
+  FastCurrencyInput,
+  FastDatePicker,
+  FastInput,
+  Input,
+  InputGroup,
+} from 'components/common/form';
 import { EvaluationKeys } from 'constants/evaluationKeys';
 import { FiscalKeys } from 'constants/fiscalKeys';
 import { indexOfFinancial } from 'features/properties/components/forms/subforms/EvaluationForm';
@@ -12,55 +20,51 @@ import { formatFiscalYear } from 'utils';
 import { HeaderDivider } from './HeaderDivider';
 import { tabStyles } from './TabStyles';
 
-interface IUsageValuationProps {
+interface IOccupancyValuation {
   withNameSpace: Function;
   disabled?: boolean;
   classifications: any;
   editInfo: {
     identification: boolean;
-    usage: boolean;
+    tenancy: boolean;
     valuation: boolean;
   };
   setEditInfo: Dispatch<SetStateAction<object>>;
 }
 
 /**
- * @description For parcels, shows usage and valuation information.
- * @param {IUsageValuationProps} props
+ * @description For buildings, shows info on occupancy and valuation
+ * @param {IOccupancyValuation} props
  * @returns React component.
  */
-export const UsageValuation: React.FC<any> = (props: IUsageValuationProps) => {
-  const { setEditInfo, editInfo, withNameSpace, classifications, disabled } = props;
+export const OccupancyValuation: React.FC<any> = (props: IOccupancyValuation) => {
+  const { setEditInfo, editInfo, withNameSpace, disabled } = props;
   const formikProps = useFormikContext();
-
   const currentYear = moment().year();
-
-  const fiscalIndex = indexOfFinancial(
-    getIn(formikProps.values, withNameSpace('fiscals')),
-    FiscalKeys.NetBook,
-    currentYear,
-  );
 
   const evaluationIndex = indexOfFinancial(
     getIn(formikProps.values, withNameSpace('evaluations')),
     EvaluationKeys.Assessed,
     currentYear,
   );
-
+  const fiscalIndex = indexOfFinancial(
+    getIn(formikProps.values, withNameSpace('fiscals')),
+    FiscalKeys.NetBook,
+    currentYear,
+  );
   const netBookYear = getIn(formikProps.values, withNameSpace(`fiscals.${fiscalIndex}.fiscalYear`));
-
   // Style Constants
   const { leftColumnWidth, rightColumnWidth, boldFontWeight, fontSize, headerColour } = tabStyles;
 
   return (
     <>
-      {/* USAGE */}
-      <div className="usage">
+      {/* OCCUPANCY */}
+      <div className="occupancy">
         <Box sx={{ p: 2, background: 'white' }}>
           {/* HEADER */}
           <Stack direction="row" spacing={1}>
             <Typography text-align="left" sx={{ fontWeight: boldFontWeight, color: headerColour }}>
-              Usage
+              Occupancy
             </Typography>
             {!disabled && (
               <Box sx={{ pl: 1 }}>
@@ -70,7 +74,7 @@ export const UsageValuation: React.FC<any> = (props: IUsageValuationProps) => {
                   onClick={() => {
                     setEditInfo({
                       ...editInfo,
-                      usage: formikProps.isValid && !editInfo.usage,
+                      tenancy: formikProps.isValid && !editInfo.tenancy,
                     });
                   }}
                 />
@@ -81,49 +85,70 @@ export const UsageValuation: React.FC<any> = (props: IUsageValuationProps) => {
 
           {/* CONTENT */}
           <Grid container sx={{ textAlign: 'left' }} rowSpacing={0.5}>
-            {/* CLASSIFICATION */}
-            <Grid item xs={leftColumnWidth}>
-              <Typography fontSize={fontSize}>Classification:</Typography>
-            </Grid>
-            <Grid item xs={rightColumnWidth}>
-              <FastSelect
-                formikProps={formikProps}
-                disabled={editInfo.usage}
-                type="number"
-                placeholder="Must Select One"
-                field={withNameSpace('classificationId')}
-                options={classifications}
-                required={true}
-              />
-            </Grid>
-
-            {/* CURRENT ZONING */}
-            <Grid item xs={leftColumnWidth}>
-              <Typography fontSize={fontSize}>Current Zoning:</Typography>
-            </Grid>
-            <Grid item xs={rightColumnWidth}>
-              <FastInput
-                formikProps={formikProps}
-                disabled={editInfo.usage}
-                field={withNameSpace('zoning')}
-              />
+            {/* TOTAL AREA */}
+            <Grid item container>
+              <Grid item xs={leftColumnWidth}>
+                <Typography fontSize={fontSize}>Total Area:</Typography>
+              </Grid>
+              <Grid item xs={rightColumnWidth} className="tenancy-fields">
+                <InputGroup
+                  displayErrorTooltips
+                  fast={true}
+                  formikProps={formikProps}
+                  disabled={editInfo.tenancy}
+                  type="number"
+                  field={withNameSpace('totalArea')}
+                  postText="Sq. M"
+                  style={{ border: 0 }}
+                  required
+                />
+              </Grid>
             </Grid>
 
-            {/* POTENTIAL ZONING */}
-            <Grid item xs={leftColumnWidth}>
-              <Typography fontSize={fontSize}>Potential Zoning:</Typography>
+            {/* NET USABLE AREA */}
+            <Grid item container>
+              <Grid item xs={leftColumnWidth}>
+                <Typography fontSize={fontSize}>Net Usable Area:</Typography>
+              </Grid>
+              <Grid item xs={rightColumnWidth} className="tenancy-fields">
+                <InputGroup
+                  displayErrorTooltips
+                  fast={true}
+                  formikProps={formikProps}
+                  disabled={editInfo.tenancy}
+                  type="number"
+                  field={withNameSpace('rentableArea')}
+                  postText="Sq. M"
+                  style={{ border: 'solid' }}
+                  required
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={rightColumnWidth}>
-              <FastInput
-                formikProps={formikProps}
-                disabled={editInfo.usage}
-                field={withNameSpace('zoningPotential')}
-              />
+
+            {/* TENANCY % */}
+            <Grid item container>
+              <Grid item xs={leftColumnWidth}>
+                <Typography fontSize={fontSize}>Tenancy %:</Typography>
+              </Grid>
+              <Grid item xs={rightColumnWidth} className="content-item">
+                <span className="tenancy-fields">
+                  <FastInput
+                    displayErrorTooltips
+                    formikProps={formikProps}
+                    disabled={editInfo.tenancy}
+                    field={withNameSpace('buildingTenancy')}
+                  />
+                  <FastDatePicker
+                    formikProps={formikProps}
+                    disabled={editInfo.tenancy}
+                    field={withNameSpace('buildingTenancyUpdatedOn')}
+                  />
+                </span>
+              </Grid>
             </Grid>
           </Grid>
         </Box>
       </div>
-
       {/* VALUATION */}
       <div className="valuation">
         <Box sx={{ p: 2, background: 'white' }}>
@@ -155,41 +180,38 @@ export const UsageValuation: React.FC<any> = (props: IUsageValuationProps) => {
             <Grid item xs={leftColumnWidth}>
               <Typography fontSize={fontSize}>Net Book Value:</Typography>
             </Grid>
-            <Grid container item xs={rightColumnWidth}>
-              <Grid item xs={4}>
+            <Grid item container xs={rightColumnWidth} className="val-item">
+              <Grid item>
                 <FastCurrencyInput
                   formikProps={formikProps}
-                  field={withNameSpace(`fiscals.${fiscalIndex}.value`)}
+                  field={`data.fiscals.${fiscalIndex}.value`}
                   disabled={editInfo.valuation}
                 />
               </Grid>
-              <Grid item xs={3}>
-                <FastInput
-                  formikProps={formikProps}
-                  field="netBookYearDisplay"
+              <Grid item>
+                <Input
+                  field="netbookYearDisplay"
                   value={formatFiscalYear(netBookYear)}
                   disabled
                   style={{ width: 50, fontSize: 11 }}
                 />
               </Grid>
             </Grid>
-
             {/* ASSESSED VALUE */}
             <Grid item xs={leftColumnWidth}>
               <Typography fontSize={fontSize}>Assessed Value:</Typography>
             </Grid>
-            <Grid container item xs={rightColumnWidth}>
-              <Grid item xs={4}>
+            <Grid item container xs={rightColumnWidth} className="val-item">
+              <Grid item>
                 <FastCurrencyInput
                   formikProps={formikProps}
-                  field={withNameSpace(`evaluations.${evaluationIndex}.value`)}
+                  field={`data.evaluations.${evaluationIndex}.value`}
                   disabled={editInfo.valuation}
                 />
               </Grid>
-              <Grid item xs={3}>
-                <FastInput
-                  formikProps={formikProps}
-                  field={withNameSpace(`evaluations.${evaluationIndex}.year`)}
+              <Grid item>
+                <Input
+                  field={`data.evaluations.${evaluationIndex}.year`}
                   disabled
                   style={{ width: 50, fontSize: 11 }}
                 />
