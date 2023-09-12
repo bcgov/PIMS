@@ -9,6 +9,11 @@ interface ITitleOwnershipProps {
   pid?: string;
 }
 
+/**
+ * @description For parcel items, shows info from LTSA
+ * @param {ITitleOwnershipProps} props
+ * @returns React component.
+ */
 export const TitleOwnership: React.FC<any> = (props: ITitleOwnershipProps) => {
   const { ltsa, pid } = props;
 
