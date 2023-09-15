@@ -3,7 +3,7 @@
 #############################################
 # https://hub.docker.com/layers/library/node/18.16-bullseye-slim/images/
 # sha256-8463e2d7bacf0cb576453a0ea8425f3b3c87fa9dd5c8a84ab1908cfd407f3edd?context=explore
-FROM node:18.16-bullseye-slim as dev
+FROM node:18.17.1-bullseye-slim as dev
 
 WORKDIR /app
 ENV NODE_ENV=development
@@ -22,7 +22,7 @@ CMD ["npm", "start"]
 #############################################
 #                Prod Build                 #
 #############################################
-FROM node:18.16-bullseye-slim as prod-build
+FROM node:18.17.1-bullseye-slim as prod-build
 
 # Set the working directory to /app
 WORKDIR /app
