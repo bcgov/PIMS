@@ -75,7 +75,7 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({ data, config, 
 
   useEffect(() => {
     getLTSAData();
-    data['SURVEY_DESIGNATION_1'] =
+    data['LEGAL_DESCRIPTION'] =
       ltsa?.order.orderedProduct.fieldedData.descriptionsOfLand[0].fullLegalDescription ?? '';
   }, [data]);
 
