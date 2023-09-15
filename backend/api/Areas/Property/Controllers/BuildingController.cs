@@ -123,7 +123,7 @@ namespace Pims.Api.Areas.Property.Controllers
         {
             var entity = _mapper.Map<Entity.Building>(model);
 
-            var updatedEntity = _pimsService.Building.Update(entity);
+            var updatedEntity = _pimsService.Building.UpdateFinancials(entity);
             var building = _mapper.Map<Model.BuildingModel>(updatedEntity);
 
             return new JsonResult(building);

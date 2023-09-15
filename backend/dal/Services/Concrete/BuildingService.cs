@@ -381,7 +381,7 @@ namespace Pims.Dal.Services
                 .Include(b => b.Fiscals)
                 .FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
             this.ThrowIfNotAllowedToUpdate(existingBuilding, _options.Project);
-            existingBuilding.Classification = building.Classification;
+
             var user = this.Context.Users
                .Include(u => u.Agencies)
                .ThenInclude(a => a.Agency)
@@ -399,6 +399,7 @@ namespace Pims.Dal.Services
             {
                 this.Context.SetOriginalRowVersion(existingBuilding);
                 this.Context.UpdateBuildingFinancials(existingBuilding, building.Evaluations, building.Fiscals);
+                existingBuilding.ClassificationId = building.ClassificationId;
             }
 
             this.Context.SaveChanges();
