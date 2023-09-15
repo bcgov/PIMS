@@ -85,7 +85,7 @@
     "@testing-library/jest-dom": "6.1.2",
     "@testing-library/react": "14.0.0",
     "@testing-library/react-hooks": "8.0.1",
-    "@testing-library/user-event": "14.4.3",
+    "@testing-library/user-event": "14.5.0",
     "@types/crypto-js": "4.1.2",
     "@types/csv-parse": "1.2.2",
     "@types/enzyme": "3.10.13",
