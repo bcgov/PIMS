@@ -198,7 +198,6 @@ export const useApi = (props?: IApiProps): PimsAPI => {
       `${ENVIRONMENT.apiUrl}/properties/buildings/${id}/financials`,
       { ...building, totalArea: building.landArea, buildingTenancy: building.buildingTenancy },
     );
-    console.log('Tenancy:' + building.buildingTenancy);
     return data;
   }, []);
 
