@@ -75,13 +75,15 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({ data, config, 
 
   useEffect(() => {
     getLTSAData();
-    data['LEGAL_DESCRIPTION'] =
-      ltsa?.order.orderedProduct.fieldedData.descriptionsOfLand[0].fullLegalDescription ?? '';
-  }, [data]);
+  }, [data.PID]);
 
   const getLTSAData = async () => {
     try {
-      setLtsa(await api.getLTSA(data.PID));
+      const ltsaData = await api.getLTSA(data.PID);
+      setLtsa(ltsaData);
+
+      data['LEGAL_DESCRIPTION'] =
+        ltsaData?.order.orderedProduct.fieldedData.descriptionsOfLand[0].fullLegalDescription ?? '';
     } catch (e) {
       setLtsa(undefined);
     }
