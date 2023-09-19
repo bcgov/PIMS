@@ -15,31 +15,6 @@
     }
   }
 
-  #file-upload {
-    padding: 1em 2em;
-    margin: 1em auto;
-    max-width: 80%;
-    height: 15em;
-    border-radius: 3px;
-    background-color: white;
-    filter: drop-shadow(0 0 0.5rem $light-variant-color);
-
-    &:hover {
-      background-color: $light-variant-color;
-      cursor: pointer;
-    }
-
-    .dashed-container {
-      border: dashed 4px darkgray;
-      padding: 2em;
-      height: 100%;
-    }
-
-    p {
-      margin: 1em auto;
-    }
-  }
-
   #upload-button {
     margin: 0 auto;
   }

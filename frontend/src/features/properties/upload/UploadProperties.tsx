@@ -3,7 +3,7 @@ import './UploadProperties.scss';
 
 import React, { useState } from 'react';
 import { Container, Col, Row } from 'react-bootstrap';
-import { FaFileUpload } from 'react-icons/fa';
+import { FileInput } from './FileInput';
 
 enum UploadPhase {
   FILE_SELECT,
@@ -35,24 +35,7 @@ export const UploadProperties: React.FC = () => {
               </>
             ) : (
               <>
-                <div
-                  id="file-upload"
-                  onClick={() => {
-                    document.getElementById('file-input')!.click();
-                  }}
-                >
-                  <div className="dashed-container">
-                    <FaFileUpload size={'7em'} />
-                    {file ? <p>{file.name}</p> : <p>Drag and drop a file or click to upload.</p>}
-                  </div>
-                  <input
-                    id="file-input"
-                    type="file"
-                    accept=".csv,.CSV"
-                    style={{ width: 0 }}
-                    onChange={handleFileChange}
-                  />
-                </div>
+                <FileInput file={file} onChange={handleFileChange} />
                 {file ? (
                   <Button
                     id="upload-button"
