@@ -191,7 +191,7 @@ const api = useApi();
 
     // Call the async function
     fetchLTSAData();
-  }, [formikRef, getByType, parcelId, parcelLayerData, ltsa]);
+  }, [formikRef, getByType, parcelId, parcelLayerData]);
 
   return {
     setShowOverwriteDialog,
