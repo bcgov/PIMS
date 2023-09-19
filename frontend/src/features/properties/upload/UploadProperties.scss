@@ -22,7 +22,7 @@
     height: 15em;
     border-radius: 3px;
     background-color: white;
-    filter: drop-shadow(10px 10px 4px $light-variant-color);
+    filter: drop-shadow(0 0 0.5rem $light-variant-color);
 
     &:hover {
       background-color: $light-variant-color;
