@@ -172,7 +172,7 @@ const api = useApi();
       ) {
         if (!parcelId) {
           const pid = parcelLayerData?.data?.PID || parcelLayerData?.data?.PID_NUMBER?.toString();
-          const ltsaResponseData = await getLTSAData(pid);
+          const ltsaResponseData = await api.getLTSA(pid);
           // Now that LTSA data is available, call setParcelFieldsFromLayerData
           setParcelFieldsFromLayerData(
             parcelLayerData,
