@@ -155,19 +155,7 @@ const useParcelLayerData = ({
   nameSpace,
   agencyId,
 }: IUseParcelLayerDataProps) => {
-  // Get LTSA information
-  const [ltsa, setLtsa] = useState<ILTSAOrderModel | undefined>(undefined);
-  const api = useApi();
-  // make the call to the LTSA api
-  const getLTSAData = async (pid: string) => {
-    try {
-      const ltsaData = await api.getLTSA(pid);
-      setLtsa(ltsaData);
-      return ltsaData;
-    } catch (e) {
-      setLtsa(undefined);
-    }
-  };
+const api = useApi();
   const parcelLayerData = useAppSelector((store) => store.parcelLayerData?.parcelLayerData);
   const { getByType } = useCodeLookups();
   const [showOverwriteDialog, setShowOverwriteDialog] = useState(false);
