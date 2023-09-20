@@ -28,7 +28,17 @@ const generateAssessedHeader = () => {
     </>
   );
 };
-
+const generateNetBookValueHeader = () => {
+  return (
+    <>
+      NetBookValue
+      <StyledToolTip
+        toolTipId="NetBookValueTip"
+        toolTip=" NBV is calculated as the original cost of an asset minus accumulated depreciation."
+      />
+    </>
+  );
+};
 const getEditableMoneyCell = (disabled: boolean | undefined, namespace: string, type: string) => {
   return (cellInfo: any) => {
     //get the desired year using the current year - the offset
@@ -130,7 +140,7 @@ export const getAssessedCols = (
 export const getNetbookCols = (disabled?: boolean, namespace = 'financials'): any => {
   const netbookCols = [
     {
-      Header: 'Net Book Value',
+      id: 'netbook',
       columns: [
         {
           Header: 'Fiscal Year',
@@ -162,7 +172,7 @@ export const getNetbookCols = (disabled?: boolean, namespace = 'financials'): an
       ],
     },
   ];
-  return netbookCols;
+  return [{ Header: generateNetBookValueHeader(), id: 'netbook', columns: [...netbookCols] }];
 };
 
 export const getAssociatedLandCols = (): any => {
