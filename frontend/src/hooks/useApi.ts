@@ -47,8 +47,8 @@ export interface PimsAPI extends AxiosInstance {
   updateParcel: (id: number, data: IApiProperty) => Promise<IParcel>;
   importProperties: (properties: IPropertyModel[]) => Promise<{
     responseCode: number;
-    acceptedProperties?: IPropertyModel[];
-    rejectedProperties?: IPropertyModel[];
+    acceptedProperties: IPropertyModel[];
+    rejectedProperties: IPropertyModel[];
   }>;
 }
 
@@ -225,8 +225,8 @@ export const useApi = (props?: IApiProps): PimsAPI => {
 
     return {
       responseCode: status,
-      acceptedProperties: data,
-      rejectedProperties,
+      acceptedProperties: data ?? [],
+      rejectedProperties: rejectedProperties ?? [],
     };
   }, []);
 

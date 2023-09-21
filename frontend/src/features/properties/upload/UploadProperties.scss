@@ -18,4 +18,20 @@
   #upload-button {
     margin: 0 auto;
   }
+
+  // For Progress Area
+  #progress-message {
+    margin: 0.5em;
+  }
+
+  #results-feed {
+    height: 35rem;
+    width: auto;
+    background-color: whitesmoke;
+    margin: 1rem 0;
+    padding: 0.5rem;
+    overflow-y: scroll;
+    border-radius: 0.5rem;
+    border: 2px solid grey;
+  }
 }
