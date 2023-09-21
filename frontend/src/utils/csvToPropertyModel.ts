@@ -1,4 +1,3 @@
-// import { parse } from 'csv-parse/browser/esm/sync';
 import Papa from 'papaparse';
 
 export interface IPropertyModel {
@@ -38,8 +37,12 @@ export interface IPropertyModel {
  */
 export const parseCSVString = async (csvContent: string): Promise<IPropertyModel[]> => {
   return new Promise<IPropertyModel[]>((resolve, reject) => {
-    const parsedCSV: Papa.ParseResult<IPropertyModel> = Papa.parse<IPropertyModel>(csvContent, {
+    const parsedCSV: Papa.ParseResult<any> = Papa.parse(csvContent, {
       header: true,
+      delimiter: ',',
+      newline: '\n',
+      quoteChar: '"',
+      skipEmptyLines: true,
     });
 
     if (parsedCSV.errors.length > 0) {
@@ -53,58 +56,6 @@ export const parseCSVString = async (csvContent: string): Promise<IPropertyModel
     }
 
     resolve(parsedCSV.data);
-
-    // let headerMap: Record<string, number> = {};
-    // let lineCounter = 0;
-    // const results: IPropertyModel[] = [];
-
-    // parse(csvContent, {
-    //   delimiter: ',',
-    // })
-    //   .on('data', (row: string[]) => {
-    //     if (lineCounter !== 0) {
-    //       results.push({
-    //         parcelId: row[headerMap['parcelId']],
-    //         pid: row[headerMap['pid']],
-    //         pin: row[headerMap['pin']],
-    //         status: row[headerMap['status']],
-    //         fiscalYear: row[headerMap['fiscalYear']],
-    //         agency: row[headerMap['agency']],
-    //         agencyCode: row[headerMap['agencyCode']],
-    //         subAgency: row[headerMap['subAgency']],
-    //         propertyType: row[headerMap['propertyType']],
-    //         localId: row[headerMap['localId']],
-    //         name: row[headerMap['name']],
-    //         description: row[headerMap['description']],
-    //         classification: row[headerMap['classification']],
-    //         civicAddress: row[headerMap['civicAddress']],
-    //         city: row[headerMap['city']],
-    //         postal: row[headerMap['postal']],
-    //         latitude: row[headerMap['latitude']],
-    //         longitude: row[headerMap['longitude']],
-    //         landArea: row[headerMap['landArea']],
-    //         landLegalDescription: row[headerMap['landLegalDescription']],
-    //         buildingFloorCount: row[headerMap['buildingFloorCount']],
-    //         buildingConstructionType: row[headerMap['buildingConstructionType']],
-    //         buildingPredominateUse: row[headerMap['buildingPredominateUse']],
-    //         buildingTenancy: row[headerMap['buildingTenancy']],
-    //         buildingRentableArea: row[headerMap['buildingRentableArea']],
-    //         assessed: row[headerMap['assessed']],
-    //         netBook: row[headerMap['netBook']],
-    //       });
-    //     } else {
-    //       headerMap = populateHeaderMap(row);
-    //     }
-    //     lineCounter++;
-    //   })
-    //   .on('end', () => {
-    //     if (lineCounter < 2) {
-    //       reject('CSV file is incomplete.');
-    //     } else {
-    //       resolve(results);
-    //     }
-    //   })
-    //   .on('error', (error: Error) => reject(error));
   });
 };
 
@@ -167,13 +118,6 @@ export const populateHeaderMap = (headerRow: string | string[]) => {
  */
 export const csvFileToString = (file: File): Promise<string> => {
   return new Promise<string>((resolve, reject) => {
-    // try {
-    //   const contents = file.text();
-    //   resolve(contents);
-    // } catch (e: any) {
-    //   reject(new Error('Error reading file: ' + (e.target?.error?.message || 'Unknown error')));
-    // }
-
     const reader = new FileReader();
 
     reader.onload = (event) => {
