@@ -40,7 +40,7 @@ EXPOSE 8080
 
 # Npm install packages. Omits dev dependencies when NODE_ENV=production
 RUN npm set progress=false
-RUN npm i
+RUN npm i vite@4.4.9 @vitejs/plugin-react@4.0.4 vite-plugin-svgr@3.3.0 vite-tsconfig-paths@4.2.1
 
 # Build the project.
 RUN npm run build-ocp
