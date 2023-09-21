@@ -16,6 +16,13 @@ const currentYear = currentMoment.year();
 const StyledToolTip = styled(TooltipIcon)`
   margin-left: 0.5rem;
 `;
+const Comment = styled.div`
+  font-size: 12px;
+  margin-top: 12px;
+  max-width: 75%;
+  margin-left: 25px;
+  margin-bottom: 8px;
+`;
 /** used to create assessed header for table with tooltip */
 const generateAssessedHeader = () => {
   return (
@@ -28,14 +35,16 @@ const generateAssessedHeader = () => {
     </>
   );
 };
+/** used to create NetBookValue header for table with tooltip */
 const generateNetBookValueHeader = () => {
   return (
     <>
       NetBookValue
       <StyledToolTip
         toolTipId="NetBookValueTip"
-        toolTip=" NBV is calculated as the original cost of an asset minus accumulated depreciation."
+        toolTip="NBV is calculated as the original cost of an asset minus accumulated depreciation."
       />
+      <Comment>Doesn't have to be entered until the property is deemed surplus</Comment>
     </>
   );
 };
@@ -140,36 +149,31 @@ export const getAssessedCols = (
 export const getNetbookCols = (disabled?: boolean, namespace = 'financials'): any => {
   const netbookCols = [
     {
-      id: 'netbook',
-      columns: [
-        {
-          Header: 'Fiscal Year',
-          className: 'year',
-          accessor: 'netbook.fiscalYear',
-          maxWidth: 50,
-          align: 'left',
-          Cell: getFiscalYear(),
-        },
-        {
-          Header: 'Effective Date',
-          accessor: 'netbook.effectiveDate',
-          maxWidth: 140,
-          align: 'left',
-          Cell: getEditableDatePickerCell(
-            `${namespace}.fiscals`,
-            `effectiveDate`,
-            FiscalKeys.NetBook,
-            disabled,
-          ),
-        },
-        {
-          Header: 'Net Book Value',
-          accessor: 'netbook.value',
-          maxWidth: 140,
-          align: 'left',
-          Cell: getEditableMoneyCell(disabled, `${namespace}.fiscals`, FiscalKeys.NetBook),
-        },
-      ],
+      Header: 'Fiscal Year',
+      className: 'year',
+      accessor: 'netbook.fiscalYear',
+      maxWidth: 50,
+      align: 'left',
+      Cell: getFiscalYear(),
+    },
+    {
+      Header: 'Effective Date',
+      accessor: 'netbook.effectiveDate',
+      maxWidth: 140,
+      align: 'left',
+      Cell: getEditableDatePickerCell(
+        `${namespace}.fiscals`,
+        `effectiveDate`,
+        FiscalKeys.NetBook,
+        disabled,
+      ),
+    },
+    {
+      Header: 'Net Book Value',
+      accessor: 'netbook.value',
+      maxWidth: 140,
+      align: 'left',
+      Cell: getEditableMoneyCell(disabled, `${namespace}.fiscals`, FiscalKeys.NetBook),
     },
   ];
   return [{ Header: generateNetBookValueHeader(), id: 'netbook', columns: [...netbookCols] }];
