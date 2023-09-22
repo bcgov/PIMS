@@ -3,12 +3,13 @@ import './UploadProperties.scss';
 import { AxiosError } from 'axios';
 import { Button } from 'components/common/form/Button';
 import { useApi } from 'hooks/useApi';
-import React, { useState } from 'react';
-import { Accordion, Col, Container, ProgressBar, Row } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
 import { csvFileToPropertyModel, IPropertyModel } from 'utils/csvToPropertyModel';
 
 import { FileInput } from './FileInput';
-import { dataToCsvFile } from '../../../utils/csvToPropertyModel';
+import { Instructions } from './Instructions';
+import { UploadProgress } from './UploadProgress';
 
 enum UploadPhase {
   FILE_SELECT,
@@ -20,6 +21,7 @@ export interface IProgressState {
   totalRecords: number;
   successes: number;
   failures: number;
+  complete: boolean;
 }
 
 interface IImportedPropertyResponse {
@@ -28,7 +30,7 @@ interface IImportedPropertyResponse {
   rejectedProperties: IPropertyModel[];
 }
 
-interface IFeedObject {
+export interface IFeedObject {
   pid: string;
   success: boolean;
 }
@@ -41,6 +43,7 @@ export const UploadProperties: React.FC = () => {
     successes: 0,
     failures: 0,
     totalRecords: 100,
+    complete: false,
   });
   const [feed, setFeed] = useState<IFeedObject[]>([]);
   const api = useApi();
@@ -48,6 +51,22 @@ export const UploadProperties: React.FC = () => {
   const handleFileChange = (e: any) => {
     if (e.target.files[0]) setFile(e.target.files[0]);
   };
+
+  const handleFileDrop = (e: any) => {
+    e.preventDefault();
+    const files: File[] = Array.from(e.dataTransfer.files);
+    if (files[0]) setFile(files[0]);
+  };
+
+  const resultsFeed = document.getElementById('results-feed');
+  useEffect(() => {
+    if (resultsFeed) {
+      resultsFeed.scrollTo({
+        top: resultsFeed.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, [feed]);
 
   const onUpload = async () => {
     // If the file is defined
@@ -62,7 +81,6 @@ export const UploadProperties: React.FC = () => {
           totalRecords: convertedCsvData.length,
         };
       });
-      const resultsFeed = document.getElementById('results-feed');
       // Split array into chunks and send to endpoint (API restriction)
       const chunkSize = 100;
       for (let i = 0; i < convertedCsvData.length; i += chunkSize) {
@@ -70,7 +88,6 @@ export const UploadProperties: React.FC = () => {
         try {
           // Send to API
           const response: IImportedPropertyResponse = await api.importProperties(currentChunk);
-          console.log(response);
           // Update progress state
           setProgress((prevProgress) => {
             const updatedSuccesses = prevProgress.successes + response.acceptedProperties.length;
@@ -93,9 +110,6 @@ export const UploadProperties: React.FC = () => {
             newFeedItems.push({ pid: property.pid, success: false }),
           );
           setFeed((prevFeed) => [...prevFeed, ...newFeedItems]);
-          if (resultsFeed) {
-            resultsFeed.scrollTop = resultsFeed.scrollHeight + 100;
-          }
         } catch (e: unknown) {
           console.error(
             'Following properties caused a critical error:',
@@ -109,131 +123,22 @@ export const UploadProperties: React.FC = () => {
           message: 'Upload Complete',
         };
       });
-      console.log(progress);
-      // Add final report here
-      if (resultsFeed) {
-        resultsFeed.scrollTop = resultsFeed.scrollHeight + 100;
-      }
     }
   };
-
-  const onDownloadResults = () => {
-    const csvFile = dataToCsvFile(feed);
-    const link = document.createElement('a');
-    link.setAttribute('href', csvFile);
-    link.setAttribute('download', 'upload_results.csv');
-    // document.body.appendChild(link); // Required for FF
-
-    link.click(); // This will download the data file named "my_data.csv".
-  };
-
-  const headers =
-    'parcelId,pid,pin,status,fiscalYear,agency,agencyCode,subAgency,propertyType,localId,name,description,classification,civicAddress,city,postal,latitude,longitude,landArea,landLegalDescription,buildingFloorCount,buildingConstructionType,buildingPredominateUse,buildingTenancy,buildingRentableArea,assessed,netBook'.split(
-      ',',
-    );
 
   return (
     <div className="csv-upload-page">
       <Container>
         <Row>
-          <Col id="instructions" xs={4}>
-            <h2>Upload Instructions</h2>
-            {/* STEPS */}
-            <h4>Upload Steps</h4>
-            <ol>
-              <li>Drag and drop a file or select the file upload area to select a file.</li>
-              <li>
-                Select the <b>Start Upload</b> button.
-              </li>
-              <li>Stay on the results page until the upload is complete.</li>
-              <li>
-                Select <b>Download Results</b> to receive a CSV file with PID and their success
-                status.
-              </li>
-            </ol>
-            {/* REQUIREMENTS */}
-            <h4>Requirements</h4>
-            <ul>
-              <li>
-                File must be <b>.csv</b> format.
-              </li>
-              <li>
-                CSV file should contain the following headers, although some fields can be null:
-                <Accordion flush>
-                  <Accordion.Item eventKey="0">
-                    <Accordion.Header>Required Headers</Accordion.Header>
-                    <Accordion.Body>
-                      <ul>
-                        {headers.map((header) => (
-                          <li key={header}>{header}</li>
-                        ))}
-                      </ul>
-                    </Accordion.Body>
-                  </Accordion.Item>
-                </Accordion>
-              </li>
-            </ul>
+          <Col xs={4}>
+            <Instructions />
           </Col>
           <Col>
             {phase === UploadPhase.DATA_UPLOAD ? (
-              <div id="progress-area">
-                <h4>Do not leave the page or close the window until the upload is complete.</h4>
-                <p id="progress-message">{progress.message}</p>
-                <ProgressBar>
-                  <ProgressBar
-                    animated={progress.failures + progress.successes !== progress.totalRecords}
-                    variant="success"
-                    now={progress.successes}
-                    key={1}
-                    max={progress.totalRecords}
-                    min={0}
-                  />
-                  <ProgressBar
-                    animated={progress.failures + progress.successes !== progress.totalRecords}
-                    variant="danger"
-                    now={progress.failures}
-                    max={progress.totalRecords}
-                    key={2}
-                    min={0}
-                  />
-                </ProgressBar>
-                <div id="results-feed">
-                  {feed.map((item) =>
-                    item.success ? (
-                      <div
-                        key={item.pid}
-                        className="feed-item feed-success"
-                      >{`PID ${item.pid} uploaded successfully.`}</div>
-                    ) : (
-                      <div
-                        key={item.pid}
-                        className="feed-item feed-failure"
-                      >{`PID ${item.pid} failed to upload.`}</div>
-                    ),
-                  )}
-                  {progress.failures + progress.successes === progress.totalRecords ? (
-                    <Container id="final-feed-report">
-                      <Row>
-                        <Col sm={6}>
-                          <p>Upload completed. {progress.totalRecords} properties uploaded.</p>
-                          <p>Successes: {progress.successes}</p>
-                          <p>Failures: {progress.failures}</p>
-                        </Col>
-                        <Col sm={6}>
-                          <Button id="download-results-button" onClick={onDownloadResults}>
-                            Download Results
-                          </Button>
-                        </Col>
-                      </Row>
-                    </Container>
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              </div>
+              <UploadProgress {...{ feed, progress }} />
             ) : (
               <>
-                <FileInput file={file} onChange={handleFileChange} />
+                <FileInput file={file} onChange={handleFileChange} onDrop={handleFileDrop} />
                 {file ? (
                   <Button
                     id="upload-button"

@@ -85,6 +85,11 @@ export const csvFileToString = (file: File): Promise<string> => {
   });
 };
 
+/**
+ * @description Converts a list of JS/JSON objects into a CSV file.
+ * @param {object[]} incomingJSON The list of objects
+ * @returns A CSV file encoded as a URI.
+ */
 export const dataToCsvFile: (incomingJSON: object[]) => string = (incomingJSON: object[]) => {
   const csvString = Papa.unparse(incomingJSON, {
     header: true,

@@ -1,7 +1,7 @@
 @import '../../../_variables.module.scss';
 
 #file-upload {
-  padding: 1em 2em;
+  padding: 1em;
   margin: 1em auto;
   max-width: 80%;
   height: 15em;
@@ -11,7 +11,7 @@
   transition: all 0.25s;
 
   &:hover {
-    background-color: $light-variant-color;
+    background-color: #f0f0f0;
     cursor: pointer;
     transition: all 0.25s;
   }
@@ -20,9 +20,14 @@
     border: dashed 4px darkgray;
     padding: 2em;
     height: 100%;
+    background: none;
   }
 
   p {
     margin: 1em auto;
   }
+}
+
+#file-upload.drag {
+  background-color: #f0f0f0;
 }

@@ -1,0 +1,48 @@
+#progress-message {
+  margin: 0.5em;
+}
+
+#results-feed {
+  height: 35rem;
+  width: auto;
+  background-color: whitesmoke;
+  margin: 1rem 0;
+  overflow-y: scroll;
+  overflow-anchor: none;
+  border-radius: 0.5rem;
+  border: 2px solid grey;
+
+  .feed-item {
+    text-align: left;
+    border-bottom: 1px gray solid;
+    padding: 0 0.5rem;
+  }
+
+  .feed-success {
+    background-color: #2e853f4f;
+  }
+
+  .feed-failure {
+    background-color: #852e2e4f;
+  }
+
+  #final-feed-report {
+    padding: 0 0.5rem;
+    margin: 1rem 0;
+    height: fit-content;
+
+    p {
+      margin: 0;
+      text-align: left;
+    }
+
+    #download-results-button {
+      margin-left: auto;
+      margin-right: 0;
+    }
+  }
+
+  .row {
+    height: fit-content;
+  }
+}
