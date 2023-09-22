@@ -1,19 +1,31 @@
 import './UploadProgress.scss';
 
 import { Button } from 'components/common/form/Button';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Col, Container, ProgressBar, Row } from 'react-bootstrap';
 
 import { dataToCsvFile } from '../../../utils/csvToPropertyModel';
 import { IFeedObject, IProgressState } from './UploadProperties';
 
+/**
+ * @interface
+ * @description Properties received as props for UploadProgress
+ * @param {IProgressState} progress The current progress of the upload
+ * @param {IFeedObject[]} feed The list of feed objects to populate user feedback area
+ */
 interface IUploadProgressProps {
   progress: IProgressState;
   feed: IFeedObject[];
 }
 
+/**
+ * @description Shows the ongoing progress for the property upload
+ * @param {IUploadProgressProps} props Properties passed to this component
+ * @returns {React.FC} A React component
+ */
 export const UploadProgress = (props: IUploadProgressProps) => {
   const { feed, progress } = props;
+  // Creates an imaginary link and clicks it to download a file
   const onDownloadResults = () => {
     const csvFile = dataToCsvFile(feed);
     const link = document.createElement('a');
@@ -21,6 +33,18 @@ export const UploadProgress = (props: IUploadProgressProps) => {
     link.setAttribute('download', 'upload_results.csv');
     link.click();
   };
+
+  // Used to scroll nicely down the upload feed area
+  const resultsFeed = document.getElementById('results-feed');
+  useEffect(() => {
+    if (resultsFeed) {
+      resultsFeed.scrollTo({
+        top: resultsFeed.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, [feed]);
+
   return (
     <div id="progress-area">
       <h4>Do not leave the page or close the window until the upload is complete.</h4>

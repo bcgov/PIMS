@@ -18,13 +18,14 @@ export const Instructions = () => (
     {/* STEPS */}
     <h4>Steps</h4>
     <ol>
-      <li>Drag and drop a file or select the file upload area to select a file.</li>
+      <li>Drag and drop a file or select the file upload area to choose a file.</li>
       <li>
         Select the <b>Start Upload</b> button.
       </li>
       <li>Stay on the results page until the upload is complete.</li>
       <li>
-        Select <b>Download Results</b> to receive a CSV file with PID and their success status.
+        (Optional) Select <b>Download Results</b> to receive a CSV file with each PID and its
+        success status.
       </li>
     </ol>
     {/* REQUIREMENTS */}
@@ -47,6 +48,12 @@ export const Instructions = () => (
             </Accordion.Body>
           </Accordion.Item>
         </Accordion>
+      </li>
+      <li>
+        This function <b>does not</b> update properties. It only inserts new properties.
+      </li>
+      <li>
+        Either the <b>parcelId</b> or the <b>pid</b> field can be null, but not both.
       </li>
     </ul>
   </div>

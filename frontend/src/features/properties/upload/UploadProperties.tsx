@@ -3,7 +3,7 @@ import './UploadProperties.scss';
 import { AxiosError } from 'axios';
 import { Button } from 'components/common/form/Button';
 import { useApi } from 'hooks/useApi';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { csvFileToPropertyModel, IPropertyModel } from 'utils/csvToPropertyModel';
 
@@ -11,63 +11,86 @@ import { FileInput } from './FileInput';
 import { Instructions } from './Instructions';
 import { UploadProgress } from './UploadProgress';
 
+/**
+ * @enum
+ * @description The possible states of the upload process
+ */
 enum UploadPhase {
   FILE_SELECT,
   DATA_UPLOAD,
 }
 
+/**
+ * @interface
+ * @description Defines properties of the progress state
+ * @param {string} message      The progress message displayed
+ * @param {number} totalRecords The total records parsed from the CSV
+ * @param {number} successes    The number of successful uploaded records
+ * @param {number} failures     The number of failed records
+ */
 export interface IProgressState {
   message: string;
   totalRecords: number;
   successes: number;
   failures: number;
-  complete: boolean;
 }
 
+/**
+ * @interface
+ * @description Defines the properties of the API response
+ * @param {number} responseCode                 HTTP status code
+ * @param {IPropertyModel[]} acceptedProperties A list of properties successfully uploaded
+ * @param {IPropertyModel[]} rejectedProperties A list of properties that failed to upload
+
+ */
 interface IImportedPropertyResponse {
   responseCode: number;
   acceptedProperties: IPropertyModel[];
   rejectedProperties: IPropertyModel[];
 }
 
+/**
+ * @interface
+ * @description Defines the properties of the objects in the feed state
+ * @param {string} pid      The PID of that property
+ * @param {boolean} success Whether it was successfully uploaded
+ */
 export interface IFeedObject {
   pid: string;
   success: boolean;
 }
 
+/**
+ * @description A page that allows users to upload CSV files to insert properties into the database
+ * @returns {React.FC} A React component
+ */
 export const UploadProperties: React.FC = () => {
-  const [file, setFile] = useState<File>();
-  const [phase, setPhase] = useState<UploadPhase>(UploadPhase.FILE_SELECT);
+  const [file, setFile] = useState<File>(); // The file used for the upload
+  const [phase, setPhase] = useState<UploadPhase>(UploadPhase.FILE_SELECT); // Controls what the user sees
+  // Monitors the progress of the upload calls
   const [progress, setProgress] = useState<IProgressState>({
     message: 'Converting CSV file.',
     successes: 0,
     failures: 0,
     totalRecords: 100,
-    complete: false,
   });
+  // A list of objects used to populate the upload feed results
   const [feed, setFeed] = useState<IFeedObject[]>([]);
   const api = useApi();
 
+  // When file changes, set the file state
   const handleFileChange = (e: any) => {
     if (e.target.files[0]) setFile(e.target.files[0]);
   };
 
+  // When file is dropped on element, update the file state
   const handleFileDrop = (e: any) => {
     e.preventDefault();
     const files: File[] = Array.from(e.dataTransfer.files);
     if (files[0]) setFile(files[0]);
   };
 
-  const resultsFeed = document.getElementById('results-feed');
-  useEffect(() => {
-    if (resultsFeed) {
-      resultsFeed.scrollTo({
-        top: resultsFeed.scrollHeight,
-        behavior: 'smooth',
-      });
-    }
-  }, [feed]);
-
+  // When the Start Upload button is clicked...
   const onUpload = async () => {
     // If the file is defined
     if (file) {
