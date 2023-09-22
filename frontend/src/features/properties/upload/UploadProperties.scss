@@ -10,9 +10,7 @@
   }
 
   #instructions {
-    p {
-      text-align: center;
-    }
+    text-align: left;
   }
 
   #upload-button {
@@ -29,9 +27,33 @@
     width: auto;
     background-color: whitesmoke;
     margin: 1rem 0;
-    padding: 0.5rem;
     overflow-y: scroll;
+    overflow-anchor: none;
     border-radius: 0.5rem;
     border: 2px solid grey;
+
+    .feed-item {
+      text-align: left;
+      border: 1px gray solid;
+      padding: 0 0.5rem;
+    }
+
+    .feed-success {
+      background-color: #2e853f4f;
+    }
+
+    .feed-failure {
+      background-color: #852e2e4f;
+    }
+
+    #final-feed-report {
+      padding: 0 0.5rem;
+      margin: 1rem 0;
+
+      p {
+        margin: 0;
+        text-align: left;
+      }
+    }
   }
 }

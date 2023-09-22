@@ -19,7 +19,17 @@ export interface IProgressState {
   totalRecords: number;
   successes: number;
   failures: number;
-  results: React.FC[];
+}
+
+interface IImportedPropertyResponse {
+  responseCode: number;
+  acceptedProperties: IPropertyModel[];
+  rejectedProperties: IPropertyModel[];
+}
+
+interface IFeedObject {
+  pid: string;
+  success: boolean;
 }
 
 export const UploadProperties: React.FC = () => {
@@ -30,8 +40,8 @@ export const UploadProperties: React.FC = () => {
     successes: 0,
     failures: 0,
     totalRecords: 100,
-    results: [],
   });
+  const [feed, setFeed] = useState<IFeedObject[]>([]);
   const api = useApi();
 
   const handleFileChange = (e: any) => {
@@ -51,13 +61,14 @@ export const UploadProperties: React.FC = () => {
           totalRecords: convertedCsvData.length,
         };
       });
+      const resultsFeed = document.getElementById('results-feed');
       // Split array into chunks and send to endpoint (API restriction)
       const chunkSize = 100;
       for (let i = 0; i < convertedCsvData.length; i += chunkSize) {
         const currentChunk = convertedCsvData.slice(i, i + chunkSize);
         try {
           // Send to API
-          const response = await api.importProperties(currentChunk);
+          const response: IImportedPropertyResponse = await api.importProperties(currentChunk);
           console.log(response);
           // Update progress state
           setProgress((prevProgress) => {
@@ -72,6 +83,18 @@ export const UploadProperties: React.FC = () => {
               failures: updatedFailures,
             };
           });
+          // Update Feed
+          const newFeedItems: IFeedObject[] = [];
+          response.acceptedProperties.forEach((property) =>
+            newFeedItems.push({ pid: property.pid, success: true }),
+          );
+          response.rejectedProperties.forEach((property) =>
+            newFeedItems.push({ pid: property.pid, success: false }),
+          );
+          setFeed((prevFeed) => [...prevFeed, ...newFeedItems]);
+          if (resultsFeed) {
+            resultsFeed.scrollTop = resultsFeed.scrollHeight + 100;
+          }
         } catch (e: unknown) {
           console.error(
             'Following properties caused a critical error:',
@@ -86,8 +109,17 @@ export const UploadProperties: React.FC = () => {
         };
       });
       console.log(progress);
+      // Add final report here
+      if (resultsFeed) {
+        resultsFeed.scrollTop = resultsFeed.scrollHeight + 100;
+      }
     }
   };
+
+  const headers =
+    'parcelId,pid,pin,status,fiscalYear,agency,agencyCode,subAgency,propertyType,localId,name,description,classification,civicAddress,city,postal,latitude,longitude,landArea,landLegalDescription,buildingFloorCount,buildingConstructionType,buildingPredominateUse,buildingTenancy,buildingRentableArea,assessed,netBook'.split(
+      ',',
+    );
 
   return (
     <div className="csv-upload-page">
@@ -95,7 +127,32 @@ export const UploadProperties: React.FC = () => {
         <Row>
           <Col id="instructions" xs={4}>
             <h2>Upload Instructions</h2>
-            <p>Follow these instructions.</p>
+            <h4>Requirements</h4>
+            <ul>
+              <li>
+                File must be <b>.csv</b> format.
+              </li>
+              <li>
+                CSV file should contain the following headers:
+                <ul>
+                  {headers.map((header) => (
+                    <li key={header}>{header}</li>
+                  ))}
+                </ul>
+              </li>
+            </ul>
+            <h4>Upload Steps</h4>
+            <ol>
+              <li>Drag and drop a file or select the file upload area to select a file.</li>
+              <li>
+                Select the <b>Start Upload</b> button.
+              </li>
+              <li>Stay on the results page until the upload is complete.</li>
+              <li>
+                Select <b>Download Results</b> to receive a CSV file with PID and their success
+                status.
+              </li>
+            </ol>
           </Col>
           <Col>
             {phase === UploadPhase.DATA_UPLOAD ? (
@@ -120,7 +177,26 @@ export const UploadProperties: React.FC = () => {
                     min={0}
                   />
                 </ProgressBar>
-                <div id="results-feed">{/* {progress.results.map(result => )} */}</div>
+                <div id="results-feed">
+                  {feed.map((item) =>
+                    item.success ? (
+                      <div
+                        key={item.pid}
+                        className="feed-item feed-success"
+                      >{`PID ${item.pid} uploaded successfully.`}</div>
+                    ) : (
+                      <div
+                        key={item.pid}
+                        className="feed-item feed-failure"
+                      >{`PID ${item.pid} failed to upload.`}</div>
+                    ),
+                  )}
+                  <div id="final-feed-report">
+                    <p>Upload completed. {progress.totalRecords} properties uploaded.</p>
+                    <p>Successes: {progress.successes}</p>
+                    <p>Failures: {progress.failures}</p>
+                  </div>
+                </div>
               </div>
             ) : (
               <>
