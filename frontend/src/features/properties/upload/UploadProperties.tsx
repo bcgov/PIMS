@@ -200,11 +200,15 @@ export const UploadProperties: React.FC = () => {
                       >{`PID ${item.pid} failed to upload.`}</div>
                     ),
                   )}
-                  <div id="final-feed-report">
-                    <p>Upload completed. {progress.totalRecords} properties uploaded.</p>
-                    <p>Successes: {progress.successes}</p>
-                    <p>Failures: {progress.failures}</p>
-                  </div>
+                  {progress.failures + progress.successes === progress.totalRecords ? (
+                    <div id="final-feed-report">
+                      <p>Upload completed. {progress.totalRecords} properties uploaded.</p>
+                      <p>Successes: {progress.successes}</p>
+                      <p>Failures: {progress.failures}</p>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </div>
             ) : (
