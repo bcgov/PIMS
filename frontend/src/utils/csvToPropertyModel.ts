@@ -85,6 +85,13 @@ export const csvFileToString = (file: File): Promise<string> => {
   });
 };
 
+export const dataToCsvFile: (incomingJSON: object[]) => string = (incomingJSON: object[]) => {
+  const csvString = Papa.unparse(incomingJSON, {
+    header: true,
+  });
+  return encodeURI(`data:text/csv;charset=utf-8,${csvString}`);
+};
+
 /**
  * @description Combines each step in CSV utils to convert from CSV to Property Model.
  * @param {File} file The incoming CSV file.

@@ -8,6 +8,7 @@ import { Accordion, Col, Container, ProgressBar, Row } from 'react-bootstrap';
 import { csvFileToPropertyModel, IPropertyModel } from 'utils/csvToPropertyModel';
 
 import { FileInput } from './FileInput';
+import { dataToCsvFile } from '../../../utils/csvToPropertyModel';
 
 enum UploadPhase {
   FILE_SELECT,
@@ -116,6 +117,16 @@ export const UploadProperties: React.FC = () => {
     }
   };
 
+  const onDownloadResults = () => {
+    const csvFile = dataToCsvFile(feed);
+    const link = document.createElement('a');
+    link.setAttribute('href', csvFile);
+    link.setAttribute('download', 'upload_results.csv');
+    // document.body.appendChild(link); // Required for FF
+
+    link.click(); // This will download the data file named "my_data.csv".
+  };
+
   const headers =
     'parcelId,pid,pin,status,fiscalYear,agency,agencyCode,subAgency,propertyType,localId,name,description,classification,civicAddress,city,postal,latitude,longitude,landArea,landLegalDescription,buildingFloorCount,buildingConstructionType,buildingPredominateUse,buildingTenancy,buildingRentableArea,assessed,netBook'.split(
       ',',
@@ -201,11 +212,20 @@ export const UploadProperties: React.FC = () => {
                     ),
                   )}
                   {progress.failures + progress.successes === progress.totalRecords ? (
-                    <div id="final-feed-report">
-                      <p>Upload completed. {progress.totalRecords} properties uploaded.</p>
-                      <p>Successes: {progress.successes}</p>
-                      <p>Failures: {progress.failures}</p>
-                    </div>
+                    <Container id="final-feed-report">
+                      <Row>
+                        <Col sm={6}>
+                          <p>Upload completed. {progress.totalRecords} properties uploaded.</p>
+                          <p>Successes: {progress.successes}</p>
+                          <p>Failures: {progress.failures}</p>
+                        </Col>
+                        <Col sm={6}>
+                          <Button id="download-results-button" onClick={onDownloadResults}>
+                            Download Results
+                          </Button>
+                        </Col>
+                      </Row>
+                    </Container>
                   ) : (
                     <></>
                   )}

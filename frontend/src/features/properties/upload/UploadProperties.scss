@@ -49,11 +49,21 @@
     #final-feed-report {
       padding: 0 0.5rem;
       margin: 1rem 0;
+      height: fit-content;
 
       p {
         margin: 0;
         text-align: left;
       }
+
+      #download-results-button {
+        margin-left: auto;
+        margin-right: 0;
+      }
+    }
+
+    .row {
+      height: fit-content;
     }
   }
 }
