@@ -1,3 +1,5 @@
+import './tableStyles.scss';
+
 import { FastCurrencyInput, FastDatePicker } from 'components/common/form';
 import { BuildingSvg, LandSvg } from 'components/common/Icons';
 import TooltipIcon from 'components/common/TooltipIcon';
@@ -6,48 +8,39 @@ import { FiscalKeys } from 'constants/fiscalKeys';
 import { getIn, useFormikContext } from 'formik';
 import moment from 'moment';
 import React from 'react';
-import styled from 'styled-components';
 import { formatFiscalYear, formatMoney } from 'utils';
 
 import { indexOfFinancial } from './EvaluationForm';
 const currentMoment = moment();
 const currentYear = currentMoment.year();
 
-const StyledToolTip = styled(TooltipIcon)`
-  margin-left: 0.5rem;
-`;
-const Comment = styled.div`
-  font-size: 12px;
-  margin-top: 12px;
-  max-width: 75%;
-  margin-left: 25px;
-  margin-bottom: 8px;
-`;
 /** used to create assessed header for table with tooltip */
 const generateAssessedHeader = () => {
   return (
     <>
       Assessed Value
-      <StyledToolTip
+      <TooltipIcon
         toolTipId="assessedTip"
         toolTip="Your assessment issued in July applies to the next calendar year."
       />
     </>
   );
 };
+
 /** used to create NetBookValue header for table with tooltip */
 const generateNetBookValueHeader = () => {
   return (
     <>
       Net Book Value
-      <StyledToolTip
+      <TooltipIcon
         toolTipId="NetBookValueTip"
         toolTip="NBV is calculated as the original cost of an asset minus accumulated depreciation."
       />
-      <Comment>Doesn't have to be entered until the property is deemed surplus</Comment>
+      <div className="comment">Doesn't have to be entered until the property is deemed surplus</div>
     </>
   );
 };
+
 const getEditableMoneyCell = (disabled: boolean | undefined, namespace: string, type: string) => {
   return (cellInfo: any) => {
     //get the desired year using the current year - the offset
