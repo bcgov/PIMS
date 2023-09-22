@@ -4,7 +4,7 @@ import { AxiosError } from 'axios';
 import { Button } from 'components/common/form/Button';
 import { useApi } from 'hooks/useApi';
 import React, { useState } from 'react';
-import { Col, Container, ProgressBar, Row } from 'react-bootstrap';
+import { Accordion, Col, Container, ProgressBar, Row } from 'react-bootstrap';
 import { csvFileToPropertyModel, IPropertyModel } from 'utils/csvToPropertyModel';
 
 import { FileInput } from './FileInput';
@@ -127,20 +127,7 @@ export const UploadProperties: React.FC = () => {
         <Row>
           <Col id="instructions" xs={4}>
             <h2>Upload Instructions</h2>
-            <h4>Requirements</h4>
-            <ul>
-              <li>
-                File must be <b>.csv</b> format.
-              </li>
-              <li>
-                CSV file should contain the following headers:
-                <ul>
-                  {headers.map((header) => (
-                    <li key={header}>{header}</li>
-                  ))}
-                </ul>
-              </li>
-            </ul>
+            {/* STEPS */}
             <h4>Upload Steps</h4>
             <ol>
               <li>Drag and drop a file or select the file upload area to select a file.</li>
@@ -153,6 +140,28 @@ export const UploadProperties: React.FC = () => {
                 status.
               </li>
             </ol>
+            {/* REQUIREMENTS */}
+            <h4>Requirements</h4>
+            <ul>
+              <li>
+                File must be <b>.csv</b> format.
+              </li>
+              <li>
+                CSV file should contain the following headers, although some fields can be null:
+                <Accordion flush>
+                  <Accordion.Item eventKey="0">
+                    <Accordion.Header>Required Headers</Accordion.Header>
+                    <Accordion.Body>
+                      <ul>
+                        {headers.map((header) => (
+                          <li key={header}>{header}</li>
+                        ))}
+                      </ul>
+                    </Accordion.Body>
+                  </Accordion.Item>
+                </Accordion>
+              </li>
+            </ul>
           </Col>
           <Col>
             {phase === UploadPhase.DATA_UPLOAD ? (
