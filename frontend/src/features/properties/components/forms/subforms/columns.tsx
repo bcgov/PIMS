@@ -39,7 +39,7 @@ const generateAssessedHeader = () => {
 const generateNetBookValueHeader = () => {
   return (
     <>
-      NetBookValue
+      Net Book Value
       <StyledToolTip
         toolTipId="NetBookValueTip"
         toolTip="NBV is calculated as the original cost of an asset minus accumulated depreciation."
