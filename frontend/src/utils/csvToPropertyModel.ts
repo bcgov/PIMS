@@ -60,58 +60,6 @@ export const parseCSVString = async (csvContent: string): Promise<IPropertyModel
 };
 
 /**
- * @description Takes a comma delimited header row from CSV and determines where each field's index is
- * @param {string | string[]} headerRow The incoming header
- * @returns {Record<string, number>[]}An object with keys matching headers and an index indicating their order.
- */
-export const populateHeaderMap = (headerRow: string | string[]) => {
-  let headerList;
-  if (headerRow && typeof headerRow === typeof 'string') {
-    headerList = (headerRow as string).split(',');
-  } else if (headerRow && Array.isArray(headerRow)) {
-    headerList = headerRow;
-  } else {
-    throw new Error(
-      `populateHeaderMap only accepts string or string[] types as its argument. Type ${typeof headerRow} is not accepted.`,
-    );
-  }
-
-  if (headerList.length < 2) {
-    throw new Error('populateHeaderMap requires a list of at least 2 headers. Check the input.');
-  }
-
-  return {
-    parcelId: headerList.indexOf('parcelId'),
-    pid: headerList.indexOf('pid'),
-    pin: headerList.indexOf('pin'),
-    status: headerList.indexOf('status'),
-    fiscalYear: headerList.indexOf('fiscalYear'),
-    agency: headerList.indexOf('agency'),
-    agencyCode: headerList.indexOf('agencyCode'),
-    subAgency: headerList.indexOf('subAgency'),
-    propertyType: headerList.indexOf('propertyType'),
-    localId: headerList.indexOf('localId'),
-    name: headerList.indexOf('name'),
-    description: headerList.indexOf('description'),
-    classification: headerList.indexOf('classification'),
-    civicAddress: headerList.indexOf('civicAddress'),
-    city: headerList.indexOf('city'),
-    postal: headerList.indexOf('postal'),
-    latitude: headerList.indexOf('latitude'),
-    longitude: headerList.indexOf('longitude'),
-    landArea: headerList.indexOf('landArea'),
-    landLegalDescription: headerList.indexOf('landLegalDescription'),
-    buildingFloorCount: headerList.indexOf('buildingFloorCount'),
-    buildingConstructionType: headerList.indexOf('buildingConstructionType'),
-    buildingPredominateUse: headerList.indexOf('buildingPredominateUse'),
-    buildingTenancy: headerList.indexOf('buildingTenancy'),
-    buildingRentableArea: headerList.indexOf('buildingRentableArea'),
-    assessed: headerList.indexOf('assessed'),
-    netBook: headerList.indexOf('netBook'),
-  };
-};
-
-/**
  * @description Takes a CSV file and converts it into a string for processing.
  * @param {File} file The incoming CSV file.
  * @returns {Promise<string>} A promise of the converted string.
