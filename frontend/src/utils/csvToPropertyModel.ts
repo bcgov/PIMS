@@ -51,7 +51,7 @@ export const parseCSVString = async (csvContent: string): Promise<IPropertyModel
         errors: parsedCSV.errors,
       });
     }
-    if (parsedCSV.data.length < 2) {
+    if (parsedCSV.data.length < 1) {
       reject('CSV file is incomplete.');
     }
 

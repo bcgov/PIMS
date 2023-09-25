@@ -5,6 +5,7 @@ import { Button } from 'components/common/form/Button';
 import { useApi } from 'hooks/useApi';
 import React, { useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import { csvFileToPropertyModel, IPropertyModel } from 'utils/csvToPropertyModel';
 
 import { FileInput } from './FileInput';
@@ -94,58 +95,63 @@ export const UploadProperties: React.FC = () => {
   const onUpload = async () => {
     // If the file is defined
     if (file) {
-      // Proceed to second phase
-      setPhase(UploadPhase.DATA_UPLOAD);
-      // Convert CSV data into JS objects
-      const convertedCsvData: IPropertyModel[] = await csvFileToPropertyModel(file);
-      setProgress((prevProgress) => {
-        return {
-          ...prevProgress,
-          totalRecords: convertedCsvData.length,
-        };
-      });
-      // Split array into chunks and send to endpoint (API restriction)
-      const chunkSize = 100;
-      for (let i = 0; i < convertedCsvData.length; i += chunkSize) {
-        const currentChunk = convertedCsvData.slice(i, i + chunkSize);
-        try {
-          // Send to API
-          const response: IImportedPropertyResponse = await api.importProperties(currentChunk);
-          // Update progress state
-          setProgress((prevProgress) => {
-            const updatedSuccesses = prevProgress.successes + response.acceptedProperties.length;
-            const updatedFailures = prevProgress.failures + response.rejectedProperties.length;
-            return {
-              ...prevProgress,
-              message: `Uploading Properties: ${updatedFailures + updatedSuccesses} of ${
-                prevProgress.totalRecords
-              }`,
-              successes: updatedSuccesses,
-              failures: updatedFailures,
-            };
-          });
-          // Update Feed
-          const newFeedItems: IFeedObject[] = [];
-          response.acceptedProperties.forEach((property) =>
-            newFeedItems.push({ pid: property.pid, success: true }),
-          );
-          response.rejectedProperties.forEach((property) =>
-            newFeedItems.push({ pid: property.pid, success: false }),
-          );
-          setFeed((prevFeed) => [...prevFeed, ...newFeedItems]);
-        } catch (e: unknown) {
-          console.error(
-            'Following properties caused a critical error:',
-            (e as AxiosError).response?.data,
-          );
+      try {
+        // Convert CSV data into JS objects
+        const convertedCsvData: IPropertyModel[] = await csvFileToPropertyModel(file);
+        // Proceed to second phase
+        setPhase(UploadPhase.DATA_UPLOAD);
+        setProgress((prevProgress) => {
+          return {
+            ...prevProgress,
+            totalRecords: convertedCsvData.length,
+          };
+        });
+        // Split array into chunks and send to endpoint (API restriction)
+        const chunkSize = 100;
+        for (let i = 0; i < convertedCsvData.length; i += chunkSize) {
+          const currentChunk = convertedCsvData.slice(i, i + chunkSize);
+          try {
+            // Send to API
+            const response: IImportedPropertyResponse = await api.importProperties(currentChunk);
+            // Update progress state
+            setProgress((prevProgress) => {
+              const updatedSuccesses = prevProgress.successes + response.acceptedProperties.length;
+              const updatedFailures = prevProgress.failures + response.rejectedProperties.length;
+              return {
+                ...prevProgress,
+                message: `Uploading Properties: ${updatedFailures + updatedSuccesses} of ${
+                  prevProgress.totalRecords
+                }`,
+                successes: updatedSuccesses,
+                failures: updatedFailures,
+              };
+            });
+            // Update Feed
+            const newFeedItems: IFeedObject[] = [];
+            response.acceptedProperties.forEach((property) =>
+              newFeedItems.push({ pid: property.pid, success: true }),
+            );
+            response.rejectedProperties.forEach((property) =>
+              newFeedItems.push({ pid: property.pid, success: false }),
+            );
+            setFeed((prevFeed) => [...prevFeed, ...newFeedItems]);
+          } catch (e: unknown) {
+            console.error(
+              'Following properties caused a critical error:',
+              (e as AxiosError).response?.data,
+            );
+          }
         }
+        setProgress((prevProgress) => {
+          return {
+            ...prevProgress,
+            message: 'Upload Complete',
+          };
+        });
+      } catch (e: any) {
+        console.error('Error parsing CSV:', e);
+        toast.warning(`Unable to process CSV file.`);
       }
-      setProgress((prevProgress) => {
-        return {
-          ...prevProgress,
-          message: 'Upload Complete',
-        };
-      });
     }
   };
 
