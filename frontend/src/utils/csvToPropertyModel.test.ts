@@ -53,6 +53,12 @@ describe('Testing CSV to JSON Utilities', () => {
     expect(parseCSVString('hello')).rejects.toEqual('CSV file is incomplete.');
   });
 
+  it('Parse fails if no rows supplied in CSV', async () => {
+    const csvString =
+      'parcelId,pid,pin,status,fiscalYear,agency,agencyCode,subAgency,propertyType,localId,name,description,classification,civicAddress,city,postal,latitude,longitude,landArea,landLegalDescription,buildingFloorCount,buildingConstructionType,buildingPredominateUse,buildingTenancy,buildingRentableArea,assessed,netBook\n';
+    await expect(parseCSVString(csvString)).rejects.toMatch(/incomplete/);
+  });
+
   // Testing JSON to CSV
   it('JSON objects converted to CSV file string successfully', () => {
     const objs = [

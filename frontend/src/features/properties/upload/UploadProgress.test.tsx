@@ -4,7 +4,7 @@ import React from 'react';
 import { UploadProgress } from './UploadProgress';
 import { IFeedObject, IProgressState } from './UploadProperties';
 
-describe('Testing Instructions section for CSV Upload', () => {
+describe('Testing Progress section for CSV Upload', () => {
   const startingProgress: IProgressState = {
     message: 'starting message',
     totalRecords: 10,
