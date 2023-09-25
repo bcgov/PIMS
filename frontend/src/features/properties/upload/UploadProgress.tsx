@@ -29,6 +29,7 @@ export const UploadProgress = (props: IUploadProgressProps) => {
   const onDownloadResults = () => {
     const csvFile = dataToCsvFile(feed);
     const link = document.createElement('a');
+    link.setAttribute('id', 'download-link');
     link.setAttribute('href', csvFile);
     link.setAttribute('download', 'upload_results.csv');
     link.click();
@@ -68,10 +69,10 @@ export const UploadProgress = (props: IUploadProgressProps) => {
         />
       </ProgressBar>
       <div id="results-feed">
-        {feed.map((item) =>
+        {feed.map((item, index) =>
           item.success ? (
             <div
-              key={item.pid}
+              key={`${item.pid}:${index}`}
               className="feed-item feed-success"
             >{`PID ${item.pid} uploaded successfully.`}</div>
           ) : (

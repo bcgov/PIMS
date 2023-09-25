@@ -36,7 +36,7 @@ export const Instructions = () => (
       </li>
       <li>
         CSV file should contain the following headers, although some fields can be null:
-        <Accordion flush>
+        <Accordion flush id="required-headers">
           <Accordion.Item eventKey="0">
             <Accordion.Header>Required Headers</Accordion.Header>
             <Accordion.Body>

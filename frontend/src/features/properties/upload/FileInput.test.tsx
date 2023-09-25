@@ -1,9 +1,7 @@
-import {
-  csvFileToPropertyModel,
-  csvFileToString,
-  dataToCsvFile,
-  parseCSVString,
-} from './csvToPropertyModel';
+import { render } from '@testing-library/react';
+import React from 'react';
+
+import { FileInput } from './FileInput';
 
 const csvString =
   'parcelId,pid,pin,status,fiscalYear,agency,agencyCode,subAgency,propertyType,localId,name,description,classification,civicAddress,city,postal,latitude,longitude,landArea,landLegalDescription,buildingFloorCount,buildingConstructionType,buildingPredominateUse,buildingTenancy,buildingRentableArea,assessed,netBook\n\
@@ -17,58 +15,24 @@ const csvString =
 660-118-397,660-118-397,,Active,2023,1,AEST,,Land,PIMS Test,The Property 8,PIMS Testing,Core Operational,123 Test St,Victoria,ABC123,52.16886178,-128.1087099,12,fresh fresh fruit,0,string,string,string,0,1234560,1230\n\
 410-118-397,410-118-397,,Active,2023,1,AEST,,Land,PIMS Test,The Property 9,PIMS Testing,Core Operational,123 Test St,Alert Bay,ABC123,52.15887178,-128.1078099,0.985,fresh fresh fruit,0,string,string,string,0,1234560,1230\n';
 
-describe('Testing CSV to JSON Utilities', () => {
+const onChangeMock = () => {};
+const onDropMock = () => {};
+
+describe('Testing FileInput component', () => {
   const blob = new Blob([csvString], { type: 'text/csv' });
   const file = new File([blob], 'test.csv', { type: 'text/csv' });
 
-  // Happy Path Tests
-  it('CSV string is parsed correctly', async () => {
-    const parsedCSV = await parseCSVString(csvString);
-    expect(parsedCSV).toBeDefined();
-    const { parcelId, pid, description, civicAddress } = parsedCSV.at(0)!;
-    expect(parcelId).toBe('000-118-397');
-    expect(pid).toBe('000-118-397');
-    expect(description).toBe('PIMS Testing');
-    expect(civicAddress).toBe('123 Test St');
+  it('With no file, instructional text is visible', () => {
+    const { getByText } = render(
+      <FileInput file={undefined} onChange={onChangeMock} onDrop={onDropMock} />,
+    );
+    expect(getByText(/Drag and drop or click to select file/)).toBeInTheDocument();
   });
 
-  it('CSV file is parsed and returned as string of content', async () => {
-    const result = await csvFileToString(file);
-    expect(result).toBeDefined();
-    expect(result).toBe(csvString);
-  });
-
-  it('CSV file is parsed and returned as array of objects', async () => {
-    const result = await csvFileToPropertyModel(file);
-    expect(result).toBeDefined();
-    const { parcelId, pid, description, civicAddress } = result.at(0)!;
-    expect(parcelId).toBe('000-118-397');
-    expect(pid).toBe('000-118-397');
-    expect(description).toBe('PIMS Testing');
-    expect(civicAddress).toBe('123 Test St');
-  });
-
-  // Unhappy Path Tests
-  it('CSV string cannot be parsed if not delimited', async () => {
-    expect(parseCSVString('hello')).rejects.toEqual('CSV file is incomplete.');
-  });
-
-  // Testing JSON to CSV
-  it('JSON objects converted to CSV file string successfully', () => {
-    const objs = [
-      {
-        name: 'Ted',
-        age: 40,
-      },
-      {
-        name: 'Mille',
-        age: 1000,
-      },
-    ];
-    const fileString = dataToCsvFile(objs);
-    expect(fileString).toBeDefined();
-    expect(typeof fileString).toBe('string');
-    expect(fileString.includes('Ted')).toBeTruthy();
-    expect(fileString.includes('1000')).toBeTruthy();
+  it('With a file, the file name is visible', () => {
+    const { getByText } = render(
+      <FileInput file={file} onChange={onChangeMock} onDrop={onDropMock} />,
+    );
+    expect(getByText(/test.csv/)).toBeInTheDocument();
   });
 });
