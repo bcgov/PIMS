@@ -194,7 +194,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
         <h4>Location</h4>
       </Row>
       <Row style={{ marginBottom: 10 }}>
-        <Col>
+        <Col xs={7}>
           <AddressForm
             {...formikProps}
             nameSpace={withNameSpace('address')}
@@ -230,7 +230,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
             }}
           />
         </Col>
-        <Col>
+        <Col xs={5}>
           <LatLongForm
             disabled={disabled}
             {...formikProps}

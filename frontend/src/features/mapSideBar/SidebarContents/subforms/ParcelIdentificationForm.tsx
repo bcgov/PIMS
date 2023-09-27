@@ -22,7 +22,7 @@ import useCodeLookups from 'hooks/useLookupCodes';
 import { useMyAgencies } from 'hooks/useMyAgencies';
 import { noop } from 'lodash';
 import React, { useMemo, useState } from 'react';
-import { Col, Container, Form, ListGroup, Row } from 'react-bootstrap';
+import { Col, Container, ListGroup, Row } from 'react-bootstrap';
 import styled from 'styled-components';
 import { mapSelectOptionWithParent } from 'utils';
 import { withNameSpace } from 'utils/formUtils';
@@ -145,144 +145,158 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
           classNames('section', latitude === '' && longitude === '' ? 'disabled' : '') + ' g-0'
         }
       >
-        <Col md={12}>
-          <h5>Parcel Details</h5>
-        </Col>
-        <Col md={6}>
-          {propertyTypeId !== PropertyTypes.SUBDIVISION && (
-            <PidPinForm
-              nameSpace={nameSpace}
-              handlePidChange={noop}
-              handlePinChange={noop}
-              disabled={disabled}
-            />
-          )}
-          <AddressForm
-            parcelInformationStyles
-            onGeocoderChange={(selection: IGeocoderResponse) => {
-              const administrativeArea = selection.administrativeArea
-                ? lookupCodes.find((code) => {
-                    return (
-                      code.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME &&
-                      code.name === selection.administrativeArea
-                    );
-                  })
-                : undefined;
-              if (administrativeArea) {
-                selection.administrativeArea = administrativeArea.name;
-              }
-              const updatedPropertyDetail = {
-                ...getIn(formikProps.values, withNameSpace(nameSpace, '')),
-                latitude: selection.latitude,
-                longitude: selection.longitude,
-                address: {
-                  ...getIn(formikProps.values, withNameSpace(nameSpace, 'address')),
-                  line1: selection.address1,
-                  administrativeArea: selection.administrativeArea,
-                },
-              };
-              if (!getIn(formikProps.values, withNameSpace(nameSpace, 'latitude'))) {
-                formikProps.setFieldValue(withNameSpace(nameSpace, ''), updatedPropertyDetail);
-              } else {
-                setOverrideData(updatedPropertyDetail);
-              }
-            }}
-            {...formikProps}
-            disabled={disabled}
-            nameSpace={withNameSpace(nameSpace, 'address')}
-          />
-          <Row
-            style={{
-              alignItems: 'center',
-              marginLeft: '-23px',
-              marginTop: '10px',
-              marginBottom: '20px',
-            }}
-          >
-            <Col md="auto" style={{ width: '160px' }}>
-              <Form.Label>Agency</Form.Label>
-            </Col>
-            <Col md="auto">
-              <ParentSelect
-                required
-                field={withNameSpace(nameSpace, 'agencyId')}
-                options={myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies))}
-                filterBy={['code', 'label', 'parent']}
-                disabled={(!isPropertyAdmin && !isUserAgencyAParent) || disabled}
-              />
+        <Col xs={12}>
+          <Row>
+            <Col md={12}>
+              <h5>Parcel Details</h5>
             </Col>
           </Row>
-        </Col>
-        <Col md={6} className="form-container">
-          <Row style={{ justifyContent: 'right', alignItems: 'center', marginBottom: '20px' }}>
-            <Col md="auto" style={{ marginRight: '-25px' }}>
-              <Label>Name</Label>
+          <Row style={{ paddingLeft: '7em' }}>
+            <Col xs={12}>
+              {propertyTypeId !== PropertyTypes.SUBDIVISION && (
+                <PidPinForm
+                  nameSpace={nameSpace}
+                  handlePidChange={noop}
+                  handlePinChange={noop}
+                  disabled={disabled}
+                />
+              )}
             </Col>
-            <Col md="auto" style={{ marginRight: '73px' }}>
-              <FastInput
+          </Row>
+          <Row>
+            <Col xs={6}>
+              <AddressForm
+                parcelInformationStyles
+                onGeocoderChange={(selection: IGeocoderResponse) => {
+                  const administrativeArea = selection.administrativeArea
+                    ? lookupCodes.find((code) => {
+                        return (
+                          code.type === API.AMINISTRATIVE_AREA_CODE_SET_NAME &&
+                          code.name === selection.administrativeArea
+                        );
+                      })
+                    : undefined;
+                  if (administrativeArea) {
+                    selection.administrativeArea = administrativeArea.name;
+                  }
+                  const updatedPropertyDetail = {
+                    ...getIn(formikProps.values, withNameSpace(nameSpace, '')),
+                    latitude: selection.latitude,
+                    longitude: selection.longitude,
+                    address: {
+                      ...getIn(formikProps.values, withNameSpace(nameSpace, 'address')),
+                      line1: selection.address1,
+                      administrativeArea: selection.administrativeArea,
+                    },
+                  };
+                  if (!getIn(formikProps.values, withNameSpace(nameSpace, 'latitude'))) {
+                    formikProps.setFieldValue(withNameSpace(nameSpace, ''), updatedPropertyDetail);
+                  } else {
+                    setOverrideData(updatedPropertyDetail);
+                  }
+                }}
+                {...formikProps}
                 disabled={disabled}
-                field={withNameSpace(nameSpace, 'name')}
-                formikProps={formikProps}
+                nameSpace={withNameSpace(nameSpace, 'address')}
               />
+              <Row
+                style={{
+                  alignItems: 'center',
+                  textAlign: 'right',
+                }}
+              >
+                <Col xs={4}>
+                  <Label>Agency</Label>
+                </Col>
+                <Col>
+                  <ParentSelect
+                    required
+                    field={withNameSpace(nameSpace, 'agencyId')}
+                    options={myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies))}
+                    filterBy={['code', 'label', 'parent']}
+                    disabled={(!isPropertyAdmin && !isUserAgencyAParent) || disabled}
+                  />
+                </Col>
+              </Row>
+            </Col>
+            <Col className="form-container">
+              <Row style={{ textAlign: 'right', alignItems: 'center', marginBottom: '0.5em' }}>
+                <Col xs={4}>
+                  <Label>Name</Label>
+                </Col>
+                <Col>
+                  <FastInput
+                    disabled={disabled}
+                    field={withNameSpace(nameSpace, 'name')}
+                    formikProps={formikProps}
+                  />
+                </Col>
+              </Row>
+              <Row style={{ textAlign: 'right', alignItems: 'center', marginBottom: '0.5em' }}>
+                <Col xs={4}>
+                  <Label>Description</Label>
+                </Col>
+                <Col>
+                  <TextArea
+                    disabled={disabled}
+                    field={withNameSpace(nameSpace, 'description')}
+                    style={{ width: '12em' }}
+                  />
+                </Col>
+              </Row>
+              <Row style={{ textAlign: 'right', alignItems: 'center', marginBottom: '0.5em' }}>
+                <Col xs={4}>
+                  <Label>Legal Description</Label>
+                </Col>
+                <Col>
+                  <TextArea
+                    disabled={disabled}
+                    field={withNameSpace(nameSpace, 'landLegalDescription')}
+                    displayErrorTooltips
+                    style={{ width: '12em' }}
+                  />
+                </Col>
+              </Row>
+              <Row style={{ textAlign: 'right', alignItems: 'center', marginBottom: '0.5em' }}>
+                <Col xs={4}>
+                  <Label>Lot Size</Label>
+                </Col>
+                <Col>
+                  <InputGroup
+                    displayErrorTooltips
+                    fast={true}
+                    disabled={disabled}
+                    type="number"
+                    field={withNameSpace(nameSpace, 'landArea')}
+                    formikProps={formikProps}
+                    postText="Hectares"
+                    required
+                    style={{ width: '7.5em' }}
+                  />
+                </Col>
+              </Row>
+              {!!projectNumbers?.length && (
+                <Row style={{ textAlign: 'right', alignItems: 'center', marginBottom: '0.5em' }}>
+                  <Col xs={4}>
+                    <Label style={{ marginTop: '1rem' }}>Project Number(s)</Label>
+                  </Col>
+                  <Col>
+                    <StyledProjectNumbers>
+                      {projectNumbers.map((projectNum: string) => (
+                        <ProjectNumberLink
+                          key={projectNum}
+                          projectNumber={projectNum}
+                          agencyId={agencyId}
+                          setPrivateProject={setPrivateProject}
+                          privateProject={privateProject}
+                        />
+                      ))}
+                    </StyledProjectNumbers>
+                  </Col>
+                </Row>
+              )}
             </Col>
           </Row>
-          <Row style={{ justifyContent: 'right', alignItems: 'center', marginBottom: '20px' }}>
-            <Col md="auto" style={{ marginRight: '-37px' }}>
-              <Label>Description</Label>
-            </Col>
-            <Col md="auto" style={{ marginRight: '70px' }}>
-              <TextArea disabled={disabled} field={withNameSpace(nameSpace, 'description')} />
-            </Col>
-          </Row>
-          <Row style={{ justifyContent: 'right', alignItems: 'center', marginBottom: '20px' }}>
-            <Col md="auto" style={{ marginRight: '-37px' }}>
-              <Label>Legal Description</Label>
-            </Col>
-            <Col md="auto" style={{ marginRight: '70px' }}>
-              <TextArea
-                disabled={disabled}
-                field={withNameSpace(nameSpace, 'landLegalDescription')}
-                displayErrorTooltips
-              />
-            </Col>
-          </Row>
-          <Row style={{ justifyContent: 'right', alignItems: 'center', marginBottom: '20px' }}>
-            <Col md="auto" style={{ marginRight: '-27px' }}>
-              <Label>Lot Size</Label>
-            </Col>
-            <Col md="auto" style={{ width: '200px', marginRight: '100px' }}>
-              <InputGroup
-                displayErrorTooltips
-                fast={true}
-                disabled={disabled}
-                type="number"
-                field={withNameSpace(nameSpace, 'landArea')}
-                formikProps={formikProps}
-                postText="Hectares"
-                required
-              />
-            </Col>
-          </Row>
-          {!!projectNumbers?.length && (
-            <Row style={{ justifyContent: 'right', alignItems: 'center', marginBottom: '20px' }}>
-              <Col md="auto">
-                <Label style={{ marginTop: '1rem' }}>Project Number(s)</Label>
-              </Col>
-              <Col md="auto">
-                <StyledProjectNumbers>
-                  {projectNumbers.map((projectNum: string) => (
-                    <ProjectNumberLink
-                      key={projectNum}
-                      projectNumber={projectNum}
-                      agencyId={agencyId}
-                      setPrivateProject={setPrivateProject}
-                      privateProject={privateProject}
-                    />
-                  ))}
-                </StyledProjectNumbers>
-              </Col>
-            </Row>
-          )}
         </Col>
       </Row>
 

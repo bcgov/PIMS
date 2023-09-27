@@ -106,13 +106,8 @@ export const Input: React.FC<InputProps> = ({
           <Form.Label>{label}</Form.Label>
         </Col>
       )}
-      {!!tooltip && !label && (
-        <Col md="auto" style={{ width: '25px' }}>
-          <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />
-        </Col>
-      )}
 
-      <Col md="auto">
+      <Col xs={8}>
         <TooltipWrapper toolTipId={`${field}-error-tooltip}`} toolTip={errorTooltip}>
           <Form.Control
             className={className}
@@ -137,6 +132,11 @@ export const Input: React.FC<InputProps> = ({
           />
         </TooltipWrapper>
       </Col>
+      {!!tooltip && !label && (
+        <Col xs={2} style={{ width: '25px', margin: '0 0.5em' }}>
+          <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />
+        </Col>
+      )}
       <DisplayError field={field} errorPrompt={errorPrompt} />
     </Row>
   );

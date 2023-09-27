@@ -114,7 +114,11 @@ export const Select: React.FC<SelectProps> = ({
       className={classNames(!!required ? 'required' : '', outerClassName)}
       style={{ alignItems: 'center' }}
     >
-      <Col md="auto">{!!label && <Form.Label>{label}</Form.Label>}</Col>
+      {!!label && (
+        <Col md="auto">
+          <Form.Label>{label}</Form.Label>
+        </Col>
+      )}
       <Col md="auto" style={{ padding: 0 }}>
         <Form.Control
           style={customStyles}
