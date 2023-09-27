@@ -112,7 +112,7 @@ export const Select: React.FC<SelectProps> = ({
     <Row
       controlid={`input-${field}`}
       className={classNames(!!required ? 'required' : '', outerClassName)}
-      style={{ alignItems: 'center' }}
+      style={{ alignItems: 'center', justifyContent: 'left', display: 'flex' }}
     >
       {!!label && (
         <Col md="auto">

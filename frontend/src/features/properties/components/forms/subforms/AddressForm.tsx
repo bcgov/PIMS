@@ -77,6 +77,7 @@ const AddressForm = <T,>(props: AddressProps & FormikProps<T>) => {
             xs={leftColumnWidth}
             style={{
               textAlign: 'right',
+              padding: '0',
             }}
           >
             <Label>Street Address</Label>
@@ -102,6 +103,7 @@ const AddressForm = <T,>(props: AddressProps & FormikProps<T>) => {
           xs={leftColumnWidth}
           style={{
             textAlign: 'right',
+            padding: '0',
           }}
         >
           <Label>Location</Label>
@@ -123,6 +125,7 @@ const AddressForm = <T,>(props: AddressProps & FormikProps<T>) => {
           xs={leftColumnWidth}
           style={{
             textAlign: 'right',
+            padding: '0',
           }}
         >
           <Label>Province</Label>
@@ -141,6 +144,7 @@ const AddressForm = <T,>(props: AddressProps & FormikProps<T>) => {
           xs={leftColumnWidth}
           style={{
             textAlign: 'right',
+            padding: '0',
           }}
         >
           <Label>Postal Code</Label>

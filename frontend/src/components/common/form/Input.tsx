@@ -107,7 +107,7 @@ export const Input: React.FC<InputProps> = ({
         </Col>
       )}
 
-      <Col xs={8}>
+      <Col xs={8} style={{ padding: '0' }}>
         <TooltipWrapper toolTipId={`${field}-error-tooltip}`} toolTip={errorTooltip}>
           <Form.Control
             className={className}

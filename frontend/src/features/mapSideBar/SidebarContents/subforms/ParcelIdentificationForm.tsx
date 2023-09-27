@@ -151,7 +151,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
               <h5>Parcel Details</h5>
             </Col>
           </Row>
-          <Row style={{ paddingLeft: '7em' }}>
+          <Row>
             <Col xs={12}>
               {propertyTypeId !== PropertyTypes.SUBDIVISION && (
                 <PidPinForm
@@ -202,10 +202,15 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
               <Row
                 style={{
                   alignItems: 'center',
-                  textAlign: 'right',
                 }}
               >
-                <Col xs={4}>
+                <Col
+                  xs={4}
+                  style={{
+                    textAlign: 'right',
+                    padding: '0',
+                  }}
+                >
                   <Label>Agency</Label>
                 </Col>
                 <Col>
@@ -220,8 +225,14 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
               </Row>
             </Col>
             <Col className="form-container">
-              <Row style={{ textAlign: 'right', alignItems: 'center', marginBottom: '0.5em' }}>
-                <Col xs={4}>
+              <Row style={{ alignItems: 'center', marginBottom: '0.5em' }}>
+                <Col
+                  xs={4}
+                  style={{
+                    textAlign: 'right',
+                    padding: '0',
+                  }}
+                >
                   <Label>Name</Label>
                 </Col>
                 <Col>
@@ -229,23 +240,36 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
                     disabled={disabled}
                     field={withNameSpace(nameSpace, 'name')}
                     formikProps={formikProps}
+                    style={{ width: '14em' }}
                   />
                 </Col>
               </Row>
-              <Row style={{ textAlign: 'right', alignItems: 'center', marginBottom: '0.5em' }}>
-                <Col xs={4}>
+              <Row style={{ alignItems: 'center', marginBottom: '0.5em' }}>
+                <Col
+                  xs={4}
+                  style={{
+                    textAlign: 'right',
+                    padding: '0',
+                  }}
+                >
                   <Label>Description</Label>
                 </Col>
                 <Col>
                   <TextArea
                     disabled={disabled}
                     field={withNameSpace(nameSpace, 'description')}
-                    style={{ width: '12em' }}
+                    style={{ width: '16em' }}
                   />
                 </Col>
               </Row>
-              <Row style={{ textAlign: 'right', alignItems: 'center', marginBottom: '0.5em' }}>
-                <Col xs={4}>
+              <Row style={{ alignItems: 'center', marginBottom: '0.5em' }}>
+                <Col
+                  xs={4}
+                  style={{
+                    textAlign: 'right',
+                    padding: '0',
+                  }}
+                >
                   <Label>Legal Description</Label>
                 </Col>
                 <Col>
@@ -253,12 +277,19 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
                     disabled={disabled}
                     field={withNameSpace(nameSpace, 'landLegalDescription')}
                     displayErrorTooltips
-                    style={{ width: '12em' }}
+                    style={{ width: '16em' }}
+                    customRowStyle={{ padding: '0' }}
                   />
                 </Col>
               </Row>
-              <Row style={{ textAlign: 'right', alignItems: 'center', marginBottom: '0.5em' }}>
-                <Col xs={4}>
+              <Row style={{ alignItems: 'center', marginBottom: '0.5em' }}>
+                <Col
+                  xs={4}
+                  style={{
+                    textAlign: 'right',
+                    padding: '0',
+                  }}
+                >
                   <Label>Lot Size</Label>
                 </Col>
                 <Col>
@@ -276,8 +307,14 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
                 </Col>
               </Row>
               {!!projectNumbers?.length && (
-                <Row style={{ textAlign: 'right', alignItems: 'center', marginBottom: '0.5em' }}>
-                  <Col xs={4}>
+                <Row style={{ alignItems: 'center', marginBottom: '0.5em' }}>
+                  <Col
+                    xs={4}
+                    style={{
+                      textAlign: 'right',
+                      padding: '0',
+                    }}
+                  >
                     <Label style={{ marginTop: '1rem' }}>Project Number(s)</Label>
                   </Col>
                   <Col>

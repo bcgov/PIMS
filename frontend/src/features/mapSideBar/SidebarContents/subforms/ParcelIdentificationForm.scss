@@ -41,11 +41,11 @@
   .bg-warning {
     height: 38px;
   }
-  input,
-  select,
-  .GeocoderAutoComplete {
-    width: 200px;
-  }
+  // input,
+  // select,
+  // .GeocoderAutoComplete {
+  //   width: 14em;
+  // }
   .container {
     .form-check-input {
       width: 15px;
@@ -57,12 +57,12 @@
       pointer-events: none;
       opacity: 0.4;
     }
-    .label,
-    .form-label {
-      text-align: right;
-      margin-right: 10px;
-      width: 125px;
-    }
+    // .label,
+    // .form-label {
+    //   text-align: right;
+    //   margin-right: 10px;
+    //   width: 125px;
+    // }
     .harmful {
       margin: 0px auto;
       width: 400px;
@@ -102,22 +102,22 @@
         display: flex;
         padding: 0px 20px;
         align-items: center;
-        > input,
-        .input-group,
-        textarea {
-          width: 200px;
-          max-width: 280px;
-          resize: both;
-          .input-group-text {
-            padding: 5px;
-          }
-        }
+        // > input,
+        // .input-group,
+        // textarea {
+        //   width: 200px;
+        //   max-width: 280px;
+        //   resize: both;
+        //   .input-group-text {
+        //     padding: 5px;
+        //   }
+        // }
       }
-      .pid-pin {
-        .form-control {
-          width: 140px;
-        }
-      }
+      // .pid-pin {
+      //   .form-control {
+      //     width: 140px;
+      //   }
+      // }
     }
   }
 }

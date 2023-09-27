@@ -61,10 +61,10 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
           field={withNameSpace('pid')}
         />
       </Col>
-      <Col xs={2} style={{ textAlign: 'right' }}>
+      <Col xs={2} style={{ textAlign: 'right', marginLeft: '1.2em' }}>
         <Label>PIN</Label>
       </Col>
-      <Col xs={4}>
+      <Col xs={3} style={{ padding: '0' }}>
         <Input
           required={true}
           displayErrorTooltips
@@ -79,6 +79,7 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
             return '';
           }}
           type="number"
+          style={{ width: '12.5em' }}
         />
       </Col>
     </Row>
