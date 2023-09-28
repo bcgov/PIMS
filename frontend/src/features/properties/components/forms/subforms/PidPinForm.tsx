@@ -79,7 +79,7 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
             return '';
           }}
           type="number"
-          style={{ width: '12.5em' }}
+          style={{ width: '12em' }}
         />
       </Col>
     </Row>

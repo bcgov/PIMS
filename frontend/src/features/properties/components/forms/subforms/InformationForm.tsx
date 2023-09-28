@@ -52,27 +52,35 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
   return (
     <>
       <Row>
-        <Col md="auto">
+        <Col xs={3} style={{ textAlign: 'right' }}>
           <Form.Label>Name</Form.Label>
         </Col>
-        <Col md="auto">
-          <Input disabled={props.disabled} field={withNameSpace('name')} />
+        <Col>
+          <Input
+            disabled={props.disabled}
+            field={withNameSpace('name')}
+            style={{ width: '18em' }}
+          />
         </Col>
       </Row>
       <Row>
-        <Col md="auto">
+        <Col xs={3} style={{ textAlign: 'right' }}>
           <Form.Label>Description</Form.Label>
         </Col>
-        <Col md="auto">
-          <TextArea disabled={props.disabled} field={withNameSpace('description')} />
+        <Col>
+          <TextArea
+            disabled={props.disabled}
+            field={withNameSpace('description')}
+            style={{ width: '18em' }}
+          />
         </Col>
       </Row>
       {!props.wizard && (
         <Row>
-          <Col md="auto">
+          <Col xs={3} style={{ textAlign: 'right' }}>
             <Form.Label>Classification</Form.Label>
           </Col>
-          <Col md="auto">
+          <Col>
             <FastSelect
               formikProps={formikProps}
               disabled={props.disabled}
@@ -80,15 +88,16 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
               placeholder="Must Select One"
               field={withNameSpace('classificationId')}
               options={props.classifications}
+              style={{ width: '18em' }}
             />
           </Col>
         </Row>
       )}
       <Row>
-        <Col md="auto" style={{ marginRight: '15px' }}>
+        <Col xs={3} style={{ textAlign: 'right' }}>
           <Form.Label>Agency</Form.Label>
         </Col>
-        <Col md="auto" style={{ marginRight: '10px' }}>
+        <Col>
           <ParentSelect
             field={withNameSpace('agencyId')}
             options={myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies))}

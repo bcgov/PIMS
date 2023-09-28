@@ -107,7 +107,7 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
           </Grid>
           <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
             <Input
-              style={{ width: '100%' }}
+              style={{ width: '40em' }}
               disabled={editInfo.identification}
               field={withNameSpace('name', index)}
             />
@@ -121,12 +121,12 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
             <Stack direction="row" spacing={1}>
               {getIn(formikProps.values, withNameSpace('pid', index)) ? (
                 <Input
-                  customRowStyle={{ width: '33%' }}
                   displayErrorTooltips
                   className="input-small"
                   disabled={true}
                   required={true}
                   field={withNameSpace('pid', index)}
+                  style={{ width: '7em' }}
                 />
               ) : (
                 <Typography

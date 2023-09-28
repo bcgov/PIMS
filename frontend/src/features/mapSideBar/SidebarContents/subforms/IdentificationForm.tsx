@@ -78,7 +78,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
         <h4 className="text-start">Building Information</h4>
       </Row>
       <Row>
-        <Col>
+        <Col xs={6}>
           <InformationForm
             isPropertyAdmin={!!isPropertyAdmin}
             wizard
@@ -88,12 +88,12 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
             disabled={disabled}
           />
         </Col>
-        <Col>
+        <Col xs={6}>
           <Row>
-            <Col md="auto">
+            <Col xs={5} style={{ textAlign: 'right', alignItems: 'center' }}>
               <Label>Main Usage</Label>
             </Col>
-            <Col md="auto">
+            <Col>
               <FastSelect
                 formikProps={formikProps}
                 placeholder="Must Select One"
@@ -107,10 +107,10 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
             </Col>
           </Row>
           <Row>
-            <Col md="auto">
+            <Col xs={5} style={{ textAlign: 'right' }}>
               <Label>Construction Type</Label>
             </Col>
-            <Col md="auto">
+            <Col>
               <FastSelect
                 formikProps={formikProps}
                 placeholder="Must Select One"
@@ -120,14 +120,15 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
                 disabled={disabled}
                 required
                 displayErrorTooltips
+                style={{ width: '10em' }}
               />
             </Col>
           </Row>
           <Row>
-            <Col md="auto">
+            <Col xs={5} style={{ textAlign: 'right' }}>
               <Label>Number of Floors</Label>
             </Col>
-            <Col md="auto" style={{ width: '275px' }}>
+            <Col style={{ width: '275px' }}>
               <FastInput
                 displayErrorTooltips
                 style={{ width: '100px' }}
@@ -141,7 +142,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
           </Row>
           {!!projectNumbers?.length && (
             <Row>
-              <Col md="auto">
+              <Col xs={5} style={{ textAlign: 'right' }}>
                 <Label>Project Number(s)</Label>
               </Col>
               <Col>
@@ -194,7 +195,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
         <h4>Location</h4>
       </Row>
       <Row style={{ marginBottom: 10 }}>
-        <Col xs={7}>
+        <Col xs={6}>
           <AddressForm
             {...formikProps}
             nameSpace={withNameSpace('address')}

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { getIn, useFormikContext } from 'formik';
 import React, { CSSProperties, useEffect, useState } from 'react';
-import { Col, Form, FormControlProps, Row } from 'react-bootstrap';
+import { Form, FormControlProps } from 'react-bootstrap';
 
 import TooltipIcon from '../TooltipIcon';
 import TooltipWrapper from '../TooltipWrapper';
@@ -96,48 +96,38 @@ export const Input: React.FC<InputProps> = ({
     }
   }, [field, onBlurFormatter, pattern, restricted, setFieldValue, value]);
   return (
-    <Row
-      controlid={`input-${field}`}
+    <div
+      id={`input-${field}`}
       className={classNames(!!required ? 'required' : '', outerClassName)}
-      style={customRowStyle || { alignItems: 'center' }}
+      style={customRowStyle || { alignItems: 'center', display: 'flex' }}
     >
-      {!!label && (
-        <Col md="auto">
-          <Form.Label>{label}</Form.Label>
-        </Col>
-      )}
+      {!!label && <Form.Label>{label}</Form.Label>}
 
-      <Col xs={8} style={{ padding: '0' }}>
-        <TooltipWrapper toolTipId={`${field}-error-tooltip}`} toolTip={errorTooltip}>
-          <Form.Control
-            className={className}
-            as={asElement}
-            name={field}
-            style={style}
-            disabled={disabled}
-            custom={custom}
-            isInvalid={!!touch && !!error}
-            {...rest}
-            isValid={false}
-            value={pattern ? restricted : rest.value ?? value}
-            placeholder={placeholder}
-            onBlur={(e: any) => {
-              if (onBlurFormatter) {
-                pattern && setRestricted(onBlurFormatter(value));
-                setFieldValue(field, onBlurFormatter(value));
-              }
-              handleBlur(e);
-            }}
-            onChange={pattern ? handleRestrictedChange : handleChange}
-          />
-        </TooltipWrapper>
-      </Col>
-      {!!tooltip && !label && (
-        <Col xs={2} style={{ width: '25px', margin: '0 0.5em' }}>
-          <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />
-        </Col>
-      )}
+      <TooltipWrapper toolTipId={`${field}-error-tooltip}`} toolTip={errorTooltip}>
+        <Form.Control
+          className={className}
+          as={asElement}
+          name={field}
+          style={style}
+          disabled={disabled}
+          custom={custom}
+          isInvalid={!!touch && !!error}
+          {...rest}
+          isValid={false}
+          value={pattern ? restricted : rest.value ?? value}
+          placeholder={placeholder}
+          onBlur={(e: any) => {
+            if (onBlurFormatter) {
+              pattern && setRestricted(onBlurFormatter(value));
+              setFieldValue(field, onBlurFormatter(value));
+            }
+            handleBlur(e);
+          }}
+          onChange={pattern ? handleRestrictedChange : handleChange}
+        />
+      </TooltipWrapper>
+      {!!tooltip && !label && <TooltipIcon toolTipId={`${field}-tooltip`} toolTip={tooltip} />}
       <DisplayError field={field} errorPrompt={errorPrompt} />
-    </Row>
+    </div>
   );
 };

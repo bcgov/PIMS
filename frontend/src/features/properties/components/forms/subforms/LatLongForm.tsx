@@ -97,7 +97,7 @@ const LatLongForm = <T,>(props: LatLongFormProps & FormikProps<T>) => {
         <Col xs={3}>
           <Label>Longitude</Label>
         </Col>
-        <Col md="auto">
+        <Col>
           <FastInput
             className="input-medium"
             displayErrorTooltips

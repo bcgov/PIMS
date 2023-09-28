@@ -81,7 +81,7 @@ const LandSearchForm = ({
             <Col md={2} style={{ textAlign: 'left' }}>
               <Label>PID</Label>
             </Col>
-            <Col md="auto" style={{ marginLeft: '-11px' }}>
+            <Col xs={4}>
               <Input
                 displayErrorTooltips
                 className="input-small"
@@ -94,16 +94,17 @@ const LandSearchForm = ({
                   return '';
                 }}
                 field={withNameSpace(nameSpace, 'searchPid')}
+                style={{ width: '14em' }}
               />
             </Col>
-            <Col md="auto" style={{ marginLeft: '-40px' }}>
+            <Col md="auto">
               <IconButton onClick={() => handlePasteFromClipboard('searchPid')}>
                 <Tooltip title="Paste From Clipboard">
                   <PasteIcon />
                 </Tooltip>
               </IconButton>
             </Col>
-            <Col md="auto" style={{ marginLeft: '-13px' }}>
+            <Col md="auto">
               <SearchButton
                 onClick={(e: any) => {
                   e.preventDefault();
@@ -116,7 +117,7 @@ const LandSearchForm = ({
             <Col md={2} style={{ textAlign: 'left' }}>
               <Label>PIN</Label>
             </Col>
-            <Col md="auto">
+            <Col xs={4}>
               <FastInput
                 formikProps={formikProps}
                 displayErrorTooltips
@@ -130,16 +131,17 @@ const LandSearchForm = ({
                   return '';
                 }}
                 type="number"
+                style={{ width: '14em' }}
               />
             </Col>
-            <Col md="auto" style={{ marginLeft: '-27px' }}>
+            <Col md="auto">
               <IconButton onClick={() => handlePasteFromClipboard('searchPin')}>
                 <Tooltip title="Paste From Clipboard">
                   <PasteIcon />
                 </Tooltip>
               </IconButton>
             </Col>
-            <Col md="auto" style={{ marginLeft: '-13px' }}>
+            <Col md="auto">
               <SearchButton
                 onClick={(e: any) => {
                   e.preventDefault();
@@ -152,7 +154,7 @@ const LandSearchForm = ({
             <Col md={2} style={{ textAlign: 'left' }}>
               <Label>Street Address</Label>
             </Col>
-            <Col md="auto">
+            <Col xs={4}>
               <GeocoderAutoComplete
                 value={searchAddress}
                 field={withNameSpace(nameSpace, 'searchAddress')}
@@ -174,14 +176,14 @@ const LandSearchForm = ({
                 displayErrorTooltips
               />
             </Col>
-            <Col md="auto" style={{ marginLeft: '-27px' }}>
+            <Col md="auto">
               <IconButton onClick={() => handlePasteFromClipboard('searchAddress')}>
                 <Tooltip title="Paste From Clipboard">
                   <PasteIcon />
                 </Tooltip>
               </IconButton>
             </Col>
-            <Col md="auto" style={{ marginLeft: '-13px' }}>
+            <Col md="auto">
               <SearchButton
                 disabled={!geocoderResponse}
                 onClick={(e: any) => {

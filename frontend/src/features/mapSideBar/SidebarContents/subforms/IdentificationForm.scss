@@ -5,7 +5,6 @@
     font-weight: bold;
   }
   .row {
-    justify-content: right;
     padding-bottom: 10px;
   }
   .container {
@@ -20,10 +19,6 @@
     .form-label,
     .label {
       text-align: right;
-    }
-    .form-control,
-    .AutoCompleteText {
-      width: 250px;
     }
     .harmful {
       padding: 10px;
