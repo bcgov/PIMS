@@ -96,10 +96,11 @@ const LandSearchForm = ({
                   return '';
                 }}
                 field={withNameSpace(nameSpace, 'searchPid')}
+                id="pid-field"
               />
             </Col>
             <Col md="auto">
-              <IconButton onClick={() => handlePasteFromClipboard('searchPid')}>
+              <IconButton onClick={() => handlePasteFromClipboard('searchPid')} id="pid-paste">
                 <Tooltip title="Paste From Clipboard">
                   <PasteIcon />
                 </Tooltip>
@@ -132,10 +133,11 @@ const LandSearchForm = ({
                   return '';
                 }}
                 type="number"
+                id="pin-field"
               />
             </Col>
             <Col md="auto">
-              <IconButton onClick={() => handlePasteFromClipboard('searchPin')}>
+              <IconButton onClick={() => handlePasteFromClipboard('searchPin')} id="pin-paste">
                 <Tooltip title="Paste From Clipboard">
                   <PasteIcon />
                 </Tooltip>
@@ -147,6 +149,7 @@ const LandSearchForm = ({
                   e.preventDefault();
                   handlePinChange(searchPin, nameSpace);
                 }}
+                id="pid-search"
               />
             </Col>
           </Row>

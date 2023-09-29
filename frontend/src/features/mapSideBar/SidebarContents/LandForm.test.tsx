@@ -180,13 +180,43 @@ describe('Land Form', () => {
     expect(screen.queryByText('Land Classification Changed')).toBeNull();
   });
 
-  xit('review has appropriate subforms', async () => {
+  it('review has appropriate subforms', async () => {
     const { getByText } = render(getLandForm());
     waitFor(() => {
       fireEvent.click(getByText(/Review/i));
     });
-    expect(getByText(/parcel identification/i)).toBeInTheDocument();
+    expect(getByText(/parcel id$/i)).toBeInTheDocument();
     expect(getByText(/usage/i)).toBeInTheDocument();
     expect(getByText(/valuation/i)).toBeInTheDocument();
+  });
+
+  it('Can switch between tabs in LandSearchForm', async () => {
+    const { queryAllByText, getByText, container } = render(getLandForm());
+    // Should be able to see "PID, PIN" twice each
+    expect(queryAllByText(/PID/).length).toBe(2);
+    expect(queryAllByText(/PIN/).length).toBe(2);
+
+    // Click on second tab
+    const secondTab = container.querySelector('#parcel-marker-tab');
+    await waitFor(() => {
+      fireEvent.click(secondTab!);
+      getByText(/Find a parcel on the map/);
+    });
+    // And should see this phrase
+    expect(queryAllByText(/Find a parcel on the map/).length).toBe(1);
+  });
+
+  // Cannot currently get a value loaded in the clipboard
+  xit('Paste buttons work in LandSearchForm', async () => {
+    const { container } = render(getLandForm());
+    const pidField = container.querySelector('#pid-field');
+    const pidPaste = container.querySelector('#pid-paste');
+
+    await waitFor(() => {
+      fireEvent.change(pidField!, { target: { value: 'hi' } });
+      fireEvent.copy(pidField!);
+      fireEvent.click(pidPaste!);
+    });
+    expect(pidField?.innerHTML).toContain('hi');
   });
 });
