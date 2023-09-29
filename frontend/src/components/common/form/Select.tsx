@@ -118,7 +118,7 @@ export const Select: React.FC<SelectProps> = ({
           <Form.Label>{label}</Form.Label>
         </Col>
       )}
-      <Col md="auto" className="no-padding">
+      <Col md="auto" className="select-column">
         <Form.Control
           style={customStyles}
           as={asElement}
