@@ -23,7 +23,6 @@ import { useMyAgencies } from 'hooks/useMyAgencies';
 import { noop } from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { Col, Container, ListGroup, Row } from 'react-bootstrap';
-import styled from 'styled-components';
 import { mapSelectOptionWithParent } from 'utils';
 import { withNameSpace } from 'utils/formUtils';
 
@@ -57,11 +56,6 @@ interface IIdentificationProps {
   /** whether or not the fields on this form can be interacted with */
   disabled?: boolean;
 }
-
-const StyledProjectNumbers = styled.div`
-  flex-direction: column;
-  display: flex;
-`;
 
 export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   nameSpace,
@@ -105,7 +99,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
           />
         </Row>
       )}
-      <Row style={{ textAlign: 'left' }}>
+      <Row className="header-row">
         <h4>Parcel Identification</h4>
       </Row>
       {!disabled && (
@@ -116,7 +110,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
                 <h5>Update Parcel Location</h5>
               </Col>
               <Col md={12} className="instruction">
-                <p style={{ textAlign: 'center' }}>
+                <p>
                   Find a parcel on the map for the new location and click it to populate the Parcel
                   Details below.
                 </p>
@@ -199,21 +193,11 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
                 disabled={disabled}
                 nameSpace={withNameSpace(nameSpace, 'address')}
               />
-              <Row
-                style={{
-                  alignItems: 'center',
-                }}
-              >
-                <Col
-                  xs={4}
-                  style={{
-                    textAlign: 'right',
-                    padding: '0',
-                  }}
-                >
+              <Row className="form-row">
+                <Col xs={4} className="left-column">
                   <Label>Agency</Label>
                 </Col>
-                <Col>
+                <Col className="right-column">
                   <ParentSelect
                     required
                     field={withNameSpace(nameSpace, 'agencyId')}
@@ -225,14 +209,8 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
               </Row>
             </Col>
             <Col className="form-container">
-              <Row style={{ alignItems: 'center', marginBottom: '0.5em' }}>
-                <Col
-                  xs={4}
-                  style={{
-                    textAlign: 'right',
-                    padding: '0',
-                  }}
-                >
+              <Row className="form-row">
+                <Col xs={4} className="left-column">
                   <Label>Name</Label>
                 </Col>
                 <Col>
@@ -240,36 +218,24 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
                     disabled={disabled}
                     field={withNameSpace(nameSpace, 'name')}
                     formikProps={formikProps}
-                    style={{ width: '14em' }}
+                    className="input-width"
                   />
                 </Col>
               </Row>
-              <Row style={{ alignItems: 'center', marginBottom: '0.5em' }}>
-                <Col
-                  xs={4}
-                  style={{
-                    textAlign: 'right',
-                    padding: '0',
-                  }}
-                >
+              <Row className="form-row">
+                <Col xs={4} className="left-column">
                   <Label>Description</Label>
                 </Col>
                 <Col>
                   <TextArea
                     disabled={disabled}
                     field={withNameSpace(nameSpace, 'description')}
-                    style={{ width: '16em' }}
+                    className="input-width"
                   />
                 </Col>
               </Row>
-              <Row style={{ alignItems: 'center', marginBottom: '0.5em' }}>
-                <Col
-                  xs={4}
-                  style={{
-                    textAlign: 'right',
-                    padding: '0',
-                  }}
-                >
+              <Row className="form-row">
+                <Col xs={4} className="left-column">
                   <Label>Legal Description</Label>
                 </Col>
                 <Col>
@@ -277,19 +243,12 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
                     disabled={disabled}
                     field={withNameSpace(nameSpace, 'landLegalDescription')}
                     displayErrorTooltips
-                    style={{ width: '16em' }}
-                    customRowStyle={{ padding: '0' }}
+                    className="input-width"
                   />
                 </Col>
               </Row>
-              <Row style={{ alignItems: 'center', marginBottom: '0.5em' }}>
-                <Col
-                  xs={4}
-                  style={{
-                    textAlign: 'right',
-                    padding: '0',
-                  }}
-                >
+              <Row className="form-row">
+                <Col xs={4} className="left-column">
                   <Label>Lot Size</Label>
                 </Col>
                 <Col>
@@ -302,23 +261,17 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
                     formikProps={formikProps}
                     postText="Hectares"
                     required
-                    style={{ width: '7.5em' }}
+                    className="input-small"
                   />
                 </Col>
               </Row>
               {!!projectNumbers?.length && (
-                <Row style={{ alignItems: 'center', marginBottom: '0.5em' }}>
-                  <Col
-                    xs={4}
-                    style={{
-                      textAlign: 'right',
-                      padding: '0',
-                    }}
-                  >
-                    <Label style={{ marginTop: '1rem' }}>Project Number(s)</Label>
+                <Row className="form-row">
+                  <Col xs={4} className="left-column">
+                    <Label>Project Number(s)</Label>
                   </Col>
                   <Col>
-                    <StyledProjectNumbers>
+                    <div className="project-numbers">
                       {projectNumbers.map((projectNum: string) => (
                         <ProjectNumberLink
                           key={projectNum}
@@ -328,7 +281,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
                           privateProject={privateProject}
                         />
                       ))}
-                    </StyledProjectNumbers>
+                    </div>
                   </Col>
                 </Row>
               )}
@@ -337,11 +290,9 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
         </Col>
       </Row>
 
-      <Row style={{ justifyContent: 'center', marginBottom: '20px' }}>
+      <Row>
         <div className="input-medium harmful">
-          <p style={{ marginBottom: '-5px' }}>
-            Would this information be harmful if released?&nbsp;
-          </p>
+          <p>Would this information be harmful if released?&nbsp;</p>
           <TooltipWrapper toolTipId="sensitive-harmful" toolTip={sensitiveTooltip}>
             <a target="_blank" rel="noopener noreferrer" href={HARMFUL_DISCLOSURE_URL}>
               Policy

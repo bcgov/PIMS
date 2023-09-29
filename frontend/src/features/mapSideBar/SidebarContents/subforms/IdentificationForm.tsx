@@ -16,7 +16,6 @@ import { IGeocoderResponse } from 'hooks/useApi';
 import useCodeLookups from 'hooks/useLookupCodes';
 import React, { useState } from 'react';
 import { Col, Container, ListGroup, Row } from 'react-bootstrap';
-import styled from 'styled-components';
 
 import { sensitiveTooltip } from '../../../../../src/features/properties/components/forms/strings';
 import { ClassificationForm } from './ClassificationForm';
@@ -42,12 +41,6 @@ interface IIdentificationProps {
   disabled?: boolean;
 }
 
-const StyledProjectNumbers = styled.div`
-  flex-direction: column;
-  display: flex;
-  background: red;
-`;
-
 export const IdentificationForm: React.FC<IIdentificationProps> = ({
   formikProps,
   agencies,
@@ -72,6 +65,8 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
   const agencyId = getIn(formikProps.values, `data.agencyId`);
   const [privateProject, setPrivateProject] = useState(false);
 
+  const leftColumnWidth = 5;
+
   return (
     <Container>
       <Row>
@@ -90,7 +85,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
         </Col>
         <Col xs={6}>
           <Row>
-            <Col xs={5} style={{ textAlign: 'right', alignItems: 'center' }}>
+            <Col xs={leftColumnWidth} className="left-column">
               <Label>Main Usage</Label>
             </Col>
             <Col>
@@ -107,7 +102,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
             </Col>
           </Row>
           <Row>
-            <Col xs={5} style={{ textAlign: 'right' }}>
+            <Col xs={leftColumnWidth} className="left-column">
               <Label>Construction Type</Label>
             </Col>
             <Col>
@@ -120,18 +115,16 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
                 disabled={disabled}
                 required
                 displayErrorTooltips
-                style={{ width: '10em' }}
               />
             </Col>
           </Row>
           <Row>
-            <Col xs={5} style={{ textAlign: 'right' }}>
+            <Col xs={leftColumnWidth} className="left-column">
               <Label>Number of Floors</Label>
             </Col>
-            <Col style={{ width: '275px' }}>
+            <Col>
               <FastInput
                 displayErrorTooltips
-                style={{ width: '100px' }}
                 className="input-small"
                 formikProps={formikProps}
                 field={withNameSpace('buildingFloorCount')}
@@ -142,11 +135,11 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
           </Row>
           {!!projectNumbers?.length && (
             <Row>
-              <Col xs={5} style={{ textAlign: 'right' }}>
+              <Col xs={leftColumnWidth} className="left-column">
                 <Label>Project Number(s)</Label>
               </Col>
               <Col>
-                <StyledProjectNumbers>
+                <div className="project-numbers">
                   {projectNumbers.map((projectNum: string) => (
                     <ProjectNumberLink
                       projectNumber={projectNum}
@@ -156,16 +149,14 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
                       privateProject={privateProject}
                     />
                   ))}
-                </StyledProjectNumbers>
+                </div>
               </Col>
             </Row>
           )}
         </Col>
-        <Row style={{ justifyContent: 'center' }}>
+        <Row>
           <div className="input-medium harmful">
-            <p style={{ marginBottom: '-5px' }}>
-              Would this information be harmful if released?&nbsp;
-            </p>
+            <p>Would this information be harmful if released?&nbsp;</p>
             <TooltipWrapper toolTipId="sensitive-harmful" toolTip={sensitiveTooltip}>
               <a target="_blank" rel="noopener noreferrer" href={HARMFUL_DISCLOSURE_URL}>
                 Policy
@@ -191,10 +182,10 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
         disabled={disabled}
       />
       <hr></hr>
-      <Row style={{ textAlign: 'left' }}>
-        <h4>Location</h4>
+      <Row>
+        <h4 className="text-start">Location</h4>
       </Row>
-      <Row style={{ marginBottom: 10 }}>
+      <Row>
         <Col xs={6}>
           <AddressForm
             {...formikProps}

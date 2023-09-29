@@ -1,3 +1,5 @@
+import './InformationForm.scss';
+
 import { FastSelect, Form, Input, SelectOption, TextArea } from 'components/common/form';
 import { ParentSelect } from 'components/common/form/ParentSelect';
 import { useFormikContext } from 'formik';
@@ -49,35 +51,33 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
 
   const myAgencies = useMyAgencies();
 
+  const leftColumnWidth = 3;
+
   return (
     <>
-      <Row>
-        <Col xs={3} style={{ textAlign: 'right' }}>
+      <Row className="information-form-row">
+        <Col xs={leftColumnWidth} className="left-column">
           <Form.Label>Name</Form.Label>
         </Col>
         <Col>
-          <Input
-            disabled={props.disabled}
-            field={withNameSpace('name')}
-            style={{ width: '18em' }}
-          />
+          <Input disabled={props.disabled} field={withNameSpace('name')} className="input" />
         </Col>
       </Row>
-      <Row>
-        <Col xs={3} style={{ textAlign: 'right' }}>
+      <Row className="information-form-row">
+        <Col xs={leftColumnWidth} className="left-column">
           <Form.Label>Description</Form.Label>
         </Col>
         <Col>
           <TextArea
             disabled={props.disabled}
             field={withNameSpace('description')}
-            style={{ width: '18em' }}
+            className="input"
           />
         </Col>
       </Row>
       {!props.wizard && (
-        <Row>
-          <Col xs={3} style={{ textAlign: 'right' }}>
+        <Row className="information-form-row">
+          <Col xs={leftColumnWidth} className="left-column">
             <Form.Label>Classification</Form.Label>
           </Col>
           <Col>
@@ -88,13 +88,13 @@ const InformationForm: FunctionComponent<InformationFormProps> = (props: Informa
               placeholder="Must Select One"
               field={withNameSpace('classificationId')}
               options={props.classifications}
-              style={{ width: '18em' }}
+              className="input"
             />
           </Col>
         </Row>
       )}
-      <Row>
-        <Col xs={3} style={{ textAlign: 'right' }}>
+      <Row className="information-form-row">
+        <Col xs={leftColumnWidth} className="left-column">
           <Form.Label>Agency</Form.Label>
         </Col>
         <Col>

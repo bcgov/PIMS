@@ -1,3 +1,6 @@
+import './PidPinForm.scss';
+
+import classNames from 'classnames';
 import { Input } from 'components/common/form';
 import { Label } from 'components/common/Label';
 import { FunctionComponent } from 'react';
@@ -41,8 +44,8 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
   };
 
   return (
-    <Row className="align-items-center" style={{ marginBottom: '20px' }}>
-      <Col xs={2} style={{ justifyContent: 'end', textAlign: 'end' }}>
+    <Row className={classNames('align-items-center', 'pid-pin-form')}>
+      <Col xs={2} className="left-column">
         <Label>PID</Label>
       </Col>
       <Col xs={4}>
@@ -61,10 +64,10 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
           field={withNameSpace('pid')}
         />
       </Col>
-      <Col xs={2} style={{ textAlign: 'right', marginLeft: '1.2em' }}>
+      <Col xs={2} className={classNames('left-column', 'pin-column')}>
         <Label>PIN</Label>
       </Col>
-      <Col xs={3} style={{ padding: '0' }}>
+      <Col xs={3} className="no-padding">
         <Input
           required={true}
           displayErrorTooltips
@@ -79,7 +82,6 @@ const PidPinForm: FunctionComponent<PidPinProps> = (props: PidPinProps) => {
             return '';
           }}
           type="number"
-          style={{ width: '12em' }}
         />
       </Col>
     </Row>

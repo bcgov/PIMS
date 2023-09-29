@@ -1,3 +1,5 @@
+import './AddressForm.scss';
+
 import { ILookupCode } from 'actions/ILookupCode';
 import { IAddress } from 'actions/parcelsActions';
 import { FastInput, Select } from 'components/common/form';
@@ -72,14 +74,8 @@ const AddressForm = <T,>(props: AddressProps & FormikProps<T>) => {
   return (
     <>
       {props.hideStreetAddress !== true && (
-        <Row style={{ marginBottom: '10px', alignItems: 'center' }}>
-          <Col
-            xs={leftColumnWidth}
-            style={{
-              textAlign: 'right',
-              padding: '0',
-            }}
-          >
+        <Row className="address-form-row">
+          <Col xs={leftColumnWidth} className="address-form-left-columns">
             <Label>Street Address</Label>
           </Col>
           <Col>
@@ -98,14 +94,8 @@ const AddressForm = <T,>(props: AddressProps & FormikProps<T>) => {
           </Col>
         </Row>
       )}
-      <Row style={{ marginBottom: '10px', alignItems: 'center' }}>
-        <Col
-          xs={leftColumnWidth}
-          style={{
-            textAlign: 'right',
-            padding: '0',
-          }}
-        >
+      <Row className="address-form-row">
+        <Col xs={leftColumnWidth} className="address-form-left-columns">
           <Label>Location</Label>
         </Col>
         <Col>
@@ -120,14 +110,8 @@ const AddressForm = <T,>(props: AddressProps & FormikProps<T>) => {
           />
         </Col>
       </Row>
-      <Row style={{ marginBottom: '10px', alignItems: 'center' }}>
-        <Col
-          xs={leftColumnWidth}
-          style={{
-            textAlign: 'right',
-            padding: '0',
-          }}
-        >
+      <Row className="address-form-row">
+        <Col xs={leftColumnWidth} className="address-form-left-columns">
           <Label>Province</Label>
         </Col>
         <Col>
@@ -139,21 +123,14 @@ const AddressForm = <T,>(props: AddressProps & FormikProps<T>) => {
           />
         </Col>
       </Row>
-      <Row className="postal" style={{ marginBottom: '10px', alignItems: 'center' }}>
-        <Col
-          xs={leftColumnWidth}
-          style={{
-            textAlign: 'right',
-            padding: '0',
-          }}
-        >
+      <Row className="address-form-row">
+        <Col xs={leftColumnWidth} className="address-form-left-columns">
           <Label>Postal Code</Label>
         </Col>
         <Col>
           <FastInput
             className="input-small"
             formikProps={props}
-            style={{ width: '120px' }}
             disabled={props.disabled}
             onBlurFormatter={(postal: string) =>
               postal.replace(postal, postalCodeFormatter(postal))

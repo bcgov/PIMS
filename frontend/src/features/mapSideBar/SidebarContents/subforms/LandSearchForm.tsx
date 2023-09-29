@@ -1,3 +1,5 @@
+import './LandSearchForm.scss';
+
 import { ContentPaste as PasteIcon } from '@mui/icons-material';
 import { Box, IconButton, Tab, Tabs, Tooltip } from '@mui/material';
 import { IParcel } from 'actions/parcelsActions';
@@ -66,7 +68,7 @@ const LandSearchForm = ({
   };
 
   return (
-    <Row className="section g-0">
+    <Row className="section g-0" id="land-search-form">
       <Col md={12}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={tab} onChange={handleTabChange} aria-label="property search tabs">
@@ -77,8 +79,8 @@ const LandSearchForm = ({
 
         {/* Search Tab */}
         <Box role="tabpanel" hidden={tab !== 0} id="parcel-tabpanel-search" sx={{ p: 3 }}>
-          <Row style={{ alignItems: 'center', marginBottom: 5 }}>
-            <Col md={2} style={{ textAlign: 'left' }}>
+          <Row className="row">
+            <Col xs={2} className="left-column">
               <Label>PID</Label>
             </Col>
             <Col xs={4}>
@@ -94,7 +96,6 @@ const LandSearchForm = ({
                   return '';
                 }}
                 field={withNameSpace(nameSpace, 'searchPid')}
-                style={{ width: '14em' }}
               />
             </Col>
             <Col md="auto">
@@ -113,8 +114,8 @@ const LandSearchForm = ({
               />
             </Col>
           </Row>
-          <Row style={{ alignItems: 'center', marginBottom: 5 }}>
-            <Col md={2} style={{ textAlign: 'left' }}>
+          <Row className="row">
+            <Col xs={2} className="left-column">
               <Label>PIN</Label>
             </Col>
             <Col xs={4}>
@@ -131,7 +132,6 @@ const LandSearchForm = ({
                   return '';
                 }}
                 type="number"
-                style={{ width: '14em' }}
               />
             </Col>
             <Col md="auto">
@@ -150,8 +150,8 @@ const LandSearchForm = ({
               />
             </Col>
           </Row>
-          <Row style={{ alignItems: 'center' }}>
-            <Col md={2} style={{ textAlign: 'left' }}>
+          <Row className="row">
+            <Col xs={2} className="left-column">
               <Label>Street Address</Label>
             </Col>
             <Col xs={4}>
@@ -197,7 +197,7 @@ const LandSearchForm = ({
 
         {/* Marker Tab */}
         <Box role="tabpanel" hidden={tab !== 1} id="parcel-tabpanel-marker" sx={{ p: 3 }}>
-          <Row style={{ alignItems: 'center' }}>
+          <Row className="row">
             <Col md="auto">
               Find a parcel on the map and click it to populate the Parcel Details below.
             </Col>

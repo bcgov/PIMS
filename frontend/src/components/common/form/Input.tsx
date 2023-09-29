@@ -1,3 +1,5 @@
+import './Input.scss';
+
 import classNames from 'classnames';
 import { getIn, useFormikContext } from 'formik';
 import React, { CSSProperties, useEffect, useState } from 'react';
@@ -98,8 +100,12 @@ export const Input: React.FC<InputProps> = ({
   return (
     <div
       id={`input-${field}`}
-      className={classNames(!!required ? 'required' : '', outerClassName)}
-      style={customRowStyle || { alignItems: 'center', display: 'flex' }}
+      className={classNames(
+        !!required ? 'required' : '',
+        outerClassName,
+        customRowStyle ? '' : 'input-flex',
+      )}
+      style={customRowStyle}
     >
       {!!label && <Form.Label>{label}</Form.Label>}
 
