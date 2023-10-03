@@ -5,10 +5,8 @@ using Pims.Dal.Helpers.Migrations;
 
 namespace Pims.Dal.Migrations
 {
-    /// <inheritdoc />
     public partial class v020614 : SeedMigration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             PreUp(migrationBuilder);
@@ -16,7 +14,6 @@ namespace Pims.Dal.Migrations
             PostUp(migrationBuilder);
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             PreDown(migrationBuilder);
