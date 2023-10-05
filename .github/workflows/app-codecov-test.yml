@@ -63,7 +63,7 @@ jobs:
           # Repository upload token - get it from codecov.io. Required only for private repositories
           token: ${{env.codeCov-token}}
           # Path to coverage file to upload
-          file: ${{env.working-directory}}/coverage/coverage-final.json
+          file: ${{env.working-directory}}/coverage/lcov.info
           # Flag upload to group coverage metrics (e.g. unittests | integration | ui,chrome)
           flags: unittests
           # Environment variables to tag the upload with (e.g. PYTHON | OS,PYTHON)
