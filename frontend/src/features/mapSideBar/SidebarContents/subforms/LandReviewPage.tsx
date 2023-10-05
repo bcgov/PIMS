@@ -11,6 +11,7 @@ import { getAssociatedBuildingsCols } from 'features/properties/components/forms
 import { getIn, useFormikContext } from 'formik';
 import React, { SyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { Container, Row } from 'react-bootstrap';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -33,9 +34,10 @@ export const LandReviewPage: React.FC<any> = (props: IReviewProps) => {
     [nameSpace],
   );
   const formikProps = useFormikContext();
+  const navigate: NavigateFunction = useNavigate();
 
   const onRowClick = (data: IBuilding) => {
-    window.open(`/mapview?sidebar=true&buildingId=${data.id}`, `_blank`);
+    navigate(`/mapview?sidebar=true&buildingId=${data.id}`);
   };
 
   const defaultEditValues = useMemo(
