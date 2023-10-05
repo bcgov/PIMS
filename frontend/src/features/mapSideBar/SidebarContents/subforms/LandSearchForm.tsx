@@ -108,6 +108,7 @@ const LandSearchForm = ({
             </Col>
             <Col md="auto">
               <SearchButton
+                id="pid-search"
                 onClick={(e: any) => {
                   e.preventDefault();
                   handlePidChange(searchPid, nameSpace);
@@ -149,7 +150,7 @@ const LandSearchForm = ({
                   e.preventDefault();
                   handlePinChange(searchPin, nameSpace);
                 }}
-                id="pid-search"
+                id="pin-search"
               />
             </Col>
           </Row>
@@ -188,6 +189,7 @@ const LandSearchForm = ({
             </Col>
             <Col md="auto">
               <SearchButton
+                id="address-search"
                 disabled={!geocoderResponse}
                 onClick={(e: any) => {
                   e.preventDefault();

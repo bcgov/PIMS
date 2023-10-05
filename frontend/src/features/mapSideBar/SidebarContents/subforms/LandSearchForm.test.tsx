@@ -78,15 +78,19 @@ jest.mock('hooks/useKeycloakWrapper');
   new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
 );
 
+const handleGeocoderChanges = jest.fn(() => promise as unknown as Promise<void>);
+const handlePidChange = jest.fn(noop);
+const handlePinChange = jest.fn(noop);
+
 // Using LandForm because it contains LandSearchForm
 const getLandForm = (disabled?: boolean, initialValues?: IParcel) => (
   <Provider store={store}>
     <MemoryRouter initialEntries={[history.location]}>
       <LandForm
-        handleGeocoderChanges={() => promise as unknown as Promise<void>}
+        handleGeocoderChanges={handleGeocoderChanges}
         setMovingPinNameSpace={noop}
-        handlePidChange={noop}
-        handlePinChange={noop}
+        handlePidChange={handlePidChange}
+        handlePinChange={handlePinChange}
         isPropertyAdmin={true}
         disabled={disabled}
         initialValues={initialValues as any}
@@ -166,6 +170,22 @@ describe('Land Form', () => {
     await userEvent.type(pinField!, '123');
     fireEvent.blur(pinField!);
     expect((pinField as HTMLInputElement).value).toBe('123');
+  });
+
+  // Cannot read properties of undefined (reading 'words')
+  // Not confident about where error comes from
+  xit('See that search buttons were clicked', async () => {
+    const { container } = render(getLandForm());
+    const pidSearch = container.querySelector('#pid-search');
+    const pinSearch = container.querySelector('#pin-search');
+    const addressSearch = container.querySelector('#address-search');
+
+    await userEvent.click(pidSearch!);
+    expect(handlePidChange).toHaveBeenCalledTimes(1);
+    await userEvent.click(pinSearch!);
+    expect(handlePinChange).toHaveBeenCalledTimes(1);
+    await userEvent.click(addressSearch!);
+    expect(handleGeocoderChanges).toHaveBeenCalledTimes(0); // Geocoder response not set...
   });
 
   // Can't seem to get addressField. It is always null.
