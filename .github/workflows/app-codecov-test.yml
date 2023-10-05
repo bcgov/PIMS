@@ -24,6 +24,7 @@ on:
       - '!frontend/Dockerfile*'
       - '!frontend/nginx.conf'
       - '!frontend/vite.config.*'
+      - '.github/workflows/app-codecov-test.yml'
 
 jobs:
   build:
