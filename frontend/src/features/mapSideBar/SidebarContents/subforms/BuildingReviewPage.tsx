@@ -1,6 +1,7 @@
 import './LandReviewPage.scss';
 
 import { Box, Tab, Tabs } from '@mui/material';
+import { IParcel } from 'actions/parcelsActions';
 import { SelectOptions } from 'components/common/form';
 import { BuildingDetails } from 'features/mapSideBar/components/tabs/BuildingDetails';
 import { OccupancyValuation } from 'features/mapSideBar/components/tabs/OccupancyValuation';
@@ -9,6 +10,7 @@ import { getAssociatedLandCols } from 'features/properties/components/forms/subf
 import { getIn, useFormikContext } from 'formik';
 import React, { SyntheticEvent, useCallback, useMemo, useState } from 'react';
 import { Container, Row } from 'react-bootstrap';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 
 interface IReviewProps {
   nameSpace?: string;
@@ -31,6 +33,11 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
     },
     [nameSpace],
   );
+  const navigate: NavigateFunction = useNavigate();
+
+  const onRowClick = (data: IParcel) => {
+    navigate(`/mapview?sidebar=true&parcelId=${data.id}`);
+  };
   const defaultEditValues = useMemo(
     () => ({
       identification: disabled || formikProps.isValid,
@@ -96,7 +103,13 @@ export const BuildingReviewPage: React.FC<any> = (props: IReviewProps) => {
         {/* ASSOCIATED LAND TAB */}
         <Box role="tabpanel" hidden={tab !== 2} id="associated-land-tabpanel">
           {parcels?.length > 0 ? (
-            <FormikTable field="data.parcels" name="parcels" columns={getAssociatedLandCols()} />
+            <FormikTable
+              field="data.parcels"
+              name="parcels"
+              columns={getAssociatedLandCols()}
+              clickableTooltip="Click to view Land details"
+              onRowClick={onRowClick}
+            />
           ) : (
             <p
               style={{
