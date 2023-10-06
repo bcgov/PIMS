@@ -11,6 +11,7 @@ import moment from 'moment';
 import pretty from 'pretty';
 import React from 'react';
 import { Provider } from 'react-redux';
+import * as Router from 'react-router';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -54,6 +55,10 @@ const form = (
   </Formik>
 );
 describe('building review page', () => {
+  const navigate = jest.fn();
+  beforeEach(() => {
+    jest.spyOn(Router, 'useNavigate').mockImplementation(() => navigate);
+  });
   it('renders correctly', () => {
     const { container } = render(form);
     expect(pretty(container.innerHTML)).toMatchSnapshot();
