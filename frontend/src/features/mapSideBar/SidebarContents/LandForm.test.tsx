@@ -16,6 +16,8 @@ import useKeycloakMock from 'useKeycloakWrapperMock';
 import { fillInput } from 'utils/testUtils';
 
 import { LandForm } from '.';
+import { valuesToApiFormat } from 'features/mapSideBar/SidebarContents/LandForm';
+import { ISteppedFormValues } from 'components/common/form/StepForm';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -82,7 +84,7 @@ jest.mock('hooks/useKeycloakWrapper');
 const defaultInitialValues: IParcel = {
   id: 1,
   pid: '111-111-111',
-  pin: '',
+  pin: 123,
   classificationId: Classifications.CoreOperational,
   encumbranceReason: '',
   landArea: 123,
@@ -188,5 +190,15 @@ describe('Land Form', () => {
     expect(getByText(/parcel id$/i)).toBeInTheDocument();
     expect(getByText(/usage/i)).toBeInTheDocument();
     expect(getByText(/valuation/i)).toBeInTheDocument();
+  });
+
+  it('valuesToApiFormat function returns expected IParcel', () => {
+    const values: ISteppedFormValues<IParcel> = {
+      activeStep: 0,
+      activeTab: 0,
+      data: defaultInitialValues,
+    };
+    const result = valuesToApiFormat(values);
+    expect(result).toEqual(defaultInitialValues);
   });
 });
