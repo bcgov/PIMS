@@ -98,6 +98,7 @@ export const InputGroup: React.FC<InputGroupProps> = ({
             className={className}
             placeholder={placeholder}
             displayErrorTooltips={displayErrorTooltips}
+            style={style}
             {...rest}
           />
         ) : (

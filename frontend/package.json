@@ -175,7 +175,8 @@
       "!<rootDir>/build/**",
       "!<rootDir>/src/serviceWorker.**",
       "!<rootDir>/src/setupProxy.*",
-      "!<rootDir>/src/setupTests.*"
+      "!<rootDir>/src/setupTests.*",
+      "!<rootDir>/src/utils/testUtils.tsx"
     ],
     "coverageThreshold": {
       "global": {

@@ -5,7 +5,6 @@
     font-weight: bold;
   }
   .row {
-    justify-content: right;
     padding-bottom: 10px;
   }
   .container {
@@ -16,25 +15,18 @@
     h4 {
       margin-bottom: 20px;
     }
-    width: 900px;
-    .form-label,
-    .label {
-      text-align: right;
-    }
-    .form-control,
-    .AutoCompleteText {
-      width: 250px;
-    }
     .harmful {
       padding: 10px;
-      margin-top: 25px;
+      margin: 2em auto 0 auto;
       width: 450px;
       background-color: $light-danger-color;
       border-radius: 5px;
-      margin-left: 14px;
       .invalid-feedback {
         display: block;
         font-size: 16px;
+      }
+      p {
+        margin-bottom: 0;
       }
     }
     .lat-long {
@@ -51,6 +43,15 @@
       padding: 15px;
       background-color: $table-header-color;
       border-radius: 5px;
+    }
+    .left-column {
+      text-align: right;
+      align-items: center;
+    }
+    .project-numbers {
+      flex-direction: column;
+      display: flex;
+      background: red;
     }
   }
 }

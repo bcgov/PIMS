@@ -111,11 +111,14 @@ export const Select: React.FC<SelectProps> = ({
   return (
     <Row
       controlid={`input-${field}`}
-      className={classNames(!!required ? 'required' : '', outerClassName)}
-      style={{ alignItems: 'center' }}
+      className={classNames(!!required ? 'required' : '', outerClassName, 'select-row')}
     >
-      <Col md="auto">{!!label && <Form.Label>{label}</Form.Label>}</Col>
-      <Col md="auto" style={{ padding: 0 }}>
+      {!!label && (
+        <Col md="auto">
+          <Form.Label>{label}</Form.Label>
+        </Col>
+      )}
+      <Col md="auto" className="select-column">
         <Form.Control
           style={customStyles}
           as={asElement}

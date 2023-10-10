@@ -53,7 +53,7 @@ export const UsersFilterBar: React.FC<IProps> = ({
       <Col className="bar-item" md="auto">
         <Input field="position" placeholder="Position" className="input" />
       </Col>
-      <Col className="bar-item parent-select" md="auto">
+      <Col className="bar-item" md="auto">
         <ParentSelect
           field="agency"
           options={agencyOptions}
@@ -61,11 +61,7 @@ export const UsersFilterBar: React.FC<IProps> = ({
           placeholder="Enter an Agency"
         />
       </Col>
-      <Col
-        className="bar-item"
-        md="auto"
-        style={{ marginLeft: '-12px', marginRight: '10px', marginTop: '2px' }}
-      >
+      <Col className="bar-item" md="auto">
         <Select field="role" placeholder="Role" options={roleOptions} className="input" />
       </Col>
     </FilterBar>
