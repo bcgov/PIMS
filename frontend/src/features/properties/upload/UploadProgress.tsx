@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import { Col, Container, ProgressBar, Row } from 'react-bootstrap';
 
 import { dataToCsvFile } from '../../../utils/csvToPropertyModel';
-import { IFeedObject, IProgressState } from './UploadProperties';
+import { IFeedObject, IProgressState, UploadPhase } from './UploadProperties';
 
 /**
  * @interface
@@ -14,6 +14,7 @@ import { IFeedObject, IProgressState } from './UploadProperties';
  * @param {IFeedObject[]} feed The list of feed objects to populate user feedback area
  */
 interface IUploadProgressProps {
+  phase: UploadPhase;
   progress: IProgressState;
   feed: IFeedObject[];
 }
@@ -24,7 +25,7 @@ interface IUploadProgressProps {
  * @returns {React.FC} A React component
  */
 export const UploadProgress = (props: IUploadProgressProps) => {
-  const { feed, progress } = props;
+  const { feed, progress, phase } = props;
   // Creates an imaginary link and clicks it to download a file
   const onDownloadResults = () => {
     const csvFile = dataToCsvFile(feed);
@@ -82,7 +83,7 @@ export const UploadProgress = (props: IUploadProgressProps) => {
             >{`PID ${item.pid} failed to upload.`}</div>
           ),
         )}
-        {progress.failures + progress.successes === progress.totalRecords ? (
+        {phase === UploadPhase.DONE ? (
           <Container id="final-feed-report">
             <Row>
               <Col sm={6}>

@@ -1,5 +1,6 @@
 import Papa from 'papaparse';
 
+// This is the ideal model that the API expects to receive.
 export interface IPropertyModel {
   parcelId: string;
   pid: string;
@@ -30,6 +31,49 @@ export interface IPropertyModel {
   netBook: string;
 }
 
+// This is the model that is created from CSV files exported from PIMS.
+// Note that keys are often string phrases. Access them with bracket notation: obj["Key Name"]
+export interface IExportedPropertyModel {
+  Address?: string;
+  Agency?: string;
+  'Assessed Building Value'?: string;
+  'Assessed Land Value'?: string;
+  'Building Assessment Year'?: string;
+  Classification: string;
+  'Construction Type'?: string;
+  Description?: string;
+  'Land Area'?: string;
+  'Land Assessment Year'?: string;
+  'Last Updated On'?: string;
+  Latitude: string;
+  'Lease Expiry'?: string;
+  'Legal Description'?: string;
+  Location: string;
+  Longitude: string;
+  Ministry: string;
+  Name: string;
+  'Netbook Date'?: string;
+  'Netbook Value'?: string;
+  Occupant?: string;
+  'Occupant Type'?: string;
+  PID: string;
+  PIN?: string;
+  Postal?: string;
+  'Predominate Use'?: string;
+  'Project Number': string;
+  'Rentable Area'?: string;
+  Sensitive: string; // Stringified boolean
+  Status?: string;
+  Tenancy?: string;
+  'Transfer Lease on Sale'?: string; // Stringified boolean
+  Type: string;
+  'Updated By'?: string;
+  Zoning?: string;
+  // Added these fields that were missing from export but are used in import
+  'Local ID'?: string;
+  'Building Floor Count'?: string;
+}
+
 /**
  * @description Takes a string representing CSV content of a file and converts it to a 2D array.
  * @param {string} csvContent Content of CSV file
@@ -55,7 +99,46 @@ export const parseCSVString = async (csvContent: string): Promise<IPropertyModel
       reject('CSV file is incomplete.');
     }
 
-    resolve(parsedCSV.data);
+    // Transform raw objects into model that API expects
+    const transformedData: IPropertyModel[] = parsedCSV.data.map(
+      (property: IExportedPropertyModel) => ({
+        parcelId: property.PID,
+        pid: property.PID,
+        pin: property.PIN ?? '',
+        status: property.Status ?? '',
+        fiscalYear:
+          property.Type === 'Building'
+            ? property['Building Assessment Year'] ?? ''
+            : property['Land Assessment Year'] ?? '',
+        agency: '', // Not used in API. Leave blank.
+        agencyCode: property.Ministry, // Names are misleading here.
+        subAgency: property.Agency ?? '',
+        propertyType: property.Type,
+        localId: property['Local ID'] ?? '',
+        name: property.Name,
+        description: property.Description ?? '',
+        classification: property.Classification,
+        civicAddress: property.Address ?? '',
+        city: property.Location,
+        postal: property.Postal ?? '',
+        latitude: property.Latitude,
+        longitude: property.Longitude,
+        landArea: property['Land Area'] ?? '0',
+        landLegalDescription: property['Legal Description'] ?? '',
+        buildingFloorCount: property['Building Floor Count'] ?? '0',
+        buildingConstructionType: property['Construction Type'] ?? '',
+        buildingPredominateUse: property['Predominate Use'] ?? '',
+        buildingTenancy: property.Tenancy ?? '',
+        buildingRentableArea: property['Rentable Area'] ?? '',
+        assessed:
+          property.Type === 'Building'
+            ? property['Assessed Building Value'] ?? '0'
+            : property['Assessed Land Value'] ?? '0',
+        netBook: property['Netbook Value'] ?? '0',
+      }),
+    );
+
+    resolve(transformedData);
   });
 };
 

@@ -16,9 +16,10 @@ import { UploadProgress } from './UploadProgress';
  * @enum
  * @description The possible states of the upload process
  */
-enum UploadPhase {
+export enum UploadPhase {
   FILE_SELECT,
   DATA_UPLOAD,
+  DONE,
 }
 
 /**
@@ -148,6 +149,7 @@ export const UploadProperties: React.FC = () => {
             message: 'Upload Complete',
           };
         });
+        setPhase(UploadPhase.DONE);
       } catch (e: any) {
         console.error('Error parsing CSV:', e);
         toast.warning(`Unable to process CSV file.`);
@@ -163,8 +165,8 @@ export const UploadProperties: React.FC = () => {
             <Instructions />
           </Col>
           <Col>
-            {phase === UploadPhase.DATA_UPLOAD ? (
-              <UploadProgress {...{ feed, progress }} />
+            {phase !== UploadPhase.FILE_SELECT ? (
+              <UploadProgress {...{ feed, progress, phase }} />
             ) : (
               <>
                 <FileInput file={file} onChange={handleFileChange} onDrop={handleFileDrop} />
