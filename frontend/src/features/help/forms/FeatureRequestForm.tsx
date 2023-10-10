@@ -1,8 +1,10 @@
+import './HelpForms.scss';
+
 import { Input, TextArea } from 'components/common/form';
 import { Formik } from 'formik';
 import { noop } from 'lodash';
 import * as React from 'react';
-import { Form } from 'react-bootstrap';
+import { Col, Container, Form, Row } from 'react-bootstrap';
 
 import { pimsSupportEmail } from '../constants/HelpText';
 import { IHelpForm } from '../interfaces';
@@ -24,6 +26,8 @@ const defaultHelpFormValues: IFeatureRequestForm = {
   description: '',
 };
 
+const leftColumnWidth = 3;
+
 /**
  * Form allowing user to request a feature. The state of this form is synchronized with the parent's mailto.
  */
@@ -43,10 +47,33 @@ const FeatureRequestForm: React.FunctionComponent<FeatureRequestFormProps> = ({
         setMailto(mailto);
       }}
     >
-      <Form>
-        <Input label="User" field="user" style={{ marginLeft: '49px', marginBottom: '10px' }} />
-        <Input label="Email" field="email" style={{ marginLeft: '42px', marginBottom: '10px' }} />
-        <TextArea label="Description" field="description" />
+      <Form className="help-form">
+        <Container>
+          <Row>
+            <Col xs={leftColumnWidth} className="left-column">
+              User
+            </Col>
+            <Col>
+              <Input field="user" />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={leftColumnWidth} className="left-column">
+              Email
+            </Col>
+            <Col>
+              <Input field="email" />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={leftColumnWidth} className="left-column">
+              Description
+            </Col>
+            <Col>
+              <TextArea field="description" />
+            </Col>
+          </Row>
+        </Container>
       </Form>
     </Formik>
   );

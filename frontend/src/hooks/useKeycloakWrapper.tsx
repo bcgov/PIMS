@@ -64,7 +64,7 @@ export interface IKeycloak {
  */
 export function useKeycloakWrapper(): IKeycloak {
   const { keycloak: keycloakInstance } = useKeycloak();
-  const userInfo = useKeycloak().keycloak.tokenParsed as IUserInfo;
+  const userInfo = keycloakInstance.tokenParsed as IUserInfo;
   //@ts-ignore
   const usersAgencies: number[] = useSelector((state) => state.usersAgencies);
   /**

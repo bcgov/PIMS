@@ -1,3 +1,5 @@
+import './ParcelDetails.scss';
+
 import { Box, Grid, Stack, Typography } from '@mui/material';
 import { ILookupCode } from 'actions/ILookupCode';
 import { Check, FastInput, Input, InputGroup, Select, TextArea } from 'components/common/form';
@@ -107,9 +109,9 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
           </Grid>
           <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
             <Input
-              style={{ width: '100%' }}
               disabled={editInfo.identification}
               field={withNameSpace('name', index)}
+              className="parcel-details-name"
             />
           </Grid>
 
@@ -121,7 +123,6 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
             <Stack direction="row" spacing={1}>
               {getIn(formikProps.values, withNameSpace('pid', index)) ? (
                 <Input
-                  customRowStyle={{ width: '33%' }}
                   displayErrorTooltips
                   className="input-small"
                   disabled={true}
@@ -134,7 +135,6 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
                     fontWeight: boldFontWeight,
                     fontSize: fontSize - 1,
                     alignSelf: 'center',
-                    width: '33%',
                   }}
                 >
                   none
