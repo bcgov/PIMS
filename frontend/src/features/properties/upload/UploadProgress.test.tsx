@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import React from 'react';
 
 import { UploadProgress } from './UploadProgress';
-import { IFeedObject, IProgressState } from './UploadProperties';
+import { IFeedObject, IProgressState, UploadPhase } from './UploadProperties';
 
 describe('Testing Progress section for CSV Upload', () => {
   const startingProgress: IProgressState = {
@@ -13,7 +13,8 @@ describe('Testing Progress section for CSV Upload', () => {
   };
   let progress: IProgressState = startingProgress;
   let feed: IFeedObject[] = [];
-  const { queryByText } = render(<UploadProgress {...{ progress, feed }} />);
+  let phase: UploadPhase = UploadPhase.FILE_SELECT;
+  const { queryByText } = render(<UploadProgress {...{ progress, feed, phase }} />);
 
   beforeEach(() => {
     progress = startingProgress;
@@ -41,14 +42,16 @@ describe('Testing Progress section for CSV Upload', () => {
         success: false,
       },
     );
-    const { queryByText } = render(<UploadProgress {...{ progress, feed }} />);
+    phase = UploadPhase.DATA_UPLOAD;
+    const { queryByText } = render(<UploadProgress {...{ progress, feed, phase }} />);
     expect(queryByText(/PID 1234 uploaded successfully/)).toBeInTheDocument();
     expect(queryByText(/PID 4321 failed to upload/)).toBeInTheDocument();
   });
 
   it('Final report is visible when upload complete', () => {
     progress = { ...progress, message: 'Upload Complete', successes: 5, failures: 5 };
-    const { queryByText } = render(<UploadProgress {...{ progress, feed }} />);
+    phase = UploadPhase.DONE;
+    const { queryByText } = render(<UploadProgress {...{ progress, feed, phase }} />);
     expect(queryByText(/Upload Complete/)).toBeInTheDocument();
     expect(queryByText(/Download Results/)).toBeInTheDocument();
     expect(queryByText(/Successes: 5/)).toBeInTheDocument();
