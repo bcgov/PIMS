@@ -106,10 +106,11 @@ export const parseCSVString = async (csvContent: string): Promise<IPropertyModel
         pid: property.PID,
         pin: property.PIN ?? '',
         status: property.Status ?? '',
+        // This cannot be nothing. It messes up the Date parsing in the API.
         fiscalYear:
-          property.Type === 'Building'
-            ? property['Building Assessment Year'] ?? ''
-            : property['Land Assessment Year'] ?? '',
+          (property.Type === 'Building'
+            ? property['Building Assessment Year']
+            : property['Land Assessment Year']) ?? `${new Date().getFullYear()}`, // Default current year
         agency: '', // Not used in API. Leave blank.
         agencyCode: property.Ministry, // Names are misleading here.
         subAgency: property.Agency ?? '',
@@ -125,7 +126,7 @@ export const parseCSVString = async (csvContent: string): Promise<IPropertyModel
         longitude: property.Longitude,
         landArea: property['Land Area'] ?? '0',
         landLegalDescription: property['Legal Description'] ?? '',
-        buildingFloorCount: property['Building Floor Count'] ?? '0',
+        buildingFloorCount: property['Building Floor Count'] ?? '1',
         buildingConstructionType: property['Construction Type'] ?? '',
         buildingPredominateUse: property['Predominate Use'] ?? '',
         buildingTenancy: property.Tenancy ?? '',
