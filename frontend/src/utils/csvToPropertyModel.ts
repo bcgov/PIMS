@@ -119,7 +119,6 @@ export const parseCSVString = async (csvContent: string): Promise<IPropertyModel
 
     const getValueOrDefault = (incomingValue: string | undefined, defaultValue: string) =>
       !incomingValue || incomingValue === '' ? `${defaultValue}` : incomingValue;
-
     // Transform raw objects into model that API expects
     const transformedData: IPropertyModel[] = parsedCSV.data.map(
       (property: IExportedPropertyModel) => ({
@@ -144,15 +143,14 @@ export const parseCSVString = async (csvContent: string): Promise<IPropertyModel
         landArea: getValueOrDefault(property['Land Area'], '0'),
         landLegalDescription: property['Legal Description'] ?? '',
         buildingFloorCount: getValueOrDefault(property['Building Floor Count'], '1'),
-        buildingConstructionType: property['Construction Type'] ?? '',
-        buildingPredominateUse: property['Predominate Use'] ?? '',
+        buildingConstructionType: getValueOrDefault(property['Construction Type'], 'Unknown'),
+        buildingPredominateUse: getValueOrDefault(property['Predominate Use'], 'Unknown'),
         buildingTenancy: property.Tenancy ?? '',
         buildingRentableArea: getValueOrDefault(property['Rentable Area'], '0'),
         assessed: getAssessedValue(property),
         netBook: getValueOrDefault(property['Netbook Value'], '0'),
       }),
     );
-
     resolve(transformedData);
   });
 };
@@ -168,7 +166,7 @@ export const csvFileToString = (file: File): Promise<string> => {
 
     reader.onload = (event) => {
       if (event.target && event.target.result) {
-        const csvData = event.target.result as string;
+        const csvData = (event.target.result as string).replace(/\r\n/g, '\n');
         resolve(csvData);
       } else {
         reject(new Error('Failed to read file.'));
