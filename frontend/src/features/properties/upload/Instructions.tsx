@@ -68,9 +68,6 @@ export const Instructions = () => (
           </Accordion.Item>
         </Accordion>
       </li>
-      <li>
-        Either the <b>parcelId</b> or the <b>pid</b> field can be null, but not both.
-      </li>
     </ul>
 
     {/* CAVEATS */}
