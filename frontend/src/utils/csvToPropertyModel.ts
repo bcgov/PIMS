@@ -62,7 +62,7 @@ export interface IExportedPropertyModel {
   'Predominate Use'?: string;
   'Project Number': string;
   'Rentable Area'?: string;
-  Sensitive: string; // Stringified boolean
+  Sensitive?: string; // Stringified boolean
   Status?: string;
   Tenancy?: string;
   'Transfer Lease on Sale'?: string; // Stringified boolean
@@ -117,6 +117,9 @@ export const parseCSVString = async (csvContent: string): Promise<IPropertyModel
       return !assessedFromFields || assessedFromFields === '' ? '0' : assessedFromFields;
     };
 
+    const getValueOrDefault = (incomingValue: string | undefined, defaultValue: string) =>
+      !incomingValue || incomingValue === '' ? `${defaultValue}` : incomingValue;
+
     // Transform raw objects into model that API expects
     const transformedData: IPropertyModel[] = parsedCSV.data.map(
       (property: IExportedPropertyModel) => ({
@@ -124,7 +127,7 @@ export const parseCSVString = async (csvContent: string): Promise<IPropertyModel
         pid: property.PID,
         pin: property.PIN ?? '',
         status: property.Status ?? '',
-        fiscalYear: getFiscalYear(property), // This cannot be nothing. It messes up the Date parsing in the API.
+        fiscalYear: getFiscalYear(property),
         agency: '', // Not used in API. Leave blank.
         agencyCode: property.Ministry, // Names are misleading here.
         subAgency: property.Agency ?? '',
@@ -138,15 +141,15 @@ export const parseCSVString = async (csvContent: string): Promise<IPropertyModel
         postal: property.Postal ?? '',
         latitude: property.Latitude,
         longitude: property.Longitude,
-        landArea: property['Land Area'] ?? '0',
+        landArea: getValueOrDefault(property['Land Area'], '0'),
         landLegalDescription: property['Legal Description'] ?? '',
-        buildingFloorCount: property['Building Floor Count'] ?? '1',
+        buildingFloorCount: getValueOrDefault(property['Building Floor Count'], '1'),
         buildingConstructionType: property['Construction Type'] ?? '',
         buildingPredominateUse: property['Predominate Use'] ?? '',
         buildingTenancy: property.Tenancy ?? '',
-        buildingRentableArea: property['Rentable Area'] ?? '',
+        buildingRentableArea: getValueOrDefault(property['Rentable Area'], '0'),
         assessed: getAssessedValue(property),
-        netBook: property['Netbook Value'] ?? '0',
+        netBook: getValueOrDefault(property['Netbook Value'], '0'),
       }),
     );
 
