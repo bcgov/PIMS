@@ -60,6 +60,7 @@ interface IImportedPropertyResponse {
 export interface IFeedObject {
   pid: string;
   success: boolean;
+  name?: string;
 }
 
 /**
@@ -133,14 +134,27 @@ export const UploadProperties: React.FC = () => {
               newFeedItems.push({ pid: property.pid, success: true }),
             );
             response.rejectedProperties.forEach((property) =>
-              newFeedItems.push({ pid: property.pid, success: false }),
+              newFeedItems.push({ pid: property.pid, success: false, name: property.name }),
             );
             setFeed((prevFeed) => [...prevFeed, ...newFeedItems]);
           } catch (e: unknown) {
-            console.error(
-              'Following properties caused a critical error:',
-              (e as AxiosError).response?.data,
+            // Consider all properties in this chunk to have failed.
+            setProgress((prevProgress) => {
+              const updatedFailures = prevProgress.failures + currentChunk.length;
+              return {
+                ...prevProgress,
+                message: `Uploading Properties: ${updatedFailures + prevProgress.successes} of ${
+                  prevProgress.totalRecords
+                }`,
+                failures: updatedFailures,
+              };
+            });
+            const newFeedItems: IFeedObject[] = [];
+            currentChunk.forEach((property) =>
+              newFeedItems.push({ pid: property.pid, success: false, name: property.name }),
             );
+            setFeed((prevFeed) => [...prevFeed, ...newFeedItems]);
+            console.error('Following error occurred:', (e as AxiosError).response?.data);
           }
         }
         setProgress((prevProgress) => {

@@ -77,10 +77,10 @@ export const UploadProgress = (props: IUploadProgressProps) => {
               className="feed-item feed-success"
             >{`PID ${item.pid} uploaded successfully.`}</div>
           ) : (
-            <div
-              key={`${item.pid}:${index}`}
-              className="feed-item feed-failure"
-            >{`PID ${item.pid} failed to upload.`}</div>
+            <div key={`${item.pid}:${index}`} className="feed-item feed-failure">
+              <p>{`PID ${item.pid} failed to upload.`}</p>
+              <p>{`Property Name: ${item.name}`}</p>
+            </div>
           ),
         )}
         {phase === UploadPhase.DONE ? (
