@@ -99,6 +99,24 @@ export const parseCSVString = async (csvContent: string): Promise<IPropertyModel
       reject('CSV file is incomplete.');
     }
 
+    const getFiscalYear = (property: IExportedPropertyModel) => {
+      const yearFromFields =
+        property.Type === 'Building'
+          ? property['Building Assessment Year']
+          : property['Land Assessment Year'];
+      return !yearFromFields || yearFromFields === ''
+        ? `${new Date().getFullYear()}`
+        : yearFromFields; // Default to current year if no year
+    };
+
+    const getAssessedValue = (property: IExportedPropertyModel) => {
+      const assessedFromFields =
+        property.Type === 'Building'
+          ? property['Assessed Building Value']
+          : property['Assessed Land Value'];
+      return !assessedFromFields || assessedFromFields === '' ? '0' : assessedFromFields;
+    };
+
     // Transform raw objects into model that API expects
     const transformedData: IPropertyModel[] = parsedCSV.data.map(
       (property: IExportedPropertyModel) => ({
@@ -106,11 +124,7 @@ export const parseCSVString = async (csvContent: string): Promise<IPropertyModel
         pid: property.PID,
         pin: property.PIN ?? '',
         status: property.Status ?? '',
-        // This cannot be nothing. It messes up the Date parsing in the API.
-        fiscalYear:
-          (property.Type === 'Building'
-            ? property['Building Assessment Year']
-            : property['Land Assessment Year']) ?? `${new Date().getFullYear()}`, // Default current year
+        fiscalYear: getFiscalYear(property), // This cannot be nothing. It messes up the Date parsing in the API.
         agency: '', // Not used in API. Leave blank.
         agencyCode: property.Ministry, // Names are misleading here.
         subAgency: property.Agency ?? '',
@@ -131,10 +145,7 @@ export const parseCSVString = async (csvContent: string): Promise<IPropertyModel
         buildingPredominateUse: property['Predominate Use'] ?? '',
         buildingTenancy: property.Tenancy ?? '',
         buildingRentableArea: property['Rentable Area'] ?? '',
-        assessed:
-          property.Type === 'Building'
-            ? property['Assessed Building Value'] ?? '0'
-            : property['Assessed Land Value'] ?? '0',
+        assessed: getAssessedValue(property),
         netBook: property['Netbook Value'] ?? '0',
       }),
     );
