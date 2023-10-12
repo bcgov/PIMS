@@ -87,7 +87,7 @@ export const UploadProgress = (props: IUploadProgressProps) => {
           <Container id="final-feed-report">
             <Row>
               <Col sm={6}>
-                <p>Upload completed. {progress.totalRecords} properties uploaded.</p>
+                <p>Upload completed. {progress.totalRecords} properties processed.</p>
                 <p>Successes: {progress.successes}</p>
                 <p>Failures: {progress.failures}</p>
               </Col>
