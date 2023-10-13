@@ -23,6 +23,7 @@ import { ICluster, PointFeature } from '../types';
 import { getMarkerIcon, pointToLayer, zoomToCluster } from './mapUtils';
 import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
 import { Spiderfier } from './Spiderfier';
+import { setMapViewZoom } from 'store';
 
 export type PointClustererProps = {
   points: Array<PointFeature>;
@@ -265,6 +266,12 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
         getParcel(id as number)
           .then((parcel) => {
             popUpContext.setPropertyInfo(parcel);
+            // TODO: Wait for lindsay's opinion on how this should function.
+            if (parcel.latitude !== '' && parcel.longitude !== '') {
+              mapInstance.setView({ lat: parcel.latitude, lng: parcel.longitude }, MAX_ZOOM); // centre and zoom
+              // mapInstance.setView({ lat: parcel.latitude, lng: parcel.longitude }); // just centre
+              // dispatch(setMapViewZoom(MAX_ZOOM)); // determines how markers are clustered
+            }
           })
           .catch(() => {
             toast.error('Unable to load property details, refresh the page and try again.');
@@ -276,6 +283,13 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
         getBuilding(id as number)
           .then((building) => {
             popUpContext.setPropertyInfo(building);
+            // TODO: Same as above todo
+            if (building.latitude !== '' && building.longitude !== '') {
+              mapInstance.setView({ lat: building.latitude, lng: building.longitude }, MAX_ZOOM); // centre and zoom
+              // mapInstance.setView({ lat: parcel.latitude, lng: parcel.longitude }); // just centre
+              // dispatch(setMapViewZoom(MAX_ZOOM)); // determines how markers are clustered
+            }
+
             if (!!building.parcels.length) {
               dispatch(
                 storePropertyDetail({
@@ -371,13 +385,13 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                       }),
                     );
                   }
-                  onMarkerClick(); //open information slideout
                   if (keycloak.canUserViewProperty(cluster.properties as IProperty)) {
                     fetchProperty(cluster.properties.propertyTypeId, cluster.properties.id);
                   } else {
                     popUpContext.setPropertyInfo(convertedProperty);
                   }
                   popUpContext.setPropertyTypeID(cluster.properties.propertyTypeId);
+                  onMarkerClick(); //open information slideout
                 },
               }}
             />
@@ -422,7 +436,6 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                     }),
                   );
                 }
-                onMarkerClick(); //open information slideout
                 if (keycloak.canUserViewProperty(m.properties as IProperty)) {
                   fetchProperty(m.properties.propertyTypeId, m.properties.id);
                 } else {
@@ -431,6 +444,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                   );
                 }
                 popUpContext.setPropertyTypeID(m.properties.propertyTypeId);
+                onMarkerClick(); //open information slideout
               },
             }}
           />
