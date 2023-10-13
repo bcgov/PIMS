@@ -6,7 +6,6 @@ import axios from 'axios';
 import classNames from 'classnames';
 import GenericModal from 'components/common/GenericModal';
 import { IGeoSearchParams } from 'constants/API';
-import { MAX_ZOOM } from 'constants/strings';
 import { SidebarSize } from 'features/mapSideBar/hooks/useQueryParamSideBar';
 import { PropertyFilter } from 'features/properties/filter';
 import { IPropertyFilter } from 'features/properties/filter/IPropertyFilter';
@@ -18,7 +17,6 @@ import { isEmpty, isEqual, isEqualWith } from 'lodash';
 import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { MapContainer, Popup, TileLayer, useMapEvents } from 'react-leaflet';
-import { useResizeDetector } from 'react-resize-detector';
 import { useAppDispatch, useAppSelector } from 'store';
 import { DEFAULT_MAP_ZOOM, setMapViewZoom } from 'store/slices/mapViewZoomSlice';
 import { saveParcelLayerData } from 'store/slices/parcelLayerDataSlice';
@@ -241,7 +239,6 @@ const Map: React.FC<MapProps> = ({
         lng: +selectedProperty.parcelDetail.longitude,
         lat: +selectedProperty.parcelDetail.latitude,
       });
-      dispatch(setMapViewZoom(MAX_ZOOM));
     }
   }, [dispatch, selectedProperty?.parcelDetail]);
 
@@ -373,22 +370,8 @@ const Map: React.FC<MapProps> = ({
     }
   };
 
-  const targetRef = React.useRef<HTMLDivElement>(null);
-  const { width } = useResizeDetector({ targetRef });
-
-  React.useEffect(() => {
-    // The map has changed and needs to be redrawn and possibly zoomed and centered.
-    mapRef.current?.invalidateSize();
-    const z = mapRef.current?.getZoom();
-    if (zoom !== z) mapRef.current?.setView(center, zoom);
-  }, [center, mapRef, width, zoom]);
-
   return (
-    <Container
-      ref={targetRef}
-      fluid
-      className={classNames('px-0 map', { narrow: sidebarSize === 'narrow' })}
-    >
+    <Container fluid className={classNames('px-0 map', { narrow: sidebarSize === 'narrow' })}>
       <FilterBackdrop show={showFilterBackdrop} />
       {!disableMapFilterBar && (
         <Container fluid className="px-0 map-filter-container">
