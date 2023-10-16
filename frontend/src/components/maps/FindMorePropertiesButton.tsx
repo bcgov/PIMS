@@ -8,9 +8,6 @@ import styled from 'styled-components';
 
 const ButtonContent = styled.div`
   display: flex;
-  .p {
-    font-size: 16px;
-  }
 `;
 
 /** popover that is triggered on button click to display form contents */
@@ -48,9 +45,9 @@ export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({
   /** this provides a way to create a form with tooltip like behaviour in the overlay trigger */
   const popover = useMemo(() => {
     const TitleContent = () => (
-      <div style={{ display: 'flex' }}>
-        <TitleForSaleSign size={42} />
-        <h3 style={{ color: variables.primaryColor }}>{buttonText}</h3>
+      <div >
+        <TitleForSaleSign  />
+        <h3>{buttonText}</h3>
         <CloseButton onClick={() => document.body.click()} />
       </div>
     );
@@ -77,10 +74,10 @@ export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({
       overlay={popover}
       placement="bottom"
     >
-      <Button style={{ height: 38 }}>
+      <Button>
         <ButtonContent>
           <FaSign size={20} style={{ marginRight: 5, marginTop: 2 }} />
-          <p style={{ marginBottom: 0 }}>Surplus Properties</p>
+          <p>Surplus Properties</p>
         </ButtonContent>
       </Button>
     </OverlayTrigger>

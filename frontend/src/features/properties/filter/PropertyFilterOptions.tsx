@@ -37,7 +37,6 @@ export const PropertyFilterOptions: React.FC<IPropertyFilterOptions> = ({ disabl
 
   return (
     <InputGroup
-      style={{ marginLeft: '-5px', width: '136px', marginRight: '10px' }}
       fast={
         searchBy === 'address' ? (
           <GeocoderAutoComplete
@@ -61,7 +60,6 @@ export const PropertyFilterOptions: React.FC<IPropertyFilterOptions> = ({ disabl
       prepend={
         <Select
           field="searchBy"
-          customStyles={{ marginLeft: '10px' }}
           options={state.options}
           onChange={reset}
           disabled={disabled}

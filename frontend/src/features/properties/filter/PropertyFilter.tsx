@@ -156,10 +156,10 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
     >
       {({ isSubmitting, setFieldValue, values }) => (
         //@ts-ignore The following line raises a linter error stating that there is no "autoComplete" prop, even though there is.
-        <Form className="container-append" autoComplete="off">
+        <Form autoComplete="off">
           <Container className="map-filter-container">
             <Row>
-              <Col md="auto" className="filter-col pad-top">
+              <Col className="filter-col">
                 <FindMorePropertiesButton
                   buttonText="Find available surplus properties"
                   onEnter={() => {
@@ -175,15 +175,10 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                   }}
                 />
               </Col>
-              <Col md="auto" className="filter-col pad-top">
-                <div className="divider"></div>
-              </Col>
-
-              <Col md="auto" className="filter-col">
+              <Col>
                 {showAllAgencySelect ? (
                   <PropertyFilterAgencyOptions disabled={findMoreOpen} agencies={agencies} />
                 ) : (
-                  <div style={{ paddingTop: '24px' }}>
                     <ParentSelect
                       field="agencies"
                       options={myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies))}
@@ -192,10 +187,9 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                       selectClosest
                       disabled={findMoreOpen}
                     />
-                  </div>
                 )}
               </Col>
-              <Col md="auto" className="filter-col" style={{ paddingTop: 24, width: '150px' }}>
+              <Col className="filter-col">
                 <AsyncTypeahead
                   disabled={
                     (findMoreOpen || values.includeAllProperties === true) &&
@@ -223,7 +217,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                   }
                 />
               </Col>
-              <Col md="auto" className="filter-col" style={{ paddingTop: 24, width: '150px' }}>
+              <Col className="filter-col">
                 <TypeaheadField
                   name="administrativeArea"
                   placeholder="Location"
@@ -238,14 +232,10 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                   disabled={findMoreOpen}
                 />
               </Col>
-              <Col md="auto" className="filter-col property-filter-options">
+              <Col className="dropdown-col">
                 <PropertyFilterOptions disabled={findMoreOpen} />
               </Col>
-              <Col
-                md="auto"
-                className="filter-col"
-                style={{ paddingTop: 24, width: 150, marginRight: '-10px' }}
-              >
+              <Col className="filter-col">
                 <Select
                   field="classificationId"
                   placeholder="Classification"
@@ -253,13 +243,13 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                   disabled={findMoreOpen}
                 />
               </Col>
-              <Col md="auto" className="filter-col pad-top">
+              <Col className="filter-col">
                 <SearchButton
                   disabled={isSubmitting || findMoreOpen}
                   onClick={() => setTriggerFilterChanged && setTriggerFilterChanged(true)}
                 />
               </Col>
-              <Col md="auto" className="filter-col pad-top">
+              <Col className="filter-col">
                 <ResetButton disabled={isSubmitting || findMoreOpen} onClick={resetFilter} />
               </Col>
             </Row>

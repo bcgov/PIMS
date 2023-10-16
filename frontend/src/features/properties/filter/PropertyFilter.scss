@@ -3,23 +3,20 @@
 
 .map-filter-container {
   width: 100%;
-  height: auto;
+  padding-bottom: .25rem;
+  padding-top: .25rem;
   background-color: $filter-background-color;
   .row {
-    width: 100%;
-    height: auto;
-    justify-content: center;
-    .pad-top {
-      padding-top: 1.2rem;
-    }
+    width: max;
     .filter-col {
       align-items: center;
-      padding-left: 5px;
-      padding-right: 5px;
-      max-width: 270px;
+      max-width: fit-content;
+      max-height: fit-content;
+      justify-content: space-evenly;
     }
-    .property-filter-options .input-group {
-      max-width: 240px;
+    .dropdown-col {
+      min-width: auto;
+      justify-content: space-evenly;
     }
     .input-group {
       margin: 0;
@@ -39,14 +36,10 @@
       font-size: 14px;
     }
     .divider {
-      border-left: 2px solid rgba(96, 96, 96, 0.2);
-      height: 40px;
+      border-left: 1px solid rgba(96, 96, 96, 0.2);
+      height: 80px;
       width: 0;
       margin-left: 0;
     }
   }
-}
-.container-append {
-  padding: 0 0 18px 0;
-  background-color: $filter-background-color;
 }
