@@ -8,6 +8,10 @@
   background-color: $filter-background-color;
   .row {
     width: max;
+    .button-col {
+      font-size: 12;
+      display: flex;
+    }
     .filter-col {
       align-items: center;
       max-width: fit-content;
@@ -16,7 +20,7 @@
     }
     .dropdown-col {
       min-width: auto;
-      justify-content: space-evenly;
+      justify-content: center;
     }
     .input-group {
       margin: 0;

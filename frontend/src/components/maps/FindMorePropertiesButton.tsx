@@ -6,10 +6,6 @@ import { BsXSquareFill } from 'react-icons/bs';
 import { FaSign } from 'react-icons/fa';
 import styled from 'styled-components';
 
-const ButtonContent = styled.div`
-  display: flex;
-`;
-
 /** popover that is triggered on button click to display form contents */
 const StyledPopover = styled(Popover)`
   max-width: 100%;
@@ -74,11 +70,9 @@ export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({
       overlay={popover}
       placement="bottom"
     >
-      <Button>
-        <ButtonContent>
-          <FaSign size={20} style={{ marginRight: 5, marginTop: 2 }} />
+      <Button className='button-col'>
+          <FaSign size={20} />
           <p>Surplus Properties</p>
-        </ButtonContent>
       </Button>
     </OverlayTrigger>
   );
