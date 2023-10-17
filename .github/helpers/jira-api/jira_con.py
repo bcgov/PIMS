@@ -147,7 +147,7 @@ def get_summary_list( conn, headers, project_key ):
     jql_project = "project = " + project_key
     jql_text = " AND text ~ \"update from version\""
     jql_status = " AND status != Done"
-    jql_labels = " AND labels = DependencyUpdates"
+    jql_labels = ""
     jql_string = jql_project + jql_text + jql_status + jql_labels
 
     max_results = 100
