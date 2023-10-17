@@ -125,7 +125,7 @@ export const parseCSVString = async (csvContent: string): Promise<IPropertyModel
         parcelId: property.PID,
         pid: property.PID,
         pin: property.PIN ?? '',
-        status: property.Status ?? '',
+        status: getValueOrDefault(property.Status, 'Active'), // Assume active if not specified
         fiscalYear: getFiscalYear(property),
         agency: '', // Not used in API. Leave blank.
         agencyCode: property.Ministry, // Names are misleading here.
