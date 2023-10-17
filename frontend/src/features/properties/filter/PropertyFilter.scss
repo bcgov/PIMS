@@ -11,16 +11,18 @@
     .button-col {
       font-size: 12;
       display: flex;
+      max-height: min-content;
+    }
+    .nested-col {
+      width: max-content;
     }
     .filter-col {
       align-items: center;
-      max-width: fit-content;
-      max-height: fit-content;
-      justify-content: space-evenly;
     }
     .dropdown-col {
-      min-width: auto;
+      max-width: fit-content;
       justify-content: center;
+      flex: auto;
     }
     .input-group {
       margin: 0;

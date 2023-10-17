@@ -72,7 +72,7 @@ export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({
     >
       <Button className='button-col'>
           <FaSign size={20} />
-          <p>Surplus Properties</p>
+          Surplus Properties
       </Button>
     </OverlayTrigger>
   );

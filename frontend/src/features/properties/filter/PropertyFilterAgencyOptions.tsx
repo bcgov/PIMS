@@ -3,7 +3,7 @@ import { Claims } from 'constants/claims';
 import { useFormikContext } from 'formik';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React, { useEffect } from 'react';
-import {  Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 
 import { Select, SelectOption } from '../../../components/common/form';
 import { IPropertyFilter } from './IPropertyFilter';
@@ -49,12 +49,15 @@ export const PropertyFilterAgencyOptions: React.FC<IPropertyFilterAgencyOptions>
 
   return (
     <Row className='dropdown-col'>
+      <Col>
         <Select
           field="includeAllProperties"
           options={state.options}
           onChange={onChange}
           disabled={disabled}
         />
+      </Col>
+      <Col className='nested-col'>
         <ParentSelect
           field="agencies"
           options={agencies}
@@ -65,6 +68,7 @@ export const PropertyFilterAgencyOptions: React.FC<IPropertyFilterAgencyOptions>
             (disabled || includeAllProperties) && !keycloak.hasClaim(Claims.ADMIN_PROPERTIES)
           }
         />
+      </Col>
     </Row>
   );
 };

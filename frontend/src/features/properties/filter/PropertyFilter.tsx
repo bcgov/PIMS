@@ -159,7 +159,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
         <Form autoComplete="off">
           <Container className="map-filter-container">
             <Row>
-              <Col className="filter-col button-col">
+              <Col className="filter-col">
                 <FindMorePropertiesButton
                   buttonText="Find available surplus properties"
                   onEnter={() => {
