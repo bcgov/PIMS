@@ -175,7 +175,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                   }}
                 />
               </Col>
-              <Col>
+              <Col className='dropdown-col'>
                 {showAllAgencySelect ? (
                   <PropertyFilterAgencyOptions disabled={findMoreOpen} agencies={agencies} />
                 ) : (

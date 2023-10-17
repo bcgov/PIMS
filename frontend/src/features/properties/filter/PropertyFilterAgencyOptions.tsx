@@ -48,8 +48,8 @@ export const PropertyFilterAgencyOptions: React.FC<IPropertyFilterAgencyOptions>
   if (typeof includeAllProperties !== 'boolean') includeAllProperties = false;
 
   return (
-    <Row className='dropdown-col'>
-      <Col>
+    <Row>
+      <Col className='agency-col'>
         <Select
           field="includeAllProperties"
           options={state.options}
@@ -57,7 +57,7 @@ export const PropertyFilterAgencyOptions: React.FC<IPropertyFilterAgencyOptions>
           disabled={disabled}
         />
       </Col>
-      <Col className='nested-col'>
+      <Col className='agency-col'>
         <ParentSelect
           field="agencies"
           options={agencies}

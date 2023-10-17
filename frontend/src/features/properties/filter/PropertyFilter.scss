@@ -8,21 +8,24 @@
   background-color: $filter-background-color;
   .row {
     width: max;
-    .button-col {
-      font-size: 12;
-      display: flex;
-      max-height: min-content;
-    }
-    .nested-col {
-      width: max-content;
-    }
+    padding-left: 0;
+    padding-right: 0;
     .filter-col {
       align-items: center;
+      min-width: fit-content;
+      padding-left: 5;
+      padding-right: 5;
     }
     .dropdown-col {
       max-width: fit-content;
       justify-content: center;
       flex: auto;
+      padding-left: 0;
+      padding-right: 0;
+    }
+    .agency-col {
+      padding-left: 0;
+      padding-right: 0;
     }
     .input-group {
       margin: 0;

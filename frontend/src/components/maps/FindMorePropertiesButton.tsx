@@ -70,8 +70,8 @@ export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({
       overlay={popover}
       placement="bottom"
     >
-      <Button className='button-col'>
-          <FaSign size={20} />
+      <Button>
+          <FaSign size={18} />
           Surplus Properties
       </Button>
     </OverlayTrigger>
