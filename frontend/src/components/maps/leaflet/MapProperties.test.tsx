@@ -3,7 +3,9 @@ import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import { IParcel, IParcelDetail, IProperty } from 'actions/parcelsActions';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
+import PointClusterer from 'components/maps/leaflet/PointClusterer';
 import Claims from 'constants/claims';
+import { PropertyTypes } from 'constants/propertyTypes';
 import { mount } from 'enzyme';
 import Enzyme from 'enzyme';
 import { createMemoryHistory } from 'history';
@@ -22,7 +24,6 @@ import Map from './Map';
 import { createPoints } from './mapUtils';
 import SelectedPropertyMarker from './SelectedPropertyMarker/SelectedPropertyMarker';
 
-const { ResizeObserver } = window;
 const mockAxios = new MockAdapter(axios);
 jest.mock('hooks/useKeycloakWrapper');
 Enzyme.configure({ adapter: new Adapter() });
@@ -35,8 +36,9 @@ const userAgency: number = 0;
 
 // This mocks the parcels of land a user can see - should be able to see 2 markers
 const mockParcels = [
-  { id: 1, latitude: 48.455059, longitude: -123.496452, propertyTypeId: 1 },
-  { id: 2, latitude: 53.917065, longitude: -122.749672, propertyTypeId: 0 },
+  { id: 1, latitude: 48.455059, longitude: -123.496452, propertyTypeId: PropertyTypes.BUILDING },
+  { id: 2, latitude: 53.917065, longitude: -122.749672, propertyTypeId: PropertyTypes.PARCEL },
+  { id: 3, latitude: 48.455059, longitude: -123.496452, propertyTypeId: PropertyTypes.PARCEL },
 ] as IProperty[];
 (useApi as unknown as jest.Mock<Partial<PimsAPI>>).mockReturnValue({
   loadProperties: jest.fn(async () => {
@@ -225,6 +227,22 @@ describe('MapProperties View', () => {
     const { loadProperties } = useApi();
     await waitFor(() => expect(loadProperties).toHaveBeenCalledTimes(18), { timeout: 500 });
     expect((loadProperties as jest.Mock).mock.calls[9][0].name).toBe('testname');
+  });
+
+  it('PointClusterer clusters 2 points together', async () => {
+    const mapRef = createRef<LeafletMap>();
+
+    const component = mount(getMap(mapRef, mockParcels, emptyDetails));
+    await waitFor(() => expect(mapRef.current).toBeDefined(), { timeout: 500 });
+    // Get cluster
+    const cluster = component.find(PointClusterer);
+    // Ensure there's only 1
+    await waitFor(
+      () => {
+        expect(cluster.length).toBe(1);
+      },
+      { timeout: 500 },
+    );
   });
 
   xit('filter will fire everytime the search button is clicked', async () => {
