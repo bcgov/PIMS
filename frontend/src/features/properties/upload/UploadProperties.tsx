@@ -68,15 +68,17 @@ export interface IFeedObject {
  * @returns {React.FC} A React component
  */
 export const UploadProperties: React.FC = () => {
-  const [file, setFile] = useState<File>(); // The file used for the upload
-  const [phase, setPhase] = useState<UploadPhase>(UploadPhase.FILE_SELECT); // Controls what the user sees
-  // Monitors the progress of the upload calls
-  const [progress, setProgress] = useState<IProgressState>({
+  const defaultProgress: IProgressState = {
     message: 'Converting CSV file.',
     successes: 0,
     failures: 0,
     totalRecords: 100,
-  });
+  };
+
+  const [file, setFile] = useState<File>(); // The file used for the upload
+  const [phase, setPhase] = useState<UploadPhase>(UploadPhase.FILE_SELECT); // Controls what the user sees
+  // Monitors the progress of the upload calls
+  const [progress, setProgress] = useState<IProgressState>(defaultProgress);
   // A list of objects used to populate the upload feed results
   const [feed, setFeed] = useState<IFeedObject[]>([]);
   const api = useApi();
@@ -93,8 +95,18 @@ export const UploadProperties: React.FC = () => {
     if (files[0]) setFile(files[0]);
   };
 
+  // Called by other components to reset this page
+  const returnToFileUpload = () => {
+    setFile(undefined);
+    setPhase(UploadPhase.FILE_SELECT);
+  };
+
   // When the Start Upload button is clicked...
   const onUpload = async () => {
+    // Set progress to default
+    setFeed([]);
+    setProgress(defaultProgress);
+    setPhase(UploadPhase.DATA_UPLOAD);
     // If the file is defined
     if (file) {
       try {
@@ -180,7 +192,11 @@ export const UploadProperties: React.FC = () => {
           </Col>
           <Col>
             {phase !== UploadPhase.FILE_SELECT ? (
-              <UploadProgress {...{ feed, progress, phase }} />
+              <UploadProgress
+                onReturn={returnToFileUpload}
+                onRestart={onUpload}
+                {...{ feed, progress, phase }}
+              />
             ) : (
               <>
                 <FileInput file={file} onChange={handleFileChange} onDrop={handleFileDrop} />

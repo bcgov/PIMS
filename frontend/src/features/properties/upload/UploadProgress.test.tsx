@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { UploadProgress } from './UploadProgress';
@@ -56,5 +56,33 @@ describe('Testing Progress section for CSV Upload', () => {
     expect(queryByText(/Download Results/)).toBeInTheDocument();
     expect(queryByText(/Successes: 5/)).toBeInTheDocument();
     expect(queryByText(/Failures: 5/)).toBeInTheDocument();
+  });
+
+  it('Buttons in final report are clickable', async () => {
+    progress = { ...progress, message: 'Upload Complete', successes: 5, failures: 5 };
+    phase = UploadPhase.DONE;
+    const onReturn = jest.fn();
+    const onRestart = jest.fn();
+    const { container } = render(
+      <UploadProgress {...{ progress, feed, phase, onRestart, onReturn }} />,
+    );
+    const restartButton = container.querySelector('#restart-upload-button');
+    const returnButton = container.querySelector('#return-to-upload-button');
+
+    await waitFor(() => {
+      fireEvent.click(restartButton!);
+      fireEvent.click(returnButton!);
+    });
+
+    expect(onReturn).toHaveBeenCalledTimes(1);
+    expect(onRestart).toHaveBeenCalledTimes(1);
+
+    // Download button
+    const downloadButton = container.querySelector('#download-results-button');
+    const downloadSpy = jest.spyOn(document, 'createElement');
+    await waitFor(() => {
+      fireEvent.click(downloadButton!);
+    });
+    expect(downloadSpy).toHaveBeenCalledTimes(1);
   });
 });

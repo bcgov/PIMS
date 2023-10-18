@@ -17,6 +17,8 @@ interface IUploadProgressProps {
   phase: UploadPhase;
   progress: IProgressState;
   feed: IFeedObject[];
+  onRestart?: React.MouseEventHandler<HTMLButtonElement> & React.MouseEventHandler<any>;
+  onReturn?: React.MouseEventHandler<HTMLButtonElement> & React.MouseEventHandler<any>;
 }
 
 /**
@@ -25,7 +27,7 @@ interface IUploadProgressProps {
  * @returns {React.FC} A React component
  */
 export const UploadProgress = (props: IUploadProgressProps) => {
-  const { feed, progress, phase } = props;
+  const { feed, progress, phase, onRestart, onReturn } = props;
   // Creates an imaginary link and clicks it to download a file
   const onDownloadResults = () => {
     const csvFile = dataToCsvFile(feed);
@@ -79,22 +81,48 @@ export const UploadProgress = (props: IUploadProgressProps) => {
           ) : (
             <div key={`${item.pid}:${index}`} className="feed-item feed-failure">
               <p>{`PID ${item.pid} failed to upload.`}</p>
-              <p>{`Property Name: ${item.name}`}</p>
+              <p>{`Property Name: ${item.name ?? 'N/A'}`}</p>
             </div>
           ),
         )}
         {phase === UploadPhase.DONE ? (
           <Container id="final-feed-report">
             <Row>
-              <Col sm={6}>
+              <Col sm={7}>
                 <p>Upload completed. {progress.totalRecords} properties processed.</p>
                 <p>Successes: {progress.successes}</p>
                 <p>Failures: {progress.failures}</p>
               </Col>
-              <Col sm={6}>
-                <Button id="download-results-button" onClick={onDownloadResults}>
+              <Col sm={5}>
+                <Button
+                  id="download-results-button"
+                  className="progress-button"
+                  onClick={onDownloadResults}
+                >
                   Download Results
                 </Button>
+                {onRestart ? (
+                  <Button
+                    id="restart-upload-button"
+                    className="progress-button"
+                    onClick={onRestart}
+                  >
+                    Restart Upload
+                  </Button>
+                ) : (
+                  <></>
+                )}
+                {onReturn ? (
+                  <Button
+                    id="return-to-upload-button"
+                    className="progress-button"
+                    onClick={onReturn}
+                  >
+                    Upload New File
+                  </Button>
+                ) : (
+                  <></>
+                )}
               </Col>
             </Row>
           </Container>
