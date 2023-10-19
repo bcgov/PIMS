@@ -51,7 +51,12 @@ const ColumnFilter: React.FC<React.PropsWithChildren<IColumnFilterProps>> = ({
 
   const handleClick = () => {
     if (open) {
-      onFilter(context.values);
+      // Some values added if not in existing context. If not specified as empty string, filter doesn't clear.
+      onFilter({
+        administrativeArea: '',
+        classificationId: '',
+        ...(context.values as object),
+      });
       setOpen(false);
     } else {
       setOpen(true);
