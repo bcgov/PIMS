@@ -71,15 +71,25 @@ const ColumnFilter: React.FC<React.PropsWithChildren<IColumnFilterProps>> = ({
     throw new Error('Column filter settings are required when the column is filterable.');
   }
 
+  console.log(context.values);
+  console.log((column.filter.props || {}).name);
   const hasValue = !!getIn(context.values, (column.filter.props || {}).name);
   const Control = column.filter!.component as any;
 
   const filter = (
     <Wrapper className={clsx('filter-wrapper', { active: hasValue })}>
       {hasValue ? (
-        <FaFilter onClick={handleClick} style={{ fontSize: 10, margin: '0 5' }} />
+        <FaFilter
+          onClick={handleClick}
+          style={{ fontSize: 10, margin: '0 5' }}
+          id="filter-active"
+        />
       ) : (
-        <FiFilter onClick={handleClick} style={{ fontSize: 10, margin: '0 5' }} />
+        <FiFilter
+          onClick={handleClick}
+          style={{ fontSize: 10, margin: '0 5' }}
+          id="filter-inactive"
+        />
       )}
 
       <span onClick={handleClick}>{children}</span>
