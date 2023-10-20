@@ -61,7 +61,7 @@ export type MapProps = {
   administrativeAreas: ILookupCode[];
   lotSizes: number[];
   selectedProperty?: IPropertyDetail | null;
-  onMarkerClick?: (obj: IProperty, position?: [number, number]) => void;
+  onMarkerClick?: () => void;
   onMarkerPopupClose?: (obj: IPropertyDetail) => void;
   onViewportChanged?: (e: MapViewportChangeEvent) => void;
   onMapClick?: (e: LeafletMouseEvent) => void;
@@ -172,6 +172,7 @@ const Map: React.FC<MapProps> = ({
   administrativeAreas,
   selectedProperty,
   onMapClick,
+  onMarkerClick,
   disableMapFilterBar,
   interactive = true,
   sidebarSize,
@@ -453,12 +454,16 @@ const Map: React.FC<MapProps> = ({
             <InventoryLayer
               zoom={zoom}
               bounds={bounds}
-              onMarkerClick={() => {
-                if (!infoOpen) {
-                  setLayersOpen(false);
-                  setInfoOpen(true);
-                }
-              }}
+              onMarkerClick={
+                onMarkerClick
+                  ? onMarkerClick
+                  : () => {
+                      if (!infoOpen) {
+                        setLayersOpen(false);
+                        setInfoOpen(true);
+                      }
+                    }
+              }
               selected={selectedProperty}
               filter={geoFilter}
               onRequestData={setShowFilterBackdrop}

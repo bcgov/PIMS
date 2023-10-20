@@ -34,7 +34,7 @@ const userRoles: string[] | Claims[] = [];
 const userAgencies: number[] = [0];
 const userAgency: number = 0;
 
-// This mocks the parcels of land a user can see - should be able to see 2 markers
+// This mocks the parcels of land a user can see - should be able to see 3 markers
 const mockParcels = [
   { id: 1, latitude: 48.455059, longitude: -123.496452, propertyTypeId: PropertyTypes.BUILDING },
   { id: 2, latitude: 53.917065, longitude: -122.749672, propertyTypeId: PropertyTypes.PARCEL },
@@ -127,6 +127,8 @@ describe('MapProperties View', () => {
     jest.restoreAllMocks();
   });
 
+  const onMarkerClick = jest.fn();
+
   const getMap = (
     mapRef: React.RefObject<LeafletMap>,
     properties: IProperty[],
@@ -143,8 +145,8 @@ describe('MapProperties View', () => {
             selectedProperty={selectedProperty}
             agencies={[]}
             lotSizes={[]}
-            onMarkerClick={jest.fn()}
             administrativeAreas={[]}
+            onMarkerClick={onMarkerClick}
           />
         </MemoryRouter>
       </Provider>
@@ -243,6 +245,25 @@ describe('MapProperties View', () => {
       },
       { timeout: 500 },
     );
+  });
+
+  it('Clicking markers opens the side menu', async () => {
+    const mapRef = createRef<LeafletMap>();
+    const component = render(getMap(mapRef, mockParcels, mockDetails));
+    await waitFor(() => expect(mapRef.current).toBeDefined(), { timeout: 500 });
+    let markers = component.container.querySelectorAll('.leaflet-marker-icon');
+    expect(markers.length).toBe(1); // Only the cluster
+    await waitFor(() => {
+      fireEvent.click(markers.item(0)); // Click to open the cluster
+    });
+    markers = component.container.querySelectorAll('.leaflet-marker-icon');
+    expect(markers.length).toBe(4); // Cluster and three markers
+    await waitFor(() => {
+      fireEvent.click(markers.item(1)); // Click a marker to open side menu (Building)
+      fireEvent.click(markers.item(2)); // Click a marker to open side menu (Land)
+    });
+
+    expect(onMarkerClick).toBeCalledTimes(3); // Clicked once for cluster, twice for markers
   });
 
   xit('filter will fire everytime the search button is clicked', async () => {
