@@ -71,8 +71,6 @@ const ColumnFilter: React.FC<React.PropsWithChildren<IColumnFilterProps>> = ({
     throw new Error('Column filter settings are required when the column is filterable.');
   }
 
-  console.log(context.values);
-  console.log((column.filter.props || {}).name);
   const hasValue = !!getIn(context.values, (column.filter.props || {}).name);
   const Control = column.filter!.component as any;
 
@@ -101,6 +99,7 @@ const ColumnFilter: React.FC<React.PropsWithChildren<IColumnFilterProps>> = ({
                 handleClick();
               }
             }}
+            className="column-input"
           >
             {(column.filter?.props as any)?.injectFormik ? (
               <Control {...column.filter?.props} formikProps={context} />

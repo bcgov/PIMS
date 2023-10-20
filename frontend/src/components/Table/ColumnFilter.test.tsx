@@ -1,4 +1,5 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import ColumnFilter from 'components/Table/ColumnFilter';
 import { ColumnInstanceWithProps } from 'components/Table/types';
 import * as Formik from 'formik';
@@ -8,28 +9,30 @@ describe('Testing ColumnFilter.tsx', () => {
   const useFormikContextMock = jest.spyOn(Formik, 'useFormikContext');
   beforeEach(() => {
     useFormikContextMock.mockReturnValue({
-      context: {
-        values: {
-          searchBy: 'address',
-          pid: '',
-          address: '',
-          administrativeArea: '',
-          name: '',
-          projectNumber: '',
-          agencies: '',
-          classificationId: '',
-          minLotSize: '',
-          maxLotSize: '',
-          rentableArea: '',
-          propertyType: 'Land',
-          maxAssessedValue: '',
-          maxNetBookValue: '',
-          inSurplusPropertyProgram: false,
-          inEnhancedReferralProcess: false,
-          surplusFilter: false,
-        },
+      values: {
+        searchBy: 'address',
+        pid: '',
+        address: '',
+        administrativeArea: '',
+        name: '',
+        projectNumber: '',
+        agencies: '',
+        classificationId: '',
+        minLotSize: '',
+        maxLotSize: '',
+        rentableArea: '',
+        propertyType: 'Land',
+        maxAssessedValue: '',
+        maxNetBookValue: '',
+        inSurplusPropertyProgram: false,
+        inEnhancedReferralProcess: false,
+        surplusFilter: false,
       },
     } as unknown as any);
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
   const column = {
@@ -95,6 +98,77 @@ describe('Testing ColumnFilter.tsx', () => {
     );
     // Open
     const filterButton = container.querySelector('#filter-inactive');
+    await waitFor(() => {
+      fireEvent.click(filterButton!);
+    });
+    expect(useFormikContextMock).toHaveBeenCalledTimes(3);
+
+    // Close
+    await waitFor(() => {
+      fireEvent.click(filterButton!);
+    });
+    expect(useFormikContextMock).toHaveBeenCalledTimes(3);
+  });
+
+  // Skipped because: Cannot seem to select the input field
+  xit('Open inactive filter, populate, use enter to submit', async () => {
+    const { container } = render(
+      <ColumnFilter
+        onFilter={mockFilter}
+        column={column as unknown as ColumnInstanceWithProps<any>}
+      ></ColumnFilter>,
+    );
+    // Open
+    const filterButton = container.querySelector('#filter-inactive');
+    await waitFor(() => {
+      fireEvent.click(filterButton!);
+    });
+    const field = container.querySelector('.column-input');
+    await waitFor(() => {
+      fireEvent.focus(field!);
+      userEvent.type(field!, 'advance');
+      userEvent.keyboard('Enter');
+    });
+    expect(filterButton).not.toBeInTheDocument();
+    expect(container.querySelector('#filter-active')).toBeInTheDocument();
+  });
+
+  it('Open active filter', async () => {
+    useFormikContextMock.mockReturnValue({
+      values: {
+        searchBy: 'address',
+        pid: '',
+        address: '',
+        administrativeArea: '',
+        name: '',
+        projectNumber: '',
+        agencies: ['1'],
+        classificationId: '',
+        minLotSize: '',
+        maxLotSize: '',
+        rentableArea: '',
+        propertyType: 'Land',
+        maxAssessedValue: '',
+        maxNetBookValue: '',
+        inSurplusPropertyProgram: false,
+        inEnhancedReferralProcess: false,
+        surplusFilter: false,
+      },
+    } as unknown as any);
+    const { container } = render(
+      <ColumnFilter
+        onFilter={mockFilter}
+        column={column as unknown as ColumnInstanceWithProps<any>}
+      ></ColumnFilter>,
+    );
+    // Open
+    const filterButton = container.querySelector('#filter-active');
+    await waitFor(() => {
+      fireEvent.click(filterButton!);
+    });
+    expect(useFormikContextMock).toHaveBeenCalledTimes(3);
+
+    // Close
     await waitFor(() => {
       fireEvent.click(filterButton!);
     });
