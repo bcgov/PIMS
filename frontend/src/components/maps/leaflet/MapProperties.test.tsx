@@ -127,8 +127,6 @@ describe('MapProperties View', () => {
     jest.restoreAllMocks();
   });
 
-  const onMarkerClick = jest.fn();
-
   const getMap = (
     mapRef: React.RefObject<LeafletMap>,
     properties: IProperty[],
@@ -146,7 +144,6 @@ describe('MapProperties View', () => {
             agencies={[]}
             lotSizes={[]}
             administrativeAreas={[]}
-            onMarkerClick={onMarkerClick}
           />
         </MemoryRouter>
       </Provider>
@@ -248,8 +245,32 @@ describe('MapProperties View', () => {
   });
 
   it('Clicking markers opens the side menu', async () => {
+    const onMarkerClick = jest.fn();
+    const getMapAlternateClick = (
+      mapRef: React.RefObject<LeafletMap>,
+      properties: IProperty[],
+      selectedProperty: any,
+    ) => {
+      return (
+        <Provider store={store}>
+          <MemoryRouter initialEntries={[history.location]}>
+            <Map
+              lat={48.43}
+              lng={-123.37}
+              zoom={14}
+              properties={properties}
+              selectedProperty={selectedProperty}
+              agencies={[]}
+              lotSizes={[]}
+              administrativeAreas={[]}
+              onMarkerClick={onMarkerClick}
+            />
+          </MemoryRouter>
+        </Provider>
+      );
+    };
     const mapRef = createRef<LeafletMap>();
-    const component = render(getMap(mapRef, mockParcels, mockDetails));
+    const component = render(getMapAlternateClick(mapRef, mockParcels, mockDetails));
     await waitFor(() => expect(mapRef.current).toBeDefined(), { timeout: 500 });
     let markers = component.container.querySelectorAll('.leaflet-marker-icon');
     expect(markers.length).toBe(1); // Only the cluster
