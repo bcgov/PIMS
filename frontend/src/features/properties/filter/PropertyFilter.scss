@@ -12,16 +12,13 @@
     padding-right: 0;
     .filter-col {
       align-items: center;
-      min-width: fit-content;
       padding-left: 5;
       padding-right: 5;
     }
     .dropdown-col {
       max-width: fit-content;
-      justify-content: center;
+      justify-content: space-between;
       flex: auto;
-      padding-left: 0;
-      padding-right: 0;
     }
     .agency-col {
       padding-left: 0;
