@@ -371,13 +371,13 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                       }),
                     );
                   }
-                  onMarkerClick(); //open information slideout
                   if (keycloak.canUserViewProperty(cluster.properties as IProperty)) {
                     fetchProperty(cluster.properties.propertyTypeId, cluster.properties.id);
                   } else {
                     popUpContext.setPropertyInfo(convertedProperty);
                   }
                   popUpContext.setPropertyTypeID(cluster.properties.propertyTypeId);
+                  onMarkerClick(); //open information slideout
                 },
               }}
             />
@@ -422,7 +422,6 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                     }),
                   );
                 }
-                onMarkerClick(); //open information slideout
                 if (keycloak.canUserViewProperty(m.properties as IProperty)) {
                   fetchProperty(m.properties.propertyTypeId, m.properties.id);
                 } else {
@@ -431,6 +430,7 @@ export const PointClusterer: React.FC<PointClustererProps> = ({
                   );
                 }
                 popUpContext.setPropertyTypeID(m.properties.propertyTypeId);
+                onMarkerClick(); //open information slideout
               },
             }}
           />
