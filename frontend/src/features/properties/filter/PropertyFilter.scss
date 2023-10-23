@@ -11,11 +11,14 @@
     padding-left: 0;
     padding-right: 0;
     .filter-col {
+      min-width: min-content;
+      max-width: max-content;
       align-items: center;
-      padding-left: 5;
+      padding-left: 0;
       padding-right: 5;
     }
     .dropdown-col {
+      min-width: min-content;
       max-width: fit-content;
       justify-content: space-between;
       flex: auto;
