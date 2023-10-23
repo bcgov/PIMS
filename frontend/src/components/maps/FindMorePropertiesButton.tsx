@@ -38,14 +38,12 @@ export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({
     );
     return (
       <Popover className='popover-style'>
-        <Row >
           <Popover.Header className='title-content'>
             {' '}
             <Col>
             <TitleContent />{' '}
             </Col>
           </Popover.Header>
-        </Row>
         <Popover.Body>
           <FindMorePropertiesForm />
         </Popover.Body>

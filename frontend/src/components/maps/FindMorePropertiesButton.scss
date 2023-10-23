@@ -9,10 +9,12 @@
 
   .button-sign {
     font-size: 18;
+    max-width: fit-content;
     display: inline;
   }
   .button-text {
     font-size: 14px;
+    max-width: fit-content;
     display: inline;
   }
 }
@@ -21,9 +23,6 @@
   max-width: 100%;
 
     .title-content { 
-      max-width: 100%;
-      min-width: fit-content;
-      justify-content: center;
 
       .close-button {
           justify-content: right;
