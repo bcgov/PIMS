@@ -59,7 +59,7 @@ export const PropertyFilterOptions: React.FC<IPropertyFilterOptions> = ({ disabl
       }
       formikProps={null as any}
       prepend={
-        <Select className='test2'
+        <Select
           field="searchBy"
           options={state.options}
           onChange={reset}
