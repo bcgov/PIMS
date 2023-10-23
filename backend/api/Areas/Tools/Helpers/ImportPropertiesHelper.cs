@@ -238,7 +238,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 _logger.LogDebug($"Add/Update property pid:{parcelId}, type:{property.PropertyType}, fiscal:{property.FiscalYear}, local:{property.LocalId}");
 
                 var validPid = int.TryParse(parcelId?.Replace("-", ""), out int pid);
-                if (!validPid) continue;
+                if (!validPid && property.PropertyType == "Land") continue;
 
                 // Fix postal.
                 property.Postal = new string(property.Postal?.Replace(" ", "").Take(6).ToArray());

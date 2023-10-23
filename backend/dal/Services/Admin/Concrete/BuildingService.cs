@@ -258,12 +258,15 @@ namespace Pims.Dal.Services.Admin
             building.ThrowIfNotAllowedToEdit(nameof(building), this.User, new[] { Permissions.SystemAdmin, Permissions.AgencyAdmin });
 
             var originalBuilding = this.Context.Buildings
+                .Include(b => b.Address).ThenInclude(a => a.Province)
                 .Include(b => b.Classification)
+                .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Address).ThenInclude(a => a.Province)
                 .FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
             this.ThrowIfNotAllowedToUpdate(originalBuilding, _options.Project);
 
             building.PropertyTypeId = originalBuilding.PropertyTypeId;
             var entry = this.Context.Entry(originalBuilding);
+            this.Context.Entry(originalBuilding.Address).CurrentValues.SetValues(building.Address);
             entry.CurrentValues.SetValues(building);
             entry.Collection(p => p.Evaluations).Load();
             entry.Collection(p => p.Fiscals).Load();
