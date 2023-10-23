@@ -7,16 +7,14 @@
   padding-top: .25rem;
   background-color: $filter-background-color;
   .row {
-    width: max;
     padding-left: 0;
     padding-right: 0;
-    justify-content: center;
     .filter-col {
       min-width: min-content;
       max-width: max-content;
       align-items: center;
       padding-left: 0;
-      padding-right: 5;
+      padding-right: 0;
     }
     .button-col {
       min-width: fit-content;
@@ -24,15 +22,25 @@
       padding-left: 0;
       padding-right: 0;
     }
+    .search-button {
+      display: flex;
+      padding-left: 0;
+      padding-right: 0;
+    }
     .dropdown-col {
       min-width: min-content;
       max-width: fit-content;
+      padding-left: 0;
+      padding-right: 0;
       justify-content: space-between;
       flex: auto;
     }
     .agency-col {
+      max-width: fit-content;
+      min-width: min-content;
       padding-left: 0;
       padding-right: 0;
+      display: inline;
     }
     .input-group {
       margin: 0;

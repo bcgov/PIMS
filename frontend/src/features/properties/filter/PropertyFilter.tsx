@@ -243,13 +243,11 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                   disabled={findMoreOpen}
                 />
               </Col>
-              <Col className="filter-col">
+              <Col className="search-button">
                 <SearchButton
                   disabled={isSubmitting || findMoreOpen}
                   onClick={() => setTriggerFilterChanged && setTriggerFilterChanged(true)}
                 />
-              </Col>
-              <Col className="filter-col">
                 <ResetButton disabled={isSubmitting || findMoreOpen} onClick={resetFilter} />
               </Col>
             </Row>
