@@ -56,6 +56,8 @@ export const PropertyFilterAgencyOptions: React.FC<IPropertyFilterAgencyOptions>
           onChange={onChange}
           disabled={disabled}
         />
+        </Col>
+        <Col className='agency-col'>
         <ParentSelect
           field="agencies"
           options={agencies}
