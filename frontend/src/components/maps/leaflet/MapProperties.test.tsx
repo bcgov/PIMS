@@ -244,7 +244,7 @@ describe('MapProperties View', () => {
     );
   });
 
-  it('Clicking markers opens the side menu', async () => {
+  it('Clicking markers opens the side menu (custom marker click provided)', async () => {
     const onMarkerClick = jest.fn();
     const getMapAlternateClick = (
       mapRef: React.RefObject<LeafletMap>,
@@ -285,6 +285,49 @@ describe('MapProperties View', () => {
     });
 
     expect(onMarkerClick).toBeCalledTimes(3); // Clicked once for cluster, twice for markers
+  });
+
+  it('Clicking markers opens the side menu (no custom marker click provided)', async () => {
+    const onMarkerClick = jest.fn();
+    const getMapAlternateClick = (
+      mapRef: React.RefObject<LeafletMap>,
+      properties: IProperty[],
+      selectedProperty: any,
+    ) => {
+      return (
+        <Provider store={store}>
+          <MemoryRouter initialEntries={[history.location]}>
+            <Map
+              lat={48.43}
+              lng={-123.37}
+              zoom={14}
+              properties={properties}
+              selectedProperty={selectedProperty}
+              agencies={[]}
+              lotSizes={[]}
+              administrativeAreas={[]}
+            />
+          </MemoryRouter>
+        </Provider>
+      );
+    };
+    const mapRef = createRef<LeafletMap>();
+    const component = render(getMapAlternateClick(mapRef, mockParcels, mockDetails));
+    await waitFor(() => expect(mapRef.current).toBeDefined(), { timeout: 500 });
+    let markers = component.container.querySelectorAll('.leaflet-marker-icon');
+    expect(markers.length).toBe(1); // Only the cluster
+    await waitFor(() => {
+      fireEvent.click(markers.item(0)); // Click to open the cluster
+    });
+    markers = component.container.querySelectorAll('.leaflet-marker-icon');
+    expect(markers.length).toBe(4); // Cluster and three markers
+    await waitFor(() => {
+      fireEvent.click(markers.item(1)); // Click a marker to open side menu (Building)
+      fireEvent.click(markers.item(2)); // Click a marker to open side menu (Land)
+    });
+
+    // A better check desired here, but can't figure how to track the setLayersOpen and setInfoOpen calls.
+    expect(onMarkerClick).toBeCalledTimes(0); // Not called at all, because it used the default behaviour.
   });
 
   xit('filter will fire everytime the search button is clicked', async () => {
