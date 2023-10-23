@@ -38,7 +38,7 @@ describe('Testing ColumnFilter.tsx', () => {
     jest.resetAllMocks();
   });
 
-  const column = {
+  const column: ColumnInstanceWithProps<any> = {
     Header: 'Agency',
     align: 'left',
     responsive: true,
@@ -71,23 +71,34 @@ describe('Testing ColumnFilter.tsx', () => {
     depth: 0,
     id: 'agencyCode',
     maxWidth: 9007199254740991,
-    sortType: 'alphanumeric',
-    sortDescFirst: false,
     canResize: true,
-    originalWidth: 1.75,
     isVisible: true,
-    totalVisibleHeaderCount: 1,
     totalLeft: 0,
-    totalMinWidth: 80,
     totalWidth: 80,
-    totalMaxWidth: 9007199254740991,
-    totalFlexWidth: 80,
     canSort: true,
     isSorted: false,
     sortedIndex: -1,
     toggleHidden: jest.fn(),
     toggleSortBy: jest.fn(),
     render: jest.fn(),
+    getHeaderProps: jest.fn(),
+    getFooterProps: jest.fn(),
+    getToggleHiddenProps: jest.fn(),
+    canFilter: true,
+    setFilter: jest.fn(),
+    filterValue: '',
+    preFilteredRows: [],
+    filteredRows: [],
+    canGroupBy: true,
+    isGrouped: true,
+    groupedIndex: 0,
+    toggleGroupBy: jest.fn(),
+    getGroupByToggleProps: jest.fn(),
+    getResizerProps: jest.fn(),
+    isResizing: false,
+    getSortByToggleProps: jest.fn(),
+    clearSortBy: jest.fn(),
+    isSortedDesc: true,
   };
 
   const mockFilter = jest.fn();
@@ -114,10 +125,7 @@ describe('Testing ColumnFilter.tsx', () => {
   xit('Close a filter', async () => {
     reactMock.mockReturnValue([true, setState]);
     const { getByText } = render(
-      <ColumnFilter
-        onFilter={mockFilter}
-        column={column as unknown as ColumnInstanceWithProps<any>}
-      >
+      <ColumnFilter onFilter={mockFilter} column={column}>
         Agency
       </ColumnFilter>,
     );
@@ -131,8 +139,8 @@ describe('Testing ColumnFilter.tsx', () => {
   });
 
   // Skipped because: Cannot seem to select the input field
-  xit('Open inactive filter, populate, use enter to submit', async () => {
-    reactMock.mockReturnValue([false, setState]);
+  xit('Populate open filter, use enter to submit', async () => {
+    reactMock.mockReturnValue([true, setState]);
     const { container, getByText } = render(
       <ColumnFilter
         onFilter={mockFilter}
@@ -142,18 +150,12 @@ describe('Testing ColumnFilter.tsx', () => {
       </ColumnFilter>,
     );
     // Open
-    const filterButton = getByText('Agency');
-
-    await waitFor(() => {
-      fireEvent.click(filterButton!);
-    });
     const field = getByText('Filter by agency');
     await waitFor(() => {
       fireEvent.focus(field!);
       userEvent.type(field!, 'advance');
       userEvent.keyboard('Enter');
     });
-    expect(filterButton).not.toBeInTheDocument();
     expect(container.querySelector('#filter-active')).toBeInTheDocument();
   });
 
