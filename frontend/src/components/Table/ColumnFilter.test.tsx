@@ -1,4 +1,4 @@
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ColumnFilter from 'components/Table/ColumnFilter';
 import { ColumnInstanceWithProps } from 'components/Table/types';
@@ -9,6 +9,7 @@ describe('Testing ColumnFilter.tsx', () => {
   const useFormikContextMock = jest.spyOn(Formik, 'useFormikContext');
   const reactMock = jest.spyOn(React, 'useState');
   const setState = jest.fn();
+  screen.debug(undefined, Infinity);
   beforeEach(() => {
     useFormikContextMock.mockReturnValue({
       values: {
@@ -93,14 +94,16 @@ describe('Testing ColumnFilter.tsx', () => {
 
   it('Open inactive filter', async () => {
     reactMock.mockReturnValue([false, setState]);
-    const { container } = render(
+    const { getByText } = render(
       <ColumnFilter
         onFilter={mockFilter}
         column={column as unknown as ColumnInstanceWithProps<any>}
-      ></ColumnFilter>,
+      >
+        Agency
+      </ColumnFilter>,
     );
     // Open
-    const filterButton = container.querySelector('#filter-inactive');
+    const filterButton = getByText('Agency');
     await waitFor(() => {
       fireEvent.click(filterButton!);
     });
@@ -110,15 +113,17 @@ describe('Testing ColumnFilter.tsx', () => {
   // Skipped because: Cannot get handleClick to follow open path
   xit('Close a filter', async () => {
     reactMock.mockReturnValue([true, setState]);
-    const { container } = render(
+    const { getByText } = render(
       <ColumnFilter
         onFilter={mockFilter}
         column={column as unknown as ColumnInstanceWithProps<any>}
-      ></ColumnFilter>,
+      >
+        Agency
+      </ColumnFilter>,
     );
 
     // Close
-    const filterButton = container.querySelector('#filter-inactive');
+    const filterButton = getByText('Agency');
     await waitFor(() => {
       fireEvent.click(filterButton!);
     });
@@ -128,18 +133,21 @@ describe('Testing ColumnFilter.tsx', () => {
   // Skipped because: Cannot seem to select the input field
   xit('Open inactive filter, populate, use enter to submit', async () => {
     reactMock.mockReturnValue([false, setState]);
-    const { container } = render(
+    const { container, getByText } = render(
       <ColumnFilter
         onFilter={mockFilter}
         column={column as unknown as ColumnInstanceWithProps<any>}
-      ></ColumnFilter>,
+      >
+        Agency
+      </ColumnFilter>,
     );
     // Open
-    const filterButton = container.querySelector('#filter-inactive');
+    const filterButton = getByText('Agency');
+
     await waitFor(() => {
       fireEvent.click(filterButton!);
     });
-    const field = container.querySelector('#agencies[0]-field');
+    const field = getByText('Filter by agency');
     await waitFor(() => {
       fireEvent.focus(field!);
       userEvent.type(field!, 'advance');
@@ -172,14 +180,16 @@ describe('Testing ColumnFilter.tsx', () => {
         surplusFilter: false,
       },
     } as unknown as any);
-    const { container } = render(
+    const { getByText } = render(
       <ColumnFilter
         onFilter={mockFilter}
         column={column as unknown as ColumnInstanceWithProps<any>}
-      ></ColumnFilter>,
+      >
+        Agency
+      </ColumnFilter>,
     );
     // Open
-    const filterButton = container.querySelector('#filter-active');
+    const filterButton = getByText('Agency');
     await waitFor(() => {
       fireEvent.click(filterButton!);
     });
