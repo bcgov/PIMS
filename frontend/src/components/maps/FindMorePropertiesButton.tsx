@@ -2,7 +2,7 @@ import './FindMorePropertiesButton.scss';
 
 import FindMorePropertiesForm from 'components/SearchBar/FindMorePropertiesForm';
 import React, { useMemo } from 'react';
-import { Button, OverlayTrigger, Popover, Row, Col } from 'react-bootstrap';
+import { Button, Col, OverlayTrigger, Popover, Row } from 'react-bootstrap';
 import { BsXSquareFill } from 'react-icons/bs';
 import { FaSign } from 'react-icons/fa';
 
@@ -60,13 +60,11 @@ export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({
       overlay={popover}
       placement="bottom"
     >
-      <Button>
-        <Row className="button-content">
-          <Col className="button-sign">
-            <FaSign />
-          </Col>
-          <Col className="button-text">Surplus Properties</Col>
-        </Row>
+      <Button className="surplus-properties-button">
+        <div className="button-content">
+          <FaSign className="button-sign" />
+          <span className="button-text">Surplus Properties</span>
+        </div>
       </Button>
     </OverlayTrigger>
   );

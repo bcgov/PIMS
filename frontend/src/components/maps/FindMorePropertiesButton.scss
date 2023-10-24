@@ -1,37 +1,44 @@
 @import '../../variables';
 @import '../../colors';
 
-.button-content {
-  max-width: fit-content;
-  min-width: min-content;
-  display: inline;
-  .button-sign {
-    font-size: 1rem;
-    max-width: fit-content;
-    display: inline;
-  }
-  .button-text {
-    font-size: 0.9rem;
-    max-width: fit-content;
-    display: inline;
-  }
-}
+.surplus-properties-button {
+  width: 15em;
+  height: 2em;
+  align-items: center;
 
-.popover-style {
-  max-width: 100%;
-  .title-content {
-    .close-button {
-      cursor: pointer;
+  .button-content {
+    max-width: fit-content;
+    min-width: min-content;
+    display: flex;
+    .button-sign {
+      font-size: 1rem;
       max-width: fit-content;
+      display: inline;
     }
-    .sale-sign {
-      font-size: 1.2rem;
-      fill: $primary-color;
+    .button-text {
+      font-size: 0.9rem;
       max-width: fit-content;
-      min-width: min-content;
+      display: inline;
+      margin-left: 0.5em;
     }
-    .title-text {
-      font-size: 1.3rem;
+  }
+
+  .popover-style {
+    max-width: 100%;
+    .title-content {
+      .close-button {
+        cursor: pointer;
+        max-width: fit-content;
+      }
+      .sale-sign {
+        font-size: 1.2rem;
+        fill: $primary-color;
+        max-width: fit-content;
+        min-width: min-content;
+      }
+      .title-text {
+        font-size: 1.3rem;
+      }
     }
   }
 }
