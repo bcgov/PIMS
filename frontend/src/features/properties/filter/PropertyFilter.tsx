@@ -157,7 +157,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
       {({ isSubmitting, setFieldValue, values }) => (
         //@ts-ignore The following line raises a linter error stating that there is no "autoComplete" prop, even though there is.
         <Form autoComplete="off">
-          <Container fluid>
+          <Container fluid className="px-0 map-filter-container">
             <div className="flex-div">
               <FindMorePropertiesButton
                 buttonText="Find available surplus properties"
