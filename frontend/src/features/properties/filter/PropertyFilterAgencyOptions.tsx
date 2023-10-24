@@ -3,7 +3,6 @@ import { Claims } from 'constants/claims';
 import { useFormikContext } from 'formik';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React, { useEffect } from 'react';
-import { Col, Row } from 'react-bootstrap';
 
 import { Select, SelectOption } from '../../../components/common/form';
 import { IPropertyFilter } from './IPropertyFilter';
@@ -48,27 +47,22 @@ export const PropertyFilterAgencyOptions: React.FC<IPropertyFilterAgencyOptions>
   if (typeof includeAllProperties !== 'boolean') includeAllProperties = false;
 
   return (
-    <Row>
-      <Col className="agency-col">
-        <Select
-          field="includeAllProperties"
-          options={state.options}
-          onChange={onChange}
-          disabled={disabled}
-        />
-      </Col>
-      <Col className="agency-col">
-        <ParentSelect
-          field="agencies"
-          options={agencies}
-          filterBy={['code', 'label', 'parent']}
-          placeholder={includeAllProperties ? '' : 'Agency'}
-          selectClosest
-          disabled={
-            (disabled || includeAllProperties) && !keycloak.hasClaim(Claims.ADMIN_PROPERTIES)
-          }
-        />
-      </Col>
-    </Row>
+    <div className="agency-container">
+      <Select
+        field="includeAllProperties"
+        options={state.options}
+        onChange={onChange}
+        disabled={disabled}
+      />
+
+      <ParentSelect
+        field="agencies"
+        options={agencies}
+        filterBy={['code', 'label', 'parent']}
+        placeholder={includeAllProperties ? '' : 'Agency'}
+        selectClosest
+        disabled={(disabled || includeAllProperties) && !keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
+      />
+    </div>
   );
 };

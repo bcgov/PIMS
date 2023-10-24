@@ -3,12 +3,13 @@
 
 .map-filter-container {
   width: 100%;
-  padding-bottom: .25rem;
-  padding-top: .25rem;
+  padding-bottom: 0.25rem;
+  padding-top: 0.25rem;
   background-color: $filter-background-color;
   .row {
     padding-left: 0;
     padding-right: 0;
+    align-items: center;
     .filter-col {
       min-width: min-content;
       max-width: max-content;
@@ -64,6 +65,17 @@
       height: 80px;
       width: 0;
       margin-left: 0;
+    }
+    // For Agency Dropdown
+    .dropdown-menu {
+      width: auto !important;
+    }
+    .menu-item {
+      width: fit-content;
+    }
+    .agency-container {
+      display: flex;
+      padding-left: 1em;
     }
   }
 }
