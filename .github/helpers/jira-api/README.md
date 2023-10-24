@@ -16,9 +16,19 @@ As work progressed we refined the goal into the following steps (note that these
 
 ### Service Account
 
+IDIR: PIMSJIRA
+
+Email: pimsjira@gov.bc.ca
+
 To not have this process dependent on a personal account we are using a service account to generate a JIRA API Key (more information below.) 
 This account's password needs to be updated every 90 days. That can be done using the following process: 
-STEPS GO HERE
+1. Open browser of choice and navigate to pwchange.gov.bc.ca (or any other Gov website)
+    - This will start the process needed to update the password.
+    - Alternatively you can try to log into a workstation (Windows) to trigger the password update.
+2. Take note of the new password and inform team members of the change. 
+    - This may eventually involve updating the password in a password sharing service.
+
+To keep up with password changes or other necessary communications to the service account it is reccomended that one team member add the email to their outlook. The email can also be accessed through summer.gov.bc.ca
 
 ### Jira API key 
 
