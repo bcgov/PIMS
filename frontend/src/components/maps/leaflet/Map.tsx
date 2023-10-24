@@ -376,19 +376,17 @@ const Map: React.FC<MapProps> = ({
       <FilterBackdrop show={showFilterBackdrop} />
       {!disableMapFilterBar && (
         <Container fluid className="px-0 map-filter-container">
-          <Container className="px-0">
-            <PropertyFilter
-              defaultFilter={{
-                ...defaultFilterValues,
-                includeAllProperties: keycloak.hasClaim(Claims.ADMIN_PROPERTIES),
-              }}
-              agencyLookupCodes={agencies}
-              adminAreaLookupCodes={administrativeAreas}
-              onChange={handleMapFilterChange}
-              setTriggerFilterChanged={setTriggerFilterChanged}
-              showAllAgencySelect={true}
-            />
-          </Container>
+          <PropertyFilter
+            defaultFilter={{
+              ...defaultFilterValues,
+              includeAllProperties: keycloak.hasClaim(Claims.ADMIN_PROPERTIES),
+            }}
+            agencyLookupCodes={agencies}
+            adminAreaLookupCodes={administrativeAreas}
+            onChange={handleMapFilterChange}
+            setTriggerFilterChanged={setTriggerFilterChanged}
+            showAllAgencySelect={true}
+          />
         </Container>
       )}
       <Row className="g-0">
