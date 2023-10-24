@@ -375,23 +375,19 @@ const Map: React.FC<MapProps> = ({
     <Container fluid className={classNames('px-0 map', { narrow: sidebarSize === 'narrow' })}>
       <FilterBackdrop show={showFilterBackdrop} />
       {!disableMapFilterBar && (
-        <Container fluid className="px-0 map-filter-container">
-          <Container className="px-0">
-            <PropertyFilter
-              defaultFilter={{
-                ...defaultFilterValues,
-                includeAllProperties: keycloak.hasClaim(Claims.ADMIN_PROPERTIES),
-              }}
-              agencyLookupCodes={agencies}
-              adminAreaLookupCodes={administrativeAreas}
-              onChange={handleMapFilterChange}
-              setTriggerFilterChanged={setTriggerFilterChanged}
-              showAllAgencySelect={true}
-            />
-          </Container>
-        </Container>
+        <PropertyFilter
+          defaultFilter={{
+            ...defaultFilterValues,
+            includeAllProperties: keycloak.hasClaim(Claims.ADMIN_PROPERTIES),
+          }}
+          agencyLookupCodes={agencies}
+          adminAreaLookupCodes={administrativeAreas}
+          onChange={handleMapFilterChange}
+          setTriggerFilterChanged={setTriggerFilterChanged}
+          showAllAgencySelect={true}
+        />
       )}
-      <Row className="g-0">
+      <Row className="g-0 map-row">
         <Col>
           {baseLayers?.length > 0 && (
             <BasemapToggle baseLayers={baseLayers} onToggle={handleBasemapToggle} />
