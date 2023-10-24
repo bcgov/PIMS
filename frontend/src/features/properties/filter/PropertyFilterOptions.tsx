@@ -39,21 +39,19 @@ export const PropertyFilterOptions: React.FC<IPropertyFilterOptions> = ({ disabl
     <InputGroup
       fast={
         searchBy === 'address' ? (
-          <div>
-            <GeocoderAutoComplete
-              placeholder={desc}
-              field="address"
-              value={address}
-              displayErrorTooltips
-              onSelectionChanged={(selection) => {
-                setFieldValue('address', selection.fullAddress);
-                setFieldValue('administrativeArea', selection.administrativeArea);
-              }}
-              onTextChange={(value) => {
-                setFieldValue('address', value);
-              }}
-            />
-          </div>
+          <GeocoderAutoComplete
+            placeholder={desc}
+            field="address"
+            value={address}
+            displayErrorTooltips
+            onSelectionChanged={(selection) => {
+              setFieldValue('address', selection.fullAddress);
+              setFieldValue('administrativeArea', selection.administrativeArea);
+            }}
+            onTextChange={(value) => {
+              setFieldValue('address', value);
+            }}
+          />
         ) : (
           false
         )
