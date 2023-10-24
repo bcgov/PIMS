@@ -49,15 +49,15 @@ export const PropertyFilterAgencyOptions: React.FC<IPropertyFilterAgencyOptions>
 
   return (
     <Row>
-      <Col className='agency-col'>
+      <Col className="agency-col">
         <Select
           field="includeAllProperties"
           options={state.options}
           onChange={onChange}
           disabled={disabled}
         />
-        </Col>
-        <Col className='agency-col'>
+      </Col>
+      <Col className="agency-col">
         <ParentSelect
           field="agencies"
           options={agencies}

@@ -175,18 +175,18 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
                   }}
                 />
               </Col>
-              <Col className='dropdown-col'>
+              <Col className="dropdown-col">
                 {showAllAgencySelect ? (
                   <PropertyFilterAgencyOptions disabled={findMoreOpen} agencies={agencies} />
                 ) : (
-                    <ParentSelect
-                      field="agencies"
-                      options={myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies))}
-                      filterBy={['code', 'label', 'parent']}
-                      placeholder="My Agencies"
-                      selectClosest
-                      disabled={findMoreOpen}
-                    />
+                  <ParentSelect
+                    field="agencies"
+                    options={myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies))}
+                    filterBy={['code', 'label', 'parent']}
+                    placeholder="My Agencies"
+                    selectClosest
+                    disabled={findMoreOpen}
+                  />
                 )}
               </Col>
               <Col className="filter-col">
