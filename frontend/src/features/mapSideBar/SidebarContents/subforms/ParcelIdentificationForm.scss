@@ -16,24 +16,6 @@
     flex-wrap: nowrap;
     align-items: center;
   }
-}
-
-.parcel-identification {
-  max-width: 900px;
-  .suggestionList {
-    margin-top: 40px;
-    margin-left: 50px;
-  }
-  .GeocoderAutoComplete,
-  .AutoCompleteText {
-    width: 230px;
-    align-items: center;
-  }
-  .form-group {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-  }
   h4 {
     margin-bottom: 20px;
     float: left;
@@ -41,12 +23,10 @@
   .bg-warning {
     height: 38px;
   }
-  input,
-  select,
-  .GeocoderAutoComplete {
-    width: 200px;
-  }
   .container {
+    .header-row {
+      text-align: left;
+    }
     .form-check-input {
       width: 15px;
     }
@@ -56,12 +36,6 @@
     .section.disabled {
       pointer-events: none;
       opacity: 0.4;
-    }
-    .label,
-    .form-label {
-      text-align: right;
-      margin-right: 10px;
-      width: 125px;
     }
     .harmful {
       margin: 0px auto;
@@ -74,6 +48,9 @@
       .invalid-feedback {
         display: block;
         font-size: 16px;
+      }
+      p {
+        margin-bottom: 0.25em;
       }
     }
     .section {
@@ -93,31 +70,39 @@
           display: flex;
           justify-content: center;
         }
+        p {
+          text-align: center;
+        }
       }
       .form-group {
         margin-bottom: 0px;
       }
+
       .form-row {
-        margin-bottom: 1rem;
-        display: flex;
-        padding: 0px 20px;
         align-items: center;
-        > input,
-        .input-group,
-        textarea {
-          width: 200px;
-          max-width: 280px;
-          resize: both;
-          .input-group-text {
-            padding: 5px;
-          }
+        margin-bottom: 1em;
+        .col {
+          padding: 0 1em;
         }
-      }
-      .pid-pin {
-        .form-control {
-          width: 140px;
+        .left-column {
+          text-align: right;
+          align-items: center;
+          padding: 0;
+        }
+        .right-column {
+          padding: 0 0.75em;
+        }
+        .input-width {
+          width: 15em;
+        }
+        .input-small {
+          width: 7.5em;
         }
       }
     }
+  }
+  .project-numbers {
+    flex-direction: column;
+    display: flex;
   }
 }

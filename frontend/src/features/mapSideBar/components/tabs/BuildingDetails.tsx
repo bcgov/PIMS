@@ -1,3 +1,5 @@
+import './BuildingDetails.scss';
+
 import { Box, Grid, Stack, Typography } from '@mui/material';
 import {
   Check,
@@ -120,7 +122,11 @@ export const BuildingDetails: React.FC<any> = (props: IBuildingDetailsProps) => 
             <Typography fontSize={fontSize}>Building Name:</Typography>
           </Grid>
           <Grid item xs={rightColumnWidth} sx={rightColumnStyle}>
-            <Input disabled={editInfo.identification} field={withNameSpace('name')} />
+            <Input
+              disabled={editInfo.identification}
+              field={withNameSpace('name')}
+              className="building-details-name"
+            />
           </Grid>
 
           {/* DESCRIPTION FIELD */}

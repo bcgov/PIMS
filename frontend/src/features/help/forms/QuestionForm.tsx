@@ -1,8 +1,10 @@
+import './HelpForms.scss';
+
 import { Input, TextArea } from 'components/common/form';
 import { Formik } from 'formik';
 import { noop } from 'lodash';
 import * as React from 'react';
-import { Form } from 'react-bootstrap';
+import { Col, Container, Form, Row } from 'react-bootstrap';
 
 import { pimsSupportEmail } from '../constants/HelpText';
 import { IHelpForm } from '../interfaces';
@@ -24,6 +26,8 @@ const defaultHelpFormValues: IQuestionForm = {
   question: '',
 };
 
+const leftColumnWidth = 3;
+
 /**
  * Form allowing user to ask a question. The state of this form is synchronized with the parent's mailto.
  */
@@ -40,11 +44,41 @@ const QuestionForm: React.FunctionComponent<QuestionFormProps> = ({ formValues, 
         setMailto(mailto);
       }}
     >
-      <Form>
-        <Input label="User" field="user" style={{ marginLeft: '27px', marginBottom: '5px' }} />
-        <Input label="Email" field="email" style={{ marginLeft: '23px', marginBottom: '5px' }} />
-        <Input label="Page" field="page" style={{ marginLeft: '27px', marginBottom: '5px' }} />
-        <TextArea label="Question" field="question" />
+      <Form className="help-form">
+        <Container>
+          <Row>
+            <Col xs={leftColumnWidth} className="left-column">
+              User
+            </Col>
+            <Col>
+              <Input field="user" />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={leftColumnWidth} className="left-column">
+              Email
+            </Col>
+            <Col>
+              <Input field="email" />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={leftColumnWidth} className="left-column">
+              Page
+            </Col>
+            <Col>
+              <Input field="page" />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={leftColumnWidth} className="left-column">
+              Question
+            </Col>
+            <Col>
+              <TextArea field="question" />
+            </Col>
+          </Row>
+        </Container>
       </Form>
     </Formik>
   );

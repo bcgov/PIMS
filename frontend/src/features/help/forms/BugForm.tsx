@@ -1,8 +1,10 @@
+import './HelpForms.scss';
+
 import { Input, TextArea } from 'components/common/form';
 import { Formik } from 'formik';
 import { noop } from 'lodash';
 import * as React from 'react';
-import { Form } from 'react-bootstrap';
+import { Col, Container, Form, Row } from 'react-bootstrap';
 
 import { pimsSupportEmail } from '../constants/HelpText';
 import { IHelpForm } from '../interfaces';
@@ -28,6 +30,8 @@ const defaultHelpFormValues: IBugForm = {
   actualResult: '',
 };
 
+const leftColumnWidth = 3;
+
 /**
  * Form allowing user to report a bug. The state of this form is synchronized with the parent's mailto.
  */
@@ -44,25 +48,57 @@ const BugForm: React.FunctionComponent<BugFormProps> = ({ formValues, setMailto 
         setMailto(mailto);
       }}
     >
-      <Form>
-        <Input label="User" field="user" style={{ marginLeft: '12px', marginBottom: '5px' }} />
-        <Input label="Email" field="email" style={{ marginLeft: '6px', marginBottom: '5px' }} />
-        <Input label="Page" field="page" style={{ marginLeft: '10px', marginBottom: '10px' }} />
-        <TextArea
-          label="Steps to Reproduce"
-          field="stepsToReproduce"
-          style={{ marginBottom: '5px' }}
-        />
-        <TextArea
-          label="Expected Result"
-          field="expectedResult"
-          style={{ marginLeft: '26px', marginBottom: '5px' }}
-        />
-        <TextArea
-          label="Actual Result"
-          field="actualResult"
-          style={{ marginLeft: '45px', marginBottom: '5px' }}
-        />
+      <Form className="help-form">
+        <Container>
+          <Row>
+            <Col xs={leftColumnWidth} className="left-column">
+              User
+            </Col>
+            <Col>
+              <Input field="user" />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={leftColumnWidth} className="left-column">
+              Email
+            </Col>
+            <Col>
+              <Input field="email" />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={leftColumnWidth} className="left-column">
+              Page
+            </Col>
+            <Col>
+              <Input field="page" />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={leftColumnWidth} className="left-column">
+              Steps to Reproduce
+            </Col>
+            <Col>
+              <TextArea field="stepsToReproduce" />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={leftColumnWidth} className="left-column">
+              Expected Result
+            </Col>
+            <Col>
+              <TextArea field="expectedResult" />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={leftColumnWidth} className="left-column">
+              Actual Result
+            </Col>
+            <Col>
+              <TextArea field="actualResult" />
+            </Col>
+          </Row>
+        </Container>
       </Form>
     </Formik>
   );
