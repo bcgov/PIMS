@@ -2,11 +2,10 @@
 
 .leaflet-container {
   /* Subtract the header, nav-bar and footer sizes */
-  height: calc(
-    100vh - #{$header-height} - #{$navbar-height} - #{$mapfilter-height} - #{$footer-height} - 0.2vh
-  );
-  //margin-top: 12px;
-  // padding-top: 20px;
+  height: 100%;
+  // height: calc(
+  //   100vh - #{$header-height} - #{$navbar-height} - #{$mapfilter-height} - #{$footer-height} - 0.2vh
+  // );
 
   .leaflet-popup-content-wrapper {
     border-radius: 0;
@@ -38,5 +37,12 @@
     label {
       display: flex;
     }
+  }
+}
+
+.map {
+  height: 100%;
+  .map-row {
+    height: 100%;
   }
 }

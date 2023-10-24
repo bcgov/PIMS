@@ -3,23 +3,22 @@
 
 .map-filter-container {
   width: 100%;
-  height: auto;
+  padding-bottom: 0.25rem;
+  padding-top: 0.25rem;
   background-color: $filter-background-color;
+  display: flex;
+  justify-content: center;
   .row {
-    width: 100%;
-    height: auto;
+    padding: 0 0.1em;
+    align-items: center;
     justify-content: center;
-    .pad-top {
-      padding-top: 1.2rem;
-    }
-    .filter-col {
+    width: 100%;
+    .col {
       align-items: center;
-      padding-left: 5px;
-      padding-right: 5px;
-      max-width: 270px;
-    }
-    .property-filter-options .input-group {
-      max-width: 240px;
+      min-width: fit-content;
+      max-width: fit-content;
+      padding: 0;
+      margin: 0 0.5em;
     }
     .input-group {
       margin: 0;
@@ -38,15 +37,26 @@
       border-radius: 0;
       font-size: 14px;
     }
-    .divider {
-      border-left: 2px solid rgba(96, 96, 96, 0.2);
-      height: 40px;
-      width: 0;
-      margin-left: 0;
+
+    // For Agency Dropdown
+    .dropdown-menu {
+      width: auto !important; // So we can see options in full
+    }
+    .menu-item {
+      width: fit-content; // So options take up the space they need
+    }
+    .agency-container {
+      display: flex;
+      padding-left: 1em;
+    }
+    .select-row {
+      width: fit-content;
     }
   }
-}
-.container-append {
-  padding: 0 0 18px 0;
-  background-color: $filter-background-color;
+
+  .flex-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }

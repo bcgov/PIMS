@@ -70,7 +70,7 @@ const MapView: React.FC<MapViewProps> = (props: MapViewProps) => {
   }
   const disableFilter = urlParsed.sidebar === 'true' ? true : false;
   return (
-    <div className={classNames(showSideBar ? 'side-bar' : '', 'd-flex')}>
+    <div className={classNames(showSideBar ? 'side-bar' : 'full-height', 'd-flex')}>
       <MapSideBarContainer properties={properties} />
       <FilterProvider>
         <PropertyPopUpContextProvider>

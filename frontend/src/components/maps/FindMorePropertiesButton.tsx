@@ -1,34 +1,10 @@
-import variables from '_variables.module.scss';
+import './FindMorePropertiesButton.scss';
+
 import FindMorePropertiesForm from 'components/SearchBar/FindMorePropertiesForm';
 import React, { useMemo } from 'react';
-import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
+import { Button, Col, OverlayTrigger, Popover, Row } from 'react-bootstrap';
 import { BsXSquareFill } from 'react-icons/bs';
 import { FaSign } from 'react-icons/fa';
-import styled from 'styled-components';
-
-const ButtonContent = styled.div`
-  display: flex;
-  .p {
-    font-size: 16px;
-  }
-`;
-
-/** popover that is triggered on button click to display form contents */
-const StyledPopover = styled(Popover)`
-  max-width: 100%;
-`;
-
-/** close button displayed in top right of popover title */
-const CloseButton = styled(BsXSquareFill)`
-  margin-left: 256px;
-  cursor: pointer;
-`;
-
-/** icon for sign used within component, styled blue */
-const TitleForSaleSign = styled(FaSign)`
-  fill: ${variables.primaryColor};
-  margin-right: 5px;
-`;
 
 interface IFindMorePropertiesButton {
   /** the text to appear beside the sign icon on the FindMorePropertiesButton */
@@ -48,22 +24,29 @@ export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({
   /** this provides a way to create a form with tooltip like behaviour in the overlay trigger */
   const popover = useMemo(() => {
     const TitleContent = () => (
-      <div style={{ display: 'flex' }}>
-        <TitleForSaleSign size={42} />
-        <h3 style={{ color: variables.primaryColor }}>{buttonText}</h3>
-        <CloseButton onClick={() => document.body.click()} />
-      </div>
+      <Row>
+        <Col className="sale-sign">
+          <FaSign />
+        </Col>
+        <Col className="title-text">
+          <div>{buttonText}</div>
+        </Col>
+        <Col className="close-button">
+          <BsXSquareFill onClick={() => document.body.click()} />
+        </Col>
+      </Row>
     );
     return (
-      <StyledPopover id="popover-basic">
-        <Popover.Header>
-          {' '}
-          <TitleContent />{' '}
+      <Popover className="popover-style">
+        <Popover.Header className="title-content">
+          <Col>
+            <TitleContent />
+          </Col>
         </Popover.Header>
         <Popover.Body>
           <FindMorePropertiesForm />
         </Popover.Body>
-      </StyledPopover>
+      </Popover>
     );
   }, [buttonText]);
 
@@ -77,11 +60,11 @@ export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({
       overlay={popover}
       placement="bottom"
     >
-      <Button style={{ height: 38 }}>
-        <ButtonContent>
-          <FaSign size={20} style={{ marginRight: 5, marginTop: 2 }} />
-          <p style={{ marginBottom: 0 }}>Surplus Properties</p>
-        </ButtonContent>
+      <Button className="surplus-properties-button">
+        <div className="button-content">
+          <FaSign className="button-sign" />
+          <span className="button-text">Surplus Properties</span>
+        </div>
       </Button>
     </OverlayTrigger>
   );
