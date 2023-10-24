@@ -24,26 +24,25 @@ export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({
   /** this provides a way to create a form with tooltip like behaviour in the overlay trigger */
   const popover = useMemo(() => {
     const TitleContent = () => (
-      <Row >
-        <Col className='sale-sign'>
-          <FaSign  />
+      <Row>
+        <Col className="sale-sign">
+          <FaSign />
         </Col>
-        <Col className='title-text'>
-          <div >{buttonText}</div>
+        <Col className="title-text">
+          <div>{buttonText}</div>
         </Col>
-        <Col className='close-button'>
-          <BsXSquareFill  onClick={() => document.body.click()} />
+        <Col className="close-button">
+          <BsXSquareFill onClick={() => document.body.click()} />
         </Col>
       </Row>
     );
     return (
-      <Popover className='popover-style'>
-          <Popover.Header className='title-content'>
-            {' '}
-            <Col>
-            <TitleContent />{' '}
-            </Col>
-          </Popover.Header>
+      <Popover className="popover-style">
+        <Popover.Header className="title-content">
+          <Col>
+            <TitleContent />
+          </Col>
+        </Popover.Header>
         <Popover.Body>
           <FindMorePropertiesForm />
         </Popover.Body>
@@ -61,14 +60,12 @@ export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({
       overlay={popover}
       placement="bottom"
     >
-      <Button >
-        <Row className='button-content'>
-          <Col className='button-sign'>
+      <Button>
+        <Row className="button-content">
+          <Col className="button-sign">
             <FaSign />
           </Col>
-          <Col className='button-text'>
-            Surplus Properties
-          </Col>
+          <Col className="button-text">Surplus Properties</Col>
         </Row>
       </Button>
     </OverlayTrigger>
