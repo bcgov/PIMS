@@ -387,7 +387,7 @@ const Map: React.FC<MapProps> = ({
           showAllAgencySelect={true}
         />
       )}
-      <Row className="g-0">
+      <Row className="g-0 map-row">
         <Col>
           {baseLayers?.length > 0 && (
             <BasemapToggle baseLayers={baseLayers} onToggle={handleBasemapToggle} />
