@@ -158,99 +158,100 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
         //@ts-ignore The following line raises a linter error stating that there is no "autoComplete" prop, even though there is.
         <Form autoComplete="off">
           <Container className="map-filter-container">
-            <Row>
-              <Col className="button-col">
-                <FindMorePropertiesButton
-                  buttonText="Find available surplus properties"
-                  onEnter={() => {
-                    setFindMoreOpen(true);
-                    setFieldValue('surplusFilter', true);
-                    setFieldValue('includeAllProperties', true);
-                    !keycloak.hasClaim(Claims.ADMIN_PROPERTIES) &&
-                      setFieldValue('agencies', undefined);
-                  }}
-                  onExit={() => {
-                    setFindMoreOpen(false);
-                    setFieldValue('surplusFilter', false);
-                  }}
-                />
-              </Col>
-              <Col className="dropdown-col">
-                {showAllAgencySelect ? (
-                  <PropertyFilterAgencyOptions disabled={findMoreOpen} agencies={agencies} />
-                ) : (
-                  <ParentSelect
-                    field="agencies"
-                    options={myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies))}
-                    filterBy={['code', 'label', 'parent']}
-                    placeholder="My Agencies"
+            <div className="flex-div">
+              <FindMorePropertiesButton
+                buttonText="Find available surplus properties"
+                onEnter={() => {
+                  setFindMoreOpen(true);
+                  setFieldValue('surplusFilter', true);
+                  setFieldValue('includeAllProperties', true);
+                  !keycloak.hasClaim(Claims.ADMIN_PROPERTIES) &&
+                    setFieldValue('agencies', undefined);
+                }}
+                onExit={() => {
+                  setFindMoreOpen(false);
+                  setFieldValue('surplusFilter', false);
+                }}
+              />
+
+              <Row>
+                <Col className="dropdown-col">
+                  {showAllAgencySelect ? (
+                    <PropertyFilterAgencyOptions disabled={findMoreOpen} agencies={agencies} />
+                  ) : (
+                    <ParentSelect
+                      field="agencies"
+                      options={myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies))}
+                      filterBy={['code', 'label', 'parent']}
+                      placeholder="My Agencies"
+                      selectClosest
+                      disabled={findMoreOpen}
+                    />
+                  )}
+                </Col>
+                <Col className="filter-col">
+                  <AsyncTypeahead
+                    disabled={
+                      (findMoreOpen || values.includeAllProperties === true) &&
+                      !keycloak.hasClaim(Claims.ADMIN_PROPERTIES)
+                    }
+                    isLoading={initialLoad}
+                    id={`name-field`}
+                    inputProps={{ id: `name-field` }}
+                    placeholder="Property name"
+                    onSearch={() => {
+                      setInitialLoad(true);
+                      fetchPropertyNames()(dispatch).then((results) => {
+                        setOptions(results);
+                        setInitialLoad(false);
+                      });
+                    }}
+                    options={options}
+                    onChange={(newValues: string[]) => {
+                      setFieldValue('name', getIn(newValues[0], 'value') ?? newValues[0]);
+                    }}
+                    ref={ref}
+                    onBlur={(e: any) =>
+                      getIn(values, 'name') !== e.target.value &&
+                      setFieldValue('name', e.target.value)
+                    }
+                  />
+                </Col>
+                <Col className="filter-col">
+                  <TypeaheadField
+                    name="administrativeArea"
+                    placeholder="Location"
                     selectClosest
+                    hideValidation={true}
+                    options={adminAreas.map((x) => x.label)}
+                    onChange={(vals: any) => {
+                      setFieldValue('administrativeArea', getIn(vals[0], 'name') ?? vals[0]);
+                    }}
+                    clearSelected={clear}
+                    setClear={setClear}
                     disabled={findMoreOpen}
                   />
-                )}
-              </Col>
-              <Col className="filter-col">
-                <AsyncTypeahead
-                  disabled={
-                    (findMoreOpen || values.includeAllProperties === true) &&
-                    !keycloak.hasClaim(Claims.ADMIN_PROPERTIES)
-                  }
-                  isLoading={initialLoad}
-                  id={`name-field`}
-                  inputProps={{ id: `name-field` }}
-                  placeholder="Property name"
-                  onSearch={() => {
-                    setInitialLoad(true);
-                    fetchPropertyNames()(dispatch).then((results) => {
-                      setOptions(results);
-                      setInitialLoad(false);
-                    });
-                  }}
-                  options={options}
-                  onChange={(newValues: string[]) => {
-                    setFieldValue('name', getIn(newValues[0], 'value') ?? newValues[0]);
-                  }}
-                  ref={ref}
-                  onBlur={(e: any) =>
-                    getIn(values, 'name') !== e.target.value &&
-                    setFieldValue('name', e.target.value)
-                  }
-                />
-              </Col>
-              <Col className="filter-col">
-                <TypeaheadField
-                  name="administrativeArea"
-                  placeholder="Location"
-                  selectClosest
-                  hideValidation={true}
-                  options={adminAreas.map((x) => x.label)}
-                  onChange={(vals: any) => {
-                    setFieldValue('administrativeArea', getIn(vals[0], 'name') ?? vals[0]);
-                  }}
-                  clearSelected={clear}
-                  setClear={setClear}
-                  disabled={findMoreOpen}
-                />
-              </Col>
-              <Col className="dropdown-col">
-                <PropertyFilterOptions disabled={findMoreOpen} />
-              </Col>
-              <Col className="filter-col">
-                <Select
-                  field="classificationId"
-                  placeholder="Classification"
-                  options={classifications}
-                  disabled={findMoreOpen}
-                />
-              </Col>
-              <Col className="search-button">
+                </Col>
+                <Col className="dropdown-col">
+                  <PropertyFilterOptions disabled={findMoreOpen} />
+                </Col>
+                <Col className="filter-col">
+                  <Select
+                    field="classificationId"
+                    placeholder="Classification"
+                    options={classifications}
+                    disabled={findMoreOpen}
+                  />
+                </Col>
+              </Row>
+              <div className="flex-div">
                 <SearchButton
                   disabled={isSubmitting || findMoreOpen}
                   onClick={() => setTriggerFilterChanged && setTriggerFilterChanged(true)}
                 />
                 <ResetButton disabled={isSubmitting || findMoreOpen} onClick={resetFilter} />
-              </Col>
-            </Row>
+              </div>
+            </div>
           </Container>
         </Form>
       )}

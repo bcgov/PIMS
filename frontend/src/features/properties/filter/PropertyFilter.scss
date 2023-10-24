@@ -6,43 +6,47 @@
   padding-bottom: 0.25rem;
   padding-top: 0.25rem;
   background-color: $filter-background-color;
+  display: flex;
+  justify-content: center;
   .row {
     padding-left: 0;
     padding-right: 0;
     align-items: center;
-    .filter-col {
-      min-width: min-content;
-      max-width: max-content;
+    justify-content: center;
+    width: 100%;
+    .col {
       align-items: center;
-      padding-left: 0;
-      padding-right: 0;
-    }
-    .button-col {
       min-width: fit-content;
       max-width: fit-content;
-      padding-left: 0;
-      padding-right: 0;
+      padding: 0 0.1em;
     }
-    .search-button {
-      display: flex;
-      padding-left: 0;
-      padding-right: 0;
-    }
-    .dropdown-col {
-      min-width: min-content;
-      max-width: fit-content;
-      padding-left: 0;
-      padding-right: 0;
-      justify-content: space-between;
-      flex: auto;
-    }
-    .agency-col {
-      max-width: fit-content;
-      min-width: min-content;
-      padding-left: 0;
-      padding-right: 0;
-      display: inline;
-    }
+    // .filter-col {
+    //   min-width: fit-content;
+    //   max-width: max-content;
+    //   align-items: center;
+    //   padding-left: 0;
+    //   padding-right: 0;
+    // }
+    // .search-button {
+    //   display: flex;
+    //   padding-left: 0;
+    //   padding-right: 0;
+    // }
+    // .dropdown-col {
+    //   min-width: min-content;
+    //   max-width: fit-content;
+    //   padding-left: 0;
+    //   padding-right: 0;
+    //   justify-content: space-between;
+    //   flex: auto;
+    // }
+    // .agency-col {
+    //   max-width: fit-content;
+    //   min-width: min-content;
+    //   padding-left: 0;
+    //   padding-right: 0;
+    //   display: inline;
+    // }
     .input-group {
       margin: 0;
       padding: 0;
@@ -68,14 +72,23 @@
     }
     // For Agency Dropdown
     .dropdown-menu {
-      width: auto !important;
+      width: auto !important; // So we can see options in full
     }
     .menu-item {
-      width: fit-content;
+      width: fit-content; // So options take up the space they need
     }
     .agency-container {
       display: flex;
       padding-left: 1em;
     }
+    .select-row {
+      width: fit-content;
+    }
+  }
+
+  .flex-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
