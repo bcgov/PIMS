@@ -22,23 +22,22 @@
       margin-left: 0.5em;
     }
   }
-
-  .popover-style {
-    max-width: 100%;
-    .title-content {
-      .close-button {
-        cursor: pointer;
-        max-width: fit-content;
-      }
-      .sale-sign {
-        font-size: 1.2rem;
-        fill: $primary-color;
-        max-width: fit-content;
-        min-width: min-content;
-      }
-      .title-text {
-        font-size: 1.3rem;
-      }
+}
+.popover-style {
+  max-width: 100%;
+  .title-content {
+    .close-button {
+      cursor: pointer;
+      max-width: fit-content;
+    }
+    .sale-sign {
+      font-size: 1.2rem;
+      fill: $primary-color;
+      max-width: fit-content;
+      min-width: min-content;
+    }
+    .title-text {
+      font-size: 1.3rem;
     }
   }
 }
