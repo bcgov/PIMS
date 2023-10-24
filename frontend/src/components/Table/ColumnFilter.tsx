@@ -1,4 +1,5 @@
-import variables from '_variables.module.scss';
+import './ColumnFilter.scss';
+
 import clsx from 'classnames';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { getIn, useFormikContext } from 'formik';
@@ -6,7 +7,6 @@ import * as React from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import { FaFilter } from 'react-icons/fa';
 import { FiFilter } from 'react-icons/fi';
-import styled from 'styled-components';
 
 import { ColumnInstanceWithProps } from '.';
 
@@ -16,27 +16,6 @@ interface IColumnFilterProps {
   /** Handle column filter change */
   onFilter: (values: any) => void;
 }
-
-const Wrapper = styled('div')`
-  display: flex;
-  align-items: center;
-  justify-items: center;
-  position: relative;
-  padding: 0 5px;
-`;
-
-const InputContainer = styled('div')`
-  position: absolute;
-  bottom: -55px;
-  left: 0;
-  z-index: 1;
-  min-width: 200px;
-
-  .form-control {
-    border-radius: 0;
-    border-color: ${variables.lightVariantColor};
-  }
-`;
 
 /**
  * Component to display column filter component, used internally by the table
@@ -51,7 +30,12 @@ const ColumnFilter: React.FC<React.PropsWithChildren<IColumnFilterProps>> = ({
 
   const handleClick = () => {
     if (open) {
-      onFilter(context.values);
+      // Some values added if not in existing context. If not specified as empty string, filter doesn't clear.
+      onFilter({
+        administrativeArea: '',
+        classificationId: '',
+        ...(context.values as object),
+      });
       setOpen(false);
     } else {
       setOpen(true);
@@ -70,17 +54,18 @@ const ColumnFilter: React.FC<React.PropsWithChildren<IColumnFilterProps>> = ({
   const Control = column.filter!.component as any;
 
   const filter = (
-    <Wrapper className={clsx('filter-wrapper', { active: hasValue })}>
+    <div className={clsx('filter-wrapper', { active: hasValue })}>
       {hasValue ? (
-        <FaFilter onClick={handleClick} style={{ fontSize: 10, margin: '0 5' }} />
+        <FaFilter onClick={handleClick} className="filter-icon" id="filter-active" />
       ) : (
-        <FiFilter onClick={handleClick} style={{ fontSize: 10, margin: '0 5' }} />
+        <FiFilter onClick={handleClick} className="filter-icon" id="filter-inactive" />
       )}
 
       <span onClick={handleClick}>{children}</span>
       {open && (
         <ClickAwayListener onClickAway={handleClick}>
-          <InputContainer
+          <div
+            className="input-container column-input"
             onKeyUp={(e: any) => {
               if (e.keyCode === 13) {
                 handleClick();
@@ -92,10 +77,10 @@ const ColumnFilter: React.FC<React.PropsWithChildren<IColumnFilterProps>> = ({
             ) : (
               <Control {...column.filter?.props} />
             )}
-          </InputContainer>
+          </div>
         </ClickAwayListener>
       )}
-    </Wrapper>
+    </div>
   );
 
   if (!(column.filter?.props as any)?.tooltip) {

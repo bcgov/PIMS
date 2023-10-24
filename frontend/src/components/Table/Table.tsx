@@ -374,8 +374,9 @@ const Table = <T extends IIdentifiedObject, TFilter extends object>(
     return (
       <div className="sortable-column">
         <ColumnFilter
-          onFilter={() => {
+          onFilter={(newValues) => {
             if (filterFormRef.current?.dirty) {
+              filterFormRef.current.setValues({ ...filterFormRef.current.values, ...newValues });
               filterFormRef.current.submitForm();
             }
           }}
