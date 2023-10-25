@@ -67,4 +67,5 @@ jobs:
             DEPLOYMENT_CONFIG: "api-dc-template.yaml"
             IMAGE_REPOSITORY: ${{ secrets.PUBLIC_IMAGE_REPOSITORY }}
           run: |
-            ./.github/helpers/deploy.sh
+            oc process -f /home/runner/work/PIMS/PIMS/openshift/templates/$DEPLOYMENT_CONFIG --namespace="$OPENSHIFT_NAMESPACE" | \
+            oc apply -f -
