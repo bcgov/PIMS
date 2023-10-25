@@ -67,5 +67,5 @@ jobs:
             DEPLOYMENT_CONFIG: "api-dc-template.yaml"
             IMAGE_REPOSITORY: ${{ secrets.PUBLIC_IMAGE_REPOSITORY }}
           run: |
-            oc process -f /home/runner/work/PIMS/PIMS/openshift/templates/api-dc-template.yaml --namespace=${{ secrets.OPENSHIFT_DEV_NAMESPACE }} | \
+            oc process -f /home/runner/work/PIMS/PIMS/openshift/templates/api-dc-template.yaml --namespace="ec1236-dev" | \
             oc apply -f -
