@@ -34,6 +34,29 @@ To keep up with password changes or other necessary communications to the servic
 
 More information on Jira API keys here: https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/
 
+Because we are using this key within a Python script (create_tickets.py and jira_con.py) and further with the HTTP Python library we need to store the Jira API as a token rather than plain text. There are a few different ways to do this. The method that has been used in this case is using Postman and the following steps:
+
+1. Start a new connection in the Postman app.
+2. If necessary change to a "Get" request
+3. Enter "https://citz-imb.atlassian.net/rest/api/2/issuetype" as the URL
+4. Under Authorization tab:
+   1. Select "Basic Authorization".
+   2. Enter the service account email as the username.
+   3. Enter the API key as the password.
+5. Press "Send" in the Postman App. 
+   - You should see a JSON Body returned with Issue Types and 200 OK. If this is the case jump to step 6.
+   - If you get any other response (401, 400, ect.) 
+       - you may not have permissions set correctly to access Jira. In this case, contact the IMB SAAS team for a permission change. 
+           - https://citz-imb.atlassian.net/servicedesk/customer/portal/4
+       - or you may have set up the API token incorrectly. Try recreating the API key. 
+6. Select the "</>" (Code) button to the right of the Postman app.
+    1. Switch language to Python - http.client
+    2. Copy the generated token from the headers variable:
+    
+    ```headers = { 'Authorization': 'Basic <token_here>', ... }```
+
+    3. This token can then be saved as a Github secret (see more information below) using the variable name "JIRA_API_KEY".
+
 The generated key was then stored in GitHub secrets so that it can be utilized as an environment variable.
 More information on Github secrets and how to use them here: https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions
 
