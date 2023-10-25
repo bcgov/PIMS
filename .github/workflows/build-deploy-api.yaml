@@ -60,9 +60,8 @@ jobs:
             openshift_token: ${{ secrets.OPENSHIFT_SA_DEV_TOKEN }}
             namespace: ${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
 
-        - name: Deploy from DeploymentConfig
+        - name: Deploy DeploymentConfig
           env:
-            OPENSHIFT_NAMESPACE: ${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
             APPLICATION_NAME: "pims-api"
             DEPLOYMENT_CONFIG: "api-dc-template.yaml"
             IMAGE_REPOSITORY: ${{ secrets.PUBLIC_IMAGE_REPOSITORY }}
