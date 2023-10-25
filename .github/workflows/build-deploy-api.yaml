@@ -34,8 +34,15 @@ jobs:
         # Build the API Image
         - name: Build API Image
           run: |
-            docker build -t ${{ secrets.PUBLIC_IMAGE_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/pims-api:dev -f backend/Dockerfile.ocp .
+            docker-compose -f docker-compose.prod.yml build backend
+        
+        - name: List Docker Images
+          run: |
             docker image ls
+
+        - name: Tag API Image
+          run: |
+            docker tag ${{ secrets.PUBLIC_IMAGE_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/pims-api:dev
 
         # Push the API Image
         - name: Push API Image
