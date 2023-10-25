@@ -1,3 +1,5 @@
+import './LandSearchForm.scss';
+
 import { ContentPaste as PasteIcon } from '@mui/icons-material';
 import { Box, IconButton, Tab, Tabs, Tooltip } from '@mui/material';
 import { IParcel } from 'actions/parcelsActions';
@@ -66,7 +68,7 @@ const LandSearchForm = ({
   };
 
   return (
-    <Row className="section g-0">
+    <Row className="section g-0" id="land-search-form">
       <Col md={12}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={tab} onChange={handleTabChange} aria-label="property search tabs">
@@ -77,11 +79,11 @@ const LandSearchForm = ({
 
         {/* Search Tab */}
         <Box role="tabpanel" hidden={tab !== 0} id="parcel-tabpanel-search" sx={{ p: 3 }}>
-          <Row style={{ alignItems: 'center', marginBottom: 5 }}>
-            <Col md={2} style={{ textAlign: 'left' }}>
+          <Row className="row">
+            <Col xs={2} className="left-column">
               <Label>PID</Label>
             </Col>
-            <Col md="auto" style={{ marginLeft: '-11px' }}>
+            <Col xs={4}>
               <Input
                 displayErrorTooltips
                 className="input-small"
@@ -94,17 +96,19 @@ const LandSearchForm = ({
                   return '';
                 }}
                 field={withNameSpace(nameSpace, 'searchPid')}
+                id="pid-field"
               />
             </Col>
-            <Col md="auto" style={{ marginLeft: '-40px' }}>
-              <IconButton onClick={() => handlePasteFromClipboard('searchPid')}>
+            <Col md="auto">
+              <IconButton onClick={() => handlePasteFromClipboard('searchPid')} id="pid-paste">
                 <Tooltip title="Paste From Clipboard">
                   <PasteIcon />
                 </Tooltip>
               </IconButton>
             </Col>
-            <Col md="auto" style={{ marginLeft: '-13px' }}>
+            <Col md="auto">
               <SearchButton
+                id="pid-search"
                 onClick={(e: any) => {
                   e.preventDefault();
                   handlePidChange(searchPid, nameSpace);
@@ -112,11 +116,11 @@ const LandSearchForm = ({
               />
             </Col>
           </Row>
-          <Row style={{ alignItems: 'center', marginBottom: 5 }}>
-            <Col md={2} style={{ textAlign: 'left' }}>
+          <Row className="row">
+            <Col xs={2} className="left-column">
               <Label>PIN</Label>
             </Col>
-            <Col md="auto">
+            <Col xs={4}>
               <FastInput
                 formikProps={formikProps}
                 displayErrorTooltips
@@ -130,29 +134,31 @@ const LandSearchForm = ({
                   return '';
                 }}
                 type="number"
+                id="pin-field"
               />
             </Col>
-            <Col md="auto" style={{ marginLeft: '-27px' }}>
-              <IconButton onClick={() => handlePasteFromClipboard('searchPin')}>
+            <Col md="auto">
+              <IconButton onClick={() => handlePasteFromClipboard('searchPin')} id="pin-paste">
                 <Tooltip title="Paste From Clipboard">
                   <PasteIcon />
                 </Tooltip>
               </IconButton>
             </Col>
-            <Col md="auto" style={{ marginLeft: '-13px' }}>
+            <Col md="auto">
               <SearchButton
                 onClick={(e: any) => {
                   e.preventDefault();
                   handlePinChange(searchPin, nameSpace);
                 }}
+                id="pin-search"
               />
             </Col>
           </Row>
-          <Row style={{ alignItems: 'center' }}>
-            <Col md={2} style={{ textAlign: 'left' }}>
+          <Row className="row">
+            <Col xs={2} className="left-column">
               <Label>Street Address</Label>
             </Col>
-            <Col md="auto">
+            <Col xs={4}>
               <GeocoderAutoComplete
                 value={searchAddress}
                 field={withNameSpace(nameSpace, 'searchAddress')}
@@ -174,15 +180,16 @@ const LandSearchForm = ({
                 displayErrorTooltips
               />
             </Col>
-            <Col md="auto" style={{ marginLeft: '-27px' }}>
+            <Col md="auto">
               <IconButton onClick={() => handlePasteFromClipboard('searchAddress')}>
                 <Tooltip title="Paste From Clipboard">
                   <PasteIcon />
                 </Tooltip>
               </IconButton>
             </Col>
-            <Col md="auto" style={{ marginLeft: '-13px' }}>
+            <Col md="auto">
               <SearchButton
+                id="address-search"
                 disabled={!geocoderResponse}
                 onClick={(e: any) => {
                   e.preventDefault();
@@ -195,7 +202,7 @@ const LandSearchForm = ({
 
         {/* Marker Tab */}
         <Box role="tabpanel" hidden={tab !== 1} id="parcel-tabpanel-marker" sx={{ p: 3 }}>
-          <Row style={{ alignItems: 'center' }}>
+          <Row className="row">
             <Col md="auto">
               Find a parcel on the map and click it to populate the Parcel Details below.
             </Col>

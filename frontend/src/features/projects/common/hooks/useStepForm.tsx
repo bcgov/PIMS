@@ -107,7 +107,7 @@ const useStepForm = () => {
       .catch((error: AxiosError<any>) => {
         const msg: string = error?.response?.data?.error ?? error.toString();
         formikRef?.current?.setStatus({ msg });
-        throw Error('axios request failed');
+        throw Error(`Axios request failed: ${msg}`);
       })
       .finally(() => {
         network.clearRequest(ProjectActions.UPDATE_PROJECT);

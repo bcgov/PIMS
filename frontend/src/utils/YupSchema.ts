@@ -101,10 +101,8 @@ export const FinancialYear = Yup.object({
 
 export const OccupancySchema = Yup.object({
   rentableArea: Yup.number()
-    .min(1, 'Net Usable Area must be greater than 0')
     .max(Yup.ref('totalArea'), 'Net Usable Area cannot be larger than Total Area')
-    .transform(emptyStringToNull)
-    .required('Required'),
+    .transform(emptyStringToNull),
   totalArea: Yup.number()
     .min(Yup.ref('rentableArea'), 'Total Area must not be smaller than Net Usable Area')
     .transform(emptyStringToNull)
@@ -112,7 +110,6 @@ export const OccupancySchema = Yup.object({
   buildingTenancy: Yup.string().max(100, 'Tenancy must be less then 100 characters'),
   buildingTenancyUpdatedOn: Yup.string().when('buildingTenancy', {
     is: (val: string) => val && val.length > 0,
-    then: () => Yup.string().required('Required'),
     otherwise: () => Yup.string().nullable(),
   }),
 });

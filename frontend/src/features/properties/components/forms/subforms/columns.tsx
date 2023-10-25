@@ -180,36 +180,42 @@ export const getAssociatedLandCols = (): any => {
       maxWidth: 50,
       align: 'left',
       Cell: () => <LandSvg className="svg" />,
+      clickable: true,
     },
     {
       Header: 'Property Name',
       accessor: 'name',
       maxWidth: 140,
       align: 'left',
+      clickable: true,
     },
     {
       Header: 'Classification',
       accessor: 'classification',
       maxWidth: 140,
       align: 'left',
+      clickable: true,
     },
     {
       Header: 'Street Address',
       accessor: 'address.line1',
       maxWidth: 140,
       align: 'left',
+      clickable: true,
     },
     {
       Header: 'Lot Size(ha)',
       accessor: 'landArea',
       maxWidth: 140,
       align: 'left',
+      clickable: true,
     },
     {
       Header: 'Location',
       accessor: 'address.administrativeArea',
       maxWidth: 140,
       align: 'left',
+      clickable: true,
     },
   ];
   return associatedLandCols;

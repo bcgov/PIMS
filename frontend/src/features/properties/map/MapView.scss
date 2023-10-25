@@ -39,6 +39,7 @@ $narrowSidebarSize: 700px;
     width 1s;
   margin-left: 0px;
   position: relative;
+  height: 100%;
 }
 .side-bar .map {
   margin-left: 930px;
@@ -50,6 +51,7 @@ $narrowSidebarSize: 700px;
   }
 }
 .side-bar {
+  height: 100%;
   .map-side-drawer {
     margin-left: 0px;
     .scroll {
@@ -58,7 +60,7 @@ $narrowSidebarSize: 700px;
     }
   }
   .map .leaflet-container {
-    height: calc(100vh - #{$header-height} - #{$navbar-height} - #{$footer-height});
+    height: 100%;
   }
   .map-filter-container {
     margin-bottom: -#{$mapfilter-height};
@@ -67,6 +69,9 @@ $narrowSidebarSize: 700px;
   .map .active-selected.leaflet-marker-icon {
     animation: blink 1.25s ease-in infinite;
   }
+}
+.full-height {
+  height: 100%;
 }
 
 @keyframes blink {
