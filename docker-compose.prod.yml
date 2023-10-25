@@ -2,7 +2,6 @@
 services:
   ####################### Backend #######################
   backend:
-    container_name: pims-api
     build:
       context: backend
       dockerfile: Dockerfile.ocp
@@ -11,10 +10,6 @@ services:
 
   ####################### Frontend #######################
   frontend:
-    stdin_open: true
-    tty: true
-    restart: 'no'
-    container_name: pims-app
     build:
       context: frontend
       dockerfile: Dockerfile.ocp
