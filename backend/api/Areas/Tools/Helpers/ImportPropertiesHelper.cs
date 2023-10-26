@@ -227,11 +227,12 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// </summary>
         /// <param name="properties"></param>
         /// <returns></returns>
-        public IEnumerable<Entity.Parcel> AddUpdateProperties(IEnumerable<Model.ImportPropertyModel> properties)
+        public IEnumerable<Model.ImportPropertyModel> AddUpdateProperties(IEnumerable<Model.ImportPropertyModel> properties)
         {
             if (properties == null) throw new ArgumentNullException(nameof(properties));
 
-            var entities = new List<Entity.Parcel>();
+            var entities = new List<Entity.Property>();
+            var propertiesAddedOrEdited = new List<Model.ImportPropertyModel>();
             foreach (var property in properties)
             {
                 var parcelId = property.ParcelId ?? property.PID;
@@ -247,19 +248,45 @@ namespace Pims.Api.Areas.Tools.Helpers
 
                 if (String.Compare(property.PropertyType, "Land") == 0)
                 {
+                    // first check to see if there is an existing parcel with the pid in the database
+                    var isPidAvailable = _pimsAdminService.Parcel.IsPidAvailable(pid);
+
                     entities.Add(AddUpdateParcel(property, pid, agency));
+
+                    // then set whether the property was updated or added based on whether the parcel was already in database or not                    
+                    if (isPidAvailable)
+                    {
+                        property.Added = true;
+                        property.Updated = false;
+                    }
+                    else
+                    {
+                        property.Added = false;
+                        property.Updated = true;
+                    }
+                    propertiesAddedOrEdited.Add(property);
                 }
                 else if (String.Compare(property.PropertyType, "Building") == 0)
                 {
-                    var parcel = AddUpdateBuilding(property, pid, agency);
-                    if (!entities.Any(p => p.PID == parcel.PID))
+                    var isBuildingExisting = _pimsAdminService.Building.GetByNameAddressWithoutTracking(property.Name, property.CivicAddress);
+                    // need to check the count before a building gets added, as the previous variable gets updated once the building has been added
+                    if (isBuildingExisting.Count() == 0)
                     {
-                        entities.Add(parcel);
+                        property.Added = true;
+                        property.Updated = false;
                     }
+                    else
+                    {
+                        property.Added = false;
+                        property.Updated = true;
+                    }
+                    var propertyToAddUpdate = AddUpdateBuilding(property, pid, agency);
+                    entities.Add(propertyToAddUpdate);
+                    propertiesAddedOrEdited.Add(property);
                 }
             }
 
-            return entities;
+            return propertiesAddedOrEdited;
         }
 
         /// <summary>
@@ -410,25 +437,21 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <param name="pid"></param>
         /// <param name="agency"></param>
         /// <returns></returns>
-        private Entity.Parcel AddUpdateBuilding(Model.ImportPropertyModel property, int pid, Entity.Agency agency)
+        private Entity.Building AddUpdateBuilding(Model.ImportPropertyModel property, int pid, Entity.Agency agency)
         {
             var name = GenerateName(property.Name, property.Description, property.LocalId);
             // Multiple buildings could be returned for the PID and Name.
-            var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByPidWithoutTracking(pid, name).FirstOrDefault(n => n.Name == name) ?? throw new KeyNotFoundException());
+            var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByNameAddressWithoutTracking(name, property.CivicAddress).FirstOrDefault(n => n.Name == name) ?? throw new KeyNotFoundException());
             var evaluationDate = new DateTime(property.FiscalYear, 1, 1); // Defaulting to Jan 1st because SIS data doesn't have the actual date.
-            // Find parcel
-            var parcel = ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Parcel.GetByPidWithoutTracking(pid));
+
+            // Find parcel if the building has an associated pid to a parcel, otherwise there is no parcel
+            var parcel = pid != 0 ? ExceptionHelper.HandleKeyNotFound(() => _pimsAdminService.Parcel.GetByPidWithoutTracking(pid)) : null;
 
             // Determine if the last evaluation or fiscal values are older than the one currently being imported.
             var fiscalNetBook = b_e.Fiscals.OrderByDescending(f => f.FiscalYear).FirstOrDefault(f => f.Key == Entity.FiscalKeys.NetBook && f.FiscalYear > property.FiscalYear);
             var evaluationAssessed = b_e.Evaluations.OrderByDescending(e => e.Date).FirstOrDefault(e => e.Key == Entity.EvaluationKeys.Assessed && e.Date > evaluationDate);
 
-            // If the parcel doesn't exist yet we'll need to create a temporary one.
-            if (parcel == null)
-            {
-                parcel = AddUpdateParcel(property, pid, agency);
-                _logger.LogWarning($"Parcel '{property.PID}' was generated for a building that had no parcel.");
-            }
+            // If the parcel is null then the building isn't associated to a parcel, so do nothing --- removed code which added a parcel
 
             // Only want to update the properties with the latest information.
             if (b_e.Id == 0 || fiscalNetBook == null || evaluationAssessed == null)
@@ -437,7 +460,9 @@ namespace Pims.Api.Areas.Tools.Helpers
                 b_e.PropertyTypeId = (int)Entity.PropertyTypes.Building;
                 b_e.AgencyId = agency?.Id ?? throw new KeyNotFoundException($"Agency '{property.Agency}' does not exist.");
                 b_e.Agency = agency;
-                if (!b_e.Parcels.Any(pb => pb.ParcelId == parcel.Id))
+
+                // if the building has an associated land, then there will be a PID. This is where the association is created when a new ParcelBuilding entry is created for the building and the parcel.
+                if (property.PID != null && property.PID != "")
                     b_e.Parcels.Add(new Entity.ParcelBuilding(parcel, b_e) { Parcel = null, Building = null });
                 b_e.Name = name;
                 b_e.Description = property.Description.ConvertToUTF8(false);
@@ -534,7 +559,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 _logger.LogDebug($"Updating building '{property.LocalId}' to parcel '{property.PID}'");
             }
 
-            return parcel;
+            return b_e;
         }
 
         /// <summary>
@@ -546,7 +571,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// <returns></returns>
         private string GenerateName(string name, string description = null, string localId = null)
         {
-            return (localId == null ? null : $"{localId.ConvertToUTF8()} ") +
+            return (localId == null ? null : $"{localId.ConvertToUTF8()}") +
                 (name != null ? name.ConvertToUTF8() : description?.Substring(0, 150 < description.Length ? 150 : description.Length).Trim().ConvertToUTF8());
         }
         #endregion

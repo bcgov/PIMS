@@ -3,6 +3,8 @@ namespace Pims.Api.Areas.Tools.Models.Import
     public class ImportPropertyModel
     {
         #region Properties
+        public bool Updated { get; set; }
+        public bool Added { get; set; }
         public string ParcelId { get; set; }
         public string PID { get; set; }
         public string PIN { get; set; }

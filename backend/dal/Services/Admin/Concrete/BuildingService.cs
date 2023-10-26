@@ -112,6 +112,27 @@ namespace Pims.Dal.Services.Admin
                 .AsNoTracking().Where(b => b.Parcels.Any(pb => pb.Parcel.PID == pid) && (name == null || EF.Functions.Like(b.Name, $"{name}%")));
         }
 
+
+        /// <summary>
+        /// Get the building for the specified 'name' and 'address'.
+        /// This searched for a name and address that equals the passed in arguments
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public IEnumerable<Building> GetByNameAddressWithoutTracking(string name, string address)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
+
+            return this.Context.Buildings
+                .Include(p => p.BuildingConstructionType)
+                .Include(p => p.BuildingPredominateUse)
+                .Include(p => p.BuildingOccupantType)
+                .Include(p => p.Address).ThenInclude(a => a.Province)
+                .Include(p => p.Agency).ThenInclude(a => a.Parent)
+                .AsNoTracking().Where(b => b.Address.Address1.Equals(address) && b.Name.Equals(name));
+        }
+
         /// <summary>
         /// Get the building for the specified 'name'.
         /// </summary>

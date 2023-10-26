@@ -152,6 +152,11 @@ namespace Pims.Dal.Services.Admin
                 .AsNoTracking().SingleOrDefault(u => u.Id == id) ?? throw new KeyNotFoundException();
         }
 
+        public bool IsPidAvailable(int PID)
+        {
+            return !Context.Parcels.Any(parcel => parcel.PID == PID);
+        }
+
         /// <summary>
         /// Get the parcel for the specified 'pid'.
         /// </summary>

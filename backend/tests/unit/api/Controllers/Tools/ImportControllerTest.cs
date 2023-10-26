@@ -64,6 +64,7 @@ namespace Pims.Api.Test.Controllers.Tools
                 new Model.ImportPropertyModel()
                 {
                     ParcelId = "123-123-123",
+                    PID = "123-123-123",
                     LocalId = "test",
                     PropertyType = "Land",
                     AgencyCode = "AEST",
@@ -97,7 +98,7 @@ namespace Pims.Api.Test.Controllers.Tools
 
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
-            var data = Assert.IsAssignableFrom<IEnumerable<Model.ParcelModel>>(actionResult.Value);
+            var data = Assert.IsAssignableFrom<IEnumerable<Model.ImportPropertyModel>>(actionResult.Value);
             Assert.Equal(properties.First().ParcelId, data.First().PID);
             service.Verify(m => m.BuildingConstructionType.GetAll(), Times.Once());
             service.Verify(m => m.BuildingPredominateUse.GetAll(), Times.Once());
