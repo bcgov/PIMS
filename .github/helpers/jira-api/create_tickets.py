@@ -90,7 +90,30 @@ def refine_dep( level_flags, dep_in, summary_li ):
     updates = ( li_patch, li_minor, li_major, )
     return updates
 
-def create_and_post_tickets( conn, headers, updates, project_key ):
+def post_subtasks( conn, headers, subtask_lists ):
+    """
+    Goes through each section of dependency updates and sends as many requests as needed.
+
+    Args:
+      subtask_json (tuple): holds lists of json objects to be sent as requests.
+    """
+
+    # break apart subtasks
+    json_patch = subtask_lists[0]
+    json_minor = subtask_lists[1]
+    json_major = subtask_lists[2]
+
+    # post all three sub task groups
+    for ele in json_patch:
+        jira_con.post_subtasks( conn, headers, ele )
+
+    for ele in json_minor:
+        jira_con.post_subtasks( conn, headers, ele )
+
+    for ele in json_major: 
+        jira_con.post_subtasks( conn, headers, ele )
+
+def create_tickets( conn, headers, updates, project_key ):
     """
     This function captures the work necessary for creating, finalization, and posting tickets. 
 
@@ -102,17 +125,14 @@ def create_and_post_tickets( conn, headers, updates, project_key ):
     """
 
     # check the number of tickets to post
-    too_many_tickets, updates = refine_tickets.check_num_tickets( updates )
+    updates = refine_tickets.check_num_tickets( updates )
     # create parent ticket and post it
     parent_ticket_json = refine_tickets.create_parent_ticket( project_key, updates )
     parent_key = jira_con.post_parent_ticket( conn, headers, parent_ticket_json )
     # create sub tasks and post them
     subtask_json = refine_tickets.create_tickets( updates, project_key, parent_key )
-    jira_con.post_subtasks( conn, headers, subtask_json )
 
-    # if too many tickets flag was set allow the script to finish but then exit with an error
-    if too_many_tickets:
-        sys.exit("WARN: Too many tickets")
+    return subtask_json
 
 def main():
     """ Works through the steps to refine dependency list and then create tickets in JIRA. """
@@ -132,9 +152,11 @@ def main():
     # refine dependencies
     updates = refine_dep( level_flags, dep_in, summary_li )
 
-    # create and post all tickets
-    create_and_post_tickets( conn, headers, updates, project_key )
+    # create all tickets
+    json_lists = create_tickets( conn, headers, updates, project_key )
 
+    # Post all tickest
+    post_subtasks( conn, headers, json_lists )
 
 if __name__=="__main__":
     main()
