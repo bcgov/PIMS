@@ -75,10 +75,6 @@ export const Instructions = () => (
     <ul>
       <li>A critical failure in the API will fail the entire payload of up to 100 properties.</li>
       <li>
-        Progress for buildings is not tracked accurately if multiple buildings with the same PID are
-        uploaded. If one is successful, they all are.
-      </li>
-      <li>
         Names of cities in the Location field must match what is already in the database. Otherwise,
         the property will be rejected.
       </li>

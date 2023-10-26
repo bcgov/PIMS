@@ -218,7 +218,12 @@ export const useApi = (props?: IApiProps): PimsAPI => {
     const rejectedProperties: IPropertyModel[] = [];
     if (data.length !== properties.length) {
       properties.forEach((property) => {
-        if (data.some((returnedProperty) => returnedProperty.pid === property.pid)) {
+        if (
+          data.some(
+            (returnedProperty) =>
+              returnedProperty.pid === property.pid && returnedProperty.name === property.name,
+          )
+        ) {
           // Was it uploaded or added?
           const addedProperty = data.find(
             (currentProperty) => currentProperty.pid === property.pid,
