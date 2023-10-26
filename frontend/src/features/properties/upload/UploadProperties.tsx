@@ -60,7 +60,10 @@ interface IImportedPropertyResponse {
 export interface IFeedObject {
   pid: string;
   success: boolean;
+  type: string;
   name?: string;
+  added?: boolean;
+  updated?: boolean;
 }
 
 /**
@@ -143,10 +146,24 @@ export const UploadProperties: React.FC = () => {
             // Update Feed
             const newFeedItems: IFeedObject[] = [];
             response.acceptedProperties.forEach((property) =>
-              newFeedItems.push({ pid: property.pid, success: true }),
+              newFeedItems.push({
+                pid: property.pid,
+                success: true,
+                updated: property.updated,
+                added: property.added,
+                type: property.propertyType,
+                name: property.name,
+              }),
             );
             response.rejectedProperties.forEach((property) =>
-              newFeedItems.push({ pid: property.pid, success: false, name: property.name }),
+              newFeedItems.push({
+                pid: property.pid,
+                success: false,
+                name: property.name,
+                type: property.propertyType,
+                updated: false,
+                added: false,
+              }),
             );
             setFeed((prevFeed) => [...prevFeed, ...newFeedItems]);
           } catch (e: unknown) {
@@ -163,7 +180,12 @@ export const UploadProperties: React.FC = () => {
             });
             const newFeedItems: IFeedObject[] = [];
             currentChunk.forEach((property) =>
-              newFeedItems.push({ pid: property.pid, success: false, name: property.name }),
+              newFeedItems.push({
+                pid: property.pid,
+                success: false,
+                name: property.name,
+                type: property.propertyType,
+              }),
             );
             setFeed((prevFeed) => [...prevFeed, ...newFeedItems]);
             console.error('Following error occurred:', (e as AxiosError).response?.data);

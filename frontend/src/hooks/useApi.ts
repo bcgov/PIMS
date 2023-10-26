@@ -219,13 +219,21 @@ export const useApi = (props?: IApiProps): PimsAPI => {
     if (data.length !== properties.length) {
       properties.forEach((property) => {
         if (data.some((returnedProperty) => returnedProperty.pid === property.pid)) {
-          acceptedProperties.push(property);
+          // Was it uploaded or added?
+          const addedProperty = data.find(
+            (currentProperty) => currentProperty.pid === property.pid,
+          );
+          acceptedProperties.push({
+            ...property,
+            updated: addedProperty?.updated,
+            added: addedProperty?.added,
+          });
         } else {
           rejectedProperties.push(property);
         }
       });
     } else {
-      acceptedProperties = properties;
+      acceptedProperties = data;
     }
     return {
       responseCode: status,

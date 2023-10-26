@@ -74,13 +74,14 @@ export const UploadProgress = (props: IUploadProgressProps) => {
       <div id="results-feed">
         {feed.map((item, index) =>
           item.success ? (
-            <div
-              key={`${item.pid}:${index}`}
-              className="feed-item feed-success"
-            >{`PID ${item.pid} uploaded successfully.`}</div>
+            <div key={`${item.pid}:${index}`} className="feed-item feed-success">{`${
+              item.type === 'Land' ? 'Parcel' : 'Building'
+            } with PID ${item.pid} ${item.updated ? 'updated' : 'added'} successfully.`}</div>
           ) : (
             <div key={`${item.pid}:${index}`} className="feed-item feed-failure">
-              <p>{`PID ${item.pid} failed to upload.`}</p>
+              <p>{`${item.type === 'Land' ? 'Parcel' : 'Building'} with PID ${
+                item.pid
+              } failed to upload.`}</p>
               <p>{`Property Name: ${item.name ?? 'N/A'}`}</p>
             </div>
           ),

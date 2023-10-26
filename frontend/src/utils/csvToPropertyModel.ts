@@ -29,6 +29,8 @@ export interface IPropertyModel {
   buildingRentableArea: string;
   assessed: string;
   netBook: string;
+  added?: boolean; // Only when received from API
+  updated?: boolean;
 }
 
 // This is the model that is created from CSV files exported from PIMS.
