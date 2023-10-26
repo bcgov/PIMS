@@ -128,6 +128,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.BuildingConstructionType)
                 .Include(p => p.BuildingPredominateUse)
                 .Include(p => p.BuildingOccupantType)
+                .Include(p => p.Parcels)
                 .Include(p => p.Address).ThenInclude(a => a.Province)
                 .Include(p => p.Agency).ThenInclude(a => a.Parent)
                 .AsNoTracking().Where(b => b.Address.Address1.Equals(address) && b.Name.Equals(name));
