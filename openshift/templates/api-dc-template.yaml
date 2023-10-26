@@ -36,7 +36,7 @@ spec:
         from:
           kind: ImageStreamTag
           namespace: ec1236-tools
-          name: 'pims-api:latest'
+          name: 'pims-api:dev'
   replicas: 2
   revisionHistoryLimit: 10
   test: false

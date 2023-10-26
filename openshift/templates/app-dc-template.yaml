@@ -1,0 +1,133 @@
+kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
+metadata:
+  annotations:
+    description: Defines how to deploy pims-app
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","metadata":{"annotations":{"description":"Defines
+      how to deploy
+      pims-app"},"labels":{"app":"pims","env":"dev","name":"pims-app","role":"app"},"name":"pims-app","namespace":"ec1236-dev"},"spec":{"replicas":2,"selector":{"app":"pims","env":"dev","name":"pims-app","role":"app"},"strategy":{"rollingParams":{"intervalSeconds":1,"maxSurge":"25%","maxUnavailable":"25%","timeoutSeconds":600,"updatePeriodSeconds":1},"type":"Rolling"},"template":{"metadata":{"labels":{"app":"pims","env":"dev","name":"pims-app","role":"app"},"name":"pims-app"},"spec":{"containers":[{"env":[{"name":"API_URL","value":""},{"name":"API_SERVICE_NAME","value":"pims-api"},{"name":"API_PATH","value":"/api"},{"name":"RealIpFrom","value":"172.51.0.0/16"}],"image":"","imagePullPolicy":"Always","livenessProbe":{"failureThreshold":3,"httpGet":{"path":"/nginx_status","port":8080,"scheme":"HTTP"},"initialDelaySeconds":30,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":60},"name":"pims-app","ports":[{"containerPort":8080,"protocol":"TCP"}],"readinessProbe":{"failureThreshold":3,"httpGet":{"path":"/nginx_status","port":8080,"scheme":"HTTP"},"initialDelaySeconds":10,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":60},"resources":{"limits":{"cpu":"250m","memory":"500Mi"},"requests":{"cpu":"50m","memory":"50Mi"}},"volumeMounts":[{"mountPath":"/tmp/app/dist/keycloak.json","name":"pims-app-keycloak","subPath":"keycloak.json"},{"mountPath":"/tmp/app/dist/environment.json","name":"pims-app-envvars","subPath":"environment.json"}]}],"dnsPolicy":"ClusterFirst","restartPolicy":"Always","securityContext":{},"terminationGracePeriodSeconds":30,"volumes":[{"configMap":{"items":[{"key":"keycloak.json","path":"keycloak.json"}],"name":"pims-app-sso"},"name":"pims-app-keycloak"},{"configMap":{"items":[{"key":"environment.json","path":"environment.json"}],"name":"pims-app-env"},"name":"pims-app-envvars"}]}},"test":false,"triggers":[{"type":"ConfigChange"},{"imageChangeParams":{"automatic":true,"containerNames":["pims-app"],"from":{"kind":"ImageStreamTag","name":"pims-app:dev","namespace":"ec1236-tools"}},"type":"ImageChange"}]}}
+  name: pims-app
+  namespace: ec1236-dev
+  labels:
+    app: pims
+    env: dev
+    name: pims-app
+    role: app
+spec:
+  strategy:
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 600
+      maxUnavailable: 25%
+      maxSurge: 25%
+    resources: {}
+    activeDeadlineSeconds: 21600
+  triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - pims-app
+        from:
+          kind: ImageStreamTag
+          namespace: ec1236-tools
+          name: 'pims-app:dev'
+  replicas: 2
+  revisionHistoryLimit: 10
+  test: false
+  selector:
+    app: pims
+    env: dev
+    name: pims-app
+    role: app
+  template:
+    metadata:
+      name: pims-app
+      creationTimestamp: null
+      labels:
+        app: pims
+        env: dev
+        name: pims-app
+        role: app
+    spec:
+      volumes:
+        - name: pims-app-keycloak
+          configMap:
+            name: pims-app-sso
+            items:
+              - key: keycloak.json
+                path: keycloak.json
+            defaultMode: 420
+        - name: pims-app-envvars
+          configMap:
+            name: pims-app-env
+            items:
+              - key: environment.json
+                path: environment.json
+            defaultMode: 420
+        - name: pims-file-storage
+          persistentVolumeClaim:
+            claimName: pims-file-storage
+      containers:
+        - resources:
+            limits:
+              cpu: 150m
+              memory: 1Gi
+            requests:
+              cpu: 50m
+              memory: 100Mi
+          readinessProbe:
+            httpGet:
+              path: /nginx_status
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            timeoutSeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          name: pims-app
+          livenessProbe:
+            httpGet:
+              path: /nginx_status
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            timeoutSeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          env:
+            - name: API_URL
+            - name: API_SERVICE_NAME
+              value: pims-api
+            - name: API_PATH
+              value: /api
+            - name: RealIpFrom
+              value: 172.51.0.0/16
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: pims-app-keycloak
+              mountPath: /tmp/app/dist/keycloak.json
+              subPath: keycloak.json
+            - name: pims-app-envvars
+              mountPath: /tmp/app/dist/environment.json
+              subPath: environment.json
+            - name: pims-file-storage
+              mountPath: /tmp/app/dist/videos
+          terminationMessagePolicy: File
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/ec1236-tools/pims-app@sha256:980dbb334a0cd8e360fca1fa3290d5e9b1016b9929347fa7b84e0e21082471fc
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
