@@ -47,8 +47,11 @@ def get_length(in_li):
 
     len_in_li = 0
 
+    # test if list is empty, if yes return 0
+    if in_li == []:
+        len_in_li = 0
     # test to see if we have a list or a list of lists
-    if isinstance(in_li[0], list):
+    elif isinstance(in_li[0], list):
         # count the number of elements of each sub list and save totals in a list
         ele_counter = [len(v) for v in in_li]
         # sum all totals
