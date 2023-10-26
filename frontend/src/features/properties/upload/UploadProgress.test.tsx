@@ -36,16 +36,24 @@ describe('Testing Progress section for CSV Upload', () => {
       {
         pid: '1234',
         success: true,
+        name: 'Property 1',
+        added: true,
+        updated: false,
+        type: 'Land',
       },
       {
         pid: '4321',
         success: false,
+        name: 'Property 2',
+        added: false,
+        updated: true,
+        type: 'Building',
       },
     );
     phase = UploadPhase.DATA_UPLOAD;
     const { queryByText } = render(<UploadProgress {...{ progress, feed, phase }} />);
-    expect(queryByText(/PID 1234 uploaded successfully/)).toBeInTheDocument();
-    expect(queryByText(/PID 4321 failed to upload/)).toBeInTheDocument();
+    expect(queryByText(/Parcel with PID 1234 added successfully/)).toBeInTheDocument();
+    expect(queryByText(/Building with PID 4321 failed to upload/)).toBeInTheDocument();
   });
 
   it('Final report is visible when upload complete', () => {
