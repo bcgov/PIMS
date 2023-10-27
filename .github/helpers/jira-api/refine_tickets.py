@@ -4,7 +4,7 @@ import sys
 import json
 import datetime
 
-JIRA_SUBTASK = "10003"
+# Global var to set number of tickets we can post in one request.
 MAX_TICKETS = 50
 
 ###################################################################################################
@@ -17,7 +17,7 @@ MAX_TICKETS = 50
 def break_update_down( update ):
     """
     Takes in a string with an update detailed and rearanges to the format we want
-      "Update <dependency> from `<old version>` to `<new version>'
+      "Update <dependency> from `<old version>` to `<new version>`
     
     Args:
       update (string): string holding current dependency update
@@ -42,7 +42,7 @@ def get_length(in_li):
     Returns:
       len_in_li (int): the total number of all elements within the list brought in. 
         ex. if in_li = [1, 2, 3] we return 3. 
-            if in_li = [[1, 2], [3, 4]] we return 4.
+            if in_li = [[1], [2], 3] we return 3.
     """
 
     len_in_li = 0
@@ -50,13 +50,14 @@ def get_length(in_li):
     # test if list is empty, if yes return 0
     if in_li == []:
         len_in_li = 0
-    # test to see if we have a list or a list of lists
+    # test to see if we have a list of lists
     elif isinstance(in_li[0], list):
         # count the number of elements of each sub list and save totals in a list
         ele_counter = [len(v) for v in in_li]
         # sum all totals
         len_in_li = sum( ele_counter )
     else:
+        # if we have a regular list we can just return the length
         len_in_li = len( in_li )
 
     return len_in_li
@@ -70,7 +71,7 @@ def create_parent_ticket( project_key, updates ):
       updates (tuple(lists)): tuple of the three update lists
 
     Returns:
-      parent_key (string): captures key of created ticket 
+      parent_key (string): captures json object holding parent ticket request.
     """
 
     # get current day and format as Mon DD, YYYY
@@ -117,11 +118,11 @@ def create_parent_ticket( project_key, updates ):
 
     return parent_ticket
 
-def create_subtasks( version, update_list, parent_key, project_key ):
+def create_subtasks( version, update_list, parent_key, project_key, jira_subtask ):
     """
     For every element in update_list we create a ticket dictionary and add it to the list of
     elements. Then we create an overarching dictionary with one parent element. Then it is 
-    converted to a JSON object. 
+    converted to a Json object. This Json object is then added to a list of elements.
 
     Args: 
       version (string): delegation between minor/major/patch update
@@ -129,9 +130,10 @@ def create_subtasks( version, update_list, parent_key, project_key ):
           and update string
       parent_key (string): specifies what ticket to post under
       project_key (string): specifies what project to post tickets to
+      jira_subtask (string): specifies the type of subtask for this board
 
     Returns: 
-      final_li (list): list contining sub lists of json tasks for specified dependency updates.
+      final_li (list): list contining json objects of tasks for specified dependency updates.
     """
 
     final_li = []
@@ -163,7 +165,7 @@ def create_subtasks( version, update_list, parent_key, project_key ):
                         "key": parent_key
                     },
                     "issuetype": {
-                        "id": JIRA_SUBTASK
+                        "id": jira_subtask
                     },
                     "priority": {
                         "name": priority_level
@@ -178,16 +180,20 @@ def create_subtasks( version, update_list, parent_key, project_key ):
             # add to list of updates
             dict_update_list.append( current )
 
-        dict_issueupdate_list = {"issueUpdates": dict_update_list}
+        # update what we created to have one parent element in a dict.
+        dict_issueupdate_list = { "issueUpdates": dict_update_list }
+        # transform dict to json object
         final_json = json.dumps( dict_issueupdate_list )
 
-        final_li.append(final_json)
+        # add json object to list of json objects
+        final_li.append( final_json )
 
+    # return list of json objects
     return final_li
 
 def split_list( in_li ):
     """
-    Takes in a list and breaks it into smaller lists of 50 elements or less.
+    Takes in a list and breaks it into smaller lists of MAX_TICKETS elements or less.
 
     Args:
       in_li (list): list in that contains elements
@@ -200,24 +206,29 @@ def split_list( in_li ):
     li_out = []
     step = MAX_TICKETS
 
+    # go through each MAX_TICKETSth element of the list sent in
+    #   (first pass through i = 0, second i = 50)
     for i in range(0, len( in_li ), step):
+        # temp holder for the step we are on
         x = i
+        # capture a group of 50 elements from the in list into a new list
+        #   and append that to the returned list
         li_out.append( in_li[ x : x + step ] )
 
     return li_out
 
 def check_num_tickets( updates ):
     """
-    This method takes in the three lists (as one tuple), checks how many dependencies are listed,
-    if any one list has more than MAX_TICKETS elements the list will be partitioned until it is 
+    This method takes in the three lists (as one tuple), then partition that list until it is 
     less than MAX_TICKET element lists in one list.
 
     Args:
       updates (tuple): Holds the three dependency update lists. 
 
     Returns:
-      updates (tuple): Holds the three dependency lists with the assurance that the number of 
-          dependencies in the innermost lists have less than MAX_TICKET elements. 
+      update (list[list], list[list], list[list]):
+        Holds the three dependency lists with the assurance that the number of dependencies in
+        the innermost lists have less than MAX_TICKET elements. 
     """
 
     patch, minor, major = updates
@@ -227,7 +238,7 @@ def check_num_tickets( updates ):
     if sum_dependencies == 0:
         sys.exit( "No unique tickets to create" )
 
-    # check if we need to split patch updates and transform into list of lists
+    # split patch updates and transform into list of lists
     patch = split_list(patch)
     minor = split_list(minor)
     major = split_list(major)
@@ -235,7 +246,7 @@ def check_num_tickets( updates ):
     update = (patch, minor, major)
     return update
 
-def create_tickets( updates, project_key, parent_key):
+def create_tickets( updates, project, parent, subtask ):
     """
     Creates json items to be sent as requests to create parent ticket and all sub tasks.
 
@@ -243,6 +254,7 @@ def create_tickets( updates, project_key, parent_key):
       updates (tuple): tuple of three lists, each containing sub tasks to transform into tickets
       project_key (string): specifies wha project to post to
       parent_key (string): specifies what ticket to post sub tasks under
+      subtask (string): specifies the issue type for board we are posting to
 
     Returns:
       json_tickets ([patch], [minor], [major]):
@@ -254,9 +266,9 @@ def create_tickets( updates, project_key, parent_key):
     update_patch, update_minor, update_major = updates
 
     # create subtasks and capture json object containing them
-    json_subtasks_patch = create_subtasks( "patch", update_patch, parent_key, project_key )
-    json_subtasks_minor = create_subtasks( "minor", update_minor, parent_key, project_key )
-    json_subtasks_major = create_subtasks( "major", update_major, parent_key, project_key )
+    json_subtasks_patch = create_subtasks( "patch", update_patch, parent, project, subtask )
+    json_subtasks_minor = create_subtasks( "minor", update_minor, parent, project, subtask )
+    json_subtasks_major = create_subtasks( "major", update_major, parent, project, subtask )
 
     # create tuple containing all json items
     json_tickets = (json_subtasks_patch, json_subtasks_minor, json_subtasks_major)
