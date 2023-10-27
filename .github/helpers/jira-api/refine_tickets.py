@@ -4,7 +4,7 @@ import sys
 import json
 import datetime
 
-JIRA_SUBTASK = "10113"
+JIRA_SUBTASK = "10003"
 MAX_TICKETS = 50
 
 ###################################################################################################
