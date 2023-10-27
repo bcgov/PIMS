@@ -150,6 +150,7 @@ namespace Pims.Api.Test.Controllers.Tools
             service.Setup(m => m.Agency.GetAll()).Returns(new[] { new Entity.Agency("AEST", "Advanced Education, Skills & Training") });
             service.Setup(m => m.Parcel.GetByPidWithoutTracking(It.IsAny<int>())).Returns(parcel);
             service.Setup(m => m.AdministrativeArea.Get(It.IsAny<string>())).Returns(new Entity.AdministrativeArea("test"));
+            service.Setup(m => m.Parcel.IsPidAvailable(It.IsAny<int>())).Returns(true);
 
             // Act
             var result = controller.ImportProperties(properties);
@@ -157,6 +158,8 @@ namespace Pims.Api.Test.Controllers.Tools
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
             var data = Assert.IsAssignableFrom<IEnumerable<Model.ImportPropertyModel>>(actionResult.Value);
+            Assert.True(data.First().Added);
+            Assert.False(data.First().Updated);
             Assert.Equal(properties.First().ParcelId, data.First().PID);
             service.Verify(m => m.BuildingConstructionType.GetAll(), Times.Once());
             service.Verify(m => m.BuildingPredominateUse.GetAll(), Times.Once());
@@ -214,8 +217,8 @@ namespace Pims.Api.Test.Controllers.Tools
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
             var data = Assert.IsAssignableFrom<IEnumerable<Model.ImportPropertyModel>>(actionResult.Value);
             Assert.True(data.First().Error.ToString() == "Invalid or missing PID.");
-            Assert.False(data.First().Added = false);
-            Assert.False(data.First().Updated = false);
+            Assert.False(data.First().Added);
+            Assert.False(data.First().Updated);
         }
 
         [Fact]
@@ -258,7 +261,7 @@ namespace Pims.Api.Test.Controllers.Tools
             service.Setup(m => m.Agency.GetAll()).Returns(new[] { new Entity.Agency("AEST", "Advanced Education, Skills & Training") });
             service.Setup(m => m.Building.GetByNameAddressWithoutTracking(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns((string name, string address) => new List<Building>
-                {});
+                { });
             service.Setup(m => m.AdministrativeArea.Get(It.IsAny<string>())).Returns(new Entity.AdministrativeArea("test"));
 
             // Act
