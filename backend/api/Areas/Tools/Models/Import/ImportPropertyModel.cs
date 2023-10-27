@@ -32,6 +32,7 @@ namespace Pims.Api.Areas.Tools.Models.Import
         public float BuildingRentableArea { get; set; }
         public decimal Assessed { get; set; }
         public decimal NetBook { get; set; }
+        public string Error { get; set; }
         #endregion
     }
 }

@@ -231,7 +231,6 @@ namespace Pims.Api.Areas.Tools.Helpers
         {
             if (properties == null) throw new ArgumentNullException(nameof(properties));
 
-            var entities = new List<Entity.Property>();
             var propertiesAddedOrEdited = new List<Model.ImportPropertyModel>();
             foreach (var property in properties)
             {
@@ -239,7 +238,14 @@ namespace Pims.Api.Areas.Tools.Helpers
                 _logger.LogDebug($"Add/Update property pid:{parcelId}, type:{property.PropertyType}, fiscal:{property.FiscalYear}, local:{property.LocalId}");
 
                 var validPid = int.TryParse(parcelId?.Replace("-", ""), out int pid);
-                if (!validPid && property.PropertyType == "Land") continue;
+                if (!validPid && property.PropertyType == "Land")
+                {
+                    property.Added = false;
+                    property.Updated = false;
+                    property.Error = "Invalid or missing PID.";
+                    propertiesAddedOrEdited.Add(property);
+                    continue;
+                }
 
                 // Fix postal.
                 property.Postal = new string(property.Postal?.Replace(" ", "").Take(6).ToArray());
@@ -250,38 +256,62 @@ namespace Pims.Api.Areas.Tools.Helpers
                 {
                     // first check to see if there is an existing parcel with the pid in the database
                     var isPidAvailable = _pimsAdminService.Parcel.IsPidAvailable(pid);
-
-                    entities.Add(AddUpdateParcel(property, pid, agency));
-
-                    // then set whether the property was updated or added based on whether the parcel was already in database or not                    
-                    if (isPidAvailable)
+                    try
                     {
-                        property.Added = true;
-                        property.Updated = false;
+                        AddUpdateParcel(property, pid, agency);
+                        // then set whether the property was updated or added based on whether the parcel was already in database or not                    
+                        if (isPidAvailable)
+                        {
+                            property.Added = true;
+                            property.Updated = false;
+                        }
+                        else
+                        {
+                            property.Added = false;
+                            property.Updated = true;
+                        }
                     }
-                    else
+                    catch (Exception e)
                     {
                         property.Added = false;
-                        property.Updated = true;
+                        property.Updated = false;
+                        property.Error = e.Message;
                     }
+
                     propertiesAddedOrEdited.Add(property);
                 }
                 else if (String.Compare(property.PropertyType, "Building") == 0)
                 {
                     var isBuildingExisting = _pimsAdminService.Building.GetByNameAddressWithoutTracking(property.Name, property.CivicAddress);
-                    // need to check the count before a building gets added, as the previous variable gets updated once the building has been added
-                    if (isBuildingExisting.Count() == 0)
+                    try
                     {
-                        property.Added = true;
-                        property.Updated = false;
+                        AddUpdateBuilding(property, pid, agency);
+                        // need to check the count before a building gets added, as the previous variable gets updated once the building has been added
+                        if (isBuildingExisting.Count() == 0)
+                        {
+                            property.Added = true;
+                            property.Updated = false;
+                        }
+                        else
+                        {
+                            property.Added = false;
+                            property.Updated = true;
+                        }
                     }
-                    else
+                    catch (Exception e)
                     {
                         property.Added = false;
-                        property.Updated = true;
+                        property.Updated = false;
+                        property.Error = e.Message;
                     }
-                    var propertyToAddUpdate = AddUpdateBuilding(property, pid, agency);
-                    entities.Add(propertyToAddUpdate);
+
+                    propertiesAddedOrEdited.Add(property);
+                }
+                else
+                {
+                    property.Added = false;
+                    property.Updated = false;
+                    property.Error = "Only Land or Building property types permitted.";
                     propertiesAddedOrEdited.Add(property);
                 }
             }
