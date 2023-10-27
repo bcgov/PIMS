@@ -49,7 +49,7 @@
     "react-bootstrap": "2.9.0",
     "react-bootstrap-typeahead": "5.2.2",
     "react-click-away-listener": "2.2.3",
-    "react-datepicker": "4.20.0",
+    "react-datepicker": "4.21.0",
     "react-dom": "18.2.0",
     "react-draggable": "4.4.5",
     "react-error-boundary": "4.0.11",
@@ -154,7 +154,8 @@
     "fork-ts-checker-webpack-plugin@<6.5.3": "6.5.3",
     "nth-check@<2.0.1": "2.0.1",
     "css-whatt@<5.0.1": "5.0.1",
-    "semver": "7.5.2"
+    "semver": "7.5.2",
+    "@babel/traverse@<7.23.2": "7.23.2"
   },
   "jest": {
     "transform": {
