@@ -178,7 +178,7 @@ def get_summary_list( conn, headers, project_key ):
         error_message = message + status + ": " + reason + "\n"
         raise error.APIError( error_message )
 
-    # save as as dict.
+    # save as dict.
     json_in = json.loads( data )
 
     # go through response and pull out summaries of tickets into list.
