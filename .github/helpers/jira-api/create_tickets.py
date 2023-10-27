@@ -168,7 +168,7 @@ def main():
     # create all tickets
     json_lists = create_tickets( conn, headers, updates, project_key, issue_key )
 
-    # Post all tickest
+    # Post all tickets
     post_subtasks( conn, headers, json_lists )
 
 if __name__=="__main__":
