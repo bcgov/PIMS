@@ -201,6 +201,7 @@ export const UploadProperties: React.FC = () => {
         });
         setPhase(UploadPhase.DONE);
       } catch (e: any) {
+        setPhase(UploadPhase.FILE_SELECT);
         console.error('Error parsing CSV:', e);
         toast.warning(`Unable to process CSV file.`);
       }
