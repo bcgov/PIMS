@@ -285,7 +285,6 @@ namespace Pims.Api.Areas.Tools.Helpers
                     var isBuildingExisting = _pimsAdminService.Building.GetByNameAddressWithoutTracking(property.Name, property.CivicAddress);
                     try
                     {
-                        AddUpdateBuilding(property, pid, agency);
                         // need to check the count before a building gets added, as the previous variable gets updated once the building has been added
                         if (isBuildingExisting.Count() == 0)
                         {
@@ -297,6 +296,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                             property.Added = false;
                             property.Updated = true;
                         }
+                        AddUpdateBuilding(property, pid, agency);
                     }
                     catch (Exception e)
                     {

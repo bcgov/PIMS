@@ -5,6 +5,7 @@ using Pims.Api.Areas.Tools.Controllers;
 using Pims.Core.Extensions;
 using Pims.Core.Test;
 using Pims.Dal;
+using Pims.Dal.Entities;
 using Pims.Dal.Helpers.Extensions;
 using Pims.Dal.Security;
 using Pims.Dal.Services.Admin;
@@ -163,6 +164,66 @@ namespace Pims.Api.Test.Controllers.Tools
             service.Verify(m => m.Agency.GetAll(), Times.Once());
             service.Verify(m => m.Agency.Add(It.IsAny<Entity.Agency>()), Times.Once());
             service.Verify(m => m.Parcel.Update(It.IsAny<Entity.Parcel>()), Times.Once());
+        }
+
+        [Fact]
+        public void ImportProperties_AddBuilding_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin);
+
+            var properties = new[]
+            {
+                new Model.ImportPropertyModel()
+                {
+                    LocalId = "test",
+                    PropertyType = "Building",
+                    AgencyCode = "AEST",
+                    SubAgency = "School",
+                    FiscalYear = 2020,
+                    Assessed = 0,
+                    BuildingPredominateUse = "School",
+                    BuildingConstructionType = "Concrete",
+                    Classification = "Surplus Active",
+                    Status = "Active",
+                    CivicAddress = "123 test st",
+                    City = "test",
+                    Postal = "T9T9T9",
+                    LandArea = 45.55f,
+                    Latitude = 49.11539986447944,
+                    Longitude = 49.21539986447944,
+                    Name = "test"
+                }
+            };
+
+            var building = new Entity.Building() { Id = 1, PropertyTypeId = 1 };
+
+            var service = helper.GetService<Mock<IPimsAdminService>>();
+            service.Setup(m => m.BuildingConstructionType.GetAll()).Returns(new[] { new Entity.BuildingConstructionType(1, "Concrete") });
+            service.Setup(m => m.BuildingPredominateUse.GetAll()).Returns(new[] { new Entity.BuildingPredominateUse(1, "School") });
+            service.Setup(m => m.PropertyClassification.GetAll()).Returns(new[] { new Entity.PropertyClassification(1, "Surplus Active") });
+            service.Setup(m => m.Agency.GetAll()).Returns(new[] { new Entity.Agency("AEST", "Advanced Education, Skills & Training") });
+            service.Setup(m => m.Building.GetByNameAddressWithoutTracking(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns((string name, string address) => new List<Building>
+                {});
+            service.Setup(m => m.AdministrativeArea.Get(It.IsAny<string>())).Returns(new Entity.AdministrativeArea("test"));
+
+            // Act
+            var result = controller.ImportProperties(properties);
+
+            // Assert
+            JsonResult actionResult = Assert.IsType<JsonResult>(result);
+            var data = Assert.IsAssignableFrom<IEnumerable<Model.ImportPropertyModel>>(actionResult.Value);
+            Assert.Equal(properties.First().ParcelId, data.First().PID);
+            Assert.True(data.First().Added = true);
+            Assert.False(data.First().Updated = false);
+            service.Verify(m => m.BuildingConstructionType.GetAll(), Times.Once());
+            service.Verify(m => m.BuildingPredominateUse.GetAll(), Times.Once());
+            service.Verify(m => m.PropertyClassification.GetAll(), Times.Once());
+            service.Verify(m => m.Agency.GetAll(), Times.Once());
+            service.Verify(m => m.Agency.Add(It.IsAny<Entity.Agency>()), Times.Once());
+            service.Verify(m => m.Building.Add(It.IsAny<Entity.Building>()), Times.Once());
         }
 
         #endregion
