@@ -1,4 +1,4 @@
-FROM image-registry.apps.silver.devops.gov.bc.ca/ec1236-tools/nodejs:18.17.1-bullseye-slim
+FROM image-registry.apps.silver.devops.gov.bc.ca/ec1236-tools/nodejs:18.17.1-bullseye-slim as prod-build
 
 # Set the working directory to /app
 WORKDIR /app
