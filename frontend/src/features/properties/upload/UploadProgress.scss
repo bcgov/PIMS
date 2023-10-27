@@ -15,7 +15,10 @@
   .feed-item {
     text-align: left;
     border-bottom: 1px gray solid;
-    padding: 0 0.5rem;
+    padding: 0.5rem;
+    p {
+      margin: 0;
+    }
   }
 
   .feed-success {

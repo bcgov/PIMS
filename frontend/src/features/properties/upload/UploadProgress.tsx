@@ -72,20 +72,28 @@ export const UploadProgress = (props: IUploadProgressProps) => {
         />
       </ProgressBar>
       <div id="results-feed">
-        {feed.map((item, index) =>
-          item.success ? (
-            <div key={`${item.pid}:${index}`} className="feed-item feed-success">{`${
-              item.type === 'Land' ? 'Parcel' : 'Building'
-            } with PID ${item.pid} ${item.updated ? 'updated' : 'added'} successfully.`}</div>
-          ) : (
-            <div key={`${item.pid}:${index}`} className="feed-item feed-failure">
-              <p>{`${item.type === 'Land' ? 'Parcel' : 'Building'} with PID ${
-                item.pid
-              } failed to upload.`}</p>
+        {feed.map((item, index) => {
+          const successful = item.added === true || item.updated === true;
+          const pidPhrase = item.pid && item.pid !== '' ? `PID ${item.pid}` : 'missing PID';
+          return successful ? (
+            <div key={`${item.pid}:${index}`} className="feed-item feed-success">
+              <p>
+                {`${item.type === 'Land' ? 'Parcel' : 'Building'} with ${pidPhrase} ${
+                  item.updated ? 'updated' : 'added'
+                } successfully.`}
+              </p>
               <p>{`Property Name: ${item.name ?? 'N/A'}`}</p>
             </div>
-          ),
-        )}
+          ) : (
+            <div key={`${item.pid}:${index}`} className="feed-item feed-failure">
+              <p>{`${
+                item.type === 'Land' ? 'Parcel' : 'Building'
+              } with ${pidPhrase} failed to upload.`}</p>
+              <p>{`Property Name: ${item.name ?? 'N/A'}`}</p>
+              <p>{`Error: ${item.error ?? 'Unknown'}`}</p>
+            </div>
+          );
+        })}
         {phase === UploadPhase.DONE ? (
           <Container id="final-feed-report">
             <Row>

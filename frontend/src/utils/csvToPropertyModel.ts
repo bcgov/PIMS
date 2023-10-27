@@ -31,6 +31,7 @@ export interface IPropertyModel {
   netBook: string;
   added?: boolean; // Only when received from API
   updated?: boolean;
+  error?: string; // Error message
 }
 
 // This is the model that is created from CSV files exported from PIMS.

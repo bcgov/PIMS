@@ -78,6 +78,10 @@ export const Instructions = () => (
         Names of cities in the Location field must match what is already in the database. Otherwise,
         the property will be rejected.
       </li>
+      <li>
+        Buildings are matched with existing buildings using their Address and Name. Both must match
+        an existing building in order to update that property.
+      </li>
     </ul>
   </div>
 );

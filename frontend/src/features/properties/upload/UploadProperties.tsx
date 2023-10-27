@@ -59,11 +59,11 @@ interface IImportedPropertyResponse {
  */
 export interface IFeedObject {
   pid: string;
-  success: boolean;
   type: string;
   name?: string;
   added?: boolean;
   updated?: boolean;
+  error?: string;
 }
 
 /**
@@ -148,21 +148,21 @@ export const UploadProperties: React.FC = () => {
             response.acceptedProperties.forEach((property) =>
               newFeedItems.push({
                 pid: property.pid,
-                success: true,
+                name: property.name,
+                type: property.propertyType,
                 updated: property.updated,
                 added: property.added,
-                type: property.propertyType,
-                name: property.name,
+                error: '',
               }),
             );
             response.rejectedProperties.forEach((property) =>
               newFeedItems.push({
                 pid: property.pid,
-                success: false,
                 name: property.name,
                 type: property.propertyType,
-                updated: false,
-                added: false,
+                updated: property.updated,
+                added: property.added,
+                error: property.error,
               }),
             );
             setFeed((prevFeed) => [...prevFeed, ...newFeedItems]);
@@ -182,9 +182,11 @@ export const UploadProperties: React.FC = () => {
             currentChunk.forEach((property) =>
               newFeedItems.push({
                 pid: property.pid,
-                success: false,
                 name: property.name,
                 type: property.propertyType,
+                updated: false,
+                added: false,
+                error: (e as AxiosError).message,
               }),
             );
             setFeed((prevFeed) => [...prevFeed, ...newFeedItems]);

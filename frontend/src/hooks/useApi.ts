@@ -212,38 +212,22 @@ export const useApi = (props?: IApiProps): PimsAPI => {
       `${ENVIRONMENT.apiUrl}/tools/import/properties`,
       properties,
     );
-    // Find all properties that were in the original but not returned from the POST.
-    // This should determine which properties were not added for some reason.
-    let acceptedProperties: IPropertyModel[] = [];
+
+    // Separate properties into accepted and rejected lists.
+    const acceptedProperties: IPropertyModel[] = [];
     const rejectedProperties: IPropertyModel[] = [];
-    if (data.length !== properties.length) {
-      properties.forEach((property) => {
-        if (
-          data.some(
-            (returnedProperty) =>
-              returnedProperty.pid === property.pid && returnedProperty.name === property.name,
-          )
-        ) {
-          // Was it uploaded or added?
-          const addedProperty = data.find(
-            (currentProperty) => currentProperty.pid === property.pid,
-          );
-          acceptedProperties.push({
-            ...property,
-            updated: addedProperty?.updated,
-            added: addedProperty?.added,
-          });
-        } else {
-          rejectedProperties.push(property);
-        }
-      });
-    } else {
-      acceptedProperties = data;
-    }
+    data.forEach((property: IPropertyModel) => {
+      if (property.added === true || property.updated === true) {
+        acceptedProperties.push(property);
+      } else {
+        rejectedProperties.push(property);
+      }
+    });
+
     return {
       responseCode: status,
-      acceptedProperties: acceptedProperties ?? [],
-      rejectedProperties: rejectedProperties ?? [],
+      acceptedProperties,
+      rejectedProperties,
     };
   }, []);
 
