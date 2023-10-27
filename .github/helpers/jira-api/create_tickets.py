@@ -1,7 +1,7 @@
 """
 Modules providing HTTP connections, json formatting, regex, operating system, and system operations
 as well as: 
-Modules used to connect to JIRA API, refining dependency updates and posting tickets.
+Modules used to connect to JIRA API, refining dependency updates and refining tickets.
 """
 import http.client
 import sys
@@ -17,18 +17,11 @@ import refine_tickets
 ## weekly dependency updates.
 ##
 ## It uses the following scripts to do the heavy lifting of the group:
-##     - jira_con.py: used for connection to JIRA
-##     - refine_dependency: used for refining strings and lists
-##     - create_and_post.py: used for creating the tickets to create
+##     - jira_con.py: used for connection to JIRA.
+##     - refine_dependency: used for refining strings and lists.
+##     - refine_tickets.py: used for creating the tickets to post.
 ##     - errors.py (not used in this script) our own error class to
-##         catch bad results from API calls
-##
-## May want to add the following features in the future
-##       Check max results vs. total results in get_summary_list
-##       Send 2 request when over 50 updates instead of trunkating.
-##       look into not using regex.
-##       set up env file for environment variables (level flags ect.)
-##       *** diagram for security and priv.
+##         catch bad results from API calls.
 ##
 ###################################################################################################
 
@@ -36,12 +29,22 @@ def get_env_variables():
     """
     This method does the work for setting environment variables to be used in this script. We will
     also catch and report any errors as they arise. 
+
+    Return:
+      (
+        level_flags,    # What levels of dependency updates to process.
+        dep_in,         # List of Dependencies to be updated.
+        jira_api_key,   # Authorization token for Jira.
+        project_key,    # Project board to post to.
+        jira_subtask    # Subtask type for specific board.
+      ): tuple containing the above information pulled in from environment variables. 
     """
+
     # check for dependency environment variable
     try:
         dep_in = os.environ["ISSUE_BODY"]
     except KeyError:
-        sys.exit( "Unable to get ISSUE_BODY" )
+        sys.exit( "Unable to get ISSUE BODY" )
 
     # decode incoming string
     dep_in = refine_dependency.decode_github_env( dep_in )
@@ -50,13 +53,13 @@ def get_env_variables():
     try:
         jira_api_key = os.environ["JIRA_API_KEY"]
     except KeyError:
-        sys.exit( "Unable to get JIRA_API_KEY" )
+        sys.exit( "Unable to get JIRA API KEY" )
 
     # check for jira board environment variable
     try:
         project_key = os.environ["JIRA_BOARD"]
     except KeyError:
-        sys.exit( "Unable to get JIRA_board" )
+        sys.exit( "Unable to get Jira board" )
 
     # check for level flags
     try:
@@ -64,25 +67,31 @@ def get_env_variables():
     except KeyError:
         sys.exit( "Unable to get level flags" )
 
-    return ( level_flags, dep_in, jira_api_key, project_key )
+    # check for jira subtask type
+    try:
+        jira_subtask = os.environ["JIRA_SUBTASK"]
+    except KeyError:
+        sys.exit( "Unable to get Jira Subtask number. " )
+
+    return ( level_flags, dep_in, jira_api_key, project_key, jira_subtask )
 
 def refine_dep( level_flags, dep_in, summary_li ):
     """
-    Used to parse the dependencies into format we want them
+    Used to parse the dependencies into the format we want.
 
     Args: 
-      level_flags (string): env variable setting what updates we are going to parse
-      dep_in (string): env variacle holding dependency list
-      summary_li (list[string]): list holding all ticket summaries we searched for
+      level_flags (string): env variable setting what updates we are going to parse.
+      dep_in (string): env variacle holding dependency list.
+      summary_li (list[string]): list holding all ticket summaries we searched for.
 
     Returns: 
-      updates (tuple): tuple containing reformated lists of updates
+      updates (tuple): tuple containing reformated lists of updates.
     """
 
     # get the list of dependencies from GitHub
     li_patch, li_minor, li_major = refine_dependency.parse_dependencies( level_flags, dep_in )
 
-    # remove any dependencies that exist in both lists
+    # remove any dependencies that have open tickets
     li_patch = refine_dependency.remove_duplicates( li_patch, summary_li )
     li_minor = refine_dependency.remove_duplicates( li_minor, summary_li )
     li_major = refine_dependency.remove_duplicates( li_major, summary_li )
@@ -90,7 +99,31 @@ def refine_dep( level_flags, dep_in, summary_li ):
     updates = ( li_patch, li_minor, li_major, )
     return updates
 
-def create_and_post_tickets( conn, headers, updates, project_key ):
+def post_subtasks( conn, headers, subtask_lists ):
+    """
+    Goes through each section of dependency updates and sends as many requests as needed.
+
+    Args:
+      subtask_json (tuple): holds lists of json objects to be sent as requests.
+    """
+
+    # break apart subtasks
+    json_patch = subtask_lists[0]
+    json_minor = subtask_lists[1]
+    json_major = subtask_lists[2]
+
+    # post all three sub task groups
+    # because we are storing each as nested lists we use loops to get through all JSON objects.
+    for ele in json_patch:
+        jira_con.post_subtasks( conn, headers, ele )
+
+    for ele in json_minor:
+        jira_con.post_subtasks( conn, headers, ele )
+
+    for ele in json_major: 
+        jira_con.post_subtasks( conn, headers, ele )
+
+def create_tickets( conn, headers, updates, project_key, issue_key ):
     """
     This function captures the work necessary for creating, finalization, and posting tickets. 
 
@@ -99,25 +132,25 @@ def create_and_post_tickets( conn, headers, updates, project_key ):
       headers (string): specifies authentication to post to JIRA
       updates (tuple(list)): a tuple of lists holding the dependency updates
       project_key (string): a string representing the key for the board we want to post to
+
+    Returns:
+      subtask_json (list[JSON], list[JSON], list[JSON]): a tuple containing 3 lists of json objects. 
     """
 
     # check the number of tickets to post
-    too_many_tickets, updates = refine_tickets.check_num_tickets( updates )
+    updates = refine_tickets.check_num_tickets( updates )
     # create parent ticket and post it
     parent_ticket_json = refine_tickets.create_parent_ticket( project_key, updates )
     parent_key = jira_con.post_parent_ticket( conn, headers, parent_ticket_json )
-    # create sub tasks and post them
-    subtask_json = refine_tickets.create_tickets( updates, project_key, parent_key )
-    jira_con.post_subtasks( conn, headers, subtask_json )
+    # create sub tasks in Json format
+    subtask_json = refine_tickets.create_tickets( updates, project_key, parent_key, issue_key )
 
-    # if too many tickets flag was set allow the script to finish but then exit with an error
-    if too_many_tickets:
-        sys.exit("WARN: Too many tickets")
+    return subtask_json
 
 def main():
     """ Works through the steps to refine dependency list and then create tickets in JIRA. """
 
-    level_flags, dep_in, jira_api_key, project_key = get_env_variables()
+    level_flags, dep_in, jira_api_key, project_key, issue_key = get_env_variables()
 
     # establish https connection and necessary variables
     conn = http.client.HTTPSConnection( "citz-imb.atlassian.net" )
@@ -132,9 +165,11 @@ def main():
     # refine dependencies
     updates = refine_dep( level_flags, dep_in, summary_li )
 
-    # create and post all tickets
-    create_and_post_tickets( conn, headers, updates, project_key )
+    # create all tickets
+    json_lists = create_tickets( conn, headers, updates, project_key, issue_key )
 
+    # Post all tickets
+    post_subtasks( conn, headers, json_lists )
 
 if __name__=="__main__":
     main()

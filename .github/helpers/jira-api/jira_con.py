@@ -52,7 +52,7 @@ def parse_tickets( tickets_json ):
     issue_list = tickets_json['issues']
 
     for issue in issue_list:
-        # extract the summary field form the json object
+        # extract the summary field from the json object
         summary = issue['fields']['summary']
         # try to match ticket summary to this
         sum_refined = re.search( r"Update (.*) from version .*", summary )
@@ -144,11 +144,10 @@ def get_summary_list( conn, headers, project_key ):
 
     summary_li = []
     #specifies JIRA query to filter results and max results
-    jql_project = "project = " + project_key
-    jql_text = " AND text ~ \"update from version\""
-    jql_status = " AND status != Done"
-    jql_labels = " AND labels = DependencyUpdates"
-    jql_string = jql_project + jql_text + jql_status + jql_labels
+    jql_string = "project = " + project_key + \
+        " AND text ~ \"update from version\"" + \
+        " AND status != Done" + \
+        " AND labels = DependencyUpdates"
 
     max_results = 100
 
@@ -179,7 +178,9 @@ def get_summary_list( conn, headers, project_key ):
         error_message = message + status + ": " + reason + "\n"
         raise error.APIError( error_message )
 
+    # save as dict.
     json_in = json.loads( data )
 
+    # go through response and pull out summaries of tickets into list.
     summary_li = parse_tickets( json_in )
     return summary_li
