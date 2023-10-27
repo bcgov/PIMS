@@ -35,7 +35,6 @@ describe('Testing Progress section for CSV Upload', () => {
     feed.push(
       {
         pid: '1234',
-        success: true,
         name: 'Property 1',
         added: true,
         updated: false,
@@ -43,11 +42,11 @@ describe('Testing Progress section for CSV Upload', () => {
       },
       {
         pid: '4321',
-        success: false,
         name: 'Property 2',
         added: false,
-        updated: true,
+        updated: false,
         type: 'Building',
+        error: 'Big Error',
       },
     );
     phase = UploadPhase.DATA_UPLOAD;
