@@ -1,6 +1,5 @@
 """ 
-Import Regex for some parsing. 
-May look into how we can accomplish this without regex in the future
+Import Regex for some parsing.
 """
 import re
 
@@ -27,6 +26,7 @@ def decode_github_env( encoded_str ):
     decoded_str = encoded_str.replace( '%25', '%' )
     decoded_str = decoded_str.replace( '%0A', '\n' )
     decoded_str = decoded_str.replace( '%0D', '\r' )
+
     return decoded_str
 
 def remove_duplicates( in_dep, in_sum ):
@@ -37,8 +37,8 @@ def remove_duplicates( in_dep, in_sum ):
       - If no we leave the dependency in the list and move to the next
 
     Args: 
-      in_dep (list[string], list[datring]): a list containing tuples of dependency updates
-          and update strings
+      in_dep (list[string], list[string], list[string]): a list containing tuples
+        of dependency updates and update strings
       in_sum (list[string]): a list containing all ticket summaries
 
     Returns: 
@@ -61,10 +61,11 @@ def remove_duplicates( in_dep, in_sum ):
         # go through summary list
         for summary in in_sum:
             if check_str == summary:
-                # if the dependency is in the summary remove the tuple from the
-                # list and go to the next tuple
+                # if the dependency is in the summary remove the
+                # tuple from the list and go to the next tuple
                 new_li.remove( ele )
                 break
+
     return new_li
 
 def refine_updates( in_dep_str, refine_word ):
@@ -123,7 +124,7 @@ def refine_dependencies( string_in ):
     # go through list and if the line starts with "npm" or "- `" add it to a new list
     for line in li_in:
         check_str = line[:3]
-        if check_str == "npm" or check_str == "- `":
+        if check_str in ( "npm", "- `" ):
             temp_li.append(line)
 
     # for every line in the refined list create a tuple containing the line and the
@@ -139,16 +140,16 @@ def refine_dependencies( string_in ):
 def parse_dependencies( level_flags, dep_text ):
     """
     This takes in a dependency update text (very specific format see 
-    https://github.com/bcgov/PIMS/issues/1706#issue-1899122308)
-    searches for the first occurance of "minor" (we can ignore patch updates)
-    then pulls all update strings into a list.
+      https://github.com/bcgov/PIMS/issues/1706#issue-1899122308 )
+    Goes through level flags and if the specific level is requested we refine the updates. If the
+    flag is not set it is left as an empty list.
 
     Args: 
       level_flags (string): env variable definind the levels of dependencies we want to check for
       dep_text (string): dependency update string
 
     Returns: 
-      dep_li (list): list with string elements of dependency updates
+      dep_li (list): tuple of lists with string elements of dependency updates
     """
 
     dep_li_patch = []
