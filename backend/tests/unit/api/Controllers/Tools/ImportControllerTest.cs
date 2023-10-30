@@ -66,26 +66,54 @@ namespace Pims.Api.Test.Controllers.Tools
                 }
             };
 
+            var property2 = new[]
+            {
+                new Model.ImportPropertyModel()
+                {
+                    ParcelId = "123-123-123",
+                    PID = "123-123-123",
+                    LocalId = "test",
+                    PropertyType = "Building",
+                    AgencyCode = "AEST",
+                    SubAgency = "School",
+                    FiscalYear = 2020,
+                    Assessed = 150000.00M,
+                    Classification = "Classification",
+                    Status = "Active",
+                    CivicAddress = "test",
+                    City = "test",
+                    Postal = "T9T9T9",
+                    LandArea = 40.55f,
+                    NetBook = 103000.00M
+                }
+            };
+
             var parcel = new Entity.Parcel()
             {
                 Id = 123123123
             };
+
+            var building = new Entity.Building() { Id = 1, PropertyTypeId = 1 };
 
             var service = helper.GetService<Mock<IPimsAdminService>>();
             service.Setup(m => m.BuildingConstructionType.GetAll()).Returns(new Entity.BuildingConstructionType[0]);
             service.Setup(m => m.BuildingPredominateUse.GetAll()).Returns(new Entity.BuildingPredominateUse[0]);
             service.Setup(m => m.PropertyClassification.GetAll()).Returns(new[] { new Entity.PropertyClassification(1, "Classification") });
             service.Setup(m => m.Agency.GetAll()).Returns(new[] { new Entity.Agency("AEST", "Advanced Education, Skills & Training") });
-            service.Setup(m => m.Parcel.GetByPid(It.IsAny<int>())).Returns(parcel);
+            service.Setup(m => m.Parcel.GetByPid(It.IsAny<int>())).Returns(parcel); service.Setup(m => m.Building.GetByPid(It.IsAny<int>(), It.IsAny<string>()))
+    .Returns((int pid, string name) => new List<Building> { building });
             service.Setup(m => m.AdministrativeArea.Get(It.IsAny<string>())).Returns(new Entity.AdministrativeArea("test"));
 
             // Act
             var result = controller.ImportPropertyFinancials(property);
+            var result2 = controller.ImportPropertyFinancials(property2);
 
             // Assert
             JsonResult actionResult = Assert.IsType<JsonResult>(result);
-            var data = Assert.IsAssignableFrom<Model.ParcelModel[]>(actionResult.Value);
-            Assert.Equal(parcel.Evaluations.First().Value, data[0].Evaluations.First().Value);
+            var parcelData = Assert.IsAssignableFrom<Model.ParcelModel[]>(actionResult.Value);
+            var buildingData = Assert.IsAssignableFrom<Model.ParcelModel[]>(actionResult.Value);
+            Assert.Equal(parcel.Evaluations.First().Value, parcelData[0].Evaluations.First().Value);
+            Assert.Equal(parcel.Evaluations.First().Value, parcelData[0].Evaluations.First().Value);
         }
 
         #endregion
