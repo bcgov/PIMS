@@ -238,11 +238,12 @@ namespace Pims.Api.Areas.Tools.Helpers
                 _logger.LogDebug($"Add/Update property pid:{parcelId}, type:{property.PropertyType}, fiscal:{property.FiscalYear}, local:{property.LocalId}");
 
                 var validPid = int.TryParse(parcelId?.Replace("-", ""), out int pid);
-                if (!validPid && property.PropertyType == "Land")
+
+                if (!validPid && property.PropertyType == "Land" || (!validPid && property.PropertyType == "Building" && property.PID != null))
                 {
                     property.Added = false;
                     property.Updated = false;
-                    property.Error = "Invalid or missing PID.";
+                    property.Error = "Invalid or missing PID: " + property.PID;
                     propertiesAddedOrEdited.Add(property);
                     continue;
                 }
