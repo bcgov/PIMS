@@ -239,7 +239,7 @@ namespace Pims.Api.Areas.Tools.Helpers
 
                 var validPid = int.TryParse(parcelId?.Replace("-", ""), out int pid);
 
-                if (!validPid && property.PropertyType == "Land" || (!validPid && property.PropertyType == "Building" && property.PID != null))
+                if (!validPid && property.PropertyType == "Land" || (!validPid && property.PropertyType == "Building" && property.PID != null && property.PID != ""))
                 {
                     property.Added = false;
                     property.Updated = false;
@@ -296,6 +296,13 @@ namespace Pims.Api.Areas.Tools.Helpers
                         {
                             property.Added = true;
                             property.Updated = false;
+                        }
+                        else if (isBuildingExisting.Count() >= 2)
+                        {
+                            // there seems to be more than one building with the same name and address.....need to determine which one to update?
+                            property.Added = false;
+                            property.Updated = false;
+                            property.Error = isBuildingExisting.Count() + " buildings were found with the same name. Couldn't tell which one to update.";
                         }
                         else
                         {
