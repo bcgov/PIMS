@@ -91,7 +91,7 @@ jobs:
     Clean-Up:
       name: Clean Up
       runs-on: ubuntu-latest
-      needs: [ healthcheck ]
+      needs: [ Health-Check ]
       steps:
         - name: Login to OpenShift
           uses: redhat-actions/oc-login@v1
