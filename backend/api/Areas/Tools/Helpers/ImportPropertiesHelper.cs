@@ -251,6 +251,11 @@ namespace Pims.Api.Areas.Tools.Helpers
                 property.Postal = new string(property.Postal?.Replace(" ", "").Take(6).ToArray());
 
                 var agency = GetOrCreateAgency(property);
+                if (property.Error != null && property.Error != "")
+                {
+                    propertiesAddedOrEdited.Add(property);
+                    continue;
+                }
 
                 if (String.Compare(property.PropertyType, "Land") == 0)
                 {
@@ -258,7 +263,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                     var isPidAvailable = _pimsAdminService.Parcel.IsPidAvailable(pid);
                     try
                     {
-                        AddUpdateParcel(property, pid, agency);
+                        AddUpdateParcel(property, pid, (Pims.Dal.Entities.Agency)agency);
                         // then set whether the property was updated or added based on whether the parcel was already in database or not                    
                         if (isPidAvailable)
                         {
@@ -296,7 +301,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                             property.Added = false;
                             property.Updated = true;
                         }
-                        AddUpdateBuilding(property, pid, agency);
+                        AddUpdateBuilding(property, pid, (Pims.Dal.Entities.Agency)agency);
                     }
                     catch (Exception e)
                     {
@@ -324,12 +329,18 @@ namespace Pims.Api.Areas.Tools.Helpers
         /// </summary>
         /// <param name="property"></param>
         /// <returns></returns>
-        private Entity.Agency GetOrCreateAgency(Model.ImportPropertyModel property)
+        private object GetOrCreateAgency(Model.ImportPropertyModel property)
         {
             // Find the parent agency.
             var agencyCode = property.AgencyCode.ConvertToUTF8();
             var subAgencyName = property.SubAgency.ConvertToUTF8();
-            var agency = _agencies.FirstOrDefault(a => a.Code == agencyCode) ?? throw new KeyNotFoundException($"Agency does not exist '{property.AgencyCode}'");
+            var agency = _agencies.FirstOrDefault(a => a.Code == agencyCode);
+            if (agency == null)
+            {
+                // Set the error message in the Error property.
+                property.Error = $"Agency '{property.AgencyCode}' does not exist ";
+                return property;
+            }
 
             // Find or create a sub-agency.
             if (!String.IsNullOrWhiteSpace(subAgencyName))

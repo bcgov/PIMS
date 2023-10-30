@@ -199,6 +199,56 @@ namespace Pims.Api.Test.Controllers.Tools
         }
 
         [Fact]
+        public void ImportProperties_InvalidAgency_Success()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var controller = helper.CreateController<ImportController>(Permissions.SystemAdmin);
+
+            var properties = new[]
+            {
+                new Model.ImportPropertyModel()
+                {
+                    ParcelId = "123-123-123",
+                    PID = "123-123-123",
+                    LocalId = "test",
+                    PropertyType = "Land",
+                    AgencyCode = "AESTT",
+                    SubAgency = "School",
+                    FiscalYear = 2020,
+                    Assessed = 0,
+                    Classification = "Classification",
+                    Status = "Active",
+                    CivicAddress = "test",
+                    City = "test",
+                    Postal = "T9T9T9",
+                    LandArea = 45.55f
+                }
+            };
+
+            var parcel = new Entity.Parcel()
+            {
+                Id = 123123123
+            };
+
+            var service = helper.GetService<Mock<IPimsAdminService>>();
+            service.Setup(m => m.BuildingConstructionType.GetAll()).Returns(new Entity.BuildingConstructionType[0]);
+            service.Setup(m => m.BuildingPredominateUse.GetAll()).Returns(new Entity.BuildingPredominateUse[0]);
+            service.Setup(m => m.PropertyClassification.GetAll()).Returns(new[] { new Entity.PropertyClassification(1, "Classification") });
+            service.Setup(m => m.Agency.GetAll()).Returns(new[] { new Entity.Agency("AEST", "Advanced Education, Skills & Training") });
+            service.Setup(m => m.Parcel.GetByPidWithoutTracking(It.IsAny<int>())).Returns(parcel);
+            service.Setup(m => m.AdministrativeArea.Get(It.IsAny<string>())).Returns(new Entity.AdministrativeArea("test"));
+            service.Setup(m => m.Parcel.IsPidAvailable(It.IsAny<int>())).Returns(true);
+
+            var result = controller.ImportProperties(properties);
+            JsonResult actionResult = Assert.IsType<JsonResult>(result);
+            var data = Assert.IsAssignableFrom<IEnumerable<Model.ImportPropertyModel>>(actionResult.Value);
+            Assert.False(data.First().Added);
+            Assert.False(data.First().Updated);
+            Assert.True(data.First().Error != null);
+        }
+
+        [Fact]
         public void ImportProperties_Parcel_InvalidPID_Success()
         {
             // Arrange
