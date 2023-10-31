@@ -70,7 +70,7 @@
     "redux-logger": "3.0.6",
     "redux-thunk": "2.4.2",
     "retry-axios": "3.0.0",
-    "sass": "1.69.0",
+    "sass": "1.69.1",
     "styled-components": "6.0.7",
     "supercluster": "8.0.1",
     "text-mask-addons": "3.8.0",
