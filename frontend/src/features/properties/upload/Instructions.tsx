@@ -70,8 +70,8 @@ export const Instructions = () => (
       </li>
     </ul>
 
-    {/* CAVEATS */}
-    <h4>Caveats</h4>
+    {/* Notes */}
+    <h4 className="red-text">Notes</h4>
     <ul>
       <li>A critical failure in the API will fail the entire payload of up to 100 properties.</li>
       <li>
