@@ -3,6 +3,7 @@ import FeatureRequestForm from 'features/help/forms/FeatureRequestForm';
 import React from 'react';
 
 describe('Testing FeatureRequestForm.tsx', () => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
   it('Form renders with all expected text', () => {
     const { getByText } = render(
       <FeatureRequestForm

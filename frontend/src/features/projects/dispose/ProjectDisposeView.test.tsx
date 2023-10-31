@@ -84,6 +84,7 @@ const renderElement = (store: any) => (
 );
 
 describe('Project Dispose View', () => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
   afterEach(() => {
     cleanup();
     jest.clearAllMocks();

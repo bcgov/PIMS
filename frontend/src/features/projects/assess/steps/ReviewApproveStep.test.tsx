@@ -204,6 +204,8 @@ const getReviewApproveStep = (storeOverride?: any) => (
 );
 
 describe('Review Approve Step', () => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+
   afterEach(() => {
     jest.clearAllMocks();
   });

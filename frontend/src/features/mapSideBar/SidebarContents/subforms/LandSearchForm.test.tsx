@@ -1,7 +1,10 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import { ILookupCode } from 'actions/ILookupCode';
+import { IParcel } from 'actions/parcelsActions';
 import * as API from 'constants/API';
 import Claims from 'constants/claims';
+import LandForm from 'features/mapSideBar/SidebarContents/LandForm';
 import { createMemoryHistory } from 'history';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import noop from 'lodash/noop';
@@ -11,10 +14,6 @@ import { MemoryRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import useKeycloakMock from 'useKeycloakWrapperMock';
-
-import LandForm from 'features/mapSideBar/SidebarContents/LandForm';
-import { IParcel } from 'actions/parcelsActions';
-import { userEvent } from '@testing-library/user-event';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -103,6 +102,9 @@ const getLandForm = (disabled?: boolean, initialValues?: IParcel) => (
 );
 
 describe('Land Form', () => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
+
   it('component renders correctly', () => {
     const { container } = render(getLandForm());
     expect(container.firstChild).toMatchSnapshot();

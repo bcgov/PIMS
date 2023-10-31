@@ -23,6 +23,7 @@ const userRoles: string[] | Claims[] = [];
 const userAgencies: number[] = [1];
 const userAgency: number = 1;
 
+jest.spyOn(console, 'error').mockImplementation(() => {});
 jest.mock('hooks/useKeycloakWrapper');
 (useKeycloakWrapper as jest.Mock).mockReturnValue(
   new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
