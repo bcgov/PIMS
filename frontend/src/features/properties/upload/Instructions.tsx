@@ -73,7 +73,6 @@ export const Instructions = () => (
     {/* Notes */}
     <h4 className="red-text">Notes</h4>
     <ul>
-      <li>A critical failure in the API will fail the entire payload of up to 100 properties.</li>
       <li>
         Names of cities in the Location field must match what is already in the database. Otherwise,
         the property will be rejected.
