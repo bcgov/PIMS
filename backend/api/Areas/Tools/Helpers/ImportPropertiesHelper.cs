@@ -300,9 +300,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                         else if (isBuildingExisting.Count() >= 2)
                         {
                             // there seems to be more than one building with the same name and address.....need to determine which one to update?
-                            property.Added = false;
-                            property.Updated = false;
-                            property.Error = isBuildingExisting.Count() + " buildings were found with the same name. Couldn't tell which one to update.";
+                            throw new Exception(isBuildingExisting.Count() + " buildings were found with the same name. Couldn't tell which one to update.");
                         }
                         else
                         {
