@@ -38,16 +38,11 @@ exports[`Update Info Form Matches Snapshot 1`] = `
         class="col-md-auto"
       >
         <div
-          class="required col-md-1 row"
+          class="required col-md-1 select-row row"
           controlid="input-tierLevelId"
-          style="align-items: center;"
         >
           <div
-            class="col-md-auto"
-          />
-          <div
-            class="col-md-auto"
-            style="padding: 0px;"
+            class="select-column col-md-auto"
           >
             <select
               class="form-select form-control"

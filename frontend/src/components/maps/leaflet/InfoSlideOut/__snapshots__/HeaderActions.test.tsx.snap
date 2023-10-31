@@ -1,52 +1,31 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`HeaderActions View HeaderActions renders correctly 1`] = `
-.c0 {
-  background-color: filterBackgroundColor;
-  height: 35px;
-  width: 322px;
-  margin: 0px 0px 5px -10px;
-  font-size: 14px;
-  padding: 10px;
-}
-
-.c0 a {
-  padding: 0px 10px;
-  color: slideOutBlue;
-}
-
-.c1 {
-  border-left: 2px solid rgba(96, 96, 96, 0.2);
-  height: 18px;
-  width: 0;
-  padding: 0;
-}
-
 <div
-  class="c0 row"
+  class="link-menu"
 >
   Actions:
   <a
+    class="header-link"
     href="/mapview?sidebar=true&disabled=true&loadDraft=false&buildingId=undefined&parcelId=1"
-    style="width: 95px;"
   >
     View details
   </a>
   <div
-    class="c1"
+    class="vertical-bar"
   />
   <a
+    class="header-link"
     href="/mapview?sidebar=true&disabled=false&loadDraft=false&buildingId=undefined&parcelId=1"
-    style="width: 63px;"
   >
     Update
   </a>
   <div
-    class="c1"
+    class="vertical-bar"
   />
   <a
+    class="header-link"
     href="/"
-    style="width: 90px;"
   >
     Zoom map
   </a>

@@ -37,24 +37,19 @@ exports[`Project Draft Step renders correctly 1`] = `
           class="col-5"
         >
           <div
-            class="col-md-2 row"
-            controlid="input-projectNumber"
-            style="align-items: center;"
+            class="col-md-2 input-flex"
+            id="input-projectNumber"
           >
-            <div
-              class="col-md-auto"
-            >
-              <div>
-                <input
-                  class="form-control"
-                  data-testid="project-number"
-                  disabled=""
-                  name="projectNumber"
-                  placeholder="SPP-XXXXXX"
-                  style="width: 200px;"
-                  value="TEST-NUMBER"
-                />
-              </div>
+            <div>
+              <input
+                class="form-control"
+                data-testid="project-number"
+                disabled=""
+                name="projectNumber"
+                placeholder="SPP-XXXXXX"
+                style="width: 200px;"
+                value="TEST-NUMBER"
+              />
             </div>
           </div>
         </div>
@@ -72,22 +67,17 @@ exports[`Project Draft Step renders correctly 1`] = `
           class="col-5"
         >
           <div
-            class="required row"
-            controlid="input-name"
-            style="align-items: center;"
+            class="required input-flex"
+            id="input-name"
           >
-            <div
-              class="col-md-auto"
-            >
-              <div>
-                <input
-                  class="form-control"
-                  data-testid="project-name"
-                  disabled=""
-                  name="name"
-                  value=""
-                />
-              </div>
+            <div>
+              <input
+                class="form-control"
+                data-testid="project-name"
+                disabled=""
+                name="name"
+                value=""
+              />
             </div>
           </div>
         </div>
@@ -105,22 +95,17 @@ exports[`Project Draft Step renders correctly 1`] = `
           class="col-md-auto"
         >
           <div
-            class="col-md-10 row"
-            controlid="input-description"
-            style="align-items: center;"
+            class="col-md-10 input-flex"
+            id="input-description"
           >
-            <div
-              class="col-md-auto"
-            >
-              <div>
-                <textarea
-                  class="col-md-auto form-control"
-                  data-testid="project-description"
-                  disabled=""
-                  name="description"
-                  style="width: 500px;"
-                />
-              </div>
+            <div>
+              <textarea
+                class="col-md-auto form-control"
+                data-testid="project-description"
+                disabled=""
+                name="description"
+                style="width: 500px;"
+              />
             </div>
           </div>
         </div>

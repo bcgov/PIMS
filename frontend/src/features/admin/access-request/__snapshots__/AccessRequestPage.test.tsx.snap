@@ -84,16 +84,11 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
               Agency
             </label>
             <div
-              class="required mx-0 row"
+              class="required mx-0 select-row row"
               controlid="input-agency"
-              style="align-items: center;"
             >
               <div
-                class="col-md-auto"
-              />
-              <div
-                class="col-md-auto"
-                style="padding: 0px;"
+                class="select-column col-md-auto"
               >
                 <select
                   class="agency-selector form-select form-control"
@@ -128,22 +123,17 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
               Position
             </label>
             <div
-              class="position-input mx-0 row"
-              controlid="input-user.position"
-              style="align-items: center;"
+              class="position-input mx-0 input-flex"
+              id="input-user.position"
             >
-              <div
-                class="col-md-auto"
-              >
-                <div>
-                  <input
-                    class="form-control"
-                    name="user.position"
-                    placeholder="e.g Director, Real Estate and Stakeholder Engagement"
-                    type="text"
-                    value=""
-                  />
-                </div>
+              <div>
+                <input
+                  class="form-control"
+                  name="user.position"
+                  placeholder="e.g Director, Real Estate and Stakeholder Engagement"
+                  type="text"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -167,16 +157,11 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
               </a>
             </label>
             <div
-              class="required mx-0 roles-input row"
+              class="required mx-0 roles-input select-row row"
               controlid="input-role"
-              style="align-items: center;"
             >
               <div
-                class="col-md-auto"
-              />
-              <div
-                class="col-md-auto"
-                style="padding: 0px;"
+                class="select-column col-md-auto"
               >
                 <select
                   class="form-select form-control"
@@ -211,20 +196,15 @@ exports[`AccessRequestPage functionality renders RequestAccessPage correctly 1`]
               Notes
             </label>
             <div
-              class="required notes-input mx-0 row"
-              controlid="input-note"
-              style="align-items: center;"
+              class="required notes-input mx-0 input-flex"
+              id="input-note"
             >
-              <div
-                class="col-md-auto"
-              >
-                <div>
-                  <textarea
-                    class="form-control"
-                    name="note"
-                    placeholder="Please specify why you need access to PIMS and include your manager's name."
-                  />
-                </div>
+              <div>
+                <textarea
+                  class="form-control"
+                  name="note"
+                  placeholder="Please specify why you need access to PIMS and include your manager's name."
+                />
               </div>
             </div>
           </div>
