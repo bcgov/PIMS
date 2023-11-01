@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag to deploy'
+        description: 'Tag to deploy - PR number'
         required: true
         default: latest
     
