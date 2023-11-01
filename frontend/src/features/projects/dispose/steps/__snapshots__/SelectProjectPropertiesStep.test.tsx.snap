@@ -31,22 +31,17 @@ exports[`Select Project Properties Step renders correctly 1`] = `
             class="bar-item col"
           >
             <div
-              class="row"
-              controlid="input-pid"
-              style="align-items: center;"
+              class="input-flex"
+              id="input-pid"
             >
-              <div
-                class="col-md-auto"
-              >
-                <div>
-                  <input
-                    class="form-control"
-                    data-testid="pid"
-                    name="pid"
-                    placeholder="Enter PID or PIN"
-                    value=""
-                  />
-                </div>
+              <div>
+                <input
+                  class="form-control"
+                  data-testid="pid"
+                  name="pid"
+                  placeholder="Enter PID or PIN"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -60,22 +55,17 @@ exports[`Select Project Properties Step renders correctly 1`] = `
                 class="input-group-content"
               >
                 <div
-                  class="row"
-                  controlid="input-address"
-                  style="align-items: center;"
+                  class="input-flex"
+                  id="input-address"
                 >
-                  <div
-                    class="col-md-auto"
-                  >
-                    <div>
-                      <input
-                        class="form-control"
-                        data-testid="address"
-                        name="address"
-                        placeholder="Enter an address or city"
-                        value=""
-                      />
-                    </div>
+                  <div>
+                    <input
+                      class="form-control"
+                      data-testid="address"
+                      name="address"
+                      placeholder="Enter an address or city"
+                      value=""
+                    />
                   </div>
                 </div>
               </div>
@@ -85,16 +75,11 @@ exports[`Select Project Properties Step renders correctly 1`] = `
             class="bar-item col"
           >
             <div
-              class="row"
+              class="select-row row"
               controlid="input-agencies"
-              style="align-items: center;"
             >
               <div
-                class="col-md-auto"
-              />
-              <div
-                class="col-md-auto"
-                style="padding: 0px;"
+                class="select-column col-md-auto"
               >
                 <select
                   class="form-select form-control"
@@ -119,16 +104,11 @@ exports[`Select Project Properties Step renders correctly 1`] = `
             class="bar-item col"
           >
             <div
-              class="row"
+              class="select-row row"
               controlid="input-classificationId"
-              style="align-items: center;"
             >
               <div
-                class="col-md-auto"
-              />
-              <div
-                class="col-md-auto"
-                style="padding: 0px;"
+                class="select-column col-md-auto"
               >
                 <select
                   class="form-select form-control"

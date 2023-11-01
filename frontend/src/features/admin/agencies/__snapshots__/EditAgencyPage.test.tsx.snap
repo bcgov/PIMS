@@ -40,65 +40,46 @@ exports[`Edit agency page EditAgencyPage renders 1`] = `
         novalidate=""
       >
         <div
-          class="required row"
-          controlid="input-name"
-          style="align-items: center;"
+          class="required input-flex"
+          id="input-name"
         >
-          <div
-            class="col-md-auto"
+          <label
+            class="form-label"
           >
-            <label
-              class="form-label"
-            >
-              Agency
-            </label>
-          </div>
-          <div
-            class="col-md-auto"
-          >
-            <div>
-              <input
-                aria-label="Agency"
-                class="form-control"
-                name="name"
-                type="text"
-                value="Test Agency"
-              />
-            </div>
+            Agency
+          </label>
+          <div>
+            <input
+              aria-label="Agency"
+              class="form-control"
+              name="name"
+              type="text"
+              value="Test Agency"
+            />
           </div>
         </div>
         <div
-          class="required row"
-          controlid="input-code"
-          style="align-items: center;"
+          class="required input-flex"
+          id="input-code"
         >
-          <div
-            class="col-md-auto"
+          <label
+            class="form-label"
           >
-            <label
-              class="form-label"
-            >
-              Short Name (Code)
-            </label>
-          </div>
-          <div
-            class="col-md-auto"
-          >
-            <div>
-              <input
-                aria-label="Short Name (Code)"
-                class="form-control"
-                name="code"
-                type="text"
-                value="TEST"
-              />
-            </div>
+            Short Name (Code)
+          </label>
+          <div>
+            <input
+              aria-label="Short Name (Code)"
+              class="form-control"
+              name="code"
+              type="text"
+              value="TEST"
+            />
           </div>
         </div>
         <div
-          class="row"
+          class="select-row row"
           controlid="input-parentId"
-          style="align-items: center;"
         >
           <div
             class="col-md-auto"
@@ -110,8 +91,7 @@ exports[`Edit agency page EditAgencyPage renders 1`] = `
             </label>
           </div>
           <div
-            class="col-md-auto"
-            style="padding: 0px;"
+            class="select-column col-md-auto"
           >
             <select
               class="form-select form-control"
@@ -134,112 +114,76 @@ exports[`Edit agency page EditAgencyPage renders 1`] = `
           </div>
         </div>
         <div
-          class="row"
-          controlid="input-description"
-          style="align-items: center;"
+          class="input-flex"
+          id="input-description"
         >
-          <div
-            class="col-md-auto"
+          <label
+            class="form-label"
           >
-            <label
-              class="form-label"
-            >
-              Description
-            </label>
-          </div>
-          <div
-            class="col-md-auto"
-          >
-            <div>
-              <input
-                class="form-control"
-                name="description"
-                type="text"
-                value=""
-              />
-            </div>
+            Description
+          </label>
+          <div>
+            <input
+              class="form-control"
+              name="description"
+              type="text"
+              value=""
+            />
           </div>
         </div>
         <div
-          class="row"
-          controlid="input-email"
-          style="align-items: center;"
+          class="input-flex"
+          id="input-email"
         >
-          <div
-            class="col-md-auto"
+          <label
+            class="form-label"
           >
-            <label
-              class="form-label"
-            >
-              Email address
-            </label>
-          </div>
-          <div
-            class="col-md-auto"
-          >
-            <div>
-              <input
-                aria-label="Email address"
-                class="form-control"
-                name="email"
-                type="text"
-                value="test@email.com"
-              />
-            </div>
+            Email address
+          </label>
+          <div>
+            <input
+              aria-label="Email address"
+              class="form-control"
+              name="email"
+              type="text"
+              value="test@email.com"
+            />
           </div>
         </div>
         <div
-          class="row"
-          controlid="input-addressTo"
-          style="align-items: center;"
+          class="input-flex"
+          id="input-addressTo"
         >
-          <div
-            class="col-md-auto"
+          <label
+            class="form-label"
           >
-            <label
-              class="form-label"
-            >
-              Addressed To
-            </label>
-          </div>
-          <div
-            class="col-md-auto"
-          >
-            <div>
-              <input
-                class="form-control"
-                name="addressTo"
-                type="text"
-                value="Good morning"
-              />
-            </div>
+            Addressed To
+          </label>
+          <div>
+            <input
+              class="form-control"
+              name="addressTo"
+              type="text"
+              value="Good morning"
+            />
           </div>
         </div>
         <div
-          class="row"
-          controlid="input-ccEmail"
-          style="align-items: center;"
+          class="input-flex"
+          id="input-ccEmail"
         >
-          <div
-            class="col-md-auto"
+          <label
+            class="form-label"
           >
-            <label
-              class="form-label"
-            >
-              CC Email address
-            </label>
-          </div>
-          <div
-            class="col-md-auto"
-          >
-            <div>
-              <input
-                class="form-control"
-                name="ccEmail"
-                type="text"
-                value=""
-              />
-            </div>
+            CC Email address
+          </label>
+          <div>
+            <input
+              class="form-control"
+              name="ccEmail"
+              type="text"
+              value=""
+            />
           </div>
         </div>
         <hr />
