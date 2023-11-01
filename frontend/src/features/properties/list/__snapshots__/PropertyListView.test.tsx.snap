@@ -1,41 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Property list view Matches snapshot 1`] = `
-.c5 {
-  display: flex;
-  align-items: center;
-  justify-items: center;
-  position: relative;
-  padding: 0 5px;
-}
-
-.c6 {
+.c4 {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-items: center;
 }
 
-.c7 {
+.c5 {
   flex: auto;
   text-align: left;
 }
 
-.c0 {
-  display: flex;
-}
-
-.c0 .p {
-  font-size: 16px;
-}
-
-.c1 {
-  width: 250px;
-  font-size: 1rem;
-  position: relative;
-}
-
-.c1 .form.Control {
+.c0 .form.Control {
   width: 100%;
   height: 100%;
   border: none;
@@ -46,7 +24,7 @@ exports[`Property list view Matches snapshot 1`] = `
   margin-bottom: 0;
 }
 
-.c1 .suggestionList {
+.c0 .suggestionList {
   background-color: white;
   border-style: solid;
   border-color: lightslategray;
@@ -62,7 +40,7 @@ exports[`Property list view Matches snapshot 1`] = `
   left: -50px;
 }
 
-.c1 option {
+.c0 option {
   padding: 10px 5px;
   word-wrap: break-word;
   width: 400px;
@@ -71,22 +49,22 @@ exports[`Property list view Matches snapshot 1`] = `
   color: #494949;
 }
 
-.c1 option:hover {
+.c0 option:hover {
   background-color: #007bff;
   color: #fff;
 }
 
-.c2 {
+.c1 {
   background-color: #fff!important;
   color: primaryColor!important;
   padding: 6px 5px;
 }
 
-.c4 {
+.c3 {
   margin-right: 12px;
 }
 
-.c3 {
+.c2 {
   border-left: 6px solid rgba(96, 96, 96, 0.2);
   height: 40px;
   margin-left: 1%;
@@ -106,60 +84,48 @@ exports[`Property list view Matches snapshot 1`] = `
     >
       <form
         autocomplete="off"
-        class="container-append"
+        class=""
         novalidate=""
       >
         <div
-          class="map-filter-container container"
+          class="px-0 map-filter-container container-fluid"
         >
           <div
-            class="row"
+            class="flex-div"
           >
-            <div
-              class="filter-col pad-top col-md-auto"
+            <button
+              class="surplus-properties-button btn btn-primary"
+              type="button"
             >
-              <button
-                class="btn btn-primary"
-                style="height: 38px;"
-                type="button"
+              <div
+                class="button-content"
               >
-                <div
-                  class="c0"
+                <svg
+                  class="button-sign"
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <svg
-                    fill="currentColor"
-                    height="20"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    style="margin-right: 5px; margin-top: 2px;"
-                    viewBox="0 0 512 512"
-                    width="20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M496 64H128V16c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16v48H16C7.2 64 0 71.2 0 80v32c0 8.8 7.2 16 16 16h48v368c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V128h368c8.8 0 16-7.2 16-16V80c0-8.8-7.2-16-16-16zM160 384h320V160H160v224z"
-                    />
-                  </svg>
-                  <p
-                    style="margin-bottom: 0px;"
-                  >
-                    Surplus Properties
-                  </p>
-                </div>
-              </button>
-            </div>
+                  <path
+                    d="M496 64H128V16c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16v48H16C7.2 64 0 71.2 0 80v32c0 8.8 7.2 16 16 16h48v368c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V128h368c8.8 0 16-7.2 16-16V80c0-8.8-7.2-16-16-16zM160 384h320V160H160v224z"
+                  />
+                </svg>
+                <span
+                  class="button-text"
+                >
+                  Surplus Properties
+                </span>
+              </div>
+            </button>
             <div
-              class="filter-col pad-top col-md-auto"
+              class="row"
             >
               <div
-                class="divider"
-              />
-            </div>
-            <div
-              class="filter-col col-md-auto"
-            >
-              <div
-                style="padding-top: 24px;"
+                class="dropdown-col col"
               >
                 <div
                   class=""
@@ -200,143 +166,75 @@ exports[`Property list view Matches snapshot 1`] = `
                   </div>
                 </div>
               </div>
-            </div>
-            <div
-              class="filter-col col-md-auto"
-              style="padding-top: 24px; width: 150px;"
-            >
               <div
-                class="rbt"
-                style="outline: none; position: relative;"
-                tabindex="-1"
+                class="filter-col col"
               >
                 <div
-                  style="display: flex; flex: 1; height: 100%; position: relative;"
-                >
-                  <input
-                    aria-autocomplete="both"
-                    aria-expanded="false"
-                    aria-haspopup="listbox"
-                    autocomplete="off"
-                    class="rbt-input-main form-control rbt-input"
-                    id="name-field"
-                    placeholder="Property name"
-                    role="combobox"
-                    type="text"
-                    value=""
-                  />
-                  <input
-                    aria-hidden="true"
-                    class="rbt-input-hint"
-                    readonly=""
-                    style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
-                    tabindex="-1"
-                    value=""
-                  />
-                </div>
-              </div>
-            </div>
-            <div
-              class="filter-col col-md-auto"
-              style="padding-top: 24px; width: 150px;"
-            >
-              <div
-                class=""
-              >
-                <div>
-                  <div
-                    class="rbt"
-                    style="outline: none; position: relative;"
-                    tabindex="-1"
-                  >
-                    <div
-                      style="display: flex; flex: 1; height: 100%; position: relative;"
-                    >
-                      <input
-                        aria-autocomplete="both"
-                        aria-expanded="false"
-                        aria-haspopup="listbox"
-                        autocomplete="off"
-                        class="rbt-input-main form-control rbt-input"
-                        id="administrativeArea-field"
-                        name="administrativeArea"
-                        placeholder="Location"
-                        role="combobox"
-                        style="width: 100%;"
-                        type="text"
-                        value=""
-                      />
-                      <input
-                        aria-hidden="true"
-                        class="rbt-input-hint"
-                        readonly=""
-                        style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
-                        tabindex="-1"
-                        value=""
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="filter-col property-filter-options col-md-auto"
-            >
-              <div
-                class="input-group"
-              >
-                <div
-                  class="input-group"
+                  class="rbt"
+                  style="outline: none; position: relative;"
+                  tabindex="-1"
                 >
                   <div
-                    class="row"
-                    controlid="input-searchBy"
-                    style="align-items: center;"
+                    style="display: flex; flex: 1; height: 100%; position: relative;"
                   >
-                    <div
-                      class="col-md-auto"
+                    <input
+                      aria-autocomplete="both"
+                      aria-expanded="false"
+                      aria-haspopup="listbox"
+                      autocomplete="off"
+                      class="rbt-input-main form-control rbt-input"
+                      id="name-field"
+                      placeholder="Property name"
+                      role="combobox"
+                      type="text"
+                      value=""
                     />
-                    <div
-                      class="col-md-auto"
-                      style="padding: 0px;"
-                    >
-                      <select
-                        class="form-select form-control"
-                        name="searchBy"
-                        style="margin-left: 10px;"
-                      >
-                        <option
-                          class="option"
-                          value="address"
-                        >
-                          Address
-                        </option>
-                        <option
-                          class="option"
-                          value="pid"
-                        >
-                          PID/PIN
-                        </option>
-                      </select>
-                    </div>
+                    <input
+                      aria-hidden="true"
+                      class="rbt-input-hint"
+                      readonly=""
+                      style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
+                      tabindex="-1"
+                      value=""
+                    />
                   </div>
                 </div>
+              </div>
+              <div
+                class="filter-col col"
+              >
                 <div
-                  class="input-group-content"
+                  class=""
                 >
-                  <div
-                    class="c1 GeocoderAutoComplete"
-                  >
+                  <div>
                     <div
-                      class=""
+                      class="rbt"
+                      style="outline: none; position: relative;"
+                      tabindex="-1"
                     >
-                      <div>
+                      <div
+                        style="display: flex; flex: 1; height: 100%; position: relative;"
+                      >
                         <input
-                          class="form-control"
-                          field="address"
-                          id="input-address"
-                          name="address"
-                          placeholder="Enter an address"
+                          aria-autocomplete="both"
+                          aria-expanded="false"
+                          aria-haspopup="listbox"
+                          autocomplete="off"
+                          class="rbt-input-main form-control rbt-input"
+                          id="administrativeArea-field"
+                          name="administrativeArea"
+                          placeholder="Location"
+                          role="combobox"
+                          style="width: 100%;"
+                          type="text"
+                          value=""
+                        />
+                        <input
+                          aria-hidden="true"
+                          class="rbt-input-hint"
+                          readonly=""
+                          style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%; border-style: inset inset inset inset; border-width: 2px 2px 2px 2px; line-height: normal; padding: 1px 1px 1px 1px;"
+                          tabindex="-1"
                           value=""
                         />
                       </div>
@@ -344,44 +242,98 @@ exports[`Property list view Matches snapshot 1`] = `
                   </div>
                 </div>
               </div>
-            </div>
-            <div
-              class="filter-col col-md-auto"
-              style="padding-top: 24px; width: 150px; margin-right: -10px;"
-            >
               <div
-                class="row"
-                controlid="input-classificationId"
-                style="align-items: center;"
+                class="dropdown-col col"
               >
                 <div
-                  class="col-md-auto"
-                />
-                <div
-                  class="col-md-auto"
-                  style="padding: 0px;"
+                  class="input-group"
                 >
-                  <select
-                    class="form-select form-control"
-                    name="classificationId"
+                  <div
+                    class="input-group"
                   >
-                    <option
-                      value=""
+                    <div
+                      class="select-row row"
+                      controlid="input-searchBy"
                     >
-                      Classification
-                    </option>
-                    <option
-                      class="option"
-                      value="1"
+                      <div
+                        class="select-column col-md-auto"
+                      >
+                        <select
+                          class="form-select form-control"
+                          name="searchBy"
+                        >
+                          <option
+                            class="option"
+                            value="address"
+                          >
+                            Address
+                          </option>
+                          <option
+                            class="option"
+                            value="pid"
+                          >
+                            PID/PIN
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="input-group-content"
+                  >
+                    <div
+                      class="c0 GeocoderAutoComplete"
                     >
-                      classificationVal
-                    </option>
-                  </select>
+                      <div
+                        class=""
+                      >
+                        <div>
+                          <input
+                            class="form-control"
+                            field="address"
+                            id="input-address"
+                            name="address"
+                            placeholder="Enter an address"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="filter-col col"
+              >
+                <div
+                  class="select-row row"
+                  controlid="input-classificationId"
+                >
+                  <div
+                    class="select-column col-md-auto"
+                  >
+                    <select
+                      class="form-select form-control"
+                      name="classificationId"
+                    >
+                      <option
+                        value=""
+                      >
+                        Classification
+                      </option>
+                      <option
+                        class="option"
+                        value="1"
+                      >
+                        classificationVal
+                      </option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
             <div
-              class="filter-col pad-top col-md-auto"
+              class="flex-div"
             >
               <div>
                 <button
@@ -408,10 +360,6 @@ exports[`Property list view Matches snapshot 1`] = `
                   </div>
                 </button>
               </div>
-            </div>
-            <div
-              class="filter-col pad-top col-md-auto"
-            >
               <div>
                 <button
                   class="Button Button--icon-only btn btn-info"
@@ -493,7 +441,7 @@ exports[`Property list view Matches snapshot 1`] = `
       </h6>
       <div>
         <button
-          class="c2 btn btn-primary"
+          class="c1 btn btn-primary"
           type="button"
         >
           <svg
@@ -514,7 +462,7 @@ exports[`Property list view Matches snapshot 1`] = `
       </div>
       <div>
         <button
-          class="c2 btn btn-primary"
+          class="c1 btn btn-primary"
           type="button"
         >
           <svg
@@ -534,11 +482,11 @@ exports[`Property list view Matches snapshot 1`] = `
         </button>
       </div>
       <div
-        class="c3"
+        class="c2"
       />
       <div>
         <button
-          class="c2 c4 btn btn-primary"
+          class="c1 c3 btn btn-primary"
           type="button"
         >
           <svg
@@ -614,16 +562,17 @@ exports[`Property list view Matches snapshot 1`] = `
                 class="sortable-column"
               >
                 <div
-                  class="c5 filter-wrapper"
+                  class="filter-wrapper"
                 >
                   <svg
+                    class="filter-icon"
                     fill="none"
                     height="1em"
+                    id="filter-inactive"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    style="font-size: 10px;"
                     viewBox="0 0 24 24"
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
@@ -638,7 +587,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 </div>
                 <span />
                 <div
-                  class="c6"
+                  class="c4"
                 >
                   <svg
                     fill="currentColor"
@@ -681,16 +630,17 @@ exports[`Property list view Matches snapshot 1`] = `
                 class="sortable-column"
               >
                 <div
-                  class="c5 filter-wrapper"
+                  class="filter-wrapper"
                 >
                   <svg
+                    class="filter-icon"
                     fill="none"
                     height="1em"
+                    id="filter-inactive"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    style="font-size: 10px;"
                     viewBox="0 0 24 24"
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
@@ -705,7 +655,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 </div>
                 <span />
                 <div
-                  class="c6"
+                  class="c4"
                 >
                   <svg
                     fill="currentColor"
@@ -750,7 +700,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 Property Name
                 <span />
                 <div
-                  class="c6"
+                  class="c4"
                 >
                   <svg
                     fill="currentColor"
@@ -792,16 +742,17 @@ exports[`Property list view Matches snapshot 1`] = `
                 class="sortable-column"
               >
                 <div
-                  class="c5 filter-wrapper"
+                  class="filter-wrapper"
                 >
                   <svg
+                    class="filter-icon"
                     fill="none"
                     height="1em"
+                    id="filter-inactive"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    style="font-size: 10px;"
                     viewBox="0 0 24 24"
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
@@ -816,7 +767,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 </div>
                 <span />
                 <div
-                  class="c6"
+                  class="c4"
                 >
                   <svg
                     fill="currentColor"
@@ -889,7 +840,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 Street Address
                 <span />
                 <div
-                  class="c6"
+                  class="c4"
                 >
                   <svg
                     fill="currentColor"
@@ -932,16 +883,17 @@ exports[`Property list view Matches snapshot 1`] = `
                 class="sortable-column"
               >
                 <div
-                  class="c5 filter-wrapper"
+                  class="filter-wrapper"
                 >
                   <svg
+                    class="filter-icon"
                     fill="none"
                     height="1em"
+                    id="filter-inactive"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    style="font-size: 10px;"
                     viewBox="0 0 24 24"
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
@@ -956,7 +908,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 </div>
                 <span />
                 <div
-                  class="c6"
+                  class="c4"
                 >
                   <svg
                     fill="currentColor"
@@ -1000,16 +952,17 @@ exports[`Property list view Matches snapshot 1`] = `
               >
                 <div>
                   <div
-                    class="c5 filter-wrapper"
+                    class="filter-wrapper"
                   >
                     <svg
+                      class="filter-icon"
                       fill="none"
                       height="1em"
+                      id="filter-inactive"
                       stroke="currentColor"
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
-                      style="font-size: 10px;"
                       viewBox="0 0 24 24"
                       width="1em"
                       xmlns="http://www.w3.org/2000/svg"
@@ -1025,7 +978,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 </div>
                 <span />
                 <div
-                  class="c6"
+                  class="c4"
                 >
                   <svg
                     fill="currentColor"
@@ -1069,16 +1022,17 @@ exports[`Property list view Matches snapshot 1`] = `
               >
                 <div>
                   <div
-                    class="c5 filter-wrapper"
+                    class="filter-wrapper"
                   >
                     <svg
+                      class="filter-icon"
                       fill="none"
                       height="1em"
+                      id="filter-inactive"
                       stroke="currentColor"
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
-                      style="font-size: 10px;"
                       viewBox="0 0 24 24"
                       width="1em"
                       xmlns="http://www.w3.org/2000/svg"
@@ -1094,7 +1048,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 </div>
                 <span />
                 <div
-                  class="c6"
+                  class="c4"
                 >
                   <svg
                     fill="currentColor"
@@ -1138,16 +1092,17 @@ exports[`Property list view Matches snapshot 1`] = `
               >
                 <div>
                   <div
-                    class="c5 filter-wrapper"
+                    class="filter-wrapper"
                   >
                     <svg
+                      class="filter-icon"
                       fill="none"
                       height="1em"
+                      id="filter-inactive"
                       stroke="currentColor"
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
-                      style="font-size: 10px;"
                       viewBox="0 0 24 24"
                       width="1em"
                       xmlns="http://www.w3.org/2000/svg"
@@ -1163,7 +1118,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 </div>
                 <span />
                 <div
-                  class="c6"
+                  class="c4"
                 >
                   <svg
                     fill="currentColor"
@@ -1206,16 +1161,17 @@ exports[`Property list view Matches snapshot 1`] = `
                 class="sortable-column"
               >
                 <div
-                  class="c5 filter-wrapper"
+                  class="filter-wrapper"
                 >
                   <svg
+                    class="filter-icon"
                     fill="none"
                     height="1em"
+                    id="filter-inactive"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    style="font-size: 10px;"
                     viewBox="0 0 24 24"
                     width="1em"
                     xmlns="http://www.w3.org/2000/svg"
@@ -1230,7 +1186,7 @@ exports[`Property list view Matches snapshot 1`] = `
                 </div>
                 <span />
                 <div
-                  class="c6"
+                  class="c4"
                 >
                   <svg
                     fill="currentColor"
@@ -1290,7 +1246,7 @@ exports[`Property list view Matches snapshot 1`] = `
       class="table-toolbar"
     >
       <p
-        class="c7"
+        class="c5"
       >
         * Assessed value per building
       </p>

@@ -49,21 +49,16 @@ exports[`Manage Users Component Snapshot matches 1`] = `
           class="bar-item col-md-auto"
         >
           <div
-            class="row"
-            controlid="input-username"
-            style="align-items: center;"
+            class="input-flex"
+            id="input-username"
           >
-            <div
-              class="col-md-auto"
-            >
-              <div>
-                <input
-                  class="input form-control"
-                  name="username"
-                  placeholder="IDIR/BCeID"
-                  value=""
-                />
-              </div>
+            <div>
+              <input
+                class="input form-control"
+                name="username"
+                placeholder="IDIR/BCeID"
+                value=""
+              />
             </div>
           </div>
         </div>
@@ -71,21 +66,16 @@ exports[`Manage Users Component Snapshot matches 1`] = `
           class="bar-item col-md-auto"
         >
           <div
-            class="row"
-            controlid="input-firstName"
-            style="align-items: center;"
+            class="input-flex"
+            id="input-firstName"
           >
-            <div
-              class="col-md-auto"
-            >
-              <div>
-                <input
-                  class="input form-control"
-                  name="firstName"
-                  placeholder="First name"
-                  value=""
-                />
-              </div>
+            <div>
+              <input
+                class="input form-control"
+                name="firstName"
+                placeholder="First name"
+                value=""
+              />
             </div>
           </div>
         </div>
@@ -93,21 +83,16 @@ exports[`Manage Users Component Snapshot matches 1`] = `
           class="bar-item col-md-auto"
         >
           <div
-            class="row"
-            controlid="input-lastName"
-            style="align-items: center;"
+            class="input-flex"
+            id="input-lastName"
           >
-            <div
-              class="col-md-auto"
-            >
-              <div>
-                <input
-                  class="input form-control"
-                  name="lastName"
-                  placeholder="Last name"
-                  value=""
-                />
-              </div>
+            <div>
+              <input
+                class="input form-control"
+                name="lastName"
+                placeholder="Last name"
+                value=""
+              />
             </div>
           </div>
         </div>
@@ -115,21 +100,16 @@ exports[`Manage Users Component Snapshot matches 1`] = `
           class="bar-item col-md-auto"
         >
           <div
-            class="row"
-            controlid="input-email"
-            style="align-items: center;"
+            class="input-flex"
+            id="input-email"
           >
-            <div
-              class="col-md-auto"
-            >
-              <div>
-                <input
-                  class="input form-control"
-                  name="email"
-                  placeholder="Email"
-                  value=""
-                />
-              </div>
+            <div>
+              <input
+                class="input form-control"
+                name="email"
+                placeholder="Email"
+                value=""
+              />
             </div>
           </div>
         </div>
@@ -137,26 +117,21 @@ exports[`Manage Users Component Snapshot matches 1`] = `
           class="bar-item col-md-auto"
         >
           <div
-            class="row"
-            controlid="input-position"
-            style="align-items: center;"
+            class="input-flex"
+            id="input-position"
           >
-            <div
-              class="col-md-auto"
-            >
-              <div>
-                <input
-                  class="input form-control"
-                  name="position"
-                  placeholder="Position"
-                  value=""
-                />
-              </div>
+            <div>
+              <input
+                class="input form-control"
+                name="position"
+                placeholder="Position"
+                value=""
+              />
             </div>
           </div>
         </div>
         <div
-          class="bar-item parent-select col-md-auto"
+          class="bar-item col-md-auto"
         >
           <div
             class=""
@@ -199,19 +174,13 @@ exports[`Manage Users Component Snapshot matches 1`] = `
         </div>
         <div
           class="bar-item col-md-auto"
-          style="margin-left: -12px; margin-right: 10px; margin-top: 2px;"
         >
           <div
-            class="row"
+            class="select-row row"
             controlid="input-role"
-            style="align-items: center;"
           >
             <div
-              class="col-md-auto"
-            />
-            <div
-              class="col-md-auto"
-              style="padding: 0px;"
+              class="select-column col-md-auto"
             >
               <select
                 class="input form-select form-control"
