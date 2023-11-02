@@ -99,7 +99,7 @@ export const UploadProgress = (props: IUploadProgressProps) => {
                       item,
                     )} failed to upload.`}</p>
                     <p>{`Property Name: ${getName(item)}`}</p>
-                    <p>{`Error: ${item.error ?? 'Unknown'}`}</p>
+                    <p>{`Error: ${item.error && item.error !== '' ? item.error : 'Unknown'}`}</p>
                   </div>
                 ))}
             </Accordion.Body>
