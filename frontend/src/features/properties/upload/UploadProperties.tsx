@@ -124,7 +124,7 @@ export const UploadProperties: React.FC = () => {
           };
         });
         // Split array into chunks and send to endpoint (API restriction)
-        const chunkSize = 100;
+        const chunkSize = 50;
         for (let i = 0; i < convertedCsvData.length; i += chunkSize) {
           const currentChunk = convertedCsvData.slice(i, i + chunkSize);
           try {
