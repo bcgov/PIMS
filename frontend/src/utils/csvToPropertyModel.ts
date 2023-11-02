@@ -169,7 +169,9 @@ export const csvFileToString = (file: File): Promise<string> => {
 
     reader.onload = (event) => {
       if (event.target && event.target.result) {
-        const csvData = (event.target.result as string).replace(/\r\n/g, '\n');
+        const csvData = (event.target.result as string)
+          .replace(/\r\n/g, '\n')
+          .replace(/^,+$/gm, '');
         resolve(csvData);
       } else {
         reject(new Error('Failed to read file.'));
