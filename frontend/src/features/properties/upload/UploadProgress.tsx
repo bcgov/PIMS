@@ -1,8 +1,8 @@
 import './UploadProgress.scss';
 
 import { Button } from 'components/common/form/Button';
-import React, { useEffect } from 'react';
-import { Col, Container, ProgressBar, Row } from 'react-bootstrap';
+import React from 'react';
+import { Accordion, Col, Container, ProgressBar, Row } from 'react-bootstrap';
 
 import { dataToCsvFile } from '../../../utils/csvToPropertyModel';
 import { IFeedObject, IProgressState, UploadPhase } from './UploadProperties';
@@ -38,16 +38,12 @@ export const UploadProgress = (props: IUploadProgressProps) => {
     link.click();
   };
 
-  // Used to scroll nicely down the upload feed area
-  const resultsFeed = document.getElementById('results-feed');
-  useEffect(() => {
-    if (resultsFeed) {
-      resultsFeed.scrollTo({
-        top: resultsFeed.scrollHeight,
-        behavior: 'smooth',
-      });
-    }
-  }, [feed]);
+  // Returns true if item was successfully added
+  const itemSuccessful = (item: IFeedObject) => item.added === true || item.updated === true;
+
+  // Creates phrase to mention pid (existing or missing)
+  const getPidPhrase = (item: IFeedObject) =>
+    item.pid && item.pid !== '' ? `PID ${item.pid}` : 'missing PID';
 
   return (
     <div id="progress-area">
@@ -72,33 +68,50 @@ export const UploadProgress = (props: IUploadProgressProps) => {
         />
       </ProgressBar>
       <div id="results-feed">
-        {feed.map((item, index) => {
-          const successful = item.added === true || item.updated === true;
-          const pidPhrase = item.pid && item.pid !== '' ? `PID ${item.pid}` : 'missing PID';
-          return successful ? (
-            <div key={`${item.pid}:${index}`} className="feed-item feed-success">
-              <p>
-                {`${item.type === 'Land' ? 'Parcel' : 'Building'} with ${pidPhrase} ${
-                  item.updated ? 'updated' : 'added'
-                } successfully.`}
-              </p>
-              <p>{`Property Name: ${item.name ?? 'N/A'}`}</p>
-            </div>
-          ) : (
-            <div key={`${item.pid}:${index}`} className="feed-item feed-failure">
-              <p>{`${
-                item.type === 'Land' ? 'Parcel' : 'Building'
-              } with ${pidPhrase} failed to upload.`}</p>
-              <p>{`Property Name: ${item.name ?? 'N/A'}`}</p>
-              <p>{`Error: ${item.error ?? 'Unknown'}`}</p>
-            </div>
-          );
-        })}
+        <Accordion flush id="successful-items">
+          <Accordion.Item eventKey="0">
+            <Accordion.Header>{`Successes: ${progress.successes}`}</Accordion.Header>
+            <Accordion.Body className="feed-accordion">
+              {feed.map((item, index) =>
+                itemSuccessful(item) ? (
+                  <div key={`${item.pid}:${index}`} className="feed-item feed-success">
+                    <p>
+                      {`${item.type === 'Land' ? 'Parcel' : 'Building'} with ${getPidPhrase(
+                        item,
+                      )} ${item.updated ? 'updated' : 'added'} successfully.`}
+                    </p>
+                    <p>{`Property Name: ${item.name ?? 'N/A'}`}</p>
+                  </div>
+                ) : (
+                  <></>
+                ),
+              )}
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="1">
+            <Accordion.Header>{`Failures: ${progress.failures}`}</Accordion.Header>
+            <Accordion.Body className="feed-accordion">
+              {feed.map((item, index) =>
+                !itemSuccessful(item) ? (
+                  <div key={`${item.pid}:${index}`} className="feed-item feed-failure">
+                    <p>{`${item.type === 'Land' ? 'Parcel' : 'Building'} with ${getPidPhrase(
+                      item,
+                    )} failed to upload.`}</p>
+                    <p>{`Property Name: ${item.name ?? 'N/A'}`}</p>
+                    <p>{`Error: ${item.error ?? 'Unknown'}`}</p>
+                  </div>
+                ) : (
+                  <></>
+                ),
+              )}
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
         {phase === UploadPhase.DONE ? (
           <Container id="final-feed-report">
             <Row>
               <Col sm={7}>
-                <p>Upload completed. {progress.totalRecords} properties processed.</p>
+                <p>Upload completed. {progress.totalRecords} entries processed.</p>
                 <p>Successes: {progress.successes}</p>
                 <p>Failures: {progress.failures}</p>
               </Col>

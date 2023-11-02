@@ -29,8 +29,16 @@
     background-color: #852e2e4f;
   }
 
+  .accordion-body {
+    padding: 0;
+  }
+
+  .accordion-button {
+    margin: 0;
+  }
+
   #final-feed-report {
-    padding: 0 0.5rem;
+    padding: 0 1rem;
     margin: 1rem 0;
     height: fit-content;
 
