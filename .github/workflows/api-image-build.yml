@@ -39,12 +39,12 @@ jobs:
 
         - name: Tag API Image
           run: |
-            docker tag pims_backend ${{ secrets.PUBLIC_IMAGE_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/pims-api:${{  context.issue.number }}
+            docker tag pims_backend ${{ secrets.PUBLIC_IMAGE_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/pims-api:${{github.event.issue.number}}
 
         # Push the API Image
         - name: Push API Image
           run: |
-            docker push ${{ secrets.PUBLIC_IMAGE_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/pims-api:${{  context.issue.number }}
+            docker push ${{ secrets.PUBLIC_IMAGE_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/pims-api:${{github.event.issue.number}}
 
         - name: Add Comment To the PR
           uses: actions/github-script@v6
@@ -54,5 +54,5 @@ jobs:
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                body: 'The API Image is built with the tag: ${{  context.issue.number }}, Please use this tag to promote the these changes to TEST and PROD environments when deploying the API.'
+                body: 'The API Image is built with the tag: ${{github.event.issue.number }}, Please use this tag to promote the these changes to TEST and PROD environments when deploying the API.'
               })
