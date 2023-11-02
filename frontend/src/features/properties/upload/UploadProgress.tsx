@@ -45,6 +45,8 @@ export const UploadProgress = (props: IUploadProgressProps) => {
   const getPidPhrase = (item: IFeedObject) =>
     item.pid && item.pid !== '' ? `PID ${item.pid}` : 'missing PID';
 
+  const getName = (item: IFeedObject) => (item.name && item.name !== '' ? item.name : 'N/A');
+
   return (
     <div id="progress-area">
       <h4>Do not leave the page or close the window until the upload is complete.</h4>
@@ -81,7 +83,7 @@ export const UploadProgress = (props: IUploadProgressProps) => {
                         item,
                       )} ${item.updated ? 'updated' : 'added'} successfully.`}
                     </p>
-                    <p>{`Property Name: ${item.name ?? 'N/A'}`}</p>
+                    <p>{`Property Name: ${getName(item)}`}</p>
                   </div>
                 ))}
             </Accordion.Body>
@@ -96,7 +98,7 @@ export const UploadProgress = (props: IUploadProgressProps) => {
                     <p>{`${item.type === 'Land' ? 'Parcel' : 'Building'} with ${getPidPhrase(
                       item,
                     )} failed to upload.`}</p>
-                    <p>{`Property Name: ${item.name ?? 'N/A'}`}</p>
+                    <p>{`Property Name: ${getName(item)}`}</p>
                     <p>{`Error: ${item.error ?? 'Unknown'}`}</p>
                   </div>
                 ))}
