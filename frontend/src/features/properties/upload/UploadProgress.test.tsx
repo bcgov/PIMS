@@ -14,7 +14,7 @@ describe('Testing Progress section for CSV Upload', () => {
   let progress: IProgressState = startingProgress;
   let feed: IFeedObject[] = [];
   let phase: UploadPhase = UploadPhase.FILE_SELECT;
-  const { queryByText } = render(<UploadProgress {...{ progress, feed, phase }} />);
+  const { queryByText, queryAllByText } = render(<UploadProgress {...{ progress, feed, phase }} />);
 
   beforeEach(() => {
     progress = startingProgress;
@@ -61,8 +61,8 @@ describe('Testing Progress section for CSV Upload', () => {
     const { queryByText } = render(<UploadProgress {...{ progress, feed, phase }} />);
     expect(queryByText(/Upload Complete/)).toBeInTheDocument();
     expect(queryByText(/Download Results/)).toBeInTheDocument();
-    expect(queryByText(/Successes: 5/)).toBeInTheDocument();
-    expect(queryByText(/Failures: 5/)).toBeInTheDocument();
+    expect(queryAllByText(/Successes: 5/)).toHaveLength(2); // Once for accordion, once for summary
+    expect(queryAllByText(/Failures: 5/)).toHaveLength(2);
   });
 
   it('Buttons in final report are clickable', async () => {
