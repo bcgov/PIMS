@@ -195,7 +195,9 @@ export const dataToCsvFile: (incomingJSON: object[]) => string = (incomingJSON: 
   const csvString = Papa.unparse(incomingJSON, {
     header: true,
   });
-  return encodeURI(`data:text/csv;charset=utf-8,${csvString}`);
+  const blob = new Blob([csvString], { type: 'text/csv' });
+  const file = URL.createObjectURL(blob);
+  return file;
 };
 
 /**

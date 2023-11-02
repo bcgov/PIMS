@@ -5,6 +5,7 @@ import { UploadProgress } from './UploadProgress';
 import { IFeedObject, IProgressState, UploadPhase } from './UploadProperties';
 
 describe('Testing Progress section for CSV Upload', () => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
   const startingProgress: IProgressState = {
     message: 'starting message',
     totalRecords: 10,
@@ -87,6 +88,7 @@ describe('Testing Progress section for CSV Upload', () => {
     // Download button
     const downloadButton = container.querySelector('#download-results-button');
     const downloadSpy = jest.spyOn(document, 'createElement');
+    window.URL.createObjectURL = jest.fn(() => 'fileString');
     await waitFor(() => {
       fireEvent.click(downloadButton!);
     });
