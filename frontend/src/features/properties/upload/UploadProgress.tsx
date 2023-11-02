@@ -72,8 +72,9 @@ export const UploadProgress = (props: IUploadProgressProps) => {
           <Accordion.Item eventKey="0">
             <Accordion.Header>{`Successes: ${progress.successes}`}</Accordion.Header>
             <Accordion.Body className="feed-accordion">
-              {feed.map((item, index) =>
-                itemSuccessful(item) ? (
+              {feed
+                .filter((item) => itemSuccessful(item))
+                .map((item, index) => (
                   <div key={`${item.pid}:${index}`} className="feed-item feed-success">
                     <p>
                       {`${item.type === 'Land' ? 'Parcel' : 'Building'} with ${getPidPhrase(
@@ -82,17 +83,15 @@ export const UploadProgress = (props: IUploadProgressProps) => {
                     </p>
                     <p>{`Property Name: ${item.name ?? 'N/A'}`}</p>
                   </div>
-                ) : (
-                  <></>
-                ),
-              )}
+                ))}
             </Accordion.Body>
           </Accordion.Item>
           <Accordion.Item eventKey="1">
             <Accordion.Header>{`Failures: ${progress.failures}`}</Accordion.Header>
             <Accordion.Body className="feed-accordion">
-              {feed.map((item, index) =>
-                !itemSuccessful(item) ? (
+              {feed
+                .filter((item) => !itemSuccessful(item))
+                .map((item, index) => (
                   <div key={`${item.pid}:${index}`} className="feed-item feed-failure">
                     <p>{`${item.type === 'Land' ? 'Parcel' : 'Building'} with ${getPidPhrase(
                       item,
@@ -100,10 +99,7 @@ export const UploadProgress = (props: IUploadProgressProps) => {
                     <p>{`Property Name: ${item.name ?? 'N/A'}`}</p>
                     <p>{`Error: ${item.error ?? 'Unknown'}`}</p>
                   </div>
-                ) : (
-                  <></>
-                ),
-              )}
+                ))}
             </Accordion.Body>
           </Accordion.Item>
         </Accordion>
