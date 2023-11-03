@@ -5,12 +5,15 @@ metadata:
     description: Defines how to deploy pims-api
     tags: dev,api
     name: ${APPLICATION_NAME}
-  namespace: ${NAMESPACE}
+  namespace: ec1236-dev
   labels:
     app: pims
     env: ${ENVIRONMENT}
     name: ${APPLICATION_NAME}
     role: api
+    app.kubernetes.io/part-of: pims-application
+    app.openshift.io/runtime: .NET Core
+    app.openshift.io/runtime-namespace: ec1236-dev
 spec:
   strategy:
     type: Rolling
@@ -31,7 +34,7 @@ spec:
           - ${APPLICATION_NAME}
         from:
           kind: ImageStreamTag
-          namespace:  ${NAMESPACE}
+          namespace: ec1236-dev
           name: '${APPLICATION_NAME}:${IMAGE_TAG}'
   replicas: 1
   revisionHistoryLimit: 10
