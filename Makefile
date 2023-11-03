@@ -95,12 +95,12 @@ server-run: ## Starts local server containers
 
 npm-clean: ## Removes local containers, images, volumes, for frontend application.
 	@echo "$(P) Removing frontend containers and volumes."
-	@docker compose stop frontend
-	@docker compose rm -f -v -s frontend
+	@docker compose stop frontend-dev
+	@docker compose rm -f -v -s frontend-dev
 	@docker volume rm -f pims-app-node-cache
 
 npm-refresh: ## Cleans and rebuilds the frontend.  This is useful when npm packages are changed.
-	@make npm-clean; make build n=frontend; make up;
+	@make npm-clean; make build n=frontend-dev; make up;
 
 db-migrations: ## Display a list of migrations.
 	@echo "$(P) Display a list of migrations."
