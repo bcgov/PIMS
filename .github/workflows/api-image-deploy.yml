@@ -37,6 +37,7 @@ jobs:
           DC_TEMPLATE: "api-dc-template.yaml"
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
           ENVIRONMENT: "dev"
+          APPLICATION_NAME: "pims-api"
         run: |
           ./.github/helpers/deploy.sh 
 
