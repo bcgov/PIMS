@@ -5,6 +5,11 @@ on:
     branches: [main]
     paths:
       - "backend/**"
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Image Tag'
+        required: true
 
 
 jobs:
