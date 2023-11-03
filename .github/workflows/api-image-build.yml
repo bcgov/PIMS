@@ -54,5 +54,7 @@ jobs:
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                body: 'The API Image is built with the tag: ${{github.event.pull_request.number }}, Please use this tag to promote the these changes to TEST and PROD environments when deploying the API.'
+                body: '🚀 **Deployment Information : TAG :- ${{github.event.pull_request.number}}**
+                    The API Image has been built with the tag: `**${{github.event.pull_request.number}}**`. 
+                    Please make sure to utilize this specific tag when promoting these changes to the TEST and PROD environments during the API deployment.'
               })

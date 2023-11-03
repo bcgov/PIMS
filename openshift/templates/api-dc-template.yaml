@@ -1,19 +1,15 @@
-kind: DeploymentConfig
 apiVersion: apps.openshift.io/v1
+kind: template
 metadata:
   annotations:
     description: Defines how to deploy pims-api
-    kubectl.kubernetes.io/last-applied-configuration: >
-      {"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","metadata":{"annotations":{"description":"Defines
-      how to deploy
-      pims-api"},"labels":{"app":"pims","env":"dev","instance":"","name":"pims-api","role":"api"},"name":"pims-api","namespace":"ec1236-dev"},"spec":{"replicas":2,"selector":{"app":"pims","env":"dev","instance":"","role":"api"},"strategy":{"rollingParams":{"intervalSeconds":1,"maxSurge":"25%","maxUnavailable":"25%","timeoutSeconds":600,"updatePeriodSeconds":1},"type":"Rolling"},"template":{"metadata":{"labels":{"app":"pims","env":"dev","instance":"","name":"pims-api","role":"api"},"name":"pims-api"},"spec":{"containers":[{"env":[{"name":"ASPNETCORE_ENVIRONMENT","value":"Development"},{"name":"ASPNETCORE_URLS","value":"http://*:8080"},{"name":"HealthChecks__LivePath","value":"/health/live"},{"name":"HealthChecks__ReadyPath","value":"/health/ready"},{"name":"ConnectionStrings__PIMS","valueFrom":{"configMapKeyRef":{"key":"CONNECTION_STRINGS_PIMS","name":"pims-api-database"}}},{"name":"DB_USER","valueFrom":{"secretKeyRef":{"key":"DB_USER","name":"pims-database"}}},{"name":"DB_PASSWORD","valueFrom":{"secretKeyRef":{"key":"DB_PASSWORD","name":"pims-database"}}},{"name":"Keycloak__Audience","valueFrom":{"configMapKeyRef":{"key":"KEYCLOAK_AUDIENCE","name":"pims-api-sso"}}},{"name":"Keycloak__Authority","valueFrom":{"configMapKeyRef":{"key":"KEYCLOAK_AUTHORITY","name":"pims-api-sso"}}},{"name":"Keycloak__Admin__Authority","valueFrom":{"configMapKeyRef":{"key":"KEYCLOAK_ADMIN_AUTHORITY","name":"pims-api-sso"}}},{"name":"Keycloak__Secret","valueFrom":{"secretKeyRef":{"key":"KEYCLOAK_SECRET","name":"pims-api-sso"}}},{"name":"Keycloak__ServiceAccount__Secret","valueFrom":{"secretKeyRef":{"key":"KEYCLOAK_SERVICE_ACCOUNT_SECRET","name":"pims-api-sso"}}},{"name":"Ches__Username","valueFrom":{"secretKeyRef":{"key":"CHES_USERNAME","name":"pims-api-ches"}}},{"name":"Ches__Password","valueFrom":{"secretKeyRef":{"key":"CHES_PASSWORD","name":"pims-api-ches"}}},{"name":"Geocoder__Key","valueFrom":{"secretKeyRef":{"key":"GEOCODER_KEY","name":"pims-api-geocoder"}}},{"name":"ElasticConfiguration__Password","valueFrom":{"secretKeyRef":{"key":"ELASTIC_PASSWORD","name":"pims-api-elasticsearch"}}}],"image":"","livenessProbe":{"failureThreshold":3,"httpGet":{"path":"/health/live","port":8080,"scheme":"HTTP"},"initialDelaySeconds":1,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"name":"pims-api","ports":[{"containerPort":8080,"protocol":"TCP"}],"readinessProbe":{"failureThreshold":3,"httpGet":{"path":"/health/ready","port":8080,"scheme":"HTTP"},"initialDelaySeconds":1,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"resources":{"limits":{"cpu":"1","memory":"6Gi"},"requests":{"cpu":"500m","memory":"2Gi"}}}]}},"triggers":[{"type":"ConfigChange"},{"imageChangeParams":{"automatic":true,"containerNames":["pims-api"],"from":{"kind":"ImageStreamTag","name":"pims-api:dev","namespace":"ec1236-tools"}},"type":"ImageChange"}]}}
-  name: pims-api
-  namespace: ec1236-dev
+    tags: dev,api
+    name: ${APPLICATION_NAME}
+  namespace: ${NAMESPACE}
   labels:
     app: pims
-    env: dev
-    instance: ''
-    name: pims-api
+    env: ${ENVIRONMENT}
+    name: ${APPLICATION_NAME}
     role: api
 spec:
   strategy:
@@ -32,28 +28,27 @@ spec:
       imageChangeParams:
         automatic: true
         containerNames:
-          - pims-api
+          - ${APPLICATION_NAME}
         from:
           kind: ImageStreamTag
-          namespace: ec1236-tools
-          name: 'pims-api:dev'
-  replicas: 2
+          namespace:  ${NAMESPACE}
+          name: '${APPLICATION_NAME}:${IMAGE_TAG}'
+  replicas: 1
   revisionHistoryLimit: 10
   test: false
   selector:
     app: pims
-    env: dev
-    instance: ''
+    env: ${ENVIRONMENT}
     role: api
   template:
     metadata:
-      name: pims-api
+      name: ${APPLICATION_NAME}
       creationTimestamp: null
       labels:
         app: pims
         env: dev
         instance: ''
-        name: pims-api
+        name: ${APPLICATION_NAME}
         role: api
     spec:
       containers:
@@ -204,3 +199,25 @@ spec:
       dnsPolicy: ClusterFirst
       securityContext: {}
       schedulerName: default-scheduler
+
+
+parameters:
+  - description: Application Name
+    displayName: AppName
+    name: APPLICATION_NAME
+    required: true
+    value: pims-api
+  - description: Environment
+    displayName: Environment
+    name: ENVIRONMENT
+    required: true
+    value: dev
+  - description: Namespace
+    displayName: Namespace
+    name: NAMESPACE
+    required: true
+    value: ec1236-dev
+  - description: ImageTag
+    displayName: ImageTag
+    name: IMAGE_TAG
+    required: true
