@@ -2,7 +2,7 @@ name: Api Image Build on PR
 
 on:
   pull_request:
-    types: [opened, synchronize] # Triggered by opened or changed pull requests.
+    types: [opened, synchronize, ready_for_review] # Triggered by opened or changed pull requests.
     branches: [main]
     paths:
       - 'backend/**' # Triggers on changes to files in the frontend/ directory.  
@@ -54,5 +54,5 @@ jobs:
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-               body: "🚀 **Deployment Information**\n\nThe API Image has been built with the tag: `**${{github.event.pull_request.number}}**`. Please make sure to utilize this specific tag when promoting these changes to the TEST and PROD environments during the API deployment."
+               body: "🚀 **Deployment Information**\n\nThe API Image has been built with the tag: **`${{github.event.pull_request.number}}`**. Please make sure to utilize this specific tag when promoting these changes to the TEST and PROD environments during the API deployment."
               })
