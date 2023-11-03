@@ -35,7 +35,7 @@ jobs:
         env:
           NAMESPACE: "${{ secrets.OPENSHIFT_DEV_NAMESPACE }}"
           DC_TEMPLATE: "api-dc-template.yaml"
-          IMAGE_TAG: "{{github.event.pull_request.number}}"
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
           ENVIRONMENT: "dev"
         run: |
           ./.github/helpers/deploy.sh 
