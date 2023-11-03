@@ -75,6 +75,8 @@ describe('Testing CSV to JSON Utilities', () => {
 
   // Testing JSON to CSV
   it('JSON objects converted to CSV file string successfully', () => {
+    // Converts blob to string, but only with browser. Mocked here.
+    global.URL.createObjectURL = jest.fn(() => 'text');
     const objs = [
       {
         name: 'Ted',
@@ -88,7 +90,6 @@ describe('Testing CSV to JSON Utilities', () => {
     const fileString = dataToCsvFile(objs);
     expect(fileString).toBeDefined();
     expect(typeof fileString).toBe('string');
-    expect(fileString.includes('Ted')).toBeTruthy();
-    expect(fileString.includes('1000')).toBeTruthy();
+    expect(global.URL.createObjectURL).toHaveBeenCalledTimes(1);
   });
 });
