@@ -1,6 +1,7 @@
 services:
   ####################### Database #######################
   database:
+    profiles: ['prod', 'dev']
     restart: 'no'
     container_name: pims-database
     build:
@@ -16,6 +17,7 @@ services:
 
   ####################### Backend #######################
   backend:
+    profiles: ['prod', 'dev']
     restart: 'no'
     container_name: pims-api
     build:
@@ -33,6 +35,7 @@ services:
 
   ####################### Frontend #######################
   frontend:
+    profiles: ['prod']
     stdin_open: true
     tty: true
     restart: 'no'
@@ -51,6 +54,7 @@ services:
 
   ####################### Frontend Dev #######################
   frontend-dev:
+    profiles: ['dev']
     stdin_open: true
     tty: true
     restart: 'no'

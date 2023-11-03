@@ -50,7 +50,7 @@ refresh: ## Recreates local docker environment (n=service name)
 
 up: ## Runs the local containers (n=service name)
 	@echo "$(P) Running client and server..."
-	@docker compose --env-file .env up -d $(n)
+	@docker compose --env-file .env --profile prod up -d $(n)
 
 down: ## Stops the local containers and removes them
 	@echo "$(P) Stopping client and server..."
@@ -62,7 +62,7 @@ stop: ## Stops the local containers (n=service name)
 
 build: ## Builds the local containers (n=service name)
 	@echo "$(P) Building images..."
-	@docker compose build --no-cache $(n)
+	@docker compose --profile prod build --no-cache $(n)
 
 rebuild: ## Build the local contains (n=service name) and then start them after building
 	@make build n=$(n)
