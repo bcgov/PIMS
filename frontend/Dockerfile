@@ -7,6 +7,7 @@ FROM node:18.17.1-bullseye-slim as dev
 
 WORKDIR /app
 ENV NODE_ENV=development
+ENV CONTAINERIZED=true
 
 # Copy files, excluding those in .dockerignore
 COPY . .
@@ -17,7 +18,7 @@ RUN npm i
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
 
 #############################################
 #                Prod Build                 #
@@ -27,23 +28,24 @@ FROM node:18.17.1-bullseye-slim as prod-build
 # Set the working directory to /app
 WORKDIR /app
 ENV NODE_ENV=production
+ENV CONTAINERIZED=true
 
 # Copy files
 COPY ./src ./src
 COPY ./public ./public
 COPY package.json .
 COPY tsconfig.json .
-COPY vite.config.js .
-COPY ./public/index.html .
+COPY vite.config.ts .
+COPY ./index.html .
 
 EXPOSE 8080
 
 # Npm install packages. Omits dev dependencies when NODE_ENV=production
 RUN npm set progress=false
-RUN npm i vite@4.4.9 @vitejs/plugin-react@4.0.4 vite-plugin-svgr@3.3.0 vite-tsconfig-paths@4.2.1
+RUN npm i
 
 # Build the project.
-RUN npm run build-ocp
+RUN npm run build
 
 ## Stage 2: Nginx state for serving content
 FROM nginx:alpine-slim as prod
