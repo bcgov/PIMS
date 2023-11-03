@@ -37,7 +37,7 @@ jobs:
   Health-Check:
     name: Check Deployment Health
     runs-on: ubuntu-latest
-    needs: [ deploy ]
+    needs: [ Deploy-To-OpenShift ]
     steps:
       - name: Login to OpenShift
         uses: redhat-actions/oc-login@v1
