@@ -509,7 +509,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 b_e.Agency = agency;
 
                 // if the building has an associated land, then there will be a PID. This is where the association is created when a new ParcelBuilding entry is created for the building and the parcel.
-                if (property.PID != null && property.PID != "")
+                if (property.PID != null && property.PID != "" && parcel != null)
                     b_e.Parcels.Add(new Entity.ParcelBuilding(parcel, b_e) { Parcel = null, Building = null });
                 b_e.Name = name;
                 b_e.Description = property.Description.ConvertToUTF8(false);
