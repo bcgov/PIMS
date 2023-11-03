@@ -11,6 +11,9 @@ on:
         description: 'Image Tag'
         required: true
 
+env:
+  IMAGE_TAG: ${{ github.event.inputs.image_tag }} || ${{ github.event.pull_request.number }}
+
 
 jobs:
   Deploy-To-OpenShift:
