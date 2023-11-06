@@ -366,14 +366,8 @@ namespace Pims.Api.Areas.Tools.Helpers
 
                 if (subAgency == null)
                 {
-                    subAgency = new Entity.Agency(createCode, subAgencyName)
-                    {
-                        ParentId = agency.Id,
-                        Parent = agency
-                    };
-                    _pimsAdminService.Agency.Add(subAgency);
-                    _agencies.Add(subAgency);
-                    _logger.LogDebug($"Adding sub-agency '{subAgency.Code}' - '{agency.Name}', parent: '{subAgency.Parent.Code}'.");
+                    property.Error = $"Sub Agency: '{property.SubAgency}' does not exist ";
+                    return property;
                 }
 
                 return subAgency;
