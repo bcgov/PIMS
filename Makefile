@@ -48,9 +48,15 @@ refresh: ## Recreates local docker environment (n=service name)
 	@make build n=$(n)
 	@make up n=$(n)
 
-up: ## Runs the local containers (n=service name)
+up: ## Runs the local containers (n=service name), stop dev container first
 	@echo "$(P) Running client and server..."
+	@docker compose rm -sf frontend-dev
 	@docker compose --env-file .env --profile prod up -d $(n)
+
+up-dev: ## Runs the local containers (n=service name), stop prod container first
+	@echo "$(P) Running client and server..."
+	@docker compose rm -sf frontend
+	@docker compose --env-file .env --profile dev up -d $(n)
 
 down: ## Stops the local containers and removes them
 	@echo "$(P) Stopping client and server..."
@@ -100,7 +106,9 @@ npm-clean: ## Removes local containers, images, volumes, for frontend-dev contai
 	@docker volume rm -f pims-app-node-cache
 
 npm-refresh: ## Cleans and rebuilds the frontend-dev container.  This is useful when npm packages are changed.
-	@make npm-clean; make build n=frontend-dev; make up;
+	@make npm-clean; 
+	@make build n=frontend-dev; 
+	@make up-dev;
 
 db-migrations: ## Display a list of migrations.
 	@echo "$(P) Display a list of migrations."
