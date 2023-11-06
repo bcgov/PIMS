@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`limited fast select renders correctly 1`] = `
+exports[`Testing FindMorePropertiesForm Snapshot Test 1`] = `
 <div
   id="find-more-properties"
 >

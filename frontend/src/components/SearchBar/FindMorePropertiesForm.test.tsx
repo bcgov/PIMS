@@ -1,4 +1,5 @@
 import Adapter from '@cfaester/enzyme-adapter-react-18';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import FindMorePropertiesForm from 'components/SearchBar/FindMorePropertiesForm';
 import * as API from 'constants/API';
@@ -27,6 +28,8 @@ jest.mock('hooks/useKeycloakWrapper');
 jest.mock('formik');
 Enzyme.configure({ adapter: new Adapter() });
 
+const handleSubmit = jest.fn();
+
 (useFormikContext as jest.Mock).mockReturnValue({
   values: {
     classificationId: 0,
@@ -34,6 +37,7 @@ Enzyme.configure({ adapter: new Adapter() });
   },
   registerField: jest.fn(),
   unregisterField: jest.fn(),
+  handleSubmit: handleSubmit,
 });
 (getIn as jest.Mock).mockReturnValue(0);
 
@@ -66,16 +70,27 @@ const store = mockStore({
   lookupCode: lCodes,
 });
 
-it('limited fast select renders correctly', () => {
-  // const context = useFormikContext();
-  const tree = renderer
-    .create(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={[history.location]}>
-          <FindMorePropertiesForm />
-        </MemoryRouter>
-      </Provider>,
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
+const RenderHelper = () => (
+  <Provider store={store}>
+    <MemoryRouter initialEntries={[history.location]}>
+      <FindMorePropertiesForm />
+    </MemoryRouter>
+  </Provider>
+);
+
+describe('Testing FindMorePropertiesForm', () => {
+  it('Snapshot Test', () => {
+    const tree = renderer.create(<RenderHelper />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('handleSubmit function called', () => {
+    const { container } = render(<RenderHelper />);
+    const searchButton = container.querySelector('.search-button');
+    waitFor(() => {
+      fireEvent.click(searchButton!);
+    });
+
+    expect(handleSubmit).toHaveBeenCalledTimes(1);
+  });
 });
