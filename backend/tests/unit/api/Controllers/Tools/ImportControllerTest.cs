@@ -154,7 +154,7 @@ namespace Pims.Api.Test.Controllers.Tools
                     LocalId = "test",
                     PropertyType = "Land",
                     AgencyCode = "AEST",
-                    SubAgency = "School",
+                    SubAgency = "",
                     FiscalYear = 2020,
                     Assessed = 0,
                     Classification = "Classification",
@@ -194,7 +194,6 @@ namespace Pims.Api.Test.Controllers.Tools
             service.Verify(m => m.PropertyClassification.GetAll(), Times.Once());
             service.Verify(m => m.AdministrativeArea.Get(It.IsAny<string>()), Times.Once());
             service.Verify(m => m.Agency.GetAll(), Times.Once());
-            service.Verify(m => m.Agency.Add(It.IsAny<Entity.Agency>()), Times.Once());
             service.Verify(m => m.Parcel.Update(It.IsAny<Entity.Parcel>()), Times.Once());
         }
 
@@ -359,7 +358,7 @@ namespace Pims.Api.Test.Controllers.Tools
                     LocalId = "test",
                     PropertyType = "Building",
                     AgencyCode = "AEST",
-                    SubAgency = "School",
+                    SubAgency = "",
                     FiscalYear = 2020,
                     Assessed = 0,
                     BuildingPredominateUse = "School",
@@ -401,7 +400,6 @@ namespace Pims.Api.Test.Controllers.Tools
             service.Verify(m => m.BuildingPredominateUse.GetAll(), Times.Once());
             service.Verify(m => m.PropertyClassification.GetAll(), Times.Once());
             service.Verify(m => m.Agency.GetAll(), Times.Once());
-            service.Verify(m => m.Agency.Add(It.IsAny<Entity.Agency>()), Times.Once());
             service.Verify(m => m.Building.Add(It.IsAny<Entity.Building>()), Times.Once());
         }
 
@@ -419,7 +417,6 @@ namespace Pims.Api.Test.Controllers.Tools
                     LocalId = "test",
                     PropertyType = "Building",
                     AgencyCode = "AEST",
-                    SubAgency = "School",
                     FiscalYear = 2020,
                     Assessed = 0,
                     BuildingPredominateUse = "School",
