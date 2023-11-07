@@ -9,10 +9,9 @@ objects:
   apiVersion: apps.openshift.io/v1
   metadata:
     annotations:
-      description: Defines how to deploy pims-api
-      tags: dev,api
-      name: ${APPLICATION_NAME}
+      openshift.io/generated-by: OpenShiftWebConsole
     namespace: ${NAMESPACE}
+    name: ${APPLICATION_NAME}
     labels:
       app: pims
       env: ${ENVIRONMENT}
@@ -41,7 +40,7 @@ objects:
           - ${APPLICATION_NAME}
         from:
           kind: ImageStreamTag
-          namespace: ${NAMESPACE}
+          namespace: ${NAMESPACE}-tools
           name: '${APPLICATION_NAME}:${IMAGE_TAG}'
   replicas: 1
   revisionHistoryLimit: 10
