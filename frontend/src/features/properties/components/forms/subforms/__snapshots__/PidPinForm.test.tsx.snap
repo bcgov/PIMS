@@ -7,20 +7,10 @@ exports[`PidPin sub-form renders correctly 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="flex-nowrap pid-pin align-items-center row"
-    style={
-      Object {
-        "marginBottom": "20px",
-      }
-    }
+    className="align-items-center pid-pin-form row"
   >
     <div
-      className="col"
-      style={
-        Object {
-          "width": "30px",
-        }
-      }
+      className="left-column col-2"
     >
       <label
         className="label"
@@ -29,44 +19,30 @@ exports[`PidPin sub-form renders correctly 1`] = `
       </label>
     </div>
     <div
-      className="col-md-auto"
+      className="col-4"
     >
       <div
-        className="required row"
-        controlid="input-pid"
-        style={
-          Object {
-            "alignItems": "center",
-          }
-        }
+        className="required input-flex"
+        id="input-pid"
       >
         <div
-          className="col-md-auto"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
         >
-          <div
+          <input
+            className="input-small form-control"
+            name="pid"
             onBlur={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
-          >
-            <input
-              className="input-small form-control"
-              name="pid"
-              onBlur={[Function]}
-              onChange={[Function]}
-              value=""
-            />
-          </div>
+            onChange={[Function]}
+            value=""
+          />
         </div>
       </div>
     </div>
     <div
-      className="col"
-      style={
-        Object {
-          "width": "20px",
-        }
-      }
+      className="left-column pin-column col-2"
     >
       <label
         className="label"
@@ -75,71 +51,53 @@ exports[`PidPin sub-form renders correctly 1`] = `
       </label>
     </div>
     <div
-      className="col-md-auto"
+      className="no-padding col-3"
     >
       <div
-        className="required row"
-        controlid="input-pin"
-        style={
-          Object {
-            "alignItems": "center",
-          }
-        }
+        className="required input-flex"
+        id="input-pin"
       >
         <div
-          className="col-md-auto"
-          style={
-            Object {
-              "width": "25px",
-            }
-          }
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
         >
-          <div
+          <input
+            className="input-small form-control"
+            name="pin"
             onBlur={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
-          >
-            <div>
-              <svg
-                className="tooltip-icon"
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                strokeWidth="0"
-                style={
-                  Object {
-                    "color": undefined,
-                  }
-                }
-                viewBox="0 0 512 512"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
-                />
-              </svg>
-            </div>
-          </div>
+            onChange={[Function]}
+            type="number"
+            value=""
+          />
         </div>
         <div
-          className="col-md-auto"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseOut={[Function]}
+          onMouseOver={[Function]}
         >
-          <div
-            onBlur={[Function]}
-            onFocus={[Function]}
-            onMouseOut={[Function]}
-            onMouseOver={[Function]}
-          >
-            <input
-              className="input-small form-control"
-              name="pin"
-              onBlur={[Function]}
-              onChange={[Function]}
-              type="number"
-              value=""
-            />
+          <div>
+            <svg
+              className="tooltip-icon"
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              strokeWidth="0"
+              style={
+                Object {
+                  "color": undefined,
+                }
+              }
+              viewBox="0 0 512 512"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+              />
+            </svg>
           </div>
         </div>
       </div>

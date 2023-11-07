@@ -30,22 +30,17 @@ exports[`Project list view tests Matches snapshot 1`] = `
             class="bar-item col-md-auto"
           >
             <div
-              class="row"
-              controlid="input-name"
-              style="align-items: center;"
+              class="input-flex"
+              id="input-name"
             >
-              <div
-                class="col-md-auto"
-              >
-                <div>
-                  <input
-                    class="form-control"
-                    name="name"
-                    placeholder="Search by project name or number"
-                    style="width: 280px;"
-                    value=""
-                  />
-                </div>
+              <div>
+                <input
+                  class="form-control"
+                  name="name"
+                  placeholder="Search by project name or number"
+                  style="width: 280px;"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -147,16 +142,11 @@ exports[`Project list view tests Matches snapshot 1`] = `
             style="margin-left: 13px; margin-right: 8px;"
           >
             <div
-              class="row"
+              class="select-row row"
               controlid="input-fiscalYear"
-              style="align-items: center;"
             >
               <div
-                class="col-md-auto"
-              />
-              <div
-                class="col-md-auto"
-                style="padding: 0px;"
+                class="select-column col-md-auto"
               >
                 <select
                   class="form-select form-control"
