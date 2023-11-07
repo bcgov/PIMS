@@ -10,7 +10,7 @@ objects:
   metadata:
     annotations:
       openshift.io/generated-by: OpenShiftWebConsole
-    namespace: ${NAMESPACE}
+    namespace: ${LICENSE_PLATE}-${ENVIRONMENT}
     name: ${APPLICATION_NAME}
     labels:
       app: pims
@@ -19,7 +19,7 @@ objects:
       role: api
       app.kubernetes.io/part-of: pims-application
       app.openshift.io/runtime: .NET Core
-      app.openshift.io/runtime-namespace: ${NAMESPACE}
+      app.openshift.io/runtime-namespace: ${LICENSE_PLATE}-${ENVIRONMENT}
   spec:
   strategy:
     type: Rolling
@@ -40,7 +40,7 @@ objects:
           - ${APPLICATION_NAME}
         from:
           kind: ImageStreamTag
-          namespace: ${NAMESPACE}-tools
+          namespace: ${LICENSE_PLATE}-tools
           name: '${APPLICATION_NAME}:${IMAGE_TAG}'
   replicas: 1
   revisionHistoryLimit: 10
@@ -221,11 +221,11 @@ parameters:
     name: ENVIRONMENT
     required: true
     value: dev
-  - description: Namespace
-    displayName: Namespace
-    name: NAMESPACE
+  - description: License Plate
+    displayName: License Plate
+    name: LICENSE_PLATE
     required: true
-    value: ec1236-dev
+    value: ec1236
   - description: ImageTag
     displayName: ImageTag
     name: IMAGE_TAG
