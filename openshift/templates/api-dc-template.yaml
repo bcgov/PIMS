@@ -1,20 +1,27 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
-  annotations:
-    description: Defines how to deploy pims-api
-    tags: dev,api
-    name: ${APPLICATION_NAME}
-  namespace: ec1236-dev
-  labels:
-    app: pims
-    env: ${ENVIRONMENT}
-    name: ${APPLICATION_NAME}
-    role: api
-    app.kubernetes.io/part-of: pims-application
-    app.openshift.io/runtime: .NET Core
-    app.openshift.io/runtime-namespace: ec1236-dev
-spec:
+  name: ${APPLICATION_NAME}-template
+labels:
+  template: ${APPLICATION_NAME}-template
+objects:
+- kind: DeploymentConfig
+  apiVersion: apps.openshift.io/v1
+  metadata:
+    annotations:
+      description: Defines how to deploy pims-api
+      tags: dev,api
+      name: ${APPLICATION_NAME}
+    namespace: ${NAMESPACE}
+    labels:
+      app: pims
+      env: ${ENVIRONMENT}
+      name: ${APPLICATION_NAME}
+      role: api
+      app.kubernetes.io/part-of: pims-application
+      app.openshift.io/runtime: .NET Core
+      app.openshift.io/runtime-namespace: ${NAMESPACE}
+  spec:
   strategy:
     type: Rolling
     rollingParams:
@@ -34,7 +41,7 @@ spec:
           - ${APPLICATION_NAME}
         from:
           kind: ImageStreamTag
-          namespace: ec1236-dev
+          namespace: ${NAMESPACE}
           name: '${APPLICATION_NAME}:${IMAGE_TAG}'
   replicas: 1
   revisionHistoryLimit: 10
