@@ -152,6 +152,7 @@ namespace Pims.Dal.Services
                 .Include(p => p.Evaluations)
                 .Include(p => p.Fiscals)
                 .Include(p => p.UpdatedBy)
+                .Include(p => p.CreatedBy)
                 .Include(p => p.Projects).ThenInclude(pp => pp.Project).ThenInclude(p => p.Workflow)
                 .Include(p => p.Projects).ThenInclude(pp => pp.Project).ThenInclude(p => p.Status)
                 .AsNoTracking()
