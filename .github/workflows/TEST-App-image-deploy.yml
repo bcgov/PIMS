@@ -1,0 +1,87 @@
+name : App Image Deploy on PR merge
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Image Tag'
+        required: true
+
+env:
+  IMAGE_TAG: ${{ github.event.inputs.image_tag }}
+
+
+jobs:
+  Deploy-To-OpenShift:
+    name: Deploy to OpenShift
+    runs-on: ubuntu-latest
+  
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3 
+    
+      - name: Login to OpenShift
+        uses: redhat-actions/oc-login@v1
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
+          openshift_token: ${{ secrets.OPENSHIFT_SA_DEV_TOKEN }}
+          namespace: ${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
+
+      - name: Process and Apply API DeploymentConfig
+        env:
+          NAMESPACE: "${{ secrets.OPENSHIFT_DEV_NAMESPACE }}"
+          DC_TEMPLATE: "api-dc-template.yaml"
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
+          ENVIRONMENT: "dev"
+          APPLICATION_NAME: "pims-app"
+          LICENSE_PLATE: "${{ secrets.LICENSE_PLATE }}"
+        run: |
+          ./.github/helpers/deploy.sh 
+
+            
+  Health-Check:
+    name: Check Deployment Health
+    runs-on: ubuntu-latest
+    needs: [ Deploy-To-OpenShift ]
+    steps:
+      - name: Login to OpenShift
+        uses: redhat-actions/oc-login@v1
+        env:
+          OPENSHIFT_USER: github-actions
+          OPENSHIFT_PROJECT: ${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
+          openshift_token: ${{ secrets.OPENSHIFT_SA_DEV_TOKEN }}
+          namespace: ${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
+
+      - name: Check Deployment Status
+        run: |
+          oc rollout status -n ${{ secrets.OPENSHIFT_DEV_NAMESPACE }} dc/pims-api --watch
+
+  Clean-Up:
+    name: Clean Up
+    runs-on: ubuntu-latest
+    needs: [ Health-Check ]
+    steps:
+      - name: Login to OpenShift
+        uses: redhat-actions/oc-login@v1
+        env:
+          OPENSHIFT_USER: github-actions
+          OPENSHIFT_PROJECT: ${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
+          openshift_token: ${{ secrets.OPENSHIFT_SA_DEV_TOKEN }}
+          namespace: ${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
+
+      - name: Remove previous objects
+        run: |
+          oc delete pod -n ${{ secrets.OPENSHIFT_DEV_NAMESPACE }} --field-selector status.phase=Succeeded
+
+      - name: Remove previous replication controllers
+        run: |
+          oc delete rc -n ${{ secrets.OPENSHIFT_DEV_NAMESPACE }} --field-selector status.replicas=0
+
