@@ -268,8 +268,7 @@ namespace Pims.Dal.Test.Services.Admin
             Assert.NotEmpty(results);
             Assert.Collection(results,
             item => Assert.Equal(building.Address.ToString(), item.Address.ToString()),
-        item => Assert.Equal(building2.Address.ToString(), item.Address.ToString()),
-        item => Assert.Equal(building2.Description.ToString(), item.Description.ToString()));
+        item => Assert.Equal(building2.Address.ToString(), item.Address.ToString()));
             Assert.Collection(results,
             item => Assert.Equal(building.Parcels.First().ParcelId, item.Parcels.First().ParcelId),
         item => Assert.Equal(building2.Parcels.First().ParcelId, item.Parcels.First().ParcelId));
