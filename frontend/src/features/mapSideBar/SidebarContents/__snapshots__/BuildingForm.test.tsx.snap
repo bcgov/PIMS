@@ -62,12 +62,6 @@ exports[`Building Form component renders correctly 1`] = `
   cursor: default;
 }
 
-.c6 {
-  width: 250px;
-  font-size: 1rem;
-  position: relative;
-}
-
 .c6 .form.Control {
   width: 100%;
   height: 100%;
@@ -238,21 +232,9 @@ exports[`Building Form component renders correctly 1`] = `
         >
           <div>
             <div
-              class="primary"
+              style="color: black;"
             >
-              <svg
-                fill="currentColor"
-                height="20"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 448 512"
-                width="20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
-                />
-              </svg>
+              Add another associated Parcel
             </div>
           </div>
         </button>
@@ -392,13 +374,13 @@ exports[`Building Form component renders correctly 1`] = `
                   class="row"
                 >
                   <div
-                    class="col"
+                    class="col-6"
                   >
                     <div
-                      class="row"
+                      class="information-form-row row"
                     >
                       <div
-                        class="col-md-auto"
+                        class="left-column col-3"
                       >
                         <label
                           class="form-label"
@@ -407,32 +389,27 @@ exports[`Building Form component renders correctly 1`] = `
                         </label>
                       </div>
                       <div
-                        class="col-md-auto"
+                        class="col"
                       >
                         <div
-                          class="row"
-                          controlid="input-building.name"
-                          style="align-items: center;"
+                          class="input-flex"
+                          id="input-building.name"
                         >
-                          <div
-                            class="col-md-auto"
-                          >
-                            <div>
-                              <input
-                                class="form-control"
-                                name="building.name"
-                                value=""
-                              />
-                            </div>
+                          <div>
+                            <input
+                              class="input form-control"
+                              name="building.name"
+                              value=""
+                            />
                           </div>
                         </div>
                       </div>
                     </div>
                     <div
-                      class="row"
+                      class="information-form-row row"
                     >
                       <div
-                        class="col-md-auto"
+                        class="left-column col-3"
                       >
                         <label
                           class="form-label"
@@ -441,32 +418,26 @@ exports[`Building Form component renders correctly 1`] = `
                         </label>
                       </div>
                       <div
-                        class="col-md-auto"
+                        class="col"
                       >
                         <div
-                          class="row"
-                          controlid="input-building.description"
-                          style="align-items: center;"
+                          class="input-flex"
+                          id="input-building.description"
                         >
-                          <div
-                            class="col-md-auto"
-                          >
-                            <div>
-                              <textarea
-                                class="form-control"
-                                name="building.description"
-                              />
-                            </div>
+                          <div>
+                            <textarea
+                              class="input form-control"
+                              name="building.description"
+                            />
                           </div>
                         </div>
                       </div>
                     </div>
                     <div
-                      class="row"
+                      class="information-form-row row"
                     >
                       <div
-                        class="col-md-auto"
-                        style="margin-right: 15px;"
+                        class="left-column col-3"
                       >
                         <label
                           class="form-label"
@@ -475,8 +446,7 @@ exports[`Building Form component renders correctly 1`] = `
                         </label>
                       </div>
                       <div
-                        class="col-md-auto"
-                        style="margin-right: 10px;"
+                        class="col"
                       >
                         <div
                           class=""
@@ -519,13 +489,13 @@ exports[`Building Form component renders correctly 1`] = `
                     </div>
                   </div>
                   <div
-                    class="col"
+                    class="col-6"
                   >
                     <div
                       class="row"
                     >
                       <div
-                        class="col-md-auto"
+                        class="left-column col-5"
                       >
                         <label
                           class="label"
@@ -534,7 +504,7 @@ exports[`Building Form component renders correctly 1`] = `
                         </label>
                       </div>
                       <div
-                        class="col-md-auto"
+                        class="col"
                       >
                         <div
                           class="required"
@@ -561,7 +531,7 @@ exports[`Building Form component renders correctly 1`] = `
                       class="row"
                     >
                       <div
-                        class="col-md-auto"
+                        class="left-column col-5"
                       >
                         <label
                           class="label"
@@ -570,7 +540,7 @@ exports[`Building Form component renders correctly 1`] = `
                         </label>
                       </div>
                       <div
-                        class="col-md-auto"
+                        class="col"
                       >
                         <div
                           class="required"
@@ -597,7 +567,7 @@ exports[`Building Form component renders correctly 1`] = `
                       class="row"
                     >
                       <div
-                        class="col-md-auto"
+                        class="left-column col-5"
                       >
                         <label
                           class="label"
@@ -606,8 +576,7 @@ exports[`Building Form component renders correctly 1`] = `
                         </label>
                       </div>
                       <div
-                        class="col-md-auto"
-                        style="width: 275px;"
+                        class="col"
                       >
                         <div
                           class=""
@@ -617,7 +586,6 @@ exports[`Building Form component renders correctly 1`] = `
                               class="input-small form-control"
                               id="input-building.buildingFloorCount"
                               name="building.buildingFloorCount"
-                              style="width: 100px;"
                               type="number"
                               value=""
                             />
@@ -628,14 +596,11 @@ exports[`Building Form component renders correctly 1`] = `
                   </div>
                   <div
                     class="row"
-                    style="justify-content: center;"
                   >
                     <div
                       class="input-medium harmful"
                     >
-                      <p
-                        style="margin-bottom: -5px;"
-                      >
+                      <p>
                         Would this information be harmful if released? 
                       </p>
                       <div>
@@ -767,26 +732,24 @@ exports[`Building Form component renders correctly 1`] = `
                 <hr />
                 <div
                   class="row"
-                  style="text-align: left;"
                 >
-                  <h4>
+                  <h4
+                    class="text-start"
+                  >
                     Location
                   </h4>
                 </div>
                 <div
                   class="row"
-                  style="margin-bottom: 10px;"
                 >
                   <div
-                    class="col"
+                    class="col-6"
                   >
                     <div
-                      class="row"
-                      style="margin-bottom: 10px; align-items: center;"
+                      class="address-form-row row"
                     >
                       <div
-                        class="col-md-auto"
-                        style="width: 140px; text-align: right; margin-right: 0px;"
+                        class="address-form-left-columns col-4"
                       >
                         <label
                           class="label"
@@ -795,7 +758,7 @@ exports[`Building Form component renders correctly 1`] = `
                         </label>
                       </div>
                       <div
-                        class="col-md-auto"
+                        class="col"
                       >
                         <div
                           class="c6 GeocoderAutoComplete"
@@ -818,12 +781,10 @@ exports[`Building Form component renders correctly 1`] = `
                       </div>
                     </div>
                     <div
-                      class="row"
-                      style="margin-bottom: 10px; align-items: center;"
+                      class="address-form-row row"
                     >
                       <div
-                        class="col-md-auto"
-                        style="width: 140px; text-align: right; margin-right: 0px;"
+                        class="address-form-left-columns col-4"
                       >
                         <label
                           class="label"
@@ -832,7 +793,7 @@ exports[`Building Form component renders correctly 1`] = `
                         </label>
                       </div>
                       <div
-                        class="col-md-auto"
+                        class="col"
                       >
                         <div
                           class="required"
@@ -874,12 +835,10 @@ exports[`Building Form component renders correctly 1`] = `
                       </div>
                     </div>
                     <div
-                      class="row"
-                      style="margin-bottom: 10px; align-items: center;"
+                      class="address-form-row row"
                     >
                       <div
-                        class="col-md-auto"
-                        style="width: 140px; text-align: right; padding-right: 12px; margin-right: -35px;"
+                        class="address-form-left-columns col-4"
                       >
                         <label
                           class="label"
@@ -888,20 +847,14 @@ exports[`Building Form component renders correctly 1`] = `
                         </label>
                       </div>
                       <div
-                        class="col-md-auto"
-                        style="padding-right: 0px;"
+                        class="col"
                       >
                         <div
-                          class="row"
+                          class="select-row row"
                           controlid="input-building.address.provinceId"
-                          style="align-items: center;"
                         >
                           <div
-                            class="col-md-auto"
-                          />
-                          <div
-                            class="col-md-auto"
-                            style="padding: 0px;"
+                            class="select-column col-md-auto"
                           >
                             <select
                               class="form-select form-control"
@@ -919,12 +872,10 @@ exports[`Building Form component renders correctly 1`] = `
                       </div>
                     </div>
                     <div
-                      class="postal row"
-                      style="margin-bottom: 10px; align-items: center;"
+                      class="address-form-row row"
                     >
                       <div
-                        class="col-md-auto"
-                        style="width: 140px; text-align: right; margin-left: 0px;"
+                        class="address-form-left-columns col-4"
                       >
                         <label
                           class="label"
@@ -933,8 +884,7 @@ exports[`Building Form component renders correctly 1`] = `
                         </label>
                       </div>
                       <div
-                        class="col-md-auto"
-                        style="width: 275px;"
+                        class="col"
                       >
                         <div
                           class=""
@@ -944,7 +894,6 @@ exports[`Building Form component renders correctly 1`] = `
                               class="input-small form-control"
                               id="input-building.address.postal"
                               name="building.address.postal"
-                              style="width: 120px;"
                               value=""
                             />
                           </div>
@@ -953,7 +902,7 @@ exports[`Building Form component renders correctly 1`] = `
                     </div>
                   </div>
                   <div
-                    class="col"
+                    class="col-5"
                   >
                     <div
                       class="lat-long"
@@ -990,7 +939,7 @@ exports[`Building Form component renders correctly 1`] = `
                         class="row"
                       >
                         <div
-                          class="col-md-auto"
+                          class="col-3"
                         >
                           <label
                             class="label"
@@ -999,7 +948,7 @@ exports[`Building Form component renders correctly 1`] = `
                           </label>
                         </div>
                         <div
-                          class="col-md-auto"
+                          class="col"
                         >
                           <div
                             class="required"
@@ -1020,7 +969,7 @@ exports[`Building Form component renders correctly 1`] = `
                         class="row"
                       >
                         <div
-                          class="col-md-auto"
+                          class="col-3"
                         >
                           <label
                             class="label"
@@ -1029,7 +978,7 @@ exports[`Building Form component renders correctly 1`] = `
                           </label>
                         </div>
                         <div
-                          class="col-md-auto"
+                          class="col"
                         >
                           <div
                             class="required"

@@ -1,12 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`PropertyFilterOptions renders for address: address 1`] = `
-.c0 {
-  width: 250px;
-  font-size: 1rem;
-  position: relative;
-}
-
 .c0 .form.Control {
   width: 100%;
   height: 100%;
@@ -56,21 +50,15 @@ exports[`PropertyFilterOptions renders for address: address 1`] = `
       class="input-group"
     >
       <div
-        class="row"
+        class="select-row row"
         controlid="input-searchBy"
-        style="align-items: center;"
       >
         <div
-          class="col-md-auto"
-        />
-        <div
-          class="col-md-auto"
-          style="padding: 0px;"
+          class="select-column col-md-auto"
         >
           <select
             class="form-select form-control"
             name="searchBy"
-            style="margin-left: 10px;"
           >
             <option
               class="option"
@@ -123,21 +111,15 @@ exports[`PropertyFilterOptions renders for pid: pid 1`] = `
       class="input-group"
     >
       <div
-        class="row"
+        class="select-row row"
         controlid="input-searchBy"
-        style="align-items: center;"
       >
         <div
-          class="col-md-auto"
-        />
-        <div
-          class="col-md-auto"
-          style="padding: 0px;"
+          class="select-column col-md-auto"
         >
           <select
             class="form-select form-control"
             name="searchBy"
-            style="margin-left: 10px;"
           >
             <option
               class="option"
@@ -159,22 +141,16 @@ exports[`PropertyFilterOptions renders for pid: pid 1`] = `
       class="input-group-content"
     >
       <div
-        class="row"
-        controlid="input-pid"
-        style="align-items: center;"
+        class="input-flex"
+        id="input-pid"
       >
-        <div
-          class="col-md-auto"
-        >
-          <div>
-            <input
-              class="form-control"
-              name="pid"
-              placeholder="Enter a PID or PIN"
-              style="margin-left: -5px; width: 136px; margin-right: 10px;"
-              value=""
-            />
-          </div>
+        <div>
+          <input
+            class="form-control"
+            name="pid"
+            placeholder="Enter a PID or PIN"
+            value=""
+          />
         </div>
       </div>
     </div>

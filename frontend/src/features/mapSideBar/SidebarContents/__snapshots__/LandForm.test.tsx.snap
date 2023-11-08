@@ -62,12 +62,6 @@ exports[`Land Form component renders correctly 1`] = `
   cursor: default;
 }
 
-.c4 {
-  width: 250px;
-  font-size: 1rem;
-  position: relative;
-}
-
 .c4 .form.Control {
   width: 100%;
   height: 100%;
@@ -220,21 +214,9 @@ exports[`Land Form component renders correctly 1`] = `
         >
           <div>
             <div
-              class="primary"
+              style="color: black;"
             >
-              <svg
-                fill="currentColor"
-                height="20"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 448 512"
-                width="20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"
-                />
-              </svg>
+              Add another associated Parcel
             </div>
           </div>
         </button>
@@ -362,8 +344,7 @@ exports[`Land Form component renders correctly 1`] = `
                 class="container"
               >
                 <div
-                  class="row"
-                  style="text-align: left;"
+                  class="header-row row"
                 >
                   <h4>
                     Parcel Identification
@@ -371,6 +352,7 @@ exports[`Land Form component renders correctly 1`] = `
                 </div>
                 <div
                   class="section g-0 row"
+                  id="land-search-form"
                 >
                   <div
                     class="col-md-12"
@@ -430,12 +412,10 @@ exports[`Land Form component renders correctly 1`] = `
                       role="tabpanel"
                     >
                       <div
-                        class="row"
-                        style="align-items: center; margin-bottom: 5px;"
+                        class="row row"
                       >
                         <div
-                          class="col-md-2"
-                          style="text-align: left;"
+                          class="left-column col-2"
                         >
                           <label
                             class="label"
@@ -444,33 +424,28 @@ exports[`Land Form component renders correctly 1`] = `
                           </label>
                         </div>
                         <div
-                          class="col-md-auto"
-                          style="margin-left: -11px;"
+                          class="col-4"
                         >
                           <div
-                            class="row"
-                            controlid="input-data.searchPid"
-                            style="align-items: center;"
+                            class="input-flex"
+                            id="input-data.searchPid"
                           >
-                            <div
-                              class="col-md-auto"
-                            >
-                              <div>
-                                <input
-                                  class="input-small form-control"
-                                  name="data.searchPid"
-                                  value=""
-                                />
-                              </div>
+                            <div>
+                              <input
+                                class="input-small form-control"
+                                id="pid-field"
+                                name="data.searchPid"
+                                value=""
+                              />
                             </div>
                           </div>
                         </div>
                         <div
                           class="col-md-auto"
-                          style="margin-left: -40px;"
                         >
                           <button
                             class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-78trlr-MuiButtonBase-root-MuiIconButton-root"
+                            id="pid-paste"
                             tabindex="0"
                             type="button"
                           >
@@ -494,12 +469,11 @@ exports[`Land Form component renders correctly 1`] = `
                         </div>
                         <div
                           class="col-md-auto"
-                          style="margin-left: -13px;"
                         >
                           <div>
                             <button
                               class="Button Button--icon-only bg-warning btn btn-primary"
-                              id="search-button"
+                              id="pid-search"
                               type="submit"
                             >
                               <div
@@ -524,12 +498,10 @@ exports[`Land Form component renders correctly 1`] = `
                         </div>
                       </div>
                       <div
-                        class="row"
-                        style="align-items: center; margin-bottom: 5px;"
+                        class="row row"
                       >
                         <div
-                          class="col-md-2"
-                          style="text-align: left;"
+                          class="left-column col-2"
                         >
                           <label
                             class="label"
@@ -538,7 +510,7 @@ exports[`Land Form component renders correctly 1`] = `
                           </label>
                         </div>
                         <div
-                          class="col-md-auto"
+                          class="col-4"
                         >
                           <div
                             class=""
@@ -546,7 +518,7 @@ exports[`Land Form component renders correctly 1`] = `
                             <div>
                               <input
                                 class="input-small form-control"
-                                id="input-data.searchPin"
+                                id="pin-field"
                                 name="data.searchPin"
                                 type="number"
                                 value=""
@@ -556,10 +528,10 @@ exports[`Land Form component renders correctly 1`] = `
                         </div>
                         <div
                           class="col-md-auto"
-                          style="margin-left: -27px;"
                         >
                           <button
                             class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-78trlr-MuiButtonBase-root-MuiIconButton-root"
+                            id="pin-paste"
                             tabindex="0"
                             type="button"
                           >
@@ -583,12 +555,11 @@ exports[`Land Form component renders correctly 1`] = `
                         </div>
                         <div
                           class="col-md-auto"
-                          style="margin-left: -13px;"
                         >
                           <div>
                             <button
                               class="Button Button--icon-only bg-warning btn btn-primary"
-                              id="search-button"
+                              id="pin-search"
                               type="submit"
                             >
                               <div
@@ -613,12 +584,10 @@ exports[`Land Form component renders correctly 1`] = `
                         </div>
                       </div>
                       <div
-                        class="row"
-                        style="align-items: center;"
+                        class="row row"
                       >
                         <div
-                          class="col-md-2"
-                          style="text-align: left;"
+                          class="left-column col-2"
                         >
                           <label
                             class="label"
@@ -627,7 +596,7 @@ exports[`Land Form component renders correctly 1`] = `
                           </label>
                         </div>
                         <div
-                          class="col-md-auto"
+                          class="col-4"
                         >
                           <div
                             class="c4 GeocoderAutoComplete"
@@ -649,7 +618,6 @@ exports[`Land Form component renders correctly 1`] = `
                         </div>
                         <div
                           class="col-md-auto"
-                          style="margin-left: -27px;"
                         >
                           <button
                             class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-78trlr-MuiButtonBase-root-MuiIconButton-root"
@@ -676,13 +644,12 @@ exports[`Land Form component renders correctly 1`] = `
                         </div>
                         <div
                           class="col-md-auto"
-                          style="margin-left: -13px;"
                         >
                           <div>
                             <button
                               class="Button Button--disabled Button--icon-only bg-warning btn btn-primary"
                               disabled=""
-                              id="search-button"
+                              id="address-search"
                               type="submit"
                             >
                               <div
@@ -714,8 +681,7 @@ exports[`Land Form component renders correctly 1`] = `
                       role="tabpanel"
                     >
                       <div
-                        class="row"
-                        style="align-items: center;"
+                        class="row row"
                       >
                         <div
                           class="col-md-auto"
@@ -739,487 +705,449 @@ exports[`Land Form component renders correctly 1`] = `
                   class="section disabled g-0 row"
                 >
                   <div
-                    class="col-md-12"
-                  >
-                    <h5>
-                      Parcel Details
-                    </h5>
-                  </div>
-                  <div
-                    class="col-md-6"
+                    class="col-12"
                   >
                     <div
-                      class="flex-nowrap pid-pin align-items-center row"
-                      style="margin-bottom: 20px;"
+                      class="row"
                     >
                       <div
-                        class="col"
-                        style="width: 30px;"
+                        class="col-md-12"
                       >
-                        <label
-                          class="label"
-                        >
-                          PID
-                        </label>
+                        <h5>
+                          Parcel Details
+                        </h5>
                       </div>
+                    </div>
+                    <div
+                      class="row"
+                    >
                       <div
-                        class="col-md-auto"
+                        class="col-12"
                       >
                         <div
-                          class="required row"
-                          controlid="input-data.pid"
-                          style="align-items: center;"
+                          class="align-items-center pid-pin-form row"
                         >
                           <div
-                            class="col-md-auto"
+                            class="left-column col-2"
                           >
-                            <div>
-                              <input
-                                class="input-small form-control"
-                                name="data.pid"
-                                value=""
-                              />
-                            </div>
+                            <label
+                              class="label"
+                            >
+                              PID
+                            </label>
                           </div>
-                        </div>
-                      </div>
-                      <div
-                        class="col"
-                        style="width: 20px;"
-                      >
-                        <label
-                          class="label"
-                        >
-                          PIN
-                        </label>
-                      </div>
-                      <div
-                        class="col-md-auto"
-                      >
-                        <div
-                          class="required row"
-                          controlid="input-data.pin"
-                          style="align-items: center;"
-                        >
                           <div
-                            class="col-md-auto"
-                            style="width: 25px;"
+                            class="col-4"
                           >
-                            <div>
+                            <div
+                              class="required input-flex"
+                              id="input-data.pid"
+                            >
                               <div>
-                                <svg
-                                  class="tooltip-icon"
-                                  fill="currentColor"
-                                  height="1em"
-                                  stroke="currentColor"
-                                  stroke-width="0"
-                                  viewBox="0 0 512 512"
-                                  width="1em"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+                                <input
+                                  class="input-small form-control"
+                                  name="data.pid"
+                                  value=""
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="left-column pin-column col-2"
+                          >
+                            <label
+                              class="label"
+                            >
+                              PIN
+                            </label>
+                          </div>
+                          <div
+                            class="no-padding col-3"
+                          >
+                            <div
+                              class="required input-flex"
+                              id="input-data.pin"
+                            >
+                              <div>
+                                <input
+                                  class="input-small form-control"
+                                  name="data.pin"
+                                  type="number"
+                                  value=""
+                                />
+                              </div>
+                              <div>
+                                <div>
+                                  <svg
+                                    class="tooltip-icon"
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    stroke-width="0"
+                                    viewBox="0 0 512 512"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"
+                                    />
+                                  </svg>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="row"
+                    >
+                      <div
+                        class="col-6"
+                      >
+                        <div
+                          class="address-form-row row"
+                        >
+                          <div
+                            class="address-form-left-columns col-4"
+                          >
+                            <label
+                              class="label"
+                            >
+                              Street Address
+                            </label>
+                          </div>
+                          <div
+                            class="col"
+                          >
+                            <div
+                              class="c4 GeocoderAutoComplete"
+                            >
+                              <div
+                                class="required"
+                              >
+                                <div>
+                                  <input
+                                    class="form-control"
+                                    field="data.address.line1"
+                                    id="input-data.address.line1"
+                                    name="data.address.line1"
+                                    required=""
+                                    value=""
                                   />
-                                </svg>
+                                </div>
                               </div>
                             </div>
                           </div>
-                          <div
-                            class="col-md-auto"
-                          >
-                            <div>
-                              <input
-                                class="input-small form-control"
-                                name="data.pin"
-                                type="number"
-                                value=""
-                              />
-                            </div>
-                          </div>
                         </div>
-                      </div>
-                    </div>
-                    <div
-                      class="row"
-                      style="margin-bottom: 10px; align-items: center;"
-                    >
-                      <div
-                        class="col-md-auto"
-                        style="width: 140px; text-align: right; margin-right: 0px;"
-                      >
-                        <label
-                          class="label"
-                        >
-                          Street Address
-                        </label>
-                      </div>
-                      <div
-                        class="col-md-auto"
-                      >
                         <div
-                          class="c4 GeocoderAutoComplete"
+                          class="address-form-row row"
                         >
                           <div
-                            class="required"
+                            class="address-form-left-columns col-4"
                           >
-                            <div>
-                              <input
-                                class="form-control"
-                                field="data.address.line1"
-                                id="input-data.address.line1"
-                                name="data.address.line1"
-                                required=""
-                                value=""
-                              />
-                            </div>
+                            <label
+                              class="label"
+                            >
+                              Location
+                            </label>
                           </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="row"
-                      style="margin-bottom: 10px; align-items: center;"
-                    >
-                      <div
-                        class="col-md-auto"
-                        style="width: 140px; text-align: right; margin-right: 0px;"
-                      >
-                        <label
-                          class="label"
-                        >
-                          Location
-                        </label>
-                      </div>
-                      <div
-                        class="col-md-auto"
-                      >
-                        <div
-                          class="required"
-                        >
-                          <div>
+                          <div
+                            class="col"
+                          >
                             <div
-                              class="rbt"
-                              style="outline: none; position: relative;"
-                              tabindex="-1"
+                              class="required"
+                            >
+                              <div>
+                                <div
+                                  class="rbt"
+                                  style="outline: none; position: relative;"
+                                  tabindex="-1"
+                                >
+                                  <div
+                                    style="display: flex; flex: 1; height: 100%; position: relative;"
+                                  >
+                                    <input
+                                      aria-autocomplete="both"
+                                      aria-expanded="false"
+                                      aria-haspopup="listbox"
+                                      autocomplete="off"
+                                      class="rbt-input-main form-control rbt-input"
+                                      id="data.address.administrativeArea-field"
+                                      name="data.address.administrativeArea"
+                                      role="combobox"
+                                      style="width: 100%;"
+                                      type="text"
+                                      value=""
+                                    />
+                                    <input
+                                      aria-hidden="true"
+                                      class="rbt-input-hint"
+                                      readonly=""
+                                      style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
+                                      tabindex="-1"
+                                      value=""
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="address-form-row row"
+                        >
+                          <div
+                            class="address-form-left-columns col-4"
+                          >
+                            <label
+                              class="label"
+                            >
+                              Province
+                            </label>
+                          </div>
+                          <div
+                            class="col"
+                          >
+                            <div
+                              class="select-row row"
+                              controlid="input-data.address.provinceId"
                             >
                               <div
-                                style="display: flex; flex: 1; height: 100%; position: relative;"
+                                class="select-column col-md-auto"
                               >
-                                <input
-                                  aria-autocomplete="both"
-                                  aria-expanded="false"
-                                  aria-haspopup="listbox"
-                                  autocomplete="off"
-                                  class="rbt-input-main form-control rbt-input"
-                                  id="data.address.administrativeArea-field"
-                                  name="data.address.administrativeArea"
-                                  role="combobox"
-                                  style="width: 100%;"
-                                  type="text"
-                                  value=""
-                                />
-                                <input
-                                  aria-hidden="true"
-                                  class="rbt-input-hint"
-                                  readonly=""
-                                  style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
-                                  tabindex="-1"
-                                  value=""
-                                />
+                                <select
+                                  class="form-select form-control"
+                                  disabled=""
+                                  name="data.address.provinceId"
+                                >
+                                  <option
+                                    value=""
+                                  >
+                                    Must Select One
+                                  </option>
+                                </select>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                    <div
-                      class="row"
-                      style="margin-bottom: 10px; align-items: center;"
-                    >
-                      <div
-                        class="col-md-auto"
-                        style="width: 140px; text-align: right; padding-right: 12px; margin-right: -35px;"
-                      >
-                        <label
-                          class="label"
-                        >
-                          Province
-                        </label>
-                      </div>
-                      <div
-                        class="col-md-auto"
-                        style="padding-right: 0px;"
-                      >
                         <div
-                          class="row"
-                          controlid="input-data.address.provinceId"
-                          style="align-items: center;"
+                          class="address-form-row row"
                         >
                           <div
-                            class="col-md-auto"
-                          />
-                          <div
-                            class="col-md-auto"
-                            style="padding: 0px;"
+                            class="address-form-left-columns col-4"
                           >
-                            <select
-                              class="form-select form-control"
-                              disabled=""
-                              name="data.address.provinceId"
+                            <label
+                              class="label"
                             >
-                              <option
-                                value=""
-                              >
-                                Must Select One
-                              </option>
-                            </select>
+                              Postal Code
+                            </label>
                           </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="postal row"
-                      style="margin-bottom: 10px; align-items: center;"
-                    >
-                      <div
-                        class="col-md-auto"
-                        style="width: 140px; text-align: right; margin-left: 0px;"
-                      >
-                        <label
-                          class="label"
-                        >
-                          Postal Code
-                        </label>
-                      </div>
-                      <div
-                        class="col-md-auto"
-                        style="width: 250px;"
-                      >
-                        <div
-                          class=""
-                        >
-                          <div>
-                            <input
-                              class="input-small form-control"
-                              id="input-data.address.postal"
-                              name="data.address.postal"
-                              style="width: 120px;"
-                              value=""
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="row"
-                      style="align-items: center; margin-left: -23px; margin-top: 10px; margin-bottom: 20px;"
-                    >
-                      <div
-                        class="col-md-auto"
-                        style="width: 160px;"
-                      >
-                        <label
-                          class="form-label"
-                        >
-                          Agency
-                        </label>
-                      </div>
-                      <div
-                        class="col-md-auto"
-                      >
-                        <div
-                          class="required"
-                        >
-                          <div>
-                            <div
-                              class="rbt"
-                              style="outline: none; position: relative;"
-                              tabindex="-1"
-                            >
-                              <div
-                                style="display: flex; flex: 1; height: 100%; position: relative;"
-                              >
-                                <input
-                                  aria-autocomplete="both"
-                                  aria-expanded="false"
-                                  aria-haspopup="listbox"
-                                  autocomplete="off"
-                                  class="rbt-input-main form-control rbt-input"
-                                  id="data.agencyId-field"
-                                  name="data.agencyId"
-                                  role="combobox"
-                                  style="width: 100%;"
-                                  type="text"
-                                  value=""
-                                />
-                                <input
-                                  aria-hidden="true"
-                                  class="rbt-input-hint"
-                                  readonly=""
-                                  style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
-                                  tabindex="-1"
-                                  value=""
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="form-container col-md-6"
-                  >
-                    <div
-                      class="row"
-                      style="justify-content: right; align-items: center; margin-bottom: 20px;"
-                    >
-                      <div
-                        class="col-md-auto"
-                        style="margin-right: -25px;"
-                      >
-                        <label
-                          class="label"
-                        >
-                          Name
-                        </label>
-                      </div>
-                      <div
-                        class="col-md-auto"
-                        style="margin-right: 73px;"
-                      >
-                        <div
-                          class=""
-                        >
-                          <div>
-                            <input
-                              class="form-control"
-                              id="input-data.name"
-                              name="data.name"
-                              value=""
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="row"
-                      style="justify-content: right; align-items: center; margin-bottom: 20px;"
-                    >
-                      <div
-                        class="col-md-auto"
-                        style="margin-right: -37px;"
-                      >
-                        <label
-                          class="label"
-                        >
-                          Description
-                        </label>
-                      </div>
-                      <div
-                        class="col-md-auto"
-                        style="margin-right: 70px;"
-                      >
-                        <div
-                          class="row"
-                          controlid="input-data.description"
-                          style="align-items: center;"
-                        >
                           <div
-                            class="col-md-auto"
-                          >
-                            <div>
-                              <textarea
-                                class="form-control"
-                                name="data.description"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="row"
-                      style="justify-content: right; align-items: center; margin-bottom: 20px;"
-                    >
-                      <div
-                        class="col-md-auto"
-                        style="margin-right: -37px;"
-                      >
-                        <label
-                          class="label"
-                        >
-                          Legal Description
-                        </label>
-                      </div>
-                      <div
-                        class="col-md-auto"
-                        style="margin-right: 70px;"
-                      >
-                        <div
-                          class="row"
-                          controlid="input-data.landLegalDescription"
-                          style="align-items: center;"
-                        >
-                          <div
-                            class="col-md-auto"
-                          >
-                            <div>
-                              <textarea
-                                class="form-control"
-                                name="data.landLegalDescription"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="row"
-                      style="justify-content: right; align-items: center; margin-bottom: 20px;"
-                    >
-                      <div
-                        class="col-md-auto"
-                        style="margin-right: -27px;"
-                      >
-                        <label
-                          class="label"
-                        >
-                          Lot Size
-                        </label>
-                      </div>
-                      <div
-                        class="col-md-auto"
-                        style="width: 200px; margin-right: 100px;"
-                      >
-                        <div
-                          class="input-group required"
-                        >
-                          <div
-                            class="input-group-content"
+                            class="col"
                           >
                             <div
                               class=""
                             >
                               <div>
                                 <input
-                                  class="form-control"
-                                  id="input-data.landArea"
-                                  name="data.landArea"
-                                  type="number"
+                                  class="input-small form-control"
+                                  id="input-data.address.postal"
+                                  name="data.address.postal"
                                   value=""
                                 />
                               </div>
                             </div>
                           </div>
+                        </div>
+                        <div
+                          class="form-row row"
+                        >
                           <div
-                            class="input-group"
+                            class="left-column col-4"
                           >
-                            <span
-                              class="input-group-text"
+                            <label
+                              class="label"
                             >
-                              Hectares
-                            </span>
+                              Agency
+                            </label>
+                          </div>
+                          <div
+                            class="right-column col"
+                          >
+                            <div
+                              class="required"
+                            >
+                              <div>
+                                <div
+                                  class="rbt"
+                                  style="outline: none; position: relative;"
+                                  tabindex="-1"
+                                >
+                                  <div
+                                    style="display: flex; flex: 1; height: 100%; position: relative;"
+                                  >
+                                    <input
+                                      aria-autocomplete="both"
+                                      aria-expanded="false"
+                                      aria-haspopup="listbox"
+                                      autocomplete="off"
+                                      class="rbt-input-main form-control rbt-input"
+                                      id="data.agencyId-field"
+                                      name="data.agencyId"
+                                      role="combobox"
+                                      style="width: 100%;"
+                                      type="text"
+                                      value=""
+                                    />
+                                    <input
+                                      aria-hidden="true"
+                                      class="rbt-input-hint"
+                                      readonly=""
+                                      style="background-color: transparent; border-color: transparent; box-shadow: none; color: rgba(0, 0, 0, 0.54); left: 0px; pointer-events: none; position: absolute; top: 0px; width: 100%;"
+                                      tabindex="-1"
+                                      value=""
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="form-container col"
+                      >
+                        <div
+                          class="form-row row"
+                        >
+                          <div
+                            class="left-column col-4"
+                          >
+                            <label
+                              class="label"
+                            >
+                              Name
+                            </label>
+                          </div>
+                          <div
+                            class="col"
+                          >
+                            <div
+                              class=""
+                            >
+                              <div>
+                                <input
+                                  class="input-width form-control"
+                                  id="input-data.name"
+                                  name="data.name"
+                                  value=""
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="form-row row"
+                        >
+                          <div
+                            class="left-column col-4"
+                          >
+                            <label
+                              class="label"
+                            >
+                              Description
+                            </label>
+                          </div>
+                          <div
+                            class="col"
+                          >
+                            <div
+                              class="input-flex"
+                              id="input-data.description"
+                            >
+                              <div>
+                                <textarea
+                                  class="input-width form-control"
+                                  name="data.description"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="form-row row"
+                        >
+                          <div
+                            class="left-column col-4"
+                          >
+                            <label
+                              class="label"
+                            >
+                              Legal Description
+                            </label>
+                          </div>
+                          <div
+                            class="col"
+                          >
+                            <div
+                              class="input-flex"
+                              id="input-data.landLegalDescription"
+                            >
+                              <div>
+                                <textarea
+                                  class="input-width form-control"
+                                  name="data.landLegalDescription"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="form-row row"
+                        >
+                          <div
+                            class="left-column col-4"
+                          >
+                            <label
+                              class="label"
+                            >
+                              Lot Size
+                            </label>
+                          </div>
+                          <div
+                            class="col"
+                          >
+                            <div
+                              class="input-group required"
+                            >
+                              <div
+                                class="input-group-content"
+                              >
+                                <div
+                                  class=""
+                                >
+                                  <div>
+                                    <input
+                                      class="input-small form-control"
+                                      id="input-data.landArea"
+                                      name="data.landArea"
+                                      type="number"
+                                      value=""
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                              <div
+                                class="input-group"
+                              >
+                                <span
+                                  class="input-group-text"
+                                >
+                                  Hectares
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1228,14 +1156,11 @@ exports[`Land Form component renders correctly 1`] = `
                 </div>
                 <div
                   class="row"
-                  style="justify-content: center; margin-bottom: 20px;"
                 >
                   <div
                     class="input-medium harmful"
                   >
-                    <p
-                      style="margin-bottom: -5px;"
-                    >
+                    <p>
                       Would this information be harmful if released? 
                     </p>
                     <div>

@@ -49,39 +49,30 @@ exports[`renders correctly 1`] = `
           className="col-5"
         >
           <div
-            className="col-md-2 row"
-            controlid="input-projectNumber"
-            style={
-              Object {
-                "alignItems": "center",
-              }
-            }
+            className="col-md-2 input-flex"
+            id="input-projectNumber"
           >
             <div
-              className="col-md-auto"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onMouseOut={[Function]}
+              onMouseOver={[Function]}
             >
-              <div
+              <input
+                className="form-control"
+                data-testid="project-number"
+                disabled={true}
+                name="projectNumber"
                 onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseOut={[Function]}
-                onMouseOver={[Function]}
-              >
-                <input
-                  className="form-control"
-                  data-testid="project-number"
-                  disabled={true}
-                  name="projectNumber"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  placeholder="SPP-XXXXXX"
-                  style={
-                    Object {
-                      "width": "200px",
-                    }
+                onChange={[Function]}
+                placeholder="SPP-XXXXXX"
+                style={
+                  Object {
+                    "width": "200px",
                   }
-                  value=""
-                />
-              </div>
+                }
+                value=""
+              />
             </div>
           </div>
         </div>
@@ -103,33 +94,24 @@ exports[`renders correctly 1`] = `
           className="col-5"
         >
           <div
-            className="required row"
-            controlid="input-name"
-            style={
-              Object {
-                "alignItems": "center",
-              }
-            }
+            className="required input-flex"
+            id="input-name"
           >
             <div
-              className="col-md-auto"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onMouseOut={[Function]}
+              onMouseOver={[Function]}
             >
-              <div
+              <input
+                className="form-control"
+                data-testid="project-name"
+                disabled={true}
+                name="name"
                 onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseOut={[Function]}
-                onMouseOver={[Function]}
-              >
-                <input
-                  className="form-control"
-                  data-testid="project-name"
-                  disabled={true}
-                  name="name"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  value=""
-                />
-              </div>
+                onChange={[Function]}
+                value=""
+              />
             </div>
           </div>
         </div>
@@ -151,38 +133,29 @@ exports[`renders correctly 1`] = `
           className="col-md-auto"
         >
           <div
-            className="col-md-10 row"
-            controlid="input-description"
-            style={
-              Object {
-                "alignItems": "center",
-              }
-            }
+            className="col-md-10 input-flex"
+            id="input-description"
           >
             <div
-              className="col-md-auto"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onMouseOut={[Function]}
+              onMouseOver={[Function]}
             >
-              <div
+              <textarea
+                className="col-md-auto form-control"
+                data-testid="project-description"
+                disabled={true}
+                name="description"
                 onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseOut={[Function]}
-                onMouseOver={[Function]}
-              >
-                <textarea
-                  className="col-md-auto form-control"
-                  data-testid="project-description"
-                  disabled={true}
-                  name="description"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  style={
-                    Object {
-                      "width": "500px",
-                    }
+                onChange={[Function]}
+                style={
+                  Object {
+                    "width": "500px",
                   }
-                  value=""
-                />
-              </div>
+                }
+                value=""
+              />
             </div>
           </div>
         </div>
@@ -212,24 +185,11 @@ exports[`renders correctly 1`] = `
           className="col-md-auto"
         >
           <div
-            className="required col-md-1 row"
+            className="required col-md-1 select-row row"
             controlid="input-tierLevelId"
-            style={
-              Object {
-                "alignItems": "center",
-              }
-            }
           >
             <div
-              className="col-md-auto"
-            />
-            <div
-              className="col-md-auto"
-              style={
-                Object {
-                  "padding": 0,
-                }
-              }
+              className="select-column col-md-auto"
             >
               <select
                 className="form-select form-control"

@@ -52,6 +52,10 @@ const LastUpdatedBy: React.FC<ILastUpdatedByProps> = ({
         </TooltipWrapper>
         &nbsp;
         {formatApiDateTime(createdOn)}
+        &nbsp;by&nbsp;
+        <TooltipWrapper toolTipId="createdByEmail" toolTip={updatedByEmail ?? undefined}>
+          <LinkButton>{updatedByName ?? 'unknown'}</LinkButton>
+        </TooltipWrapper>
       </UpdateText>
     );
   }
