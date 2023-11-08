@@ -288,7 +288,7 @@ namespace Pims.Api.Areas.Tools.Helpers
                 }
                 else if (String.Compare(property.PropertyType, "Building") == 0)
                 {
-                    var isBuildingExisting = _pimsAdminService.Building.GetByNameAddressWithoutTracking(property.Name, property.CivicAddress);
+                    var isBuildingExisting = _pimsAdminService.Building.GetByNameAddressWithoutTracking(property.Name, property.CivicAddress, property.Description);
                     try
                     {
                         // need to check the count before a building gets added, as the previous variable gets updated once the building has been added
@@ -482,7 +482,7 @@ namespace Pims.Api.Areas.Tools.Helpers
         {
             var name = GenerateName(property.Name, property.Description, property.LocalId);
             // Multiple buildings could be returned for the PID and Name.
-            var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByNameAddressWithoutTracking(name, property.CivicAddress).FirstOrDefault(n => n.Name == name) ?? throw new KeyNotFoundException());
+            var b_e = ExceptionHelper.HandleKeyNotFoundWithDefault(() => _pimsAdminService.Building.GetByNameAddressWithoutTracking(name, property.CivicAddress, property.Description).FirstOrDefault(n => n.Name == name) ?? throw new KeyNotFoundException());
             var evaluationDate = new DateTime(property.FiscalYear, 1, 1); // Defaulting to Jan 1st because SIS data doesn't have the actual date.
 
             // Find parcel if the building has an associated pid to a parcel, otherwise there is no parcel

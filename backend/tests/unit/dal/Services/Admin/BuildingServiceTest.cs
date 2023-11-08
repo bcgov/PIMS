@@ -261,14 +261,15 @@ namespace Pims.Dal.Test.Services.Admin
             var service = helper.CreateService<BuildingService>(user);
 
             // Act
-            var results = service.GetByNameAddressWithoutTracking(building.Name, building.Address.Address1);
+            var results = service.GetByNameAddressWithoutTracking(building.Name, building.Address.Address1, building.Description);
 
             // Assert
             Assert.NotNull(results);
             Assert.NotEmpty(results);
             Assert.Collection(results,
             item => Assert.Equal(building.Address.ToString(), item.Address.ToString()),
-        item => Assert.Equal(building2.Address.ToString(), item.Address.ToString()));
+        item => Assert.Equal(building2.Address.ToString(), item.Address.ToString()),
+        item => Assert.Equal(building2.Description.ToString(), item.Description.ToString()));
             Assert.Collection(results,
             item => Assert.Equal(building.Parcels.First().ParcelId, item.Parcels.First().ParcelId),
         item => Assert.Equal(building2.Parcels.First().ParcelId, item.Parcels.First().ParcelId));

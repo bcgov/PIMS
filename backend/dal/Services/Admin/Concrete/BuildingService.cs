@@ -120,7 +120,7 @@ namespace Pims.Dal.Services.Admin
         /// <param name="name"></param>
         /// <param name="address"></param>
         /// <returns></returns>
-        public IEnumerable<Building> GetByNameAddressWithoutTracking(string name, string address)
+        public IEnumerable<Building> GetByNameAddressWithoutTracking(string name, string address, string description)
         {
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
@@ -131,7 +131,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Parcels)
                 .Include(p => p.Address).ThenInclude(a => a.Province)
                 .Include(p => p.Agency).ThenInclude(a => a.Parent)
-                .AsNoTracking().Where(b => b.Address.Address1.Equals(address) && b.Name.Equals(name));
+                .AsNoTracking().Where(b => b.Address.Address1.Equals(address) && b.Name.Equals(name) && b.Description.Equals(description));
         }
 
         /// <summary>
