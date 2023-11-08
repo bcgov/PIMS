@@ -33,7 +33,7 @@ jobs:
 
       - name: Process and Apply API DeploymentConfig
         env:
-          NAMESPACE: ${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
+          NAMESPACE: "ec1236-dev"
           DC_TEMPLATE: "api-dc-template.yaml"
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
           ENVIRONMENT: "dev"
