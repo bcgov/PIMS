@@ -18,6 +18,10 @@ const dispatchSpy = jest.spyOn(store, 'dispatch');
 const saveJwtSpy = jest.spyOn(jwtSlice, 'saveJwt');
 const clearJwtSpy = jest.spyOn(jwtSlice, 'clearJwt');
 const setKeycloakReadySpy = jest.spyOn(keycloakReadySlice, 'setKeycloakReady');
+// Mock console functions to avoid large amounts of printouts in tests
+jest.spyOn(console, 'log').mockImplementation(() => {});
+jest.spyOn(console, 'debug').mockImplementation(() => {});
+jest.spyOn(console, 'group').mockImplementation(() => {});
 
 const keycloak = {
   subject: 'test',

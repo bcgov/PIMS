@@ -35,9 +35,6 @@ const Header = () => {
 
   const [errors, setErrors] = React.useState<IGenericNetworkAction[]>([]);
 
-  if (location.pathname === '/') {
-    navigate('/mapview', { replace: true });
-  }
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -48,6 +45,12 @@ const Header = () => {
 
   const isNetworkError = (x: any): x is IGenericNetworkAction =>
     (x as IGenericNetworkAction).type === 'ERROR';
+
+  React.useEffect(() => {
+    if (location.pathname === '/') {
+      navigate('/mapview', { replace: true });
+    }
+  }, []);
 
   React.useEffect(() => {
     const errors: IGenericNetworkAction[] = Object.values(requests)

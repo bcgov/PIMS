@@ -36,6 +36,11 @@ interface IBuildingDetailsProps {
   setEditInfo: Dispatch<SetStateAction<object>>;
 }
 
+const StyledProjectNumbers = styled.div`
+  flex-direction: column;
+  display: flex;
+`;
+
 /**
  * @description For buildings, displays building details
  * @param {IBuildingDetailsProps} props
@@ -72,10 +77,6 @@ export const BuildingDetails: React.FC<any> = (props: IBuildingDetailsProps) => 
   const rightColumnStyle: CSSProperties = { display: 'flex', justifyContent: 'left' };
   const fieldFontWeight = 600;
   const fieldFontSize = 'small';
-  const StyledProjectNumbers = styled.div`
-    flex-direction: column;
-    display: flex;
-  `;
 
   return (
     <div className="identification">
