@@ -4,7 +4,6 @@ import { LayoutWrapper } from 'features/routes';
 import { createMemoryHistory } from 'history';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 import useKeycloakMock from 'useKeycloakWrapperMock';
@@ -31,11 +30,10 @@ describe('Layout Wrapper', () => {
     const container = document.createElement('div');
     document.body.appendChild(container);
     act(() => {
-      ReactDOM.render(
+      render(
         <MemoryRouter initialEntries={[history.location]}>
           <LayoutWrapper component={() => <p>Title Test Page</p>} title={title} />
         </MemoryRouter>,
-        container,
       );
     });
 

@@ -27,6 +27,7 @@ const testRender = (props?: any, formikProps?: any) =>
   );
 
 describe('fast date picker old date functionality', () => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
   beforeAll(() => {
     (global as any).IS_REACT_ACT_ENVIRONMENT = false;
   });

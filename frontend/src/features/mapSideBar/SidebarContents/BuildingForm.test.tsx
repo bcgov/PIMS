@@ -74,6 +74,9 @@ const buildingForm = (
 );
 
 describe('Building Form', () => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
+
   it('component renders correctly', () => {
     const { container } = render(buildingForm);
     expect(container.firstChild).toMatchSnapshot();
