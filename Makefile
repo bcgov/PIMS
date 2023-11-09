@@ -48,9 +48,16 @@ refresh: ## Recreates local docker environment (n=service name)
 	@make build n=$(n)
 	@make up n=$(n)
 
-up: ## Runs the local containers (n=service name)
+up: ## Runs the local containers (n=service name), stop dev container first
 	@echo "$(P) Running client and server..."
-	@docker compose --env-file .env up -d $(n)
+	@docker compose rm -sf frontend-dev
+	@docker compose --env-file .env --profile prod up -d $(n)
+
+up-dev: ## Runs the local containers (n=service name), stop prod container first
+	@echo "$(P) Running client and server..."
+	@docker compose rm -sf frontend
+	@make npm-refresh
+	@docker compose --env-file .env --profile dev up -d $(n)
 
 down: ## Stops the local containers and removes them
 	@echo "$(P) Stopping client and server..."
@@ -62,7 +69,7 @@ stop: ## Stops the local containers (n=service name)
 
 build: ## Builds the local containers (n=service name)
 	@echo "$(P) Building images..."
-	@docker compose build --no-cache $(n)
+	@docker compose --profile prod build --no-cache $(n)
 
 rebuild: ## Build the local contains (n=service name) and then start them after building
 	@make build n=$(n)
@@ -93,14 +100,15 @@ server-run: ## Starts local server containers
 	@echo "$(P) Starting server containers..."
 	@docker compose --env-file .env up -d backend
 
-npm-clean: ## Removes local containers, images, volumes, for frontend application.
+npm-clean: ## Removes local containers, images, volumes, for frontend-dev container.
 	@echo "$(P) Removing frontend containers and volumes."
-	@docker compose stop frontend
-	@docker compose rm -f -v -s frontend
+	@docker compose stop frontend-dev
+	@docker compose rm -f -v -s frontend-dev
 	@docker volume rm -f pims-app-node-cache
 
-npm-refresh: ## Cleans and rebuilds the frontend.  This is useful when npm packages are changed.
-	@make npm-clean; make build n=frontend; make up;
+npm-refresh: ## Cleans and rebuilds the frontend-dev container.  This is useful when npm packages are changed.
+	@make npm-clean; 
+	@docker compose up frontend-dev --build -d
 
 db-migrations: ## Display a list of migrations.
 	@echo "$(P) Display a list of migrations."

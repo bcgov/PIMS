@@ -3,20 +3,21 @@ FROM image-registry.apps.silver.devops.gov.bc.ca/354028-tools/nodejs:18.17.1-bul
 # Set the working directory to /app
 WORKDIR /app
 ENV NODE_ENV=production
+ENV CONTAINERIZED=true
 
 # Copy files
 COPY ./src ./src
 COPY ./public ./public
 COPY package.json .
 COPY tsconfig.json .
-COPY vite.config.js .
-COPY ./public/index.html .
+COPY vite.config.ts .
+COPY ./index.html .
 
 # Npm install packages. Omits dev dependencies when NODE_ENV=production
 RUN npm set progress=false
-RUN npm i vite@4.4.9 @vitejs/plugin-react@4.0.4 vite-plugin-svgr@3.3.0 vite-tsconfig-paths@4.2.1
+RUN npm i
 
 EXPOSE 8080
 
 # Build the project.
-RUN npm run build-ocp
+RUN npm run build
