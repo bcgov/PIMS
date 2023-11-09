@@ -1,10 +1,6 @@
 name : Api Image Deploy on PR merge
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - "backend/**"
   workflow_dispatch:
     inputs:
       image_tag:

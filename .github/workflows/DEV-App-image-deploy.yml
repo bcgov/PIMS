@@ -1,14 +1,17 @@
 name : App Image Deploy on PR merge
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - "backend/**"
+  pull_request:
+      types:
+        - closed
+      branches: [main]
+      paths:
+        - 'frontend/**' # Triggers on changes to files in the frontend/ directory.
 
 
 jobs:
   Deploy-To-OpenShift:
+    if: ${{ github.event.pull_request.merged }}
     name: Deploy to OpenShift
     runs-on: ubuntu-latest
   
