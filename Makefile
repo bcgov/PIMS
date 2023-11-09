@@ -56,6 +56,7 @@ up: ## Runs the local containers (n=service name), stop dev container first
 up-dev: ## Runs the local containers (n=service name), stop prod container first
 	@echo "$(P) Running client and server..."
 	@docker compose rm -sf frontend
+	@make npm-refresh
 	@docker compose --env-file .env --profile dev up -d $(n)
 
 down: ## Stops the local containers and removes them
@@ -107,8 +108,7 @@ npm-clean: ## Removes local containers, images, volumes, for frontend-dev contai
 
 npm-refresh: ## Cleans and rebuilds the frontend-dev container.  This is useful when npm packages are changed.
 	@make npm-clean; 
-	@make build n=frontend-dev; 
-	@make up-dev;
+	@docker compose up frontend-dev --build -d
 
 db-migrations: ## Display a list of migrations.
 	@echo "$(P) Display a list of migrations."
