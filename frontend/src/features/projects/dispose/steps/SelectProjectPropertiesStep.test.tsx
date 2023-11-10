@@ -41,6 +41,8 @@ const store = mockStore({
   },
 });
 
+jest.spyOn(console, 'warn').mockImplementation(() => {});
+
 const uiElement = (
   <Provider store={store}>
     <MemoryRouter initialEntries={[history.location]}>

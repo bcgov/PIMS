@@ -32,7 +32,7 @@ jest.mock('hooks/useKeycloakWrapper');
 );
 
 const history = createMemoryHistory();
-history.push('admin');
+history.push('/admin');
 const mockStore = configureMockStore([thunk]);
 
 const lCodes = {

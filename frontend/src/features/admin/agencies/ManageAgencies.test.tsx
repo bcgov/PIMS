@@ -27,7 +27,7 @@ jest.mock('hooks/useKeycloakWrapper');
 );
 
 const history = createMemoryHistory();
-history.push('admin/agencies');
+history.push('/admin/agencies');
 const mockStore = configureMockStore([thunk]);
 
 const lCodes = {
@@ -70,6 +70,7 @@ const getStore = () =>
           },
         ],
       },
+      rowsPerPage: 10,
     },
     [reducerTypes.LOOKUP_CODE]: lCodes,
     [reducerTypes.NETWORK]: {

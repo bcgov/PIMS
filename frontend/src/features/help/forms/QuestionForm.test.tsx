@@ -3,6 +3,7 @@ import QuestionForm from 'features/help/forms/QuestionForm';
 import React from 'react';
 
 describe('Testing BugForm.tsx', () => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
   it('Form renders with all expected text', () => {
     const { getByText } = render(
       <QuestionForm
