@@ -32,6 +32,11 @@ interface IParcelDetailsProps {
   index?: number;
 }
 
+const StyledProjectNumbers = styled.div`
+  flex-direction: column;
+  display: flex;
+`;
+
 /**
  * @description For parcels, shows details with parcel information.
  * @param {IParcelDetailsProps} props
@@ -48,10 +53,6 @@ export const ParcelDetails: React.FC<any> = (props: IParcelDetailsProps) => {
   // Style Constants
   const { leftColumnWidth, rightColumnWidth, boldFontWeight, fontSize, headerColour } = tabStyles;
   const rightColumnStyle: CSSProperties = { display: 'flex', justifyContent: 'left' };
-  const StyledProjectNumbers = styled.div`
-    flex-direction: column;
-    display: flex;
-  `;
 
   // Address form:
   const lookupCodes = useAppSelector((store) => store.lookupCode.lookupCodes);
