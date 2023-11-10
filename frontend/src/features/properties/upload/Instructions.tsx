@@ -4,12 +4,12 @@ import React from 'react';
 import { Accordion } from 'react-bootstrap';
 
 const mandatoryHeaders =
-  'PID,Type (Land or Building),Classification,Name,Address,Ministry,Location (City),Latitude,Longitude'.split(
+  'PID,Type (Land or Building),Classification,Name,Ministry,Location (City),Latitude,Longitude'.split(
     ',',
   );
 
 const optionalHeaders =
-  'Status,Description,Agency (subagency for Ministry),Postal,Assessed Land Value,Land Assessment Year,Netbook Value,Assessed Building Value,Building Assessment Year,Land Area,Legal Description,Construction Type,Predominate Use,Tenancy,Rentable Area,Building Floor Count,Local ID'.split(
+  'Status,Description,Agency (subagency for Ministry),Address,Postal,Assessed Land Value,Land Assessment Year,Netbook Value,Assessed Building Value,Building Assessment Year,Land Area,Legal Description,Construction Type,Predominate Use,Tenancy,Rentable Area,Building Floor Count,Local ID'.split(
     ',',
   );
 
@@ -78,8 +78,8 @@ export const Instructions = () => (
         the property will be rejected.
       </li>
       <li>
-        Buildings are matched with existing buildings using their Address and Name. Both must match
-        an existing building in order to update that property.
+        Buildings are matched with existing buildings using their Name and associated PID. Both must
+        match an existing building in order to update that property.
       </li>
     </ul>
   </div>
