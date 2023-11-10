@@ -365,15 +365,29 @@ exports[`Manage Agencies Component Snapshot matches 1`] = `
           </a>
         </li>
         <li
-          class="page-item"
+          class="page-item active"
         >
           <a
-            aria-disabled="false"
-            aria-label="Next page"
+            aria-current="page"
+            aria-label="Page 1 is your current page"
             class="page-link"
+            rel="canonical"
+            role="button"
+            tabindex="-1"
+          >
+            1
+          </a>
+        </li>
+        <li
+          class="page-item disabled"
+        >
+          <a
+            aria-disabled="true"
+            aria-label="Next page"
+            class="page-link "
             rel="next"
             role="button"
-            tabindex="0"
+            tabindex="-1"
           >
             &gt;
           </a>
