@@ -54,7 +54,7 @@ const accessRequests = {
 Enzyme.configure({ adapter: new Adapter() });
 
 const history = createMemoryHistory();
-history.push('admin');
+history.push('/admin');
 const mockStore = configureMockStore([thunk]);
 
 const lCodes = {
