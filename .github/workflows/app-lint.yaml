@@ -21,7 +21,7 @@ jobs:
       # Could optimize this by only installing necessary dependencies
       - name: Install Dependencies
         working-directory: ./frontend
-        run: npm i
+        run: npm i --only=dev
 
       - name: Run ESLint
         working-directory: ./frontend
