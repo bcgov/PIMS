@@ -25,16 +25,16 @@ The available commands for the frontend are as follows:
 
 | Command                    | Description                                                              |
 | -------------------------- | ------------------------------------------------------------------------ |
-| `npm run dev`                  | Runs app in development mode. |
-| `npm run build` | Builds the app using Vite. |
-| `npm test`                   | Runs frontend test suites.                                               |
-| `npm run coverage`             | Runs frontend test suites and creates code coverage files.                         |
-| `npm run coverage:changed`             | Runs code coverage but only for files changed since the main branch.                         |
-| `npm run snapshots`             | Runs frontend test suites and updates snapshots.                         |
-| `npm run lint`               | Runs the linter.                                                         |
-| `npm run lint:fix`               | Runs the linter and attempts to fix issues.                                                         |
-| `npm run check`               | Runs a code style check using Prettier.                                                         |
-| `npm run format`             | Runs a code style check using Prettier and attempts to fix issues.                                                         |
+| `npm run dev`              | Runs app in development mode.                                            |
+| `npm run build`            | Builds the app using Vite.                                               |
+| `npm test`                 | Runs frontend test suites.                                               |
+| `npm run coverage`         | Runs frontend test suites and creates code coverage files.               |
+| `npm run coverage:changed` | Runs code coverage but only for files changed since the main branch.     |
+| `npm run snapshots`        | Runs frontend test suites and updates snapshots.                         |
+| `npm run lint`             | Runs the linter.                                                         |
+| `npm run lint:fix`         | Runs the linter and attempts to fix issues.                              |
+| `npm run check`            | Runs a code style check using Prettier.                                  |
+| `npm run format`           | Runs a code style check using Prettier and attempts to fix issues.       |
 
 ### `npm run dev`
 
