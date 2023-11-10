@@ -261,7 +261,7 @@ namespace Pims.Dal.Test.Services.Admin
             var service = helper.CreateService<BuildingService>(user);
 
             // Act
-            var results = service.GetByNameAddressWithoutTracking(building.Name, building.Address.Address1, building.Description);
+            var results = service.GetByNameAddressWithoutTracking(building.Name, building.Address.Address1);
 
             // Assert
             Assert.NotNull(results);
