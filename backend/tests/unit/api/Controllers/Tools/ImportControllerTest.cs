@@ -429,7 +429,8 @@ namespace Pims.Api.Test.Controllers.Tools
                     LandArea = 45.55f,
                     Latitude = 49.11539986447944,
                     Longitude = 49.21539986447944,
-                    Name = "test"
+                    Name = "test",
+                    PID = "1234"
                 }
             };
 
@@ -441,7 +442,7 @@ namespace Pims.Api.Test.Controllers.Tools
             service.Setup(m => m.PropertyClassification.GetAll()).Returns(new[] { new Entity.PropertyClassification(1, "Surplus Active") });
             service.Setup(m => m.Agency.GetAll()).Returns(new[] { new Entity.Agency("AEST", "Advanced Education, Skills & Training") });
             service.Setup(m => m.Building.GetByPidNameWithoutTracking(It.IsAny<int>(), It.IsAny<string>()))
-                .Returns((string name, string address) => Enumerable.Range(1, 10).Select(_ => new Building
+                .Returns((int pid, string name) => Enumerable.Range(1, 10).Select(_ => new Building
                 {
                     Name = "test",
                     Address = new Entity.Address("123 test st", null, "BC", "1", "T9T9T9"),
