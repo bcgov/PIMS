@@ -94,7 +94,42 @@ namespace Pims.Dal.Services.Admin
 
         /// <summary>
         /// Get the building for the specified 'pid' and 'name'.
-        /// This searched for a name that begins the same.
+        /// This searches for a name that matches exactly if provided.
+        /// If name is null, it only searches by pid.
+        /// If pid is null but name provided, it searches by name.
+        /// If both are null, all buildings with no associated parcel and no name would be returned.
+        /// </summary>
+        /// <param name="pid"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public IEnumerable<Building> GetByPidNameWithoutTracking(int pid = 0, string name = null)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
+
+            if (pid == 0)
+            {
+                return this.Context.Buildings
+                .Include(p => p.BuildingConstructionType)
+                .Include(p => p.BuildingPredominateUse)
+                .Include(p => p.BuildingOccupantType)
+                .Include(p => p.Address).ThenInclude(a => a.Province)
+                .Include(p => p.Agency).ThenInclude(a => a.Parent)
+                .AsNoTracking().Where(b => b.Parcels.Count == 0 && (name == null || name == b.Name));
+            }
+
+            return this.Context.Buildings
+                .Include(p => p.BuildingConstructionType)
+                .Include(p => p.BuildingPredominateUse)
+                .Include(p => p.BuildingOccupantType)
+                .Include(p => p.Address).ThenInclude(a => a.Province)
+                .Include(p => p.Agency).ThenInclude(a => a.Parent)
+                .AsNoTracking().Where(b => b.Parcels.Any(pb => pb.Parcel.PID == pid) && (name == null || name == b.Name));
+        }
+
+        /// <summary>
+        /// Get the building for the specified 'pid' and 'name'.
+        /// This searches for a name that begins the same.
+        /// 
         /// </summary>
         /// <param name="pid"></param>
         /// <param name="name"></param>
@@ -120,7 +155,7 @@ namespace Pims.Dal.Services.Admin
         /// <param name="name"></param>
         /// <param name="address"></param>
         /// <returns></returns>
-        public IEnumerable<Building> GetByNameAddressWithoutTracking(string name, string address, string description)
+        public IEnumerable<Building> GetByNameAddressWithoutTracking(string name, string address)
         {
             this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
 
@@ -131,7 +166,7 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Parcels)
                 .Include(p => p.Address).ThenInclude(a => a.Province)
                 .Include(p => p.Agency).ThenInclude(a => a.Parent)
-                .AsNoTracking().Where(b => b.Address.Address1.Equals(address) && b.Name.Equals(name) && b.Description.Equals(description));
+                .AsNoTracking().Where(b => b.Address.Address1.Equals(address) && b.Name.Equals(name));
         }
 
         /// <summary>
