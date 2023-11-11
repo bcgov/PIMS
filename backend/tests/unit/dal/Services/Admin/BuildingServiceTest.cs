@@ -243,6 +243,64 @@ namespace Pims.Dal.Test.Services.Admin
         }
 
         /// <summary>
+        /// Buildings found using PID and building name where pid is defined
+        /// </summary>
+        [Fact]
+        public void GetByPidNameWithoutTracking_WithPID()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin);
+
+            using var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(1);
+            var building = init.CreateBuilding(parcel, 2, null, "test building");
+            var building2 = init.CreateBuilding(parcel, 3, null, "test building");
+            init.AddAndSaveChanges(building, building2);
+
+            var service = helper.CreateService<BuildingService>(user);
+
+            // Act
+            var results = service.GetByPidNameWithoutTracking(parcel.PID, building.Name);
+
+            // Assert
+            Assert.NotNull(results);
+            Assert.NotEmpty(results);
+            Assert.Collection(results,
+            item => Assert.Equal(building.Address.ToString(), item.Address.ToString()),
+        item => Assert.Equal(building2.Address.ToString(), item.Address.ToString()));
+        }
+
+        /// <summary>
+        /// Buildings found using PID and building name where pid is 0 (not defined)
+        /// </summary>
+        [Fact]
+        public void GetByPidNameWithoutTracking_WithoutPID()
+        {
+            // Arrange
+            var helper = new TestHelper();
+            var user = PrincipalHelper.CreateForPermission(Permissions.SystemAdmin);
+
+            using var init = helper.InitializeDatabase(user);
+            var parcel = init.CreateParcel(0);
+            var building = init.CreateBuilding(parcel, 2, null, "test building");
+            var building2 = init.CreateBuilding(parcel, 3, null, "test building");
+            init.AddAndSaveChanges(building, building2);
+
+            var service = helper.CreateService<BuildingService>(user);
+
+            // Act
+            var results = service.GetByPidNameWithoutTracking(parcel.PID, building.Name);
+
+            // Assert
+            Assert.NotNull(results);
+            Assert.NotEmpty(results);
+            Assert.Collection(results,
+            item => Assert.Equal(building.Address.ToString(), item.Address.ToString()),
+        item => Assert.Equal(building2.Address.ToString(), item.Address.ToString()));
+        }
+
+        /// <summary>
         /// Buildings found using PID and building name
         /// </summary>
         [Fact]
