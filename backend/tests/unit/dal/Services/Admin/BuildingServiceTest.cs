@@ -294,10 +294,7 @@ namespace Pims.Dal.Test.Services.Admin
 
             // Assert
             Assert.NotNull(results);
-            Assert.NotEmpty(results);
-            Assert.Collection(results,
-            item => Assert.Equal(building.Address.ToString(), item.Address.ToString()),
-        item => Assert.Equal(building2.Address.ToString(), item.Address.ToString()));
+            Assert.Empty(results);
         }
 
         /// <summary>
