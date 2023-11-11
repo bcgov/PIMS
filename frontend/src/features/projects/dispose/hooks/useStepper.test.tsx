@@ -34,6 +34,7 @@ const store = mockStore({
 });
 
 describe('useStepper hook functionality', () => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
   beforeAll(() => {
     renderHook(() => useStepper(), {
       wrapper: ({ children }: { children: any }) => (

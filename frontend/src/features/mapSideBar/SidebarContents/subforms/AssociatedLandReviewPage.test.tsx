@@ -30,6 +30,7 @@ const getElement = (disabled: boolean) => {
 };
 
 describe('AssociatedLandReviewPage', () => {
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
   const { container, getByText } = render(getElement(false));
   it('renders correctly', () => {
     expect(container.firstChild).toMatchSnapshot();

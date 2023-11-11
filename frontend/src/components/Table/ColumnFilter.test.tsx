@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ColumnFilter from 'components/Table/ColumnFilter';
 import { ColumnInstanceWithProps } from 'components/Table/types';
@@ -9,7 +9,7 @@ describe('Testing ColumnFilter.tsx', () => {
   const useFormikContextMock = jest.spyOn(Formik, 'useFormikContext');
   const reactMock = jest.spyOn(React, 'useState');
   const setState = jest.fn();
-  screen.debug(undefined, Infinity);
+  jest.spyOn(console, 'error').mockImplementation(() => {});
   beforeEach(() => {
     useFormikContextMock.mockReturnValue({
       values: {
