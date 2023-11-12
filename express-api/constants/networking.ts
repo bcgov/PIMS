@@ -1,14 +1,14 @@
-const { ENVIRONMENT, FRONTEND_URL, BACKEND_URL, API_PORT, FRONTEND_PORT } = process.env;
+const { CONTAINERIZED, FRONTEND_URL, BACKEND_URL, API_HTTP_PORT, APP_HTTP_PORT } = process.env;
 
-// Use production urls unless ENVIRONMENT === "local".
-let frontendUrl = FRONTEND_URL ?? '';
-let backendUrl = BACKEND_URL ?? '';
-const apiPort = API_PORT ?? 3004;
-const frontendPort = FRONTEND_PORT ?? 3003;
+// Use production urls unless CONTAINERIZED.
+let frontendUrl = FRONTEND_URL ?? 'Warning: No FRONTEND_URL set.';
+let backendUrl = BACKEND_URL ?? 'Warning: No BACKEND_URL set.';
+const apiPort = +API_HTTP_PORT ?? 5000;
+const frontendPort = +APP_HTTP_PORT ?? 3000;
 
-if (ENVIRONMENT && ENVIRONMENT === 'local') {
-  frontendUrl = `http://localhost:${FRONTEND_PORT}`;
-  backendUrl = `http://localhost:${API_PORT}`;
+if (!CONTAINERIZED) {
+  frontendUrl = `http://localhost:${frontendPort}`;
+  backendUrl = `http://localhost:${apiPort}`;
 }
 
 export default {
