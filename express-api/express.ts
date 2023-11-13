@@ -21,7 +21,7 @@ const limiter = rateLimit({
 });
 
 // CORS Configuration
-// Localhost does not need to be specified.
+// TODO: Does localhost need to be specified?
 const corsOptions = {
   origin: [
     'http://localhost:3000', // Local frontend testing
