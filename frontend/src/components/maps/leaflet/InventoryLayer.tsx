@@ -6,7 +6,7 @@ import { useApiGeocoder } from 'hooks/api';
 import { useApi } from 'hooks/useApi';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { GeoJSON, LatLngBounds } from 'leaflet';
+import L, { GeoJSON, LatLngBounds } from 'leaflet';
 import { flatten, uniqBy } from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useMap } from 'react-leaflet';
@@ -17,7 +17,7 @@ import { tilesInBbox } from 'tiles-in-bbox';
 import { useMapRefreshEvent } from '../hooks/useMapRefreshEvent';
 import { useFilterContext } from '../providers/FIlterProvider';
 import { PointFeature } from '../types';
-import { MUNICIPALITY_LAYER_URL, useLayerQuery } from './LayerPopup';
+import { MUNICIPALITY_LAYER_URL, PARCELS_PUBLIC_LAYER_URL, useLayerQuery } from './LayerPopup';
 import PointClusterer from './PointClusterer';
 
 export type InventoryLayerProps = {
@@ -145,6 +145,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   const { loadProperties } = useApi();
   const { changed: filterChanged } = useFilterContext();
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
+  const parcelWMSLayerService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
   const geocoder = useApiGeocoder();
 
   const draftProperties: PointFeature[] = useAppSelector((store) => store.parcel.draftProperties);
@@ -153,16 +154,20 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
     throw new Error('<InventoryLayer /> must be used under a <Map> leaflet component');
   }
 
-  const bbox = useMemo(() => getBbox(bounds), [bounds]);
+  const bbox = useMemo(() => {
+    const calculatedBbox = getBbox(bounds);
+    return calculatedBbox;
+  }, [bounds]);
+
   useEffect(() => {
     const fit = async () => {
       if (filterChanged) {
-        map.fitBounds(defaultBounds, { maxZoom: 5 });
+        map.fitBounds(bounds, { maxZoom: 21 });
       }
     };
 
     fit();
-  }, [map, filter, filterChanged]);
+  }, [map, filter, filterChanged, bounds]);
 
   const params = useMemo((): any => {
     const tiles = getTiles(defaultBounds, 5);
@@ -243,14 +248,35 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
       }) as any;
 
       const administrativeArea = filter?.administrativeArea;
+      const pid = filter?.pid;
       if (results.length === 0 && !!administrativeArea) {
         const municipality = await municipalitiesService.findByAdministrative(administrativeArea);
         if (municipality) {
           // Fit to municipality bounds
           map.fitBounds((GeoJSON.geometryToLayer(municipality) as any)._bounds, { maxZoom: 11 });
         }
+      } else if (results.length === 0 && !!pid) {
+        // if (!!pid) {
+        const searchedByPID = await parcelWMSLayerService.findByPid(pid);
+        if (searchedByPID && searchedByPID.features.length > 0) {
+          //alert('There is a feature');
+          const firstFeature = searchedByPID.features[0];
+          if (firstFeature.geometry) {
+            // Create a GeoJSON layer for the highlighted parcel
+            const highlightedParcelLayer = L.geoJSON(firstFeature.geometry);
+            // Add the GeoJSON layer to the map
+            highlightedParcelLayer.addTo(map);
+            // Optionally, you can zoom to the highlighted parcel
+            map.fitBounds(highlightedParcelLayer.getBounds(), { maxZoom: 21 });
+          } else {
+            console.error('Feature does not have geometry property');
+          }
+          // Set features directly with the array of features
+          setFeatures(searchedByPID.features as PointFeature[]);
+          setLoadingTiles(false);
+        }
       }
-      setFeatures(results);
+      setFeatures(results || []);
       setLoadingTiles(false);
       if (results.length === 0) {
         toast.info('No search results found');
