@@ -1,9 +1,11 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ILookupCode } from 'actions/ILookupCode';
 import { IParcel } from 'actions/parcelsActions';
+import { ISteppedFormValues } from 'components/common/form/StepForm';
 import * as API from 'constants/API';
 import Claims from 'constants/claims';
 import { Classifications } from 'constants/classifications';
+import { valuesToApiFormat } from 'features/mapSideBar/SidebarContents/LandForm';
 import { createMemoryHistory } from 'history';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import noop from 'lodash/noop';
@@ -16,8 +18,6 @@ import useKeycloakMock from 'useKeycloakWrapperMock';
 import { fillInput } from 'utils/testUtils';
 
 import { LandForm } from '.';
-import { valuesToApiFormat } from 'features/mapSideBar/SidebarContents/LandForm';
-import { ISteppedFormValues } from 'components/common/form/StepForm';
 
 const mockStore = configureMockStore([thunk]);
 const history = createMemoryHistory();
@@ -131,6 +131,9 @@ const getLandForm = (disabled?: boolean, initialValues?: IParcel) => (
 );
 
 describe('Land Form', () => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
+
   it('component renders correctly', () => {
     const { container } = render(getLandForm());
     expect(container.firstChild).toMatchSnapshot();
