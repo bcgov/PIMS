@@ -1,5 +1,6 @@
-import { parse } from 'csv-parse';
+import Papa from 'papaparse';
 
+// This is the ideal model that the API expects to receive.
 export interface IPropertyModel {
   parcelId: string;
   pid: string;
@@ -28,6 +29,52 @@ export interface IPropertyModel {
   buildingRentableArea: string;
   assessed: string;
   netBook: string;
+  added?: boolean; // Only when received from API
+  updated?: boolean;
+  error?: string; // Error message
+}
+
+// This is the model that is created from CSV files exported from PIMS.
+// Note that keys are often string phrases. Access them with bracket notation: obj["Key Name"]
+export interface IExportedPropertyModel {
+  Address?: string;
+  Agency?: string;
+  'Assessed Building Value'?: string;
+  'Assessed Land Value'?: string;
+  'Building Assessment Year'?: string;
+  Classification: string;
+  'Construction Type'?: string;
+  Description?: string;
+  'Land Area'?: string;
+  'Land Assessment Year'?: string;
+  'Last Updated On'?: string;
+  Latitude: string;
+  'Lease Expiry'?: string;
+  'Legal Description'?: string;
+  Location: string;
+  Longitude: string;
+  Ministry: string;
+  Name: string;
+  'Netbook Date'?: string;
+  'Netbook Value'?: string;
+  Occupant?: string;
+  'Occupant Type'?: string;
+  PID: string;
+  PIN?: string;
+  Postal?: string;
+  'Predominate Use'?: string;
+  'Project Number': string;
+  'Rentable Area'?: string;
+  Sensitive?: string; // Stringified boolean
+  Status?: string;
+  Tenancy?: string;
+  'Transfer Lease on Sale'?: string; // Stringified boolean
+  Type: string;
+  'Updated By'?: string;
+  Zoning?: string;
+  // Added these fields that were missing from export but are used in import
+  'Local ID'?: string;
+  'Building Floor Count'?: string;
 }
 
 /**
@@ -37,110 +84,78 @@ export interface IPropertyModel {
  */
 export const parseCSVString = async (csvContent: string): Promise<IPropertyModel[]> => {
   return new Promise<IPropertyModel[]>((resolve, reject) => {
-    const results: IPropertyModel[] = [];
-    let headerMap: Record<string, number> = {};
-    let lineCounter = 0;
-
-    parse(csvContent, {
+    const parsedCSV: Papa.ParseResult<any> = Papa.parse(csvContent, {
+      header: true,
       delimiter: ',',
-    })
-      .on('data', (row: string[]) => {
-        if (lineCounter !== 0) {
-          results.push({
-            parcelId: row[headerMap['parcelId']],
-            pid: row[headerMap['pid']],
-            pin: row[headerMap['pin']],
-            status: row[headerMap['status']],
-            fiscalYear: row[headerMap['fiscalYear']],
-            agency: row[headerMap['agency']],
-            agencyCode: row[headerMap['agencyCode']],
-            subAgency: row[headerMap['subAgency']],
-            propertyType: row[headerMap['propertyType']],
-            localId: row[headerMap['localId']],
-            name: row[headerMap['name']],
-            description: row[headerMap['description']],
-            classification: row[headerMap['classification']],
-            civicAddress: row[headerMap['civicAddress']],
-            city: row[headerMap['city']],
-            postal: row[headerMap['postal']],
-            latitude: row[headerMap['latitude']],
-            longitude: row[headerMap['longitude']],
-            landArea: row[headerMap['landArea']],
-            landLegalDescription: row[headerMap['landLegalDescription']],
-            buildingFloorCount: row[headerMap['buildingFloorCount']],
-            buildingConstructionType: row[headerMap['buildingConstructionType']],
-            buildingPredominateUse: row[headerMap['buildingPredominateUse']],
-            buildingTenancy: row[headerMap['buildingTenancy']],
-            buildingRentableArea: row[headerMap['buildingRentableArea']],
-            assessed: row[headerMap['assessed']],
-            netBook: row[headerMap['netBook']],
-          });
-        } else {
-          headerMap = populateHeaderMap(row);
-        }
-        lineCounter++;
-      })
-      .on('end', () => {
-        if (lineCounter < 2) {
-          reject('CSV file is incomplete.');
-        } else {
-          resolve(results);
-        }
-      })
-      .on('error', (error: Error) => reject(error));
-  });
-};
+      newline: '\n',
+      quoteChar: '"',
+      skipEmptyLines: true,
+    });
 
-/**
- * @description Takes a comma delimited header row from CSV and determines where each field's index is
- * @param {string | string[]} headerRow The incoming header
- * @returns {Record<string, number>[]}An object with keys matching headers and an index indicating their order.
- */
-export const populateHeaderMap = (headerRow: string | string[]) => {
-  let headerList;
-  if (headerRow && typeof headerRow === typeof 'string') {
-    headerList = (headerRow as string).split(',');
-  } else if (headerRow && Array.isArray(headerRow)) {
-    headerList = headerRow;
-  } else {
-    throw new Error(
-      `populateHeaderMap only accepts string or string[] types as its argument. Type ${typeof headerRow} is not accepted.`,
+    if (parsedCSV.errors.length > 0) {
+      reject({
+        message: 'Error parsing CSV file',
+        errors: parsedCSV.errors,
+      });
+    }
+    if (parsedCSV.data.length < 1) {
+      reject('CSV file is incomplete.');
+    }
+
+    const getFiscalYear = (property: IExportedPropertyModel) => {
+      const yearFromFields =
+        property.Type === 'Building'
+          ? property['Building Assessment Year']
+          : property['Land Assessment Year'];
+      return !yearFromFields || yearFromFields === ''
+        ? `${new Date().getFullYear()}`
+        : yearFromFields; // Default to current year if no year
+    };
+
+    const getAssessedValue = (property: IExportedPropertyModel) => {
+      const assessedFromFields =
+        property.Type === 'Building'
+          ? property['Assessed Building Value']
+          : property['Assessed Land Value'];
+      return !assessedFromFields || assessedFromFields === '' ? '0' : assessedFromFields;
+    };
+
+    const getValueOrDefault = (incomingValue: string | undefined, defaultValue: string) =>
+      !incomingValue || incomingValue === '' ? `${defaultValue}` : incomingValue;
+    // Transform raw objects into model that API expects
+    const transformedData: IPropertyModel[] = parsedCSV.data.map(
+      (property: IExportedPropertyModel) => ({
+        parcelId: property.PID,
+        pid: property.PID,
+        pin: property.PIN ?? '',
+        status: getValueOrDefault(property.Status, 'Active'), // Assume active if not specified
+        fiscalYear: getFiscalYear(property),
+        agency: '', // Not used in API. Leave blank.
+        agencyCode: property.Ministry, // Names are misleading here.
+        subAgency: property.Agency ?? '',
+        propertyType: property.Type,
+        localId: property['Local ID'] ?? '',
+        name: property.Name,
+        description: property.Description ?? '',
+        classification: property.Classification,
+        civicAddress: property.Address ?? '',
+        city: property.Location,
+        postal: property.Postal ?? '',
+        latitude: property.Latitude,
+        longitude: property.Longitude,
+        landArea: getValueOrDefault(property['Land Area'], '0'),
+        landLegalDescription: property['Legal Description'] ?? '',
+        buildingFloorCount: getValueOrDefault(property['Building Floor Count'], '1'),
+        buildingConstructionType: getValueOrDefault(property['Construction Type'], 'Unknown'),
+        buildingPredominateUse: getValueOrDefault(property['Predominate Use'], 'Unknown'),
+        buildingTenancy: property.Tenancy ?? '',
+        buildingRentableArea: getValueOrDefault(property['Rentable Area'], '0'),
+        assessed: getAssessedValue(property),
+        netBook: getValueOrDefault(property['Netbook Value'], '0'),
+      }),
     );
-  }
-
-  if (headerList.length < 2) {
-    throw new Error('populateHeaderMap requires a list of at least 2 headers. Check the input.');
-  }
-
-  return {
-    parcelId: headerList.indexOf('parcelId'),
-    pid: headerList.indexOf('pid'),
-    pin: headerList.indexOf('pin'),
-    status: headerList.indexOf('status'),
-    fiscalYear: headerList.indexOf('fiscalYear'),
-    agency: headerList.indexOf('agency'),
-    agencyCode: headerList.indexOf('agencyCode'),
-    subAgency: headerList.indexOf('subAgency'),
-    propertyType: headerList.indexOf('propertyType'),
-    localId: headerList.indexOf('localId'),
-    name: headerList.indexOf('name'),
-    description: headerList.indexOf('description'),
-    classification: headerList.indexOf('classification'),
-    civicAddress: headerList.indexOf('civicAddress'),
-    city: headerList.indexOf('city'),
-    postal: headerList.indexOf('postal'),
-    latitude: headerList.indexOf('latitude'),
-    longitude: headerList.indexOf('longitude'),
-    landArea: headerList.indexOf('landArea'),
-    landLegalDescription: headerList.indexOf('landLegalDescription'),
-    buildingFloorCount: headerList.indexOf('buildingFloorCount'),
-    buildingConstructionType: headerList.indexOf('buildingConstructionType'),
-    buildingPredominateUse: headerList.indexOf('buildingPredominateUse'),
-    buildingTenancy: headerList.indexOf('buildingTenancy'),
-    buildingRentableArea: headerList.indexOf('buildingRentableArea'),
-    assessed: headerList.indexOf('assessed'),
-    netBook: headerList.indexOf('netBook'),
-  };
+    resolve(transformedData);
+  });
 };
 
 /**
@@ -154,7 +169,9 @@ export const csvFileToString = (file: File): Promise<string> => {
 
     reader.onload = (event) => {
       if (event.target && event.target.result) {
-        const csvData = event.target.result as string;
+        const csvData = (event.target.result as string)
+          .replace(/\r\n/g, '\n')
+          .replace(/^,+$/gm, '');
         resolve(csvData);
       } else {
         reject(new Error('Failed to read file.'));
@@ -170,12 +187,26 @@ export const csvFileToString = (file: File): Promise<string> => {
 };
 
 /**
+ * @description Converts a list of JS/JSON objects into a CSV file.
+ * @param {object[]} incomingJSON The list of objects
+ * @returns A CSV file encoded as a URI.
+ */
+export const dataToCsvFile: (incomingJSON: object[]) => string = (incomingJSON: object[]) => {
+  const csvString = Papa.unparse(incomingJSON, {
+    header: true,
+  });
+  const blob = new Blob([csvString], { type: 'text/csv' });
+  const file = URL.createObjectURL(blob);
+  return file;
+};
+
+/**
  * @description Combines each step in CSV utils to convert from CSV to Property Model.
  * @param {File} file The incoming CSV file.
  * @returns {IPropertyModel[]} An array of Property Model objects.
  */
 export const csvFileToPropertyModel = async (file: File) => {
   const string = await csvFileToString(file);
-  const objects = await parseCSVString(string);
+  const objects: IPropertyModel[] = await parseCSVString(string);
   return objects;
 };

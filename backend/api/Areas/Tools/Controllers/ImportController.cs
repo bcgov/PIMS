@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Model = Pims.Api.Areas.Tools.Models.Import;
 
 namespace Pims.Api.Areas.Tools.Controllers
@@ -65,7 +66,7 @@ namespace Pims.Api.Areas.Tools.Controllers
         /// <returns>The properties added.</returns>
         [HttpPost("properties")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<Model.ParcelModel>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<Model.ImportPropertyModel>), 200)]
         [ProducesResponseType(typeof(Pims.Api.Models.ErrorResponseModel), 400)]
         [SwaggerOperation(Tags = new[] { "tools-import" })]
         [HasPermission(Permissions.SystemAdmin)]
@@ -75,9 +76,7 @@ namespace Pims.Api.Areas.Tools.Controllers
 
             var helper = new ImportPropertiesHelper(_pimsAdminService, _logger);
             var entities = helper.AddUpdateProperties(models);
-            var parcels = _mapper.Map<Model.ParcelModel[]>(entities);
-
-            return new JsonResult(parcels);
+            return new JsonResult(entities.ToList());
         }
 
         /// <summary>
