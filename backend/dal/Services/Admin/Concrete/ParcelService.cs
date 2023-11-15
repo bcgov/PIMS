@@ -152,6 +152,11 @@ namespace Pims.Dal.Services.Admin
                 .AsNoTracking().SingleOrDefault(u => u.Id == id) ?? throw new KeyNotFoundException();
         }
 
+        public bool IsPidAvailable(int PID)
+        {
+            return !Context.Parcels.Any(parcel => parcel.PID == PID);
+        }
+
         /// <summary>
         /// Get the parcel for the specified 'pid'.
         /// </summary>
@@ -364,8 +369,20 @@ namespace Pims.Dal.Services.Admin
             parcel.ThrowIfNull(nameof(parcel));
             parcel.ThrowIfNotAllowedToEdit(nameof(parcel), this.User, new[] { Permissions.SystemAdmin, Permissions.AgencyAdmin });
 
-            var originalParcel = this.Context.Parcels.Find(parcel.Id) ?? throw new KeyNotFoundException();
+            var originalParcel = this.Context.Parcels
+                .Include(p => p.Agency)
+                .Include(p => p.Address)
+                .Include(p => p.Evaluations)
+                .Include(p => p.Fiscals)
+                .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Evaluations)
+                .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Fiscals)
+                .Include(p => p.Buildings).ThenInclude(pb => pb.Building).ThenInclude(b => b.Address)
+                .Include(p => p.Parcels).ThenInclude(pp => pp.Parcel)
+                .Include(p => p.Subdivisions).ThenInclude(pp => pp.Subdivision)
+                .SingleOrDefault(p => p.Id == parcel.Id) ?? throw new KeyNotFoundException();
+
             parcel.PropertyTypeId = originalParcel.PropertyTypeId;
+            this.Context.Entry(originalParcel.Address).CurrentValues.SetValues(parcel.Address);
 
             var entry = this.Context.Entry(originalParcel);
             entry.CurrentValues.SetValues(parcel);

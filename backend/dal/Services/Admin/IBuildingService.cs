@@ -15,6 +15,8 @@ namespace Pims.Dal.Services.Admin
         IEnumerable<Building> GetByPidWithoutTracking(int pid, string name = null);
         IEnumerable<Building> GetByName(string name);
         IEnumerable<Building> GetByNameWithoutTracking(string name);
+        IEnumerable<Building> GetByPidNameWithoutTracking(int pid = 0, string name = null);
+        IEnumerable<Building> GetByNameAddressWithoutTracking(string name, string address);
 
         void LoadParcelsFor(Building building);
         IEnumerable<Building> Add(IEnumerable<Building> buildings);

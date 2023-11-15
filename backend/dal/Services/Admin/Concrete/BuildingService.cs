@@ -94,7 +94,42 @@ namespace Pims.Dal.Services.Admin
 
         /// <summary>
         /// Get the building for the specified 'pid' and 'name'.
-        /// This searched for a name that begins the same.
+        /// This searches for a name that matches exactly if provided.
+        /// If name is null, it only searches by pid.
+        /// If pid is null but name provided, it searches by name.
+        /// If both are null, all buildings with no associated parcel and no name would be returned.
+        /// </summary>
+        /// <param name="pid"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public IEnumerable<Building> GetByPidNameWithoutTracking(int pid = 0, string name = null)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
+
+            if (pid == 0)
+            {
+                return this.Context.Buildings
+                .Include(p => p.BuildingConstructionType)
+                .Include(p => p.BuildingPredominateUse)
+                .Include(p => p.BuildingOccupantType)
+                .Include(p => p.Address).ThenInclude(a => a.Province)
+                .Include(p => p.Agency).ThenInclude(a => a.Parent)
+                .AsNoTracking().Where(b => b.Parcels.Count == 0 && (name == null || name == b.Name));
+            }
+
+            return this.Context.Buildings
+                .Include(p => p.BuildingConstructionType)
+                .Include(p => p.BuildingPredominateUse)
+                .Include(p => p.BuildingOccupantType)
+                .Include(p => p.Address).ThenInclude(a => a.Province)
+                .Include(p => p.Agency).ThenInclude(a => a.Parent)
+                .AsNoTracking().Where(b => b.Parcels.Any(pb => pb.Parcel.PID == pid) && (name == null || name == b.Name));
+        }
+
+        /// <summary>
+        /// Get the building for the specified 'pid' and 'name'.
+        /// This searches for a name that begins the same.
+        /// 
         /// </summary>
         /// <param name="pid"></param>
         /// <param name="name"></param>
@@ -110,6 +145,28 @@ namespace Pims.Dal.Services.Admin
                 .Include(p => p.Address).ThenInclude(a => a.Province)
                 .Include(p => p.Agency).ThenInclude(a => a.Parent)
                 .AsNoTracking().Where(b => b.Parcels.Any(pb => pb.Parcel.PID == pid) && (name == null || EF.Functions.Like(b.Name, $"{name}%")));
+        }
+
+
+        /// <summary>
+        /// Get the building for the specified 'name' and 'address'.
+        /// This searched for a name and address that equals the passed in arguments
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public IEnumerable<Building> GetByNameAddressWithoutTracking(string name, string address)
+        {
+            this.User.ThrowIfNotAuthorized(Permissions.SystemAdmin, Permissions.AgencyAdmin);
+
+            return this.Context.Buildings
+                .Include(p => p.BuildingConstructionType)
+                .Include(p => p.BuildingPredominateUse)
+                .Include(p => p.BuildingOccupantType)
+                .Include(p => p.Parcels)
+                .Include(p => p.Address).ThenInclude(a => a.Province)
+                .Include(p => p.Agency).ThenInclude(a => a.Parent)
+                .AsNoTracking().Where(b => b.Address.Address1.Equals(address) && b.Name.Equals(name));
         }
 
         /// <summary>
@@ -258,12 +315,15 @@ namespace Pims.Dal.Services.Admin
             building.ThrowIfNotAllowedToEdit(nameof(building), this.User, new[] { Permissions.SystemAdmin, Permissions.AgencyAdmin });
 
             var originalBuilding = this.Context.Buildings
+                .Include(b => b.Address).ThenInclude(a => a.Province)
                 .Include(b => b.Classification)
+                .Include(b => b.Parcels).ThenInclude(pb => pb.Parcel).ThenInclude(b => b.Address).ThenInclude(a => a.Province)
                 .FirstOrDefault(b => b.Id == building.Id) ?? throw new KeyNotFoundException();
             this.ThrowIfNotAllowedToUpdate(originalBuilding, _options.Project);
 
             building.PropertyTypeId = originalBuilding.PropertyTypeId;
             var entry = this.Context.Entry(originalBuilding);
+            this.Context.Entry(originalBuilding.Address).CurrentValues.SetValues(building.Address);
             entry.CurrentValues.SetValues(building);
             entry.Collection(p => p.Evaluations).Load();
             entry.Collection(p => p.Fiscals).Load();
