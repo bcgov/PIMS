@@ -147,6 +147,8 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const parcelWMSLayerService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
   const geocoder = useApiGeocoder();
+  // Declare a variable to store the highlighted GeoJSON layer
+  const [highlightedParcelLayer, setHighlightedParcelLayer] = useState<L.GeoJSON | null>(null);
 
   const draftProperties: PointFeature[] = useAppSelector((store) => store.parcel.draftProperties);
 
@@ -227,6 +229,13 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   const search = async (filters: IGeoSearchParams[]) => {
     try {
       onRequestData(true);
+      // Check if there is a highlighted parcel layer, and remove it
+      console.log('test highlightedParcelLayer', highlightedParcelLayer);
+      if (highlightedParcelLayer) {
+        map.removeLayer(highlightedParcelLayer);
+        setHighlightedParcelLayer(null); // Reset the state
+      }
+      console.log('test we are here');
       const data = flatten(await Promise.all(filters.map((x) => loadTile(x)))).map((f) => {
         return {
           ...f,
@@ -258,16 +267,19 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
       } else if (results.length === 0 && !!pid) {
         // if (!!pid) {
         const searchedByPID = await parcelWMSLayerService.findByPid(pid);
+        console.log('test searchedByPID', searchedByPID);
         if (searchedByPID && searchedByPID.features.length > 0) {
-          //alert('There is a feature');
           const firstFeature = searchedByPID.features[0];
+          console.log('test: ', firstFeature);
           if (firstFeature.geometry) {
             // Create a GeoJSON layer for the highlighted parcel
-            const highlightedParcelLayer = L.geoJSON(firstFeature.geometry);
+            const newHighlightedParcelLayer = L.geoJSON(firstFeature.geometry);
             // Add the GeoJSON layer to the map
-            highlightedParcelLayer.addTo(map);
-            // Optionally, you can zoom to the highlighted parcel
-            map.fitBounds(highlightedParcelLayer.getBounds(), { maxZoom: 21 });
+            newHighlightedParcelLayer.addTo(map);
+            // zoom to the highlighted parcel
+            map.fitBounds(newHighlightedParcelLayer.getBounds(), { maxZoom: 21 });
+            // Update the state with the new highlighted parcel layer
+            setHighlightedParcelLayer(newHighlightedParcelLayer);
           } else {
             console.error('Feature does not have geometry property');
           }
