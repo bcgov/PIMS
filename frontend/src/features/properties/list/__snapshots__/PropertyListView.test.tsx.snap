@@ -408,11 +408,9 @@ exports[`Property list view Matches snapshot 1`] = `
             <div
               class="svg-btn active"
             >
-              <svg
-                class="svg"
-              >
-                icon-lot.svg
-              </svg>
+              <template>
+                <svg />
+              </template>
               Parcels view
             </div>
           </div>
@@ -422,11 +420,9 @@ exports[`Property list view Matches snapshot 1`] = `
             <div
               class="svg-btn"
             >
-              <svg
-                class="svg"
-              >
-                icon-business.svg
-              </svg>
+              <template>
+                <svg />
+              </template>
               Buildings view
             </div>
           </div>

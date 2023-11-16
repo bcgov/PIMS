@@ -197,7 +197,10 @@
           "projectRoot": ".."
         }
       ]
-    ]
+    ],
+    "moduleNameMapper": {
+      ".+\\.(svg)(\\?react)?$": "<rootDir>/src/__mocks__/svg-mock.tsx"
+    }
   },
   "browserslist": {
     "production": [
