@@ -40,7 +40,7 @@ objects:
             kind: ImageStreamTag
             namespace: ${LICENSE_PLATE}-tools
             name: 'pims-api:${IMAGE_TAG}'
-    replicas: 1
+    replicas: 2
     revisionHistoryLimit: 10
     test: false
     selector:
@@ -220,7 +220,7 @@ parameters:
     displayName: License Plate
     name: LICENSE_PLATE
     required: true
-    value: 354028
+    value: "354028"
   - description: ImageTag
     displayName: ImageTag
     name: IMAGE_TAG
