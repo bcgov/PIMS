@@ -128,7 +128,7 @@ objects:
                   mountPath: /tmp/app/dist/videos
               terminationMessagePolicy: File
               image: >-
-                image-registry.openshift-image-registry.svc:5000/ec1236-tools/pims-app@sha256:9b67dfe4e3590d61f426138c18f9a85092562881effbc1c9945a0441856ddde5
+                image-registry.openshift-image-registry.svc:5000/${LICENSE_PLATE}-tools/pims-app@sha256:9b67dfe4e3590d61f426138c18f9a85092562881effbc1c9945a0441856ddde5
           restartPolicy: Always
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
@@ -148,7 +148,7 @@ parameters:
     displayName: License Plate
     name: LICENSE_PLATE
     required: true
-    value: ec1236
+    value: 354028
   - description: ImageTag
     displayName: ImageTag
     name: IMAGE_TAG

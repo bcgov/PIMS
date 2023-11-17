@@ -220,7 +220,7 @@ parameters:
     displayName: License Plate
     name: LICENSE_PLATE
     required: true
-    value: ec1236
+    value: 354028
   - description: ImageTag
     displayName: ImageTag
     name: IMAGE_TAG
