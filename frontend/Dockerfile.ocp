@@ -24,7 +24,7 @@ RUN npm run build
 
 
 ## Stage 2: Nginx state for serving content
-FROM image-registry.apps.silver.devops.gov.bc.ca/354028-tools/nginx-runtime as prod
+FROM nginx:alpine-slim as prod
 
 # copy custom nginx configuration to container
 # copy custom nginx configuration from host to container
