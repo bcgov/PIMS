@@ -2,7 +2,7 @@ name: API (.NET 7.0)
 
 on:
   push:
-    branches: [dev]
+    branches: [main]
     paths:
       - 'backend/**' # Triggers on changes to files in the backend/ directory.
       - '!backend/Dockerfile*' # Will not trigger on changes to the following.
