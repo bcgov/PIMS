@@ -33,7 +33,7 @@ jobs:
       - name: Process and Apply API DeploymentConfig
         env:
           NAMESPACE: '${{ secrets.OPENSHIFT_DEV_NAMESPACE }}'
-          DC_TEMPLATE: 'app-dc-template.yaml'
+          DC_TEMPLATE: 'api-dc-template.yaml'
           IMAGE_TAG: ${{github.event.pull_request.number}}
           ENVIRONMENT: 'dev'
           APPLICATION_NAME: 'pims-api'
