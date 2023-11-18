@@ -2,7 +2,7 @@ ARG BUILD_CONFIGURATION=Release
 FROM image-registry.apps.silver.devops.gov.bc.ca/354028-tools/dotnet-aspnet-runtime:7.0 AS base
 WORKDIR /app
 EXPOSE 443 8080
-# temp comment : to test pipeline : to be removed in next commit
+
 # Copy csproj and restore as distinct layers
 FROM image-registry.apps.silver.devops.gov.bc.ca/354028-tools/dotnet-sdk:7.0 AS build
 WORKDIR /src
