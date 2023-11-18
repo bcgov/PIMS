@@ -125,7 +125,7 @@ objects:
                 - name: pims-app-envvars
                   mountPath: /tmp/app/dist/environment.json
                   subPath: environment.json
-                - name: pims-file-storage
+                - name: file-storage
                   mountPath: /tmp/app/dist/videos
               terminationMessagePolicy: File
               image: >-
