@@ -73,9 +73,9 @@ objects:
                   - key: environment.json
                     path: environment.json
                 defaultMode: 420
-            - name: pims-file-storage
+            - name: file-storage
               persistentVolumeClaim:
-                claimName: pims-file-storage
+                claimName: file-storage
           containers:
             - resources:
                 limits:
