@@ -3,8 +3,7 @@ import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-ic
 import { FastInput, Form, InputGroup } from 'components/common/form';
 import { Label } from 'components/common/Label';
 import { FormikProps } from 'formik';
-import { useCallback } from 'react';
-import React from 'react';
+import React, { Dispatch, SetStateAction, useCallback } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import ClickAwayListener from 'react-click-away-listener';
 import styled from 'styled-components';
@@ -16,6 +15,8 @@ interface LatLongFormProps {
   showLandArea?: boolean;
   /** determine the text for the lat long for depending on where it is being called */
   building?: boolean;
+  /** Set the location pin */
+  setLocationPinActive: Dispatch<SetStateAction<boolean>>;
 }
 
 export const defaultLatLongValues: any = {
@@ -63,12 +64,14 @@ const LatLongForm = <T,>(props: LatLongFormProps & FormikProps<T>) => {
           <ClickAwayListener
             onClickAway={() => {
               props.setMovingPinNameSpace(undefined);
+              // Don't set pin as inactive here. Handled in MapSideBarContainer.
             }}
           >
             <DraftMarkerButton
               disabled={props.disabled}
               onClick={(e: any) => {
                 props.setMovingPinNameSpace(props.nameSpace ?? '');
+                props.setLocationPinActive(true); // Pin picked up, set active
                 e.preventDefault();
               }}
             >
