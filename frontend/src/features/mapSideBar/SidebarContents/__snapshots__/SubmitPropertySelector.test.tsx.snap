@@ -57,7 +57,7 @@ exports[`SubmitPropertySelector component renders correctly 1`] = `
   cursor: pointer;
 }
 
-.c7 {
+.c6 {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -65,34 +65,13 @@ exports[`SubmitPropertySelector component renders correctly 1`] = `
   height: 47px;
 }
 
-.c6 {
-  color: textColor;
-  height: 47px;
-  width: 47px;
-  margin-right: 16px;
-}
-
-.c9 {
-  color: textColor;
-  height: 47px;
-  width: 47px;
-  margin-right: 16px;
-}
-
-.c11 {
-  color: #494949;
-  height: 47px;
-  width: 47px;
-  margin-right: 16px;
-}
-
-.c8 {
+.c7 {
   font-size: 21px;
   color: slideOutBlue;
   margin-bottom: 0px;
 }
 
-.c10 {
+.c8 {
   font-size: 12px;
   color: textColor;
   margin-bottom: 0px;
@@ -158,16 +137,14 @@ exports[`SubmitPropertySelector component renders correctly 1`] = `
       className="c5"
       onClick={[Function]}
     >
-      <svg
-        className="c6 svg"
-      >
-        icon-business.svg
-      </svg>
+      <template>
+        <svg />
+      </template>
       <div
-        className="c7"
+        className="c6"
       >
         <p
-          className="c8"
+          className="c7"
         >
           Add a building
         </p>
@@ -177,21 +154,19 @@ exports[`SubmitPropertySelector component renders correctly 1`] = `
       className="c5"
       onClick={[Function]}
     >
-      <svg
-        className="c9 svg"
-      >
-        icon-lot.svg
-      </svg>
+      <template>
+        <svg />
+      </template>
       <div
-        className="c7"
+        className="c6"
       >
         <p
-          className="c8"
+          className="c7"
         >
           Add Land
         </p>
         <p
-          className="c10"
+          className="c8"
         >
           PID or PIN
         </p>
@@ -201,21 +176,19 @@ exports[`SubmitPropertySelector component renders correctly 1`] = `
       className="c5"
       onClick={[Function]}
     >
-      <svg
-        className="c11 svg"
-      >
-        project-diagram-solid.svg
-      </svg>
+      <template>
+        <svg />
+      </template>
       <div
-        className="c7"
+        className="c6"
       >
         <p
-          className="c8"
+          className="c7"
         >
           Add Potential Subdivision
         </p>
         <p
-          className="c10"
+          className="c8"
         >
           PID
         </p>

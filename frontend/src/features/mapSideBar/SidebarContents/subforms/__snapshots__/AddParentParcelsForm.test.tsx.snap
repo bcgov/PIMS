@@ -48,12 +48,9 @@ exports[`InfoContent View InfoContent renders correctly 1`] = `
   <label
     class="label header"
   >
-    <svg
-      class="svg"
-      style="height: 25px; width: 25px; margin-right: 5px;"
-    >
-      icon-lot.svg
-    </svg>
+    <template>
+      <svg />
+    </template>
     Parcel Identification
   </label>
   <div

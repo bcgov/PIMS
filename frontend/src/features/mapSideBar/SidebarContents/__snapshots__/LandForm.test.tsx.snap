@@ -691,11 +691,9 @@ exports[`Land Form component renders correctly 1`] = `
                         <div
                           class="marker-svg col"
                         >
-                          <svg
-                            class="parcel-icon"
-                          >
-                            draft-parcel-icon.svg
-                          </svg>
+                          <template>
+                            <svg />
+                          </template>
                         </div>
                       </div>
                     </div>
