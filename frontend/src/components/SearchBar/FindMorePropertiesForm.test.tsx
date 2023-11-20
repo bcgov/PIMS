@@ -70,6 +70,9 @@ const store = mockStore({
   lookupCode: lCodes,
 });
 
+// Suppress console.error messages
+jest.spyOn(console, 'error').mockImplementation(() => {});
+
 const RenderHelper = () => (
   <Provider store={store}>
     <MemoryRouter initialEntries={[history.location]}>

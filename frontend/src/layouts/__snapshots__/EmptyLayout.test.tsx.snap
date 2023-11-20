@@ -32,7 +32,17 @@ exports[`Empty Layout renders 1`] = `
               alt="Government of BC logo"
               class="bc-gov-icon"
               height="43"
-              src="logo-banner.svg"
+              src="() => /*#__PURE__*/(0, _jsxDevRuntime.jsxDEV)(\\"template\\", {
+  children: /*#__PURE__*/(0, _jsxDevRuntime.jsxDEV)(\\"svg\\", {}, void 0, false, {
+    fileName: _jsxFileName,
+    lineNumber: 5,
+    columnNumber: 5
+  }, void 0)
+}, void 0, false, {
+  fileName: _jsxFileName,
+  lineNumber: 4,
+  columnNumber: 3
+}, void 0)"
               width="156"
             />
           </a>
