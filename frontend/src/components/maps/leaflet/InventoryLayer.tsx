@@ -279,7 +279,9 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
         // If anything is found in inventory
         propertiesFound = results.length;
         setFeatures(results || []);
-        // TODO: set lat and long && zoom
+        map.fitBounds(L.geoJSON(results[0].geometry).getBounds(), {
+          maxZoom: 11,
+        });
       } else if (pidsFoundInParcelLayer > 0) {
         // If nothing in inventory, but found in parcel layer
         // if (!!pid) {
