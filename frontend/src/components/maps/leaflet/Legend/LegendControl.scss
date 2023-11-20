@@ -1,4 +1,5 @@
 @import '../../../../styles.scss';
+@import '../../../../colors.scss';
 
 .legendTooltip {
   .arrow::before {
@@ -20,4 +21,12 @@
       }
     }
   }
+}
+
+.legend-button {
+  background-color: white !important;
+  color: $dark-variant-color !important;
+  width: 40px;
+  height: 40px;
+  align-items: center;
 }
