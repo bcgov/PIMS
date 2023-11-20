@@ -1,5 +1,7 @@
-import { ReactComponent as BuildingDraftIcon } from 'assets/images/draft-building-icon.svg';
-import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-icon.svg';
+/// <reference types="vite-plugin-svgr/client" />
+
+import BuildingDraftIcon from 'assets/images/draft-building-icon.svg?react';
+import ParcelDraftIcon from 'assets/images/draft-parcel-icon.svg?react';
 import { FastInput, Form, InputGroup } from 'components/common/form';
 import { Label } from 'components/common/Label';
 import { FormikProps } from 'formik';

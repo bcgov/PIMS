@@ -140,7 +140,7 @@ namespace Pims.Core.Test
                 Address = address,
                 Classification = classification,
                 ClassificationId = classification.Id,
-                Description = $"description-{id}",
+                Description = "description",
                 BuildingPredominateUse = predominateUse,
                 BuildingPredominateUseId = predominateUse.Id,
                 BuildingConstructionType = constructionType,

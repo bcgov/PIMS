@@ -47,8 +47,8 @@ export interface PimsAPI extends AxiosInstance {
   updateParcel: (id: number, data: IApiProperty) => Promise<IParcel>;
   importProperties: (properties: IPropertyModel[]) => Promise<{
     responseCode: number;
-    acceptedProperties?: IPropertyModel[];
-    rejectedProperties?: IPropertyModel[];
+    acceptedProperties: IPropertyModel[];
+    rejectedProperties: IPropertyModel[];
   }>;
 }
 
@@ -212,20 +212,21 @@ export const useApi = (props?: IApiProps): PimsAPI => {
       `${ENVIRONMENT.apiUrl}/tools/import/properties`,
       properties,
     );
-    // Find all properties that were in the original but not returned from the POST.
-    // This should determine which properties were not added for some reason.
+
+    // Separate properties into accepted and rejected lists.
+    const acceptedProperties: IPropertyModel[] = [];
     const rejectedProperties: IPropertyModel[] = [];
-    if (data.length !== properties.length) {
-      properties.forEach((property) => {
-        if (!data.some((returnedProperty) => returnedProperty['pid'] === property['pid'])) {
-          rejectedProperties.push(property);
-        }
-      });
-    }
+    data.forEach((property: IPropertyModel) => {
+      if (property.added === true || property.updated === true) {
+        acceptedProperties.push(property);
+      } else {
+        rejectedProperties.push(property);
+      }
+    });
 
     return {
       responseCode: status,
-      acceptedProperties: data,
+      acceptedProperties,
       rejectedProperties,
     };
   }, []);

@@ -1,7 +1,9 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import './ParcelIdentificationForm.scss';
 
 import { IParcel } from 'actions/parcelsActions';
-import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-icon.svg';
+import ParcelDraftIcon from 'assets/images/draft-parcel-icon.svg?react';
 import classNames from 'classnames';
 import { Check, FastInput, InputGroup, SelectOptions, TextArea } from 'components/common/form';
 import { ParentSelect } from 'components/common/form/ParentSelect';

@@ -1430,7 +1430,7 @@ namespace Pims.Dal.Test.Services
             Assert.NotNull(result);
             result.Properties.Should().HaveCount(1);
             result.Properties.First().PropertyType.Should().Be(Entity.PropertyTypes.Building);
-            result.Properties.First().Building.Description.Should().Be("description-20");
+            result.Properties.First().Building.Description.Should().Be("description");
             queueService.Verify(m => m.NotificationQueue.GenerateNotifications(It.IsAny<Project>(), null, project.StatusId, true), Times.Never());
             queueService.Verify(m => m.NotificationQueue.SendNotificationsAsync(It.IsAny<IEnumerable<NotificationQueue>>(), true), Times.Once());
         }
