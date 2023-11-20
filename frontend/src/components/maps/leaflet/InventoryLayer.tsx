@@ -247,7 +247,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
         (point) => `${point?.properties.id}-${point?.properties.propertyTypeId}`,
       );
 
-      const results = items.filter(({ properties }: any) => {
+      const results: PointFeature[] = items.filter(({ properties }: any) => {
         return (
           properties.propertyTypeId === PropertyTypes.BUILDING ||
           properties.propertyTypeId === PropertyTypes.PARCEL ||
@@ -258,43 +258,62 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
 
       const administrativeArea = filter?.administrativeArea;
       const pid = filter?.pid;
-      if (results.length === 0 && !!administrativeArea) {
+      const searchedByPID = await parcelWMSLayerService.findByPid(pid ?? '0');
+      const pidsFoundInParcelLayer = searchedByPID.features.length;
+      let propertiesFound;
+      console.log('xxx', results, pidsFoundInParcelLayer, administrativeArea);
+      // If nothing in inventory or parcel layer, zoom to administrative area
+      if (results.length > 0 && !!administrativeArea) {
+        propertiesFound = results.length;
+        setFeatures(results || []);
+
         const municipality = await municipalitiesService.findByAdministrative(administrativeArea);
+        console.log('municipality1', municipality);
         if (municipality) {
           // Fit to municipality bounds
+          console.log('municipality2', municipality);
+
           map.fitBounds((GeoJSON.geometryToLayer(municipality) as any)._bounds, { maxZoom: 11 });
         }
-      } else if (results.length === 0 && !!pid) {
+      } else if (results.length > 0) {
+        // If anything is found in inventory
+        propertiesFound = results.length;
+        setFeatures(results || []);
+        // TODO: set lat and long && zoom
+      } else if (pidsFoundInParcelLayer > 0) {
+        // If nothing in inventory, but found in parcel layer
         // if (!!pid) {
-        const searchedByPID = await parcelWMSLayerService.findByPid(pid);
         console.log('test searchedByPID', searchedByPID);
-        if (searchedByPID && searchedByPID.features.length > 0) {
-          const firstFeature = searchedByPID.features[0];
-          console.log('test: ', firstFeature);
-          if (firstFeature.geometry) {
-            // Create a GeoJSON layer for the highlighted parcel
-            const newHighlightedParcelLayer = L.geoJSON(firstFeature.geometry);
-            // Add the GeoJSON layer to the map
-            newHighlightedParcelLayer.addTo(map);
-            // zoom to the highlighted parcel
-            map.fitBounds(newHighlightedParcelLayer.getBounds(), { maxZoom: 21 });
-            // Update the state with the new highlighted parcel layer
-            setHighlightedParcelLayer(newHighlightedParcelLayer);
-          } else {
-            console.error('Feature does not have geometry property');
-          }
+        propertiesFound = pidsFoundInParcelLayer;
+        const firstFeature = searchedByPID.features[0];
+        console.log('test: ', firstFeature);
+        if (firstFeature.geometry) {
+          // Create a GeoJSON layer for the highlighted parcel
+          const newHighlightedParcelLayer = L.geoJSON(firstFeature.geometry);
+          // Add the GeoJSON layer to the map
+          newHighlightedParcelLayer.addTo(map);
+          // zoom to the highlighted parcel
+          console.log('xxx1');
+          map.fitBounds(newHighlightedParcelLayer.getBounds(), { maxZoom: 21 });
+          // Update the state with the new highlighted parcel layer
+          console.log('xxx2');
+          setHighlightedParcelLayer(newHighlightedParcelLayer);
           // Set features directly with the array of features
-          setFeatures(searchedByPID.features as PointFeature[]);
-          setLoadingTiles(false);
+          // setFeatures(searchedByPID.features as PointFeature[]);
+        } else {
+          console.error('Feature does not have geometry property');
         }
       }
-      setFeatures(results || []);
-      setLoadingTiles(false);
-      if (results.length === 0) {
-        toast.info('No search results found');
+
+      if (propertiesFound && propertiesFound > 0) {
+        toast.info(`${propertiesFound} properties found`);
       } else {
-        toast.info(`${results.length} properties found`);
+        // Nothing found in either inventory or parcel layer
+        toast.info('No search results found');
       }
+
+      setLoadingTiles(false);
+      console.log('xxx3');
     } catch (error) {
       toast.error((error as Error).message, { autoClose: 7000 });
       console.error(error);
