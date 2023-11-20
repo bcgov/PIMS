@@ -46,7 +46,11 @@ const LastUpdatedBy: React.FC<ILastUpdatedByProps> = ({
   } else if (createdOn) {
     return (
       <UpdateText>
-        Created On:&nbsp;
+        Created By:&nbsp;
+        <TooltipWrapper toolTipId="lastUpdatedEmail" toolTip={updatedByEmail ?? undefined}>
+          <LinkButton>{updatedByName ?? 'unknown'}</LinkButton>
+        </TooltipWrapper>
+        &nbsp;
         {formatApiDateTime(createdOn)}
       </UpdateText>
     );

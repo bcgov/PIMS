@@ -13,6 +13,7 @@ namespace Pims.Dal.Services.Admin
         Parcel Get(int id);
         Parcel GetByPid(int pid);
         Parcel GetByPidWithoutTracking(int pid);
+        bool IsPidAvailable(int pid);
         IEnumerable<Parcel> Add(IEnumerable<Parcel> parcels);
         void UpdateFinancials(Parcel parcel);
     }

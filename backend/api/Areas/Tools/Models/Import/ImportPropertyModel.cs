@@ -3,6 +3,8 @@ namespace Pims.Api.Areas.Tools.Models.Import
     public class ImportPropertyModel
     {
         #region Properties
+        public bool Updated { get; set; }
+        public bool Added { get; set; }
         public string ParcelId { get; set; }
         public string PID { get; set; }
         public string PIN { get; set; }
@@ -30,6 +32,7 @@ namespace Pims.Api.Areas.Tools.Models.Import
         public float BuildingRentableArea { get; set; }
         public decimal Assessed { get; set; }
         public decimal NetBook { get; set; }
+        public string Error { get; set; }
         #endregion
     }
 }

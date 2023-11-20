@@ -1,0 +1,10 @@
+@import '../../../colors.scss';
+
+#instructions {
+  text-align: left;
+  margin-bottom: 2em;
+
+  .red-text {
+    color: $danger-color;
+  }
+}
