@@ -61,7 +61,7 @@ jobs:
       # Check Deployment Status
       - name: Check Deployment Status
         run: |
-          oc rollout status -n ${{ secrets.OPENSHIFT_DEV_NAMESPACE }} dc/pims-api --watch
+          oc rollout status -n ${{ secrets.OPENSHIFT_DEV_NAMESPACE }} dc/pims-app --watch
 
   # Job to clean up previous objects in OpenShift
   Clean-Up:
