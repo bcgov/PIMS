@@ -929,9 +929,9 @@ exports[`Building Form component renders correctly 1`] = `
                           <button
                             class="c7"
                           >
-                            <svg>
-                              draft-building-icon.svg
-                            </svg>
+                            <template>
+                              <svg />
+                            </template>
                           </button>
                         </div>
                       </div>

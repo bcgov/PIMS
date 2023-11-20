@@ -23,7 +23,7 @@ exports[`header renders correctly 1`] = `
         alt="Government of BC logo"
         className="bc-gov-icon"
         height="43"
-        src="logo-banner.svg"
+        src={[Function]}
         width="156"
       />
     </a>

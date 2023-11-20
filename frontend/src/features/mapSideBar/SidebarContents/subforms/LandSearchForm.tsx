@@ -1,9 +1,11 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import './LandSearchForm.scss';
 
 import { ContentPaste as PasteIcon } from '@mui/icons-material';
 import { Box, IconButton, Tab, Tabs, Tooltip } from '@mui/material';
 import { IParcel } from 'actions/parcelsActions';
-import { ReactComponent as ParcelDraftIcon } from 'assets/images/draft-parcel-icon.svg';
+import ParcelDraftIcon from 'assets/images/draft-parcel-icon.svg?react';
 import { FastInput, Input } from 'components/common/form';
 import SearchButton from 'components/common/form/SearchButton';
 import { ISteppedFormValues } from 'components/common/form/StepForm';

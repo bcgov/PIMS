@@ -1,7 +1,9 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import { IProperty } from 'actions/parcelsActions';
-import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
-import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
-import { ReactComponent as SubdivisionSvg } from 'assets/images/project-diagram-solid.svg';
+import BuildingSvg from 'assets/images/icon-business.svg?react';
+import LandSvg from 'assets/images/icon-lot.svg?react';
+import SubdivisionSvg from 'assets/images/project-diagram-solid.svg?react';
 import { PropertyTypes } from 'constants/propertyTypes';
 import React from 'react';
 import { CellProps, Renderer } from 'react-table';

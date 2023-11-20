@@ -1,3 +1,7 @@
-export { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
-export { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
-export { ReactComponent as SubdivisionSvg } from 'assets/images/project-diagram-solid.svg';
+/// <reference types="vite-plugin-svgr/client" />
+
+import BuildingSvg from 'assets/images/icon-business.svg?react';
+import LandSvg from 'assets/images/icon-lot.svg?react';
+import SubdivisionSvg from 'assets/images/project-diagram-solid.svg?react';
+
+export { BuildingSvg, LandSvg, SubdivisionSvg };
