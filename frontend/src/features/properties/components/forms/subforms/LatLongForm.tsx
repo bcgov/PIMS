@@ -17,7 +17,7 @@ interface LatLongFormProps {
   showLandArea?: boolean;
   /** determine the text for the lat long for depending on where it is being called */
   building?: boolean;
-  /** Set the location pin */
+  /** Set the location pin state */
   setLocationPinActive: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -70,6 +70,7 @@ const LatLongForm = <T,>(props: LatLongFormProps & FormikProps<T>) => {
             }}
           >
             <DraftMarkerButton
+              id="draft-marker-button"
               disabled={props.disabled}
               onClick={(e: any) => {
                 props.setMovingPinNameSpace(props.nameSpace ?? '');
