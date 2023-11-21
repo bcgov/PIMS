@@ -1,5 +1,6 @@
-import variables from '_variables.module.scss';
 import './BuildingForm.scss';
+
+import variables from '_variables.module.scss';
 import { IBuilding } from 'actions/parcelsActions';
 import {
   ISteppedFormValues,
