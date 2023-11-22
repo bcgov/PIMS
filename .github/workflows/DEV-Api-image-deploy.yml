@@ -9,10 +9,19 @@ on:
     paths:
       - 'backend/**' # Triggers on changes to files in the backend/ directory.
 
+  workflow_dispatch:
+      inputs:
+        image_tag:
+          description: 'Image Tag to deploy'
+          required: true
+
+env:
+  IMAGE_TAG: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.image_tag || github.event.pull_request.number }}
+
 jobs:
   # Job to deploy API image to OpenShift
   Deploy-To-OpenShift:
-    if: ${{ github.event.pull_request.merged }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.pull_request.merged }}
     name: Deploy to OpenShift
     runs-on: ubuntu-latest
 
@@ -34,7 +43,7 @@ jobs:
         env:
           NAMESPACE: '${{ secrets.OPENSHIFT_DEV_NAMESPACE }}'
           DC_TEMPLATE: 'api-dc-template.yaml'
-          IMAGE_TAG: ${{github.event.pull_request.number}}
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
           ENVIRONMENT: 'dev'
           APPLICATION_NAME: 'pims-api'
           LICENSE_PLATE: '${{ secrets.LICENSE_PLATE }}'
@@ -117,7 +126,7 @@ jobs:
 
       # Run update wiki python script
       - name: Run update wiki python script
-        run: python ./.github/helpers/update-wiki-table.py ./wiki/Image-tags.md API "Deployed Image Tag in DEV" "${{github.event.pull_request.number}}"
+        run: python ./.github/helpers/update-wiki-table.py ./wiki/Image-tags.md API "Deployed Image Tag in DEV" "${{ env.IMAGE_TAG }}"
 
       # Commit and push changes to wiki
       - name: Commit and push changes to wiki
