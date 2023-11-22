@@ -3,7 +3,7 @@ name: APP Linting Check
 on:
   pull_request:
     types: [opened, synchronize]
-    branches: [dev]
+    branches: [main]
     paths:
       - "frontend/**"
       - ".github/workflows/app-lint.yaml"
