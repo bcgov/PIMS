@@ -91,6 +91,7 @@ jobs:
 
       # Add comment to the PR
       - name: Add Comment To the PR
+        if: github.event.action == 'opened'
         uses: actions/github-script@v6
         with:
           script: |
