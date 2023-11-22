@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 export const GeocoderAutoCompleteStyled = styled.div`
-
   .form.Control {
     width: 100%;
     height: 100%;

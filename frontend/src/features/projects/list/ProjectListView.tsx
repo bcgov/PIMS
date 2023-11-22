@@ -311,8 +311,8 @@ export const ProjectListView: React.FC<IProps> = ({
         title.includes('SPL Projects')
           ? 'disposal-projects-spl-project-list-view'
           : title.includes('Approval Requests')
-          ? 'disposal-projects-project-approval-request-list-view'
-          : 'disposal-projects-project-list-view'
+            ? 'disposal-projects-project-approval-request-list-view'
+            : 'disposal-projects-project-list-view'
       }
     >
       <div className="filter-container">

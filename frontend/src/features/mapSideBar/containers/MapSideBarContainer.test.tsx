@@ -1,4 +1,4 @@
-import { cleanup, render, waitFor } from '@testing-library/react';
+import { cleanup, render } from '@testing-library/react';
 import { IParcel } from 'actions/parcelsActions';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
@@ -6,7 +6,6 @@ import * as actionTypes from 'constants/actionTypes';
 import { Claims } from 'constants/claims';
 import { createMemoryHistory } from 'history';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { mockDetails } from 'mocks/filterDataMock';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
@@ -22,7 +21,7 @@ import MapSideBarContainer from './MapSideBarContainer';
 jest.mock(
   'react-visibility-sensor',
   (): typeof VisibilitySensor =>
-    ({ children, partialVisibility, ...rest }: any) => (
+    ({ children, ...rest }: any) => (
       <div {...rest}>
         {typeof children === 'function' ? children({ isVisible: true }) : children}
       </div>
