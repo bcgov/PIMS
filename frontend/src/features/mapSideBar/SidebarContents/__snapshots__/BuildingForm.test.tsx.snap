@@ -928,6 +928,7 @@ exports[`Building Form component renders correctly 1`] = `
                         >
                           <button
                             class="c7"
+                            id="draft-marker-button"
                           >
                             <template>
                               <svg />
