@@ -16,8 +16,7 @@ import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { LatLng } from 'leaflet';
 import _, { cloneDeep, noop } from 'lodash';
-import React, { FunctionComponent, useEffect, useRef } from 'react';
-import { useState } from 'react';
+import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { FaCheckCircle, FaEdit } from 'react-icons/fa';
 import { FaTrash } from 'react-icons/fa';
@@ -142,6 +141,8 @@ const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [showUpdatedModal, setShowUpdatedModal] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  // Is location pin from LatLongForm active?
+  const [locationPinActive, setLocationPinActive] = useState<boolean>(false);
 
   /**
    * Populate the formik form using the passed parcel.
@@ -304,9 +305,13 @@ const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
   // Add a pin to the map where the user has clicked.
   useDeepCompareEffect(() => {
     // If we click on the map, create a new pin at the click location.
-    if (!!formikRef?.current && isMouseEventRecent(leafletMouseEvent?.originalEvent)) {
-      formikRef.current.setFieldValue(`data.latitude`, leafletMouseEvent?.latlng.lat || 0);
-      formikRef.current.setFieldValue(`data.longitude`, leafletMouseEvent?.latlng.lng || 0);
+    if (!!formikRef?.current && isMouseEventRecent(leafletMouseEvent?.originalEvent) && !disabled) {
+      // Only update lat and long if holding the location pin
+      if (locationPinActive) {
+        formikRef.current.setFieldValue(`data.latitude`, leafletMouseEvent?.latlng.lat || 0);
+        formikRef.current.setFieldValue(`data.longitude`, leafletMouseEvent?.latlng.lng || 0);
+        setLocationPinActive(false);
+      }
       const isParcel = [
         SidebarContextType.VIEW_BARE_LAND,
         SidebarContextType.UPDATE_DEVELOPED_LAND,
@@ -455,6 +460,8 @@ const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
             }}
             isPropertyAdmin={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
             initialValues={buildingDetail ?? buildingWithParcelDetail ?? ({} as any)}
+            locationPinActive={locationPinActive}
+            setLocationPinActive={setLocationPinActive}
           />
         ) : (
           <Spinner animation="border"></Spinner>
