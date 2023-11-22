@@ -15,7 +15,7 @@ const number = 'number';
 const digitRegExp = /\d/;
 const caretTrap = '[]';
 
-export default function createNumberMask({
+const createNumberMask = ({
   prefix = dollarSign,
   suffix = emptyString,
   includeThousandsSeparator = true,
@@ -27,13 +27,13 @@ export default function createNumberMask({
   allowNegative = false,
   allowLeadingZeroes = false,
   integerLimit = 30,
-} = {}) {
+} = {}) => {
   const prefixLength = (prefix && prefix.length) || 0;
   const suffixLength = (suffix && suffix.length) || 0;
   const thousandsSeparatorSymbolLength =
     (thousandsSeparatorSymbol && thousandsSeparatorSymbol.length) || 0;
 
-  function numberMask(rawValue = emptyString) {
+  const numberMask = (rawValue = emptyString) => {
     const rawValueLength = rawValue.length;
 
     if (rawValue === emptyString || (rawValue[0] === prefix[0] && rawValueLength === 1)) {
@@ -143,18 +143,20 @@ export default function createNumberMask({
     }
 
     return mask;
-  }
+  };
 
   numberMask.instanceOf = 'createNumberMask';
 
   return numberMask;
-}
+};
 
-function convertToMask(strNumber: string) {
+const convertToMask = (strNumber: string) => {
   return strNumber.split(emptyString).map((char) => (digitRegExp.test(char) ? digitRegExp : char));
-}
+};
 
 // http://stackoverflow.com/a/10899795/604296
-function addThousandsSeparator(n: string, thousandsSeparatorSymbol: string) {
+const addThousandsSeparator = (n: string, thousandsSeparatorSymbol: string) => {
   return n.replace(/\B(?=(\d{3})+(?!\d))/g, thousandsSeparatorSymbol);
-}
+};
+
+export default createNumberMask;
