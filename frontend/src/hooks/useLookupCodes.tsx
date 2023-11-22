@@ -65,12 +65,13 @@ export function useCodeLookups() {
     return filter
       ? (classifications ?? []).map((c) => mapLookupCode(c)).filter(filter)
       : !keycloak.hasClaim(Claims.ADMIN_PROPERTIES)
-      ? (classifications ?? [])
-          .map((c) => mapLookupCode(c))
-          .filter(
-            (c) => +c.value !== Classifications.Subdivided && +c.value !== Classifications.Disposed,
-          )
-      : (classifications ?? []).map((c) => mapLookupCode(c));
+        ? (classifications ?? [])
+            .map((c) => mapLookupCode(c))
+            .filter(
+              (c) =>
+                +c.value !== Classifications.Subdivided && +c.value !== Classifications.Disposed,
+            )
+        : (classifications ?? []).map((c) => mapLookupCode(c));
   };
 
   /**

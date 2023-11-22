@@ -69,8 +69,8 @@ export const AgencyInterestColumns = ({ disabled = false }) => {
             (cellInfo.value === AgencyResponses.Unsubscribe
               ? 'Not Interested'
               : cellInfo.value === AgencyResponses.Watch
-              ? 'Interested'
-              : 'Send Notifications') ?? null
+                ? 'Interested'
+                : 'Send Notifications') ?? null
         : getEditableSelectCell(namespace),
     },
   ];
