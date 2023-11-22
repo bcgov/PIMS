@@ -93,6 +93,7 @@ jobs:
 
       # Add Comment To the PR
       - name: Add Comment To the PR
+        if: github.event.action == 'opened'
         uses: actions/github-script@v6
         with:
           script: |
@@ -100,5 +101,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "🚀 **Deployment Information**\n\nThe APP Image has been built with the tag: **`${{github.event.pull_request.number}}`**. Please make sure to utilize this specific tag when promoting these changes to the TEST and PROD environments during the APP deployment. For more updates please monitor Image Tags Page on Wiki."
+              body: "🚀 **Deployment Information**\n\nThe APP Image has been built with the tag: **`${{github.event.pull_request.number}}`**. Please make sure to utilize this specific tag when promoting these changes to the TEST and PROD environments during the APP deployment. For more updates please monitor [Image Tags](https://github.com/bcgov/PIMS/wiki/Image-tags) Page on Wiki."
             })

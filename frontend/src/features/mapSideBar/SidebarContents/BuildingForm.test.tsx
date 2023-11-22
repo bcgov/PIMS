@@ -44,16 +44,24 @@ jest.mock('hooks/useKeycloakWrapper');
   new (useKeycloakMock as any)(userRoles, userAgencies, userAgency),
 );
 
-const getBuildingForm = (disabled: boolean) => {
+const setMovingPinNameSpaceMock = jest.fn();
+const setLocationPinActiveMock = jest.fn();
+
+const getBuildingForm = (
+  disabled: boolean,
+  setMovingPinNameSpaceMock: jest.Mock<any, any, any> | ((...args: any[]) => void) = noop,
+  setLocationPinActiveMock: jest.Mock<any, any, any> | ((...args: any[]) => void) = noop,
+) => {
   return (
     <Provider store={store}>
       <MemoryRouter initialEntries={[history.location]}>
         <BuildingForm
           setBuildingToAssociateLand={noop}
           goToAssociatedLand={noop}
-          setMovingPinNameSpace={noop}
+          setMovingPinNameSpace={setMovingPinNameSpaceMock}
           nameSpace="building"
           disabled={disabled}
+          setLocationPinActive={setLocationPinActiveMock}
         />
       </MemoryRouter>
     </Provider>
@@ -111,5 +119,35 @@ describe('Building Form', () => {
     expect(getByText(/Building Identification/i)).toBeInTheDocument();
     expect(getByText(/Net Usable Area/i)).toBeInTheDocument();
     expect(getByText(/Net Book Value/i)).toBeInTheDocument();
+  });
+
+  // Tests for LatLongForm
+  it('LatLong has expected text', async () => {
+    const { getByText } = render(getBuildingForm(false));
+    expect(getByText(/building information/i)).toBeInTheDocument(); // correct page of BuildingForm
+    expect(getByText(/Click your desired location/)).toBeInTheDocument();
+  });
+
+  it('LatLong Pin Can Be Picked Up and Dropped', async () => {
+    const { container, getByText } = render(
+      getBuildingForm(false, setMovingPinNameSpaceMock, setLocationPinActiveMock),
+    );
+    expect(getByText(/building information/i)).toBeInTheDocument(); // correct page of BuildingForm
+    expect(getByText(/Click your desired location/)).toBeInTheDocument();
+
+    // Click Pin
+    const pin = container.querySelector('#draft-marker-button');
+    expect(pin).toBeInTheDocument();
+    await waitFor(() => {
+      fireEvent.click(pin!);
+    });
+
+    expect(setLocationPinActiveMock).toHaveBeenCalledTimes(1);
+
+    // Drop pin somewhere arbitrary
+    await waitFor(() => {
+      fireEvent.click(getByText(/Click your desired location/));
+    });
+    expect(setMovingPinNameSpaceMock).toHaveBeenCalledTimes(2);
   });
 });

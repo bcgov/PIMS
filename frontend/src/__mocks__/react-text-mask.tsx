@@ -1,23 +1,14 @@
-import React, { ChangeEvent, FocusEvent } from 'react';
+import React from 'react';
 import { MaskedInputProps } from 'react-text-mask';
 
 export default function mock(props: MaskedInputProps) {
-  const {
-    render,
-    mask,
-    guide,
-    placeholderChar,
-    keepCharPositions,
-    pipe,
-    defaultValue,
-    ...otherProps
-  } = props;
+  const { render, defaultValue, ...otherProps } = props;
 
   function setRef() {}
 
-  const onChange = (event: ChangeEvent<HTMLElement>) => {};
+  const onChange = () => {};
 
-  const onBlur = (event: FocusEvent<HTMLElement, Element>) => {};
+  const onBlur = () => {};
 
   return render ? (
     render(setRef, {

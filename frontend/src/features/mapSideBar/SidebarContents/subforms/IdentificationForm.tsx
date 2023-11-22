@@ -14,7 +14,7 @@ import LatLongForm from 'features/properties/components/forms/subforms/LatLongFo
 import { getIn, useFormikContext } from 'formik';
 import { IGeocoderResponse } from 'hooks/useApi';
 import useCodeLookups from 'hooks/useLookupCodes';
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { Col, Container, ListGroup, Row } from 'react-bootstrap';
 
 import { sensitiveTooltip } from '../../../../../src/features/properties/components/forms/strings';
@@ -39,6 +39,8 @@ interface IIdentificationProps {
   setMovingPinNameSpace: (nameSpace?: string) => void;
   /** whether the form fields on this page can be edited */
   disabled?: boolean;
+  /** Set the location pin from LatLongForm */
+  setLocationPinActive?: Dispatch<SetStateAction<boolean>>;
 }
 
 export const IdentificationForm: React.FC<IIdentificationProps> = ({
@@ -51,6 +53,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
   setMovingPinNameSpace,
   isPropertyAdmin,
   disabled,
+  setLocationPinActive,
 }) => {
   const { setFieldValue } = useFormikContext();
   const [overrideData, setOverrideData] = useState<IBuilding>();
@@ -229,6 +232,7 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
             building
             setMovingPinNameSpace={setMovingPinNameSpace}
             nameSpace={withNameSpace('')}
+            setLocationPinActive={setLocationPinActive}
           />
         </Col>
       </Row>

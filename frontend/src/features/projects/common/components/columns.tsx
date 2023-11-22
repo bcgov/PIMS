@@ -264,8 +264,8 @@ export const getPropertyColumns = ({
         [PropertyTypes.PARCEL, PropertyTypes.SUBDIVISION].includes(row.propertyTypeId)
           ? getYear(row.assessedLandDate)
           : [PropertyTypes.BUILDING].includes(row.propertyTypeId)
-          ? getYear(row.assessedBuildingDate)
-          : undefined,
+            ? getYear(row.assessedBuildingDate)
+            : undefined,
       className: 'form-group',
       style: {
         marginTop: '18px',

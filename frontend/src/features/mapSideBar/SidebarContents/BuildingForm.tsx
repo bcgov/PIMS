@@ -1,5 +1,6 @@
-import variables from '_variables.module.scss';
 import './BuildingForm.scss';
+
+import variables from '_variables.module.scss';
 import { IBuilding } from 'actions/parcelsActions';
 import {
   ISteppedFormValues,
@@ -28,7 +29,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { noop } from 'lodash';
 import _ from 'lodash';
-import * as React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { Button } from 'react-bootstrap';
 import { useAppDispatch } from 'store';
 import styled from 'styled-components';
@@ -42,7 +43,6 @@ import {
 
 import { InventoryPolicy } from '../components/InventoryPolicy';
 import { useBuildingApi } from '../hooks/useBuildingApi';
-import { BuildingForm } from '.';
 import { valuesToApiFormat as landValuesToApiFormat } from './LandForm';
 import { BuildingReviewPage } from './subforms/BuildingReviewPage';
 import { BuildingValuationForm } from './subforms/BuildingValuationForm';
@@ -135,17 +135,21 @@ const Form: React.FC<IBuildingForm> = ({
   goToAssociatedLand,
   formikRef,
   buildingData,
+  locationPinActive,
+  setLocationPinActive,
 }) => {
   const stepper = useFormStepper();
   useDraftMarkerSynchronizer('data');
   const formikProps = useFormikContext<ISteppedFormValues<IBuilding>>();
-  useParcelLayerData({
-    formikRef,
-    nameSpace: 'data',
-    agencyId: +(formikProps.values.data.agencyId as any)?.value
-      ? +(formikProps.values.data.agencyId as any).value
-      : +formikProps.values.data.agencyId,
-  });
+  if (locationPinActive) {
+    useParcelLayerData({
+      formikRef,
+      nameSpace: 'data',
+      agencyId: +(formikProps.values.data.agencyId as any)?.value
+        ? +(formikProps.values.data.agencyId as any).value
+        : +formikProps.values.data.agencyId,
+    });
+  }
   const { getOptionsByType, getPropertyClassificationOptions } = useCodeLookups();
   const isViewOrUpdate = !!formikProps.values?.data?.id;
 
@@ -170,6 +174,7 @@ const Form: React.FC<IBuildingForm> = ({
               nameSpace={nameSpace}
               isPropertyAdmin={isPropertyAdmin}
               disabled={disabled}
+              setLocationPinActive={setLocationPinActive}
             />
           </div>
         );
@@ -288,6 +293,8 @@ interface IBuildingForm {
   disabled?: boolean;
   /** the initial values of this form, as loaded from the api */
   buildingData?: IBuilding;
+  locationPinActive?: boolean;
+  setLocationPinActive?: Dispatch<SetStateAction<boolean>>;
 }
 
 interface IParentBuildingForm extends IBuildingForm {
@@ -343,7 +350,7 @@ export const valuesToApiFormat = (values: ISteppedFormValues<IBuilding>): IBuild
   return apiValues.data;
 };
 
-const BuidingForm: React.FC<IParentBuildingForm> = ({
+const BuildingForm: React.FC<IParentBuildingForm> = ({
   setMovingPinNameSpace,
   nameSpace,
   isPropertyAdmin,
@@ -351,6 +358,7 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
   setBuildingToAssociateLand,
   goToAssociatedLand,
   disabled,
+  setLocationPinActive,
   ...rest
 }) => {
   const keycloak = useKeycloakWrapper();
@@ -483,10 +491,11 @@ const BuidingForm: React.FC<IParentBuildingForm> = ({
           goToAssociatedLand={goToAssociatedLand}
           formikRef={formikRef}
           buildingData={initialValues.data}
+          setLocationPinActive={setLocationPinActive}
         />
       </SteppedForm>
     </Container>
   );
 };
 
-export default BuidingForm;
+export default BuildingForm;
