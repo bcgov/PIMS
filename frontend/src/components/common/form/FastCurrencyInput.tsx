@@ -5,8 +5,8 @@ import { ErrorMessage, FormikProps, getIn } from 'formik';
 import React, { memo, useEffect } from 'react';
 import { Col, ColProps, Form } from 'react-bootstrap';
 import MaskedInput from 'react-text-mask';
-import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import { formikFieldMemo, isPositiveNumberOrZero } from 'utils';
+import createNumberMask from 'utils/createNumberMask';
 
 import TooltipIcon from '../TooltipIcon';
 
