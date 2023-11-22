@@ -7,7 +7,7 @@
     "build": "vite build",
     "test": "react-scripts test --watchAll=false",
     "coverage": "react-scripts test --coverage --watchAll=false",
-    "coverage:changed": "react-scripts test --coverage --watchAll=false --changedSince=dev",
+    "coverage:changed": "react-scripts test --coverage --watchAll=false --changedSince=main",
     "snapshots": "react-scripts test --watchAll=false --updateSnapshot",
     "cypress:open": "npx cypress open",
     "cypress:open-dev": "npx cypress open --config baseUrl=\"https://pims-dev.apps.silver.devops.gov.bc.ca\" --env auth_client_id=\"pims-frontend-4391\"",
