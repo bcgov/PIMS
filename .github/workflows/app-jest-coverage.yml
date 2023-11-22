@@ -3,7 +3,7 @@ name: APP (React 18) - Jest Test Coverage
 on:
   pull_request:
     types: [opened, synchronize] # Triggered by opened or changed pull requests.
-    branches: [dev]
+    branches: [main]
     paths:
       - 'frontend/**' # Triggers on changes to files in the frontend/ directory.
       - '!frontend/cypress/**' # Will not trigger on changes to the following.

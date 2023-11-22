@@ -1,9 +1,11 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import './PropertyListView.scss';
 
 import variables from '_variables.module.scss';
 import { IBuilding, IParcel } from 'actions/parcelsActions';
-import { ReactComponent as BuildingSvg } from 'assets/images/icon-business.svg';
-import { ReactComponent as LandSvg } from 'assets/images/icon-lot.svg';
+import BuildingSvg from 'assets/images/icon-business.svg?react';
+import LandSvg from 'assets/images/icon-lot.svg?react';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { Table } from 'components/Table';
 import { SortDirection, TableSort } from 'components/Table/TableSort';
