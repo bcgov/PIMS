@@ -77,7 +77,7 @@ def get_env_variables():
     # check for epic id and key and seperate it into a tuple
     try:
         jira_epic = os.environ["JIRA_EPIC"]
-        jira_epic = jira_epic.str.split(", ")
+        jira_epic = jira_epic.split(", ")
     except KeyError:
         sys.exit( "Unable to get Epic ID environment variable." )
 
