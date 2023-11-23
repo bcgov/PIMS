@@ -37,7 +37,7 @@ def get_env_variables():
         jira_api_key,   # Authorization token for Jira.
         project_key,    # Project board to post to.
         jira_subtask,   # Subtask type for specific board.
-        jira_epic       # Epic custom field id to link parent ticket to.
+        jira_epic       # Epic custom field id and parent ticket to link to.
       ): tuple containing the above information pulled in from environment variables. 
     """
 
@@ -74,8 +74,10 @@ def get_env_variables():
     except KeyError:
         sys.exit( "Unable to get Jira Subtask number. " )
 
+    # check for epic id and key and seperate it into a tuple
     try:
         jira_epic = os.environ["JIRA_EPIC"]
+        jira_epic = jira_epic.str.split(", ")
     except KeyError:
         sys.exit( "Unable to get Epic ID environment variable." )
 
