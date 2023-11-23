@@ -36,7 +36,8 @@ def get_env_variables():
         dep_in,         # List of Dependencies to be updated.
         jira_api_key,   # Authorization token for Jira.
         project_key,    # Project board to post to.
-        jira_subtask    # Subtask type for specific board.
+        jira_subtask,   # Subtask type for specific board.
+        jira_epic       # Epic custom field id to link parent ticket to.
       ): tuple containing the above information pulled in from environment variables. 
     """
 
@@ -73,7 +74,12 @@ def get_env_variables():
     except KeyError:
         sys.exit( "Unable to get Jira Subtask number. " )
 
-    return ( level_flags, dep_in, jira_api_key, project_key, jira_subtask )
+    try:
+        jira_epic = os.environ["JIRA_EPIC"]
+    except KeyError:
+        sys.exit( "Unable to get Epic ID environment variable." )
+
+    return ( level_flags, dep_in, jira_api_key, project_key, jira_subtask, jira_epic )
 
 def refine_dep( level_flags, dep_in, summary_li ):
     """
@@ -123,7 +129,7 @@ def post_subtasks( conn, headers, subtask_lists ):
     for ele in json_major: 
         jira_con.post_subtasks( conn, headers, ele )
 
-def create_tickets( conn, headers, updates, project_key, issue_key ):
+def create_tickets( conn, headers, updates, project_key, issue_key, epic_id ):
     """
     This function captures the work necessary for creating, finalization, and posting tickets. 
 
@@ -132,6 +138,7 @@ def create_tickets( conn, headers, updates, project_key, issue_key ):
       headers (string): specifies authentication to post to JIRA
       updates (tuple(list)): a tuple of lists holding the dependency updates
       project_key (string): a string representing the key for the board we want to post to
+      epic_id: (id, key): a tuple containing epic id and ticket number we want to post under
 
     Returns:
       subtask_json (list[JSON], list[JSON], list[JSON]): a tuple containing 3 lists of json objects. 
@@ -140,7 +147,7 @@ def create_tickets( conn, headers, updates, project_key, issue_key ):
     # check the number of tickets to post
     updates = refine_tickets.check_num_tickets( updates )
     # create parent ticket and post it
-    parent_ticket_json = refine_tickets.create_parent_ticket( project_key, updates )
+    parent_ticket_json = refine_tickets.create_parent_ticket( project_key, updates, epic_id )
     parent_key = jira_con.post_parent_ticket( conn, headers, parent_ticket_json )
     # create sub tasks in Json format
     subtask_json = refine_tickets.create_tickets( updates, project_key, parent_key, issue_key )
@@ -150,7 +157,7 @@ def create_tickets( conn, headers, updates, project_key, issue_key ):
 def main():
     """ Works through the steps to refine dependency list and then create tickets in JIRA. """
 
-    level_flags, dep_in, jira_api_key, project_key, issue_key = get_env_variables()
+    level_flags, dep_in, jira_api_key, project_key, issue_key, epic_id = get_env_variables()
 
     # establish https connection and necessary variables
     conn = http.client.HTTPSConnection( "citz-imb.atlassian.net" )
@@ -166,7 +173,7 @@ def main():
     updates = refine_dep( level_flags, dep_in, summary_li )
 
     # create all tickets
-    json_lists = create_tickets( conn, headers, updates, project_key, issue_key )
+    json_lists = create_tickets( conn, headers, updates, project_key, issue_key, epic_id )
 
     # Post all tickets
     post_subtasks( conn, headers, json_lists )
