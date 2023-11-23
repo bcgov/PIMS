@@ -23,8 +23,10 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { useMyAgencies } from 'hooks/useMyAgencies';
 import { noop } from 'lodash';
-import React, { useMemo, useState } from 'react';
+import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { Col, Container, ListGroup, Row } from 'react-bootstrap';
+import ClickAwayListener from 'react-click-away-listener';
+import { styled } from 'styled-components';
 import { mapSelectOptionWithParent } from 'utils';
 import { withNameSpace } from 'utils/formUtils';
 
@@ -57,7 +59,18 @@ interface IIdentificationProps {
   isViewOrUpdate: boolean;
   /** whether or not the fields on this form can be interacted with */
   disabled?: boolean;
+  /** Set the location pin state */
+  setLocationPinActive?: Dispatch<SetStateAction<boolean>>;
 }
+
+const DraftMarkerButton = styled.button`
+  // position: absolute;
+  top: 20px;
+  right: 20px;
+  border: 0px;
+  background-color: none;
+  display: flex;
+`;
 
 export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   nameSpace,
@@ -69,6 +82,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   isPropertyAdmin,
   isViewOrUpdate,
   disabled,
+  setLocationPinActive,
   ...props
 }) => {
   const [overrideData, setOverrideData] = useState<IParcel>();
@@ -113,12 +127,32 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
               </Col>
               <Col md={12} className="instruction">
                 <p>
-                  Find a parcel on the map for the new location and click it to populate the Parcel
-                  Details below.
+                  Select the marker below then select a parcel on the map to update the parcel's
+                  location.
                 </p>
                 <Row>
                   <Col className="marker-svg">
-                    <ParcelDraftIcon className="parcel-icon" />
+                    <ClickAwayListener
+                      onClickAway={() => {
+                        setMovingPinNameSpace(undefined);
+                        // Don't set pin as inactive here. Handled in MapSideBarContainer.
+                      }}
+                    >
+                      <DraftMarkerButton
+                        id="draft-marker-button"
+                        disabled={disabled}
+                        onClick={(e: any) => {
+                          setMovingPinNameSpace(nameSpace ?? '');
+                          if (setLocationPinActive) {
+                            // Pin picked up, set active
+                            setLocationPinActive(true);
+                          }
+                          e.preventDefault();
+                        }}
+                      >
+                        <ParcelDraftIcon className="parcel-icon" />
+                      </DraftMarkerButton>
+                    </ClickAwayListener>
                   </Col>
                 </Row>
               </Col>

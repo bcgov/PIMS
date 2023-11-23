@@ -493,6 +493,8 @@ const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
             initialValues={
               parcelDetail ?? { ...getInitialValues(), propertyTypeId: PropertyTypes.SUBDIVISION }
             }
+            locationPinActive={locationPinActive}
+            setLocationPinActive={setLocationPinActive}
           />
         );
       case SidebarContextType.ADD_BARE_LAND:
@@ -514,6 +516,8 @@ const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
             setLandComplete={setShowCompleteModal}
             setLandUpdateComplete={setShowUpdatedModal}
             initialValues={parcelDetail ?? ({} as any)}
+            locationPinActive={locationPinActive}
+            setLocationPinActive={setLocationPinActive}
           />
         ) : (
           <Spinner animation="border"></Spinner>
