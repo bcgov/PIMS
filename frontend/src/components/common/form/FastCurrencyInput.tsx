@@ -15,10 +15,10 @@ export const defaultMaskOptions = {
   suffix: '',
   includeThousandsSeparator: true,
   thousandsSeparatorSymbol: ',',
-  allowDecimal: true,
+  allowDecimal: false,
   decimalSymbol: '.',
-  decimalLimit: 0, // how many digits allowed after the decimal
-  integerLimit: undefined, // limit length of integer numbers
+  decimalLimit: 2, // how many digits allowed after the decimal
+  integerLimit: 15, // limit length of integer numbers
   allowNegative: false,
   allowLeadingZeroes: false,
 };
