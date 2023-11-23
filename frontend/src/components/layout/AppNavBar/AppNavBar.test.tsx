@@ -35,6 +35,13 @@ const store = mockStore({
   [reducerTypes.LOOKUP_CODE]: { lookupCodes: [] },
 });
 
+// Mocking useNavigate to track when called
+const mockedUseNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...(jest.requireActual('react-router-dom') as any),
+  useNavigate: () => mockedUseNavigate,
+}));
+
 describe('AppNavBar', () => {
   afterEach(() => {
     cleanup();
@@ -53,6 +60,10 @@ describe('AppNavBar', () => {
 
   describe('AppNavBar Links Based on Security', () => {
     describe('AppNavBar Administation Dropdown', () => {
+      afterEach(() => {
+        mockedUseNavigate.mockReset();
+      });
+
       it('AppNavBar include Administration Dropdown', () => {
         (useKeycloakWrapper as jest.Mock).mockReturnValue(
           new (useKeycloakMock as any)([Roles.SYSTEM_ADMINISTRATOR], []),
@@ -85,6 +96,8 @@ describe('AppNavBar', () => {
         const element = getByText('Users');
 
         expect(element).toBeVisible();
+        fireEvent.click(element);
+        expect(mockedUseNavigate).toHaveBeenCalledWith('/admin/users');
       });
       it('AppNavBar include Admin Access Requests Link', () => {
         (useKeycloakWrapper as jest.Mock).mockReturnValue(
@@ -101,6 +114,8 @@ describe('AppNavBar', () => {
         const element = getByText('Access Requests');
 
         expect(element).toBeVisible();
+        fireEvent.click(element);
+        expect(mockedUseNavigate).toHaveBeenCalledWith('/admin/access/requests');
       });
 
       it('AppNavBar include Admin Agencies link', () => {
@@ -118,6 +133,46 @@ describe('AppNavBar', () => {
         const element = getByText('Agencies');
 
         expect(element).toBeVisible();
+        fireEvent.click(element);
+        expect(mockedUseNavigate).toHaveBeenCalledWith('/admin/agencies');
+      });
+
+      it('AppNavBar include Administrative Areas link', () => {
+        (useKeycloakWrapper as jest.Mock).mockReturnValue(
+          new (useKeycloakMock as any)([Roles.SYSTEM_ADMINISTRATOR], []),
+        );
+        const { getByText } = render(
+          <Provider store={store}>
+            <MemoryRouter initialEntries={[history.location]}>
+              <AppNavBar />
+            </MemoryRouter>
+          </Provider>,
+        );
+        fireEvent.click(getByText('Administration'));
+        const element = getByText('Administrative Areas');
+
+        expect(element).toBeVisible();
+        fireEvent.click(element);
+        expect(mockedUseNavigate).toHaveBeenCalledWith('/admin/administrativeAreas');
+      });
+
+      it('AppNavBar include Upload Properties link', () => {
+        (useKeycloakWrapper as jest.Mock).mockReturnValue(
+          new (useKeycloakMock as any)([Roles.SYSTEM_ADMINISTRATOR], []),
+        );
+        const { getByText } = render(
+          <Provider store={store}>
+            <MemoryRouter initialEntries={[history.location]}>
+              <AppNavBar />
+            </MemoryRouter>
+          </Provider>,
+        );
+        fireEvent.click(getByText('Administration'));
+        const element = getByText('Upload Properties');
+
+        expect(element).toBeVisible();
+        fireEvent.click(element);
+        expect(mockedUseNavigate).toHaveBeenCalledWith('/admin/uploadProperties');
       });
     });
 
@@ -134,6 +189,12 @@ describe('AppNavBar', () => {
       );
       const link = getByText('Submit Property');
       expect(link).toBeTruthy();
+      fireEvent.click(link);
+      expect(mockedUseNavigate).toHaveBeenCalledWith({
+        pathname: '/mapview',
+        search:
+          'sidebar=true&disabled=false&loadDraft=false&buildingId=undefined&parcelId=undefined&new=true&sidebarContext=addPropertyTypeSelector&sidebarSize=narrow',
+      });
     });
 
     it('AppNavBar include View Inventory Link', () => {
@@ -151,9 +212,19 @@ describe('AppNavBar', () => {
       const link = getByText('View Property Inventory');
 
       expect(link).toBeTruthy();
+      fireEvent.click(link);
+      expect(mockedUseNavigate).toHaveBeenCalledWith({
+        pathname: '/mapview',
+        search:
+          'sidebar=true&disabled=false&loadDraft=false&buildingId=undefined&parcelId=undefined&new=true&sidebarContext=addPropertyTypeSelector&sidebarSize=narrow',
+      });
     });
 
     describe('AppNavBar Disposal Projects dropdown', () => {
+      afterEach(() => {
+        mockedUseNavigate.mockReset();
+      });
+
       it('AppNavBar include Disposal Projects dropdown for Approval requests only', () => {
         (useKeycloakWrapper as jest.Mock).mockReturnValue(
           new (useKeycloakMock as any)([Claims.DISPOSE_APPROVE], []),
@@ -169,6 +240,7 @@ describe('AppNavBar', () => {
 
         expect(element).toBeVisible();
       });
+
       it('AppNavBar include Create Disposal Project Link', () => {
         (useKeycloakWrapper as jest.Mock).mockReturnValue(
           new (useKeycloakMock as any)([Claims.ADMIN_PROPERTIES, Claims.ADMIN_PROJECTS], []),
@@ -184,6 +256,8 @@ describe('AppNavBar', () => {
         const link = getByText('Create Disposal Project');
 
         expect(link).toBeVisible();
+        fireEvent.click(link);
+        expect(mockedUseNavigate).toHaveBeenCalledWith('/dispose');
       });
 
       it('AppNavBar include View Projects Link', () => {
@@ -201,6 +275,27 @@ describe('AppNavBar', () => {
         const link = getByText('View Projects');
 
         expect(link).toBeVisible();
+        fireEvent.click(link);
+        expect(mockedUseNavigate).toHaveBeenCalledWith('/projects/list');
+      });
+
+      it('AppNavBar include View SPL Projects Link', () => {
+        (useKeycloakWrapper as jest.Mock).mockReturnValue(
+          new (useKeycloakMock as any)([Claims.ADMIN_PROPERTIES, Claims.ADMIN_PROJECTS], []),
+        );
+        const { getByText } = render(
+          <Provider store={store}>
+            <MemoryRouter initialEntries={[history.location]}>
+              <AppNavBar />
+            </MemoryRouter>
+          </Provider>,
+        );
+        fireEvent.click(getByText('Disposal Projects'));
+        const link = getByText('View SPL Projects');
+
+        expect(link).toBeVisible();
+        fireEvent.click(link);
+        expect(mockedUseNavigate).toHaveBeenCalledWith('/projects/spl');
       });
 
       it('AppNavBar include Approval Requests Link', () => {
@@ -218,10 +313,16 @@ describe('AppNavBar', () => {
         const link = getByText('Approval Requests');
 
         expect(link).toBeVisible();
+        fireEvent.click(link);
+        expect(mockedUseNavigate).toHaveBeenCalledWith('/projects/approval/requests');
       });
     });
 
     describe('AppNavBar Reports Dropdown', () => {
+      afterEach(() => {
+        mockedUseNavigate.mockReset();
+      });
+
       it('AppNavBar include Reports Dropdown', () => {
         (useKeycloakWrapper as jest.Mock).mockReturnValue(
           new (useKeycloakMock as any)([Claims.REPORTS_VIEW, Claims.REPORTS_SPL], []),
@@ -252,6 +353,8 @@ describe('AppNavBar', () => {
         const link = getByText('SPL Report');
 
         expect(link).toBeVisible();
+        fireEvent.click(link);
+        expect(mockedUseNavigate).toHaveBeenCalledWith('/reports/spl');
       });
     });
   });
