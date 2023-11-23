@@ -123,6 +123,9 @@ def post_parent_ticket(conn, headers, parent_ticket):
         error_message = message + status + ": " + reason + "\n" + data
         raise error.APIError( error_message )
 
+    #REMOVE BEFORE MERGE
+    print(data)
+
     readable_data = json.loads( data )
     # get the key from the response and return it
     parent_key = readable_data["key"]

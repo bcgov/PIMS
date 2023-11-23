@@ -117,7 +117,8 @@ def create_parent_ticket( project_key, updates, epic_id ):
             ]
         }
     })
-
+    # REMOVE BEFORE MERGE
+    print("customfield_" + epic_id[0] + ":" + epic_id[1])
     return parent_ticket
 
 def create_subtasks( version, update_list, parent_key, project_key, jira_subtask ):
