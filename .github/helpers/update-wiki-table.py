@@ -1,6 +1,7 @@
 import re
 import json
 import argparse
+from datetime import datetime
 
 def update_md_table(md_file_path, json_data):
     with open(md_file_path, 'r') as file:
@@ -75,10 +76,15 @@ def update_json_data(md_file_path, target, column, value):
         entry = {header[i].strip(): values[i] if values[i].isdigit() else values[i] for i in range(1, len(header)) if header[i].strip() != ""}
         data["data"].append(entry)
 
+    # Get the current date and time
+    current_datetime = datetime.now()
+
+    # Format the date and time
+    formatted_date = current_datetime.strftime('%b %d, %Y')  # Example: Nov 15, 2023
     # Update the JSON data based on user input
     for entry in data["data"]:
         if entry["Target"] == target:
-            entry[column] = str(value)
+            entry[column] = f"[{value}](https://github.com/bcgov/PIMS/pull/{value})<br>📅 `{formatted_date}`"
 
     return data
 
