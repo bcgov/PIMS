@@ -259,7 +259,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
       const administrativeArea = filter?.administrativeArea;
       const pid = filter?.pid;
       const searchedByPID = await parcelWMSLayerService.findByPid(pid ?? '0');
-      const pidsFoundInParcelLayer = searchedByPID.features.length;
+      const pidsFoundInParcelLayer = searchedByPID?.features.length;
       let propertiesFound;
       console.log('xxx', results, pidsFoundInParcelLayer, administrativeArea);
       // If nothing in inventory or parcel layer, zoom to administrative area
