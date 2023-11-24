@@ -111,7 +111,7 @@ def create_parent_ticket( project_key, updates, epic_id ):
             "priority": {
                 "name": "Medium"
             },
-            "customfield_10014": "PIMS-450",
+            "customfield_" + epic_id[0]: epic_id[1],
             "labels": [
                 "DependencyUpdates"
             ]
