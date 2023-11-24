@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-duplicate-enum-values */
 import { ReactNode } from 'react';
 
 export enum HelpPageKeys {

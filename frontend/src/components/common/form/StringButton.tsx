@@ -18,11 +18,11 @@ interface IStringButtonProps extends ButtonProps {
  */
 const StringButton: React.FC<IStringButtonProps> = (props) => {
   const disabled = props.disabled || false;
-  const stringText = props.stringText || "";
+  const stringText = props.stringText || '';
   return (
     <TooltipWrapper toolTipId={props.toolId} toolTip={props.toolText}>
       <div style={{ color: 'black' }} onClick={disabled ? () => {} : props.onClick}>
-        { stringText }
+        {stringText}
       </div>
     </TooltipWrapper>
   );

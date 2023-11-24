@@ -2,7 +2,7 @@ import './DisplayCurrency.scss';
 
 import React from 'react';
 import MaskedInput from 'react-text-mask';
-import createNumberMask from 'text-mask-addons/dist/createNumberMask';
+import createNumberMask from 'utils/createNumberMask';
 
 import { defaultMaskOptions } from './FastCurrencyInput';
 

@@ -5,8 +5,8 @@ import { ErrorMessage, FormikProps, getIn } from 'formik';
 import React, { memo, useEffect } from 'react';
 import { Col, ColProps, Form } from 'react-bootstrap';
 import MaskedInput from 'react-text-mask';
-import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import { formikFieldMemo, isPositiveNumberOrZero } from 'utils';
+import createNumberMask from 'utils/createNumberMask';
 
 import TooltipIcon from '../TooltipIcon';
 
@@ -15,10 +15,10 @@ export const defaultMaskOptions = {
   suffix: '',
   includeThousandsSeparator: true,
   thousandsSeparatorSymbol: ',',
-  allowDecimal: true,
+  allowDecimal: false,
   decimalSymbol: '.',
-  decimalLimit: 0, // how many digits allowed after the decimal
-  integerLimit: undefined, // limit length of integer numbers
+  decimalLimit: 2, // how many digits allowed after the decimal
+  integerLimit: 15, // limit length of integer numbers
   allowNegative: false,
   allowLeadingZeroes: false,
 };
