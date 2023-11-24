@@ -230,12 +230,10 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
     try {
       onRequestData(true);
       // Check if there is a highlighted parcel layer, and remove it
-      console.log('test highlightedParcelLayer', highlightedParcelLayer);
       if (highlightedParcelLayer) {
         map.removeLayer(highlightedParcelLayer);
         setHighlightedParcelLayer(null); // Reset the state
       }
-      console.log('test we are here');
       const data = flatten(await Promise.all(filters.map((x) => loadTile(x)))).map((f) => {
         return {
           ...f,
@@ -261,18 +259,14 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
       const searchedByPID = await parcelWMSLayerService.findByPid(pid ?? '0');
       const pidsFoundInParcelLayer = searchedByPID?.features.length;
       let propertiesFound;
-      console.log('xxx', results, pidsFoundInParcelLayer, administrativeArea);
       // If nothing in inventory or parcel layer, zoom to administrative area
       if (results.length > 0 && !!administrativeArea) {
         propertiesFound = results.length;
         setFeatures(results || []);
 
         const municipality = await municipalitiesService.findByAdministrative(administrativeArea);
-        console.log('municipality1', municipality);
         if (municipality) {
           // Fit to municipality bounds
-          console.log('municipality2', municipality);
-
           map.fitBounds((GeoJSON.geometryToLayer(municipality) as any)._bounds, { maxZoom: 11 });
         }
       } else if (results.length > 0) {
@@ -289,24 +283,17 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
         }
       } else if (pidsFoundInParcelLayer > 0) {
         // If nothing in inventory, but found in parcel layer
-        // if (!!pid) {
-        console.log('test searchedByPID', searchedByPID);
         propertiesFound = pidsFoundInParcelLayer;
         const firstFeature = searchedByPID.features[0];
-        console.log('test: ', firstFeature);
         if (firstFeature.geometry) {
           // Create a GeoJSON layer for the highlighted parcel
           const newHighlightedParcelLayer = L.geoJSON(firstFeature.geometry);
           // Add the GeoJSON layer to the map
           newHighlightedParcelLayer.addTo(map);
           // zoom to the highlighted parcel
-          console.log('xxx1');
           map.fitBounds(newHighlightedParcelLayer.getBounds(), { maxZoom: 21 });
           // Update the state with the new highlighted parcel layer
-          console.log('xxx2');
           setHighlightedParcelLayer(newHighlightedParcelLayer);
-          // Set features directly with the array of features
-          // setFeatures(searchedByPID.features as PointFeature[]);
         } else {
           console.error('Feature does not have geometry property');
         }
@@ -320,7 +307,6 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
       }
 
       setLoadingTiles(false);
-      console.log('xxx3');
     } catch (error) {
       toast.error((error as Error).message, { autoClose: 7000 });
       console.error(error);
