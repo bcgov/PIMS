@@ -6,7 +6,6 @@ IMAGE=$IMAGE_REPOSITORY/$TOOLS_NAMESPACE/$MIGRATION_IMAGE:$IMAGE_TAG
 
 DB_CS=$(oc -n $NAMESPACE get cm pims-api-database -o jsonpath='{.data.CONNECTION_STRINGS_PIMS}')
 
-
 DB_USERNAME=$(oc -n $NAMESPACE get secret $DB_NAME -o jsonpath='{.data.DB_USER}' | base64 -d)
 
 DB_PASSWORD=$(oc -n $NAMESPACE get secret $DB_NAME -o jsonpath='{.data.DB_PASSWORD}' | base64 -d)
