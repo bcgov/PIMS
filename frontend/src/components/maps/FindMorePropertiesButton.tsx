@@ -37,9 +37,7 @@ export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({
       </Row>
     );
     return (
-      <Popover
-        className="popover-style"
-      >
+      <Popover className="popover-style">
         <Popover.Header className="title-content">
           <Col>
             <TitleContent />
