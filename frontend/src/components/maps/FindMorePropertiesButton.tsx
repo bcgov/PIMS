@@ -61,7 +61,6 @@ export const FindMorePropertiesButton: React.FC<IFindMorePropertiesButton> = ({
       onEnter={onEnter}
       overlay={popover}
       placement="bottom"
-      containerPadding={75}
     >
       <Button className="surplus-properties-button">
         <div className="button-content">
