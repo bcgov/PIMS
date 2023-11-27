@@ -14,9 +14,14 @@ on:
         image_tag:
           description: 'Image Tag to deploy'
           required: true
+        
+        migration_tag:
+          description: 'DataBase Migration Tag, if needed'
+          required: false
 
 env:
   IMAGE_TAG: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.image_tag || github.event.pull_request.number }}
+  MIGRATION_IMAGE : ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.migration_tag || github.event.pull_request.number }}
 
 jobs:
   # Job to deploy API image to OpenShift
@@ -24,19 +29,45 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.pull_request.merged }}
     name: Deploy to OpenShift
     runs-on: ubuntu-latest
-
+    outputs:
+          migration: ${{ steps.migration.outputs.migration_needed }} 
     steps:
       # Checkout the repository
       - name: Checkout Repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      # Login to OpenShift
+      # Check for migration files
+      - name: Check for migration files
+        if: ${{ github.event_name != 'workflow_dispatch'}}
+        id: migration
+        run: |
+          if git diff --name-only origin/main HEAD~1 | grep -q "backend/dal/Migrations"; then
+            echo "migration_needed=true" >> $GITHUB_OUTPUT
+          else
+            echo "migration_needed=false" >> $GITHUB_OUTPUT
+          fi
+    
       - name: Login to OpenShift
         uses: redhat-actions/oc-login@v1
         with:
           openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
           openshift_token: ${{ secrets.OPENSHIFT_SA_DEV_TOKEN }}
           namespace: ${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
+      
+      # run migration if needed
+      - name: Migration Run
+        if: github.event.inputs.migration_tag || steps.migration.outputs.migration_needed == 'true'
+        env:
+          NAMESPACE: "${{ secrets.OPENSHIFT_DEV_NAMESPACE }}"
+          TOOLS_NAMESPACE: "${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}"
+          IMAGE_REPOSITORY : ${{ secrets.PUBLIC_IMAGE_REPOSITORY }}
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
+          MIGRATION_IMAGE: "pims-migrations"
+          DB_NAME: "pims-database"
+        run: |
+          ./.github/helpers/migrations.sh
 
       # Process and Apply API DeploymentConfig
       - name: Process and Apply API DeploymentConfig
@@ -101,7 +132,7 @@ jobs:
 
   # Job to update the wiki with deployed image tag information
   Update_Wiki_Tags:
-    needs: [Health-Check]
+    needs: [Health-Check, Deploy-To-OpenShift]
     name: Update table in wiki
     runs-on: ubuntu-latest
     env:
@@ -128,6 +159,11 @@ jobs:
       - name: Run update wiki python script
         run: python ./.github/helpers/update-wiki-table.py ./wiki/Image-tags.md API "Deployed Image Tag in DEV" "${{ env.IMAGE_TAG }}"
 
+       # Run update wiki python script for Migration If needed
+      - name: Update wiki for Migration If needed
+        if: github.event.inputs.migration_tag || needs.Deploy-To-OpenShift.outputs.migration == 'true'
+        run: python ./.github/helpers/update-wiki-table.py ./wiki/Image-tags.md MIGRATION "Latest Build Image Tag" "${{github.event.pull_request.number}}"
+      
       # Commit and push changes to wiki
       - name: Commit and push changes to wiki
         run: |
