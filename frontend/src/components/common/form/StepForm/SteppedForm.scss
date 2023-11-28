@@ -1,0 +1,55 @@
+@import '../../../../colors.scss';
+
+.hideTabs {
+  li.nav-item {
+    background-color: white;
+    display: none;
+  }
+}
+.tab-content {
+  border: 0;
+  border-top: 1px solid #666666;
+  padding: 0;
+}
+.nav-tabs {
+  border: 0;
+  .nav-item.active {
+    color: white;
+    svg {
+      background-color: $secondary-variant-color;
+      color: white;
+    }
+  }
+  .nav-item {
+    background-color: white;
+    color: black;
+    position: relative;
+    display: inline-flex;
+    p,
+    abbr {
+      margin: 0;
+    }
+    position: relative;
+    svg {
+      color: black;
+      position: absolute;
+      top: .1em;
+      right: .5em;
+    }
+    .nav-item:last-child {
+      svg {
+        position: relative;
+        color: white;
+      }
+      padding: 0;
+    }
+  }
+  .btn:disabled {
+    background-color: $primary-color;
+    cursor: default;
+  }
+}
+.tab-line-header {
+  float: left; 
+  margin-right: 1.5em;
+}
