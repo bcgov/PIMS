@@ -6,7 +6,7 @@ import GenericModal from 'components/common/GenericModal';
 import { IStep } from 'components/common/Stepper';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { ILeasedLand } from 'features/mapSideBar/SidebarContents/AssociatedLandForm';
-import { Form, Formik, FormikConfig, getIn, setIn, useFormikContext } from 'formik';
+import { Formik, FormikConfig, getIn, setIn, useFormikContext } from 'formik';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import _ from 'lodash';
 import * as React from 'react';
@@ -19,7 +19,6 @@ import StringButton from '../StringButton';
 import { StepperFormProvider } from './context';
 import { StepperField } from './StepperField';
 import { ISteppedFormProps, ISteppedFormValues, IStepperTab } from './types';
-
 
 export const MAX_STEPPED_TABS = 5;
 
@@ -70,7 +69,7 @@ export const SteppedForm = function <T extends object>({
         <>
           <StepChanger setSteps={setSteps} onChangeTab={onChangeTab}></StepChanger>
           <div>
-            {!!getTabs && tabLineHeader && <div className='tab-line-header'>{tabLineHeader}</div>}
+            {!!getTabs && tabLineHeader && <div className="tab-line-header">{tabLineHeader}</div>}
             <Tabs
               id="steppedform-tabs"
               className={!getTabs ? 'hideTabs' : ''}
@@ -88,7 +87,7 @@ export const SteppedForm = function <T extends object>({
                   title={tabTitle(tab.name, index, setTabToDeleteId)}
                   eventKey={index}
                   key={`stepped-tab-${index}`}
-                  className='nav-tabs'
+                  className="nav-tabs"
                 >
                   <StepperFormProvider steps={steps} tabs={getFormikTabs(values.data)}>
                     <>
@@ -108,7 +107,7 @@ export const SteppedForm = function <T extends object>({
                     toolText="Add Parcel"
                     stringText="Add another associated Parcel"
                     toolId="add-associated-parcel"
-                    className='nav-item'
+                    className="nav-item"
                     data-testid="add-tab"
                     onClick={() => {
                       //update the data model that the tab represents
