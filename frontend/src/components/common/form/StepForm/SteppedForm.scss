@@ -2,13 +2,13 @@
 
 .hideTabs {
   li.nav-item {
-    // not sure what this is
+    // this gets over written by src/tabs.scss
     background-color: black;
     display: none;
   }
 }
 .tab-content {
-  // not sure what this is formatting
+  // this gets over written by src/tabs.scss
   border: 0;
   border-top: 1px solid #666666;
   padding: 0;
