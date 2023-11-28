@@ -7,23 +7,30 @@
   }
 }
 
-.required {
-  color: red;
-  font-weight: 700;
-}
-
 input {
   margin-bottom: 10px;
 }
 
 .agency-edit-form-container {
-  justify-content: center;
+  justify-content: left;
   margin-top: 20px;
   margin-bottom: $footer-height;
   .agencyInfo {
     .label,
     .form-label {
       float: left;
+    }
+    .form-text-field {
+      margin-bottom: 1em;
+      max-width: fit-content;
+      width: 20em;
+      padding-right: 10em;
+    }
+    .form-select-field {
+      margin-bottom: 1em;
+      max-width: fit-content;
+      width: 20em;
+      
     }
     .checkboxes {
       margin-top: 10px;

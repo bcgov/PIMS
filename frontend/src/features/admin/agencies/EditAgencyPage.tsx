@@ -138,34 +138,99 @@ const EditAgencyPage = () => {
           >
             {(props) => (
               <Form className="agencyInfo">
-                <Input
-                  label="Agency"
-                  aria-label="Agency"
-                  required
-                  field="name"
-                  value={props.values.name}
-                  type="text"
-                />
-                <Input
-                  label="Short Name (Code)"
-                  aria-label="Short Name (Code)"
-                  field="code"
-                  value={props.values.code}
-                  type="text"
-                  required
-                />
-                <Select
-                  style={{ marginBottom: '10px', width: '250px' }}
-                  label="Parent Agency - If applicable"
-                  field="parentId"
-                  options={selectAgencies}
-                  disabled={!agency.parentId && !newAgency}
-                  placeholder={newAgency ? 'Please select if applicable' : 'No parent'}
-                />
-                <Input label="Description" field="description" type="text" />
-                <Input label="Email address" aria-label="Email address" field="email" type="text" />
-                <Input label="Addressed To" field="addressTo" type="text" />
-                <Input label="CC Email address" field="ccEmail" type="text" />
+                <Row>
+                  <Col className='col-3'>
+                    <div className='form-label'>Agency</div>
+                  </Col>
+                  <Col>
+                    <Input
+                      aria-label="Agency"
+                      className='form-text-field'
+                      required
+                      field="name"
+                      value={props.values.name}
+                      type="text"
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className='col-3'>
+                    <div className='form-label'>Short Name (Code)</div>
+                  </Col>
+                  <Col>
+                    <Input
+                      aria-label="Short Name (Code)"
+                      className='form-text-field'
+                      field="code"
+                      value={props.values.code}
+                      type="text"
+                      required
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className='col-3'>
+                    <div className='form-label'>Parent Agency - If applicable</div>
+                  </Col>
+                  <Col>
+                    <Select
+                      field="parentId"
+                      className='form-select-field'
+                      options={selectAgencies}
+                      disabled={!agency.parentId && !newAgency}
+                      placeholder={newAgency ? 'Please select if applicable' : 'No parent'}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className='col-3'>
+                    <div className='form-label'>Description</div>
+                  </Col>
+                  <Col>
+                    <Input 
+                      field="description"
+                      className='form-text-field'
+                      type="text" 
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className='col-3'>
+                    <div className='form-label'>Email address</div>
+                  </Col>
+                  <Col>
+                    <Input
+                      aria-label="Email address"
+                      className='form-text-field'
+                      field="email"
+                      type="text"
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className='col-3'>
+                    <div className='form-label'>Addressed To</div>
+                  </Col>
+                  <Col>
+                    <Input
+                      field="addressTo"
+                      className='form-text-field'
+                      type="text"
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className='col-3'>
+                    <div className='form-label'>CC Email address</div>
+                  </Col>
+                  <Col>
+                    <Input
+                      field="ccEmail"
+                      className='form-text-field'
+                      type="text"
+                    />
+                  </Col>
+                </Row>
 
                 <hr></hr>
 
