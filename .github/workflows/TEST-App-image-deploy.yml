@@ -1,5 +1,5 @@
 # GitHub Actions workflow for deploying APP image to TEST env
-name: TEST APP-Image Deploy on PR merge
+name: TEST APP-Image Deploy
 
 on:
   workflow_dispatch:

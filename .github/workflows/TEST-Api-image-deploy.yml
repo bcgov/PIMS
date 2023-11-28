@@ -1,5 +1,5 @@
 # GitHub Actions workflow for deploying API image to TEST env
-name: TEST API-Image Deploy on PR merge
+name: TEST API-Image Deploy
 
 on:
   workflow_dispatch:
