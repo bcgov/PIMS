@@ -1,68 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Land Form component renders correctly 1`] = `
-.c1 .hideTabs li.nav-item {
-  background-color: white;
-  display: none;
-}
-
-.c1 .nav-tabs>.nav-item:last-child {
-  border: 0;
-  padding: 0;
-}
-
-.c1 .nav-tabs>.nav-item:last-child svg {
-  position: relative;
-  color: white;
-}
-
-.c1 .tab-content {
-  border: 0;
-  border-top: 1px solid #666666;
-  padding: 0;
-}
-
-.c1 .nav-tabs {
-  border: 0;
-}
-
-.c1 .nav-tabs .nav-item.active {
-  border: 0;
-  color: white;
-}
-
-.c1 .nav-tabs .nav-item.active svg {
-  background-color: secondaryVariantColor;
-  color: white;
-}
-
-.c1 .nav-tabs .nav-item {
-  border: 1px solid black;
-  background-color: white;
-  color: black;
-  position: relative;
-  display: inline-flex;
-  position: relative;
-}
-
-.c1 .nav-tabs .nav-item p,
-.c1 .nav-tabs .nav-item abbr {
-  margin: 0;
-}
-
-.c1 .nav-tabs .nav-item svg {
-  color: black;
-  position: absolute;
-  top: 1px;
-  right: 1px;
-}
-
-.c1 .nav-tabs .btn:disabled {
-  background-color: primaryColor;
-  cursor: default;
-}
-
-.c4 .form.Control {
+.c3 .form.Control {
   width: 100%;
   height: 100%;
   border: none;
@@ -73,7 +12,7 @@ exports[`Land Form component renders correctly 1`] = `
   margin-bottom: 0;
 }
 
-.c4 .suggestionList {
+.c3 .suggestionList {
   background-color: white;
   border-style: solid;
   border-color: lightslategray;
@@ -89,7 +28,7 @@ exports[`Land Form component renders correctly 1`] = `
   left: -50px;
 }
 
-.c4 option {
+.c3 option {
   padding: 10px 5px;
   word-wrap: break-word;
   width: 400px;
@@ -98,18 +37,18 @@ exports[`Land Form component renders correctly 1`] = `
   color: #494949;
 }
 
-.c4 option:hover {
+.c3 option:hover {
   background-color: #007bff;
   color: #fff;
 }
 
-.c6 {
+.c5 {
   display: flex;
   align-items: center;
   align-content: center;
 }
 
-.c7 {
+.c6 {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -124,7 +63,7 @@ exports[`Land Form component renders correctly 1`] = `
   overflow-y: auto;
 }
 
-.c2 {
+.c1 {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -132,13 +71,13 @@ exports[`Land Form component renders correctly 1`] = `
   margin-bottom: 20px;
 }
 
-.c3 {
+.c2 {
   border-top: 1px solid #666666;
   width: 100%;
   min-height: 100px;
 }
 
-.c5 {
+.c4 {
   display: flex;
   width: 100%;
   height: 70px;
@@ -150,17 +89,14 @@ exports[`Land Form component renders correctly 1`] = `
   border-top: 10px solid white;
 }
 
-.c8 {
+.c7 {
   flex: 1 1 auto;
 }
 
 <div
   class="c0 landForm"
 >
-  <form
-    action="#"
-    class="c1"
-  >
+  <div>
     <ul
       class="hideTabs nav nav-tabs"
       role="tablist"
@@ -227,7 +163,7 @@ exports[`Land Form component renders correctly 1`] = `
     >
       <div
         aria-labelledby="steppedform-tabs-tab-0"
-        class="fade tab-pane active show"
+        class="fade nav-tabs tab-pane active show"
         id="steppedform-tabs-tabpane-0"
         role="tabpanel"
       >
@@ -332,10 +268,10 @@ exports[`Land Form component renders correctly 1`] = `
           </div>
         </div>
         <div
-          class="c2"
+          class="c1"
         >
           <div
-            class="c3"
+            class="c2"
           >
             <div
               class="parcel-identification"
@@ -599,7 +535,7 @@ exports[`Land Form component renders correctly 1`] = `
                           class="col-4"
                         >
                           <div
-                            class="c4 GeocoderAutoComplete"
+                            class="c3 GeocoderAutoComplete"
                           >
                             <div
                               class=""
@@ -819,7 +755,7 @@ exports[`Land Form component renders correctly 1`] = `
                             class="col"
                           >
                             <div
-                              class="c4 GeocoderAutoComplete"
+                              class="c3 GeocoderAutoComplete"
                             >
                               <div
                                 class="required"
@@ -1223,10 +1159,10 @@ exports[`Land Form component renders correctly 1`] = `
             </div>
           </div>
           <div
-            class="c5"
+            class="c4"
           >
             <div
-              class="c6"
+              class="c5"
             >
               <div
                 class="SresManual"
@@ -1253,13 +1189,13 @@ exports[`Land Form component renders correctly 1`] = `
                 </div>
               </div>
               <small
-                class="c7 p-1 mr-2"
+                class="c6 p-1 mr-2"
               >
                 Inventory Policy
               </small>
             </div>
             <span
-              class="c8"
+              class="c7"
             />
             <button
               class="btn btn-primary btn-sm"
@@ -1274,6 +1210,6 @@ exports[`Land Form component renders correctly 1`] = `
     <div
       class="container"
     />
-  </form>
+  </div>
 </div>
 `;
