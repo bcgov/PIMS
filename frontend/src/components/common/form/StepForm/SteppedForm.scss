@@ -2,54 +2,53 @@
 
 .hideTabs {
   li.nav-item {
-    background-color: white;
+    // not sure what this is
+    background-color: black;
     display: none;
   }
 }
 .tab-content {
+  // not sure what this is formatting
   border: 0;
   border-top: 1px solid #666666;
   padding: 0;
 }
 .nav-tabs {
-  border: 0;
-  .nav-item.active {
-    color: white;
-    svg {
-      background-color: $secondary-variant-color;
-      color: white;
-    }
-  }
   .nav-item {
+    // formatting tabs
     background-color: white;
-    color: black;
-    position: relative;
     display: inline-flex;
-    p,
-    abbr {
-      margin: 0;
-    }
     position: relative;
     svg {
+      // icon formatting
       color: black;
       position: absolute;
       top: .1em;
       right: .5em;
     }
-    .nav-item:last-child {
+    .active {
+      // selected tab
+      color: $slide-out-blue;
       svg {
-        position: relative;
+        background-color: $secondary-variant-color;
         color: white;
       }
-      padding: 0;
+      .last-child {
+        padding: 0;
+        svg {
+          position: relative;
+          color: white;
+        }
+      }
     }
-  }
-  .btn:disabled {
-    background-color: $primary-color;
-    cursor: default;
+    .btn:disabled {
+      background-color: $primary-color;
+      cursor: default;
+    }
   }
 }
 .tab-line-header {
+  // Form header formatting
   float: left; 
-  margin-right: 1.5em;
+  margin-right: .5em;
 }

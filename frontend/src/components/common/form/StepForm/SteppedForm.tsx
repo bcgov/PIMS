@@ -1,6 +1,5 @@
 import './SteppedForm.scss';
 
-import variables from '_variables.module.scss';
 import AbbreviatedText from 'components/common/AbbreviatedText';
 import { Persist } from 'components/common/FormikPersist';
 import GenericModal from 'components/common/GenericModal';
@@ -15,7 +14,6 @@ import { useState } from 'react';
 import { Tab, Tabs } from 'react-bootstrap';
 import { FaWindowClose } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import styled from 'styled-components';
 
 import StringButton from '../StringButton';
 import { StepperFormProvider } from './context';
@@ -103,13 +101,14 @@ export const SteppedForm = function <T extends object>({
               <Tab
                 disabled={(values?.tabs?.length ?? 0) >= MAX_STEPPED_TABS}
                 eventKey=""
+                className="nav-item"
                 title={
                   <StringButton
                     disabled={(values?.tabs?.length ?? 0) >= MAX_STEPPED_TABS}
                     toolText="Add Parcel"
                     stringText="Add another associated Parcel"
                     toolId="add-associated-parcel"
-                    className='nav-item:last-child'
+                    className='nav-item'
                     data-testid="add-tab"
                     onClick={() => {
                       //update the data model that the tab represents
