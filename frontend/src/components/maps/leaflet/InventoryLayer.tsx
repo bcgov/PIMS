@@ -256,14 +256,11 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
 
       const administrativeArea = filter?.administrativeArea;
       const pid = filter?.pid;
-      const searchedByPID = await parcelWMSLayerService.findByPid(pid ?? '0');
-      const pidsFoundInParcelLayer = searchedByPID?.features.length;
       let propertiesFound;
       // If nothing in inventory or parcel layer, zoom to administrative area
       if (results.length > 0 && !!administrativeArea) {
         propertiesFound = results.length;
         setFeatures(results || []);
-
         const municipality = await municipalitiesService.findByAdministrative(administrativeArea);
         if (municipality) {
           // Fit to municipality bounds
@@ -274,10 +271,27 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
         propertiesFound = results.length;
         setFeatures(results || []);
 
-        map.fitBounds(L.geoJSON(results.map((result) => result.geometry)).getBounds(), {
-          maxZoom: 6,
+        // Extract all coordinates from the GeoJSON features
+        const allCoordinates: number[][] = results.map((result) => result.geometry.coordinates);
+
+        // Flatten the array of coordinates
+        const latLngObjects: L.LatLng[] = ([] as L.LatLng[]).concat(
+          ...allCoordinates.map((coord) => L.latLng(coord[1], coord[0])),
+        );
+
+        // Create a LatLngBounds object from the LatLng coordinates
+        const bounds = L.latLngBounds(latLngObjects);
+        map.fitBounds(bounds, {
+          maxZoom: 10,
         });
-      } else if (pidsFoundInParcelLayer > 0) {
+      } else if (
+        // if the PID is used in the filter search
+        pid !== undefined &&
+        !isNaN(parseInt(pid as string)) &&
+        parseInt(pid as string) !== 0
+      ) {
+        const searchedByPID = await parcelWMSLayerService.findByPid(pid ?? '0');
+        const pidsFoundInParcelLayer = searchedByPID?.features.length;
         // If nothing in inventory, but found in parcel layer
         propertiesFound = pidsFoundInParcelLayer;
         const firstFeature = searchedByPID.features[0];
@@ -287,7 +301,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
           // Add the GeoJSON layer to the map
           newHighlightedParcelLayer.addTo(map);
           // zoom to the highlighted parcel
-          map.fitBounds(newHighlightedParcelLayer.getBounds(), { maxZoom: 21 });
+          map.fitBounds(newHighlightedParcelLayer.getBounds(), { maxZoom: 16 });
           // Update the state with the new highlighted parcel layer
           setHighlightedParcelLayer(newHighlightedParcelLayer);
         } else {
