@@ -162,7 +162,7 @@ jobs:
        # Run update wiki python script for Migration If needed
       - name: Update wiki for Migration If needed
         if: github.event.inputs.migration_tag || needs.Deploy-To-OpenShift.outputs.migration == 'true'
-        run: python ./.github/helpers/update-wiki-table.py ./wiki/Image-tags.md MIGRATION "Latest Build Image Tag" "${{github.event.pull_request.number}}"
+        run: python ./.github/helpers/update-wiki-table.py ./wiki/Image-tags.md MIGRATION "Deployed Image Tag in DEV" "${{github.event.pull_request.number}}"
       
       # Commit and push changes to wiki
       - name: Commit and push changes to wiki
