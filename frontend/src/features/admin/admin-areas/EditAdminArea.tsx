@@ -7,11 +7,10 @@ import TooltipWrapper from 'components/common/TooltipWrapper';
 import { Formik } from 'formik';
 import { useAdminAreaApi } from 'hooks/useApiAdminAreas';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ButtonToolbar, Row, Col, Container, Navbar, Spinner } from 'react-bootstrap';
+import { ButtonToolbar, Col, Navbar, Row, Spinner } from 'react-bootstrap';
 import { FaArrowAltCircleLeft } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
 import { isAxiosError } from 'utils';
 import { AdministrativeAreaSchema } from 'utils/YupSchema';
 
@@ -23,7 +22,6 @@ export interface IEditAdminAreaProps {
   name: string;
   match?: any;
 }
-
 
 /** component used to edit specific administrative area selected from the ManageAdminArea component */
 const EditAdminArea = () => {
@@ -78,13 +76,10 @@ const EditAdminArea = () => {
       <Navbar className="navBar nav-bar-admin" expand="sm" variant="light">
         <Navbar.Brand>
           <TooltipWrapper toolTipId="back" toolTip="Back to administrative area list">
-            <FaArrowAltCircleLeft
-              onClick={goBack}
-              className='back-icon'
-            />
+            <FaArrowAltCircleLeft onClick={goBack} className="back-icon" />
           </TooltipWrapper>
         </Navbar.Brand>
-        <p className='text-header'>Administrative Area</p>
+        <p className="text-header">Administrative Area</p>
       </Navbar>
       <Formik
         enableReinitialize
@@ -115,7 +110,7 @@ const EditAdminArea = () => {
         }}
         validationSchema={AdministrativeAreaSchema}
       >
-        <div className='container-edit-admin'>
+        <div className="container-edit-admin">
           {showDeleteModal && (
             <DeleteModal {...{ showDeleteModal, setShowDeleteModal, onDelete }} />
           )}
@@ -131,10 +126,10 @@ const EditAdminArea = () => {
               <Spinner animation="border" />
             ) : (
               <Row className="edit-admin-form">
-                <Col className='col-2'>
+                <Col className="col-2">
                   <div>Name: </div>
                 </Col>
-                <Col className='col-3'>
+                <Col className="col-3">
                   <Input field="name" type="text" />
                 </Col>
               </Row>
