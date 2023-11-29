@@ -87,7 +87,7 @@ export const SteppedForm = function <T extends object>({
                   title={tabTitle(tab.name, index, setTabToDeleteId)}
                   eventKey={index}
                   key={`stepped-tab-${index}`}
-                  className="nav-tabs"
+                  className="nav-item"
                 >
                   <StepperFormProvider steps={steps} tabs={getFormikTabs(values.data)}>
                     <>

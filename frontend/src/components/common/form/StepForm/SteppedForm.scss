@@ -19,19 +19,29 @@
     background-color: white;
     display: inline-flex;
     position: relative;
+    color: black;
+    p {
+      color: black;
+      margin-bottom: 0;
+    }
+    abbr {
+      color: black;
+      text-decoration: none;
+    }
     svg {
       // icon formatting
       color: black;
       position: absolute;
       top: 0.1em;
       right: 0.5em;
+      visibility: hidden;
     }
     .active {
       // selected tab
-      color: $slide-out-blue;
       svg {
         background-color: $secondary-variant-color;
         color: white;
+        visibility: visible;
       }
       .last-child {
         padding: 0;
