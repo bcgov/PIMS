@@ -62,13 +62,14 @@ def get_length(in_li):
 
     return len_in_li
 
-def create_parent_ticket( project_key, updates ):
+def create_parent_ticket( project_key, updates, epic_id ):
     """
     POST API to create a parent ticket on the specified board
 
     Args:
       project_key (string): defines project key of JIRA board we want to post to
       updates (tuple(lists)): tuple of the three update lists
+      epic_id (id, key): tuple containing field id and issue number of epic we want to post under
 
     Returns:
       parent_key (string): captures json object holding parent ticket request.
@@ -110,12 +111,12 @@ def create_parent_ticket( project_key, updates ):
             "priority": {
                 "name": "Medium"
             },
+            "customfield_" + epic_id[0]: epic_id[1],
             "labels": [
                 "DependencyUpdates"
             ]
         }
     })
-
     return parent_ticket
 
 def create_subtasks( version, update_list, parent_key, project_key, jira_subtask ):

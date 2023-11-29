@@ -121,6 +121,7 @@ jobs:
           LEVEL_FLAGS: "MINOR MAJOR" # used to determine what updates to post
           JIRA_BOARD: "PIMS" # sets what JIRA board to post and pull from
           JIRA_SUBTASK: "10003" # each Jira board has a different issue type for subtasks
+          JIRA_EPIC: "10014, PIMS-450" # epic links are technically a custom field with this specific id and ticket number (for PIMS)
           JIRA_API_KEY: ${{ secrets.JIRA_API_KEY }} # key used to access JIRA API
           ISSUE_BODY: ${{ env.ISSUE_BODY }} # dependency update list
         run: |

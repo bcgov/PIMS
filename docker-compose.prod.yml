@@ -21,6 +21,5 @@ services:
   migration:
     build:
       context: backend
-      dockerfile: Dockerfile.migration
-    image: pims-migrations:latest
+      dockerfile: Dockerfile.migrations
     
