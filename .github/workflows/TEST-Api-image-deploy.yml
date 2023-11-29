@@ -1,14 +1,7 @@
-# GitHub Actions workflow for deploying API image on PR merge to main branch
-name: DEV API-Image Deploy on PR merge
+# GitHub Actions workflow for deploying API image to TEST env
+name: TEST API-Image Deploy
 
 on:
-  pull_request:
-    types:
-      - closed
-    branches: [main]
-    paths:
-      - 'backend/**' # Triggers on changes to files in the backend/ directory.
-
   workflow_dispatch:
       inputs:
         image_tag:
@@ -20,47 +13,36 @@ on:
           required: false
 
 env:
-  IMAGE_TAG: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.image_tag || github.event.pull_request.number }}
-  MIGRATION_IMAGE : ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.migration_tag || github.event.pull_request.number }}
+  IMAGE_TAG: ${{ github.event.inputs.image_tag }}
+  MIGRATION_IMAGE : ${{ github.event.inputs.migration_tag }}
+  ENVIRONMENT: 'test'
+  OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_SA_TEST_TOKEN }}
+
 
 jobs:
   # Job to deploy API image to OpenShift
   Deploy-To-OpenShift:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.pull_request.merged }}
     name: Deploy to OpenShift
     runs-on: ubuntu-latest
-    outputs:
-          migration: ${{ steps.migration.outputs.migration_needed }} 
     steps:
       # Checkout the repository
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
-      # Check for migration files
-      - name: Check for migration files
-        if: ${{ github.event_name != 'workflow_dispatch'}}
-        id: migration
-        run: |
-          if git diff --name-only origin/main HEAD~1 | grep -q "backend/dal/Migrations"; then
-            echo "migration_needed=true" >> $GITHUB_OUTPUT
-          else
-            echo "migration_needed=false" >> $GITHUB_OUTPUT
-          fi
     
       - name: Login to OpenShift
         uses: redhat-actions/oc-login@v1
         with:
           openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
-          openshift_token: ${{ secrets.OPENSHIFT_SA_DEV_TOKEN }}
-          namespace: ${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
+          openshift_token: ${{env.OPENSHIFT_TOKEN}}
+          namespace: ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }}
       
       # run migration if needed
       - name: Migration Run
-        if: github.event.inputs.migration_tag || steps.migration.outputs.migration_needed == 'true'
+        if: github.event.inputs.migration_tag 
         env:
-          NAMESPACE: "${{ secrets.OPENSHIFT_DEV_NAMESPACE }}"
+          NAMESPACE: ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }}
           TOOLS_NAMESPACE: "${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}"
           IMAGE_REPOSITORY : ${{ secrets.PUBLIC_IMAGE_REPOSITORY }}
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
@@ -72,10 +54,10 @@ jobs:
       # Process and Apply API DeploymentConfig
       - name: Process and Apply API DeploymentConfig
         env:
-          NAMESPACE: '${{ secrets.OPENSHIFT_DEV_NAMESPACE }}'
+          NAMESPACE: ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }}
           DC_TEMPLATE: 'api-dc-template.yaml'
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
-          ENVIRONMENT: 'dev'
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}
           APPLICATION_NAME: 'pims-api'
           LICENSE_PLATE: '${{ secrets.LICENSE_PLATE }}'
         run: |
@@ -92,16 +74,16 @@ jobs:
         uses: redhat-actions/oc-login@v1
         env:
           OPENSHIFT_USER: github-actions
-          OPENSHIFT_PROJECT: ${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
+          OPENSHIFT_PROJECT: ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }}
         with:
           openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
-          openshift_token: ${{ secrets.OPENSHIFT_SA_DEV_TOKEN }}
-          namespace: ${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
+          openshift_token: ${{env.OPENSHIFT_TOKEN}}
+          namespace: ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }}
 
       # Check Deployment Status
       - name: Check Deployment Status
         run: |
-          oc rollout status -n ${{ secrets.OPENSHIFT_DEV_NAMESPACE }} dc/pims-api --watch
+          oc rollout status -n ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }} dc/pims-api --watch
 
   # Job to clean up previous objects in OpenShift
   Clean-Up:
@@ -114,21 +96,21 @@ jobs:
         uses: redhat-actions/oc-login@v1
         env:
           OPENSHIFT_USER: github-actions
-          OPENSHIFT_PROJECT: ${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
+          OPENSHIFT_PROJECT: ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }}
         with:
           openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
-          openshift_token: ${{ secrets.OPENSHIFT_SA_DEV_TOKEN }}
-          namespace: ${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
+          openshift_token: ${{env.OPENSHIFT_TOKEN}}
+          namespace: ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }}
 
       # Remove previous objects
       - name: Remove previous objects
         run: |
-          oc delete pod -n ${{ secrets.OPENSHIFT_DEV_NAMESPACE }} --field-selector status.phase=Succeeded
+          oc delete pod -n ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }} --field-selector status.phase=Succeeded
 
       # Remove previous replication controllers
       - name: Remove previous replication controllers
         run: |
-          oc delete rc -n ${{ secrets.OPENSHIFT_DEV_NAMESPACE }} --field-selector status.replicas=0
+          oc delete rc -n ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }} --field-selector status.replicas=0
 
   # Job to update the wiki with deployed image tag information
   Update_Wiki_Tags:
@@ -157,12 +139,12 @@ jobs:
 
       # Run update wiki python script
       - name: Run update wiki python script
-        run: python ./.github/helpers/update-wiki-table.py ./wiki/Image-tags.md API "Deployed Image Tag in DEV" "${{ env.IMAGE_TAG }}"
+        run: python ./.github/helpers/update-wiki-table.py ./wiki/Image-tags.md API "Deployed Image Tag in TEST" "${{ env.IMAGE_TAG }}"
 
        # Run update wiki python script for Migration If needed
       - name: Update wiki for Migration If needed
-        if: github.event.inputs.migration_tag || needs.Deploy-To-OpenShift.outputs.migration == 'true'
-        run: python ./.github/helpers/update-wiki-table.py ./wiki/Image-tags.md MIGRATION "Deployed Image Tag in DEV" "${{ env.MIGRATION_IMAGE }}"
+        if: github.event.inputs.migration_tag
+        run: python ./.github/helpers/update-wiki-table.py ./wiki/Image-tags.md MIGRATION "Deployed Image Tag in TEST" "${{ env.MIGRATION_IMAGE }}"
       
       # Commit and push changes to wiki
       - name: Commit and push changes to wiki
