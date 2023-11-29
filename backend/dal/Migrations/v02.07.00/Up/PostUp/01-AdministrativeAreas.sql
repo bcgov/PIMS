@@ -30,4 +30,4 @@ VALUES
 ('qathet Regional District', 'qRD'),
 ('Sunshine Coast Regional District', 'SCRD'),
 ('Strathcona Regional District', 'STRD'),
-('Stikine Region (Unincorporated)', 'Stikine Region');
+('Stikine Region (Unincorporated)', 'STIK');
