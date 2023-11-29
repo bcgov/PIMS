@@ -1,20 +1,7 @@
 @import '../../../variables';
-.navBar {
-  font-weight: 700;
-  text-align: left;
-  .navbar-brand {
-    cursor: pointer;
-  }
-}
-
-input {
-  margin-bottom: 10px;
-}
 
 .agency-edit-form-container {
-  justify-content: left;
-  margin-top: 20px;
-  margin-bottom: $footer-height;
+  margin-top: 2.5em;
   .agencyInfo {
     .label,
     .form-label {
@@ -22,9 +9,7 @@ input {
     }
     .form-text-field {
       margin-bottom: 1em;
-      max-width: fit-content;
       width: 20em;
-      padding-right: 10em;
     }
     .form-select-field {
       margin-bottom: 1em;
