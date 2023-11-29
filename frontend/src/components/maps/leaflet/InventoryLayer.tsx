@@ -319,7 +319,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
 
       setLoadingTiles(false);
     } catch (error) {
-      toast.error((error as Error).message, { autoClose: 7000 });
+      toast.error('Current search contains invalid values.', { autoClose: 7000 });
       console.error(error);
     } finally {
       onRequestData(false);
