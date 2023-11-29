@@ -1,4 +1,4 @@
-import headerHandler from "./headerHandler";
+import headerHandler from './headerHandler';
 
 export default {
   headerHandler,
