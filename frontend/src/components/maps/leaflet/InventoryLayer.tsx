@@ -6,7 +6,7 @@ import { useApiGeocoder } from 'hooks/api';
 import { useApi } from 'hooks/useApi';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
-import { GeoJSON, LatLngBounds } from 'leaflet';
+import L, { GeoJSON, LatLngBounds } from 'leaflet';
 import { flatten, uniqBy } from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useMap } from 'react-leaflet';
@@ -17,7 +17,7 @@ import { tilesInBbox } from 'tiles-in-bbox';
 import { useMapRefreshEvent } from '../hooks/useMapRefreshEvent';
 import { useFilterContext } from '../providers/FIlterProvider';
 import { PointFeature } from '../types';
-import { MUNICIPALITY_LAYER_URL, useLayerQuery } from './LayerPopup';
+import { MUNICIPALITY_LAYER_URL, PARCELS_PUBLIC_LAYER_URL, useLayerQuery } from './LayerPopup';
 import PointClusterer from './PointClusterer';
 
 export type InventoryLayerProps = {
@@ -145,7 +145,10 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   const { loadProperties } = useApi();
   const { changed: filterChanged } = useFilterContext();
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
+  const parcelWMSLayerService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
   const geocoder = useApiGeocoder();
+  // Declare a variable to store the highlighted GeoJSON layer
+  const [highlightedParcelLayer, setHighlightedParcelLayer] = useState<L.GeoJSON | null>(null);
 
   const draftProperties: PointFeature[] = useAppSelector((store) => store.parcel.draftProperties);
 
@@ -153,16 +156,20 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
     throw new Error('<InventoryLayer /> must be used under a <Map> leaflet component');
   }
 
-  const bbox = useMemo(() => getBbox(bounds), [bounds]);
+  const bbox = useMemo(() => {
+    const calculatedBbox = getBbox(bounds);
+    return calculatedBbox;
+  }, [bounds]);
+
   useEffect(() => {
     const fit = async () => {
       if (filterChanged) {
-        map.fitBounds(defaultBounds, { maxZoom: 5 });
+        map.fitBounds(bounds, { maxZoom: 21 });
       }
     };
 
     fit();
-  }, [map, filter, filterChanged]);
+  }, [map, filter, filterChanged, bounds]);
 
   const params = useMemo((): any => {
     const tiles = getTiles(defaultBounds, 5);
@@ -222,6 +229,11 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
   const search = async (filters: IGeoSearchParams[]) => {
     try {
       onRequestData(true);
+      // Check if there is a highlighted parcel layer, and remove it
+      if (highlightedParcelLayer) {
+        map.removeLayer(highlightedParcelLayer);
+        setHighlightedParcelLayer(null); // Reset the state
+      }
       const data = flatten(await Promise.all(filters.map((x) => loadTile(x)))).map((f) => {
         return {
           ...f,
@@ -233,7 +245,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
         (point) => `${point?.properties.id}-${point?.properties.propertyTypeId}`,
       );
 
-      const results = items.filter(({ properties }: any) => {
+      const results: PointFeature[] = items.filter(({ properties }: any) => {
         return (
           properties.propertyTypeId === PropertyTypes.BUILDING ||
           properties.propertyTypeId === PropertyTypes.PARCEL ||
@@ -243,22 +255,71 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
       }) as any;
 
       const administrativeArea = filter?.administrativeArea;
-      if (results.length === 0 && !!administrativeArea) {
+      const pid = filter?.pid;
+      let propertiesFound;
+      // If nothing in inventory or parcel layer, zoom to administrative area
+      if (results.length > 0 && !!administrativeArea) {
+        propertiesFound = results.length;
+        setFeatures(results || []);
         const municipality = await municipalitiesService.findByAdministrative(administrativeArea);
         if (municipality) {
           // Fit to municipality bounds
           map.fitBounds((GeoJSON.geometryToLayer(municipality) as any)._bounds, { maxZoom: 11 });
         }
+      } else if (results.length > 0) {
+        // If anything is found in inventory
+        propertiesFound = results.length;
+        setFeatures(results || []);
+
+        // Extract all coordinates from the GeoJSON features
+        const allCoordinates: number[][] = results.map((result) => result.geometry.coordinates);
+
+        // Flatten the array of coordinates
+        const latLngObjects: L.LatLng[] = ([] as L.LatLng[]).concat(
+          ...allCoordinates.map((coord) => L.latLng(coord[1], coord[0])),
+        );
+
+        // Create a LatLngBounds object from the LatLng coordinates
+        const bounds = L.latLngBounds(latLngObjects);
+        map.fitBounds(bounds, {
+          maxZoom: 10,
+        });
+      } else if (
+        // if the PID is used in the filter search
+        pid !== undefined &&
+        !isNaN(parseInt(pid as string)) &&
+        parseInt(pid as string) !== 0
+      ) {
+        const searchedByPID = await parcelWMSLayerService.findByPid(pid ?? '0');
+        const pidsFoundInParcelLayer = searchedByPID?.features.length;
+        // If nothing in inventory, but found in parcel layer
+        propertiesFound = pidsFoundInParcelLayer;
+        const firstFeature = searchedByPID.features[0];
+        if (firstFeature.geometry) {
+          // Create a GeoJSON layer for the highlighted parcel
+          const newHighlightedParcelLayer = L.geoJSON(firstFeature.geometry);
+          // Add the GeoJSON layer to the map
+          newHighlightedParcelLayer.addTo(map);
+          // zoom to the highlighted parcel
+          map.fitBounds(newHighlightedParcelLayer.getBounds(), { maxZoom: 16 });
+          // Update the state with the new highlighted parcel layer
+          setHighlightedParcelLayer(newHighlightedParcelLayer);
+        } else {
+          console.error('Feature does not have geometry property');
+        }
       }
-      setFeatures(results);
-      setLoadingTiles(false);
-      if (results.length === 0) {
-        toast.info('No search results found');
+
+      if (propertiesFound && propertiesFound > 0) {
+        toast.info(`${propertiesFound} properties found`);
       } else {
-        toast.info(`${results.length} properties found`);
+        // Nothing found in either inventory or parcel layer
+        toast.info('No search results found');
+        setFeatures([]);
       }
+
+      setLoadingTiles(false);
     } catch (error) {
-      toast.error((error as Error).message, { autoClose: 7000 });
+      toast.error('Current search contains invalid values.', { autoClose: 7000 });
       console.error(error);
     } finally {
       onRequestData(false);
