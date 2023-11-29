@@ -5,7 +5,7 @@ import FilterBackdrop from 'components/maps/leaflet/FilterBackdrop';
 import { AuthStateContext, IAuthState } from 'contexts/authStateContext';
 import { AppRouter } from 'features/routes';
 import useKeycloakWrapper, { IKeycloak } from 'hooks/useKeycloakWrapper';
-import { KeycloakInstance } from 'keycloak-js';
+import Keycloak from 'keycloak-js';
 import PublicLayout from 'layouts/PublicLayout';
 import OnLoadActions from 'OnLoadActions';
 import React, { useEffect } from 'react';
@@ -18,7 +18,7 @@ import { fetchUserAgencies, getActivateUserAction } from 'store/slices/hooks/use
 
 const App = () => {
   const keycloakWrapper: IKeycloak = useKeycloakWrapper();
-  const keycloak: KeycloakInstance = keycloakWrapper.obj;
+  const keycloak: Keycloak = keycloakWrapper.obj;
   const dispatch = useAppDispatch();
   const location = useLocation();
 
