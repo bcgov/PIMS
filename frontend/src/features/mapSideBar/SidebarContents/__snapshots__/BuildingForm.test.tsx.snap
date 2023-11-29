@@ -181,7 +181,7 @@ exports[`Building Form component renders correctly 1`] = `
     >
       <div
         aria-labelledby="steppedform-tabs-tab-0"
-        class="fade nav-tabs tab-pane active show"
+        class="fade nav-item tab-pane active show"
         id="steppedform-tabs-tabpane-0"
         role="tabpanel"
       >
