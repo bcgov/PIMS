@@ -1,4 +1,4 @@
-import { KeycloakInstance } from 'keycloak-js';
+import Keycloak from 'keycloak-js';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as jwtSlice from 'store/slices/jwtSlice';
@@ -30,7 +30,7 @@ const keycloak = {
     agencies: ['1'],
   },
   token: '123456789',
-} as any as KeycloakInstance;
+} as any as Keycloak;
 
 const keyclockEventHandler = getKeycloakEventHandler(keycloak);
 
