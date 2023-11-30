@@ -251,15 +251,15 @@ exports[`Manage Users Component Snapshot matches 1`] = `
       </div>
     </div>
   </form>
-  <div>
-    <div
-      class="excel-export-style"
+  <div
+    class="excel-export-style"
+  >
+    <p
+      class="excel-export-label"
     >
-      <p
-        class="excel-export-label"
-      >
-        Export To Excel: 
-      </p>
+      Export To Excel: 
+    </p>
+    <div>
       <div
         class="excel-export-button"
       >
