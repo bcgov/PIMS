@@ -1,3 +1,5 @@
+import './EditAdminArea.scss';
+
 import { AxiosError } from 'axios';
 import { Button, Form, Input } from 'components/common/form';
 import GenericModal from 'components/common/GenericModal';
@@ -5,11 +7,10 @@ import TooltipWrapper from 'components/common/TooltipWrapper';
 import { Formik } from 'formik';
 import { useAdminAreaApi } from 'hooks/useApiAdminAreas';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ButtonToolbar, Container, Navbar, Spinner } from 'react-bootstrap';
+import { ButtonToolbar, Col, Navbar, Row, Spinner } from 'react-bootstrap';
 import { FaArrowAltCircleLeft } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
 import { isAxiosError } from 'utils';
 import { AdministrativeAreaSchema } from 'utils/YupSchema';
 
@@ -21,11 +22,6 @@ export interface IEditAdminAreaProps {
   name: string;
   match?: any;
 }
-
-/** styled container to center the contents of the page */
-const EditAdminAreaContainer = styled(Container)`
-  justify-content: center;
-`;
 
 /** component used to edit specific administrative area selected from the ManageAdminArea component */
 const EditAdminArea = () => {
@@ -77,17 +73,13 @@ const EditAdminArea = () => {
 
   return (
     <div>
-      <Navbar className="navBar" expand="sm" variant="light" bg="light">
-        <Navbar.Brand style={{ marginLeft: '10px' }}>
+      <Navbar className="navBar nav-bar-admin" expand="sm" variant="light">
+        <Navbar.Brand>
           <TooltipWrapper toolTipId="back" toolTip="Back to administrative area list">
-            <FaArrowAltCircleLeft
-              onClick={goBack}
-              size={20}
-              style={{ marginBottom: '0.5rem', cursor: 'pointer' }}
-            />
+            <FaArrowAltCircleLeft onClick={goBack} className="back-icon" />
           </TooltipWrapper>
         </Navbar.Brand>
-        <h4>Administrative Area</h4>
+        <p className="text-header">Administrative Area</p>
       </Navbar>
       <Formik
         enableReinitialize
@@ -118,7 +110,7 @@ const EditAdminArea = () => {
         }}
         validationSchema={AdministrativeAreaSchema}
       >
-        <EditAdminAreaContainer>
+        <div className="container-edit-admin">
           {showDeleteModal && (
             <DeleteModal {...{ showDeleteModal, setShowDeleteModal, onDelete }} />
           )}
@@ -133,7 +125,14 @@ const EditAdminArea = () => {
             {!activeArea && !newAdminArea ? (
               <Spinner animation="border" />
             ) : (
-              <Input style={{ marginTop: '10px' }} field="name" label="Name: " type="text" />
+              <Row className="edit-admin-form">
+                <Col className="col-2">
+                  <div>Name: </div>
+                </Col>
+                <Col className="col-3">
+                  <Input field="name" type="text" />
+                </Col>
+              </Row>
             )}
             <ButtonToolbar style={{ justifyContent: 'center' }}>
               <Button style={{ marginRight: '10px' }} type="submit">
@@ -154,7 +153,7 @@ const EditAdminArea = () => {
               )}
             </ButtonToolbar>
           </Form>
-        </EditAdminAreaContainer>
+        </div>
       </Formik>
     </div>
   );

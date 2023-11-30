@@ -1,34 +1,31 @@
 @import '../../../variables';
-.navBar {
-  font-weight: 700;
-  text-align: left;
-  .navbar-brand {
-    cursor: pointer;
-  }
-}
-
-.required {
-  color: red;
-  font-weight: 700;
-}
-
-input {
-  margin-bottom: 10px;
-}
 
 .agency-edit-form-container {
-  justify-content: center;
-  margin-top: 20px;
-  margin-bottom: $footer-height;
-  .agencyInfo {
-    .label,
-    .form-label {
-      float: left;
+  margin-top: 2.5em;
+  .checkboxes {
+    margin-top: 10px;
+    float: left;
+    margin-bottom: 10px;
+  }
+  .table-style {
+    width: 100%;
+    .left-col {
+      width: 25%;
+      .form-label {
+        float: left;
+      }
     }
-    .checkboxes {
-      margin-top: 10px;
-      float: left;
-      margin-bottom: 10px;
+    .right-col {
+      width: 75%;
+      .form-text-field {
+        margin-bottom: 1em;
+        width: 33rem;
+      }
+      .form-select-field {
+        margin-bottom: 1em;
+        margin-left: 0.7em;
+        max-width: fit-content;
+      }
     }
   }
 }
