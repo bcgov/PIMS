@@ -4,12 +4,12 @@ import React from 'react';
 import { Accordion } from 'react-bootstrap';
 
 const mandatoryHeaders =
-  'PID,Type (Land or Building),Classification,Name,Ministry,Location (City) or Regional District,Latitude,Longitude'.split(
+  'PID,Type (Land or Building),Classification,Name,Ministry,Location (City),Latitude,Longitude'.split(
     ',',
   );
 
 const optionalHeaders =
-  'Status,Description,Agency (subagency for Ministry),Address,Postal,Assessed Land Value,Land Assessment Year,Netbook Value,Assessed Building Value,Building Assessment Year,Land Area,Legal Description,Construction Type,Predominate Use,Tenancy,Rentable Area,Building Floor Count,Local ID'.split(
+  'Status,Description,Agency (subagency for Ministry),Address,Postal,Regional District,Assessed Land Value,Land Assessment Year,Netbook Value,Assessed Building Value,Building Assessment Year,Land Area,Legal Description,Construction Type,Predominate Use,Tenancy,Rentable Area,Building Floor Count,Local ID'.split(
     ',',
   );
 

@@ -52,7 +52,7 @@ export interface IExportedPropertyModel {
   Latitude: string;
   'Lease Expiry'?: string;
   'Legal Description'?: string;
-  Location?: string;
+  Location: string;
   Longitude: string;
   Ministry: string;
   Name: string;
@@ -141,7 +141,7 @@ export const parseCSVString = async (csvContent: string): Promise<IPropertyModel
         description: property.Description ?? '',
         classification: property.Classification,
         civicAddress: property.Address ?? '',
-        city: getValueOrDefault(property.Location, ''),
+        city: property.Location,
         postal: property.Postal ?? '',
         latitude: property.Latitude,
         longitude: property.Longitude,
