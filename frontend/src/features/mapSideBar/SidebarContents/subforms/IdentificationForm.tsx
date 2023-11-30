@@ -53,7 +53,6 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
   setMovingPinNameSpace,
   isPropertyAdmin,
   disabled,
-  setLocationPinActive,
 }) => {
   const { setFieldValue } = useFormikContext();
   const [overrideData, setOverrideData] = useState<IBuilding>();
@@ -232,7 +231,6 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
             building
             setMovingPinNameSpace={setMovingPinNameSpace}
             nameSpace={withNameSpace('')}
-            setLocationPinActive={setLocationPinActive}
           />
         </Col>
       </Row>

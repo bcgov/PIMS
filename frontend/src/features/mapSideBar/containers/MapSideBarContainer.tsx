@@ -141,8 +141,6 @@ const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [showUpdatedModal, setShowUpdatedModal] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
-  // Is location pin from LatLongForm active?
-  const [locationPinActive, setLocationPinActive] = useState<boolean>(false);
 
   /**
    * Populate the formik form using the passed parcel.
@@ -305,13 +303,17 @@ const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
   // Add a pin to the map where the user has clicked.
   useDeepCompareEffect(() => {
     // If we click on the map, create a new pin at the click location.
-    if (!!formikRef?.current && isMouseEventRecent(leafletMouseEvent?.originalEvent) && !disabled) {
+    if (
+      movingPinNameSpace !== undefined &&
+      !!formikRef?.current &&
+      isMouseEventRecent(leafletMouseEvent?.originalEvent) &&
+      !disabled
+    ) {
+      const nameSpace = (movingPinNameSpace?.length ?? 0) > 0 ? `${movingPinNameSpace}.` : '';
       // Only update lat and long if holding the location pin
-      if (locationPinActive) {
-        formikRef.current.setFieldValue(`data.latitude`, leafletMouseEvent?.latlng.lat || 0);
-        formikRef.current.setFieldValue(`data.longitude`, leafletMouseEvent?.latlng.lng || 0);
-        setLocationPinActive(false);
-      }
+      formikRef.current.setFieldValue(`${nameSpace}.latitude`, leafletMouseEvent?.latlng.lat || 0);
+      formikRef.current.setFieldValue(`${nameSpace}.longitude`, leafletMouseEvent?.latlng.lng || 0);
+
       const isParcel = [
         SidebarContextType.VIEW_BARE_LAND,
         SidebarContextType.UPDATE_DEVELOPED_LAND,
@@ -319,7 +321,7 @@ const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
         SidebarContextType.ADD_ASSOCIATED_LAND,
         SidebarContextType.ADD_BARE_LAND,
       ].includes(context);
-      droppedMarkerSearch('data', leafletMouseEvent?.latlng, isParcel);
+      droppedMarkerSearch(nameSpace, leafletMouseEvent?.latlng, isParcel);
       setMovingPinNameSpace(undefined);
     }
   }, [dispatch, leafletMouseEvent, showSideBar]);
@@ -460,8 +462,6 @@ const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
             }}
             isPropertyAdmin={keycloak.hasClaim(Claims.ADMIN_PROPERTIES)}
             initialValues={buildingDetail ?? buildingWithParcelDetail ?? ({} as any)}
-            locationPinActive={locationPinActive}
-            setLocationPinActive={setLocationPinActive}
           />
         ) : (
           <Spinner animation="border"></Spinner>
@@ -493,8 +493,6 @@ const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
             initialValues={
               parcelDetail ?? { ...getInitialValues(), propertyTypeId: PropertyTypes.SUBDIVISION }
             }
-            locationPinActive={locationPinActive}
-            setLocationPinActive={setLocationPinActive}
           />
         );
       case SidebarContextType.ADD_BARE_LAND:
@@ -516,8 +514,6 @@ const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
             setLandComplete={setShowCompleteModal}
             setLandUpdateComplete={setShowUpdatedModal}
             initialValues={parcelDetail ?? ({} as any)}
-            locationPinActive={locationPinActive}
-            setLocationPinActive={setLocationPinActive}
           />
         ) : (
           <Spinner animation="border"></Spinner>

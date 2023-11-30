@@ -61,6 +61,7 @@ interface IIdentificationProps {
   disabled?: boolean;
   /** Set the location pin state */
   setLocationPinActive?: Dispatch<SetStateAction<boolean>>;
+  onPinDrop?: () => void;
 }
 
 const DraftMarkerButton = styled.button`
@@ -82,7 +83,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   isPropertyAdmin,
   isViewOrUpdate,
   disabled,
-  setLocationPinActive,
+  onPinDrop,
   ...props
 }) => {
   const [overrideData, setOverrideData] = useState<IParcel>();
@@ -103,6 +104,8 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   }, [userAgency]);
 
   const myAgencies = useMyAgencies();
+
+  const [locationPinActive, setLocationPinActive] = useState<boolean>(false);
 
   return (
     <Container>
@@ -134,7 +137,9 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
                   <Col className="marker-svg">
                     <ClickAwayListener
                       onClickAway={() => {
-                        setMovingPinNameSpace(undefined);
+                        // setMovingPinNameSpace(undefined);
+                        if (onPinDrop && locationPinActive) onPinDrop();
+                        setLocationPinActive(false);
                         // Don't set pin as inactive here. Handled in MapSideBarContainer.
                       }}
                     >
@@ -143,10 +148,9 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
                         disabled={disabled}
                         onClick={(e: any) => {
                           setMovingPinNameSpace(nameSpace ?? '');
-                          if (setLocationPinActive) {
-                            // Pin picked up, set active
-                            setLocationPinActive(true);
-                          }
+                          // Pin picked up, set active
+                          setLocationPinActive(true);
+
                           e.preventDefault();
                         }}
                       >

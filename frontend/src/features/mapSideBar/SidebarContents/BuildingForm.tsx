@@ -29,7 +29,7 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { noop } from 'lodash';
 import _ from 'lodash';
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import { Button } from 'react-bootstrap';
 import { useAppDispatch } from 'store';
 import styled from 'styled-components';
@@ -135,21 +135,17 @@ const Form: React.FC<IBuildingForm> = ({
   goToAssociatedLand,
   formikRef,
   buildingData,
-  locationPinActive,
-  setLocationPinActive,
 }) => {
   const stepper = useFormStepper();
   useDraftMarkerSynchronizer('data');
   const formikProps = useFormikContext<ISteppedFormValues<IBuilding>>();
-  if (locationPinActive) {
-    useParcelLayerData({
-      formikRef,
-      nameSpace: 'data',
-      agencyId: +(formikProps.values.data.agencyId as any)?.value
-        ? +(formikProps.values.data.agencyId as any).value
-        : +formikProps.values.data.agencyId,
-    });
-  }
+  const { setParcelFieldsFromLayerData } = useParcelLayerData({
+    formikRef,
+    nameSpace: 'data',
+    agencyId: +(formikProps.values.data.agencyId as any)?.value
+      ? +(formikProps.values.data.agencyId as any).value
+      : +formikProps.values.data.agencyId,
+  });
   const { getOptionsByType, getPropertyClassificationOptions } = useCodeLookups();
   const isViewOrUpdate = !!formikProps.values?.data?.id;
 
@@ -174,7 +170,6 @@ const Form: React.FC<IBuildingForm> = ({
               nameSpace={nameSpace}
               isPropertyAdmin={isPropertyAdmin}
               disabled={disabled}
-              setLocationPinActive={setLocationPinActive}
             />
           </div>
         );
@@ -293,8 +288,6 @@ interface IBuildingForm {
   disabled?: boolean;
   /** the initial values of this form, as loaded from the api */
   buildingData?: IBuilding;
-  locationPinActive?: boolean;
-  setLocationPinActive?: Dispatch<SetStateAction<boolean>>;
 }
 
 interface IParentBuildingForm extends IBuildingForm {
@@ -358,7 +351,6 @@ const BuildingForm: React.FC<IParentBuildingForm> = ({
   setBuildingToAssociateLand,
   goToAssociatedLand,
   disabled,
-  setLocationPinActive,
   ...rest
 }) => {
   const keycloak = useKeycloakWrapper();
@@ -491,7 +483,6 @@ const BuildingForm: React.FC<IParentBuildingForm> = ({
           goToAssociatedLand={goToAssociatedLand}
           formikRef={formikRef}
           buildingData={initialValues.data}
-          setLocationPinActive={setLocationPinActive}
         />
       </SteppedForm>
     </Container>

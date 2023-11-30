@@ -24,7 +24,6 @@ import { defaultLandValues } from 'features/properties/components/forms/subforms
 import { defaultPidPinFormValues } from 'features/properties/components/forms/subforms/PidPinForm';
 import LastUpdatedBy from 'features/properties/components/LastUpdatedBy';
 import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
-// import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 import { useFormikContext, yupToFormErrors } from 'formik';
 import { IGeocoderResponse, useApi } from 'hooks/useApi';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
@@ -33,7 +32,6 @@ import useCodeLookups from 'hooks/useLookupCodes';
 import { noop } from 'lodash';
 import _ from 'lodash';
 import * as React from 'react';
-import { Dispatch, SetStateAction } from 'react';
 import { Button } from 'react-bootstrap';
 import { useAppDispatch } from 'store';
 import { createParcel, updateParcel } from 'store/slices/hooks/parcelsActionCreator';
@@ -51,6 +49,7 @@ import { LandReviewPage } from './subforms/LandReviewPage';
 import { LandUsageForm } from './subforms/LandUsageForm';
 import { LandValuationForm } from './subforms/LandValuationForm';
 import { ParcelIdentificationForm } from './subforms/ParcelIdentificationForm';
+import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 
 const Container = styled.div`
   background-color: #fff;
@@ -150,12 +149,10 @@ const Form: React.FC<ILandForm> = ({
   handlePidChange,
   handlePinChange,
   findMatchingPid,
-  // formikRef,
+  formikRef,
   isPropertyAdmin,
   initialValues,
   disabled,
-  // locationPinActive,
-  setLocationPinActive,
 }) => {
   // access the stepper to later split the form into segments
   const stepper = useFormStepper();
@@ -170,15 +167,13 @@ const Form: React.FC<ILandForm> = ({
     }
   }, [formikProps.values.data.pid, formikProps.values.data.pin]);
 
-  // if (locationPinActive) {
-  //   useParcelLayerData({
-  //     formikRef,
-  //     nameSpace: 'data',
-  //     agencyId: +(formikProps.values.data.agencyId as any)?.value
-  //       ? +(formikProps.values.data.agencyId as any).value
-  //       : +formikProps.values.data.agencyId,
-  //   });
-  // }
+  const { setParcelFieldsFromLayerData } = useParcelLayerData({
+    formikRef,
+    nameSpace: 'data',
+    agencyId: +(formikProps.values.data.agencyId as any)?.value
+      ? +(formikProps.values.data.agencyId as any).value
+      : +formikProps.values.data.agencyId,
+  });
   const isViewOrUpdate = !!initialValues.id;
 
   // lookup codes that will be used by subforms
@@ -204,7 +199,7 @@ const Form: React.FC<ILandForm> = ({
               nameSpace="data"
               isViewOrUpdate={isViewOrUpdate}
               disabled={disabled}
-              setLocationPinActive={setLocationPinActive}
+              onPinDrop={setParcelFieldsFromLayerData}
             />
           </div>
         );
@@ -304,9 +299,6 @@ interface ILandForm {
   initialValues: IParcel;
   /** whether this form can be interacted with */
   disabled?: boolean;
-  locationPinActive?: boolean;
-  /** Set the location pin state */
-  setLocationPinActive?: Dispatch<SetStateAction<boolean>>;
 }
 
 interface IParentLandForm extends ILandForm {
@@ -521,8 +513,6 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
           formikRef={props.formikRef}
           initialValues={initialValues.data}
           disabled={props.disabled}
-          locationPinActive={props.locationPinActive}
-          setLocationPinActive={props.setLocationPinActive}
         />
       </SteppedForm>
     </Container>
