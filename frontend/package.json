@@ -121,7 +121,7 @@
     "axios-mock-adapter": "1.22.0",
     "babel-jest": "29.7.0",
     "cross-env": "7.0.3",
-    "cypress": "13.5.0",
+    "cypress": "13.6.0",
     "dotenv": "16.3.1",
     "enzyme": "3.11.0",
     "enzyme-to-json": "3.6.2",
