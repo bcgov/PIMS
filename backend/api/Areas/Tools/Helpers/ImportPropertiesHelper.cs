@@ -424,8 +424,22 @@ namespace Pims.Api.Areas.Tools.Helpers
                 p_e.ClassificationId = propClassification.Id;
                 p_e.Classification = propClassification;
 
-                // TODO: Handle this issue more gracefully.
-                var city = _pimsAdminService.AdministrativeArea.Get(property.City.ConvertToUTF8()) ?? throw new InvalidOperationException($"Administrative area '{property.City}' does not exist in the datasource.");
+                // See if the City matches an AdministrativeArea
+                var city = _pimsAdminService.AdministrativeArea.Get(property.City.ConvertToUTF8());
+                if (city == null)
+                {
+                    // No City match, see if RegionalDistrict was provided
+                    if (property.RegionalDistrict != null && property.RegionalDistrict.Length > 0)
+                    {
+                        // Map to city if it exists, otherwise throw error
+                        city = _pimsAdminService.AdministrativeArea.Get(property.RegionalDistrict.ConvertToUTF8()) ?? throw new InvalidOperationException($"Regional District '{property.RegionalDistrict}' does not exist in the datasource.");
+                    }
+                    else
+                    {
+                        // City didn't match, RegionalDistrict was not provided, throw error
+                        throw new InvalidOperationException($"Administrative area '{property.City}' does not exist in the datasource and Regional District was not provided.");
+                    }
+                }
 
                 // Add/Update the address.
                 if (p_e.AddressId == 0)
@@ -557,8 +571,22 @@ namespace Pims.Api.Areas.Tools.Helpers
                 b_e.BuildingPredominateUse = build_use;
 
 
-                // TODO: Handle this issue more gracefully.
-                var city = _pimsAdminService.AdministrativeArea.Get(property.City.ConvertToUTF8()) ?? throw new InvalidOperationException($"Administrative area '{property.City}' does not exist in the datasource.");
+                // See if the City matches an AdministrativeArea
+                var city = _pimsAdminService.AdministrativeArea.Get(property.City.ConvertToUTF8());
+                if (city == null)
+                {
+                    // No City match, see if RegionalDistrict was provided
+                    if (property.RegionalDistrict != null && property.RegionalDistrict.Length > 0)
+                    {
+                        // Map to city if it exists, otherwise throw error
+                        city = _pimsAdminService.AdministrativeArea.Get(property.RegionalDistrict.ConvertToUTF8()) ?? throw new InvalidOperationException($"Regional District '{property.RegionalDistrict}' does not exist in the datasource.");
+                    }
+                    else
+                    {
+                        // City didn't match, RegionalDistrict was not provided, throw error
+                        throw new InvalidOperationException($"Administrative area '{property.City}' does not exist in the datasource and Regional District was not provided.");
+                    }
+                }
 
                 // Add/Update the address.
                 if (b_e.AddressId == 0)
