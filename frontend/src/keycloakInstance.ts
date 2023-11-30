@@ -1,8 +1,8 @@
 import { useConfiguration } from 'hooks/useConfiguration';
-import Keycloak, { KeycloakInstance } from 'keycloak-js';
+import Keycloak from 'keycloak-js';
 
 //@ts-ignore
-export const useKeycloakInstance = (): KeycloakInstance => {
+export const useKeycloakInstance = (): Keycloak => {
   const { keycloakAuthUrl, keycloakId } = useConfiguration();
   return new Keycloak({
     url: keycloakAuthUrl,
