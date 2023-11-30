@@ -135,14 +135,14 @@ export const ManageUsers = () => {
       />
       {
         <>
-          <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
-            <div className="excel-export-style">
-              <p className="excel-export-label">Export To Excel: </p>
+          <div className="excel-export-style">
+            <p className="excel-export-label">Export To Excel: </p>
+            <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
               <div className="excel-export-button">
                 <FaFileExcel data-testid="excel-icon" onClick={() => fetch('excel')} />
               </div>
-            </div>
-          </TooltipWrapper>
+            </TooltipWrapper>
+          </div>
           <div className="table-container">
             <Table<IUserRecord, any>
               name="usersTable"
