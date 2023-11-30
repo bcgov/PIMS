@@ -1,11 +1,12 @@
-import variables from '_variables.module.scss';
+import './SteppedForm.scss';
+
 import AbbreviatedText from 'components/common/AbbreviatedText';
 import { Persist } from 'components/common/FormikPersist';
 import GenericModal from 'components/common/GenericModal';
 import { IStep } from 'components/common/Stepper';
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { ILeasedLand } from 'features/mapSideBar/SidebarContents/AssociatedLandForm';
-import { Form, Formik, FormikConfig, getIn, setIn, useFormikContext } from 'formik';
+import { Formik, FormikConfig, getIn, setIn, useFormikContext } from 'formik';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
 import _ from 'lodash';
 import * as React from 'react';
@@ -13,72 +14,11 @@ import { useState } from 'react';
 import { Tab, Tabs } from 'react-bootstrap';
 import { FaWindowClose } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import styled from 'styled-components';
 
 import StringButton from '../StringButton';
 import { StepperFormProvider } from './context';
 import { StepperField } from './StepperField';
 import { ISteppedFormProps, ISteppedFormValues, IStepperTab } from './types';
-
-const TabbedForm = styled(Form)`
-  .hideTabs {
-    li.nav-item {
-      background-color: white;
-      display: none;
-    }
-  }
-  .nav-tabs > .nav-item:last-child {
-    border: 0;
-    svg {
-      position: relative;
-      color: white;
-    }
-    padding: 0;
-  }
-  .tab-content {
-    border: 0;
-    border-top: 1px solid #666666;
-    padding: 0;
-  }
-  .nav-tabs {
-    .nav-item.active {
-      border: 0;
-      color: white;
-      svg {
-        background-color: ${variables.secondaryVariantColor};
-        color: white;
-      }
-    }
-    .nav-item {
-      border: 1px solid black;
-      background-color: white;
-      color: black;
-      position: relative;
-      display: inline-flex;
-      p,
-      abbr {
-        margin: 0;
-      }
-      position: relative;
-      svg {
-        color: black;
-        position: absolute;
-        top: 1px;
-        right: 1px;
-      }
-    }
-    border: 0;
-    .btn:disabled {
-      background-color: ${variables.primaryColor};
-      cursor: default;
-    }
-  }
-`;
-
-const TabLineHeader = styled.h5`
-  float: left;
-  margin-right: 50px;
-`;
 
 export const MAX_STEPPED_TABS = 5;
 
@@ -128,8 +68,8 @@ export const SteppedForm = function <T extends object>({
       {({ values, setFieldValue, validateForm, initialValues: initalFormValues }) => (
         <>
           <StepChanger setSteps={setSteps} onChangeTab={onChangeTab}></StepChanger>
-          <TabbedForm>
-            {!!getTabs && tabLineHeader && <TabLineHeader>{tabLineHeader}</TabLineHeader>}
+          <div>
+            {!!getTabs && tabLineHeader && <div className="tab-line-header">{tabLineHeader}</div>}
             <Tabs
               id="steppedform-tabs"
               className={!getTabs ? 'hideTabs' : ''}
@@ -147,6 +87,7 @@ export const SteppedForm = function <T extends object>({
                   title={tabTitle(tab.name, index, setTabToDeleteId)}
                   eventKey={index}
                   key={`stepped-tab-${index}`}
+                  className="nav-item"
                 >
                   <StepperFormProvider steps={steps} tabs={getFormikTabs(values.data)}>
                     <>
@@ -159,12 +100,14 @@ export const SteppedForm = function <T extends object>({
               <Tab
                 disabled={(values?.tabs?.length ?? 0) >= MAX_STEPPED_TABS}
                 eventKey=""
+                className="nav-item"
                 title={
                   <StringButton
                     disabled={(values?.tabs?.length ?? 0) >= MAX_STEPPED_TABS}
                     toolText="Add Parcel"
                     stringText="Add another associated Parcel"
                     toolId="add-associated-parcel"
+                    className="nav-item"
                     data-testid="add-tab"
                     onClick={() => {
                       //update the data model that the tab represents
@@ -218,7 +161,7 @@ export const SteppedForm = function <T extends object>({
               }}
               cancelButtonText="Cancel"
             />
-          </TabbedForm>
+          </div>
           {rest.persistable && <Persist {...rest.persistProps!} initialValues={initialValues} />}
         </>
       )}
