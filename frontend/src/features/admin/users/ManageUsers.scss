@@ -1,12 +1,12 @@
 @import '../../../colors.scss';
 @import '../../../variables.scss';
 
-.excel-export-style{
+.excel-export-style {
   display: flex;
   justify-content: right;
   margin-top: 0.5rem;
   margin-right: 1rem;
-  .excel-export-button{
+  .excel-export-button {
     font-size: xx-large;
   }
   .excel-export-label {
@@ -18,6 +18,6 @@
   }
 }
 .table-container {
-    margin-top: 1rem;
-    margin-bottom: $footer-height * 1.5;
+  margin-top: 1rem;
+  margin-bottom: $footer-height * 1.5;
 }

@@ -1,4 +1,5 @@
 import './ManageUsers.scss';
+
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { Table } from 'components/Table';
 import * as actionTypes from 'constants/actionTypes';
@@ -27,7 +28,6 @@ import download from 'utils/download';
 import { UsersFilterBar } from './components/UsersFilterBar';
 import { columnDefinitions } from './constants';
 import { IUserRecord } from './interfaces/IUserRecord';
-
 
 const downloadUsers = (filter: IPaginateParams) => {
   const queryParams = new URLSearchParams();
@@ -136,14 +136,14 @@ export const ManageUsers = () => {
       {
         <>
           <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
-            <div className='excel-export-style'>
-              <p className='excel-export-label'>Export To Excel: </p>
-              <div className='excel-export-button'>
+            <div className="excel-export-style">
+              <p className="excel-export-label">Export To Excel: </p>
+              <div className="excel-export-button">
                 <FaFileExcel data-testid="excel-icon" onClick={() => fetch('excel')} />
               </div>
             </div>
           </TooltipWrapper>
-          <div className='table-container'>
+          <div className="table-container">
             <Table<IUserRecord, any>
               name="usersTable"
               columns={columns}
