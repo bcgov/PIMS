@@ -36,235 +36,225 @@ exports[`Edit agency page EditAgencyPage renders 1`] = `
       class="agency-edit-form-container row"
     >
       <form
-        class="agencyInfo"
+        class=""
         novalidate=""
       >
-        <div
-          class="row"
+        <table
+          class="table-style"
         >
-          <div
-            class="col-3 col"
-          >
-            <div
-              class="form-label"
-            >
-              Agency
-            </div>
-          </div>
-          <div
-            class="col"
-          >
-            <div
-              class="required input-flex"
-              id="input-name"
-            >
-              <div>
-                <input
-                  aria-label="Agency"
-                  class="form-text-field form-control"
-                  name="name"
-                  type="text"
-                  value="Test Agency"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="row"
-        >
-          <div
-            class="col-3 col"
-          >
-            <div
-              class="form-label"
-            >
-              Short Name (Code)
-            </div>
-          </div>
-          <div
-            class="col"
-          >
-            <div
-              class="required input-flex"
-              id="input-code"
-            >
-              <div>
-                <input
-                  aria-label="Short Name (Code)"
-                  class="form-text-field form-control"
-                  name="code"
-                  type="text"
-                  value="TEST"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="row"
-        >
-          <div
-            class="col-3 col"
-          >
-            <div
-              class="form-label"
-            >
-              Parent Agency - If applicable
-            </div>
-          </div>
-          <div
-            class="col"
-          >
-            <div
-              class="select-row row"
-              controlid="input-parentId"
+          <tr>
+            <td
+              class="left-col"
             >
               <div
-                class="select-column col-md-auto"
+                class="form-label"
               >
-                <select
-                  class="form-select-field form-select form-control"
-                  disabled=""
-                  name="parentId"
+                Agency
+              </div>
+            </td>
+            <td
+              class="right-col"
+            >
+              <div
+                class="required input-flex"
+                id="input-name"
+              >
+                <div>
+                  <input
+                    aria-label="Agency"
+                    class="form-text-field form-control"
+                    name="name"
+                    type="text"
+                    value="Test Agency"
+                  />
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td
+              class="left-col"
+            >
+              <div
+                class="form-label"
+              >
+                Short Name (Code)
+              </div>
+            </td>
+            <td
+              class="right-col"
+            >
+              <div
+                class="required input-flex"
+                id="input-code"
+              >
+                <div>
+                  <input
+                    aria-label="Short Name (Code)"
+                    class="form-text-field form-control"
+                    name="code"
+                    type="text"
+                    value="TEST"
+                  />
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td
+              class="left-col"
+            >
+              <div
+                class="form-label"
+              >
+                Parent Agency - If applicable
+              </div>
+            </td>
+            <td
+              class="right-col"
+            >
+              <div
+                class="select-row row"
+                controlid="input-parentId"
+              >
+                <div
+                  class="select-column col-md-auto"
                 >
-                  <option
+                  <select
+                    class="form-select-field form-select form-control"
+                    disabled=""
+                    name="parentId"
+                  >
+                    <option
+                      value=""
+                    >
+                      No parent
+                    </option>
+                    <option
+                      class="option"
+                      value="111"
+                    >
+                      Test Agency
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td
+              class="left-col"
+            >
+              <div
+                class="form-label"
+              >
+                Description
+              </div>
+            </td>
+            <td
+              class="right-col"
+            >
+              <div
+                class="input-flex"
+                id="input-description"
+              >
+                <div>
+                  <input
+                    class="form-text-field form-control"
+                    name="description"
+                    type="text"
                     value=""
-                  >
-                    No parent
-                  </option>
-                  <option
-                    class="option"
-                    value="111"
-                  >
-                    Test Agency
-                  </option>
-                </select>
+                  />
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="row"
-        >
-          <div
-            class="col-3 col"
-          >
-            <div
-              class="form-label"
+            </td>
+          </tr>
+          <tr>
+            <td
+              class="left-col"
             >
-              Description
-            </div>
-          </div>
-          <div
-            class="col"
-          >
-            <div
-              class="input-flex"
-              id="input-description"
-            >
-              <div>
-                <input
-                  class="form-text-field form-control"
-                  name="description"
-                  type="text"
-                  value=""
-                />
+              <div
+                class="form-label"
+              >
+                Email address
               </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="row"
-        >
-          <div
-            class="col-3 col"
-          >
-            <div
-              class="form-label"
+            </td>
+            <td
+              class="right-col"
             >
-              Email address
-            </div>
-          </div>
-          <div
-            class="col"
-          >
-            <div
-              class="input-flex"
-              id="input-email"
-            >
-              <div>
-                <input
-                  aria-label="Email address"
-                  class="form-text-field form-control"
-                  name="email"
-                  type="text"
-                  value="test@email.com"
-                />
+              <div
+                class="input-flex"
+                id="input-email"
+              >
+                <div>
+                  <input
+                    aria-label="Email address"
+                    class="form-text-field form-control"
+                    name="email"
+                    type="text"
+                    value="test@email.com"
+                  />
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="row"
-        >
-          <div
-            class="col-3 col"
-          >
-            <div
-              class="form-label"
+            </td>
+          </tr>
+          <tr>
+            <td
+              class="left-col"
             >
-              Addressed To
-            </div>
-          </div>
-          <div
-            class="col"
-          >
-            <div
-              class="input-flex"
-              id="input-addressTo"
-            >
-              <div>
-                <input
-                  class="form-text-field form-control"
-                  name="addressTo"
-                  type="text"
-                  value="Good morning"
-                />
+              <div
+                class="form-label"
+              >
+                Addressed To
               </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="row"
-        >
-          <div
-            class="col-3 col"
-          >
-            <div
-              class="form-label"
+            </td>
+            <td
+              class="right-col"
             >
-              CC Email address
-            </div>
-          </div>
-          <div
-            class="col"
-          >
-            <div
-              class="input-flex"
-              id="input-ccEmail"
-            >
-              <div>
-                <input
-                  class="form-text-field form-control"
-                  name="ccEmail"
-                  type="text"
-                  value=""
-                />
+              <div
+                class="input-flex"
+                id="input-addressTo"
+              >
+                <div>
+                  <input
+                    class="form-text-field form-control"
+                    name="addressTo"
+                    type="text"
+                    value="Good morning"
+                  />
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
+            </td>
+          </tr>
+          <tr>
+            <td
+              class="left-col"
+            >
+              <div
+                class="form-label"
+              >
+                CC Email address
+              </div>
+            </td>
+            <td
+              class="right-col"
+            >
+              <div
+                class="input-flex"
+                id="input-ccEmail"
+              >
+                <div>
+                  <input
+                    class="form-text-field form-control"
+                    name="ccEmail"
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
         <hr />
         <div
           class="checkboxes row"
