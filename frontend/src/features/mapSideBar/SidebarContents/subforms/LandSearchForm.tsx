@@ -19,6 +19,17 @@ import { Col, Row } from 'react-bootstrap';
 import { withNameSpace } from 'utils/formUtils';
 
 import { ISearchFields } from '../LandForm';
+import ClickAwayListener from 'react-click-away-listener';
+import { styled } from 'styled-components';
+
+const DraftMarkerButton = styled.button`
+  // position: absolute;
+  top: 20px;
+  right: 20px;
+  border: 0px;
+  background-color: none;
+  display: flex;
+`;
 
 interface ISearchFormProps {
   /** used for determining nameSpace of field */
@@ -31,6 +42,7 @@ interface ISearchFormProps {
   handlePidChange: (pid: string, nameSpace?: string) => void;
   /** handle the pin formatting on change */
   handlePinChange: (pin: string, nameSpace?: string) => void;
+  onPinDrop?: () => void;
 }
 
 /**
@@ -42,9 +54,12 @@ const LandSearchForm = ({
   handleGeocoderChanges,
   handlePidChange,
   handlePinChange,
+  onPinDrop,
+  setMovingPinNameSpace,
 }: ISearchFormProps) => {
   const [geocoderResponse, setGeocoderResponse] = useState<IGeocoderResponse | undefined>();
   const [tab, setTab] = useState<number>(0);
+  const [locationPinActive, setLocationPinActive] = useState<boolean>(false);
 
   const handleTabChange = (event: SyntheticEvent, newValue: number) => {
     setTab(newValue);
@@ -209,7 +224,26 @@ const LandSearchForm = ({
               Find a parcel on the map and click it to populate the Parcel Details below.
             </Col>
             <Col className="marker-svg">
-              <ParcelDraftIcon className="parcel-icon" />
+              <ClickAwayListener
+                onClickAway={() => {
+                  if (onPinDrop && locationPinActive) onPinDrop();
+                  setLocationPinActive(false);
+                  // setMovingPinNameSpace(undefined);
+                }}
+              >
+                <DraftMarkerButton
+                  id="draft-marker-button"
+                  disabled={false}
+                  onClick={(e: any) => {
+                    e.preventDefault();
+                    setMovingPinNameSpace(nameSpace ?? '');
+                    // Pin picked up, set active
+                    setLocationPinActive(true);
+                  }}
+                >
+                  <ParcelDraftIcon className="parcel-icon" />
+                </DraftMarkerButton>
+              </ClickAwayListener>
             </Col>
           </Row>
         </Box>

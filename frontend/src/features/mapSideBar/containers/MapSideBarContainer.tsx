@@ -310,7 +310,6 @@ const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
       !disabled
     ) {
       const nameSpace = (movingPinNameSpace?.length ?? 0) > 0 ? `${movingPinNameSpace}.` : '';
-      // Only update lat and long if holding the location pin
       formikRef.current.setFieldValue(`${nameSpace}.latitude`, leafletMouseEvent?.latlng.lat || 0);
       formikRef.current.setFieldValue(`${nameSpace}.longitude`, leafletMouseEvent?.latlng.lng || 0);
 

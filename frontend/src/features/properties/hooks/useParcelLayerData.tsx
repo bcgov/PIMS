@@ -73,7 +73,6 @@ const setParcelFieldsFromLayerData = (
     }
 
     const layerParcelData = layerData!.data;
-    console.log('xxx layerParcelData', layerParcelData);
     //These fields are generic and used in both buildings and parcels
     newValues = setIn(
       newValues,
@@ -100,7 +99,6 @@ const setParcelFieldsFromLayerData = (
     }
 
     //parcel only fields.
-    console.log('xxx values.pid', getIn(values, `${nameSpace}`));
     if (getIn(values, `${nameSpace}.pid`) !== undefined) {
       const pid = layerData?.data?.PID || layerData?.data?.PID_NUMBER?.toString();
       newValues = setIn(newValues, `${nameSpace}.pid`, !!pid ? pidFormatter(pid) : '');

@@ -23,7 +23,6 @@ import {
 } from 'features/properties/components/forms/subforms/EvaluationForm';
 import LastUpdatedBy from 'features/properties/components/LastUpdatedBy';
 import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
-import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 import { useFormikContext, yupToFormErrors } from 'formik';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
@@ -31,7 +30,7 @@ import { noop } from 'lodash';
 import _ from 'lodash';
 import React from 'react';
 import { Button } from 'react-bootstrap';
-import { useAppDispatch } from 'store';
+import { useAppDispatch, useAppSelector } from 'store';
 import styled from 'styled-components';
 import { stringToNull } from 'utils';
 import {
@@ -48,6 +47,7 @@ import { BuildingReviewPage } from './subforms/BuildingReviewPage';
 import { BuildingValuationForm } from './subforms/BuildingValuationForm';
 import { IdentificationForm } from './subforms/IdentificationForm';
 import { OccupancyForm } from './subforms/OccupancyForm';
+// import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 
 const Container = styled.div`
   background-color: #fff;
@@ -139,13 +139,7 @@ const Form: React.FC<IBuildingForm> = ({
   const stepper = useFormStepper();
   useDraftMarkerSynchronizer('data');
   const formikProps = useFormikContext<ISteppedFormValues<IBuilding>>();
-  const { setParcelFieldsFromLayerData } = useParcelLayerData({
-    formikRef,
-    nameSpace: 'data',
-    agencyId: +(formikProps.values.data.agencyId as any)?.value
-      ? +(formikProps.values.data.agencyId as any).value
-      : +formikProps.values.data.agencyId,
-  });
+  const leafletMouseEvent = useAppSelector((store) => store.leafletClickEvent?.mapClickEvent);
   const { getOptionsByType, getPropertyClassificationOptions } = useCodeLookups();
   const isViewOrUpdate = !!formikProps.values?.data?.id;
 
@@ -154,6 +148,18 @@ const Form: React.FC<IBuildingForm> = ({
   const predominateUses = getOptionsByType(API.PREDOMINATE_USE_CODE_SET_NAME);
   const constructionType = getOptionsByType(API.CONSTRUCTION_CODE_SET_NAME);
   const occupancyType = getOptionsByType(API.OCCUPANT_TYPE_CODE_SET_NAME);
+  // const { setParcelFieldsFromLayerData } = useParcelLayerData({
+  //   formikRef,
+  //   nameSpace: 'data',
+  //   agencyId: +(formikProps.values.data.agencyId as any)?.value
+  //     ? +(formikProps.values.data.agencyId as any).value
+  //     : +formikProps.values.data.agencyId,
+  // });
+  const onPinDrop = () => {
+    formikRef.current.setFieldValue(`${nameSpace}.latitude`, leafletMouseEvent?.latlng.lat || 0);
+    formikRef.current.setFieldValue(`${nameSpace}.longitude`, leafletMouseEvent?.latlng.lng || 0);
+    // setParcelFieldsFromLayerData();
+  };
 
   const render = (): React.ReactNode => {
     switch (stepper.current) {
@@ -170,6 +176,7 @@ const Form: React.FC<IBuildingForm> = ({
               nameSpace={nameSpace}
               isPropertyAdmin={isPropertyAdmin}
               disabled={disabled}
+              onPinDrop={onPinDrop}
             />
           </div>
         );

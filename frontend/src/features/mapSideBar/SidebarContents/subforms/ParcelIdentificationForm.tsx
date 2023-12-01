@@ -137,21 +137,19 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
                   <Col className="marker-svg">
                     <ClickAwayListener
                       onClickAway={() => {
-                        // setMovingPinNameSpace(undefined);
                         if (onPinDrop && locationPinActive) onPinDrop();
                         setLocationPinActive(false);
-                        // Don't set pin as inactive here. Handled in MapSideBarContainer.
+                        // setMovingPinNameSpace(undefined);
                       }}
                     >
                       <DraftMarkerButton
                         id="draft-marker-button"
                         disabled={disabled}
                         onClick={(e: any) => {
+                          e.preventDefault();
                           setMovingPinNameSpace(nameSpace ?? '');
                           // Pin picked up, set active
                           setLocationPinActive(true);
-
-                          e.preventDefault();
                         }}
                       >
                         <ParcelDraftIcon className="parcel-icon" />
@@ -169,6 +167,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
                 handleGeocoderChanges,
                 handlePidChange,
                 handlePinChange,
+                onPinDrop,
               }}
             />
           )}

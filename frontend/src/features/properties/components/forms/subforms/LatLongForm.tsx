@@ -5,7 +5,7 @@ import ParcelDraftIcon from 'assets/images/draft-parcel-icon.svg?react';
 import { FastInput, Form, InputGroup } from 'components/common/form';
 import { Label } from 'components/common/Label';
 import { FormikProps } from 'formik';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import ClickAwayListener from 'react-click-away-listener';
 import styled from 'styled-components';
@@ -17,6 +17,7 @@ interface LatLongFormProps {
   showLandArea?: boolean;
   /** determine the text for the lat long for depending on where it is being called */
   building?: boolean;
+  onPinDrop?: () => void;
 }
 
 export const defaultLatLongValues: any = {
@@ -34,6 +35,9 @@ const DraftMarkerButton = styled.button`
 `;
 
 const LatLongForm = <T,>(props: LatLongFormProps & FormikProps<T>) => {
+  const [locationPinActive, setLocationPinActive] = useState<boolean>(false);
+
+  const { onPinDrop } = props;
   const withNameSpace: Function = useCallback(
     (fieldName: string) => {
       return props.nameSpace ? `${props.nameSpace}.${fieldName}` : fieldName;
@@ -63,8 +67,9 @@ const LatLongForm = <T,>(props: LatLongFormProps & FormikProps<T>) => {
         <Col className="marker-svg">
           <ClickAwayListener
             onClickAway={() => {
+              if (onPinDrop && locationPinActive) onPinDrop();
               props.setMovingPinNameSpace(undefined);
-              // Don't set pin as inactive here. Handled in MapSideBarContainer.
+              setLocationPinActive(false);
             }}
           >
             <DraftMarkerButton
@@ -72,6 +77,8 @@ const LatLongForm = <T,>(props: LatLongFormProps & FormikProps<T>) => {
               disabled={props.disabled}
               onClick={(e: any) => {
                 props.setMovingPinNameSpace(props.nameSpace ?? '');
+                // Pin picked up, set active
+                setLocationPinActive(true);
                 e.preventDefault();
               }}
             >
