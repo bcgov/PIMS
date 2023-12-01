@@ -16,11 +16,11 @@ import { getIn, useFormikContext } from 'formik';
 import { IGeocoderResponse } from 'hooks/useApi';
 import React, { SyntheticEvent, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
+import ClickAwayListener from 'react-click-away-listener';
+import { styled } from 'styled-components';
 import { withNameSpace } from 'utils/formUtils';
 
 import { ISearchFields } from '../LandForm';
-import ClickAwayListener from 'react-click-away-listener';
-import { styled } from 'styled-components';
 
 const DraftMarkerButton = styled.button`
   // position: absolute;

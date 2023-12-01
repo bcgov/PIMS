@@ -51,7 +51,6 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
   nameSpace,
   setMovingPinNameSpace,
   isPropertyAdmin,
-  onPinDrop,
   disabled,
 }) => {
   const { setFieldValue } = useFormikContext();
@@ -231,7 +230,6 @@ export const IdentificationForm: React.FC<IIdentificationProps> = ({
             building
             setMovingPinNameSpace={setMovingPinNameSpace}
             nameSpace={withNameSpace('')}
-            onPinDrop={onPinDrop}
           />
         </Col>
       </Row>

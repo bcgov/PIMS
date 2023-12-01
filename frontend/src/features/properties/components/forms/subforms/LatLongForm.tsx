@@ -37,7 +37,6 @@ const DraftMarkerButton = styled.button`
 const LatLongForm = <T,>(props: LatLongFormProps & FormikProps<T>) => {
   const [locationPinActive, setLocationPinActive] = useState<boolean>(false);
 
-  const { onPinDrop } = props;
   const withNameSpace: Function = useCallback(
     (fieldName: string) => {
       return props.nameSpace ? `${props.nameSpace}.${fieldName}` : fieldName;
@@ -67,9 +66,9 @@ const LatLongForm = <T,>(props: LatLongFormProps & FormikProps<T>) => {
         <Col className="marker-svg">
           <ClickAwayListener
             onClickAway={() => {
-              if (onPinDrop && locationPinActive) onPinDrop();
-              props.setMovingPinNameSpace(undefined);
-              setLocationPinActive(false);
+              if (locationPinActive) {
+                setLocationPinActive(false);
+              }
             }}
           >
             <DraftMarkerButton

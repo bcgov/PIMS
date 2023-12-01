@@ -24,6 +24,7 @@ import { defaultLandValues } from 'features/properties/components/forms/subforms
 import { defaultPidPinFormValues } from 'features/properties/components/forms/subforms/PidPinForm';
 import LastUpdatedBy from 'features/properties/components/LastUpdatedBy';
 import useDraftMarkerSynchronizer from 'features/properties/hooks/useDraftMarkerSynchronizer';
+import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 import { useFormikContext, yupToFormErrors } from 'formik';
 import { IGeocoderResponse, useApi } from 'hooks/useApi';
 import useDeepCompareEffect from 'hooks/useDeepCompareEffect';
@@ -49,7 +50,6 @@ import { LandReviewPage } from './subforms/LandReviewPage';
 import { LandUsageForm } from './subforms/LandUsageForm';
 import { LandValuationForm } from './subforms/LandValuationForm';
 import { ParcelIdentificationForm } from './subforms/ParcelIdentificationForm';
-import useParcelLayerData from 'features/properties/hooks/useParcelLayerData';
 
 const Container = styled.div`
   background-color: #fff;

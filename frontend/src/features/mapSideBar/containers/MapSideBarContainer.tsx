@@ -309,7 +309,7 @@ const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
       isMouseEventRecent(leafletMouseEvent?.originalEvent) &&
       !disabled
     ) {
-      const nameSpace = (movingPinNameSpace?.length ?? 0) > 0 ? `${movingPinNameSpace}.` : '';
+      const nameSpace = (movingPinNameSpace?.length ?? 0) > 0 ? `${movingPinNameSpace}` : 'data';
       formikRef.current.setFieldValue(`${nameSpace}.latitude`, leafletMouseEvent?.latlng.lat || 0);
       formikRef.current.setFieldValue(`${nameSpace}.longitude`, leafletMouseEvent?.latlng.lng || 0);
 
