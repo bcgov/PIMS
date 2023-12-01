@@ -103,13 +103,13 @@ exports[`Building Form component renders correctly 1`] = `
   color: #fff;
 }
 
-.c9 {
+.c8 {
   display: flex;
   align-items: center;
   align-content: center;
 }
 
-.c10 {
+.c9 {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -127,14 +127,6 @@ exports[`Building Form component renders correctly 1`] = `
   text-align: left;
   padding: 8px 12px 10px;
   margin-bottom: 10px;
-}
-
-.c7 {
-  top: 20px;
-  right: 20px;
-  border: 0px;
-  background-color: none;
-  display: flex;
 }
 
 .c0 {
@@ -158,7 +150,7 @@ exports[`Building Form component renders correctly 1`] = `
   min-height: 100px;
 }
 
-.c8 {
+.c7 {
   display: flex;
   width: 100%;
   height: 70px;
@@ -168,7 +160,7 @@ exports[`Building Form component renders correctly 1`] = `
   bottom: -20px;
 }
 
-.c11 {
+.c10 {
   flex: 1 1 auto;
 }
 
@@ -919,7 +911,7 @@ exports[`Building Form component renders correctly 1`] = `
                             style="display: flex;"
                           >
                             <p>
-                              Click your desired location on the map to mark the location of this building, or if you already have the coordinates, you can enter them in the fields below.
+                              Select the pin below then click your desired location on the map to mark the location of this building and populate known fields. If you already have the coordinates, you can enter them in the fields below.
                             </p>
                           </div>
                         </div>
@@ -927,7 +919,6 @@ exports[`Building Form component renders correctly 1`] = `
                           class="marker-svg col"
                         >
                           <button
-                            class="c7"
                             id="draft-marker-button"
                           >
                             <template>
@@ -1006,10 +997,10 @@ exports[`Building Form component renders correctly 1`] = `
             </div>
           </div>
           <div
-            class="c8"
+            class="c7"
           >
             <div
-              class="c9"
+              class="c8"
             >
               <div
                 class="SresManual"
@@ -1036,13 +1027,13 @@ exports[`Building Form component renders correctly 1`] = `
                 </div>
               </div>
               <small
-                class="c10 p-1 mr-2"
+                class="c9 p-1 mr-2"
               >
                 Inventory Policy
               </small>
             </div>
             <span
-              class="c11"
+              class="c10"
             />
             <button
               class="btn btn-primary btn-sm"
