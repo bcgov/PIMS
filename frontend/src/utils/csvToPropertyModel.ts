@@ -29,6 +29,7 @@ export interface IPropertyModel {
   buildingRentableArea: string;
   assessed: string;
   netBook: string;
+  regionalDistrict: string;
   added?: boolean; // Only when received from API
   updated?: boolean;
   error?: string; // Error message
@@ -51,7 +52,7 @@ export interface IExportedPropertyModel {
   Latitude: string;
   'Lease Expiry'?: string;
   'Legal Description'?: string;
-  Location: string;
+  Location?: string;
   Longitude: string;
   Ministry: string;
   Name: string;
@@ -75,6 +76,7 @@ export interface IExportedPropertyModel {
   // Added these fields that were missing from export but are used in import
   'Local ID'?: string;
   'Building Floor Count'?: string;
+  'Regional District'?: string;
 }
 
 /**
@@ -139,7 +141,7 @@ export const parseCSVString = async (csvContent: string): Promise<IPropertyModel
         description: property.Description ?? '',
         classification: property.Classification,
         civicAddress: property.Address ?? '',
-        city: property.Location,
+        city: getValueOrDefault(property.Location, '<blank>'), // Done to ensure something is passed to backend, empty string not enough
         postal: property.Postal ?? '',
         latitude: property.Latitude,
         longitude: property.Longitude,
@@ -152,6 +154,7 @@ export const parseCSVString = async (csvContent: string): Promise<IPropertyModel
         buildingRentableArea: getValueOrDefault(property['Rentable Area'], '0'),
         assessed: getAssessedValue(property),
         netBook: getValueOrDefault(property['Netbook Value'], '0'),
+        regionalDistrict: getValueOrDefault(property['Regional District'], ''),
       }),
     );
     resolve(transformedData);

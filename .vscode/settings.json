@@ -39,14 +39,22 @@
       "port": 1433,
       "server": "localhost",
       "username": "sa"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5433,
+      "askForPassword": true,
+      "driver": "MSSQL",
+      "name": "pims",
+      "database": "pims",
+      "username": "admin"
     }
-  ],
-  "cSpell.words": [
-    "Formik",
-    "keycloak",
-    "Mapster",
-    "pims",
-    "Xunit"
   ],
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"

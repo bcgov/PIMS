@@ -4,7 +4,7 @@ import React from 'react';
 import { Accordion } from 'react-bootstrap';
 
 const mandatoryHeaders =
-  'PID,Type (Land or Building),Classification,Name,Ministry,Location (City),Latitude,Longitude'.split(
+  'PID,Type (Land or Building),Classification,Name,Ministry,Location (City) or Regional District,Latitude,Longitude'.split(
     ',',
   );
 
@@ -74,8 +74,9 @@ export const Instructions = () => (
     <h4 className="red-text">Notes</h4>
     <ul>
       <li>
-        Names of cities in the Location field must match what is already in the database. Otherwise,
-        the property will be rejected.
+        Names of cities in the Location field must match what is already in the database. If not,
+        the provided Regional District will be used. If both are missing or invalid, the property
+        will be rejected.
       </li>
       <li>
         Buildings are matched with existing buildings using their Name and associated PID. Both must

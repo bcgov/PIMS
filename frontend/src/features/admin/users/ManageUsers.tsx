@@ -1,4 +1,5 @@
-import variables from '_variables.module.scss';
+import './ManageUsers.scss';
+
 import TooltipWrapper from 'components/common/TooltipWrapper';
 import { Table } from 'components/Table';
 import * as actionTypes from 'constants/actionTypes';
@@ -10,7 +11,6 @@ import { IUser, IUsersFilter } from 'interfaces';
 import { isEmpty } from 'lodash';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { Button, Container } from 'react-bootstrap';
 import { FaFileExcel } from 'react-icons/fa';
 import { IGenericNetworkAction } from 'store';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -21,7 +21,6 @@ import {
   storeUserPageQuantity,
   storeUserSort,
 } from 'store/slices/userSlice';
-import styled from 'styled-components';
 import { formatApiDateTime, generateMultiSortCriteria } from 'utils';
 import { toFilteredApiPaginateParams } from 'utils/CommonFunctions';
 import download from 'utils/download';
@@ -29,17 +28,6 @@ import download from 'utils/download';
 import { UsersFilterBar } from './components/UsersFilterBar';
 import { columnDefinitions } from './constants';
 import { IUserRecord } from './interfaces/IUserRecord';
-
-const TableContainer = styled(Container)`
-  margin-top: 10px;
-  margin-bottom: 40px;
-`;
-
-const FileIcon = styled(Button)`
-  background-color: #fff !important;
-  color: ${variables.primaryColor} !important;
-  padding: 6px 5px;
-`;
 
 const downloadUsers = (filter: IPaginateParams) => {
   const queryParams = new URLSearchParams();
@@ -147,14 +135,15 @@ export const ManageUsers = () => {
       />
       {
         <>
-          <div style={{ paddingLeft: '90%' }}>
+          <div className="excel-export-style">
+            <p className="excel-export-label">Export To Excel: </p>
             <TooltipWrapper toolTipId="export-to-excel" toolTip="Export to Excel">
-              <FileIcon>
-                <FaFileExcel data-testid="excel-icon" size={36} onClick={() => fetch('excel')} />
-              </FileIcon>
+              <div className="excel-export-button">
+                <FaFileExcel data-testid="excel-icon" onClick={() => fetch('excel')} />
+              </div>
             </TooltipWrapper>
           </div>
-          <TableContainer fluid>
+          <div className="table-container">
             <Table<IUserRecord, any>
               name="usersTable"
               columns={columns}
@@ -176,7 +165,7 @@ export const ManageUsers = () => {
               loading={!(users && !users.isFetching)}
               clickableTooltip="Click IDIR/BCeID link to view User Information page"
             />
-          </TableContainer>
+          </div>
         </>
       }
     </div>

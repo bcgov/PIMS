@@ -1,68 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Building Form component renders correctly 1`] = `
-.c1 .hideTabs li.nav-item {
-  background-color: white;
-  display: none;
-}
-
-.c1 .nav-tabs>.nav-item:last-child {
-  border: 0;
-  padding: 0;
-}
-
-.c1 .nav-tabs>.nav-item:last-child svg {
-  position: relative;
-  color: white;
-}
-
-.c1 .tab-content {
-  border: 0;
-  border-top: 1px solid #666666;
-  padding: 0;
-}
-
-.c1 .nav-tabs {
-  border: 0;
-}
-
-.c1 .nav-tabs .nav-item.active {
-  border: 0;
-  color: white;
-}
-
-.c1 .nav-tabs .nav-item.active svg {
-  background-color: secondaryVariantColor;
-  color: white;
-}
-
-.c1 .nav-tabs .nav-item {
-  border: 1px solid black;
-  background-color: white;
-  color: black;
-  position: relative;
-  display: inline-flex;
-  position: relative;
-}
-
-.c1 .nav-tabs .nav-item p,
-.c1 .nav-tabs .nav-item abbr {
-  margin: 0;
-}
-
-.c1 .nav-tabs .nav-item svg {
-  color: black;
-  position: absolute;
-  top: 1px;
-  right: 1px;
-}
-
-.c1 .nav-tabs .btn:disabled {
-  background-color: primaryColor;
-  cursor: default;
-}
-
-.c6 .form.Control {
+.c5 .form.Control {
   width: 100%;
   height: 100%;
   border: none;
@@ -73,7 +12,7 @@ exports[`Building Form component renders correctly 1`] = `
   margin-bottom: 0;
 }
 
-.c6 .suggestionList {
+.c5 .suggestionList {
   background-color: white;
   border-style: solid;
   border-color: lightslategray;
@@ -89,7 +28,7 @@ exports[`Building Form component renders correctly 1`] = `
   left: -50px;
 }
 
-.c6 option {
+.c5 option {
   padding: 10px 5px;
   word-wrap: break-word;
   width: 400px;
@@ -98,7 +37,7 @@ exports[`Building Form component renders correctly 1`] = `
   color: #494949;
 }
 
-.c6 option:hover {
+.c5 option:hover {
   background-color: #007bff;
   color: #fff;
 }
@@ -117,11 +56,11 @@ exports[`Building Form component renders correctly 1`] = `
   font-weight: bold;
 }
 
-.c4 {
+.c3 {
   float: left;
 }
 
-.c5 {
+.c4 {
   border: 1px solid filterBackgroundColor;
   border-radius: 4px;
   text-align: left;
@@ -136,7 +75,7 @@ exports[`Building Form component renders correctly 1`] = `
   overflow-y: auto;
 }
 
-.c2 {
+.c1 {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -144,7 +83,7 @@ exports[`Building Form component renders correctly 1`] = `
   margin-bottom: 20px;
 }
 
-.c3 {
+.c2 {
   border-top: 1px solid #666666;
   width: 100%;
   min-height: 100px;
@@ -167,10 +106,7 @@ exports[`Building Form component renders correctly 1`] = `
 <div
   class="c0 buildingForm"
 >
-  <form
-    action="#"
-    class="c1"
-  >
+  <div>
     <ul
       class="hideTabs nav nav-tabs"
       role="tablist"
@@ -237,7 +173,7 @@ exports[`Building Form component renders correctly 1`] = `
     >
       <div
         aria-labelledby="steppedform-tabs-tab-0"
-        class="fade tab-pane active show"
+        class="fade nav-item tab-pane active show"
         id="steppedform-tabs-tabpane-0"
         role="tabpanel"
       >
@@ -342,10 +278,10 @@ exports[`Building Form component renders correctly 1`] = `
           </div>
         </div>
         <div
-          class="c2"
+          class="c1"
         >
           <div
-            class="c3"
+            class="c2"
           >
             <div
               class="identification"
@@ -657,7 +593,7 @@ exports[`Building Form component renders correctly 1`] = `
                   style="text-align: left;"
                 >
                   <h4
-                    class="c4"
+                    class="c3"
                   >
                     Strategic Real Estate Classification
                   </h4>
@@ -711,7 +647,7 @@ exports[`Building Form component renders correctly 1`] = `
                     class="col-md-6"
                   >
                     <div
-                      class="c5"
+                      class="c4"
                     >
                       <p
                         style="font-size: 11px;"
@@ -753,7 +689,7 @@ exports[`Building Form component renders correctly 1`] = `
                         class="col"
                       >
                         <div
-                          class="c6 GeocoderAutoComplete"
+                          class="c5 GeocoderAutoComplete"
                         >
                           <div
                             class="required"
@@ -1049,6 +985,6 @@ exports[`Building Form component renders correctly 1`] = `
     <div
       class="container"
     />
-  </form>
+  </div>
 </div>
 `;

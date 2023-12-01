@@ -137,35 +137,90 @@ const EditAgencyPage = () => {
             }}
           >
             {(props) => (
-              <Form className="agencyInfo">
-                <Input
-                  label="Agency"
-                  aria-label="Agency"
-                  required
-                  field="name"
-                  value={props.values.name}
-                  type="text"
-                />
-                <Input
-                  label="Short Name (Code)"
-                  aria-label="Short Name (Code)"
-                  field="code"
-                  value={props.values.code}
-                  type="text"
-                  required
-                />
-                <Select
-                  style={{ marginBottom: '10px', width: '250px' }}
-                  label="Parent Agency - If applicable"
-                  field="parentId"
-                  options={selectAgencies}
-                  disabled={!agency.parentId && !newAgency}
-                  placeholder={newAgency ? 'Please select if applicable' : 'No parent'}
-                />
-                <Input label="Description" field="description" type="text" />
-                <Input label="Email address" aria-label="Email address" field="email" type="text" />
-                <Input label="Addressed To" field="addressTo" type="text" />
-                <Input label="CC Email address" field="ccEmail" type="text" />
+              <Form>
+                <table className="table-style">
+                  <tr>
+                    <td className="left-col">
+                      <div className="form-label">Agency</div>
+                    </td>
+                    <td className="right-col">
+                      <Input
+                        aria-label="Agency"
+                        className="form-text-field"
+                        required
+                        field="name"
+                        value={props.values.name}
+                        type="text"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="left-col">
+                      <div className="form-label">Short Name (Code)</div>
+                    </td>
+                    <td className="right-col">
+                      <Input
+                        aria-label="Short Name (Code)"
+                        className="form-text-field"
+                        field="code"
+                        value={props.values.code}
+                        type="text"
+                        required
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="left-col">
+                      <div className="form-label">Parent Agency - If applicable</div>
+                    </td>
+                    <td className="right-col">
+                      <Select
+                        field="parentId"
+                        className="form-select-field"
+                        options={selectAgencies}
+                        disabled={!agency.parentId && !newAgency}
+                        placeholder={newAgency ? 'Please select if applicable' : 'No parent'}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="left-col">
+                      <div className="form-label">Description</div>
+                    </td>
+                    <td className="right-col">
+                      <Input field="description" className="form-text-field" type="text" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="left-col">
+                      <div className="form-label">Email address</div>
+                    </td>
+                    <td className="right-col">
+                      <Input
+                        aria-label="Email address"
+                        className="form-text-field"
+                        field="email"
+                        type="text"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="left-col">
+                      <div className="form-label">Addressed To</div>
+                    </td>
+                    <td className="right-col">
+                      <Input field="addressTo" className="form-text-field" type="text" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="left-col">
+                      <div className="form-label">CC Email address</div>
+                    </td>
+                    <td className="right-col">
+                      <Input field="ccEmail" className="form-text-field" type="text" />
+                    </td>
+                  </tr>
+                </table>
 
                 <hr></hr>
 
