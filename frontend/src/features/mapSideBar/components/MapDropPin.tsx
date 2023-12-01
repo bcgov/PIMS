@@ -1,10 +1,11 @@
 /// <reference types="vite-plugin-svgr/client" />
 
+import './MapDropPin.scss';
+
 import BuildingDraftIcon from 'assets/images/draft-building-icon.svg?react';
 import ParcelDraftIcon from 'assets/images/draft-parcel-icon.svg?react';
 import React, { useState } from 'react';
 import ClickAwayListener from 'react-click-away-listener';
-import { styled } from 'styled-components';
 
 /**
  * @interface
@@ -42,15 +43,6 @@ const MapDropPin = (props: IMapDropPin) => {
 
   const [locationPinActive, setLocationPinActive] = useState<boolean>(false);
 
-  const DraftMarkerButton = styled.button`
-    // position: absolute;
-    top: 20px;
-    right: 20px;
-    border: 0px;
-    background-color: none;
-    display: flex;
-  `;
-
   return (
     <ClickAwayListener
       onClickAway={() => {
@@ -61,7 +53,7 @@ const MapDropPin = (props: IMapDropPin) => {
         }
       }}
     >
-      <DraftMarkerButton
+      <button
         id="draft-marker-button"
         disabled={disabled}
         onClick={(e: any) => {
@@ -72,7 +64,7 @@ const MapDropPin = (props: IMapDropPin) => {
         }}
       >
         {isBuilding ? <BuildingDraftIcon /> : <ParcelDraftIcon className="parcel-icon" />}
-      </DraftMarkerButton>
+      </button>
     </ClickAwayListener>
   );
 };
