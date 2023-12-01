@@ -39,6 +39,7 @@ interface IIdentificationProps {
   setMovingPinNameSpace: (nameSpace?: string) => void;
   /** whether the form fields on this page can be edited */
   disabled?: boolean;
+  /** function called when drop pin is placed */
   onPinDrop?: () => void;
 }
 

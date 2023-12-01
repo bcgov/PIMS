@@ -1,9 +1,6 @@
-/// <reference types="vite-plugin-svgr/client" />
-
 import './ParcelIdentificationForm.scss';
 
 import { IParcel } from 'actions/parcelsActions';
-import ParcelDraftIcon from 'assets/images/draft-parcel-icon.svg?react';
 import classNames from 'classnames';
 import { Check, FastInput, InputGroup, SelectOptions, TextArea } from 'components/common/form';
 import { ParentSelect } from 'components/common/form/ParentSelect';
@@ -15,6 +12,7 @@ import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectN
 import * as API from 'constants/API';
 import { PropertyTypes } from 'constants/propertyTypes';
 import { HARMFUL_DISCLOSURE_URL } from 'constants/strings';
+import MapDropPin from 'features/mapSideBar/components/MapDropPin';
 import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
 import PidPinForm from 'features/properties/components/forms/subforms/PidPinForm';
 import { getIn, useFormikContext } from 'formik';
@@ -23,10 +21,8 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import { useMyAgencies } from 'hooks/useMyAgencies';
 import { noop } from 'lodash';
-import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Col, Container, ListGroup, Row } from 'react-bootstrap';
-import ClickAwayListener from 'react-click-away-listener';
-import { styled } from 'styled-components';
 import { mapSelectOptionWithParent } from 'utils';
 import { withNameSpace } from 'utils/formUtils';
 
@@ -59,19 +55,9 @@ interface IIdentificationProps {
   isViewOrUpdate: boolean;
   /** whether or not the fields on this form can be interacted with */
   disabled?: boolean;
-  /** Set the location pin state */
-  setLocationPinActive?: Dispatch<SetStateAction<boolean>>;
+  /** function called when drop pin is placed */
   onPinDrop?: () => void;
 }
-
-const DraftMarkerButton = styled.button`
-  // position: absolute;
-  top: 20px;
-  right: 20px;
-  border: 0px;
-  background-color: none;
-  display: flex;
-`;
 
 export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   nameSpace,
@@ -105,8 +91,6 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
 
   const myAgencies = useMyAgencies();
 
-  const [locationPinActive, setLocationPinActive] = useState<boolean>(false);
-
   return (
     <Container>
       {propertyTypeId === PropertyTypes.SUBDIVISION && (
@@ -135,26 +119,12 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
                 </p>
                 <Row>
                   <Col className="marker-svg">
-                    <ClickAwayListener
-                      onClickAway={() => {
-                        if (onPinDrop && locationPinActive) onPinDrop();
-                        setLocationPinActive(false);
-                        // setMovingPinNameSpace(undefined);
-                      }}
-                    >
-                      <DraftMarkerButton
-                        id="draft-marker-button"
-                        disabled={disabled}
-                        onClick={(e: any) => {
-                          e.preventDefault();
-                          setMovingPinNameSpace(nameSpace ?? '');
-                          // Pin picked up, set active
-                          setLocationPinActive(true);
-                        }}
-                      >
-                        <ParcelDraftIcon className="parcel-icon" />
-                      </DraftMarkerButton>
-                    </ClickAwayListener>
+                    <MapDropPin
+                      onPinDrop={onPinDrop}
+                      setMovingPinNameSpace={setMovingPinNameSpace}
+                      disabled={disabled}
+                      nameSpace={nameSpace}
+                    />
                   </Col>
                 </Row>
               </Col>

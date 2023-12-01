@@ -1,35 +1,22 @@
-/// <reference types="vite-plugin-svgr/client" />
-
 import './LandSearchForm.scss';
 
 import { ContentPaste as PasteIcon } from '@mui/icons-material';
 import { Box, IconButton, Tab, Tabs, Tooltip } from '@mui/material';
 import { IParcel } from 'actions/parcelsActions';
-import ParcelDraftIcon from 'assets/images/draft-parcel-icon.svg?react';
 import { FastInput, Input } from 'components/common/form';
 import SearchButton from 'components/common/form/SearchButton';
 import { ISteppedFormValues } from 'components/common/form/StepForm';
 import { Label } from 'components/common/Label';
+import MapDropPin from 'features/mapSideBar/components/MapDropPin';
 import { pidFormatter } from 'features/properties/components/forms/subforms/PidPinForm';
 import { GeocoderAutoComplete } from 'features/properties/components/GeocoderAutoComplete';
 import { getIn, useFormikContext } from 'formik';
 import { IGeocoderResponse } from 'hooks/useApi';
 import React, { SyntheticEvent, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import ClickAwayListener from 'react-click-away-listener';
-import { styled } from 'styled-components';
 import { withNameSpace } from 'utils/formUtils';
 
 import { ISearchFields } from '../LandForm';
-
-const DraftMarkerButton = styled.button`
-  // position: absolute;
-  top: 20px;
-  right: 20px;
-  border: 0px;
-  background-color: none;
-  display: flex;
-`;
 
 interface ISearchFormProps {
   /** used for determining nameSpace of field */
@@ -42,6 +29,7 @@ interface ISearchFormProps {
   handlePidChange: (pid: string, nameSpace?: string) => void;
   /** handle the pin formatting on change */
   handlePinChange: (pin: string, nameSpace?: string) => void;
+  /** function called when drop pin is placed */
   onPinDrop?: () => void;
 }
 
@@ -59,7 +47,6 @@ const LandSearchForm = ({
 }: ISearchFormProps) => {
   const [geocoderResponse, setGeocoderResponse] = useState<IGeocoderResponse | undefined>();
   const [tab, setTab] = useState<number>(0);
-  const [locationPinActive, setLocationPinActive] = useState<boolean>(false);
 
   const handleTabChange = (event: SyntheticEvent, newValue: number) => {
     setTab(newValue);
@@ -221,29 +208,15 @@ const LandSearchForm = ({
         <Box role="tabpanel" hidden={tab !== 1} id="parcel-tabpanel-marker" sx={{ p: 3 }}>
           <Row className="row">
             <Col md="auto">
-              Find a parcel on the map and click it to populate the Parcel Details below.
+              Select this pin and then select a parcel on the map to populate the Parcel Details
+              below.
             </Col>
             <Col className="marker-svg">
-              <ClickAwayListener
-                onClickAway={() => {
-                  if (onPinDrop && locationPinActive) onPinDrop();
-                  setLocationPinActive(false);
-                  // setMovingPinNameSpace(undefined);
-                }}
-              >
-                <DraftMarkerButton
-                  id="draft-marker-button"
-                  disabled={false}
-                  onClick={(e: any) => {
-                    e.preventDefault();
-                    setMovingPinNameSpace(nameSpace ?? '');
-                    // Pin picked up, set active
-                    setLocationPinActive(true);
-                  }}
-                >
-                  <ParcelDraftIcon className="parcel-icon" />
-                </DraftMarkerButton>
-              </ClickAwayListener>
+              <MapDropPin
+                onPinDrop={onPinDrop}
+                setMovingPinNameSpace={setMovingPinNameSpace}
+                nameSpace={nameSpace}
+              />
             </Col>
           </Row>
         </Box>
