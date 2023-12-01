@@ -190,7 +190,6 @@ const useParcelLayerData = ({
 
     // Call the async function
     fetchLTSAData();
-    console.log(formikRef, getByType, parcelId, parcelLayerData);
   }, [formikRef, getByType, parcelId, parcelLayerData]);
 
   return {
