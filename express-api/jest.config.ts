@@ -15,6 +15,8 @@ const jestConfig: JestConfigWithTsJest = {
   collectCoverageFrom: [
     'controllers/**/*.ts',
     'middleware/**/*.ts',
+    'routes/**/*.ts',
+    'express.ts',
   ],
   coveragePathIgnorePatterns: ['index.ts'],
   coverageReporters: ['lcov'],
