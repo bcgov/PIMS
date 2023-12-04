@@ -622,14 +622,18 @@ exports[`Land Form component renders correctly 1`] = `
                         <div
                           class="col-md-auto"
                         >
-                          Find a parcel on the map and click it to populate the Parcel Details below.
+                          Select this pin and then select a parcel on the map to populate the Parcel Details below.
                         </div>
                         <div
                           class="marker-svg col"
                         >
-                          <template>
-                            <svg />
-                          </template>
+                          <button
+                            id="draft-marker-button"
+                          >
+                            <template>
+                              <svg />
+                            </template>
+                          </button>
                         </div>
                       </div>
                     </div>

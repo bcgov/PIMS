@@ -120,10 +120,10 @@ describe('Land Form', () => {
     const secondTab = container.querySelector('#parcel-marker-tab');
     await waitFor(() => {
       fireEvent.click(secondTab!);
-      getByText(/Find a parcel on the map/);
+      getByText(/Select this pin/);
     });
     // And should see this phrase
-    expect(queryAllByText(/Find a parcel on the map/).length).toBe(1);
+    expect(queryAllByText(/Select this pin/).length).toBe(1);
   });
 
   // Cannot currently get a value loaded in the clipboard
