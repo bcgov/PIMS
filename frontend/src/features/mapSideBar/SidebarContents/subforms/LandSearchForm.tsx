@@ -1,15 +1,13 @@
-/// <reference types="vite-plugin-svgr/client" />
-
 import './LandSearchForm.scss';
 
 import { ContentPaste as PasteIcon } from '@mui/icons-material';
 import { Box, IconButton, Tab, Tabs, Tooltip } from '@mui/material';
 import { IParcel } from 'actions/parcelsActions';
-import ParcelDraftIcon from 'assets/images/draft-parcel-icon.svg?react';
 import { FastInput, Input } from 'components/common/form';
 import SearchButton from 'components/common/form/SearchButton';
 import { ISteppedFormValues } from 'components/common/form/StepForm';
 import { Label } from 'components/common/Label';
+import MapDropPin from 'features/mapSideBar/components/MapDropPin';
 import { pidFormatter } from 'features/properties/components/forms/subforms/PidPinForm';
 import { GeocoderAutoComplete } from 'features/properties/components/GeocoderAutoComplete';
 import { getIn, useFormikContext } from 'formik';
@@ -31,6 +29,8 @@ interface ISearchFormProps {
   handlePidChange: (pid: string, nameSpace?: string) => void;
   /** handle the pin formatting on change */
   handlePinChange: (pin: string, nameSpace?: string) => void;
+  /** function called when drop pin is placed */
+  onPinDrop?: () => void;
 }
 
 /**
@@ -42,6 +42,8 @@ const LandSearchForm = ({
   handleGeocoderChanges,
   handlePidChange,
   handlePinChange,
+  onPinDrop,
+  setMovingPinNameSpace,
 }: ISearchFormProps) => {
   const [geocoderResponse, setGeocoderResponse] = useState<IGeocoderResponse | undefined>();
   const [tab, setTab] = useState<number>(0);
@@ -206,10 +208,15 @@ const LandSearchForm = ({
         <Box role="tabpanel" hidden={tab !== 1} id="parcel-tabpanel-marker" sx={{ p: 3 }}>
           <Row className="row">
             <Col md="auto">
-              Find a parcel on the map and click it to populate the Parcel Details below.
+              Select this pin and then select a parcel on the map to populate the Parcel Details
+              below.
             </Col>
             <Col className="marker-svg">
-              <ParcelDraftIcon className="parcel-icon" />
+              <MapDropPin
+                onPinDrop={onPinDrop}
+                setMovingPinNameSpace={setMovingPinNameSpace}
+                nameSpace={nameSpace}
+              />
             </Col>
           </Row>
         </Box>

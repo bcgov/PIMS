@@ -45,12 +45,10 @@ jest.mock('hooks/useKeycloakWrapper');
 );
 
 const setMovingPinNameSpaceMock = jest.fn();
-const setLocationPinActiveMock = jest.fn();
 
 const getBuildingForm = (
   disabled: boolean,
   setMovingPinNameSpaceMock: jest.Mock<any, any, any> | ((...args: any[]) => void) = noop,
-  setLocationPinActiveMock: jest.Mock<any, any, any> | ((...args: any[]) => void) = noop,
 ) => {
   return (
     <Provider store={store}>
@@ -61,7 +59,6 @@ const getBuildingForm = (
           setMovingPinNameSpace={setMovingPinNameSpaceMock}
           nameSpace="building"
           disabled={disabled}
-          setLocationPinActive={setLocationPinActiveMock}
         />
       </MemoryRouter>
     </Provider>
@@ -125,15 +122,13 @@ describe('Building Form', () => {
   it('LatLong has expected text', async () => {
     const { getByText } = render(getBuildingForm(false));
     expect(getByText(/building information/i)).toBeInTheDocument(); // correct page of BuildingForm
-    expect(getByText(/Click your desired location/)).toBeInTheDocument();
+    expect(getByText(/Select this pin/)).toBeInTheDocument();
   });
 
   it('LatLong Pin Can Be Picked Up and Dropped', async () => {
-    const { container, getByText } = render(
-      getBuildingForm(false, setMovingPinNameSpaceMock, setLocationPinActiveMock),
-    );
+    const { container, getByText } = render(getBuildingForm(false, setMovingPinNameSpaceMock));
     expect(getByText(/building information/i)).toBeInTheDocument(); // correct page of BuildingForm
-    expect(getByText(/Click your desired location/)).toBeInTheDocument();
+    expect(getByText(/Select this pin/)).toBeInTheDocument();
 
     // Click Pin
     const pin = container.querySelector('#draft-marker-button');
@@ -142,12 +137,10 @@ describe('Building Form', () => {
       fireEvent.click(pin!);
     });
 
-    expect(setLocationPinActiveMock).toHaveBeenCalledTimes(1);
-
     // Drop pin somewhere arbitrary
     await waitFor(() => {
-      fireEvent.click(getByText(/Click your desired location/));
+      fireEvent.click(getByText(/Select this pin/));
     });
-    expect(setMovingPinNameSpaceMock).toHaveBeenCalledTimes(2);
+    expect(setMovingPinNameSpaceMock).toHaveBeenCalledTimes(1);
   });
 });
