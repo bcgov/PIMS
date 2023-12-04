@@ -23,5 +23,5 @@ oc run $MIGRATION_IMAGE \
     --restart=Never \
     --env=ASPNETCORE_ENVIRONMENT=Production \
     --env=ConnectionStrings__PIMS="$DB_CS" \
-    --env=DB_PASSWORD=$DB_PASSWORD \
-    --timeout=10m
+    --env=DB_PASSWORD=$DB_PASSWORD
+    
