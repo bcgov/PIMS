@@ -45,7 +45,7 @@ jobs:
           NAMESPACE: ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }}
           TOOLS_NAMESPACE: "${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}"
           IMAGE_REPOSITORY : ${{ secrets.PUBLIC_IMAGE_REPOSITORY }}
-          IMAGE_TAG: ${{ env.IMAGE_TAG }}
+          IMAGE_TAG: ${{ env.MIGRATION_IMAGE }}
           MIGRATION_IMAGE: "pims-migrations"
           DB_NAME: "pims-database"
         run: |
