@@ -17,6 +17,7 @@ import { isEmpty, isEqual, isEqualWith } from 'lodash';
 import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { MapContainer, Popup, TileLayer, useMapEvents } from 'react-leaflet';
+import { useResizeDetector } from 'react-resize-detector';
 import { useAppDispatch, useAppSelector } from 'store';
 import { DEFAULT_MAP_ZOOM, setMapViewZoom } from 'store/slices/mapViewZoomSlice';
 import { saveParcelLayerData } from 'store/slices/parcelLayerDataSlice';
@@ -371,8 +372,22 @@ const Map: React.FC<MapProps> = ({
     }
   };
 
+  const targetRef = React.useRef<HTMLDivElement>(null);
+  const { width } = useResizeDetector({ targetRef });
+
+  React.useEffect(() => {
+    // the map has changed and needs to be redrwan and possibly zoomed and centered.
+    mapRef.current?.invalidateSize();
+    const z = mapRef.current?.getZoom();
+    mapRef.current?.setView(center, z);
+  }, [width]);
+
   return (
-    <Container fluid className={classNames('px-0 map', { narrow: sidebarSize === 'narrow' })}>
+    <Container
+      ref={targetRef}
+      fluid
+      className={classNames('px-0 map', { narrow: sidebarSize === 'narrow' })}
+    >
       <FilterBackdrop show={showFilterBackdrop} />
       {!disableMapFilterBar && (
         <PropertyFilter
