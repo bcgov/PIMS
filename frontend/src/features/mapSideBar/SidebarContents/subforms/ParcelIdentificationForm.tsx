@@ -1,9 +1,6 @@
-/// <reference types="vite-plugin-svgr/client" />
-
 import './ParcelIdentificationForm.scss';
 
 import { IParcel } from 'actions/parcelsActions';
-import ParcelDraftIcon from 'assets/images/draft-parcel-icon.svg?react';
 import classNames from 'classnames';
 import { Check, FastInput, InputGroup, SelectOptions, TextArea } from 'components/common/form';
 import { ParentSelect } from 'components/common/form/ParentSelect';
@@ -15,6 +12,7 @@ import { ProjectNumberLink } from 'components/maps/leaflet/InfoSlideOut/ProjectN
 import * as API from 'constants/API';
 import { PropertyTypes } from 'constants/propertyTypes';
 import { HARMFUL_DISCLOSURE_URL } from 'constants/strings';
+import MapDropPin from 'features/mapSideBar/components/MapDropPin';
 import AddressForm from 'features/properties/components/forms/subforms/AddressForm';
 import PidPinForm from 'features/properties/components/forms/subforms/PidPinForm';
 import { getIn, useFormikContext } from 'formik';
@@ -57,6 +55,8 @@ interface IIdentificationProps {
   isViewOrUpdate: boolean;
   /** whether or not the fields on this form can be interacted with */
   disabled?: boolean;
+  /** function called when drop pin is placed */
+  onPinDrop?: () => void;
 }
 
 export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
@@ -69,6 +69,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
   isPropertyAdmin,
   isViewOrUpdate,
   disabled,
+  onPinDrop,
   ...props
 }) => {
   const [overrideData, setOverrideData] = useState<IParcel>();
@@ -113,12 +114,17 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
               </Col>
               <Col md={12} className="instruction">
                 <p>
-                  Find a parcel on the map for the new location and click it to populate the Parcel
-                  Details below.
+                  Select the marker below then select a parcel on the map to update the parcel's
+                  location.
                 </p>
                 <Row>
                   <Col className="marker-svg">
-                    <ParcelDraftIcon className="parcel-icon" />
+                    <MapDropPin
+                      onPinDrop={onPinDrop}
+                      setMovingPinNameSpace={setMovingPinNameSpace}
+                      disabled={disabled}
+                      nameSpace={nameSpace}
+                    />
                   </Col>
                 </Row>
               </Col>
@@ -131,6 +137,7 @@ export const ParcelIdentificationForm: React.FC<IIdentificationProps> = ({
                 handleGeocoderChanges,
                 handlePidChange,
                 handlePinChange,
+                onPinDrop,
               }}
             />
           )}

@@ -73,7 +73,6 @@ const setParcelFieldsFromLayerData = (
     }
 
     const layerParcelData = layerData!.data;
-
     //These fields are generic and used in both buildings and parcels
     newValues = setIn(
       newValues,

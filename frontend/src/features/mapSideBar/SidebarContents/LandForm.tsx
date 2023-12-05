@@ -166,7 +166,8 @@ const Form: React.FC<ILandForm> = ({
       formikProps.setFieldTouched('data.pin', true);
     }
   }, [formikProps.values.data.pid, formikProps.values.data.pin]);
-  useParcelLayerData({
+
+  const { setParcelFieldsFromLayerData } = useParcelLayerData({
     formikRef,
     nameSpace: 'data',
     agencyId: +(formikProps.values.data.agencyId as any)?.value
@@ -198,6 +199,7 @@ const Form: React.FC<ILandForm> = ({
               nameSpace="data"
               isViewOrUpdate={isViewOrUpdate}
               disabled={disabled}
+              onPinDrop={setParcelFieldsFromLayerData}
             />
           </div>
         );
