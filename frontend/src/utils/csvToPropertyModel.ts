@@ -1,3 +1,4 @@
+import { ILookupCode } from 'actions/ILookupCode';
 import Papa from 'papaparse';
 
 // This is the ideal model that the API expects to receive.
@@ -84,7 +85,10 @@ export interface IExportedPropertyModel {
  * @param {string} csvContent Content of CSV file
  * @returns {Promise<IPropertyModel[]>} Promise of 2D array of Property Models
  */
-export const parseCSVString = async (csvContent: string): Promise<IPropertyModel[]> => {
+export const parseCSVString = (
+  csvContent: string,
+  existingAdminAreas: ILookupCode[],
+): Promise<IPropertyModel[]> => {
   return new Promise<IPropertyModel[]>((resolve, reject) => {
     const parsedCSV: Papa.ParseResult<any> = Papa.parse(csvContent, {
       header: true,
@@ -124,39 +128,51 @@ export const parseCSVString = async (csvContent: string): Promise<IPropertyModel
 
     const getValueOrDefault = (incomingValue: string | undefined, defaultValue: string) =>
       !incomingValue || incomingValue === '' ? `${defaultValue}` : incomingValue;
+
+    console.log('test parsedCSV', parsedCSV);
+
     // Transform raw objects into model that API expects
     const transformedData: IPropertyModel[] = parsedCSV.data.map(
-      (property: IExportedPropertyModel) => ({
-        parcelId: property.PID,
-        pid: property.PID,
-        pin: property.PIN ?? '',
-        status: getValueOrDefault(property.Status, 'Active'), // Assume active if not specified
-        fiscalYear: getFiscalYear(property),
-        agency: '', // Not used in API. Leave blank.
-        agencyCode: property.Ministry, // Names are misleading here.
-        subAgency: property.Agency ?? '',
-        propertyType: property.Type,
-        localId: property['Local ID'] ?? '',
-        name: property.Name,
-        description: property.Description ?? '',
-        classification: property.Classification,
-        civicAddress: property.Address ?? '',
-        city: getValueOrDefault(property.Location, '<blank>'), // Done to ensure something is passed to backend, empty string not enough
-        postal: property.Postal ?? '',
-        latitude: property.Latitude,
-        longitude: property.Longitude,
-        landArea: getValueOrDefault(property['Land Area'], '0'),
-        landLegalDescription: property['Legal Description'] ?? '',
-        buildingFloorCount: getValueOrDefault(property['Building Floor Count'], '1'),
-        buildingConstructionType: getValueOrDefault(property['Construction Type'], 'Unknown'),
-        buildingPredominateUse: getValueOrDefault(property['Predominate Use'], 'Unknown'),
-        buildingTenancy: property.Tenancy ?? '',
-        buildingRentableArea: getValueOrDefault(property['Rentable Area'], '0'),
-        assessed: getAssessedValue(property),
-        netBook: getValueOrDefault(property['Netbook Value'], '0'),
-        regionalDistrict: getValueOrDefault(property['Regional District'], ''),
-      }),
+      (property: IExportedPropertyModel) => {
+        const city = existingAdminAreas.some((adminArea) => adminArea.name === property.Location)
+          ? property.Location || ''
+          : getValueOrDefault(property['Regional District'], '');
+
+        console.log('test city to be used', city);
+        return {
+          parcelId: property.PID,
+          pid: property.PID,
+          pin: property.PIN ?? '',
+          status: getValueOrDefault(property.Status, 'Active'), // Assume active if not specified
+          fiscalYear: getFiscalYear(property),
+          agency: '', // Not used in API. Leave blank.
+          agencyCode: property.Ministry, // Names are misleading here.
+          subAgency: property.Agency ?? '',
+          propertyType: property.Type,
+          localId: property['Local ID'] ?? '',
+          name: property.Name,
+          description: property.Description ?? '',
+          classification: property.Classification,
+          civicAddress: property.Address ?? '',
+          city: city, // Done to ensure something is passed to backend, empty string not enough
+          postal: property.Postal ?? '',
+          latitude: property.Latitude,
+          longitude: property.Longitude,
+          landArea: getValueOrDefault(property['Land Area'], '0'),
+          landLegalDescription: property['Legal Description'] ?? '',
+          buildingFloorCount: getValueOrDefault(property['Building Floor Count'], '1'),
+          buildingConstructionType: getValueOrDefault(property['Construction Type'], 'Unknown'),
+          buildingPredominateUse: getValueOrDefault(property['Predominate Use'], 'Unknown'),
+          buildingTenancy: property.Tenancy ?? '',
+          buildingRentableArea: getValueOrDefault(property['Rentable Area'], '0'),
+          assessed: getAssessedValue(property),
+          netBook: getValueOrDefault(property['Netbook Value'], '0'),
+          regionalDistrict: getValueOrDefault(property['Regional District'], ''),
+        };
+      },
     );
+
+    console.log('test parsedCSV', transformedData);
     resolve(transformedData);
   });
 };
@@ -208,8 +224,8 @@ export const dataToCsvFile: (incomingJSON: object[]) => string = (incomingJSON: 
  * @param {File} file The incoming CSV file.
  * @returns {IPropertyModel[]} An array of Property Model objects.
  */
-export const csvFileToPropertyModel = async (file: File) => {
+export const csvFileToPropertyModel = async (file: File, existingAdminAreas: ILookupCode[]) => {
   const string = await csvFileToString(file);
-  const objects: IPropertyModel[] = await parseCSVString(string);
+  const objects: IPropertyModel[] = await parseCSVString(string, existingAdminAreas);
   return objects;
 };

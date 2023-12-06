@@ -2,7 +2,9 @@ import './UploadProperties.scss';
 
 import { AxiosError } from 'axios';
 import { Button } from 'components/common/form/Button';
+import * as API from 'constants/API';
 import { useApi } from 'hooks/useApi';
+import useCodeLookups from 'hooks/useLookupCodes';
 import React, { useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
@@ -70,7 +72,7 @@ export interface IFeedObject {
  * @description A page that allows users to upload CSV files to insert properties into the database
  * @returns {React.FC} A React component
  */
-export const UploadProperties: React.FC = () => {
+const UploadProperties: React.FC = () => {
   const defaultProgress: IProgressState = {
     message: 'Converting CSV file.',
     successes: 0,
@@ -87,12 +89,12 @@ export const UploadProperties: React.FC = () => {
   const api = useApi();
 
   // When file changes, set the file state
-  const handleFileChange = (e: any) => {
-    if (e.target.files[0]) setFile(e.target.files[0]);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) setFile(e.target.files[0]);
   };
 
   // When file is dropped on element, update the file state
-  const handleFileDrop = (e: any) => {
+  const handleFileDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const files: File[] = Array.from(e.dataTransfer.files);
     if (files[0]) setFile(files[0]);
@@ -104,6 +106,8 @@ export const UploadProperties: React.FC = () => {
     setPhase(UploadPhase.FILE_SELECT);
   };
 
+  // Fetch existingAdminAreas using useCodeLookups
+  const lookupCodes = useCodeLookups();
   // When the Start Upload button is clicked...
   const onUpload = async () => {
     // Set progress to default
@@ -113,8 +117,13 @@ export const UploadProperties: React.FC = () => {
     // If the file is defined
     if (file) {
       try {
+        const existingAdminAreas = lookupCodes.getByType(API.AMINISTRATIVE_AREA_CODE_SET_NAME);
+
         // Convert CSV data into JS objects
-        const convertedCsvData: IPropertyModel[] = await csvFileToPropertyModel(file);
+        const convertedCsvData: IPropertyModel[] = await csvFileToPropertyModel(
+          file,
+          existingAdminAreas,
+        );
         // Proceed to second phase
         setPhase(UploadPhase.DATA_UPLOAD);
         setProgress((prevProgress) => {
@@ -127,9 +136,11 @@ export const UploadProperties: React.FC = () => {
         const chunkSize = 50;
         for (let i = 0; i < convertedCsvData.length; i += chunkSize) {
           const currentChunk = convertedCsvData.slice(i, i + chunkSize);
+          console.log('test currentChunk', currentChunk);
           try {
             // Send to API
             const response: IImportedPropertyResponse = await api.importProperties(currentChunk);
+            console.log('test response:', response);
             // Update progress state
             setProgress((prevProgress) => {
               const updatedSuccesses = prevProgress.successes + response.acceptedProperties.length;
@@ -245,3 +256,5 @@ export const UploadProperties: React.FC = () => {
     </div>
   );
 };
+
+export default UploadProperties;

@@ -33,7 +33,7 @@ import {
 } from 'features/projects/dispose';
 import { ProjectSummary } from 'features/projects/summary';
 import MapView from 'features/properties/map/MapView';
-import { UploadProperties } from 'features/properties/upload/UploadProperties';
+import UploadProperties from 'features/properties/upload/UploadProperties';
 import { IsAuthenticatedRoute, LayoutWrapper, PrivateRoute } from 'features/routes';
 import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import { AuthLayout, PublicLayout } from 'layouts';
