@@ -30,6 +30,13 @@ Enzyme.configure({ adapter: new Adapter() });
 const mockStore = configureMockStore([thunk]);
 jest.mock('hooks/useApi');
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useLocation: () => ({
+    pathname: 'localhost:3000/mapview/',
+  }),
+}));
+
 const userRoles: string[] | Claims[] = [];
 const userAgencies: number[] = [0];
 const userAgency: number = 0;
@@ -264,6 +271,7 @@ describe('MapProperties View', () => {
               lotSizes={[]}
               administrativeAreas={[]}
               onMarkerClick={onMarkerClick}
+              mapRefExternal={mapRef}
             />
           </MemoryRouter>
         </Provider>
@@ -271,7 +279,7 @@ describe('MapProperties View', () => {
     };
     const mapRef = createRef<LeafletMap>();
     const component = render(getMapAlternateClick(mapRef, mockParcels, mockDetails));
-    await waitFor(() => expect(mapRef.current).toBeDefined(), { timeout: 500 });
+    await waitFor(() => expect(mapRef.current).not.toBeNull(), { timeout: 500 });
     let markers = component.container.querySelectorAll('.leaflet-marker-icon');
     expect(markers.length).toBe(1); // Only the cluster
     await waitFor(() => {
@@ -306,6 +314,7 @@ describe('MapProperties View', () => {
               agencies={[]}
               lotSizes={[]}
               administrativeAreas={[]}
+              mapRefExternal={mapRef}
             />
           </MemoryRouter>
         </Provider>
@@ -313,7 +322,7 @@ describe('MapProperties View', () => {
     };
     const mapRef = createRef<LeafletMap>();
     const component = render(getMapAlternateClick(mapRef, mockParcels, mockDetails));
-    await waitFor(() => expect(mapRef.current).toBeDefined(), { timeout: 500 });
+    await waitFor(() => expect(mapRef.current).not.toBeNull(), { timeout: 500 });
     let markers = component.container.querySelectorAll('.leaflet-marker-icon');
     expect(markers.length).toBe(1); // Only the cluster
     await waitFor(() => {
