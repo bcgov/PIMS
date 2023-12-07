@@ -14,9 +14,10 @@ import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import useCodeLookups from 'hooks/useLookupCodes';
 import L, { geoJSON, LatLng, LatLngBounds, LeafletMouseEvent, Map as LeafletMap } from 'leaflet';
 import { isEmpty, isEqual, isEqualWith } from 'lodash';
-import React from 'react';
+import React, { RefObject } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { MapContainer, Popup, TileLayer, useMapEvents } from 'react-leaflet';
+import { useResizeDetector } from 'react-resize-detector';
 import { useAppDispatch, useAppSelector } from 'store';
 import { DEFAULT_MAP_ZOOM, setMapViewZoom } from 'store/slices/mapViewZoomSlice';
 import { saveParcelLayerData } from 'store/slices/parcelLayerDataSlice';
@@ -69,6 +70,7 @@ export type MapProps = {
   interactive?: boolean;
   showParcelBoundaries?: boolean;
   sidebarSize?: SidebarSize;
+  mapRefExternal?: RefObject<LeafletMap>; // Primarily used for testing
 };
 
 export type LayerPopupInformation = PopupContentConfig & {
@@ -176,10 +178,11 @@ const Map: React.FC<MapProps> = ({
   disableMapFilterBar,
   interactive = true,
   sidebarSize,
+  mapRefExternal,
 }) => {
   const keycloak = useKeycloakWrapper();
   const dispatch = useAppDispatch();
-  const mapRef = React.useRef<LeafletMap>(null);
+  const mapRef = mapRefExternal ? mapRefExternal : React.useRef<LeafletMap>(null);
   const [triggerFilterChanged, setTriggerFilterChanged] = React.useState(true);
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const parcelsService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
@@ -371,8 +374,22 @@ const Map: React.FC<MapProps> = ({
     }
   };
 
+  const targetRef = React.useRef<HTMLDivElement>(null);
+  const { width } = useResizeDetector({ targetRef });
+
+  React.useEffect(() => {
+    // the map has changed and needs to be redrwan and possibly zoomed and centered.
+    mapRef.current?.invalidateSize();
+    const z = mapRef.current?.getZoom();
+    mapRef.current?.setView(center, z);
+  }, [width]);
+
   return (
-    <Container fluid className={classNames('px-0 map', { narrow: sidebarSize === 'narrow' })}>
+    <Container
+      ref={targetRef}
+      fluid
+      className={classNames('px-0 map', { narrow: sidebarSize === 'narrow' })}
+    >
       <FilterBackdrop show={showFilterBackdrop} />
       {!disableMapFilterBar && (
         <PropertyFilter
