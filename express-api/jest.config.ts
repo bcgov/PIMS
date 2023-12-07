@@ -19,7 +19,7 @@ const jestConfig: JestConfigWithTsJest = {
     'express.ts',
   ],
   coveragePathIgnorePatterns: ['index.ts'],
-  coverageReporters: [['lcov', { projectRoot: ".." }]],
+  coverageReporters: [['lcov', { projectRoot: '..' }]],
   coverageThreshold: {
     global: {
       branches: 80,
