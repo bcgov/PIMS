@@ -5,6 +5,7 @@ on:
     types: [opened, synchronize] # Triggered by opened or changed pull requests.
     branches: [main]
     paths:
+      - '.github/workflows/api-jest-coverage.yaml'
       - 'express-api/**' # Triggers on changes to files in the express-api/ directory.
       - '!express-api/.eslintrc.cjs' # Will not trigger on changes to the following.
       - '!express-api/.gitignore'
