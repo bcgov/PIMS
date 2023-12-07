@@ -1,4 +1,4 @@
-import type { JestConfigWithTsJest } from 'ts-jest'
+import type { JestConfigWithTsJest } from 'ts-jest';
 
 const jestConfig: JestConfigWithTsJest = {
   testEnvironment: 'node',
@@ -29,6 +29,6 @@ const jestConfig: JestConfigWithTsJest = {
     },
   },
   randomize: true, // Randomizes order of tests
-}
+};
 
 export default jestConfig;
