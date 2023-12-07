@@ -10,6 +10,7 @@ import L, { GeoJSON, LatLngBounds } from 'leaflet';
 import { flatten, uniqBy } from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useMap } from 'react-leaflet';
+import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAppSelector } from 'store';
 import { tilesInBbox } from 'tiles-in-bbox';
@@ -226,7 +227,15 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
     return inventory;
   };
 
+  const location = useLocation();
   const search = async (filters: IGeoSearchParams[]) => {
+    const queryParams = new URLSearchParams(location.search);
+    // check to see if the sidebar is open
+    const isSidebarOpen = queryParams.get('sidebar') ?? 'false';
+
+    const pathname = location.pathname;
+    // check if we are using the map page
+    const isMapView = pathname.includes('mapview');
     try {
       onRequestData(true);
       // Check if there is a highlighted parcel layer, and remove it
@@ -239,7 +248,6 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
           ...f,
         } as PointFeature;
       });
-
       const items = uniqBy(
         data,
         (point) => `${point?.properties.id}-${point?.properties.propertyTypeId}`,
@@ -266,7 +274,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
           // Fit to municipality bounds
           map.fitBounds((GeoJSON.geometryToLayer(municipality) as any)._bounds, { maxZoom: 11 });
         }
-      } else if (results.length > 0) {
+      } else if (results.length > 0 && isMapView && isSidebarOpen === 'false') {
         // If anything is found in inventory
         propertiesFound = results.length;
         setFeatures(results || []);
@@ -278,7 +286,6 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
         const latLngObjects: L.LatLng[] = ([] as L.LatLng[]).concat(
           ...allCoordinates.map((coord) => L.latLng(coord[1], coord[0])),
         );
-
         // Create a LatLngBounds object from the LatLng coordinates
         const bounds = L.latLngBounds(latLngObjects);
         map.fitBounds(bounds, {
