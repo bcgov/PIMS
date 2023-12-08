@@ -349,9 +349,9 @@ namespace Pims.Dal.Services.Admin
             string payload = await response.Content.ReadAsStringAsync();
             JsonDocument json = JsonDocument.Parse(payload);
 
-            _logger.LogDebug($"Test Logging the response from Keycloak '{json.ToString()}'");
+            _logger.LogDebug($"Test Logging the response from Keycloak '{json.RootElement.ToString()}'");
             IEnumerable<string> roles = json.RootElement.GetProperty("data").EnumerateArray().Select(r => r.GetProperty("name").GetString());
-            _logger.LogDebug($"Test Logging the Keycloak roles: '{roles}'");
+            _logger.LogDebug($"Test Logging the Keycloak roles: '{string.Join(", ", roles)}'");
 
             return roles;
         }
