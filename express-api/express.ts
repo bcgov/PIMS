@@ -5,7 +5,7 @@ import compression from 'compression';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import router from './routes';
-import headerHandler from './middleware/headerHandler';
+import middleware from './middleware';
 import constants from './constants';
 
 const app: Application = express();
@@ -13,7 +13,7 @@ const app: Application = express();
 const { TESTING, FRONTEND_URL } = constants;
 
 // Express Rate Limiter Configuration
-const limiter = rateLimit({
+export const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 1000, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
@@ -33,13 +33,18 @@ const corsOptions = {
 // Incoming CORS Filter
 app.use(cors(corsOptions));
 
-// Express middleware
+// Express Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(compression());
 
-// TODO: Add logger here
+// Get Custom Middleware
+const { headerHandler, morganMiddleware } = middleware;
+
+// Logging Middleware
+app.use(morganMiddleware);
+
 // TODO: Add Swagger here
 
 // Set headers for response
