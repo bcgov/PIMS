@@ -5,7 +5,7 @@ import compression from 'compression';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import router from './routes';
-import headerHandler from './middleware/headerHandler';
+import middleware from './middleware';
 import constants from './constants';
 
 const app: Application = express();
@@ -33,13 +33,18 @@ const corsOptions = {
 // Incoming CORS Filter
 app.use(cors(corsOptions));
 
-// Express middleware
+// Express Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(compression());
 
-// TODO: Add logger here
+// Get Custom Middleware
+const { headerHandler, morganMiddleware } = middleware;
+
+// Logging Middleware
+app.use(morganMiddleware);
+
 // TODO: Add Swagger here
 
 // Set headers for response
