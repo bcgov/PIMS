@@ -11,7 +11,7 @@ const morganMiddleware = morgan(':method :url :status :response-time', {
     // Configure Morgan to use our custom logger with the http severity
     write: (message) => {
       const trimmedMessage = message.trim(); // Because there's a \n at the end.
-      // Break message from into parts for JSON
+      // Break message from morgan into parts for JSON
       const method = trimmedMessage.split(' ').at(0);
       const route = trimmedMessage.split(' ').at(1);
       const status = +trimmedMessage.split(' ').at(2);

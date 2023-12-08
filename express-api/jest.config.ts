@@ -28,6 +28,9 @@ const jestConfig: JestConfigWithTsJest = {
       lines: 80,
       statements: 80,
     },
+    'express.ts': {
+      branches: 0, // Because rate limiter is omitted when testing
+    },
   },
   randomize: true, // Randomizes order of tests,
 };
