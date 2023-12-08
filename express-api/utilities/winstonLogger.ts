@@ -1,6 +1,8 @@
 import { format, createLogger, transports } from 'winston';
+import constants from '../constants';
 
 const { timestamp, combine, json } = format;
+const { TESTING } = constants;
 
 /**
  * Creates a logger object that can be called to generate log messages.
@@ -20,6 +22,7 @@ const logger = createLogger({
     json(),
   ),
   transports: [new transports.Console()],
+  silent: TESTING,
 });
 
 export default logger;
