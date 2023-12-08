@@ -28,6 +28,8 @@ namespace Pims.Dal.Services.Admin
         private IConfiguration configuration;
         #region Variables
         private string access_token = "";
+
+        private readonly ILogger<UserService> _logger;
         #endregion
 
         #region Constructors
@@ -38,7 +40,11 @@ namespace Pims.Dal.Services.Admin
         /// <param name="user"></param>
         /// <param name="service"></param>
         /// <param name="logger"></param>
-        public UserService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, ILogger<UserService> logger, IConfiguration configuration) : base(dbContext, user, service, logger) { this.configuration = configuration; }
+        public UserService(PimsContext dbContext, ClaimsPrincipal user, IPimsService service, ILogger<UserService> logger, IConfiguration configuration) : base(dbContext, user, service, logger)
+        {
+            this.configuration = configuration;
+            _logger = logger;
+        }
         #endregion
 
         #region Methods
@@ -335,13 +341,17 @@ namespace Pims.Dal.Services.Admin
             // Keycloak Gold only wants the clientID as a number, which is always at the end of the id, after a "-"
             string frontendId = this.configuration["Keycloak:FrontendClientId"].Split("-").Last();
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, this.configuration["Keycloak:BaseURL"] + $"integrations/{frontendId}/{getEnv()}/users/{preferred_username}/roles");
+            _logger.LogDebug($"Test Logging the request to Keycloak '{request}'");
+
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             HttpResponseMessage response = await _httpClient.SendAsync(request);
             if (!response.IsSuccessStatusCode) throw new Exception("Unable to fetch roles from Keycloak Gold");
             string payload = await response.Content.ReadAsStringAsync();
             JsonDocument json = JsonDocument.Parse(payload);
 
+            _logger.LogDebug($"Test Logging the response from Keycloak '{json.RootElement.ToString()}'");
             IEnumerable<string> roles = json.RootElement.GetProperty("data").EnumerateArray().Select(r => r.GetProperty("name").GetString());
+            _logger.LogDebug($"Test Logging the Keycloak roles: '{string.Join(", ", roles)}'");
 
             return roles;
         }
@@ -390,12 +400,14 @@ namespace Pims.Dal.Services.Admin
             // Keycloak Gold only wants the clientID as a number, which is always at the end of the id, after a "-"
             string frontendId = this.configuration["Keycloak:FrontendClientId"].Split("-").Last();
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"https://api.loginproxy.gov.bc.ca/api/v1/{getEnv()}/{idp}/users?email={email}");
+            _logger.LogDebug($"Test Logging the request for username to Keycloak '{request}'");
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             HttpResponseMessage response = await _httpClient.SendAsync(request);
             if (!response.IsSuccessStatusCode) throw new Exception("Unable to get user's username from Keycloak Gold");
             string payload = await response.Content.ReadAsStringAsync();
 
             JsonDocument json = JsonDocument.Parse(payload);
+            _logger.LogDebug($"Test Logging the response for username from Keycloak '{json.RootElement.ToString()}'");
             string username = json.RootElement.GetProperty("data").EnumerateArray().First().GetProperty("username").GetString();
 
             return username;
