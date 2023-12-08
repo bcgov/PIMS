@@ -1,5 +1,5 @@
-const { TESTING } = process.env;
+const { NODE_ENV } = process.env;
 
 export default {
-  TESTING: `${TESTING}`.toLowerCase() === 'true', // Can be used to disable certain features
+  TESTING: NODE_ENV === 'test', // Can be used to disable certain features when testing
 };
