@@ -400,12 +400,14 @@ namespace Pims.Dal.Services.Admin
             // Keycloak Gold only wants the clientID as a number, which is always at the end of the id, after a "-"
             string frontendId = this.configuration["Keycloak:FrontendClientId"].Split("-").Last();
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"https://api.loginproxy.gov.bc.ca/api/v1/{getEnv()}/{idp}/users?email={email}");
+            _logger.LogDebug($"Test Logging the request for username to Keycloak '{request}'");
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             HttpResponseMessage response = await _httpClient.SendAsync(request);
             if (!response.IsSuccessStatusCode) throw new Exception("Unable to get user's username from Keycloak Gold");
             string payload = await response.Content.ReadAsStringAsync();
 
             JsonDocument json = JsonDocument.Parse(payload);
+            _logger.LogDebug($"Test Logging the response for username from Keycloak '{json.RootElement.ToString()}'");
             string username = json.RootElement.GetProperty("data").EnumerateArray().First().GetProperty("username").GetString();
 
             return username;
