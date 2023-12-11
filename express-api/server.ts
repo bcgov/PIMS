@@ -1,6 +1,7 @@
 import logger from './utilities/winstonLogger';
 import constants from './constants';
 import app from './express';
+import "reflect-metadata";
 
 const { API_PORT } = constants;
 
