@@ -219,19 +219,20 @@ namespace Pims.Dal.Keycloak
                     }
                 });
 
+                _logger.LogDebug($"Test Logging for Keycloak before going into GetUsersPreferredUsername using keycloakuserid: '{user.KeycloakUserId}' and idp should be IDIR: '{user.Username.Split("@").Last()}'");
                 // Add role to user to update, and add role in keycloak.
-                var preferred_username = _pimsAdminService.User.GetUsersPreferredUsername(user.KeycloakUserId ?? Guid.Empty, user.Username.Split("@").Last()).Result;
+                var preferred_username = await _pimsAdminService.User.GetUsersPreferredUsername(user.KeycloakUserId ?? Guid.Empty, user.Username.Split("@").Last());
                 accessRequest.Roles.ForEach(async (accessRequestRole) =>
                 {
                     if (!user.Roles.Any(r => r.RoleId == accessRequestRole.RoleId))
                     {
-                      var roleEntity = _pimsAdminService.Role.Get(accessRequestRole.RoleId);
-                      await _pimsAdminService.User.AddRoleToUser(preferred_username, roleEntity.Name);
-                      user.Roles.Add(new Entity.UserRole()
-                      {
-                          User = user,
-                          RoleId = accessRequestRole.RoleId
-                      });
+                        var roleEntity = _pimsAdminService.Role.Get(accessRequestRole.RoleId);
+                        await _pimsAdminService.User.AddRoleToUser(preferred_username, roleEntity.Name);
+                        user.Roles.Add(new Entity.UserRole()
+                        {
+                            User = user,
+                            RoleId = accessRequestRole.RoleId
+                        });
                     }
                 });
 
