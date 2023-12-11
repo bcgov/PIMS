@@ -2,7 +2,7 @@ import logger from './utilities/winstonLogger';
 import constants from './constants';
 import app from './express';
 import 'reflect-metadata';
-import { myDataSource } from './app-data-source';
+import { AppDataSource } from './app-data-source';
 
 const { API_PORT } = constants;
 
@@ -12,11 +12,10 @@ app.listen(API_PORT, (err?: Error) => {
 });
 
 // creating connection to database
-myDataSource
-  .initialize()
+AppDataSource.initialize()
   .then(() => {
-    logger.info("Database connection has been initialized")
+    logger.info('Database connection has been initialized');
   })
   .catch((err) => {
-    logger.info("Error during data source initialization")
-  })
+    logger.info('Error during data source initialization. With error: ', err);
+  });
