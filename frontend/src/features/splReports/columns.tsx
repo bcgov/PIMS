@@ -29,6 +29,7 @@ export const columns = (agencyOptions: SelectOption[]): any[] => [
     width: spacing.small,
     minWidth: 65, // px
     sortable: true,
+    clickable: true,
     filterable: true,
     filter: {
       component: Input,
@@ -44,6 +45,7 @@ export const columns = (agencyOptions: SelectOption[]): any[] => [
     accessor: 'project.actualFiscalYear',
     align: 'left',
     responsive: false,
+    clickable: true,
     width: 50,
     minWidth: 50,
     Cell: (props: CellProps<ISnapshot>) => {
@@ -66,6 +68,7 @@ export const columns = (agencyOptions: SelectOption[]): any[] => [
     accessor: 'project.agencyName',
     align: 'left',
     responsive: false,
+    clickable: true,
     width: 55,
     minWidth: 55,
     sortable: true,
@@ -87,6 +90,7 @@ export const columns = (agencyOptions: SelectOption[]): any[] => [
     accessor: 'project.name',
     align: 'left',
     responsive: true,
+    clickable: true,
     width: spacing.medium,
     minWidth: 80,
   },
@@ -95,6 +99,7 @@ export const columns = (agencyOptions: SelectOption[]): any[] => [
     accessor: 'project.risk',
     align: 'left',
     responsive: true,
+    clickable: true,
     width: spacing.xsmall,
     minWidth: 55,
   },
@@ -103,6 +108,7 @@ export const columns = (agencyOptions: SelectOption[]): any[] => [
     accessor: 'project.status.name',
     align: 'left',
     responsive: true,
+    clickable: true,
     width: spacing.large,
     minWidth: 100,
   },
@@ -111,6 +117,7 @@ export const columns = (agencyOptions: SelectOption[]): any[] => [
     accessor: 'market',
     align: 'left',
     responsive: true,
+    clickable: true,
     width: spacing.small,
     minWidth: 80,
     Cell: (props: CellProps<ISnapshot>) => {
@@ -122,6 +129,7 @@ export const columns = (agencyOptions: SelectOption[]): any[] => [
     accessor: 'netBook',
     align: 'left',
     responsive: true,
+    clickable: true,
     width: spacing.small,
     minWidth: 80,
     Cell: (props: CellProps<ISnapshot>) => {
@@ -133,6 +141,7 @@ export const columns = (agencyOptions: SelectOption[]): any[] => [
     accessor: 'salesCost',
     align: 'left',
     responsive: true,
+    clickable: true,
     width: spacing.small,
     minWidth: 80,
     Cell: (props: CellProps<ISnapshot>) => {
@@ -144,6 +153,7 @@ export const columns = (agencyOptions: SelectOption[]): any[] => [
     accessor: 'programCost',
     align: 'left',
     responsive: true,
+    clickable: true,
     width: spacing.small,
     minWidth: 80,
     Cell: (props: CellProps<ISnapshot>) => {
@@ -155,6 +165,7 @@ export const columns = (agencyOptions: SelectOption[]): any[] => [
     accessor: 'gainLoss',
     align: 'left',
     responsive: true,
+    clickable: true,
     width: spacing.small,
     minWidth: 80,
     Cell: (props: CellProps<ISnapshot>) => {
@@ -166,6 +177,7 @@ export const columns = (agencyOptions: SelectOption[]): any[] => [
     accessor: 'ocgFinancialStatements',
     align: 'left',
     responsive: true,
+    clickable: true,
     width: spacing.small,
     minWidth: 80,
     Cell: (props: CellProps<ISnapshot>) => {
@@ -177,6 +189,7 @@ export const columns = (agencyOptions: SelectOption[]): any[] => [
     accessor: 'interestComponent',
     align: 'left',
     responsive: true,
+    clickable: true,
     width: spacing.small,
     minWidth: 80,
     Cell: (props: CellProps<ISnapshot>) => {
@@ -188,6 +201,7 @@ export const columns = (agencyOptions: SelectOption[]): any[] => [
     accessor: 'netProceeds',
     align: 'left',
     responsive: true,
+    clickable: true,
     width: spacing.small,
     minWidth: 80,
     Cell: (props: CellProps<ISnapshot>) => {
@@ -199,6 +213,7 @@ export const columns = (agencyOptions: SelectOption[]): any[] => [
     accessor: 'baselineIntegrity',
     align: 'left',
     responsive: true,
+    clickable: true,
     width: spacing.small,
     minWidth: 80,
     Cell: (props: CellProps<ISnapshot>) => {

@@ -58,3 +58,4 @@ exclude_patterns:
   - '**/typings/'
   - 'scripts/'
   - 'Screenshots/'
+  - 'express.ts'

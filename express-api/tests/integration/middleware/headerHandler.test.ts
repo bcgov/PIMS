@@ -7,11 +7,12 @@ const request = supertest(app);
 // Using the health endpoint to trigger these changes.
 describe('INTEGRATION - headerHandler middleware', () => {
   it('should set headers with expected values', async () => {
-    const response = await request
-      .get('/api/v2/health');
+    const response = await request.get('/api/v2/health');
     // Remember to use lower case for header keys
     expect(response.header['access-control-allow-origin']).toBe('*');
     expect(response.header['access-control-allow-methods']).toBe('GET,PUT,PATCH,POST,DELETE');
-    expect(response.header['access-control-allow-headers']).toBe('Content-Type, Accept, Authorization');
-  })
-})
+    expect(response.header['access-control-allow-headers']).toBe(
+      'Content-Type, Accept, Authorization',
+    );
+  });
+});

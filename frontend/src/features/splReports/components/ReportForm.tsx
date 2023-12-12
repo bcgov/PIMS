@@ -3,6 +3,7 @@ import { SortDirection } from 'components/Table/TableSort';
 import * as API from 'constants/API';
 import useCodeLookups from 'hooks/useLookupCodes';
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { mapSelectOptionWithParent } from 'utils';
 
 import { columns } from '../columns';
@@ -26,6 +27,10 @@ const ReportForm: React.FunctionComponent<IReportFormProps> = ({ snapshots }) =>
     [agencyItems],
   );
   const { snapshotFilter, setSnapshotFilter } = useSplReportContext();
+  const navigate = useNavigate();
+  const onRowClick = (row: ISnapshot) => {
+    navigate(`/projects/disposal/${row.projectId}`);
+  };
 
   return (
     <Table<ISnapshot, ISnapshotFilter>
@@ -40,6 +45,7 @@ const ReportForm: React.FunctionComponent<IReportFormProps> = ({ snapshots }) =>
       sort={snapshotFilter.sortBy}
       columns={columns(agencyFilterOptions)}
       data={data}
+      onRowClick={onRowClick}
       loading={snapshots === undefined}
       hideToolbar
     />

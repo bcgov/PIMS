@@ -20,12 +20,13 @@ module.exports = {
     'no-extra-boolean-cast': 'off',
     'no-unsafe-optional-chaining': 'off',
     'no-prototype-builtins': 'off',
+    'no-console': 'error',
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-inferrable-types': 'off', // ie. const val: number = 4;
     '@typescript-eslint/no-empty-function': 'off', // ie. {}
     '@typescript-eslint/no-non-null-assertion': 'off', // Allow use of non-null assertion operator (!).
     '@typescript-eslint/no-explicit-any': 'warn', // Warn if 'any' type is used.
-    '@typescript-eslint/no-duplicate-enum-values': 'warn', // TODO: Review whether we need those duplicate enum values.
+    '@typescript-eslint/no-duplicate-enum-values': 'error',
   },
-  ignorePatterns: ['node_modules/', 'package-lock.json', 'dist/'],
+  ignorePatterns: ['node_modules/', 'package-lock.json', 'dist/', 'coverage/'],
 };
