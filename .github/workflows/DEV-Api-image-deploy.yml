@@ -76,6 +76,7 @@ jobs:
           DC_TEMPLATE: 'api-dc-template.yaml'
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
           ENVIRONMENT: 'dev'
+          ASPNETCORE_ENVIRONMENT: 'Development'
           APPLICATION_NAME: 'pims-api'
           LICENSE_PLATE: '${{ secrets.LICENSE_PLATE }}'
         run: |
