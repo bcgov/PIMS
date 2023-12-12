@@ -17,5 +17,5 @@ AppDataSource.initialize()
     logger.info('Database connection has been initialized');
   })
   .catch((err) => {
-    logger.info('Error during data source initialization. With error: ', err);
+    logger.error('Error during data source initialization. With error: ', err);
   });
