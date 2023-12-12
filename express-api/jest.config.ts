@@ -1,4 +1,4 @@
-import type { JestConfigWithTsJest } from 'ts-jest'
+import type { JestConfigWithTsJest } from 'ts-jest';
 
 const jestConfig: JestConfigWithTsJest = {
   testEnvironment: 'node',
@@ -15,6 +15,7 @@ const jestConfig: JestConfigWithTsJest = {
   collectCoverageFrom: [
     'controllers/**/*.ts',
     'middleware/**/*.ts',
+    'utilities/**/*.ts',
     'routes/**/*.ts',
     'express.ts',
   ],
@@ -27,8 +28,11 @@ const jestConfig: JestConfigWithTsJest = {
       lines: 80,
       statements: 80,
     },
+    'express.ts': {
+      branches: 0, // Because rate limiter is omitted when testing
+    },
   },
-  randomize: true, // Randomizes order of tests
-}
+  randomize: true, // Randomizes order of tests,
+};
 
 export default jestConfig;
