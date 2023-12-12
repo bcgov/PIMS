@@ -7,6 +7,8 @@ import rateLimit from 'express-rate-limit';
 import router from './routes';
 import headerHandler from './middleware/headerHandler';
 import constants from './constants';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJSON from './swagger/swagger-output.json';
 
 const app: Application = express();
 
@@ -40,7 +42,9 @@ app.use(cookieParser());
 app.use(compression());
 
 // TODO: Add logger here
-// TODO: Add Swagger here
+
+// Swagger service route
+app.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJSON));
 
 // Set headers for response
 app.use(`/api/v2`, headerHandler as RequestHandler);

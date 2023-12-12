@@ -1,0 +1,33 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "3.0.0",
+    "title": "PIMS Express API",
+    "description": "A REST API that supports the Property Inventory Management System (PIMS)."
+  },
+  "servers": [
+    {
+      "url": "/api/v2",
+      "description": ""
+    },
+    {
+      "url": "/api/v3",
+      "description": ""
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "description": "Returns a 200 (OK) status if API is reached.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}
