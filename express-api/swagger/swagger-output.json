@@ -9,10 +9,6 @@
     {
       "url": "/api/v2",
       "description": ""
-    },
-    {
-      "url": "/api/v3",
-      "description": ""
     }
   ],
   "paths": {
