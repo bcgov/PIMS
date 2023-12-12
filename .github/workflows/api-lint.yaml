@@ -1,0 +1,32 @@
+name: Express API Linting Check
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [main]
+    paths:
+      - "express-api/**"
+      - ".github/workflows/api-lint.yaml"
+  workflow_dispatch:
+
+jobs:
+  lint-api:
+    name: Lint Express API
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      # Could optimize this by only installing necessary dependencies
+      - name: Install Dependencies
+        working-directory: ./express-api
+        run: npm i --only=dev
+
+      - name: Run ESLint
+        working-directory: ./express-api
+        run: npm run lint
+
+      - name: Run Prettier
+        working-directory: ./express-api
+        run: npm run check 
