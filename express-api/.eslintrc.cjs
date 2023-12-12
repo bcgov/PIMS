@@ -20,6 +20,7 @@ module.exports = {
     'no-extra-boolean-cast': 'off',
     'no-unsafe-optional-chaining': 'off',
     'no-prototype-builtins': 'off',
+    'no-console': 'error',
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-inferrable-types': 'off', // ie. const val: number = 4;
     '@typescript-eslint/no-empty-function': 'off', // ie. {}

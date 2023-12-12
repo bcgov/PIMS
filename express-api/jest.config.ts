@@ -15,6 +15,7 @@ const jestConfig: JestConfigWithTsJest = {
   collectCoverageFrom: [
     'controllers/**/*.ts',
     'middleware/**/*.ts',
+    'utilities/**/*.ts',
     'routes/**/*.ts',
     'express.ts',
   ],
@@ -26,6 +27,9 @@ const jestConfig: JestConfigWithTsJest = {
       functions: 80,
       lines: 80,
       statements: 80,
+    },
+    'express.ts': {
+      branches: 0, // Because rate limiter is omitted when testing
     },
   },
   randomize: true, // Randomizes order of tests
