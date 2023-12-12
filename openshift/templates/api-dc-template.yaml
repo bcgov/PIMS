@@ -91,7 +91,7 @@ objects:
               failureThreshold: 3
             env:
               - name: ASPNETCORE_ENVIRONMENT
-                value: Development
+                value: ${ASPNETCORE_ENVIRONMENT}
               - name: ASPNETCORE_URLS
                 value: 'http://*:8080'
               - name: HealthChecks__LivePath
@@ -221,6 +221,11 @@ parameters:
     name: LICENSE_PLATE
     required: true
     value: "354028"
+  - description: ASP.NET Core Environment
+    displayName: ASP.NET Core Environment
+    name: ASPNETCORE_ENVIRONMENT
+    required: true
+    value: Development
   - description: ImageTag
     displayName: ImageTag
     name: IMAGE_TAG
