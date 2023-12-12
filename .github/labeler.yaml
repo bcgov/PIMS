@@ -38,6 +38,11 @@ Styles:
 - frontend/**/*.css
 - frontend/**/*.scss
 
+################
+# Express API
+Express:
+- express-api/**/*
+
 #################
 # Testing
 Tests:
