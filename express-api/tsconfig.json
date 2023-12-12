@@ -7,10 +7,6 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "*": ["node_modules/*"]
-    },
     "resolveJsonModule": true // Used for swagger-output.json
   },
   "include": ["./**/*"]
