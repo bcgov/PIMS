@@ -1,4 +1,4 @@
-import { AbstractLogger, LogLevel, LogMessage, QueryRunner } from 'typeorm';
+import { AbstractLogger, LogLevel, LogMessage } from 'typeorm';
 import logger from '../../utilities/winstonLogger';
 
 export class CustomWinstonLogger extends AbstractLogger {
@@ -8,7 +8,6 @@ export class CustomWinstonLogger extends AbstractLogger {
   protected writeLog(
     level: LogLevel,
     logMessage: LogMessage | LogMessage[],
-    queryRunner?: QueryRunner,
   ) {
     const messages = this.prepareLogMessages(logMessage, {
       highlightSql: false,
