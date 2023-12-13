@@ -1,4 +1,5 @@
 import { DataSource } from 'typeorm';
+import { CustomWinstonLogger } from './typeorm/utilities/CustomWinstonLogger';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -10,6 +11,7 @@ export const AppDataSource = new DataSource({
   synchronize: true,
   migrationsRun: false,
   logging: true,
+  logger: new CustomWinstonLogger(true),
   entities: ['./typeorm/entity/*.ts'],
   migrations: ['./typeorm/migrations/seed/*.ts', './typeorm/migrations/*.ts'],
   subscribers: [],
