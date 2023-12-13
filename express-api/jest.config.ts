@@ -20,7 +20,7 @@ const jestConfig: JestConfigWithTsJest = {
     'express.ts',
   ],
   coveragePathIgnorePatterns: ['index.ts'],
-  coverageReporters: ['lcov'],
+  coverageReporters: [['lcov', { projectRoot: '..' }]],
   coverageThreshold: {
     global: {
       branches: 80,
@@ -32,7 +32,7 @@ const jestConfig: JestConfigWithTsJest = {
       branches: 0, // Because rate limiter is omitted when testing
     },
   },
-  randomize: true, // Randomizes order of tests,
+  randomize: true, // Randomizes order of tests
 };
 
 export default jestConfig;
