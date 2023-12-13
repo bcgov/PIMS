@@ -24,7 +24,7 @@ RUN npm run build
 #############################################
 FROM node:18.17.1-bullseye-slim as Prod
 
-# Set the working directory to /app
+# Set the working directory to /express-api
 WORKDIR /express-api
 
 ENV NODE_ENV=production
