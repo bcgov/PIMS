@@ -42,3 +42,4 @@ RUN apt-get install -y curl
 COPY --from=base /express-api/dist .
 
 CMD [ "node", "server.js" ]
+
