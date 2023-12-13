@@ -5,10 +5,7 @@ export class CustomWinstonLogger extends AbstractLogger {
   /**
    * Write Winston Logs for TypeORM actions
    */
-  protected writeLog(
-    level: LogLevel,
-    logMessage: LogMessage | LogMessage[],
-  ) {
+  protected writeLog(level: LogLevel, logMessage: LogMessage | LogMessage[]) {
     const messages = this.prepareLogMessages(logMessage, {
       highlightSql: false,
     });
