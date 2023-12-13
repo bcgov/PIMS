@@ -161,7 +161,7 @@ objects:
               - name: Ches__EmailEnabled
                 value: 'true'
               - name: Ches__EmailAuthorized
-                value: 'false'
+                value: ${EMAIL_AUTHORIZED}
               - name: Elastic__Uri
                 value: 'https://pims-elastic.apps.silver.devops.gov.bc.ca/'
               - name: Elastic__Username
@@ -226,6 +226,10 @@ parameters:
     name: ASPNETCORE_ENVIRONMENT
     required: true
     value: Development
+  - description: Ches__EmailAuthorized
+    displayName: Ches__EmailAuthorized
+    name: EMAIL_AUTHORIZED
+    required: true
   - description: ImageTag
     displayName: ImageTag
     name: IMAGE_TAG
