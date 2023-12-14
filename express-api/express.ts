@@ -8,6 +8,7 @@ import { keycloak } from '@bcgov/citz-imb-kc-express';
 import router from './routes';
 import middleware from './middleware';
 import constants from './constants';
+import { KEYCLOAK_OPTIONS } from './middleware/keycloak/keycloakOptions';
 
 const app: Application = express();
 
@@ -50,7 +51,7 @@ const { headerHandler, morganMiddleware } = middleware;
 app.use(morganMiddleware);
 
 // Keycloak initialization
-keycloak(app);
+keycloak(app, KEYCLOAK_OPTIONS);
 
 // TODO: Add Swagger here
 
