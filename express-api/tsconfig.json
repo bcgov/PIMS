@@ -1,5 +1,12 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@middleware/*": ["./middleware/*"],
+      "@controllers/*": ["./controllers/*"],
+      "@constants/*": ["./constants/*"],
+      "*": ["./src/*"] // Include a wildcard path for general source files
+    },
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es2022",

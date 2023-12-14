@@ -1,5 +1,5 @@
-import headerHandler from './headerHandler';
-import morganMiddleware from './morganHttpLogging';
+import headerHandler from '@middleware/headerHandler';
+import morganMiddleware from '@middleware/morganHttpLogging';
 
 export default {
   headerHandler,

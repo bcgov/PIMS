@@ -1,4 +1,4 @@
-import { healthCheck } from './healthController';
+import { healthCheck } from '@controllers/healthController';
 
 export default {
   healthCheck,
