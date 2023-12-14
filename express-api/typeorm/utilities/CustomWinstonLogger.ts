@@ -21,7 +21,7 @@ export class CustomWinstonLogger extends AbstractLogger {
         case 'info':
         case 'query':
           if (message.prefix) {
-            logger.info(message.prefix, message.message);
+            logger.info(`${message.prefix} ${message.message}`);
           } else {
             logger.info(message.message);
           }
@@ -30,7 +30,7 @@ export class CustomWinstonLogger extends AbstractLogger {
         case 'warn':
         case 'query-slow':
           if (message.prefix) {
-            logger.warn(message.prefix, message.message);
+            logger.warn(`${message.prefix} ${message.message}`);
           } else {
             logger.warn(message.message);
           }
@@ -39,7 +39,7 @@ export class CustomWinstonLogger extends AbstractLogger {
         case 'error':
         case 'query-error':
           if (message.prefix) {
-            logger.error(message.prefix, message.message);
+            logger.error(`${message.prefix} ${message.message}`);
           } else {
             logger.error(message.message);
           }
