@@ -1,16 +1,22 @@
 import { DataSource } from 'typeorm';
 import { CustomWinstonLogger } from './typeorm/utilities/CustomWinstonLogger';
 
-// test if we are in a continer or not. if false use localhost
-//const hostname = process.env.CONTAINERIZED ? process.env.SERVICE_NAME : 'localhost';
+const {
+  POSTGRES_USER,
+  POSTGRES_PASSWORD,
+  POSTGRES_DB,
+  POSTGRES_PORT,
+  POSTGRES_SERVICE,
+  CONTAINERIZED,
+} = process.env;
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  host: 'localhost',
-  port: Number(parseInt(process.env.DATABASEPORT)),
-  username: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
-  database: process.env.POSTGRES_DB,
+  host: CONTAINERIZED ? POSTGRES_SERVICE : 'localhost', // If in a container, use the service name, else use localhost
+  port: +(POSTGRES_PORT ?? '5432'),
+  username: POSTGRES_USER,
+  password: POSTGRES_PASSWORD,
+  database: POSTGRES_DB,
   synchronize: true,
   migrationsRun: false,
   logging: true,
