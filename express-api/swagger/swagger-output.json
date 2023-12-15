@@ -3,7 +3,15 @@
   "info": {
     "version": "3.0.0",
     "title": "PIMS Express API",
-    "description": "A REST API that supports the Property Inventory Management System (PIMS)."
+    "description": "A REST API that supports the Property Inventory Management System (PIMS).",
+    "contact": {
+      "name": "Support",
+      "email": "support@pims.gov.bc.ca"
+    },
+    "license": {
+      "name": "APACHE",
+      "url": "https://github.com/bcgov/PIMS/blob/dev/LICENSE"
+    }
   },
   "servers": [
     {

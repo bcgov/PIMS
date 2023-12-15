@@ -5,6 +5,14 @@ const doc = {
     version: '3.0.0', // by default: '1.0.0'
     title: 'PIMS Express API', // by default: 'REST API'
     description: 'A REST API that supports the Property Inventory Management System (PIMS).', // by default: ''
+    contact: {
+      name: 'Support',
+      email: 'support@pims.gov.bc.ca',
+    },
+    license: {
+      name: 'APACHE',
+      url: 'https://github.com/bcgov/PIMS/blob/dev/LICENSE',
+    },
   },
   servers: [
     {
