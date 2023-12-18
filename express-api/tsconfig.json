@@ -9,6 +9,8 @@
     "outDir": "dist",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
+    "resolveJsonModule": true // Used for swagger-output.json
+
   },
   "include": ["./**/*"]
 }

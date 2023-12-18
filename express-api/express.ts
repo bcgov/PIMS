@@ -7,6 +7,8 @@ import rateLimit from 'express-rate-limit';
 import router from './routes';
 import middleware from './middleware';
 import constants from './constants';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJSON from './swagger/swagger-output.json';
 
 const app: Application = express();
 
@@ -39,13 +41,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(compression());
 
+// Swagger service route
+app.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJSON));
 // Get Custom Middleware
 const { headerHandler, morganMiddleware } = middleware;
 
 // Logging Middleware
 app.use(morganMiddleware);
-
-// TODO: Add Swagger here
 
 // Set headers for response
 app.use(`/api/v2`, headerHandler as RequestHandler);
