@@ -4,9 +4,11 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
+import { keycloak } from '@bcgov/citz-imb-kc-express';
 import router from './routes';
 import middleware from './middleware';
 import constants from './constants';
+import { KEYCLOAK_OPTIONS } from './middleware/keycloak/keycloakOptions';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSON from './swagger/swagger-output.json';
 
@@ -21,6 +23,9 @@ export const limiter = rateLimit({
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
+
+// Use rate limiter if not testing
+if (!TESTING) app.use(limiter);
 
 // CORS Configuration
 // TODO: Does localhost need to be specified?
@@ -49,11 +54,11 @@ const { headerHandler, morganMiddleware } = middleware;
 // Logging Middleware
 app.use(morganMiddleware);
 
+// Keycloak initialization
+keycloak(app, KEYCLOAK_OPTIONS);
+
 // Set headers for response
 app.use(`/api/v2`, headerHandler as RequestHandler);
-
-// Use rate limiter if not testing
-if (!TESTING) app.use(limiter);
 
 // TODO: Allow versioning by environment variable
 app.use(`/api/v2`, router.healthRouter);
