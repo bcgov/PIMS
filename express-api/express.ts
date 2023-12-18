@@ -55,5 +55,7 @@ if (!TESTING) app.use(limiter);
 
 // TODO: Allow versioning by environment variable
 app.use(`/api/v2`, router.healthRouter);
+// TODO: Protect this router with keycloak
+app.use(`/api/v2`, router.ltsaRouter);
 
 export default app;
