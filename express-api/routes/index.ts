@@ -1,4 +1,4 @@
-import healthRouter from './health-router';
+import healthRouter from './healthRouter';
 
 const router = {
   healthRouter,

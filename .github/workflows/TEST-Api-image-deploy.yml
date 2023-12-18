@@ -58,6 +58,8 @@ jobs:
           DC_TEMPLATE: 'api-dc-template.yaml'
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
           ENVIRONMENT: ${{ env.ENVIRONMENT }}
+          ASPNETCORE_ENVIRONMENT: 'Test'
+          EMAIL_AUTHORIZED: 'false'
           APPLICATION_NAME: 'pims-api'
           LICENSE_PLATE: '${{ secrets.LICENSE_PLATE }}'
         run: |
