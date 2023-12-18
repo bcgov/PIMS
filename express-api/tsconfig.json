@@ -8,7 +8,7 @@
     "sourceMap": true,
     "outDir": "dist",
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
     "resolveJsonModule": true // Used for swagger-output.json
 
   },
