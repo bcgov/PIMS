@@ -1,7 +1,7 @@
 import { healthCheck } from './healthController';
-import { stubController } from './stubController';
+import * as ltsa from './ltsa/ltsaController';
 
 export default {
   healthCheck,
-  stubController,
+  ...ltsa,
 };
