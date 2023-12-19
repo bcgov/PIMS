@@ -9,7 +9,7 @@ const request = supertest(app);
 describe('INTEGRATION - GET /ltsa', () => {
   // TODO: pass fake keycloak token once route is protected
   const TOKEN = '';
-  it('should return 401 Unauthorized if invalid provided', async () => {
+  it('should return 401 Unauthorized if invalid token provided', async () => {
     const response = await request
       .get(`/api/v2/ltsa/land/title?pid=0`)
       .set('Authorization', `Bearer notAToken`);
