@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Land Form component renders correctly 1`] = `
-.c3 .form.Control {
+.c0 .form.Control {
   width: 100%;
   height: 100%;
   border: none;
@@ -12,7 +12,7 @@ exports[`Land Form component renders correctly 1`] = `
   margin-bottom: 0;
 }
 
-.c3 .suggestionList {
+.c0 .suggestionList {
   background-color: white;
   border-style: solid;
   border-color: lightslategray;
@@ -28,7 +28,7 @@ exports[`Land Form component renders correctly 1`] = `
   left: -50px;
 }
 
-.c3 option {
+.c0 option {
   padding: 10px 5px;
   word-wrap: break-word;
   width: 400px;
@@ -37,18 +37,18 @@ exports[`Land Form component renders correctly 1`] = `
   color: #494949;
 }
 
-.c3 option:hover {
+.c0 option:hover {
   background-color: #007bff;
   color: #fff;
 }
 
-.c5 {
+.c1 {
   display: flex;
   align-items: center;
   align-content: center;
 }
 
-.c6 {
+.c2 {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -56,45 +56,8 @@ exports[`Land Form component renders correctly 1`] = `
   font-weight: bold;
 }
 
-.c0 {
-  background-color: #fff;
-  height: 100%;
-  width: 100%;
-  overflow-y: auto;
-}
-
-.c1 {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  margin-bottom: 20px;
-}
-
-.c2 {
-  border-top: 1px solid #666666;
-  width: 100%;
-  min-height: 100px;
-}
-
-.c4 {
-  display: flex;
-  width: 100%;
-  height: 70px;
-  padding-left: 10px;
-  align-items: center;
-  position: sticky;
-  background-color: filterBackgroundColor;
-  bottom: -20px;
-  border-top: 10px solid white;
-}
-
-.c7 {
-  flex: 1 1 auto;
-}
-
 <div
-  class="c0 landForm"
+  class="container-style"
 >
   <div>
     <ul
@@ -268,10 +231,10 @@ exports[`Land Form component renders correctly 1`] = `
           </div>
         </div>
         <div
-          class="c1"
+          class="form-content-wrapper"
         >
           <div
-            class="c2"
+            class="form-content"
           >
             <div
               class="parcel-identification"
@@ -535,7 +498,7 @@ exports[`Land Form component renders correctly 1`] = `
                           class="col-4"
                         >
                           <div
-                            class="c3 GeocoderAutoComplete"
+                            class="c0 GeocoderAutoComplete"
                           >
                             <div
                               class=""
@@ -759,7 +722,7 @@ exports[`Land Form component renders correctly 1`] = `
                             class="col"
                           >
                             <div
-                              class="c3 GeocoderAutoComplete"
+                              class="c0 GeocoderAutoComplete"
                             >
                               <div
                                 class="required"
@@ -1163,10 +1126,10 @@ exports[`Land Form component renders correctly 1`] = `
             </div>
           </div>
           <div
-            class="c4"
+            class="form-footer"
           >
             <div
-              class="c5"
+              class="c1"
             >
               <div
                 class="SresManual"
@@ -1193,13 +1156,13 @@ exports[`Land Form component renders correctly 1`] = `
                 </div>
               </div>
               <small
-                class="c6 p-1 mr-2"
+                class="c2 p-1 mr-2"
               >
                 Inventory Policy
               </small>
             </div>
             <span
-              class="c7"
+              class="fill-remaining-space"
             />
             <button
               class="btn btn-primary btn-sm"
