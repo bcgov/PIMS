@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, Index } from 
 
 @Entity()
 @Index(['IsDisabled', 'Name', 'SortOrder'])
-export class TierLevels {
+export class Workflows {
   @PrimaryGeneratedColumn()
   Id: number;
 
@@ -27,6 +27,10 @@ export class TierLevels {
 
   @Column('int')
   SortOrder: number;
+
+  @Column({ type: 'character varying', length: 20 })
+  @Index({ unique: true })
+  Code: string;
 
   @Column('text', { nullable: true })
   Description: string;
