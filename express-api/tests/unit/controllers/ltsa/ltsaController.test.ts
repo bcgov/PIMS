@@ -19,6 +19,7 @@ describe('UNIT - Testing controllers for /ltsa routes', () => {
   const mockResponse = {
     send: jest.fn().mockReturnThis(),
     status: jest.fn().mockReturnThis(),
+    json: jest.fn().mockReturnThis(),
   } as unknown as Response;
 
   // TODO: remove stub test when controller is complete
