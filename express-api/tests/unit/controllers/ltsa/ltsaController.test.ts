@@ -2,7 +2,20 @@ import { Request, Response } from 'express';
 import controllers from '../../../../controllers';
 
 describe('UNIT - Testing controllers for /ltsa routes', () => {
-  const mockRequest = {} as Request;
+  const mockRequest = {
+    user: {
+      idir_user_guid: 'W7802F34D2390EFA9E7JK15923770279',
+      identity_provider: 'idir',
+      idir_username: 'JOHNDOE',
+      name: 'Doe, John CITZ:EX',
+      preferred_username: 'a7254c34i2755fea9e7ed15918356158@idir',
+      given_name: 'John',
+      display_name: 'Doe, John CITZ:EX',
+      family_name: 'Doe',
+      email: 'john.doe@gov.bc.ca',
+      client_roles: ['Admin'],
+    },
+  } as Request;
   const mockResponse = {
     send: jest.fn().mockReturnThis(),
     status: jest.fn().mockReturnThis(),
