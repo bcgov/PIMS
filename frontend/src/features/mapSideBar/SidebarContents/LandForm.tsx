@@ -1,5 +1,4 @@
-import './LandForm.scss'
-
+import variables from '_variables.module.scss';
 import { IParcel } from 'actions/parcelsActions';
 import {
   ISteppedFormValues,
@@ -37,6 +36,7 @@ import * as React from 'react';
 import { Button } from 'react-bootstrap';
 import { useAppDispatch } from 'store';
 import { createParcel, updateParcel } from 'store/slices/hooks/parcelsActionCreator';
+import styled from 'styled-components';
 import { stringToNull } from 'utils';
 import {
   LandIdentificationSchema,
@@ -51,6 +51,42 @@ import { LandUsageForm } from './subforms/LandUsageForm';
 import { LandValuationForm } from './subforms/LandValuationForm';
 import { ParcelIdentificationForm } from './subforms/ParcelIdentificationForm';
 
+const Container = styled.div`
+  background-color: #fff;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+`;
+
+const FormContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  margin-bottom: 20px;
+`;
+
+const FormContent = styled.div`
+  border-top: 1px solid #666666;
+  width: 100%;
+  min-height: 100px;
+`;
+
+const FormFooter = styled.div`
+  display: flex;
+  width: 100%;
+  height: 70px;
+  padding-left: 10px;
+  align-items: center;
+  position: sticky;
+  background-color: ${variables.filterBackgroundColor};
+  bottom: -20px;
+  border-top: 10px solid white;
+`;
+
+const FillRemainingSpace = styled.span`
+  flex: 1 1 auto;
+`;
 
 export interface ISearchFields {
   searchPid: string;
@@ -202,10 +238,10 @@ const Form: React.FC<ILandForm> = ({
     }
   };
   return (
-    <div className='form-content-wrapper'>
+    <FormContentWrapper>
       <DebouncedValidation formikProps={formikProps}></DebouncedValidation>
-      <div className='form-content'>{render()}</div>
-      <div className='form-footer'>
+      <FormContent>{render()}</FormContent>
+      <FormFooter>
         <InventoryPolicy />
         <LastUpdatedBy
           createdOn={initialValues?.createdOn}
@@ -213,7 +249,7 @@ const Form: React.FC<ILandForm> = ({
           updatedByName={initialValues?.updatedByName}
           updatedByEmail={initialValues?.updatedByEmail}
         />
-        <span className='fill-remaining-space' />
+        <FillRemainingSpace />
         {!stepper.isSubmit(stepper.current) && (
           <Button
             type="button"
@@ -239,8 +275,8 @@ const Form: React.FC<ILandForm> = ({
             Submit
           </Button>
         )}
-      </div>
-    </div>
+      </FormFooter>
+    </FormContentWrapper>
   );
 };
 
@@ -424,7 +460,7 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
   };
 
   return (
-    <div className="container-style">
+    <Container className="landForm">
       <SteppedForm
         // Provide the steps
         steps={steps}
@@ -479,7 +515,7 @@ const LandForm: React.FC<IParentLandForm> = (props: IParentLandForm) => {
           disabled={props.disabled}
         />
       </SteppedForm>
-    </div>
+    </Container>
   );
 };
 export default LandForm;
