@@ -1,4 +1,5 @@
-import './LandForm.scss'
+import './LandForm.scss';
+
 import { IParcel } from 'actions/parcelsActions';
 import {
   ISteppedFormValues,
@@ -36,7 +37,6 @@ import * as React from 'react';
 import { Button } from 'react-bootstrap';
 import { useAppDispatch } from 'store';
 import { createParcel, updateParcel } from 'store/slices/hooks/parcelsActionCreator';
-import styled from 'styled-components';
 import { stringToNull } from 'utils';
 import {
   LandIdentificationSchema,
@@ -201,10 +201,10 @@ const Form: React.FC<ILandForm> = ({
     }
   };
   return (
-    <div className='corm-content-wrapper'>
+    <div className="corm-content-wrapper">
       <DebouncedValidation formikProps={formikProps}></DebouncedValidation>
-      <div className='form-content'>{render()}</div>
-      <div className='form-footer'>
+      <div className="form-content">{render()}</div>
+      <div className="form-footer">
         <InventoryPolicy />
         <LastUpdatedBy
           createdOn={initialValues?.createdOn}
@@ -212,7 +212,7 @@ const Form: React.FC<ILandForm> = ({
           updatedByName={initialValues?.updatedByName}
           updatedByEmail={initialValues?.updatedByEmail}
         />
-        <span className='fill-remaining-space' />
+        <span className="fill-remaining-space" />
         {!stepper.isSubmit(stepper.current) && (
           <Button
             type="button"
