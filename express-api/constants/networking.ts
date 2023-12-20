@@ -1,9 +1,9 @@
 const { CONTAINERIZED, FRONTEND_URL, BACKEND_URL, API_HTTP_PORT, APP_HTTP_PORT } = process.env;
 
-let frontendUrl = FRONTEND_URL;
-let backendUrl = BACKEND_URL;
-const apiPort = +API_HTTP_PORT ?? 5000;
-const frontendPort = +APP_HTTP_PORT ?? 3000;
+let frontendUrl = FRONTEND_URL ?? '';
+let backendUrl = BACKEND_URL ?? '';
+const apiPort = +(API_HTTP_PORT ?? 5000);
+const frontendPort = +(APP_HTTP_PORT ?? 3000);
 
 // Use production urls unless CONTAINERIZED.
 if (!CONTAINERIZED) {

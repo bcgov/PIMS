@@ -16,6 +16,9 @@ COPY . .
 # Install TypeScript. Needed for build process.
 RUN npm i -D typescript
 
+# Generate swagger-output
+RUN npm run swagger
+
 # Compile to JavaScript build 
 RUN npm run build
 
