@@ -1,5 +1,5 @@
 import { format, createLogger, transports } from 'winston';
-import constants from '../constants';
+import constants from '@constants';
 
 const { timestamp, combine, json } = format;
 const { TESTING } = constants;

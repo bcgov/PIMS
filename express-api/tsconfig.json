@@ -2,10 +2,14 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@middleware/*": ["./middleware/*"],
-      "@controllers/*": ["./controllers/*"],
-      "@constants/*": ["./constants/*"],
-      "*": ["./src/*"] // Include a wildcard path for general source files
+      "@constants/*": ["src/constants/*"],
+      "@controllers/*": ["src/controllers/*"],
+      "@middleware/*": ["src/middleware/*"],
+      "@routes/*": ["src/routes/*"],
+      "@swagger/*": ["src/swagger/*"],
+      "@typeorm/*": ["src/typeorm/*"],
+      "@utilities/*": ["src/utilities/*"],
+      "@*": ["src/*"] // Include a wildcard path for general source files
     },
     "module": "commonjs",
     "esModuleInterop": true,

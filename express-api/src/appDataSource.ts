@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { CustomWinstonLogger } from './typeorm/utilities/CustomWinstonLogger';
+import { CustomWinstonLogger } from '@typeorm/utilities/CustomWinstonLogger';
 
 const {
   POSTGRES_USER,

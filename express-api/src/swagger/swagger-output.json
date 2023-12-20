@@ -22,13 +22,10 @@
   "paths": {
     "/health": {
       "get": {
-        "tags": [
-          "Health"
-        ],
-        "description": "Returns a 200 (OK) status if API is reached.",
+        "description": "",
         "responses": {
-          "200": {
-            "description": "OK"
+          "default": {
+            "description": ""
           }
         }
       }

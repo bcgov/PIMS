@@ -8,16 +8,31 @@ const jestConfig: JestConfigWithTsJest = {
       'ts-jest',
       {
         // ts-jest configuration goes here
+        tsconfig: {
+          baseUrl: "src",
+          paths: {
+            "@constants/*": ["src/constants/*"],
+            "@controllers/*": ["src/controllers/*"],
+            "@middleware/*": ["src/middleware/*"],
+            "@routes/*": ["src/routes/*"],
+            "@swagger/*": ["src/swagger/*"],
+            "@typeorm/*": ["src/typeorm/*"],
+            "@utilities/*": ["src/utilities/*"],
+            "@*": ["src/*"] // Include a wildcard path for general source files
+          },
+
+
+        }
       },
     ],
   },
   collectCoverage: true,
   collectCoverageFrom: [
-    'controllers/**/*.ts',
-    'middleware/**/*.ts',
-    'utilities/**/*.ts',
-    'routes/**/*.ts',
-    'express.ts',
+    'src/controllers/**/*.ts',
+    'src/middleware/**/*.ts',
+    'src/utilities/**/*.ts',
+    'src/routes/**/*.ts',
+    'src/express.ts',
   ],
   coveragePathIgnorePatterns: ['index.ts'],
   coverageReporters: [['lcov', { projectRoot: '..' }]],

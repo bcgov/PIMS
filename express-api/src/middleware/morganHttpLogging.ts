@@ -1,5 +1,5 @@
 import morgan from 'morgan';
-import logger from '../utilities/winstonLogger';
+import logger from '@utilities/winstonLogger';
 
 /**
  * Middleware function that configures Morgan to use a custom logger with the http severity.
