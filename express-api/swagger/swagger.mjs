@@ -29,7 +29,16 @@ const doc = {
     // },
     // { ... }
   ],
-  components: {}, // by default: empty object
+  components: {
+    securitySchemes: {
+      bearerAuth: {
+        // arbitrary name for the security scheme
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+    },
+  }, // by default: empty object
 };
 
 const outputFile = './swagger-output.json';
