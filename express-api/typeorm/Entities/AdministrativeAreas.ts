@@ -42,8 +42,6 @@ export class AdministrativeAreas {
   @Column({ type: 'character varying', length: 50, nullable: true })
   BoundaryType: string;
 
-  @ManyToOne(() => RegionalDistrict, (RegionalDistrict) => RegionalDistrict.AdministrativeAreas, {
-    cascade: true,
-  })
+  @ManyToOne(() => RegionalDistrict, (RegionalDistrict) => RegionalDistrict.AdministrativeAreas)
   RegionalDistrict: RegionalDistrict;
 }
