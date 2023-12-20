@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
-import { keycloak } from '@bcgov/citz-imb-kc-express';
+import { keycloak, protectedRoute } from '@bcgov/citz-imb-kc-express';
 import router from './routes';
 import middleware from './middleware';
 import constants from './constants';
@@ -60,7 +60,10 @@ keycloak(app, KEYCLOAK_OPTIONS);
 // Set headers for response
 app.use(`/api/v2`, headerHandler as RequestHandler);
 
-// TODO: Allow versioning by environment variable
+// Unprotected Routes
 app.use(`/api/v2`, router.healthRouter);
+
+// Protected Routes
+app.use(`/api/v2`, protectedRoute(), router.ltsaRouter);
 
 export default app;
