@@ -43,10 +43,8 @@ Styles:
 Express:
   - express-api/**/*
 
-################
-# TypeORM
 TypeORM:
-  - typeorm/**/*
+  - express-api/typeorm/**/*
 
 #################
 # Testing
