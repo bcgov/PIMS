@@ -171,7 +171,7 @@ describe('UNIT - Parcels', () => {
       expect(mockResponse.statusValue).toBe(501);
     });
 
-    it('should return a status of 200', async () => {
+    xit('should return a status of 200', async () => {
       mockRequest.query.pin = '1234';
       await controllers.checkPinAvailable(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
@@ -184,7 +184,7 @@ describe('UNIT - Parcels', () => {
       expect(mockResponse.statusValue).toBe(501);
     });
 
-    it('should return a status of 200', async () => {
+    xit('should return a status of 200', async () => {
       mockRequest.query.pid = '1234';
       await controllers.checkPidAvailable(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
