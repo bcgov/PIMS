@@ -1,7 +1,7 @@
 import logger from '@utilities/winstonLogger';
-import constants from '@constants';
-import app from '@express';
-import { AppDataSource } from '@appDataSource';
+import constants from '@approot/constants';
+import app from '@approot/express';
+import { AppDataSource } from '@approot/appDataSource';
 
 const { API_PORT } = constants;
 
