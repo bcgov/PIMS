@@ -11,6 +11,7 @@ import constants from './constants';
 import { KEYCLOAK_OPTIONS } from './middleware/keycloak/keycloakOptions';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSON from './swagger/swagger-output.json';
+import { Roles } from './constants/roles';
 
 const app: Application = express();
 
@@ -65,6 +66,6 @@ app.use(`/api/v2`, router.healthRouter);
 
 // Protected Routes
 app.use(`/api/v2`, protectedRoute(), router.ltsaRouter);
-app.use(`/api/v2`, protectedRoute(['System Administrator']), router.adminAccessRequestsRouter);
+app.use(`/api/v2`, protectedRoute([Roles.ADMIN]), router.adminRouter);
 
 export default app;

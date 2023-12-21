@@ -1,11 +1,11 @@
 import ltsaRouter from './ltsaRouter';
 import healthRouter from './healthRouter';
-import adminAccessRequestsRouter from './admin/accessRequestsRouter';
+import adminRouter from './adminRouter';
 
 const router = {
   healthRouter,
   ltsaRouter,
-  adminAccessRequestsRouter,
+  adminRouter,
 };
 
 export default router;
