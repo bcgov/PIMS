@@ -9,7 +9,7 @@
       "@swagger/*": ["src/swagger/*"],
       "@typeorm/*": ["src/typeorm/*"],
       "@utilities/*": ["src/utilities/*"],
-      "@*": ["src/*"]
+      "@approot/*": ["src/*"]
     },
     "module": "commonjs",
     "esModuleInterop": true,
