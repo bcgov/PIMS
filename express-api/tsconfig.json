@@ -9,7 +9,7 @@
       "@swagger/*": ["src/swagger/*"],
       "@typeorm/*": ["src/typeorm/*"],
       "@utilities/*": ["src/utilities/*"],
-      "@*": ["src/*"] // Include a wildcard path for general source files
+      "@*": ["src/*"]
     },
     "module": "commonjs",
     "esModuleInterop": true,
@@ -20,7 +20,7 @@
     "outDir": "dist",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "resolveJsonModule": true // Used for swagger-output.json
+    "resolveJsonModule": true
   },
   "include": ["./**/*"]
 }

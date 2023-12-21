@@ -1,4 +1,6 @@
 import type { JestConfigWithTsJest } from 'ts-jest';
+import { pathsToModuleNameMapper } from 'ts-jest';
+import { compilerOptions } from './tsconfig.json';
 
 const jestConfig: JestConfigWithTsJest = {
   testEnvironment: 'node',
@@ -8,21 +10,6 @@ const jestConfig: JestConfigWithTsJest = {
       'ts-jest',
       {
         // ts-jest configuration goes here
-        tsconfig: {
-          baseUrl: "src",
-          paths: {
-            "@constants/*": ["src/constants/*"],
-            "@controllers/*": ["src/controllers/*"],
-            "@middleware/*": ["src/middleware/*"],
-            "@routes/*": ["src/routes/*"],
-            "@swagger/*": ["src/swagger/*"],
-            "@typeorm/*": ["src/typeorm/*"],
-            "@utilities/*": ["src/utilities/*"],
-            "@*": ["src/*"] // Include a wildcard path for general source files
-          },
-
-
-        }
       },
     ],
   },
@@ -48,6 +35,9 @@ const jestConfig: JestConfigWithTsJest = {
     },
   },
   randomize: true, // Randomizes order of tests
+  roots: ['.'],
+  modulePaths: [compilerOptions.baseUrl], // <-- This will be set to 'baseUrl' value
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
 };
 
 export default jestConfig;
