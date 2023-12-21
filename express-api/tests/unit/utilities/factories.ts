@@ -1,24 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import sinon from 'sinon';
 import { Request, Response } from 'express';
 
 export class MockRes {
   statusValue: any;
-  status = sinon.fake((value: any) => {
+  status = jest.fn().mockImplementation((value: any) => {
     this.statusValue = value;
 
     return this;
   });
 
   jsonValue: any;
-  json = sinon.fake((value: any) => {
+  json = jest.fn().mockImplementation((value: any) => {
     this.jsonValue = value;
 
     return this;
   });
 
   sendValue: any;
-  send = sinon.fake((value: any) => {
+  send = jest.fn().mockImplementation((value: any) => {
     this.sendValue = value;
 
     return this;
