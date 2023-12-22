@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import controllers from '../../../../../controllers';
 import { MockReq, MockRes, getRequestHandlerMocks } from '../../../../testUtils/factories';
 import { Roles } from '../../../../../constants/roles';
+import { IAdministrativeArea } from '../../../../../controllers/admin/administrativeAreas/IAdministrativeArea';
+import { faker } from '@faker-js/faker';
 
 let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
@@ -13,6 +15,21 @@ const {
   getAdministrativeAreasFiltered,
   updateAdministrativeAreaById,
 } = controllers.admin;
+
+const mockAdministrativeArea: IAdministrativeArea = {
+  createdOn: faker.date.anytime().toLocaleString(),
+  updatedOn: faker.date.anytime().toLocaleString(),
+  updatedByName: faker.person.firstName(),
+  updatedByEmail: faker.internet.email(),
+  id: faker.number.int(),
+  name: faker.location.city(),
+  isDisabled: false,
+  isVisible: true,
+  sortOrder: 0,
+  abbreviation: '',
+  boundaryType: '',
+  regionalDistrict: 'CPRD',
+};
 
 describe('UNIT - Administrative Areas Admin', () => {
   beforeEach(() => {
@@ -36,6 +53,9 @@ describe('UNIT - Administrative Areas Admin', () => {
   });
 
   describe('POST /admin/administrativeAreas', () => {
+    beforeEach(() => {
+      mockRequest.body = mockAdministrativeArea;
+    });
     // TODO: remove stub test when controller is complete
     it('should return the stub response of 501', async () => {
       await addAdministrativeArea(mockRequest, mockResponse);
@@ -55,6 +75,15 @@ describe('UNIT - Administrative Areas Admin', () => {
   });
 
   describe('POST /admin/administrativeAreas/filter', () => {
+    beforeEach(() => {
+      mockRequest.body = {
+        page: 0,
+        quantity: 0,
+        boundaryType: mockAdministrativeArea.boundaryType,
+        name: mockAdministrativeArea.name,
+        abbreviation: mockAdministrativeArea.abbreviation,
+      };
+    });
     // TODO: remove stub test when controller is complete
     it('should return the stub response of 501', async () => {
       await getAdministrativeAreasFiltered(mockRequest, mockResponse);
@@ -74,6 +103,9 @@ describe('UNIT - Administrative Areas Admin', () => {
   });
 
   describe('GET /admin/administrativeAreas/:id', () => {
+    beforeEach(() => {
+      mockRequest.params.id = `${mockAdministrativeArea.id}`;
+    });
     // TODO: remove stub test when controller is complete
     it('should return the stub response of 501', async () => {
       await getAdministrativeAreaById(mockRequest, mockResponse);
@@ -93,6 +125,10 @@ describe('UNIT - Administrative Areas Admin', () => {
   });
 
   describe('PUT /admin/administrativeAreas/:id', () => {
+    beforeEach(() => {
+      mockRequest.body = { ...mockAdministrativeArea, name: 'new name' };
+      mockRequest.params.id = `${mockAdministrativeArea.id}`;
+    });
     // TODO: remove stub test when controller is complete
     it('should return the stub response of 501', async () => {
       await updateAdministrativeAreaById(mockRequest, mockResponse);
@@ -103,6 +139,7 @@ describe('UNIT - Administrative Areas Admin', () => {
     xit('should return status 200 and the updated administrative area', async () => {
       await updateAdministrativeAreaById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
+      expect(mockResponse.jsonValue.name).toBe('new name');
     });
 
     xit('should return status 400 when a bad request is received', async () => {
@@ -112,6 +149,9 @@ describe('UNIT - Administrative Areas Admin', () => {
   });
 
   describe('DELETE /admin/administrativeAreas/:id', () => {
+    beforeEach(() => {
+      mockRequest.params.id = `${mockAdministrativeArea.id}`;
+    });
     // TODO: remove stub test when controller is complete
     it('should return the stub response of 501', async () => {
       await deleteAdministrativeAreaById(mockRequest, mockResponse);
