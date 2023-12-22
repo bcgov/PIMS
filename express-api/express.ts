@@ -67,5 +67,6 @@ app.use(`/api/v2`, router.healthRouter);
 // Protected Routes
 app.use(`/api/v2`, protectedRoute(), router.ltsaRouter);
 app.use(`/api/v2`, protectedRoute([Roles.ADMIN]), router.adminRouter);
+app.use(`/api/v2`, protectedRoute(), router.parcelsRouter);
 
 export default app;
