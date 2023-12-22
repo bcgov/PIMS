@@ -1,9 +1,9 @@
 import { healthCheck } from './healthController';
 import * as ltsa from './ltsa/ltsaController';
-import * as adminAccessRequests from './admin/accessRequests/accessRequestsController';
+import admin from './admin';
 
 export default {
   healthCheck,
   ...ltsa,
-  ...adminAccessRequests,
+  admin,
 };
