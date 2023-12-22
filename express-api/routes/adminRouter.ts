@@ -20,16 +20,14 @@ router.route(`${ADMIN_ROUTE}/accessRequests`).get(getAccessRequests).delete(dele
 
 // Endpoints for Admin Administrative Areas
 router
-  .route(`${ADMIN_ROUTE}/administrativeAreas/areas`)
+  .route(`${ADMIN_ROUTE}/administrativeAreas`)
   .get(getAdministrativeAreas)
   .post(addAdministrativeArea);
 
-router
-  .route(`${ADMIN_ROUTE}/administrativeAreas/areas/filter`)
-  .post(getAdministrativeAreasFiltered); // TODO: Could be a get with query strings
+router.route(`${ADMIN_ROUTE}/administrativeAreas/filter`).post(getAdministrativeAreasFiltered); // TODO: Could be a get with query strings
 
 router
-  .route(`${ADMIN_ROUTE}/administrativeAreas/areas/:id`)
+  .route(`${ADMIN_ROUTE}/administrativeAreas/:id`)
   .get(getAdministrativeAreaById)
   .put(updateAdministrativeAreaById) // TODO: Should this be a patch?
   .delete(deleteAdministrativeAreaById);
