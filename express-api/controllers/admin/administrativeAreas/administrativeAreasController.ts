@@ -67,7 +67,7 @@ export const getAdministrativeAreasFiltered = async (req: Request, res: Response
 export const getAdministrativeAreaById = async (req: Request, res: Response) => {
   /**
    * #swagger.tags = ['Administrative Areas - Admin']
-   * #swagger.description = 'Returns an administrative areas that matches the supplied ID.'
+   * #swagger.description = 'Returns an administrative area that matches the supplied ID.'
    * #swagger.security = [{
             "bearerAuth": []
       }]
@@ -86,7 +86,7 @@ export const getAdministrativeAreaById = async (req: Request, res: Response) => 
 export const updateAdministrativeAreaById = async (req: Request, res: Response) => {
   /**
    * #swagger.tags = ['Administrative Areas - Admin']
-   * #swagger.description = 'Updates an administrative areas that matches the supplied ID.'
+   * #swagger.description = 'Updates an administrative area that matches the supplied ID.'
    * #swagger.security = [{
             "bearerAuth": []
       }]
@@ -105,7 +105,7 @@ export const updateAdministrativeAreaById = async (req: Request, res: Response) 
 export const deleteAdministrativeAreaById = async (req: Request, res: Response) => {
   /**
    * #swagger.tags = ['Administrative Areas - Admin']
-   * #swagger.description = 'Deletes an administrative areas that matches the supplied ID.'
+   * #swagger.description = 'Deletes an administrative area that matches the supplied ID.'
    * #swagger.security = [{
             "bearerAuth": []
       }]
