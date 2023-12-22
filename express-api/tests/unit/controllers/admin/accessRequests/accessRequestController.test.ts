@@ -51,5 +51,4 @@ describe('UNIT - Access Requests Admin', () => {
       expect(mockResponse.statusValue).toBe(400);
     });
   });
-})
-
+});
