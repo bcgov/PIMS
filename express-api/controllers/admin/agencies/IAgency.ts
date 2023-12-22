@@ -5,8 +5,8 @@ export interface IAgency {
   updatedByEmail: string;
   id: number;
   name: string;
-  isDisabled: true;
-  isVisible: true;
+  isDisabled: boolean;
+  isVisible: boolean;
   sortOrder: number;
   type: string;
   code: string;

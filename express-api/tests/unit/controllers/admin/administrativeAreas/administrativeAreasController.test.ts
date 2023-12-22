@@ -38,7 +38,7 @@ describe('UNIT - Administrative Areas Admin', () => {
     mockRequest.setUser({ client_roles: [Roles.ADMIN] });
     mockResponse = mockRes;
   });
-  describe('GET /admin/administrativeAreas', () => {
+  describe('Controller getAdministrativeAreas', () => {
     // TODO: remove stub test when controller is complete
     it('should return the stub response of 501', async () => {
       await getAdministrativeAreas(mockRequest, mockResponse);
@@ -52,7 +52,7 @@ describe('UNIT - Administrative Areas Admin', () => {
     });
   });
 
-  describe('POST /admin/administrativeAreas', () => {
+  describe('Controller addAdministrativeArea', () => {
     beforeEach(() => {
       mockRequest.body = mockAdministrativeArea;
     });
@@ -74,7 +74,7 @@ describe('UNIT - Administrative Areas Admin', () => {
     });
   });
 
-  describe('POST /admin/administrativeAreas/filter', () => {
+  describe('Controller getAdministrativeAreasFiltered', () => {
     beforeEach(() => {
       mockRequest.body = {
         page: 0,
@@ -102,7 +102,7 @@ describe('UNIT - Administrative Areas Admin', () => {
     });
   });
 
-  describe('GET /admin/administrativeAreas/:id', () => {
+  describe('Controller getAdministrativeAreaById', () => {
     beforeEach(() => {
       mockRequest.params.id = `${mockAdministrativeArea.id}`;
     });
@@ -124,7 +124,7 @@ describe('UNIT - Administrative Areas Admin', () => {
     });
   });
 
-  describe('PUT /admin/administrativeAreas/:id', () => {
+  describe('Controller updateAdministrativeAreaById', () => {
     beforeEach(() => {
       mockRequest.body = { ...mockAdministrativeArea, name: 'new name' };
       mockRequest.params.id = `${mockAdministrativeArea.id}`;
@@ -148,7 +148,7 @@ describe('UNIT - Administrative Areas Admin', () => {
     });
   });
 
-  describe('DELETE /admin/administrativeAreas/:id', () => {
+  describe('Controller deleteAdministrativeAreaById', () => {
     beforeEach(() => {
       mockRequest.params.id = `${mockAdministrativeArea.id}`;
     });

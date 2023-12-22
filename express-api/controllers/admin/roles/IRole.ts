@@ -7,8 +7,8 @@ export interface IRole {
   updatedByEmail: string;
   id: UUID;
   name: string;
-  isDisabled: true;
-  isVisible: true;
+  isDisabled: boolean;
+  isVisible: boolean;
   sortOrder: number;
   type: string;
   description: string;

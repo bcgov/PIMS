@@ -14,7 +14,7 @@ describe('UNIT - Access Requests Admin', () => {
     mockRequest.setUser({ client_roles: [Roles.ADMIN] });
     mockResponse = mockRes;
   });
-  describe('GET /admin/accessRequest', () => {
+  describe('Controller getAccessRequests', () => {
     // TODO: remove stub test when controller is complete
     it('should return the stub response of 501', async () => {
       await getAccessRequests(mockRequest, mockResponse);
@@ -33,7 +33,7 @@ describe('UNIT - Access Requests Admin', () => {
     });
   });
 
-  describe('DELETE /admin/accessRequest', () => {
+  describe('Controller deleteAccessRequest', () => {
     // TODO: remove stub test when controller is complete
     it('should return the stub response of 501', async () => {
       await deleteAccessRequest(mockRequest, mockResponse);
