@@ -52,7 +52,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
       expect(mockResponse.statusValue).toBe(200);
     });
 
-    xit('should return status 204 if no requests', async () => {
+    xit('should return status 404 if no request found', async () => {
       mockRequest.params.requestId = '-1';
       await controllers.getUserAccessRequestById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(404);
