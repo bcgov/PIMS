@@ -1,4 +1,4 @@
-import controllers from '@approot/controllers';
+import controllers from '@/controllers';
 import express from 'express';
 
 const router = express.Router();

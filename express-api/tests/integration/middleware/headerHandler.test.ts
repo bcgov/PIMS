@@ -1,4 +1,4 @@
-import app from '@approot/express';
+import app from '@/express';
 import supertest from 'supertest';
 
 const request = supertest(app);

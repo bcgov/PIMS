@@ -5,12 +5,12 @@ import compression from 'compression';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import { keycloak, protectedRoute } from '@bcgov/citz-imb-kc-express';
-import router from '@approot/routes';
-import middleware from '@approot/middleware';
-import constants from '@approot/constants';
-import { KEYCLOAK_OPTIONS } from '@middleware/keycloak/keycloakOptions';
+import router from '@/routes';
+import middleware from '@/middleware';
+import constants from '@/constants';
+import { KEYCLOAK_OPTIONS } from '@/middleware/keycloak/keycloakOptions';
 import swaggerUi from 'swagger-ui-express';
-import swaggerJSON from '@swagger/swagger-output.json';
+import swaggerJSON from '@/swagger/swagger-output.json';
 
 const app: Application = express();
 

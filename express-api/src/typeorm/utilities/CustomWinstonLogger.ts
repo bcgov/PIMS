@@ -1,5 +1,5 @@
 import { AbstractLogger, LogLevel, LogMessage } from 'typeorm';
-import logger from '@utilities/winstonLogger';
+import logger from '@/utilities/winstonLogger';
 
 export class CustomWinstonLogger extends AbstractLogger {
   /**

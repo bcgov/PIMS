@@ -1,5 +1,5 @@
-import ltsaRouter from '@routes/ltsaRouter';
-import healthRouter from '@routes/healthRouter';
+import ltsaRouter from '@/routes/ltsaRouter';
+import healthRouter from '@/routes/healthRouter';
 
 const router = {
   healthRouter,

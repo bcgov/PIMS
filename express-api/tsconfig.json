@@ -2,14 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@constants/*": ["src/constants/*"],
-      "@controllers/*": ["src/controllers/*"],
-      "@middleware/*": ["src/middleware/*"],
-      "@routes/*": ["src/routes/*"],
-      "@swagger/*": ["src/swagger/*"],
-      "@typeorm/*": ["src/typeorm/*"],
-      "@utilities/*": ["src/utilities/*"],
-      "@approot/*": ["src/*"]
+      "@/*": ["src/*"]
     },
     "module": "commonjs",
     "esModuleInterop": true,

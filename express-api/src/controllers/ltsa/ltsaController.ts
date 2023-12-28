@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { stubResponse } from '@utilities/stubResponse';
+import { stubResponse } from '@/utilities/stubResponse';
 
 /**
  * @description Used to retrieve property information from LTSA.
