@@ -8,7 +8,8 @@ import { IRole } from '../../../../../controllers/admin/roles/IRole';
 
 let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
-const { addRole, getRoleById, getRoleByName, getRoles, deleteRoleById, updateRoleById } = controllers.admin;
+const { addRole, getRoleById, getRoleByName, getRoles, deleteRoleById, updateRoleById } =
+  controllers.admin;
 
 const mockRole: IRole = {
   createdOn: faker.date.anytime().toLocaleString(),
