@@ -2,6 +2,7 @@ import supertest from 'supertest';
 import { faker } from '@faker-js/faker';
 import app from '../../../../express';
 import { IAdministrativeArea } from '../../../../controllers/admin/administrativeAreas/IAdministrativeArea';
+import { UUID } from 'crypto';
 
 const request = supertest(app);
 
@@ -11,7 +12,7 @@ const mockAdministrativeArea: IAdministrativeArea = {
   updatedOn: faker.date.anytime().toLocaleString(),
   updatedByName: faker.person.firstName(),
   updatedByEmail: faker.internet.email(),
-  id: faker.number.int(),
+  id: faker.string.uuid() as UUID,
   name: faker.location.city(),
   isDisabled: false,
   isVisible: true,

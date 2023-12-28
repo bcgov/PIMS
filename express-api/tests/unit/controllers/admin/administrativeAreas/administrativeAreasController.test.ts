@@ -4,6 +4,7 @@ import { MockReq, MockRes, getRequestHandlerMocks } from '../../../../testUtils/
 import { Roles } from '../../../../../constants/roles';
 import { IAdministrativeArea } from '../../../../../controllers/admin/administrativeAreas/IAdministrativeArea';
 import { faker } from '@faker-js/faker';
+import { UUID } from 'crypto';
 
 let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
@@ -21,7 +22,7 @@ const mockAdministrativeArea: IAdministrativeArea = {
   updatedOn: faker.date.anytime().toLocaleString(),
   updatedByName: faker.person.firstName(),
   updatedByEmail: faker.internet.email(),
-  id: faker.number.int(),
+  id: faker.string.uuid() as UUID,
   name: faker.location.city(),
   isDisabled: false,
   isVisible: true,
