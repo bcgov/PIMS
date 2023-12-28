@@ -33,7 +33,9 @@ describe('INTEGRATION - Administrative Areas Admin', () => {
     });
 
     xit('should return status 200 with a list of admin areas', async () => {
-      const response = await request.get(`${ADMIN_AREAS_PATH}`).set('Authorization', `Bearer ${TOKEN}`);
+      const response = await request
+        .get(`${ADMIN_AREAS_PATH}`)
+        .set('Authorization', `Bearer ${TOKEN}`);
       expect(response.status).toBe(200);
     });
   });

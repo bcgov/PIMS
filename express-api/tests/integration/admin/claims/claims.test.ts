@@ -23,9 +23,7 @@ describe('INTEGRATION - Claims Admin', () => {
   const TOKEN = '';
   describe(`GET ${CLAIMS_PATH}`, () => {
     it('should return 401 Unauthorized if invalid token provided', async () => {
-      const response = await request
-        .get(`${CLAIMS_PATH}`)
-        .set('Authorization', `Bearer notAToken`);
+      const response = await request.get(`${CLAIMS_PATH}`).set('Authorization', `Bearer notAToken`);
       expect(response.status).toBe(401);
     });
 

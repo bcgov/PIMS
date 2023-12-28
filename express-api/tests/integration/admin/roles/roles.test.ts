@@ -18,16 +18,14 @@ const mockRole: IRole = {
   isVisible: true,
   description: '',
   sortOrder: 0,
-  type: ''
+  type: '',
 };
 describe('INTEGRATION - Roles Admin', () => {
   // TODO: figure out how to mock keycloak
   const TOKEN = '';
   describe(`GET ${ROLES_PATH}`, () => {
     it('should return 401 Unauthorized if invalid token provided', async () => {
-      const response = await request
-        .get(`${ROLES_PATH}`)
-        .set('Authorization', `Bearer notAToken`);
+      const response = await request.get(`${ROLES_PATH}`).set('Authorization', `Bearer notAToken`);
       expect(response.status).toBe(401);
     });
 
@@ -39,9 +37,7 @@ describe('INTEGRATION - Roles Admin', () => {
 
   describe(`POST ${ROLES_PATH}`, () => {
     it('should return 401 Unauthorized if invalid token provided', async () => {
-      const response = await request
-        .post(`${ROLES_PATH}`)
-        .set('Authorization', `Bearer notAToken`);
+      const response = await request.post(`${ROLES_PATH}`).set('Authorization', `Bearer notAToken`);
       expect(response.status).toBe(401);
     });
 

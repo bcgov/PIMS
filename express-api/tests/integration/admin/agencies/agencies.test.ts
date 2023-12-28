@@ -34,7 +34,9 @@ describe('INTEGRATION - Agencies Admin', () => {
     });
 
     xit('should return status 200 with a list of agencies', async () => {
-      const response = await request.get(`${AGENCIES_PATH}`).set('Authorization', `Bearer ${TOKEN}`);
+      const response = await request
+        .get(`${AGENCIES_PATH}`)
+        .set('Authorization', `Bearer ${TOKEN}`);
       expect(response.status).toBe(200);
     });
   });

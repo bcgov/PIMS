@@ -117,12 +117,15 @@ describe('INTEGRATION - Users Admin', () => {
     });
 
     xit('should return status 200 with a list of users', async () => {
-      const response = await request.post(`${USERS_PATH}/filter`).set('Authorization', `Bearer ${TOKEN}`).send({
-        page: 0,
-        quantity: 0,
-        position: 'Tester',
-        isDisabled: false,
-      });
+      const response = await request
+        .post(`${USERS_PATH}/filter`)
+        .set('Authorization', `Bearer ${TOKEN}`)
+        .send({
+          page: 0,
+          quantity: 0,
+          position: 'Tester',
+          isDisabled: false,
+        });
       expect(response.status).toBe(200);
     });
   });
@@ -138,12 +141,15 @@ describe('INTEGRATION - Users Admin', () => {
     // Not clear why this would be a POST. Should be able to just send agency...
     // Could ditch this route entirely and just use get user filter route
     xit('should return status 200 with a list of users', async () => {
-      const response = await request.post(`${USERS_PATH}/my/agency`).set('Authorization', `Bearer ${TOKEN}`).send({
-        page: 0,
-        quantity: 0,
-        position: 'Tester',
-        isDisabled: false,
-      });
+      const response = await request
+        .post(`${USERS_PATH}/my/agency`)
+        .set('Authorization', `Bearer ${TOKEN}`)
+        .send({
+          page: 0,
+          quantity: 0,
+          position: 'Tester',
+          isDisabled: false,
+        });
       expect(response.status).toBe(200);
     });
   });
@@ -157,7 +163,9 @@ describe('INTEGRATION - Users Admin', () => {
     });
 
     xit('should return status 200 with the matching user', async () => {
-      const response = await request.get(`${USERS_PATH}/roles/${mockUser.username}`).set('Authorization', `Bearer ${TOKEN}`);
+      const response = await request
+        .get(`${USERS_PATH}/roles/${mockUser.username}`)
+        .set('Authorization', `Bearer ${TOKEN}`);
       expect(response.status).toBe(200);
       expect(response.body.userName).toBe(mockUser.username);
     });
@@ -173,7 +181,10 @@ describe('INTEGRATION - Users Admin', () => {
     });
 
     xit('should return status 200 with the matching user and new role', async () => {
-      const response = await request.post(`${USERS_PATH}/roles/${mockUser.username}`).set('Authorization', `Bearer ${TOKEN}`).send('new role');
+      const response = await request
+        .post(`${USERS_PATH}/roles/${mockUser.username}`)
+        .set('Authorization', `Bearer ${TOKEN}`)
+        .send('new role');
       expect(response.status).toBe(200);
       expect(response.body.roles).toContain('new role');
     });
@@ -189,7 +200,10 @@ describe('INTEGRATION - Users Admin', () => {
     });
 
     xit('should return status 200 with the matching user but without new role', async () => {
-      const response = await request.delete(`${USERS_PATH}/roles/${mockUser.username}`).set('Authorization', `Bearer ${TOKEN}`).send('new role');
+      const response = await request
+        .delete(`${USERS_PATH}/roles/${mockUser.username}`)
+        .set('Authorization', `Bearer ${TOKEN}`)
+        .send('new role');
       expect(response.status).toBe(200);
       expect(response.body.roles).not.toContain('new role');
     });
