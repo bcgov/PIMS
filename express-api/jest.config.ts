@@ -1,4 +1,6 @@
 import type { JestConfigWithTsJest } from 'ts-jest';
+import { pathsToModuleNameMapper } from 'ts-jest';
+import { compilerOptions } from './tsconfig.json';
 
 const jestConfig: JestConfigWithTsJest = {
   testEnvironment: 'node',
@@ -13,11 +15,11 @@ const jestConfig: JestConfigWithTsJest = {
   },
   collectCoverage: true,
   collectCoverageFrom: [
-    'controllers/**/*.ts',
-    'middleware/**/*.ts',
-    'utilities/**/*.ts',
-    'routes/**/*.ts',
-    'express.ts',
+    'src/controllers/**/*.ts',
+    'src/middleware/**/*.ts',
+    'src/utilities/**/*.ts',
+    'src/routes/**/*.ts',
+    'src/express.ts',
   ],
   coveragePathIgnorePatterns: ['index.ts'],
   coverageReporters: [['lcov', { projectRoot: '..' }]],
@@ -28,11 +30,14 @@ const jestConfig: JestConfigWithTsJest = {
       lines: 80,
       statements: 80,
     },
-    'express.ts': {
+    'src/express.ts': {
       branches: 0, // Because rate limiter is omitted when testing
     },
   },
   randomize: true, // Randomizes order of tests
+  roots: ['.'],
+  modulePaths: [compilerOptions.baseUrl], // <-- This will be set to 'baseUrl' value
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
 };
 
 export default jestConfig;

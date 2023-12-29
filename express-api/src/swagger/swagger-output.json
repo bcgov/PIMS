@@ -1,0 +1,224 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "3.0.0",
+    "title": "PIMS Express API",
+    "description": "A REST API that supports the Property Inventory Management System (PIMS).",
+    "contact": {
+      "name": "Support",
+      "email": "support@pims.gov.bc.ca"
+    },
+    "license": {
+      "name": "APACHE",
+      "url": "https://github.com/bcgov/PIMS/blob/dev/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "/api/v2",
+      "description": ""
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "description": "Returns a 200 (OK) status if API is reached.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/ltsa/land/title": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "${PARCELS_ROUTE}/{parcelId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "PARCELS_ROUTE",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "parcelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "PARCELS_ROUTE",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "parcelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "PARCELS_ROUTE",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "parcelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "${PARCELS_ROUTE}/filter": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "PARCELS_ROUTE",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "${PARCELS_ROUTE}/check/pid-available": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "PARCELS_ROUTE",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "${PARCELS_ROUTE}/check/pin-available": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "PARCELS_ROUTE",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "${PARCELS_ROUTE}/{parcelId}/financials": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "PARCELS_ROUTE",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "parcelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
