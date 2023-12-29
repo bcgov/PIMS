@@ -5,12 +5,12 @@ import compression from 'compression';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import { keycloak, protectedRoute } from '@bcgov/citz-imb-kc-express';
-import router from './routes';
-import middleware from './middleware';
-import constants from './constants';
-import { KEYCLOAK_OPTIONS } from './middleware/keycloak/keycloakOptions';
+import router from '@/routes';
+import middleware from '@/middleware';
+import constants from '@/constants';
+import { KEYCLOAK_OPTIONS } from '@/middleware/keycloak/keycloakOptions';
 import swaggerUi from 'swagger-ui-express';
-import swaggerJSON from './swagger/swagger-output.json';
+import swaggerJSON from '@/swagger/swagger-output.json';
 
 const app: Application = express();
 
@@ -19,7 +19,7 @@ const { TESTING, FRONTEND_URL } = constants;
 // Express Rate Limiter Configuration
 export const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  max: 1000, // Limit each IP to 1000 requests per `window` (here, per 15 minutes)
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });

@@ -1,4 +1,4 @@
-import controllers from '../controllers';
+import controllers from '@/controllers';
 import express from 'express';
 
 export const PARCELS_ROUTE = '/properties/parcels';
