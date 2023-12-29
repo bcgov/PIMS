@@ -1,4 +1,4 @@
-import controllers from '../../../controllers';
+import controllers from '@/controllers';
 import { Request, Response } from 'express';
 
 describe('UNIT - Testing controller for /health routes', () => {

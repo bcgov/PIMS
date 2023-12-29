@@ -1,6 +1,6 @@
 import { IdirIdentityProvider } from '@bcgov/citz-imb-kc-express';
-import { KEYCLOAK_OPTIONS } from '../../../../middleware/keycloak/keycloakOptions';
-import logger from '../../../../utilities/winstonLogger';
+import { KEYCLOAK_OPTIONS } from '@/middleware/keycloak/keycloakOptions';
+import logger from '@/utilities/winstonLogger';
 
 describe('UNIT - Keycloak Options', () => {
   const user = {

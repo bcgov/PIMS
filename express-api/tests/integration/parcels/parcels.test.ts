@@ -1,7 +1,7 @@
 import supertest from 'supertest';
-import app from '../../../express';
+import app from '@/express';
 import { faker } from '@faker-js/faker';
-import { IParcel } from '../../../controllers/parcels/IParcel';
+import { IParcel } from '@/controllers/parcels/IParcel';
 
 const request = supertest(app);
 const API_PATH = '/api/v2/properties/parcels';
