@@ -1,4 +1,4 @@
-import { stubResponse } from '../../../utilities/stubResponse';
+import { stubResponse } from '@/utilities/stubResponse';
 import { Response } from 'express';
 
 // TODO: Remove this test, along with the stub controller when all routes are fully implemented.

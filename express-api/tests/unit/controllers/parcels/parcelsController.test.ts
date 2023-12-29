@@ -1,6 +1,6 @@
-import { IParcel } from '../../../../controllers/parcels/IParcel';
+import { IParcel } from '@/controllers/parcels/IParcel';
 import { faker } from '@faker-js/faker';
-import controllers from '../../../../controllers';
+import controllers from '@/controllers';
 import { Request, Response } from 'express';
 import { MockReq, MockRes, getRequestHandlerMocks } from '../../../testUtils/factories';
 
