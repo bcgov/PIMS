@@ -1,12 +1,12 @@
 import supertest from 'supertest';
-import app from '../../../express';
+import app from '@/express';
 import {
   UserAccessRequest,
   UserAccessRequestSchema,
   UserKeycloakInfoSchema,
   UserReportCsvSchema,
   UserReportFilter,
-} from '../../../controllers/users/usersSchema';
+} from '@/controllers/users/usersSchema';
 
 const request = supertest(app);
 describe('INTEGRATION - Users', () => {

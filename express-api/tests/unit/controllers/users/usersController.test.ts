@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import controllers from '../../../../controllers';
+import controllers from '@/controllers';
 import { MockReq, MockRes, getRequestHandlerMocks } from '../../../testUtils/factories';
 
 describe('UNIT - Testing controllers for users routes.', () => {
