@@ -1,4 +1,4 @@
-import { IAccessRequest } from './IAccessRequest';
+import { IAccessRequest } from '@/controllers/admin/accessRequests/IAccessRequest';
 
 export interface IAccessRequestList {
   items: IAccessRequest[];

@@ -1,8 +1,8 @@
 import supertest from 'supertest';
 import { faker } from '@faker-js/faker';
-import app from '../../../../express';
+import app from '@/express';
 import { UUID } from 'crypto';
-import { IClaim } from '../../../../controllers/admin/claims/IClaim';
+import { IClaim } from '@/controllers/admin/claims/IClaim';
 
 const request = supertest(app);
 

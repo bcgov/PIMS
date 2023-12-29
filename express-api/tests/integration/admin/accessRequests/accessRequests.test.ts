@@ -1,6 +1,6 @@
-import { IAccessRequestList } from '../../../../controllers/admin/accessRequests/IAccessRequestList';
-import { IAccessRequest } from '../../../../controllers/admin/accessRequests/IAccessRequest';
-import app from '../../../../express';
+import { IAccessRequestList } from '@/controllers/admin/accessRequests/IAccessRequestList';
+import { IAccessRequest } from '@/controllers/admin/accessRequests/IAccessRequest';
+import app from '@/express';
 import supertest from 'supertest';
 
 const request = supertest(app);

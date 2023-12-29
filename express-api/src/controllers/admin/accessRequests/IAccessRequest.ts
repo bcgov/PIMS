@@ -1,7 +1,7 @@
 import { UUID } from 'crypto';
-import { IAgency } from '../agencies/IAgency';
-import { IRole } from '../roles/IRole';
-import { IUser } from '../users/IUser';
+import { IAgency } from '@/controllers/admin/agencies/IAgency';
+import { IRole } from '@/controllers/admin/roles/IRole';
+import { IUser } from '@/controllers/admin/users/IUser';
 
 export interface IAccessRequest {
   createdOn?: string;

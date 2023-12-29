@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import controllers from '../../../../../controllers';
+import controllers from '@/controllers';
 import { MockReq, MockRes, getRequestHandlerMocks } from '../../../../testUtils/factories';
-import { Roles } from '../../../../../constants/roles';
-import { IAdministrativeArea } from '../../../../../controllers/admin/administrativeAreas/IAdministrativeArea';
+import { Roles } from '@/constants/roles';
+import { IAdministrativeArea } from '@/controllers/admin/administrativeAreas/IAdministrativeArea';
 import { faker } from '@faker-js/faker';
 import { UUID } from 'crypto';
 

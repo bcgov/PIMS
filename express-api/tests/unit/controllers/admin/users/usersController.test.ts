@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import controllers from '../../../../../controllers';
+import controllers from '@/controllers';
 import { MockReq, MockRes, getRequestHandlerMocks } from '../../../../testUtils/factories';
-import { Roles } from '../../../../../constants/roles';
+import { Roles } from '@/constants/roles';
 import { faker } from '@faker-js/faker';
 import { UUID } from 'crypto';
-import { IUser } from '../../../../../controllers/admin/users/IUser';
+import { IUser } from '@/controllers/admin/users/IUser';
 
 let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
