@@ -1,5 +1,5 @@
 import { KCOptions, KeycloakUser } from '@bcgov/citz-imb-kc-express';
-import logger from '../../utilities/winstonLogger';
+import logger from '@/utilities/winstonLogger';
 
 export const KEYCLOAK_OPTIONS: KCOptions = {
   afterUserLogin: (user: KeycloakUser) => {

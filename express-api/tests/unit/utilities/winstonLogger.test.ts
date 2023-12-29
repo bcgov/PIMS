@@ -1,4 +1,4 @@
-import logger from '../../../utilities/winstonLogger';
+import logger from '@/utilities/winstonLogger';
 
 describe('UNIT - winston logger', () => {
   it('should be created with the expected settings', () => {
