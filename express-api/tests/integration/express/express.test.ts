@@ -1,4 +1,4 @@
-import app, { limiter } from '../../../express';
+import app, { limiter } from '@/express';
 import supertest from 'supertest';
 
 const request = supertest(app);

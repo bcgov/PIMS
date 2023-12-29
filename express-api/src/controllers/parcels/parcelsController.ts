@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { stubResponse } from '../../utilities/stubResponse';
+import { stubResponse } from '@/utilities/stubResponse';
 
 /**
  * @description Gets information about a particular parcel by the Id provided in the URL parameter.

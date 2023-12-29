@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import controllers from '../../../../controllers';
+import controllers from '@/controllers';
 
 describe('UNIT - Testing controllers for /ltsa routes', () => {
   const mockRequest = {
