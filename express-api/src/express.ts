@@ -10,6 +10,7 @@ import middleware from '@/middleware';
 import constants from '@/constants';
 import { KEYCLOAK_OPTIONS } from '@/middleware/keycloak/keycloakOptions';
 import swaggerUi from 'swagger-ui-express';
+import { Roles } from '@/constants/roles';
 import swaggerJSON from '@/swagger/swagger-output.json';
 
 const app: Application = express();
@@ -65,6 +66,7 @@ app.use(`/api/v2`, router.healthRouter);
 
 // Protected Routes
 app.use(`/api/v2`, protectedRoute(), router.ltsaRouter);
+app.use(`/api/v2`, protectedRoute([Roles.ADMIN]), router.adminRouter);
 app.use(`/api/v2`, protectedRoute(), router.parcelsRouter);
 app.use('/api/v2', protectedRoute(), router.lookupRouter);
 app.use(`/api/v2`, protectedRoute(), router.usersRouter);
