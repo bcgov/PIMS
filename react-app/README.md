@@ -11,4 +11,4 @@ The available commands for the frontend app are as follows:
 | Command                    | Description                                                              |
 | -------------------------- | ------------------------------------------------------------------------ |
 | `npm run dev`              | Runs app in development mode.                                            |
-| `npm run build`            | Builds the app into runnable JavaScript, located in the `/dist` folder. |                   
+| `npm run build`            | Builds the app into runnable JavaScript, located in the `/dist` folder. |
