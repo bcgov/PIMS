@@ -4,6 +4,7 @@ import parcelsRouter from '@/routes/parcelsRouter';
 import lookupRouter from '@/routes/lookupRouter';
 import adminRouter from '@/routes/adminRouter';
 import usersRouter from '@/routes/usersRouter';
+import propertiesRouter from '@/routes/propertiesRouter';
 
 const router = {
   healthRouter,
@@ -12,6 +13,7 @@ const router = {
   lookupRouter,
   adminRouter,
   usersRouter,
+  propertiesRouter,
 };
 
 export default router;
