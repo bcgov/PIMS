@@ -6,7 +6,7 @@ on:
     branches: [main]
     paths:
       - "react-app/**"
-      - ".github/workflows/react-app-lint.yaml"
+      - ".github/workflows/react-app-lint.yml"
   workflow_dispatch:
 
 jobs:
