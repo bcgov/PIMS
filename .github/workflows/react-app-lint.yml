@@ -1,0 +1,32 @@
+name: React App Linting Check
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [main]
+    paths:
+      - "react-app/**"
+      - ".github/workflows/react-app-lint.yaml"
+  workflow_dispatch:
+
+jobs:
+  lint-api:
+    name: Lint React App
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      # Could optimize this by only installing necessary dependencies
+      - name: Install Dependencies
+        working-directory: ./react-app
+        run: npm i --only=dev
+
+      - name: Run ESLint
+        working-directory: ./react-app
+        run: npm run lint
+
+      - name: Run Prettier
+        working-directory: ./react-app
+        run: npm run check 
