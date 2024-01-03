@@ -70,5 +70,6 @@ app.use(`/api/v2`, protectedRoute([Roles.ADMIN]), router.adminRouter);
 app.use(`/api/v2`, protectedRoute(), router.parcelsRouter);
 app.use('/api/v2', protectedRoute(), router.lookupRouter);
 app.use(`/api/v2`, protectedRoute(), router.usersRouter);
+app.use(`/api/v2`, protectedRoute(), router.projectRouter);
 
 export default app;
