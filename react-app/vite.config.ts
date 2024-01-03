@@ -20,6 +20,7 @@ export default () => {
         '/api': {
           target: target,
           changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ''),
         },
       },
     },
