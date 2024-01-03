@@ -20,11 +20,11 @@ export class Users {
   @CreateDateColumn()
   CreatedOn: Date;
 
-  @ManyToOne(() => Users, (user) => user.Id)
+  @ManyToOne(() => Users, (user) => user.Id, { nullable: true })
   @JoinColumn({ name: 'UpdatedById' })
   UpdatedById: Users;
 
-  @Column('timestamp')
+  @Column({ type: 'uuid', nullable: true })
   UpdatedOn: Date;
 
   @Column({ type: 'character varying', length: 25 })
