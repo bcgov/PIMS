@@ -42,3 +42,5 @@ router.route(`${NOTIFICATION_TEMPLATE_ROUTE}`).post(controllers.addNotificationT
 router
   .route(`${NOTIFICATION_TEMPLATE_ROUTE}/:templateId/projects/:projectId`)
   .post(controllers.sendNotificationsForTemplate);
+
+export default router;
