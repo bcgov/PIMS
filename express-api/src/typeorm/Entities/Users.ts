@@ -24,7 +24,7 @@ export class Users {
   @JoinColumn({ name: 'UpdatedById' })
   UpdatedById: Users;
 
-  @Column({ type: 'uuid', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   UpdatedOn: Date;
 
   @Column({ type: 'character varying', length: 25 })
