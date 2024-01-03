@@ -1,6 +1,7 @@
 import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 import {Routes, Route} from 'react-router-dom';
 import { Home } from './pages/Home';
+import React from 'react';
 import './App.css';
 import { Login } from './pages/Login';
 

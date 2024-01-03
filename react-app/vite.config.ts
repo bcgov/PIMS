@@ -1,5 +1,5 @@
-import { defineConfig, loadEnv } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 // This configuration is only relevant when running dev locally using Vite.
