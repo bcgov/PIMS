@@ -42,7 +42,7 @@
     "keycloak-js": "23.0.0",
     "leaflet": "1.9.4",
     "lodash": "4.17.21",
-    "moment": "2.29.4",
+    "moment": "2.30.1",
     "papaparse": "5.4.1",
     "polylabel": "1.1.0",
     "react": "18.2.0",
