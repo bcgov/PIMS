@@ -1,14 +1,11 @@
+import { IProperty } from '@/controllers/properties/IProperty';
+import { IBaseEntity } from '@/controllers/baseEntity';
 /**
  * Some of these can probably be separated out elsewhere later, but I think this is fine for now.
  * Was uncertain whether ISubdivision or ISubParcel are meant to be just a selection from IParcel or their own interfaces.
  */
 
-interface IAddress {
-  createdOn: string;
-  updatedOn: string;
-  updatedByName: string;
-  updatedByEmail: string;
-  rowVersion: string;
+interface IAddress extends IBaseEntity {
   id: number;
   line1: string;
   line2: string;
@@ -18,12 +15,7 @@ interface IAddress {
   postal: string;
 }
 
-interface IEvaluation {
-  createdOn: string;
-  updatedOn: string;
-  updatedByName: string;
-  updatedByEmail: string;
-  rowVersion: string;
+interface IEvaluation extends IBaseEntity {
   parcelId: number;
   date: string;
   key: string;
@@ -32,12 +24,7 @@ interface IEvaluation {
   firm: string;
 }
 
-interface IFiscal {
-  createdOn: string;
-  updatedOn: string;
-  updatedByName: string;
-  updatedByEmail: string;
-  rowVersion: string;
+interface IFiscal extends IBaseEntity {
   parcelId: number;
   fiscalYear: number;
   effectiveDate: string;
@@ -46,12 +33,7 @@ interface IFiscal {
   note: string;
 }
 
-interface IBuilding {
-  createdOn: string;
-  updatedOn: string;
-  updatedByName: string;
-  updatedByEmail: string;
-  rowVersion: string;
+interface IBuilding extends IBaseEntity {
   id: number;
   propertyTypeId: number;
   projectNumbers: string[];
@@ -89,45 +71,22 @@ interface IBuilding {
   fiscals: IFiscal[];
 }
 
-interface ISubParcel {
-  createdOn: string;
-  updatedOn: string;
-  updatedByName: string;
-  updatedByEmail: string;
-  rowVersion: string;
+interface ISubParcel extends IBaseEntity {
   id: number;
   pid: string;
   pin: number;
 }
 
-interface ISubdivision {
-  createdOn: string;
-  updatedOn: string;
-  updatedByName: string;
-  updatedByEmail: string;
-  rowVersion: string;
+interface ISubdivision extends IBaseEntity {
   id: number;
   pid: string;
   pin: number;
 }
 
-interface IParcel {
-  createdOn: string;
-  updatedOn: string;
-  updatedByName: string;
-  updatedByEmail: string;
-  rowVersion: string;
-  id: number;
-  propertyTypeId: number;
-  projectNumbers: string[];
+interface IParcel extends IProperty, IBaseEntity {
   projectWorkflow: string;
   projectStatus: string;
-  name: string;
-  description: string;
-  classificationId: number;
   classification: string;
-  encumbranceReason: string;
-  agencyId: number;
   subAgency: string;
   agency: string;
   subAgencyFullName: string;

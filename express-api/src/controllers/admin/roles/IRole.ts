@@ -1,10 +1,7 @@
 import { UUID } from 'crypto';
+import { IBaseEntity } from '@/controllers/baseEntity';
 
-export interface IRole {
-  createdOn: string;
-  updatedOn: string;
-  updatedByName: string;
-  updatedByEmail: string;
+export interface IRole extends IBaseEntity {
   id: UUID;
   name: string;
   isDisabled: boolean;

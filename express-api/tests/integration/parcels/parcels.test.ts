@@ -2,6 +2,7 @@ import supertest from 'supertest';
 import app from '@/express';
 import { faker } from '@faker-js/faker';
 import { IParcel } from '@/controllers/parcels/IParcel';
+import { UUID } from 'crypto';
 
 const request = supertest(app);
 const API_PATH = '/api/v2/properties/parcels';
@@ -9,9 +10,7 @@ const API_PATH = '/api/v2/properties/parcels';
 const mockParcel: IParcel = {
   createdOn: faker.date.anytime().toLocaleString(),
   updatedOn: faker.date.anytime().toLocaleString(),
-  updatedByName: faker.person.firstName(),
-  updatedByEmail: faker.internet.email(),
-  rowVersion: faker.number.binary(),
+  updatedById: UUID,
   id: faker.number.int(),
   propertyTypeId: 0,
   projectNumbers: [],
