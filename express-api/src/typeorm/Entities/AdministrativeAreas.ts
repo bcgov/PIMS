@@ -6,7 +6,7 @@ import {
   Index,
   ManyToOne,
 } from 'typeorm';
-import { RegionalDistrict } from './RegionalDistrict';
+import { RegionalDistricts } from './RegionalDistricts';
 
 @Entity()
 @Index(['IsDisabled', 'Name', 'SortOrder'])
@@ -17,13 +17,13 @@ export class AdministrativeAreas {
   @Column('uuid')
   CreatedById: string;
 
-  @CreateDateColumn('timestamp')
+  @CreateDateColumn()
   CreatedOn: Date;
 
   @Column('uuid')
   UpdatedById: string;
 
-  @CreateDateColumn('timestamp')
+  @Column('timestamp')
   UpdatedOn: Date;
 
   @Column({ type: 'character varying', length: 150 })
@@ -42,6 +42,6 @@ export class AdministrativeAreas {
   @Column({ type: 'character varying', length: 50, nullable: true })
   BoundaryType: string;
 
-  @ManyToOne(() => RegionalDistrict, (RegionalDistrict) => RegionalDistrict.AdministrativeAreas)
-  RegionalDistrict: RegionalDistrict;
+  @ManyToOne(() => RegionalDistricts, (RegionalDistrict) => RegionalDistrict.AdministrativeAreas)
+  RegionalDistrict: RegionalDistricts;
 }

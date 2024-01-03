@@ -1,7 +1,6 @@
 import { Entity, Column, CreateDateColumn, Index, PrimaryColumn } from 'typeorm';
 
 @Entity()
-@Index(['Name'])
 export class Provinces {
   @PrimaryColumn({ type: 'character varying', length: 2 })
   Id: string;
@@ -9,7 +8,7 @@ export class Provinces {
   @Column('uuid')
   CreatedById: string;
 
-  @CreateDateColumn('timestamp')
+  @CreateDateColumn()
   CreatedOn: Date;
 
   @Column('uuid')

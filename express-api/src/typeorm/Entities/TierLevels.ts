@@ -9,13 +9,13 @@ export class TierLevels {
   @Column('uuid')
   CreatedById: string;
 
-  @CreateDateColumn('timestamp')
+  @CreateDateColumn()
   CreatedOn: Date;
 
   @Column('uuid')
   UpdatedById: string;
 
-  @CreateDateColumn('timestamp')
+  @Column('timestamp')
   UpdatedOn: Date;
 
   @Column({ type: 'character varying', length: 150 })

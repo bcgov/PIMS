@@ -2,7 +2,7 @@ import { Entity, PrimaryColumn, Column, CreateDateColumn, Index, OneToMany } fro
 import { AdministrativeAreas } from './AdministrativeAreas';
 
 @Entity()
-export class RegionalDistrict {
+export class RegionalDistricts {
   @PrimaryColumn({ type: 'character varying', length: 4 })
   @Index({ unique: true })
   Id: string;
@@ -10,13 +10,13 @@ export class RegionalDistrict {
   @Column('uuid')
   CreatedById: string;
 
-  @CreateDateColumn('timestamp')
+  @CreateDateColumn()
   CreatedOn: Date;
 
   @Column('uuid')
   UpdatedById: string;
 
-  @CreateDateColumn('timestamp')
+  @Column('timestamp')
   UpdatedOn: Date;
 
   @Column({ type: 'character varying', length: 250 })
