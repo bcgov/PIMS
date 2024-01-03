@@ -32,7 +32,7 @@ export class Addresses {
   @Column({ type: 'character varying', length: 150 })
   Address1: string;
 
-  @Column({ type: 'character varying', length: 150 })
+  @Column({ type: 'character varying', length: 150, nullable: true })
   Address2: string;
 
   @ManyToOne(() => Provinces, (province) => province.Id)
