@@ -1,5 +1,5 @@
-import { ILtsaOrder } from '../../../controllers/ltsa/ILtsaOrder';
-import app from '../../../express';
+import { ILtsaOrder } from '@/controllers/ltsa/ILtsaOrder';
+import app from '@/express';
 import supertest from 'supertest';
 
 const request = supertest(app);

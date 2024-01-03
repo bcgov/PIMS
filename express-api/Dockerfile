@@ -13,8 +13,8 @@ ENV CONTAINERIZED=true
 # Copy files, excluding those in .dockerignore
 COPY . .
 
-# Install TypeScript. Needed for build process.
-RUN npm i -D typescript
+# Install packages. Needed for build process.
+RUN npm i
 
 # Generate swagger-output
 RUN npm run swagger
@@ -34,6 +34,7 @@ ENV NODE_ENV=production
 ENV CONTAINERIZED=true
 
 # Install packages. Needed even for compiled build.
+# Only installs non-dev dependencies
 COPY package.json .
 RUN npm i
 
@@ -44,5 +45,5 @@ RUN apt-get install -y curl
 # Copy compiled build from base
 COPY --from=base /express-api/dist .
 
-CMD [ "node", "server.js" ]
+CMD [ "node", "src/server.js" ]
 
