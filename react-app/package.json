@@ -12,8 +12,10 @@
     "check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,css,scss}\""
   },
   "dependencies": {
+    "@bcgov/citz-imb-kc-react": "https://github.com/bcgov/citz-imb-kc-react/releases/download/v1.1.0/bcgov-citz-imb-kc-react-1.1.0.tgz",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-router-dom": "6.21.1"
   },
   "devDependencies": {
     "@types/react": "18.2.43",

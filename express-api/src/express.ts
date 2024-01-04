@@ -71,5 +71,6 @@ app.use(`/api/v2`, protectedRoute(), router.parcelsRouter);
 app.use('/api/v2', protectedRoute(), router.lookupRouter);
 app.use(`/api/v2`, protectedRoute(), router.usersRouter);
 app.use(`/api/v2`, protectedRoute(), router.projectRouter);
+app.use(`/api/v2`, protectedRoute(), router.notificationsRouter);
 
 export default app;
