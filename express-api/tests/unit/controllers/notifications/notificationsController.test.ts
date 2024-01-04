@@ -48,19 +48,22 @@ describe('UNIT - Testing controllers for notifications routes.', () => {
     });
   });
 
-  describe('PUT /projects/disposal/:id/notifications/cancel', () => {
+  describe('PUT /projects/disposal/:id/notifications', () => {
     it('should return stub response 501', async () => {
       await controllers.cancelDisposalNotification(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(501);
     });
 
     xit('should return status 200 for valid request', async () => {
+      mockRequest.params.id = '1';
       await controllers.cancelDisposalNotification(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
 
     xit('should return 400 for bad request', async () => {
-      // Add test case for bad request and expected 400 response
+      mockRequest.params.id = '-1';
+      await controllers.cancelDisposalNotification(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
     });
   });
 
@@ -153,7 +156,7 @@ describe('UNIT - Testing controllers for notifications routes.', () => {
     });
   });
 
-  describe('PUT /notifications/queue/:id/cancel', () => {
+  describe('PUT /notifications/queue/:id', () => {
     it('should return stub response 501', async () => {
       await controllers.cancelNotificationInQueueById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(501);

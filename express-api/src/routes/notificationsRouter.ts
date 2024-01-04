@@ -13,8 +13,8 @@ router.route(`${DISPOSAL_API_ROUTE}/notifications`).post(controllers.filterDispo
 //This is implemented as PUT in the original implementation, but I'm not sure it makes sense considering you don't need to send an entire resource.
 //The implementation only really looks at the ID in the query param. Surely a DELETE is more appropriate, could probably omit the 'cancel' verb altogether.
 router
-  .route(`${DISPOSAL_API_ROUTE}/:id/notifications/cancel`)
-  .put(controllers.deleteNotificationTemplate);
+  .route(`${DISPOSAL_API_ROUTE}/:id/notifications`)
+  .delete(controllers.deleteNotificationTemplate);
 
 //I believe that the IDs used in these routes are actually the project ID, even though the structure here sort of implies
 //that it might be an individual "notification id".
@@ -28,9 +28,7 @@ router.route(`${NOTIFICATION_QUEUE_ROUTE}/:id`).put(controllers.updateNotificati
 router
   .route(`${NOTIFICATION_QUEUE_ROUTE}/:id/resend`)
   .put(controllers.resendNotificationInQueueById);
-router
-  .route(`${NOTIFICATION_QUEUE_ROUTE}/:id/cancel`)
-  .put(controllers.cancelNotificationInQueueById);
+router.route(`${NOTIFICATION_QUEUE_ROUTE}/:id`).delete(controllers.cancelNotificationInQueueById);
 
 //The ID here is the "template id", I think. The service implementation does not actually look at the param though, it just trusts the body.
 router.route(`${NOTIFICATION_TEMPLATE_ROUTE}`).get(controllers.getAllNotificationTemplates);

@@ -114,19 +114,19 @@ describe('INTEGRATION - Notifications', () => {
     });
   });
 
-  describe('PUT /projects/disposal/:id/notifications/cancel', () => {
+  describe('PUT /projects/disposal/:id/notifications', () => {
     xit('should return status 200 for successful request', async () => {
-      const response = await request.put(`${DISPOSAL_API_ROUTE}/1/notifications/cancel`);
+      const response = await request.delete(`${DISPOSAL_API_ROUTE}/1/notifications`);
       expect(response.status).toBe(200);
     });
 
     xit('should return status 404 for non-existent project ID', async () => {
-      const response = await request.put(`${DISPOSAL_API_ROUTE}/999/notifications/cancel`);
+      const response = await request.delete(`${DISPOSAL_API_ROUTE}/999/notifications`);
       expect(response.status).toBe(404);
     });
 
     xit('should return status 400 for invalid project ID', async () => {
-      const response = await request.put(`${DISPOSAL_API_ROUTE}/invalid_id/notifications/cancel`);
+      const response = await request.delete(`${DISPOSAL_API_ROUTE}/invalid_id/notifications`);
       expect(response.status).toBe(400);
     });
   });
@@ -206,9 +206,9 @@ describe('INTEGRATION - Notifications', () => {
     });
   });
 
-  describe('PUT /notifications/queue/:id/cancel', () => {
+  describe('PUT /notifications/queue/:id', () => {
     xit('should return status 200 for successful request', async () => {
-      const response = await request.put(`${NOTIFICATION_QUEUE_ROUTE}/1/cancel`);
+      const response = await request.delete(`${NOTIFICATION_QUEUE_ROUTE}/1`);
       expect(response.status).toBe(200);
     });
   });
