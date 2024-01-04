@@ -1,5 +1,6 @@
-import { defineConfig, loadEnv } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 // https://vitejs.dev/config/
 // This configuration is only relevant when running dev locally using Vite.
@@ -9,7 +10,7 @@ export default () => {
   const target = `http://localhost:5000`;
 
   return defineConfig({
-    plugins: [react()],
+    plugins: [react(), tsconfigPaths()],
     build: {
       outDir: 'dist',
     },
@@ -20,6 +21,7 @@ export default () => {
         '/api': {
           target: target,
           changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ''),
         },
       },
     },

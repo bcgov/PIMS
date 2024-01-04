@@ -5,6 +5,7 @@ import * as buildings from '@/controllers/buildings/buildingsController';
 import * as parcels from '@/controllers/parcels/parcelsController';
 import * as lookup from '@/controllers/lookup/lookupController';
 import * as users from '@/controllers/users/usersController';
+import * as notifications from '@/controllers/notifications/notificationsController';
 
 export default {
   healthCheck,
@@ -14,4 +15,5 @@ export default {
   ...lookup,
   admin,
   ...users,
+  ...notifications,
 };
