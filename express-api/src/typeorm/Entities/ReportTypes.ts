@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, Index } from 
 
 @Entity()
 @Index(['IsDisabled', 'Name', 'SortOrder'])
-export class ProjectTypes {
+export class ReportTypes {
   @PrimaryGeneratedColumn()
   Id: number;
 
