@@ -6,7 +6,7 @@ import { IRole } from '@/controllers/admin/roles/IRole';
 
 const request = supertest(app);
 
-const ROLES_PATH = '/api/v2//admin/roles';
+const ROLES_PATH = '/api/v2/admin/roles';
 const mockRole: IRole = {
   createdOn: faker.date.anytime().toLocaleString(),
   updatedOn: faker.date.anytime().toLocaleString(),

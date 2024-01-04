@@ -41,71 +41,70 @@ const {
   updateUserById,
 } = controllers.admin;
 
-const ADMIN_ROUTE = '/admin';
 
 // Endpoints for Admin Access Requests
-router.route(`${ADMIN_ROUTE}/accessRequests`).get(getAccessRequests).delete(deleteAccessRequest);
+router.route(`/accessRequests`).get(getAccessRequests).delete(deleteAccessRequest);
 
 // Endpoints for Admin Administrative Areas
 router
-  .route(`${ADMIN_ROUTE}/administrativeAreas`)
+  .route(`/administrativeAreas`)
   .get(getAdministrativeAreas)
   .post(addAdministrativeArea);
 
-router.route(`${ADMIN_ROUTE}/administrativeAreas/filter`).post(getAdministrativeAreasFiltered); // TODO: Could be a get with query strings
+router.route(`/administrativeAreas/filter`).post(getAdministrativeAreasFiltered); // TODO: Could be a get with query strings
 
 router
-  .route(`${ADMIN_ROUTE}/administrativeAreas/:id`)
+  .route(`/administrativeAreas/:id`)
   .get(getAdministrativeAreaById)
   .put(updateAdministrativeAreaById) // TODO: Should this be a patch?
   .delete(deleteAdministrativeAreaById);
 
 // Endpoints for Admin Agencies
-router.route(`${ADMIN_ROUTE}/agencies`).get(getAgencies).post(addAgency);
+router.route(`/agencies`).get(getAgencies).post(addAgency);
 
 router
-  .route(`${ADMIN_ROUTE}/agencies/:id`)
+  .route(`/agencies/:id`)
   .get(getAgencyById)
   .put(updateAgencyById)
   .delete(deleteAgencyById); // TODO: should put be a patch?
 
-router.route(`${ADMIN_ROUTE}/agencies/filter`).post(getAgenciesFiltered); // TODO: Should this be GET with query strings?
+router.route(`/agencies/filter`).post(getAgenciesFiltered); // TODO: Should this be GET with query strings?
 
 // Endpoints for Admin Claims
-router.route(`${ADMIN_ROUTE}/claims`).get(getClaims).post(addClaim);
+router.route(`/claims`).get(getClaims).post(addClaim);
 
 router
-  .route(`${ADMIN_ROUTE}/claims/:id`)
+  .route(`/claims/:id`)
   .get(getClaimById)
   .put(updateClaimById) // TODO: should put be a patch?
   .delete(deleteClaimById);
 
 // Endpoints for Admin Roles
-router.route(`${ADMIN_ROUTE}/roles`).get(getRoles).post(addRole);
+router.route(`/roles`).get(getRoles).post(addRole);
 
 router
-  .route(`${ADMIN_ROUTE}/roles/:id`)
+  .route(`/roles/:id`)
   .get(getRoleById)
   .put(updateRoleById) // TODO: should put be a patch?
   .delete(deleteRoleById);
 
-router.route(`${ADMIN_ROUTE}/roles/name/:name`).get(getRoleByName);
+router.route(`/roles/name/:name`).get(getRoleByName);
 
 // Endpoints for Admin Users
-router.route(`${ADMIN_ROUTE}/users`).get(getUsers).post(addUser);
+router.route(`/users`).get(getUsers).post(addUser);
 
-router.route(`${ADMIN_ROUTE}/users/filter`).post(getUsersByFilter); // TODO: GET with query strings instead?
+router.route(`/users/filter`).post(getUsersByFilter); // TODO: GET with query strings instead?
 
-router.route(`${ADMIN_ROUTE}/users/my/agency`).post(getUsersSameAgency); // TODO: Should this just be generic: get users from an agency?
+router.route(`/users/my/agency`).post(getUsersSameAgency); // TODO: Should this just be generic: get users from an agency?
 
 router
-  .route(`${ADMIN_ROUTE}/users/:id`)
+  .route(`/users/:id`)
   .get(getUserById)
   .put(updateUserById) // TODO: should put be a patch?
   .delete(deleteUserById);
 
 router
-  .route(`${ADMIN_ROUTE}/users/roles/:username`)
+  .route(`/users/roles/:username`)
   .get(getUserRolesByName)
   .post(addUserRoleByName)
   .delete(deleteUserRoleByName);

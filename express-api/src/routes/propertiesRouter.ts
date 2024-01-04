@@ -14,13 +14,13 @@ const {
 
 // TODO: Could these just be GET requests with query params? Then no need for /filter routes. Would cut controllers in half too.
 
-router.route('/properties/search').get(getProperties);
-router.route('/properties/search/filter').post(getPropertiesFilter);
+router.route('/search').get(getProperties);
+router.route('/search/filter').post(getPropertiesFilter);
 
-router.route('/properties/search/geo').get(getPropertiesForMap); // Formerly wfs route
-router.route('/properties/search/geo/filter').post(getPropertiesForMapFilter);
+router.route('/search/geo').get(getPropertiesForMap); // Formerly wfs route
+router.route('/search/geo/filter').post(getPropertiesForMapFilter);
 
-router.route('/properties/search/page').get(getPropertiesPaged);
-router.route('/properties/search/page/filter').post(getPropertiesPagedFilter);
+router.route('/search/page').get(getPropertiesPaged);
+router.route('/search/page/filter').post(getPropertiesPagedFilter);
 
 export default router;
