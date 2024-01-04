@@ -1,4 +1,4 @@
-import { IBaseEntity } from '@/controllers/IBaseEntity';
+import { IBaseEntity } from '@/controllers/common/IBaseEntity';
 export interface IAddress extends IBaseEntity {
   rowVersion: string;
   id: number;

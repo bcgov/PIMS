@@ -1,5 +1,5 @@
 import { IProperty } from '@/controllers/properties/IProperty';
-import { IBaseEntity } from '@/controllers/IBaseEntity';
+import { IBaseEntity } from '@/controllers/common/IBaseEntity';
 /**
  * Some of these can probably be separated out elsewhere later, but I think this is fine for now.
  * Was uncertain whether ISubdivision or ISubParcel are meant to be just a selection from IParcel or their own interfaces.
