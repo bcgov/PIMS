@@ -1,5 +1,5 @@
 import { UUID } from 'crypto';
-import { IBaseEntity } from '@/controllers/baseEntity';
+import { IBaseEntity } from '@/controllers/IBaseEntity';
 
 export interface IRole extends IBaseEntity {
   id: UUID;

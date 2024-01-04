@@ -1,5 +1,5 @@
 import { UUID } from 'crypto';
-import { IBaseEntity } from '@/controllers/baseEntity';
+import { IBaseEntity } from '@/controllers/IBaseEntity';
 
 export interface IAgency extends IBaseEntity {
   id?: UUID;
@@ -11,4 +11,8 @@ export interface IAgency extends IBaseEntity {
   code: string;
   parentId: UUID;
   description: string;
+  email: string;
+  sendEmail: boolean;
+  addreessTo?: string;
+  ccEmail?: string;
 }

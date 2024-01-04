@@ -31,6 +31,9 @@ const mockAgency: IAgency = {
   code: 'BCH',
   parentId: faker.string.uuid() as UUID,
   description: '',
+  email: 'test@test.com',
+  sendEmail: true,
+  addreessTo: 'test',
 };
 
 describe('UNIT - Agencies Admin', () => {
