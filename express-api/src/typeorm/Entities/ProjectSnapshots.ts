@@ -1,7 +1,7 @@
+import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
 import {
   Entity,
   Column,
-  CreateDateColumn,
   Index /*
   ManyToOne,
   JoinColumn,
@@ -12,21 +12,9 @@ import {
 
 @Entity()
 @Index([/*'ProjectId',*/ 'SnapshotOn'])
-export class ProjectSnapshots {
+export class ProjectSnapshots extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id: number;
-
-  @Column('uuid')
-  CreatedById: string;
-
-  @CreateDateColumn()
-  CreatedOn: Date;
-
-  @Column('uuid')
-  UpdatedById: string;
-
-  @CreateDateColumn()
-  UpdatedOn: Date;
 
   @Column('money', { nullable: true })
   NetBook: number;
