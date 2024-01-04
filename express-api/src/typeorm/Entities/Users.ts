@@ -1,17 +1,19 @@
+import { UUID } from 'crypto';
 import {
   Entity,
   Column,
   CreateDateColumn,
-  PrimaryGeneratedColumn,
   ManyToOne,
   Index,
   JoinColumn,
+  PrimaryColumn,
 } from 'typeorm';
 
+// This class cannot extend BaseEntity. It creates a circular reference that TypeORM can't handle.
 @Entity()
 export class Users {
-  @PrimaryGeneratedColumn()
-  Id: number;
+  @PrimaryColumn({ type: 'uuid' })
+  Id: UUID;
 
   @ManyToOne(() => Users, (user) => user.Id)
   @JoinColumn({ name: 'CreatedById' })

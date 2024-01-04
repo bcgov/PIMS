@@ -1,9 +1,9 @@
 import { AdministrativeAreas } from '@/typeorm/Entities/AdministrativeAreas';
+import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
 import { Provinces } from '@/typeorm/Entities/Provinces';
 import {
   Entity,
   Column,
-  CreateDateColumn,
   PrimaryGeneratedColumn,
   ManyToOne,
   Unique,
@@ -13,21 +13,9 @@ import {
 
 @Entity()
 @Unique('Unique Address', ['Address1', 'Province', 'Postal', 'AdministrativeArea'])
-export class Addresses {
+export class Addresses extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id: number;
-
-  @Column('uuid')
-  CreatedById: string;
-
-  @CreateDateColumn()
-  CreatedOn: Date;
-
-  @Column('uuid')
-  UpdatedById: string;
-
-  @Column('timestamp')
-  UpdatedOn: Date;
 
   @Column({ type: 'character varying', length: 150 })
   Address1: string;

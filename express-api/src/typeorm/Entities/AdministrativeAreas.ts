@@ -1,30 +1,12 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  Index,
-  ManyToOne,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Index, ManyToOne } from 'typeorm';
 import { RegionalDistricts } from './RegionalDistricts';
+import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
 
 @Entity()
 @Index(['IsDisabled', 'Name', 'SortOrder'])
-export class AdministrativeAreas {
+export class AdministrativeAreas extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id: number;
-
-  @Column('uuid')
-  CreatedById: string;
-
-  @CreateDateColumn()
-  CreatedOn: Date;
-
-  @Column('uuid')
-  UpdatedById: string;
-
-  @Column('timestamp')
-  UpdatedOn: Date;
 
   @Column({ type: 'character varying', length: 150 })
   @Index({ unique: true })

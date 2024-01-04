@@ -3,8 +3,6 @@
 import {
   Entity,
   PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
   Index,
   ManyToOne,
   JoinColumn,
@@ -12,24 +10,13 @@ import {
 } from 'typeorm';
 import { ProjectStatus } from './ProjectStatus';
 import { Workflows } from './Workflows';
+import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
 //import { Projects } from './Projects';
 
 @Entity()
-export class ProjectStatusHistory {
+export class ProjectStatusHistory extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id: number;
-
-  @Column('uuid')
-  CreatedById: string;
-
-  @CreateDateColumn()
-  CreatedOn: Date;
-
-  @Column('uuid')
-  UpdatedById: string;
-
-  @Column('timestamp')
-  UpdatedOn: Date;
 
   /* @ManyToOne(() => Projects, (project) => project.Id)
   @JoinColumn({ name: 'ProjectId' })

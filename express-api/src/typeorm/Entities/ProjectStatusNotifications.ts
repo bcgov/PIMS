@@ -1,32 +1,13 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  Index,
-  ManyToOne,
-  JoinColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Index, ManyToOne, JoinColumn } from 'typeorm';
 import { ProjectStatus } from './ProjectStatus';
 import { NotificationTemplates } from './NotificationTemplates';
+import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
 
 @Entity()
 @Index(['FromStatusId', 'ToStatusId'])
-export class ProjectStatusNotifications {
+export class ProjectStatusNotifications extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id: number;
-
-  @Column('uuid')
-  CreatedById: string;
-
-  @CreateDateColumn()
-  CreatedOn: Date;
-
-  @Column('uuid')
-  UpdatedById: string;
-
-  @CreateDateColumn()
-  UpdatedOn: Date;
 
   @Column('int')
   Priority: number;

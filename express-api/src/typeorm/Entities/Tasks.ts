@@ -1,31 +1,12 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  Index,
-  ManyToOne,
-  JoinColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Index, ManyToOne, JoinColumn } from 'typeorm';
 import { ProjectStatus } from './ProjectStatus';
+import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
 
 @Entity()
 @Index(['IsDisabled', 'IsOptional', 'Name', 'SortOrder'])
-export class Tasks {
+export class Tasks extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id: number;
-
-  @Column('uuid')
-  CreatedById: string;
-
-  @CreateDateColumn()
-  CreatedOn: Date;
-
-  @Column('uuid')
-  UpdatedById: string;
-
-  @CreateDateColumn()
-  UpdatedOn: Date;
 
   @Column({ type: 'character varying', length: 150 })
   Name: string;

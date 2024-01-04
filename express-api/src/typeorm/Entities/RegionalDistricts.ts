@@ -1,23 +1,12 @@
-import { Entity, PrimaryColumn, Column, CreateDateColumn, Index, OneToMany } from 'typeorm';
+import { Entity, PrimaryColumn, Column, Index, OneToMany } from 'typeorm';
 import { AdministrativeAreas } from './AdministrativeAreas';
+import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
 
 @Entity()
-export class RegionalDistricts {
+export class RegionalDistricts extends BaseEntity {
   @PrimaryColumn({ type: 'character varying', length: 4 })
   @Index({ unique: true })
   Id: string;
-
-  @Column('uuid')
-  CreatedById: string;
-
-  @CreateDateColumn()
-  CreatedOn: Date;
-
-  @Column('uuid')
-  UpdatedById: string;
-
-  @Column('timestamp')
-  UpdatedOn: Date;
 
   @Column({ type: 'character varying', length: 250 })
   @Index({ unique: true })

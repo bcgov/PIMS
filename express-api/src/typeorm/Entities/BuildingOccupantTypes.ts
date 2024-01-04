@@ -1,22 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, Index } from 'typeorm';
+import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
+import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
 
 @Entity()
 @Index(['IsDisabled', 'Name', 'SortOrder'])
-export class BuildingOccupantTypes {
+export class BuildingOccupantTypes extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id: number;
-
-  @Column('uuid')
-  CreatedById: string;
-
-  @CreateDateColumn()
-  CreatedOn: Date;
-
-  @Column('uuid')
-  UpdatedById: string;
-
-  @Column('timestamp')
-  UpdatedOn: Date;
 
   @Column({ type: 'character varying', length: 150 })
   @Index({ unique: true })

@@ -1,30 +1,11 @@
-import {
-  Entity,
-  Column,
-  CreateDateColumn,
-  Index,
-  ManyToOne,
-  JoinColumn,
-  PrimaryColumn,
-} from 'typeorm';
+import { Entity, Column, Index, ManyToOne, JoinColumn, PrimaryColumn } from 'typeorm';
 import { Workflows } from './Workflows';
 import { ProjectStatus } from './ProjectStatus';
+import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
 
 @Entity()
 @Index(['StatusId'])
-export class WorkflowProjectStatus {
-  @Column('uuid')
-  CreatedById: string;
-
-  @CreateDateColumn()
-  CreatedOn: Date;
-
-  @Column('uuid')
-  UpdatedById: string;
-
-  @CreateDateColumn()
-  UpdatedOn: Date;
-
+export class WorkflowProjectStatus extends BaseEntity {
   @Column('int')
   SortOrder: number;
 

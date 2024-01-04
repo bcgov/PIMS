@@ -11,22 +11,11 @@ import {
 } from 'typeorm';
 //import { Projects } from './Projects';
 import { Tasks } from './Tasks';
+import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
 
 @Entity()
 @Index([/*'ProjectId',*/ 'TaskId', 'IsCompleted', 'CompletedOn'])
-export class ProjectTasks {
-  @Column('uuid')
-  CreatedById: string;
-
-  @CreateDateColumn()
-  CreatedOn: Date;
-
-  @Column('uuid')
-  UpdatedById: string;
-
-  @CreateDateColumn()
-  UpdatedOn: Date;
-
+export class ProjectTasks extends BaseEntity {
   @Column('bit')
   IsCompleted: boolean;
 
