@@ -5,18 +5,14 @@ import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { User } from '@/controllers/users/usersSchema';
 
 @Entity()
-export class UserAgency extends BaseEntity {
-  @PrimaryColumn('uuid')
-  UserId: string;
-
+export class UserAgencies extends BaseEntity {
   @ManyToOne(() => Users, { nullable: false })
   @JoinColumn({ name: 'UserId' })
-  User: User;
-
-  @PrimaryColumn('int')
-  AgencyId: number;
+  @PrimaryColumn('uuid')
+  UserId: User;
 
   @ManyToOne(() => Agencies, { nullable: false })
   @JoinColumn({ name: 'AgencyId' })
-  Agency: Agencies;
+  @PrimaryColumn('character varying')
+  AgencyId: Agencies;
 }
