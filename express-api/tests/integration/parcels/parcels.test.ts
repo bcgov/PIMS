@@ -2,17 +2,27 @@ import supertest from 'supertest';
 import app from '@/express';
 import { faker } from '@faker-js/faker';
 import { IParcel } from '@/controllers/parcels/IParcel';
+import { Point } from 'typeorm';
 import { UUID } from 'crypto';
 
 const request = supertest(app);
 const API_PATH = '/api/v2/properties/parcels';
 
+const mockPoint: Point = {
+  type: 'Point',
+  coordinates: [1.23, 4.56],
+};
+
 const mockParcel: IParcel = {
   createdOn: faker.date.anytime().toLocaleString(),
   updatedOn: faker.date.anytime().toLocaleString(),
-  updatedById: UUID,
+  updatedById: faker.string.uuid() as UUID,
+  createdById: faker.string.uuid() as UUID,
   id: faker.number.int(),
   propertyTypeId: 0,
+  propertyType: 'Land',
+  addressId: 1,
+  location: mockPoint,
   projectNumbers: [],
   projectWorkflow: 'Submit Surplus Property Process Project',
   projectStatus: 'Draft',

@@ -12,7 +12,7 @@ export interface IProperty {
   agencyId?: number | null;
   addressId: number;
   location: Point;
-  boundary: Geometry;
+  boundary?: Geometry;
   isSensitive: boolean;
   isVisibleToOtherAgencies: boolean;
 }
