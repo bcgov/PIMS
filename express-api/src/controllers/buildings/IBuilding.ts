@@ -1,8 +1,5 @@
-export interface IAddress {
-  createdOn: string;
-  updatedOn: string;
-  updatedByName: string;
-  updatedByEmail: string;
+import { IBaseEntity } from '@/controllers/IBaseEntity';
+export interface IAddress extends IBaseEntity {
   rowVersion: string;
   id: number;
   line1: string;
@@ -13,11 +10,7 @@ export interface IAddress {
   postal: string;
 }
 
-export interface IEvaluation {
-  createdOn: string;
-  updatedOn: string;
-  updatedByName: string;
-  updatedByEmail: string;
+export interface IEvaluation extends IBaseEntity {
   rowVersion: string;
   parcelId: number;
   date: string;
@@ -27,11 +20,7 @@ export interface IEvaluation {
   firm: string;
 }
 
-export interface IFiscal {
-  createdOn: string;
-  updatedOn: string;
-  updatedByName: string;
-  updatedByEmail: string;
+export interface IFiscal extends IBaseEntity {
   rowVersion: string;
   parcelId: number;
   fiscalYear: number;
@@ -41,11 +30,7 @@ export interface IFiscal {
   note: string;
 }
 
-export interface IBuilding {
-  createdOn: string;
-  updatedOn: string;
-  updatedByName: string;
-  updatedByEmail: string;
+export interface IBuilding extends IBaseEntity {
   rowVersion: string;
   id: number;
   propertyTypeId: number;
