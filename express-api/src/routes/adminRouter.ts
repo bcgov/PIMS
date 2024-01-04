@@ -41,15 +41,11 @@ const {
   updateUserById,
 } = controllers.admin;
 
-
 // Endpoints for Admin Access Requests
 router.route(`/accessRequests`).get(getAccessRequests).delete(deleteAccessRequest);
 
 // Endpoints for Admin Administrative Areas
-router
-  .route(`/administrativeAreas`)
-  .get(getAdministrativeAreas)
-  .post(addAdministrativeArea);
+router.route(`/administrativeAreas`).get(getAdministrativeAreas).post(addAdministrativeArea);
 
 router.route(`/administrativeAreas/filter`).post(getAdministrativeAreasFiltered); // TODO: Could be a get with query strings
 
@@ -62,11 +58,7 @@ router
 // Endpoints for Admin Agencies
 router.route(`/agencies`).get(getAgencies).post(addAgency);
 
-router
-  .route(`/agencies/:id`)
-  .get(getAgencyById)
-  .put(updateAgencyById)
-  .delete(deleteAgencyById); // TODO: should put be a patch?
+router.route(`/agencies/:id`).get(getAgencyById).put(updateAgencyById).delete(deleteAgencyById); // TODO: should put be a patch?
 
 router.route(`/agencies/filter`).post(getAgenciesFiltered); // TODO: Should this be GET with query strings?
 
