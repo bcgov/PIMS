@@ -121,7 +121,7 @@ export const updateProjectReport = async (req: Request, res: Response) => {
 };
 
 /**
- * @description Update the report for the specified project.
+ * @description Delete the report for the specified project.
  * @param {Request}     req Incoming request.
  * @param {Response}    res Outgoing response.
  * @returns {Response}      A 200 status with the deleted report.
