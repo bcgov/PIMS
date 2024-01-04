@@ -1,10 +1,7 @@
 import { UUID } from 'crypto';
+import { IBaseEntity } from '@/controllers/baseEntity';
 
-export interface IUser {
-  createdOn: string;
-  updatedOn: string;
-  updatedByName: string;
-  updatedByEmail: string;
+export interface IUser extends IBaseEntity {
   id: UUID;
   displayName: string;
   firstName: string;

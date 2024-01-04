@@ -10,8 +10,8 @@ const USERS_PATH = '/api/v2//admin/users';
 const mockUser: IUser = {
   createdOn: faker.date.anytime().toLocaleString(),
   updatedOn: faker.date.anytime().toLocaleString(),
-  updatedByName: faker.person.firstName(),
-  updatedByEmail: faker.internet.email(),
+  updatedById: faker.string.uuid() as UUID,
+  createdById: faker.string.uuid() as UUID,
   id: faker.string.uuid() as UUID,
   displayName: faker.company.name(),
   firstName: faker.person.firstName(),

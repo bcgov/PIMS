@@ -20,8 +20,8 @@ const {
 const mockAgency: IAgency = {
   createdOn: faker.date.anytime().toLocaleString(),
   updatedOn: faker.date.anytime().toLocaleString(),
-  updatedByName: faker.person.firstName(),
-  updatedByEmail: faker.internet.email(),
+  updatedById: faker.string.uuid() as UUID,
+  createdById: faker.string.uuid() as UUID,
   id: faker.string.uuid() as UUID,
   name: faker.company.name(),
   isDisabled: false,
