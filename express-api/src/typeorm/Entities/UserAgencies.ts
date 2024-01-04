@@ -1,6 +1,6 @@
 import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
 import { Users } from '@/typeorm/Entities/Users'; // Adjust the path based on your project structure
-import { Agencies, Agency } from '@/typeorm/Entities/Agencies'; // Adjust the path based on your project structure
+import { Agencies } from '@/typeorm/Entities/Agencies'; // Adjust the path based on your project structure
 import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { User } from '@/controllers/users/usersSchema';
 
@@ -16,7 +16,7 @@ export class UserAgency extends BaseEntity {
   @PrimaryColumn('int')
   AgencyId: number;
 
-  @ManyToOne(() => Agency, { nullable: false })
+  @ManyToOne(() => Agencies, { nullable: false })
   @JoinColumn({ name: 'AgencyId' })
-  Agency: Agency;
+  Agency: Agencies;
 }
