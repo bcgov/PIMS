@@ -41,5 +41,6 @@ export class ProjectTasks {
   @ManyToOne(() => Tasks, (task) => task.Id)
   @JoinColumn({ name: 'TaskId' })
   @PrimaryColumn()
+  @Index()
   TaskId: Tasks;
 }
