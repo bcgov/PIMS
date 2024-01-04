@@ -13,6 +13,9 @@
   },
   "dependencies": {
     "@bcgov/citz-imb-kc-react": "https://github.com/bcgov/citz-imb-kc-react/releases/download/v1.1.0/bcgov-citz-imb-kc-react-1.1.0.tgz",
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.15.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-router-dom": "6.21.1"

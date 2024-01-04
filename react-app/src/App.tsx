@@ -4,8 +4,10 @@ import { Home } from '@/pages/Home';
 import React from 'react';
 import '@/App.css';
 import { Login } from '@/pages/Login';
+import { ThemeProvider } from '@emotion/react';
+import appTheme from './themes/appTheme';
 
-const App = () => {
+const Router = () => {
   const { isAuthenticated } = useKeycloak();
 
   return isAuthenticated ? (
@@ -14,6 +16,14 @@ const App = () => {
     </Routes>
   ) : (
     <Login />
+  );
+};
+
+const App = () => {
+  return (
+    <ThemeProvider theme={appTheme}>
+      <Router />
+    </ThemeProvider>
   );
 };
 
