@@ -8,14 +8,10 @@ import { ThemeProvider } from '@emotion/react';
 import appTheme from './themes/appTheme';
 
 const Router = () => {
-  const { isAuthenticated } = useKeycloak();
-
-  return isAuthenticated ? (
+  return (
     <Routes>
       <Route index element={<Home />} />
     </Routes>
-  ) : (
-    <Login />
   );
 };
 

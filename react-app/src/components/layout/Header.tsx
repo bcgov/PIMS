@@ -3,6 +3,7 @@ import headerImageLarge from '@/assets/images/BCID_H_rgb_pos.png';
 import headerImageSmall from '@/assets/images/BCID_V_rgb_pos.png';
 import { AppBar, Box, Button, Divider, Toolbar, Typography, useTheme } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 
 const AppBrand = () => {
   const theme = useTheme();
@@ -28,7 +29,7 @@ const AppBrand = () => {
             <img
               src={headerImageSmall}
               alt={'Government of British Columbia'}
-              style={{ height: '75px' }}
+              style={{ height: '48px' }}
             />
           </picture>
         </Box>
@@ -53,17 +54,41 @@ const AppBrand = () => {
 };
 
 const Header: React.FC = () => {
+  const { logout, isAuthenticated, login } = useKeycloak();
   const theme = useTheme();
+  const handleLoginButton = () => {
+    if (isAuthenticated) {
+      logout();
+    } else {
+      login({ idpHint: 'idir' });
+    }
+  };
   return (
-    <AppBar style={{ backgroundColor: theme.palette.white.main }}>
+    <AppBar
+      elevation={0}
+      style={{
+        backgroundColor: theme.palette.white.main,
+        height: '74px',
+        display: 'flex',
+        justifyContent: 'center',
+        borderBottom: '1px solid',
+        borderBottomColor: theme.palette.gray.main,
+      }}
+    >
       <Toolbar>
         <AppBrand />
         <Box flexGrow={1}></Box>
         <Box gap={'32px'} display={'flex'}>
-          <Button variant="text">Active Inventory</Button>
-          <Button variant="text">Disposal Inventory</Button>
-          <Button variant="text">Users</Button>
-          <Button variant="contained">Logout</Button>
+          {isAuthenticated && (
+            <>
+              <Button variant="text">Active Inventory</Button>
+              <Button variant="text">Disposal Inventory</Button>
+              <Button variant="text">Users</Button>
+            </>
+          )}
+          <Button onClick={() => handleLoginButton()} variant="contained">
+            {isAuthenticated ? 'Logout' : 'Login'}
+          </Button>
         </Box>
       </Toolbar>
     </AppBar>
