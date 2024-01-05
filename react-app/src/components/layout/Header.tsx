@@ -1,8 +1,8 @@
 import React from 'react';
 import headerImageLarge from '@/assets/images/BCID_H_rgb_pos.png';
 import headerImageSmall from '@/assets/images/BCID_V_rgb_pos.png';
-import { AppBar, Box, Button, Divider, Toolbar, Typography, useTheme } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { AppBar, Link, Box, Button, Divider, Toolbar, Typography, useTheme } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 
 const AppBrand = () => {
@@ -21,7 +21,7 @@ const AppBrand = () => {
         },
       }}
     >
-      <Link to="/" aria-label="Go to PIMS Home">
+      <RouterLink to="/" aria-label="Go to PIMS Home">
         <Box>
           <picture>
             <source srcSet={headerImageLarge} media="(min-width: 960px)"></source>
@@ -48,7 +48,7 @@ const AppBrand = () => {
             Property Inventory Management System
           </Typography>
         </Box>
-      </Link>
+      </RouterLink>
     </Box>
   );
 };
@@ -70,6 +70,7 @@ const Header: React.FC = () => {
         backgroundColor: theme.palette.white.main,
         height: '74px',
         display: 'flex',
+        position: 'relative',
         justifyContent: 'center',
         borderBottom: '1px solid',
         borderBottomColor: theme.palette.gray.main,
@@ -78,12 +79,18 @@ const Header: React.FC = () => {
       <Toolbar>
         <AppBrand />
         <Box flexGrow={1}></Box>
-        <Box gap={'32px'} display={'flex'}>
+        <Box textAlign={'center'} alignItems={'center'} gap={'32px'} display={'flex'}>
           {isAuthenticated && (
             <>
-              <Button variant="text">Active Inventory</Button>
-              <Button variant="text">Disposal Inventory</Button>
-              <Button variant="text">Users</Button>
+              <Link underline="none" href="#" variant="h5">
+                Active Inventory
+              </Link>
+              <Link underline="none" href="#" variant="h5">
+                Disposal Inventory
+              </Link>
+              <Link underline="none" href="#" variant="h5">
+                Users
+              </Link>
             </>
           )}
           <Button onClick={() => handleLoginButton()} variant="contained">

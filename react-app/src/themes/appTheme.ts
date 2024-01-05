@@ -51,6 +51,9 @@ const appTheme = createTheme({
       light: '#FABBC3',
       main: '#A92F36',
     },
+    text: {
+      primary: '#000',
+    },
   },
   typography: {
     fontFamily: ['BC Sans', 'Verdana', 'Arial', 'sans-serif'].join(','),
@@ -82,9 +85,24 @@ const appTheme = createTheme({
           textTransform: 'none',
           borderRadius: '32px',
           minWidth: '82px',
+          boxShadow: 'none',
+          ':hover': {
+            opacity: 0.85,
+            boxShadow: 'none',
+            backgroundColor: '#FCBA19',
+          },
         },
         textPrimary: {
           color: '#000',
+        },
+      },
+    },
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          color: '#000',
+          fontWeight: 500,
+          textDecorationColor: '#000',
         },
       },
     },
