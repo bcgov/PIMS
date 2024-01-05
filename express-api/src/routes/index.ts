@@ -5,6 +5,7 @@ import parcelsRouter from '@/routes/parcelsRouter';
 import lookupRouter from '@/routes/lookupRouter';
 import adminRouter from '@/routes/adminRouter';
 import usersRouter from '@/routes/usersRouter';
+import projectRouter from '@/routes/projectRouter';
 import notificationsRouter from '@/routes/notificationsRouter';
 
 const router = {
@@ -15,6 +16,7 @@ const router = {
   lookupRouter,
   adminRouter,
   usersRouter,
+  projectRouter,
   notificationsRouter,
 };
 
