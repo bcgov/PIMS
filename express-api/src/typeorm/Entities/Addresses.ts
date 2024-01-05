@@ -1,5 +1,5 @@
 import { AdministrativeAreas } from '@/typeorm/Entities/AdministrativeAreas';
-import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
+import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Provinces } from '@/typeorm/Entities/Provinces';
 import {
   Entity,

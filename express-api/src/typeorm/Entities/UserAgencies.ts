@@ -1,4 +1,4 @@
-import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
+import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Users } from '@/typeorm/Entities/Users'; // Adjust the path based on your project structure
 import { Agencies } from '@/typeorm/Entities/Agencies'; // Adjust the path based on your project structure
 import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
