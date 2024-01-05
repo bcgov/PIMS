@@ -8,21 +8,21 @@ import {
   JoinColumn,
   PrimaryColumn,
 } from 'typeorm';
-import { ProjectStatus } from './ProjectStatus';
-import { Workflows } from './Workflows';
+import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
+import { Workflows } from '@/typeorm/Entities/Workflows';
 import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
-//import { Projects } from './Projects';
+import { Projects } from '@/typeorm/Entities/Projects';
 
 @Entity()
 export class ProjectStatusHistory extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id: number;
 
-  /* @ManyToOne(() => Projects, (project) => project.Id)
+  @ManyToOne(() => Projects, (project) => project.Id)
   @JoinColumn({ name: 'ProjectId' })
   @PrimaryColumn()
   @Index()
-  ProjectId: Projects; */
+  ProjectId: Projects;
 
   @ManyToOne(() => Workflows, (workflow) => workflow.Id)
   @JoinColumn({ name: 'ToWorkflowId' })

@@ -1,15 +1,15 @@
 import { Entity, Column, Index, JoinColumn, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { ProjectStatus } from './ProjectStatus';
-import { Workflows } from './Workflows';
-import { TierLevels } from './TierLevels';
-import { ProjectRisks } from './ProjectRisks';
-import { Agencies } from './Agencies';
+import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
+import { Workflows } from '@/typeorm/Entities/Workflows';
+import { TierLevels } from '@/typeorm/Entities/TierLevels';
+//import { ProjectRisks } from '@/typeorm/Entities/ProjectRisks';
+import { Agencies } from '@/typeorm/Entities/Agencies';
 import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
 
 @Entity()
 @Index(['Assessed', 'NetBook', 'Market', 'ReportedFiscalYear', 'ActualFiscalYear'])
 @Index(['StatusId', 'TierLevelId', 'AgencyId'])
-export class ProjectStatusTransitions extends BaseEntity {
+export class Projects extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id: number;
 
@@ -85,8 +85,8 @@ export class ProjectStatusTransitions extends BaseEntity {
   @Index()
   StatusId: ProjectStatus;
 
-  @ManyToOne(() => ProjectRisks, (risk) => risk.Id)
+  /*@ManyToOne(() => ProjectRisks, (risk) => risk.Id)
   @JoinColumn({ name: 'RiskId' })
   @Index()
-  RiskId: ProjectRisks;
+  RiskId: ProjectRisks;*/
 }

@@ -2,19 +2,25 @@ import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
 import {
   Entity,
   Column,
-  Index /*
+  Index,
   ManyToOne,
   JoinColumn,
-  PrimaryColumn,*/,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-//import { Projects } from './Projects';
+import { Projects } from '@/typeorm/Entities/Projects';
 
 @Entity()
-@Index([/*'ProjectId',*/ 'SnapshotOn'])
+@Index(['ProjectId', 'SnapshotOn'])
 export class ProjectSnapshots extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id: number;
+
+  @ManyToOne(() => Projects, (project) => project.Id)
+  @JoinColumn({ name: 'ProjectId' })
+  @PrimaryColumn()
+  @Index()
+  ProjectId: Projects;
 
   @Column('money', { nullable: true })
   NetBook: number;
@@ -33,10 +39,4 @@ export class ProjectSnapshots extends BaseEntity {
 
   @Column('text', { nullable: true })
   Metadata: string;
-
-  /*@ManyToOne(() => Projects, (project) => project.Id)
-  @JoinColumn({ name: 'ProjectId' })
-  @PrimaryColumn()
-  @Index()
-  ProjectId: Projects;*/
 }
