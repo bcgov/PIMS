@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, Index, ManyToOne, JoinColumn } from 'typeorm';
-import { ProjectStatus } from './ProjectStatus';
+import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
 
 @Entity()

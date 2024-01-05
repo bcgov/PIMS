@@ -6,17 +6,16 @@ import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
 @Entity()
 @Index(['ToWorkflowId', 'ToStatusId'])
 export class ProjectStatusTransitions extends BaseEntity {
-  @Column({ type: 'character varying', length: 100 })
-  Action: string;
-
-  @Column('bit')
-  ValidateTasks: boolean;
-
   @ManyToOne(() => Workflows, (workflow) => workflow.Id)
   @JoinColumn({ name: 'FromWorkflowId' })
   @PrimaryColumn()
   @Index()
   FromWorkflowId: Workflows;
+
+  @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
+  @JoinColumn({ name: 'FromStatusId' })
+  @PrimaryColumn()
+  FromStatusId: ProjectStatus;
 
   @ManyToOne(() => Workflows, (workflow) => workflow.Id)
   @JoinColumn({ name: 'ToWorkflowId' })
@@ -25,13 +24,14 @@ export class ProjectStatusTransitions extends BaseEntity {
   ToWorkflowId: Workflows;
 
   @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
-  @JoinColumn({ name: 'FromStatusId' })
-  @PrimaryColumn()
-  FromStatusId: ProjectStatus;
-
-  @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
   @JoinColumn({ name: 'ToStatusId' })
   @PrimaryColumn()
   @Index()
   ToStatusId: ProjectStatus;
+
+  @Column({ type: 'character varying', length: 100 })
+  Action: string;
+
+  @Column('bit')
+  ValidateTasks: boolean;
 }

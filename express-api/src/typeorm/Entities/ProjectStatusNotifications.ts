@@ -9,15 +9,6 @@ export class ProjectStatusNotifications extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id: number;
 
-  @Column('int')
-  Priority: number;
-
-  @Column('int')
-  Delay: number;
-
-  @Column('int')
-  DelayDays: number;
-
   @ManyToOne(() => NotificationTemplates, (template) => template.Id)
   @JoinColumn({ name: 'TemplateId' })
   @Index()
@@ -31,4 +22,13 @@ export class ProjectStatusNotifications extends BaseEntity {
   @JoinColumn({ name: 'ToStatusId' })
   @Index()
   ToStatusId: ProjectStatus;
+
+  @Column('int')
+  Priority: number;
+
+  @Column('int')
+  Delay: number;
+
+  @Column('int')
+  DelayDays: number;
 }
