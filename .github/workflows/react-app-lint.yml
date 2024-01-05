@@ -5,8 +5,8 @@ on:
     types: [opened, synchronize]
     branches: [main]
     paths:
-      - "react-app/**"
-      - ".github/workflows/react-app-lint.yml"
+      - 'react-app/**'
+      - '.github/workflows/react-app-lint.yml'
   workflow_dispatch:
 
 jobs:
@@ -29,5 +29,4 @@ jobs:
 
       - name: Run Prettier
         working-directory: ./react-app
-        run: npm run check 
-        
+        run: npm run check
