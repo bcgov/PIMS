@@ -1,18 +1,18 @@
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
-import { Users } from '@/typeorm/Entities/Users'; // Adjust the path based on your project structure
-import { Agencies } from '@/typeorm/Entities/Agencies'; // Adjust the path based on your project structure
+import { Roles } from '@/typeorm/Entities/Roles';
+import { Users } from '@/typeorm/Entities/Users';
 import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { User } from '@/controllers/users/usersSchema';
 
 @Entity()
-export class UserAgencies extends BaseEntity {
+export class UserRoles extends BaseEntity {
   @ManyToOne(() => Users, (user) => user.Id)
   @JoinColumn({ name: 'UserId' })
   @PrimaryColumn('uuid')
   UserId: User;
 
-  @ManyToOne(() => Agencies, (agency) => agency.Id)
-  @JoinColumn({ name: 'AgencyId' })
+  @ManyToOne(() => Roles, (role) => role.Id)
+  @JoinColumn({ name: 'RoleId' })
   @PrimaryColumn('character varying')
-  AgencyId: Agencies;
+  AgencyId: Roles;
 }
