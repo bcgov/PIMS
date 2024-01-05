@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material';
+import '@bcgov/bc-sans/css/BC_Sans.css';
 
 declare module '@mui/material/styles/createPalette' {
   interface Palette {
@@ -34,6 +35,10 @@ const appTheme = createTheme({
     gray: {
       main: '#D2D8D8',
     },
+    primary: {
+      main: '#FCBA19',
+      contrastText: '#FFF',
+    },
     success: {
       light: '#CAF0CC',
       main: '#467A06',
@@ -48,7 +53,7 @@ const appTheme = createTheme({
     },
   },
   typography: {
-    fontFamily: 'BCSans',
+    fontFamily: ['BC Sans', 'Verdana', 'Arial', 'sans-serif'].join(','),
     h1: {
       fontSize: '2.25rem',
       fontWeight: 700,
@@ -68,6 +73,20 @@ const appTheme = createTheme({
     h5: {
       fontSize: '0.9rem',
       fontWeight: 700,
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          borderRadius: '32px',
+          minWidth: '82px',
+        },
+        textPrimary: {
+          color: '#000',
+        },
+      },
     },
   },
 });
