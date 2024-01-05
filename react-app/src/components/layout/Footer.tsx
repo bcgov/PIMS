@@ -1,3 +1,4 @@
+import { footerCopyright } from '@/constants/strings';
 import { Box, Link, Toolbar, Typography, useTheme } from '@mui/material';
 import React from 'react';
 
@@ -8,7 +9,7 @@ const Footer = (): JSX.Element => {
       <Toolbar
         sx={{ height: '74px', borderTop: '1px solid', borderTopColor: theme.palette.gray.main }}
       >
-        <Typography>{`© ${new Date().getFullYear()} Government of British Columbia.`}</Typography>
+        <Typography>{footerCopyright}</Typography>
         <Box flexGrow={1} />
         <Box display={'flex'} gap={'32px'}>
           <Link href="#" variant="h5">
