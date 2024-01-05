@@ -7,11 +7,11 @@ import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 export class RoleClaims extends BaseEntity {
   @ManyToOne(() => Roles, (role) => role.Id)
   @JoinColumn({ name: 'RoleId' })
-  @PrimaryColumn('number')
+  @PrimaryColumn('int')
   RoleId: Roles;
 
   @ManyToOne(() => Claims, (claim) => claim.Id)
   @JoinColumn({ name: 'ClaimId' })
-  @PrimaryColumn('number')
+  @PrimaryColumn('int')
   ClaimId: Claims;
 }
