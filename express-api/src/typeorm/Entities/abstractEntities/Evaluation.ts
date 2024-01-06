@@ -1,12 +1,12 @@
-import { BaseEntity } from "@/typeorm/Entities/abstractEntities/BaseEntity";
-import { Column, PrimaryColumn } from "typeorm";
+import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
+import { Column, PrimaryColumn } from 'typeorm';
 
 export abstract class Evaluation extends BaseEntity {
   @PrimaryColumn('timestamp')
   Date: Date;
 
   @PrimaryColumn('int')
-  EvaluationKey: number;
+  EvaluationKey: number; // Should this be its own table?
 
   @Column({ type: 'money' })
   Value: number;
