@@ -3,8 +3,8 @@ import express from 'express';
 
 const router = express.Router();
 
-export const PROJECT_DISPOSAL = '/projects/disposal';
-export const PROJECT_REPORTS = '/projects/reports';
+export const PROJECT_DISPOSAL = '/disposal';
+export const PROJECT_REPORTS = '/reports';
 
 //These originally had a separate route for numeric id and projectNumber, but I don't think express supports this pattern.
 router

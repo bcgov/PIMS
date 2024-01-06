@@ -6,7 +6,7 @@ import lookupRouter from '@/routes/lookupRouter';
 import adminRouter from '@/routes/adminRouter';
 import usersRouter from '@/routes/usersRouter';
 import propertiesRouter from '@/routes/propertiesRouter';
-import projectRouter from '@/routes/projectRouter';
+import projectsRouter from '@/routes/projectsRouter';
 import notificationsRouter from '@/routes/notificationsRouter';
 
 const router = {
@@ -18,7 +18,7 @@ const router = {
   adminRouter,
   usersRouter,
   propertiesRouter,
-  projectRouter,
+  projectsRouter,
   notificationsRouter,
 };
 
