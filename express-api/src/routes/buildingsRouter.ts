@@ -1,7 +1,7 @@
 import controllers from '@/controllers';
 import express from 'express';
 
-export const BUILDINGS_ROUTE = '/properties/buildings';
+export const BUILDINGS_ROUTE = '/buildings';
 
 const router = express.Router();
 

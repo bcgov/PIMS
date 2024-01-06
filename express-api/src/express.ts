@@ -67,10 +67,11 @@ app.use(`/api/v2/health`, router.healthRouter);
 // Protected Routes
 app.use(`/api/v2/ltsa`, protectedRoute(), router.ltsaRouter);
 app.use(`/api/v2/admin`, protectedRoute([Roles.ADMIN]), router.adminRouter);
-app.use(`/api/v2/parcels`, protectedRoute(), router.parcelsRouter);
 app.use('/api/v2/lookup', protectedRoute(), router.lookupRouter);
 app.use(`/api/v2/users`, protectedRoute(), router.usersRouter);
 app.use(`/api/v2/properties`, protectedRoute(), router.propertiesRouter);
+app.use(`/api/v2/properties`, protectedRoute(), router.parcelsRouter);
+app.use(`/api/v2/properties`, protectedRoute(), router.buildingsRouter);
 app.use(`/api/v2/notifications`, protectedRoute(), router.notificationsRouter);
 app.use(`/api/v2/projects`, protectedRoute(), router.projectsRouter);
 
