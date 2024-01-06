@@ -62,15 +62,17 @@ keycloak(app, KEYCLOAK_OPTIONS);
 app.use(`/api/v2`, headerHandler as RequestHandler);
 
 // Unprotected Routes
-app.use(`/api/v2`, router.healthRouter);
+app.use(`/api/v2/health`, router.healthRouter);
 
 // Protected Routes
-app.use(`/api/v2`, protectedRoute(), router.ltsaRouter);
-app.use(`/api/v2`, protectedRoute([Roles.ADMIN]), router.adminRouter);
-app.use(`/api/v2`, protectedRoute(), router.parcelsRouter);
-app.use('/api/v2', protectedRoute(), router.lookupRouter);
-app.use(`/api/v2`, protectedRoute(), router.usersRouter);
-app.use(`/api/v2`, protectedRoute(), router.projectRouter);
-app.use(`/api/v2`, protectedRoute(), router.notificationsRouter);
+app.use(`/api/v2/ltsa`, protectedRoute(), router.ltsaRouter);
+app.use(`/api/v2/admin`, protectedRoute([Roles.ADMIN]), router.adminRouter);
+app.use('/api/v2/lookup', protectedRoute(), router.lookupRouter);
+app.use(`/api/v2/users`, protectedRoute(), router.usersRouter);
+app.use(`/api/v2/properties`, protectedRoute(), router.propertiesRouter);
+app.use(`/api/v2/properties`, protectedRoute(), router.parcelsRouter);
+app.use(`/api/v2/properties`, protectedRoute(), router.buildingsRouter);
+app.use(`/api/v2/notifications`, protectedRoute(), router.notificationsRouter);
+app.use(`/api/v2/projects`, protectedRoute(), router.projectsRouter);
 
 export default app;
