@@ -13,6 +13,6 @@ export class UserRoles extends BaseEntity {
 
   @ManyToOne(() => Roles, (role) => role.Id)
   @JoinColumn({ name: 'RoleId' })
-  @PrimaryColumn('character varying')
+  @PrimaryColumn('int')
   RoleId: Roles;
 }
