@@ -6,7 +6,7 @@ import { IAgency } from '@/controllers/admin/agencies/IAgency';
 
 const request = supertest(app);
 
-const AGENCIES_PATH = '/api/v2//admin/agencies';
+const AGENCIES_PATH = '/api/v2/admin/agencies';
 const mockAgency: IAgency = {
   createdOn: faker.date.anytime().toLocaleString(),
   updatedOn: faker.date.anytime().toLocaleString(),
