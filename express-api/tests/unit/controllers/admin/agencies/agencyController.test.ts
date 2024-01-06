@@ -20,8 +20,8 @@ const {
 const mockAgency: IAgency = {
   createdOn: faker.date.anytime().toLocaleString(),
   updatedOn: faker.date.anytime().toLocaleString(),
-  updatedByName: faker.person.firstName(),
-  updatedByEmail: faker.internet.email(),
+  updatedById: faker.string.uuid() as UUID,
+  createdById: faker.string.uuid() as UUID,
   id: faker.string.uuid() as UUID,
   name: faker.company.name(),
   isDisabled: false,
@@ -31,6 +31,9 @@ const mockAgency: IAgency = {
   code: 'BCH',
   parentId: faker.string.uuid() as UUID,
   description: '',
+  email: 'test@test.com',
+  sendEmail: true,
+  addreessTo: 'test',
 };
 
 describe('UNIT - Agencies Admin', () => {

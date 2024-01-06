@@ -1,10 +1,7 @@
 import { UUID } from 'crypto';
+import { IBaseEntity } from '@/controllers/common/IBaseEntity';
 
-export interface IAdministrativeArea {
-  createdOn?: string;
-  updatedOn?: string;
-  updatedByName?: string;
-  updatedByEmail?: string;
+export interface IAdministrativeArea extends IBaseEntity {
   id?: UUID;
   name: string;
   isDisabled: boolean;

@@ -2,6 +2,8 @@ import { IAccessRequestList } from '@/controllers/admin/accessRequests/IAccessRe
 import { IAccessRequest } from '@/controllers/admin/accessRequests/IAccessRequest';
 import app from '@/express';
 import supertest from 'supertest';
+import { faker } from '@faker-js/faker';
+import { UUID } from 'crypto';
 
 const request = supertest(app);
 
@@ -10,8 +12,8 @@ const expectedList: IAccessRequestList = {
     {
       createdOn: '2023-12-21T21:04:15.758Z',
       updatedOn: '2023-12-21T21:04:15.758Z',
-      updatedByName: 'string',
-      updatedByEmail: 'string',
+      updatedById: faker.string.uuid() as UUID,
+      createdById: faker.string.uuid() as UUID,
       rowVersion: 'string',
       id: 'fekljsfkl-sdf-sdfsd-sdfsd-sdfsd',
       status: 'Approved',
@@ -19,8 +21,8 @@ const expectedList: IAccessRequestList = {
       user: {
         createdOn: '2023-12-21T21:04:15.758Z',
         updatedOn: '2023-12-21T21:04:15.758Z',
-        updatedByName: 'string',
-        updatedByEmail: 'string',
+        updatedById: faker.string.uuid() as UUID,
+        createdById: faker.string.uuid() as UUID,
         id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
         displayName: 'string',
         firstName: 'string',
@@ -34,8 +36,8 @@ const expectedList: IAccessRequestList = {
         {
           createdOn: '2023-12-21T21:04:15.758Z',
           updatedOn: '2023-12-21T21:04:15.758Z',
-          updatedByName: 'string',
-          updatedByEmail: 'string',
+          updatedById: faker.string.uuid() as UUID,
+          createdById: faker.string.uuid() as UUID,
           id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
           name: 'string',
           isDisabled: true,
@@ -45,14 +47,17 @@ const expectedList: IAccessRequestList = {
           code: 'string',
           parentId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
           description: 'string',
+          email: 'test@test.com',
+          sendEmail: true,
+          addreessTo: 'test',
         },
       ],
       roles: [
         {
           createdOn: '2023-12-21T21:04:15.758Z',
           updatedOn: '2023-12-21T21:04:15.758Z',
-          updatedByName: 'string',
-          updatedByEmail: 'string',
+          updatedById: faker.string.uuid() as UUID,
+          createdById: faker.string.uuid() as UUID,
           id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
           name: 'string',
           isDisabled: true,
