@@ -1,10 +1,7 @@
 import { UUID } from 'crypto';
+import { IBaseEntity } from '@/controllers/common/IBaseEntity';
 
-export interface IClaim {
-  createdOn?: string;
-  updatedOn?: string;
-  updatedByName?: string;
-  updatedByEmail?: string;
+export interface IClaim extends IBaseEntity {
   id?: UUID;
   name: string;
   keycloakRoleId: UUID;
