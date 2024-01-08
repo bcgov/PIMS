@@ -1,6 +1,6 @@
 import supertest from 'supertest';
 import app from '@/express';
-import { PROJECT_DISPOSAL, PROJECT_REPORTS } from '@/routes/projectRouter';
+import { PROJECT_DISPOSAL, PROJECT_REPORTS } from '@/routes/projectsRouter';
 import { Project, ProjectReport, ProjectSnapshot } from '@/controllers/projects/projectsSchema';
 import { faker } from '@faker-js/faker';
 
