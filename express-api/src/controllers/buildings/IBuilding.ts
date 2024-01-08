@@ -1,11 +1,6 @@
-import { IProperty } from '@/controllers/properties/IProperty';
 import { IBaseEntity } from '@/controllers/common/IBaseEntity';
-/**
- * Some of these can probably be separated out elsewhere later, but I think this is fine for now.
- * Was uncertain whether ISubdivision or ISubParcel are meant to be just a selection from IParcel or their own interfaces.
- */
-
-interface IAddress extends IBaseEntity {
+export interface IAddress extends IBaseEntity {
+  rowVersion: string;
   id: number;
   line1: string;
   line2: string;
@@ -15,7 +10,8 @@ interface IAddress extends IBaseEntity {
   postal: string;
 }
 
-interface IEvaluation extends IBaseEntity {
+export interface IEvaluation extends IBaseEntity {
+  rowVersion: string;
   parcelId: number;
   date: string;
   key: string;
@@ -24,7 +20,8 @@ interface IEvaluation extends IBaseEntity {
   firm: string;
 }
 
-interface IFiscal extends IBaseEntity {
+export interface IFiscal extends IBaseEntity {
+  rowVersion: string;
   parcelId: number;
   fiscalYear: number;
   effectiveDate: string;
@@ -33,7 +30,8 @@ interface IFiscal extends IBaseEntity {
   note: string;
 }
 
-interface IBuilding extends IBaseEntity {
+export interface IBuilding extends IBaseEntity {
+  rowVersion: string;
   id: number;
   propertyTypeId: number;
   projectNumbers: string[];
@@ -70,43 +68,3 @@ interface IBuilding extends IBaseEntity {
   evaluations: IEvaluation[];
   fiscals: IFiscal[];
 }
-
-interface ISubParcel extends IBaseEntity {
-  id: number;
-  pid: string;
-  pin: number;
-}
-
-interface ISubdivision extends IBaseEntity {
-  id: number;
-  pid: string;
-  pin: number;
-}
-
-interface IParcel extends IProperty, IBaseEntity {
-  projectWorkflow: string;
-  projectStatus: string;
-  classification: string;
-  subAgency: string;
-  agency: string;
-  subAgencyFullName: string;
-  agencyFullName: string;
-  address: IAddress;
-  latitude: number;
-  longitude: number;
-  isSensitive: boolean;
-  isVisibleToOtherAgencies: boolean;
-  pid: string;
-  pin: number;
-  landArea: number;
-  landLegalDescription: string;
-  zoning: string;
-  zoningPotential: string;
-  evaluations: IEvaluation[];
-  fiscals: IFiscal[];
-  buildings: IBuilding[];
-  parcels: ISubParcel[];
-  subdivisions: ISubdivision[];
-}
-
-export { IParcel };

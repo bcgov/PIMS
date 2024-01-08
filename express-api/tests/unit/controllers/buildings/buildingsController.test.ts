@@ -1,26 +1,19 @@
-import { IParcel } from '@/controllers/parcels/IParcel';
+import { IBuilding } from '@/controllers/buildings/IBuilding';
 import { faker } from '@faker-js/faker';
 import { UUID } from 'crypto';
 import controllers from '@/controllers';
 import { Request, Response } from 'express';
 import { MockReq, MockRes, getRequestHandlerMocks } from '../../../testUtils/factories';
-import { Point } from 'typeorm';
 
-const mockPoint: Point = {
-  type: 'Point',
-  coordinates: [1.23, 4.56],
-};
-describe('UNIT - Parcels', () => {
-  const mockParcel: IParcel = {
+describe('UNIT - Buildings', () => {
+  const mockBuilding: IBuilding = {
     createdOn: faker.date.anytime().toLocaleString(),
     updatedOn: faker.date.anytime().toLocaleString(),
     updatedById: faker.string.uuid() as UUID,
     createdById: faker.string.uuid() as UUID,
+    rowVersion: faker.number.binary(),
     id: faker.number.int(),
     propertyTypeId: 0,
-    propertyType: 'Land',
-    addressId: 1,
-    location: mockPoint,
     projectNumbers: [],
     projectWorkflow: 'Submit Surplus Property Process Project',
     projectStatus: 'Draft',
@@ -39,17 +32,21 @@ describe('UNIT - Parcels', () => {
     longitude: faker.location.longitude(),
     isSensitive: false,
     isVisibleToOtherAgencies: false,
-    pid: faker.string.numeric(),
-    pin: faker.number.int(),
-    landArea: 0,
-    landLegalDescription: faker.string.alpha(),
-    zoning: '',
-    zoningPotential: '',
     evaluations: [],
     fiscals: [],
-    buildings: [],
-    parcels: [],
-    subdivisions: [],
+    parcelId: faker.number.int(),
+    buildingConstructionTypeId: 0,
+    buildingConstructionType: '',
+    buildingFloorCount: 0,
+    buildingPredominateUseId: 0,
+    buildingPredominateUse: '',
+    buildingOccupantTypeId: 0,
+    buildingOccupantType: '',
+    leaseExpiry: '',
+    occupantName: '',
+    transferLeaseOnSale: false,
+    buildingTenancy: '',
+    rentableArea: 0,
   };
 
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
@@ -60,141 +57,115 @@ describe('UNIT - Parcels', () => {
     mockResponse = mockRes;
   });
 
-  describe('GET /properties/parcels/:id', () => {
+  describe('GET /properties/buildings/:id', () => {
     it('should return the stub response of 501', async () => {
-      await controllers.getParcel(mockRequest, mockResponse);
+      await controllers.getBuilding(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(501);
     });
 
     xit('should return 200 with a correct response body', async () => {
       mockRequest.params.parcelId = '1';
-      await controllers.getParcel(mockRequest, mockResponse);
+      await controllers.getBuilding(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
 
     xit('should return 404 when resource is not found', async () => {
       mockRequest.params.parcelId = 'non-integer';
-      await controllers.getParcel(mockRequest, mockResponse);
+      await controllers.getBuilding(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(404);
     });
   });
 
-  describe('PUT /properties/parcels/:id', () => {
+  describe('PUT /properties/buildings/:id', () => {
     beforeEach(() => {
-      mockRequest.body = mockParcel;
+      mockRequest.body = mockBuilding;
     });
 
     it('should return the stub response of 501', async () => {
-      await controllers.updateParcel(mockRequest, mockResponse);
+      await controllers.updateBuilding(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(501);
     });
 
     xit('should return 200 with a correct response body', async () => {
-      await controllers.updateParcel(mockRequest, mockResponse);
+      await controllers.updateBuilding(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
 
     xit('should return 404 when resource is not found', async () => {
-      mockRequest.params.parcelId = 'non-integer';
-      await controllers.updateParcel(mockRequest, mockResponse);
+      mockRequest.params.buildingId = 'non-integer';
+      await controllers.updateBuilding(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(404);
     });
   });
 
-  describe('DELETE /properties/parcels/:id', () => {
+  describe('DELETE /properties/buildings/:id', () => {
     it('should return the stub response of 501', async () => {
-      await controllers.deleteParcel(mockRequest, mockResponse);
+      await controllers.deleteBuilding(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(501);
     });
 
     xit('should return 200 with a correct response body', async () => {
-      mockRequest.params.parcelId = '1';
-      await controllers.deleteParcel(mockRequest, mockResponse);
+      mockRequest.params.buildingId = '1';
+      await controllers.deleteBuilding(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
 
     xit('should return 404 when resource is not found', async () => {
-      mockRequest.params.parcelId = 'non-integer';
-      await controllers.deleteParcel(mockRequest, mockResponse);
+      mockRequest.params.buildingId = 'non-integer';
+      await controllers.deleteBuilding(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(404);
     });
   });
 
-  describe('GET /properties/parcels', () => {
+  describe('GET /properties/buildings', () => {
     it('should return the stub response of 501', async () => {
-      await controllers.filterParcelsQueryString(mockRequest, mockResponse);
+      await controllers.filterBuildingsQueryString(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(501);
     });
 
     xit('should return 200 with a correct response body', async () => {
       mockRequest.query.filterString = '1';
-      await controllers.filterParcelsQueryString(mockRequest, mockResponse);
+      await controllers.filterBuildingsQueryString(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
   });
 
-  describe('POST /properties/parcels', () => {
+  describe('POST /properties/buildings', () => {
     it('should return the stub response of 501', async () => {
-      await controllers.addParcel(mockRequest, mockResponse);
+      await controllers.addBuilding(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(501);
     });
 
     xit('should return 201 with a correct response body', async () => {
-      mockRequest.body = mockParcel;
-      await controllers.addParcel(mockRequest, mockResponse);
+      mockRequest.body = mockBuilding;
+      await controllers.addBuilding(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
   });
 
   describe('POST /properties/filter', () => {
     it('should return the stub response of 501', async () => {
-      await controllers.filterParcelsRequestBody(mockRequest, mockResponse);
+      await controllers.filterBuildingsRequestBody(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(501);
     });
 
     xit('should return 200 with a correct response body', async () => {
       mockRequest.body = { filter: 'string' };
-      await controllers.filterParcelsRequestBody(mockRequest, mockResponse);
+      await controllers.filterBuildingsRequestBody(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
   });
 
-  describe('PUT /properties/parcel/:id/financial', () => {
+  describe('PUT /properties/building/:id/financial', () => {
     it('should return the stub response of 501', async () => {
-      await controllers.filterParcelsQueryString(mockRequest, mockResponse);
+      await controllers.filterBuildingsQueryString(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(501);
     });
 
     xit('should return 200 with a correct response body', async () => {
       mockRequest.params.parcelId = '1';
-      mockRequest.body = mockParcel;
-      await controllers.filterParcelsQueryString(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
-  });
-
-  describe('GET /properties/parcel/check/pin-available', () => {
-    it('should return the stub response of 501', async () => {
-      await controllers.filterParcelsQueryString(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return a status of 200', async () => {
-      mockRequest.query.pin = '1234';
-      await controllers.checkPinAvailable(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
-  });
-
-  describe('GET /properties/parcel/check/pid-available', () => {
-    it('should return the stub response of 501', async () => {
-      await controllers.filterParcelsQueryString(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return a status of 200', async () => {
-      mockRequest.query.pid = '1234';
-      await controllers.checkPidAvailable(mockRequest, mockResponse);
+      mockRequest.body = mockBuilding;
+      await controllers.filterBuildingsQueryString(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
   });
