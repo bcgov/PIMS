@@ -17,37 +17,27 @@ const AppBrand = () => {
           textDecoration: 'none',
         },
         '& img': {
-          mr: 2,
+          mr: '12px',
         },
       }}
     >
       <RouterLink to="/" aria-label="Go to PIMS Home">
-        <Box>
-          <picture>
-            <source srcSet={headerImageLarge} media="(min-width: 960px)"></source>
-            <source srcSet={headerImageSmall} media="(min-width: 600px)"></source>
-            <img
-              src={headerImageSmall}
-              alt={'Government of British Columbia'}
-              style={{ height: '48px' }}
-            />
-          </picture>
-        </Box>
-        <Box>
-          <Divider
-            style={{ borderBottomWidth: '26px', borderRightWidth: '2px' }}
-            orientation="vertical"
+        <picture>
+          <source srcSet={headerImageLarge} media="(min-width: 960px)"></source>
+          <source srcSet={headerImageSmall} media="(min-width: 600px)"></source>
+          <img
+            src={headerImageSmall}
+            alt={'Government of British Columbia'}
+            style={{ height: '48px' }}
           />
-        </Box>
-        <Box
-          sx={{
-            marginLeft: '16px',
-          }}
-        >
-          <Typography color={theme.palette.black.main} variant="h5">
-            Property Inventory Management System
-          </Typography>
-        </Box>
+        </picture>
+        <Divider
+          style={{ borderBottomWidth: '26px', borderRightWidth: '2px' }}
+          orientation="vertical"
+        />
+        <Typography marginLeft={'16px'} color={theme.palette.black.main} variant="h5">
+          Property Inventory Management System
+        </Typography>
       </RouterLink>
     </Box>
   );
