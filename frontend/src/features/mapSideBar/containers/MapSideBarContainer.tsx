@@ -210,6 +210,7 @@ const MapSideBarContainer: FunctionComponent<IMapSideBarContainerProps> = ({
           landArea: matchingParcel.landArea,
         });
         formikDataPopulateCallback(matchingParcel, nameSpace);
+        parcelLayerSearchCallback();
         return matchingParcel;
       } else {
         parcelLayerSearchCallback();
