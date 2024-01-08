@@ -6,12 +6,12 @@ import { UUID } from 'crypto';
 
 const request = supertest(app);
 
-const ADMIN_AREAS_PATH = '/api/v2//admin/administrativeAreas';
+const ADMIN_AREAS_PATH = '/api/v2/admin/administrativeAreas';
 const mockAdministrativeArea: IAdministrativeArea = {
   createdOn: faker.date.anytime().toLocaleString(),
   updatedOn: faker.date.anytime().toLocaleString(),
-  updatedByName: faker.person.firstName(),
-  updatedByEmail: faker.internet.email(),
+  updatedById: faker.string.uuid() as UUID,
+  createdById: faker.string.uuid() as UUID,
   id: faker.string.uuid() as UUID,
   name: faker.location.city(),
   isDisabled: false,

@@ -6,12 +6,12 @@ import { IClaim } from '@/controllers/admin/claims/IClaim';
 
 const request = supertest(app);
 
-const CLAIMS_PATH = '/api/v2//admin/claims';
+const CLAIMS_PATH = '/api/v2/admin/claims';
 const mockClaim: IClaim = {
   createdOn: faker.date.anytime().toLocaleString(),
   updatedOn: faker.date.anytime().toLocaleString(),
-  updatedByName: faker.person.firstName(),
-  updatedByEmail: faker.internet.email(),
+  updatedById: faker.string.uuid() as UUID,
+  createdById: faker.string.uuid() as UUID,
   id: faker.string.uuid() as UUID,
   name: faker.location.city(),
   isDisabled: false,
