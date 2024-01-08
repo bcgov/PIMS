@@ -1,7 +1,7 @@
 import { Entity, Column, Index, ManyToOne, JoinColumn, PrimaryColumn } from 'typeorm';
 import { ProjectStatus } from './ProjectStatus';
 import { Workflows } from './Workflows';
-import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
+import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 
 @Entity()
 @Index(['ToWorkflowId', 'ToStatusId'])

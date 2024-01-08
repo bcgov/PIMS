@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { Workflows } from '@/typeorm/Entities/Workflows';
-import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
+import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Projects } from '@/typeorm/Entities/Projects';
 
 @Entity()

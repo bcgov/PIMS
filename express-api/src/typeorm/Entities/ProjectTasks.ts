@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { Projects } from './Projects';
 import { Tasks } from './Tasks';
-import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
+import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 
 @Entity()
 @Index(['ProjectId', 'TaskId', 'IsCompleted', 'CompletedOn'])

@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, Index, ManyToOne, JoinColumn } from 'typeorm';
 import { ProjectStatus } from './ProjectStatus';
 import { NotificationTemplates } from './NotificationTemplates';
-import { BaseEntity } from '@/typeorm/Entities/BaseEntity';
+import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 
 @Entity()
 @Index(['FromStatusId', 'ToStatusId'])
