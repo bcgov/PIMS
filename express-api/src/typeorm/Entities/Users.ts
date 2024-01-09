@@ -64,7 +64,7 @@ export class Users {
   @Column({ type: 'character varying', length: 1000, nullable: true })
   Note: string;
 
-  @Column('timestamp')
+  @Column({ type: 'timestamp', nullable: true })
   LastLogin: Date;
 
   @ManyToOne(() => Users, (user) => user.Id, { nullable: true })
