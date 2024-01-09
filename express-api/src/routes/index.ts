@@ -8,6 +8,7 @@ import usersRouter from '@/routes/usersRouter';
 import propertiesRouter from '@/routes/propertiesRouter';
 import projectsRouter from '@/routes/projectsRouter';
 import notificationsRouter from '@/routes/notificationsRouter';
+import reportsRouter from '@/routes/reportsRouter';
 
 const router = {
   healthRouter,
@@ -20,6 +21,7 @@ const router = {
   propertiesRouter,
   projectsRouter,
   notificationsRouter,
+  reportsRouter,
 };
 
 export default router;

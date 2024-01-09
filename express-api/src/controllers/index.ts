@@ -8,6 +8,7 @@ import * as users from '@/controllers/users/usersController';
 import * as properties from '@/controllers/properties/propertiesController';
 import * as projects from '@/controllers/projects/projectsController';
 import * as notifications from '@/controllers/notifications/notificationsController';
+import * as reports from '@/controllers/reports/reportsController';
 
 export default {
   healthCheck,
@@ -20,4 +21,5 @@ export default {
   ...properties,
   ...projects,
   ...notifications,
+  ...reports,
 };
