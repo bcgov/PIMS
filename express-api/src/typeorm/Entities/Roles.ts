@@ -1,11 +1,12 @@
+import { UUID } from 'crypto';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
-import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
+import { Entity, PrimaryColumn, Column, Index } from 'typeorm';
 
 @Entity()
 @Index(['IsDisabled', 'Name'])
 export class Roles extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  Id: number;
+  @PrimaryColumn({ type: 'uuid' })
+  Id: UUID;
 
   @Column({ type: 'character varying', length: 100 })
   @Index({ unique: true })

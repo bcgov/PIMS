@@ -1,11 +1,12 @@
+import { UUID } from 'crypto';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
-import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
+import { Entity, Column, Index, PrimaryColumn } from 'typeorm';
 
 @Entity()
 @Index(['IsDisabled', 'Name'])
 export class Claims extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  Id: number;
+  @PrimaryColumn({ type: 'uuid' })
+  Id: UUID;
 
   @Column({ type: 'character varying', length: 150 })
   @Index({ unique: true })
