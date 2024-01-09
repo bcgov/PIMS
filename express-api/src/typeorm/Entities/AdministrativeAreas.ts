@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, Index, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Index, ManyToOne, JoinColumn } from 'typeorm';
 import { RegionalDistricts } from './RegionalDistricts';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 
@@ -24,6 +24,9 @@ export class AdministrativeAreas extends BaseEntity {
   @Column({ type: 'character varying', length: 50, nullable: true })
   BoundaryType: string;
 
-  @ManyToOne(() => RegionalDistricts, (RegionalDistrict) => RegionalDistrict.AdministrativeAreas)
-  RegionalDistrict: RegionalDistricts;
+  @ManyToOne(() => RegionalDistricts, (RegionalDistrict) => RegionalDistrict.Id, {
+    nullable: true,
+  })
+  @JoinColumn({ name: 'RegionalDistrictId' })
+  RegionalDistrictId: RegionalDistricts;
 }
