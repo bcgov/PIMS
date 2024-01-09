@@ -1,9 +1,9 @@
 import { Entity, Index, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { Fiscals } from '@/typeorm/Entities/abstractEntities/Fiscals';
+import { Fiscal } from '@/typeorm/Entities/abstractEntities/Fiscals';
 import { Buildings } from '@/typeorm/Entities/Buildings';
 
 @Entity()
-export class BuildingFiscals extends Fiscals {
+export class BuildingFiscals extends Fiscal {
   @ManyToOne(() => Buildings, (building) => building.Id)
   @JoinColumn({ name: 'BuildingId' })
   @PrimaryColumn()

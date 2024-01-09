@@ -3,7 +3,7 @@ import { Entity, Column, Index, PrimaryColumn } from 'typeorm';
 
 @Entity()
 @Index(['FiscalYear', 'Key', 'Value'])
-export class Fiscals extends BaseEntity {
+export class Fiscal extends BaseEntity {
   @PrimaryColumn('int')
   FiscalYear: number;
 
