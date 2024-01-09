@@ -57,3 +57,22 @@ export const getKeycloakRole = async (req: Request, res: Response) => {
     // TODO: replace stub with controller logic
     return stubResponse(res);
 };
+
+/**
+ * @description Update the keycloak group and PIMS role fo the specified 'id'. If the group doesn't exist in keycloak it will return a 400 BadRequest. If the role doesn't exist in PIMS it will create it.
+ * @param   {Request}  req Incoming Request
+ * @param   {Response} res Outgoing Response
+ * @returns {Response} A 200 response with json data of updated role and group
+ */
+export const updateKeycloakRole = async (req: Request, res: Response) => {
+    /**
+     * #swagger.tags = ['Keycloak - Roles']
+     * #swagger.description = 'Update the keycloak group and PIMS role fo the specified 'id'. If the group doesn't exist in keycloak it will return a 400 BadRequest. If the role doesn't exist in PIMS it will create it.'
+     * #swagger.security = [{
+     *         "bearerAuth": []
+     *     }]
+     */
+
+    //TODO: replace stub with controller logic
+    return stubResponse(res);
+};
