@@ -16,7 +16,7 @@ describe('UNIT - Reports', () => {
   });
 
   describe('GET /reports/projects', () => {
-    it('should return stub response 501', async () =>{ 
+    it('should return stub response 501', async () => {
       await getSpreadsheetProjectsReports(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(501);
     });
