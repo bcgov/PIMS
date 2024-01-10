@@ -18,13 +18,13 @@ export class ProjectStatusHistory extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id: number;
 
-  @ManyToOne(() => Projects, (project) => project.Id)
+  @ManyToOne(() => Projects, (Project) => Project.Id)
   @JoinColumn({ name: 'ProjectId' })
   @PrimaryColumn()
   @Index()
   ProjectId: Projects;
 
-  @ManyToOne(() => Workflows, (workflow) => workflow.Id)
+  @ManyToOne(() => Workflows, (Workflow) => Workflow.Id)
   @JoinColumn({ name: 'ToWorkflowId' })
   @PrimaryColumn()
   @Index()

@@ -65,27 +65,27 @@ export class Projects extends BaseEntity {
   @Column('int')
   ProjectType: number;
 
-  @ManyToOne(() => Workflows, (workflow) => workflow.Id)
+  @ManyToOne(() => Workflows, (Workflow) => Workflow.Id)
   @JoinColumn({ name: 'WorkflowId' })
   @Index()
   WorkflowId: Workflows;
 
-  @ManyToOne(() => Agencies, (agency) => agency.Id)
+  @ManyToOne(() => Agencies, (Agency) => Agency.Id)
   @JoinColumn({ name: 'AgencyId' })
   @Index()
   AgencyId: Agencies;
 
-  @ManyToOne(() => TierLevels, (tierlevel) => tierlevel.Id)
+  @ManyToOne(() => TierLevels, (TierLevel) => TierLevel.Id)
   @JoinColumn({ name: 'TierLevelId' })
   @Index()
   TierLevelId: TierLevels;
 
-  @ManyToOne(() => ProjectStatus, (status) => status.Id)
+  @ManyToOne(() => ProjectStatus, (Status) => Status.Id)
   @JoinColumn({ name: 'StatusId' })
   @Index()
   StatusId: ProjectStatus;
 
-  @ManyToOne(() => ProjectRisks, (risk) => risk.Id)
+  @ManyToOne(() => ProjectRisks, (Risk) => Risk.Id)
   @JoinColumn({ name: 'RiskId' })
   @Index()
   RiskId: ProjectRisks;

@@ -6,12 +6,12 @@ import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 
 @Entity()
 export class ProjectAgencyResponses extends BaseEntity {
-  @ManyToOne(() => Projects, (project) => project.Id)
+  @ManyToOne(() => Projects, (Project) => Project.Id)
   @JoinColumn({ name: 'ProjectId' })
   @PrimaryColumn('int')
   ProjectId: Projects;
 
-  @ManyToOne(() => Agencies, (agency) => agency.Id)
+  @ManyToOne(() => Agencies, (Agency) => Agency.Id)
   @JoinColumn({ name: 'AgencyId' })
   @PrimaryColumn('int')
   AgencyId: Agencies;
@@ -19,7 +19,7 @@ export class ProjectAgencyResponses extends BaseEntity {
   @Column({ type: 'money' })
   OfferAmount: number;
 
-  @ManyToOne(() => NotificationQueue, (notification) => notification.Id, { nullable: true })
+  @ManyToOne(() => NotificationQueue, (Notification) => Notification.Id, { nullable: true })
   @JoinColumn({ name: 'NotificationId' })
   @Index()
   NotificationId: NotificationQueue;

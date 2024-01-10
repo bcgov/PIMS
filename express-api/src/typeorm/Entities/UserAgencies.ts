@@ -6,12 +6,12 @@ import { User } from '@/controllers/users/usersSchema';
 
 @Entity()
 export class UserAgencies extends BaseEntity {
-  @ManyToOne(() => Users, (user) => user.Id)
+  @ManyToOne(() => Users, (User) => User.Id)
   @JoinColumn({ name: 'UserId' })
   @PrimaryColumn('uuid')
   UserId: User;
 
-  @ManyToOne(() => Agencies, (agency) => agency.Id)
+  @ManyToOne(() => Agencies, (Agency) => Agency.Id)
   @JoinColumn({ name: 'AgencyId' })
   @PrimaryColumn('character varying')
   AgencyId: Agencies;

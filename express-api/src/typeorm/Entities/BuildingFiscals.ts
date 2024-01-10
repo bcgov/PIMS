@@ -4,7 +4,7 @@ import { Buildings } from '@/typeorm/Entities/Buildings';
 
 @Entity()
 export class BuildingFiscals extends Fiscal {
-  @ManyToOne(() => Buildings, (building) => building.Id)
+  @ManyToOne(() => Buildings, (Building) => Building.Id)
   @JoinColumn({ name: 'BuildingId' })
   @PrimaryColumn()
   @Index()

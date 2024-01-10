@@ -6,7 +6,7 @@ import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 @Entity()
 @Index(['StatusId'])
 export class WorkflowProjectStatus extends BaseEntity {
-  @ManyToOne(() => Workflows, (Workflows) => Workflows.Id)
+  @ManyToOne(() => Workflows, (Workflow) => Workflow.Id)
   @JoinColumn({ name: 'WorkflowId' })
   @PrimaryColumn()
   WorkflowId: Workflows;

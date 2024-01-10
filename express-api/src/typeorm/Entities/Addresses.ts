@@ -23,14 +23,14 @@ export class Addresses extends BaseEntity {
   @Column({ type: 'character varying', length: 150, nullable: true })
   Address2: string;
 
-  @ManyToOne(() => Provinces, (province) => province.Id)
+  @ManyToOne(() => Provinces, (Province) => Province.Id)
   @JoinColumn({ name: 'Province' })
   Province: Provinces;
 
   @Column({ type: 'character varying', length: 6 })
   Postal: string;
 
-  @ManyToOne(() => AdministrativeAreas, (adminArea) => adminArea.Id)
+  @ManyToOne(() => AdministrativeAreas, (AdminArea) => AdminArea.Id)
   @JoinColumn({ name: 'AdministrativeArea' })
   @Index()
   AdministrativeArea: number;

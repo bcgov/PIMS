@@ -9,7 +9,7 @@ export class AccessRequests extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id: number;
 
-  @ManyToOne(() => Users, (user) => user.Id)
+  @ManyToOne(() => Users, (User) => User.Id)
   @JoinColumn({ name: 'UserId' })
   @Index()
   UserId: Users;
@@ -21,11 +21,11 @@ export class AccessRequests extends BaseEntity {
   @Index()
   Status: number;
 
-  @ManyToOne(() => Roles, (role) => role.Id)
+  @ManyToOne(() => Roles, (Role) => Role.Id)
   @JoinColumn({ name: 'RoleId' })
   RoleId: Roles;
 
-  @ManyToOne(() => Agencies, (agency) => agency.Id)
+  @ManyToOne(() => Agencies, (Agency) => Agency.Id)
   @JoinColumn({ name: 'AgencyId' })
   AgencyId: Agencies;
 }

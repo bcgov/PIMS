@@ -9,7 +9,7 @@ export class ProjectStatusNotifications extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id: number;
 
-  @ManyToOne(() => NotificationTemplates, (template) => template.Id)
+  @ManyToOne(() => NotificationTemplates, (Template) => Template.Id)
   @JoinColumn({ name: 'TemplateId' })
   @Index()
   TemplateId: NotificationTemplates;

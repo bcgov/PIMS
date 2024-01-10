@@ -11,19 +11,19 @@ export class ProjectProperties extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id: number;
 
-  @ManyToOne(() => Projects, (project) => project.Id)
+  @ManyToOne(() => Projects, (Project) => Project.Id)
   @JoinColumn({ name: 'ProjectId' })
   ProjectId: Projects;
 
-  @ManyToOne(() => PropertyTypes, (propertyType) => propertyType.Id)
+  @ManyToOne(() => PropertyTypes, (PropertyType) => PropertyType.Id)
   @JoinColumn({ name: 'PropertyType' })
   PropertyType: number;
 
-  @ManyToOne(() => Parcels, (parcel) => parcel.Id)
+  @ManyToOne(() => Parcels, (Parcel) => Parcel.Id)
   @JoinColumn({ name: 'ParcelId' })
   ParcelId: Parcels;
 
-  @ManyToOne(() => Buildings, (building) => building.Id)
+  @ManyToOne(() => Buildings, (Building) => Building.Id)
   @JoinColumn({ name: 'BuildingId' })
   BuildingId: Buildings;
 }

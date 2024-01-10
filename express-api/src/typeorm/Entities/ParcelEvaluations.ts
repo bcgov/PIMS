@@ -5,7 +5,7 @@ import { Entity, Column, Index, ManyToOne, JoinColumn, PrimaryColumn } from 'typ
 @Entity()
 @Index(['ParcelId', 'EvaluationKey'])
 export class ParcelEvaluations extends Evaluation {
-  @ManyToOne(() => Parcels, (parcel) => parcel.Id)
+  @ManyToOne(() => Parcels, (Parcel) => Parcel.Id)
   @JoinColumn({ name: 'ParcelId' })
   @PrimaryColumn()
   ParcelId: Parcels;

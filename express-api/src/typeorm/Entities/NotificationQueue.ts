@@ -50,16 +50,16 @@ export class NotificationQueue extends BaseEntity {
   @Column({ type: 'character varying', length: 50, nullable: true })
   Tag: string;
 
-  @ManyToOne(() => Projects, (project) => project.Id)
+  @ManyToOne(() => Projects, (Project) => Project.Id)
   @JoinColumn({ name: 'ProjectId' })
   ProjectId: Projects;
 
-  @ManyToOne(() => Agencies, (agency) => agency.Id)
+  @ManyToOne(() => Agencies, (Agency) => Agency.Id)
   @JoinColumn({ name: 'ToAgencyId' })
   @Index()
   ToAgencyId: Agencies;
 
-  @ManyToOne(() => NotificationTemplates, (template) => template.Id)
+  @ManyToOne(() => NotificationTemplates, (Template) => Template.Id)
   @JoinColumn({ name: 'TemplateId' })
   @Index()
   TemplateId: NotificationTemplates;

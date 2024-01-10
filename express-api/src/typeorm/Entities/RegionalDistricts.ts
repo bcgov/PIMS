@@ -14,7 +14,7 @@ export class RegionalDistricts extends BaseEntity {
 
   @OneToMany(
     () => AdministrativeAreas,
-    (AdministrativeAreas) => AdministrativeAreas.RegionalDistrictId,
+    (AdministrativeArea) => AdministrativeArea.RegionalDistrictId,
   )
   AdministrativeAreas: AdministrativeAreas[];
 }

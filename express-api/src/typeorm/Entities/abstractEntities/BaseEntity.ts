@@ -2,7 +2,7 @@ import { Users } from '@/typeorm/Entities/Users';
 import { Column, CreateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
 
 export abstract class BaseEntity {
-  @ManyToOne(() => Users, (user) => user.Id)
+  @ManyToOne(() => Users, (User) => User.Id)
   @JoinColumn({ name: 'CreatedById' })
   @Index()
   CreatedById: Users;
@@ -10,7 +10,7 @@ export abstract class BaseEntity {
   @CreateDateColumn()
   CreatedOn: Date;
 
-  @ManyToOne(() => Users, (user) => user.Id, { nullable: true })
+  @ManyToOne(() => Users, (User) => User.Id, { nullable: true })
   @JoinColumn({ name: 'UpdatedById' })
   @Index()
   UpdatedById: Users;

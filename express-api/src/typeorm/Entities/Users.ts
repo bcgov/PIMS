@@ -15,14 +15,14 @@ export class Users {
   @PrimaryColumn({ type: 'uuid' })
   Id: UUID;
 
-  @ManyToOne(() => Users, (user) => user.Id)
+  @ManyToOne(() => Users, (User) => User.Id)
   @JoinColumn({ name: 'CreatedById' })
   CreatedById: Users;
 
   @CreateDateColumn()
   CreatedOn: Date;
 
-  @ManyToOne(() => Users, (user) => user.Id, { nullable: true })
+  @ManyToOne(() => Users, (User) => User.Id, { nullable: true })
   @JoinColumn({ name: 'UpdatedById' })
   UpdatedById: Users;
 
@@ -67,7 +67,7 @@ export class Users {
   @Column({ type: 'timestamp', nullable: true })
   LastLogin: Date;
 
-  @ManyToOne(() => Users, (user) => user.Id, { nullable: true })
+  @ManyToOne(() => Users, (User) => User.Id, { nullable: true })
   @JoinColumn({ name: 'ApprovedById' })
   ApprovedById: Users;
 

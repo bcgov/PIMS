@@ -10,7 +10,7 @@ import { Property } from '@/typeorm/Entities/abstractEntities/Property';
 // Can Buildings and Parcels share a base Properties entity?
 @Entity()
 export class Buildings extends Property {
-  @ManyToOne(() => BuildingConstructionTypes, (constructionType) => constructionType.Id)
+  @ManyToOne(() => BuildingConstructionTypes, (ConstructionType) => ConstructionType.Id)
   @JoinColumn({ name: 'BuildingConstructionTypeId' })
   @Index()
   BuildingConstructionTypeId: BuildingConstructionTypes;
@@ -18,7 +18,7 @@ export class Buildings extends Property {
   @Column({ type: 'int' })
   BuildingFloorCount: number;
 
-  @ManyToOne(() => BuildingPredominateUses, (predominateUse) => predominateUse.Id)
+  @ManyToOne(() => BuildingPredominateUses, (PredominateUse) => PredominateUse.Id)
   @JoinColumn({ name: 'BuildingPredominateUseId' })
   @Index()
   BuildingPredominateUseId: BuildingPredominateUses;
@@ -29,7 +29,7 @@ export class Buildings extends Property {
   @Column({ type: 'real' })
   RentableArea: number;
 
-  @ManyToOne(() => BuildingOccupantTypes, (occupantType) => occupantType.Id)
+  @ManyToOne(() => BuildingOccupantTypes, (OccupantType) => OccupantType.Id)
   @JoinColumn({ name: 'BuildingOccupantTypeId' })
   @Index()
   BuildingOccupantTypeId: BuildingOccupantTypes;

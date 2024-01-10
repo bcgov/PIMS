@@ -5,7 +5,7 @@ import { Entity, Index, ManyToOne, JoinColumn, PrimaryColumn } from 'typeorm';
 @Entity()
 @Index(['BuildingId', 'EvaluationKey'])
 export class BuildingEvaluations extends Evaluation {
-  @ManyToOne(() => Buildings, (building) => building.Id)
+  @ManyToOne(() => Buildings, (Building) => Building.Id)
   @JoinColumn({ name: 'BuildingId' })
   @PrimaryColumn()
   BuildingId: Buildings;

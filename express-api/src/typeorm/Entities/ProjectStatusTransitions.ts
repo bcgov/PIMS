@@ -6,7 +6,7 @@ import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 @Entity()
 @Index(['ToWorkflowId', 'ToStatusId'])
 export class ProjectStatusTransitions extends BaseEntity {
-  @ManyToOne(() => Workflows, (workflow) => workflow.Id)
+  @ManyToOne(() => Workflows, (Workflow) => Workflow.Id)
   @JoinColumn({ name: 'FromWorkflowId' })
   @PrimaryColumn()
   @Index()
@@ -17,7 +17,7 @@ export class ProjectStatusTransitions extends BaseEntity {
   @PrimaryColumn()
   FromStatusId: ProjectStatus;
 
-  @ManyToOne(() => Workflows, (workflow) => workflow.Id)
+  @ManyToOne(() => Workflows, (Workflow) => Workflow.Id)
   @JoinColumn({ name: 'ToWorkflowId' })
   @PrimaryColumn()
   @Index()

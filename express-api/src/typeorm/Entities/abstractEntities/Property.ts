@@ -15,17 +15,17 @@ export abstract class Property extends BaseEntity {
   @Column({ type: 'character varying', length: 2000, nullable: true })
   Description: string;
 
-  @ManyToOne(() => PropertyClassifications, (classification) => classification.Id)
+  @ManyToOne(() => PropertyClassifications, (Classification) => Classification.Id)
   @JoinColumn({ name: 'ClassificationId' })
   @Index()
   ClassificationId: PropertyClassifications;
 
-  @ManyToOne(() => Agencies, (agency) => agency.Id, { nullable: true })
+  @ManyToOne(() => Agencies, (Agency) => Agency.Id, { nullable: true })
   @JoinColumn({ name: 'AgencyId' })
   @Index()
   AgencyId: Agencies;
 
-  @ManyToOne(() => Addresses, (address) => address.Id)
+  @ManyToOne(() => Addresses, (Address) => Address.Id)
   @JoinColumn({ name: 'AddressId' })
   @Index()
   AddressId: Addresses;
@@ -42,7 +42,7 @@ export abstract class Property extends BaseEntity {
   @Column({ type: 'character varying', length: 2000, nullable: true })
   ProjectNumbers: string;
 
-  @ManyToOne(() => PropertyTypes, (propertyType) => propertyType.Id)
+  @ManyToOne(() => PropertyTypes, (PropertyType) => PropertyType.Id)
   @JoinColumn({ name: 'PropertyTypeId' })
   @Index()
   PropertyTypeId: PropertyTypes;
