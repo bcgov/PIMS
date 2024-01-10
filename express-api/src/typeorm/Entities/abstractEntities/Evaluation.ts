@@ -1,12 +1,15 @@
+import { EvaluationKeys } from '@/typeorm/Entities/EvaluationKeys';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
-import { Column, PrimaryColumn } from 'typeorm';
+import { Column, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
 export abstract class Evaluation extends BaseEntity {
   @PrimaryColumn('timestamp')
   Date: Date;
 
-  @PrimaryColumn('int')
-  EvaluationKey: number; // Should this be its own table?
+  @PrimaryColumn()
+  @ManyToOne(() => EvaluationKeys, (EvaluationKey) => EvaluationKey.Id)
+  @JoinColumn({ name: 'EvaluationKey' })
+  EvaluationKey: EvaluationKeys;
 
   @Column({ type: 'money' })
   Value: number;
