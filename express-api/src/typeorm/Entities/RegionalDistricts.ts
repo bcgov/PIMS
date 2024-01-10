@@ -1,5 +1,4 @@
-import { Entity, PrimaryColumn, Column, Index, OneToMany } from 'typeorm';
-import { AdministrativeAreas } from './AdministrativeAreas';
+import { Entity, PrimaryColumn, Column, Index } from 'typeorm';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 
 @Entity()
@@ -11,10 +10,4 @@ export class RegionalDistricts extends BaseEntity {
   @Column({ type: 'character varying', length: 250 })
   @Index({ unique: true })
   Name: string;
-
-  @OneToMany(
-    () => AdministrativeAreas,
-    (AdministrativeArea) => AdministrativeArea.RegionalDistrictId,
-  )
-  AdministrativeAreas: AdministrativeAreas[];
 }
