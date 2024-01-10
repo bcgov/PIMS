@@ -2,13 +2,13 @@ import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Entity, Column, Index, PrimaryColumn } from 'typeorm';
 
 @Entity()
-@Index(['FiscalYear', 'Key', 'Value'])
+@Index(['FiscalYear', 'FiscalKey', 'Value'])
 export class Fiscal extends BaseEntity {
   @PrimaryColumn('int')
   FiscalYear: number;
 
   @PrimaryColumn('int')
-  Key: number;
+  FiscalKey: number;
 
   @Column('money')
   Value: number;

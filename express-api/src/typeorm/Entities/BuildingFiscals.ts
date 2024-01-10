@@ -1,5 +1,5 @@
 import { Entity, Index, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { Fiscal } from '@/typeorm/Entities/abstractEntities/Fiscals';
+import { Fiscal } from '@/typeorm/Entities/abstractEntities/Fiscal';
 import { Buildings } from '@/typeorm/Entities/Buildings';
 
 @Entity()
