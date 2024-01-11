@@ -54,7 +54,7 @@ export const AccessRequest = () => {
                 label={'Email'}
                 defaultValue={keycloak.state.userInfo.email}
                 disabled
-              ></TextInput>
+              />
             </Grid>
             <Grid item xs={6}>
               <TextInput
@@ -72,17 +72,17 @@ export const AccessRequest = () => {
                 label={'Last name'}
                 defaultValue={keycloak.state.userInfo.family_name}
                 disabled
-              ></TextInput>
+              />
             </Grid>
             <Grid item xs={12}>
               <AutocompleteFormField
                 name={'Agency'}
                 label={'Your agency'}
                 options={placeholderData}
-              ></AutocompleteFormField>
+              />
             </Grid>
             <Grid item xs={12}>
-              <TextInput name={'Position'} fullWidth label={'Your position'}></TextInput>
+              <TextInput name={'Position'} fullWidth label={'Your position'} />
             </Grid>
             <Grid item xs={12}>
               <TextInput
@@ -90,7 +90,7 @@ export const AccessRequest = () => {
                 multiline
                 fullWidth
                 label={'Notes (e.g. Reason for access)'}
-              ></TextInput>
+              />
             </Grid>
           </Grid>
         </FormProvider>
@@ -99,7 +99,7 @@ export const AccessRequest = () => {
             onClick={formMethods.handleSubmit(onSubmit)}
             variant="contained"
             color="primary"
-            sx={{ width: '150px', marginX: 'auto' }}
+            sx={{ width: '6rem', marginX: 'auto' }}
           >
             Submit
           </Button>
