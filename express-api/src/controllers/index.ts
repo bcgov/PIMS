@@ -5,7 +5,6 @@ import * as parcels from '@/controllers/parcels/parcelsController';
 import * as lookup from '@/controllers/lookup/lookupController';
 import * as users from '@/controllers/users/usersController';
 import * as notifications from '@/controllers/notifications/notificationsController';
-import * as keycloak from '@/controllers/keycloak/role/roleController';
 
 export default {
   healthCheck,
