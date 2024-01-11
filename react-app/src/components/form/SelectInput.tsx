@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import React from 'react';
+import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Controller, useFormContext } from 'react-hook-form';
 
 export interface ISelectMenuItem {
   label: string;
@@ -7,36 +8,32 @@ export interface ISelectMenuItem {
 }
 
 interface ISelectInputProps {
+  name: string;
   label: string;
   required: boolean;
   options: ISelectMenuItem[];
 }
 
 const SelectInput = (props: ISelectInputProps) => {
-  const { label, options } = props;
-  const [value, setValue] = useState('');
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setValue(event.target.value as string);
-  };
-
+  const { label, options, name } = props;
+  const { control } = useFormContext();
   return (
-    <FormControl fullWidth>
-      <InputLabel id={`select-inputlabel-${label}`}>{label}</InputLabel>
-      <Select
-        labelId={`select-label-${label}`}
-        id={`select-${label}`}
-        value={value}
-        label={label}
-        onChange={handleChange}
-      >
-        {options.map((option) => (
-          <MenuItem key={`menu-item-${label}-${option.label}`} value={option.value}>
-            {option.label}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <Controller
+      name={name}
+      control={control}
+      render={({ field }) => (
+        <FormControl fullWidth>
+          <InputLabel id={`select-inputlabel-${label}`}>{label}</InputLabel>
+          <Select labelId={`select-label-${label}`} id={`select-${label}`} label={label} {...field}>
+            {options.map((option) => (
+              <MenuItem key={`menu-item-${label}-${option.label}`} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
+    />
   );
 };
 
