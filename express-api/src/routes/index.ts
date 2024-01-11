@@ -9,6 +9,7 @@ import propertiesRouter from '@/routes/propertiesRouter';
 import projectsRouter from '@/routes/projectsRouter';
 import notificationsRouter from '@/routes/notificationsRouter';
 import reportsRouter from '@/routes/reportsRouter';
+import toolsRouter from '@/routes/toolsRouter';
 
 const router = {
   healthRouter,
@@ -22,6 +23,7 @@ const router = {
   projectsRouter,
   notificationsRouter,
   reportsRouter,
+  toolsRouter,
 };
 
 export default router;
