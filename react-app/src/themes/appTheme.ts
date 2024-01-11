@@ -36,7 +36,12 @@ const appTheme = createTheme({
       main: '#D2D8D8',
     },
     primary: {
+      main: '#0E3468',
+      dark: '#0E3468D8',
+    },
+    secondary: {
       main: '#FCBA19',
+      dark: '#FCBA19D8',
       contrastText: '#FFF',
     },
     success: {
@@ -79,6 +84,13 @@ const appTheme = createTheme({
     },
   },
   components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          color: 'secondary',
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
@@ -87,9 +99,7 @@ const appTheme = createTheme({
           minWidth: '82px',
           boxShadow: 'none',
           ':hover': {
-            opacity: 0.85,
             boxShadow: 'none',
-            backgroundColor: '#FCBA19',
           },
         },
         textPrimary: {
