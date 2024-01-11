@@ -1,6 +1,6 @@
 import React from 'react';
 import { Autocomplete, SxProps, TextField } from '@mui/material';
-import { ISelectMenuItem } from './SelectInput';
+import { ISelectMenuItem } from './SelectFormField';
 import { Controller, useFormContext } from 'react-hook-form';
 
 interface IAutocompleteProps {
@@ -10,7 +10,7 @@ interface IAutocompleteProps {
   sx?: SxProps;
 }
 
-const AutocompleteInput = (props: IAutocompleteProps) => {
+const AutocompleteFormField = (props: IAutocompleteProps) => {
   const { control } = useFormContext();
   const { name, options, label, sx } = props;
   return (
@@ -33,4 +33,4 @@ const AutocompleteInput = (props: IAutocompleteProps) => {
   );
 };
 
-export default AutocompleteInput;
+export default AutocompleteFormField;

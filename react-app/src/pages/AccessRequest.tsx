@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Button, Grid, Paper, Typography } from '@mui/material';
-import TextInput from '@/components/form/TextInput';
-import AutocompleteInput from '@/components/form/AutocompleteInput';
+import TextInput from '@/components/form/TextFormField';
+import AutocompleteFormField from '@/components/form/AutocompleteFormField';
 import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -16,7 +16,6 @@ export const AccessRequest = () => {
       Notes: '',
       Agency: '',
       Position: '',
-      Amogus: '',
     },
   });
 
@@ -76,11 +75,11 @@ export const AccessRequest = () => {
               ></TextInput>
             </Grid>
             <Grid item xs={12}>
-              <AutocompleteInput
+              <AutocompleteFormField
                 name={'Agency'}
                 label={'Your agency'}
                 options={placeholderData}
-              ></AutocompleteInput>
+              ></AutocompleteFormField>
             </Grid>
             <Grid item xs={12}>
               <TextInput name={'Position'} fullWidth label={'Your position'}></TextInput>

@@ -14,7 +14,7 @@ interface ISelectInputProps {
   options: ISelectMenuItem[];
 }
 
-const SelectInput = (props: ISelectInputProps) => {
+const SelectFormField = (props: ISelectInputProps) => {
   const { label, options, name } = props;
   const { control } = useFormContext();
   return (
@@ -37,4 +37,4 @@ const SelectInput = (props: ISelectInputProps) => {
   );
 };
 
-export default SelectInput;
+export default SelectFormField;
