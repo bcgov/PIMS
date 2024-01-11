@@ -20,7 +20,7 @@
     }
   ],
   "paths": {
-    "${ADMIN_ROUTE}/accessRequests": {
+    "/accessRequests": {
       "get": {
         "description": "",
         "responses": {
@@ -38,7 +38,7 @@
         }
       }
     },
-    "${ADMIN_ROUTE}/administrativeAreas": {
+    "/administrativeAreas": {
       "get": {
         "description": "",
         "responses": {
@@ -56,7 +56,7 @@
         }
       }
     },
-    "${ADMIN_ROUTE}/administrativeAreas/filter": {
+    "/administrativeAreas/filter": {
       "post": {
         "description": "",
         "responses": {
@@ -66,7 +66,7 @@
         }
       }
     },
-    "${ADMIN_ROUTE}/administrativeAreas/{id}": {
+    "/administrativeAreas/{id}": {
       "get": {
         "description": "",
         "responses": {
@@ -92,7 +92,7 @@
         }
       }
     },
-    "${ADMIN_ROUTE}/agencies": {
+    "/agencies": {
       "get": {
         "description": "",
         "responses": {
@@ -110,7 +110,7 @@
         }
       }
     },
-    "${ADMIN_ROUTE}/agencies/{id}": {
+    "/agencies/{id}": {
       "get": {
         "description": "",
         "responses": {
@@ -136,7 +136,7 @@
         }
       }
     },
-    "${ADMIN_ROUTE}/agencies/filter": {
+    "/agencies/filter": {
       "post": {
         "description": "",
         "responses": {
@@ -146,7 +146,7 @@
         }
       }
     },
-    "${ADMIN_ROUTE}/claims": {
+    "/claims": {
       "get": {
         "description": "",
         "responses": {
@@ -164,7 +164,7 @@
         }
       }
     },
-    "${ADMIN_ROUTE}/claims/{id}": {
+    "/claims/{id}": {
       "get": {
         "description": "",
         "responses": {
@@ -190,7 +190,7 @@
         }
       }
     },
-    "${ADMIN_ROUTE}/roles": {
+    "/roles": {
       "get": {
         "description": "",
         "responses": {
@@ -208,7 +208,7 @@
         }
       }
     },
-    "${ADMIN_ROUTE}/roles/{id}": {
+    "/roles/{id}": {
       "get": {
         "description": "",
         "responses": {
@@ -234,7 +234,7 @@
         }
       }
     },
-    "${ADMIN_ROUTE}/roles/name/{name}": {
+    "/roles/name/{name}": {
       "get": {
         "description": "",
         "responses": {
@@ -244,7 +244,7 @@
         }
       }
     },
-    "${ADMIN_ROUTE}/users": {
+    "/users": {
       "get": {
         "description": "",
         "responses": {
@@ -262,7 +262,7 @@
         }
       }
     },
-    "${ADMIN_ROUTE}/users/filter": {
+    "/users/filter": {
       "post": {
         "description": "",
         "responses": {
@@ -272,7 +272,7 @@
         }
       }
     },
-    "${ADMIN_ROUTE}/users/my/agency": {
+    "/users/my/agency": {
       "post": {
         "description": "",
         "responses": {
@@ -282,7 +282,7 @@
         }
       }
     },
-    "${ADMIN_ROUTE}/users/{id}": {
+    "/users/{id}": {
       "get": {
         "description": "",
         "responses": {
@@ -308,7 +308,7 @@
         }
       }
     },
-    "${ADMIN_ROUTE}/users/roles/{username}": {
+    "/users/roles/{username}": {
       "get": {
         "description": "",
         "responses": {
@@ -334,7 +334,175 @@
         }
       }
     },
-    "/health": {
+    "${BUILDINGS_ROUTE}/{buildingId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "BUILDINGS_ROUTE",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "buildingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "BUILDINGS_ROUTE",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "buildingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "BUILDINGS_ROUTE",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "buildingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "${BUILDINGS_ROUTE}/filter": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "BUILDINGS_ROUTE",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "${BUILDINGS_ROUTE}/check/pid-available": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "BUILDINGS_ROUTE",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "${BUILDINGS_ROUTE}/check/pin-available": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "BUILDINGS_ROUTE",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "${BUILDINGS_ROUTE}/{buildingId}/financials": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "BUILDINGS_ROUTE",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "buildingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/": {
       "get": {
         "tags": [
           "Health"
@@ -347,7 +515,7 @@
         }
       }
     },
-    "/lookup/agencies": {
+    "/property/classifications": {
       "get": {
         "description": "",
         "responses": {
@@ -357,7 +525,7 @@
         }
       }
     },
-    "/lookup/roles": {
+    "/project/tier/levels": {
       "get": {
         "description": "",
         "responses": {
@@ -367,7 +535,7 @@
         }
       }
     },
-    "/lookup/property/classifications": {
+    "/project/risks": {
       "get": {
         "description": "",
         "responses": {
@@ -377,7 +545,7 @@
         }
       }
     },
-    "/lookup/project/tier/levels": {
+    "/all": {
       "get": {
         "description": "",
         "responses": {
@@ -387,7 +555,7 @@
         }
       }
     },
-    "/lookup/project/risks": {
+    "/land/title": {
       "get": {
         "description": "",
         "responses": {
@@ -397,27 +565,7 @@
         }
       }
     },
-    "/lookup/all": {
-      "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/ltsa/land/title": {
-      "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "${DISPOSAL_API_ROUTE}/{id}/notifications": {
+    "${DISPOSAL_API_ROUTE}/{id}": {
       "get": {
         "description": "",
         "parameters": [
@@ -457,26 +605,6 @@
           },
           {
             "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "${DISPOSAL_API_ROUTE}/notifications": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "DISPOSAL_API_ROUTE",
             "in": "path",
             "required": true,
             "schema": {
@@ -801,6 +929,44 @@
           },
           {
             "name": "parcelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "${PARCELS_URL}/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "PARCELS_URL",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "PARCELS_URL",
             "in": "path",
             "required": true,
             "schema": {
@@ -1235,12 +1401,72 @@
         }
       }
     },
-    "${USERS_API}/info": {
+    "/search": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/search/filter": {
+      "post": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/search/geo/filter": {
+      "post": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/search/page": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/search/page/filter": {
+      "post": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/ches/status/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/ches/status/{messageId}": {
       "get": {
         "description": "",
         "parameters": [
           {
-            "name": "USERS_API",
+            "name": "messageId",
             "in": "path",
             "required": true,
             "schema": {
@@ -1255,12 +1481,12 @@
         }
       }
     },
-    "${USERS_API}/access/requests": {
-      "get": {
+    "/ches/cancel/{messageId}": {
+      "delete": {
         "description": "",
         "parameters": [
           {
-            "name": "USERS_API",
+            "name": "messageId",
             "in": "path",
             "required": true,
             "schema": {
@@ -1268,6 +1494,94 @@
             }
           }
         ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/geocoder/addresses": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/geocoder/parcels/pids/{siteId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "siteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/import/properties": {
+      "post": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/import/properties/financials": {
+      "patch": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/import/projects": {
+      "post": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/info": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/access/requests": {
+      "get": {
+        "description": "",
         "responses": {
           "default": {
             "description": ""
@@ -1276,16 +1590,6 @@
       },
       "post": {
         "description": "",
-        "parameters": [
-          {
-            "name": "USERS_API",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "default": {
             "description": ""
@@ -1293,18 +1597,10 @@
         }
       }
     },
-    "${USERS_API}/access/requests/{requestId}": {
+    "/access/requests/{requestId}": {
       "get": {
         "description": "",
         "parameters": [
-          {
-            "name": "USERS_API",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "requestId",
             "in": "path",
@@ -1324,14 +1620,6 @@
         "description": "",
         "parameters": [
           {
-            "name": "USERS_API",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "requestId",
             "in": "path",
             "required": true,
@@ -1347,18 +1635,10 @@
         }
       }
     },
-    "${USERS_API}/agencies/{username}": {
+    "/agencies/{username}": {
       "get": {
         "description": "",
         "parameters": [
-          {
-            "name": "USERS_API",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "username",
             "in": "path",
@@ -1375,19 +1655,9 @@
         }
       }
     },
-    "${USERS_API}/reports/users": {
+    "/reports/users": {
       "get": {
         "description": "",
-        "parameters": [
-          {
-            "name": "USERS_API",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "default": {
             "description": ""
@@ -1395,19 +1665,9 @@
         }
       }
     },
-    "${USERS_API}/reports/users/filter": {
+    "/reports/users/filter": {
       "post": {
         "description": "",
-        "parameters": [
-          {
-            "name": "USERS_API",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "default": {
             "description": ""
