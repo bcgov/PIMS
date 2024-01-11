@@ -5,14 +5,14 @@ import { compilerOptions } from './tsconfig.json';
 const jestConfig: JestConfigWithTsJest = {
   testEnvironment: 'jsdom',
   preset: 'ts-jest',
-  // transform: {
-  //   '^.+\\.tsx?$': [
-  //     'ts-jest',
-  //     {
-  //       // ts-jest configuration goes here
-  //     },
-  //   ],
-  // },
+  transform: {
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        // ts-jest configuration goes here
+      },
+    ],
+  },
   collectCoverage: true,
   // collectCoverageFrom: [
   //   'src/controllers/**/*.ts',
