@@ -22,14 +22,7 @@ describe('App.tsx', () => {
         <App />
       </BrowserRouter>,
     ).toJSON();
-    expect(tree).toMatchInlineSnapshot(`
-<div
-  data-props="{}"
-  data-testid="mocked-child-component"
->
-  Mocked Header
-</div>
-`);
+    expect(tree).toMatchSnapshot();
   });
 
   it('should contain the header component', async () => {

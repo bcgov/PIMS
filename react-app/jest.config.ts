@@ -24,6 +24,7 @@ const jestConfig: JestConfigWithTsJest = {
       statements: 80,
     },
   },
+  snapshotResolver: './tests/snapshotResolver.ts',
   randomize: true, // Randomizes order of tests
   roots: ['.'],
   modulePaths: [compilerOptions.baseUrl], // <-- This will be set to 'baseUrl' value
