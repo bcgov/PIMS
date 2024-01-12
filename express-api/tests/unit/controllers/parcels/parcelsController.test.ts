@@ -1,18 +1,26 @@
 import { IParcel } from '@/controllers/parcels/IParcel';
 import { faker } from '@faker-js/faker';
+import { UUID } from 'crypto';
 import controllers from '@/controllers';
 import { Request, Response } from 'express';
 import { MockReq, MockRes, getRequestHandlerMocks } from '../../../testUtils/factories';
+import { Point } from 'typeorm';
 
+const mockPoint: Point = {
+  type: 'Point',
+  coordinates: [1.23, 4.56],
+};
 describe('UNIT - Parcels', () => {
   const mockParcel: IParcel = {
     createdOn: faker.date.anytime().toLocaleString(),
     updatedOn: faker.date.anytime().toLocaleString(),
-    updatedByName: faker.person.firstName(),
-    updatedByEmail: faker.internet.email(),
-    rowVersion: faker.number.binary(),
+    updatedById: faker.string.uuid() as UUID,
+    createdById: faker.string.uuid() as UUID,
     id: faker.number.int(),
     propertyTypeId: 0,
+    propertyType: 'Land',
+    addressId: 1,
+    location: mockPoint,
     projectNumbers: [],
     projectWorkflow: 'Submit Surplus Property Process Project',
     projectStatus: 'Draft',

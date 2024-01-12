@@ -81,18 +81,20 @@ const makeTemplate = (): NotificationTemplate => {
 describe('INTEGRATION - Notifications', () => {
   describe('GET /projects/disposal/:id/notifications', () => {
     xit('should return status 200 with notifications', async () => {
-      const response = await request.get(`${DISPOSAL_API_ROUTE}/1/notifications`);
+      const response = await request.get(`/notifications/${DISPOSAL_API_ROUTE}/1/notifications`);
       expect(response.status).toBe(200);
       expect(response.body).toBeDefined();
     });
 
     xit('should return status 404 for non-existent project ID', async () => {
-      const response = await request.get(`${DISPOSAL_API_ROUTE}/999/notifications`);
+      const response = await request.get(`/notifications/${DISPOSAL_API_ROUTE}/999/notifications`);
       expect(response.status).toBe(404);
     });
 
     xit('should return status 400 for invalid project ID', async () => {
-      const response = await request.get(`${DISPOSAL_API_ROUTE}/invalid_id/notifications`);
+      const response = await request.get(
+        `/notifications/${DISPOSAL_API_ROUTE}/invalid_id/notifications`,
+      );
       expect(response.status).toBe(400);
     });
   });
@@ -103,30 +105,38 @@ describe('INTEGRATION - Notifications', () => {
         page: 0,
         projectId: 0,
       };
-      const response = await request.post(`${DISPOSAL_API_ROUTE}/notifications`).send(filter);
+      const response = await request
+        .post(`/notifications/${DISPOSAL_API_ROUTE}/notifications`)
+        .send(filter);
       expect(response.status).toBe(200);
     });
 
     xit('should return status 400 for malformed request', async () => {
       const filter = { bad: 0 };
-      const response = await request.post(`${DISPOSAL_API_ROUTE}/notifications`).send(filter);
+      const response = await request
+        .post(`/notifications/${DISPOSAL_API_ROUTE}/notifications`)
+        .send(filter);
       expect(response.status).toBe(400);
     });
   });
 
   describe('PUT /projects/disposal/:id/notifications', () => {
     xit('should return status 200 for successful request', async () => {
-      const response = await request.delete(`${DISPOSAL_API_ROUTE}/1/notifications`);
+      const response = await request.delete(`/notifications/${DISPOSAL_API_ROUTE}/1/notifications`);
       expect(response.status).toBe(200);
     });
 
     xit('should return status 404 for non-existent project ID', async () => {
-      const response = await request.delete(`${DISPOSAL_API_ROUTE}/999/notifications`);
+      const response = await request.delete(
+        `/notifications/${DISPOSAL_API_ROUTE}/999/notifications`,
+      );
       expect(response.status).toBe(404);
     });
 
     xit('should return status 400 for invalid project ID', async () => {
-      const response = await request.delete(`${DISPOSAL_API_ROUTE}/invalid_id/notifications`);
+      const response = await request.delete(
+        `/notifications/${DISPOSAL_API_ROUTE}/invalid_id/notifications`,
+      );
       expect(response.status).toBe(400);
     });
   });
@@ -146,7 +156,9 @@ describe('INTEGRATION - Notifications', () => {
         page: 0,
         agencyId: 1,
       };
-      const response = await request.post(`${NOTIFICATION_QUEUE_ROUTE}/filter`).send(filter);
+      const response = await request
+        .post(`/notifications/${NOTIFICATION_QUEUE_ROUTE}/filter`)
+        .send(filter);
       expect(response.status).toBe(200);
       expect(response.body).toBeDefined();
     });
@@ -156,7 +168,7 @@ describe('INTEGRATION - Notifications', () => {
         bad: 'a',
       };
       const response = await request
-        .post(`${NOTIFICATION_QUEUE_ROUTE}/filter/invalid_id`)
+        .post(`/notifications/${NOTIFICATION_QUEUE_ROUTE}/filter/invalid_id`)
         .send(filter);
       expect(response.status).toBe(400);
     });
@@ -164,18 +176,18 @@ describe('INTEGRATION - Notifications', () => {
 
   describe('GET /notifications/queue/:id', () => {
     xit('should return status 200 for successful request', async () => {
-      const response = await request.get(`${NOTIFICATION_QUEUE_ROUTE}/1`);
+      const response = await request.get(`/notifications/${NOTIFICATION_QUEUE_ROUTE}/1`);
       expect(response.status).toBe(200);
       expect(response.body).toBeDefined();
     });
 
     xit('should return status 404 for non-existent resource', async () => {
-      const response = await request.get(`${NOTIFICATION_QUEUE_ROUTE}/999`);
+      const response = await request.get(`/notifications/${NOTIFICATION_QUEUE_ROUTE}/999`);
       expect(response.status).toBe(404);
     });
 
     xit('should return status 400 for invalid request', async () => {
-      const response = await request.get(`${NOTIFICATION_QUEUE_ROUTE}/invalid_id`);
+      const response = await request.get(`/notifications/${NOTIFICATION_QUEUE_ROUTE}/invalid_id`);
       expect(response.status).toBe(400);
     });
   });
@@ -183,32 +195,34 @@ describe('INTEGRATION - Notifications', () => {
   describe('PUT /notifications/queue/:id', () => {
     xit('should return status 200 for successful request', async () => {
       const updateBody = makeNotification();
-      const response = await request.put(`${NOTIFICATION_QUEUE_ROUTE}/1`).send(updateBody);
+      const response = await request
+        .put(`/notifications/${NOTIFICATION_QUEUE_ROUTE}/1`)
+        .send(updateBody);
       expect(response.status).toBe(200);
     });
 
     xit('should return status 404 for non-existent resource', async () => {
-      const response = await request.put(`${NOTIFICATION_QUEUE_ROUTE}/999`);
+      const response = await request.put(`/notifications/${NOTIFICATION_QUEUE_ROUTE}/999`);
       expect(response.status).toBe(404);
     });
 
     xit('should return status 400 for invalid request', async () => {
       const body = { a: 'b' };
-      const response = await request.put(`${NOTIFICATION_QUEUE_ROUTE}/1`).send(body);
+      const response = await request.put(`/notifications/${NOTIFICATION_QUEUE_ROUTE}/1`).send(body);
       expect(response.status).toBe(400);
     });
   });
 
   describe('PUT /notifications/queue/:id/resend', () => {
     xit('should return status 200 for successful request', async () => {
-      const response = await request.put(`${NOTIFICATION_QUEUE_ROUTE}/1/resend`);
+      const response = await request.put(`/notifications/${NOTIFICATION_QUEUE_ROUTE}/1/resend`);
       expect(response.status).toBe(200);
     });
   });
 
   describe('PUT /notifications/queue/:id', () => {
     xit('should return status 200 for successful request', async () => {
-      const response = await request.delete(`${NOTIFICATION_QUEUE_ROUTE}/1`);
+      const response = await request.delete(`/notifications/${NOTIFICATION_QUEUE_ROUTE}/1`);
       expect(response.status).toBe(200);
     });
   });
@@ -223,18 +237,20 @@ describe('INTEGRATION - Notifications', () => {
 
   describe('GET /notifications/templates/:id', () => {
     xit('should return status 200 for successful request', async () => {
-      const response = await request.get(`${NOTIFICATION_TEMPLATE_ROUTE}/1`);
+      const response = await request.get(`/notifications/${NOTIFICATION_TEMPLATE_ROUTE}/1`);
       expect(response.status).toBe(200);
       expect(response.body).toBeDefined();
     });
 
     xit('should return status 404 for non-existent resource', async () => {
-      const response = await request.get(`${NOTIFICATION_TEMPLATE_ROUTE}/999`);
+      const response = await request.get(`/notifications/${NOTIFICATION_TEMPLATE_ROUTE}/999`);
       expect(response.status).toBe(404);
     });
 
     xit('should return status 400 for invalid request', async () => {
-      const response = await request.get(`${NOTIFICATION_TEMPLATE_ROUTE}/invalid_id`);
+      const response = await request.get(
+        `/notifications/${NOTIFICATION_TEMPLATE_ROUTE}/invalid_id`,
+      );
       expect(response.status).toBe(400);
     });
   });
@@ -242,34 +258,40 @@ describe('INTEGRATION - Notifications', () => {
   describe('PUT /notifications/templates/:id', () => {
     xit('should return status 200 for successful request', async () => {
       const templateBody = makeTemplate();
-      const response = await request.put(`${NOTIFICATION_TEMPLATE_ROUTE}/1`).send(templateBody);
+      const response = await request
+        .put(`/notifications/${NOTIFICATION_TEMPLATE_ROUTE}/1`)
+        .send(templateBody);
       expect(response.status).toBe(200);
     });
 
     xit('should return status 404 for non-existent resource', async () => {
-      const response = await request.put(`${NOTIFICATION_TEMPLATE_ROUTE}/999`);
+      const response = await request.put(`/notifications/${NOTIFICATION_TEMPLATE_ROUTE}/999`);
       expect(response.status).toBe(404);
     });
 
     xit('should return status 400 for invalid request', async () => {
-      const response = await request.put(`${NOTIFICATION_TEMPLATE_ROUTE}/invalid_id`);
+      const response = await request.put(
+        `/notifications/${NOTIFICATION_TEMPLATE_ROUTE}/invalid_id`,
+      );
       expect(response.status).toBe(400);
     });
   });
 
   describe('DELETE /notifications/templates/:id', () => {
     xit('should return status 200 for successful request', async () => {
-      const response = await request.delete(`${NOTIFICATION_TEMPLATE_ROUTE}/1`);
+      const response = await request.delete(`/notifications/${NOTIFICATION_TEMPLATE_ROUTE}/1`);
       expect(response.status).toBe(200);
     });
 
     xit('should return status 404 for non-existent resource', async () => {
-      const response = await request.delete(`${NOTIFICATION_TEMPLATE_ROUTE}/999`);
+      const response = await request.delete(`/notifications/${NOTIFICATION_TEMPLATE_ROUTE}/999`);
       expect(response.status).toBe(404);
     });
 
     xit('should return status 400 for invalid request', async () => {
-      const response = await request.delete(`${NOTIFICATION_TEMPLATE_ROUTE}/invalid_id`);
+      const response = await request.delete(
+        `/notifications/${NOTIFICATION_TEMPLATE_ROUTE}/invalid_id`,
+      );
       expect(response.status).toBe(400);
     });
   });
@@ -283,30 +305,38 @@ describe('INTEGRATION - Notifications', () => {
     });
 
     xit('should return status 404 for non-existent resource', async () => {
-      const response = await request.post(`${NOTIFICATION_TEMPLATE_ROUTE}/999`);
+      const response = await request.post(`/notifications/${NOTIFICATION_TEMPLATE_ROUTE}/999`);
       expect(response.status).toBe(404);
     });
 
     xit('should return status 400 for invalid request', async () => {
-      const response = await request.post(`${NOTIFICATION_TEMPLATE_ROUTE}/invalid_id`);
+      const response = await request.post(
+        `/notifications/${NOTIFICATION_TEMPLATE_ROUTE}/invalid_id`,
+      );
       expect(response.status).toBe(400);
     });
   });
 
   describe('POST /notifications/templates/:templateId/projects/:projectId', () => {
     xit('should return status 201 for successful request', async () => {
-      const response = await request.post(`${NOTIFICATION_TEMPLATE_ROUTE}/1/projects/1`);
+      const response = await request.post(
+        `/notifications/${NOTIFICATION_TEMPLATE_ROUTE}/1/projects/1`,
+      );
       expect(response.status).toBe(201);
       expect(response.body).toBeDefined();
     });
 
     xit('should return status 404 for non-existent resource', async () => {
-      const response = await request.post(`${NOTIFICATION_TEMPLATE_ROUTE}/999/projects/1`);
+      const response = await request.post(
+        `/notifications/${NOTIFICATION_TEMPLATE_ROUTE}/999/projects/1`,
+      );
       expect(response.status).toBe(404);
     });
 
     xit('should return status 400 for invalid request', async () => {
-      const response = await request.post(`${NOTIFICATION_TEMPLATE_ROUTE}/invalid_id/projects/1`);
+      const response = await request.post(
+        `/notifications/${NOTIFICATION_TEMPLATE_ROUTE}/invalid_id/projects/1`,
+      );
       expect(response.status).toBe(400);
     });
   });

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0.134 0 58.606 82.485" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .b {
+        fill: #1c3a6a;
+      }
+
+      .b, .c, .d, .e, .f, .g, .h, .i, .j, .k {
+        stroke-width: 0px;
+      }
+
+      .l {
+        letter-spacing: 0em;
+      }
+
+      .m, .n {
+        font-family: MrEavesXLModOT-Bold, 'Mr Eaves XL Mod OT';
+        font-size: 22.49px;
+        font-weight: 700;
+      }
+
+      .o {
+        letter-spacing: 0em;
+      }
+
+      .c {
+        fill: #c6a554;
+      }
+
+      .d {
+        fill: #ce3e3e;
+      }
+
+      .p {
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+        font-size: 12px;
+      }
+
+      .f {
+        fill: #23868e;
+      }
+
+      .g {
+        fill: #898888;
+      }
+
+      .n {
+        fill: #fff;
+      }
+
+      .h {
+        fill: #fe4a49;
+      }
+
+      .q {
+        letter-spacing: .04em;
+      }
+
+      .r {
+        letter-spacing: .02em;
+      }
+
+      .s {
+        letter-spacing: .05em;
+      }
+
+      .i {
+        fill: #2ab7ca;
+      }
+
+      .t {
+        letter-spacing: .02em;
+      }
+
+      .j {
+        fill: #e6e6ea;
+      }
+
+      .k {
+        fill: #fed766;
+      }
+    </style>
+  </defs>
+  <g transform="matrix(1, 0, 0, 1, -160.1300048828125, -70.70999908447266)">
+    <polygon class="h" points="218.84 109.59 180.87 99.28 180.87 88.03 218.84 102.66 218.84 109.59"/>
+    <polygon class="k" points="218.84 120.97 180.87 116.82 180.87 105.52 218.84 114.01 218.84 120.97"/>
+    <polygon class="j" points="180.87 122.46 180.87 131.89 180.87 131.9 180.87 153.17 218.84 125.39 180.87 122.46"/>
+    <polygon class="d" points="160.13 108.28 180.87 99.28 180.87 88.03 160.13 99.98 160.13 108.28"/>
+    <polygon class="i" points="218.84 98.05 180.87 81.96 180.87 70.71 218.84 91.12 218.84 98.05"/>
+    <polygon class="f" points="160.13 95.8 180.87 81.96 180.87 70.71 160.13 88.43 160.13 95.8"/>
+    <polygon class="c" points="160.13 120.31 180.87 116.82 180.87 105.52 160.13 112.91 160.13 120.31"/>
+    <polygon class="g" points="160.13 124.95 180.87 153.17 180.87 131.9 180.87 122.46 160.13 124.95"/>
+  </g>
+</svg>

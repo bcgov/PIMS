@@ -12,11 +12,11 @@ const {
   lookupRoles,
 } = controllers;
 
-router.route('/lookup/agencies').get(lookupAgencies);
-router.route('/lookup/roles').get(lookupRoles);
-router.route('/lookup/property/classifications').get(lookupPropertyClassifications);
-router.route('/lookup/project/tier/levels').get(lookupProjectTierLevels);
-router.route('/lookup/project/risks').get(lookupProjectRisks);
-router.route('/lookup/all').get(lookupAll);
+router.route('/agencies').get(lookupAgencies);
+router.route('/roles').get(lookupRoles);
+router.route('/property/classifications').get(lookupPropertyClassifications);
+router.route('/project/tier/levels').get(lookupProjectTierLevels);
+router.route('/project/risks').get(lookupProjectRisks);
+router.route('/all').get(lookupAll);
 
 export default router;
