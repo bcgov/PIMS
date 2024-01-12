@@ -37,8 +37,10 @@ const jestConfig: JestConfigWithTsJest = {
   moduleNameMapper: {
     ...pathsToModuleNameMapper(compilerOptions.paths),
     '\\.(svg|png)$': '<rootDir>/tests/__mocks__/imgMock.tsx',
+    '\\.(css|less)$': '<rootDir>/tests/__mocks__/styleMock.ts',
   },
   setupFilesAfterEnv: ['./tests/setupTests.ts'],
+  prettierPath: null,
 };
 
 export default jestConfig;
