@@ -21,7 +21,7 @@ export const AppDataSource = new DataSource({
   migrationsRun: false,
   logging: true,
   logger: new CustomWinstonLogger(true),
-  entities: ['./typeorm/entity/*.ts'],
-  migrations: ['./typeorm/migrations/seed/*.ts', './typeorm/migrations/*.ts'],
+  entities: ['./src/typeorm/Entities/*.ts'],
+  migrations: ['./src/typeorm/migrations/seed/*.ts', './src/typeorm/migrations/*.ts'],
   subscribers: [],
 });
