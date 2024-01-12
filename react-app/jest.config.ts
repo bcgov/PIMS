@@ -6,7 +6,7 @@ const jestConfig: JestConfigWithTsJest = {
   testEnvironment: 'jsdom',
   preset: 'ts-jest',
   transform: {
-    '^.+\\.tsx?$': [
+    '^.+\\.ts(x)?$': [
       'ts-jest',
       {
         // ts-jest configuration goes here
@@ -14,14 +14,7 @@ const jestConfig: JestConfigWithTsJest = {
     ],
   },
   collectCoverage: true,
-  // collectCoverageFrom: [
-  //   'src/controllers/**/*.ts',
-  //   'src/middleware/**/*.ts',
-  //   'src/utilities/**/*.ts',
-  //   'src/routes/**/*.ts',
-  //   'src/express.ts',
-  // ],
-  // coveragePathIgnorePatterns: ['index.ts'],
+  collectCoverageFrom: ['src/components/**/*.ts(x)', 'src/pages/**/*.ts(x)', 'src/App.tsx'],
   coverageReporters: [['lcov', { projectRoot: '..' }]],
   coverageThreshold: {
     global: {
