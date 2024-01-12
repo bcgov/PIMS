@@ -20,10 +20,10 @@ import { z } from 'zod';
 /**
  * @description Sync keycloak roles into PIMS roles.
  */
+// TODO: Complete when role service is complete.
 const syncKeycloakRoles = async () => {
-  // TODO: Implement after typeorm entities exist
-  // Gets groups from keycloak
-  // For each group, gets associated roles
+  // Gets roles from keycloak
+  // For each role
   // If role is in PIMS, update it
   // If not in PIMS, add it
   // If PIMS has roles that aren't in Keycloak, remove them.
@@ -79,12 +79,15 @@ const updateKeycloakRole = async (roleName: string, newRoleName: string) => {
   return role;
 };
 
-const syncKeycloakUsers = async () => {
-  // TODO: Implement after typeorm entities exist
-  // Get users from Keycloak
-  // For each user
-  // If they don't exist in PIMS, insert them with their Keycloak roles
-  // If they do, update their PIMS info
+// TODO: Complete when user and role services are complete.
+const syncKeycloakUser = async () => {
+  // Does user exist in Keycloak?
+  // Get their existing roles.
+  // Does user exist in PIMS
+  // If user exists in PIMS...
+  // Update the roles in PIMS to match their Keycloak roles
+  // If they don't exist in PIMS...
+  // Add user and assign their roles
 };
 
 interface IKeycloakUsersFilter {
@@ -155,7 +158,7 @@ const KeycloakService = {
   getKeycloakRole,
   getKeycloakRoles,
   updateKeycloakRole,
-  syncKeycloakUsers,
+  syncKeycloakUser,
   getKeycloakUser,
   getKeycloakUsers,
   updateKeycloakUserRoles,
