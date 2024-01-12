@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App.tsx should match the existing snapshot 1`] = `
+<div
+  data-props="{}"
+  data-testid="mocked-child-component"
+>
+  Mocked Header
+</div>
+`;

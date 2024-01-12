@@ -4,7 +4,7 @@ import BaseLayout from '@/components/layout/BaseLayout';
 import propertyVector from '@/assets/images/PIMS_logo.svg';
 import { landingPageBottomText, landingPageTopText } from '@/constants/strings';
 
-export const Home = () => {
+const Home = () => {
   return (
     <BaseLayout displayFooter>
       <Box
@@ -34,3 +34,5 @@ export const Home = () => {
     </BaseLayout>
   );
 };
+
+export default Home;
