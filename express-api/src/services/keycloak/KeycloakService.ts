@@ -50,8 +50,11 @@ const getKeycloakRole = async (roleName: string) => {
   const response: IKeycloakRole | IKeycloakErrorResponse = await getRole(roleName);
   // Did the role exist? If not, it will be of type IKeycloakErrorResponse.
   if (!keycloakRoleSchema.safeParse(response).success) {
-    logger.warn(`keycloakService.getKeycloakRole: ${(response as IKeycloakErrorResponse).message}`);
-    return undefined;
+    const message = `keycloakService.getKeycloakRole: ${
+      (response as IKeycloakErrorResponse).message
+    }`;
+    logger.warn(message);
+    throw new Error(message);
   }
   // Return role info
   return response;
@@ -61,11 +64,18 @@ const getKeycloakRole = async (roleName: string) => {
  * @description Update a role that exists in Keycloak. Create it if it does not exist.
  * @param   {string}   roleName String name of role in Keycloak
  * @param   {string}   newRoleName The name to change the role name to.
- * @returns {IKeycloakRole} The updated role information.
+ * @returns {IKeycloakRole} The updated role information. Existing role info if cannot be updated.
  */
 const updateKeycloakRole = async (roleName: string, newRoleName: string) => {
+  const roleWithNameAlready: IKeycloakRole = await getRole(newRoleName);
+  // If it already exists, log the error and return existing role
+  if (keycloakRoleSchema.safeParse(roleWithNameAlready).success) {
+    const message = `keycloakService.updateKeycloakRole: Role ${newRoleName} already exists`;
+    logger.warn(message);
+    throw new Error(message);
+  }
   const response: IKeycloakRole = await getRole(roleName);
-  // Did the role exist? If not, it will be of type IKeycloakErrorResponse.
+  // Did the role to be changed exist? If not, it will be of type IKeycloakErrorResponse.
   let role: IKeycloakRole;
   if (keycloakRoleSchema.safeParse(response).success) {
     // Already existed. Update the role.
@@ -73,15 +83,6 @@ const updateKeycloakRole = async (roleName: string, newRoleName: string) => {
   } else {
     // Didn't exist already. Add the role.
     role = await createRole(newRoleName);
-    // If it already exists, log the error and return existing role
-    if (!keycloakRoleSchema.safeParse(role).success) {
-      logger.warn(
-        `Failed to create role. ${
-          (JSON.parse(role as unknown as string) as IKeycloakErrorResponse).message
-        }`,
-      );
-      return await getRole(newRoleName);
-    }
   }
 
   // Return role info
@@ -108,22 +109,22 @@ interface IKeycloakUsersFilter {
 const getKeycloakUsers = async (filter: IKeycloakUsersFilter) => {
   // Get all users from Keycloak for IDIR
   // CSS API returns an empty list if no match.
-  const users: IKeycloakUser[] = ((await getIDIRUsers(filter)) as IKeycloakUsersResponse).data;
+  let users: IKeycloakUser[] = ((await getIDIRUsers(filter)) as IKeycloakUsersResponse).data;
   // Add BCeID if GUID was included.
   if (filter.guid) {
-    users.concat(((await getBothBCeIDUser(filter.guid)) as IKeycloakUsersResponse).data);
+    users = users.concat(((await getBothBCeIDUser(filter.guid)) as IKeycloakUsersResponse).data);
   }
   // Return list of users
   return users;
 };
 
-const getKeycloakUser = (guidOrEmail: string) => {
+const getKeycloakUser = async (guidOrEmail: string) => {
   // Should be by ID or email. Only way to guarantee uniqueness.
   const emailSchema = z.string().email();
   if (emailSchema.safeParse(guidOrEmail).success) {
-    return getKeycloakUsers({ email: guidOrEmail, firstName: '' }); // TODO: Remove firstName after fix is applied to package.
+    return (await getKeycloakUsers({ email: guidOrEmail, firstName: '' })).at(0); // TODO: Remove firstName after fix is applied to package.
   } else {
-    return getKeycloakUsers({ guid: guidOrEmail, firstName: '' }); // TODO: Remove firstName after fix is applied to package.
+    return (await getKeycloakUsers({ guid: guidOrEmail, firstName: '' })).at(0); // TODO: Remove firstName after fix is applied to package.
   }
 };
 
@@ -132,12 +133,11 @@ const updateKeycloakUserRoles = async (username: string, roles: string[]) => {
     await getUserRoles(username);
   // Did that user exist? If not, it will be of type IKeycloakErrorResponse.
   if (!keycloakUserRolesSchema.safeParse(existingRolesResponse).success) {
-    logger.warn(
-      `keycloakService.updateKeycloakUserRoles: ${
-        (existingRolesResponse as IKeycloakErrorResponse).message
-      }`,
-    );
-    return undefined;
+    const message = `keycloakService.updateKeycloakUserRoles: ${
+      (existingRolesResponse as IKeycloakErrorResponse).message
+    }`;
+    logger.warn(message);
+    throw new Error(message);
   }
 
   // User is found in Keycloak.
