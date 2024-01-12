@@ -29,6 +29,7 @@ export class MockReq {
   params = {};
   body = {};
   user = {};
+  headers = {};
   files: any[] = [];
 
   public setUser = (userData: object) => {
