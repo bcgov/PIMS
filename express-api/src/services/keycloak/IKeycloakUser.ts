@@ -5,9 +5,13 @@ export interface IKeycloakUser {
   firstName: string;
   lastName: string;
   attributes: {
-    display_name: string[];
-    idir_user_guid: string[];
-    idir_username: string[];
+    display_name: [string];
+    idir_user_guid?: [string];
+    idir_username?: [string];
+    bceid_business_guid?: [string];
+    bceid_business_name?: [string];
+    bceid_user_guid?: [string];
+    bceid_username?: [string];
   };
 }
 

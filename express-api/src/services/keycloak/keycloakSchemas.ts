@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { array, z } from 'zod';
 
 export const keycloakRoleSchema = z.object({
   name: z.string(),
@@ -7,4 +7,8 @@ export const keycloakRoleSchema = z.object({
 
 export const keycloakErrorSchema = z.object({
   message: z.string(),
+});
+
+export const keycloakUserRolesSchema = z.object({
+  data: array(keycloakRoleSchema),
 });

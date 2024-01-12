@@ -1,9 +1,21 @@
 import { IKeycloakErrorResponse } from '@/services/keycloak/IKeycloakErrorResponse';
 import { IKeycloakRole, IKeycloakRolesResponse } from '@/services/keycloak/IKeycloakRole';
-import { keycloakRoleSchema } from '@/services/keycloak/keycloakSchemas';
+import { IKeycloakUser, IKeycloakUsersResponse } from '@/services/keycloak/IKeycloakUser';
+import { keycloakRoleSchema, keycloakUserRolesSchema } from '@/services/keycloak/keycloakSchemas';
 import logger from '@/utilities/winstonLogger';
 
-import { getRoles, getRole, updateRole, createRole } from '@bcgov/citz-imb-kc-css-api';
+import {
+  getRoles,
+  getRole,
+  updateRole,
+  createRole,
+  getIDIRUsers,
+  getBothBCeIDUser,
+  getUserRoles,
+  assignUserRoles,
+  unassignUserRole,
+} from '@bcgov/citz-imb-kc-css-api';
+import { z } from 'zod';
 
 /**
  * @description Sync keycloak roles into PIMS roles.
@@ -19,7 +31,7 @@ const syncKeycloakRoles = async () => {
 
 /**
  * @description Fetch a list of groups from Keycloak and their associated role within PIMS
- * @returns {IKeycloakRolesResponse}  A list of roles from Keycloak.
+ * @returns {IKeycloakRoles[]}  A list of roles from Keycloak.
  */
 const getKeycloakRoles = async () => {
   // Get roles available in Keycloak
@@ -38,7 +50,7 @@ const getKeycloakRole = async (roleName: string) => {
   const response: IKeycloakRole | IKeycloakErrorResponse = await getRole(roleName);
   // Did the role exist? If not, it will be of type IKeycloakErrorResponse.
   if (!keycloakRoleSchema.safeParse(response).success) {
-    logger.warn(`KeycloakService.getKeycloakRole: ${(response as IKeycloakErrorResponse).message}`);
+    logger.warn(`keycloakService.getKeycloakRole: ${(response as IKeycloakErrorResponse).message}`);
     return undefined;
   }
   // Return role info
@@ -76,28 +88,66 @@ const syncKeycloakUsers = async () => {
 };
 
 interface IKeycloakUsersFilter {
-  lastName: string;
-  firstName: string;
-  email: string;
-  guid: string;
+  lastName?: string;
+  firstName: string; // Currently required. Asked for changes in CSS repo.
+  email?: string;
+  guid?: string;
 }
 const getKeycloakUsers = async (filter: IKeycloakUsersFilter) => {
-  // Get all users from Keycloak, need to repeat for BCeID and IDIR
+  // Get all users from Keycloak for IDIR
+  // CSS API returns an empty list if no match.
+  const users: IKeycloakUser[] = ((await getIDIRUsers(filter)) as IKeycloakUsersResponse).data;
+  // Add BCeID if GUID was included.
+  if (filter.guid) {
+    users.concat(((await getBothBCeIDUser(filter.guid)) as IKeycloakUsersResponse).data);
+  }
   // Return list of users
+  return users;
 };
 
-const getKeycloakUser = async (guidOrEmail: string) => {
+const getKeycloakUser = (guidOrEmail: string) => {
   // Should be by ID or email. Only way to guarantee uniqueness.
-  // Check both IDIR and BCeID.
-  // Return user info
+  const emailSchema = z.string().email();
+  if (emailSchema.safeParse(guidOrEmail).success) {
+    return getKeycloakUsers({ email: guidOrEmail, firstName: '' }); // TODO: Remove firstName after fix is applied to package.
+  } else {
+    return getKeycloakUsers({ guid: guidOrEmail, firstName: '' }); // TODO: Remove firstName after fix is applied to package.
+  }
 };
 
-const updateKeycloakUserRoles = async (roles: IKeycloakRole[]) => {
-  // Find roles new roles that aren't in Keycloak already.
+const updateKeycloakUserRoles = async (username: string, roles: string[]) => {
+  const existingRolesResponse: IKeycloakRolesResponse | IKeycloakErrorResponse =
+    await getUserRoles(username);
+  // Did that user exist? If not, it will be of type IKeycloakErrorResponse.
+  if (!keycloakUserRolesSchema.safeParse(existingRolesResponse).success) {
+    logger.warn(
+      `keycloakService.updateKeycloakUserRoles: ${
+        (existingRolesResponse as IKeycloakErrorResponse).message
+      }`,
+    );
+    return undefined;
+  }
+
+  // User is found in Keycloak.
+  const existingRoles: string[] = (existingRolesResponse as IKeycloakRolesResponse).data.map(
+    (role) => role.name,
+  );
+
   // Find roles that are in Keycloak but are not in new user info.
-  // Add new roles
+  const rolesToRemove = existingRoles.filter((existingRole) => !roles.includes(existingRole));
   // Remove old roles
+  // No call to remove all as list, so have to loop.
+  rolesToRemove.forEach(async (role) => {
+    await unassignUserRole(username, role);
+  });
+
+  // Find new roles that aren't in Keycloak already.
+  const rolesToAdd = roles.filter((newrole) => !existingRoles.includes(newrole));
+  // Add new roles
+  const updatedRoles: IKeycloakRolesResponse = await assignUserRoles(username, rolesToAdd);
+
   // Return updated list of roles
+  return updatedRoles.data;
 };
 
 const KeycloakService = {
