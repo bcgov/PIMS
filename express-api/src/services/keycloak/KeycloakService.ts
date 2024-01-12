@@ -64,7 +64,7 @@ const getKeycloakRole = async (roleName: string) => {
  * @returns {IKeycloakRole} The updated role information.
  */
 const updateKeycloakRole = async (roleName: string, newRoleName: string) => {
-  const response = await getRole(roleName);
+  const response: IKeycloakRole = await getRole(roleName);
   // Did the role exist? If not, it will be of type IKeycloakErrorResponse.
   let role: IKeycloakRole;
   if (keycloakRoleSchema.safeParse(response).success) {
@@ -73,6 +73,15 @@ const updateKeycloakRole = async (roleName: string, newRoleName: string) => {
   } else {
     // Didn't exist already. Add the role.
     role = await createRole(newRoleName);
+    // If it already exists, log the error and return existing role
+    if (!keycloakRoleSchema.safeParse(role).success) {
+      logger.warn(
+        `Failed to create role. ${
+          (JSON.parse(role as unknown as string) as IKeycloakErrorResponse).message
+        }`,
+      );
+      return await getRole(newRoleName);
+    }
   }
 
   // Return role info
@@ -147,6 +156,7 @@ const updateKeycloakUserRoles = async (username: string, roles: string[]) => {
   // Find new roles that aren't in Keycloak already.
   const rolesToAdd = roles.filter((newrole) => !existingRoles.includes(newrole));
   // Add new roles
+  // FIXME: There's a bug with the package code here. I've opened an issue. Might open a PR just to get it through.
   const updatedRoles: IKeycloakRolesResponse = await assignUserRoles(username, rolesToAdd);
 
   // Return updated list of roles
