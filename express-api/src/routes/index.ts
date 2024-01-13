@@ -8,6 +8,7 @@ import usersRouter from '@/routes/usersRouter';
 import propertiesRouter from '@/routes/propertiesRouter';
 import projectsRouter from '@/routes/projectsRouter';
 import notificationsRouter from '@/routes/notificationsRouter';
+import reportsRouter from '@/routes/reportsRouter';
 import toolsRouter from '@/routes/toolsRouter';
 
 const router = {
@@ -21,6 +22,7 @@ const router = {
   propertiesRouter,
   projectsRouter,
   notificationsRouter,
+  reportsRouter,
   toolsRouter,
 };
 

@@ -10,7 +10,7 @@ export const accessPendingBlurb = (
 
 export const signupTermsAndConditionsClaim = (
   <>
-    By signing up, you agree to <a href="#">Terms and Conditions</a> and that you have read{' '}
-    <a href="#">Privacy Policy</a>.
+    By signing up, you agree to the <a href="#">Terms and Conditions</a> and confirm that you have
+    read the <a href="#">Privacy Policy</a>.
   </>
 );

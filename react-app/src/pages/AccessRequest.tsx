@@ -27,8 +27,8 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
 
   const formMethods = useForm({
     defaultValues: {
-      UserName: keycloak.state.userInfo.idir_username,
-      FirstName: keycloak.state.userInfo.given_name,
+      UserName: keycloak.state.userInfo.idir_username || keycloak.state.userInfo.bceid_username,
+      FirstName: keycloak.state.userInfo.given_name || keycloak.state.userInfo.display_name,
       LastName: keycloak.state.userInfo.family_name,
       Email: keycloak.state.userInfo.email,
       Notes: '',
