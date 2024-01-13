@@ -1,5 +1,6 @@
 import { createTheme } from '@mui/material';
 import '@bcgov/bc-sans/css/BC_Sans.css';
+import type {} from '@mui/x-data-grid/themeAugmentation';
 
 declare module '@mui/material/styles/createPalette' {
   interface Palette {
@@ -121,6 +122,16 @@ const appTheme = createTheme({
         root: {
           boxShadow: '0px 8px 20px 0px rgba(0, 0, 0, 0.04)',
         },
+      },
+    },
+    MuiDataGrid: {
+      styleOverrides: {
+        columnHeaderTitle: {
+          fontWeight: 700,
+        },
+        footerContainer: {
+          fontWeight: 700,
+        }
       },
     },
   },
