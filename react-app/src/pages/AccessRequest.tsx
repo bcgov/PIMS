@@ -9,9 +9,9 @@ export const AccessRequest = () => {
   const keycloak = useKeycloak();
   const formMethods = useForm({
     defaultValues: {
-      UserName: keycloak.state.userInfo.idir_username,
-      FirstName: keycloak.state.userInfo.given_name,
-      LastName: keycloak.state.userInfo.family_name,
+      UserName: keycloak.state.userInfo.idir_username || keycloak.state.userInfo.bceid_username,
+      FirstName: keycloak.state.userInfo.given_name || keycloak.state.userInfo.display_name,
+      LastName: keycloak.state.userInfo.family_name || '',
       Email: keycloak.state.userInfo.email,
       Notes: '',
       Agency: '',
@@ -106,8 +106,8 @@ export const AccessRequest = () => {
         </Box>
       </Paper>
       <Typography mt={'1rem'} textAlign={'center'}>
-        By signing up, you agree to <a href="#">Terms and Conditions</a> and that you have read{' '}
-        <a href="#">Privacy Policy</a>.
+        By signing up, you agree to the <a href="#">Terms and Conditions</a> and confirm that you
+        have read the <a href="#">Privacy Policy</a>.
       </Typography>
     </Box>
   );
