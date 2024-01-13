@@ -1,7 +1,11 @@
 import { IKeycloakErrorResponse } from '@/services/keycloak/IKeycloakErrorResponse';
 import { IKeycloakRole, IKeycloakRolesResponse } from '@/services/keycloak/IKeycloakRole';
 import { IKeycloakUser, IKeycloakUsersResponse } from '@/services/keycloak/IKeycloakUser';
-import { keycloakRoleSchema, keycloakUserRolesSchema } from '@/services/keycloak/keycloakSchemas';
+import {
+  keycloakRoleSchema,
+  keycloakUserRolesSchema,
+  keycloakUserSchema,
+} from '@/services/keycloak/keycloakSchemas';
 import logger from '@/utilities/winstonLogger';
 
 import {
@@ -15,7 +19,6 @@ import {
   assignUserRoles,
   unassignUserRole,
 } from '@bcgov/citz-imb-kc-css-api';
-import { z } from 'zod';
 
 /**
  * @description Sync keycloak roles into PIMS roles.
@@ -118,13 +121,15 @@ const getKeycloakUsers = async (filter: IKeycloakUsersFilter) => {
   return users;
 };
 
-const getKeycloakUser = async (guidOrEmail: string) => {
-  // Should be by ID or email. Only way to guarantee uniqueness.
-  const emailSchema = z.string().email();
-  if (emailSchema.safeParse(guidOrEmail).success) {
-    return (await getKeycloakUsers({ email: guidOrEmail, firstName: '' })).at(0); // TODO: Remove firstName after fix is applied to package.
+const getKeycloakUser = async (guid: string) => {
+  // Should be by guid. Only way to guarantee uniqueness.
+  const user: IKeycloakUser = (await getKeycloakUsers({ guid: guid, firstName: '' })).at(0); // TODO: Remove firstName after fix is applied to package.
+  if (keycloakUserSchema.safeParse(user).success) {
+    // User found
+    return user;
   } else {
-    return (await getKeycloakUsers({ guid: guidOrEmail, firstName: '' })).at(0); // TODO: Remove firstName after fix is applied to package.
+    // User not found
+    throw new Error(`keycloakService.getKeycloakUser: User ${guid} not found.`);
   }
 };
 

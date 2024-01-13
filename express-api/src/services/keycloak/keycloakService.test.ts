@@ -65,9 +65,10 @@ describe('UNIT - KeycloakService', () => {
       const expectedResponse = { message: 'role does not exist' };
       (getRole as jest.Mock).mockResolvedValue(expectedResponse);
 
-      expect(KeycloakService.getKeycloakRole('role1')).rejects.toThrow(`keycloakService.getKeycloakRole: role does not exist`);
+      expect(KeycloakService.getKeycloakRole('role1')).rejects.toThrow(
+        `keycloakService.getKeycloakRole: role does not exist`,
+      );
       expect(getRole).toHaveBeenCalledTimes(1);
-
     });
   });
 
@@ -103,10 +104,10 @@ describe('UNIT - KeycloakService', () => {
       // Mock the call to Keycloak
       (getRole as jest.Mock).mockResolvedValue({ name: 'newRoleName' });
 
-      expect(
-        KeycloakService.updateKeycloakRole('role1', 'newRoleName')
-      ).rejects.toThrow(`keycloakService.updateKeycloakRole: Role newRoleName already exists`);
-            expect(getRole).toHaveBeenCalledTimes(1);
+      expect(KeycloakService.updateKeycloakRole('role1', 'newRoleName')).rejects.toThrow(
+        `keycloakService.updateKeycloakRole: Role newRoleName already exists`,
+      );
+      expect(getRole).toHaveBeenCalledTimes(1);
       expect(getRole).toHaveBeenCalledWith('newRoleName');
     });
   });
@@ -133,14 +134,6 @@ describe('UNIT - KeycloakService', () => {
   });
 
   describe('getKeycloakUser', () => {
-    it('should return a single user by email', async () => {
-      (getIDIRUsers as jest.Mock).mockResolvedValue({ data: [mockUser] });
-
-      const response = await KeycloakService.getKeycloakUser(mockUser.email);
-      expect(getIDIRUsers).toHaveBeenCalledTimes(1);
-      expect(response).toEqual(mockUser);
-    });
-
     it('should return a single user by guid', async () => {
       (getIDIRUsers as jest.Mock).mockResolvedValue({ data: [] });
       (getBothBCeIDUser as jest.Mock).mockResolvedValue({ data: [mockUser] });
@@ -150,7 +143,71 @@ describe('UNIT - KeycloakService', () => {
       expect(getBothBCeIDUser).toHaveBeenCalledTimes(1);
       expect(response).toEqual(mockUser);
     });
+
+    it('should throw an error when no user is found', async () => {
+      (getIDIRUsers as jest.Mock).mockResolvedValue({ data: [] });
+      (getBothBCeIDUser as jest.Mock).mockResolvedValue({ data: [] });
+
+      expect(KeycloakService.getKeycloakUser(mockUser.username)).rejects.toThrow(
+        `keycloakService.getKeycloakUser: User ${mockUser.username} not found.`,
+      );
+      expect(getIDIRUsers).toHaveBeenCalledTimes(1);
+    });
   });
 
-  describe('updateKeycloakUserRoles', () => {});
+  describe('updateKeycloakUserRoles', () => {
+    it('should throw an error when no user is found', async () => {
+      (getUserRoles as jest.Mock).mockResolvedValue({ message: 'no user found' });
+
+      expect(KeycloakService.updateKeycloakUserRoles(mockUser.username, ['role1'])).rejects.toThrow(
+        `keycloakService.updateKeycloakUserRoles: `,
+      );
+      expect(getUserRoles).toHaveBeenCalledTimes(1);
+    });
+
+    it('should do nothing if requested roles match existing roles', async () => {
+      const role = {
+        name: 'role1',
+      };
+      (getUserRoles as jest.Mock).mockResolvedValue({ data: [role] });
+      (assignUserRoles as jest.Mock).mockResolvedValue({ data: [role] });
+
+      const response = await KeycloakService.updateKeycloakUserRoles(mockUser.username, ['role1']);
+      expect(response).toEqual([role]);
+      expect(getUserRoles).toHaveBeenCalledTimes(1);
+      expect(assignUserRoles).toHaveBeenCalledTimes(1);
+    });
+
+    it('should add requested roles to user and remove existing roles not in requested roles', async () => {
+      const existingRoles = [
+        {
+          name: 'role1',
+        },
+        {
+          name: 'role2',
+        },
+      ];
+      const newRoles = [
+        {
+          name: 'role2',
+        },
+        {
+          name: 'role3',
+        },
+      ];
+      (getUserRoles as jest.Mock).mockResolvedValue({ data: existingRoles });
+      (assignUserRoles as jest.Mock).mockResolvedValue({ data: newRoles });
+      (unassignUserRole as jest.Mock).mockResolvedValue({});
+
+      const response = await KeycloakService.updateKeycloakUserRoles(
+        mockUser.username,
+        newRoles.map((role) => role.name),
+      );
+      expect(response).toEqual(newRoles);
+      expect(getUserRoles).toHaveBeenCalledTimes(1);
+      expect(unassignUserRole).toHaveBeenCalledTimes(1);
+      expect(assignUserRoles).toHaveBeenCalledTimes(1);
+      expect(assignUserRoles).toHaveBeenCalledWith(mockUser.username, ['role3']);
+    });
+  });
 });
