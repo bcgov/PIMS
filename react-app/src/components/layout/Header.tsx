@@ -83,7 +83,7 @@ const Header: React.FC = () => {
               </Link>
             </>
           )}
-          <Button onClick={() => handleLoginButton()} variant="contained">
+          <Button onClick={() => handleLoginButton()} color="secondary" variant="contained">
             {isAuthenticated ? 'Logout' : 'Login'}
           </Button>
         </Box>
