@@ -1,4 +1,4 @@
-import { array, z } from 'zod';
+import { z } from 'zod';
 
 // A role as returned from Keycloak.
 export const keycloakRoleSchema = z.object({
@@ -13,7 +13,7 @@ export const keycloakErrorSchema = z.object({
 
 // A list of roles returned by Keycloak.
 export const keycloakUserRolesSchema = z.object({
-  data: array(keycloakRoleSchema),
+  data: z.array(keycloakRoleSchema),
 });
 
 const optionalSingleStringArray = z.array(z.string()).length(1).optional();
