@@ -13,7 +13,7 @@ const jestConfig: JestConfigWithTsJest = {
       },
     ],
   },
-  collectCoverage: true,
+  collectCoverage: false,
   collectCoverageFrom: ['src/components/**/*.ts(x)', 'src/pages/**/*.ts(x)', 'src/App.tsx'],
   coverageReporters: [['lcov', { projectRoot: '..' }]],
   coverageThreshold: {

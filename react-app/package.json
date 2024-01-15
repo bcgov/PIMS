@@ -11,6 +11,7 @@
     "format": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json,css,scss}\"",
     "check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,css,scss}\"",
     "test": "jest",
+    "coverage": "jest --coverage",
     "snapshots": "jest --updateSnapshot"
   },
   "dependencies": {
