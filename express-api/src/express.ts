@@ -74,6 +74,7 @@ app.use(`/api/v2/properties`, protectedRoute(), router.parcelsRouter);
 app.use(`/api/v2/properties`, protectedRoute(), router.buildingsRouter);
 app.use(`/api/v2/notifications`, protectedRoute(), router.notificationsRouter);
 app.use(`/api/v2/projects`, protectedRoute(), router.projectsRouter);
+app.use(`/api/v2/reports`, protectedRoute(), router.reportsRouter);
 app.use(`/api/v2/tools`, protectedRoute(), router.toolsRouter);
 
 export default app;

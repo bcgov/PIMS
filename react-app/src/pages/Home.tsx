@@ -43,3 +43,5 @@ export const Home = () => {
     </BaseLayout>
   );
 };
+
+export default Home;

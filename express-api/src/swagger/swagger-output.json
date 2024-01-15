@@ -1451,6 +1451,26 @@
         }
       }
     },
+    "/projects": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/properties": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/ches/status/": {
       "get": {
         "description": "",
