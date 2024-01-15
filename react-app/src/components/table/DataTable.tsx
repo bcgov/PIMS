@@ -17,7 +17,7 @@ import {
   GridTreeNodeWithRender,
 } from '@mui/x-data-grid';
 
-type RenderCellParams = GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
+type RenderCellParams = GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
 
 const NoRowsOverlay = (): JSX.Element => {
   return (
