@@ -1,20 +1,25 @@
 import { array, z } from 'zod';
 
+// A role as returned from Keycloak.
 export const keycloakRoleSchema = z.object({
   name: z.string(),
   composite: z.boolean().optional(),
 });
 
+// The generic error object that Keycloak returns.
 export const keycloakErrorSchema = z.object({
   message: z.string(),
 });
 
+// A list of roles returned by Keycloak.
 export const keycloakUserRolesSchema = z.object({
   data: array(keycloakRoleSchema),
 });
 
 const optionalSingleStringArray = z.array(z.string()).length(1).optional();
 
+// The user object returned by Keycloak.
+// The fields in attributes depend on authentication method.
 export const keycloakUserSchema = z.object({
   username: z.string(),
   email: z.string(),
@@ -30,18 +35,3 @@ export const keycloakUserSchema = z.object({
     bceid_username: optionalSingleStringArray,
   }),
 });
-export interface IKeycloakUser {
-  username: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  attributes: {
-    display_name: [string];
-    idir_user_guid?: [string];
-    idir_username?: [string];
-    bceid_business_guid?: [string];
-    bceid_business_name?: [string];
-    bceid_user_guid?: [string];
-    bceid_username?: [string];
-  };
-}

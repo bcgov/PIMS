@@ -47,6 +47,7 @@ const getKeycloakRoles = async () => {
  * @description Get information on a single Keycloak role from the role name.
  * @param   {string}   roleName String name of role in Keycloak
  * @returns {IKeycloakRole}  A single role object.
+ * @throws If the role does not exist in Keycloak.
  */
 const getKeycloakRole = async (roleName: string) => {
   // Get single role
@@ -68,6 +69,7 @@ const getKeycloakRole = async (roleName: string) => {
  * @param   {string}   roleName String name of role in Keycloak
  * @param   {string}   newRoleName The name to change the role name to.
  * @returns {IKeycloakRole} The updated role information. Existing role info if cannot be updated.
+ * @throws  {Error} If the newRoleName already exists.
  */
 const updateKeycloakRole = async (roleName: string, newRoleName: string) => {
   const roleWithNameAlready: IKeycloakRole = await getRole(newRoleName);
@@ -109,6 +111,11 @@ interface IKeycloakUsersFilter {
   email?: string;
   guid?: string;
 }
+/**
+ * @description Retrieves Keycloak users based on the provided filter.
+ * @param {IKeycloakUsersFilter} filter The filter to apply when retrieving users.
+ * @returns {IKeycloakUser[]} A list of Keycloak users.
+ */
 const getKeycloakUsers = async (filter: IKeycloakUsersFilter) => {
   // Get all users from Keycloak for IDIR
   // CSS API returns an empty list if no match.
@@ -121,6 +128,12 @@ const getKeycloakUsers = async (filter: IKeycloakUsersFilter) => {
   return users;
 };
 
+/**
+ * @description Retrieves a Keycloak user that matches the provided guid.
+ * @param {string} guid The guid of the desired user.
+ * @returns {IKeycloakUser} A single Keycloak user.
+ * @throws If the user is not found.
+ */
 const getKeycloakUser = async (guid: string) => {
   // Should be by guid. Only way to guarantee uniqueness.
   const user: IKeycloakUser = (await getKeycloakUsers({ guid: guid, firstName: '' })).at(0); // TODO: Remove firstName after fix is applied to package.
@@ -133,6 +146,13 @@ const getKeycloakUser = async (guid: string) => {
   }
 };
 
+/**
+ * @description Updates a user's roles in Keycloak.
+ * @param {string} username The user's username.
+ * @param {string[]} roles A list of roles that the user should have.
+ * @returns {IKeycloakRole[]} A list of Keycloak roles.
+ * @throws If the user does not exist.
+ */
 const updateKeycloakUserRoles = async (username: string, roles: string[]) => {
   const existingRolesResponse: IKeycloakRolesResponse | IKeycloakErrorResponse =
     await getUserRoles(username);
@@ -159,7 +179,7 @@ const updateKeycloakUserRoles = async (username: string, roles: string[]) => {
   });
 
   // Find new roles that aren't in Keycloak already.
-  const rolesToAdd = roles.filter((newrole) => !existingRoles.includes(newrole));
+  const rolesToAdd = roles.filter((newRole) => !existingRoles.includes(newRole));
   // Add new roles
   // FIXME: There's a bug with the package code here. I've opened an issue. Might open a PR just to get it through.
   const updatedRoles: IKeycloakRolesResponse = await assignUserRoles(username, rolesToAdd);

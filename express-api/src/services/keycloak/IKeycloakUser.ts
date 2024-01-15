@@ -1,4 +1,8 @@
 // Confirmed that the fields in attributes are arrays of length 1;
+/**
+ * @interface
+ * @description User object returned from Keycloak.
+ */
 export interface IKeycloakUser {
   username: string;
   email: string;

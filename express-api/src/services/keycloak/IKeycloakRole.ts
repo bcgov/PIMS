@@ -1,5 +1,6 @@
 /**
  * @interface
+ * @description Role object returned from Keycloak. Composite field indicates if it is composed of other roles.
  * @param {string} name Name of role.
  * @param {boolean} composite (Optional) Is composed of other roles.
  */
