@@ -107,7 +107,7 @@ const syncKeycloakUser = async () => {
 
 interface IKeycloakUsersFilter {
   lastName?: string;
-  firstName: string; // Currently required. Asked for changes in CSS repo.
+  firstName?: string;
   email?: string;
   guid?: string;
 }
@@ -136,7 +136,7 @@ const getKeycloakUsers = async (filter: IKeycloakUsersFilter) => {
  */
 const getKeycloakUser = async (guid: string) => {
   // Should be by guid. Only way to guarantee uniqueness.
-  const user: IKeycloakUser = (await getKeycloakUsers({ guid: guid, firstName: '' })).at(0); // TODO: Remove firstName after fix is applied to package.
+  const user: IKeycloakUser = (await getKeycloakUsers({ guid: guid })).at(0);
   if (keycloakUserSchema.safeParse(user).success) {
     // User found
     return user;
@@ -181,7 +181,6 @@ const updateKeycloakUserRoles = async (username: string, roles: string[]) => {
   // Find new roles that aren't in Keycloak already.
   const rolesToAdd = roles.filter((newRole) => !existingRoles.includes(newRole));
   // Add new roles
-  // FIXME: There's a bug with the package code here. I've opened an issue. Might open a PR just to get it through.
   const updatedRoles: IKeycloakRolesResponse = await assignUserRoles(username, rolesToAdd);
 
   // Return updated list of roles
