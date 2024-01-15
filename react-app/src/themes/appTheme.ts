@@ -131,7 +131,7 @@ const appTheme = createTheme({
         },
         footerContainer: {
           fontWeight: 700,
-        }
+        },
       },
     },
   },
