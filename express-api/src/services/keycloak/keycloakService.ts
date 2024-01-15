@@ -18,6 +18,7 @@ import {
   getUserRoles,
   assignUserRoles,
   unassignUserRole,
+  IDIRUserQuery,
 } from '@bcgov/citz-imb-kc-css-api';
 
 /**
@@ -105,18 +106,12 @@ const syncKeycloakUser = async () => {
   // Add user and assign their roles
 };
 
-interface IKeycloakUsersFilter {
-  lastName?: string;
-  firstName?: string;
-  email?: string;
-  guid?: string;
-}
 /**
  * @description Retrieves Keycloak users based on the provided filter.
  * @param {IKeycloakUsersFilter} filter The filter to apply when retrieving users.
  * @returns {IKeycloakUser[]} A list of Keycloak users.
  */
-const getKeycloakUsers = async (filter: IKeycloakUsersFilter) => {
+const getKeycloakUsers = async (filter: IDIRUserQuery) => {
   // Get all users from Keycloak for IDIR
   // CSS API returns an empty list if no match.
   let users: IKeycloakUser[] = ((await getIDIRUsers(filter)) as IKeycloakUsersResponse).data;
@@ -136,7 +131,7 @@ const getKeycloakUsers = async (filter: IKeycloakUsersFilter) => {
  */
 const getKeycloakUser = async (guid: string) => {
   // Should be by guid. Only way to guarantee uniqueness.
-  const user: IKeycloakUser = (await getKeycloakUsers({ guid: guid })).at(0);
+  const user: IKeycloakUser = (await getKeycloakUsers({ guid: guid }))?.at(0);
   if (keycloakUserSchema.safeParse(user).success) {
     // User found
     return user;
