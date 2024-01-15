@@ -54,7 +54,7 @@ jobs:
       - name: Run Coverage Report
         working-directory: ./react-app
         run: |
-          npm run coverage
+          npm test
 
       # Use lcov to format coverage for Code Climate
       # -t is for coverage type
