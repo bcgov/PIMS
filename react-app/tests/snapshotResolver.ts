@@ -4,7 +4,8 @@
  * @param snapshotExtension The extension for snapshots (.snap usually)
  */
 const resolveSnapshotPath = (testPath, snapshotExtension) => {
-  const snapshotFilePath = testPath + snapshotExtension; //(i.e. some.test.js + '.snap')
+  const fileName = (testPath as string).substring(testPath.lastIndexOf('/') + 1);
+  const snapshotFilePath = 'tests/__snapshots__/' + fileName + snapshotExtension; //(i.e. some.test.js + '.snap')
   return snapshotFilePath;
 };
 
@@ -14,12 +15,12 @@ const resolveSnapshotPath = (testPath, snapshotExtension) => {
  * @param snapshotExtension The extension for snapshots (.snap)
  */
 const resolveTestPath = (snapshotFilePath, snapshotExtension) => {
-  const testPath = snapshotFilePath.replace(snapshotExtension, '').replace('__snapshots__/', ''); //Remove the .snap
+  const testPath = snapshotFilePath.replace(snapshotExtension, ''); //Remove the .snap
   return testPath;
 };
 
 /* Used to validate resolveTestPath(resolveSnapshotPath( {this} )) */
-const testPathForConsistencyCheck = 'some.test.js';
+const testPathForConsistencyCheck = 'tests/__snapshots__/some.test.js';
 
 export default {
   resolveSnapshotPath,
