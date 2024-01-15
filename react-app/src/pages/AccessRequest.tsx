@@ -118,6 +118,7 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
 };
 
 export const AccessRequest = () => {
+  //Note: Placeholder state only, remove once API handling is implemented here.
   const [requestSent, setRequestSent] = useState(false);
 
   const onSubmit = (data) => {
