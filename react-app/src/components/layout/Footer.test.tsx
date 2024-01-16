@@ -9,8 +9,8 @@ jest.mock('@mui/material', () => ({
       gray: {
         main: '#FFFFFF',
       },
-    }
-  })
+    },
+  }),
 }));
 
 describe('Footer.tsx', () => {
