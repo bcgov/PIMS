@@ -7,7 +7,11 @@ import {
   Index,
   JoinColumn,
   PrimaryColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
+import type { Roles } from './Roles';
+import type { Agencies } from './Agencies';
 
 // This class cannot extend BaseEntity. It creates a circular reference that TypeORM can't handle.
 @Entity()
@@ -77,4 +81,30 @@ export class Users {
   @Column({ type: 'uuid', nullable: true })
   @Index({ unique: true })
   KeycloakUserId: string;
+
+  @ManyToMany('Roles', 'Users')
+  @JoinTable({
+    name: 'user_roles',
+    joinColumn: {
+      name: 'UserId',
+    },
+    inverseJoinColumn: {
+      referencedColumnName: 'Id',
+      name: 'RoleId',
+    },
+  })
+  Roles: Roles[];
+
+  @ManyToMany('Agencies', 'Users')
+  @JoinTable({
+    name: 'user_agencies',
+    joinColumn: {
+      name: 'UserId',
+    },
+    inverseJoinColumn: {
+      referencedColumnName: 'Id',
+      name: 'AgencyId',
+    },
+  })
+  Agencies: Agencies[];
 }

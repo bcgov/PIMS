@@ -1,6 +1,7 @@
 import { UUID } from 'crypto';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
-import { Entity, Column, Index, PrimaryColumn } from 'typeorm';
+import { Entity, Column, Index, PrimaryColumn, JoinTable, ManyToMany } from 'typeorm';
+import type { Roles } from './Roles';
 
 @Entity()
 @Index(['IsDisabled', 'Name'])
@@ -20,4 +21,17 @@ export class Claims extends BaseEntity {
 
   @Column('bit')
   IsDisabled: boolean;
+
+  @ManyToMany('Roles', 'Claims')
+  @JoinTable({
+    name: 'role_claims',
+    joinColumn: {
+      name: 'ClaimId',
+    },
+    inverseJoinColumn: {
+      referencedColumnName: 'Id',
+      name: 'RoleId',
+    },
+  })
+  Roles: Roles[];
 }

@@ -1,5 +1,15 @@
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
-import { Entity, Column, ManyToOne, Index, JoinColumn, PrimaryColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  Index,
+  JoinColumn,
+  PrimaryColumn,
+  JoinTable,
+  ManyToMany,
+} from 'typeorm';
+import type { Users } from './Users';
 
 @Entity()
 @Index(['ParentId', 'IsDisabled', 'Id', 'Name', 'SortOrder']) // I'm not sure this index is needed. How often do we search by this group?
@@ -35,4 +45,17 @@ export class Agencies extends BaseEntity {
 
   @Column({ type: 'character varying', length: 250, nullable: true })
   CCEmail: string;
+
+  @ManyToMany('Users', 'Agencies')
+  @JoinTable({
+    name: 'user_agencies',
+    joinColumn: {
+      name: 'AgencyId',
+    },
+    inverseJoinColumn: {
+      referencedColumnName: 'Id',
+      name: 'UserId',
+    },
+  })
+  Agencies: Users[];
 }

@@ -1,6 +1,8 @@
 import { UUID } from 'crypto';
+import { Entity, PrimaryColumn, Column, Index, ManyToMany, JoinTable } from 'typeorm';
+import type { Users } from './Users';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
-import { Entity, PrimaryColumn, Column, Index } from 'typeorm';
+import type { Claims } from './Claims';
 
 @Entity()
 @Index(['IsDisabled', 'Name'])
@@ -26,4 +28,30 @@ export class Roles extends BaseEntity {
 
   @Column('bit')
   IsPublic: boolean;
+
+  @ManyToMany('Users', 'Roles')
+  @JoinTable({
+    name: 'user_roles',
+    joinColumn: {
+      name: 'RoleId',
+    },
+    inverseJoinColumn: {
+      referencedColumnName: 'Id',
+      name: 'UserId',
+    },
+  })
+  Users: Users[];
+
+  @ManyToMany('Claims', 'Roles')
+  @JoinTable({
+    name: 'role_claims',
+    joinColumn: {
+      name: 'RoleId',
+    },
+    inverseJoinColumn: {
+      referencedColumnName: 'Id',
+      name: 'ClaimId',
+    },
+  })
+  Claims: Claims[];
 }
