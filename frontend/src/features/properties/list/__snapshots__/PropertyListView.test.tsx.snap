@@ -13,6 +13,10 @@ exports[`Property list view Matches snapshot 1`] = `
   text-align: left;
 }
 
+.c0 {
+  position: relative;
+}
+
 .c0 .form.Control {
   width: 100%;
   height: 100%;
@@ -36,8 +40,6 @@ exports[`Property list view Matches snapshot 1`] = `
   padding: 0;
   position: absolute;
   z-index: 999;
-  top: 40px;
-  left: -50px;
 }
 
 .c0 option {
