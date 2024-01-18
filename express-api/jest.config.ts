@@ -19,6 +19,7 @@ const jestConfig: JestConfigWithTsJest = {
     'src/middleware/**/*.ts',
     'src/utilities/**/*.ts',
     'src/routes/**/*.ts',
+    'src/services/**/*.ts',
     'src/express.ts',
   ],
   coveragePathIgnorePatterns: ['index.ts'],
