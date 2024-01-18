@@ -1,0 +1,31 @@
+name: Vite React App - Jest Test
+
+on:
+  pull_request:
+    types: [opened, synchronize] # Triggered by opened or changed pull requests.
+    branches: [main]
+    paths:
+      - 'react-app/**' # Triggers on changes to files in the react-app/ directory.
+      - '.github/workflows/react-app-regression-test.yaml'
+
+jobs:
+  regression-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout code from Repo.
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # Install dependencies.
+      - name: Install Dependencies
+        working-directory: ./react-app
+        run: |
+          npm i
+
+      - name: Run Regression Tests
+        working-directory: ./react-app
+        run: |
+          npm run test
