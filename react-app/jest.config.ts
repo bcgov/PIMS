@@ -14,7 +14,7 @@ const jestConfig: JestConfigWithTsJest = {
     ],
   },
   collectCoverage: true,
-  collectCoverageFrom: ['src/components/**/*.ts(x)', 'src/pages/**/*.ts(x)', 'src/App.tsx'],
+  collectCoverageFrom: ['src/utils'], // Re-enable and add paths when we have non-component unit testing to do.
   coverageReporters: [['lcov', { projectRoot: '..' }]],
   coverageThreshold: {
     global: {
