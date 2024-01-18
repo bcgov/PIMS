@@ -1,8 +1,10 @@
 FROM mcr.microsoft.com/mssql/rhel/server:2022-latest
 
+USER root
 RUN mkdir -p /usr/config
 WORKDIR /usr/config
 COPY . /usr/config
+USER mssql
 
 # Make sure GIT has the following permissions set.
 # RUN chmod +x ./entrypoint.sh
