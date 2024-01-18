@@ -29,6 +29,7 @@ const jestConfig: JestConfigWithTsJest = {
   roots: ['.'],
   modulePaths: [compilerOptions.baseUrl], // <-- This will be set to 'baseUrl' value
   moduleNameMapper: {
+    // FIXME: The mapper matches the first occurrence, so image and css files are not getting matched properly.
     ...pathsToModuleNameMapper(compilerOptions.paths),
     '\\.(svg|png)$': '<rootDir>/tests/__mocks__/imgMock.tsx',
     '\\.(css|less)$': '<rootDir>/tests/__mocks__/styleMock.ts',
