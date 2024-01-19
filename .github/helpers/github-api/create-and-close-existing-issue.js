@@ -1,19 +1,22 @@
-const { createIssue, closeIssue, findIssueByTitle } = require('./github-api-requests');
-const { ISSUE_TITLE, ISSUE_BODY, PATH_TO_PACKAGE_JSON } = process.env;
+const {
+  createIssue,
+  closeIssue,
+  findIssueByTitle,
+} = require("./github-api-requests");
 
 /**
  * FILE DOES NOT NEED TO BE EDITED.
  * Place within .github/helpers/github-api/
  */
 
-(async () => {
-  const defaultIssueTitle =
-    PATH_TO_PACKAGE_JSON && PATH_TO_PACKAGE_JSON !== '.'
-      ? `${PATH_TO_PACKAGE_JSON} NPM Dependency Updates`
-      : 'NPM Dependency Updates';
+const createAndCloseExistingIssue = async (packageJsonPath, issueBody) => {
+  const issueTitle =
+    packageJsonPath !== "."
+      ? `${packageJsonPath} NPM Dependency Report`
+      : "NPM Dependency Report";
 
   // Check for existing Issue.
-  const existingIssueNumber = await findIssueByTitle(ISSUE_TITLE ?? defaultIssueTitle);
+  const existingIssueNumber = await findIssueByTitle(issueTitle);
 
   if (existingIssueNumber && !Number.isNaN(Number(existingIssueNumber))) {
     // Close old Issue.
@@ -21,5 +24,7 @@ const { ISSUE_TITLE, ISSUE_BODY, PATH_TO_PACKAGE_JSON } = process.env;
   }
 
   // Create new Issue.
-  await createIssue(ISSUE_TITLE, decodeURIComponent(ISSUE_BODY));
-})();
+  await createIssue(issueTitle, decodeURIComponent(issueBody));
+};
+
+module.exports = createAndCloseExistingIssue;
