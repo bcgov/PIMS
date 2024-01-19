@@ -142,14 +142,14 @@ jobs:
   #     - name: Download output
   #       uses: actions/download-artifact@v3
   #       with:
-  #         name: output
+  #         name: outputText
   #         path: .
 
   #     # Encode and set ISSUE_BODY env.
   #     - name: Set ISSUE_BODY env
   #       shell: bash
   #       run: |
-  #         OUTPUT=$(cat output.txt)
+  #         OUTPUT=$(cat outputText.txt)
   #         OUTPUT="${OUTPUT//'%'/'%25'}"
   #         OUTPUT="${OUTPUT//$'\n'/'%0A'}"
   #         OUTPUT="${OUTPUT//$'\r'/'%0D'}"
@@ -166,12 +166,5 @@ jobs:
   #         python-version: '3.11' # current Python version
 
   #     - name: execute py script
-  #       env: 
-  #         LEVEL_FLAGS: "MINOR MAJOR" # used to determine what updates to post
-  #         JIRA_BOARD: "PIMS" # sets what JIRA board to post and pull from
-  #         JIRA_SUBTASK: "10003" # each Jira board has a different issue type for subtasks
-  #         JIRA_EPIC: "10014, PIMS-450" # epic links are technically a custom field with this specific id and ticket number (for PIMS)
-  #         JIRA_API_KEY: ${{ secrets.JIRA_API_KEY }} # key used to access JIRA API
-  #         ISSUE_BODY: ${{ env.ISSUE_BODY }} # dependency update list
   #       run: |
   #         python3 .github/helpers/jira-api/create_tickets.py

@@ -9,4 +9,19 @@
     "src/frontend": [], // Add names of packages such as ["typescript"].
     "src/backend": [],
   },
+
+  // The env variables below are used to update the create_tickets.py script
+  
+  // used to determine what updates to post
+  LEVEL_FLAGS: "MINOR MAJOR",
+  // sets what JIRA board to post and pull from
+  JIRA_BOARD: "PIMS",
+  // each Jira board has a different issue type for subtasks
+  JIRA_SUBTASK: "10003",
+  // epic links are technically a custom field with this specific id and ticket number (for PIMS)
+  JIRA_EPIC: "10014, PIMS-450",
+  // key used to access JIRA API
+  JIRA_API_KEY: ${{ secrets.JIRA_API_KEY }},
+  // dependency update list
+  ISSUE_BODY: ${{ env.ISSUE_BODY }},
 }
