@@ -135,7 +135,9 @@ jobs:
           node .github/helpers/create-npm-dep-report-issues
   
   # create-tickets:
-  #   needs: check-versions
+  #   needs: 
+  #     - parse-json5-config
+  #     - write-output
   #   runs-on: ubuntu-latest
   #   steps:
   #     # Download the output artifact.

@@ -152,28 +152,34 @@ def parse_dependencies( level_flags, dep_text ):
       dep_li (list): tuple of lists with string elements of dependency updates
     """
 
-    dep_li_patch = []
-    dep_li_minor = []
-    dep_li_major = []
+    # take in the dependency string and parse it looking for flags we want to continue with 
+    for type_dep in dep_text:
+        # seperates into dev dep and dep
+        for level in dep_text[type_dep]:
+            if level in level_flags:
+                
+    # dep_li_patch = []
+    # dep_li_minor = []
+    # dep_li_major = []
 
-    # split env variables into a list
-    li_levels = level_flags.split()
+    # # split env variables into a list
+    # li_levels = level_flags.split()
 
-    # if PATCH is listed in env flag grab that section of the report and then refine it
-    if "PATCH" in li_levels:
-        dep_text_patch = refine_updates( dep_text, "patch" )
-        dep_li_patch = refine_dependencies( dep_text_patch )
+    # # if PATCH is listed in env flag grab that section of the report and then refine it
+    # if "PATCH" in li_levels:
+    #     dep_text_patch = refine_updates( dep_text, "patch" )
+    #     dep_li_patch = refine_dependencies( dep_text_patch )
 
-    # if MINOR is listed in env flag grab that section of the report and then refine it
-    if "MINOR" in li_levels:
-        dep_text_minor = refine_updates( dep_text, "minor" )
-        dep_li_minor = refine_dependencies( dep_text_minor )
+    # # if MINOR is listed in env flag grab that section of the report and then refine it
+    # if "MINOR" in li_levels:
+    #     dep_text_minor = refine_updates( dep_text, "minor" )
+    #     dep_li_minor = refine_dependencies( dep_text_minor )
 
-    # if MAJOR is listed in env flag grab that section of the report and then refine it
-    if "MAJOR" in li_levels:
-        dep_text_major = refine_updates( dep_text, "major" )
-        dep_li_major = refine_dependencies( dep_text_major )
+    # # if MAJOR is listed in env flag grab that section of the report and then refine it
+    # if "MAJOR" in li_levels:
+    #     dep_text_major = refine_updates( dep_text, "major" )
+    #     dep_li_major = refine_dependencies( dep_text_major )
 
-    # create a tuple of lists of dependency updates.
-    dep_li = [dep_li_patch, dep_li_minor, dep_li_major]
-    return dep_li
+    # # create a tuple of lists of dependency updates.
+    # dep_li = [dep_li_patch, dep_li_minor, dep_li_major]
+    # return dep_li

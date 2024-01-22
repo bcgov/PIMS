@@ -95,16 +95,19 @@ def refine_dep( level_flags, dep_in, summary_li ):
     Returns: 
       updates (tuple): tuple containing reformated lists of updates.
     """
+    formatted_dpes = []
 
-    # get the list of dependencies from GitHub
-    li_patch, li_minor, li_major = refine_dependency.parse_dependencies( level_flags, dep_in )
+    # get the list of dependencies from GitHub for each folder
+    for folder in dep_in:
+        #li_patch, li_minor, li_major = 
+        refine_dependency.parse_dependencies( level_flags, dep_in[folder] )
 
     # remove any dependencies that have open tickets
-    li_patch = refine_dependency.remove_duplicates( li_patch, summary_li )
-    li_minor = refine_dependency.remove_duplicates( li_minor, summary_li )
-    li_major = refine_dependency.remove_duplicates( li_major, summary_li )
+    # li_patch = refine_dependency.remove_duplicates( li_patch, summary_li )
+    # li_minor = refine_dependency.remove_duplicates( li_minor, summary_li )
+    # li_major = refine_dependency.remove_duplicates( li_major, summary_li )
 
-    updates = ( li_patch, li_minor, li_major, )
+    # updates = ( li_patch, li_minor, li_major, )
     return updates
 
 def post_subtasks( conn, headers, subtask_lists ):
