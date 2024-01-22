@@ -93,21 +93,18 @@ def refine_dep( level_flags, dep_in, summary_li ):
       summary_li (list[string]): list holding all ticket summaries we searched for.
 
     Returns: 
-      updates (tuple): tuple containing reformated lists of updates.
+      updates (list): list containing reformated lists of updates in all folders.
     """
-    formatted_dpes = []
+    updates = []
 
     # get the list of dependencies from GitHub for each folder
     for folder in dep_in:
-        #li_patch, li_minor, li_major = 
-        refine_dependency.parse_dependencies( level_flags, dep_in[folder] )
+        # refine the dependencies to look the way we want them to 
+        refined_li = refine_dependency.parse_dependencies( level_flags, dep_in[folder] )
+        # remove any dependencies currently being worked on
+        unique_li = refine_dependency.remove_duplicates(refined_li, summary_li)
+        updates.append((folder, unique_li))
 
-    # remove any dependencies that have open tickets
-    # li_patch = refine_dependency.remove_duplicates( li_patch, summary_li )
-    # li_minor = refine_dependency.remove_duplicates( li_minor, summary_li )
-    # li_major = refine_dependency.remove_duplicates( li_major, summary_li )
-
-    # updates = ( li_patch, li_minor, li_major, )
     return updates
 
 def post_subtasks( conn, headers, subtask_lists ):
@@ -119,19 +116,7 @@ def post_subtasks( conn, headers, subtask_lists ):
     """
 
     # break apart subtasks
-    json_patch = subtask_lists[0]
-    json_minor = subtask_lists[1]
-    json_major = subtask_lists[2]
-
-    # post all three sub task groups
-    # because we are storing each as nested lists we use loops to get through all JSON objects.
-    for ele in json_patch:
-        jira_con.post_subtasks( conn, headers, ele )
-
-    for ele in json_minor:
-        jira_con.post_subtasks( conn, headers, ele )
-
-    for ele in json_major: 
+    for ele in subtask_lists:
         jira_con.post_subtasks( conn, headers, ele )
 
 def create_tickets( conn, headers, updates, project_key, issue_key, epic_id ):
@@ -148,16 +133,19 @@ def create_tickets( conn, headers, updates, project_key, issue_key, epic_id ):
     Returns:
       subtask_json (list[JSON], list[JSON], list[JSON]): a tuple containing 3 lists of json objects. 
     """
+    final_li = []
 
     # check the number of tickets to post
-    updates = refine_tickets.check_num_tickets( updates )
-    # create parent ticket and post it
-    parent_ticket_json = refine_tickets.create_parent_ticket( project_key, updates, epic_id )
-    parent_key = jira_con.post_parent_ticket( conn, headers, parent_ticket_json )
-    # create sub tasks in Json format
-    subtask_json = refine_tickets.create_tickets( updates, project_key, parent_key, issue_key )
+    refine_tickets.check_num_tickets( updates )
+    # create parent tickets and post them
+    for folder in updates:
+        parent_ticket_json = refine_tickets.create_parent_ticket( project_key, updates[folder], epic_id )
+        parent_key = jira_con.post_parent_ticket( conn, headers, parent_ticket_json )
+        # create sub tasks in Json format
+        subtask_json = refine_tickets.create_subtasks( updates[folder], parent_key, project_key, issue_key )
+        final_li.append(subtask_json)
 
-    return subtask_json
+    return final_li
 
 def main():
     """ Works through the steps to refine dependency list and then create tickets in JIRA. """

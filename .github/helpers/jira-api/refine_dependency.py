@@ -37,30 +37,26 @@ def remove_duplicates( in_dep, in_sum ):
       - If no we leave the dependency in the list and move to the next
 
     Args: 
-      in_dep (list[string], list[string], list[string]): a list containing tuples
-        of dependency updates and update strings
+      in_dep (list): a list containing dependency update information
       in_sum (list[string]): a list containing all ticket summaries
 
     Returns: 
       new_li (list[string]): a list containing only elements that exist from
           in_dep that did not exist in in_sum
     """
+    # TODO: Add functionality to update a dependency ticket if it isnt already in progress
+    #       and updated version is different than in summary
 
     # holders for returned list and tickets to only hold dependency name
     new_li = []
 
     for ele in in_dep:
-        # get the first elemet of the tuple which is the dependency update
-        dependency = ele[0]
-        # add tuple to list
-        new_li.append( ele )
+        #get the dependency name 
+        dep_name = ele['dependency']
 
-        # check the dependency for a match and get the dependency
-        check_str = re.search( r"^- `(.*)` Update", dependency )
-        check_str = check_str.group(1)
         # go through summary list
         for summary in in_sum:
-            if check_str == summary:
+            if dep_name == summary:
                 # if the dependency is in the summary remove the
                 # tuple from the list and go to the next tuple
                 new_li.remove( ele )
@@ -137,49 +133,32 @@ def refine_dependencies( string_in ):
     return new_li
 
 
-def parse_dependencies( level_flags, dep_text ):
+def parse_dependencies( level_flags, folder ):
     """
-    This takes in a dependency update text (very specific format see 
-      https://github.com/bcgov/PIMS/issues/1706#issue-1899122308 )
     Goes through level flags and if the specific level is requested we refine the updates. If the
     flag is not set it is left as an empty list.
 
     Args: 
       level_flags (string): env variable definind the levels of dependencies we want to check for
-      dep_text (string): dependency update string
+      folder (dictionary): dependency update dictionary
 
     Returns: 
-      dep_li (list): tuple of lists with string elements of dependency updates
+      dep_li (list): lists with dictionary elements of dependency updates
     """
+    # split env variables into a list
+    li_levels = level_flags.split()
+    dep_li = []
 
     # take in the dependency string and parse it looking for flags we want to continue with 
-    for type_dep in dep_text:
+    for type_dep in folder:
         # seperates into dev dep and dep
-        for level in dep_text[type_dep]:
-            if level in level_flags:
-                
-    # dep_li_patch = []
-    # dep_li_minor = []
-    # dep_li_major = []
-
-    # # split env variables into a list
-    # li_levels = level_flags.split()
-
-    # # if PATCH is listed in env flag grab that section of the report and then refine it
-    # if "PATCH" in li_levels:
-    #     dep_text_patch = refine_updates( dep_text, "patch" )
-    #     dep_li_patch = refine_dependencies( dep_text_patch )
-
-    # # if MINOR is listed in env flag grab that section of the report and then refine it
-    # if "MINOR" in li_levels:
-    #     dep_text_minor = refine_updates( dep_text, "minor" )
-    #     dep_li_minor = refine_dependencies( dep_text_minor )
-
-    # # if MAJOR is listed in env flag grab that section of the report and then refine it
-    # if "MAJOR" in li_levels:
-    #     dep_text_major = refine_updates( dep_text, "major" )
-    #     dep_li_major = refine_dependencies( dep_text_major )
-
-    # # create a tuple of lists of dependency updates.
-    # dep_li = [dep_li_patch, dep_li_minor, dep_li_major]
-    # return dep_li
+        for level in folder[type_dep]:
+            # level will let us know if it is minor major or patch update
+            # check to see if it matches the levels we want to process
+            if level.upper() in li_levels:
+                for dependency in folder[type_dep][level]:
+                    # add another key to the dict
+                    dependency['level'] = level
+                    # then add it to this list
+                    dep_li.append(dependency)
+    return dep_li
