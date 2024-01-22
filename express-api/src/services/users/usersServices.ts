@@ -161,7 +161,6 @@ const getAdministrators = async (agencyIds: number[]) => {
 };
 
 const userServices = {
-  getUser,
   activateUser,
   getAccessRequest,
   getAccessRequestById,

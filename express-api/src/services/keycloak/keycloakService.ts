@@ -141,6 +141,19 @@ const getKeycloakUser = async (guid: string) => {
   }
 };
 
+const getKeycloakUserRoles = async (username: string) => {
+  const existingRolesResponse: IKeycloakRolesResponse | IKeycloakErrorResponse =
+    await getUserRoles(username);
+  if (!keycloakUserRolesSchema.safeParse(existingRolesResponse).success) {
+    const message = `keycloakService.updateKeycloakUserRoles: ${
+      (existingRolesResponse as IKeycloakErrorResponse).message
+    }`;
+    logger.warn(message);
+    throw new Error(message);
+  }
+  return (existingRolesResponse as IKeycloakRolesResponse).data;
+};
+
 /**
  * @description Updates a user's roles in Keycloak.
  * @param {string} username The user's username.
@@ -149,21 +162,10 @@ const getKeycloakUser = async (guid: string) => {
  * @throws If the user does not exist.
  */
 const updateKeycloakUserRoles = async (username: string, roles: string[]) => {
-  const existingRolesResponse: IKeycloakRolesResponse | IKeycloakErrorResponse =
-    await getUserRoles(username);
-  // Did that user exist? If not, it will be of type IKeycloakErrorResponse.
-  if (!keycloakUserRolesSchema.safeParse(existingRolesResponse).success) {
-    const message = `keycloakService.updateKeycloakUserRoles: ${
-      (existingRolesResponse as IKeycloakErrorResponse).message
-    }`;
-    logger.warn(message);
-    throw new Error(message);
-  }
+  const existingRolesResponse = await getKeycloakUserRoles(username);
 
   // User is found in Keycloak.
-  const existingRoles: string[] = (existingRolesResponse as IKeycloakRolesResponse).data.map(
-    (role) => role.name,
-  );
+  const existingRoles: string[] = existingRolesResponse.map((role) => role.name);
 
   // Find roles that are in Keycloak but are not in new user info.
   const rolesToRemove = existingRoles.filter((existingRole) => !roles.includes(existingRole));
@@ -183,6 +185,7 @@ const updateKeycloakUserRoles = async (username: string, roles: string[]) => {
 };
 
 const KeycloakService = {
+  getKeycloakUserRoles,
   syncKeycloakRoles,
   getKeycloakRole,
   getKeycloakRoles,

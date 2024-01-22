@@ -82,7 +82,7 @@ export class Users {
   @Index({ unique: true })
   KeycloakUserId: string;
 
-  @ManyToMany('Roles', 'Users')
+  @ManyToMany('Roles', 'Users', { cascade: true })
   @JoinTable({
     name: 'user_roles',
     joinColumn: {
@@ -95,7 +95,7 @@ export class Users {
   })
   Roles: Roles[];
 
-  @ManyToMany('Agencies', 'Users')
+  @ManyToMany('Agencies', 'Users', { cascade: true })
   @JoinTable({
     name: 'user_agencies',
     joinColumn: {
