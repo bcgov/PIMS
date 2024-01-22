@@ -151,7 +151,7 @@ jobs:
       - name: Set ISSUE_BODY env
         shell: bash
         run: |
-          OUTPUT=$(cat outputText.txt)
+          OUTPUT=$(cat outputText.json)
           OUTPUT="${OUTPUT//'%'/'%25'}"
           OUTPUT="${OUTPUT//$'\n'/'%0A'}"
           OUTPUT="${OUTPUT//$'\r'/'%0D'}"
