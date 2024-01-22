@@ -19,9 +19,5 @@
   // each Jira board has a different issue type for subtasks
   JIRA_SUBTASK: "10003",
   // epic links are technically a custom field with this specific id and ticket number (for PIMS)
-  JIRA_EPIC: "10014, PIMS-450",
-  // key used to access JIRA API
-  JIRA_API_KEY: ${{ secrets.JIRA_API_KEY }},
-  // dependency update list
-  ISSUE_BODY: ${{ env.ISSUE_BODY }},
+  JIRA_EPIC: "10014, PIMS-450"
 }

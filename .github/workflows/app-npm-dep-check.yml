@@ -134,39 +134,42 @@ jobs:
         run: |
           node .github/helpers/create-npm-dep-report-issues
   
-  # create-tickets:
-  #   needs: 
-  #     - parse-json5-config
-  #     - write-output
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     # Download the output artifact.
-  #     - name: Download output
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: outputText
-  #         path: .
+  create-tickets:
+    needs: 
+      - parse-json5-config
+      - write-output
+    runs-on: ubuntu-latest
+    steps:
+      # Download the output artifact.
+      - name: Download output
+        uses: actions/download-artifact@v3
+        with:
+          name: outputText
+          path: .
 
-  #     # Encode and set ISSUE_BODY env.
-  #     - name: Set ISSUE_BODY env
-  #       shell: bash
-  #       run: |
-  #         OUTPUT=$(cat outputText.txt)
-  #         OUTPUT="${OUTPUT//'%'/'%25'}"
-  #         OUTPUT="${OUTPUT//$'\n'/'%0A'}"
-  #         OUTPUT="${OUTPUT//$'\r'/'%0D'}"
-  #         echo "ISSUE_BODY=${OUTPUT}" >> $GITHUB_ENV
+      # Encode and set ISSUE_BODY env.
+      - name: Set ISSUE_BODY env
+        shell: bash
+        run: |
+          OUTPUT=$(cat outputText.txt)
+          OUTPUT="${OUTPUT//'%'/'%25'}"
+          OUTPUT="${OUTPUT//$'\n'/'%0A'}"
+          OUTPUT="${OUTPUT//$'\r'/'%0D'}"
+          echo "ISSUE_BODY=${OUTPUT}" >> $GITHUB_ENV
 
-  #     # Checkout branch
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v3
+      # Checkout branch
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-  #     # Setup Python
-  #     - name: setup python      
-  #       uses: actions/setup-python@v4
-  #       with:
-  #         python-version: '3.11' # current Python version
+      # Setup Python
+      - name: setup python      
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11' # current Python version
 
-  #     - name: execute py script
-  #       run: |
-  #         python3 .github/helpers/jira-api/create_tickets.py
+      - name: execute py script
+        env:      
+          JIRA_API_KEY: ${{ secrets.JIRA_API_KEY }} # key used to access JIRA API
+          ISSUE_BODY: ${{ env.ISSUE_BODY }} # dependency update list
+        run: |
+          python3 .github/helpers/jira-api/create_tickets.py
