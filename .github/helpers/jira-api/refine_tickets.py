@@ -82,6 +82,8 @@ def create_parent_ticket( project_key, updates, epic_id ):
     folder = updates[0]
     update_list = updates[1]
 
+    summary_str = str(folder) + " Dependency Updates " + str(today)
+
     # format the description of the parent ticket
     description = "Currently we have:\n" + \
         "- " + str(len(update_list)) + " updates to process\n" + \
@@ -94,7 +96,7 @@ def create_parent_ticket( project_key, updates, epic_id ):
             "project": {
                 "key": project_key
             },
-            "summary": "Dependency Updates " + str(today),
+            "summary": summary_str ,
             "description": description,
             "issuetype": {
                 "name": "Task"
