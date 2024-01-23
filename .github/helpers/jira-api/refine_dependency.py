@@ -51,8 +51,9 @@ def remove_duplicates( in_dep, in_sum ):
     new_li = []
 
     for ele in in_dep:
-        #get the dependency name 
+        #get the dependency name
         dep_name = ele['dependency']
+        new_li.append(ele)
 
         # go through summary list
         for summary in in_sum:
