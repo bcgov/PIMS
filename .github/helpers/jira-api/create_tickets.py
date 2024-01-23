@@ -6,6 +6,7 @@ Modules used to connect to JIRA API, refining dependency updates and refining ti
 import http.client
 import sys
 import os
+import json
 
 import jira_con
 import refine_dependency
@@ -96,10 +97,11 @@ def refine_dep( level_flags, dep_in, summary_li ):
       updates (list): list containing reformated lists of updates in all folders.
     """
     updates = []
+    dep_in = json.loads(dep_in)
 
     # get the list of dependencies from GitHub for each folder
     for folder in dep_in:
-        # refine the dependencies to look the way we want them to 
+        # refine the dependencies to look the way we want them to
         refined_li = refine_dependency.parse_dependencies( level_flags, dep_in[folder] )
         # remove any dependencies currently being worked on
         unique_li = refine_dependency.remove_duplicates(refined_li, summary_li)
