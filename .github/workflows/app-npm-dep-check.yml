@@ -137,25 +137,26 @@ jobs:
   create-tickets:
     needs: 
       - parse-json5-config
-      - write-output
+      - parse-package-versions
     runs-on: ubuntu-latest
     steps:
-      # Download the output artifact.
+      # Download the output artifact from parse-package-versions.
       - name: Download output
         uses: actions/download-artifact@v3
         with:
-          name: outputText
+          name: outdatedDeps
           path: .
 
-      # Encode and set ISSUE_BODY env.
-      - name: Set ISSUE_BODY env
+      # create env variable for issue body
+      - name: Create Issue Body
         shell: bash
         run: |
-          OUTPUT=$(cat outputText.json)
+          OUTPUT=$(cat outdatedDeps.json)
           OUTPUT="${OUTPUT//'%'/'%25'}"
           OUTPUT="${OUTPUT//$'\n'/'%0A'}"
           OUTPUT="${OUTPUT//$'\r'/'%0D'}"
           echo "ISSUE_BODY=${OUTPUT}" >> $GITHUB_ENV
+
 
       # Checkout branch
       - name: Checkout repository
