@@ -139,6 +139,8 @@ def create_tickets( conn, headers, updates, project_key, issue_key, epic_id ):
 
     # check the number of tickets to post
     refine_tickets.check_num_tickets( updates )
+    print(type(updates))
+    print(updates)
     # create parent tickets and post them
     for x in range(updates):
         parent_ticket_json = refine_tickets.create_parent_ticket( project_key, updates[x], epic_id )
