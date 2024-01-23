@@ -1,29 +1,42 @@
 import { AppDataSource } from '@/appDataSource';
-import KeycloakService from '../keycloak/keycloakService';
-import { In } from 'typeorm/find-options/operator/In';
 import { Roles } from '@/typeorm/Entities/Roles';
+import { RolesFilter } from '../../controllers/admin/roles/rolesSchema';
 
-const getRoles = async () => {
-  const roles = await KeycloakService.getKeycloakRoles();
-  return AppDataSource.getRepository(Roles).findBy({
-    Name: In(roles.map((a) => a.name)),
+const getRoles = async (filter: RolesFilter) => {
+  const roles = AppDataSource.getRepository(Roles).find({
+    relations: {
+      Claims: true,
+    },
+    where: {
+      Name: filter.name,
+      Id: filter.id,
+    },
+    skip: filter.page,
+    take: filter.quantity,
   });
+  return roles;
 };
 
-const getUserRoles = async (username: string) => {
-  const keycloakRoles = await KeycloakService.getKeycloakUserRoles(username);
-  return keycloakRoles.map((a) => a.name);
+const addRole = async (role: Roles) => {
+  const retRole = AppDataSource.getRepository(Roles).save(role);
+  return retRole;
 };
 
-const updateUserRoles = async (username: string, roleNames: string[]) => {
-  const keycloakRoles = await KeycloakService.updateKeycloakUserRoles(username, roleNames);
-  return keycloakRoles.map((a) => a.name);
+const updateRole = async (role: Roles) => {
+  const retRole = AppDataSource.getRepository(Roles).update(role.Id, role);
+  return retRole;
+};
+
+const removeRole = async (role: Roles) => {
+  const retRole = AppDataSource.getRepository(Roles).remove(role);
+  return retRole;
 };
 
 const rolesServices = {
   getRoles,
-  getUserRoles,
-  updateUserRoles,
+  addRole,
+  updateRole,
+  removeRole,
 };
 
 export default rolesServices;

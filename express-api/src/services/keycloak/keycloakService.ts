@@ -20,6 +20,11 @@ import {
   unassignUserRole,
   IDIRUserQuery,
 } from '@bcgov/citz-imb-kc-css-api';
+import rolesServices from '../admin/rolesServices';
+import { Roles } from '@/typeorm/Entities/Roles';
+import { randomUUID } from 'crypto';
+import { AppDataSource } from '@/appDataSource';
+import { In, Not } from 'typeorm';
 
 /**
  * @description Sync keycloak roles into PIMS roles.
@@ -31,6 +36,52 @@ const syncKeycloakRoles = async () => {
   // If role is in PIMS, update it
   // If not in PIMS, add it
   // If PIMS has roles that aren't in Keycloak, remove them.
+  const roles = await KeycloakService.getKeycloakRoles();
+  for (const role of roles) {
+    const internalRole = await rolesServices.getRoles({ name: role.name });
+
+    if (internalRole.length == 0) {
+      const newRole: Roles = {
+        Id: randomUUID(),
+        Name: role.name,
+        IsDisabled: false,
+        SortOrder: 0,
+        KeycloakGroupId: role.id,
+        Description: '',
+        IsPublic: false,
+        Users: [],
+        Claims: [],
+        CreatedById: undefined,
+        CreatedOn: undefined,
+        UpdatedById: undefined,
+        UpdatedOn: undefined,
+      };
+      rolesServices.addRole(newRole);
+    } else {
+      const overwriteRole: Roles = {
+        Id: internalRole[0].Id,
+        Name: role.name,
+        IsDisabled: false,
+        SortOrder: 0,
+        KeycloakGroupId: role.id,
+        Description: '',
+        IsPublic: false,
+        Users: [],
+        Claims: [],
+        CreatedById: undefined,
+        CreatedOn: undefined,
+        UpdatedById: undefined,
+        UpdatedOn: undefined,
+      };
+      rolesServices.updateRole(overwriteRole);
+    }
+
+    await AppDataSource.getRepository(Roles).delete({
+      Name: Not(In(roles.map((a) => a.name))),
+    });
+
+    return roles;
+  }
 };
 
 /**

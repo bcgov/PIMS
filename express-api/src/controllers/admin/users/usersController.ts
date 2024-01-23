@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
 import { stubResponse } from '@/utilities/stubResponse';
+import userServices from '@/services/admin/usersServices';
+import { UserFilteringSchema, UserFiltering } from '@/controllers/admin/users/usersSchema';
+import { z } from 'zod';
 
 /**
  * @description Gets a paged list of users.
@@ -16,8 +19,13 @@ export const getUsers = async (req: Request, res: Response) => {
       }]
    */
 
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  const filter = UserFilteringSchema.safeParse(req.query);
+  if (filter.success) {
+    const users = await userServices.getUsers(filter.data as UserFiltering);
+    return res.status(200).send(users);
+  } else {
+    return res.status(400).send('Failed to parse filter query.');
+  }
 };
 
 /**
@@ -34,9 +42,12 @@ export const addUser = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  try {
+    const user = await userServices.addUser(req.body);
+    return res.status(200).send(user);
+  } catch (e) {
+    return res.status(400).send(e.message);
+  }
 };
 
 /**
@@ -53,9 +64,18 @@ export const getUserById = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  const id = req.params.id;
+  const filter = UserFilteringSchema.safeParse({ id: id });
+  if (filter.success) {
+    const user = await userServices.getUsers(filter.data as UserFiltering);
+    if (user.length == 1) {
+      return res.status(200).send(user[0]);
+    } else {
+      return res.status(500);
+    }
+  } else {
+    return res.status(400).send('Unable to parse filter.');
+  }
 };
 
 /**
@@ -72,9 +92,12 @@ export const updateUserById = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  const id = z.string().uuid().parse(req.params.id);
+  if (id != req.body.id) {
+    return res.status(400).send('The param ID does not match the request body.');
+  }
+  const user = await userServices.updateUser(req.body);
+  return res.status(200).send(user);
 };
 
 /**
@@ -92,27 +115,12 @@ export const deleteUserById = async (req: Request, res: Response) => {
       }]
    */
 
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
-};
-
-/**
- * @description Gets a paged list of users based on filter.
- * @param   {Request}     req Incoming request
- * @param   {Response}    res Outgoing response
- * @returns {Response}        A 200 status with a list of users.
- */
-export const getUsersByFilter = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Users - Admin']
-   * #swagger.description = 'Gets a paged list of users based on supplied filter.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  const id = z.string().uuid().parse(req.params.id);
+  if (id != req.body.id) {
+    return res.status(400).send('The param ID does not match the request body.');
+  }
+  const user = await userServices.deleteUser(req.body);
+  return res.status(200).send(user);
 };
 
 /**
@@ -148,9 +156,12 @@ export const getUserRolesByName = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  const username = req.params.username;
+  if (!username) {
+    return res.status(400).send('Username was empty.');
+  }
+  const roles = await userServices.getUserRoles(username);
+  return res.status(200).send(roles);
 };
 
 /**

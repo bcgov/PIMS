@@ -1,23 +1,11 @@
 import { AppDataSource } from '@/appDataSource';
 import { Users } from '@/typeorm/Entities/Users';
-import { UUID } from 'crypto';
+import { UserFiltering } from '../../controllers/admin/users/usersSchema';
+import KeycloakService from '../keycloak/keycloakService';
+import { In } from 'typeorm/find-options/operator/In';
+import { Roles } from '@/typeorm/Entities/Roles';
 
-interface IUserFiltering {
-  page?: number;
-  quantity?: number;
-  username?: string;
-  displayName?: string;
-  lastName?: string;
-  firstName?: string;
-  email: string;
-  agency: string;
-  role: string;
-  position: string;
-  id: UUID;
-  isDisabled: boolean;
-}
-
-const getUsers = async (filter: IUserFiltering) => {
+const getUsers = async (filter: UserFiltering) => {
   const users = await AppDataSource.getRepository(Users).find({
     relations: {
       Agencies: true,
@@ -62,11 +50,31 @@ const deleteUser = async (user: Users) => {
   return retUser;
 };
 
+const getRoles = async () => {
+  const roles = await KeycloakService.getKeycloakRoles();
+  return AppDataSource.getRepository(Roles).findBy({
+    Name: In(roles.map((a) => a.name)),
+  });
+};
+
+const getUserRoles = async (username: string) => {
+  const keycloakRoles = await KeycloakService.getKeycloakUserRoles(username);
+  return keycloakRoles.map((a) => a.name);
+};
+
+const updateUserRoles = async (username: string, roleNames: string[]) => {
+  const keycloakRoles = await KeycloakService.updateKeycloakUserRoles(username, roleNames);
+  return keycloakRoles.map((a) => a.name);
+};
+
 const userServices = {
   getUsers,
   addUser,
   updateUser,
   deleteUser,
+  getRoles,
+  getUserRoles,
+  updateUserRoles,
 };
 
 export default userServices;
