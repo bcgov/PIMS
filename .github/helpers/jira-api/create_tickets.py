@@ -140,11 +140,11 @@ def create_tickets( conn, headers, updates, project_key, issue_key, epic_id ):
     # check the number of tickets to post
     refine_tickets.check_num_tickets( updates )
     # create parent tickets and post them
-    for folder in updates:
-        parent_ticket_json = refine_tickets.create_parent_ticket( project_key, updates[folder], epic_id )
+    for x in range(updates):
+        parent_ticket_json = refine_tickets.create_parent_ticket( project_key, updates[x], epic_id )
         parent_key = jira_con.post_parent_ticket( conn, headers, parent_ticket_json )
         # create sub tasks in Json format
-        subtask_json = refine_tickets.create_subtasks( updates[folder], parent_key, project_key, issue_key )
+        subtask_json = refine_tickets.create_subtasks( updates[x], parent_key, project_key, issue_key )
         final_li.append(subtask_json)
 
     return final_li
