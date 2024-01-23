@@ -97,7 +97,7 @@ def refine_dep( level_flags, dep_in, summary_li ):
       updates (list): list containing reformated lists of updates in all folders.
     """
     updates = []
-    dep_in = json.loads(dep_in)
+    dep_in = json.loads(dep_in, strict=False)
 
     # get the list of dependencies from GitHub for each folder
     for folder in dep_in:
