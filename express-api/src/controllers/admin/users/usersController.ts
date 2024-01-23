@@ -148,6 +148,28 @@ export const getUsersSameAgency = async (req: Request, res: Response) => {
  * @param   {Response}    res Outgoing response
  * @returns {Response}        A 200 status with a list of the user's roles.
  */
+export const getAllRoles = async (req: Request, res: Response) => {
+  /**
+   * #swagger.tags = ['Users - Admin']
+   * #swagger.description = 'Gets a list of roles assigned to a user.'
+   * #swagger.security = [{
+            "bearerAuth": []
+      }]
+   */
+  const username = req.params.username;
+  if (!username) {
+    return res.status(400).send('Username was empty.');
+  }
+  const roles = await userServices.getUserRoles(username);
+  return res.status(200).send(roles);
+};
+
+/**
+ * @description Gets all roles of a user based on their name.
+ * @param   {Request}     req Incoming request
+ * @param   {Response}    res Outgoing response
+ * @returns {Response}        A 200 status with a list of the user's roles.
+ */
 export const getUserRolesByName = async (req: Request, res: Response) => {
   /**
    * #swagger.tags = ['Users - Admin']
@@ -163,6 +185,21 @@ export const getUserRolesByName = async (req: Request, res: Response) => {
   const roles = await userServices.getUserRoles(username);
   return res.status(200).send(roles);
 };
+
+export const updateUserRolesByName = async (req: Request, res: Response) => {
+  const username = req.params.username;
+  const roles = z.string().array().safeParse(req.body);
+  if (!roles.success) {
+    return res.status(400).send('Request body was wrong format.');
+  }
+  if (!username) {
+    return res.status(400).send('Username was empty.');
+  }
+  const updatedRoles = await userServices.updateUserRoles(username, roles.data);
+  return res.status(200).send(updatedRoles);
+};
+
+// Leaving these two below here for now but I think that we can just consolidate them into the above function instead.
 
 /**
  * @description Adds a role to a user based on their name.

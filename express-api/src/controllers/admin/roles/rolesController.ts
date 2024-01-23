@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import rolesServices from '@/services/admin/rolesServices';
 import { RolesFilter, RolesFilterSchema } from '@/controllers/admin/roles/rolesSchema';
+import userServices from '@/services/admin/usersServices';
 
 /**
  * @description Gets a paged list of roles.
@@ -18,7 +19,7 @@ export const getRoles = async (req: Request, res: Response) => {
    */
   const filter = RolesFilterSchema.safeParse(req.query);
   if (filter.success) {
-    const roles = rolesServices.getRoles(filter.data as RolesFilter);
+    const roles = await userServices.getRoles(); //await rolesServices.getRoles(filter.data as RolesFilter);
     return res.status(200).send(roles);
   } else {
     return res.status(400).send('Could not parse filter.');
@@ -40,7 +41,7 @@ export const addRole = async (req: Request, res: Response) => {
       }]
    */
 
-  const role = rolesServices.addRole(req.body);
+  const role = await rolesServices.addRole(req.body);
   return res.status(200).send(role);
 };
 
@@ -92,7 +93,7 @@ export const updateRoleById = async (req: Request, res: Response) => {
   if (id != req.body.Id) {
     return res.status(400).send('Request param id did not match request body id.');
   } else {
-    const role = rolesServices.updateRole(req.body);
+    const role = await rolesServices.updateRole(req.body);
     return role;
   }
 };
@@ -116,7 +117,7 @@ export const deleteRoleById = async (req: Request, res: Response) => {
   if (id != req.body.Id) {
     return res.status(400).send('Request param id did not match request body id.');
   } else {
-    const role = rolesServices.removeRole(req.body);
+    const role = await rolesServices.removeRole(req.body);
     return role;
   }
 };

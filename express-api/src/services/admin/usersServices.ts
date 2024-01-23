@@ -2,8 +2,6 @@ import { AppDataSource } from '@/appDataSource';
 import { Users } from '@/typeorm/Entities/Users';
 import { UserFiltering } from '../../controllers/admin/users/usersSchema';
 import KeycloakService from '../keycloak/keycloakService';
-import { In } from 'typeorm/find-options/operator/In';
-import { Roles } from '@/typeorm/Entities/Roles';
 
 const getUsers = async (filter: UserFiltering) => {
   const users = await AppDataSource.getRepository(Users).find({
@@ -52,9 +50,7 @@ const deleteUser = async (user: Users) => {
 
 const getRoles = async () => {
   const roles = await KeycloakService.getKeycloakRoles();
-  return AppDataSource.getRepository(Roles).findBy({
-    Name: In(roles.map((a) => a.name)),
-  });
+  return roles.map((a) => a.name);
 };
 
 const getUserRoles = async (username: string) => {

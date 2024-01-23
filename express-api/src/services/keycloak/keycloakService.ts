@@ -22,9 +22,11 @@ import {
 } from '@bcgov/citz-imb-kc-css-api';
 import rolesServices from '../admin/rolesServices';
 import { Roles } from '@/typeorm/Entities/Roles';
-import { randomUUID } from 'crypto';
+import { UUID, randomUUID } from 'crypto';
 import { AppDataSource } from '@/appDataSource';
 import { In, Not } from 'typeorm';
+import userServices from '../admin/usersServices';
+import { Users } from '@/typeorm/Entities/Users';
 
 /**
  * @description Sync keycloak roles into PIMS roles.
@@ -147,7 +149,7 @@ const updateKeycloakRole = async (roleName: string, newRoleName: string) => {
 };
 
 // TODO: Complete when user and role services are complete.
-const syncKeycloakUser = async () => {
+const syncKeycloakUser = async (keycloakGuid: string) => {
   // Does user exist in Keycloak?
   // Get their existing roles.
   // Does user exist in PIMS
@@ -155,6 +157,66 @@ const syncKeycloakUser = async () => {
   // Update the roles in PIMS to match their Keycloak roles
   // If they don't exist in PIMS...
   // Add user and assign their roles
+  const kuser = await KeycloakService.getKeycloakUser(keycloakGuid);
+  const kroles = await KeycloakService.getKeycloakUserRoles(kuser.username);
+  const internalUser = await userServices.getUsers({ username: kuser.username });
+
+  for (const krole of kroles) {
+    const internalRole = await rolesServices.getRoles({ id: krole.id as UUID });
+    if (internalRole.length == 0) {
+      const newRole: Roles = {
+        Id: randomUUID(),
+        Name: krole.name,
+        IsDisabled: false,
+        SortOrder: 0,
+        KeycloakGroupId: krole.id,
+        Description: '',
+        IsPublic: false,
+        Users: [],
+        Claims: [],
+        CreatedById: undefined,
+        CreatedOn: undefined,
+        UpdatedById: undefined,
+        UpdatedOn: undefined,
+      };
+      await rolesServices.addRole(newRole);
+    }
+  }
+
+  const newUsersRoles = await AppDataSource.getRepository(Roles).find({
+    where: { KeycloakGroupId: In(kroles.map((a) => a.id)) },
+  });
+
+  if (internalUser.length == 0) {
+    const newUser: Users = {
+      Id: randomUUID(),
+      CreatedById: undefined,
+      CreatedOn: undefined,
+      UpdatedById: undefined,
+      UpdatedOn: undefined,
+      Username: kuser.username,
+      DisplayName: kuser.attributes.display_name[0],
+      FirstName: kuser.firstName,
+      MiddleName: '',
+      LastName: kuser.lastName,
+      Email: kuser.email,
+      Position: '',
+      IsDisabled: false,
+      EmailVerified: false,
+      IsSystem: false,
+      Note: '',
+      LastLogin: new Date(),
+      ApprovedById: undefined,
+      ApprovedOn: undefined,
+      KeycloakUserId: keycloakGuid,
+      Roles: newUsersRoles,
+      Agencies: [],
+    };
+    return await userServices.addUser(newUser);
+  } else {
+    internalUser[0].Roles = newUsersRoles;
+    return await userServices.updateUser(internalUser[0]);
+  }
 };
 
 /**
@@ -196,7 +258,7 @@ const getKeycloakUserRoles = async (username: string) => {
   const existingRolesResponse: IKeycloakRolesResponse | IKeycloakErrorResponse =
     await getUserRoles(username);
   if (!keycloakUserRolesSchema.safeParse(existingRolesResponse).success) {
-    const message = `keycloakService.updateKeycloakUserRoles: ${
+    const message = `keycloakService.getKeycloakUser: ${
       (existingRolesResponse as IKeycloakErrorResponse).message
     }`;
     logger.warn(message);
