@@ -143,7 +143,7 @@ def create_tickets( conn, headers, updates, project_key, issue_key, epic_id ):
     # create parent tickets and post them
     for folder in updates:
         if len(folder[1] ) == 0:
-            # if there are no updates then there are no tickets to post. 
+            # if there are no updates then there are no tickets to post.
             continue
         parent_ticket_json = refine_tickets.create_parent_ticket( project_key, folder, epic_id )
         parent_key = jira_con.post_parent_ticket( conn, headers, parent_ticket_json )
@@ -151,6 +151,7 @@ def create_tickets( conn, headers, updates, project_key, issue_key, epic_id ):
         subtask_json = refine_tickets.create_subtasks( folder, parent_key, project_key, issue_key )
         final_li.append(subtask_json)
 
+    print(final_li)
     return final_li
 
 def main():
