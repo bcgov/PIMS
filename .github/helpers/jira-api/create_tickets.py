@@ -142,7 +142,7 @@ def create_tickets( conn, headers, updates, project_key, issue_key, epic_id ):
 
     # create parent tickets and post them
     for folder in updates:
-        if len(folder[1] == 0):
+        if len(folder[1] ) == 0:
             # if there are no updates then there are no tickets to post. 
             continue
         parent_ticket_json = refine_tickets.create_parent_ticket( project_key, folder, epic_id )
