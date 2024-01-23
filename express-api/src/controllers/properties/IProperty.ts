@@ -9,7 +9,7 @@ export interface IProperty {
   description: string;
   classificationId: number;
   encumbranceReason: string;
-  agencyId?: number | null;
+  agencyId?: string | null;
   addressId: number;
   location: Point;
   boundary?: Geometry;

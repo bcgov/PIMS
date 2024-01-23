@@ -1,4 +1,4 @@
-import { Entity, Column, Index } from 'typeorm';
+import { Entity, Column, Index, ManyToOne, JoinColumn } from 'typeorm';
 import { Property } from '@/typeorm/Entities/abstractEntities/Property';
 
 @Entity()
@@ -24,4 +24,8 @@ export class Parcels extends Property {
 
   @Column({ type: 'bit' })
   NotOwned: boolean;
+
+  @ManyToOne(() => Parcels, (Parcel) => Parcel.Id)
+  @JoinColumn({ name: 'ParentParcel' })
+  ParentParcel: Parcels;
 }

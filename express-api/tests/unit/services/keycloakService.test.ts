@@ -1,5 +1,5 @@
 import { IKeycloakUser } from '@/services/keycloak/IKeycloakUser';
-import KeycloakService from './keycloakService';
+import KeycloakService from '@/services/keycloak/keycloakService';
 import {
   getRoles,
   getRole,
