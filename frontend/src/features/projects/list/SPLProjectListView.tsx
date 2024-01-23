@@ -27,8 +27,8 @@ const initialValues: IProjectFilterState = {
 };
 
 export const SPLProjectListView = () => {
-  const projectStatuses = useAppSelector((store) => store.statuses)?.filter(
-    (x) => initialValues?.statusId?.includes(x.id.toString()),
+  const projectStatuses = useAppSelector((store) => store.statuses)?.filter((x) =>
+    initialValues?.statusId?.includes(x.id.toString()),
   );
   return (
     <ProjectListView

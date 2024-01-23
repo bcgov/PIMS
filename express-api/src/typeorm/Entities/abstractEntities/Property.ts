@@ -1,4 +1,4 @@
-import { Addresses } from '@/typeorm/Entities/Addresses';
+import { AdministrativeAreas } from '@/typeorm/Entities/AdministrativeAreas';
 import { Agencies } from '@/typeorm/Entities/Agencies';
 import { PropertyClassifications } from '@/typeorm/Entities/PropertyClassifications';
 import { PropertyTypes } from '@/typeorm/Entities/PropertyTypes';
@@ -25,10 +25,10 @@ export abstract class Property extends BaseEntity {
   @Index()
   AgencyId: Agencies;
 
-  @ManyToOne(() => Addresses, (Address) => Address.Id)
-  @JoinColumn({ name: 'AddressId' })
+  @ManyToOne(() => AdministrativeAreas, (AdminArea) => AdminArea.Id)
+  @JoinColumn({ name: 'AdministrativeAreaId' })
   @Index()
-  AddressId: Addresses;
+  AdministrativeAreaId: AdministrativeAreas;
 
   @Column({ type: 'bit' })
   IsSensitive: boolean;
@@ -46,4 +46,18 @@ export abstract class Property extends BaseEntity {
   @JoinColumn({ name: 'PropertyTypeId' })
   @Index()
   PropertyTypeId: PropertyTypes;
+
+  @Column({ type: 'character varying', length: 150, nullable: true })
+  @Index()
+  Address1: string;
+
+  @Column({ type: 'character varying', length: 150, nullable: true })
+  Address2: string;
+
+  @Column({ type: 'character varying', length: 6, nullable: true })
+  Postal: string;
+
+  // Including this for quick geocoder lookup.
+  @Column({ type: 'character varying', nullable: true })
+  SiteId: string;
 }
