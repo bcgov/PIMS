@@ -140,6 +140,8 @@ def create_tickets( conn, headers, updates, project_key, issue_key, epic_id ):
     # check the number of tickets to post
     refine_tickets.check_num_tickets( updates )
 
+    print(updates)
+
     # create parent tickets and post them
     for folder in updates:
         if len(folder[1] ) == 0:
@@ -151,7 +153,6 @@ def create_tickets( conn, headers, updates, project_key, issue_key, epic_id ):
         subtask_json = refine_tickets.create_subtasks( folder, parent_key, project_key, issue_key )
         final_li.append(subtask_json)
 
-    print(final_li)
     return final_li
 
 def main():
