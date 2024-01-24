@@ -57,9 +57,8 @@ export class Buildings extends Property {
   @Column({ type: 'real' })
   TotalArea: number;
 
-  @ManyToMany('Buildings', 'Parcels', { cascade: ['insert', 'update'], nullable: true })
+  @ManyToMany(() => Buildings, () => Parcels, { cascade: ['insert', 'update'], nullable: true })
   @JoinTable({
-    name: 'parcel_buildings',
     joinColumn: {
       name: 'BuildingId',
     },

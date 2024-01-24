@@ -1,4 +1,12 @@
-import { Entity, Column, Index, ManyToOne, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
+import {
+  Entity,
+  Column,
+  Index,
+  ManyToOne,
+  JoinColumn,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 import { Property } from '@/typeorm/Entities/abstractEntities/Property';
 import { Buildings } from '@/typeorm/Entities/Buildings';
 
@@ -31,7 +39,7 @@ export class Parcels extends Property {
   @Index()
   ParentParcel: Parcels;
 
-  @ManyToMany('Buildings', 'Parcels', { cascade: ['insert', 'update'], nullable: true })
+  @ManyToMany(() => Buildings, () => Parcels, { cascade: ['insert', 'update'], nullable: true })
   @JoinTable({
     name: 'parcel_buildings',
     joinColumn: {
@@ -39,7 +47,7 @@ export class Parcels extends Property {
     },
     inverseJoinColumn: {
       referencedColumnName: 'Id',
-      name: 'BuildingId'
+      name: 'BuildingId',
     },
   })
   Buildings: Buildings[];

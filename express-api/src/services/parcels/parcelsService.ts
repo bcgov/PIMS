@@ -1,23 +1,21 @@
 import { AppDataSource } from '@/appDataSource';
-import { IParcel } from '@/controllers/parcels/IParcel';
 import { AdministrativeAreas } from '@/typeorm/Entities/AdministrativeAreas';
 import { Agencies } from '@/typeorm/Entities/Agencies';
 import { Parcels } from '@/typeorm/Entities/Parcels';
 import { PropertyClassifications } from '@/typeorm/Entities/PropertyClassifications';
 import { PropertyTypes } from '@/typeorm/Entities/PropertyTypes';
-import { UserAgencies } from '@/typeorm/Entities/UserAgencies';
-import { Users } from '@/typeorm/Entities/Users';
-import { pidNumberToString, pidStringToNumber } from '@/utilities/pidConversion';
+import { pidStringToNumber } from '@/utilities/pidConversion';
 import { KeycloakUser, KeycloakIdirUser } from '@bcgov/citz-imb-kc-express';
 import { Point, QueryFailedError } from 'typeorm';
 import { hasRole } from '@bcgov/citz-imb-kc-express';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import { Buildings } from '@/typeorm/Entities/Buildings';
+import { Roles } from '@/constants/roles';
 
 const parcelsRepository = AppDataSource.getRepository(Parcels);
-const usersRepository = AppDataSource.getRepository(Users);
-const userAgenciesRepository = AppDataSource.getRepository(UserAgencies);
 
 const getParcels = async (filter?: unknown) => {
+  // TODO: Does user have matching agency?
   if (filter) {
     return await parcelsRepository.findBy(filter);
   } else {
@@ -32,6 +30,9 @@ const getParcels = async (filter?: unknown) => {
  * @throws {ErrorWithCode}
  */
 const getParcelById = async (id: number) => {
+  // TODO: Does user have matching agency?
+
+  // TODO: Validate parcel id
   const parcel = await parcelsRepository
     .findOneByOrFail({
       Id: id,
@@ -43,6 +44,7 @@ const getParcelById = async (id: number) => {
 };
 
 const getParcelByLocation = async (lat: number, lng: number) => {
+  // TODO: Does user have matching agency?
   const point: Point = {
     type: 'Point',
     coordinates: [lat, lng],
@@ -55,15 +57,18 @@ const getParcelByLocation = async (lat: number, lng: number) => {
     })
     .getOneOrFail()
     .catch(() => {
-      throw new ErrorWithCode(`Parcel with that location not found.`, 404);
+      throw new ErrorWithCode(`Parcel with location [${lat},${lng}] not found.`, 404);
     });
   return parcel;
 };
 
-const getParcelByPid = async (pid: string) => {
+const getParcelByPid = async (pid: number) => {
+  // TODO: Does user have matching agency?
+
+  // TODO: Validate pid
   const parcel = await parcelsRepository
     .findOneByOrFail({
-      PID: pidStringToNumber(pid),
+      PID: pid,
     })
     .catch(() => {
       throw new ErrorWithCode(`Parcel with PID ${pid} not found.`, 404);
@@ -71,95 +76,167 @@ const getParcelByPid = async (pid: string) => {
   return parcel;
 };
 
-const addParcel = async (parcel: IParcel, user: KeycloakUser & KeycloakIdirUser) => {
+const addParcel = async (
+  parcel: Parcels,
+  user: KeycloakUser & KeycloakIdirUser,
+  subdivisionPids?: string[],
+) => {
+  // TODO: refactor this out so it can be used everywhere.
   // If user is not an admin, do they belong to this agency?
-  if (!hasRole(user, ['admin'])) {
-    const userEntity = await usersRepository
-      .findOneByOrFail({
-        Email: user.email,
-      })
-      .catch(() => {
-        throw new ErrorWithCode(`User with email ${user.email} not found.`, 404);
-      });
-    const usersAgencies = await userAgenciesRepository.find({
-      where: {
-        UserId: userEntity.Id,
-      },
-    });
-    if (userEntity) {
-    }
+  // And do they have the sensitive-view claim?
+  if (!hasRole(user, [Roles.ADMIN])) {
+    // TODO: Check agencies against user after usersService is up.
   }
 
+  // Validate incoming parcel
+
   // Make sure that the PID doesn't already exist.
-  const existingParcel = await parcelsRepository.findOneBy({ PID: pidStringToNumber(parcel.pid) });
+  const existingParcel = await parcelsRepository.findOneBy({ PID: parcel.PID });
   if (existingParcel != null)
-    throw new ErrorWithCode(`A parcel with PID ${parcel.pid} already exists.`);
-  const parcelEntity = await parcelsRepository.create();
-  // Is this a part of another parcel?
-  if (parcel.parentParcelPID) {
-    parcelEntity.PropertyTypeId = await AppDataSource.getRepository(PropertyTypes).findOneBy({
+    throw new ErrorWithCode(`A parcel with PID ${parcel.PID} already exists.`);
+
+  // Is this a part of another parcel or just land?
+  if (parcel.ParentParcel) {
+    parcel.PropertyType = await AppDataSource.getRepository(PropertyTypes).findOneBy({
       Name: 'Subdivision',
     });
     // Ensure that the parent parcel exists and assign it.
-    parcelEntity.ParentParcel = await parcelsRepository
+    parcel.ParentParcel = await parcelsRepository
       .findOneByOrFail({
-        PID: parcel.parentParcelPID,
+        PID: parcel.ParentParcel.PID,
       })
       .catch(() => {
-        throw new ErrorWithCode(`Parent parcel ${parcel.parentParcelPID} not found`, 404);
+        throw new ErrorWithCode(`Parent parcel ${parcel.ParentParcel.PID} not found`, 404);
       });
+  } else {
+    parcel.PropertyType = await AppDataSource.getRepository(PropertyTypes).findOneBy({
+      Name: 'Land',
+    });
   }
 
-  // Add other fields.
-  parcelEntity.Name = parcel.name;
-  parcelEntity.Description = parcel.description;
-  parcelEntity.ClassificationId = await AppDataSource.getRepository(
-    PropertyClassifications,
-  ).findOneByOrFail({ Id: parcel.classificationId });
-  parcelEntity.AgencyId = await AppDataSource.getRepository(Agencies).findOneByOrFail({
-    Id: parcel.agencyId,
-  });
-  parcelEntity.AdministrativeAreaId = await AppDataSource.getRepository(
-    AdministrativeAreas,
-  ).findOneByOrFail({ Id: parcel.administrativeArea });
-  parcelEntity.IsSensitive = parcel.isSensitive;
-  parcelEntity.IsVisibleToOtherAgencies = false;
-  parcelEntity.Location = parcel.location;
-  parcelEntity.Address1 = parcel.address1;
-  parcelEntity.Address2 = parcel.address2;
-  parcelEntity.Postal = parcel.postal;
-  parcelEntity.SiteId = parcel.siteId;
-  parcelEntity.PID = pidStringToNumber(parcel.pid);
-  parcelEntity.PIN = parcel.pin;
-  parcelEntity.LandArea = parcel.landArea;
-  parcelEntity.LandLegalDescription = parcel.landLegalDescription;
-  parcelEntity.Zoning = parcel.zoning;
-  parcelEntity.ZoningPotential = parcel.zoningPotential;
-  parcelEntity.NotOwned = false; // TODO: Not clear where this comes from.
+  // Does this Classification ID exist?
+  await AppDataSource.getRepository(PropertyClassifications)
+    .findOneByOrFail({
+      Id: parcel.Classification.Id,
+    })
+    .catch(() => {
+      throw new ErrorWithCode(`Classification ID ${parcel.Classification.Id} not found.`, 404);
+    });
 
-  const result = await parcelsRepository.insert(parcelEntity);
+  // Does this Agency exist?
+  await AppDataSource.getRepository(Agencies)
+    .findOneByOrFail({
+      Id: parcel.Agency.Id,
+    })
+    .catch(() => {
+      throw new ErrorWithCode(`Agency ID ${parcel.Agency.Id} not found`, 404);
+    });
+
+  // Does this Administrative Area exist?
+  await AppDataSource.getRepository(AdministrativeAreas)
+    .findOneByOrFail({
+      Id: parcel.AdministrativeArea.Id,
+    })
+    .catch(() => {
+      throw new ErrorWithCode(
+        `Administrative Area ID ${parcel.AdministrativeArea.Id} not found`,
+        404,
+      );
+    });
+
+  const result = await parcelsRepository.insert(parcel);
 
   // If insert successful, add relations to buildings and subdivisions
-  parcel.buildings.forEach((building) => {
+  parcel.Buildings.forEach((building: Buildings) => {
     // TODO: Call update building when building service is ready
   });
-  parcel.subdivisionPids.forEach(async (pid) => {
-    const subdivision = await getParcelByPid(pid);
-    subdivision.ParentParcel = await getParcelByPid(pidNumberToString(parcel.parentParcelPID));
-    updateParcel(subdivision);
+  subdivisionPids.forEach(async (pid) => {
+    await parcelsRepository.update({ PID: pidStringToNumber(pid) }, { ParentParcel: parcel });
   });
   return result;
 };
 
-const updateParcel = async (parcel: Parcels) => {
-  await parcelsRepository.update({ Id: parcel.Id }, parcel);
+const updateParcel = async (
+  parcel: Parcels,
+  user: KeycloakUser & KeycloakIdirUser,
+  newSubdivisionPids?: string[],
+) => {
+  // TODO: Does user have matching agency?
+  // Get original parcel
+  const original = await parcelsRepository.findOneByOrFail({ Id: parcel.Id }).catch(() => {
+    throw new ErrorWithCode(`Parcel ID ${parcel.Id} not found`, 404);
+  });
+  // TODO: Is this property in a project already? If so, reject update.
+
+  const classificationTypes = await AppDataSource.getRepository(PropertyClassifications).find();
+  // Unless admin...
+  if (!hasRole(user, [Roles.ADMIN])) {
+    // no switching of agencies
+    if (original.Agency != parcel.Agency) {
+      throw new ErrorWithCode(`Parcel cannot be transferred to the specified agency.`, 403);
+    }
+    // No disposing of property
+    if (
+      parcel.Classification.Id ===
+      classificationTypes.find((classification) => classification.Name === 'Disposed').Id
+    ) {
+      throw new ErrorWithCode(`Parcel classification cannot be changed to Disposed.`, 403);
+    }
+
+    // No changing classification to subdivided
+    if (
+      parcel.Classification.Id ===
+      classificationTypes.find((classification) => classification.Name === 'Subdivided').Id
+    ) {
+      throw new ErrorWithCode(`Parcel classification cannot be changed to Subdivided.`, 403);
+    }
+  }
+
+  // No making properties visible through update
+  if (original.IsVisibleToOtherAgencies != parcel.IsVisibleToOtherAgencies) {
+    throw new ErrorWithCode(
+      `Cannot make a parcel visible to other agencies through this service.`,
+      403,
+    );
+  }
+  // No changing parcels to demolished classification
+  if (
+    parcel.Classification.Id ===
+    classificationTypes.find((classification) => classification.Name === 'Demolished').Id
+  ) {
+    throw new ErrorWithCode(`Parcel classification cannot be changed to Demolished.`, 403);
+  }
+
+  // TODO: Do we need to check buildings, or will they be included in this update?
+
+  // Update parcel
+  const updatedParcel = await parcelsRepository.update({ Id: parcel.Id }, parcel);
+
+  // If there are any attached subdivisions, update them with the new PID
+  newSubdivisionPids.forEach(async (pid) => {
+    await parcelsRepository.update({ PID: pidStringToNumber(pid) }, { ParentParcel: parcel });
+  });
+ 
+  // TODO: Add/Update Fiscals and Evaluations
+  
+  // TODO: Remove outdated fiscals and evaluations
+
+  // TODO: Do we need to verify buildings? Do we remove them if not in incoming parcel?
+  
+  return updatedParcel;
 };
 
-const updateParcelFinancials = async () => {};
+const updateParcelFinancials = async () => {
+  // TODO: Does user have matching agency?
+};
 
 const deleteParcel = async (id: number) => {
   // TODO: Does user have permission? And agency?
-  await parcelsRepository
+  // TODO: Is this property in a project already? If so, reject deletion.
+
+  // TODO: Do we delete related buildings too?
+
+  return await parcelsRepository
     .delete({
       Id: id,
     })
