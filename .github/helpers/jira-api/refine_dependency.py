@@ -29,7 +29,7 @@ def decode_github_env( encoded_str ):
 
     return decoded_str
 
-def remove_duplicates( in_dep, in_sum ):
+def remove_duplicates( in_dep, in_sum, in_folder ):
     """
     Goes through the dependency lists, checks to see if the dependency listed 
     already has a ticket capturing the work. 
@@ -59,9 +59,9 @@ def remove_duplicates( in_dep, in_sum ):
         for summary_tuple in in_sum:
             summary = summary_tuple[0]
             folder_name = summary_tuple[1]
-            if dep_name == summary:
-                # if the dependency is in the summary remove the
-                # tuple from the list and go to the next tuple
+            if dep_name == summary and folder_name == in_folder:
+                # if the dependency is in the summary and the folders are the 
+                # same remove the tuple from the list and go to the next tuple
                 new_li.remove( ele )
                 break
 
