@@ -1,75 +1,10 @@
 import { IProperty } from '@/controllers/properties/IProperty';
 import { IBaseEntity } from '@/controllers/common/IBaseEntity';
+import { IBuilding } from '@/controllers/buildings/IBuilding';
 /**
  * Some of these can probably be separated out elsewhere later, but I think this is fine for now.
  * Was uncertain whether ISubdivision or ISubParcel are meant to be just a selection from IParcel or their own interfaces.
  */
-
-export interface IAddress extends IBaseEntity {
-  id: number;
-  line1: string;
-  line2: string;
-  administrativeArea: string;
-  provinceId: string;
-  province: string;
-  postal: string;
-}
-
-export interface IEvaluation extends IBaseEntity {
-  parcelId: number;
-  date: string;
-  key: string;
-  value: number;
-  note: string;
-  firm: string;
-}
-
-export interface IFiscal extends IBaseEntity {
-  parcelId: number;
-  fiscalYear: number;
-  effectiveDate: string;
-  key: string;
-  value: number;
-  note: string;
-}
-
-export interface IBuilding extends IBaseEntity {
-  id: number;
-  propertyTypeId: number;
-  projectNumbers: string[];
-  projectWorkflow: string;
-  projectStatus: string;
-  name: string;
-  description: string;
-  classificationId: number;
-  classification: string;
-  encumbranceReason: string;
-  agencyId: number;
-  subAgency: string;
-  agency: string;
-  subAgencyFullName: string;
-  agencyFullName: string;
-  address: IAddress;
-  latitude: number;
-  longitude: number;
-  isSensitive: boolean;
-  isVisibleToOtherAgencies: boolean;
-  parcelId: number;
-  buildingConstructionTypeId: number;
-  buildingConstructionType: string;
-  buildingFloorCount: number;
-  buildingPredominateUseId: number;
-  buildingPredominateUse: string;
-  buildingOccupantTypeId: number;
-  buildingOccupantType: string;
-  leaseExpiry: string;
-  occupantName: string;
-  transferLeaseOnSale: boolean;
-  buildingTenancy: string;
-  rentableArea: number;
-  evaluations: IEvaluation[];
-  fiscals: IFiscal[];
-}
 
 export interface ISubParcel extends IBaseEntity {
   id: number;
@@ -83,26 +18,14 @@ export interface ISubdivision extends IBaseEntity {
   pin: number;
 }
 
-export interface IParcel extends IProperty, IBaseEntity {
-  projectWorkflow: string;
-  projectStatus: string;
-  classification: string;
-  subAgency: string;
-  agency: string;
-  subAgencyFullName: string;
-  agencyFullName: string;
-  latitude: number;
-  longitude: number;
-  isSensitive: boolean;
-  isVisibleToOtherAgencies: boolean;
+export interface IParcel extends IProperty {
+  propertyType: 'Land' | 'Subdivision';
   pid: string;
   pin?: number;
-  landArea: number;
-  landLegalDescription: string;
-  zoning: string;
-  zoningPotential: string;
-  evaluations: IEvaluation[];
-  fiscals: IFiscal[];
+  landArea?: number;
+  landLegalDescription?: string;
+  zoning?: string;
+  zoningPotential?: string;
   buildings?: IBuilding[];
   parentParcelPID?: number;
   subdivisionPids?: string[];

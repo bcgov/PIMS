@@ -1,22 +1,32 @@
-import { Geometry, Point } from 'typeorm';
+import { IBaseEntity } from '@/controllers/common/IBaseEntity';
+import { IEvaluation } from '@/controllers/properties/IEvaluation';
+import { IFiscal } from '@/controllers/properties/IFiscal';
+import { Point } from 'typeorm';
 
-export interface IProperty {
+export interface IProperty extends IBaseEntity {
   id: number;
-  propertyType: string;
-  propertyTypeId: number;
-  projectNumbers: string[];
-  name: string;
-  description: string;
+  name?: string;
+  description?: string;
   classificationId: number;
-  encumbranceReason: string;
-  agencyId?: string | null;
+  classification: string;
+  encumbranceReason?: string;
+  agencyId?: number;
+  agency?: string;
+  subAgency?: string;
   location: Point;
-  boundary?: Geometry;
   isSensitive: boolean;
   isVisibleToOtherAgencies: boolean;
-  administrativeArea: number;
+  administrativeAreaId: number;
+  administrativeArea: string;
+  regionalDistrict: string;
+  province: string;
   address1?: string;
   address2?: string;
   postal?: string;
   siteId?: string;
+  evaluations?: IEvaluation[];
+  fiscals?: IFiscal[];
+  projectNumbers?: string[];
+  projectWorkflow?: string;
+  projectStatus?: string;
 }
