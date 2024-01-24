@@ -38,14 +38,13 @@ def remove_duplicates( in_dep, in_sum, in_folder ):
 
     Args: 
       in_dep (list): a list containing dependency update information
-      in_sum (list[string]): a list containing all ticket summaries
+      in_sum (list[string]): a list containing all ticket summaries for this folder
+      in_folder (string): a string holding the name of the folder we are currently processing
 
     Returns: 
       new_li (list[string]): a list containing only elements that exist from
           in_dep that did not exist in in_sum
     """
-    # TODO: Add functionality to update a dependency ticket if it isnt already in progress
-    #       and updated version is different than in summary
 
     # holders for returned list and tickets to only hold dependency name
     new_li = []
@@ -57,10 +56,11 @@ def remove_duplicates( in_dep, in_sum, in_folder ):
 
         # go through summary list
         for summary_tuple in in_sum:
+            # pull out the summary and folder name
             summary = summary_tuple[0]
             folder_name = summary_tuple[1]
             if dep_name == summary and folder_name == in_folder:
-                # if the dependency is in the summary and the folders are the 
+                # if the dependency is in the summary and the folders are the
                 # same remove the tuple from the list and go to the next tuple
                 new_li.remove( ele )
                 break
@@ -143,7 +143,7 @@ def parse_dependencies( level_flags, updates ):
 
     Args: 
       level_flags (string): env variable definind the levels of dependencies we want to check for
-      folder (dictionary): dependency update dictionary
+      updates (dictionary): dependency update dictionary for specific folder
 
     Returns: 
       dep_li (list): lists with dictionary elements of dependency updates
@@ -152,7 +152,7 @@ def parse_dependencies( level_flags, updates ):
     li_levels = level_flags.split()
     dep_li = []
 
-    # take in the dependency string and parse it looking for flags we want to continue with 
+    # take in the dependency string and parse it looking for flags we want to continue with
     for type_dep in updates:
         # seperates into dev dep and dep
         for level in updates[type_dep]:
@@ -160,7 +160,7 @@ def parse_dependencies( level_flags, updates ):
             # check to see if it matches the levels we want to process
             if level.upper() in li_levels:
                 for dependency in updates[type_dep][level]:
-                    # add another key to the dict
+                    # add level and type to the dict
                     dependency['level'] = level
                     dependency['type'] = type_dep
                     # then add it to this list

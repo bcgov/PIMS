@@ -54,23 +54,26 @@ def parse_tickets( tickets_json ):
     for issue in issue_list:
         # extract the summary field from the json object
         summary = issue['fields']['summary']
-        # try to match ticket summary to this
+        # try to match ticket summary to this. Group name and folder
         sum_refined = re.search( r"^Update (.*) from version .* to .* in (.*)$", summary )
         #if it does not match ignore it
         if sum_refined is None:
             continue
 
         try:
-            # if it matches extract the depenency name
+            # if it matches extract the depenency name and folder
             dep_name = sum_refined.group(1)
             folder_in = sum_refined.group(2)
         except AttributeError:
-            # if we cant find a match for the update name and folder we dont have a dependency ticket
+            # if we cant find a match for the update and folder we dont have a dependency ticket
             continue
 
-        # if the summary is not already in the list add it
-        if dep_name not in summary_li:
-            summary_li.append( (dep_name, folder_in) )
+        # group the update name and folder together
+        update_info = (dep_name, folder_in)
+
+        # if the update is not already in the list add it
+        if update_info not in summary_li:
+            summary_li.append( update_info )
 
     # return the list of dependencies from update tickets
     return summary_li

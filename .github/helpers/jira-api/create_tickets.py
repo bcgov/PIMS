@@ -90,7 +90,7 @@ def refine_dep( level_flags, dep_in, summary_li ):
 
     Args: 
       level_flags (string): env variable setting what updates we are going to parse.
-      dep_in (string): env variacle holding dependency list.
+      dep_in (string): env variable holding dependency list.
       summary_li (list[string]): list holding all ticket summaries we searched for.
 
     Returns: 
@@ -109,18 +109,6 @@ def refine_dep( level_flags, dep_in, summary_li ):
 
     return updates
 
-def post_subtasks( conn, headers, subtask_lists ):
-    """
-    Goes through each section of dependency updates and sends as many requests as needed.
-
-    Args:
-      subtask_json (tuple): holds lists of json objects to be sent as requests.
-    """
-
-    # break apart subtasks
-    for ele in subtask_lists:
-        jira_con.post_subtasks( conn, headers, ele )
-
 def create_tickets( conn, headers, updates, project_key, issue_key, epic_id ):
     """
     This function captures the work necessary for creating, finalization, and posting tickets. 
@@ -130,10 +118,11 @@ def create_tickets( conn, headers, updates, project_key, issue_key, epic_id ):
       headers (string): specifies authentication to post to JIRA
       updates (tuple(list)): a tuple of lists holding the dependency updates
       project_key (string): a string representing the key for the board we want to post to
+      issue_key (string): a string representing the id for the type of ticket we want to create
       epic_id: (id, key): a tuple containing epic id and ticket number we want to post under
 
     Returns:
-      subtask_json (list[JSON], list[JSON], list[JSON]): a tuple containing 3 lists of json objects. 
+      final_li (list): a list containing refined lists of json ticket data. One list for each folder 
     """
     final_li = []
 
@@ -174,8 +163,9 @@ def main():
     # create all tickets
     json_lists = create_tickets( conn, headers, updates, project_key, issue_key, epic_id )
 
-    # Post all tickets
-    post_subtasks( conn, headers, json_lists )
+    # Post all tickets for each folder
+    for ele in json_lists:
+        jira_con.post_subtasks( conn, headers, ele )
 
 if __name__=="__main__":
     main()

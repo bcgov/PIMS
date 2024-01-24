@@ -85,8 +85,8 @@ def create_parent_ticket( project_key, updates, epic_id ):
     summary_str = str(folder) + " Dependency Updates " + str(today)
 
     # format the description of the parent ticket
-    description = "Currently we have:\n" + \
-        "- " + str(len(update_list)) + " updates to process\n" + \
+    description = "Currently we have " + \
+        str(len(update_list)) + " updates to process\n" + \
         "To update please navigate to the folder " + folder + "\n"\
         "``` cd " + folder + "```\n\nand run command listed in ticket"
 
@@ -119,7 +119,7 @@ def create_subtasks( update_list, parent_key, project_key, jira_subtask ):
     converted to a Json object. This Json object is then added to a list of elements.
 
     Args: 
-      update_list (list): a list containing folder and update information
+      update_list (tuple): a tuple containing folder and update information in a list
       parent_key (string): specifies what ticket to post under
       project_key (string): specifies what project to post tickets to
       jira_subtask (string): specifies the type of subtask for this board
@@ -132,7 +132,9 @@ def create_subtasks( update_list, parent_key, project_key, jira_subtask ):
     updates = update_list[1]
     dict_update_list = []
 
+    # for each update
     for inner_li in updates:
+        # set variables we may want to use
         priority_level = ""
         dependency_type = ""
         dep_name = inner_li['dependency']
@@ -141,6 +143,7 @@ def create_subtasks( update_list, parent_key, project_key, jira_subtask ):
         new_version = inner_li['latestVersion']
         dep_type = inner_li['type']
 
+        # check for dev dependency flag
         if dep_type == "devDeps":
             dependency_type = " -D "
 
@@ -158,6 +161,7 @@ def create_subtasks( update_list, parent_key, project_key, jira_subtask ):
         summary_title = "Update " + str(dep_name) + ver_delta + " in " + str(folder_name)
         description = "To update please run the following command:\n\n' " + update_command + " '"
 
+        # create the json format we need
         current = {
             "update": {},
             "fields": {
@@ -219,16 +223,11 @@ def split_list( in_li ):
 
 def check_num_tickets( updates ):
     """
-    This method takes in the three lists (as one tuple), then partition that list until it is 
-    less than MAX_TICKET element lists in one list.
+    This method takes in the list of updates and checks to ensure that 
+    we can post the tickets in one go.
 
     Args:
-      updates (tuple): Holds the three dependency update lists. 
-
-    Returns:
-      update (list[list], list[list], list[list]):
-        Holds the three dependency lists with the assurance that the number of dependencies in
-        the innermost lists have less than MAX_TICKET elements. 
+      updates (list): Holds the dependency update lists. 
     """
     sum_dependencies = 0
     for folder in updates:
