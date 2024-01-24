@@ -41,6 +41,9 @@ export const getUserAccessRequestLatest = async (req: Request, res: Response) =>
   const user = req?.user as KeycloakUser;
   try {
     const result = await userServices.getAccessRequest(user);
+    if (!result) {
+      return res.status(204).send('No access request was found.');
+    }
     return res.status(200).send(result);
   } catch (e) {
     return res.status(400).send(e?.message);
@@ -88,6 +91,9 @@ export const getUserAccessRequestById = async (req: Request, res: Response) => {
   const requestId = Number(req.params?.reqeustId);
   try {
     const result = await userServices.getAccessRequestById(requestId, user);
+    if (!result) {
+      return res.status(404);
+    }
     return res.status(200).send(result);
   } catch (e) {
     return res.status(400).send(e?.message);

@@ -83,7 +83,7 @@ const getAccessRequest = async (kcUser: KeycloakUser) => {
     .where('AccessRequests.UserId = :userId', { userId: internalUser.Id })
     .andWhere('AccessRequests.Status = :status', { status: 0 })
     .orderBy('AccessRequests.CreatedOn', 'DESC')
-    .getOneOrFail();
+    .getOne();
   return accessRequest;
 };
 
@@ -94,9 +94,9 @@ const getAccessRequestById = async (requestId: number, kcUser: KeycloakUser) => 
     .leftJoinAndSelect('AccessRequests.RoleId', 'Roles')
     .leftJoinAndSelect('AccessRequests.UserId', 'Users')
     .where('AccessRequests.Id = :requestId', { requestId: requestId })
-    .getOneOrFail();
+    .getOne();
   const internalUser = await getUserFromKeycloak(kcUser);
-  if (accessRequest.UserId.Id != internalUser.Id) throw new Error('Not authorized.');
+  if (accessRequest && accessRequest.UserId.Id != internalUser.Id) throw new Error('Not authorized.');
   return accessRequest;
 };
 
