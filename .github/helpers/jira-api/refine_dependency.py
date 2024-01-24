@@ -49,6 +49,11 @@ def remove_duplicates( in_dep, in_sum, in_folder ):
     # holders for returned list and tickets to only hold dependency name
     new_li = []
     print("##### BEFORE")
+    print("in folder: " + str(in_folder) + " has dep: ")
+    print(in_dep)
+    print("in sum")
+    print(in_sum)
+
 
     for ele in in_dep:
         #get the dependency name
