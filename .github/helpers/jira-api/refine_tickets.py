@@ -127,17 +127,22 @@ def create_subtasks( update_list, parent_key, project_key, jira_subtask ):
     Returns: 
       final_li (list): list contining json objects of tasks for specified dependency updates.
     """
-    # TODO DEPENDENC FLAG IN COMMAND
+
     folder_name = update_list[0]
     updates = update_list[1]
     dict_update_list = []
 
     for inner_li in updates:
         priority_level = ""
+        dependency_type = ""
         dep_name = inner_li['dependency']
         level = inner_li['level']
         old_version = inner_li['version']
         new_version = inner_li['latestVersion']
+        dep_type = inner_li['type']
+
+        if dep_type == "devDeps":
+            dependency_type = " -D "
 
         # set priority level based on what type of dependency we are working through
         if level == "minor":
@@ -148,7 +153,7 @@ def create_subtasks( update_list, parent_key, project_key, jira_subtask ):
             priority_level = "Low"
 
         # reformat the string to how we want the summary to look
-        update_command = ": npm install " + str(dep_name) + "@" + new_version
+        update_command = ": npm install " + dependency_type + str(dep_name) + "@" + new_version
         ver_delta = " from " + str(old_version) + " to " + str(new_version)
         summary_title = "Update " + str(dep_name) + ver_delta + " in " + str(folder_name)
         description = "To update please run the following command:\n\n' " + update_command + " '"

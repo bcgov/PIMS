@@ -136,7 +136,7 @@ def refine_dependencies( string_in ):
     return new_li
 
 
-def parse_dependencies( level_flags, folder ):
+def parse_dependencies( level_flags, updates ):
     """
     Goes through level flags and if the specific level is requested we refine the updates. If the
     flag is not set it is left as an empty list.
@@ -153,15 +153,16 @@ def parse_dependencies( level_flags, folder ):
     dep_li = []
 
     # take in the dependency string and parse it looking for flags we want to continue with 
-    for type_dep in folder:
+    for type_dep in updates:
         # seperates into dev dep and dep
-        for level in folder[type_dep]:
+        for level in updates[type_dep]:
             # level will let us know if it is minor major or patch update
             # check to see if it matches the levels we want to process
             if level.upper() in li_levels:
-                for dependency in folder[type_dep][level]:
+                for dependency in updates[type_dep][level]:
                     # add another key to the dict
                     dependency['level'] = level
+                    dependency['type'] = type_dep
                     # then add it to this list
                     dep_li.append(dependency)
     return dep_li
