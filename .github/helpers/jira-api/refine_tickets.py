@@ -1,6 +1,4 @@
 """ Importing modules for parsing, and json formatting"""
-import re
-import sys
 import json
 import datetime
 
@@ -13,54 +11,6 @@ MAX_TICKETS = 50
 ## post parent and subtask tickets.
 ##
 ###################################################################################################
-
-def break_update_down( update ):
-    """
-    Takes in a string with an update detailed and rearanges to the format we want
-      "Update <dependency> from `<old version>` to `<new version>`
-    
-    Args:
-      update (string): string holding current dependency update
-
-    Returns:
-      summary (string): reformated string holding current dependency update
-    """
-
-    # seperate dependency into 2 groups
-    check_str = re.search( r"^- `(.*)` Update (from version `.*` to `.*`)", update )
-    # reformat line
-    summary = "Update " + check_str.group(1) + " " + check_str.group(2)
-    return summary
-
-def get_length(in_li):
-    """
-    Takes in a list or a list of lists and returns the total number of elements in in_li.
-
-    Args: 
-      in_li (list): either just a list or a list of lists containing dependency updates.
-
-    Returns:
-      len_in_li (int): the total number of all elements within the list brought in. 
-        ex. if in_li = [1, 2, 3] we return 3. 
-            if in_li = [[1], [2], 3] we return 3.
-    """
-
-    len_in_li = 0
-
-    # test if list is empty, if yes return 0
-    if in_li == []:
-        len_in_li = 0
-    # test to see if we have a list of lists
-    elif isinstance(in_li[0], list):
-        # count the number of elements of each sub list and save totals in a list
-        ele_counter = [len(v) for v in in_li]
-        # sum all totals
-        len_in_li = sum( ele_counter )
-    else:
-        # if we have a regular list we can just return the length
-        len_in_li = len( in_li )
-
-    return len_in_li
 
 def create_parent_ticket( project_key, updates, epic_id ):
     """
@@ -203,46 +153,3 @@ def create_subtasks( update_list, parent_key, project_key, jira_subtask ):
 
     # return list of json objects
     return json_update_li
-
-def split_list( in_li ):
-    """
-    Takes in a list and breaks it into smaller lists of MAX_TICKETS elements or less.
-
-    Args:
-      in_li (list): list in that contains elements
-
-    Returns:
-      out_li (list[list]): list containing all elements of in_li but split into smaller lists
-        of 50 or less elements.
-    """
-
-    li_out = []
-    step = MAX_TICKETS
-
-    # go through each MAX_TICKETSth element of the list sent in
-    #   (first pass through i = 0, second i = 50)
-    for i in range(0, len( in_li ), step):
-        # temp holder for the step we are on
-        x = i
-        # capture a group of 50 elements from the in list into a new list
-        #   and append that to the returned list
-        li_out.append( in_li[ x : x + step ] )
-
-    return li_out
-
-def check_num_tickets( folder ):
-    """
-    This method takes in the list of updates and checks to ensure that 
-    we can post the tickets in one go.
-
-    Args:
-      updates (list): Holds the dependency update lists. 
-    """
-    sum_dependencies = 0
-    num_folder_dep = len(folder[1])
-
-    # Check if there are any tickets left after removing duplicates or if there are too many
-    if num_folder_dep == 0:
-        sys.exit( "No unique tickets to create" )
-    elif num_folder_dep > MAX_TICKETS:
-        sys.exit( "Too many tickets" )
