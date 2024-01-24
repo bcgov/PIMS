@@ -43,9 +43,10 @@ describe('useLayerQuery hook tests', () => {
     toastErrorSpy.mockReset();
   });
   afterEach(async () => {});
+  const { findOneWhereContains, findByAdministrative, findByPid, findByPin } = getRenderedHook();
+
   describe('findOneWhereContains tests', () => {
     it('Displays a warning when a warehouse request fails', async () => {
-      const { findOneWhereContains } = getRenderedHook();
       mockAxios.onGet().reply(500);
       try {
         await findOneWhereContains({ lat: 1, lng: 1 } as any);
@@ -56,7 +57,6 @@ describe('useLayerQuery hook tests', () => {
       expect(toastErrorSpy).toHaveBeenCalledTimes(2);
     });
     it('retries failed wfs requests', async () => {
-      const { findOneWhereContains } = getRenderedHook();
       mockAxios.onGet().reply(500);
       try {
         await findOneWhereContains({ lat: 1, lng: 1 } as any);
@@ -67,7 +67,6 @@ describe('useLayerQuery hook tests', () => {
       expect(mockAxios.history.get.length).toBe(3);
     });
     it('does not show the data warehouse error if the retry passes', async () => {
-      const { findOneWhereContains } = getRenderedHook();
       mockAxios.onGet().replyOnce(500).onAny().reply(200);
       try {
         await findOneWhereContains({ lat: 1, lng: 1 } as any);
@@ -81,7 +80,6 @@ describe('useLayerQuery hook tests', () => {
   });
   describe('findByAdministrative tests', () => {
     it('Displays a warning when a warehouse request fails', async () => {
-      const { findByAdministrative } = getRenderedHook();
       mockAxios.onGet().reply(500);
       try {
         await findByAdministrative('city');
@@ -92,7 +90,6 @@ describe('useLayerQuery hook tests', () => {
       expect(toastErrorSpy).toHaveBeenCalledTimes(2);
     });
     it('retries failed wfs requests', async () => {
-      const { findByAdministrative } = getRenderedHook();
       mockAxios.onGet().reply(500);
       try {
         await findByAdministrative('city');
@@ -103,7 +100,6 @@ describe('useLayerQuery hook tests', () => {
       expect(mockAxios.history.get.length).toBe(3);
     });
     it('does not show the data warehouse error if the retry passes', async () => {
-      const { findByAdministrative } = getRenderedHook();
       mockAxios.onGet().replyOnce(500).onAny().reply(200);
       try {
         await findByAdministrative('city');
@@ -117,7 +113,6 @@ describe('useLayerQuery hook tests', () => {
   });
   describe('findByPid tests', () => {
     it('Displays a warning when a warehouse request fails', async () => {
-      const { findByPid } = getRenderedHook();
       mockAxios.onGet().reply(500);
       try {
         await findByPid('pid');
@@ -128,7 +123,6 @@ describe('useLayerQuery hook tests', () => {
       expect(toastErrorSpy).toHaveBeenCalledTimes(2);
     });
     it('retries failed wfs requests', async () => {
-      const { findByPid } = getRenderedHook();
       mockAxios.onGet().reply(500);
       try {
         await findByPid('pid');
@@ -139,7 +133,6 @@ describe('useLayerQuery hook tests', () => {
       expect(mockAxios.history.get.length).toBe(3);
     });
     it('does not show the data warehouse error if the retry passes', async () => {
-      const { findByPid } = getRenderedHook();
       mockAxios.onGet().replyOnce(500).onAny().reply(200);
       try {
         await findByPid('pid');
@@ -153,7 +146,6 @@ describe('useLayerQuery hook tests', () => {
   });
   describe('findByPin tests', () => {
     it('Displays a warning when a warehouse request fails', async () => {
-      const { findByPin } = getRenderedHook();
       mockAxios.onGet().reply(500);
       try {
         await findByPin('pin');
@@ -164,7 +156,6 @@ describe('useLayerQuery hook tests', () => {
       expect(toastErrorSpy).toHaveBeenCalledTimes(2);
     });
     it('retries failed wfs requests', async () => {
-      const { findByPin } = getRenderedHook();
       mockAxios.onGet().reply(500);
       try {
         await findByPin('pin');
@@ -175,7 +166,6 @@ describe('useLayerQuery hook tests', () => {
       expect(mockAxios.history.get.length).toBe(3);
     });
     it('does not show the data warehouse error if the retry passes', async () => {
-      const { findByPin } = getRenderedHook();
       mockAxios.onGet().replyOnce(500).onAny().reply(200);
       try {
         await findByPin('pin');

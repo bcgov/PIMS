@@ -1,5 +1,3 @@
-//ProjectId can be included after the Projects entity is created
-
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -25,14 +23,14 @@ export class ProjectStatusHistory extends BaseEntity {
   ProjectId: Projects;
 
   @ManyToOne(() => Workflows, (Workflow) => Workflow.Id)
-  @JoinColumn({ name: 'ToWorkflowId' })
+  @JoinColumn({ name: 'WorkflowId' })
   @PrimaryColumn()
   @Index()
-  ToWorkflowId: Workflows;
+  WorkflowId: Workflows;
 
   @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
-  @JoinColumn({ name: 'FromStatusId' })
+  @JoinColumn({ name: 'StatusId' })
   @PrimaryColumn()
   @Index()
-  FromStatusId: ProjectStatus;
+  StatusId: ProjectStatus;
 }

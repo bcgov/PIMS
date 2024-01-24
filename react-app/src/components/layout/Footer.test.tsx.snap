@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Footer.tsx should match the existing snapshot 1`] = `
+<footer>
+  <div
+    className="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-ydkvb7-MuiToolbar-root"
+  >
+    <p
+      className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+    >
+      © 2024 Government of British Columbia.
+    </p>
+    <div
+      className="MuiBox-root css-i9gxme"
+    />
+    <div
+      className="MuiBox-root css-13t3iqc"
+    >
+      <a
+        className="MuiTypography-root MuiTypography-h5 MuiLink-root MuiLink-underlineAlways css-1qas1pa-MuiTypography-root-MuiLink-root"
+        href="#"
+        onBlur={[Function]}
+        onFocus={[Function]}
+      >
+        Accessibility
+      </a>
+      <a
+        className="MuiTypography-root MuiTypography-h5 MuiLink-root MuiLink-underlineAlways css-1qas1pa-MuiTypography-root-MuiLink-root"
+        href="#"
+        onBlur={[Function]}
+        onFocus={[Function]}
+      >
+        Privacy
+      </a>
+      <a
+        className="MuiTypography-root MuiTypography-h5 MuiLink-root MuiLink-underlineAlways css-1qas1pa-MuiTypography-root-MuiLink-root"
+        href="#"
+        onBlur={[Function]}
+        onFocus={[Function]}
+      >
+        Copyright
+      </a>
+      <a
+        className="MuiTypography-root MuiTypography-h5 MuiLink-root MuiLink-underlineAlways css-1qas1pa-MuiTypography-root-MuiLink-root"
+        href="#"
+        onBlur={[Function]}
+        onFocus={[Function]}
+      >
+        Disclaimer
+      </a>
+    </div>
+  </div>
+</footer>
+`;
