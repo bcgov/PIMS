@@ -1,8 +1,9 @@
 import { BuildingConstructionTypes } from '@/typeorm/Entities/BuildingConstructionTypes';
 import { BuildingOccupantTypes } from '@/typeorm/Entities/BuildingOccupantTypes';
 import { BuildingPredominateUses } from '@/typeorm/Entities/BuildingPredominateUses';
-import { Entity, Column, ManyToOne, Index, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, Index, JoinColumn, JoinTable, ManyToMany } from 'typeorm';
 import { Property } from '@/typeorm/Entities/abstractEntities/Property';
+import { Parcels } from '@/typeorm/Entities/Parcels';
 
 // Should the occupant information (OccupantTypeId, OccupantName, and BuildingTenancyUpdatedOn) be a separate table?
 // This may change over time and we wouldn't be able to track previous occupants by storing it in this table.
@@ -55,4 +56,17 @@ export class Buildings extends Property {
 
   @Column({ type: 'real' })
   TotalArea: number;
+
+  @ManyToMany('Buildings', 'Parcels', { cascade: ['insert', 'update'], nullable: true })
+  @JoinTable({
+    name: 'parcel_buildings',
+    joinColumn: {
+      name: 'BuildingId',
+    },
+    inverseJoinColumn: {
+      referencedColumnName: 'Id',
+      name: 'ParcelId',
+    },
+  })
+  Parcels: Parcels[];
 }

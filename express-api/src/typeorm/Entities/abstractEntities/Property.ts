@@ -16,19 +16,19 @@ export abstract class Property extends BaseEntity {
   Description: string;
 
   @ManyToOne(() => PropertyClassifications, (Classification) => Classification.Id)
-  @JoinColumn({ name: 'ClassificationId' })
+  @JoinColumn({ name: 'Classification' })
   @Index()
-  ClassificationId: PropertyClassifications;
+  Classification: PropertyClassifications;
 
   @ManyToOne(() => Agencies, (Agency) => Agency.Id, { nullable: true })
-  @JoinColumn({ name: 'AgencyId' })
+  @JoinColumn({ name: 'Agency' })
   @Index()
-  AgencyId: Agencies;
+  Agency: Agencies;
 
   @ManyToOne(() => AdministrativeAreas, (AdminArea) => AdminArea.Id)
-  @JoinColumn({ name: 'AdministrativeAreaId' })
+  @JoinColumn({ name: 'AdministrativeArea' })
   @Index()
-  AdministrativeAreaId: AdministrativeAreas;
+  AdministrativeArea: AdministrativeAreas;
 
   @Column({ type: 'bit' })
   IsSensitive: boolean;
@@ -43,9 +43,9 @@ export abstract class Property extends BaseEntity {
   ProjectNumbers: string;
 
   @ManyToOne(() => PropertyTypes, (PropertyType) => PropertyType.Id)
-  @JoinColumn({ name: 'PropertyTypeId' })
+  @JoinColumn({ name: 'PropertyType' })
   @Index()
-  PropertyTypeId: PropertyTypes;
+  PropertyType: PropertyTypes;
 
   @Column({ type: 'character varying', length: 150, nullable: true })
   @Index()

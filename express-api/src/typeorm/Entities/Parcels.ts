@@ -1,5 +1,6 @@
-import { Entity, Column, Index, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, Index, ManyToOne, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
 import { Property } from '@/typeorm/Entities/abstractEntities/Property';
+import { Buildings } from '@/typeorm/Entities/Buildings';
 
 @Entity()
 @Index(['PID', 'PIN'], { unique: true })
@@ -27,5 +28,19 @@ export class Parcels extends Property {
 
   @ManyToOne(() => Parcels, (Parcel) => Parcel.Id)
   @JoinColumn({ name: 'ParentParcel' })
+  @Index()
   ParentParcel: Parcels;
+
+  @ManyToMany('Buildings', 'Parcels', { cascade: ['insert', 'update'], nullable: true })
+  @JoinTable({
+    name: 'parcel_buildings',
+    joinColumn: {
+      name: 'ParcelId',
+    },
+    inverseJoinColumn: {
+      referencedColumnName: 'Id',
+      name: 'BuildingId'
+    },
+  })
+  Buildings: Buildings[];
 }
