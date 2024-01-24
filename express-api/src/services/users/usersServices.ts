@@ -15,11 +15,11 @@ interface NormalizedKeycloakUser {
 const getUser = async (nameOrGuid: string): Promise<Users> => {
   const userGuid = z.string().uuid().safeParse(nameOrGuid);
   if (userGuid.success) {
-    return AppDataSource.getRepository(Users).findOneByOrFail({
+    return AppDataSource.getRepository(Users).findOneBy({
       KeycloakUserId: userGuid.data,
     });
   } else {
-    return AppDataSource.getRepository(Users).findOneByOrFail({
+    return AppDataSource.getRepository(Users).findOneBy({
       Username: nameOrGuid,
     });
   }
@@ -57,7 +57,7 @@ const getUserFromKeycloak = async (kcUser: KeycloakUser) => {
 
 const activateUser = async (kcUser: KeycloakUser) => {
   const normalizedUser = normalizeKeycloakUser(kcUser);
-  const internalUser = await getUser(kcUser.display_name);
+  const internalUser = await getUser(kcUser.preferred_username);
   if (!internalUser) {
     const { given_name, family_name, username, guid } = normalizedUser;
     AppDataSource.getRepository(Users).insert({
@@ -96,7 +96,8 @@ const getAccessRequestById = async (requestId: number, kcUser: KeycloakUser) => 
     .where('AccessRequests.Id = :requestId', { requestId: requestId })
     .getOne();
   const internalUser = await getUserFromKeycloak(kcUser);
-  if (accessRequest && accessRequest.UserId.Id != internalUser.Id) throw new Error('Not authorized.');
+  if (accessRequest && accessRequest.UserId.Id != internalUser.Id)
+    throw new Error('Not authorized.');
   return accessRequest;
 };
 
@@ -119,7 +120,7 @@ const addAccessRequest = async (accessRequest: AccessRequests, kcUser: KeycloakU
 };
 
 const updateAccessRequest = async (updateRequest: AccessRequests, kcUser: KeycloakUser) => {
-  if (updateRequest == null || updateRequest.AgencyId == null || updateRequest.RoleId)
+  if (updateRequest == null || updateRequest.AgencyId == null || updateRequest.RoleId == null)
     throw new Error('Null argument.');
 
   const internalUser = await getUserFromKeycloak(kcUser);
@@ -144,10 +145,10 @@ const getAgencies = async (username: string) => {
     .createQueryBuilder('Agencies')
     .where('Agencies.ParentId IN (:...ids)', { ids: agencies })
     .getMany();
-  return [...agencies, ...children];
+  return [...agencies, ...children.map((c) => c.Id)];
 };
 
-const getAdministrators = async (agencyIds: number[]) => {
+const getAdministrators = async (agencyIds: string[]) => {
   const admins = await AppDataSource.getRepository(Users)
     .createQueryBuilder('Users')
     .leftJoinAndSelect('Users.Roles', 'Roles')

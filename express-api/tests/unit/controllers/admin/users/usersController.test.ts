@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
 import controllers from '@/controllers';
-import { MockReq, MockRes, getRequestHandlerMocks } from '../../../../testUtils/factories';
+import {
+  MockReq,
+  MockRes,
+  getRequestHandlerMocks,
+  produceUser,
+} from '../../../../testUtils/factories';
 import { Roles } from '@/constants/roles';
-import { faker } from '@faker-js/faker';
-import { UUID } from 'crypto';
-import { Users } from '@/typeorm/Entities/Users';
 import { UserFiltering } from '@/controllers/admin/users/usersSchema';
 
 let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
@@ -20,33 +22,6 @@ const {
   //deleteUserRoleByName,
   updateUserById,
 } = controllers.admin;
-
-const produceUser = (): Users => {
-  return {
-    CreatedOn: faker.date.anytime(),
-    UpdatedOn: faker.date.anytime(),
-    UpdatedById: undefined,
-    CreatedById: undefined,
-    Id: faker.string.uuid() as UUID,
-    DisplayName: faker.company.name(),
-    FirstName: faker.person.firstName(),
-    MiddleName: faker.person.middleName(),
-    LastName: faker.person.lastName(),
-    Email: faker.internet.email(),
-    Username: faker.internet.userName(),
-    Position: 'Tester',
-    IsDisabled: false,
-    EmailVerified: false,
-    IsSystem: false,
-    Note: '',
-    LastLogin: faker.date.anytime(),
-    ApprovedById: undefined,
-    ApprovedOn: undefined,
-    KeycloakUserId: faker.string.uuid() as UUID,
-    Roles: [],
-    Agencies: [],
-  };
-};
 
 const _getUsers = jest.fn().mockImplementation(() => {
   return [produceUser()];

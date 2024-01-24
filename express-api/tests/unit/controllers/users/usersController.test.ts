@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request, Response } from 'express';
 import controllers from '@/controllers';
-import { MockReq, MockRes, getRequestHandlerMocks } from '../../../testUtils/factories';
+import { MockReq, MockRes, getRequestHandlerMocks, produceRequest } from '../../../testUtils/factories';
 import { IKeycloakUser } from '@/services/keycloak/IKeycloakUser';
 import { AccessRequests } from '@/typeorm/Entities/AccessRequests';
 import { faker } from '@faker-js/faker';
@@ -28,21 +28,6 @@ jest.mock('@/services/users/usersServices', () => ({
   getAdministrators: () => _getAdministrators(),
 }));
 
-const produceRequest = (): AccessRequests => {
-  const request: AccessRequests = {
-    Id: faker.number.int(),
-    UserId: undefined,
-    Note: 'test',
-    Status: 0,
-    RoleId: undefined,
-    AgencyId: undefined,
-    CreatedById: undefined,
-    CreatedOn: faker.date.anytime(),
-    UpdatedById: undefined,
-    UpdatedOn: faker.date.anytime(),
-  };
-  return request;
-};
 describe('UNIT - Testing controllers for users routes.', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
