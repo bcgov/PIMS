@@ -125,9 +125,10 @@ def create_subtasks( update_list, parent_key, project_key, jira_subtask ):
       jira_subtask (string): specifies the type of subtask for this board
 
     Returns: 
-      final_li (list): list contining json objects of tasks for specified dependency updates.
+      json_update_list (list): list contining lists of json objects of tasks
+        for specified dependency updates.
     """
-
+    json_update_li = []
     folder_name = update_list[0]
     updates = update_list[1]
     dict_update_list = []
@@ -186,14 +187,22 @@ def create_subtasks( update_list, parent_key, project_key, jira_subtask ):
         }
         # add to list of updates
         dict_update_list.append( current )
+        # if we hit the number of max tickets then we have to finalize this 
+        # section and start the next
+        if len(dict_update_list) == MAX_TICKETS:
+            dict_issueupdate_list = { "issueUpdates": dict_update_list }
+            final_json = json.dumps( dict_issueupdate_list )
+            json_update_li.append(final_json)
+            dict_update_list = []
 
     # update what we created to have one parent element in a dict.
     dict_issueupdate_list = { "issueUpdates": dict_update_list }
     # transform dict to json object
     final_json = json.dumps( dict_issueupdate_list )
+    json_update_li.append(final_json)
 
     # return list of json objects
-    return final_json
+    return json_update_li
 
 def split_list( in_li ):
     """
@@ -221,7 +230,7 @@ def split_list( in_li ):
 
     return li_out
 
-def check_num_tickets( updates ):
+def check_num_tickets( folder ):
     """
     This method takes in the list of updates and checks to ensure that 
     we can post the tickets in one go.
@@ -230,12 +239,10 @@ def check_num_tickets( updates ):
       updates (list): Holds the dependency update lists. 
     """
     sum_dependencies = 0
-    for folder in updates:
-        num_folder_dep = len(folder[1])
-        sum_dependencies = sum_dependencies + num_folder_dep
+    num_folder_dep = len(folder[1])
 
     # Check if there are any tickets left after removing duplicates or if there are too many
-    if sum_dependencies == 0:
+    if num_folder_dep == 0:
         sys.exit( "No unique tickets to create" )
-    elif sum_dependencies > MAX_TICKETS:
+    elif num_folder_dep > MAX_TICKETS:
         sys.exit( "Too many tickets" )
