@@ -127,13 +127,12 @@ def create_subtasks( update_list, parent_key, project_key, jira_subtask ):
     Returns: 
       final_li (list): list contining json objects of tasks for specified dependency updates.
     """
-
-    final_li = []
+    # TODO DEPENDENC FLAG IN COMMAND
     folder_name = update_list[0]
     updates = update_list[1]
+    dict_update_list = []
 
     for inner_li in updates:
-        dict_update_list = []
         priority_level = ""
         dep_name = inner_li['dependency']
         level = inner_li['level']
@@ -148,10 +147,10 @@ def create_subtasks( update_list, parent_key, project_key, jira_subtask ):
         elif level == "patch":
             priority_level = "Low"
 
-        #TODO DEPENDENC FLAG IN COMMAND
         # reformat the string to how we want the summary to look
-        update_command = "npm install " + str(dep_name) + "@" + new_version
-        summary_title = "Update " + str(dep_name) + " from " + str(old_version) + " to " + str(new_version)
+        update_command = ": npm install " + str(dep_name) + "@" + new_version
+        ver_delta = " from " + str(old_version) + " to " + str(new_version)
+        summary_title = "Update " + str(dep_name) + ver_delta + " in " + str(folder_name)
         description = "To update please run the following command:\n\n' " + update_command + " '"
 
         current = {
@@ -236,4 +235,3 @@ def check_num_tickets( updates ):
         sys.exit( "No unique tickets to create" )
     elif sum_dependencies > MAX_TICKETS:
         sys.exit( "Too many tickets" )
-

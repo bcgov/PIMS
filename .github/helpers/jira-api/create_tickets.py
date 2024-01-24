@@ -140,8 +140,6 @@ def create_tickets( conn, headers, updates, project_key, issue_key, epic_id ):
     # check the number of tickets to post
     refine_tickets.check_num_tickets( updates )
 
-    print(updates)
-
     # create parent tickets and post them
     for folder in updates:
         if len(folder[1] ) == 0:
