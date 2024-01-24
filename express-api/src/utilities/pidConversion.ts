@@ -2,7 +2,7 @@ export const pidStringToNumber = (pid: string) => {
   return parseInt(pid.trim().replace('-', ''));
 };
 
-export const pidNumbertoString = (pid: number) => {
+export const pidNumberToString = (pid: number) => {
   const pidArray = `${pid}`.split('');
   if (pidArray.length > 9) {
     throw new Error('PID length too long. Maximum 9 digits.');

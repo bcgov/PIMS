@@ -91,19 +91,19 @@ export interface IParcel extends IProperty, IBaseEntity {
   agency: string;
   subAgencyFullName: string;
   agencyFullName: string;
-  address: IAddress;
   latitude: number;
   longitude: number;
   isSensitive: boolean;
   isVisibleToOtherAgencies: boolean;
   pid: string;
-  pin: number;
+  pin?: number;
   landArea: number;
   landLegalDescription: string;
   zoning: string;
   zoningPotential: string;
   evaluations: IEvaluation[];
   fiscals: IFiscal[];
-  buildings: IBuilding[];
-  parentParcelPID: number;
+  buildings?: IBuilding[];
+  parentParcelPID?: number;
+  subdivisionPids?: string[];
 }

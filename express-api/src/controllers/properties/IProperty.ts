@@ -10,9 +10,13 @@ export interface IProperty {
   classificationId: number;
   encumbranceReason: string;
   agencyId?: string | null;
-  addressId: number;
   location: Point;
   boundary?: Geometry;
   isSensitive: boolean;
   isVisibleToOtherAgencies: boolean;
+  administrativeArea: number;
+  address1?: string;
+  address2?: string;
+  postal?: string;
+  siteId?: string;
 }
