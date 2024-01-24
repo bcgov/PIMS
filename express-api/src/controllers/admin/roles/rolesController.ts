@@ -42,7 +42,7 @@ export const addRole = async (req: Request, res: Response) => {
    */
 
   const role = await rolesServices.addRole(req.body);
-  return res.status(200).send(role);
+  return res.status(201).send(role);
 };
 
 /**
@@ -65,7 +65,7 @@ export const getRoleById = async (req: Request, res: Response) => {
   if (filter.success) {
     const roles = await rolesServices.getRoles(filter.data as RolesFilter);
     if (roles.length == 1) {
-      return res.status(200).send(roles);
+      return res.status(200).send(roles[0]);
     } else {
       return res.status(500);
     }
@@ -94,7 +94,7 @@ export const updateRoleById = async (req: Request, res: Response) => {
     return res.status(400).send('Request param id did not match request body id.');
   } else {
     const role = await rolesServices.updateRole(req.body);
-    return role;
+    return res.status(200).send(role);
   }
 };
 
@@ -118,6 +118,6 @@ export const deleteRoleById = async (req: Request, res: Response) => {
     return res.status(400).send('Request param id did not match request body id.');
   } else {
     const role = await rolesServices.removeRole(req.body);
-    return role;
+    return res.status(200).send(role);
   }
 };

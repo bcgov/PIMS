@@ -1,138 +1,123 @@
 import { Request, Response } from 'express';
 import controllers from '@/controllers';
 import { MockReq, MockRes, getRequestHandlerMocks } from '../../../../testUtils/factories';
-import { Roles } from '@/constants/roles';
 import { faker } from '@faker-js/faker';
 import { UUID } from 'crypto';
-import { IRole } from '@/controllers/admin/roles/IRole';
+import { Roles as RolesEntity } from '@/typeorm/Entities/Roles';
+import { Roles as RolesConstant } from '@/constants/roles';
 
 let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
-const { addRole, getRoleById, getRoleByName, getRoles, deleteRoleById, updateRoleById } =
-  controllers.admin;
+const { addRole, getRoleById, getRoles, deleteRoleById, updateRoleById } = controllers.admin;
 
-const mockRole: IRole = {
-  createdOn: faker.date.anytime().toLocaleString(),
-  updatedOn: faker.date.anytime().toLocaleString(),
-  updatedById: faker.string.uuid() as UUID,
-  createdById: faker.string.uuid() as UUID,
-  id: faker.string.uuid() as UUID,
-  name: faker.company.name(),
-  isDisabled: false,
-  description: '',
-  type: '',
-  sortOrder: 0,
-  isVisible: true,
+const produceRole = (): RolesEntity => {
+  return {
+    CreatedOn: faker.date.anytime(),
+    UpdatedOn: faker.date.anytime(),
+    UpdatedById: undefined,
+    CreatedById: undefined,
+    Id: faker.string.uuid() as UUID,
+    Name: faker.company.name(),
+    IsDisabled: false,
+    Description: '',
+    SortOrder: 0,
+    KeycloakGroupId: faker.string.uuid() as UUID,
+    IsPublic: false,
+    Users: [],
+    Claims: [],
+  };
 };
+
+const _getRoles = jest.fn().mockImplementation(() => [produceRole()]);
+const _addRole = jest.fn().mockImplementation((role) => role);
+const _updateRole = jest.fn().mockImplementation((role) => role);
+const _deleteRole = jest.fn().mockImplementation((role) => role);
+
+jest.mock('@/services/admin/rolesServices', () => ({
+  getRoles: () => _getRoles(),
+  addRole: (role: RolesEntity) => _addRole(role),
+  updateRole: (role: RolesEntity) => _updateRole(role),
+  removeRole: (role: RolesEntity) => _deleteRole(role),
+}));
 
 describe('UNIT - Roles Admin', () => {
   beforeEach(() => {
     const { mockReq, mockRes } = getRequestHandlerMocks();
     mockRequest = mockReq;
-    mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+    mockRequest.setUser({ client_roles: [RolesConstant.ADMIN] });
     mockResponse = mockRes;
   });
 
   describe('Controller getRoles', () => {
-    // TODO: remove stub test when controller is complete
-    it('should return the stub response of 501', async () => {
-      await getRoles(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    // TODO: enable other tests when controller is complete
-    xit('should return status 200 and a list of roles', async () => {
+    it('should return status 200 and a list of roles', async () => {
       await getRoles(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
+      expect(Array.isArray(mockResponse.sendValue)).toBe(true);
+    });
+
+    it('should return status 200 and a filtered roles', async () => {
+      mockRequest.body.filter = { name: 'big name' };
+      const role = produceRole();
+      role.Name = 'big name';
+      await getRoles(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(Array.isArray(mockResponse.sendValue)).toBe(true);
     });
   });
 
   describe('Controller addRole', () => {
+    const role = produceRole();
     beforeEach(() => {
-      mockRequest.body = mockRole;
-    });
-    // TODO: remove stub test when controller is complete
-    it('should return the stub response of 501', async () => {
-      await addRole(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
+      mockRequest.body = role;
     });
 
-    // TODO: enable other tests when controller is complete
-    xit('should return status 201 and the new role', async () => {
+    it('should return status 201 and the new role', async () => {
       await addRole(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(201);
+      expect(role.Id).toBe(mockResponse.sendValue.Id);
     });
   });
 
   describe('Controller getRoleById', () => {
+    const role = produceRole();
     beforeEach(() => {
-      mockRequest.params.id = `${mockRole.id}`;
-    });
-    // TODO: remove stub test when controller is complete
-    it('should return the stub response of 501', async () => {
-      await getRoleById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
+      _getRoles.mockImplementationOnce(() => [role]);
+      mockRequest.params.id = role.Id;
     });
 
-    // TODO: enable other tests when controller is complete
-    xit('should return status 200 and the role info', async () => {
+    it('should return status 200 and the role info', async () => {
       await getRoleById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
-      expect(mockResponse.jsonValue.name).toBe('new name');
-    });
-  });
-
-  describe('Controller getRoleByName', () => {
-    beforeEach(() => {
-      mockRequest.params.name = `${mockRole.name}`;
-    });
-    // TODO: remove stub test when controller is complete
-    it('should return the stub response of 501', async () => {
-      await getRoleByName(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    // TODO: enable other tests when controller is complete
-    xit('should return status 200 and the role info', async () => {
-      await getRoleByName(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-      expect(mockResponse.jsonValue.name).toBe('new name');
+      expect(mockResponse.sendValue.Id).toBe(role.Id);
     });
   });
 
   describe('Controller updateRoleById', () => {
+    const role = produceRole();
     beforeEach(() => {
-      mockRequest.params.id = `${mockRole.id}`;
-      mockRequest.body = { ...mockRole, name: 'new name' };
-    });
-    // TODO: remove stub test when controller is complete
-    it('should return the stub response of 501', async () => {
-      await updateRoleById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
+      role.Name = 'new name';
+      mockRequest.params.id = role.Id;
+      mockRequest.body = role;
     });
 
-    // TODO: enable other tests when controller is complete
-    xit('should return status 200 and the updated role', async () => {
+    it('should return status 200 and the updated role', async () => {
       await updateRoleById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
-      expect(mockResponse.jsonValue.name).toBe('new name');
+      expect(mockResponse.sendValue.Name).toBe('new name');
     });
   });
 
   describe('Controller deleteRoleById', () => {
+    const role = produceRole();
     beforeEach(() => {
-      mockRequest.params.id = `${mockRole.id}`;
-    });
-    // TODO: remove stub test when controller is complete
-    it('should return the stub response of 501', async () => {
-      await deleteRoleById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
+      mockRequest.params.id = role.Id;
     });
 
-    // TODO: enable other tests when controller is complete
-    xit('should return status 204', async () => {
+    it('should return status 204', async () => {
+      mockRequest.body = role;
       await deleteRoleById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(204);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(mockResponse.sendValue.Id).toBe(role.Id);
     });
   });
 });
