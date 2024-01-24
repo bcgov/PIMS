@@ -153,7 +153,7 @@ def get_summary_list( conn, headers, project_key ):
     summary_li = []
     #specifies JIRA query to filter results and max results
     jql_string = "project = " + project_key + \
-        " AND text ~ \"update from version\"" + \
+        " AND text ~ \"update\"" + \
         " AND status != Done" + \
         " AND labels = DependencyUpdates"
 
