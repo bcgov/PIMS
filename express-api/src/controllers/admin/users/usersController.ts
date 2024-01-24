@@ -44,7 +44,7 @@ export const addUser = async (req: Request, res: Response) => {
    */
   try {
     const user = await userServices.addUser(req.body);
-    return res.status(200).send(user);
+    return res.status(201).send(user);
   } catch (e) {
     return res.status(400).send(e.message);
   }
@@ -93,7 +93,7 @@ export const updateUserById = async (req: Request, res: Response) => {
       }]
    */
   const id = z.string().uuid().parse(req.params.id);
-  if (id != req.body.id) {
+  if (id != req.body.Id) {
     return res.status(400).send('The param ID does not match the request body.');
   }
   const user = await userServices.updateUser(req.body);
@@ -116,7 +116,7 @@ export const deleteUserById = async (req: Request, res: Response) => {
    */
 
   const id = z.string().uuid().parse(req.params.id);
-  if (id != req.body.id) {
+  if (id != req.body.Id) {
     return res.status(400).send('The param ID does not match the request body.');
   }
   const user = await userServices.deleteUser(req.body);
