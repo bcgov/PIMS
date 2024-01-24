@@ -56,7 +56,9 @@ def remove_duplicates( in_dep, in_sum ):
         new_li.append(ele)
 
         # go through summary list
-        for summary in in_sum:
+        for summary_tuple in in_sum:
+            summary = summary_tuple[0]
+            folder_name = summary_tuple[1]
             if dep_name == summary:
                 # if the dependency is in the summary remove the
                 # tuple from the list and go to the next tuple

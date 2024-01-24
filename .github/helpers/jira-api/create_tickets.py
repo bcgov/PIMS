@@ -104,6 +104,9 @@ def refine_dep( level_flags, dep_in, summary_li ):
         # refine the dependencies to look the way we want them to
         refined_li = refine_dependency.parse_dependencies( level_flags, dep_in[folder] )
         # remove any dependencies currently being worked on
+        print("################")
+        print(refined_li)
+        print("################")
         unique_li = refine_dependency.remove_duplicates(refined_li, summary_li)
         updates.append((folder, unique_li))
 
