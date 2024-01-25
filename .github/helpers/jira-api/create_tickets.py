@@ -157,6 +157,9 @@ def main():
     # get the list of summaries from JIRA
     summary_li = jira_con.get_summary_list( conn, headers, project_key )
 
+    print("in main")
+    print(summary_li)
+    print("end main")
     # refine dependencies
     updates = refine_dep( level_flags, dep_in, summary_li )
 
