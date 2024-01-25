@@ -172,28 +172,6 @@ exports[`SubmitPropertySelector component renders correctly 1`] = `
         </p>
       </div>
     </div>
-    <div
-      className="c5"
-      onClick={[Function]}
-    >
-      <template>
-        <svg />
-      </template>
-      <div
-        className="c6"
-      >
-        <p
-          className="c7"
-        >
-          Add Potential Subdivision
-        </p>
-        <p
-          className="c8"
-        >
-          PID
-        </p>
-      </div>
-    </div>
   </div>
 </div>
 `;

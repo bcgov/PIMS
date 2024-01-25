@@ -1,5 +1,6 @@
 import variables from '_variables.module.scss';
 import { BuildingSvg, LandSvg, SubdivisionSvg } from 'components/common/Icons';
+import useKeycloakWrapper from 'hooks/useKeycloakWrapper';
 import * as React from 'react';
 import styled from 'styled-components';
 
@@ -98,6 +99,8 @@ const SubmitPropertySelector: React.FC<ISubmitPropertySelectorProps> = ({
   addBareLand,
   addSubdivision,
 }) => {
+  const { isAdmin } = useKeycloakWrapper();
+
   return (
     <SidebarContent data-testid="submit-property-selector">
       <p>
@@ -122,13 +125,17 @@ const SubmitPropertySelector: React.FC<ISubmitPropertySelectorProps> = ({
             <ActionSecondaryText>PID or PIN</ActionSecondaryText>
           </ActionLabelWrapper>
         </Action>
-        <Action onClick={addSubdivision}>
-          <SubdivisionIcon className="svg" />
-          <ActionLabelWrapper>
-            <ActionPrimaryText>Add Potential Subdivision</ActionPrimaryText>
-            <ActionSecondaryText>PID</ActionSecondaryText>
-          </ActionLabelWrapper>
-        </Action>
+        {isAdmin ? (
+          <Action onClick={addSubdivision}>
+            <SubdivisionIcon className="svg" />
+            <ActionLabelWrapper>
+              <ActionPrimaryText>Add Potential Subdivision</ActionPrimaryText>
+              <ActionSecondaryText>PID</ActionSecondaryText>
+            </ActionLabelWrapper>
+          </Action>
+        ) : (
+          <></>
+        )}
       </ActionsWrapper>
     </SidebarContent>
   );
