@@ -127,10 +127,11 @@ const updateAccessRequest = async (updateRequest: AccessRequests, kcUser: Keyclo
 
   if (updateRequest.UserId.Id != internalUser.Id) throw new Error('Not authorized.');
 
-  return AppDataSource.getRepository(AccessRequests).update(
+  const result = await AppDataSource.getRepository(AccessRequests).update(
     { Id: updateRequest.Id },
     updateRequest,
   );
+  return result.generatedMaps[0];
 };
 
 const getAgencies = async (username: string) => {

@@ -40,7 +40,7 @@ const addUser = async (user: Users) => {
 
 const updateUser = async (user: Users) => {
   const retUser = await AppDataSource.getRepository(Users).update(user.Id, user);
-  return retUser;
+  return retUser.generatedMaps[0];
 };
 
 const deleteUser = async (user: Users) => {
