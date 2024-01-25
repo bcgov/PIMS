@@ -165,7 +165,8 @@ def main():
 
     # Post all tickets for each folder
     for ele in json_lists:
-        jira_con.post_subtasks( conn, headers, ele )
+        print(ele)
+    #     jira_con.post_subtasks( conn, headers, ele )
 
 if __name__=="__main__":
     main()
