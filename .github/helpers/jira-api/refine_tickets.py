@@ -93,7 +93,6 @@ def create_subtasks( update_list, parent_key, project_key, jira_subtask ):
         old_version = inner_li['version']
         new_version = inner_li['latestVersion']
         dep_type = inner_li['type']
-        print(dep_type)
 
         # check for dev dependency flag
         if dep_type == "devDeps":

@@ -191,5 +191,4 @@ def get_summary_list( conn, headers, project_key ):
 
     # go through response and pull out summaries of tickets into list.
     summary_li = parse_tickets( json_in )
-    print(summary_li)
     return summary_li

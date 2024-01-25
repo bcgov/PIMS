@@ -48,11 +48,6 @@ def remove_duplicates( in_dep, in_sum, in_folder ):
 
     # holders for returned list and tickets to only hold dependency name
     new_li = []
-    # print("BEFORE")
-    # print("updates in folder: ", str(in_folder), "list: ")
-    # print(in_dep)
-    # print("Summary")
-    # print(in_sum)
 
     for ele in in_dep:
         #get the dependency name
@@ -70,8 +65,6 @@ def remove_duplicates( in_dep, in_sum, in_folder ):
                 new_li.remove( ele )
                 break
 
-    # print("AFTER")
-    # print(new_li)
     return new_li
 
 def refine_updates( in_dep_str, refine_word ):
