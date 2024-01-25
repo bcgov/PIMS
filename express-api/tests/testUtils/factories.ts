@@ -2,6 +2,7 @@
 import { AccessRequests } from '@/typeorm/Entities/AccessRequests';
 import { Agencies } from '@/typeorm/Entities/Agencies';
 import { Users } from '@/typeorm/Entities/Users';
+import { Roles as RolesEntity } from '@/typeorm/Entities/Roles';
 import { faker } from '@faker-js/faker';
 import { UUID } from 'crypto';
 import { Request, Response } from 'express';
@@ -134,4 +135,22 @@ export const produceAgency = (): Agencies => {
     UpdatedOn: new Date(),
   };
   return agency;
+};
+
+export const produceRole = (): RolesEntity => {
+  return {
+    CreatedOn: faker.date.anytime(),
+    UpdatedOn: faker.date.anytime(),
+    UpdatedById: undefined,
+    CreatedById: undefined,
+    Id: faker.string.uuid() as UUID,
+    Name: faker.company.name(),
+    IsDisabled: false,
+    Description: '',
+    SortOrder: 0,
+    KeycloakGroupId: faker.string.uuid() as UUID,
+    IsPublic: false,
+    Users: [],
+    Claims: [],
+  };
 };

@@ -23,8 +23,8 @@ const addRole = async (role: Roles) => {
 };
 
 const updateRole = async (role: Roles) => {
-  const retRole = AppDataSource.getRepository(Roles).update(role.Id, role);
-  return retRole;
+  const retRole = await AppDataSource.getRepository(Roles).update(role.Id, role);
+  return retRole.generatedMaps[0];
 };
 
 const removeRole = async (role: Roles) => {

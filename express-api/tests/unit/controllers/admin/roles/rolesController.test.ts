@@ -1,32 +1,17 @@
 import { Request, Response } from 'express';
 import controllers from '@/controllers';
-import { MockReq, MockRes, getRequestHandlerMocks } from '../../../../testUtils/factories';
-import { faker } from '@faker-js/faker';
-import { UUID } from 'crypto';
+import {
+  MockReq,
+  MockRes,
+  getRequestHandlerMocks,
+  produceRole,
+} from '../../../../testUtils/factories';
 import { Roles as RolesEntity } from '@/typeorm/Entities/Roles';
 import { Roles as RolesConstant } from '@/constants/roles';
 
 let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
 const { addRole, getRoleById, getRoles, deleteRoleById, updateRoleById } = controllers.admin;
-
-const produceRole = (): RolesEntity => {
-  return {
-    CreatedOn: faker.date.anytime(),
-    UpdatedOn: faker.date.anytime(),
-    UpdatedById: undefined,
-    CreatedById: undefined,
-    Id: faker.string.uuid() as UUID,
-    Name: faker.company.name(),
-    IsDisabled: false,
-    Description: '',
-    SortOrder: 0,
-    KeycloakGroupId: faker.string.uuid() as UUID,
-    IsPublic: false,
-    Users: [],
-    Claims: [],
-  };
-};
 
 const _getRoles = jest.fn().mockImplementation(() => [produceRole()]);
 const _addRole = jest.fn().mockImplementation((role) => role);
