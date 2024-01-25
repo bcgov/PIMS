@@ -108,7 +108,7 @@ def create_subtasks( update_list, parent_key, project_key, jira_subtask ):
 
         # reformat the string to how we want the summary to look
         update_command = "npm install " + dependency_type + str(dep_name) + "@" + new_version
-        ver_delta = " from " + str(old_version) + " to " + str(new_version)
+        ver_delta = " from version " + str(old_version) + " to " + str(new_version)
         summary_title = "Update " + str(dep_name) + ver_delta + " in " + str(folder_name)
         description = "To update please run the following command:\n\n' " + update_command + " '"
 

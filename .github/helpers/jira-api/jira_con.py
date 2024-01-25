@@ -61,8 +61,6 @@ def parse_tickets( tickets_json ):
         #if it does not match ignore it
         if sum_refined is None:
             continue
-        else:
-            print("got match")
 
         try:
             # if it matches extract the depenency name and folder
@@ -195,4 +193,5 @@ def get_summary_list( conn, headers, project_key ):
 
     # go through response and pull out summaries of tickets into list.
     summary_li = parse_tickets( json_in )
+    print(summary_li)
     return summary_li
