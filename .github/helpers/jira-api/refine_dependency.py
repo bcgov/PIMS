@@ -1,8 +1,4 @@
-""" 
-Import Regex for some parsing.
-"""
-import re
-
+""" No modules to import for this script. """
 ###################################################################################################
 ##
 ## This script hosts functions that are used to decode env variables, remove matching elements from
