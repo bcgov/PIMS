@@ -1,5 +1,11 @@
 import { Request, Response } from 'express';
 import { stubResponse } from '@/utilities/stubResponse';
+import parcelsService from '@/services/parcels/parcelsService';
+import { pidStringToNumber } from '@/utilities/pidConversion';
+import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import { IParcel } from '@/controllers/parcels/IParcel';
+import { ParcelQueryFilter, parcelQuerySchema } from '@/controllers/parcels/parcelSchemas';
+import { KeycloakIdirUser, KeycloakUser } from '@bcgov/citz-imb-kc-express';
 
 /**
  * @description Gets information about a particular parcel by the Id provided in the URL parameter.
@@ -15,7 +21,19 @@ export const getParcel = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  return stubResponse(res);
+
+  const { id } = req.params;
+  try {
+    const serviceResponse = await parcelsService.getParcelById(parseInt(id));
+    // TODO: Convert to IParcel
+    const parcel = { ...serviceResponse };
+    return res.status(200).json(parcel);
+  } catch (e: unknown) {
+    if (e instanceof ErrorWithCode) {
+      return res.status(e.code).send(e.message);
+    }
+    return res.status(400).send((e as Error).message);
+  }
 };
 
 /**
@@ -66,6 +84,23 @@ export const filterParcelsQueryString = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
+  const user = req.user as KeycloakUser & KeycloakIdirUser;
+  try {
+    if (req.query) {
+      const filter = req.query;
+      parcelQuerySchema.parse(filter);
+      const serviceResponse = await parcelsService.getParcels(user,filter);
+      return res.status(200).json(serviceResponse)
+    } else {
+      const serviceResponse = await parcelsService.getParcels(user);
+      return res.status(200).json(serviceResponse)
+    }
+  } catch (e: unknown) {
+    if (e instanceof ErrorWithCode) {
+      return res.status(e.code).send(e.message);
+    }
+    return res.status(400).send((e as Error).message);
+  }
   return stubResponse(res);
 };
 
@@ -83,6 +118,9 @@ export const filterParcelsRequestBody = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
+  
+  const filter: IParcel = req.body;
+
   return stubResponse(res);
 };
 
@@ -124,7 +162,16 @@ export const checkPidAvailable = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  return stubResponse(res);
+  const { pid } = req.query;
+  if (!pid) {
+    return res.status(400).send('PID not supplied as query string.');
+  }
+  try {
+    const serviceResponse = await parcelsService.isPidAvailable(pidStringToNumber(pid as string));
+    return res.status(200).json({ available: serviceResponse });
+  } catch (e: unknown) {
+    return res.status(400).send((e as Error).message);
+  }
 };
 
 /**
@@ -141,7 +188,17 @@ export const checkPinAvailable = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  return stubResponse(res);
+
+  const { pin } = req.query;
+  if (!pin) {
+    return res.status(400).send('PIN not supplied as query string.');
+  }
+  try {
+    const serviceResponse = await parcelsService.isPinAvailable(parseInt(pin as string));
+    return res.status(200).json({ available: serviceResponse });
+  } catch (e: unknown) {
+    return res.status(400).send((e as Error).message);
+  }
 };
 
 /**

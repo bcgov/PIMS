@@ -6,20 +6,50 @@ import { PropertyClassifications } from '@/typeorm/Entities/PropertyClassificati
 import { PropertyTypes } from '@/typeorm/Entities/PropertyTypes';
 import { pidStringToNumber } from '@/utilities/pidConversion';
 import { KeycloakUser, KeycloakIdirUser } from '@bcgov/citz-imb-kc-express';
-import { Point, QueryFailedError } from 'typeorm';
+import { In, Point, QueryFailedError } from 'typeorm';
 import { hasRole } from '@bcgov/citz-imb-kc-express';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { Buildings } from '@/typeorm/Entities/Buildings';
 import { Roles } from '@/constants/roles';
+import { Users } from '@/typeorm/Entities/Users';
+import { UserAgencies } from '@/typeorm/Entities/UserAgencies';
+import { ParcelQueryFilter } from '@/controllers/parcels/parcelSchemas';
 
 const parcelsRepository = AppDataSource.getRepository(Parcels);
 
-const getParcels = async (filter?: unknown) => {
+const getParcels = async (user: KeycloakUser & KeycloakIdirUser, filter?: any) => {
+  const joinRelations = {
+    Buildings: true,
+    ParentParcel: true,
+    PropertyType: true,
+    Agency: true,
+    AdministrativeArea: true,
+    Classification: true,
+  };
+  const userEntity = await AppDataSource.getRepository(Users).findOne({
+    where: { Email: user.email },
+    relations: {
+      // Agencies: true,
+    },
+  });
+  const userAgencyIds = await AppDataSource.getRepository(UserAgencies).find({where:{
+     UserId: {id: userEntity.Id}
+  }}).then((agencies) => agencies.map(agency => agency.AgencyId));
+  const searchingAgency = await AppDataSource.getRepository(Agencies).findOneBy({Name: filter.agency})
+  const allAgencies = (await AppDataSource.getRepository(Agencies).find());
+  // If user is admin, allow any agency. Otherwise, only allow search within agencies.
+  const agenciesToSearch = [searchingAgency] || hasRole(user, ['admin']) ? allAgencies : userAgencyIds;
+
   // TODO: Does user have matching agency?
   if (filter) {
     return await parcelsRepository.findBy(filter);
   } else {
-    return await parcelsRepository.find();
+    return await parcelsRepository.find({
+      relations: joinRelations,
+      where: {
+        Agency: In(agenciesToSearch),
+      },
+    });
   }
 };
 
@@ -216,13 +246,13 @@ const updateParcel = async (
   newSubdivisionPids.forEach(async (pid) => {
     await parcelsRepository.update({ PID: pidStringToNumber(pid) }, { ParentParcel: parcel });
   });
- 
+
   // TODO: Add/Update Fiscals and Evaluations
-  
+
   // TODO: Remove outdated fiscals and evaluations
 
   // TODO: Do we need to verify buildings? Do we remove them if not in incoming parcel?
-  
+
   return updatedParcel;
 };
 
