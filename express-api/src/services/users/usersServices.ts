@@ -27,6 +27,7 @@ const getUser = async (nameOrGuid: string): Promise<Users> => {
 
 const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => {
   const provider = kcUser.identity_provider;
+  const username = kcUser.preferred_username;
   let user;
   switch (provider) {
     case 'idir':
@@ -34,7 +35,7 @@ const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => 
       return {
         given_name: user.given_name,
         family_name: user.family_name,
-        username: user.idir_username,
+        username: username,
         guid: user.idir_user_guid,
       };
     case 'bceidbasic':
@@ -42,7 +43,7 @@ const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => 
       return {
         given_name: '',
         family_name: '',
-        username: user.bceid_username,
+        username: username,
         guid: user.bceid_user_guid,
       };
     default:

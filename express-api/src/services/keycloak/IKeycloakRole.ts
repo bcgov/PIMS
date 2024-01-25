@@ -6,7 +6,6 @@
  */
 export interface IKeycloakRole {
   name: string;
-  id: string;
   composite?: boolean;
 }
 

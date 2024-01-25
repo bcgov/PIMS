@@ -22,7 +22,7 @@ import {
 } from '@bcgov/citz-imb-kc-css-api';
 import rolesServices from '../admin/rolesServices';
 import { Roles } from '@/typeorm/Entities/Roles';
-import { UUID, randomUUID } from 'crypto';
+import { randomUUID } from 'crypto';
 import { AppDataSource } from '@/appDataSource';
 import { In, Not } from 'typeorm';
 import userServices from '../admin/usersServices';
@@ -48,7 +48,7 @@ const syncKeycloakRoles = async () => {
         Name: role.name,
         IsDisabled: false,
         SortOrder: 0,
-        KeycloakGroupId: role.id,
+        KeycloakGroupId: '',
         Description: '',
         IsPublic: false,
         Users: [],
@@ -65,7 +65,7 @@ const syncKeycloakRoles = async () => {
         Name: role.name,
         IsDisabled: false,
         SortOrder: 0,
-        KeycloakGroupId: role.id,
+        KeycloakGroupId: '',
         Description: '',
         IsPublic: false,
         Users: [],
@@ -162,14 +162,14 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
   const internalUser = await userServices.getUsers({ username: kuser.username });
 
   for (const krole of kroles) {
-    const internalRole = await rolesServices.getRoles({ id: krole.id as UUID });
+    const internalRole = await rolesServices.getRoles({ name: krole.name });
     if (internalRole.length == 0) {
       const newRole: Roles = {
         Id: randomUUID(),
         Name: krole.name,
         IsDisabled: false,
         SortOrder: 0,
-        KeycloakGroupId: krole.id,
+        KeycloakGroupId: '',
         Description: '',
         IsPublic: false,
         Users: [],
@@ -184,7 +184,7 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
   }
 
   const newUsersRoles = await AppDataSource.getRepository(Roles).find({
-    where: { KeycloakGroupId: In(kroles.map((a) => a.id)) },
+    where: { Name: In(kroles.map((a) => a.name)) },
   });
 
   if (internalUser.length == 0) {
