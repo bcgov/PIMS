@@ -54,11 +54,15 @@ def parse_tickets( tickets_json ):
     for issue in issue_list:
         # extract the summary field from the json object
         summary = issue['fields']['summary']
+        print("parse summary")
+        print(summary)
         # try to match ticket summary to this. Group name and folder
         sum_refined = re.search( r"^Update (.*) from version .* to .* in (.*)$", summary )
         #if it does not match ignore it
         if sum_refined is None:
             continue
+        else:
+            print("got match")
 
         try:
             # if it matches extract the depenency name and folder
