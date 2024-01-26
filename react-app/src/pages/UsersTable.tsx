@@ -72,8 +72,94 @@ interface IUser {
   roles: string;
 }
 
+const KeywordSearch = ({onChange}) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [fieldContents, setFieldContents] = useState<string>();
+  const theme = useTheme();
+
+  const commonStyle: SxProps = {
+    fontSize: theme.typography.fontWeightBold,
+    fontFamily: theme.typography.fontFamily,
+    padding: '5px',
+    marginBottom: '1px',
+    boxSizing: 'content-box',
+    borderRadius: '5px',
+  };
+
+  const openStyle: SxProps = {
+    ...commonStyle,
+    width: '240px',
+    transition: 'width 0.3s ease-in, border 1s',
+    border: '1.5px solid grey',
+    '&:focus-within': {
+      border: '1.5px solid black',
+    },
+  };
+
+  const closedStyle: SxProps = {
+    ...commonStyle,
+    width: '32px',
+    transition: 'width 0.3s ease-in, border 1s',
+    border: '1.5px solid transparent',
+    '&:hover': {
+      cursor: 'default',
+    },
+  };
+  return (
+    <TextField
+      id="keyword-search"
+      variant="standard"
+      sx={isOpen ? openStyle : closedStyle}
+      size="small"
+      style={{ fontSize: '5em' }}
+      placeholder="Search..."
+      value={fieldContents}
+      onChange={(e) => {
+        setFieldContents(e.target.value);
+        onChange(e.target.value);
+      }}
+      InputProps={{
+        disableUnderline: true,
+        sx: { cursor: 'default' },
+        endAdornment: (
+          <InputAdornment position={'end'}>
+            {fieldContents ? (
+              <CloseIcon
+                onClick={() => {
+                  // Clear text and filter
+                  setFieldContents('');
+                  onChange('');
+                  document.getElementById('keyword-search').focus();
+                }}
+                sx={{
+                  '&:hover': {
+                    cursor: 'pointer',
+                  },
+                }}
+              />
+            ) : (
+              <SearchIcon
+                onClick={() => {
+                  setIsOpen(!isOpen);
+                  document.getElementById('keyword-search').focus();
+                }}
+                sx={{
+                  '&:hover': {
+                    cursor: 'pointer',
+                  },
+                }}
+              />
+            )}
+          </InputAdornment>
+        ),
+      }}
+    />
+  );
+};
+
 const UsersTable = () => {
   const [users, setUsers] = useState<IUser[]>([]);
+  const [rowCount, setRowCount] = useState<number>(0);
   const { getAuthorizationHeaderValue, state } = useKeycloak();
   const theme = useTheme();
   const apiRef = useGridApiRef();
@@ -85,9 +171,8 @@ const UsersTable = () => {
       },
     })
       .then(async (response) => {
-        const result = await response.json();
+        const result: IUser[] = await response.json();
         setUsers(result);
-        // Clear any filter
       })
       .catch((e: unknown) => {
         console.log(e);
@@ -102,96 +187,11 @@ const UsersTable = () => {
 
   const updateSearchValue = React.useMemo(() => {
     return debounce((newValue) => {
-      apiRef.current.setQuickFilterValues(
-        newValue.split(" ").filter((word) => word !== "")
-      );
+      apiRef.current.setQuickFilterValues(newValue.split(' ').filter((word) => word !== ''));
     }, 100);
   }, [apiRef]);
 
-  const KeywordSearch = () => {
-    const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [fieldContents, setFieldContents] = useState<string>();
-
-    const commonStyle: SxProps = {
-      fontSize: theme.typography.fontWeightBold,
-      fontFamily: theme.typography.fontFamily,
-      padding: '5px',
-      marginBottom: '1px',
-      boxSizing: 'content-box',
-      borderRadius: '5px',
-
-    };
-
-    const openStyle: SxProps = {
-      ...commonStyle,
-      width: '240px',
-      transition: 'width 0.3s ease-in, border 1s',
-      border: '1.5px solid grey',
-      '&:focus-within': {
-        border: '1.5px solid black',
-      },
-    };
-
-    const closedStyle: SxProps = {
-      ...commonStyle,
-      width: '32px',
-      transition: 'width 0.3s ease-in, border 1s',
-      border: '1.5px solid transparent',
-      '&:hover': {
-        cursor: 'default',
-      },
-    };
-    return (
-      <TextField
-        id="keyword-search"
-        variant="standard"
-        sx={isOpen ? openStyle : closedStyle}
-        size="small"
-        style={{ fontSize: '5em' }}
-        placeholder="Search..."
-        value={fieldContents}
-        onChange={(e) => {
-          setFieldContents(e.target.value);
-          updateSearchValue(e.target.value);
-        }}
-        InputProps={{
-          disableUnderline: true,
-          sx: { cursor: 'default' },
-          endAdornment: (
-            <InputAdornment position={'end'}>
-              {fieldContents ? (
-                <CloseIcon
-                  onClick={() => {
-                    // Clear text and filter
-                    setFieldContents('');
-                    updateSearchValue('');
-                    document.getElementById('keyword-search').focus();
-                  }}
-                  sx={{
-                    '&:hover': {
-                      cursor: 'pointer',
-                    },
-                  }}
-                />
-              ) : (
-                <SearchIcon
-                  onClick={() => {
-                    setIsOpen(!isOpen);
-                    document.getElementById('keyword-search').focus();
-                  }}
-                  sx={{
-                    '&:hover': {
-                      cursor: 'pointer',
-                    },
-                  }}
-                />
-              )}
-            </InputAdornment>
-          ),
-        }}
-      />
-    );
-  };
+  
 
   const dateFormatter = (params) =>
     new Intl.DateTimeFormat('en-US', {
@@ -273,6 +273,7 @@ const UsersTable = () => {
       valueFormatter: dateFormatter,
     },
   ];
+
   return (
     <BaseLayout>
       <Box display={'flex'} justifyContent={'center'}>
@@ -284,13 +285,18 @@ const UsersTable = () => {
               marginBottom: '1em',
             }}
           >
-            <Typography variant="h4">Users Overview ({users.length ?? 0} users)</Typography>
-            <KeywordSearch />
+            <Typography variant="h4">Users Overview ({rowCount ?? 0} users)</Typography>
+            <KeywordSearch onChange={updateSearchValue} />
           </Box>
           <CustomDataGrid
             getRowId={(row) => row.id}
             columns={columns}
             rows={users}
+            onStateChange={(e) => {
+              setRowCount(Object.values(e.filter.filteredRowsLookup).filter(
+                (value) => value,
+              ).length)
+            }}
             apiRef={apiRef}
             initialState={{
               pagination: { paginationModel: { pageSize: 10 } },
