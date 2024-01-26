@@ -8,10 +8,11 @@ import {
   SxProps,
   TextField,
   Typography,
+  debounce,
   useTheme,
 } from '@mui/material';
-import { GridColDef } from '@mui/x-data-grid';
-import React, { CSSProperties, useEffect, useState } from 'react';
+import { GridColDef, useGridApiRef } from '@mui/x-data-grid';
+import React, { useEffect, useState } from 'react';
 import { UUID } from 'crypto';
 import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 import SearchIcon from '@mui/icons-material/Search';
@@ -75,6 +76,7 @@ const UsersTable = () => {
   const [users, setUsers] = useState<IUser[]>([]);
   const { getAuthorizationHeaderValue, state } = useKeycloak();
   const theme = useTheme();
+  const apiRef = useGridApiRef();
 
   useEffect(() => {
     fetch('http://localhost:5000/api/v2/admin/users', {
@@ -83,7 +85,9 @@ const UsersTable = () => {
       },
     })
       .then(async (response) => {
-        setUsers(await response.json());
+        const result = await response.json();
+        setUsers(result);
+        // Clear any filter
       })
       .catch((e: unknown) => {
         console.log(e);
@@ -96,6 +100,14 @@ const UsersTable = () => {
     Hold: 'warning',
   };
 
+  const updateSearchValue = React.useMemo(() => {
+    return debounce((newValue) => {
+      apiRef.current.setQuickFilterValues(
+        newValue.split(" ").filter((word) => word !== "")
+      );
+    }, 100);
+  }, [apiRef]);
+
   const KeywordSearch = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [fieldContents, setFieldContents] = useState<string>();
@@ -106,14 +118,15 @@ const UsersTable = () => {
       padding: '5px',
       marginBottom: '1px',
       boxSizing: 'content-box',
+      borderRadius: '5px',
+
     };
 
     const openStyle: SxProps = {
       ...commonStyle,
       width: '240px',
-      transition: 'width 0.3s ease-in',
+      transition: 'width 0.3s ease-in, border 1s',
       border: '1.5px solid grey',
-      borderRadius: '5px',
       '&:focus-within': {
         border: '1.5px solid black',
       },
@@ -122,9 +135,8 @@ const UsersTable = () => {
     const closedStyle: SxProps = {
       ...commonStyle,
       width: '32px',
-      transition: 'width 0.3s ease-in',
+      transition: 'width 0.3s ease-in, border 1s',
       border: '1.5px solid transparent',
-      borderRadius: '5px',
       '&:hover': {
         cursor: 'default',
       },
@@ -140,6 +152,7 @@ const UsersTable = () => {
         value={fieldContents}
         onChange={(e) => {
           setFieldContents(e.target.value);
+          updateSearchValue(e.target.value);
         }}
         InputProps={{
           disableUnderline: true,
@@ -151,6 +164,7 @@ const UsersTable = () => {
                   onClick={() => {
                     // Clear text and filter
                     setFieldContents('');
+                    updateSearchValue('');
                     document.getElementById('keyword-search').focus();
                   }}
                   sx={{
@@ -277,6 +291,7 @@ const UsersTable = () => {
             getRowId={(row) => row.id}
             columns={columns}
             rows={users}
+            apiRef={apiRef}
             initialState={{
               pagination: { paginationModel: { pageSize: 10 } },
               sorting: {
