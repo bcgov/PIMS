@@ -85,6 +85,13 @@ const UsersTable = () => {
     Hold: 'warning',
   };
 
+  const dateFormatter = (params) =>
+    new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric',
+    }).format(new Date(params.value));
+
   const columns: GridColDef[] = [
     {
       field: 'firstName',
@@ -148,12 +155,14 @@ const UsersTable = () => {
     {
       field: 'created',
       headerName: 'Created',
-      maxWidth: 120,
+      minWidth: 120,
+      valueFormatter: dateFormatter,
     },
     {
       field: 'lastLogin',
       headerName: 'Last Login',
-      maxWidth: 120,
+      minWidth: 120,
+      valueFormatter: dateFormatter,
     },
   ];
   return (
@@ -171,7 +180,7 @@ const UsersTable = () => {
           <CustomDataGrid
             getRowId={(row) => row.id}
             columns={columns}
-            rows={users ?? []}
+            rows={users}
             initialState={{
               pagination: { paginationModel: { pageSize: 10 } },
               sorting: {
@@ -192,7 +201,7 @@ const UsersTable = () => {
               },
               '& .MuiDataGrid-cell:focus-within': {
                 outline: 'none',
-              }
+              },
             }}
           />
         </Paper>
