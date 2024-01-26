@@ -1,10 +1,21 @@
 import BaseLayout from '@/components/layout/BaseLayout';
 import { CustomDataGrid } from '@/components/table/DataTable';
-import { Box, Chip, Paper, Typography, useTheme } from '@mui/material';
+import {
+  Box,
+  Chip,
+  InputAdornment,
+  Paper,
+  SxProps,
+  TextField,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
-import React, { useEffect, useState } from 'react';
+import React, { CSSProperties, useEffect, useState } from 'react';
 import { UUID } from 'crypto';
 import { useKeycloak } from '@bcgov/citz-imb-kc-react';
+import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
 
 // interface IAgency {
 //   createdOn: string;
@@ -83,6 +94,89 @@ const UsersTable = () => {
     Pending: 'info',
     Active: 'success',
     Hold: 'warning',
+  };
+
+  const KeywordSearch = () => {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [fieldContents, setFieldContents] = useState<string>();
+
+    const commonStyle: SxProps = {
+      fontSize: theme.typography.fontWeightBold,
+      fontFamily: theme.typography.fontFamily,
+      padding: '5px',
+      marginBottom: '1px',
+      boxSizing: 'content-box',
+    };
+
+    const openStyle: SxProps = {
+      ...commonStyle,
+      width: '240px',
+      transition: 'width 0.3s ease-in',
+      border: '1.5px solid grey',
+      borderRadius: '5px',
+      '&:focus-within': {
+        border: '1.5px solid black',
+      },
+    };
+
+    const closedStyle: SxProps = {
+      ...commonStyle,
+      width: '32px',
+      transition: 'width 0.3s ease-in',
+      border: '1.5px solid transparent',
+      borderRadius: '5px',
+      '&:hover': {
+        cursor: 'default',
+      },
+    };
+    return (
+      <TextField
+        id="keyword-search"
+        variant="standard"
+        sx={isOpen ? openStyle : closedStyle}
+        size="small"
+        style={{ fontSize: '5em' }}
+        placeholder="Search..."
+        value={fieldContents}
+        onChange={(e) => {
+          setFieldContents(e.target.value);
+        }}
+        InputProps={{
+          disableUnderline: true,
+          sx: { cursor: 'default' },
+          endAdornment: (
+            <InputAdornment position={'end'}>
+              {fieldContents ? (
+                <CloseIcon
+                  onClick={() => {
+                    // Clear text and filter
+                    setFieldContents('');
+                    document.getElementById('keyword-search').focus();
+                  }}
+                  sx={{
+                    '&:hover': {
+                      cursor: 'pointer',
+                    },
+                  }}
+                />
+              ) : (
+                <SearchIcon
+                  onClick={() => {
+                    setIsOpen(!isOpen);
+                    document.getElementById('keyword-search').focus();
+                  }}
+                  sx={{
+                    '&:hover': {
+                      cursor: 'pointer',
+                    },
+                  }}
+                />
+              )}
+            </InputAdornment>
+          ),
+        }}
+      />
+    );
   };
 
   const dateFormatter = (params) =>
@@ -172,10 +266,12 @@ const UsersTable = () => {
           <Box
             sx={{
               display: 'flex',
+              justifyContent: 'space-between',
               marginBottom: '1em',
             }}
           >
             <Typography variant="h4">Users Overview ({users.length ?? 0} users)</Typography>
+            <KeywordSearch />
           </Box>
           <CustomDataGrid
             getRowId={(row) => row.id}
@@ -203,6 +299,7 @@ const UsersTable = () => {
                 outline: 'none',
               },
             }}
+            slots={{ toolbar: KeywordSearch }}
           />
         </Paper>
       </Box>
