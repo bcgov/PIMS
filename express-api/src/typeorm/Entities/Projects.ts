@@ -3,8 +3,8 @@ import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { Workflows } from '@/typeorm/Entities/Workflows';
 import { TierLevels } from '@/typeorm/Entities/TierLevels';
 import { ProjectRisks } from '@/typeorm/Entities/ProjectRisks';
-import { Agencies } from '@/typeorm/Entities/Agencies';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
+import { Agencies } from './Users_Agencies_Roles_Claims';
 
 @Entity()
 @Index(['Assessed', 'NetBook', 'Market', 'ReportedFiscalYear', 'ActualFiscalYear'])

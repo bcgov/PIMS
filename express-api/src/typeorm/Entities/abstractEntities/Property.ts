@@ -1,9 +1,9 @@
 import { Addresses } from '@/typeorm/Entities/Addresses';
-import { Agencies } from '@/typeorm/Entities/Agencies';
 import { PropertyClassifications } from '@/typeorm/Entities/PropertyClassifications';
 import { PropertyTypes } from '@/typeorm/Entities/PropertyTypes';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Column, ManyToOne, JoinColumn, Index, PrimaryGeneratedColumn, Point } from 'typeorm';
+import { Agencies } from '../Users_Agencies_Roles_Claims';
 
 export abstract class Property extends BaseEntity {
   @PrimaryGeneratedColumn()

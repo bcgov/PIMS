@@ -1,7 +1,5 @@
-import { Agencies } from '@/typeorm/Entities/Agencies';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
-import { Roles } from '@/typeorm/Entities/Roles';
-import { Users } from '@/typeorm/Entities/Users';
+import { Agencies, Users, Roles } from '@/typeorm/Entities/Users_Agencies_Roles_Claims';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, Index, JoinColumn } from 'typeorm';
 
 @Entity()

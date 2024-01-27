@@ -1,11 +1,12 @@
 import { AppDataSource } from '@/appDataSource';
-import { Roles } from '@/typeorm/Entities/Roles';
 import { RolesFilter } from '../../controllers/admin/roles/rolesSchema';
+import { DeepPartial } from 'typeorm';
+import { Roles } from '@/typeorm/Entities/Users_Agencies_Roles_Claims';
 
 const getRoles = async (filter: RolesFilter) => {
   const roles = AppDataSource.getRepository(Roles).find({
     relations: {
-      Claims: true,
+      RoleClaims: { Claim: true },
     },
     where: {
       Name: filter.name,
@@ -22,7 +23,7 @@ const addRole = async (role: Roles) => {
   return retRole;
 };
 
-const updateRole = async (role: Roles) => {
+const updateRole = async (role: DeepPartial<Roles>) => {
   const retRole = await AppDataSource.getRepository(Roles).update(role.Id, role);
   return retRole.generatedMaps[0];
 };

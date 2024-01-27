@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import rolesServices from '@/services/admin/rolesServices';
 import { RolesFilter, RolesFilterSchema } from '@/controllers/admin/roles/rolesSchema';
-import userServices from '@/services/admin/usersServices';
 
 /**
  * @description Gets a paged list of roles.
@@ -19,7 +18,7 @@ export const getRoles = async (req: Request, res: Response) => {
    */
   const filter = RolesFilterSchema.safeParse(req.query);
   if (filter.success) {
-    const roles = await userServices.getRoles(); //await rolesServices.getRoles(filter.data as RolesFilter);
+    const roles = await rolesServices.getRoles(filter.data as RolesFilter); //await rolesServices.getRoles(filter.data as RolesFilter);
     return res.status(200).send(roles);
   } else {
     return res.status(400).send('Could not parse filter.');

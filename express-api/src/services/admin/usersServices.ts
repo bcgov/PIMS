@@ -1,13 +1,13 @@
 import { AppDataSource } from '@/appDataSource';
-import { Users } from '@/typeorm/Entities/Users';
+import { Users } from '@/typeorm/Entities/Users_Agencies_Roles_Claims';
 import { UserFiltering } from '../../controllers/admin/users/usersSchema';
 import KeycloakService from '../keycloak/keycloakService';
 
 const getUsers = async (filter: UserFiltering) => {
   const users = await AppDataSource.getRepository(Users).find({
     relations: {
-      Agencies: true,
-      Roles: true,
+      UserAgencies: true,
+      UserRoles: { Role: true },
     },
     where: {
       Id: filter.id,
@@ -15,11 +15,15 @@ const getUsers = async (filter: UserFiltering) => {
       DisplayName: filter.displayName,
       LastName: filter.lastName,
       Email: filter.email,
-      Agencies: {
-        Name: filter.agency,
+      UserAgencies: {
+        Agency: {
+          Name: filter.agency,
+        },
       },
-      Roles: {
-        Name: filter.role,
+      UserRoles: {
+        Role: {
+          Name: filter.role,
+        },
       },
       IsDisabled: filter.isDisabled,
       Position: filter.position,
@@ -27,7 +31,6 @@ const getUsers = async (filter: UserFiltering) => {
     take: filter.quantity,
     skip: filter.page,
   });
-
   return users;
 };
 
@@ -48,17 +51,17 @@ const deleteUser = async (user: Users) => {
   return retUser;
 };
 
-const getRoles = async () => {
+const getKeycloakRoles = async () => {
   const roles = await KeycloakService.getKeycloakRoles();
   return roles.map((a) => a.name);
 };
 
-const getUserRoles = async (username: string) => {
+const getKeycloakUserRoles = async (username: string) => {
   const keycloakRoles = await KeycloakService.getKeycloakUserRoles(username);
   return keycloakRoles.map((a) => a.name);
 };
 
-const updateUserRoles = async (username: string, roleNames: string[]) => {
+const updateKeycloakUserRoles = async (username: string, roleNames: string[]) => {
   const keycloakRoles = await KeycloakService.updateKeycloakUserRoles(username, roleNames);
   return keycloakRoles.map((a) => a.name);
 };
@@ -68,9 +71,9 @@ const userServices = {
   addUser,
   updateUser,
   deleteUser,
-  getRoles,
-  getUserRoles,
-  updateUserRoles,
+  getKeycloakRoles,
+  getKeycloakUserRoles,
+  updateKeycloakUserRoles,
 };
 
 export default userServices;

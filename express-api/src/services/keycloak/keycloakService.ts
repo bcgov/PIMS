@@ -21,12 +21,11 @@ import {
   IDIRUserQuery,
 } from '@bcgov/citz-imb-kc-css-api';
 import rolesServices from '../admin/rolesServices';
-import { Roles } from '@/typeorm/Entities/Roles';
 import { randomUUID } from 'crypto';
 import { AppDataSource } from '@/appDataSource';
-import { In, Not } from 'typeorm';
+import { DeepPartial, In, Not } from 'typeorm';
 import userServices from '../admin/usersServices';
-import { Users } from '@/typeorm/Entities/Users';
+import { Users, Roles } from '@/typeorm/Entities/Users_Agencies_Roles_Claims';
 
 /**
  * @description Sync keycloak roles into PIMS roles.
@@ -51,16 +50,16 @@ const syncKeycloakRoles = async () => {
         KeycloakGroupId: '',
         Description: '',
         IsPublic: false,
-        Users: [],
-        Claims: [],
         CreatedById: undefined,
         CreatedOn: undefined,
         UpdatedById: undefined,
         UpdatedOn: undefined,
+        UserRoles: [],
+        RoleClaims: [],
       };
       rolesServices.addRole(newRole);
     } else {
-      const overwriteRole: Roles = {
+      const overwriteRole: DeepPartial<Roles> = {
         Id: internalRole[0].Id,
         Name: role.name,
         IsDisabled: false,
@@ -68,8 +67,6 @@ const syncKeycloakRoles = async () => {
         KeycloakGroupId: '',
         Description: '',
         IsPublic: false,
-        Users: [],
-        Claims: [],
         CreatedById: undefined,
         CreatedOn: undefined,
         UpdatedById: undefined,
@@ -172,8 +169,8 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
         KeycloakGroupId: '',
         Description: '',
         IsPublic: false,
-        Users: [],
-        Claims: [],
+        UserRoles: [],
+        RoleClaims: [],
         CreatedById: undefined,
         CreatedOn: undefined,
         UpdatedById: undefined,
@@ -183,6 +180,7 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const newUsersRoles = await AppDataSource.getRepository(Roles).find({
     where: { Name: In(kroles.map((a) => a.name)) },
   });
@@ -209,13 +207,19 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
       ApprovedById: undefined,
       ApprovedOn: undefined,
       KeycloakUserId: keycloakGuid,
-      Roles: newUsersRoles,
-      Agencies: [],
+      UserRoles: [],
+      UserAgencies: [],
     };
     return await userServices.addUser(newUser);
   } else {
-    internalUser[0].Roles = newUsersRoles;
-    return await userServices.updateUser(internalUser[0]);
+    // internalUser[0].UserRoles = newUsersRoles.map((a) => ({
+    //   UserId: internalUser[0].Id,
+    //   RoleId: a.Id,
+    //   User: internalUser[0],
+    //   Role: a,
+    // }));
+    // return await userServices.updateUser(internalUser[0]);
+    return;
   }
 };
 

@@ -1,4 +1,4 @@
-import { Users } from '@/typeorm/Entities/Users';
+import { Users } from '@/typeorm/Entities/Users_Agencies_Roles_Claims';
 import { Column, CreateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
 
 export abstract class BaseEntity {

@@ -1,8 +1,8 @@
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { Projects } from '@/typeorm/Entities/Projects';
-import { Agencies } from '@/typeorm/Entities/Agencies';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
+import { Agencies } from './Users_Agencies_Roles_Claims';
 
 @Entity()
 export class ProjectAgencyResponses extends BaseEntity {

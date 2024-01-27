@@ -160,7 +160,7 @@ export const getAllRoles = async (req: Request, res: Response) => {
   if (!username) {
     return res.status(400).send('Username was empty.');
   }
-  const roles = await userServices.getUserRoles(username);
+  const roles = await userServices.getKeycloakUserRoles(username);
   return res.status(200).send(roles);
 };
 
@@ -182,7 +182,7 @@ export const getUserRolesByName = async (req: Request, res: Response) => {
   if (!username) {
     return res.status(400).send('Username was empty.');
   }
-  const roles = await userServices.getUserRoles(username);
+  const roles = await userServices.getKeycloakUserRoles(username);
   return res.status(200).send(roles);
 };
 
@@ -195,7 +195,7 @@ export const updateUserRolesByName = async (req: Request, res: Response) => {
   if (!username) {
     return res.status(400).send('Username was empty.');
   }
-  const updatedRoles = await userServices.updateUserRoles(username, roles.data);
+  const updatedRoles = await userServices.updateKeycloakUserRoles(username, roles.data);
   return res.status(200).send(updatedRoles);
 };
 

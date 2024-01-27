@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AccessRequests } from '@/typeorm/Entities/AccessRequests';
-import { Agencies } from '@/typeorm/Entities/Agencies';
-import { Users } from '@/typeorm/Entities/Users';
-import { Roles as RolesEntity } from '@/typeorm/Entities/Roles';
+import {
+  Agencies,
+  Users,
+  Roles as RolesEntity,
+} from '@/typeorm/Entities/Users_Agencies_Roles_Claims';
 import { faker } from '@faker-js/faker';
 import { UUID } from 'crypto';
 import { Request, Response } from 'express';
@@ -95,8 +97,8 @@ export const produceUser = (): Users => {
     ApprovedById: undefined,
     ApprovedOn: undefined,
     KeycloakUserId: faker.string.uuid() as UUID,
-    Roles: [],
-    Agencies: [],
+    UserRoles: [],
+    UserAgencies: [],
   };
 };
 
@@ -128,7 +130,7 @@ export const produceAgency = (): Agencies => {
     SendEmail: false,
     AddressTo: '',
     CCEmail: faker.internet.email(),
-    Agencies: [],
+    UserAgencies: [],
     CreatedById: produceUser(),
     CreatedOn: new Date(),
     UpdatedById: produceUser(),
@@ -150,7 +152,7 @@ export const produceRole = (): RolesEntity => {
     SortOrder: 0,
     KeycloakGroupId: faker.string.uuid() as UUID,
     IsPublic: false,
-    Users: [],
-    Claims: [],
+    UserRoles: [],
+    RoleClaims: [],
   };
 };

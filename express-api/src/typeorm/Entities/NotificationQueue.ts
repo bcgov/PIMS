@@ -2,8 +2,8 @@ import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UUID } from 'crypto';
 import { Projects } from '@/typeorm/Entities/Projects';
-import { Agencies } from '@/typeorm/Entities/Agencies';
 import { NotificationTemplates } from '@/typeorm/Entities/NotificationTemplates';
+import { Agencies } from './Users_Agencies_Roles_Claims';
 
 @Entity()
 @Index(['Status', 'SendOn', 'Subject'])

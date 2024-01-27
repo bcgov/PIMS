@@ -1,9 +1,9 @@
-import { Users } from '@/typeorm/Entities/Users';
+import { Agencies, Users } from '@/typeorm/Entities/Users_Agencies_Roles_Claims';
 import { AppDataSource } from '@/appDataSource';
 import { KeycloakBCeIDUser, KeycloakIdirUser, KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { z } from 'zod';
 import { AccessRequests } from '@/typeorm/Entities/AccessRequests';
-import { Agencies } from '@/typeorm/Entities/Agencies';
+import { In } from 'typeorm';
 
 interface NormalizedKeycloakUser {
   given_name: string;
@@ -137,28 +137,46 @@ const updateAccessRequest = async (updateRequest: AccessRequests, kcUser: Keyclo
 
 const getAgencies = async (username: string) => {
   const user = await getUser(username);
-  const userAgencies = await AppDataSource.getRepository(Users)
-    .createQueryBuilder('Users')
-    .leftJoinAndSelect('Users.Agencies', 'Agencies')
-    .where('User.Id = :userId', { userId: user.Id })
-    .getOneOrFail();
-  const agencies = userAgencies.Agencies.map((a) => a.Id);
-  const children = await AppDataSource.getRepository(Agencies)
-    .createQueryBuilder('Agencies')
-    .where('Agencies.ParentId IN (:...ids)', { ids: agencies })
-    .getMany();
+  const userAgencies = await AppDataSource.getRepository(Users).findOneOrFail({
+    relations: {
+      UserAgencies: { Agency: true },
+    },
+    where: {
+      Id: user.Id,
+    },
+  });
+  const agencies = userAgencies.UserAgencies.map((a) => a.Agency.Id);
+  const children = await AppDataSource.getRepository(Agencies).find({
+    where: {
+      ParentId: In(agencies),
+    },
+  });
+  // .createQueryBuilder('Agencies')
+  // .where('Agencies.ParentId IN (:...ids)', { ids: agencies })
+  // .getMany();
   return [...agencies, ...children.map((c) => c.Id)];
 };
 
 const getAdministrators = async (agencyIds: string[]) => {
-  const admins = await AppDataSource.getRepository(Users)
-    .createQueryBuilder('Users')
-    .leftJoinAndSelect('Users.Roles', 'Roles')
-    .leftJoinAndSelect('Roles.Claims', 'Claims')
-    .leftJoinAndSelect('Users.Agencies', 'Agencies')
-    .where('Agencies.Id IN (:...agencyIds)', { agencyIds: agencyIds })
-    .andWhere('Claims.Name = :systemAdmin', { systemAdmin: 'System Admin' })
-    .getMany();
+  const admins = await AppDataSource.getRepository(Users).find({
+    relations: {
+      UserRoles: { Role: { RoleClaims: { Claim: true } } },
+      UserAgencies: { Agency: true },
+    },
+    where: {
+      UserAgencies: {
+        Agency: In(agencyIds),
+      },
+      UserRoles: { Role: { RoleClaims: { Claim: { Name: 'System Admin' } } } },
+    },
+  });
+  // .createQueryBuilder('Users')
+  // .leftJoinAndSelect('Users.Roles', 'Roles')
+  // .leftJoinAndSelect('Roles.Claims', 'Claims')
+  // .leftJoinAndSelect('Users.Agencies', 'Agencies')
+  // .where('Agencies.Id IN (:...agencyIds)', { agencyIds: agencyIds })
+  // .andWhere('Claims.Name = :systemAdmin', { systemAdmin: 'System Admin' })
+  // .getMany();
 
   return admins;
 };
