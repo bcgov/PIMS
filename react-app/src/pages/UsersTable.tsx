@@ -9,13 +9,50 @@ import {
   debounce,
   useTheme,
   IconButton,
+  Select,
+  ListSubheader,
+  MenuItem,
 } from '@mui/material';
 import { GridColDef, useGridApiRef } from '@mui/x-data-grid';
-import React, { useEffect, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useState } from 'react';
 import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import KeywordSearch from '@/components/table/KeywordSearch';
 import { IUser } from '@/interfaces/IUser';
+
+const CustomMenuItem = (props: PropsWithChildren & { value: string }) => {
+  const theme = useTheme();
+  return (
+    <MenuItem
+      sx={{
+        fontSize: theme.typography.fontSize,
+        fontWeight: theme.typography.fontWeightMedium,
+        height: '2.3em',
+      }}
+      {...props}
+    >
+      {props.children}
+    </MenuItem>
+  );
+};
+
+const CustomListSubheader = (props: PropsWithChildren) => {
+  const theme = useTheme();
+  return (
+    <ListSubheader
+      sx={{
+        fontSize: theme.typography.fontSize,
+        fontWeight: theme.typography.fontWeightBold,
+        color: 'rgba(0, 0, 0, 1)',
+        height: '2.3em',
+        marginBottom: '5px',
+      }}
+      {...props}
+    >
+      {props.children}
+    </ListSubheader>
+  );
+};
 
 const UsersTable = () => {
   // States and contexts
@@ -68,6 +105,44 @@ const UsersTable = () => {
       day: '2-digit',
       year: 'numeric',
     }).format(new Date(params.value));
+
+  // Sets the preset filter based on the select input
+  const selectPresetFilter = (value: string) => {
+    // Clear the quick search contents
+    setKeywordSearchContents('');
+    switch (value) {
+      case 'all':
+        apiRef.current.setFilterModel({ items: [] });
+        break;
+      // All Status filters
+      case 'active':
+      case 'pending':
+      case 'hold':
+        apiRef.current.setFilterModel({
+          items: [
+            {
+              value,
+              operator: 'contains',
+              field: 'status',
+            },
+          ],
+        });
+        break;
+      // All Role filters
+      case 'user':
+      case 'admin':
+        apiRef.current.setFilterModel({
+          items: [
+            {
+              value,
+              operator: 'contains',
+              field: 'role',
+            },
+          ],
+        });
+        break;
+    }
+  };
 
   // Defines the columns used in the table.
   const columns: GridColDef[] = [
@@ -182,10 +257,38 @@ const UsersTable = () => {
                 <></>
               )}
             </Box>
-            <KeywordSearch
-              onChange={updateSearchValue}
-              optionalExternalState={[keywordSearchContents, setKeywordSearchContents]}
-            />
+            <Box
+              display={'flex'}
+              maxHeight={'2.5em'}
+              sx={{
+                '> *': {
+                  // Applies to all children
+                  margin: '0 5px',
+                },
+              }}
+            >
+              <KeywordSearch
+                onChange={updateSearchValue}
+                optionalExternalState={[keywordSearchContents, setKeywordSearchContents]}
+              />
+              <Select
+                onChange={(e) => {
+                  selectPresetFilter(e.target.value);
+                }}
+                defaultValue={'all'}
+                sx={{ width: '10em' }}
+              >
+                <CustomMenuItem value={'all'}>All Users</CustomMenuItem>
+                <CustomListSubheader>Status</CustomListSubheader>
+                <CustomMenuItem value={'active'}>Active</CustomMenuItem>
+                <CustomMenuItem value={'pending'}>Pending</CustomMenuItem>
+                <CustomMenuItem value={'hold'}>Hold</CustomMenuItem>
+
+                <CustomListSubheader>Role</CustomListSubheader>
+                <CustomMenuItem value={'user'}>User</CustomMenuItem>
+                <CustomMenuItem value={'admin'}>System Admin</CustomMenuItem>
+              </Select>
+            </Box>
           </Box>
           <CustomDataGrid
             getRowId={(row) => row.id}

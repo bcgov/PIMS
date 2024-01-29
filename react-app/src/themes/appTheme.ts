@@ -62,6 +62,7 @@ const appTheme = createTheme({
     },
   },
   typography: {
+    fontWeightMedium: 400,
     fontFamily: ['BC Sans', 'Verdana', 'Arial', 'sans-serif'].join(','),
     h1: {
       fontSize: '2.25rem',
@@ -105,6 +106,16 @@ const appTheme = createTheme({
         },
         textPrimary: {
           color: '#000',
+        },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          boxShadow: 'none',
+          ':hover': {
+            boxShadow: 'none',
+          },
         },
       },
     },
