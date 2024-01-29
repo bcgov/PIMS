@@ -10,13 +10,15 @@ import {
   Typography,
   debounce,
   useTheme,
+  IconButton,
 } from '@mui/material';
 import { GridColDef, useGridApiRef } from '@mui/x-data-grid';
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { UUID } from 'crypto';
 import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
+import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 
 // interface IAgency {
 //   createdOn: string;
@@ -72,9 +74,17 @@ interface IUser {
   roles: string;
 }
 
-const KeywordSearch = ({onChange}) => {
+interface IKeywordSearchProps {
+  onChange?: Function;
+  optionalExternalState?: [string, Dispatch<SetStateAction<string>>];
+}
+
+const KeywordSearch = (props: IKeywordSearchProps) => {
+  const { onChange, optionalExternalState } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [fieldContents, setFieldContents] = useState<string>();
+  const [fieldContents, setFieldContents] = optionalExternalState
+    ? optionalExternalState
+    : useState<string>('');
   const theme = useTheme();
 
   const commonStyle: SxProps = {
@@ -90,7 +100,7 @@ const KeywordSearch = ({onChange}) => {
     ...commonStyle,
     width: '240px',
     transition: 'width 0.3s ease-in, border 1s',
-    border: '1.5px solid grey',
+    border: `1.5px solid ${theme.palette.grey[400]}`,
     '&:focus-within': {
       border: '1.5px solid black',
     },
@@ -160,23 +170,29 @@ const KeywordSearch = ({onChange}) => {
 const UsersTable = () => {
   const [users, setUsers] = useState<IUser[]>([]);
   const [rowCount, setRowCount] = useState<number>(0);
+  const [keywordSearchContents, setKeywordSearchContents] = useState<string>('');
+  const [gridFilterItems, setGridFilterItems] = useState([]);
   const { getAuthorizationHeaderValue, state } = useKeycloak();
   const theme = useTheme();
   const apiRef = useGridApiRef();
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/v2/admin/users', {
-      headers: {
-        Authorization: getAuthorizationHeaderValue(),
-      },
-    })
-      .then(async (response) => {
-        const result: IUser[] = await response.json();
-        setUsers(result);
+    if (state.accessToken) {
+      fetch('http://localhost:5000/api/v2/admin/users', {
+        headers: {
+          Authorization: getAuthorizationHeaderValue(),
+        },
       })
-      .catch((e: unknown) => {
-        console.log(e);
-      });
+        .then(async (response) => {
+          if (response.ok) {
+            const result: IUser[] = await response.json();
+            setUsers(result);
+          }
+        })
+        .catch((e: unknown) => {
+          console.log(e);
+        });
+    }
   }, [state]);
 
   const colorMap = {
@@ -190,8 +206,6 @@ const UsersTable = () => {
       apiRef.current.setQuickFilterValues(newValue.split(' ').filter((word) => word !== ''));
     }, 100);
   }, [apiRef]);
-
-  
 
   const dateFormatter = (params) =>
     new Intl.DateTimeFormat('en-US', {
@@ -277,7 +291,16 @@ const UsersTable = () => {
   return (
     <BaseLayout>
       <Box display={'flex'} justifyContent={'center'}>
-        <Paper sx={{ width: '95vw', padding: '2rem', borderRadius: '32px' }}>
+        <Paper
+          sx={
+            {
+              width: '95vw',
+              padding: '2rem',
+              borderRadius: '32px',
+              height: 'fit-content',
+            } as SxProps
+          }
+        >
           <Box
             sx={{
               display: 'flex',
@@ -285,17 +308,40 @@ const UsersTable = () => {
               marginBottom: '1em',
             }}
           >
-            <Typography variant="h4">Users Overview ({rowCount ?? 0} users)</Typography>
-            <KeywordSearch onChange={updateSearchValue} />
+            <Box display={'flex'}>
+              <Typography variant="h4" alignSelf={'center'} marginRight={'1em'}>
+                Users Overview ({rowCount ?? 0} users)
+              </Typography>
+              {keywordSearchContents || gridFilterItems.length > 0 ? (
+                <IconButton
+                  onClick={() => {
+                    apiRef.current.setFilterModel({ items: [] });
+                    setKeywordSearchContents('');
+                  }}
+                >
+                  <FilterAltOffIcon />
+                </IconButton>
+              ) : (
+                <></>
+              )}
+            </Box>
+
+            <KeywordSearch
+              onChange={updateSearchValue}
+              optionalExternalState={[keywordSearchContents, setKeywordSearchContents]}
+            />
           </Box>
           <CustomDataGrid
             getRowId={(row) => row.id}
             columns={columns}
             rows={users}
             onStateChange={(e) => {
-              setRowCount(Object.values(e.filter.filteredRowsLookup).filter(
-                (value) => value,
-              ).length)
+              setRowCount(
+                Object.values(e.filter.filteredRowsLookup).filter((value) => value).length,
+              );
+            }}
+            onFilterModelChange={(e) => {
+              setGridFilterItems(e.items.filter((item) => item.value));
             }}
             apiRef={apiRef}
             initialState={{
@@ -307,6 +353,7 @@ const UsersTable = () => {
             pageSizeOptions={[10, 20, 30, 100]} // DataGrid max is 100
             disableRowSelectionOnClick
             sx={{
+              minHeight: '200px',
               overflow: 'scroll',
               // Neutralize the hover colour (causing a flash)
               '& .MuiDataGrid-row.Mui-hovered': {
