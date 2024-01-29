@@ -40,9 +40,12 @@ export const addRole = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  const role = await rolesServices.addRole(req.body);
-  return res.status(201).send(role);
+  try {
+    const role = await rolesServices.addRole(req.body);
+    return res.status(201).send(role);
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message);
+  }
 };
 
 /**
@@ -59,7 +62,6 @@ export const getRoleById = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
   const id = req.params.id;
   const role = rolesServices.getRoleById(id as UUID);
   if (!role) {
@@ -107,12 +109,15 @@ export const deleteRoleById = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  const id = req.params.id;
-  if (id != req.body.Id) {
-    return res.status(400).send('Request param id did not match request body id.');
-  } else {
-    const role = await rolesServices.removeRole(req.body);
-    return res.status(200).send(role);
+  try {
+    const id = req.params.id;
+    if (id != req.body.Id) {
+      return res.status(400).send('Request param id did not match request body id.');
+    } else {
+      const role = await rolesServices.removeRole(req.body);
+      return res.status(200).send(role);
+    }
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message);
   }
 };

@@ -46,7 +46,7 @@ const updateRole = async (role: DeepPartial<Roles>) => {
 const removeRole = async (role: Roles) => {
   const existing = await getRoleById(role.Id);
   if (!existing) {
-    throw new ErrorWithCode('Role already exists', 409);
+    throw new ErrorWithCode('Role was not found.', 409);
   }
   const retRole = AppDataSource.getRepository(Roles).remove(role);
   return retRole;

@@ -128,11 +128,11 @@ export const produceAgency = (): Agencies => {
     SendEmail: false,
     AddressTo: '',
     CCEmail: faker.internet.email(),
-    UserAgencies: [],
     CreatedById: produceUser(),
     CreatedOn: new Date(),
     UpdatedById: produceUser(),
     UpdatedOn: new Date(),
+    Users: [],
   };
   return agency;
 };
