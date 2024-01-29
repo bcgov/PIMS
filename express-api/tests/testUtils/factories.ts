@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AccessRequests } from '@/typeorm/Entities/AccessRequests';
-import {
-  Agencies,
-  Users,
-  Roles as RolesEntity,
-} from '@/typeorm/Entities/Users_Agencies_Roles_Claims';
+import { Agencies } from '@/typeorm/Entities/Agencies';
+import { Users, Roles as RolesEntity } from '@/typeorm/Entities/Users_Roles_Claims';
 import { faker } from '@faker-js/faker';
 import { UUID } from 'crypto';
 import { Request, Response } from 'express';
@@ -98,7 +95,8 @@ export const produceUser = (): Users => {
     ApprovedOn: undefined,
     KeycloakUserId: faker.string.uuid() as UUID,
     UserRoles: [],
-    UserAgencies: [],
+    Agency: undefined,
+    AgencyId: undefined,
   };
 };
 

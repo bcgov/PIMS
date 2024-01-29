@@ -65,16 +65,16 @@ export const getUserById = async (req: Request, res: Response) => {
       }]
    */
   const id = req.params.id;
-  const filter = UserFilteringSchema.safeParse({ id: id });
-  if (filter.success) {
-    const user = await userServices.getUsers(filter.data as UserFiltering);
-    if (user.length == 1) {
-      return res.status(200).send(user[0]);
+  const uuid = z.string().uuid().safeParse(id);
+  if (uuid.success) {
+    const user = await userServices.getUserById(uuid.data);
+    if (user) {
+      return res.status(200).send(user);
     } else {
       return res.status(500);
     }
   } else {
-    return res.status(400).send('Unable to parse filter.');
+    return res.status(400).send('Could not parse UUID.');
   }
 };
 
@@ -96,8 +96,12 @@ export const updateUserById = async (req: Request, res: Response) => {
   if (id != req.body.Id) {
     return res.status(400).send('The param ID does not match the request body.');
   }
-  const user = await userServices.updateUser(req.body);
-  return res.status(200).send(user);
+  try {
+    const user = await userServices.updateUser(req.body);
+    return res.status(200).send(user);
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message);
+  }
 };
 
 /**
@@ -119,8 +123,12 @@ export const deleteUserById = async (req: Request, res: Response) => {
   if (id != req.body.Id) {
     return res.status(400).send('The param ID does not match the request body.');
   }
-  const user = await userServices.deleteUser(req.body);
-  return res.status(200).send(user);
+  try {
+    const user = await userServices.deleteUser(req.body);
+    return res.status(200).send(user);
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message);
+  }
 };
 
 /**

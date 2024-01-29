@@ -1,7 +1,6 @@
 import userServices from '@/services/users/usersServices';
 import { Request, Response } from 'express';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
-
 /**
  * @description Redirects user to the keycloak user info endpoint.
  * @param {Request}     req Incoming request.
@@ -16,9 +15,25 @@ export const getUserInfo = async (req: Request, res: Response) => {
       "bearerAuth" : []
       }]
    */
-  const user = req.user;
-  if (user) {
-    return res.status(200).send(user);
+  const decodeJWT = (jwt: string) => {
+    try {
+      return JSON.parse(Buffer.from(jwt, 'base64').toString('ascii'));
+    } catch {
+      throw new Error('Invalid input in decodeJWT()');
+    }
+  };
+
+  if (!req.token) return res.status(400).send('No access token');
+  const [header, payload] = req.token.split('.');
+  if (!header || !payload) return null;
+
+  const info = {
+    header: decodeJWT(header),
+    payload: decodeJWT(payload),
+  };
+
+  if (info) {
+    return res.status(200).send(info.payload);
   } else {
     return res.status(400).send('No keycloak user authenticated.');
   }
@@ -46,7 +61,7 @@ export const getUserAccessRequestLatest = async (req: Request, res: Response) =>
     }
     return res.status(200).send(result);
   } catch (e) {
-    return res.status(400).send(e?.message);
+    return res.status(e?.code ?? 400).send(e?.message);
   }
 };
 
@@ -69,7 +84,7 @@ export const submitUserAccessRequest = async (req: Request, res: Response) => {
     const result = await userServices.addAccessRequest(req.body, user);
     return res.status(200).send(result);
   } catch (e) {
-    return res.status(400).send(e?.message);
+    return res.status(e?.code ?? 400).send(e?.message);
   }
 };
 
@@ -96,7 +111,7 @@ export const getUserAccessRequestById = async (req: Request, res: Response) => {
     }
     return res.status(200).send(result);
   } catch (e) {
-    return res.status(400).send(e?.message);
+    return res.status(e?.code ?? 400).send(e?.message);
   }
 };
 
@@ -119,7 +134,7 @@ export const updateUserAccessRequest = async (req: Request, res: Response) => {
     const result = await userServices.updateAccessRequest(req.body, user);
     return res.status(200).send(result);
   } catch (e) {
-    return res.status(400).send(e?.message);
+    return res.status(e?.code ?? 400).send(e?.message);
   }
 };
 
@@ -145,6 +160,6 @@ export const getUserAgencies = async (req: Request, res: Response) => {
     const result = await userServices.getAgencies(user);
     return res.status(200).send(result);
   } catch (e) {
-    return res.status(400).send(e?.message);
+    return res.status(e?.code ?? 400).send(e?.message);
   }
 };

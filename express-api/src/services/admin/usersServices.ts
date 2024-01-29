@@ -1,12 +1,14 @@
 import { AppDataSource } from '@/appDataSource';
-import { Users } from '@/typeorm/Entities/Users_Agencies_Roles_Claims';
+import { Users } from '@/typeorm/Entities/Users_Roles_Claims';
 import { UserFiltering } from '../../controllers/admin/users/usersSchema';
 import KeycloakService from '../keycloak/keycloakService';
+import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import { UUID } from 'crypto';
 
 const getUsers = async (filter: UserFiltering) => {
   const users = await AppDataSource.getRepository(Users).find({
     relations: {
-      UserAgencies: true,
+      Agency: true,
       UserRoles: { Role: true },
     },
     where: {
@@ -15,10 +17,8 @@ const getUsers = async (filter: UserFiltering) => {
       DisplayName: filter.displayName,
       LastName: filter.lastName,
       Email: filter.email,
-      UserAgencies: {
-        Agency: {
-          Name: filter.agency,
-        },
+      Agency: {
+        Name: filter.agency,
       },
       UserRoles: {
         Role: {
@@ -29,24 +29,46 @@ const getUsers = async (filter: UserFiltering) => {
       Position: filter.position,
     },
     take: filter.quantity,
-    skip: filter.page,
+    skip: filter.page * filter.quantity,
   });
   return users;
 };
 
-//type AddUserPayload = Users & { agencies: Agencies[]; roles: Roles[] };
+const getUserById = async (id: string) => {
+  return AppDataSource.getRepository(Users).findOne({
+    relations: {
+      Agency: true,
+      UserRoles: { Role: true },
+    },
+    where: {
+      Id: id as UUID,
+    },
+  });
+};
 
 const addUser = async (user: Users) => {
+  const resource = await AppDataSource.getRepository(Users).findOne({ where: { Id: user.Id } });
+  if (resource) {
+    throw new ErrorWithCode('Resource already exists.', 409);
+  }
   const retUser = await AppDataSource.getRepository(Users).save(user);
   return retUser;
 };
 
 const updateUser = async (user: Users) => {
+  const resource = await AppDataSource.getRepository(Users).findOne({ where: { Id: user.Id } });
+  if (!resource) {
+    throw new ErrorWithCode('Resource does not exist.', 404);
+  }
   const retUser = await AppDataSource.getRepository(Users).update(user.Id, user);
   return retUser.generatedMaps[0];
 };
 
 const deleteUser = async (user: Users) => {
+  const resource = await AppDataSource.getRepository(Users).findOne({ where: { Id: user.Id } });
+  if (!resource) {
+    throw new ErrorWithCode('Resource does not exist.', 404);
+  }
   const retUser = await AppDataSource.getRepository(Users).remove(user);
   return retUser;
 };
@@ -74,6 +96,7 @@ const userServices = {
   getKeycloakRoles,
   getKeycloakUserRoles,
   updateKeycloakUserRoles,
+  getUserById,
 };
 
 export default userServices;

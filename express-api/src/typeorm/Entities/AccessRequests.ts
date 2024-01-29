@@ -1,6 +1,7 @@
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
-import { Agencies, Users, Roles } from '@/typeorm/Entities/Users_Agencies_Roles_Claims';
+import { Users, Roles } from '@/typeorm/Entities/Users_Roles_Claims';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, Index, JoinColumn } from 'typeorm';
+import { Agencies } from './Agencies';
 
 @Entity()
 export class AccessRequests extends BaseEntity {

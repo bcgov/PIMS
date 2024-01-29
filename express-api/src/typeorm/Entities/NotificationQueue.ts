@@ -3,7 +3,7 @@ import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } 
 import { UUID } from 'crypto';
 import { Projects } from '@/typeorm/Entities/Projects';
 import { NotificationTemplates } from '@/typeorm/Entities/NotificationTemplates';
-import { Agencies } from './Users_Agencies_Roles_Claims';
+import { Agencies } from './Agencies';
 
 @Entity()
 @Index(['Status', 'SendOn', 'Subject'])

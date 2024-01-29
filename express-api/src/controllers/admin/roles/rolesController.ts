@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import rolesServices from '@/services/admin/rolesServices';
 import { RolesFilter, RolesFilterSchema } from '@/controllers/admin/roles/rolesSchema';
+import { UUID } from 'crypto';
 
 /**
  * @description Gets a paged list of roles.
@@ -60,16 +61,11 @@ export const getRoleById = async (req: Request, res: Response) => {
    */
 
   const id = req.params.id;
-  const filter = RolesFilterSchema.safeParse({ id: id });
-  if (filter.success) {
-    const roles = await rolesServices.getRoles(filter.data as RolesFilter);
-    if (roles.length == 1) {
-      return res.status(200).send(roles[0]);
-    } else {
-      return res.status(500);
-    }
+  const role = rolesServices.getRoleById(id as UUID);
+  if (!role) {
+    return res.status(404);
   } else {
-    return res.status(400).send('Could not parse filter.');
+    return res.status(200).send(role);
   }
 };
 

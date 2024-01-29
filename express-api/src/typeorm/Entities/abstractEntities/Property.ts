@@ -3,7 +3,7 @@ import { PropertyClassifications } from '@/typeorm/Entities/PropertyClassificati
 import { PropertyTypes } from '@/typeorm/Entities/PropertyTypes';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Column, ManyToOne, JoinColumn, Index, PrimaryGeneratedColumn, Point } from 'typeorm';
-import { Agencies } from '../Users_Agencies_Roles_Claims';
+import { Agencies } from '../Agencies';
 
 export abstract class Property extends BaseEntity {
   @PrimaryGeneratedColumn()

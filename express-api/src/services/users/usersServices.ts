@@ -1,9 +1,11 @@
-import { Agencies, Users } from '@/typeorm/Entities/Users_Agencies_Roles_Claims';
+import { Users } from '@/typeorm/Entities/Users_Roles_Claims';
 import { AppDataSource } from '@/appDataSource';
 import { KeycloakBCeIDUser, KeycloakIdirUser, KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { z } from 'zod';
 import { AccessRequests } from '@/typeorm/Entities/AccessRequests';
 import { In } from 'typeorm';
+import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import { Agencies } from '@/typeorm/Entities/Agencies';
 
 interface NormalizedKeycloakUser {
   given_name: string;
@@ -28,6 +30,8 @@ const getUser = async (nameOrGuid: string): Promise<Users> => {
 const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => {
   const provider = kcUser.identity_provider;
   const username = kcUser.preferred_username;
+  const normalizeUuid = (keycloakUuid: string) =>
+    keycloakUuid.toLowerCase().replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/g, '$1-$2-$3-$4-$5');
   let user;
   switch (provider) {
     case 'idir':
@@ -36,7 +40,7 @@ const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => 
         given_name: user.given_name,
         family_name: user.family_name,
         username: username,
-        guid: user.idir_user_guid,
+        guid: normalizeUuid(user.idir_user_guid),
       };
     case 'bceidbasic':
       user = kcUser as KeycloakBCeIDUser;
@@ -44,7 +48,7 @@ const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => 
         given_name: '',
         family_name: '',
         username: username,
-        guid: user.bceid_user_guid,
+        guid: normalizeUuid(user.bceid_user_guid),
       };
     default:
       throw new Error();
@@ -103,6 +107,12 @@ const getAccessRequestById = async (requestId: number, kcUser: KeycloakUser) => 
 };
 
 const deleteAccessRequest = async (accessRequest: AccessRequests) => {
+  const existing = await AppDataSource.getRepository(AccessRequests).findOne({
+    where: { Id: accessRequest.Id },
+  });
+  if (!existing) {
+    throw new ErrorWithCode('No access request found', 404);
+  }
   const deletedRequest = AppDataSource.getRepository(AccessRequests).remove(accessRequest);
   return deletedRequest;
 };
@@ -132,6 +142,9 @@ const updateAccessRequest = async (updateRequest: AccessRequests, kcUser: Keyclo
     { Id: updateRequest.Id },
     updateRequest,
   );
+  if (!result.affected) {
+    throw new ErrorWithCode('Resource not found.', 404);
+  }
   return result.generatedMaps[0];
 };
 
@@ -139,34 +152,32 @@ const getAgencies = async (username: string) => {
   const user = await getUser(username);
   const userAgencies = await AppDataSource.getRepository(Users).findOneOrFail({
     relations: {
-      UserAgencies: { Agency: true },
+      Agency: true,
     },
     where: {
       Id: user.Id,
     },
   });
-  const agencies = userAgencies.UserAgencies.map((a) => a.Agency.Id);
+  const agencyId = userAgencies.Agency.Id;
   const children = await AppDataSource.getRepository(Agencies).find({
     where: {
-      ParentId: In(agencies),
+      ParentId: { Id: agencyId },
     },
   });
   // .createQueryBuilder('Agencies')
   // .where('Agencies.ParentId IN (:...ids)', { ids: agencies })
   // .getMany();
-  return [...agencies, ...children.map((c) => c.Id)];
+  return [agencyId, ...children.map((c) => c.Id)];
 };
 
 const getAdministrators = async (agencyIds: string[]) => {
   const admins = await AppDataSource.getRepository(Users).find({
     relations: {
       UserRoles: { Role: { RoleClaims: { Claim: true } } },
-      UserAgencies: { Agency: true },
+      Agency: true,
     },
     where: {
-      UserAgencies: {
-        Agency: In(agencyIds),
-      },
+      Agency: In(agencyIds),
       UserRoles: { Role: { RoleClaims: { Claim: { Name: 'System Admin' } } } },
     },
   });

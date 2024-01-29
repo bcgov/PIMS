@@ -8,7 +8,9 @@ import {
   JoinColumn,
   PrimaryColumn,
   OneToMany,
+  Relation,
 } from 'typeorm';
+import { Agencies } from './Agencies';
 
 @Entity()
 export class Users {
@@ -78,8 +80,12 @@ export class Users {
   @Index({ unique: true })
   KeycloakUserId: string;
 
-  @OneToMany(() => UserAgencies, (userAgency) => userAgency.User, { cascade: true })
-  UserAgencies: UserAgencies[];
+  @Column({ name: 'AgencyId', type: 'varchar', length: 6 })
+  AgencyId: string;
+
+  @ManyToOne(() => Agencies, (agency) => agency.Users)
+  @JoinColumn({ name: 'AgencyId' })
+  Agency: Relation<Agencies>;
 
   @OneToMany('UserRoles', 'UserRoles.User', { cascade: true })
   UserRoles: UserRoles[];
@@ -103,62 +109,6 @@ abstract class BaseEntity {
 
   @Column({ type: 'timestamp', nullable: true })
   UpdatedOn: Date;
-}
-
-@Entity()
-@Index(['ParentId', 'IsDisabled', 'Id', 'Name', 'SortOrder']) // I'm not sure this index is needed. How often do we search by this group?
-export class Agencies extends BaseEntity {
-  @PrimaryColumn({ type: 'character varying', length: 6 })
-  Id: string;
-
-  @Column({ type: 'character varying', length: 150 })
-  Name: string;
-
-  @Column({ type: 'bit' })
-  IsDisabled: boolean;
-
-  @Column({ type: 'int' })
-  SortOrder: number;
-
-  @Column({ type: 'character varying', length: 500, nullable: true })
-  Description: string;
-
-  @ManyToOne(() => Agencies, (agency) => agency.Id)
-  @JoinColumn({ name: 'ParentId' })
-  @Index()
-  ParentId: Agencies;
-
-  @Column({ type: 'character varying', length: 150, nullable: true })
-  Email: string;
-
-  @Column({ type: 'bit' })
-  SendEmail: boolean;
-
-  @Column({ type: 'character varying', length: 100, nullable: true })
-  AddressTo: string;
-
-  @Column({ type: 'character varying', length: 250, nullable: true })
-  CCEmail: string;
-
-  @OneToMany(() => UserAgencies, (userAgency) => userAgency.Agency)
-  UserAgencies: UserAgencies[];
-}
-
-@Entity()
-export class UserAgencies extends BaseEntity {
-  @PrimaryColumn({ type: 'varchar', length: '6' })
-  AgencyId: string;
-
-  @PrimaryColumn()
-  UserId: string;
-
-  @ManyToOne(() => Users, (User) => User.UserAgencies)
-  @JoinColumn({ name: 'UserId', referencedColumnName: 'Id' })
-  User: Users;
-
-  @ManyToOne(() => Agencies, (Agency) => Agency.UserAgencies)
-  @JoinColumn({ name: 'AgencyId', referencedColumnName: 'Id' })
-  Agency: Agencies;
 }
 
 @Entity()
