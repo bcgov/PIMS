@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { stubResponse } from '@/utilities/stubResponse';
+import * as agencyService from '@/services/admin/agencyServices';
 
 /**
  * @description Gets a paged list of agencies.
@@ -15,9 +16,9 @@ export const getAgencies = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  // can use ErrorWithCode try catch 
+  const agencies = agencyService.getAgencies();
+  return res.status(200).send(agencies);
 };
 
 /**
@@ -55,6 +56,10 @@ export const getAgenciesFiltered = async (req: Request, res: Response) => {
    */
 
   // TODO: Replace stub response with controller logic
+  // pull out query 
+  const queryParams = req.query;
+
+  const reqUser = req.user;
   return stubResponse(res);
 };
 

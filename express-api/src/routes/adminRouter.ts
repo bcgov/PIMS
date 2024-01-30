@@ -59,8 +59,11 @@ router
 router.route(`/agencies`).get(getAgencies).post(addAgency);
 
 router.route(`/agencies/:id`).get(getAgencyById).put(updateAgencyById).delete(deleteAgencyById); // TODO: should put be a patch?
+// router.route(`/agencies/:id`).put(getAgencyById).put(updateAgencyById).delete(deleteAgencyById);
 
-router.route(`/agencies/filter`).post(getAgenciesFiltered); // TODO: Should this be GET with query strings?
+// router.route(`/agencies/filter`).post(getAgenciesFiltered); // TODO: Should this be GET with query strings?
+// this would work with singular parameter would it work as a query string (unknown amount of parameters)? 
+router.route(`/agencies/filter`).get(getAgenciesFiltered);
 
 // Endpoints for Admin Claims
 router.route(`/claims`).get(getClaims).post(addClaim);
