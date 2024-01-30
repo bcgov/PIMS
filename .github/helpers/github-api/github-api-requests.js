@@ -40,8 +40,8 @@
  */
 
 const { GITHUB_TOKEN, GITHUB_REPOSITORY } = process.env;
-const [GITHUB_OWNER, GITHUB_REPO] = GITHUB_REPOSITORY.split('/');
-const { Octokit } = require('@octokit/rest');
+const [GITHUB_OWNER, GITHUB_REPO] = GITHUB_REPOSITORY.split("/");
+const { Octokit } = require("@octokit/rest");
 
 // Create a personal access token at https://github.com/settings/tokens/new?scopes=repo
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
@@ -77,7 +77,7 @@ async function closeIssue(issue_number) {
     owner: GITHUB_OWNER,
     repo: GITHUB_REPO,
     issue_number,
-    state: 'closed',
+    state: "closed",
   });
   console.log(request.data);
   return request;
@@ -91,7 +91,7 @@ async function closeIssue(issue_number) {
  * @example
  * findIssueByTitle('My Issue');
  */
-async function findIssueByTitle(title, state = 'open') {
+async function findIssueByTitle(title, state = "open") {
   const { data: issues } = await octokit.rest.issues.listForRepo({
     owner: GITHUB_OWNER,
     repo: GITHUB_REPO,
