@@ -25,7 +25,7 @@ export const getUserInfo = async (req: Request, res: Response) => {
 
   if (!req.token) return res.status(400).send('No access token');
   const [header, payload] = req.token.split('.');
-  if (!header || !payload) return null;
+  if (!header || !payload) return res.status(400).send('Bad token format.');
 
   const info = {
     header: decodeJWT(header),

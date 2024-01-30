@@ -1,6 +1,6 @@
 import { AppDataSource } from '@/appDataSource';
 import rolesServices from '@/services/admin/rolesServices';
-import { Roles } from '@/typeorm/Entities/Roles';
+import { Roles } from '@/typeorm/Entities/Users_Roles_Claims';
 import { produceRole } from 'tests/testUtils/factories';
 import { DeepPartial } from 'typeorm';
 
@@ -12,10 +12,14 @@ const _rolesSave = jest
   .mockImplementation(async (role: DeepPartial<Roles> & Roles) => role);
 const _rolesUpdate = jest
   .spyOn(AppDataSource.getRepository(Roles), 'update')
-  .mockImplementation(async (id, role) => ({ raw: {}, generatedMaps: [role] }));
+  .mockImplementation(async (id, role) => ({ raw: {}, generatedMaps: [role], affected: 1 }));
 const _rolesRemove = jest
   .spyOn(AppDataSource.getRepository(Roles), 'remove')
   .mockImplementation(async (role) => role);
+
+const _roleFindOne = jest
+  .spyOn(AppDataSource.getRepository(Roles), 'findOne')
+  .mockImplementation(async () => produceRole());
 
 describe('UNIT - Admin roles services', () => {
   beforeEach(() => jest.clearAllMocks());
@@ -30,6 +34,7 @@ describe('UNIT - Admin roles services', () => {
 
   describe('addRole', () => {
     it('should save a role and return it', async () => {
+      _roleFindOne.mockResolvedValueOnce(null);
       const role = produceRole();
       const ret = await rolesServices.addRole(role);
       expect(_rolesSave).toHaveBeenCalledTimes(1);

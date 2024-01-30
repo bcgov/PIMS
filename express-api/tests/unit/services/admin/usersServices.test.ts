@@ -1,8 +1,7 @@
 import { AppDataSource } from '@/appDataSource';
 import userServices from '@/services/admin/usersServices';
 import { IKeycloakRole } from '@/services/keycloak/IKeycloakRole';
-import { Users } from '@/typeorm/Entities/Users';
-import { randomUUID } from 'crypto';
+import { Users } from '@/typeorm/Entities/Users_Roles_Claims';
 import { produceUser } from 'tests/testUtils/factories';
 import { DeepPartial } from 'typeorm';
 import { z } from 'zod';
@@ -10,6 +9,10 @@ import { z } from 'zod';
 const _usersFind = jest
   .spyOn(AppDataSource.getRepository(Users), 'find')
   .mockImplementation(async () => [produceUser()]);
+
+const _usersFindOne = jest
+  .spyOn(AppDataSource.getRepository(Users), 'findOne')
+  .mockImplementation(async () => produceUser());
 
 const _usersSave = jest
   .spyOn(AppDataSource.getRepository(Users), 'save')
@@ -24,10 +27,10 @@ const _usersRemove = jest
   .mockImplementation(async (user) => user);
 
 jest.mock('@/services/keycloak/keycloakService', () => ({
-  getKeycloakRoles: (): IKeycloakRole[] => [{ name: 'abc', id: randomUUID() }],
-  getKeycloakUserRoles: (): IKeycloakRole[] => [{ name: 'abc', id: randomUUID() }],
+  getKeycloakRoles: (): IKeycloakRole[] => [{ name: 'abc' }],
+  getKeycloakUserRoles: (): IKeycloakRole[] => [{ name: 'abc' }],
   updateKeycloakUserRoles: (username: string, roles: string[]): IKeycloakRole[] =>
-    roles.map((a) => ({ name: a, id: randomUUID() })),
+    roles.map((a) => ({ name: a })),
 }));
 
 describe('UNIT - admin user services', () => {
@@ -41,6 +44,7 @@ describe('UNIT - admin user services', () => {
   describe('addUser', () => {
     it('should insert and return the added user', async () => {
       const user = produceUser();
+      _usersFindOne.mockResolvedValueOnce(null);
       const retUser = await userServices.addUser(user);
       expect(_usersSave).toHaveBeenCalledTimes(1);
       expect(user.Id).toBe(retUser.Id);
@@ -64,20 +68,20 @@ describe('UNIT - admin user services', () => {
   });
   describe('getRoles', () => {
     it('should get names of roles in keycloak', async () => {
-      const roles = await userServices.getRoles();
+      const roles = await userServices.getKeycloakRoles();
       expect(z.string().array().safeParse(roles).success).toBe(true);
     });
   });
   describe('getUserRoles', () => {
     it('should get names of users roles in keycloak', async () => {
-      const roles = await userServices.getUserRoles('test');
+      const roles = await userServices.getKeycloakUserRoles('test');
       expect(z.string().array().safeParse(roles).success).toBe(true);
     });
   });
   describe('updateUserRoles', () => {
     it('should update (put style) users roles in keycloak', async () => {
       const newRoles = ['admin', 'test'];
-      const roles = await userServices.updateUserRoles('test', newRoles);
+      const roles = await userServices.updateKeycloakUserRoles('test', newRoles);
       expect(z.string().array().safeParse(roles).success).toBe(true);
       newRoles.forEach((a, i) => expect(a).toBe(newRoles[i]));
     });

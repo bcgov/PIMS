@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request, Response } from 'express';
 import controllers from '@/controllers';
-import { MockReq, MockRes, getRequestHandlerMocks, produceRequest } from '../../../testUtils/factories';
+import {
+  MockReq,
+  MockRes,
+  getRequestHandlerMocks,
+  produceRequest,
+} from '../../../testUtils/factories';
 import { IKeycloakUser } from '@/services/keycloak/IKeycloakUser';
 import { AccessRequests } from '@/typeorm/Entities/AccessRequests';
 import { faker } from '@faker-js/faker';
@@ -39,25 +44,12 @@ describe('UNIT - Testing controllers for users routes.', () => {
 
   describe('GET /users/info ', () => {
     it('should return status 200 and keycloak info', async () => {
-      const keycloakUser: IKeycloakUser = {
-        username: 'test',
-        email: 'test',
-        firstName: 'test',
-        lastName: 'test',
-        attributes: {
-          display_name: ['test'],
-          idir_user_guid: ['test'],
-          idir_username: ['test'],
-          bceid_business_guid: ['test'],
-          bceid_business_name: ['test'],
-          bceid_user_guid: ['test'],
-          bceid_username: ['test'],
-        },
-      };
-      mockRequest.user = keycloakUser;
+      const header = { a: faker.string.alphanumeric() };
+      const payload = { b: faker.string.alphanumeric() };
+      mockRequest.token = btoa(JSON.stringify(header)) + '.' + btoa(JSON.stringify(payload));
       await controllers.getUserInfo(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
-      expect(mockResponse.sendValue.username).toBe('test');
+      expect(mockResponse.sendValue.b).toBe(payload.b);
     });
   });
 

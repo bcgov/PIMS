@@ -44,6 +44,7 @@ const _getUserRoles = jest.fn().mockImplementation(() => {
 const _updateUserRoles = jest.fn().mockImplementation((username, roles) => {
   return [roles];
 });
+const _getUserById = jest.fn().mockImplementation(() => produceUser());
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 jest.mock('@/services/admin/usersServices', () => ({
@@ -51,9 +52,10 @@ jest.mock('@/services/admin/usersServices', () => ({
   addUser: () => _addUser(),
   updateUser: () => _updateUser(),
   deleteUser: () => _deleteUser(),
-  getRoles: () => _getRoles(),
-  getUserRoles: () => _getUserRoles(),
-  updateUserRoles: () => _updateUserRoles(),
+  getKeycloakRoles: () => _getRoles(),
+  getKeycloakUserRoles: () => _getUserRoles(),
+  updateKeycloakUserRoles: () => _updateUserRoles(),
+  getUserById: () => _getUserById(),
 }));
 
 describe('UNIT - Users Admin', () => {
@@ -113,7 +115,7 @@ describe('UNIT - Users Admin', () => {
   describe('Controller getUserById', () => {
     const user = produceUser();
     beforeEach(() => {
-      _getUsers.mockImplementationOnce(() => [user]);
+      _getUserById.mockImplementationOnce(() => user);
     });
 
     it('should return status 200 and the user info', async () => {

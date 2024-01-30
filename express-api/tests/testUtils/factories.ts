@@ -73,12 +73,13 @@ export const getRequestHandlerMocks = () => {
 };
 
 export const produceUser = (): Users => {
+  const id = faker.string.uuid() as UUID;
   return {
     CreatedOn: faker.date.anytime(),
     UpdatedOn: faker.date.anytime(),
     UpdatedById: undefined,
     CreatedById: undefined,
-    Id: faker.string.uuid() as UUID,
+    Id: id,
     DisplayName: faker.company.name(),
     FirstName: faker.person.firstName(),
     MiddleName: faker.person.middleName(),
@@ -95,7 +96,7 @@ export const produceUser = (): Users => {
     ApprovedOn: undefined,
     KeycloakUserId: faker.string.uuid() as UUID,
     UserRoles: [],
-    Agency: undefined,
+    Agency: produceAgency(id),
     AgencyId: undefined,
   };
 };
@@ -116,9 +117,9 @@ export const produceRequest = (): AccessRequests => {
   return request;
 };
 
-export const produceAgency = (): Agencies => {
+export const produceAgency = (userId?: string): Agencies => {
   const agency: Agencies = {
-    Id: faker.string.numeric(6),
+    Id: userId ?? faker.string.numeric(6),
     Name: faker.company.name(),
     IsDisabled: false,
     SortOrder: 0,
@@ -128,9 +129,9 @@ export const produceAgency = (): Agencies => {
     SendEmail: false,
     AddressTo: '',
     CCEmail: faker.internet.email(),
-    CreatedById: produceUser(),
+    CreatedById: undefined,
     CreatedOn: new Date(),
-    UpdatedById: produceUser(),
+    UpdatedById: undefined,
     UpdatedOn: new Date(),
     Users: [],
   };

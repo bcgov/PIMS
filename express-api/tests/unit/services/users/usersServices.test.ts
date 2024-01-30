@@ -3,7 +3,7 @@ import { AppDataSource } from '@/appDataSource';
 import userServices from '@/services/users/usersServices';
 import { AccessRequests } from '@/typeorm/Entities/AccessRequests';
 import { Agencies } from '@/typeorm/Entities/Agencies';
-import { Users } from '@/typeorm/Entities/Users';
+import { Users } from '@/typeorm/Entities/Users_Roles_Claims';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { produceAgency, produceRequest, produceUser } from 'tests/testUtils/factories';
 
@@ -25,7 +25,12 @@ const _requestInsert = jest
 
 const _requestUpdate = jest
   .spyOn(AppDataSource.getRepository(AccessRequests), 'update')
-  .mockImplementation(async (req) => ({ raw: {}, generatedMaps: [], identifiers: [] }));
+  .mockImplementation(async (id, req) => ({
+    raw: {},
+    generatedMaps: [req],
+    identifiers: [],
+    affected: 1,
+  }));
 
 const _requestRemove = jest
   .spyOn(AppDataSource.getRepository(AccessRequests), 'remove')
@@ -41,44 +46,37 @@ const _requestsCreateQueryBuilder: any = {
   getOne: () => _requestQueryGetOne(),
 };
 
-const _userQueryGetOne = jest.fn().mockImplementation(() => produceUser());
-const _userQueryGetOneOrFail = jest.fn().mockImplementation(() => produceUser());
-const _usersQueryGetMany = jest.fn().mockImplementation(() => [produceUser(), produceUser()]);
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const _usersCreateQueryBuilder: any = {
-  select: () => _usersCreateQueryBuilder,
-  leftJoinAndSelect: () => _usersCreateQueryBuilder,
-  where: () => _usersCreateQueryBuilder,
-  andWhere: () => _usersCreateQueryBuilder,
-  orderBy: () => _usersCreateQueryBuilder,
-  getOne: () => _userQueryGetOne(),
-  getOneOrFail: () => _userQueryGetOneOrFail(),
-  getMany: () => _usersQueryGetMany(),
-};
-
-const _agenciesGetMany = jest.fn().mockImplementation(() => [produceAgency(), produceAgency()]);
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const _agenciesCreateQueryBuilder: any = {
-  select: () => _agenciesCreateQueryBuilder,
-  leftJoinAndSelect: () => _agenciesCreateQueryBuilder,
-  where: () => _agenciesCreateQueryBuilder,
-  andWhere: () => _agenciesCreateQueryBuilder,
-  orderBy: () => _agenciesCreateQueryBuilder,
-  getOne: () => {},
-  getMany: () => _agenciesGetMany(),
-};
-
 jest
   .spyOn(AppDataSource.getRepository(AccessRequests), 'createQueryBuilder')
   .mockImplementation(() => _requestsCreateQueryBuilder);
 
 jest
-  .spyOn(AppDataSource.getRepository(Users), 'createQueryBuilder')
-  .mockImplementation(() => _usersCreateQueryBuilder);
+  .spyOn(AppDataSource.getRepository(Users), 'find')
+  .mockImplementation(async () => [produceUser()]);
 
 jest
-  .spyOn(AppDataSource.getRepository(Agencies), 'createQueryBuilder')
-  .mockImplementation(() => _agenciesCreateQueryBuilder);
+  .spyOn(AppDataSource.getRepository(Users), 'findOneOrFail')
+  .mockImplementation(async () => produceUser());
+
+jest
+  .spyOn(AppDataSource.getRepository(AccessRequests), 'findOne')
+  .mockImplementation(async () => produceRequest());
+
+jest
+  .spyOn(AppDataSource.getRepository(AccessRequests), 'findOneOrFail')
+  .mockImplementation(async () => produceRequest());
+
+jest
+  .spyOn(AppDataSource.getRepository(Agencies), 'findOne')
+  .mockImplementation(async () => produceAgency());
+
+jest
+  .spyOn(AppDataSource.getRepository(Agencies), 'findOneOrFail')
+  .mockImplementation(async () => produceAgency());
+
+jest
+  .spyOn(AppDataSource.getRepository(Agencies), 'find')
+  .mockImplementation(async () => [produceAgency()]);
 
 describe('UNIT - User services', () => {
   beforeEach(() => {
@@ -166,7 +164,8 @@ describe('UNIT - User services', () => {
   describe('getAgencies', () => {
     it('should return an array of agency ids', async () => {
       const agencies = await userServices.getAgencies('test');
-      expect(_agenciesGetMany).toHaveBeenCalledTimes(1);
+      expect(AppDataSource.getRepository(Users).findOneOrFail).toHaveBeenCalledTimes(1);
+      expect(AppDataSource.getRepository(Agencies).find).toHaveBeenCalledTimes(1);
       expect(Array.isArray(agencies)).toBe(true);
     });
   });
@@ -174,7 +173,7 @@ describe('UNIT - User services', () => {
   describe('getAdministrators', () => {
     it('should return users that have administrative role in the given agencies', async () => {
       const admins = await userServices.getAdministrators(['123', '456']);
-      expect(_usersQueryGetMany).toHaveBeenCalledTimes(1);
+      expect(AppDataSource.getRepository(Users).find).toHaveBeenCalledTimes(1);
       expect(Array.isArray(admins)).toBe(true);
     });
   });
