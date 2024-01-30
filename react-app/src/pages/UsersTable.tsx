@@ -12,13 +12,17 @@ import {
   Select,
   ListSubheader,
   MenuItem,
+  Tooltip,
 } from '@mui/material';
-import { GridColDef, useGridApiRef } from '@mui/x-data-grid';
-import React, { PropsWithChildren, useEffect, useState } from 'react';
+import { GridColDef, gridFilteredSortedRowEntriesSelector, useGridApiRef } from '@mui/x-data-grid';
+import React, { PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import KeywordSearch from '@/components/table/KeywordSearch';
 import { IUser } from '@/interfaces/IUser';
+import AddIcon from '@mui/icons-material/Add';
+import DownloadIcon from '@mui/icons-material/Download';
+import xlsx from 'node-xlsx';
 
 const CustomMenuItem = (props: PropsWithChildren & { value: string }) => {
   const theme = useTheme();
@@ -93,7 +97,7 @@ const UsersTable = () => {
   };
 
   // Sets quickfilter value of DataGrid. newValue is a string input.
-  const updateSearchValue = React.useMemo(() => {
+  const updateSearchValue = useMemo(() => {
     return debounce((newValue) => {
       apiRef.current.setQuickFilterValues(newValue.split(' ').filter((word) => word !== ''));
     }, 100);
@@ -211,12 +215,14 @@ const UsersTable = () => {
       headerName: 'Created',
       minWidth: 120,
       valueFormatter: dateFormatter,
+      type: 'date',
     },
     {
       field: 'lastLogin',
       headerName: 'Last Login',
       minWidth: 120,
       valueFormatter: dateFormatter,
+      type: 'date',
     },
   ];
 
@@ -245,17 +251,19 @@ const UsersTable = () => {
                 Users Overview ({rowCount ?? 0} users)
               </Typography>
               {keywordSearchContents || gridFilterItems.length > 0 ? (
-                <IconButton
-                  onClick={() => {
-                    // Set both DataGrid and Keyword search back to blanks
-                    apiRef.current.setFilterModel({ items: [] });
-                    setKeywordSearchContents('');
-                    // Set select field back to default
-                    setSelectValue('all');
-                  }}
-                >
-                  <FilterAltOffIcon />
-                </IconButton>
+                <Tooltip title="Clear Filter">
+                  <IconButton
+                    onClick={() => {
+                      // Set both DataGrid and Keyword search back to blanks
+                      apiRef.current.setFilterModel({ items: [] });
+                      setKeywordSearchContents('');
+                      // Set select field back to default
+                      setSelectValue('all');
+                    }}
+                  >
+                    <FilterAltOffIcon />
+                  </IconButton>
+                </Tooltip>
               ) : (
                 <></>
               )}
@@ -266,7 +274,7 @@ const UsersTable = () => {
               sx={{
                 '> *': {
                   // Applies to all children
-                  margin: '0 5px',
+                  margin: '0 2px',
                 },
               }}
             >
@@ -274,13 +282,58 @@ const UsersTable = () => {
                 onChange={updateSearchValue}
                 optionalExternalState={[keywordSearchContents, setKeywordSearchContents]}
               />
+              <Tooltip
+                title={
+                  'Adding a new user from this table is not supported yet. Please advise users to use the sign-up form.'
+                }
+              >
+                <span>
+                  <IconButton disabled>
+                    <AddIcon />
+                  </IconButton>
+                </span>
+              </Tooltip>
+              <Tooltip title="Export to Excel">
+                <IconButton
+                  onClick={() => {
+                    const rows = gridFilteredSortedRowEntriesSelector(apiRef);
+                    // No point exporting if there are no rows
+                    if (rows.length > 0) {
+                      const columnHeaders = Object.keys(rows.at(0).model);
+                      const bitArray = xlsx.build([
+                        {
+                          name: 'UsersTable',
+                          data: [columnHeaders, ...rows.map((row) => Object.values(row.model))],
+                          options: {}, // Required even if empty
+                        },
+                      ]);
+                      const binaryString = bitArray.reduce(
+                        (acc, cur) => (acc += String.fromCharCode(cur)),
+                        '',
+                      );
+                      const file = window.btoa(binaryString);
+                      const url = `data:application/xlsx;base64,${file}`;
+
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = 'my-file.xlsx';
+                      document.body.appendChild(a);
+                      a.click();
+                      document.body.removeChild(a);
+                      window.URL.revokeObjectURL(url);
+                    }
+                  }}
+                >
+                  <DownloadIcon />
+                </IconButton>
+              </Tooltip>
               <Select
                 onChange={(e) => {
                   selectPresetFilter(e.target.value);
                   setSelectValue(e.target.value);
                 }}
                 defaultValue={'all'}
-                sx={{ width: '10em' }}
+                sx={{ width: '10em', marginLeft: '0.5em' }}
                 value={selectValue}
               >
                 <CustomMenuItem value={'all'}>All Users</CustomMenuItem>
