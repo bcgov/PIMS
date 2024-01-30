@@ -258,7 +258,7 @@ const UsersTable = () => {
                       apiRef.current.setFilterModel({ items: [] });
                       setKeywordSearchContents('');
                       // Set select field back to default
-                      setSelectValue('all');
+                      setSelectValue('All Users');
                     }}
                   >
                     <FilterAltOffIcon />
