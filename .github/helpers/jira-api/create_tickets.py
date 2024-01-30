@@ -6,6 +6,7 @@ Modules used to connect to JIRA API, refining dependency updates and refining ti
 import http.client
 import sys
 import os
+import json
 
 import jira_con
 import refine_dependency
@@ -89,47 +90,24 @@ def refine_dep( level_flags, dep_in, summary_li ):
 
     Args: 
       level_flags (string): env variable setting what updates we are going to parse.
-      dep_in (string): env variacle holding dependency list.
+      dep_in (string): env variable holding dependency list.
       summary_li (list[string]): list holding all ticket summaries we searched for.
 
     Returns: 
-      updates (tuple): tuple containing reformated lists of updates.
+      updates (list): list containing reformated lists of updates in all folders.
     """
+    updates = []
+    dep_in = json.loads(dep_in, strict=False)
 
-    # get the list of dependencies from GitHub
-    li_patch, li_minor, li_major = refine_dependency.parse_dependencies( level_flags, dep_in )
+    # get the list of dependencies from GitHub for each folder
+    for folder in dep_in:
+        # refine the dependencies to look the way we want them to
+        refined_li = refine_dependency.parse_dependencies( level_flags, dep_in[folder] )
+        # remove any dependencies currently being worked on
+        unique_li = refine_dependency.remove_duplicates(refined_li, summary_li, folder)
+        updates.append((folder, unique_li))
 
-    # remove any dependencies that have open tickets
-    li_patch = refine_dependency.remove_duplicates( li_patch, summary_li )
-    li_minor = refine_dependency.remove_duplicates( li_minor, summary_li )
-    li_major = refine_dependency.remove_duplicates( li_major, summary_li )
-
-    updates = ( li_patch, li_minor, li_major, )
     return updates
-
-def post_subtasks( conn, headers, subtask_lists ):
-    """
-    Goes through each section of dependency updates and sends as many requests as needed.
-
-    Args:
-      subtask_json (tuple): holds lists of json objects to be sent as requests.
-    """
-
-    # break apart subtasks
-    json_patch = subtask_lists[0]
-    json_minor = subtask_lists[1]
-    json_major = subtask_lists[2]
-
-    # post all three sub task groups
-    # because we are storing each as nested lists we use loops to get through all JSON objects.
-    for ele in json_patch:
-        jira_con.post_subtasks( conn, headers, ele )
-
-    for ele in json_minor:
-        jira_con.post_subtasks( conn, headers, ele )
-
-    for ele in json_major: 
-        jira_con.post_subtasks( conn, headers, ele )
 
 def create_tickets( conn, headers, updates, project_key, issue_key, epic_id ):
     """
@@ -140,21 +118,29 @@ def create_tickets( conn, headers, updates, project_key, issue_key, epic_id ):
       headers (string): specifies authentication to post to JIRA
       updates (tuple(list)): a tuple of lists holding the dependency updates
       project_key (string): a string representing the key for the board we want to post to
+      issue_key (string): a string representing the id for the type of ticket we want to create
       epic_id: (id, key): a tuple containing epic id and ticket number we want to post under
 
     Returns:
-      subtask_json (list[JSON], list[JSON], list[JSON]): a tuple containing 3 lists of json objects. 
+      final_li (list): a list containing refined lists of json ticket data. One list for each folder 
     """
+    final_li = []
 
-    # check the number of tickets to post
-    updates = refine_tickets.check_num_tickets( updates )
-    # create parent ticket and post it
-    parent_ticket_json = refine_tickets.create_parent_ticket( project_key, updates, epic_id )
-    parent_key = jira_con.post_parent_ticket( conn, headers, parent_ticket_json )
-    # create sub tasks in Json format
-    subtask_json = refine_tickets.create_tickets( updates, project_key, parent_key, issue_key )
+    # create parent tickets and post them
+    for folder in updates:
 
-    return subtask_json
+        if len(folder[1] ) == 0:
+            # if there are no updates then there are no tickets to post.
+            continue
+
+        parent_ticket_json = refine_tickets.create_parent_ticket( project_key, folder, epic_id )
+        parent_key = jira_con.post_parent_ticket( conn, headers, parent_ticket_json )
+        # create sub tasks in Json format
+        subtask_json = refine_tickets.create_subtasks( folder, parent_key, project_key, issue_key )
+        for ele in subtask_json:
+            final_li.append(ele)
+
+    return final_li
 
 def main():
     """ Works through the steps to refine dependency list and then create tickets in JIRA. """
@@ -177,8 +163,9 @@ def main():
     # create all tickets
     json_lists = create_tickets( conn, headers, updates, project_key, issue_key, epic_id )
 
-    # Post all tickets
-    post_subtasks( conn, headers, json_lists )
+    # Post all tickets for each folder
+    for ele in json_lists:
+        jira_con.post_subtasks( conn, headers, ele )
 
 if __name__=="__main__":
     main()
