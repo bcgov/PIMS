@@ -59,6 +59,7 @@ const UsersTable = () => {
   const [users, setUsers] = useState<IUser[]>([]);
   const [rowCount, setRowCount] = useState<number>(0);
   const [keywordSearchContents, setKeywordSearchContents] = useState<string>('');
+  const [selectValue, setSelectValue] = useState<string>('all');
   const [gridFilterItems, setGridFilterItems] = useState([]);
   const { getAuthorizationHeaderValue, state } = useKeycloak();
   const theme = useTheme();
@@ -150,13 +151,13 @@ const UsersTable = () => {
       field: 'firstName',
       headerName: 'First Name',
       flex: 1,
-      minWidth: 150,
+      minWidth: 125,
     },
     {
       field: 'lastName',
       headerName: 'Last Name',
       flex: 1,
-      minWidth: 150,
+      minWidth: 125,
     },
     {
       field: 'status',
@@ -190,7 +191,7 @@ const UsersTable = () => {
     {
       field: 'agency',
       headerName: 'Agency',
-      minWidth: 150,
+      minWidth: 125,
       flex: 1,
     },
     {
@@ -249,6 +250,8 @@ const UsersTable = () => {
                     // Set both DataGrid and Keyword search back to blanks
                     apiRef.current.setFilterModel({ items: [] });
                     setKeywordSearchContents('');
+                    // Set select field back to default
+                    setSelectValue('all');
                   }}
                 >
                   <FilterAltOffIcon />
@@ -274,9 +277,11 @@ const UsersTable = () => {
               <Select
                 onChange={(e) => {
                   selectPresetFilter(e.target.value);
+                  setSelectValue(e.target.value);
                 }}
                 defaultValue={'all'}
                 sx={{ width: '10em' }}
+                value={selectValue}
               >
                 <CustomMenuItem value={'all'}>All Users</CustomMenuItem>
                 <CustomListSubheader>Status</CustomListSubheader>
