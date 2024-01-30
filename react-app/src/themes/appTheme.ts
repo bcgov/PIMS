@@ -145,6 +145,15 @@ const appTheme = createTheme({
         },
       },
     },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          ':hover': {
+            backgroundColor: '#f8f8f8',
+          },
+        },
+      },
+    },
   },
 });
 

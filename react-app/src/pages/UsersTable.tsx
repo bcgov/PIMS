@@ -22,7 +22,7 @@ import KeywordSearch from '@/components/table/KeywordSearch';
 import { IUser } from '@/interfaces/IUser';
 import AddIcon from '@mui/icons-material/Add';
 import DownloadIcon from '@mui/icons-material/Download';
-import xlsx from 'node-xlsx';
+import { downloadExcelFile } from '@/utilities/downloadExcelFile';
 
 const CustomMenuItem = (props: PropsWithChildren & { value: string }) => {
   const theme = useTheme();
@@ -63,7 +63,7 @@ const UsersTable = () => {
   const [users, setUsers] = useState<IUser[]>([]);
   const [rowCount, setRowCount] = useState<number>(0);
   const [keywordSearchContents, setKeywordSearchContents] = useState<string>('');
-  const [selectValue, setSelectValue] = useState<string>('all');
+  const [selectValue, setSelectValue] = useState<string>('All Users');
   const [gridFilterItems, setGridFilterItems] = useState([]);
   const { getAuthorizationHeaderValue, state } = useKeycloak();
   const theme = useTheme();
@@ -71,7 +71,7 @@ const UsersTable = () => {
 
   useEffect(() => {
     if (state.accessToken) {
-      // FIXME: This should be using the proxy...
+      // FIXME: This should be using the proxy... and future API solution
       fetch('http://localhost:5000/api/v2/admin/users', {
         headers: {
           Authorization: getAuthorizationHeaderValue(),
@@ -116,13 +116,13 @@ const UsersTable = () => {
     // Clear the quick search contents
     setKeywordSearchContents('');
     switch (value) {
-      case 'all':
+      case 'All Users':
         apiRef.current.setFilterModel({ items: [] });
         break;
       // All Status filters
-      case 'active':
-      case 'pending':
-      case 'hold':
+      case 'Active':
+      case 'Pending':
+      case 'Hold':
         apiRef.current.setFilterModel({
           items: [
             {
@@ -134,8 +134,8 @@ const UsersTable = () => {
         });
         break;
       // All Role filters
-      case 'user':
-      case 'admin':
+      case 'User':
+      case 'Admin':
         apiRef.current.setFilterModel({
           items: [
             {
@@ -296,32 +296,12 @@ const UsersTable = () => {
               <Tooltip title="Export to Excel">
                 <IconButton
                   onClick={() => {
-                    const rows = gridFilteredSortedRowEntriesSelector(apiRef);
-                    // No point exporting if there are no rows
-                    if (rows.length > 0) {
-                      const columnHeaders = Object.keys(rows.at(0).model);
-                      const bitArray = xlsx.build([
-                        {
-                          name: 'UsersTable',
-                          data: [columnHeaders, ...rows.map((row) => Object.values(row.model))],
-                          options: {}, // Required even if empty
-                        },
-                      ]);
-                      const binaryString = bitArray.reduce(
-                        (acc, cur) => (acc += String.fromCharCode(cur)),
-                        '',
-                      );
-                      const file = window.btoa(binaryString);
-                      const url = `data:application/xlsx;base64,${file}`;
-
-                      const a = document.createElement('a');
-                      a.href = url;
-                      a.download = 'my-file.xlsx';
-                      document.body.appendChild(a);
-                      a.click();
-                      document.body.removeChild(a);
-                      window.URL.revokeObjectURL(url);
-                    }
+                    downloadExcelFile({
+                      data: gridFilteredSortedRowEntriesSelector(apiRef),
+                      tableName: 'UsersTable',
+                      filterName: selectValue,
+                      includeDate: true,
+                    });
                   }}
                 >
                   <DownloadIcon />
@@ -332,19 +312,18 @@ const UsersTable = () => {
                   selectPresetFilter(e.target.value);
                   setSelectValue(e.target.value);
                 }}
-                defaultValue={'all'}
                 sx={{ width: '10em', marginLeft: '0.5em' }}
                 value={selectValue}
               >
-                <CustomMenuItem value={'all'}>All Users</CustomMenuItem>
+                <CustomMenuItem value={'All Users'}>All Users</CustomMenuItem>
                 <CustomListSubheader>Status</CustomListSubheader>
-                <CustomMenuItem value={'active'}>Active</CustomMenuItem>
-                <CustomMenuItem value={'pending'}>Pending</CustomMenuItem>
-                <CustomMenuItem value={'hold'}>Hold</CustomMenuItem>
+                <CustomMenuItem value={'Active'}>Active</CustomMenuItem>
+                <CustomMenuItem value={'Pending'}>Pending</CustomMenuItem>
+                <CustomMenuItem value={'Hold'}>Hold</CustomMenuItem>
 
                 <CustomListSubheader>Role</CustomListSubheader>
-                <CustomMenuItem value={'user'}>User</CustomMenuItem>
-                <CustomMenuItem value={'admin'}>System Admin</CustomMenuItem>
+                <CustomMenuItem value={'User'}>User</CustomMenuItem>
+                <CustomMenuItem value={'Admin'}>System Admin</CustomMenuItem>
               </Select>
             </Box>
           </Box>
