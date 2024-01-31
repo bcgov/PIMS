@@ -4,8 +4,8 @@ import { Entity, Column, ManyToOne, Index, JoinColumn, PrimaryColumn } from 'typ
 @Entity()
 @Index(['ParentId', 'IsDisabled', 'Id', 'Name', 'SortOrder']) // I'm not sure this index is needed. How often do we search by this group?
 export class Agencies extends BaseEntity {
-  @PrimaryColumn({ type: 'character varying', length: 6 })
-  Id: string;
+  @PrimaryColumn({ type: 'int' })
+  Id: number;
 
   @Column({ type: 'character varying', length: 150 })
   Name: string;
@@ -15,6 +15,9 @@ export class Agencies extends BaseEntity {
 
   @Column({ type: 'int' })
   SortOrder: number;
+
+  @Column({ type: 'character varying', length: 6 })
+  Code: string;
 
   @Column({ type: 'character varying', length: 500, nullable: true })
   Description: string;
