@@ -71,7 +71,7 @@ export const getUserById = async (req: Request, res: Response) => {
     if (user) {
       return res.status(200).send(user);
     } else {
-      return res.status(500);
+      return res.status(404);
     }
   } else {
     return res.status(400).send('Could not parse UUID.');
