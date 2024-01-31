@@ -6,6 +6,7 @@ import { Box, Chip, Paper } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import BaseLayout from '@/components/layout/BaseLayout';
 import { mdiCheckCircle, mdiCloseThick } from '@mdi/js';
+import UserDetail from '@/components/users/UserDetail';
 
 const Dev = () => {
   const colorMap = {
@@ -82,9 +83,7 @@ const Dev = () => {
   return (
     <BaseLayout>
       <Box display={'flex'} justifyContent={'center'}>
-        <Paper sx={{ width: '1080px', padding: '2rem', borderRadius: '32px' }}>
-          <CustomDataGrid getRowId={(row) => row.UserId} columns={columns} rows={rows} />
-        </Paper>
+        <UserDetail />
       </Box>
     </BaseLayout>
   );

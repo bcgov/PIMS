@@ -103,9 +103,6 @@ const appTheme = createTheme({
             boxShadow: 'none',
           },
         },
-        textPrimary: {
-          color: '#000',
-        },
       },
     },
     MuiLink: {
