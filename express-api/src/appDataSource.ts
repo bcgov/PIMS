@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-//import { CustomWinstonLogger } from '@/typeorm/utilities/CustomWinstonLogger';
+import { CustomWinstonLogger } from '@/typeorm/utilities/CustomWinstonLogger';
 import dotenv from 'dotenv';
 import { resolve } from 'path';
 dotenv.config({ path: resolve(__dirname, '../../.env') });
@@ -23,7 +23,7 @@ export const AppDataSource = new DataSource({
   synchronize: true,
   migrationsRun: false,
   logging: true,
-  // logger: new CustomWinstonLogger(true),
+  logger: new CustomWinstonLogger(true),
   entities: ['./src/typeorm/Entities/*.ts'],
   migrations: ['./src/typeorm/Migrations/Seeds/*.ts', './src/typeorm/Migrations/*.ts'],
   subscribers: [],
