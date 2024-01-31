@@ -1,0 +1,7 @@
+INSERT INTO "workflows" ("Id","CreatedById","CreatedOn","UpdatedById","UpdatedOn","Name","IsDisabled","SortOrder","Code","Description") VALUES
+	 (1,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.2766667',NULL,NULL,N'Submit Surplus Property Process Project',B'0',0,N'SUBMIT-DISPOSAL',N'Create a new Surplus Property Process Project to add properties to the Enhanced Referral Program or the Surplus Property List.'),
+	 (2,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.2766667',NULL,NULL,N'Assess Surplus Property Process Project Request',B'0',1,N'ASSESS-DISPOSAL',N'Assess a submitted Surplus Property Process Project to determine whether it will be approved or denied.'),
+	 (3,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.2766667',NULL,NULL,N'Assess Enhanced Referral Process Exemption',B'0',2,N'ASSESS-EXEMPTION',N'Assess a requested ERP exemption.'),
+	 (4,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.2766667',NULL,NULL,N'Assess Enhanced Referral Process Exemption Project Request',B'0',3,N'ASSESS-EX-DISPOSAL',N'Assess a submitted Surplus Property Process Project to determine whether it will be approved or denied.'),
+	 (5,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.2766667',NULL,NULL,N'Enhanced Referral Program',B'0',4,N'ERP',N'Internal marketing for 90 days.'),
+	 (6,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.2766667',NULL,NULL,N'Surplus Property List',B'0',5,N'SPL',N'External marketing.');

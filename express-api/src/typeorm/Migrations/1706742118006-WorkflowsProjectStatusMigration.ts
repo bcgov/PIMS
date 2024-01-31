@@ -1,0 +1,17 @@
+import { MigrationInterface, QueryRunner } from 'typeorm';
+import { SqlReader } from 'node-sql-reader';
+import * as path from 'path';
+
+export class WorkflowsProjectStatusMigration1706742118006 implements MigrationInterface {
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    const sqlFilePath = path.resolve(__dirname, 'Seeds');
+    const sqlContent = SqlReader.readSqlFile(
+      path.join(sqlFilePath, 'WorkflowProjectStatus_202401311454.sql'),
+    );
+    await queryRunner.query(sqlContent.toString());
+  }
+
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropTable('workflow_project_status');
+  }
+}

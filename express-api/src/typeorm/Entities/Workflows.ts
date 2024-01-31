@@ -1,10 +1,10 @@
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
-import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
+import { Entity, PrimaryColumn, Column, Index } from 'typeorm';
 
 @Entity()
 @Index(['IsDisabled', 'Name', 'SortOrder'])
 export class Workflows extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   Id: number;
 
   @Column({ type: 'character varying', length: 150 })
