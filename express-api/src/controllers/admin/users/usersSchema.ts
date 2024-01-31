@@ -2,8 +2,8 @@ import { UUID } from 'crypto';
 import { z } from 'zod';
 
 export const UserFilteringSchema = z.object({
-  page: z.number().optional(),
-  quantity: z.number().optional(),
+  page: z.coerce.number().optional(),
+  quantity: z.coerce.number().optional(),
   username: z.string().optional(),
   displayName: z.string().optional(),
   lastName: z.string().optional(),

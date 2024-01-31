@@ -87,7 +87,7 @@ export class Users {
   @JoinColumn({ name: 'AgencyId' })
   Agency: Relation<Agencies>;
 
-  @OneToMany('UserRoles', 'UserRoles.User', { cascade: true })
+  @OneToMany(() => UserRoles, (userRole) => userRole.User, { cascade: true })
   UserRoles: UserRoles[];
 }
 
@@ -136,10 +136,10 @@ export class Roles extends BaseEntity {
   @Column('bit')
   IsPublic: boolean;
 
-  @OneToMany('UserRoles', 'UserRoles.Role')
+  @OneToMany(() => UserRoles, (userRole) => userRole.Role)
   UserRoles: UserRoles[];
 
-  @OneToMany('RoleClaims', 'RoleClaims.Role')
+  @OneToMany(() => RoleClaims, (roleClaim) => roleClaim.Role)
   RoleClaims: RoleClaims[];
 }
 
@@ -162,7 +162,7 @@ export class Claims extends BaseEntity {
   @Column('bit')
   IsDisabled: boolean;
 
-  @OneToMany('RoleClaims', 'RoleClaims.Claim')
+  @OneToMany(() => RoleClaims, (roleClaim) => roleClaim.Claim)
   RoleClaims: RoleClaims[];
 }
 

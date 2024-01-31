@@ -2,8 +2,8 @@ import { UUID } from 'crypto';
 import { z } from 'zod';
 
 export const RolesFilterSchema = z.object({
-  page: z.number().optional(),
-  quantity: z.number().optional(),
+  page: z.coerce.number().optional(),
+  quantity: z.coerce.number().optional(),
   name: z.string().optional(),
   id: z.string().uuid().optional(),
 });

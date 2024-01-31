@@ -9,7 +9,6 @@ const getUsers = async (filter: UserFiltering) => {
   const users = await AppDataSource.getRepository(Users).find({
     relations: {
       Agency: true,
-      UserRoles: { Role: true },
     },
     where: {
       Id: filter.id,
@@ -29,7 +28,7 @@ const getUsers = async (filter: UserFiltering) => {
       Position: filter.position,
     },
     take: filter.quantity,
-    skip: filter.page * filter.quantity,
+    skip: (filter.page ?? 0) * (filter.quantity ?? 0),
   });
   return users;
 };

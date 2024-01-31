@@ -14,7 +14,7 @@ const getRoles = async (filter: RolesFilter) => {
       Name: filter.name,
       Id: filter.id,
     },
-    skip: filter.page * filter.quantity,
+    skip: (filter.page ?? 0) * (filter.quantity ?? 0),
     take: filter.quantity,
   });
   return roles;
