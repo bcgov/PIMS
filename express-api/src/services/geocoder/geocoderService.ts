@@ -5,11 +5,6 @@ import constants from '@/constants';
 import { IFeatureModel } from '@/services/geocoder/interfaces/IFeatureModel';
 import { getLongitude, getLatitude, getAddress1 } from './geocoderUtils';
 
-const generateUrl = (endpoint: string, outputFormat = 'json'): string => {
-  const host = constants.GEOCODER.HOSTURI;
-  return `${host}${endpoint.replace('{outputFormat}', outputFormat)}`;
-};
-
 // const getSiteAddresses = async (
 //   address: string,
 //   outputFormat = 'json',
@@ -33,13 +28,16 @@ const mapFeatureToAddress = (feature: IFeatureModel): IAddressModel => {
   };
 };
 
-export const getSiteAddressesAsync = async (): Promise<IAddressModel> =>
+export const getSiteAddressesAsync = async (address: string): Promise<IAddressModel> =>
   //parameters: AddressesParameters,
   {
     // const queryString = new URLSearchParams(parameters).toString();
+    const encodedAddress = encodeURIComponent(address);
+    const url = new URL('/addresses.json', constants.GEOCODER.HOSTURI);
+    url.searchParams.append('addressString', encodedAddress);
+
     try {
-      const url = constants.GEOCODER.HOSTURI + '/addresses.json?addressString=525%20Superior';
-      const response = await fetch(url, {
+      const response = await fetch(url.toString(), {
         headers: {
           apiKey: process.env.GEOCODER__KEY,
         },
@@ -52,7 +50,7 @@ export const getSiteAddressesAsync = async (): Promise<IAddressModel> =>
       const responseData = await response.json();
       const featureCollection: IFeatureCollectionModel = responseData;
       const addressInformation: IAddressModel = mapFeatureToAddress(featureCollection.features[0]);
-      console.log('generateUrl', generateUrl('addresses.json?addressString=525%20Superior'));
+      console.log(url.toString());
       console.log('test', addressInformation);
       return addressInformation;
     } catch (error) {
@@ -61,6 +59,11 @@ export const getSiteAddressesAsync = async (): Promise<IAddressModel> =>
     }
   };
 
+/// <summary>
+/// Make a request to Data BC Geocoder for PIDs that belong to the specified 'siteId'.
+/// </summary>
+/// <param name="siteId">The site identifier for a parcel.</param>
+/// <returns>An array of PIDs for the supplied 'siteId'.</returns>
 // const getPids = async (siteId: string, outputFormat = 'json'): Promise<SitePidsResponseModel> => {
 //   const endpoint = options.parcels.pidsUrl.replace('{siteId}', siteId);
 //   const url = generateUrl(endpoint, outputFormat);
@@ -69,7 +72,6 @@ export const getSiteAddressesAsync = async (): Promise<IAddressModel> =>
 // };
 
 export const GeocoderService = {
-  generateUrl,
   // getSiteAddresses,
   getSiteAddressesAsync,
   // getPids,
