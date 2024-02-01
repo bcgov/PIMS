@@ -12,7 +12,7 @@ export const ConfigContext = createContext<IConfig | undefined>({
 
 const getConfig = (): IConfig => {
   return {
-    API_HOST: '/api',
+    API_HOST: '/api/v2',
     NODE_ENV: import.meta.env.MODE,
   };
 };

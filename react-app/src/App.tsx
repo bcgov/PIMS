@@ -5,13 +5,16 @@ import '@/App.css';
 import { ThemeProvider } from '@emotion/react';
 import appTheme from './themes/appTheme';
 import Dev from './pages/DevZone';
+import { ConfigContextProvider } from './contexts/configContext';
 
 const Router = () => {
   return (
-    <Routes>
-      <Route index element={<Home />} />
-      <Route path="/dev" element={<Dev />} />
-    </Routes>
+    <ConfigContextProvider>
+      <Routes>
+        <Route index element={<Home />} />
+        <Route path="/dev" element={<Dev />} />
+      </Routes>
+    </ConfigContextProvider>
   );
 };
 

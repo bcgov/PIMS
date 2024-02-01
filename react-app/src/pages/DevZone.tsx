@@ -1,13 +1,20 @@
 /* eslint-disable no-console */
 //Simple component testing area.
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CustomDataGrid, DataGridFloatingMenu } from '@/components/table/DataTable';
 import { Box, Chip, Paper } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import BaseLayout from '@/components/layout/BaseLayout';
 import { mdiCheckCircle, mdiCloseThick } from '@mdi/js';
+import usePimsApi from '@/hooks/usePimsApi';
 
 const Dev = () => {
+  const { users } = usePimsApi();
+  const a = users.getLatestAccessRequest();
+  useEffect(() => {
+    a.then((b) => console.log(JSON.stringify(b)));
+  }, [a]);
+
   const colorMap = {
     Pending: 'warning',
     Active: 'success',
