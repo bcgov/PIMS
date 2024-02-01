@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Used to extract roles from existing Keycloak integrations and remap them onto new ones.",
   "scripts": {
-    "extract": "ts-node ./src/saveRoleMap.ts",
+    "extract": "ts-node ./src/extractRoleMap.ts",
+    "import": "ts-node ./src/importRoleMap.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Dylan Barkowsky",
