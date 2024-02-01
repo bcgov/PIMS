@@ -52,7 +52,6 @@ const createUserRolesObject = async () => {
       }
     })
   })
-  // console.log(usersWithRoles)
   return usersWithRoles;
 }
 
