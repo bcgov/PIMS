@@ -6,14 +6,28 @@ import { ThemeProvider } from '@emotion/react';
 import appTheme from './themes/appTheme';
 import Dev from './pages/DevZone';
 import { ConfigContextProvider } from './contexts/configContext';
+import AuthContextProvider from './contexts/authContext';
+import AuthRouteGuard from './guards/AuthRouteGuard';
+import BaseLayout from './components/layout/BaseLayout';
 
 const Router = () => {
   return (
     <ConfigContextProvider>
-      <Routes>
-        <Route index element={<Home />} />
-        <Route path="/dev" element={<Dev />} />
-      </Routes>
+      <AuthContextProvider>
+        <Routes>
+          <Route index element={<Home />} />
+          <Route
+            path="/dev"
+            element={
+              <BaseLayout>
+                <AuthRouteGuard>
+                  <Dev />
+                </AuthRouteGuard>
+              </BaseLayout>
+            }
+          />
+        </Routes>
+      </AuthContextProvider>
     </ConfigContextProvider>
   );
 };

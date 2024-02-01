@@ -87,13 +87,11 @@ const Dev = () => {
   ];
 
   return (
-    <BaseLayout>
-      <Box display={'flex'} justifyContent={'center'}>
-        <Paper sx={{ width: '1080px', padding: '2rem', borderRadius: '32px' }}>
-          <CustomDataGrid getRowId={(row) => row.UserId} columns={columns} rows={rows} />
-        </Paper>
-      </Box>
-    </BaseLayout>
+    <Box display={'flex'} justifyContent={'center'}>
+      <Paper sx={{ width: '1080px', padding: '2rem', borderRadius: '32px' }}>
+        <CustomDataGrid getRowId={(row) => row.UserId} columns={columns} rows={rows} />
+      </Paper>
+    </Box>
   );
 };
 
