@@ -62,7 +62,7 @@ const saveResultToFile = async () => {
     if (err) {
       console.error('Error writing file', err);
     } else {
-      console.log('Successfully wrote file');
+      console.log('Successfully wrote file: extractResults.json');
     }
   });
 }

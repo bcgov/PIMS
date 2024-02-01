@@ -18,3 +18,7 @@ These scripts were created to transfer the existing roles and re-map them to the
 
 - `npm run extract`: Takes all users and roles from specified integration and saves a JSON file in this directory with their mappings.
 - `npm run import`: Uses the JSON file saved in the extract command to transform and apply the old roles to new roles, applying them to relevant users.
+
+### Notes
+
+- Make sure to switch the integration information in your `.env` between extract and import commands.

@@ -36,6 +36,7 @@ const importRoles = async () => {
       console.error(e);
     }
   }))
+  console.log('Finished successfully! Please check Keycloak integration to confirm.')
 }
 
 importRoles();
