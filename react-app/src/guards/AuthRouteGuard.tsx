@@ -6,11 +6,8 @@ import React from 'react';
 const AuthRouteGuard = (props: PropsWithChildren) => {
   const authStateContext = useContext(AuthContext);
 
-  if (
-    !authStateContext.keycloak.isAuthenticated ||
-    !authStateContext.keycloak.getAuthorizationHeaderValue()
-  ) {
-    return <CircularProgress />;
+  if (!authStateContext.keycloak.isAuthenticated) {
+    return <CircularProgress sx={{ position: 'fixed', top: '50%', left: '50%' }} />;
   }
 
   return <>{props.children}</>;
