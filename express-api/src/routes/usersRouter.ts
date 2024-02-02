@@ -9,7 +9,5 @@ router.route(`/access/requests`).post(controllers.submitUserAccessRequest);
 router.route(`/access/requests/:requestId`).get(controllers.getUserAccessRequestById);
 router.route(`/access/requests/:requestId`).put(controllers.updateUserAccessRequest);
 router.route(`/agencies/:username`).get(controllers.getUserAgencies);
-router.route(`/reports/users`).get(controllers.getUserReport);
-router.route(`/reports/users/filter`).post(controllers.filterUserReport);
 
 export default router;
