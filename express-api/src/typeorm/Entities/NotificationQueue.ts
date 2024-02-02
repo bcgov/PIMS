@@ -38,7 +38,7 @@ export class NotificationQueue extends BaseEntity {
   @Column({ type: 'character varying', length: 50 })
   BodyType: string;
 
-  @Column({ type: 'character varying', length: 2000 }) // Should be max length, but not clear what max is.
+  @Column({ type: 'text' })
   Body: string;
 
   @Column({ type: 'character varying', length: 500, nullable: true })

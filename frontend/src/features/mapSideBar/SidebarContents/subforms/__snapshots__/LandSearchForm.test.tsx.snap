@@ -1,6 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Land Form component renders correctly 1`] = `
+.c0 {
+  position: relative;
+}
+
 .c0 .form.Control {
   width: 100%;
   height: 100%;
@@ -24,8 +28,6 @@ exports[`Land Form component renders correctly 1`] = `
   padding: 0;
   position: absolute;
   z-index: 999;
-  top: 40px;
-  left: -50px;
 }
 
 .c0 option {
