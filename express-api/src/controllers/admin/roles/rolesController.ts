@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
-import { stubResponse } from '@/utilities/stubResponse';
+import rolesServices from '@/services/admin/rolesServices';
+import { RolesFilter, RolesFilterSchema } from '@/controllers/admin/roles/rolesSchema';
+import { UUID } from 'crypto';
 
 /**
  * @description Gets a paged list of roles.
@@ -15,9 +17,13 @@ export const getRoles = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  const filter = RolesFilterSchema.safeParse(req.query);
+  if (filter.success) {
+    const roles = await rolesServices.getRoles(filter.data as RolesFilter); //await rolesServices.getRoles(filter.data as RolesFilter);
+    return res.status(200).send(roles);
+  } else {
+    return res.status(400).send('Could not parse filter.');
+  }
 };
 
 /**
@@ -34,9 +40,12 @@ export const addRole = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  try {
+    const role = await rolesServices.addRole(req.body);
+    return res.status(201).send(role);
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message);
+  }
 };
 
 /**
@@ -53,9 +62,13 @@ export const getRoleById = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  const id = req.params.id;
+  const role = rolesServices.getRoleById(id as UUID);
+  if (!role) {
+    return res.status(404);
+  } else {
+    return res.status(200).send(role);
+  }
 };
 
 /**
@@ -73,8 +86,13 @@ export const updateRoleById = async (req: Request, res: Response) => {
       }]
    */
 
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  const id = req.params.id;
+  if (id != req.body.Id) {
+    return res.status(400).send('Request param id did not match request body id.');
+  } else {
+    const role = await rolesServices.updateRole(req.body);
+    return res.status(200).send(role);
+  }
 };
 
 /**
@@ -91,26 +109,15 @@ export const deleteRoleById = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
-};
-
-/**
- * @description Gets a single role that matches a name.
- * @param   {Request}     req Incoming request
- * @param   {Response}    res Outgoing response
- * @returns {Response}        A 200 status and the role data.
- */
-export const getRoleByName = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Roles - Admin']
-   * #swagger.description = 'Gets a role that matches the supplied name.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  try {
+    const id = req.params.id;
+    if (id != req.body.Id) {
+      return res.status(400).send('Request param id did not match request body id.');
+    } else {
+      const role = await rolesServices.removeRole(req.body);
+      return res.status(200).send(role);
+    }
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message);
+  }
 };
