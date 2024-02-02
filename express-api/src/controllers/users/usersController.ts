@@ -1,6 +1,6 @@
-import { stubResponse } from '../../utilities/stubResponse';
+import userServices from '@/services/users/usersServices';
 import { Request, Response } from 'express';
-
+import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 /**
  * @description Redirects user to the keycloak user info endpoint.
  * @param {Request}     req Incoming request.
@@ -15,7 +15,28 @@ export const getUserInfo = async (req: Request, res: Response) => {
       "bearerAuth" : []
       }]
    */
-  return stubResponse(res);
+  const decodeJWT = (jwt: string) => {
+    try {
+      return JSON.parse(Buffer.from(jwt, 'base64').toString('ascii'));
+    } catch {
+      throw new Error('Invalid input in decodeJWT()');
+    }
+  };
+
+  if (!req.token) return res.status(400).send('No access token');
+  const [header, payload] = req.token.split('.');
+  if (!header || !payload) return res.status(400).send('Bad token format.');
+
+  const info = {
+    header: decodeJWT(header),
+    payload: decodeJWT(payload),
+  };
+
+  if (info) {
+    return res.status(200).send(info.payload);
+  } else {
+    return res.status(400).send('No keycloak user authenticated.');
+  }
 };
 
 /**
@@ -32,7 +53,16 @@ export const getUserAccessRequestLatest = async (req: Request, res: Response) =>
       "bearerAuth" : []
       }]
    */
-  return stubResponse(res);
+  const user = req?.user as KeycloakUser;
+  try {
+    const result = await userServices.getAccessRequest(user);
+    if (!result) {
+      return res.status(204).send('No access request was found.');
+    }
+    return res.status(200).send(result);
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message);
+  }
 };
 
 /**
@@ -49,7 +79,13 @@ export const submitUserAccessRequest = async (req: Request, res: Response) => {
       "bearerAuth" : []
       }]
    */
-  return stubResponse(res);
+  const user = req?.user as KeycloakUser;
+  try {
+    const result = await userServices.addAccessRequest(req.body, user);
+    return res.status(200).send(result);
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message);
+  }
 };
 
 /**
@@ -66,7 +102,17 @@ export const getUserAccessRequestById = async (req: Request, res: Response) => {
       "bearerAuth" : []
       }]
    */
-  return stubResponse(res);
+  const user = req?.user as KeycloakUser;
+  const requestId = Number(req.params?.reqeustId);
+  try {
+    const result = await userServices.getAccessRequestById(requestId, user);
+    if (!result) {
+      return res.status(404);
+    }
+    return res.status(200).send(result);
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message);
+  }
 };
 
 /**
@@ -83,7 +129,13 @@ export const updateUserAccessRequest = async (req: Request, res: Response) => {
       "bearerAuth" : []
       }]
    */
-  return stubResponse(res);
+  const user = req?.user as KeycloakUser;
+  try {
+    const result = await userServices.updateAccessRequest(req.body, user);
+    return res.status(200).send(result);
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message);
+  }
 };
 
 /**
@@ -103,39 +155,11 @@ export const getUserAgencies = async (req: Request, res: Response) => {
       "bearerAuth" : []
       }]
    */
-  return stubResponse(res);
-};
-
-/**
- * @description Exports user as CSV or Excel file.
- * @param {Request}     req Incoming request.
- * @param {Response}    res Outgoing response.
- * @returns {Response}      A 200 status with the CSV or Excel file in the response body.
- */
-export const getUserReport = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Users']
-   * #swagger.description = 'Exports users as CSV or Excel file. Include 'Accept' header to request the appropriate expor - ["text/csv", "application/application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]'
-   * #swagger.security = [{
-      "bearerAuth" : []
-      }]
-   */
-  return stubResponse(res);
-};
-
-/**
- * @description Filters user report based on criteria provided in the request body.
- * @param {Request}     req Incoming request.
- * @param {Response}    res Outgoing response.
- * @returns {Response}      A 200 status with
- */
-export const filterUserReport = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Users']
-   * #swagger.description = 'Exports users as CSV or Excel file. Include 'Accept' header to request the appropriate expor - ["text/csv", "application/application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]'
-   * #swagger.security = [{
-      "bearerAuth" : []
-      }]
-   */
-  return stubResponse(res);
+  const user = String(req.params?.username);
+  try {
+    const result = await userServices.getAgencies(user);
+    return res.status(200).send(result);
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message);
+  }
 };
