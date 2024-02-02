@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import DataCard from '../display/DataCard';
 import { Avatar, Box, Button, IconButton, Typography, useTheme } from '@mui/material';
 import Icon from '@mdi/react';
 import { mdiArrowLeft } from '@mdi/js';
 import { statusChipFormatter } from '@/utils/formatters';
+import DeleteDialog from '../dialog/DeleteDialog';
+import { deleteAccountConfirmText } from '@/constants/strings';
 
 const UserDetail = () => {
   const theme = useTheme();
-
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   interface User {
     Status: string;
   } //Placeholder type.
@@ -45,12 +47,25 @@ const UserDetail = () => {
           </Avatar>
         </IconButton>
         <Typography variant="h5">Back to User Overview</Typography>
-        <Button sx={{ fontWeight: 'bold', color: theme.palette.warning.main, marginLeft: 'auto' }}>
+        <Button
+          onClick={() => setOpenDeleteDialog(true)}
+          sx={{ fontWeight: 'bold', color: theme.palette.warning.main, marginLeft: 'auto' }}
+        >
           Delete Account
         </Button>
       </Box>
       <DataCard customFormatter={customFormatter} values={userStatusData} title={'User Status'} />
       <DataCard values={userProfileData} title={'User Profile'} />
+      <DeleteDialog
+        open={openDeleteDialog}
+        title={'Delete account'}
+        message={deleteAccountConfirmText}
+        deleteText="Delete Account"
+        onDelete={function (): void {
+          throw new Error('Function not implemented.');
+        }}
+        onClose={() => setOpenDeleteDialog(false)}
+      />
     </Box>
   );
 };
