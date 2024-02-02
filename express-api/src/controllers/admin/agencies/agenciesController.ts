@@ -35,8 +35,10 @@ export const addAgency = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  // TODO: Replace stub response with controller logic
+  // verify that the request passed in matches the format we need 
+  // call postAgency in service to do work in database
+  // confirm that is has happened
+  // send back response code and information on the agency
   return stubResponse(res);
 };
 
