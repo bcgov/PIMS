@@ -1,0 +1,20 @@
+{
+  "name": "keycloak-role-mapping-tool",
+  "version": "1.0.0",
+  "description": "Used to extract roles from existing Keycloak integrations and remap them onto new ones.",
+  "scripts": {
+    "extract": "ts-node ./src/extractRoleMap.ts",
+    "import": "ts-node ./src/importRoleMap.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dylan Barkowsky",
+  "license": "ISC",
+  "dependencies": {
+    "@bcgov/citz-imb-kc-css-api": "https://github.com/bcgov/citz-imb-kc-css-api/releases/download/v1.3.4/bcgov-citz-imb-kc-css-api-1.3.4.tgz"
+  },
+  "devDependencies": {
+    "@types/node": "20.11.16",
+    "ts-node": "10.9.2",
+    "typescript": "5.3.3"
+  }
+}
