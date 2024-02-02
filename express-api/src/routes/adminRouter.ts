@@ -24,7 +24,6 @@ const {
   addRole,
   deleteRoleById,
   getRoleById,
-  getRoleByName,
   getRoles,
   updateRoleById,
   deleteAccessRequest,
@@ -36,7 +35,6 @@ const {
   getUserById,
   getUserRolesByName,
   getUsers,
-  getUsersByFilter,
   getUsersSameAgency,
   updateUserById,
 } = controllers.admin;
@@ -80,12 +78,10 @@ router
   .put(updateRoleById) // TODO: should put be a patch?
   .delete(deleteRoleById);
 
-router.route(`/roles/name/:name`).get(getRoleByName);
+// router.route(`/roles/name/:name`).get(getRoleByName);
 
 // Endpoints for Admin Users
 router.route(`/users`).get(getUsers).post(addUser);
-
-router.route(`/users/filter`).post(getUsersByFilter); // TODO: GET with query strings instead?
 
 router.route(`/users/my/agency`).post(getUsersSameAgency); // TODO: Should this just be generic: get users from an agency?
 

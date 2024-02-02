@@ -14,7 +14,8 @@
     "coverage": "jest --coverage",
     "test:unit": "jest --testPathPattern=/tests/unit",
     "test:integration": "jest --testPathPattern=/tests/integration",
-    "swagger": "node ./src/swagger/swagger.mjs"
+    "swagger": "node ./src/swagger/swagger.mjs",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm"
   },
   "author": "",
   "license": "ISC",
