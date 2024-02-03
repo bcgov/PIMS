@@ -20,17 +20,16 @@ import {
   unassignUserRole,
   IDIRUserQuery,
 } from '@bcgov/citz-imb-kc-css-api';
-import rolesServices from '../admin/rolesServices';
+import rolesServices from '@/services/admin/rolesServices';
 import { randomUUID } from 'crypto';
 import { AppDataSource } from '@/appDataSource';
 import { DeepPartial, In, Not } from 'typeorm';
-import userServices from '../admin/usersServices';
+import userServices from '@/services/admin/usersServices';
 import { Users, Roles } from '@/typeorm/Entities/Users_Roles_Claims';
 
 /**
  * @description Sync keycloak roles into PIMS roles.
  */
-// TODO: Complete when role service is complete.
 const syncKeycloakRoles = async () => {
   // Gets roles from keycloak
   // For each role
@@ -145,7 +144,6 @@ const updateKeycloakRole = async (roleName: string, newRoleName: string) => {
   return role;
 };
 
-// TODO: Complete when user and role services are complete.
 const syncKeycloakUser = async (keycloakGuid: string) => {
   // Does user exist in Keycloak?
   // Get their existing roles.
@@ -259,11 +257,17 @@ const getKeycloakUser = async (guid: string) => {
   }
 };
 
+/**
+ * @description Retrieves a Keycloak user's roles.
+ * @param {string} username The user's username.
+ * @returns {IKeycloakRole[]} A list of the user's roles.
+ * @throws If the user is not found.
+ */
 const getKeycloakUserRoles = async (username: string) => {
   const existingRolesResponse: IKeycloakRolesResponse | IKeycloakErrorResponse =
     await getUserRoles(username);
   if (!keycloakUserRolesSchema.safeParse(existingRolesResponse).success) {
-    const message = `keycloakService.getKeycloakUser: ${
+    const message = `keycloakService.getKeycloakUserRoles: ${
       (existingRolesResponse as IKeycloakErrorResponse).message
     }`;
     logger.warn(message);
@@ -276,30 +280,38 @@ const getKeycloakUserRoles = async (username: string) => {
  * @description Updates a user's roles in Keycloak.
  * @param {string} username The user's username.
  * @param {string[]} roles A list of roles that the user should have.
- * @returns {IKeycloakRole[]} A list of Keycloak roles.
+ * @returns {IKeycloakRole[]} A list of the updated Keycloak roles.
  * @throws If the user does not exist.
  */
 const updateKeycloakUserRoles = async (username: string, roles: string[]) => {
-  const existingRolesResponse = await getKeycloakUserRoles(username);
+  try {
+    const existingRolesResponse = await getKeycloakUserRoles(username);
 
-  // User is found in Keycloak.
-  const existingRoles: string[] = existingRolesResponse.map((role) => role.name);
+    // User is found in Keycloak.
+    const existingRoles: string[] = existingRolesResponse.map((role) => role.name);
 
-  // Find roles that are in Keycloak but are not in new user info.
-  const rolesToRemove = existingRoles.filter((existingRole) => !roles.includes(existingRole));
-  // Remove old roles
-  // No call to remove all as list, so have to loop.
-  rolesToRemove.forEach(async (role) => {
-    await unassignUserRole(username, role);
-  });
+    // Find roles that are in Keycloak but are not in new user info.
+    const rolesToRemove = existingRoles.filter((existingRole) => !roles.includes(existingRole));
+    // Remove old roles
+    // No call to remove all as list, so have to loop.
+    rolesToRemove.forEach(async (role) => {
+      await unassignUserRole(username, role);
+    });
 
-  // Find new roles that aren't in Keycloak already.
-  const rolesToAdd = roles.filter((newRole) => !existingRoles.includes(newRole));
-  // Add new roles
-  const updatedRoles: IKeycloakRolesResponse = await assignUserRoles(username, rolesToAdd);
+    // Find new roles that aren't in Keycloak already.
+    const rolesToAdd = roles.filter((newRole) => !existingRoles.includes(newRole));
+    // Add new roles
+    const updatedRoles: IKeycloakRolesResponse = await assignUserRoles(username, rolesToAdd);
 
-  // Return updated list of roles
-  return updatedRoles.data;
+    // Return updated list of roles
+    return updatedRoles.data;
+  } catch (e: unknown) {
+    const message = `keycloakService.updateKeycloakUserRoles: ${
+      (e as IKeycloakErrorResponse).message
+    }`;
+    logger.warn(message);
+    throw new Error(message);
+  }
 };
 
 const KeycloakService = {
