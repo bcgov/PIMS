@@ -6,11 +6,12 @@ import React from 'react';
 interface IDataCard<T> {
   values: T;
   title: string;
+  onEdit: () => void;
   customFormatter?: (key: keyof T, value: any) => string | JSX.Element | undefined;
 }
 
 const DataCard = <T,>(props: IDataCard<T>) => {
-  const { values, title, customFormatter } = props;
+  const { values, title, customFormatter, onEdit } = props;
 
   const defaultFormatter = (key: keyof T, val: any) => {
     const customFormat = customFormatter?.(key, val);
@@ -40,7 +41,7 @@ const DataCard = <T,>(props: IDataCard<T>) => {
         action={
           <Button
             sx={{ minWidth: '50px', fontWeight: 'bold' }}
-            onClick={() => {}}
+            onClick={() => onEdit()}
             color={'primary'}
           >
             Edit

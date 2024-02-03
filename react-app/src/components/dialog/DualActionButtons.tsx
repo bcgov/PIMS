@@ -23,7 +23,6 @@ const DualActionButtons = (props: IDualActionButtons) => {
       <Button
         sx={{ fontWeight: 'bold' }}
         variant="contained"
-        color="warning"
         onClick={() => onConfirm()}
         {...confirmButtonProps}
       >
