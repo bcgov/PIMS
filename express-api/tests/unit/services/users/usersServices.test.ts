@@ -155,6 +155,15 @@ describe('UNIT - User services', () => {
       const req = await userServices.deleteAccessRequest(produceRequest());
       expect(_requestRemove).toHaveBeenCalledTimes(1);
     });
+
+    it('should throw an error if the access request does not exist', () => {
+      jest
+        .spyOn(AppDataSource.getRepository(AccessRequests), 'findOne')
+        .mockImplementationOnce(() => undefined);
+      expect(
+        async () => await userServices.deleteAccessRequest(produceRequest()),
+      ).rejects.toThrow();
+    });
   });
 
   describe('addAccessRequest', () => {
@@ -167,6 +176,10 @@ describe('UNIT - User services', () => {
       const req = await userServices.addAccessRequest(request, kcUser);
       expect(_requestInsert).toHaveBeenCalledTimes(1);
     });
+
+    it('should throw an error if the provided access request is null', () => {
+      expect(async () => await userServices.addAccessRequest(null, kcUser)).rejects.toThrow();
+    });
   });
 
   describe('updateAccessRequest', () => {
@@ -177,6 +190,10 @@ describe('UNIT - User services', () => {
       req.RoleId = {} as any;
       const request = await userServices.updateAccessRequest(req, kcUser);
       expect(_requestUpdate).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw an error if the provided access request is null', () => {
+      expect(async () => await userServices.updateAccessRequest(null, kcUser)).rejects.toThrow();
     });
   });
 
