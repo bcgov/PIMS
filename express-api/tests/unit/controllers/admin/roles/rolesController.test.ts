@@ -50,6 +50,15 @@ describe('UNIT - Roles Admin', () => {
       expect(mockResponse.statusValue).toBe(200);
       expect(Array.isArray(mockResponse.sendValue)).toBe(true);
     });
+
+    it('should return status 400 if incorrect query params are sent', async () => {
+      mockRequest.query = {
+        page: 'not good',
+      };
+      await getRoles(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+      expect(mockResponse.sendValue).toBe('Could not parse filter.');
+    });
   });
 
   describe('Controller addRole', () => {
@@ -63,12 +72,20 @@ describe('UNIT - Roles Admin', () => {
       expect(mockResponse.statusValue).toBe(201);
       expect(role.Id).toBe(mockResponse.sendValue.Id);
     });
+
+    it('should return a 400 status code if adding a user is unsuccessful', async () => {
+      _addRole.mockImplementationOnce((role) => {
+        throw new Error(role.name);
+      });
+      await addRole(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
   });
 
   describe('Controller getRoleById', () => {
     const role = produceRole();
     beforeEach(() => {
-      _getRole.mockImplementationOnce(() => role);
+      _getRole.mockImplementation(() => role);
       mockRequest.params.id = role.Id;
     });
 
@@ -76,6 +93,12 @@ describe('UNIT - Roles Admin', () => {
       await getRoleById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.Id).toBe(role.Id);
+    });
+
+    it('should return status 404 if the role cannot be found', async () => {
+      _getRole.mockImplementationOnce(() => undefined);
+      await getRoleById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(404);
     });
   });
 
@@ -92,19 +115,41 @@ describe('UNIT - Roles Admin', () => {
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.Name).toBe('new name');
     });
+
+    it('should return status 400 if body id and param id do not match', async () => {
+      mockRequest.params.id = '9999';
+      await updateRoleById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+      expect(mockResponse.sendValue).toBe('Request param id did not match request body id.');
+    });
   });
 
   describe('Controller deleteRoleById', () => {
     const role = produceRole();
     beforeEach(() => {
       mockRequest.params.id = role.Id;
+      mockRequest.body = role;
     });
 
     it('should return status 204', async () => {
-      mockRequest.body = role;
       await deleteRoleById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.Id).toBe(role.Id);
+    });
+
+    it('should return status 400 if body id and param id do not match', async () => {
+      mockRequest.params.id = '9999';
+      await deleteRoleById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+      expect(mockResponse.sendValue).toBe('Request param id did not match request body id.');
+    });
+
+    it('should return status 400 if the rolesService.removeRole throws an error', async () => {
+      _deleteRole.mockImplementationOnce((role) => {
+        throw new Error(role.name);
+      });
+      await deleteRoleById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
     });
   });
 });

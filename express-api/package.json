@@ -15,7 +15,8 @@
     "test:unit": "jest --testPathPattern=/tests/unit",
     "test:integration": "jest --testPathPattern=/tests/integration",
     "swagger": "node ./src/swagger/swagger.mjs",
-    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm"
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
+    "migration": "sh ./src/typeorm/utilities/helperScripts/migrationScript.sh"
   },
   "author": "",
   "license": "ISC",
