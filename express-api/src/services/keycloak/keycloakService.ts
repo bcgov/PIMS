@@ -20,11 +20,11 @@ import {
   unassignUserRole,
   IDIRUserQuery,
 } from '@bcgov/citz-imb-kc-css-api';
-import rolesServices from '../admin/rolesServices';
+import rolesServices from '@/services/admin/rolesServices';
 import { randomUUID } from 'crypto';
 import { AppDataSource } from '@/appDataSource';
 import { DeepPartial, In, Not } from 'typeorm';
-import userServices from '../admin/usersServices';
+import userServices from '@/services/admin/usersServices';
 import { Users, Roles } from '@/typeorm/Entities/Users_Roles_Claims';
 
 /**

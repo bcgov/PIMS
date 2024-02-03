@@ -7,7 +7,9 @@ import {
   produceUser,
 } from '../../../../testUtils/factories';
 import { Roles } from '@/constants/roles';
-import { UserFiltering } from '@/controllers/admin/users/usersSchema';
+import { faker } from '@faker-js/faker';
+import { UUID } from 'crypto';
+import { updateUserRolesByName } from '@/controllers/admin/users/usersController';
 
 let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
@@ -16,6 +18,7 @@ const {
   //addUserRoleByName,
   getUserById,
   getUserRolesByName,
+  getAllRoles,
   getUsers,
   //getUsersSameAgency,
   deleteUserById,
@@ -42,7 +45,7 @@ const _getUserRoles = jest.fn().mockImplementation(() => {
   return ['admin'];
 });
 const _updateUserRoles = jest.fn().mockImplementation((username, roles) => {
-  return [roles];
+  return roles;
 });
 const _getUserById = jest.fn().mockImplementation(() => produceUser());
 
@@ -74,13 +77,22 @@ describe('UNIT - Users Admin', () => {
     });
 
     it('should return a list of users based off the filter', async () => {
-      mockRequest.body = {
+      mockRequest.query = {
         position: 'Tester',
-      } as UserFiltering;
+      };
       await getUsers(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(Array.isArray(mockResponse.sendValue)).toBe(true);
       expect(mockResponse.sendValue.length === 1);
+    });
+
+    it('should return status 400 when given a filter that fails to parse', async () => {
+      mockRequest.query = {
+        page: 'hi',
+      };
+      await getUsers(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+      expect(mockResponse.sendValue).toBe('Failed to parse filter query.');
     });
   });
 
@@ -101,7 +113,7 @@ describe('UNIT - Users Admin', () => {
   describe('Controller addUser', () => {
     const user = produceUser();
     beforeEach(() => {
-      _addUser.mockImplementationOnce(() => user);
+      _addUser.mockImplementation(() => user);
       mockRequest.body = user;
     });
 
@@ -110,12 +122,20 @@ describe('UNIT - Users Admin', () => {
       expect(mockResponse.statusValue).toBe(201);
       expect(mockResponse.sendValue.Id).toBe(mockRequest.body.Id);
     });
+
+    it('should return status 400 when the userService.addUser throws an error', async () => {
+      _addUser.mockImplementationOnce(() => {
+        throw new Error();
+      });
+      await addUser(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
   });
 
   describe('Controller getUserById', () => {
     const user = produceUser();
     beforeEach(() => {
-      _getUserById.mockImplementationOnce(() => user);
+      _getUserById.mockImplementation(() => user);
     });
 
     it('should return status 200 and the user info', async () => {
@@ -124,13 +144,27 @@ describe('UNIT - Users Admin', () => {
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.Id).toBe(user.Id);
     });
+
+    it('should return status 400 if the uuid cannot be parsed', async () => {
+      mockRequest.params.id = 'hello';
+      await getUserById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+      expect(mockResponse.sendValue).toBe('Could not parse UUID.');
+    });
+
+    it('should return status 404 userService.getUserById does not find a user', async () => {
+      mockRequest.params.id = user.Id;
+      _getUserById.mockImplementationOnce(() => undefined);
+      await getUserById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(404);
+    });
   });
 
   describe('Controller updateUserById', () => {
     const user = produceUser();
     user.Email = 'newEmail@gov.bc.ca';
     beforeEach(() => {
-      _updateUser.mockImplementationOnce(() => user);
+      _updateUser.mockImplementation(() => user);
       mockRequest.params.id = user.Id;
       mockRequest.body = { ...user, Email: 'newEmail@gov.bc.ca' };
     });
@@ -140,12 +174,27 @@ describe('UNIT - Users Admin', () => {
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.Email).toBe('newEmail@gov.bc.ca');
     });
+
+    it('should return status 400 if the param ID does not match the body ID', async () => {
+      mockRequest.params.id = faker.string.uuid() as UUID;
+      await updateUserById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+      expect(mockResponse.sendValue).toBe('The param ID does not match the request body.');
+    });
+
+    it('should return status 400 if userService.updateUser throws an error', async () => {
+      _updateUser.mockImplementation(() => {
+        throw new Error();
+      });
+      await updateUserById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
   });
 
   describe('Controller deleteUserById', () => {
     const user = produceUser();
     beforeEach(() => {
-      _deleteUser.mockImplementationOnce(() => user);
+      _deleteUser.mockImplementation(() => user);
       mockRequest.params.id = user.Id;
       mockRequest.body = user;
     });
@@ -154,6 +203,21 @@ describe('UNIT - Users Admin', () => {
       await deleteUserById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.Id).toBe(user.Id);
+    });
+
+    it('should return status 400 if the param ID does not match the body ID', async () => {
+      mockRequest.params.id = faker.string.uuid() as UUID;
+      await deleteUserById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+      expect(mockResponse.sendValue).toBe('The param ID does not match the request body.');
+    });
+
+    it('should return status 400 if userService.deleteUser throws an error', async () => {
+      _deleteUser.mockImplementationOnce(() => {
+        throw new Error();
+      });
+      await deleteUserById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
     });
   });
 
@@ -168,6 +232,66 @@ describe('UNIT - Users Admin', () => {
       // Only role is Admin
       expect(mockResponse.sendValue).toHaveLength(1);
       expect(mockResponse.sendValue.at(0)).toBe('admin');
+    });
+
+    it('should return status 400 if params.username is not provided', async () => {
+      mockRequest.params = {};
+      await getUserRolesByName(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+      expect(mockResponse.sendValue).toBe('Username was empty.');
+    });
+  });
+
+  describe('Controller getAllRoles', () => {
+    const user = produceUser();
+    beforeEach(() => {
+      mockRequest.params = {
+        username: user.Username,
+      };
+    });
+    it('should return status 200 and a list of roles assigned to a user', async () => {
+      await getAllRoles(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(mockResponse.sendValue.at(0)).toBe('admin');
+    });
+
+    it('should return status 400 when no username is provided', async () => {
+      mockRequest.params = {};
+      await getAllRoles(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+      expect(mockResponse.sendValue).toBe('Username was empty.');
+    });
+  });
+
+  describe('Controller updateUserRolesByName', () => {
+    const user = produceUser();
+    beforeEach(() => {
+      _updateUserRoles.mockImplementation((username, roles) => roles);
+      mockRequest.params = {
+        username: user.Username,
+      };
+      mockRequest.body = ['admin', 'auditor'];
+    });
+    it('should return status 200 and a list of updated roles', async () => {
+      await updateUserRolesByName(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      // TODO: Check the return value. It's currently undefined for some reason.
+    });
+
+    it('should return status 400 if the request body was not parsed successfully', async () => {
+      mockRequest.body = {
+        notGood: true,
+      };
+      await updateUserRolesByName(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+      expect(mockResponse.sendValue).toBe('Request body was wrong format.');
+    });
+
+    it('should return 400 if params.username was not provided', async () => {
+      mockRequest.params = {};
+      await updateUserRolesByName(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+      expect(mockResponse.sendValue).toBe('Username was empty.');
     });
   });
 

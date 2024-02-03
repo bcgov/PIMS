@@ -94,6 +94,25 @@ describe('UNIT - User services', () => {
     family_name: 'test',
   };
 
+  describe('getUser', () => {
+    const user = produceUser();
+    it('should return a user when called with a UUID', async () => {
+      jest
+        .spyOn(AppDataSource.getRepository(Users), 'findOneBy')
+        .mockImplementationOnce(async () => user);
+      const result = await userServices.getUser(user.Id);
+      expect(result.FirstName).toBe(user.FirstName);
+    });
+
+    it('should return a user when called with a username', async () => {
+      jest
+        .spyOn(AppDataSource.getRepository(Users), 'findOneBy')
+        .mockImplementationOnce(async () => user);
+      const result = await userServices.getUser(user.Username);
+      expect(result.FirstName).toBe(user.FirstName);
+    });
+  });
+
   describe('activateUser', () => {
     it('updates a user based off the kc username', async () => {
       const found = produceUser();
@@ -176,5 +195,32 @@ describe('UNIT - User services', () => {
       expect(AppDataSource.getRepository(Users).find).toHaveBeenCalledTimes(1);
       expect(Array.isArray(admins)).toBe(true);
     });
+  });
+
+  describe('normalizeKeycloakUser', () => {
+    it('should return a normalized user from IDIR', () => {
+      const result = userServices.normalizeKeycloakUser(kcUser);
+      expect(result.given_name).toBe(kcUser.given_name);
+      expect(result.family_name).toBe(kcUser.family_name);
+      expect(result.username).toBe(kcUser.preferred_username);
+    });
+
+    // TODO: This function looks like it should handle BCeID users, but the param type doesn't fit
+    // It should also allow business and basic bceid users, not just basic
+    // it('should return a normalized BCeID user', () => {
+    //   const bceidUser = {
+    //     identity_provider: 'bciedbasic',
+    //     preferred_username: 'Test',
+    //     bceid_user_guid: '00000000000000000000000000000000',
+    //     bceid_username: 'test',
+    //     display_name: 'Test',
+    //     email: 'test@gov.bc.ca'
+    //   }
+    //   const result = userServices.normalizeKeycloakUser(bceidUser);
+    //   expect(result.given_name).toBe('');
+    //   expect(result.family_name).toBe('');
+    //   expect(result.username).toBe(bceidUser.preferred_username);
+    //   expect(result.guid).toBe('00000000-0000-0000-0000-000000000000')
+    // })
   });
 });
