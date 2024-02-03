@@ -193,6 +193,7 @@ const getAdministrators = async (agencyIds: string[]) => {
 };
 
 const userServices = {
+  getUser,
   activateUser,
   getAccessRequest,
   getAccessRequestById,
@@ -201,6 +202,7 @@ const userServices = {
   updateAccessRequest,
   getAgencies,
   getAdministrators,
+  normalizeKeycloakUser,
 };
 
 export default userServices;
