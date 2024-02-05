@@ -35,11 +35,13 @@ export const addAgency = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  // verify that the request passed in matches the format we need 
-  // call postAgency in service to do work in database
-  // confirm that is has happened
-  // send back response code and information on the agency
-  return stubResponse(res);
+  
+  try {
+    const agency = agencyService.postAgency(req.body);
+    return res.status(201).send(agency);
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message);
+  }
 };
 
 /**
@@ -80,8 +82,12 @@ export const getAgencyById = async (req: Request, res: Response) => {
       }]
    */
 
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  try {
+    const agency = agencyService.getAgencyById(req.body);
+    return res.status(201).send(agency);
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message);
+  }
 };
 
 /**
@@ -99,8 +105,12 @@ export const updateAgencyById = async (req: Request, res: Response) => {
       }]
    */
 
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  try {
+    const agency = agencyService.updateAgencyById(req.body);
+    return res.status(201).send(agency);
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message);
+  }
 };
 
 /**
@@ -118,6 +128,10 @@ export const deleteAgencyById = async (req: Request, res: Response) => {
       }]
    */
 
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  try {
+    const agency = agencyService.deleteAgencyById(req.body);
+    return res.status(201).send(agency);
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message);
+  }
 };

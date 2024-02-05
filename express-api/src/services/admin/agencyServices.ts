@@ -53,7 +53,7 @@ export const getAgencyById = async (agencyId: string) => {
  * @returns Status and information on updated agency.
  * @throws ErrorWithCode if agency isnt found or another error is hit.
  */
-const updateAgencyById = async (agencyIn: Agencies) => { 
+export const updateAgencyById = async (agencyIn: Agencies) => { 
     const findAgency = await getAgencyById(agencyIn.Id);
     try{
         const update = await agencyRepo.update(findAgency, agencyIn);
@@ -69,7 +69,7 @@ const updateAgencyById = async (agencyIn: Agencies) => {
  * @returns Status with conformation on the removal. 
  * @throws ErrorWithCode if the agency isnt found or another error is hit.
  */
-const deleteAgencyById = async (agencyId: string) => { 
+export const deleteAgencyById = async (agencyId: string) => { 
     const findAgency = await getAgencyById(agencyId);
     try{
         const deleted = await agencyRepo.delete(findAgency.Id);
