@@ -1,12 +1,15 @@
-import { AppDataSource } from "@/appDataSource";
-import { Agencies } from "@/typeorm/Entities/Agencies";
+import { AppDataSource } from '@/appDataSource';
+import { Agencies } from '@/typeorm/Entities/Agencies';
+import { UUID, randomUUID } from 'crypto';
+import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import { Repository } from 'typeorm';
 
 const agencyRepo = AppDataSource.getRepository(Agencies);
+const agencyManager = agencyRepo.manager; 
 
 /**
  * @description Gets and returns a list of all agencies.
- * @returns { Agencies[] } A list of agencies 
- * @throws ErrorWithCode if an error is hit.
+ * @returns { Agencies[] } A list of all agencies in the database
  */
 export const getAgencies = async () => { 
     const allAgencies = await agencyRepo.find();
@@ -17,23 +20,31 @@ export const getAgencies = async () => {
  * @description Creates a new agency in the database.
  * @param Request information on agency to be created.
  * @returns Status and information on the added agency
- * @throws Error With Code if there is an error adding to the database.
  */
-const postAgency = async () => {
-    // create agency
-    // connect to database and try to add the agency
-    // if fail throw ErrorWithCode to be caught in controller
-    // if pass send back good response. 
+export const postAgency = async (agency: Agencies) => {
+    // try{
+    //     const existingAgency = await getAgencyById(agency.Id);
+    //     if (existingAgency) {
+    //         throw new ErrorWithCode('Agency already exists', 409);
+    //     };
+    //     const newAgency = AppDataSource.getRepository(Agencies).save(agency);
+    //     return newAgency;
+    // } catch (e) {
+    //     throw new ErrorWithCode(e?.body ?? 'Bad request', e?.status ?? 400);
+    // }
+    console.log(agency);
 };
 
 /**
  * @description Finds and returns an agency with a given id.
  * @param Request id. 
- * @returns Status and found agency.
- * @throws ErrorWithCode if the agency isn't found or if there is another error hit.
+ * @returns found agency.
  */
-const getAgencyById = async () => { 
-    // logic here for getting a single agency that matches provided id 
+export const getAgencyById = async (agencyId: string) => { 
+    const findAgency = agencyRepo.findOne({
+        where: {Id: agencyId},
+    });
+    return findAgency;
 };
 
 /**
@@ -42,8 +53,14 @@ const getAgencyById = async () => {
  * @returns Status and information on updated agency.
  * @throws ErrorWithCode if agency isnt found or another error is hit.
  */
-const updateAgencyById = async () => { 
-    // logic here for posting a single agency that matches provided id
+const updateAgencyById = async (agencyIn: Agencies) => { 
+    const findAgency = await getAgencyById(agencyIn.Id);
+    try{
+        const update = await agencyRepo.update(findAgency, agencyIn);
+        return update;
+    } catch (e) {
+        throw new ErrorWithCode(e?.body ?? 'Unable to update element.', e?.status ?? 400);
+    }
 };
 
 /**
@@ -52,8 +69,15 @@ const updateAgencyById = async () => {
  * @returns Status with conformation on the removal. 
  * @throws ErrorWithCode if the agency isnt found or another error is hit.
  */
-const deleteAgencyById = async () => { 
-    // logic here for deleting a single agency that matches provided id
+const deleteAgencyById = async (agencyId: string) => { 
+    const findAgency = await getAgencyById(agencyId);
+    try{
+        const deleted = await agencyRepo.delete(findAgency.Id);
+        return deleted;
+    } catch (e) {
+        throw new ErrorWithCode(e?.body ?? 'Unable to update element.', e?.status ?? 400);
+    };
+    
 };
 
 /**
