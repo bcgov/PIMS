@@ -16,7 +16,7 @@ export const getAgencies = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  // can use ErrorWithCode try catch 
+  // can use ErrorWithCode try catch
   const agencies = agencyService.getAgencies();
   return res.status(200).send(agencies);
 };
@@ -35,7 +35,7 @@ export const addAgency = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  
+
   try {
     const agency = agencyService.postAgency(req.body);
     return res.status(201).send(agency);
@@ -60,10 +60,10 @@ export const getAgenciesFiltered = async (req: Request, res: Response) => {
    */
 
   // TODO: Replace stub response with controller logic
-  // pull out query 
-  const queryParams = req.query;
+  // pull out query
+  //const queryParams = req.query;
 
-  const reqUser = req.user;
+  //const reqUser = req.user;
   return stubResponse(res);
 };
 
