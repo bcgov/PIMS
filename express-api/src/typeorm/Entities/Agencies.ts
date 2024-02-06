@@ -8,8 +8,8 @@ import {
   OneToMany,
   Relation,
 } from 'typeorm';
-import { Users } from './Users_Roles_Claims';
 import { BaseEntity } from './abstractEntities/BaseEntity';
+import { Users } from './Users_Roles_Claims';
 
 @Entity()
 @Index(['ParentId', 'IsDisabled', 'Id', 'Name', 'SortOrder']) // I'm not sure this index is needed. How often do we search by this group?
