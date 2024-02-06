@@ -92,6 +92,7 @@ export const updateUserById = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
+  // TODO: This schema check should not throw an uncaught error when failing. Handle properly.
   const id = z.string().uuid().parse(req.params.id);
   if (id != req.body.Id) {
     return res.status(400).send('The param ID does not match the request body.');
@@ -119,6 +120,7 @@ export const deleteUserById = async (req: Request, res: Response) => {
       }]
    */
 
+  // TODO: This schema check should not throw an uncaught error when failing. Handle properly.
   const id = z.string().uuid().parse(req.params.id);
   if (id != req.body.Id) {
     return res.status(400).send('The param ID does not match the request body.');
