@@ -2,6 +2,7 @@ import { DataSource } from 'typeorm';
 import { CustomWinstonLogger } from '@/typeorm/utilities/CustomWinstonLogger';
 import dotenv from 'dotenv';
 import { resolve } from 'path';
+
 dotenv.config({ path: resolve(__dirname, '../../.env') });
 
 const {
