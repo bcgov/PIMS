@@ -100,8 +100,8 @@ const getAccessRequestById = async (requestId: number, kcUser: KeycloakUser) => 
     .leftJoinAndSelect('AccessRequests.UserId', 'Users')
     .where('AccessRequests.Id = :requestId', { requestId: requestId })
     .getOne();
-  const internalUser = await getUserFromKeycloak(kcUser);
-  if (accessRequest && accessRequest.UserId.Id != internalUser.Id)
+  const normalizedKc = await normalizeKeycloakUser(kcUser);
+  if (accessRequest && accessRequest.KeycloakUserId != normalizedKc.guid)
     throw new Error('Not authorized.');
   return accessRequest;
 };
@@ -117,14 +117,14 @@ const deleteAccessRequest = async (accessRequest: AccessRequests) => {
   return deletedRequest;
 };
 
-const addAccessRequest = async (accessRequest: AccessRequests, kcUser: KeycloakUser) => {
-  if (accessRequest == null || accessRequest.AgencyId == null || accessRequest.RoleId == null) {
+const addAccessRequest = async (accessRequest: AccessRequests) => {
+  if (
+    accessRequest.KeycloakUserId == null ||
+    accessRequest.AgencyId == null ||
+    accessRequest.RoleId == null
+  ) {
     throw new Error('Null argument.');
   }
-  const internalUser = await getUserFromKeycloak(kcUser);
-  accessRequest.UserId = internalUser;
-  internalUser.Position = accessRequest.UserId.Position;
-
   //Iterating through agencies and roles no longer necessary here?
 
   return AppDataSource.getRepository(AccessRequests).insert(accessRequest);
@@ -134,9 +134,9 @@ const updateAccessRequest = async (updateRequest: AccessRequests, kcUser: Keyclo
   if (updateRequest == null || updateRequest.AgencyId == null || updateRequest.RoleId == null)
     throw new Error('Null argument.');
 
-  const internalUser = await getUserFromKeycloak(kcUser);
+  const normalizedKc = await normalizeKeycloakUser(kcUser);
 
-  if (updateRequest.UserId.Id != internalUser.Id) throw new Error('Not authorized.');
+  if (updateRequest.KeycloakUserId != normalizedKc.guid) throw new Error('Not authorized.');
 
   const result = await AppDataSource.getRepository(AccessRequests).update(
     { Id: updateRequest.Id },

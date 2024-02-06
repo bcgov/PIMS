@@ -1,5 +1,5 @@
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
-import { Users, Roles } from '@/typeorm/Entities/Users_Roles_Claims';
+import { Roles } from '@/typeorm/Entities/Users_Roles_Claims';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, Index, JoinColumn } from 'typeorm';
 import { Agencies } from './Agencies';
 
@@ -8,10 +8,9 @@ export class AccessRequests extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id: number;
 
-  @ManyToOne(() => Users, (User) => User.Id)
-  @JoinColumn({ name: 'UserId' })
+  @Column({ type: 'uuid' })
   @Index()
-  UserId: Users;
+  KeycloakUserId: string;
 
   @Column({ type: 'character varying', length: 1000, nullable: true })
   Note: string;

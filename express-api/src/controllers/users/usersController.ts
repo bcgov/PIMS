@@ -79,9 +79,8 @@ export const submitUserAccessRequest = async (req: Request, res: Response) => {
       "bearerAuth" : []
       }]
    */
-  const user = req?.user as KeycloakUser;
   try {
-    const result = await userServices.addAccessRequest(req.body, user);
+    const result = await userServices.addAccessRequest(req.body);
     return res.status(200).send(result);
   } catch (e) {
     return res.status(e?.code ?? 400).send(e?.message);
