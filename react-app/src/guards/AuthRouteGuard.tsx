@@ -5,8 +5,8 @@ import React from 'react';
 
 /**
  * AuthRouteGuard - Use this to wrap any component you don't want being rendered until the keycloak authentication state has resolved.
- * @param props 
- * @returns 
+ * @param props
+ * @returns
  */
 const AuthRouteGuard = (props: PropsWithChildren) => {
   const authStateContext = useContext(AuthContext);

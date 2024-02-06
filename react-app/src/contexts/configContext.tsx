@@ -19,8 +19,8 @@ const getConfig = (): IConfig => {
 
 /**
  * Retrieves information from the environment and exposes it within this context.
- * @param props 
- * @returns 
+ * @param props
+ * @returns
  */
 export const ConfigContextProvider: React.FC<React.PropsWithChildren> = (props) => {
   const [config, setConfig] = useState<IConfig>();

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 /**
  * useDataLoader - Hook that helps you retrieve data from api calls.
  * Plug in an async api call into the first argument. Then use refresh to make the call, and data to access the response body.
- * 
+ *
  * @param dataFetcher An async api call that returns some data in the response body.
  * @param errorHandler Handle any errors thrown using this.
  * @returns {AFResponse} data - async function response
