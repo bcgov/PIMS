@@ -10,6 +10,15 @@ export interface IFetch {
   del: (url: string, body?: any) => Promise<FetchResponse>;
   post: (url: string, body?: any) => Promise<FetchResponse>;
 }
+
+/**
+ * useFetch - hook serving as a wrapper over the native fetch implementation of node.
+ * You can use this pretty similarly to a certain popular library, the baseUrl can be set to avoid typing in the root path all the time,
+ * the authorization header is automatically set, and the request and response bodies are automatically encoded/decoded into JSON.
+ * 
+ * @param baseUrl 
+ * @returns 
+ */
 const useFetch = (baseUrl?: string) => {
   const keycloak = useKeycloak();
 
