@@ -1,33 +1,37 @@
 import { Entity, Column, Index, ManyToOne, JoinColumn, PrimaryColumn } from 'typeorm';
-import { ProjectStatus } from './ProjectStatus';
-import { Workflows } from './Workflows';
+import { WorkflowProjectStatus } from './WorkflowProjectStatus';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 
 @Entity()
 @Index(['ToWorkflowId', 'ToStatusId'])
 export class ProjectStatusTransitions extends BaseEntity {
-  @ManyToOne(() => Workflows, (Workflow) => Workflow.Id)
+  @ManyToOne(
+    () => WorkflowProjectStatus,
+    (WorkflowProjectStatus) => WorkflowProjectStatus.WorkflowId,
+  )
   @JoinColumn({ name: 'FromWorkflowId' })
   @PrimaryColumn()
   @Index()
-  FromWorkflowId: Workflows;
+  FromWorkflowId: WorkflowProjectStatus;
 
-  @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
+  @ManyToOne(() => WorkflowProjectStatus, (WorkflowProjectStatus) => WorkflowProjectStatus.StatusId)
   @JoinColumn({ name: 'FromStatusId' })
   @PrimaryColumn()
-  FromStatusId: ProjectStatus;
+  FromStatusId: WorkflowProjectStatus;
 
-  @ManyToOne(() => Workflows, (Workflow) => Workflow.Id)
+  @ManyToOne(
+    () => WorkflowProjectStatus,
+    (WorkflowProjectStatus) => WorkflowProjectStatus.WorkflowId,
+  )
   @JoinColumn({ name: 'ToWorkflowId' })
   @PrimaryColumn()
   @Index()
-  ToWorkflowId: Workflows;
+  ToWorkflowId: WorkflowProjectStatus;
 
-  @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
+  @ManyToOne(() => WorkflowProjectStatus, (WorkflowProjectStatus) => WorkflowProjectStatus.StatusId)
   @JoinColumn({ name: 'ToStatusId' })
   @PrimaryColumn()
-  @Index()
-  ToStatusId: ProjectStatus;
+  ToStatusId: WorkflowProjectStatus;
 
   @Column({ type: 'character varying', length: 100 })
   Action: string;

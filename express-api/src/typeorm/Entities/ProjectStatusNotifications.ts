@@ -16,6 +16,7 @@ export class ProjectStatusNotifications extends BaseEntity {
 
   @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
   @JoinColumn({ name: 'FromStatusId' })
+  @Index()
   FromStatusId: ProjectStatus;
 
   @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
