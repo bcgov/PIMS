@@ -80,10 +80,10 @@ export class Users {
   @Index({ unique: true })
   KeycloakUserId: string;
 
-  @Column({ name: 'AgencyId', type: 'varchar', length: 6 })
-  AgencyId: string;
+  @Column({ name: 'AgencyId', type: 'int', nullable: true })
+  AgencyId: number;
 
-  @ManyToOne(() => Agencies, (agency) => agency.Users)
+  @ManyToOne(() => Agencies, (agency) => agency.Users, { nullable: true })
   @JoinColumn({ name: 'AgencyId' })
   Agency: Relation<Agencies>;
 
