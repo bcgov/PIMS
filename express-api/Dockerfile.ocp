@@ -1,0 +1,46 @@
+#############################################
+#                 Base                #
+#############################################
+# Use an official Node.js runtime as a base image
+FROM image-registry.apps.silver.devops.gov.bc.ca/354028-tools/nodejs:18.17.1-bullseye-slim AS base
+
+# Set the working directory in the container
+WORKDIR /express-api
+
+ENV CONTAINERIZED=true
+
+# Copy files, excluding those in .dockerignore
+COPY . .
+
+# Install all dependencies
+RUN npm install
+
+# Generate swagger-output
+RUN npm run swagger
+
+# Compile to JavaScript build 
+RUN npm run build
+
+#############################################
+#                 Prod Build                #
+#############################################
+FROM image-registry.apps.silver.devops.gov.bc.ca/354028-tools/nodejs:18.17.1-bullseye-slim as Prod
+
+# Set the working directory to /express-api
+WORKDIR /express-api
+
+ENV NODE_ENV=production
+ENV CONTAINERIZED=true
+
+# Install packages
+COPY package.json .
+RUN npm install
+
+# Add curl for health check
+RUN apt-get update && apt-get install -y curl
+
+# Copy compiled build from base
+COPY --from=base /express-api/dist .
+
+# entrypoint command
+CMD [ "node", "src/server.js" ]
