@@ -1,4 +1,4 @@
-import type { Users } from '@/typeorm/Entities/Users';
+import type { User } from '@/typeorm/Entities/User';
 import { UUID } from 'crypto';
 import { Column, CreateDateColumn, ManyToOne, JoinColumn, Index, Relation } from 'typeorm';
 
@@ -9,7 +9,7 @@ export abstract class BaseEntity {
   @ManyToOne('Users', 'Users.Id')
   @JoinColumn({ name: 'CreatedById' })
   @Index()
-  CreatedBy: Relation<Users>;
+  CreatedBy: Relation<User>;
 
   @CreateDateColumn()
   CreatedOn: Date;
@@ -20,7 +20,7 @@ export abstract class BaseEntity {
   @ManyToOne('Users', 'Users.Id', { nullable: true })
   @JoinColumn({ name: 'UpdatedById' })
   @Index()
-  UpdatedBy: Relation<Users>;
+  UpdatedBy: Relation<User>;
 
   @Column({ type: 'timestamp', nullable: true })
   UpdatedOn: Date;

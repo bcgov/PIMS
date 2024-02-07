@@ -1,30 +1,30 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { AppDataSource } from '@/appDataSource';
 import userServices from '@/services/users/usersServices';
-import { AccessRequests } from '@/typeorm/Entities/AccessRequests';
-import { Agencies } from '@/typeorm/Entities/Agencies';
-import { Users } from '@/typeorm/Entities/Users';
+import { AccessRequest } from '@/typeorm/Entities/AccessRequest';
+import { Agency } from '@/typeorm/Entities/Agency';
+import { User } from '@/typeorm/Entities/User';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { produceAgency, produceRequest, produceUser } from 'tests/testUtils/factories';
 
 const _usersFindOneBy = jest
-  .spyOn(AppDataSource.getRepository(Users), 'findOneBy')
+  .spyOn(AppDataSource.getRepository(User), 'findOneBy')
   .mockImplementation(async (_where) => produceUser());
 
 const _usersUpdate = jest
-  .spyOn(AppDataSource.getRepository(Users), 'update')
+  .spyOn(AppDataSource.getRepository(User), 'update')
   .mockImplementation(async (_where) => ({ raw: {}, generatedMaps: [] }));
 
 const _usersInsert = jest
-  .spyOn(AppDataSource.getRepository(Users), 'insert')
+  .spyOn(AppDataSource.getRepository(User), 'insert')
   .mockImplementation(async (_where) => ({ raw: {}, generatedMaps: [], identifiers: [] }));
 
 const _requestInsert = jest
-  .spyOn(AppDataSource.getRepository(AccessRequests), 'insert')
+  .spyOn(AppDataSource.getRepository(AccessRequest), 'insert')
   .mockImplementation(async (req) => ({ raw: {}, generatedMaps: [{ ...req }], identifiers: [] }));
 
 const _requestUpdate = jest
-  .spyOn(AppDataSource.getRepository(AccessRequests), 'update')
+  .spyOn(AppDataSource.getRepository(AccessRequest), 'update')
   .mockImplementation(async (id, req) => ({
     raw: {},
     generatedMaps: [req],
@@ -33,7 +33,7 @@ const _requestUpdate = jest
   }));
 
 const _requestRemove = jest
-  .spyOn(AppDataSource.getRepository(AccessRequests), 'remove')
+  .spyOn(AppDataSource.getRepository(AccessRequest), 'remove')
   .mockImplementation(async (req) => req);
 const _requestQueryGetOne = jest.fn().mockImplementation(() => produceRequest());
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -47,35 +47,35 @@ const _requestsCreateQueryBuilder: any = {
 };
 
 jest
-  .spyOn(AppDataSource.getRepository(AccessRequests), 'createQueryBuilder')
+  .spyOn(AppDataSource.getRepository(AccessRequest), 'createQueryBuilder')
   .mockImplementation(() => _requestsCreateQueryBuilder);
 
 jest
-  .spyOn(AppDataSource.getRepository(Users), 'find')
+  .spyOn(AppDataSource.getRepository(User), 'find')
   .mockImplementation(async () => [produceUser()]);
 
 jest
-  .spyOn(AppDataSource.getRepository(Users), 'findOneOrFail')
+  .spyOn(AppDataSource.getRepository(User), 'findOneOrFail')
   .mockImplementation(async () => produceUser());
 
 jest
-  .spyOn(AppDataSource.getRepository(AccessRequests), 'findOne')
+  .spyOn(AppDataSource.getRepository(AccessRequest), 'findOne')
   .mockImplementation(async () => produceRequest());
 
 jest
-  .spyOn(AppDataSource.getRepository(AccessRequests), 'findOneOrFail')
+  .spyOn(AppDataSource.getRepository(AccessRequest), 'findOneOrFail')
   .mockImplementation(async () => produceRequest());
 
 jest
-  .spyOn(AppDataSource.getRepository(Agencies), 'findOne')
+  .spyOn(AppDataSource.getRepository(Agency), 'findOne')
   .mockImplementation(async () => produceAgency());
 
 jest
-  .spyOn(AppDataSource.getRepository(Agencies), 'findOneOrFail')
+  .spyOn(AppDataSource.getRepository(Agency), 'findOneOrFail')
   .mockImplementation(async () => produceAgency());
 
 jest
-  .spyOn(AppDataSource.getRepository(Agencies), 'find')
+  .spyOn(AppDataSource.getRepository(Agency), 'find')
   .mockImplementation(async () => [produceAgency()]);
 
 describe('UNIT - User services', () => {
@@ -98,7 +98,7 @@ describe('UNIT - User services', () => {
     const user = produceUser();
     it('should return a user when called with a UUID', async () => {
       jest
-        .spyOn(AppDataSource.getRepository(Users), 'findOneBy')
+        .spyOn(AppDataSource.getRepository(User), 'findOneBy')
         .mockImplementationOnce(async () => user);
       const result = await userServices.getUser(user.Id);
       expect(result.FirstName).toBe(user.FirstName);
@@ -106,7 +106,7 @@ describe('UNIT - User services', () => {
 
     it('should return a user when called with a username', async () => {
       jest
-        .spyOn(AppDataSource.getRepository(Users), 'findOneBy')
+        .spyOn(AppDataSource.getRepository(User), 'findOneBy')
         .mockImplementationOnce(async () => user);
       const result = await userServices.getUser(user.Username);
       expect(result.FirstName).toBe(user.FirstName);
@@ -133,7 +133,7 @@ describe('UNIT - User services', () => {
   describe('getAccessRequest', () => {
     it('should get the latest accessRequest', async () => {
       const request = await userServices.getAccessRequest(kcUser);
-      expect(AppDataSource.getRepository(AccessRequests).createQueryBuilder).toHaveBeenCalledTimes(
+      expect(AppDataSource.getRepository(AccessRequest).createQueryBuilder).toHaveBeenCalledTimes(
         1,
       );
     });
@@ -158,7 +158,7 @@ describe('UNIT - User services', () => {
 
     it('should throw an error if the access request does not exist', () => {
       jest
-        .spyOn(AppDataSource.getRepository(AccessRequests), 'findOne')
+        .spyOn(AppDataSource.getRepository(AccessRequest), 'findOne')
         .mockImplementationOnce(() => undefined);
       expect(
         async () => await userServices.deleteAccessRequest(produceRequest()),
@@ -200,8 +200,8 @@ describe('UNIT - User services', () => {
   describe('getAgencies', () => {
     it('should return an array of agency ids', async () => {
       const agencies = await userServices.getAgencies('test');
-      expect(AppDataSource.getRepository(Users).findOneOrFail).toHaveBeenCalledTimes(1);
-      expect(AppDataSource.getRepository(Agencies).find).toHaveBeenCalledTimes(1);
+      expect(AppDataSource.getRepository(User).findOneOrFail).toHaveBeenCalledTimes(1);
+      expect(AppDataSource.getRepository(Agency).find).toHaveBeenCalledTimes(1);
       expect(Array.isArray(agencies)).toBe(true);
     });
   });
@@ -209,7 +209,7 @@ describe('UNIT - User services', () => {
   describe('getAdministrators', () => {
     it('should return users that have administrative role in the given agencies', async () => {
       const admins = await userServices.getAdministrators(['123', '456']);
-      expect(AppDataSource.getRepository(Users).find).toHaveBeenCalledTimes(1);
+      expect(AppDataSource.getRepository(User).find).toHaveBeenCalledTimes(1);
       expect(Array.isArray(admins)).toBe(true);
     });
   });

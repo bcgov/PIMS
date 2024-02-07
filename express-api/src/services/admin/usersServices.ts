@@ -1,12 +1,12 @@
 import { AppDataSource } from '@/appDataSource';
-import { Users } from '@/typeorm/Entities/Users';
+import { User } from '@/typeorm/Entities/User';
 import { UserFiltering } from '../../controllers/admin/users/usersSchema';
 import KeycloakService from '../keycloak/keycloakService';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { UUID } from 'crypto';
 
 const getUsers = async (filter: UserFiltering) => {
-  const users = await AppDataSource.getRepository(Users).find({
+  const users = await AppDataSource.getRepository(User).find({
     relations: {
       Agency: true,
       Role: true,
@@ -33,7 +33,7 @@ const getUsers = async (filter: UserFiltering) => {
 };
 
 const getUserById = async (id: string) => {
-  return AppDataSource.getRepository(Users).findOne({
+  return AppDataSource.getRepository(User).findOne({
     relations: {
       Agency: true,
       Role: true,
@@ -44,30 +44,30 @@ const getUserById = async (id: string) => {
   });
 };
 
-const addUser = async (user: Users) => {
-  const resource = await AppDataSource.getRepository(Users).findOne({ where: { Id: user.Id } });
+const addUser = async (user: User) => {
+  const resource = await AppDataSource.getRepository(User).findOne({ where: { Id: user.Id } });
   if (resource) {
     throw new ErrorWithCode('Resource already exists.', 409);
   }
-  const retUser = await AppDataSource.getRepository(Users).save(user);
+  const retUser = await AppDataSource.getRepository(User).save(user);
   return retUser;
 };
 
-const updateUser = async (user: Users) => {
-  const resource = await AppDataSource.getRepository(Users).findOne({ where: { Id: user.Id } });
+const updateUser = async (user: User) => {
+  const resource = await AppDataSource.getRepository(User).findOne({ where: { Id: user.Id } });
   if (!resource) {
     throw new ErrorWithCode('Resource does not exist.', 404);
   }
-  const retUser = await AppDataSource.getRepository(Users).update(user.Id, user);
+  const retUser = await AppDataSource.getRepository(User).update(user.Id, user);
   return retUser.generatedMaps[0];
 };
 
-const deleteUser = async (user: Users) => {
-  const resource = await AppDataSource.getRepository(Users).findOne({ where: { Id: user.Id } });
+const deleteUser = async (user: User) => {
+  const resource = await AppDataSource.getRepository(User).findOne({ where: { Id: user.Id } });
   if (!resource) {
     throw new ErrorWithCode('Resource does not exist.', 404);
   }
-  const retUser = await AppDataSource.getRepository(Users).remove(user);
+  const retUser = await AppDataSource.getRepository(User).remove(user);
   return retUser;
 };
 

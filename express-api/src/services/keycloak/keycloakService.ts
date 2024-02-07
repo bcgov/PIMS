@@ -25,8 +25,8 @@ import { randomUUID } from 'crypto';
 import { AppDataSource } from '@/appDataSource';
 import { DeepPartial, In, Not } from 'typeorm';
 import userServices from '@/services/admin/usersServices';
-import { Users } from '@/typeorm/Entities/Users';
-import { Roles } from '@/typeorm/Entities/Roles';
+import { User } from '@/typeorm/Entities/User';
+import { Role } from '@/typeorm/Entities/Role';
 
 /**
  * @description Sync keycloak roles into PIMS roles.
@@ -42,7 +42,7 @@ const syncKeycloakRoles = async () => {
     const internalRole = await rolesServices.getRoles({ name: role.name });
 
     if (internalRole.length == 0) {
-      const newRole: Roles = {
+      const newRole: Role = {
         Id: randomUUID(),
         Name: role.name,
         IsDisabled: false,
@@ -60,7 +60,7 @@ const syncKeycloakRoles = async () => {
       };
       rolesServices.addRole(newRole);
     } else {
-      const overwriteRole: DeepPartial<Roles> = {
+      const overwriteRole: DeepPartial<Role> = {
         Id: internalRole[0].Id,
         Name: role.name,
         IsDisabled: false,
@@ -76,7 +76,7 @@ const syncKeycloakRoles = async () => {
       rolesServices.updateRole(overwriteRole);
     }
 
-    await AppDataSource.getRepository(Roles).delete({
+    await AppDataSource.getRepository(Role).delete({
       Name: Not(In(roles.map((a) => a.name))),
     });
 
@@ -161,7 +161,7 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
   for (const krole of kroles) {
     const internalRole = await rolesServices.getRoles({ name: krole.name });
     if (internalRole.length == 0) {
-      const newRole: Roles = {
+      const newRole: Role = {
         Id: randomUUID(),
         Name: krole.name,
         IsDisabled: false,
@@ -182,12 +182,12 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const newUsersRoles = await AppDataSource.getRepository(Roles).find({
+  const newUsersRoles = await AppDataSource.getRepository(Role).find({
     where: { Name: In(kroles.map((a) => a.name)) },
   });
 
   if (internalUser.length == 0) {
-    const newUser: Users = {
+    const newUser: User = {
       Id: randomUUID(),
       CreatedById: undefined,
       CreatedBy: undefined,

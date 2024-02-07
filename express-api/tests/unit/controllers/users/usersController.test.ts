@@ -8,7 +8,7 @@ import {
   produceRequest,
 } from '../../../testUtils/factories';
 import { IKeycloakUser } from '@/services/keycloak/IKeycloakUser';
-import { AccessRequests } from '@/typeorm/Entities/AccessRequests';
+import { AccessRequests } from '@/typeorm/Entities/AccessRequest';
 import { faker } from '@faker-js/faker';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 

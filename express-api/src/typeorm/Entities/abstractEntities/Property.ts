@@ -1,7 +1,7 @@
-import { AdministrativeAreas } from '@/typeorm/Entities/AdministrativeAreas';
-import { Agencies } from '@/typeorm/Entities/Agencies';
-import { PropertyClassifications } from '@/typeorm/Entities/PropertyClassifications';
-import { PropertyTypes } from '@/typeorm/Entities/PropertyTypes';
+import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
+import { Agency } from '@/typeorm/Entities/Agency';
+import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
+import { PropertyType } from '@/typeorm/Entities/PropertyType';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Column, ManyToOne, JoinColumn, Index, PrimaryGeneratedColumn, Point } from 'typeorm';
 
@@ -15,25 +15,25 @@ export abstract class Property extends BaseEntity {
   @Column({ type: 'character varying', length: 2000, nullable: true })
   Description: string;
 
-  @ManyToOne(() => PropertyClassifications, (Classification) => Classification.Id)
+  @ManyToOne(() => PropertyClassification, (Classification) => Classification.Id)
   @JoinColumn({ name: 'ClassificationId' })
   @Index()
-  ClassificationId: PropertyClassifications;
+  ClassificationId: PropertyClassification;
 
-  @ManyToOne(() => Agencies, (Agency) => Agency.Id, { nullable: true })
+  @ManyToOne(() => Agency, (Agency) => Agency.Id, { nullable: true })
   @JoinColumn({ name: 'AgencyId' })
   @Index()
-  AgencyId: Agencies;
+  AgencyId: Agency;
 
-  @ManyToOne(() => AdministrativeAreas, (AdminArea) => AdminArea.Id)
+  @ManyToOne(() => AdministrativeArea, (AdminArea) => AdminArea.Id)
   @JoinColumn({ name: 'AdministrativeAreaId' })
   @Index()
-  AdministrativeAreaId: AdministrativeAreas;
+  AdministrativeAreaId: AdministrativeArea;
 
-  @Column({ type: 'bit' })
+  @Column({ type: 'boolean' })
   IsSensitive: boolean;
 
-  @Column({ type: 'bit' })
+  @Column({ type: 'boolean' })
   IsVisibleToOtherAgencies: boolean;
 
   @Column({ type: 'point' }) // We need PostGIS before we can use type geography, using point for now, but maybe this is ok?
@@ -42,10 +42,10 @@ export abstract class Property extends BaseEntity {
   @Column({ type: 'character varying', length: 2000, nullable: true })
   ProjectNumbers: string;
 
-  @ManyToOne(() => PropertyTypes, (PropertyType) => PropertyType.Id)
+  @ManyToOne(() => PropertyType, (PropertyType) => PropertyType.Id)
   @JoinColumn({ name: 'PropertyTypeId' })
   @Index()
-  PropertyTypeId: PropertyTypes;
+  PropertyTypeId: PropertyType;
 
   @Column({ type: 'character varying', length: 150, nullable: true })
   @Index()
