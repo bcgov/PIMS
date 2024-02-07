@@ -6,7 +6,7 @@ export abstract class BaseEntity {
   @Column({ name: 'CreatedById' })
   CreatedById: UUID;
 
-  @ManyToOne('Users', 'Users.Id')
+  @ManyToOne('User', 'User.Id')
   @JoinColumn({ name: 'CreatedById' })
   @Index()
   CreatedBy: Relation<User>;
@@ -17,7 +17,7 @@ export abstract class BaseEntity {
   @Column({ name: 'UpdatedById', nullable: true })
   UpdatedById: UUID;
 
-  @ManyToOne('Users', 'Users.Id', { nullable: true })
+  @ManyToOne('User', 'User.Id', { nullable: true })
   @JoinColumn({ name: 'UpdatedById' })
   @Index()
   UpdatedBy: Relation<User>;
