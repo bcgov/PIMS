@@ -80,6 +80,7 @@ export class User {
   @Index({ unique: true })
   KeycloakUserId: string;
 
+  // Agency Relations
   @Column({ name: 'AgencyId', type: 'int', nullable: true })
   AgencyId: number;
 
@@ -87,8 +88,13 @@ export class User {
   @JoinColumn({ name: 'AgencyId' })
   Agency: Relation<Agency>;
 
-  @OneToMany(() => UserRole, (userRole) => userRole.User, { cascade: true })
-  UserRoles: UserRole[];
+  // Role Relations
+  @Column({ name: 'RoleId', type: 'uuid', nullable: true })
+  RoleId: UUID;
+
+  @ManyToOne(() => Role, (role) => role.Users, { nullable: true })
+  @JoinColumn({ name: 'RoleId' })
+  Role: Relation<Role>;
 }
 
 //This is copied from the BaseEntity in its own file. Obviously duplication is not ideal, but I doubt this will be getting changed much so should be acceptable.
@@ -136,66 +142,6 @@ export class Role extends BaseEntity {
   @Column('boolean')
   IsPublic: boolean;
 
-  @OneToMany(() => UserRole, (userRole) => userRole.Role)
-  UserRoles: UserRole[];
-
-  @OneToMany(() => RoleClaim, (roleClaim) => roleClaim.Role)
-  RoleClaims: RoleClaim[];
-}
-
-@Entity()
-@Index(['IsDisabled', 'Name'])
-export class Claim extends BaseEntity {
-  @PrimaryColumn({ type: 'uuid' })
-  Id: UUID;
-
-  @Column({ type: 'character varying', length: 150 })
-  @Index({ unique: true })
-  Name: string;
-
-  @Column('uuid', { nullable: true })
-  KeycloakRoleId: string;
-
-  @Column('text', { nullable: true })
-  Description: string;
-
-  @Column('boolean')
-  IsDisabled: boolean;
-
-  @OneToMany(() => RoleClaim, (roleClaim) => roleClaim.Claim)
-  RoleClaims: RoleClaim[];
-}
-
-@Entity()
-export class RoleClaim extends BaseEntity {
-  @PrimaryColumn()
-  RoleId: string;
-
-  @PrimaryColumn()
-  ClaimId: string;
-
-  @ManyToOne(() => Role, (Role) => Role.Id)
-  @JoinColumn({ name: 'RoleId', referencedColumnName: 'Id' })
-  Role: Role;
-
-  @ManyToOne(() => Claim, (Claim) => Claim.Id)
-  @JoinColumn({ name: 'ClaimId', referencedColumnName: 'Id' })
-  Claim: Claim;
-}
-
-@Entity()
-export class UserRole extends BaseEntity {
-  @PrimaryColumn()
-  RoleId: string;
-
-  @PrimaryColumn()
-  UserId: string;
-
-  @ManyToOne(() => User, (User) => User.UserRoles)
-  @JoinColumn({ name: 'UserId', referencedColumnName: 'Id' })
-  User: User;
-
-  @ManyToOne(() => Role, (Role) => Role.UserRoles)
-  @JoinColumn({ name: 'RoleId', referencedColumnName: 'Id' })
-  Role: Role;
+  @OneToMany(() => User, (user) => user.Role)
+  Users: User[];
 }

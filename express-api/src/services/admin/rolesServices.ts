@@ -7,9 +7,6 @@ import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
 const getRoles = async (filter: RolesFilter) => {
   const roles = AppDataSource.getRepository(Role).find({
-    relations: {
-      RoleClaims: { Claim: true },
-    },
     where: {
       Name: filter.name,
       Id: filter.id,

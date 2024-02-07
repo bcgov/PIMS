@@ -9,6 +9,7 @@ const getUsers = async (filter: UserFiltering) => {
   const users = await AppDataSource.getRepository(User).find({
     relations: {
       Agency: true,
+      Role: true,
     },
     where: {
       Id: filter.id,
@@ -19,10 +20,8 @@ const getUsers = async (filter: UserFiltering) => {
       Agency: {
         Name: filter.agency,
       },
-      UserRoles: {
-        Role: {
-          Name: filter.role,
-        },
+      Role: {
+        Name: filter.role,
       },
       IsDisabled: filter.isDisabled,
       Position: filter.position,
@@ -37,7 +36,7 @@ const getUserById = async (id: string) => {
   return AppDataSource.getRepository(User).findOne({
     relations: {
       Agency: true,
-      UserRoles: { Role: true },
+      Role: true,
     },
     where: {
       Id: id as UUID,
