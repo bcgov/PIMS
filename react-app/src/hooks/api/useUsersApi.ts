@@ -9,7 +9,7 @@ export interface User { //temp interface, should standardize somehow
 }
 
 export interface AccessRequest {
-  RoledId: string;
+  Position?: string;
   AgencyId: string;
   Note?: string;
 }
@@ -23,8 +23,8 @@ const useUsersApi = (absoluteFetch: IFetch) => {
     const { parsedBody } = await absoluteFetch.get(`/users/self`);
     return parsedBody as User;
   };
-  const submitAccessRequest = async (agencyId: string): Promise<User> => {
-    const { parsedBody } = await absoluteFetch.post(`/users/access/requests`, { agencyId });
+  const submitAccessRequest = async (request: AccessRequest): Promise<User> => {
+    const { parsedBody } = await absoluteFetch.post(`/users/access/requests`, request);
     return parsedBody as User;
   };
   return {

@@ -124,7 +124,12 @@ const deleteAccessRequest = async (accessRequest: AccessRequests) => {
   return deletedRequest;
 };
 
-const addKeycloakUserOnHold = async (kcUser: KeycloakUser, agencyId: string) => {
+const addKeycloakUserOnHold = async (
+  kcUser: KeycloakUser,
+  agencyId: string,
+  position: string,
+  note: string,
+) => {
   if (
     agencyId == null
     // roleId == null
@@ -145,6 +150,8 @@ const addKeycloakUserOnHold = async (kcUser: KeycloakUser, agencyId: string) => 
     IsSystem: 0 as any,
     EmailVerified: 0 as any,
     AgencyId: agencyId,
+    Position: position,
+    Note: note,
   });
   return result.generatedMaps[0];
 };

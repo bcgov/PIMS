@@ -93,12 +93,7 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
             <TextInput name={'Position'} fullWidth label={'Your position'} />
           </Grid>
           <Grid item xs={12}>
-            <TextInput
-              name={'Notes'}
-              multiline
-              fullWidth
-              label={'Notes (e.g. Reason for access)'}
-            />
+            <TextInput name={'Note'} multiline fullWidth label={'Notes (e.g. Reason for access)'} />
           </Grid>
         </Grid>
       </FormProvider>
@@ -122,7 +117,7 @@ export const AccessRequest = () => {
 
   const onSubmit = async (data: AccessRequestType) => {
     try {
-      await api.users.submitAccessRequest(data.AgencyId);
+      await api.users.submitAccessRequest(data);
       await auth.pimsUser.refreshData();
     } catch (e) {
       //Maybe we can display a little snackbar in these cases at some point.
@@ -132,7 +127,14 @@ export const AccessRequest = () => {
   };
 
   return (
-    <Box display="flex" flexDirection={'column'} width="600px" marginX="auto">
+    <Box
+      display="flex"
+      flexDirection={'column'}
+      width="600px"
+      marginX="auto"
+      alignSelf={'center'}
+      mt={'4rem'}
+    >
       <Paper sx={{ padding: '2rem', borderRadius: '32px' }}>
         <Typography mb={'2rem'} variant="h2">
           {auth.pimsUser.data ? 'Access Pending' : 'Access Request'}

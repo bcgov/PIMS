@@ -1,5 +1,4 @@
 import userServices from '@/services/users/usersServices';
-import adminUserServices from '@/services/admin/usersServices';
 import { Request, Response } from 'express';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 /**
@@ -83,7 +82,9 @@ export const submitUserAccessRequest = async (req: Request, res: Response) => {
   try {
     const result = await userServices.addKeycloakUserOnHold(
       req.user as KeycloakUser,
-      req.body.agencyId,
+      req.body.AgencyId,
+      req.body.Position,
+      req.body.Note,
     );
     return res.status(200).send(result);
   } catch (e) {
