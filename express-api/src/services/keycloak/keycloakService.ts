@@ -53,8 +53,7 @@ const syncKeycloakRoles = async () => {
         CreatedOn: undefined,
         UpdatedById: undefined,
         UpdatedOn: undefined,
-        UserRoles: [],
-        RoleClaims: [],
+        Users: [],
       };
       rolesServices.addRole(newRole);
     } else {
@@ -167,8 +166,7 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
         KeycloakGroupId: '',
         Description: '',
         IsPublic: false,
-        UserRoles: [],
-        RoleClaims: [],
+        Users: [],
         CreatedById: undefined,
         CreatedOn: undefined,
         UpdatedById: undefined,
@@ -205,7 +203,8 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
       ApprovedById: undefined,
       ApprovedOn: undefined,
       KeycloakUserId: keycloakGuid,
-      UserRoles: [],
+      Role: undefined,
+      RoleId: undefined,
       Agency: undefined,
       AgencyId: undefined,
     };

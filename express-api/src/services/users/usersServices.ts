@@ -164,31 +164,20 @@ const getAgencies = async (username: string) => {
       ParentId: { Id: agencyId },
     },
   });
-  // .createQueryBuilder('Agencies')
-  // .where('Agencies.ParentId IN (:...ids)', { ids: agencies })
-  // .getMany();
   return [agencyId, ...children.map((c) => c.Id)];
 };
 
 const getAdministrators = async (agencyIds: string[]) => {
   const admins = await AppDataSource.getRepository(Users).find({
     relations: {
-      UserRoles: { Role: { RoleClaims: { Claim: true } } },
+      Role: true,
       Agency: true,
     },
     where: {
       Agency: In(agencyIds),
-      UserRoles: { Role: { RoleClaims: { Claim: { Name: 'System Admin' } } } },
+      Role: { Name: 'System Admin' },
     },
   });
-  // .createQueryBuilder('Users')
-  // .leftJoinAndSelect('Users.Roles', 'Roles')
-  // .leftJoinAndSelect('Roles.Claims', 'Claims')
-  // .leftJoinAndSelect('Users.Agencies', 'Agencies')
-  // .where('Agencies.Id IN (:...agencyIds)', { agencyIds: agencyIds })
-  // .andWhere('Claims.Name = :systemAdmin', { systemAdmin: 'System Admin' })
-  // .getMany();
-
   return admins;
 };
 
