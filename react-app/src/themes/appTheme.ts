@@ -62,6 +62,7 @@ const appTheme = createTheme({
     },
   },
   typography: {
+    fontWeightMedium: 400,
     fontFamily: ['BC Sans', 'Verdana', 'Arial', 'sans-serif'].join(','),
     h1: {
       fontSize: '2.25rem',
@@ -108,6 +109,16 @@ const appTheme = createTheme({
         },
       },
     },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          boxShadow: 'none',
+          ':hover': {
+            boxShadow: 'none',
+          },
+        },
+      },
+    },
     MuiLink: {
       styleOverrides: {
         root: {
@@ -131,6 +142,15 @@ const appTheme = createTheme({
         },
         footerContainer: {
           fontWeight: 700,
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          ':hover': {
+            backgroundColor: '#f8f8f8',
+          },
         },
       },
     },

@@ -36,7 +36,7 @@ module.exports = {
     'no-prototype-builtins': 'off',
     'react/prop-types': 'off',
     'react/display-name': 'off',
-    'no-console': 'error',
+    'no-console': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-inferrable-types': 'off', // ie. const val: number = 4;
     '@typescript-eslint/no-empty-function': 'off', // ie. {}
