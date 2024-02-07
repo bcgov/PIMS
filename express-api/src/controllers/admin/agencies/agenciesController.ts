@@ -17,7 +17,8 @@ export const getAgencies = async (req: Request, res: Response) => {
       }]
    */
   // can use ErrorWithCode try catch
-  const agencies = agencyService.getAgencies();
+
+  const agencies = await agencyService.getAgenciesService();
   return res.status(200).send(agencies);
 };
 
@@ -35,12 +36,11 @@ export const addAgency = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
   try {
-    const agency = agencyService.postAgency(req.body);
+    const agency = await agencyService.postAgency(req.body);
     return res.status(201).send(agency);
   } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message);
+    return res.status(400).send(e.message);
   }
 };
 
@@ -83,8 +83,8 @@ export const getAgencyById = async (req: Request, res: Response) => {
    */
 
   try {
-    const agency = agencyService.getAgencyById(req.body);
-    return res.status(201).send(agency);
+    const agency = await agencyService.getAgencyById(req.body);
+    return res.status(200).send(agency);
   } catch (e) {
     return res.status(e?.code ?? 400).send(e?.message);
   }
