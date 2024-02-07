@@ -9,6 +9,7 @@ import { ConfigContextProvider } from './contexts/configContext';
 import AuthContextProvider from './contexts/authContext';
 import AuthRouteGuard from './guards/AuthRouteGuard';
 import BaseLayout from './components/layout/BaseLayout';
+import UsersTable from '@/pages/UsersTable';
 
 const Router = () => {
   return (
@@ -26,6 +27,18 @@ const Router = () => {
               </BaseLayout>
             }
           />
+          <Route path="admin">
+            <Route
+              path="users"
+              element={
+                <BaseLayout>
+                  <AuthRouteGuard>
+                    <UsersTable />
+                  </AuthRouteGuard>
+                </BaseLayout>
+              }
+            />
+          </Route>
         </Routes>
       </AuthContextProvider>
     </ConfigContextProvider>
