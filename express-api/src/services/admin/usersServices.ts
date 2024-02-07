@@ -16,6 +16,7 @@ const getUsers = async (filter: UserFiltering) => {
       DisplayName: filter.displayName,
       LastName: filter.lastName,
       Email: filter.email,
+      KeycloakUserId: filter.guid,
       Agency: {
         Name: filter.agency,
       },

@@ -1,4 +1,5 @@
 import userServices from '@/services/users/usersServices';
+import adminUserServices from '@/services/admin/usersServices';
 import { Request, Response } from 'express';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 /**
@@ -159,6 +160,24 @@ export const getUserAgencies = async (req: Request, res: Response) => {
     const result = await userServices.getAgencies(user);
     return res.status(200).send(result);
   } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message);
+    
   }
 };
+
+export const getSelf = async (req: Request, res: Response) => {
+  try {
+    const user = userServices.normalizeKeycloakUser(req.user as KeycloakUser);
+    const result = await userServices.getUser(user.guid);
+    if(result)
+    {
+      return res.status(200).send(result);
+    }
+    else 
+    {
+      return res.status(204); //Valid request, but no user for this keycloak login.
+    }
+  }
+  catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message);
+  }
+}

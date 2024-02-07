@@ -14,6 +14,7 @@ export const UserFilteringSchema = z.object({
   position: z.string().optional(),
   id: z.string().uuid().optional(),
   isDisabled: z.boolean().optional(),
+  guid: z.string().uuid().optional()
 });
 
 export type UserFiltering = z.infer<typeof UserFilteringSchema> & { id?: UUID }; //Kinda hacky, but the type expected in typeorm is more strict than what zod infers here.
