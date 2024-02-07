@@ -25,7 +25,6 @@ const getUsers = async (filter: UserFiltering) => {
           Name: filter.role,
         },
       },
-      IsDisabled: filter.isDisabled,
       Position: filter.position,
     },
     take: filter.quantity,

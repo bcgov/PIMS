@@ -1,4 +1,4 @@
-import { Users } from '@/typeorm/Entities/Users_Roles_Claims';
+import { UserStatus, Users } from '@/typeorm/Entities/Users_Roles_Claims';
 import { AppDataSource } from '@/appDataSource';
 import { KeycloakBCeIDUser, KeycloakIdirUser, KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { z } from 'zod';
@@ -6,12 +6,15 @@ import { AccessRequests } from '@/typeorm/Entities/AccessRequests';
 import { In } from 'typeorm';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { Agencies } from '@/typeorm/Entities/Agencies';
+import { randomUUID } from 'crypto';
 
 interface NormalizedKeycloakUser {
   given_name: string;
   family_name: string;
   username: string;
   guid: string;
+  email: string;
+  display_name: string;
 }
 
 const getUser = async (nameOrGuid: string): Promise<Users> => {
@@ -40,6 +43,8 @@ const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => 
         given_name: user.given_name,
         family_name: user.family_name,
         username: username,
+        email: kcUser.email,
+        display_name: kcUser.display_name,
         guid: normalizeUuid(user.idir_user_guid),
       };
     case 'bceidbasic':
@@ -48,6 +53,8 @@ const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => 
         given_name: '',
         family_name: '',
         username: username,
+        email: kcUser.email,
+        display_name: kcUser.display_name,
         guid: normalizeUuid(user.bceid_user_guid),
       };
     default:
@@ -117,17 +124,29 @@ const deleteAccessRequest = async (accessRequest: AccessRequests) => {
   return deletedRequest;
 };
 
-const addAccessRequest = async (accessRequest: AccessRequests) => {
+const addKeycloakUserOnHold = async (kcUser: KeycloakUser, agencyId: string) => {
   if (
-    accessRequest.KeycloakUserId == null ||
-    accessRequest.AgencyId == null ||
-    accessRequest.RoleId == null
+    agencyId == null
+    // roleId == null
   ) {
     throw new Error('Null argument.');
   }
   //Iterating through agencies and roles no longer necessary here?
-
-  return AppDataSource.getRepository(AccessRequests).insert(accessRequest);
+  const normalizedKc = normalizeKeycloakUser(kcUser);
+  const result = await AppDataSource.getRepository(Users).insert({
+    Id: randomUUID(),
+    FirstName: normalizedKc.given_name,
+    LastName: normalizedKc.family_name,
+    Email: normalizedKc.email,
+    DisplayName: normalizedKc.display_name,
+    KeycloakUserId: normalizedKc.guid,
+    Username: normalizedKc.username,
+    Status: UserStatus.OnHold,
+    IsSystem: 0 as any,
+    EmailVerified: 0 as any,
+    AgencyId: agencyId,
+  });
+  return result.generatedMaps[0];
 };
 
 const updateAccessRequest = async (updateRequest: AccessRequests, kcUser: KeycloakUser) => {
@@ -198,7 +217,7 @@ const userServices = {
   getAccessRequest,
   getAccessRequestById,
   deleteAccessRequest,
-  addAccessRequest,
+  addKeycloakUserOnHold,
   updateAccessRequest,
   getAgencies,
   getAdministrators,

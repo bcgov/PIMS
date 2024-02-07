@@ -31,12 +31,17 @@ const useDataLoader = <AFArgs extends any[], AFResponse = unknown, AFError = unk
   const [error, setError] = useState<AFError>();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<AFResponse>();
+  const [oneTimeLoad, setOneTimeLoad] = useState(false);
+
   const getData = useAsync(dataFetcher);
+
   const refreshData = async (...args: AFArgs) => {
     setIsLoading(true);
     setError(undefined);
+
     try {
       const response = await getData(...args);
+
       if (!isMounted) {
         return;
       }
@@ -54,7 +59,15 @@ const useDataLoader = <AFArgs extends any[], AFResponse = unknown, AFError = unk
     }
   };
 
-  return { refreshData, isLoading, data, error };
+  const loadOnce = async (...args: AFArgs) => {
+    if (oneTimeLoad) {
+      return;
+    }
+    setOneTimeLoad(true);
+    return refreshData(...args);
+  };
+
+  return { refreshData, isLoading, data, error, loadOnce };
 };
 
 export default useDataLoader;

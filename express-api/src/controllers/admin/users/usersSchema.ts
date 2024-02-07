@@ -13,7 +13,6 @@ export const UserFilteringSchema = z.object({
   role: z.string().optional(),
   position: z.string().optional(),
   id: z.string().uuid().optional(),
-  isDisabled: z.boolean().optional(),
   guid: z.string().uuid().optional()
 });
 

@@ -5,6 +5,13 @@ export interface User { //temp interface, should standardize somehow
   Username: string;
   FirstName: string;
   KeycloakUserId: string;
+  Status: string;
+}
+
+export interface AccessRequest {
+  RoledId: string;
+  AgencyId: string;
+  Note?: string;
 }
 
 const useUsersApi = (absoluteFetch: IFetch) => {
@@ -15,10 +22,15 @@ const useUsersApi = (absoluteFetch: IFetch) => {
   const getSelf = async (): Promise<User> => {
     const { parsedBody } = await absoluteFetch.get(`/users/self`);
     return parsedBody as User;
-  }
+  };
+  const submitAccessRequest = async (agencyId: string): Promise<User> => {
+    const { parsedBody } = await absoluteFetch.post(`/users/access/requests`, { agencyId });
+    return parsedBody as User;
+  };
   return {
     getLatestAccessRequest,
     getSelf,
+    submitAccessRequest,
   };
 };
 

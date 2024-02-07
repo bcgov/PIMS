@@ -12,6 +12,13 @@ import {
 } from 'typeorm';
 import { Agencies } from './Agencies';
 
+export enum UserStatus {
+  Active = 'Active',
+  OnHold = 'OnHold',
+  Denied = 'Denied',
+  Disabled = 'Disabled',
+}
+
 @Entity()
 export class Users {
   @PrimaryColumn({ type: 'uuid' })
@@ -31,7 +38,7 @@ export class Users {
   @Column({ type: 'timestamp', nullable: true })
   UpdatedOn: Date;
 
-  @Column({ type: 'character varying', length: 25 })
+  @Column({ type: 'character varying', length: 50 })
   @Index({ unique: true })
   Username: string;
 
@@ -55,9 +62,6 @@ export class Users {
   Position: string;
 
   @Column('bit')
-  IsDisabled: boolean;
-
-  @Column('bit')
   EmailVerified: boolean;
 
   @Column('bit')
@@ -75,6 +79,9 @@ export class Users {
 
   @Column({ type: 'timestamp', nullable: true })
   ApprovedOn: Date;
+
+  @Column({ type: 'enum', enum: UserStatus })
+  Status: UserStatus;
 
   @Column({ type: 'uuid', nullable: true })
   @Index({ unique: true })
