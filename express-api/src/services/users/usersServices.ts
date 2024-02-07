@@ -1,4 +1,4 @@
-import { Users } from '@/typeorm/Entities/Users_Roles_Claims';
+import { Users } from '@/typeorm/Entities/Users';
 import { AppDataSource } from '@/appDataSource';
 import { KeycloakBCeIDUser, KeycloakIdirUser, KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { z } from 'zod';

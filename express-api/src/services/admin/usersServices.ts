@@ -1,5 +1,5 @@
 import { AppDataSource } from '@/appDataSource';
-import { Users } from '@/typeorm/Entities/Users_Roles_Claims';
+import { Users } from '@/typeorm/Entities/Users';
 import { UserFiltering } from '../../controllers/admin/users/usersSchema';
 import KeycloakService from '../keycloak/keycloakService';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';

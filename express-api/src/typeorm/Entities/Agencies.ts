@@ -9,7 +9,7 @@ import {
   Relation,
 } from 'typeorm';
 import { BaseEntity } from './abstractEntities/BaseEntity';
-import { Users } from './Users_Roles_Claims';
+import { Users } from './Users';
 
 @Entity()
 @Index(['ParentId', 'IsDisabled', 'Id', 'Name', 'SortOrder']) // I'm not sure this index is needed. How often do we search by this group?

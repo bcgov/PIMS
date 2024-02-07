@@ -3,7 +3,7 @@ import { AppDataSource } from '@/appDataSource';
 import userServices from '@/services/users/usersServices';
 import { AccessRequests } from '@/typeorm/Entities/AccessRequests';
 import { Agencies } from '@/typeorm/Entities/Agencies';
-import { Users } from '@/typeorm/Entities/Users_Roles_Claims';
+import { Users } from '@/typeorm/Entities/Users';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { produceAgency, produceRequest, produceUser } from 'tests/testUtils/factories';
 

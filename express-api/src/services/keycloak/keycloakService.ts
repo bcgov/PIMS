@@ -25,7 +25,8 @@ import { randomUUID } from 'crypto';
 import { AppDataSource } from '@/appDataSource';
 import { DeepPartial, In, Not } from 'typeorm';
 import userServices from '@/services/admin/usersServices';
-import { Users, Roles } from '@/typeorm/Entities/Users_Roles_Claims';
+import { Users } from '@/typeorm/Entities/Users';
+import { Roles } from '@/typeorm/Entities/Roles';
 
 /**
  * @description Sync keycloak roles into PIMS roles.
@@ -50,8 +51,10 @@ const syncKeycloakRoles = async () => {
         Description: '',
         IsPublic: false,
         CreatedById: undefined,
+        CreatedBy: undefined,
         CreatedOn: undefined,
         UpdatedById: undefined,
+        UpdatedBy: undefined,
         UpdatedOn: undefined,
         Users: [],
       };
@@ -168,8 +171,10 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
         IsPublic: false,
         Users: [],
         CreatedById: undefined,
+        CreatedBy: undefined,
         CreatedOn: undefined,
         UpdatedById: undefined,
+        UpdatedBy: undefined,
         UpdatedOn: undefined,
       };
       await rolesServices.addRole(newRole);
@@ -185,8 +190,10 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
     const newUser: Users = {
       Id: randomUUID(),
       CreatedById: undefined,
+      CreatedBy: undefined,
       CreatedOn: undefined,
       UpdatedById: undefined,
+      UpdatedBy: undefined,
       UpdatedOn: undefined,
       Username: kuser.username,
       DisplayName: kuser.attributes.display_name[0],
@@ -201,6 +208,7 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
       Note: '',
       LastLogin: new Date(),
       ApprovedById: undefined,
+      ApprovedBy: undefined,
       ApprovedOn: undefined,
       KeycloakUserId: keycloakGuid,
       Role: undefined,

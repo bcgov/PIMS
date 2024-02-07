@@ -1,6 +1,6 @@
 import { AppDataSource } from '@/appDataSource';
 import rolesServices from '@/services/admin/rolesServices';
-import { Roles } from '@/typeorm/Entities/Users_Roles_Claims';
+import { Roles } from '@/typeorm/Entities/Roles';
 import { produceRole } from 'tests/testUtils/factories';
 import { DeepPartial } from 'typeorm';
 

@@ -1,7 +1,7 @@
 import { AppDataSource } from '@/appDataSource';
 import userServices from '@/services/admin/usersServices';
 import { IKeycloakRole } from '@/services/keycloak/IKeycloakRole';
-import { Users } from '@/typeorm/Entities/Users_Roles_Claims';
+import { Users } from '@/typeorm/Entities/Users';
 import { produceUser } from 'tests/testUtils/factories';
 import { DeepPartial } from 'typeorm';
 import { z } from 'zod';
