@@ -1,18 +1,29 @@
 /* eslint-disable no-console */
 //Simple component testing area.
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { CustomDataGrid, DataGridFloatingMenu } from '@/components/table/DataTable';
-import { Box, Chip, Paper } from '@mui/material';
+import { Box, Button, Chip, Paper, Typography } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
-import BaseLayout from '@/components/layout/BaseLayout';
 import { mdiCheckCircle, mdiCloseThick } from '@mdi/js';
+import usePimsApi from '@/hooks/usePimsApi';
+import useDataLoader from '@/hooks/useDataLoader';
 
 const Dev = () => {
-  const colorMap = {
-    Pending: 'warning',
-    Active: 'success',
-    Hold: 'error',
-  };
+  const { users } = usePimsApi();
+  const {
+    data: realData,
+    refreshData: refreshRealData,
+    isLoading: realDataLoading,
+  } = useDataLoader(users.getLatestAccessRequest, () => {});
+
+  const {
+    data: fakeData,
+    refreshData: refreshFakeData,
+    isLoading: fakeDataLoading,
+  } = useDataLoader(
+    async () => rows,
+    () => {},
+  );
 
   const rows = [
     { UserId: 0, FirstName: 'Graham', LastName: 'Stewart', Status: 'Active', Date: '2023-04-02' },
@@ -26,6 +37,25 @@ const Dev = () => {
     { UserId: 8, FirstName: 'Olivia', LastName: 'Wilson', Status: 'Active', Date: '2023-04-06' },
     { UserId: 9, FirstName: 'Daniel', LastName: 'Miller', Status: 'Hold', Date: '2023-04-06' },
   ];
+
+  const [dataRows, setDataRows] = useState([]);
+  useEffect(() => {
+    if (fakeData) {
+      setDataRows(fakeData);
+    }
+  }, [fakeData]);
+
+  useEffect(() => {
+    if (!realData) {
+      refreshRealData();
+    }
+  }, [realData]);
+
+  const colorMap = {
+    Pending: 'warning',
+    Active: 'success',
+    Hold: 'error',
+  };
 
   const columns: GridColDef[] = [
     {
@@ -80,13 +110,26 @@ const Dev = () => {
   ];
 
   return (
-    <BaseLayout>
-      <Box display={'flex'} justifyContent={'center'}>
-        <Paper sx={{ width: '1080px', padding: '2rem', borderRadius: '32px' }}>
-          <CustomDataGrid getRowId={(row) => row.UserId} columns={columns} rows={rows} />
-        </Paper>
+    <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
+      <Box>
+        <Button onClick={() => refreshFakeData()}>Populate Fake Data</Button>
+        {realDataLoading ? (
+          <Typography>Real API Data loading....</Typography>
+        ) : (
+          <Typography>{JSON.stringify(realData, null, 2)}</Typography>
+        )}
       </Box>
-    </BaseLayout>
+
+      <Paper sx={{ width: '1080px', padding: '2rem', borderRadius: '32px' }}>
+        <CustomDataGrid
+          autoHeight={true}
+          getRowId={(row) => row.UserId}
+          columns={columns}
+          rows={dataRows}
+          loading={fakeDataLoading}
+        />
+      </Paper>
+    </Box>
   );
 };
 

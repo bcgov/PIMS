@@ -1,5 +1,15 @@
-import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
-import { Entity, Column, ManyToOne, Index, JoinColumn, PrimaryColumn } from 'typeorm';
+import {
+  Entity,
+  Index,
+  PrimaryColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+  Relation,
+} from 'typeorm';
+import { BaseEntity } from './abstractEntities/BaseEntity';
+import { Users } from './Users_Roles_Claims';
 
 @Entity()
 @Index(['ParentId', 'IsDisabled', 'Id', 'Name', 'SortOrder']) // I'm not sure this index is needed. How often do we search by this group?
@@ -35,4 +45,7 @@ export class Agencies extends BaseEntity {
 
   @Column({ type: 'character varying', length: 250, nullable: true })
   CCEmail: string;
+
+  @OneToMany(() => Users, (users) => users.Agency)
+  Users: Relation<Users>[];
 }
