@@ -1,15 +1,15 @@
 import { Entity, Column, Index, ManyToOne, JoinColumn, PrimaryColumn } from 'typeorm';
-import { Workflows } from '@/typeorm/Entities/Workflows';
+import { Workflow } from '@/typeorm/Entities/Workflow';
 import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 
 @Entity()
 @Index(['StatusId'])
 export class WorkflowProjectStatus extends BaseEntity {
-  @ManyToOne(() => Workflows, (Workflow) => Workflow.Id)
+  @ManyToOne(() => Workflow, (Workflow) => Workflow.Id)
   @JoinColumn({ name: 'WorkflowId' })
   @PrimaryColumn()
-  WorkflowId: Workflows;
+  WorkflowId: Workflow;
 
   @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
   @JoinColumn({ name: 'StatusId' })
@@ -19,6 +19,6 @@ export class WorkflowProjectStatus extends BaseEntity {
   @Column('int')
   SortOrder: number;
 
-  @Column('bit')
+  @Column('boolean')
   IsOptional: boolean;
 }

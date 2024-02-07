@@ -1,4 +1,4 @@
-import { EvaluationKeys } from '@/typeorm/Entities/EvaluationKeys';
+import { EvaluationKey } from '@/typeorm/Entities/EvaluationKey';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Column, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
@@ -7,9 +7,9 @@ export abstract class Evaluation extends BaseEntity {
   Date: Date;
 
   @PrimaryColumn()
-  @ManyToOne(() => EvaluationKeys, (EvaluationKey) => EvaluationKey.Id)
+  @ManyToOne(() => EvaluationKey, (EvaluationKey) => EvaluationKey.Id)
   @JoinColumn({ name: 'EvaluationKey' })
-  EvaluationKey: EvaluationKeys;
+  EvaluationKey: EvaluationKey;
 
   @Column({ type: 'money' })
   Value: number;

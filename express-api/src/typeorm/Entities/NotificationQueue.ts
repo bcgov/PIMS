@@ -1,9 +1,9 @@
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UUID } from 'crypto';
-import { Projects } from '@/typeorm/Entities/Projects';
-import { NotificationTemplates } from '@/typeorm/Entities/NotificationTemplates';
-import { Agencies } from './Agencies';
+import { Project } from '@/typeorm/Entities/Project';
+import { NotificationTemplate } from '@/typeorm/Entities/NotificationTemplate';
+import { Agency } from './Agency';
 
 @Entity()
 @Index(['Status', 'SendOn', 'Subject'])
@@ -50,19 +50,19 @@ export class NotificationQueue extends BaseEntity {
   @Column({ type: 'character varying', length: 50, nullable: true })
   Tag: string;
 
-  @ManyToOne(() => Projects, (Project) => Project.Id)
+  @ManyToOne(() => Project, (Project) => Project.Id)
   @JoinColumn({ name: 'ProjectId' })
-  ProjectId: Projects;
+  ProjectId: Project;
 
-  @ManyToOne(() => Agencies, (Agency) => Agency.Id)
+  @ManyToOne(() => Agency, (Agency) => Agency.Id)
   @JoinColumn({ name: 'ToAgencyId' })
   @Index()
-  ToAgencyId: Agencies;
+  ToAgencyId: Agency;
 
-  @ManyToOne(() => NotificationTemplates, (Template) => Template.Id)
+  @ManyToOne(() => NotificationTemplate, (Template) => Template.Id)
   @JoinColumn({ name: 'TemplateId' })
   @Index()
-  TemplateId: NotificationTemplates;
+  TemplateId: NotificationTemplate;
 
   @Column({ type: 'uuid' })
   ChesMessageId: UUID;

@@ -1,19 +1,19 @@
-import type { Users } from '@/typeorm/Entities/Users_Roles_Claims';
+import type { User } from '@/typeorm/Entities/User_Role_Claim';
 import { Column, CreateDateColumn, ManyToOne, JoinColumn, Index, Relation } from 'typeorm';
 
 export abstract class BaseEntity {
-  @ManyToOne('Users', 'Users.Id')
+  @ManyToOne('User', 'User.Id')
   @JoinColumn({ name: 'CreatedById' })
   @Index()
-  CreatedById: Relation<Users>;
+  CreatedById: Relation<User>;
 
   @CreateDateColumn()
   CreatedOn: Date;
 
-  @ManyToOne('Users', 'Users.Id', { nullable: true })
+  @ManyToOne('User', 'User.Id', { nullable: true })
   @JoinColumn({ name: 'UpdatedById' })
   @Index()
-  UpdatedById: Relation<Users>;
+  UpdatedById: Relation<User>;
 
   @Column({ type: 'timestamp', nullable: true })
   UpdatedOn: Date;

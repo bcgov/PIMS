@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AccessRequests } from '@/typeorm/Entities/AccessRequests';
-import { Agencies } from '@/typeorm/Entities/Agencies';
-import { Users, Roles as RolesEntity } from '@/typeorm/Entities/Users_Roles_Claims';
+import { AccessRequest } from '@/typeorm/Entities/AccessRequest';
+import { Agency } from '@/typeorm/Entities/Agency';
+import { User, Role as RolesEntity } from '@/typeorm/Entities/User_Role_Claim';
 import { faker } from '@faker-js/faker';
 import { UUID } from 'crypto';
 import { Request, Response } from 'express';
@@ -72,7 +72,7 @@ export const getRequestHandlerMocks = () => {
   return { mockReq, mockRes /*mockNext*/ };
 };
 
-export const produceUser = (): Users => {
+export const produceUser = (): User => {
   const id = faker.string.uuid() as UUID;
   return {
     CreatedOn: faker.date.anytime(),
@@ -101,8 +101,8 @@ export const produceUser = (): Users => {
   };
 };
 
-export const produceRequest = (): AccessRequests => {
-  const request: AccessRequests = {
+export const produceRequest = (): AccessRequest => {
+  const request: AccessRequest = {
     Id: faker.number.int(),
     UserId: produceUser(),
     Note: 'test',
@@ -117,8 +117,8 @@ export const produceRequest = (): AccessRequests => {
   return request;
 };
 
-export const produceAgency = (userId?: string): Agencies => {
-  const agency: Agencies = {
+export const produceAgency = (userId?: string): Agency => {
+  const agency: Agency = {
     Id: userId ?? faker.string.numeric(6),
     Name: faker.company.name(),
     IsDisabled: false,

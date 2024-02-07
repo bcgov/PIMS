@@ -1,24 +1,24 @@
 import { AppDataSource } from '@/appDataSource';
 import rolesServices from '@/services/admin/rolesServices';
-import { Roles } from '@/typeorm/Entities/Users_Roles_Claims';
+import { Role } from '@/typeorm/Entities/User_Role_Claim';
 import { produceRole } from 'tests/testUtils/factories';
 import { DeepPartial } from 'typeorm';
 
 const _rolesFind = jest
-  .spyOn(AppDataSource.getRepository(Roles), 'find')
+  .spyOn(AppDataSource.getRepository(Role), 'find')
   .mockImplementation(async () => [produceRole()]);
 const _rolesSave = jest
-  .spyOn(AppDataSource.getRepository(Roles), 'save')
-  .mockImplementation(async (role: DeepPartial<Roles> & Roles) => role);
+  .spyOn(AppDataSource.getRepository(Role), 'save')
+  .mockImplementation(async (role: DeepPartial<Role> & Role) => role);
 const _rolesUpdate = jest
-  .spyOn(AppDataSource.getRepository(Roles), 'update')
+  .spyOn(AppDataSource.getRepository(Role), 'update')
   .mockImplementation(async (id, role) => ({ raw: {}, generatedMaps: [role], affected: 1 }));
 const _rolesRemove = jest
-  .spyOn(AppDataSource.getRepository(Roles), 'remove')
+  .spyOn(AppDataSource.getRepository(Role), 'remove')
   .mockImplementation(async (role) => role);
 
 const _roleFindOne = jest
-  .spyOn(AppDataSource.getRepository(Roles), 'findOne')
+  .spyOn(AppDataSource.getRepository(Role), 'findOne')
   .mockImplementation(async () => produceRole());
 
 describe('UNIT - Admin roles services', () => {
