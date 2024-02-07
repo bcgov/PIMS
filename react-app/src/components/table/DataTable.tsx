@@ -21,7 +21,7 @@ type RenderCellParams = GridRenderCellParams<any, any, any, GridTreeNodeWithRend
 
 const NoRowsOverlay = (): JSX.Element => {
   return (
-    <GridOverlay>
+    <GridOverlay sx={{ height: '100%' }}>
       <Typography>No rows to display.</Typography>
     </GridOverlay>
   );
