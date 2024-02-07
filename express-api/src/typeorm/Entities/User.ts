@@ -1,11 +1,11 @@
 import { UUID } from 'crypto';
 import { Entity, Column, ManyToOne, Index, JoinColumn, PrimaryColumn, Relation } from 'typeorm';
-import { Agencies } from '@/typeorm/Entities/Agencies';
+import { Agency } from '@/typeorm/Entities/Agency';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
-import { Roles } from '@/typeorm/Entities/Roles';
+import { Role } from '@/typeorm/Entities/Role';
 
 @Entity()
-export class Users extends BaseEntity {
+export class User extends BaseEntity {
   @PrimaryColumn({ type: 'uuid' })
   Id: UUID;
 
@@ -32,13 +32,13 @@ export class Users extends BaseEntity {
   @Column({ type: 'character varying', length: 100, nullable: true })
   Position: string;
 
-  @Column('bit')
+  @Column('boolean')
   IsDisabled: boolean;
 
-  @Column('bit')
+  @Column('boolean')
   EmailVerified: boolean;
 
-  @Column('bit')
+  @Column('boolean')
   IsSystem: boolean;
 
   @Column({ type: 'character varying', length: 1000, nullable: true })
@@ -50,9 +50,9 @@ export class Users extends BaseEntity {
   @Column({ name: 'ApprovedById', type: 'uuid', nullable: true })
   ApprovedById: UUID;
 
-  @ManyToOne(() => Users, (User) => User.Id, { nullable: true })
+  @ManyToOne(() => User, (User) => User.Id, { nullable: true })
   @JoinColumn({ name: 'ApprovedById' })
-  ApprovedBy: Users;
+  ApprovedBy: User;
 
   @Column({ type: 'timestamp', nullable: true })
   ApprovedOn: Date;
@@ -65,15 +65,15 @@ export class Users extends BaseEntity {
   @Column({ name: 'AgencyId', type: 'int', nullable: true })
   AgencyId: number;
 
-  @ManyToOne(() => Agencies, (agency) => agency.Users, { nullable: true })
+  @ManyToOne(() => Agency, (agency) => agency.Users, { nullable: true })
   @JoinColumn({ name: 'AgencyId' })
-  Agency: Relation<Agencies>;
+  Agency: Relation<Agency>;
 
   // Role Relations
   @Column({ name: 'RoleId', type: 'uuid', nullable: true })
   RoleId: UUID;
 
-  @ManyToOne(() => Roles, (role) => role.Users, { nullable: true })
+  @ManyToOne(() => Role, (role) => role.Users, { nullable: true })
   @JoinColumn({ name: 'RoleId' })
-  Role: Relation<Roles>;
+  Role: Relation<Role>;
 }

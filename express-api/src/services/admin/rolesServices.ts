@@ -1,7 +1,7 @@
 import { AppDataSource } from '@/appDataSource';
 import { RolesFilter } from '../../controllers/admin/roles/rolesSchema';
 import { DeepPartial } from 'typeorm';
-import { Roles } from '@/typeorm/Entities/Roles';
+import { Role } from '@/typeorm/Entities/Role';
 import { UUID } from 'crypto';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 

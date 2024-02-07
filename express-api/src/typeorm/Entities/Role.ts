@@ -1,11 +1,11 @@
 import { UUID } from 'crypto';
 import { Entity, Column, Index, PrimaryColumn, OneToMany, Relation } from 'typeorm';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
-import { Users } from '@/typeorm/Entities/Users';
+import { User } from '@/typeorm/Entities/User';
 
 @Entity()
 @Index(['IsDisabled', 'Name'])
-export class Roles extends BaseEntity {
+export class Role extends BaseEntity {
   @PrimaryColumn({ type: 'uuid' })
   Id: UUID;
 
@@ -13,7 +13,7 @@ export class Roles extends BaseEntity {
   @Index({ unique: true })
   Name: string;
 
-  @Column('bit')
+  @Column('boolean')
   IsDisabled: boolean;
 
   @Column('int')
@@ -25,9 +25,9 @@ export class Roles extends BaseEntity {
   @Column('text', { nullable: true })
   Description: string;
 
-  @Column('bit')
+  @Column('boolean')
   IsPublic: boolean;
 
-  @OneToMany(() => Users, (user) => user.Role)
-  Users: Relation<Users>[];
+  @OneToMany(() => User, (user) => user.Role)
+  Users: Relation<User>[];
 }

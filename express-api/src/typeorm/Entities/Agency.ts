@@ -50,5 +50,5 @@ export class Agency extends BaseEntity {
   CCEmail: string;
 
   @OneToMany(() => User, (user) => user.AgencyId)
-  User: Relation<User>[];
+  Users: Relation<User>[];
 }
