@@ -78,7 +78,7 @@ const Header: React.FC = () => {
               <Link underline="none" href="#" variant="h5">
                 Disposal Inventory
               </Link>
-              <Link underline="none" href="#" variant="h5">
+              <Link underline="none" href="/admin/users" variant="h5">
                 Users
               </Link>
             </>

@@ -42,7 +42,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
     mockResponse = mockRes;
   });
 
-  describe('GET /users/info ', () => {
+  describe('getUserInfo', () => {
     it('should return status 200 and keycloak info', async () => {
       const header = { a: faker.string.alphanumeric() };
       const payload = { b: faker.string.alphanumeric() };
@@ -51,9 +51,26 @@ describe('UNIT - Testing controllers for users routes.', () => {
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.b).toBe(payload.b);
     });
+
+    it('should return 400 when an invalid JWT is sent', async () => {
+      mockRequest.token = 'hello';
+      await controllers.getUserInfo(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+
+    it('should return 400 when no JWT is sent', async () => {
+      await controllers.getUserInfo(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+
+    // FIXME: I don't think we should be throwing errors from controllers
+    // it('should throw an error when either side of the jwt cannot be parsed', () => {
+    //   mockRequest.token = 'hello.goodbye';
+    //   expect(() => {controllers.getUserInfo(mockRequest, mockResponse)}).toThrow();
+    // })
   });
 
-  describe('GET /users/access/requests', () => {
+  describe('getUserAccessRequestLatest', () => {
     it('should return status 200 and an access request', async () => {
       await controllers.getUserAccessRequestLatest(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
@@ -66,9 +83,17 @@ describe('UNIT - Testing controllers for users routes.', () => {
       expect(mockResponse.statusValue).toBe(204);
       expect(mockResponse.sendValue.Id).toBeUndefined();
     });
+
+    it('should return status 400 if userService.getAccessRequest throws an error', async () => {
+      _getAccessRequest.mockImplementationOnce(() => {
+        throw new Error();
+      });
+      await controllers.getUserAccessRequestLatest(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
   });
 
-  describe('GET /users/access/requests/:requestId', () => {
+  describe('getUserAccessRequestById', () => {
     const request = produceRequest();
 
     it('should return status 200 and an access request', async () => {
@@ -87,7 +112,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
     });
   });
 
-  describe('PUT /users/access/requests/:requestId', () => {
+  describe('updateUserAccessRequest', () => {
     it('should return status 200 and an access request', async () => {
       const request = produceRequest();
       mockRequest.params.requestId = '1';
@@ -108,7 +133,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
     });
   });
 
-  describe('POST /users/access/requests', () => {
+  describe('submitUserAccessRequest', () => {
     it('should return status 201 and an access request', async () => {
       const request = produceRequest();
       mockRequest.body = request;
@@ -127,7 +152,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
     });
   });
 
-  describe('GET /users/agencies/:username', () => {
+  describe('getUserAgencies', () => {
     it('should return status 200 and an int array', async () => {
       mockRequest.params.username = 'john';
       await controllers.getUserAgencies(mockRequest, mockResponse);

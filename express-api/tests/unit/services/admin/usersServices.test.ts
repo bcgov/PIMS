@@ -49,6 +49,12 @@ describe('UNIT - admin user services', () => {
       expect(_usersSave).toHaveBeenCalledTimes(1);
       expect(user.Id).toBe(retUser.Id);
     });
+
+    it('should throw an error if the user already exists', async () => {
+      const user = produceUser();
+      _usersFindOne.mockResolvedValueOnce(user);
+      expect(async () => await userServices.addUser(user)).rejects.toThrow();
+    });
   });
   describe('updateUser', () => {
     it('should update and return the added user', async () => {
@@ -57,6 +63,12 @@ describe('UNIT - admin user services', () => {
       expect(_usersUpdate).toHaveBeenCalledTimes(1);
       expect(user.Id).toBe(retUser.Id);
     });
+
+    it('should throw an error if the user does not exist', () => {
+      const user = produceUser();
+      _usersFindOne.mockResolvedValueOnce(undefined);
+      expect(async () => await userServices.updateUser(user)).rejects.toThrow();
+    });
   });
   describe('deleteUser', () => {
     it('should delete and return the deleted user', async () => {
@@ -64,6 +76,12 @@ describe('UNIT - admin user services', () => {
       const retUser = await userServices.deleteUser(user);
       expect(_usersRemove).toHaveBeenCalledTimes(1);
       expect(user.Id).toBe(retUser.Id);
+    });
+
+    it('should throw an error if the user does not exist', () => {
+      const user = produceUser();
+      _usersFindOne.mockResolvedValueOnce(undefined);
+      expect(async () => await userServices.deleteUser(user)).rejects.toThrow();
     });
   });
   describe('getRoles', () => {
