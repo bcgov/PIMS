@@ -26,8 +26,6 @@ import { IUser } from '@/interfaces/IUser';
 import AddIcon from '@mui/icons-material/Add';
 import DownloadIcon from '@mui/icons-material/Download';
 import { downloadExcelFile } from '@/utilities/downloadExcelFile';
-import useDataLoader from '@/hooks/useDataLoader';
-import usePimsApi from '@/hooks/usePimsApi';
 import { statusChipFormatter } from '@/utils/formatters';
 
 const CustomMenuItem = (props: PropsWithChildren & { value: string }) => {
@@ -66,10 +64,15 @@ const CustomListSubheader = (props: PropsWithChildren) => {
 
 interface IUsersTable {
   rowClickHandler: GridEventListener<'rowClick'>;
+  data: Record<string, any>;
+  isLoading: boolean;
+  refreshData: () => void;
+  error: unknown;
 }
 
-const UsersTable = ({ rowClickHandler }: IUsersTable) => {
+const UsersTable = (props: IUsersTable) => {
   // States and contexts
+  const { refreshData, data, error, isLoading, rowClickHandler } = props;
   const [users, setUsers] = useState([]);
   const [rowCount, setRowCount] = useState<number>(0);
   const [keywordSearchContents, setKeywordSearchContents] = useState<string>('');
@@ -77,10 +80,6 @@ const UsersTable = ({ rowClickHandler }: IUsersTable) => {
   const [gridFilterItems, setGridFilterItems] = useState([]);
   const { state } = useKeycloak();
   const tableApiRef = useGridApiRef(); // Ref to MUI DataGrid
-
-  // Getting data from API
-  const usersApi = usePimsApi();
-  const { data, refreshData, isLoading, error } = useDataLoader(usersApi.users.getAllUsers);
 
   useEffect(() => {
     if (error) {

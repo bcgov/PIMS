@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import DataCard from '../display/DataCard';
 import { Avatar, Box, Button, Grid, IconButton, Typography, useTheme } from '@mui/material';
 import Icon from '@mdi/react';
@@ -13,6 +13,7 @@ import AutocompleteFormField from '@/components/form/AutocompleteFormField';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { User } from '@/hooks/api/useUsersApi';
+import { AuthContext } from '@/contexts/authContext';
 
 interface IUserDetail {
   userId: string;
@@ -20,6 +21,7 @@ interface IUserDetail {
 }
 
 const UserDetail = ({ userId, onClose }: IUserDetail) => {
+  const { pimsUser } = useContext(AuthContext);
   const theme = useTheme();
   const api = usePimsApi();
 
@@ -108,6 +110,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
         </IconButton>
         <Typography variant="h5">Back to User Overview</Typography>
         <Button
+          disabled={pimsUser.data.Id === userId}
           onClick={() => setOpenDeleteDialog(true)}
           sx={{ fontWeight: 'bold', color: theme.palette.warning.main, marginLeft: 'auto' }}
         >
@@ -130,8 +133,11 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
         title={'Delete account'}
         message={deleteAccountConfirmText}
         deleteText="Delete Account"
-        onDelete={function (): void {
-          throw new Error('Function not implemented.');
+        onDelete={() => {
+          api.users.deleteUser(userId).then(() => {
+            setOpenDeleteDialog(false);
+            onClose();
+          });
         }}
         onClose={() => setOpenDeleteDialog(false)}
       />
@@ -139,8 +145,9 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
         title={'Update User Profile'}
         open={openProfileDialog}
         onConfirm={() => {
-          api.users.updateUser(userId, { Id: userId, ...profileFormMethods.getValues() });
-          refreshData();
+          api.users
+            .updateUser(userId, { Id: userId, ...profileFormMethods.getValues() })
+            .then(() => refreshData());
           setOpenProfileDialog(false);
         }}
         onCancel={() => setOpenProfileDialog(false)}
@@ -172,11 +179,12 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
         title={'Update User Status'}
         open={openStatusDialog}
         onConfirm={() => {
-          api.users.updateUser(userId, {
-            Id: userId,
-            Status: statusFormMethods.getValues().Status,
-          });
-          refreshData();
+          api.users
+            .updateUser(userId, {
+              Id: userId,
+              Status: statusFormMethods.getValues().Status,
+            })
+            .then(() => refreshData());
           setOpenStatusDialog(false);
         }}
         onCancel={() => setOpenStatusDialog(false)}
