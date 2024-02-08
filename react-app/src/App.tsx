@@ -9,18 +9,14 @@ import { ConfigContextProvider } from './contexts/configContext';
 import AuthContextProvider from './contexts/authContext';
 import AuthRouteGuard from './guards/AuthRouteGuard';
 import BaseLayout from './components/layout/BaseLayout';
-<<<<<<< HEAD
 import { AccessRequest } from './pages/AccessRequest';
-=======
-import UsersTable from '@/pages/UsersTable';
->>>>>>> main
+import UsersTable from './pages/UsersTable';
 
 const Router = () => {
   return (
     <ConfigContextProvider>
       <AuthContextProvider>
         <Routes>
-<<<<<<< HEAD
           <Route
             index
             element={
@@ -39,9 +35,6 @@ const Router = () => {
               </BaseLayout>
             }
           />
-=======
-          <Route index element={<Home />} />
->>>>>>> main
           <Route
             path="/dev"
             element={
@@ -52,8 +45,6 @@ const Router = () => {
               </BaseLayout>
             }
           />
-<<<<<<< HEAD
-=======
           <Route path="admin">
             <Route
               path="users"
@@ -66,7 +57,6 @@ const Router = () => {
               }
             />
           </Route>
->>>>>>> main
         </Routes>
       </AuthContextProvider>
     </ConfigContextProvider>
