@@ -32,10 +32,14 @@ export class Agency extends BaseEntity {
   @Column({ type: 'character varying', length: 500, nullable: true })
   Description: string;
 
+  // Parent Agency Relations
+  @Column({ name: 'ParentId', type: 'int' })
+  ParentId: number;
+
   @ManyToOne(() => Agency, (agency) => agency.Id)
   @JoinColumn({ name: 'ParentId' })
   @Index()
-  ParentId: Agency;
+  Parent: Agency;
 
   @Column({ type: 'character varying', length: 150, nullable: true })
   Email: string;

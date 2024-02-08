@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Index, Column } from 'typeorm';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Project } from '@/typeorm/Entities/Project';
 import { Building } from '@/typeorm/Entities/Building';
@@ -11,19 +11,35 @@ export class ProjectProperty extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id: number;
 
+  // Project Relation
+  @Column({ name: 'ProjectId', type: 'int' })
+  ProjectId: number;
+
   @ManyToOne(() => Project, (Project) => Project.Id)
   @JoinColumn({ name: 'ProjectId' })
-  ProjectId: Project;
+  Project: Project;
+
+  // Property Type Relation
+  @Column({ name: 'PropertyTypeId', type: 'int' })
+  PropertyTypeId: number;
 
   @ManyToOne(() => PropertyType, (PropertyType) => PropertyType.Id)
-  @JoinColumn({ name: 'PropertyType' })
+  @JoinColumn({ name: 'PropertyTypeId' })
   PropertyType: PropertyType;
+
+  // Parcel Relation
+  @Column({ name: 'ParcelId', type: 'int' })
+  ParcelId: number;
 
   @ManyToOne(() => Parcel, (Parcel) => Parcel.Id)
   @JoinColumn({ name: 'ParcelId' })
-  ParcelId: Parcel;
+  Parcel: Parcel;
+
+  // Building Relation
+  @Column({ name: 'BuildingId', type: 'int' })
+  BuildingId: number;
 
   @ManyToOne(() => Building, (Building) => Building.Id)
   @JoinColumn({ name: 'BuildingId' })
-  BuildingId: Building;
+  Building: Building;
 }

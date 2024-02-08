@@ -101,8 +101,7 @@ const getAccessRequestById = async (requestId: number, kcUser: KeycloakUser) => 
     .where('AccessRequests.Id = :requestId', { requestId: requestId })
     .getOne();
   const internalUser = await getUserFromKeycloak(kcUser);
-  if (accessRequest && accessRequest.UserId.Id != internalUser.Id)
-    throw new Error('Not authorized.');
+  if (accessRequest && accessRequest.UserId != internalUser.Id) throw new Error('Not authorized.');
   return accessRequest;
 };
 
@@ -122,8 +121,8 @@ const addAccessRequest = async (accessRequest: AccessRequest, kcUser: KeycloakUs
     throw new Error('Null argument.');
   }
   const internalUser = await getUserFromKeycloak(kcUser);
-  accessRequest.UserId = internalUser;
-  internalUser.Position = accessRequest.UserId.Position;
+  accessRequest.User = internalUser;
+  internalUser.Position = accessRequest.User.Position;
 
   //Iterating through agencies and roles no longer necessary here?
 
@@ -136,7 +135,7 @@ const updateAccessRequest = async (updateRequest: AccessRequest, kcUser: Keycloa
 
   const internalUser = await getUserFromKeycloak(kcUser);
 
-  if (updateRequest.UserId.Id != internalUser.Id) throw new Error('Not authorized.');
+  if (updateRequest.UserId != internalUser.Id) throw new Error('Not authorized.');
 
   const result = await AppDataSource.getRepository(AccessRequest).update(
     { Id: updateRequest.Id },
@@ -161,7 +160,7 @@ const getAgencies = async (username: string) => {
   const agencyId = userAgencies.Agency.Id;
   const children = await AppDataSource.getRepository(Agency).find({
     where: {
-      ParentId: { Id: agencyId },
+      ParentId: agencyId,
     },
   });
   return [agencyId, ...children.map((c) => c.Id)];

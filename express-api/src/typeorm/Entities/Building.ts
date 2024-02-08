@@ -10,18 +10,26 @@ import { Property } from '@/typeorm/Entities/abstractEntities/Property';
 // Can Buildings and Parcels share a base Properties entity?
 @Entity()
 export class Building extends Property {
+  // Construction Type Relations
+  @Column({ name: 'BuildingConstructionTypeId', type: 'int' })
+  BuildingConstructionTypeId: number;
+
   @ManyToOne(() => BuildingConstructionType, (ConstructionType) => ConstructionType.Id)
   @JoinColumn({ name: 'BuildingConstructionTypeId' })
   @Index()
-  BuildingConstructionTypeId: BuildingConstructionType;
+  BuildingConstructionType: BuildingConstructionType;
 
   @Column({ type: 'int' })
   BuildingFloorCount: number;
 
+  // Predominate Use Relations
+  @Column({ name: 'BuildingPredominateUseId', type: 'int' })
+  BuildingPredominateUseId: number;
+
   @ManyToOne(() => BuildingPredominateUse, (PredominateUse) => PredominateUse.Id)
   @JoinColumn({ name: 'BuildingPredominateUseId' })
   @Index()
-  BuildingPredominateUseId: BuildingPredominateUse;
+  BuildingPredominateUse: BuildingPredominateUse;
 
   @Column({ type: 'character varying', length: 450 })
   BuildingTenancy: string;
@@ -29,10 +37,14 @@ export class Building extends Property {
   @Column({ type: 'real' })
   RentableArea: number;
 
+  // Occupant Type Relations
+  @Column({ name: 'BuildingOccupantTypeId', type: 'int' })
+  BuildingOccupantTypeId: number;
+
   @ManyToOne(() => BuildingOccupantType, (OccupantType) => OccupantType.Id)
   @JoinColumn({ name: 'BuildingOccupantTypeId' })
   @Index()
-  BuildingOccupantTypeId: BuildingOccupantType;
+  BuildingOccupantType: BuildingOccupantType;
 
   @Column({ type: 'timestamp', nullable: true })
   LeaseExpiry: Date;

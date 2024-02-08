@@ -8,7 +8,7 @@ import {
   produceRequest,
 } from '../../../testUtils/factories';
 import { IKeycloakUser } from '@/services/keycloak/IKeycloakUser';
-import { AccessRequests } from '@/typeorm/Entities/AccessRequest';
+import { AccessRequest } from '@/typeorm/Entities/AccessRequest';
 import { faker } from '@faker-js/faker';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 
@@ -25,10 +25,9 @@ jest.mock('@/services/users/usersServices', () => ({
   activateUser: () => _activateUser(),
   getAccessRequest: () => _getAccessRequest(),
   getAccessRequestById: () => _getAccessRequestById(),
-  deleteAccessRequest: (request: AccessRequests) => _deleteAccessRequest(request),
-  addAccessRequest: (request: AccessRequests, _kc: KeycloakUser) => _addAccessRequest(request),
-  updateAccessRequest: (request: AccessRequests, _kc: KeycloakUser) =>
-    _updateAccessRequest(request),
+  deleteAccessRequest: (request: AccessRequest) => _deleteAccessRequest(request),
+  addAccessRequest: (request: AccessRequest, _kc: KeycloakUser) => _addAccessRequest(request),
+  updateAccessRequest: (request: AccessRequest, _kc: KeycloakUser) => _updateAccessRequest(request),
   getAgencies: () => _getAgencies(),
   getAdministrators: () => _getAdministrators(),
 }));

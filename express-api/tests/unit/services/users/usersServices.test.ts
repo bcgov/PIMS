@@ -143,7 +143,8 @@ describe('UNIT - User services', () => {
     it('should get the accessRequest at the id specified', async () => {
       const user = produceUser();
       const req = produceRequest();
-      req.UserId = user;
+      req.User = user;
+      req.UserId = user.Id;
       _usersFindOneBy.mockResolvedValueOnce(user);
       _requestQueryGetOne.mockImplementationOnce(() => req);
       const request = await userServices.getAccessRequestById(req.Id, kcUser);
@@ -185,7 +186,7 @@ describe('UNIT - User services', () => {
   describe('updateAccessRequest', () => {
     it('should update and return the access request', async () => {
       const req = produceRequest();
-      _usersFindOneBy.mockResolvedValueOnce(req.UserId);
+      _usersFindOneBy.mockResolvedValueOnce(req.User);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       req.RoleId = {} as any;
       const request = await userServices.updateAccessRequest(req, kcUser);

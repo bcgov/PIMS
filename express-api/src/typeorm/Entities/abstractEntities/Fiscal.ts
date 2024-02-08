@@ -3,14 +3,16 @@ import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Entity, Column, Index, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity()
-@Index(['FiscalYear', 'FiscalKey', 'Value'])
+@Index(['FiscalYear', 'FiscalKeyId', 'Value'])
 export class Fiscal extends BaseEntity {
   @PrimaryColumn('int')
   FiscalYear: number;
 
-  @PrimaryColumn()
+  @PrimaryColumn({ name: 'FiscalKeyId', type: 'int' })
+  FiscalKeyId: number;
+
   @ManyToOne(() => FiscalKey, (FiscalKey) => FiscalKey.Id)
-  @JoinColumn({ name: 'FiscalKey' })
+  @JoinColumn({ name: 'FiscalKeyId' })
   FiscalKey: FiscalKey;
 
   @Column('money')

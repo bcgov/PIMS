@@ -14,16 +14,22 @@ import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 @Entity()
 @Index(['ProjectId', 'TaskId', 'IsCompleted', 'CompletedOn'])
 export class ProjectTask extends BaseEntity {
+  // Project Relation
+  @PrimaryColumn({ name: 'ProjectId', type: 'int' })
+  ProjectId: number;
+
   @ManyToOne(() => Project, (Project) => Project.Id)
   @JoinColumn({ name: 'ProjectId' })
-  @PrimaryColumn()
-  ProjectId: Project;
+  Project: Project;
+
+  // Task Relation
+  @PrimaryColumn({ name: 'TaskId', type: 'int' })
+  @Index()
+  TaskId: number;
 
   @ManyToOne(() => Task, (Task) => Task.Id)
   @JoinColumn({ name: 'TaskId' })
-  @PrimaryColumn()
-  @Index()
-  TaskId: Task;
+  Task: Task;
 
   @Column('boolean')
   IsCompleted: boolean;

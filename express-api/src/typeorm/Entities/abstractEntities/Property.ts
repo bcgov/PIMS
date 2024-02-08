@@ -15,20 +15,32 @@ export abstract class Property extends BaseEntity {
   @Column({ type: 'character varying', length: 2000, nullable: true })
   Description: string;
 
+  // Classification Relations
+  @Column({ name: 'ClassificationId', type: 'int' })
+  ClassificationId: number;
+
   @ManyToOne(() => PropertyClassification, (Classification) => Classification.Id)
   @JoinColumn({ name: 'ClassificationId' })
   @Index()
-  ClassificationId: PropertyClassification;
+  Classification: PropertyClassification;
+
+  // Agency Relations
+  @Column({ name: 'AgencyId', type: 'int', nullable: true })
+  AgencyId: number;
 
   @ManyToOne(() => Agency, (Agency) => Agency.Id, { nullable: true })
   @JoinColumn({ name: 'AgencyId' })
   @Index()
-  AgencyId: Agency;
+  Agency: Agency;
+
+  // Administrative Area Relations
+  @Column({ name: 'AdministrativeAreaId', type: 'int' })
+  AdministrativeAreaId: number;
 
   @ManyToOne(() => AdministrativeArea, (AdminArea) => AdminArea.Id)
   @JoinColumn({ name: 'AdministrativeAreaId' })
   @Index()
-  AdministrativeAreaId: AdministrativeArea;
+  AdministrativeArea: AdministrativeArea;
 
   @Column({ type: 'boolean' })
   IsSensitive: boolean;
@@ -42,10 +54,14 @@ export abstract class Property extends BaseEntity {
   @Column({ type: 'character varying', length: 2000, nullable: true })
   ProjectNumbers: string;
 
+  // Property Type Relations
+  @Column({ name: 'PropertyTypeId', type: 'int' })
+  PropertyTypeId: number;
+
   @ManyToOne(() => PropertyType, (PropertyType) => PropertyType.Id)
   @JoinColumn({ name: 'PropertyTypeId' })
   @Index()
-  PropertyTypeId: PropertyType;
+  PropertyType: PropertyType;
 
   @Column({ type: 'character varying', length: 150, nullable: true })
   @Index()

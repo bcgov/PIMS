@@ -34,13 +34,21 @@ export class AdministrativeArea extends BaseEntity {
   @Column({ type: 'character varying', length: 50, nullable: true })
   BoundaryType: string;
 
+  // Regional District Relations
+  @Column({ name: 'RegionalDistrictId', type: 'character varying' })
+  RegionalDistrictId: string;
+
   @ManyToOne(() => RegionalDistrict, (RegionalDistrict) => RegionalDistrict.Id)
   @JoinColumn({ name: 'RegionalDistrictId' })
   @Index()
-  RegionalDistrictId: RegionalDistrict;
+  RegionalDistrict: RegionalDistrict;
+
+  // Regional District Relations
+  @Column({ name: 'ProvinceId', type: 'character varying', length: 2 })
+  ProvinceId: string;
 
   @ManyToOne(() => Province, (Province) => Province.Id)
   @JoinColumn({ name: 'ProvinceId' })
   @Index()
-  ProvinceId: Province;
+  Province: Province;
 }

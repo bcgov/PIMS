@@ -107,13 +107,19 @@ export const produceUser = (): User => {
 };
 
 export const produceRequest = (): AccessRequest => {
+  const agency = produceAgency();
+  const role = produceRole();
+  const user = produceUser();
   const request: AccessRequest = {
     Id: faker.number.int(),
-    UserId: produceUser(),
+    UserId: user.Id,
+    User: user,
     Note: 'test',
     Status: 0,
-    RoleId: undefined,
-    AgencyId: produceAgency(),
+    RoleId: role.Id,
+    Role: role,
+    Agency: agency,
+    AgencyId: agency.Id,
     CreatedById: undefined,
     CreatedBy: undefined,
     CreatedOn: faker.date.anytime(),
@@ -126,12 +132,13 @@ export const produceRequest = (): AccessRequest => {
 
 export const produceAgency = (code?: string): Agency => {
   const agency: Agency = {
-    Id: faker.number.int(),
+    Id: faker.number.int({ max: 10 }),
     Name: faker.company.name(),
     IsDisabled: false,
     SortOrder: 0,
     Description: '',
     ParentId: undefined,
+    Parent: undefined,
     Code: code ?? faker.string.alpha({ length: 4 }),
     Email: faker.internet.email(),
     SendEmail: false,

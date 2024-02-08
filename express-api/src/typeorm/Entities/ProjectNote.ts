@@ -8,9 +8,13 @@ export class ProjectNote extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id: number;
 
+  // Project Relation
+  @Column({ name: 'ProjectId', type: 'int' })
+  ProjectId: number;
+
   @ManyToOne(() => Project, (Project) => Project.Id)
   @JoinColumn({ name: 'ProjectId' })
-  ProjectId: Project;
+  Project: Project;
 
   @Column('int')
   NoteType: number;
