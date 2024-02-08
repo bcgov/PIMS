@@ -20,17 +20,66 @@ import {
   unassignUserRole,
   IDIRUserQuery,
 } from '@bcgov/citz-imb-kc-css-api';
+import rolesServices from '@/services/admin/rolesServices';
+import { randomUUID } from 'crypto';
+import { AppDataSource } from '@/appDataSource';
+import { DeepPartial, In, Not } from 'typeorm';
+import userServices from '@/services/admin/usersServices';
+import { Users, Roles } from '@/typeorm/Entities/Users_Roles_Claims';
 
 /**
  * @description Sync keycloak roles into PIMS roles.
  */
-// TODO: Complete when role service is complete.
 const syncKeycloakRoles = async () => {
   // Gets roles from keycloak
   // For each role
   // If role is in PIMS, update it
   // If not in PIMS, add it
   // If PIMS has roles that aren't in Keycloak, remove them.
+  const roles = await KeycloakService.getKeycloakRoles();
+  for (const role of roles) {
+    const internalRole = await rolesServices.getRoles({ name: role.name });
+
+    if (internalRole.length == 0) {
+      const newRole: Roles = {
+        Id: randomUUID(),
+        Name: role.name,
+        IsDisabled: false,
+        SortOrder: 0,
+        KeycloakGroupId: '',
+        Description: '',
+        IsPublic: false,
+        CreatedById: undefined,
+        CreatedOn: undefined,
+        UpdatedById: undefined,
+        UpdatedOn: undefined,
+        UserRoles: [],
+        RoleClaims: [],
+      };
+      rolesServices.addRole(newRole);
+    } else {
+      const overwriteRole: DeepPartial<Roles> = {
+        Id: internalRole[0].Id,
+        Name: role.name,
+        IsDisabled: false,
+        SortOrder: 0,
+        KeycloakGroupId: '',
+        Description: '',
+        IsPublic: false,
+        CreatedById: undefined,
+        CreatedOn: undefined,
+        UpdatedById: undefined,
+        UpdatedOn: undefined,
+      };
+      rolesServices.updateRole(overwriteRole);
+    }
+
+    await AppDataSource.getRepository(Roles).delete({
+      Name: Not(In(roles.map((a) => a.name))),
+    });
+
+    return roles;
+  }
 };
 
 /**
@@ -95,8 +144,7 @@ const updateKeycloakRole = async (roleName: string, newRoleName: string) => {
   return role;
 };
 
-// TODO: Complete when user and role services are complete.
-const syncKeycloakUser = async () => {
+const syncKeycloakUser = async (keycloakGuid: string) => {
   // Does user exist in Keycloak?
   // Get their existing roles.
   // Does user exist in PIMS
@@ -104,6 +152,74 @@ const syncKeycloakUser = async () => {
   // Update the roles in PIMS to match their Keycloak roles
   // If they don't exist in PIMS...
   // Add user and assign their roles
+  const kuser = await KeycloakService.getKeycloakUser(keycloakGuid);
+  const kroles = await KeycloakService.getKeycloakUserRoles(kuser.username);
+  const internalUser = await userServices.getUsers({ username: kuser.username });
+
+  for (const krole of kroles) {
+    const internalRole = await rolesServices.getRoles({ name: krole.name });
+    if (internalRole.length == 0) {
+      const newRole: Roles = {
+        Id: randomUUID(),
+        Name: krole.name,
+        IsDisabled: false,
+        SortOrder: 0,
+        KeycloakGroupId: '',
+        Description: '',
+        IsPublic: false,
+        UserRoles: [],
+        RoleClaims: [],
+        CreatedById: undefined,
+        CreatedOn: undefined,
+        UpdatedById: undefined,
+        UpdatedOn: undefined,
+      };
+      await rolesServices.addRole(newRole);
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const newUsersRoles = await AppDataSource.getRepository(Roles).find({
+    where: { Name: In(kroles.map((a) => a.name)) },
+  });
+
+  if (internalUser.length == 0) {
+    const newUser: Users = {
+      Id: randomUUID(),
+      CreatedById: undefined,
+      CreatedOn: undefined,
+      UpdatedById: undefined,
+      UpdatedOn: undefined,
+      Username: kuser.username,
+      DisplayName: kuser.attributes.display_name[0],
+      FirstName: kuser.firstName,
+      MiddleName: '',
+      LastName: kuser.lastName,
+      Email: kuser.email,
+      Position: '',
+      IsDisabled: false,
+      EmailVerified: false,
+      IsSystem: false,
+      Note: '',
+      LastLogin: new Date(),
+      ApprovedById: undefined,
+      ApprovedOn: undefined,
+      KeycloakUserId: keycloakGuid,
+      UserRoles: [],
+      Agency: undefined,
+      AgencyId: undefined,
+    };
+    return await userServices.addUser(newUser);
+  } else {
+    // internalUser[0].UserRoles = newUsersRoles.map((a) => ({
+    //   UserId: internalUser[0].Id,
+    //   RoleId: a.Id,
+    //   User: internalUser[0],
+    //   Role: a,
+    // }));
+    // return await userServices.updateUser(internalUser[0]);
+    return;
+  }
 };
 
 /**
@@ -142,47 +258,64 @@ const getKeycloakUser = async (guid: string) => {
 };
 
 /**
- * @description Updates a user's roles in Keycloak.
+ * @description Retrieves a Keycloak user's roles.
  * @param {string} username The user's username.
- * @param {string[]} roles A list of roles that the user should have.
- * @returns {IKeycloakRole[]} A list of Keycloak roles.
- * @throws If the user does not exist.
+ * @returns {IKeycloakRole[]} A list of the user's roles.
+ * @throws If the user is not found.
  */
-const updateKeycloakUserRoles = async (username: string, roles: string[]) => {
+const getKeycloakUserRoles = async (username: string) => {
   const existingRolesResponse: IKeycloakRolesResponse | IKeycloakErrorResponse =
     await getUserRoles(username);
-  // Did that user exist? If not, it will be of type IKeycloakErrorResponse.
   if (!keycloakUserRolesSchema.safeParse(existingRolesResponse).success) {
-    const message = `keycloakService.updateKeycloakUserRoles: ${
+    const message = `keycloakService.getKeycloakUserRoles: ${
       (existingRolesResponse as IKeycloakErrorResponse).message
     }`;
     logger.warn(message);
     throw new Error(message);
   }
+  return (existingRolesResponse as IKeycloakRolesResponse).data;
+};
 
-  // User is found in Keycloak.
-  const existingRoles: string[] = (existingRolesResponse as IKeycloakRolesResponse).data.map(
-    (role) => role.name,
-  );
+/**
+ * @description Updates a user's roles in Keycloak.
+ * @param {string} username The user's username.
+ * @param {string[]} roles A list of roles that the user should have.
+ * @returns {IKeycloakRole[]} A list of the updated Keycloak roles.
+ * @throws If the user does not exist.
+ */
+const updateKeycloakUserRoles = async (username: string, roles: string[]) => {
+  try {
+    const existingRolesResponse = await getKeycloakUserRoles(username);
 
-  // Find roles that are in Keycloak but are not in new user info.
-  const rolesToRemove = existingRoles.filter((existingRole) => !roles.includes(existingRole));
-  // Remove old roles
-  // No call to remove all as list, so have to loop.
-  rolesToRemove.forEach(async (role) => {
-    await unassignUserRole(username, role);
-  });
+    // User is found in Keycloak.
+    const existingRoles: string[] = existingRolesResponse.map((role) => role.name);
 
-  // Find new roles that aren't in Keycloak already.
-  const rolesToAdd = roles.filter((newRole) => !existingRoles.includes(newRole));
-  // Add new roles
-  const updatedRoles: IKeycloakRolesResponse = await assignUserRoles(username, rolesToAdd);
+    // Find roles that are in Keycloak but are not in new user info.
+    const rolesToRemove = existingRoles.filter((existingRole) => !roles.includes(existingRole));
+    // Remove old roles
+    // No call to remove all as list, so have to loop.
+    rolesToRemove.forEach(async (role) => {
+      await unassignUserRole(username, role);
+    });
 
-  // Return updated list of roles
-  return updatedRoles.data;
+    // Find new roles that aren't in Keycloak already.
+    const rolesToAdd = roles.filter((newRole) => !existingRoles.includes(newRole));
+    // Add new roles
+    const updatedRoles: IKeycloakRolesResponse = await assignUserRoles(username, rolesToAdd);
+
+    // Return updated list of roles
+    return updatedRoles.data;
+  } catch (e: unknown) {
+    const message = `keycloakService.updateKeycloakUserRoles: ${
+      (e as IKeycloakErrorResponse).message
+    }`;
+    logger.warn(message);
+    throw new Error(message);
+  }
 };
 
 const KeycloakService = {
+  getKeycloakUserRoles,
   syncKeycloakRoles,
   getKeycloakRole,
   getKeycloakRoles,
