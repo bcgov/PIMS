@@ -1,51 +1,43 @@
-import { Entity, Column, Index, ManyToOne, JoinColumn, PrimaryColumn, Relation } from 'typeorm';
-import { WorkflowProjectStatus } from './WorkflowProjectStatus';
+import { Entity, Column, Index, ManyToOne, JoinColumn, Relation, PrimaryColumn } from 'typeorm';
+import { Workflow } from './Workflow';
+import { ProjectStatus } from './ProjectStatus';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 
 @Entity()
 @Index(['ToWorkflowId', 'ToStatusId'])
+@Index(['FromWorkflowId', 'FromStatusId'])
 export class ProjectStatusTransition extends BaseEntity {
   // From Workflow Relation
   @PrimaryColumn({ name: 'FromWorkflowId', type: 'int' })
-  @Index()
   FromWorkflowId: number;
 
-  @ManyToOne(
-    () => WorkflowProjectStatus,
-    (WorkflowProjectStatus) => WorkflowProjectStatus.WorkflowId,
-  )
+  @ManyToOne(() => Workflow, (Workflow) => Workflow.Id)
   @JoinColumn({ name: 'FromWorkflowId' })
-  FromWorkflow: Relation<WorkflowProjectStatus>;
+  FromWorkflow: Relation<Workflow>;
 
   // From Status Relation
   @PrimaryColumn({ name: 'FromStatusId', type: 'int' })
-  @Index()
   FromStatusId: number;
 
-  @ManyToOne(() => WorkflowProjectStatus, (WorkflowProjectStatus) => WorkflowProjectStatus.StatusId)
+  @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
   @JoinColumn({ name: 'FromStatusId' })
-  FromStatus: Relation<WorkflowProjectStatus>;
+  FromStatus: Relation<ProjectStatus>;
 
   // To Workflow Relation
   @PrimaryColumn({ name: 'ToWorkflowId', type: 'int' })
-  @Index()
   ToWorkflowId: number;
 
-  @ManyToOne(
-    () => WorkflowProjectStatus,
-    (WorkflowProjectStatus) => WorkflowProjectStatus.WorkflowId,
-  )
+  @ManyToOne(() => Workflow, (Workflow) => Workflow.Id)
   @JoinColumn({ name: 'ToWorkflowId' })
-  ToWorkflow: Relation<WorkflowProjectStatus>;
+  ToWorkflow: Relation<Workflow>;
 
   // To Status Relation
   @PrimaryColumn({ name: 'ToStatusId', type: 'int' })
-  @Index()
   ToStatusId: number;
 
-  @ManyToOne(() => WorkflowProjectStatus, (WorkflowProjectStatus) => WorkflowProjectStatus.StatusId)
+  @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
   @JoinColumn({ name: 'ToStatusId' })
-  ToStatus: Relation<WorkflowProjectStatus>;
+  ToStatus: Relation<ProjectStatus>;
 
   @Column({ type: 'character varying', length: 100 })
   Action: string;

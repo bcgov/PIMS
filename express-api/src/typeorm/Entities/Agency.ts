@@ -33,7 +33,7 @@ export class Agency extends BaseEntity {
   Description: string;
 
   // Parent Agency Relations
-  @Column({ name: 'ParentId', type: 'int' })
+  @Column({ name: 'ParentId', type: 'int', nullable: true })
   ParentId: number;
 
   @ManyToOne(() => Agency, (agency) => agency.Id)

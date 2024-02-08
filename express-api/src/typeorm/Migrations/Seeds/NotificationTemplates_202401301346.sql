@@ -1,5 +1,5 @@
-INSERT INTO "notification_templates" ("CreatedById","CreatedOn","UpdatedById","UpdatedOn","Name","Description","To","Cc","Bcc","Audience","Encoding","BodyType","Priority","Subject","Body","IsDisabled","Tag") VALUES
-	 ('00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'New Disposal Project Submitted',N'Inform SRES a new project has been submitted for assessment.',N'RealPropertyDivision.Disposals@gov.bc.ca',N'',N'',N'Default',N'Utf8',N'Html',N'High',N'New Disposal Project Submitted - @Model.Project.ProjectNumber','
+INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById","UpdatedOn","Name","Description","To","Cc","Bcc","Audience","Encoding","BodyType","Priority","Subject","Body","IsDisabled","Tag") VALUES
+	 (1,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'New Disposal Project Submitted',N'Inform SRES a new project has been submitted for assessment.',N'RealPropertyDivision.Disposals@gov.bc.ca',N'',N'',N'Default',N'Utf8',N'Html',N'High',N'New Disposal Project Submitted - @Model.Project.ProjectNumber','
 @using System.Linq
 @using Pims.Dal.Entities
 @using System.Globalization
@@ -64,8 +64,8 @@ INSERT INTO "notification_templates" ("CreatedById","CreatedOn","UpdatedById","U
     </ol>
 </p>
 <p>Thank you.</p>
-<p>Strategic Real Estate Services, Real Property Division</p></body></html>',B'0',N'SPP'),
-	 ('00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'Disposal Project Denied',N'Inform owning agency their disposal project was denied.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ProjectOwner',N'Utf8',N'Html',N'Normal',N'Disposal Project Denied - @Model.Project.ProjectNumber','
+<p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'SPP'),
+	 (2,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'Disposal Project Denied',N'Inform owning agency their disposal project was denied.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ProjectOwner',N'Utf8',N'Html',N'Normal',N'Disposal Project Denied - @Model.Project.ProjectNumber','
 <html>
 <head><title>@Model.Environment.Title</title></head>
 <body>
@@ -73,16 +73,16 @@ INSERT INTO "notification_templates" ("CreatedById","CreatedOn","UpdatedById","U
   <p>Your project @Model.Project.ProjectNumber has been denied. Signin to <a href="@Model.Environment.Uri">PIMS</a> to review the reason.</p>
   <p>Sincerely Real Property Division</p>
 </body>
-</html>',B'0',N'SPP'),
-	 ('00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'Disposal Project Cancelled',N'Inform owning agency their disposal project was cancelled.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ProjectOwner',N'Utf8',N'Html',N'Normal',N'Disposal Project Cancelled - @Model.Project.ProjectNumber','
+</html>',false,N'SPP'),
+	 (3,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'Disposal Project Cancelled',N'Inform owning agency their disposal project was cancelled.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ProjectOwner',N'Utf8',N'Html',N'Normal',N'Disposal Project Cancelled - @Model.Project.ProjectNumber','
 <html><head><title>@Model.Environment.Title</title></head>
 <body>
   <p>Good morning / Good afternoon,</p>
   <p>Your project @Model.Project.ProjectNumber has been cancelled. Signin to <a href="@Model.Environment.Uri">PIMS</a> to review the reason.</p>
   <p>Sincerely Real Property Division</p>
 </body>
-</html>',B'0',N'SPP'),
-	 ('00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'Disposal Project Approved for ERP',N'Inform owning agency their project has been approved and properties will be added to ERP.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ProjectOwner',N'Utf8',N'Html',N'Normal',N'Disposal Project Approved for ERP - @Model.Project.ProjectNumber','
+</html>',false,N'SPP'),
+	 (4,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'Disposal Project Approved for ERP',N'Inform owning agency their project has been approved and properties will be added to ERP.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ProjectOwner',N'Utf8',N'Html',N'Normal',N'Disposal Project Approved for ERP - @Model.Project.ProjectNumber','
 @using System.Linq
 @using Pims.Dal.Entities
 <html>
@@ -92,8 +92,8 @@ INSERT INTO "notification_templates" ("CreatedById","CreatedOn","UpdatedById","U
   <p>Your project @Model.Project.ProjectNumber has been approved. Signin to <a href="@Model.Environment.Uri">PIMS</a> to review the progress.</p>
   <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p><p>Sincerely Real Property Division</p>
 </body>
-</html>',B'0',N'ERP'),
-	 ('00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'New Properties on ERP',N'Inform agencies of new properties added to ERP.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ParentAgencies',N'Utf8',N'Html',N'High',N'ACTION REQUIRED - Notification of Surplus Real Property','
+</html>',false,N'ERP'),
+	 (5,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'New Properties on ERP',N'Inform agencies of new properties added to ERP.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ParentAgencies',N'Utf8',N'Html',N'High',N'ACTION REQUIRED - Notification of Surplus Real Property','
 @using System.Linq
 @using Pims.Dal.Entities
 @using System.Globalization
@@ -164,8 +164,8 @@ INSERT INTO "notification_templates" ("CreatedById","CreatedOn","UpdatedById","U
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
 <p>If you have any questions regarding this matter, please contact Chris Seltenrich A/Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
 <p>Thank you.</p>
-<p>Strategic Real Estate Services, Real Property Division</p></body></html>',B'0',N'ERP'),
-	 ('00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'30 day ERP notification - Owning Agency',N'ERP 30 expiration notification to inform owning agency of time remaining in ERP',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ProjectOwner',N'Utf8',N'Html',N'Normal',N'Notification of Surplus Real Property - 30 Day Reminder Notification of Surplus Real Property','
+<p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
+	 (6,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'30 day ERP notification - Owning Agency',N'ERP 30 expiration notification to inform owning agency of time remaining in ERP',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ProjectOwner',N'Utf8',N'Html',N'Normal',N'Notification of Surplus Real Property - 30 Day Reminder Notification of Surplus Real Property','
 @using System.Linq
 @using Pims.Dal.Entities
 @using System.Globalization
@@ -234,8 +234,8 @@ INSERT INTO "notification_templates" ("CreatedById","CreatedOn","UpdatedById","U
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
 <p>If you have any questions regarding this matter, please contact Chris Seltenrich A/Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
 <p>Thank you.</p>
-<p>Strategic Real Estate Services, Real Property Division</p></body></html>',B'0',N'ERP'),
-	 ('00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'60 day ERP notification - Owning Agency',N'ERP 60 expiration notification to inform owning agency of time remaining in ERP',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ProjectOwner',N'Utf8',N'Html',N'Normal',N'Notification of Surplus Real Property - 60 Day Reminder Notification of Surplus Real Property','
+<p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
+	 (7,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'60 day ERP notification - Owning Agency',N'ERP 60 expiration notification to inform owning agency of time remaining in ERP',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ProjectOwner',N'Utf8',N'Html',N'Normal',N'Notification of Surplus Real Property - 60 Day Reminder Notification of Surplus Real Property','
 @using System.Linq
 @using Pims.Dal.Entities
 @using System.Globalization
@@ -304,8 +304,8 @@ INSERT INTO "notification_templates" ("CreatedById","CreatedOn","UpdatedById","U
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
 <p>If you have any questions regarding this matter, please contact Chris Seltenrich A/Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
 <p>Thank you.</p>
-<p>Strategic Real Estate Services, Real Property Division</p></body></html>',B'0',N'ERP'),
-	 ('00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'90 day ERP notification - Owning Agency',N'ERP 90 expiration notification to inform owning agency ERP is complete.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ProjectOwner',N'Utf8',N'Html',N'Normal',N'Notification of Surplus Real Property - Completion of 90 Day Enhanced Referral Period for Notification of Surplus Real Property','
+<p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
+	 (8,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'90 day ERP notification - Owning Agency',N'ERP 90 expiration notification to inform owning agency ERP is complete.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ProjectOwner',N'Utf8',N'Html',N'Normal',N'Notification of Surplus Real Property - Completion of 90 Day Enhanced Referral Period for Notification of Surplus Real Property','
 @using System.Linq
 @using Pims.Dal.Entities
 @using System.Globalization
@@ -374,8 +374,8 @@ INSERT INTO "notification_templates" ("CreatedById","CreatedOn","UpdatedById","U
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
 <p>If you have any questions regarding this matter, please contact Chris Seltenrich A/Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
 <p>Thank you.</p>
-<p>Strategic Real Estate Services, Real Property Division</p></body></html>',B'0',N'ERP'),
-	 ('00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'30 day ERP notification - Parent Agencies',N'ERP 30 notification to inform agencies or properties available in ERP.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ParentAgencies',N'Utf8',N'Html',N'High',N'ACTION REQUIRED - Notification of Surplus Real Property - 30 Day Reminder Notification of Surplus Real Property','
+<p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
+	 (9,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'30 day ERP notification - Parent Agencies',N'ERP 30 notification to inform agencies or properties available in ERP.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ParentAgencies',N'Utf8',N'Html',N'High',N'ACTION REQUIRED - Notification of Surplus Real Property - 30 Day Reminder Notification of Surplus Real Property','
 @using System.Linq
 @using Pims.Dal.Entities
 @using System.Globalization
@@ -447,8 +447,8 @@ INSERT INTO "notification_templates" ("CreatedById","CreatedOn","UpdatedById","U
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
 <p>If you have any questions regarding this matter, please contact Chris Seltenrich A/Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
 <p>Thank you.</p>
-<p>Strategic Real Estate Services, Real Property Division</p></body></html>',B'0',N'ERP'),
-	 ('00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'60 day ERP notification - Parent Agencies',N'ERP 60 notification to inform agencies or properties available in ERP.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ParentAgencies',N'Utf8',N'Html',N'High',N'ACTION REQUIRED - Notification of Surplus Real Property - 60 Day Reminder Notification of Surplus Real Property','
+<p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
+	 (10,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'60 day ERP notification - Parent Agencies',N'ERP 60 notification to inform agencies or properties available in ERP.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ParentAgencies',N'Utf8',N'Html',N'High',N'ACTION REQUIRED - Notification of Surplus Real Property - 60 Day Reminder Notification of Surplus Real Property','
 @using System.Linq
 @using Pims.Dal.Entities
 @using System.Globalization
@@ -520,8 +520,8 @@ INSERT INTO "notification_templates" ("CreatedById","CreatedOn","UpdatedById","U
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
 <p>If you have any questions regarding this matter, please contact Chris Seltenrich A/Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
 <p>Thank you.</p>
-<p>Strategic Real Estate Services, Real Property Division</p></body></html>',B'0',N'ERP'),
-	 ('00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'90 day ERP notification - Parent Agencies',N'ERP 90 expiration notification to inform agencies.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ParentAgencies',N'Utf8',N'Html',N'High',N'ACTION REQUIRED - Notification of Surplus Real Property - Completion of 90 Day Enhanced Referral Period for Notification of Surplus Real Property','
+<p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
+	 (11,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'90 day ERP notification - Parent Agencies',N'ERP 90 expiration notification to inform agencies.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ParentAgencies',N'Utf8',N'Html',N'High',N'ACTION REQUIRED - Notification of Surplus Real Property - Completion of 90 Day Enhanced Referral Period for Notification of Surplus Real Property','
 @using System.Linq
 @using Pims.Dal.Entities
 @using System.Globalization
@@ -593,8 +593,8 @@ INSERT INTO "notification_templates" ("CreatedById","CreatedOn","UpdatedById","U
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
 <p>If you have any questions regarding this matter, please contact Chris Seltenrich A/Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
 <p>Thank you.</p>
-<p>Strategic Real Estate Services, Real Property Division</p></body></html>',B'0',N'ERP'),
-	 ('00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'30 day ERP notification - Purchasing Agencies',N'ERP 30 notification to inform purchasing agencies to submit business case.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'WatchingAgencies',N'Utf8',N'Html',N'Normal',N'ACTION REQUIRED - Notification of Surplus Real Property - 30 Day Reminder Notification of Surplus Real Property','
+<p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
+	 (12,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'30 day ERP notification - Purchasing Agencies',N'ERP 30 notification to inform purchasing agencies to submit business case.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'WatchingAgencies',N'Utf8',N'Html',N'Normal',N'ACTION REQUIRED - Notification of Surplus Real Property - 30 Day Reminder Notification of Surplus Real Property','
 @using System.Linq
 @using Pims.Dal.Entities
 @using System.Globalization
@@ -664,8 +664,8 @@ INSERT INTO "notification_templates" ("CreatedById","CreatedOn","UpdatedById","U
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
 <p>If you have any questions regarding this matter, please contact Chris Seltenrich A/Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
 <p>Thank you.</p>
-<p>Strategic Real Estate Services, Real Property Division</p></body></html>',B'0',N'ERP'),
-	 ('00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'60 day ERP notification - Purchasing Agencies',N'ERP 60 notification to inform purchasing agencies to submit business case.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'WatchingAgencies',N'Utf8',N'Html',N'Normal',N'ACTION REQUIRED - Notification of Surplus Real Property - 60 Day Reminder Notification of Surplus Real Property','
+<p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
+	 (13,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'60 day ERP notification - Purchasing Agencies',N'ERP 60 notification to inform purchasing agencies to submit business case.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'WatchingAgencies',N'Utf8',N'Html',N'Normal',N'ACTION REQUIRED - Notification of Surplus Real Property - 60 Day Reminder Notification of Surplus Real Property','
 @using System.Linq
 @using Pims.Dal.Entities
 @using System.Globalization
@@ -735,8 +735,8 @@ INSERT INTO "notification_templates" ("CreatedById","CreatedOn","UpdatedById","U
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
 <p>If you have any questions regarding this matter, please contact Chris Seltenrich A/Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
 <p>Thank you.</p>
-<p>Strategic Real Estate Services, Real Property Division</p></body></html>',B'0',N'ERP'),
-	 ('00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'90 day ERP notification - Purchasing Agencies',N'ERP 90 expiration notification to inform purchasing agencies to submit business case.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'WatchingAgencies',N'Utf8',N'Html',N'Normal',N'ACTION REQUIRED - Notification of Surplus Real Property - Completion of 90 Day Enhanced Referral Period for Notification of Surplus Real Property','
+<p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
+	 (14,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'90 day ERP notification - Purchasing Agencies',N'ERP 90 expiration notification to inform purchasing agencies to submit business case.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'WatchingAgencies',N'Utf8',N'Html',N'Normal',N'ACTION REQUIRED - Notification of Surplus Real Property - Completion of 90 Day Enhanced Referral Period for Notification of Surplus Real Property','
 @using System.Linq
 @using Pims.Dal.Entities
 @using System.Globalization
@@ -807,15 +807,15 @@ INSERT INTO "notification_templates" ("CreatedById","CreatedOn","UpdatedById","U
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
 <p>If you have any questions regarding this matter, please contact Chris Seltenrich A/Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
 <p>Thank you.</p>
-<p>Strategic Real Estate Services, Real Property Division</p></body></html>',B'0',N'ERP'),
-	 ('00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'Access Request',N'A new authenticated user has requested access.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'Default',N'Utf8',N'Html',N'High',N'PIMS - Access Request','
+<p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
+	 (15,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'Access Request',N'A new authenticated user has requested access.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'Default',N'Utf8',N'Html',N'High',N'PIMS - Access Request','
 <html><head><title>@Model.Environment.Title</title></head>
-<body><p>Dear Administrator,</p><p>@Model.AccessRequest.User.FirstName @Model.AccessRequest.User.LastName has submitted an access request to <a href="@Model.Environment.Uri">PIMS</a>.</p><p>Signin and review their request.</p></body></html>',B'0',N'Access Request'),
-	 ('00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'Project Shared Note Changed',N'The shared note has been updated and the owning agency should be notified.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ProjectOwner',N'Utf8',N'Html',N'High',N'PIMS - Project Note Updated - @Model.Project.ProjectNumber','
+<body><p>Dear Administrator,</p><p>@Model.AccessRequest.User.FirstName @Model.AccessRequest.User.LastName has submitted an access request to <a href="@Model.Environment.Uri">PIMS</a>.</p><p>Signin and review their request.</p></body></html>',false,N'Access Request'),
+	 (16,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'Project Shared Note Changed',N'The shared note has been updated and the owning agency should be notified.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ProjectOwner',N'Utf8',N'Html',N'High',N'PIMS - Project Note Updated - @Model.Project.ProjectNumber','
 @using System.Linq
 @using Pims.Dal.Entities
 <html><head><title>@Model.Environment.Title</title></head>
-<body><p>Dear @(Model.Project.Manager ?? "Property Manager"),</p><p>Your project @Model.Project.ProjectNumber has been updated with the following note;</p><p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.Public)?.Note</p></body></html>',B'0',N'SPP'),
-	 ('00000000-0000-0000-0000-000000000000','2023-01-17 17:58:54.0800000',NULL,NULL,N'Access Request RPD Mailbox',N'A new authenticated user has requested access.',N'CITZ_RPD_IMIT_HELP@gov.bc.ca',N'',N'',N'Default',N'Utf8',N'Html',N'High',N'PIMS - Access Request','
+<body><p>Dear @(Model.Project.Manager ?? "Property Manager"),</p><p>Your project @Model.Project.ProjectNumber has been updated with the following note;</p><p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.Public)?.Note</p></body></html>',false,N'SPP'),
+	 (17,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:54.0800000',NULL,NULL,N'Access Request RPD Mailbox',N'A new authenticated user has requested access.',N'CITZ_RPD_IMIT_HELP@gov.bc.ca',N'',N'',N'Default',N'Utf8',N'Html',N'High',N'PIMS - Access Request','
 <html><head><title>@Model.Environment.Title</title></head>
-<body><p>Dear Administrator,</p><p>@Model.AccessRequest.User.FirstName @Model.AccessRequest.User.LastName has submitted an access request to <a href="@Model.Environment.Uri">PIMS</a>.</p><p>Signin and review their request.</p></body></html>',B'0',N'Access Request');
+<body><p>Dear Administrator,</p><p>@Model.AccessRequest.User.FirstName @Model.AccessRequest.User.LastName has submitted an access request to <a href="@Model.Environment.Uri">PIMS</a>.</p><p>Signin and review their request.</p></body></html>',false,N'Access Request');

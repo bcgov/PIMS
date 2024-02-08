@@ -19,8 +19,7 @@ export class ProjectStatusNotification extends BaseEntity {
   Template: NotificationTemplate;
 
   // From Status Relation
-  @Column({ name: 'FromStatusId', type: 'int' })
-  @Index()
+  @Column({ name: 'FromStatusId', type: 'int', nullable: true })
   FromStatusId: number;
 
   @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
@@ -29,7 +28,6 @@ export class ProjectStatusNotification extends BaseEntity {
 
   // To Status Relation
   @Column({ name: 'ToStatusId', type: 'int' })
-  @Index()
   ToStatusId: number;
 
   @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
