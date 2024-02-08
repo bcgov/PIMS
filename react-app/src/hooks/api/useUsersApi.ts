@@ -27,10 +27,15 @@ const useUsersApi = (absoluteFetch: IFetch) => {
     const { parsedBody } = await absoluteFetch.post(`/users/access/requests`, request);
     return parsedBody as User;
   };
+  const getAllUsers = async () => {
+    const { parsedBody } = await absoluteFetch.get('/admin/users');
+    return parsedBody;
+  };
   return {
     getLatestAccessRequest,
     getSelf,
     submitAccessRequest,
+    getAllUsers,
   };
 };
 

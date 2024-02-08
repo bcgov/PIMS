@@ -14,7 +14,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
  */
 const useDataLoader = <AFArgs extends any[], AFResponse = unknown, AFError = unknown>(
   dataFetcher: AsyncFunction<AFArgs, AFResponse>,
-  errorHandler: (error: AFError) => void,
+  errorHandler: (error: AFError) => void = () => {},
 ) => {
   //We have this little useEffect here to avoid touching state if this hook suddenly gets unmounted.
   //React doesn't like it when this happens.
