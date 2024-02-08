@@ -1,7 +1,6 @@
 import { CustomDataGrid } from '@/components/table/DataTable';
 import {
   Box,
-  Chip,
   Paper,
   SxProps,
   Typography,
@@ -13,7 +12,12 @@ import {
   MenuItem,
   Tooltip,
 } from '@mui/material';
-import { GridColDef, gridFilteredSortedRowEntriesSelector, useGridApiRef } from '@mui/x-data-grid';
+import {
+  GridColDef,
+  GridEventListener,
+  gridFilteredSortedRowEntriesSelector,
+  useGridApiRef,
+} from '@mui/x-data-grid';
 import React, { PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
@@ -24,6 +28,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import { downloadExcelFile } from '@/utilities/downloadExcelFile';
 import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
+import { statusChipFormatter } from '@/utils/formatters';
 
 const CustomMenuItem = (props: PropsWithChildren & { value: string }) => {
   const theme = useTheme();
@@ -59,7 +64,11 @@ const CustomListSubheader = (props: PropsWithChildren) => {
   );
 };
 
-const UsersTable = () => {
+interface IUsersTable {
+  rowClickHandler: GridEventListener<'rowClick'>;
+}
+
+const UsersTable = ({ rowClickHandler }: IUsersTable) => {
   // States and contexts
   const [users, setUsers] = useState([]);
   const [rowCount, setRowCount] = useState<number>(0);
@@ -67,7 +76,6 @@ const UsersTable = () => {
   const [selectValue, setSelectValue] = useState<string>('All Users');
   const [gridFilterItems, setGridFilterItems] = useState([]);
   const { state } = useKeycloak();
-  const theme = useTheme();
   const tableApiRef = useGridApiRef(); // Ref to MUI DataGrid
 
   // Getting data from API
@@ -84,13 +92,6 @@ const UsersTable = () => {
       refreshData();
     }
   }, [state, data]);
-
-  // Determines colours of chips
-  const colorMap = {
-    Pending: 'info',
-    Active: 'success',
-    Hold: 'warning',
-  };
 
   // Sets quickfilter value of DataGrid. newValue is a string input.
   const updateSearchValue = useMemo(() => {
@@ -166,16 +167,7 @@ const UsersTable = () => {
       headerName: 'Status',
       renderCell: (params) => {
         if (!params.value) return <></>;
-        return (
-          <Chip
-            sx={{
-              width: '6rem',
-              color: theme.palette[colorMap[params.value]]['main'],
-              backgroundColor: theme.palette[colorMap[params.value]]['light'],
-            }}
-            label={params.value}
-          />
-        );
+        return statusChipFormatter(params.value);
       },
       maxWidth: 100,
     },
@@ -186,13 +178,13 @@ const UsersTable = () => {
       flex: 1,
     },
     {
-      field: 'Username',
+      field: 'DisplayName',
       headerName: 'IDIR/BCeID',
       minWidth: 150,
       flex: 1,
     },
     {
-      field: 'Agency',
+      field: 'AgencyId',
       headerName: 'Agency',
       minWidth: 125,
       flex: 1,
@@ -326,6 +318,7 @@ const UsersTable = () => {
           </Box>
         </Box>
         <CustomDataGrid
+          onRowClick={rowClickHandler}
           getRowId={(row) => row.Id}
           columns={columns}
           rows={users}

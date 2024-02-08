@@ -4,8 +4,16 @@ export interface User { //temp interface, should standardize somehow
   Id: string;
   Username: string;
   FirstName: string;
+  LastName: string;
   KeycloakUserId: string;
   Status: string;
+  Email: string;
+  LastLogin: Date;
+  CreatedOn: string;
+  DisplayName: string;
+  AgencyId: string;
+  Position: string;
+  Role: string;
 }
 
 export interface AccessRequest {
@@ -31,11 +39,21 @@ const useUsersApi = (absoluteFetch: IFetch) => {
     const { parsedBody } = await absoluteFetch.get('/admin/users');
     return parsedBody;
   };
+  const getUserById = async (userId: string): Promise<User> => {
+    const { parsedBody } = await absoluteFetch.get(`/admin/users/${userId}`);
+    return parsedBody as User;
+  };
+  const updateUser = async (userId: string, user: Partial<User>) => {
+    const { parsedBody } = await absoluteFetch.put(`/admin/users/${userId}`, user);
+    return parsedBody;
+  };
   return {
     getLatestAccessRequest,
     getSelf,
     submitAccessRequest,
     getAllUsers,
+    getUserById,
+    updateUser,
   };
 };
 

@@ -10,7 +10,7 @@ import AuthContextProvider from './contexts/authContext';
 import AuthRouteGuard from './guards/AuthRouteGuard';
 import BaseLayout from './components/layout/BaseLayout';
 import { AccessRequest } from './pages/AccessRequest';
-import UsersTable from './pages/UsersTable';
+import UsersManagement from './pages/UsersManagement';
 
 const Router = () => {
   return (
@@ -51,7 +51,7 @@ const Router = () => {
               element={
                 <BaseLayout>
                   <AuthRouteGuard>
-                    <UsersTable />
+                    <UsersManagement />
                   </AuthRouteGuard>
                 </BaseLayout>
               }
