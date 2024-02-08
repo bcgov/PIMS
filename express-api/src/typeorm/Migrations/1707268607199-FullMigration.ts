@@ -67,6 +67,9 @@ export class FullMigration1707268607199 implements MigrationInterface {
     await queryRunner.query(sqlContent12.toString());
     // const sqlContent18 = SqlReader.readSqlFile(path.join(sqlFilePath, 'TierLevels_202402011455.sql'));
     // await queryRunner.query(sqlContent18.toString());
+
+    const sqlContent19 = SqlReader.readSqlFile(path.join(sqlFilePath, 'Roles.sql'));
+    await queryRunner.query(sqlContent19.toString());
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
@@ -88,5 +91,6 @@ export class FullMigration1707268607199 implements MigrationInterface {
     await queryRunner.query('TRUNCATE TABLE task');
     await queryRunner.query('TRUNCATE TABLE project_status_notification');
     await queryRunner.query('TRUNCATE TABLE project_status_transition');
+    await queryRunner.query('TRUNCATE TABLE role');
   }
 }
