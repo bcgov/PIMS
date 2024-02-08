@@ -25,7 +25,7 @@ import { randomUUID } from 'crypto';
 import { AppDataSource } from '@/appDataSource';
 import { DeepPartial, In, Not } from 'typeorm';
 import userServices from '@/services/admin/usersServices';
-import { Users, Roles } from '@/typeorm/Entities/Users_Roles_Claims';
+import { Users, Roles, UserStatus } from '@/typeorm/Entities/Users_Roles_Claims';
 
 /**
  * @description Sync keycloak roles into PIMS roles.
@@ -197,7 +197,6 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
       LastName: kuser.lastName,
       Email: kuser.email,
       Position: '',
-      IsDisabled: false,
       EmailVerified: false,
       IsSystem: false,
       Note: '',
@@ -208,6 +207,7 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
       UserRoles: [],
       Agency: undefined,
       AgencyId: undefined,
+      Status: UserStatus.Active
     };
     return await userServices.addUser(newUser);
   } else {

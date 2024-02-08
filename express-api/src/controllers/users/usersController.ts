@@ -79,9 +79,13 @@ export const submitUserAccessRequest = async (req: Request, res: Response) => {
       "bearerAuth" : []
       }]
    */
-  const user = req?.user as KeycloakUser;
   try {
-    const result = await userServices.addAccessRequest(req.body, user);
+    const result = await userServices.addKeycloakUserOnHold(
+      req.user as KeycloakUser,
+      req.body.AgencyId,
+      req.body.Position,
+      req.body.Note,
+    );
     return res.status(200).send(result);
   } catch (e) {
     return res.status(e?.code ?? 400).send(e?.message);
@@ -159,6 +163,20 @@ export const getUserAgencies = async (req: Request, res: Response) => {
   try {
     const result = await userServices.getAgencies(user);
     return res.status(200).send(result);
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message);
+  }
+};
+
+export const getSelf = async (req: Request, res: Response) => {
+  try {
+    const user = userServices.normalizeKeycloakUser(req.user as KeycloakUser);
+    const result = await userServices.getUser(user.guid);
+    if (result) {
+      return res.status(200).send(result);
+    } else {
+      return res.status(204).send(); //Valid request, but no user for this keycloak login.
+    }
   } catch (e) {
     return res.status(e?.code ?? 400).send(e?.message);
   }

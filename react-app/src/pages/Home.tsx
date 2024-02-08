@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Box, Typography } from '@mui/material';
-import BaseLayout from '@/components/layout/BaseLayout';
 import propertyVector from '@/assets/images/PIMS_logo.svg';
 import { landingPageBottomText, landingPageTopText } from '@/constants/strings';
-import { AccessRequest } from './AccessRequest';
-import { useKeycloak } from '@bcgov/citz-imb-kc-react';
+import { AuthContext } from '@/contexts/authContext';
+import { Navigate } from 'react-router-dom';
 
 const Landing = () => {
   return (
@@ -27,20 +26,22 @@ const Landing = () => {
 };
 
 export const Home = () => {
-  const keycloak = useKeycloak();
+  const auth = useContext(AuthContext);
   return (
-    <BaseLayout displayFooter>
-      <Box
-        flexDirection={'column'}
-        flexGrow={1}
-        display={'flex'}
-        justifyContent={'center'}
-        height={'100%'}
-        bgcolor={'#F8F8F8'} //In the ticket this was #D2D8D8, but I think it was meant to be #F8F8F8 based on the example.
-      >
-        {keycloak.isAuthenticated ? <AccessRequest /> : <Landing />}
-      </Box>
-    </BaseLayout>
+    <Box
+      flexDirection={'column'}
+      flexGrow={1}
+      display={'flex'}
+      justifyContent={'center'}
+      height={'100%'}
+      bgcolor={'#F8F8F8'} //In the ticket this was #D2D8D8, but I think it was meant to be #F8F8F8 based on the example.
+    >
+      {!auth.keycloak.isAuthenticated || auth.pimsUser.data?.Status === 'Active' ? (
+        <Landing />
+      ) : (
+        <Navigate replace to={'/access-request'} />
+      )}
+    </Box>
   );
 };
 

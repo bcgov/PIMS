@@ -9,14 +9,32 @@ import { ConfigContextProvider } from './contexts/configContext';
 import AuthContextProvider from './contexts/authContext';
 import AuthRouteGuard from './guards/AuthRouteGuard';
 import BaseLayout from './components/layout/BaseLayout';
-import UsersTable from '@/pages/UsersTable';
+import { AccessRequest } from './pages/AccessRequest';
+import UsersTable from './pages/UsersTable';
 
 const Router = () => {
   return (
     <ConfigContextProvider>
       <AuthContextProvider>
         <Routes>
-          <Route index element={<Home />} />
+          <Route
+            index
+            element={
+              <BaseLayout displayFooter>
+                <Home />
+              </BaseLayout>
+            }
+          />
+          <Route
+            path="/access-request"
+            element={
+              <BaseLayout>
+                <AuthRouteGuard>
+                  <AccessRequest />
+                </AuthRouteGuard>
+              </BaseLayout>
+            }
+          />
           <Route
             path="/dev"
             element={
