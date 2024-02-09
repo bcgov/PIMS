@@ -1,6 +1,7 @@
 import { IFetch } from '../useFetch';
 
-export interface User { //temp interface, should standardize somehow
+export interface User {
+  //temp interface, should standardize somehow
   Id: string;
   Username: string;
   FirstName: string;

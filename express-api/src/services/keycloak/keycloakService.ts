@@ -207,7 +207,7 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
       UserRoles: [],
       Agency: undefined,
       AgencyId: undefined,
-      Status: UserStatus.Active
+      Status: UserStatus.Active,
     };
     return await userServices.addUser(newUser);
   } else {
