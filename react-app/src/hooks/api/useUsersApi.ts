@@ -9,7 +9,7 @@ export interface User { //temp interface, should standardize somehow
   Status: string;
   Email: string;
   LastLogin: Date;
-  CreatedOn: string;
+  CreatedOn: Date;
   DisplayName: string;
   AgencyId: string;
   Position: string;

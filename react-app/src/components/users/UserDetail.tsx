@@ -43,6 +43,8 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
     LastName: data?.LastName,
     Agency: data?.AgencyId,
     Position: data?.Position,
+    CreatedOn: data?.CreatedOn ? new Date(data?.CreatedOn) : undefined,
+    LastLogin: data?.LastLogin ? new Date(data?.LastLogin) : undefined,
   };
 
   const customFormatter = (key: keyof User, val: any) => {
@@ -69,6 +71,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
       Status: '',
       Role: '',
     },
+    mode: 'onBlur',
   });
 
   useEffect(() => {
@@ -144,13 +147,16 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
       <ConfirmDialog
         title={'Update User Profile'}
         open={openProfileDialog}
-        onConfirm={() => {
-          api.users
-            .updateUser(userId, { Id: userId, ...profileFormMethods.getValues() })
-            .then(() => refreshData());
-          setOpenProfileDialog(false);
+        onConfirm={async () => {
+          const isValid = await profileFormMethods.trigger();
+          if (isValid) {
+            api.users
+              .updateUser(userId, { Id: userId, ...profileFormMethods.getValues() })
+              .then(() => refreshData());
+            setOpenProfileDialog(false);
+          }
         }}
-        onCancel={() => setOpenProfileDialog(false)}
+        onCancel={async () => setOpenProfileDialog(false)}
       >
         <FormProvider {...profileFormMethods}>
           <Grid mt={'1rem'} spacing={2} container>
@@ -158,13 +164,13 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
               <TextInput fullWidth name={'DisplayName'} label={'IDIR/BCeID'} disabled />
             </Grid>
             <Grid item xs={6}>
-              <TextInput fullWidth name={'Email'} label={'Email'} />
+              <TextInput required fullWidth name={'Email'} label={'Email'} />
             </Grid>
             <Grid item xs={6}>
-              <TextInput fullWidth name={'FirstName'} label={'First Name'} />
+              <TextInput required fullWidth name={'FirstName'} label={'First Name'} />
             </Grid>
             <Grid item xs={6}>
-              <TextInput fullWidth name={'LastName'} label={'Last Name'} />
+              <TextInput required fullWidth name={'LastName'} label={'Last Name'} />
             </Grid>
             <Grid item xs={12}>
               <AutocompleteFormField name={'AgencyId'} label={'Agency'} options={agencyData} />
@@ -178,16 +184,19 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
       <ConfirmDialog
         title={'Update User Status'}
         open={openStatusDialog}
-        onConfirm={() => {
-          api.users
-            .updateUser(userId, {
-              Id: userId,
-              Status: statusFormMethods.getValues().Status,
-            })
-            .then(() => refreshData());
-          setOpenStatusDialog(false);
+        onConfirm={async () => {
+          const isValid = await statusFormMethods.trigger();
+          if (isValid) {
+            api.users
+              .updateUser(userId, {
+                Id: userId,
+                Status: statusFormMethods.getValues().Status,
+              })
+              .then(() => refreshData());
+            setOpenStatusDialog(false);
+          }
         }}
-        onCancel={() => setOpenStatusDialog(false)}
+        onCancel={async () => setOpenStatusDialog(false)}
       >
         <FormProvider {...statusFormMethods}>
           <Grid minWidth={'30rem'} mt={1} spacing={2} container>

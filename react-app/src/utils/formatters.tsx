@@ -2,10 +2,13 @@ import { Chip, useTheme } from '@mui/material';
 import React from 'react';
 
 export const dateFormatter = (input: any) => {
-  if (!(input instanceof Date)) {
-    input = new Date(input);
-  }
-  return `${input.getDay()}/${input.getMonth() + 1}/${input.getFullYear()}`;
+  return input
+    ? new Intl.DateTimeFormat('en-US', {
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric',
+      }).format(new Date(input))
+    : '';
 };
 
 export const columnNameFormatter = (input: string) => {

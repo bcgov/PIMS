@@ -26,7 +26,7 @@ import { IUser } from '@/interfaces/IUser';
 import AddIcon from '@mui/icons-material/Add';
 import DownloadIcon from '@mui/icons-material/Download';
 import { downloadExcelFile } from '@/utilities/downloadExcelFile';
-import { statusChipFormatter } from '@/utils/formatters';
+import { dateFormatter, statusChipFormatter } from '@/utils/formatters';
 
 const CustomMenuItem = (props: PropsWithChildren & { value: string }) => {
   const theme = useTheme();
@@ -98,16 +98,6 @@ const UsersTable = (props: IUsersTable) => {
       tableApiRef.current.setQuickFilterValues(newValue.split(' ').filter((word) => word !== ''));
     }, 100);
   }, [tableApiRef]);
-
-  // Converts dates to the MMM DD, YYYY locale
-  const dateFormatter = (params) =>
-    params.value
-      ? new Intl.DateTimeFormat('en-US', {
-          month: 'short',
-          day: '2-digit',
-          year: 'numeric',
-        }).format(new Date(params.value))
-      : undefined;
 
   // Sets the preset filter based on the select input
   const selectPresetFilter = (value: string) => {
@@ -204,14 +194,14 @@ const UsersTable = (props: IUsersTable) => {
       field: 'CreatedOn',
       headerName: 'Created',
       minWidth: 120,
-      valueFormatter: dateFormatter,
+      valueFormatter: (params) => dateFormatter(params.value),
       type: 'date',
     },
     {
       field: 'LastLogin',
       headerName: 'Last Login',
       minWidth: 120,
-      valueFormatter: dateFormatter,
+      valueFormatter: (params) => dateFormatter(params.value),
       type: 'date',
     },
   ];

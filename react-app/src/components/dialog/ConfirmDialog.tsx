@@ -6,8 +6,8 @@ import React, { PropsWithChildren } from 'react';
 interface IConfirmDialog extends PropsWithChildren {
   title: string;
   open: boolean;
-  onConfirm: () => void;
-  onCancel: () => void;
+  onConfirm: () => Promise<void>;
+  onCancel: () => Promise<void>;
   confirmButtonText?: string;
   confirmButtonProps?: ButtonProps;
 }

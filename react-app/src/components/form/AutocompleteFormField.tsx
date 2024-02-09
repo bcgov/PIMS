@@ -26,7 +26,7 @@ const AutocompleteFormField = (props: IAutocompleteProps) => {
           sx={sx}
           renderInput={(params) => <TextField {...params} label={label} />}
           onChange={(_, data) => onChange(data.value)}
-          defaultValue={options.find((option) => option.value === getValues()[name])}
+          value={options.find((option) => option.value === getValues()[name])}
           {...props}
         />
       )}
