@@ -70,6 +70,11 @@ export class FullMigration1707268607199 implements MigrationInterface {
 
     const sqlContent19 = SqlReader.readSqlFile(path.join(sqlFilePath, 'Roles.sql'));
     await queryRunner.query(sqlContent19.toString());
+
+    const sqlContent20 = SqlReader.readSqlFile(
+      path.join(sqlFilePath, 'ReportTypes_2024020081047.sql'),
+    );
+    await queryRunner.query(sqlContent20.toString());
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
