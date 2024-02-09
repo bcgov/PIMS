@@ -91,13 +91,30 @@ export class FullMigration1707268607199 implements MigrationInterface {
       path.join(sqlFilePath, 'RegionalDistricts_20240208.sql'),
     );
     await queryRunner.query(RegionalDistricts.toString());
+
+    // const AdministrativeAreas = SqlReader.readSqlFile(
+    //   path.join(sqlFilePath, 'AdministrativeAreas_202402091218.sql'),
+    // );
+    // await queryRunner.query(AdministrativeAreas.toString());
+    const FiscalKeys = SqlReader.readSqlFile(path.join(sqlFilePath, 'FiscalKeys_20240206.sql'));
+    await queryRunner.query(FiscalKeys.toString());
+    const EvaluationKeys = SqlReader.readSqlFile(
+      path.join(sqlFilePath, 'EvaluationKeys_20240208.sql'),
+    );
+    await queryRunner.query(EvaluationKeys.toString());
+    const ProjectTypes = SqlReader.readSqlFile(path.join(sqlFilePath, 'ProjectTypes_20240208.sql'));
+    await queryRunner.query(ProjectTypes.toString());
   }
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query('TRUNCATE TABLE project_type cascade');
+    await queryRunner.query('TRUNCATE TABLE evaluation_key cascade');
+    await queryRunner.query('TRUNCATE TABLE fiscal_key cascade');
+    // await queryRunner.query('TRUNCATE TABLE administrative_area cascade');
+    await queryRunner.query('TRUNCATE TABLE report_types cascade');
     await queryRunner.query('TRUNCATE TABLE project_status_transition cascade');
     await queryRunner.query('TRUNCATE TABLE project_status_notification cascade');
     await queryRunner.query('TRUNCATE TABLE workflow_project_status cascade');
     await queryRunner.query('TRUNCATE TABLE notification_template cascade');
-    await queryRunner.query('TRUNCATE TABLE fiscal_key cascade');
     await queryRunner.query('TRUNCATE TABLE building_construction_type cascade');
     await queryRunner.query('TRUNCATE TABLE building_occupant_type cascade');
     await queryRunner.query('TRUNCATE TABLE building_predominate_use cascade');

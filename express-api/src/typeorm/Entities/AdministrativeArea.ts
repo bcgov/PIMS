@@ -43,7 +43,7 @@ export class AdministrativeArea extends BaseEntity {
   @JoinColumn({ name: 'RegionalDistrictId' })
   RegionalDistrict: RegionalDistrict;
 
-  // Regional District Relations
+  // Province Relations
   @Column({ name: 'ProvinceId', type: 'character varying', length: 2 })
   @Index()
   ProvinceId: string;
