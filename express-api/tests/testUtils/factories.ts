@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AccessRequests } from '@/typeorm/Entities/AccessRequests';
 import { Agencies } from '@/typeorm/Entities/Agencies';
-import { Users, Roles as RolesEntity } from '@/typeorm/Entities/Users_Roles_Claims';
+import { Users, Roles as RolesEntity, UserStatus } from '@/typeorm/Entities/Users_Roles_Claims';
+import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { faker } from '@faker-js/faker';
 import { UUID } from 'crypto';
 import { Request, Response } from 'express';
@@ -87,7 +88,7 @@ export const produceUser = (): Users => {
     Email: faker.internet.email(),
     Username: faker.internet.userName(),
     Position: 'Tester',
-    IsDisabled: false,
+    Status: UserStatus.Active,
     EmailVerified: false,
     IsSystem: false,
     Note: '',
@@ -104,7 +105,7 @@ export const produceUser = (): Users => {
 export const produceRequest = (): AccessRequests => {
   const request: AccessRequests = {
     Id: faker.number.int(),
-    UserId: produceUser(),
+    KeycloakUserId: faker.string.uuid(),
     Note: 'test',
     Status: 0,
     RoleId: undefined,
@@ -153,5 +154,20 @@ export const produceRole = (): RolesEntity => {
     IsPublic: false,
     UserRoles: [],
     RoleClaims: [],
+  };
+};
+
+export const produceKeycloak = (): KeycloakUser => {
+  return {
+    name: faker.string.alphanumeric(),
+    preferred_username: faker.string.alphanumeric(),
+    email: faker.internet.email(),
+    display_name: faker.string.alphanumeric(),
+    client_roles: [faker.string.alphanumeric()],
+    identity_provider: 'idir',
+    idir_user_guid: faker.string.uuid(),
+    idir_username: faker.string.alphanumeric(),
+    given_name: faker.person.firstName(),
+    family_name: faker.person.lastName(),
   };
 };
