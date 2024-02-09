@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AccessRequests } from '@/typeorm/Entities/AccessRequests';
 import { Agencies } from '@/typeorm/Entities/Agencies';
-import { Users, Roles as RolesEntity } from '@/typeorm/Entities/Users_Roles_Claims';
+import { Users, Roles as RolesEntity, UserStatus } from '@/typeorm/Entities/Users_Roles_Claims';
 import { faker } from '@faker-js/faker';
 import { UUID } from 'crypto';
 import { Request, Response } from 'express';
@@ -80,6 +80,7 @@ export const produceUser = (): Users => {
     UpdatedById: undefined,
     CreatedById: undefined,
     Id: id,
+    Status: UserStatus.Active,
     DisplayName: faker.company.name(),
     FirstName: faker.person.firstName(),
     MiddleName: faker.person.middleName(),
@@ -87,7 +88,6 @@ export const produceUser = (): Users => {
     Email: faker.internet.email(),
     Username: faker.internet.userName(),
     Position: 'Tester',
-    IsDisabled: false,
     EmailVerified: false,
     IsSystem: false,
     Note: '',
@@ -104,7 +104,7 @@ export const produceUser = (): Users => {
 export const produceRequest = (): AccessRequests => {
   const request: AccessRequests = {
     Id: faker.number.int(),
-    UserId: produceUser(),
+    KeycloakUserId: faker.string.uuid(),
     Note: 'test',
     Status: 0,
     RoleId: undefined,

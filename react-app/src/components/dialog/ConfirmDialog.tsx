@@ -13,7 +13,8 @@ interface IConfirmDialog extends PropsWithChildren {
 }
 
 const ConfirmDialog = (props: IConfirmDialog) => {
-  const { title, open, onConfirm, onCancel, confirmButtonProps, confirmButtonText, children } = props;
+  const { title, open, onConfirm, onCancel, confirmButtonProps, confirmButtonText, children } =
+    props;
   return (
     <BaseDialog
       open={open}
