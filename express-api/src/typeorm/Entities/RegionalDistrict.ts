@@ -3,9 +3,12 @@ import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 
 @Entity()
 export class RegionalDistrict extends BaseEntity {
-  @PrimaryColumn({ type: 'character varying', length: 4 })
+  @PrimaryColumn({ type: 'int' })
   @Index({ unique: true })
-  Id: string;
+  Id: number;
+
+  @Column({ type: 'character varying', length: 5 })
+  Abbreviation: string;
 
   @Column({ type: 'character varying', length: 250 })
   @Index({ unique: true })

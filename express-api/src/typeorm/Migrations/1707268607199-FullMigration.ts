@@ -86,8 +86,12 @@ export class FullMigration1707268607199 implements MigrationInterface {
       path.join(sqlFilePath, 'ReportTypes_2024020081047.sql'),
     );
     await queryRunner.query(ReportTypes.toString());
-  }
 
+    const RegionalDistricts = SqlReader.readSqlFile(
+      path.join(sqlFilePath, 'RegionalDistricts_20240208.sql'),
+    );
+    await queryRunner.query(RegionalDistricts.toString());
+  }
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query('TRUNCATE TABLE project_status_transition cascade');
     await queryRunner.query('TRUNCATE TABLE project_status_notification cascade');
@@ -107,6 +111,7 @@ export class FullMigration1707268607199 implements MigrationInterface {
     await queryRunner.query('TRUNCATE TABLE workflow cascade');
     await queryRunner.query('TRUNCATE TABLE project_status cascade');
     await queryRunner.query('TRUNCATE TABLE task cascade');
+    await queryRunner.query('TRUNCATE TABLE regional_district cascade');
     await queryRunner.query('TRUNCATE TABLE "user" cascade'); // Seems to only work with quotes.
   }
 }
