@@ -35,9 +35,9 @@ export class AdministrativeArea extends BaseEntity {
   BoundaryType: string;
 
   // Regional District Relations
-  @Column({ name: 'RegionalDistrictId', type: 'character varying' })
+  @Column({ name: 'RegionalDistrictId', type: 'int' })
   @Index()
-  RegionalDistrictId: string;
+  RegionalDistrictId: number;
 
   @ManyToOne(() => RegionalDistrict, (RegionalDistrict) => RegionalDistrict.Id)
   @JoinColumn({ name: 'RegionalDistrictId' })

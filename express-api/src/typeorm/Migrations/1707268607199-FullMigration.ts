@@ -61,10 +61,10 @@ export class FullMigration1707268607199 implements MigrationInterface {
       path.join(sqlFilePath, 'ProjectStatusNotifications_202401301558.sql'),
     );
     await queryRunner.query(sqlContent17.toString());
-    const sqlContent12 = SqlReader.readSqlFile(
+    const sqlContent18 = SqlReader.readSqlFile(
       path.join(sqlFilePath, 'ProjectStatusTransitions_202401311020.sql'),
     );
-    await queryRunner.query(sqlContent12.toString());
+    await queryRunner.query(sqlContent18.toString());
     // const sqlContent18 = SqlReader.readSqlFile(path.join(sqlFilePath, 'TierLevels_202402011455.sql'));
     // await queryRunner.query(sqlContent18.toString());
 
@@ -75,6 +75,10 @@ export class FullMigration1707268607199 implements MigrationInterface {
       path.join(sqlFilePath, 'ReportTypes_2024020081047.sql'),
     );
     await queryRunner.query(sqlContent20.toString());
+    const sqlContent21 = SqlReader.readSqlFile(
+      path.join(sqlFilePath, 'RegionalDistricts_20240208.sql'),
+    );
+    await queryRunner.query(sqlContent21.toString());
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
@@ -97,5 +101,6 @@ export class FullMigration1707268607199 implements MigrationInterface {
     await queryRunner.query('TRUNCATE TABLE project_status_notification');
     await queryRunner.query('TRUNCATE TABLE project_status_transition');
     await queryRunner.query('TRUNCATE TABLE role');
+    await queryRunner.query('TRUNCATE TABLE regional_district');
   }
 }
