@@ -25,7 +25,7 @@ export class Parcel extends Property {
   @Column({ type: 'boolean' })
   NotOwned: boolean;
 
-  @Column({ name: 'ParentParcelId', type: 'int' })
+  @Column({ name: 'ParentParcelId', type: 'int', nullable: true })
   ParentParcelId: number;
 
   @ManyToOne(() => Parcel, (Parcel) => Parcel.Id)
