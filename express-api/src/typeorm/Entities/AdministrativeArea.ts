@@ -28,12 +28,6 @@ export class AdministrativeArea extends BaseEntity {
   @Column('int')
   SortOrder: number;
 
-  @Column({ type: 'character varying', length: 100, nullable: true })
-  Abbreviation: string;
-
-  @Column({ type: 'character varying', length: 50, nullable: true })
-  BoundaryType: string;
-
   // Regional District Relations
   @Column({ name: 'RegionalDistrictId', type: 'int' })
   @Index()
