@@ -22,13 +22,4 @@ services:
     build:
       context: backend
       dockerfile: Dockerfile.migrations
-
-  ################## Express API #################
-
-  express:
-    build:
-      context: express-api
-      dockerfile: Dockerfile.ocp
-    ports:
-      - 8080:8080
-    
+      
