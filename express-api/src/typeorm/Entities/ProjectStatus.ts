@@ -1,16 +1,16 @@
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
-import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
+import { Entity, PrimaryColumn, Column, Index } from 'typeorm';
 
 @Entity()
 @Index(['IsDisabled', 'Name', 'Code', 'SortOrder'])
 export class ProjectStatus extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   Id: number;
 
   @Column({ type: 'character varying', length: 150 })
   Name: string;
 
-  @Column('bit')
+  @Column('boolean')
   IsDisabled: boolean;
 
   @Column('int')
@@ -26,10 +26,10 @@ export class ProjectStatus extends BaseEntity {
   @Column('text', { nullable: true })
   Description: string;
 
-  @Column('bit')
+  @Column('boolean')
   IsMilestone: boolean;
 
-  @Column('bit')
+  @Column('boolean')
   IsTerminal: boolean;
 
   @Column({ type: 'character varying', length: 150 })

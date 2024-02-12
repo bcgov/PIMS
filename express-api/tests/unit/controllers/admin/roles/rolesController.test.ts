@@ -6,7 +6,7 @@ import {
   getRequestHandlerMocks,
   produceRole,
 } from '../../../../testUtils/factories';
-import { Roles as RolesEntity } from '@/typeorm/Entities/Users_Roles_Claims';
+import { Role as RolesEntity } from '@/typeorm/Entities/Role';
 import { Roles as RolesConstant } from '@/constants/roles';
 
 let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
