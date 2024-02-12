@@ -82,7 +82,7 @@ export const submitUserAccessRequest = async (req: Request, res: Response) => {
   try {
     const result = await userServices.addKeycloakUserOnHold(
       req.user as KeycloakUser,
-      req.body.AgencyId,
+      Number(req.body.AgencyId),
       req.body.Position,
       req.body.Note,
     );

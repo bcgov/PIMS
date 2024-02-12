@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AccessRequests } from '@/typeorm/Entities/AccessRequests';
-import { Agencies } from '@/typeorm/Entities/Agencies';
-import { Users, Roles as RolesEntity, UserStatus } from '@/typeorm/Entities/Users_Roles_Claims';
+import { AccessRequest } from '@/typeorm/Entities/AccessRequest';
+import { Agency } from '@/typeorm/Entities/Agency';
+import { User, UserStatus } from '@/typeorm/Entities/User';
 import { faker } from '@faker-js/faker';
 import { UUID } from 'crypto';
 import { Request, Response } from 'express';
+import { Role as RolesEntity } from '@/typeorm/Entities/Role';
 
 export class MockRes {
   statusValue: any;
@@ -72,13 +73,15 @@ export const getRequestHandlerMocks = () => {
   return { mockReq, mockRes /*mockNext*/ };
 };
 
-export const produceUser = (): Users => {
+export const produceUser = (): User => {
   const id = faker.string.uuid() as UUID;
   return {
     CreatedOn: faker.date.anytime(),
     UpdatedOn: faker.date.anytime(),
     UpdatedById: undefined,
+    UpdatedBy: undefined,
     CreatedById: undefined,
+    CreatedBy: undefined,
     Id: id,
     Status: UserStatus.Active,
     DisplayName: faker.company.name(),
@@ -93,45 +96,60 @@ export const produceUser = (): Users => {
     Note: '',
     LastLogin: faker.date.anytime(),
     ApprovedById: undefined,
+    ApprovedBy: undefined,
     ApprovedOn: undefined,
     KeycloakUserId: faker.string.uuid() as UUID,
-    UserRoles: [],
+    Role: produceRole(),
+    RoleId: undefined,
     Agency: produceAgency(id),
     AgencyId: undefined,
+    IsDisabled: false,
   };
 };
 
-export const produceRequest = (): AccessRequests => {
-  const request: AccessRequests = {
+export const produceRequest = (): AccessRequest => {
+  const agency = produceAgency();
+  const role = produceRole();
+  const user = produceUser();
+  const request: AccessRequest = {
     Id: faker.number.int(),
-    KeycloakUserId: faker.string.uuid(),
+    UserId: user.Id,
+    User: user,
     Note: 'test',
     Status: 0,
-    RoleId: undefined,
-    AgencyId: produceAgency(),
+    RoleId: role.Id,
+    Role: role,
+    Agency: agency,
+    AgencyId: agency.Id,
     CreatedById: undefined,
+    CreatedBy: undefined,
     CreatedOn: faker.date.anytime(),
     UpdatedById: undefined,
+    UpdatedBy: undefined,
     UpdatedOn: faker.date.anytime(),
   };
   return request;
 };
 
-export const produceAgency = (userId?: string): Agencies => {
-  const agency: Agencies = {
-    Id: userId ?? faker.string.numeric(6),
+export const produceAgency = (code?: string): Agency => {
+  const agency: Agency = {
+    Id: faker.number.int({ max: 10 }),
     Name: faker.company.name(),
     IsDisabled: false,
     SortOrder: 0,
     Description: '',
     ParentId: undefined,
+    Parent: undefined,
+    Code: code ?? faker.string.alpha({ length: 4 }),
     Email: faker.internet.email(),
     SendEmail: false,
     AddressTo: '',
     CCEmail: faker.internet.email(),
     CreatedById: undefined,
     CreatedOn: new Date(),
+    CreatedBy: undefined,
     UpdatedById: undefined,
+    UpdatedBy: undefined,
     UpdatedOn: new Date(),
     Users: [],
   };
@@ -143,7 +161,9 @@ export const produceRole = (): RolesEntity => {
     CreatedOn: faker.date.anytime(),
     UpdatedOn: faker.date.anytime(),
     UpdatedById: undefined,
+    UpdatedBy: undefined,
     CreatedById: undefined,
+    CreatedBy: undefined,
     Id: faker.string.uuid() as UUID,
     Name: faker.company.name(),
     IsDisabled: false,
@@ -151,7 +171,6 @@ export const produceRole = (): RolesEntity => {
     SortOrder: 0,
     KeycloakGroupId: faker.string.uuid() as UUID,
     IsPublic: false,
-    UserRoles: [],
-    RoleClaims: [],
+    Users: [],
   };
 };

@@ -1,17 +1,19 @@
-import { FiscalKeys } from '@/typeorm/Entities/FiscalKeys';
+import { FiscalKey } from '@/typeorm/Entities/FiscalKey';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Entity, Column, Index, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity()
-@Index(['FiscalYear', 'FiscalKey', 'Value'])
+@Index(['FiscalYear', 'FiscalKeyId', 'Value'])
 export class Fiscal extends BaseEntity {
   @PrimaryColumn('int')
   FiscalYear: number;
 
-  @PrimaryColumn()
-  @ManyToOne(() => FiscalKeys, (FiscalKey) => FiscalKey.Id)
-  @JoinColumn({ name: 'FiscalKey' })
-  FiscalKey: FiscalKeys;
+  @PrimaryColumn({ name: 'FiscalKeyId', type: 'int' })
+  FiscalKeyId: number;
+
+  @ManyToOne(() => FiscalKey, (FiscalKey) => FiscalKey.Id)
+  @JoinColumn({ name: 'FiscalKeyId' })
+  FiscalKey: FiscalKey;
 
   @Column('money')
   Value: number;
