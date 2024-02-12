@@ -1,29 +1,29 @@
 import { AppDataSource } from '@/appDataSource';
 import userServices from '@/services/admin/usersServices';
 import { IKeycloakRole } from '@/services/keycloak/IKeycloakRole';
-import { Users } from '@/typeorm/Entities/Users_Roles_Claims';
+import { User } from '@/typeorm/Entities/User';
 import { produceUser } from 'tests/testUtils/factories';
 import { DeepPartial } from 'typeorm';
 import { z } from 'zod';
 
 const _usersFind = jest
-  .spyOn(AppDataSource.getRepository(Users), 'find')
+  .spyOn(AppDataSource.getRepository(User), 'find')
   .mockImplementation(async () => [produceUser()]);
 
 const _usersFindOne = jest
-  .spyOn(AppDataSource.getRepository(Users), 'findOne')
+  .spyOn(AppDataSource.getRepository(User), 'findOne')
   .mockImplementation(async () => produceUser());
 
 const _usersSave = jest
-  .spyOn(AppDataSource.getRepository(Users), 'save')
-  .mockImplementation(async (user: DeepPartial<Users> & Users) => user);
+  .spyOn(AppDataSource.getRepository(User), 'save')
+  .mockImplementation(async (user: DeepPartial<User> & User) => user);
 
 const _usersUpdate = jest
-  .spyOn(AppDataSource.getRepository(Users), 'update')
+  .spyOn(AppDataSource.getRepository(User), 'update')
   .mockImplementation(async (id, user) => ({ generatedMaps: [user], raw: {} }));
 
 const _usersRemove = jest
-  .spyOn(AppDataSource.getRepository(Users), 'remove')
+  .spyOn(AppDataSource.getRepository(User), 'remove')
   .mockImplementation(async (user) => user);
 
 jest.mock('@/services/keycloak/keycloakService', () => ({
