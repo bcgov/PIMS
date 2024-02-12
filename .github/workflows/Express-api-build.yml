@@ -1,0 +1,98 @@
+# GitHub Actions workflow for building and tagging the API image on PR
+name: EXPRESS API-:Image Build on PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review] # Triggered by opened or changed pull requests.
+    branches: [main]
+    paths:
+      - 'express-api/**' # Triggers on changes to files in the express-api/ directory.
+
+jobs:
+  PIMS-API-Build-Tag-Push:
+    environment: dev
+    runs-on: ubuntu-latest
+    steps:
+      # check out the repo
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # login to the Openshift Cluster
+      - name: Login to Openshift
+        uses: redhat-actions/oc-login@v1
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
+          openshift_token: ${{ secrets.OPENSHIFT_SA_TOOLS_TOKEN }}
+          namespace: ${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}
+
+      # Login to BC Gov Docker Image Repository
+      - name: Login to Openshift Docker
+        run: |
+          docker login ${{ secrets.PUBLIC_IMAGE_REPOSITORY }} -u ${{ secrets.OPENSHIFT_SA_NAME }} -p ${{ secrets.OPENSHIFT_SA_TOOLS_TOKEN }}
+
+      # Build the API Image 
+      - name: Build API Image
+        run: |
+          cd express-api && docker build -t ${{ secrets.PUBLIC_IMAGE_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/pims-api-v2:${{github.event.pull_request.number}} -f Dockerfile .
+
+      # Push the API Image
+      - name: Push API Image
+        run: |
+          docker push ${{ secrets.PUBLIC_IMAGE_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/pims-api-v2:${{github.event.pull_request.number}}
+
+  Update_Wiki_Tags:
+    needs: [PIMS-API-Build-Tag-Push]
+    name: Update table in wiki
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      
+    steps:
+      # Checkout the repository
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Clone the wiki repository
+      - name: Clone wiki repository
+        run: |
+          echo "Cloning wiki repo https://github.com/$GITHUB_REPOSITORY.wiki.git"
+          git clone "https://$GITHUB_ACTOR:$GH_TOKEN@github.com/$GITHUB_REPOSITORY.wiki.git" ./wiki
+
+      # Setup Python
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' 
+
+      # Run the update wiki Python script
+      - name: Run update wiki Python script
+        run: python ./.github/helpers/update-wiki-table.py ./wiki/Image-tags.md "EXPRESS API" "Latest Build Image Tag" "${{github.event.pull_request.number}}"
+
+      # Commit and push changes to the wiki
+      - name: Commit and push changes to wiki
+        run: |
+          cd ./wiki
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git add .
+          if git diff-index --quiet HEAD; then
+            echo "Nothing changed"
+            exit 0
+          fi
+          echo "Pushing changes to wiki"
+          git commit -m "Value populated at image build API" && git push "https://$GITHUB_ACTOR:$GH_TOKEN@github.com/$GITHUB_REPOSITORY.wiki.git"
+
+      # Add comment to the PR
+      - name: Add Comment To the PR
+        if: github.event.action == 'opened'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "🚀 **Deployment Information**\n\nThe API Image has been built with the tag: **`${{github.event.pull_request.number}}`**. Please make sure to utilize this specific tag when promoting these changes to the TEST and PROD environments during the API deployment. For more updates please monitor [Image Tags](https://github.com/bcgov/PIMS/wiki/Image-tags) Page on Wiki."
+            })
