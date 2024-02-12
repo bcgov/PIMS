@@ -65,7 +65,7 @@ export const getAgencyById = async (req: Request, res: Response) => {
    */
 
   try {
-    const agency = await agencyService.getAgencyById(req.body);
+    const agency = await agencyService.getAgencyById(req.params.id);
     return res.status(200).send(agency);
   } catch (e) {
     return res.status(e?.code ?? 400).send(e?.message);

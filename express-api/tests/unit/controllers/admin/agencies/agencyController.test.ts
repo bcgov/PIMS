@@ -1,40 +1,34 @@
 import { Request, Response } from 'express';
 import controllers from '@/controllers';
-import { MockReq, MockRes, getRequestHandlerMocks } from '../../../../testUtils/factories';
+import {
+  MockReq,
+  MockRes,
+  getRequestHandlerMocks,
+  produceAgency,
+} from '../../../../testUtils/factories';
 import { Roles } from '@/constants/roles';
-import { faker } from '@faker-js/faker';
-import { IAgency } from '@/controllers/admin/agencies/IAgency';
-import { UUID } from 'crypto';
+import { Agencies } from '@/typeorm/Entities/Agencies';
 
 let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
-const {
-  getAgencies,
-  getAgenciesFiltered,
-  addAgency,
-  updateAgencyById,
-  getAgencyById,
-  deleteAgencyById,
-} = controllers.admin;
+const { getAgencies, addAgency, updateAgencyById, getAgencyById, deleteAgencyById } =
+  controllers.admin;
 
-const mockAgency: IAgency = {
-  createdOn: faker.date.anytime().toLocaleString(),
-  updatedOn: faker.date.anytime().toLocaleString(),
-  updatedById: faker.string.uuid() as UUID,
-  createdById: faker.string.uuid() as UUID,
-  id: faker.string.uuid() as UUID,
-  name: faker.company.name(),
-  isDisabled: false,
-  isVisible: true,
-  sortOrder: 0,
-  type: '',
-  code: 'BCH',
-  parentId: faker.string.uuid() as UUID,
-  description: '',
-  email: 'test@test.com',
-  sendEmail: true,
-  addreessTo: 'test',
-};
+const _getAgencies = jest.fn().mockImplementation(() => [produceAgency()]);
+const _postAgency = jest.fn().mockImplementation((agency) => agency);
+const _getAgencyById = jest
+  .fn()
+  .mockImplementation((id: string) => ({ ...produceAgency(), Id: id }));
+const _updateAgencyById = jest.fn().mockImplementation((agency) => agency);
+const _deleteAgencyById = jest.fn().mockImplementation((id) => ({ ...produceAgency(), Id: id }));
+
+jest.mock('@/services/admin/agencyServices', () => ({
+  getAgencies: () => _getAgencies(),
+  postAgency: (_agency: Agencies) => _postAgency(_agency),
+  getAgencyById: (id: string) => _getAgencyById(id),
+  updateAgencyById: (agency: Agencies) => _updateAgencyById(agency),
+  deleteAgencyById: (id: string) => _deleteAgencyById(id),
+}));
 
 describe('UNIT - Agencies Admin', () => {
   beforeEach(() => {
@@ -45,112 +39,64 @@ describe('UNIT - Agencies Admin', () => {
   });
 
   describe('Controller getAgencies', () => {
-    // TODO: remove stub test when controller is complete
-    it('should return the stub response of 501', async () => {
-      await getAgencies(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
     // TODO: enable other tests when controller is complete
-    xit('should return status 200 and a list of agencies', async () => {
+    it('should return status 200 and a list of agencies', async () => {
       await getAgencies(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
-  });
 
-  describe('Controller getAgenciesFiltered', () => {
-    beforeEach(() => {
+    it('should return status 200 and a list of agencies', async () => {
       mockRequest.body = {
         page: 0,
         quantity: 0,
-        name: mockAgency.name,
-        parentId: mockAgency.parentId,
-        isDisabled: mockAgency.isDisabled,
-        id: mockAgency.id,
-        sort: [''],
+        name: 'a',
+        parentId: 'a',
+        isDisabled: 0,
+        id: 'a',
       };
-    });
-    // TODO: remove stub test when controller is complete
-    it('should return the stub response of 501', async () => {
-      await getAgenciesFiltered(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    // TODO: enable other tests when controller is complete
-    xit('should return status 200 and a list of agencies', async () => {
-      await getAgenciesFiltered(mockRequest, mockResponse);
+      await getAgencies(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
   });
 
   describe('Controller addAgency', () => {
-    beforeEach(() => {
-      mockRequest.body = mockAgency;
-    });
-    // TODO: remove stub test when controller is complete
-    it('should return the stub response of 501', async () => {
-      await addAgency(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
     // TODO: enable other tests when controller is complete
-    xit('should return status 201 and the new agency', async () => {
+    it('should return status 201 and the new agency', async () => {
+      const agency = produceAgency();
+      mockRequest.body = agency;
       await addAgency(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(201);
+      expect(mockResponse.sendValue.Id).toBe(agency.Id);
     });
   });
 
   describe('Controller getAgencyById', () => {
-    beforeEach(() => {
-      mockRequest.params.id = `${mockAgency.id}`;
-    });
-    // TODO: remove stub test when controller is complete
-    it('should return the stub response of 501', async () => {
-      await getAgencyById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    // TODO: enable other tests when controller is complete
-    xit('should return status 200 and the agency info', async () => {
+    it('should return status 200 and the agency info', async () => {
+      mockRequest.params.id = '777';
       await getAgencyById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
-      expect(mockResponse.jsonValue.name).toBe('new name');
+      expect(mockResponse.sendValue.Id).toBe('777');
     });
   });
 
   describe('Controller updateAgencyById', () => {
-    beforeEach(() => {
-      mockRequest.params.id = `${mockAgency.id}`;
-      mockRequest.body = { ...mockAgency, name: 'new name' };
-    });
-    // TODO: remove stub test when controller is complete
-    it('should return the stub response of 501', async () => {
-      await updateAgencyById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    // TODO: enable other tests when controller is complete
-    xit('should return status 200 and the updated agency', async () => {
+    it('should return status 200 and the updated agency', async () => {
+      const agency = produceAgency();
+      mockRequest.params.id = agency.Id;
+      mockRequest.body = agency;
       await updateAgencyById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
-      expect(mockResponse.jsonValue.name).toBe('new name');
+      expect(mockResponse.sendValue.Id).toBe(agency.Id);
     });
   });
 
   describe('Controller deleteAgencyById', () => {
-    beforeEach(() => {
-      mockRequest.params.id = `${mockAgency.id}`;
-    });
-    // TODO: remove stub test when controller is complete
-    it('should return the stub response of 501', async () => {
+    it('should return status 200', async () => {
+      const agency = produceAgency();
+      mockRequest.params.id = agency.Id;
       await deleteAgencyById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    // TODO: enable other tests when controller is complete
-    xit('should return status 204', async () => {
-      await deleteAgencyById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(204);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(mockResponse.sendValue.Id).toBe(agency.Id);
     });
   });
 });
