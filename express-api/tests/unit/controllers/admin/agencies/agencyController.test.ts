@@ -7,7 +7,7 @@ import {
   produceAgency,
 } from '../../../../testUtils/factories';
 import { Roles } from '@/constants/roles';
-import { Agencies } from '@/typeorm/Entities/Agencies';
+import { Agency } from '@/typeorm/Entities/Agency';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
 let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
@@ -25,9 +25,9 @@ const _deleteAgencyById = jest.fn().mockImplementation((id) => ({ ...produceAgen
 
 jest.mock('@/services/admin/agencyServices', () => ({
   getAgencies: () => _getAgencies(),
-  postAgency: (_agency: Agencies) => _postAgency(_agency),
+  postAgency: (_agency: Agency) => _postAgency(_agency),
   getAgencyById: (id: string) => _getAgencyById(id),
-  updateAgencyById: (agency: Agencies) => _updateAgencyById(agency),
+  updateAgencyById: (agency: Agency) => _updateAgencyById(agency),
   deleteAgencyById: (id: string) => _deleteAgencyById(id),
 }));
 
@@ -87,7 +87,7 @@ describe('UNIT - Agencies Admin', () => {
       mockRequest.params.id = '777';
       await controllers.admin.getAgencyById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
-      expect(mockResponse.sendValue.Id).toBe('777');
+      expect(mockResponse.sendValue.Id).toBe(777);
     });
     it('should return status 400', async () => {
       _getAgencyById.mockImplementationOnce(() => {
@@ -108,7 +108,7 @@ describe('UNIT - Agencies Admin', () => {
   describe('Controller updateAgencyById', () => {
     it('should return status 200 and the updated agency', async () => {
       const agency = produceAgency();
-      mockRequest.params.id = agency.Id;
+      mockRequest.params.id = agency.Id.toString();
       mockRequest.body = agency;
       await controllers.admin.updateAgencyById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
@@ -127,7 +127,7 @@ describe('UNIT - Agencies Admin', () => {
         throw new ErrorWithCode('', 400);
       });
       const agency = produceAgency();
-      mockRequest.params.id = agency.Id;
+      mockRequest.params.id = agency.Id.toString();
       mockRequest.body = agency;
       await controllers.admin.updateAgencyById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
@@ -137,7 +137,7 @@ describe('UNIT - Agencies Admin', () => {
         throw new Error();
       });
       const agency = produceAgency();
-      mockRequest.params.id = agency.Id;
+      mockRequest.params.id = agency.Id.toString();
       mockRequest.body = agency;
       await controllers.admin.updateAgencyById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
@@ -147,7 +147,7 @@ describe('UNIT - Agencies Admin', () => {
   describe('Controller deleteAgencyById', () => {
     it('should return status 200', async () => {
       const agency = produceAgency();
-      mockRequest.params.id = agency.Id;
+      mockRequest.params.id = agency.Id.toString();
       await controllers.admin.deleteAgencyById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.Id).toBe(agency.Id);

@@ -65,7 +65,7 @@ export const getAgencyById = async (req: Request, res: Response) => {
    */
 
   try {
-    const agency = await agencyService.getAgencyById(req.params.id);
+    const agency = await agencyService.getAgencyById(parseInt(req.params.id));
     return res.status(200).send(agency);
   } catch (e) {
     return res.status(e?.code ?? 400).send(e?.message);
@@ -114,7 +114,7 @@ export const deleteAgencyById = async (req: Request, res: Response) => {
    */
   const id = z.string().parse(req.params.id);
   try {
-    const agency = await agencyService.deleteAgencyById(id);
+    const agency = await agencyService.deleteAgencyById(parseInt(id));
     return res.status(200).send(agency);
   } catch (e) {
     return res.status(e?.code ?? 400).send(e?.message);

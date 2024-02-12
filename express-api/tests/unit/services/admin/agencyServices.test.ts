@@ -1,23 +1,23 @@
 import { AppDataSource } from '@/appDataSource';
-import { Agencies } from '@/typeorm/Entities/Agencies';
+import { Agency } from '@/typeorm/Entities/Agency';
 import { produceAgency } from 'tests/testUtils/factories';
 import * as agencyServices from '@/services/admin/agencyServices';
 import { DeepPartial } from 'typeorm';
 
 const _agencyFind = jest
-  .spyOn(AppDataSource.getRepository(Agencies), 'find')
+  .spyOn(AppDataSource.getRepository(Agency), 'find')
   .mockImplementation(async () => [produceAgency()]);
 const _agencySave = jest
-  .spyOn(AppDataSource.getRepository(Agencies), 'save')
-  .mockImplementation(async (agency: DeepPartial<Agencies> & Agencies) => agency);
+  .spyOn(AppDataSource.getRepository(Agency), 'save')
+  .mockImplementation(async (agency: DeepPartial<Agency> & Agency) => agency);
 const _agencyFindOne = jest
-  .spyOn(AppDataSource.getRepository(Agencies), 'findOne')
+  .spyOn(AppDataSource.getRepository(Agency), 'findOne')
   .mockImplementation(async () => produceAgency());
 const _agencyUpdate = jest
-  .spyOn(AppDataSource.getRepository(Agencies), 'update')
+  .spyOn(AppDataSource.getRepository(Agency), 'update')
   .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
 const _agencyDelete = jest
-  .spyOn(AppDataSource.getRepository(Agencies), 'delete')
+  .spyOn(AppDataSource.getRepository(Agency), 'delete')
   .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
 
 beforeEach(() => {

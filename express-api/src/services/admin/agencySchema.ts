@@ -6,7 +6,7 @@ export const AgencyCreationSchema = z.object({
   updatedByName: z.string(),
   updatedByEmail: z.string(),
   rowVersion: z.string(),
-  id: z.string(),
+  id: z.number().int(),
   name: z.string(),
   isDisabled: z.boolean(),
   isVisible: z.boolean(),
@@ -29,12 +29,12 @@ export const AgencyFilterSchema = AgencyCreationSchema.partial()
     parentId: true,
     isDisabled: true,
     sortOrder: true,
-    id: true,
   })
   .extend({
     page: z.coerce.number().optional(),
     quantity: z.coerce.number().optional(),
     sort: z.string().optional(),
+    id: z.string().optional(),
   });
 
 export type Agency = z.infer<typeof AgencyCreationSchema>;
