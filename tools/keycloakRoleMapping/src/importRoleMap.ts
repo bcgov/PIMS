@@ -19,14 +19,14 @@ const importRoles = async () => {
       // If there is more than one new role, we have to choose the most permissive
       // Logic should work if there's only one role as well.
       switch (true) {
-        case newRoles.has('admin'):
-          await assignUserRoles(username, ['admin']);
+        case newRoles.has('Administrator'):
+          await assignUserRoles(username, ['Administrator']);
           break;
-        case newRoles.has('auditor'):
-          await assignUserRoles(username, ['auditor']);
+        case newRoles.has('Auditor'):
+          await assignUserRoles(username, ['Auditor']);
           break;
-        case newRoles.has('general user'):
-          await assignUserRoles(username, ['general user']);
+        case newRoles.has('General User'):
+          await assignUserRoles(username, ['General User']);
           break;
         default:
           break;
