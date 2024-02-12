@@ -103,7 +103,7 @@ export class SeedData1707763864014 implements MigrationInterface {
     await queryRunner.query('TRUNCATE TABLE evaluation_key cascade');
     await queryRunner.query('TRUNCATE TABLE fiscal_key cascade');
     await queryRunner.query('TRUNCATE TABLE administrative_area cascade');
-    await queryRunner.query('TRUNCATE TABLE report_types cascade');
+    await queryRunner.query('TRUNCATE TABLE report_type cascade');
     await queryRunner.query('TRUNCATE TABLE project_status_transition cascade');
     await queryRunner.query('TRUNCATE TABLE project_status_notification cascade');
     await queryRunner.query('TRUNCATE TABLE workflow_project_status cascade');
