@@ -8,11 +8,12 @@ import {
 } from '../../../../testUtils/factories';
 import { Roles } from '@/constants/roles';
 import { Agencies } from '@/typeorm/Entities/Agencies';
+import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
 let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
-const { getAgencies, addAgency, updateAgencyById, getAgencyById, deleteAgencyById } =
-  controllers.admin;
+// const { getAgencies, addAgency, updateAgencyById, getAgencyById, deleteAgencyById } =
+//   controllers.admin;
 
 const _getAgencies = jest.fn().mockImplementation(() => [produceAgency()]);
 const _postAgency = jest.fn().mockImplementation((agency) => agency);
@@ -41,41 +42,66 @@ describe('UNIT - Agencies Admin', () => {
   describe('Controller getAgencies', () => {
     // TODO: enable other tests when controller is complete
     it('should return status 200 and a list of agencies', async () => {
-      await getAgencies(mockRequest, mockResponse);
+      await controllers.admin.getAgencies(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
 
     it('should return status 200 and a list of agencies', async () => {
-      mockRequest.body = {
-        page: 0,
-        quantity: 0,
+      mockRequest.query = {
         name: 'a',
         parentId: 'a',
-        isDisabled: 0,
         id: 'a',
       };
-      await getAgencies(mockRequest, mockResponse);
+      await controllers.admin.getAgencies(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
+    });
+
+    it('should return status 400', async () => {
+      mockRequest.query = {
+        name: 0 as any,
+      };
+      await controllers.admin.getAgencies(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
     });
   });
 
   describe('Controller addAgency', () => {
-    // TODO: enable other tests when controller is complete
     it('should return status 201 and the new agency', async () => {
       const agency = produceAgency();
       mockRequest.body = agency;
-      await addAgency(mockRequest, mockResponse);
+      await controllers.admin.addAgency(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(201);
       expect(mockResponse.sendValue.Id).toBe(agency.Id);
+    });
+    it('should return status 400', async () => {
+      _postAgency.mockImplementationOnce(() => {
+        throw new ErrorWithCode('', 400);
+      });
+      await controllers.admin.addAgency(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
     });
   });
 
   describe('Controller getAgencyById', () => {
     it('should return status 200 and the agency info', async () => {
       mockRequest.params.id = '777';
-      await getAgencyById(mockRequest, mockResponse);
+      await controllers.admin.getAgencyById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.Id).toBe('777');
+    });
+    it('should return status 400', async () => {
+      _getAgencyById.mockImplementationOnce(() => {
+        throw new ErrorWithCode('', 400);
+      });
+      await controllers.admin.getAgencyById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+    it('should return status 400', async () => {
+      _getAgencyById.mockImplementationOnce(() => {
+        throw new Error();
+      });
+      await controllers.admin.getAgencyById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
     });
   });
 
@@ -84,9 +110,37 @@ describe('UNIT - Agencies Admin', () => {
       const agency = produceAgency();
       mockRequest.params.id = agency.Id;
       mockRequest.body = agency;
-      await updateAgencyById(mockRequest, mockResponse);
+      await controllers.admin.updateAgencyById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.Id).toBe(agency.Id);
+    });
+    it('should return status 400 and specify that there was a mismatch', async () => {
+      const agency = produceAgency();
+      mockRequest.params.id = 'asdf';
+      mockRequest.body = agency;
+      await controllers.admin.updateAgencyById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+      expect(mockResponse.sendValue).toBe('The param ID does not match the request body.');
+    });
+    it('should return status 400', async () => {
+      _updateAgencyById.mockImplementationOnce(() => {
+        throw new ErrorWithCode('', 400);
+      });
+      const agency = produceAgency();
+      mockRequest.params.id = agency.Id;
+      mockRequest.body = agency;
+      await controllers.admin.updateAgencyById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+    it('should return status 400', async () => {
+      _updateAgencyById.mockImplementationOnce(() => {
+        throw new Error();
+      });
+      const agency = produceAgency();
+      mockRequest.params.id = agency.Id;
+      mockRequest.body = agency;
+      await controllers.admin.updateAgencyById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
     });
   });
 
@@ -94,9 +148,25 @@ describe('UNIT - Agencies Admin', () => {
     it('should return status 200', async () => {
       const agency = produceAgency();
       mockRequest.params.id = agency.Id;
-      await deleteAgencyById(mockRequest, mockResponse);
+      await controllers.admin.deleteAgencyById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.Id).toBe(agency.Id);
+    });
+    it('should return status 400', async () => {
+      _deleteAgencyById.mockImplementationOnce(() => {
+        throw new ErrorWithCode('', 400);
+      });
+      mockRequest.params.id = 'asf';
+      await controllers.admin.deleteAgencyById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+    it('should return status 400', async () => {
+      _deleteAgencyById.mockImplementationOnce(() => {
+        throw new Error();
+      });
+      mockRequest.params.id = 'asf';
+      await controllers.admin.deleteAgencyById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
     });
   });
 });
