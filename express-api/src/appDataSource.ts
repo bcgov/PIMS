@@ -21,7 +21,7 @@ export const AppDataSource = new DataSource({
   username: POSTGRES_USER,
   password: POSTGRES_PASSWORD,
   database: POSTGRES_DB,
-  synchronize: true,
+  synchronize: false,
   migrationsRun: false,
   logging: true,
   logger: new CustomWinstonLogger(true),
