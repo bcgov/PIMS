@@ -25,7 +25,8 @@ import { randomUUID } from 'crypto';
 import { AppDataSource } from '@/appDataSource';
 import { DeepPartial, In, Not } from 'typeorm';
 import userServices from '@/services/admin/usersServices';
-import { Users, Roles } from '@/typeorm/Entities/Users_Roles_Claims';
+import { User } from '@/typeorm/Entities/User';
+import { Role } from '@/typeorm/Entities/Role';
 
 /**
  * @description Sync keycloak roles into PIMS roles.
@@ -41,7 +42,7 @@ const syncKeycloakRoles = async () => {
     const internalRole = await rolesServices.getRoles({ name: role.name });
 
     if (internalRole.length == 0) {
-      const newRole: Roles = {
+      const newRole: Role = {
         Id: randomUUID(),
         Name: role.name,
         IsDisabled: false,
@@ -50,15 +51,16 @@ const syncKeycloakRoles = async () => {
         Description: '',
         IsPublic: false,
         CreatedById: undefined,
+        CreatedBy: undefined,
         CreatedOn: undefined,
         UpdatedById: undefined,
+        UpdatedBy: undefined,
         UpdatedOn: undefined,
-        UserRoles: [],
-        RoleClaims: [],
+        Users: [],
       };
       rolesServices.addRole(newRole);
     } else {
-      const overwriteRole: DeepPartial<Roles> = {
+      const overwriteRole: DeepPartial<Role> = {
         Id: internalRole[0].Id,
         Name: role.name,
         IsDisabled: false,
@@ -74,7 +76,7 @@ const syncKeycloakRoles = async () => {
       rolesServices.updateRole(overwriteRole);
     }
 
-    await AppDataSource.getRepository(Roles).delete({
+    await AppDataSource.getRepository(Role).delete({
       Name: Not(In(roles.map((a) => a.name))),
     });
 
@@ -159,7 +161,7 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
   for (const krole of kroles) {
     const internalRole = await rolesServices.getRoles({ name: krole.name });
     if (internalRole.length == 0) {
-      const newRole: Roles = {
+      const newRole: Role = {
         Id: randomUUID(),
         Name: krole.name,
         IsDisabled: false,
@@ -167,11 +169,12 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
         KeycloakGroupId: '',
         Description: '',
         IsPublic: false,
-        UserRoles: [],
-        RoleClaims: [],
+        Users: [],
         CreatedById: undefined,
+        CreatedBy: undefined,
         CreatedOn: undefined,
         UpdatedById: undefined,
+        UpdatedBy: undefined,
         UpdatedOn: undefined,
       };
       await rolesServices.addRole(newRole);
@@ -179,16 +182,18 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const newUsersRoles = await AppDataSource.getRepository(Roles).find({
+  const newUsersRoles = await AppDataSource.getRepository(Role).find({
     where: { Name: In(kroles.map((a) => a.name)) },
   });
 
   if (internalUser.length == 0) {
-    const newUser: Users = {
+    const newUser: User = {
       Id: randomUUID(),
       CreatedById: undefined,
+      CreatedBy: undefined,
       CreatedOn: undefined,
       UpdatedById: undefined,
+      UpdatedBy: undefined,
       UpdatedOn: undefined,
       Username: kuser.username,
       DisplayName: kuser.attributes.display_name[0],
@@ -203,9 +208,11 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
       Note: '',
       LastLogin: new Date(),
       ApprovedById: undefined,
+      ApprovedBy: undefined,
       ApprovedOn: undefined,
       KeycloakUserId: keycloakGuid,
-      UserRoles: [],
+      Role: undefined,
+      RoleId: undefined,
       Agency: undefined,
       AgencyId: undefined,
     };

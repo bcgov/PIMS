@@ -7,30 +7,39 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
-import { Workflows } from '@/typeorm/Entities/Workflows';
+import { Workflow } from '@/typeorm/Entities/Workflow';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
-import { Projects } from '@/typeorm/Entities/Projects';
+import { Project } from '@/typeorm/Entities/Project';
 
 @Entity()
 export class ProjectStatusHistory extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id: number;
 
-  @ManyToOne(() => Projects, (Project) => Project.Id)
-  @JoinColumn({ name: 'ProjectId' })
-  @PrimaryColumn()
-  @Index()
-  ProjectId: Projects;
+  // Project Relation
+  @PrimaryColumn({ name: 'ProjectId', type: 'int' })
+  ProjectId: number;
 
-  @ManyToOne(() => Workflows, (Workflow) => Workflow.Id)
-  @JoinColumn({ name: 'WorkflowId' })
-  @PrimaryColumn()
+  @ManyToOne(() => Project, (Project) => Project.Id)
+  @JoinColumn({ name: 'ProjectId' })
   @Index()
-  WorkflowId: Workflows;
+  Project: Project;
+
+  // Workflow Relation
+  @PrimaryColumn({ name: 'WorkflowId', type: 'int' })
+  WorkflowId: number;
+
+  @ManyToOne(() => Workflow, (Workflow) => Workflow.Id)
+  @JoinColumn({ name: 'WorkflowId' })
+  @Index()
+  Workflow: Workflow;
+
+  // Status Relation
+  @PrimaryColumn({ name: 'StatusId', type: 'int' })
+  StatusId: number;
 
   @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
   @JoinColumn({ name: 'StatusId' })
-  @PrimaryColumn()
   @Index()
-  StatusId: ProjectStatus;
+  Status: ProjectStatus;
 }
