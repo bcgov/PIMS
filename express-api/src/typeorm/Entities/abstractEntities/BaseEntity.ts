@@ -1,19 +1,26 @@
-import type { Users } from '@/typeorm/Entities/Users_Roles_Claims';
+import type { User } from '@/typeorm/Entities/User';
+import { UUID } from 'crypto';
 import { Column, CreateDateColumn, ManyToOne, JoinColumn, Index, Relation } from 'typeorm';
 
 export abstract class BaseEntity {
-  @ManyToOne('Users', 'Users.Id')
+  @Column({ name: 'CreatedById' })
+  CreatedById: UUID;
+
+  @ManyToOne('User', 'User.Id')
   @JoinColumn({ name: 'CreatedById' })
   @Index()
-  CreatedById: Relation<Users>;
+  CreatedBy: Relation<User>;
 
   @CreateDateColumn()
   CreatedOn: Date;
 
-  @ManyToOne('Users', 'Users.Id', { nullable: true })
+  @Column({ name: 'UpdatedById', nullable: true })
+  UpdatedById: UUID;
+
+  @ManyToOne('User', 'User.Id', { nullable: true })
   @JoinColumn({ name: 'UpdatedById' })
   @Index()
-  UpdatedById: Relation<Users>;
+  UpdatedBy: Relation<User>;
 
   @Column({ type: 'timestamp', nullable: true })
   UpdatedOn: Date;
