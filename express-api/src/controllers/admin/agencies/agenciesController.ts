@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
-import { stubResponse } from '@/utilities/stubResponse';
 import * as agencyService from '@/services/admin/agencyServices';
+import { AgencyFilterSchema } from '@/services/admin/agencySchema';
+import { z } from 'zod';
 
 /**
  * @description Gets a paged list of agencies.
@@ -17,9 +18,13 @@ export const getAgencies = async (req: Request, res: Response) => {
       }]
    */
   // can use ErrorWithCode try catch
-
-  const agencies = await agencyService.getAgenciesService();
-  return res.status(200).send(agencies);
+  const filter = AgencyFilterSchema.safeParse(req.query);
+  if (filter.success) {
+    const agencies = await agencyService.getAgencies(filter.data);
+    return res.status(200).send(agencies);
+  } else {
+    return res.status(400).send('Could not parse filter.');
+  }
 };
 
 /**
@@ -42,29 +47,6 @@ export const addAgency = async (req: Request, res: Response) => {
   } catch (e) {
     return res.status(400).send(e.message);
   }
-};
-
-/**
- * @description Gets a list of agencies based on a filter.
- * @param   {Request}     req Incoming request
- * @param   {Response}    res Outgoing response
- * @returns {Response}        A 200 status with a list of agencies.
- */
-export const getAgenciesFiltered = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Agencies - Admin']
-   * #swagger.description = 'Returns a paged list of agencies from the datasource based on a supplied filter.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
-  // TODO: Replace stub response with controller logic
-  // pull out query
-  //const queryParams = req.query;
-
-  //const reqUser = req.user;
-  return stubResponse(res);
 };
 
 /**
@@ -104,10 +86,13 @@ export const updateAgencyById = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
+  const id = z.string().parse(req.params.id);
+  if (id != req.body.Id) {
+    return res.status(400).send('The param ID does not match the request body.');
+  }
   try {
-    const agency = agencyService.updateAgencyById(req.body);
-    return res.status(201).send(agency);
+    const agency = await agencyService.updateAgencyById(req.body);
+    return res.status(200).send(agency);
   } catch (e) {
     return res.status(e?.code ?? 400).send(e?.message);
   }
@@ -127,10 +112,10 @@ export const deleteAgencyById = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
+  const id = z.string().parse(req.params.id);
   try {
-    const agency = agencyService.deleteAgencyById(req.body);
-    return res.status(201).send(agency);
+    const agency = await agencyService.deleteAgencyById(id);
+    return res.status(200).send(agency);
   } catch (e) {
     return res.status(e?.code ?? 400).send(e?.message);
   }

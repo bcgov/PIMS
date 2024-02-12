@@ -6,14 +6,14 @@ export const AgencyCreationSchema = z.object({
   updatedByName: z.string(),
   updatedByEmail: z.string(),
   rowVersion: z.string(),
-  id: z.number(),
+  id: z.string(),
   name: z.string(),
   isDisabled: z.boolean(),
   isVisible: z.boolean(),
-  sortOrder: z.number(),
+  sortOrder: z.coerce.number(),
   type: z.string(),
   code: z.string(),
-  parentId: z.number(),
+  parentId: z.string(),
   description: z.string(),
   email: z.string(),
   ccEmail: z.string(),
@@ -21,4 +21,21 @@ export const AgencyCreationSchema = z.object({
   addressTo: z.string(),
 });
 
+//The swagger for the .NET verison was once again misleading about what fields you can filter by.
+//This rendition is based off the actual AgencyFilter C# Model.
+export const AgencyFilterSchema = AgencyCreationSchema.partial()
+  .pick({
+    name: true,
+    parentId: true,
+    isDisabled: true,
+    sortOrder: true,
+    id: true,
+  })
+  .extend({
+    page: z.coerce.number().optional(),
+    quantity: z.coerce.number().optional(),
+    sort: z.string().optional(),
+  });
+
 export type Agency = z.infer<typeof AgencyCreationSchema>;
+export type AgencyFilter = z.infer<typeof AgencyFilterSchema>;

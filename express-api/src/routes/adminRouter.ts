@@ -13,7 +13,6 @@ const {
   addAgency,
   deleteAgencyById,
   getAgencies,
-  getAgenciesFiltered,
   getAgencyById,
   updateAgencyById,
   addClaim,
@@ -57,8 +56,6 @@ router
 router.route(`/agencies`).get(getAgencies).post(addAgency);
 
 router.route(`/agencies/:id`).get(getAgencyById).patch(updateAgencyById).delete(deleteAgencyById);
-
-router.route(`/agencies/filter`).get(getAgenciesFiltered);
 
 // Endpoints for Admin Claims
 router.route(`/claims`).get(getClaims).post(addClaim);

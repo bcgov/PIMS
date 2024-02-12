@@ -1,7 +1,8 @@
 import { AppDataSource } from '@/appDataSource';
 import { Agencies } from '@/typeorm/Entities/Agencies';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
-import { all } from 'axios';
+import { AgencyFilter } from './agencySchema';
+import { FindOptionsOrder } from 'typeorm';
 
 const agencyRepo = AppDataSource.getRepository(Agencies);
 
@@ -9,8 +10,18 @@ const agencyRepo = AppDataSource.getRepository(Agencies);
  * @description Gets and returns a list of all agencies.
  * @returns { Agencies[] } A list of all agencies in the database
  */
-export const getAgenciesService = async () => {
-  const allAgencies = await agencyRepo.find();
+export const getAgencies = async (filter: AgencyFilter) => {
+  const allAgencies = await agencyRepo.find({
+    where: {
+      Name: filter.name,
+      IsDisabled: filter.isDisabled,
+      SortOrder: filter.sortOrder,
+      Id: filter.id,
+    },
+    take: filter.quantity,
+    skip: (filter.quantity ?? 0) * (filter.page ?? 0),
+    order: filter.sort as FindOptionsOrder<Agencies>,
+  });
   return allAgencies;
 };
 
@@ -21,7 +32,6 @@ export const getAgenciesService = async () => {
  * @throws ErrorWithCode if agency already exists
  */
 export const postAgency = async (agency: Agencies) => {
-
   const existingAgency = await getAgencyById(agency.Id);
   if (existingAgency) {
     throw new ErrorWithCode('Agency already exists', 409);
@@ -40,7 +50,7 @@ export const getAgencyById = async (agencyId: string) => {
     where: { Id: agencyId },
   });
   if (findAgency == null) {
-    throw new ErrorWithCode("Agency not found", 404);
+    throw new ErrorWithCode('Agency not found', 404);
   }
   return findAgency;
 };
@@ -52,8 +62,11 @@ export const getAgencyById = async (agencyId: string) => {
  */
 export const updateAgencyById = async (agencyIn: Agencies) => {
   const findAgency = await getAgencyById(agencyIn.Id);
-  const update = await agencyRepo.update(findAgency, agencyIn);
-  return update;
+  if (findAgency == null) {
+    throw new ErrorWithCode('Agency not found', 404);
+  }
+  const update = await agencyRepo.update({ Id: agencyIn.Id }, agencyIn);
+  return update.raw[0];
 };
 
 /**
@@ -63,17 +76,9 @@ export const updateAgencyById = async (agencyIn: Agencies) => {
  */
 export const deleteAgencyById = async (agencyId: string) => {
   const findAgency = await getAgencyById(agencyId);
+  if (findAgency == null) {
+    throw new ErrorWithCode('Agency not found', 404);
+  }
   const deleted = await agencyRepo.delete(findAgency.Id);
   return deleted;
-};
-
-/**
- * @description Gets a list of agencies that meet the filters provided.
- * @param list of filters in the request.
- * @returns Status with list of agencies.
- * @throws ErrorWithCode if
- */
-const getAgenciesFiltered = async () => {
-  //logic here to check params and return list of agencies matching parameters paginated
-  return getAgenciesService();
 };
