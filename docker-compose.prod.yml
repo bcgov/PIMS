@@ -22,4 +22,4 @@ services:
     build:
       context: backend
       dockerfile: Dockerfile.migrations
-    
+      
