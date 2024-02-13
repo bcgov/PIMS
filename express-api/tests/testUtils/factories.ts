@@ -1,18 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-<<<<<<< HEAD
 import { AccessRequest } from '@/typeorm/Entities/AccessRequest';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { User, UserStatus } from '@/typeorm/Entities/User';
-=======
-import { AccessRequests } from '@/typeorm/Entities/AccessRequests';
-import { Agencies } from '@/typeorm/Entities/Agencies';
-import { Users, Roles as RolesEntity, UserStatus } from '@/typeorm/Entities/Users_Roles_Claims';
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
->>>>>>> PIMS-1294-AccessRequestWorkflow
 import { faker } from '@faker-js/faker';
 import { UUID } from 'crypto';
 import { Request, Response } from 'express';
 import { Role as RolesEntity } from '@/typeorm/Entities/Role';
+import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 
 export class MockRes {
   statusValue: any;
@@ -98,10 +92,6 @@ export const produceUser = (): User => {
     Email: faker.internet.email(),
     Username: faker.internet.userName(),
     Position: 'Tester',
-<<<<<<< HEAD
-=======
-    Status: UserStatus.Active,
->>>>>>> PIMS-1294-AccessRequestWorkflow
     EmailVerified: false,
     IsSystem: false,
     Note: '',
