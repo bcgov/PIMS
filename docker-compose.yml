@@ -76,10 +76,10 @@ services:
       - pims
 
   ####################### React App #######################
-  react-app:
+  pims-app-v2:
     tty: true
     restart: 'no'
-    container_name: react-app
+    container_name: pims-app-v2
     build:
       context: react-app
       target: prod
@@ -92,9 +92,9 @@ services:
       - pims
   
   ####################### Express API #######################
-  express-api:
+  pims-api-v2:
     restart: 'no'
-    container_name: express-api
+    container_name: pims-api-v2
     build:
       context: express-api
       target: Prod
