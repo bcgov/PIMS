@@ -2,9 +2,7 @@ import { User, UserStatus } from '@/typeorm/Entities/User';
 import { AppDataSource } from '@/appDataSource';
 import { KeycloakBCeIDUser, KeycloakIdirUser, KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { z } from 'zod';
-import { AccessRequest } from '@/typeorm/Entities/AccessRequest';
 import { In } from 'typeorm';
-import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { randomUUID } from 'crypto';
 
@@ -61,10 +59,10 @@ const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => 
   }
 };
 
-const getUserFromKeycloak = async (kcUser: KeycloakUser) => {
-  const normalized = normalizeKeycloakUser(kcUser);
-  return getUser(normalized.guid ?? normalized.username);
-};
+// const getUserFromKeycloak = async (kcUser: KeycloakUser) => {
+//   const normalized = normalizeKeycloakUser(kcUser);
+//   return getUser(normalized.guid ?? normalized.username);
+// };
 
 const activateUser = async (kcUser: KeycloakUser) => {
   const normalizedUser = normalizeKeycloakUser(kcUser);
@@ -84,43 +82,43 @@ const activateUser = async (kcUser: KeycloakUser) => {
   }
 };
 
-const getAccessRequest = async (kcUser: KeycloakUser) => {
-  const internalUser = await getUserFromKeycloak(kcUser);
-  const accessRequest = AppDataSource.getRepository(AccessRequest)
-    .createQueryBuilder('AccessRequests')
-    .leftJoinAndSelect('AccessRequests.AgencyId', 'Agencies')
-    .leftJoinAndSelect('AccessRequests.RoleId', 'Roles')
-    .leftJoinAndSelect('AccessRequests.UserId', 'Users')
-    .where('AccessRequests.UserId = :userId', { userId: internalUser.Id })
-    .andWhere('AccessRequests.Status = :status', { status: 0 })
-    .orderBy('AccessRequests.CreatedOn', 'DESC')
-    .getOne();
-  return accessRequest;
-};
+// const getAccessRequest = async (kcUser: KeycloakUser) => {
+//   const internalUser = await getUserFromKeycloak(kcUser);
+//   const accessRequest = AppDataSource.getRepository(AccessRequest)
+//     .createQueryBuilder('AccessRequests')
+//     .leftJoinAndSelect('AccessRequests.AgencyId', 'Agencies')
+//     .leftJoinAndSelect('AccessRequests.RoleId', 'Roles')
+//     .leftJoinAndSelect('AccessRequests.UserId', 'Users')
+//     .where('AccessRequests.UserId = :userId', { userId: internalUser.Id })
+//     .andWhere('AccessRequests.Status = :status', { status: 0 })
+//     .orderBy('AccessRequests.CreatedOn', 'DESC')
+//     .getOne();
+//   return accessRequest;
+// };
 
-const getAccessRequestById = async (requestId: number, kcUser: KeycloakUser) => {
-  const accessRequest = await AppDataSource.getRepository(AccessRequest)
-    .createQueryBuilder('AccessRequests')
-    .leftJoinAndSelect('AccessRequests.AgencyId', 'Agencies')
-    .leftJoinAndSelect('AccessRequests.RoleId', 'Roles')
-    .leftJoinAndSelect('AccessRequests.UserId', 'Users')
-    .where('AccessRequests.Id = :requestId', { requestId: requestId })
-    .getOne();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const normalizedKc = await normalizeKeycloakUser(kcUser);
-  return accessRequest;
-};
+// const getAccessRequestById = async (requestId: number, kcUser: KeycloakUser) => {
+//   const accessRequest = await AppDataSource.getRepository(AccessRequest)
+//     .createQueryBuilder('AccessRequests')
+//     .leftJoinAndSelect('AccessRequests.AgencyId', 'Agencies')
+//     .leftJoinAndSelect('AccessRequests.RoleId', 'Roles')
+//     .leftJoinAndSelect('AccessRequests.UserId', 'Users')
+//     .where('AccessRequests.Id = :requestId', { requestId: requestId })
+//     .getOne();
+//   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+//   const normalizedKc = await normalizeKeycloakUser(kcUser);
+//   return accessRequest;
+// };
 
-const deleteAccessRequest = async (accessRequest: AccessRequest) => {
-  const existing = await AppDataSource.getRepository(AccessRequest).findOne({
-    where: { Id: accessRequest.Id },
-  });
-  if (!existing) {
-    throw new ErrorWithCode('No access request found', 404);
-  }
-  const deletedRequest = AppDataSource.getRepository(AccessRequest).remove(accessRequest);
-  return deletedRequest;
-};
+// const deleteAccessRequest = async (accessRequest: AccessRequest) => {
+//   const existing = await AppDataSource.getRepository(AccessRequest).findOne({
+//     where: { Id: accessRequest.Id },
+//   });
+//   if (!existing) {
+//     throw new ErrorWithCode('No access request found', 404);
+//   }
+//   const deletedRequest = AppDataSource.getRepository(AccessRequest).remove(accessRequest);
+//   return deletedRequest;
+// };
 
 const addKeycloakUserOnHold = async (
   kcUser: KeycloakUser,
@@ -159,22 +157,22 @@ const addKeycloakUserOnHold = async (
   return result.generatedMaps[0];
 };
 
-const updateAccessRequest = async (updateRequest: AccessRequest, kcUser: KeycloakUser) => {
-  if (updateRequest == null || updateRequest.AgencyId == null || updateRequest.RoleId == null)
-    throw new Error('Null argument.');
+// const updateAccessRequest = async (updateRequest: AccessRequest, kcUser: KeycloakUser) => {
+//   if (updateRequest == null || updateRequest.AgencyId == null || updateRequest.RoleId == null)
+//     throw new Error('Null argument.');
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const normalizedKc = await normalizeKeycloakUser(kcUser);
+//   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+//   const normalizedKc = await normalizeKeycloakUser(kcUser);
 
-  const result = await AppDataSource.getRepository(AccessRequest).update(
-    { Id: updateRequest.Id },
-    updateRequest,
-  );
-  if (!result.affected) {
-    throw new ErrorWithCode('Resource not found.', 404);
-  }
-  return result.generatedMaps[0];
-};
+//   const result = await AppDataSource.getRepository(AccessRequest).update(
+//     { Id: updateRequest.Id },
+//     updateRequest,
+//   );
+//   if (!result.affected) {
+//     throw new ErrorWithCode('Resource not found.', 404);
+//   }
+//   return result.generatedMaps[0];
+// };
 
 const getAgencies = async (username: string) => {
   const user = await getUser(username);
@@ -212,11 +210,7 @@ const getAdministrators = async (agencyIds: string[]) => {
 const userServices = {
   getUser,
   activateUser,
-  getAccessRequest,
-  getAccessRequestById,
-  deleteAccessRequest,
   addKeycloakUserOnHold,
-  updateAccessRequest,
   getAgencies,
   getAdministrators,
   normalizeKeycloakUser,

@@ -45,25 +45,25 @@ export const getUserInfo = async (req: Request, res: Response) => {
  * @param {Response}    res Outgoing response.
  * @returns {Response}      A 200 status with the most recent access request.
  */
-export const getUserAccessRequestLatest = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Users']
-   * #swagger.description = 'Get user's most recent access request.'
-   * #swagger.security = [{
-      "bearerAuth" : []
-      }]
-   */
-  const user = req?.user as KeycloakUser;
-  try {
-    const result = await userServices.getAccessRequest(user);
-    if (!result) {
-      return res.status(204).send('No access request was found.');
-    }
-    return res.status(200).send(result);
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message);
-  }
-};
+// export const getUserAccessRequestLatest = async (req: Request, res: Response) => {
+//   /**
+//    * #swagger.tags = ['Users']
+//    * #swagger.description = 'Get user's most recent access request.'
+//    * #swagger.security = [{
+//       "bearerAuth" : []
+//       }]
+//    */
+//   const user = req?.user as KeycloakUser;
+//   try {
+//     const result = await userServices.getAccessRequest(user);
+//     if (!result) {
+//       return res.status(204).send('No access request was found.');
+//     }
+//     return res.status(200).send(result);
+//   } catch (e) {
+//     return res.status(e?.code ?? 400).send(e?.message);
+//   }
+// };
 
 /**
  * @description Submits a user access request.
@@ -98,26 +98,26 @@ export const submitUserAccessRequest = async (req: Request, res: Response) => {
  * @param {Response}    res Outgoing response.
  * @returns {Response}      A 200 status with the user access request matching the Id.
  */
-export const getUserAccessRequestById = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Users']
-   * #swagger.description = 'Get a user access request by ID.'
-   * #swagger.security = [{
-      "bearerAuth" : []
-      }]
-   */
-  const user = req?.user as KeycloakUser;
-  const requestId = Number(req.params?.reqeustId);
-  try {
-    const result = await userServices.getAccessRequestById(requestId, user);
-    if (!result) {
-      return res.status(404);
-    }
-    return res.status(200).send(result);
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message);
-  }
-};
+// export const getUserAccessRequestById = async (req: Request, res: Response) => {
+//   /**
+//    * #swagger.tags = ['Users']
+//    * #swagger.description = 'Get a user access request by ID.'
+//    * #swagger.security = [{
+//       "bearerAuth" : []
+//       }]
+//    */
+//   const user = req?.user as KeycloakUser;
+//   const requestId = Number(req.params?.reqeustId);
+//   try {
+//     const result = await userServices.getAccessRequestById(requestId, user);
+//     if (!result) {
+//       return res.status(404);
+//     }
+//     return res.status(200).send(result);
+//   } catch (e) {
+//     return res.status(e?.code ?? 400).send(e?.message);
+//   }
+// };
 
 /**
  * @description Updates a user access request.
@@ -125,22 +125,22 @@ export const getUserAccessRequestById = async (req: Request, res: Response) => {
  * @param {Response}    res Outgoing response.
  * @returns {Response}      A 200 status with the updated request.
  */
-export const updateUserAccessRequest = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Users']
-   * #swagger.description = 'Update a user access request.'
-   * #swagger.security = [{
-      "bearerAuth" : []
-      }]
-   */
-  const user = req?.user as KeycloakUser;
-  try {
-    const result = await userServices.updateAccessRequest(req.body, user);
-    return res.status(200).send(result);
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message);
-  }
-};
+// export const updateUserAccessRequest = async (req: Request, res: Response) => {
+//   /**
+//    * #swagger.tags = ['Users']
+//    * #swagger.description = 'Update a user access request.'
+//    * #swagger.security = [{
+//       "bearerAuth" : []
+//       }]
+//    */
+//   const user = req?.user as KeycloakUser;
+//   try {
+//     const result = await userServices.updateAccessRequest(req.body, user);
+//     return res.status(200).send(result);
+//   } catch (e) {
+//     return res.status(e?.code ?? 400).send(e?.message);
+//   }
+// };
 
 /**
  * @description Gets user agency information.
