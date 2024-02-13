@@ -32,7 +32,6 @@ const getUser = async (nameOrGuid: string): Promise<User> => {
 
 const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => {
   const provider = kcUser.identity_provider;
-  const username = kcUser.preferred_username;
   const normalizeUuid = (keycloakUuid: string) =>
     keycloakUuid.toLowerCase().replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/g, '$1-$2-$3-$4-$5');
   let user;
@@ -42,7 +41,7 @@ const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => 
       return {
         given_name: user.given_name,
         family_name: user.family_name,
-        username: username,
+        username: kcUser.idir_username,
         email: kcUser.email,
         display_name: kcUser.display_name,
         guid: normalizeUuid(user.idir_user_guid),
@@ -52,7 +51,7 @@ const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => 
       return {
         given_name: '',
         family_name: '',
-        username: username,
+        username: kcUser.bceid_username,
         email: kcUser.email,
         display_name: kcUser.display_name,
         guid: normalizeUuid(user.bceid_user_guid),
@@ -137,6 +136,9 @@ const addKeycloakUserOnHold = async (
   }
   //Iterating through agencies and roles no longer necessary here?
   const normalizedKc = normalizeKeycloakUser(kcUser);
+  const systemUser = await AppDataSource.getRepository(User).findOne({
+    where: { Username: 'system' },
+  });
   const result = await AppDataSource.getRepository(User).insert({
     Id: randomUUID(),
     FirstName: normalizedKc.given_name,
@@ -148,9 +150,11 @@ const addKeycloakUserOnHold = async (
     Status: UserStatus.OnHold,
     IsSystem: false,
     EmailVerified: false,
+    IsDisabled: false,
     AgencyId: agencyId,
     Position: position,
     Note: note,
+    CreatedById: systemUser.Id,
   });
   return result.generatedMaps[0];
 };

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import DataCard from '../display/DataCard';
 import { Avatar, Box, Button, Grid, IconButton, Typography, useTheme } from '@mui/material';
 import Icon from '@mdi/react';
@@ -14,6 +14,7 @@ import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { User } from '@/hooks/api/useUsersApi';
 import { AuthContext } from '@/contexts/authContext';
+import { Agency } from '@/hooks/api/useAgencyApi';
 
 interface IUserDetail {
   userId: string;
@@ -30,6 +31,13 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
 
   const { data, refreshData } = useDataLoader(() => api.users.getUserById(userId));
+  const { data: agencyData, loadOnce: loadAgency } = useDataLoader(api.agencies.getAgencies);
+  loadAgency();
+
+  const agencyOptions = useMemo(
+    () => agencyData?.map((agency) => ({ label: agency.Name, value: agency.Id })) ?? [],
+    [agencyData],
+  );
 
   const userStatusData = {
     Status: data?.Status,
@@ -41,19 +49,23 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
     Email: data?.Email,
     FirstName: data?.FirstName,
     LastName: data?.LastName,
-    Agency: data?.AgencyId,
+    Agency: data?.Agency,
     Position: data?.Position,
     CreatedOn: data?.CreatedOn ? new Date(data?.CreatedOn) : undefined,
     LastLogin: data?.LastLogin ? new Date(data?.LastLogin) : undefined,
   };
 
-  const customFormatter = (key: keyof User, val: any) => {
+  const customFormatterStatus = (key: keyof User, val: any) => {
     if (key === 'Status') {
       return statusChipFormatter(val);
     }
   };
 
-  const agencyData = [{ label: 'BC Electric & Hydro', value: 'BCH' }];
+  const customFormatterProfile = (key: keyof User, val: any) => {
+    if (key === 'Agency' && val) {
+      return <Typography>{(val as Agency).Name}</Typography>;
+    }
+  };
 
   const profileFormMethods = useForm({
     defaultValues: {
@@ -61,7 +73,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
       Email: '',
       FirstName: '',
       LastName: '',
-      AgencyId: '',
+      AgencyId: null,
       Position: '',
     },
   });
@@ -84,7 +96,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
       Email: userProfileData.Email,
       FirstName: userProfileData.FirstName,
       LastName: userProfileData.LastName,
-      AgencyId: userProfileData.Agency,
+      AgencyId: userProfileData.Agency?.Id,
       Position: userProfileData.Position,
     });
     statusFormMethods.reset({
@@ -121,12 +133,13 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
         </Button>
       </Box>
       <DataCard
-        customFormatter={customFormatter}
+        customFormatter={customFormatterStatus}
         values={userStatusData}
         title={'User Status'}
         onEdit={() => setOpenStatusDialog(true)}
       />
       <DataCard
+        customFormatter={customFormatterProfile}
         values={userProfileData}
         title={'User Profile'}
         onEdit={() => setOpenProfileDialog(true)}
@@ -173,7 +186,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
               <TextInput required fullWidth name={'LastName'} label={'Last Name'} />
             </Grid>
             <Grid item xs={12}>
-              <AutocompleteFormField name={'AgencyId'} label={'Agency'} options={agencyData} />
+              <AutocompleteFormField name={'AgencyId'} label={'Agency'} options={agencyOptions} />
             </Grid>
             <Grid item xs={12}>
               <TextInput name={'Position'} fullWidth label={'Position'} />
@@ -205,13 +218,20 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
                 name={'Status'}
                 label={'Status'}
                 options={[
+                  //TODO: Get these through a lookup endpoint.
                   { label: 'Active', value: 'Active' },
                   { label: 'OnHold', value: 'OnHold' },
+                  { label: 'Disabled', value: 'Disabled' },
+                  { label: 'Denied', value: 'Denied' },
                 ]}
               />
             </Grid>
             <Grid item xs={6}>
-              <AutocompleteFormField name={'Role'} label={'Role'} options={agencyData} />
+              <AutocompleteFormField
+                name={'Role'}
+                label={'Role'}
+                options={[{ label: 'Not implemented.', value: 'Not implemented.' }]}
+              />
             </Grid>
           </Grid>
         </FormProvider>

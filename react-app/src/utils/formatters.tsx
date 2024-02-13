@@ -15,13 +15,14 @@ export const columnNameFormatter = (input: string) => {
   return input.replace(/([a-z])([A-Z])/g, '$1 $2');
 };
 
-type ChipStatus = 'Pending' | 'Active' | 'Hold'; //Replace with a better type eventually.
+type ChipStatus = 'OnHold' | 'Active' | 'Disabled' | 'Denied'; //Replace with a better type eventually.
 export const statusChipFormatter = (value: ChipStatus) => {
   const theme = useTheme();
   const colorMap = {
-    Pending: 'info',
+    Disabled: 'warning',
     Active: 'success',
-    OnHold: 'warning',
+    OnHold: 'info',
+    Denied: 'warning',
   };
   return (
     <>

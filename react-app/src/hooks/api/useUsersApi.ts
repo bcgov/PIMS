@@ -1,4 +1,5 @@
 import { IFetch } from '../useFetch';
+import { Agency } from './useAgencyApi';
 
 export interface User {
   //temp interface, should standardize somehow
@@ -12,7 +13,8 @@ export interface User {
   LastLogin: Date;
   CreatedOn: Date;
   DisplayName: string;
-  AgencyId: string;
+  AgencyId: number | null;
+  Agency: Agency | null;
   Position: string;
   Role: string;
 }
