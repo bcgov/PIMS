@@ -2,7 +2,7 @@ import supertest from 'supertest';
 import { faker } from '@faker-js/faker';
 import app from '@/express';
 import { UUID } from 'crypto';
-import { IAgency } from '@/controllers/admin/agencies/IAgency';
+import { IAgency } from '@/controllers/agencies/IAgency';
 
 const request = supertest(app);
 
