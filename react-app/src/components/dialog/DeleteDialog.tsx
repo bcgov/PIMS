@@ -7,8 +7,8 @@ interface IDeleteDialog {
   title: string;
   message: string;
   deleteText?: string;
-  onDelete: () => void;
-  onClose: () => void;
+  onDelete: () => Promise<void>;
+  onClose: () => Promise<void>;
 }
 
 const DeleteDialog = (props: IDeleteDialog) => {

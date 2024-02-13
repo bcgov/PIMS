@@ -149,13 +149,13 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
         title={'Delete account'}
         message={deleteAccountConfirmText}
         deleteText="Delete Account"
-        onDelete={() => {
+        onDelete={async () => {
           api.users.deleteUser(userId).then(() => {
             setOpenDeleteDialog(false);
             onClose();
           });
         }}
-        onClose={() => setOpenDeleteDialog(false)}
+        onClose={async () => setOpenDeleteDialog(false)}
       />
       <ConfirmDialog
         title={'Update User Profile'}
