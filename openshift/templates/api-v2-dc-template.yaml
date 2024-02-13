@@ -1,0 +1,170 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: pims-api-v2-template
+labels:
+  template: pims-api-v2-template
+objects:
+- kind: DeploymentConfig
+  apiVersion: apps.openshift.io/v1
+  metadata:
+    annotations:
+      app.openshift.io/connects-to: pims-database
+    name: pims-api-v2
+    namespace: ${LICENSE_PLATE}-${ENVIRONMENT}
+    labels:
+      app: pims-v2
+      app.kubernetes.io/part-of: pims
+      env: ${ENVIRONMENT}
+      name: pims-api-v2
+      role: api
+  spec:
+    strategy:
+      type: Rolling
+      rollingParams:
+        updatePeriodSeconds: 1
+        intervalSeconds: 1
+        timeoutSeconds: 600
+        maxUnavailable: 25%
+        maxSurge: 25%
+      resources: {}
+      activeDeadlineSeconds: 21600
+    triggers:
+      - type: ConfigChange
+      - type: ImageChange
+        imageChangeParams:
+          automatic: true
+          containerNames:
+            - pims-api-v2
+          from:
+            kind: ImageStreamTag
+            namespace: ${LICENSE_PLATE}-tools
+            name: 'pims-api-v2:${IMAGE_TAG}'
+    replicas: 2
+    revisionHistoryLimit: 10
+    test: false
+    selector:
+      app: pims-v2
+      env: ${ENVIRONMENT}
+      instance: ''
+      role: api
+    template:
+      metadata:
+        name: pims-api-v2
+        creationTimestamp: null
+        labels:
+          app: pims-v2
+          env: ${ENVIRONMENT}
+          instance: ''
+          name: pims-api-v2
+          role: api
+      spec:
+        containers:
+          - resources:
+              limits:
+                cpu: 250m
+                memory: 1Gi
+            requests:
+                cpu: 50m
+                memory: 100Mi
+            readinessProbe:
+              httpGet:
+                path: /api/v2/health
+                port: 5000
+                scheme: HTTP
+              initialDelaySeconds: 60
+              timeoutSeconds: 30
+              periodSeconds: 10
+              successThreshold: 1
+              failureThreshold: 3
+            terminationMessagePath: /dev/termination-log
+            name: pims-api-v2
+            livenessProbe:
+              httpGet:
+                path: /api/v2/health
+                port: 5000
+                scheme: HTTP
+              initialDelaySeconds: 60
+              timeoutSeconds: 30
+              periodSeconds: 10
+              successThreshold: 1
+              failureThreshold: 3
+            env:
+            - name: FRONTEND_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: pims-v2
+                  key: FRONTEND_URL
+            - name: BACKEND_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: pims-v2
+                  key: BACKEND_URL
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: pims-secrets
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pims-secrets
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: pims-secrets
+                  key: POSTGRES_PORT
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: pims-secrets
+                  key: POSTGRES_DB
+            - name: POSTGRES_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  name: pims-v2
+                  key: POSTGRES_SERVICE
+            - name: SSO_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: pims-secrets
+                  key: SSO_CLIENT_SECRET
+            - name: SSO_AUTH_SERVER_URL
+              valueFrom:
+                secretKeyRef:
+                  name: pims-secrets
+                  key: SSO_AUTH_SERVER_URL
+            - name: SSO_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: pims-secrets
+                  key: SSO_CLIENT_ID
+            ports:
+              - containerPort: 5000
+                protocol: TCP
+            imagePullPolicy: IfNotPresent
+            terminationMessagePolicy: File
+            image: >-
+              image-registry.openshift-image-registry.svc:5000/${LICENSE_PLATE}-tools/pims-api-v2
+        restartPolicy: Always
+        terminationGracePeriodSeconds: 30
+        dnsPolicy: ClusterFirst
+        securityContext: {}
+        schedulerName: default-scheduler
+
+
+parameters:
+  - description: Environment
+    displayName: Environment
+    name: ENVIRONMENT
+    required: true
+    value: dev
+  - description: License Plate
+    displayName: License Plate
+    name: LICENSE_PLATE
+    required: true
+  - description: ImageTag
+    displayName: ImageTag
+    name: IMAGE_TAG
+    required: true
