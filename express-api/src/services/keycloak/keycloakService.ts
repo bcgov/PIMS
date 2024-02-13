@@ -215,7 +215,10 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
       Agency: undefined,
       AgencyId: undefined,
       Status: UserStatus.Active,
+<<<<<<< HEAD
       IsDisabled: false,
+=======
+>>>>>>> PIMS-1294-AccessRequestWorkflow
     };
     return await userServices.addUser(newUser);
   } else {

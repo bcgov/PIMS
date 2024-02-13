@@ -5,7 +5,9 @@ import {
   MockReq,
   MockRes,
   getRequestHandlerMocks,
+  produceKeycloak,
   produceRequest,
+  produceUser,
 } from '../../../testUtils/factories';
 import { IKeycloakUser } from '@/services/keycloak/IKeycloakUser';
 import { AccessRequest } from '@/typeorm/Entities/AccessRequest';
@@ -16,7 +18,14 @@ const _activateUser = jest.fn();
 const _getAccessRequest = jest.fn().mockImplementation(() => produceRequest());
 const _getAccessRequestById = jest.fn().mockImplementation(() => produceRequest());
 const _deleteAccessRequest = jest.fn().mockImplementation((req) => req);
-const _addAccessRequest = jest.fn().mockImplementation((req) => req);
+const _addKeycloakUserOnHold = jest
+  .fn()
+  .mockImplementation((kc: KeycloakUser, agencyId: string, position: string, note: string) => ({
+    ...produceUser(),
+    AgencyId: agencyId,
+    Position: position,
+    Note: note,
+  }));
 const _updateAccessRequest = jest.fn().mockImplementation((req) => req);
 const _getAgencies = jest.fn().mockImplementation(() => ['1', '2', '3']);
 const _getAdministrators = jest.fn();
@@ -26,7 +35,8 @@ jest.mock('@/services/users/usersServices', () => ({
   getAccessRequest: () => _getAccessRequest(),
   getAccessRequestById: () => _getAccessRequestById(),
   deleteAccessRequest: (request: AccessRequest) => _deleteAccessRequest(request),
-  addAccessRequest: (request: AccessRequest, _kc: KeycloakUser) => _addAccessRequest(request),
+  addKeycloakUserOnHold: (kc: KeycloakUser, agencyId: string, position: string, note: string) =>
+    _addKeycloakUserOnHold(kc, agencyId, position, note),
   updateAccessRequest: (request: AccessRequest, _kc: KeycloakUser) => _updateAccessRequest(request),
   getAgencies: () => _getAgencies(),
   getAdministrators: () => _getAdministrators(),
@@ -134,16 +144,15 @@ describe('UNIT - Testing controllers for users routes.', () => {
 
   describe('submitUserAccessRequest', () => {
     it('should return status 201 and an access request', async () => {
-      const request = produceRequest();
-      mockRequest.body = request;
+      mockRequest.user = produceKeycloak();
+      mockRequest.body = { agencyId: 'bch' };
       await controllers.submitUserAccessRequest(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
-      expect(mockResponse.sendValue.Id).toBe(request.Id);
     });
 
     it('should return status 400 if malformed', async () => {
       mockRequest.body = {};
-      _addAccessRequest.mockImplementationOnce(() => {
+      _addKeycloakUserOnHold.mockImplementationOnce(() => {
         throw Error();
       });
       await controllers.submitUserAccessRequest(mockRequest, mockResponse);
