@@ -12,7 +12,8 @@ import {
 import { IKeycloakUser } from '@/services/keycloak/IKeycloakUser';
 import { AccessRequest } from '@/typeorm/Entities/AccessRequest';
 import { faker } from '@faker-js/faker';
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { KeycloakIdirUser, KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
 const _activateUser = jest.fn();
 const _getAccessRequest = jest.fn().mockImplementation(() => produceRequest());
@@ -29,7 +30,10 @@ const _addKeycloakUserOnHold = jest
 const _updateAccessRequest = jest.fn().mockImplementation((req) => req);
 const _getAgencies = jest.fn().mockImplementation(() => ['1', '2', '3']);
 const _getAdministrators = jest.fn();
-
+const _getUser = jest
+  .fn()
+  .mockImplementation((guid: string) => ({ ...produceUser(), KeycloakUserId: guid }));
+const _normalizeKeycloakUser = jest.fn().mockImplementation(() => {});
 jest.mock('@/services/users/usersServices', () => ({
   activateUser: () => _activateUser(),
   getAccessRequest: () => _getAccessRequest(),
@@ -40,6 +44,8 @@ jest.mock('@/services/users/usersServices', () => ({
   updateAccessRequest: (request: AccessRequest, _kc: KeycloakUser) => _updateAccessRequest(request),
   getAgencies: () => _getAgencies(),
   getAdministrators: () => _getAdministrators(),
+  getUser: (guid: string) => _getUser(guid),
+  normalizeKeycloakUser: () => _normalizeKeycloakUser(),
 }));
 
 describe('UNIT - Testing controllers for users routes.', () => {
@@ -175,6 +181,49 @@ describe('UNIT - Testing controllers for users routes.', () => {
       });
       await controllers.getUserAgencies(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
+    });
+  });
+
+  describe('getSelf', () => {
+    it('should return the internal user corresponding to this keycloak', async () => {
+      const kcUser = produceKeycloak();
+      _normalizeKeycloakUser.mockImplementationOnce(() => ({
+        guid: (kcUser as KeycloakIdirUser).idir_user_guid,
+      }));
+      mockRequest.user = kcUser;
+      await controllers.getSelf(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+    });
+
+    it('should return no data', async () => {
+      const kcUser = produceKeycloak();
+      _normalizeKeycloakUser.mockImplementationOnce(() => ({
+        guid: (kcUser as KeycloakIdirUser).idir_user_guid,
+      }));
+      _getUser.mockImplementationOnce(() => null);
+      mockRequest.user = kcUser;
+      await controllers.getSelf(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(204);
+    });
+
+    it('should return 400', async () => {
+      const kcUser = produceKeycloak();
+      _normalizeKeycloakUser.mockImplementationOnce(() => {
+        throw Error();
+      });
+      mockRequest.user = kcUser;
+      await controllers.getSelf(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+
+    it('should return 500', async () => {
+      const kcUser = produceKeycloak();
+      _normalizeKeycloakUser.mockImplementationOnce(() => {
+        throw new ErrorWithCode('', 500);
+      });
+      mockRequest.user = kcUser;
+      await controllers.getSelf(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(500);
     });
   });
 });
