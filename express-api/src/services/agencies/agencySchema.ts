@@ -5,7 +5,6 @@ export const AgencyCreationSchema = z.object({
   updatedOn: z.string(),
   updatedByName: z.string(),
   updatedByEmail: z.string(),
-  rowVersion: z.string(),
   id: z.number().int(),
   name: z.string(),
   isDisabled: z.boolean(),

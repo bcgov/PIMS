@@ -49,6 +49,9 @@ export const getAgencyById = async (agencyId: number) => {
   const findAgency = await agencyRepo.findOne({
     where: { Id: agencyId },
   });
+  if (findAgency == null) {
+    throw new ErrorWithCode('Agency not found', 404);
+  }
   return findAgency;
 };
 
