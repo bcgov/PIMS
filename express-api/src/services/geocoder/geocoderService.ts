@@ -4,6 +4,7 @@ import { IFeatureCollectionModel } from '@/services/geocoder/interfaces/IFeature
 import constants from '@/constants';
 import { IFeatureModel } from '@/services/geocoder/interfaces/IFeatureModel';
 import { getLongitude, getLatitude, getAddress1 } from './geocoderUtils';
+import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
 // const getSiteAddresses = async (
 //   address: string,
@@ -28,48 +29,46 @@ const mapFeatureToAddress = (feature: IFeatureModel): IAddressModel => {
   };
 };
 
-export const getSiteAddressesAsync = async (address: string): Promise<IAddressModel> =>
-  //parameters: AddressesParameters,
-  {
-    // const queryString = new URLSearchParams(parameters).toString();
-    const encodedAddress = encodeURIComponent(address);
-    const url = new URL('/addresses.json', constants.GEOCODER.HOSTURI);
-    url.searchParams.append('addressString', encodedAddress);
+export const getSiteAddressesAsync = async (address: string): Promise<IAddressModel> => {
+  const url = new URL('/addresses.json', constants.GEOCODER.HOSTURI);
+  url.searchParams.append('addressString', address);
 
-    try {
-      const response = await fetch(url.toString(), {
-        headers: {
-          apiKey: process.env.GEOCODER__KEY,
-        },
-      });
+  try {
+    const response = await fetch(url.toString(), {
+      headers: {
+        apiKey: process.env.GEOCODER__KEY,
+      },
+    });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
-
-      const responseData = await response.json();
-      const featureCollection: IFeatureCollectionModel = responseData;
-      const addressInformation: IAddressModel = mapFeatureToAddress(featureCollection.features[0]);
-      console.log(url.toString());
-      console.log('test', addressInformation);
-      return addressInformation;
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      throw error;
+    if (!response.ok) {
+      throw new ErrorWithCode('Failed to fetch data', response.status);
     }
-  };
+
+    const responseData = await response.json();
+    const featureCollection: IFeatureCollectionModel = responseData;
+    const addressInformation: IAddressModel = mapFeatureToAddress(featureCollection.features[0]);
+
+    return addressInformation;
+
+  } catch (error) {
+    throw new ErrorWithCode(error.message, error.status);
+  }
+};
 
 /// <summary>
 /// Make a request to Data BC Geocoder for PIDs that belong to the specified 'siteId'.
 /// </summary>
 /// <param name="siteId">The site identifier for a parcel.</param>
 /// <returns>An array of PIDs for the supplied 'siteId'.</returns>
+
+const getPids = async (siteId: string) => {
 // const getPids = async (siteId: string, outputFormat = 'json'): Promise<SitePidsResponseModel> => {
 //   const endpoint = options.parcels.pidsUrl.replace('{siteId}', siteId);
 //   const url = generateUrl(endpoint, outputFormat);
 //   const response = await fetch(url);
 //   return await response.json();
 // };
+}
 
 export const GeocoderService = {
   // getSiteAddresses,
