@@ -67,6 +67,7 @@ app.use(`/api/v2/health`, router.healthRouter);
 // Protected Routes
 app.use(`/api/v2/ltsa`, protectedRoute(), router.ltsaRouter);
 app.use(`/api/v2/admin`, protectedRoute([Roles.ADMIN]), router.adminRouter);
+app.use(`/api/v2/agencies`, protectedRoute(), router.agenciesRouter);
 app.use('/api/v2/lookup', protectedRoute(), router.lookupRouter);
 app.use(`/api/v2/users`, protectedRoute(), router.usersRouter);
 app.use(`/api/v2/properties`, protectedRoute(), router.propertiesRouter);

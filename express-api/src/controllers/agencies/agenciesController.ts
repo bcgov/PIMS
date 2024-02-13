@@ -1,5 +1,10 @@
 import { Request, Response } from 'express';
-import { stubResponse } from '@/utilities/stubResponse';
+import * as agencyService from '@/services/agencies/agencyServices';
+import { AgencyFilterSchema, AgencyPublicResponseSchema } from '@/services/agencies/agencySchema';
+import { z } from 'zod';
+import KeycloakService from '@/services/keycloak/keycloakService';
+import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { Roles } from '@/constants/roles';
 
 /**
  * @description Gets a paged list of agencies.
@@ -15,9 +20,19 @@ export const getAgencies = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  const kcUser = req.user as KeycloakUser;
+  const roles = await KeycloakService.getKeycloakUserRoles(kcUser.preferred_username);
+  const filter = AgencyFilterSchema.safeParse(req.query);
+  if (filter.success) {
+    const agencies = await agencyService.getAgencies(filter.data);
+    if (!roles.map((role) => role.name).includes(Roles.ADMIN)) {
+      const trimmed = AgencyPublicResponseSchema.array().parse(agencies);
+      return res.status(200).send(trimmed);
+    }
+    return res.status(200).send(agencies);
+  } else {
+    return res.status(400).send('Could not parse filter.');
+  }
 };
 
 /**
@@ -34,28 +49,12 @@ export const addAgency = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
-};
-
-/**
- * @description Gets a list of agencies based on a filter.
- * @param   {Request}     req Incoming request
- * @param   {Response}    res Outgoing response
- * @returns {Response}        A 200 status with a list of agencies.
- */
-export const getAgenciesFiltered = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Agencies - Admin']
-   * #swagger.description = 'Returns a paged list of agencies from the datasource based on a supplied filter.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  try {
+    const agency = await agencyService.postAgency(req.body);
+    return res.status(201).send(agency);
+  } catch (e) {
+    return res.status(400).send(e.message);
+  }
 };
 
 /**
@@ -73,8 +72,15 @@ export const getAgencyById = async (req: Request, res: Response) => {
       }]
    */
 
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  try {
+    const agency = await agencyService.getAgencyById(parseInt(req.params.id));
+    if (!agency) {
+      return res.status(404).send('Agency does not exist.');
+    }
+    return res.status(200).send(agency);
+  } catch (e) {
+    return res.status(400).send(e.message);
+  }
 };
 
 /**
@@ -91,9 +97,16 @@ export const updateAgencyById = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  const id = z.string().parse(req.params.id);
+  if (id != req.body.Id) {
+    return res.status(400).send('The param ID does not match the request body.');
+  }
+  try {
+    const agency = await agencyService.updateAgencyById(req.body);
+    return res.status(200).send(agency);
+  } catch (e) {
+    return res.status(400).send(e.message);
+  }
 };
 
 /**
@@ -110,7 +123,11 @@ export const deleteAgencyById = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  const id = z.string().parse(req.params.id);
+  try {
+    const agency = await agencyService.deleteAgencyById(parseInt(id));
+    return res.status(200).send(agency);
+  } catch (e) {
+    return res.status(400).send(e.message);
+  }
 };

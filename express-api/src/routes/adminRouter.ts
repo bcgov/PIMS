@@ -10,12 +10,6 @@ const {
   getAdministrativeAreas,
   getAdministrativeAreasFiltered,
   updateAdministrativeAreaById,
-  addAgency,
-  deleteAgencyById,
-  getAgencies,
-  getAgenciesFiltered,
-  getAgencyById,
-  updateAgencyById,
   addClaim,
   deleteClaimById,
   getClaimById,
@@ -52,13 +46,6 @@ router
   .get(getAdministrativeAreaById)
   .put(updateAdministrativeAreaById) // TODO: Should this be a patch?
   .delete(deleteAdministrativeAreaById);
-
-// Endpoints for Admin Agencies
-router.route(`/agencies`).get(getAgencies).post(addAgency);
-
-router.route(`/agencies/:id`).get(getAgencyById).put(updateAgencyById).delete(deleteAgencyById); // TODO: should put be a patch?
-
-router.route(`/agencies/filter`).post(getAgenciesFiltered); // TODO: Should this be GET with query strings?
 
 // Endpoints for Admin Claims
 router.route(`/claims`).get(getClaims).post(addClaim);
