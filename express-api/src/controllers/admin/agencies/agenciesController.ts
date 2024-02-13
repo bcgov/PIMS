@@ -66,9 +66,13 @@ export const getAgencyById = async (req: Request, res: Response) => {
 
   try {
     const agency = await agencyService.getAgencyById(parseInt(req.params.id));
+
+    if (agency == null){
+      return res.status(404).send("Agency not found");
+    }
     return res.status(200).send(agency);
   } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message);
+    return res.status(400).send(e.message);
   }
 };
 
@@ -94,7 +98,7 @@ export const updateAgencyById = async (req: Request, res: Response) => {
     const agency = await agencyService.updateAgencyById(req.body);
     return res.status(200).send(agency);
   } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message);
+    return res.status(400).send(e.message);
   }
 };
 
@@ -117,6 +121,6 @@ export const deleteAgencyById = async (req: Request, res: Response) => {
     const agency = await agencyService.deleteAgencyById(parseInt(id));
     return res.status(200).send(agency);
   } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message);
+    return res.status(400).send(e.message);
   }
 };
