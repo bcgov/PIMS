@@ -173,10 +173,11 @@ const UsersTable = (props: IUsersTable) => {
       flex: 1,
     },
     {
-      field: 'AgencyId',
+      field: 'Agency',
       headerName: 'Agency',
       minWidth: 125,
       flex: 1,
+      valueGetter: (params) => params.value?.Name ?? ``,
     },
     {
       field: 'Position',
