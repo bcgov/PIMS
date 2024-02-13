@@ -74,6 +74,9 @@ export const getAgencyById = async (req: Request, res: Response) => {
 
   try {
     const agency = await agencyService.getAgencyById(parseInt(req.params.id));
+    if (!agency) {
+      return res.status(404).send('Agency does not exist.');
+    }
     return res.status(200).send(agency);
   } catch (e) {
     return res.status(400).send(e.message);
