@@ -16,7 +16,7 @@ export const getAgencies = async (filter: AgencyFilter) => {
       Name: filter.name,
       IsDisabled: filter.isDisabled,
       SortOrder: filter.sortOrder,
-      Id: parseInt(filter.id),
+      Id: filter.id,
     },
     take: filter.quantity,
     skip: (filter.quantity ?? 0) * (filter.page ?? 0),

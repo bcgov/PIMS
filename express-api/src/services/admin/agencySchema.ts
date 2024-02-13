@@ -34,7 +34,7 @@ export const AgencyFilterSchema = AgencyCreationSchema.partial()
     page: z.coerce.number().optional(),
     quantity: z.coerce.number().optional(),
     sort: z.string().optional(),
-    id: z.string().optional(),
+    id: z.coerce.number().optional(),
   });
 
 export type Agency = z.infer<typeof AgencyCreationSchema>;
