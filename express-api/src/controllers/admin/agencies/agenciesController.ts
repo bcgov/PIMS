@@ -65,10 +65,6 @@ export const getAgencyById = async (req: Request, res: Response) => {
 
   try {
     const agency = await agencyService.getAgencyById(parseInt(req.params.id));
-
-    if (agency == null) {
-      return res.status(404).send('Agency not found');
-    }
     return res.status(200).send(agency);
   } catch (e) {
     return res.status(400).send(e.message);
