@@ -37,5 +37,15 @@ export const AgencyFilterSchema = AgencyCreationSchema.partial()
     id: z.coerce.number().optional(),
   });
 
+export const AgencyPublicResponseSchema = z.object({
+  Id: z.number(),
+  Name: z.string(),
+  SortOrder: z.number(),
+  Code: z.string(),
+  Description: z.string().nullable(),
+  IsDisabled: z.boolean(),
+});
+
 export type Agency = z.infer<typeof AgencyCreationSchema>;
+export type AgencyPublicResponse = z.infer<typeof AgencyPublicResponseSchema>;
 export type AgencyFilter = z.infer<typeof AgencyFilterSchema>;

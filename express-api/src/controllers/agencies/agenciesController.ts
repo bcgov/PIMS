@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
-import * as agencyService from '@/services/admin/agencyServices';
-import { AgencyFilterSchema } from '@/services/admin/agencySchema';
+import * as agencyService from '@/services/agencies/agencyServices';
+import { AgencyFilterSchema, AgencyPublicResponseSchema } from '@/services/agencies/agencySchema';
 import { z } from 'zod';
+import KeycloakService from '@/services/keycloak/keycloakService';
+import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { Roles } from '@/constants/roles';
 
 /**
  * @description Gets a paged list of agencies.
@@ -17,10 +20,15 @@ export const getAgencies = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  // can use ErrorWithCode try catch
+  const kcUser = req.user as KeycloakUser;
+  const roles = await KeycloakService.getKeycloakUserRoles(kcUser.preferred_username);
   const filter = AgencyFilterSchema.safeParse(req.query);
   if (filter.success) {
     const agencies = await agencyService.getAgencies(filter.data);
+    if (!roles.map((role) => role.name).includes(Roles.ADMIN)) {
+      const trimmed = AgencyPublicResponseSchema.array().parse(agencies);
+      return res.status(200).send(trimmed);
+    }
     return res.status(200).send(agencies);
   } else {
     return res.status(400).send('Could not parse filter.');

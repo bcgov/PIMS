@@ -1,7 +1,7 @@
 import { AppDataSource } from '@/appDataSource';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { produceAgency } from 'tests/testUtils/factories';
-import * as agencyServices from '@/services/admin/agencyServices';
+import * as agencyServices from '@/services/agencies/agencyServices';
 import { DeepPartial } from 'typeorm';
 
 const _agencyFind = jest
