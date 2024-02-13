@@ -1,5 +1,5 @@
 # GitHub Actions workflow for deploying API image on PR merge to main branch
-name: EXPRESS API-Image Deploy on PR merge
+name: EXPRESS API-DEV Deploy
 
 on:
   pull_request:
@@ -126,8 +126,7 @@ jobs:
 
       # Run update wiki python script
       - name: Run update wiki python script
-        run: python ./.github/helpers/update-wiki-table.py ./wiki/Image-tags.md "EXPRESS API" "Deployed Image Tag in DEV" "${{ env.IMAGE_TAG }}"
-
+        run: python ./.github/helpers/update-wiki-table.py ./wiki/Image-tags.md "API V2" "Deployed Image Tag in DEV" "${{ env.IMAGE_TAG }}"
       
       # Commit and push changes to wiki
       - name: Commit and push changes to wiki
