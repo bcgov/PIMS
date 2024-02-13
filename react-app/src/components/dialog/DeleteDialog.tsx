@@ -20,7 +20,7 @@ const DeleteDialog = (props: IDeleteDialog) => {
       title={title}
       onConfirm={onDelete}
       onCancel={onClose}
-      confirmButtonText={deleteText}
+      confirmButtonText={deleteText ?? 'Delete'}
       confirmButtonProps={{ color: 'warning', disabled: textFieldValue.toLowerCase() != 'delete' }}
     >
       <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
