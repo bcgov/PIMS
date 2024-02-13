@@ -10,6 +10,7 @@ import * as projects from '@/controllers/projects/projectsController';
 import * as notifications from '@/controllers/notifications/notificationsController';
 import * as reports from '@/controllers/reports/reportsController';
 import * as tools from '@/controllers/tools/toolsController';
+import * as agencies from '@/controllers/agencies/agenciesController';
 
 export default {
   healthCheck,
@@ -24,4 +25,5 @@ export default {
   ...notifications,
   ...reports,
   ...tools,
+  ...agencies,
 };
