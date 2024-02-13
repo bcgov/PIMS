@@ -1,5 +1,5 @@
 # GitHub Actions workflow for deploying APP image on PR merge to main branch
-name: DEV APP-Image Deploy on PR merge
+name: REACT APP - DEV Deploy
 
 on:
   pull_request:
@@ -141,4 +141,4 @@ jobs:
           fi
           echo "Pushing changes to wiki"
           git commit -m "Value populated at Deploy App" && git push "https://$GITHUB_ACTOR:$GH_TOKEN@github.com/$GITHUB_REPOSITORY.wiki.git"
-          
+    
