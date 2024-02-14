@@ -1,14 +1,7 @@
-# GitHub Actions workflow for deploying API image on PR merge to main branch
-name: EXPRESS API-Image Deploy on PR merge
+# GitHub Actions workflow for deploying API image to TEST env
+name: EXPRESS API-TEST Deploy
 
 on:
-  pull_request:
-    types:
-      - closed
-    branches: [main]
-    paths:
-      - 'express-api/**' # Triggers on changes to files in the express-api/ directory.
-
   workflow_dispatch:
       inputs:
         image_tag:
@@ -16,12 +9,14 @@ on:
           required: true
 
 env:
-  IMAGE_TAG: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.image_tag || github.event.pull_request.number }}
+  IMAGE_TAG: ${{ github.event.inputs.image_tag }}
+  ENVIRONMENT: 'test'
+  OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_SA_TEST_TOKEN }}
+
 
 jobs:
   # Job to deploy API image to OpenShift
   Deploy-To-OpenShift:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.pull_request.merged }}
     name: Deploy to OpenShift
     runs-on: ubuntu-latest
     steps:
@@ -35,16 +30,15 @@ jobs:
         uses: redhat-actions/oc-login@v1
         with:
           openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
-          openshift_token: ${{ secrets.OPENSHIFT_SA_DEV_TOKEN }}
-          namespace: ${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
-      
+          openshift_token: ${{env.OPENSHIFT_TOKEN}}
+          namespace: ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }}
+
       # Process and Apply API DeploymentConfig
       - name: Process and Apply API DeploymentConfig
         env:
-          NAMESPACE: '${{ secrets.OPENSHIFT_DEV_NAMESPACE }}'
+          NAMESPACE: ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }}
           DC_TEMPLATE: 'api-v2-dc-template.yaml'
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
-          ENVIRONMENT: 'dev'
           APPLICATION_NAME: 'pims-api-v2'
           LICENSE_PLATE: '${{ secrets.LICENSE_PLATE }}'
         run: |
@@ -61,16 +55,16 @@ jobs:
         uses: redhat-actions/oc-login@v1
         env:
           OPENSHIFT_USER: github-actions
-          OPENSHIFT_PROJECT: ${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
+          OPENSHIFT_PROJECT: ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }}
         with:
           openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
-          openshift_token: ${{ secrets.OPENSHIFT_SA_DEV_TOKEN }}
-          namespace: ${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
+          openshift_token: ${{env.OPENSHIFT_TOKEN}}
+          namespace: ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }}
 
       # Check Deployment Status
       - name: Check Deployment Status
         run: |
-          oc rollout status -n ${{ secrets.OPENSHIFT_DEV_NAMESPACE }} dc/pims-api-v2 --watch
+          oc rollout status -n ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }} dc/pims-api-v2 --watch
 
   # Job to clean up previous objects in OpenShift
   Clean-Up:
@@ -83,21 +77,21 @@ jobs:
         uses: redhat-actions/oc-login@v1
         env:
           OPENSHIFT_USER: github-actions
-          OPENSHIFT_PROJECT: ${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
+          OPENSHIFT_PROJECT: ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }}
         with:
           openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
-          openshift_token: ${{ secrets.OPENSHIFT_SA_DEV_TOKEN }}
-          namespace: ${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
+          openshift_token: ${{env.OPENSHIFT_TOKEN}}
+          namespace: ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }}
 
       # Remove previous objects
       - name: Remove previous objects
         run: |
-          oc delete pod -n ${{ secrets.OPENSHIFT_DEV_NAMESPACE }} --field-selector status.phase=Succeeded
+          oc delete pod -n ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }} --field-selector status.phase=Succeeded
 
       # Remove previous replication controllers
       - name: Remove previous replication controllers
         run: |
-          oc delete rc -n ${{ secrets.OPENSHIFT_DEV_NAMESPACE }} --field-selector status.replicas=0
+          oc delete rc -n ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }} --field-selector status.replicas=0
 
   # Job to update the wiki with deployed image tag information
   Update_Wiki_Tags:
@@ -126,8 +120,7 @@ jobs:
 
       # Run update wiki python script
       - name: Run update wiki python script
-        run: python ./.github/helpers/update-wiki-table.py ./wiki/Image-tags.md "EXPRESS API" "Deployed Image Tag in DEV" "${{ env.IMAGE_TAG }}"
-
+        run: python ./.github/helpers/update-wiki-table.py ./wiki/Image-tags.md "API V2" "Deployed Image Tag in TEST" "${{ env.IMAGE_TAG }}"
       
       # Commit and push changes to wiki
       - name: Commit and push changes to wiki

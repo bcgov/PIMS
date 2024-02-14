@@ -1,5 +1,5 @@
 # GitHub Actions workflow for building and tagging the API image on PR
-name: EXPRESS API-:Image Build on PR
+name: EXPRESS API-Image Build
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ on:
       - 'express-api/**' # Triggers on changes to files in the express-api/ directory.
 
 jobs:
-  PIMS-API-Build-Tag-Push:
+  PIMS-API-V2-Build-Tag-Push:
     environment: dev
     runs-on: ubuntu-latest
     steps:
@@ -43,7 +43,7 @@ jobs:
           docker push ${{ secrets.PUBLIC_IMAGE_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/pims-api-v2:${{github.event.pull_request.number}}
 
   Update_Wiki_Tags:
-    needs: [PIMS-API-Build-Tag-Push]
+    needs: [PIMS-API-V2-Build-Tag-Push]
     name: Update table in wiki
     runs-on: ubuntu-latest
     env:
@@ -68,7 +68,7 @@ jobs:
 
       # Run the update wiki Python script
       - name: Run update wiki Python script
-        run: python ./.github/helpers/update-wiki-table.py ./wiki/Image-tags.md "EXPRESS API" "Latest Build Image Tag" "${{github.event.pull_request.number}}"
+        run: python ./.github/helpers/update-wiki-table.py ./wiki/Image-tags.md "API V2" "Latest Build Image Tag" "${{github.event.pull_request.number}}"
 
       # Commit and push changes to the wiki
       - name: Commit and push changes to wiki
