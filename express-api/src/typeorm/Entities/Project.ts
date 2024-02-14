@@ -66,47 +66,47 @@ export class Project extends BaseEntity {
   ProjectType: number;
 
   // Workflow Relation
-  @Column({ name: 'WorkflowId', type: 'int' })
+  @Column({ name: 'workflow_id', type: 'int' })
   WorkflowId: number;
 
   @ManyToOne(() => Workflow, (Workflow) => Workflow.Id)
-  @JoinColumn({ name: 'WorkflowId' })
+  @JoinColumn({ name: 'workflow_id' })
   @Index()
   Workflow: Workflow;
 
   // Agency Relation
-  @Column({ name: 'AgencyId', type: 'int' })
+  @Column({ name: 'agency_id', type: 'int' })
   AgencyId: number;
 
   @ManyToOne(() => Agency, (Agency) => Agency.Id)
-  @JoinColumn({ name: 'AgencyId' })
+  @JoinColumn({ name: 'agency_id' })
   @Index()
   Agency: Agency;
 
   // Tier Level Relation
-  @Column({ name: 'TierLevelId', type: 'int' })
+  @Column({ name: 'trier_level_id', type: 'int' })
   TierLevelId: number;
 
   @ManyToOne(() => TierLevel, (TierLevel) => TierLevel.Id)
-  @JoinColumn({ name: 'TierLevelId' })
+  @JoinColumn({ name: 'trier_level_id' })
   @Index()
   TierLevel: TierLevel;
 
   // Status Relation
-  @Column({ name: 'StatusId', type: 'int' })
+  @Column({ name: 'status_id', type: 'int' })
   StatusId: number;
 
   @ManyToOne(() => ProjectStatus, (Status) => Status.Id)
-  @JoinColumn({ name: 'StatusId' })
+  @JoinColumn({ name: 'status_id' })
   @Index()
   Status: ProjectStatus;
 
   // Risk Relation
-  @Column({ name: 'RiskId', type: 'int' })
+  @Column({ name: 'risk_id', type: 'int' })
   RiskId: number;
 
   @ManyToOne(() => ProjectRisk, (Risk) => Risk.Id)
-  @JoinColumn({ name: 'RiskId' })
+  @JoinColumn({ name: 'risk_id' })
   @Index()
   Risk: ProjectRisk;
 }

@@ -11,11 +11,11 @@ import { Property } from '@/typeorm/Entities/abstractEntities/Property';
 @Entity()
 export class Building extends Property {
   // Construction Type Relations
-  @Column({ name: 'BuildingConstructionTypeId', type: 'int' })
+  @Column({ name: 'building_construction_type_id', type: 'int' })
   BuildingConstructionTypeId: number;
 
   @ManyToOne(() => BuildingConstructionType, (ConstructionType) => ConstructionType.Id)
-  @JoinColumn({ name: 'BuildingConstructionTypeId' })
+  @JoinColumn({ name: 'building_construction_type_id' })
   @Index()
   BuildingConstructionType: BuildingConstructionType;
 
@@ -23,11 +23,11 @@ export class Building extends Property {
   BuildingFloorCount: number;
 
   // Predominate Use Relations
-  @Column({ name: 'BuildingPredominateUseId', type: 'int' })
+  @Column({ name: 'building_predominate_use_id', type: 'int' })
   BuildingPredominateUseId: number;
 
   @ManyToOne(() => BuildingPredominateUse, (PredominateUse) => PredominateUse.Id)
-  @JoinColumn({ name: 'BuildingPredominateUseId' })
+  @JoinColumn({ name: 'building_predominate_use_id' })
   @Index()
   BuildingPredominateUse: BuildingPredominateUse;
 
@@ -38,11 +38,11 @@ export class Building extends Property {
   RentableArea: number;
 
   // Occupant Type Relations
-  @Column({ name: 'BuildingOccupantTypeId', type: 'int' })
+  @Column({ name: 'building_occupant_type_id', type: 'int' })
   BuildingOccupantTypeId: number;
 
   @ManyToOne(() => BuildingOccupantType, (OccupantType) => OccupantType.Id)
-  @JoinColumn({ name: 'BuildingOccupantTypeId' })
+  @JoinColumn({ name: 'building_occupant_type_id' })
   @Index()
   BuildingOccupantType: BuildingOccupantType;
 
