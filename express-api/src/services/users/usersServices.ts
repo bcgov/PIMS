@@ -4,7 +4,6 @@ import { KeycloakBCeIDUser, KeycloakIdirUser, KeycloakUser } from '@bcgov/citz-i
 import { In } from 'typeorm';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { randomUUID } from 'crypto';
-import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
 interface NormalizedKeycloakUser {
   given_name: string;
@@ -15,14 +14,11 @@ interface NormalizedKeycloakUser {
   display_name: string;
 }
 
-const getUser = async (username: string): Promise<User> => {
+const getUser = async (username: string): Promise<User | null> => {
   const user = await AppDataSource.getRepository(User).findOneBy({
     Username: username,
   });
-  if (user !== null) {
-    return user;
-  }
-  throw new ErrorWithCode(`User ${username} not found.`, 404);
+  return user;
 };
 
 const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => {
