@@ -17,13 +17,13 @@ const getUsers = async (filter: UserFiltering) => {
       DisplayName: filter.displayName,
       LastName: filter.lastName,
       Email: filter.email,
+      KeycloakUserId: filter.guid,
       Agency: {
         Name: filter.agency,
       },
       Role: {
         Name: filter.role,
       },
-      IsDisabled: filter.isDisabled,
       Position: filter.position,
     },
     take: filter.quantity,

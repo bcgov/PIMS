@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import * as agencyService from '@/services/agencies/agencyServices';
 import { AgencyFilterSchema, AgencyPublicResponseSchema } from '@/services/agencies/agencySchema';
 import { z } from 'zod';
-import KeycloakService from '@/services/keycloak/keycloakService';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { Roles } from '@/constants/roles';
 
@@ -21,11 +20,10 @@ export const getAgencies = async (req: Request, res: Response) => {
       }]
    */
   const kcUser = req.user as KeycloakUser;
-  const roles = await KeycloakService.getKeycloakUserRoles(kcUser.preferred_username);
   const filter = AgencyFilterSchema.safeParse(req.query);
   if (filter.success) {
     const agencies = await agencyService.getAgencies(filter.data);
-    if (!roles.map((role) => role.name).includes(Roles.ADMIN)) {
+    if (!kcUser.client_roles || !kcUser.client_roles.includes(Roles.ADMIN)) {
       const trimmed = AgencyPublicResponseSchema.array().parse(agencies);
       return res.status(200).send(trimmed);
     }

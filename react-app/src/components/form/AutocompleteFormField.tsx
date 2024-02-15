@@ -11,7 +11,7 @@ interface IAutocompleteProps {
 }
 
 const AutocompleteFormField = (props: IAutocompleteProps) => {
-  const { control } = useFormContext();
+  const { control, getValues } = useFormContext();
   const { name, options, label, sx } = props;
   return (
     <Controller
@@ -20,12 +20,13 @@ const AutocompleteFormField = (props: IAutocompleteProps) => {
       render={({ field: { onChange } }) => (
         <Autocomplete
           freeSolo={false}
-          disablePortal
+          disablePortal={false}
           id={`autocompleteinput-${label}`}
           options={options}
           sx={sx}
           renderInput={(params) => <TextField {...params} label={label} />}
           onChange={(_, data) => onChange(data.value)}
+          value={options.find((option) => option.value === getValues()[name]) ?? null}
           {...props}
         />
       )}
