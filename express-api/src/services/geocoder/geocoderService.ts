@@ -7,7 +7,6 @@ import { getLongitude, getLatitude, getAddress1 } from './geocoderUtils';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { ISitePidsResponseModel } from './interfaces/ISitePidsResponseModel';
 
-
 const mapFeatureToAddress = (feature: IFeatureModel): IAddressModel => {
   return {
     siteId: feature.properties.siteID,
@@ -25,7 +24,7 @@ const mapFeatureToAddress = (feature: IFeatureModel): IAddressModel => {
  * @description Sends a request to Geocoder for addresses that match the specified 'address'.
  * @param address String of searchable address. eg. "4000 Seymour St Victoria BC"
  * @returns address information matching IAddressModel format
- * @throws ErrorWithCode if an error is caught 
+ * @throws ErrorWithCode if an error is caught
  */
 export const getSiteAddressesAsync = async (address: string) => {
   const url = new URL('/addresses.json', constants.GEOCODER.HOSTURI);
@@ -40,17 +39,16 @@ export const getSiteAddressesAsync = async (address: string) => {
 
     if (!response.ok) {
       throw new ErrorWithCode('Failed to fetch data', response.status);
-    };
+    }
 
     const responseData = await response.json();
     const featureCollection: IFeatureCollectionModel = responseData;
     const addressInformation: IAddressModel = mapFeatureToAddress(featureCollection.features[0]);
 
     return addressInformation;
-
   } catch (error) {
     throw new ErrorWithCode(error.message, error.status);
-  };
+  }
 };
 
 /**
@@ -68,11 +66,11 @@ const getPids = async (siteId: string) => {
     },
   });
 
-  if (result.status != 200){
+  if (result.status != 200) {
     throw new ErrorWithCode(result.statusText, result.status);
-  };
+  }
 
-  const resultData = await result.json()
+  const resultData = await result.json();
   const pidInformation: ISitePidsResponseModel = resultData;
   return pidInformation;
 };
