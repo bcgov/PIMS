@@ -24,31 +24,27 @@ const mapFeatureToAddress = (feature: IFeatureModel): IAddressModel => {
  * @description Sends a request to Geocoder for addresses that match the specified 'address'.
  * @param address String of searchable address. eg. "4000 Seymour St Victoria BC"
  * @returns address information matching IAddressModel format
- * @throws ErrorWithCode if an error is caught
+ * @throws ErrorWithCode if the response is not 200 OK
  */
 export const getSiteAddressesAsync = async (address: string) => {
   const url = new URL('/addresses.json', constants.GEOCODER.HOSTURI);
   url.searchParams.append('addressString', address);
 
-  try {
-    const response = await fetch(url.toString(), {
-      headers: {
-        apiKey: process.env.GEOCODER__KEY,
-      },
-    });
+  const response = await fetch(url.toString(), {
+    headers: {
+      apiKey: process.env.GEOCODER__KEY,
+    },
+  });
 
-    if (!response.ok) {
-      throw new ErrorWithCode('Failed to fetch data', response.status);
-    }
-
-    const responseData = await response.json();
-    const featureCollection: IFeatureCollectionModel = responseData;
-    const addressInformation: IAddressModel = mapFeatureToAddress(featureCollection.features[0]);
-
-    return addressInformation;
-  } catch (error) {
-    throw new ErrorWithCode(error.message, error.status);
+  if (!response.ok) {
+    throw new ErrorWithCode('Failed to fetch data', response.status);
   }
+
+  const responseData = await response.json();
+  const featureCollection: IFeatureCollectionModel = responseData;
+  const addressInformation: IAddressModel = mapFeatureToAddress(featureCollection.features[0]);
+
+  return addressInformation;
 };
 
 /**
