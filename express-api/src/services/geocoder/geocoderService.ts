@@ -5,16 +5,8 @@ import constants from '@/constants';
 import { IFeatureModel } from '@/services/geocoder/interfaces/IFeatureModel';
 import { getLongitude, getLatitude, getAddress1 } from './geocoderUtils';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import { ISitePidsResponseModel } from './interfaces/ISitePidsResponseModel';
 
-// const getSiteAddresses = async (
-//   address: string,
-//   outputFormat = 'json',
-// ): Promise<FeatureCollectionModel> => {
-//   const parameters = {
-//     AddressString: address,
-//   };
-//   return getSiteAddressesAsync(parameters, outputFormat);
-// };
 
 const mapFeatureToAddress = (feature: IFeatureModel): IAddressModel => {
   return {
@@ -29,7 +21,13 @@ const mapFeatureToAddress = (feature: IFeatureModel): IAddressModel => {
   };
 };
 
-export const getSiteAddressesAsync = async (address: string): Promise<IAddressModel> => {
+/**
+ * @description Sends a request to Geocoder for addresses that match the specified 'address'.
+ * @param address String of searchable address. eg. "4000 Seymour St Victoria BC"
+ * @returns address information matching IAddressModel format
+ * @throws ErrorWithCode if an error is caught 
+ */
+export const getSiteAddressesAsync = async (address: string) => {
   const url = new URL('/addresses.json', constants.GEOCODER.HOSTURI);
   url.searchParams.append('addressString', address);
 
@@ -42,7 +40,7 @@ export const getSiteAddressesAsync = async (address: string): Promise<IAddressMo
 
     if (!response.ok) {
       throw new ErrorWithCode('Failed to fetch data', response.status);
-    }
+    };
 
     const responseData = await response.json();
     const featureCollection: IFeatureCollectionModel = responseData;
@@ -52,26 +50,34 @@ export const getSiteAddressesAsync = async (address: string): Promise<IAddressMo
 
   } catch (error) {
     throw new ErrorWithCode(error.message, error.status);
-  }
+  };
 };
 
-/// <summary>
-/// Make a request to Data BC Geocoder for PIDs that belong to the specified 'siteId'.
-/// </summary>
-/// <param name="siteId">The site identifier for a parcel.</param>
-/// <returns>An array of PIDs for the supplied 'siteId'.</returns>
-
+/**
+ * @description Sends a request to Geocoder for all parcel identifiers (PIDs) associated with an individual site.
+ * @param siteId a unique identifier assigned to every site in B.C.
+ * @returns Valid 'siteId' values for an address
+ * @throws ErrorWithCode if result is not 200 OK
+ */
 const getPids = async (siteId: string) => {
-// const getPids = async (siteId: string, outputFormat = 'json'): Promise<SitePidsResponseModel> => {
-//   const endpoint = options.parcels.pidsUrl.replace('{siteId}', siteId);
-//   const url = generateUrl(endpoint, outputFormat);
-//   const response = await fetch(url);
-//   return await response.json();
-// };
-}
+  // essentially what we want is this
+  const url = new URL('/parcels/pids/'.concat(siteId).concat('.json'), constants.GEOCODER.HOSTURI);
+  const result = await fetch(url.toString(), {
+    headers: {
+      apiKey: process.env.GEOCODER_KEY,
+    },
+  });
+
+  if (result.status != 200){
+    throw new ErrorWithCode(result.statusText, result.status);
+  };
+
+  const resultData = await result.json()
+  const pidInformation: ISitePidsResponseModel = resultData;
+  return pidInformation;
+};
 
 export const GeocoderService = {
-  // getSiteAddresses,
   getSiteAddressesAsync,
-  // getPids,
+  getPids,
 };
