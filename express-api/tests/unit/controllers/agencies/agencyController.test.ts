@@ -53,6 +53,12 @@ describe('UNIT - Agencies Admin', () => {
     });
 
     it('should return status 200 and a list of agencies', async () => {
+      _getKeycloakUserRoles.mockImplementationOnce(() => []);
+      await controllers.getAgencies(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+    });
+
+    it('should return status 200 and a list of agencies', async () => {
       mockRequest.query = {
         name: 'a',
         parentId: 'a',
@@ -95,6 +101,11 @@ describe('UNIT - Agencies Admin', () => {
       await controllers.getAgencyById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.Id).toBe(777);
+    });
+    it('should return status 404', async () => {
+      _getAgencyById.mockImplementationOnce(() => null);
+      await controllers.getAgencyById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(404);
     });
     it('should return status 400', async () => {
       _getAgencyById.mockImplementationOnce(() => {

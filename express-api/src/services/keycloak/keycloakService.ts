@@ -25,7 +25,7 @@ import { randomUUID } from 'crypto';
 import { AppDataSource } from '@/appDataSource';
 import { DeepPartial, In, Not } from 'typeorm';
 import userServices from '@/services/admin/usersServices';
-import { User } from '@/typeorm/Entities/User';
+import { User, UserStatus } from '@/typeorm/Entities/User';
 import { Role } from '@/typeorm/Entities/Role';
 
 /**
@@ -202,7 +202,6 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
       LastName: kuser.lastName,
       Email: kuser.email,
       Position: '',
-      IsDisabled: false,
       EmailVerified: false,
       IsSystem: false,
       Note: '',
@@ -215,6 +214,8 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
       RoleId: undefined,
       Agency: undefined,
       AgencyId: undefined,
+      Status: UserStatus.Active,
+      IsDisabled: false,
     };
     return await userServices.addUser(newUser);
   } else {
