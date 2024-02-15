@@ -220,7 +220,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
                 options={[
                   //TODO: Get these through a lookup endpoint.
                   { label: 'Active', value: 'Active' },
-                  { label: 'OnHold', value: 'OnHold' },
+                  { label: 'On Hold', value: 'OnHold' },
                   { label: 'Disabled', value: 'Disabled' },
                   { label: 'Denied', value: 'Denied' },
                 ]}
