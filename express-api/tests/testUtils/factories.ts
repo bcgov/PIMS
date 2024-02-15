@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AccessRequest } from '@/typeorm/Entities/AccessRequest';
 import { Agency } from '@/typeorm/Entities/Agency';
-import { User } from '@/typeorm/Entities/User';
+import { User, UserStatus } from '@/typeorm/Entities/User';
 import { faker } from '@faker-js/faker';
 import { UUID } from 'crypto';
 import { Request, Response } from 'express';
 import { Role as RolesEntity } from '@/typeorm/Entities/Role';
+import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 
 export class MockRes {
   statusValue: any;
@@ -83,6 +84,7 @@ export const produceUser = (): User => {
     CreatedById: undefined,
     CreatedBy: undefined,
     Id: id,
+    Status: UserStatus.Active,
     DisplayName: faker.company.name(),
     FirstName: faker.person.firstName(),
     MiddleName: faker.person.middleName(),
@@ -90,7 +92,6 @@ export const produceUser = (): User => {
     Email: faker.internet.email(),
     Username: faker.internet.userName(),
     Position: 'Tester',
-    IsDisabled: false,
     EmailVerified: false,
     IsSystem: false,
     Note: '',
@@ -103,6 +104,7 @@ export const produceUser = (): User => {
     RoleId: undefined,
     Agency: produceAgency(id),
     AgencyId: undefined,
+    IsDisabled: false,
   };
 };
 
@@ -171,5 +173,20 @@ export const produceRole = (): RolesEntity => {
     KeycloakGroupId: faker.string.uuid() as UUID,
     IsPublic: false,
     Users: [],
+  };
+};
+
+export const produceKeycloak = (): KeycloakUser => {
+  return {
+    name: faker.string.alphanumeric(),
+    preferred_username: faker.string.alphanumeric(),
+    email: faker.internet.email(),
+    display_name: faker.string.alphanumeric(),
+    client_roles: [faker.string.alphanumeric()],
+    identity_provider: 'idir',
+    idir_user_guid: faker.string.uuid(),
+    idir_username: faker.string.alphanumeric(),
+    given_name: faker.person.firstName(),
+    family_name: faker.person.lastName(),
   };
 };

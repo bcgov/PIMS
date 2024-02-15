@@ -1,35 +1,28 @@
-import { User } from '@/typeorm/Entities/User';
+import { User, UserStatus } from '@/typeorm/Entities/User';
 import { AppDataSource } from '@/appDataSource';
 import { KeycloakBCeIDUser, KeycloakIdirUser, KeycloakUser } from '@bcgov/citz-imb-kc-express';
-import { z } from 'zod';
-import { AccessRequest } from '@/typeorm/Entities/AccessRequest';
 import { In } from 'typeorm';
-import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { Agency } from '@/typeorm/Entities/Agency';
+import { randomUUID } from 'crypto';
 
 interface NormalizedKeycloakUser {
   given_name: string;
   family_name: string;
   username: string;
   guid: string;
+  email: string;
+  display_name: string;
 }
 
-const getUser = async (nameOrGuid: string): Promise<User> => {
-  const userGuid = z.string().uuid().safeParse(nameOrGuid);
-  if (userGuid.success) {
-    return AppDataSource.getRepository(User).findOneBy({
-      KeycloakUserId: userGuid.data,
-    });
-  } else {
-    return AppDataSource.getRepository(User).findOneBy({
-      Username: nameOrGuid,
-    });
-  }
+const getUser = async (username: string): Promise<User | null> => {
+  const user = await AppDataSource.getRepository(User).findOneBy({
+    Username: username,
+  });
+  return user;
 };
 
 const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => {
   const provider = kcUser.identity_provider;
-  const username = kcUser.preferred_username;
   const normalizeUuid = (keycloakUuid: string) =>
     keycloakUuid.toLowerCase().replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/g, '$1-$2-$3-$4-$5');
   let user;
@@ -39,7 +32,9 @@ const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => 
       return {
         given_name: user.given_name,
         family_name: user.family_name,
-        username: username,
+        username: kcUser.preferred_username,
+        email: kcUser.email,
+        display_name: kcUser.display_name,
         guid: normalizeUuid(user.idir_user_guid),
       };
     case 'bceidbasic':
@@ -47,7 +42,9 @@ const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => 
       return {
         given_name: '',
         family_name: '',
-        username: username,
+        username: kcUser.preferred_username,
+        email: kcUser.email,
+        display_name: kcUser.display_name,
         guid: normalizeUuid(user.bceid_user_guid),
       };
     default:
@@ -55,10 +52,10 @@ const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => 
   }
 };
 
-const getUserFromKeycloak = async (kcUser: KeycloakUser) => {
-  const normalized = normalizeKeycloakUser(kcUser);
-  return getUser(normalized.guid ?? normalized.username);
-};
+// const getUserFromKeycloak = async (kcUser: KeycloakUser) => {
+//   const normalized = normalizeKeycloakUser(kcUser);
+//   return getUser(normalized.guid ?? normalized.username);
+// };
 
 const activateUser = async (kcUser: KeycloakUser) => {
   const normalizedUser = normalizeKeycloakUser(kcUser);
@@ -78,74 +75,97 @@ const activateUser = async (kcUser: KeycloakUser) => {
   }
 };
 
-const getAccessRequest = async (kcUser: KeycloakUser) => {
-  const internalUser = await getUserFromKeycloak(kcUser);
-  const accessRequest = AppDataSource.getRepository(AccessRequest)
-    .createQueryBuilder('AccessRequests')
-    .leftJoinAndSelect('AccessRequests.AgencyId', 'Agencies')
-    .leftJoinAndSelect('AccessRequests.RoleId', 'Roles')
-    .leftJoinAndSelect('AccessRequests.UserId', 'Users')
-    .where('AccessRequests.UserId = :userId', { userId: internalUser.Id })
-    .andWhere('AccessRequests.Status = :status', { status: 0 })
-    .orderBy('AccessRequests.CreatedOn', 'DESC')
-    .getOne();
-  return accessRequest;
-};
+// const getAccessRequest = async (kcUser: KeycloakUser) => {
+//   const internalUser = await getUserFromKeycloak(kcUser);
+//   const accessRequest = AppDataSource.getRepository(AccessRequest)
+//     .createQueryBuilder('AccessRequests')
+//     .leftJoinAndSelect('AccessRequests.AgencyId', 'Agencies')
+//     .leftJoinAndSelect('AccessRequests.RoleId', 'Roles')
+//     .leftJoinAndSelect('AccessRequests.UserId', 'Users')
+//     .where('AccessRequests.UserId = :userId', { userId: internalUser.Id })
+//     .andWhere('AccessRequests.Status = :status', { status: 0 })
+//     .orderBy('AccessRequests.CreatedOn', 'DESC')
+//     .getOne();
+//   return accessRequest;
+// };
 
-const getAccessRequestById = async (requestId: number, kcUser: KeycloakUser) => {
-  const accessRequest = await AppDataSource.getRepository(AccessRequest)
-    .createQueryBuilder('AccessRequests')
-    .leftJoinAndSelect('AccessRequests.AgencyId', 'Agencies')
-    .leftJoinAndSelect('AccessRequests.RoleId', 'Roles')
-    .leftJoinAndSelect('AccessRequests.UserId', 'Users')
-    .where('AccessRequests.Id = :requestId', { requestId: requestId })
-    .getOne();
-  const internalUser = await getUserFromKeycloak(kcUser);
-  if (accessRequest && accessRequest.UserId != internalUser.Id) throw new Error('Not authorized.');
-  return accessRequest;
-};
+// const getAccessRequestById = async (requestId: number, kcUser: KeycloakUser) => {
+//   const accessRequest = await AppDataSource.getRepository(AccessRequest)
+//     .createQueryBuilder('AccessRequests')
+//     .leftJoinAndSelect('AccessRequests.AgencyId', 'Agencies')
+//     .leftJoinAndSelect('AccessRequests.RoleId', 'Roles')
+//     .leftJoinAndSelect('AccessRequests.UserId', 'Users')
+//     .where('AccessRequests.Id = :requestId', { requestId: requestId })
+//     .getOne();
+//   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+//   const normalizedKc = await normalizeKeycloakUser(kcUser);
+//   return accessRequest;
+// };
 
-const deleteAccessRequest = async (accessRequest: AccessRequest) => {
-  const existing = await AppDataSource.getRepository(AccessRequest).findOne({
-    where: { Id: accessRequest.Id },
-  });
-  if (!existing) {
-    throw new ErrorWithCode('No access request found', 404);
-  }
-  const deletedRequest = AppDataSource.getRepository(AccessRequest).remove(accessRequest);
-  return deletedRequest;
-};
+// const deleteAccessRequest = async (accessRequest: AccessRequest) => {
+//   const existing = await AppDataSource.getRepository(AccessRequest).findOne({
+//     where: { Id: accessRequest.Id },
+//   });
+//   if (!existing) {
+//     throw new ErrorWithCode('No access request found', 404);
+//   }
+//   const deletedRequest = AppDataSource.getRepository(AccessRequest).remove(accessRequest);
+//   return deletedRequest;
+// };
 
-const addAccessRequest = async (accessRequest: AccessRequest, kcUser: KeycloakUser) => {
-  if (accessRequest == null || accessRequest.AgencyId == null || accessRequest.RoleId == null) {
+const addKeycloakUserOnHold = async (
+  kcUser: KeycloakUser,
+  agencyId: number,
+  position: string,
+  note: string,
+) => {
+  if (
+    agencyId == null
+    // roleId == null
+  ) {
     throw new Error('Null argument.');
   }
-  const internalUser = await getUserFromKeycloak(kcUser);
-  accessRequest.User = internalUser;
-  internalUser.Position = accessRequest.User.Position;
-
   //Iterating through agencies and roles no longer necessary here?
-
-  return AppDataSource.getRepository(AccessRequest).insert(accessRequest);
-};
-
-const updateAccessRequest = async (updateRequest: AccessRequest, kcUser: KeycloakUser) => {
-  if (updateRequest == null || updateRequest.AgencyId == null || updateRequest.RoleId == null)
-    throw new Error('Null argument.');
-
-  const internalUser = await getUserFromKeycloak(kcUser);
-
-  if (updateRequest.UserId != internalUser.Id) throw new Error('Not authorized.');
-
-  const result = await AppDataSource.getRepository(AccessRequest).update(
-    { Id: updateRequest.Id },
-    updateRequest,
-  );
-  if (!result.affected) {
-    throw new ErrorWithCode('Resource not found.', 404);
-  }
+  const normalizedKc = normalizeKeycloakUser(kcUser);
+  const systemUser = await AppDataSource.getRepository(User).findOne({
+    where: { Username: 'system' },
+  });
+  const result = await AppDataSource.getRepository(User).insert({
+    Id: randomUUID(),
+    FirstName: normalizedKc.given_name,
+    LastName: normalizedKc.family_name,
+    Email: normalizedKc.email,
+    DisplayName: normalizedKc.display_name,
+    KeycloakUserId: normalizedKc.guid,
+    Username: normalizedKc.username,
+    Status: UserStatus.OnHold,
+    IsSystem: false,
+    EmailVerified: false,
+    IsDisabled: false,
+    AgencyId: agencyId,
+    Position: position,
+    Note: note,
+    CreatedById: systemUser.Id,
+  });
   return result.generatedMaps[0];
 };
+
+// const updateAccessRequest = async (updateRequest: AccessRequest, kcUser: KeycloakUser) => {
+//   if (updateRequest == null || updateRequest.AgencyId == null || updateRequest.RoleId == null)
+//     throw new Error('Null argument.');
+
+//   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+//   const normalizedKc = await normalizeKeycloakUser(kcUser);
+
+//   const result = await AppDataSource.getRepository(AccessRequest).update(
+//     { Id: updateRequest.Id },
+//     updateRequest,
+//   );
+//   if (!result.affected) {
+//     throw new ErrorWithCode('Resource not found.', 404);
+//   }
+//   return result.generatedMaps[0];
+// };
 
 const getAgencies = async (username: string) => {
   const user = await getUser(username);
@@ -183,11 +203,7 @@ const getAdministrators = async (agencyIds: string[]) => {
 const userServices = {
   getUser,
   activateUser,
-  getAccessRequest,
-  getAccessRequestById,
-  deleteAccessRequest,
-  addAccessRequest,
-  updateAccessRequest,
+  addKeycloakUserOnHold,
   getAgencies,
   getAdministrators,
   normalizeKeycloakUser,
