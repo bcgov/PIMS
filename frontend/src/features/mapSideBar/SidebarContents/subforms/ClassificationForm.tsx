@@ -179,11 +179,11 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
             <Label style={{ padding: 0 }}>Reason for Encumbrance</Label>
           </Col>
           <Col md={4}>
-            {' '}
             <TextArea
               field={encumbranceField}
               style={{
                 minHeight: '86px',
+                minWidth: '270px',
               }}
             ></TextArea>
           </Col>
