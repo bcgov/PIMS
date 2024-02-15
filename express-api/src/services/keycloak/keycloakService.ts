@@ -40,14 +40,14 @@ const syncKeycloakRoles = async () => {
   const roles = await KeycloakService.getKeycloakRoles();
   for (const role of roles) {
     const internalRole = await rolesServices.getRoles({ name: role.name });
-
+    console.log(`Got this internalRole: ${internalRole[0]?.Name} for name ${role.name}`);
     if (internalRole.length == 0) {
       const newRole: Role = {
         Id: randomUUID(),
         Name: role.name,
         IsDisabled: false,
         SortOrder: 0,
-        KeycloakGroupId: '',
+        KeycloakGroupId: null,
         Description: '',
         IsPublic: false,
         CreatedById: undefined,
@@ -58,14 +58,14 @@ const syncKeycloakRoles = async () => {
         UpdatedOn: undefined,
         Users: [],
       };
-      rolesServices.addRole(newRole);
+      await rolesServices.addRole(newRole);
     } else {
       const overwriteRole: DeepPartial<Role> = {
         Id: internalRole[0].Id,
         Name: role.name,
         IsDisabled: false,
         SortOrder: 0,
-        KeycloakGroupId: '',
+        KeycloakGroupId: null,
         Description: '',
         IsPublic: false,
         CreatedById: undefined,
@@ -73,7 +73,8 @@ const syncKeycloakRoles = async () => {
         UpdatedById: undefined,
         UpdatedOn: undefined,
       };
-      rolesServices.updateRole(overwriteRole);
+      console.log(`Called updatedrole for ${role.name}`);
+      await rolesServices.updateRole(overwriteRole);
     }
 
     await AppDataSource.getRepository(Role).delete({
