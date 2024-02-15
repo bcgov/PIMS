@@ -31,26 +31,7 @@ const InfoBox = styled.div`
   text-align: left;
   padding: 8px 12px 10px;
   margin-bottom: 10px;
-`;
-
-/** formatted field description that will appear underneath the select input */
-const FieldDescription = styled.p`
-  margin-left: 166px;
-  margin-top: 10px;
-  font-size: 12px;
-  text-align: left;
-`;
-
-const Encumberance = styled(Col)`
-  .form-label {
-    min-width: 140px;
-  }
-  .form-group {
-    display: flex;
-    textarea.form-control {
-      width: 100%;
-    }
-  }
+  font-size: 11px;
 `;
 
 /** used to conditionally render the information display box with the desired content */
@@ -167,43 +148,51 @@ export const ClassificationForm: React.FC<IClassificationFormProps> = ({
         <Title>{title}</Title>
       </Row>
       <Row>
-        <Col md={6}>
-          <Row>
-            <Col md="4" style={{ textAlign: 'right' }}>
-              <Label>{fieldLabel}</Label>
-            </Col>
-            <Col md="auto">
-              <FastSelect
-                className="form-select"
-                formikProps={formikProps}
-                type="number"
-                style={{ marginTop: '5px', display: 'flex' }}
-                placeholder="Must Select One"
-                field={field}
-                options={filteredClassifications}
-                disabled={disabled}
-                required
-                displayErrorTooltips
-              />
-            </Col>
-            {toolTip && (
-              <div style={{ marginTop: '8px' }}>
-                <TooltipIcon toolTip={toolTip} toolTipId="classificationToolTip" />
-              </div>
-            )}
-          </Row>
+        <Col md={3} style={{ textAlign: 'left' }}>
+          <Label style={{ padding: 0 }}>{fieldLabel}</Label>
         </Col>
-        <Col md={6}>{renderInfo()}</Col>
+        <Col md={4}>
+          <FastSelect
+            className="form-select"
+            formikProps={formikProps}
+            type="number"
+            style={{ marginTop: '5px', display: 'flex' }}
+            placeholder="Must Select One"
+            field={field}
+            options={filteredClassifications}
+            disabled={disabled}
+            required
+            displayErrorTooltips
+          />
+        </Col>
+        {toolTip && (
+          <div style={{ marginTop: '8px' }}>
+            <TooltipIcon toolTip={toolTip} toolTipId="classificationToolTip" />
+          </div>
+        )}
+
+        <Col md={5}>{renderInfo()}</Col>
       </Row>
       {getIn(formikProps.values, field) === Classifications.SurplusEncumbered && (
         <Row>
-          <Encumberance>
-            <TextArea field={encumbranceField} label="Reason for Encumbrance"></TextArea>
-          </Encumberance>
+          <Col md={3} style={{ textAlign: 'left' }}>
+            <Label style={{ padding: 0 }}>Reason for Encumbrance</Label>
+          </Col>
+          <Col md={4}>
+            {' '}
+            <TextArea
+              field={encumbranceField}
+              style={{
+                minHeight: '86px',
+              }}
+            ></TextArea>
+          </Col>
+          {surplusActiveOrEncumbered && (
+            <Col md={5}>
+              <InfoBox>{SurplusEncumberedOrActive}</InfoBox>
+            </Col>
+          )}
         </Row>
-      )}
-      {surplusActiveOrEncumbered && (
-        <FieldDescription>{SurplusEncumberedOrActive}</FieldDescription>
       )}
     </>
   );
