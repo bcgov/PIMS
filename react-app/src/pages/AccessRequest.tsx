@@ -10,6 +10,7 @@ import usePimsApi from '@/hooks/usePimsApi';
 import { AccessRequest as AccessRequestType } from '@/hooks/api/useUsersApi';
 import { AuthContext } from '@/contexts/authContext';
 import useDataLoader from '@/hooks/useDataLoader';
+import { Navigate } from 'react-router-dom';
 
 const AccessPending = () => {
   return (
@@ -134,6 +135,10 @@ export const AccessRequest = () => {
     }
   };
 
+  if (auth.pimsUser.data.Status && auth.pimsUser.data.Status === 'Active') {
+    return <Navigate replace to={'/'} />;
+  }
+
   return (
     <Box
       display="flex"
@@ -147,7 +152,11 @@ export const AccessRequest = () => {
         <Typography mb={'2rem'} variant="h2">
           {auth.pimsUser.data ? 'Access Pending' : 'Access Request'}
         </Typography>
-        {auth.pimsUser.data ? <AccessPending /> : <RequestForm submitHandler={onSubmit} />}
+        {auth.pimsUser.data.Status && auth.pimsUser.data.Status === 'OnHold' ? (
+          <AccessPending />
+        ) : (
+          <RequestForm submitHandler={onSubmit} />
+        )}
       </Paper>
 
       <Typography mt={'1rem'} textAlign={'center'}>
