@@ -16,7 +16,7 @@ export class User extends BaseEntity {
   @PrimaryColumn({ type: 'uuid' })
   Id: UUID;
 
-  @Column({ type: 'character varying', length: 25 })
+  @Column({ type: 'character varying', length: 100 })
   @Index({ unique: true })
   Username: string;
 

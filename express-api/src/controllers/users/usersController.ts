@@ -171,7 +171,7 @@ export const getUserAgencies = async (req: Request, res: Response) => {
 export const getSelf = async (req: Request, res: Response) => {
   try {
     const user = userServices.normalizeKeycloakUser(req.user as KeycloakUser);
-    const result = await userServices.getUser(user.guid);
+    const result = await userServices.getUser(user.username);
     if (result) {
       return res.status(200).send(result);
     } else {

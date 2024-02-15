@@ -1,10 +1,10 @@
 import { User, UserStatus } from '@/typeorm/Entities/User';
 import { AppDataSource } from '@/appDataSource';
 import { KeycloakBCeIDUser, KeycloakIdirUser, KeycloakUser } from '@bcgov/citz-imb-kc-express';
-import { z } from 'zod';
 import { In } from 'typeorm';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { randomUUID } from 'crypto';
+import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
 interface NormalizedKeycloakUser {
   given_name: string;
@@ -15,17 +15,14 @@ interface NormalizedKeycloakUser {
   display_name: string;
 }
 
-const getUser = async (nameOrGuid: string): Promise<User> => {
-  const userGuid = z.string().uuid().safeParse(nameOrGuid);
-  if (userGuid.success) {
-    return AppDataSource.getRepository(User).findOneBy({
-      KeycloakUserId: userGuid.data,
-    });
-  } else {
-    return AppDataSource.getRepository(User).findOneBy({
-      Username: nameOrGuid,
-    });
+const getUser = async (username: string): Promise<User> => {
+  const user = await AppDataSource.getRepository(User).findOneBy({
+    Username: username,
+  });
+  if (user !== null) {
+    return user;
   }
+  throw new ErrorWithCode(`User ${username} not found.`, 404);
 };
 
 const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => {
@@ -39,7 +36,7 @@ const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => 
       return {
         given_name: user.given_name,
         family_name: user.family_name,
-        username: kcUser.idir_username,
+        username: kcUser.preferred_username,
         email: kcUser.email,
         display_name: kcUser.display_name,
         guid: normalizeUuid(user.idir_user_guid),
@@ -49,7 +46,7 @@ const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => 
       return {
         given_name: '',
         family_name: '',
-        username: kcUser.bceid_username,
+        username: kcUser.preferred_username,
         email: kcUser.email,
         display_name: kcUser.display_name,
         guid: normalizeUuid(user.bceid_user_guid),
