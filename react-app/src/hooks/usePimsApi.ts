@@ -2,6 +2,7 @@ import { ConfigContext } from '@/contexts/configContext';
 import { useContext } from 'react';
 import useFetch from './useFetch';
 import useUsersApi from './api/useUsersApi';
+import useAgencyApi from './api/useAgencyApi';
 
 /**
  * usePimsApi - This stores all the sub-hooks we need to make calls to our API and helps manage authentication state for them.
@@ -12,9 +13,11 @@ const usePimsApi = () => {
   const fetch = useFetch(config?.API_HOST);
 
   const users = useUsersApi(fetch);
+  const agencies = useAgencyApi(fetch);
 
   return {
     users,
+    agencies,
   };
 };
 
