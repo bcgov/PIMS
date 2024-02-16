@@ -2,7 +2,7 @@
 #                 Base                #
 #############################################
 # Use an official Node.js runtime as a base image
-FROM node:18.17.1-bullseye-slim as base
+FROM node:21.6-bullseye-slim as base
 
 # Set the working directory in the container
 WORKDIR /express-api
@@ -25,7 +25,7 @@ RUN npm run build
 #############################################
 #                 Prod Build                #
 #############################################
-FROM node:18.17.1-bullseye-slim as Prod
+FROM node:21.6-bullseye-slim as Prod
 
 # Set the working directory to /express-api
 WORKDIR /express-api
