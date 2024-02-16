@@ -1,5 +1,4 @@
 import { IAddressModel } from '@/services/geocoder/interfaces/IAddressModel';
-//import { Request, Response } from 'express';
 import { IFeatureCollectionModel } from '@/services/geocoder/interfaces/IFeatureCollectionModel';
 import constants from '@/constants';
 import { IFeatureModel } from '@/services/geocoder/interfaces/IFeatureModel';
