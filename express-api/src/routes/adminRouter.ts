@@ -31,6 +31,7 @@ const {
   getUsers,
   getUsersSameAgency,
   updateUserById,
+  getAllRoles,
 } = controllers.admin;
 
 // Endpoints for Admin Access Requests
@@ -72,16 +73,18 @@ router.route(`/users`).get(getUsers).post(addUser);
 
 router.route(`/users/my/agency`).post(getUsersSameAgency); // TODO: Should this just be generic: get users from an agency?
 
-router
-  .route(`/users/:id`)
-  .get(getUserById)
-  .put(updateUserById) // TODO: should put be a patch?
-  .delete(deleteUserById);
+router.route(`/users/roles`).get(getAllRoles);
 
 router
   .route(`/users/roles/:username`)
   .get(getUserRolesByName)
   .post(addUserRoleByName)
   .delete(deleteUserRoleByName);
+
+router
+  .route(`/users/:id`)
+  .get(getUserById)
+  .put(updateUserById) // TODO: should put be a patch?
+  .delete(deleteUserById);
 
 export default router;

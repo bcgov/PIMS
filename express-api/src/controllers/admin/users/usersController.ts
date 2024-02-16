@@ -166,11 +166,7 @@ export const getAllRoles = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  const username = req.params.username;
-  if (!username) {
-    return res.status(400).send('Username was empty.');
-  }
-  const roles = await userServices.getKeycloakUserRoles(username);
+  const roles = await userServices.getKeycloakRoles();
   return res.status(200).send(roles);
 };
 
