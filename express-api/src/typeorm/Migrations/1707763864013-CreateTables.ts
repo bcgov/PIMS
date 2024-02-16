@@ -1677,10 +1677,6 @@ export class CreateTables1707763864013 implements MigrationInterface {
     await queryRunner.query(`DROP INDEX "public"."IDX_53e376cb167a686b211ad33db2"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_c8152b400e5f86a3818e337767"`);
     await queryRunner.query(`DROP TABLE "building_construction_type"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_9ec779b93060366cbad0029609"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_352664edaa51c51a3f62d1cd8a"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_8c57de51745f83ebe380ada011"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_50d23da5bb0e560f7bc3961e70"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_153314ab22e3d8bac6c328ec5c"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_e12875dfb3b1d92d7d7c5377e2"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_78a916df40e02a9deb1c4b75ed"`);
