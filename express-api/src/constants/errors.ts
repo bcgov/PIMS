@@ -9,6 +9,8 @@ export const Forbidden403 = new ErrorWithCode('Forbidden request.', 403);
 
 export const NotFound404 = new ErrorWithCode('Resource not found.', 404);
 
+export const EndpointNotFound404 = new ErrorWithCode('Requested endpoint not found', 404);
+
 export const NotAllowed405 = new ErrorWithCode('Method not allowed.', 405);
 
 // 5xx Error Codes
