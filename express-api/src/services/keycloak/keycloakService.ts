@@ -163,7 +163,7 @@ const updateKeycloakRole = async (roleName: string, newRoleName: string) => {
   return role;
 };
 
-const syncKeycloakUser = async (keycloakGuid: string) => {
+const syncKeycloakUser = async (username: string) => {
   // Does user exist in Keycloak?
   // Get their existing roles.
   // Does user exist in PIMS
@@ -171,7 +171,7 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
   // Update the roles in PIMS to match their Keycloak roles
   // If they don't exist in PIMS...
   // Add user and assign their roles
-  const users = await userServices.getUsers({ guid: keycloakGuid });
+  const users = await userServices.getUsers({ username: username });
   if (users?.length !== 1) {
     throw new ErrorWithCode('User was missing during keycloak role sync.', 500);
   }

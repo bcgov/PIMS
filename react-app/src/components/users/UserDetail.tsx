@@ -44,7 +44,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
   );
 
   const rolesOptions = useMemo(
-    () => rolesData?.map((role) => ({ label: role.Name, value: role.Id })) ?? [],
+    () => rolesData?.map((role) => ({ label: role.Name, value: role.Name })) ?? [],
     [rolesData],
   );
 
@@ -92,7 +92,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
   const statusFormMethods = useForm({
     defaultValues: {
       Status: '',
-      RoleId: null,
+      Role: '',
     },
     mode: 'onBlur',
   });
@@ -112,7 +112,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
     });
     statusFormMethods.reset({
       Status: userStatusData.Status,
-      RoleId: userStatusData.Role?.Id,
+      Role: userStatusData.Role?.Name,
     });
   }, [data]);
 
@@ -211,6 +211,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
         onConfirm={async () => {
           const isValid = await statusFormMethods.trigger();
           if (isValid) {
+            await api.users.updateUserRole(data.Username, statusFormMethods.getValues().Role);
             api.users
               .updateUser(userId, {
                 Id: userId,
@@ -238,7 +239,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
               />
             </Grid>
             <Grid item xs={6}>
-              <AutocompleteFormField name={'RoleId'} label={'Role'} options={rolesOptions} />
+              <AutocompleteFormField name={'Role'} label={'Role'} options={rolesOptions} />
             </Grid>
           </Grid>
         </FormProvider>

@@ -1,6 +1,6 @@
 import { IFetch } from '../useFetch';
 import { Agency } from './useAgencyApi';
-import { Role } from './useRolesApi';
+import { KeycloakRole, Role } from './useRolesApi';
 
 export interface User {
   //temp interface, should standardize somehow
@@ -52,6 +52,10 @@ const useUsersApi = (absoluteFetch: IFetch) => {
     const { parsedBody } = await absoluteFetch.put(`/admin/users/${userId}`, user);
     return parsedBody;
   };
+  const updateUserRole = async (username: string, role: string) => {
+    const { parsedBody } = await absoluteFetch.put(`/admin/users/roles/${username}`, [role]);
+    return parsedBody as KeycloakRole[];
+  };
   const deleteUser = async (userId: string) => {
     const { parsedBody } = await absoluteFetch.del(`/admin/users/${userId}`, { Id: userId });
     return parsedBody;
@@ -64,6 +68,7 @@ const useUsersApi = (absoluteFetch: IFetch) => {
     getUserById,
     updateUser,
     deleteUser,
+    updateUserRole,
   };
 };
 

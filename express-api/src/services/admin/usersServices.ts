@@ -84,6 +84,7 @@ const getKeycloakUserRoles = async (username: string) => {
 
 const updateKeycloakUserRoles = async (username: string, roleNames: string[]) => {
   const keycloakRoles = await KeycloakService.updateKeycloakUserRoles(username, roleNames);
+  await KeycloakService.syncKeycloakUser(username);
   return keycloakRoles.map((a) => a.name);
 };
 

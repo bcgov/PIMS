@@ -1,4 +1,5 @@
 import controllers from '@/controllers';
+import { updateUserRolesByName } from '@/controllers/admin/users/usersController';
 import express from 'express';
 
 const router = express.Router();
@@ -23,9 +24,7 @@ const {
   deleteAccessRequest,
   getAccessRequests,
   addUser,
-  addUserRoleByName,
   deleteUserById,
-  deleteUserRoleByName,
   getUserById,
   getUserRolesByName,
   getUsers,
@@ -75,11 +74,7 @@ router.route(`/users/my/agency`).post(getUsersSameAgency); // TODO: Should this 
 
 router.route(`/users/roles`).get(getAllRoles);
 
-router
-  .route(`/users/roles/:username`)
-  .get(getUserRolesByName)
-  .post(addUserRoleByName)
-  .delete(deleteUserRoleByName);
+router.route(`/users/roles/:username`).get(getUserRolesByName).put(updateUserRolesByName);
 
 router
   .route(`/users/:id`)
