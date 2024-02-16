@@ -1,5 +1,5 @@
 import 'dotenv/config.js';
-import express, { Application, RequestHandler } from 'express';
+import express, { Application, NextFunction, Request, RequestHandler, Response } from 'express';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import cors from 'cors';
@@ -12,6 +12,7 @@ import { KEYCLOAK_OPTIONS } from '@/middleware/keycloak/keycloakOptions';
 import swaggerUi from 'swagger-ui-express';
 import { Roles } from '@/constants/roles';
 import swaggerJSON from '@/swagger/swagger-output.json';
+import errorHandler from '@/middleware/errorHandler';
 
 const app: Application = express();
 
@@ -64,6 +65,11 @@ app.use(`/api/v2`, headerHandler as RequestHandler);
 // Unprotected Routes
 app.use(`/api/v2/health`, router.healthRouter);
 
+// TODO: Remove after testing
+app.use('/error', async (req: Request, res: Response, next: NextFunction) => {
+  next('test');
+});
+
 // Protected Routes
 app.use(`/api/v2/ltsa`, protectedRoute(), router.ltsaRouter);
 app.use(`/api/v2/admin`, protectedRoute([Roles.ADMIN]), router.adminRouter);
@@ -78,4 +84,5 @@ app.use(`/api/v2/projects`, protectedRoute(), router.projectsRouter);
 app.use(`/api/v2/reports`, protectedRoute(), router.reportsRouter);
 app.use(`/api/v2/tools`, protectedRoute(), router.toolsRouter);
 
+app.use(errorHandler);
 export default app;
