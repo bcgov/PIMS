@@ -93,6 +93,7 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
           </Grid>
           <Grid item xs={12}>
             <AutocompleteFormField
+              required
               name={'AgencyId'}
               label={'Your agency'}
               options={agencyOptions ?? []}
@@ -108,10 +109,16 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
       </FormProvider>
       <Box mt={'2rem'} display="flex">
         <Button
-          onClick={formMethods.handleSubmit(submitHandler)}
+          onClick={async () => {
+            const isValid = await formMethods.trigger();
+            console.log(`Was valid? ${isValid}`);
+            if (isValid) {
+              submitHandler(formMethods.getValues());
+            }
+          }}
           variant="contained"
           color="primary"
-          sx={{ width: '6rem', marginX: 'auto' }}
+          sx={{ padding: '8px', width: '6rem', marginX: 'auto' }}
         >
           Submit
         </Button>
@@ -135,7 +142,7 @@ export const AccessRequest = () => {
     }
   };
 
-  if (auth.pimsUser.data.Status && auth.pimsUser.data.Status === 'Active') {
+  if (auth.pimsUser?.data?.Status && auth.pimsUser.data.Status === 'Active') {
     return <Navigate replace to={'/'} />;
   }
 
@@ -148,18 +155,30 @@ export const AccessRequest = () => {
       alignSelf={'center'}
       mt={'4rem'}
     >
-      <Paper sx={{ padding: '2rem', borderRadius: '32px' }}>
+      <Paper
+        sx={{
+          padding: '2.5rem',
+          borderRadius: '16px',
+          boxShadow: '0px 8px 20px 0px rgba(0, 0, 0, 0.04)',
+        }}
+      >
         <Typography mb={'2rem'} variant="h2">
           {auth.pimsUser.data ? 'Access Pending' : 'Access Request'}
         </Typography>
-        {auth.pimsUser.data.Status && auth.pimsUser.data.Status === 'OnHold' ? (
+        {auth.pimsUser?.data?.Status && auth.pimsUser.data.Status === 'OnHold' ? (
           <AccessPending />
         ) : (
           <RequestForm submitHandler={onSubmit} />
         )}
       </Paper>
 
-      <Typography mt={'1rem'} textAlign={'center'}>
+      <Typography
+        lineHeight={1.8}
+        marginX={'6em'}
+        fontSize={'0.8rem'}
+        mt={'1rem'}
+        textAlign={'center'}
+      >
         {signupTermsAndConditionsClaim}
       </Typography>
     </Box>
