@@ -4,12 +4,19 @@ import { Agency } from '@/typeorm/Entities/Agency';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Role } from '@/typeorm/Entities/Role';
 
+export enum UserStatus {
+  Active = 'Active',
+  OnHold = 'OnHold',
+  Denied = 'Denied',
+  Disabled = 'Disabled',
+}
+
 @Entity()
 export class User extends BaseEntity {
   @PrimaryColumn({ type: 'uuid' })
   Id: UUID;
 
-  @Column({ type: 'character varying', length: 25 })
+  @Column({ type: 'character varying', length: 100 })
   @Index({ unique: true })
   Username: string;
 
@@ -76,4 +83,7 @@ export class User extends BaseEntity {
   @ManyToOne(() => Role, (role) => role.Users, { nullable: true })
   @JoinColumn({ name: 'role_id' })
   Role: Relation<Role>;
+
+  @Column({ type: 'enum', enum: UserStatus })
+  Status: UserStatus;
 }

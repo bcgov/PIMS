@@ -1,0 +1,85 @@
+import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
+import { Agency } from '@/typeorm/Entities/Agency';
+import { Building } from '@/typeorm/Entities/Building';
+import { BuildingConstructionType } from '@/typeorm/Entities/BuildingConstructionType';
+import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
+import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
+import { BuildingOccupantType } from '@/typeorm/Entities/BuildingOccupantType';
+import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUse';
+import { EvaluationKey } from '@/typeorm/Entities/EvaluationKey';
+import { FiscalKey } from '@/typeorm/Entities/FiscalKey';
+import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
+import { NotificationTemplate } from '@/typeorm/Entities/NotificationTemplate';
+import { Parcel } from '@/typeorm/Entities/Parcel';
+import { ParcelBuilding } from '@/typeorm/Entities/ParcelBuilding';
+import { ParcelEvaluation } from '@/typeorm/Entities/ParcelEvaluation';
+import { ParcelFiscal } from '@/typeorm/Entities/ParcelFiscal';
+import { Project } from '@/typeorm/Entities/Project';
+import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
+import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
+import { ProjectNumber } from '@/typeorm/Entities/ProjectNumber';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
+import { ProjectRisk } from '@/typeorm/Entities/ProjectRisk';
+import { ProjectReport } from '@/typeorm/Entities/ProjectReport';
+import { ProjectSnapshot } from '@/typeorm/Entities/ProjectSnapshot';
+import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
+import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
+import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
+import { ProjectStatusTransition } from '@/typeorm/Entities/ProjectStatusTransition';
+import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
+import { ProjectType } from '@/typeorm/Entities/ProjectType';
+import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
+import { PropertyType } from '@/typeorm/Entities/PropertyType';
+import { Province } from '@/typeorm/Entities/Province';
+import { RegionalDistrict } from '@/typeorm/Entities/RegionalDistrict';
+import { ReportType } from '@/typeorm/Entities/ReportType';
+import { Role } from '@/typeorm/Entities/Role';
+import { Task } from '@/typeorm/Entities/Task';
+import { TierLevel } from '@/typeorm/Entities/TierLevel';
+import { User } from '@/typeorm/Entities/User';
+import { Workflow } from '@/typeorm/Entities/Workflow';
+import { WorkflowProjectStatus } from '@/typeorm/Entities/WorkflowProjectStatus';
+
+export default [
+  AdministrativeArea,
+  Agency,
+  Building,
+  BuildingConstructionType,
+  BuildingEvaluation,
+  BuildingFiscal,
+  BuildingOccupantType,
+  BuildingPredominateUse,
+  EvaluationKey,
+  FiscalKey,
+  NotificationQueue,
+  NotificationTemplate,
+  Parcel,
+  ParcelBuilding,
+  ParcelEvaluation,
+  ParcelFiscal,
+  Project,
+  ProjectAgencyResponse,
+  ProjectNote,
+  ProjectNumber,
+  ProjectProperty,
+  ProjectRisk,
+  ProjectReport,
+  ProjectSnapshot,
+  ProjectStatus,
+  ProjectStatusHistory,
+  ProjectStatusNotification,
+  ProjectStatusTransition,
+  ProjectTask,
+  ProjectType,
+  PropertyClassification,
+  PropertyType,
+  Province,
+  RegionalDistrict,
+  ReportType,
+  Role,
+  Task,
+  TierLevel,
+  User,
+  Workflow,
+  WorkflowProjectStatus,
+];
