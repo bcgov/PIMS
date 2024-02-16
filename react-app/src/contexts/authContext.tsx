@@ -1,7 +1,9 @@
+import usePimsUser, { IPimsUser } from '@/hooks/usePimsUser';
 import { AuthService, useKeycloak } from '@bcgov/citz-imb-kc-react';
 import React, { createContext } from 'react';
 export interface IAuthState {
   keycloak: AuthService;
+  pimsUser: IPimsUser;
 }
 export const AuthContext = createContext<IAuthState | undefined>(undefined);
 
@@ -13,15 +15,13 @@ export const AuthContext = createContext<IAuthState | undefined>(undefined);
  */
 export const AuthContextProvider: React.FC<React.PropsWithChildren> = (props) => {
   const keycloak = useKeycloak();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const pimsUser = undefined;
-  // We could later add in a hook to give us user information from this context as well, thus allowing us to obtain
-  // both the keycloak authentication state and our internal user state in the same spot.
+  const pimsUser = usePimsUser();
 
   return (
     <AuthContext.Provider
       value={{
         keycloak,
+        pimsUser,
       }}
     >
       {props.children}

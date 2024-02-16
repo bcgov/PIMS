@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useMemo } from 'react';
 import pendingImage from '@/assets/images/pending.svg';
 import { Box, Button, Grid, Paper, Typography } from '@mui/material';
 import TextInput from '@/components/form/TextFormField';
@@ -6,6 +6,11 @@ import AutocompleteFormField from '@/components/form/AutocompleteFormField';
 import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { accessPendingBlurb, signupTermsAndConditionsClaim } from '@/constants/jsxSnippets';
+import usePimsApi from '@/hooks/usePimsApi';
+import { AccessRequest as AccessRequestType } from '@/hooks/api/useUsersApi';
+import { AuthContext } from '@/contexts/authContext';
+import useDataLoader from '@/hooks/useDataLoader';
+import { Navigate } from 'react-router-dom';
 
 const AccessPending = () => {
   return (
@@ -24,6 +29,15 @@ const AccessPending = () => {
 
 const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => {
   const keycloak = useKeycloak();
+  const api = usePimsApi();
+
+  const { loadOnce: agencyLoad, data: agencyData } = useDataLoader(api.agencies.getAgencies);
+  agencyLoad();
+
+  const agencyOptions = useMemo(
+    () => agencyData?.map((agency) => ({ label: agency.Name, value: agency.Id })) ?? [],
+    [agencyData],
+  );
 
   const formMethods = useForm({
     defaultValues: {
@@ -36,12 +50,6 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
       Position: '',
     },
   });
-
-  const placeholderData = [
-    { label: 'BC Ministry of Education', value: 'key1' },
-    { label: 'BC Ministry of Health', value: 'key2' },
-    { label: 'BC Electric & Hydro', value: 'key3' },
-  ];
 
   return (
     <>
@@ -85,21 +93,16 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
           </Grid>
           <Grid item xs={12}>
             <AutocompleteFormField
-              name={'Agency'}
+              name={'AgencyId'}
               label={'Your agency'}
-              options={placeholderData}
+              options={agencyOptions ?? []}
             />
           </Grid>
           <Grid item xs={12}>
             <TextInput name={'Position'} fullWidth label={'Your position'} />
           </Grid>
           <Grid item xs={12}>
-            <TextInput
-              name={'Notes'}
-              multiline
-              fullWidth
-              label={'Notes (e.g. Reason for access)'}
-            />
+            <TextInput name={'Note'} multiline fullWidth label={'Notes (e.g. Reason for access)'} />
           </Grid>
         </Grid>
       </FormProvider>
@@ -118,22 +121,42 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
 };
 
 export const AccessRequest = () => {
-  //Note: Placeholder state only, remove once API handling is implemented here.
-  const [requestSent, setRequestSent] = useState(false);
+  const api = usePimsApi();
+  const auth = useContext(AuthContext);
 
-  const onSubmit = (data) => {
-    // eslint-disable-next-line no-console
-    console.log(JSON.stringify(data));
-    setRequestSent(true);
+  const onSubmit = async (data: AccessRequestType) => {
+    try {
+      await api.users.submitAccessRequest(data);
+      await auth.pimsUser.refreshData();
+    } catch (e) {
+      //Maybe we can display a little snackbar in these cases at some point.
+      // eslint-disable-next-line no-console
+      console.log(e?.message);
+    }
   };
 
+  if (auth.pimsUser.data.Status && auth.pimsUser.data.Status === 'Active') {
+    return <Navigate replace to={'/'} />;
+  }
+
   return (
-    <Box display="flex" flexDirection={'column'} width="600px" marginX="auto">
+    <Box
+      display="flex"
+      flexDirection={'column'}
+      width="600px"
+      marginX="auto"
+      alignSelf={'center'}
+      mt={'4rem'}
+    >
       <Paper sx={{ padding: '2rem', borderRadius: '32px' }}>
         <Typography mb={'2rem'} variant="h2">
-          {requestSent ? 'Access Request' : 'Access Pending'}
+          {auth.pimsUser.data ? 'Access Pending' : 'Access Request'}
         </Typography>
-        {requestSent ? <AccessPending /> : <RequestForm submitHandler={onSubmit} />}
+        {auth.pimsUser.data.Status && auth.pimsUser.data.Status === 'OnHold' ? (
+          <AccessPending />
+        ) : (
+          <RequestForm submitHandler={onSubmit} />
+        )}
       </Paper>
 
       <Typography mt={'1rem'} textAlign={'center'}>
