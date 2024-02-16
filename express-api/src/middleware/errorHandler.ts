@@ -24,7 +24,7 @@ const errorHandler = (
     logger.warn(message);
   }
   // Return status and message
-  res.status(code).send(`it's broken: ${message}`);
+  res.status(code).send(`Error: ${message}`);
   next();
 };
 
