@@ -88,7 +88,7 @@ export class Project extends BaseEntity {
   TierLevelId: number;
 
   @ManyToOne(() => TierLevel, (TierLevel) => TierLevel.Id)
-  @JoinColumn({ name: 'trier_level_id' })
+  @JoinColumn({ name: 'tier_level_id' })
   @Index()
   TierLevel: TierLevel;
 
