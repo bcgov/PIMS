@@ -101,21 +101,6 @@ export class CreateTables1707763864013 implements MigrationInterface {
       `CREATE UNIQUE INDEX "IDX_153314ab22e3d8bac6c328ec5c" ON "user" ("keycloak_user_id") `,
     );
     await queryRunner.query(
-      `CREATE TABLE "access_request" ("created_by_id" uuid NOT NULL, "created_on" TIMESTAMP NOT NULL DEFAULT now(), "updated_by_id" uuid, "updated_on" TIMESTAMP, "id" SERIAL NOT NULL, "UserId" uuid NOT NULL, "note" character varying(1000), "status" integer NOT NULL, "RoleId" uuid NOT NULL, "AgencyId" integer NOT NULL, CONSTRAINT "PK_a543250cab0b6d2eb3a85593d93" PRIMARY KEY ("id"))`,
-    );
-    await queryRunner.query(
-      `CREATE INDEX "IDX_50d23da5bb0e560f7bc3961e70" ON "access_request" ("created_by_id") `,
-    );
-    await queryRunner.query(
-      `CREATE INDEX "IDX_8c57de51745f83ebe380ada011" ON "access_request" ("updated_by_id") `,
-    );
-    await queryRunner.query(
-      `CREATE INDEX "IDX_352664edaa51c51a3f62d1cd8a" ON "access_request" ("UserId") `,
-    );
-    await queryRunner.query(
-      `CREATE INDEX "IDX_9ec779b93060366cbad0029609" ON "access_request" ("status") `,
-    );
-    await queryRunner.query(
       `CREATE TABLE "building_construction_type" ("created_by_id" uuid NOT NULL, "created_on" TIMESTAMP NOT NULL DEFAULT now(), "updated_by_id" uuid, "updated_on" TIMESTAMP, "id" SERIAL NOT NULL, "name" character varying(150) NOT NULL, "is_disabled" boolean NOT NULL, "sort_order" integer NOT NULL, CONSTRAINT "PK_08cbc1b9bb5ea287fa8030740c7" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
@@ -720,21 +705,6 @@ export class CreateTables1707763864013 implements MigrationInterface {
     );
     await queryRunner.query(
       `ALTER TABLE "user" ADD CONSTRAINT "FK_fb2e442d14add3cefbdf33c4561" FOREIGN KEY ("role_id") REFERENCES "role"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "access_request" ADD CONSTRAINT "FK_50d23da5bb0e560f7bc3961e70a" FOREIGN KEY ("created_by_id") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "access_request" ADD CONSTRAINT "FK_8c57de51745f83ebe380ada011f" FOREIGN KEY ("updated_by_id") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "access_request" ADD CONSTRAINT "FK_352664edaa51c51a3f62d1cd8a6" FOREIGN KEY ("UserId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "access_request" ADD CONSTRAINT "FK_952464b169add4b0f13a4401ef9" FOREIGN KEY ("RoleId") REFERENCES "role"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "access_request" ADD CONSTRAINT "FK_f8eab68887703533b9ec5656b64" FOREIGN KEY ("AgencyId") REFERENCES "agency"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
       `ALTER TABLE "building_construction_type" ADD CONSTRAINT "FK_c8152b400e5f86a3818e337767a" FOREIGN KEY ("created_by_id") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
@@ -1483,21 +1453,6 @@ export class CreateTables1707763864013 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "building_construction_type" DROP CONSTRAINT "FK_c8152b400e5f86a3818e337767a"`,
     );
-    await queryRunner.query(
-      `ALTER TABLE "access_request" DROP CONSTRAINT "FK_f8eab68887703533b9ec5656b64"`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "access_request" DROP CONSTRAINT "FK_952464b169add4b0f13a4401ef9"`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "access_request" DROP CONSTRAINT "FK_352664edaa51c51a3f62d1cd8a6"`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "access_request" DROP CONSTRAINT "FK_8c57de51745f83ebe380ada011f"`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "access_request" DROP CONSTRAINT "FK_50d23da5bb0e560f7bc3961e70a"`,
-    );
     await queryRunner.query(`ALTER TABLE "user" DROP CONSTRAINT "FK_fb2e442d14add3cefbdf33c4561"`);
     await queryRunner.query(`ALTER TABLE "user" DROP CONSTRAINT "FK_da38a07feb5a323fd8e5e3a232e"`);
     await queryRunner.query(`ALTER TABLE "user" DROP CONSTRAINT "FK_041db0fa9bb4e3daeead3fce0d0"`);
@@ -1726,7 +1681,6 @@ export class CreateTables1707763864013 implements MigrationInterface {
     await queryRunner.query(`DROP INDEX "public"."IDX_352664edaa51c51a3f62d1cd8a"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_8c57de51745f83ebe380ada011"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_50d23da5bb0e560f7bc3961e70"`);
-    await queryRunner.query(`DROP TABLE "access_request"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_153314ab22e3d8bac6c328ec5c"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_e12875dfb3b1d92d7d7c5377e2"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_78a916df40e02a9deb1c4b75ed"`);
