@@ -3249,12 +3249,12 @@
 				}
 			],
 			"configuration": {
-				"maxJobCount": 1.0,
+				"maxJobCount": 1,
 				"showFinalMessage": true,
 				"DatabaseTransferProducer": {
 					"extractType": "SEGMENTS",
-					"segmentSize": 100.0,
-					"fetchSize": 10000.0,
+					"segmentSize": 100,
+					"fetchSize": 10000,
 					"openNewConnections": false,
 					"queryRowCount": false,
 					"selectedColumnsOnly": false,
@@ -3264,9 +3264,9 @@
 					"entityId": "postgres-jdbc-18ceb57db81-643fa3bb56d54f2f/postgres/public",
 					"openNewConnections": true,
 					"useTransactions": true,
-					"commitAfterRows": 1000.0,
+					"commitAfterRows": 1000,
 					"useMultiRowInsert": false,
-					"multiRowInsertBatch": 500.0,
+					"multiRowInsertBatch": 500,
 					"skipBindValues": false,
 					"disableUsingBatches": true,
 					"ignoreDuplicateRows": false,
@@ -3854,7 +3854,7 @@
 						"dataSource": "mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539",
 						"defaultCatalog": "pims",
 						"defaultSchema": "dbo",
-						"query": "\r\nSELECT \r\n    u.[Id],\r\n    \r\n\t  CASE \r\n\t\tWHEN u.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE u.[CreatedById]\r\n\t  END AS [CreatedById],\r\n    u.[UpdatedById],\r\n    u.[UpdatedOn],\r\n    u.[Username],\r\n    u.[DisplayName],\r\n    u.[FirstName],\r\n    u.[MiddleName],\r\n    u.[LastName],\r\n    u.[Email],\r\n    u.[Position],\r\n    u.[IsDisabled],\r\n    u.[EmailVerified],\r\n    u.[Note],\r\n    u.[IsSystem],\r\n    u.[LastLogin],\r\n    u.[ApprovedById],\r\n    u.[ApprovedOn],\r\n    u.[KeycloakUserId],\r\n    urd.CreatedOn,\r\n    urd.UserId,\r\n    ua.AgencyId, \r\n    STRING_AGG(urd.RoleName, \u0027, \u0027) AS Roles,\r\n    CASE \r\n        WHEN STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%System Administrator%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%SRES%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%SRES Financial Reporter%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%SRES Financial%\u0027 THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n             \r\n        WHEN STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Agency Administrator%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Real Estate Analyst%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Real Estate Manager%\u0027 THEN \u002700000000-0000-0000-0000-000000000001\u0027\r\n             \r\n        WHEN STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Assistant Deputy Minister Assistant%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Assistant Deputy Minister%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Executive Director%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%View Only Properties%\u0027 THEN \u002700000000-0000-0000-0000-000000000002\u0027\r\n\t   \r\n    END AS UserType\r\nFROM Users u\r\nLEFT JOIN (\r\n    SELECT \r\n        ur.UserId,\r\n        MAX(ur.CreatedOn) AS CreatedOn,\r\n        STRING_AGG(r.Name, \u0027, \u0027) AS RoleName\r\n    FROM [pims].[dbo].[UserRoles] ur\r\n    INNER JOIN Roles r ON ur.RoleId \u003d r.Id\r\n    GROUP BY ur.UserId\r\n) AS urd ON u.Id \u003d urd.UserId\r\n\r\nLEFT OUTER JOIN (\r\n    SELECT UserId, MIN(AgencyId) AS AgencyId\r\n    FROM UserAgencies\r\n    GROUP BY UserId\r\n) ua_min ON u.Id \u003d ua_min.UserId\r\nLEFT OUTER JOIN UserAgencies ua ON u.Id \u003d ua.UserId AND ua.AgencyId \u003d ua_min.AgencyId\r\n\r\nWHERE u.Id \u003c\u003e \u002700000000-0000-0000-0000-000000000000\u0027\r\n\r\nGROUP BY u.[Id],\r\n    u.[CreatedById],\r\n    u.[UpdatedById],\r\n    u.[UpdatedOn],\r\n    u.[Username],\r\n    u.[DisplayName],\r\n    u.[FirstName],\r\n    u.[MiddleName],\r\n    u.[LastName],\r\n    u.[Email],\r\n    u.[Position],\r\n    u.[IsDisabled],\r\n    u.[EmailVerified],\r\n    u.[Note],\r\n    u.[IsSystem],\r\n    u.[LastLogin],\r\n    u.[ApprovedById],\r\n    u.[ApprovedOn],\r\n    u.[KeycloakUserId],\r\n    urd.CreatedOn, \r\n    urd.UserId, \r\n    ua.AgencyId\r\nORDER BY urd.CreatedOn ASC"
+						"query": "\r\nSELECT \r\n    u.[Id],\r\n    \r\n\t  CASE \r\n\t\tWHEN u.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE u.[CreatedById]\r\n\t  END AS [CreatedById],\r\n    \r\n\t  CASE \r\n\t\tWHEN u.IsDisabled \u003d 0 THEN \u0027Active\u0027\r\n\t\tELSE \u0027Disabled\u0027\r\n\t  END AS [Status],\r\n    u.[UpdatedById],\r\n    u.[UpdatedOn],\r\n    u.[Username],\r\n    u.[DisplayName],\r\n    u.[FirstName],\r\n    u.[MiddleName],\r\n    u.[LastName],\r\n    u.[Email],\r\n    u.[Position],\r\n    u.[IsDisabled],\r\n    u.[EmailVerified],\r\n    u.[Note],\r\n    u.[IsSystem],\r\n    u.[LastLogin],\r\n    u.[ApprovedById],\r\n    u.[ApprovedOn],\r\n    u.[KeycloakUserId],\r\n    urd.CreatedOn,\r\n    urd.UserId,\r\n    ua.AgencyId, \r\n    STRING_AGG(urd.RoleName, \u0027, \u0027) AS Roles,\r\n    CASE \r\n        WHEN STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%System Administrator%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%SRES%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%SRES Financial Reporter%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%SRES Financial%\u0027 THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n             \r\n        WHEN STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Agency Administrator%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Real Estate Analyst%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Real Estate Manager%\u0027 THEN \u002700000000-0000-0000-0000-000000000001\u0027\r\n             \r\n        WHEN STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Assistant Deputy Minister Assistant%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Assistant Deputy Minister%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Executive Director%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%View Only Properties%\u0027 THEN \u002700000000-0000-0000-0000-000000000002\u0027\r\n\t   \r\n    END AS UserType\r\nFROM Users u\r\nLEFT JOIN (\r\n    SELECT \r\n        ur.UserId,\r\n        MAX(ur.CreatedOn) AS CreatedOn,\r\n        STRING_AGG(r.Name, \u0027, \u0027) AS RoleName\r\n    FROM [pims].[dbo].[UserRoles] ur\r\n    INNER JOIN Roles r ON ur.RoleId \u003d r.Id\r\n    GROUP BY ur.UserId\r\n) AS urd ON u.Id \u003d urd.UserId\r\n\r\nLEFT OUTER JOIN (\r\n    SELECT UserId, MIN(AgencyId) AS AgencyId\r\n    FROM UserAgencies\r\n    GROUP BY UserId\r\n) ua_min ON u.Id \u003d ua_min.UserId\r\nLEFT OUTER JOIN UserAgencies ua ON u.Id \u003d ua.UserId AND ua.AgencyId \u003d ua_min.AgencyId\r\n\r\nWHERE u.Id \u003c\u003e \u002700000000-0000-0000-0000-000000000000\u0027\r\n\r\nGROUP BY u.[Id],\r\n    u.[CreatedById],\r\n    u.[UpdatedById],\r\n    u.[UpdatedOn],\r\n    u.[Username],\r\n    u.[DisplayName],\r\n    u.[FirstName],\r\n    u.[MiddleName],\r\n    u.[LastName],\r\n    u.[Email],\r\n    u.[Position],\r\n    u.[IsDisabled],\r\n    u.[EmailVerified],\r\n    u.[Note],\r\n    u.[IsSystem],\r\n    u.[LastLogin],\r\n    u.[ApprovedById],\r\n    u.[ApprovedOn],\r\n    u.[KeycloakUserId],\r\n    urd.CreatedOn, \r\n    urd.UserId, \r\n    ua.AgencyId\r\nORDER BY urd.CreatedOn ASC"
 					}
 				},
 				{
@@ -3916,9 +3916,68 @@
 						"defaultCatalog": "pims",
 						"query": "SELECT [ParcelId]\r\n      ,[FiscalYear]\r\n      ,[Key]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Value]\r\n      ,[Note]\r\n      ,[EffectiveDate]\r\n  FROM [dbo].[ParcelFiscals]"
 					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539",
+						"defaultCatalog": "pims",
+						"query": "\r\n  SELECT BuildingId,\r\n  FiscalYear,\r\n  [Key],\r\n  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById],\r\n  CreatedOn,\r\n  UpdatedById,\r\n  UpdatedOn,\r\n  [Value],\r\n  Note,\r\n  EffectiveDate\r\n  FROM BuildingFiscals \r\n  \r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "entity",
+						"project": "General",
+						"entityId": "mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/Projects"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539",
+						"defaultCatalog": "pims",
+						"query": "\r\nSELECT [ProjectId]\r\n      ,[TaskId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsCompleted]\r\n      ,[CompletedOn]\r\n  FROM [dbo].[ProjectTasks]"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "entity",
+						"project": "General",
+						"entityId": "mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/ProjectStatusHistory"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "entity",
+						"project": "General",
+						"entityId": "mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/ProjectSnapshots"
+					}
 				}
 			],
 			"consumers": [
+				{
+					"type": "databaseTransferConsumer"
+				},
+				{
+					"type": "databaseTransferConsumer"
+				},
+				{
+					"type": "databaseTransferConsumer"
+				},
+				{
+					"type": "databaseTransferConsumer"
+				},
+				{
+					"type": "databaseTransferConsumer"
+				},
 				{
 					"type": "databaseTransferConsumer"
 				},
@@ -3972,82 +4031,7 @@
 					"truncateBeforeLoad": false,
 					"openTableOnFinish": true,
 					"mappings": {
-						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/Agencies": {
-							"targetName": "agency",
-							"mappingType": "existing",
-							"attributes": {
-								"id": {
-									"targetName": "\"Id\"",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "\"CreatedById\"",
-									"mappingType": "existing",
-									"transformer": "constant",
-									"transformerProperties": {
-										"constant": "00000000-0000-0000-0000-000000000000"
-									},
-									"transformerPropertiesNames": "constant"
-								},
-								"createdon": {
-									"targetName": "\"CreatedOn\"",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "\"UpdatedById\"",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "\"UpdatedOn\"",
-									"mappingType": "existing"
-								},
-								"rowversion": {
-									"targetName": "\"RowVersion\"",
-									"mappingType": "skip"
-								},
-								"Name": {
-									"targetName": "\"Name\"",
-									"mappingType": "existing"
-								},
-								"isdisabled": {
-									"targetName": "\"IsDisabled\"",
-									"mappingType": "existing"
-								},
-								"sortorder": {
-									"targetName": "\"SortOrder\"",
-									"mappingType": "existing"
-								},
-								"code": {
-									"targetName": "\"Code\"",
-									"mappingType": "existing"
-								},
-								"description": {
-									"targetName": "\"Description\"",
-									"mappingType": "existing"
-								},
-								"parentid": {
-									"targetName": "\"ParentId\"",
-									"mappingType": "existing"
-								},
-								"email": {
-									"targetName": "\"Email\"",
-									"mappingType": "existing"
-								},
-								"sendemail": {
-									"targetName": "\"SendEmail\"",
-									"mappingType": "existing"
-								},
-								"addressto": {
-									"targetName": "\"AddressTo\"",
-									"mappingType": "existing"
-								},
-								"ccemail": {
-									"targetName": "\"CCEmail\"",
-									"mappingType": "existing"
-								}
-							}
-						},
-						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/\r\nSELECT \r\n    u.[Id],\r\n    \r\n\t  CASE \r\n\t\tWHEN u.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE u.[CreatedById]\r\n\t  END AS [CreatedById],\r\n    u.[UpdatedById],\r\n    u.[UpdatedOn],\r\n    u.[Username],\r\n    u.[DisplayName],\r\n    u.[FirstName],\r\n    u.[MiddleName],\r\n    u.[LastName],\r\n    u.[Email],\r\n    u.[Position],\r\n    u.[IsDisabled],\r\n    u.[EmailVerified],\r\n    u.[Note],\r\n    u.[IsSystem],\r\n    u.[LastLogin],\r\n    u.[ApprovedById],\r\n    u.[ApprovedOn],\r\n    u.[KeycloakUserId],\r\n    urd.CreatedOn,\r\n    urd.UserId,\r\n    ua.AgencyId, \r\n    STRING_AGG(urd.RoleName, \u0027, \u0027) AS Roles,\r\n    CASE \r\n        WHEN STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%System Administrator%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%SRES%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%SRES Financial Reporter%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%SRES Financial%\u0027 THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n             \r\n        WHEN STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Agency Administrator%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Real Estate Analyst%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Real Estate Manager%\u0027 THEN \u002700000000-0000-0000-0000-000000000001\u0027\r\n             \r\n        WHEN STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Assistant Deputy Minister Assistant%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Assistant Deputy Minister%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Executive Director%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%View Only Properties%\u0027 THEN \u002700000000-0000-0000-0000-000000000002\u0027\r\n\t   \r\n    END AS UserType\r\nFROM Users u\r\nLEFT JOIN (\r\n    SELECT \r\n        ur.UserId,\r\n        MAX(ur.CreatedOn) AS CreatedOn,\r\n        STRING_AGG(r.Name, \u0027, \u0027) AS RoleName\r\n    FROM [pims].[dbo].[UserRoles] ur\r\n    INNER JOIN Roles r ON ur.RoleId \u003d r.Id\r\n    GROUP BY ur.UserId\r\n) AS urd ON u.Id \u003d urd.UserId\r\n\r\nLEFT OUTER JOIN (\r\n    SELECT UserId, MIN(AgencyId) AS AgencyId\r\n    FROM UserAgencies\r\n    GROUP BY UserId\r\n) ua_min ON u.Id \u003d ua_min.UserId\r\nLEFT OUTER JOIN UserAgencies ua ON u.Id \u003d ua.UserId AND ua.AgencyId \u003d ua_min.AgencyId\r\n\r\nWHERE u.Id \u003c\u003e \u002700000000-0000-0000-0000-000000000000\u0027\r\n\r\nGROUP BY u.[Id],\r\n    u.[CreatedById],\r\n    u.[UpdatedById],\r\n    u.[UpdatedOn],\r\n    u.[Username],\r\n    u.[DisplayName],\r\n    u.[FirstName],\r\n    u.[MiddleName],\r\n    u.[LastName],\r\n    u.[Email],\r\n    u.[Position],\r\n    u.[IsDisabled],\r\n    u.[EmailVerified],\r\n    u.[Note],\r\n    u.[IsSystem],\r\n    u.[LastLogin],\r\n    u.[ApprovedById],\r\n    u.[ApprovedOn],\r\n    u.[KeycloakUserId],\r\n    urd.CreatedOn, \r\n    urd.UserId, \r\n    ua.AgencyId\r\nORDER BY urd.CreatedOn ASC": {
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/\r\nSELECT \r\n    u.[Id],\r\n    \r\n\t  CASE \r\n\t\tWHEN u.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE u.[CreatedById]\r\n\t  END AS [CreatedById],\r\n    \r\n\t  CASE \r\n\t\tWHEN u.IsDisabled \u003d 0 THEN \u0027Active\u0027\r\n\t\tELSE \u0027Disabled\u0027\r\n\t  END AS [Status],\r\n    u.[UpdatedById],\r\n    u.[UpdatedOn],\r\n    u.[Username],\r\n    u.[DisplayName],\r\n    u.[FirstName],\r\n    u.[MiddleName],\r\n    u.[LastName],\r\n    u.[Email],\r\n    u.[Position],\r\n    u.[IsDisabled],\r\n    u.[EmailVerified],\r\n    u.[Note],\r\n    u.[IsSystem],\r\n    u.[LastLogin],\r\n    u.[ApprovedById],\r\n    u.[ApprovedOn],\r\n    u.[KeycloakUserId],\r\n    urd.CreatedOn,\r\n    urd.UserId,\r\n    ua.AgencyId, \r\n    STRING_AGG(urd.RoleName, \u0027, \u0027) AS Roles,\r\n    CASE \r\n        WHEN STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%System Administrator%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%SRES%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%SRES Financial Reporter%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%SRES Financial%\u0027 THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n             \r\n        WHEN STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Agency Administrator%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Real Estate Analyst%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Real Estate Manager%\u0027 THEN \u002700000000-0000-0000-0000-000000000001\u0027\r\n             \r\n        WHEN STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Assistant Deputy Minister Assistant%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Assistant Deputy Minister%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%Executive Director%\u0027\r\n             OR STRING_AGG(urd.RoleName, \u0027, \u0027) LIKE \u0027%View Only Properties%\u0027 THEN \u002700000000-0000-0000-0000-000000000002\u0027\r\n\t   \r\n    END AS UserType\r\nFROM Users u\r\nLEFT JOIN (\r\n    SELECT \r\n        ur.UserId,\r\n        MAX(ur.CreatedOn) AS CreatedOn,\r\n        STRING_AGG(r.Name, \u0027, \u0027) AS RoleName\r\n    FROM [pims].[dbo].[UserRoles] ur\r\n    INNER JOIN Roles r ON ur.RoleId \u003d r.Id\r\n    GROUP BY ur.UserId\r\n) AS urd ON u.Id \u003d urd.UserId\r\n\r\nLEFT OUTER JOIN (\r\n    SELECT UserId, MIN(AgencyId) AS AgencyId\r\n    FROM UserAgencies\r\n    GROUP BY UserId\r\n) ua_min ON u.Id \u003d ua_min.UserId\r\nLEFT OUTER JOIN UserAgencies ua ON u.Id \u003d ua.UserId AND ua.AgencyId \u003d ua_min.AgencyId\r\n\r\nWHERE u.Id \u003c\u003e \u002700000000-0000-0000-0000-000000000000\u0027\r\n\r\nGROUP BY u.[Id],\r\n    u.[CreatedById],\r\n    u.[UpdatedById],\r\n    u.[UpdatedOn],\r\n    u.[Username],\r\n    u.[DisplayName],\r\n    u.[FirstName],\r\n    u.[MiddleName],\r\n    u.[LastName],\r\n    u.[Email],\r\n    u.[Position],\r\n    u.[IsDisabled],\r\n    u.[EmailVerified],\r\n    u.[Note],\r\n    u.[IsSystem],\r\n    u.[LastLogin],\r\n    u.[ApprovedById],\r\n    u.[ApprovedOn],\r\n    u.[KeycloakUserId],\r\n    urd.CreatedOn, \r\n    urd.UserId, \r\n    ua.AgencyId\r\nORDER BY urd.CreatedOn ASC": {
 							"targetName": "user",
 							"mappingType": "existing",
 							"attributes": {
@@ -4057,6 +4041,10 @@
 								},
 								"createdbyid": {
 									"targetName": "createdbyid",
+									"mappingType": "existing"
+								},
+								"status": {
+									"targetName": "status",
 									"mappingType": "existing"
 								},
 								"updatedbyid": {
@@ -4145,6 +4133,81 @@
 								},
 								"usertype": {
 									"targetName": "\"RoleId\"",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/Agencies": {
+							"targetName": "agency",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "\"Id\"",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "\"CreatedById\"",
+									"mappingType": "existing",
+									"transformer": "constant",
+									"transformerProperties": {
+										"constant": "00000000-0000-0000-0000-000000000000"
+									},
+									"transformerPropertiesNames": "constant"
+								},
+								"createdon": {
+									"targetName": "\"CreatedOn\"",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "\"UpdatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "\"UpdatedOn\"",
+									"mappingType": "existing"
+								},
+								"rowversion": {
+									"targetName": "\"RowVersion\"",
+									"mappingType": "skip"
+								},
+								"Name": {
+									"targetName": "\"Name\"",
+									"mappingType": "existing"
+								},
+								"isdisabled": {
+									"targetName": "\"IsDisabled\"",
+									"mappingType": "existing"
+								},
+								"sortorder": {
+									"targetName": "\"SortOrder\"",
+									"mappingType": "existing"
+								},
+								"code": {
+									"targetName": "\"Code\"",
+									"mappingType": "existing"
+								},
+								"description": {
+									"targetName": "\"Description\"",
+									"mappingType": "existing"
+								},
+								"parentid": {
+									"targetName": "\"ParentId\"",
+									"mappingType": "existing"
+								},
+								"email": {
+									"targetName": "\"Email\"",
+									"mappingType": "existing"
+								},
+								"sendemail": {
+									"targetName": "\"SendEmail\"",
+									"mappingType": "existing"
+								},
+								"addressto": {
+									"targetName": "\"AddressTo\"",
+									"mappingType": "existing"
+								},
+								"ccemail": {
+									"targetName": "\"CCEmail\"",
 									"mappingType": "existing"
 								}
 							}
@@ -4499,56 +4562,6 @@
 								}
 							}
 						},
-						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/ParcelFiscals": {
-							"targetName": "parcel_fiscal",
-							"mappingType": "existing",
-							"attributes": {
-								"parcelid": {
-									"targetName": "\"ParcelId\"",
-									"mappingType": "existing"
-								},
-								"fiscalyear": {
-									"targetName": "\"FiscalYear\"",
-									"mappingType": "existing"
-								},
-								"Key": {
-									"targetName": "\"FiscalKeyId\"",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "\"CreatedById\"",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "\"CreatedOn\"",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "\"UpdatedById\"",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "\"UpdatedOn\"",
-									"mappingType": "existing"
-								},
-								"rowversion": {
-									"targetName": "\"RowVersion\"",
-									"mappingType": "skip"
-								},
-								"value": {
-									"targetName": "\"Value\"",
-									"mappingType": "existing"
-								},
-								"note": {
-									"targetName": "\"Note\"",
-									"mappingType": "existing"
-								},
-								"effectivedate": {
-									"targetName": "\"EffectiveDate\"",
-									"mappingType": "existing"
-								}
-							}
-						},
 						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/SELECT [ParcelId]\r\n      ,[FiscalYear]\r\n      ,[Key]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Value]\r\n      ,[Note]\r\n      ,[EffectiveDate]\r\n  FROM [dbo].[ParcelFiscals]": {
 							"targetName": "parcel_fiscal",
 							"mappingType": "existing",
@@ -4591,6 +4604,304 @@
 								},
 								"effectivedate": {
 									"targetName": "effectivedate",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/\r\n  SELECT BuildingId,\r\n  FiscalYear,\r\n  [Key],\r\n  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById],\r\n  CreatedOn,\r\n  UpdatedById,\r\n  UpdatedOn,\r\n  [Value],\r\n  Note,\r\n  EffectiveDate\r\n  FROM BuildingFiscals \r\n  \r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)": {
+							"targetName": "building_fiscal",
+							"mappingType": "existing",
+							"attributes": {
+								"buildingid": {
+									"targetName": "\"BuildingId\"",
+									"mappingType": "existing"
+								},
+								"fiscalyear": {
+									"targetName": "\"FiscalYear\"",
+									"mappingType": "existing"
+								},
+								"Key": {
+									"targetName": "\"FiscalKeyId\"",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "\"CreatedById\"",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "\"CreatedOn\"",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "\"UpdatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "\"UpdatedOn\"",
+									"mappingType": "existing"
+								},
+								"value": {
+									"targetName": "\"Value\"",
+									"mappingType": "existing"
+								},
+								"note": {
+									"targetName": "\"Note\"",
+									"mappingType": "existing"
+								},
+								"effectivedate": {
+									"targetName": "\"EffectiveDate\"",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/Projects": {
+							"targetName": "project",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "\"Id\"",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "\"CreatedById\"",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "\"CreatedOn\"",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "\"UpdatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "\"UpdatedOn\"",
+									"mappingType": "existing"
+								},
+								"rowversion": {
+									"targetName": "\"RowVersion\"",
+									"mappingType": "skip"
+								},
+								"projectnumber": {
+									"targetName": "\"ProjectNumber\"",
+									"mappingType": "existing"
+								},
+								"Name": {
+									"targetName": "\"Name\"",
+									"mappingType": "existing"
+								},
+								"workflowid": {
+									"targetName": "\"WorkflowId\"",
+									"mappingType": "existing"
+								},
+								"manager": {
+									"targetName": "\"Manager\"",
+									"mappingType": "existing"
+								},
+								"reportedfiscalyear": {
+									"targetName": "\"ReportedFiscalYear\"",
+									"mappingType": "existing"
+								},
+								"actualfiscalyear": {
+									"targetName": "\"ActualFiscalYear\"",
+									"mappingType": "existing"
+								},
+								"agencyid": {
+									"targetName": "\"AgencyId\"",
+									"mappingType": "existing"
+								},
+								"statusid": {
+									"targetName": "\"StatusId\"",
+									"mappingType": "existing"
+								},
+								"description": {
+									"targetName": "\"Description\"",
+									"mappingType": "existing"
+								},
+								"tierlevelid": {
+									"targetName": "\"TierLevelId\"",
+									"mappingType": "existing"
+								},
+								"riskid": {
+									"targetName": "\"RiskId\"",
+									"mappingType": "existing"
+								},
+								"metadata": {
+									"targetName": "\"Metadata\"",
+									"mappingType": "existing"
+								},
+								"submittedon": {
+									"targetName": "\"SubmittedOn\"",
+									"mappingType": "existing"
+								},
+								"approvedon": {
+									"targetName": "\"ApprovedOn\"",
+									"mappingType": "existing"
+								},
+								"deniedon": {
+									"targetName": "\"DeniedOn\"",
+									"mappingType": "existing"
+								},
+								"cancelledon": {
+									"targetName": "\"CancelledOn\"",
+									"mappingType": "existing"
+								},
+								"completedon": {
+									"targetName": "\"CompletedOn\"",
+									"mappingType": "existing"
+								},
+								"netbook": {
+									"targetName": "\"NetBook\"",
+									"mappingType": "existing"
+								},
+								"market": {
+									"targetName": "\"Market\"",
+									"mappingType": "existing"
+								},
+								"assessed": {
+									"targetName": "\"Assessed\"",
+									"mappingType": "existing"
+								},
+								"appraised": {
+									"targetName": "\"Appraised\"",
+									"mappingType": "existing"
+								},
+								"projecttype": {
+									"targetName": "\"ProjectType\"",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/\r\nSELECT [ProjectId]\r\n      ,[TaskId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsCompleted]\r\n      ,[CompletedOn]\r\n  FROM [dbo].[ProjectTasks]": {
+							"targetName": "project_task",
+							"mappingType": "existing",
+							"attributes": {
+								"projectid": {
+									"targetName": "\"ProjectId\"",
+									"mappingType": "existing"
+								},
+								"taskid": {
+									"targetName": "\"TaskId\"",
+									"mappingType": "existing"
+								},
+								"CreatedById\r\n      ,[CreatedOn": {
+									"targetName": "\"CreatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "\"UpdatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "\"UpdatedOn\"",
+									"mappingType": "existing"
+								},
+								"iscompleted": {
+									"targetName": "\"IsCompleted\"",
+									"mappingType": "existing"
+								},
+								"completedon": {
+									"targetName": "\"CompletedOn\"",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/ProjectStatusHistory": {
+							"targetName": "project_status_history",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "\"Id\"",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "\"CreatedById\"",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "\"CreatedOn\"",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "\"UpdatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "\"UpdatedOn\"",
+									"mappingType": "existing"
+								},
+								"rowversion": {
+									"targetName": "\"RowVersion\"",
+									"mappingType": "skip"
+								},
+								"projectid": {
+									"targetName": "\"ProjectId\"",
+									"mappingType": "existing"
+								},
+								"workflowid": {
+									"targetName": "\"WorkflowId\"",
+									"mappingType": "existing"
+								},
+								"statusid": {
+									"targetName": "\"StatusId\"",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/ProjectSnapshots": {
+							"targetName": "project_snapshot",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "\"Id\"",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "\"CreatedById\"",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "\"CreatedOn\"",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "\"UpdatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "\"UpdatedOn\"",
+									"mappingType": "existing"
+								},
+								"rowversion": {
+									"targetName": "\"RowVersion\"",
+									"mappingType": "skip"
+								},
+								"projectid": {
+									"targetName": "\"ProjectId\"",
+									"mappingType": "existing"
+								},
+								"netbook": {
+									"targetName": "\"NetBook\"",
+									"mappingType": "existing"
+								},
+								"market": {
+									"targetName": "\"Market\"",
+									"mappingType": "existing"
+								},
+								"assessed": {
+									"targetName": "\"Assessed\"",
+									"mappingType": "existing"
+								},
+								"appraised": {
+									"targetName": "\"Appraised\"",
+									"mappingType": "existing"
+								},
+								"snapshoton": {
+									"targetName": "\"SnapshotOn\"",
+									"mappingType": "existing"
+								},
+								"metadata": {
+									"targetName": "\"Metadata\"",
 									"mappingType": "existing"
 								}
 							}
@@ -4954,6 +5265,322 @@
 								},
 								"effectivedate": {
 									"targetName": "\"EffectiveDate\"",
+									"mappingType": "existing"
+								}
+							}
+						}
+					}
+				},
+				"producer": "database_producer",
+				"consumer": "database_consumer"
+			}
+		}
+	},
+	"b0670349-36fe-48f2-83f1-a8712f4da3cc": {
+		"task": "dataExport",
+		"label": "BuildingFiscalsExport",
+		"description": "",
+		"taskFolder": "Testing",
+		"createTime": "202402151417",
+		"updateTime": "202402151417",
+		"state": {
+			"producers": [
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539",
+						"query": "\r\n  SELECT BuildingId,\r\n  FiscalYear,\r\n  [Key],\r\n  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById],\r\n  CreatedOn,\r\n  UpdatedById,\r\n  UpdatedOn,\r\n  [Value],\r\n  Note,\r\n  EffectiveDate\r\n  FROM BuildingFiscals \r\n  \r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)"
+					}
+				}
+			],
+			"consumers": [
+				{
+					"type": "databaseTransferConsumer"
+				}
+			],
+			"configuration": {
+				"maxJobCount": 1,
+				"showFinalMessage": true,
+				"DatabaseTransferProducer": {
+					"extractType": "SEGMENTS",
+					"segmentSize": 1000,
+					"fetchSize": 10000,
+					"openNewConnections": false,
+					"queryRowCount": false,
+					"selectedColumnsOnly": false,
+					"selectedRowsOnly": false
+				},
+				"DatabaseTransferConsumer": {
+					"entityId": "postgres-jdbc-18ceb57db81-643fa3bb56d54f2f/postgres/public",
+					"openNewConnections": true,
+					"useTransactions": true,
+					"commitAfterRows": 1000,
+					"useMultiRowInsert": false,
+					"multiRowInsertBatch": 500,
+					"skipBindValues": false,
+					"disableUsingBatches": true,
+					"ignoreDuplicateRows": false,
+					"transferAutoGeneratedColumns": true,
+					"disableReferentialIntegrity": true,
+					"useBulkLoad": false,
+					"truncateBeforeLoad": false,
+					"openTableOnFinish": true,
+					"mappings": {
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/\r\n  SELECT BuildingId,\r\n  FiscalYear,\r\n  [Key],\r\n  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById],\r\n  CreatedOn,\r\n  UpdatedById,\r\n  UpdatedOn,\r\n  [Value],\r\n  Note,\r\n  EffectiveDate\r\n  FROM BuildingFiscals \r\n  \r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)": {
+							"targetName": "building_fiscal",
+							"mappingType": "existing",
+							"attributes": {
+								"buildingid": {
+									"targetName": "\"BuildingId\"",
+									"mappingType": "existing"
+								},
+								"fiscalyear": {
+									"targetName": "\"FiscalYear\"",
+									"mappingType": "existing"
+								},
+								"Key": {
+									"targetName": "\"FiscalKeyId\"",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "\"CreatedById\"",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "\"CreatedOn\"",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "\"UpdatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "\"UpdatedOn\"",
+									"mappingType": "existing"
+								},
+								"value": {
+									"targetName": "\"Value\"",
+									"mappingType": "existing"
+								},
+								"note": {
+									"targetName": "\"Note\"",
+									"mappingType": "existing"
+								},
+								"effectivedate": {
+									"targetName": "\"EffectiveDate\"",
+									"mappingType": "existing"
+								}
+							}
+						}
+					}
+				},
+				"producer": "database_producer",
+				"consumer": "database_consumer"
+			}
+		}
+	},
+	"d054c29f-10f6-441b-a0ad-7d69d9bdea31": {
+		"task": "dataExport",
+		"label": "ProjectsExport",
+		"description": "",
+		"taskFolder": "Testing",
+		"createTime": "202402151428",
+		"updateTime": "202402151428",
+		"state": {
+			"producers": [
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539",
+						"query": "\r\nSELECT [ProjectId]\r\n      ,[TaskId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsCompleted]\r\n      ,[CompletedOn]\r\n  FROM [dbo].[ProjectTasks]"
+					}
+				}
+			],
+			"consumers": [
+				{
+					"type": "databaseTransferConsumer"
+				}
+			],
+			"configuration": {
+				"maxJobCount": 1,
+				"showFinalMessage": true,
+				"DatabaseTransferProducer": {
+					"extractType": "SEGMENTS",
+					"segmentSize": 1000,
+					"fetchSize": 10000,
+					"openNewConnections": false,
+					"queryRowCount": false,
+					"selectedColumnsOnly": false,
+					"selectedRowsOnly": false
+				},
+				"DatabaseTransferConsumer": {
+					"entityId": "postgres-jdbc-18ceb57db81-643fa3bb56d54f2f/postgres/public",
+					"openNewConnections": true,
+					"useTransactions": true,
+					"commitAfterRows": 1000,
+					"useMultiRowInsert": false,
+					"multiRowInsertBatch": 500,
+					"skipBindValues": false,
+					"disableUsingBatches": true,
+					"ignoreDuplicateRows": false,
+					"transferAutoGeneratedColumns": true,
+					"disableReferentialIntegrity": true,
+					"useBulkLoad": false,
+					"truncateBeforeLoad": false,
+					"openTableOnFinish": true,
+					"mappings": {
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/Projects": {
+							"targetName": "project",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "\"Id\"",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "\"CreatedById\"",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "\"CreatedOn\"",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "\"UpdatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "\"UpdatedOn\"",
+									"mappingType": "existing"
+								},
+								"rowversion": {
+									"targetName": "\"RowVersion\"",
+									"mappingType": "skip"
+								},
+								"projectnumber": {
+									"targetName": "\"ProjectNumber\"",
+									"mappingType": "existing"
+								},
+								"Name": {
+									"targetName": "\"Name\"",
+									"mappingType": "existing"
+								},
+								"workflowid": {
+									"targetName": "\"WorkflowId\"",
+									"mappingType": "existing"
+								},
+								"manager": {
+									"targetName": "\"Manager\"",
+									"mappingType": "existing"
+								},
+								"reportedfiscalyear": {
+									"targetName": "\"ReportedFiscalYear\"",
+									"mappingType": "existing"
+								},
+								"actualfiscalyear": {
+									"targetName": "\"ActualFiscalYear\"",
+									"mappingType": "existing"
+								},
+								"agencyid": {
+									"targetName": "\"AgencyId\"",
+									"mappingType": "existing"
+								},
+								"statusid": {
+									"targetName": "\"StatusId\"",
+									"mappingType": "existing"
+								},
+								"description": {
+									"targetName": "\"Description\"",
+									"mappingType": "existing"
+								},
+								"tierlevelid": {
+									"targetName": "\"TierLevelId\"",
+									"mappingType": "existing"
+								},
+								"riskid": {
+									"targetName": "\"RiskId\"",
+									"mappingType": "existing"
+								},
+								"metadata": {
+									"targetName": "\"Metadata\"",
+									"mappingType": "existing"
+								},
+								"submittedon": {
+									"targetName": "\"SubmittedOn\"",
+									"mappingType": "existing"
+								},
+								"approvedon": {
+									"targetName": "\"ApprovedOn\"",
+									"mappingType": "existing"
+								},
+								"deniedon": {
+									"targetName": "\"DeniedOn\"",
+									"mappingType": "existing"
+								},
+								"cancelledon": {
+									"targetName": "\"CancelledOn\"",
+									"mappingType": "existing"
+								},
+								"completedon": {
+									"targetName": "\"CompletedOn\"",
+									"mappingType": "existing"
+								},
+								"netbook": {
+									"targetName": "\"NetBook\"",
+									"mappingType": "existing"
+								},
+								"market": {
+									"targetName": "\"Market\"",
+									"mappingType": "existing"
+								},
+								"assessed": {
+									"targetName": "\"Assessed\"",
+									"mappingType": "existing"
+								},
+								"appraised": {
+									"targetName": "\"Appraised\"",
+									"mappingType": "existing"
+								},
+								"projecttype": {
+									"targetName": "\"ProjectType\"",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/\r\nSELECT [ProjectId]\r\n      ,[TaskId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsCompleted]\r\n      ,[CompletedOn]\r\n  FROM [dbo].[ProjectTasks]": {
+							"targetName": "project_task",
+							"mappingType": "existing",
+							"attributes": {
+								"projectid": {
+									"targetName": "\"ProjectId\"",
+									"mappingType": "existing"
+								},
+								"taskid": {
+									"targetName": "\"TaskId\"",
+									"mappingType": "existing"
+								},
+								"CreatedById\r\n      ,[CreatedOn": {
+									"targetName": "\"CreatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "\"UpdatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "\"UpdatedOn\"",
+									"mappingType": "existing"
+								},
+								"iscompleted": {
+									"targetName": "\"IsCompleted\"",
+									"mappingType": "existing"
+								},
+								"completedon": {
+									"targetName": "\"CompletedOn\"",
 									"mappingType": "existing"
 								}
 							}
