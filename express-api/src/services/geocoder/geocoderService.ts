@@ -54,7 +54,7 @@ export const getSiteAddresses = async (address: string) => {
  * @throws ErrorWithCode if result is not 200 OK
  */
 export const getPids = async (siteId: string) => {
-  const url = new URL('/parcels/pids/'.concat(siteId).concat('.json'), constants.GEOCODER.HOSTURI);
+  const url = new URL(`/parcels/pids/${siteId}.json`, constants.GEOCODER.HOSTURI);
   const result = await fetch(url.toString(), {
     headers: {
       apiKey: process.env.GEOCODER_KEY,
