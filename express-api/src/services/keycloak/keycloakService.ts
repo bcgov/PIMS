@@ -25,8 +25,9 @@ import { randomUUID } from 'crypto';
 import { AppDataSource } from '@/appDataSource';
 import { DeepPartial, In, Not } from 'typeorm';
 import userServices from '@/services/admin/usersServices';
-import { User, UserStatus } from '@/typeorm/Entities/User';
 import { Role } from '@/typeorm/Entities/Role';
+import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import { User } from '@/typeorm/Entities/User';
 
 /**
  * @description Sync keycloak roles into PIMS roles.
@@ -37,10 +38,14 @@ const syncKeycloakRoles = async () => {
   // If role is in PIMS, update it
   // If not in PIMS, add it
   // If PIMS has roles that aren't in Keycloak, remove them.
+  const systemUser = await userServices.getUsers({ username: 'system' });
+  if (systemUser?.length !== 1) {
+    throw new ErrorWithCode('System user was missing.', 500);
+  }
+  const systemId = systemUser[0].Id;
   const roles = await KeycloakService.getKeycloakRoles();
   for (const role of roles) {
     const internalRole = await rolesServices.getRoles({ name: role.name });
-    console.log(`Got this internalRole: ${internalRole[0]?.Name} for name ${role.name}`);
     if (internalRole.length == 0) {
       const newRole: Role = {
         Id: randomUUID(),
@@ -50,7 +55,7 @@ const syncKeycloakRoles = async () => {
         KeycloakGroupId: null,
         Description: '',
         IsPublic: false,
-        CreatedById: undefined,
+        CreatedById: systemId,
         CreatedBy: undefined,
         CreatedOn: undefined,
         UpdatedById: undefined,
@@ -70,19 +75,30 @@ const syncKeycloakRoles = async () => {
         IsPublic: false,
         CreatedById: undefined,
         CreatedOn: undefined,
-        UpdatedById: undefined,
-        UpdatedOn: undefined,
+        UpdatedById: systemId,
+        UpdatedOn: new Date(),
       };
-      console.log(`Called updatedrole for ${role.name}`);
       await rolesServices.updateRole(overwriteRole);
     }
 
-    await AppDataSource.getRepository(Role).delete({
+    //This deletion section is somewhat clunky. Could consider delete cascade on the schema to avoid some of this.
+    const internalRolesForDeletion = await AppDataSource.getRepository(Role).findBy({
       Name: Not(In(roles.map((a) => a.name))),
     });
-
-    return roles;
+    if (internalRolesForDeletion.length) {
+      const roleIdsForDeletion = internalRolesForDeletion.map((role) => role.Id);
+      await AppDataSource.getRepository(User)
+        .createQueryBuilder()
+        .update(User)
+        .set({ RoleId: null })
+        .where('RoleId IN (:...ids)', { ids: roleIdsForDeletion })
+        .execute();
+      await AppDataSource.getRepository(Role).delete({
+        Id: In(roleIdsForDeletion),
+      });
+    }
   }
+  return roles;
 };
 
 /**
@@ -155,80 +171,29 @@ const syncKeycloakUser = async (keycloakGuid: string) => {
   // Update the roles in PIMS to match their Keycloak roles
   // If they don't exist in PIMS...
   // Add user and assign their roles
-  const kuser = await KeycloakService.getKeycloakUser(keycloakGuid);
-  const kroles = await KeycloakService.getKeycloakUserRoles(kuser.username);
-  const internalUser = await userServices.getUsers({ username: kuser.username });
+  const users = await userServices.getUsers({ guid: keycloakGuid });
+  if (users?.length !== 1) {
+    throw new ErrorWithCode('User was missing during keycloak role sync.', 500);
+  }
+  const user = users[0];
+  const kroles = await KeycloakService.getKeycloakUserRoles(user.Username);
 
-  for (const krole of kroles) {
-    const internalRole = await rolesServices.getRoles({ name: krole.name });
-    if (internalRole.length == 0) {
-      const newRole: Role = {
-        Id: randomUUID(),
-        Name: krole.name,
-        IsDisabled: false,
-        SortOrder: 0,
-        KeycloakGroupId: '',
-        Description: '',
-        IsPublic: false,
-        Users: [],
-        CreatedById: undefined,
-        CreatedBy: undefined,
-        CreatedOn: undefined,
-        UpdatedById: undefined,
-        UpdatedBy: undefined,
-        UpdatedOn: undefined,
-      };
-      await rolesServices.addRole(newRole);
-    }
+  if (kroles.length > 1) {
+    logger.warn(
+      `User ${user.Username} was assigned multiple roles in keycloak. This is not fully supported internally. A single role will be assigned abitrarily.`,
+    );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const newUsersRoles = await AppDataSource.getRepository(Role).find({
-    where: { Name: In(kroles.map((a) => a.name)) },
-  });
-
-  if (internalUser.length == 0) {
-    const newUser: User = {
-      Id: randomUUID(),
-      CreatedById: undefined,
-      CreatedBy: undefined,
-      CreatedOn: undefined,
-      UpdatedById: undefined,
-      UpdatedBy: undefined,
-      UpdatedOn: undefined,
-      Username: kuser.username,
-      DisplayName: kuser.attributes.display_name[0],
-      FirstName: kuser.firstName,
-      MiddleName: '',
-      LastName: kuser.lastName,
-      Email: kuser.email,
-      Position: '',
-      EmailVerified: false,
-      IsSystem: false,
-      Note: '',
-      LastLogin: new Date(),
-      ApprovedById: undefined,
-      ApprovedBy: undefined,
-      ApprovedOn: undefined,
-      KeycloakUserId: keycloakGuid,
-      Role: undefined,
-      RoleId: undefined,
-      Agency: undefined,
-      AgencyId: undefined,
-      Status: UserStatus.Active,
-      IsDisabled: false,
-    };
-    return await userServices.addUser(newUser);
-  } else {
-    // internalUser[0].UserRoles = newUsersRoles.map((a) => ({
-    //   UserId: internalUser[0].Id,
-    //   RoleId: a.Id,
-    //   User: internalUser[0],
-    //   Role: a,
-    // }));
-    // return await userServices.updateUser(internalUser[0]);
-    return;
+  const krole = kroles?.[0];
+  if (!krole) {
+    logger.warn(`User ${user.Username} has no roles in keycloak.`);
+    await userServices.updateUser({ Id: user.Id, RoleId: null });
+    return userServices.getUserById(user.Id);
   }
+
+  const internalRole = await rolesServices.getRoleByName(krole.name);
+  await userServices.updateUser({ Id: user.Id, RoleId: internalRole.Id });
+  return userServices.getUserById(user.Id);
 };
 
 /**

@@ -171,12 +171,12 @@ export const getUserAgencies = async (req: Request, res: Response) => {
 
 export const getSelf = async (req: Request, res: Response) => {
   try {
-    const syncedRoles = await KeycloakService.syncKeycloakRoles();
-    console.log(JSON.stringify(syncedRoles));
+    await KeycloakService.syncKeycloakRoles();
     const user = userServices.normalizeKeycloakUser(req.user as KeycloakUser);
     const result = await userServices.getUser(user.username);
     if (result) {
-      return res.status(200).send(result);
+      const syncedUser = await KeycloakService.syncKeycloakUser(user.guid);
+      return res.status(200).send(syncedUser);
     } else {
       return res.status(204).send(); //Valid request, but no user for this keycloak login.
     }
