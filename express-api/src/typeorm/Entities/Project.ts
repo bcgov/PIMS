@@ -84,7 +84,7 @@ export class Project extends BaseEntity {
   Agency: Agency;
 
   // Tier Level Relation
-  @Column({ name: 'trier_level_id', type: 'int' })
+  @Column({ name: 'tier_level_id', type: 'int' })
   TierLevelId: number;
 
   @ManyToOne(() => TierLevel, (TierLevel) => TierLevel.Id)
