@@ -1,4 +1,4 @@
-INSERT INTO "regional_district" ("Id","CreatedById","UpdatedById","UpdatedOn","CreatedOn","Name","Abbreviation") 
+INSERT INTO regional_district (id,created_by_id,updated_by_id,updated_on,created_on,name,abbreviation) 
 VALUES
 	 (1, '00000000-0000-0000-0000-000000000000', NULL, NULL,'2023-02-08 17:58:34.7500000', N'Regional District of Bulkley-Nechako',N'RDBN'),
 	 (2, '00000000-0000-0000-0000-000000000000', NULL, NULL,'2023-02-08 17:58:34.7500000', N'Cariboo Regional District', N'CRD'),

@@ -1,4 +1,4 @@
-INSERT INTO "project_status" ("Id","CreatedById","CreatedOn","UpdatedById","UpdatedOn","Name","IsDisabled","SortOrder","Code","GroupName","Description","IsMilestone","IsTerminal","Route") VALUES
+INSERT INTO project_status (id,created_by_id,created_on,updated_by_id,updated_on,name,is_disabled,sort_order,code,group_name,description,is_milestone,is_terminal,route) VALUES
 	 (1,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'Draft',false,0,N'DR',N'Draft',N'A new draft project that is not ready to submit to apply to be added to the Surplus Property Program.',false,false,N'/projects/draft'),
 	 (2,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'Select Properties',false,1,N'DR-P',N'Draft',N'Add properties to the project.',false,false,N'/projects/properties'),
 	 (3,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'Update Information',false,2,N'DR-I',N'Draft',N'Assign tier level, classification and update current financial information.',false,false,N'/projects/information'),
