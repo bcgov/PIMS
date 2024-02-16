@@ -11,6 +11,8 @@ import AuthRouteGuard from './guards/AuthRouteGuard';
 import BaseLayout from './components/layout/BaseLayout';
 import { AccessRequest } from './pages/AccessRequest';
 import UsersManagement from './pages/UsersManagement';
+import { ErrorBoundary } from 'react-error-boundary';
+import { useNavigate } from 'react-router-dom';
 
 const Router = () => {
   return (
@@ -63,11 +65,37 @@ const Router = () => {
   );
 };
 
+const FallbackRenderPage = ({ error, resetErrorBoundary }) => {
+  // Call resetErrorBoundary() to reset the error boundary and retry the render.
+  const navigate = useNavigate();
+  return (
+    <div role="alert">
+      <p>Something went wrong:</p>
+      <pre style={{ color: 'red' }}>{error.message}</pre>
+      <button
+        onClick={() => {
+          resetErrorBoundary();
+          navigate('/');
+        }}
+      >
+        Return to home page.
+      </button>
+    </div>
+  );
+};
+
 const App = () => {
   return (
-    <ThemeProvider theme={appTheme}>
-      <Router />
-    </ThemeProvider>
+    <ErrorBoundary
+      onReset={() => {
+        console.log('hi');
+      }}
+      fallbackRender={FallbackRenderPage}
+    >
+      <ThemeProvider theme={appTheme}>
+        <Router />
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 };
 
