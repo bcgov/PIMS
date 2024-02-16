@@ -135,7 +135,7 @@ export const AccessRequest = () => {
     }
   };
 
-  if (auth.pimsUser.data.Status && auth.pimsUser.data.Status === 'Active') {
+  if (auth.pimsUser.data && auth.pimsUser.data.Status === 'Active') {
     return <Navigate replace to={'/'} />;
   }
 
@@ -152,7 +152,7 @@ export const AccessRequest = () => {
         <Typography mb={'2rem'} variant="h2">
           {auth.pimsUser.data ? 'Access Pending' : 'Access Request'}
         </Typography>
-        {auth.pimsUser.data.Status && auth.pimsUser.data.Status === 'OnHold' ? (
+        {auth.pimsUser.data && auth.pimsUser.data.Status === 'OnHold' ? (
           <AccessPending />
         ) : (
           <RequestForm submitHandler={onSubmit} />

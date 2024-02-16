@@ -172,7 +172,7 @@ export const getSelf = async (req: Request, res: Response) => {
   try {
     const user = userServices.normalizeKeycloakUser(req.user as KeycloakUser);
     const result = await userServices.getUser(user.username);
-    if (result) {
+    if (result && result !== null) {
       return res.status(200).send(result);
     } else {
       return res.status(204).send(); //Valid request, but no user for this keycloak login.
