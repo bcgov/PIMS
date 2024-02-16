@@ -3692,22 +3692,6 @@
 				{
 					"type": "databaseTransferProducer",
 					"location": {
-						"type": "entity",
-						"project": "General",
-						"entityId": "mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/ProjectSnapshots"
-					}
-				},
-				{
-					"type": "databaseTransferProducer",
-					"location": {
-						"type": "entity",
-						"project": "General",
-						"entityId": "mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/ProjectStatusHistory"
-					}
-				},
-				{
-					"type": "databaseTransferProducer",
-					"location": {
 						"type": "query",
 						"project": "General",
 						"dataSource": "mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539",
@@ -3730,11 +3714,75 @@
 					"location": {
 						"type": "entity",
 						"project": "General",
+						"entityId": "mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/ProjectSnapshots"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "entity",
+						"project": "General",
+						"entityId": "mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/ProjectStatusHistory"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "entity",
+						"project": "General",
 						"entityId": "mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/ProjectProperties"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539",
+						"defaultCatalog": "pims",
+						"query": "\r\nSELECT [ProjectId]\r\n      ,[AgencyId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[OfferAmount]\r\n      ,[NotificationId]\r\n      ,[Response]\r\n      ,[ReceivedOn]\r\n      ,[Note]\r\n  FROM [dbo].[ProjectAgencyResponses]"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "entity",
+						"project": "General",
+						"entityId": "mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/ProjectNumbers"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539",
+						"defaultCatalog": "pims",
+						"query": "SELECT [Id]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[ProjectId]\r\n      ,[NoteType]\r\n      ,[Note]\r\n  FROM [dbo].[ProjectNotes]"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "entity",
+						"project": "General",
+						"entityId": "mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/NotificationQueue"
 					}
 				}
 			],
 			"consumers": [
+				{
+					"type": "databaseTransferConsumer"
+				},
+				{
+					"type": "databaseTransferConsumer"
+				},
+				{
+					"type": "databaseTransferConsumer"
+				},
+				{
+					"type": "databaseTransferConsumer"
+				},
 				{
 					"type": "databaseTransferConsumer"
 				},
@@ -3880,270 +3928,6 @@
 								},
 								"ccemail": {
 									"targetName": "\"CCEmail\"",
-									"mappingType": "existing"
-								}
-							}
-						},
-						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/Projects": {
-							"targetName": "project",
-							"mappingType": "existing",
-							"attributes": {
-								"id": {
-									"targetName": "\"Id\"",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "\"CreatedById\"",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "\"CreatedOn\"",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "\"UpdatedById\"",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "\"UpdatedOn\"",
-									"mappingType": "existing"
-								},
-								"rowversion": {
-									"targetName": "\"RowVersion\"",
-									"mappingType": "skip"
-								},
-								"projectnumber": {
-									"targetName": "\"ProjectNumber\"",
-									"mappingType": "existing"
-								},
-								"Name": {
-									"targetName": "\"Name\"",
-									"mappingType": "existing"
-								},
-								"workflowid": {
-									"targetName": "\"WorkflowId\"",
-									"mappingType": "existing"
-								},
-								"manager": {
-									"targetName": "\"Manager\"",
-									"mappingType": "existing"
-								},
-								"reportedfiscalyear": {
-									"targetName": "\"ReportedFiscalYear\"",
-									"mappingType": "existing"
-								},
-								"actualfiscalyear": {
-									"targetName": "\"ActualFiscalYear\"",
-									"mappingType": "existing"
-								},
-								"agencyid": {
-									"targetName": "\"AgencyId\"",
-									"mappingType": "existing"
-								},
-								"statusid": {
-									"targetName": "\"StatusId\"",
-									"mappingType": "existing"
-								},
-								"description": {
-									"targetName": "\"Description\"",
-									"mappingType": "existing"
-								},
-								"tierlevelid": {
-									"targetName": "\"TierLevelId\"",
-									"mappingType": "existing"
-								},
-								"riskid": {
-									"targetName": "\"RiskId\"",
-									"mappingType": "existing"
-								},
-								"metadata": {
-									"targetName": "\"Metadata\"",
-									"mappingType": "existing"
-								},
-								"submittedon": {
-									"targetName": "\"SubmittedOn\"",
-									"mappingType": "existing"
-								},
-								"approvedon": {
-									"targetName": "\"ApprovedOn\"",
-									"mappingType": "existing"
-								},
-								"deniedon": {
-									"targetName": "\"DeniedOn\"",
-									"mappingType": "existing"
-								},
-								"cancelledon": {
-									"targetName": "\"CancelledOn\"",
-									"mappingType": "existing"
-								},
-								"completedon": {
-									"targetName": "\"CompletedOn\"",
-									"mappingType": "existing"
-								},
-								"netbook": {
-									"targetName": "\"NetBook\"",
-									"mappingType": "existing"
-								},
-								"market": {
-									"targetName": "\"Market\"",
-									"mappingType": "existing"
-								},
-								"assessed": {
-									"targetName": "\"Assessed\"",
-									"mappingType": "existing"
-								},
-								"appraised": {
-									"targetName": "\"Appraised\"",
-									"mappingType": "existing"
-								},
-								"projecttype": {
-									"targetName": "\"ProjectType\"",
-									"mappingType": "existing"
-								}
-							}
-						},
-						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/ProjectSnapshots": {
-							"targetName": "project_snapshot",
-							"mappingType": "existing",
-							"attributes": {
-								"id": {
-									"targetName": "\"Id\"",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "\"CreatedById\"",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "\"CreatedOn\"",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "\"UpdatedById\"",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "\"UpdatedOn\"",
-									"mappingType": "existing"
-								},
-								"rowversion": {
-									"targetName": "\"RowVersion\"",
-									"mappingType": "skip"
-								},
-								"projectid": {
-									"targetName": "\"ProjectId\"",
-									"mappingType": "existing"
-								},
-								"netbook": {
-									"targetName": "\"NetBook\"",
-									"mappingType": "existing"
-								},
-								"market": {
-									"targetName": "\"Market\"",
-									"mappingType": "existing"
-								},
-								"assessed": {
-									"targetName": "\"Assessed\"",
-									"mappingType": "existing"
-								},
-								"appraised": {
-									"targetName": "\"Appraised\"",
-									"mappingType": "existing"
-								},
-								"snapshoton": {
-									"targetName": "\"SnapshotOn\"",
-									"mappingType": "existing"
-								},
-								"metadata": {
-									"targetName": "\"Metadata\"",
-									"mappingType": "existing"
-								}
-							}
-						},
-						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/ProjectStatusHistory": {
-							"targetName": "project_status_history",
-							"mappingType": "existing",
-							"attributes": {
-								"id": {
-									"targetName": "\"Id\"",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "\"CreatedById\"",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "\"CreatedOn\"",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "\"UpdatedById\"",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "\"UpdatedOn\"",
-									"mappingType": "existing"
-								},
-								"rowversion": {
-									"targetName": "\"RowVersion\"",
-									"mappingType": "skip"
-								},
-								"projectid": {
-									"targetName": "\"ProjectId\"",
-									"mappingType": "existing"
-								},
-								"workflowid": {
-									"targetName": "\"WorkflowId\"",
-									"mappingType": "existing"
-								},
-								"statusid": {
-									"targetName": "\"StatusId\"",
-									"mappingType": "existing"
-								}
-							}
-						},
-						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/ProjectProperties": {
-							"targetName": "project_property",
-							"mappingType": "existing",
-							"attributes": {
-								"id": {
-									"targetName": "\"Id\"",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "\"CreatedById\"",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "\"CreatedOn\"",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "\"UpdatedById\"",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "\"UpdatedOn\"",
-									"mappingType": "existing"
-								},
-								"rowversion": {
-									"targetName": "\"RowVersion\"",
-									"mappingType": "skip"
-								},
-								"projectid": {
-									"targetName": "\"ProjectId\"",
-									"mappingType": "existing"
-								},
-								"propertytype": {
-									"targetName": "\"PropertyTypeId\"",
-									"mappingType": "existing"
-								},
-								"parcelid": {
-									"targetName": "\"ParcelId\"",
-									"mappingType": "existing"
-								},
-								"buildingid": {
-									"targetName": "\"BuildingId\"",
 									"mappingType": "existing"
 								}
 							}
@@ -4360,52 +4144,6 @@
 								}
 							}
 						},
-						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/SELECT [ParcelId]\r\n      ,[Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Firm]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[ParcelEvaluations]": {
-							"targetName": "parcel_evaluation",
-							"mappingType": "existing",
-							"attributes": {
-								"parcelid": {
-									"targetName": "\"ParcelId\"",
-									"mappingType": "existing"
-								},
-								"Date": {
-									"targetName": "\"Date\"",
-									"mappingType": "existing"
-								},
-								"Key": {
-									"targetName": "\"EvaluationKeyId\"",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "\"CreatedById\"",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "\"CreatedOn\"",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "\"UpdatedById\"",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "\"UpdatedOn\"",
-									"mappingType": "existing"
-								},
-								"firm": {
-									"targetName": "\"Firm\"",
-									"mappingType": "existing"
-								},
-								"value": {
-									"targetName": "\"Value\"",
-									"mappingType": "existing"
-								},
-								"note": {
-									"targetName": "\"Note\"",
-									"mappingType": "existing"
-								}
-							}
-						},
 						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/SELECT p.[Id],\r\n\tCASE \r\n\t  WHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t  ELSE p.[CreatedById]\r\n\tEND AS [CreatedById],\r\n    p.[CreatedOn],\r\n    p.[UpdatedById],\r\n    p.[UpdatedOn],\r\n    p.[Name],\r\n    p.[Description],\r\n    p.[ClassificationId],\r\n    p.BuildingConstructionTypeId,\r\n    p.[AgencyId],\r\n    p.[IsSensitive],\r\n    p.[IsVisibleToOtherAgencies],\r\n\tp.BuildingFloorCount,\r\n\tp.BuildingPredominateUseId,\r\n\tp.BuildingTenancy,\r\n\tp.RentableArea,\r\n\tp.BuildingOccupantTypeId,\r\n\tp.LeaseExpiry,\r\n\tp.OccupantName,\r\n\tp.TransferLeaseOnSale,\r\n\tp.BuildingTenancyUpdatedOn,\r\n\tp.EncumbranceReason,\r\n\tp.LeasedLandMetadata,\r\n\tp.TotalArea,\r\n\tCONVERT(VARCHAR(40), CAST(Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(Location.Lat AS DECIMAL(18, 14))) AS Location,\r\n\tCASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448\r\n        ELSE aa.Id \r\n    END AS AdministrativeAreaId,  \r\n\ta.Address1, \r\n\ta.Postal,\r\n\t1 as PropertyTypeID\r\nFROM \r\n    [pims].[dbo].Buildings p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\nWHERE p.BuildingPredominateUseId \u003c\u003d 54": {
 							"targetName": "building",
 							"mappingType": "existing",
@@ -4528,48 +4266,6 @@
 								}
 							}
 						},
-						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/SELECT [BuildingId]\r\n      ,[Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[BuildingEvaluations]\r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)": {
-							"targetName": "building_evaluation",
-							"mappingType": "existing",
-							"attributes": {
-								"buildingid": {
-									"targetName": "\"BuildingId\"",
-									"mappingType": "existing"
-								},
-								"Date": {
-									"targetName": "\"Date\"",
-									"mappingType": "existing"
-								},
-								"Key": {
-									"targetName": "\"EvaluationKeyId\"",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "\"CreatedById\"",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "\"CreatedOn\"",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "\"UpdatedById\"",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "\"UpdatedOn\"",
-									"mappingType": "existing"
-								},
-								"value": {
-									"targetName": "\"Value\"",
-									"mappingType": "existing"
-								},
-								"note": {
-									"targetName": "\"Note\"",
-									"mappingType": "existing"
-								}
-							}
-						},
 						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/\r\nSELECT pb.*\r\n  FROM [pims].[dbo].ParcelBuildings pb\r\n  INNER JOIN Buildings b\r\n  ON b.Id \u003d pb.BuildingId\r\n  WHERE b.BuildingPredominateUseId \u003c\u003d 54": {
 							"targetName": "parcel_building",
 							"mappingType": "existing",
@@ -4601,6 +4297,52 @@
 								"rowversion": {
 									"targetName": "\"RowVersion\"",
 									"mappingType": "skip"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/SELECT [ParcelId]\r\n      ,[Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Firm]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[ParcelEvaluations]": {
+							"targetName": "parcel_evaluation",
+							"mappingType": "existing",
+							"attributes": {
+								"parcelid": {
+									"targetName": "\"ParcelId\"",
+									"mappingType": "existing"
+								},
+								"Date": {
+									"targetName": "\"Date\"",
+									"mappingType": "existing"
+								},
+								"Key": {
+									"targetName": "\"EvaluationKeyId\"",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "\"CreatedById\"",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "\"CreatedOn\"",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "\"UpdatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "\"UpdatedOn\"",
+									"mappingType": "existing"
+								},
+								"firm": {
+									"targetName": "\"Firm\"",
+									"mappingType": "existing"
+								},
+								"value": {
+									"targetName": "\"Value\"",
+									"mappingType": "existing"
+								},
+								"note": {
+									"targetName": "\"Note\"",
+									"mappingType": "existing"
 								}
 							}
 						},
@@ -4696,6 +4438,166 @@
 								}
 							}
 						},
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/SELECT [BuildingId]\r\n      ,[Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[BuildingEvaluations]\r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)": {
+							"targetName": "building_evaluation",
+							"mappingType": "existing",
+							"attributes": {
+								"buildingid": {
+									"targetName": "\"BuildingId\"",
+									"mappingType": "existing"
+								},
+								"Date": {
+									"targetName": "\"Date\"",
+									"mappingType": "existing"
+								},
+								"Key": {
+									"targetName": "\"EvaluationKeyId\"",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "\"CreatedById\"",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "\"CreatedOn\"",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "\"UpdatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "\"UpdatedOn\"",
+									"mappingType": "existing"
+								},
+								"value": {
+									"targetName": "\"Value\"",
+									"mappingType": "existing"
+								},
+								"note": {
+									"targetName": "\"Note\"",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/Projects": {
+							"targetName": "project",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "\"Id\"",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "\"CreatedById\"",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "\"CreatedOn\"",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "\"UpdatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "\"UpdatedOn\"",
+									"mappingType": "existing"
+								},
+								"rowversion": {
+									"targetName": "\"RowVersion\"",
+									"mappingType": "skip"
+								},
+								"projectnumber": {
+									"targetName": "\"ProjectNumber\"",
+									"mappingType": "existing"
+								},
+								"Name": {
+									"targetName": "\"Name\"",
+									"mappingType": "existing"
+								},
+								"workflowid": {
+									"targetName": "\"WorkflowId\"",
+									"mappingType": "existing"
+								},
+								"manager": {
+									"targetName": "\"Manager\"",
+									"mappingType": "existing"
+								},
+								"reportedfiscalyear": {
+									"targetName": "\"ReportedFiscalYear\"",
+									"mappingType": "existing"
+								},
+								"actualfiscalyear": {
+									"targetName": "\"ActualFiscalYear\"",
+									"mappingType": "existing"
+								},
+								"agencyid": {
+									"targetName": "\"AgencyId\"",
+									"mappingType": "existing"
+								},
+								"statusid": {
+									"targetName": "\"StatusId\"",
+									"mappingType": "existing"
+								},
+								"description": {
+									"targetName": "\"Description\"",
+									"mappingType": "existing"
+								},
+								"tierlevelid": {
+									"targetName": "\"TierLevelId\"",
+									"mappingType": "existing"
+								},
+								"riskid": {
+									"targetName": "\"RiskId\"",
+									"mappingType": "existing"
+								},
+								"metadata": {
+									"targetName": "\"Metadata\"",
+									"mappingType": "existing"
+								},
+								"submittedon": {
+									"targetName": "\"SubmittedOn\"",
+									"mappingType": "existing"
+								},
+								"approvedon": {
+									"targetName": "\"ApprovedOn\"",
+									"mappingType": "existing"
+								},
+								"deniedon": {
+									"targetName": "\"DeniedOn\"",
+									"mappingType": "existing"
+								},
+								"cancelledon": {
+									"targetName": "\"CancelledOn\"",
+									"mappingType": "existing"
+								},
+								"completedon": {
+									"targetName": "\"CompletedOn\"",
+									"mappingType": "existing"
+								},
+								"netbook": {
+									"targetName": "\"NetBook\"",
+									"mappingType": "existing"
+								},
+								"market": {
+									"targetName": "\"Market\"",
+									"mappingType": "existing"
+								},
+								"assessed": {
+									"targetName": "\"Assessed\"",
+									"mappingType": "existing"
+								},
+								"appraised": {
+									"targetName": "\"Appraised\"",
+									"mappingType": "existing"
+								},
+								"projecttype": {
+									"targetName": "\"ProjectType\"",
+									"mappingType": "existing"
+								}
+							}
+						},
 						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/\r\nSELECT [ProjectId]\r\n      ,[TaskId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsCompleted]\r\n      ,[CompletedOn]\r\n  FROM [dbo].[ProjectTasks]": {
 							"targetName": "project_task",
 							"mappingType": "existing",
@@ -4772,6 +4674,368 @@
 								},
 								"reporttype": {
 									"targetName": "\"ReportTypeId\"",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/ProjectSnapshots": {
+							"targetName": "project_snapshot",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "\"Id\"",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "\"CreatedById\"",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "\"CreatedOn\"",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "\"UpdatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "\"UpdatedOn\"",
+									"mappingType": "existing"
+								},
+								"rowversion": {
+									"targetName": "\"RowVersion\"",
+									"mappingType": "skip"
+								},
+								"projectid": {
+									"targetName": "\"ProjectId\"",
+									"mappingType": "existing"
+								},
+								"netbook": {
+									"targetName": "\"NetBook\"",
+									"mappingType": "existing"
+								},
+								"market": {
+									"targetName": "\"Market\"",
+									"mappingType": "existing"
+								},
+								"assessed": {
+									"targetName": "\"Assessed\"",
+									"mappingType": "existing"
+								},
+								"appraised": {
+									"targetName": "\"Appraised\"",
+									"mappingType": "existing"
+								},
+								"snapshoton": {
+									"targetName": "\"SnapshotOn\"",
+									"mappingType": "existing"
+								},
+								"metadata": {
+									"targetName": "\"Metadata\"",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/ProjectStatusHistory": {
+							"targetName": "project_status_history",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "\"Id\"",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "\"CreatedById\"",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "\"CreatedOn\"",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "\"UpdatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "\"UpdatedOn\"",
+									"mappingType": "existing"
+								},
+								"rowversion": {
+									"targetName": "\"RowVersion\"",
+									"mappingType": "skip"
+								},
+								"projectid": {
+									"targetName": "\"ProjectId\"",
+									"mappingType": "existing"
+								},
+								"workflowid": {
+									"targetName": "\"WorkflowId\"",
+									"mappingType": "existing"
+								},
+								"statusid": {
+									"targetName": "\"StatusId\"",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/ProjectProperties": {
+							"targetName": "project_property",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "\"Id\"",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "\"CreatedById\"",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "\"CreatedOn\"",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "\"UpdatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "\"UpdatedOn\"",
+									"mappingType": "existing"
+								},
+								"rowversion": {
+									"targetName": "\"RowVersion\"",
+									"mappingType": "skip"
+								},
+								"projectid": {
+									"targetName": "\"ProjectId\"",
+									"mappingType": "existing"
+								},
+								"propertytype": {
+									"targetName": "\"PropertyTypeId\"",
+									"mappingType": "existing"
+								},
+								"parcelid": {
+									"targetName": "\"ParcelId\"",
+									"mappingType": "existing"
+								},
+								"buildingid": {
+									"targetName": "\"BuildingId\"",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/\r\nSELECT [ProjectId]\r\n      ,[AgencyId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[OfferAmount]\r\n      ,[NotificationId]\r\n      ,[Response]\r\n      ,[ReceivedOn]\r\n      ,[Note]\r\n  FROM [dbo].[ProjectAgencyResponses]": {
+							"targetName": "project_agency_response",
+							"mappingType": "existing",
+							"attributes": {
+								"projectid": {
+									"targetName": "\"ProjectId\"",
+									"mappingType": "existing"
+								},
+								"agencyid": {
+									"targetName": "\"AgencyId\"",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "\"CreatedById\"",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "\"CreatedOn\"",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "\"UpdatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "\"UpdatedOn\"",
+									"mappingType": "existing"
+								},
+								"offeramount": {
+									"targetName": "\"OfferAmount\"",
+									"mappingType": "existing"
+								},
+								"notificationid": {
+									"targetName": "\"NotificationId\"",
+									"mappingType": "existing"
+								},
+								"response": {
+									"targetName": "\"Response\"",
+									"mappingType": "existing"
+								},
+								"receivedon": {
+									"targetName": "\"ReceivedOn\"",
+									"mappingType": "existing"
+								},
+								"note": {
+									"targetName": "\"Note\"",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/ProjectNumbers": {
+							"targetName": "project_number",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "\"Id\"",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "\"CreatedById\"",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "\"CreatedOn\"",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "\"UpdatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "\"UpdatedOn\"",
+									"mappingType": "existing"
+								},
+								"rowversion": {
+									"targetName": "\"RowVersion\"",
+									"mappingType": "skip"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/SELECT [Id]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[ProjectId]\r\n      ,[NoteType]\r\n      ,[Note]\r\n  FROM [dbo].[ProjectNotes]": {
+							"targetName": "project_note",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "\"Id\"",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "\"CreatedById\"",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "\"CreatedOn\"",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "\"UpdatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "\"UpdatedOn\"",
+									"mappingType": "existing"
+								},
+								"projectid": {
+									"targetName": "\"ProjectId\"",
+									"mappingType": "existing"
+								},
+								"notetype": {
+									"targetName": "\"NoteType\"",
+									"mappingType": "existing"
+								},
+								"note": {
+									"targetName": "\"Note\"",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/pims/dbo/NotificationQueue": {
+							"targetName": "notification_queue",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "\"Id\"",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "\"CreatedById\"",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "\"CreatedOn\"",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "\"UpdatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "\"UpdatedOn\"",
+									"mappingType": "existing"
+								},
+								"rowversion": {
+									"targetName": "\"RowVersion\"",
+									"mappingType": "skip"
+								},
+								"Key": {
+									"targetName": "\"Key\"",
+									"mappingType": "existing"
+								},
+								"status": {
+									"targetName": "\"Status\"",
+									"mappingType": "existing"
+								},
+								"priority": {
+									"targetName": "\"Priority\"",
+									"mappingType": "existing"
+								},
+								"Encoding": {
+									"targetName": "\"Encoding\"",
+									"mappingType": "existing"
+								},
+								"sendon": {
+									"targetName": "\"SendOn\"",
+									"mappingType": "existing"
+								},
+								"To": {
+									"targetName": "\"To\"",
+									"mappingType": "existing"
+								},
+								"subject": {
+									"targetName": "\"Subject\"",
+									"mappingType": "existing"
+								},
+								"bodytype": {
+									"targetName": "\"BodyType\"",
+									"mappingType": "existing"
+								},
+								"body": {
+									"targetName": "\"Body\"",
+									"mappingType": "existing"
+								},
+								"bcc": {
+									"targetName": "\"Bcc\"",
+									"mappingType": "existing"
+								},
+								"cc": {
+									"targetName": "\"Cc\"",
+									"mappingType": "existing"
+								},
+								"tag": {
+									"targetName": "\"Tag\"",
+									"mappingType": "existing"
+								},
+								"projectid": {
+									"targetName": "\"ProjectId\"",
+									"mappingType": "existing"
+								},
+								"toagencyid": {
+									"targetName": "\"ToAgencyId\"",
+									"mappingType": "existing"
+								},
+								"templateid": {
+									"targetName": "\"TemplateId\"",
+									"mappingType": "existing"
+								},
+								"chesmessageid": {
+									"targetName": "\"ChesMessageId\"",
+									"mappingType": "existing"
+								},
+								"chestransactionid": {
+									"targetName": "\"ChesTransactionId\"",
 									"mappingType": "existing"
 								}
 							}
@@ -5343,6 +5607,115 @@
 								},
 								"completedon": {
 									"targetName": "\"CompletedOn\"",
+									"mappingType": "existing"
+								}
+							}
+						}
+					}
+				},
+				"producer": "database_producer",
+				"consumer": "database_consumer"
+			}
+		}
+	},
+	"ffb584f8-e245-4b85-b70f-6ccf505e7928": {
+		"task": "dataExport",
+		"label": "ProjectAgencyResponsesExport",
+		"description": "",
+		"taskFolder": "Testing",
+		"createTime": "202402161327",
+		"updateTime": "202402161327",
+		"state": {
+			"producers": [
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539",
+						"query": "\r\nSELECT [ProjectId]\r\n      ,[AgencyId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[OfferAmount]\r\n      ,[NotificationId]\r\n      ,[Response]\r\n      ,[ReceivedOn]\r\n      ,[Note]\r\n  FROM [dbo].[ProjectAgencyResponses]"
+					}
+				}
+			],
+			"consumers": [
+				{
+					"type": "databaseTransferConsumer"
+				}
+			],
+			"configuration": {
+				"maxJobCount": 1,
+				"showFinalMessage": true,
+				"DatabaseTransferProducer": {
+					"extractType": "SEGMENTS",
+					"segmentSize": 1000,
+					"fetchSize": 10000,
+					"openNewConnections": false,
+					"queryRowCount": false,
+					"selectedColumnsOnly": false,
+					"selectedRowsOnly": false
+				},
+				"DatabaseTransferConsumer": {
+					"entityId": "postgres-jdbc-18ceb57db81-643fa3bb56d54f2f/postgres/public",
+					"openNewConnections": true,
+					"useTransactions": true,
+					"commitAfterRows": 1000,
+					"useMultiRowInsert": false,
+					"multiRowInsertBatch": 500,
+					"skipBindValues": false,
+					"disableUsingBatches": true,
+					"ignoreDuplicateRows": false,
+					"transferAutoGeneratedColumns": true,
+					"disableReferentialIntegrity": true,
+					"useBulkLoad": false,
+					"truncateBeforeLoad": false,
+					"openTableOnFinish": true,
+					"mappings": {
+						"mssql_jtds_legacy-18ceb477545-3f1bdd7d812c2539/\r\nSELECT [ProjectId]\r\n      ,[AgencyId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[OfferAmount]\r\n      ,[NotificationId]\r\n      ,[Response]\r\n      ,[ReceivedOn]\r\n      ,[Note]\r\n  FROM [dbo].[ProjectAgencyResponses]": {
+							"targetName": "project_agency_response",
+							"mappingType": "existing",
+							"attributes": {
+								"projectid": {
+									"targetName": "\"ProjectId\"",
+									"mappingType": "existing"
+								},
+								"agencyid": {
+									"targetName": "\"AgencyId\"",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "\"CreatedById\"",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "\"CreatedOn\"",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "\"UpdatedById\"",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "\"UpdatedOn\"",
+									"mappingType": "existing"
+								},
+								"offeramount": {
+									"targetName": "\"OfferAmount\"",
+									"mappingType": "existing"
+								},
+								"notificationid": {
+									"targetName": "\"NotificationId\"",
+									"mappingType": "existing"
+								},
+								"response": {
+									"targetName": "\"Response\"",
+									"mappingType": "existing"
+								},
+								"receivedon": {
+									"targetName": "\"ReceivedOn\"",
+									"mappingType": "existing"
+								},
+								"note": {
+									"targetName": "\"Note\"",
 									"mappingType": "existing"
 								}
 							}

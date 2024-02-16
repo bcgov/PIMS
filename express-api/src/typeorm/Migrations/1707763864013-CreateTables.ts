@@ -44,9 +44,6 @@ export class CreateTables1707763864013 implements MigrationInterface {
       `CREATE INDEX "IDX_cdcb63fdec2cdf48ea4589557d" ON "user" ("UpdatedById") `,
     );
     await queryRunner.query(
-      `CREATE UNIQUE INDEX "IDX_b000857089edf6cae23b9bc9b8" ON "user" ("Username") `,
-    );
-    await queryRunner.query(
       `CREATE UNIQUE INDEX "IDX_b7eee57d84fb7ed872e660197f" ON "user" ("Email") `,
     );
     await queryRunner.query(
@@ -1745,7 +1742,6 @@ export class CreateTables1707763864013 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE "access_request"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_c01351e0689032ad8995861393"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_b7eee57d84fb7ed872e660197f"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_b000857089edf6cae23b9bc9b8"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_cdcb63fdec2cdf48ea4589557d"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_061257d343976f0dd80167c79e"`);
     await queryRunner.query(`DROP TABLE "user"`);
