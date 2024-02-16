@@ -111,7 +111,6 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
         <Button
           onClick={async () => {
             const isValid = await formMethods.trigger();
-            console.log(`Was valid? ${isValid}`);
             if (isValid) {
               submitHandler(formMethods.getValues());
             }
