@@ -68,6 +68,7 @@ exports[`Building Form component renders correctly 1`] = `
   text-align: left;
   padding: 8px 12px 10px;
   margin-bottom: 10px;
+  font-size: 11px;
 }
 
 .c0 {
@@ -604,49 +605,42 @@ exports[`Building Form component renders correctly 1`] = `
                   class="row"
                 >
                   <div
-                    class="col-md-6"
+                    class="col-md-3"
+                    style="text-align: left;"
+                  >
+                    <label
+                      class="label"
+                      style="padding: 0px;"
+                    >
+                      Building Classification
+                    </label>
+                  </div>
+                  <div
+                    class="col-md-4"
                   >
                     <div
-                      class="row"
+                      class="required"
                     >
-                      <div
-                        class="col-md-4"
-                        style="text-align: right;"
-                      >
-                        <label
-                          class="label"
+                      <div>
+                        <select
+                          class="form-select form-control"
+                          id="input-building.classificationId-fast"
+                          name="building.classificationId"
+                          required=""
+                          style="margin-top: 5px; display: flex;"
+                          type="number"
                         >
-                          Building Classification
-                        </label>
-                      </div>
-                      <div
-                        class="col-md-auto"
-                      >
-                        <div
-                          class="required"
-                        >
-                          <div>
-                            <select
-                              class="form-select form-control"
-                              id="input-building.classificationId-fast"
-                              name="building.classificationId"
-                              required=""
-                              style="margin-top: 5px; display: flex;"
-                              type="number"
-                            >
-                              <option
-                                value=""
-                              >
-                                Must Select One
-                              </option>
-                            </select>
-                          </div>
-                        </div>
+                          <option
+                            value=""
+                          >
+                            Must Select One
+                          </option>
+                        </select>
                       </div>
                     </div>
                   </div>
                   <div
-                    class="col-md-6"
+                    class="col-md-5"
                   >
                     <div
                       class="c4"
