@@ -1,5 +1,5 @@
 import 'dotenv/config.js';
-import express, { Application, RequestHandler } from 'express';
+import express, { Application, Request, RequestHandler, Response } from 'express';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import cors from 'cors';
@@ -65,6 +65,10 @@ app.use(`/api/v2`, headerHandler as RequestHandler);
 
 // Unprotected Routes
 app.use(`/api/v2/health`, router.healthRouter);
+
+app.use('/error', (req: Request, res: Response) => {
+  process.kill(process.pid, 'SIGTERM');
+})
 
 // Protected Routes
 app.use(`/api/v2/ltsa`, protectedRoute(), router.ltsaRouter);
