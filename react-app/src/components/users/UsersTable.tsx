@@ -1,7 +1,6 @@
 import { CustomDataGrid } from '@/components/table/DataTable';
 import {
   Box,
-  Paper,
   SxProps,
   Typography,
   debounce,
@@ -158,7 +157,7 @@ const UsersTable = (props: IUsersTable) => {
         if (!params.value) return <></>;
         return statusChipFormatter(params.value);
       },
-      maxWidth: 100,
+      minWidth: 150,
     },
     {
       field: 'Email',
@@ -209,146 +208,149 @@ const UsersTable = (props: IUsersTable) => {
   ];
 
   return (
-    <Box display={'flex'} justifyContent={'center'}>
-      <Paper
-        sx={
-          {
-            width: '95vw',
-            padding: '2rem',
-            borderRadius: '32px',
-            height: 'fit-content',
-          } as SxProps
-        }
+    <Box
+      sx={
+        {
+          padding: '24px',
+          height: 'fit-content',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        } as SxProps
+      }
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginBottom: '1em',
+        }}
       >
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            marginBottom: '1em',
-          }}
-        >
-          <Box display={'flex'}>
-            <Typography variant="h4" alignSelf={'center'} marginRight={'1em'}>
-              Users Overview ({rowCount ?? 0} users)
-            </Typography>
-            {keywordSearchContents || gridFilterItems.length > 0 ? (
-              <Tooltip title="Clear Filter">
-                <IconButton
-                  onClick={() => {
-                    // Set both DataGrid and Keyword search back to blanks
-                    tableApiRef.current.setFilterModel({ items: [] });
-                    setKeywordSearchContents('');
-                    // Set select field back to default
-                    setSelectValue('All Users');
-                  }}
-                >
-                  <FilterAltOffIcon />
-                </IconButton>
-              </Tooltip>
-            ) : (
-              <></>
-            )}
-          </Box>
-          <Box
-            display={'flex'}
-            maxHeight={'2.5em'}
-            sx={{
-              '> *': {
-                // Applies to all children
-                margin: '0 2px',
-              },
-            }}
-          >
-            <KeywordSearch
-              onChange={updateSearchValue}
-              optionalExternalState={[keywordSearchContents, setKeywordSearchContents]}
-            />
-            <Tooltip
-              title={
-                'Adding a new user from this table is not supported yet. Please advise users to use the sign-up form.'
-              }
-            >
-              <span>
-                <IconButton disabled>
-                  <AddIcon />
-                </IconButton>
-              </span>
-            </Tooltip>
-            <Tooltip title="Export to Excel">
+        <Box display={'flex'}>
+          <Typography variant="h4" alignSelf={'center'} marginRight={'1em'}>
+            Users Overview ({rowCount ?? 0} users)
+          </Typography>
+          {keywordSearchContents || gridFilterItems.length > 0 ? (
+            <Tooltip title="Clear Filter">
               <IconButton
                 onClick={() => {
-                  downloadExcelFile({
-                    data: gridFilteredSortedRowEntriesSelector(tableApiRef),
-                    tableName: 'UsersTable',
-                    filterName: selectValue,
-                    includeDate: true,
-                  });
+                  // Set both DataGrid and Keyword search back to blanks
+                  tableApiRef.current.setFilterModel({ items: [] });
+                  setKeywordSearchContents('');
+                  // Set select field back to default
+                  setSelectValue('All Users');
                 }}
               >
-                <DownloadIcon />
+                <FilterAltOffIcon />
               </IconButton>
             </Tooltip>
-            <Select
-              onChange={(e) => {
-                selectPresetFilter(e.target.value);
-                setSelectValue(e.target.value);
-              }}
-              sx={{ width: '10em', marginLeft: '0.5em' }}
-              value={selectValue}
-            >
-              <CustomMenuItem value={'All Users'}>All Users</CustomMenuItem>
-              <CustomListSubheader>Status</CustomListSubheader>
-              <CustomMenuItem value={'Active'}>Active</CustomMenuItem>
-              <CustomMenuItem value={'Pending'}>Pending</CustomMenuItem>
-              <CustomMenuItem value={'Hold'}>Hold</CustomMenuItem>
-
-              <CustomListSubheader>Role</CustomListSubheader>
-              <CustomMenuItem value={'User'}>User</CustomMenuItem>
-              <CustomMenuItem value={'Admin'}>System Admin</CustomMenuItem>
-            </Select>
-          </Box>
+          ) : (
+            <></>
+          )}
         </Box>
-        <CustomDataGrid
-          onRowClick={rowClickHandler}
-          getRowId={(row) => row.Id}
-          columns={columns}
-          rows={users}
-          loading={isLoading}
-          onStateChange={(e) => {
-            // Keep track of row count separately
-            setRowCount(Object.values(e.filter.filteredRowsLookup).filter((value) => value).length);
-          }}
-          onFilterModelChange={(e) => {
-            // Get the filter items from MUI, filter out blanks, set state
-            setGridFilterItems(e.items.filter((item) => item.value));
-          }}
-          apiRef={tableApiRef}
-          initialState={{
-            pagination: { paginationModel: { pageSize: 10 } },
-            sorting: {
-              sortModel: [{ field: 'created', sort: 'desc' }],
-            },
-          }}
-          pageSizeOptions={[10, 20, 30, 100]} // DataGrid max is 100
-          disableRowSelectionOnClick
+        <Box
+          display={'flex'}
+          maxHeight={'2.5em'}
           sx={{
-            minHeight: '200px',
-            overflow: 'scroll',
-            // Neutralize the hover colour (causing a flash)
-            '& .MuiDataGrid-row.Mui-hovered': {
-              backgroundColor: 'transparent',
-            },
-            // Take out the hover colour
-            '& .MuiDataGrid-row:hover': {
-              backgroundColor: 'transparent',
-            },
-            '& .MuiDataGrid-cell:focus-within': {
-              outline: 'none',
+            '> *': {
+              // Applies to all children
+              margin: '0 2px',
             },
           }}
-          slots={{ toolbar: KeywordSearch }}
-        />
-      </Paper>
+        >
+          <KeywordSearch
+            onChange={updateSearchValue}
+            optionalExternalState={[keywordSearchContents, setKeywordSearchContents]}
+          />
+          <Tooltip
+            title={
+              'Adding a new user from this table is not supported yet. Please advise users to use the sign-up form.'
+            }
+          >
+            <span>
+              <IconButton disabled>
+                <AddIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+          <Tooltip title="Export to Excel">
+            <IconButton
+              onClick={() => {
+                downloadExcelFile({
+                  data: gridFilteredSortedRowEntriesSelector(tableApiRef),
+                  tableName: 'UsersTable',
+                  filterName: selectValue,
+                  includeDate: true,
+                });
+              }}
+            >
+              <DownloadIcon />
+            </IconButton>
+          </Tooltip>
+          <Select
+            onChange={(e) => {
+              selectPresetFilter(e.target.value);
+              setSelectValue(e.target.value);
+            }}
+            sx={{ width: '10em', marginLeft: '0.5em' }}
+            value={selectValue}
+          >
+            <CustomMenuItem value={'All Users'}>All Users</CustomMenuItem>
+            <CustomListSubheader>Status</CustomListSubheader>
+            <CustomMenuItem value={'Active'}>Active</CustomMenuItem>
+            <CustomMenuItem value={'Pending'}>Pending</CustomMenuItem>
+            <CustomMenuItem value={'Hold'}>Hold</CustomMenuItem>
+
+            <CustomListSubheader>Role</CustomListSubheader>
+            <CustomMenuItem value={'User'}>User</CustomMenuItem>
+            <CustomMenuItem value={'Admin'}>System Admin</CustomMenuItem>
+          </Select>
+        </Box>
+      </Box>
+      <CustomDataGrid
+        onRowClick={rowClickHandler}
+        getRowId={(row) => row.Id}
+        columns={columns}
+        rows={users}
+        loading={isLoading}
+        onStateChange={(e) => {
+          // Keep track of row count separately
+          setRowCount(Object.values(e.filter.filteredRowsLookup).filter((value) => value).length);
+        }}
+        onFilterModelChange={(e) => {
+          // Get the filter items from MUI, filter out blanks, set state
+          setGridFilterItems(e.items.filter((item) => item.value));
+        }}
+        apiRef={tableApiRef}
+        initialState={{
+          pagination: { paginationModel: { pageSize: 10 } },
+          sorting: {
+            sortModel: [{ field: 'created', sort: 'desc' }],
+          },
+        }}
+        pageSizeOptions={[10, 20, 30, 100]} // DataGrid max is 100
+        disableRowSelectionOnClick
+        sx={{
+          width: '100%',
+          minHeight: '200px',
+          overflow: 'scroll',
+          // Neutralize the hover colour (causing a flash)
+          '& .MuiDataGrid-row.Mui-hovered': {
+            backgroundColor: 'transparent',
+          },
+          // Take out the hover colour
+          '& .MuiDataGrid-row:hover': {
+            backgroundColor: 'transparent',
+          },
+          '& .MuiDataGrid-cell:focus-within': {
+            outline: 'none',
+          },
+          '& .MuiDataGrid-cell, & .MuiDataGrid-columnHeader': {
+            padding: '16px',
+          },
+        }}
+        slots={{ toolbar: KeywordSearch }}
+      />
     </Box>
   );
 };

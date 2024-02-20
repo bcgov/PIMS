@@ -4,11 +4,11 @@ import { Parcel } from '@/typeorm/Entities/Parcel';
 
 @Entity()
 export class ParcelFiscal extends Fiscal {
-  @PrimaryColumn({ name: 'ParcelId', type: 'int' })
+  @PrimaryColumn({ name: 'parcel_id', type: 'int' })
   @Index()
   ParcelId: number;
 
   @ManyToOne(() => Parcel, (Parcel) => Parcel.Id)
-  @JoinColumn({ name: 'ParcelId' })
+  @JoinColumn({ name: 'parcel_id' })
   Parcel: Parcel;
 }
