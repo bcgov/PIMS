@@ -28,7 +28,7 @@ const Router = () => {
           <Route
             path="/access-request"
             element={
-              <BaseLayout>
+              <BaseLayout displayFooter>
                 <AuthRouteGuard>
                   <AccessRequest />
                 </AuthRouteGuard>

@@ -3,10 +3,10 @@
 exports[`Footer.tsx should match the existing snapshot 1`] = `
 <footer>
   <div
-    className="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-ydkvb7-MuiToolbar-root"
+    className="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-szcixw-MuiToolbar-root"
   >
     <p
-      className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      className="MuiTypography-root MuiTypography-body1 css-3blj21-MuiTypography-root"
     >
       © 2024 Government of British Columbia.
     </p>
