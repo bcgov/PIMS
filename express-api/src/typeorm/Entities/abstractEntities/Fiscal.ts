@@ -8,11 +8,11 @@ export class Fiscal extends BaseEntity {
   @PrimaryColumn('int')
   FiscalYear: number;
 
-  @PrimaryColumn({ name: 'FiscalKeyId', type: 'int' })
+  @PrimaryColumn({ name: 'fiscal_key_id', type: 'int' })
   FiscalKeyId: number;
 
   @ManyToOne(() => FiscalKey, (FiscalKey) => FiscalKey.Id)
-  @JoinColumn({ name: 'FiscalKeyId' })
+  @JoinColumn({ name: 'fiscal_key_id' })
   FiscalKey: FiscalKey;
 
   @Column('money')

@@ -3,22 +3,22 @@ import { UUID } from 'crypto';
 import { Column, CreateDateColumn, ManyToOne, JoinColumn, Index, Relation } from 'typeorm';
 
 export abstract class BaseEntity {
-  @Column({ name: 'CreatedById' })
+  @Column({ name: 'created_by_id' })
   CreatedById: UUID;
 
   @ManyToOne('User', 'User.Id')
-  @JoinColumn({ name: 'CreatedById' })
+  @JoinColumn({ name: 'created_by_id' })
   @Index()
   CreatedBy: Relation<User>;
 
   @CreateDateColumn()
   CreatedOn: Date;
 
-  @Column({ name: 'UpdatedById', nullable: true })
+  @Column({ name: 'updated_by_id', nullable: true })
   UpdatedById: UUID;
 
   @ManyToOne('User', 'User.Id', { nullable: true })
-  @JoinColumn({ name: 'UpdatedById' })
+  @JoinColumn({ name: 'updated_by_id' })
   @Index()
   UpdatedBy: Relation<User>;
 
