@@ -1,4 +1,4 @@
-INSERT INTO "agency"("Id","CreatedById","CreatedOn","UpdatedById","UpdatedOn","Name","IsDisabled","SortOrder","Code","Description","ParentId","Email","SendEmail","AddressTo","CCEmail") VALUES
+INSERT INTO agency(id,created_by_id,created_on,updated_by_id,updated_on,name,is_disabled,sort_order,code,description,parent_id,email,send_email,address_to,cc_email) VALUES
 	 (1,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:29.3833333',NULL,NULL,N'Advanced Education & Skills Training',false,0,N'AEST',N'',NULL,N'kevin.brewster@gov.bc.ca',true,N'Kevin',NULL),
 	 (2,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:29.3833333',NULL,NULL,N'Citizens'' Services',false,0,N'CITZ',N'',NULL,N'dean.skinner@gov.bc.ca',true,N'Dean',NULL),
 	 (4,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:29.3833333',NULL,NULL,N'Education',false,0,N'EDUC',N'',NULL,N'reg.bawa@gov.bc.ca',true,N'Reg',NULL),

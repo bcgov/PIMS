@@ -11,11 +11,11 @@ export class AccessRequest extends BaseEntity {
   Id: number;
 
   // User Relations
-  @Column({ name: 'UserId', type: 'uuid' })
+  @Column({ name: 'user_id', type: 'uuid' })
   UserId: UUID;
 
   @ManyToOne(() => User, (User) => User.Id)
-  @JoinColumn({ name: 'UserId' })
+  @JoinColumn({ name: 'user_id' })
   @Index()
   User: User;
 
@@ -27,18 +27,18 @@ export class AccessRequest extends BaseEntity {
   Status: number;
 
   // Role Relations
-  @Column({ name: 'RoleId', type: 'uuid' })
+  @Column({ name: 'role_id', type: 'uuid' })
   RoleId: UUID;
 
   @ManyToOne(() => Role, (Role) => Role.Id)
-  @JoinColumn({ name: 'RoleId' })
+  @JoinColumn({ name: 'role_id' })
   Role: Role;
 
   // Agency Relations
-  @Column({ name: 'AgencyId', type: 'int' })
+  @Column({ name: 'agency_id', type: 'int' })
   AgencyId: number;
 
   @ManyToOne(() => Agency, (Agency) => Agency.Id)
-  @JoinColumn({ name: 'AgencyId' })
+  @JoinColumn({ name: 'agency_id' })
   Agency: Agency;
 }

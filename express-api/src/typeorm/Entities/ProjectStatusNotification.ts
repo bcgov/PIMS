@@ -10,28 +10,28 @@ export class ProjectStatusNotification extends BaseEntity {
   Id: number;
 
   // Template Relation
-  @Column({ name: 'TemplateId', type: 'int' })
+  @Column({ name: 'template_id', type: 'int' })
   @Index()
   TemplateId: number;
 
   @ManyToOne(() => NotificationTemplate, (Template) => Template.Id)
-  @JoinColumn({ name: 'TemplateId' })
+  @JoinColumn({ name: 'template_id' })
   Template: NotificationTemplate;
 
   // From Status Relation
-  @Column({ name: 'FromStatusId', type: 'int', nullable: true })
+  @Column({ name: 'from_status_id', type: 'int', nullable: true })
   FromStatusId: number;
 
   @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
-  @JoinColumn({ name: 'FromStatusId' })
+  @JoinColumn({ name: 'from_status_id' })
   FromStatus: ProjectStatus;
 
   // To Status Relation
-  @Column({ name: 'ToStatusId', type: 'int' })
+  @Column({ name: 'to_status_id', type: 'int' })
   ToStatusId: number;
 
   @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
-  @JoinColumn({ name: 'ToStatusId' })
+  @JoinColumn({ name: 'to_status_id' })
   @Index()
   ToStatus: ProjectStatus;
 

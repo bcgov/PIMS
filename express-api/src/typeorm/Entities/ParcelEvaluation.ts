@@ -5,11 +5,11 @@ import { Entity, Column, Index, ManyToOne, JoinColumn, PrimaryColumn } from 'typ
 @Entity()
 @Index(['ParcelId', 'EvaluationKey'])
 export class ParcelEvaluation extends Evaluation {
-  @PrimaryColumn({ name: 'ParcelId', type: 'int' })
+  @PrimaryColumn({ name: 'parcel_id', type: 'int' })
   ParcelId: number;
 
   @ManyToOne(() => Parcel, (Parcel) => Parcel.Id)
-  @JoinColumn({ name: 'ParcelId' })
+  @JoinColumn({ name: 'parcel_id' })
   Parcel: Parcel;
 
   @Column({ type: 'character varying', length: 150, nullable: true })
