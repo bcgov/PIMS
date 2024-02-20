@@ -27,6 +27,12 @@ jest.mock('@/services/admin/rolesServices', () => ({
   removeRole: (role: RolesEntity) => _deleteRole(role),
 }));
 
+const _syncKeycloakRoles = jest.fn().mockImplementation(() => {});
+
+jest.mock('@/services/keycloak/keycloakService', () => ({
+  syncKeycloakRoles: () => _syncKeycloakRoles(),
+}));
+
 describe('UNIT - Roles Admin', () => {
   beforeEach(() => {
     const { mockReq, mockRes } = getRequestHandlerMocks();
@@ -43,7 +49,7 @@ describe('UNIT - Roles Admin', () => {
     });
 
     it('should return status 200 and a filtered roles', async () => {
-      mockRequest.body.filter = { name: 'big name' };
+      mockRequest.query = { name: 'big name' };
       const role = produceRole();
       role.Name = 'big name';
       await getRoles(mockRequest, mockResponse);

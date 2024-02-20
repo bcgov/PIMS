@@ -80,23 +80,23 @@ const syncKeycloakRoles = async () => {
       };
       await rolesServices.updateRole(overwriteRole);
     }
+  }
+  //This deletion section is somewhat clunky. Could consider delete cascade on the schema to avoid some of this.
+  const internalRolesForDeletion = await AppDataSource.getRepository(Role).findBy({
+    Name: Not(In(roles.map((a) => a.name))),
+  });
 
-    //This deletion section is somewhat clunky. Could consider delete cascade on the schema to avoid some of this.
-    const internalRolesForDeletion = await AppDataSource.getRepository(Role).findBy({
-      Name: Not(In(roles.map((a) => a.name))),
+  if (internalRolesForDeletion.length) {
+    const roleIdsForDeletion = internalRolesForDeletion.map((role) => role.Id);
+    await AppDataSource.getRepository(User)
+      .createQueryBuilder()
+      .update(User)
+      .set({ RoleId: null })
+      .where('RoleId IN (:...ids)', { ids: roleIdsForDeletion })
+      .execute();
+    await AppDataSource.getRepository(Role).delete({
+      Id: In(roleIdsForDeletion),
     });
-    if (internalRolesForDeletion.length) {
-      const roleIdsForDeletion = internalRolesForDeletion.map((role) => role.Id);
-      await AppDataSource.getRepository(User)
-        .createQueryBuilder()
-        .update(User)
-        .set({ RoleId: null })
-        .where('RoleId IN (:...ids)', { ids: roleIdsForDeletion })
-        .execute();
-      await AppDataSource.getRepository(Role).delete({
-        Id: In(roleIdsForDeletion),
-      });
-    }
   }
   return roles;
 };

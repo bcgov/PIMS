@@ -12,6 +12,11 @@ import {
   unassignUserRole,
 } from '@bcgov/citz-imb-kc-css-api';
 import { faker } from '@faker-js/faker';
+import { produceRole, produceUser } from 'tests/testUtils/factories';
+import { AppDataSource } from '@/appDataSource';
+import { Role } from '@/typeorm/Entities/Role';
+import { User } from '@/typeorm/Entities/User';
+import { DeepPartial } from 'typeorm';
 
 jest.mock('@bcgov/citz-imb-kc-css-api');
 
@@ -24,17 +29,87 @@ const mockUser: IKeycloakUser = {
     display_name: [faker.person.fullName()],
   },
 };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _updateUser = jest.fn().mockImplementation((_user: DeepPartial<User>) => ({ raw: {} }));
+
+jest.mock('@/services/admin/usersServices', () => ({
+  getUsers: () => [produceUser()],
+  getUserById: () => produceUser(),
+  updateUser: (user: DeepPartial<User>) => _updateUser(user),
+}));
+
+const _getRoles = jest.fn();
+const _addRole = jest.fn();
+const _updateRole = jest.fn();
+const _getRoleByName = jest.fn().mockImplementation(async () => produceRole());
+
+jest.mock('@/services/admin/rolesServices', () => ({
+  getRoles: () => _getRoles(),
+  addRole: () => _addRole(),
+  updateRole: () => _updateRole(),
+  getRoleByName: () => _getRoleByName(),
+}));
+
+const _getKeycloakRoles = jest.spyOn(KeycloakService, 'getKeycloakRoles');
+const _getKeycloakUserRoles = jest.spyOn(KeycloakService, 'getKeycloakUserRoles');
+
+const _repoFindBy = jest.spyOn(AppDataSource.getRepository(Role), 'findBy');
+const _repoDelete = jest
+  .spyOn(AppDataSource.getRepository(Role), 'delete')
+  .mockImplementation(async () => ({ raw: {} }));
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const userCreateQueryBuilder: any = {
+  update: () => userCreateQueryBuilder,
+  set: () => userCreateQueryBuilder,
+  where: () => userCreateQueryBuilder,
+  execute: () => {},
+};
+jest
+  .spyOn(AppDataSource.getRepository(User), 'createQueryBuilder')
+  .mockImplementation(() => userCreateQueryBuilder);
 
 describe('UNIT - KeycloakService', () => {
   beforeEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
   });
 
   describe('syncKeycloakRoles', () => {
-    // TODO: finish tests when function is implemented
-    xit('should add roles to PIMS if they do not already exist', () => {});
-    xit('should remove roles from PIMS if they do not exist in Keycloak', () => {});
-    xit('should update roles in PIMS if they do not match what is in Keycloak', () => {});
+    beforeEach(() => jest.clearAllMocks());
+
+    it('should add roles to PIMS if they do not already exist', async () => {
+      _getKeycloakRoles.mockImplementationOnce(async () => [{ name: 'Administrator' }]);
+      _getRoles.mockImplementationOnce(async () => []);
+      _addRole.mockImplementationOnce(async (role) => role);
+      _repoFindBy.mockImplementationOnce(async () => []);
+      await KeycloakService.syncKeycloakRoles();
+
+      expect(_addRole).toHaveBeenCalledTimes(1);
+      expect(_repoDelete).toHaveBeenCalledTimes(0);
+    });
+    it('should remove roles from PIMS if they do not exist in Keycloak', async () => {
+      _getKeycloakRoles.mockImplementationOnce(async () => []);
+      _getRoles.mockImplementationOnce(async () => []);
+      _repoFindBy.mockImplementationOnce(async () => {
+        return [{ ...produceRole(), Name: 'OldRole' }];
+      });
+      await KeycloakService.syncKeycloakRoles();
+
+      expect(_addRole).toHaveBeenCalledTimes(0);
+      expect(_repoDelete).toHaveBeenCalledTimes(1);
+    });
+    it('should update roles in PIMS if they do not match what is in Keycloak', async () => {
+      _getKeycloakRoles.mockImplementationOnce(async () => [{ name: 'Administrator' }]);
+      _getRoles.mockImplementationOnce(async () =>
+        Promise.resolve([{ ...produceRole(), Name: 'Administrator' }]),
+      );
+      _updateRole.mockImplementationOnce(async (role) => role);
+      _repoFindBy.mockImplementationOnce(async () => []);
+
+      await KeycloakService.syncKeycloakRoles();
+
+      expect(_updateRole).toHaveBeenCalledTimes(1);
+      expect(_repoDelete).toHaveBeenCalledTimes(0);
+    });
   });
 
   describe('getKeycloakRoles', () => {
@@ -114,8 +189,16 @@ describe('UNIT - KeycloakService', () => {
 
   describe('syncKeycloakUser', () => {
     // TODO: finish tests when function is implemented
-    xit('should add update user roles in PIMS', () => {});
-    xit('should add user and roles in PIMS if they do not exist', () => {});
+    it('should add update user roles in PIMS', async () => {
+      _getKeycloakUserRoles.mockImplementationOnce(async () => [{ name: 'Test' }]);
+      await KeycloakService.syncKeycloakUser('test');
+      expect(_updateUser.mock.calls[0][0].RoleId).toBeTruthy();
+    });
+    it('should null role if no role is present', async () => {
+      _getKeycloakUserRoles.mockImplementationOnce(async () => []);
+      await KeycloakService.syncKeycloakUser('test');
+      expect(_updateUser.mock.calls[0][0].RoleId).toBeNull();
+    });
   });
 
   describe('getKeycloakUsers', () => {
