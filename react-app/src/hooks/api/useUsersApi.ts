@@ -42,6 +42,9 @@ const useUsersApi = (absoluteFetch: IFetch) => {
   };
   const getAllUsers = async () => {
     const { parsedBody } = await absoluteFetch.get('/admin/users');
+    if (parsedBody.error) {
+      return [];
+    }
     return parsedBody;
   };
   const getUserById = async (userId: string): Promise<User> => {
