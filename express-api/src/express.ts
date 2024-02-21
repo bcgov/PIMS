@@ -1,5 +1,5 @@
 import 'dotenv/config.js';
-import express, { Application, Request, RequestHandler, Response } from 'express';
+import express, { Application, RequestHandler } from 'express';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import cors from 'cors';
