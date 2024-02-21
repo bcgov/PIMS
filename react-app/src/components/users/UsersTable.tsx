@@ -1,31 +1,12 @@
-import { CustomDataGrid, FilterSearchDataGrid } from '@/components/table/DataTable';
-import {
-  Box,
-  SxProps,
-  Typography,
-  debounce,
-  useTheme,
-  IconButton,
-  Select,
-  ListSubheader,
-  MenuItem,
-  Tooltip,
-} from '@mui/material';
-import {
-  GridColDef,
-  GridEventListener,
-  gridFilteredSortedRowEntriesSelector,
-  useGridApiRef,
-} from '@mui/x-data-grid';
-import React, { PropsWithChildren, useEffect, useMemo, useState } from 'react';
+import React from 'react';
+import { FilterSearchDataGrid } from '@/components/table/DataTable';
+import { Box, SxProps, useTheme, ListSubheader, MenuItem } from '@mui/material';
+import { GridColDef, GridEventListener } from '@mui/x-data-grid';
+import { MutableRefObject, PropsWithChildren, useEffect, useState } from 'react';
 import { useKeycloak } from '@bcgov/citz-imb-kc-react';
-import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
-import KeywordSearch from '@/components/table/KeywordSearch';
 import { IUser } from '@/interfaces/IUser';
-import AddIcon from '@mui/icons-material/Add';
-import DownloadIcon from '@mui/icons-material/Download';
-import { downloadExcelFile } from '@/utilities/downloadExcelFile';
 import { dateFormatter, statusChipFormatter } from '@/utils/formatters';
+import { GridApiCommunity } from '@mui/x-data-grid/internals';
 
 const CustomMenuItem = (props: PropsWithChildren & { value: string }) => {
   const theme = useTheme();
@@ -74,7 +55,6 @@ const UsersTable = (props: IUsersTable) => {
   const { refreshData, data, error, isLoading, rowClickHandler } = props;
   const [users, setUsers] = useState([]);
   const { state } = useKeycloak();
-  const tableApiRef = useGridApiRef(); // Ref to MUI DataGrid
 
   useEffect(() => {
     if (error) {
@@ -88,18 +68,18 @@ const UsersTable = (props: IUsersTable) => {
   }, [state, data]);
 
   // Sets the preset filter based on the select input
-  const selectPresetFilter = (value: string) => {
+  const selectPresetFilter = (value: string, ref: MutableRefObject<GridApiCommunity>) => {
     // Clear the quick search contents
 
     switch (value) {
       case 'All Users':
-        tableApiRef.current.setFilterModel({ items: [] });
+        ref.current.setFilterModel({ items: [] });
         break;
       // All Status filters
       case 'Active':
       case 'Pending':
       case 'Hold':
-        tableApiRef.current.setFilterModel({
+        ref.current.setFilterModel({
           items: [
             {
               value,
@@ -112,7 +92,7 @@ const UsersTable = (props: IUsersTable) => {
       // All Role filters
       case 'User':
       case 'Admin':
-        tableApiRef.current.setFilterModel({
+        ref.current.setFilterModel({
           items: [
             {
               value,
@@ -217,18 +197,28 @@ const UsersTable = (props: IUsersTable) => {
         rows={users}
         loading={isLoading}
         onPresetFilterChange={selectPresetFilter}
-        presetFilterSelectOptions={
-          <>
-            <CustomMenuItem value={'All Users'}>All Users</CustomMenuItem>
-            <CustomListSubheader>Status</CustomListSubheader>
-            <CustomMenuItem value={'Active'}>Active</CustomMenuItem>
-            <CustomMenuItem value={'Pending'}>Pending</CustomMenuItem>
-            <CustomMenuItem value={'Hold'}>Hold</CustomMenuItem>
-            <CustomListSubheader>Role</CustomListSubheader>
-            <CustomMenuItem value={'User'}>User</CustomMenuItem>
-            <CustomMenuItem value={'Admin'}>System Admin</CustomMenuItem>
-          </>
-        }
+        presetFilterSelectOptions={[
+          <CustomMenuItem key={'AllUsers'} value={'All Users'}>
+            All Users
+          </CustomMenuItem>,
+          <CustomListSubheader key={'Status'}>Status</CustomListSubheader>,
+          <CustomMenuItem key={'Active'} value={'Active'}>
+            Active
+          </CustomMenuItem>,
+          <CustomMenuItem key={'Pending'} value={'Pending'}>
+            Pending
+          </CustomMenuItem>,
+          <CustomMenuItem key={'Hold'} value={'Hold'}>
+            Hold
+          </CustomMenuItem>,
+          <CustomListSubheader key={'Role'}>Role</CustomListSubheader>,
+          <CustomMenuItem key={'User'} value={'User'}>
+            User
+          </CustomMenuItem>,
+          <CustomMenuItem key={'Admin'} value={'Admin'}>
+            System Admin
+          </CustomMenuItem>,
+        ]}
       />
     </Box>
   );

@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useMemo, useState } from 'react';
+import React, { MutableRefObject, PropsWithChildren, useMemo, useState } from 'react';
 import Icon from '@mdi/react';
 import { mdiDotsHorizontal } from '@mdi/js';
 import {
@@ -29,6 +29,7 @@ import KeywordSearch from './KeywordSearch';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import DownloadIcon from '@mui/icons-material/Download';
 import AddIcon from '@mui/icons-material/Add';
+import { GridApiCommunity } from '@mui/x-data-grid/internals';
 
 type RenderCellParams = GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
 
@@ -150,9 +151,9 @@ export const CustomListSubheader = (props: PropsWithChildren) => {
 };
 
 type FilterSearchDataGridProps = {
-  onPresetFilterChange: (value: string) => void;
+  onPresetFilterChange: (value: string, ref: MutableRefObject<GridApiCommunity>) => void;
   defaultFilter: string;
-  presetFilterSelectOptions: JSX.Element;
+  presetFilterSelectOptions: JSX.Element[];
   tableHeader: string;
   excelTitle: string;
 } & DataGridProps;
@@ -244,7 +245,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           <Select
             onChange={(e) => {
               setKeywordSearchContents('');
-              props.onPresetFilterChange(e.target.value);
+              props.onPresetFilterChange(e.target.value, tableApiRef);
               setSelectValue(e.target.value);
             }}
             sx={{ width: '10em', marginLeft: '0.5em' }}
