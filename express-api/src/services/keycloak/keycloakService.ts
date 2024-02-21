@@ -180,7 +180,7 @@ const syncKeycloakUser = async (username: string) => {
 
   if (kroles.length > 1) {
     logger.warn(
-      `User ${user.Username} was assigned multiple roles in keycloak. This is not fully supported internally. A single role will be assigned abitrarily.`,
+      `User ${user.Username} was assigned multiple roles in keycloak. This is not fully supported internally. A single role will be assigned arbitrarily.`,
     );
   }
 
