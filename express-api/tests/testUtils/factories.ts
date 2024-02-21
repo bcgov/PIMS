@@ -193,20 +193,20 @@ export const produceKeycloak = (): KeycloakUser => {
 };
 
 export const produceParcel = (): Parcel => {
-  return { 
+  return {
     Id: faker.number.int({ max: 10 }),
     CreatedOn: faker.date.anytime(),
     UpdatedOn: faker.date.anytime(),
     Name: faker.string.alphanumeric(),
     LandLegalDescription: faker.string.alphanumeric(),
     PID: undefined,
-    PIN: undefined, 
+    PIN: undefined,
     LandArea: undefined,
     Zoning: undefined,
     ZoningPotential: undefined,
     NotOwned: undefined,
     ParentParcelId: undefined,
-    ParentParcel:undefined,
+    ParentParcel: undefined,
     Description: faker.string.alphanumeric(),
     ClassificationId: undefined,
     Classification: undefined,
@@ -227,6 +227,6 @@ export const produceParcel = (): Parcel => {
     CreatedById: undefined,
     CreatedBy: undefined,
     UpdatedById: undefined,
-    UpdatedBy: undefined
-  }
-}
+    UpdatedBy: undefined,
+  };
+};
