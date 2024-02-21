@@ -4,7 +4,7 @@ import { produceParcel } from "tests/testUtils/factories";
 import { DeepPartial } from "typeorm";
 import * as parcelService from "@/services/parcels/parcelServices";
 
-jest.setTimeout(30000);
+//jest.setTimeout(30000);
 
 const parcelRepo = AppDataSource.getRepository(Parcel);
 
@@ -25,7 +25,7 @@ const _parcelFindOne = jest
             expect(_parcelSave).toHaveBeenCalledTimes(1);
             expect(ret.Id).toBe(parcel.Id);
         });
-        it('should throw an error if the agency already exists', async => { 
+        it('should throw an error if the agency already exists', () => { 
             const parcel = produceParcel();
             _parcelFindOne.mockResolvedValueOnce(parcel);
             expect(async () => await parcelService.postParcel(parcel)).rejects.toThrow();
