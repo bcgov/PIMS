@@ -7,8 +7,13 @@ import { IncomingMessage, Server, ServerResponse } from 'http';
 
 const { API_PORT } = constants;
 
+/**
+ * Starts the application server and initializes the database connection.
+ *
+ * @param app - The Express application instance.
+ * @returns The server instance.
+ */
 const startApp = async (app: Application) => {
-  // activeConnections = [];
   const server = app.listen(API_PORT, (err?: Error) => {
     if (err) logger.error(err);
     logger.info(`Server started on port ${API_PORT}.`);
@@ -26,11 +31,21 @@ const startApp = async (app: Application) => {
   return server;
 };
 
+// Start the server here.
+// Set up in a why that the server could be restarted (reassigned) if needed.
 let server: Server<typeof IncomingMessage, typeof ServerResponse>;
 (async () => {
   server = await startApp(app);
 })();
 
+/**
+ * Stops the application gracefully.
+ *
+ * @param exitCode - The exit code to be used when terminating the process.
+ * @param e - Optional. The error message to be logged.
+ *
+ * @returns void
+ */
 const stopApp = async (exitCode: number, e?: string) => {
   logger.warn('Closing database connection.');
   await AppDataSource.destroy();
@@ -53,6 +68,7 @@ process.on('unhandledRejection', (err: Error) => {
   stopApp(1, `Unhandled rejection: ${err.stack}`);
 });
 
+// When termination call is received.
 process.on('SIGTERM', () => {
   logger.warn('SIGTERM received. Shutting down gracefully.');
   stopApp(0, 'SIGTERM request.');

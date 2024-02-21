@@ -2,6 +2,15 @@ import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import logger from '@/utilities/winstonLogger';
 import { NextFunction, Request, Response } from 'express';
 
+/**
+ * Handles errors and sends appropriate response.
+ * Use this as the last middleware in express.ts
+ *
+ * @param err - The error message or Error object.
+ * @param req - The Express request object.
+ * @param res - The Express response object.
+ * @param next - The Express next function.
+ */
 const errorHandler = (
   err: string | Error | ErrorWithCode,
   req: Request,
