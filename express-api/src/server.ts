@@ -3,12 +3,9 @@ import constants from '@/constants';
 import app from '@/express';
 import { AppDataSource } from '@/appDataSource';
 import { Application } from 'express';
-import { Server } from 'http';
-import { Socket } from 'net';
+import { IncomingMessage, Server, ServerResponse } from 'http';
 
 const { API_PORT } = constants;
-
-// let activeConnections: Socket[] = [];
 
 const startApp = async (app: Application) => {
   // activeConnections = [];
@@ -29,39 +26,35 @@ const startApp = async (app: Application) => {
   return server;
 };
 
-let server: Server;
+let server: Server<typeof IncomingMessage, typeof ServerResponse>;
 (async () => {
   server = await startApp(app);
+  throw new Error('wow');
 })();
 
-// server.on('connection', connection => {
-//   activeConnections.push(connection);
-//   connection.on('close', () => activeConnections = activeConnections.filter(curr => curr !== connection));
-// })
-// Error catching listeners
-process.on('uncaughtException', (err) => {
-  console.log('Uncaught Exception: ', err.message);
-  AppDataSource.destroy();
-  console.log('Closing server now...');
-  process.exit(1);
-});
-
-process.on('unhandledRejection', (err) => {
-  console.log(err);
-  AppDataSource.destroy();
-  console.log('Closing server now...');
-  process.exit(1);
-});
-
-process.on('SIGTERM', async () => {
-  console.log('SIGTERM received. Shutting down gracefully');
+const stopApp = async (exitCode: number, e?: string) => {
+  logger.warn('Closing database connection.');
   await AppDataSource.destroy();
-  console.log('Closing server now...');
+  logger.warn('Closing user connections.');
   server.closeAllConnections();
   server.close(() => {
-    // activeConnections.forEach(curr => curr.end());
-    // activeConnections.forEach(curr => curr.destroy());
-    // process.exit(0);
+    logger.error(`Express application terminated. ${e ?? 'unknown'}`);
+    process.exit(exitCode);
   });
-  server = await startApp(app);
+};
+
+// Error catching listeners
+process.on('uncaughtException', (err: Error) => {
+  logger.warn('Uncaught exception received. Shutting down gracefully.');
+  stopApp(1, `Uncaught exception: ${err.stack}`);
+});
+
+process.on('unhandledRejection', (err: Error) => {
+  logger.warn('Unhandled rejection received. Shutting down gracefully.');
+  stopApp(1, `Unhandled rejection: ${err.stack}`);
+});
+
+process.on('SIGTERM', () => {
+  logger.warn('SIGTERM received. Shutting down gracefully.');
+  stopApp(0, 'SIGTERM request.');
 });
