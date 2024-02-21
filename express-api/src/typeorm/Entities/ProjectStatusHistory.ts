@@ -17,29 +17,29 @@ export class ProjectStatusHistory extends BaseEntity {
   Id: number;
 
   // Project Relation
-  @PrimaryColumn({ name: 'ProjectId', type: 'int' })
+  @PrimaryColumn({ name: 'project_id', type: 'int' })
   ProjectId: number;
 
   @ManyToOne(() => Project, (Project) => Project.Id)
-  @JoinColumn({ name: 'ProjectId' })
+  @JoinColumn({ name: 'project_id' })
   @Index()
   Project: Project;
 
   // Workflow Relation
-  @PrimaryColumn({ name: 'WorkflowId', type: 'int' })
+  @PrimaryColumn({ name: 'workflow_id', type: 'int' })
   WorkflowId: number;
 
   @ManyToOne(() => Workflow, (Workflow) => Workflow.Id)
-  @JoinColumn({ name: 'WorkflowId' })
+  @JoinColumn({ name: 'workflow_id' })
   @Index()
   Workflow: Workflow;
 
   // Status Relation
-  @PrimaryColumn({ name: 'StatusId', type: 'int' })
+  @PrimaryColumn({ name: 'status_id', type: 'int' })
   StatusId: number;
 
   @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
-  @JoinColumn({ name: 'StatusId' })
+  @JoinColumn({ name: 'status_id' })
   @Index()
   Status: ProjectStatus;
 }

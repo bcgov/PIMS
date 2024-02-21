@@ -1,4 +1,4 @@
-INSERT INTO "administrative_area" ("Id","CreatedById","CreatedOn","Name","IsDisabled","SortOrder","RegionalDistrictId","ProvinceId") VALUES
+INSERT INTO administrative_area (id,created_by_id,created_on,name,is_disabled,sort_order,regional_district_id,province_id) VALUES
 	 (2, '00000000-0000-0000-0000-000000000000', '2023-01-17 17:58:40.2466667', '100 Mile House', false, 0, 2, 'BC'),
 (3, '00000000-0000-0000-0000-000000000000', '2023-01-17 17:58:40.2466667', '150 Mile House', false, 0, 2, 'BC'),
 (4, '00000000-0000-0000-0000-000000000000', '2023-01-17 17:58:40.2466667', 'Abbotsford', false, 0, 8, 'BC'),
