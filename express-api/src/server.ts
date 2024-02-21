@@ -29,7 +29,6 @@ const startApp = async (app: Application) => {
 let server: Server<typeof IncomingMessage, typeof ServerResponse>;
 (async () => {
   server = await startApp(app);
-  throw new Error('wow');
 })();
 
 const stopApp = async (exitCode: number, e?: string) => {
