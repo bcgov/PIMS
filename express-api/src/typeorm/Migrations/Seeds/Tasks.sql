@@ -1,4 +1,4 @@
-INSERT INTO "task" ("Id","CreatedById","CreatedOn","UpdatedById","UpdatedOn","Name","IsDisabled","SortOrder","Description","IsOptional","StatusId") VALUES
+INSERT INTO task (id,created_by_id,created_on,updated_by_id,updated_on,name,is_disabled,sort_order,description,is_optional,status_id) VALUES
 	 (1,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.2166667',NULL,NULL,N'Surplus Declaration & Readiness Checklist completed and sent',false,1,N'Surplus Declaration & Readiness Checklist document emailed to SRES.',false,4),
 	 (2,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.2166667',NULL,NULL,N'Triple Bottom Line completed and sent',false,2,N'Triple Bottom Line document emailed to SRES OR Project is in Tier 1.',false,4),
 	 (3,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.2166667',NULL,NULL,N'Review completed',false,0,N'Project property information has been reviewed',false,7),

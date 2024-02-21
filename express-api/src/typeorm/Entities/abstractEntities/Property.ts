@@ -16,29 +16,29 @@ export abstract class Property extends BaseEntity {
   Description: string;
 
   // Classification Relations
-  @Column({ name: 'ClassificationId', type: 'int' })
+  @Column({ name: 'classification_id', type: 'int' })
   ClassificationId: number;
 
   @ManyToOne(() => PropertyClassification, (Classification) => Classification.Id)
-  @JoinColumn({ name: 'ClassificationId' })
+  @JoinColumn({ name: 'classification_id' })
   @Index()
   Classification: PropertyClassification;
 
   // Agency Relations
-  @Column({ name: 'AgencyId', type: 'int', nullable: true })
+  @Column({ name: 'agency_id', type: 'int', nullable: true })
   AgencyId: number;
 
   @ManyToOne(() => Agency, (Agency) => Agency.Id, { nullable: true })
-  @JoinColumn({ name: 'AgencyId' })
+  @JoinColumn({ name: 'agency_id' })
   @Index()
   Agency: Agency;
 
   // Administrative Area Relations
-  @Column({ name: 'AdministrativeAreaId', type: 'int' })
+  @Column({ name: 'administrative_area_id', type: 'int' })
   AdministrativeAreaId: number;
 
   @ManyToOne(() => AdministrativeArea, (AdminArea) => AdminArea.Id)
-  @JoinColumn({ name: 'AdministrativeAreaId' })
+  @JoinColumn({ name: 'administrative_area_id' })
   @Index()
   AdministrativeArea: AdministrativeArea;
 
@@ -55,11 +55,11 @@ export abstract class Property extends BaseEntity {
   ProjectNumbers: string;
 
   // Property Type Relations
-  @Column({ name: 'PropertyTypeId', type: 'int' })
+  @Column({ name: 'property_type_id', type: 'int' })
   PropertyTypeId: number;
 
   @ManyToOne(() => PropertyType, (PropertyType) => PropertyType.Id)
-  @JoinColumn({ name: 'PropertyTypeId' })
+  @JoinColumn({ name: 'property_type_id' })
   @Index()
   PropertyType: PropertyType;
 

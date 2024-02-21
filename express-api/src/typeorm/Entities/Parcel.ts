@@ -25,10 +25,10 @@ export class Parcel extends Property {
   @Column({ type: 'boolean' })
   NotOwned: boolean;
 
-  @Column({ name: 'ParentParcelId', type: 'int', nullable: true })
+  @Column({ name: 'parent_parcel_id', type: 'int', nullable: true })
   ParentParcelId: number;
 
   @ManyToOne(() => Parcel, (Parcel) => Parcel.Id)
-  @JoinColumn({ name: 'ParentParcelId' })
+  @JoinColumn({ name: 'parent_parcel_id' })
   ParentParcel: Parcel;
 }

@@ -28,7 +28,7 @@ export const statusChipFormatter = (value: ChipStatus) => {
     <>
       <Chip
         sx={{
-          width: '6rem',
+          padding: '.25rem',
           color: theme.palette[colorMap[value] ?? 'warning']['main'],
           backgroundColor: theme.palette[colorMap[value] ?? 'warning']['light'],
         }}

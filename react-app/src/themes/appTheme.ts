@@ -128,7 +128,9 @@ const appTheme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          boxShadow: '0px 8px 20px 0px rgba(0, 0, 0, 0.04)',
+          // boxShadow: '0px 8px 20px 0px rgba(0, 0, 0, 0.04)',
+          // Keeping this here for now as reference but I think too many components depend on Paper
+          // to use this globally without interfering with random custom tweaks we want to make.
         },
       },
     },

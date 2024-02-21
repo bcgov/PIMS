@@ -24,10 +24,10 @@ export class Task extends BaseEntity {
   IsOptional: boolean;
 
   // Status Relation
-  @Column({ name: 'StatusId', type: 'int' })
+  @Column({ name: 'status_id', type: 'int' })
   StatusId: number;
 
   @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id, { nullable: true })
-  @JoinColumn({ name: 'StatusId' })
+  @JoinColumn({ name: 'status_id' })
   Status: ProjectStatus;
 }

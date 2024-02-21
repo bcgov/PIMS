@@ -9,11 +9,11 @@ export class ProjectNote extends BaseEntity {
   Id: number;
 
   // Project Relation
-  @Column({ name: 'ProjectId', type: 'int' })
+  @Column({ name: 'project_id', type: 'int' })
   ProjectId: number;
 
   @ManyToOne(() => Project, (Project) => Project.Id)
-  @JoinColumn({ name: 'ProjectId' })
+  @JoinColumn({ name: 'project_id' })
   Project: Project;
 
   @Column('int')
