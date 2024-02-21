@@ -21,10 +21,10 @@ export class ProjectReport extends BaseEntity {
   To: Date;
 
   // Report Type Relation
-  @Column({ name: 'ReportTypeId', type: 'int' })
+  @Column({ name: 'report_type_id', type: 'int' })
   ReportTypeId: number;
 
   @ManyToOne(() => ReportType, (ReportType) => ReportType.Id)
-  @JoinColumn({ name: 'ReportTypeId' })
+  @JoinColumn({ name: 'report_type_id' })
   ReportType: ReportType;
 }

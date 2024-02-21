@@ -7,9 +7,9 @@ const Footer = (): JSX.Element => {
   return (
     <footer>
       <Toolbar
-        sx={{ height: '74px', borderTop: '1px solid', borderTopColor: theme.palette.gray.main }}
+        sx={{ height: '0.85rem', borderTop: '1px solid', borderTopColor: theme.palette.gray.main }}
       >
-        <Typography>{footerCopyright}</Typography>
+        <Typography fontSize={'0.85rem'}>{footerCopyright}</Typography>
         <Box flexGrow={1} />
         <Box display={'flex'} gap={'32px'}>
           <Link href="#" variant="h5">

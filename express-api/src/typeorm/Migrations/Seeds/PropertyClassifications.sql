@@ -1,4 +1,4 @@
-INSERT INTO "property_classification" ("Id","CreatedById","CreatedOn","UpdatedById","UpdatedOn","Name","IsDisabled","SortOrder","IsVisible") VALUES
+INSERT INTO property_classification (id,created_by_id,created_on,updated_by_id,updated_on,name,is_disabled,sort_order,is_visible) VALUES
 	 (0,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'Core Operational',false,1,true),
 	 (1,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'Core Strategic',false,2,true),
 	 (2,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'Surplus Active',false,3,true),

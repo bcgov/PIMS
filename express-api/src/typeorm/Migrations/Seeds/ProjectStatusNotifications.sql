@@ -1,4 +1,4 @@
-INSERT INTO "project_status_notification" ("CreatedById","CreatedOn","UpdatedById","UpdatedOn","TemplateId","FromStatusId","ToStatusId","Priority","Delay","DelayDays") VALUES
+INSERT INTO project_status_notification (created_by_id,created_on,updated_by_id,updated_on,template_id,from_status_id,to_status_id,priority,delay,delay_days) VALUES
 	 ('00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.3300000',NULL,NULL,1,6,7,2,0,0),
 	 ('00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.3300000',NULL,NULL,1,6,8,2,0,0),
 	 ('00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.3300000',NULL,NULL,2,NULL,16,1,0,0),
