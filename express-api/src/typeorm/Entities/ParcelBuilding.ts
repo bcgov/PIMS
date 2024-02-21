@@ -5,17 +5,17 @@ import { Building } from '@/typeorm/Entities/Building';
 
 @Entity()
 export class ParcelBuilding extends BaseEntity {
-  @PrimaryColumn({ name: 'ParcelId', type: 'int' })
+  @PrimaryColumn({ name: 'parcel_id', type: 'int' })
   ParcelId: number;
 
   @ManyToOne(() => Parcel, (Parcel) => Parcel.Id)
-  @JoinColumn({ name: 'ParcelId' })
+  @JoinColumn({ name: 'parcel_id' })
   Parcel: Parcel;
 
-  @PrimaryColumn({ name: 'BuildingId', type: 'int' })
+  @PrimaryColumn({ name: 'building_id', type: 'int' })
   BuildingId: number;
 
   @ManyToOne(() => Building, (Building) => Building.Id)
-  @JoinColumn({ name: 'BuildingId' })
+  @JoinColumn({ name: 'building_id' })
   Building: Building;
 }

@@ -6,21 +6,21 @@ import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 @Entity()
 export class WorkflowProjectStatus extends BaseEntity {
   // Workflow Relation
-  @PrimaryColumn({ name: 'WorkflowId', type: 'int' })
+  @PrimaryColumn({ name: 'workflow_id', type: 'int' })
   @Index()
   WorkflowId: number;
 
   @ManyToOne(() => Workflow, (Workflow) => Workflow.Id)
-  @JoinColumn({ name: 'WorkflowId' })
+  @JoinColumn({ name: 'workflow_id' })
   Workflow: Workflow;
 
   // Status Relation
-  @PrimaryColumn({ name: 'StatusId', type: 'int' })
+  @PrimaryColumn({ name: 'status_id', type: 'int' })
   @Index()
   StatusId: number;
 
   @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
-  @JoinColumn({ name: 'StatusId' })
+  @JoinColumn({ name: 'status_id' })
   Status: ProjectStatus;
 
   @Column('int')

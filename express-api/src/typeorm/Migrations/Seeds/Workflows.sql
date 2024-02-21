@@ -1,4 +1,4 @@
-INSERT INTO "workflow" ("Id","CreatedById","CreatedOn","UpdatedById","UpdatedOn","Name","IsDisabled","SortOrder","Code","Description") VALUES
+INSERT INTO workflow (id,created_by_id,created_on,updated_by_id,updated_on,name,is_disabled,sort_order,code,description) VALUES
 	 (1,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.2766667',NULL,NULL,N'Submit Surplus Property Process Project',false,0,N'SUBMIT-DISPOSAL',N'Create a new Surplus Property Process Project to add properties to the Enhanced Referral Program or the Surplus Property List.'),
 	 (2,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.2766667',NULL,NULL,N'Assess Surplus Property Process Project Request',false,1,N'ASSESS-DISPOSAL',N'Assess a submitted Surplus Property Process Project to determine whether it will be approved or denied.'),
 	 (3,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.2766667',NULL,NULL,N'Assess Enhanced Referral Process Exemption',false,2,N'ASSESS-EXEMPTION',N'Assess a requested ERP exemption.'),

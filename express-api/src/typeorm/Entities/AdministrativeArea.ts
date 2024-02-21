@@ -29,20 +29,20 @@ export class AdministrativeArea extends BaseEntity {
   SortOrder: number;
 
   // Regional District Relations
-  @Column({ name: 'RegionalDistrictId', type: 'int' })
+  @Column({ name: 'regional_district_id', type: 'int' })
   @Index()
   RegionalDistrictId: number;
 
   @ManyToOne(() => RegionalDistrict, (RegionalDistrict) => RegionalDistrict.Id)
-  @JoinColumn({ name: 'RegionalDistrictId' })
+  @JoinColumn({ name: 'regional_district_id' })
   RegionalDistrict: RegionalDistrict;
 
   // Province Relations
-  @Column({ name: 'ProvinceId', type: 'character varying', length: 2 })
+  @Column({ name: 'province_id', type: 'character varying', length: 2 })
   @Index()
   ProvinceId: string;
 
   @ManyToOne(() => Province, (Province) => Province.Id)
-  @JoinColumn({ name: 'ProvinceId' })
+  @JoinColumn({ name: 'province_id' })
   Province: Province;
 }
