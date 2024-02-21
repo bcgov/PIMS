@@ -66,10 +66,6 @@ app.use(`/api/v2`, headerHandler as RequestHandler);
 // Unprotected Routes
 app.use(`/api/v2/health`, router.healthRouter);
 
-app.use('/error', (req: Request, res: Response) => {
-  process.kill(process.pid, 'SIGTERM');
-})
-
 // Protected Routes
 app.use(`/api/v2/ltsa`, protectedRoute(), router.ltsaRouter);
 app.use(`/api/v2/admin`, protectedRoute([Roles.ADMIN]), router.adminRouter);
