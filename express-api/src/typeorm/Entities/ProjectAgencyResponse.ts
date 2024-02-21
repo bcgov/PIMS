@@ -7,30 +7,30 @@ import { Agency } from './Agency';
 @Entity()
 export class ProjectAgencyResponse extends BaseEntity {
   // Project Relation
-  @PrimaryColumn({ name: 'ProjectId', type: 'int' })
+  @PrimaryColumn({ name: 'project_id', type: 'int' })
   ProjectId: number;
 
   @ManyToOne(() => Project, (Project) => Project.Id)
-  @JoinColumn({ name: 'ProjectId' })
+  @JoinColumn({ name: 'project_id' })
   Project: Project;
 
   // Agency Relation
-  @PrimaryColumn({ name: 'AgencyId', type: 'int' })
+  @PrimaryColumn({ name: 'agency_id', type: 'int' })
   AgencyId: number;
 
   @ManyToOne(() => Agency, (Agency) => Agency.Id)
-  @JoinColumn({ name: 'AgencyId' })
+  @JoinColumn({ name: 'agency_id' })
   Agency: Agency;
 
   @Column({ type: 'money' })
   OfferAmount: number;
 
   // Notification Relation
-  @Column({ name: 'NotificationId', type: 'int', nullable: true })
+  @Column({ name: 'notification_id', type: 'int' })
   NotificationId: number;
 
   @ManyToOne(() => NotificationQueue, (Notification) => Notification.Id, { nullable: true })
-  @JoinColumn({ name: 'NotificationId' })
+  @JoinColumn({ name: 'notification_id' })
   @Index()
   Notification: NotificationQueue;
 

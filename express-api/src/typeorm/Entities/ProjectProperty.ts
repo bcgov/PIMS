@@ -12,34 +12,34 @@ export class ProjectProperty extends BaseEntity {
   Id: number;
 
   // Project Relation
-  @Column({ name: 'ProjectId', type: 'int' })
+  @Column({ name: 'project_id', type: 'int' })
   ProjectId: number;
 
   @ManyToOne(() => Project, (Project) => Project.Id)
-  @JoinColumn({ name: 'ProjectId' })
+  @JoinColumn({ name: 'project_id' })
   Project: Project;
 
   // Property Type Relation
-  @Column({ name: 'PropertyTypeId', type: 'int' })
+  @Column({ name: 'property_type_id', type: 'int' })
   PropertyTypeId: number;
 
   @ManyToOne(() => PropertyType, (PropertyType) => PropertyType.Id)
-  @JoinColumn({ name: 'PropertyTypeId' })
+  @JoinColumn({ name: 'property_type_id' })
   PropertyType: PropertyType;
 
   // Parcel Relation
-  @Column({ name: 'ParcelId', type: 'int', nullable: true })
+  @Column({ name: 'parcel_id', type: 'int' })
   ParcelId: number;
 
   @ManyToOne(() => Parcel, (Parcel) => Parcel.Id)
-  @JoinColumn({ name: 'ParcelId' })
+  @JoinColumn({ name: 'parcel_id' })
   Parcel: Parcel;
 
   // Building Relation
-  @Column({ name: 'BuildingId', type: 'int', nullable: true })
+  @Column({ name: 'building_id', type: 'int' })
   BuildingId: number;
 
   @ManyToOne(() => Building, (Building) => Building.Id)
-  @JoinColumn({ name: 'BuildingId' })
+  @JoinColumn({ name: 'building_id' })
   Building: Building;
 }

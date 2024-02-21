@@ -1,4 +1,4 @@
-INSERT INTO "project_status_transition" ("FromWorkflowId","FromStatusId","ToWorkflowId","ToStatusId","CreatedById","CreatedOn","UpdatedById","UpdatedOn","Action","ValidateTasks") VALUES
+INSERT INTO project_status_transition (from_workflow_id,from_status_id,to_workflow_id,to_status_id,created_by_id,created_on,updated_by_id,updated_on,"action",validate_tasks) VALUES
 	 (1,1,1,2,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.3800000',NULL,NULL,N'Select Properties',true),
 	 (1,2,1,3,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.3800000',NULL,NULL,N'Update Information',true),
 	 (1,3,1,4,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.3800000',NULL,NULL,N'Provide Documentation',true),

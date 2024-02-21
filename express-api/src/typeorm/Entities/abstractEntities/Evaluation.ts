@@ -6,11 +6,11 @@ export abstract class Evaluation extends BaseEntity {
   @PrimaryColumn('timestamp')
   Date: Date;
 
-  @PrimaryColumn({ name: 'EvaluationKeyId', type: 'int' })
+  @PrimaryColumn({ name: 'evaluation_key_id', type: 'int' })
   EvaluationKeyId: number;
 
   @ManyToOne(() => EvaluationKey, (EvaluationKey) => EvaluationKey.Id)
-  @JoinColumn({ name: 'EvaluationKeyId' })
+  @JoinColumn({ name: 'evaluation_key_id' })
   EvaluationKey: EvaluationKey;
 
   @Column({ type: 'money' })

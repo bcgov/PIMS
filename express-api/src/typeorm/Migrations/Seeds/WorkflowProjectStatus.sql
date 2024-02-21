@@ -1,4 +1,4 @@
-INSERT INTO "workflow_project_status" ("WorkflowId","StatusId","CreatedById","CreatedOn","UpdatedById","UpdatedOn","SortOrder","IsOptional") VALUES
+INSERT INTO workflow_project_status (workflow_id,status_id,created_by_id,created_on,updated_by_id,updated_on,sort_order,is_optional) VALUES
 	 (1,1,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.3066667',NULL,NULL,0,false),
 	 (1,2,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.3066667',NULL,NULL,1,false),
 	 (1,3,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:35.3066667',NULL,NULL,2,false),

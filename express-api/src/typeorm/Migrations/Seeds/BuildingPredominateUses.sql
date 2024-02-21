@@ -1,4 +1,4 @@
-INSERT INTO "building_predominate_use" ("Id","CreatedById","CreatedOn","UpdatedById","UpdatedOn","Name","IsDisabled","SortOrder") VALUES
+INSERT INTO building_predominate_use (id,created_by_id,created_on,updated_by_id,updated_on,Name,is_disabled,sort_order) VALUES
 	 (0,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.6166667',NULL,NULL,N'Religious',false,0),
 	 (1,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.6166667',NULL,NULL,N'Research & Development Facility',false,0),
 	 (2,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.6166667',NULL,NULL,N'Residential Detached',false,0),
