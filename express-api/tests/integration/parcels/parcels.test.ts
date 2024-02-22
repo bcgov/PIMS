@@ -6,7 +6,7 @@ import { Point } from 'typeorm';
 import { UUID } from 'crypto';
 
 const request = supertest(app);
-const API_PATH = '/api/v2/properties/parcels';
+const API_PATH = '/v2/properties/parcels';
 
 const mockPoint: Point = {
   type: 'Point',

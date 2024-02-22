@@ -14,7 +14,7 @@ export class ProjectReport extends BaseEntity {
   @Column({ type: 'character varying', length: 250, nullable: true })
   Name: string;
 
-  @Column('timestamp')
+  @Column({ type: 'timestamp', nullable: true })
   From: Date;
 
   @Column('timestamp')

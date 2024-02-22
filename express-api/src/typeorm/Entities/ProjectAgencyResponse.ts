@@ -26,7 +26,7 @@ export class ProjectAgencyResponse extends BaseEntity {
   OfferAmount: number;
 
   // Notification Relation
-  @Column({ name: 'notification_id', type: 'int' })
+  @Column({ name: 'notification_id', type: 'int', nullable: true })
   NotificationId: number;
 
   @ManyToOne(() => NotificationQueue, (Notification) => Notification.Id, { nullable: true })

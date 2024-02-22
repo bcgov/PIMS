@@ -10,7 +10,7 @@ import {
 
 const request = supertest(app);
 describe('INTEGRATION - Users', () => {
-  const API_ROUTE = '/api/v2/users';
+  const API_ROUTE = '/v2/users';
 
   describe('GET /users/info', () => {
     xit('should return status 200 with the user keycloak info', async () => {
