@@ -12,6 +12,8 @@ import { KEYCLOAK_OPTIONS } from '@/middleware/keycloak/keycloakOptions';
 import swaggerUi from 'swagger-ui-express';
 import { Roles } from '@/constants/roles';
 import swaggerJSON from '@/swagger/swagger-output.json';
+import errorHandler from '@/middleware/errorHandler';
+import { EndpointNotFound404 } from '@/constants/errors';
 
 const app: Application = express();
 
@@ -77,5 +79,11 @@ app.use(`/api/v2/notifications`, protectedRoute(), router.notificationsRouter);
 app.use(`/api/v2/projects`, protectedRoute(), router.projectsRouter);
 app.use(`/api/v2/reports`, protectedRoute(), router.reportsRouter);
 app.use(`/api/v2/tools`, protectedRoute(), router.toolsRouter);
+
+// If a non-existent route is called. Must go after other routes.
+app.use('*', (_req, _res, next) => next(EndpointNotFound404));
+
+// Request error handler. Must go last.
+app.use(errorHandler);
 
 export default app;
