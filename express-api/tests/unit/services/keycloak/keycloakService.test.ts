@@ -38,7 +38,7 @@ jest.mock('@/services/admin/usersServices', () => ({
   updateUser: (user: DeepPartial<User>) => _updateUser(user),
 }));
 
-const _getRoles = jest.fn();
+const _getRoles = jest.fn().mockImplementation(async () => []);
 const _addRole = jest.fn();
 const _updateRole = jest.fn();
 const _getRoleByName = jest.fn().mockImplementation(async () => produceRole());
@@ -50,7 +50,6 @@ jest.mock('@/services/admin/rolesServices', () => ({
   getRoleByName: () => _getRoleByName(),
 }));
 
-const _getKeycloakRoles = jest.spyOn(KeycloakService, 'getKeycloakRoles');
 const _getKeycloakUserRoles = jest.spyOn(KeycloakService, 'getKeycloakUserRoles');
 
 const _repoFindBy = jest.spyOn(AppDataSource.getRepository(Role), 'findBy');
@@ -72,13 +71,19 @@ describe('UNIT - KeycloakService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
   describe('syncKeycloakRoles', () => {
     beforeEach(() => jest.clearAllMocks());
 
     it('should add roles to PIMS if they do not already exist', async () => {
+      const _getKeycloakRoles = jest.spyOn(KeycloakService, 'getKeycloakRoles');
       _getKeycloakRoles.mockImplementationOnce(async () => [{ name: 'Administrator' }]);
-      _getRoles.mockImplementationOnce(async () => []);
+      _getRoles.mockImplementationOnce(async () => {
+        return [];
+      });
       _addRole.mockImplementationOnce(async (role) => role);
       _repoFindBy.mockImplementationOnce(async () => []);
       await KeycloakService.syncKeycloakRoles();
@@ -87,8 +92,8 @@ describe('UNIT - KeycloakService', () => {
       expect(_repoDelete).toHaveBeenCalledTimes(0);
     });
     it('should remove roles from PIMS if they do not exist in Keycloak', async () => {
+      const _getKeycloakRoles = jest.spyOn(KeycloakService, 'getKeycloakRoles');
       _getKeycloakRoles.mockImplementationOnce(async () => []);
-      _getRoles.mockImplementationOnce(async () => []);
       _repoFindBy.mockImplementationOnce(async () => {
         return [{ ...produceRole(), Name: 'OldRole' }];
       });
@@ -98,8 +103,9 @@ describe('UNIT - KeycloakService', () => {
       expect(_repoDelete).toHaveBeenCalledTimes(1);
     });
     it('should update roles in PIMS if they do not match what is in Keycloak', async () => {
+      const _getKeycloakRoles = jest.spyOn(KeycloakService, 'getKeycloakRoles');
       _getKeycloakRoles.mockImplementationOnce(async () => [{ name: 'Administrator' }]);
-      _getRoles.mockImplementationOnce(async () =>
+      _getRoles.mockImplementationOnce(() =>
         Promise.resolve([{ ...produceRole(), Name: 'Administrator' }]),
       );
       _updateRole.mockImplementationOnce(async (role) => role);
@@ -117,7 +123,7 @@ describe('UNIT - KeycloakService', () => {
       // Mock the call to Keycloak
       const expectedRoles = { data: ['role1', 'role2'] };
       (getRoles as jest.Mock).mockResolvedValue(expectedRoles);
-
+      //_getKeycloakRoles.mockRestore();
       const roles = await KeycloakService.getKeycloakRoles();
       expect(getRoles).toHaveBeenCalledTimes(1);
       expect(roles).toEqual(expectedRoles.data);
@@ -240,7 +246,7 @@ describe('UNIT - KeycloakService', () => {
 
   describe('updateKeycloakUserRoles', () => {
     it('should throw an error when no user is found', async () => {
-      (getUserRoles as jest.Mock).mockResolvedValue({ message: 'no user found' });
+      (getUserRoles as jest.Mock).mockResolvedValueOnce({ message: 'no user found' });
 
       expect(KeycloakService.updateKeycloakUserRoles(mockUser.username, ['role1'])).rejects.toThrow(
         `keycloakService.updateKeycloakUserRoles: `,
@@ -252,7 +258,7 @@ describe('UNIT - KeycloakService', () => {
       const role = {
         name: 'role1',
       };
-      (getUserRoles as jest.Mock).mockResolvedValue({ data: [role] });
+      (getUserRoles as jest.Mock).mockResolvedValueOnce({ data: [role] });
       (assignUserRoles as jest.Mock).mockResolvedValue({ data: [role] });
 
       const response = await KeycloakService.updateKeycloakUserRoles(mockUser.username, ['role1']);
@@ -278,7 +284,7 @@ describe('UNIT - KeycloakService', () => {
           name: 'role3',
         },
       ];
-      (getUserRoles as jest.Mock).mockResolvedValue({ data: existingRoles });
+      (getUserRoles as jest.Mock).mockResolvedValueOnce({ data: existingRoles });
       (assignUserRoles as jest.Mock).mockResolvedValue({ data: newRoles });
       (unassignUserRole as jest.Mock).mockResolvedValue({});
 
