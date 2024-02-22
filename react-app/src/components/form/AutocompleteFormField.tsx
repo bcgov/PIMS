@@ -31,6 +31,7 @@ const AutocompleteFormField = (props: IAutocompleteProps) => {
           options={options}
           PaperComponent={CustomPaper}
           sx={sx}
+          disableClearable={true}
           renderInput={(params) => (
             <TextField
               {...params}

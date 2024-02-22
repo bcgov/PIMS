@@ -4,7 +4,7 @@ import { faker } from '@faker-js/faker';
 
 const request = supertest(app);
 describe('INTEGRATION - Tools', () => {
-  const API_ROUTE = '/api/v2/tools';
+  const API_ROUTE = '/v2/tools';
 
   const makeProjectImportRequest = () => ({
     projectNumber: faker.string.alphanumeric(8),

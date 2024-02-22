@@ -6,7 +6,7 @@ import { IClaim } from '@/controllers/admin/claims/IClaim';
 
 const request = supertest(app);
 
-const CLAIMS_PATH = '/api/v2/admin/claims';
+const CLAIMS_PATH = '/v2/admin/claims';
 const mockClaim: IClaim = {
   createdOn: faker.date.anytime().toLocaleString(),
   updatedOn: faker.date.anytime().toLocaleString(),
