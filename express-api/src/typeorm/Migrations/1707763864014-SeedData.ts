@@ -9,9 +9,6 @@ export class SeedData1707763864014 implements MigrationInterface {
     const Users = SqlReader.readSqlFile(path.join(sqlFilePath, 'Users.sql'));
     await queryRunner.query(Users.toString());
 
-    const Agencies = SqlReader.readSqlFile(path.join(sqlFilePath, 'Agencies.sql'));
-    await queryRunner.query(Agencies.toString());
-
     const Provinces = SqlReader.readSqlFile(path.join(sqlFilePath, 'Provinces.sql'));
     await queryRunner.query(Provinces.toString());
 
@@ -114,7 +111,6 @@ export class SeedData1707763864014 implements MigrationInterface {
     await queryRunner.query('TRUNCATE TABLE property_classification cascade');
     await queryRunner.query('TRUNCATE TABLE property_type cascade');
     await queryRunner.query('TRUNCATE TABLE tier_level cascade');
-    await queryRunner.query('TRUNCATE TABLE agency cascade');
     await queryRunner.query('TRUNCATE TABLE role cascade');
     await queryRunner.query('TRUNCATE TABLE province cascade');
     await queryRunner.query('TRUNCATE TABLE project_risk cascade');
