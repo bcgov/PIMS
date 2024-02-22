@@ -2,7 +2,7 @@ import supertest from 'supertest';
 import app from '@/express';
 
 const request = supertest(app);
-const PROPERTIES_PATH = '/api/v2/properties';
+const PROPERTIES_PATH = '/v2/properties';
 
 describe('INTEGRATION - Properties', () => {
   // TODO: Need to figure out how to get token populated or Keycloak mocked
