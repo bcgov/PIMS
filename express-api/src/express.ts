@@ -50,7 +50,7 @@ app.use(cookieParser());
 app.use(compression());
 
 // Swagger service route
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJSON));
+app.use('/api-docs/', swaggerUi.serve, swaggerUi.setup(swaggerJSON));
 // Get Custom Middleware
 const { headerHandler, morganMiddleware } = middleware;
 
