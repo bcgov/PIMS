@@ -28,7 +28,7 @@ export class ProjectProperty extends BaseEntity {
   PropertyType: PropertyType;
 
   // Parcel Relation
-  @Column({ name: 'parcel_id', type: 'int' })
+  @Column({ name: 'parcel_id', type: 'int', nullable: true })
   ParcelId: number;
 
   @ManyToOne(() => Parcel, (Parcel) => Parcel.Id)
@@ -36,7 +36,7 @@ export class ProjectProperty extends BaseEntity {
   Parcel: Parcel;
 
   // Building Relation
-  @Column({ name: 'building_id', type: 'int' })
+  @Column({ name: 'building_id', type: 'int', nullable: true })
   BuildingId: number;
 
   @ManyToOne(() => Building, (Building) => Building.Id)
