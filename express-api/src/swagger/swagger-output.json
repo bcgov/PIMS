@@ -15,7 +15,7 @@
   },
   "servers": [
     {
-      "url": "/api/v2",
+      "url": "/v2",
       "description": ""
     }
   ],
