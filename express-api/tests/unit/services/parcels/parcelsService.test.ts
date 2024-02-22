@@ -21,14 +21,14 @@ describe('UNIT - Parcel Services', () => {
     it('should add a new parcel and return it', async () => {
       _parcelFindOne.mockResolvedValueOnce(null);
       const parcel = produceParcel();
-      const ret = await parcelService.postParcel(parcel);
+      const ret = await parcelService.addParcel(parcel);
       expect(_parcelSave).toHaveBeenCalledTimes(1);
       expect(ret.Id).toBe(parcel.Id);
     });
     it('should throw an error if the agency already exists', () => {
       const parcel = produceParcel();
       _parcelFindOne.mockResolvedValueOnce(parcel);
-      expect(async () => await parcelService.postParcel(parcel)).rejects.toThrow();
+      expect(async () => await parcelService.addParcel(parcel)).rejects.toThrow();
     });
   });
 });
