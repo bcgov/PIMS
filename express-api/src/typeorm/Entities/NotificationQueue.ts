@@ -51,7 +51,7 @@ export class NotificationQueue extends BaseEntity {
   Tag: string;
 
   // Project Relation
-  @Column({ name: 'project_id', type: 'int' })
+  @Column({ name: 'project_id', type: 'int', nullable: true })
   ProjectId: number;
 
   @ManyToOne(() => Project, (Project) => Project.Id)
@@ -59,7 +59,7 @@ export class NotificationQueue extends BaseEntity {
   Project: Project;
 
   // Agency Relation
-  @Column({ name: 'to_agency_id', type: 'int' })
+  @Column({ name: 'to_agency_id', type: 'int', nullable: true })
   ToAgencyId: number;
 
   @ManyToOne(() => Agency, (Agency) => Agency.Id)
