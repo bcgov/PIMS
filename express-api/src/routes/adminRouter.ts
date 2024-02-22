@@ -1,4 +1,5 @@
 import controllers from '@/controllers';
+import { updateUserRolesByName } from '@/controllers/admin/users/usersController';
 import express from 'express';
 
 const router = express.Router();
@@ -23,14 +24,13 @@ const {
   deleteAccessRequest,
   getAccessRequests,
   addUser,
-  addUserRoleByName,
   deleteUserById,
-  deleteUserRoleByName,
   getUserById,
   getUserRolesByName,
   getUsers,
   getUsersSameAgency,
   updateUserById,
+  getAllRoles,
 } = controllers.admin;
 
 // Endpoints for Admin Access Requests
@@ -72,16 +72,14 @@ router.route(`/users`).get(getUsers).post(addUser);
 
 router.route(`/users/my/agency`).post(getUsersSameAgency); // TODO: Should this just be generic: get users from an agency?
 
+router.route(`/users/roles`).get(getAllRoles);
+
+router.route(`/users/roles/:username`).get(getUserRolesByName).put(updateUserRolesByName);
+
 router
   .route(`/users/:id`)
   .get(getUserById)
   .put(updateUserById) // TODO: should put be a patch?
   .delete(deleteUserById);
-
-router
-  .route(`/users/roles/:username`)
-  .get(getUserRolesByName)
-  .post(addUserRoleByName)
-  .delete(deleteUserRoleByName);
 
 export default router;

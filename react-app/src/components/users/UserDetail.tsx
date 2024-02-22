@@ -15,6 +15,7 @@ import useDataLoader from '@/hooks/useDataLoader';
 import { User } from '@/hooks/api/useUsersApi';
 import { AuthContext } from '@/contexts/authContext';
 import { Agency } from '@/hooks/api/useAgencyApi';
+import { Role } from '@/hooks/api/useRolesApi';
 
 interface IUserDetail {
   userId: string;
@@ -34,14 +35,22 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
   const { data: agencyData, loadOnce: loadAgency } = useDataLoader(api.agencies.getAgencies);
   loadAgency();
 
+  const { data: rolesData, loadOnce: loadRoles } = useDataLoader(api.roles.getInternalRoles);
+  loadRoles();
+
   const agencyOptions = useMemo(
     () => agencyData?.map((agency) => ({ label: agency.Name, value: agency.Id })) ?? [],
     [agencyData],
   );
 
+  const rolesOptions = useMemo(
+    () => rolesData?.map((role) => ({ label: role.Name, value: role.Name })) ?? [],
+    [rolesData],
+  );
+
   const userStatusData = {
     Status: data?.Status,
-    Role: 'Not implemented',
+    Role: data?.Role,
   };
 
   const userProfileData = {
@@ -58,6 +67,8 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
   const customFormatterStatus = (key: keyof User, val: any) => {
     if (key === 'Status') {
       return statusChipFormatter(val);
+    } else if (key === 'Role' && val) {
+      return <Typography>{(val as Role).Name}</Typography>;
     }
   };
 
@@ -101,7 +112,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
     });
     statusFormMethods.reset({
       Status: userStatusData.Status,
-      Role: userStatusData.Role,
+      Role: userStatusData.Role?.Name,
     });
   }, [data]);
 
@@ -200,6 +211,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
         onConfirm={async () => {
           const isValid = await statusFormMethods.trigger();
           if (isValid) {
+            await api.users.updateUserRole(data.Username, statusFormMethods.getValues().Role);
             api.users
               .updateUser(userId, {
                 Id: userId,
@@ -227,11 +239,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
               />
             </Grid>
             <Grid item xs={6}>
-              <AutocompleteFormField
-                name={'Role'}
-                label={'Role'}
-                options={[{ label: 'Not implemented.', value: 'Not implemented.' }]}
-              />
+              <AutocompleteFormField name={'Role'} label={'Role'} options={rolesOptions} />
             </Grid>
           </Grid>
         </FormProvider>

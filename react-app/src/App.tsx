@@ -45,7 +45,7 @@ const Router = () => {
               </BaseLayout>
             }
           />
-          <Route path="admin">
+          <Route path="/admin">
             <Route
               path="users"
               element={

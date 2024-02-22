@@ -28,18 +28,15 @@ const useAsync = <AFArgs extends any[], AFResponse>(
     isPending.current = true;
 
     //An example of one of few instances where there is probably not a real equivalent using await.
-    promiseResponse.current = asyncFunction(...args).then(
-      (response: AFResponse) => {
+    promiseResponse.current = asyncFunction(...args)
+      .then((response: AFResponse) => {
         isPending.current = false;
-
         return response;
-      },
-      (error) => {
+      })
+      .catch((error: unknown) => {
         isPending.current = false;
-
         throw error;
-      },
-    );
+      });
 
     return promiseResponse.current;
   };
