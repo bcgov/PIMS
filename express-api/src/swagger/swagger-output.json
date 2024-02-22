@@ -92,60 +92,6 @@
         }
       }
     },
-    "/agencies": {
-      "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      },
-      "post": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/agencies/{id}": {
-      "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      },
-      "put": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      },
-      "delete": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/agencies/filter": {
-      "post": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/claims": {
       "get": {
         "description": "",
@@ -234,16 +180,6 @@
         }
       }
     },
-    "/roles/name/{name}": {
-      "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/users": {
       "get": {
         "description": "",
@@ -262,7 +198,7 @@
         }
       }
     },
-    "/users/filter": {
+    "/users/my/agency": {
       "post": {
         "description": "",
         "responses": {
@@ -272,12 +208,43 @@
         }
       }
     },
-    "/users/my/agency": {
-      "post": {
+    "/users/roles": {
+      "get": {
         "description": "",
         "responses": {
           "default": {
             "description": ""
+          }
+        }
+      }
+    },
+    "/users/roles/{username}": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
@@ -308,28 +275,143 @@
         }
       }
     },
-    "/users/roles/{username}": {
+    "/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Health"
+        ],
+        "description": "Returns a 200 (OK) status if API is reached.",
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       },
       "post": {
-        "description": "",
+        "tags": [
+          "Agencies - Admin"
+        ],
+        "description": "Adds a new agency to the datasource.",
         "responses": {
-          "default": {
-            "description": ""
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/{id}": {
+      "get": {
+        "tags": [
+          "Agencies - Admin"
+        ],
+        "description": "Returns an agency that matches the supplied ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Agencies - Admin"
+        ],
+        "description": "Deletes an agency that matches the supplied ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Agencies - Admin"
+        ],
+        "description": "Updates an agency that matches the supplied ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Id": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -502,15 +584,12 @@
         }
       }
     },
-    "/": {
+    "/agencies": {
       "get": {
-        "tags": [
-          "Health"
-        ],
-        "description": "Returns a 200 (OK) status if API is reached.",
+        "description": "",
         "responses": {
-          "200": {
-            "description": "OK"
+          "default": {
+            "description": ""
           }
         }
       }
@@ -1599,16 +1678,8 @@
         }
       }
     },
-    "/access/requests": {
+    "/self": {
       "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      },
-      "post": {
         "description": "",
         "responses": {
           "default": {
@@ -1617,37 +1688,9 @@
         }
       }
     },
-    "/access/requests/{requestId}": {
-      "get": {
+    "/access/requests": {
+      "post": {
         "description": "",
-        "parameters": [
-          {
-            "name": "requestId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      },
-      "put": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "requestId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "default": {
             "description": ""
@@ -1668,26 +1711,6 @@
             }
           }
         ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/reports/users": {
-      "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/reports/users/filter": {
-      "post": {
-        "description": "",
         "responses": {
           "default": {
             "description": ""

@@ -11,7 +11,7 @@ describe('INTEGRATION - GET /ltsa', () => {
   const TOKEN = '';
   it('should return 401 Unauthorized if invalid token provided', async () => {
     const response = await request
-      .get(`/api/v2/ltsa/land/title?pid=0`)
+      .get(`/v2/ltsa/land/title?pid=0`)
       .set('Authorization', `Bearer notAToken`);
     expect(response.status).toBe(401);
   });
@@ -19,7 +19,7 @@ describe('INTEGRATION - GET /ltsa', () => {
   xit('should return a 200 status code and a body with the LTSA info', async () => {
     const pid = '000382345'; // PID for 4000 Seymour, Victoria, BC
     const response = await request
-      .get(`/api/v2/ltsa/land/title?pid=${pid}`)
+      .get(`/v2/ltsa/land/title?pid=${pid}`)
       .set('Authorization', `Bearer ${TOKEN}`);
 
     const ltsaInfo: ILtsaOrder = response.body;
@@ -41,7 +41,7 @@ describe('INTEGRATION - GET /ltsa', () => {
   xit('should return a 404 status code if the PID is invalid', async () => {
     const pid = 'notapid';
     const response = await request
-      .get(`/api/v2/ltsa/land/title?pid=${pid}`)
+      .get(`/v2/ltsa/land/title?pid=${pid}`)
       .set('Authorization', `Bearer ${TOKEN}`);
     expect(response.status).toBe(404);
   });

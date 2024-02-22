@@ -50,7 +50,7 @@ app.use(cookieParser());
 app.use(compression());
 
 // Swagger service route
-app.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJSON));
+app.use('/api-docs/', swaggerUi.serve, swaggerUi.setup(swaggerJSON));
 // Get Custom Middleware
 const { headerHandler, morganMiddleware } = middleware;
 
@@ -61,24 +61,24 @@ app.use(morganMiddleware);
 keycloak(app, KEYCLOAK_OPTIONS);
 
 // Set headers for response
-app.use(`/api/v2`, headerHandler as RequestHandler);
+app.use(`/v2`, headerHandler as RequestHandler);
 
 // Unprotected Routes
-app.use(`/api/v2/health`, router.healthRouter);
+app.use(`/v2/health`, router.healthRouter);
 
 // Protected Routes
-app.use(`/api/v2/ltsa`, protectedRoute(), router.ltsaRouter);
-app.use(`/api/v2/admin`, protectedRoute([Roles.ADMIN]), router.adminRouter);
-app.use(`/api/v2/agencies`, protectedRoute(), router.agenciesRouter);
-app.use('/api/v2/lookup', protectedRoute(), router.lookupRouter);
-app.use(`/api/v2/users`, protectedRoute(), router.usersRouter);
-app.use(`/api/v2/properties`, protectedRoute(), router.propertiesRouter);
-app.use(`/api/v2/properties`, protectedRoute(), router.parcelsRouter);
-app.use(`/api/v2/properties`, protectedRoute(), router.buildingsRouter);
-app.use(`/api/v2/notifications`, protectedRoute(), router.notificationsRouter);
-app.use(`/api/v2/projects`, protectedRoute(), router.projectsRouter);
-app.use(`/api/v2/reports`, protectedRoute(), router.reportsRouter);
-app.use(`/api/v2/tools`, protectedRoute(), router.toolsRouter);
+app.use(`/v2/ltsa`, protectedRoute(), router.ltsaRouter);
+app.use(`/v2/admin`, protectedRoute([Roles.ADMIN]), router.adminRouter);
+app.use(`/v2/agencies`, protectedRoute(), router.agenciesRouter);
+app.use('/v2/lookup', protectedRoute(), router.lookupRouter);
+app.use(`/v2/users`, protectedRoute(), router.usersRouter);
+app.use(`/v2/properties`, protectedRoute(), router.propertiesRouter);
+app.use(`/v2/properties`, protectedRoute(), router.parcelsRouter);
+app.use(`/v2/properties`, protectedRoute(), router.buildingsRouter);
+app.use(`/v2/notifications`, protectedRoute(), router.notificationsRouter);
+app.use(`/v2/projects`, protectedRoute(), router.projectsRouter);
+app.use(`/v2/reports`, protectedRoute(), router.reportsRouter);
+app.use(`/v2/tools`, protectedRoute(), router.toolsRouter);
 
 // If a non-existent route is called. Must go after other routes.
 app.use('*', (_req, _res, next) => next(EndpointNotFound404));
