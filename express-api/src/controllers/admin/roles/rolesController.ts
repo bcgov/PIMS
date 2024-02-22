@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import rolesServices from '@/services/admin/rolesServices';
 import { RolesFilter, RolesFilterSchema } from '@/controllers/admin/roles/rolesSchema';
 import { UUID } from 'crypto';
+import KeycloakService from '@/services/keycloak/keycloakService';
 
 /**
  * @description Gets a paged list of roles.
@@ -17,12 +18,17 @@ export const getRoles = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  const filter = RolesFilterSchema.safeParse(req.query);
-  if (filter.success) {
-    const roles = await rolesServices.getRoles(filter.data as RolesFilter); //await rolesServices.getRoles(filter.data as RolesFilter);
-    return res.status(200).send(roles);
-  } else {
-    return res.status(400).send('Could not parse filter.');
+  try {
+    const filter = RolesFilterSchema.safeParse(req.query);
+    await KeycloakService.syncKeycloakRoles();
+    if (filter.success) {
+      const roles = await rolesServices.getRoles(filter.data as RolesFilter); //await rolesServices.getRoles(filter.data as RolesFilter);
+      return res.status(200).send(roles);
+    } else {
+      return res.status(400).send('Could not parse filter.');
+    }
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message);
   }
 };
 

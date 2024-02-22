@@ -50,8 +50,8 @@ const useDataLoader = <AFArgs extends any[], AFResponse = unknown, AFError = unk
       if (!isMounted) {
         return;
       }
-      setError(error);
-      errorHandler?.(error);
+      setError(e);
+      errorHandler?.(e);
     } finally {
       if (isMounted) {
         setIsLoading(false);

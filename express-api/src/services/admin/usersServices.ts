@@ -4,6 +4,7 @@ import { UserFiltering } from '../../controllers/admin/users/usersSchema';
 import KeycloakService from '../keycloak/keycloakService';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { UUID } from 'crypto';
+import { DeepPartial } from 'typeorm';
 
 const getUsers = async (filter: UserFiltering) => {
   const users = await AppDataSource.getRepository(User).find({
@@ -53,7 +54,7 @@ const addUser = async (user: User) => {
   return retUser;
 };
 
-const updateUser = async (user: User) => {
+const updateUser = async (user: DeepPartial<User>) => {
   const resource = await AppDataSource.getRepository(User).findOne({ where: { Id: user.Id } });
   if (!resource) {
     throw new ErrorWithCode('Resource does not exist.', 404);
@@ -83,6 +84,7 @@ const getKeycloakUserRoles = async (username: string) => {
 
 const updateKeycloakUserRoles = async (username: string, roleNames: string[]) => {
   const keycloakRoles = await KeycloakService.updateKeycloakUserRoles(username, roleNames);
+  await KeycloakService.syncKeycloakUser(username);
   return keycloakRoles.map((a) => a.name);
 };
 
