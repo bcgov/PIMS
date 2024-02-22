@@ -25,12 +25,12 @@ export const postParcel = async (parcel: Parcel) => {
  * @returns     findParcel Parcel data matching PID passed in.
  */
 export const getParcelByPid = async (parcelPid: number) => {
-    try {
-      const findParcel = await parcelRepo.findOne({
-        where: { PID: parcelPid },
-      });
-      return findParcel;
-    } catch (e) {
-      throw new ErrorWithCode(e.message, e.status);
-    }
-  };
+  try {
+    const findParcel = await parcelRepo.findOne({
+      where: { PID: parcelPid },
+    });
+    return findParcel;
+  } catch (e) {
+    throw new ErrorWithCode(e.message, e.status);
+  }
+};
