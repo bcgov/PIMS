@@ -31,6 +31,7 @@ jest.mock('@/services/keycloak/keycloakService', () => ({
   getKeycloakUserRoles: (): IKeycloakRole[] => [{ name: 'abc' }],
   updateKeycloakUserRoles: (username: string, roles: string[]): IKeycloakRole[] =>
     roles.map((a) => ({ name: a })),
+  syncKeycloakUser: (username: string) => ({ ...produceUser(), Username: username }),
 }));
 
 describe('UNIT - admin user services', () => {

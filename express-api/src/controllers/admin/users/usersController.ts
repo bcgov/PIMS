@@ -166,12 +166,12 @@ export const getAllRoles = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  const username = req.params.username;
-  if (!username) {
-    return res.status(400).send('Username was empty.');
+  try {
+    const roles = await userServices.getKeycloakRoles();
+    return res.status(200).send(roles);
+  } catch (e) {
+    return res.status(500).send('Something went wrong accessing the keycloak service.');
   }
-  const roles = await userServices.getKeycloakUserRoles(username);
-  return res.status(200).send(roles);
 };
 
 /**
