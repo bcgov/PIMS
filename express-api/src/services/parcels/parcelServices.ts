@@ -11,26 +11,26 @@ const parcelRepo = AppDataSource.getRepository(Parcel);
  * @throws ErrorWithCode If the parcel already exists or is unable to be added.
  */
 export const postParcel = async (parcel: Parcel) => {
-  const existingParcel = await getParcelById(parcel.Id);
+  const existingParcel = await getParcelByPid(parcel.PID);
   if (existingParcel) {
-    throw new ErrorWithCode('Parcel already exists', 409);
+    throw new ErrorWithCode('Parcel already exists.', 409);
   }
   const newParcel = parcelRepo.save(parcel);
   return newParcel;
 };
 
 /**
- * @description Finds and returns a parcel with matching Id
- * @param       parcelId Number representing parcel we want to find.
- * @returns     findParcel Parcel data matching Id passed in.
+ * @description Finds and returns a parcel with matching PID
+ * @param       parcelPID Number representing parcel we want to find.
+ * @returns     findParcel Parcel data matching PID passed in.
  */
-export const getParcelById = async (parcelId: number) => {
-  try {
-    const findParcel = await parcelRepo.findOne({
-      where: { Id: parcelId },
-    });
-    return findParcel;
-  } catch (e) {
-    throw new ErrorWithCode(e.message, e.status);
-  }
-};
+export const getParcelByPid = async (parcelPid: number) => {
+    try {
+      const findParcel = await parcelRepo.findOne({
+        where: { PID: parcelPid },
+      });
+      return findParcel;
+    } catch (e) {
+      throw new ErrorWithCode(e.message, e.status);
+    }
+  };
