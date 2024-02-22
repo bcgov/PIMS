@@ -2,7 +2,7 @@ import supertest from 'supertest';
 import app from '@/express';
 
 const request = supertest(app);
-const LOOKUP_PATH = '/api/v2/lookup';
+const LOOKUP_PATH = '/v2/lookup';
 
 describe('INTEGRATION - Lookup', () => {
   const TOKEN = '';

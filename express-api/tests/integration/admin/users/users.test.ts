@@ -6,7 +6,7 @@ import { IUser } from '@/controllers/admin/users/IUser';
 
 const request = supertest(app);
 
-const USERS_PATH = '/api/v2/admin/users';
+const USERS_PATH = '/v2/admin/users';
 const mockUser: IUser = {
   createdOn: faker.date.anytime().toLocaleString(),
   updatedOn: faker.date.anytime().toLocaleString(),

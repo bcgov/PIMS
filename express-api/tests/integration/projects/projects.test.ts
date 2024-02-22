@@ -6,7 +6,7 @@ import { faker } from '@faker-js/faker';
 
 const request = supertest(app);
 describe('INTEGRATION - Project Routes', () => {
-  const API_ROUTE = '/api/v2';
+  const API_ROUTE = '/v2';
 
   const makeProject = (): Project => {
     return {
