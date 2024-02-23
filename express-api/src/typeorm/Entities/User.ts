@@ -1,5 +1,13 @@
 import { UUID } from 'crypto';
-import { Entity, Column, ManyToOne, Index, JoinColumn, PrimaryColumn, Relation } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  Index,
+  JoinColumn,
+  Relation,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Role } from '@/typeorm/Entities/Role';
@@ -13,7 +21,7 @@ export enum UserStatus {
 
 @Entity()
 export class User extends BaseEntity {
-  @PrimaryColumn({ type: 'uuid' })
+  @PrimaryGeneratedColumn('uuid')
   Id: UUID;
 
   @Column({ type: 'character varying', length: 100 })
