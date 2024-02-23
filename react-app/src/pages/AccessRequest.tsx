@@ -141,7 +141,6 @@ export const AccessRequest = () => {
     }
   };
 
-
   if (auth.pimsUser?.data?.Status && auth.pimsUser.data.Status === 'Active') {
     return <Navigate replace to={'/'} />;
   }
