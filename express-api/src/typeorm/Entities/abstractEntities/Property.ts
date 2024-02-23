@@ -3,7 +3,13 @@ import { Agency } from '@/typeorm/Entities/Agency';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
 import { PropertyType } from '@/typeorm/Entities/PropertyType';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
-import { Column, ManyToOne, JoinColumn, Index, PrimaryGeneratedColumn, Point } from 'typeorm';
+import { Column, ManyToOne, JoinColumn, Index, PrimaryGeneratedColumn } from 'typeorm';
+
+// Custom type to easily handle points without PostGIS
+export type GeoPoint = {
+  x: number;
+  y: number;
+};
 
 export abstract class Property extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -48,8 +54,14 @@ export abstract class Property extends BaseEntity {
   @Column({ type: 'boolean' })
   IsVisibleToOtherAgencies: boolean;
 
-  @Column({ type: 'point' }) // We need PostGIS before we can use type geography, using point for now, but maybe this is ok?
-  Location: Point; // May need a transformation here.
+  @Column({
+    type: 'point',
+    transformer: {
+      to: (obj: GeoPoint) => `${obj.x},${obj.y}`, // Going to the database. Format into point.
+      from: (value: GeoPoint) => value, // Coming from the database. Comes out formatted!
+    },
+  })
+  Location: GeoPoint;
 
   @Column({ type: 'character varying', length: 2000, nullable: true })
   ProjectNumbers: string;
