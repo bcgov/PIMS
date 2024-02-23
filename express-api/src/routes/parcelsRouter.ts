@@ -12,7 +12,7 @@ router
   .put(controllers.updateParcel)
   .delete(controllers.deleteParcel);
 router
-  .route('${PARCELS_URL}/')
+  .route(`${PARCELS_ROUTE}/`)
   .get(controllers.filterParcelsQueryString)
   .post(controllers.addParcel);
 router.route(`${PARCELS_ROUTE}/filter`).post(controllers.filterParcelsRequestBody);
