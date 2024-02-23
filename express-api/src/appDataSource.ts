@@ -24,11 +24,11 @@ export const AppDataSource = new DataSource({
   password: POSTGRES_PASSWORD,
   database: POSTGRES_DB,
   synchronize: false,
-  migrationsRun: false,
+  migrationsRun: true,
   logging: true,
   logger: new CustomWinstonLogger(true),
   entities: Entities,
-  migrations: ['./src/typeorm/Migrations/Seeds/*.ts', './src/typeorm/Migrations/*.ts'],
+  migrations: [`src/typeorm/Migrations/*.{ts,js}`],
   subscribers: [],
   namingStrategy: new SnakeNamingStrategy(),
 });

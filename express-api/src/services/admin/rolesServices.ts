@@ -23,6 +23,12 @@ const getRoleById = async (roleId: UUID) => {
   });
 };
 
+const getRoleByName = async (roleName: string) => {
+  return AppDataSource.getRepository(Role).findOne({
+    where: { Name: roleName },
+  });
+};
+
 const addRole = async (role: Role) => {
   const existing = await getRoleById(role.Id);
   if (existing) {
@@ -55,6 +61,7 @@ const rolesServices = {
   addRole,
   updateRole,
   removeRole,
+  getRoleByName,
 };
 
 export default rolesServices;

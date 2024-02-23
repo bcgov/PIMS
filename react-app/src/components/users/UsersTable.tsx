@@ -158,6 +158,7 @@ const UsersTable = (props: IUsersTable) => {
       headerName: 'Role',
       minWidth: 100,
       flex: 1,
+      valueGetter: (params) => params.value?.Name ?? `No Role`,
     },
     {
       field: 'CreatedOn',

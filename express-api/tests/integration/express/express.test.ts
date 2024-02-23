@@ -7,7 +7,7 @@ describe('INTEGRATION - Express', () => {
   const appSpy = jest.spyOn(app, 'use');
 
   it('should not use the rate limiter when testing', async () => {
-    await request.get('/api/v2/health');
+    await request.get('/v2/health');
     expect(appSpy).not.toHaveBeenCalledWith(limiter);
   });
 });

@@ -243,23 +243,18 @@ describe('UNIT - Users Admin', () => {
   });
 
   describe('Controller getAllRoles', () => {
-    const user = produceUser();
-    beforeEach(() => {
-      mockRequest.params = {
-        username: user.Username,
-      };
-    });
     it('should return status 200 and a list of roles assigned to a user', async () => {
       await getAllRoles(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.at(0)).toBe('admin');
     });
 
-    it('should return status 400 when no username is provided', async () => {
-      mockRequest.params = {};
+    it('should return status 400 when internal service throws', async () => {
+      _getRoles.mockImplementationOnce(() => {
+        throw Error();
+      });
       await getAllRoles(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
-      expect(mockResponse.sendValue).toBe('Username was empty.');
+      expect(mockResponse.statusValue).toBe(500);
     });
   });
 

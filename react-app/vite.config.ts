@@ -21,12 +21,7 @@ export default () => {
         '/api': {
           target: target,
           changeOrigin: true,
-          rewrite: (path) => {
-            if (path.includes('auth')) {
-              return path.replace(/^\/api/, '');
-            }
-            return path;
-          },
+          rewrite: (path) => path.replace(/^\/api/, ''),
         },
       },
     },
