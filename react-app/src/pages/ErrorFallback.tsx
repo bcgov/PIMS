@@ -1,12 +1,90 @@
 import BaseLayout from '@/components/layout/BaseLayout';
 import appTheme from '@/themes/appTheme';
-import { Button, Grid, SxProps, ThemeProvider, Typography } from '@mui/material';
-import React from 'react';
+import { Button, Grid, SxProps, TextField, ThemeProvider, Typography } from '@mui/material';
+import React, { useState } from 'react';
 import errorImage from '@/assets/images/error.svg';
 
 const ErrorFallback = ({ error, resetErrorBoundary }) => {
   // Call resetErrorBoundary() to reset the error boundary and retry the render.
-  // const navigate = useNavigate();
+  const [state, setState] = useState<string>('landing');
+  const [text, setText] = useState<string>('');
+
+  const getElement = () => {
+    switch (state) {
+      case 'report':
+        return (
+          <>
+            <Grid item>
+              <TextField
+                value={text}
+                multiline
+                rows={6}
+                sx={{
+                  width: '100%',
+                  marginBottom: '1em',
+                }}
+                placeholder="Describe the issue or give any desired feedback"
+                onChange={(e) => {
+                  setText(e.target.value);
+                }}
+              ></TextField>
+            </Grid>
+            <Grid
+              item
+              sx={{
+                justifyContent: 'space-between',
+                display: 'flex',
+              }}
+            >
+              <Button
+                variant="text"
+                onClick={() => {
+                  setState('landing');
+                }}
+                sx={{ marginRight: '1em', width: '7.5em' }}
+                size="large"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  console.log(text);
+                }}
+                sx={{ marginRight: '1em', width: '7.5em' }}
+                size="large"
+              >
+                Send
+              </Button>
+            </Grid>
+          </>
+        );
+      default:
+        return (
+          <Grid item>
+            <Button
+              variant="contained"
+              onClick={() => {
+                resetErrorBoundary();
+              }}
+              sx={{ marginRight: '1em', width: '7.5em' }}
+              size="large"
+            >
+              Reload
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                setState('report');
+              }}
+              size="large"
+            >
+              Report a problem
+            </Button>
+          </Grid>
+        );
+    }
+  };
 
   const gridStyle: SxProps = {
     alignItems: 'center',
@@ -32,7 +110,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
             container
             sm={12}
             md={6}
-            sx={{ ...gridStyle, display: 'inline-block', marginLeft: '2em' }}
+            sx={{ ...gridStyle, display: 'inline-block', margin: '0 2em', marginBottom: '2em' }}
           >
             <Grid
               item
@@ -58,21 +136,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
                 The server encountered a temporary error and could not complete your request.
               </Typography>
             </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                onClick={() => {
-                  resetErrorBoundary();
-                }}
-                sx={{ marginRight: '1em', width: '7.5em' }}
-                size="large"
-              >
-                Reload
-              </Button>
-              <Button variant="outlined" onClick={() => {}} size="large">
-                Report a problem
-              </Button>
-            </Grid>
+            {getElement()}
           </Grid>
           <Grid item sm={12} md={5} sx={gridStyle}>
             <img
