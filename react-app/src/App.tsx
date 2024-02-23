@@ -16,61 +16,61 @@ import ErrorFallback from '@/pages/ErrorFallback';
 
 const Router = () => {
   return (
-    <ConfigContextProvider>
-      <AuthContextProvider>
-        <Routes>
-          <Route
-            index
-            element={
-              <BaseLayout displayFooter>
-                <Home />
-              </BaseLayout>
-            }
-          />
-          <Route
-            path="/access-request"
-            element={
-              <BaseLayout displayFooter>
-                <AuthRouteGuard>
-                  <AccessRequest />
-                </AuthRouteGuard>
-              </BaseLayout>
-            }
-          />
-          <Route
-            path="/dev"
-            element={
-              <BaseLayout>
-                <AuthRouteGuard>
-                  <Dev />
-                </AuthRouteGuard>
-              </BaseLayout>
-            }
-          />
-          <Route path="/admin">
-            <Route
-              path="users"
-              element={
-                <BaseLayout>
-                  <AuthRouteGuard>
-                    <UsersManagement />
-                  </AuthRouteGuard>
-                </BaseLayout>
-              }
-            />
-          </Route>
-        </Routes>
-      </AuthContextProvider>
-    </ConfigContextProvider>
+    <Routes>
+      <Route
+        index
+        element={
+          <BaseLayout displayFooter>
+            <Home />
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="/access-request"
+        element={
+          <BaseLayout displayFooter>
+            <AuthRouteGuard>
+              <AccessRequest />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="/dev"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <Dev />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route path="/admin">
+        <Route
+          path="users"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard>
+                <UsersManagement />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
+      </Route>
+    </Routes>
   );
 };
 
 const App = () => {
   return (
     <ThemeProvider theme={appTheme}>
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <Router />
-      </ErrorBoundary>
+      <ConfigContextProvider>
+        <AuthContextProvider>
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Router />
+          </ErrorBoundary>
+        </AuthContextProvider>
+      </ConfigContextProvider>
     </ThemeProvider>
   );
 };

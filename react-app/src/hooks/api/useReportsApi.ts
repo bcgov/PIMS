@@ -10,7 +10,7 @@ export interface ErrorReport {
 
 const useReportsApi = (absoluteFetch: IFetch) => {
   const postErrorReport = async (error: ErrorReport): Promise<FetchResponse> => {
-    return await absoluteFetch.post(`reports/error`, error);
+    return await absoluteFetch.post(`/reports/error`, error);
   };
 
   return {
