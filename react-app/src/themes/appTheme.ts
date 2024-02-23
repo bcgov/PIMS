@@ -154,6 +154,16 @@ const appTheme = createTheme({
         },
       },
     },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: 'white',
+          color: 'black',
+          border: '1px solid #e0e0e0',
+          padding: '0.8rem',
+        },
+      },
+    },
   },
 });
 
