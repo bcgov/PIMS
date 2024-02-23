@@ -2,6 +2,7 @@ import { DataSource } from 'typeorm';
 import { CustomWinstonLogger } from '@/typeorm/utilities/CustomWinstonLogger';
 import dotenv from 'dotenv';
 import { resolve } from 'path';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import Entities from '@/typeorm/entitiesIndex';
 
 dotenv.config({ path: resolve(__dirname, '../../.env') });
@@ -23,10 +24,11 @@ export const AppDataSource = new DataSource({
   password: POSTGRES_PASSWORD,
   database: POSTGRES_DB,
   synchronize: false,
-  migrationsRun: false,
+  migrationsRun: true,
   logging: true,
   logger: new CustomWinstonLogger(true),
   entities: Entities,
-  migrations: ['./src/typeorm/Migrations/Seeds/*.ts', './src/typeorm/Migrations/*.ts'],
+  migrations: ['./src/typeorm/Migrations/Seeds/*.{ts,js}', './src/typeorm/Migrations/*.{ts,js}'],
   subscribers: [],
+  namingStrategy: new SnakeNamingStrategy(),
 });

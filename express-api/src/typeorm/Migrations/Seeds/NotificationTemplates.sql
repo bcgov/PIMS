@@ -1,4 +1,4 @@
-INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById","UpdatedOn","Name","Description","To","Cc","Bcc","Audience","Encoding","BodyType","Priority","Subject","Body","IsDisabled","Tag") VALUES
+INSERT INTO notification_template (id,created_by_id,created_on,updated_by_id,updated_on,name,description,"to",cc,bcc,audience,encoding,body_type,priority,subject,body,is_disabled,tag) VALUES
 	 (1,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'New Disposal Project Submitted',N'Inform SRES a new project has been submitted for assessment.',N'RealPropertyDivision.Disposals@gov.bc.ca',N'',N'',N'Default',N'Utf8',N'Html',N'High',N'New Disposal Project Submitted - @Model.Project.ProjectNumber','
 @using System.Linq
 @using Pims.Dal.Entities
@@ -7,7 +7,7 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
 <html><head><title>@Model.Environment.Title</title></head><body>
 <p>Good afternoon,</p>
 <p>This email is to advise that the following properties have been submitted to the Surplus Property Program to be reviewed as surplus by the current holder of the property and is requesting your review:</p>
-<p>Property Inventory Management System - <a href="@Model.Environment.Uri">@Model.Project.ProjectNumber</a></p>
+<p>Property Inventory Management System - <a href=@Model.Environment.Uri>@Model.Project.ProjectNumber</a></p>
 <p>
     <ol>
         @foreach (var property in Model.Project.Properties)
@@ -28,11 +28,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Parcel.Agency?.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US)) (@appraised.Date.Year BC Assessment)</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US)) (@assessed.Date.Year)</span>
                     }
                 </span>
             }
@@ -51,11 +51,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Building.Agency?.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US")) (@appraised.Date.Year BC Assessment)</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US)) (@appraised.Date.Year BC Assessment)</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US")) (@assessed.Date.Year)</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US)) (@assessed.Date.Year)</span>
                     }
                 </span>
             }
@@ -70,7 +70,7 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
 <head><title>@Model.Environment.Title</title></head>
 <body>
   <p>Good morning / Good afternoon,</p>
-  <p>Your project @Model.Project.ProjectNumber has been denied. Signin to <a href="@Model.Environment.Uri">PIMS</a> to review the reason.</p>
+  <p>Your project @Model.Project.ProjectNumber has been denied. Signin to <a href=@Model.Environment.Uri>PIMS</a> to review the reason.</p>
   <p>Sincerely Real Property Division</p>
 </body>
 </html>',false,N'SPP'),
@@ -78,7 +78,7 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
 <html><head><title>@Model.Environment.Title</title></head>
 <body>
   <p>Good morning / Good afternoon,</p>
-  <p>Your project @Model.Project.ProjectNumber has been cancelled. Signin to <a href="@Model.Environment.Uri">PIMS</a> to review the reason.</p>
+  <p>Your project @Model.Project.ProjectNumber has been cancelled. Signin to <a href=@Model.Environment.Uri>PIMS</a> to review the reason.</p>
   <p>Sincerely Real Property Division</p>
 </body>
 </html>',false,N'SPP'),
@@ -89,7 +89,7 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
 <head><title>@Model.Environment.Title</title></head>
 <body>
   <p>Good morning / Good afternoon,</p>
-  <p>Your project @Model.Project.ProjectNumber has been approved. Signin to <a href="@Model.Environment.Uri">PIMS</a> to review the progress.</p>
+  <p>Your project @Model.Project.ProjectNumber has been approved. Signin to <a href=@Model.Environment.Uri>PIMS</a> to review the progress.</p>
   <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p><p>Sincerely Real Property Division</p>
 </body>
 </html>',false,N'ERP'),
@@ -99,8 +99,8 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
 @using System.Globalization
 
 <html><head><title>@Model.Environment.Title</title></head><body>
-<p>@(Model.ToAgency.AddressTo ?? "Good morning / Good afternoon"),</p>
-<p>As detailed in the <a href="https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf">Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
+<p>@(Model.ToAgency.AddressTo ?? Good morning / Good afternoon),</p>
+<p>As detailed in the <a href=https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf>Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
 <p><b>Please forward this notification to any SUCH Sector Organization or BPS Entity that your ministry is responsible for to ensure any interest from Ministries or Agencies in the properties is identified.</b></p>
 <p><b>Should there be no interest in the property detailed below from your Ministry or any SUCH Sector Organization or BPS Entity that your Ministry is responsible for, please respond to confirm. </b></p>
 <p>This email is to advise that the following property has been identified as surplus by the current holder of the property and is available for redeployment if there is a need by your Ministry, SUCH Sector Organization or BPS Entity:</p>
@@ -125,11 +125,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Parcel.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                 </span>
             }
@@ -148,11 +148,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Building.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                 </span>
             }
@@ -171,9 +171,9 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
 @using System.Globalization
 
 <html><head><title>@Model.Environment.Title</title></head><body>
-<p>@(Model.ToAgency.AddressTo ?? "Good morning / Good afternoon"),</p>
+<p>@(Model.ToAgency.AddressTo ?? Good morning / Good afternoon),</p>
 <p>This email is a 30 Day Reminder Notification as detailed in the initial Notification of Surplus Real Property below.</p>
-<p>As detailed in the <a href="https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf">Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
+<p>As detailed in the <a href=https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf>Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
 <p>This email is to advise that the following property have been identified as surplus is available for redeployment:</p>
 <p><b> @Model.Project.ProjectNumber : </b></p>
 <p>
@@ -196,11 +196,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Parcel.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                 </span>
             }
@@ -219,11 +219,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Building.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                 </span>
             }
@@ -241,9 +241,9 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
 @using System.Globalization
 
 <html><head><title>@Model.Environment.Title</title></head><body>
-<p>@(Model.ToAgency.AddressTo ?? "Good morning / Good afternoon"),</p>
+<p>@(Model.ToAgency.AddressTo ?? Good morning / Good afternoon),</p>
 <p>This email is a 60 Day Reminder Notification as detailed in the initial Notification of Surplus Real Property below.</p>
-<p>As detailed in the <a href="https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf">Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
+<p>As detailed in the <a href=https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf>Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
 <p>This email is to advise that the following property have been identified as surplus is available for redeployment:</p>
 <p><b> @Model.Project.ProjectNumber : </b></p>
 <p>
@@ -266,11 +266,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Parcel.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                 </span>
             }
@@ -289,11 +289,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Building.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                 </span>
             }
@@ -311,9 +311,9 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
 @using System.Globalization
 
 <html><head><title>@Model.Environment.Title</title></head><body>
-<p>@(Model.ToAgency.AddressTo ?? "Good morning / Good afternoon"),</p>
+<p>@(Model.ToAgency.AddressTo ?? Good morning / Good afternoon),</p>
 <p>This email is the 90 Day Completion Reminder Notification as detailed in the initial Notification of Surplus Real Property below.</p>
-<p>As detailed in the <a href="https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf">Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
+<p>As detailed in the <a href=https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf>Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
 <p>This email is to advise that the following property have been identified as surplus is available for redeployment:</p>
 <p><b> @Model.Project.ProjectNumber : </b></p>
 <p>
@@ -336,11 +336,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Parcel.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                 </span>
             }
@@ -359,11 +359,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Building.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                 </span>
             }
@@ -381,9 +381,9 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
 @using System.Globalization
 
 <html><head><title>@Model.Environment.Title</title></head><body>
-<p>@(Model.ToAgency.AddressTo ?? "Good morning / Good afternoon"),</p>
+<p>@(Model.ToAgency.AddressTo ?? Good morning / Good afternoon),</p>
 <p>This email is a 30 Day Reminder Notification as detailed in the initial Notification of Surplus Real Property below.</p>
-<p>As detailed in the <a href="https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf">Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
+<p>As detailed in the <a href=https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf>Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
 <p><b>Please forward this notification to any SUCH Sector Organization or BPS Entity that your ministry is responsible for to ensure any interest from Ministries or Agencies in the properties is identified.</b></p>
 <p><b>Should there be no interest in the property detailed below from your Ministry or any SUCH Sector Organization or BPS Entity that your Ministry is responsible for, please respond to confirm. </b></p>
 <p>This email is to advise that the following property has been identified as surplus by the current holder of the property and is available for redeployment if there is a need by your Ministry, SUCH Sector Organization or BPS Entity:</p>
@@ -408,11 +408,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Parcel.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                 </span>
             }
@@ -431,11 +431,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Building.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                 </span>
             }
@@ -454,9 +454,9 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
 @using System.Globalization
 
 <html><head><title>@Model.Environment.Title</title></head><body>
-<p>@(Model.ToAgency.AddressTo ?? "Good morning / Good afternoon"),</p>
+<p>@(Model.ToAgency.AddressTo ?? Good morning / Good afternoon),</p>
 <p>This email is a 60 Day Reminder Notification as detailed in the initial Notification of Surplus Real Property below.</p>
-<p>As detailed in the <a href="https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf">Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
+<p>As detailed in the <a href=https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf>Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
 <p><b>Please forward this notification to any SUCH Sector Organization or BPS Entity that your ministry is responsible for to ensure any interest from Ministries or Agencies in the properties is identified.</b></p>
 <p><b>Should there be no interest in the property detailed below from your Ministry or any SUCH Sector Organization or BPS Entity that your Ministry is responsible for, please respond to confirm. </b></p>
 <p>This email is to advise that the following property has been identified as surplus by the current holder of the property and is available for redeployment if there is a need by your Ministry, SUCH Sector Organization or BPS Entity:</p>
@@ -481,11 +481,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Parcel.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                 </span>
             }
@@ -504,11 +504,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Building.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                 </span>
             }
@@ -527,9 +527,9 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
 @using System.Globalization
 
 <html><head><title>@Model.Environment.Title</title></head><body>
-<p>@(Model.ToAgency.AddressTo ?? "Good morning / Good afternoon"),</p>
+<p>@(Model.ToAgency.AddressTo ?? Good morning / Good afternoon),</p>
 <p>This email is to provide confirmation that the 90 Day Enhanced Referral Period as detailed in the initial Notification of Surplus Real Property below is now complete.</p>
-<p>As detailed in the <a href="https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf">Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
+<p>As detailed in the <a href=https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf>Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
 <p><b>Please forward this notification to any SUCH Sector Organization or BPS Entity that your ministry is responsible for to ensure any interest from Ministries or Agencies in the properties is identified.</b></p>
 <p><b>Should there be no interest in the property detailed below from your Ministry or any SUCH Sector Organization or BPS Entity that your Ministry is responsible for, please respond to confirm. </b></p>
 <p>This email is to advise that the following property has been identified as surplus by the current holder of the property and is available for redeployment if there is a need by your Ministry, SUCH Sector Organization or BPS Entity:</p>
@@ -554,11 +554,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Parcel.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                 </span>
             }
@@ -577,11 +577,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Building.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                 </span>
             }
@@ -600,9 +600,9 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
 @using System.Globalization
 
 <html><head><title>@Model.Environment.Title</title></head><body>
-<p>@(Model.ToAgency.AddressTo ?? "Good morning / Good afternoon"),</p>
+<p>@(Model.ToAgency.AddressTo ?? Good morning / Good afternoon),</p>
 <p>This email is a 30 Day Reminder Notification as detailed in the initial Notification of Surplus Real Property below.</p>
-<p>As detailed in the <a href="https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf">Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
+<p>As detailed in the <a href=https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf>Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
 <p>This email is to advise that the following property has been identified as surplus by the current holder of the property and is available for redeployment if there is a need by your Ministry, SUCH Sector Organization or BPS Entity:</p>
 <p><b> @Model.Project.ProjectNumber : </b></p>
 <p>
@@ -625,11 +625,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Parcel.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                 </span>
             }
@@ -648,11 +648,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Building.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                 </span>
             }
@@ -671,9 +671,9 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
 @using System.Globalization
 
 <html><head><title>@Model.Environment.Title</title></head><body>
-<p>@(Model.ToAgency.AddressTo ?? "Good morning / Good afternoon"),</p>
+<p>@(Model.ToAgency.AddressTo ?? Good morning / Good afternoon),</p>
 <p>This email is a 60 Day Reminder Notification as detailed in the initial Notification of Surplus Real Property below.</p>
-<p>As detailed in the <a href="https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf">Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
+<p>As detailed in the <a href=https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf>Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
 <p>This email is to advise that the following property has been identified as surplus by the current holder of the property and is available for redeployment if there is a need by your Ministry, SUCH Sector Organization or BPS Entity:</p>
 <p><b> @Model.Project.ProjectNumber : </b></p>
 <p>
@@ -696,11 +696,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Parcel.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                 </span>
             }
@@ -719,11 +719,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Building.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                 </span>
             }
@@ -742,9 +742,9 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
 @using System.Globalization
 
 <html><head><title>@Model.Environment.Title</title></head><body>
-<p>@(Model.ToAgency.AddressTo ?? "Good morning / Good afternoon"),</p>
+<p>@(Model.ToAgency.AddressTo ?? Good morning / Good afternoon),</p>
 <p>This email is to provide confirmation that the 90 Day Enhanced Referral Period as detailed in the initial Notification of Surplus Real Property below is now complete.</p>
-<p>As detailed in the <a href="https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf">Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
+<p>As detailed in the <a href=https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf>Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
 <p>This email is to advise that the following property has been identified as surplus by the current holder of the property and is available for redeployment if there is a need by your Ministry, SUCH Sector Organization or BPS Entity:</p>
 <p><b> @Model.Project.ProjectNumber : </b></p>
 <p>
@@ -767,11 +767,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Parcel.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                 </span>
             }
@@ -790,11 +790,11 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
                     Current Holder of the Property: @property.Building.Agency.Name<br>
                     @if (appraised != null && appraised.Value > 0)
                     {
-                        <span>Appraised Value: @appraised.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Appraised Value: @appraised.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                     else if (assessed != null && assessed.Value > 0)
                     {
-                        <span>Assessed Value: @assessed.Value.ToString("C", new CultureInfo("en-US"))</span>
+                        <span>Assessed Value: @assessed.Value.ToString(C, new CultureInfo(en-US))</span>
                     }
                 </span>
             }
@@ -810,12 +810,12 @@ INSERT INTO "notification_template" ("Id","CreatedById","CreatedOn","UpdatedById
 <p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
 	 (15,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'Access Request',N'A new authenticated user has requested access.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'Default',N'Utf8',N'Html',N'High',N'PIMS - Access Request','
 <html><head><title>@Model.Environment.Title</title></head>
-<body><p>Dear Administrator,</p><p>@Model.AccessRequest.User.FirstName @Model.AccessRequest.User.LastName has submitted an access request to <a href="@Model.Environment.Uri">PIMS</a>.</p><p>Signin and review their request.</p></body></html>',false,N'Access Request'),
+<body><p>Dear Administrator,</p><p>@Model.AccessRequest.User.FirstName @Model.AccessRequest.User.LastName has submitted an access request to <a href=@Model.Environment.Uri>PIMS</a>.</p><p>Signin and review their request.</p></body></html>',false,N'Access Request'),
 	 (16,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'Project Shared Note Changed',N'The shared note has been updated and the owning agency should be notified.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ProjectOwner',N'Utf8',N'Html',N'High',N'PIMS - Project Note Updated - @Model.Project.ProjectNumber','
 @using System.Linq
 @using Pims.Dal.Entities
 <html><head><title>@Model.Environment.Title</title></head>
-<body><p>Dear @(Model.Project.Manager ?? "Property Manager"),</p><p>Your project @Model.Project.ProjectNumber has been updated with the following note;</p><p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.Public)?.Note</p></body></html>',false,N'SPP'),
+<body><p>Dear @(Model.Project.Manager ?? Property Manager),</p><p>Your project @Model.Project.ProjectNumber has been updated with the following note;</p><p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.Public)?.Note</p></body></html>',false,N'SPP'),
 	 (17,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:54.0800000',NULL,NULL,N'Access Request RPD Mailbox',N'A new authenticated user has requested access.',N'CITZ_RPD_IMIT_HELP@gov.bc.ca',N'',N'',N'Default',N'Utf8',N'Html',N'High',N'PIMS - Access Request','
 <html><head><title>@Model.Environment.Title</title></head>
-<body><p>Dear Administrator,</p><p>@Model.AccessRequest.User.FirstName @Model.AccessRequest.User.LastName has submitted an access request to <a href="@Model.Environment.Uri">PIMS</a>.</p><p>Signin and review their request.</p></body></html>',false,N'Access Request');
+<body><p>Dear Administrator,</p><p>@Model.AccessRequest.User.FirstName @Model.AccessRequest.User.LastName has submitted an access request to <a href=@Model.Environment.Uri>PIMS</a>.</p><p>Signin and review their request.</p></body></html>',false,N'Access Request');

@@ -3,7 +3,13 @@ import { Agency } from '@/typeorm/Entities/Agency';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
 import { PropertyType } from '@/typeorm/Entities/PropertyType';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
-import { Column, ManyToOne, JoinColumn, Index, PrimaryGeneratedColumn, Point } from 'typeorm';
+import { Column, ManyToOne, JoinColumn, Index, PrimaryGeneratedColumn } from 'typeorm';
+
+// Custom type to easily handle points without PostGIS
+export type GeoPoint = {
+  x: number;
+  y: number;
+};
 
 export abstract class Property extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -16,29 +22,29 @@ export abstract class Property extends BaseEntity {
   Description: string;
 
   // Classification Relations
-  @Column({ name: 'ClassificationId', type: 'int' })
+  @Column({ name: 'classification_id', type: 'int' })
   ClassificationId: number;
 
   @ManyToOne(() => PropertyClassification, (Classification) => Classification.Id)
-  @JoinColumn({ name: 'ClassificationId' })
+  @JoinColumn({ name: 'classification_id' })
   @Index()
   Classification: PropertyClassification;
 
   // Agency Relations
-  @Column({ name: 'AgencyId', type: 'int', nullable: true })
+  @Column({ name: 'agency_id', type: 'int', nullable: true })
   AgencyId: number;
 
   @ManyToOne(() => Agency, (Agency) => Agency.Id, { nullable: true })
-  @JoinColumn({ name: 'AgencyId' })
+  @JoinColumn({ name: 'agency_id' })
   @Index()
   Agency: Agency;
 
   // Administrative Area Relations
-  @Column({ name: 'AdministrativeAreaId', type: 'int' })
+  @Column({ name: 'administrative_area_id', type: 'int' })
   AdministrativeAreaId: number;
 
   @ManyToOne(() => AdministrativeArea, (AdminArea) => AdminArea.Id)
-  @JoinColumn({ name: 'AdministrativeAreaId' })
+  @JoinColumn({ name: 'administrative_area_id' })
   @Index()
   AdministrativeArea: AdministrativeArea;
 
@@ -48,18 +54,24 @@ export abstract class Property extends BaseEntity {
   @Column({ type: 'boolean' })
   IsVisibleToOtherAgencies: boolean;
 
-  @Column({ type: 'point' }) // We need PostGIS before we can use type geography, using point for now, but maybe this is ok?
-  Location: Point; // May need a transformation here.
+  @Column({
+    type: 'point',
+    transformer: {
+      to: (obj: GeoPoint) => `${obj.x},${obj.y}`, // Going to the database. Format into point.
+      from: (value: GeoPoint) => value, // Coming from the database. Comes out formatted!
+    },
+  })
+  Location: GeoPoint;
 
   @Column({ type: 'character varying', length: 2000, nullable: true })
   ProjectNumbers: string;
 
   // Property Type Relations
-  @Column({ name: 'PropertyTypeId', type: 'int' })
+  @Column({ name: 'property_type_id', type: 'int' })
   PropertyTypeId: number;
 
   @ManyToOne(() => PropertyType, (PropertyType) => PropertyType.Id)
-  @JoinColumn({ name: 'PropertyTypeId' })
+  @JoinColumn({ name: 'property_type_id' })
   @Index()
   PropertyType: PropertyType;
 

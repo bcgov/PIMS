@@ -14,17 +14,17 @@ export class ProjectReport extends BaseEntity {
   @Column({ type: 'character varying', length: 250, nullable: true })
   Name: string;
 
-  @Column('timestamp')
+  @Column({ type: 'timestamp', nullable: true })
   From: Date;
 
   @Column('timestamp')
   To: Date;
 
   // Report Type Relation
-  @Column({ name: 'ReportTypeId', type: 'int' })
+  @Column({ name: 'report_type_id', type: 'int' })
   ReportTypeId: number;
 
   @ManyToOne(() => ReportType, (ReportType) => ReportType.Id)
-  @JoinColumn({ name: 'ReportTypeId' })
+  @JoinColumn({ name: 'report_type_id' })
   ReportType: ReportType;
 }

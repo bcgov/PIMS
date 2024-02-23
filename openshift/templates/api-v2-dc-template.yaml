@@ -69,7 +69,7 @@ objects:
                 memory: 100Mi
             readinessProbe:
               httpGet:
-                path: /api/v2/health
+                path: /v2/health
                 port: 5000
                 scheme: HTTP
               initialDelaySeconds: 60
@@ -81,7 +81,7 @@ objects:
             name: pims-api-v2
             livenessProbe:
               httpGet:
-                path: /api/v2/health
+                path: /v2/health
                 port: 5000
                 scheme: HTTP
               initialDelaySeconds: 60

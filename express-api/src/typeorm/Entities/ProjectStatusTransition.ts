@@ -8,35 +8,35 @@ import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 @Index(['FromWorkflowId', 'FromStatusId'])
 export class ProjectStatusTransition extends BaseEntity {
   // From Workflow Relation
-  @PrimaryColumn({ name: 'FromWorkflowId', type: 'int' })
+  @PrimaryColumn({ name: 'from_workflow_id', type: 'int' })
   FromWorkflowId: number;
 
   @ManyToOne(() => Workflow, (Workflow) => Workflow.Id)
-  @JoinColumn({ name: 'FromWorkflowId' })
+  @JoinColumn({ name: 'from_workflow_id' })
   FromWorkflow: Relation<Workflow>;
 
   // From Status Relation
-  @PrimaryColumn({ name: 'FromStatusId', type: 'int' })
+  @PrimaryColumn({ name: 'from_status_id', type: 'int' })
   FromStatusId: number;
 
   @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
-  @JoinColumn({ name: 'FromStatusId' })
+  @JoinColumn({ name: 'from_status_id' })
   FromStatus: Relation<ProjectStatus>;
 
   // To Workflow Relation
-  @PrimaryColumn({ name: 'ToWorkflowId', type: 'int' })
+  @PrimaryColumn({ name: 'to_workflow_id', type: 'int' })
   ToWorkflowId: number;
 
   @ManyToOne(() => Workflow, (Workflow) => Workflow.Id)
-  @JoinColumn({ name: 'ToWorkflowId' })
+  @JoinColumn({ name: 'to_workflow_id' })
   ToWorkflow: Relation<Workflow>;
 
   // To Status Relation
-  @PrimaryColumn({ name: 'ToStatusId', type: 'int' })
+  @PrimaryColumn({ name: 'to_status_id', type: 'int' })
   ToStatusId: number;
 
   @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
-  @JoinColumn({ name: 'ToStatusId' })
+  @JoinColumn({ name: 'to_status_id' })
   ToStatus: Relation<ProjectStatus>;
 
   @Column({ type: 'character varying', length: 100 })

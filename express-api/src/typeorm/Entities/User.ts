@@ -1,5 +1,13 @@
 import { UUID } from 'crypto';
-import { Entity, Column, ManyToOne, Index, JoinColumn, PrimaryColumn, Relation } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  Index,
+  JoinColumn,
+  Relation,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Role } from '@/typeorm/Entities/Role';
@@ -13,7 +21,7 @@ export enum UserStatus {
 
 @Entity()
 export class User extends BaseEntity {
-  @PrimaryColumn({ type: 'uuid' })
+  @PrimaryGeneratedColumn('uuid')
   Id: UUID;
 
   @Column({ type: 'character varying', length: 100 })
@@ -54,11 +62,11 @@ export class User extends BaseEntity {
   @Column({ type: 'timestamp', nullable: true })
   LastLogin: Date;
 
-  @Column({ name: 'ApprovedById', type: 'uuid', nullable: true })
+  @Column({ name: 'approved_by_id', type: 'uuid', nullable: true })
   ApprovedById: UUID;
 
   @ManyToOne(() => User, (User) => User.Id, { nullable: true })
-  @JoinColumn({ name: 'ApprovedById' })
+  @JoinColumn({ name: 'approved_by_id' })
   ApprovedBy: User;
 
   @Column({ type: 'timestamp', nullable: true })
@@ -69,19 +77,19 @@ export class User extends BaseEntity {
   KeycloakUserId: string;
 
   // Agency Relations
-  @Column({ name: 'AgencyId', type: 'int', nullable: true })
+  @Column({ name: 'agency_id', type: 'int', nullable: true })
   AgencyId: number;
 
   @ManyToOne(() => Agency, (agency) => agency.Users, { nullable: true })
-  @JoinColumn({ name: 'AgencyId' })
+  @JoinColumn({ name: 'agency_id' })
   Agency: Relation<Agency>;
 
   // Role Relations
-  @Column({ name: 'RoleId', type: 'uuid', nullable: true })
+  @Column({ name: 'role_id', type: 'uuid', nullable: true })
   RoleId: UUID;
 
   @ManyToOne(() => Role, (role) => role.Users, { nullable: true })
-  @JoinColumn({ name: 'RoleId' })
+  @JoinColumn({ name: 'role_id' })
   Role: Relation<Role>;
 
   @Column({ type: 'enum', enum: UserStatus })

@@ -1,5 +1,5 @@
 import React from 'react';
-import headerImageLarge from '@/assets/images/BCID_H_rgb_pos.png';
+import headerImageLarge from '@/assets/images/BCGOV_logo.svg';
 import headerImageSmall from '@/assets/images/BCID_V_rgb_pos.png';
 import { AppBar, Link, Box, Button, Divider, Toolbar, Typography, useTheme } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
@@ -28,14 +28,19 @@ const AppBrand = () => {
           <img
             src={headerImageSmall}
             alt={'Government of British Columbia'}
-            style={{ height: '48px' }}
+            style={{ height: '34px' }}
           />
         </picture>
         <Divider
           style={{ borderBottomWidth: '26px', borderRightWidth: '2px' }}
           orientation="vertical"
         />
-        <Typography marginLeft={'16px'} color={theme.palette.black.main} variant="h5">
+        <Typography
+          marginLeft={'16px'}
+          color={theme.palette.black.main}
+          variant="h4"
+          fontSize={'1rem'}
+        >
           Property Inventory Management System
         </Typography>
       </RouterLink>
@@ -78,7 +83,7 @@ const Header: React.FC = () => {
               <Link underline="none" href="#" variant="h5">
                 Disposal Inventory
               </Link>
-              <Link underline="none" href="/admin/users" variant="h5">
+              <Link component={RouterLink} underline="none" to="/admin/users" variant="h5">
                 Users
               </Link>
             </>

@@ -51,28 +51,28 @@ export class NotificationQueue extends BaseEntity {
   Tag: string;
 
   // Project Relation
-  @Column({ name: 'ProjectId', type: 'int' })
+  @Column({ name: 'project_id', type: 'int', nullable: true })
   ProjectId: number;
 
   @ManyToOne(() => Project, (Project) => Project.Id)
-  @JoinColumn({ name: 'ProjectId' })
+  @JoinColumn({ name: 'project_id' })
   Project: Project;
 
   // Agency Relation
-  @Column({ name: 'ToAgencyId', type: 'int' })
+  @Column({ name: 'to_agency_id', type: 'int', nullable: true })
   ToAgencyId: number;
 
   @ManyToOne(() => Agency, (Agency) => Agency.Id)
-  @JoinColumn({ name: 'ToAgencyId' })
+  @JoinColumn({ name: 'to_agency_id' })
   @Index()
   ToAgency: Agency;
 
   // Template Relation
-  @Column({ name: 'TemplateId', type: 'int' })
+  @Column({ name: 'template_id', type: 'int' })
   TemplateId: number;
 
   @ManyToOne(() => NotificationTemplate, (Template) => Template.Id)
-  @JoinColumn({ name: 'TemplateId' })
+  @JoinColumn({ name: 'template_id' })
   @Index()
   Template: NotificationTemplate;
 

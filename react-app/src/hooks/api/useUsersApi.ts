@@ -1,5 +1,6 @@
 import { IFetch } from '../useFetch';
 import { Agency } from './useAgencyApi';
+import { KeycloakRole, Role } from './useRolesApi';
 
 export interface User {
   //temp interface, should standardize somehow
@@ -16,7 +17,8 @@ export interface User {
   AgencyId: number | null;
   Agency: Agency | null;
   Position: string;
-  Role: string;
+  RoleId: string;
+  Role: Role;
 }
 
 export interface AccessRequest {
@@ -40,6 +42,9 @@ const useUsersApi = (absoluteFetch: IFetch) => {
   };
   const getAllUsers = async () => {
     const { parsedBody } = await absoluteFetch.get('/admin/users');
+    if (parsedBody.error) {
+      return [];
+    }
     return parsedBody;
   };
   const getUserById = async (userId: string): Promise<User> => {
@@ -49,6 +54,10 @@ const useUsersApi = (absoluteFetch: IFetch) => {
   const updateUser = async (userId: string, user: Partial<User>) => {
     const { parsedBody } = await absoluteFetch.put(`/admin/users/${userId}`, user);
     return parsedBody;
+  };
+  const updateUserRole = async (username: string, role: string) => {
+    const { parsedBody } = await absoluteFetch.put(`/admin/users/roles/${username}`, [role]);
+    return parsedBody as KeycloakRole[];
   };
   const deleteUser = async (userId: string) => {
     const { parsedBody } = await absoluteFetch.del(`/admin/users/${userId}`, { Id: userId });
@@ -62,6 +71,7 @@ const useUsersApi = (absoluteFetch: IFetch) => {
     getUserById,
     updateUser,
     deleteUser,
+    updateUserRole,
   };
 };
 

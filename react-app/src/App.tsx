@@ -30,7 +30,7 @@ const Router = () => {
           <Route
             path="/access-request"
             element={
-              <BaseLayout>
+              <BaseLayout displayFooter>
                 <AuthRouteGuard>
                   <AccessRequest />
                 </AuthRouteGuard>
@@ -47,7 +47,7 @@ const Router = () => {
               </BaseLayout>
             }
           />
-          <Route path="admin">
+          <Route path="/admin">
             <Route
               path="users"
               element={

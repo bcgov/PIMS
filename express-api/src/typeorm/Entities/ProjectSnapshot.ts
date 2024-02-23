@@ -17,11 +17,11 @@ export class ProjectSnapshot extends BaseEntity {
   Id: number;
 
   // Project Relation
-  @PrimaryColumn({ name: 'ProjectId', type: 'int' })
+  @PrimaryColumn({ name: 'project_id', type: 'int' })
   ProjectId: number;
 
   @ManyToOne(() => Project, (Project) => Project.Id)
-  @JoinColumn({ name: 'ProjectId' })
+  @JoinColumn({ name: 'project_id' })
   @Index()
   Project: Project;
 
