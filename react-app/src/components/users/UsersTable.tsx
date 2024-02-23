@@ -1,31 +1,12 @@
-import { CustomDataGrid } from '@/components/table/DataTable';
-import {
-  Box,
-  SxProps,
-  Typography,
-  debounce,
-  useTheme,
-  IconButton,
-  Select,
-  ListSubheader,
-  MenuItem,
-  Tooltip,
-} from '@mui/material';
-import {
-  GridColDef,
-  GridEventListener,
-  gridFilteredSortedRowEntriesSelector,
-  useGridApiRef,
-} from '@mui/x-data-grid';
-import React, { PropsWithChildren, useEffect, useMemo, useState } from 'react';
+import React from 'react';
+import { FilterSearchDataGrid } from '@/components/table/DataTable';
+import { Box, SxProps, useTheme, ListSubheader, MenuItem } from '@mui/material';
+import { GridColDef, GridEventListener } from '@mui/x-data-grid';
+import { MutableRefObject, PropsWithChildren, useEffect, useState } from 'react';
 import { useKeycloak } from '@bcgov/citz-imb-kc-react';
-import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
-import KeywordSearch from '@/components/table/KeywordSearch';
 import { IUser } from '@/interfaces/IUser';
-import AddIcon from '@mui/icons-material/Add';
-import DownloadIcon from '@mui/icons-material/Download';
-import { downloadExcelFile } from '@/utilities/downloadExcelFile';
 import { dateFormatter, statusChipFormatter } from '@/utils/formatters';
+import { GridApiCommunity } from '@mui/x-data-grid/internals';
 
 const CustomMenuItem = (props: PropsWithChildren & { value: string }) => {
   const theme = useTheme();
@@ -73,12 +54,7 @@ const UsersTable = (props: IUsersTable) => {
   // States and contexts
   const { refreshData, data, error, isLoading, rowClickHandler } = props;
   const [users, setUsers] = useState([]);
-  const [rowCount, setRowCount] = useState<number>(0);
-  const [keywordSearchContents, setKeywordSearchContents] = useState<string>('');
-  const [selectValue, setSelectValue] = useState<string>('All Users');
-  const [gridFilterItems, setGridFilterItems] = useState([]);
   const { state } = useKeycloak();
-  const tableApiRef = useGridApiRef(); // Ref to MUI DataGrid
 
   useEffect(() => {
     if (error) {
@@ -91,26 +67,19 @@ const UsersTable = (props: IUsersTable) => {
     }
   }, [state, data]);
 
-  // Sets quickfilter value of DataGrid. newValue is a string input.
-  const updateSearchValue = useMemo(() => {
-    return debounce((newValue) => {
-      tableApiRef.current.setQuickFilterValues(newValue.split(' ').filter((word) => word !== ''));
-    }, 100);
-  }, [tableApiRef]);
-
   // Sets the preset filter based on the select input
-  const selectPresetFilter = (value: string) => {
+  const selectPresetFilter = (value: string, ref: MutableRefObject<GridApiCommunity>) => {
     // Clear the quick search contents
-    setKeywordSearchContents('');
+
     switch (value) {
       case 'All Users':
-        tableApiRef.current.setFilterModel({ items: [] });
+        ref.current.setFilterModel({ items: [] });
         break;
       // All Status filters
       case 'Active':
       case 'Pending':
       case 'Hold':
-        tableApiRef.current.setFilterModel({
+        ref.current.setFilterModel({
           items: [
             {
               value,
@@ -123,7 +92,7 @@ const UsersTable = (props: IUsersTable) => {
       // All Role filters
       case 'User':
       case 'Admin':
-        tableApiRef.current.setFilterModel({
+        ref.current.setFilterModel({
           items: [
             {
               value,
@@ -219,137 +188,38 @@ const UsersTable = (props: IUsersTable) => {
         } as SxProps
       }
     >
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          marginBottom: '1em',
-        }}
-      >
-        <Box display={'flex'}>
-          <Typography variant="h4" alignSelf={'center'} marginRight={'1em'}>
-            Users Overview ({rowCount ?? 0} users)
-          </Typography>
-          {keywordSearchContents || gridFilterItems.length > 0 ? (
-            <Tooltip title="Clear Filter">
-              <IconButton
-                onClick={() => {
-                  // Set both DataGrid and Keyword search back to blanks
-                  tableApiRef.current.setFilterModel({ items: [] });
-                  setKeywordSearchContents('');
-                  // Set select field back to default
-                  setSelectValue('All Users');
-                }}
-              >
-                <FilterAltOffIcon />
-              </IconButton>
-            </Tooltip>
-          ) : (
-            <></>
-          )}
-        </Box>
-        <Box
-          display={'flex'}
-          maxHeight={'2.5em'}
-          sx={{
-            '> *': {
-              // Applies to all children
-              margin: '0 2px',
-            },
-          }}
-        >
-          <KeywordSearch
-            onChange={updateSearchValue}
-            optionalExternalState={[keywordSearchContents, setKeywordSearchContents]}
-          />
-          <Tooltip
-            title={
-              'Adding a new user from this table is not supported yet. Please advise users to use the sign-up form.'
-            }
-          >
-            <span>
-              <IconButton disabled>
-                <AddIcon />
-              </IconButton>
-            </span>
-          </Tooltip>
-          <Tooltip title="Export to Excel">
-            <IconButton
-              onClick={() => {
-                downloadExcelFile({
-                  data: gridFilteredSortedRowEntriesSelector(tableApiRef),
-                  tableName: 'UsersTable',
-                  filterName: selectValue,
-                  includeDate: true,
-                });
-              }}
-            >
-              <DownloadIcon />
-            </IconButton>
-          </Tooltip>
-          <Select
-            onChange={(e) => {
-              selectPresetFilter(e.target.value);
-              setSelectValue(e.target.value);
-            }}
-            sx={{ width: '10em', marginLeft: '0.5em' }}
-            value={selectValue}
-          >
-            <CustomMenuItem value={'All Users'}>All Users</CustomMenuItem>
-            <CustomListSubheader>Status</CustomListSubheader>
-            <CustomMenuItem value={'Active'}>Active</CustomMenuItem>
-            <CustomMenuItem value={'Pending'}>Pending</CustomMenuItem>
-            <CustomMenuItem value={'Hold'}>Hold</CustomMenuItem>
-
-            <CustomListSubheader>Role</CustomListSubheader>
-            <CustomMenuItem value={'User'}>User</CustomMenuItem>
-            <CustomMenuItem value={'Admin'}>System Admin</CustomMenuItem>
-          </Select>
-        </Box>
-      </Box>
-      <CustomDataGrid
+      <FilterSearchDataGrid
         onRowClick={rowClickHandler}
+        defaultFilter="All Users"
+        tableHeader="Users Overview"
+        excelTitle="Users Table"
         getRowId={(row) => row.Id}
         columns={columns}
         rows={users}
         loading={isLoading}
-        onStateChange={(e) => {
-          // Keep track of row count separately
-          setRowCount(Object.values(e.filter.filteredRowsLookup).filter((value) => value).length);
-        }}
-        onFilterModelChange={(e) => {
-          // Get the filter items from MUI, filter out blanks, set state
-          setGridFilterItems(e.items.filter((item) => item.value));
-        }}
-        apiRef={tableApiRef}
-        initialState={{
-          pagination: { paginationModel: { pageSize: 10 } },
-          sorting: {
-            sortModel: [{ field: 'created', sort: 'desc' }],
-          },
-        }}
-        pageSizeOptions={[10, 20, 30, 100]} // DataGrid max is 100
-        disableRowSelectionOnClick
-        sx={{
-          width: '100%',
-          minHeight: '200px',
-          overflow: 'scroll',
-          // Neutralize the hover colour (causing a flash)
-          '& .MuiDataGrid-row.Mui-hovered': {
-            backgroundColor: 'transparent',
-          },
-          // Take out the hover colour
-          '& .MuiDataGrid-row:hover': {
-            backgroundColor: 'transparent',
-          },
-          '& .MuiDataGrid-cell:focus-within': {
-            outline: 'none',
-          },
-          '& .MuiDataGrid-cell, & .MuiDataGrid-columnHeader': {
-            padding: '16px',
-          },
-        }}
-        slots={{ toolbar: KeywordSearch }}
+        onPresetFilterChange={selectPresetFilter}
+        presetFilterSelectOptions={[
+          <CustomMenuItem key={'AllUsers'} value={'All Users'}>
+            All Users
+          </CustomMenuItem>,
+          <CustomListSubheader key={'Status'}>Status</CustomListSubheader>,
+          <CustomMenuItem key={'Active'} value={'Active'}>
+            Active
+          </CustomMenuItem>,
+          <CustomMenuItem key={'Pending'} value={'Pending'}>
+            Pending
+          </CustomMenuItem>,
+          <CustomMenuItem key={'Hold'} value={'Hold'}>
+            Hold
+          </CustomMenuItem>,
+          <CustomListSubheader key={'Role'}>Role</CustomListSubheader>,
+          <CustomMenuItem key={'User'} value={'User'}>
+            User
+          </CustomMenuItem>,
+          <CustomMenuItem key={'Admin'} value={'Admin'}>
+            System Admin
+          </CustomMenuItem>,
+        ]}
       />
     </Box>
   );
