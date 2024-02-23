@@ -1,16 +1,86 @@
 import BaseLayout from '@/components/layout/BaseLayout';
 import appTheme from '@/themes/appTheme';
-import { Button, Grid, SxProps, TextField, ThemeProvider, Typography } from '@mui/material';
+import {
+  Button,
+  Grid,
+  IconButton,
+  SxProps,
+  TextField,
+  ThemeProvider,
+  Typography,
+} from '@mui/material';
 import React, { useState } from 'react';
 import errorImage from '@/assets/images/error.svg';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import CloseIcon from '@mui/icons-material/Close';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 const ErrorFallback = ({ error, resetErrorBoundary }) => {
   // Call resetErrorBoundary() to reset the error boundary and retry the render.
-  const [state, setState] = useState<string>('landing');
+  const [state, setState] = useState<string>('');
   const [text, setText] = useState<string>('');
+
+  const commonResultStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    width: 'fit-content',
+    padding: '0.5em',
+    borderRadius: '5px',
+  };
 
   const getElement = () => {
     switch (state) {
+      case 'success':
+        setTimeout(() => {
+          resetErrorBoundary();
+        }, 3000);
+        return (
+          <Grid
+            item
+            sx={{
+              ...commonResultStyle,
+              backgroundColor: appTheme.palette.success.light,
+              color: appTheme.palette.text.secondary,
+            }}
+          >
+            <TaskAltIcon sx={{ marginRight: '0.5em', color: appTheme.palette.success.main }} />
+            <Typography sx={{ marginRight: '4em' }}>Thank you for your feedback.</Typography>
+            <IconButton
+              onClick={() => {
+                resetErrorBoundary();
+              }}
+            >
+              <CloseIcon sx={{ color: appTheme.palette.text.secondary }} />
+            </IconButton>
+          </Grid>
+        );
+      case 'failure':
+        setTimeout(() => {
+          setState('report');
+        }, 3000);
+        return (
+          <Grid
+            item
+            sx={{
+              ...commonResultStyle,
+              backgroundColor: appTheme.palette.error.light,
+              color: appTheme.palette.error.contrastText,
+            }}
+          >
+            <ErrorOutlineIcon
+              sx={{ marginRight: '0.5em', color: appTheme.palette.error.contrastText }}
+            />
+            <Typography sx={{ marginRight: '4em' }}>Sorry. Please try again later.</Typography>
+            <IconButton
+              onClick={() => {
+                setState('report');
+              }}
+              sx={{ '&:hover': { backgroundColor: appTheme.palette.error.dark } }}
+            >
+              <CloseIcon sx={{ color: appTheme.palette.error.contrastText }} />
+            </IconButton>
+          </Grid>
+        );
       case 'report':
         return (
           <>
@@ -49,7 +119,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
               <Button
                 variant="contained"
                 onClick={() => {
-                  console.log(text);
+                  console.log(error);
                 }}
                 sx={{ marginRight: '1em', width: '7.5em' }}
                 size="large"
