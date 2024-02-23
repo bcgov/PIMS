@@ -1,14 +1,6 @@
 import BaseLayout from '@/components/layout/BaseLayout';
 import appTheme from '@/themes/appTheme';
-import {
-  Button,
-  Grid,
-  IconButton,
-  SxProps,
-  TextField,
-  ThemeProvider,
-  Typography,
-} from '@mui/material';
+import { Button, Grid, IconButton, SxProps, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import errorImage from '@/assets/images/error.svg';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
@@ -162,64 +154,62 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
     display: 'flex',
   };
   return (
-    <ThemeProvider theme={appTheme}>
-      <BaseLayout>
+    <BaseLayout>
+      <Grid
+        container
+        sx={{
+          height: '95%',
+          display: 'flex',
+          alignItems: 'center',
+          width: '100%',
+          maxWidth: '1200px',
+          margin: '0 auto',
+        }}
+      >
         <Grid
+          item
           container
-          sx={{
-            height: '95%',
-            display: 'flex',
-            alignItems: 'center',
-            width: '100%',
-            maxWidth: '1200px',
-            margin: '0 auto',
-          }}
+          sm={12}
+          md={6}
+          sx={{ ...gridStyle, display: 'inline-block', margin: '0 2em', marginBottom: '2em' }}
         >
           <Grid
             item
-            container
-            sm={12}
-            md={6}
-            sx={{ ...gridStyle, display: 'inline-block', margin: '0 2em', marginBottom: '2em' }}
+            sx={{
+              margin: '3em 0',
+            }}
           >
-            <Grid
-              item
+            <Typography variant="h1">Oops, something went wrong...</Typography>
+          </Grid>
+          <Grid
+            item
+            sx={{
+              margin: '3em 0',
+            }}
+          >
+            <Typography
+              variant="caption"
               sx={{
-                margin: '3em 0',
+                fontSize: '1.2rem',
+                color: appTheme.palette.text.disabled,
               }}
             >
-              <Typography variant="h1">Oops, something went wrong...</Typography>
-            </Grid>
-            <Grid
-              item
-              sx={{
-                margin: '3em 0',
-              }}
-            >
-              <Typography
-                variant="caption"
-                sx={{
-                  fontSize: '1.2rem',
-                  color: appTheme.palette.text.disabled,
-                }}
-              >
-                The server encountered a temporary error and could not complete your request.
-              </Typography>
-            </Grid>
-            {getElement()}
+              The server encountered a temporary error and could not complete your request.
+            </Typography>
           </Grid>
-          <Grid item sm={12} md={5} sx={gridStyle}>
-            <img
-              src={errorImage}
-              style={{
-                height: '500px',
-                maxWidth: '100%',
-              }}
-            />
-          </Grid>
+          {getElement()}
         </Grid>
-      </BaseLayout>
-    </ThemeProvider>
+        <Grid item sm={12} md={5} sx={gridStyle}>
+          <img
+            src={errorImage}
+            style={{
+              height: '500px',
+              maxWidth: '100%',
+            }}
+          />
+        </Grid>
+      </Grid>
+    </BaseLayout>
   );
 };
 

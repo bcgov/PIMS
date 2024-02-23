@@ -67,11 +67,11 @@ const Router = () => {
 
 const App = () => {
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <ThemeProvider theme={appTheme}>
+    <ThemeProvider theme={appTheme}>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Router />
-      </ThemeProvider>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </ThemeProvider>
   );
 };
 
