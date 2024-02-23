@@ -1,12 +1,25 @@
 import React from 'react';
 import { FilterSearchDataGrid } from '../table/DataTable';
-import { Box, SxProps } from '@mui/material';
+import { Box, SxProps, useTheme } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
-import { CheckBox } from '@mui/icons-material';
+import { Check, CheckBox } from '@mui/icons-material';
 import { GridColDef } from '@mui/x-data-grid';
 import { dateFormatter } from '@/utils/formatters';
+import ClassificationIcon from './ClassificationIcon';
 
 const PropertyTable = () => {
+  const theme = useTheme();
+
+  const classificationColorMap = {
+    0: { textColor: theme.palette.blue.main, bgColor: theme.palette.blue.light },
+    1: { textColor: theme.palette.success.main, bgColor: theme.palette.success.light },
+    2: { textColor: theme.palette.info.main, bgColor: theme.palette.info.light },
+    3: { textColor: theme.palette.info.main, bgColor: theme.palette.info.light },
+    4: { textColor: theme.palette.warning.main, bgColor: theme.palette.warning.light },
+    5: { textColor: theme.palette.warning.main, bgColor: theme.palette.warning.light },
+    6: { textColor: theme.palette.warning.main, bgColor: theme.palette.warning.light },
+  };
+
   const columns: GridColDef[] = [
     {
       field: 'PID',
@@ -17,11 +30,45 @@ const PropertyTable = () => {
       field: 'ClassificationId',
       headerName: 'Classification',
       flex: 1,
+      minWidth: 260,
+      renderCell: (params) => {
+        const reduced = params.row.Buildings.reduce((acc, curr) => {
+          const colorKey = classificationColorMap[curr.ClassificationId].bgColor;
+          if (!acc[colorKey]) {
+            acc[colorKey] = 1;
+          } else {
+            acc[colorKey]++;
+          }
+          return acc;
+        }, {});
+        return (
+          <Box display={'flex'} gap={'12px'}>
+            <ClassificationIcon
+              iconType="parcel"
+              amount={1}
+              textColor={classificationColorMap[params.row.ClassificationId].textColor}
+              backgroundColor={classificationColorMap[params.row.ClassificationId].bgColor}
+            />
+            {Object.entries(reduced).map(([key, val]) => (
+              <ClassificationIcon
+                key={`buildingparcelicon${key}`}
+                iconType="building"
+                amount={Number(val)}
+                textColor={
+                  Object.values(classificationColorMap).find((c) => c.bgColor === key).textColor
+                }
+                backgroundColor={key}
+              />
+            ))}
+          </Box>
+        );
+      },
     },
     {
-      field: 'AgencyId',
+      field: 'Agency',
       headerName: 'Agency',
       flex: 1,
+      valueGetter: (params) => params.value?.Name ?? '',
     },
     {
       field: 'Address1',
@@ -48,7 +95,7 @@ const PropertyTable = () => {
       headerName: 'Sensitive',
       renderCell: (params) => {
         if (params.value) {
-          return <CheckBox />;
+          return <Check />;
         } else return <></>;
       },
       flex: 1,
@@ -74,6 +121,10 @@ const PropertyTable = () => {
       Id: 3,
       ClassificationId: 2,
     },
+    {
+      Id: 7,
+      ClassificationId: 2,
+    },
   ];
 
   const buildings2 = [
@@ -89,6 +140,10 @@ const PropertyTable = () => {
       Id: 6,
       ClassificationId: 5,
     },
+    {
+      Id: 8,
+      ClassificationId: 5,
+    },
   ];
 
   const rows = [
@@ -97,6 +152,7 @@ const PropertyTable = () => {
       PID: '010-113-1332',
       ClassificationId: 1,
       AgencyId: 1,
+      Agency: { Name: 'Smith & Weston' },
       Address1: '1450 Whenever Pl',
       ProjectNumbers: 'FX1234',
       Corporation: 'asdasda',
@@ -110,6 +166,7 @@ const PropertyTable = () => {
       PID: '330-11-4335',
       ClassificationId: 2,
       AgencyId: 2,
+      Agency: { Name: 'Burger King' },
       Address1: '1143 Bigapple Rd',
       ProjectNumbers: 'FX121a4',
       Corporation: 'Big Corp',

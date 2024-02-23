@@ -9,10 +9,8 @@ const Dev = () => {
   return (
     <Box>
       <PropertyTable />
-      <ClassificationIcon indicatorColor={'green'} iconType={'building'} />
     </Box>
-  )
-
+  );
 };
 
 export default Dev;

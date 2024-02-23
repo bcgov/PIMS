@@ -26,6 +26,7 @@ const appTheme = createTheme({
     },
     blue: {
       main: '#0e3468',
+      light: '#d4e7f6',
     },
     black: {
       main: '#000000',
