@@ -7,6 +7,7 @@ import { UUID } from 'crypto';
 import { Request, Response } from 'express';
 import { Role as RolesEntity } from '@/typeorm/Entities/Role';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { Parcel } from '@/typeorm/Entities/Parcel';
 
 export class MockRes {
   statusValue: any;
@@ -188,5 +189,44 @@ export const produceKeycloak = (): KeycloakUser => {
     idir_username: faker.string.alphanumeric(),
     given_name: faker.person.firstName(),
     family_name: faker.person.lastName(),
+  };
+};
+
+export const produceParcel = (): Parcel => {
+  return {
+    Id: faker.number.int({ max: 10 }),
+    CreatedOn: faker.date.anytime(),
+    UpdatedOn: faker.date.anytime(),
+    Name: faker.string.alphanumeric(),
+    LandLegalDescription: faker.string.alphanumeric(),
+    PID: undefined,
+    PIN: undefined,
+    LandArea: undefined,
+    Zoning: undefined,
+    ZoningPotential: undefined,
+    NotOwned: undefined,
+    ParentParcelId: undefined,
+    ParentParcel: undefined,
+    Description: faker.string.alphanumeric(),
+    ClassificationId: undefined,
+    Classification: undefined,
+    AgencyId: undefined,
+    Agency: undefined,
+    AdministrativeAreaId: undefined,
+    AdministrativeArea: undefined,
+    IsSensitive: undefined,
+    IsVisibleToOtherAgencies: undefined,
+    Location: undefined,
+    ProjectNumbers: undefined,
+    PropertyTypeId: undefined,
+    PropertyType: undefined,
+    Address1: undefined,
+    Address2: undefined,
+    Postal: undefined,
+    SiteId: undefined,
+    CreatedById: undefined,
+    CreatedBy: undefined,
+    UpdatedById: undefined,
+    UpdatedBy: undefined,
   };
 };
