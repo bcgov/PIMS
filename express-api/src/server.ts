@@ -13,20 +13,20 @@ const { API_PORT } = constants;
  * @param app - The Express application instance.
  * @returns The server instance.
  */
-const startApp = async (app: Application) => {
-  const server = app.listen(API_PORT, (err?: Error) => {
+const startApp = (app: Application) => {
+  const server = app.listen(API_PORT, async (err?: Error) => {
     if (err) logger.error(err);
     logger.info(`Server started on port ${API_PORT}.`);
-  });
 
-  // creating connection to database
-  await AppDataSource.initialize()
-    .then(() => {
-      logger.info('Database connection has been initialized');
-    })
-    .catch((err?: Error) => {
-      logger.error('Error during data source initialization. With error: ', err);
-    });
+    // creating connection to database
+    await AppDataSource.initialize()
+      .then(() => {
+        logger.info('Database connection has been initialized');
+      })
+      .catch((err?: Error) => {
+        logger.error('Error during data source initialization. With error: ', err);
+      });
+  });
 
   return server;
 };
@@ -47,25 +47,32 @@ let server: Server<typeof IncomingMessage, typeof ServerResponse>;
  * @returns void
  */
 const stopApp = async (exitCode: number, e?: string) => {
-  logger.warn('Closing database connection.');
-  await AppDataSource.destroy();
-  logger.warn('Closing user connections.');
-  server.closeAllConnections();
-  server.close(() => {
-    logger.error(`Express application terminated. ${e ?? 'unknown'}`);
-    process.exit(exitCode);
-  });
+  logger.error(`${e ?? 'unknown'}`);
+  // Database connection may not be initialized.
+  if (AppDataSource.isInitialized) {
+    logger.warn('Closing database connection.');
+    await AppDataSource.destroy();
+  }
+  // Server may not be defined.
+  if (server) {
+    logger.warn('Closing user connections.');
+    server.closeAllConnections();
+    server.close(() => {
+      logger.warn('Express application terminated.');
+      process.exit(exitCode);
+    });
+  }
 };
 
 // Error catching listeners
 process.on('uncaughtException', (err: Error) => {
   logger.warn('Uncaught exception received. Shutting down gracefully.');
-  stopApp(1, `Uncaught exception: ${err.stack}`);
+  stopApp(1, err.stack);
 });
 
 process.on('unhandledRejection', (err: Error) => {
   logger.warn('Unhandled rejection received. Shutting down gracefully.');
-  stopApp(1, `Unhandled rejection: ${err.stack}`);
+  stopApp(1, err.stack);
 });
 
 // When termination call is received.
