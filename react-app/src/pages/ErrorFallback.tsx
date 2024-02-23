@@ -6,11 +6,15 @@ import errorImage from '@/assets/images/error.svg';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { useKeycloak } from '@bcgov/citz-imb-kc-react';
+import usePimsApi from '@/hooks/usePimsApi';
 
 const ErrorFallback = ({ error, resetErrorBoundary }) => {
   // Call resetErrorBoundary() to reset the error boundary and retry the render.
   const [state, setState] = useState<string>('');
   const [text, setText] = useState<string>('');
+  const keycloak = useKeycloak();
+  const api = usePimsApi();
 
   const commonResultStyle = {
     display: 'flex',
@@ -111,7 +115,30 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
               <Button
                 variant="contained"
                 onClick={() => {
-                  console.log(error);
+                  // console.log({
+                  //   user: keycloak.user,
+                  //   error: error,
+                  //   userMessage: text,
+                  //   timestamp: new Date().toLocaleString(),
+                  // });
+                  api.reports
+                    .postErrorReport({
+                      user: keycloak.user,
+                      error: error,
+                      userMessage: text,
+                      timestamp: new Date().toLocaleString(),
+                    })
+                    .then((res) => {
+                      if (res.status === 200) {
+                        setState('success');
+                        setText('');
+                      }
+                      setState('failure');
+                    })
+                    .catch((e) => {
+                      console.error(e);
+                      setState('failure');
+                    });
                 }}
                 sx={{ marginRight: '1em', width: '7.5em' }}
                 size="large"
