@@ -1,8 +1,8 @@
-import React from 'react';
-import { FilterSearchDataGrid } from '../table/DataTable';
+import React, { MutableRefObject } from 'react';
+import { CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, SxProps, useTheme } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
-import { Check, CheckBox } from '@mui/icons-material';
+import { Check } from '@mui/icons-material';
 import { GridColDef } from '@mui/x-data-grid';
 import { dateFormatter } from '@/utils/formatters';
 import ClassificationIcon from './ClassificationIcon';
@@ -177,6 +177,16 @@ const PropertyTable = () => {
     },
   ];
 
+  const selectPresetFilter = (value: string, ref: MutableRefObject<GridApiCommunity>) => {
+    switch (value) {
+      case 'All Properties':
+        ref.current.setFilterModel({ items: [] });
+        break;
+      default:
+        ref.current.setFilterModel({ items: [] });
+    }
+  };
+
   return (
     <Box
       sx={
@@ -190,12 +200,14 @@ const PropertyTable = () => {
       }
     >
       <FilterSearchDataGrid
-        onPresetFilterChange={(value: string, ref: React.MutableRefObject<GridApiCommunity>) => {
-          console.log('value changed');
-        }}
+        onPresetFilterChange={selectPresetFilter}
         getRowId={(row) => row.Id}
         defaultFilter={'All Properties'}
-        presetFilterSelectOptions={[]}
+        presetFilterSelectOptions={[
+          <CustomMenuItem key={'All Properties'} value={'All Properties'}>
+            All Properties
+          </CustomMenuItem>,
+        ]}
         tableHeader={'Properties Overview'}
         excelTitle={'Properties'}
         columns={columns}
