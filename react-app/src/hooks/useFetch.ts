@@ -43,7 +43,6 @@ const useFetch = (baseUrl?: string) => {
       } else {
         response = await fetch(url, params);
       }
-      console.log(response)
       const text = await response.text();
       if (text.length) {
         let parsedBody: any | undefined;
@@ -52,7 +51,8 @@ const useFetch = (baseUrl?: string) => {
         } catch {
           parsedBody = text;
         }
-        return { ...response, parsedBody: parsedBody };
+        (response as FetchResponse).parsedBody = parsedBody;
+        return response;
       } else {
         return response;
       }
