@@ -63,12 +63,12 @@ export const submitErrorReport = async (req: Request, res: Response) => {
    * }]
    */
   const info = req.body;
+  logger.info(info);
   try {
     errorReportSchema.parse(info);
   } catch (e) {
     return res.status(400).send(e);
   }
-  logger.info(info);
   // TODO: Add email component after CHES is in. Response depends on that outcome.
   return res.status(200).send(info);
 };

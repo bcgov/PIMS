@@ -64,13 +64,13 @@ const Router = () => {
 const App = () => {
   return (
     <ThemeProvider theme={appTheme}>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
       <ConfigContextProvider>
         <AuthContextProvider>
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
             <Router />
-          </ErrorBoundary>
         </AuthContextProvider>
       </ConfigContextProvider>
+      </ErrorBoundary>
     </ThemeProvider>
   );
 };

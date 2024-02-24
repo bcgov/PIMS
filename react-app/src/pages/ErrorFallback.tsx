@@ -115,20 +115,24 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
               <Button
                 variant="contained"
                 onClick={() => {
-                  // console.log({
-                  //   user: keycloak.user,
-                  //   error: error,
-                  //   userMessage: text,
-                  //   timestamp: new Date().toLocaleString(),
-                  // });
+                  console.log({
+                    user: keycloak.user,
+                    error: error,
+                    userMessage: text,
+                    timestamp: new Date().toLocaleString(),
+                  });
                   api.reports
                     .postErrorReport({
                       user: keycloak.user,
-                      error: error,
+                      error: {
+                        message: error.message,
+                        stack: error.stack,
+                      },
                       userMessage: text,
                       timestamp: new Date().toLocaleString(),
                     })
                     .then((res) => {
+                      console.log(res)
                       if (res.status === 200) {
                         setState('success');
                         setText('');

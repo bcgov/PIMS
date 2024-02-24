@@ -4,13 +4,19 @@ import { FetchResponse, IFetch } from '../useFetch';
 export interface ErrorReport {
   user: KeycloakUser;
   userMessage: string;
-  error: Error;
+  error: {
+    message: string;
+    stack: string;
+  };
   timestamp: string;
 }
 
 const useReportsApi = (absoluteFetch: IFetch) => {
   const postErrorReport = async (error: ErrorReport): Promise<FetchResponse> => {
-    return await absoluteFetch.post(`/reports/error`, error);
+    // Specified url base because this call is outside of the ConfigContext
+    const response = await absoluteFetch.post(`/api/v2/reports/error`, error);
+    console.log(response)
+    return response;
   };
 
   return {
