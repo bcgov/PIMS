@@ -103,6 +103,16 @@ const PropertyDetail = () => {
         title={'Parcel information'}
         onEdit={() => {}}
       />
+      {buildings1.map((building, idx) => {
+        return (
+          <DataCard
+            key={'building' + idx}
+            values={building}
+            title={`Building information (${idx + 1})`}
+            onEdit={() => {}}
+          />
+        );
+      })}
     </Box>
   );
 };
