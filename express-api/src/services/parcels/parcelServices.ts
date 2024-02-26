@@ -26,7 +26,7 @@ export const addParcel = async (parcel: Partial<Parcel>) => {
 /**
  * @description Remove a parcel from the database based on incoming PID
  * @param parcelId Incoming PID of parcel to be removed
- * @returns object with data on number of rows affected. 
+ * @returns object with data on number of rows affected.
  * @throws ErrorWithCode if no parcels have the PID sent in
  */
 export const deleteParcelByPid = async (parcelPid: number) => {
