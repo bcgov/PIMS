@@ -39,11 +39,12 @@ COPY package.json .
 RUN npm i
 
 # Add curl for health check
-RUN apt-get update
-RUN apt-get install -y curl
+RUN apt-get update && apt-get install -y curl
 
 # Copy compiled build from base
 COPY --from=base /express-api/dist .
+# Copy seed SQL files. Typescript compiler ignores these.
+COPY --from=base /express-api/src/typeorm/Migrations/Seeds ./src/typeorm/Migrations/Seeds
 
 CMD [ "node", "src/server.js" ]
 
