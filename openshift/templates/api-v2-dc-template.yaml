@@ -140,6 +140,31 @@ objects:
                 secretKeyRef:
                   name: pims-secrets
                   key: SSO_CLIENT_ID
+            - name: CSS_API_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: pims-secrets
+                  key: CSS_API_CLIENT_ID
+            - name: CSS_API_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: pims-secrets
+                  key: CSS_API_CLIENT_SECRET
+            - name: SSO_INTEGRATION_ID
+              valueFrom:
+                secretKeyRef:
+                  name: pims-secrets
+                  key: SSO_INTEGRATION_ID
+            - name: SSO_ENVIRONMENT
+              valueFrom:
+                secretKeyRef:
+                  name: pims-secrets
+                  key: SSO_ENVIRONMENT
+            - name: GEOCODER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: pims-secrets
+                  key: GEOCODER_KEY
             ports:
               - containerPort: 5000
                 protocol: TCP
