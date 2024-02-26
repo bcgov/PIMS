@@ -24,6 +24,20 @@ export const addParcel = async (parcel: Partial<Parcel>) => {
 };
 
 /**
+ * @description Remove a parcel from the database based on incoming PID
+ * @param parcelId Incoming PID of parcel to be removed
+ * @returns
+ */
+export const deleteParcelByPid = async (parcelPid: number) => {
+  const existingParcel = await getParcelByPid(parcelPid);
+  if (!existingParcel) {
+    throw new ErrorWithCode('Parcel PID was not found.', 404);
+  }
+  const removeParcel = await parcelRepo.delete(existingParcel.Id);
+  return removeParcel;
+};
+
+/**
  * @description Finds and returns a parcel with matching PID
  * @param       parcelPID Number representing parcel we want to find.
  * @returns     findParcel Parcel data matching PID passed in.
