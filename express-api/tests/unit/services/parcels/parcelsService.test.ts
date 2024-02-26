@@ -52,12 +52,13 @@ describe('UNIT - Parcel Services', () => {
       expect(
         async () => await parcelService.deleteParcelByPid(parcelToDelete.PID),
       ).rejects.toThrow();
-      describe('UNIT - getParcels', () => {
-        it('should return a list of parcels', async () => {
-          const parcels = await parcelService.getParcels({});
-          expect(parcels).toHaveLength(2);
-        });
-      });
+    });
+  });
+
+  describe('getParcels', () => {
+    it('should return a list of parcels', async () => {
+      const parcels = await parcelService.getParcels({});
+      expect(parcels).toHaveLength(2);
     });
   });
 });
