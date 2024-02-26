@@ -1,13 +1,15 @@
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { AppDataSource } from '@/appDataSource';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import { ParcelFilter } from '@/services/parcels/parcelSchema';
+import { FindOptionsOrder } from 'typeorm';
 
 const parcelRepo = AppDataSource.getRepository(Parcel);
 
 /**
  * @description          Adds a new parcel to the datasource.
  * @param   parcel       incoming parcel data to be added to the database
- * @returns {Response}   A 201 status and the data of the role added.
+ * @returns {Parcel}   A 201 status and the data of the role added.
  * @throws ErrorWithCode If the parcel already exists or is unable to be added.
  */
 export const addParcel = async (parcel: Partial<Parcel>) => {
@@ -36,6 +38,35 @@ export const deleteParcelByPid = async (parcelPid: number) => {
   }
   const removeParcel = await parcelRepo.delete(existingParcel.Id);
   return removeParcel;
+};
+
+/**
+ * @description Retrieves parcels based on the provided filter.
+ * @param filter - The filter object used to specify the criteria for retrieving parcels.
+ * @returns {Parcel[]} An array of parcels that match the filter criteria.
+ */
+export const getParcels = async (filter: ParcelFilter, includeRelations: boolean = false) => {
+  const parcels = await parcelRepo.find({
+    relations: {
+      ParentParcel: includeRelations,
+      Agency: includeRelations,
+      AdministrativeArea: includeRelations,
+      Classification: includeRelations,
+      PropertyType: includeRelations,
+    },
+    where: {
+      PID: filter.pid,
+      ClassificationId: filter.classificationId,
+      AgencyId: filter.agencyId,
+      AdministrativeAreaId: filter.administrativeAreaId,
+      PropertyTypeId: filter.propertyTypeId,
+      IsSensitive: filter.isSensitive,
+    },
+    take: filter.quantity,
+    skip: (filter.page ?? 0) * (filter.quantity ?? 0),
+    order: filter.sort as FindOptionsOrder<Parcel>,
+  });
+  return parcels;
 };
 
 /**
