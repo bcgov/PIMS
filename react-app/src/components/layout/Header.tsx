@@ -65,10 +65,11 @@ const Header: React.FC = () => {
         backgroundColor: theme.palette.white.main,
         height: '74px',
         display: 'flex',
-        position: 'relative',
+        position: 'sticky',
         justifyContent: 'center',
         borderBottom: '1px solid',
         borderBottomColor: theme.palette.gray.main,
+        zIndex: theme.zIndex.drawer + 1,
       }}
     >
       <Toolbar>

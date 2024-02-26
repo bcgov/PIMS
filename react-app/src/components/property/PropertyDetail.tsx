@@ -3,6 +3,7 @@ import DetailViewNavigation from '../display/DetailViewNavigation';
 import { Box, Typography, useTheme } from '@mui/material';
 import DataCard from '../display/DataCard';
 import { ClassificationInline } from './ClassificationIcon';
+import CollapsibleSidebar from '../layout/CollapsibleSidebar';
 
 const PropertyDetail = () => {
   const buildings1 = [
@@ -83,37 +84,46 @@ const PropertyDetail = () => {
   };
 
   return (
-    <Box
-      display={'flex'}
-      gap={'1rem'}
-      mt={'2rem'}
-      flexDirection={'column'}
-      width={'46rem'}
-      marginX={'auto'}
+    <CollapsibleSidebar
+      items={[
+        { title: 'Parcel information' },
+        ...buildings1.map((a, idx) => ({ title: `Building information (${idx + 1})` })),
+      ]}
     >
-      <DetailViewNavigation
-        navigateBackTitle={'Back to Property Overview'}
-        deleteTitle={'Delete Property'}
-        onDeleteClick={() => {}}
-        onBackClick={() => {}}
-      />
-      <DataCard
-        customFormatter={customFormatter}
-        values={data}
-        title={'Parcel information'}
-        onEdit={() => {}}
-      />
-      {buildings1.map((building, idx) => {
-        return (
-          <DataCard
-            key={'building' + idx}
-            values={building}
-            title={`Building information (${idx + 1})`}
-            onEdit={() => {}}
-          />
-        );
-      })}
-    </Box>
+      <Box
+        display={'flex'}
+        gap={'1rem'}
+        mt={'2rem'}
+        flexDirection={'column'}
+        width={'46rem'}
+        marginX={'auto'}
+      >
+        <DetailViewNavigation
+          navigateBackTitle={'Back to Property Overview'}
+          deleteTitle={'Delete Property'}
+          onDeleteClick={() => {}}
+          onBackClick={() => {}}
+        />
+        <DataCard
+          id="Parcel information"
+          customFormatter={customFormatter}
+          values={data}
+          title={'Parcel information'}
+          onEdit={() => {}}
+        />
+        {buildings1.map((building, idx) => {
+          return (
+            <DataCard
+              id={`Building information (${idx + 1})`}
+              key={'building' + idx}
+              values={building}
+              title={`Building information (${idx + 1})`}
+              onEdit={() => {}}
+            />
+          );
+        })}
+      </Box>
+    </CollapsibleSidebar>
   );
 };
 

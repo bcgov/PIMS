@@ -4,6 +4,7 @@ import Card from '@mui/material/Card';
 import React from 'react';
 
 interface IDataCard<T> {
+  id?: string;
   values: T;
   title: string;
   onEdit: () => void;
@@ -29,6 +30,7 @@ const DataCard = <T,>(props: IDataCard<T>) => {
   return (
     <Card variant="outlined" sx={{ padding: '2rem', minWidth: '34rem', backgroundColor: 'white' }}>
       <CardHeader
+        id={props.id}
         titleTypographyProps={{ variant: 'h1' }}
         sx={{
           '.MuiCardHeader-action': {
