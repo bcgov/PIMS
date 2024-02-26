@@ -16,7 +16,7 @@ export const errorReportSchema = z.object({
     message: z.string(),
     stack: z.string(),
   }),
-  timestamp: z.string().datetime(),
+  timestamp: z.string(),
 });
 
 /**

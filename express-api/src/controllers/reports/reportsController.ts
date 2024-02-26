@@ -1,7 +1,7 @@
 import logger from '@/utilities/winstonLogger';
 import { stubResponse } from '../../utilities/stubResponse';
 import { Request, Response } from 'express';
-import { errorReportSchema } from '@/controllers/reports/errorReportSchema';
+import { ErrorReport, errorReportSchema } from '@/controllers/reports/errorReportSchema';
 
 /**
  * @description Get all reports as a CSV or Excel file.
@@ -62,7 +62,7 @@ export const submitErrorReport = async (req: Request, res: Response) => {
    *   "bearerAuth" : []
    * }]
    */
-  const info = req.body;
+  const info: ErrorReport = req.body;
   logger.info(info);
   try {
     errorReportSchema.parse(info);
