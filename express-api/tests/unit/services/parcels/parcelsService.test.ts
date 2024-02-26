@@ -12,6 +12,10 @@ const _parcelSave = jest
   .spyOn(parcelRepo, 'save')
   .mockImplementation(async (parcel: DeepPartial<Parcel> & Parcel) => parcel);
 
+const _parcelDelete = jest
+  .spyOn(parcelRepo, 'delete')
+  .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
+
 const _parcelFindOne = jest
   .spyOn(parcelRepo, 'findOne')
   .mockImplementation(async () => produceParcel());
@@ -29,6 +33,22 @@ describe('UNIT - Parcel Services', () => {
       const parcel = produceParcel();
       _parcelFindOne.mockResolvedValueOnce(parcel);
       expect(async () => await parcelService.addParcel(parcel)).rejects.toThrow();
+    });
+  });
+
+  describe('deleteParcelByPid', () => {
+    it('should delete a parcel and return a 204 status code', async () => {
+      const parcelToDelete = produceParcel();
+      _parcelFindOne.mockResolvedValueOnce(parcelToDelete);
+      await parcelService.deleteParcelByPid(parcelToDelete.PID);
+      expect(_parcelDelete).toHaveBeenCalledTimes(1);
+    });
+    it('should throw an error if the PID does not exist in the parcel table', () => {
+      const parcelToDelete = produceParcel();
+      _parcelFindOne.mockResolvedValueOnce(null);
+      expect(
+        async () => await parcelService.deleteParcelByPid(parcelToDelete.PID),
+      ).rejects.toThrow();
     });
   });
 });
