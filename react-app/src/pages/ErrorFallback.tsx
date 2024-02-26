@@ -9,6 +9,14 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 import usePimsApi from '@/hooks/usePimsApi';
 
+/**
+ * Renders an error fallback component that displays an error message and provides options for handling the error.
+ *
+ * @param {Object} props - The component props.
+ * @param {Error} props.error - The error object that caused the fallback.
+ * @param {Function} props.resetErrorBoundary - A function to reset the error boundary and retry the render.
+ * @returns {JSX.Element} The rendered error fallback component.
+ */
 const ErrorFallback = ({ error, resetErrorBoundary }) => {
   // Call resetErrorBoundary() to reset the error boundary and retry the render.
   const [state, setState] = useState<string>('');

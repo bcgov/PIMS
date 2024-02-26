@@ -1,5 +1,8 @@
 import z from 'zod';
 
+/**
+ * @description Zod schema for validating frontend error reports.
+ */
 export const errorReportSchema = z.object({
   // Only specified the fields we're using.
   user: z.object({
@@ -13,7 +16,11 @@ export const errorReportSchema = z.object({
     message: z.string(),
     stack: z.string(),
   }),
-  timestamp: z.string(),
+  timestamp: z.string().datetime(),
 });
 
+/**
+ * @description Type inferred from Zod schema errorReportSchema
+ * @type ErrorReport
+ */
 export type ErrorReport = z.infer<typeof errorReportSchema>;

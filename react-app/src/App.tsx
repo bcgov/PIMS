@@ -65,11 +65,11 @@ const App = () => {
   return (
     <ThemeProvider theme={appTheme}>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <ConfigContextProvider>
-        <AuthContextProvider>
+        <ConfigContextProvider>
+          <AuthContextProvider>
             <Router />
-        </AuthContextProvider>
-      </ConfigContextProvider>
+          </AuthContextProvider>
+        </ConfigContextProvider>
       </ErrorBoundary>
     </ThemeProvider>
   );
