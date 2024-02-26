@@ -4,7 +4,7 @@ import {
   getSpreadsheetProjectsReports,
   getSpreadsheetPropertiesReports,
   getSpreadsheetUsersReports,
-  submitErrorReport
+  submitErrorReport,
 } from '@/controllers/reports/reportsController';
 import { ErrorReport } from '@/controllers/reports/errorReportSchema';
 import { Roles } from '@/constants/roles';
@@ -103,7 +103,7 @@ describe('UNIT - Reports', () => {
       userMessage: 'Help, it broke.',
       timestamp: new Date().toLocaleString(),
       error: new Error('Bad Error'),
-    }
+    };
 
     afterEach(() => {
       jest.clearAllMocks();
@@ -115,14 +115,14 @@ describe('UNIT - Reports', () => {
       expect(mockLogger).toHaveBeenCalledTimes(1);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue).toBe(error);
-    })
+    });
 
     it('should return 400 status when body does not match zod schema', async () => {
       mockRequest.body = {
-        fakeFields: 'Should fail check'
+        fakeFields: 'Should fail check',
       };
       await submitErrorReport(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
-    })
-  })
+    });
+  });
 });
