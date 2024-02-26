@@ -10,7 +10,7 @@ const parcelRepo = AppDataSource.getRepository(Parcel);
  * @returns {Response}   A 201 status and the data of the role added.
  * @throws ErrorWithCode If the parcel already exists or is unable to be added.
  */
-export const postParcel = async (parcel: Parcel) => {
+export const addParcel = async (parcel: Parcel) => {
   const existingParcel = await getParcelByPid(parcel.PID);
   if (existingParcel) {
     throw new ErrorWithCode('Parcel already exists.', 409);
