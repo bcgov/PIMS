@@ -1,17 +1,17 @@
 import { columnNameFormatter, dateFormatter } from '@/utils/formatters';
 import { Box, Button, CardContent, CardHeader, Divider, Typography } from '@mui/material';
 import Card from '@mui/material/Card';
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 
-interface IDataCard<T> {
+type DataCardProps<T> = {
   id?: string;
   values: T;
   title: string;
   onEdit: () => void;
   customFormatter?: (key: keyof T, value: any) => string | JSX.Element | undefined;
-}
+} & PropsWithChildren;
 
-const DataCard = <T,>(props: IDataCard<T>) => {
+const DataCard = <T,>(props: DataCardProps<T>) => {
   const { values, title, customFormatter, onEdit } = props;
 
   const defaultFormatter = (key: keyof T, val: any) => {
@@ -51,17 +51,18 @@ const DataCard = <T,>(props: IDataCard<T>) => {
         }
       />
       <CardContent>
-        {Object.keys(values).map((key, idx) => (
-          <React.Fragment key={`card-data-fragment-${idx}-${key}`}>
-            <Box display={'flex'} flexDirection={'row'}>
-              <Typography width={'150px'} fontWeight={'bold'}>
-                {columnNameFormatter(key)}
-              </Typography>
-              {defaultFormatter(key as keyof T, values[key])}
-            </Box>
-            {idx < Object.keys(values).length - 1 && <Divider sx={{ mt: '1rem', mb: '1rem' }} />}
-          </React.Fragment>
-        ))}
+        {props.children ??
+          Object.keys(values).map((key, idx) => (
+            <React.Fragment key={`card-data-fragment-${idx}-${key}`}>
+              <Box display={'flex'} flexDirection={'row'}>
+                <Typography width={'150px'} fontWeight={'bold'}>
+                  {columnNameFormatter(key)}
+                </Typography>
+                {defaultFormatter(key as keyof T, values[key])}
+              </Box>
+              {idx < Object.keys(values).length - 1 && <Divider sx={{ mt: '1rem', mb: '1rem' }} />}
+            </React.Fragment>
+          ))}
       </CardContent>
     </Card>
   );

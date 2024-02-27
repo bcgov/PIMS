@@ -4,26 +4,86 @@ import { Box, Typography, useTheme } from '@mui/material';
 import DataCard from '../display/DataCard';
 import { ClassificationInline } from './ClassificationIcon';
 import CollapsibleSidebar from '../layout/CollapsibleSidebar';
+import ParcelNetValueTable from './ParcelNetValueTable';
+import { PinnedColumnDataGrid } from '../table/DataTable';
+import { GridColDef } from '@mui/x-data-grid';
 
 const PropertyDetail = () => {
   const buildings1 = [
     {
       Id: 1,
       ClassificationId: 0,
+      BuildingName: 'Aqua Center',
     },
     {
       Id: 2,
       ClassificationId: 1,
+      BuildingName: 'Hydraulic Press',
     },
     {
       Id: 3,
       ClassificationId: 2,
+      BuildingName: 'Iron Processing',
     },
     {
       Id: 7,
       ClassificationId: 2,
+      BuildingName: 'St. Patricks Building',
     },
   ];
+
+  const assessedValue = [
+    {
+      FiscalYear: '2024',
+      Land: '$2450000',
+      Building1: '$350000',
+      Building2: '$5000000',
+      Building3: '$5000000',
+      Building4: '$2000000',
+      Building5: '$8090000',
+    },
+    {
+      FiscalYear: '23/22',
+      Land: '$2450000',
+      Building1: '$350000',
+      Building2: '$5000000',
+      Building3: '$5000000',
+      Building4: '$2000000',
+      Building5: '$8090000',
+    },
+  ];
+
+  const assesValCol: GridColDef[] = [
+    {
+      field: 'FiscalYear',
+      headerName: 'Year',
+    },
+    {
+      field: 'Land',
+      headerName: 'Land',
+    },
+    {
+      field: 'Building1',
+      headerName: 'Building (1)',
+    },
+    {
+      field: 'Building2',
+      headerName: 'Building (2)',
+    },
+    {
+      field: 'Building3',
+      headerName: 'Building (3)',
+    },
+    {
+      field: 'Building4',
+      headerName: 'Building (4)',
+    },
+    {
+      field: 'Building5',
+      headerName: 'Building (5)',
+    },
+  ];
+
   const data = {
     //Id: 1,
     PID: '010-113-1332',
@@ -87,13 +147,19 @@ const PropertyDetail = () => {
     <CollapsibleSidebar
       items={[
         { title: 'Parcel information' },
-        ...buildings1.map((a, idx) => ({ title: `Building information (${idx + 1})` })),
+        { title: 'Parcel net book value' },
+        ...buildings1.map((a, idx) => ({
+          title: `Building information (${idx + 1})`,
+          subTitle: a.BuildingName,
+        })),
+        { title: 'Assessed value' },
       ]}
     >
       <Box
         display={'flex'}
         gap={'1rem'}
         mt={'2rem'}
+        mb={'2rem'}
         flexDirection={'column'}
         width={'46rem'}
         marginX={'auto'}
@@ -111,6 +177,14 @@ const PropertyDetail = () => {
           title={'Parcel information'}
           onEdit={() => {}}
         />
+        <DataCard
+          id="Parcel net book value"
+          values={undefined}
+          title={'Parcel net book value'}
+          onEdit={() => {}}
+        >
+          <ParcelNetValueTable />
+        </DataCard>
         {buildings1.map((building, idx) => {
           return (
             <DataCard
@@ -122,6 +196,39 @@ const PropertyDetail = () => {
             />
           );
         })}
+        <DataCard
+          id={'Assessed value'}
+          values={undefined}
+          title={'Assessed value'}
+          onEdit={() => {}}
+        >
+          <PinnedColumnDataGrid
+            hideFooter
+            getRowId={(row) => row.FiscalYear}
+            pinnedFields={['FiscalYear', 'Land']}
+            columns={assesValCol}
+            rows={assessedValue}
+            scrollableSxProps={{
+              borderStyle: 'none',
+              '& .MuiDataGrid-columnHeaders': {
+                borderBottom: 'none',
+              },
+              '& div div div div >.MuiDataGrid-cell': {
+                borderBottom: 'none',
+                borderTop: '1px solid rgba(224, 224, 224, 1)',
+              },
+            }}
+            pinnedSxProps={{
+              borderStyle: 'none',
+              '& .MuiDataGrid-columnHeaders': {
+                borderBottom: 'none',
+              },
+              '& div div div div >.MuiDataGrid-cell': {
+                borderBottom: 'none',
+              },
+            }}
+          />
+        </DataCard>
       </Box>
     </CollapsibleSidebar>
   );

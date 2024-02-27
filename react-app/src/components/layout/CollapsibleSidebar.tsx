@@ -23,7 +23,7 @@ type ICollapsibleSidebar = {
 
 const CollapsibleSidebar = (props: ICollapsibleSidebar) => {
   const openWidth = '300px';
-  const closedWidth = '5rem';
+  const closedWidth = '4.3rem';
   const openedMixin = (theme: Theme): CSSObject => ({
     width: openWidth,
     transition: theme.transitions.create('width', {
