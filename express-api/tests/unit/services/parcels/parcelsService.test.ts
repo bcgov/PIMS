@@ -4,6 +4,7 @@ import { produceParcel } from 'tests/testUtils/factories';
 import { DeepPartial } from 'typeorm';
 import * as parcelService from '@/services/parcels/parcelServices';
 import { ParcelFilterSchema } from '@/services/parcels/parcelSchema';
+import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
 //jest.setTimeout(30000);
 
@@ -51,6 +52,18 @@ describe('UNIT - Parcel Services', () => {
       _parcelFindOne.mockResolvedValueOnce(null);
       expect(
         async () => await parcelService.deleteParcelByPid(parcelToDelete.PID),
+      ).rejects.toThrow();
+    });
+    it('should throw an error if the Parcel has a child Parcel relationship', async () => {
+      const newParentParcel = produceParcel();
+      //const childParcel = {...produceParcel(), parentParcel: newParentParcel.Id}
+      const errorMessage = `update or delete on table "parcel" violates foreign key constraint "FK_9720341fe17e4c22decf0a0b87f" on table "parcel"`;
+      _parcelFindOne.mockResolvedValueOnce(newParentParcel);
+      _parcelDelete.mockImplementationOnce(() => {
+        throw new ErrorWithCode(errorMessage, 418);
+      });
+      expect(
+        async () => await parcelService.deleteParcelByPid(newParentParcel.PID),
       ).rejects.toThrow();
     });
   });

@@ -36,8 +36,12 @@ export const deleteParcelByPid = async (parcelPid: number) => {
   if (!existingParcel) {
     throw new ErrorWithCode('Parcel PID was not found.', 404);
   }
-  const removeParcel = await parcelRepo.delete(existingParcel.Id);
-  return removeParcel;
+  try {
+    const removeParcel = await parcelRepo.delete(existingParcel.Id);
+    return removeParcel;
+  } catch (e) {
+    throw new ErrorWithCode(e.message, e.status);
+  }
 };
 
 /**
