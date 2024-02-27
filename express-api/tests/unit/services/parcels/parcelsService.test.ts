@@ -80,6 +80,7 @@ describe('UNIT - Parcel Services', () => {
   });
 
   describe('updateParcels', () => {
+    beforeEach(() => jest.clearAllMocks());
     it('should update an existing parcel', async () => {
       const updateParcel = produceParcel();
       await parcelService.updateParcel(updateParcel);
