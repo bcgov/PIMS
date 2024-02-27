@@ -4,6 +4,7 @@ import useFetch from './useFetch';
 import useUsersApi from './api/useUsersApi';
 import useAgencyApi from './api/useAgencyApi';
 import useRolesApi from './api/useRolesApi';
+import useReportsApi from '@/hooks/api/useReportsApi';
 
 /**
  * usePimsApi - This stores all the sub-hooks we need to make calls to our API and helps manage authentication state for them.
@@ -16,11 +17,13 @@ const usePimsApi = () => {
   const users = useUsersApi(fetch);
   const agencies = useAgencyApi(fetch);
   const roles = useRolesApi(fetch);
+  const reports = useReportsApi(fetch);
 
   return {
     users,
     agencies,
     roles,
+    reports,
   };
 };
 

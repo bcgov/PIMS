@@ -25,4 +25,7 @@ router.route('/users').get(controllers.getSpreadsheetUsersReports);
  * ie. /reports/properties?include=agency,classification,type
  */
 
+// For errors submitted by the frontend Error Boundary.
+router.route('/error').post(controllers.submitErrorReport);
+
 export default router;

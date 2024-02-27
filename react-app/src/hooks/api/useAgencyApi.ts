@@ -8,9 +8,9 @@ export interface Agency {
   SortOrder: number;
 }
 
-const useAgencyApi = (absolueFetch: IFetch) => {
+const useAgencyApi = (absoluteFetch: IFetch) => {
   const getAgencies = async (): Promise<Agency[]> => {
-    const { parsedBody } = await absolueFetch.get(`/agencies`);
+    const { parsedBody } = await absoluteFetch.get(`/agencies`);
     return parsedBody as Agency[];
   };
 
