@@ -22,6 +22,10 @@ const _parcelFindOne = jest
   .spyOn(parcelRepo, 'findOne')
   .mockImplementation(async () => produceParcel());
 
+const _parcelUpdate = jest
+  .spyOn(parcelRepo, 'update')
+  .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
+
 jest.spyOn(parcelRepo, 'find').mockImplementation(async () => [produceParcel(), produceParcel()]);
 
 describe('UNIT - Parcel Services', () => {
@@ -57,7 +61,6 @@ describe('UNIT - Parcel Services', () => {
     });
     it('should throw an error if the Parcel has a child Parcel relationship', async () => {
       const newParentParcel = produceParcel();
-      //const childParcel = {...produceParcel(), parentParcel: newParentParcel.Id}
       const errorMessage = `update or delete on table "parcel" violates foreign key constraint "FK_9720341fe17e4c22decf0a0b87f" on table "parcel"`;
       _parcelFindOne.mockResolvedValueOnce(newParentParcel);
       _parcelDelete.mockImplementationOnce(() => {
@@ -73,6 +76,27 @@ describe('UNIT - Parcel Services', () => {
     it('should return a list of parcels', async () => {
       const parcels = await parcelService.getParcels({});
       expect(parcels).toHaveLength(2);
+    });
+  });
+
+  describe('updateParcels', () => {
+    it('should update an existing parcel', async () => {
+      const updateParcel = produceParcel();
+      await parcelService.updateParcel(updateParcel);
+      expect(_parcelUpdate).toHaveBeenCalledTimes(1);
+    });
+    it('should throw an error if the parcel is not found.', async () => {
+      const updateParcel = produceParcel();
+      _parcelFindOne.mockResolvedValueOnce(null);
+      expect(async () => await parcelService.updateParcel(updateParcel)).rejects.toThrow();
+    });
+    it('should throw and error if parcel is unable to be updated', async () => {
+      const updateParcel = produceParcel();
+      _parcelFindOne.mockResolvedValueOnce(updateParcel);
+      _parcelUpdate.mockImplementationOnce(() => {
+        throw new ErrorWithCode('errorMessage');
+      });
+      expect(async () => await parcelService.updateParcel(updateParcel)).rejects.toThrow();
     });
   });
 });

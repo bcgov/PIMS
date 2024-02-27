@@ -79,7 +79,7 @@ export const getParcels = async (filter: ParcelFilter, includeRelations: boolean
  * @returns updated parcel information and status
  * @throws Error with code if parcel is not found or if an unexpected error is hit on update
  */
-export const updateParcelByPid = async (incomingParcel: Parcel) => {
+export const updateParcel = async (incomingParcel: Parcel) => {
   const findParcel = await getParcelByPid(incomingParcel.PID);
   if (findParcel == null) {
     throw new ErrorWithCode('Parcel not found', 404);
@@ -88,7 +88,7 @@ export const updateParcelByPid = async (incomingParcel: Parcel) => {
     const updateParcel = await parcelRepo.update({ Id: findParcel.Id }, incomingParcel);
     return updateParcel.raw[0];
   } catch (e) {
-    throw new ErrorWithCode('Error updating parcel');
+    throw new ErrorWithCode(e.message);
   }
 };
 
