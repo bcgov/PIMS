@@ -1,5 +1,7 @@
+import logger from '@/utilities/winstonLogger';
 import { stubResponse } from '../../utilities/stubResponse';
 import { Request, Response } from 'express';
+import { ErrorReport, errorReportSchema } from '@/controllers/reports/errorReportSchema';
 
 /**
  * @description Get all reports as a CSV or Excel file.
@@ -50,4 +52,23 @@ export const getSpreadsheetUsersReports = async (req: Request, res: Response) =>
    * }]
    */
   return stubResponse(res);
+};
+
+export const submitErrorReport = async (req: Request, res: Response) => {
+  /**
+   * #swagger.tags = ['Reports']
+   * #swagger.description = 'Accepts an error report from the frontend and sends an email to administrators.'
+   * #swagger.security = [{
+   *   "bearerAuth" : []
+   * }]
+   */
+  const info: ErrorReport = req.body;
+  logger.info(info);
+  try {
+    errorReportSchema.parse(info);
+  } catch (e) {
+    return res.status(400).send(e);
+  }
+  // TODO: Add email component after CHES is in. Response depends on that outcome.
+  return res.status(200).send(info);
 };
