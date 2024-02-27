@@ -74,6 +74,25 @@ export const getParcels = async (filter: ParcelFilter, includeRelations: boolean
 };
 
 /**
+ * @description Finds and updates parcel based on the incoming PID
+ * @param incomingParcel incoming parcel information to be updated
+ * @returns updated parcel information and status
+ * @throws Error with code if parcel is not found or if an unexpected error is hit on update
+ */
+export const updateParcelByPid = async (incomingParcel: Parcel) => {
+  const findParcel = await getParcelByPid(incomingParcel.PID);
+  if (findParcel == null) {
+    throw new ErrorWithCode('Parcel not found', 404);
+  }
+  try {
+    const updateParcel = await parcelRepo.update({ Id: findParcel.Id }, incomingParcel);
+    return updateParcel.raw[0];
+  } catch (e) {
+    throw new ErrorWithCode('Error updating parcel');
+  }
+};
+
+/**
  * @description Finds and returns a parcel with matching PID
  * @param       parcelPID Number representing parcel we want to find.
  * @returns     findParcel Parcel data matching PID passed in.
