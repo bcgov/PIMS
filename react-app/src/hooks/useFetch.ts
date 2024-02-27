@@ -51,12 +51,13 @@ const useFetch = (baseUrl?: string) => {
         } catch {
           parsedBody = text;
         }
-        return { ...response, parsedBody: parsedBody };
+        (response as FetchResponse).parsedBody = parsedBody;
+        return response;
       } else {
         return response;
       }
     };
-    const buildQueryParms = (params: Record<string, any>): string => {
+    const buildQueryParams = (params: Record<string, any>): string => {
       if (!params) {
         return '';
       }
@@ -68,7 +69,7 @@ const useFetch = (baseUrl?: string) => {
       return `?${q}`;
     };
     const get = (url: string, params?: Record<string, any>) => {
-      return absoluteFetch(url + buildQueryParms(params), { method: 'GET' });
+      return absoluteFetch(url + buildQueryParams(params), { method: 'GET' });
     };
     const post = (url: string, body: any) => {
       return absoluteFetch(url, { method: 'POST', body: body });
