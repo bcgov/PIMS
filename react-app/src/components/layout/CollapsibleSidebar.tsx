@@ -1,8 +1,10 @@
-import { MenuOpen } from '@mui/icons-material';
+import sideBarIcon from '@/assets/icons/SidebarLeft-Linear.svg';
 import {
+  Avatar,
   Box,
   CSSObject,
   Drawer,
+  Icon,
   IconButton,
   ListItem,
   ListItemButton,
@@ -23,7 +25,7 @@ type ICollapsibleSidebar = {
 
 const CollapsibleSidebar = (props: ICollapsibleSidebar) => {
   const openWidth = '300px';
-  const closedWidth = '4.3rem';
+  const closedWidth = 'calc(52px + 2rem)';
   const openedMixin = (theme: Theme): CSSObject => ({
     width: openWidth,
     transition: theme.transitions.create('width', {
@@ -69,7 +71,22 @@ const CollapsibleSidebar = (props: ICollapsibleSidebar) => {
       >
         <Box display={'flex'} sx={{ ml: '1rem', mt: '88px', mr: '1rem' }}>
           <IconButton onClick={() => setDrawerOpen(!drawerOpen)}>
-            <MenuOpen />
+            <Avatar
+              style={{
+                backgroundColor: '#eee',
+                height: 36,
+                width: 36,
+              }}
+            >
+              <Icon sx={{ mb: '2px' }}>
+                <img
+                  height={18}
+                  width={18}
+                  src={sideBarIcon}
+                  style={{ transform: `rotate(${drawerOpen ? '3.142rad' : '0'})` }}
+                />
+              </Icon>
+            </Avatar>
           </IconButton>
         </Box>
         <Box>
