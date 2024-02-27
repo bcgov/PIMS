@@ -40,7 +40,7 @@ export const deleteParcelByPid = async (parcelPid: number) => {
     const removeParcel = await parcelRepo.delete(existingParcel.Id);
     return removeParcel;
   } catch (e) {
-    throw new ErrorWithCode(e.message, e.status);
+    throw new ErrorWithCode(e.message);
   }
 };
 

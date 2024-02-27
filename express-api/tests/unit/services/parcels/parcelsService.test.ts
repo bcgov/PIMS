@@ -41,6 +41,7 @@ describe('UNIT - Parcel Services', () => {
   });
 
   describe('deleteParcelByPid', () => {
+    beforeEach(() => jest.clearAllMocks());
     it('should delete a parcel and return a 204 status code', async () => {
       const parcelToDelete = produceParcel();
       _parcelFindOne.mockResolvedValueOnce(parcelToDelete);
@@ -60,7 +61,7 @@ describe('UNIT - Parcel Services', () => {
       const errorMessage = `update or delete on table "parcel" violates foreign key constraint "FK_9720341fe17e4c22decf0a0b87f" on table "parcel"`;
       _parcelFindOne.mockResolvedValueOnce(newParentParcel);
       _parcelDelete.mockImplementationOnce(() => {
-        throw new ErrorWithCode(errorMessage, 418);
+        throw new ErrorWithCode(errorMessage);
       });
       expect(
         async () => await parcelService.deleteParcelByPid(newParentParcel.PID),
