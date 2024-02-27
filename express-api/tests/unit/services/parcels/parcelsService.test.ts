@@ -4,6 +4,7 @@ import { produceParcel } from 'tests/testUtils/factories';
 import { DeepPartial } from 'typeorm';
 import * as parcelService from '@/services/parcels/parcelServices';
 import { ParcelFilterSchema } from '@/services/parcels/parcelSchema';
+import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
 //jest.setTimeout(30000);
 
@@ -12,6 +13,10 @@ const parcelRepo = AppDataSource.getRepository(Parcel);
 const _parcelSave = jest
   .spyOn(parcelRepo, 'save')
   .mockImplementation(async (parcel: DeepPartial<Parcel> & Parcel) => parcel);
+
+const _parcelDelete = jest
+  .spyOn(parcelRepo, 'delete')
+  .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
 
 const _parcelFindOne = jest
   .spyOn(parcelRepo, 'findOne')
@@ -35,37 +40,66 @@ describe('UNIT - Parcel Services', () => {
     });
   });
 
-  describe('UNIT - getParcels', () => {
+  describe('deleteParcelByPid', () => {
+    beforeEach(() => jest.clearAllMocks());
+    it('should delete a parcel and return a 204 status code', async () => {
+      const parcelToDelete = produceParcel();
+      _parcelFindOne.mockResolvedValueOnce(parcelToDelete);
+      await parcelService.deleteParcelByPid(parcelToDelete.PID);
+      expect(_parcelDelete).toHaveBeenCalledTimes(1);
+    });
+    it('should throw an error if the PID does not exist in the parcel table', () => {
+      const parcelToDelete = produceParcel();
+      _parcelFindOne.mockResolvedValueOnce(null);
+      expect(
+        async () => await parcelService.deleteParcelByPid(parcelToDelete.PID),
+      ).rejects.toThrow();
+    });
+    it('should throw an error if the Parcel has a child Parcel relationship', async () => {
+      const newParentParcel = produceParcel();
+      //const childParcel = {...produceParcel(), parentParcel: newParentParcel.Id}
+      const errorMessage = `update or delete on table "parcel" violates foreign key constraint "FK_9720341fe17e4c22decf0a0b87f" on table "parcel"`;
+      _parcelFindOne.mockResolvedValueOnce(newParentParcel);
+      _parcelDelete.mockImplementationOnce(() => {
+        throw new ErrorWithCode(errorMessage);
+      });
+      expect(
+        async () => await parcelService.deleteParcelByPid(newParentParcel.PID),
+      ).rejects.toThrow();
+    });
+  });
+
+  describe('getParcels', () => {
     it('should return a list of parcels', async () => {
       const parcels = await parcelService.getParcels({});
       expect(parcels).toHaveLength(2);
     });
   });
+});
 
-  describe('UNIT - ParcelFilterSchema', () => {
-    it('should validate partial or complete filters', () => {
-      // Empty filter
-      expect(() => ParcelFilterSchema.parse({})).not.toThrow();
-      // Partial filter
-      expect(() =>
-        ParcelFilterSchema.parse({
-          agencyId: 3,
-        }),
-      ).not.toThrow();
-      // Filter with only page
-      expect(() =>
-        ParcelFilterSchema.parse({
-          page: 3,
-          quantity: 50,
-        }),
-      ).not.toThrow();
-    });
-    it('should throw an error when invalid filters are given', () => {
-      expect(() =>
-        ParcelFilterSchema.parse({
-          agencyId: 'hi',
-        }),
-      ).toThrow();
-    });
+describe('UNIT - ParcelFilterSchema', () => {
+  it('should validate partial or complete filters', () => {
+    // Empty filter
+    expect(() => ParcelFilterSchema.parse({})).not.toThrow();
+    // Partial filter
+    expect(() =>
+      ParcelFilterSchema.parse({
+        agencyId: 3,
+      }),
+    ).not.toThrow();
+    // Filter with only page
+    expect(() =>
+      ParcelFilterSchema.parse({
+        page: 3,
+        quantity: 50,
+      }),
+    ).not.toThrow();
+  });
+  it('should throw an error when invalid filters are given', () => {
+    expect(() =>
+      ParcelFilterSchema.parse({
+        agencyId: 'hi',
+      }),
+    ).toThrow();
   });
 });
