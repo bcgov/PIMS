@@ -84,7 +84,7 @@ objects:
                   protocol: TCP
               imagePullPolicy: Always
               terminationMessagePolicy: File
-              image: artifacts.developer.gov.bc.ca/t354-pims-image-repository/pims-api-v2:${IMAGE_TAG}
+              image: artifacts.developer.gov.bc.ca/t354-pims-image-repository/pims-app-v2:${IMAGE_TAG}
               imagePullSecrets:
                 - name: artifactory-creds
           restartPolicy: Always
