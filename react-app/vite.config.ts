@@ -24,6 +24,7 @@ export default () => {
           rewrite: (path) => path.replace(/^\/api/, ''),
         },
       },
+      cors: true,
     },
   });
 };

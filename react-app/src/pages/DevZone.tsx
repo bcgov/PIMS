@@ -1,23 +1,14 @@
 /* eslint-disable no-console */
 //Simple component testing area.
-import React, { useState } from 'react';
-import { Agency } from '@/hooks/api/useAgencyApi';
-import { Button } from '@mui/material';
+import React from 'react';
+import { Box } from '@mui/material';
+import ReactEsriLeafletMap from '@/components/map/ReactEsriLeafletMap';
 
 const Dev = () => {
-  const agencies: Agency[] = [];
-  const [error, setError] = useState(false);
-  return error ? (
-    <div>{agencies.at(0).Id}</div>
-  ) : (
-    <Button
-      variant="contained"
-      onClick={() => {
-        setError(true);
-      }}
-    >
-      Cause Rendering Error
-    </Button>
+  return (
+    <Box height={'900px'}>
+      <ReactEsriLeafletMap />
+    </Box>
   );
 };
 
