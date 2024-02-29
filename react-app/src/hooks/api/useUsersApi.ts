@@ -34,7 +34,6 @@ const useUsersApi = (absoluteFetch: IFetch) => {
   };
   const getSelf = async (): Promise<User> => {
     const a = await absoluteFetch.get(`/users/self`);
-    console.log(a.status);
     return a.parsedBody as User;
   };
   const submitAccessRequest = async (request: AccessRequest): Promise<User> => {
