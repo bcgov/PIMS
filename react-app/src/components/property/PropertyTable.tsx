@@ -1,46 +1,11 @@
 import React, { MutableRefObject } from 'react';
 import { CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
-import { Box, SxProps, Tooltip, Typography, lighten, useTheme } from '@mui/material';
+import { Box, SxProps, Tooltip, lighten, useTheme } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { Check } from '@mui/icons-material';
 import { GridColDef, GridColumnHeaderTitle } from '@mui/x-data-grid';
 import { dateFormatter } from '@/utils/formatters';
-import ClassificationIcon from './ClassificationIcon';
-
-interface IClassificationToolTipItem {
-  color: string;
-  backgroundColor: string;
-  title: string;
-}
-
-const ClassificationToolTipItem = (props: IClassificationToolTipItem) => {
-  return (
-    <Box display={'flex'} flexDirection={'row'} alignItems={'center'} gap={'12px'}>
-      <Box
-        display={'flex'}
-        alignItems={'center'}
-        justifyContent={'center'}
-        sx={{
-          width: '16px',
-          height: '16px',
-          borderRadius: '50%',
-          backgroundColor: props.backgroundColor,
-        }}
-      >
-        <Box
-          sx={{
-            width: '8px',
-            height: '8px',
-            borderRadius: '50%',
-            opacity: '100%',
-            backgroundColor: props.color,
-          }}
-        ></Box>
-      </Box>
-      <Typography fontSize={'0.8rem'}>{props.title}</Typography>
-    </Box>
-  );
-};
+import { ClassificationInline, ClassificationIcon } from './ClassificationIcon';
 
 const PropertyTable = () => {
   const theme = useTheme();
@@ -71,22 +36,22 @@ const PropertyTable = () => {
           <Tooltip
             title={
               <Box display={'flex'} flexDirection={'column'} gap={'4px'}>
-                <ClassificationToolTipItem
+                <ClassificationInline
                   title="Core operational"
                   color={lighten(theme.palette.success.main, 0.3)}
                   backgroundColor={theme.palette.success.light}
                 />
-                <ClassificationToolTipItem
+                <ClassificationInline
                   title="Core strategic"
                   color={lighten(theme.palette.blue.main, 0.4)}
                   backgroundColor={theme.palette.blue.light}
                 />
-                <ClassificationToolTipItem
+                <ClassificationInline
                   title="Surplus"
                   color={lighten(theme.palette.info.main, 0.3)}
                   backgroundColor={theme.palette.info.light}
                 />
-                <ClassificationToolTipItem
+                <ClassificationInline
                   title="Disposed"
                   color={lighten(theme.palette.warning.main, 0.2)}
                   backgroundColor={theme.palette.warning.light}
