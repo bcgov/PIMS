@@ -18,7 +18,7 @@ export const addParcel = async (parcel: Partial<Parcel>) => {
     throw new ErrorWithCode('Must include PID in parcel data.', 400);
   }
 
-  const matchPID = inPID.toString().search(/\d{9}/);
+  const matchPID = inPID.toString().search(/^\d{9}$/);
   if (matchPID === -1) {
     throw new ErrorWithCode('PID must be a number and in the format #########');
   }
