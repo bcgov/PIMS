@@ -35,12 +35,12 @@ jobs:
       # Build the API Image 
       - name: Build API Image
         run: |
-          cd express-api && docker build -t ${{ secrets.ARTIFACTORY_IMAGE_REPOSITORY }}/${{ secrets.ARTIFACTORY_REPOSITORY_NAME }}//pims-api-v2:${{github.event.pull_request.number}} -f Dockerfile .
+          cd express-api && docker build -t ${{ secrets.ARTIFACTORY_IMAGE_REPOSITORY }}/${{ secrets.ARTIFACTORY_REPOSITORY_NAME }}/pims-api-v2:${{github.event.pull_request.number}} -f Dockerfile .
 
       # Push the API Image
       - name: Push API Image
         run: |
-          docker push ${{ secrets.ARTIFACTORY_IMAGE_REPOSITORY }}/${{ secrets.ARTIFACTORY_REPOSITORY_NAME }}//pims-api-v2:${{github.event.pull_request.number}}
+          docker push ${{ secrets.ARTIFACTORY_IMAGE_REPOSITORY }}/${{ secrets.ARTIFACTORY_REPOSITORY_NAME }}/pims-api-v2:${{github.event.pull_request.number}}
 
   Update_Wiki_Tags:
     needs: [PIMS-API-V2-Build-Tag-Push]
