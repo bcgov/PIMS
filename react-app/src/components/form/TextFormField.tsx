@@ -9,6 +9,7 @@ const TextFormField = (props: TextFieldProps) => {
     <TextField
       {...props}
       {...register(name, { required: props.required })}
+      //InputLabelProps={{ shrink: !!watch(name) }}
       error={!!formState.errors?.[name]}
       helperText={formState.errors?.[name] ? 'This field is required.' : undefined}
     />
