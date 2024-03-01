@@ -10,6 +10,7 @@ import {
   Menu,
   MenuItem,
   Select,
+  SxProps,
   Tooltip,
   Typography,
   debounce,
@@ -296,5 +297,59 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         {...props}
       />
     </>
+  );
+};
+
+type PinnedColumnDataGridProps = {
+  pinnedFields: string[];
+  pinnedSxProps?: SxProps;
+  scrollableSxProps?: SxProps;
+} & DataGridProps;
+
+/**
+ * This is a somewhat hacky workaround for pinned columns in the community version of mui-x.
+ * If we ever get a Pro sub, we can just get rid of this entirely.
+ * All the sorting and filtering options are disabled since this is just two data grids smushed together
+ * and their states are not synced at all.
+ */
+export const PinnedColumnDataGrid = (props: PinnedColumnDataGridProps) => {
+  const { columns, rows, pinnedFields, scrollableSxProps, pinnedSxProps, ...rest } = props;
+  columns.forEach((col) => (col.sortable = false));
+  const pinnedColumns = columns.filter((col) => pinnedFields.find((a) => a === col.field));
+  const scrollableColumns = columns.filter((col) => !pinnedFields.find((a) => a === col.field));
+
+  return (
+    <Box style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+      <Box
+        display={'flex'}
+        boxShadow={'2px 0px 5px 0px rgba(0, 0, 0, 0.12)'}
+        style={{ flex: '0 0 auto' }}
+        sx={{ clipPath: 'inset(0px -10px 0px 0px);' }}
+        width={'auto'}
+      >
+        <DataGrid
+          columns={pinnedColumns}
+          rows={rows}
+          disableColumnMenu
+          disableColumnFilter
+          disableRowSelectionOnClick
+          autoHeight
+          sx={pinnedSxProps}
+          {...rest}
+        />
+      </Box>
+      <Box display={'flex'} width={'auto'} style={{ flex: '1 1 auto', overflowX: 'auto' }}>
+        <DataGrid
+          columns={scrollableColumns}
+          rows={rows}
+          disableColumnMenu
+          disableColumnFilter
+          disableRowSelectionOnClick
+          autoHeight
+          sx={scrollableSxProps}
+          {...rest}
+        />
+      </Box>
+    </Box>
   );
 };
