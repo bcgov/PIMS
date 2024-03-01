@@ -13,8 +13,18 @@ const parcelRepo = AppDataSource.getRepository(Parcel);
  * @throws ErrorWithCode If the parcel already exists or is unable to be added.
  */
 export const addParcel = async (parcel: Partial<Parcel>) => {
-  // regex here for PID format checking st. #########
-  const existingParcel = await getParcelByPid(parcel.PID);
+  const inPID = Number(parcel.PID);
+  if (inPID == undefined) {
+    throw new ErrorWithCode('Must include PID in parcel data.', 400);
+  }
+
+  const matchPID = inPID.toString().search(/\d{9}/);
+  if (matchPID === -1) {
+    throw new ErrorWithCode('PID must be a number and in the format #########');
+  }
+
+  const existingParcel = await getParcelByPid(inPID);
+
   if (existingParcel) {
     throw new ErrorWithCode('Parcel already exists.', 409);
   }
