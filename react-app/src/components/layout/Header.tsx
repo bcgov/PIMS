@@ -61,14 +61,16 @@ const Header: React.FC = () => {
   return (
     <AppBar
       elevation={0}
+      component={'nav'}
       style={{
         backgroundColor: theme.palette.white.main,
         height: '74px',
         display: 'flex',
-        position: 'relative',
+        position: 'fixed',
         justifyContent: 'center',
         borderBottom: '1px solid',
         borderBottomColor: theme.palette.gray.main,
+        zIndex: theme.zIndex.drawer + 1,
       }}
     >
       <Toolbar>
