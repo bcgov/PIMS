@@ -14,7 +14,7 @@ const parcelRepo = AppDataSource.getRepository(Parcel);
  */
 export const addParcel = async (parcel: Partial<Parcel>) => {
   const inPID = Number(parcel.PID);
-  if (inPID == undefined) {
+  if (inPID == undefined || Number.isNaN(inPID)) {
     throw new ErrorWithCode('Must include PID in parcel data.', 400);
   }
 

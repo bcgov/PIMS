@@ -30,6 +30,7 @@ jest.spyOn(parcelRepo, 'find').mockImplementation(async () => [produceParcel(), 
 
 describe('UNIT - Parcel Services', () => {
   describe('addParcel', () => {
+    beforeEach(() => jest.clearAllMocks());
     it('should add a new parcel and return it', async () => {
       _parcelFindOne.mockResolvedValueOnce(null);
       const parcel = produceParcel();
@@ -40,6 +41,26 @@ describe('UNIT - Parcel Services', () => {
     it('should throw an error if the agency already exists', () => {
       const parcel = produceParcel();
       _parcelFindOne.mockResolvedValueOnce(parcel);
+      expect(async () => await parcelService.addParcel(parcel)).rejects.toThrow();
+    });
+    it('should throw an error if PID is not in schema', () => {
+      const parcel = {};
+      expect(async () => await parcelService.addParcel(parcel)).rejects.toThrow();
+    });
+    it('should throw an error if the PID is too short', () => {
+      const parcel = { PID: 11111111 };
+      expect(async () => await parcelService.addParcel(parcel)).rejects.toThrow();
+    });
+    it('should throw an error if the PID is too long', () => {
+      const parcel = { PID: 1111111111 };
+      expect(async () => await parcelService.addParcel(parcel)).rejects.toThrow();
+    });
+    it('should throw an error if the save statement fails', () => {
+      _parcelFindOne.mockResolvedValueOnce(null);
+      const parcel = produceParcel();
+      _parcelSave.mockImplementationOnce(() => {
+        throw new Error();
+      });
       expect(async () => await parcelService.addParcel(parcel)).rejects.toThrow();
     });
   });
@@ -98,6 +119,21 @@ describe('UNIT - Parcel Services', () => {
         throw new ErrorWithCode('errorMessage');
       });
       expect(async () => await parcelService.updateParcel(updateParcel)).rejects.toThrow();
+    });
+    it('should throw an error if PID is not in schema', () => {
+      const parcel = {};
+      expect(async () => await parcelService.updateParcel(parcel)).rejects.toThrow();
+    });
+  });
+
+  describe('getParcelByPid', () => {
+    beforeEach(() => jest.clearAllMocks());
+    it('should return an error if the database fails', () => {
+      const searchPID = 999999999;
+      _parcelFindOne.mockImplementationOnce(() => {
+        throw new Error();
+      });
+      expect(async () => await parcelService.getParcelByPid(searchPID)).rejects.toThrow();
     });
   });
 });
