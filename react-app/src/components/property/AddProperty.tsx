@@ -6,6 +6,7 @@ import {
   Grid,
   IconButton,
   InputAdornment,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
@@ -13,7 +14,7 @@ import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook
 import AutocompleteFormField from '../form/AutocompleteFormField';
 import SelectFormField from '../form/SelectFormField';
 import TextFormField from '../form/TextFormField';
-import { Add, DeleteOutline } from '@mui/icons-material';
+import { Add, DeleteOutline, Help } from '@mui/icons-material';
 import DateFormField from '../form/DateFormField';
 import dayjs from 'dayjs';
 import DeleteDialog from '../dialog/DeleteDialog';
@@ -373,7 +374,14 @@ const AddProperty = () => {
           </Grid>
           <Grid item xs={6}>
             <SelectFormField
-              label={'Sensitive information'}
+              label={
+                <Box display={'inline-flex'} alignItems={'center'}>
+                  Sensitive information{' '}
+                  <Tooltip title="Some blurb about sensitive information will go here I don't know what it should say.">
+                    <Help sx={{ ml: '4px' }} fontSize="small" />
+                  </Tooltip>
+                </Box>
+              }
               name={'IsSensitive'}
               options={[
                 { label: 'Yes', value: true },
