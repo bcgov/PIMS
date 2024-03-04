@@ -1,7 +1,6 @@
 import React, { useContext, useMemo } from 'react';
 import pendingImage from '@/assets/images/pending.svg';
 import { Box, Button, Grid, Paper, Typography } from '@mui/material';
-import TextInput from '@/components/form/TextFormField';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
 import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -11,6 +10,7 @@ import { AccessRequest as AccessRequestType } from '@/hooks/api/useUsersApi';
 import { AuthContext } from '@/contexts/authContext';
 import useDataLoader from '@/hooks/useDataLoader';
 import { Navigate } from 'react-router-dom';
+import TextFormField from '@/components/form/TextFormField';
 
 const AccessPending = () => {
   return (
@@ -56,7 +56,7 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
       <FormProvider {...formMethods}>
         <Grid spacing={2} container>
           <Grid item xs={6}>
-            <TextInput
+            <TextFormField
               fullWidth
               name={'UserName'}
               label={'IDIR/BCeID'}
@@ -65,7 +65,7 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
             />
           </Grid>
           <Grid item xs={6}>
-            <TextInput
+            <TextFormField
               fullWidth
               name={'Email'}
               label={'Email'}
@@ -74,7 +74,7 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
             />
           </Grid>
           <Grid item xs={6}>
-            <TextInput
+            <TextFormField
               fullWidth
               name={'FirstName'}
               label={'First name'}
@@ -83,7 +83,7 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
             />
           </Grid>
           <Grid item xs={6}>
-            <TextInput
+            <TextFormField
               name={'LastName'}
               fullWidth
               label={'Last name'}
@@ -100,10 +100,15 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
             />
           </Grid>
           <Grid item xs={12}>
-            <TextInput name={'Position'} fullWidth label={'Your position'} />
+            <TextFormField name={'Position'} fullWidth label={'Your position'} />
           </Grid>
           <Grid item xs={12}>
-            <TextInput name={'Note'} multiline fullWidth label={'Notes (e.g. Reason for access)'} />
+            <TextFormField
+              name={'Note'}
+              multiline
+              fullWidth
+              label={'Notes (e.g. Reason for access)'}
+            />
           </Grid>
         </Grid>
       </FormProvider>

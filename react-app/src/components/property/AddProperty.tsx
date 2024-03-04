@@ -9,13 +9,14 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
-import TextFormField from '../form/TextFormField';
 import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form';
 import AutocompleteFormField from '../form/AutocompleteFormField';
 import SelectFormField from '../form/SelectFormField';
-import NumberFormField from '../form/NumberFormField';
+import TextFormField from '../form/TextFormField';
 import { Add, DeleteOutline } from '@mui/icons-material';
 import DateFormField from '../form/DateFormField';
+import dayjs from 'dayjs';
+import DeleteDialog from '../dialog/DeleteDialog';
 
 interface IAssessedValue {
   years: number[];
@@ -45,7 +46,7 @@ const AssessedValue = (props: IAssessedValue) => {
                 sx={{ minWidth: 'calc(33.3% - 1rem)' }}
                 name={`AssessedValue.${idx}.Year`}
                 label={'Year'}
-                defaultValue={yr}
+                value={yr}
                 disabled
               />
               <TextFormField
@@ -54,18 +55,21 @@ const AssessedValue = (props: IAssessedValue) => {
                 }}
                 sx={{ minWidth: 'calc(33.3% - 1rem)' }}
                 name={`AssessedValue.${idx}.LandValue`}
+                numeric
                 label={'Land'}
               />
-              {[...Array(numBuildings).keys()].map((_b, idx) => {
+              {[...Array(numBuildings).keys()].map((_b, localidx) => {
                 return (
                   <TextFormField
                     InputProps={{
                       startAdornment: <InputAdornment position="start">$</InputAdornment>,
                     }}
                     sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-                    key={`assessedbuilding-${idx}`}
-                    name={`FiscalBuilding.${idx}.Value`}
-                    label={`Building ${idx + 1}`}
+                    key={`assessedbuilding-${idx}${localidx}`}
+                    name={`BuildingFiscal.${yr}.${localidx}.Value`}
+                    label={`Building ${localidx + 1}`}
+                    numeric
+                    defaultVal=""
                   />
                 );
               })}
@@ -111,7 +115,12 @@ const BuildingInformation = (props: IBuildingInformation) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <TextFormField fullWidth label={'Building name'} name={`Building.${index}.Name`} />
+          <TextFormField
+            required
+            fullWidth
+            label={'Building name'}
+            name={`Building.${index}.Name`}
+          />
         </Grid>
         <Grid item xs={12}>
           <FormControlLabel
@@ -147,14 +156,21 @@ const BuildingInformation = (props: IBuildingInformation) => {
             name={`Building.${index}.TotalArea`}
             label={'Total area'}
             fullWidth
+            numeric
             InputProps={{ endAdornment: <InputAdornment position="end">Sq. M</InputAdornment> }}
           />
         </Grid>
         <Grid item xs={6}>
           <TextFormField
             name={`Building.${index}.RentableArea`}
+            rules={{
+              validate: (val, formVals) =>
+                val <= formVals.Building?.[index]?.TotalArea ||
+                `Cannot be larger than Total area: ${val} <= ${formVals.Building?.[index]?.TotalArea}`,
+            }}
             label={'Net usable area'}
             fullWidth
+            numeric
             InputProps={{ endAdornment: <InputAdornment position="end">Sq. M</InputAdornment> }}
           />
         </Grid>
@@ -162,7 +178,7 @@ const BuildingInformation = (props: IBuildingInformation) => {
           <TextFormField
             name={`Building.${index}.BuildingTenancy`}
             label={'Tenancy'}
-            type={'number'}
+            numeric
             fullWidth
             InputProps={{ endAdornment: <InputAdornment position="end">%</InputAdornment> }}
           />
@@ -190,19 +206,20 @@ const NetBookValue = (props: INetBookValue) => {
           <React.Fragment key={`netbookgrid${yr}`}>
             <Grid item xs={4}>
               <TextFormField
-                defaultValue={yr}
+                value={yr}
                 disabled
-                name={`FiscalYear.${idx}.Year`}
+                name={`NetBookValue.${idx}.Year`}
                 label={'Fiscal year'}
               />
             </Grid>
             <Grid item xs={4}>
-              <DateFormField name={`FiscalYear.${idx}.EffectiveDate`} label={'Effective date'} />
+              <DateFormField name={`NetBookValue.${idx}.EffectiveDate`} label={'Effective date'} />
             </Grid>
             <Grid item xs={4}>
-              <NumberFormField
-                name={`FiscalYear.${idx}.Value`}
+              <TextFormField
+                name={`NetBookValue.${idx}.Value`}
                 label={'Net book value'}
+                numeric
                 InputProps={{
                   startAdornment: <InputAdornment position="start">$</InputAdornment>,
                 }}
@@ -216,6 +233,10 @@ const NetBookValue = (props: INetBookValue) => {
 };
 
 const AddProperty = () => {
+  const years = [new Date().getFullYear(), new Date().getFullYear() - 1];
+  const [showErrorText, setShowErrorTest] = useState(false);
+  const [selectedDeletionIndex, setSelectedDeletionIndex] = useState<number>(undefined);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const formMethods = useForm({
     defaultValues: {
       Address1: '',
@@ -226,7 +247,24 @@ const AddProperty = () => {
       Latitude: '',
       Longitude: '',
       Toggle: '',
+      LandArea: '',
       Building: [],
+      AssessedValue: years.map((yr) => ({
+        Year: yr,
+        LandValue: '',
+      })),
+      BuildingFiscal: years.reduce(
+        (acc, curr) => ({
+          ...acc,
+          [curr]: [],
+        }),
+        {},
+      ),
+      NetBookValue: years.map((yr) => ({
+        Year: yr,
+        EffectiveDate: dayjs(),
+        Value: '',
+      })),
     },
   });
 
@@ -259,10 +297,17 @@ const AddProperty = () => {
             />
           </Grid>
           <Grid item xs={6}>
-            <TextFormField fullWidth name={'PID'} label={'PID'} />
+            <TextFormField
+              fullWidth
+              name={'PID'}
+              label={'PID'}
+              numeric
+              required
+              rules={{ validate: (val) => String(val).length <= 9 || 'PIN is too long.' }}
+            />
           </Grid>
           <Grid item xs={6}>
-            <TextFormField fullWidth name={'PIN'} label={'PIN'} />
+            <TextFormField numeric fullWidth name={'PIN'} label={'PIN'} />
           </Grid>
           <Grid item xs={6}>
             <AutocompleteFormField
@@ -275,10 +320,22 @@ const AddProperty = () => {
             <TextFormField fullWidth name={'PostalCode'} label={'Postal code'} />
           </Grid>
           <Grid item xs={6}>
-            <NumberFormField fullWidth name={'Latitude'} label={'Latitude'} />
+            <TextFormField
+              fullWidth
+              numeric
+              name={'Latitude'}
+              label={'Latitude'}
+              rules={{ validate: (val) => Math.abs(val) <= 90 || 'Outside valid range.' }}
+            />
           </Grid>
           <Grid item xs={6}>
-            <NumberFormField fullWidth name={'Longitude'} label={'Longitude'} />
+            <TextFormField
+              fullWidth
+              numeric
+              name={'Longitude'}
+              label={'Longitude'}
+              rules={{ validate: (val) => Math.abs(val) <= 180 || 'Outside valid range.' }}
+            />
           </Grid>
         </Grid>
         <Typography mt={'2rem'} variant="h5">
@@ -305,7 +362,7 @@ const AddProperty = () => {
             />
           </Grid>
           <Grid item xs={6}>
-            <NumberFormField
+            <TextFormField
               fullWidth
               label={'Lot size'}
               name={'LandArea'}
@@ -335,31 +392,53 @@ const AddProperty = () => {
         <Typography mt={'2rem'} variant="h5">
           Net book value
         </Typography>
-        <NetBookValue years={[2023, 2024]} />
+        <NetBookValue years={years} />
         {fields.map((_a, idx) => (
           <BuildingInformation
             key={`buildinginfo-${idx}`}
             index={idx}
-            onDeleteClick={() => remove(idx)}
+            onDeleteClick={() => {
+              setOpenDeleteDialog(true);
+              setSelectedDeletionIndex(idx);
+            }}
           />
         ))}
         <Button
           startIcon={<Add />}
           onClick={() => {
-            append({});
+            append({
+              ClassificationId: '',
+              Name: '',
+              Address1: '',
+              BuildingPredominateUse: '',
+              BuildingConstructionType: '',
+              TotalArea: '',
+              RentableArea: '',
+              BuildingTenancy: '',
+              BuildingTenancyUpdatedOn: dayjs(),
+            });
           }}
           variant="contained"
           sx={{ padding: '8px', width: '9rem', marginX: 'auto', backgroundColor: 'grey' }}
         >
           Add Building
         </Button>
-        <AssessedValue years={[2023, 2024]} numBuildings={2} />
+        <AssessedValue years={years} numBuildings={fields.length} />
       </FormProvider>
+      {showErrorText && (
+        <Typography alignSelf={'center'} variant="h5" color={'error'}>
+          Please correct issues in the form input.
+        </Typography>
+      )}
       <Button
         onClick={async () => {
           const isValid = await formMethods.trigger();
           if (isValid) {
             console.log(JSON.stringify(formMethods.getValues(), null, 2));
+            setShowErrorTest(false);
+          } else {
+            console.log('Error!');
+            setShowErrorTest(true);
           }
         }}
         variant="contained"
@@ -368,6 +447,18 @@ const AddProperty = () => {
       >
         Submit
       </Button>
+      <DeleteDialog
+        open={openDeleteDialog}
+        title={'Delete building'}
+        message={
+          'Once you delete the selected building section, all the entered data will be removed as well.'
+        }
+        onDelete={async () => {
+          remove(selectedDeletionIndex);
+          setOpenDeleteDialog(false);
+        }}
+        onClose={async () => setOpenDeleteDialog(false)}
+      />
     </Box>
   );
 };
