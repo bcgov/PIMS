@@ -30,8 +30,6 @@ const AccessPending = () => {
 const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => {
   const keycloak = useKeycloak();
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
-  console.log('agencyOptions', useGroupedAgenciesApi().agencyOptions);
-  console.log('groupedAgencies', useGroupedAgenciesApi().groupedAgencies);
 
   const formMethods = useForm({
     defaultValues: {
