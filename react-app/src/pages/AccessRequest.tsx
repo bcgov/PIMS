@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import pendingImage from '@/assets/images/pending.svg';
 import { Box, Button, Grid, Paper, Typography } from '@mui/material';
 import TextInput from '@/components/form/TextFormField';
@@ -9,8 +9,10 @@ import { accessPendingBlurb, signupTermsAndConditionsClaim } from '@/constants/j
 import usePimsApi from '@/hooks/usePimsApi';
 import { AccessRequest as AccessRequestType } from '@/hooks/api/useUsersApi';
 import { AuthContext } from '@/contexts/authContext';
-import useDataLoader from '@/hooks/useDataLoader';
+//import useDataLoader from '@/hooks/useDataLoader';
 import { Navigate } from 'react-router-dom';
+//import { Agency } from '@/hooks/api/useAgencyApi';
+import { useGroupedAgenciesApi } from '../hooks/api/useGroupedAgenciesApi';
 
 const AccessPending = () => {
   return (
@@ -27,17 +29,83 @@ const AccessPending = () => {
   );
 };
 
+// interface IStyledSelectMenuItem extends ISelectMenuItem {
+//   style?: React.CSSProperties;
+// }
+
+const parentOptionStyle = {
+  fontWeight: 'bold',
+  // Add any other styles you want for parent options
+};
+
+const childOptionStyle = {
+  paddingLeft: '20px', // Indent child options to visually differentiate them
+  // Add any other styles you want for child options
+};
+console.log('Parent option style:', parentOptionStyle);
+console.log('child option style:', childOptionStyle);
 const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => {
   const keycloak = useKeycloak();
-  const api = usePimsApi();
+  // const api = usePimsApi();
 
-  const { loadOnce: agencyLoad, data: agencyData } = useDataLoader(api.agencies.getAgencies);
-  agencyLoad();
+  // const { loadOnce: agencyLoad, data: agencyData } = useDataLoader(api.agencies.getAgencies);
+  // agencyLoad();
+  // console.log('agencyData', agencyData);
+  // Group agencies by parent agency names where ParentId is null
+  // const groupedAgencies = useMemo(() => {
+  //   const groups: { [parentName: string]: Agency[] } = {};
+  //   const parentAgencies: Agency[] = [];
 
-  const agencyOptions = useMemo(
-    () => agencyData?.map((agency) => ({ label: agency.Name, value: agency.Id })) ?? [],
-    [agencyData],
-  );
+  //   // Populate groups
+  //   agencyData?.forEach((agency) => {
+  //     if (agency.ParentId === null) {
+  //       parentAgencies.push(agency);
+  //     } else {
+  //       const parentAgency = agencyData.find((parent) => parent.Id === agency.ParentId);
+  //       if (parentAgency) {
+  //         if (!groups[parentAgency.Name]) {
+  //           groups[parentAgency.Name] = [];
+  //         }
+  //         groups[parentAgency.Name].push(agency);
+  //       }
+  //     }
+  //   });
+
+  //   // Include parent agencies and their children in the groupedAgencies array
+  //   const groupedAgencies: Agency[] = parentAgencies.map((parent) => ({
+  //     ...parent,
+  //     children: groups[parent.Name] ?? [],
+  //   }));
+
+  //   return groupedAgencies;
+  // }, [agencyData]);
+
+  //console.log('groupedAgencies:', groupedAgencies);
+  // const agencyOptions: IStyledSelectMenuItem[] = useMemo(() => {
+  //   const options: IStyledSelectMenuItem[] = [];
+
+  //   groupedAgencies.forEach((agency) => {
+  //     // addAgencyAndChildren(agency);
+  //     console.log('Agency:', agency.Name);
+  //     options.push({ label: agency.Name, value: agency.Id, style: parentOptionStyle });
+  //     if (agency.children && agency.children.length > 0) {
+  //       console.log('Children:');
+  //       agency.children.forEach((childAgency) => {
+  //         console.log(' - ', childAgency.Name);
+  //         options.push({ label: childAgency.Name, value: childAgency.Id, style: childOptionStyle });
+  //       });
+  //     } else {
+  //       console.log('No children found for this agency.');
+  //     }
+  //   });
+
+  //   console.log('options:', options);
+  //   return options;
+  // }, [groupedAgencies]);
+
+  const agencyOptions = useGroupedAgenciesApi().agencyOptions;
+  console.log('agencyOptions', useGroupedAgenciesApi().agencyOptions);
+  console.log('groupedAgencies', useGroupedAgenciesApi().groupedAgencies);
 
   const formMethods = useForm({
     defaultValues: {
