@@ -249,6 +249,7 @@ const AddProperty = () => {
       Longitude: '',
       Toggle: '',
       LandArea: '',
+      IsSensitive: '',
       Building: [],
       AssessedValue: years.map((yr) => ({
         Year: yr,

@@ -56,40 +56,16 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
       <FormProvider {...formMethods}>
         <Grid spacing={2} container>
           <Grid item xs={6}>
-            <TextFormField
-              fullWidth
-              name={'UserName'}
-              label={'IDIR/BCeID'}
-              defaultValue={keycloak.state.userInfo.idir_username}
-              disabled
-            />
+            <TextFormField fullWidth name={'UserName'} label={'IDIR/BCeID'} disabled />
           </Grid>
           <Grid item xs={6}>
-            <TextFormField
-              fullWidth
-              name={'Email'}
-              label={'Email'}
-              defaultValue={keycloak.state.userInfo.email}
-              disabled
-            />
+            <TextFormField fullWidth name={'Email'} label={'Email'} disabled />
           </Grid>
           <Grid item xs={6}>
-            <TextFormField
-              fullWidth
-              name={'FirstName'}
-              label={'First name'}
-              defaultValue={keycloak.state.userInfo.given_name}
-              disabled
-            />
+            <TextFormField fullWidth name={'FirstName'} label={'First name'} disabled />
           </Grid>
           <Grid item xs={6}>
-            <TextFormField
-              name={'LastName'}
-              fullWidth
-              label={'Last name'}
-              defaultValue={keycloak.state.userInfo.family_name}
-              disabled
-            />
+            <TextFormField name={'LastName'} fullWidth label={'Last name'} disabled />
           </Grid>
           <Grid item xs={12}>
             <AutocompleteFormField
