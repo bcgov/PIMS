@@ -1,5 +1,5 @@
 import React from 'react';
-import { Autocomplete, SxProps, TextField, Paper } from '@mui/material';
+import { Autocomplete, SxProps, TextField, Paper, Box, autocompleteClasses } from '@mui/material';
 import { ISelectMenuItem } from './SelectFormField';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -32,6 +32,24 @@ const AutocompleteFormField = (props: IAutocompleteProps) => {
           PaperComponent={CustomPaper}
           sx={sx}
           disableClearable={true}
+          getOptionLabel={(option: ISelectMenuItem) => option.label}
+          renderOption={(props, option, state, ownerState) => (
+            <Box
+              sx={{
+                borderRadius: '8px',
+                fontWeight: option.parent ? 900 : 500,
+                margin: '3px',
+                [`&.${autocompleteClasses.option}`]: {
+                  padding: '4px',
+                },
+                marginLeft: option.parent ? '0' : '15px',
+              }}
+              component="li"
+              {...props}
+            >
+              {ownerState.getOptionLabel(option)}
+            </Box>
+          )}
           renderInput={(params) => (
             <TextField
               {...params}
