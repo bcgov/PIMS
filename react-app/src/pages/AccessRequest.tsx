@@ -86,6 +86,7 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
           <Grid item xs={12}>
             <AutocompleteFormField
               required
+              allowNestedIndent
               name={'AgencyId'}
               label={'Your agency'}
               options={agencyOptions ?? []}

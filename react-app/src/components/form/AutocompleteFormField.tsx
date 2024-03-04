@@ -9,6 +9,7 @@ interface IAutocompleteProps {
   options: ISelectMenuItem[];
   sx?: SxProps;
   required?: boolean;
+  allowNestedIndent?: boolean;
 }
 
 const CustomPaper = (props) => {
@@ -17,7 +18,7 @@ const CustomPaper = (props) => {
 
 const AutocompleteFormField = (props: IAutocompleteProps) => {
   const { control, getValues, formState } = useFormContext();
-  const { name, options, label, sx, required } = props;
+  const { name, options, label, sx, required, allowNestedIndent, ...rest } = props;
   return (
     <Controller
       name={name}
@@ -36,13 +37,11 @@ const AutocompleteFormField = (props: IAutocompleteProps) => {
           renderOption={(props, option, state, ownerState) => (
             <Box
               sx={{
-                borderRadius: '8px',
                 fontWeight: option.parent ? 900 : 500,
-                margin: '3px',
                 [`&.${autocompleteClasses.option}`]: {
-                  padding: '4px',
+                  padding: 1,
+                  paddingLeft: allowNestedIndent && !option.parent ? 2 : 1,
                 },
-                marginLeft: option.parent ? '0' : '15px',
               }}
               component="li"
               {...props}
@@ -61,7 +60,7 @@ const AutocompleteFormField = (props: IAutocompleteProps) => {
           )}
           onChange={(_, data) => onChange(data.value)}
           value={options.find((option) => option.value === getValues()[name]) ?? null}
-          {...props}
+          {...rest}
         />
       )}
     />
