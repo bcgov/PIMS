@@ -22,10 +22,15 @@ const _parcelFindOne = jest
   .spyOn(parcelRepo, 'findOne')
   .mockImplementation(async () => produceParcel());
 
+const _parcelUpdate = jest
+  .spyOn(parcelRepo, 'update')
+  .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
+
 jest.spyOn(parcelRepo, 'find').mockImplementation(async () => [produceParcel(), produceParcel()]);
 
 describe('UNIT - Parcel Services', () => {
   describe('addParcel', () => {
+    beforeEach(() => jest.clearAllMocks());
     it('should add a new parcel and return it', async () => {
       _parcelFindOne.mockResolvedValueOnce(null);
       const parcel = produceParcel();
@@ -36,6 +41,26 @@ describe('UNIT - Parcel Services', () => {
     it('should throw an error if the agency already exists', () => {
       const parcel = produceParcel();
       _parcelFindOne.mockResolvedValueOnce(parcel);
+      expect(async () => await parcelService.addParcel(parcel)).rejects.toThrow();
+    });
+    it('should throw an error if PID is not in schema', () => {
+      const parcel = {};
+      expect(async () => await parcelService.addParcel(parcel)).rejects.toThrow();
+    });
+    it('should throw an error if the PID is too short', () => {
+      const parcel = { PID: 11111111 };
+      expect(async () => await parcelService.addParcel(parcel)).rejects.toThrow();
+    });
+    it('should throw an error if the PID is too long', () => {
+      const parcel = { PID: 1111111111 };
+      expect(async () => await parcelService.addParcel(parcel)).rejects.toThrow();
+    });
+    it('should throw an error if the save statement fails', () => {
+      _parcelFindOne.mockResolvedValueOnce(null);
+      const parcel = produceParcel();
+      _parcelSave.mockImplementationOnce(() => {
+        throw new Error();
+      });
       expect(async () => await parcelService.addParcel(parcel)).rejects.toThrow();
     });
   });
@@ -57,7 +82,6 @@ describe('UNIT - Parcel Services', () => {
     });
     it('should throw an error if the Parcel has a child Parcel relationship', async () => {
       const newParentParcel = produceParcel();
-      //const childParcel = {...produceParcel(), parentParcel: newParentParcel.Id}
       const errorMessage = `update or delete on table "parcel" violates foreign key constraint "FK_9720341fe17e4c22decf0a0b87f" on table "parcel"`;
       _parcelFindOne.mockResolvedValueOnce(newParentParcel);
       _parcelDelete.mockImplementationOnce(() => {
@@ -73,6 +97,43 @@ describe('UNIT - Parcel Services', () => {
     it('should return a list of parcels', async () => {
       const parcels = await parcelService.getParcels({});
       expect(parcels).toHaveLength(2);
+    });
+  });
+
+  describe('updateParcels', () => {
+    beforeEach(() => jest.clearAllMocks());
+    it('should update an existing parcel', async () => {
+      const updateParcel = produceParcel();
+      await parcelService.updateParcel(updateParcel);
+      expect(_parcelUpdate).toHaveBeenCalledTimes(1);
+    });
+    it('should throw an error if the parcel is not found.', async () => {
+      const updateParcel = produceParcel();
+      _parcelFindOne.mockResolvedValueOnce(null);
+      expect(async () => await parcelService.updateParcel(updateParcel)).rejects.toThrow();
+    });
+    it('should throw and error if parcel is unable to be updated', async () => {
+      const updateParcel = produceParcel();
+      _parcelFindOne.mockResolvedValueOnce(updateParcel);
+      _parcelUpdate.mockImplementationOnce(() => {
+        throw new ErrorWithCode('errorMessage');
+      });
+      expect(async () => await parcelService.updateParcel(updateParcel)).rejects.toThrow();
+    });
+    it('should throw an error if PID is not in schema', () => {
+      const parcel = {};
+      expect(async () => await parcelService.updateParcel(parcel)).rejects.toThrow();
+    });
+  });
+
+  describe('getParcelByPid', () => {
+    beforeEach(() => jest.clearAllMocks());
+    it('should return an error if the database fails', () => {
+      const searchPID = 999999999;
+      _parcelFindOne.mockImplementationOnce(() => {
+        throw new Error();
+      });
+      expect(async () => await parcelService.getParcelByPid(searchPID)).rejects.toThrow();
     });
   });
 });
