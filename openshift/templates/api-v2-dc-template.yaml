@@ -43,6 +43,28 @@ objects:
       metadata:
         name: pims-api-v2
         creationTimestamp: null
+        annotations:
+          vault.hashicorp.com/agent-inject: 'true'
+          vault.hashicorp.com/agent-inject-token: 'false'
+          vault.hashicorp.com/agent-pre-populate-only: 'true'
+          vault.hashicorp.com/auth-path: 'auth/k8s-silver'
+          vault.hashicorp.com/namespace: 'platform-services'
+          vault.hashicorp.com/role: ${LICENSE_PLATE}-${VAULT_ENVIRONMENT} 
+          vault.hashicorp.com/agent-inject-secret-pims-secrets-${ENVIRONMENT}: ${LICENSE_PLATE}-${VAULT_ENVIRONMENT}/pims-secrets-${ENVIRONMENT}
+          vault.hashicorp.com/agent-inject-template-pims-secrets-${ENVIRONMENT}: |
+            {{- with secret "${LICENSE_PLATE}-${VAULT_ENVIRONMENT}/pims-secrets-${ENVIRONMENT}" }}
+            export CSS_API_CLIENT_ID="{{ .Data.data.CSS_API_CLIENT_ID }}"
+            export CSS_API_CLIENT_SECRET="{{ .Data.data.CSS_API_CLIENT_SECRET }}"
+            export GEOCODER_KEY="{{ .Data.data.GEOCODER_KEY }}"
+            export SSO_AUTH_SERVER_URI="{{ .Data.data.SSO_AUTH_SERVER_URI }}"
+            export SSO_CLIENT_ID="{{ .Data.data.SSO_CLIENT_ID }}"
+            export SSO_CLIENT_SECRET="{{ .Data.data.SSO_CLIENT_SECRET }}"
+            export SSO_ENVIRONMENT="{{ .Data.data.SSO_ENVIRONMENT }}"
+            export SSO_INTEGRATION_ID="{{ .Data.data.SSO_INTEGRATION_ID }}"
+            export POSTGRES_DB="{{ .Data.data.POSTGRES_DB }}"
+            export POSTGRES_USER="{{ .Data.data.POSTGRES_USER }}"
+            export POSTGRES_PASSWORD="{{ .Data.data.POSTGRES_PASSWORD }}"
+            {{- end }}
         labels:
           app: pims-v2
           env: ${ENVIRONMENT}
@@ -50,6 +72,7 @@ objects:
           name: pims-api-v2
           role: api
       spec:
+        serviceAccountName: 354028-vault
         containers:
           - resources:
               limits:
@@ -70,6 +93,10 @@ objects:
               failureThreshold: 3
             terminationMessagePath: /dev/termination-log
             name: pims-api-v2
+            command:
+              ['sh', '-c']
+            args:
+              ['. /vault/secrets/pims-secrets-${ENVIRONMENT} && node src/server.js']
             livenessProbe:
               httpGet:
                 path: /v2/health
@@ -91,71 +118,11 @@ objects:
                 configMapKeyRef:
                   name: pims-v2
                   key: BACKEND_URL
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: pims-secrets
-                  key: POSTGRES_USER
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: pims-secrets
-                  key: POSTGRES_PASSWORD
-            - name: POSTGRES_PORT
-              valueFrom:
-                secretKeyRef:
-                  name: pims-secrets
-                  key: POSTGRES_PORT
-            - name: POSTGRES_DB
-              valueFrom:
-                secretKeyRef:
-                  name: pims-secrets
-                  key: POSTGRES_DB
             - name: POSTGRES_SERVICE
               valueFrom:
                 configMapKeyRef:
                   name: pims-v2
                   key: POSTGRES_SERVICE
-            - name: SSO_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: pims-secrets
-                  key: SSO_CLIENT_SECRET
-            - name: SSO_AUTH_SERVER_URL
-              valueFrom:
-                secretKeyRef:
-                  name: pims-secrets
-                  key: SSO_AUTH_SERVER_URL
-            - name: SSO_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: pims-secrets
-                  key: SSO_CLIENT_ID
-            - name: CSS_API_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: pims-secrets
-                  key: CSS_API_CLIENT_ID
-            - name: CSS_API_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: pims-secrets
-                  key: CSS_API_CLIENT_SECRET
-            - name: SSO_INTEGRATION_ID
-              valueFrom:
-                secretKeyRef:
-                  name: pims-secrets
-                  key: SSO_INTEGRATION_ID
-            - name: SSO_ENVIRONMENT
-              valueFrom:
-                secretKeyRef:
-                  name: pims-secrets
-                  key: SSO_ENVIRONMENT
-            - name: GEOCODER_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: pims-secrets
-                  key: GEOCODER_KEY
             ports:
               - containerPort: 5000
                 protocol: TCP
@@ -181,6 +148,11 @@ parameters:
     displayName: License Plate
     name: LICENSE_PLATE
     required: true
+  - description: Vault Environment
+    displayName: Vault Environment
+    name: VAULT_ENVIRONMENT
+    required: true
+    value: nonprod
   - description: ImageTag
     displayName: ImageTag
     name: IMAGE_TAG
