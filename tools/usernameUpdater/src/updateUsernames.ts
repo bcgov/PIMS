@@ -94,10 +94,14 @@ const updateUsernames = async () => {
       // A request where they are not found doesn't have an error message, just empty data array.
       let keycloakUser: KeycloakUser;
       do {
-        keycloakUser = user.Username.includes('idir')
-        ? await getKeycloakUser(user.KeycloakUserId, access_token, 'idir')
-        : await getKeycloakUser(user.KeycloakUserId, access_token, 'basic-business-bceid');
-      } while (keycloakUser.message)
+        try {
+          keycloakUser = user.Username.includes('idir')
+          ? await getKeycloakUser(user.KeycloakUserId, access_token, 'idir')
+          : await getKeycloakUser(user.KeycloakUserId, access_token, 'basic-business-bceid');
+        } catch (e) {
+          keycloakUser = e;
+        }
+      } while (!keycloakUser.data)
       // Only if some user was returned
       if (keycloakUser.data && keycloakUser.data.length > 0) {
         // Update the database table with their proper username
