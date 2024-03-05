@@ -1,11 +1,13 @@
-import { User } from "./UserEntity";
+import { User, UserStatus } from "./UserEntity";
 import { AppDataSource } from "./appDataSource";
+import fs from 'fs';
 
 interface KeycloakUser {
   data: {
     username: string;
     email: string;
-  }[]
+  }[],
+  message?: string;
 }
 
 const { CSS_API_CLIENT_ID, CSS_API_CLIENT_SECRET, SSO_ENVIRONMENT } = process.env;
@@ -19,7 +21,7 @@ const getKeycloakUser = async (guid: string, token: string, type: 'idir' | 'basi
   };
 
   // Create request url.
-  const url = `${CSS_API_URL}/${SSO_ENVIRONMENT}/${type}/users?guid=${guid.replaceAll('-','')}`;
+  const url = `${CSS_API_URL}/${SSO_ENVIRONMENT}/${type}/users?guid=${guid.replaceAll('-', '')}`;
 
   // Fetch request.
   const response = await fetch(
@@ -70,34 +72,82 @@ const updateUsernames = async () => {
   console.log(`Total Users: ${users.length}`)
   let successes = 0;
   let failures = 0;
+
+  interface ErrorQueue {
+    message: string;
+    user: any;
+    action: string;
+  }
+  const errors: ErrorQueue[] = [];
+
+  const ignoredUsernames = ['system', 'service-account'];
+
   // For each user
   await Promise.all(users.map(async (user) => {
     try {
-      console.log(`Current user: ${user.Username}`)
+      // Checking for ignored users
+      if (ignoredUsernames.includes(user.Username)) {
+        return;
+      }
       // Get their details from Keycloak
-      const keycloakUser: KeycloakUser = user.Username.includes('idir') 
-        ? await getKeycloakUser(user.KeycloakUserId, access_token, 'idir') 
+      // This must loop. Sometimes the request fails for no reason, but then succeeds on later attempts.
+      // A request where they are not found doesn't have an error message, just empty data array.
+      let keycloakUser: KeycloakUser;
+      do {
+        keycloakUser = user.Username.includes('idir')
+        ? await getKeycloakUser(user.KeycloakUserId, access_token, 'idir')
         : await getKeycloakUser(user.KeycloakUserId, access_token, 'basic-business-bceid');
-
+      } while (keycloakUser.message)
+      // Only if some user was returned
       if (keycloakUser.data && keycloakUser.data.length > 0) {
         // Update the database table with their proper username
-        // userRepo.update({
-        //   Id: user.Id
-        // },
-        // {
-        //   Username: keycloakUser.data.at(0).username,
-        // })
+        await userRepo.update({
+          Id: user.Id
+        },
+        {
+          Username: keycloakUser.data.at(0).username,
+        })
         console.log(`New username: ${user.Username} -> ${keycloakUser.data.at(0).username}`)
         successes++;
       } else {
         console.log(`Could not find Keycloak user for ${user.Username}`)
         failures++;
+        // Try to delete. If can't, just disable.
+        try {
+          await userRepo.delete({ Id: user.Id })
+          errors.push({
+            message: (keycloakUser as unknown as { message: string; }).message,
+            user: user,
+            action: 'deleted'
+          })
+        } catch (e) {
+          await userRepo.update({
+            Id: user.Id
+          },
+          {
+            IsDisabled: true,
+            Status: UserStatus.Disabled
+          })
+          errors.push({
+            message: (keycloakUser as unknown as { message: string; }).message,
+            user: user,
+            action: 'disabled'
+          })
+        }
       }
     } catch (e) {
       console.log(e)
       failures++;
     }
   }))
+
+  fs.writeFile('failures.json', JSON.stringify(errors, null, 2), (err) => {
+    if (err) {
+      console.error('Error writing file', err);
+    } else {
+      console.log('Successfully wrote file: failures.json');
+    }
+  });
   console.log(`Finished username transfer.`)
   console.log(`Successes: ${successes}`)
   console.log(`Failures: ${failures}`)
