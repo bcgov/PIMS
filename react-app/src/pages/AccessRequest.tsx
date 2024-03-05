@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import pendingImage from '@/assets/images/pending.svg';
 import { Box, Button, Grid, Paper, Typography } from '@mui/material';
 import TextInput from '@/components/form/TextFormField';
@@ -9,8 +9,8 @@ import { accessPendingBlurb, signupTermsAndConditionsClaim } from '@/constants/j
 import usePimsApi from '@/hooks/usePimsApi';
 import { AccessRequest as AccessRequestType } from '@/hooks/api/useUsersApi';
 import { AuthContext } from '@/contexts/authContext';
-import useDataLoader from '@/hooks/useDataLoader';
 import { Navigate } from 'react-router-dom';
+import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 
 const AccessPending = () => {
   return (
@@ -29,15 +29,7 @@ const AccessPending = () => {
 
 const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => {
   const keycloak = useKeycloak();
-  const api = usePimsApi();
-
-  const { loadOnce: agencyLoad, data: agencyData } = useDataLoader(api.agencies.getAgencies);
-  agencyLoad();
-
-  const agencyOptions = useMemo(
-    () => agencyData?.map((agency) => ({ label: agency.Name, value: agency.Id })) ?? [],
-    [agencyData],
-  );
+  const agencyOptions = useGroupedAgenciesApi().agencyOptions;
 
   const formMethods = useForm({
     defaultValues: {
@@ -94,6 +86,7 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
           <Grid item xs={12}>
             <AutocompleteFormField
               required
+              allowNestedIndent
               name={'AgencyId'}
               label={'Your agency'}
               options={agencyOptions ?? []}

@@ -6,6 +6,8 @@ export interface Agency {
   Description: string | null;
   Code: string;
   SortOrder: number;
+  ParentId: number;
+  children: Agency[];
 }
 
 const useAgencyApi = (absoluteFetch: IFetch) => {
