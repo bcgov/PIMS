@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import DataCard from '../display/DataCard';
-import { Avatar, Box, Button, Grid, IconButton, Typography, useTheme } from '@mui/material';
-import Icon from '@mdi/react';
-import { mdiArrowLeft } from '@mdi/js';
+import { Box, Grid, Typography } from '@mui/material';
 import { statusChipFormatter } from '@/utils/formatters';
 import DeleteDialog from '../dialog/DeleteDialog';
 import { deleteAccountConfirmText } from '@/constants/strings';
@@ -16,6 +14,7 @@ import { AuthContext } from '@/contexts/authContext';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { Role } from '@/hooks/api/useRolesApi';
 import TextFormField from '../form/TextFormField';
+import DetailViewNavigation from '../display/DetailViewNavigation';
 
 interface IUserDetail {
   userId: string;
@@ -24,7 +23,6 @@ interface IUserDetail {
 
 const UserDetail = ({ userId, onClose }: IUserDetail) => {
   const { pimsUser } = useContext(AuthContext);
-  const theme = useTheme();
   const api = usePimsApi();
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -125,24 +123,13 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
       width={'46rem'}
       marginX={'auto'}
     >
-      <Box display={'flex'} alignItems={'center'}>
-        <IconButton onClick={() => onClose()}>
-          <Avatar
-            style={{ color: 'white', backgroundColor: 'white' }} //For some reason this doesn't get applied if you do it in sx props.
-            sx={{ border: '0.1px solid lightgray' }}
-          >
-            <Icon color="black" size={0.9} path={mdiArrowLeft} />
-          </Avatar>
-        </IconButton>
-        <Typography variant="h5">Back to User Overview</Typography>
-        <Button
-          disabled={pimsUser.data.Id === userId}
-          onClick={() => setOpenDeleteDialog(true)}
-          sx={{ fontWeight: 'bold', color: theme.palette.warning.main, marginLeft: 'auto' }}
-        >
-          Delete Account
-        </Button>
-      </Box>
+      <DetailViewNavigation
+        navigateBackTitle={'Back to User Overview'}
+        deleteTitle={'Delete Account'}
+        onDeleteClick={() => setOpenDeleteDialog(true)}
+        onBackClick={() => onClose()}
+        deleteButtonProps={{ disabled: pimsUser.data.Id === userId }}
+      />
       <DataCard
         customFormatter={customFormatterStatus}
         values={userStatusData}
