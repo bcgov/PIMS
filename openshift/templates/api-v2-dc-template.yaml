@@ -14,7 +14,7 @@ objects:
     namespace: ${LICENSE_PLATE}-${ENVIRONMENT}
     labels:
       app: pims-v2
-      app.kubernetes.io/part-of: pims
+      app.kubernetes.io/part-of: pims-v2
       env: ${ENVIRONMENT}
       name: pims-api-v2
       role: api
