@@ -14,6 +14,7 @@ import { Roles } from '@/constants/roles';
 import swaggerJSON from '@/swagger/swagger-output.json';
 import errorHandler from '@/middleware/errorHandler';
 import { EndpointNotFound404 } from '@/constants/errors';
+import nunjucks from 'nunjucks';
 
 const app: Application = express();
 
@@ -59,6 +60,9 @@ app.use(morganMiddleware);
 
 // Keycloak initialization
 keycloak(app, KEYCLOAK_OPTIONS);
+
+// Nunjucks configuration
+nunjucks.configure('src/notificationTemplates', { autoescape: true, express: app, noCache: true });
 
 // Set headers for response
 app.use(`/v2`, headerHandler as RequestHandler);
