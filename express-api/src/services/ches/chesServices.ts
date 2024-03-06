@@ -127,7 +127,7 @@ export interface IEmail {
   attachments?: IEmailAttachment[];
 }
 
-const sendEmailAsync = (email: IEmail, user: KeycloakUser) => {
+const sendEmailAsync = async (email: IEmail, user: KeycloakUser) => {
   if (email == null) {
     throw new ErrorWithCode('Null argument for email.', 400);
   }
@@ -163,9 +163,56 @@ const sendEmailAsync = (email: IEmail, user: KeycloakUser) => {
   }
 };
 
+interface IChesStatusResponse {
+  status: string;
+  tag: string;
+  txId: string;
+  updatedTS: number;
+  createdTS: number;
+}
+const getStatusByIdAsync = async (messageId: string): Promise<IChesStatusResponse> => {
+  return sendAsync(`/status/${messageId}`, 'GET');
+};
+
+interface IChesStatusFilter {
+  txId?: string;
+  msgId?: string;
+  status?: string;
+  tag?: string;
+}
+
+const getStatusesAsync = async (filter: IChesStatusFilter) => {
+  if (filter == null) throw new ErrorWithCode('Null filter.', 400);
+  if (!filter.txId && !filter.msgId && !filter.status && !filter.tag)
+    throw new ErrorWithCode('At least one parameter expected.', 400);
+  const params = new URLSearchParams(filter as Record<string, string>);
+  return sendAsync(`/status?${params}`, 'GET');
+};
+
+const cancelEmailByIdAsync = async (messageId: string) => {
+  const response = await getStatusByIdAsync(messageId);
+  if (response.status === 'accepted' || response.status === 'pending') {
+    await sendAsync(`/cancel/${messageId}`, 'DELETE');
+    response.status = 'cancelled';
+  }
+  return response;
+};
+
+const cancelEmailsAsync = async (filter: IChesStatusFilter) => {
+  if (filter == null) throw new ErrorWithCode('Null filter.', 400);
+  if (!filter.txId && !filter.msgId && !filter.status && !filter.tag)
+    throw new ErrorWithCode('At least one parameter expected.', 400);
+  const params = new URLSearchParams(filter as Record<string, string>);
+  return sendAsync(`/cancel?${params}`, 'DELETE');
+};
+
 const chesServices = {
   getTokenAsync,
   sendEmailAsync,
+  getStatusByIdAsync,
+  getStatusesAsync,
+  cancelEmailByIdAsync,
+  cancelEmailsAsync,
 };
 
 export default chesServices;
