@@ -1,6 +1,7 @@
 import config from '@/constants/config';
 import credentials from '@/constants/credentials';
 import urls from '@/constants/urls';
+import { ChesFilter } from '@/controllers/tools/toolsSchema';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 
@@ -64,6 +65,7 @@ const refreshTokenAsync = async () => {
   }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const sendAsync = async (endpoint: string, method: string, data: Record<string, any> = null) => {
   await refreshTokenAsync();
   const url = generateUrl(endpoint);
@@ -123,7 +125,7 @@ export interface IEmail {
   subject: string;
   body: string;
   tag?: string;
-  sendOn?: Date;
+  delayTS?: number;
   attachments?: IEmailAttachment[];
 }
 
@@ -151,7 +153,10 @@ const sendEmailAsync = async (email: IEmail, user: KeycloakUser) => {
   if (config.ches.alwaysDelay) {
     const numSeconds = parseInt(config.ches.alwaysDelay);
     if (!isNaN(numSeconds)) {
-      email.sendOn.setSeconds(email.sendOn.getSeconds() + Number(config.ches.alwaysDelay));
+      if (!email.delayTS) {
+        email.delayTS = 0;
+      }
+      email.delayTS += Number(config.ches.alwaysDelay);
     }
   }
   email.to = email.to.filter((a) => !!a);
@@ -174,19 +179,12 @@ const getStatusByIdAsync = async (messageId: string): Promise<IChesStatusRespons
   return sendAsync(`/status/${messageId}`, 'GET');
 };
 
-interface IChesStatusFilter {
-  txId?: string;
-  msgId?: string;
-  status?: string;
-  tag?: string;
-}
-
-const getStatusesAsync = async (filter: IChesStatusFilter) => {
+const getStatusesAsync = async (filter: ChesFilter) => {
   if (filter == null) throw new ErrorWithCode('Null filter.', 400);
   if (!filter.txId && !filter.msgId && !filter.status && !filter.tag)
     throw new ErrorWithCode('At least one parameter expected.', 400);
   const params = new URLSearchParams(filter as Record<string, string>);
-  return sendAsync(`/status?${params}`, 'GET');
+  return sendAsync(`/status?${params.toString()}`, 'GET');
 };
 
 const cancelEmailByIdAsync = async (messageId: string) => {
@@ -198,7 +196,7 @@ const cancelEmailByIdAsync = async (messageId: string) => {
   return response;
 };
 
-const cancelEmailsAsync = async (filter: IChesStatusFilter) => {
+const cancelEmailsAsync = async (filter: ChesFilter) => {
   if (filter == null) throw new ErrorWithCode('Null filter.', 400);
   if (!filter.txId && !filter.msgId && !filter.status && !filter.tag)
     throw new ErrorWithCode('At least one parameter expected.', 400);
