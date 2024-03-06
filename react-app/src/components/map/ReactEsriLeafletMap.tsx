@@ -1,15 +1,15 @@
 import React, { useRef } from 'react';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { MapContainer, TileLayer, WMSTileLayer } from 'react-leaflet';
 import EsriLeafletGeoSearch from 'react-esri-leaflet/plugins/EsriLeafletGeoSearch';
-import VectorBasemapLayer from 'react-esri-leaflet/plugins/VectorBasemapLayer';
-import { DynamicMapLayer, FeatureLayer } from 'react-esri-leaflet';
+import { FeatureLayer } from 'react-esri-leaflet';
+import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 
 const municipality_url =
-  'https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP/ows?service=WMS&request=GetMap';
-const parcel_url =
-  'https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/wfs';
+  'https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP/ows';
+const cultural_url = 'https://test.apps.gov.bc.ca/ext/sgw/geo.bca/ows';
 
 const ReactEsriLeafletMap = () => {
+  const keycloak = useKeycloak();
   const geosearchControlRef = useRef();
   const handleClick = () => {
     if (geosearchControlRef) {
@@ -18,24 +18,42 @@ const ReactEsriLeafletMap = () => {
     }
   };
   const layerRef = useRef();
-  layerRef?.current?.on('tileload', (e) => {
-    console.log('The underlying leaflet tileload event is:', e);
-  });
   const ARCGIS_API_KEY =
-    'put the api key here';
+    'AAPK93366c08f59444f381edba619017813b9SnbJPvthOR1DO-sYctZoiWzp87GMp5PQLkGRI_yFoUZdV5CfmcrnmoYnzoWfmyj';
   return (
     <MapContainer
-      center={[51.505, -125]}
-      zoom={13}
       scrollWheelZoom={true}
       style={{ height: '100%' }}
+      bounds={[
+        [51.2516, -129.371],
+        [48.129, -122.203],
+      ]}
     >
       <button onClick={handleClick}>Disable Geosearch</button>
-      <VectorBasemapLayer ref={layerRef} name="ArcGIS:Streets" token={ARCGIS_API_KEY} />
+      <TileLayer
+        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        maxZoom={19}
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      />
       <FeatureLayer
         url={'https://maps.gov.bc.ca/arcgis/rest/services/whse/bcgw_pub_whse_cadastre/MapServer/0'}
       />
-      <DynamicMapLayer url={municipality_url} format="image/png" />
+      {/* <DynamicMapLayer url={municipality_url} f="image" format="image/png"/> */}
+      <WMSTileLayer
+        url={municipality_url}
+        format="image/png"
+        transparent={true}
+        opacity={0.5}
+        params={{ layers: 'WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP' }}
+      />
+      {/* <WMSTileLayer
+        url={cultural_url}
+        format="image/png"
+        transparent={true}
+        opacity={0.5}
+        
+        params={{ layers: 'WHSE_HUMAN_CULTURAL_ECONOMIC.BCA_FOLIO_GNRL_PROP_VALUES_SV' }}
+      /> */}
       <EsriLeafletGeoSearch
         ref={geosearchControlRef}
         position="topleft"
