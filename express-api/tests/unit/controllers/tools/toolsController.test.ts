@@ -64,7 +64,7 @@ describe('UNIT - Tools', () => {
       });
       await controllers.getChesMessageStatusById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
-    })
+    });
   });
 
   describe('GET /tools/ches/status', () => {
@@ -76,6 +76,13 @@ describe('UNIT - Tools', () => {
     });
     it('should return status 400', async () => {
       mockRequest.query.status = ['a'];
+      await controllers.getChesMessageStatuses(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+    it('should return thrown code', async () => {
+      _getChesMessageStatuses.mockImplementationOnce(() => {
+        throw new Error();
+      });
       await controllers.getChesMessageStatuses(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
