@@ -1,5 +1,5 @@
 import React from 'react';
-import { Autocomplete, SxProps, TextField, Paper } from '@mui/material';
+import { Autocomplete, SxProps, TextField, Paper, Box, autocompleteClasses } from '@mui/material';
 import { ISelectMenuItem } from './SelectFormField';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -9,6 +9,7 @@ interface IAutocompleteProps {
   options: ISelectMenuItem[];
   sx?: SxProps;
   required?: boolean;
+  allowNestedIndent?: boolean;
 }
 
 const CustomPaper = (props) => {
@@ -17,7 +18,7 @@ const CustomPaper = (props) => {
 
 const AutocompleteFormField = (props: IAutocompleteProps) => {
   const { control, getValues, formState } = useFormContext();
-  const { name, options, label, sx, required } = props;
+  const { name, options, label, sx, required, allowNestedIndent, ...rest } = props;
   return (
     <Controller
       name={name}
@@ -32,6 +33,22 @@ const AutocompleteFormField = (props: IAutocompleteProps) => {
           PaperComponent={CustomPaper}
           sx={sx}
           disableClearable={true}
+          getOptionLabel={(option: ISelectMenuItem) => option.label}
+          renderOption={(props, option, state, ownerState) => (
+            <Box
+              sx={{
+                fontWeight: option.parent ? 900 : 500,
+                [`&.${autocompleteClasses.option}`]: {
+                  padding: 1,
+                  paddingLeft: allowNestedIndent && !option.parent ? 2 : 1,
+                },
+              }}
+              component="li"
+              {...props}
+            >
+              {ownerState.getOptionLabel(option)}
+            </Box>
+          )}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -43,7 +60,7 @@ const AutocompleteFormField = (props: IAutocompleteProps) => {
           )}
           onChange={(_, data) => onChange(data.value)}
           value={options.find((option) => option.value === getValues()[name]) ?? null}
-          {...props}
+          {...rest}
         />
       )}
     />
