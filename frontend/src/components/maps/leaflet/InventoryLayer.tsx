@@ -333,7 +333,11 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
 
       setLoadingTiles(false);
     } catch (error) {
-      toast.error('Current search contains invalid values.', { autoClose: 7000 });
+      // Don't print the leaflet errors.
+      // If navigating away from map before this function is done, the map is already destroyed.
+      if (!(error as Error).message.includes('leaflet')) {
+        toast.error('Current search contains invalid values.', { autoClose: 7000 });
+      }
       console.error(error);
     } finally {
       onRequestData(false);
