@@ -129,7 +129,12 @@ export interface IEmail {
   attachments?: IEmailAttachment[];
 }
 
-const sendEmailAsync = async (email: IEmail, user: KeycloakUser) => {
+export interface IEmailSentResponse {
+  messages: Array<{ msgId: string; to: string }>;
+  txId: string;
+}
+
+const sendEmailAsync = async (email: IEmail, user: KeycloakUser): Promise<IEmailSentResponse> => {
   if (email == null) {
     throw new ErrorWithCode('Null argument for email.', 400);
   }
@@ -168,7 +173,7 @@ const sendEmailAsync = async (email: IEmail, user: KeycloakUser) => {
   }
 };
 
-interface IChesStatusResponse {
+export interface IChesStatusResponse {
   status: string;
   tag: string;
   txId: string;

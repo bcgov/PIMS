@@ -119,7 +119,7 @@ export const sendChesMessage = async (req: Request, res: Response) => {
     const email = req.body;
     const kcUser = req.user as KeycloakUser;
     const response = await chesServices.sendEmailAsync(email, kcUser);
-    return res.status(200).send(response);
+    return res.status(201).send(response);
   } catch (e) {
     return res.status(e?.code ?? 400).send(e?.message ?? 'Bad request.');
   }
