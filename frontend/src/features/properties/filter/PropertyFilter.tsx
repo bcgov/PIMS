@@ -177,7 +177,10 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
               <Row>
                 <Col className="dropdown-col">
                   {showAllAgencySelect ? (
-                    <PropertyFilterAgencyOptions disabled={findMoreOpen} agencies={agencies} />
+                    <PropertyFilterAgencyOptions
+                      disabled={findMoreOpen}
+                      agencies={myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies))}
+                    />
                   ) : (
                     <ParentSelect
                       field="agencies"
