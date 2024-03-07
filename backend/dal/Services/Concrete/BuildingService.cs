@@ -60,7 +60,7 @@ namespace Pims.Dal.Services
                 .ThenInclude(a => a.Agency)
                 .ThenInclude(a => a.Children)
                 .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
-            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
+            IEnumerable<int> userAgencies = _service.User.GetAgencies(user.Id);
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
@@ -133,7 +133,9 @@ namespace Pims.Dal.Services
                 .ThenInclude(a => a.Agency)
                 .ThenInclude(a => a.Children)
                 .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
-            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
+
+            // Identify users agencies and child agencies
+            IEnumerable<int> userAgencies = _service.User.GetAgencies(user.Id);
 
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
@@ -242,7 +244,7 @@ namespace Pims.Dal.Services
                .ThenInclude(a => a.Agency)
                .ThenInclude(a => a.Children)
                .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
-            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
+            IEnumerable<int> userAgencies = _service.User.GetAgencies(user.Id);
 
             if (!isAdmin && !userAgencies.Contains((int)existingBuilding.AgencyId)) throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
 
@@ -388,7 +390,7 @@ namespace Pims.Dal.Services
                .ThenInclude(a => a.Agency)
                .ThenInclude(a => a.Children)
                .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
-            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
+            IEnumerable<int> userAgencies = _service.User.GetAgencies(user.Id);
 
             if (!isAdmin && !userAgencies.Contains((int)existingBuilding.AgencyId))
                 throw new NotAuthorizedException("User may not edit buildings outside of their agency.");
