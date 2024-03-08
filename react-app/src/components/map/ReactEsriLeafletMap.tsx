@@ -2,14 +2,14 @@ import React, { useRef } from 'react';
 import { MapContainer, TileLayer, WMSTileLayer } from 'react-leaflet';
 import EsriLeafletGeoSearch from 'react-esri-leaflet/plugins/EsriLeafletGeoSearch';
 import { FeatureLayer } from 'react-esri-leaflet';
-import { useKeycloak } from '@bcgov/citz-imb-kc-react';
+//import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 
 const municipality_url =
   'https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP/ows';
 const cultural_url = 'https://test.apps.gov.bc.ca/ext/sgw/geo.bca/ows';
 
 const ReactEsriLeafletMap = () => {
-  const keycloak = useKeycloak();
+  //const keycloak = useKeycloak();
   const geosearchControlRef = useRef();
   const handleClick = () => {
     if (geosearchControlRef) {
@@ -17,7 +17,7 @@ const ReactEsriLeafletMap = () => {
       geosearchControlRef.current.disable();
     }
   };
-  const layerRef = useRef();
+  //const layerRef = useRef();
   const ARCGIS_API_KEY =
     'AAPK93366c08f59444f381edba619017813b9SnbJPvthOR1DO-sYctZoiWzp87GMp5PQLkGRI_yFoUZdV5CfmcrnmoYnzoWfmyj';
   return (
@@ -46,14 +46,13 @@ const ReactEsriLeafletMap = () => {
         opacity={0.5}
         params={{ layers: 'WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP' }}
       />
-      {/* <WMSTileLayer
+      <WMSTileLayer
         url={cultural_url}
         format="image/png"
         transparent={true}
         opacity={0.5}
-        
         params={{ layers: 'WHSE_HUMAN_CULTURAL_ECONOMIC.BCA_FOLIO_GNRL_PROP_VALUES_SV' }}
-      /> */}
+      />
       <EsriLeafletGeoSearch
         ref={geosearchControlRef}
         position="topleft"
