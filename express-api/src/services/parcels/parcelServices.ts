@@ -2,7 +2,7 @@ import { Parcel } from '@/typeorm/Entities/Parcel';
 import { AppDataSource } from '@/appDataSource';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { ParcelFilter } from '@/services/parcels/parcelSchema';
-import { FindOptionsOrder } from 'typeorm';
+import { DeepPartial, FindOptionsOrder } from 'typeorm';
 
 const parcelRepo = AppDataSource.getRepository(Parcel);
 
@@ -13,7 +13,18 @@ const parcelRepo = AppDataSource.getRepository(Parcel);
  * @throws ErrorWithCode If the parcel already exists or is unable to be added.
  */
 export const addParcel = async (parcel: Partial<Parcel>) => {
-  const existingParcel = await getParcelByPid(parcel.PID);
+  const inPID = Number(parcel.PID);
+  if (inPID == undefined || Number.isNaN(inPID)) {
+    throw new ErrorWithCode('Must include PID in parcel data.', 400);
+  }
+
+  const matchPID = inPID.toString().search(/^\d{9}$/);
+  if (matchPID === -1) {
+    throw new ErrorWithCode('PID must be a number and in the format #########');
+  }
+
+  const existingParcel = await getParcelByPid(inPID);
+
   if (existingParcel) {
     throw new ErrorWithCode('Parcel already exists.', 409);
   }
@@ -71,6 +82,30 @@ export const getParcels = async (filter: ParcelFilter, includeRelations: boolean
     order: filter.sort as FindOptionsOrder<Parcel>,
   });
   return parcels;
+};
+
+/**
+ * @description Finds and updates parcel based on the incoming PID
+ * @param incomingParcel incoming parcel information to be updated
+ * @returns updated parcel information and status
+ * @throws Error with code if parcel is not found or if an unexpected error is hit on update
+ */
+export const updateParcel = async (incomingParcel: DeepPartial<Parcel>) => {
+  if (incomingParcel.PID == undefined) {
+    throw new ErrorWithCode('Must include PID in parcel data.', 400);
+  }
+  const findParcel = await getParcelByPid(incomingParcel.PID);
+  if (findParcel == null) {
+    throw new ErrorWithCode('Parcel not found', 404);
+  }
+  try {
+    await parcelRepo.update({ Id: findParcel.Id }, incomingParcel);
+    // update function doesn't return data on the row changed. Have to get the changed row again
+    const newParcel = await getParcelByPid(incomingParcel.PID);
+    return newParcel;
+  } catch (e) {
+    throw new ErrorWithCode(e.message);
+  }
 };
 
 /**
