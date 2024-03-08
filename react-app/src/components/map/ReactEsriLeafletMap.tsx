@@ -18,8 +18,7 @@ const ReactEsriLeafletMap = () => {
     }
   };
   //const layerRef = useRef();
-  const ARCGIS_API_KEY =
-    'AAPK93366c08f59444f381edba619017813b9SnbJPvthOR1DO-sYctZoiWzp87GMp5PQLkGRI_yFoUZdV5CfmcrnmoYnzoWfmyj';
+  const ARCGIS_API_KEY = process.env.ARCGIS_API_KEY;
   return (
     <MapContainer
       scrollWheelZoom={true}
