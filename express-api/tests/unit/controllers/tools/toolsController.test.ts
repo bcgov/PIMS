@@ -99,6 +99,13 @@ describe('UNIT - Tools', () => {
       await controllers.cancelChesMessageById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
+    it('should return thrown code', async () => {
+      _cancelEmailByIdAsync.mockImplementationOnce(() => {
+        throw new Error();
+      });
+      await controllers.cancelChesMessageById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
   });
 
   describe('DELETE /tools/ches/cancel', () => {
@@ -112,6 +119,13 @@ describe('UNIT - Tools', () => {
       await controllers.cancelChesMessages(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
+    it('should return thrown code', async () => {
+      _cancelEmailsAsync.mockImplementationOnce(() => {
+        throw new Error();
+      });
+      await controllers.cancelChesMessages(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
   });
 
   describe('POST /tools/ches', () => {
@@ -122,6 +136,13 @@ describe('UNIT - Tools', () => {
       expect(mockResponse.statusValue).toBe(201);
     });
     it('should return status 400', async () => {
+      _sendEmailAsync.mockImplementationOnce(() => {
+        throw new Error();
+      });
+      await controllers.sendChesMessage(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+    it('should return thrown code', async () => {
       _sendEmailAsync.mockImplementationOnce(() => {
         throw new Error();
       });

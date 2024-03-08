@@ -135,42 +135,46 @@ export interface IEmailSentResponse {
 }
 
 const sendEmailAsync = async (email: IEmail, user: KeycloakUser): Promise<IEmailSentResponse> => {
+  const cfg = config();
   if (email == null) {
     throw new ErrorWithCode('Null argument for email.', 400);
   }
 
-  email.from = config.ches.from ?? email.from;
+  email.from = cfg.ches.from ?? email.from;
 
-  if (config.ches.bccUser) {
+  if (cfg.ches.bccUser) {
     email.bcc = [user.email, ...(email.bcc ?? [])];
   }
-  if (config.ches.alwaysBcc && typeof config.ches.alwaysBcc === 'string') {
+  if (cfg.ches.alwaysBcc && typeof cfg.ches.alwaysBcc === 'string') {
     email.bcc = [
       ...email.bcc,
-      ...(config.ches.alwaysBcc?.split(';').map((email) => email.trim()) ?? []),
+      ...(cfg.ches.alwaysBcc?.split(';').map((email) => email.trim()) ?? []),
     ];
   }
-  if (config.ches.overrideTo || !config.ches.emailAuthorized) {
-    email.to = config.ches.overrideTo
-      ? config.ches.overrideTo?.split(';').map((email) => email.trim()) ?? []
+  if (cfg.ches.overrideTo || !cfg.ches.emailAuthorized) {
+    email.to = cfg.ches.overrideTo
+      ? cfg.ches.overrideTo?.split(';').map((email) => email.trim()) ?? []
       : [user.email];
   }
-  if (config.ches.alwaysDelay) {
-    const numSeconds = parseInt(config.ches.alwaysDelay);
+  if (cfg.ches.alwaysDelay) {
+    const numSeconds = parseInt(cfg.ches.alwaysDelay);
     if (!isNaN(numSeconds)) {
       if (!email.delayTS) {
         email.delayTS = 0;
       }
-      email.delayTS += Number(config.ches.alwaysDelay);
+      email.delayTS += Number(cfg.ches.alwaysDelay);
     }
   }
   email.to = email.to.filter((a) => !!a);
   email.cc = email.cc?.filter((a) => !!a);
   email.bcc = email.bcc?.filter((a) => !!a);
 
-  if (config.ches.emailEnabled) {
+  console.log('Processed sendEmail');
+  if (cfg.ches.emailEnabled) {
     return sendAsync('/email', 'POST', email);
   }
+  console.log('Returning void!');
+  console.log(JSON.stringify(config));
 };
 
 export interface IChesStatusResponse {
@@ -210,7 +214,6 @@ const cancelEmailsAsync = async (filter: ChesFilter) => {
 };
 
 const chesServices = {
-  getTokenAsync,
   sendEmailAsync,
   getStatusByIdAsync,
   getStatusesAsync,
