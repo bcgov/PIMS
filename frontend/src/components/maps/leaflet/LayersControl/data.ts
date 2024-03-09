@@ -58,6 +58,18 @@ export const layersTree: ILayerItem[] = [
         id: 'regionalDistricts',
         opacity: 0.5,
       },
+      {
+        key: 'bcAssessment',
+        label: 'BC Assessment',
+        on: false,
+        layers: 'WHSE_HUMAN_CULTURAL_ECONOMIC.BCA_FOLIO_GNRL_PROP_VALUES_SV',
+        url: 'https:/test.apps.gov.bc.ca/ext/sgw/geo.bca/ows?',
+        transparent: true,
+        format: 'image/png',
+        zIndex: 23,
+        id: 'bcAssessment',
+        opacity: 0.5,
+      },
     ],
   },
   {

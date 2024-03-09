@@ -33,6 +33,7 @@ import FilterBackdrop from './FilterBackdrop';
 import InfoSlideOut from './InfoSlideOut/InfoSlideOut';
 import { InventoryLayer } from './InventoryLayer';
 import {
+  BCA_PRIVATE_LAYER_URL,
   MUNICIPALITY_LAYER_URL,
   municipalityLayerPopupConfig,
   parcelLayerPopupConfig,
@@ -186,6 +187,7 @@ const Map: React.FC<MapProps> = ({
   const [triggerFilterChanged, setTriggerFilterChanged] = React.useState(true);
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const parcelsService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
+  const bcaWMSLayerService = useLayerQuery(BCA_PRIVATE_LAYER_URL);
   const { setChanged } = useFilterContext();
   const popUpContext = React.useContext(PropertyPopUpContext);
   const parcelLayerFeature = useAppSelector((store) => store.parcelLayerData?.parcelLayerFeature);
@@ -313,12 +315,16 @@ const Map: React.FC<MapProps> = ({
     !!onMapClick && onMapClick(event);
     const municipality = await municipalitiesService.findOneWhereContains(event.latlng);
     const parcel = await parcelsService.findOneWhereContains(event.latlng);
+    const bca = await bcaWMSLayerService.findOneWhereContains(event.latlng);
     let properties = {};
     let center: LatLng | undefined;
     let bounds: LatLngBounds | undefined;
     let displayConfig = {};
     let title = 'Municipality Information';
     let feature = {};
+    let netvalue = undefined;
+    let grossvalue = undefined;
+    let folio_id = undefined;
     if (municipality.features.length === 1) {
       properties = municipality.features[0].properties!;
       displayConfig = municipalityLayerPopupConfig;
@@ -336,6 +342,13 @@ const Map: React.FC<MapProps> = ({
         : undefined;
       center = bounds?.getCenter();
       feature = parcel.features[0];
+    }
+    if (bca.features.length >= 1) {
+      const feature = bca.features[0];
+      netvalue = feature.properties!.GEN_GROSS_IMPROVEMENT_VALUE;
+      grossvalue = feature.properties!.GEN_NET_IMPROVEMENT_VALUE;
+      folio_id = feature.properties!.FOLIO_ID;
+      properties = { ...properties, netvalue, grossvalue, folio_id}
     }
 
     if (!isEmpty(properties)) {
