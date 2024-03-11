@@ -123,21 +123,23 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({ data, config, 
           </StyledLink>
           <LTSADialog pid={data.PID} {...{ ltsa, ltsaInfoOpen, setLtsaInfoOpen }} />
         </Col>
-        <Col>
-          <StyledLink
-            to={{ ...location }}
-            onClick={() => {
-              setBcaInfoOpen(true);
-            }}
-          >
-            BCA Info
-          </StyledLink>
-          <BCADialog
-            bcaData={data as unknown as IBCAData}
-            bcaInfoOpen={bcaInfoOpen}
-            setBcaInfoOpen={setBcaInfoOpen}
-          />
-        </Col>
+        {data.FOLIO_ID && (
+          <Col>
+            <StyledLink
+              to={{ ...location }}
+              onClick={() => {
+                setBcaInfoOpen(true);
+              }}
+            >
+              BCA Info
+            </StyledLink>
+            <BCADialog
+              bcaData={data as unknown as IBCAData}
+              bcaInfoOpen={bcaInfoOpen}
+              setBcaInfoOpen={setBcaInfoOpen}
+            />
+          </Col>
+        )}
       </MenuRow>
     </>
   );
