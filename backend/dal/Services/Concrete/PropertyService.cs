@@ -176,11 +176,9 @@ namespace Pims.Dal.Services
                 p.Name = null;
                 p.Description = null;
                 p.IsSensitive = true;
-                p.AgencyId = null;
                 p.AgencyCode = null;
                 p.Agency = null;
                 p.SubAgencyCode = null;
-                p.SubAgency = null;
                 p.Market = null;
                 p.MarketFiscalYear = null;
                 p.NetBook = null;

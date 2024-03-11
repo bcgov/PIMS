@@ -24,7 +24,7 @@ export const useMyAgencies = (): SelectOption[] => {
 
   const isSRES = useMemo(() => {
     return (
-      keycloak.hasClaim(Claims.PROJECT_VIEW) ||
+      keycloak.hasClaim(Claims.SYSTEM_ADMINISTRATOR) ||
       keycloak.hasClaim(Claims.DISPOSE_APPROVE) ||
       keycloak.hasClaim(Claims.ADMIN_PROJECTS) ||
       keycloak.hasClaim(Claims.VIEW_ONLY_PROPERTIES)
