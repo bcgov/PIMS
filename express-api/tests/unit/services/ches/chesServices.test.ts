@@ -17,9 +17,9 @@ describe('UNIT - Ches Services', () => {
     it('should return a valid token response', async () => {
       const email = produceEmail({});
       const keycloak = produceKeycloak();
-      _fetch.mockImplementationOnce(() => ({ text: () => ({}) }));
+      _fetch.mockImplementationOnce(() => ({ text: () => '{"access_token":"aaaa"}' }));
       _fetch.mockImplementationOnce(() => ({
-        text: () => ({ messages: [{}], txId: randomUUID() }),
+        text: () => `{ "messages": [{}], "txId": "${randomUUID()}" }`,
       }));
       const response = await chesServices.sendEmailAsync(email, keycloak);
       expect(response.txId).toBeDefined();
