@@ -21,6 +21,7 @@ namespace Pims.Dal.Services
     {
         #region Variables
         private readonly PimsOptions _options;
+        private readonly IPimsService _service;
         #endregion
 
         #region Constructors
@@ -35,6 +36,7 @@ namespace Pims.Dal.Services
         public ParcelService(IOptions<PimsOptions> options, PimsContext dbContext, ClaimsPrincipal user, IPimsService service, ILogger<ParcelService> logger) : base(dbContext, user, service, logger)
         {
             _options = options.Value;
+            _service = service;
         }
         #endregion
 
@@ -58,7 +60,7 @@ namespace Pims.Dal.Services
                .ThenInclude(a => a.Agency)
                .ThenInclude(a => a.Children)
                .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
-            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
+            IEnumerable<int> userAgencies = _service.User.GetAgencies(user.Id);
             var viewSensitive = this.User.HasPermission(Security.Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
@@ -133,7 +135,10 @@ namespace Pims.Dal.Services
                 .ThenInclude(a => a.Agency)
                 .ThenInclude(a => a.Children)
                 .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
-            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
+
+            // Identify users agencies and child agencies
+            IEnumerable<int> userAgencies = _service.User.GetAgencies(user.Id);
+
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
 
@@ -281,7 +286,7 @@ namespace Pims.Dal.Services
                 .ThenInclude(a => a.Agency)
                 .ThenInclude(a => a.Children)
                 .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
-            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
+            IEnumerable<int> userAgencies = _service.User.GetAgencies(user.Id);
             var originalAgencyId = (int)this.Context.Entry(originalParcel).OriginalValues[nameof(Parcel.AgencyId)];
             var allowEdit = isAdmin || userAgencies.Contains(originalAgencyId);
             if (!allowEdit) throw new NotAuthorizedException("User may not edit parcels outside of their agency.");
@@ -323,7 +328,7 @@ namespace Pims.Dal.Services
                 .ThenInclude(a => a.Agency)
                 .ThenInclude(a => a.Children)
                 .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
-            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
+            IEnumerable<int> userAgencies = _service.User.GetAgencies(user.Id);
             var originalAgencyId = (int)this.Context.Entry(originalParcel).OriginalValues[nameof(Parcel.AgencyId)];
             var allowEdit = isAdmin || userAgencies.Contains(originalAgencyId);
             var ownsABuilding = originalParcel.Buildings.Any(pb => userAgencies.Contains(pb.Building.AgencyId.Value));
@@ -526,7 +531,7 @@ namespace Pims.Dal.Services
                 .ThenInclude(a => a.Agency)
                 .ThenInclude(a => a.Children)
                 .SingleOrDefault(u => u.Username == this.User.GetUsername()) ?? throw new KeyNotFoundException();
-            var userAgencies = user.Agencies.Select(a => a.AgencyId).ToList();
+            IEnumerable<int> userAgencies = _service.User.GetAgencies(user.Id);
 
             var viewSensitive = this.User.HasPermission(Permissions.SensitiveView);
             var isAdmin = this.User.HasPermission(Permissions.AdminProperties);
