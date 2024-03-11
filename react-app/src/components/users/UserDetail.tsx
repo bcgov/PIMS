@@ -15,6 +15,7 @@ import { AuthContext } from '@/contexts/authContext';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { Role } from '@/hooks/api/useRolesApi';
 import DetailViewNavigation from '../display/DetailViewNavigation';
+import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 
 interface IUserDetail {
   userId: string;
@@ -30,16 +31,11 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
 
   const { data, refreshData } = useDataLoader(() => api.users.getUserById(userId));
-  const { data: agencyData, loadOnce: loadAgency } = useDataLoader(api.agencies.getAgencies);
-  loadAgency();
 
   const { data: rolesData, loadOnce: loadRoles } = useDataLoader(api.roles.getInternalRoles);
   loadRoles();
 
-  const agencyOptions = useMemo(
-    () => agencyData?.map((agency) => ({ label: agency.Name, value: agency.Id })) ?? [],
-    [agencyData],
-  );
+  const agencyOptions = useGroupedAgenciesApi().agencyOptions;
 
   const rolesOptions = useMemo(
     () => rolesData?.map((role) => ({ label: role.Name, value: role.Name })) ?? [],
@@ -184,7 +180,12 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
               <TextInput required fullWidth name={'LastName'} label={'Last Name'} />
             </Grid>
             <Grid item xs={12}>
-              <AutocompleteFormField name={'AgencyId'} label={'Agency'} options={agencyOptions} />
+              <AutocompleteFormField
+                allowNestedIndent
+                name={'AgencyId'}
+                label={'Agency'}
+                options={agencyOptions}
+              />
             </Grid>
             <Grid item xs={12}>
               <TextInput name={'Position'} fullWidth label={'Position'} />
