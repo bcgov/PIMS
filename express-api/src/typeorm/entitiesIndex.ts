@@ -11,7 +11,6 @@ import { FiscalKey } from '@/typeorm/Entities/FiscalKey';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { NotificationTemplate } from '@/typeorm/Entities/NotificationTemplate';
 import { Parcel } from '@/typeorm/Entities/Parcel';
-import { ParcelBuilding } from '@/typeorm/Entities/ParcelBuilding';
 import { ParcelEvaluation } from '@/typeorm/Entities/ParcelEvaluation';
 import { ParcelFiscal } from '@/typeorm/Entities/ParcelFiscal';
 import { Project } from '@/typeorm/Entities/Project';
@@ -54,7 +53,6 @@ export default [
   NotificationQueue,
   NotificationTemplate,
   Parcel,
-  ParcelBuilding,
   ParcelEvaluation,
   ParcelFiscal,
   Project,

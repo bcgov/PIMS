@@ -9,6 +9,7 @@ import { Property } from '@/typeorm/Entities/abstractEntities/Property';
 
 // Can Buildings and Parcels share a base Properties entity?
 @Entity()
+@Index(['PID', 'PIN'], { unique: false })
 export class Building extends Property {
   // Construction Type Relations
   @Column({ name: 'building_construction_type_id', type: 'int' })

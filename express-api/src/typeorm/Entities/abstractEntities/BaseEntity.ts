@@ -1,6 +1,14 @@
 import type { User } from '@/typeorm/Entities/User';
 import { UUID } from 'crypto';
-import { Column, CreateDateColumn, ManyToOne, JoinColumn, Index, Relation } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  Index,
+  Relation,
+  UpdateDateColumn,
+} from 'typeorm';
 
 export abstract class BaseEntity {
   @Column({ name: 'created_by_id' })
@@ -22,6 +30,6 @@ export abstract class BaseEntity {
   @Index()
   UpdatedBy: Relation<User>;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @UpdateDateColumn({ type: 'timestamp', nullable: true })
   UpdatedOn: Date;
 }

@@ -4,12 +4,6 @@ import { Property } from '@/typeorm/Entities/abstractEntities/Property';
 @Entity()
 @Index(['PID', 'PIN'], { unique: true })
 export class Parcel extends Property {
-  @Column({ type: 'int' })
-  PID: number;
-
-  @Column({ type: 'int', nullable: true })
-  PIN: number;
-
   @Column({ type: 'real', nullable: true })
   LandArea: number;
 
