@@ -322,9 +322,6 @@ const Map: React.FC<MapProps> = ({
     let displayConfig = {};
     let title = 'Municipality Information';
     let feature = {};
-    let netvalue = undefined;
-    let grossvalue = undefined;
-    let folio_id = undefined;
     if (municipality.features.length === 1) {
       properties = municipality.features[0].properties!;
       displayConfig = municipalityLayerPopupConfig;
@@ -344,11 +341,22 @@ const Map: React.FC<MapProps> = ({
       feature = parcel.features[0];
     }
     if (bca.features.length >= 1) {
-      const feature = bca.features[0];
-      netvalue = feature.properties!.GEN_GROSS_IMPROVEMENT_VALUE;
-      grossvalue = feature.properties!.GEN_NET_IMPROVEMENT_VALUE;
-      folio_id = feature.properties!.FOLIO_ID;
-      properties = { ...properties, netvalue, grossvalue, folio_id}
+      const bcaProps = bca.features[0].properties!;
+      const {
+        GEN_NET_IMPROVEMENT_VALUE,
+        GEN_NET_LAND_VALUE,
+        GEN_GROSS_LAND_VALUE,
+        GEN_GROSS_IMPROVEMENT_VALUE,
+        FOLIO_ID,
+      } = bcaProps;
+      properties = {
+        ...properties,
+        GEN_NET_IMPROVEMENT_VALUE,
+        GEN_NET_LAND_VALUE,
+        GEN_GROSS_LAND_VALUE,
+        GEN_GROSS_IMPROVEMENT_VALUE,
+        FOLIO_ID,
+      };
     }
 
     if (!isEmpty(properties)) {
