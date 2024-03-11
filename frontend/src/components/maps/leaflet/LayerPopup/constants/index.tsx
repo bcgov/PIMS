@@ -34,32 +34,32 @@ export const parcelLayerPopupConfig = {
       </>
     ),
   },
-  GEN_GROSS_LAND_VALUE: {
-    label: 'Gross Land Value:',
-    display: (data: any) => (
-      <>{data.GEN_GROSS_LAND_VALUE ? `$${data.GEN_GROSS_LAND_VALUE}` : `N/A`}</>
-    ),
-  },
-  GEN_GROSS_IMPROVEMENT_VALUE: {
-    label: 'Gross Improvement Value:',
-    display: (data: any) => (
-      <>{data.GEN_GROSS_IMPROVEMENT_VALUE ? `$${data.GEN_GROSS_IMPROVEMENT_VALUE}` : `N/A`}</>
-    ),
-  },
-  GEN_NET_LAND_VALUE: {
-    label: 'Net Land Value:',
-    display: (data: any) => <>{data.GEN_NET_LAND_VALUE ? `$${data.GEN_NET_LAND_VALUE}` : `N/A`}</>,
-  },
-  GEN_NET_IMPROVEMENT_VALUE: {
-    label: 'Net Improvement Value:',
-    display: (data: any) => (
-      <>{data.GEN_NET_IMPROVEMENT_VALUE ? `$${data.GEN_NET_IMPROVEMENT_VALUE}` : `N/A`}</>
-    ),
-  },
-  FOLIO_ID: {
-    label: 'Folio ID:',
-    display: (data: any) => <>{data.FOLIO_ID ? `${data.FOLIO_ID}` : `N/A`}</>,
-  },
+  // GEN_GROSS_LAND_VALUE: {
+  //   label: 'Gross Land Value:',
+  //   display: (data: any) => (
+  //     <>{data.GEN_GROSS_LAND_VALUE ? `$${data.GEN_GROSS_LAND_VALUE}` : `N/A`}</>
+  //   ),
+  // },
+  // GEN_GROSS_IMPROVEMENT_VALUE: {
+  //   label: 'Gross Improvement Value:',
+  //   display: (data: any) => (
+  //     <>{data.GEN_GROSS_IMPROVEMENT_VALUE ? `$${data.GEN_GROSS_IMPROVEMENT_VALUE}` : `N/A`}</>
+  //   ),
+  // },
+  // GEN_NET_LAND_VALUE: {
+  //   label: 'Net Land Value:',
+  //   display: (data: any) => <>{data.GEN_NET_LAND_VALUE ? `$${data.GEN_NET_LAND_VALUE}` : `N/A`}</>,
+  // },
+  // GEN_NET_IMPROVEMENT_VALUE: {
+  //   label: 'Net Improvement Value:',
+  //   display: (data: any) => (
+  //     <>{data.GEN_NET_IMPROVEMENT_VALUE ? `$${data.GEN_NET_IMPROVEMENT_VALUE}` : `N/A`}</>
+  //   ),
+  // },
+  // FOLIO_ID: {
+  //   label: 'Folio ID:',
+  //   display: (data: any) => <>{data.FOLIO_ID ? `${data.FOLIO_ID}` : `N/A`}</>,
+  // },
 };
 
 export const municipalityLayerPopupConfig = {
