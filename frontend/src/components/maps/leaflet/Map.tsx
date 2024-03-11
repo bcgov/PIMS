@@ -378,7 +378,7 @@ const Map: React.FC<MapProps> = ({
   const { width } = useResizeDetector({ targetRef });
 
   React.useEffect(() => {
-    // the map has changed and needs to be redrwan and possibly zoomed and centered.
+    // the map has changed and needs to be redrawn and possibly zoomed and centered.
     mapRef.current?.invalidateSize();
     const z = mapRef.current?.getZoom();
     mapRef.current?.setView(center, z);
