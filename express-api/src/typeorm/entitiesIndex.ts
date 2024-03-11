@@ -38,6 +38,9 @@ import { TierLevel } from '@/typeorm/Entities/TierLevel';
 import { User } from '@/typeorm/Entities/User';
 import { Workflow } from '@/typeorm/Entities/Workflow';
 import { WorkflowProjectStatus } from '@/typeorm/Entities/WorkflowProjectStatus';
+import { BuildingRelations } from '@/typeorm/Entities/views/PropertyView';
+
+const views = [BuildingRelations];
 
 export default [
   AdministrativeArea,
@@ -80,4 +83,5 @@ export default [
   User,
   Workflow,
   WorkflowProjectStatus,
+  ...views,
 ];
