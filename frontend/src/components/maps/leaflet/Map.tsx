@@ -187,7 +187,7 @@ const Map: React.FC<MapProps> = ({
   const [triggerFilterChanged, setTriggerFilterChanged] = React.useState(true);
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const parcelsService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
-  const bcaWMSLayerService = useLayerQuery(BCA_PRIVATE_LAYER_URL);
+  const bcaWMSLayerService = useLayerQuery(BCA_PRIVATE_LAYER_URL ?? '');
   const { setChanged } = useFilterContext();
   const popUpContext = React.useContext(PropertyPopUpContext);
   const parcelLayerFeature = useAppSelector((store) => store.parcelLayerData?.parcelLayerFeature);
