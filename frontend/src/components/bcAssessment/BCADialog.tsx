@@ -31,6 +31,12 @@ interface IBCADialogProps {
 export const BCADialog = (props: IBCADialogProps) => {
   const { bcaInfoOpen, setBcaInfoOpen, bcaData } = props;
   const { leftColumnWidth, rightColumnWidth, boldFontWeight, fontSize, headerColour } = tabStyles;
+  const noInfoParagraphStyle = {
+    display: 'flex',
+    margin: '1em',
+    color: 'GrayText',
+    fontSize: '11pt',
+  };
   return (
     <Dialog
       open={bcaInfoOpen}
@@ -41,66 +47,74 @@ export const BCADialog = (props: IBCADialogProps) => {
     >
       <DialogTitle id="scroll-dialog-title">BC Assessment Information</DialogTitle>
       <DialogContent>
-        <div className="title">
-          <Box sx={{ p: 2, background: 'white' }}>
-            {/* HEADER */}
-            <Stack direction="row" spacing={1}>
-              <Typography
-                text-align="left"
-                sx={{ fontWeight: boldFontWeight, color: headerColour }}
-              >
-                Details
-              </Typography>
-            </Stack>
-            <HeaderDivider />
-
-            {/* CONTENT */}
-            <Grid container sx={{ textAlign: 'left' }} rowSpacing={0.5}>
-              <Grid item xs={leftColumnWidth}>
-                <Typography fontSize={fontSize}>Folio ID:</Typography>
-              </Grid>
-              <Grid item xs={rightColumnWidth}>
-                <Typography fontSize={fontSize}>{bcaData?.FOLIO_ID}</Typography>
-              </Grid>
-
-              <Grid item xs={leftColumnWidth}>
-                <Typography fontSize={fontSize}>Net Improvement Value:</Typography>
-              </Grid>
-              <Grid item xs={rightColumnWidth}>
-                <Typography fontSize={fontSize}>
-                  {formatCurrency(bcaData.GEN_NET_IMPROVEMENT_VALUE)}
+        {bcaData.FOLIO_ID ? (
+          <div className="title">
+            <Box sx={{ p: 2, background: 'white' }}>
+              {/* HEADER */}
+              <Stack direction="row" spacing={1}>
+                <Typography
+                  text-align="left"
+                  sx={{ fontWeight: boldFontWeight, color: headerColour }}
+                >
+                  Details
                 </Typography>
-              </Grid>
+              </Stack>
+              <HeaderDivider />
 
-              <Grid item xs={leftColumnWidth}>
-                <Typography fontSize={fontSize}>Net Land Value:</Typography>
-              </Grid>
-              <Grid item xs={rightColumnWidth}>
-                <Typography fontSize={fontSize}>
-                  {formatCurrency(bcaData?.GEN_NET_LAND_VALUE)}
-                </Typography>
-              </Grid>
+              {/* CONTENT */}
+              <Grid container sx={{ textAlign: 'left' }} rowSpacing={0.5}>
+                <Grid item xs={leftColumnWidth}>
+                  <Typography fontSize={fontSize}>Folio ID:</Typography>
+                </Grid>
+                <Grid item xs={rightColumnWidth}>
+                  <Typography fontSize={fontSize}>{bcaData?.FOLIO_ID}</Typography>
+                </Grid>
 
-              <Grid item xs={leftColumnWidth}>
-                <Typography fontSize={fontSize}>Gross Improvement Value:</Typography>
-              </Grid>
-              <Grid item xs={rightColumnWidth}>
-                <Typography fontSize={fontSize}>
-                  {formatCurrency(bcaData?.GEN_GROSS_IMPROVEMENT_VALUE)}
-                </Typography>
-              </Grid>
+                <Grid item xs={leftColumnWidth}>
+                  <Typography fontSize={fontSize}>Net Improvement Value:</Typography>
+                </Grid>
+                <Grid item xs={rightColumnWidth}>
+                  <Typography fontSize={fontSize}>
+                    {formatCurrency(bcaData.GEN_NET_IMPROVEMENT_VALUE)}
+                  </Typography>
+                </Grid>
 
-              <Grid item xs={leftColumnWidth}>
-                <Typography fontSize={fontSize}>Gross Land Value:</Typography>
+                <Grid item xs={leftColumnWidth}>
+                  <Typography fontSize={fontSize}>Net Land Value:</Typography>
+                </Grid>
+                <Grid item xs={rightColumnWidth}>
+                  <Typography fontSize={fontSize}>
+                    {formatCurrency(bcaData?.GEN_NET_LAND_VALUE)}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={leftColumnWidth}>
+                  <Typography fontSize={fontSize}>Gross Improvement Value:</Typography>
+                </Grid>
+                <Grid item xs={rightColumnWidth}>
+                  <Typography fontSize={fontSize}>
+                    {formatCurrency(bcaData?.GEN_GROSS_IMPROVEMENT_VALUE)}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={leftColumnWidth}>
+                  <Typography fontSize={fontSize}>Gross Land Value:</Typography>
+                </Grid>
+                <Grid item xs={rightColumnWidth}>
+                  <Typography fontSize={fontSize}>
+                    {formatCurrency(bcaData?.GEN_GROSS_LAND_VALUE)}
+                  </Typography>
+                </Grid>
               </Grid>
-              <Grid item xs={rightColumnWidth}>
-                <Typography fontSize={fontSize}>
-                  {formatCurrency(bcaData?.GEN_GROSS_LAND_VALUE)}
-                </Typography>
-              </Grid>
-            </Grid>
-          </Box>
-        </div>
+            </Box>
+          </div>
+        ) : (
+          <>
+            <p style={noInfoParagraphStyle}>
+              No BC Assessment information available for this PID or information still loading.
+            </p>
+          </>
+        )}
       </DialogContent>
       <DialogActions>
         <Button
