@@ -50,3 +50,5 @@ TestResults/
 healthchecksdb
 healthchecksdb-shm
 healthchecksdb-wal
+
+failures.json
