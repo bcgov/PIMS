@@ -6,6 +6,8 @@ export class ParcelBuildingChange1710178740326 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`ALTER TABLE "building" ADD "pid" integer`);
     await queryRunner.query(`ALTER TABLE "building" ADD "pin" integer`);
+    await queryRunner.query(`ALTER TABLE "user" ALTER COLUMN "updated_on" SET DEFAULT now()`);
+    await queryRunner.query(`ALTER TABLE "user" ALTER COLUMN "id" SET DEFAULT uuid_generate_v4()`);
     await queryRunner.query(
       `ALTER TABLE "regional_district" ALTER COLUMN "updated_on" SET DEFAULT now()`,
     );
