@@ -169,12 +169,9 @@ const sendEmailAsync = async (email: IEmail, user: KeycloakUser): Promise<IEmail
   email.cc = email.cc?.filter((a) => !!a);
   email.bcc = email.bcc?.filter((a) => !!a);
 
-  console.log('Processed sendEmail');
   if (cfg.ches.emailEnabled) {
     return sendAsync('/email', 'POST', email);
   }
-  console.log('Returning void!');
-  console.log(JSON.stringify(config));
 };
 
 export interface IChesStatusResponse {
