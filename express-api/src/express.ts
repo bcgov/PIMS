@@ -35,7 +35,8 @@ if (!TESTING) app.use(limiter);
 const corsOptions = {
   origin: [
     'http://localhost:3000', // Local frontend testing
-    FRONTEND_URL, // Frontend
+    FRONTEND_URL, // Frontend,
+    'http://local.gov.bc.ca:3000',
   ],
   credentials: true,
 };

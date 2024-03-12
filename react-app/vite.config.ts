@@ -7,7 +7,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 // Production build is handled by NGINX, which has its own settings.
 export default () => {
   const frontendPort: number = 3000;
-  const target = `http://localhost:5000`;
+  const target = `http://local.gov.bc.ca:5000`;
 
   return defineConfig({
     plugins: [react(), tsconfigPaths()],
@@ -24,6 +24,7 @@ export default () => {
           rewrite: (path) => path.replace(/^\/api/, ''),
         },
       },
+      cors: true,
     },
   });
 };
