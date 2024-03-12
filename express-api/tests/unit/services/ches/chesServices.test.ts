@@ -8,7 +8,7 @@ const _fetch = jest.fn().mockImplementation(() => {
     text: () => '{ a: 1 }',
   };
 });
-const _config = jest.fn().mockImplementation(() => ({ ches: { emailEnabled: 'true' } as any }));
+const _config = jest.fn().mockImplementation(() => ({ ches: { emailEnabled: 'true' } }));
 jest.spyOn(config, 'default').mockImplementation(() => _config());
 jest.spyOn(global, 'fetch').mockImplementation(() => _fetch());
 
@@ -274,5 +274,5 @@ describe('UNIT - Ches Services', () => {
     it('should throw when no valid filter keys', async () => {
       expect(async () => await chesServices.cancelEmailsAsync({})).rejects.toThrow();
     });
-  })
+  });
 });
