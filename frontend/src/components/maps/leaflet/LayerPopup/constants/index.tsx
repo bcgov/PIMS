@@ -4,7 +4,7 @@ export const MUNICIPALITY_LAYER_URL =
   'https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP/wfs?SERVICE=WFS&REQUEST=GetFeature&VERSION=1.3.0&outputFormat=application/json&typeNames=pub:WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP';
 export const PARCELS_PUBLIC_LAYER_URL =
   'https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/wfs?service=WFS&REQUEST=GetFeature&VERSION=1.3.0&outputFormat=application/json&typeNames=pub:WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW';
-export const BCA_PRIVATE_LAYER_URL = process.env.BCA_LAYER_URL;
+export const BCA_PRIVATE_LAYER_URL = import.meta.env.VITE_BCA_LAYER_URL;
 
 export const parcelLayerPopupConfig = {
   PARCEL_NAME: { label: 'Parcel Name:', display: (data: any) => data.PARCEL_NAME },

@@ -340,7 +340,7 @@ const Map: React.FC<MapProps> = ({
       center = bounds?.getCenter();
       feature = parcel.features[0];
     }
-    if (bca.features.length >= 1) {
+    if (bca && bca.features?.length >= 1) {
       const bcaProps = bca.features[0].properties!;
       const {
         GEN_NET_IMPROVEMENT_VALUE,
