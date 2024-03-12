@@ -16,7 +16,7 @@ const decodeJWT = (jwt: string) => {
 };
 
 interface TokenResponse {
-  access_token: string;
+  access_token?: string;
 }
 
 interface KeycloakPayload {
@@ -60,7 +60,7 @@ const generateUrl = (endpoint: string) => {
 };
 
 const refreshTokenAsync = async () => {
-  if (!_token || new Date(readToken(_token).payload.exp) <= new Date()) {
+  if (!_token?.access_token || new Date(readToken(_token).payload.exp) <= new Date()) {
     _token = await getTokenAsync(credentials.ches.user, credentials.ches.pass);
   }
 };
