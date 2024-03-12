@@ -17,4 +17,5 @@ export type PointFeature = Supercluster.PointFeature<{
   projectStatus?: string;
   name?: string;
   projectWorkflow?: string;
+  subAgency?: string;
 }>;
