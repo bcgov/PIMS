@@ -3,10 +3,11 @@ import express from 'express';
 
 const router = express.Router();
 
+router.route(`/ches`).post(controllers.sendChesMessage);
 router.route(`/ches/status/`).get(controllers.getChesMessageStatuses);
 router.route(`/ches/status/:messageId`).get(controllers.getChesMessageStatusById);
 router.route(`/ches/cancel/:messageId`).delete(controllers.cancelChesMessageById);
-router.route(`/ches/cancel/:messageId`).delete(controllers.cancelChesMessages);
+router.route(`/ches/cancel/`).delete(controllers.cancelChesMessages);
 
 router.route(`/geocoder/addresses`).get(controllers.searchGeocoderAddresses);
 router.route(`/geocoder/parcels/pids/:siteId`).get(controllers.searchGeocoderSiteId);
