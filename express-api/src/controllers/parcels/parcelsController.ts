@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import { stubResponse } from '@/utilities/stubResponse';
+import parcelServices from '@/services/parcels/parcelServices';
+import { ParcelFilterSchema } from '@/services/parcels/parcelSchema';
 
 /**
  * @description Gets information about a particular parcel by the Id provided in the URL parameter.
@@ -15,7 +17,19 @@ export const getParcel = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  return stubResponse(res);
+  try {
+    const parcelId = Number(req.params.parcelId);
+    if (isNaN(parcelId)) {
+      return res.status(400).send('Parcel ID was invalid.');
+    }
+    const parcel = await parcelServices.getParcelById(parcelId);
+    if (!parcel) {
+      return res.status(404).send('Parcel matching this internal ID not found.');
+    }
+    return res.status(200).send(parcel);
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong.');
+  }
 };
 
 /**
@@ -32,7 +46,18 @@ export const updateParcel = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  return stubResponse(res);
+  try {
+    const parcelId = Number(req.params.parcelId);
+    if (isNaN(parcelId) || parcelId !== req.body.parcelId) {
+      return res.status(400).send('Parcel ID was invalid or mismatched with body.');
+    }
+    const parcel = await parcelServices.updateParcel(req.body);
+    if (!parcel) {
+      return res.status(404).send('Parcel matching this internal ID not found.');
+    }
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong.');
+  }
 };
 
 /**
@@ -49,7 +74,18 @@ export const deleteParcel = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  return stubResponse(res);
+  try {
+    const parcelId = Number(req.params.parcelId);
+    if (isNaN(parcelId)) {
+      return res.status(400).send('Parcel ID was invalid or mismatched with body.');
+    }
+    const parcel = await parcelServices.deleteParcelById(parcelId);
+    if (!parcel) {
+      return res.status(404).send('Parcel matching this internal ID not found.');
+    }
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong.');
+  }
 };
 
 /**
@@ -59,31 +95,17 @@ export const deleteParcel = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status with a response body containing an array of parcel data.
  */
 export const filterParcelsQueryString = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['parcels']
-   * #swagger.description = 'Gets all parcels that satisfy the filters.'
-   * #swagger.security = [{
-   * "bearerAuth": []
-   * }]
-   */
-  return stubResponse(res);
-};
-
-/**
- * @description Gets all parcels satisfying the filter parameters.
- * @param {Request}     req Incoming Request. Body should contain filter parameters.
- * @param {Response}    res Outgoing Response
- * @returns {Response}      A 200 status with a response body containing an array of parcel data.
- */
-export const filterParcelsRequestBody = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['parcels']
-   * #swagger.description = 'Creates a new parcel in the datasource.'
-   * #swagger.security = [{
-   * "bearerAuth": []
-   * }]
-   */
-  return stubResponse(res);
+  try {
+    const filter = ParcelFilterSchema.safeParse(req.body);
+    if (filter.success) {
+      const response = await parcelServices.getParcels(filter.data);
+      return res.status(200).send(response);
+    } else {
+      return res.status(400).send('Could not parse filter.');
+    }
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong.');
+  }
 };
 
 /* Perhaps the above two methods could be consolidated into one? 
@@ -107,7 +129,12 @@ export const addParcel = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  return stubResponse(res);
+  try {
+    const response = await parcelServices.addParcel(req.body);
+    return res.status(201).send(response);
+  } catch (e) {
+    return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong.');
+  }
 };
 
 /**
