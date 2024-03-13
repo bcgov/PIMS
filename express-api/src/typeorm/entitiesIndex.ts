@@ -11,7 +11,6 @@ import { FiscalKey } from '@/typeorm/Entities/FiscalKey';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { NotificationTemplate } from '@/typeorm/Entities/NotificationTemplate';
 import { Parcel } from '@/typeorm/Entities/Parcel';
-import { ParcelBuilding } from '@/typeorm/Entities/ParcelBuilding';
 import { ParcelEvaluation } from '@/typeorm/Entities/ParcelEvaluation';
 import { ParcelFiscal } from '@/typeorm/Entities/ParcelFiscal';
 import { Project } from '@/typeorm/Entities/Project';
@@ -39,6 +38,9 @@ import { TierLevel } from '@/typeorm/Entities/TierLevel';
 import { User } from '@/typeorm/Entities/User';
 import { Workflow } from '@/typeorm/Entities/Workflow';
 import { WorkflowProjectStatus } from '@/typeorm/Entities/WorkflowProjectStatus';
+import { BuildingRelations } from '@/typeorm/Entities/views/PropertyView';
+
+const views = [BuildingRelations];
 
 export default [
   AdministrativeArea,
@@ -54,7 +56,6 @@ export default [
   NotificationQueue,
   NotificationTemplate,
   Parcel,
-  ParcelBuilding,
   ParcelEvaluation,
   ParcelFiscal,
   Project,
@@ -82,4 +83,5 @@ export default [
   User,
   Workflow,
   WorkflowProjectStatus,
+  ...views,
 ];
