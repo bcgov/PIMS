@@ -140,29 +140,29 @@ const sendEmailAsync = async (email: IEmail, user: KeycloakUser): Promise<IEmail
     throw new ErrorWithCode('Null argument for email.', 400);
   }
 
-  email.from = cfg.ches.from ?? email.from;
+  email.from = email.from ?? cfg.ches.defaultFrom;
 
-  if (cfg.ches.bccUser) {
+  if (cfg.ches.bccCurrentUser) {
     email.bcc = [user.email, ...(email.bcc ?? [])];
   }
-  if (cfg.ches.alwaysBcc && typeof cfg.ches.alwaysBcc === 'string') {
+  if (cfg.ches.usersToBcc && typeof cfg.ches.usersToBcc === 'string') {
     email.bcc = [
       ...email.bcc,
-      ...(cfg.ches.alwaysBcc?.split(';').map((email) => email.trim()) ?? []),
+      ...(cfg.ches.usersToBcc?.split(';').map((email) => email.trim()) ?? []),
     ];
   }
-  if (cfg.ches.overrideTo || !cfg.ches.emailAuthorized) {
+  if (cfg.ches.overrideTo) {
     email.to = cfg.ches.overrideTo
       ? cfg.ches.overrideTo?.split(';').map((email) => email.trim()) ?? []
       : [user.email];
   }
-  if (cfg.ches.alwaysDelay) {
-    const numSeconds = parseInt(cfg.ches.alwaysDelay);
+  if (cfg.ches.secondsToDelay) {
+    const numSeconds = parseInt(cfg.ches.secondsToDelay);
     if (!isNaN(numSeconds)) {
       if (!email.delayTS) {
         email.delayTS = 0;
       }
-      email.delayTS += Number(cfg.ches.alwaysDelay);
+      email.delayTS += Number(cfg.ches.secondsToDelay);
     }
   }
   email.to = email.to.filter((a) => !!a);

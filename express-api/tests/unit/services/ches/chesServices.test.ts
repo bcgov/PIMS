@@ -46,10 +46,10 @@ describe('UNIT - Ches Services', () => {
       _config.mockImplementationOnce(() => ({
         ches: {
           emailEnabled: true,
-          bccUser: true,
-          alwaysBcc: 'john@doe.com',
+          bccCurrentUser: true,
+          usersToBcc: 'john@doe.com',
           overrideTo: 'john@doe.com',
-          alwaysDelay: 1,
+          secondsToDelay: 1,
         },
       }));
       _fetch.mockImplementationOnce(() => ({

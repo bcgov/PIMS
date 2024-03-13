@@ -1,12 +1,11 @@
 const config = {
   ches: {
-    emailAuthorized: process.env.CHES_EMAIL_AUTHORIZED,
-    alwaysBcc: process.env.CHES_ALWAYS_BCC,
-    from: process.env.CHES_FROM,
-    overrideTo: process.env.CHES_OVERRIDE_TO,
-    bccUser: process.env.CHES_BCC_USER,
-    alwaysDelay: process.env.CHES_ALWAYS_DELAY,
-    emailEnabled: process.env.CHES_EMAIL_ENABLED,
+    usersToBcc: process.env.CHES_ALWAYS_BCC, //Semi-colon separated list of emails to include in the BCC
+    defaultFrom: process.env.CHES_DEFAULT_FROM, //Default to this for the from field if email does not supply it.
+    overrideTo: process.env.CHES_OVERRIDE_TO, //Override the to field to this every time, useful for testing.
+    bccCurrentUser: process.env.CHES_BCC_USER, //If truthy, current user will be included in bcc list.
+    secondsToDelay: process.env.CHES_SECONDS_TO_DELAY, //Added in seconds to the delayTS to delay the email send date.
+    emailEnabled: process.env.CHES_EMAIL_ENABLED, //If false, emails will not send at all.
   },
 };
 

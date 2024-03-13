@@ -62,6 +62,7 @@ describe('UNIT - Tools', () => {
       _getChesMessageStatusById.mockImplementationOnce(() => {
         throw new Error();
       });
+      mockRequest.params.messageId = randomUUID();
       await controllers.getChesMessageStatusById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
@@ -80,6 +81,7 @@ describe('UNIT - Tools', () => {
       expect(mockResponse.statusValue).toBe(400);
     });
     it('should return thrown code', async () => {
+      mockRequest.query.status = 'pending';
       _getChesMessageStatuses.mockImplementationOnce(() => {
         throw new Error();
       });
@@ -100,6 +102,7 @@ describe('UNIT - Tools', () => {
       expect(mockResponse.statusValue).toBe(400);
     });
     it('should return thrown code', async () => {
+      mockRequest.params.messageId = '-11';
       _cancelEmailByIdAsync.mockImplementationOnce(() => {
         throw new Error();
       });
@@ -123,6 +126,7 @@ describe('UNIT - Tools', () => {
       _cancelEmailsAsync.mockImplementationOnce(() => {
         throw new Error();
       });
+      mockRequest.query.status = 'pending';
       await controllers.cancelChesMessages(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
