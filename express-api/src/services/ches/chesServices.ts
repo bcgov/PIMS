@@ -3,17 +3,10 @@ import credentials from '@/constants/credentials';
 import urls from '@/constants/urls';
 import { ChesFilter } from '@/controllers/tools/toolsSchema';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import { decodeJWT } from '@/utilities/decodeJWT';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 
 let _token: TokenResponse = null;
-
-const decodeJWT = (jwt: string) => {
-  try {
-    return JSON.parse(Buffer.from(jwt, 'base64').toString('ascii'));
-  } catch {
-    throw new Error('Invalid input in decodeJWT()');
-  }
-};
 
 interface TokenResponse {
   access_token?: string;
@@ -187,8 +180,7 @@ const getStatusByIdAsync = async (messageId: string): Promise<IChesStatusRespons
 
 const getStatusesAsync = async (filter: ChesFilter) => {
   if (filter == null) throw new ErrorWithCode('Null filter.', 400);
-  if (!filter.txId && !filter.msgId && !filter.status && !filter.tag)
-    throw new ErrorWithCode('At least one parameter expected.', 400);
+  throwIfMissingParameter(filter);
   const params = new URLSearchParams(filter as Record<string, string>);
   return sendAsync(`/status?${params.toString()}`, 'GET');
 };
@@ -204,10 +196,14 @@ const cancelEmailByIdAsync = async (messageId: string) => {
 
 const cancelEmailsAsync = async (filter: ChesFilter) => {
   if (filter == null) throw new ErrorWithCode('Null filter.', 400);
-  if (!filter.txId && !filter.msgId && !filter.status && !filter.tag)
-    throw new ErrorWithCode('At least one parameter expected.', 400);
+  throwIfMissingParameter(filter);
   const params = new URLSearchParams(filter as Record<string, string>);
   return sendAsync(`/cancel?${params}`, 'DELETE');
+};
+
+const throwIfMissingParameter = (filter: ChesFilter) => {
+  if (!filter.txId && !filter.msgId && !filter.status && !filter.tag)
+    throw new ErrorWithCode('At least one parameter expected.', 400);
 };
 
 const chesServices = {

@@ -2,6 +2,7 @@ import userServices from '@/services/users/usersServices';
 import { Request, Response } from 'express';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import KeycloakService from '@/services/keycloak/keycloakService';
+import { decodeJWT } from '@/utilities/decodeJWT';
 /**
  * @description Redirects user to the keycloak user info endpoint.
  * @param {Request}     req Incoming request.
@@ -16,13 +17,6 @@ export const getUserInfo = async (req: Request, res: Response) => {
       "bearerAuth" : []
       }]
    */
-  const decodeJWT = (jwt: string) => {
-    try {
-      return JSON.parse(Buffer.from(jwt, 'base64').toString('ascii'));
-    } catch {
-      throw new Error('Invalid input in decodeJWT()');
-    }
-  };
 
   if (!req.token) return res.status(400).send('No access token');
   const [header, payload] = req.token.split('.');
