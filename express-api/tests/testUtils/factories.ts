@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AccessRequest } from '@/typeorm/Entities/AccessRequest';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { User, UserStatus } from '@/typeorm/Entities/User';
 import { faker } from '@faker-js/faker';
@@ -109,30 +108,6 @@ export const produceUser = (): User => {
   };
 };
 
-export const produceRequest = (): AccessRequest => {
-  const agency = produceAgency();
-  const role = produceRole();
-  const user = produceUser();
-  const request: AccessRequest = {
-    Id: faker.number.int(),
-    UserId: user.Id,
-    User: user,
-    Note: 'test',
-    Status: 0,
-    RoleId: role.Id,
-    Role: role,
-    Agency: agency,
-    AgencyId: agency.Id,
-    CreatedById: undefined,
-    CreatedBy: undefined,
-    CreatedOn: faker.date.anytime(),
-    UpdatedById: undefined,
-    UpdatedBy: undefined,
-    UpdatedOn: faker.date.anytime(),
-  };
-  return request;
-};
-
 export const produceAgency = (code?: string): Agency => {
   const agency: Agency = {
     Id: faker.number.int({ max: 10 }),
@@ -228,5 +203,7 @@ export const produceParcel = (): Parcel => {
     CreatedBy: undefined,
     UpdatedById: undefined,
     UpdatedBy: undefined,
+    Fiscals: [],
+    Evaluations: [],
   };
 };
