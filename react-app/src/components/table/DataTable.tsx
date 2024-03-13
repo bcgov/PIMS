@@ -31,6 +31,7 @@ import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import DownloadIcon from '@mui/icons-material/Download';
 import AddIcon from '@mui/icons-material/Add';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
+import { GridInitialStateCommunity } from '@mui/x-data-grid/models/gridStateCommunity';
 
 type RenderCellParams = GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
 
@@ -157,6 +158,7 @@ type FilterSearchDataGridProps = {
   presetFilterSelectOptions: JSX.Element[];
   tableHeader: string;
   excelTitle: string;
+  initialState?: GridInitialStateCommunity;
 } & DataGridProps;
 
 export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
@@ -268,9 +270,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         apiRef={tableApiRef}
         initialState={{
           pagination: { paginationModel: { pageSize: 10 } },
-          sorting: {
-            sortModel: [{ field: 'created', sort: 'desc' }],
-          },
+          ...props.initialState,
         }}
         pageSizeOptions={[10, 20, 30, 100]} // DataGrid max is 100
         disableRowSelectionOnClick

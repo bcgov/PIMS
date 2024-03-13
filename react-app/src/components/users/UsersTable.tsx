@@ -78,7 +78,7 @@ const UsersTable = (props: IUsersTable) => {
       // All Status filters
       case 'Active':
       case 'Pending':
-      case 'Hold':
+      case 'On Hold':
         ref.current.setFilterModel({
           items: [
             {
@@ -197,6 +197,16 @@ const UsersTable = (props: IUsersTable) => {
         columns={columns}
         rows={users}
         loading={isLoading}
+        initialState={{
+          sorting: {
+            sortModel: [{ field: 'CreatedOn', sort: 'desc' }],
+          },
+          columns: {
+            columnVisibilityModel: {
+              DisplayName: false,
+            }
+          }
+        }}
         onPresetFilterChange={selectPresetFilter}
         presetFilterSelectOptions={[
           <CustomMenuItem key={'AllUsers'} value={'All Users'}>
@@ -209,8 +219,8 @@ const UsersTable = (props: IUsersTable) => {
           <CustomMenuItem key={'Pending'} value={'Pending'}>
             Pending
           </CustomMenuItem>,
-          <CustomMenuItem key={'Hold'} value={'Hold'}>
-            Hold
+          <CustomMenuItem key={'Hold'} value={'On Hold'}>
+            On Hold
           </CustomMenuItem>,
           <CustomListSubheader key={'Role'}>Role</CustomListSubheader>,
           <CustomMenuItem key={'User'} value={'User'}>
