@@ -115,7 +115,7 @@ interface IEmailAttachment {
 }
 
 export interface IEmail {
-  from: string;
+  from?: string;
   to: string[];
   cc?: string[];
   bcc?: string[];
