@@ -28,12 +28,8 @@ const addParcel = async (parcel: Partial<Parcel>) => {
   if (existingParcel) {
     throw new ErrorWithCode('Parcel already exists.', 409);
   }
-  try {
-    const newParcel = parcelRepo.save(parcel);
-    return newParcel;
-  } catch (e) {
-    throw new Error(e);
-  }
+  const newParcel = parcelRepo.save(parcel);
+  return newParcel;
 };
 
 /**
@@ -47,12 +43,8 @@ const deleteParcelById = async (parcelId: number) => {
   if (!existingParcel) {
     throw new ErrorWithCode('Parcel PID was not found.', 404);
   }
-  try {
-    const removeParcel = await parcelRepo.delete(existingParcel.Id);
-    return removeParcel;
-  } catch (e) {
-    throw new ErrorWithCode(e.message);
-  }
+  const removeParcel = await parcelRepo.delete(existingParcel.Id);
+  return removeParcel;
 };
 
 /**
@@ -98,14 +90,10 @@ const updateParcel = async (incomingParcel: DeepPartial<Parcel>) => {
   if (findParcel == null || findParcel.Id !== incomingParcel.Id) {
     throw new ErrorWithCode('Parcel not found', 404);
   }
-  try {
-    await parcelRepo.update({ Id: findParcel.Id }, incomingParcel);
-    // update function doesn't return data on the row changed. Have to get the changed row again
-    const newParcel = await getParcelById(incomingParcel.Id);
-    return newParcel;
-  } catch (e) {
-    throw new ErrorWithCode(e.message);
-  }
+  await parcelRepo.update({ Id: findParcel.Id }, incomingParcel);
+  // update function doesn't return data on the row changed. Have to get the changed row again
+  const newParcel = await getParcelById(incomingParcel.Id);
+  return newParcel;
 };
 
 /**

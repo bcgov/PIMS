@@ -48,13 +48,14 @@ export const updateParcel = async (req: Request, res: Response) => {
    */
   try {
     const parcelId = Number(req.params.parcelId);
-    if (isNaN(parcelId) || parcelId !== req.body.parcelId) {
+    if (isNaN(parcelId) || parcelId !== req.body.Id) {
       return res.status(400).send('Parcel ID was invalid or mismatched with body.');
     }
     const parcel = await parcelServices.updateParcel(req.body);
     if (!parcel) {
       return res.status(404).send('Parcel matching this internal ID not found.');
     }
+    return res.status(200).send(parcel);
   } catch (e) {
     return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong.');
   }
@@ -77,12 +78,10 @@ export const deleteParcel = async (req: Request, res: Response) => {
   try {
     const parcelId = Number(req.params.parcelId);
     if (isNaN(parcelId)) {
-      return res.status(400).send('Parcel ID was invalid or mismatched with body.');
+      return res.status(400).send('Parcel ID was invalid.');
     }
-    const parcel = await parcelServices.deleteParcelById(parcelId);
-    if (!parcel) {
-      return res.status(404).send('Parcel matching this internal ID not found.');
-    }
+    const delResult = await parcelServices.deleteParcelById(parcelId);
+    return res.status(200).send(delResult);
   } catch (e) {
     return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong.');
   }
