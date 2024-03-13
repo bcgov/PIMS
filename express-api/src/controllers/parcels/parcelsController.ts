@@ -95,7 +95,7 @@ export const deleteParcel = async (req: Request, res: Response) => {
  */
 export const filterParcelsQueryString = async (req: Request, res: Response) => {
   try {
-    const filter = ParcelFilterSchema.safeParse(req.body);
+    const filter = ParcelFilterSchema.safeParse(req.query);
     if (filter.success) {
       const response = await parcelServices.getParcels(filter.data);
       return res.status(200).send(response);

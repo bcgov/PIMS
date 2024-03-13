@@ -50,6 +50,15 @@ describe('UNIT - Parcels', () => {
       await controllers.getParcel(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(404);
     });
+
+    it('should return 400 on generic error', async () => {
+      _getParcelById.mockImplementationOnce(() => {
+        throw Error;
+      });
+      mockRequest.params.parcelId = '1';
+      await controllers.getParcel(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
   });
 
   describe('PUT /properties/parcels/:id', () => {
@@ -73,6 +82,17 @@ describe('UNIT - Parcels', () => {
       mockRequest.params.parcelId = '1';
       mockRequest.body = produceParcel();
       mockRequest.body.Id = 2;
+      await controllers.updateParcel(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+
+    it('should return 200 with a correct response body', async () => {
+      _updateParcel.mockImplementationOnce(() => {
+        throw Error;
+      });
+      mockRequest.params.parcelId = '1';
+      mockRequest.body = produceParcel();
+      mockRequest.body.Id = 1;
       await controllers.updateParcel(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
@@ -113,6 +133,19 @@ describe('UNIT - Parcels', () => {
       await controllers.filterParcelsQueryString(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(Array.isArray(mockResponse.sendValue)).toBeTruthy();
+    });
+    it('should return 400 on incorrect filter', async () => {
+      mockRequest.query.isSensitive = {};
+      await controllers.filterParcelsQueryString(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+    it('should return 400 on incorrect filter', async () => {
+      mockRequest.query.pid = '1';
+      _getParcels.mockImplementationOnce(() => {
+        throw Error;
+      });
+      await controllers.filterParcelsQueryString(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
     });
   });
 
