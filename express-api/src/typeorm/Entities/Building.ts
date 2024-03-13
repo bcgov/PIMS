@@ -1,14 +1,16 @@
 import { BuildingConstructionType } from '@/typeorm/Entities/BuildingConstructionType';
 import { BuildingOccupantType } from '@/typeorm/Entities/BuildingOccupantType';
 import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUse';
-import { Entity, Column, ManyToOne, Index, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, Index, JoinColumn, OneToMany } from 'typeorm';
 import { Property } from '@/typeorm/Entities/abstractEntities/Property';
+import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
+import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
 
 // Should the occupant information (OccupantTypeId, OccupantName, and BuildingTenancyUpdatedOn) be a separate table?
 // This may change over time and we wouldn't be able to track previous occupants by storing it in this table.
 
-// Can Buildings and Parcels share a base Properties entity?
 @Entity()
+@Index(['PID', 'PIN'], { unique: false })
 export class Building extends Property {
   // Construction Type Relations
   @Column({ name: 'building_construction_type_id', type: 'int' })
@@ -67,4 +69,10 @@ export class Building extends Property {
 
   @Column({ type: 'real' })
   TotalArea: number;
+
+  @OneToMany(() => BuildingFiscal, (Fiscal) => Fiscal.BuildingId, { nullable: true })
+  Fiscals: BuildingFiscal[];
+
+  @OneToMany(() => BuildingEvaluation, (Evaluation) => Evaluation.BuildingId, { nullable: true })
+  Evaluations: BuildingEvaluation[];
 }

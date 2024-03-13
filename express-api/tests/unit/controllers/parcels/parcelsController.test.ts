@@ -1,55 +1,41 @@
-import { IParcel } from '@/controllers/parcels/IParcel';
 import { faker } from '@faker-js/faker';
 import { UUID } from 'crypto';
 import controllers from '@/controllers';
 import { Request, Response } from 'express';
 import { MockReq, MockRes, getRequestHandlerMocks } from '../../../testUtils/factories';
-import { Point } from 'typeorm';
+import { Parcel } from '@/typeorm/Entities/Parcel';
+import { GeoPoint } from '@/typeorm/Entities/abstractEntities/Property';
 
-const mockPoint: Point = {
-  type: 'Point',
-  coordinates: [1.23, 4.56],
+const mockPoint: GeoPoint = {
+  x: 1.23,
+  y: 4.56,
 };
 describe('UNIT - Parcels', () => {
-  const mockParcel: IParcel = {
-    createdOn: faker.date.anytime().toLocaleString(),
-    updatedOn: faker.date.anytime().toLocaleString(),
-    updatedById: faker.string.uuid() as UUID,
-    createdById: faker.string.uuid() as UUID,
-    id: faker.number.int(),
-    propertyTypeId: 0,
-    propertyType: 'Land',
-    addressId: 1,
-    location: mockPoint,
-    projectNumbers: [],
-    projectWorkflow: 'Submit Surplus Property Process Project',
-    projectStatus: 'Draft',
-    name: faker.location.cardinalDirection() + faker.location.city(),
-    description: faker.string.alpha(),
-    classificationId: 0,
-    classification: 'Core Operational',
-    encumbranceReason: '',
-    agencyId: 0,
-    subAgency: 'BCHY',
-    agency: 'EMPR',
-    subAgencyFullName: 'BC Hydro',
-    agencyFullName: 'Energy, Mines & Petroleum Resources',
-    address: undefined,
-    latitude: faker.location.latitude(),
-    longitude: faker.location.longitude(),
-    isSensitive: false,
-    isVisibleToOtherAgencies: false,
-    pid: faker.string.numeric(),
-    pin: faker.number.int(),
-    landArea: 0,
-    landLegalDescription: faker.string.alpha(),
-    zoning: '',
-    zoningPotential: '',
-    evaluations: [],
-    fiscals: [],
-    buildings: [],
-    parcels: [],
-    subdivisions: [],
+  const mockParcel: Partial<Parcel> = {
+    CreatedOn: faker.date.anytime(),
+    UpdatedOn: faker.date.anytime(),
+    UpdatedById: faker.string.uuid() as UUID,
+    CreatedById: faker.string.uuid() as UUID,
+    Id: faker.number.int(),
+    PropertyTypeId: 0,
+    Location: mockPoint,
+    ProjectNumbers: '',
+    Name: faker.location.cardinalDirection() + faker.location.city(),
+    Description: faker.string.alpha(),
+    ClassificationId: 0,
+    AgencyId: 0,
+    IsSensitive: false,
+    IsVisibleToOtherAgencies: false,
+    PID: faker.number.int(),
+    PIN: faker.number.int(),
+    LandArea: 0,
+    LandLegalDescription: faker.string.alpha(),
+    Zoning: '',
+    ZoningPotential: '',
+    ParentParcelId: 1,
+    AdministrativeAreaId: 2,
+    Address1: '742 Evergreen Terrace',
+    Postal: 'V8A 3E8',
   };
 
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
