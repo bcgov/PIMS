@@ -68,7 +68,7 @@ export class NotificationQueue extends BaseEntity {
   ToAgency: Agency;
 
   // Template Relation
-  @Column({ name: 'template_id', type: 'int', nullable: true })
+  @Column({ name: 'template_id', type: 'int' })
   TemplateId: number;
 
   @ManyToOne(() => NotificationTemplate, (Template) => Template.Id)
