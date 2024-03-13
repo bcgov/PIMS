@@ -124,7 +124,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
         deleteTitle={'Delete Account'}
         onDeleteClick={() => setOpenDeleteDialog(true)}
         onBackClick={() => onClose()}
-        deleteButtonProps={{ disabled: pimsUser.data.Id === userId }}
+        deleteButtonProps={{ disabled: pimsUser.data?.Id === userId }}
       />
       <DataCard
         customFormatter={customFormatterStatus}
