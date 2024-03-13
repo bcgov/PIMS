@@ -348,6 +348,7 @@ const Map: React.FC<MapProps> = ({
         GEN_GROSS_LAND_VALUE,
         GEN_GROSS_IMPROVEMENT_VALUE,
         FOLIO_ID,
+        ROLL_NUMBER,
       } = bcaProps;
       properties = {
         ...properties,
@@ -356,6 +357,7 @@ const Map: React.FC<MapProps> = ({
         GEN_GROSS_LAND_VALUE,
         GEN_GROSS_IMPROVEMENT_VALUE,
         FOLIO_ID,
+        ROLL_NUMBER,
       };
     }
 

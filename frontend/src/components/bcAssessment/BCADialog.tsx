@@ -20,6 +20,7 @@ export interface IBCAData {
   GEN_GROSS_LAND_VALUE: number;
   GEN_GROSS_IMPROVEMENT_VALUE: number;
   FOLIO_ID: string;
+  ROLL_NUMBER: string;
 }
 
 interface IBCADialogProps {
@@ -68,6 +69,13 @@ export const BCADialog = (props: IBCADialogProps) => {
                 </Grid>
                 <Grid item xs={rightColumnWidth}>
                   <Typography fontSize={fontSize}>{bcaData?.FOLIO_ID}</Typography>
+                </Grid>
+
+                <Grid item xs={leftColumnWidth}>
+                  <Typography fontSize={fontSize}>Roll Number:</Typography>
+                </Grid>
+                <Grid item xs={rightColumnWidth}>
+                  <Typography fontSize={fontSize}>{bcaData?.ROLL_NUMBER}</Typography>
                 </Grid>
 
                 <Grid item xs={leftColumnWidth}>
