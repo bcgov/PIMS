@@ -68,7 +68,7 @@ export class NotificationQueue extends BaseEntity {
   ToAgency: Agency;
 
   // Template Relation
-  @Column({ name: 'template_id', type: 'int' })
+  @Column({ name: 'template_id', type: 'int', nullable: true })
   TemplateId: number;
 
   @ManyToOne(() => NotificationTemplate, (Template) => Template.Id)
@@ -76,9 +76,9 @@ export class NotificationQueue extends BaseEntity {
   @Index()
   Template: NotificationTemplate;
 
-  @Column({ type: 'uuid' })
+  @Column({ type: 'uuid', nullable: true })
   ChesMessageId: UUID;
 
-  @Column({ type: 'uuid' })
+  @Column({ type: 'uuid', nullable: true })
   ChesTransactionId: UUID;
 }
