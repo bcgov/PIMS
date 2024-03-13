@@ -253,7 +253,7 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
         (point) => `${point?.properties.id}-${point?.properties.propertyTypeId}`,
       );
 
-      const results: PointFeature[] = items.filter(({ properties }: any) => {
+      let results: PointFeature[] = items.filter(({ properties }: any) => {
         return (
           properties.propertyTypeId === PropertyTypes.BUILDING ||
           properties.propertyTypeId === PropertyTypes.PARCEL ||
@@ -262,6 +262,13 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
         );
       }) as any;
 
+      // Remove results that don't match the current agency filter
+      // Checking for subdivision includes children of parent agencies
+      if (filter?.agencies) {
+        results = results.filter(
+          (item) => item.properties.agencyId == filter.agencies || item.properties.subAgency,
+        );
+      }
       const administrativeArea = filter?.administrativeArea;
       const pid = filter?.pid;
       let propertiesFound;
@@ -326,7 +333,11 @@ export const InventoryLayer: React.FC<InventoryLayerProps> = ({
 
       setLoadingTiles(false);
     } catch (error) {
-      toast.error('Current search contains invalid values.', { autoClose: 7000 });
+      // Don't print the leaflet errors.
+      // If navigating away from map before this function is done, the map is already destroyed.
+      if (!(error as Error).message.includes('leaflet')) {
+        toast.error('Current search contains invalid values.', { autoClose: 7000 });
+      }
       console.error(error);
     } finally {
       onRequestData(false);
