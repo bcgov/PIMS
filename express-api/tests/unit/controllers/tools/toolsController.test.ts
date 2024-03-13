@@ -102,7 +102,7 @@ describe('UNIT - Tools', () => {
       expect(mockResponse.statusValue).toBe(400);
     });
     it('should return thrown code', async () => {
-      mockRequest.params.messageId = '-11';
+      mockRequest.params.messageId = randomUUID();
       _cancelEmailByIdAsync.mockImplementationOnce(() => {
         throw new Error();
       });
