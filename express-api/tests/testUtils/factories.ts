@@ -203,5 +203,7 @@ export const produceParcel = (): Parcel => {
     CreatedBy: undefined,
     UpdatedById: undefined,
     UpdatedBy: undefined,
+    Fiscals: [],
+    Evaluations: [],
   };
 };
