@@ -1,12 +1,12 @@
 import {
   Entity,
   Index,
-  PrimaryColumn,
   Column,
   ManyToOne,
   JoinColumn,
   OneToMany,
   Relation,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { User } from '@/typeorm/Entities/User';
@@ -14,7 +14,7 @@ import { User } from '@/typeorm/Entities/User';
 @Entity()
 @Index(['ParentId', 'IsDisabled', 'Id', 'Name', 'SortOrder']) // I'm not sure this index is needed. How often do we search by this group?
 export class Agency extends BaseEntity {
-  @PrimaryColumn({ type: 'int' })
+  @PrimaryGeneratedColumn({ type: 'int' })
   Id: number;
 
   @Column({ type: 'character varying', length: 150 })

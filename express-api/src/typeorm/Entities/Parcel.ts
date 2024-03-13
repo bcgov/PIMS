@@ -1,15 +1,11 @@
-import { Entity, Column, Index, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, Index, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Property } from '@/typeorm/Entities/abstractEntities/Property';
+import { ParcelFiscal } from '@/typeorm/Entities/ParcelFiscal';
+import { ParcelEvaluation } from '@/typeorm/Entities/ParcelEvaluation';
 
 @Entity()
 @Index(['PID', 'PIN'], { unique: true })
 export class Parcel extends Property {
-  @Column({ type: 'int' })
-  PID: number;
-
-  @Column({ type: 'int', nullable: true })
-  PIN: number;
-
   @Column({ type: 'real', nullable: true })
   LandArea: number;
 
@@ -31,4 +27,10 @@ export class Parcel extends Property {
   @ManyToOne(() => Parcel, (Parcel) => Parcel.Id)
   @JoinColumn({ name: 'parent_parcel_id' })
   ParentParcel: Parcel;
+
+  @OneToMany(() => ParcelFiscal, (Fiscal) => Fiscal.ParcelId, { nullable: true })
+  Fiscals: ParcelFiscal[];
+
+  @OneToMany(() => ParcelEvaluation, (Evaluation) => Evaluation.ParcelId, { nullable: true })
+  Evaluations: ParcelEvaluation[];
 }
