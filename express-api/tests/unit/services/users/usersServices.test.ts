@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { AppDataSource } from '@/appDataSource';
 import userServices from '@/services/users/usersServices';
-import { AccessRequest } from '@/typeorm/Entities/AccessRequest';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { User } from '@/typeorm/Entities/User';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { faker } from '@faker-js/faker';
-import { produceAgency, produceRequest, produceUser } from 'tests/testUtils/factories';
+import { produceAgency, produceUser } from 'tests/testUtils/factories';
 
 const _usersFindOneBy = jest
   .spyOn(AppDataSource.getRepository(User), 'findOneBy')
@@ -20,23 +19,6 @@ const _usersInsert = jest
   .spyOn(AppDataSource.getRepository(User), 'insert')
   .mockImplementation(async (_where) => ({ raw: {}, generatedMaps: [], identifiers: [] }));
 
-const _requestInsert = jest
-  .spyOn(AppDataSource.getRepository(AccessRequest), 'insert')
-  .mockImplementation(async (req) => ({ raw: {}, generatedMaps: [{ ...req }], identifiers: [] }));
-
-const _requestUpdate = jest
-  .spyOn(AppDataSource.getRepository(AccessRequest), 'update')
-  .mockImplementation(async (id, req) => ({
-    raw: {},
-    generatedMaps: [req],
-    identifiers: [],
-    affected: 1,
-  }));
-
-const _requestRemove = jest
-  .spyOn(AppDataSource.getRepository(AccessRequest), 'remove')
-  .mockImplementation(async (req) => req);
-const _requestQueryGetOne = jest.fn().mockImplementation(() => produceRequest());
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const _requestsCreateQueryBuilder: any = {
   select: () => _requestsCreateQueryBuilder,
@@ -44,12 +26,7 @@ const _requestsCreateQueryBuilder: any = {
   where: () => _requestsCreateQueryBuilder,
   andWhere: () => _requestsCreateQueryBuilder,
   orderBy: () => _requestsCreateQueryBuilder,
-  getOne: () => _requestQueryGetOne(),
 };
-
-jest
-  .spyOn(AppDataSource.getRepository(AccessRequest), 'createQueryBuilder')
-  .mockImplementation(() => _requestsCreateQueryBuilder);
 
 jest
   .spyOn(AppDataSource.getRepository(User), 'find')
@@ -62,14 +39,6 @@ jest
 jest
   .spyOn(AppDataSource.getRepository(User), 'findOneOrFail')
   .mockImplementation(async () => produceUser());
-
-jest
-  .spyOn(AppDataSource.getRepository(AccessRequest), 'findOne')
-  .mockImplementation(async () => produceRequest());
-
-jest
-  .spyOn(AppDataSource.getRepository(AccessRequest), 'findOneOrFail')
-  .mockImplementation(async () => produceRequest());
 
 jest
   .spyOn(AppDataSource.getRepository(Agency), 'findOne')
