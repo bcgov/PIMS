@@ -158,6 +158,7 @@ type FilterSearchDataGridProps = {
   presetFilterSelectOptions: JSX.Element[];
   tableHeader: string;
   excelTitle: string;
+  addTooltip: string;
   initialState?: GridInitialStateCommunity;
 } & DataGridProps;
 
@@ -220,11 +221,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             onChange={updateSearchValue}
             optionalExternalState={[keywordSearchContents, setKeywordSearchContents]}
           />
-          <Tooltip
-            title={
-              'Adding a new user from this table is not supported yet. Please advise users to use the sign-up form.'
-            }
-          >
+          <Tooltip title={props.addTooltip}>
             <span>
               <IconButton disabled>
                 <AddIcon />

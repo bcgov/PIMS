@@ -218,6 +218,7 @@ const UsersTable = (props: IUsersTable) => {
         defaultFilter="All Users"
         tableHeader="Users Overview"
         excelTitle="Users Table"
+        addTooltip="Adding a new user from this table is not supported yet. Please advise users to use the access request form."
         getRowId={(row) => row.Id}
         columns={columns}
         rows={users}
