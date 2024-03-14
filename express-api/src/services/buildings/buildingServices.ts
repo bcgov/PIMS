@@ -1,7 +1,7 @@
 import { Building } from '@/typeorm/Entities/Building';
 import { AppDataSource } from '@/appDataSource';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
-import { FindOptionsOrder } from 'typeorm';
+import { DeepPartial, FindOptionsOrder } from 'typeorm';
 import { BuildingFilter } from '@/services/buildings/buildingSchema';
 
 const buildingRepo = AppDataSource.getRepository(Building);
@@ -66,7 +66,7 @@ export const deleteBuildingById = async (buildingId: number) => {
 };
 
 /**
- * @description Get buildings based on the provided filter.
+ * @description Retrieves buildings based on the provided filter.
  * @param filter - The filter object used to specify the criteria for retrieving buildings.
  * @returns {Building[]} An array of buildings that match the filter criteria.
  */
@@ -97,4 +97,25 @@ export const getBuildings = async (filter: BuildingFilter, includeRelations: boo
     order: filter.sort as FindOptionsOrder<Building>,
   });
   return buildings;
+};
+
+/**
+ * @description Finds and updates building based on the Building Id
+ * @param incomingBuilding incoming building information to be updated
+ * @returns updated building information and status
+ * @throws Error with code if building is not found or if an unexpected error is hit on update
+ */
+export const updateBuilding = async (incomingBuilding: DeepPartial<Building>) => {
+  const findBuilding = await getBuildingById(incomingBuilding.Id);
+  if (findBuilding == null) {
+    throw new ErrorWithCode('Building not found', 404);
+  }
+  try {
+    await buildingRepo.update({ Id: findBuilding.Id }, incomingBuilding);
+    // update function doesn't return data on the row changed. Have to get the changed row again
+    const newBuilding = await getBuildingById(incomingBuilding.Id);
+    return newBuilding;
+  } catch (e) {
+    throw new ErrorWithCode(e.message);
+  }
 };
