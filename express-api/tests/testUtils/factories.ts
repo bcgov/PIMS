@@ -8,6 +8,8 @@ import { Role as RolesEntity } from '@/typeorm/Entities/Role';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Building } from '@/typeorm/Entities/Building';
+import { EmailBody, IChesStatusResponse, IEmail } from '@/services/ches/chesServices';
+
 
 export class MockRes {
   statusValue: any;
@@ -254,4 +256,26 @@ export const produceBuilding = (): Building => {
     UpdatedById: undefined,
     UpdatedBy: undefined,
   };
+
+export const produceEmailStatus = (props: Partial<IChesStatusResponse>): IChesStatusResponse => {
+  const email: IChesStatusResponse = {
+    status: props.status ?? 'completed',
+    tag: props.tag ?? undefined,
+    txId: props.txId ?? faker.string.uuid(),
+    updatedTS: new Date().getTime(),
+    createdTS: new Date().getTime(),
+  };
+  return email;
+};
+
+export const produceEmail = (props: Partial<IEmail>): IEmail => {
+  const email: IEmail = {
+    from: props.from ?? faker.internet.email(),
+    to: props.to ?? [faker.internet.email()],
+    bodyType: props.bodyType ?? ('text' as EmailBody.Text), //I love that Jest makes you do this!!
+    subject: props.subject ?? faker.lorem.sentence(),
+    body: props.body ?? faker.lorem.paragraph(),
+    ...props,
+  };
+  return email;
 };
