@@ -1,6 +1,8 @@
 import { Building } from '@/typeorm/Entities/Building';
 import { AppDataSource } from '@/appDataSource';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import { FindOptionsOrder } from 'typeorm';
+import { BuildingFilter } from '@/services/buildings/buildingSchema';
 
 const buildingRepo = AppDataSource.getRepository(Building);
 
@@ -54,11 +56,45 @@ export const updateBuildingById = async (building: Building) => {
  * @param       buildingId  - Number representing building we want to delete.
  * @returns     findBuilding - Building data matching Id passed in.
  */
-export const deleteBuildingById = async (building: Building) => {
-  const existingBuilding = await getBuildingById(building.Id);
+export const deleteBuildingById = async (buildingId: number) => {
+  const existingBuilding = await getBuildingById(buildingId);
   if (!existingBuilding) {
     throw new ErrorWithCode('Building does not exists.', 404);
   }
-  const retBuilding = await buildingRepo.remove(building);
-  return retBuilding;
+  const removeBuilding = await buildingRepo.delete(existingBuilding.Id);
+  return removeBuilding;
+};
+
+/**
+ * @description Get buildings based on the provided filter.
+ * @param filter - The filter object used to specify the criteria for retrieving buildings.
+ * @returns {Building[]} An array of buildings that match the filter criteria.
+ */
+export const getBuildings = async (filter: BuildingFilter, includeRelations: boolean = false) => {
+  const buildings = await buildingRepo.find({
+    relations: {
+      Agency: includeRelations,
+      AdministrativeArea: includeRelations,
+      Classification: includeRelations,
+      PropertyType: includeRelations,
+      BuildingConstructionType: includeRelations,
+      BuildingPredominateUse: includeRelations,
+      BuildingOccupantType: includeRelations,
+    },
+    where: {
+      PID: filter.pid,
+      ClassificationId: filter.classificationId,
+      AgencyId: filter.agencyId,
+      AdministrativeAreaId: filter.administrativeAreaId,
+      PropertyTypeId: filter.propertyTypeId,
+      BuildingConstructionTypeId: filter.buildingConstructionTypeId,
+      BuildingPredominateUseId: filter.buildingPredominateUseId,
+      BuildingOccupantTypeId: filter.buildingOccupantTypeId,
+      IsSensitive: filter.isSensitive,
+    },
+    take: filter.quantity,
+    skip: (filter.page ?? 0) * (filter.quantity ?? 0),
+    order: filter.sort as FindOptionsOrder<Building>,
+  });
+  return buildings;
 };

@@ -7,11 +7,8 @@ import { Request, Response } from 'express';
 import { Role as RolesEntity } from '@/typeorm/Entities/Role';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { Parcel } from '@/typeorm/Entities/Parcel';
-<<<<<<< HEAD
-import { Building } from '@/typeorm/Entities/Building';
-=======
 import { EmailBody, IChesStatusResponse, IEmail } from '@/services/ches/chesServices';
->>>>>>> main
+import { Building } from '@/typeorm/Entities/Building';
 
 export class MockRes {
   statusValue: any;
@@ -213,7 +210,29 @@ export const produceParcel = (): Parcel => {
   };
 };
 
-<<<<<<< HEAD
+export const produceEmailStatus = (props: Partial<IChesStatusResponse>): IChesStatusResponse => {
+  const email: IChesStatusResponse = {
+    status: props.status ?? 'completed',
+    tag: props.tag ?? undefined,
+    txId: props.txId ?? faker.string.uuid(),
+    updatedTS: new Date().getTime(),
+    createdTS: new Date().getTime(),
+  };
+  return email;
+};
+
+export const produceEmail = (props: Partial<IEmail>): IEmail => {
+  const email: IEmail = {
+    from: props.from ?? faker.internet.email(),
+    to: props.to ?? [faker.internet.email()],
+    bodyType: props.bodyType ?? ('text' as EmailBody.Text), //I love that Jest makes you do this!!
+    subject: props.subject ?? faker.lorem.sentence(),
+    body: props.body ?? faker.lorem.paragraph(),
+    ...props,
+  };
+  return email;
+};
+
 export const produceBuilding = (): Building => {
   const id = faker.string.uuid() as UUID;
   return {
@@ -258,28 +277,9 @@ export const produceBuilding = (): Building => {
     CreatedBy: undefined,
     UpdatedById: undefined,
     UpdatedBy: undefined,
+    Fiscals: undefined,
+    Evaluations: undefined,
+    PID: undefined,
+    PIN: undefined,
   };
-=======
-export const produceEmailStatus = (props: Partial<IChesStatusResponse>): IChesStatusResponse => {
-  const email: IChesStatusResponse = {
-    status: props.status ?? 'completed',
-    tag: props.tag ?? undefined,
-    txId: props.txId ?? faker.string.uuid(),
-    updatedTS: new Date().getTime(),
-    createdTS: new Date().getTime(),
-  };
-  return email;
-};
-
-export const produceEmail = (props: Partial<IEmail>): IEmail => {
-  const email: IEmail = {
-    from: props.from ?? faker.internet.email(),
-    to: props.to ?? [faker.internet.email()],
-    bodyType: props.bodyType ?? ('text' as EmailBody.Text), //I love that Jest makes you do this!!
-    subject: props.subject ?? faker.lorem.sentence(),
-    body: props.body ?? faker.lorem.paragraph(),
-    ...props,
-  };
-  return email;
->>>>>>> main
 };
