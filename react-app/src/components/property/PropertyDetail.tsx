@@ -1,37 +1,39 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import DetailViewNavigation from '../display/DetailViewNavigation';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import DataCard from '../display/DataCard';
 import { ClassificationInline } from './ClassificationIcon';
 import CollapsibleSidebar from '../layout/CollapsibleSidebar';
 import ParcelNetValueTable from './ParcelNetValueTable';
 import { PinnedColumnDataGrid } from '../table/DataTable';
 import { GridColDef } from '@mui/x-data-grid';
+import usePimsApi from '@/hooks/usePimsApi';
+import useDataLoader from '@/hooks/useDataLoader';
+import { useClassificationStyle } from './PropertyTable';
 
-const PropertyDetail = () => {
-  const buildings1 = [
-    {
-      Id: 1,
-      ClassificationId: 0,
-      BuildingName: 'Aqua Center',
-    },
-    {
-      Id: 2,
-      ClassificationId: 1,
-      BuildingName: 'Hydraulic Press',
-    },
-    {
-      Id: 3,
-      ClassificationId: 2,
-      BuildingName: 'Iron Processing',
-    },
-    {
-      Id: 7,
-      ClassificationId: 2,
-      BuildingName: 'St. Patricks Building',
-    },
-  ];
+interface IPropertyDetail {
+  parcelId?: number;
+  buildingId?: number;
+  onClose: () => void;
+}
 
+const PropertyDetail = (props: IPropertyDetail) => {
+  const { parcelId, buildingId } = props;
+  const api = usePimsApi();
+  const { data: parcel, refreshData: refreshParcel } = useDataLoader(() =>
+    api.parcels.getParcelById(parcelId),
+  );
+  const { data: building, refreshData: refreshBuilding } = useDataLoader(() =>
+    api.buildings.getBuildingById(buildingId),
+  );
+  useEffect(() => {
+    refreshBuilding();
+  }, [buildingId]);
+
+  useEffect(() => {
+    refreshParcel();
+  }, [parcelId]);
+  const classification = useClassificationStyle();
   const assessedValue = [
     {
       FiscalYear: '2024',
@@ -84,74 +86,44 @@ const PropertyDetail = () => {
     },
   ];
 
-  const data = {
-    //Id: 1,
-    PID: '010-113-1332',
-    Classification: 1,
-    Agency: { Name: 'Smith & Weston' },
-    Address: '1450 Whenever Pl',
-    ProjectNumbers: 'FX1234',
-    Corporation: 'asdasda',
-    Ownership: 'BC Gov',
-    Sensitive: true,
-    UpdatedOn: new Date(),
-  };
-  const theme = useTheme();
-  const classificationColorMap = {
-    0: {
-      textColor: theme.palette.blue.main,
-      bgColor: theme.palette.blue.light,
-      text: 'Core operational',
-    },
-    1: {
-      textColor: theme.palette.success.main,
-      bgColor: theme.palette.success.light,
-      text: 'Core strategic',
-    },
-    2: { textColor: theme.palette.info.main, bgColor: theme.palette.info.light, text: 'Surplus' },
-    3: { textColor: theme.palette.info.main, bgColor: theme.palette.info.light, text: 'Surplus' },
-    4: {
-      textColor: theme.palette.warning.main,
-      bgColor: theme.palette.warning.light,
-      text: 'Disposal',
-    },
-    5: {
-      textColor: theme.palette.warning.main,
-      bgColor: theme.palette.warning.light,
-      text: 'Disposal',
-    },
-    6: {
-      textColor: theme.palette.warning.main,
-      bgColor: theme.palette.warning.light,
-      text: 'Disposal',
-    },
-  };
-
   const customFormatter = (key: any, val: any) => {
     if (key === 'Agency' && val) {
       return <Typography>{val.Name}</Typography>;
     } else if (key === 'Classification') {
       return (
         <ClassificationInline
-          color={classificationColorMap[val].textColor}
-          backgroundColor={classificationColorMap[val].bgColor}
-          title={classificationColorMap[val].text}
+          color={classification[val.Id].textColor}
+          backgroundColor={classification[val.Id].bgColor}
+          title={val.Name}
         />
       );
-    } else if (key === 'Sensitive') {
+    } else if (key === 'IsSensitive') {
       return val ? <Typography>Yes</Typography> : <Typography>No</Typography>;
     }
   };
 
+  const buildingOrParcel = building ? 'Building' : 'Parcel';
+  const mainInformation = useMemo(() => {
+    const data = parcel ?? building;
+    if (!data) {
+      return {};
+    } else {
+      return {
+        Classification: data.Classification,
+        PID: data.PID,
+        PIN: data.PIN,
+        Address: data.Address1,
+        LotSize: data.TotalArea,
+        IsSensitive: data.IsSensitive,
+        Description: data.Description,
+      };
+    }
+  }, [parcel, building]);
   return (
     <CollapsibleSidebar
       items={[
-        { title: 'Parcel information' },
-        { title: 'Parcel net book value' },
-        ...buildings1.map((a, idx) => ({
-          title: `Building information (${idx + 1})`,
-          subTitle: a.BuildingName,
-        })),
+        { title: `${buildingOrParcel} information` },
+        { title: `${buildingOrParcel} net book value` },
         { title: 'Assessed value' },
       ]}
     >
@@ -166,26 +138,26 @@ const PropertyDetail = () => {
       >
         <DetailViewNavigation
           navigateBackTitle={'Back to Property Overview'}
-          deleteTitle={'Delete Property'}
+          deleteTitle={`Delete ${buildingOrParcel}`}
           onDeleteClick={() => {}}
-          onBackClick={() => {}}
+          onBackClick={() => props.onClose()}
         />
         <DataCard
           id="Parcel information"
           customFormatter={customFormatter}
-          values={data}
-          title={'Parcel information'}
+          values={mainInformation}
+          title={`${buildingOrParcel} information`}
           onEdit={() => {}}
         />
         <DataCard
-          id="Parcel net book value"
+          id={`${buildingOrParcel} net book value`}
           values={undefined}
-          title={'Parcel net book value'}
+          title={`${buildingOrParcel} net book value`}
           onEdit={() => {}}
         >
           <ParcelNetValueTable />
         </DataCard>
-        {buildings1.map((building, idx) => {
+        {/* {buildings1.map((building, idx) => {
           return (
             <DataCard
               id={`Building information (${idx + 1})`}
@@ -195,7 +167,7 @@ const PropertyDetail = () => {
               onEdit={() => {}}
             />
           );
-        })}
+        })} */}
         <DataCard
           id={'Assessed value'}
           values={undefined}
