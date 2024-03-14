@@ -1,25 +1,18 @@
-import UserDetail from '@/components/users/UserDetail';
 import UsersTable from '@/components/users/UsersTable';
 import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
-import React, { useState } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const UsersManagement = () => {
-  const [selectedUserId, setSelectedUserId] = useState('');
+  const navigate = useNavigate();
   // Getting data from API
   const usersApi = usePimsApi();
   const { data, refreshData, isLoading, error } = useDataLoader(usersApi.users.getAllUsers);
-  return selectedUserId ? (
-    <UserDetail
-      userId={selectedUserId}
-      onClose={() => {
-        setSelectedUserId('');
-        refreshData();
-      }}
-    />
-  ) : (
+
+  return (
     <UsersTable
-      rowClickHandler={(params) => setSelectedUserId(params.row.Id)}
+      rowClickHandler={(params) => navigate(`/admin/users/${params.id}`)}
       data={data}
       refreshData={refreshData}
       isLoading={isLoading}
