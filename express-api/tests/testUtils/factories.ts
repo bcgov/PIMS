@@ -7,8 +7,8 @@ import { Request, Response } from 'express';
 import { Role as RolesEntity } from '@/typeorm/Entities/Role';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { Parcel } from '@/typeorm/Entities/Parcel';
-import { EmailBody, IChesStatusResponse, IEmail } from '@/services/ches/chesServices';
 import { Building } from '@/typeorm/Entities/Building';
+import { EmailBody, IChesStatusResponse, IEmail } from '@/services/ches/chesServices';
 
 export class MockRes {
   statusValue: any;
