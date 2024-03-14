@@ -79,6 +79,7 @@ const UsersTable = (props: IUsersTable) => {
       case 'Active':
       case 'Pending':
       case 'On Hold':
+      case 'Disabled':
         ref.current.setFilterModel({
           items: [
             {
@@ -92,6 +93,18 @@ const UsersTable = (props: IUsersTable) => {
       // All Role filters
       case 'User':
       case 'Admin':
+      case 'Auditor':
+        ref.current.setFilterModel({
+          items: [
+            {
+              value,
+              operator: 'contains',
+              field: 'Role',
+            },
+          ],
+        });
+        break;
+      case 'No Role':
         ref.current.setFilterModel({
           items: [
             {
@@ -112,12 +125,14 @@ const UsersTable = (props: IUsersTable) => {
       headerName: 'First Name',
       flex: 1,
       minWidth: 125,
+      maxWidth: 200,
     },
     {
       field: 'LastName',
       headerName: 'Last Name',
       flex: 1,
       minWidth: 125,
+      maxWidth: 200,
     },
     {
       field: 'Status',
@@ -126,19 +141,29 @@ const UsersTable = (props: IUsersTable) => {
         if (!params.value) return <></>;
         return statusChipFormatter(params.value);
       },
-      minWidth: 150,
+      width: 150,
     },
     {
       field: 'Email',
       headerName: 'Email Address',
-      minWidth: 150,
+      minWidth: 200,
       flex: 1,
     },
     {
-      field: 'DisplayName',
-      headerName: 'IDIR/BCeID',
-      minWidth: 150,
-      flex: 1,
+      field: 'Username',
+      headerName: 'Auth Provider',
+      width: 150,
+      valueGetter: (params) => {
+        const username: string = params.value;
+        if (!username.includes('@')) return undefined;
+        const provider = username.split('@').at(1);
+        switch (provider) {
+          case 'idir':
+            return 'IDIR';
+          default:
+            return 'BCeID';
+        }
+      },
     },
     {
       field: 'Agency',
@@ -156,7 +181,7 @@ const UsersTable = (props: IUsersTable) => {
     {
       field: 'Role',
       headerName: 'Role',
-      minWidth: 100,
+      minWidth: 150,
       flex: 1,
       valueGetter: (params) => params.value?.Name ?? `No Role`,
     },
@@ -203,13 +228,13 @@ const UsersTable = (props: IUsersTable) => {
           },
           columns: {
             columnVisibilityModel: {
-              DisplayName: false,
-            }
-          }
+              Username: false,
+            },
+          },
         }}
         onPresetFilterChange={selectPresetFilter}
         presetFilterSelectOptions={[
-          <CustomMenuItem key={'AllUsers'} value={'All Users'}>
+          <CustomMenuItem key={'All Users'} value={'All Users'}>
             All Users
           </CustomMenuItem>,
           <CustomListSubheader key={'Status'}>Status</CustomListSubheader>,
@@ -219,15 +244,24 @@ const UsersTable = (props: IUsersTable) => {
           <CustomMenuItem key={'Pending'} value={'Pending'}>
             Pending
           </CustomMenuItem>,
-          <CustomMenuItem key={'Hold'} value={'On Hold'}>
+          <CustomMenuItem key={'On Hold'} value={'On Hold'}>
             On Hold
+          </CustomMenuItem>,
+          <CustomMenuItem key={'Disabled'} value={'Disabled'}>
+            Disabled
           </CustomMenuItem>,
           <CustomListSubheader key={'Role'}>Role</CustomListSubheader>,
           <CustomMenuItem key={'User'} value={'User'}>
-            User
+            General User
           </CustomMenuItem>,
           <CustomMenuItem key={'Admin'} value={'Admin'}>
             System Admin
+          </CustomMenuItem>,
+          <CustomMenuItem key={'Auditor'} value={'Auditor'}>
+            Auditor
+          </CustomMenuItem>,
+          <CustomMenuItem key={'No Role'} value={'No Role'}>
+            No Role
           </CustomMenuItem>,
         ]}
       />
