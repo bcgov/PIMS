@@ -5,11 +5,10 @@ import DataCard from '../display/DataCard';
 import { ClassificationInline } from './ClassificationIcon';
 import CollapsibleSidebar from '../layout/CollapsibleSidebar';
 import ParcelNetValueTable from './ParcelNetValueTable';
-import { PinnedColumnDataGrid } from '../table/DataTable';
-import { GridColDef } from '@mui/x-data-grid';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { useClassificationStyle } from './PropertyTable';
+import PropertyAssessedValueTable from './PropertyAssessedValueTable';
 
 interface IPropertyDetail {
   parcelId?: number;
@@ -26,6 +25,9 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const { data: building, refreshData: refreshBuilding } = useDataLoader(() =>
     api.buildings.getBuildingById(buildingId),
   );
+  const { data: relatedBuildings, refreshData: refreshRelated } = useDataLoader(
+    () => parcel && api.buildings.getBuildingsByPid(parcel.PID),
+  );
   useEffect(() => {
     refreshBuilding();
   }, [buildingId]);
@@ -33,58 +35,57 @@ const PropertyDetail = (props: IPropertyDetail) => {
   useEffect(() => {
     refreshParcel();
   }, [parcelId]);
-  const classification = useClassificationStyle();
-  const assessedValue = [
-    {
-      FiscalYear: '2024',
-      Land: '$2450000',
-      Building1: '$350000',
-      Building2: '$5000000',
-      Building3: '$5000000',
-      Building4: '$2000000',
-      Building5: '$8090000',
-    },
-    {
-      FiscalYear: '23/22',
-      Land: '$2450000',
-      Building1: '$350000',
-      Building2: '$5000000',
-      Building3: '$5000000',
-      Building4: '$2000000',
-      Building5: '$8090000',
-    },
-  ];
 
-  const assesValCol: GridColDef[] = [
-    {
-      field: 'FiscalYear',
-      headerName: 'Year',
-    },
-    {
-      field: 'Land',
-      headerName: 'Land',
-    },
-    {
-      field: 'Building1',
-      headerName: 'Building (1)',
-    },
-    {
-      field: 'Building2',
-      headerName: 'Building (2)',
-    },
-    {
-      field: 'Building3',
-      headerName: 'Building (3)',
-    },
-    {
-      field: 'Building4',
-      headerName: 'Building (4)',
-    },
-    {
-      field: 'Building5',
-      headerName: 'Building (5)',
-    },
-  ];
+  useEffect(() => {
+    refreshRelated();
+  }, [parcel]);
+
+  const classification = useClassificationStyle();
+
+  const assessedValues = useMemo(() => {
+    if (parcelId && parcel) {
+      //We only want latest two years accroding to PO requirements.
+      const lastTwoYrs = parcel.Evaluations.sort(
+        (a, b) => b.Date.getFullYear() - a.Date.getFullYear(),
+      ).slice(0, 2);
+      const evaluations = [];
+      for (const parcelEval of lastTwoYrs) {
+        //This is a parcel. So first, get fields for the parcel.
+        const evaluation = { Year: parcelEval.Date.getFullYear(), Land: parcelEval.Value };
+        //If exists, iterate over relatedBuildings.
+        relatedBuildings?.forEach((building, idx) => {
+          const buildingEval = building.Evaluations.find(
+            (e) => e.Date.getFullYear() === parcelEval.Date.getFullYear(),
+          );
+          if (buildingEval) {
+            evaluation[`Building${idx + 1}`] = buildingEval.Value;
+          }
+        });
+        evaluations.push(evaluation);
+      }
+      return evaluations;
+    } else if (buildingId && building) {
+      const lastTwoYrs = building.Evaluations.sort(
+        (a, b) => b.Date.getFullYear() - a.Date.getFullYear(),
+      ).slice(0, 2);
+      return lastTwoYrs.map((ev) => ({
+        Year: ev.Date.getFullYear(),
+        Value: ev.Value,
+      }));
+    } else {
+      return [];
+    }
+  }, [parcel, building, relatedBuildings]);
+
+  const netBookValues = useMemo(() => {
+    if (parcelId && parcel) {
+      return parcel.Fiscals;
+    } else if (buildingId && building) {
+      return building.Fiscals;
+    } else {
+      return [];
+    }
+  }, [parcel, building]);
 
   const customFormatter = (key: any, val: any) => {
     if (key === 'Agency' && val) {
@@ -155,50 +156,18 @@ const PropertyDetail = (props: IPropertyDetail) => {
           title={`${buildingOrParcel} net book value`}
           onEdit={() => {}}
         >
-          <ParcelNetValueTable />
+          <ParcelNetValueTable rows={netBookValues} />
         </DataCard>
-        {/* {buildings1.map((building, idx) => {
-          return (
-            <DataCard
-              id={`Building information (${idx + 1})`}
-              key={'building' + idx}
-              values={building}
-              title={`Building information (${idx + 1})`}
-              onEdit={() => {}}
-            />
-          );
-        })} */}
         <DataCard
           id={'Assessed value'}
           values={undefined}
           title={'Assessed value'}
           onEdit={() => {}}
         >
-          <PinnedColumnDataGrid
-            hideFooter
-            getRowId={(row) => row.FiscalYear}
-            pinnedFields={['FiscalYear', 'Land']}
-            columns={assesValCol}
-            rows={assessedValue}
-            scrollableSxProps={{
-              borderStyle: 'none',
-              '& .MuiDataGrid-columnHeaders': {
-                borderBottom: 'none',
-              },
-              '& div div div div >.MuiDataGrid-cell': {
-                borderBottom: 'none',
-                borderTop: '1px solid rgba(224, 224, 224, 1)',
-              },
-            }}
-            pinnedSxProps={{
-              borderStyle: 'none',
-              '& .MuiDataGrid-columnHeaders': {
-                borderBottom: 'none',
-              },
-              '& div div div div >.MuiDataGrid-cell': {
-                borderBottom: 'none',
-              },
-            }}
+          <PropertyAssessedValueTable
+            rows={assessedValues}
+            isBuilding={!!buildingId}
+            parcelRelatedBuildingsNum={relatedBuildings?.length ?? 0}
           />
         </DataCard>
       </Box>

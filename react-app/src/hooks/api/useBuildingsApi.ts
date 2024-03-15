@@ -8,9 +8,11 @@ const buildings1 = [
     },
     AgencyId: 1,
     Agency: { Name: 'Smith & Weston' },
-    PID: '010-113-1344',
+    PID: 111333444,
     IsSensitive: true,
     UpdatedOn: new Date(),
+    Evaluations: [{ Value: 99888, Date: new Date() }],
+    Fiscals: [{ Value: 1235000, FiscalYear: 2024 }],
   },
   {
     Id: 2,
@@ -21,9 +23,11 @@ const buildings1 = [
     },
     AgencyId: 1,
     Agency: { Name: 'Smith & Weston' },
-    PID: null,
+    PID: 676555444,
     IsSensitive: false,
     UpdatedOn: new Date(),
+    Evaluations: [{ Value: 999988, Date: new Date() }],
+    Fiscals: [{ Value: 1235000, FiscalYear: 2024, }],
   },
 ];
 
@@ -36,9 +40,14 @@ const useBuildingsApi = () => {
     return buildings1.find((b) => b.Id === id);
   };
 
+  const getBuildingsByPid = async (pid: number) => {
+    return buildings1.filter((b) => b.PID === pid);
+  };
+
   return {
     getBuildings,
     getBuildingById,
+    getBuildingsByPid,
   };
 };
 
