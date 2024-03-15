@@ -39,16 +39,6 @@ jest.mock('@/services/users/usersServices', () => ({
   normalizeKeycloakUser: () => _normalizeKeycloakUser(),
 }));
 
-const _syncKeycloakRoles = jest.fn();
-const _syncKeycloakUser = jest
-  .fn()
-  .mockImplementation((username: string) => ({ ...produceUser(), Username: username }));
-
-jest.mock('@/services/keycloak/keycloakService.ts', () => ({
-  syncKeycloakRoles: () => _syncKeycloakRoles(),
-  syncKeycloakUser: () => _syncKeycloakUser(),
-}));
-
 describe('UNIT - Testing controllers for users routes.', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
