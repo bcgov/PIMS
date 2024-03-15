@@ -15,15 +15,17 @@ export const useGroupedAgenciesApi = () => {
 
     // Populate groups
     agencyData?.forEach((agency) => {
-      if (agency.ParentId === null) {
-        parentAgencies.push(agency);
-      } else {
-        const parentAgency = agencyData.find((parent) => parent.Id === agency.ParentId);
-        if (parentAgency) {
-          if (!groups[parentAgency.Name]) {
-            groups[parentAgency.Name] = [];
+      if (!agency.IsDisabled) {
+        if (agency.ParentId === null) {
+          parentAgencies.push(agency);
+        } else {
+          const parentAgency = agencyData.find((parent) => parent.Id === agency.ParentId);
+          if (parentAgency) {
+            if (!groups[parentAgency.Name]) {
+              groups[parentAgency.Name] = [];
+            }
+            groups[parentAgency.Name].push(agency);
           }
-          groups[parentAgency.Name].push(agency);
         }
       }
     });
