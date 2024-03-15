@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import Home from '@/pages/Home';
 import React from 'react';
 import '@/App.css';
@@ -13,8 +13,10 @@ import { AccessRequest } from './pages/AccessRequest';
 import UsersManagement from './pages/UsersManagement';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from '@/pages/ErrorFallback';
+import UserDetail from '@/components/users/UserDetail';
 
 const Router = () => {
+  const navigate = useNavigate();
   return (
     <Routes>
       <Route
@@ -52,6 +54,16 @@ const Router = () => {
             <BaseLayout>
               <AuthRouteGuard>
                 <UsersManagement />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
+        <Route
+          path="users/:id"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard>
+                <UserDetail onClose={() => navigate('/admin/users')} />
               </AuthRouteGuard>
             </BaseLayout>
           }
