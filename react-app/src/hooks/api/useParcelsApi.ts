@@ -2,6 +2,7 @@ const parcels = [
   {
     Id: 1,
     PID: 676555444,
+    PIN: 1234,
     ClassificationId: 0,
     Classification: {
       Name: 'Core operational',
@@ -21,6 +22,7 @@ const parcels = [
   {
     Id: 2,
     PID: 678456334,
+    PIN: 1234,
     ClassificationId: 1,
     Classification: {
       Name: 'Core strategic',

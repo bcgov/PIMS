@@ -54,6 +54,8 @@ const PropertyDetail = (props: IPropertyDetail) => {
         const evaluation = { Year: parcelEval.Date.getFullYear(), Land: parcelEval.Value };
         //If exists, iterate over relatedBuildings.
         relatedBuildings?.forEach((building, idx) => {
+          //We need to find evaluations with the matching year of the parcel evaluations.
+          //We can't just sort naively in the same way since we can't guarantee both lists have the same years.
           const buildingEval = building.Evaluations.find(
             (e) => e.Date.getFullYear() === parcelEval.Date.getFullYear(),
           );
@@ -105,7 +107,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
 
   const buildingOrParcel = building ? 'Building' : 'Parcel';
   const mainInformation = useMemo(() => {
-    const data = parcel ?? building;
+    const data: any = parcel ?? building;
     if (!data) {
       return {};
     } else {
