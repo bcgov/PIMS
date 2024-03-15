@@ -7,8 +7,12 @@ const cronSyncKeycloakRoles = () => {
   const cronSchedule = '*/10 * * * *'; // Every 10 minutes
   cron.schedule(cronSchedule, async () => {
     logger.info(`Starting Sync Keycloak Roles routine at ${new Date().toISOString()}.`);
-    await KeycloakService.syncKeycloakRoles();
-    logger.info(`Sync Keycloak Roles routine complete at ${new Date().toISOString()}.`);
+    try {
+      await KeycloakService.syncKeycloakRoles();
+      logger.info(`Sync Keycloak Roles routine complete at ${new Date().toISOString()}.`);
+    } catch (e) {
+      logger.warn(e.message);
+    }
   });
 };
 
