@@ -4,6 +4,7 @@ import app from '@/express';
 import { AppDataSource } from '@/appDataSource';
 import { Application } from 'express';
 import { IncomingMessage, Server, ServerResponse } from 'http';
+import cronSyncKeycloakRoles from '@/utilities/cronJobs/syncKeycloakRoles';
 
 const { API_PORT } = constants;
 
@@ -26,6 +27,9 @@ const startApp = (app: Application) => {
       .catch((err?: Error) => {
         logger.error('Error during data source initialization. With error: ', err);
       });
+
+    // Starting cron jobs
+    cronSyncKeycloakRoles();
   });
 
   return server;
