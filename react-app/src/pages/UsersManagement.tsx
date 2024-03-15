@@ -12,7 +12,13 @@ const UsersManagement = () => {
 
   return (
     <UsersTable
-      rowClickHandler={(params) => navigate(`/admin/users/${params.id}`)}
+      rowClickHandler={(params) => {
+        // Checking length of selection so it only navigates if user isn't trying to select something
+        const selection = window.getSelection().toString();
+        if (!selection.length) {
+          navigate(`/admin/users/${params.id}`);
+        }
+      }}
       data={data}
       refreshData={refreshData}
       isLoading={isLoading}
