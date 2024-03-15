@@ -246,6 +246,7 @@ const PropertyTable = () => {
         excelTitle={'Properties'}
         columns={columns}
         rows={rows}
+        addTooltip="Add a new property"
       />
     </Box>
   );
