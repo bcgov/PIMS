@@ -1,11 +1,11 @@
 import z from 'zod';
 
 export const ParcelFilterSchema = z.object({
-  pid: z.number().nonnegative().optional(),
-  classificationId: z.number().nonnegative().optional(),
-  agencyId: z.number().nonnegative().optional(),
-  administrativeAreaId: z.number().nonnegative().optional(),
-  propertyTypeId: z.number().nonnegative().optional(),
+  pid: z.coerce.number().nonnegative().optional(),
+  classificationId: z.coerce.number().nonnegative().optional(),
+  agencyId: z.coerce.number().nonnegative().optional(),
+  administrativeAreaId: z.coerce.number().nonnegative().optional(),
+  propertyTypeId: z.coerce.number().nonnegative().optional(),
   isSensitive: z.boolean().optional(),
   page: z.coerce.number().optional(),
   quantity: z.coerce.number().optional(),

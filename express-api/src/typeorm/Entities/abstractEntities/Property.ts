@@ -85,6 +85,12 @@ export abstract class Property extends BaseEntity {
   @Column({ type: 'character varying', length: 6, nullable: true })
   Postal: string;
 
+  @Column({ type: 'int', nullable: true })
+  PID: number;
+
+  @Column({ type: 'int', nullable: true })
+  PIN: number;
+
   // Including this for quick geocoder lookup.
   @Column({ type: 'character varying', nullable: true })
   SiteId: string;

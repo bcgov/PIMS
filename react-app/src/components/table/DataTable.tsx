@@ -31,6 +31,7 @@ import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import DownloadIcon from '@mui/icons-material/Download';
 import AddIcon from '@mui/icons-material/Add';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
+import { GridInitialStateCommunity } from '@mui/x-data-grid/models/gridStateCommunity';
 
 type RenderCellParams = GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
 
@@ -157,6 +158,8 @@ type FilterSearchDataGridProps = {
   presetFilterSelectOptions: JSX.Element[];
   tableHeader: string;
   excelTitle: string;
+  addTooltip: string;
+  initialState?: GridInitialStateCommunity;
 } & DataGridProps;
 
 export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
@@ -218,11 +221,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             onChange={updateSearchValue}
             optionalExternalState={[keywordSearchContents, setKeywordSearchContents]}
           />
-          <Tooltip
-            title={
-              'Adding a new user from this table is not supported yet. Please advise users to use the sign-up form.'
-            }
-          >
+          <Tooltip title={props.addTooltip}>
             <span>
               <IconButton disabled>
                 <AddIcon />
@@ -268,9 +267,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         apiRef={tableApiRef}
         initialState={{
           pagination: { paginationModel: { pageSize: 10 } },
-          sorting: {
-            sortModel: [{ field: 'created', sort: 'desc' }],
-          },
+          ...props.initialState,
         }}
         pageSizeOptions={[10, 20, 30, 100]} // DataGrid max is 100
         disableRowSelectionOnClick
