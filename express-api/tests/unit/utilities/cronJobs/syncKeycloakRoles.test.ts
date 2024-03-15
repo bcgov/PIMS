@@ -40,5 +40,5 @@ describe('UNIT - cronSyncKeycloakRoles', () => {
     });
     cronSyncKeycloakRoles();
     expect(_loggerSpy).toHaveBeenCalledTimes(1);
-  })
+  });
 });
