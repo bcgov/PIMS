@@ -151,8 +151,8 @@ const UsersTable = (props: IUsersTable) => {
     },
     {
       field: 'Username',
-      headerName: 'Auth Provider',
-      width: 150,
+      headerName: 'Provider',
+      width: 125,
       valueGetter: (params) => {
         const username: string = params.value;
         if (!username.includes('@')) return undefined;
@@ -226,11 +226,6 @@ const UsersTable = (props: IUsersTable) => {
         initialState={{
           sorting: {
             sortModel: [{ field: 'CreatedOn', sort: 'desc' }],
-          },
-          columns: {
-            columnVisibilityModel: {
-              Username: false,
-            },
           },
         }}
         onPresetFilterChange={selectPresetFilter}
