@@ -4,8 +4,11 @@ import {
   Checkbox,
   FormControlLabel,
   Grid,
+  Icon,
   IconButton,
   InputAdornment,
+  Radio,
+  RadioGroup,
   Tooltip,
   Typography,
 } from '@mui/material';
@@ -18,6 +21,8 @@ import { Add, DeleteOutline, Help } from '@mui/icons-material';
 import DateFormField from '../form/DateFormField';
 import dayjs from 'dayjs';
 import DeleteDialog from '../dialog/DeleteDialog';
+import BuildingIcon from '@/assets/icons/building.svg';
+import ParcelIcon from '@/assets/icons/parcel.svg';
 
 interface IAssessedValue {
   years: number[];
@@ -234,10 +239,17 @@ const NetBookValue = (props: INetBookValue) => {
 };
 
 const AddProperty = () => {
+  type PropetyType = 'Building' | 'Parcel';
   const years = [new Date().getFullYear(), new Date().getFullYear() - 1];
+  const [propertyType, setPropertyType] = useState<PropetyType>('Building');
   const [showErrorText, setShowErrorTest] = useState(false);
   const [selectedDeletionIndex, setSelectedDeletionIndex] = useState<number>(undefined);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+  const handleRadioEvent = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPropertyType(event.target.value as PropetyType);
+  };
+
   const formMethods = useForm({
     defaultValues: {
       Address1: '',
@@ -289,7 +301,75 @@ const AddProperty = () => {
         <Typography mb={'2rem'} variant="h2">
           Add new property
         </Typography>
-        <Typography variant="h5">Address</Typography>
+        <Typography variant="h5">Property type</Typography>
+        <RadioGroup name="controlled-radio-property-type">
+          <Box
+            border={'1px solid rgba(0, 0, 0, 0.23)'}
+            borderRadius={'4px'}
+            padding={'1.2rem'}
+            display={'flex'}
+            alignItems={'center'}
+            flexDirection={'row'}
+            gap={'1.5rem'}
+            onClick={() => setPropertyType('Parcel')}
+            sx={{
+              '&:hover': {
+                cursor: 'pointer',
+              }
+            }}
+          >
+            <Radio
+              checked={propertyType === 'Parcel'}
+              //onChange={handleRadioEvent}
+              value={'Parcel'}
+              sx={{ padding: 0 }}
+            />
+            <Icon>
+              <img height={18} width={18} src={ParcelIcon} />
+            </Icon>
+            <Box>
+              <Typography>Parcel</Typography>
+              <Typography
+                color={'rgba(0, 0, 0, 0.5)'}
+              >{`PID (Parcel Identifier) is required to proceed.`}</Typography>
+            </Box>
+          </Box>
+          <Box
+            border={'1px solid rgba(0, 0, 0, 0.23)'}
+            borderRadius={'4px'}
+            padding={'1.2rem'}
+            display={'flex'}
+            alignItems={'center'}
+            flexDirection={'row'}
+            gap={'1.5rem'}
+            mt={'1rem'}
+            sx={{
+              '&:hover': {
+                cursor: 'pointer',
+              },
+            }}
+            onClick={() => setPropertyType('Building')}
+          >
+            <Radio
+              checked={propertyType === 'Building'}
+              //onChange={handleRadioEvent}
+              value={'Building'}
+              sx={{ padding: 0 }}
+            />
+            <Icon>
+              <img height={18} width={18} src={BuildingIcon} />
+            </Icon>
+            <Box>
+              <Typography>Building</Typography>
+              <Typography
+                color={'rgba(0, 0, 0, 0.5)'}
+              >{`Street address with postal code is required to proceed.`}</Typography>
+            </Box>
+          </Box>
+        </RadioGroup>
+        <Typography mt={'2rem'} variant="h5">
+          Address
+        </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextFormField
