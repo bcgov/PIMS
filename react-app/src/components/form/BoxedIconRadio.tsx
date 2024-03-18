@@ -10,7 +10,7 @@ type BoxedIconRadioProps = {
   subText?: string;
   iconScale?: number;
   boxSx?: SxProps;
-}
+};
 
 const BoxedIconRadio = (props: BoxedIconRadioProps) => {
   const { onClick, checked, value, icon, mainText, subText, iconScale, boxSx } = props;
