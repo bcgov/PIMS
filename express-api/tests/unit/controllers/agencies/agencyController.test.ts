@@ -46,7 +46,6 @@ describe('UNIT - Agencies Admin', () => {
   });
 
   describe('Controller getAgencies', () => {
-    // TODO: enable other tests when controller is complete
     it('should return status 200 and a list of agencies', async () => {
       await controllers.getAgencies(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
@@ -61,7 +60,7 @@ describe('UNIT - Agencies Admin', () => {
     it('should return status 200 and a list of agencies', async () => {
       mockRequest.query = {
         name: 'a',
-        parentId: 'a',
+        parentId: '0',
         id: '1',
       };
       await controllers.getAgencies(mockRequest, mockResponse);
