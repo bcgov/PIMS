@@ -1,36 +1,24 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  Grid,
-  Icon,
-  IconButton,
-  InputAdornment,
-  Radio,
-  RadioGroup,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Grid, InputAdornment, RadioGroup, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import AutocompleteFormField from '../form/AutocompleteFormField';
 import SelectFormField from '../form/SelectFormField';
 import TextFormField from '../form/TextFormField';
-import { Add, DeleteOutline, Help } from '@mui/icons-material';
+import { Help } from '@mui/icons-material';
 import DateFormField from '../form/DateFormField';
 import dayjs from 'dayjs';
-import DeleteDialog from '../dialog/DeleteDialog';
 import BuildingIcon from '@/assets/icons/building.svg';
 import ParcelIcon from '@/assets/icons/parcel.svg';
+import BoxedIconRadio from '../form/BoxedIconRadio';
+
+type PropetyType = 'Building' | 'Parcel';
 
 interface IAssessedValue {
   years: number[];
-  numBuildings: number;
 }
 
 const AssessedValue = (props: IAssessedValue) => {
-  const { years, numBuildings } = props;
+  const { years } = props;
 
   return (
     <>
@@ -50,7 +38,7 @@ const AssessedValue = (props: IAssessedValue) => {
             >
               <TextFormField
                 sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-                name={`AssessedValue.${idx}.Year`}
+                name={`Evaluations.${idx}.Year`}
                 label={'Year'}
                 value={yr}
                 disabled
@@ -60,25 +48,10 @@ const AssessedValue = (props: IAssessedValue) => {
                   startAdornment: <InputAdornment position="start">$</InputAdornment>,
                 }}
                 sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-                name={`AssessedValue.${idx}.LandValue`}
+                name={`Evaluations.${idx}.Value`}
                 numeric
-                label={'Land'}
+                label={'Value'}
               />
-              {[...Array(numBuildings).keys()].map((_b, localidx) => {
-                return (
-                  <TextFormField
-                    InputProps={{
-                      startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                    }}
-                    sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-                    key={`assessedbuilding-${idx}${localidx}`}
-                    name={`BuildingFiscal.${yr}.${localidx}.Value`}
-                    label={`Building ${localidx + 1}`}
-                    numeric
-                    defaultVal=""
-                  />
-                );
-              })}
             </Box>
           );
         })}
@@ -87,79 +60,39 @@ const AssessedValue = (props: IAssessedValue) => {
   );
 };
 
-interface IBuildingInformation {
-  index: number;
-  onDeleteClick: () => void;
-}
-
-const BuildingInformation = (props: IBuildingInformation) => {
-  const formContext = useFormContext();
-  const [addressSame, setAddressSame] = useState(true);
-  const onCheckboxClick = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    if (checked) {
-      formContext.setValue(`Building.${index}.Address1`, undefined);
-    }
-    setAddressSame(checked);
-  };
-
-  const { index } = props;
+const BuildingInformation = () => {
   return (
     <>
-      <Box display={'flex'} mt={'2rem'} flexDirection={'row'} alignItems={'center'}>
-        <Typography variant="h5">{`Building information (${index + 1})`}</Typography>
-        <IconButton onClick={() => props.onDeleteClick()} sx={{ marginLeft: 'auto' }}>
-          <DeleteOutline />
-        </IconButton>
-      </Box>
+      <Typography mt={'2rem'} variant="h5">{`Building information`}</Typography>
 
       <Grid container spacing={2}>
         <Grid item xs={12} paddingTop={'1rem'}>
           <AutocompleteFormField
-            name={`Building.${index}.ClassificationId`}
+            name={`ClassificationId`}
             label={'Building classification'}
             options={[{ label: 'Placeholder', value: 'Placeholder' }]}
           />
         </Grid>
         <Grid item xs={12}>
-          <TextFormField
-            required
-            fullWidth
-            label={'Building name'}
-            name={`Building.${index}.Name`}
-          />
+          <TextFormField required fullWidth label={'Building name'} name={`Name`} />
         </Grid>
-        <Grid item xs={12}>
-          <FormControlLabel
-            control={<Checkbox checked={addressSame} onChange={onCheckboxClick} />}
-            label="Building address is the same as parcel"
-          />
-        </Grid>
-        {!addressSame && (
-          <Grid item xs={12}>
-            <TextFormField
-              fullWidth
-              label={'Building address'}
-              name={`Building.${index}.Address1`}
-            />
-          </Grid>
-        )}
         <Grid item xs={6}>
           <AutocompleteFormField
             label={'Main usage'}
-            name={`Building.${index}.BuildingPredominateUse`}
+            name={`BuildingPredominateUse`}
             options={[{ label: 'Placeholder', value: 'Placeholder' }]}
           />
         </Grid>
         <Grid item xs={6}>
           <AutocompleteFormField
             label={'Construction type'}
-            name={`Building.${index}.BuildingConstructionType`}
+            name={`BuildingConstructionType`}
             options={[{ label: 'Placeholder', value: 'Placeholder' }]}
           />
         </Grid>
         <Grid item xs={6}>
           <TextFormField
-            name={`Building.${index}.TotalArea`}
+            name={`TotalArea`}
             label={'Total area'}
             fullWidth
             numeric
@@ -168,11 +101,11 @@ const BuildingInformation = (props: IBuildingInformation) => {
         </Grid>
         <Grid item xs={6}>
           <TextFormField
-            name={`Building.${index}.RentableArea`}
+            name={`RentableArea`}
             rules={{
               validate: (val, formVals) =>
-                val <= formVals.Building?.[index]?.TotalArea ||
-                `Cannot be larger than Total area: ${val} <= ${formVals.Building?.[index]?.TotalArea}`,
+                val <= formVals.TotalArea ||
+                `Cannot be larger than Total area: ${val} <= ${formVals?.TotalArea}`,
             }}
             label={'Net usable area'}
             fullWidth
@@ -182,7 +115,7 @@ const BuildingInformation = (props: IBuildingInformation) => {
         </Grid>
         <Grid item xs={6}>
           <TextFormField
-            name={`Building.${index}.BuildingTenancy`}
+            name={`BuildingTenancy`}
             label={'Tenancy'}
             numeric
             fullWidth
@@ -190,10 +123,60 @@ const BuildingInformation = (props: IBuildingInformation) => {
           />
         </Grid>
         <Grid item xs={6}>
-          <DateFormField
-            name={`Building.${index}.BuildingTenancyUpdatedOn`}
-            label={'Tenancy date'}
+          <DateFormField name={`BuildingTenancyUpdatedOn`} label={'Tenancy date'} />
+        </Grid>
+      </Grid>
+    </>
+  );
+};
+
+const ParcelInformation = () => {
+  return (
+    <>
+      <Typography mt={'2rem'} variant="h5">
+        Parcel information
+      </Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <AutocompleteFormField
+            name={'ClassificationId'}
+            label={'Parcel classification'}
+            options={[{ label: 'Placeholder', value: 'Placeholder' }]}
           />
+        </Grid>
+        <Grid item xs={6}>
+          <TextFormField
+            fullWidth
+            label={'Lot size'}
+            name={'LandArea'}
+            InputProps={{
+              endAdornment: <InputAdornment position="end">Hectacres</InputAdornment>,
+            }}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <SelectFormField
+            label={
+              <Box display={'inline-flex'} alignItems={'center'}>
+                Sensitive information{' '}
+                <Tooltip title="Some blurb about sensitive information will go here I don't know what it should say.">
+                  <Help sx={{ ml: '4px' }} fontSize="small" />
+                </Tooltip>
+              </Box>
+            }
+            name={'IsSensitive'}
+            options={[
+              { label: 'Yes', value: true },
+              { label: 'No (Non-confidential)', value: false },
+            ]}
+            required={false}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextFormField label={'Description'} name={'Description'} fullWidth />
+        </Grid>
+        <Grid item xs={12}>
+          <TextFormField label={'Legal description'} name={'LandLegalDescription'} fullWidth />
         </Grid>
       </Grid>
     </>
@@ -214,16 +197,16 @@ const NetBookValue = (props: INetBookValue) => {
               <TextFormField
                 value={yr}
                 disabled
-                name={`NetBookValue.${idx}.Year`}
+                name={`Fiscals.${idx}.Year`}
                 label={'Fiscal year'}
               />
             </Grid>
             <Grid item xs={4}>
-              <DateFormField name={`NetBookValue.${idx}.EffectiveDate`} label={'Effective date'} />
+              <DateFormField name={`Fiscals.${idx}.EffectiveDate`} label={'Effective date'} />
             </Grid>
             <Grid item xs={4}>
               <TextFormField
-                name={`NetBookValue.${idx}.Value`}
+                name={`Fiscals.${idx}.Value`}
                 label={'Net book value'}
                 numeric
                 InputProps={{
@@ -239,19 +222,13 @@ const NetBookValue = (props: INetBookValue) => {
 };
 
 const AddProperty = () => {
-  type PropetyType = 'Building' | 'Parcel';
   const years = [new Date().getFullYear(), new Date().getFullYear() - 1];
   const [propertyType, setPropertyType] = useState<PropetyType>('Building');
   const [showErrorText, setShowErrorTest] = useState(false);
-  const [selectedDeletionIndex, setSelectedDeletionIndex] = useState<number>(undefined);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-
-  const handleRadioEvent = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPropertyType(event.target.value as PropetyType);
-  };
 
   const formMethods = useForm({
     defaultValues: {
+      NotOwned: true,
       Address1: '',
       PIN: '',
       PID: '',
@@ -259,32 +236,27 @@ const AddProperty = () => {
       AdministrativeArea: '',
       Latitude: '',
       Longitude: '',
-      Toggle: '',
       LandArea: '',
       IsSensitive: '',
-      Building: [],
-      AssessedValue: years.map((yr) => ({
+      ClassificationId: '',
+      Description: '',
+      Name: '',
+      BuildingPredominateUse: '',
+      BuildingConstructionType: '',
+      TotalArea: '',
+      RentableArea: '',
+      BuildingTenancy: '',
+      BuildingTenancyUpdatedOn: dayjs(),
+      Fiscals: years.map((yr) => ({
         Year: yr,
-        LandValue: '',
+        Value: '',
       })),
-      BuildingFiscal: years.reduce(
-        (acc, curr) => ({
-          ...acc,
-          [curr]: [],
-        }),
-        {},
-      ),
-      NetBookValue: years.map((yr) => ({
+      Evaluations: years.map((yr) => ({
         Year: yr,
         EffectiveDate: dayjs(),
         Value: '',
       })),
     },
-  });
-
-  const { fields, append, remove } = useFieldArray({
-    name: 'Building',
-    control: formMethods.control,
   });
 
   return (
@@ -303,69 +275,23 @@ const AddProperty = () => {
         </Typography>
         <Typography variant="h5">Property type</Typography>
         <RadioGroup name="controlled-radio-property-type">
-          <Box
-            border={'1px solid rgba(0, 0, 0, 0.23)'}
-            borderRadius={'4px'}
-            padding={'1.2rem'}
-            display={'flex'}
-            alignItems={'center'}
-            flexDirection={'row'}
-            gap={'1.5rem'}
+          <BoxedIconRadio
             onClick={() => setPropertyType('Parcel')}
-            sx={{
-              '&:hover': {
-                cursor: 'pointer',
-              }
-            }}
-          >
-            <Radio
-              checked={propertyType === 'Parcel'}
-              //onChange={handleRadioEvent}
-              value={'Parcel'}
-              sx={{ padding: 0 }}
-            />
-            <Icon>
-              <img height={18} width={18} src={ParcelIcon} />
-            </Icon>
-            <Box>
-              <Typography>Parcel</Typography>
-              <Typography
-                color={'rgba(0, 0, 0, 0.5)'}
-              >{`PID (Parcel Identifier) is required to proceed.`}</Typography>
-            </Box>
-          </Box>
-          <Box
-            border={'1px solid rgba(0, 0, 0, 0.23)'}
-            borderRadius={'4px'}
-            padding={'1.2rem'}
-            display={'flex'}
-            alignItems={'center'}
-            flexDirection={'row'}
-            gap={'1.5rem'}
-            mt={'1rem'}
-            sx={{
-              '&:hover': {
-                cursor: 'pointer',
-              },
-            }}
+            checked={propertyType === 'Parcel'}
+            value={'Parcel'}
+            icon={ParcelIcon}
+            mainText={'Parcel'}
+            subText={`PID (Parcel Identifier) is required to proceed.`}
+          />
+          <BoxedIconRadio
             onClick={() => setPropertyType('Building')}
-          >
-            <Radio
-              checked={propertyType === 'Building'}
-              //onChange={handleRadioEvent}
-              value={'Building'}
-              sx={{ padding: 0 }}
-            />
-            <Icon>
-              <img height={18} width={18} src={BuildingIcon} />
-            </Icon>
-            <Box>
-              <Typography>Building</Typography>
-              <Typography
-                color={'rgba(0, 0, 0, 0.5)'}
-              >{`Street address with postal code is required to proceed.`}</Typography>
-            </Box>
-          </Box>
+            checked={propertyType === 'Building'}
+            value={'Building'}
+            icon={BuildingIcon}
+            mainText={'Building'}
+            subText={`Street address with postal code is required to proceed.`}
+            boxSx={{ mt: '1rem' }}
+          />
         </RadioGroup>
         <Typography mt={'2rem'} variant="h5">
           Address
@@ -374,8 +300,9 @@ const AddProperty = () => {
           <Grid item xs={12}>
             <TextFormField
               fullWidth
+              required={propertyType === 'Building'}
               name={'Address1'}
-              label={'Street address (Leave blank if no address)'}
+              label={`Street address${propertyType === 'Parcel' ? ' (Leave blank if no address)' : ''}`}
             />
           </Grid>
           <Grid item xs={6}>
@@ -384,7 +311,7 @@ const AddProperty = () => {
               name={'PID'}
               label={'PID'}
               numeric
-              required
+              required={propertyType === 'Parcel'}
               rules={{ validate: (val) => String(val).length <= 9 || 'PIN is too long.' }}
             />
           </Grid>
@@ -399,7 +326,13 @@ const AddProperty = () => {
             />
           </Grid>
           <Grid item xs={6}>
-            <TextFormField fullWidth name={'PostalCode'} label={'Postal code'} />
+            <TextFormField
+              fullWidth
+              name={'PostalCode'}
+              label={'Postal code'}
+              required
+              rules={{ validate: (val) => val?.length == 6 || 'Should be exactly 6 characters.' }}
+            />
           </Grid>
           <Grid item xs={6}>
             <TextFormField
@@ -420,99 +353,29 @@ const AddProperty = () => {
             />
           </Grid>
         </Grid>
-        <Typography mt={'2rem'} variant="h5">
-          Does your agency own the parcel?
-        </Typography>
-        <SelectFormField
-          name={'Toggle'}
-          label={'Parcel'}
-          options={[
-            { label: 'Yes', value: true },
-            { label: 'No (Only Buildings)', value: false },
-          ]}
-          required={false}
-        />
-        <Typography mt={'2rem'} variant="h5">
-          Parcel information
-        </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <AutocompleteFormField
-              name={'ClassificationId'}
-              label={'Parcel classification'}
-              options={[{ label: 'Placeholder', value: 'Placeholder' }]}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextFormField
-              fullWidth
-              label={'Lot size'}
-              name={'LandArea'}
-              InputProps={{
-                endAdornment: <InputAdornment position="end">Hectacres</InputAdornment>,
-              }}
-            />
-          </Grid>
-          <Grid item xs={6}>
+
+        {propertyType === 'Parcel' && (
+          <>
+            <Typography mt={'2rem'} variant="h5">
+              Does your agency own the parcel?
+            </Typography>
             <SelectFormField
-              label={
-                <Box display={'inline-flex'} alignItems={'center'}>
-                  Sensitive information{' '}
-                  <Tooltip title="Some blurb about sensitive information will go here I don't know what it should say.">
-                    <Help sx={{ ml: '4px' }} fontSize="small" />
-                  </Tooltip>
-                </Box>
-              }
-              name={'IsSensitive'}
+              name={'NotOwned'}
+              label={'Owned'}
               options={[
-                { label: 'Yes', value: true },
-                { label: 'No (Non-confidential)', value: false },
+                { label: 'Yes', value: false },
+                { label: 'No', value: true },
               ]}
-              required={false}
+              required={true}
             />
-          </Grid>
-          <Grid item xs={12}>
-            <TextFormField label={'Description'} name={'Description'} fullWidth />
-          </Grid>
-          <Grid item xs={12}>
-            <TextFormField label={'Legal description'} name={'LandLegalDescription'} fullWidth />
-          </Grid>
-        </Grid>
+          </>
+        )}
+        {propertyType === 'Parcel' ? <ParcelInformation /> : <BuildingInformation />}
         <Typography mt={'2rem'} variant="h5">
           Net book value
         </Typography>
         <NetBookValue years={years} />
-        {fields.map((_a, idx) => (
-          <BuildingInformation
-            key={`buildinginfo-${idx}`}
-            index={idx}
-            onDeleteClick={() => {
-              setOpenDeleteDialog(true);
-              setSelectedDeletionIndex(idx);
-            }}
-          />
-        ))}
-        <Button
-          startIcon={<Add />}
-          onClick={() => {
-            append({
-              ClassificationId: '',
-              Name: '',
-              Address1: '',
-              BuildingPredominateUse: '',
-              BuildingConstructionType: '',
-              TotalArea: '',
-              RentableArea: '',
-              BuildingTenancy: '',
-              BuildingTenancyUpdatedOn: dayjs(),
-            });
-          }}
-          variant="contained"
-          sx={{ padding: '8px', width: '9rem', marginX: 'auto', backgroundColor: 'grey' }}
-        >
-          Add Building
-        </Button>
-        <AssessedValue years={years} numBuildings={fields.length} />
+        <AssessedValue years={years} />
       </FormProvider>
       {showErrorText && (
         <Typography alignSelf={'center'} variant="h5" color={'error'}>
@@ -536,18 +399,6 @@ const AddProperty = () => {
       >
         Submit
       </Button>
-      <DeleteDialog
-        open={openDeleteDialog}
-        title={'Delete building'}
-        message={
-          'Once you delete the selected building section, all the entered data will be removed as well.'
-        }
-        onDelete={async () => {
-          remove(selectedDeletionIndex);
-          setOpenDeleteDialog(false);
-        }}
-        onClose={async () => setOpenDeleteDialog(false)}
-      />
     </Box>
   );
 };
