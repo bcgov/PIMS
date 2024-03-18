@@ -1,4 +1,5 @@
 import { ILTSAOrderModel } from 'actions/parcelsActions';
+import { BCADialog, IBCAData } from 'components/bcAssessment/BCADialog';
 import { LTSADialog } from 'components/ltsa/LTSADialog';
 import { useApi } from 'hooks/useApi';
 import { LatLng, LatLngBounds } from 'leaflet';
@@ -70,6 +71,7 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({ data, config, 
 
   // Get LTSA information
   const [ltsaInfoOpen, setLtsaInfoOpen] = React.useState<boolean>(false);
+  const [bcaInfoOpen, setBcaInfoOpen] = React.useState<boolean>(false);
   const [ltsa, setLtsa] = useState<ILTSAOrderModel | undefined>(undefined);
   const api = useApi();
 
@@ -121,6 +123,23 @@ export const LayerPopupContent: React.FC<IPopupContentProps> = ({ data, config, 
           </StyledLink>
           <LTSADialog pid={data.PID} {...{ ltsa, ltsaInfoOpen, setLtsaInfoOpen }} />
         </Col>
+        {data.FOLIO_ID && (
+          <Col>
+            <StyledLink
+              to={{ ...location }}
+              onClick={() => {
+                setBcaInfoOpen(true);
+              }}
+            >
+              BCA Info
+            </StyledLink>
+            <BCADialog
+              bcaData={data as unknown as IBCAData}
+              bcaInfoOpen={bcaInfoOpen}
+              setBcaInfoOpen={setBcaInfoOpen}
+            />
+          </Col>
+        )}
       </MenuRow>
     </>
   );
