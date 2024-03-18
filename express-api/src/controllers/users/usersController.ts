@@ -1,7 +1,6 @@
 import userServices from '@/services/users/usersServices';
 import { Request, Response } from 'express';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
-import KeycloakService from '@/services/keycloak/keycloakService';
 import { decodeJWT } from '@/utilities/decodeJWT';
 /**
  * @description Redirects user to the keycloak user info endpoint.
@@ -165,12 +164,10 @@ export const getUserAgencies = async (req: Request, res: Response) => {
 
 export const getSelf = async (req: Request, res: Response) => {
   try {
-    await KeycloakService.syncKeycloakRoles();
     const user = userServices.normalizeKeycloakUser(req.user as KeycloakUser);
     const result = await userServices.getUser(user.username);
     if (result) {
-      const syncedUser = await KeycloakService.syncKeycloakUser(user.username);
-      return res.status(200).send(syncedUser);
+      return res.status(200).send(result);
     } else {
       return res.status(204).send(); //Valid request, but no user for this keycloak login.
     }
