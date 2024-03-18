@@ -114,11 +114,6 @@ objects:
                   value: /api
                 - name: RealIpFrom
                   value: 172.51.0.0/16
-                - name: VITE_BCA_LAYER_URL
-                  valueFrom:
-                    configMapKeyRef: 
-                      name: pims-app-env
-                      key: BCA_LAYER_URL
               ports:
                 - containerPort: 8080
                   protocol: TCP
