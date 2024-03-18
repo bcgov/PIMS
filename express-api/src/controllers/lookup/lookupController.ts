@@ -1,5 +1,12 @@
+import { AppDataSource } from '@/appDataSource';
+import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
 import { stubResponse } from '@/utilities/stubResponse';
 import { Request, Response } from 'express';
+import {
+  ClassificationPublicResponseSchema,
+  PredominateUsePublicResponseSchema,
+} from './lookupSchema';
+import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUse';
 
 // TODO: What controllers here could just be replaced by existing GET requests?
 
@@ -56,8 +63,25 @@ export const lookupPropertyClassifications = async (req: Request, res: Response)
       }]
    */
 
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  const classifications = await AppDataSource.getRepository(PropertyClassification).find();
+  const filtered = classifications.filter((c) => !c.IsDisabled);
+  const parsed = ClassificationPublicResponseSchema.array().safeParse(filtered);
+  if (parsed.success) {
+    return res.status(200).send(parsed.data);
+  } else {
+    return res.status(400).send('Something went wrong.');
+  }
+};
+
+export const lookupBuildingPredominateUse = async (req: Request, res: Response) => {
+  const uses = await AppDataSource.getRepository(BuildingPredominateUse).find();
+  const filtered = uses.filter((u) => !u.IsDisabled);
+  const parsed = PredominateUsePublicResponseSchema.array().safeParse(filtered);
+  if (parsed.success) {
+    return res.status(200).send(parsed.data);
+  } else {
+    return res.status(400).send('Something went wrong.');
+  }
 };
 
 /**
