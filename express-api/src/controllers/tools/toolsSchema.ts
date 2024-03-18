@@ -91,3 +91,12 @@ const PropertySchema = z.object({
 export const ImportPropertyRequestSchema = z.array(PropertySchema);
 
 export type ImportPropertyRequest = z.infer<typeof ImportPropertyRequestSchema>;
+
+export const ChesFilterSchema = z.object({
+  txId: z.string().uuid().optional(),
+  msgId: z.string().uuid().optional(),
+  status: z.string().optional(),
+  tag: z.string().optional(),
+});
+
+export type ChesFilter = z.infer<typeof ChesFilterSchema>;

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AccessRequest } from '@/typeorm/Entities/AccessRequest';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { User, UserStatus } from '@/typeorm/Entities/User';
 import { faker } from '@faker-js/faker';
@@ -8,6 +7,7 @@ import { Request, Response } from 'express';
 import { Role as RolesEntity } from '@/typeorm/Entities/Role';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { Parcel } from '@/typeorm/Entities/Parcel';
+import { EmailBody, IChesStatusResponse, IEmail } from '@/services/ches/chesServices';
 
 export class MockRes {
   statusValue: any;
@@ -109,30 +109,6 @@ export const produceUser = (): User => {
   };
 };
 
-export const produceRequest = (): AccessRequest => {
-  const agency = produceAgency();
-  const role = produceRole();
-  const user = produceUser();
-  const request: AccessRequest = {
-    Id: faker.number.int(),
-    UserId: user.Id,
-    User: user,
-    Note: 'test',
-    Status: 0,
-    RoleId: role.Id,
-    Role: role,
-    Agency: agency,
-    AgencyId: agency.Id,
-    CreatedById: undefined,
-    CreatedBy: undefined,
-    CreatedOn: faker.date.anytime(),
-    UpdatedById: undefined,
-    UpdatedBy: undefined,
-    UpdatedOn: faker.date.anytime(),
-  };
-  return request;
-};
-
 export const produceAgency = (code?: string): Agency => {
   const agency: Agency = {
     Id: faker.number.int({ max: 10 }),
@@ -228,5 +204,30 @@ export const produceParcel = (): Parcel => {
     CreatedBy: undefined,
     UpdatedById: undefined,
     UpdatedBy: undefined,
+    Fiscals: [],
+    Evaluations: [],
   };
+};
+
+export const produceEmailStatus = (props: Partial<IChesStatusResponse>): IChesStatusResponse => {
+  const email: IChesStatusResponse = {
+    status: props.status ?? 'completed',
+    tag: props.tag ?? undefined,
+    txId: props.txId ?? faker.string.uuid(),
+    updatedTS: new Date().getTime(),
+    createdTS: new Date().getTime(),
+  };
+  return email;
+};
+
+export const produceEmail = (props: Partial<IEmail>): IEmail => {
+  const email: IEmail = {
+    from: props.from ?? faker.internet.email(),
+    to: props.to ?? [faker.internet.email()],
+    bodyType: props.bodyType ?? ('text' as EmailBody.Text), //I love that Jest makes you do this!!
+    subject: props.subject ?? faker.lorem.sentence(),
+    body: props.body ?? faker.lorem.paragraph(),
+    ...props,
+  };
+  return email;
 };

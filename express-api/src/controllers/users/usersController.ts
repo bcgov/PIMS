@@ -1,7 +1,7 @@
 import userServices from '@/services/users/usersServices';
 import { Request, Response } from 'express';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
-import KeycloakService from '@/services/keycloak/keycloakService';
+import { decodeJWT } from '@/utilities/decodeJWT';
 /**
  * @description Redirects user to the keycloak user info endpoint.
  * @param {Request}     req Incoming request.
@@ -16,13 +16,6 @@ export const getUserInfo = async (req: Request, res: Response) => {
       "bearerAuth" : []
       }]
    */
-  const decodeJWT = (jwt: string) => {
-    try {
-      return JSON.parse(Buffer.from(jwt, 'base64').toString('ascii'));
-    } catch {
-      throw new Error('Invalid input in decodeJWT()');
-    }
-  };
 
   if (!req.token) return res.status(400).send('No access token');
   const [header, payload] = req.token.split('.');
@@ -171,12 +164,10 @@ export const getUserAgencies = async (req: Request, res: Response) => {
 
 export const getSelf = async (req: Request, res: Response) => {
   try {
-    await KeycloakService.syncKeycloakRoles();
     const user = userServices.normalizeKeycloakUser(req.user as KeycloakUser);
     const result = await userServices.getUser(user.username);
     if (result) {
-      const syncedUser = await KeycloakService.syncKeycloakUser(user.username);
-      return res.status(200).send(syncedUser);
+      return res.status(200).send(result);
     } else {
       return res.status(204).send(); //Valid request, but no user for this keycloak login.
     }

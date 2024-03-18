@@ -28,7 +28,7 @@ This account's password needs to be updated every 90 days. That can be done usin
 2. Take note of the new password and update in the confluence doc: https://citz-imb.atlassian.net/l/cp/p86LrnB8
     - If you dont have access to this page please request access from the IMB Full Stack Developer Chapter Lead. 
 
-To keep up with password changes or other necessary communications to the service account it is reccomended that one team member add the email to their outlook. The email can also be accessed through summer.gov.bc.ca
+To keep up with password changes or other necessary communications to the service account it is reccomended that one team member add the email to their outlook. The email can also be accessed through [Office Online](https://www.microsoft365.com/?auth=2)
 
 ### Jira API key 
 

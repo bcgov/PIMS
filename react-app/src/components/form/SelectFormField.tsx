@@ -5,6 +5,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 export interface ISelectMenuItem {
   label: string;
   value: any;
+  parent?: boolean;
 }
 
 interface ISelectInputProps {

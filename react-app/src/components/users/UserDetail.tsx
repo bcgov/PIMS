@@ -15,13 +15,15 @@ import { Agency } from '@/hooks/api/useAgencyApi';
 import { Role } from '@/hooks/api/useRolesApi';
 import TextFormField from '../form/TextFormField';
 import DetailViewNavigation from '../display/DetailViewNavigation';
+import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
+import { useParams } from 'react-router-dom';
 
 interface IUserDetail {
-  userId: string;
   onClose: () => void;
 }
 
-const UserDetail = ({ userId, onClose }: IUserDetail) => {
+const UserDetail = ({ onClose }: IUserDetail) => {
+  const { id } = useParams();
   const { pimsUser } = useContext(AuthContext);
   const api = usePimsApi();
 
@@ -29,17 +31,12 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
 
-  const { data, refreshData } = useDataLoader(() => api.users.getUserById(userId));
-  const { data: agencyData, loadOnce: loadAgency } = useDataLoader(api.agencies.getAgencies);
-  loadAgency();
+  const { data, refreshData } = useDataLoader(() => api.users.getUserById(id));
 
   const { data: rolesData, loadOnce: loadRoles } = useDataLoader(api.roles.getInternalRoles);
   loadRoles();
 
-  const agencyOptions = useMemo(
-    () => agencyData?.map((agency) => ({ label: agency.Name, value: agency.Id })) ?? [],
-    [agencyData],
-  );
+  const agencyOptions = useGroupedAgenciesApi().agencyOptions;
 
   const rolesOptions = useMemo(
     () => rolesData?.map((role) => ({ label: role.Name, value: role.Name })) ?? [],
@@ -97,7 +94,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
 
   useEffect(() => {
     refreshData();
-  }, [userId]);
+  }, [id]);
 
   useEffect(() => {
     profileFormMethods.reset({
@@ -128,7 +125,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
         deleteTitle={'Delete Account'}
         onDeleteClick={() => setOpenDeleteDialog(true)}
         onBackClick={() => onClose()}
-        deleteButtonProps={{ disabled: pimsUser.data.Id === userId }}
+        deleteButtonProps={{ disabled: pimsUser.data?.Id === id }}
       />
       <DataCard
         customFormatter={customFormatterStatus}
@@ -148,7 +145,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
         message={deleteAccountConfirmText}
         deleteText="Delete Account"
         onDelete={async () => {
-          api.users.deleteUser(userId).then(() => {
+          api.users.deleteUser(id).then(() => {
             setOpenDeleteDialog(false);
             onClose();
           });
@@ -162,7 +159,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
           const isValid = await profileFormMethods.trigger();
           if (isValid) {
             api.users
-              .updateUser(userId, { Id: userId, ...profileFormMethods.getValues() })
+              .updateUser(id, { Id: id, ...profileFormMethods.getValues() })
               .then(() => refreshData());
             setOpenProfileDialog(false);
           }
@@ -184,7 +181,12 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
               <TextFormField required fullWidth name={'LastName'} label={'Last Name'} />
             </Grid>
             <Grid item xs={12}>
-              <AutocompleteFormField name={'AgencyId'} label={'Agency'} options={agencyOptions} />
+              <AutocompleteFormField
+                allowNestedIndent
+                name={'AgencyId'}
+                label={'Agency'}
+                options={agencyOptions}
+              />
             </Grid>
             <Grid item xs={12}>
               <TextFormField name={'Position'} fullWidth label={'Position'} />
@@ -200,8 +202,8 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
           if (isValid) {
             await api.users.updateUserRole(data.Username, statusFormMethods.getValues().Role);
             api.users
-              .updateUser(userId, {
-                Id: userId,
+              .updateUser(id, {
+                Id: id,
                 Status: statusFormMethods.getValues().Status,
               })
               .then(() => refreshData());
