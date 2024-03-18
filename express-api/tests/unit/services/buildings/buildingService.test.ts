@@ -23,6 +23,8 @@ const _buildingUpdate = jest
   .spyOn(buildingRepo, 'update')
   .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
 
+jest.spyOn(buildingRepo, 'find').mockImplementation(async () => [produceBuilding()]);
+
 describe('UNIT - Building Services', () => {
   describe('addBuilding', () => {
     beforeEach(() => jest.clearAllMocks());
@@ -48,12 +50,19 @@ describe('deleteBuildingById', () => {
     await buildingService.deleteBuildingById(buildingToDelete.Id);
     expect(_buildingDelete).toHaveBeenCalledTimes(1);
   });
+  it('should throw an error if the building does not exist', () => {
+    const buildingToDelete = produceBuilding();
+    _buildingFindOne.mockResolvedValueOnce(null);
+    expect(
+      async () => await buildingService.deleteBuildingById(buildingToDelete.Id),
+    ).rejects.toThrow();
+  });
 });
 describe('getBuildings', () => {
   beforeEach(() => jest.clearAllMocks());
   it('should return a list of buildings', async () => {
-    const buildings = await buildingService.getBuildings({});
-    expect(buildings).toHaveLength(1);
+    const building = await buildingService.getBuildings({});
+    expect(building).toHaveLength(1);
   });
 });
 
