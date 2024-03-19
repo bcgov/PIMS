@@ -87,10 +87,15 @@ const appTheme = createTheme({
     },
   },
   components: {
-    MuiTextField: {
+    MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          color: 'secondary',
+          '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
+            display: 'none',
+          },
+          '& input[type=number]': {
+            MozAppearance: 'textfield',
+          },
         },
       },
     },

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import * as agencyService from '@/services/agencies/agencyServices';
 import { AgencyFilterSchema, AgencyPublicResponseSchema } from '@/services/agencies/agencySchema';
 import { z } from 'zod';
@@ -11,7 +11,7 @@ import { Roles } from '@/constants/roles';
  * @param   {Response}    res Outgoing response
  * @returns {Response}        A 200 status with a list of agencies.
  */
-export const getAgencies = async (req: Request, res: Response) => {
+export const getAgencies = async (req: Request, res: Response, next: NextFunction) => {
   /**
    * #swagger.tags = ['Agencies - Admin']
    * #swagger.description = 'Gets a paged list of agencies.'
@@ -19,17 +19,21 @@ export const getAgencies = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  const kcUser = req.user as KeycloakUser;
-  const filter = AgencyFilterSchema.safeParse(req.query);
-  if (filter.success) {
-    const agencies = await agencyService.getAgencies(filter.data);
-    if (!kcUser.client_roles || !kcUser.client_roles.includes(Roles.ADMIN)) {
-      const trimmed = AgencyPublicResponseSchema.array().parse(agencies);
-      return res.status(200).send(trimmed);
+  try {
+    const kcUser = req.user as KeycloakUser;
+    const filter = AgencyFilterSchema.safeParse(req.query);
+    if (filter.success) {
+      const agencies = await agencyService.getAgencies(filter.data);
+      if (!kcUser.client_roles || !kcUser.client_roles.includes(Roles.ADMIN)) {
+        const trimmed = AgencyPublicResponseSchema.array().parse(agencies);
+        return res.status(200).send(trimmed);
+      }
+      return res.status(200).send(agencies);
+    } else {
+      return res.status(400).send('Could not parse filter.');
     }
-    return res.status(200).send(agencies);
-  } else {
-    return res.status(400).send('Could not parse filter.');
+  } catch (e) {
+    next(e);
   }
 };
 
