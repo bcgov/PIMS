@@ -29,7 +29,7 @@ const buildings1 = [
     IsSensitive: false,
     UpdatedOn: new Date(),
     Evaluations: [{ Value: 999988, Date: new Date() }],
-    Fiscals: [{ Value: 1235000, FiscalYear: 2024, }],
+    Fiscals: [{ Value: 1235000, FiscalYear: 2024 }],
   },
 ];
 

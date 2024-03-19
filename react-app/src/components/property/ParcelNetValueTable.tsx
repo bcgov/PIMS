@@ -22,7 +22,7 @@ const ParcelNetValueTable = (props: IParcelNetValueTable) => {
       field: 'Value',
       headerName: 'Net Book Value',
       flex: 1,
-      valueFormatter: (params) => formatMoney(params.value)
+      valueFormatter: (params) => formatMoney(params.value),
     },
   ];
 
