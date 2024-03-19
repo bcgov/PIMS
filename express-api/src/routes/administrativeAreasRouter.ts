@@ -5,7 +5,7 @@ import {
   getAdministrativeAreaById,
   updateAdministrativeAreaById,
   deleteAdministrativeAreaById,
-} from '@/controllers/admin/administrativeAreas/administrativeAreasController';
+} from '@/controllers/administrativeAreas/administrativeAreasController';
 import { protectedRoute } from '@bcgov/citz-imb-kc-express';
 import express from 'express';
 

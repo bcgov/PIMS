@@ -1,7 +1,10 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { stubResponse } from '@/utilities/stubResponse';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
-import { AdministrativeAreaFilterSchema, AdministrativeAreaPublicResponseSchema } from '@/services/administrativeAreas/administrativeAreaSchema';
+import {
+  AdministrativeAreaFilterSchema,
+  AdministrativeAreaPublicResponseSchema,
+} from '@/services/administrativeAreas/administrativeAreaSchema';
 import administrativeAreasServices from '@/services/administrativeAreas/administrativeAreasServices';
 import { Roles } from '@/constants/roles';
 
@@ -11,7 +14,7 @@ import { Roles } from '@/constants/roles';
  * @param   {Response}    res Outgoing response
  * @returns {Response}        A 200 status with a list of administrative areas.
  */
-export const getAdministrativeAreas = async (req: Request, res: Response) => {
+export const getAdministrativeAreas = async (req: Request, res: Response, next: NextFunction) => {
   /**
    * #swagger.tags = ['Administrative Areas - Admin']
    * #swagger.description = 'Returns a paged list of administrative areas from the datasource.'
@@ -19,18 +22,21 @@ export const getAdministrativeAreas = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  const kcUser = req.user as KeycloakUser;
-  const filter = AdministrativeAreaFilterSchema.safeParse(req.query);
-  if (filter.success) {
-    const adminAreas = await administrativeAreasServices.getAdministrativeAreas(filter.data);
-    if (!kcUser.client_roles || !kcUser.client_roles.includes(Roles.ADMIN)) {
-      const trimmed = AdministrativeAreaPublicResponseSchema.array().parse(adminAreas);
-      return res.status(200).send(trimmed);
+  try {
+    const kcUser = req.user as KeycloakUser;
+    const filter = AdministrativeAreaFilterSchema.safeParse(req.query);
+    if (filter.success) {
+      const adminAreas = await administrativeAreasServices.getAdministrativeAreas(filter.data);
+      if (!kcUser.client_roles || !kcUser.client_roles.includes(Roles.ADMIN)) {
+        const trimmed = AdministrativeAreaPublicResponseSchema.array().parse(adminAreas);
+        return res.status(200).send(trimmed);
+      }
+      return res.status(200).send(adminAreas);
+    } else {
+      return res.status(400).send('Could not parse filter.');
     }
-    return res.status(200).send(adminAreas);
-  } else {
-    return res.status(400).send('Could not parse filter.');
+  } catch (e) {
+    next(e);
   }
 };
 

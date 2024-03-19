@@ -1,8 +1,13 @@
 import { Request, Response } from 'express';
 import controllers from '@/controllers';
-import { MockReq, MockRes, getRequestHandlerMocks } from '../../../../testUtils/factories';
+import {
+  MockReq,
+  MockRes,
+  getRequestHandlerMocks,
+  produceAdminArea,
+} from '../../../testUtils/factories';
 import { Roles } from '@/constants/roles';
-import { IAdministrativeArea } from '@/controllers/admin/administrativeAreas/IAdministrativeArea';
+import { IAdministrativeArea } from '@/controllers/administrativeAreas/IAdministrativeArea';
 import { faker } from '@faker-js/faker';
 import { UUID } from 'crypto';
 
@@ -32,6 +37,12 @@ const mockAdministrativeArea: IAdministrativeArea = {
   regionalDistrict: 'CPRD',
 };
 
+const _getAdminAreas = jest.fn().mockImplementation(() => [produceAdminArea({})]);
+const _next = jest.fn();
+jest.mock('@/services/administrativeAreas/administrativeAreasServices', () => ({
+  getAdministrativeAreas: () => _getAdminAreas(),
+}));
+
 describe('UNIT - Administrative Areas Admin', () => {
   beforeEach(() => {
     const { mockReq, mockRes } = getRequestHandlerMocks();
@@ -40,16 +51,28 @@ describe('UNIT - Administrative Areas Admin', () => {
     mockResponse = mockRes;
   });
   describe('Controller getAdministrativeAreas', () => {
-    // TODO: remove stub test when controller is complete
-    it('should return the stub response of 501', async () => {
-      await getAdministrativeAreas(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
     // TODO: enable other tests when controller is complete
-    xit('should return status 200 and a list of administrative areas', async () => {
-      await getAdministrativeAreas(mockRequest, mockResponse);
+    it('should return status 200 and a list of administrative areas', async () => {
+      await getAdministrativeAreas(mockRequest, mockResponse, _next);
       expect(mockResponse.statusValue).toBe(200);
+    });
+    it('should return status 200 and a list of administrative areas, lacks metadata', async () => {
+      mockRequest.setUser({ client_roles: [] });
+      await getAdministrativeAreas(mockRequest, mockResponse, _next);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(mockResponse.sendValue.CreatedOn).toBeUndefined();
+    });
+    it('should return status 400 when parse fails', async () => {
+      mockRequest.query = { name: ['a'] };
+      await getAdministrativeAreas(mockRequest, mockResponse, _next);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+    it('should return status 400 when parse fails', async () => {
+      _getAdminAreas.mockImplementationOnce(() => {
+        throw Error();
+      });
+      await getAdministrativeAreas(mockRequest, mockResponse, _next);
+      expect(_next).toHaveBeenCalled();
     });
   });
 

@@ -12,3 +12,9 @@ export const PredominateUsePublicResponseSchema = z.object({
   Id: z.number(),
   SortOrder: z.number(),
 });
+
+export const BuildingConstructionPublicResponseSchema = z.object({
+  Name: z.string(),
+  Id: z.number(),
+  SortOrder: z.number(),
+});

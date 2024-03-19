@@ -1,12 +1,14 @@
 import { AppDataSource } from '@/appDataSource';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
 import { stubResponse } from '@/utilities/stubResponse';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import {
+  BuildingConstructionPublicResponseSchema,
   ClassificationPublicResponseSchema,
   PredominateUsePublicResponseSchema,
 } from './lookupSchema';
 import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUse';
+import { BuildingConstructionType } from '@/typeorm/Entities/BuildingConstructionType';
 
 // TODO: What controllers here could just be replaced by existing GET requests?
 
@@ -54,7 +56,11 @@ export const lookupRoles = async (req: Request, res: Response) => {
  * @param {Response}    res Outgoing response
  * @returns {Response}      A 200 status and a list of property classifications.
  */
-export const lookupPropertyClassifications = async (req: Request, res: Response) => {
+export const lookupPropertyClassifications = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   /**
    * #swagger.tags = ['Lookup']
    * #swagger.description = 'Get all property classification entries.'
@@ -62,25 +68,69 @@ export const lookupPropertyClassifications = async (req: Request, res: Response)
             "bearerAuth": []
       }]
    */
-
-  const classifications = await AppDataSource.getRepository(PropertyClassification).find();
-  const filtered = classifications.filter((c) => !c.IsDisabled);
-  const parsed = ClassificationPublicResponseSchema.array().safeParse(filtered);
-  if (parsed.success) {
-    return res.status(200).send(parsed.data);
-  } else {
-    return res.status(400).send('Something went wrong.');
+  try {
+    const classifications = await AppDataSource.getRepository(PropertyClassification).find();
+    const filtered = classifications.filter((c) => !c.IsDisabled);
+    const parsed = ClassificationPublicResponseSchema.array().safeParse(filtered);
+    if (parsed.success) {
+      return res.status(200).send(parsed.data);
+    } else {
+      return res.status(400).send('Something went wrong.');
+    }
+  } catch (e) {
+    next(e);
   }
 };
 
-export const lookupBuildingPredominateUse = async (req: Request, res: Response) => {
-  const uses = await AppDataSource.getRepository(BuildingPredominateUse).find();
-  const filtered = uses.filter((u) => !u.IsDisabled);
-  const parsed = PredominateUsePublicResponseSchema.array().safeParse(filtered);
-  if (parsed.success) {
-    return res.status(200).send(parsed.data);
-  } else {
-    return res.status(400).send('Something went wrong.');
+export const lookupBuildingPredominateUse = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  /**
+   * #swagger.tags = ['Lookup']
+   * #swagger.description = 'Get all predomanite uses entries.'
+   * #swagger.security = [{
+            "bearerAuth": []
+      }]
+   */
+  try {
+    const uses = await AppDataSource.getRepository(BuildingPredominateUse).find();
+    const filtered = uses.filter((u) => !u.IsDisabled);
+    const parsed = PredominateUsePublicResponseSchema.array().safeParse(filtered);
+    if (parsed.success) {
+      return res.status(200).send(parsed.data);
+    } else {
+      return res.status(400).send('Something went wrong.');
+    }
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const lookupBuildingConstructionType = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  /**
+   * #swagger.tags = ['Lookup']
+   * #swagger.description = 'Get all building construction type entries.'
+   * #swagger.security = [{
+            "bearerAuth": []
+      }]
+   */
+  try {
+    const uses = await AppDataSource.getRepository(BuildingConstructionType).find();
+    const filtered = uses.filter((u) => !u.IsDisabled);
+    const parsed = BuildingConstructionPublicResponseSchema.array().safeParse(filtered);
+    if (parsed.success) {
+      return res.status(200).send(parsed.data);
+    } else {
+      return res.status(400).send('Something went wrong.');
+    }
+  } catch (e) {
+    next(e);
   }
 };
 
