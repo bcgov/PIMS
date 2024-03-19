@@ -12,7 +12,10 @@ import { AppDataSource } from '@/appDataSource';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
 import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUse';
 import { BuildingConstructionType } from '@/typeorm/Entities/BuildingConstructionType';
-import { lookupBuildingConstructionType, lookupBuildingPredominateUse } from '@/controllers/lookup/lookupController';
+import {
+  lookupBuildingConstructionType,
+  lookupBuildingPredominateUse,
+} from '@/controllers/lookup/lookupController';
 
 const {
   lookupAgencies,
