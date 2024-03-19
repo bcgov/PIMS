@@ -1,15 +1,10 @@
 /* eslint-disable no-console */
 //Simple component testing area.
 import React from 'react';
-import { Box } from '@mui/material';
-import PropertyDetail from '@/components/property/PropertyDetail';
+import AddProperty from '@/components/property/AddProperty';
 
 const Dev = () => {
-  return (
-    <Box>
-      <PropertyDetail />
-    </Box>
-  );
+  return <AddProperty />;
 };
 
 export default Dev;
