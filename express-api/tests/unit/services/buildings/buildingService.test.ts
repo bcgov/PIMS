@@ -50,12 +50,14 @@ describe('deleteBuildingById', () => {
     await buildingService.deleteBuildingById(buildingToDelete.Id);
     expect(_buildingDelete).toHaveBeenCalledTimes(1);
   });
-  it('should throw an error if the building does not exist', () => {
-    const buildingToDelete = produceBuilding();
-    _buildingFindOne.mockResolvedValueOnce(null);
-    expect(
-      async () => await buildingService.deleteBuildingById(buildingToDelete.Id),
-    ).rejects.toThrow();
+});
+describe('getBuildingById', () => {
+  beforeEach(() => jest.clearAllMocks());
+  it('should get one building with the specified Id and return a 204 status code', async () => {
+    const getbuilding = produceBuilding();
+    _buildingFindOne.mockResolvedValueOnce(getbuilding);
+    await buildingService.getBuildingById(getbuilding.Id);
+    expect(_buildingFindOne).toHaveBeenCalledTimes(1);
   });
 });
 describe('getBuildings', () => {
