@@ -17,7 +17,8 @@
     "jsx": "react-jsx",
     "downlevelIteration": true,
     "noFallthroughCasesInSwitch": true,
-    "typeRoots": ["src/types", "node_modules/@types"]
+    "typeRoots": ["src/types", "node_modules/@types", "./node_modules"],
+    "types": ["vite/client"]
   },
   "include": ["src"]
 }

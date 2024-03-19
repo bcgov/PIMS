@@ -3,6 +3,7 @@ import { ILTSAOrderModel } from 'actions/parcelsActions';
 import { HeaderDivider } from 'features/mapSideBar/components/tabs/HeaderDivider';
 import { tabStyles } from 'features/mapSideBar/components/tabs/TabStyles';
 import React from 'react';
+import formatCurrency from 'utils/formatCurrency';
 
 interface ITitleDetailsProps {
   ltsa?: ILTSAOrderModel;
@@ -11,27 +12,6 @@ interface ITitleDetailsProps {
 export const TitleDetails = (props: ITitleDetailsProps) => {
   const { ltsa } = props;
   const { leftColumnWidth, rightColumnWidth, boldFontWeight, fontSize, headerColour } = tabStyles;
-
-  const calculateCurrency = (value: number | string | undefined) => {
-    if (!value) {
-      return '';
-    }
-
-    let cleanedValue = 0;
-    if (typeof value === 'string') {
-      cleanedValue = parseFloat(value.replace(',', '').replace('$', ''));
-      if (Number.isNaN(cleanedValue)) {
-        return '';
-      }
-    } else if (typeof value === 'number') {
-      cleanedValue = value;
-    }
-
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'CAD',
-    }).format(cleanedValue);
-  };
 
   return (
     <div className="title">
@@ -80,9 +60,7 @@ export const TitleDetails = (props: ITitleDetailsProps) => {
           </Grid>
           <Grid item xs={rightColumnWidth}>
             <Typography fontSize={fontSize}>
-              {calculateCurrency(
-                ltsa?.order.orderedProduct.fieldedData.tombstone.marketValueAmount,
-              )}
+              {formatCurrency(ltsa?.order.orderedProduct.fieldedData.tombstone.marketValueAmount)}
             </Typography>
           </Grid>
 

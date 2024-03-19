@@ -2,7 +2,7 @@ import { AppDataSource } from '@/appDataSource';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { produceParcel } from 'tests/testUtils/factories';
 import { DeepPartial } from 'typeorm';
-import * as parcelService from '@/services/parcels/parcelServices';
+import parcelService from '@/services/parcels/parcelServices';
 import { ParcelFilterSchema } from '@/services/parcels/parcelSchema';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
@@ -70,15 +70,13 @@ describe('UNIT - Parcel Services', () => {
     it('should delete a parcel and return a 204 status code', async () => {
       const parcelToDelete = produceParcel();
       _parcelFindOne.mockResolvedValueOnce(parcelToDelete);
-      await parcelService.deleteParcelByPid(parcelToDelete.PID);
+      await parcelService.deleteParcelById(parcelToDelete.Id);
       expect(_parcelDelete).toHaveBeenCalledTimes(1);
     });
     it('should throw an error if the PID does not exist in the parcel table', () => {
       const parcelToDelete = produceParcel();
       _parcelFindOne.mockResolvedValueOnce(null);
-      expect(
-        async () => await parcelService.deleteParcelByPid(parcelToDelete.PID),
-      ).rejects.toThrow();
+      expect(async () => await parcelService.deleteParcelById(parcelToDelete.Id)).rejects.toThrow();
     });
     it('should throw an error if the Parcel has a child Parcel relationship', async () => {
       const newParentParcel = produceParcel();
@@ -88,7 +86,7 @@ describe('UNIT - Parcel Services', () => {
         throw new ErrorWithCode(errorMessage);
       });
       expect(
-        async () => await parcelService.deleteParcelByPid(newParentParcel.PID),
+        async () => await parcelService.deleteParcelById(newParentParcel.Id),
       ).rejects.toThrow();
     });
   });
@@ -103,7 +101,8 @@ describe('UNIT - Parcel Services', () => {
   describe('updateParcels', () => {
     beforeEach(() => jest.clearAllMocks());
     it('should update an existing parcel', async () => {
-      const updateParcel = produceParcel();
+      _parcelFindOne.mockResolvedValueOnce({ ...produceParcel(), Id: 1 });
+      const updateParcel = { ...produceParcel(), Id: 1 };
       await parcelService.updateParcel(updateParcel);
       expect(_parcelUpdate).toHaveBeenCalledTimes(1);
     });

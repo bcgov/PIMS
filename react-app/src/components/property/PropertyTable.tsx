@@ -209,6 +209,7 @@ const PropertyTable = (props: IPropertyTable) => {
         excelTitle={'Properties'}
         columns={columns}
         rows={properties}
+        addTooltip="Add a new property"
       />
     </Box>
   );
