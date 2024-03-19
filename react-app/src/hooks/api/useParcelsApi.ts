@@ -1,52 +1,45 @@
-const parcels = [
-  {
-    Id: 1,
-    PID: 676555444,
-    PIN: 1234,
-    ClassificationId: 0,
-    Classification: {
-      Name: 'Core operational',
-      Id: 0,
-    },
-    AgencyId: 1,
-    Agency: { Name: 'Smith & Weston' },
-    Address1: '1450 Whenever Pl',
-    ProjectNumbers: 'FX1234',
-    Corporation: 'asdasda',
-    Ownership: 50,
-    IsSensitive: true,
-    UpdatedOn: new Date(),
-    Evaluations: [{ Value: 12300, Date: new Date() }],
-    Fiscals: [{ Value: 1235000, FiscalYear: 2024 }],
-  },
-  {
-    Id: 2,
-    PID: 678456334,
-    PIN: 1234,
-    ClassificationId: 1,
-    Classification: {
-      Name: 'Core strategic',
-      Id: 1,
-    },
-    AgencyId: 2,
-    Agency: { Name: 'Burger King' },
-    Address1: '1143 Bigapple Rd',
-    ProjectNumbers: 'FX121a4',
-    Corporation: 'Big Corp',
-    Ownership: 99,
-    IsSensitive: false,
-    UpdatedOn: new Date(),
-    Evaluations: [{ Value: 129900, Date: new Date() }],
-    Fiscals: [{ Value: 11256777, FiscalYear: 2019 }],
-  },
-];
+import { IFetch } from '../useFetch';
+import { Agency } from './useAgencyApi';
 
-const useParcelsApi = () => {
+export interface Evaluation {
+  Date: Date;
+  Value: number;
+}
+
+export interface Fiscal {
+  FiscalYear: number;
+  EffectiveDate: Date;
+  Value: number;
+}
+export interface Parcel {
+  Id: string;
+  PID: number;
+  PIN: number;
+  ClassificationId: number;
+  Classification: {
+    Name: 'Core operational';
+    Id: 0;
+  };
+  AgencyId: 1;
+  Agency: Agency | null;
+  Address1: string;
+  ProjectNumbers: string;
+  Corporation: string;
+  Ownership: 50;
+  IsSensitive: true;
+  UpdatedOn: Date;
+  Evaluations: Evaluation | null;
+  Fiscals: Fiscal | null;
+}
+
+const useParcelsApi = (absoluteFetch: IFetch) => {
   const getParcels = async () => {
-    return parcels;
+    const { parsedBody } = await absoluteFetch.get('/parcels');
+    return parsedBody;
   };
   const getParcelById = async (id: number) => {
-    return parcels.find((p) => p.Id === id);
+    const { parsedBody } = await absoluteFetch.get(`/parcels/${id}`);
+    return parsedBody;
   };
   return {
     getParcels,
