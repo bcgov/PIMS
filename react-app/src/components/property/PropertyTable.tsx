@@ -1,36 +1,77 @@
-import React, { MutableRefObject } from 'react';
+import React, { MutableRefObject, useEffect, useState } from 'react';
 import { CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, SxProps, Tooltip, lighten, useTheme } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { Check } from '@mui/icons-material';
-import { GridColDef, GridColumnHeaderTitle } from '@mui/x-data-grid';
+import { GridColDef, GridColumnHeaderTitle, GridEventListener } from '@mui/x-data-grid';
 import { dateFormatter } from '@/utils/formatters';
-import { ClassificationInline, ClassificationIcon } from './ClassificationIcon';
+import { ClassificationInline } from './ClassificationIcon';
+import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 
-const PropertyTable = () => {
+interface IPropertyTable {
+  rowClickHandler: GridEventListener<'rowClick'>;
+  data: Record<string, any>[];
+  isLoading: boolean;
+  refreshData: () => void;
+  error: unknown;
+}
+
+export const useClassificationStyle = () => {
   const theme = useTheme();
 
-  const classificationColorMap = {
-    0: { textColor: theme.palette.blue.main, bgColor: theme.palette.blue.light },
-    1: { textColor: theme.palette.success.main, bgColor: theme.palette.success.light },
-    2: { textColor: theme.palette.info.main, bgColor: theme.palette.info.light },
-    3: { textColor: theme.palette.info.main, bgColor: theme.palette.info.light },
-    4: { textColor: theme.palette.warning.main, bgColor: theme.palette.warning.light },
-    5: { textColor: theme.palette.warning.main, bgColor: theme.palette.warning.light },
-    6: { textColor: theme.palette.warning.main, bgColor: theme.palette.warning.light },
+  return {
+    0: {
+      textColor: lighten(theme.palette.success.main, 0.3),
+      bgColor: theme.palette.success.light,
+    },
+    1: { textColor: lighten(theme.palette.blue.main, 0.4), bgColor: theme.palette.blue.light },
+    2: { textColor: lighten(theme.palette.info.main, 0.3), bgColor: theme.palette.info.light },
+    3: { textColor: lighten(theme.palette.info.main, 0.3), bgColor: theme.palette.info.light },
+    4: {
+      textColor: lighten(theme.palette.warning.main, 0.2),
+      bgColor: theme.palette.warning.light,
+    },
+    5: {
+      textColor: lighten(theme.palette.warning.main, 0.2),
+      bgColor: theme.palette.warning.light,
+    },
+    6: {
+      textColor: lighten(theme.palette.warning.main, 0.2),
+      bgColor: theme.palette.warning.light,
+    },
   };
+};
+
+const PropertyTable = (props: IPropertyTable) => {
+  const { rowClickHandler, data, isLoading, refreshData, error } = props;
+  const [properties, setProperties] = useState([]);
+  const classification = useClassificationStyle();
+  const theme = useTheme();
+  const { state } = useKeycloak();
+  useEffect(() => {
+    if (error) {
+      console.error(error);
+    }
+    if (data && data.length > 0) {
+      console.log('Will set property rows.');
+      setProperties(data);
+    } else {
+      console.log('Will refresh rows.');
+      refreshData();
+    }
+  }, [state, data]);
 
   const columns: GridColDef[] = [
     {
-      field: 'PID',
-      headerName: 'PID',
+      field: 'Type',
+      headerName: 'Type',
       flex: 1,
     },
     {
       field: 'ClassificationId',
       headerName: 'Classification',
       flex: 1,
-      minWidth: 260,
+      minWidth: 200,
       renderHeader: (params) => {
         return (
           <Tooltip
@@ -66,37 +107,20 @@ const PropertyTable = () => {
         );
       },
       renderCell: (params) => {
-        const reduced = params.row.Buildings.reduce((acc, curr) => {
-          const colorKey = classificationColorMap[curr.ClassificationId].bgColor;
-          if (!acc[colorKey]) {
-            acc[colorKey] = 1;
-          } else {
-            acc[colorKey]++;
-          }
-          return acc;
-        }, {});
         return (
-          <Box display={'flex'} gap={'12px'}>
-            <ClassificationIcon
-              iconType="parcel"
-              amount={1}
-              textColor={classificationColorMap[params.row.ClassificationId].textColor}
-              backgroundColor={classificationColorMap[params.row.ClassificationId].bgColor}
-            />
-            {Object.entries(reduced).map(([key, val]) => (
-              <ClassificationIcon
-                key={`buildingparcelicon${key}`}
-                iconType="building"
-                amount={Number(val)}
-                textColor={
-                  Object.values(classificationColorMap).find((c) => c.bgColor === key).textColor
-                }
-                backgroundColor={key}
-              />
-            ))}
-          </Box>
+          <ClassificationInline
+            color={classification[params.row.ClassificationId].textColor}
+            backgroundColor={classification[params.row.ClassificationId].bgColor}
+            title={params.row.Classification.Name}
+          />
         );
       },
+    },
+    {
+      field: 'PID',
+      headerName: 'PID',
+      flex: 1,
+      renderCell: (params) => params.value ?? 'N/A',
     },
     {
       field: 'Agency',
@@ -110,11 +134,6 @@ const PropertyTable = () => {
       flex: 1,
     },
     {
-      field: 'ProjectNumbers', // right field??
-      headerName: 'Title Number',
-      flex: 1,
-    },
-    {
       field: 'Corporation',
       headerName: 'Corporation',
       flex: 1,
@@ -123,6 +142,7 @@ const PropertyTable = () => {
       field: 'Ownership',
       headerName: 'Ownership',
       flex: 1,
+      renderCell: (params) => (params.value ? `${params.value}%` : ''),
     },
     {
       field: 'IsSensitive',
@@ -142,79 +162,14 @@ const PropertyTable = () => {
     },
   ];
 
-  const buildings1 = [
-    {
-      Id: 1,
-      ClassificationId: 0,
-    },
-    {
-      Id: 2,
-      ClassificationId: 1,
-    },
-    {
-      Id: 3,
-      ClassificationId: 2,
-    },
-    {
-      Id: 7,
-      ClassificationId: 2,
-    },
-  ];
-
-  const buildings2 = [
-    {
-      Id: 4,
-      ClassificationId: 3,
-    },
-    {
-      Id: 5,
-      ClassificationId: 4,
-    },
-    {
-      Id: 6,
-      ClassificationId: 5,
-    },
-    {
-      Id: 8,
-      ClassificationId: 5,
-    },
-  ];
-
-  const rows = [
-    {
-      Id: 1,
-      PID: '010-113-1332',
-      ClassificationId: 1,
-      AgencyId: 1,
-      Agency: { Name: 'Smith & Weston' },
-      Address1: '1450 Whenever Pl',
-      ProjectNumbers: 'FX1234',
-      Corporation: 'asdasda',
-      Ownership: 'BC Gov',
-      IsSensitive: true,
-      UpdatedOn: new Date(),
-      Buildings: buildings1,
-    },
-    {
-      Id: 2,
-      PID: '330-11-4335',
-      ClassificationId: 2,
-      AgencyId: 2,
-      Agency: { Name: 'Burger King' },
-      Address1: '1143 Bigapple Rd',
-      ProjectNumbers: 'FX121a4',
-      Corporation: 'Big Corp',
-      Ownership: 'BC Gov',
-      IsSensitive: false,
-      UpdatedOn: new Date(),
-      Buildings: buildings2,
-    },
-  ];
-
   const selectPresetFilter = (value: string, ref: MutableRefObject<GridApiCommunity>) => {
     switch (value) {
       case 'All Properties':
         ref.current.setFilterModel({ items: [] });
+        break;
+      case 'Building':
+      case 'Parcel':
+        ref.current.setFilterModel({ items: [{ value, operator: 'contains', field: 'Type' }] });
         break;
       default:
         ref.current.setFilterModel({ items: [] });
@@ -235,17 +190,25 @@ const PropertyTable = () => {
     >
       <FilterSearchDataGrid
         onPresetFilterChange={selectPresetFilter}
-        getRowId={(row) => row.Id}
+        getRowId={(row) => row.Id + row.Type}
         defaultFilter={'All Properties'}
+        onRowClick={rowClickHandler}
         presetFilterSelectOptions={[
           <CustomMenuItem key={'All Properties'} value={'All Properties'}>
             All Properties
           </CustomMenuItem>,
+          <CustomMenuItem key={'Building'} value={'Building'}>
+            Buildings
+          </CustomMenuItem>,
+          <CustomMenuItem key={'Parcel'} value={'Parcel'}>
+            Parcels
+          </CustomMenuItem>,
         ]}
+        loading={isLoading}
         tableHeader={'Properties Overview'}
         excelTitle={'Properties'}
         columns={columns}
-        rows={rows}
+        rows={properties}
         addTooltip="Add a new property"
       />
     </Box>
