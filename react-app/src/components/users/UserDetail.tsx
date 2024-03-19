@@ -6,7 +6,6 @@ import DeleteDialog from '../dialog/DeleteDialog';
 import { deleteAccountConfirmText } from '@/constants/strings';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import { FormProvider, useForm } from 'react-hook-form';
-import TextInput from '@/components/form/TextFormField';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
@@ -14,6 +13,7 @@ import { User } from '@/hooks/api/useUsersApi';
 import { AuthContext } from '@/contexts/authContext';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { Role } from '@/hooks/api/useRolesApi';
+import TextFormField from '../form/TextFormField';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 import { useParams } from 'react-router-dom';
@@ -169,16 +169,16 @@ const UserDetail = ({ onClose }: IUserDetail) => {
         <FormProvider {...profileFormMethods}>
           <Grid mt={'1rem'} spacing={2} container>
             <Grid item xs={6}>
-              <TextInput fullWidth name={'DisplayName'} label={'IDIR/BCeID'} disabled />
+              <TextFormField fullWidth name={'DisplayName'} label={'IDIR/BCeID'} disabled />
             </Grid>
             <Grid item xs={6}>
-              <TextInput required fullWidth name={'Email'} label={'Email'} />
+              <TextFormField required fullWidth name={'Email'} label={'Email'} />
             </Grid>
             <Grid item xs={6}>
-              <TextInput required fullWidth name={'FirstName'} label={'First Name'} />
+              <TextFormField required fullWidth name={'FirstName'} label={'First Name'} />
             </Grid>
             <Grid item xs={6}>
-              <TextInput required fullWidth name={'LastName'} label={'Last Name'} />
+              <TextFormField required fullWidth name={'LastName'} label={'Last Name'} />
             </Grid>
             <Grid item xs={12}>
               <AutocompleteFormField
@@ -189,7 +189,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextInput name={'Position'} fullWidth label={'Position'} />
+              <TextFormField name={'Position'} fullWidth label={'Position'} />
             </Grid>
           </Grid>
         </FormProvider>
