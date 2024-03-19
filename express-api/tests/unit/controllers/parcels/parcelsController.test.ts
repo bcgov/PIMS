@@ -130,13 +130,13 @@ describe('UNIT - Parcels', () => {
   describe('GET /properties/parcels', () => {
     it('should return 200 with a correct response body', async () => {
       mockRequest.query.pid = '1';
-      await controllers.filterParcelsQueryString(mockRequest, mockResponse);
+      await controllers.getParcels(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(Array.isArray(mockResponse.sendValue)).toBeTruthy();
     });
     it('should return 400 on incorrect filter', async () => {
       mockRequest.query.isSensitive = {};
-      await controllers.filterParcelsQueryString(mockRequest, mockResponse);
+      await controllers.getParcels(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
     it('should return 400 on incorrect filter', async () => {
@@ -144,7 +144,7 @@ describe('UNIT - Parcels', () => {
       _getParcels.mockImplementationOnce(() => {
         throw Error;
       });
-      await controllers.filterParcelsQueryString(mockRequest, mockResponse);
+      await controllers.getParcels(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
   });
@@ -166,20 +166,20 @@ describe('UNIT - Parcels', () => {
 
   describe('PUT /properties/parcel/:id/financial', () => {
     xit('should return the stub response of 501', async () => {
-      await controllers.filterParcelsQueryString(mockRequest, mockResponse);
+      await controllers.getParcels(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(501);
     });
 
     xit('should return 200 with a correct response body', async () => {
       mockRequest.params.parcelId = '1';
-      await controllers.filterParcelsQueryString(mockRequest, mockResponse);
+      await controllers.getParcels(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
   });
 
   describe('GET /properties/parcel/check/pin-available', () => {
     xit('should return the stub response of 501', async () => {
-      await controllers.filterParcelsQueryString(mockRequest, mockResponse);
+      await controllers.getParcels(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(501);
     });
 
@@ -192,7 +192,7 @@ describe('UNIT - Parcels', () => {
 
   describe('GET /properties/parcel/check/pid-available', () => {
     xit('should return the stub response of 501', async () => {
-      await controllers.filterParcelsQueryString(mockRequest, mockResponse);
+      await controllers.getParcels(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(501);
     });
 
