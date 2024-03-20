@@ -8,7 +8,7 @@ export class ParcelFiscal extends Fiscal {
   @Index()
   ParcelId: number;
 
-  @ManyToOne(() => Parcel, (Parcel) => Parcel.Id)
+  @ManyToOne(() => Parcel, (Parcel) => Parcel.Fiscals, { orphanedRowAction: 'disable' })
   @JoinColumn({ name: 'parcel_id' })
   Parcel: Parcel;
 }
