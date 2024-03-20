@@ -75,7 +75,7 @@ export const lookupPropertyClassifications = async (
     if (parsed.success) {
       return res.status(200).send(parsed.data);
     } else {
-      return res.status(400).send('Something went wrong.');
+      return res.status(400).send(parsed);
     }
   } catch (e) {
     next(e);
@@ -101,7 +101,7 @@ export const lookupBuildingPredominateUse = async (
     if (parsed.success) {
       return res.status(200).send(parsed.data);
     } else {
-      return res.status(400).send('Something went wrong.');
+      return res.status(400).send(parsed);
     }
   } catch (e) {
     next(e);
@@ -127,7 +127,7 @@ export const lookupBuildingConstructionType = async (
     if (parsed.success) {
       return res.status(200).send(parsed.data);
     } else {
-      return res.status(400).send('Something went wrong.');
+      return res.status(400).send(parsed);
     }
   } catch (e) {
     next(e);
