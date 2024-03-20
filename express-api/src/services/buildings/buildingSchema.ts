@@ -1,14 +1,14 @@
 import z from 'zod';
 
 export const BuildingFilterSchema = z.object({
-  pid: z.number().nonnegative().optional(),
-  classificationId: z.number().nonnegative().optional(),
-  agencyId: z.number().nonnegative().optional(),
-  administrativeAreaId: z.number().nonnegative().optional(),
-  propertyTypeId: z.number().nonnegative().optional(),
-  buildingConstructionTypeId: z.number().nonnegative().optional(),
-  buildingPredominateUseId: z.number().nonnegative().optional(),
-  buildingOccupantTypeId: z.number().nonnegative().optional(),
+  pid: z.coerce.number().nonnegative().optional(),
+  classificationId: z.coerce.number().nonnegative().optional(),
+  agencyId: z.coerce.number().nonnegative().optional(),
+  administrativeAreaId: z.coerce.number().nonnegative().optional(),
+  propertyTypeId: z.coerce.number().nonnegative().optional(),
+  buildingConstructionTypeId: z.coerce.number().nonnegative().optional(),
+  buildingPredominateUseId: z.coerce.number().nonnegative().optional(),
+  buildingOccupantTypeId: z.coerce.number().nonnegative().optional(),
   isSensitive: z.boolean().optional(),
   page: z.coerce.number().optional(),
   quantity: z.coerce.number().optional(),
