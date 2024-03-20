@@ -21,7 +21,7 @@ export interface Parcel {
   PIN: number;
   ClassificationId: number;
   Classification: Classification;
-  AgencyId: 1;
+  AgencyId: number;
   Agency: Agency | null;
   Address1: string;
   ProjectNumbers: string;
