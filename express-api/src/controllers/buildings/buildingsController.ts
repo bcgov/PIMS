@@ -58,7 +58,7 @@ export const deleteBuilding = async (req: Request, res: Response) => {
  * @param {Response}    res Outgoing Response
  * @returns {Response}      A 200 status with a response body containing an array of building data.
  */
-export const filterBuildingsQueryString = async (req: Request, res: Response) => {
+export const getBuildings = async (req: Request, res: Response) => {
   /**
    * #swagger.tags = ['building']
    * #swagger.description = 'Gets all buildings that satisfy the filters.'
@@ -68,29 +68,6 @@ export const filterBuildingsQueryString = async (req: Request, res: Response) =>
    */
   return stubResponse(res);
 };
-
-/**
- * @description Gets all buildings satisfying the filter parameters.
- * @param {Request}     req Incoming Request. Body should contain filter parameters.
- * @param {Response}    res Outgoing Response
- * @returns {Response}      A 200 status with a response body containing an array of building data.
- */
-export const filterBuildingsRequestBody = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['building']
-   * #swagger.description = 'Creates a new building in the datasource.'
-   * #swagger.security = [{
-   * "bearerAuth": []
-   * }]
-   */
-  return stubResponse(res);
-};
-
-/* Perhaps the above two methods could be consolidated into one? 
-  In the original implementation they are separated into a GET and POST endpoint, but obviously
-  a POST endpoint could accept both query strings and request body. Whether that's RESTful or not 
-  is another discussion though.
-*/
 
 /**
  * @description Add a new building to the datasource for the current user.
