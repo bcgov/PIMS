@@ -53,11 +53,16 @@ const useParcelsApi = (absoluteFetch: IFetch) => {
     const { parsedBody } = await absoluteFetch.get(`/parcels/${id}`);
     return parsedBody as Parcel;
   };
+  const deleteParcelById = async (id: number) => {
+    const { parsedBody } = await absoluteFetch.del(`/parcels/${id}`);
+    return parsedBody as Parcel;
+  };
   return {
     addParcel,
     updateParcel,
     getParcels,
     getParcelById,
+    deleteParcelById,
   };
 };
 
