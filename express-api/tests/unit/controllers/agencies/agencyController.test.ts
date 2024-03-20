@@ -15,6 +15,8 @@ let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 // const { getAgencies, addAgency, updateAgencyById, getAgencyById, deleteAgencyById } =
 //   controllers.admin;
 
+const _nextFunction = jest.fn();
+
 const _getAgencies = jest.fn().mockImplementation(() => [produceAgency()]);
 const _postAgency = jest.fn().mockImplementation((agency) => agency);
 const _getAgencyById = jest
@@ -47,13 +49,13 @@ describe('UNIT - Agencies Admin', () => {
 
   describe('Controller getAgencies', () => {
     it('should return status 200 and a list of agencies', async () => {
-      await controllers.getAgencies(mockRequest, mockResponse);
+      await controllers.getAgencies(mockRequest, mockResponse, _nextFunction);
       expect(mockResponse.statusValue).toBe(200);
     });
 
     it('should return status 200 and a list of agencies', async () => {
       _getKeycloakUserRoles.mockImplementationOnce(() => []);
-      await controllers.getAgencies(mockRequest, mockResponse);
+      await controllers.getAgencies(mockRequest, mockResponse, _nextFunction);
       expect(mockResponse.statusValue).toBe(200);
     });
 
@@ -63,7 +65,7 @@ describe('UNIT - Agencies Admin', () => {
         parentId: '0',
         id: '1',
       };
-      await controllers.getAgencies(mockRequest, mockResponse);
+      await controllers.getAgencies(mockRequest, mockResponse, _nextFunction);
       expect(mockResponse.statusValue).toBe(200);
     });
 
@@ -72,7 +74,7 @@ describe('UNIT - Agencies Admin', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         name: 0 as any,
       };
-      await controllers.getAgencies(mockRequest, mockResponse);
+      await controllers.getAgencies(mockRequest, mockResponse, _nextFunction);
       expect(mockResponse.statusValue).toBe(400);
     });
   });

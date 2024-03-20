@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import pendingImage from '@/assets/images/pending.svg';
 import { Box, Button, Grid, Paper, Typography } from '@mui/material';
-import TextInput from '@/components/form/TextFormField';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
 import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -10,6 +9,7 @@ import usePimsApi from '@/hooks/usePimsApi';
 import { AccessRequest as AccessRequestType } from '@/hooks/api/useUsersApi';
 import { AuthContext } from '@/contexts/authContext';
 import { Navigate } from 'react-router-dom';
+import TextFormField from '@/components/form/TextFormField';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 
 const AccessPending = () => {
@@ -48,40 +48,16 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
       <FormProvider {...formMethods}>
         <Grid spacing={2} container>
           <Grid item xs={6}>
-            <TextInput
-              fullWidth
-              name={'UserName'}
-              label={'IDIR/BCeID'}
-              defaultValue={keycloak.state.userInfo.idir_username}
-              disabled
-            />
+            <TextFormField fullWidth name={'UserName'} label={'IDIR/BCeID'} disabled />
           </Grid>
           <Grid item xs={6}>
-            <TextInput
-              fullWidth
-              name={'Email'}
-              label={'Email'}
-              defaultValue={keycloak.state.userInfo.email}
-              disabled
-            />
+            <TextFormField fullWidth name={'Email'} label={'Email'} disabled />
           </Grid>
           <Grid item xs={6}>
-            <TextInput
-              fullWidth
-              name={'FirstName'}
-              label={'First name'}
-              defaultValue={keycloak.state.userInfo.given_name}
-              disabled
-            />
+            <TextFormField fullWidth name={'FirstName'} label={'First name'} disabled />
           </Grid>
           <Grid item xs={6}>
-            <TextInput
-              name={'LastName'}
-              fullWidth
-              label={'Last name'}
-              defaultValue={keycloak.state.userInfo.family_name}
-              disabled
-            />
+            <TextFormField name={'LastName'} fullWidth label={'Last name'} disabled />
           </Grid>
           <Grid item xs={12}>
             <AutocompleteFormField
@@ -93,10 +69,15 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
             />
           </Grid>
           <Grid item xs={12}>
-            <TextInput name={'Position'} fullWidth label={'Your position'} />
+            <TextFormField name={'Position'} fullWidth label={'Your position'} />
           </Grid>
           <Grid item xs={12}>
-            <TextInput name={'Note'} multiline fullWidth label={'Notes (e.g. Reason for access)'} />
+            <TextFormField
+              name={'Note'}
+              multiline
+              fullWidth
+              label={'Notes (e.g. Reason for access)'}
+            />
           </Grid>
         </Grid>
       </FormProvider>
