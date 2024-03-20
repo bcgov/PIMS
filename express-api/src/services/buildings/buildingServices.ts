@@ -9,7 +9,7 @@ const buildingRepo = AppDataSource.getRepository(Building);
 /**
  * @description          Adds a new building to the datasource.
  * @param   building     Incoming building data to be added to the database.
- * @returns {Response}   A 201 status and the building data added.
+ * @returns {Response}   New Building added.
  * @throws ErrorWithCode If the building already exists or is unable to be added.
  */
 export const addBuilding = async (building: Building) => {
@@ -17,7 +17,7 @@ export const addBuilding = async (building: Building) => {
   if (existingBuilding) {
     throw new ErrorWithCode('Building already exists.', 409);
   }
-  const newBuilding = buildingRepo.save(building);
+  const newBuilding = await buildingRepo.save(building);
   return newBuilding;
 };
 
@@ -42,13 +42,15 @@ export const getBuildingById = async (buildingId: number) => {
  * @param       buildingId  - Number representing building we want to update.
  * @returns     findBuilding - Building data matching Id passed in.
  */
-export const updateBuildingById = async (building: Building) => {
+export const updateBuildingById = async (building: DeepPartial<Building>) => {
   const existingBuilding = await getBuildingById(building.Id);
   if (!existingBuilding) {
     throw new ErrorWithCode('Building does not exists.', 404);
   }
-  const retBuilding = await buildingRepo.update(building.Id, building);
-  return retBuilding;
+  await buildingRepo.update(building.Id, building);
+  //update function doesn't return data on the row changed. Have to get the changed row again
+  const newBuilding = await getBuildingById(building.Id);
+  return newBuilding;
 };
 
 /**
@@ -97,25 +99,4 @@ export const getBuildings = async (filter: BuildingFilter, includeRelations: boo
     order: filter.sort as FindOptionsOrder<Building>,
   });
   return buildings;
-};
-
-/**
- * @description Finds and updates building based on the Building Id
- * @param incomingBuilding incoming building information to be updated
- * @returns updated building information and status
- * @throws Error with code if building is not found or if an unexpected error is hit on update
- */
-export const updateBuilding = async (incomingBuilding: DeepPartial<Building>) => {
-  const findBuilding = await getBuildingById(incomingBuilding.Id);
-  if (findBuilding == null) {
-    throw new ErrorWithCode('Building not found', 404);
-  }
-  try {
-    await buildingRepo.update({ Id: findBuilding.Id }, incomingBuilding);
-    // update function doesn't return data on the row changed. Have to get the changed row again
-    const newBuilding = await getBuildingById(incomingBuilding.Id);
-    return newBuilding;
-  } catch (e) {
-    throw new ErrorWithCode(e.message);
-  }
 };

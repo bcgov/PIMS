@@ -68,17 +68,17 @@ describe('getBuildings', () => {
   });
 });
 
-describe('updateBuildings', () => {
+describe('updateBuildingById', () => {
   beforeEach(() => jest.clearAllMocks());
   it('should update an existing building', async () => {
     const updateBuilding = produceBuilding();
-    await buildingService.updateBuilding(updateBuilding);
+    await buildingService.updateBuildingById(updateBuilding);
     expect(_buildingUpdate).toHaveBeenCalledTimes(1);
   });
   it('should throw an error if the building is not found.', async () => {
     const updateBuilding = produceBuilding();
     _buildingFindOne.mockResolvedValueOnce(null);
-    expect(async () => await buildingService.updateBuilding(updateBuilding)).rejects.toThrow();
+    expect(async () => await buildingService.updateBuildingById(updateBuilding)).rejects.toThrow();
   });
 });
 
