@@ -5,12 +5,6 @@ import express from 'express';
 const router = express.Router();
 
 const {
-  addAdministrativeArea,
-  deleteAdministrativeAreaById,
-  getAdministrativeAreaById,
-  getAdministrativeAreas,
-  getAdministrativeAreasFiltered,
-  updateAdministrativeAreaById,
   addClaim,
   deleteClaimById,
   getClaimById,
@@ -21,8 +15,6 @@ const {
   getRoleById,
   getRoles,
   updateRoleById,
-  deleteAccessRequest,
-  getAccessRequests,
   addUser,
   deleteUserById,
   getUserById,
@@ -32,20 +24,6 @@ const {
   updateUserById,
   getAllRoles,
 } = controllers.admin;
-
-// Endpoints for Admin Access Requests
-router.route(`/accessRequests`).get(getAccessRequests).delete(deleteAccessRequest);
-
-// Endpoints for Admin Administrative Areas
-router.route(`/administrativeAreas`).get(getAdministrativeAreas).post(addAdministrativeArea);
-
-router.route(`/administrativeAreas/filter`).post(getAdministrativeAreasFiltered); // TODO: Could be a get with query strings
-
-router
-  .route(`/administrativeAreas/:id`)
-  .get(getAdministrativeAreaById)
-  .put(updateAdministrativeAreaById) // TODO: Should this be a patch?
-  .delete(deleteAdministrativeAreaById);
 
 // Endpoints for Admin Claims
 router.route(`/claims`).get(getClaims).post(addClaim);
