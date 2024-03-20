@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import controllers from '@/controllers';
 import {
   MockReq,
   MockRes,
@@ -10,17 +9,16 @@ import { Roles } from '@/constants/roles';
 import { IAdministrativeArea } from '@/controllers/administrativeAreas/IAdministrativeArea';
 import { faker } from '@faker-js/faker';
 import { UUID } from 'crypto';
-
-let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
-
-const {
-  getAdministrativeAreaById,
+import {
   getAdministrativeAreas,
   addAdministrativeArea,
-  deleteAdministrativeAreaById,
   getAdministrativeAreasFiltered,
+  getAdministrativeAreaById,
   updateAdministrativeAreaById,
-} = controllers.admin;
+  deleteAdministrativeAreaById,
+} from '@/controllers/administrativeAreas/administrativeAreasController';
+
+let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
 const mockAdministrativeArea: IAdministrativeArea = {
   createdOn: faker.date.anytime().toLocaleString(),
