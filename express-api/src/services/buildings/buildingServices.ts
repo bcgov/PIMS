@@ -27,14 +27,10 @@ export const addBuilding = async (building: Building) => {
  * @returns     findBuilding - Building data matching Id passed in.
  */
 export const getBuildingById = async (buildingId: number) => {
-  try {
-    const findBuilding = await buildingRepo.findOne({
-      where: { Id: buildingId },
-    });
-    return findBuilding;
-  } catch (e) {
-    throw new ErrorWithCode(e.message, e.status);
-  }
+  const findBuilding = await buildingRepo.findOne({
+    where: { Id: buildingId },
+  });
+  return findBuilding;
 };
 
 /**
