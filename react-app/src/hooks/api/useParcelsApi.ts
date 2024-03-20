@@ -17,8 +17,8 @@ export interface Classification {
 }
 export interface Parcel {
   Id: string;
-  PID: number;
-  PIN: number;
+  PID?: number;
+  PIN?: number;
   ClassificationId: number;
   Classification: Classification;
   AgencyId: number;
@@ -29,8 +29,8 @@ export interface Parcel {
   Ownership: string;
   IsSensitive: true;
   UpdatedOn: Date;
-  Evaluations: Evaluation[] | null;
-  Fiscals: Fiscal[] | null;
+  Evaluations?: Evaluation[] | null;
+  Fiscals?: Fiscal[] | null;
 }
 
 const useParcelsApi = (absoluteFetch: IFetch) => {
@@ -38,7 +38,7 @@ const useParcelsApi = (absoluteFetch: IFetch) => {
     const { parsedBody } = await absoluteFetch.post('/parcels', parcel);
     return parsedBody as Parcel;
   };
-  const updateParcel = async (id: number, parcel: Partial<Parcel>) => {
+  const updateParcelById = async (id: number, parcel: Partial<Parcel>) => {
     const { parsedBody } = await absoluteFetch.put(`/parcels/${id}`, parcel);
     return parsedBody as Parcel;
   };
@@ -59,7 +59,7 @@ const useParcelsApi = (absoluteFetch: IFetch) => {
   };
   return {
     addParcel,
-    updateParcel,
+    updateParcelById,
     getParcels,
     getParcelById,
     deleteParcelById,
