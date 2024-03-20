@@ -182,12 +182,11 @@ describe('UNIT - Users Admin', () => {
       expect(mockResponse.sendValue).toBe('The param ID does not match the request body.');
     });
 
-    it('should return status 400 if userService.updateUser throws an error', async () => {
+    it('should throw an error if userService.updateUser throws an error', async () => {
       _updateUser.mockImplementation(() => {
         throw new Error();
       });
-      await updateUserById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(async () => await updateUserById(mockRequest, mockResponse)).rejects.toThrow();
     });
   });
 
@@ -212,12 +211,11 @@ describe('UNIT - Users Admin', () => {
       expect(mockResponse.sendValue).toBe('The param ID does not match the request body.');
     });
 
-    it('should return status 400 if userService.deleteUser throws an error', async () => {
+    it('should throw an error if userService.deleteUser throws an error', async () => {
       _deleteUser.mockImplementationOnce(() => {
         throw new Error();
       });
-      await deleteUserById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(async () => await deleteUserById(mockRequest, mockResponse)).rejects.toThrow();
     });
   });
 
@@ -249,12 +247,11 @@ describe('UNIT - Users Admin', () => {
       expect(mockResponse.sendValue.at(0)).toBe('admin');
     });
 
-    it('should return status 400 when internal service throws', async () => {
+    it('should throw an error when internal service throws', async () => {
       _getRoles.mockImplementationOnce(() => {
         throw Error();
       });
-      await getAllRoles(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(500);
+      expect(async () => await getAllRoles(mockRequest, mockResponse)).rejects.toThrow();
     });
   });
 
