@@ -52,7 +52,7 @@ const DataCard = <T,>(props: DataCardProps<T>) => {
       />
       <CardContent>
         {props.children ??
-          Object.keys(values).map((key, idx) => (
+          Object.keys(values ?? {}).map((key, idx) => (
             <React.Fragment key={`card-data-fragment-${idx}-${key}`}>
               <Box display={'flex'} flexDirection={'row'}>
                 <Typography width={'150px'} fontWeight={'bold'}>

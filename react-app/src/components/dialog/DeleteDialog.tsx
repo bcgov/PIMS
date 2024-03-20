@@ -18,8 +18,14 @@ const DeleteDialog = (props: IDeleteDialog) => {
     <ConfirmDialog
       open={open}
       title={title}
-      onConfirm={onDelete}
-      onCancel={onClose}
+      onConfirm={async () => {
+        await onDelete();
+        setTextFieldValue('');
+      }}
+      onCancel={async () => {
+        await onClose();
+        setTextFieldValue('');
+      }}
       confirmButtonText={deleteText ?? 'Delete'}
       confirmButtonProps={{ color: 'warning', disabled: textFieldValue.toLowerCase() != 'delete' }}
     >
