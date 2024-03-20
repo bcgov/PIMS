@@ -29,8 +29,8 @@ export interface Parcel {
   Ownership: string;
   IsSensitive: true;
   UpdatedOn: Date;
-  Evaluations: Evaluation | null;
-  Fiscals: Fiscal | null;
+  Evaluations: Evaluation[] | null;
+  Fiscals: Fiscal[] | null;
 }
 
 const useParcelsApi = (absoluteFetch: IFetch) => {
