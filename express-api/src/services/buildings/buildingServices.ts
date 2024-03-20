@@ -12,7 +12,7 @@ const buildingRepo = AppDataSource.getRepository(Building);
  * @returns {Response}   New Building added.
  * @throws ErrorWithCode If the building already exists or is unable to be added.
  */
-export const addBuilding = async (building: Building) => {
+export const addBuilding = async (building: DeepPartial<Building>) => {
   const existingBuilding = await getBuildingById(building.Id);
   if (existingBuilding) {
     throw new ErrorWithCode('Building already exists.', 409);
@@ -27,14 +27,10 @@ export const addBuilding = async (building: Building) => {
  * @returns     findBuilding - Building data matching Id passed in.
  */
 export const getBuildingById = async (buildingId: number) => {
-  try {
-    const findBuilding = await buildingRepo.findOne({
-      where: { Id: buildingId },
-    });
-    return findBuilding;
-  } catch (e) {
-    throw new ErrorWithCode(e.message, e.status);
-  }
+  const findBuilding = await buildingRepo.findOne({
+    where: { Id: buildingId },
+  });
+  return findBuilding;
 };
 
 /**
