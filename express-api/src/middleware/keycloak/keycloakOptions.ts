@@ -1,18 +1,24 @@
 import { KCOptions, KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import logger from '@/utilities/winstonLogger';
 import KeycloakService from '@/services/keycloak/keycloakService';
-import userServices from '@/services/users/usersServices';
+import { AppDataSource } from '@/appDataSource';
+import { User } from '@/typeorm/Entities/User';
+
+const users = AppDataSource.getRepository(User);
 
 export const KEYCLOAK_OPTIONS: KCOptions = {
   afterUserLogin: async (user: KeycloakUser) => {
     if (user) {
       logger.info(`${user.display_name} has logged in.`);
+      // Update last login date
+      if (await users.exists({ where: { Username: user.preferred_username } })) {
+        await users.update({ Username: user.preferred_username }, { LastLogin: new Date() });
+      }
       // Try to sync the user's roles from Keycloak
       try {
-        const normalizedUser = userServices.normalizeKeycloakUser(user);
-        await KeycloakService.syncKeycloakUser(normalizedUser.username);
+        await KeycloakService.syncKeycloakUser(user.preferred_username);
       } catch (e) {
-        logger.warn(e.message);
+        logger.warn(`Could not sync roles for user ${user.preferred_username}.`);
       }
     }
   },
