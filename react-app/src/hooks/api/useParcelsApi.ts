@@ -38,8 +38,8 @@ const useParcelsApi = (absoluteFetch: IFetch) => {
     const { parsedBody } = await absoluteFetch.post('/parcels');
     return parsedBody as Parcel;
   };
-  const updateParcel = async () => {
-    const { parsedBody } = await absoluteFetch.put('/parcels');
+  const updateParcel = async (id: number, parcel: Partial<Parcel>) => {
+    const { parsedBody } = await absoluteFetch.put(`/parcels/${id}`, parcel);
     return parsedBody as Parcel;
   };
   const getParcels = async () => {
