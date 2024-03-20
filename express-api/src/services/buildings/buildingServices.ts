@@ -17,7 +17,7 @@ export const addBuilding = async (building: Building) => {
   if (existingBuilding) {
     throw new ErrorWithCode('Building already exists.', 409);
   }
-  const newBuilding = buildingRepo.save(building);
+  const newBuilding = await buildingRepo.save(building);
   return newBuilding;
 };
 
