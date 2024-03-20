@@ -34,8 +34,8 @@ export interface Parcel {
 }
 
 const useParcelsApi = (absoluteFetch: IFetch) => {
-  const addParcel = async () => {
-    const { parsedBody } = await absoluteFetch.post('/parcels');
+  const addParcel = async (parcel: Parcel) => {
+    const { parsedBody } = await absoluteFetch.post('/parcels', parcel);
     return parsedBody as Parcel;
   };
   const updateParcel = async (id: number, parcel: Partial<Parcel>) => {
