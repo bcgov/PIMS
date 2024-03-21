@@ -12,17 +12,59 @@ export interface Fiscal {
 export interface Classification {
   Name: string;
 }
+export interface BuildingConstructionType {
+  Name: string;
+}
+export interface BuildingPredominateUse {
+  Name: string;
+}
+export interface BuildingOccupantType {
+  Name: string;
+}
+export interface PropertyType {
+  Name: string;
+}
+
+export type GeoPoint = {
+  x: number;
+  y: number;
+};
 export interface Building {
-  Id: string;
+  Id?: string;
+  Name?: string;
+  Description?: string;
+  BuildingConstructionTypeId: number;
+  BuildingConstructionType?: BuildingConstructionType;
+  BuildingFloorCount: number;
+  BuildingPredominateUseId: number;
+  BuildingPredominateUse: BuildingPredominateUse;
+  BuildingTenancy: string;
+  RentableArea: number;
+  BuildingOccupantTypeId: number;
+  BuildingOccupantType?: BuildingOccupantType;
+  LeaseExpiry?: Date;
+  OccupantName?: string;
+  TransferLeaseOnSale?: boolean;
+  BuildingTenancyUpdatedOn?: Date;
+  EncumbranceReason?: string;
+  LeasedLandMetadata?: string;
+  TotalArea?: number;
+  AdministrativeAreaId: number;
+  AdministrativeArea?: string;
+  IsVisibleToOtherAgencies?: boolean;
+  Location: GeoPoint;
+  Address1: string;
+  Address2: string;
   ClassificationId: number;
   Classification: Classification;
+  ProjectNumbers?: string;
+  PropertyTypeId: number;
+  PropertyType?: PropertyType;
   AgencyId: number;
-  Agency: Agency | null;
+  Agency?: Agency | null;
   PID?: number;
   PIN?: number;
-  Address1: string;
-  IsSensitive: true;
-  UpdatedOn: Date;
+  IsSensitive: boolean;
   Evaluations?: Evaluation[] | null;
   Fiscals?: Fiscal[] | null;
 }

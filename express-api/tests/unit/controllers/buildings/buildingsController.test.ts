@@ -108,13 +108,13 @@ describe('UNIT - Buildings', () => {
 
   describe('GET /properties/buildings', () => {
     it('should return the stub response of 501', async () => {
-      await controllers.filterBuildingsQueryString(mockRequest, mockResponse);
+      await controllers.getBuildings(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(501);
     });
 
     xit('should return 200 with a correct response body', async () => {
       mockRequest.query.filterString = '1';
-      await controllers.filterBuildingsQueryString(mockRequest, mockResponse);
+      await controllers.getBuildings(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
   });
@@ -134,27 +134,27 @@ describe('UNIT - Buildings', () => {
 
   describe('POST /properties/filter', () => {
     it('should return the stub response of 501', async () => {
-      await controllers.filterBuildingsRequestBody(mockRequest, mockResponse);
+      await controllers.getBuildings(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(501);
     });
 
     xit('should return 200 with a correct response body', async () => {
       mockRequest.body = { filter: 'string' };
-      await controllers.filterBuildingsRequestBody(mockRequest, mockResponse);
+      await controllers.getBuildings(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
   });
 
   describe('PUT /properties/building/:id/financial', () => {
     it('should return the stub response of 501', async () => {
-      await controllers.filterBuildingsQueryString(mockRequest, mockResponse);
+      await controllers.updateBuildingFinancial(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(501);
     });
 
     xit('should return 200 with a correct response body', async () => {
       mockRequest.params.parcelId = '1';
       mockRequest.body = mockBuilding;
-      await controllers.filterBuildingsQueryString(mockRequest, mockResponse);
+      await controllers.updateBuildingFinancial(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
   });
