@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import { faker } from '@faker-js/faker';
 import app from '@/express';
-import { IAdministrativeArea } from '@/controllers/admin/administrativeAreas/IAdministrativeArea';
+import { IAdministrativeArea } from '@/controllers/administrativeAreas/IAdministrativeArea';
 import { UUID } from 'crypto';
 
 const request = supertest(app);
