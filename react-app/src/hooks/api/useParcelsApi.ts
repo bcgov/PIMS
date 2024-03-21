@@ -15,22 +15,38 @@ export interface Fiscal {
 export interface Classification {
   Name: string;
 }
+
+export type GeoPoint = {
+  x: number;
+  y: number;
+};
+
 export interface Parcel {
-  Id: string;
+  Id?: string; // Optional because we don't submit this for new parcels.
   PID?: number;
   PIN?: number;
+  Name: string;
+  Description?: string;
   ClassificationId: number;
-  Classification: Classification;
+  Classification?: Classification;
   AgencyId: number;
-  Agency: Agency | null;
-  Address1: string;
-  ProjectNumbers: string;
-  Corporation: string;
-  Ownership: string;
-  IsSensitive: true;
-  UpdatedOn: Date;
+  Agency?: Agency | null;
+  AdministrativeAreaId: number;
+  Address1?: string;
+  Address2?: string;
+  Postal?: string;
+  ProjectNumbers?: string;
+  IsSensitive: boolean;
+  IsVisibleToOtherAgencies: boolean;
+  Location: GeoPoint;
   Evaluations?: Evaluation[] | null;
   Fiscals?: Fiscal[] | null;
+  SiteID?: string;
+  LandArea?: number;
+  LandLegalDescription?: string;
+  Zoning?: string;
+  ZoningPotential?: string;
+  ParentParcelId?: number;
 }
 
 const useParcelsApi = (absoluteFetch: IFetch) => {
