@@ -1,4 +1,4 @@
-import { User } from "@/hooks/api/useUsersApi";
+import { User } from '@/hooks/api/useUsersApi';
 import { UUID } from 'crypto';
 
 export interface BaseEntityInterface {

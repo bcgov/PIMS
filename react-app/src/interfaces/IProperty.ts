@@ -1,5 +1,5 @@
-import { Agency } from "@/hooks/api/useAgencyApi";
-import { BaseEntityInterface } from "@/interfaces/IBaseEntity";
+import { Agency } from '@/hooks/api/useAgencyApi';
+import { BaseEntityInterface } from '@/interfaces/IBaseEntity';
 
 export interface PropertyClassification extends BaseEntityInterface {
   Name: string;
