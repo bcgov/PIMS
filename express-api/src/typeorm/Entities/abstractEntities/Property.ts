@@ -57,7 +57,7 @@ export abstract class Property extends BaseEntity {
   @Column({
     type: 'point',
     transformer: {
-      to: (obj: GeoPoint) => `${obj?.x},${obj.y}`, // Going to the database. Format into point.
+      to: (obj: GeoPoint) => `${obj.x},${obj.y}`, // Going to the database. Format into point.
       from: (value: GeoPoint) => value, // Coming from the database. Comes out formatted!
     },
   })

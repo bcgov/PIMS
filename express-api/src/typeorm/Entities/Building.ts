@@ -70,9 +70,12 @@ export class Building extends Property {
   @Column({ type: 'real' })
   TotalArea: number;
 
-  @OneToMany(() => BuildingFiscal, (Fiscal) => Fiscal.BuildingId, { nullable: true })
+  @OneToMany(() => BuildingFiscal, (Fiscal) => Fiscal.Building, { nullable: true, cascade: true })
   Fiscals: BuildingFiscal[];
 
-  @OneToMany(() => BuildingEvaluation, (Evaluation) => Evaluation.BuildingId, { nullable: true })
+  @OneToMany(() => BuildingEvaluation, (Evaluation) => Evaluation.Building, {
+    nullable: true,
+    cascade: true,
+  })
   Evaluations: BuildingEvaluation[];
 }

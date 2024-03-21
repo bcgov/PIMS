@@ -8,7 +8,7 @@ export class BuildingFiscal extends Fiscal {
   @Index()
   BuildingId: number;
 
-  @ManyToOne(() => Building, (Building) => Building.Id)
+  @ManyToOne(() => Building, (Building) => Building.Fiscals, { orphanedRowAction: 'disable' })
   @JoinColumn({ name: 'building_id' })
   Building: Building;
 }
