@@ -58,13 +58,14 @@ describe('UNIT - Tools', () => {
       expect(mockResponse.statusValue).toBe(400);
     });
 
-    it('should return thrown code', async () => {
+    it('should throw an error when getChesMessageStatusById throws an error', async () => {
       _getChesMessageStatusById.mockImplementationOnce(() => {
         throw new Error();
       });
       mockRequest.params.messageId = randomUUID();
-      await controllers.getChesMessageStatusById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(
+        async () => await controllers.getChesMessageStatusById(mockRequest, mockResponse),
+      ).rejects.toThrow();
     });
   });
 
@@ -80,13 +81,14 @@ describe('UNIT - Tools', () => {
       await controllers.getChesMessageStatuses(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
-    it('should return thrown code', async () => {
+    it('should throw an error when getChesMessageStatuses throws an error', async () => {
       mockRequest.query.status = 'pending';
       _getChesMessageStatuses.mockImplementationOnce(() => {
         throw new Error();
       });
-      await controllers.getChesMessageStatuses(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(
+        async () => await controllers.getChesMessageStatuses(mockRequest, mockResponse),
+      ).rejects.toThrow();
     });
   });
 
@@ -101,13 +103,14 @@ describe('UNIT - Tools', () => {
       await controllers.cancelChesMessageById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
-    it('should return thrown code', async () => {
+    it('should throw an error when cancelEmailByIdAsync throws an error', async () => {
       mockRequest.params.messageId = randomUUID();
       _cancelEmailByIdAsync.mockImplementationOnce(() => {
         throw new Error();
       });
-      await controllers.cancelChesMessageById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(
+        async () => await controllers.cancelChesMessageById(mockRequest, mockResponse),
+      ).rejects.toThrow();
     });
   });
 
@@ -122,13 +125,14 @@ describe('UNIT - Tools', () => {
       await controllers.cancelChesMessages(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
-    it('should return thrown code', async () => {
+    it('should throw an error when cancelEmailAsync throws an error', async () => {
       _cancelEmailsAsync.mockImplementationOnce(() => {
         throw new Error();
       });
       mockRequest.query.status = 'pending';
-      await controllers.cancelChesMessages(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(
+        async () => await controllers.cancelChesMessages(mockRequest, mockResponse),
+      ).rejects.toThrow();
     });
   });
 
@@ -139,19 +143,13 @@ describe('UNIT - Tools', () => {
       await controllers.sendChesMessage(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(201);
     });
-    it('should return status 400', async () => {
+    it('should throw an error when sendEmailAsync throws an error', async () => {
       _sendEmailAsync.mockImplementationOnce(() => {
         throw new Error();
       });
-      await controllers.sendChesMessage(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
-    });
-    it('should return thrown code', async () => {
-      _sendEmailAsync.mockImplementationOnce(() => {
-        throw new Error();
-      });
-      await controllers.sendChesMessage(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(
+        async () => await controllers.sendChesMessage(mockRequest, mockResponse),
+      ).rejects.toThrow();
     });
   });
 

@@ -1,9 +1,17 @@
 import controllers from '@/controllers';
+import catchErrors from '@/utilities/controllerErrorWrapper';
 import express from 'express';
 
 const router = express.Router();
 
-router.route('/projects').get(controllers.getSpreadsheetProjectsReports);
+const {
+  getSpreadsheetProjectsReports,
+  getSpreadsheetPropertiesReports,
+  getSpreadsheetUsersReports,
+  submitErrorReport,
+} = controllers;
+
+router.route('/projects').get(catchErrors(getSpreadsheetProjectsReports));
 
 /**
  * I'm pretty sure this is not necessary but perhaps someone can weigh in. Why do we need an endpoint specifically for
@@ -11,10 +19,10 @@ router.route('/projects').get(controllers.getSpreadsheetProjectsReports);
  * need to apply a filter on the general properties endpoint. The endpoints do actually function differently but they appear
  * to produce a similar end result so not sure what the distinction is for.
  */
-//router.route('/projects/surplus/properties').get(controllers.getSpreadsheetSurplusPropertiesReport);
+//router.route('/projects/surplus/properties').get(getSpreadsheetSurplusPropertiesReport);
 
-router.route('/properties').get(controllers.getSpreadsheetPropertiesReports);
-router.route('/users').get(controllers.getSpreadsheetUsersReports);
+router.route('/properties').get(catchErrors(getSpreadsheetPropertiesReports));
+router.route('/users').get(catchErrors(getSpreadsheetUsersReports));
 
 /**
  * As per other routers, filter is omitted.
@@ -26,6 +34,6 @@ router.route('/users').get(controllers.getSpreadsheetUsersReports);
  */
 
 // For errors submitted by the frontend Error Boundary.
-router.route('/error').post(controllers.submitErrorReport);
+router.route('/error').post(catchErrors(submitErrorReport));
 
 export default router;
