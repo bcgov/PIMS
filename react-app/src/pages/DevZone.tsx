@@ -15,7 +15,7 @@ const Dev = () => {
     isLoading: parcelsLoading,
     refreshData: refreshParcels,
     error: parcelError,
-  } = useDataLoader(api.parcels.getParcels);
+  } = useDataLoader(api.parcels.getParcelsWithRelations);
   const {
     data: buildings,
     isLoading: buildingsLoading,

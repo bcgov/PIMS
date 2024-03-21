@@ -26,6 +26,8 @@ const ParcelNetValueTable = (props: IParcelNetValueTable) => {
     },
   ];
 
+  if (!props.rows) return <></>;
+
   return (
     <DataGrid
       sx={{
@@ -41,7 +43,7 @@ const ParcelNetValueTable = (props: IParcelNetValueTable) => {
       hideFooter
       getRowId={(row) => row.FiscalYear}
       columns={columns}
-      rows={props.rows}
+      rows={props.rows ?? []}
     />
   );
 };
