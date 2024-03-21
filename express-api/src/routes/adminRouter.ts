@@ -6,12 +6,6 @@ import express from 'express';
 const router = express.Router();
 
 const {
-  addAdministrativeArea,
-  deleteAdministrativeAreaById,
-  getAdministrativeAreaById,
-  getAdministrativeAreas,
-  getAdministrativeAreasFiltered,
-  updateAdministrativeAreaById,
   addClaim,
   deleteClaimById,
   getClaimById,
@@ -22,8 +16,6 @@ const {
   getRoleById,
   getRoles,
   updateRoleById,
-  deleteAccessRequest,
-  getAccessRequests,
   addUser,
   deleteUserById,
   getUserById,
@@ -33,26 +25,6 @@ const {
   updateUserById,
   getAllRoles,
 } = controllers.admin;
-
-// Endpoints for Admin Access Requests
-router
-  .route(`/accessRequests`)
-  .get(catchErrors(getAccessRequests))
-  .delete(catchErrors(deleteAccessRequest));
-
-// Endpoints for Admin Administrative Areas
-router
-  .route(`/administrativeAreas`)
-  .get(catchErrors(getAdministrativeAreas))
-  .post(catchErrors(addAdministrativeArea));
-
-router.route(`/administrativeAreas/filter`).post(catchErrors(getAdministrativeAreasFiltered)); // TODO: Could be a get with query strings
-
-router
-  .route(`/administrativeAreas/:id`)
-  .get(catchErrors(getAdministrativeAreaById))
-  .put(catchErrors(updateAdministrativeAreaById)) // TODO: Should this be a patch?
-  .delete(catchErrors(deleteAdministrativeAreaById));
 
 // Endpoints for Admin Claims
 router.route(`/claims`).get(catchErrors(getClaims)).post(catchErrors(addClaim));
