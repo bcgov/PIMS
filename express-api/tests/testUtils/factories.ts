@@ -2,13 +2,16 @@
 import { Agency } from '@/typeorm/Entities/Agency';
 import { User, UserStatus } from '@/typeorm/Entities/User';
 import { faker } from '@faker-js/faker';
-import { UUID } from 'crypto';
+import { UUID, randomUUID } from 'crypto';
 import { Request, Response } from 'express';
 import { Role as RolesEntity } from '@/typeorm/Entities/Role';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Building } from '@/typeorm/Entities/Building';
 import { EmailBody, IChesStatusResponse, IEmail } from '@/services/ches/chesServices';
+import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
+import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
+import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUse';
 
 export class MockRes {
   statusValue: any;
@@ -282,4 +285,80 @@ export const produceBuilding = (): Building => {
     PID: undefined,
     PIN: undefined,
   };
+};
+export const produceAdminArea = (props: Partial<AdministrativeArea>): AdministrativeArea => {
+  const adminArea: AdministrativeArea = {
+    Id: faker.number.int(),
+    Name: faker.location.city(),
+    IsDisabled: false,
+    SortOrder: 0,
+    RegionalDistrictId: 0,
+    RegionalDistrict: undefined,
+    ProvinceId: 'BC',
+    Province: undefined,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedOn: new Date(),
+    UpdatedBy: undefined,
+    ...props,
+  };
+  return adminArea;
+};
+
+export const produceClassification = (
+  props: Partial<PropertyClassification>,
+): PropertyClassification => {
+  const classification: PropertyClassification = {
+    Id: faker.number.int(),
+    Name: faker.lorem.word(),
+    IsDisabled: false,
+    SortOrder: 0,
+    IsVisible: false,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return classification;
+};
+
+export const producePredominateUse = (
+  props: Partial<BuildingPredominateUse>,
+): BuildingPredominateUse => {
+  const predominateUse: BuildingPredominateUse = {
+    Id: faker.number.int(),
+    Name: faker.lorem.word(),
+    IsDisabled: false,
+    SortOrder: 0,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return predominateUse;
+};
+
+export const produceConstructionType = (props: Partial<BuildingPredominateUse>) => {
+  const constructionType: BuildingPredominateUse = {
+    Id: faker.number.int(),
+    Name: faker.lorem.word(),
+    IsDisabled: false,
+    SortOrder: 0,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return constructionType;
 };
