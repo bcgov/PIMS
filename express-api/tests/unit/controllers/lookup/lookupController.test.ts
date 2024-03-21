@@ -76,76 +76,79 @@ describe('UNIT - Lookup Controller', () => {
 
   describe('GET /lookup/property/classifications', () => {
     it('should return status 200 and a list of property classifications', async () => {
-      await lookupPropertyClassifications(mockRequest, mockResponse, _next);
+      await lookupPropertyClassifications(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
     it('should return status 200 and a list of trimmed classifications', async () => {
       mockRequest.setUser({ client_roles: [] });
-      await lookupPropertyClassifications(mockRequest, mockResponse, _next);
+      await lookupPropertyClassifications(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.CreatedOn).toBeUndefined();
     });
     it('should return 400 on bad parse', async () => {
       _findClassification.mockImplementationOnce(() => [{ Name: [] }]);
-      await lookupPropertyClassifications(mockRequest, mockResponse, _next);
+      await lookupPropertyClassifications(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
-    it('should pass to next on throw', async () => {
+    it('should throw an error when findClassification throws an error', async () => {
       _findClassification.mockImplementationOnce(() => {
-        throw Error;
+        throw new Error();
       });
-      await lookupPropertyClassifications(mockRequest, mockResponse, _next);
-      expect(_next).toHaveBeenCalled();
+      expect(
+        async () => await lookupPropertyClassifications(mockRequest, mockResponse),
+      ).rejects.toThrow();
     });
   });
 
   describe('GET /lookup/property/predominateUses', () => {
     it('should return status 200 and a list of property classifications', async () => {
-      await lookupBuildingPredominateUse(mockRequest, mockResponse, _next);
+      await lookupBuildingPredominateUse(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
     it('should return status 200 and a list of trimmed classifications', async () => {
       mockRequest.setUser({ client_roles: [] });
-      await lookupBuildingPredominateUse(mockRequest, mockResponse, _next);
+      await lookupBuildingPredominateUse(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.CreatedOn).toBeUndefined();
     });
     it('should return 400 on bad parse', async () => {
       _findUses.mockImplementationOnce(() => [{ Name: [] }]);
-      await lookupBuildingPredominateUse(mockRequest, mockResponse, _next);
+      await lookupBuildingPredominateUse(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
-    it('should pass to next on throw', async () => {
+    it('should throw an error when findUses throws an error', async () => {
       _findUses.mockImplementationOnce(() => {
-        throw Error;
+        throw new Error();
       });
-      await lookupBuildingPredominateUse(mockRequest, mockResponse, _next);
-      expect(_next).toHaveBeenCalled();
+      expect(
+        async () => await lookupBuildingPredominateUse(mockRequest, mockResponse),
+      ).rejects.toThrow();
     });
   });
 
   describe('GET /lookup/property/constructionTypes', () => {
     it('should return status 200 and a list of property classifications', async () => {
-      await lookupBuildingConstructionType(mockRequest, mockResponse, _next);
+      await lookupBuildingConstructionType(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
     it('should return status 200 and a list of trimmed classifications', async () => {
       mockRequest.setUser({ client_roles: [] });
-      await lookupBuildingConstructionType(mockRequest, mockResponse, _next);
+      await lookupBuildingConstructionType(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.CreatedOn).toBeUndefined();
     });
     it('should return 400 on bad parse', async () => {
       _findConstruction.mockImplementationOnce(() => [{ Name: [] }]);
-      await lookupBuildingConstructionType(mockRequest, mockResponse, _next);
+      await lookupBuildingConstructionType(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
-    it('should pass to next on throw', async () => {
+    it('should throw an error when findConstruction throws an error', async () => {
       _findConstruction.mockImplementationOnce(() => {
-        throw Error;
+        throw new Error();
       });
-      await lookupBuildingConstructionType(mockRequest, mockResponse, _next);
-      expect(_next).toHaveBeenCalled();
+      expect(
+        async () => await lookupBuildingConstructionType(mockRequest, mockResponse),
+      ).rejects.toThrow();
     });
   });
 
