@@ -6,19 +6,13 @@ import {
   MockRes,
   getRequestHandlerMocks,
   produceKeycloak,
-  produceRequest,
   produceUser,
 } from '../../../testUtils/factories';
-import { IKeycloakUser } from '@/services/keycloak/IKeycloakUser';
-import { AccessRequest } from '@/typeorm/Entities/AccessRequest';
 import { faker } from '@faker-js/faker';
 import { KeycloakIdirUser, KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
 const _activateUser = jest.fn();
-const _getAccessRequest = jest.fn().mockImplementation(() => produceRequest());
-const _getAccessRequestById = jest.fn().mockImplementation(() => produceRequest());
-const _deleteAccessRequest = jest.fn().mockImplementation((req) => req);
 const _addKeycloakUserOnHold = jest
   .fn()
   .mockImplementation((kc: KeycloakUser, agencyId: string, position: string, note: string) => ({
@@ -37,26 +31,12 @@ const _normalizeKeycloakUser = jest.fn().mockImplementation(() => {});
 
 jest.mock('@/services/users/usersServices', () => ({
   activateUser: () => _activateUser(),
-  getAccessRequest: () => _getAccessRequest(),
-  getAccessRequestById: () => _getAccessRequestById(),
-  deleteAccessRequest: (request: AccessRequest) => _deleteAccessRequest(request),
   addKeycloakUserOnHold: (kc: KeycloakUser, agencyId: string, position: string, note: string) =>
     _addKeycloakUserOnHold(kc, agencyId, position, note),
-  updateAccessRequest: (request: AccessRequest, _kc: KeycloakUser) => _updateAccessRequest(request),
   getAgencies: () => _getAgencies(),
   getAdministrators: () => _getAdministrators(),
   getUser: (guid: string) => _getUser(guid),
   normalizeKeycloakUser: () => _normalizeKeycloakUser(),
-}));
-
-const _syncKeycloakRoles = jest.fn();
-const _syncKeycloakUser = jest
-  .fn()
-  .mockImplementation((username: string) => ({ ...produceUser(), Username: username }));
-
-jest.mock('@/services/keycloak/keycloakService.ts', () => ({
-  syncKeycloakRoles: () => _syncKeycloakRoles(),
-  syncKeycloakUser: () => _syncKeycloakUser(),
 }));
 
 describe('UNIT - Testing controllers for users routes.', () => {

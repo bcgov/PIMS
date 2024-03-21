@@ -1,6 +1,16 @@
 import { IdirIdentityProvider } from '@bcgov/citz-imb-kc-express';
 import { KEYCLOAK_OPTIONS } from '@/middleware/keycloak/keycloakOptions';
 import logger from '@/utilities/winstonLogger';
+import { AppDataSource } from '@/appDataSource';
+import { User } from '@/typeorm/Entities/User';
+
+const _userExists = jest
+  .spyOn(AppDataSource.getRepository(User), 'exists')
+  .mockImplementation(async () => true);
+
+const _userUpdate = jest
+  .spyOn(AppDataSource.getRepository(User), 'update')
+  .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
 
 describe('UNIT - Keycloak Options', () => {
   const user = {
@@ -15,14 +25,25 @@ describe('UNIT - Keycloak Options', () => {
   };
   const { afterUserLogin, afterUserLogout } = KEYCLOAK_OPTIONS;
 
-  const loggerSpy = jest.spyOn(logger, 'info');
-  it('should log when a user logs in', () => {
-    afterUserLogin(user);
-    expect(loggerSpy).toHaveBeenCalledWith('Tester has logged in.');
+  beforeEach(() => {
+    jest.clearAllMocks;
   });
 
-  it('should log when a user logs out', () => {
-    afterUserLogout(user);
+  const loggerSpy = jest.spyOn(logger, 'info');
+  it('should log when a user logs in', async () => {
+    await afterUserLogin(user);
+    expect(loggerSpy).toHaveBeenCalledWith('Tester has logged in.');
+    expect(_userExists).toHaveBeenCalledTimes(1);
+    expect(_userExists).toHaveBeenCalledWith({
+      where: {
+        Username: user.preferred_username,
+      },
+    });
+    expect(_userUpdate).toHaveBeenCalledTimes(1);
+  });
+
+  it('should log when a user logs out', async () => {
+    await afterUserLogout(user);
     expect(loggerSpy).toHaveBeenCalledWith('Tester has logged out.');
   });
 });

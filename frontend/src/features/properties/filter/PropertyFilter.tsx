@@ -106,6 +106,7 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
   }, [defaultFilter, propertyFilter, agencies]);
 
   const myAgencies = useMyAgencies();
+  const agencyOptions = myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies));
 
   const changeFilter = (values: IPropertyFilter) => {
     const agencyIds = (values.agencies as any)?.value
@@ -177,11 +178,11 @@ export const PropertyFilter: React.FC<IPropertyFilterProps> = ({
               <Row>
                 <Col className="dropdown-col">
                   {showAllAgencySelect ? (
-                    <PropertyFilterAgencyOptions disabled={findMoreOpen} agencies={agencies} />
+                    <PropertyFilterAgencyOptions disabled={findMoreOpen} agencies={agencyOptions} />
                   ) : (
                     <ParentSelect
                       field="agencies"
-                      options={myAgencies.map((c) => mapSelectOptionWithParent(c, myAgencies))}
+                      options={agencyOptions}
                       filterBy={['code', 'label', 'parent']}
                       placeholder="My Agencies"
                       selectClosest

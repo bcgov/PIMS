@@ -8,11 +8,11 @@ const parcelRepo = AppDataSource.getRepository(Parcel);
 
 /**
  * @description          Adds a new parcel to the datasource.
- * @param   parcel       incoming parcel data to be added to the database
- * @returns {Parcel}   A 201 status and the data of the role added.
+ * @param   parcel       Incoming parcel data to be added to the database
+ * @returns {Parcel}     The new Parcel added.
  * @throws ErrorWithCode If the parcel already exists or is unable to be added.
  */
-export const addParcel = async (parcel: Partial<Parcel>) => {
+const addParcel = async (parcel: DeepPartial<Parcel>) => {
   const inPID = Number(parcel.PID);
   if (inPID == undefined || Number.isNaN(inPID)) {
     throw new ErrorWithCode('Must include PID in parcel data.', 400);
@@ -28,31 +28,23 @@ export const addParcel = async (parcel: Partial<Parcel>) => {
   if (existingParcel) {
     throw new ErrorWithCode('Parcel already exists.', 409);
   }
-  try {
-    const newParcel = parcelRepo.save(parcel);
-    return newParcel;
-  } catch (e) {
-    throw new Error(e);
-  }
+  const newParcel = await parcelRepo.save(parcel);
+  return newParcel;
 };
 
 /**
- * @description Remove a parcel from the database based on incoming PID
- * @param parcelId Incoming PID of parcel to be removed
+ * @description Remove a parcel from the database based on incoming internal ID
+ * @param parcelId Incoming ID of parcel to be removed
  * @returns object with data on number of rows affected.
- * @throws ErrorWithCode if no parcels have the PID sent in
+ * @throws ErrorWithCode if no parcels have the ID sent in
  */
-export const deleteParcelByPid = async (parcelPid: number) => {
-  const existingParcel = await getParcelByPid(parcelPid);
+const deleteParcelById = async (parcelId: number) => {
+  const existingParcel = await getParcelById(parcelId);
   if (!existingParcel) {
     throw new ErrorWithCode('Parcel PID was not found.', 404);
   }
-  try {
-    const removeParcel = await parcelRepo.delete(existingParcel.Id);
-    return removeParcel;
-  } catch (e) {
-    throw new ErrorWithCode(e.message);
-  }
+  const removeParcel = await parcelRepo.delete(existingParcel.Id);
+  return removeParcel;
 };
 
 /**
@@ -60,7 +52,7 @@ export const deleteParcelByPid = async (parcelPid: number) => {
  * @param filter - The filter object used to specify the criteria for retrieving parcels.
  * @returns {Parcel[]} An array of parcels that match the filter criteria.
  */
-export const getParcels = async (filter: ParcelFilter, includeRelations: boolean = false) => {
+const getParcels = async (filter: ParcelFilter, includeRelations: boolean = false) => {
   const parcels = await parcelRepo.find({
     relations: {
       ParentParcel: includeRelations,
@@ -90,36 +82,47 @@ export const getParcels = async (filter: ParcelFilter, includeRelations: boolean
  * @returns updated parcel information and status
  * @throws Error with code if parcel is not found or if an unexpected error is hit on update
  */
-export const updateParcel = async (incomingParcel: DeepPartial<Parcel>) => {
+const updateParcel = async (incomingParcel: DeepPartial<Parcel>) => {
   if (incomingParcel.PID == undefined) {
     throw new ErrorWithCode('Must include PID in parcel data.', 400);
   }
-  const findParcel = await getParcelByPid(incomingParcel.PID);
-  if (findParcel == null) {
+  const findParcel = await getParcelById(incomingParcel.Id);
+  if (findParcel == null || findParcel.Id !== incomingParcel.Id) {
     throw new ErrorWithCode('Parcel not found', 404);
   }
-  try {
-    await parcelRepo.update({ Id: findParcel.Id }, incomingParcel);
-    // update function doesn't return data on the row changed. Have to get the changed row again
-    const newParcel = await getParcelByPid(incomingParcel.PID);
-    return newParcel;
-  } catch (e) {
-    throw new ErrorWithCode(e.message);
-  }
+  await parcelRepo.update({ Id: findParcel.Id }, incomingParcel);
+  // update function doesn't return data on the row changed. Have to get the changed row again
+  const newParcel = await getParcelById(incomingParcel.Id);
+  return newParcel;
 };
 
 /**
  * @description Finds and returns a parcel with matching PID
- * @param       parcelPID Number representing parcel we want to find.
+ * @param       parcelPID The PID of the parcel.
  * @returns     findParcel Parcel data matching PID passed in.
  */
-export const getParcelByPid = async (parcelPid: number) => {
-  try {
-    const findParcel = await parcelRepo.findOne({
-      where: { PID: parcelPid },
-    });
-    return findParcel;
-  } catch (e) {
-    throw new ErrorWithCode(e.message, e.status);
-  }
+const getParcelByPid = async (parcelPid: number) => {
+  return parcelRepo.findOne({
+    where: { PID: parcelPid },
+  });
 };
+
+/**
+ * @description Finds and returns a parcel with matching internal ID
+ * @param       parcelId The primary generated ID of the parcel.
+ * @returns     findParcel Parcel data matching ID passed in.
+ */
+const getParcelById = async (parcelId: number) => {
+  return parcelRepo.findOne({ where: { Id: parcelId } });
+};
+
+const parcelServices = {
+  getParcelById,
+  getParcelByPid,
+  getParcels,
+  updateParcel,
+  deleteParcelById,
+  addParcel,
+};
+
+export default parcelServices;

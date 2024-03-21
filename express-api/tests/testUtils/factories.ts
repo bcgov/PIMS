@@ -1,13 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AccessRequest } from '@/typeorm/Entities/AccessRequest';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { User, UserStatus } from '@/typeorm/Entities/User';
 import { faker } from '@faker-js/faker';
-import { UUID } from 'crypto';
+import { UUID, randomUUID } from 'crypto';
 import { Request, Response } from 'express';
 import { Role as RolesEntity } from '@/typeorm/Entities/Role';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { Parcel } from '@/typeorm/Entities/Parcel';
+import { Building } from '@/typeorm/Entities/Building';
+import { EmailBody, IChesStatusResponse, IEmail } from '@/services/ches/chesServices';
+import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
+import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
+import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUse';
 
 export class MockRes {
   statusValue: any;
@@ -109,30 +113,6 @@ export const produceUser = (): User => {
   };
 };
 
-export const produceRequest = (): AccessRequest => {
-  const agency = produceAgency();
-  const role = produceRole();
-  const user = produceUser();
-  const request: AccessRequest = {
-    Id: faker.number.int(),
-    UserId: user.Id,
-    User: user,
-    Note: 'test',
-    Status: 0,
-    RoleId: role.Id,
-    Role: role,
-    Agency: agency,
-    AgencyId: agency.Id,
-    CreatedById: undefined,
-    CreatedBy: undefined,
-    CreatedOn: faker.date.anytime(),
-    UpdatedById: undefined,
-    UpdatedBy: undefined,
-    UpdatedOn: faker.date.anytime(),
-  };
-  return request;
-};
-
 export const produceAgency = (code?: string): Agency => {
   const agency: Agency = {
     Id: faker.number.int({ max: 10 }),
@@ -228,5 +208,157 @@ export const produceParcel = (): Parcel => {
     CreatedBy: undefined,
     UpdatedById: undefined,
     UpdatedBy: undefined,
+    Fiscals: [],
+    Evaluations: [],
   };
+};
+
+export const produceEmailStatus = (props: Partial<IChesStatusResponse>): IChesStatusResponse => {
+  const email: IChesStatusResponse = {
+    status: props.status ?? 'completed',
+    tag: props.tag ?? undefined,
+    txId: props.txId ?? faker.string.uuid(),
+    updatedTS: new Date().getTime(),
+    createdTS: new Date().getTime(),
+  };
+  return email;
+};
+
+export const produceEmail = (props: Partial<IEmail>): IEmail => {
+  const email: IEmail = {
+    from: props.from ?? faker.internet.email(),
+    to: props.to ?? [faker.internet.email()],
+    bodyType: props.bodyType ?? ('text' as EmailBody.Text), //I love that Jest makes you do this!!
+    subject: props.subject ?? faker.lorem.sentence(),
+    body: props.body ?? faker.lorem.paragraph(),
+    ...props,
+  };
+  return email;
+};
+
+export const produceBuilding = (): Building => {
+  const id = faker.string.uuid() as UUID;
+  return {
+    Id: faker.number.int({ max: 10 }),
+    CreatedOn: faker.date.anytime(),
+    UpdatedOn: faker.date.anytime(),
+    Name: faker.string.alphanumeric(),
+    Description: faker.string.alphanumeric(),
+    BuildingConstructionTypeId: undefined,
+    BuildingConstructionType: undefined,
+    BuildingFloorCount: undefined,
+    BuildingPredominateUseId: undefined,
+    BuildingPredominateUse: undefined,
+    BuildingTenancy: undefined,
+    RentableArea: undefined,
+    BuildingOccupantTypeId: undefined,
+    BuildingOccupantType: undefined,
+    LeaseExpiry: undefined,
+    OccupantName: undefined,
+    TransferLeaseOnSale: undefined,
+    BuildingTenancyUpdatedOn: undefined,
+    EncumbranceReason: undefined,
+    LeasedLandMetadata: undefined,
+    TotalArea: undefined,
+    ClassificationId: undefined,
+    Classification: undefined,
+    AgencyId: undefined,
+    Agency: produceAgency(id),
+    AdministrativeAreaId: undefined,
+    AdministrativeArea: undefined,
+    IsSensitive: undefined,
+    IsVisibleToOtherAgencies: undefined,
+    Location: undefined,
+    ProjectNumbers: undefined,
+    PropertyTypeId: undefined,
+    PropertyType: undefined,
+    Address1: undefined,
+    Address2: undefined,
+    Postal: undefined,
+    SiteId: undefined,
+    CreatedById: undefined,
+    CreatedBy: undefined,
+    UpdatedById: undefined,
+    UpdatedBy: undefined,
+    Fiscals: undefined,
+    Evaluations: undefined,
+    PID: undefined,
+    PIN: undefined,
+  };
+};
+export const produceAdminArea = (props: Partial<AdministrativeArea>): AdministrativeArea => {
+  const adminArea: AdministrativeArea = {
+    Id: faker.number.int(),
+    Name: faker.location.city(),
+    IsDisabled: false,
+    SortOrder: 0,
+    RegionalDistrictId: 0,
+    RegionalDistrict: undefined,
+    ProvinceId: 'BC',
+    Province: undefined,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedOn: new Date(),
+    UpdatedBy: undefined,
+    ...props,
+  };
+  return adminArea;
+};
+
+export const produceClassification = (
+  props: Partial<PropertyClassification>,
+): PropertyClassification => {
+  const classification: PropertyClassification = {
+    Id: faker.number.int(),
+    Name: faker.lorem.word(),
+    IsDisabled: false,
+    SortOrder: 0,
+    IsVisible: false,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return classification;
+};
+
+export const producePredominateUse = (
+  props: Partial<BuildingPredominateUse>,
+): BuildingPredominateUse => {
+  const predominateUse: BuildingPredominateUse = {
+    Id: faker.number.int(),
+    Name: faker.lorem.word(),
+    IsDisabled: false,
+    SortOrder: 0,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return predominateUse;
+};
+
+export const produceConstructionType = (props: Partial<BuildingPredominateUse>) => {
+  const constructionType: BuildingPredominateUse = {
+    Id: faker.number.int(),
+    Name: faker.lorem.word(),
+    IsDisabled: false,
+    SortOrder: 0,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return constructionType;
 };

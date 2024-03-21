@@ -1,57 +1,28 @@
-import { IParcel } from '@/controllers/parcels/IParcel';
-import { faker } from '@faker-js/faker';
-import { UUID } from 'crypto';
 import controllers from '@/controllers';
 import { Request, Response } from 'express';
-import { MockReq, MockRes, getRequestHandlerMocks } from '../../../testUtils/factories';
-import { Point } from 'typeorm';
+import {
+  MockReq,
+  MockRes,
+  getRequestHandlerMocks,
+  produceParcel,
+} from '../../../testUtils/factories';
+import { DeleteResult } from 'typeorm';
+import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
-const mockPoint: Point = {
-  type: 'Point',
-  coordinates: [1.23, 4.56],
-};
+const _getParcelById = jest.fn().mockImplementation(() => produceParcel());
+const _updateParcel = jest.fn().mockImplementation(() => produceParcel());
+const _deleteParcel = jest.fn().mockImplementation((): DeleteResult => ({ raw: {} }));
+const _addParcel = jest.fn().mockImplementation(() => produceParcel());
+const _getParcels = jest.fn().mockImplementation(() => [produceParcel()]);
+jest.mock('@/services/parcels/parcelServices', () => ({
+  getParcelById: () => _getParcelById(),
+  updateParcel: () => _updateParcel(),
+  deleteParcelById: () => _deleteParcel(),
+  getParcels: () => _getParcels(),
+  addParcel: () => _addParcel(),
+}));
+
 describe('UNIT - Parcels', () => {
-  const mockParcel: IParcel = {
-    createdOn: faker.date.anytime().toLocaleString(),
-    updatedOn: faker.date.anytime().toLocaleString(),
-    updatedById: faker.string.uuid() as UUID,
-    createdById: faker.string.uuid() as UUID,
-    id: faker.number.int(),
-    propertyTypeId: 0,
-    propertyType: 'Land',
-    addressId: 1,
-    location: mockPoint,
-    projectNumbers: [],
-    projectWorkflow: 'Submit Surplus Property Process Project',
-    projectStatus: 'Draft',
-    name: faker.location.cardinalDirection() + faker.location.city(),
-    description: faker.string.alpha(),
-    classificationId: 0,
-    classification: 'Core Operational',
-    encumbranceReason: '',
-    agencyId: 0,
-    subAgency: 'BCHY',
-    agency: 'EMPR',
-    subAgencyFullName: 'BC Hydro',
-    agencyFullName: 'Energy, Mines & Petroleum Resources',
-    address: undefined,
-    latitude: faker.location.latitude(),
-    longitude: faker.location.longitude(),
-    isSensitive: false,
-    isVisibleToOtherAgencies: false,
-    pid: faker.string.numeric(),
-    pin: faker.number.int(),
-    landArea: 0,
-    landLegalDescription: faker.string.alpha(),
-    zoning: '',
-    zoningPotential: '',
-    evaluations: [],
-    fiscals: [],
-    buildings: [],
-    parcels: [],
-    subdivisions: [],
-  };
-
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
   beforeEach(() => {
@@ -60,121 +31,154 @@ describe('UNIT - Parcels', () => {
     mockResponse = mockRes;
   });
 
-  describe('GET /properties/parcels/:id', () => {
-    it('should return the stub response of 501', async () => {
-      await controllers.getParcel(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return 200 with a correct response body', async () => {
+  describe('GET /properties/parcels/:parcelId', () => {
+    it('should return 200 with a correct response body', async () => {
       mockRequest.params.parcelId = '1';
       await controllers.getParcel(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
 
-    xit('should return 404 when resource is not found', async () => {
+    it('should return 400 when ID is incorrect', async () => {
       mockRequest.params.parcelId = 'non-integer';
       await controllers.getParcel(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+
+    it('should return 404 when resource not found', async () => {
+      _getParcelById.mockImplementationOnce(() => null);
+      mockRequest.params.parcelId = '1';
+      await controllers.getParcel(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(404);
+    });
+
+    it('should return 400 on generic error', async () => {
+      _getParcelById.mockImplementationOnce(() => {
+        throw Error;
+      });
+      mockRequest.params.parcelId = '1';
+      await controllers.getParcel(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
     });
   });
 
   describe('PUT /properties/parcels/:id', () => {
-    beforeEach(() => {
-      mockRequest.body = mockParcel;
-    });
-
-    it('should return the stub response of 501', async () => {
-      await controllers.updateParcel(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return 200 with a correct response body', async () => {
+    it('should return 200 with a correct response body', async () => {
+      mockRequest.params.parcelId = '1';
+      mockRequest.body = produceParcel();
+      mockRequest.body.Id = 1;
       await controllers.updateParcel(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
 
-    xit('should return 404 when resource is not found', async () => {
-      mockRequest.params.parcelId = 'non-integer';
+    it('should return 404 when resource is not found', async () => {
+      _updateParcel.mockImplementationOnce(() => null);
+      mockRequest.params.parcelId = '1';
+      mockRequest.body.Id = 1;
       await controllers.updateParcel(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(404);
+    });
+
+    it('should return 400 if parcel is ID mistmatch', async () => {
+      mockRequest.params.parcelId = '1';
+      mockRequest.body = produceParcel();
+      mockRequest.body.Id = 2;
+      await controllers.updateParcel(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+
+    it('should return 200 with a correct response body', async () => {
+      _updateParcel.mockImplementationOnce(() => {
+        throw Error;
+      });
+      mockRequest.params.parcelId = '1';
+      mockRequest.body = produceParcel();
+      mockRequest.body.Id = 1;
+      await controllers.updateParcel(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
     });
   });
 
   describe('DELETE /properties/parcels/:id', () => {
-    it('should return the stub response of 501', async () => {
-      await controllers.deleteParcel(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return 200 with a correct response body', async () => {
+    it('should return 200 with a correct response body', async () => {
       mockRequest.params.parcelId = '1';
       await controllers.deleteParcel(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
-
-    xit('should return 404 when resource is not found', async () => {
+    it('should return status 400 on incorrect parcelId', async () => {
       mockRequest.params.parcelId = 'non-integer';
+      await controllers.deleteParcel(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+    it('should return status 400 on arbitrary error', async () => {
+      mockRequest.params.parcelId = '1';
+      _deleteParcel.mockImplementationOnce(() => {
+        throw Error;
+      });
+      await controllers.deleteParcel(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+    it('should return 404 when resource is not found', async () => {
+      _deleteParcel.mockImplementationOnce(() => {
+        throw new ErrorWithCode('', 404);
+      });
+      mockRequest.params.parcelId = '1';
       await controllers.deleteParcel(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(404);
     });
   });
 
   describe('GET /properties/parcels', () => {
-    it('should return the stub response of 501', async () => {
-      await controllers.filterParcelsQueryString(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return 200 with a correct response body', async () => {
-      mockRequest.query.filterString = '1';
+    it('should return 200 with a correct response body', async () => {
+      mockRequest.query.pid = '1';
       await controllers.filterParcelsQueryString(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
+      expect(Array.isArray(mockResponse.sendValue)).toBeTruthy();
+    });
+    it('should return 400 on incorrect filter', async () => {
+      mockRequest.query.isSensitive = {};
+      await controllers.filterParcelsQueryString(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+    it('should return 400 on incorrect filter', async () => {
+      mockRequest.query.pid = '1';
+      _getParcels.mockImplementationOnce(() => {
+        throw Error;
+      });
+      await controllers.filterParcelsQueryString(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
     });
   });
 
   describe('POST /properties/parcels', () => {
-    it('should return the stub response of 501', async () => {
+    it('should return 201 with a correct response body', async () => {
+      mockRequest.body = produceParcel();
       await controllers.addParcel(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
+      expect(mockResponse.statusValue).toBe(201);
     });
-
-    xit('should return 201 with a correct response body', async () => {
-      mockRequest.body = mockParcel;
+    it('should return 400 on generic error', async () => {
+      _addParcel.mockImplementationOnce(() => {
+        throw Error;
+      });
       await controllers.addParcel(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
-  });
-
-  describe('POST /properties/filter', () => {
-    it('should return the stub response of 501', async () => {
-      await controllers.filterParcelsRequestBody(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return 200 with a correct response body', async () => {
-      mockRequest.body = { filter: 'string' };
-      await controllers.filterParcelsRequestBody(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
+      expect(mockResponse.statusValue).toBe(400);
     });
   });
 
   describe('PUT /properties/parcel/:id/financial', () => {
-    it('should return the stub response of 501', async () => {
+    xit('should return the stub response of 501', async () => {
       await controllers.filterParcelsQueryString(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(501);
     });
 
     xit('should return 200 with a correct response body', async () => {
       mockRequest.params.parcelId = '1';
-      mockRequest.body = mockParcel;
       await controllers.filterParcelsQueryString(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
   });
 
   describe('GET /properties/parcel/check/pin-available', () => {
-    it('should return the stub response of 501', async () => {
+    xit('should return the stub response of 501', async () => {
       await controllers.filterParcelsQueryString(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(501);
     });
@@ -187,7 +191,7 @@ describe('UNIT - Parcels', () => {
   });
 
   describe('GET /properties/parcel/check/pid-available', () => {
-    it('should return the stub response of 501', async () => {
+    xit('should return the stub response of 501', async () => {
       await controllers.filterParcelsQueryString(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(501);
     });
