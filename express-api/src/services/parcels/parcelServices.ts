@@ -8,11 +8,11 @@ const parcelRepo = AppDataSource.getRepository(Parcel);
 
 /**
  * @description          Adds a new parcel to the datasource.
- * @param   parcel       incoming parcel data to be added to the database
- * @returns {Parcel}   A 201 status and the data of the role added.
+ * @param   parcel       Incoming parcel data to be added to the database
+ * @returns {Parcel}     The new Parcel added.
  * @throws ErrorWithCode If the parcel already exists or is unable to be added.
  */
-const addParcel = async (parcel: Partial<Parcel>) => {
+const addParcel = async (parcel: DeepPartial<Parcel>) => {
   const inPID = Number(parcel.PID);
   if (inPID == undefined || Number.isNaN(inPID)) {
     throw new ErrorWithCode('Must include PID in parcel data.', 400);
@@ -28,7 +28,7 @@ const addParcel = async (parcel: Partial<Parcel>) => {
   if (existingParcel) {
     throw new ErrorWithCode('Parcel already exists.', 409);
   }
-  const newParcel = parcelRepo.save(parcel);
+  const newParcel = await parcelRepo.save(parcel);
   return newParcel;
 };
 
