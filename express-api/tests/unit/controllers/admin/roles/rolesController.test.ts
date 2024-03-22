@@ -83,8 +83,7 @@ describe('UNIT - Roles Admin', () => {
       _addRole.mockImplementationOnce((role) => {
         throw new Error(role.name);
       });
-      await addRole(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(async () => await addRole(mockRequest, mockResponse)).rejects.toThrow();
     });
   });
 
@@ -154,8 +153,7 @@ describe('UNIT - Roles Admin', () => {
       _deleteRole.mockImplementationOnce((role) => {
         throw new Error(role.name);
       });
-      await deleteRoleById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(async () => await deleteRoleById(mockRequest, mockResponse)).rejects.toThrow();
     });
   });
 });
