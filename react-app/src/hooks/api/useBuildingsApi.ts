@@ -1,45 +1,64 @@
+import { Property } from '@/interfaces/IProperty';
 import { IFetch } from '../useFetch';
-import { Agency } from './useAgencyApi';
-export interface Evaluation {
-  Date: Date;
-  Value: number;
+import { BaseEntityInterface } from '@/interfaces/IBaseEntity';
+export interface EvaluationKey extends BaseEntityInterface {
+  Id: number;
+  Name: string;
+  Description?: string;
 }
-export interface Fiscal {
+export interface BuildingEvaluation extends BaseEntityInterface {
+  BuildingId: number;
+  Building?: Building;
+  Value: number;
+  EvalutationKeyId: number;
+  EvaluationKey?: EvaluationKey;
+  Note?: string;
+}
+export interface FiscalKey extends BaseEntityInterface {
+  Id: number;
+  Name: string;
+  Description?: string;
+}
+export interface BuildingFiscal extends BaseEntityInterface {
   FiscalYear: number;
   EffectiveDate: Date;
   Value: number;
-}
-export interface Classification {
-  Name: string;
+  Note?: string;
+  FiscalKeyId: number;
+  FiscalKey?: FiscalKey;
 }
 export interface BuildingConstructionType {
+  Id: number;
   Name: string;
+  IsDisabled: boolean;
+  SortOrder: number;
 }
 export interface BuildingPredominateUse {
+  Id: number;
   Name: string;
+  IsDisabled: boolean;
+  SortOrder: number;
 }
 export interface BuildingOccupantType {
+  Id: number;
   Name: string;
+  IsDisabled: boolean;
+  SortOrder: number;
 }
 export interface PropertyType {
+  Id: number;
   Name: string;
+  IsDisabled: boolean;
+  SortOrder: number;
 }
-
-export type GeoPoint = {
-  x: number;
-  y: number;
-};
-export interface Building {
-  Id?: string;
-  Name?: string;
-  Description?: string;
+export interface Building extends Property {
   BuildingConstructionTypeId: number;
   BuildingConstructionType?: BuildingConstructionType;
   BuildingFloorCount: number;
   BuildingPredominateUseId: number;
-  BuildingPredominateUse: BuildingPredominateUse;
-  BuildingTenancy: string;
-  RentableArea: number;
+  BuildingPredominateUse?: BuildingPredominateUse;
+  BuildingTenancy?: string;
+  RentableArea?: number;
   BuildingOccupantTypeId: number;
   BuildingOccupantType?: BuildingOccupantType;
   LeaseExpiry?: Date;
@@ -49,24 +68,10 @@ export interface Building {
   EncumbranceReason?: string;
   LeasedLandMetadata?: string;
   TotalArea?: number;
-  AdministrativeAreaId: number;
-  AdministrativeArea?: string;
-  IsVisibleToOtherAgencies?: boolean;
-  Location: GeoPoint;
-  Address1: string;
-  Address2: string;
-  ClassificationId: number;
-  Classification: Classification;
-  ProjectNumbers?: string;
   PropertyTypeId: number;
   PropertyType?: PropertyType;
-  AgencyId: number;
-  Agency?: Agency | null;
-  PID?: number;
-  PIN?: number;
-  IsSensitive: boolean;
-  Evaluations?: Evaluation[] | null;
-  Fiscals?: Fiscal[] | null;
+  Evaluations?: BuildingEvaluation[] | null;
+  Fiscals?: BuildingFiscal[] | null;
 }
 
 const useBuildingsApi = (absoluteFetch: IFetch) => {
