@@ -10,6 +10,9 @@ import dayjs from 'dayjs';
 import BuildingIcon from '@/assets/icons/building.svg';
 import ParcelIcon from '@/assets/icons/parcel.svg';
 import BoxedIconRadio from '../form/BoxedIconRadio';
+import useDataLoader from '@/hooks/useDataLoader';
+import usePimsApi from '@/hooks/usePimsApi';
+import { LookupObject } from '@/hooks/api/useLookupApi';
 
 type PropetyType = 'Building' | 'Parcel';
 
@@ -60,7 +63,13 @@ const AssessedValue = (props: IAssessedValue) => {
   );
 };
 
-const BuildingInformation = () => {
+interface IBuildingInformation {
+  classificationOptions: LookupObject[];
+  constructionOptions: LookupObject[];
+  predominateUseOptions: LookupObject[];
+}
+
+const BuildingInformation = (props: IBuildingInformation) => {
   return (
     <>
       <Typography mt={'2rem'} variant="h5">{`Building information`}</Typography>
@@ -70,7 +79,12 @@ const BuildingInformation = () => {
           <AutocompleteFormField
             name={`ClassificationId`}
             label={'Building classification'}
-            options={[{ label: 'Placeholder', value: 'Placeholder' }]}
+            options={
+              props.classificationOptions?.map((classification) => ({
+                label: classification.Name,
+                value: classification.Id,
+              })) ?? []
+            }
           />
         </Grid>
         <Grid item xs={12}>
@@ -79,15 +93,25 @@ const BuildingInformation = () => {
         <Grid item xs={6}>
           <AutocompleteFormField
             label={'Main usage'}
-            name={`BuildingPredominateUse`}
-            options={[{ label: 'Placeholder', value: 'Placeholder' }]}
+            name={`BuildingPredominateUseId`}
+            options={
+              props.predominateUseOptions?.map((usage) => ({
+                label: usage.Name,
+                value: usage.Id,
+              })) ?? []
+            }
           />
         </Grid>
         <Grid item xs={6}>
           <AutocompleteFormField
             label={'Construction type'}
-            name={`BuildingConstructionType`}
-            options={[{ label: 'Placeholder', value: 'Placeholder' }]}
+            name={`BuildingConstructionTypeId`}
+            options={
+              props.constructionOptions?.map((construct) => ({
+                label: construct.Name,
+                value: construct.Id,
+              })) ?? []
+            }
           />
         </Grid>
         <Grid item xs={6}>
@@ -226,6 +250,25 @@ const AddProperty = () => {
   const [propertyType, setPropertyType] = useState<PropetyType>('Building');
   const [showErrorText, setShowErrorTest] = useState(false);
 
+  const api = usePimsApi();
+  const { data: adminAreasData, loadOnce: loadAdminAreas } = useDataLoader(
+    api.administrativeAreas.getAdministrativeAreas,
+  );
+  const { data: classificationData, loadOnce: loadClassifications } = useDataLoader(
+    api.lookup.getClassifications,
+  );
+  const { data: predominateUseData, loadOnce: loadPredominateUse } = useDataLoader(
+    api.lookup.getPredominateUses,
+  );
+  const { data: constructionTypeData, loadOnce: loadConstructionTypeData } = useDataLoader(
+    api.lookup.getConstructionTypes,
+  );
+
+  loadAdminAreas();
+  loadClassifications();
+  loadPredominateUse();
+  loadConstructionTypeData();
+
   const formMethods = useForm({
     defaultValues: {
       NotOwned: true,
@@ -233,7 +276,7 @@ const AddProperty = () => {
       PIN: '',
       PID: '',
       PostalCode: '',
-      AdministrativeArea: '',
+      AdministrativeAreaId: '',
       Latitude: '',
       Longitude: '',
       LandArea: '',
@@ -241,8 +284,8 @@ const AddProperty = () => {
       ClassificationId: '',
       Description: '',
       Name: '',
-      BuildingPredominateUse: '',
-      BuildingConstructionType: '',
+      BuildingPredominateUseId: '',
+      BuildingConstructionTypeId: '',
       TotalArea: '',
       RentableArea: '',
       BuildingTenancy: '',
@@ -320,9 +363,9 @@ const AddProperty = () => {
           </Grid>
           <Grid item xs={6}>
             <AutocompleteFormField
-              name={'AdministrativeArea'}
+              name={'AdministrativeAreaId'}
               label={'Administrative area'}
-              options={[{ label: 'Placeholder', value: 'Placeholder' }]}
+              options={adminAreasData?.map((area) => ({ label: area.Name, value: area.Id })) ?? []}
             />
           </Grid>
           <Grid item xs={6}>
@@ -370,7 +413,15 @@ const AddProperty = () => {
             />
           </>
         )}
-        {propertyType === 'Parcel' ? <ParcelInformation /> : <BuildingInformation />}
+        {propertyType === 'Parcel' ? (
+          <ParcelInformation />
+        ) : (
+          <BuildingInformation
+            predominateUseOptions={predominateUseData}
+            classificationOptions={classificationData}
+            constructionOptions={constructionTypeData}
+          />
+        )}
         <Typography mt={'2rem'} variant="h5">
           Net book value
         </Typography>

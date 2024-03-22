@@ -147,13 +147,14 @@ describe('UNIT - Testing controllers for users routes.', () => {
       expect(mockResponse.statusValue).toBe(200);
     });
 
-    it('should return status 400 if malformed', async () => {
+    it('should throw an error if addKeycloakUserOnHold throws an error', async () => {
       mockRequest.body = {};
       _addKeycloakUserOnHold.mockImplementationOnce(() => {
-        throw Error();
+        throw new Error();
       });
-      await controllers.submitUserAccessRequest(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(
+        async () => await controllers.submitUserAccessRequest(mockRequest, mockResponse),
+      ).rejects.toThrow();
     });
   });
 
@@ -165,13 +166,14 @@ describe('UNIT - Testing controllers for users routes.', () => {
       expect(Array.isArray(mockResponse.sendValue));
     });
 
-    it('should return status 400 if no user exists', async () => {
+    it('should throw an error if getAgencies throws an error', async () => {
       mockRequest.params.username = '11111';
       _getAgencies.mockImplementationOnce(() => {
-        throw Error();
+        throw new Error();
       });
-      await controllers.getUserAgencies(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(
+        async () => await controllers.getUserAgencies(mockRequest, mockResponse),
+      ).rejects.toThrow();
     });
   });
 
@@ -197,24 +199,13 @@ describe('UNIT - Testing controllers for users routes.', () => {
       expect(mockResponse.statusValue).toBe(204);
     });
 
-    it('should return 400', async () => {
+    it('should throw an error if normalizeKeycloakUser throws an error', async () => {
       const kcUser = produceKeycloak();
       _normalizeKeycloakUser.mockImplementationOnce(() => {
-        throw Error();
+        throw new Error();
       });
       mockRequest.user = kcUser;
-      await controllers.getSelf(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
-    });
-
-    it('should return 500', async () => {
-      const kcUser = produceKeycloak();
-      _normalizeKeycloakUser.mockImplementationOnce(() => {
-        throw new ErrorWithCode('', 500);
-      });
-      mockRequest.user = kcUser;
-      await controllers.getSelf(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(500);
+      expect(async () => await controllers.getSelf(mockRequest, mockResponse)).rejects.toThrow();
     });
   });
 });

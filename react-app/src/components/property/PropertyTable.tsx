@@ -111,7 +111,7 @@ const PropertyTable = (props: IPropertyTable) => {
           <ClassificationInline
             color={classification[params.row.ClassificationId].textColor}
             backgroundColor={classification[params.row.ClassificationId].bgColor}
-            title={params.row.Classification.Name}
+            title={params.row.Classification?.Name ?? ''}
           />
         );
       },
