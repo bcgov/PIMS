@@ -7,6 +7,7 @@ import { Request, Response } from 'express';
 import { Role as RolesEntity } from '@/typeorm/Entities/Role';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { Parcel } from '@/typeorm/Entities/Parcel';
+import { Building } from '@/typeorm/Entities/Building';
 import { EmailBody, IChesStatusResponse, IEmail } from '@/services/ches/chesServices';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
@@ -235,6 +236,56 @@ export const produceEmail = (props: Partial<IEmail>): IEmail => {
   return email;
 };
 
+export const produceBuilding = (): Building => {
+  const id = faker.string.uuid() as UUID;
+  return {
+    Id: faker.number.int({ max: 10 }),
+    CreatedOn: faker.date.anytime(),
+    UpdatedOn: faker.date.anytime(),
+    Name: faker.string.alphanumeric(),
+    Description: faker.string.alphanumeric(),
+    BuildingConstructionTypeId: undefined,
+    BuildingConstructionType: undefined,
+    BuildingFloorCount: undefined,
+    BuildingPredominateUseId: undefined,
+    BuildingPredominateUse: undefined,
+    BuildingTenancy: undefined,
+    RentableArea: undefined,
+    BuildingOccupantTypeId: undefined,
+    BuildingOccupantType: undefined,
+    LeaseExpiry: undefined,
+    OccupantName: undefined,
+    TransferLeaseOnSale: undefined,
+    BuildingTenancyUpdatedOn: undefined,
+    EncumbranceReason: undefined,
+    LeasedLandMetadata: undefined,
+    TotalArea: undefined,
+    ClassificationId: undefined,
+    Classification: undefined,
+    AgencyId: undefined,
+    Agency: produceAgency(id),
+    AdministrativeAreaId: undefined,
+    AdministrativeArea: undefined,
+    IsSensitive: undefined,
+    IsVisibleToOtherAgencies: undefined,
+    Location: undefined,
+    ProjectNumbers: undefined,
+    PropertyTypeId: undefined,
+    PropertyType: undefined,
+    Address1: undefined,
+    Address2: undefined,
+    Postal: undefined,
+    SiteId: undefined,
+    CreatedById: undefined,
+    CreatedBy: undefined,
+    UpdatedById: undefined,
+    UpdatedBy: undefined,
+    Fiscals: undefined,
+    Evaluations: undefined,
+    PID: undefined,
+    PIN: undefined,
+  };
+};
 export const produceAdminArea = (props: Partial<AdministrativeArea>): AdministrativeArea => {
   const adminArea: AdministrativeArea = {
     Id: faker.number.int(),

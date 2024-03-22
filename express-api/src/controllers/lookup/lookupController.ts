@@ -1,7 +1,7 @@
 import { AppDataSource } from '@/appDataSource';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
 import { stubResponse } from '@/utilities/stubResponse';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import {
   BuildingConstructionPublicResponseSchema,
   ClassificationPublicResponseSchema,
@@ -56,11 +56,7 @@ export const lookupRoles = async (req: Request, res: Response) => {
  * @param {Response}    res Outgoing response
  * @returns {Response}      A 200 status and a list of property classifications.
  */
-export const lookupPropertyClassifications = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const lookupPropertyClassifications = async (req: Request, res: Response) => {
   /**
    * #swagger.tags = ['Lookup']
    * #swagger.description = 'Get all property classification entries.'
@@ -68,25 +64,17 @@ export const lookupPropertyClassifications = async (
             "bearerAuth": []
       }]
    */
-  try {
-    const classifications = await AppDataSource.getRepository(PropertyClassification).find();
-    const filtered = classifications.filter((c) => !c.IsDisabled);
-    const parsed = ClassificationPublicResponseSchema.array().safeParse(filtered);
-    if (parsed.success) {
-      return res.status(200).send(parsed.data);
-    } else {
-      return res.status(400).send(parsed);
-    }
-  } catch (e) {
-    next(e);
+  const classifications = await AppDataSource.getRepository(PropertyClassification).find();
+  const filtered = classifications.filter((c) => !c.IsDisabled);
+  const parsed = ClassificationPublicResponseSchema.array().safeParse(filtered);
+  if (parsed.success) {
+    return res.status(200).send(parsed.data);
+  } else {
+    return res.status(400).send(parsed);
   }
 };
 
-export const lookupBuildingPredominateUse = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const lookupBuildingPredominateUse = async (req: Request, res: Response) => {
   /**
    * #swagger.tags = ['Lookup']
    * #swagger.description = 'Get all predomanite uses entries.'
@@ -94,25 +82,17 @@ export const lookupBuildingPredominateUse = async (
             "bearerAuth": []
       }]
    */
-  try {
-    const uses = await AppDataSource.getRepository(BuildingPredominateUse).find();
-    const filtered = uses.filter((u) => !u.IsDisabled);
-    const parsed = PredominateUsePublicResponseSchema.array().safeParse(filtered);
-    if (parsed.success) {
-      return res.status(200).send(parsed.data);
-    } else {
-      return res.status(400).send(parsed);
-    }
-  } catch (e) {
-    next(e);
+  const uses = await AppDataSource.getRepository(BuildingPredominateUse).find();
+  const filtered = uses.filter((u) => !u.IsDisabled);
+  const parsed = PredominateUsePublicResponseSchema.array().safeParse(filtered);
+  if (parsed.success) {
+    return res.status(200).send(parsed.data);
+  } else {
+    return res.status(400).send(parsed);
   }
 };
 
-export const lookupBuildingConstructionType = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const lookupBuildingConstructionType = async (req: Request, res: Response) => {
   /**
    * #swagger.tags = ['Lookup']
    * #swagger.description = 'Get all building construction type entries.'
@@ -120,17 +100,13 @@ export const lookupBuildingConstructionType = async (
             "bearerAuth": []
       }]
    */
-  try {
-    const uses = await AppDataSource.getRepository(BuildingConstructionType).find();
-    const filtered = uses.filter((u) => !u.IsDisabled);
-    const parsed = BuildingConstructionPublicResponseSchema.array().safeParse(filtered);
-    if (parsed.success) {
-      return res.status(200).send(parsed.data);
-    } else {
-      return res.status(400).send(parsed);
-    }
-  } catch (e) {
-    next(e);
+  const uses = await AppDataSource.getRepository(BuildingConstructionType).find();
+  const filtered = uses.filter((u) => !u.IsDisabled);
+  const parsed = BuildingConstructionPublicResponseSchema.array().safeParse(filtered);
+  if (parsed.success) {
+    return res.status(200).send(parsed.data);
+  } else {
+    return res.status(400).send(parsed);
   }
 };
 

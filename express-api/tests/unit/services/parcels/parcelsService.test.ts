@@ -34,7 +34,7 @@ describe('UNIT - Parcel Services', () => {
       expect(_parcelSave).toHaveBeenCalledTimes(1);
       expect(ret.Id).toBe(parcel.Id);
     });
-    it('should throw an error if the agency already exists', () => {
+    it('should throw an error if the parcel already exists', () => {
       const parcel = produceParcel();
       _parcelFindOne.mockResolvedValueOnce(parcel);
       expect(async () => await parcelService.addParcel(parcel)).rejects.toThrow();
