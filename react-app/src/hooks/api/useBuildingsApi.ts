@@ -9,6 +9,7 @@ export interface EvaluationKey extends BaseEntityInterface {
 export interface BuildingEvaluation extends BaseEntityInterface {
   BuildingId: number;
   Building?: Building;
+  Date: Date;
   Value: number;
   EvalutationKeyId: number;
   EvaluationKey?: EvaluationKey;
