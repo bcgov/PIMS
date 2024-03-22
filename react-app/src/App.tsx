@@ -47,28 +47,27 @@ const Router = () => {
           </BaseLayout>
         }
       />
-      <Route path="/admin">
-        <Route
-          path="users"
-          element={
-            <BaseLayout>
-              <AuthRouteGuard>
-                <UsersManagement />
-              </AuthRouteGuard>
-            </BaseLayout>
-          }
-        />
-        <Route
-          path="users/:id"
-          element={
-            <BaseLayout>
-              <AuthRouteGuard>
-                <UserDetail onClose={() => navigate('/admin/users')} />
-              </AuthRouteGuard>
-            </BaseLayout>
-          }
-        />
-      </Route>
+      <Route
+        path="users"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <UsersManagement />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="users/:id"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <UserDetail onClose={() => navigate('/users')} />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route path="/admin"></Route>
     </Routes>
   );
 };
