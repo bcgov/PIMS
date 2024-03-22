@@ -1,12 +1,8 @@
 import { Property } from '@/interfaces/IProperty';
 import { IFetch } from '../useFetch';
 import { BaseEntityInterface } from '@/interfaces/IBaseEntity';
-
-export interface EvaluationKey extends BaseEntityInterface {
-  Id: number;
-  Name: string;
-  Description?: string;
-}
+import { EvaluationKey } from '@/interfaces/IEvaluationKey';
+import { FiscalKey } from '@/interfaces/IFiscalKey';
 
 export interface ParcelEvaluation extends BaseEntityInterface {
   ParcelId: number;
@@ -17,12 +13,6 @@ export interface ParcelEvaluation extends BaseEntityInterface {
   EvalutationKeyId: number;
   EvaluationKey?: EvaluationKey;
   Note?: string;
-}
-
-export interface FiscalKey extends BaseEntityInterface {
-  Id: number;
-  Name: string;
-  Description?: string;
 }
 
 export interface ParcelFiscal extends BaseEntityInterface {

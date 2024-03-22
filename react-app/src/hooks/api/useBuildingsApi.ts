@@ -1,11 +1,9 @@
 import { Property } from '@/interfaces/IProperty';
 import { IFetch } from '../useFetch';
 import { BaseEntityInterface } from '@/interfaces/IBaseEntity';
-export interface EvaluationKey extends BaseEntityInterface {
-  Id: number;
-  Name: string;
-  Description?: string;
-}
+import { EvaluationKey } from '@/interfaces/IEvaluationKey';
+import { FiscalKey } from '@/interfaces/IFiscalKey';
+
 export interface BuildingEvaluation extends BaseEntityInterface {
   BuildingId: number;
   Building?: Building;
@@ -15,11 +13,7 @@ export interface BuildingEvaluation extends BaseEntityInterface {
   EvaluationKey?: EvaluationKey;
   Note?: string;
 }
-export interface FiscalKey extends BaseEntityInterface {
-  Id: number;
-  Name: string;
-  Description?: string;
-}
+
 export interface BuildingFiscal extends BaseEntityInterface {
   FiscalYear: number;
   EffectiveDate: Date;
@@ -28,30 +22,35 @@ export interface BuildingFiscal extends BaseEntityInterface {
   FiscalKeyId: number;
   FiscalKey?: FiscalKey;
 }
-export interface BuildingConstructionType {
+
+export interface BuildingConstructionType extends BaseEntityInterface {
   Id: number;
   Name: string;
   IsDisabled: boolean;
   SortOrder: number;
 }
-export interface BuildingPredominateUse {
+
+export interface BuildingPredominateUse extends BaseEntityInterface {
   Id: number;
   Name: string;
   IsDisabled: boolean;
   SortOrder: number;
 }
-export interface BuildingOccupantType {
+
+export interface BuildingOccupantType extends BaseEntityInterface {
   Id: number;
   Name: string;
   IsDisabled: boolean;
   SortOrder: number;
 }
-export interface PropertyType {
+
+export interface PropertyType extends BaseEntityInterface {
   Id: number;
   Name: string;
   IsDisabled: boolean;
   SortOrder: number;
 }
+
 export interface Building extends Property {
   BuildingConstructionTypeId: number;
   BuildingConstructionType?: BuildingConstructionType;
@@ -82,11 +81,11 @@ export type BuildingAdd = Omit<
 >;
 
 const useBuildingsApi = (absoluteFetch: IFetch) => {
-  const addBuilding = async (building: Building) => {
+  const addBuilding = async (building: BuildingAdd) => {
     const { parsedBody } = await absoluteFetch.post('/buildings', building);
     return parsedBody as Building;
   };
-  const updateBuildingById = async (id: number, building: Partial<Building>) => {
+  const updateBuildingById = async (id: number, building: BuildingUpdate) => {
     const { parsedBody } = await absoluteFetch.put(`/buildings/${id}`, building);
     return parsedBody as Building;
   };
