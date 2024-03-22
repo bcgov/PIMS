@@ -1,56 +1,94 @@
-const parcels = [
-  {
-    Id: 1,
-    PID: 676555444,
-    PIN: 1234,
-    ClassificationId: 0,
-    Classification: {
-      Name: 'Core operational',
-      Id: 0,
-    },
-    AgencyId: 1,
-    Agency: { Name: 'Smith & Weston' },
-    Address1: '1450 Whenever Pl',
-    ProjectNumbers: 'FX1234',
-    Corporation: 'asdasda',
-    Ownership: 50,
-    IsSensitive: true,
-    UpdatedOn: new Date(),
-    Evaluations: [{ Value: 12300, Date: new Date() }],
-    Fiscals: [{ Value: 1235000, FiscalYear: 2024 }],
-  },
-  {
-    Id: 2,
-    PID: 678456334,
-    PIN: 1234,
-    ClassificationId: 1,
-    Classification: {
-      Name: 'Core strategic',
-      Id: 1,
-    },
-    AgencyId: 2,
-    Agency: { Name: 'Burger King' },
-    Address1: '1143 Bigapple Rd',
-    ProjectNumbers: 'FX121a4',
-    Corporation: 'Big Corp',
-    Ownership: 99,
-    IsSensitive: false,
-    UpdatedOn: new Date(),
-    Evaluations: [{ Value: 129900, Date: new Date() }],
-    Fiscals: [{ Value: 11256777, FiscalYear: 2019 }],
-  },
-];
+import { Property } from '@/interfaces/IProperty';
+import { IFetch } from '../useFetch';
+import { BaseEntityInterface } from '@/interfaces/IBaseEntity';
 
-const useParcelsApi = () => {
+export interface EvaluationKey extends BaseEntityInterface {
+  Id: number;
+  Name: string;
+  Description?: string;
+}
+
+export interface ParcelEvaluation extends BaseEntityInterface {
+  ParcelId: number;
+  Parcel?: Parcel;
+  Year: number;
+  Value: number;
+  Firm?: string;
+  EvalutationKeyId: number;
+  EvaluationKey?: EvaluationKey;
+  Note?: string;
+}
+
+export interface FiscalKey extends BaseEntityInterface {
+  Id: number;
+  Name: string;
+  Description?: string;
+}
+
+export interface ParcelFiscal extends BaseEntityInterface {
+  FiscalYear: number;
+  EffectiveDate: Date;
+  Value: number;
+  Note?: string;
+  FiscalKeyId: number;
+  FiscalKey?: FiscalKey;
+}
+
+export interface Parcel extends Property {
+  Evaluations?: ParcelEvaluation[] | null;
+  Fiscals?: ParcelFiscal[] | null;
+  LandArea?: number;
+  LandLegalDescription?: string;
+  Zoning?: string;
+  ZoningPotential?: string;
+  ParentParcelId?: number;
+  ParentParcel?: Parcel;
+}
+
+export type ParcelUpdate = Partial<Parcel>;
+export type ParcelAdd = Omit<
+  Parcel,
+  'Id' | 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById'
+>;
+
+const useParcelsApi = (absoluteFetch: IFetch) => {
+  const addParcel = async (parcel: ParcelAdd) => {
+    const { parsedBody } = await absoluteFetch.post('/parcels', parcel);
+    return parsedBody as Parcel;
+  };
+  const updateParcelById = async (id: number, parcel: ParcelUpdate) => {
+    const { parsedBody } = await absoluteFetch.put(`/parcels/${id}`, parcel);
+    return parsedBody as Parcel;
+  };
   const getParcels = async () => {
-    return parcels;
+    const { parsedBody } = await absoluteFetch.get('/parcels');
+    if (parsedBody.error) {
+      return [];
+    }
+    return parsedBody as Parcel[];
+  };
+  const getParcelsWithRelations = async () => {
+    const { parsedBody } = await absoluteFetch.get('/parcels?includeRelations=true');
+    if (parsedBody.error) {
+      return [];
+    }
+    return parsedBody as Parcel[];
   };
   const getParcelById = async (id: number) => {
-    return parcels.find((p) => p.Id === id);
+    const { parsedBody } = await absoluteFetch.get(`/parcels/${id}`);
+    return parsedBody as Parcel;
+  };
+  const deleteParcelById = async (id: number) => {
+    const { parsedBody } = await absoluteFetch.del(`/parcels/${id}`);
+    return parsedBody as Parcel;
   };
   return {
+    addParcel,
+    updateParcelById,
     getParcels,
+    getParcelsWithRelations,
     getParcelById,
+    deleteParcelById,
   };
 };
 

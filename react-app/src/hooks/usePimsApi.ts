@@ -23,7 +23,7 @@ const usePimsApi = () => {
   const roles = useRolesApi(fetch);
   const reports = useReportsApi(fetch);
   const buildings = useBuildingsApi();
-  const parcels = useParcelsApi();
+  const parcels = useParcelsApi(fetch);
   const lookup = useLookupApi(fetch);
   const administrativeAreas = useAdministrativeAreaApi(fetch);
 
