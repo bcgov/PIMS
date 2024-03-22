@@ -26,7 +26,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
     api.buildings.getBuildingById(buildingId),
   );
   const { data: relatedBuildings, refreshData: refreshRelated } = useDataLoader(
-    () => parcel && api.buildings.getBuildingById(parcel.PID),
+    () => parcel && api.buildings.getBuildings(),
   );
   useEffect(() => {
     refreshBuilding();
