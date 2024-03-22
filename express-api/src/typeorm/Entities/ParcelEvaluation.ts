@@ -8,7 +8,7 @@ export class ParcelEvaluation extends Evaluation {
   @PrimaryColumn({ name: 'parcel_id', type: 'int' })
   ParcelId: number;
 
-  @ManyToOne(() => Parcel, (Parcel) => Parcel.Id, { orphanedRowAction: 'disable' })
+  @ManyToOne(() => Parcel, (Parcel) => Parcel.Evaluations, { orphanedRowAction: 'disable' })
   @JoinColumn({ name: 'parcel_id' })
   Parcel: Parcel;
 

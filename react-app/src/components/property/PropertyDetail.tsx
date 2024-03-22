@@ -9,15 +9,16 @@ import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { useClassificationStyle } from './PropertyTable';
 import PropertyAssessedValueTable from './PropertyAssessedValueTable';
+import { useParams } from 'react-router-dom';
 
 interface IPropertyDetail {
-  parcelId?: number;
-  buildingId?: number;
   onClose: () => void;
 }
 
 const PropertyDetail = (props: IPropertyDetail) => {
-  const { parcelId, buildingId } = props;
+  const params = useParams();
+  const parcelId = isNaN(Number(params.parcelId)) ? null : Number(params.parcelId);
+  const buildingId = isNaN(Number(params.buildingId)) ? null : Number(params.buildingId);
   const api = usePimsApi();
   const { data: parcel, refreshData: refreshParcel } = useDataLoader(() =>
     api.parcels.getParcelById(parcelId),

@@ -14,6 +14,8 @@ import UsersManagement from './pages/UsersManagement';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from '@/pages/ErrorFallback';
 import UserDetail from '@/components/users/UserDetail';
+import ActiveInventory from './pages/ActiveInventory';
+import PropertyDetail from './components/property/PropertyDetail';
 
 const Router = () => {
   const navigate = useNavigate();
@@ -69,6 +71,36 @@ const Router = () => {
           }
         />
       </Route>
+      <Route
+        path="properties"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <ActiveInventory />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="properties/building/:buildingId"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <PropertyDetail onClose={() => navigate('/properties/')}/>
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="properties/parcel/:parcelId"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <PropertyDetail onClose={() => navigate('/properties/')} />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
     </Routes>
   );
 };

@@ -79,7 +79,7 @@ const Header: React.FC = () => {
         <Box textAlign={'center'} alignItems={'center'} gap={'32px'} display={'flex'}>
           {isAuthenticated && (
             <>
-              <Link underline="none" href="#" variant="h5">
+              <Link underline="none" href="/properties" variant="h5">
                 Active Inventory
               </Link>
               <Link underline="none" href="#" variant="h5">
