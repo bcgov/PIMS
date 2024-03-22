@@ -81,7 +81,7 @@ export const deleteParcel = async (req: Request, res: Response) => {
  * @param {Response}    res Outgoing Response
  * @returns {Response}      A 200 status with a response body containing an array of parcel data.
  */
-export const filterParcelsQueryString = async (req: Request, res: Response) => {
+export const getParcels = async (req: Request, res: Response) => {
   const includeRelations = req.query.includeRelations === 'true';
   const filter = ParcelFilterSchema.safeParse(req.query);
   if (filter.success) {

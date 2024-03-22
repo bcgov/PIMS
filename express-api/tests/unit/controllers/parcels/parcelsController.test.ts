@@ -146,9 +146,7 @@ describe('UNIT - Parcels', () => {
       _getParcels.mockImplementationOnce(() => {
         throw new Error();
       });
-      expect(
-        async () => await controllers.filterParcelsQueryString(mockRequest, mockResponse),
-      ).rejects.toThrow();
+      expect(async () => await controllers.getParcels(mockRequest, mockResponse)).rejects.toThrow();
     });
   });
 
