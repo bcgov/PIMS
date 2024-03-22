@@ -67,9 +67,6 @@ export const updateBuilding = async (req: Request, res: Response) => {
   const user = await userServices.getUser((req.user as KeycloakUser).preferred_username);
   const updateBody = { ...req.body, UpdatedById: user.Id };
   const building = await buildingService.updateBuildingById(updateBody);
-  if (!building) {
-    return res.status(404).send('Building matching this internal ID not found.');
-  }
   return res.status(200).send(building);
 };
 
