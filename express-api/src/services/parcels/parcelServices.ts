@@ -102,7 +102,7 @@ const updateParcel = async (incomingParcel: DeepPartial<Parcel>) => {
  * @returns     findParcel Parcel data matching PID passed in.
  */
 const getParcelByPid = async (parcelPid: number) => {
-  return parcelRepo.findOne({
+  return await parcelRepo.findOne({
     where: { PID: parcelPid },
   });
 };
@@ -113,7 +113,7 @@ const getParcelByPid = async (parcelPid: number) => {
  * @returns     findParcel Parcel data matching ID passed in.
  */
 const getParcelById = async (parcelId: number) => {
-  return parcelRepo.findOne({ where: { Id: parcelId } });
+  return await parcelRepo.findOne({ where: { Id: parcelId } });
 };
 
 const parcelServices = {

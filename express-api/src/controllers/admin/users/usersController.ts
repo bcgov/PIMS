@@ -92,17 +92,15 @@ export const updateUserById = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  // TODO: This schema check should not throw an uncaught error when failing. Handle properly.
-  const id = z.string().uuid().parse(req.params.id);
-  if (id != req.body.Id) {
+  const idParse = z.string().uuid().safeParse(req.params.id);
+  if (!idParse.success) {
+    return res.status(400).send(idParse);
+  }
+  if (idParse.data != req.body.Id) {
     return res.status(400).send('The param ID does not match the request body.');
   }
-  try {
-    const user = await userServices.updateUser(req.body);
-    return res.status(200).send(user);
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message);
-  }
+  const user = await userServices.updateUser(req.body);
+  return res.status(200).send(user);
 };
 
 /**
@@ -120,17 +118,15 @@ export const deleteUserById = async (req: Request, res: Response) => {
       }]
    */
 
-  // TODO: This schema check should not throw an uncaught error when failing. Handle properly.
-  const id = z.string().uuid().parse(req.params.id);
-  if (id != req.body.Id) {
+  const idParse = z.string().uuid().safeParse(req.params.id);
+  if (!idParse.success) {
+    return res.status(400).send(idParse);
+  }
+  if (idParse.data != req.body.Id) {
     return res.status(400).send('The param ID does not match the request body.');
   }
-  try {
-    const user = await userServices.deleteUser(req.body);
-    return res.status(200).send(user);
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message);
-  }
+  const user = await userServices.deleteUser(req.body);
+  return res.status(200).send(user);
 };
 
 /**
@@ -166,12 +162,8 @@ export const getAllRoles = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  try {
-    const roles = await userServices.getKeycloakRoles();
-    return res.status(200).send(roles);
-  } catch (e) {
-    return res.status(500).send('Something went wrong accessing the keycloak service.');
-  }
+  const roles = await userServices.getKeycloakRoles();
+  return res.status(200).send(roles);
 };
 
 /**

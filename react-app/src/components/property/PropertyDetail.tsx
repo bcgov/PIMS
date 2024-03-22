@@ -45,32 +45,32 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const assessedValues = useMemo(() => {
     if (parcelId && parcel) {
       //We only want latest two years accroding to PO requirements.
-      const lastTwoYrs = parcel.Evaluations.sort(
-        (a, b) => b.Date.getFullYear() - a.Date.getFullYear(),
-      ).slice(0, 2);
+      const lastTwoYrs = parcel.Evaluations?.sort((a, b) => b.Year - a.Year).slice(0, 2);
       const evaluations = [];
-      for (const parcelEval of lastTwoYrs) {
-        //This is a parcel. So first, get fields for the parcel.
-        const evaluation = { Year: parcelEval.Date.getFullYear(), Land: parcelEval.Value };
-        //If exists, iterate over relatedBuildings.
-        relatedBuildings?.forEach((building, idx) => {
-          //We need to find evaluations with the matching year of the parcel evaluations.
-          //We can't just sort naively in the same way since we can't guarantee both lists have the same years.
-          const buildingEval = building.Evaluations.find(
-            (e) => e.Date.getFullYear() === parcelEval.Date.getFullYear(),
-          );
-          if (buildingEval) {
-            evaluation[`Building${idx + 1}`] = buildingEval.Value;
-          }
-        });
-        evaluations.push(evaluation);
+      if (lastTwoYrs) {
+        for (const parcelEval of lastTwoYrs) {
+          //This is a parcel. So first, get fields for the parcel.
+          const evaluation = { Year: parcelEval.Year, Land: parcelEval.Value };
+          //If exists, iterate over relatedBuildings.
+          relatedBuildings?.forEach((building, idx) => {
+            //We need to find evaluations with the matching year of the parcel evaluations.
+            //We can't just sort naively in the same way since we can't guarantee both lists have the same years.
+            const buildingEval = building.Evaluations?.find(
+              (e) => e.Date.getFullYear() === parcelEval.Year,
+            );
+            if (buildingEval) {
+              evaluation[`Building${idx + 1}`] = buildingEval.Value;
+            }
+          });
+          evaluations.push(evaluation);
+        }
       }
       return evaluations;
     } else if (buildingId && building) {
-      const lastTwoYrs = building.Evaluations.sort(
+      const lastTwoYrs = building.Evaluations?.sort(
         (a, b) => b.Date.getFullYear() - a.Date.getFullYear(),
       ).slice(0, 2);
-      return lastTwoYrs.map((ev) => ({
+      return lastTwoYrs?.map((ev) => ({
         Year: ev.Date.getFullYear(),
         Value: ev.Value,
       }));
@@ -92,7 +92,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const customFormatter = (key: any, val: any) => {
     if (key === 'Agency' && val) {
       return <Typography>{val.Name}</Typography>;
-    } else if (key === 'Classification') {
+    } else if (key === 'Classification' && val) {
       return (
         <ClassificationInline
           color={classification[val.Id].textColor}
@@ -103,6 +103,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
     } else if (key === 'IsSensitive') {
       return val ? <Typography>Yes</Typography> : <Typography>No</Typography>;
     }
+    return <></>;
   };
 
   const buildingOrParcel = building ? 'Building' : 'Parcel';

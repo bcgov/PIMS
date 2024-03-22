@@ -106,10 +106,14 @@ const syncKeycloakRoles = async () => {
  * @returns {IKeycloakRoles[]}  A list of roles from Keycloak.
  */
 const getKeycloakRoles = async () => {
-  // Get roles available in Keycloak
-  const keycloakRoles: IKeycloakRolesResponse = await getRoles();
-  // Return the list of roles
-  return keycloakRoles.data;
+  try {
+    // Get roles available in Keycloak
+    const keycloakRoles: IKeycloakRolesResponse = await getRoles();
+    // Return the list of roles
+    return keycloakRoles.data;
+  } catch (e) {
+    throw new ErrorWithCode('Something went wrong getting Keycloak roles.');
+  }
 };
 
 /**
