@@ -28,6 +28,7 @@ const addParcel = async (parcel: Partial<Parcel>) => {
   if (existingParcel) {
     throw new ErrorWithCode('Parcel already exists.', 409);
   }
+
   const newParcel = parcelRepo.save(parcel);
   return newParcel;
 };
