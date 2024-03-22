@@ -75,6 +75,12 @@ export interface Building extends Property {
   Fiscals?: BuildingFiscal[] | null;
 }
 
+export type BuildingUpdate = Partial<Building>;
+export type BuildingAdd = Omit<
+  Building,
+  'Id' | 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById'
+>;
+
 const useBuildingsApi = (absoluteFetch: IFetch) => {
   const addBuilding = async (building: Building) => {
     const { parsedBody } = await absoluteFetch.post('/buildings', building);
