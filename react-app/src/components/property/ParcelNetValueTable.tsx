@@ -1,8 +1,12 @@
-import { dateFormatter } from '@/utils/formatters';
+import { dateFormatter, formatMoney } from '@/utils/formatters';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 
-const ParcelNetValueTable = () => {
+interface IParcelNetValueTable {
+  rows: Record<string, any>[];
+}
+
+const ParcelNetValueTable = (props: IParcelNetValueTable) => {
   const columns: GridColDef[] = [
     {
       field: 'FiscalYear',
@@ -12,24 +16,13 @@ const ParcelNetValueTable = () => {
       field: 'EffectiveDate',
       headerName: 'Effective Date',
       flex: 1,
+      renderCell: (params) => (params.value ? dateFormatter(params.value) : 'Not provided'),
     },
     {
       field: 'Value',
       headerName: 'Net Book Value',
       flex: 1,
-    },
-  ];
-
-  const testData = [
-    {
-      FiscalYear: '24/23',
-      EffectiveDate: dateFormatter(new Date()),
-      Value: '$34000000',
-    },
-    {
-      FiscalYear: '23/22',
-      EffectiveDate: dateFormatter(new Date()),
-      Value: '$145000000',
+      valueFormatter: (params) => formatMoney(params.value),
     },
   ];
 
@@ -48,7 +41,7 @@ const ParcelNetValueTable = () => {
       hideFooter
       getRowId={(row) => row.FiscalYear}
       columns={columns}
-      rows={testData}
+      rows={props.rows}
     />
   );
 };

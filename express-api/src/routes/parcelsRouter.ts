@@ -1,22 +1,34 @@
 import controllers from '@/controllers';
+import catchErrors from '@/utilities/controllerErrorWrapper';
 import express from 'express';
 
 const router = express.Router();
 
 const PARCELS_ROUTE = '/parcels';
 
+const {
+  getParcel,
+  updateParcel,
+  deleteParcel,
+  filterParcelsQueryString,
+  addParcel,
+  checkPidAvailable,
+  checkPinAvailable,
+  updateParcelFinancial,
+} = controllers;
+
 // Endpoints for parcels data manipulation
 router
   .route(`${PARCELS_ROUTE}/:parcelId`)
-  .get(controllers.getParcel)
-  .put(controllers.updateParcel)
-  .delete(controllers.deleteParcel);
+  .get(catchErrors(getParcel))
+  .put(catchErrors(updateParcel))
+  .delete(catchErrors(deleteParcel));
 router
   .route(`${PARCELS_ROUTE}/`)
-  .get(controllers.filterParcelsQueryString)
-  .post(controllers.addParcel);
-router.route(`${PARCELS_ROUTE}/check/pid-available`).get(controllers.checkPidAvailable);
-router.route(`${PARCELS_ROUTE}/check/pin-available`).get(controllers.checkPinAvailable);
-router.route(`${PARCELS_ROUTE}/:parcelId/financials`).put(controllers.updateParcelFinancial);
+  .get(catchErrors(filterParcelsQueryString))
+  .post(catchErrors(addParcel));
+router.route(`${PARCELS_ROUTE}/check/pid-available`).get(catchErrors(checkPidAvailable));
+router.route(`${PARCELS_ROUTE}/check/pin-available`).get(catchErrors(checkPinAvailable));
+router.route(`${PARCELS_ROUTE}/:parcelId/financials`).put(catchErrors(updateParcelFinancial));
 
 export default router;

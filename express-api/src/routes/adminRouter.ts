@@ -1,16 +1,11 @@
 import controllers from '@/controllers';
 import { updateUserRolesByName } from '@/controllers/admin/users/usersController';
+import catchErrors from '@/utilities/controllerErrorWrapper';
 import express from 'express';
 
 const router = express.Router();
 
 const {
-  addAdministrativeArea,
-  deleteAdministrativeAreaById,
-  getAdministrativeAreaById,
-  getAdministrativeAreas,
-  getAdministrativeAreasFiltered,
-  updateAdministrativeAreaById,
   addClaim,
   deleteClaimById,
   getClaimById,
@@ -21,8 +16,6 @@ const {
   getRoleById,
   getRoles,
   updateRoleById,
-  deleteAccessRequest,
-  getAccessRequests,
   addUser,
   deleteUserById,
   getUserById,
@@ -33,53 +26,40 @@ const {
   getAllRoles,
 } = controllers.admin;
 
-// Endpoints for Admin Access Requests
-router.route(`/accessRequests`).get(getAccessRequests).delete(deleteAccessRequest);
-
-// Endpoints for Admin Administrative Areas
-router.route(`/administrativeAreas`).get(getAdministrativeAreas).post(addAdministrativeArea);
-
-router.route(`/administrativeAreas/filter`).post(getAdministrativeAreasFiltered); // TODO: Could be a get with query strings
-
-router
-  .route(`/administrativeAreas/:id`)
-  .get(getAdministrativeAreaById)
-  .put(updateAdministrativeAreaById) // TODO: Should this be a patch?
-  .delete(deleteAdministrativeAreaById);
-
 // Endpoints for Admin Claims
-router.route(`/claims`).get(getClaims).post(addClaim);
+router.route(`/claims`).get(catchErrors(getClaims)).post(catchErrors(addClaim));
 
 router
   .route(`/claims/:id`)
-  .get(getClaimById)
-  .put(updateClaimById) // TODO: should put be a patch?
-  .delete(deleteClaimById);
+  .get(catchErrors(getClaimById))
+  .put(catchErrors(updateClaimById)) // TODO: should put be a patch?
+  .delete(catchErrors(deleteClaimById));
 
 // Endpoints for Admin Roles
-router.route(`/roles`).get(getRoles).post(addRole);
+router.route(`/roles`).get(catchErrors(getRoles)).post(catchErrors(addRole));
 
 router
   .route(`/roles/:id`)
-  .get(getRoleById)
-  .put(updateRoleById) // TODO: should put be a patch?
-  .delete(deleteRoleById);
-
-// router.route(`/roles/name/:name`).get(getRoleByName);
+  .get(catchErrors(getRoleById))
+  .put(catchErrors(updateRoleById)) // TODO: should put be a patch?
+  .delete(catchErrors(deleteRoleById));
 
 // Endpoints for Admin Users
-router.route(`/users`).get(getUsers).post(addUser);
+router.route(`/users`).get(catchErrors(getUsers)).post(catchErrors(addUser));
 
-router.route(`/users/my/agency`).post(getUsersSameAgency); // TODO: Should this just be generic: get users from an agency?
+router.route(`/users/my/agency`).post(catchErrors(getUsersSameAgency)); // TODO: Should this just be generic: get users from an agency?
 
-router.route(`/users/roles`).get(getAllRoles);
+router.route(`/users/roles`).get(catchErrors(getAllRoles));
 
-router.route(`/users/roles/:username`).get(getUserRolesByName).put(updateUserRolesByName);
+router
+  .route(`/users/roles/:username`)
+  .get(catchErrors(getUserRolesByName))
+  .put(catchErrors(updateUserRolesByName));
 
 router
   .route(`/users/:id`)
-  .get(getUserById)
-  .put(updateUserById) // TODO: should put be a patch?
+  .get(catchErrors(getUserById))
+  .put(catchErrors(updateUserById)) // TODO: should put be a patch?
   .delete(deleteUserById);
 
 export default router;

@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import rolesServices from '@/services/admin/rolesServices';
 import { RolesFilter, RolesFilterSchema } from '@/controllers/admin/roles/rolesSchema';
 import { UUID } from 'crypto';
-import KeycloakService from '@/services/keycloak/keycloakService';
 
 /**
  * @description Gets a paged list of roles.
@@ -18,17 +17,12 @@ export const getRoles = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  try {
-    const filter = RolesFilterSchema.safeParse(req.query);
-    await KeycloakService.syncKeycloakRoles();
-    if (filter.success) {
-      const roles = await rolesServices.getRoles(filter.data as RolesFilter); //await rolesServices.getRoles(filter.data as RolesFilter);
-      return res.status(200).send(roles);
-    } else {
-      return res.status(400).send('Could not parse filter.');
-    }
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message);
+  const filter = RolesFilterSchema.safeParse(req.query);
+  if (filter.success) {
+    const roles = await rolesServices.getRoles(filter.data as RolesFilter); //await rolesServices.getRoles(filter.data as RolesFilter);
+    return res.status(200).send(roles);
+  } else {
+    return res.status(400).send('Could not parse filter.');
   }
 };
 
@@ -46,12 +40,8 @@ export const addRole = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  try {
-    const role = await rolesServices.addRole(req.body);
-    return res.status(201).send(role);
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message);
-  }
+  const role = await rolesServices.addRole(req.body);
+  return res.status(201).send(role);
 };
 
 /**
@@ -115,15 +105,11 @@ export const deleteRoleById = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  try {
-    const id = req.params.id;
-    if (id != req.body.Id) {
-      return res.status(400).send('Request param id did not match request body id.');
-    } else {
-      const role = await rolesServices.removeRole(req.body);
-      return res.status(200).send(role);
-    }
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message);
+  const id = req.params.id;
+  if (id != req.body.Id) {
+    return res.status(400).send('Request param id did not match request body id.');
+  } else {
+    const role = await rolesServices.removeRole(req.body);
+    return res.status(200).send(role);
   }
 };

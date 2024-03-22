@@ -12,9 +12,6 @@ import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
 let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
-// const { getAgencies, addAgency, updateAgencyById, getAgencyById, deleteAgencyById } =
-//   controllers.admin;
-
 const _getAgencies = jest.fn().mockImplementation(() => [produceAgency()]);
 const _postAgency = jest.fn().mockImplementation((agency) => agency);
 const _getAgencyById = jest
@@ -46,29 +43,28 @@ describe('UNIT - Agencies Admin', () => {
   });
 
   describe('Controller getAgencies', () => {
-    // TODO: enable other tests when controller is complete
     it('should return status 200 and a list of agencies', async () => {
       await controllers.getAgencies(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
 
-    it('should return status 200 and a list of agencies', async () => {
+    it('should return status 200 and a list of agencies with no filter', async () => {
       _getKeycloakUserRoles.mockImplementationOnce(() => []);
       await controllers.getAgencies(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
 
-    it('should return status 200 and a list of agencies', async () => {
+    it('should return status 200 and a list of agencies when given a filter', async () => {
       mockRequest.query = {
         name: 'a',
-        parentId: 'a',
+        parentId: '0',
         id: '1',
       };
       await controllers.getAgencies(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
 
-    it('should return status 400', async () => {
+    it('should return status 400 when the filter has incorrect typing', async () => {
       mockRequest.query = {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         name: 0 as any,
@@ -86,17 +82,16 @@ describe('UNIT - Agencies Admin', () => {
       expect(mockResponse.statusValue).toBe(201);
       expect(mockResponse.sendValue.Id).toBe(agency.Id);
     });
-    it('should return status 400', async () => {
+    it('should throw an error when the postAgency service fails', async () => {
       _postAgency.mockImplementationOnce(() => {
         throw new ErrorWithCode('', 400);
       });
-      await controllers.addAgency(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(async () => await controllers.addAgency(mockRequest, mockResponse)).rejects.toThrow();
     });
   });
 
   describe('Controller getAgencyById', () => {
-    it('should return status 200 and the agency info', async () => {
+    it('should return status 200 and the agency info when given specific id', async () => {
       mockRequest.params.id = '777';
       await controllers.getAgencyById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
@@ -107,19 +102,13 @@ describe('UNIT - Agencies Admin', () => {
       await controllers.getAgencyById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(404);
     });
-    it('should return status 400', async () => {
+    it('should throw an error when getAgencyById service throws an error', async () => {
       _getAgencyById.mockImplementationOnce(() => {
         throw new ErrorWithCode('', 400);
       });
-      await controllers.getAgencyById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
-    });
-    it('should return status 400', async () => {
-      _getAgencyById.mockImplementationOnce(() => {
-        throw new Error();
-      });
-      await controllers.getAgencyById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(
+        async () => await controllers.getAgencyById(mockRequest, mockResponse),
+      ).rejects.toThrow();
     });
   });
 
@@ -140,25 +129,16 @@ describe('UNIT - Agencies Admin', () => {
       expect(mockResponse.statusValue).toBe(400);
       expect(mockResponse.sendValue).toBe('The param ID does not match the request body.');
     });
-    it('should return status 400', async () => {
+    it('should throw an error when updateAgencyById service throws an error', async () => {
       _updateAgencyById.mockImplementationOnce(() => {
         throw new ErrorWithCode('', 400);
       });
       const agency = produceAgency();
       mockRequest.params.id = agency.Id.toString();
       mockRequest.body = agency;
-      await controllers.updateAgencyById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
-    });
-    it('should return status 400', async () => {
-      _updateAgencyById.mockImplementationOnce(() => {
-        throw new Error();
-      });
-      const agency = produceAgency();
-      mockRequest.params.id = agency.Id.toString();
-      mockRequest.body = agency;
-      await controllers.updateAgencyById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(
+        async () => await controllers.updateAgencyById(mockRequest, mockResponse),
+      ).rejects.toThrow();
     });
   });
 
@@ -170,21 +150,14 @@ describe('UNIT - Agencies Admin', () => {
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.Id).toBe(agency.Id);
     });
-    it('should return status 400', async () => {
+    it('should throw an error when deleteAgencyById service throws an error', async () => {
       _deleteAgencyById.mockImplementationOnce(() => {
         throw new ErrorWithCode('', 400);
       });
       mockRequest.params.id = 'asf';
-      await controllers.deleteAgencyById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
-    });
-    it('should return status 400', async () => {
-      _deleteAgencyById.mockImplementationOnce(() => {
-        throw new Error();
-      });
-      mockRequest.params.id = 'asf';
-      await controllers.deleteAgencyById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(
+        async () => await controllers.deleteAgencyById(mockRequest, mockResponse),
+      ).rejects.toThrow();
     });
   });
 });

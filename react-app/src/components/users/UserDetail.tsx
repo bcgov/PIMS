@@ -6,7 +6,6 @@ import DeleteDialog from '../dialog/DeleteDialog';
 import { deleteAccountConfirmText } from '@/constants/strings';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import { FormProvider, useForm } from 'react-hook-form';
-import TextInput from '@/components/form/TextFormField';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
@@ -14,15 +13,17 @@ import { User } from '@/hooks/api/useUsersApi';
 import { AuthContext } from '@/contexts/authContext';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { Role } from '@/hooks/api/useRolesApi';
+import TextFormField from '../form/TextFormField';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
+import { useParams } from 'react-router-dom';
 
 interface IUserDetail {
-  userId: string;
   onClose: () => void;
 }
 
-const UserDetail = ({ userId, onClose }: IUserDetail) => {
+const UserDetail = ({ onClose }: IUserDetail) => {
+  const { id } = useParams();
   const { pimsUser } = useContext(AuthContext);
   const api = usePimsApi();
 
@@ -30,7 +31,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
 
-  const { data, refreshData } = useDataLoader(() => api.users.getUserById(userId));
+  const { data, refreshData } = useDataLoader(() => api.users.getUserById(id));
 
   const { data: rolesData, loadOnce: loadRoles } = useDataLoader(api.roles.getInternalRoles);
   loadRoles();
@@ -93,7 +94,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
 
   useEffect(() => {
     refreshData();
-  }, [userId]);
+  }, [id]);
 
   useEffect(() => {
     profileFormMethods.reset({
@@ -124,7 +125,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
         deleteTitle={'Delete Account'}
         onDeleteClick={() => setOpenDeleteDialog(true)}
         onBackClick={() => onClose()}
-        deleteButtonProps={{ disabled: pimsUser.data.Id === userId }}
+        deleteButtonProps={{ disabled: pimsUser.data?.Id === id }}
       />
       <DataCard
         customFormatter={customFormatterStatus}
@@ -144,7 +145,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
         message={deleteAccountConfirmText}
         deleteText="Delete Account"
         onDelete={async () => {
-          api.users.deleteUser(userId).then(() => {
+          api.users.deleteUser(id).then(() => {
             setOpenDeleteDialog(false);
             onClose();
           });
@@ -158,7 +159,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
           const isValid = await profileFormMethods.trigger();
           if (isValid) {
             api.users
-              .updateUser(userId, { Id: userId, ...profileFormMethods.getValues() })
+              .updateUser(id, { Id: id, ...profileFormMethods.getValues() })
               .then(() => refreshData());
             setOpenProfileDialog(false);
           }
@@ -168,16 +169,16 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
         <FormProvider {...profileFormMethods}>
           <Grid mt={'1rem'} spacing={2} container>
             <Grid item xs={6}>
-              <TextInput fullWidth name={'DisplayName'} label={'IDIR/BCeID'} disabled />
+              <TextFormField fullWidth name={'DisplayName'} label={'IDIR/BCeID'} disabled />
             </Grid>
             <Grid item xs={6}>
-              <TextInput required fullWidth name={'Email'} label={'Email'} />
+              <TextFormField required fullWidth name={'Email'} label={'Email'} />
             </Grid>
             <Grid item xs={6}>
-              <TextInput required fullWidth name={'FirstName'} label={'First Name'} />
+              <TextFormField required fullWidth name={'FirstName'} label={'First Name'} />
             </Grid>
             <Grid item xs={6}>
-              <TextInput required fullWidth name={'LastName'} label={'Last Name'} />
+              <TextFormField required fullWidth name={'LastName'} label={'Last Name'} />
             </Grid>
             <Grid item xs={12}>
               <AutocompleteFormField
@@ -188,7 +189,7 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextInput name={'Position'} fullWidth label={'Position'} />
+              <TextFormField name={'Position'} fullWidth label={'Position'} />
             </Grid>
           </Grid>
         </FormProvider>
@@ -201,8 +202,8 @@ const UserDetail = ({ userId, onClose }: IUserDetail) => {
           if (isValid) {
             await api.users.updateUserRole(data.Username, statusFormMethods.getValues().Role);
             api.users
-              .updateUser(userId, {
-                Id: userId,
+              .updateUser(id, {
+                Id: id,
                 Status: statusFormMethods.getValues().Status,
               })
               .then(() => refreshData());

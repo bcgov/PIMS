@@ -47,12 +47,8 @@ export const addAgency = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  try {
-    const agency = await agencyService.postAgency(req.body);
-    return res.status(201).send(agency);
-  } catch (e) {
-    return res.status(400).send(e.message);
-  }
+  const agency = await agencyService.postAgency(req.body);
+  return res.status(201).send(agency);
 };
 
 /**
@@ -70,15 +66,11 @@ export const getAgencyById = async (req: Request, res: Response) => {
       }]
    */
 
-  try {
-    const agency = await agencyService.getAgencyById(parseInt(req.params.id));
-    if (!agency) {
-      return res.status(404).send('Agency does not exist.');
-    }
-    return res.status(200).send(agency);
-  } catch (e) {
-    return res.status(400).send(e.message);
+  const agency = await agencyService.getAgencyById(parseInt(req.params.id));
+  if (!agency) {
+    return res.status(404).send('Agency does not exist.');
   }
+  return res.status(200).send(agency);
 };
 
 /**
@@ -95,16 +87,15 @@ export const updateAgencyById = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  const id = z.string().parse(req.params.id);
-  if (id != req.body.Id) {
+  const idParse = z.string().safeParse(req.params.id);
+  if (!idParse.success) {
+    return res.status(400).send(idParse);
+  }
+  if (idParse.data != req.body.Id) {
     return res.status(400).send('The param ID does not match the request body.');
   }
-  try {
-    const agency = await agencyService.updateAgencyById(req.body);
-    return res.status(200).send(agency);
-  } catch (e) {
-    return res.status(400).send(e.message);
-  }
+  const agency = await agencyService.updateAgencyById(req.body);
+  return res.status(200).send(agency);
 };
 
 /**
@@ -121,11 +112,10 @@ export const deleteAgencyById = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  const id = z.string().parse(req.params.id);
-  try {
-    const agency = await agencyService.deleteAgencyById(parseInt(id));
-    return res.status(200).send(agency);
-  } catch (e) {
-    return res.status(400).send(e.message);
+  const idParse = z.string().safeParse(req.params.id);
+  if (!idParse.success) {
+    return res.status(400).send(idParse);
   }
+  const agency = await agencyService.deleteAgencyById(parseInt(idParse.data));
+  return res.status(200).send(agency);
 };

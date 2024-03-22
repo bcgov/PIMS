@@ -70,7 +70,7 @@ export const updateBuilding = async (req: Request, res: Response) => {
     if (isNaN(buildingId) || buildingId !== req.body.Id) {
       return res.status(400).send('Building ID was invalid or mismatched with body.');
     }
-    const building = await buildingService.updateBuilding(req.body);
+    const building = await buildingService.updateBuildingById(req.body);
     if (!building) {
       return res.status(404).send('Building matching this internal ID not found.');
     }

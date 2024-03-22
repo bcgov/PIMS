@@ -33,6 +33,7 @@ import FilterBackdrop from './FilterBackdrop';
 import InfoSlideOut from './InfoSlideOut/InfoSlideOut';
 import { InventoryLayer } from './InventoryLayer';
 import {
+  BCA_PRIVATE_LAYER_URL,
   MUNICIPALITY_LAYER_URL,
   municipalityLayerPopupConfig,
   parcelLayerPopupConfig,
@@ -186,6 +187,7 @@ const Map: React.FC<MapProps> = ({
   const [triggerFilterChanged, setTriggerFilterChanged] = React.useState(true);
   const municipalitiesService = useLayerQuery(MUNICIPALITY_LAYER_URL);
   const parcelsService = useLayerQuery(PARCELS_PUBLIC_LAYER_URL);
+  const bcaWMSLayerService = useLayerQuery(BCA_PRIVATE_LAYER_URL ?? '');
   const { setChanged } = useFilterContext();
   const popUpContext = React.useContext(PropertyPopUpContext);
   const parcelLayerFeature = useAppSelector((store) => store.parcelLayerData?.parcelLayerFeature);
@@ -313,6 +315,7 @@ const Map: React.FC<MapProps> = ({
     !!onMapClick && onMapClick(event);
     const municipality = await municipalitiesService.findOneWhereContains(event.latlng);
     const parcel = await parcelsService.findOneWhereContains(event.latlng);
+    const bca = await bcaWMSLayerService.findOneWhereContains(event.latlng);
     let properties = {};
     let center: LatLng | undefined;
     let bounds: LatLngBounds | undefined;
@@ -336,6 +339,26 @@ const Map: React.FC<MapProps> = ({
         : undefined;
       center = bounds?.getCenter();
       feature = parcel.features[0];
+    }
+    if (bca && bca.features?.length >= 1) {
+      const bcaProps = bca.features[0].properties!;
+      const {
+        GEN_NET_IMPROVEMENT_VALUE,
+        GEN_NET_LAND_VALUE,
+        GEN_GROSS_LAND_VALUE,
+        GEN_GROSS_IMPROVEMENT_VALUE,
+        FOLIO_ID,
+        ROLL_NUMBER,
+      } = bcaProps;
+      properties = {
+        ...properties,
+        GEN_NET_IMPROVEMENT_VALUE,
+        GEN_NET_LAND_VALUE,
+        GEN_GROSS_LAND_VALUE,
+        GEN_GROSS_IMPROVEMENT_VALUE,
+        FOLIO_ID,
+        ROLL_NUMBER,
+      };
     }
 
     if (!isEmpty(properties)) {
