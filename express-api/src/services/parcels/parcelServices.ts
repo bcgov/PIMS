@@ -90,10 +90,8 @@ const updateParcel = async (incomingParcel: DeepPartial<Parcel>) => {
   if (findParcel == null || findParcel.Id !== incomingParcel.Id) {
     throw new ErrorWithCode('Parcel not found', 404);
   }
-  await parcelRepo.update({ Id: findParcel.Id }, incomingParcel);
-  // update function doesn't return data on the row changed. Have to get the changed row again
-  const newParcel = await getParcelById(incomingParcel.Id);
-  return newParcel;
+
+  return parcelRepo.save(incomingParcel);
 };
 
 /**
@@ -113,7 +111,18 @@ const getParcelByPid = async (parcelPid: number) => {
  * @returns     findParcel Parcel data matching ID passed in.
  */
 const getParcelById = async (parcelId: number) => {
-  return await parcelRepo.findOne({ where: { Id: parcelId } });
+  return parcelRepo.findOne({
+    relations: {
+      ParentParcel: true,
+      Agency: true,
+      AdministrativeArea: true,
+      Classification: true,
+      PropertyType: true,
+      Evaluations: true,
+      Fiscals: true,
+    },
+    where: { Id: parcelId },
+  });
 };
 
 const parcelServices = {

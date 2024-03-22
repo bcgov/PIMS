@@ -5,6 +5,7 @@ import {
   MockRes,
   getRequestHandlerMocks,
   produceParcel,
+  produceUser,
 } from '../../../testUtils/factories';
 import { DeleteResult } from 'typeorm';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
@@ -21,7 +22,9 @@ jest.mock('@/services/parcels/parcelServices', () => ({
   getParcels: () => _getParcels(),
   addParcel: () => _addParcel(),
 }));
-
+jest.mock('@/services/users/usersServices', () => ({
+  getUser: jest.fn().mockImplementation(() => produceUser()),
+}));
 describe('UNIT - Parcels', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
