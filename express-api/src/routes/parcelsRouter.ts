@@ -4,13 +4,11 @@ import express from 'express';
 
 const router = express.Router();
 
-const PARCELS_ROUTE = '/parcels';
-
 const {
   getParcel,
   updateParcel,
   deleteParcel,
-  filterParcelsQueryString,
+  getParcels,
   addParcel,
   checkPidAvailable,
   checkPinAvailable,
@@ -19,16 +17,13 @@ const {
 
 // Endpoints for parcels data manipulation
 router
-  .route(`${PARCELS_ROUTE}/:parcelId`)
+  .route(`/:parcelId`)
   .get(catchErrors(getParcel))
   .put(catchErrors(updateParcel))
   .delete(catchErrors(deleteParcel));
-router
-  .route(`${PARCELS_ROUTE}/`)
-  .get(catchErrors(filterParcelsQueryString))
-  .post(catchErrors(addParcel));
-router.route(`${PARCELS_ROUTE}/check/pid-available`).get(catchErrors(checkPidAvailable));
-router.route(`${PARCELS_ROUTE}/check/pin-available`).get(catchErrors(checkPinAvailable));
-router.route(`${PARCELS_ROUTE}/:parcelId/financials`).put(catchErrors(updateParcelFinancial));
+router.route(`/`).get(catchErrors(getParcels)).post(catchErrors(addParcel));
+router.route(`/check/pid-available`).get(catchErrors(checkPidAvailable));
+router.route(`/check/pin-available`).get(catchErrors(checkPinAvailable));
+router.route(`/:parcelId/financials`).put(catchErrors(updateParcelFinancial));
 
 export default router;
