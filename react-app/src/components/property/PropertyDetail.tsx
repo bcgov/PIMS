@@ -55,9 +55,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           relatedBuildings?.forEach((building, idx) => {
             //We need to find evaluations with the matching year of the parcel evaluations.
             //We can't just sort naively in the same way since we can't guarantee both lists have the same years.
-            const buildingEval = building.Evaluations?.find(
-              (e) => e.Date.getFullYear() === parcelEval.Year,
-            );
+            const buildingEval = building.Evaluations?.find((e) => e.Year === parcelEval.Year);
             if (buildingEval) {
               evaluation[`Building${idx + 1}`] = buildingEval.Value;
             }
@@ -67,11 +65,9 @@ const PropertyDetail = (props: IPropertyDetail) => {
       }
       return evaluations;
     } else if (buildingId && building) {
-      const lastTwoYrs = building.Evaluations?.sort(
-        (a, b) => b.Date.getFullYear() - a.Date.getFullYear(),
-      ).slice(0, 2);
+      const lastTwoYrs = building.Evaluations?.sort((a, b) => b.Year - a.Year).slice(0, 2);
       return lastTwoYrs?.map((ev) => ({
-        Year: ev.Date.getFullYear(),
+        Year: ev.Year,
         Value: ev.Value,
       }));
     } else {
