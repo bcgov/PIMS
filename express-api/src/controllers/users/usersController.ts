@@ -73,17 +73,13 @@ export const submitUserAccessRequest = async (req: Request, res: Response) => {
       "bearerAuth" : []
       }]
    */
-  try {
-    const result = await userServices.addKeycloakUserOnHold(
-      req.user as KeycloakUser,
-      Number(req.body.AgencyId),
-      req.body.Position,
-      req.body.Note,
-    );
-    return res.status(200).send(result);
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message);
-  }
+  const result = await userServices.addKeycloakUserOnHold(
+    req.user as KeycloakUser,
+    Number(req.body.AgencyId),
+    req.body.Position,
+    req.body.Note,
+  );
+  return res.status(200).send(result);
 };
 
 /**
@@ -154,24 +150,16 @@ export const getUserAgencies = async (req: Request, res: Response) => {
       }]
    */
   const user = String(req.params?.username);
-  try {
-    const result = await userServices.getAgencies(user);
-    return res.status(200).send(result);
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message);
-  }
+  const result = await userServices.getAgencies(user);
+  return res.status(200).send(result);
 };
 
 export const getSelf = async (req: Request, res: Response) => {
-  try {
-    const user = userServices.normalizeKeycloakUser(req.user as KeycloakUser);
-    const result = await userServices.getUser(user.username);
-    if (result) {
-      return res.status(200).send(result);
-    } else {
-      return res.status(204).send(); //Valid request, but no user for this keycloak login.
-    }
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message);
+  const user = userServices.normalizeKeycloakUser(req.user as KeycloakUser);
+  const result = await userServices.getUser(user.username);
+  if (result) {
+    return res.status(200).send(result);
+  } else {
+    return res.status(204).send(); //Valid request, but no user for this keycloak login.
   }
 };
