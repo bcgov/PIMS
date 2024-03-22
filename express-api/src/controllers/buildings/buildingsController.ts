@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import * as buildingService from '@/services/buildings/buildingServices';
 import { BuildingFilterSchema } from '@/services/buildings/buildingSchema';
+import userServices from '@/services/users/usersServices';
+import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 
 /**
  * @description Gets all buildings satisfying the filter parameters.
@@ -8,17 +10,14 @@ import { BuildingFilterSchema } from '@/services/buildings/buildingSchema';
  * @param {Response}    res Outgoing Response
  * @returns {Response}      A 200 status with a response body containing an array of building data.
  */
-export const filterBuildingQueryString = async (req: Request, res: Response) => {
-  try {
-    const filter = BuildingFilterSchema.safeParse(req.query);
-    if (filter.success) {
-      const response = await buildingService.getBuildings(filter.data);
-      return res.status(200).send(response);
-    } else {
-      return res.status(400).send('Could not parse filter.');
-    }
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong.');
+export const getBuildings = async (req: Request, res: Response) => {
+  const includeRelations = req.query.includeRelations === 'true';
+  const filter = BuildingFilterSchema.safeParse(req.query);
+  if (filter.success) {
+    const response = await buildingService.getBuildings(filter.data, includeRelations);
+    return res.status(200).send(response);
+  } else {
+    return res.status(400).send('Could not parse filter.');
   }
 };
 
@@ -36,19 +35,15 @@ export const getBuilding = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  try {
-    const buildingId = Number(req.params.buildingId);
-    if (isNaN(buildingId)) {
-      return res.status(400).send('Building Id is invalid.');
-    }
-    const building = await buildingService.getBuildingById(buildingId);
-    if (!building) {
-      return res.status(404).send('Building matching this ID was not found.');
-    }
-    return res.status(200).send(building);
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong.');
+  const buildingId = Number(req.params.buildingId);
+  if (isNaN(buildingId)) {
+    return res.status(400).send('Building Id is invalid.');
   }
+  const building = await buildingService.getBuildingById(buildingId);
+  if (!building) {
+    return res.status(404).send('Building matching this ID was not found.');
+  }
+  return res.status(200).send(building);
 };
 
 /**
@@ -65,19 +60,17 @@ export const updateBuilding = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  try {
-    const buildingId = Number(req.params.buildingId);
-    if (isNaN(buildingId) || buildingId !== req.body.Id) {
-      return res.status(400).send('Building ID was invalid or mismatched with body.');
-    }
-    const building = await buildingService.updateBuildingById(req.body);
-    if (!building) {
-      return res.status(404).send('Building matching this internal ID not found.');
-    }
-    return res.status(200).send(building);
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong.');
+  const buildingId = Number(req.params.buildingId);
+  if (isNaN(buildingId) || buildingId !== req.body.Id) {
+    return res.status(400).send('Building ID was invalid or mismatched with body.');
   }
+  const user = await userServices.getUser((req.user as KeycloakUser).preferred_username);
+  const updateBody = { ...req.body, UpdatedById: user.Id };
+  const building = await buildingService.updateBuildingById(updateBody);
+  if (!building) {
+    return res.status(404).send('Building matching this internal ID not found.');
+  }
+  return res.status(200).send(building);
 };
 
 /**
@@ -94,16 +87,12 @@ export const deleteBuilding = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  try {
-    const buildingId = Number(req.params.buildingId);
-    if (isNaN(buildingId)) {
-      return res.status(400).send('Building ID was invalid.');
-    }
-    const delResult = await buildingService.deleteBuildingById(buildingId);
-    return res.status(200).send(delResult);
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong.');
+  const buildingId = Number(req.params.buildingId);
+  if (isNaN(buildingId)) {
+    return res.status(400).send('Building ID was invalid.');
   }
+  const delResult = await buildingService.deleteBuildingById(buildingId);
+  return res.status(200).send(delResult);
 };
 
 /**
@@ -121,10 +110,8 @@ export const addBuilding = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  try {
-    const response = await buildingService.addBuilding(req.body);
-    return res.status(201).send(response);
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong.');
-  }
+  const user = await userServices.getUser((req.user as KeycloakUser).preferred_username);
+  const createBody = { ...req.body, CreatedById: user.Id };
+  const response = await buildingService.addBuilding(createBody);
+  return res.status(201).send(response);
 };
