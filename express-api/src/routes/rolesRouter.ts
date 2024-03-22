@@ -9,10 +9,10 @@ const router = express.Router();
 const { addRole, deleteRoleById, getRoleById, getRoles, updateRoleById } = controllers;
 
 // Endpoints for Roles
-router.route(`/roles`).get(catchErrors(getRoles)).post(catchErrors(addRole));
+router.route(`/`).get(catchErrors(getRoles)).post(catchErrors(addRole));
 
 router
-  .route(`/roles/:id`)
+  .route(`/:id`)
   .get(catchErrors(getRoleById))
   .put(protectedRoute([Roles.ADMIN]), catchErrors(updateRoleById)) // TODO: should put be a patch?
   .delete(protectedRoute([Roles.ADMIN]), catchErrors(deleteRoleById));

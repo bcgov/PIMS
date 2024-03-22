@@ -6,7 +6,7 @@ import { IRole } from '@/controllers/roles/IRole';
 
 const request = supertest(app);
 
-const ROLES_PATH = '/v2/admin/roles';
+const ROLES_PATH = '/v2/roles';
 const mockRole: IRole = {
   createdOn: faker.date.anytime().toLocaleString(),
   updatedOn: faker.date.anytime().toLocaleString(),
@@ -20,7 +20,7 @@ const mockRole: IRole = {
   sortOrder: 0,
   type: '',
 };
-describe('INTEGRATION - Roles Admin', () => {
+describe('INTEGRATION - Roles', () => {
   // TODO: figure out how to mock keycloak
   const TOKEN = '';
   describe(`GET ${ROLES_PATH}`, () => {
