@@ -22,7 +22,8 @@ export const getAgencies = async (req: Request, res: Response) => {
   const kcUser = req.user as KeycloakUser;
   const filter = AgencyFilterSchema.safeParse(req.query);
   if (filter.success) {
-    const agencies = await agencyService.getAgencies(filter.data);
+    const includeRelations = req.query.includeRelations === 'true';
+    const agencies = await agencyService.getAgencies(filter.data, includeRelations);
     if (!kcUser.client_roles || !kcUser.client_roles.includes(Roles.ADMIN)) {
       const trimmed = AgencyPublicResponseSchema.array().parse(agencies);
       return res.status(200).send(trimmed);
