@@ -10,10 +10,19 @@ export interface ParcelEvaluation extends BaseEntityInterface {
   Year: number;
   Value: number;
   Firm?: string;
-  EvalutationKeyId: number;
+  EvaluationKeyId: number;
   EvaluationKey?: EvaluationKey;
   Note?: string;
 }
+
+type ParcelEvaluationAdd = Omit<
+  ParcelEvaluation,
+  'ParcelId' | 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById'
+>;
+type ParcelFiscalAdd = Omit<
+  ParcelFiscal,
+  'ParcelId' | 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById'
+>;
 
 export interface ParcelFiscal extends BaseEntityInterface {
   FiscalYear: number;
@@ -34,13 +43,14 @@ export interface Parcel extends Property {
   ParentParcelId?: number;
   ParentParcel?: Parcel;
   NotOwned?: boolean;
+  PropertyTypeId: number;
 }
 
 export type ParcelUpdate = Partial<Parcel>;
 export type ParcelAdd = Omit<
   Parcel,
-  'Id' | 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById'
->;
+  'Id' | 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById' | 'Evaluations' | 'Fiscals'
+> & { Evaluations: ParcelEvaluationAdd[]; Fiscals: ParcelFiscalAdd[] };
 
 const useParcelsApi = (absoluteFetch: IFetch) => {
   const addParcel = async (parcel: ParcelAdd) => {

@@ -10,8 +10,9 @@ import useDataLoader from '@/hooks/useDataLoader';
 import { useClassificationStyle } from './PropertyTable';
 import PropertyAssessedValueTable from './PropertyAssessedValueTable';
 import { useParams } from 'react-router-dom';
-import { ParcelInformationEditDialog } from './PropertyForms';
+import { BuildingInformationEditDialog, ParcelInformationEditDialog } from './PropertyForms';
 import { Parcel } from '@/hooks/api/useParcelsApi';
+import { Building } from '@/hooks/api/useBuildingsApi';
 
 interface IPropertyDetail {
   onClose: () => void;
@@ -105,25 +106,29 @@ const PropertyDetail = (props: IPropertyDetail) => {
     return <Typography>{val}</Typography>;
   };
 
-  const buildingOrParcel = building ? 'Building' : 'Parcel';
+  const buildingOrParcel = typeof building === 'object' ? 'Building' : 'Parcel';
   const mainInformation = useMemo(() => {
-    const data: any = parcel ?? building;
+    const data: Parcel | Building = buildingOrParcel === 'Building' ? building : parcel;
     if (!data) {
       return {};
     } else {
-      const info = {
+      const info: any = {
         Classification: data.Classification,
         PID: data.PID,
         PIN: data.PIN,
         PostalCode: data.Postal,
         AdministrativeArea: data.AdministrativeArea?.Name,
         Address: data.Address1,
-        LotSize: data.TotalArea,
         IsSensitive: data.IsSensitive,
         Description: data.Description,
-        LandArea: data.LandArea,
-        Owned: !data.NotOwned,
       };
+      if (buildingOrParcel === 'Building') {
+        info.TotalArea = (data as Building).TotalArea;
+        info.UsableArea = (data as Building).RentableArea;
+      } else {
+        info.LandArea = (data as Parcel).LandArea;
+        info.Owned = !(data as Parcel).NotOwned;
+      }
       return info;
     }
   }, [parcel, building]);
@@ -184,11 +189,21 @@ const PropertyDetail = (props: IPropertyDetail) => {
           />
         </DataCard>
       </Box>
-      <ParcelInformationEditDialog
-        open={openInformationDialog}
-        onCancel={() => setOpenInformationDialog(false)}
-        initialValues={parcel}
-      />
+      <>
+        {buildingOrParcel === 'Parcel' ? (
+          <ParcelInformationEditDialog
+            open={openInformationDialog}
+            onCancel={() => setOpenInformationDialog(false)}
+            initialValues={parcel}
+          />
+        ) : (
+          <BuildingInformationEditDialog
+            initialValues={building}
+            open={openInformationDialog}
+            onCancel={() => setOpenInformationDialog(false)}
+          />
+        )}
+      </>
     </CollapsibleSidebar>
   );
 };

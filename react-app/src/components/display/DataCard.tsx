@@ -19,7 +19,7 @@ const DataCard = <T,>(props: DataCardProps<T>) => {
     if (customFormat) {
       return customFormat;
     }
-
+    console.log(`Processing key: ${key}, val: ${val}`);
     if (val instanceof Date) {
       return <Typography>{dateFormatter(val)}</Typography>;
     }

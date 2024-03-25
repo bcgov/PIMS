@@ -9,7 +9,7 @@ export interface BuildingEvaluation extends BaseEntityInterface {
   Building?: Building;
   Year: number;
   Value: number;
-  EvalutationKeyId: number;
+  EvaluationKeyId: number;
   EvaluationKey?: EvaluationKey;
   Note?: string;
 }
@@ -74,11 +74,20 @@ export interface Building extends Property {
   Fiscals?: BuildingFiscal[] | null;
 }
 
+type BuildingEvaluationAdd = Omit<
+  BuildingEvaluation,
+  'BuildingId' | 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById'
+>;
+type BuildingFiscalAdd = Omit<
+  BuildingFiscal,
+  'BuildingId' | 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById'
+>;
+
 export type BuildingUpdate = Partial<Building>;
 export type BuildingAdd = Omit<
   Building,
-  'Id' | 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById'
->;
+  'Id' | 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById' | 'Evaluations' | 'Fiscals'
+> & { Evaluations: BuildingEvaluationAdd[]; Fiscals: BuildingFiscalAdd[] };
 
 const useBuildingsApi = (absoluteFetch: IFetch) => {
   const addBuilding = async (building: BuildingAdd) => {

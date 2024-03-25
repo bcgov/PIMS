@@ -12,6 +12,10 @@ import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
 import { LookupObject } from '@/hooks/api/useLookupApi';
 import { GeneralInformationForm, ParcelInformationForm, PropertyType } from './PropertyForms';
+import { NavigateBackButton } from '../display/DetailViewNavigation';
+import { useNavigate } from 'react-router-dom';
+import { ParcelAdd } from '@/hooks/api/useParcelsApi';
+import { BuildingAdd } from '@/hooks/api/useBuildingsApi';
 
 interface IAssessedValue {
   years: number[];
@@ -155,6 +159,7 @@ interface INetBookValue {
   years: number[];
 }
 
+// Property.Fiscals
 const NetBookValue = (props: INetBookValue) => {
   return (
     <Grid container spacing={2}>
@@ -165,7 +170,7 @@ const NetBookValue = (props: INetBookValue) => {
               <TextFormField
                 value={yr}
                 disabled
-                name={`Fiscals.${idx}.Year`}
+                name={`Fiscals.${idx}.FiscalYear`}
                 label={'Fiscal year'}
               />
             </Grid>
@@ -191,9 +196,9 @@ const NetBookValue = (props: INetBookValue) => {
 
 const AddProperty = () => {
   const years = [new Date().getFullYear(), new Date().getFullYear() - 1];
-  const [propertyType, setPropertyType] = useState<PropertyType>('Building');
+  const [propertyType, setPropertyType] = useState<PropertyType>('Parcel');
   const [showErrorText, setShowErrorTest] = useState(false);
-
+  const navigate = useNavigate();
   const api = usePimsApi();
   const { data: adminAreasData, loadOnce: loadAdminAreas } = useDataLoader(
     api.administrativeAreas.getAdministrativeAreas,
@@ -217,31 +222,33 @@ const AddProperty = () => {
     defaultValues: {
       NotOwned: true,
       Address1: '',
-      PIN: '',
-      PID: '',
+      PIN: null,
+      PID: null,
       PostalCode: '',
-      AdministrativeAreaId: '',
+      AdministrativeAreaId: null,
       Latitude: '',
       Longitude: '',
-      LandArea: '',
-      IsSensitive: '',
-      ClassificationId: '',
+      LandArea: null,
+      IsSensitive: false,
+      ClassificationId: null,
       Description: '',
       Name: '',
-      BuildingPredominateUseId: '',
-      BuildingConstructionTypeId: '',
-      TotalArea: '',
-      RentableArea: '',
+      BuildingPredominateUseId: null,
+      BuildingConstructionTypeId: null,
+      TotalArea: null,
+      RentableArea: null,
       BuildingTenancy: '',
       BuildingTenancyUpdatedOn: dayjs(),
       Fiscals: years.map((yr) => ({
-        Year: yr,
-        Value: '',
+        FiscalYear: yr,
+        Value: null,
+        FiscalKeyId: 0,
+        EffectiveDate: dayjs(),
       })),
       Evaluations: years.map((yr) => ({
         Year: yr,
-        EffectiveDate: dayjs(),
-        Value: '',
+        EvaluationKeyId: 0,
+        Value: null,
       })),
     },
   });
@@ -256,6 +263,12 @@ const AddProperty = () => {
       width={'38rem'}
       marginX={'auto'}
     >
+      <Box>
+        <NavigateBackButton
+          navigateBackTitle={'Back to properties'}
+          onBackClick={() => navigate('/properties')}
+        />
+      </Box>
       <FormProvider {...formMethods}>
         <Typography mb={'2rem'} variant="h2">
           Add new property
@@ -286,7 +299,7 @@ const AddProperty = () => {
         />
         {propertyType === 'Parcel' ? (
           <ParcelInformationForm
-            classificationOptions={classificationData.map((classif) => ({
+            classificationOptions={classificationData?.map((classif) => ({
               label: classif.Name,
               value: classif.Id,
             }))}
@@ -313,8 +326,47 @@ const AddProperty = () => {
         onClick={async () => {
           const isValid = await formMethods.trigger();
           if (isValid) {
-            console.log(JSON.stringify(formMethods.getValues(), null, 2));
             setShowErrorTest(false);
+            if (propertyType === 'Parcel') {
+              const formValues = formMethods.getValues();
+              const addParcel: ParcelAdd = {
+                ...formValues,
+                PropertyTypeId: 0,
+                AgencyId: null,
+                IsVisibleToOtherAgencies: false,
+                Location: { x: 0, y: 0 },
+                Fiscals: formValues.Fiscals.map((a) => ({
+                  ...a,
+                  EffectiveDate: a?.EffectiveDate?.toDate(),
+                })),
+              };
+              addParcel.Evaluations = addParcel.Evaluations.filter((a) => a.Value);
+              addParcel.Fiscals = addParcel.Fiscals.filter((a) => a.Value);
+              api.parcels.addParcel(addParcel);
+            } else {
+              const formValues = formMethods.getValues();
+              const addBuilding: BuildingAdd = {
+                ...formValues,
+                BuildingFloorCount: 0,
+                BuildingOccupantTypeId: 0,
+                PropertyTypeId: 0,
+                AgencyId: null,
+                IsVisibleToOtherAgencies: false,
+                Location: {
+                  x: 0,
+                  y: 0,
+                },
+                Fiscals: formValues.Fiscals.map((a) => ({
+                  ...a,
+                  EffectiveDate: a?.EffectiveDate?.toDate(),
+                })),
+                BuildingTenancyUpdatedOn: formValues.BuildingTenancyUpdatedOn.toDate(),
+                TransferLeaseOnSale: false,
+              };
+              addBuilding.Evaluations = addBuilding.Evaluations.filter((a) => a.Value);
+              addBuilding.Fiscals = addBuilding.Fiscals.filter((a) => a.Value);
+              api.buildings.addBuilding(addBuilding);
+            }
           } else {
             console.log('Error!');
             setShowErrorTest(true);

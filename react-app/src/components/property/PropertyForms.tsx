@@ -11,6 +11,8 @@ import DateFormField from '../form/DateFormField';
 import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
 import ConfirmDialog from '../dialog/ConfirmDialog';
+import { Building } from '@/hooks/api/useBuildingsApi';
+import dayjs from 'dayjs';
 
 export type PropertyType = 'Building' | 'Parcel';
 
@@ -313,13 +315,33 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
 };
 
 interface IBuildingInformationEditDialog {
-  initialValues: Property;
+  initialValues: Building;
   open: boolean;
   onCancel: () => void;
 }
 
 export const BuildingInformationEditDialog = (props: IBuildingInformationEditDialog) => {
-  
+  const api = usePimsApi();
+
+  const { data: adminAreasData, loadOnce: adminLoad } = useDataLoader(
+    api.administrativeAreas.getAdministrativeAreas,
+  );
+  const { data: classificationData, loadOnce: classificationLoad } = useDataLoader(
+    api.lookup.getClassifications,
+  );
+  const { data: predominateUseData, loadOnce: predominateUseLoad } = useDataLoader(
+    api.lookup.getPredominateUses,
+  );
+  const { data: constructionTypeData, loadOnce: constructionLoad } = useDataLoader(
+    api.lookup.getConstructionTypes,
+  );
+
+  adminLoad();
+  classificationLoad();
+  predominateUseLoad();
+  constructionLoad();
+
+  const { initialValues, open, onCancel } = props;
   const infoFormMethods = useForm({
     defaultValues: {
       NotOwned: true,
@@ -333,10 +355,10 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
       ClassificationId: null,
       Description: '',
       Name: '',
-      BuildingPredominateUseId: '',
-      BuildingConstructionTypeId: '',
-      TotalArea: '',
-      RentableArea: '',
+      BuildingPredominateUseId: null,
+      BuildingConstructionTypeId: null,
+      TotalArea: null,
+      RentableArea: null,
       BuildingTenancy: '',
       BuildingTenancyUpdatedOn: dayjs(),
     },
@@ -344,25 +366,31 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
 
   useEffect(() => {
     infoFormMethods.reset({
-      NotOwned: initialValues?.NotOwned,
       Address1: initialValues?.Address1,
       PIN: initialValues?.PIN,
       PID: initialValues?.PID,
       Postal: initialValues?.Postal,
       AdministrativeAreaId: initialValues?.AdministrativeAreaId,
-      LandArea: initialValues?.LandArea,
+      LandArea: initialValues?.TotalArea,
       IsSensitive: initialValues?.IsSensitive,
       ClassificationId: initialValues?.ClassificationId,
       Description: initialValues?.Description,
+      Name: initialValues?.Name,
+      BuildingPredominateUseId: initialValues?.BuildingPredominateUseId,
+      BuildingConstructionTypeId: initialValues?.BuildingConstructionTypeId,
+      TotalArea: initialValues?.TotalArea,
+      RentableArea: initialValues?.RentableArea,
+      BuildingTenancy: initialValues?.BuildingTenancy,
+      BuildingTenancyUpdatedOn: initialValues?.BuildingTenancyUpdatedOn,
     });
   }, [initialValues]);
-  
+
   return (
     <ConfirmDialog
-      title={'Edit parcel information'}
-      open={props.open}
+      title={'Edit building information'}
+      open={open}
       onConfirm={async () => console.log(infoFormMethods.getValues())}
-      onCancel={async () => props.onCancel()}
+      onCancel={async () => onCancel()}
     >
       <FormProvider {...infoFormMethods}>
         <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
@@ -373,10 +401,12 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
             }
           />
           <BuildingInformationForm
-            
+            classificationOptions={classificationData}
+            constructionOptions={constructionTypeData}
+            predominateUseOptions={predominateUseData}
           />
         </Box>
       </FormProvider>
     </ConfirmDialog>
-  )
-}
+  );
+};
