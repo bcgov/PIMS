@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import rolesServices from '@/services/admin/rolesServices';
-import { RolesFilter, RolesFilterSchema } from '@/controllers/admin/roles/rolesSchema';
+import rolesServices from '@/services/roles/rolesServices';
+import { RolesFilter, RolesFilterSchema } from '@/controllers/roles/rolesSchema';
 import { UUID } from 'crypto';
 
 /**
