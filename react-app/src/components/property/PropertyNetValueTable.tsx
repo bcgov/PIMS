@@ -2,11 +2,11 @@ import { dateFormatter } from '@/utils/formatters';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 
-interface IParcelNetValueTable {
+interface IPropertyNetValueTable {
   rows: Record<string, any>[];
 }
 
-const ParcelNetValueTable = (props: IParcelNetValueTable) => {
+const PropertyNetValueTable = (props: IPropertyNetValueTable) => {
   const columns: GridColDef[] = [
     {
       field: 'FiscalYear',
@@ -47,4 +47,4 @@ const ParcelNetValueTable = (props: IParcelNetValueTable) => {
   );
 };
 
-export default ParcelNetValueTable;
+export default PropertyNetValueTable;

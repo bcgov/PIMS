@@ -4,13 +4,14 @@ import { Box, Typography } from '@mui/material';
 import DataCard from '../display/DataCard';
 import { ClassificationInline } from './ClassificationIcon';
 import CollapsibleSidebar from '../layout/CollapsibleSidebar';
-import ParcelNetValueTable from './ParcelNetValueTable';
+import PropertyNetValueTable from './PropertyNetValueTable';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { useClassificationStyle } from './PropertyTable';
 import PropertyAssessedValueTable from './PropertyAssessedValueTable';
 import { useParams } from 'react-router-dom';
 import { ParcelInformationEditDialog } from './PropertyForms';
+import { Parcel } from '@/hooks/api/useParcelsApi';
 
 interface IPropertyDetail {
   onClose: () => void;
@@ -118,10 +119,14 @@ const PropertyDetail = (props: IPropertyDetail) => {
         Classification: data.Classification,
         PID: data.PID,
         PIN: data.PIN,
+        PostalCode: data.Postal,
+        AdministrativeArea: data.AdministrativeArea?.Name,
         Address: data.Address1,
         LotSize: data.TotalArea,
         IsSensitive: data.IsSensitive,
         Description: data.Description,
+        LandArea: data.LandArea,
+        Owned: !data.NotOwned,
       };
       return info;
     }
@@ -168,7 +173,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           title={`${buildingOrParcel} net book value`}
           onEdit={() => {}}
         >
-          <ParcelNetValueTable rows={netBookValues} />
+          <PropertyNetValueTable rows={netBookValues} />
         </DataCard>
         <DataCard
           id={'Assessed value'}

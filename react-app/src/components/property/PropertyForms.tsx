@@ -142,13 +142,13 @@ export const ParcelInformationForm = (props: IParcelInformationForm) => {
   );
 };
 
-interface IBuildingInformation {
+interface IBuildingInformationForm {
   classificationOptions: LookupObject[];
   constructionOptions: LookupObject[];
   predominateUseOptions: LookupObject[];
 }
 
-export const BuildingInformation = (props: IBuildingInformation) => {
+export const BuildingInformationForm = (props: IBuildingInformationForm) => {
   return (
     <>
       <Typography mt={'2rem'} variant="h5">{`Building information`}</Typography>
@@ -266,7 +266,6 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
       IsSensitive: false,
       ClassificationId: null,
       Description: '',
-      Name: '',
     },
   });
 
@@ -282,7 +281,6 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
       IsSensitive: initialValues?.IsSensitive,
       ClassificationId: initialValues?.ClassificationId,
       Description: initialValues?.Description,
-      Name: initialValues?.Name,
     });
   }, [initialValues]);
   return (
@@ -293,21 +291,92 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
       onCancel={async () => props.onCancel()}
     >
       <FormProvider {...infoFormMethods}>
-        <GeneralInformationForm
-          propertyType={'Parcel'}
-          adminAreas={
-            adminAreasData?.map((admin) => ({ label: admin.Name, value: admin.Id })) ?? []
-          }
-        />
-        <ParcelInformationForm
-          classificationOptions={
-            classificationData?.map((classif) => ({
-              label: classif.Name,
-              value: classif.Id,
-            })) ?? []
-          }
-        />
+        <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
+          <GeneralInformationForm
+            propertyType={'Parcel'}
+            adminAreas={
+              adminAreasData?.map((admin) => ({ label: admin.Name, value: admin.Id })) ?? []
+            }
+          />
+          <ParcelInformationForm
+            classificationOptions={
+              classificationData?.map((classif) => ({
+                label: classif.Name,
+                value: classif.Id,
+              })) ?? []
+            }
+          />
+        </Box>
       </FormProvider>
     </ConfirmDialog>
   );
 };
+
+interface IBuildingInformationEditDialog {
+  initialValues: Property;
+  open: boolean;
+  onCancel: () => void;
+}
+
+export const BuildingInformationEditDialog = (props: IBuildingInformationEditDialog) => {
+  
+  const infoFormMethods = useForm({
+    defaultValues: {
+      NotOwned: true,
+      Address1: '',
+      PIN: null,
+      PID: null,
+      Postal: '',
+      AdministrativeAreaId: null,
+      LandArea: null,
+      IsSensitive: false,
+      ClassificationId: null,
+      Description: '',
+      Name: '',
+      BuildingPredominateUseId: '',
+      BuildingConstructionTypeId: '',
+      TotalArea: '',
+      RentableArea: '',
+      BuildingTenancy: '',
+      BuildingTenancyUpdatedOn: dayjs(),
+    },
+  });
+
+  useEffect(() => {
+    infoFormMethods.reset({
+      NotOwned: initialValues?.NotOwned,
+      Address1: initialValues?.Address1,
+      PIN: initialValues?.PIN,
+      PID: initialValues?.PID,
+      Postal: initialValues?.Postal,
+      AdministrativeAreaId: initialValues?.AdministrativeAreaId,
+      LandArea: initialValues?.LandArea,
+      IsSensitive: initialValues?.IsSensitive,
+      ClassificationId: initialValues?.ClassificationId,
+      Description: initialValues?.Description,
+    });
+  }, [initialValues]);
+  
+  return (
+    <ConfirmDialog
+      title={'Edit parcel information'}
+      open={props.open}
+      onConfirm={async () => console.log(infoFormMethods.getValues())}
+      onCancel={async () => props.onCancel()}
+    >
+      <FormProvider {...infoFormMethods}>
+        <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
+          <GeneralInformationForm
+            propertyType={'Building'}
+            adminAreas={
+              adminAreasData?.map((admin) => ({ label: admin.Name, value: admin.Id })) ?? []
+            }
+          />
+          <BuildingInformationForm
+            
+          />
+        </Box>
+      </FormProvider>
+    </ConfirmDialog>
+  )
+}
