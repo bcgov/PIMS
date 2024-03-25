@@ -4,6 +4,7 @@ import parcelServices from '@/services/parcels/parcelServices';
 import { ParcelFilterSchema } from '@/services/parcels/parcelSchema';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import userServices from '@/services/users/usersServices';
+import { Parcel } from '@/typeorm/Entities/Parcel';
 
 /**
  * @description Gets information about a particular parcel by the Id provided in the URL parameter.
@@ -118,7 +119,12 @@ export const addParcel = async (req: Request, res: Response) => {
    * }]
    */
   const user = await userServices.getUser((req.user as KeycloakUser).preferred_username);
-  const parcel = { ...req.body, CreatedById: user.Id };
+  const parcel: Parcel = { ...req.body, CreatedById: user.Id };
+  parcel.Evaluations = parcel.Evaluations?.map((evaluation) => ({
+    ...evaluation,
+    CreatedById: user.Id,
+  }));
+  parcel.Fiscals = parcel.Fiscals?.map((fiscal) => ({ ...fiscal, CreatedById: user.Id }));
   const response = await parcelServices.addParcel(parcel);
   return res.status(201).send(response);
 };

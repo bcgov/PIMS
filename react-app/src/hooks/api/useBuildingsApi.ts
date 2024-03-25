@@ -98,8 +98,8 @@ const useBuildingsApi = (absoluteFetch: IFetch) => {
     const { parsedBody } = await absoluteFetch.put(`/buildings/${id}`, building);
     return parsedBody as Building;
   };
-  const getBuildings = async () => {
-    const { parsedBody } = await absoluteFetch.get('/buildings');
+  const getBuildings = async (pid?: number) => {
+    const { parsedBody } = await absoluteFetch.get('/buildings', pid ? { pid } : undefined);
     if (parsedBody.error) {
       return [];
     }

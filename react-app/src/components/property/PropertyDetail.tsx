@@ -10,9 +10,10 @@ import useDataLoader from '@/hooks/useDataLoader';
 import { useClassificationStyle } from './PropertyTable';
 import PropertyAssessedValueTable from './PropertyAssessedValueTable';
 import { useParams } from 'react-router-dom';
-import { BuildingInformationEditDialog, ParcelInformationEditDialog } from './PropertyForms';
 import { Parcel } from '@/hooks/api/useParcelsApi';
 import { Building } from '@/hooks/api/useBuildingsApi';
+import DeleteDialog from '../dialog/DeleteDialog';
+import { BuildingInformationEditDialog, ParcelInformationEditDialog } from './PropertyDialog';
 
 interface IPropertyDetail {
   onClose: () => void;
@@ -30,7 +31,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
     api.buildings.getBuildingById(buildingId),
   );
   const { data: relatedBuildings, refreshData: refreshRelated } = useDataLoader(
-    () => parcel && api.buildings.getBuildings(),
+    () => parcel && api.buildings.getBuildings(parcel.PID),
   );
   useEffect(() => {
     refreshBuilding();
@@ -158,7 +159,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
         <DetailViewNavigation
           navigateBackTitle={'Back to Property Overview'}
           deleteTitle={`Delete ${buildingOrParcel}`}
-          onDeleteClick={() => {}}
+          onDeleteClick={() => setOpenDeleteDialog(true)}
           onBackClick={() => props.onClose()}
         />
         <DataCard
@@ -172,7 +173,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           id={`${buildingOrParcel} net book value`}
           values={undefined}
           title={`${buildingOrParcel} net book value`}
-          onEdit={() => {}}
+          onEdit={() => setOpenNetBookDialog(true)}
         >
           <PropertyNetValueTable rows={netBookValues} />
         </DataCard>
@@ -180,7 +181,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           id={'Assessed value'}
           values={undefined}
           title={'Assessed value'}
-          onEdit={() => {}}
+          onEdit={() => setOpenAssessedValueDialog(true)}
         >
           <PropertyAssessedValueTable
             rows={assessedValues}
@@ -204,6 +205,13 @@ const PropertyDetail = (props: IPropertyDetail) => {
           />
         )}
       </>
+      <DeleteDialog
+        open={openDeleteDialog}
+        title={'Delete property'}
+        message={'Are you sure you want to delete this property?'}
+        onDelete={async () => {}}
+        onClose={async () => setOpenDeleteDialog(false)}
+      />
     </CollapsibleSidebar>
   );
 };
