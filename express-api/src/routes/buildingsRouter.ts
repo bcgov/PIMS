@@ -10,7 +10,7 @@ const { getBuilding, updateBuilding, deleteBuilding, getBuildings, addBuilding }
 
 // Endpoints for buildings data manipulation
 router
-  .route(`${BUILDINGS_ROUTE}/:buildingId`)
+  .route(`/:buildingId`)
   .get(catchErrors(getBuilding))
   .put(catchErrors(updateBuilding))
   .delete(catchErrors(deleteBuilding));
