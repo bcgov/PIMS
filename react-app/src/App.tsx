@@ -16,6 +16,7 @@ import ErrorFallback from '@/pages/ErrorFallback';
 import UserDetail from '@/components/users/UserDetail';
 import ActiveInventory from './pages/ActiveInventory';
 import PropertyDetail from './components/property/PropertyDetail';
+import AddProperty from './components/property/AddProperty';
 
 const Router = () => {
   const navigate = useNavigate();
@@ -77,6 +78,16 @@ const Router = () => {
           <BaseLayout>
             <AuthRouteGuard>
               <ActiveInventory />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="properties/add"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <AddProperty />
             </AuthRouteGuard>
           </BaseLayout>
         }

@@ -7,6 +7,7 @@ import { GridColDef, GridColumnHeaderTitle, GridEventListener } from '@mui/x-dat
 import { dateFormatter } from '@/utils/formatters';
 import { ClassificationInline } from './ClassificationIcon';
 import { useKeycloak } from '@bcgov/citz-imb-kc-react';
+import { useNavigate } from 'react-router-dom';
 
 interface IPropertyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
@@ -48,6 +49,7 @@ const PropertyTable = (props: IPropertyTable) => {
   const classification = useClassificationStyle();
   const theme = useTheme();
   const { state } = useKeycloak();
+  const navigate = useNavigate();
   useEffect(() => {
     if (error) {
       console.error(error);
@@ -193,6 +195,7 @@ const PropertyTable = (props: IPropertyTable) => {
         getRowId={(row) => row.Id + row.Type}
         defaultFilter={'All Properties'}
         onRowClick={rowClickHandler}
+        onAddButtonClick={() => navigate('add')}
         presetFilterSelectOptions={[
           <CustomMenuItem key={'All Properties'} value={'All Properties'}>
             All Properties

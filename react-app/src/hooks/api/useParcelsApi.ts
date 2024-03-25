@@ -43,6 +43,7 @@ export interface Parcel extends Property {
   ZoningPotential?: string;
   ParentParcelId?: number;
   ParentParcel?: Parcel;
+  NotOwned?: boolean;
 }
 
 export type ParcelUpdate = Partial<Parcel>;

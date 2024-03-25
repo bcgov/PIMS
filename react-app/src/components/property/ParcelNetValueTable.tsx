@@ -1,4 +1,4 @@
-import { dateFormatter, formatMoney } from '@/utils/formatters';
+import { dateFormatter } from '@/utils/formatters';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 
@@ -22,7 +22,6 @@ const ParcelNetValueTable = (props: IParcelNetValueTable) => {
       field: 'Value',
       headerName: 'Net Book Value',
       flex: 1,
-      valueFormatter: (params) => formatMoney(params.value),
     },
   ];
 

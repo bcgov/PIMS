@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import { Box, Typography } from '@mui/material';
 import DataCard from '../display/DataCard';
@@ -10,6 +10,7 @@ import useDataLoader from '@/hooks/useDataLoader';
 import { useClassificationStyle } from './PropertyTable';
 import PropertyAssessedValueTable from './PropertyAssessedValueTable';
 import { useParams } from 'react-router-dom';
+import { ParcelInformationEditDialog } from './PropertyForms';
 
 interface IPropertyDetail {
   onClose: () => void;
@@ -104,7 +105,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
     } else if (key === 'IsSensitive') {
       return val ? <Typography>Yes</Typography> : <Typography>No</Typography>;
     }
-    return <></>;
+    return <Typography>{val}</Typography>;
   };
 
   const buildingOrParcel = building ? 'Building' : 'Parcel';
@@ -113,7 +114,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
     if (!data) {
       return {};
     } else {
-      return {
+      const info = {
         Classification: data.Classification,
         PID: data.PID,
         PIN: data.PIN,
@@ -122,8 +123,15 @@ const PropertyDetail = (props: IPropertyDetail) => {
         IsSensitive: data.IsSensitive,
         Description: data.Description,
       };
+      return info;
     }
   }, [parcel, building]);
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openInformationDialog, setOpenInformationDialog] = useState(false);
+  const [openNetBookDialog, setOpenNetBookDialog] = useState(false);
+  const [openAssessedValueDialog, setOpenAssessedValueDialog] = useState(false);
+
   return (
     <CollapsibleSidebar
       items={[
@@ -152,7 +160,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           customFormatter={customFormatter}
           values={mainInformation}
           title={`${buildingOrParcel} information`}
-          onEdit={() => {}}
+          onEdit={() => setOpenInformationDialog(true)}
         />
         <DataCard
           id={`${buildingOrParcel} net book value`}
@@ -175,6 +183,11 @@ const PropertyDetail = (props: IPropertyDetail) => {
           />
         </DataCard>
       </Box>
+      <ParcelInformationEditDialog
+        open={openInformationDialog}
+        onCancel={() => setOpenInformationDialog(false)}
+        initialValues={parcel}
+      />
     </CollapsibleSidebar>
   );
 };
