@@ -14,6 +14,7 @@ import UsersManagement from './pages/UsersManagement';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from '@/pages/ErrorFallback';
 import UserDetail from '@/components/users/UserDetail';
+import AgencyManagement from '@/pages/AgencyManagement';
 
 const Router = () => {
   const navigate = useNavigate();
@@ -49,26 +50,36 @@ const Router = () => {
       />
       <Route path="/admin">
         <Route
-          path="users"
+          path="agencies"
           element={
             <BaseLayout>
               <AuthRouteGuard>
-                <UsersManagement />
-              </AuthRouteGuard>
-            </BaseLayout>
-          }
-        />
-        <Route
-          path="users/:id"
-          element={
-            <BaseLayout>
-              <AuthRouteGuard>
-                <UserDetail onClose={() => navigate('/admin/users')} />
+                <AgencyManagement />
               </AuthRouteGuard>
             </BaseLayout>
           }
         />
       </Route>
+      <Route
+        path="users"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <UsersManagement />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="users/:id"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <UserDetail onClose={() => navigate('/users')} />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
     </Routes>
   );
 };
