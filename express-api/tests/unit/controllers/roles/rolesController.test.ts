@@ -5,13 +5,13 @@ import {
   MockRes,
   getRequestHandlerMocks,
   produceRole,
-} from '../../../../testUtils/factories';
+} from '../../../testUtils/factories';
 import { Role as RolesEntity } from '@/typeorm/Entities/Role';
 import { Roles as RolesConstant } from '@/constants/roles';
 
 let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
-const { addRole, getRoleById, getRoles, deleteRoleById, updateRoleById } = controllers.admin;
+const { addRole, getRoleById, getRoles, deleteRoleById, updateRoleById } = controllers;
 
 const _getRoles = jest.fn().mockImplementation(() => [produceRole()]);
 const _addRole = jest.fn().mockImplementation((role) => role);
@@ -19,7 +19,7 @@ const _updateRole = jest.fn().mockImplementation((role) => role);
 const _deleteRole = jest.fn().mockImplementation((role) => role);
 const _getRole = jest.fn().mockImplementation(() => produceRole());
 
-jest.mock('@/services/admin/rolesServices', () => ({
+jest.mock('@/services/roles/rolesServices', () => ({
   getRoles: () => _getRoles(),
   addRole: (role: RolesEntity) => _addRole(role),
   getRoleById: () => _getRole(),
