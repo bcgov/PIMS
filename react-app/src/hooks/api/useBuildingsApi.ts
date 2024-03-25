@@ -1,55 +1,115 @@
-const buildings1 = [
-  {
-    Id: 1,
-    ClassificationId: 0,
-    Classification: {
-      Name: 'Core operational',
-      Id: 0,
-    },
-    Address1: '2345 Example St.',
-    AgencyId: 1,
-    Agency: { Name: 'Smith & Weston' },
-    PID: 111333444,
-    IsSensitive: true,
-    UpdatedOn: new Date(),
-    Evaluations: [{ Value: 99888, Date: new Date() }],
-    Fiscals: [{ Value: 1235000, FiscalYear: 2024 }],
-  },
-  {
-    Id: 2,
-    ClassificationId: 5,
-    Classification: {
-      Name: 'Disposed',
-      Id: 5,
-    },
-    Address1: '6432 Nullabel Ln.',
-    AgencyId: 1,
-    Agency: { Name: 'Smith & Weston' },
-    PID: 676555444,
-    IsSensitive: false,
-    UpdatedOn: new Date(),
-    Evaluations: [{ Value: 999988, Date: new Date() }],
-    Fiscals: [{ Value: 1235000, FiscalYear: 2024 }],
-  },
-];
+import { Property } from '@/interfaces/IProperty';
+import { IFetch } from '../useFetch';
+import { BaseEntityInterface } from '@/interfaces/IBaseEntity';
+import { EvaluationKey } from '@/interfaces/IEvaluationKey';
+import { FiscalKey } from '@/interfaces/IFiscalKey';
 
-const useBuildingsApi = () => {
+export interface BuildingEvaluation extends BaseEntityInterface {
+  BuildingId: number;
+  Building?: Building;
+  Year: number;
+  Value: number;
+  EvalutationKeyId: number;
+  EvaluationKey?: EvaluationKey;
+  Note?: string;
+}
+
+export interface BuildingFiscal extends BaseEntityInterface {
+  FiscalYear: number;
+  EffectiveDate: Date;
+  Value: number;
+  Note?: string;
+  FiscalKeyId: number;
+  FiscalKey?: FiscalKey;
+}
+
+export interface BuildingConstructionType extends BaseEntityInterface {
+  Id: number;
+  Name: string;
+  IsDisabled: boolean;
+  SortOrder: number;
+}
+
+export interface BuildingPredominateUse extends BaseEntityInterface {
+  Id: number;
+  Name: string;
+  IsDisabled: boolean;
+  SortOrder: number;
+}
+
+export interface BuildingOccupantType extends BaseEntityInterface {
+  Id: number;
+  Name: string;
+  IsDisabled: boolean;
+  SortOrder: number;
+}
+
+export interface PropertyType extends BaseEntityInterface {
+  Id: number;
+  Name: string;
+  IsDisabled: boolean;
+  SortOrder: number;
+}
+
+export interface Building extends Property {
+  BuildingConstructionTypeId: number;
+  BuildingConstructionType?: BuildingConstructionType;
+  BuildingFloorCount: number;
+  BuildingPredominateUseId: number;
+  BuildingPredominateUse?: BuildingPredominateUse;
+  BuildingTenancy?: string;
+  RentableArea?: number;
+  BuildingOccupantTypeId: number;
+  BuildingOccupantType?: BuildingOccupantType;
+  LeaseExpiry?: Date;
+  OccupantName?: string;
+  TransferLeaseOnSale?: boolean;
+  BuildingTenancyUpdatedOn?: Date;
+  EncumbranceReason?: string;
+  LeasedLandMetadata?: string;
+  TotalArea?: number;
+  PropertyTypeId: number;
+  PropertyType?: PropertyType;
+  Evaluations?: BuildingEvaluation[] | null;
+  Fiscals?: BuildingFiscal[] | null;
+}
+
+export type BuildingUpdate = Partial<Building>;
+export type BuildingAdd = Omit<
+  Building,
+  'Id' | 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById'
+>;
+
+const useBuildingsApi = (absoluteFetch: IFetch) => {
+  const addBuilding = async (building: BuildingAdd) => {
+    const { parsedBody } = await absoluteFetch.post('/buildings', building);
+    return parsedBody as Building;
+  };
+  const updateBuildingById = async (id: number, building: BuildingUpdate) => {
+    const { parsedBody } = await absoluteFetch.put(`/buildings/${id}`, building);
+    return parsedBody as Building;
+  };
   const getBuildings = async () => {
-    return buildings1;
+    const { parsedBody } = await absoluteFetch.get('/buildings');
+    if (parsedBody.error) {
+      return [];
+    }
+    return parsedBody as Building[];
   };
-
   const getBuildingById = async (id: number) => {
-    return buildings1.find((b) => b.Id === id);
+    const { parsedBody } = await absoluteFetch.get(`/buildings/${id}`);
+    return parsedBody as Building;
   };
-
-  const getBuildingsByPid = async (pid: number) => {
-    return buildings1.filter((b) => b.PID === pid);
+  const deleteBuildingById = async (id: number) => {
+    const { parsedBody } = await absoluteFetch.del(`/buildings/${id}`);
+    return parsedBody as Building;
   };
-
   return {
+    addBuilding,
+    updateBuildingById,
     getBuildings,
     getBuildingById,
-    getBuildingsByPid,
+    deleteBuildingById,
   };
 };
 
