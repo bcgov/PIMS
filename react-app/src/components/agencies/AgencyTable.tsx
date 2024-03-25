@@ -40,7 +40,7 @@ const AgencyTable = (props: IAgencyTable) => {
       field: 'Code',
       headerName: 'Short Name',
       flex: 1,
-      maxWidth: 150
+      maxWidth: 150,
     },
     {
       field: 'IsDisabled',
@@ -51,7 +51,7 @@ const AgencyTable = (props: IAgencyTable) => {
         if (params.value) return statusChipFormatter('Disabled');
         return statusChipFormatter('Active');
       },
-      maxWidth: 120
+      maxWidth: 120,
     },
     {
       field: 'Parent',
@@ -60,34 +60,34 @@ const AgencyTable = (props: IAgencyTable) => {
       valueFormatter: (params) => {
         if (params.value) return params.value.Name;
         return '';
-      }
+      },
     },
     {
       field: 'SendEmail',
       headerName: 'Notification',
       flex: 1,
-      valueFormatter: (params) => params.value ? 'Yes' : 'No',
-      maxWidth: 120
+      valueFormatter: (params) => (params.value ? 'Yes' : 'No'),
+      maxWidth: 120,
     },
     {
       field: 'Email',
       headerName: 'Send To',
       flex: 1,
-      maxWidth: 250
+      maxWidth: 250,
     },
     {
       field: 'CreatedOn',
       headerName: 'Created',
       flex: 1,
       valueFormatter: (params) => dateFormatter(params.value),
-      maxWidth: 150
+      maxWidth: 150,
     },
     {
       field: 'UpdatedOn',
       headerName: 'Last Update',
       flex: 1,
       valueFormatter: (params) => dateFormatter(params.value),
-      maxWidth: 150
+      maxWidth: 150,
     },
   ];
 
@@ -97,10 +97,14 @@ const AgencyTable = (props: IAgencyTable) => {
         ref.current.setFilterModel({ items: [] });
         break;
       case 'Active':
-        ref.current.setFilterModel({ items: [{ value: 'false', operator: 'equals', field: 'IsDisabled' }] });
+        ref.current.setFilterModel({
+          items: [{ value: 'false', operator: 'equals', field: 'IsDisabled' }],
+        });
         break;
       case 'Disabled':
-        ref.current.setFilterModel({ items: [{ value: 'true', operator: 'equals', field: 'IsDisabled' }] });
+        ref.current.setFilterModel({
+          items: [{ value: 'true', operator: 'equals', field: 'IsDisabled' }],
+        });
         break;
       default:
         ref.current.setFilterModel({ items: [] });
@@ -127,7 +131,7 @@ const AgencyTable = (props: IAgencyTable) => {
         initialState={{
           sorting: {
             sortModel: [{ field: 'Name', sort: 'asc' }],
-          }
+          },
         }}
         presetFilterSelectOptions={[
           <CustomMenuItem key={'All Agencies'} value={'All Agencies'}>

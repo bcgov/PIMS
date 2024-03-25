@@ -9,7 +9,7 @@ const AgencyManagement = () => {
   // Getting data from API
   const api = usePimsApi();
   const { data, refreshData, isLoading, error } = useDataLoader(api.agencies.getAgenciesWithParent);
-  console.log('xxx data', data)
+  console.log('xxx data', data);
   return (
     <AgencyTable
       rowClickHandler={() => {
