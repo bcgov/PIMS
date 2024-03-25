@@ -28,6 +28,17 @@ export const addBuilding = async (building: DeepPartial<Building>) => {
  */
 export const getBuildingById = async (buildingId: number) => {
   const findBuilding = await buildingRepo.findOne({
+    relations: {
+      Agency: true,
+      AdministrativeArea: true,
+      Classification: true,
+      PropertyType: true,
+      BuildingConstructionType: true,
+      BuildingPredominateUse: true,
+      BuildingOccupantType: true,
+      Evaluations: true,
+      Fiscals: true,
+    },
     where: { Id: buildingId },
   });
   return findBuilding;

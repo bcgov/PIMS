@@ -7,6 +7,8 @@ import useRolesApi from './api/useRolesApi';
 import useReportsApi from '@/hooks/api/useReportsApi';
 import useBuildingsApi from './api/useBuildingsApi';
 import useParcelsApi from './api/useParcelsApi';
+import useLookupApi from './api/useLookupApi';
+import useAdministrativeAreaApi from './api/useAdministrativeAreaApi';
 
 /**
  * usePimsApi - This stores all the sub-hooks we need to make calls to our API and helps manage authentication state for them.
@@ -20,8 +22,10 @@ const usePimsApi = () => {
   const agencies = useAgencyApi(fetch);
   const roles = useRolesApi(fetch);
   const reports = useReportsApi(fetch);
-  const buildings = useBuildingsApi();
-  const parcels = useParcelsApi();
+  const buildings = useBuildingsApi(fetch);
+  const parcels = useParcelsApi(fetch);
+  const lookup = useLookupApi(fetch);
+  const administrativeAreas = useAdministrativeAreaApi(fetch);
 
   return {
     users,
@@ -30,6 +34,8 @@ const usePimsApi = () => {
     reports,
     buildings,
     parcels,
+    lookup,
+    administrativeAreas,
   };
 };
 
