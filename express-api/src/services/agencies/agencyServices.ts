@@ -10,13 +10,16 @@ const agencyRepo = AppDataSource.getRepository(Agency);
  * @description Gets and returns a list of all agencies.
  * @returns { Agency[] } A list of all agencies in the database
  */
-export const getAgencies = async (filter: AgencyFilter) => {
+export const getAgencies = async (filter: AgencyFilter, includeRelations: boolean = false) => {
   const allAgencies = await agencyRepo.find({
     where: {
       Name: filter.name,
       IsDisabled: filter.isDisabled,
       SortOrder: filter.sortOrder,
       Id: filter.id,
+    },
+    relations: {
+      Parent: includeRelations,
     },
     take: filter.quantity,
     skip: (filter.quantity ?? 0) * (filter.page ?? 0),
