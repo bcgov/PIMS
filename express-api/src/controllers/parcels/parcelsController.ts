@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { stubResponse } from '@/utilities/stubResponse';
 import parcelServices from '@/services/parcels/parcelServices';
 import { ParcelFilterSchema } from '@/services/parcels/parcelSchema';
+import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import userServices from '@/services/users/usersServices';
 
 /**
  * @description Gets information about a particular parcel by the Id provided in the URL parameter.
@@ -46,7 +48,9 @@ export const updateParcel = async (req: Request, res: Response) => {
   if (isNaN(parcelId) || parcelId !== req.body.Id) {
     return res.status(400).send('Parcel ID was invalid or mismatched with body.');
   }
-  const parcel = await parcelServices.updateParcel(req.body);
+  const user = await userServices.getUser((req.user as KeycloakUser).preferred_username);
+  const updateBody = { ...req.body, UpdatedById: user.Id };
+  const parcel = await parcelServices.updateParcel(updateBody);
   if (!parcel) {
     return res.status(404).send('Parcel matching this internal ID not found.');
   }
@@ -113,7 +117,9 @@ export const addParcel = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  const response = await parcelServices.addParcel(req.body);
+  const user = await userServices.getUser((req.user as KeycloakUser).preferred_username);
+  const parcel = { ...req.body, CreatedById: user.Id };
+  const response = await parcelServices.addParcel(parcel);
   return res.status(201).send(response);
 };
 
