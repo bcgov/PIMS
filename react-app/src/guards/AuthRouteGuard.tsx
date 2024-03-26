@@ -11,7 +11,7 @@ import React from 'react';
 const AuthRouteGuard = (props: PropsWithChildren) => {
   const authStateContext = useContext(AuthContext);
 
-  if (!authStateContext.keycloak.isAuthenticated || authStateContext.pimsUser.isLoading) {
+  if (authStateContext.keycloak?.isLoggingIn || authStateContext.pimsUser?.isLoading) {
     return <CircularProgress sx={{ position: 'fixed', top: '50%', left: '50%' }} />;
   }
 
