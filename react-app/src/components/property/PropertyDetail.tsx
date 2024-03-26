@@ -17,7 +17,9 @@ import {
   BuildingInformationEditDialog,
   ParcelInformationEditDialog,
   PropertyAssessedValueEditDialog,
+  PropertyNetBookValueEditDialog,
 } from './PropertyDialog';
+import { PropertyType } from './PropertyForms';
 
 interface IPropertyDetail {
   onClose: () => void;
@@ -37,6 +39,13 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const { data: relatedBuildings, refreshData: refreshRelated } = useDataLoader(
     () => parcelId && api.buildings.getBuildings(parcel.PID),
   );
+  const refreshEither = () => {
+    if (parcelId) {
+      refreshParcel();
+    } else {
+      refreshBuilding();
+    }
+  };
   useEffect(() => {
     refreshBuilding();
   }, [buildingId]);
@@ -46,7 +55,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
   }, [parcelId]);
 
   useEffect(() => {
-    console.log(`Will refresh related with pid ${parcel?.PID}`)
+    console.log(`Will refresh related with pid ${parcel?.PID}`);
     refreshRelated();
   }, [parcel]);
 
@@ -113,7 +122,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
     return <Typography>{val}</Typography>;
   };
 
-  const buildingOrParcel = typeof building === 'object' ? 'Building' : 'Parcel';
+  const buildingOrParcel: PropertyType = typeof building === 'object' ? 'Building' : 'Parcel';
   const mainInformation = useMemo(() => {
     const data: Parcel | Building = buildingOrParcel === 'Building' ? building : parcel;
     if (!data) {
@@ -202,12 +211,20 @@ const PropertyDetail = (props: IPropertyDetail) => {
             open={openInformationDialog}
             onCancel={() => setOpenInformationDialog(false)}
             initialValues={parcel}
+            postSubmit={() => {
+              refreshEither();
+              setOpenInformationDialog(false);
+            }}
           />
         ) : (
           <BuildingInformationEditDialog
             initialValues={building}
             open={openInformationDialog}
             onCancel={() => setOpenInformationDialog(false)}
+            postSubmit={() => {
+              refreshEither();
+              setOpenInformationDialog(false);
+            }}
           />
         )}
       </>
@@ -217,6 +234,20 @@ const PropertyDetail = (props: IPropertyDetail) => {
         initialValues={buildingOrParcel === 'Building' ? building : parcel}
         open={openAssessedValueDialog}
         onCancel={() => setOpenAssessedValueDialog(false)}
+        postSubmit={() => {
+          refreshEither();
+          setOpenAssessedValueDialog(false);
+        }}
+      />
+      <PropertyNetBookValueEditDialog
+        postSubmit={() => {
+          refreshEither();
+          setOpenNetBookDialog(false);
+        }}
+        open={openNetBookDialog}
+        onClose={() => setOpenNetBookDialog(false)}
+        initialValues={buildingOrParcel === 'Building' ? building : parcel}
+        propertyType={buildingOrParcel}
       />
       <DeleteDialog
         open={openDeleteDialog}

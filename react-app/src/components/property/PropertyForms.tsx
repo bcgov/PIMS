@@ -57,7 +57,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
         <Grid item xs={6}>
           <TextFormField
             fullWidth
-            name={'PostalCode'}
+            name={'Postal'}
             label={'Postal code'}
             required
             rules={{ validate: (val) => val?.length == 6 || 'Should be exactly 6 characters.' }}

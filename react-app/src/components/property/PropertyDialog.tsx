@@ -13,16 +13,18 @@ import {
   BuildingInformationForm,
   AssessedValue,
   PropertyType,
+  NetBookValue,
 } from './PropertyForms';
 
 interface IParcelInformationEditDialog {
   initialValues: Parcel;
   open: boolean;
   onCancel: () => void;
+  postSubmit: () => void;
 }
 
 export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog) => {
-  const { initialValues } = props;
+  const { initialValues, postSubmit } = props;
 
   const api = usePimsApi();
 
@@ -72,7 +74,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
       onConfirm={async () => {
         const formValues: any = infoFormMethods.getValues();
         formValues.Id = initialValues.Id;
-        api.parcels.updateParcelById(initialValues.Id, formValues);
+        api.parcels.updateParcelById(initialValues.Id, formValues).then(() => postSubmit());
       }}
       onCancel={async () => props.onCancel()}
     >
@@ -102,6 +104,7 @@ interface IBuildingInformationEditDialog {
   initialValues: Building;
   open: boolean;
   onCancel: () => void;
+  postSubmit: () => void;
 }
 
 export const BuildingInformationEditDialog = (props: IBuildingInformationEditDialog) => {
@@ -125,7 +128,7 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
   predominateUseLoad();
   constructionLoad();
 
-  const { initialValues, open, onCancel } = props;
+  const { initialValues, open, onCancel, postSubmit } = props;
   const infoFormMethods = useForm({
     defaultValues: {
       NotOwned: true,
@@ -176,7 +179,7 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
         const formValues: any = { ...infoFormMethods.getValues() };
         formValues.Id = initialValues.Id;
         formValues.BuildingTenancyUpdatedOn = formValues.BuildingTenancyUpdatedOn.toDate();
-        api.buildings.updateBuildingById(initialValues.Id, formValues);
+        api.buildings.updateBuildingById(initialValues.Id, formValues).then(() => postSubmit());
       }}
       onCancel={async () => onCancel()}
     >
@@ -204,11 +207,13 @@ interface IPropertyAssessedValueEditDialog {
   initialRelatedBuildings: Building[];
   open: boolean;
   onCancel: () => void;
+  postSubmit: () => void;
   propertyType: PropertyType;
 }
 
 export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEditDialog) => {
-  const { initialValues, initialRelatedBuildings, open, onCancel, propertyType } = props;
+  const { initialValues, initialRelatedBuildings, open, onCancel, propertyType, postSubmit } =
+    props;
   const api = usePimsApi();
   const assessedFormMethods = useForm({
     defaultValues: {
@@ -226,7 +231,7 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
         Id: building.Id,
         Evaluations: building.Evaluations.map((evalu) => ({
           ...evalu,
-          Value: String(evalu.Value).replace(/[$,]/g, ''), // TODO: Consider some more robust handling for this at the TypeORM level.
+          Value: String(evalu.Value).replace(/[$,]/g, ''), // Obviously this double map is pretty evil so suggestions welcome.
         })),
       })),
     });
@@ -240,12 +245,13 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
         const formValues = assessedFormMethods.getValues();
         const evalus = { Id: initialValues.Id, PID: initialValues.PID, ...formValues };
         if (propertyType === 'Parcel') {
-          api.parcels.updateParcelById(initialValues.Id, evalus);
+          await api.parcels.updateParcelById(initialValues.Id, evalus);
           for (const building of formValues.RelatedBuildings) {
-            api.buildings.updateBuildingById(building.Id, building);
+            await api.buildings.updateBuildingById(building.Id, building);
           }
+          postSubmit();
         } else {
-          api.buildings.updateBuildingById(initialValues.Id, evalus);
+          api.buildings.updateBuildingById(initialValues.Id, evalus).then(() => postSubmit());
         }
       }}
       onCancel={async () => onCancel()}
@@ -260,6 +266,62 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
             topLevelKey={`RelatedBuildings.${idx}.`}
           />
         ))}
+      </FormProvider>
+    </ConfirmDialog>
+  );
+};
+
+interface IPropertyNetBookValueEditDialog {
+  open: boolean;
+  onClose: () => void;
+  postSubmit: () => void;
+  initialValues: Parcel | Building;
+  propertyType: PropertyType;
+}
+
+export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditDialog) => {
+  const { open, onClose, initialValues, propertyType, postSubmit } = props;
+  const api = usePimsApi();
+  const netBookFormMethods = useForm({
+    defaultValues: { Fiscals: [] },
+  });
+
+  useEffect(() => {
+    netBookFormMethods.reset({
+      Fiscals: initialValues?.Fiscals?.map((fisc) => ({
+        ...fisc,
+        Value: String(fisc.Value).replace(/[$,]/g, ''),
+        EffectiveDate: dayjs(fisc.EffectiveDate),
+      })),
+    });
+  }, [initialValues]);
+  return (
+    <ConfirmDialog
+      title={'Edit net book values'}
+      open={open}
+      onConfirm={async () => {
+        const formValues: any = netBookFormMethods.getValues();
+        if (propertyType === 'Parcel') {
+          api.parcels
+            .updateParcelById(initialValues.Id, {
+              Id: initialValues.Id,
+              PID: initialValues.PID,
+              ...formValues,
+            })
+            .then(() => postSubmit());
+        } else {
+          api.buildings
+            .updateBuildingById(initialValues.Id, {
+              Id: initialValues.Id,
+              ...formValues,
+            })
+            .then(() => postSubmit());
+        }
+      }}
+      onCancel={async () => onClose()}
+    >
+      <FormProvider {...netBookFormMethods}>
+        <NetBookValue years={initialValues?.Fiscals?.map((f) => f.FiscalYear) ?? []} />
       </FormProvider>
     </ConfirmDialog>
   );
