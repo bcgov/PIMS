@@ -15,6 +15,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from '@/pages/ErrorFallback';
 import UserDetail from '@/components/users/UserDetail';
 import AgencyManagement from '@/pages/AgencyManagement';
+import AgencyDetail from '@/components/agencies/AgencyDetails';
 
 const Router = () => {
   const navigate = useNavigate();
@@ -55,6 +56,16 @@ const Router = () => {
             <BaseLayout>
               <AuthRouteGuard>
                 <AgencyManagement />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
+        <Route
+          path="agencies/:id"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard>
+                <AgencyDetail onClose={() => navigate('/admin/agencies')} />
               </AuthRouteGuard>
             </BaseLayout>
           }
