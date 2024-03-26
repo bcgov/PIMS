@@ -54,7 +54,7 @@ export const updateBuildingById = async (building: DeepPartial<Building>) => {
   if (!existingBuilding) {
     throw new ErrorWithCode('Building does not exists.', 404);
   }
-  await buildingRepo.update(building.Id, building);
+  await buildingRepo.save(building);
   //update function doesn't return data on the row changed. Have to get the changed row again
   const newBuilding = await getBuildingById(building.Id);
   return newBuilding;
@@ -89,6 +89,8 @@ export const getBuildings = async (filter: BuildingFilter, includeRelations: boo
       BuildingConstructionType: includeRelations,
       BuildingPredominateUse: includeRelations,
       BuildingOccupantType: includeRelations,
+      Evaluations: includeRelations,
+      Fiscals: includeRelations,
     },
     where: {
       PID: filter.pid,

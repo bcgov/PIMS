@@ -1,198 +1,24 @@
-import { Box, Button, Grid, InputAdornment, RadioGroup, Typography } from '@mui/material';
+import { Box, Button, RadioGroup, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import AutocompleteFormField from '../form/AutocompleteFormField';
-import TextFormField from '../form/TextFormField';
-import DateFormField from '../form/DateFormField';
 import dayjs from 'dayjs';
 import BuildingIcon from '@/assets/icons/building.svg';
 import ParcelIcon from '@/assets/icons/parcel.svg';
 import BoxedIconRadio from '../form/BoxedIconRadio';
 import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
-import { LookupObject } from '@/hooks/api/useLookupApi';
-import { GeneralInformationForm, ParcelInformationForm, PropertyType } from './PropertyForms';
+import {
+  AssessedValue,
+  BuildingInformationForm,
+  GeneralInformationForm,
+  NetBookValue,
+  ParcelInformationForm,
+  PropertyType,
+} from './PropertyForms';
 import { NavigateBackButton } from '../display/DetailViewNavigation';
 import { useNavigate } from 'react-router-dom';
 import { ParcelAdd } from '@/hooks/api/useParcelsApi';
 import { BuildingAdd } from '@/hooks/api/useBuildingsApi';
-
-interface IAssessedValue {
-  years: number[];
-}
-
-const AssessedValue = (props: IAssessedValue) => {
-  const { years } = props;
-
-  return (
-    <>
-      <Typography mt={2} variant="h5">
-        Assessed Value
-      </Typography>
-      <Box overflow={'auto'} paddingTop={'8px'}>
-        {years.map((yr, idx) => {
-          return (
-            <Box
-              mb={2}
-              gap={2}
-              key={`assessedvaluerow-${yr}`}
-              display={'flex'}
-              width={'100%'}
-              flexDirection={'row'}
-            >
-              <TextFormField
-                sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-                name={`Evaluations.${idx}.Year`}
-                label={'Year'}
-                value={yr}
-                disabled
-              />
-              <TextFormField
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                }}
-                sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-                name={`Evaluations.${idx}.Value`}
-                numeric
-                label={'Value'}
-              />
-            </Box>
-          );
-        })}
-      </Box>
-    </>
-  );
-};
-
-interface IBuildingInformation {
-  classificationOptions: LookupObject[];
-  constructionOptions: LookupObject[];
-  predominateUseOptions: LookupObject[];
-}
-
-const BuildingInformation = (props: IBuildingInformation) => {
-  return (
-    <>
-      <Typography mt={'2rem'} variant="h5">{`Building information`}</Typography>
-
-      <Grid container spacing={2}>
-        <Grid item xs={12} paddingTop={'1rem'}>
-          <AutocompleteFormField
-            name={`ClassificationId`}
-            label={'Building classification'}
-            options={
-              props.classificationOptions?.map((classification) => ({
-                label: classification.Name,
-                value: classification.Id,
-              })) ?? []
-            }
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextFormField required fullWidth label={'Building name'} name={`Name`} />
-        </Grid>
-        <Grid item xs={6}>
-          <AutocompleteFormField
-            label={'Main usage'}
-            name={`BuildingPredominateUseId`}
-            options={
-              props.predominateUseOptions?.map((usage) => ({
-                label: usage.Name,
-                value: usage.Id,
-              })) ?? []
-            }
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <AutocompleteFormField
-            label={'Construction type'}
-            name={`BuildingConstructionTypeId`}
-            options={
-              props.constructionOptions?.map((construct) => ({
-                label: construct.Name,
-                value: construct.Id,
-              })) ?? []
-            }
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextFormField
-            name={`TotalArea`}
-            label={'Total area'}
-            fullWidth
-            numeric
-            InputProps={{ endAdornment: <InputAdornment position="end">Sq. M</InputAdornment> }}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextFormField
-            name={`RentableArea`}
-            rules={{
-              validate: (val, formVals) =>
-                val <= formVals.TotalArea ||
-                `Cannot be larger than Total area: ${val} <= ${formVals?.TotalArea}`,
-            }}
-            label={'Net usable area'}
-            fullWidth
-            numeric
-            InputProps={{ endAdornment: <InputAdornment position="end">Sq. M</InputAdornment> }}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextFormField
-            name={`BuildingTenancy`}
-            label={'Tenancy'}
-            numeric
-            fullWidth
-            InputProps={{ endAdornment: <InputAdornment position="end">%</InputAdornment> }}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <DateFormField name={`BuildingTenancyUpdatedOn`} label={'Tenancy date'} />
-        </Grid>
-      </Grid>
-    </>
-  );
-};
-
-interface INetBookValue {
-  years: number[];
-}
-
-// Property.Fiscals
-const NetBookValue = (props: INetBookValue) => {
-  return (
-    <Grid container spacing={2}>
-      {props.years.map((yr, idx) => {
-        return (
-          <React.Fragment key={`netbookgrid${yr}`}>
-            <Grid item xs={4}>
-              <TextFormField
-                value={yr}
-                disabled
-                name={`Fiscals.${idx}.FiscalYear`}
-                label={'Fiscal year'}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <DateFormField name={`Fiscals.${idx}.EffectiveDate`} label={'Effective date'} />
-            </Grid>
-            <Grid item xs={4}>
-              <TextFormField
-                name={`Fiscals.${idx}.Value`}
-                label={'Net book value'}
-                numeric
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                }}
-              />
-            </Grid>
-          </React.Fragment>
-        );
-      })}
-    </Grid>
-  );
-};
 
 const AddProperty = () => {
   const years = [new Date().getFullYear(), new Date().getFullYear() - 1];
@@ -305,7 +131,7 @@ const AddProperty = () => {
             }))}
           />
         ) : (
-          <BuildingInformation
+          <BuildingInformationForm
             predominateUseOptions={predominateUseData}
             classificationOptions={classificationData}
             constructionOptions={constructionTypeData}

@@ -223,3 +223,91 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
     </>
   );
 };
+
+interface INetBookValue {
+  years: number[];
+}
+
+// Property.Fiscals
+export const NetBookValue = (props: INetBookValue) => {
+  return (
+    <Grid container spacing={2}>
+      {props.years.map((yr, idx) => {
+        return (
+          <React.Fragment key={`netbookgrid${yr}`}>
+            <Grid item xs={4}>
+              <TextFormField
+                value={yr}
+                disabled
+                name={`Fiscals.${idx}.FiscalYear`}
+                label={'Fiscal year'}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <DateFormField name={`Fiscals.${idx}.EffectiveDate`} label={'Effective date'} />
+            </Grid>
+            <Grid item xs={4}>
+              <TextFormField
+                name={`Fiscals.${idx}.Value`}
+                label={'Net book value'}
+                numeric
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                }}
+              />
+            </Grid>
+          </React.Fragment>
+        );
+      })}
+    </Grid>
+  );
+};
+
+interface IAssessedValue {
+  years: number[];
+  title?: string;
+  topLevelKey?: string;
+}
+
+export const AssessedValue = (props: IAssessedValue) => {
+  const { years, title, topLevelKey } = props;
+
+  return (
+    <>
+      <Typography mt={2} variant="h5">
+        {title ?? 'Assessed Value'}
+      </Typography>
+      <Box overflow={'auto'} paddingTop={'8px'}>
+        {years.map((yr, idx) => {
+          return (
+            <Box
+              mb={2}
+              gap={2}
+              key={`assessedvaluerow-${yr}${'-' + topLevelKey}`}
+              display={'flex'}
+              width={'100%'}
+              flexDirection={'row'}
+            >
+              <TextFormField
+                sx={{ minWidth: 'calc(33.3% - 1rem)' }}
+                name={`${topLevelKey ?? ''}Evaluations.${idx}.Year`}
+                label={'Year'}
+                value={yr}
+                disabled
+              />
+              <TextFormField
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                }}
+                sx={{ minWidth: 'calc(33.3% - 1rem)' }}
+                name={`${topLevelKey ?? ''}Evaluations.${idx}.Value`}
+                numeric
+                label={'Value'}
+              />
+            </Box>
+          );
+        })}
+      </Box>
+    </>
+  );
+};

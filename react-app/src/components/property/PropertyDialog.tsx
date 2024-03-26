@@ -11,6 +11,8 @@ import {
   GeneralInformationForm,
   ParcelInformationForm,
   BuildingInformationForm,
+  AssessedValue,
+  PropertyType,
 } from './PropertyForms';
 
 interface IParcelInformationEditDialog {
@@ -192,6 +194,72 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
             predominateUseOptions={predominateUseData}
           />
         </Box>
+      </FormProvider>
+    </ConfirmDialog>
+  );
+};
+
+interface IPropertyAssessedValueEditDialog {
+  initialValues: Parcel | Building;
+  initialRelatedBuildings: Building[];
+  open: boolean;
+  onCancel: () => void;
+  propertyType: PropertyType;
+}
+
+export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEditDialog) => {
+  const { initialValues, initialRelatedBuildings, open, onCancel, propertyType } = props;
+  const api = usePimsApi();
+  const assessedFormMethods = useForm({
+    defaultValues: {
+      Evaluations: [],
+      RelatedBuildings: [],
+    },
+  });
+  useEffect(() => {
+    assessedFormMethods.reset({
+      Evaluations: initialValues?.Evaluations?.map((evalu) => ({
+        ...evalu,
+        Value: evalu.Value.replace(/[$,]/g, ''), // TODO: Consider some more robust handling for this at the TypeORM level.
+      })),
+      RelatedBuildings: initialRelatedBuildings?.map((building) => ({
+        Id: building.Id,
+        Evaluations: building.Evaluations.map((evalu) => ({
+          ...evalu,
+          Value: String(evalu.Value).replace(/[$,]/g, ''), // TODO: Consider some more robust handling for this at the TypeORM level.
+        })),
+      })),
+    });
+  }, [initialValues]);
+
+  return (
+    <ConfirmDialog
+      title={'Edit assessed values'}
+      open={open}
+      onConfirm={async () => {
+        const formValues = assessedFormMethods.getValues();
+        const evalus = { Id: initialValues.Id, PID: initialValues.PID, ...formValues };
+        if (propertyType === 'Parcel') {
+          api.parcels.updateParcelById(initialValues.Id, evalus);
+          for (const building of formValues.RelatedBuildings) {
+            api.buildings.updateBuildingById(building.Id, building);
+          }
+        } else {
+          api.buildings.updateBuildingById(initialValues.Id, evalus);
+        }
+      }}
+      onCancel={async () => onCancel()}
+    >
+      <FormProvider {...assessedFormMethods}>
+        <AssessedValue years={initialValues?.Evaluations?.map((evalu) => evalu.Year)} />
+        {initialRelatedBuildings?.map((building, idx) => (
+          <AssessedValue
+            title={`Building (${idx + 1}) ${building.Address1 ?? ''}`}
+            key={`assessed-value-${building.Id}`}
+            years={building?.Evaluations?.map((evalu) => evalu.Year)}
+            topLevelKey={`RelatedBuildings.${idx}.`}
+          />
+        ))}
       </FormProvider>
     </ConfirmDialog>
   );

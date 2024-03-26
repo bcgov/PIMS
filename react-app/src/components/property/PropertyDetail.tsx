@@ -13,7 +13,11 @@ import { useParams } from 'react-router-dom';
 import { Parcel } from '@/hooks/api/useParcelsApi';
 import { Building } from '@/hooks/api/useBuildingsApi';
 import DeleteDialog from '../dialog/DeleteDialog';
-import { BuildingInformationEditDialog, ParcelInformationEditDialog } from './PropertyDialog';
+import {
+  BuildingInformationEditDialog,
+  ParcelInformationEditDialog,
+  PropertyAssessedValueEditDialog,
+} from './PropertyDialog';
 
 interface IPropertyDetail {
   onClose: () => void;
@@ -31,7 +35,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
     api.buildings.getBuildingById(buildingId),
   );
   const { data: relatedBuildings, refreshData: refreshRelated } = useDataLoader(
-    () => parcel && api.buildings.getBuildings(parcel.PID),
+    () => parcelId && api.buildings.getBuildings(parcel.PID),
   );
   useEffect(() => {
     refreshBuilding();
@@ -42,6 +46,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
   }, [parcelId]);
 
   useEffect(() => {
+    console.log(`Will refresh related with pid ${parcel?.PID}`)
     refreshRelated();
   }, [parcel]);
 
@@ -68,6 +73,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           evaluations.push(evaluation);
         }
       }
+      console.log(`Final evaluations: ${JSON.stringify(evaluations)}`);
       return evaluations;
     } else if (buildingId && building) {
       const lastTwoYrs = building.Evaluations?.sort((a, b) => b.Year - a.Year).slice(0, 2);
@@ -205,6 +211,13 @@ const PropertyDetail = (props: IPropertyDetail) => {
           />
         )}
       </>
+      <PropertyAssessedValueEditDialog
+        initialRelatedBuildings={relatedBuildings}
+        propertyType={buildingOrParcel}
+        initialValues={buildingOrParcel === 'Building' ? building : parcel}
+        open={openAssessedValueDialog}
+        onCancel={() => setOpenAssessedValueDialog(false)}
+      />
       <DeleteDialog
         open={openDeleteDialog}
         title={'Delete property'}
