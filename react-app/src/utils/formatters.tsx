@@ -54,4 +54,4 @@ export const parseIntOrNull = (int: string) => {
 
 export const parseFloatOrNull = (flt: string) => {
   return flt.length > 0 ? parseFloat(flt) : null;
-}
+};
