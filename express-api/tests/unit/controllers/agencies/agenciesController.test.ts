@@ -134,6 +134,14 @@ describe('UNIT - Agencies Admin', () => {
       expect(mockResponse.statusValue).toBe(400);
       expect(mockResponse.sendValue).toBe('The param ID does not match the request body.');
     });
+    it('should return status 403 if you try to set an agency as its own parent', async () => {
+      const agency = produceAgency();
+      mockRequest.params.id = agency.Id.toString();
+      mockRequest.body = { ...agency, ParentId: agency.Id };
+      await controllers.updateAgencyById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(403);
+      expect(mockResponse.sendValue).toBe('An agency cannot be its own parent.');
+    });
     it('should throw an error when updateAgencyById service throws an error', async () => {
       _updateAgencyById.mockImplementationOnce(() => {
         throw new ErrorWithCode('', 400);
