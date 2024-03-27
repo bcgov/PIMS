@@ -54,8 +54,8 @@ export type ParcelAdd = Omit<
 
 const useParcelsApi = (absoluteFetch: IFetch) => {
   const addParcel = async (parcel: ParcelAdd) => {
-    const { parsedBody } = await absoluteFetch.post('/parcels', parcel);
-    return parsedBody as Parcel;
+    const { parsedBody, status } = await absoluteFetch.post('/parcels', parcel);
+    return { parsedBody, status };
   };
   const updateParcelById = async (id: number, parcel: ParcelUpdate) => {
     const { parsedBody } = await absoluteFetch.put(`/parcels/${id}`, parcel);

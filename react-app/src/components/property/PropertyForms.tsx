@@ -49,6 +49,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
         </Grid>
         <Grid item xs={6}>
           <AutocompleteFormField
+            required
             name={'AdministrativeAreaId'}
             label={'Administrative area'}
             options={adminAreas ?? []}
@@ -89,6 +90,7 @@ export const ParcelInformationForm = (props: IParcelInformationForm) => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <AutocompleteFormField
+            required
             name={'ClassificationId'}
             label={'Parcel classification'}
             options={props.classificationOptions ?? []}
@@ -164,6 +166,7 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
           <AutocompleteFormField
             label={'Main usage'}
             name={`BuildingPredominateUseId`}
+            required
             options={
               props.predominateUseOptions?.map((usage) => ({
                 label: usage.Name,
@@ -176,6 +179,7 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
           <AutocompleteFormField
             label={'Construction type'}
             name={`BuildingConstructionTypeId`}
+            required
             options={
               props.constructionOptions?.map((construct) => ({
                 label: construct.Name,
@@ -189,6 +193,7 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
             name={`TotalArea`}
             label={'Total area'}
             fullWidth
+            required
             numeric
             InputProps={{ endAdornment: <InputAdornment position="end">Sq. M</InputAdornment> }}
           />
@@ -201,6 +206,7 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
                 val <= formVals.TotalArea ||
                 `Cannot be larger than Total area: ${val} <= ${formVals?.TotalArea}`,
             }}
+            required
             label={'Net usable area'}
             fullWidth
             numeric

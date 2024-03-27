@@ -91,8 +91,8 @@ export type BuildingAdd = Omit<
 
 const useBuildingsApi = (absoluteFetch: IFetch) => {
   const addBuilding = async (building: BuildingAdd) => {
-    const { parsedBody } = await absoluteFetch.post('/buildings', building);
-    return parsedBody as Building;
+    const { parsedBody, status } = await absoluteFetch.post('/buildings', building);
+    return { parsedBody, status };
   };
   const updateBuildingById = async (id: number, building: BuildingUpdate) => {
     const { parsedBody } = await absoluteFetch.put(`/buildings/${id}`, building);

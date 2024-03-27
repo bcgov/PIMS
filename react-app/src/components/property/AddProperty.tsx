@@ -168,7 +168,9 @@ const AddProperty = () => {
               };
               addParcel.Evaluations = addParcel.Evaluations.filter((a) => a.Value);
               addParcel.Fiscals = addParcel.Fiscals.filter((a) => a.Value);
-              api.parcels.addParcel(addParcel).then(() => navigate('/properties'));
+              api.parcels.addParcel(addParcel).then((ret) => {
+                if (ret.status == 201) navigate('/properties');
+              });
             } else {
               const formValues = formMethods.getValues();
               const addBuilding: BuildingAdd = {
@@ -191,7 +193,9 @@ const AddProperty = () => {
               };
               addBuilding.Evaluations = addBuilding.Evaluations.filter((a) => a.Value);
               addBuilding.Fiscals = addBuilding.Fiscals.filter((a) => a.Value);
-              api.buildings.addBuilding(addBuilding).then(() => navigate('/properties'));
+              api.buildings.addBuilding(addBuilding).then((ret) => {
+                if (ret.status == 201) navigate('/properties');
+              });
             }
           } else {
             console.log('Error!');
