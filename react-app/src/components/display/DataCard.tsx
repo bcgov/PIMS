@@ -9,10 +9,11 @@ type DataCardProps<T> = {
   title: string;
   onEdit: () => void;
   customFormatter?: (key: keyof T, value: any) => string | JSX.Element | undefined;
+  disableEdit?: boolean;
 } & PropsWithChildren;
 
 const DataCard = <T,>(props: DataCardProps<T>) => {
-  const { values, title, customFormatter, onEdit } = props;
+  const { values, title, customFormatter, onEdit, disableEdit } = props;
 
   const defaultFormatter = (key: keyof T, val: any) => {
     const customFormat = customFormatter?.(key, val);
@@ -44,6 +45,7 @@ const DataCard = <T,>(props: DataCardProps<T>) => {
             sx={{ minWidth: '50px', fontWeight: 'bold' }}
             onClick={() => onEdit()}
             color={'primary'}
+            disabled={disableEdit}
           >
             Edit
           </Button>

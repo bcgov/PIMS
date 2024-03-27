@@ -231,11 +231,11 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
         Id: building.Id,
         Evaluations: building.Evaluations.map((evalu) => ({
           ...evalu,
-          Value: String(evalu.Value).replace(/[$,]/g, ''), // Obviously this double map is pretty evil so suggestions welcome.
+          Value: evalu.Value.replace(/[$,]/g, ''), // Obviously this double map is pretty evil so suggestions welcome.
         })),
       })),
     });
-  }, [initialValues]);
+  }, [initialValues, initialRelatedBuildings]);
 
   return (
     <ConfirmDialog
@@ -247,7 +247,9 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
         if (propertyType === 'Parcel') {
           await api.parcels.updateParcelById(initialValues.Id, evalus);
           for (const building of formValues.RelatedBuildings) {
-            await api.buildings.updateBuildingById(building.Id, building);
+            if (building.Evaluations.length) {
+              await api.buildings.updateBuildingById(building.Id, building);
+            }
           }
           postSubmit();
         } else {
@@ -258,7 +260,7 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
     >
       <FormProvider {...assessedFormMethods}>
         <AssessedValue years={initialValues?.Evaluations?.map((evalu) => evalu.Year)} />
-        {initialRelatedBuildings?.map((building, idx) => (
+        {initialRelatedBuildings.map((building, idx) => (
           <AssessedValue
             title={`Building (${idx + 1}) ${building.Address1 ?? ''}`}
             key={`assessed-value-${building.Id}`}
@@ -295,6 +297,7 @@ export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditD
       })),
     });
   }, [initialValues]);
+
   return (
     <ConfirmDialog
       title={'Edit net book values'}

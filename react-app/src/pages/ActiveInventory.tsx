@@ -10,14 +10,14 @@ const ActiveInventory = () => {
   const {
     data: parcels,
     isLoading: parcelsLoading,
-    refreshData: refreshParcels,
     error: parcelError,
+    loadOnce: loadParcels,
   } = useDataLoader(api.parcels.getParcelsWithRelations);
   const {
     data: buildings,
     isLoading: buildingsLoading,
-    refreshData: refreshBuildings,
     error: buildingError,
+    loadOnce: loadBuildings,
   } = useDataLoader(api.buildings.getBuildings);
 
   const properties = useMemo(
@@ -29,17 +29,16 @@ const ActiveInventory = () => {
   );
 
   const loading = parcelsLoading || buildingsLoading;
-  const refresh = () => {
-    refreshBuildings();
-    refreshParcels();
-  };
   const error = buildingError ?? parcelError;
-
+  const loadAll = () => {
+    loadParcels();
+    loadBuildings();
+  };
   return (
     <PropertyTable
       data={properties}
       isLoading={loading}
-      refreshData={refresh}
+      loadData={loadAll}
       rowClickHandler={(params) => {
         if (params.row.Type === 'Building') {
           navigate(`building/${params.row.Id}`);

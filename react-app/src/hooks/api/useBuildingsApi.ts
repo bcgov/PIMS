@@ -8,7 +8,7 @@ export interface BuildingEvaluation extends BaseEntityInterface {
   BuildingId: number;
   Building?: Building;
   Year: number;
-  Value: number;
+  Value: string;
   EvaluationKeyId: number;
   EvaluationKey?: EvaluationKey;
   Note?: string;
@@ -17,7 +17,7 @@ export interface BuildingEvaluation extends BaseEntityInterface {
 export interface BuildingFiscal extends BaseEntityInterface {
   FiscalYear: number;
   EffectiveDate: Date;
-  Value: number;
+  Value: string;
   Note?: string;
   FiscalKeyId: number;
   FiscalKey?: FiscalKey;

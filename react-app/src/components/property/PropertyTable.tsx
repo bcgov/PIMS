@@ -6,14 +6,14 @@ import { Check } from '@mui/icons-material';
 import { GridColDef, GridColumnHeaderTitle, GridEventListener } from '@mui/x-data-grid';
 import { dateFormatter } from '@/utils/formatters';
 import { ClassificationInline } from './ClassificationIcon';
-import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 import { useNavigate } from 'react-router-dom';
 
 interface IPropertyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
   data: Record<string, any>[];
   isLoading: boolean;
-  refreshData: () => void;
+  // refreshData: () => void;
+  loadData: () => void;
   error: unknown;
 }
 
@@ -44,24 +44,31 @@ export const useClassificationStyle = () => {
 };
 
 const PropertyTable = (props: IPropertyTable) => {
-  const { rowClickHandler, data, isLoading, refreshData, error } = props;
+  const { rowClickHandler, data, isLoading, loadData } = props;
   const [properties, setProperties] = useState([]);
   const classification = useClassificationStyle();
   const theme = useTheme();
-  const { state } = useKeycloak();
+  // const { state } = useKeycloak();
   const navigate = useNavigate();
+
+  loadData();
   useEffect(() => {
-    if (error) {
-      console.error(error);
-    }
-    if (data && data.length > 0) {
-      console.log('Will set property rows.');
+    if (data) {
       setProperties(data);
-    } else {
-      console.log('Will refresh rows.');
-      refreshData();
     }
-  }, [state, data]);
+  }, [data]);
+  // useEffect(() => {
+  //   if (error) {
+  //     console.error(error);
+  //   }
+  //   console.log(JSON.stringify(data));
+  //   console.log(isLoading);
+  //   if (data) {
+  //     setProperties(data);
+  //   } else {
+  //     refreshData();
+  //   }
+  // }, [state, data]);
 
   const columns: GridColDef[] = [
     {

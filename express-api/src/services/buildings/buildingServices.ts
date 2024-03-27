@@ -14,7 +14,6 @@ const buildingRepo = AppDataSource.getRepository(Building);
  */
 export const addBuilding = async (building: DeepPartial<Building>) => {
   const existingBuilding = building.Id ? await getBuildingById(building.Id) : null;
-  console.log(`This was the existing building: ${JSON.stringify(existingBuilding, null, 2)}`)
   if (existingBuilding) {
     throw new ErrorWithCode('Building already exists.', 409);
   }

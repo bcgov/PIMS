@@ -1,4 +1,5 @@
 import { dateFormatter } from '@/utils/formatters';
+import { Box, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 
@@ -27,7 +28,11 @@ const PropertyNetValueTable = (props: IPropertyNetValueTable) => {
 
   if (!props.rows) return <></>;
 
-  return (
+  return !props.rows.length ? (
+    <Box display={'flex'} justifyContent={'center'}>
+      <Typography>No net book values recorded.</Typography>
+    </Box>
+  ) : (
     <DataGrid
       sx={{
         borderStyle: 'none',
