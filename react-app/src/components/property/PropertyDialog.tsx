@@ -73,7 +73,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
       title={'Edit parcel information'}
       open={props.open}
       onConfirm={async () => {
-        const formValues: any =  { ...infoFormMethods.getValues(), Id: initialValues.Id };
+        const formValues: any = { ...infoFormMethods.getValues(), Id: initialValues.Id };
         formValues.PID = parseIntOrNull(formValues.PID);
         formValues.PIN = parseIntOrNull(formValues.PIN);
         formValues.LandArea = parseFloatOrNull(formValues.LandArea);
