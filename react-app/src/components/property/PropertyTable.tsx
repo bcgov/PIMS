@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useEffect, useState } from 'react';
+import React, { MutableRefObject, useMemo } from 'react';
 import { CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, SxProps, Tooltip, lighten, useTheme } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
@@ -7,14 +7,16 @@ import { GridColDef, GridColumnHeaderTitle, GridEventListener } from '@mui/x-dat
 import { dateFormatter } from '@/utils/formatters';
 import { ClassificationInline } from './ClassificationIcon';
 import { useNavigate } from 'react-router-dom';
+import usePimsApi from '@/hooks/usePimsApi';
+import useDataLoader from '@/hooks/useDataLoader';
 
 interface IPropertyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
-  data: Record<string, any>[];
-  isLoading: boolean;
+  // data: Record<string, any>[];
+  // isLoading: boolean;
   // refreshData: () => void;
-  loadData: () => void;
-  error: unknown;
+  // loadData: () => void;
+  // error: unknown;
 }
 
 export const useClassificationStyle = () => {
@@ -44,31 +46,38 @@ export const useClassificationStyle = () => {
 };
 
 const PropertyTable = (props: IPropertyTable) => {
-  const { rowClickHandler, data, isLoading, loadData } = props;
-  const [properties, setProperties] = useState([]);
+  const api = usePimsApi();
+  const navigate = useNavigate();
+  const {
+    data: parcels,
+    isLoading: parcelsLoading,
+    loadOnce: loadParcels,
+  } = useDataLoader(api.parcels.getParcelsWithRelations);
+  const {
+    data: buildings,
+    isLoading: buildingsLoading,
+    loadOnce: loadBuildings,
+  } = useDataLoader(api.buildings.getBuildings);
+
+  const properties = useMemo(
+    () => [
+      ...(buildings?.map((b) => ({ ...b, Type: 'Building' })) ?? []),
+      ...(parcels?.map((p) => ({ ...p, Type: 'Parcel' })) ?? []),
+    ],
+    [buildings, parcels],
+  );
+
+  const loading = parcelsLoading || buildingsLoading;
+
+  const loadAll = () => {
+    loadParcels();
+    loadBuildings();
+  };
+
   const classification = useClassificationStyle();
   const theme = useTheme();
-  // const { state } = useKeycloak();
-  const navigate = useNavigate();
 
-  loadData();
-  useEffect(() => {
-    if (data) {
-      setProperties(data);
-    }
-  }, [data]);
-  // useEffect(() => {
-  //   if (error) {
-  //     console.error(error);
-  //   }
-  //   console.log(JSON.stringify(data));
-  //   console.log(isLoading);
-  //   if (data) {
-  //     setProperties(data);
-  //   } else {
-  //     refreshData();
-  //   }
-  // }, [state, data]);
+  loadAll();
 
   const columns: GridColDef[] = [
     {
@@ -201,7 +210,7 @@ const PropertyTable = (props: IPropertyTable) => {
         onPresetFilterChange={selectPresetFilter}
         getRowId={(row) => row.Id + row.Type}
         defaultFilter={'All Properties'}
-        onRowClick={rowClickHandler}
+        onRowClick={props.rowClickHandler}
         onAddButtonClick={() => navigate('add')}
         presetFilterSelectOptions={[
           <CustomMenuItem key={'All Properties'} value={'All Properties'}>
@@ -214,7 +223,7 @@ const PropertyTable = (props: IPropertyTable) => {
             Parcels
           </CustomMenuItem>,
         ]}
-        loading={isLoading}
+        loading={loading}
         tableHeader={'Properties Overview'}
         excelTitle={'Properties'}
         columns={columns}

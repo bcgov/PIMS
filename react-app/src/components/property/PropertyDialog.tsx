@@ -260,7 +260,7 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
     >
       <FormProvider {...assessedFormMethods}>
         <AssessedValue years={initialValues?.Evaluations?.map((evalu) => evalu.Year)} />
-        {initialRelatedBuildings.map((building, idx) => (
+        {initialRelatedBuildings?.map((building, idx) => (
           <AssessedValue
             title={`Building (${idx + 1}) ${building.Address1 ?? ''}`}
             key={`assessed-value-${building.Id}`}

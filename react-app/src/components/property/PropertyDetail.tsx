@@ -55,7 +55,6 @@ const PropertyDetail = (props: IPropertyDetail) => {
   }, [parcelId]);
 
   useEffect(() => {
-    console.log(`Will refresh related with pid ${parcel?.PID}`);
     refreshRelated();
   }, [parcel]);
 
@@ -82,7 +81,6 @@ const PropertyDetail = (props: IPropertyDetail) => {
           evaluations.push(evaluation);
         }
       }
-      console.log(`Final evaluations: ${JSON.stringify(evaluations)}`);
       return evaluations;
     } else if (buildingId && building) {
       const lastTwoYrs = building.Evaluations?.sort((a, b) => b.Year - a.Year).slice(0, 2);
