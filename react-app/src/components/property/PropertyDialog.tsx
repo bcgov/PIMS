@@ -15,6 +15,7 @@ import {
   PropertyType,
   NetBookValue,
 } from './PropertyForms';
+import { parseFloatOrNull, parseIntOrNull } from '@/utils/formatters';
 
 interface IParcelInformationEditDialog {
   initialValues: Parcel;
@@ -42,11 +43,11 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
     defaultValues: {
       NotOwned: true,
       Address1: '',
-      PIN: null,
-      PID: null,
+      PIN: '',
+      PID: '',
       Postal: '',
       AdministrativeAreaId: null,
-      LandArea: null,
+      LandArea: '',
       IsSensitive: false,
       ClassificationId: null,
       Description: '',
@@ -57,11 +58,11 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
     infoFormMethods.reset({
       NotOwned: initialValues?.NotOwned,
       Address1: initialValues?.Address1,
-      PIN: initialValues?.PIN,
-      PID: initialValues?.PID,
+      PIN: String(initialValues?.PIN ?? ''),
+      PID: String(initialValues?.PID ?? ''),
       Postal: initialValues?.Postal,
       AdministrativeAreaId: initialValues?.AdministrativeAreaId,
-      LandArea: initialValues?.LandArea,
+      LandArea: String(initialValues?.LandArea ?? ''),
       IsSensitive: initialValues?.IsSensitive,
       ClassificationId: initialValues?.ClassificationId,
       Description: initialValues?.Description,
@@ -72,8 +73,10 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
       title={'Edit parcel information'}
       open={props.open}
       onConfirm={async () => {
-        const formValues: any = infoFormMethods.getValues();
-        formValues.Id = initialValues.Id;
+        const formValues: any =  { ...infoFormMethods.getValues(), Id: initialValues.Id };
+        formValues.PID = parseIntOrNull(formValues.PID);
+        formValues.PIN = parseIntOrNull(formValues.PIN);
+        formValues.LandArea = parseFloatOrNull(formValues.LandArea);
         api.parcels.updateParcelById(initialValues.Id, formValues).then(() => postSubmit());
       }}
       onCancel={async () => props.onCancel()}
@@ -154,8 +157,8 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
   useEffect(() => {
     infoFormMethods.reset({
       Address1: initialValues?.Address1,
-      PIN: String(initialValues?.PIN),
-      PID: String(initialValues?.PID),
+      PIN: String(initialValues?.PIN ?? ''),
+      PID: String(initialValues?.PID ?? ''),
       Postal: initialValues?.Postal,
       AdministrativeAreaId: initialValues?.AdministrativeAreaId,
       IsSensitive: initialValues?.IsSensitive,
@@ -164,8 +167,8 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
       Name: initialValues?.Name,
       BuildingPredominateUseId: initialValues?.BuildingPredominateUseId,
       BuildingConstructionTypeId: initialValues?.BuildingConstructionTypeId,
-      TotalArea: String(initialValues?.TotalArea),
-      RentableArea: String(initialValues?.RentableArea),
+      TotalArea: String(initialValues?.TotalArea ?? ''),
+      RentableArea: String(initialValues?.RentableArea ?? ''),
       BuildingTenancy: initialValues?.BuildingTenancy,
       BuildingTenancyUpdatedOn: dayjs(initialValues?.BuildingTenancyUpdatedOn),
     });
@@ -176,8 +179,11 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
       title={'Edit building information'}
       open={open}
       onConfirm={async () => {
-        const formValues: any = { ...infoFormMethods.getValues() };
-        formValues.Id = initialValues.Id;
+        const formValues: any = { ...infoFormMethods.getValues(), Id: initialValues.Id };
+        formValues.PID = parseIntOrNull(formValues.PID);
+        formValues.PIN = parseIntOrNull(formValues.PIN);
+        formValues.TotalArea = parseFloatOrNull(formValues.TotalArea);
+        formValues.RentableArea = parseFloatOrNull(formValues.RentableArea);
         formValues.BuildingTenancyUpdatedOn = formValues.BuildingTenancyUpdatedOn.toDate();
         api.buildings.updateBuildingById(initialValues.Id, formValues).then(() => postSubmit());
       }}
@@ -229,7 +235,7 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
       })),
       RelatedBuildings: initialRelatedBuildings?.map((building) => ({
         Id: building.Id,
-        Evaluations: building.Evaluations.map((evalu) => ({
+        Evaluations: building.Evaluations?.map((evalu) => ({
           ...evalu,
           Value: evalu.Value.replace(/[$,]/g, ''), // Obviously this double map is pretty evil so suggestions welcome.
         })),

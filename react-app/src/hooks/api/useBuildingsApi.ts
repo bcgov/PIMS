@@ -89,6 +89,11 @@ export type BuildingAdd = Omit<
   'Id' | 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById' | 'Evaluations' | 'Fiscals'
 > & { Evaluations: BuildingEvaluationAdd[]; Fiscals: BuildingFiscalAdd[] };
 
+interface IBuildingsGetParams {
+  pid?: number;
+  includeRelations: boolean;
+}
+
 const useBuildingsApi = (absoluteFetch: IFetch) => {
   const addBuilding = async (building: BuildingAdd) => {
     const { parsedBody, status } = await absoluteFetch.post('/buildings', building);
@@ -98,12 +103,13 @@ const useBuildingsApi = (absoluteFetch: IFetch) => {
     const { parsedBody } = await absoluteFetch.put(`/buildings/${id}`, building);
     return parsedBody as Building;
   };
-  const getBuildings = async (pid?: number) => {
-    const params: Record<string, any> = {};
-    if (pid) {
-      params.pid = pid;
-    }
-    const { parsedBody } = await absoluteFetch.get('/buildings', params);
+
+  const getBuildings = async (params?: IBuildingsGetParams) => {
+    const noNullParam = params
+      ? // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        Object.fromEntries(Object.entries(params).filter(([_, v]) => v != null))
+      : undefined;
+    const { parsedBody } = await absoluteFetch.get('/buildings', noNullParam);
     if (parsedBody.error) {
       return [];
     }
