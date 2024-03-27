@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DataCard from '../display/DataCard';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Chip, Grid, Typography } from '@mui/material';
 import { dateFormatter, statusChipFormatter } from '@/utils/formatters';
 import DeleteDialog from '../dialog/DeleteDialog';
-import { deleteAccountConfirmText } from '@/constants/strings';
+import { deleteAgencyConfirmText } from '@/constants/strings';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import { FormProvider, useForm } from 'react-hook-form';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
@@ -14,6 +14,8 @@ import TextFormField from '../form/TextFormField';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 import { useParams } from 'react-router-dom';
+import EmailChipFormField from '@/components/form/EmailChipFormField';
+import SingleSelectBoxFormField from '@/components/form/SingleSelectBoxFormField';
 
 interface IAgencyDetail {
   onClose: () => void;
@@ -21,6 +23,8 @@ interface IAgencyDetail {
 
 interface AgencyStatus extends Agency {
   Status: string;
+  CC: string[];
+  To: string[];
 }
 
 const AgencyDetail = ({ onClose }: IAgencyDetail) => {
@@ -28,42 +32,44 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   const api = usePimsApi();
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [openProfileDialog, setOpenProfileDialog] = useState(false);
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
+  const [openNotificationsDialog, setOpenNotificationsDialog] = useState(false);
 
   const { data, refreshData } = useDataLoader(() => api.agencies.getAgencyById(+id));
 
-  const { data: rolesData, loadOnce: loadRoles } = useDataLoader(api.roles.getInternalRoles);
-  loadRoles();
-
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
-
-  const rolesOptions = useMemo(
-    () => rolesData?.map((role) => ({ label: role.Name, value: role.Name })) ?? [],
-    [rolesData],
-  );
 
   const agencyStatusData = {
     Status: data?.IsDisabled ? 'Disabled' : 'Active',
-    Name: data?.Name,
     Code: data?.Code,
+    Name: data?.Name,
     Description: data?.Description,
-    Parent: data?.Parent?.Name,
+    Parent: data?.Parent,
     UpdatedOn: data?.UpdatedOn,
   };
 
   const notificationsSettingsData = {
-    Email: data?.Email,
-    SendTo: data?.AddressTo,
-    CC: data?.CCEmail,
+    SendEmail: data?.SendEmail,
+    To: data?.Email ? data.Email.split(';') : [],
+    CC: data?.CCEmail ? data.CCEmail.split(';') : [],
   };
 
-  const customFormatterStatus = (key: keyof AgencyStatus, val: any) => {
+  const customFormatter = (key: keyof AgencyStatus, val: any) => {
+    console.log(val);
     switch (key) {
       case 'Status':
         return statusChipFormatter(val);
       case 'UpdatedOn':
         return <Typography>{dateFormatter(val)}</Typography>;
+      case 'Parent':
+        return <Typography>{(val as Agency)?.Name}</Typography>;
+      case 'SendEmail':
+        return <Typography>{val ? 'Yes' : 'No'}</Typography>;
+      case 'To':
+      case 'CC':
+        return val.map((email) => (
+          <Chip key={email} label={email} variant="outlined" sx={{ marginRight: '4px' }} />
+        ));
       default:
         return <Typography>{val}</Typography>;
     }
@@ -74,16 +80,16 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
       Status: '',
       Name: '',
       Code: '',
-      Parent: '',
+      ParentId: undefined,
       Description: '',
     },
   });
 
-  const emailFormMethods = useForm({
+  const notificationsFormMethods = useForm({
     defaultValues: {
-      Email: '',
-      SendTo: '',
-      CC: '',
+      SendEmail: false,
+      To: [],
+      CC: [],
     },
     mode: 'onBlur',
   });
@@ -97,12 +103,12 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
       Status: agencyStatusData.Status,
       Name: agencyStatusData.Name,
       Code: agencyStatusData.Code,
-      Parent: agencyStatusData.Parent,
+      ParentId: agencyStatusData.Parent?.Id,
       Description: agencyStatusData.Description,
     });
-    emailFormMethods.reset({
-      Email: notificationsSettingsData.Email,
-      SendTo: notificationsSettingsData.SendTo,
+    notificationsFormMethods.reset({
+      SendEmail: notificationsSettingsData.SendEmail,
+      To: notificationsSettingsData.To,
       CC: notificationsSettingsData.CC,
     });
   }, [data]);
@@ -123,20 +129,21 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
         onBackClick={() => onClose()}
       />
       <DataCard
-        customFormatter={customFormatterStatus}
+        customFormatter={customFormatter}
         values={agencyStatusData}
-        title={'Agency Status'}
+        title={'Agency Details'}
         onEdit={() => setOpenStatusDialog(true)}
       />
       <DataCard
+        customFormatter={customFormatter}
         values={notificationsSettingsData}
         title={'Notification Settings'}
-        onEdit={() => setOpenProfileDialog(true)}
+        onEdit={() => setOpenNotificationsDialog(true)}
       />
       <DeleteDialog
         open={openDeleteDialog}
         title={'Delete Agency'}
-        message={deleteAccountConfirmText}
+        message={deleteAgencyConfirmText}
         deleteText="Delete Agency"
         onDelete={async () => {
           api.agencies.deleteAgencyById(+id).then(() => {
@@ -148,79 +155,96 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
       />
       <ConfirmDialog
         title={'Update Agency'}
-        open={openProfileDialog}
+        open={openStatusDialog}
         onConfirm={async () => {
           const isValid = await agencyFormMethods.trigger();
           if (isValid) {
-            api.users
-              .updateUser(id, { Id: id, ...agencyFormMethods.getValues() })
+            const { Status, ParentId, Name, Code, Description } = agencyFormMethods.getValues();
+            api.agencies
+              .updateAgencyById(+id, {
+                Id: +id,
+                IsDisabled: Status === 'Disabled',
+                ParentId,
+                Name,
+                Code,
+                Description,
+              })
               .then(() => refreshData());
-            setOpenProfileDialog(false);
-          }
-        }}
-        onCancel={async () => setOpenProfileDialog(false)}
-      >
-        <FormProvider {...agencyFormMethods}>
-          <Grid mt={'1rem'} spacing={2} container>
-            <Grid item xs={6}>
-              <TextFormField fullWidth name={'DisplayName'} label={'IDIR/BCeID'} disabled />
-            </Grid>
-            <Grid item xs={6}>
-              <TextFormField required fullWidth name={'Email'} label={'Email'} />
-            </Grid>
-            <Grid item xs={6}>
-              <TextFormField required fullWidth name={'FirstName'} label={'First Name'} />
-            </Grid>
-            <Grid item xs={6}>
-              <TextFormField required fullWidth name={'LastName'} label={'Last Name'} />
-            </Grid>
-            <Grid item xs={12}>
-              <AutocompleteFormField
-                allowNestedIndent
-                name={'AgencyId'}
-                label={'Agency'}
-                options={agencyOptions}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextFormField name={'Position'} fullWidth label={'Position'} />
-            </Grid>
-          </Grid>
-        </FormProvider>
-      </ConfirmDialog>
-      <ConfirmDialog
-        title={'Update Agency Status'}
-        open={openStatusDialog}
-        onConfirm={async () => {
-          const isValid = await emailFormMethods.trigger();
-          if (isValid) {
-            // await api.users.updateUserRole(data.Username, emailFormMethods.getValues().Role);
-            // api.users
-            //   .updateUser(id, {
-            //     Id: id,
-            //     Status: emailFormMethods.getValues().Status,
-            //   })
-            //   .then(() => refreshData());
             setOpenStatusDialog(false);
           }
         }}
         onCancel={async () => setOpenStatusDialog(false)}
       >
-        <FormProvider {...emailFormMethods}>
-          <Grid minWidth={'30rem'} mt={1} spacing={2} container>
+        <FormProvider {...agencyFormMethods}>
+          <Grid mt={'1rem'} spacing={2} container>
             <Grid item xs={6}>
               <AutocompleteFormField
                 name={'Status'}
                 label={'Status'}
+                required
                 options={[
-                  //TODO: Get these through a lookup endpoint.
                   { label: 'Active', value: 'Active' },
                   { label: 'Disabled', value: 'Disabled' },
                 ]}
               />
             </Grid>
             <Grid item xs={6}>
-              <AutocompleteFormField name={'Role'} label={'Role'} options={rolesOptions} />
+              <TextFormField required fullWidth name={'Code'} label={'Code'} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextFormField required fullWidth name={'Name'} label={'Name'} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextFormField
+                fullWidth
+                multiline
+                name={'Description'}
+                label={'Description'}
+                minRows={3}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <AutocompleteFormField
+                allowNestedIndent
+                name={'ParentId'}
+                label={'Parent Agency'}
+                options={agencyOptions}
+              />
+            </Grid>
+          </Grid>
+        </FormProvider>
+      </ConfirmDialog>
+      <ConfirmDialog
+        title={'Update Notification Settings'}
+        open={openNotificationsDialog}
+        onConfirm={async () => {
+          const isValid = await notificationsFormMethods.trigger();
+
+          if (isValid) {
+            const { CC, To, SendEmail } = notificationsFormMethods.getValues();
+            api.agencies
+              .updateAgencyById(+id, {
+                Id: +id,
+                CCEmail: CC.join(';'),
+                Email: To.join(';'),
+                SendEmail,
+              })
+              .then(() => refreshData());
+            setOpenNotificationsDialog(false);
+          }
+        }}
+        onCancel={async () => setOpenNotificationsDialog(false)}
+      >
+        <FormProvider {...notificationsFormMethods}>
+          <Grid minWidth={'30rem'} mt={1} spacing={2} container>
+            <Grid item xs={12}>
+              <SingleSelectBoxFormField name={'SendEmail'} label={'Enable Email Notifications'} />
+            </Grid>
+            <Grid item xs={12}>
+              <EmailChipFormField name={'To'} label={'To'} />
+            </Grid>
+            <Grid item xs={12}>
+              <EmailChipFormField name={'CC'} label={'CC'} />
             </Grid>
           </Grid>
         </FormProvider>
