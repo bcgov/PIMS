@@ -147,7 +147,7 @@ describe('UNIT - Agencies Admin', () => {
       const agency = produceAgency();
       mockRequest.params.id = agency.Id.toString();
       await controllers.deleteAgencyById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
+      expect(mockResponse.statusValue).toBe(204);
       expect(mockResponse.sendValue.Id).toBe(agency.Id);
     });
     it('should throw an error when deleteAgencyById service throws an error', async () => {
