@@ -114,7 +114,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           title={val.Name}
         />
       );
-    } else if (key === 'IsSensitive') {
+    } else if (key === 'IsSensitive' || key === 'Owned') {
       return val ? <Typography>Yes</Typography> : <Typography>No</Typography>;
     }
     return <Typography>{val}</Typography>;

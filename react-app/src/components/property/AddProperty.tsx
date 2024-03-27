@@ -1,5 +1,5 @@
 import { Box, Button, RadioGroup, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 import BuildingIcon from '@/assets/icons/building.svg';
@@ -19,6 +19,8 @@ import { NavigateBackButton } from '../display/DetailViewNavigation';
 import { useNavigate } from 'react-router-dom';
 import { ParcelAdd } from '@/hooks/api/useParcelsApi';
 import { BuildingAdd } from '@/hooks/api/useBuildingsApi';
+import { AuthContext } from '@/contexts/authContext';
+import { parseFloatOrNull, parseIntOrNull } from '@/utils/formatters';
 
 const AddProperty = () => {
   const years = [new Date().getFullYear(), new Date().getFullYear() - 1];
@@ -26,6 +28,7 @@ const AddProperty = () => {
   const [showErrorText, setShowErrorTest] = useState(false);
   const navigate = useNavigate();
   const api = usePimsApi();
+  const userContext = useContext(AuthContext);
   const { data: adminAreasData, loadOnce: loadAdminAreas } = useDataLoader(
     api.administrativeAreas.getAdministrativeAreas,
   );
@@ -48,33 +51,34 @@ const AddProperty = () => {
     defaultValues: {
       NotOwned: true,
       Address1: '',
-      PIN: null,
-      PID: null,
-      PostalCode: '',
+      PIN: '',
+      PID: '',
+      Postal: '',
       AdministrativeAreaId: null,
       Latitude: '',
       Longitude: '',
-      LandArea: null,
+      LandArea: '',
       IsSensitive: false,
       ClassificationId: null,
       Description: '',
+      LandLegalDescription: '',
       Name: '',
       BuildingPredominateUseId: null,
       BuildingConstructionTypeId: null,
-      TotalArea: null,
-      RentableArea: null,
+      TotalArea: '',
+      RentableArea: '',
       BuildingTenancy: '',
       BuildingTenancyUpdatedOn: dayjs(),
       Fiscals: years.map((yr) => ({
         FiscalYear: yr,
-        Value: null,
+        Value: '',
         FiscalKeyId: 0,
         EffectiveDate: dayjs(),
       })),
       Evaluations: years.map((yr) => ({
         Year: yr,
         EvaluationKeyId: 0,
-        Value: null,
+        Value: '',
       })),
     },
   });
@@ -157,8 +161,11 @@ const AddProperty = () => {
               const formValues = formMethods.getValues();
               const addParcel: ParcelAdd = {
                 ...formValues,
+                LandArea: parseFloatOrNull(formValues.LandArea),
+                PID: parseIntOrNull(formValues.PID),
+                PIN: parseIntOrNull(formValues.PIN),
                 PropertyTypeId: 0,
-                AgencyId: null,
+                AgencyId: userContext.pimsUser.data.AgencyId,
                 IsVisibleToOtherAgencies: false,
                 Location: { x: 0, y: 0 },
                 Fiscals: formValues.Fiscals.map((a) => ({
@@ -175,10 +182,14 @@ const AddProperty = () => {
               const formValues = formMethods.getValues();
               const addBuilding: BuildingAdd = {
                 ...formValues,
+                PID: parseIntOrNull(formValues.PID),
+                PIN: parseIntOrNull(formValues.PIN),
+                RentableArea: parseFloatOrNull(formValues.RentableArea),
+                TotalArea: parseFloatOrNull(formValues.TotalArea),
                 BuildingFloorCount: 0,
                 BuildingOccupantTypeId: 0,
                 PropertyTypeId: 0,
-                AgencyId: null,
+                AgencyId: userContext.pimsUser.data.AgencyId,
                 IsVisibleToOtherAgencies: false,
                 Location: {
                   x: 0,
