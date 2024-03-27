@@ -154,7 +154,7 @@ export const CustomListSubheader = (props: PropsWithChildren) => {
 
 type FilterSearchDataGridProps = {
   onPresetFilterChange: (value: string, ref: MutableRefObject<GridApiCommunity>) => void;
-  onAddButtonClick: React.MouseEventHandler<HTMLButtonElement>;
+  onAddButtonClick?: React.MouseEventHandler<HTMLButtonElement>;
   defaultFilter: string;
   presetFilterSelectOptions: JSX.Element[];
   tableHeader: string;
