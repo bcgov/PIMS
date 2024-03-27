@@ -137,6 +137,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
         Description: data.Description,
       };
       if (buildingOrParcel === 'Building') {
+        info.Name = (data as Building).Name;
         info.TotalArea = (data as Building).TotalArea;
         info.UsableArea = (data as Building).RentableArea;
       } else {
@@ -186,7 +187,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           id={`${buildingOrParcel} net book value`}
           values={undefined}
           title={`${buildingOrParcel} net book value`}
-          disableEdit={!netBookValues.length}
+          disableEdit={!netBookValues?.length}
           onEdit={() => setOpenNetBookDialog(true)}
         >
           <PropertyNetValueTable rows={netBookValues} />
@@ -195,7 +196,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           id={'Assessed value'}
           values={undefined}
           title={'Assessed value'}
-          disableEdit={!assessedValues.length}
+          disableEdit={!assessedValues?.length}
           onEdit={() => setOpenAssessedValueDialog(true)}
         >
           <PropertyAssessedValueTable
