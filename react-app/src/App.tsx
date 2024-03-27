@@ -17,6 +17,7 @@ import UserDetail from '@/components/users/UserDetail';
 import ActiveInventory from './pages/ActiveInventory';
 import PropertyDetail from './components/property/PropertyDetail';
 import AddProperty from './components/property/AddProperty';
+import AgencyManagement from '@/pages/AgencyManagement';
 
 const Router = () => {
   const navigate = useNavigate();
@@ -52,21 +53,11 @@ const Router = () => {
       />
       <Route path="/admin">
         <Route
-          path="users"
+          path="agencies"
           element={
             <BaseLayout>
               <AuthRouteGuard>
-                <UsersManagement />
-              </AuthRouteGuard>
-            </BaseLayout>
-          }
-        />
-        <Route
-          path="users/:id"
-          element={
-            <BaseLayout>
-              <AuthRouteGuard>
-                <UserDetail onClose={() => navigate('/admin/users')} />
+                <AgencyManagement />
               </AuthRouteGuard>
             </BaseLayout>
           }
@@ -78,6 +69,16 @@ const Router = () => {
           <BaseLayout>
             <AuthRouteGuard>
               <ActiveInventory />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="users"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <UsersManagement />
             </AuthRouteGuard>
           </BaseLayout>
         }
@@ -97,7 +98,7 @@ const Router = () => {
         element={
           <BaseLayout>
             <AuthRouteGuard>
-              <PropertyDetail onClose={() => navigate('/properties/')}/>
+              <PropertyDetail onClose={() => navigate('/properties/')} />
             </AuthRouteGuard>
           </BaseLayout>
         }
@@ -108,6 +109,16 @@ const Router = () => {
           <BaseLayout>
             <AuthRouteGuard>
               <PropertyDetail onClose={() => navigate('/properties/')} />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="users/:id"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <UserDetail onClose={() => navigate('/users')} />
             </AuthRouteGuard>
           </BaseLayout>
         }

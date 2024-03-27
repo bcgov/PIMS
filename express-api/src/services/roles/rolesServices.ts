@@ -1,5 +1,5 @@
 import { AppDataSource } from '@/appDataSource';
-import { RolesFilter } from '../../controllers/admin/roles/rolesSchema';
+import { RolesFilter } from '../../controllers/roles/rolesSchema';
 import { DeepPartial } from 'typeorm';
 import { Role } from '@/typeorm/Entities/Role';
 import { UUID } from 'crypto';
