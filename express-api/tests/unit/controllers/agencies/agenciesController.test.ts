@@ -5,6 +5,7 @@ import {
   MockRes,
   getRequestHandlerMocks,
   produceAgency,
+  produceUser,
 } from '../../../testUtils/factories';
 import { Roles } from '@/constants/roles';
 import { Agency } from '@/typeorm/Entities/Agency';
@@ -32,6 +33,10 @@ const _getKeycloakUserRoles = jest.fn().mockImplementation(() => [{ name: Roles.
 
 jest.mock('@/services/keycloak/keycloakService.ts', () => ({
   getKeycloakUserRoles: () => _getKeycloakUserRoles(),
+}));
+
+jest.mock('@/services/users/usersServices', () => ({
+  getUser: jest.fn().mockImplementation(() => produceUser()),
 }));
 
 describe('UNIT - Agencies Admin', () => {
@@ -148,7 +153,8 @@ describe('UNIT - Agencies Admin', () => {
       mockRequest.params.id = agency.Id.toString();
       await controllers.deleteAgencyById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(204);
-      expect(mockResponse.sendValue.Id).toBe(agency.Id);
+      // expect(mockResponse.sendValue.Id).toBe(agency.Id);
+      expect(mockResponse.sendValue).toBeUndefined();
     });
     it('should throw an error when deleteAgencyById service throws an error', async () => {
       _deleteAgencyById.mockImplementationOnce(() => {
