@@ -38,6 +38,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   const { data, refreshData } = useDataLoader(() => api.agencies.getAgencyById(+id));
 
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
+  console.log(agencyOptions)
 
   const agencyStatusData = {
     Status: data?.IsDisabled ? 'Disabled' : 'Active',
@@ -208,6 +209,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
                 name={'ParentId'}
                 label={'Parent Agency'}
                 options={agencyOptions}
+                disableOptionsFunction={(option) => option.value === +id}
               />
             </Grid>
           </Grid>
