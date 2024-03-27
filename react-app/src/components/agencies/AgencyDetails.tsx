@@ -55,7 +55,6 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   };
 
   const customFormatter = (key: keyof AgencyStatus, val: any) => {
-    console.log(val);
     switch (key) {
       case 'Status':
         return statusChipFormatter(val);
