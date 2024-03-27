@@ -52,13 +52,16 @@ const PropertyTable = (props: IPropertyTable) => {
     data: parcels,
     isLoading: parcelsLoading,
     loadOnce: loadParcels,
-  } = useDataLoader(api.parcels.getParcelsWithRelations);
+  } = useDataLoader(api.parcels.getParcels);
   const {
     data: buildings,
     isLoading: buildingsLoading,
     loadOnce: loadBuildings,
   } = useDataLoader(api.buildings.getBuildings);
-
+  const { data: agencies, loadOnce: loadAgencies } = useDataLoader(api.agencies.getAgencies);
+  const { data: classifications, loadOnce: loadClassifications } = useDataLoader(
+    api.lookup.getClassifications,
+  );
   const properties = useMemo(
     () => [
       ...(buildings?.map((b) => ({ ...b, Type: 'Building' })) ?? []),
@@ -78,6 +81,8 @@ const PropertyTable = (props: IPropertyTable) => {
   const theme = useTheme();
 
   loadAll();
+  loadAgencies();
+  loadClassifications();
 
   const columns: GridColDef[] = [
     {
@@ -125,11 +130,12 @@ const PropertyTable = (props: IPropertyTable) => {
         );
       },
       renderCell: (params) => {
+        const classificationName = classifications?.find((cl) => cl.Id === params.value)?.Name;
         return (
           <ClassificationInline
             color={classification[params.row.ClassificationId].textColor}
             backgroundColor={classification[params.row.ClassificationId].bgColor}
-            title={params.row.Classification?.Name ?? ''}
+            title={classificationName ?? ''}
           />
         );
       },
@@ -141,10 +147,10 @@ const PropertyTable = (props: IPropertyTable) => {
       renderCell: (params) => params.value ?? 'N/A',
     },
     {
-      field: 'Agency',
+      field: 'AgencyId',
       headerName: 'Agency',
       flex: 1,
-      valueGetter: (params) => params.value?.Name ?? '',
+      valueGetter: (params) => agencies?.find((ag) => ag.Id === params.value)?.Name ?? '',
     },
     {
       field: 'Address1',

@@ -99,7 +99,7 @@ const useBuildingsApi = (absoluteFetch: IFetch) => {
     return parsedBody as Building;
   };
   const getBuildings = async (pid?: number) => {
-    const params: any = { includeRelations: true };
+    const params: Record<string, any> = {};
     if (pid) {
       params.pid = pid;
     }
