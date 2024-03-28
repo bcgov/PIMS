@@ -38,7 +38,6 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   const { data, refreshData } = useDataLoader(() => api.agencies.getAgencyById(+id));
 
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
-  console.log(agencyOptions)
 
   const agencyStatusData = {
     Status: data?.IsDisabled ? 'Disabled' : 'Active',
@@ -68,7 +67,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
       case 'To':
       case 'CC':
         return val.map((email) => (
-          <Chip key={email} label={email} variant="outlined" sx={{ marginRight: '4px' }} />
+          <Chip key={email} label={email} variant="outlined" sx={{ margin: '0 4px 4px 0' }} />
         ));
       default:
         return <Typography>{val}</Typography>;

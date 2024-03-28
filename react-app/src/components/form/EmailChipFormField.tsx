@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Autocomplete, SxProps, TextField, Paper, Chip } from '@mui/material';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -16,6 +16,8 @@ const CustomPaper = (props) => {
 const EmailChipFormField = (props: EmailChipFormFieldProps) => {
   const { control, getValues, formState } = useFormContext();
   const { name, label, sx, required, ...rest } = props;
+  const [inputValue, setInputValue] = useState<string>('');
+
   return (
     <Controller
       name={name}
@@ -48,7 +50,18 @@ const EmailChipFormField = (props: EmailChipFormFieldProps) => {
             />
           )}
           onChange={(_, data) => data && onChange(data)}
+          onInputChange={(e, value) => {
+            // To allow for other email delimiters
+            const key = (e.nativeEvent as InputEvent).data;
+            if (';,'.includes(key)) {
+              onChange([...getValues()[name], value.trim().substring(0, value.length - 1)]);
+              setInputValue('');
+            } else {
+              setInputValue(value.trim());
+            }
+          }}
           value={getValues()[name]}
+          inputValue={inputValue}
           {...rest}
         />
       )}
