@@ -4,7 +4,7 @@ import urls from '@/constants/urls';
 import { ChesFilter } from '@/controllers/tools/toolsSchema';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { decodeJWT } from '@/utilities/decodeJWT';
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 
 let _token: TokenResponse = null;
 
@@ -127,7 +127,7 @@ export interface IEmailSentResponse {
   txId: string;
 }
 
-const sendEmailAsync = async (email: IEmail, user: KeycloakUser): Promise<IEmailSentResponse> => {
+const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentResponse> => {
   const cfg = config();
   if (email == null) {
     throw new ErrorWithCode('Null argument for email.', 400);

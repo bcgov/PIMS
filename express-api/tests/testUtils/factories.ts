@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker';
 import { UUID, randomUUID } from 'crypto';
 import { Request, Response } from 'express';
 import { Role as RolesEntity } from '@/typeorm/Entities/Role';
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Building } from '@/typeorm/Entities/Building';
 import { EmailBody, IChesStatusResponse, IEmail } from '@/services/ches/chesServices';
@@ -157,7 +157,7 @@ export const produceRole = (): RolesEntity => {
   };
 };
 
-export const produceKeycloak = (): KeycloakUser => {
+export const produceSSO = (): SSOUser => {
   return {
     name: faker.string.alphanumeric(),
     preferred_username: faker.string.alphanumeric(),
@@ -165,10 +165,12 @@ export const produceKeycloak = (): KeycloakUser => {
     display_name: faker.string.alphanumeric(),
     client_roles: [faker.string.alphanumeric()],
     identity_provider: 'idir',
-    idir_user_guid: faker.string.uuid(),
-    idir_username: faker.string.alphanumeric(),
-    given_name: faker.person.firstName(),
-    family_name: faker.person.lastName(),
+    guid: faker.string.uuid(),
+    username: faker.string.alphanumeric(),
+    first_name: faker.person.firstName(),
+    last_name: faker.person.lastName(),
+    originalData: null, 
+    hasRoles: null,
   };
 };
 
