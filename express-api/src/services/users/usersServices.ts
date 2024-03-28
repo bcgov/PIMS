@@ -1,6 +1,6 @@
 import { User, UserStatus } from '@/typeorm/Entities/User';
 import { AppDataSource } from '@/appDataSource';
-import { KeycloakBCeIDUser, KeycloakIdirUser, KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { SSOBCeIDUser, SSOIdirUser, SSOUser } from '@bcgov/citz-imb-sso-express';
 import { DeepPartial, In } from 'typeorm';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { randomUUID, UUID } from 'crypto';
@@ -24,14 +24,14 @@ const getUser = async (username: string): Promise<User | null> => {
   return user;
 };
 
-const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => {
+const normalizeKeycloakUser = (kcUser: SSOUser): NormalizedKeycloakUser => {
   const provider = kcUser.identity_provider;
   const normalizeUuid = (keycloakUuid: string) =>
     keycloakUuid.toLowerCase().replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/g, '$1-$2-$3-$4-$5');
   let user;
   switch (provider) {
     case 'idir':
-      user = kcUser as KeycloakIdirUser;
+      user = kcUser as SSOIdirUser;
       return {
         given_name: user.given_name,
         family_name: user.family_name,
@@ -41,7 +41,7 @@ const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => 
         guid: normalizeUuid(user.idir_user_guid),
       };
     case 'bceidbasic':
-      user = kcUser as KeycloakBCeIDUser;
+      user = kcUser as SSOBCeIDUser;
       return {
         given_name: '',
         family_name: '',
@@ -60,9 +60,9 @@ const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => 
 //   return getUser(normalized.guid ?? normalized.username);
 // };
 
-const activateUser = async (kcUser: KeycloakUser) => {
-  const normalizedUser = normalizeKeycloakUser(kcUser);
-  const internalUser = await getUser(kcUser.preferred_username);
+const activateUser = async (ssoUser: SSOUser) => {
+  const normalizedUser = normalizeKeycloakUser(ssoUser);
+  const internalUser = await getUser(ssoUser.preferred_username);
   if (!internalUser) {
     const { given_name, family_name, username, guid } = normalizedUser;
     AppDataSource.getRepository(User).insert({
@@ -117,7 +117,7 @@ const activateUser = async (kcUser: KeycloakUser) => {
 // };
 
 const addKeycloakUserOnHold = async (
-  kcUser: KeycloakUser,
+  ssoUser: SSOUser,
   agencyId: number,
   position: string,
   note: string,
@@ -129,7 +129,7 @@ const addKeycloakUserOnHold = async (
     throw new Error('Null argument.');
   }
   //Iterating through agencies and roles no longer necessary here?
-  const normalizedKc = normalizeKeycloakUser(kcUser);
+  const normalizedKc = normalizeKeycloakUser(ssoUser);
   const systemUser = await AppDataSource.getRepository(User).findOne({
     where: { Username: 'system' },
   });

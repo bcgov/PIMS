@@ -1,4 +1,4 @@
-import { KCOptions, KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { SSOOptions, SSOUser } from '@bcgov/citz-imb-sso-express';
 import logger from '@/utilities/winstonLogger';
 import KeycloakService from '@/services/keycloak/keycloakService';
 import { AppDataSource } from '@/appDataSource';
@@ -6,8 +6,8 @@ import { User } from '@/typeorm/Entities/User';
 
 const users = AppDataSource.getRepository(User);
 
-export const KEYCLOAK_OPTIONS: KCOptions = {
-  afterUserLogin: async (user: KeycloakUser) => {
+export const SSO_OPTIONS: SSOOptions = {
+  afterUserLogin: async (user: SSOUser) => {
     if (user) {
       logger.info(`${user.display_name} has logged in.`);
       // Update last login date
@@ -22,7 +22,7 @@ export const KEYCLOAK_OPTIONS: KCOptions = {
       }
     }
   },
-  afterUserLogout: (user: KeycloakUser) => {
+  afterUserLogout: (user: SSOUser) => {
     if (user) {
       logger.info(`${user.display_name} has logged out.`);
     }

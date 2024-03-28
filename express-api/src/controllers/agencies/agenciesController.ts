@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import * as agencyService from '@/services/agencies/agencyServices';
 import { AgencyFilterSchema, AgencyPublicResponseSchema } from '@/services/agencies/agencySchema';
 import { z } from 'zod';
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Roles } from '@/constants/roles';
 
 /**
@@ -19,12 +19,12 @@ export const getAgencies = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  const kcUser = req.user as KeycloakUser;
+  const ssoUser = req.user as SSOUser;
   const filter = AgencyFilterSchema.safeParse(req.query);
   if (filter.success) {
     const includeRelations = req.query.includeRelations === 'true';
     const agencies = await agencyService.getAgencies(filter.data, includeRelations);
-    if (!kcUser.client_roles || !kcUser.client_roles.includes(Roles.ADMIN)) {
+    if (!ssoUser.client_roles || !ssoUser.client_roles.includes(Roles.ADMIN)) {
       const trimmed = AgencyPublicResponseSchema.array().parse(agencies);
       return res.status(200).send(trimmed);
     }

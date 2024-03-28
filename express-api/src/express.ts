@@ -4,11 +4,11 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
-import { keycloak, protectedRoute } from '@bcgov/citz-imb-kc-express';
+import { sso, protectedRoute } from '@bcgov/citz-imb-sso-express';
 import router from '@/routes';
 import middleware from '@/middleware';
 import constants from '@/constants';
-import { KEYCLOAK_OPTIONS } from '@/middleware/keycloak/keycloakOptions';
+import { SSO_OPTIONS } from '@/middleware/keycloak/keycloakOptions';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSON from '@/swagger/swagger-output.json';
 import errorHandler from '@/middleware/errorHandler';
@@ -56,8 +56,8 @@ const { headerHandler, morganMiddleware } = middleware;
 // Logging Middleware
 app.use(morganMiddleware);
 
-// Keycloak initialization
-keycloak(app, KEYCLOAK_OPTIONS);
+// SSO initialization
+sso(app, SSO_OPTIONS);
 
 // Set headers for response
 app.use(`/v2`, headerHandler as RequestHandler);

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { stubResponse } from '@/utilities/stubResponse';
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import {
   AdministrativeAreaFilterSchema,
   AdministrativeAreaPublicResponseSchema,
@@ -23,11 +23,11 @@ export const getAdministrativeAreas = async (req: Request, res: Response, next: 
       }]
    */
   try {
-    const kcUser = req.user as KeycloakUser;
+    const ssoUser = req.user as SSOUser;
     const filter = AdministrativeAreaFilterSchema.safeParse(req.query);
     if (filter.success) {
       const adminAreas = await administrativeAreasServices.getAdministrativeAreas(filter.data);
-      if (!kcUser.client_roles || !kcUser.client_roles.includes(Roles.ADMIN)) {
+      if (!ssoUser.client_roles || !ssoUser.client_roles.includes(Roles.ADMIN)) {
         const trimmed = AdministrativeAreaPublicResponseSchema.array().parse(adminAreas);
         return res.status(200).send(trimmed);
       }

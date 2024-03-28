@@ -1,7 +1,7 @@
 /* eslint-disable no-var */
 import chesServices, { IEmail } from '@/services/ches/chesServices';
 import { randomUUID } from 'crypto';
-import { produceEmail, produceKeycloak } from 'tests/testUtils/factories';
+import { produceEmail, produceSSO } from 'tests/testUtils/factories';
 import * as config from '@/constants/config';
 const _fetch = jest.fn().mockImplementation(() => {
   return {
@@ -19,7 +19,7 @@ describe('UNIT - Ches Services', () => {
   describe('sendEmailSync', () => {
     it('should return a valid token response', async () => {
       const email = produceEmail({ cc: ['john@doe.com'], bcc: ['john@doe.com'] });
-      const keycloak = produceKeycloak();
+      const keycloak = produceSSO();
       _fetch.mockImplementationOnce(() => ({
         text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
       }));
@@ -31,7 +31,7 @@ describe('UNIT - Ches Services', () => {
     });
     it('should throw an error on null email', async () => {
       const email: IEmail = null;
-      const keycloak = produceKeycloak();
+      const keycloak = produceSSO();
       _fetch.mockImplementationOnce(() => ({
         text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
       }));
@@ -42,7 +42,7 @@ describe('UNIT - Ches Services', () => {
     });
     it('should send email with extra config', async () => {
       const email: IEmail = produceEmail({});
-      const keycloak = produceKeycloak();
+      const keycloak = produceSSO();
       _config.mockImplementationOnce(() => ({
         ches: {
           emailEnabled: true,

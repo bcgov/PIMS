@@ -1,6 +1,6 @@
 import userServices from '@/services/users/usersServices';
 import { Request, Response } from 'express';
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { decodeJWT } from '@/utilities/decodeJWT';
 import { stubResponse } from '@/utilities/stubResponse';
 import { UserFiltering, UserFilteringSchema } from '@/controllers/users/usersSchema';
@@ -77,7 +77,7 @@ export const submitUserAccessRequest = async (req: Request, res: Response) => {
       }]
    */
   const result = await userServices.addKeycloakUserOnHold(
-    req.user as KeycloakUser,
+    req.user as SSOUser,
     Number(req.body.AgencyId),
     req.body.Position,
     req.body.Note,
@@ -158,7 +158,7 @@ export const getUserAgencies = async (req: Request, res: Response) => {
 };
 
 export const getSelf = async (req: Request, res: Response) => {
-  const user = userServices.normalizeKeycloakUser(req.user as KeycloakUser);
+  const user = userServices.normalizeKeycloakUser(req.user as SSOUser);
   const result = await userServices.getUser(user.username);
   if (result) {
     return res.status(200).send(result);
