@@ -1,4 +1,3 @@
-import { IdirIdentityProvider } from '@bcgov/citz-imb-sso-express';
 import { SSO_OPTIONS } from '@/middleware/keycloak/keycloakOptions';
 import logger from '@/utilities/winstonLogger';
 import { AppDataSource } from '@/appDataSource';

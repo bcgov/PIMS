@@ -169,7 +169,7 @@ export const produceSSO = (): SSOUser => {
     username: faker.string.alphanumeric(),
     first_name: faker.person.firstName(),
     last_name: faker.person.lastName(),
-    originalData: null, 
+    originalData: null,
     hasRoles: null,
   };
 };
