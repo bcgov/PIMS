@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { GeocoderService } from '@/services/geocoder/geocoderService';
+import geocoderService from '@/services/geocoder/geocoderService';
 
 const mockJson = {
   type: 'FeatureCollection',
@@ -89,14 +89,14 @@ describe('UNIT - Geoserver services', () => {
       .mockImplementation(() => Promise.resolve(new Response(stringjson)));
 
     it('should get an address from Geocoder service.', async () => {
-      const address = await GeocoderService.getSiteAddresses('4000 Seymour pl BC');
-      expect(typeof address === 'object' && !Array.isArray(address) && address !== null).toBe(true);
-      expect(address.siteId != '').toBe(true);
+      const address = await geocoderService.getSiteAddresses('4000 Seymour pl BC');
+      expect(Array.isArray(address)).toBe(true);
+      expect(address[0].siteId).toBeDefined();
     });
     it('should return an error when service is unreachable.', async () => {
       fetchMock.mockImplementationOnce(() => Promise.resolve(new Response('', { status: 500 })));
       expect(async () => {
-        await GeocoderService.getSiteAddresses('');
+        await geocoderService.getSiteAddresses('');
       }).rejects.toThrow();
     });
   });
@@ -112,7 +112,7 @@ describe('UNIT - Geoserver services', () => {
       const fetchMock = jest
         .spyOn(global, 'fetch')
         .mockImplementationOnce(() => Promise.resolve(new Response(stringPids)));
-      const pids = await GeocoderService.getPids('eccd759a-8476-46b0-af5d-e1c071f8e78e');
+      const pids = await geocoderService.getPids('eccd759a-8476-46b0-af5d-e1c071f8e78e');
       expect(typeof pids === 'object' && !Array.isArray(pids) && pids !== null).toBe(true);
       expect(typeof pids.pids === 'string' && pids.pids === '000382345').toBe(true);
     });
@@ -122,7 +122,7 @@ describe('UNIT - Geoserver services', () => {
         .spyOn(global, 'fetch')
         .mockImplementationOnce(() => Promise.resolve(new Response('', { status: 500 })));
       expect(async () => {
-        await GeocoderService.getPids('');
+        await geocoderService.getPids('');
       }).rejects.toThrow();
     });
   });
