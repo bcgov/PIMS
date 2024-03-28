@@ -16,6 +16,7 @@ import ErrorFallback from '@/pages/ErrorFallback';
 import UserDetail from '@/components/users/UserDetail';
 import AgencyManagement from '@/pages/AgencyManagement';
 import AgencyDetail from '@/components/agencies/AgencyDetails';
+import AdminAreasManagement from './pages/AdminAreasManagement';
 
 const Router = () => {
   const navigate = useNavigate();
@@ -50,6 +51,16 @@ const Router = () => {
         }
       />
       <Route path="/admin">
+        <Route
+          path="adminAreas"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard>
+                <AdminAreasManagement />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
         <Route
           path="agencies"
           element={

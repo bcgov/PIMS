@@ -5,6 +5,9 @@ import { FindOptionsOrder } from 'typeorm';
 
 const getAdministrativeAreas = (filter: AdministrativeAreaFilter) => {
   return AppDataSource.getRepository(AdministrativeArea).find({
+    relations: {
+      RegionalDistrict: true,
+    },
     where: {
       Name: filter.name,
       ProvinceId: filter.provinceId,
