@@ -25,9 +25,15 @@ const mapFeatureToAddress = (feature: IFeatureModel): IAddressModel => {
  * @returns address information matching IAddressModel format
  * @throws ErrorWithCode if the response is not 200 OK
  */
-export const getSiteAddresses = async (address: string) => {
+export const getSiteAddresses = async (
+  address: string,
+  minScore: string = '0',
+  maxResults: string = '1',
+) => {
   const url = new URL('/addresses.json', constants.GEOCODER.HOSTURI);
   url.searchParams.append('addressString', address);
+  url.searchParams.append('minScore', minScore);
+  url.searchParams.append('maxResults', maxResults);
 
   const response = await fetch(url.toString(), {
     headers: {
@@ -41,7 +47,9 @@ export const getSiteAddresses = async (address: string) => {
 
   const responseData = await response.json();
   const featureCollection: IFeatureCollectionModel = responseData;
-  const addressInformation: IAddressModel = mapFeatureToAddress(featureCollection.features[0]);
+  const addressInformation: IAddressModel[] = featureCollection.features.map((feature) =>
+    mapFeatureToAddress(feature),
+  ); // mapFeatureToAddress(featureCollection.features[0]);
 
   return addressInformation;
 };
@@ -69,7 +77,9 @@ export const getPids = async (siteId: string) => {
   return pidInformation;
 };
 
-export const GeocoderService = {
+const geocoderService = {
   getSiteAddresses,
   getPids,
 };
+
+export default geocoderService;
