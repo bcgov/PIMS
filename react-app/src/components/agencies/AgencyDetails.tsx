@@ -213,8 +213,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
                     option.value === +id || // Can't assign to self
                     agencyOptions
                       .find((parent) => parent.value === +id)
-                      .children.map((child: Agency) => child.Id)
-                      .includes(option.value) // Can't assign to current children
+                      .children.includes(option.value) // Can't assign to current children
                 }
               />
             </Grid>

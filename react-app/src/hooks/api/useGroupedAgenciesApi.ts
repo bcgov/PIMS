@@ -49,7 +49,7 @@ export const useGroupedAgenciesApi = () => {
         label: agency.Name,
         value: agency.Id,
         parent: true,
-        children: agency.children,
+        children: agency.children.map((child) => child.Id),
       });
       if (agency.children && agency.children.length > 0) {
         // Custom sorting logic for children agencies that contain numeric values
