@@ -6,7 +6,9 @@ import {
   getRequestHandlerMocks,
   produceEmail,
   produceEmailStatus,
+  produceGeocoderAddress,
   produceKeycloak,
+  producePidsResponse,
 } from '../../../testUtils/factories';
 import { randomUUID } from 'crypto';
 
@@ -34,6 +36,14 @@ jest.mock('@/services/ches/chesServices.ts', () => ({
   cancelEmailByIdAsync: () => _cancelEmailByIdAsync(),
   cancelEmailsAsync: () => _cancelEmailsAsync(),
   sendEmailAsync: () => _sendEmailAsync(),
+}));
+
+const _getSiteAddresses = jest.fn().mockImplementation(() => [produceGeocoderAddress()]);
+const _getPids = jest.fn().mockImplementation(() => producePidsResponse());
+
+jest.mock('@/services/geocoder/geocoderService', () => ({
+  getSiteAddresses: () => _getSiteAddresses(),
+  getPids: () => _getPids(),
 }));
 
 describe('UNIT - Tools', () => {
@@ -154,34 +164,32 @@ describe('UNIT - Tools', () => {
   });
 
   describe('GET /tools/geocoder/addresses', () => {
-    it('should return stub response 501', async () => {
+    it('should return 200 on just an address', async () => {
+      mockRequest.query.address = '1999 Tester St';
       await controllers.searchGeocoderAddresses(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
+      expect(mockResponse.statusValue).toBe(200);
     });
-
-    xit('should return status 200 and an address object', async () => {
-      mockRequest.query.address = 'eeeeee';
+    it('should return 200 on maxResults and minScore provided', async () => {
+      mockRequest.query.address = '1999 Tester St';
+      mockRequest.query.maxResults = '1';
+      mockRequest.query.minScore = '1';
+      await controllers.searchGeocoderAddresses(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+    });
+    it('should 200 and ignore poorly formatted maxResults and minScore', async () => {
+      mockRequest.query.address = '1999 Tester St';
+      mockRequest.query.maxResults = 'aaabbb';
+      mockRequest.query.minScore = 'aaabbb';
       await controllers.searchGeocoderAddresses(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
   });
 
   describe('GET /tools/geocoder/parcels/pids/:siteId', () => {
-    it('should return stub response 501', async () => {
-      await controllers.searchGeocoderAddresses(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and an address object', async () => {
-      mockRequest.params.siteId = 'eeeeee';
+    it('should return 200', async () => {
+      mockRequest.params.siteId = randomUUID();
       await controllers.searchGeocoderAddresses(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
-    });
-
-    xit('should return status 404 on no resource', async () => {
-      mockRequest.params.siteId = '-1111';
-      await controllers.searchGeocoderAddresses(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(404);
     });
   });
 

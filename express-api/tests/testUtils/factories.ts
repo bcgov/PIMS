@@ -12,6 +12,8 @@ import { EmailBody, IChesStatusResponse, IEmail } from '@/services/ches/chesServ
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
 import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUse';
+import { IAddressModel } from '@/services/geocoder/interfaces/IAddressModel';
+import { ISitePidsResponseModel } from '@/services/geocoder/interfaces/ISitePidsResponseModel';
 
 export class MockRes {
   statusValue: any;
@@ -361,4 +363,26 @@ export const produceConstructionType = (props: Partial<BuildingPredominateUse>) 
     ...props,
   };
   return constructionType;
+};
+
+export const produceGeocoderAddress = (): IAddressModel => {
+  const address: IAddressModel = {
+    siteId: randomUUID(),
+    fullAddress: faker.location.streetAddress(),
+    address1: faker.location.streetAddress(),
+    administrativeArea: faker.location.city(),
+    provinceCode: faker.location.state(),
+    latitude: faker.location.latitude(),
+    longitude: faker.location.longitude(),
+    score: faker.number.int({ min: 0, max: 99 }),
+  };
+  return address;
+};
+
+export const producePidsResponse = (): ISitePidsResponseModel => {
+  const pidResponse: ISitePidsResponseModel = {
+    siteID: randomUUID(),
+    pids: String(faker.number.int({ min: 11111111, max: 99999999 })),
+  };
+  return pidResponse;
 };
