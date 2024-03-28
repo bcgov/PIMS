@@ -6,6 +6,7 @@ export interface ISelectMenuItem {
   label: string;
   value: any;
   parent?: boolean;
+  children?: unknown[];
 }
 
 interface ISelectInputProps {
