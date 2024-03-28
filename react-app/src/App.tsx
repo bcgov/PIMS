@@ -16,6 +16,7 @@ import ErrorFallback from '@/pages/ErrorFallback';
 import UserDetail from '@/components/users/UserDetail';
 import AgencyManagement from '@/pages/AgencyManagement';
 import AgencyDetail from '@/components/agencies/AgencyDetails';
+import AddAgency from '@/components/agencies/AddAgency';
 
 const Router = () => {
   const navigate = useNavigate();
@@ -66,6 +67,16 @@ const Router = () => {
             <BaseLayout>
               <AuthRouteGuard>
                 <AgencyDetail onClose={() => navigate('/admin/agencies')} />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
+        <Route
+          path="agencies/add"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard>
+                <AddAgency />
               </AuthRouteGuard>
             </BaseLayout>
           }

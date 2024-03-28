@@ -159,6 +159,7 @@ type FilterSearchDataGridProps = {
   tableHeader: string;
   excelTitle: string;
   addTooltip: string;
+  addAction?: () => void;
   initialState?: GridInitialStateCommunity;
 } & DataGridProps;
 
@@ -223,7 +224,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           />
           <Tooltip title={props.addTooltip}>
             <span>
-              <IconButton disabled>
+              <IconButton disabled={!props.addAction} onClick={props.addAction}>
                 <AddIcon />
               </IconButton>
             </span>
