@@ -2,10 +2,13 @@ import { IFetch } from '../useFetch';
 
 export interface Agency {
   Id: number;
+  UpdatedById?: string;
+  UpdatedOn?: Date;
   Name: string;
   Description?: string;
   SortOrder: number;
   ParentId?: number;
+  Parent?: Agency;
   IsDisabled: boolean;
   Email?: string;
   Code: string;
@@ -31,10 +34,28 @@ const useAgencyApi = (absoluteFetch: IFetch) => {
     return parsedBody as Agency[];
   };
 
+  const getAgencyById = async (id: number): Promise<Agency> => {
+    const { parsedBody } = await absoluteFetch.get(`/agencies/${id}`);
+    return parsedBody as Agency;
+  };
+
+  const deleteAgencyById = async (id: number): Promise<number> => {
+    const { status } = await absoluteFetch.del(`/agencies/${id}`);
+    return status;
+  };
+
+  const updateAgencyById = async (id: number, agency: Partial<Agency>): Promise<Agency> => {
+    const { parsedBody } = await absoluteFetch.patch(`/agencies/${id}`, agency);
+    return parsedBody as Agency;
+  };
+
   return {
     getAgencies,
     getAgenciesNotDisabled,
     getAgenciesWithParent,
+    getAgencyById,
+    deleteAgencyById,
+    updateAgencyById,
   };
 };
 
