@@ -73,11 +73,14 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
       title={'Edit parcel information'}
       open={props.open}
       onConfirm={async () => {
-        const formValues: any = { ...infoFormMethods.getValues(), Id: initialValues.Id };
-        formValues.PID = parseIntOrNull(formValues.PID);
-        formValues.PIN = parseIntOrNull(formValues.PIN);
-        formValues.LandArea = parseFloatOrNull(formValues.LandArea);
-        api.parcels.updateParcelById(initialValues.Id, formValues).then(() => postSubmit());
+        const isValid = await infoFormMethods.trigger();
+        if (isValid) {
+          const formValues: any = { ...infoFormMethods.getValues(), Id: initialValues.Id };
+          formValues.PID = parseIntOrNull(formValues.PID);
+          formValues.PIN = parseIntOrNull(formValues.PIN);
+          formValues.LandArea = parseFloatOrNull(formValues.LandArea);
+          api.parcels.updateParcelById(initialValues.Id, formValues).then(() => postSubmit());
+        }
       }}
       onCancel={async () => props.onCancel()}
     >
@@ -179,13 +182,16 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
       title={'Edit building information'}
       open={open}
       onConfirm={async () => {
-        const formValues: any = { ...infoFormMethods.getValues(), Id: initialValues.Id };
-        formValues.PID = parseIntOrNull(formValues.PID);
-        formValues.PIN = parseIntOrNull(formValues.PIN);
-        formValues.TotalArea = parseFloatOrNull(formValues.TotalArea);
-        formValues.RentableArea = parseFloatOrNull(formValues.RentableArea);
-        formValues.BuildingTenancyUpdatedOn = formValues.BuildingTenancyUpdatedOn.toDate();
-        api.buildings.updateBuildingById(initialValues.Id, formValues).then(() => postSubmit());
+        const isValid = await infoFormMethods.trigger();
+        if (isValid) {
+          const formValues: any = { ...infoFormMethods.getValues(), Id: initialValues.Id };
+          formValues.PID = parseIntOrNull(formValues.PID);
+          formValues.PIN = parseIntOrNull(formValues.PIN);
+          formValues.TotalArea = parseFloatOrNull(formValues.TotalArea);
+          formValues.RentableArea = parseFloatOrNull(formValues.RentableArea);
+          formValues.BuildingTenancyUpdatedOn = formValues.BuildingTenancyUpdatedOn.toDate();
+          api.buildings.updateBuildingById(initialValues.Id, formValues).then(() => postSubmit());
+        }
       }}
       onCancel={async () => onCancel()}
     >
@@ -330,7 +336,9 @@ export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditD
       onCancel={async () => onClose()}
     >
       <FormProvider {...netBookFormMethods}>
-        <NetBookValue years={initialValues?.Fiscals?.map((f) => f.FiscalYear) ?? []} />
+        <Box paddingTop={'1rem'}>
+          <NetBookValue years={initialValues?.Fiscals?.map((f) => f.FiscalYear) ?? []} />
+        </Box>
       </FormProvider>
     </ConfirmDialog>
   );

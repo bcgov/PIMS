@@ -40,12 +40,27 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             name={'PID'}
             label={'PID'}
             numeric
-            required={propertyType === 'Parcel'}
-            rules={{ validate: (val) => String(val).length <= 9 || 'PIN is too long.' }}
+            rules={{
+              validate: (val, formVals) =>
+                (val.length <= 9 &&
+                  (val.length > 0 || formVals['PIN'].length > 0 || propertyType === 'Building')) ||
+                'Must have set either PID or PIN',
+            }}
           />
         </Grid>
         <Grid item xs={6}>
-          <TextFormField numeric fullWidth name={'PIN'} label={'PIN'} />
+          <TextFormField
+            numeric
+            fullWidth
+            name={'PIN'}
+            label={'PIN'}
+            rules={{
+              validate: (val, formVals) =>
+                (val.length <= 9 &&
+                  (val.length > 0 || formVals['PID'].length > 0 || propertyType === 'Building')) ||
+                'Must have set either PID or PIN',
+            }}
+          />
         </Grid>
         <Grid item xs={6}>
           <AutocompleteFormField
@@ -60,8 +75,10 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             fullWidth
             name={'Postal'}
             label={'Postal code'}
-            required
-            rules={{ validate: (val) => val?.length == 6 || 'Should be exactly 6 characters.' }}
+            rules={{
+              validate: (val) =>
+                val.length == 0 || val.length == 6 || 'Should be exactly 6 characters.',
+            }}
           />
         </Grid>
       </Grid>
@@ -125,10 +142,15 @@ export const ParcelInformationForm = (props: IParcelInformationForm) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <TextFormField label={'Description'} name={'Description'} fullWidth />
+          <TextFormField multiline label={'Description'} name={'Description'} fullWidth />
         </Grid>
         <Grid item xs={12}>
-          <TextFormField label={'Legal description'} name={'LandLegalDescription'} fullWidth />
+          <TextFormField
+            multiline
+            label={'Legal description'}
+            name={'LandLegalDescription'}
+            fullWidth
+          />
         </Grid>
       </Grid>
     </>
@@ -226,7 +248,7 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
           <DateFormField name={`BuildingTenancyUpdatedOn`} label={'Tenancy date'} />
         </Grid>
         <Grid item xs={12}>
-          <TextFormField label={'Description'} name={'Description'} fullWidth />
+          <TextFormField multiline label={'Description'} name={'Description'} fullWidth />
         </Grid>
       </Grid>
     </>
