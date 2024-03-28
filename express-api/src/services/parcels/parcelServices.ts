@@ -14,16 +14,13 @@ const parcelRepo = AppDataSource.getRepository(Parcel);
  */
 const addParcel = async (parcel: DeepPartial<Parcel>) => {
   const inPID = Number(parcel.PID);
-  if (inPID == undefined || Number.isNaN(inPID)) {
-    throw new ErrorWithCode('Must include PID in parcel data.', 400);
-  }
 
   const matchPID = inPID.toString().search(/^\d{9}$/);
-  if (matchPID === -1) {
+  if (parcel.PID != null && matchPID === -1) {
     throw new ErrorWithCode('PID must be a number and in the format #########');
   }
 
-  const existingParcel = await getParcelByPid(inPID);
+  const existingParcel = parcel.PID != null ? await getParcelByPid(inPID) : undefined;
 
   if (existingParcel) {
     throw new ErrorWithCode('Parcel already exists.', 409);
@@ -83,8 +80,8 @@ const getParcels = async (filter: ParcelFilter, includeRelations: boolean = fals
  * @throws Error with code if parcel is not found or if an unexpected error is hit on update
  */
 const updateParcel = async (incomingParcel: DeepPartial<Parcel>) => {
-  if (incomingParcel.PID == undefined) {
-    throw new ErrorWithCode('Must include PID in parcel data.', 400);
+  if (incomingParcel.PID == null && incomingParcel.PIN == null) {
+    throw new ErrorWithCode('Must include PID or PIN in parcel data.', 400);
   }
   const findParcel = await getParcelById(incomingParcel.Id);
   if (findParcel == null || findParcel.Id !== incomingParcel.Id) {

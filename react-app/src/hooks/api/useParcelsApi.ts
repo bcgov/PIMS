@@ -8,17 +8,26 @@ export interface ParcelEvaluation extends BaseEntityInterface {
   ParcelId: number;
   Parcel?: Parcel;
   Year: number;
-  Value: number;
+  Value: string;
   Firm?: string;
-  EvalutationKeyId: number;
+  EvaluationKeyId: number;
   EvaluationKey?: EvaluationKey;
   Note?: string;
 }
 
+type ParcelEvaluationAdd = Omit<
+  ParcelEvaluation,
+  'ParcelId' | 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById'
+>;
+type ParcelFiscalAdd = Omit<
+  ParcelFiscal,
+  'ParcelId' | 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById'
+>;
+
 export interface ParcelFiscal extends BaseEntityInterface {
   FiscalYear: number;
   EffectiveDate: Date;
-  Value: number;
+  Value: string;
   Note?: string;
   FiscalKeyId: number;
   FiscalKey?: FiscalKey;
@@ -33,18 +42,20 @@ export interface Parcel extends Property {
   ZoningPotential?: string;
   ParentParcelId?: number;
   ParentParcel?: Parcel;
+  NotOwned?: boolean;
+  PropertyTypeId: number;
 }
 
 export type ParcelUpdate = Partial<Parcel>;
 export type ParcelAdd = Omit<
   Parcel,
-  'Id' | 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById'
->;
+  'Id' | 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById' | 'Evaluations' | 'Fiscals'
+> & { Evaluations: ParcelEvaluationAdd[]; Fiscals: ParcelFiscalAdd[] };
 
 const useParcelsApi = (absoluteFetch: IFetch) => {
   const addParcel = async (parcel: ParcelAdd) => {
-    const { parsedBody } = await absoluteFetch.post('/parcels', parcel);
-    return parsedBody as Parcel;
+    const { parsedBody, status } = await absoluteFetch.post('/parcels', parcel);
+    return { parsedBody, status };
   };
   const updateParcelById = async (id: number, parcel: ParcelUpdate) => {
     const { parsedBody } = await absoluteFetch.put(`/parcels/${id}`, parcel);

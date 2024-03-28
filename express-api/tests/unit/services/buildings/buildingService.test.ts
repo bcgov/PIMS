@@ -19,9 +19,9 @@ const _buildingFindOne = jest
   .spyOn(buildingRepo, 'findOne')
   .mockImplementation(async () => produceBuilding());
 
-const _buildingUpdate = jest
-  .spyOn(buildingRepo, 'update')
-  .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
+// const _buildingUpdate = jest
+//   .spyOn(buildingRepo, 'update')
+//   .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
 
 jest.spyOn(buildingRepo, 'find').mockImplementation(async () => [produceBuilding()]);
 
@@ -73,7 +73,7 @@ describe('updateBuildingById', () => {
   it('should update an existing building', async () => {
     const updateBuilding = produceBuilding();
     await buildingService.updateBuildingById(updateBuilding);
-    expect(_buildingUpdate).toHaveBeenCalledTimes(1);
+    expect(_buildingSave).toHaveBeenCalledTimes(1);
   });
   it('should throw an error if the building is not found.', async () => {
     const updateBuilding = produceBuilding();
