@@ -30,12 +30,20 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const parcelId = isNaN(Number(params.parcelId)) ? null : Number(params.parcelId);
   const buildingId = isNaN(Number(params.buildingId)) ? null : Number(params.buildingId);
   const api = usePimsApi();
-  const { data: parcel, refreshData: refreshParcel } = useDataLoader(() =>
-    api.parcels.getParcelById(parcelId),
-  );
-  const { data: building, refreshData: refreshBuilding } = useDataLoader(() =>
-    api.buildings.getBuildingById(buildingId),
-  );
+  const { data: parcel, refreshData: refreshParcel } = useDataLoader(() => {
+    if (parcelId) {
+      return api.parcels.getParcelById(parcelId);
+    } else {
+      return null;
+    }
+  });
+  const { data: building, refreshData: refreshBuilding } = useDataLoader(() => {
+    if (buildingId) {
+      return api.buildings.getBuildingById(buildingId);
+    } else {
+      return null;
+    }
+  });
   const { data: relatedBuildings, refreshData: refreshRelated } = useDataLoader(
     () => parcelId && api.buildings.getBuildings({ pid: parcel.PID, includeRelations: true }),
   );
@@ -120,7 +128,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
     return <Typography>{val}</Typography>;
   };
 
-  const buildingOrParcel: PropertyType = typeof building === 'object' ? 'Building' : 'Parcel';
+  const buildingOrParcel: PropertyType = building != null ? 'Building' : 'Parcel';
   const mainInformation = useMemo(() => {
     const data: Parcel | Building = buildingOrParcel === 'Building' ? building : parcel;
     if (!data) {
