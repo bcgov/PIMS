@@ -1,5 +1,5 @@
 import { columnNameFormatter, dateFormatter } from '@/utils/formatters';
-import { Box, Button, CardContent, CardHeader, Divider, Typography } from '@mui/material';
+import { Button, CardContent, CardHeader, Divider, Grid, Typography } from '@mui/material';
 import Card from '@mui/material/Card';
 import React, { PropsWithChildren } from 'react';
 
@@ -55,12 +55,16 @@ const DataCard = <T,>(props: DataCardProps<T>) => {
         {props.children ??
           Object.keys(values ?? {}).map((key, idx) => (
             <React.Fragment key={`card-data-fragment-${idx}-${key}`}>
-              <Box display={'flex'} flexDirection={'row'}>
-                <Typography width={'150px'} fontWeight={'bold'}>
-                  {columnNameFormatter(key)}
-                </Typography>
-                {defaultFormatter(key as keyof T, values[key])}
-              </Box>
+              <Grid container display={'flex'} flexDirection={'row'}>
+                <Grid item xs={3}>
+                  <Typography width={'150px'} fontWeight={'bold'}>
+                    {columnNameFormatter(key)}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  {defaultFormatter(key as keyof T, values[key])}
+                </Grid>
+              </Grid>
               {idx < Object.keys(values).length - 1 && <Divider sx={{ mt: '1rem', mb: '1rem' }} />}
             </React.Fragment>
           ))}

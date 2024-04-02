@@ -45,7 +45,12 @@ export const useGroupedAgenciesApi = () => {
     const options: ISelectMenuItem[] = [];
 
     groupedAgencies.forEach((agency) => {
-      options.push({ label: agency.Name, value: agency.Id, parent: true });
+      options.push({
+        label: agency.Name,
+        value: agency.Id,
+        parent: true,
+        children: agency.children.map((child) => child.Id),
+      });
       if (agency.children && agency.children.length > 0) {
         // Custom sorting logic for children agencies that contain numeric values
         agency.children = agency.children.sort((a: Agency, b: Agency) => {
@@ -54,7 +59,11 @@ export const useGroupedAgenciesApi = () => {
           return numA - numB;
         });
         agency.children.forEach((childAgency) => {
-          options.push({ label: childAgency.Name, value: childAgency.Id, parent: false });
+          options.push({
+            label: childAgency.Name,
+            value: childAgency.Id,
+            parent: false,
+          });
         });
       }
     });

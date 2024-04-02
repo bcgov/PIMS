@@ -18,6 +18,9 @@ import ActiveInventory from './pages/ActiveInventory';
 import PropertyDetail from './components/property/PropertyDetail';
 import AddProperty from './components/property/AddProperty';
 import AgencyManagement from '@/pages/AgencyManagement';
+import AgencyDetail from '@/components/agencies/AgencyDetails';
+import AdminAreasManagement from './pages/AdminAreasManagement';
+import AdministrativeAreaDetail from './components/adminAreas/AdministrativeAreaDetail';
 
 const Router = () => {
   const navigate = useNavigate();
@@ -53,11 +56,41 @@ const Router = () => {
       />
       <Route path="/admin">
         <Route
+          path="adminAreas"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard>
+                <AdminAreasManagement />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
+        <Route
+          path="adminAreas/:id"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard>
+                <AdministrativeAreaDetail />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
+        <Route
           path="agencies"
           element={
             <BaseLayout>
               <AuthRouteGuard>
                 <AgencyManagement />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
+        <Route
+          path="agencies/:id"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard>
+                <AgencyDetail onClose={() => navigate('/admin/agencies')} />
               </AuthRouteGuard>
             </BaseLayout>
           }

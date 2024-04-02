@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import chesServices from '@/services/ches/chesServices';
 import { ChesFilterSchema } from './toolsSchema';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import geocoderService from '@/services/geocoder/geocoderService';
 
 /**
  * @description Gets the status of a CHES message.
@@ -119,7 +120,11 @@ export const searchGeocoderAddresses = async (req: Request, res: Response) => {
         "bearerAuth" : []
         }]
      */
-  return stubResponse(res);
+  const address = String(req.query.address);
+  const minScore = isNaN(Number(req.query.minScore)) ? undefined : String(req.query.minScore);
+  const maxResults = isNaN(Number(req.query.maxResults)) ? undefined : String(req.query.maxResults);
+  const geoReturn = await geocoderService.getSiteAddresses(address, minScore, maxResults);
+  return res.status(200).send(geoReturn);
 };
 
 /**
@@ -136,7 +141,9 @@ export const searchGeocoderSiteId = async (req: Request, res: Response) => {
         "bearerAuth" : []
         }]
      */
-  return stubResponse(res);
+  const siteId = String(req.params.siteId);
+  const result = await geocoderService.getPids(siteId);
+  return res.status(200).send(result);
 };
 
 /**

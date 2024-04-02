@@ -5,6 +5,7 @@ import {
   MockRes,
   getRequestHandlerMocks,
   produceAgency,
+  produceUser,
 } from '../../../testUtils/factories';
 import { Roles } from '@/constants/roles';
 import { Agency } from '@/typeorm/Entities/Agency';
@@ -32,6 +33,10 @@ const _getKeycloakUserRoles = jest.fn().mockImplementation(() => [{ name: Roles.
 
 jest.mock('@/services/keycloak/keycloakService.ts', () => ({
   getKeycloakUserRoles: () => _getKeycloakUserRoles(),
+}));
+
+jest.mock('@/services/users/usersServices', () => ({
+  getUser: jest.fn().mockImplementation(() => produceUser()),
 }));
 
 describe('UNIT - Agencies Admin', () => {
@@ -129,6 +134,14 @@ describe('UNIT - Agencies Admin', () => {
       expect(mockResponse.statusValue).toBe(400);
       expect(mockResponse.sendValue).toBe('The param ID does not match the request body.');
     });
+    it('should return status 403 if you try to set an agency as its own parent', async () => {
+      const agency = produceAgency();
+      mockRequest.params.id = agency.Id.toString();
+      mockRequest.body = { ...agency, ParentId: agency.Id };
+      await controllers.updateAgencyById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(403);
+      expect(mockResponse.sendValue).toBe('An agency cannot be its own parent.');
+    });
     it('should throw an error when updateAgencyById service throws an error', async () => {
       _updateAgencyById.mockImplementationOnce(() => {
         throw new ErrorWithCode('', 400);
@@ -147,8 +160,9 @@ describe('UNIT - Agencies Admin', () => {
       const agency = produceAgency();
       mockRequest.params.id = agency.Id.toString();
       await controllers.deleteAgencyById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-      expect(mockResponse.sendValue.Id).toBe(agency.Id);
+      expect(mockResponse.statusValue).toBe(204);
+      // expect(mockResponse.sendValue.Id).toBe(agency.Id);
+      expect(mockResponse.sendValue).toBeUndefined();
     });
     it('should throw an error when deleteAgencyById service throws an error', async () => {
       _deleteAgencyById.mockImplementationOnce(() => {
