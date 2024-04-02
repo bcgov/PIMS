@@ -18,3 +18,9 @@ export const BuildingConstructionPublicResponseSchema = z.object({
   Id: z.number(),
   SortOrder: z.number(),
 });
+
+export const RegionalDistrictPublicResponseSchema = z.object({
+  Name: z.string(),
+  Id: z.number(),
+  Abbreviation: z.string(),
+});
