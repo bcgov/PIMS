@@ -10,6 +10,7 @@ interface IAutocompleteProps {
   sx?: SxProps;
   required?: boolean;
   allowNestedIndent?: boolean;
+  disableOptionsFunction?: (option: ISelectMenuItem) => boolean;
 }
 
 const CustomPaper = (props) => {
@@ -18,7 +19,8 @@ const CustomPaper = (props) => {
 
 const AutocompleteFormField = (props: IAutocompleteProps) => {
   const { control, getValues, formState } = useFormContext();
-  const { name, options, label, sx, required, allowNestedIndent, ...rest } = props;
+  const { name, options, label, sx, required, allowNestedIndent, disableOptionsFunction, ...rest } =
+    props;
   return (
     <Controller
       name={name}
@@ -34,6 +36,7 @@ const AutocompleteFormField = (props: IAutocompleteProps) => {
           sx={sx}
           disableClearable={true}
           getOptionLabel={(option: ISelectMenuItem) => option.label}
+          getOptionDisabled={disableOptionsFunction}
           renderOption={(props, option, state, ownerState) => (
             <Box
               sx={{
