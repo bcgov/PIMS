@@ -6,6 +6,9 @@ import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
 const getAdministrativeAreas = (filter: AdministrativeAreaFilter) => {
   return AppDataSource.getRepository(AdministrativeArea).find({
+    relations: {
+      RegionalDistrict: true,
+    },
     where: {
       Name: filter.name,
       ProvinceId: filter.provinceId,
