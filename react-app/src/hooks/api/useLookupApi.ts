@@ -26,10 +26,16 @@ const useLookupApi = (absoluteFetch: IFetch) => {
     return parsedBody as LookupObject[];
   };
 
+  const getRegionalDistricts = async () => {
+    const { parsedBody } = await absoluteFetch.get('/lookup/regionalDistricts');
+    return parsedBody as Omit<LookupObject, 'SortOrder'>[];
+  };
+
   return {
     getClassifications,
     getConstructionTypes,
     getPredominateUses,
+    getRegionalDistricts,
   };
 };
 

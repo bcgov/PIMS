@@ -7,6 +7,7 @@ import {
   produceClassification,
   produceConstructionType,
   producePredominateUse,
+  produceRegionalDistrict,
 } from '../../../testUtils/factories';
 import { AppDataSource } from '@/appDataSource';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
@@ -15,7 +16,9 @@ import { BuildingConstructionType } from '@/typeorm/Entities/BuildingConstructio
 import {
   lookupBuildingConstructionType,
   lookupBuildingPredominateUse,
+  lookupRegionalDistricts,
 } from '@/controllers/lookup/lookupController';
+import { RegionalDistrict } from '@/typeorm/Entities/RegionalDistrict';
 
 const {
   lookupAgencies,
@@ -30,6 +33,7 @@ const _next = jest.fn();
 const _findClassification = jest.fn().mockImplementation(() => [produceClassification({})]);
 const _findUses = jest.fn().mockImplementation(() => [producePredominateUse({})]);
 const _findConstruction = jest.fn().mockImplementation(() => [produceConstructionType({})]);
+const _findRegionalDistricts = jest.fn().mockImplementation(() => [produceRegionalDistrict({})]);
 jest
   .spyOn(AppDataSource.getRepository(PropertyClassification), 'find')
   .mockImplementation(async () => _findClassification());
@@ -39,6 +43,9 @@ jest
 jest
   .spyOn(AppDataSource.getRepository(BuildingConstructionType), 'find')
   .mockImplementation(async () => _findConstruction());
+jest
+  .spyOn(AppDataSource.getRepository(RegionalDistrict), 'find')
+  .mockImplementation(() => _findRegionalDistricts());
 
 describe('UNIT - Lookup Controller', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
@@ -97,6 +104,18 @@ describe('UNIT - Lookup Controller', () => {
       expect(
         async () => await lookupPropertyClassifications(mockRequest, mockResponse),
       ).rejects.toThrow();
+    });
+  });
+
+  describe('GET /lookup/regionalDistricts', () => {
+    it('should return status 200 and a list of regionalDistricts', async () => {
+      await lookupRegionalDistricts(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+    });
+    it('should return 400 on bad parse', async () => {
+      _findRegionalDistricts.mockImplementationOnce(() => [{ Name: [] }]);
+      await lookupRegionalDistricts(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
     });
   });
 
