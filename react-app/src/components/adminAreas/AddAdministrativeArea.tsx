@@ -4,9 +4,12 @@ import { FormProvider, useForm } from 'react-hook-form';
 import TextFormField from '../form/TextFormField';
 import AutocompleteFormField from '../form/AutocompleteFormField';
 import usePimsApi from '@/hooks/usePimsApi';
+import useDataLoader from '@/hooks/useDataLoader';
 
 const AddAdministrativeArea = () => {
   const api = usePimsApi();
+  const { data: regionalDistricts, loadOnce: loadRegional } = useDataLoader(api.lookup.getRegionalDistricts);
+  loadRegional();
   const formMethods = useForm({
     defaultValues: {
       Name: '',
@@ -39,7 +42,7 @@ const AddAdministrativeArea = () => {
             <AutocompleteFormField
               name={'RegionalDistrictId'}
               label={'Regional District'}
-              options={[]}
+              options={regionalDistricts?.map((reg) => ({ value: reg.Id, label: reg.Name })) ?? []}
             />
           </Grid>
         </Grid>
