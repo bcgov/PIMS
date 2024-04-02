@@ -45,7 +45,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
     }
   });
   const { data: relatedBuildings, refreshData: refreshRelated } = useDataLoader(
-    () => parcelId && api.buildings.getBuildings({ pid: parcel.PID, includeRelations: true }),
+    () => parcel?.PID && api.buildings.getBuildings({ pid: parcel.PID, includeRelations: true }),
   );
   const refreshEither = () => {
     if (parcelId) {
