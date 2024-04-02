@@ -13,10 +13,12 @@ const {
   lookupRoles,
   lookupBuildingConstructionType,
   lookupBuildingPredominateUse,
+  lookupRegionalDistricts,
 } = controllers;
 
 router.route('/agencies').get(catchErrors(lookupAgencies));
 router.route('/roles').get(catchErrors(lookupRoles));
+router.route('/regionalDistricts').get(catchErrors(lookupRegionalDistricts));
 router.route('/property/classifications').get(catchErrors(lookupPropertyClassifications));
 router.route('/property/predominateUses').get(catchErrors(lookupBuildingPredominateUse));
 router.route('/property/constructionTypes').get(catchErrors(lookupBuildingConstructionType));

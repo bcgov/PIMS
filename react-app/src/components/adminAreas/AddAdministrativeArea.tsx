@@ -10,7 +10,7 @@ const AddAdministrativeArea = () => {
   const formMethods = useForm({
     defaultValues: {
       Name: '',
-      RegionalDistrict: '',
+      RegionalDistrictId: null,
       SortOrder: '0',
     },
   });
@@ -48,7 +48,12 @@ const AddAdministrativeArea = () => {
             const isValid = await formMethods.trigger();
             const formValues = formMethods.getValues();
             if (isValid) {
-              api.administrativeAreas.addAdministrativeArea({ ...formValues, ProvinceId: 'BC' });
+              api.administrativeAreas.addAdministrativeArea({
+                ...formValues,
+                IsDisabled: false,
+                ProvinceId: 'BC',
+                SortOrder: Number(formValues.SortOrder),
+              });
             } else {
               console.log('Error!');
             }

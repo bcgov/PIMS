@@ -6,9 +6,11 @@ import useDataLoader from '@/hooks/useDataLoader';
 import { dateFormatter } from '@/utils/formatters';
 import { Check } from '@mui/icons-material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
+import { useNavigate } from 'react-router-dom';
 
 const AdministrativeAreasTable = () => {
   const api = usePimsApi();
+  const navigate = useNavigate();
   const { data, loadOnce } = useDataLoader(api.administrativeAreas.getAdministrativeAreas);
   loadOnce();
   const columns: GridColDef[] = [
@@ -74,8 +76,10 @@ const AdministrativeAreasTable = () => {
 
   return (
     <FilterSearchDataGrid
+      onRowClick={(params) => navigate(`${params.row.Id}`)}
       onPresetFilterChange={selectPresetFilter}
       defaultFilter={'All'}
+      onAddButtonClick={() => navigate('add')}
       presetFilterSelectOptions={[
         <CustomMenuItem key={'All'} value={'All'}>
           All Areas

@@ -12,6 +12,7 @@ export const AdministrativeAreaPublicResponseSchema = z.object({
   Id: z.number(),
   Name: z.string(),
   ProvinceId: z.string(),
+  CreatedOn: z.date(),
 });
 
 export type AdministrativeAreaFilter = z.infer<typeof AdministrativeAreaFilterSchema>;
