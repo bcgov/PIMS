@@ -6,9 +6,11 @@ import {
   BuildingConstructionPublicResponseSchema,
   ClassificationPublicResponseSchema,
   PredominateUsePublicResponseSchema,
+  RegionalDistrictPublicResponseSchema,
 } from './lookupSchema';
 import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUse';
 import { BuildingConstructionType } from '@/typeorm/Entities/BuildingConstructionType';
+import { RegionalDistrict } from '@/typeorm/Entities/RegionalDistrict';
 
 // TODO: What controllers here could just be replaced by existing GET requests?
 
@@ -103,6 +105,16 @@ export const lookupBuildingConstructionType = async (req: Request, res: Response
   const uses = await AppDataSource.getRepository(BuildingConstructionType).find();
   const filtered = uses.filter((u) => !u.IsDisabled);
   const parsed = BuildingConstructionPublicResponseSchema.array().safeParse(filtered);
+  if (parsed.success) {
+    return res.status(200).send(parsed.data);
+  } else {
+    return res.status(400).send(parsed);
+  }
+};
+
+export const lookupRegionalDistricts = async (req: Request, res: Response) => {
+  const districts = await AppDataSource.getRepository(RegionalDistrict).find();
+  const parsed = RegionalDistrictPublicResponseSchema.array().safeParse(districts);
   if (parsed.success) {
     return res.status(200).send(parsed.data);
   } else {
