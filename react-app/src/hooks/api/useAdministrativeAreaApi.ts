@@ -12,8 +12,16 @@ const useAdministrativeAreaApi = (absoluteFetch: IFetch) => {
     return parsedBody as AdministrativeArea[];
   };
 
+  const addAdministrativeArea = async (
+    adminArea: Omit<AdministrativeArea, 'Id'>,
+  ): Promise<AdministrativeArea> => {
+    const { parsedBody } = await absoluteFetch.post(`/administrativeAreas`, adminArea);
+    return parsedBody as AdministrativeArea;
+  };
+
   return {
     getAdministrativeAreas,
+    addAdministrativeArea,
   };
 };
 

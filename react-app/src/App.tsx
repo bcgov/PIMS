@@ -17,6 +17,7 @@ import UserDetail from '@/components/users/UserDetail';
 import AgencyManagement from '@/pages/AgencyManagement';
 import AgencyDetail from '@/components/agencies/AgencyDetails';
 import AdminAreasManagement from './pages/AdminAreasManagement';
+import AddAdministrativeArea from './components/adminAreas/AddAdministrativeArea';
 
 const Router = () => {
   const navigate = useNavigate();
@@ -57,6 +58,16 @@ const Router = () => {
             <BaseLayout>
               <AuthRouteGuard>
                 <AdminAreasManagement />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
+        <Route
+          path="adminAreas/add"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard>
+                <AddAdministrativeArea />
               </AuthRouteGuard>
             </BaseLayout>
           }

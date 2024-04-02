@@ -7,6 +7,7 @@ import {
 } from '@/services/administrativeAreas/administrativeAreaSchema';
 import administrativeAreasServices from '@/services/administrativeAreas/administrativeAreasServices';
 import { Roles } from '@/constants/roles';
+import userServices from '@/services/users/usersServices';
 
 /**
  * @description Gets a list of administrative areas.
@@ -54,9 +55,10 @@ export const addAdministrativeArea = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  const user = await userServices.getUser((req.user as KeycloakUser).preferred_username);
+  const addBody = { ...req.body, CreatedById: user.Id };
+  const response = await administrativeAreasServices.addAdministrativeArea(addBody);
+  return res.status(201).send(response);
 };
 
 /**
