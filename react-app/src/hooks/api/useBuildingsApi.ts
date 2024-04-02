@@ -89,7 +89,7 @@ export type BuildingAdd = Omit<
   'Id' | 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById' | 'Evaluations' | 'Fiscals'
 > & { Evaluations: BuildingEvaluationAdd[]; Fiscals: BuildingFiscalAdd[] };
 
-interface IBuildingsGetParams {
+export interface IBuildingsGetParams {
   pid?: number;
   includeRelations: boolean;
 }
