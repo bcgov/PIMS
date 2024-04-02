@@ -1,5 +1,5 @@
 import usePimsUser, { IPimsUser } from '@/hooks/usePimsUser';
-import { AuthService, useKeycloak } from '@bcgov/citz-imb-kc-react';
+import { AuthService, useSSO } from '@bcgov/citz-imb-sso-react';
 import React, { createContext } from 'react';
 export interface IAuthState {
   keycloak: AuthService;
@@ -14,7 +14,7 @@ export const AuthContext = createContext<IAuthState | undefined>(undefined);
  * @return {*}
  */
 export const AuthContextProvider: React.FC<React.PropsWithChildren> = (props) => {
-  const keycloak = useKeycloak();
+  const keycloak = useSSO();
   const pimsUser = usePimsUser();
 
   return (

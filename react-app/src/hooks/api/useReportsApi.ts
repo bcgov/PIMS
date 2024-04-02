@@ -1,8 +1,8 @@
-import { KeycloakUser } from '@bcgov/citz-imb-kc-react';
+import { SSOUser } from '@bcgov/citz-imb-sso-react';
 import { FetchResponse, IFetch } from '../useFetch';
 
 export interface ErrorReport {
-  user: KeycloakUser;
+  user: SSOUser;
   userMessage: string;
   error: {
     message: string;

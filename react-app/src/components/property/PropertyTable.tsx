@@ -6,7 +6,7 @@ import { Check } from '@mui/icons-material';
 import { GridColDef, GridColumnHeaderTitle, GridEventListener } from '@mui/x-data-grid';
 import { dateFormatter } from '@/utils/formatters';
 import { ClassificationInline } from './ClassificationIcon';
-import { useKeycloak } from '@bcgov/citz-imb-kc-react';
+import { useSSO } from '@bcgov/citz-imb-sso-react';
 
 interface IPropertyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
@@ -47,7 +47,7 @@ const PropertyTable = (props: IPropertyTable) => {
   const [properties, setProperties] = useState([]);
   const classification = useClassificationStyle();
   const theme = useTheme();
-  const { state } = useKeycloak();
+  const { state } = useSSO();
   useEffect(() => {
     if (error) {
       console.error(error);

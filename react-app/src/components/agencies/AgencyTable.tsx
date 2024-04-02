@@ -4,7 +4,7 @@ import { Box, SxProps } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { dateFormatter, statusChipFormatter } from '@/utils/formatters';
-import { useKeycloak } from '@bcgov/citz-imb-kc-react';
+import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { Agency } from '@/hooks/api/useAgencyApi';
 
 interface IAgencyTable {
@@ -18,7 +18,7 @@ interface IAgencyTable {
 const AgencyTable = (props: IAgencyTable) => {
   const { rowClickHandler, data, isLoading, refreshData, error } = props;
   const [agencies, setAgencies] = useState<Agency[]>([]);
-  const { state } = useKeycloak();
+  const { state } = useSSO();
   useEffect(() => {
     if (error) {
       console.error(error);
