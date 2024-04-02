@@ -1,12 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { stubResponse } from '@/utilities/stubResponse';
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
-import {
-  AdministrativeAreaFilterSchema,
-  AdministrativeAreaPublicResponseSchema,
-} from '@/services/administrativeAreas/administrativeAreaSchema';
+import { AdministrativeAreaFilterSchema } from '@/services/administrativeAreas/administrativeAreaSchema';
 import administrativeAreasServices from '@/services/administrativeAreas/administrativeAreasServices';
-import { Roles } from '@/constants/roles';
 
 /**
  * @description Gets a list of administrative areas.
