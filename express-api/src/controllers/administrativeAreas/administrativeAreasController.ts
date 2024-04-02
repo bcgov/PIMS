@@ -23,14 +23,9 @@ export const getAdministrativeAreas = async (req: Request, res: Response, next: 
       }]
    */
   try {
-    const kcUser = req.user as KeycloakUser;
     const filter = AdministrativeAreaFilterSchema.safeParse(req.query);
     if (filter.success) {
       const adminAreas = await administrativeAreasServices.getAdministrativeAreas(filter.data);
-      if (!kcUser.client_roles || !kcUser.client_roles.includes(Roles.ADMIN)) {
-        const trimmed = AdministrativeAreaPublicResponseSchema.array().parse(adminAreas);
-        return res.status(200).send(trimmed);
-      }
       return res.status(200).send(adminAreas);
     } else {
       return res.status(400).send('Could not parse filter.');

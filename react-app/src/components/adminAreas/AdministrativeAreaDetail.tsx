@@ -2,7 +2,7 @@ import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
 import { Box, Grid, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import DataCard from '../display/DataCard';
 import { AdministrativeArea } from '@/hooks/api/useAdministrativeAreaApi';
@@ -14,8 +14,7 @@ import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
 import AutocompleteFormField from '../form/AutocompleteFormField';
 
 const AdministrativeAreaDetail = () => {
-  //const { id } = useParams();
-  const id = 2;
+  const { id } = useParams();
   const api = usePimsApi();
   const { data, refreshData } = useDataLoader(() =>
     api.administrativeAreas.getAdminAreaById(Number(id)),
@@ -24,6 +23,7 @@ const AdministrativeAreaDetail = () => {
     api.lookup.getRegionalDistricts,
   );
   loadDistricts();
+  const navigate = useNavigate();
   useEffect(() => {
     refreshData();
   }, [id]);
@@ -73,7 +73,7 @@ const AdministrativeAreaDetail = () => {
         navigateBackTitle="Back to Administrative Areas"
         deleteTitle="Delete Area"
         onDeleteClick={() => setOpenDeleteDialog(true)}
-        onBackClick={() => {}}
+        onBackClick={() => navigate('/admin/adminAreas')}
       />
       <DataCard
         customFormatter={customFormatter}
@@ -88,10 +88,11 @@ const AdministrativeAreaDetail = () => {
           const valid = await formMethods.trigger();
           if (valid) {
             const formValues = formMethods.getValues();
+            const idAsNumber = Number(id);
             api.administrativeAreas
-              .updateAdminArea(id, {
+              .updateAdminArea(idAsNumber, {
                 ...formValues,
-                Id: id,
+                Id: idAsNumber,
                 SortOrder: Number(formValues.SortOrder),
               })
               .then(() => refreshData());

@@ -58,12 +58,12 @@ describe('UNIT - Administrative Areas Admin', () => {
       await getAdministrativeAreas(mockRequest, mockResponse, _next);
       expect(mockResponse.statusValue).toBe(200);
     });
-    it('should return status 200 and a list of administrative areas, lacks metadata', async () => {
-      mockRequest.setUser({ client_roles: [] });
-      await getAdministrativeAreas(mockRequest, mockResponse, _next);
-      expect(mockResponse.statusValue).toBe(200);
-      expect(mockResponse.sendValue.CreatedOn).toBeUndefined();
-    });
+    // it('should return status 200 and a list of administrative areas, lacks metadata', async () => {
+    //   mockRequest.setUser({ client_roles: [] });
+    //   await getAdministrativeAreas(mockRequest, mockResponse, _next);
+    //   expect(mockResponse.statusValue).toBe(200);
+    //   expect(mockResponse.sendValue.CreatedOn).toBeUndefined();
+    // });
     it('should return status 400 when parse fails', async () => {
       mockRequest.query = { name: ['a'] };
       await getAdministrativeAreas(mockRequest, mockResponse, _next);
