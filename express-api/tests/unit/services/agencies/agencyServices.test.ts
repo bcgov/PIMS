@@ -48,6 +48,12 @@ describe('UNIT - agency services', () => {
       expect(agency.Id).toBe(addagency.Id);
       expect(_agencySave).toHaveBeenCalledTimes(1);
     });
+
+    it('should throw an error if the new agency name or code is already taken', async () => {
+      _agencyFind.mockResolvedValueOnce([produceAgency()]);
+      const addagency = produceAgency();
+      expect(async () => await agencyServices.addAgency(addagency)).rejects.toThrow();
+    });
   });
   describe('updateAgencyById', () => {
     it('should update an agency and return it', async () => {
