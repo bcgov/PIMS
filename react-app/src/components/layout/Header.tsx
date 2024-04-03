@@ -49,7 +49,7 @@ const AppBrand = () => {
         />
         <Typography
           marginLeft={'16px'}
-          color={theme.palette.black.main}
+          color={theme.palette.white.main}
           variant="h4"
           fontSize={'1rem'}
         >
@@ -87,7 +87,7 @@ const Header: React.FC = () => {
       elevation={0}
       component={'nav'}
       style={{
-        backgroundColor: theme.palette.white.main,
+        backgroundColor: theme.palette.blue.main,
         height: '74px',
         display: 'flex',
         position: 'fixed',
@@ -95,6 +95,8 @@ const Header: React.FC = () => {
         borderBottom: '1px solid',
         borderBottomColor: theme.palette.gray.main,
         zIndex: theme.zIndex.drawer + 1,
+        borderColor: '#fcba19',
+        borderBottomWidth: '2px',
       }}
     >
       <Toolbar>
@@ -112,7 +114,7 @@ const Header: React.FC = () => {
                     aria-expanded={open ? 'true' : undefined}
                     onClick={handleClick}
                     sx={{
-                      color: '#000',
+                      color: '#FFF',
                       fontWeight: 500,
                       '&:hover': {
                         cursor: 'pointer',

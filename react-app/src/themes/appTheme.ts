@@ -125,9 +125,9 @@ const appTheme = createTheme({
     MuiLink: {
       styleOverrides: {
         root: {
-          color: '#000',
+          color: '#fff',
           fontWeight: 500,
-          textDecorationColor: '#000',
+          textDecorationColor: '#fff',
         },
       },
     },
