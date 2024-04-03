@@ -258,7 +258,6 @@ export const produceBuilding = (): Building => {
     BuildingOccupantType: undefined,
     LeaseExpiry: undefined,
     OccupantName: undefined,
-    TransferLeaseOnSale: undefined,
     BuildingTenancyUpdatedOn: undefined,
     EncumbranceReason: undefined,
     LeasedLandMetadata: undefined,

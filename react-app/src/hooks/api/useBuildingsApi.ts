@@ -63,7 +63,6 @@ export interface Building extends Property {
   BuildingOccupantType?: BuildingOccupantType;
   LeaseExpiry?: Date;
   OccupantName?: string;
-  TransferLeaseOnSale?: boolean;
   BuildingTenancyUpdatedOn?: Date;
   EncumbranceReason?: string;
   LeasedLandMetadata?: string;
