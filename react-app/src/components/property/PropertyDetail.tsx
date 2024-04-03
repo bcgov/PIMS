@@ -103,9 +103,9 @@ const PropertyDetail = (props: IPropertyDetail) => {
 
   const netBookValues = useMemo(() => {
     if (parcelId && parcel) {
-      return parcel.Fiscals;
+      return parcel.Fiscals.map((v) => v).sort((a, b) => b.FiscalYear - a.FiscalYear);
     } else if (buildingId && building) {
-      return building.Fiscals;
+      return building.Fiscals.map((v) => v).sort((a, b) => b.FiscalYear - a.FiscalYear);
     } else {
       return [];
     }
