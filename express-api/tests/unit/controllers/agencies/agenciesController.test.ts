@@ -151,7 +151,7 @@ describe('UNIT - Agencies Admin', () => {
       mockRequest.body = agency;
       expect(
         async () => await controllers.updateAgencyById(mockRequest, mockResponse),
-      ).rejects.toThrow();
+      ).rejects.toThrow('');
     });
   });
 

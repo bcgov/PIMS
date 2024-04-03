@@ -14,6 +14,7 @@ import { PropertyClassification } from '@/typeorm/Entities/PropertyClassificatio
 import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUse';
 import { IAddressModel } from '@/services/geocoder/interfaces/IAddressModel';
 import { ISitePidsResponseModel } from '@/services/geocoder/interfaces/ISitePidsResponseModel';
+import { RegionalDistrict } from '@/typeorm/Entities/RegionalDistrict';
 
 export class MockRes {
   statusValue: any;
@@ -259,7 +260,6 @@ export const produceBuilding = (): Building => {
     BuildingOccupantType: undefined,
     LeaseExpiry: undefined,
     OccupantName: undefined,
-    TransferLeaseOnSale: undefined,
     BuildingTenancyUpdatedOn: undefined,
     EncumbranceReason: undefined,
     LeasedLandMetadata: undefined,
@@ -365,6 +365,22 @@ export const produceConstructionType = (props: Partial<BuildingPredominateUse>) 
     ...props,
   };
   return constructionType;
+};
+
+export const produceRegionalDistrict = (props: Partial<RegionalDistrict>) => {
+  const regionalDistrict: RegionalDistrict = {
+    Id: faker.number.int(),
+    Abbreviation: faker.string.alpha(5),
+    Name: faker.location.city(),
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return regionalDistrict;
 };
 
 export const produceGeocoderAddress = (): IAddressModel => {

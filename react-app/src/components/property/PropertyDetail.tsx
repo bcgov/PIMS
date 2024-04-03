@@ -1,33 +1,59 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import { Box, Typography } from '@mui/material';
 import DataCard from '../display/DataCard';
 import { ClassificationInline } from './ClassificationIcon';
 import CollapsibleSidebar from '../layout/CollapsibleSidebar';
-import ParcelNetValueTable from './ParcelNetValueTable';
+import PropertyNetValueTable from './PropertyNetValueTable';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { useClassificationStyle } from './PropertyTable';
 import PropertyAssessedValueTable from './PropertyAssessedValueTable';
+import { useParams } from 'react-router-dom';
+import { Parcel } from '@/hooks/api/useParcelsApi';
+import { Building } from '@/hooks/api/useBuildingsApi';
+import DeleteDialog from '../dialog/DeleteDialog';
+import {
+  BuildingInformationEditDialog,
+  ParcelInformationEditDialog,
+  PropertyAssessedValueEditDialog,
+  PropertyNetBookValueEditDialog,
+} from './PropertyDialog';
+import { PropertyType } from './PropertyForms';
 
 interface IPropertyDetail {
-  parcelId?: number;
-  buildingId?: number;
   onClose: () => void;
 }
 
 const PropertyDetail = (props: IPropertyDetail) => {
-  const { parcelId, buildingId } = props;
+  const params = useParams();
+  const parcelId = isNaN(Number(params.parcelId)) ? null : Number(params.parcelId);
+  const buildingId = isNaN(Number(params.buildingId)) ? null : Number(params.buildingId);
   const api = usePimsApi();
-  const { data: parcel, refreshData: refreshParcel } = useDataLoader(() =>
-    api.parcels.getParcelById(parcelId),
-  );
-  const { data: building, refreshData: refreshBuilding } = useDataLoader(() =>
-    api.buildings.getBuildingById(buildingId),
-  );
+  const { data: parcel, refreshData: refreshParcel } = useDataLoader(() => {
+    if (parcelId) {
+      return api.parcels.getParcelById(parcelId);
+    } else {
+      return null;
+    }
+  });
+  const { data: building, refreshData: refreshBuilding } = useDataLoader(() => {
+    if (buildingId) {
+      return api.buildings.getBuildingById(buildingId);
+    } else {
+      return null;
+    }
+  });
   const { data: relatedBuildings, refreshData: refreshRelated } = useDataLoader(
-    () => parcel && api.buildings.getBuildings(),
+    () => parcel?.PID && api.buildings.getBuildings({ pid: parcel.PID, includeRelations: true }),
   );
+  const refreshEither = () => {
+    if (parcelId) {
+      refreshParcel();
+    } else {
+      refreshBuilding();
+    }
+  };
   useEffect(() => {
     refreshBuilding();
   }, [buildingId]);
@@ -77,9 +103,9 @@ const PropertyDetail = (props: IPropertyDetail) => {
 
   const netBookValues = useMemo(() => {
     if (parcelId && parcel) {
-      return parcel.Fiscals;
+      return parcel.Fiscals.map((v) => v).sort((a, b) => b.FiscalYear - a.FiscalYear);
     } else if (buildingId && building) {
-      return building.Fiscals;
+      return building.Fiscals.map((v) => v).sort((a, b) => b.FiscalYear - a.FiscalYear);
     } else {
       return [];
     }
@@ -96,29 +122,45 @@ const PropertyDetail = (props: IPropertyDetail) => {
           title={val.Name}
         />
       );
-    } else if (key === 'IsSensitive') {
+    } else if (key === 'IsSensitive' || key === 'Owned') {
       return val ? <Typography>Yes</Typography> : <Typography>No</Typography>;
     }
-    return <></>;
+    return <Typography>{val}</Typography>;
   };
 
-  const buildingOrParcel = building ? 'Building' : 'Parcel';
+  const buildingOrParcel: PropertyType = building != null ? 'Building' : 'Parcel';
   const mainInformation = useMemo(() => {
-    const data: any = parcel ?? building;
+    const data: Parcel | Building = buildingOrParcel === 'Building' ? building : parcel;
     if (!data) {
       return {};
     } else {
-      return {
+      const info: any = {
         Classification: data.Classification,
         PID: data.PID,
         PIN: data.PIN,
+        PostalCode: data.Postal,
+        AdministrativeArea: data.AdministrativeArea?.Name,
         Address: data.Address1,
-        LotSize: data.TotalArea,
         IsSensitive: data.IsSensitive,
         Description: data.Description,
       };
+      if (buildingOrParcel === 'Building') {
+        info.Name = (data as Building).Name;
+        info.TotalArea = (data as Building).TotalArea;
+        info.UsableArea = (data as Building).RentableArea;
+      } else {
+        info.LandArea = (data as Parcel).LandArea;
+        info.Owned = !(data as Parcel).NotOwned;
+      }
+      return info;
     }
   }, [parcel, building]);
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openInformationDialog, setOpenInformationDialog] = useState(false);
+  const [openNetBookDialog, setOpenNetBookDialog] = useState(false);
+  const [openAssessedValueDialog, setOpenAssessedValueDialog] = useState(false);
+
   return (
     <CollapsibleSidebar
       items={[
@@ -139,29 +181,31 @@ const PropertyDetail = (props: IPropertyDetail) => {
         <DetailViewNavigation
           navigateBackTitle={'Back to Property Overview'}
           deleteTitle={`Delete ${buildingOrParcel}`}
-          onDeleteClick={() => {}}
+          onDeleteClick={() => setOpenDeleteDialog(true)}
           onBackClick={() => props.onClose()}
         />
         <DataCard
-          id="Parcel information"
+          id={`${buildingOrParcel} information`}
           customFormatter={customFormatter}
           values={mainInformation}
           title={`${buildingOrParcel} information`}
-          onEdit={() => {}}
+          onEdit={() => setOpenInformationDialog(true)}
         />
         <DataCard
           id={`${buildingOrParcel} net book value`}
           values={undefined}
           title={`${buildingOrParcel} net book value`}
-          onEdit={() => {}}
+          disableEdit={!netBookValues?.length}
+          onEdit={() => setOpenNetBookDialog(true)}
         >
-          <ParcelNetValueTable rows={netBookValues} />
+          <PropertyNetValueTable rows={netBookValues} />
         </DataCard>
         <DataCard
           id={'Assessed value'}
           values={undefined}
           title={'Assessed value'}
-          onEdit={() => {}}
+          disableEdit={!assessedValues?.length}
+          onEdit={() => setOpenAssessedValueDialog(true)}
         >
           <PropertyAssessedValueTable
             rows={assessedValues}
@@ -170,6 +214,57 @@ const PropertyDetail = (props: IPropertyDetail) => {
           />
         </DataCard>
       </Box>
+      <>
+        {buildingOrParcel === 'Parcel' ? (
+          <ParcelInformationEditDialog
+            open={openInformationDialog}
+            onCancel={() => setOpenInformationDialog(false)}
+            initialValues={parcel}
+            postSubmit={() => {
+              refreshEither();
+              setOpenInformationDialog(false);
+            }}
+          />
+        ) : (
+          <BuildingInformationEditDialog
+            initialValues={building}
+            open={openInformationDialog}
+            onCancel={() => setOpenInformationDialog(false)}
+            postSubmit={() => {
+              refreshEither();
+              setOpenInformationDialog(false);
+            }}
+          />
+        )}
+      </>
+      <PropertyAssessedValueEditDialog
+        initialRelatedBuildings={relatedBuildings}
+        propertyType={buildingOrParcel}
+        initialValues={buildingOrParcel === 'Building' ? building : parcel}
+        open={openAssessedValueDialog}
+        onCancel={() => setOpenAssessedValueDialog(false)}
+        postSubmit={() => {
+          refreshEither();
+          setOpenAssessedValueDialog(false);
+        }}
+      />
+      <PropertyNetBookValueEditDialog
+        postSubmit={() => {
+          refreshEither();
+          setOpenNetBookDialog(false);
+        }}
+        open={openNetBookDialog}
+        onClose={() => setOpenNetBookDialog(false)}
+        initialValues={buildingOrParcel === 'Building' ? building : parcel}
+        propertyType={buildingOrParcel}
+      />
+      <DeleteDialog
+        open={openDeleteDialog}
+        title={'Delete property'}
+        message={'Are you sure you want to delete this property?'}
+        onDelete={async () => {}} //Purposefully omitted for now.
+        onClose={async () => setOpenDeleteDialog(false)}
+      />
     </CollapsibleSidebar>
   );
 };

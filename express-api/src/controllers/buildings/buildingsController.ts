@@ -3,6 +3,7 @@ import * as buildingService from '@/services/buildings/buildingServices';
 import { BuildingFilterSchema } from '@/services/buildings/buildingSchema';
 import userServices from '@/services/users/usersServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import { Building } from '@/typeorm/Entities/Building';
 
 /**
  * @description Gets all buildings satisfying the filter parameters.
@@ -108,7 +109,12 @@ export const addBuilding = async (req: Request, res: Response) => {
    * }]
    */
   const user = await userServices.getUser((req.user as SSOUser).preferred_username);
-  const createBody = { ...req.body, CreatedById: user.Id };
+  const createBody: Building = { ...req.body, CreatedById: user.Id };
+  createBody.Evaluations = createBody.Evaluations?.map((evaluation) => ({
+    ...evaluation,
+    CreatedById: user.Id,
+  }));
+  createBody.Fiscals = createBody.Fiscals?.map((fiscal) => ({ ...fiscal, CreatedById: user.Id }));
   const response = await buildingService.addBuilding(createBody);
   return res.status(201).send(response);
 };

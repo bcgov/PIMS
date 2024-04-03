@@ -100,7 +100,7 @@ export const updateAgencyById = async (req: Request, res: Response) => {
     return res.status(400).send('The param ID does not match the request body.');
   }
   // Make sure you can't assign an agency as its own parent
-  if (updateInfo.ParentId && updateInfo.ParentId === updateInfo.Id) {
+  if (updateInfo.ParentId != null && updateInfo.ParentId === updateInfo.Id) {
     return res.status(403).send('An agency cannot be its own parent.');
   }
   const user = await userServices.getUser((req.user as SSOUser).preferred_username);

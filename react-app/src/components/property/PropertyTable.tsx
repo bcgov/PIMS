@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useEffect, useState } from 'react';
+import React, { MutableRefObject, useMemo } from 'react';
 import { CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, SxProps, Tooltip, lighten, useTheme } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
@@ -6,14 +6,17 @@ import { Check } from '@mui/icons-material';
 import { GridColDef, GridColumnHeaderTitle, GridEventListener } from '@mui/x-data-grid';
 import { dateFormatter } from '@/utils/formatters';
 import { ClassificationInline } from './ClassificationIcon';
-import { useSSO } from '@bcgov/citz-imb-sso-react';
+import { useNavigate } from 'react-router-dom';
+import usePimsApi from '@/hooks/usePimsApi';
+import useDataLoader from '@/hooks/useDataLoader';
 
 interface IPropertyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
-  data: Record<string, any>[];
-  isLoading: boolean;
-  refreshData: () => void;
-  error: unknown;
+  // data: Record<string, any>[];
+  // isLoading: boolean;
+  // refreshData: () => void;
+  // loadData: () => void;
+  // error: unknown;
 }
 
 export const useClassificationStyle = () => {
@@ -43,23 +46,43 @@ export const useClassificationStyle = () => {
 };
 
 const PropertyTable = (props: IPropertyTable) => {
-  const { rowClickHandler, data, isLoading, refreshData, error } = props;
-  const [properties, setProperties] = useState([]);
+  const api = usePimsApi();
+  const navigate = useNavigate();
+  const {
+    data: parcels,
+    isLoading: parcelsLoading,
+    loadOnce: loadParcels,
+  } = useDataLoader(api.parcels.getParcels);
+  const {
+    data: buildings,
+    isLoading: buildingsLoading,
+    loadOnce: loadBuildings,
+  } = useDataLoader(api.buildings.getBuildings);
+  const { data: agencies, loadOnce: loadAgencies } = useDataLoader(api.agencies.getAgencies);
+  const { data: classifications, loadOnce: loadClassifications } = useDataLoader(
+    api.lookup.getClassifications,
+  );
+  const properties = useMemo(
+    () => [
+      ...(buildings?.map((b) => ({ ...b, Type: 'Building' })) ?? []),
+      ...(parcels?.map((p) => ({ ...p, Type: 'Parcel' })) ?? []),
+    ],
+    [buildings, parcels],
+  );
+
+  const loading = parcelsLoading || buildingsLoading;
+
+  const loadAll = () => {
+    loadParcels();
+    loadBuildings();
+  };
+
   const classification = useClassificationStyle();
   const theme = useTheme();
-  const { state } = useSSO();
-  useEffect(() => {
-    if (error) {
-      console.error(error);
-    }
-    if (data && data.length > 0) {
-      console.log('Will set property rows.');
-      setProperties(data);
-    } else {
-      console.log('Will refresh rows.');
-      refreshData();
-    }
-  }, [state, data]);
+
+  loadAll();
+  loadAgencies();
+  loadClassifications();
 
   const columns: GridColDef[] = [
     {
@@ -107,11 +130,12 @@ const PropertyTable = (props: IPropertyTable) => {
         );
       },
       renderCell: (params) => {
+        const classificationName = classifications?.find((cl) => cl.Id === params.value)?.Name;
         return (
           <ClassificationInline
             color={classification[params.row.ClassificationId].textColor}
             backgroundColor={classification[params.row.ClassificationId].bgColor}
-            title={params.row.Classification?.Name ?? ''}
+            title={classificationName ?? ''}
           />
         );
       },
@@ -123,10 +147,10 @@ const PropertyTable = (props: IPropertyTable) => {
       renderCell: (params) => params.value ?? 'N/A',
     },
     {
-      field: 'Agency',
+      field: 'AgencyId',
       headerName: 'Agency',
       flex: 1,
-      valueGetter: (params) => params.value?.Name ?? '',
+      valueGetter: (params) => agencies?.find((ag) => ag.Id === params.value)?.Name ?? '',
     },
     {
       field: 'Address1',
@@ -192,7 +216,8 @@ const PropertyTable = (props: IPropertyTable) => {
         onPresetFilterChange={selectPresetFilter}
         getRowId={(row) => row.Id + row.Type}
         defaultFilter={'All Properties'}
-        onRowClick={rowClickHandler}
+        onRowClick={props.rowClickHandler}
+        onAddButtonClick={() => navigate('add')}
         presetFilterSelectOptions={[
           <CustomMenuItem key={'All Properties'} value={'All Properties'}>
             All Properties
@@ -204,7 +229,7 @@ const PropertyTable = (props: IPropertyTable) => {
             Parcels
           </CustomMenuItem>,
         ]}
-        loading={isLoading}
+        loading={loading}
         tableHeader={'Properties Overview'}
         excelTitle={'Properties'}
         columns={columns}

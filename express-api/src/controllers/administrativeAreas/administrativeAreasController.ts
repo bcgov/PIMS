@@ -73,8 +73,6 @@ export const getAdministrativeAreasFiltered = async (req: Request, res: Response
             "bearerAuth": []
       }]
    */
-
-  // TODO: Replace stub response with controller logic
   return stubResponse(res);
 };
 
@@ -93,8 +91,9 @@ export const getAdministrativeAreaById = async (req: Request, res: Response) => 
       }]
    */
 
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  const id = Number(req.params.id);
+  const adminArea = await administrativeAreasServices.getAdministrativeAreaById(id);
+  return res.status(200).send(adminArea);
 };
 
 /**
@@ -112,8 +111,12 @@ export const updateAdministrativeAreaById = async (req: Request, res: Response) 
       }]
    */
 
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  const id = req.params.id;
+  if (id != req.body.Id) {
+    return res.status(400).send('Id mismatched or invalid.');
+  }
+  const update = await administrativeAreasServices.updateAdministrativeArea(req.body);
+  return res.status(200).send(update);
 };
 
 /**
