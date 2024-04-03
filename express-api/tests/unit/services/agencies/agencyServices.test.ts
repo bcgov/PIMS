@@ -20,11 +20,10 @@ const _agencyDelete = jest
   .spyOn(AppDataSource.getRepository(Agency), 'delete')
   .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
 
-beforeEach(() => {
-  jest.clearAllMocks();
-});
-
 describe('UNIT - agency services', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
   describe('getAgencies', () => {
     it('should get a list of agencies', async () => {
       const agencies = await agencyServices.getAgencies({});
@@ -43,9 +42,9 @@ describe('UNIT - agency services', () => {
   });
   describe('addAgency', () => {
     it('should add an agency and return it', async () => {
-      _agencyFindOne.mockResolvedValueOnce(null);
+      _agencyFind.mockResolvedValueOnce([]);
       const addagency = produceAgency();
-      const agency = await agencyServices.postAgency(addagency);
+      const agency = await agencyServices.addAgency(addagency);
       expect(agency.Id).toBe(addagency.Id);
       expect(_agencySave).toHaveBeenCalledTimes(1);
     });

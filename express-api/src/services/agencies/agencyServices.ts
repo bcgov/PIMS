@@ -34,7 +34,7 @@ export const getAgencies = async (filter: AgencyFilter, includeRelations: boolea
  * @returns Status and information on the added agency
  * @throws ErrorWithCode if agency already exists
  */
-export const postAgency = async (agency: Agency) => {
+export const addAgency = async (agency: Agency) => {
   const existingAgencies = await agencyRepo.find({
     where: [{ Name: agency.Name }, { Code: agency.Code }], // OR check
   });
