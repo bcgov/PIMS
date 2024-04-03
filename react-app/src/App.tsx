@@ -14,6 +14,9 @@ import UsersManagement from './pages/UsersManagement';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from '@/pages/ErrorFallback';
 import UserDetail from '@/components/users/UserDetail';
+import ActiveInventory from './pages/ActiveInventory';
+import PropertyDetail from './components/property/PropertyDetail';
+import AddProperty from './components/property/AddProperty';
 import AgencyManagement from '@/pages/AgencyManagement';
 import AgencyDetail from '@/components/agencies/AgencyDetails';
 import AdminAreasManagement from './pages/AdminAreasManagement';
@@ -94,11 +97,51 @@ const Router = () => {
         />
       </Route>
       <Route
+        path="properties"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <ActiveInventory />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
         path="users"
         element={
           <BaseLayout>
             <AuthRouteGuard>
               <UsersManagement />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="properties/add"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <AddProperty />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="properties/building/:buildingId"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <PropertyDetail onClose={() => navigate('/properties/')} />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="properties/parcel/:parcelId"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <PropertyDetail onClose={() => navigate('/properties/')} />
             </AuthRouteGuard>
           </BaseLayout>
         }

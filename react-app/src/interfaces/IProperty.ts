@@ -9,6 +9,11 @@ export interface PropertyClassification extends BaseEntityInterface {
   IsVisible: boolean;
 }
 
+interface AdministrativeArea {
+  Id: number;
+  Name: string;
+}
+
 export type GeoPoint = {
   x: number;
   y: number;
@@ -23,6 +28,7 @@ export interface Property extends BaseEntityInterface {
   AgencyId: number;
   Agency?: Agency | null;
   AdministrativeAreaId: number;
+  AdministrativeArea?: AdministrativeArea;
   Address1?: string;
   Address2?: string;
   Postal?: string;
