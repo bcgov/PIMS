@@ -152,7 +152,7 @@ const Header: React.FC = () => {
               ) : (
                 <></>
               )}
-              <Link underline="none" href="#" variant="h5">
+              <Link underline="none" href="/properties" variant="h5">
                 Active Inventory
               </Link>
               <Link underline="none" href="#" variant="h5">

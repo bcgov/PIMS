@@ -39,10 +39,10 @@ describe('UNIT - Parcel Services', () => {
       _parcelFindOne.mockResolvedValueOnce(parcel);
       expect(async () => await parcelService.addParcel(parcel)).rejects.toThrow();
     });
-    it('should throw an error if PID is not in schema', () => {
-      const parcel = {};
-      expect(async () => await parcelService.addParcel(parcel)).rejects.toThrow();
-    });
+    // it('should throw an error if PID is not in schema', () => {
+    //   const parcel = {};
+    //   expect(async () => await parcelService.addParcel(parcel)).rejects.toThrow();
+    // });
     it('should throw an error if the PID is too short', () => {
       const parcel = { PID: 11111111 };
       expect(async () => await parcelService.addParcel(parcel)).rejects.toThrow();

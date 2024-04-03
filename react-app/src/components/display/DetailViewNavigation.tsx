@@ -3,19 +3,21 @@ import Icon from '@mdi/react';
 import { Box, IconButton, Avatar, Typography, Button, ButtonProps, useTheme } from '@mui/material';
 import { mdiArrowLeft } from '@mdi/js';
 
-interface IDetailViewNavigation {
-  navigateBackTitle: string;
+type DetailViewNavigtionProps = {
   deleteTitle: string;
   onDeleteClick: () => void;
-  onBackClick: () => void;
   deleteButtonProps?: ButtonProps;
-}
+} & NavigateBackButtonProps;
 
-const DetailViewNavigation = (props: IDetailViewNavigation) => {
-  const theme = useTheme();
-  const { navigateBackTitle, deleteTitle, onDeleteClick, onBackClick, deleteButtonProps } = props;
+type NavigateBackButtonProps = {
+  navigateBackTitle: string;
+  onBackClick: () => void;
+};
+
+export const NavigateBackButton = (props: NavigateBackButtonProps) => {
+  const { navigateBackTitle, onBackClick } = props;
   return (
-    <Box display={'flex'} alignItems={'center'}>
+    <Box display={'flex'} flexDirection={'row'} alignItems={'center'}>
       <IconButton onClick={() => onBackClick()}>
         <Avatar
           style={{ color: 'white', backgroundColor: 'white' }} //For some reason this doesn't get applied if you do it in sx props.
@@ -25,6 +27,16 @@ const DetailViewNavigation = (props: IDetailViewNavigation) => {
         </Avatar>
       </IconButton>
       <Typography variant="h5">{navigateBackTitle}</Typography>
+    </Box>
+  );
+};
+
+const DetailViewNavigation = (props: DetailViewNavigtionProps) => {
+  const theme = useTheme();
+  const { navigateBackTitle, deleteTitle, onDeleteClick, onBackClick, deleteButtonProps } = props;
+  return (
+    <Box display={'flex'} alignItems={'center'}>
+      <NavigateBackButton onBackClick={onBackClick} navigateBackTitle={navigateBackTitle} />
       <Button
         onClick={() => onDeleteClick()}
         sx={{ fontWeight: 'bold', color: theme.palette.warning.main, marginLeft: 'auto' }}
