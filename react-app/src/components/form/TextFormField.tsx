@@ -30,7 +30,7 @@ const TextFormField = (props: TextFormFieldProps) => {
                 onChange(event);
                 return;
               }
-              if (event.target.value === '' || /^[0-9]*\.?[0-9]*$/.test(event.target.value)) {
+              if (event.target.value === '' || /^[0-9]*\.?[0-9]{0,2}$/.test(event.target.value)) {
                 onChange(event);
               }
             }}

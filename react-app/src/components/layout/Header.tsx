@@ -131,13 +131,28 @@ const Header: React.FC = () => {
                       'aria-labelledby': 'admin-menu-button',
                     }}
                   >
-                    <MenuItem onClick={() => navigate('/admin/agencies')}>Agencies</MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        navigate('/admin/agencies');
+                        setAnchorEl(undefined);
+                      }}
+                    >
+                      Agencies
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        navigate('/admin/adminAreas');
+                        setAnchorEl(undefined);
+                      }}
+                    >
+                      Administrative Areas
+                    </MenuItem>
                   </Menu>
                 </>
               ) : (
                 <></>
               )}
-              <Link underline="none" href="#" variant="h5">
+              <Link underline="none" href="/properties" variant="h5">
                 Active Inventory
               </Link>
               <Link underline="none" href="#" variant="h5">

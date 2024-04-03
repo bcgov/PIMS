@@ -154,6 +154,7 @@ export const CustomListSubheader = (props: PropsWithChildren) => {
 
 type FilterSearchDataGridProps = {
   onPresetFilterChange: (value: string, ref: MutableRefObject<GridApiCommunity>) => void;
+  onAddButtonClick?: React.MouseEventHandler<HTMLButtonElement>;
   defaultFilter: string;
   presetFilterSelectOptions: JSX.Element[];
   tableHeader: string;
@@ -224,7 +225,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           />
           <Tooltip title={props.addTooltip}>
             <span>
-              <IconButton disabled={!props.addAction} onClick={props.addAction}>
+              <IconButton onClick={props.onAddButtonClick} disabled={!props.onAddButtonClick}>
                 <AddIcon />
               </IconButton>
             </span>

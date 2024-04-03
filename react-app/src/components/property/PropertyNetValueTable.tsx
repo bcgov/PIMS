@@ -1,12 +1,13 @@
-import { dateFormatter, formatMoney } from '@/utils/formatters';
+import { dateFormatter } from '@/utils/formatters';
+import { Box, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 
-interface IParcelNetValueTable {
+interface IPropertyNetValueTable {
   rows: Record<string, any>[];
 }
 
-const ParcelNetValueTable = (props: IParcelNetValueTable) => {
+const PropertyNetValueTable = (props: IPropertyNetValueTable) => {
   const columns: GridColDef[] = [
     {
       field: 'FiscalYear',
@@ -22,13 +23,16 @@ const ParcelNetValueTable = (props: IParcelNetValueTable) => {
       field: 'Value',
       headerName: 'Net Book Value',
       flex: 1,
-      valueFormatter: (params) => formatMoney(params.value),
     },
   ];
 
   if (!props.rows) return <></>;
 
-  return (
+  return !props.rows.length ? (
+    <Box display={'flex'} justifyContent={'center'}>
+      <Typography>No net book values recorded.</Typography>
+    </Box>
+  ) : (
     <DataGrid
       sx={{
         borderStyle: 'none',
@@ -48,4 +52,4 @@ const ParcelNetValueTable = (props: IParcelNetValueTable) => {
   );
 };
 
-export default ParcelNetValueTable;
+export default PropertyNetValueTable;
