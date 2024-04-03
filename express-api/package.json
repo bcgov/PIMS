@@ -22,7 +22,7 @@
   "license": "ISC",
   "dependencies": {
     "@bcgov/citz-imb-kc-css-api": "https://github.com/bcgov/citz-imb-kc-css-api/releases/download/v1.4.0/bcgov-citz-imb-kc-css-api-1.4.0.tgz",
-    "@bcgov/citz-imb-sso-express": "1.0.0-alpha2",
+    "@bcgov/citz-imb-sso-express": "1.0.0-alpha3",
     "axios": "1.6.0",
     "body-parser": "1.20.2",
     "compression": "1.7.4",
