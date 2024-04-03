@@ -3,15 +3,19 @@ import { Box, Button, Grid, Typography } from '@mui/material';
 import { FormProvider, useForm } from 'react-hook-form';
 import React, { useState } from 'react';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
-// import usePimsApi from '@/hooks/usePimsApi';
+import usePimsApi from '@/hooks/usePimsApi';
 import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
 import EmailChipFormField from '@/components/form/EmailChipFormField';
 import SingleSelectBoxFormField from '@/components/form/SingleSelectBoxFormField';
+import { NavigateBackButton } from '@/components/display/DetailViewNavigation';
+import { useNavigate } from 'react-router-dom';
+import { AgencyAdd } from '@/hooks/api/useAgencyApi';
 
 const AddAgency = () => {
-  const [showErrorText, setShowErrorTest] = useState(false);
+  const [showErrorText, setShowErrorText] = useState(false);
 
-  // const api = usePimsApi();
+  const api = usePimsApi();
+  const navigate = useNavigate();
 
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
 
@@ -38,16 +42,25 @@ const AddAgency = () => {
       marginX={'auto'}
       boxShadow={'2em'}
     >
+      <Box>
+        <NavigateBackButton
+          navigateBackTitle="Back to Agency Overview"
+          onBackClick={() => navigate('/admin/agencies')}
+        />
+      </Box>
       <FormProvider {...formMethods}>
         <Typography mb={'2rem'} variant="h2">
           Add New Agency
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <TextFormField fullWidth name={'Name'} label={`Agency Name`} />
+            <Typography variant="h5">Agency Details</Typography>
           </Grid>
           <Grid item xs={12}>
-            <TextFormField fullWidth name={'Code'} label={`Agency Code`} />
+            <TextFormField required fullWidth name={'Name'} label={`Agency Name`} />
+          </Grid>
+          <Grid item xs={12}>
+            <TextFormField required fullWidth name={'Code'} label={`Agency Code`} />
           </Grid>
           <Grid item xs={12}>
             <TextFormField
@@ -67,8 +80,7 @@ const AddAgency = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            {' '}
-            <Typography mt={'2rem'} variant="h3">
+            <Typography mt={'2rem'} variant="h5">
               Notifications
             </Typography>
           </Grid>
@@ -94,10 +106,26 @@ const AddAgency = () => {
           const isValid = await formMethods.trigger();
           if (isValid) {
             console.log(JSON.stringify(formMethods.getValues(), null, 2));
-            setShowErrorTest(false);
+            setShowErrorText(false);
+            const formValues = formMethods.getValues();
+            const newAgency: AgencyAdd = {
+              Name: formValues.Name,
+              Code: formValues.Code,
+              Description: formValues.Description,
+              ParentId: formValues.ParentId,
+              SendEmail: formValues.SendEmail,
+              Email: formValues.To?.join(';'),
+              CCEmail: formValues.CC?.join(';'),
+              IsDisabled: false,
+              SortOrder: 0,
+            };
+            api.agencies.addAgency(newAgency).then((res) => {
+              if (res.status === 201) navigate('/admin/agencies');
+              // TODO: What do we do if it wasn't successful?
+            });
           } else {
             console.log('Error!');
-            setShowErrorTest(true);
+            setShowErrorText(true);
           }
         }}
         variant="contained"

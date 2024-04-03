@@ -1,6 +1,6 @@
 import React, { MutableRefObject, useEffect, useState } from 'react';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
-import { Box, SxProps } from '@mui/material';
+import { Box, Chip, SxProps } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { dateFormatter, statusChipFormatter } from '@/utils/formatters';
@@ -76,6 +76,16 @@ const AgencyTable = (props: IAgencyTable) => {
       headerName: 'Send To',
       flex: 1,
       maxWidth: 250,
+      renderCell: (params) =>
+        params.value
+          ?.split(';')
+          .map((email) =>
+            email ? (
+              <Chip key={email} label={email} variant="outlined" sx={{ marginRight: '5px' }} />
+            ) : (
+              <></>
+            ),
+          ),
     },
     {
       field: 'CreatedOn',
@@ -153,7 +163,7 @@ const AgencyTable = (props: IAgencyTable) => {
         columns={columns}
         rows={agencies}
         addTooltip="Add a new agency"
-        addAction={() => navigate('/admin/agencies/add')}
+        onAddButtonClick={() => navigate('/admin/agencies/add')}
       />
     </Box>
   );

@@ -160,7 +160,6 @@ type FilterSearchDataGridProps = {
   tableHeader: string;
   excelTitle: string;
   addTooltip: string;
-  addAction?: () => void;
   initialState?: GridInitialStateCommunity;
 } & DataGridProps;
 

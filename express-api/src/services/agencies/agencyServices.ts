@@ -35,9 +35,11 @@ export const getAgencies = async (filter: AgencyFilter, includeRelations: boolea
  * @throws ErrorWithCode if agency already exists
  */
 export const postAgency = async (agency: Agency) => {
-  const existingAgency = await getAgencyById(agency.Id);
-  if (existingAgency) {
-    throw new ErrorWithCode('Agency already exists', 409);
+  const existingAgencies = await agencyRepo.find({
+    where: [{ Name: agency.Name }, { Code: agency.Code }], // OR check
+  });
+  if (existingAgencies.length > 0) {
+    throw new ErrorWithCode('Agency with that name or code already exists', 409);
   }
   const newAgency = AppDataSource.getRepository(Agency).save(agency);
   return newAgency;
