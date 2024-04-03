@@ -5,12 +5,40 @@ import { decodeJWT } from '@/utilities/decodeJWT';
 import { stubResponse } from '@/utilities/stubResponse';
 import { UserFiltering, UserFilteringSchema } from '@/controllers/users/usersSchema';
 import { z } from 'zod';
+import { Roles } from '@/constants/roles';
 /**
  * @description Redirects user to the keycloak user info endpoint.
  * @param {Request}     req Incoming request.
  * @param {Response}    res Outgoing response.
  * @returns {Response}      A 200 status with an object containing keycloak info.
  */
+
+// Function to check if user is an admin
+const isAdmin = (user: KeycloakUser): boolean => {
+  // Check if the user has the ADMIN role
+  return !!user.client_roles?.includes(Roles.ADMIN);
+};
+
+// Function to filter users based on agencies
+const filterUsersByAgencies = async (req: Request, res: Response, kcUser: KeycloakUser) => {
+  const filter = UserFilteringSchema.safeParse(req.query);
+  if (!filter.success) {
+    return res.status(400).send('Failed to parse filter query.');
+  }
+  const filterResult = filter.data;
+
+  let users;
+  if (isAdmin(kcUser)) {
+    users = await userServices.getUsers(filterResult as UserFiltering);
+  } else {
+    // Get agencies associated with the requesting user
+    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+    filterResult.agencyId = usersAgencies;
+    users = await userServices.getUsers(filterResult as UserFiltering);
+  }
+  return users;
+};
+
 export const getUserInfo = async (req: Request, res: Response) => {
   /**
    * #swagger.tags = ['Users']
@@ -181,14 +209,9 @@ export const getUsers = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  const filter = UserFilteringSchema.safeParse(req.query);
-  if (filter.success) {
-    const users = await userServices.getUsers(filter.data as UserFiltering);
-    return res.status(200).send(users);
-  } else {
-    return res.status(400).send('Failed to parse filter query.');
-  }
+  const kcUser = req.user as unknown as KeycloakUser;
+  const users = await filterUsersByAgencies(req, res, kcUser);
+  return res.status(200).send(users);
 };
 
 /**
