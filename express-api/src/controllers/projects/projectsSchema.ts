@@ -83,7 +83,6 @@ const BuildingSchema = z.object({
   buildingOccupantType: z.string(),
   leaseExpiry: z.string(),
   occupantName: z.string(),
-  transferLeaseOnSale: z.boolean(),
   buildingTenancy: z.string(),
   rentableArea: z.number(),
   landArea: z.number(),
