@@ -37,13 +37,6 @@ export interface BuildingPredominateUse extends BaseEntityInterface {
   SortOrder: number;
 }
 
-export interface BuildingOccupantType extends BaseEntityInterface {
-  Id: number;
-  Name: string;
-  IsDisabled: boolean;
-  SortOrder: number;
-}
-
 export interface PropertyType extends BaseEntityInterface {
   Id: number;
   Name: string;
@@ -59,8 +52,6 @@ export interface Building extends Property {
   BuildingPredominateUse?: BuildingPredominateUse;
   BuildingTenancy?: string;
   RentableArea?: number;
-  BuildingOccupantTypeId: number;
-  BuildingOccupantType?: BuildingOccupantType;
   LeaseExpiry?: Date;
   OccupantName?: string;
   BuildingTenancyUpdatedOn?: Date;

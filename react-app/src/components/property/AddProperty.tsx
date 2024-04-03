@@ -187,7 +187,6 @@ const AddProperty = () => {
                 RentableArea: parseFloatOrNull(formValues.RentableArea),
                 TotalArea: parseFloatOrNull(formValues.TotalArea),
                 BuildingFloorCount: 0,
-                BuildingOccupantTypeId: 0,
                 PropertyTypeId: 0,
                 AgencyId: userContext.pimsUser.data.AgencyId,
                 IsVisibleToOtherAgencies: false,
@@ -200,7 +199,6 @@ const AddProperty = () => {
                   EffectiveDate: a?.EffectiveDate?.toDate(),
                 })),
                 BuildingTenancyUpdatedOn: formValues.BuildingTenancyUpdatedOn.toDate(),
-                TransferLeaseOnSale: false,
               };
               addBuilding.Evaluations = addBuilding.Evaluations.filter((a) => a.Value);
               addBuilding.Fiscals = addBuilding.Fiscals.filter((a) => a.Value);
