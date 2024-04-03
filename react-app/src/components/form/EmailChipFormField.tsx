@@ -22,7 +22,23 @@ const EmailChipFormField = (props: EmailChipFormFieldProps) => {
     <Controller
       name={name}
       control={control}
-      rules={{ required: required }}
+      rules={{
+        required: { value: required, message: 'Required field.' },
+        validate: (value: string[]) => {
+          if (
+            value.some(
+              (email) =>
+                !email.match(
+                  // eslint-disable-next-line no-useless-escape
+                  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+                ),
+            )
+          ) {
+            return 'Emails must be valid addresses.';
+          }
+          return true;
+        },
+      }}
       render={({ field: { onChange } }) => (
         <Autocomplete
           multiple
@@ -46,7 +62,7 @@ const EmailChipFormField = (props: EmailChipFormFieldProps) => {
               error={!!formState.errors?.[name]}
               required={required}
               label={label}
-              helperText={formState.errors?.[name] ? 'This field is required.' : undefined}
+              helperText={(formState.errors?.[name]?.message as string) ?? undefined}
             />
           )}
           onChange={(_, data) => data && onChange(data)}
@@ -54,7 +70,10 @@ const EmailChipFormField = (props: EmailChipFormFieldProps) => {
             // To allow for other email delimiters
             const key = (e.nativeEvent as InputEvent).data;
             if (';,'.includes(key)) {
-              onChange([...getValues()[name], value.trim().substring(0, value.length - 1)]);
+              // Don't include just a blank chip
+              if (value.length > 1) {
+                onChange([...getValues()[name], value.trim().substring(0, value.length - 1)]);
+              }
               setInputValue('');
             } else {
               setInputValue(value.trim());

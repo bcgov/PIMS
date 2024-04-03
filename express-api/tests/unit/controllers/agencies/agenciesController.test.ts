@@ -23,7 +23,7 @@ const _deleteAgencyById = jest.fn().mockImplementation((id) => ({ ...produceAgen
 
 jest.mock('@/services/agencies/agencyServices', () => ({
   getAgencies: () => _getAgencies(),
-  postAgency: (_agency: Agency) => _postAgency(_agency),
+  addAgency: (_agency: Agency) => _postAgency(_agency),
   getAgencyById: (id: string) => _getAgencyById(id),
   updateAgencyById: (agency: Agency) => _updateAgencyById(agency),
   deleteAgencyById: (id: string) => _deleteAgencyById(id),
