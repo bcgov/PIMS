@@ -209,6 +209,10 @@ export const getUsers = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
+  const filter = UserFilteringSchema.safeParse(req.query);
+  if (!filter.success) {
+    return res.status(400).send('Failed to parse filter query.');
+  }
   const kcUser = req.user as unknown as KeycloakUser;
   const users = await filterUsersByAgencies(req, res, kcUser);
   return res.status(200).send(users);
