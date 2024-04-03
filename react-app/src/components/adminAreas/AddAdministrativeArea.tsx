@@ -5,11 +5,16 @@ import TextFormField from '../form/TextFormField';
 import AutocompleteFormField from '../form/AutocompleteFormField';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
+import { NavigateBackButton } from '../display/DetailViewNavigation';
+import { useNavigate } from 'react-router-dom';
 
 const AddAdministrativeArea = () => {
   const api = usePimsApi();
-  const { data: regionalDistricts, loadOnce: loadRegional } = useDataLoader(api.lookup.getRegionalDistricts);
+  const { data: regionalDistricts, loadOnce: loadRegional } = useDataLoader(
+    api.lookup.getRegionalDistricts,
+  );
   loadRegional();
+  const navigate = useNavigate();
   const formMethods = useForm({
     defaultValues: {
       Name: '',
@@ -27,6 +32,12 @@ const AddAdministrativeArea = () => {
       width={'38rem'}
       marginX={'auto'}
     >
+      <Box>
+        <NavigateBackButton
+          navigateBackTitle={'Back to administrative areas'}
+          onBackClick={() => navigate('/admin/adminAreas')}
+        />
+      </Box>
       <FormProvider {...formMethods}>
         <Typography mb={'2rem'} variant="h2">
           Add new administrative area
@@ -40,6 +51,7 @@ const AddAdministrativeArea = () => {
           </Grid>
           <Grid item xs={12}>
             <AutocompleteFormField
+              required
               name={'RegionalDistrictId'}
               label={'Regional District'}
               options={regionalDistricts?.map((reg) => ({ value: reg.Id, label: reg.Name })) ?? []}
@@ -51,12 +63,14 @@ const AddAdministrativeArea = () => {
             const isValid = await formMethods.trigger();
             const formValues = formMethods.getValues();
             if (isValid) {
-              api.administrativeAreas.addAdministrativeArea({
-                ...formValues,
-                IsDisabled: false,
-                ProvinceId: 'BC',
-                SortOrder: Number(formValues.SortOrder),
-              });
+              api.administrativeAreas
+                .addAdministrativeArea({
+                  ...formValues,
+                  IsDisabled: false,
+                  ProvinceId: 'BC',
+                  SortOrder: Number(formValues.SortOrder),
+                })
+                .then(() => navigate('/admin/adminAreas'));
             } else {
               console.log('Error!');
             }
