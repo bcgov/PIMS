@@ -40,7 +40,7 @@ export class Building extends Property {
   RentableArea: number;
 
   // Occupant Type Relations
-  @Column({ name: 'building_occupant_type_id', type: 'int' })
+  @Column({ name: 'building_occupant_type_id', type: 'int', nullable: true })
   BuildingOccupantTypeId: number;
 
   @ManyToOne(() => BuildingOccupantType, (OccupantType) => OccupantType.Id)
@@ -53,9 +53,6 @@ export class Building extends Property {
 
   @Column({ type: 'character varying', length: 100, nullable: true })
   OccupantName: string;
-
-  @Column({ type: 'boolean' })
-  TransferLeaseOnSale: boolean;
 
   @Column({ type: 'timestamp', nullable: true })
   BuildingTenancyUpdatedOn: Date;

@@ -51,6 +51,9 @@ export const postAgency = async (agency: Agency) => {
 export const getAgencyById = async (agencyId: number) => {
   const findAgency = await agencyRepo.findOne({
     where: { Id: agencyId },
+    relations: {
+      Parent: true,
+    },
   });
   return findAgency;
 };

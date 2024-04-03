@@ -4,6 +4,8 @@ import { AgencyFilterSchema, AgencyPublicResponseSchema } from '@/services/agenc
 import { z } from 'zod';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { Roles } from '@/constants/roles';
+import userServices from '@/services/users/usersServices';
+import { Agency } from '@/typeorm/Entities/Agency';
 
 /**
  * @description Gets a paged list of agencies.
@@ -48,7 +50,8 @@ export const addAgency = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  const agency = await agencyService.postAgency(req.body);
+  const user = await userServices.getUser((req.user as KeycloakUser).preferred_username);
+  const agency = await agencyService.postAgency({ ...req.body, CreatedById: user.Id });
   return res.status(201).send(agency);
 };
 
@@ -92,10 +95,16 @@ export const updateAgencyById = async (req: Request, res: Response) => {
   if (!idParse.success) {
     return res.status(400).send(idParse);
   }
-  if (idParse.data != req.body.Id) {
+  const updateInfo: Partial<Agency> = req.body;
+  if (idParse.data != updateInfo.Id.toString()) {
     return res.status(400).send('The param ID does not match the request body.');
   }
-  const agency = await agencyService.updateAgencyById(req.body);
+  // Make sure you can't assign an agency as its own parent
+  if (updateInfo.ParentId != null && updateInfo.ParentId === updateInfo.Id) {
+    return res.status(403).send('An agency cannot be its own parent.');
+  }
+  const user = await userServices.getUser((req.user as KeycloakUser).preferred_username);
+  const agency = await agencyService.updateAgencyById({ ...req.body, UpdatedById: user.Id });
   return res.status(200).send(agency);
 };
 
@@ -117,6 +126,6 @@ export const deleteAgencyById = async (req: Request, res: Response) => {
   if (!idParse.success) {
     return res.status(400).send(idParse);
   }
-  const agency = await agencyService.deleteAgencyById(parseInt(idParse.data));
-  return res.status(200).send(agency);
+  await agencyService.deleteAgencyById(parseInt(idParse.data));
+  return res.status(204).send();
 };

@@ -29,7 +29,7 @@
     "cookie-parser": "1.4.6",
     "cors": "2.8.5",
     "dotenv": "16.4.1",
-    "express": "4.18.2",
+    "express": "4.19.2",
     "express-rate-limit": "7.2.0",
     "morgan": "1.10.0",
     "node-cron": "3.0.3",
@@ -39,7 +39,7 @@
     "swagger-ui-express": "5.0.0",
     "typeorm": "0.3.20",
     "typeorm-naming-strategies": "4.1.0",
-    "winston": "3.12.0",
+    "winston": "3.13.0",
     "zod": "3.22.4"
   },
   "devDependencies": {
@@ -54,8 +54,8 @@
     "@types/node-cron": "3.0.11",
     "@types/supertest": "6.0.2",
     "@types/swagger-ui-express": "4.1.6",
-    "@typescript-eslint/eslint-plugin": "7.2.0",
-    "@typescript-eslint/parser": "7.2.0",
+    "@typescript-eslint/eslint-plugin": "7.4.0",
+    "@typescript-eslint/parser": "7.4.0",
     "eslint": "8.57.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.1.3",
