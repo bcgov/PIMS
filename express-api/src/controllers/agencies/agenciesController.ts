@@ -50,7 +50,7 @@ export const addAgency = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  const user = await userServices.getUser((req.user as KeycloakUser).preferred_username);
+  const user = await userServices.getUser((req.user as SSOUser).preferred_username);
   const agency = await agencyService.postAgency({ ...req.body, CreatedById: user.Id });
   return res.status(201).send(agency);
 };
@@ -103,7 +103,7 @@ export const updateAgencyById = async (req: Request, res: Response) => {
   if (updateInfo.ParentId && updateInfo.ParentId === updateInfo.Id) {
     return res.status(403).send('An agency cannot be its own parent.');
   }
-  const user = await userServices.getUser((req.user as KeycloakUser).preferred_username);
+  const user = await userServices.getUser((req.user as SSOUser).preferred_username);
   const agency = await agencyService.updateAgencyById({ ...req.body, UpdatedById: user.Id });
   return res.status(200).send(agency);
 };
