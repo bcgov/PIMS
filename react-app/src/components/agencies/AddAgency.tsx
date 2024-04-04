@@ -105,7 +105,6 @@ const AddAgency = () => {
         onClick={async () => {
           const isValid = await formMethods.trigger();
           if (isValid) {
-            console.log(JSON.stringify(formMethods.getValues(), null, 2));
             setShowErrorText(false);
             const formValues = formMethods.getValues();
             const newAgency: AgencyAdd = {
