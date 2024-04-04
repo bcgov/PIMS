@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 export type FetchResponse = Response & { parsedBody?: Record<string, any> };
 export type FetchType = (url: string, params?: RequestInit) => Promise<Response>;
 export interface IFetch {
-  get: (url: string, params?: Record<string, any>) => Promise<FetchResponse>;
+  get: (url: string, params?: Record<string, any>, signal?: AbortSignal) => Promise<FetchResponse>;
   put: (url: string, body?: any) => Promise<FetchResponse>;
   patch: (url: string, body?: any) => Promise<FetchResponse>;
   del: (url: string, body?: any) => Promise<FetchResponse>;
@@ -62,14 +62,15 @@ const useFetch = (baseUrl?: string) => {
         return '';
       }
       const q = Object.entries(params)
+        .filter(([, v]) => v !== undefined)
         .map(([k, value]) => {
           return `${k}=${encodeURIComponent(value)}`;
         })
         .join('&');
       return `?${q}`;
     };
-    const get = (url: string, params?: Record<string, any>) => {
-      return absoluteFetch(url + buildQueryParams(params), { method: 'GET' });
+    const get = (url: string, params?: Record<string, any>, signal?: AbortSignal) => {
+      return absoluteFetch(url + buildQueryParams(params), { method: 'GET', signal });
     };
     const post = (url: string, body: any) => {
       return absoluteFetch(url, { method: 'POST', body: body });

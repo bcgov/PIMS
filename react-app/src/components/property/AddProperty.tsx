@@ -155,6 +155,7 @@ const AddProperty = () => {
       <Button
         onClick={async () => {
           const isValid = await formMethods.trigger();
+          console.log(JSON.stringify(formMethods.getValues(), null, 2));
           if (isValid) {
             setShowErrorTest(false);
             if (propertyType === 'Parcel') {

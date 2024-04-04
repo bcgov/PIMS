@@ -1,26 +1,58 @@
-import React from 'react';
-import { Autocomplete, SxProps, TextField, Paper, Box, autocompleteClasses } from '@mui/material';
+import React, { useEffect } from 'react';
+import {
+  Autocomplete,
+  SxProps,
+  TextField,
+  Paper,
+  Box,
+  autocompleteClasses,
+  AutocompleteInputChangeReason,
+} from '@mui/material';
 import { ISelectMenuItem } from './SelectFormField';
 import { Controller, useFormContext } from 'react-hook-form';
 
-interface IAutocompleteProps {
+type AutocompleteFormProps = {
   name: string;
   label: string;
   options: ISelectMenuItem[];
   sx?: SxProps;
   required?: boolean;
+  onInputChange?: (
+    event: React.SyntheticEvent<Element, Event>,
+    value: string,
+    reason: AutocompleteInputChangeReason,
+  ) => void;
   allowNestedIndent?: boolean;
   disableOptionsFunction?: (option: ISelectMenuItem) => boolean;
-}
+  disableClearable?: boolean;
+  defaultValue?: ISelectMenuItem | null;
+};
 
 const CustomPaper = (props) => {
   return <Paper elevation={4} {...props} />;
 };
 
-const AutocompleteFormField = (props: IAutocompleteProps) => {
+const AutocompleteFormField = (props: AutocompleteFormProps) => {
   const { control, getValues, formState } = useFormContext();
-  const { name, options, label, sx, required, allowNestedIndent, disableOptionsFunction, ...rest } =
-    props;
+  const {
+    name,
+    options,
+    label,
+    sx,
+    required,
+    allowNestedIndent,
+    disableClearable,
+    onInputChange,
+    disableOptionsFunction,
+    ...rest
+  } = props;
+  useEffect(() => {
+    console.log('new options' + JSON.stringify(options, null, 2));
+    console.log('getvalues: ' + getValues()[name]);
+    console.log(
+      'found this ' + JSON.stringify(options.find((option) => option.value === getValues()[name])),
+    );
+  }, [options]);
   return (
     <Controller
       name={name}
@@ -34,9 +66,11 @@ const AutocompleteFormField = (props: IAutocompleteProps) => {
           options={options}
           PaperComponent={CustomPaper}
           sx={sx}
-          disableClearable={true}
+          disableClearable={disableClearable}
           getOptionLabel={(option: ISelectMenuItem) => option.label}
           getOptionDisabled={disableOptionsFunction}
+          onInputChange={onInputChange}
+          filterOptions={(x) => x}
           renderOption={(props, option, state, ownerState) => (
             <Box
               sx={{
@@ -61,7 +95,18 @@ const AutocompleteFormField = (props: IAutocompleteProps) => {
               helperText={formState.errors?.[name] ? 'This field is required.' : undefined}
             />
           )}
-          onChange={(_, data) => onChange(data.value)}
+          onChange={(_, data, reason) => {
+            console.log(reason);
+            console.log(JSON.stringify(data));
+            if (reason === 'clear') {
+              onChange('');
+            } else if (reason === 'createOption' || reason === 'removeOption') {
+              return;
+            } else {
+              onChange(data.value);
+            }
+          }}
+          isOptionEqualToValue={(option, value) => option.value === value.value}
           value={options.find((option) => option.value === getValues()[name]) ?? null}
           {...rest}
         />

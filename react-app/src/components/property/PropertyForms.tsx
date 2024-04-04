@@ -5,7 +5,9 @@ import SelectFormField, { ISelectMenuItem } from '../form/SelectFormField';
 import { Help } from '@mui/icons-material';
 import { LookupObject } from '@/hooks/api/useLookupApi';
 import DateFormField from '../form/DateFormField';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import usePimsApi from '@/hooks/usePimsApi';
+import { useFormContext } from 'react-hook-form';
 
 export type PropertyType = 'Building' | 'Parcel';
 
@@ -19,7 +21,50 @@ interface IGeneralInformationForm {
 }
 
 export const GeneralInformationForm = (props: IGeneralInformationForm) => {
+  const api = usePimsApi();
   const { propertyType, adminAreas } = props;
+  const [addressOptions, setAddressOptions] = useState<string[]>([]);
+
+  const formContext = useFormContext();
+
+  useEffect(() => {
+    const formValues = formContext.getValues();
+    if (formValues.Address1) {
+      api.tools.getAddresses(formValues.Address1, 40, 5).then((resolved) => {
+        setAddressOptions(
+          [...new Set(resolved ?? [])].filter((x) => x).map((res) => res.fullAddress) ?? [],
+        );
+      });
+    }
+  }, [formContext]);
+
+  const previousController = useRef<AbortController>();
+  const onAddressInputChange = (_event: any, value: string) => {
+    if (value && !addressOptions.find((a) => a === value)) {
+      if (previousController.current) {
+        previousController.current.abort();
+      }
+      const controller = new AbortController();
+      const signal = controller.signal;
+      previousController.current = controller;
+      api.tools
+        .getAddresses(value, 40, 5, signal)
+        .then((resolved) => {
+          setAddressOptions(
+            [...new Set(resolved ?? [])].filter((x) => x).map((res) => res.fullAddress) ?? [],
+            //Call set constructor to eliminate duplicates, then filter out empty values.
+          );
+        })
+        .catch((e) => {
+          if (!(e instanceof DOMException)) {
+            //Represses DOMException which is the expected result of aborting the connection.
+            //If something else happens though, we may want to rethrow that.
+            throw e;
+          }
+        });
+    }
+  };
+
   return (
     <>
       <Typography mt={'2rem'} variant="h5">
@@ -27,8 +72,9 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <TextFormField
-            fullWidth
+          <AutocompleteFormField
+            onInputChange={onAddressInputChange}
+            options={addressOptions.map((address) => ({ value: address, label: address }))}
             required={propertyType === 'Building'}
             name={'Address1'}
             label={`Street address${propertyType === 'Parcel' ? ' (Leave blank if no address)' : ''}`}

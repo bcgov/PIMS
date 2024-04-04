@@ -73,6 +73,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
       title={'Edit parcel information'}
       open={props.open}
       onConfirm={async () => {
+        console.log(JSON.stringify(infoFormMethods.getValues(), null, 2));
         const isValid = await infoFormMethods.trigger();
         if (isValid) {
           const formValues: any = { ...infoFormMethods.getValues(), Id: initialValues.Id };
