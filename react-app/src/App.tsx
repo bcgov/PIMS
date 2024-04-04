@@ -47,7 +47,7 @@ const Router = () => {
       <Route
         path="/dev"
         element={
-          <BaseLayout>
+          <BaseLayout displayFooter>
             <AuthRouteGuard>
               <Dev />
             </AuthRouteGuard>
@@ -58,7 +58,7 @@ const Router = () => {
         <Route
           path="adminAreas"
           element={
-            <BaseLayout>
+            <BaseLayout displayFooter>
               <AuthRouteGuard>
                 <AdminAreasManagement />
               </AuthRouteGuard>
@@ -68,7 +68,7 @@ const Router = () => {
         <Route
           path="adminAreas/:id"
           element={
-            <BaseLayout>
+            <BaseLayout displayFooter>
               <AuthRouteGuard>
                 <AdministrativeAreaDetail />
               </AuthRouteGuard>
@@ -78,7 +78,7 @@ const Router = () => {
         <Route
           path="agencies"
           element={
-            <BaseLayout>
+            <BaseLayout displayFooter>
               <AuthRouteGuard>
                 <AgencyManagement />
               </AuthRouteGuard>
@@ -88,7 +88,7 @@ const Router = () => {
         <Route
           path="agencies/:id"
           element={
-            <BaseLayout>
+            <BaseLayout displayFooter>
               <AuthRouteGuard>
                 <AgencyDetail onClose={() => navigate('/admin/agencies')} />
               </AuthRouteGuard>
@@ -99,7 +99,7 @@ const Router = () => {
       <Route
         path="properties"
         element={
-          <BaseLayout>
+          <BaseLayout displayFooter>
             <AuthRouteGuard>
               <ActiveInventory />
             </AuthRouteGuard>
@@ -109,7 +109,7 @@ const Router = () => {
       <Route
         path="users"
         element={
-          <BaseLayout>
+          <BaseLayout displayFooter>
             <AuthRouteGuard>
               <UsersManagement />
             </AuthRouteGuard>
@@ -119,7 +119,7 @@ const Router = () => {
       <Route
         path="properties/add"
         element={
-          <BaseLayout>
+          <BaseLayout displayFooter>
             <AuthRouteGuard>
               <AddProperty />
             </AuthRouteGuard>
@@ -129,7 +129,7 @@ const Router = () => {
       <Route
         path="properties/building/:buildingId"
         element={
-          <BaseLayout>
+          <BaseLayout displayFooter>
             <AuthRouteGuard>
               <PropertyDetail onClose={() => navigate('/properties/')} />
             </AuthRouteGuard>
@@ -139,7 +139,7 @@ const Router = () => {
       <Route
         path="properties/parcel/:parcelId"
         element={
-          <BaseLayout>
+          <BaseLayout displayFooter>
             <AuthRouteGuard>
               <PropertyDetail onClose={() => navigate('/properties/')} />
             </AuthRouteGuard>
@@ -149,7 +149,7 @@ const Router = () => {
       <Route
         path="users/:id"
         element={
-          <BaseLayout>
+          <BaseLayout displayFooter>
             <AuthRouteGuard>
               <UserDetail onClose={() => navigate('/users')} />
             </AuthRouteGuard>
