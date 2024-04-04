@@ -68,7 +68,8 @@ const EmailChipFormField = (props: EmailChipFormFieldProps) => {
           onBlur={(e) => {
             // When they enter an email but forget to "chip it"
             const { value } = e.target as HTMLInputElement;
-            if (value.length > 7) { // Minimum for valid email
+            // Minimum for valid email
+            if (value.length > 7) {
               onChange([...getValues()[name], value.trim()]);
             }
             setInputValue('');
