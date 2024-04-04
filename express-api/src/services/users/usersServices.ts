@@ -189,6 +189,12 @@ const getAgencies = async (username: string) => {
   return [agencyId, ...children.map((c) => c.Id)];
 };
 
+const hasAgencies = async (username: string, agencies: number[]) => {
+  const usersAgencies = await getAgencies(username);
+  const result = agencies.every((id) => usersAgencies.includes(id));
+  return result;
+};
+
 const getAdministrators = async (agencyIds: string[]) => {
   const admins = await AppDataSource.getRepository(User).find({
     relations: {
@@ -216,9 +222,9 @@ const getUsers = async (filter: UserFiltering) => {
       LastName: filter.lastName,
       Email: filter.email,
       KeycloakUserId: filter.guid,
-      Agency: {
-        Name: filter.agency,
-      },
+      AgencyId: filter.agencyId
+        ? In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId)
+        : undefined,
       Role: {
         Name: filter.role,
       },
@@ -289,6 +295,7 @@ const userServices = {
   getUser,
   activateUser,
   addKeycloakUserOnHold,
+  hasAgencies,
   getAgencies,
   getAdministrators,
   normalizeKeycloakUser,

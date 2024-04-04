@@ -4,6 +4,8 @@ export interface Agency {
   Id: number;
   UpdatedById?: string;
   UpdatedOn?: Date;
+  CreatedById: string;
+  CreatedOn: Date;
   Name: string;
   Description?: string;
   SortOrder: number;
@@ -17,6 +19,11 @@ export interface Agency {
   SendEmail: boolean;
   children?: Agency[];
 }
+
+export type AgencyAdd = Omit<
+  Agency,
+  'Id' | 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById'
+>;
 
 const useAgencyApi = (absoluteFetch: IFetch) => {
   const getAgencies = async (): Promise<Agency[]> => {
@@ -49,6 +56,11 @@ const useAgencyApi = (absoluteFetch: IFetch) => {
     return parsedBody as Agency;
   };
 
+  const addAgency = async (agency: AgencyAdd) => {
+    const { parsedBody, status } = await absoluteFetch.post('/agencies', agency);
+    return { parsedBody, status };
+  };
+
   return {
     getAgencies,
     getAgenciesNotDisabled,
@@ -56,6 +68,7 @@ const useAgencyApi = (absoluteFetch: IFetch) => {
     getAgencyById,
     deleteAgencyById,
     updateAgencyById,
+    addAgency,
   };
 };
 
