@@ -9,7 +9,7 @@ export const UserFilteringSchema = z.object({
   lastName: z.string().optional(),
   firstName: z.string().optional(),
   email: z.string().optional(),
-  agency: z.string().optional(),
+  agencyId: z.number().optional() || z.array(z.number().int().nonnegative()).optional(),
   role: z.string().optional(),
   position: z.string().optional(),
   id: z.string().uuid().optional(),
