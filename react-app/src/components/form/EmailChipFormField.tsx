@@ -65,6 +65,14 @@ const EmailChipFormField = (props: EmailChipFormFieldProps) => {
               helperText={(formState.errors?.[name]?.message as string) ?? undefined}
             />
           )}
+          onBlur={(e) => {
+            // When they enter an email but forget to "chip it"
+            const { value } = e.target as HTMLInputElement;
+            if (value.length > 7) { // Minimum for valid email
+              onChange([...getValues()[name], value.trim()]);
+            }
+            setInputValue('');
+          }}
           onChange={(_, data) => data && onChange(data)}
           onInputChange={(e, value) => {
             // To allow for other email delimiters
