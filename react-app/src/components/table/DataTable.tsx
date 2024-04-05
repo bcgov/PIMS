@@ -179,6 +179,40 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   const [selectValue, setSelectValue] = useState<string>(props.defaultFilter);
   const tableApiRef = useGridApiRef(); // Ref to MUI DataGrid
 
+  interface QueryStrings {
+    keywordFilter?: string;
+    quickSelectFilter?: string;
+    columnFilterName?: string;
+    columnFilterValue?: string;
+    columnSortName?: string;
+    columnSortValue?: 'asc' | 'desc';
+  }
+
+  const setQuery = (query: QueryStrings) => {
+    if ('URLSearchParams' in window) {
+      const searchParams = new URLSearchParams(window.location.search);
+      Object.entries(query).forEach((entry) => {
+        const [key, value] = entry;
+        if (value === null || value === undefined || value === '') searchParams.delete(key);
+        else searchParams.set(key, `${value}`);
+      });
+      const newRelativePathQuery = window.location.pathname + '?' + searchParams.toString();
+      history.replaceState(null, '', newRelativePathQuery);
+    }
+  };
+
+  const getQuery: () => QueryStrings = () => {
+    if ('URLSearchParams' in window) {
+      const searchParams = Object.fromEntries(new URLSearchParams(window.location.search));
+      return searchParams;
+    }
+    return {};
+  };
+
+  const clearQuery = () => {
+    history.replaceState(null, '', window.location.pathname);
+  };
+
   const saveSnapshot = useCallback(() => {
     if (sessionStorage) {
       if (tableApiRef?.current?.exportState) {
@@ -189,21 +223,61 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   }, [tableApiRef]);
 
   useLayoutEffect(() => {
-    const stateFromLocalStorage = sessionStorage?.getItem(props.name);
-    if (stateFromLocalStorage) {
-      const state: GridState = JSON.parse(stateFromLocalStorage);
-      tableApiRef.current.setSortModel(state.sorting.sortModel);
-      tableApiRef.current.setFilterModel(state.filter.filterModel);
-      // Set Select filter
-      // Without MUI Pro, only one item can be in this model at a time
-      if (state.filter.filterModel.items.length > 0) {
-        setSelectValue(state.filter.filterModel.items.at(0).value);
+    const query = getQuery();
+    // If query strings exist, prioritize that for preset filters, etc.
+    if (Boolean(Object.keys(query).length)) {
+      if (query.keywordFilter) {
+        setKeywordSearchContents(query.keywordFilter);
+        updateSearchValue(query.keywordFilter);
       }
-      tableApiRef.current.setColumnVisibilityModel(state.columns.columnVisibilityModel);
-      tableApiRef.current.setPaginationModel(state.pagination.paginationModel);
-      // Set keyword search bar
-      if (state.filter.filterModel.quickFilterValues) {
-        setKeywordSearchContents(state.filter.filterModel.quickFilterValues.join(' '));
+      if (query.quickSelectFilter) {
+        setSelectValue(query.quickSelectFilter);
+        props.onPresetFilterChange(query.quickSelectFilter, tableApiRef);
+      }
+      if (query.columnFilterName && query.columnFilterValue) {
+        tableApiRef.current.setFilterModel({
+          items: [
+            {
+              value: query.columnFilterValue,
+              operator: 'contains',
+              field: query.columnFilterName,
+            },
+          ],
+        });
+      }
+      if (query.columnSortName && query.columnSortValue) {
+        tableApiRef.current.setSortModel([
+          {
+            field: query.columnSortName,
+            sort: query.columnSortValue,
+          },
+        ]);
+      }
+    } else {
+      // Setting the table's state from sessionStorage cookies
+      const stateFromLocalStorage = sessionStorage?.getItem(props.name);
+      if (stateFromLocalStorage) {
+        const state: GridState = JSON.parse(stateFromLocalStorage);
+        tableApiRef.current.setSortModel(state.sorting.sortModel);
+        tableApiRef.current.setFilterModel(state.filter.filterModel);
+        // Set Select filter
+        // Without MUI Pro, only one item can be in this model at a time
+        if (state.filter.filterModel.items.length > 0) {
+          setSelectValue(state.filter.filterModel.items.at(0).value);
+          setQuery({
+            quickSelectFilter: state.filter.filterModel.items.at(0).value,
+          });
+        }
+        tableApiRef.current.setColumnVisibilityModel(state.columns.columnVisibilityModel);
+        tableApiRef.current.setPaginationModel(state.pagination.paginationModel);
+        // Set keyword search bar
+        if (state.filter.filterModel.quickFilterValues) {
+          const filterValue = state.filter.filterModel.quickFilterValues.join(' ');
+          setKeywordSearchContents(filterValue);
+          setQuery({
+            keywordFilter: filterValue,
+          });
+        }
       }
     }
 
@@ -221,6 +295,9 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   const updateSearchValue = useMemo(() => {
     return debounce((newValue) => {
       tableApiRef.current.setQuickFilterValues(newValue.split(' ').filter((word) => word !== ''));
+      setQuery({
+        keywordFilter: newValue,
+      });
     }, 100);
   }, [tableApiRef]);
 
@@ -246,6 +323,8 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
                   setKeywordSearchContents('');
                   // Set select field back to default
                   setSelectValue(props.defaultFilter);
+                  // Clear query params
+                  clearQuery();
                 }}
               >
                 <FilterAltOffIcon />
@@ -294,7 +373,8 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             onChange={(e) => {
               setKeywordSearchContents('');
               setSelectValue(e.target.value);
-              props.onPresetFilterChange(e.target.value, tableApiRef);
+              setQuery({ quickSelectFilter: e.target.value, keywordFilter: '' });
+              props.onPresetFilterChange(`${e.target.value}`, tableApiRef);
             }}
             sx={{ width: '10em', marginLeft: '0.5em' }}
             value={selectValue}
@@ -309,8 +389,24 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           setRowCount(Object.values(e.filter.filteredRowsLookup).filter((value) => value).length);
         }}
         onFilterModelChange={(e) => {
+          // Can only filter by 1 at a time without DataGrid Pro
+          if (e.items.length > 0) {
+            const item = e.items.at(0);
+            setQuery({ columnFilterName: item.field, columnFilterValue: item.value });
+          } else {
+            setQuery({ columnFilterName: undefined, columnFilterValue: undefined });
+          }
           // Get the filter items from MUI, filter out blanks, set state
           setGridFilterItems(e.items.filter((item) => item.value));
+        }}
+        onSortModelChange={(e) => {
+          // Can only sort by 1 at a time without DataGrid Pro
+          if (e.length > 0) {
+            const item = e.at(0);
+            setQuery({ columnSortName: item.field, columnSortValue: item.sort });
+          } else {
+            setQuery({ columnSortName: undefined, columnSortValue: undefined });
+          }
         }}
         apiRef={tableApiRef}
         initialState={{

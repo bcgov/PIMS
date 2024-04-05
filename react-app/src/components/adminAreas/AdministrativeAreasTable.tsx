@@ -1,6 +1,6 @@
 import React, { MutableRefObject } from 'react';
 import { GridColDef } from '@mui/x-data-grid';
-import { CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
+import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { dateFormatter } from '@/utils/formatters';
@@ -84,6 +84,7 @@ const AdministrativeAreasTable = () => {
         <CustomMenuItem key={'All'} value={'All'}>
           All Areas
         </CustomMenuItem>,
+        <CustomListSubheader key={'Status'}>Disabled Status</CustomListSubheader>,
         <CustomMenuItem key={'Enabled'} value={'Enabled'}>
           Enabled
         </CustomMenuItem>,
