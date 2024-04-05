@@ -213,6 +213,7 @@ const PropertyTable = (props: IPropertyTable) => {
       }
     >
       <FilterSearchDataGrid
+        name="properties"
         onPresetFilterChange={selectPresetFilter}
         getRowId={(row) => row.Id + row.Type}
         defaultFilter={'All Properties'}
