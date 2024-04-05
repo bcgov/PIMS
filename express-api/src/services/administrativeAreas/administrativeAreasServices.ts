@@ -19,6 +19,16 @@ const getAdministrativeAreas = (filter: AdministrativeAreaFilter) => {
   });
 };
 
+const addAdministrativeArea = async (adminArea: AdministrativeArea) => {
+  const existing = await AppDataSource.getRepository(AdministrativeArea).findOne({
+    where: [{ Id: adminArea.Id }, { Name: adminArea.Name }],
+  });
+  if (existing) {
+    throw new ErrorWithCode('Administrative area already exists.');
+  }
+  return AppDataSource.getRepository(AdministrativeArea).save(adminArea);
+};
+
 const getAdministrativeAreaById = (id: number) => {
   return AppDataSource.getRepository(AdministrativeArea).findOne({
     relations: {
@@ -39,6 +49,7 @@ const updateAdministrativeArea = async (adminArea: DeepPartial<AdministrativeAre
 
 const administrativeAreasServices = {
   getAdministrativeAreas,
+  addAdministrativeArea,
   getAdministrativeAreaById,
   updateAdministrativeArea,
 };
