@@ -19,6 +19,7 @@ import PropertyDetail from './components/property/PropertyDetail';
 import AddProperty from './components/property/AddProperty';
 import AgencyManagement from '@/pages/AgencyManagement';
 import AgencyDetail from '@/components/agencies/AgencyDetails';
+import AddAgency from '@/components/agencies/AddAgency';
 import AdminAreasManagement from './pages/AdminAreasManagement';
 import AddAdministrativeArea from './components/adminAreas/AddAdministrativeArea';
 import AdministrativeAreaDetail from './components/adminAreas/AdministrativeAreaDetail';
@@ -102,6 +103,16 @@ const Router = () => {
             <BaseLayout>
               <AuthRouteGuard>
                 <AgencyDetail onClose={() => navigate('/admin/agencies')} />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
+        <Route
+          path="agencies/add"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard>
+                <AddAgency />
               </AuthRouteGuard>
             </BaseLayout>
           }

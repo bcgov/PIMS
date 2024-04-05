@@ -20,11 +20,10 @@ const _agencyDelete = jest
   .spyOn(AppDataSource.getRepository(Agency), 'delete')
   .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
 
-beforeEach(() => {
-  jest.clearAllMocks();
-});
-
 describe('UNIT - agency services', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
   describe('getAgencies', () => {
     it('should get a list of agencies', async () => {
       const agencies = await agencyServices.getAgencies({});
@@ -43,11 +42,17 @@ describe('UNIT - agency services', () => {
   });
   describe('addAgency', () => {
     it('should add an agency and return it', async () => {
-      _agencyFindOne.mockResolvedValueOnce(null);
+      _agencyFind.mockResolvedValueOnce([]);
       const addagency = produceAgency();
-      const agency = await agencyServices.postAgency(addagency);
+      const agency = await agencyServices.addAgency(addagency);
       expect(agency.Id).toBe(addagency.Id);
       expect(_agencySave).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw an error if the new agency name or code is already taken', async () => {
+      _agencyFind.mockResolvedValueOnce([produceAgency()]);
+      const addagency = produceAgency();
+      expect(async () => await agencyServices.addAgency(addagency)).rejects.toThrow();
     });
   });
   describe('updateAgencyById', () => {
