@@ -179,6 +179,10 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   const [selectValue, setSelectValue] = useState<string>(props.defaultFilter);
   const tableApiRef = useGridApiRef(); // Ref to MUI DataGrid
 
+  /**
+   * @interface
+   * @description Defines possible query parameters for table state
+   */
   interface QueryStrings {
     keywordFilter?: string;
     quickSelectFilter?: string;
@@ -188,19 +192,30 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     columnSortValue?: 'asc' | 'desc';
   }
 
+  /**
+   * @description Sets the query parameters in the URL
+   * @param {QueryStrings} query An object with possible query string key-value pairs
+   */
   const setQuery = (query: QueryStrings) => {
     if ('URLSearchParams' in window) {
       const searchParams = new URLSearchParams(window.location.search);
       Object.entries(query).forEach((entry) => {
         const [key, value] = entry;
+        // Remove is one of these values
         if (value === null || value === undefined || value === '') searchParams.delete(key);
+        // Otherwise set the query param
         else searchParams.set(key, `${value}`);
       });
+      // Replace existing entry in the browser history
       const newRelativePathQuery = window.location.pathname + '?' + searchParams.toString();
       history.replaceState(null, '', newRelativePathQuery);
     }
   };
 
+  /**
+   * @description Gets the query parameters from the URL
+   * @returns An object with properties matching URL query parameters
+   */
   const getQuery: () => QueryStrings = () => {
     if ('URLSearchParams' in window) {
       const searchParams = Object.fromEntries(new URLSearchParams(window.location.search));
@@ -209,10 +224,16 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     return {};
   };
 
+  /**
+   * @description Clears all query parameters from the URL.
+   */
   const clearQuery = () => {
     history.replaceState(null, '', window.location.pathname);
   };
 
+  /**
+   * @description Saves the current table state to a cookie based on a provided name
+   */
   const saveSnapshot = useCallback(() => {
     if (sessionStorage) {
       if (tableApiRef?.current?.exportState) {
@@ -222,18 +243,24 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     }
   }, [tableApiRef]);
 
+  /**
+   * @description Hook that runs after render. Looks to query strings to set filter. If none are found, then looks to state cookie.
+   */
   useLayoutEffect(() => {
     const query = getQuery();
     // If query strings exist, prioritize that for preset filters, etc.
     if (Boolean(Object.keys(query).length)) {
+      // Set keyword filter
       if (query.keywordFilter) {
         setKeywordSearchContents(query.keywordFilter);
         updateSearchValue(query.keywordFilter);
       }
+      // Set quick select filter
       if (query.quickSelectFilter) {
         setSelectValue(query.quickSelectFilter);
         props.onPresetFilterChange(query.quickSelectFilter, tableApiRef);
       }
+      // Set other column filter
       if (query.columnFilterName && query.columnFilterValue) {
         tableApiRef.current.setFilterModel({
           items: [
@@ -245,6 +272,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           ],
         });
       }
+      // Set sorting options
       if (query.columnSortName && query.columnSortValue) {
         tableApiRef.current.setSortModel([
           {
@@ -258,6 +286,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
       const stateFromLocalStorage = sessionStorage?.getItem(props.name);
       if (stateFromLocalStorage) {
         const state: GridState = JSON.parse(stateFromLocalStorage);
+        // Set sort and filter
         tableApiRef.current.setSortModel(state.sorting.sortModel);
         tableApiRef.current.setFilterModel(state.filter.filterModel);
         // Set Select filter
@@ -268,6 +297,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             quickSelectFilter: state.filter.filterModel.items.at(0).value,
           });
         }
+        // Pagination and visibility are local only
         tableApiRef.current.setColumnVisibilityModel(state.columns.columnVisibilityModel);
         tableApiRef.current.setPaginationModel(state.pagination.paginationModel);
         // Set keyword search bar
@@ -373,7 +403,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             onChange={(e) => {
               setKeywordSearchContents('');
               setSelectValue(e.target.value);
-              setQuery({ quickSelectFilter: e.target.value, keywordFilter: '' });
+              setQuery({ quickSelectFilter: e.target.value, keywordFilter: undefined });
               props.onPresetFilterChange(`${e.target.value}`, tableApiRef);
             }}
             sx={{ width: '10em', marginLeft: '0.5em' }}
