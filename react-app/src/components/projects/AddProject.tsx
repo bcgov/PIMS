@@ -1,11 +1,13 @@
 import {
   Autocomplete,
   Box,
+  Button,
   Grid,
   IconButton,
   InputAdornment,
   TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
 import React, { useState } from 'react';
 import { NavigateBackButton } from '../display/DetailViewNavigation';
@@ -17,7 +19,12 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Delete, Search } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
-const DisposalProjectSearch = () => {
+interface IDisposalProjectSearch {
+  rows: any[];
+  setRows: (a: any[]) => void;
+}
+
+const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
   const data = [
     {
       CreatedById: '0edf3fce-20ce-414e-b53f-11cd3dbf4976',
@@ -253,7 +260,7 @@ const DisposalProjectSearch = () => {
       ParentParcel: null,
     },
   ];
-  const [rows, setRows] = useState([]);
+  const { rows, setRows } = props;
   const [autoCompleteVal, setAutoCompleteVal] = useState(null);
   const navigate = useNavigate();
   const columns: GridColDef[] = [
@@ -356,6 +363,9 @@ const DisposalProjectSearch = () => {
 
 const AddProject = () => {
   const formMethods = useForm();
+  const [showNoPropertiesError, setShowNoPropertiesError] = useState(false);
+  const [rows, setRows] = useState([]);
+  const theme = useTheme();
   return (
     <Box
       display={'flex'}
@@ -392,7 +402,12 @@ const AddProject = () => {
           </Grid>
         </Grid>
         <Typography variant="h5">Disposal properties</Typography>
-        <DisposalProjectSearch />
+        <DisposalProjectSearch rows={rows} setRows={setRows} />
+        {showNoPropertiesError && (
+          <Typography textAlign={'center'} color={theme.palette.error.main}>
+            You must include at least one property.
+          </Typography>
+        )}
         <Typography variant="h5">Financial information</Typography>
         <Grid container spacing={2}>
           <Grid item xs={6}>
@@ -489,6 +504,20 @@ const AddProject = () => {
           </Grid>
         </Grid>
       </FormProvider>
+      <Button
+        onClick={async () => {
+          await formMethods.trigger();
+
+          setShowNoPropertiesError(!rows.length);
+
+          console.log(formMethods.getValues());
+        }}
+        variant="contained"
+        color="primary"
+        sx={{ padding: '8px', width: '6rem', marginX: 'auto' }}
+      >
+        Submit
+      </Button>
     </Box>
   );
 };
