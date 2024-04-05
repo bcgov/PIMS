@@ -22,6 +22,10 @@ interface IUserDetail {
   onClose: () => void;
 }
 
+interface UserProfile extends User {
+  Provider: string;
+}
+
 const UserDetail = ({ onClose }: IUserDetail) => {
   const { id } = useParams();
   const { pimsUser } = useContext(AuthContext);
@@ -49,7 +53,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
   };
 
   const userProfileData = {
-    DisplayName: data?.DisplayName,
+    Provider: data?.Username.includes('idir') ? 'IDIR' : 'BCeID',
     Email: data?.Email,
     FirstName: data?.FirstName,
     LastName: data?.LastName,
@@ -67,7 +71,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
     }
   };
 
-  const customFormatterProfile = (key: keyof User, val: any) => {
+  const customFormatterProfile = (key: keyof UserProfile, val: any) => {
     if (key === 'Agency' && val) {
       return <Typography>{(val as Agency).Name}</Typography>;
     }
@@ -75,7 +79,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
 
   const profileFormMethods = useForm({
     defaultValues: {
-      DisplayName: '',
+      Provider: '',
       Email: '',
       FirstName: '',
       LastName: '',
@@ -98,7 +102,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
 
   useEffect(() => {
     profileFormMethods.reset({
-      DisplayName: userProfileData.DisplayName,
+      Provider: data?.Username.includes('idir') ? 'IDIR' : 'BCeID',
       Email: userProfileData.Email,
       FirstName: userProfileData.FirstName,
       LastName: userProfileData.LastName,
@@ -158,8 +162,15 @@ const UserDetail = ({ onClose }: IUserDetail) => {
         onConfirm={async () => {
           const isValid = await profileFormMethods.trigger();
           if (isValid) {
+            const formValues = profileFormMethods.getValues();
+            // Remove Provider. Field is frontend only.
+            formValues.Provider = undefined;
             api.users
-              .updateUser(id, { Id: id, ...profileFormMethods.getValues() })
+              .updateUser(id, {
+                Id: id,
+                ...formValues,
+                DisplayName: `${formValues.LastName}, ${formValues.FirstName}`,
+              })
               .then(() => refreshData());
             setOpenProfileDialog(false);
           }
@@ -169,7 +180,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
         <FormProvider {...profileFormMethods}>
           <Grid mt={'1rem'} spacing={2} container>
             <Grid item xs={6}>
-              <TextFormField fullWidth name={'DisplayName'} label={'IDIR/BCeID'} disabled />
+              <TextFormField fullWidth name={'Provider'} label={'Provider'} disabled />
             </Grid>
             <Grid item xs={6}>
               <TextFormField required fullWidth name={'Email'} label={'Email'} />
