@@ -59,7 +59,7 @@ const Router = () => {
         <Route
           path="adminAreas"
           element={
-            <BaseLayout>
+            <BaseLayout displayFooter>
               <AuthRouteGuard>
                 <AdminAreasManagement />
               </AuthRouteGuard>
