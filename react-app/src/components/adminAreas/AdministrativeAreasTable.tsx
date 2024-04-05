@@ -97,6 +97,14 @@ const AdministrativeAreasTable = () => {
       columns={columns}
       getRowId={(row) => row.Id}
       rows={data ?? []}
+      initialState={{
+        pagination: {
+          paginationModel: { pageSize: 10, page: 0 },
+        },
+        sorting: {
+          sortModel: [{ field: 'Name', sort: 'asc' }],
+        },
+      }}
     />
   );
 };
