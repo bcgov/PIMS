@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { stubResponse } from '@/utilities/stubResponse';
-import propertyServices from '@/services/property/propertyServices';
+import propertyServices from '@/services/properties/propertiesServices';
 
 /**
  * @description Used to retrieve all properties.
