@@ -169,7 +169,6 @@ const UserDetail = ({ onClose }: IUserDetail) => {
               .updateUser(id, {
                 Id: id,
                 ...formValues,
-                DisplayName: `${formValues.LastName}, ${formValues.FirstName}`,
               })
               .then(() => refreshData());
             setOpenProfileDialog(false);
