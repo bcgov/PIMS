@@ -21,6 +21,7 @@ import AgencyManagement from '@/pages/AgencyManagement';
 import AgencyDetail from '@/components/agencies/AgencyDetails';
 import AddAgency from '@/components/agencies/AddAgency';
 import AdminAreasManagement from './pages/AdminAreasManagement';
+import AddAdministrativeArea from './components/adminAreas/AddAdministrativeArea';
 import AdministrativeAreaDetail from './components/adminAreas/AdministrativeAreaDetail';
 
 const Router = () => {
@@ -72,6 +73,16 @@ const Router = () => {
             <BaseLayout>
               <AuthRouteGuard>
                 <AdministrativeAreaDetail />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
+        <Route
+          path="adminAreas/add"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard>
+                <AddAdministrativeArea />
               </AuthRouteGuard>
             </BaseLayout>
           }
