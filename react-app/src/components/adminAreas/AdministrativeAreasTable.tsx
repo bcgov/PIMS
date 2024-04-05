@@ -76,6 +76,7 @@ const AdministrativeAreasTable = () => {
 
   return (
     <FilterSearchDataGrid
+      name="adminAreas"
       onRowClick={(params) => navigate(`${params.row.Id}`)}
       onPresetFilterChange={selectPresetFilter}
       defaultFilter={'All'}

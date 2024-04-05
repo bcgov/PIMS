@@ -1,4 +1,11 @@
-import React, { MutableRefObject, PropsWithChildren, useMemo, useState } from 'react';
+import React, {
+  MutableRefObject,
+  PropsWithChildren,
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from 'react';
 import Icon from '@mdi/react';
 import { mdiDotsHorizontal } from '@mdi/js';
 import {
@@ -21,6 +28,7 @@ import {
   DataGridProps,
   GridOverlay,
   GridRenderCellParams,
+  GridState,
   GridTreeNodeWithRender,
   gridFilteredSortedRowEntriesSelector,
   useGridApiRef,
@@ -160,6 +168,7 @@ type FilterSearchDataGridProps = {
   tableHeader: string;
   excelTitle: string;
   addTooltip: string;
+  name: string;
   initialState?: GridInitialStateCommunity;
 } & DataGridProps;
 
@@ -169,6 +178,44 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   const [gridFilterItems, setGridFilterItems] = useState([]);
   const [selectValue, setSelectValue] = useState<string>(props.defaultFilter);
   const tableApiRef = useGridApiRef(); // Ref to MUI DataGrid
+
+  const saveSnapshot = useCallback(() => {
+    if (sessionStorage) {
+      if (tableApiRef?.current?.exportState) {
+        const currentState = tableApiRef.current.exportState();
+        sessionStorage.setItem(props.name, JSON.stringify(currentState));
+      }
+    }
+  }, [tableApiRef]);
+
+  useLayoutEffect(() => {
+    const stateFromLocalStorage = sessionStorage?.getItem(props.name);
+    if (stateFromLocalStorage) {
+      const state: GridState = JSON.parse(stateFromLocalStorage);
+      tableApiRef.current.setSortModel(state.sorting.sortModel);
+      tableApiRef.current.setFilterModel(state.filter.filterModel);
+      // Set Select filter
+      // Without MUI Pro, only one item can be in this model at a time
+      if (state.filter.filterModel.items.length > 0) {
+        setSelectValue(state.filter.filterModel.items.at(0).value);
+      }
+      tableApiRef.current.setColumnVisibilityModel(state.columns.columnVisibilityModel);
+      tableApiRef.current.setPaginationModel(state.pagination.paginationModel);
+      // Set keyword search bar
+      if (state.filter.filterModel.quickFilterValues) {
+        setKeywordSearchContents(state.filter.filterModel.quickFilterValues.join(' '));
+      }
+    }
+
+    // handle refresh and navigating away/refreshing
+    window.addEventListener('beforeunload', saveSnapshot);
+
+    return () => {
+      // in case of an SPA remove the event-listener
+      // window.removeEventListener('beforeunload', saveSnapshot);
+      saveSnapshot();
+    };
+  }, [saveSnapshot]);
 
   // Sets quickfilter value of DataGrid. newValue is a string input.
   const updateSearchValue = useMemo(() => {
@@ -246,8 +293,8 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           <Select
             onChange={(e) => {
               setKeywordSearchContents('');
-              props.onPresetFilterChange(e.target.value, tableApiRef);
               setSelectValue(e.target.value);
+              props.onPresetFilterChange(e.target.value, tableApiRef);
             }}
             sx={{ width: '10em', marginLeft: '0.5em' }}
             value={selectValue}
