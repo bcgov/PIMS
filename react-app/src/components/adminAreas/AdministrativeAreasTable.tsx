@@ -79,6 +79,7 @@ const AdministrativeAreasTable = () => {
       onRowClick={(params) => navigate(`${params.row.Id}`)}
       onPresetFilterChange={selectPresetFilter}
       defaultFilter={'All'}
+      onAddButtonClick={() => navigate('add')}
       presetFilterSelectOptions={[
         <CustomMenuItem key={'All'} value={'All'}>
           All Areas
@@ -96,6 +97,14 @@ const AdministrativeAreasTable = () => {
       columns={columns}
       getRowId={(row) => row.Id}
       rows={data ?? []}
+      initialState={{
+        pagination: {
+          paginationModel: { pageSize: 10, page: 0 },
+        },
+        sorting: {
+          sortModel: [{ field: 'Name', sort: 'asc' }],
+        },
+      }}
     />
   );
 };
