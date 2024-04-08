@@ -5,21 +5,15 @@ import { decodeJWT } from '@/utilities/decodeJWT';
 import { stubResponse } from '@/utilities/stubResponse';
 import { UserFiltering, UserFilteringSchema } from '@/controllers/users/usersSchema';
 import { z } from 'zod';
-import { Roles } from '@/constants/roles';
+import { isAdmin } from '@/utilities/authorizationCheck';
+
 /**
- * @description Redirects user to the keycloak user info endpoint.
+ * @description Function to filter users based on agencies
  * @param {Request}     req Incoming request.
  * @param {Response}    res Outgoing response.
- * @returns {Response}      A 200 status with an object containing keycloak info.
+ * @param {KeycloakUser}    kcUser Incoming Keycloak user.
+ * @returns {User[]}      An array of users.
  */
-
-// Function to check if user is an admin
-const isAdmin = (user: KeycloakUser): boolean => {
-  // Check if the user has the ADMIN role
-  return !!user.client_roles?.includes(Roles.ADMIN);
-};
-
-// Function to filter users based on agencies
 const filterUsersByAgencies = async (req: Request, res: Response, kcUser: KeycloakUser) => {
   const filter = UserFilteringSchema.safeParse(req.query);
   if (!filter.success) {
@@ -38,6 +32,13 @@ const filterUsersByAgencies = async (req: Request, res: Response, kcUser: Keyclo
   }
   return users;
 };
+
+/**
+ * @description Redirects user to the keycloak user info endpoint.
+ * @param {Request}     req Incoming request.
+ * @param {Response}    res Outgoing response.
+ * @returns {Response}      A 200 status with an object containing keycloak info.
+ */
 
 export const getUserInfo = async (req: Request, res: Response) => {
   /**
