@@ -1,9 +1,12 @@
 import { User, UserStatus } from '@/typeorm/Entities/User';
 import { AppDataSource } from '@/appDataSource';
 import { KeycloakBCeIDUser, KeycloakIdirUser, KeycloakUser } from '@bcgov/citz-imb-kc-express';
-import { In } from 'typeorm';
+import { DeepPartial, In } from 'typeorm';
 import { Agency } from '@/typeorm/Entities/Agency';
-import { randomUUID } from 'crypto';
+import { randomUUID, UUID } from 'crypto';
+import KeycloakService from '@/services/keycloak/keycloakService';
+import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import { UserFiltering } from '@/controllers/users/usersSchema';
 
 interface NormalizedKeycloakUser {
   given_name: string;
@@ -186,6 +189,12 @@ const getAgencies = async (username: string) => {
   return [agencyId, ...children.map((c) => c.Id)];
 };
 
+const hasAgencies = async (username: string, agencies: number[]) => {
+  const usersAgencies = await getAgencies(username);
+  const result = agencies.every((id) => usersAgencies.includes(id));
+  return result;
+};
+
 const getAdministrators = async (agencyIds: string[]) => {
   const admins = await AppDataSource.getRepository(User).find({
     relations: {
@@ -200,13 +209,107 @@ const getAdministrators = async (agencyIds: string[]) => {
   return admins;
 };
 
+const getUsers = async (filter: UserFiltering) => {
+  const users = await AppDataSource.getRepository(User).find({
+    relations: {
+      Agency: true,
+      Role: true,
+    },
+    where: {
+      Id: filter.id,
+      Username: filter.username,
+      DisplayName: filter.displayName,
+      LastName: filter.lastName,
+      Email: filter.email,
+      KeycloakUserId: filter.guid,
+      AgencyId: filter.agencyId
+        ? In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId)
+        : undefined,
+      Role: {
+        Name: filter.role,
+      },
+      Position: filter.position,
+    },
+    take: filter.quantity,
+    skip: (filter.page ?? 0) * (filter.quantity ?? 0),
+  });
+  return users;
+};
+
+const getUserById = async (id: string) => {
+  return AppDataSource.getRepository(User).findOne({
+    relations: {
+      Agency: true,
+      Role: true,
+    },
+    where: {
+      Id: id as UUID,
+    },
+  });
+};
+
+const addUser = async (user: User) => {
+  const resource = await AppDataSource.getRepository(User).findOne({ where: { Id: user.Id } });
+  if (resource) {
+    throw new ErrorWithCode('Resource already exists.', 409);
+  }
+  const retUser = await AppDataSource.getRepository(User).save(user);
+  return retUser;
+};
+
+const updateUser = async (user: DeepPartial<User>) => {
+  const resource = await AppDataSource.getRepository(User).findOne({ where: { Id: user.Id } });
+  if (!resource) {
+    throw new ErrorWithCode('Resource does not exist.', 404);
+  }
+  const retUser = await AppDataSource.getRepository(User).update(user.Id, {
+    ...user,
+    DisplayName: `${user.LastName}, ${user.FirstName}`,
+  });
+  return retUser.generatedMaps[0];
+};
+
+const deleteUser = async (user: User) => {
+  const resource = await AppDataSource.getRepository(User).findOne({ where: { Id: user.Id } });
+  if (!resource) {
+    throw new ErrorWithCode('Resource does not exist.', 404);
+  }
+  const retUser = await AppDataSource.getRepository(User).remove(user);
+  return retUser;
+};
+
+const getKeycloakRoles = async () => {
+  const roles = await KeycloakService.getKeycloakRoles();
+  return roles.map((a) => a.name);
+};
+
+const getKeycloakUserRoles = async (username: string) => {
+  const keycloakRoles = await KeycloakService.getKeycloakUserRoles(username);
+  return keycloakRoles.map((a) => a.name);
+};
+
+const updateKeycloakUserRoles = async (username: string, roleNames: string[]) => {
+  const keycloakRoles = await KeycloakService.updateKeycloakUserRoles(username, roleNames);
+  await KeycloakService.syncKeycloakUser(username);
+  return keycloakRoles.map((a) => a.name);
+};
+
 const userServices = {
   getUser,
   activateUser,
   addKeycloakUserOnHold,
+  hasAgencies,
   getAgencies,
   getAdministrators,
   normalizeKeycloakUser,
+  getUsers,
+  addUser,
+  updateUser,
+  deleteUser,
+  getKeycloakRoles,
+  getKeycloakUserRoles,
+  updateKeycloakUserRoles,
+  getUserById,
 };
 
 export default userServices;

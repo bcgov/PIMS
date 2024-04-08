@@ -37,3 +37,21 @@ export const statusChipFormatter = (value: ChipStatus) => {
     </>
   );
 };
+
+export const formatMoney = (value?: number | ''): string => {
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+  return formatter.format(value || 0);
+};
+
+export const parseIntOrNull = (int: string) => {
+  return int.length > 0 ? parseInt(int) : null;
+};
+
+export const parseFloatOrNull = (flt: string) => {
+  return flt.length > 0 ? parseFloat(flt) : null;
+};

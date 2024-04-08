@@ -38,6 +38,7 @@ export const AgencyPublicResponseSchema = z.object({
   Code: z.string(),
   Description: z.string().nullable(),
   IsDisabled: z.boolean(),
+  ParentId: z.number().int().nullable(),
 });
 
 export type Agency = z.infer<typeof AgencyCreationSchema>;

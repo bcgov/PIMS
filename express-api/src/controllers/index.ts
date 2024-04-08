@@ -1,4 +1,3 @@
-import admin from '@/controllers/admin';
 import { healthCheck } from '@/controllers/healthController';
 import * as ltsa from '@/controllers/ltsa/ltsaController';
 import * as buildings from '@/controllers/buildings/buildingsController';
@@ -11,14 +10,15 @@ import * as notifications from '@/controllers/notifications/notificationsControl
 import * as reports from '@/controllers/reports/reportsController';
 import * as tools from '@/controllers/tools/toolsController';
 import * as agencies from '@/controllers/agencies/agenciesController';
+import * as roles from '@/controllers/roles/rolesController';
 
 export default {
   healthCheck,
+  ...roles,
   ...ltsa,
   ...buildings,
   ...parcels,
   ...lookup,
-  admin,
   ...users,
   ...properties,
   ...projects,

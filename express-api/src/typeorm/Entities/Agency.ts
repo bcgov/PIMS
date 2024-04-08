@@ -53,6 +53,6 @@ export class Agency extends BaseEntity {
   @Column({ type: 'character varying', length: 250, nullable: true })
   CCEmail: string;
 
-  @OneToMany(() => User, (user) => user.AgencyId)
+  @OneToMany(() => User, (user) => user.Agency, { nullable: true })
   Users: Relation<User>[];
 }

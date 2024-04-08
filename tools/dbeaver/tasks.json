@@ -51,7 +51,7 @@
 						"project": "General",
 						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
 						"defaultCatalog": "pims",
-						"query": "SELECT p.[Id],\r\n\tCASE \r\n\t  WHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t  ELSE p.[CreatedById]\r\n\tEND AS created_by_id,\r\n    p.[CreatedOn] AS created_on,\r\n    p.[UpdatedById] AS updated_by_id,\r\n    p.[UpdatedOn] AS updated_on,\r\n    p.[Name] AS [name],\r\n    p.[Description] AS [description],\r\n    p.[ClassificationId] AS classification_id,\r\n    p.BuildingConstructionTypeId AS building_construction_type_id,\r\n    p.[AgencyId] AS agency_id,\r\n    p.[IsSensitive] AS is_sensitive,\r\n    p.[IsVisibleToOtherAgencies] AS is_visible_to_other_agencies,\r\n\tp.BuildingFloorCount AS building_floor_count,\r\n\tp.BuildingPredominateUseId AS building_predominate_use_id,\r\n\tp.BuildingTenancy AS building_tenancy,\r\n\tp.RentableArea AS rentable_area,\r\n\tp.BuildingOccupantTypeId AS building_occupant_type_id,\r\n\tp.LeaseExpiry AS lease_expiry,\r\n\tp.OccupantName AS occupant_name,\r\n\tp.TransferLeaseOnSale AS transfer_lease_on_sale,\r\n\tp.BuildingTenancyUpdatedOn AS building_tenancy_updated_on,\r\n\tp.EncumbranceReason AS encumbrance_reason,\r\n\tp.LeasedLandMetadata AS leased_land_metadata,\r\n\tp.TotalArea AS total_area,\r\n\tCONVERT(VARCHAR(40), CAST(p.Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(p.Location.Lat AS DECIMAL(18, 14))) AS [location],\r\n\tCASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511 \r\n        ELSE aa.Id \r\n    END AS administrative_area_id,  \r\n\ta.Address1 AS address1, \r\n\ta.Postal AS postal,\r\n\t1 as property_type_id,\r\n\tp.ProjectNumbers AS project_numbers, \r\n    COALESCE(b.PID, s.PID) AS pid,\r\n    COALESCE(b.PIN, s.PIN) AS pin\r\nFROM \r\n    [pims].[dbo].Buildings p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n\tLEFT OUTER JOIN ParcelBuildings pb\r\n\tON p.Id \u003d pb.BuildingId\r\n\tLEFT OUTER JOIN Parcels b\r\n\tON pb.ParcelId \u003d b.Id\r\n\tLEFT OUTER JOIN ##spreadsheet_data s\r\n\tON s.BuildingId \u003d p.Id\r\nWHERE p.BuildingPredominateUseId \u003c\u003d 54 "
+						"query": "SELECT p.[Id],\r\n\tCASE \r\n\t  WHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t  ELSE p.[CreatedById]\r\n\tEND AS created_by_id,\r\n    p.[CreatedOn] AS created_on,\r\n    p.[UpdatedById] AS updated_by_id,\r\n    p.[UpdatedOn] AS updated_on,\r\n    p.[Name] AS [name],\r\n    p.[Description] AS [description],\r\n    p.[ClassificationId] AS classification_id,\r\n    p.BuildingConstructionTypeId AS building_construction_type_id,\r\n    p.[AgencyId] AS agency_id,\r\n    p.[IsSensitive] AS is_sensitive,\r\n    p.[IsVisibleToOtherAgencies] AS is_visible_to_other_agencies,\r\n\tp.BuildingFloorCount AS building_floor_count,\r\n\tp.BuildingPredominateUseId AS building_predominate_use_id,\r\n\tp.BuildingTenancy AS building_tenancy,\r\n\tp.RentableArea AS rentable_area,\r\n\tp.BuildingOccupantTypeId AS building_occupant_type_id,\r\n\tp.LeaseExpiry AS lease_expiry,\r\n\tp.OccupantName AS occupant_name,\r\n\tp.TransferLeaseOnSale AS transfer_lease_on_sale,\r\n\tp.BuildingTenancyUpdatedOn AS building_tenancy_updated_on,\r\n\tp.EncumbranceReason AS encumbrance_reason,\r\n\tp.LeasedLandMetadata AS leased_land_metadata,\r\n\tp.TotalArea AS total_area,\r\n\tCONVERT(VARCHAR(40), CAST(p.Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(p.Location.Lat AS DECIMAL(18, 14))) AS [location],\r\n\tCASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511 \r\n        ELSE aa.Id \r\n    END AS administrative_area_id,  \r\n\ta.Address1 AS address1, \r\n\ta.Postal AS postal,\r\n\t1 as property_type_id,\r\n\tp.ProjectNumbers AS project_numbers, \r\n    COALESCE(b.PID, s.PID) AS pid,\r\n    COALESCE(b.PIN, s.PIN) AS pin\r\nFROM \r\n    [pims].[dbo].Buildings p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n\tLEFT OUTER JOIN ParcelBuildings pb\r\n\tON p.Id \u003d pb.BuildingId\r\n\tLEFT OUTER JOIN Parcels b\r\n\tON pb.ParcelId \u003d b.Id\r\n\tLEFT OUTER JOIN spreadsheet_data s\r\n\tON s.BuildingId \u003d p.Id\r\nWHERE p.BuildingPredominateUseId \u003c\u003d 54 "
 					}
 				},
 				{
@@ -61,7 +61,7 @@
 						"project": "General",
 						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
 						"defaultCatalog": "pims",
-						"query": "SELECT [ParcelId]\r\n      ,[Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Firm]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[ParcelEvaluations]"
+						"query": "SELECT [ParcelId]\r\n      ,YEAR([Date]) AS [Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Firm]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[ParcelEvaluations]"
 					}
 				},
 				{
@@ -91,7 +91,7 @@
 						"project": "General",
 						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
 						"defaultCatalog": "pims",
-						"query": "SELECT [BuildingId]\r\n      ,[Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[BuildingEvaluations]\r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)"
+						"query": "SELECT [BuildingId]\r\n      ,YEAR([Date]) AS [Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[BuildingEvaluations]\r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)"
 					}
 				},
 				{
@@ -240,12 +240,12 @@
 				}
 			],
 			"configuration": {
-				"maxJobCount": 1.0,
+				"maxJobCount": 1,
 				"showFinalMessage": true,
 				"DatabaseTransferProducer": {
 					"extractType": "SEGMENTS",
-					"segmentSize": 1000.0,
-					"fetchSize": 10000.0,
+					"segmentSize": 1000,
+					"fetchSize": 10000,
 					"openNewConnections": true,
 					"queryRowCount": false,
 					"selectedColumnsOnly": false,
@@ -255,9 +255,9 @@
 					"entityId": "postgres-jdbc-18dd2b052a7-539b625bbf9f91bf/pims/public",
 					"openNewConnections": true,
 					"useTransactions": true,
-					"commitAfterRows": 1000.0,
+					"commitAfterRows": 1000,
 					"useMultiRowInsert": false,
-					"multiRowInsertBatch": 500.0,
+					"multiRowInsertBatch": 500,
 					"skipBindValues": false,
 					"disableUsingBatches": true,
 					"ignoreDuplicateRows": true,
@@ -291,8 +291,8 @@
 									"targetName": "updated_on",
 									"mappingType": "existing"
 								},
-								"Name": {
-									"targetName": "Name",
+								"name": {
+									"targetName": "name",
 									"mappingType": "existing"
 								},
 								"isdisabled": {
@@ -463,8 +463,8 @@
 									"targetName": "updated_on",
 									"mappingType": "existing"
 								},
-								"Name": {
-									"targetName": "Name",
+								"name": {
+									"targetName": "name",
 									"mappingType": "existing"
 								},
 								"description": {
@@ -545,7 +545,7 @@
 								}
 							}
 						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT p.[Id],\r\n\tCASE \r\n\t  WHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t  ELSE p.[CreatedById]\r\n\tEND AS created_by_id,\r\n    p.[CreatedOn] AS created_on,\r\n    p.[UpdatedById] AS updated_by_id,\r\n    p.[UpdatedOn] AS updated_on,\r\n    p.[Name] AS [name],\r\n    p.[Description] AS [description],\r\n    p.[ClassificationId] AS classification_id,\r\n    p.BuildingConstructionTypeId AS building_construction_type_id,\r\n    p.[AgencyId] AS agency_id,\r\n    p.[IsSensitive] AS is_sensitive,\r\n    p.[IsVisibleToOtherAgencies] AS is_visible_to_other_agencies,\r\n\tp.BuildingFloorCount AS building_floor_count,\r\n\tp.BuildingPredominateUseId AS building_predominate_use_id,\r\n\tp.BuildingTenancy AS building_tenancy,\r\n\tp.RentableArea AS rentable_area,\r\n\tp.BuildingOccupantTypeId AS building_occupant_type_id,\r\n\tp.LeaseExpiry AS lease_expiry,\r\n\tp.OccupantName AS occupant_name,\r\n\tp.TransferLeaseOnSale AS transfer_lease_on_sale,\r\n\tp.BuildingTenancyUpdatedOn AS building_tenancy_updated_on,\r\n\tp.EncumbranceReason AS encumbrance_reason,\r\n\tp.LeasedLandMetadata AS leased_land_metadata,\r\n\tp.TotalArea AS total_area,\r\n\tCONVERT(VARCHAR(40), CAST(p.Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(p.Location.Lat AS DECIMAL(18, 14))) AS [location],\r\n\tCASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511 \r\n        ELSE aa.Id \r\n    END AS administrative_area_id,  \r\n\ta.Address1 AS address1, \r\n\ta.Postal AS postal,\r\n\t1 as property_type_id,\r\n\tp.ProjectNumbers AS project_numbers, \r\n    COALESCE(b.PID, s.PID) AS pid,\r\n    COALESCE(b.PIN, s.PIN) AS pin\r\nFROM \r\n    [pims].[dbo].Buildings p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n\tLEFT OUTER JOIN ParcelBuildings pb\r\n\tON p.Id \u003d pb.BuildingId\r\n\tLEFT OUTER JOIN Parcels b\r\n\tON pb.ParcelId \u003d b.Id\r\n\tLEFT OUTER JOIN ##spreadsheet_data s\r\n\tON s.BuildingId \u003d p.Id\r\nWHERE p.BuildingPredominateUseId \u003c\u003d 54 ": {
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT p.[Id],\r\n\tCASE \r\n\t  WHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t  ELSE p.[CreatedById]\r\n\tEND AS created_by_id,\r\n    p.[CreatedOn] AS created_on,\r\n    p.[UpdatedById] AS updated_by_id,\r\n    p.[UpdatedOn] AS updated_on,\r\n    p.[Name] AS [name],\r\n    p.[Description] AS [description],\r\n    p.[ClassificationId] AS classification_id,\r\n    p.BuildingConstructionTypeId AS building_construction_type_id,\r\n    p.[AgencyId] AS agency_id,\r\n    p.[IsSensitive] AS is_sensitive,\r\n    p.[IsVisibleToOtherAgencies] AS is_visible_to_other_agencies,\r\n\tp.BuildingFloorCount AS building_floor_count,\r\n\tp.BuildingPredominateUseId AS building_predominate_use_id,\r\n\tp.BuildingTenancy AS building_tenancy,\r\n\tp.RentableArea AS rentable_area,\r\n\tp.BuildingOccupantTypeId AS building_occupant_type_id,\r\n\tp.LeaseExpiry AS lease_expiry,\r\n\tp.OccupantName AS occupant_name,\r\n\tp.TransferLeaseOnSale AS transfer_lease_on_sale,\r\n\tp.BuildingTenancyUpdatedOn AS building_tenancy_updated_on,\r\n\tp.EncumbranceReason AS encumbrance_reason,\r\n\tp.LeasedLandMetadata AS leased_land_metadata,\r\n\tp.TotalArea AS total_area,\r\n\tCONVERT(VARCHAR(40), CAST(p.Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(p.Location.Lat AS DECIMAL(18, 14))) AS [location],\r\n\tCASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511 \r\n        ELSE aa.Id \r\n    END AS administrative_area_id,  \r\n\ta.Address1 AS address1, \r\n\ta.Postal AS postal,\r\n\t1 as property_type_id,\r\n\tp.ProjectNumbers AS project_numbers, \r\n    COALESCE(b.PID, s.PID) AS pid,\r\n    COALESCE(b.PIN, s.PIN) AS pin\r\nFROM \r\n    [pims].[dbo].Buildings p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n\tLEFT OUTER JOIN ParcelBuildings pb\r\n\tON p.Id \u003d pb.BuildingId\r\n\tLEFT OUTER JOIN Parcels b\r\n\tON pb.ParcelId \u003d b.Id\r\n\tLEFT OUTER JOIN spreadsheet_data s\r\n\tON s.BuildingId \u003d p.Id\r\nWHERE p.BuildingPredominateUseId \u003c\u003d 54 ": {
 							"targetName": "building",
 							"mappingType": "existing",
 							"attributes": {
@@ -679,7 +679,7 @@
 								}
 							}
 						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT [ParcelId]\r\n      ,[Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Firm]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[ParcelEvaluations]": {
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT [ParcelId]\r\n      ,YEAR([Date]) AS [Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Firm]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[ParcelEvaluations]": {
 							"targetName": "parcel_evaluation",
 							"mappingType": "existing",
 							"attributes": {
@@ -688,7 +688,7 @@
 									"mappingType": "existing"
 								},
 								"Date": {
-									"targetName": "\"date\"",
+									"targetName": "\"year\"",
 									"mappingType": "existing"
 								},
 								"Key": {
@@ -817,7 +817,7 @@
 								}
 							}
 						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT [BuildingId]\r\n      ,[Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[BuildingEvaluations]\r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)": {
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT [BuildingId]\r\n      ,YEAR([Date]) AS [Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[BuildingEvaluations]\r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)": {
 							"targetName": "building_evaluation",
 							"mappingType": "existing",
 							"attributes": {
@@ -826,7 +826,7 @@
 									"mappingType": "existing"
 								},
 								"Date": {
-									"targetName": "\"Date\"",
+									"targetName": "\"year\"",
 									"mappingType": "existing"
 								},
 								"Key": {
@@ -891,8 +891,8 @@
 									"targetName": "project_number",
 									"mappingType": "existing"
 								},
-								"Name": {
-									"targetName": "Name",
+								"name": {
+									"targetName": "name",
 									"mappingType": "existing"
 								},
 								"workflowid": {
@@ -1215,8 +1215,8 @@
 									"targetName": "is_final",
 									"mappingType": "existing"
 								},
-								"Name": {
-									"targetName": "Name",
+								"name": {
+									"targetName": "name",
 									"mappingType": "existing"
 								},
 								"From": {
@@ -2902,7 +2902,7 @@
 						"project": "General",
 						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
 						"defaultCatalog": "pims",
-						"query": "SELECT p.[Id],\r\n\tCASE \r\n\t  WHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t  ELSE p.[CreatedById]\r\n\tEND AS created_by_id,\r\n    p.[CreatedOn] AS created_on,\r\n    p.[UpdatedById] AS updated_by_id,\r\n    p.[UpdatedOn] AS updated_on,\r\n    p.[Name] AS [name],\r\n    p.[Description] AS [description],\r\n    p.[ClassificationId] AS classification_id,\r\n    p.BuildingConstructionTypeId AS building_construction_type_id,\r\n    p.[AgencyId] AS agency_id,\r\n    p.[IsSensitive] AS is_sensitive,\r\n    p.[IsVisibleToOtherAgencies] AS is_visible_to_other_agencies,\r\n\tp.BuildingFloorCount AS building_floor_count,\r\n\tp.BuildingPredominateUseId AS building_predominate_use_id,\r\n\tp.BuildingTenancy AS building_tenancy,\r\n\tp.RentableArea AS rentable_area,\r\n\tp.BuildingOccupantTypeId AS building_occupant_type_id,\r\n\tp.LeaseExpiry AS lease_expiry,\r\n\tp.OccupantName AS occupant_name,\r\n\tp.TransferLeaseOnSale AS transfer_lease_on_sale,\r\n\tp.BuildingTenancyUpdatedOn AS building_tenancy_updated_on,\r\n\tp.EncumbranceReason AS encumbrance_reason,\r\n\tp.LeasedLandMetadata AS leased_land_metadata,\r\n\tp.TotalArea AS total_area,\r\n\tCONVERT(VARCHAR(40), CAST(p.Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(p.Location.Lat AS DECIMAL(18, 14))) AS [location],\r\n\tCASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511 \r\n        ELSE aa.Id \r\n    END AS administrative_area_id,  \r\n\ta.Address1 AS address1, \r\n\ta.Postal AS postal,\r\n\t1 as property_type_id,\r\n\tp.ProjectNumbers AS project_numbers, \r\n    COALESCE(b.PID, s.PID) AS pid,\r\n    COALESCE(b.PIN, s.PIN) AS pin\r\nFROM \r\n    [pims].[dbo].Buildings p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n\tLEFT OUTER JOIN ParcelBuildings pb\r\n\tON p.Id \u003d pb.BuildingId\r\n\tLEFT OUTER JOIN Parcels b\r\n\tON pb.ParcelId \u003d b.Id\r\n\tLEFT OUTER JOIN ##spreadsheet_data s\r\n\tON s.BuildingId \u003d p.Id\r\nWHERE p.BuildingPredominateUseId \u003c\u003d 54 "
+						"query": "SELECT p.[Id],\r\n\tCASE \r\n\t  WHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t  ELSE p.[CreatedById]\r\n\tEND AS created_by_id,\r\n    p.[CreatedOn] AS created_on,\r\n    p.[UpdatedById] AS updated_by_id,\r\n    p.[UpdatedOn] AS updated_on,\r\n    p.[Name] AS [name],\r\n    p.[Description] AS [description],\r\n    p.[ClassificationId] AS classification_id,\r\n    p.BuildingConstructionTypeId AS building_construction_type_id,\r\n    p.[AgencyId] AS agency_id,\r\n    p.[IsSensitive] AS is_sensitive,\r\n    p.[IsVisibleToOtherAgencies] AS is_visible_to_other_agencies,\r\n\tp.BuildingFloorCount AS building_floor_count,\r\n\tp.BuildingPredominateUseId AS building_predominate_use_id,\r\n\tp.BuildingTenancy AS building_tenancy,\r\n\tp.RentableArea AS rentable_area,\r\n\tp.BuildingOccupantTypeId AS building_occupant_type_id,\r\n\tp.LeaseExpiry AS lease_expiry,\r\n\tp.OccupantName AS occupant_name,\r\n\tp.TransferLeaseOnSale AS transfer_lease_on_sale,\r\n\tp.BuildingTenancyUpdatedOn AS building_tenancy_updated_on,\r\n\tp.EncumbranceReason AS encumbrance_reason,\r\n\tp.LeasedLandMetadata AS leased_land_metadata,\r\n\tp.TotalArea AS total_area,\r\n\tCONVERT(VARCHAR(40), CAST(p.Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(p.Location.Lat AS DECIMAL(18, 14))) AS [location],\r\n\tCASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511 \r\n        ELSE aa.Id \r\n    END AS administrative_area_id,  \r\n\ta.Address1 AS address1, \r\n\ta.Postal AS postal,\r\n\t1 as property_type_id,\r\n\tp.ProjectNumbers AS project_numbers, \r\n    COALESCE(b.PID, s.PID) AS pid,\r\n    COALESCE(b.PIN, s.PIN) AS pin\r\nFROM \r\n    [pims].[dbo].Buildings p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n\tLEFT OUTER JOIN ParcelBuildings pb\r\n\tON p.Id \u003d pb.BuildingId\r\n\tLEFT OUTER JOIN Parcels b\r\n\tON pb.ParcelId \u003d b.Id\r\n\tLEFT OUTER JOIN spreadsheet_data s\r\n\tON s.BuildingId \u003d p.Id\r\nWHERE p.BuildingPredominateUseId \u003c\u003d 54 "
 					}
 				},
 				{
@@ -2912,7 +2912,7 @@
 						"project": "General",
 						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
 						"defaultCatalog": "pims",
-						"query": "SELECT [ParcelId]\r\n      ,[Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Firm]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[ParcelEvaluations]"
+						"query": "SELECT [ParcelId]\r\n      ,YEAR([Date]) AS [Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Firm]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[ParcelEvaluations]"
 					}
 				},
 				{
@@ -2942,7 +2942,7 @@
 						"project": "General",
 						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
 						"defaultCatalog": "pims",
-						"query": "SELECT [BuildingId]\r\n      ,[Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[BuildingEvaluations]\r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)"
+						"query": "SELECT [BuildingId]\r\n      ,YEAR([Date]) AS [Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[BuildingEvaluations]\r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)"
 					}
 				},
 				{
@@ -2956,9 +2956,11 @@
 				{
 					"type": "databaseTransferProducer",
 					"location": {
-						"type": "entity",
+						"type": "query",
 						"project": "General",
-						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectProperties"
+						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
+						"defaultCatalog": "pims",
+						"query": "\r\nSELECT [ProjectId]\r\n      ,[TaskId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsCompleted]\r\n      ,[CompletedOn]\r\n  FROM [dbo].[ProjectTasks]"
 					}
 				},
 				{
@@ -2982,17 +2984,7 @@
 					"location": {
 						"type": "entity",
 						"project": "General",
-						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectSnapshots"
-					}
-				},
-				{
-					"type": "databaseTransferProducer",
-					"location": {
-						"type": "query",
-						"project": "General",
-						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
-						"defaultCatalog": "pims",
-						"query": "\r\nSELECT [ProjectId]\r\n      ,[TaskId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsCompleted]\r\n      ,[CompletedOn]\r\n  FROM [dbo].[ProjectTasks]"
+						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectProperties"
 					}
 				},
 				{
@@ -3003,6 +2995,14 @@
 						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
 						"defaultCatalog": "pims",
 						"query": "SELECT [Id]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsFinal]\r\n      ,[Name]\r\n      ,[From]\r\n      ,[To]\r\n      ,[ReportType]\r\n  FROM [dbo].[ProjectReports]"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "entity",
+						"project": "General",
+						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectSnapshots"
 					}
 				},
 				{
@@ -3397,7 +3397,7 @@
 								}
 							}
 						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT p.[Id],\r\n\tCASE \r\n\t  WHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t  ELSE p.[CreatedById]\r\n\tEND AS created_by_id,\r\n    p.[CreatedOn] AS created_on,\r\n    p.[UpdatedById] AS updated_by_id,\r\n    p.[UpdatedOn] AS updated_on,\r\n    p.[Name] AS [name],\r\n    p.[Description] AS [description],\r\n    p.[ClassificationId] AS classification_id,\r\n    p.BuildingConstructionTypeId AS building_construction_type_id,\r\n    p.[AgencyId] AS agency_id,\r\n    p.[IsSensitive] AS is_sensitive,\r\n    p.[IsVisibleToOtherAgencies] AS is_visible_to_other_agencies,\r\n\tp.BuildingFloorCount AS building_floor_count,\r\n\tp.BuildingPredominateUseId AS building_predominate_use_id,\r\n\tp.BuildingTenancy AS building_tenancy,\r\n\tp.RentableArea AS rentable_area,\r\n\tp.BuildingOccupantTypeId AS building_occupant_type_id,\r\n\tp.LeaseExpiry AS lease_expiry,\r\n\tp.OccupantName AS occupant_name,\r\n\tp.TransferLeaseOnSale AS transfer_lease_on_sale,\r\n\tp.BuildingTenancyUpdatedOn AS building_tenancy_updated_on,\r\n\tp.EncumbranceReason AS encumbrance_reason,\r\n\tp.LeasedLandMetadata AS leased_land_metadata,\r\n\tp.TotalArea AS total_area,\r\n\tCONVERT(VARCHAR(40), CAST(p.Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(p.Location.Lat AS DECIMAL(18, 14))) AS [location],\r\n\tCASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511 \r\n        ELSE aa.Id \r\n    END AS administrative_area_id,  \r\n\ta.Address1 AS address1, \r\n\ta.Postal AS postal,\r\n\t1 as property_type_id,\r\n\tp.ProjectNumbers AS project_numbers, \r\n    COALESCE(b.PID, s.PID) AS pid,\r\n    COALESCE(b.PIN, s.PIN) AS pin\r\nFROM \r\n    [pims].[dbo].Buildings p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n\tLEFT OUTER JOIN ParcelBuildings pb\r\n\tON p.Id \u003d pb.BuildingId\r\n\tLEFT OUTER JOIN Parcels b\r\n\tON pb.ParcelId \u003d b.Id\r\n\tLEFT OUTER JOIN ##spreadsheet_data s\r\n\tON s.BuildingId \u003d p.Id\r\nWHERE p.BuildingPredominateUseId \u003c\u003d 54 ": {
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT p.[Id],\r\n\tCASE \r\n\t  WHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t  ELSE p.[CreatedById]\r\n\tEND AS created_by_id,\r\n    p.[CreatedOn] AS created_on,\r\n    p.[UpdatedById] AS updated_by_id,\r\n    p.[UpdatedOn] AS updated_on,\r\n    p.[Name] AS [name],\r\n    p.[Description] AS [description],\r\n    p.[ClassificationId] AS classification_id,\r\n    p.BuildingConstructionTypeId AS building_construction_type_id,\r\n    p.[AgencyId] AS agency_id,\r\n    p.[IsSensitive] AS is_sensitive,\r\n    p.[IsVisibleToOtherAgencies] AS is_visible_to_other_agencies,\r\n\tp.BuildingFloorCount AS building_floor_count,\r\n\tp.BuildingPredominateUseId AS building_predominate_use_id,\r\n\tp.BuildingTenancy AS building_tenancy,\r\n\tp.RentableArea AS rentable_area,\r\n\tp.BuildingOccupantTypeId AS building_occupant_type_id,\r\n\tp.LeaseExpiry AS lease_expiry,\r\n\tp.OccupantName AS occupant_name,\r\n\tp.TransferLeaseOnSale AS transfer_lease_on_sale,\r\n\tp.BuildingTenancyUpdatedOn AS building_tenancy_updated_on,\r\n\tp.EncumbranceReason AS encumbrance_reason,\r\n\tp.LeasedLandMetadata AS leased_land_metadata,\r\n\tp.TotalArea AS total_area,\r\n\tCONVERT(VARCHAR(40), CAST(p.Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(p.Location.Lat AS DECIMAL(18, 14))) AS [location],\r\n\tCASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511 \r\n        ELSE aa.Id \r\n    END AS administrative_area_id,  \r\n\ta.Address1 AS address1, \r\n\ta.Postal AS postal,\r\n\t1 as property_type_id,\r\n\tp.ProjectNumbers AS project_numbers, \r\n    COALESCE(b.PID, s.PID) AS pid,\r\n    COALESCE(b.PIN, s.PIN) AS pin\r\nFROM \r\n    [pims].[dbo].Buildings p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n\tLEFT OUTER JOIN ParcelBuildings pb\r\n\tON p.Id \u003d pb.BuildingId\r\n\tLEFT OUTER JOIN Parcels b\r\n\tON pb.ParcelId \u003d b.Id\r\n\tLEFT OUTER JOIN spreadsheet_data s\r\n\tON s.BuildingId \u003d p.Id\r\nWHERE p.BuildingPredominateUseId \u003c\u003d 54 ": {
 							"targetName": "building",
 							"mappingType": "existing",
 							"attributes": {
@@ -3498,7 +3498,7 @@
 									"mappingType": "existing"
 								},
 								"location": {
-									"targetName": "\"location\"",
+									"targetName": "location",
 									"mappingType": "existing"
 								},
 								"administrative_area_id": {
@@ -3531,7 +3531,7 @@
 								}
 							}
 						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT [ParcelId]\r\n      ,[Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Firm]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[ParcelEvaluations]": {
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT [ParcelId]\r\n      ,YEAR([Date]) AS [Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Firm]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[ParcelEvaluations]": {
 							"targetName": "parcel_evaluation",
 							"mappingType": "existing",
 							"attributes": {
@@ -3540,7 +3540,7 @@
 									"mappingType": "existing"
 								},
 								"Date": {
-									"targetName": "\"date\"",
+									"targetName": "\"year\"",
 									"mappingType": "existing"
 								},
 								"Key": {
@@ -3669,7 +3669,7 @@
 								}
 							}
 						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT [BuildingId]\r\n      ,[Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[BuildingEvaluations]\r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)": {
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT [BuildingId]\r\n      ,YEAR([Date]) AS [Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[BuildingEvaluations]\r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)": {
 							"targetName": "building_evaluation",
 							"mappingType": "existing",
 							"attributes": {
@@ -3678,7 +3678,7 @@
 									"mappingType": "existing"
 								},
 								"Date": {
-									"targetName": "\"Date\"",
+									"targetName": "\"year\"",
 									"mappingType": "existing"
 								},
 								"Key": {
@@ -3829,20 +3829,20 @@
 								}
 							}
 						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectProperties": {
-							"targetName": "project_property",
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/\r\nSELECT [ProjectId]\r\n      ,[TaskId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsCompleted]\r\n      ,[CompletedOn]\r\n  FROM [dbo].[ProjectTasks]": {
+							"targetName": "project_task",
 							"mappingType": "existing",
 							"attributes": {
-								"id": {
-									"targetName": "id",
+								"projectid": {
+									"targetName": "project_id",
 									"mappingType": "existing"
 								},
-								"createdbyid": {
+								"taskid": {
+									"targetName": "task_id",
+									"mappingType": "existing"
+								},
+								"CreatedById\r\n      ,[CreatedOn": {
 									"targetName": "created_by_id",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "created_on",
 									"mappingType": "existing"
 								},
 								"updatedbyid": {
@@ -3853,24 +3853,12 @@
 									"targetName": "updated_on",
 									"mappingType": "existing"
 								},
-								"rowversion": {
-									"targetName": "rowversion",
-									"mappingType": "skip"
-								},
-								"projectid": {
-									"targetName": "project_id",
+								"iscompleted": {
+									"targetName": "is_completed",
 									"mappingType": "existing"
 								},
-								"propertytype": {
-									"targetName": "property_type_id",
-									"mappingType": "existing"
-								},
-								"parcelid": {
-									"targetName": "parcel_id",
-									"mappingType": "existing"
-								},
-								"buildingid": {
-									"targetName": "building_id",
+								"completedon": {
+									"targetName": "completed_on",
 									"mappingType": "existing"
 								}
 							}
@@ -3947,6 +3935,98 @@
 								}
 							}
 						},
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectProperties": {
+							"targetName": "project_property",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "id",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "created_by_id",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "created_on",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "updated_by_id",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "updated_on",
+									"mappingType": "existing"
+								},
+								"rowversion": {
+									"targetName": "rowversion",
+									"mappingType": "skip"
+								},
+								"projectid": {
+									"targetName": "project_id",
+									"mappingType": "existing"
+								},
+								"propertytype": {
+									"targetName": "property_type_id",
+									"mappingType": "existing"
+								},
+								"parcelid": {
+									"targetName": "parcel_id",
+									"mappingType": "existing"
+								},
+								"buildingid": {
+									"targetName": "building_id",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT [Id]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsFinal]\r\n      ,[Name]\r\n      ,[From]\r\n      ,[To]\r\n      ,[ReportType]\r\n  FROM [dbo].[ProjectReports]": {
+							"targetName": "project_report",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "id",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "created_by_id",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "created_on",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "updated_by_id",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "updated_on",
+									"mappingType": "existing"
+								},
+								"isfinal": {
+									"targetName": "is_final",
+									"mappingType": "existing"
+								},
+								"Name": {
+									"targetName": "name",
+									"mappingType": "existing"
+								},
+								"From": {
+									"targetName": "\"From\"",
+									"mappingType": "existing"
+								},
+								"To": {
+									"targetName": "\"To\"",
+									"mappingType": "existing"
+								},
+								"reporttype": {
+									"targetName": "report_type_id",
+									"mappingType": "existing"
+								}
+							}
+						},
 						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectSnapshots": {
 							"targetName": "project_snapshot",
 							"mappingType": "existing",
@@ -4001,86 +4081,6 @@
 								},
 								"metadata": {
 									"targetName": "metadata",
-									"mappingType": "existing"
-								}
-							}
-						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/\r\nSELECT [ProjectId]\r\n      ,[TaskId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsCompleted]\r\n      ,[CompletedOn]\r\n  FROM [dbo].[ProjectTasks]": {
-							"targetName": "project_task",
-							"mappingType": "existing",
-							"attributes": {
-								"projectid": {
-									"targetName": "project_id",
-									"mappingType": "existing"
-								},
-								"taskid": {
-									"targetName": "task_id",
-									"mappingType": "existing"
-								},
-								"CreatedById\r\n      ,[CreatedOn": {
-									"targetName": "created_by_id",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "updated_by_id",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "updated_on",
-									"mappingType": "existing"
-								},
-								"iscompleted": {
-									"targetName": "is_completed",
-									"mappingType": "existing"
-								},
-								"completedon": {
-									"targetName": "completed_on",
-									"mappingType": "existing"
-								}
-							}
-						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT [Id]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsFinal]\r\n      ,[Name]\r\n      ,[From]\r\n      ,[To]\r\n      ,[ReportType]\r\n  FROM [dbo].[ProjectReports]": {
-							"targetName": "project_report",
-							"mappingType": "existing",
-							"attributes": {
-								"id": {
-									"targetName": "id",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "created_by_id",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "created_on",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "updated_by_id",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "updated_on",
-									"mappingType": "existing"
-								},
-								"isfinal": {
-									"targetName": "is_final",
-									"mappingType": "existing"
-								},
-								"Name": {
-									"targetName": "name",
-									"mappingType": "existing"
-								},
-								"From": {
-									"targetName": "\"From\"",
-									"mappingType": "existing"
-								},
-								"To": {
-									"targetName": "\"To\"",
-									"mappingType": "existing"
-								},
-								"reporttype": {
-									"targetName": "report_type_id",
 									"mappingType": "existing"
 								}
 							}

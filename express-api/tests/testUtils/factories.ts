@@ -2,12 +2,19 @@
 import { Agency } from '@/typeorm/Entities/Agency';
 import { User, UserStatus } from '@/typeorm/Entities/User';
 import { faker } from '@faker-js/faker';
-import { UUID } from 'crypto';
+import { UUID, randomUUID } from 'crypto';
 import { Request, Response } from 'express';
 import { Role as RolesEntity } from '@/typeorm/Entities/Role';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { Parcel } from '@/typeorm/Entities/Parcel';
+import { Building } from '@/typeorm/Entities/Building';
 import { EmailBody, IChesStatusResponse, IEmail } from '@/services/ches/chesServices';
+import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
+import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
+import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUse';
+import { IAddressModel } from '@/services/geocoder/interfaces/IAddressModel';
+import { ISitePidsResponseModel } from '@/services/geocoder/interfaces/ISitePidsResponseModel';
+import { RegionalDistrict } from '@/typeorm/Entities/RegionalDistrict';
 
 export class MockRes {
   statusValue: any;
@@ -230,4 +237,168 @@ export const produceEmail = (props: Partial<IEmail>): IEmail => {
     ...props,
   };
   return email;
+};
+
+export const produceBuilding = (): Building => {
+  const id = faker.string.uuid() as UUID;
+  return {
+    Id: faker.number.int({ max: 10 }),
+    CreatedOn: faker.date.anytime(),
+    UpdatedOn: faker.date.anytime(),
+    Name: faker.string.alphanumeric(),
+    Description: faker.string.alphanumeric(),
+    BuildingConstructionTypeId: undefined,
+    BuildingConstructionType: undefined,
+    BuildingFloorCount: undefined,
+    BuildingPredominateUseId: undefined,
+    BuildingPredominateUse: undefined,
+    BuildingTenancy: undefined,
+    RentableArea: undefined,
+    BuildingOccupantTypeId: undefined,
+    BuildingOccupantType: undefined,
+    LeaseExpiry: undefined,
+    OccupantName: undefined,
+    BuildingTenancyUpdatedOn: undefined,
+    EncumbranceReason: undefined,
+    LeasedLandMetadata: undefined,
+    TotalArea: undefined,
+    ClassificationId: undefined,
+    Classification: undefined,
+    AgencyId: undefined,
+    Agency: produceAgency(id),
+    AdministrativeAreaId: undefined,
+    AdministrativeArea: undefined,
+    IsSensitive: undefined,
+    IsVisibleToOtherAgencies: undefined,
+    Location: undefined,
+    ProjectNumbers: undefined,
+    PropertyTypeId: undefined,
+    PropertyType: undefined,
+    Address1: undefined,
+    Address2: undefined,
+    Postal: undefined,
+    SiteId: undefined,
+    CreatedById: undefined,
+    CreatedBy: undefined,
+    UpdatedById: undefined,
+    UpdatedBy: undefined,
+    Fiscals: undefined,
+    Evaluations: undefined,
+    PID: undefined,
+    PIN: undefined,
+  };
+};
+export const produceAdminArea = (props: Partial<AdministrativeArea>): AdministrativeArea => {
+  const adminArea: AdministrativeArea = {
+    Id: faker.number.int(),
+    Name: faker.location.city(),
+    IsDisabled: false,
+    SortOrder: 0,
+    RegionalDistrictId: 0,
+    RegionalDistrict: undefined,
+    ProvinceId: 'BC',
+    Province: undefined,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedOn: new Date(),
+    UpdatedBy: undefined,
+    ...props,
+  };
+  return adminArea;
+};
+
+export const produceClassification = (
+  props: Partial<PropertyClassification>,
+): PropertyClassification => {
+  const classification: PropertyClassification = {
+    Id: faker.number.int(),
+    Name: faker.lorem.word(),
+    IsDisabled: false,
+    SortOrder: 0,
+    IsVisible: false,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return classification;
+};
+
+export const producePredominateUse = (
+  props: Partial<BuildingPredominateUse>,
+): BuildingPredominateUse => {
+  const predominateUse: BuildingPredominateUse = {
+    Id: faker.number.int(),
+    Name: faker.lorem.word(),
+    IsDisabled: false,
+    SortOrder: 0,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return predominateUse;
+};
+
+export const produceConstructionType = (props: Partial<BuildingPredominateUse>) => {
+  const constructionType: BuildingPredominateUse = {
+    Id: faker.number.int(),
+    Name: faker.lorem.word(),
+    IsDisabled: false,
+    SortOrder: 0,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return constructionType;
+};
+
+export const produceRegionalDistrict = (props: Partial<RegionalDistrict>) => {
+  const regionalDistrict: RegionalDistrict = {
+    Id: faker.number.int(),
+    Abbreviation: faker.string.alpha(5),
+    Name: faker.location.city(),
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return regionalDistrict;
+};
+
+export const produceGeocoderAddress = (): IAddressModel => {
+  const address: IAddressModel = {
+    siteId: randomUUID(),
+    fullAddress: faker.location.streetAddress(),
+    address1: faker.location.streetAddress(),
+    administrativeArea: faker.location.city(),
+    provinceCode: faker.location.state(),
+    latitude: faker.location.latitude(),
+    longitude: faker.location.longitude(),
+    score: faker.number.int({ min: 0, max: 99 }),
+  };
+  return address;
+};
+
+export const producePidsResponse = (): ISitePidsResponseModel => {
+  const pidResponse: ISitePidsResponseModel = {
+    siteID: randomUUID(),
+    pids: String(faker.number.int({ min: 11111111, max: 99999999 })),
+  };
+  return pidResponse;
 };

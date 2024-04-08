@@ -1,157 +1,171 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import DetailViewNavigation from '../display/DetailViewNavigation';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import DataCard from '../display/DataCard';
 import { ClassificationInline } from './ClassificationIcon';
 import CollapsibleSidebar from '../layout/CollapsibleSidebar';
-import ParcelNetValueTable from './ParcelNetValueTable';
-import { PinnedColumnDataGrid } from '../table/DataTable';
-import { GridColDef } from '@mui/x-data-grid';
+import PropertyNetValueTable from './PropertyNetValueTable';
+import usePimsApi from '@/hooks/usePimsApi';
+import useDataLoader from '@/hooks/useDataLoader';
+import { useClassificationStyle } from './PropertyTable';
+import PropertyAssessedValueTable from './PropertyAssessedValueTable';
+import { useParams } from 'react-router-dom';
+import { Parcel } from '@/hooks/api/useParcelsApi';
+import { Building } from '@/hooks/api/useBuildingsApi';
+import DeleteDialog from '../dialog/DeleteDialog';
+import {
+  BuildingInformationEditDialog,
+  ParcelInformationEditDialog,
+  PropertyAssessedValueEditDialog,
+  PropertyNetBookValueEditDialog,
+} from './PropertyDialog';
+import { PropertyType } from './PropertyForms';
 
-const PropertyDetail = () => {
-  const buildings1 = [
-    {
-      Id: 1,
-      ClassificationId: 0,
-      BuildingName: 'Aqua Center',
-    },
-    {
-      Id: 2,
-      ClassificationId: 1,
-      BuildingName: 'Hydraulic Press',
-    },
-    {
-      Id: 3,
-      ClassificationId: 2,
-      BuildingName: 'Iron Processing',
-    },
-    {
-      Id: 7,
-      ClassificationId: 2,
-      BuildingName: 'St. Patricks Building',
-    },
-  ];
+interface IPropertyDetail {
+  onClose: () => void;
+}
 
-  const assessedValue = [
-    {
-      FiscalYear: '2024',
-      Land: '$2450000',
-      Building1: '$350000',
-      Building2: '$5000000',
-      Building3: '$5000000',
-      Building4: '$2000000',
-      Building5: '$8090000',
-    },
-    {
-      FiscalYear: '23/22',
-      Land: '$2450000',
-      Building1: '$350000',
-      Building2: '$5000000',
-      Building3: '$5000000',
-      Building4: '$2000000',
-      Building5: '$8090000',
-    },
-  ];
-
-  const assesValCol: GridColDef[] = [
-    {
-      field: 'FiscalYear',
-      headerName: 'Year',
-    },
-    {
-      field: 'Land',
-      headerName: 'Land',
-    },
-    {
-      field: 'Building1',
-      headerName: 'Building (1)',
-    },
-    {
-      field: 'Building2',
-      headerName: 'Building (2)',
-    },
-    {
-      field: 'Building3',
-      headerName: 'Building (3)',
-    },
-    {
-      field: 'Building4',
-      headerName: 'Building (4)',
-    },
-    {
-      field: 'Building5',
-      headerName: 'Building (5)',
-    },
-  ];
-
-  const data = {
-    //Id: 1,
-    PID: '010-113-1332',
-    Classification: 1,
-    Agency: { Name: 'Smith & Weston' },
-    Address: '1450 Whenever Pl',
-    ProjectNumbers: 'FX1234',
-    Corporation: 'asdasda',
-    Ownership: 'BC Gov',
-    Sensitive: true,
-    UpdatedOn: new Date(),
+const PropertyDetail = (props: IPropertyDetail) => {
+  const params = useParams();
+  const parcelId = isNaN(Number(params.parcelId)) ? null : Number(params.parcelId);
+  const buildingId = isNaN(Number(params.buildingId)) ? null : Number(params.buildingId);
+  const api = usePimsApi();
+  const { data: parcel, refreshData: refreshParcel } = useDataLoader(() => {
+    if (parcelId) {
+      return api.parcels.getParcelById(parcelId);
+    } else {
+      return null;
+    }
+  });
+  const { data: building, refreshData: refreshBuilding } = useDataLoader(() => {
+    if (buildingId) {
+      return api.buildings.getBuildingById(buildingId);
+    } else {
+      return null;
+    }
+  });
+  const { data: relatedBuildings, refreshData: refreshRelated } = useDataLoader(
+    () => parcel?.PID && api.buildings.getBuildings({ pid: parcel.PID, includeRelations: true }),
+  );
+  const refreshEither = () => {
+    if (parcelId) {
+      refreshParcel();
+    } else {
+      refreshBuilding();
+    }
   };
-  const theme = useTheme();
-  const classificationColorMap = {
-    0: {
-      textColor: theme.palette.blue.main,
-      bgColor: theme.palette.blue.light,
-      text: 'Core operational',
-    },
-    1: {
-      textColor: theme.palette.success.main,
-      bgColor: theme.palette.success.light,
-      text: 'Core strategic',
-    },
-    2: { textColor: theme.palette.info.main, bgColor: theme.palette.info.light, text: 'Surplus' },
-    3: { textColor: theme.palette.info.main, bgColor: theme.palette.info.light, text: 'Surplus' },
-    4: {
-      textColor: theme.palette.warning.main,
-      bgColor: theme.palette.warning.light,
-      text: 'Disposal',
-    },
-    5: {
-      textColor: theme.palette.warning.main,
-      bgColor: theme.palette.warning.light,
-      text: 'Disposal',
-    },
-    6: {
-      textColor: theme.palette.warning.main,
-      bgColor: theme.palette.warning.light,
-      text: 'Disposal',
-    },
-  };
+  useEffect(() => {
+    refreshBuilding();
+  }, [buildingId]);
+
+  useEffect(() => {
+    refreshParcel();
+  }, [parcelId]);
+
+  useEffect(() => {
+    refreshRelated();
+  }, [parcel]);
+
+  const classification = useClassificationStyle();
+
+  const assessedValues = useMemo(() => {
+    if (parcelId && parcel) {
+      //We only want latest two years accroding to PO requirements.
+      const lastTwoYrs = parcel.Evaluations?.sort((a, b) => b.Year - a.Year).slice(0, 2);
+      const evaluations = [];
+      if (lastTwoYrs) {
+        for (const parcelEval of lastTwoYrs) {
+          //This is a parcel. So first, get fields for the parcel.
+          const evaluation = { Year: parcelEval.Year, Land: parcelEval.Value };
+          //If exists, iterate over relatedBuildings.
+          relatedBuildings?.forEach((building, idx) => {
+            //We need to find evaluations with the matching year of the parcel evaluations.
+            //We can't just sort naively in the same way since we can't guarantee both lists have the same years.
+            const buildingEval = building.Evaluations?.find((e) => e.Year === parcelEval.Year);
+            if (buildingEval) {
+              evaluation[`Building${idx + 1}`] = buildingEval.Value;
+            }
+          });
+          evaluations.push(evaluation);
+        }
+      }
+      return evaluations;
+    } else if (buildingId && building) {
+      const lastTwoYrs = building.Evaluations?.sort((a, b) => b.Year - a.Year).slice(0, 2);
+      return lastTwoYrs?.map((ev) => ({
+        Year: ev.Year,
+        Value: ev.Value,
+      }));
+    } else {
+      return [];
+    }
+  }, [parcel, building, relatedBuildings]);
+
+  const netBookValues = useMemo(() => {
+    if (parcelId && parcel) {
+      return parcel.Fiscals.map((v) => v).sort((a, b) => b.FiscalYear - a.FiscalYear);
+    } else if (buildingId && building) {
+      return building.Fiscals.map((v) => v).sort((a, b) => b.FiscalYear - a.FiscalYear);
+    } else {
+      return [];
+    }
+  }, [parcel, building]);
 
   const customFormatter = (key: any, val: any) => {
     if (key === 'Agency' && val) {
       return <Typography>{val.Name}</Typography>;
-    } else if (key === 'Classification') {
+    } else if (key === 'Classification' && val) {
       return (
         <ClassificationInline
-          color={classificationColorMap[val].textColor}
-          backgroundColor={classificationColorMap[val].bgColor}
-          title={classificationColorMap[val].text}
+          color={classification[val.Id].textColor}
+          backgroundColor={classification[val.Id].bgColor}
+          title={val.Name}
         />
       );
-    } else if (key === 'Sensitive') {
+    } else if (key === 'IsSensitive' || key === 'Owned') {
       return val ? <Typography>Yes</Typography> : <Typography>No</Typography>;
     }
+    return <Typography>{val}</Typography>;
   };
+
+  const buildingOrParcel: PropertyType = building != null ? 'Building' : 'Parcel';
+  const mainInformation = useMemo(() => {
+    const data: Parcel | Building = buildingOrParcel === 'Building' ? building : parcel;
+    if (!data) {
+      return {};
+    } else {
+      const info: any = {
+        Classification: data.Classification,
+        PID: data.PID,
+        PIN: data.PIN,
+        PostalCode: data.Postal,
+        AdministrativeArea: data.AdministrativeArea?.Name,
+        Address: data.Address1,
+        IsSensitive: data.IsSensitive,
+        Description: data.Description,
+      };
+      if (buildingOrParcel === 'Building') {
+        info.Name = (data as Building).Name;
+        info.TotalArea = (data as Building).TotalArea;
+        info.UsableArea = (data as Building).RentableArea;
+      } else {
+        info.LandArea = (data as Parcel).LandArea;
+        info.Owned = !(data as Parcel).NotOwned;
+      }
+      return info;
+    }
+  }, [parcel, building]);
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openInformationDialog, setOpenInformationDialog] = useState(false);
+  const [openNetBookDialog, setOpenNetBookDialog] = useState(false);
+  const [openAssessedValueDialog, setOpenAssessedValueDialog] = useState(false);
 
   return (
     <CollapsibleSidebar
       items={[
-        { title: 'Parcel information' },
-        { title: 'Parcel net book value' },
-        ...buildings1.map((a, idx) => ({
-          title: `Building information (${idx + 1})`,
-          subTitle: a.BuildingName,
-        })),
+        { title: `${buildingOrParcel} information` },
+        { title: `${buildingOrParcel} net book value` },
         { title: 'Assessed value' },
       ]}
     >
@@ -166,70 +180,91 @@ const PropertyDetail = () => {
       >
         <DetailViewNavigation
           navigateBackTitle={'Back to Property Overview'}
-          deleteTitle={'Delete Property'}
-          onDeleteClick={() => {}}
-          onBackClick={() => {}}
+          deleteTitle={`Delete ${buildingOrParcel}`}
+          onDeleteClick={() => setOpenDeleteDialog(true)}
+          onBackClick={() => props.onClose()}
         />
         <DataCard
-          id="Parcel information"
+          id={`${buildingOrParcel} information`}
           customFormatter={customFormatter}
-          values={data}
-          title={'Parcel information'}
-          onEdit={() => {}}
+          values={mainInformation}
+          title={`${buildingOrParcel} information`}
+          onEdit={() => setOpenInformationDialog(true)}
         />
         <DataCard
-          id="Parcel net book value"
+          id={`${buildingOrParcel} net book value`}
           values={undefined}
-          title={'Parcel net book value'}
-          onEdit={() => {}}
+          title={`${buildingOrParcel} net book value`}
+          disableEdit={!netBookValues?.length}
+          onEdit={() => setOpenNetBookDialog(true)}
         >
-          <ParcelNetValueTable />
+          <PropertyNetValueTable rows={netBookValues} />
         </DataCard>
-        {buildings1.map((building, idx) => {
-          return (
-            <DataCard
-              id={`Building information (${idx + 1})`}
-              key={'building' + idx}
-              values={building}
-              title={`Building information (${idx + 1})`}
-              onEdit={() => {}}
-            />
-          );
-        })}
         <DataCard
           id={'Assessed value'}
           values={undefined}
           title={'Assessed value'}
-          onEdit={() => {}}
+          disableEdit={!assessedValues?.length}
+          onEdit={() => setOpenAssessedValueDialog(true)}
         >
-          <PinnedColumnDataGrid
-            hideFooter
-            getRowId={(row) => row.FiscalYear}
-            pinnedFields={['FiscalYear', 'Land']}
-            columns={assesValCol}
-            rows={assessedValue}
-            scrollableSxProps={{
-              borderStyle: 'none',
-              '& .MuiDataGrid-columnHeaders': {
-                borderBottom: 'none',
-              },
-              '& div div div div >.MuiDataGrid-cell': {
-                borderBottom: 'none',
-                borderTop: '1px solid rgba(224, 224, 224, 1)',
-              },
-            }}
-            pinnedSxProps={{
-              borderStyle: 'none',
-              '& .MuiDataGrid-columnHeaders': {
-                borderBottom: 'none',
-              },
-              '& div div div div >.MuiDataGrid-cell': {
-                borderBottom: 'none',
-              },
-            }}
+          <PropertyAssessedValueTable
+            rows={assessedValues}
+            isBuilding={!!buildingId}
+            parcelRelatedBuildingsNum={relatedBuildings?.length ?? 0}
           />
         </DataCard>
       </Box>
+      <>
+        {buildingOrParcel === 'Parcel' ? (
+          <ParcelInformationEditDialog
+            open={openInformationDialog}
+            onCancel={() => setOpenInformationDialog(false)}
+            initialValues={parcel}
+            postSubmit={() => {
+              refreshEither();
+              setOpenInformationDialog(false);
+            }}
+          />
+        ) : (
+          <BuildingInformationEditDialog
+            initialValues={building}
+            open={openInformationDialog}
+            onCancel={() => setOpenInformationDialog(false)}
+            postSubmit={() => {
+              refreshEither();
+              setOpenInformationDialog(false);
+            }}
+          />
+        )}
+      </>
+      <PropertyAssessedValueEditDialog
+        initialRelatedBuildings={relatedBuildings}
+        propertyType={buildingOrParcel}
+        initialValues={buildingOrParcel === 'Building' ? building : parcel}
+        open={openAssessedValueDialog}
+        onCancel={() => setOpenAssessedValueDialog(false)}
+        postSubmit={() => {
+          refreshEither();
+          setOpenAssessedValueDialog(false);
+        }}
+      />
+      <PropertyNetBookValueEditDialog
+        postSubmit={() => {
+          refreshEither();
+          setOpenNetBookDialog(false);
+        }}
+        open={openNetBookDialog}
+        onClose={() => setOpenNetBookDialog(false)}
+        initialValues={buildingOrParcel === 'Building' ? building : parcel}
+        propertyType={buildingOrParcel}
+      />
+      <DeleteDialog
+        open={openDeleteDialog}
+        title={'Delete property'}
+        message={'Are you sure you want to delete this property?'}
+        onDelete={async () => {}} //Purposefully omitted for now.
+        onClose={async () => setOpenDeleteDialog(false)}
+      />
     </CollapsibleSidebar>
   );
 };

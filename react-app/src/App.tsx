@@ -14,6 +14,15 @@ import UsersManagement from './pages/UsersManagement';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from '@/pages/ErrorFallback';
 import UserDetail from '@/components/users/UserDetail';
+import ActiveInventory from './pages/ActiveInventory';
+import PropertyDetail from './components/property/PropertyDetail';
+import AddProperty from './components/property/AddProperty';
+import AgencyManagement from '@/pages/AgencyManagement';
+import AgencyDetail from '@/components/agencies/AgencyDetails';
+import AddAgency from '@/components/agencies/AddAgency';
+import AdminAreasManagement from './pages/AdminAreasManagement';
+import AddAdministrativeArea from './components/adminAreas/AddAdministrativeArea';
+import AdministrativeAreaDetail from './components/adminAreas/AdministrativeAreaDetail';
 
 const Router = () => {
   const navigate = useNavigate();
@@ -49,26 +58,126 @@ const Router = () => {
       />
       <Route path="/admin">
         <Route
-          path="users"
+          path="adminAreas"
           element={
             <BaseLayout>
               <AuthRouteGuard>
-                <UsersManagement />
+                <AdminAreasManagement />
               </AuthRouteGuard>
             </BaseLayout>
           }
         />
         <Route
-          path="users/:id"
+          path="adminAreas/:id"
           element={
             <BaseLayout>
               <AuthRouteGuard>
-                <UserDetail onClose={() => navigate('/admin/users')} />
+                <AdministrativeAreaDetail />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
+        <Route
+          path="adminAreas/add"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard>
+                <AddAdministrativeArea />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
+        <Route
+          path="agencies"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard>
+                <AgencyManagement />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
+        <Route
+          path="agencies/:id"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard>
+                <AgencyDetail onClose={() => navigate('/admin/agencies')} />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
+        <Route
+          path="agencies/add"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard>
+                <AddAgency />
               </AuthRouteGuard>
             </BaseLayout>
           }
         />
       </Route>
+      <Route
+        path="properties"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <ActiveInventory />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="users"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <UsersManagement />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="properties/add"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <AddProperty />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="properties/building/:buildingId"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <PropertyDetail onClose={() => navigate('/properties/')} />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="properties/parcel/:parcelId"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <PropertyDetail onClose={() => navigate('/properties/')} />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="users/:id"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <UserDetail onClose={() => navigate('/users')} />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
     </Routes>
   );
 };

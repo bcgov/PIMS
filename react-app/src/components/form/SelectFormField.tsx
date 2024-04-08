@@ -6,11 +6,12 @@ export interface ISelectMenuItem {
   label: string;
   value: any;
   parent?: boolean;
+  children?: unknown[];
 }
 
 interface ISelectInputProps {
   name: string;
-  label: string;
+  label: string | JSX.Element;
   required: boolean;
   options: ISelectMenuItem[];
 }

@@ -87,10 +87,15 @@ const appTheme = createTheme({
     },
   },
   components: {
-    MuiTextField: {
+    MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          color: 'secondary',
+          '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
+            display: 'none',
+          },
+          '& input[type=number]': {
+            MozAppearance: 'textfield',
+          },
         },
       },
     },
@@ -161,6 +166,21 @@ const appTheme = createTheme({
           color: 'black',
           border: '1px solid #e0e0e0',
           padding: '0.8rem',
+        },
+      },
+    },
+    MuiMenu: {
+      styleOverrides: {
+        root: {
+          top: '5px',
+        },
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          fontWeight: 500,
+          fontSize: '0.9rem',
         },
       },
     },

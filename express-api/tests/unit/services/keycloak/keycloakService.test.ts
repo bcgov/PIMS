@@ -32,7 +32,7 @@ const mockUser: IKeycloakUser = {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _updateUser = jest.fn().mockImplementation((_user: DeepPartial<User>) => ({ raw: {} }));
 
-jest.mock('@/services/admin/usersServices', () => ({
+jest.mock('@/services/users/usersServices', () => ({
   getUsers: () => [produceUser()],
   getUserById: () => produceUser(),
   updateUser: (user: DeepPartial<User>) => _updateUser(user),
@@ -43,7 +43,7 @@ const _addRole = jest.fn();
 const _updateRole = jest.fn();
 const _getRoleByName = jest.fn().mockImplementation(async () => produceRole());
 
-jest.mock('@/services/admin/rolesServices', () => ({
+jest.mock('@/services/roles/rolesServices', () => ({
   getRoles: () => _getRoles(),
   addRole: () => _addRole(),
   updateRole: () => _updateRole(),

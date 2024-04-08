@@ -56,7 +56,7 @@ objects:
             export CSS_API_CLIENT_ID="{{ .Data.data.CSS_API_CLIENT_ID }}"
             export CSS_API_CLIENT_SECRET="{{ .Data.data.CSS_API_CLIENT_SECRET }}"
             export GEOCODER_KEY="{{ .Data.data.GEOCODER_KEY }}"
-            export SSO_AUTH_SERVER_URI="{{ .Data.data.SSO_AUTH_SERVER_URI }}"
+            export SSO_AUTH_SERVER_URL="{{ .Data.data.SSO_AUTH_SERVER_URL }}"
             export SSO_CLIENT_ID="{{ .Data.data.SSO_CLIENT_ID }}"
             export SSO_CLIENT_SECRET="{{ .Data.data.SSO_CLIENT_SECRET }}"
             export SSO_ENVIRONMENT="{{ .Data.data.SSO_ENVIRONMENT }}"

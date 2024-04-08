@@ -28,9 +28,12 @@ export class Parcel extends Property {
   @JoinColumn({ name: 'parent_parcel_id' })
   ParentParcel: Parcel;
 
-  @OneToMany(() => ParcelFiscal, (Fiscal) => Fiscal.ParcelId, { nullable: true })
+  @OneToMany(() => ParcelFiscal, (Fiscal) => Fiscal.Parcel, { nullable: true, cascade: true })
   Fiscals: ParcelFiscal[];
 
-  @OneToMany(() => ParcelEvaluation, (Evaluation) => Evaluation.ParcelId, { nullable: true })
+  @OneToMany(() => ParcelEvaluation, (Evaluation) => Evaluation.Parcel, {
+    nullable: true,
+    cascade: true,
+  })
   Evaluations: ParcelEvaluation[];
 }

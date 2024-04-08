@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { AppDataSource } from '@/appDataSource';
+import { IKeycloakRole } from '@/services/keycloak/IKeycloakRole';
 import userServices from '@/services/users/usersServices';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { User } from '@/typeorm/Entities/User';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { faker } from '@faker-js/faker';
 import { produceAgency, produceUser } from 'tests/testUtils/factories';
+import { DeepPartial } from 'typeorm';
+import { z } from 'zod';
 
 const _usersFindOneBy = jest
   .spyOn(AppDataSource.getRepository(User), 'findOneBy')
@@ -13,12 +16,27 @@ const _usersFindOneBy = jest
 
 const _usersUpdate = jest
   .spyOn(AppDataSource.getRepository(User), 'update')
-  .mockImplementation(async (_where) => ({ raw: {}, generatedMaps: [] }));
+  .mockImplementation(async (id, user) => ({ raw: {}, generatedMaps: [user] }));
 
 const _usersInsert = jest
   .spyOn(AppDataSource.getRepository(User), 'insert')
   .mockImplementation(async (_where) => ({ raw: {}, generatedMaps: [], identifiers: [] }));
 
+const _usersFind = jest
+  .spyOn(AppDataSource.getRepository(User), 'find')
+  .mockImplementation(async () => [produceUser()]);
+
+const _usersFindOne = jest
+  .spyOn(AppDataSource.getRepository(User), 'findOne')
+  .mockImplementation(async () => produceUser());
+
+const _usersSave = jest
+  .spyOn(AppDataSource.getRepository(User), 'save')
+  .mockImplementation(async (user: DeepPartial<User> & User) => user);
+
+const _usersRemove = jest
+  .spyOn(AppDataSource.getRepository(User), 'remove')
+  .mockImplementation(async (user) => user);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const _requestsCreateQueryBuilder: any = {
   select: () => _requestsCreateQueryBuilder,
@@ -27,6 +45,14 @@ const _requestsCreateQueryBuilder: any = {
   andWhere: () => _requestsCreateQueryBuilder,
   orderBy: () => _requestsCreateQueryBuilder,
 };
+
+jest.mock('@/services/keycloak/keycloakService', () => ({
+  getKeycloakRoles: (): IKeycloakRole[] => [{ name: 'abc' }],
+  getKeycloakUserRoles: (): IKeycloakRole[] => [{ name: 'abc' }],
+  updateKeycloakUserRoles: (username: string, roles: string[]): IKeycloakRole[] =>
+    roles.map((a) => ({ name: a })),
+  syncKeycloakUser: (username: string) => ({ ...produceUser(), Username: username }),
+}));
 
 jest
   .spyOn(AppDataSource.getRepository(User), 'find')
@@ -207,5 +233,76 @@ describe('UNIT - User services', () => {
     //   expect(result.username).toBe(bceidUser.preferred_username);
     //   expect(result.guid).toBe('00000000-0000-0000-0000-000000000000')
     // })
+  });
+
+  describe('getUsers', () => {
+    it('should get a list of all users', async () => {
+      const users = await userServices.getUsers({});
+      expect(_usersFind).toHaveBeenCalledTimes(1);
+      expect(Array.isArray(users)).toBe(true);
+    });
+  });
+  describe('addUser', () => {
+    it('should insert and return the added user', async () => {
+      const user = produceUser();
+      _usersFindOne.mockResolvedValueOnce(null);
+      const retUser = await userServices.addUser(user);
+      expect(_usersSave).toHaveBeenCalledTimes(1);
+      expect(user.Id).toBe(retUser.Id);
+    });
+
+    it('should throw an error if the user already exists', async () => {
+      const user = produceUser();
+      _usersFindOne.mockResolvedValueOnce(user);
+      expect(async () => await userServices.addUser(user)).rejects.toThrow();
+    });
+  });
+  describe('updateUser', () => {
+    it('should update and return the added user', async () => {
+      const user = produceUser();
+      const retUser = await userServices.updateUser(user);
+      expect(_usersUpdate).toHaveBeenCalledTimes(1);
+      expect(user.Id).toBe(retUser.Id);
+    });
+
+    it('should throw an error if the user does not exist', () => {
+      const user = produceUser();
+      _usersFindOne.mockResolvedValueOnce(undefined);
+      expect(async () => await userServices.updateUser(user)).rejects.toThrow();
+    });
+  });
+  describe('deleteUser', () => {
+    it('should delete and return the deleted user', async () => {
+      const user = produceUser();
+      const retUser = await userServices.deleteUser(user);
+      expect(_usersRemove).toHaveBeenCalledTimes(1);
+      expect(user.Id).toBe(retUser.Id);
+    });
+
+    it('should throw an error if the user does not exist', () => {
+      const user = produceUser();
+      _usersFindOne.mockResolvedValueOnce(undefined);
+      expect(async () => await userServices.deleteUser(user)).rejects.toThrow();
+    });
+  });
+  describe('getRoles', () => {
+    it('should get names of roles in keycloak', async () => {
+      const roles = await userServices.getKeycloakRoles();
+      expect(z.string().array().safeParse(roles).success).toBe(true);
+    });
+  });
+  describe('getUserRoles', () => {
+    it('should get names of users roles in keycloak', async () => {
+      const roles = await userServices.getKeycloakUserRoles('test');
+      expect(z.string().array().safeParse(roles).success).toBe(true);
+    });
+  });
+  describe('updateUserRoles', () => {
+    it('should update (put style) users roles in keycloak', async () => {
+      const newRoles = ['admin', 'test'];
+      const roles = await userServices.updateKeycloakUserRoles('test', newRoles);
+      expect(z.string().array().safeParse(roles).success).toBe(true);
+      newRoles.forEach((a, i) => expect(a).toBe(newRoles[i]));
+    });
   });
 });

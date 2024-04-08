@@ -6,7 +6,6 @@ import DeleteDialog from '../dialog/DeleteDialog';
 import { deleteAccountConfirmText } from '@/constants/strings';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import { FormProvider, useForm } from 'react-hook-form';
-import TextInput from '@/components/form/TextFormField';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
@@ -14,12 +13,17 @@ import { User } from '@/hooks/api/useUsersApi';
 import { AuthContext } from '@/contexts/authContext';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { Role } from '@/hooks/api/useRolesApi';
+import TextFormField from '../form/TextFormField';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 import { useParams } from 'react-router-dom';
 
 interface IUserDetail {
   onClose: () => void;
+}
+
+interface UserProfile extends User {
+  Provider: string;
 }
 
 const UserDetail = ({ onClose }: IUserDetail) => {
@@ -49,7 +53,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
   };
 
   const userProfileData = {
-    DisplayName: data?.DisplayName,
+    Provider: data?.Username.includes('idir') ? 'IDIR' : 'BCeID',
     Email: data?.Email,
     FirstName: data?.FirstName,
     LastName: data?.LastName,
@@ -67,7 +71,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
     }
   };
 
-  const customFormatterProfile = (key: keyof User, val: any) => {
+  const customFormatterProfile = (key: keyof UserProfile, val: any) => {
     if (key === 'Agency' && val) {
       return <Typography>{(val as Agency).Name}</Typography>;
     }
@@ -75,7 +79,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
 
   const profileFormMethods = useForm({
     defaultValues: {
-      DisplayName: '',
+      Provider: '',
       Email: '',
       FirstName: '',
       LastName: '',
@@ -98,7 +102,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
 
   useEffect(() => {
     profileFormMethods.reset({
-      DisplayName: userProfileData.DisplayName,
+      Provider: data?.Username.includes('idir') ? 'IDIR' : 'BCeID',
       Email: userProfileData.Email,
       FirstName: userProfileData.FirstName,
       LastName: userProfileData.LastName,
@@ -158,8 +162,14 @@ const UserDetail = ({ onClose }: IUserDetail) => {
         onConfirm={async () => {
           const isValid = await profileFormMethods.trigger();
           if (isValid) {
+            const formValues = profileFormMethods.getValues();
+            // Remove Provider. Field is frontend only.
+            formValues.Provider = undefined;
             api.users
-              .updateUser(id, { Id: id, ...profileFormMethods.getValues() })
+              .updateUser(id, {
+                Id: id,
+                ...formValues,
+              })
               .then(() => refreshData());
             setOpenProfileDialog(false);
           }
@@ -169,16 +179,16 @@ const UserDetail = ({ onClose }: IUserDetail) => {
         <FormProvider {...profileFormMethods}>
           <Grid mt={'1rem'} spacing={2} container>
             <Grid item xs={6}>
-              <TextInput fullWidth name={'DisplayName'} label={'IDIR/BCeID'} disabled />
+              <TextFormField fullWidth name={'Provider'} label={'Provider'} disabled />
             </Grid>
             <Grid item xs={6}>
-              <TextInput required fullWidth name={'Email'} label={'Email'} />
+              <TextFormField required fullWidth name={'Email'} label={'Email'} />
             </Grid>
             <Grid item xs={6}>
-              <TextInput required fullWidth name={'FirstName'} label={'First Name'} />
+              <TextFormField required fullWidth name={'FirstName'} label={'First Name'} />
             </Grid>
             <Grid item xs={6}>
-              <TextInput required fullWidth name={'LastName'} label={'Last Name'} />
+              <TextFormField required fullWidth name={'LastName'} label={'Last Name'} />
             </Grid>
             <Grid item xs={12}>
               <AutocompleteFormField
@@ -189,7 +199,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextInput name={'Position'} fullWidth label={'Position'} />
+              <TextFormField name={'Position'} fullWidth label={'Position'} />
             </Grid>
           </Grid>
         </FormProvider>

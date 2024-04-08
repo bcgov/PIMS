@@ -3,12 +3,12 @@ import { Evaluation } from '@/typeorm/Entities/abstractEntities/Evaluation';
 import { Entity, Column, Index, ManyToOne, JoinColumn, PrimaryColumn } from 'typeorm';
 
 @Entity()
-@Index(['ParcelId', 'EvaluationKey'])
+@Index(['ParcelId', 'EvaluationKey', 'Year'], { unique: true })
 export class ParcelEvaluation extends Evaluation {
   @PrimaryColumn({ name: 'parcel_id', type: 'int' })
   ParcelId: number;
 
-  @ManyToOne(() => Parcel, (Parcel) => Parcel.Id)
+  @ManyToOne(() => Parcel, (Parcel) => Parcel.Evaluations, { orphanedRowAction: 'disable' })
   @JoinColumn({ name: 'parcel_id' })
   Parcel: Parcel;
 

@@ -11,12 +11,12 @@ export interface Role {
 
 const useRolesApi = (absoluteFetch: IFetch) => {
   const getKeycloakRoles = async () => {
-    const { parsedBody } = await absoluteFetch.get(`/admin/users/roles/`);
+    const { parsedBody } = await absoluteFetch.get(`/users/roles/`);
     return parsedBody as KeycloakRole[];
   };
 
   const getInternalRoles = async () => {
-    const { parsedBody } = await absoluteFetch.get(`/admin/roles/`);
+    const { parsedBody } = await absoluteFetch.get(`/roles/`);
     return parsedBody as Role[];
   };
 

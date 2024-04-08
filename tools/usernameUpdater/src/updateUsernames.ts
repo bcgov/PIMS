@@ -139,6 +139,33 @@ const updateUsernames = async () => {
           })
         }
       }
+      // Try and fix missing last names (last name also in first name)
+      if (!user.LastName) {
+        // Is there exactly 2 first names?
+        const userNames = user.FirstName.split(' ');
+        if (userNames.length === 2){
+          const [first, last] = userNames;
+          try {
+            await userRepo.update({ Id: user.Id }, {
+              FirstName: first,
+              LastName: last
+            })
+          } catch (e) {
+            console.log(`Failed to update names for user ${user.Username}`)
+          }
+          // Also handle exactly 3. e.g. Joe Van Name
+        } else if (userNames.length === 3){
+          const [first, pre, last] = userNames;
+          try {
+            await userRepo.update({ Id: user.Id }, {
+              FirstName: first,
+              LastName: `${pre} ${last}`
+            })
+          } catch (e) {
+            console.log(`Failed to update names for user ${user.Username}`)
+          }
+        }
+      }
     } catch (e) {
       console.log(e)
       failures++;
