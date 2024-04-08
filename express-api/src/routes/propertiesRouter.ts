@@ -1,4 +1,5 @@
 import controllers from '@/controllers';
+import { getPropertiesFuzzySearch } from '@/controllers/properties/propertiesController';
 import catchErrors from '@/utilities/controllerErrorWrapper';
 import express from 'express';
 
@@ -14,6 +15,8 @@ const {
 } = controllers;
 
 // TODO: Could these just be GET requests with query params? Then no need for /filter routes. Would cut controllers in half too.
+
+router.route('/search/fuzzy').get(catchErrors(getPropertiesFuzzySearch));
 
 router.route('/search').get(catchErrors(getProperties));
 router.route('/search/filter').post(catchErrors(getPropertiesFilter));
