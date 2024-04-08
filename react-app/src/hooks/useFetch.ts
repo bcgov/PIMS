@@ -43,8 +43,15 @@ const useFetch = (baseUrl?: string) => {
       } else {
         response = await fetch(url, params);
       }
+
       if (response.status === 401) {
-        // TODO: Redirect to page that informs user of this issue, then call this login after.
+        // Token has expired, save the page user was on
+        // This can be reloaded after login
+        if (sessionStorage) {
+          sessionStorage.setItem('401redirect', window.location.href);
+        }
+
+        // Send to login page, this will redirect home after
         keycloak.login({ idpHint: 'idir' });
       }
       const text = await response.text();

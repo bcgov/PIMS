@@ -27,6 +27,13 @@ const Landing = () => {
 
 export const Home = () => {
   const auth = useContext(AuthContext);
+  if (sessionStorage) {
+    const preLoginLocation = sessionStorage.getItem('401redirect');
+    if (preLoginLocation) {
+      sessionStorage.removeItem('401redirect');
+      window.location.href = preLoginLocation;
+    }
+  }
   return (
     <Box
       flexDirection={'column'}
