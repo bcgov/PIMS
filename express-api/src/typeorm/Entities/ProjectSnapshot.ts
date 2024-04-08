@@ -8,7 +8,7 @@ import {
   PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Project } from '@/typeorm/Entities/Project';
+import { Project, ProjectMetadata } from '@/typeorm/Entities/Project';
 
 @Entity()
 @Index(['ProjectId', 'SnapshotOn'])
@@ -40,6 +40,6 @@ export class ProjectSnapshot extends BaseEntity {
   @Column('timestamp')
   SnapshotOn: Date;
 
-  @Column('text', { nullable: true })
-  Metadata: string;
+  @Column('jsonb', { nullable: true })
+  Metadata: ProjectMetadata;
 }
