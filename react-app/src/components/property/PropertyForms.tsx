@@ -2,10 +2,12 @@ import { Box, Grid, InputAdornment, Tooltip, Typography } from '@mui/material';
 import TextFormField from '../form/TextFormField';
 import AutocompleteFormField from '../form/AutocompleteFormField';
 import SelectFormField, { ISelectMenuItem } from '../form/SelectFormField';
-import { Help } from '@mui/icons-material';
+import { Room, Help } from '@mui/icons-material';
 import { LookupObject } from '@/hooks/api/useLookupApi';
 import DateFormField from '../form/DateFormField';
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { MapContainer, Marker, TileLayer, WMSTileLayer } from 'react-leaflet';
+import { LatLng } from 'leaflet';
 
 export type PropertyType = 'Building' | 'Parcel';
 
@@ -18,8 +20,27 @@ interface IGeneralInformationForm {
   adminAreas: ISelectMenuItem[];
 }
 
+const PARCEL_LAYER_URL =
+  'https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/ows';
+
 export const GeneralInformationForm = (props: IGeneralInformationForm) => {
   const { propertyType, adminAreas } = props;
+  const [map, setMap] = useState(null);
+  const [position, setPosition] = useState<LatLng>(null);
+  const onMove = useCallback(() => {
+    if (map) {
+      setPosition(map.getCenter());
+    }
+  }, [map]);
+
+  useEffect(() => {
+    if (map) {
+      map.on('move', onMove);
+      return () => {
+        map.off('move', onMove);
+      };
+    }
+  }, [map, onMove]);
   return (
     <>
       <Typography mt={'2rem'} variant="h5">
@@ -80,6 +101,34 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
                 val.length == 0 || val.length == 6 || 'Should be exactly 6 characters.',
             }}
           />
+        </Grid>
+        <Grid item xs={12}>
+          <Box height={'500px'}>
+            <MapContainer
+              style={{ height: '100%' }}
+              bounds={[
+                [51.2516, -129.371],
+                [48.129, -122.203],
+              ]}
+              ref={setMap}
+            >
+              <TileLayer url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              <WMSTileLayer
+                url={PARCEL_LAYER_URL}
+                format="image/png; mode=8bit"
+                transparent={true}
+                opacity={0.5}
+                layers="WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW"
+              />
+              <Box display={'flex'} alignItems={'center'} justifyContent={'center'}>
+                <Room
+                  color="primary"
+                  sx={{ zIndex: 400, position: 'absolute', marginBottom: '12px' }}
+                />
+              </Box>
+            </MapContainer>
+          </Box>
+          <Typography>{`Latitude: ${position?.lat.toFixed(4)}, Longitude: ${position?.lng.toFixed(4)}`}</Typography>
         </Grid>
       </Grid>
     </>
