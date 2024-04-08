@@ -5,8 +5,7 @@ import { decodeJWT } from '@/utilities/decodeJWT';
 import { stubResponse } from '@/utilities/stubResponse';
 import { UserFiltering, UserFilteringSchema } from '@/controllers/users/usersSchema';
 import { z } from 'zod';
-import { isAdmin } from '@/utilities/authorizationCheck';
-
+import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 /**
  * @description Function to filter users based on agencies
  * @param {Request}     req Incoming request.
@@ -22,7 +21,7 @@ const filterUsersByAgencies = async (req: Request, res: Response, kcUser: Keyclo
   const filterResult = filter.data;
 
   let users;
-  if (isAdmin(kcUser)) {
+  if (isAdmin(kcUser) || isAuditor(kcUser)) {
     users = await userServices.getUsers(filterResult as UserFiltering);
   } else {
     // Get agencies associated with the requesting user
@@ -249,7 +248,7 @@ export const addUser = async (req: Request, res: Response) => {
  */
 export const getUserById = async (req: Request, res: Response) => {
   /**
-   * #swagger.tags = ['Users - Admin']
+   * #swagger.tags = ['Users']
    * #swagger.description = 'Returns an user that matches the supplied ID.'
    * #swagger.security = [{
             "bearerAuth": []
@@ -257,12 +256,23 @@ export const getUserById = async (req: Request, res: Response) => {
    */
   const id = req.params.id;
   const uuid = z.string().uuid().safeParse(id);
+  const kcUser = req.user as unknown as KeycloakUser;
   if (uuid.success) {
     const user = await userServices.getUserById(uuid.data);
+
     if (user) {
+      if (!isAdmin(kcUser) && !isAuditor(kcUser)) {
+        // check if user has the correct agencies
+        const usersAgencies = await userServices.hasAgencies(kcUser.preferred_username, [
+          user.AgencyId,
+        ]);
+        if (!usersAgencies) {
+          return res.status(403).send('User does not have permission to view this user');
+        }
+      }
       return res.status(200).send(user);
     } else {
-      return res.status(404);
+      return res.status(404).send('User not found');
     }
   } else {
     return res.status(400).send('Could not parse UUID.');
