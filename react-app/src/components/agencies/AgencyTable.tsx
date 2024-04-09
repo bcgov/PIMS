@@ -136,6 +136,7 @@ const AgencyTable = (props: IAgencyTable) => {
       }
     >
       <FilterSearchDataGrid
+        name="agencies"
         onPresetFilterChange={selectPresetFilter}
         getRowId={(row: Agency) => row.Id}
         defaultFilter={'All Agencies'}
