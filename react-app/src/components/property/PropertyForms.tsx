@@ -6,7 +6,7 @@ import { Room, Help } from '@mui/icons-material';
 import { LookupObject } from '@/hooks/api/useLookupApi';
 import DateFormField from '../form/DateFormField';
 import React, { useCallback, useEffect, useState } from 'react';
-import { LatLng } from 'leaflet';
+import { LatLng, Map } from 'leaflet';
 import usePimsApi from '@/hooks/usePimsApi';
 import { centroid } from '@turf/turf';
 import ParcelMap from '../map/ParcelMap';
@@ -28,12 +28,20 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
 
   const formContext = useFormContext();
   const api = usePimsApi();
-  const [map, setMap] = useState(null);
+  const [map, setMap] = useState<Map>(null);
   const [position, setPosition] = useState<LatLng>(null);
 
   const updateLocation = (latlng: LatLng) => {
     formContext.setValue('Location', { x: latlng.lng, y: latlng.lat }); //Technically, longitude is x and latitude is y...
   };
+
+  useEffect(() => {
+    const vals = formContext?.getValues();
+    if (vals?.Location) {
+      map?.setView([vals.Location.y, vals.Location.x], 17);
+      onMove();
+    }
+  }, [formContext, map]);
 
   const onMove = useCallback(() => {
     if (map) {
@@ -74,9 +82,9 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             onBlur={(event) => {
               api.parcel.getParcelByPid(event.target.value).then((response) => {
                 if (response.features.length) {
-                  const coordArr: number[] = centroid(response.features[0]).geometry.coordinates;
-                  setPosition(new LatLng(coordArr[1], coordArr[0]));
-                  map.setView(coordArr.reverse(), 17);
+                  const coordArr: [number, number] = centroid(response.features[0]).geometry
+                    .coordinates;
+                  map.setView([coordArr[1], coordArr[0]], 17);
                 }
               });
             }}
@@ -98,8 +106,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
               api.parcel.getParcelByPin(event.target.value).then((response) => {
                 if (response.features.length) {
                   const coordArr: number[] = centroid(response.features[0]).geometry.coordinates;
-                  setPosition(new LatLng(coordArr[1], coordArr[0]));
-                  map.setView(coordArr.reverse(), 17);
+                  map.setView([coordArr[1], coordArr[0]], 17);
                 }
               });
             }}

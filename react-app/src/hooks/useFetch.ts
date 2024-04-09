@@ -38,8 +38,6 @@ const useFetch = (baseUrl?: string) => {
         ...params,
       };
 
-      console.log(JSON.stringify(params));
-
       if (params && params.body) {
         params.body = JSON.stringify(params.body);
       }
