@@ -156,7 +156,7 @@ const AddProperty = () => {
       <Button
         onClick={async () => {
           const isValid = await formMethods.trigger();
-          if (isValid) {
+          if (isValid && formMethods.getValues()['Location'] != null) {
             setShowErrorTest(false);
             if (propertyType === 'Parcel') {
               const formValues = formMethods.getValues();
