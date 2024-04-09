@@ -6,8 +6,11 @@ import { Room, Help } from '@mui/icons-material';
 import { LookupObject } from '@/hooks/api/useLookupApi';
 import DateFormField from '../form/DateFormField';
 import React, { useCallback, useEffect, useState } from 'react';
-import { MapContainer, Marker, TileLayer, WMSTileLayer } from 'react-leaflet';
 import { LatLng } from 'leaflet';
+import usePimsApi from '@/hooks/usePimsApi';
+import { centroid } from '@turf/turf';
+import ParcelMap from '../map/ParcelMap';
+import { useFormContext } from 'react-hook-form';
 
 export type PropertyType = 'Building' | 'Parcel';
 
@@ -20,16 +23,22 @@ interface IGeneralInformationForm {
   adminAreas: ISelectMenuItem[];
 }
 
-const PARCEL_LAYER_URL =
-  'https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/ows';
-
 export const GeneralInformationForm = (props: IGeneralInformationForm) => {
   const { propertyType, adminAreas } = props;
+
+  const formContext = useFormContext();
+  const api = usePimsApi();
   const [map, setMap] = useState(null);
   const [position, setPosition] = useState<LatLng>(null);
+
+  const updateLocation = (latlng: LatLng) => {
+    formContext.setValue('Location', { x: latlng.lng, y: latlng.lat }); //Technically, longitude is x and latitude is y...
+  };
+
   const onMove = useCallback(() => {
     if (map) {
       setPosition(map.getCenter());
+      updateLocation(map.getCenter());
     }
   }, [map]);
 
@@ -41,6 +50,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
       };
     }
   }, [map, onMove]);
+
   return (
     <>
       <Typography mt={'2rem'} variant="h5">
@@ -61,6 +71,15 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             name={'PID'}
             label={'PID'}
             numeric
+            onBlur={(event) => {
+              api.parcel.getParcelByPid(event.target.value).then((response) => {
+                if (response.features.length) {
+                  const coordArr: number[] = centroid(response.features[0]).geometry.coordinates;
+                  setPosition(new LatLng(coordArr[1], coordArr[0]));
+                  map.setView(coordArr.reverse(), 17);
+                }
+              });
+            }}
             rules={{
               validate: (val, formVals) =>
                 (val.length <= 9 &&
@@ -75,6 +94,15 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             fullWidth
             name={'PIN'}
             label={'PIN'}
+            onBlur={(event) => {
+              api.parcel.getParcelByPin(event.target.value).then((response) => {
+                if (response.features.length) {
+                  const coordArr: number[] = centroid(response.features[0]).geometry.coordinates;
+                  setPosition(new LatLng(coordArr[1], coordArr[0]));
+                  map.setView(coordArr.reverse(), 17);
+                }
+              });
+            }}
             rules={{
               validate: (val, formVals) =>
                 (val.length <= 9 &&
@@ -103,32 +131,19 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <Box height={'500px'}>
-            <MapContainer
-              style={{ height: '100%' }}
-              bounds={[
-                [51.2516, -129.371],
-                [48.129, -122.203],
-              ]}
-              ref={setMap}
-            >
-              <TileLayer url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" />
-              <WMSTileLayer
-                url={PARCEL_LAYER_URL}
-                format="image/png; mode=8bit"
-                transparent={true}
-                opacity={0.5}
-                layers="WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW"
+          <ParcelMap height={'500px'} mapRef={setMap}>
+            <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height={'100%'}>
+              <Room
+                color="primary"
+                sx={{ zIndex: 400, position: 'relative', marginBottom: '12px' }}
               />
-              <Box display={'flex'} alignItems={'center'} justifyContent={'center'}>
-                <Room
-                  color="primary"
-                  sx={{ zIndex: 400, position: 'absolute', marginBottom: '12px' }}
-                />
-              </Box>
-            </MapContainer>
-          </Box>
-          <Typography>{`Latitude: ${position?.lat.toFixed(4)}, Longitude: ${position?.lng.toFixed(4)}`}</Typography>
+            </Box>
+          </ParcelMap>
+          <Typography textAlign={'center'}>
+            {position
+              ? `Latitude: ${position.lat.toFixed(4)}, Longitude: ${position.lng.toFixed(4)}`
+              : 'Fill fields or drag map to set location.'}
+          </Typography>
         </Grid>
       </Grid>
     </>
