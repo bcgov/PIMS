@@ -1,5 +1,6 @@
 import { FeatureCollection } from 'geojson';
 import { IFetch } from '../useFetch';
+import { LatLng } from 'leaflet';
 
 const useParcelLayerApi = (absoluteFetch: IFetch) => {
   const getFeatureUrl =
@@ -19,9 +20,16 @@ const useParcelLayerApi = (absoluteFetch: IFetch) => {
     return parsedBody as FeatureCollection;
   };
 
+  const getParcelByLatLng = async (latlng: LatLng) => {
+    const finalUrl = `${getFeatureUrl}&srsName=EPSG:4326&count=1&&cql_filter=CONTAINS(SHAPE, SRID=4326;POINT ( ${latlng.lng} ${latlng.lat}))`;
+    const { parsedBody } = await absoluteFetch.get(finalUrl, {}, { headers: {} });
+    return parsedBody as FeatureCollection;
+  };
+
   return {
     getParcelByPid,
     getParcelByPin,
+    getParcelByLatLng,
   };
 };
 

@@ -11,6 +11,7 @@ import usePimsApi from '@/hooks/usePimsApi';
 import { centroid } from '@turf/turf';
 import ParcelMap from '../map/ParcelMap';
 import { useFormContext } from 'react-hook-form';
+import { FeatureCollection } from 'geojson';
 
 export type PropertyType = 'Building' | 'Parcel';
 
@@ -59,6 +60,13 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
     }
   }, [map, onMove]);
 
+  const handleFeatureCollectionResponse = (response: FeatureCollection) => {
+    if (response.features.length) {
+      const coordArr: [number, number] = centroid(response.features[0]).geometry.coordinates;
+      map.setView([coordArr[1], coordArr[0]], 17);
+    }
+  };
+
   return (
     <>
       <Typography mt={'2rem'} variant="h5">
@@ -80,13 +88,9 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             label={'PID'}
             numeric
             onBlur={(event) => {
-              api.parcel.getParcelByPid(event.target.value).then((response) => {
-                if (response.features.length) {
-                  const coordArr: [number, number] = centroid(response.features[0]).geometry
-                    .coordinates;
-                  map.setView([coordArr[1], coordArr[0]], 17);
-                }
-              });
+              api.parcelLayer
+                .getParcelByPid(event.target.value)
+                .then(handleFeatureCollectionResponse);
             }}
             rules={{
               validate: (val, formVals) =>
@@ -103,12 +107,9 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             name={'PIN'}
             label={'PIN'}
             onBlur={(event) => {
-              api.parcel.getParcelByPin(event.target.value).then((response) => {
-                if (response.features.length) {
-                  const coordArr: number[] = centroid(response.features[0]).geometry.coordinates;
-                  map.setView([coordArr[1], coordArr[0]], 17);
-                }
-              });
+              api.parcelLayer
+                .getParcelByPin(event.target.value)
+                .then(handleFeatureCollectionResponse);
             }}
             rules={{
               validate: (val, formVals) =>
