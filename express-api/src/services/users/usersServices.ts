@@ -17,7 +17,7 @@ interface NormalizedKeycloakUser {
   display_name: string;
 }
 
-const getUser = async (username: string): Promise<User | null> => {
+export const getUser = async (username: string): Promise<User | null> => {
   const user = await AppDataSource.getRepository(User).findOneBy({
     Username: username,
   });
@@ -262,7 +262,10 @@ const updateUser = async (user: DeepPartial<User>) => {
   if (!resource) {
     throw new ErrorWithCode('Resource does not exist.', 404);
   }
-  const retUser = await AppDataSource.getRepository(User).update(user.Id, user);
+  const retUser = await AppDataSource.getRepository(User).update(user.Id, {
+    ...user,
+    DisplayName: `${user.LastName}, ${user.FirstName}`,
+  });
   return retUser.generatedMaps[0];
 };
 
