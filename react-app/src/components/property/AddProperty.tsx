@@ -68,6 +68,7 @@ const AddProperty = () => {
       TotalArea: '',
       RentableArea: '',
       BuildingTenancy: '',
+      Location: null,
       BuildingTenancyUpdatedOn: dayjs(),
       Fiscals: years.map((yr) => ({
         FiscalYear: yr,
@@ -155,7 +156,7 @@ const AddProperty = () => {
       <Button
         onClick={async () => {
           const isValid = await formMethods.trigger();
-          if (isValid) {
+          if (isValid && formMethods.getValues()['Location'] != null) {
             setShowErrorTest(false);
             if (propertyType === 'Parcel') {
               const formValues = formMethods.getValues();
@@ -167,7 +168,6 @@ const AddProperty = () => {
                 PropertyTypeId: 0,
                 AgencyId: userContext.pimsUser.data.AgencyId,
                 IsVisibleToOtherAgencies: false,
-                Location: { x: 0, y: 0 },
                 Fiscals: formValues.Fiscals.map((a) => ({
                   ...a,
                   EffectiveDate: a?.EffectiveDate?.toDate(),
@@ -190,10 +190,6 @@ const AddProperty = () => {
                 PropertyTypeId: 0,
                 AgencyId: userContext.pimsUser.data.AgencyId,
                 IsVisibleToOtherAgencies: false,
-                Location: {
-                  x: 0,
-                  y: 0,
-                },
                 Fiscals: formValues.Fiscals.map((a) => ({
                   ...a,
                   EffectiveDate: a?.EffectiveDate?.toDate(),
