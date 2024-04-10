@@ -6,7 +6,7 @@ import { Parcel } from '@/typeorm/Entities/Parcel';
 import { PropertyType } from './PropertyType';
 
 @Entity()
-@Index(['ProjectId', 'PropertyType', 'ParcelId', 'BuildingId'])
+@Index(['ProjectId', 'PropertyType', 'ParcelId', 'BuildingId'], { unique: true })
 export class ProjectProperty extends BaseEntity {
   @PrimaryGeneratedColumn()
   Id: number;
