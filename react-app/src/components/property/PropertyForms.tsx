@@ -8,6 +8,7 @@ import DateFormField from '../form/DateFormField';
 import React, { useEffect, useRef, useState } from 'react';
 import usePimsApi from '@/hooks/usePimsApi';
 import { useFormContext } from 'react-hook-form';
+import { IAddressModel } from '@/hooks/api/useToolsApi';
 
 export type PropertyType = 'Building' | 'Parcel';
 
@@ -23,7 +24,7 @@ interface IGeneralInformationForm {
 export const GeneralInformationForm = (props: IGeneralInformationForm) => {
   const api = usePimsApi();
   const { propertyType, adminAreas } = props;
-  const [addressOptions, setAddressOptions] = useState<string[]>([]);
+  const [addressOptions, setAddressOptions] = useState<IAddressModel[]>([]);
 
   const formContext = useFormContext();
 
@@ -31,16 +32,14 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
     const formValues = formContext.getValues();
     if (formValues.Address1) {
       api.tools.getAddresses(formValues.Address1, 40, 5).then((resolved) => {
-        setAddressOptions(
-          [...new Set(resolved ?? [])].filter((x) => x).map((res) => res.fullAddress) ?? [],
-        );
+        setAddressOptions([...new Set(resolved ?? [])].filter((x) => x) ?? []);
       });
     }
   }, [formContext]);
 
   const previousController = useRef<AbortController>();
   const onAddressInputChange = (_event: any, value: string) => {
-    if (value && !addressOptions.find((a) => a === value)) {
+    if (value && !addressOptions.find((a) => a.address1 === value)) {
       if (previousController.current) {
         previousController.current.abort();
       }
@@ -51,7 +50,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
         .getAddresses(value, 40, 5, signal)
         .then((resolved) => {
           setAddressOptions(
-            [...new Set(resolved ?? [])].filter((x) => x).map((res) => res.fullAddress) ?? [],
+            [...new Set(resolved ?? [])].filter((x) => x) ?? [],
             //Call set constructor to eliminate duplicates, then filter out empty values.
           );
         })
@@ -74,7 +73,13 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
         <Grid item xs={12}>
           <AutocompleteFormField
             onInputChange={onAddressInputChange}
-            options={addressOptions.map((address) => ({ value: address, label: address }))}
+            onChangeSideEffect={() => {
+              console.log(`Current addressOptions: ${JSON.stringify(addressOptions)}`);
+            }}
+            options={addressOptions.map((address) => ({
+              value: address.address1,
+              label: address.address1,
+            }))}
             required={propertyType === 'Building'}
             name={'Address1'}
             label={`Street address${propertyType === 'Parcel' ? ' (Leave blank if no address)' : ''}`}

@@ -26,6 +26,7 @@ type AutocompleteFormProps = {
   disableOptionsFunction?: (option: ISelectMenuItem) => boolean;
   disableClearable?: boolean;
   defaultValue?: ISelectMenuItem | null;
+  onChangeSideEffect?: (value: ISelectMenuItem) => void;
 };
 
 const CustomPaper = (props) => {
@@ -44,15 +45,10 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
     disableClearable,
     onInputChange,
     disableOptionsFunction,
+    onChangeSideEffect,
     ...rest
   } = props;
-  useEffect(() => {
-    console.log('new options' + JSON.stringify(options, null, 2));
-    console.log('getvalues: ' + getValues()[name]);
-    console.log(
-      'found this ' + JSON.stringify(options.find((option) => option.value === getValues()[name])),
-    );
-  }, [options]);
+
   return (
     <Controller
       name={name}
@@ -96,8 +92,6 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
             />
           )}
           onChange={(_, data, reason) => {
-            console.log(reason);
-            console.log(JSON.stringify(data));
             if (reason === 'clear') {
               onChange('');
             } else if (reason === 'createOption' || reason === 'removeOption') {
@@ -105,6 +99,7 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
             } else {
               onChange(data.value);
             }
+            onChangeSideEffect?.(data.value);
           }}
           isOptionEqualToValue={(option, value) => option.value === value.value}
           value={options.find((option) => option.value === getValues()[name]) ?? null}
