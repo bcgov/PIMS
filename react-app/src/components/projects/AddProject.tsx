@@ -18,251 +18,46 @@ import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Delete, Search } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import usePimsApi from '@/hooks/usePimsApi';
+import { Parcel, ParcelEvaluation } from '@/hooks/api/useParcelsApi';
+import { Building, BuildingEvaluation } from '@/hooks/api/useBuildingsApi';
 
 interface IDisposalProjectSearch {
   rows: any[];
   setRows: (a: any[]) => void;
 }
 
+type ParcelWithType = Parcel & {
+  Type: string;
+};
+
+type BuildingWithType = Building & {
+  Type: string;
+};
+
 const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
-  const data = [
-    {
-      CreatedById: '0edf3fce-20ce-414e-b53f-11cd3dbf4976',
-      CreatedOn: '2024-03-28T01:48:09.930Z',
-      UpdatedById: '5cdf645d-26b2-4a6b-b3c6-84c2eda011bd',
-      UpdatedOn: '2024-04-04T03:24:14.126Z',
-      Id: 3,
-      Name: '',
-      Description: 'AAAAA',
-      ClassificationId: 4,
-      Classification: {
-        CreatedById: '00000000-0000-0000-0000-000000000000',
-        CreatedOn: '2023-01-18T01:58:34.750Z',
-        UpdatedById: null,
-        UpdatedOn: null,
-        Id: 4,
-        Name: 'Disposed',
-        IsDisabled: false,
-        SortOrder: 5,
-        IsVisible: false,
-      },
-      AgencyId: 1,
-      Agency: {
-        CreatedById: '00000000-0000-0000-0000-000000000000',
-        CreatedOn: '2024-03-27T17:12:43.658Z',
-        UpdatedById: '0edf3fce-20ce-414e-b53f-11cd3dbf4976',
-        UpdatedOn: '2024-03-29T02:13:28.548Z',
-        Id: 1,
-        Name: 'TESTY',
-        IsDisabled: false,
-        SortOrder: 0,
-        Code: '0',
-        Description: 'Description stuff',
-        ParentId: null,
-        Email: 'testingemail@gmail.com;test123@gmail.com;testing@aaa.com',
-        SendEmail: true,
-        AddressTo: null,
-        CCEmail: '',
-      },
-      AdministrativeAreaId: 7,
-      AdministrativeArea: {
-        CreatedById: '00000000-0000-0000-0000-000000000000',
-        CreatedOn: '2023-01-18T01:58:40.246Z',
-        UpdatedById: null,
-        UpdatedOn: null,
-        Id: 7,
-        Name: 'Albert Canyon',
-        IsDisabled: false,
-        SortOrder: 0,
-        RegionalDistrictId: 14,
-        ProvinceId: 'BC',
-      },
-      IsSensitive: false,
-      IsVisibleToOtherAgencies: false,
-      Location: {
-        x: 0,
-        y: 0,
-      },
-      ProjectNumbers: null,
-      PropertyTypeId: 0,
-      PropertyType: {
-        CreatedById: '00000000-0000-0000-0000-000000000000',
-        CreatedOn: '2023-01-18T01:58:34.750Z',
-        UpdatedById: null,
-        UpdatedOn: null,
-        Id: 0,
-        Name: 'Land',
-        IsDisabled: false,
-        SortOrder: 0,
-      },
-      Address1: '1234 AAA St',
-      Address2: null,
-      Postal: '111AAA',
-      PID: 123111555,
-      PIN: 111222333,
-      SiteId: null,
-      LandArea: 1389,
-      LandLegalDescription: 'AAAAAA',
-      Zoning: null,
-      ZoningPotential: null,
-      NotOwned: true,
-      ParentParcelId: null,
-      ParentParcel: null,
-    },
-    {
-      CreatedById: '5cdf645d-26b2-4a6b-b3c6-84c2eda011bd',
-      CreatedOn: '2024-04-04T03:18:48.468Z',
-      UpdatedById: '5cdf645d-26b2-4a6b-b3c6-84c2eda011bd',
-      UpdatedOn: '2024-04-04T06:46:24.014Z',
-      Id: 5,
-      Name: '',
-      Description: '',
-      ClassificationId: 0,
-      Classification: {
-        CreatedById: '00000000-0000-0000-0000-000000000000',
-        CreatedOn: '2023-01-18T01:58:34.750Z',
-        UpdatedById: null,
-        UpdatedOn: null,
-        Id: 0,
-        Name: 'Core Operational',
-        IsDisabled: false,
-        SortOrder: 1,
-        IsVisible: true,
-      },
-      AgencyId: 1,
-      Agency: {
-        CreatedById: '00000000-0000-0000-0000-000000000000',
-        CreatedOn: '2024-03-27T17:12:43.658Z',
-        UpdatedById: '0edf3fce-20ce-414e-b53f-11cd3dbf4976',
-        UpdatedOn: '2024-03-29T02:13:28.548Z',
-        Id: 1,
-        Name: 'TESTY',
-        IsDisabled: false,
-        SortOrder: 0,
-        Code: '0',
-        Description: 'Description stuff',
-        ParentId: null,
-        Email: 'testingemail@gmail.com;test123@gmail.com;testing@aaa.com',
-        SendEmail: true,
-        AddressTo: null,
-        CCEmail: '',
-      },
-      AdministrativeAreaId: 3,
-      AdministrativeArea: {
-        CreatedById: '00000000-0000-0000-0000-000000000000',
-        CreatedOn: '2023-01-18T01:58:40.246Z',
-        UpdatedById: null,
-        UpdatedOn: null,
-        Id: 3,
-        Name: '150 Mile House',
-        IsDisabled: false,
-        SortOrder: 0,
-        RegionalDistrictId: 2,
-        ProvinceId: 'BC',
-      },
-      IsSensitive: false,
-      IsVisibleToOtherAgencies: false,
-      Location: {
-        x: 0,
-        y: 0,
-      },
-      ProjectNumbers: null,
-      PropertyTypeId: 0,
-      PropertyType: {
-        CreatedById: '00000000-0000-0000-0000-000000000000',
-        CreatedOn: '2023-01-18T01:58:34.750Z',
-        UpdatedById: null,
-        UpdatedOn: null,
-        Id: 0,
-        Name: 'Land',
-        IsDisabled: false,
-        SortOrder: 0,
-      },
-      Address1: '123 Ave, Maple Ridge, BC',
-      Address2: null,
-      Postal: '',
-      PID: 123443211,
-      PIN: null,
-      SiteId: null,
-      LandArea: 123,
-      LandLegalDescription: '',
-      Zoning: null,
-      ZoningPotential: null,
-      NotOwned: true,
-      ParentParcelId: null,
-      ParentParcel: null,
-    },
-    {
-      CreatedById: '0edf3fce-20ce-414e-b53f-11cd3dbf4976',
-      CreatedOn: '2024-03-28T00:13:27.461Z',
-      UpdatedById: '0edf3fce-20ce-414e-b53f-11cd3dbf4976',
-      UpdatedOn: '2024-03-28T00:39:35.439Z',
-      Id: 1,
-      Name: '',
-      Description: '',
-      ClassificationId: 0,
-      Classification: {
-        CreatedById: '00000000-0000-0000-0000-000000000000',
-        CreatedOn: '2023-01-18T01:58:34.750Z',
-        UpdatedById: null,
-        UpdatedOn: null,
-        Id: 0,
-        Name: 'Core Operational',
-        IsDisabled: false,
-        SortOrder: 1,
-        IsVisible: true,
-      },
-      AgencyId: null,
-      Agency: null,
-      AdministrativeAreaId: 6,
-      AdministrativeArea: {
-        CreatedById: '00000000-0000-0000-0000-000000000000',
-        CreatedOn: '2023-01-18T01:58:40.246Z',
-        UpdatedById: null,
-        UpdatedOn: null,
-        Id: 6,
-        Name: 'Ahousaht',
-        IsDisabled: false,
-        SortOrder: 0,
-        RegionalDistrictId: 18,
-        ProvinceId: 'BC',
-      },
-      IsSensitive: false,
-      IsVisibleToOtherAgencies: false,
-      Location: {
-        x: 0,
-        y: 0,
-      },
-      ProjectNumbers: null,
-      PropertyTypeId: 0,
-      PropertyType: {
-        CreatedById: '00000000-0000-0000-0000-000000000000',
-        CreatedOn: '2023-01-18T01:58:34.750Z',
-        UpdatedById: null,
-        UpdatedOn: null,
-        Id: 0,
-        Name: 'Land',
-        IsDisabled: false,
-        SortOrder: 0,
-      },
-      Address1: '',
-      Address2: null,
-      Postal: 'V2345A',
-      PID: 123456789,
-      PIN: null,
-      SiteId: null,
-      LandArea: 123,
-      LandLegalDescription: null,
-      Zoning: null,
-      ZoningPotential: null,
-      NotOwned: true,
-      ParentParcelId: null,
-      ParentParcel: null,
-    },
-  ];
   const { rows, setRows } = props;
   const [autoCompleteVal, setAutoCompleteVal] = useState(null);
+  const [fuzzySearchOptions, setFuzzySearchOptions] = useState([]);
+  const api = usePimsApi();
   const navigate = useNavigate();
+
+  const getAutoCompleteLabel = (input: ParcelWithType | BuildingWithType | string) => {
+    if (typeof input === 'string') {
+      return '';
+    }
+
+    if (input.PID) {
+      return `${input.Type} - PID: ${input.PID}`;
+    } else if (input.PIN) {
+      return `${input.Type} - PIN: ${input.PIN}`;
+    } else if (input.Address1) {
+      return `${input.Type} - Address: ${input.Address1}`;
+    } else {
+      return `${input.Type} - No identifying info.`;
+    }
+  };
+
   const columns: GridColDef[] = [
     {
       field: 'Type',
@@ -296,11 +91,15 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
       field: 'Year',
       headerName: 'Year',
       flex: 1,
+      valueGetter: (params) =>
+        (params.row.Evaluations as ParcelEvaluation[] | BuildingEvaluation[])
+          ?.map((a) => a.Year) //Map evaluations to just their year.
+          .sort((a, b) => b - a)?.[0] ?? 'N/A', //Sort in reverse order to obtain most recent year.
     },
     {
       field: 'Evaluation',
       headerName: 'Evaluation',
-      valueGetter: (params) => params.row.Evaluations?.[0]?.Value,
+      valueGetter: (params) => params.row.Evaluations?.[0]?.Value ?? 'N/A',
       flex: 1,
     },
     {
@@ -327,23 +126,35 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
       <Autocomplete
-        options={data.map((d) => ({ Id: d.Id, PID: d.PID, Address1: d.Address1 }))}
+        clearOnBlur={true}
+        blurOnSelect={true}
+        options={fuzzySearchOptions}
         onChange={(event, value) => {
-          const row = data.find((a) => a.Id === value.Id);
+          const row = value;
           if (row) {
-            const transformedRow = { ...row, Type: 'Parcel' };
-            setRows([...rows, transformedRow]);
-            setAutoCompleteVal(null);
+            setRows([...rows, row]);
+            setTimeout(() => setAutoCompleteVal(''), 15);
+            setFuzzySearchOptions([]);
           }
         }}
-        getOptionLabel={(option) =>
-          `Parcel @ PID: ${String(option.PID)}` ?? `Parcel @ ${option.Address1}`
-        }
+        getOptionLabel={(option) => getAutoCompleteLabel(option)}
+        getOptionKey={(option) => option.Id + option.Type}
+        onInputChange={(_event, value) => {
+          api.properties
+            .propertiesFuzzySearch(value)
+            .then((response) =>
+              setFuzzySearchOptions([
+                ...response.Parcels.map((a) => ({ ...a, Type: 'Parcel' })),
+                ...response.Buildings.map((a) => ({ ...a, Type: 'Building' })),
+              ]),
+            );
+        }}
         filterOptions={(options) => options.filter((x) => !rows.find((row) => row.Id === x.Id))}
         value={autoCompleteVal}
         renderInput={(params) => (
           <TextField
             {...params}
+            onBlur={() => setFuzzySearchOptions([])}
             InputProps={{
               ...params.InputProps,
               startAdornment: (
@@ -356,7 +167,13 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
           />
         )}
       />
-      <DataGrid getRowId={(row) => row.Id} autoHeight hideFooter columns={columns} rows={rows} />
+      <DataGrid
+        getRowId={(row) => row.Id + row.Type}
+        autoHeight
+        hideFooter
+        columns={columns}
+        rows={rows}
+      />
     </Box>
   );
 };

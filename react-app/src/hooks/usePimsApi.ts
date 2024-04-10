@@ -9,6 +9,7 @@ import useBuildingsApi from './api/useBuildingsApi';
 import useParcelsApi from './api/useParcelsApi';
 import useLookupApi from './api/useLookupApi';
 import useAdministrativeAreaApi from './api/useAdministrativeAreaApi';
+import usePropertiesApi from './api/usePropertiesApi';
 
 /**
  * usePimsApi - This stores all the sub-hooks we need to make calls to our API and helps manage authentication state for them.
@@ -26,6 +27,7 @@ const usePimsApi = () => {
   const parcels = useParcelsApi(fetch);
   const lookup = useLookupApi(fetch);
   const administrativeAreas = useAdministrativeAreaApi(fetch);
+  const properties = usePropertiesApi(fetch);
 
   return {
     users,
@@ -36,6 +38,7 @@ const usePimsApi = () => {
     parcels,
     lookup,
     administrativeAreas,
+    properties,
   };
 };
 
