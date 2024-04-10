@@ -41,6 +41,7 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
   const [fuzzySearchOptions, setFuzzySearchOptions] = useState([]);
   const api = usePimsApi();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const getAutoCompleteLabel = (input: ParcelWithType | BuildingWithType | string) => {
     if (typeof input === 'string') {
@@ -74,6 +75,7 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
           <Typography
             component={'a'}
             href=""
+            sx={{ color: theme.palette.primary.main }}
             onClick={() => navigate(`/properties/parcel/${params.row.Id}`)}
           >
             {params.value}
@@ -233,6 +235,7 @@ const AddProject = () => {
                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
               }}
               fullWidth
+              numeric
               name={'Assessed'}
               label={'Assessed value'}
             />
@@ -243,6 +246,7 @@ const AddProject = () => {
                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
               }}
               fullWidth
+              numeric
               name={'NetBook'}
               label={'Net book value'}
             />
@@ -252,6 +256,7 @@ const AddProject = () => {
               InputProps={{
                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
               }}
+              numeric
               fullWidth
               name={'Estimated'}
               label={'Estimated market value'}
@@ -262,6 +267,7 @@ const AddProject = () => {
               InputProps={{
                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
               }}
+              numeric
               fullWidth
               name={'Appraised'}
               label={'Appraised value'}
@@ -272,6 +278,7 @@ const AddProject = () => {
               InputProps={{
                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
               }}
+              numeric
               fullWidth
               name={'Metadata.estimatedSalesCost'}
               label={'Estimated sales cost'}
@@ -282,6 +289,7 @@ const AddProject = () => {
               InputProps={{
                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
               }}
+              numeric
               fullWidth
               name={'Metadata.estimatedProgramRecoveryFees'}
               label={'Estimated program recovery fees'}
