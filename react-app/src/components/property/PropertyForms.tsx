@@ -2,13 +2,17 @@ import { Box, Grid, InputAdornment, Tooltip, Typography } from '@mui/material';
 import TextFormField from '../form/TextFormField';
 import AutocompleteFormField from '../form/AutocompleteFormField';
 import SelectFormField, { ISelectMenuItem } from '../form/SelectFormField';
-import { Help } from '@mui/icons-material';
+import { Room, Help } from '@mui/icons-material';
 import { LookupObject } from '@/hooks/api/useLookupApi';
 import DateFormField from '../form/DateFormField';
-import React, { useEffect, useRef, useState } from 'react';
-import usePimsApi from '@/hooks/usePimsApi';
-import { useFormContext } from 'react-hook-form';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { IAddressModel } from '@/hooks/api/useToolsApi';
+import { LatLng, Map } from 'leaflet';
+import usePimsApi from '@/hooks/usePimsApi';
+import { centroid } from '@turf/turf';
+import ParcelMap from '../map/ParcelMap';
+import { useFormContext } from 'react-hook-form';
+import { FeatureCollection } from 'geojson';
 
 export type PropertyType = 'Building' | 'Parcel';
 
@@ -64,6 +68,44 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
     }
   };
 
+  const [map, setMap] = useState<Map>(null);
+  const [position, setPosition] = useState<LatLng>(null);
+
+  const updateLocation = (latlng: LatLng) => {
+    formContext.setValue('Location', { x: latlng.lng, y: latlng.lat }); //Technically, longitude is x and latitude is y...
+  };
+
+  useEffect(() => {
+    const vals = formContext?.getValues();
+    if (vals?.Location) {
+      map?.setView([vals.Location.y, vals.Location.x], 17);
+      onMove();
+    }
+  }, [formContext, map]);
+
+  const onMove = useCallback(() => {
+    if (map) {
+      setPosition(map.getCenter());
+      updateLocation(map.getCenter());
+    }
+  }, [map]);
+
+  useEffect(() => {
+    if (map) {
+      map.on('move', onMove);
+      return () => {
+        map.off('move', onMove);
+      };
+    }
+  }, [map, onMove]);
+
+  const handleFeatureCollectionResponse = (response: FeatureCollection) => {
+    if (response.features.length) {
+      const coordArr: [number, number] = centroid(response.features[0]).geometry.coordinates;
+      map.setView([coordArr[1], coordArr[0]], 17);
+    }
+  };
+
   return (
     <>
       <Typography mt={'2rem'} variant="h5">
@@ -91,6 +133,12 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             name={'PID'}
             label={'PID'}
             numeric
+            onBlur={(event) => {
+              map.closePopup();
+              api.parcelLayer
+                .getParcelByPid(event.target.value)
+                .then(handleFeatureCollectionResponse);
+            }}
             rules={{
               validate: (val, formVals) =>
                 (val.length <= 9 &&
@@ -105,6 +153,12 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             fullWidth
             name={'PIN'}
             label={'PIN'}
+            onBlur={(event) => {
+              map.closePopup();
+              api.parcelLayer
+                .getParcelByPin(event.target.value)
+                .then(handleFeatureCollectionResponse);
+            }}
             rules={{
               validate: (val, formVals) =>
                 (val.length <= 9 &&
@@ -131,6 +185,21 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
                 val.length == 0 || val.length == 6 || 'Should be exactly 6 characters.',
             }}
           />
+        </Grid>
+        <Grid item xs={12}>
+          <ParcelMap height={'500px'} mapRef={setMap}>
+            <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height={'100%'}>
+              <Room
+                color="primary"
+                sx={{ zIndex: 400, position: 'relative', marginBottom: '12px' }}
+              />
+            </Box>
+          </ParcelMap>
+          <Typography textAlign={'center'}>
+            {position
+              ? `Latitude: ${position.lat.toFixed(4)}, Longitude: ${position.lng.toFixed(4)}`
+              : 'Fill fields or drag map to set location.'}
+          </Typography>
         </Grid>
       </Grid>
     </>

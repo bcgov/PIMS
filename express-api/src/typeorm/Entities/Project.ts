@@ -6,6 +6,57 @@ import { ProjectRisk } from '@/typeorm/Entities/ProjectRisk';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Agency } from './Agency';
 
+export interface ProjectMetadata {
+  // Exemption Fields
+  exemptionRequested?: boolean;
+  exemptionApprovedOn?: Date;
+  // ERP Fields
+  initialNotificationSentOn?: Date;
+  thirtyDayNotificationSentOn?: Date;
+  sixtyDayNotificationSentOn?: Date;
+  ninetyDayNotificationSentOn?: Date;
+  onHoldNotificationSentOn?: Date;
+  interestReceivedOn?: Date;
+  transferredWithinGreOn?: Date;
+  clearanceNotificationSentOn?: Date;
+  // SPL Fields
+  requestForSplReceivedOn?: Date;
+  approvedForSplOn?: Date;
+  marketedOn?: Date;
+  purchaser?: string;
+  offerAcceptedOn?: Date;
+  adjustedOn?: Date;
+  preliminaryFormSignedOn?: Date;
+  finalFormSignedOn?: Date;
+  priorYearAdjustmentOn?: Date;
+  disposedOn?: Date;
+  // Removing from SPL
+  removalFromSplRequestOn?: Date;
+  removalFromSplApprovedOn?: Date;
+  // Financials
+  assessedOn?: Date;
+  appraisedBy?: string;
+  appraisedOn?: Date;
+  salesCost?: number;
+  netProceeds?: number;
+  programCost?: number;
+  gainLost?: number;
+  sppCapitalization?: number;
+  gainBeforeSpl?: number;
+  ocgFinancialStatement?: number;
+  interestComponent?: number;
+  plannedFutureUse?: string;
+  offerAmount?: number;
+  saleWithLeaseInPlace?: boolean;
+  priorYearAdjustment?: boolean;
+  priorYearAdjustmentAmount?: number;
+  realtor?: string;
+  realtorRate?: string;
+  realtorCommission?: number;
+  preliminaryFormSignedBy?: string;
+  finalFormSignedBy?: string;
+}
+
 @Entity()
 @Index(['Assessed', 'NetBook', 'Market', 'ReportedFiscalYear', 'ActualFiscalYear'])
 @Index(['StatusId', 'TierLevelId', 'AgencyId'])
@@ -32,8 +83,10 @@ export class Project extends BaseEntity {
   @Column('text', { nullable: true })
   Description: string;
 
-  @Column('text', { nullable: true })
-  Metadata: string;
+  @Column('jsonb', {
+    nullable: true,
+  })
+  Metadata: ProjectMetadata;
 
   @Column('timestamp', { nullable: true })
   SubmittedOn: Date;

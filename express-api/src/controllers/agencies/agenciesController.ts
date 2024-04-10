@@ -51,7 +51,7 @@ export const addAgency = async (req: Request, res: Response) => {
       }]
    */
   const user = await userServices.getUser((req.user as KeycloakUser).preferred_username);
-  const agency = await agencyService.postAgency({ ...req.body, CreatedById: user.Id });
+  const agency = await agencyService.addAgency({ ...req.body, CreatedById: user.Id });
   return res.status(201).send(agency);
 };
 

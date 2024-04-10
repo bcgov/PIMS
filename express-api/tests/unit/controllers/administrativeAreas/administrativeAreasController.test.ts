@@ -4,6 +4,7 @@ import {
   MockRes,
   getRequestHandlerMocks,
   produceAdminArea,
+  produceUser,
 } from '../../../testUtils/factories';
 import { Roles } from '@/constants/roles';
 import { IAdministrativeArea } from '@/controllers/administrativeAreas/IAdministrativeArea';
@@ -38,11 +39,17 @@ const mockAdministrativeArea: IAdministrativeArea = {
 const _getAdminAreas = jest.fn().mockImplementation(() => [produceAdminArea({})]);
 const _getAdminAreaById = jest.fn().mockImplementation(() => produceAdminArea({}));
 const _updateAdminAreaById = jest.fn().mockImplementation(() => produceAdminArea({}));
+const _addAdminArea = jest.fn().mockImplementation(() => produceAdminArea({}));
 const _next = jest.fn();
 jest.mock('@/services/administrativeAreas/administrativeAreasServices', () => ({
   getAdministrativeAreas: () => _getAdminAreas(),
   getAdministrativeAreaById: () => _getAdminAreaById(),
   updateAdministrativeArea: () => _updateAdminAreaById(),
+  addAdministrativeArea: () => _addAdminArea(),
+}));
+
+jest.mock('@/services/users/usersServices', () => ({
+  getUser: jest.fn().mockImplementation(() => produceUser()),
 }));
 
 describe('UNIT - Administrative Areas Admin', () => {
@@ -79,24 +86,10 @@ describe('UNIT - Administrative Areas Admin', () => {
   });
 
   describe('Controller addAdministrativeArea', () => {
-    beforeEach(() => {
-      mockRequest.body = mockAdministrativeArea;
-    });
-    // TODO: remove stub test when controller is complete
-    it('should return the stub response of 501', async () => {
-      await addAdministrativeArea(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    // TODO: enable other tests when controller is complete
-    xit('should return status 201 and the new administrative area ', async () => {
+    it('should return status 201 and the new administrative area ', async () => {
+      mockRequest.body = produceAdminArea({});
       await addAdministrativeArea(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(201);
-    });
-
-    xit('should return status 400 when a bad request is received', async () => {
-      await addAdministrativeArea(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
     });
   });
 

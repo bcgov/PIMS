@@ -5,7 +5,7 @@ import { GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { MutableRefObject, PropsWithChildren, useEffect, useState } from 'react';
 import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 import { IUser } from '@/interfaces/IUser';
-import { dateFormatter, statusChipFormatter } from '@/utils/formatters';
+import { dateFormatter, statusChipFormatter } from '@/utilities/formatters';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 
 const CustomMenuItem = (props: PropsWithChildren & { value: string }) => {
@@ -214,6 +214,7 @@ const UsersTable = (props: IUsersTable) => {
       }
     >
       <FilterSearchDataGrid
+        name="users"
         onAddButtonClick={() => {}}
         onRowClick={rowClickHandler}
         defaultFilter="All Users"
