@@ -9,6 +9,17 @@ import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
 // Should the occupant information (OccupantTypeId, OccupantName, and BuildingTenancyUpdatedOn) be a separate table?
 // This may change over time and we wouldn't be able to track previous occupants by storing it in this table.
 
+export enum LeasedLandTypes {
+  OWNED = 0,
+  LEASED = 1,
+  OTHER = 2,
+}
+export interface LeasedLandMetadata {
+  Type?: LeasedLandTypes;
+  ParcelId?: number;
+  OwnershipNote?: string;
+}
+
 @Entity()
 @Index(['PID', 'PIN'], { unique: false })
 export class Building extends Property {
@@ -60,9 +71,8 @@ export class Building extends Property {
   @Column({ type: 'character varying', length: 500, nullable: true })
   EncumbranceReason: string;
 
-  // What is this column used for?
-  @Column({ type: 'character varying', length: 2000, nullable: true })
-  LeasedLandMetadata: string;
+  @Column({ type: 'jsonb', nullable: true })
+  LeasedLandMetadata: LeasedLandMetadata;
 
   @Column({ type: 'real' })
   TotalArea: number;

@@ -17,7 +17,7 @@ interface NormalizedKeycloakUser {
   display_name: string;
 }
 
-const getUser = async (username: string): Promise<User | null> => {
+export const getUser = async (username: string): Promise<User | null> => {
   const user = await AppDataSource.getRepository(User).findOneBy({
     Username: username,
   });
