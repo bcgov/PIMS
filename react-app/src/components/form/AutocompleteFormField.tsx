@@ -99,7 +99,7 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
             } else {
               onChange(data.value);
             }
-            onChangeSideEffect?.(data.value);
+            onChangeSideEffect?.(data);
           }}
           isOptionEqualToValue={(option, value) => option.value === value.value}
           value={options.find((option) => option.value === getValues()[name]) ?? null}

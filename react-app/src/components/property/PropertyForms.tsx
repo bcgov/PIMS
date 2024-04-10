@@ -13,6 +13,7 @@ import { centroid } from '@turf/turf';
 import ParcelMap from '../map/ParcelMap';
 import { useFormContext } from 'react-hook-form';
 import { FeatureCollection } from 'geojson';
+import { arrayUniqueBy } from '@/utilities/helperFunctions';
 
 export type PropertyType = 'Building' | 'Parcel';
 
@@ -36,17 +37,21 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
     const formValues = formContext.getValues();
     if (formValues.Address1) {
       api.tools.getAddresses(formValues.Address1, 40, 5).then((resolved) => {
-        setAddressOptions([...new Set(resolved ?? [])].filter((x) => x) ?? []);
+        setAddressOptions(
+          arrayUniqueBy(resolved.filter((x) => x.fullAddress) ?? [], (a) => a.fullAddress),
+        );
       });
     }
   }, [formContext]);
 
   const previousController = useRef<AbortController>();
   const onAddressInputChange = (_event: any, value: string) => {
-    if (value && !addressOptions.find((a) => a.address1 === value)) {
+    if (value && !addressOptions.find((a) => a.fullAddress === value)) {
       if (previousController.current) {
         previousController.current.abort();
       }
+      //We use this AbortController to cancel requests that haven't finished yet everytime we start a new one.
+      //Without this the state can change in unexpected ways which usually results in the text input or autocomplete options disappearing.
       const controller = new AbortController();
       const signal = controller.signal;
       previousController.current = controller;
@@ -54,8 +59,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
         .getAddresses(value, 40, 5, signal)
         .then((resolved) => {
           setAddressOptions(
-            [...new Set(resolved ?? [])].filter((x) => x) ?? [],
-            //Call set constructor to eliminate duplicates, then filter out empty values.
+            arrayUniqueBy(resolved.filter((x) => x.fullAddress) ?? [], (a) => a.fullAddress), //Not removing duplicates here makes the autocomplete go crazy.
           );
         })
         .catch((e) => {
@@ -75,6 +79,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
     formContext.setValue('Location', { x: latlng.lng, y: latlng.lat }); //Technically, longitude is x and latitude is y...
   };
 
+  //Necessary to make sure we set the map to the correct place when opening this form in the edit view.
   useEffect(() => {
     const vals = formContext?.getValues();
     if (vals?.Location) {
@@ -115,12 +120,15 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
         <Grid item xs={12}>
           <AutocompleteFormField
             onInputChange={onAddressInputChange}
-            onChangeSideEffect={() => {
-              console.log(`Current addressOptions: ${JSON.stringify(addressOptions)}`);
+            onChangeSideEffect={(menuItem) => {
+              if (menuItem) {
+                const selectedModel = addressOptions.find((a) => menuItem.value === a.fullAddress);
+                map.setView(new LatLng(selectedModel.latitude, selectedModel.longitude), 17);
+              }
             }}
             options={addressOptions.map((address) => ({
-              value: address.address1,
-              label: address.address1,
+              value: address.fullAddress,
+              label: address.fullAddress,
             }))}
             required={propertyType === 'Building'}
             name={'Address1'}

@@ -25,7 +25,9 @@ const useToolsApi = (absoluteFetch: IFetch) => {
         minScore,
         maxResults,
       },
-      signal,
+      {
+        signal,
+      },
     );
     return parsedBody as IAddressModel[];
   };
