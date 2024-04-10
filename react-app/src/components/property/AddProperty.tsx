@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { ParcelAdd } from '@/hooks/api/useParcelsApi';
 import { BuildingAdd } from '@/hooks/api/useBuildingsApi';
 import { AuthContext } from '@/contexts/authContext';
-import { parseFloatOrNull, parseIntOrNull } from '@/utils/formatters';
+import { parseFloatOrNull, parseIntOrNull } from '@/utilities/formatters';
 
 const AddProperty = () => {
   const years = [new Date().getFullYear(), new Date().getFullYear() - 1];

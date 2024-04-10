@@ -1,15 +1,30 @@
 import controllers from '@/controllers';
 import { Request, Response } from 'express';
-import { MockReq, MockRes, getRequestHandlerMocks } from '../../../testUtils/factories';
+import {
+  MockReq,
+  MockRes,
+  getRequestHandlerMocks,
+  produceBuilding,
+  produceParcel,
+} from '../../../testUtils/factories';
 
 const {
   getProperties,
+  getPropertiesFuzzySearch,
   getPropertiesFilter,
   getPropertiesForMap,
   getPropertiesForMapFilter,
   getPropertiesPaged,
   getPropertiesPagedFilter,
 } = controllers;
+
+const _propertiesFuzzySearch = jest
+  .fn()
+  .mockImplementation(() => ({ Parcels: [produceParcel()], Buildings: [produceBuilding()] }));
+
+jest.mock('@/services/properties/propertiesServices', () => ({
+  propertiesFuzzySearch: () => _propertiesFuzzySearch(),
+}));
 
 describe('UNIT - Properties', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
@@ -30,6 +45,17 @@ describe('UNIT - Properties', () => {
       await getProperties(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.jsonValue.length).toBeGreaterThanOrEqual(1);
+    });
+  });
+
+  describe('GET /properties/search/fuzzy', () => {
+    it('should return 200 with a list of properties', async () => {
+      mockRequest.query.keyword = '123';
+      mockRequest.query.take = '3';
+      await getPropertiesFuzzySearch(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(Array.isArray(mockResponse.sendValue.Parcels)).toBe(true);
+      expect(Array.isArray(mockResponse.sendValue.Buildings)).toBe(true);
     });
   });
 

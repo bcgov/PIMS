@@ -15,7 +15,7 @@ import {
   PropertyType,
   NetBookValue,
 } from './PropertyForms';
-import { parseFloatOrNull, parseIntOrNull } from '@/utils/formatters';
+import { parseFloatOrNull, parseIntOrNull } from '@/utilities/formatters';
 
 interface IParcelInformationEditDialog {
   initialValues: Parcel;

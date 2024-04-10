@@ -113,7 +113,10 @@ export const lookupBuildingConstructionType = async (req: Request, res: Response
 };
 
 export const lookupRegionalDistricts = async (req: Request, res: Response) => {
-  const districts = await AppDataSource.getRepository(RegionalDistrict).find();
+  // Uses sort instead of TypeORM order because some names start with lowercase letters
+  const districts = (await AppDataSource.getRepository(RegionalDistrict).find()).sort((a, b) =>
+    a.Name.toLowerCase().localeCompare(b.Name.toLowerCase()),
+  );
   const parsed = RegionalDistrictPublicResponseSchema.array().safeParse(districts);
   if (parsed.success) {
     return res.status(200).send(parsed.data);
