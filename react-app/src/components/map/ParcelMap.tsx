@@ -63,7 +63,7 @@ const ParcelMap = (props: ParcelMapProps) => {
           layers="WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW"
         />
         {clickPosition?.position && (
-          <Popup position={clickPosition.position}>
+          <Popup autoPan={false} position={clickPosition.position}>
             <Typography>{`PID: ${clickPosition?.pid ?? 'None'}`}</Typography>
             <Typography>{`PIN: ${clickPosition?.pin ?? 'None'}`}</Typography>
           </Popup>
