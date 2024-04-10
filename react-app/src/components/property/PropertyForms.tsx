@@ -88,6 +88,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             label={'PID'}
             numeric
             onBlur={(event) => {
+              map.closePopup();
               api.parcelLayer
                 .getParcelByPid(event.target.value)
                 .then(handleFeatureCollectionResponse);
@@ -107,6 +108,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             name={'PIN'}
             label={'PIN'}
             onBlur={(event) => {
+              map.closePopup();
               api.parcelLayer
                 .getParcelByPin(event.target.value)
                 .then(handleFeatureCollectionResponse);
