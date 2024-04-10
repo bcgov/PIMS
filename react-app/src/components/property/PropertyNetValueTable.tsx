@@ -1,4 +1,4 @@
-import { dateFormatter } from '@/utils/formatters';
+import { dateFormatter } from '@/utilities/formatters';
 import { Box, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
