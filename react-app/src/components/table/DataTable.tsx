@@ -469,9 +469,6 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           '& .MuiDataGrid-cell:focus-within': {
             outline: 'none',
           },
-          '& .MuiDataGrid-cell, & .MuiDataGrid-columnHeader': {
-            padding: '16px',
-          },
         }}
         slots={{ toolbar: KeywordSearch }}
         {...props}

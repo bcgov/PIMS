@@ -7,6 +7,7 @@ import { dateFormatter } from '@/utilities/formatters';
 import { Check } from '@mui/icons-material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { useNavigate } from 'react-router-dom';
+import { RegionalDistrict } from '@/hooks/api/useLookupApi';
 
 const AdministrativeAreasTable = () => {
   const api = usePimsApi();
@@ -23,14 +24,14 @@ const AdministrativeAreasTable = () => {
       field: 'RegionalDistrict',
       headerName: 'Regional District',
       flex: 1,
-      valueGetter: (params) => params.value?.Name ?? 'N/A',
+      valueGetter: (value: RegionalDistrict) => value?.Name ?? 'N/A',
     },
     {
       field: 'IsDisabled',
       headerName: 'Is Disabled',
       flex: 1,
-      renderCell: (params) => {
-        if (params.value) {
+      renderCell: (value) => {
+        if (value) {
           return <Check />;
         } else return <></>;
       },
@@ -39,7 +40,7 @@ const AdministrativeAreasTable = () => {
       field: 'CreatedOn',
       headerName: 'CreatedOn',
       flex: 1,
-      valueFormatter: (params) => dateFormatter(params.value),
+      valueFormatter: (value) => dateFormatter(value),
       type: 'date',
     },
   ];

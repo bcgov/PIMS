@@ -144,13 +144,13 @@ const PropertyTable = (props: IPropertyTable) => {
       field: 'PID',
       headerName: 'PID',
       flex: 1,
-      renderCell: (params) => params.value ?? 'N/A',
+      valueFormatter: (value: number | null) => value ?? 'N/A',
     },
     {
       field: 'AgencyId',
       headerName: 'Agency',
       flex: 1,
-      valueGetter: (params) => agencies?.find((ag) => ag.Id === params.value)?.Name ?? '',
+      valueGetter: (value) => agencies?.find((ag) => ag.Id === value)?.Name ?? '',
     },
     {
       field: 'Address1',
@@ -171,8 +171,8 @@ const PropertyTable = (props: IPropertyTable) => {
     {
       field: 'IsSensitive',
       headerName: 'Sensitive',
-      renderCell: (params) => {
-        if (params.value) {
+      renderCell: (value) => {
+        if (value) {
           return <Check />;
         } else return <></>;
       },
@@ -182,7 +182,7 @@ const PropertyTable = (props: IPropertyTable) => {
       field: 'UpdatedOn',
       headerName: 'Last Update',
       flex: 1,
-      valueFormatter: (params) => dateFormatter(params.value),
+      valueFormatter: (value) => dateFormatter(value),
     },
   ];
 
