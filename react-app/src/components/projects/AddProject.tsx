@@ -17,10 +17,11 @@ import { FormProvider, useForm } from 'react-hook-form';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Delete, Search } from '@mui/icons-material';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import usePimsApi from '@/hooks/usePimsApi';
 import { Parcel, ParcelEvaluation } from '@/hooks/api/useParcelsApi';
 import { Building, BuildingEvaluation } from '@/hooks/api/useBuildingsApi';
+import useDataLoader from '@/hooks/useDataLoader';
 
 interface IDisposalProjectSearch {
   rows: any[];
@@ -39,6 +40,7 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
   const { rows, setRows } = props;
   const [autoCompleteVal, setAutoCompleteVal] = useState(null);
   const [fuzzySearchOptions, setFuzzySearchOptions] = useState([]);
+  const [loadingOptions, setLoadingOptions] = useState(false);
   const api = usePimsApi();
   const theme = useTheme();
 
@@ -127,6 +129,7 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
       <Autocomplete
+        loading={loadingOptions}
         clearOnBlur={true}
         blurOnSelect={true}
         options={fuzzySearchOptions}
@@ -134,21 +137,21 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
           const row = value;
           if (row) {
             setRows([...rows, row]);
-            setTimeout(() => setAutoCompleteVal(''), 15);
+            setAutoCompleteVal('');
             setFuzzySearchOptions([]);
           }
         }}
         getOptionLabel={(option) => getAutoCompleteLabel(option)}
         getOptionKey={(option) => option.Id + option.Type}
         onInputChange={(_event, value) => {
-          api.properties
-            .propertiesFuzzySearch(value)
-            .then((response) =>
-              setFuzzySearchOptions([
-                ...response.Parcels.map((a) => ({ ...a, Type: 'Parcel' })),
-                ...response.Buildings.map((a) => ({ ...a, Type: 'Building' })),
-              ]),
-            );
+          setLoadingOptions(true);
+          api.properties.propertiesFuzzySearch(value).then((response) => {
+            setLoadingOptions(false);
+            setFuzzySearchOptions([
+              ...response.Parcels.map((a) => ({ ...a, Type: 'Parcel' })),
+              ...response.Buildings.map((a) => ({ ...a, Type: 'Building' })),
+            ]);
+          });
         }}
         filterOptions={(options) => options.filter((x) => !rows.find((row) => row.Id === x.Id))}
         value={autoCompleteVal}
@@ -180,10 +183,33 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
 };
 
 const AddProject = () => {
-  const formMethods = useForm();
+  const formMethods = useForm({
+    defaultValues: {
+      Name: '',
+      TierLevelId: null,
+      Notes: '',
+      Assessed: '',
+      NetBook: '',
+      Estimated: '',
+      Appraised: '',
+      Metadata: {
+        estimatedSalesCost: '',
+        estimatedProgramRecoveryFees: '',
+        surplusDeclaration: false,
+        tripleBottomLine: false,
+        applyForEnhancedExemption: false,
+      },
+      Approval: false,
+    },
+  });
+
   const [showNoPropertiesError, setShowNoPropertiesError] = useState(false);
   const [rows, setRows] = useState([]);
   const theme = useTheme();
+  const api = usePimsApi();
+  const { data: tierData, loadOnce: loadTiers } = useDataLoader(api.lookup.getProjectTierLevels);
+  loadTiers();
+
   return (
     <Box
       display={'flex'}
@@ -212,7 +238,7 @@ const AddProject = () => {
               required
               name={'TierLevelId'}
               label={'Assign tier'}
-              options={[]}
+              options={tierData?.map((tier) => ({ value: tier.Id, label: tier.Name })) ?? []}
             />
           </Grid>
           <Grid item xs={12}>
