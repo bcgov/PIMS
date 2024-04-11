@@ -419,4 +419,4 @@ export const produceTierLevels = (): TierLevel => {
     UpdatedOn: new Date(),
   };
   return tier;
-}
+};
