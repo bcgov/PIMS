@@ -17,7 +17,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Delete, Search } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import usePimsApi from '@/hooks/usePimsApi';
 import { Parcel, ParcelEvaluation } from '@/hooks/api/useParcelsApi';
 import { Building, BuildingEvaluation } from '@/hooks/api/useBuildingsApi';
@@ -40,7 +40,6 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
   const [autoCompleteVal, setAutoCompleteVal] = useState(null);
   const [fuzzySearchOptions, setFuzzySearchOptions] = useState([]);
   const api = usePimsApi();
-  const navigate = useNavigate();
   const theme = useTheme();
 
   const getAutoCompleteLabel = (input: ParcelWithType | BuildingWithType | string) => {
@@ -72,14 +71,14 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
       flex: 1,
       renderCell: (params) => {
         return (
-          <Typography
-            component={'a'}
-            href=""
-            sx={{ color: theme.palette.primary.main }}
-            onClick={() => navigate(`/properties/parcel/${params.row.Id}`)}
+          <Link
+            to={`/properties/${params.row.Type.toLowerCase()}/${params.row.Id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: theme.palette.primary.main }}
           >
             {params.value}
-          </Typography>
+          </Link>
         );
       },
     },
