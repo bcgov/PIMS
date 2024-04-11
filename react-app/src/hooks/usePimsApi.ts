@@ -28,6 +28,7 @@ const usePimsApi = () => {
   const lookup = useLookupApi(fetch);
   const administrativeAreas = useAdministrativeAreaApi(fetch);
   const parcelLayer = useParcelLayerApi(fetch);
+  const projects = use;
 
   return {
     users,

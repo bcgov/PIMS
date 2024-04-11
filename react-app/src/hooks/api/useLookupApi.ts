@@ -31,6 +31,11 @@ const useLookupApi = (absoluteFetch: IFetch) => {
     return parsedBody as Omit<LookupObject, 'SortOrder'>[];
   };
 
+  const getTierLevels = async () => {
+    const { parsedBody } = await absoluteFetch.get('/lookup/property/constructionTypes');
+    return parsedBody as LookupObject[];
+  };
+
   return {
     getClassifications,
     getConstructionTypes,
