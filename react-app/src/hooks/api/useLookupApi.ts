@@ -41,7 +41,7 @@ const useLookupApi = (absoluteFetch: IFetch) => {
     getConstructionTypes,
     getPredominateUses,
     getRegionalDistricts,
-    getProjectTierLevels
+    getProjectTierLevels,
   };
 };
 
