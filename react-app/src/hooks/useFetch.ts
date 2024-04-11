@@ -4,7 +4,11 @@ import { useMemo } from 'react';
 export type FetchResponse = Response & { parsedBody?: Record<string, any> };
 export type FetchType = (url: string, params?: RequestInit) => Promise<Response>;
 export interface IFetch {
-  get: (url: string, params?: Record<string, any>) => Promise<FetchResponse>;
+  get: (
+    url: string,
+    params?: Record<string, any>,
+    requestInit?: RequestInit,
+  ) => Promise<FetchResponse>;
   put: (url: string, body?: any) => Promise<FetchResponse>;
   patch: (url: string, body?: any) => Promise<FetchResponse>;
   del: (url: string, body?: any) => Promise<FetchResponse>;
@@ -27,11 +31,11 @@ const useFetch = (baseUrl?: string) => {
       let response: Response;
 
       params = {
-        ...params,
         headers: {
           Authorization: keycloak.getAuthorizationHeaderValue(),
           'Content-Type': 'application/json',
         },
+        ...params,
       };
 
       if (params && params.body) {
@@ -58,7 +62,7 @@ const useFetch = (baseUrl?: string) => {
       }
     };
     const buildQueryParams = (params: Record<string, any>): string => {
-      if (!params) {
+      if (!params || !Object.entries(params).length) {
         return '';
       }
       const q = Object.entries(params)
@@ -68,8 +72,11 @@ const useFetch = (baseUrl?: string) => {
         .join('&');
       return `?${q}`;
     };
-    const get = (url: string, params?: Record<string, any>) => {
-      return absoluteFetch(url + buildQueryParams(params), { method: 'GET' });
+    const get = (url: string, params?: Record<string, any>, requestInit?: RequestInit) => {
+      return absoluteFetch(url + buildQueryParams(params), {
+        method: 'GET',
+        ...requestInit,
+      });
     };
     const post = (url: string, body: any) => {
       return absoluteFetch(url, { method: 'POST', body: body });

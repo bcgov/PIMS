@@ -3,7 +3,7 @@ import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../ta
 import { Box, Chip, SxProps } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { GridColDef, GridEventListener } from '@mui/x-data-grid';
-import { dateFormatter, statusChipFormatter } from '@/utils/formatters';
+import { dateFormatter, statusChipFormatter } from '@/utilities/formatters';
 import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { useNavigate } from 'react-router-dom';

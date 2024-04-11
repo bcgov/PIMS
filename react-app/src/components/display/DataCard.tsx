@@ -1,4 +1,4 @@
-import { columnNameFormatter, dateFormatter } from '@/utils/formatters';
+import { columnNameFormatter, dateFormatter } from '@/utilities/formatters';
 import { Button, CardContent, CardHeader, Divider, Grid, Typography } from '@mui/material';
 import Card from '@mui/material/Card';
 import React, { PropsWithChildren } from 'react';

@@ -4,7 +4,7 @@ import { Box, SxProps, Tooltip, lighten, useTheme } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { Check } from '@mui/icons-material';
 import { GridColDef, GridColumnHeaderTitle, GridEventListener } from '@mui/x-data-grid';
-import { dateFormatter } from '@/utils/formatters';
+import { dateFormatter } from '@/utilities/formatters';
 import { ClassificationInline } from './ClassificationIcon';
 import { useNavigate } from 'react-router-dom';
 import usePimsApi from '@/hooks/usePimsApi';
