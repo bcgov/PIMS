@@ -7,10 +7,12 @@ import {
   ClassificationPublicResponseSchema,
   PredominateUsePublicResponseSchema,
   RegionalDistrictPublicResponseSchema,
+  TierLevelPublicResponseSchema,
 } from './lookupSchema';
 import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUse';
 import { BuildingConstructionType } from '@/typeorm/Entities/BuildingConstructionType';
 import { RegionalDistrict } from '@/typeorm/Entities/RegionalDistrict';
+import { TierLevel } from '@/typeorm/Entities/TierLevel';
 
 // TODO: What controllers here could just be replaced by existing GET requests?
 
@@ -139,9 +141,14 @@ export const lookupProjectTierLevels = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  const uses = await AppDataSource.getRepository(TierLevel).find();
+  const filtered = uses.filter((u) => !u.IsDisabled);
+  const parsed = TierLevelPublicResponseSchema.array().safeParse(filtered);
+  if (parsed.success) {
+    return res.status(200).send(parsed.data);
+  } else {
+    return res.status(400).send(parsed);
+  }
 };
 
 /**
