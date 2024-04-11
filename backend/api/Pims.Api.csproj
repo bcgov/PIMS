@@ -48,7 +48,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
-    <PackageReference Include="Azure.Identity" Version="1.10.3" />
+    <PackageReference Include="Azure.Identity" Version="1.11.0" />
     <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.24" />
   </ItemGroup>
   <ItemGroup>
