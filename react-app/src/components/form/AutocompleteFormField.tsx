@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Autocomplete,
-  SxProps,
-  TextField,
-  Paper,
-  Box,
-  autocompleteClasses,
-  AutocompleteInputChangeReason,
-} from '@mui/material';
+import { Autocomplete, SxProps, TextField, Paper, Box, autocompleteClasses } from '@mui/material';
 import { ISelectMenuItem } from './SelectFormField';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -17,16 +9,10 @@ type AutocompleteFormProps = {
   options: ISelectMenuItem[];
   sx?: SxProps;
   required?: boolean;
-  onInputChange?: (
-    event: React.SyntheticEvent<Element, Event>,
-    value: string,
-    reason: AutocompleteInputChangeReason,
-  ) => void;
   allowNestedIndent?: boolean;
   disableOptionsFunction?: (option: ISelectMenuItem) => boolean;
   disableClearable?: boolean;
   defaultValue?: ISelectMenuItem | null;
-  onChangeSideEffect?: (value: ISelectMenuItem) => void;
 };
 
 const CustomPaper = (props) => {
@@ -43,9 +29,7 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
     required,
     allowNestedIndent,
     disableClearable,
-    onInputChange,
     disableOptionsFunction,
-    onChangeSideEffect,
     ...rest
   } = props;
 
@@ -56,7 +40,6 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
       rules={{ required: required }}
       render={({ field: { onChange } }) => (
         <Autocomplete
-          freeSolo={false}
           disablePortal={false}
           id={`autocompleteinput-${label}`}
           options={options}
@@ -65,7 +48,6 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
           disableClearable={disableClearable}
           getOptionLabel={(option: ISelectMenuItem) => option.label}
           getOptionDisabled={disableOptionsFunction}
-          onInputChange={onInputChange}
           filterOptions={(x) => x}
           renderOption={(props, option, state, ownerState) => (
             <Box
@@ -91,15 +73,8 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
               helperText={formState.errors?.[name] ? 'This field is required.' : undefined}
             />
           )}
-          onChange={(_, data, reason) => {
-            if (reason === 'clear') {
-              onChange('');
-            } else if (reason === 'createOption' || reason === 'removeOption') {
-              return;
-            } else {
-              onChange(data.value);
-            }
-            onChangeSideEffect?.(data);
+          onChange={(_, data) => {
+            onChange(data.value);
           }}
           isOptionEqualToValue={(option, value) => option.value === value.value}
           value={options.find((option) => option.value === getValues()[name]) ?? null}

@@ -1,4 +1,12 @@
-import { Box, Grid, InputAdornment, Tooltip, Typography } from '@mui/material';
+import {
+  Autocomplete,
+  Box,
+  Grid,
+  InputAdornment,
+  TextField,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import TextFormField from '../form/TextFormField';
 import AutocompleteFormField from '../form/AutocompleteFormField';
 import SelectFormField, { ISelectMenuItem } from '../form/SelectFormField';
@@ -11,7 +19,7 @@ import { LatLng, Map } from 'leaflet';
 import usePimsApi from '@/hooks/usePimsApi';
 import { centroid } from '@turf/turf';
 import ParcelMap from '../map/ParcelMap';
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { FeatureCollection } from 'geojson';
 import { arrayUniqueBy } from '@/utilities/helperFunctions';
 
@@ -30,6 +38,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
   const api = usePimsApi();
   const { propertyType, adminAreas } = props;
   const [addressOptions, setAddressOptions] = useState<IAddressModel[]>([]);
+  const [loadingOptions, setLoadingOptions] = useState(false);
 
   const formContext = useFormContext();
 
@@ -55,12 +64,14 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
       const controller = new AbortController();
       const signal = controller.signal;
       previousController.current = controller;
+      setLoadingOptions(true);
       api.tools
         .getAddresses(value, 40, 5, signal)
         .then((resolved) => {
           setAddressOptions(
             arrayUniqueBy(resolved.filter((x) => x.fullAddress) ?? [], (a) => a.fullAddress), //Not removing duplicates here makes the autocomplete go crazy.
           );
+          setLoadingOptions(false);
         })
         .catch((e) => {
           if (!(e instanceof DOMException)) {
@@ -118,21 +129,51 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <AutocompleteFormField
-            onInputChange={onAddressInputChange}
-            onChangeSideEffect={(menuItem) => {
-              if (menuItem) {
-                const selectedModel = addressOptions.find((a) => menuItem.value === a.fullAddress);
-                map.setView(new LatLng(selectedModel.latitude, selectedModel.longitude), 17);
-              }
-            }}
-            options={addressOptions.map((address) => ({
-              value: address.fullAddress,
-              label: address.fullAddress,
-            }))}
-            required={propertyType === 'Building'}
+          <Controller
             name={'Address1'}
-            label={`Street address${propertyType === 'Parcel' ? ' (Leave blank if no address)' : ''}`}
+            control={formContext.control}
+            render={({ field }) => {
+              return (
+                <Autocomplete
+                  freeSolo
+                  loading={loadingOptions}
+                  getOptionLabel={(option) =>
+                    typeof option === 'string' ? option : option.fullAddress
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      error={!!formContext.formState.errors?.['Address1']}
+                      required={propertyType === 'Building'}
+                      label={'Street address'}
+                      helperText={
+                        formContext.formState.errors?.['Address1']
+                          ? 'This field is required.'
+                          : undefined
+                      }
+                      {...params}
+                    />
+                  )}
+                  options={addressOptions}
+                  onChange={(e, value) => {
+                    if (value != null) {
+                      if (typeof value !== 'string') {
+                        map.setView(new LatLng(value.latitude, value.longitude), 17);
+                        field.onChange(value.fullAddress);
+                      } else {
+                        field.onChange(value);
+                      }
+                    }
+                  }}
+                  onInputChange={(event, data) => {
+                    if (data) {
+                      field.onChange(data);
+                      onAddressInputChange(event, data);
+                    }
+                  }}
+                  value={field.value}
+                />
+              );
+            }}
           />
         </Grid>
         <Grid item xs={6}>
@@ -301,6 +342,7 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
           <AutocompleteFormField
             name={`ClassificationId`}
             label={'Building classification'}
+            required
             options={
               props.classificationOptions?.map((classification) => ({
                 label: classification.Name,
