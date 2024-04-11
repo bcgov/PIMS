@@ -32,7 +32,7 @@ const useLookupApi = (absoluteFetch: IFetch) => {
   };
 
   const getTierLevels = async () => {
-    const { parsedBody } = await absoluteFetch.get('/lookup/property/constructionTypes');
+    const { parsedBody } = await absoluteFetch.get('/lookup/tierLevels');
     return parsedBody as LookupObject[];
   };
 
@@ -41,6 +41,7 @@ const useLookupApi = (absoluteFetch: IFetch) => {
     getConstructionTypes,
     getPredominateUses,
     getRegionalDistricts,
+    getTierLevels,
   };
 };
 
