@@ -15,6 +15,7 @@ import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUs
 import { IAddressModel } from '@/services/geocoder/interfaces/IAddressModel';
 import { ISitePidsResponseModel } from '@/services/geocoder/interfaces/ISitePidsResponseModel';
 import { RegionalDistrict } from '@/typeorm/Entities/RegionalDistrict';
+import { TierLevel } from '@/typeorm/Entities/TierLevel';
 
 export class MockRes {
   statusValue: any;
@@ -401,4 +402,22 @@ export const producePidsResponse = (): ISitePidsResponseModel => {
     pids: String(faker.number.int({ min: 11111111, max: 99999999 })),
   };
   return pidResponse;
+};
+
+export const produceTierLevel = (props: Partial<TierLevel>) => {
+  const tierlevel: TierLevel = {
+    Id: faker.number.int(),
+    Name: faker.lorem.word(),
+    IsDisabled: false,
+    SortOrder: 0,
+    Description: faker.string.alphanumeric(),
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return tierlevel;
 };
