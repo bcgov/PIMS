@@ -16,7 +16,7 @@ export interface ProjectPropertyIds {
   buildings?: number[];
 }
 
-const addProject = async (project: DeepPartial<Project>, propertyIds?: ProjectPropertyIds) => {
+const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPropertyIds) => {
   // Does the project have a name?
   if (!project.Name) throw new ErrorWithCode('Projects must have a name.', 400);
 
@@ -45,8 +45,8 @@ const addProject = async (project: DeepPartial<Project>, propertyIds?: ProjectPr
     const newProject = await projectRepo.save(project);
     // After project is saved, add parcel/building relations
     const { parcels, buildings } = propertyIds;
-    await addProjectParcelRelations(newProject, parcels);
-    await addProjectBuildingRelations(newProject, buildings);
+    if (propertyIds.parcels) await addProjectParcelRelations(newProject, parcels);
+    if (propertyIds.buildings) await addProjectBuildingRelations(newProject, buildings);
     await queryRunner.commitTransaction();
     return newProject;
   } catch (e) {
