@@ -37,6 +37,7 @@ const AgencyTable = (props: IAgencyTable) => {
       field: 'Name',
       headerName: 'Name',
       flex: 1,
+      minWidth: 200,
     },
     {
       field: 'Code',
@@ -83,7 +84,7 @@ const AgencyTable = (props: IAgencyTable) => {
             email ? (
               <Chip key={email} label={email} variant="outlined" sx={{ marginRight: '5px' }} />
             ) : (
-              <></>
+              ''
             ),
           ),
     },
