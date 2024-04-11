@@ -286,27 +286,36 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
       const stateFromLocalStorage = sessionStorage?.getItem(props.name);
       if (stateFromLocalStorage) {
         const state: GridState = JSON.parse(stateFromLocalStorage);
-        // Set sort and filter
-        tableApiRef.current.setSortModel(state.sorting.sortModel);
-        tableApiRef.current.setFilterModel(state.filter.filterModel);
-        // Set Select filter
-        // Without MUI Pro, only one item can be in this model at a time
-        if (state.filter.filterModel.items.length > 0) {
-          setSelectValue(state.filter.filterModel.items.at(0).value);
-          setQuery({
-            quickSelectFilter: state.filter.filterModel.items.at(0).value,
-          });
+        // Set sort
+        if (state.sorting) {
+          tableApiRef.current.setSortModel(state.sorting.sortModel);
         }
-        // Pagination and visibility are local only
-        tableApiRef.current.setColumnVisibilityModel(state.columns.columnVisibilityModel);
-        tableApiRef.current.setPaginationModel(state.pagination.paginationModel);
-        // Set keyword search bar
-        if (state.filter.filterModel.quickFilterValues) {
-          const filterValue = state.filter.filterModel.quickFilterValues.join(' ');
-          setKeywordSearchContents(filterValue);
-          setQuery({
-            keywordFilter: filterValue,
-          });
+        if (state.pagination) {
+          // Pagination and visibility are local only
+          tableApiRef.current.setPaginationModel(state.pagination.paginationModel);
+        }
+        if (state.columns) {
+          tableApiRef.current.setColumnVisibilityModel(state.columns.columnVisibilityModel);
+        }
+        // Set filters
+        if (state.filter) {
+          tableApiRef.current.setFilterModel(state.filter.filterModel);
+          // Set Select filter
+          // Without MUI Pro, only one item can be in this model at a time
+          if (state.filter.filterModel.items.length > 0) {
+            setSelectValue(state.filter.filterModel.items.at(0).value);
+            setQuery({
+              quickSelectFilter: state.filter.filterModel.items.at(0).value,
+            });
+          }
+          // Set keyword search bar
+          if (state.filter.filterModel.quickFilterValues) {
+            const filterValue = state.filter.filterModel.quickFilterValues.join(' ');
+            setKeywordSearchContents(filterValue);
+            setQuery({
+              keywordFilter: filterValue,
+            });
+          }
         }
       }
     }

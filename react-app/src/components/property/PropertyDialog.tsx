@@ -51,6 +51,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
       IsSensitive: false,
       ClassificationId: null,
       Description: '',
+      Location: null,
     },
   });
 
@@ -66,6 +67,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
       IsSensitive: initialValues?.IsSensitive,
       ClassificationId: initialValues?.ClassificationId,
       Description: initialValues?.Description,
+      Location: initialValues?.Location,
     });
   }, [initialValues]);
   return (
@@ -154,6 +156,7 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
       RentableArea: '',
       BuildingTenancy: '',
       BuildingTenancyUpdatedOn: dayjs(),
+      Location: null,
     },
   });
 
@@ -174,6 +177,7 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
       RentableArea: String(initialValues?.RentableArea ?? ''),
       BuildingTenancy: initialValues?.BuildingTenancy,
       BuildingTenancyUpdatedOn: dayjs(initialValues?.BuildingTenancyUpdatedOn),
+      Location: initialValues?.Location,
     });
   }, [initialValues]);
 
