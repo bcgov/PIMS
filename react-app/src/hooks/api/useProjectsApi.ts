@@ -15,9 +15,10 @@ const projects = [
     Agency: {
       Name: 'Test Agency',
     },
-    ProjectStatus: {
+    Status: {
       Name: 'In ERP',
     },
+    UpdatedOn: new Date(),
   },
   {
     Id: 2,
@@ -33,9 +34,10 @@ const projects = [
     Agency: {
       Name: 'Test Agency 2',
     },
-    ProjectStatus: {
+    Status: {
       Name: 'Approved for Exemption',
     },
+    UpdatedOn: new Date(),
   },
 ];
 
