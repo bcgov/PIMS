@@ -134,15 +134,10 @@ export const lookupRegionalDistricts = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status and a list of project tier levels.
  */
 export const lookupProjectTierLevels = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Lookup']
-   * #swagger.description = 'Get all project tier level entries.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-  const uses = await AppDataSource.getRepository(TierLevel).find();
-  const filtered = uses.filter((u) => !u.IsDisabled);
+  const tiers = (await AppDataSource.getRepository(TierLevel).find()).sort(
+    (a, b) => a.SortOrder - b.SortOrder,
+  );
+  const filtered = tiers.filter((u) => !u.IsDisabled);
   const parsed = TierLevelPublicResponseSchema.array().safeParse(filtered);
   if (parsed.success) {
     return res.status(200).send(parsed.data);

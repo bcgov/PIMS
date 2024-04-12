@@ -32,7 +32,7 @@ const useLookupApi = (absoluteFetch: IFetch) => {
   };
 
   const getTierLevels = async () => {
-    const { parsedBody } = await absoluteFetch.get('/lookup/tierLevels');
+    const { parsedBody } = await absoluteFetch.get('/lookup/project/tierLevels');
     return parsedBody as LookupObject[];
   };
 

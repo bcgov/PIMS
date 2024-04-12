@@ -187,7 +187,7 @@ const AddProperty = () => {
                 RentableArea: parseFloatOrNull(formValues.RentableArea),
                 TotalArea: parseFloatOrNull(formValues.TotalArea),
                 BuildingFloorCount: 0,
-                PropertyTypeId: 0,
+                PropertyTypeId: 1,
                 AgencyId: userContext.pimsUser.data.AgencyId,
                 IsVisibleToOtherAgencies: false,
                 Fiscals: formValues.Fiscals.map((a) => ({

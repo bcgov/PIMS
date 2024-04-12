@@ -1,13 +1,19 @@
 import AgencyTable from '@/components/agencies/AgencyTable';
+import { Roles } from '@/constants/roles';
+import { AuthContext } from '@/contexts/authContext';
 import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const AgencyManagement = () => {
   const navigate = useNavigate();
   // Getting data from API
   const api = usePimsApi();
+  const userContext = useContext(AuthContext);
+  if (!userContext.keycloak.hasRole([Roles.ADMIN, Roles.AUDITOR], { requireAllRoles: false })) {
+    navigate('/');
+  }
   const { data, refreshData, isLoading, error } = useDataLoader(api.agencies.getAgenciesWithParent);
 
   return (
