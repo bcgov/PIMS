@@ -66,6 +66,7 @@ const useFetch = (baseUrl?: string) => {
         return '';
       }
       const q = Object.entries(params)
+        .filter(([, v]) => v !== undefined)
         .map(([k, value]) => {
           return `${k}=${encodeURIComponent(value)}`;
         })
