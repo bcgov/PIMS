@@ -12,6 +12,7 @@ import useAdministrativeAreaApi from './api/useAdministrativeAreaApi';
 import usePropertiesApi from './api/usePropertiesApi';
 import useToolsApi from './api/useToolsApi';
 import useParcelLayerApi from './api/useParcelLayerApi';
+import useProjectsApi from './api/useProjectsApi';
 
 /**
  * usePimsApi - This stores all the sub-hooks we need to make calls to our API and helps manage authentication state for them.
@@ -32,7 +33,7 @@ const usePimsApi = () => {
   const properties = usePropertiesApi(fetch);
   const tools = useToolsApi(fetch);
   const parcelLayer = useParcelLayerApi(fetch);
-  const projects = use;
+  const projects = useProjectsApi(fetch);
 
   return {
     users,
@@ -46,6 +47,7 @@ const usePimsApi = () => {
     properties,
     tools,
     parcelLayer,
+    projects,
   };
 };
 

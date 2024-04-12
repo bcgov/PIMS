@@ -1,7 +1,42 @@
+import { BaseEntityInterface } from '@/interfaces/IBaseEntity';
 import { IFetch } from '../useFetch';
 import { Agency } from './useAgencyApi';
-import { TierLevel } from './useAgencyApi';
 
+export interface TierLevel extends BaseEntityInterface {
+  Id: number;
+  Name: string;
+  IsDisabled: boolean;
+  SortOrder: number;
+  Description?: string;
+}
+export interface ProjectStatus extends BaseEntityInterface {
+  Id: number;
+  Name: string;
+  IsDisabled: boolean;
+  SortOrder: number;
+  Description?: string;
+  Code: string;
+  GroupName?: string;
+  IsMilestone: boolean;
+  IsTerminal: boolean;
+  Route: string;
+}
+export interface Workflow extends BaseEntityInterface {
+  Id: number;
+  Name: string;
+  IsDisabled: boolean;
+  SortOrder: number;
+  Description?: string;
+  Code: string;
+}
+export interface ProjectRisk extends BaseEntityInterface {
+  Id: number;
+  Name: string;
+  IsDisabled: boolean;
+  SortOrder: number;
+  Description?: string;
+  Code: string;
+}
 export interface Project {
   Id: number;
   ProjectNumber: string;
@@ -20,51 +55,41 @@ export interface Project {
   Assessed: number;
   Appraised: number;
   ProjectType: number;
-  //   WorkflowId: number;
-  //   Workflow?: Workflow;
-  AgencyId: number | null;
-  Agency: Agency | null;
+  AgencyId: number;
+  Agency: Agency;
+  WorkflowId: number;
+  Workflow?: Workflow;
   TierLevelId: number;
-  TierLevel: TierLevel | null;
-  IsDisabled: boolean;
-  SortOrder: number;
-  RegionalDistrictId: number;
-  RegionalDistrict?: Record<string, any>;
+  TierLevel?: TierLevel;
+  StatusId: number;
+  Status?: ProjectStatus;
+  RiskId: number;
+  Risk?: ProjectRisk;
   CreatedOn: string;
 }
 
-const useAdministrativeAreaApi = (absoluteFetch: IFetch) => {
-  const getAdministrativeAreas = async (): Promise<AdministrativeArea[]> => {
-    const { parsedBody } = await absoluteFetch.get(`/administrativeAreas`);
-    return parsedBody as AdministrativeArea[];
+const useProjectsApi = (absoluteFetch: IFetch) => {
+  const getProjectById = async (id: number): Promise<Project> => {
+    const { parsedBody } = await absoluteFetch.get(`/project/${id}`);
+    return parsedBody as Project;
   };
-
-  const addAdministrativeArea = async (
-    adminArea: Omit<AdministrativeArea, 'Id' | 'CreatedOn'>,
-  ): Promise<AdministrativeArea> => {
-    const { parsedBody } = await absoluteFetch.post(`/administrativeAreas`, adminArea);
-    return parsedBody as AdministrativeArea;
-  };
-
-  const getAdminAreaById = async (id: number): Promise<AdministrativeArea> => {
-    const { parsedBody } = await absoluteFetch.get(`/administrativeAreas/${id}`);
-    return parsedBody as AdministrativeArea;
-  };
-
-  const updateAdminArea = async (
+  const updateProject = async (
     id: number,
-    adminArea: Partial<AdministrativeArea>,
-  ): Promise<AdministrativeArea> => {
-    const { parsedBody } = await absoluteFetch.put(`/administrativeAreas/${id}`, adminArea);
-    return parsedBody as AdministrativeArea;
+    project: Omit<Project, 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById'>,
+  ): Promise<Project> => {
+    const { parsedBody } = await absoluteFetch.put(`/project/${id}`, project);
+    return parsedBody as Project;
+  };
+  const deleteProjectById = async (id: number) => {
+    const { status } = await absoluteFetch.del(`/project/${id}`);
+    return status;
   };
 
   return {
-    getAdministrativeAreas,
-    addAdministrativeArea,
-    getAdminAreaById,
-    updateAdminArea,
+    getProjectById,
+    updateProject,
+    deleteProjectById,
   };
 };
 
-export default useAdministrativeAreaApi;
+export default useProjectsApi;
