@@ -129,6 +129,7 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
       <Autocomplete
+        freeSolo
         loading={loadingOptions}
         clearOnBlur={true}
         blurOnSelect={true}
@@ -158,7 +159,10 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
         renderInput={(params) => (
           <TextField
             {...params}
-            onBlur={() => setFuzzySearchOptions([])}
+            onBlur={() => {
+              setFuzzySearchOptions([]);
+              setAutoCompleteVal('');
+            }}
             InputProps={{
               ...params.InputProps,
               startAdornment: (
@@ -242,7 +246,7 @@ const AddProject = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <TextFormField required fullWidth name={'Notes'} label={'Notes'} />
+            <TextFormField multiline minRows={3} fullWidth name={'Notes'} label={'Notes'} />
           </Grid>
         </Grid>
         <Typography variant="h5">Disposal properties</Typography>
