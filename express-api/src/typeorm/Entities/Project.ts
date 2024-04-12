@@ -1,10 +1,19 @@
-import { Entity, Column, Index, JoinColumn, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  Index,
+  JoinColumn,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { Workflow } from '@/typeorm/Entities/Workflow';
 import { TierLevel } from '@/typeorm/Entities/TierLevel';
 import { ProjectRisk } from '@/typeorm/Entities/ProjectRisk';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Agency } from './Agency';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 
 export interface ProjectMetadata {
   // Exemption Fields
@@ -162,4 +171,7 @@ export class Project extends BaseEntity {
   @JoinColumn({ name: 'risk_id' })
   @Index()
   Risk: ProjectRisk;
+
+  @OneToMany(() => ProjectProperty, (ProjectProperty) => ProjectProperty.Project)
+  ProjectProperties: ProjectProperty[];
 }

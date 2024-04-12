@@ -15,6 +15,8 @@ import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUs
 import { IAddressModel } from '@/services/geocoder/interfaces/IAddressModel';
 import { ISitePidsResponseModel } from '@/services/geocoder/interfaces/ISitePidsResponseModel';
 import { RegionalDistrict } from '@/typeorm/Entities/RegionalDistrict';
+import { Project } from '@/typeorm/Entities/Project';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 
 export class MockRes {
   statusValue: any;
@@ -401,4 +403,76 @@ export const producePidsResponse = (): ISitePidsResponseModel => {
     pids: String(faker.number.int({ min: 11111111, max: 99999999 })),
   };
   return pidResponse;
+};
+
+export const produceProject = (
+  props: Partial<Project>,
+  projectProperties?: ProjectProperty[],
+): Project => {
+  const projectId = faker.number.int();
+  const project: Project = {
+    Id: projectId,
+    Name: faker.lorem.word(),
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ProjectNumber: `SPP-${faker.number.int()}`,
+    Manager: faker.person.fullName(),
+    ReportedFiscalYear: faker.number.int({ min: 1990, max: 2040 }),
+    ActualFiscalYear: faker.number.int({ min: 1990, max: 2040 }),
+    Description: faker.string.sample(),
+    Metadata: null,
+    SubmittedOn: null,
+    ApprovedOn: null,
+    DeniedOn: null,
+    CancelledOn: null,
+    CompletedOn: null,
+    NetBook: faker.number.int(),
+    Assessed: faker.number.int(),
+    Appraised: faker.number.int(),
+    Market: faker.number.int(),
+    ProjectType: 1,
+    WorkflowId: 1,
+    Workflow: null, // TODO: produceWorkflow
+    AgencyId: 1,
+    Agency: produceAgency(),
+    TierLevelId: 1,
+    TierLevel: null, // TODO: produceTier
+    StatusId: 1,
+    Status: null, // TODO: produceStatus
+    RiskId: 1,
+    Risk: null, // TODO: produceRisk
+    ProjectProperties: projectProperties ?? [
+      produceProjectProperty({
+        ProjectId: projectId,
+      }),
+    ],
+    ...props,
+  };
+  return project;
+};
+
+export const produceProjectProperty = (props: Partial<ProjectProperty>): ProjectProperty => {
+  const projectProperty: ProjectProperty = {
+    Id: faker.number.int(),
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ProjectId: faker.number.int(),
+    Project: null,
+    PropertyTypeId: faker.number.int({ min: 0, max: 2 }),
+    PropertyType: null,
+    ParcelId: faker.number.int(),
+    Parcel: null,
+    BuildingId: faker.number.int(),
+    Building: null,
+    ...props,
+  };
+  return projectProperty;
 };
