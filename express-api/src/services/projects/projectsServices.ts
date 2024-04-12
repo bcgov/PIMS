@@ -16,6 +16,64 @@ export interface ProjectPropertyIds {
   buildings?: number[];
 }
 
+/**
+ * Retrieves a project by its ID.
+ *
+ * @param id - The ID of the project to retrieve.
+ * @returns A Promise that resolves to the project object or null if not found.
+ */
+const getProjectById = async (id: number) => {
+  const project = await projectRepo.findOne({
+    where: {
+      Id: id,
+    },
+    relations: {
+      Agency: true,
+      Workflow: true,
+      TierLevel: true,
+      Status: true,
+      Risk: true,
+      ProjectProperties: true,
+    },
+    select: {
+      Workflow: {
+        Name: true,
+        Code: true,
+        Description: true,
+      },
+      Agency: {
+        Name: true,
+        Code: true,
+      },
+      TierLevel: {
+        Name: true,
+        Description: true,
+      },
+      Status: {
+        Name: true,
+        GroupName: true,
+        Description: true,
+        IsTerminal: true,
+        IsMilestone: true,
+      },
+      Risk: {
+        Name: true,
+        Code: true,
+        Description: true,
+      },
+    },
+  });
+  return project;
+};
+
+/**
+ * Adds a new project to the database.
+ *
+ * @param project - The project object to be added.
+ * @param propertyIds - The IDs of the properties (parcels and buildings) to be associated with the project.
+ * @returns The newly created project.
+ * @throws ErrorWithCode - If the project name is missing, agency is not found, or there is an error creating the project.
+ */
 const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPropertyIds) => {
   // Does the project have a name?
   if (!project.Name) throw new ErrorWithCode('Projects must have a name.', 400);
@@ -125,6 +183,7 @@ const addProjectBuildingRelations = async (project: Project, buildingIds: number
 
 const projectServices = {
   addProject,
+  getProjectById,
 };
 
 export default projectServices;
