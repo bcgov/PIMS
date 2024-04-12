@@ -5,12 +5,40 @@ import { decodeJWT } from '@/utilities/decodeJWT';
 import { stubResponse } from '@/utilities/stubResponse';
 import { UserFiltering, UserFilteringSchema } from '@/controllers/users/usersSchema';
 import { z } from 'zod';
+import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
+/**
+ * @description Function to filter users based on agencies
+ * @param {Request}     req Incoming request.
+ * @param {Response}    res Outgoing response.
+ * @param {KeycloakUser}    kcUser Incoming Keycloak user.
+ * @returns {User[]}      An array of users.
+ */
+const filterUsersByAgencies = async (req: Request, res: Response, kcUser: KeycloakUser) => {
+  const filter = UserFilteringSchema.safeParse(req.query);
+  if (!filter.success) {
+    return res.status(400).send('Failed to parse filter query.');
+  }
+  const filterResult = filter.data;
+
+  let users;
+  if (isAdmin(kcUser) || isAuditor(kcUser)) {
+    users = await userServices.getUsers(filterResult as UserFiltering);
+  } else {
+    // Get agencies associated with the requesting user
+    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+    filterResult.agencyId = usersAgencies;
+    users = await userServices.getUsers(filterResult as UserFiltering);
+  }
+  return users;
+};
+
 /**
  * @description Redirects user to the keycloak user info endpoint.
  * @param {Request}     req Incoming request.
  * @param {Response}    res Outgoing response.
  * @returns {Response}      A 200 status with an object containing keycloak info.
  */
+
 export const getUserInfo = async (req: Request, res: Response) => {
   /**
    * #swagger.tags = ['Users']
@@ -181,14 +209,13 @@ export const getUsers = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
   const filter = UserFilteringSchema.safeParse(req.query);
-  if (filter.success) {
-    const users = await userServices.getUsers(filter.data as UserFiltering);
-    return res.status(200).send(users);
-  } else {
+  if (!filter.success) {
     return res.status(400).send('Failed to parse filter query.');
   }
+  const kcUser = req.user as unknown as KeycloakUser;
+  const users = await filterUsersByAgencies(req, res, kcUser);
+  return res.status(200).send(users);
 };
 
 /**
@@ -221,7 +248,7 @@ export const addUser = async (req: Request, res: Response) => {
  */
 export const getUserById = async (req: Request, res: Response) => {
   /**
-   * #swagger.tags = ['Users - Admin']
+   * #swagger.tags = ['Users']
    * #swagger.description = 'Returns an user that matches the supplied ID.'
    * #swagger.security = [{
             "bearerAuth": []
@@ -229,12 +256,23 @@ export const getUserById = async (req: Request, res: Response) => {
    */
   const id = req.params.id;
   const uuid = z.string().uuid().safeParse(id);
+  const kcUser = req.user as unknown as KeycloakUser;
   if (uuid.success) {
     const user = await userServices.getUserById(uuid.data);
+
     if (user) {
+      if (!isAdmin(kcUser) && !isAuditor(kcUser)) {
+        // check if user has the correct agencies
+        const usersAgencies = await userServices.hasAgencies(kcUser.preferred_username, [
+          user.AgencyId,
+        ]);
+        if (!usersAgencies) {
+          return res.status(403).send('User does not have permission to view this user');
+        }
+      }
       return res.status(200).send(user);
     } else {
-      return res.status(404);
+      return res.status(404).send('User not found');
     }
   } else {
     return res.status(400).send('Could not parse UUID.');

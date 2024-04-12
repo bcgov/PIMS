@@ -11,12 +11,11 @@ interface SingleSelectBoxFormFieldProps {
 
 const SingleSelectBoxFormField = (props: SingleSelectBoxFormFieldProps) => {
   const { control, getValues } = useFormContext();
-  const { name, label, required } = props;
+  const { name, label } = props;
   return (
     <Controller
       name={name}
       control={control}
-      rules={{ required: required }}
       render={({ field: { onChange } }) => (
         <Box
           sx={{

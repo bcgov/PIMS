@@ -1,11 +1,27 @@
-import { Box, Grid, InputAdornment, Tooltip, Typography } from '@mui/material';
+import {
+  Autocomplete,
+  Box,
+  Grid,
+  InputAdornment,
+  TextField,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import TextFormField from '../form/TextFormField';
 import AutocompleteFormField from '../form/AutocompleteFormField';
 import SelectFormField, { ISelectMenuItem } from '../form/SelectFormField';
-import { Help } from '@mui/icons-material';
+import { Room, Help } from '@mui/icons-material';
 import { LookupObject } from '@/hooks/api/useLookupApi';
 import DateFormField from '../form/DateFormField';
-import React from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { IAddressModel } from '@/hooks/api/useToolsApi';
+import { LatLng, Map } from 'leaflet';
+import usePimsApi from '@/hooks/usePimsApi';
+import { centroid } from '@turf/turf';
+import ParcelMap from '../map/ParcelMap';
+import { Controller, useFormContext } from 'react-hook-form';
+import { FeatureCollection } from 'geojson';
+import { arrayUniqueBy } from '@/utilities/helperFunctions';
 
 export type PropertyType = 'Building' | 'Parcel';
 
@@ -19,7 +35,93 @@ interface IGeneralInformationForm {
 }
 
 export const GeneralInformationForm = (props: IGeneralInformationForm) => {
+  const api = usePimsApi();
   const { propertyType, adminAreas } = props;
+  const [addressOptions, setAddressOptions] = useState<IAddressModel[]>([]);
+  const [loadingOptions, setLoadingOptions] = useState(false);
+
+  const formContext = useFormContext();
+
+  useEffect(() => {
+    const formValues = formContext.getValues();
+    if (formValues.Address1) {
+      api.tools.getAddresses(formValues.Address1, 40, 5).then((resolved) => {
+        setAddressOptions(
+          arrayUniqueBy(resolved.filter((x) => x.fullAddress) ?? [], (a) => a.fullAddress),
+        );
+      });
+    }
+  }, [formContext]);
+
+  const previousController = useRef<AbortController>();
+  const onAddressInputChange = (_event: any, value: string) => {
+    if (value && !addressOptions.find((a) => a.fullAddress === value)) {
+      if (previousController.current) {
+        previousController.current.abort();
+      }
+      //We use this AbortController to cancel requests that haven't finished yet everytime we start a new one.
+      //Without this the state can change in unexpected ways which usually results in the text input or autocomplete options disappearing.
+      const controller = new AbortController();
+      const signal = controller.signal;
+      previousController.current = controller;
+      setLoadingOptions(true);
+      api.tools
+        .getAddresses(value, 40, 5, signal)
+        .then((resolved) => {
+          setAddressOptions(
+            arrayUniqueBy(resolved.filter((x) => x.fullAddress) ?? [], (a) => a.fullAddress), //Not removing duplicates here makes the autocomplete go crazy.
+          );
+          setLoadingOptions(false);
+        })
+        .catch((e) => {
+          if (!(e instanceof DOMException)) {
+            //Represses DOMException which is the expected result of aborting the connection.
+            //If something else happens though, we may want to rethrow that.
+            throw e;
+          }
+        });
+    }
+  };
+
+  const [map, setMap] = useState<Map>(null);
+  const [position, setPosition] = useState<LatLng>(null);
+
+  const updateLocation = (latlng: LatLng) => {
+    formContext.setValue('Location', { x: latlng.lng, y: latlng.lat }); //Technically, longitude is x and latitude is y...
+  };
+
+  //Necessary to make sure we set the map to the correct place when opening this form in the edit view.
+  useEffect(() => {
+    const vals = formContext?.getValues();
+    if (vals?.Location) {
+      map?.setView([vals.Location.y, vals.Location.x], 17);
+      onMove();
+    }
+  }, [formContext, map]);
+
+  const onMove = useCallback(() => {
+    if (map) {
+      setPosition(map.getCenter());
+      updateLocation(map.getCenter());
+    }
+  }, [map]);
+
+  useEffect(() => {
+    if (map) {
+      map.on('move', onMove);
+      return () => {
+        map.off('move', onMove);
+      };
+    }
+  }, [map, onMove]);
+
+  const handleFeatureCollectionResponse = (response: FeatureCollection) => {
+    if (response.features.length) {
+      const coordArr: [number, number] = centroid(response.features[0]).geometry.coordinates;
+      map.setView([coordArr[1], coordArr[0]], 17);
+    }
+  };
+
   return (
     <>
       <Typography mt={'2rem'} variant="h5">
@@ -27,11 +129,51 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <TextFormField
-            fullWidth
-            required={propertyType === 'Building'}
+          <Controller
             name={'Address1'}
-            label={`Street address${propertyType === 'Parcel' ? ' (Leave blank if no address)' : ''}`}
+            control={formContext.control}
+            render={({ field }) => {
+              return (
+                <Autocomplete
+                  freeSolo
+                  loading={loadingOptions}
+                  getOptionLabel={(option) =>
+                    typeof option === 'string' ? option : option.fullAddress
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      error={!!formContext.formState.errors?.['Address1']}
+                      required={propertyType === 'Building'}
+                      label={'Street address'}
+                      helperText={
+                        formContext.formState.errors?.['Address1']
+                          ? 'This field is required.'
+                          : undefined
+                      }
+                      {...params}
+                    />
+                  )}
+                  options={addressOptions}
+                  onChange={(e, value) => {
+                    if (value != null) {
+                      if (typeof value !== 'string') {
+                        map.setView(new LatLng(value.latitude, value.longitude), 17);
+                        field.onChange(value.fullAddress);
+                      } else {
+                        field.onChange(value);
+                      }
+                    }
+                  }}
+                  onInputChange={(event, data) => {
+                    if (data) {
+                      field.onChange(data);
+                      onAddressInputChange(event, data);
+                    }
+                  }}
+                  value={field.value}
+                />
+              );
+            }}
           />
         </Grid>
         <Grid item xs={6}>
@@ -40,6 +182,12 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             name={'PID'}
             label={'PID'}
             numeric
+            onBlur={(event) => {
+              map.closePopup();
+              api.parcelLayer
+                .getParcelByPid(event.target.value)
+                .then(handleFeatureCollectionResponse);
+            }}
             rules={{
               validate: (val, formVals) =>
                 (val.length <= 9 &&
@@ -54,6 +202,12 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             fullWidth
             name={'PIN'}
             label={'PIN'}
+            onBlur={(event) => {
+              map.closePopup();
+              api.parcelLayer
+                .getParcelByPin(event.target.value)
+                .then(handleFeatureCollectionResponse);
+            }}
             rules={{
               validate: (val, formVals) =>
                 (val.length <= 9 &&
@@ -80,6 +234,21 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
                 val.length == 0 || val.length == 6 || 'Should be exactly 6 characters.',
             }}
           />
+        </Grid>
+        <Grid item xs={12}>
+          <ParcelMap height={'500px'} mapRef={setMap}>
+            <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height={'100%'}>
+              <Room
+                color="primary"
+                sx={{ zIndex: 400, position: 'relative', marginBottom: '12px' }}
+              />
+            </Box>
+          </ParcelMap>
+          <Typography textAlign={'center'}>
+            {position
+              ? `Latitude: ${position.lat.toFixed(4)}, Longitude: ${position.lng.toFixed(4)}`
+              : 'Fill fields or drag map to set location.'}
+          </Typography>
         </Grid>
       </Grid>
     </>
@@ -173,6 +342,7 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
           <AutocompleteFormField
             name={`ClassificationId`}
             label={'Building classification'}
+            required
             options={
               props.classificationOptions?.map((classification) => ({
                 label: classification.Name,

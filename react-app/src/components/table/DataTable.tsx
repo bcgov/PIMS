@@ -1,4 +1,11 @@
-import React, { MutableRefObject, PropsWithChildren, useMemo, useState } from 'react';
+import React, {
+  MutableRefObject,
+  PropsWithChildren,
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from 'react';
 import Icon from '@mdi/react';
 import { mdiDotsHorizontal } from '@mdi/js';
 import {
@@ -21,6 +28,7 @@ import {
   DataGridProps,
   GridOverlay,
   GridRenderCellParams,
+  GridState,
   GridTreeNodeWithRender,
   gridFilteredSortedRowEntriesSelector,
   useGridApiRef,
@@ -160,6 +168,7 @@ type FilterSearchDataGridProps = {
   tableHeader: string;
   excelTitle: string;
   addTooltip: string;
+  name: string;
   initialState?: GridInitialStateCommunity;
 } & DataGridProps;
 
@@ -170,10 +179,164 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   const [selectValue, setSelectValue] = useState<string>(props.defaultFilter);
   const tableApiRef = useGridApiRef(); // Ref to MUI DataGrid
 
+  /**
+   * @interface
+   * @description Defines possible query parameters for table state
+   */
+  interface QueryStrings {
+    keywordFilter?: string;
+    quickSelectFilter?: string;
+    columnFilterName?: string;
+    columnFilterValue?: string;
+    columnSortName?: string;
+    columnSortValue?: 'asc' | 'desc';
+  }
+
+  /**
+   * @description Sets the query parameters in the URL
+   * @param {QueryStrings} query An object with possible query string key-value pairs
+   */
+  const setQuery = (query: QueryStrings) => {
+    if ('URLSearchParams' in window) {
+      const searchParams = new URLSearchParams(window.location.search);
+      Object.entries(query).forEach((entry) => {
+        const [key, value] = entry;
+        // Remove is one of these values
+        if (value === null || value === undefined || value === '') searchParams.delete(key);
+        // Otherwise set the query param
+        else searchParams.set(key, `${value}`);
+      });
+      // Replace existing entry in the browser history
+      const newRelativePathQuery = window.location.pathname + '?' + searchParams.toString();
+      history.replaceState(null, '', newRelativePathQuery);
+    }
+  };
+
+  /**
+   * @description Gets the query parameters from the URL
+   * @returns An object with properties matching URL query parameters
+   */
+  const getQuery: () => QueryStrings = () => {
+    if ('URLSearchParams' in window) {
+      const searchParams = Object.fromEntries(new URLSearchParams(window.location.search));
+      return searchParams;
+    }
+    return {};
+  };
+
+  /**
+   * @description Clears all query parameters from the URL.
+   */
+  const clearQuery = () => {
+    history.replaceState(null, '', window.location.pathname);
+  };
+
+  /**
+   * @description Saves the current table state to a cookie based on a provided name
+   */
+  const saveSnapshot = useCallback(() => {
+    if (sessionStorage) {
+      if (tableApiRef?.current?.exportState) {
+        const currentState = tableApiRef.current.exportState();
+        sessionStorage.setItem(props.name, JSON.stringify(currentState));
+      }
+    }
+  }, [tableApiRef]);
+
+  /**
+   * @description Hook that runs after render. Looks to query strings to set filter. If none are found, then looks to state cookie.
+   */
+  useLayoutEffect(() => {
+    const query = getQuery();
+    // If query strings exist, prioritize that for preset filters, etc.
+    if (Boolean(Object.keys(query).length)) {
+      // Set keyword filter
+      if (query.keywordFilter) {
+        setKeywordSearchContents(query.keywordFilter);
+        updateSearchValue(query.keywordFilter);
+      }
+      // Set quick select filter
+      if (query.quickSelectFilter) {
+        setSelectValue(query.quickSelectFilter);
+        props.onPresetFilterChange(query.quickSelectFilter, tableApiRef);
+      }
+      // Set other column filter
+      if (query.columnFilterName && query.columnFilterValue) {
+        tableApiRef.current.setFilterModel({
+          items: [
+            {
+              value: query.columnFilterValue,
+              operator: 'contains',
+              field: query.columnFilterName,
+            },
+          ],
+        });
+      }
+      // Set sorting options
+      if (query.columnSortName && query.columnSortValue) {
+        tableApiRef.current.setSortModel([
+          {
+            field: query.columnSortName,
+            sort: query.columnSortValue,
+          },
+        ]);
+      }
+    } else {
+      // Setting the table's state from sessionStorage cookies
+      const stateFromLocalStorage = sessionStorage?.getItem(props.name);
+      if (stateFromLocalStorage) {
+        const state: GridState = JSON.parse(stateFromLocalStorage);
+        // Set sort
+        if (state.sorting) {
+          tableApiRef.current.setSortModel(state.sorting.sortModel);
+        }
+        if (state.pagination) {
+          // Pagination and visibility are local only
+          tableApiRef.current.setPaginationModel(state.pagination.paginationModel);
+        }
+        if (state.columns) {
+          tableApiRef.current.setColumnVisibilityModel(state.columns.columnVisibilityModel);
+        }
+        // Set filters
+        if (state.filter) {
+          tableApiRef.current.setFilterModel(state.filter.filterModel);
+          // Set Select filter
+          // Without MUI Pro, only one item can be in this model at a time
+          if (state.filter.filterModel.items.length > 0) {
+            setSelectValue(state.filter.filterModel.items.at(0).value);
+            setQuery({
+              quickSelectFilter: state.filter.filterModel.items.at(0).value,
+            });
+          }
+          // Set keyword search bar
+          if (state.filter.filterModel.quickFilterValues) {
+            const filterValue = state.filter.filterModel.quickFilterValues.join(' ');
+            setKeywordSearchContents(filterValue);
+            setQuery({
+              keywordFilter: filterValue,
+            });
+          }
+        }
+      }
+    }
+
+    // handle refresh and navigating away/refreshing
+    window.addEventListener('beforeunload', saveSnapshot);
+
+    return () => {
+      // in case of an SPA remove the event-listener
+      // window.removeEventListener('beforeunload', saveSnapshot);
+      saveSnapshot();
+    };
+  }, [saveSnapshot]);
+
   // Sets quickfilter value of DataGrid. newValue is a string input.
   const updateSearchValue = useMemo(() => {
     return debounce((newValue) => {
       tableApiRef.current.setQuickFilterValues(newValue.split(' ').filter((word) => word !== ''));
+      setQuery({
+        keywordFilter: newValue,
+      });
     }, 100);
   }, [tableApiRef]);
 
@@ -199,6 +362,8 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
                   setKeywordSearchContents('');
                   // Set select field back to default
                   setSelectValue(props.defaultFilter);
+                  // Clear query params
+                  clearQuery();
                 }}
               >
                 <FilterAltOffIcon />
@@ -246,8 +411,9 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           <Select
             onChange={(e) => {
               setKeywordSearchContents('');
-              props.onPresetFilterChange(e.target.value, tableApiRef);
               setSelectValue(e.target.value);
+              setQuery({ quickSelectFilter: e.target.value, keywordFilter: undefined });
+              props.onPresetFilterChange(`${e.target.value}`, tableApiRef);
             }}
             sx={{ width: '10em', marginLeft: '0.5em' }}
             value={selectValue}
@@ -262,8 +428,24 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           setRowCount(Object.values(e.filter.filteredRowsLookup).filter((value) => value).length);
         }}
         onFilterModelChange={(e) => {
+          // Can only filter by 1 at a time without DataGrid Pro
+          if (e.items.length > 0) {
+            const item = e.items.at(0);
+            setQuery({ columnFilterName: item.field, columnFilterValue: item.value });
+          } else {
+            setQuery({ columnFilterName: undefined, columnFilterValue: undefined });
+          }
           // Get the filter items from MUI, filter out blanks, set state
           setGridFilterItems(e.items.filter((item) => item.value));
+        }}
+        onSortModelChange={(e) => {
+          // Can only sort by 1 at a time without DataGrid Pro
+          if (e.length > 0) {
+            const item = e.at(0);
+            setQuery({ columnSortName: item.field, columnSortValue: item.sort });
+          } else {
+            setQuery({ columnSortName: undefined, columnSortValue: undefined });
+          }
         }}
         apiRef={tableApiRef}
         initialState={{

@@ -70,6 +70,7 @@ const _updateUserRoles = jest.fn().mockImplementation((username, roles) => {
   return roles;
 });
 const _getUserById = jest.fn().mockImplementation(() => produceUser());
+const _hasAgencies = jest.fn().mockImplementation(() => true);
 
 jest.mock('@/services/users/usersServices', () => ({
   activateUser: () => _activateUser(),
@@ -87,6 +88,7 @@ jest.mock('@/services/users/usersServices', () => ({
   getKeycloakUserRoles: () => _getUserRoles(),
   updateKeycloakUserRoles: () => _updateUserRoles(),
   getUserById: () => _getUserById(),
+  hasAgencies: () => _hasAgencies(),
 }));
 
 describe('UNIT - Testing controllers for users routes.', () => {

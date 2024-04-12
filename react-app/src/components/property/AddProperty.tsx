@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { ParcelAdd } from '@/hooks/api/useParcelsApi';
 import { BuildingAdd } from '@/hooks/api/useBuildingsApi';
 import { AuthContext } from '@/contexts/authContext';
-import { parseFloatOrNull, parseIntOrNull } from '@/utils/formatters';
+import { parseFloatOrNull, parseIntOrNull } from '@/utilities/formatters';
 
 const AddProperty = () => {
   const years = [new Date().getFullYear(), new Date().getFullYear() - 1];
@@ -68,6 +68,7 @@ const AddProperty = () => {
       TotalArea: '',
       RentableArea: '',
       BuildingTenancy: '',
+      Location: null,
       BuildingTenancyUpdatedOn: dayjs(),
       Fiscals: years.map((yr) => ({
         FiscalYear: yr,
@@ -155,7 +156,7 @@ const AddProperty = () => {
       <Button
         onClick={async () => {
           const isValid = await formMethods.trigger();
-          if (isValid) {
+          if (isValid && formMethods.getValues()['Location'] != null) {
             setShowErrorTest(false);
             if (propertyType === 'Parcel') {
               const formValues = formMethods.getValues();
@@ -167,7 +168,6 @@ const AddProperty = () => {
                 PropertyTypeId: 0,
                 AgencyId: userContext.pimsUser.data.AgencyId,
                 IsVisibleToOtherAgencies: false,
-                Location: { x: 0, y: 0 },
                 Fiscals: formValues.Fiscals.map((a) => ({
                   ...a,
                   EffectiveDate: a?.EffectiveDate?.toDate(),
@@ -187,13 +187,9 @@ const AddProperty = () => {
                 RentableArea: parseFloatOrNull(formValues.RentableArea),
                 TotalArea: parseFloatOrNull(formValues.TotalArea),
                 BuildingFloorCount: 0,
-                PropertyTypeId: 0,
+                PropertyTypeId: 1,
                 AgencyId: userContext.pimsUser.data.AgencyId,
                 IsVisibleToOtherAgencies: false,
-                Location: {
-                  x: 0,
-                  y: 0,
-                },
                 Fiscals: formValues.Fiscals.map((a) => ({
                   ...a,
                   EffectiveDate: a?.EffectiveDate?.toDate(),

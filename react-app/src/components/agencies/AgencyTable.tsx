@@ -1,11 +1,12 @@
 import React, { MutableRefObject, useEffect, useState } from 'react';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
-import { Box, SxProps } from '@mui/material';
+import { Box, Chip, SxProps } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { GridColDef, GridEventListener } from '@mui/x-data-grid';
-import { dateFormatter, statusChipFormatter } from '@/utils/formatters';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
+import { dateFormatter, statusChipFormatter } from '@/utilities/formatters';
 import { Agency } from '@/hooks/api/useAgencyApi';
+import { useNavigate } from 'react-router-dom';
 
 interface IAgencyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
@@ -19,6 +20,8 @@ const AgencyTable = (props: IAgencyTable) => {
   const { rowClickHandler, data, isLoading, refreshData, error } = props;
   const [agencies, setAgencies] = useState<Agency[]>([]);
   const { state } = useSSO();
+  const navigate = useNavigate();
+    
   useEffect(() => {
     if (error) {
       console.error(error);
@@ -35,6 +38,7 @@ const AgencyTable = (props: IAgencyTable) => {
       field: 'Name',
       headerName: 'Name',
       flex: 1,
+      minWidth: 200,
     },
     {
       field: 'Code',
@@ -74,6 +78,16 @@ const AgencyTable = (props: IAgencyTable) => {
       headerName: 'Send To',
       flex: 1,
       maxWidth: 250,
+      renderCell: (params) =>
+        params.value
+          ?.split(';')
+          .map((email) =>
+            email ? (
+              <Chip key={email} label={email} variant="outlined" sx={{ marginRight: '5px' }} />
+            ) : (
+              ''
+            ),
+          ),
     },
     {
       field: 'CreatedOn',
@@ -124,6 +138,7 @@ const AgencyTable = (props: IAgencyTable) => {
       }
     >
       <FilterSearchDataGrid
+        name="agencies"
         onPresetFilterChange={selectPresetFilter}
         getRowId={(row: Agency) => row.Id}
         defaultFilter={'All Agencies'}
@@ -151,6 +166,7 @@ const AgencyTable = (props: IAgencyTable) => {
         columns={columns}
         rows={agencies}
         addTooltip="Add a new agency"
+        onAddButtonClick={() => navigate('/admin/agencies/add')}
       />
     </Box>
   );
