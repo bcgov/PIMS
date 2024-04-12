@@ -110,8 +110,8 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
     const newProject = await projectRepo.save(project);
     // After project is saved, add parcel/building relations
     const { parcels, buildings } = propertyIds;
-    if (propertyIds.parcels) await addProjectParcelRelations(newProject, parcels);
-    if (propertyIds.buildings) await addProjectBuildingRelations(newProject, buildings);
+    if (parcels) await addProjectParcelRelations(newProject, parcels);
+    if (buildings) await addProjectBuildingRelations(newProject, buildings);
     await queryRunner.commitTransaction();
     return newProject;
   } catch (e) {
@@ -206,27 +206,77 @@ const addProjectBuildingRelations = async (project: Project, buildingIds: number
 };
 
 /**
- * Updates a project in the database.
+ * Removes the relations between a project and the specified parcel IDs.
  *
- * @param {DeepPartial<Project>} project - The project object containing the updated data.
- * @returns {Promise<any>} - A promise that resolves to the update result.
- * @throws {ErrorWithCode} - Throws an error if the project does not exist.
+ * @param {Project} project - The project from which to remove the parcel relations.
+ * @param {number[]} parcelIds - An array of parcel IDs to remove the relations for.
+ * @returns {Promise<void>} - A promise that resolves when the relations have been removed.
  */
-const updateProject = async (project: DeepPartial<Project>) => {
+const removeProjectParcelRelations = async (project: Project, parcelIds: number[]) => {
+  await Promise.all(
+    parcelIds?.map(async (parcelId) => {
+      await projectPropertiesRepo.delete({
+        ProjectId: project.Id,
+        ParcelId: parcelId,
+      });
+    }),
+  );
+};
+
+/**
+ * Removes the relationship between a project and the specified buildings.
+ *
+ * @param {Project} project - The project from which to remove the building relationships.
+ * @param {number[]} buildingIds - An array of building IDs to be removed from the project.
+ * @returns {Promise<void>} - A promise that resolves when the building relationships have been removed.
+ */
+const removeProjectBuildingRelations = async (project: Project, buildingIds: number[]) => {
+  await Promise.all(
+    buildingIds?.map(async (buildingId) => {
+      await projectPropertiesRepo.delete({
+        ProjectId: project.Id,
+        BuildingId: buildingId,
+      });
+    }),
+  );
+};
+
+/**
+ * Updates a project with the given changes and property IDs.
+ *
+ * @param project - The project object containing the changes to be made.
+ * @param propertyIds - The IDs of the properties to be associated with the project.
+ * @returns The result of the project update.
+ * @throws {ErrorWithCode} If the project name is empty or null, if the project does not exist, if the project number or agency cannot be changed, or if there is an error updating the project.
+ */
+const updateProject = async (project: DeepPartial<Project>, propertyIds: ProjectPropertyIds) => {
+  // Project must still have a name
+  // undefined is allowed because it is not always updated
+  if (project.Name === null || project.Name === '') {
+    throw new ErrorWithCode('Projects must have a name.', 400);
+  }
   const originalProject = await projectRepo.findOne({ where: { Id: project.Id } });
   if (!originalProject) {
     throw new ErrorWithCode('Project does not exist.', 404);
   }
+  // Not allowed to change Project Number
+  if (project.ProjectNumber && originalProject.ProjectNumber !== project.ProjectNumber) {
+    throw new ErrorWithCode('Project Number may not be changed.', 403);
+  } // Not allowed to change the agency
+  if (project.AgencyId && originalProject.AgencyId !== project.AgencyId) {
+    throw new ErrorWithCode('Project Agency may not be changed.', 403);
+  }
+
+  /* TODO: Need something that checks for valid changes between status, workflow, etc.
+   * Can address this when business logic is determined.
+   */
+
   const queryRunner = await AppDataSource.createQueryRunner();
   queryRunner.startTransaction();
   try {
     // Metadata field is not preserved if a metadata property is set. It is overwritten.
     // Construct the proper metadata before continuing.
     const newMetadata = { ...originalProject.Metadata, ...project.Metadata };
-
-    /* TODO: Need something that checks for valid changes between status, workflow, etc.
-     * Can address this when business logic is determined.
-     */
 
     // If status was changed, write result to Project Status History table.
     if (originalProject.StatusId !== project.StatusId) {
@@ -242,6 +292,40 @@ const updateProject = async (project: DeepPartial<Project>) => {
       { Id: project.Id },
       { ...project, Metadata: newMetadata },
     );
+
+    // Update related Project Properties
+    const existingProjectProperties = await projectPropertiesRepo.find({
+      where: { ProjectId: originalProject.Id },
+    });
+    const existingParcelIds = existingProjectProperties
+      .map((record) => record.ParcelId)
+      .filter((id) => id);
+    const existingBuildingIds = existingProjectProperties
+      .map((record) => record.BuildingId)
+      .filter((id) => id);
+    // Adding new Project Properties
+    const propertiesToAdd: ProjectPropertyIds = {
+      parcels: propertyIds.parcels
+        ? propertyIds.parcels.filter((id) => !existingParcelIds.includes(id))
+        : [],
+      buildings: propertyIds.buildings
+        ? propertyIds.buildings.filter((id) => !existingBuildingIds.includes(id))
+        : [],
+    };
+    const { parcels: parcelsToAdd, buildings: buildingsToAdd } = propertiesToAdd;
+    if (parcelsToAdd) await addProjectParcelRelations(originalProject, parcelsToAdd);
+    if (buildingsToAdd) await addProjectBuildingRelations(originalProject, buildingsToAdd);
+    // Removing the old project properties
+    const propertiesToRemove: ProjectPropertyIds = {
+      parcels: parcelsToAdd ? existingParcelIds.filter((id) => !parcelsToAdd.includes(id)) : [],
+      buildings: buildingsToAdd
+        ? existingBuildingIds.filter((id) => !buildingsToAdd.includes(id))
+        : [],
+    };
+    const { parcels: parcelsToRemove, buildings: buildingsToRemove } = propertiesToRemove;
+    if (parcelsToRemove) await removeProjectParcelRelations(originalProject, parcelsToRemove);
+    if (buildingsToRemove) await removeProjectBuildingRelations(originalProject, buildingsToRemove);
+
     queryRunner.commitTransaction();
     return updateResult;
   } catch (e) {
