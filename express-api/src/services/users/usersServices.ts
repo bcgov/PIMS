@@ -9,8 +9,8 @@ import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { UserFiltering } from '@/controllers/users/usersSchema';
 
 interface NormalizedKeycloakUser {
-  given_name: string;
-  family_name: string;
+  first_name: string;
+  last_name: string;
   username: string;
   guid: string;
   email: string;
@@ -33,8 +33,8 @@ const normalizeKeycloakUser = (kcUser: SSOUser): NormalizedKeycloakUser => {
     case 'idir':
       user = kcUser as SSOIdirUser;
       return {
-        given_name: user.given_name,
-        family_name: user.family_name,
+        first_name: user.given_name,
+        last_name: user.family_name,
         username: kcUser.preferred_username,
         email: kcUser.email,
         display_name: kcUser.display_name,
@@ -43,8 +43,8 @@ const normalizeKeycloakUser = (kcUser: SSOUser): NormalizedKeycloakUser => {
     case 'bceidbasic':
       user = kcUser as SSOBCeIDUser;
       return {
-        given_name: '',
-        family_name: '',
+        first_name: '',
+        last_name: '',
         username: kcUser.preferred_username,
         email: kcUser.email,
         display_name: kcUser.display_name,
@@ -64,11 +64,11 @@ const activateUser = async (ssoUser: SSOUser) => {
   const normalizedUser = normalizeKeycloakUser(ssoUser);
   const internalUser = await getUser(ssoUser.preferred_username);
   if (!internalUser) {
-    const { given_name, family_name, username, guid } = normalizedUser;
+    const { first_name, last_name, username, guid } = normalizedUser;
     AppDataSource.getRepository(User).insert({
       Username: username,
-      FirstName: given_name,
-      LastName: family_name,
+      FirstName: first_name,
+      LastName: last_name,
       KeycloakUserId: guid,
     });
   } else {
@@ -135,8 +135,8 @@ const addKeycloakUserOnHold = async (
   });
   const result = await AppDataSource.getRepository(User).insert({
     Id: randomUUID(),
-    FirstName: normalizedKc.given_name,
-    LastName: normalizedKc.family_name,
+    FirstName: normalizedKc.first_name,
+    LastName: normalizedKc.last_name,
     Email: normalizedKc.email,
     DisplayName: normalizedKc.display_name,
     KeycloakUserId: normalizedKc.guid,

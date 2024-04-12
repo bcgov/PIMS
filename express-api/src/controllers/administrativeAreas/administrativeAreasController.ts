@@ -8,7 +8,6 @@ import {
 import administrativeAreasServices from '@/services/administrativeAreas/administrativeAreasServices';
 import { Roles } from '@/constants/roles';
 import userServices from '@/services/users/usersServices';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
 
 
 /**

@@ -202,8 +202,8 @@ describe('UNIT - User services', () => {
   describe('normalizeKeycloakUser', () => {
     it('should return a normalized user from IDIR', () => {
       const result = userServices.normalizeKeycloakUser(ssoUser);
-      expect(result.given_name).toBe(ssoUser.first_name);
-      expect(result.family_name).toBe(ssoUser.last_name);
+      expect(result.first_name).toBe(ssoUser.first_name);
+      expect(result.last_name).toBe(ssoUser.last_name);
       expect(result.username).toBe(ssoUser.preferred_username);
     });
 

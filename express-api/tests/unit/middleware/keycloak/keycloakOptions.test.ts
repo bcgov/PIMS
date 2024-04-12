@@ -23,7 +23,7 @@ describe('UNIT - SSO Options', () => {
   const loggerSpy = jest.spyOn(logger, 'info');
   it('should log when a user logs in', async () => {
     await afterUserLogin(user);
-    expect(loggerSpy).toHaveBeenCalledWith('Tester has logged in.');
+    expect(loggerSpy).toHaveBeenCalledWith(`${user.display_name} has logged in.`);
     expect(_userExists).toHaveBeenCalledTimes(1);
     expect(_userExists).toHaveBeenCalledWith({
       where: {
@@ -35,6 +35,6 @@ describe('UNIT - SSO Options', () => {
 
   it('should log when a user logs out', async () => {
     await afterUserLogout(user);
-    expect(loggerSpy).toHaveBeenCalledWith('Tester has logged out.');
+    expect(loggerSpy).toHaveBeenCalledWith(`${user.display_name} has logged out.`);
   });
 });

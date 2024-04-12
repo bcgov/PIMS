@@ -6,7 +6,7 @@ import {
   isUserActive,
 } from '@/utilities/authorizationChecks';
 import { faker } from '@faker-js/faker';
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { getUser as getUserService } from '@/services/users/usersServices';
 
 // Mock the getUser function
@@ -15,16 +15,16 @@ jest.mock('@/services/users/usersServices', () => ({
 }));
 
 describe('Authorization Checks', () => {
-  const mockUser: KeycloakUser = {
+  const mockUser: SSOUser = {
     name: faker.string.alphanumeric(),
     preferred_username: faker.string.alphanumeric(),
     email: faker.internet.email(),
     display_name: faker.string.alphanumeric(),
     identity_provider: 'idir',
-    idir_user_guid: faker.string.uuid(),
-    idir_username: faker.string.alphanumeric(),
-    given_name: faker.person.firstName(),
-    family_name: faker.person.lastName(),
+    guid: faker.string.uuid(),
+    username: faker.string.alphanumeric(),
+    first_name: faker.person.firstName(),
+    last_name: faker.person.lastName(),
     client_roles: ['Administrator'],
   };
 
