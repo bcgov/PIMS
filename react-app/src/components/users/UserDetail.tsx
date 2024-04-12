@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import DataCard from '../display/DataCard';
 import { Box, Grid, Typography } from '@mui/material';
-import { statusChipFormatter } from '@/utils/formatters';
+import { statusChipFormatter } from '@/utilities/formatters';
 import DeleteDialog from '../dialog/DeleteDialog';
 import { deleteAccountConfirmText } from '@/constants/strings';
 import ConfirmDialog from '../dialog/ConfirmDialog';
