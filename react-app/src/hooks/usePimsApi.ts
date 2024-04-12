@@ -9,6 +9,7 @@ import useBuildingsApi from './api/useBuildingsApi';
 import useParcelsApi from './api/useParcelsApi';
 import useLookupApi from './api/useLookupApi';
 import useAdministrativeAreaApi from './api/useAdministrativeAreaApi';
+import useToolsApi from './api/useToolsApi';
 import useParcelLayerApi from './api/useParcelLayerApi';
 
 /**
@@ -27,6 +28,7 @@ const usePimsApi = () => {
   const parcels = useParcelsApi(fetch);
   const lookup = useLookupApi(fetch);
   const administrativeAreas = useAdministrativeAreaApi(fetch);
+  const tools = useToolsApi(fetch);
   const parcelLayer = useParcelLayerApi(fetch);
 
   return {
@@ -38,6 +40,7 @@ const usePimsApi = () => {
     parcels,
     lookup,
     administrativeAreas,
+    tools,
     parcelLayer,
   };
 };
