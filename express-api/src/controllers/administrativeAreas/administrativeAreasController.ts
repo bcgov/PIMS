@@ -9,7 +9,6 @@ import administrativeAreasServices from '@/services/administrativeAreas/administ
 import { Roles } from '@/constants/roles';
 import userServices from '@/services/users/usersServices';
 
-
 /**
  * @description Gets a list of administrative areas.
  * @param   {Request}     req Incoming request

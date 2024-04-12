@@ -21,7 +21,7 @@ const AgencyTable = (props: IAgencyTable) => {
   const [agencies, setAgencies] = useState<Agency[]>([]);
   const { state } = useSSO();
   const navigate = useNavigate();
-    
+
   useEffect(() => {
     if (error) {
       console.error(error);
