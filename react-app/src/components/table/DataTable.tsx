@@ -473,7 +473,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             padding: '16px',
           },
         }}
-        slots={{ toolbar: KeywordSearch }}
+        slots={{ toolbar: KeywordSearch, noRowsOverlay: NoRowsOverlay }}
         {...props}
       />
     </>
