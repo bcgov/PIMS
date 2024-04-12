@@ -1,9 +1,12 @@
 import { AppDataSource } from '@/appDataSource';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { Building } from '@/typeorm/Entities/Building';
+import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Project } from '@/typeorm/Entities/Project';
+import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
+import { ProjectSnapshot } from '@/typeorm/Entities/ProjectSnapshot';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { DeepPartial } from 'typeorm';
 
@@ -181,9 +184,39 @@ const addProjectBuildingRelations = async (project: Project, buildingIds: number
   );
 };
 
+const deleteProjectById = async (id: number) => {
+  if (!(await projectRepo.exists({ where: { Id: id } }))) {
+    throw new ErrorWithCode('Project does not exist.', 404);
+  }
+  const queryRunner = await AppDataSource.createQueryRunner();
+  queryRunner.startTransaction();
+  try {
+    // Remove Project Properties relations
+    await projectPropertiesRepo.delete({ ProjectId: id });
+    // Remove Project Notes
+    await AppDataSource.getRepository(ProjectNote).delete({ ProjectId: id });
+    // Remove Project Snapshots
+    await AppDataSource.getRepository(ProjectSnapshot).delete({ ProjectId: id });
+    // Remove Notifications from Project
+    /* FIXME: This should eventually be done with the notifications service.
+     * Otherwise, any notifications sent to CHES won't be cancelled.
+     */
+    await AppDataSource.getRepository(NotificationQueue).delete({ ProjectId: id });
+    // Delete the project
+    const deleteResult = await projectRepo.delete({ Id: id });
+    queryRunner.commitTransaction();
+    return deleteResult;
+  } catch (e) {
+    await queryRunner.rollbackTransaction();
+    if (e instanceof ErrorWithCode) throw e;
+    throw new ErrorWithCode('Error deleting project.', 500);
+  }
+};
+
 const projectServices = {
   addProject,
   getProjectById,
+  deleteProjectById,
 };
 
 export default projectServices;
