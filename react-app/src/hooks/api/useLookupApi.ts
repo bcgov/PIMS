@@ -31,11 +31,17 @@ const useLookupApi = (absoluteFetch: IFetch) => {
     return parsedBody as Omit<LookupObject, 'SortOrder'>[];
   };
 
+  const getProjectTierLevels = async () => {
+    const { parsedBody } = await absoluteFetch.get('/lookup/project/tier/levels');
+    return parsedBody as LookupObject[];
+  };
+
   return {
     getClassifications,
     getConstructionTypes,
     getPredominateUses,
     getRegionalDistricts,
+    getProjectTierLevels,
   };
 };
 

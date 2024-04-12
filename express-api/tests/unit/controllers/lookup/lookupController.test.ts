@@ -8,6 +8,7 @@ import {
   produceConstructionType,
   producePredominateUse,
   produceRegionalDistrict,
+  produceTierLevels,
 } from '../../../testUtils/factories';
 import { AppDataSource } from '@/appDataSource';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
@@ -19,6 +20,7 @@ import {
   lookupRegionalDistricts,
 } from '@/controllers/lookup/lookupController';
 import { RegionalDistrict } from '@/typeorm/Entities/RegionalDistrict';
+import { TierLevel } from '@/typeorm/Entities/TierLevel';
 
 const {
   lookupAgencies,
@@ -34,6 +36,7 @@ const _findClassification = jest.fn().mockImplementation(() => [produceClassific
 const _findUses = jest.fn().mockImplementation(() => [producePredominateUse({})]);
 const _findConstruction = jest.fn().mockImplementation(() => [produceConstructionType({})]);
 const _findRegionalDistricts = jest.fn().mockImplementation(() => [produceRegionalDistrict({})]);
+const _findTierLevels = jest.fn().mockImplementation(() => [produceTierLevels()]);
 jest
   .spyOn(AppDataSource.getRepository(PropertyClassification), 'find')
   .mockImplementation(async () => _findClassification());
@@ -46,6 +49,10 @@ jest
 jest
   .spyOn(AppDataSource.getRepository(RegionalDistrict), 'find')
   .mockImplementation(() => _findRegionalDistricts());
+
+jest
+  .spyOn(AppDataSource.getRepository(TierLevel), 'find')
+  .mockImplementation(() => _findTierLevels());
 
 describe('UNIT - Lookup Controller', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
@@ -172,14 +179,14 @@ describe('UNIT - Lookup Controller', () => {
   });
 
   describe('GET /lookup/project/tier/levels', () => {
-    it('should return the stub response of 501', async () => {
-      await lookupProjectTierLevels(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and a list of project tier levels', async () => {
+    it('should return status 200 and a list of project tier levels', async () => {
       await lookupProjectTierLevels(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
+    });
+    it('should return 400 on bad parse', async () => {
+      _findTierLevels.mockImplementationOnce(() => [{ Name: [] }]);
+      await lookupProjectTierLevels(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
     });
   });
 
