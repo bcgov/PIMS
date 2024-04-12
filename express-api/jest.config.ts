@@ -39,6 +39,7 @@ const jestConfig: JestConfigWithTsJest = {
   roots: ['.'],
   modulePaths: [compilerOptions.baseUrl], // <-- This will be set to 'baseUrl' value
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
+  setupFiles: ["dotenv/config"],
 };
 
 export default jestConfig;
