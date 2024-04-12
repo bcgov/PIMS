@@ -122,6 +122,14 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
   }
 };
 
+/**
+ * Adds parcel relations to a project.
+ *
+ * @param project - The project to add parcel relations to.
+ * @param parcelIds - An array of parcel IDs to add as relations.
+ * @throws {ErrorWithCode} - If the parcel with the given ID does not exist or already belongs to another project.
+ * @returns {Promise<void>} - A promise that resolves when the parcel relations have been added.
+ */
 const addProjectParcelRelations = async (project: Project, parcelIds: number[]) => {
   await Promise.all(
     parcelIds?.map(async (parcelId) => {
@@ -156,6 +164,14 @@ const addProjectParcelRelations = async (project: Project, parcelIds: number[]) 
   );
 };
 
+/**
+ * Adds building relations to a project.
+ *
+ * @param {Project} project - The project to add building relations to.
+ * @param {number[]} buildingIds - An array of building IDs to add as relations.
+ * @returns {Promise<void>} - A promise that resolves when the building relations have been added.
+ * @throws {ErrorWithCode} - If a building with the given ID does not exist or if the building already belongs to another project.
+ */
 const addProjectBuildingRelations = async (project: Project, buildingIds: number[]) => {
   await Promise.all(
     buildingIds?.map(async (buildingId) => {
@@ -189,6 +205,60 @@ const addProjectBuildingRelations = async (project: Project, buildingIds: number
   );
 };
 
+/**
+ * Updates a project in the database.
+ *
+ * @param {DeepPartial<Project>} project - The project object containing the updated data.
+ * @returns {Promise<any>} - A promise that resolves to the update result.
+ * @throws {ErrorWithCode} - Throws an error if the project does not exist.
+ */
+const updateProject = async (project: DeepPartial<Project>) => {
+  const originalProject = await projectRepo.findOne({ where: { Id: project.Id } });
+  if (!originalProject) {
+    throw new ErrorWithCode('Project does not exist.', 404);
+  }
+  const queryRunner = await AppDataSource.createQueryRunner();
+  queryRunner.startTransaction();
+  try {
+    // Metadata field is not preserved if a metadata property is set. It is overwritten.
+    // Construct the proper metadata before continuing.
+    const newMetadata = { ...originalProject.Metadata, ...project.Metadata };
+
+    /* TODO: Need something that checks for valid changes between status, workflow, etc.
+     * Can address this when business logic is determined.
+     */
+
+    // If status was changed, write result to Project Status History table.
+    if (originalProject.StatusId !== project.StatusId) {
+      await AppDataSource.getRepository(ProjectStatusHistory).insert({
+        CreatedById: project.UpdatedById,
+        ProjectId: project.Id,
+        WorkflowId: project.WorkflowId,
+        StatusId: project.StatusId,
+      });
+    }
+
+    const updateResult = await projectRepo.update(
+      { Id: project.Id },
+      { ...project, Metadata: newMetadata },
+    );
+    queryRunner.commitTransaction();
+    return updateResult;
+  } catch (e) {
+    await queryRunner.rollbackTransaction();
+    logger.warn(e.message);
+    if (e instanceof ErrorWithCode) throw e;
+    throw new ErrorWithCode('Error updating project.', 500);
+  }
+};
+
+/**
+ * Deletes a project by its ID.
+ *
+ * @param {number} id - The ID of the project to delete.
+ * @returns {Promise<DeleteResult>} - A promise that resolves to the delete result.
+ * @throws {ErrorWithCode} - If the project does not exist, or if there is an error deleting the project.
+ */
 const deleteProjectById = async (id: number) => {
   if (!(await projectRepo.exists({ where: { Id: id } }))) {
     throw new ErrorWithCode('Project does not exist.', 404);
@@ -205,7 +275,7 @@ const deleteProjectById = async (id: number) => {
     // Remove Project Snapshots
     await AppDataSource.getRepository(ProjectSnapshot).delete({ ProjectId: id });
     // Remove Project Tasks
-    await AppDataSource.getRepository(ProjectTask).delete({ ProjectId: id })
+    await AppDataSource.getRepository(ProjectTask).delete({ ProjectId: id });
     // Remove Project Agency Responses
     await AppDataSource.getRepository(ProjectAgencyResponse).delete({ ProjectId: id });
     // Remove Notifications from Project
@@ -229,6 +299,7 @@ const projectServices = {
   addProject,
   getProjectById,
   deleteProjectById,
+  updateProject,
 };
 
 export default projectServices;
