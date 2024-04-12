@@ -5,7 +5,8 @@ import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
-import { DeepPartial } from 'typeorm';
+import { DeepPartial, FindOptionsOrder, In } from 'typeorm';
+import { ProjectFilter } from '@/services/projects/projectSchema';
 
 const projectRepo = AppDataSource.getRepository(Project);
 const projectPropertiesRepo = AppDataSource.getRepository(ProjectProperty);
@@ -123,8 +124,28 @@ const addProjectBuildingRelations = async (project: Project, buildingIds: number
   );
 };
 
+const getProjects = async (filter: ProjectFilter, includeRelations: boolean = false) => {
+  const projects = await projectRepo.find({
+    relations: {
+      ProjectProperties: includeRelations,
+      Agency: includeRelations,
+      Status: includeRelations,
+    },
+    where: {
+      Status: In(filter.StatusId),
+      AgencyId: In(filter.Agencies),
+      ActualFiscalYear: filter.FiscalYear,
+    },
+    take: filter.quantity,
+    skip: (filter.page ?? 0) * (filter.quantity ?? 0),
+    order: filter.sort as FindOptionsOrder<Project>,
+  });
+  return projects;
+};
+
 const projectServices = {
   addProject,
+  getProjects,
 };
 
 export default projectServices;
