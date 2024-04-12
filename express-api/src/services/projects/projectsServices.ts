@@ -4,10 +4,14 @@ import { Building } from '@/typeorm/Entities/Building';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Project } from '@/typeorm/Entities/Project';
+import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
 import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectSnapshot } from '@/typeorm/Entities/ProjectSnapshot';
+import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
+import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import logger from '@/utilities/winstonLogger';
 import { DeepPartial } from 'typeorm';
 
 const projectRepo = AppDataSource.getRepository(Project);
@@ -112,6 +116,7 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
     return newProject;
   } catch (e) {
     await queryRunner.rollbackTransaction();
+    logger.warn(e.message);
     if (e instanceof ErrorWithCode) throw e;
     throw new ErrorWithCode('Error creating project.', 500);
   }
@@ -193,10 +198,16 @@ const deleteProjectById = async (id: number) => {
   try {
     // Remove Project Properties relations
     await projectPropertiesRepo.delete({ ProjectId: id });
+    // Remove Project Status History
+    await AppDataSource.getRepository(ProjectStatusHistory).delete({ ProjectId: id });
     // Remove Project Notes
     await AppDataSource.getRepository(ProjectNote).delete({ ProjectId: id });
     // Remove Project Snapshots
     await AppDataSource.getRepository(ProjectSnapshot).delete({ ProjectId: id });
+    // Remove Project Tasks
+    await AppDataSource.getRepository(ProjectTask).delete({ ProjectId: id })
+    // Remove Project Agency Responses
+    await AppDataSource.getRepository(ProjectAgencyResponse).delete({ ProjectId: id });
     // Remove Notifications from Project
     /* FIXME: This should eventually be done with the notifications service.
      * Otherwise, any notifications sent to CHES won't be cancelled.
@@ -208,6 +219,7 @@ const deleteProjectById = async (id: number) => {
     return deleteResult;
   } catch (e) {
     await queryRunner.rollbackTransaction();
+    logger.warn(e.message);
     if (e instanceof ErrorWithCode) throw e;
     throw new ErrorWithCode('Error deleting project.', 500);
   }
