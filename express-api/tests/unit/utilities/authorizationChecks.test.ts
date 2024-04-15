@@ -5,9 +5,8 @@ import {
   isUserDisabled,
   isUserActive,
 } from '@/utilities/authorizationChecks';
-import { faker } from '@faker-js/faker';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { getUser as getUserService } from '@/services/users/usersServices';
+import { produceSSO } from '@/../tests/testUtils/factories';
 
 // Mock the getUser function
 jest.mock('@/services/users/usersServices', () => ({
@@ -15,18 +14,8 @@ jest.mock('@/services/users/usersServices', () => ({
 }));
 
 describe('Authorization Checks', () => {
-  const mockUser: SSOUser = {
-    name: faker.string.alphanumeric(),
-    preferred_username: faker.string.alphanumeric(),
-    email: faker.internet.email(),
-    display_name: faker.string.alphanumeric(),
-    identity_provider: 'idir',
-    guid: faker.string.uuid(),
-    username: faker.string.alphanumeric(),
-    first_name: faker.person.firstName(),
-    last_name: faker.person.lastName(),
-    client_roles: ['Administrator'],
-  };
+  const mockUser = produceSSO();
+  mockUser.client_roles.push('Administrator');
 
   beforeEach(() => {
     jest.clearAllMocks();

@@ -28,27 +28,26 @@ const normalizeKeycloakUser = (kcUser: SSOUser): NormalizedKeycloakUser => {
   const provider = kcUser.identity_provider;
   const normalizeUuid = (keycloakUuid: string) =>
     keycloakUuid.toLowerCase().replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/g, '$1-$2-$3-$4-$5');
-  let user;
   switch (provider) {
     case 'idir':
-      user = kcUser as SSOIdirUser;
+      kcUser as SSOIdirUser;
       return {
-        first_name: user.given_name,
-        last_name: user.family_name,
+        first_name: kcUser.first_name,
+        last_name: kcUser.last_name,
         username: kcUser.preferred_username,
         email: kcUser.email,
         display_name: kcUser.display_name,
-        guid: normalizeUuid(user.idir_user_guid),
+        guid: normalizeUuid(kcUser.guid),
       };
     case 'bceidbasic':
-      user = kcUser as SSOBCeIDUser;
+      kcUser as SSOBCeIDUser;
       return {
         first_name: '',
         last_name: '',
         username: kcUser.preferred_username,
         email: kcUser.email,
         display_name: kcUser.display_name,
-        guid: normalizeUuid(user.bceid_user_guid),
+        guid: normalizeUuid(kcUser.guid),
       };
     default:
       throw new Error();
