@@ -125,14 +125,14 @@ const addProjectBuildingRelations = async (project: Project, buildingIds: number
 };
 
 const getProjects = async (filter: ProjectFilter, includeRelations: boolean = false) => {
-  const relations = includeRelations
-    ? ['ProjectProperties', 'Agency', 'Status', 'Buildings', 'Parcels']
-    : [];
-
   const projects = await projectRepo.find({
-    relations,
+    relations: {
+      ProjectProperties: includeRelations,
+      Agency: includeRelations,
+      Status: includeRelations,
+    },
     where: {
-      Status: In(filter.StatusId),
+      StatusId: In(filter.StatusId),
       AgencyId: In(filter.Agencies),
       ActualFiscalYear: filter.FiscalYear,
       ProjectNumber: filter.ProjectNumber,
