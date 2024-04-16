@@ -7,6 +7,7 @@ import useDataLoader from '@/hooks/useDataLoader';
 import { dateFormatter, projectStatusChipFormatter } from '@/utilities/formatters';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { Agency } from '@/hooks/api/useAgencyApi';
+import { User } from '@/hooks/api/useUsersApi';
 
 const ProjectsTable = () => {
   const api = usePimsApi();
@@ -64,6 +65,7 @@ const ProjectsTable = () => {
       field: 'UpdatedBy',
       headerName: 'Updated By',
       flex: 1,
+      valueGetter: (value: User) => value?.FirstName + ' ' + value?.LastName ?? '',
     },
   ];
 

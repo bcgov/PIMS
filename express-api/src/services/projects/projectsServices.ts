@@ -5,7 +5,7 @@ import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
-import { DeepPartial, FindOptionsOrder, In } from 'typeorm';
+import { DeepPartial, FindManyOptions, FindOptionsOrder, In } from 'typeorm';
 import { ProjectFilter } from '@/services/projects/projectSchema';
 
 const projectRepo = AppDataSource.getRepository(Project);
@@ -125,12 +125,7 @@ const addProjectBuildingRelations = async (project: Project, buildingIds: number
 };
 
 const getProjects = async (filter: ProjectFilter, includeRelations: boolean = false) => {
-  const projects = await projectRepo.find({
-    relations: {
-      ProjectProperties: includeRelations,
-      Agency: includeRelations,
-      Status: includeRelations,
-    },
+  const queryOptions: FindManyOptions<Project> = {
     select: {
       Agency: {
         Name: true,
@@ -146,7 +141,14 @@ const getProjects = async (filter: ProjectFilter, includeRelations: boolean = fa
     take: filter.quantity,
     skip: (filter.page ?? 0) * (filter.quantity ?? 0),
     order: filter.sort as FindOptionsOrder<Project>,
-  });
+  };
+
+  // Conditionally include relations if includeRelations is true
+  if (includeRelations) {
+    queryOptions.relations = ['ProjectProperties', 'Agency', 'Status', 'CreatedBy', 'UpdatedBy'];
+  }
+
+  const projects = await projectRepo.find(queryOptions);
   return projects;
 };
 
