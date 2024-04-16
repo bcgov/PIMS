@@ -45,6 +45,7 @@ export interface Project {
   ReportedFiscalYear: string;
   ActualFiscalYear: number;
   Description: string;
+  Metadata?: string;
   SubmittedOn: Date;
   ApprovedOn: Date;
   DeniedOn: Date;
@@ -60,7 +61,7 @@ export interface Project {
   WorkflowId: number;
   Workflow?: Workflow;
   TierLevelId: number;
-  TierLevel?: TierLevel;
+  TierLevel: TierLevel;
   StatusId: number;
   Status?: ProjectStatus;
   RiskId: number;
