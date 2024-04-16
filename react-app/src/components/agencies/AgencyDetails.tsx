@@ -34,7 +34,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   const { id } = useParams();
   const api = usePimsApi();
   const userContext = useContext(AuthContext);
-  if (!userContext.keycloak.hasRole([Roles.ADMIN, Roles.AUDITOR], { requireAllRoles: false })) {
+  if (!userContext.keycloak.hasRoles([Roles.ADMIN, Roles.AUDITOR], { requireAllRoles: false })) {
     navigate('/');
   }
 

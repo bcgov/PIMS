@@ -24,6 +24,7 @@ export const getUser = async (username: string): Promise<User | null> => {
   return user;
 };
 
+// TODO: UPDATE THIS
 const normalizeKeycloakUser = (kcUser: SSOUser): NormalizedKeycloakUser => {
   const provider = kcUser.identity_provider;
   const normalizeUuid = (keycloakUuid: string) =>

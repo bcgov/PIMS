@@ -11,7 +11,7 @@ const AgencyManagement = () => {
   // Getting data from API
   const api = usePimsApi();
   const userContext = useContext(AuthContext);
-  if (!userContext.keycloak.hasRole([Roles.ADMIN, Roles.AUDITOR], { requireAllRoles: false })) {
+  if (!userContext.keycloak.hasRoles([Roles.ADMIN, Roles.AUDITOR], { requireAllRoles: false })) {
     navigate('/');
   }
   const { data, refreshData, isLoading, error } = useDataLoader(api.agencies.getAgenciesWithParent);
