@@ -9,7 +9,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { NavigateBackButton } from '../display/DetailViewNavigation';
 import TextFormField from '../form/TextFormField';
 import AutocompleteFormField from '../form/AutocompleteFormField';
@@ -22,6 +22,7 @@ import usePimsApi from '@/hooks/usePimsApi';
 import { Parcel, ParcelEvaluation } from '@/hooks/api/useParcelsApi';
 import { Building, BuildingEvaluation } from '@/hooks/api/useBuildingsApi';
 import useDataLoader from '@/hooks/useDataLoader';
+import { Agency } from '@/hooks/api/useAgencyApi';
 
 interface IDisposalProjectSearch {
   rows: any[];
@@ -65,11 +66,11 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
       field: 'Type',
       headerName: 'Type',
       flex: 1,
+      maxWidth: 75,
     },
     {
       field: 'PID_Address',
       headerName: 'PID/Address',
-      valueGetter: (params) => params.row.PID ?? params.row.Address1,
       flex: 1,
       renderCell: (params) => {
         return (
@@ -79,30 +80,35 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
             rel="noopener noreferrer"
             style={{ color: theme.palette.primary.main }}
           >
-            {params.value}
+            {params.row.Type === 'Building' && params.row.Address1
+              ? params.row.Address1
+              : params.row.PID}
           </Link>
-        );
+        ) as ReactNode;
       },
     },
     {
       field: 'Agency',
       headerName: 'Agency',
-      valueGetter: (params) => params.value?.Name ?? 'N/A',
+      valueGetter: (value: Agency) => value?.Name ?? 'N/A',
       flex: 1,
     },
     {
-      field: 'Year',
+      field: 'EvaluationYears',
       headerName: 'Year',
       flex: 1,
-      valueGetter: (params) =>
-        (params.row.Evaluations as ParcelEvaluation[] | BuildingEvaluation[])
-          ?.map((a) => a.Year) //Map evaluations to just their year.
-          .sort((a, b) => b - a)?.[0] ?? 'N/A', //Sort in reverse order to obtain most recent year.
+      maxWidth: 75,
+      valueGetter: (evaluationYears: number[]) => {
+        return evaluationYears?.sort((a, b) => b - a)?.[0] ?? 'N/A'; //Sort in reverse order to obtain most recent year.
+      },
     },
     {
-      field: 'Evaluation',
-      headerName: 'Evaluation',
-      valueGetter: (params) => params.row.Evaluations?.[0]?.Value ?? 'N/A',
+      field: 'Evaluations',
+      headerName: 'Assessed',
+      maxWidth: 120,
+      valueGetter: (evaluations: ParcelEvaluation[] | BuildingEvaluation[]) => {
+        return evaluations?.sort((a, b) => b.Year - a.Year)[0]?.Value ?? 'N/A';
+      },
       flex: 1,
     },
     {
@@ -122,7 +128,7 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
           >
             <Delete />
           </IconButton>
-        );
+        ) as ReactNode;
       },
     },
   ];
@@ -149,8 +155,16 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
           api.properties.propertiesFuzzySearch(value).then((response) => {
             setLoadingOptions(false);
             setFuzzySearchOptions([
-              ...response.Parcels.map((a) => ({ ...a, Type: 'Parcel' })),
-              ...response.Buildings.map((a) => ({ ...a, Type: 'Building' })),
+              ...response.Parcels.map((a) => ({
+                ...a,
+                Type: 'Parcel',
+                EvaluationYears: a.Evaluations.map((e) => e.Year),
+              })),
+              ...response.Buildings.map((a) => ({
+                ...a,
+                Type: 'Building',
+                EvaluationYears: a.Evaluations.map((e) => e.Year),
+              })),
             ]);
           });
         }}
