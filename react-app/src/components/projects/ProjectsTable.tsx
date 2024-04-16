@@ -10,8 +10,6 @@ import { User } from '@/hooks/api/useUsersApi';
 
 const ProjectsTable = () => {
   const api = usePimsApi();
-  //const navigate = useNavigate();
-
   const { data, loadOnce } = useDataLoader(api.projects.getProjects);
   loadOnce();
 
