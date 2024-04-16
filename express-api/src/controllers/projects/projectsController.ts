@@ -10,14 +10,14 @@ import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
  * @description Function to filter users based on agencies
  * @param {Request}     req Incoming request.
  * @param {Response}    res Outgoing response.
- * @param {KeycloakUser}    kcUser Incoming Keycloak user.
  * @returns {Project[]}      An array of projects.
  */
-const filterProjectsByAgencies = async (req: Request, res: Response, kcUser: KeycloakUser) => {
+const filterProjectsByAgencies = async (req: Request, res: Response) => {
   const filter = ProjectFilterSchema.safeParse(req.query);
   const includeRelations = req.query.includeRelations === 'true';
+  const kcUser = req.user as unknown as KeycloakUser;
   if (!filter.success) {
-    return res.status(400).send('Failed to parse filter query.');
+    return res.status(400).send('Could not parse filter.');
   }
   const filterResult = filter.data;
 
@@ -25,9 +25,10 @@ const filterProjectsByAgencies = async (req: Request, res: Response, kcUser: Key
   if (isAdmin(kcUser) || isAuditor(kcUser)) {
     projects = await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
   } else {
-    // Get projects associated with the requesting user
+    // get array of user's agencies
     const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
     filterResult.agencyId = usersAgencies;
+    // Get projects associated with agencies of the requesting user
     projects = await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
   }
   return projects;
@@ -278,13 +279,7 @@ export const searchProjects = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status with the an array of projects.
  */
 export const filterProjects = async (req: Request, res: Response) => {
-  const filter = ProjectFilterSchema.safeParse(req.query);
-  const kcUser = req.user as unknown as KeycloakUser;
-  if (!filter.success) {
-    // const response = await projectServices.getProjects(filter.data, includeRelations);
-    return res.status(400).send('Could not parse filter.');
-  }
-  const projects = await filterProjectsByAgencies(req, res, kcUser);
+  const projects = await filterProjectsByAgencies(req, res);
   return res.status(200).send(projects);
 };
 
