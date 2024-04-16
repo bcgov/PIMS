@@ -1,5 +1,7 @@
+import { ProjectFilterSchema } from '@/services/projects/projectSchema';
 import { stubResponse } from '../../utilities/stubResponse';
 import { Request, Response } from 'express';
+import projectServices from '@/services/projects/projectsServices';
 
 /**
  * @description Get disposal project by either the numeric id or projectNumber.
@@ -246,14 +248,14 @@ export const searchProjects = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status with the an array of projects.
  */
 export const filterProjects = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Projects']
-   * #swagger.description = 'Filter projects based on specified criteria.'
-   * #swagger.security = [{
-   *   "bearerAuth" : []
-   * }]
-   */
-  return stubResponse(res);
+  const includeRelations = req.query.includeRelations === 'true';
+  const filter = ProjectFilterSchema.safeParse(req.query);
+  if (filter.success) {
+    const response = await projectServices.getProjects(filter.data, includeRelations);
+    return res.status(200).send(response);
+  } else {
+    return res.status(400).send('Could not parse filter.');
+  }
 };
 
 /**

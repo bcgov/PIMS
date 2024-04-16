@@ -5,8 +5,8 @@ import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../ta
 import React, { MutableRefObject } from 'react';
 import useDataLoader from '@/hooks/useDataLoader';
 import { dateFormatter, projectStatusChipFormatter } from '@/utilities/formatters';
-import { Agency } from '@/hooks/api/useAgencyApi';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
+import { Agency } from '@/hooks/api/useAgencyApi';
 
 const ProjectsTable = () => {
   const api = usePimsApi();
@@ -42,7 +42,7 @@ const ProjectsTable = () => {
       field: 'Agency',
       headerName: 'Agency',
       flex: 1,
-      valueGetter: (value: Agency) => value?.Name ?? 'N/A',
+      valueGetter: (value: Agency) => value?.Name ?? '',
     },
     {
       field: 'NetBook',

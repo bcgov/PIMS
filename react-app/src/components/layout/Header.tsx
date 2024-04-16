@@ -156,7 +156,7 @@ const Header: React.FC = () => {
                 Active Inventory
               </Link>
               <Link underline="none" href="/projects" variant="h5">
-                Disposal Inventory
+                Disposal Projects
               </Link>
               <Link underline="none" href="/users" variant="h5">
                 Users

@@ -13,7 +13,7 @@ import {
   produceProject,
   produceProjectProperty,
 } from 'tests/testUtils/factories';
-import { DeepPartial, In } from 'typeorm';
+import { DeepPartial } from 'typeorm';
 
 const projectRepo = AppDataSource.getRepository(Project);
 
@@ -177,8 +177,8 @@ describe('UNIT - Project Services', () => {
   describe('getProjects', () => {
     it('should return projects based on filter conditions', async () => {
       const filter = {
-        StatusId: [1, 2],
-        Agencies: [3, 4],
+        statusId: 1,
+        agencyId: 3,
         quantity: 10,
         page: 0,
       };
@@ -191,9 +191,7 @@ describe('UNIT - Project Services', () => {
       jest.spyOn(projectRepo, 'find').mockImplementation(async () => {
         // Check if the project matches the filter conditions
         return mockProjects.filter(
-          (project) =>
-            filter.StatusId.includes(project.StatusId) &&
-            filter.Agencies.includes(project.AgencyId),
+          (project) => filter.statusId === project.StatusId && filter.agencyId === project.AgencyId,
         );
       });
 
@@ -205,8 +203,8 @@ describe('UNIT - Project Services', () => {
         // Verify projectRepo.find is called with correct arguments
         relations: expect.any(Object),
         where: {
-          StatusId: In(filter.StatusId),
-          AgencyId: In(filter.Agencies),
+          StatusId: filter.statusId,
+          AgencyId: filter.agencyId,
         },
         take: filter.quantity,
         skip: 0,
