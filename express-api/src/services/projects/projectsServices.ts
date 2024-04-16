@@ -288,10 +288,8 @@ const updateProject = async (project: DeepPartial<Project>, propertyIds: Project
       });
     }
 
-    const updateResult = await projectRepo.update(
-      { Id: project.Id },
-      { ...project, Metadata: newMetadata },
-    );
+    // Update Project
+    await projectRepo.update({ Id: project.Id }, { ...project, Metadata: newMetadata });
 
     // Update related Project Properties
     const existingProjectProperties = await projectPropertiesRepo.find({
@@ -312,9 +310,11 @@ const updateProject = async (project: DeepPartial<Project>, propertyIds: Project
         ? propertyIds.buildings.filter((id) => !existingBuildingIds.includes(id))
         : [],
     };
+
     const { parcels: parcelsToAdd, buildings: buildingsToAdd } = propertiesToAdd;
     if (parcelsToAdd) await addProjectParcelRelations(originalProject, parcelsToAdd);
     if (buildingsToAdd) await addProjectBuildingRelations(originalProject, buildingsToAdd);
+
     // Removing the old project properties
     const propertiesToRemove: ProjectPropertyIds = {
       parcels: parcelsToAdd ? existingParcelIds.filter((id) => !parcelsToAdd.includes(id)) : [],
@@ -327,7 +327,10 @@ const updateProject = async (project: DeepPartial<Project>, propertyIds: Project
     if (buildingsToRemove) await removeProjectBuildingRelations(originalProject, buildingsToRemove);
 
     queryRunner.commitTransaction();
-    return updateResult;
+
+    // Get project to return
+    const returnProject = await projectRepo.findOne({ where: { Id: originalProject.Id } });
+    return returnProject;
   } catch (e) {
     await queryRunner.rollbackTransaction();
     logger.warn(e.message);

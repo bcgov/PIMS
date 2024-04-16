@@ -91,6 +91,32 @@ const _buildingFindOne = jest
 const _projectFindOne = jest
   .spyOn(AppDataSource.getRepository(Project), 'findOne')
   .mockImplementation(async () => produceProject({}));
+const _projectPropertiesFind = jest
+  .spyOn(AppDataSource.getRepository(ProjectProperty), 'find')
+  .mockImplementation(
+    async () => [{ ParcelId: 3, BuildingId: 4, ProjectId: 1 }] as ProjectProperty[],
+  );
+
+// UPDATE mocks
+const _projectUpdate = jest
+  .spyOn(AppDataSource.getRepository(Project), 'update')
+  .mockImplementation(async () => ({
+    generatedMaps: [],
+    affected: 1,
+    raw: [],
+  }));
+
+// INSERT mocks
+const _projectStatusHistoryInsert = jest
+  .spyOn(AppDataSource.getRepository(ProjectStatusHistory), 'insert')
+  .mockImplementation(
+    async () =>
+      await {
+        identifiers: [],
+        raw: [],
+        generatedMaps: [],
+      },
+  );
 
 // QUERY mocks
 const _getNextSequence = jest.spyOn(AppDataSource, 'query').mockImplementation(async () => [
@@ -99,19 +125,23 @@ const _getNextSequence = jest.spyOn(AppDataSource, 'query').mockImplementation(a
   },
 ]);
 
+const _mockStartTransaction = jest.fn().mockImplementation(async () => {});
+const _mockRollbackTransaction = jest.fn(async () => {});
+const _mockCommitTransaction = jest.fn(async () => {});
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _queryRunner = jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
   ...jest.requireActual('@/appDataSource').createQueryRunner,
-  startTransaction: async () => {},
-  rollbackTransaction: async () => {},
-  commitTransaction: async () => {},
+  startTransaction: _mockStartTransaction,
+  rollbackTransaction: _mockRollbackTransaction,
+  commitTransaction: _mockCommitTransaction,
 });
 
 describe('UNIT - Project Services', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
   describe('addProject', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
     it('should add a project and its relevant project property entries', async () => {
       const project = produceProject({ Name: 'Test Project' });
       const result = await projectServices.addProject(project, {
@@ -228,6 +258,9 @@ describe('UNIT - Project Services', () => {
   });
 
   describe('getProjectById', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
     it('should return a project if it is found', async () => {
       const result = await projectServices.getProjectById(1);
       expect(_projectFindOne).toHaveBeenCalledTimes(1);
@@ -243,6 +276,9 @@ describe('UNIT - Project Services', () => {
   });
 
   describe('deleteProject', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
     it('should delete a project and return the DeleteResult object', async () => {
       const result = await projectServices.deleteProjectById(1);
       // Was the project checked for existance?
@@ -260,6 +296,108 @@ describe('UNIT - Project Services', () => {
 
       // Expect one result deleted
       expect(result.affected).toBeGreaterThanOrEqual(1);
+    });
+
+    it('should throw an error if the project does not exist', async () => {
+      _projectExists.mockImplementationOnce(async () => false);
+      expect(projectServices.deleteProjectById(1)).rejects.toThrow(
+        new ErrorWithCode('Project does not exist.', 404),
+      );
+    });
+
+    it('should rollback the transaction and throw and error if database operations fail', async () => {
+      _projectDelete.mockImplementationOnce(async () => {
+        throw new Error();
+      });
+      expect(async () => await projectServices.deleteProjectById(2)).rejects.toThrow();
+    });
+  });
+
+  describe('updateProject', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    const originalProject = produceProject({});
+
+    const projectUpdate = {
+      ...originalProject,
+      Name: 'New Name',
+      StatusId: 2,
+    };
+
+    it('should update values of a project', async () => {
+      _projectFindOne
+        .mockImplementationOnce(async () => originalProject)
+        .mockImplementationOnce(async () => projectUpdate);
+      const result = await projectServices.updateProject(projectUpdate, {
+        parcels: [1, 3],
+        buildings: [4, 5],
+      });
+      expect(result.StatusId).toBe(2);
+      expect(result.Name).toBe('New Name');
+      expect(_projectPropertiesFind).toHaveBeenCalledTimes(1);
+      expect(_projectStatusHistoryInsert).toHaveBeenCalledTimes(1);
+      expect(_projectUpdate).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw an error if a name is not included', async () => {
+      expect(
+        async () =>
+          await projectServices.updateProject(
+            {
+              Name: '',
+              StatusId: 2,
+            },
+            {},
+          ),
+      ).rejects.toThrow(new ErrorWithCode('Projects must have a name.', 400));
+    });
+
+    it('should throw an error if the project does not exist', async () => {
+      _projectFindOne.mockImplementationOnce(async () => null);
+      expect(
+        async () =>
+          await projectServices.updateProject(
+            {
+              Name: 'New Name',
+              StatusId: 2,
+            },
+            {},
+          ),
+      ).rejects.toThrow(new ErrorWithCode('Project does not exist.', 404));
+    });
+
+    it('should throw an error if the project number does not match', async () => {
+      _projectFindOne.mockImplementationOnce(async () =>
+        produceProject({ ProjectNumber: 'a number' }),
+      );
+      expect(
+        async () =>
+          await projectServices.updateProject(
+            {
+              Name: 'New Name',
+              StatusId: 2,
+              ProjectNumber: 'not a number',
+            },
+            {},
+          ),
+      ).rejects.toThrow(new ErrorWithCode('Project Number may not be changed.', 403));
+    });
+
+    it('should throw an error if trying to change the agency', async () => {
+      _projectFindOne.mockImplementationOnce(async () => produceProject({ AgencyId: 1 }));
+      expect(
+        async () =>
+          await projectServices.updateProject(
+            {
+              Name: 'New Name',
+              StatusId: 2,
+              AgencyId: 5,
+            },
+            {},
+          ),
+      ).rejects.toThrow(new ErrorWithCode('Project Agency may not be changed.', 403));
     });
   });
 });
