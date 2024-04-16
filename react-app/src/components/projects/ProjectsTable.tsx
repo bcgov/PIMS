@@ -114,6 +114,9 @@ const ProjectsTable = () => {
       name={'projects'}
       columns={columns}
       rows={data ?? []}
+      initialState={{
+        sorting: { sortModel: [{ field: 'UpdatedOn', sort: 'desc' }] },
+      }}
     />
   );
 };
