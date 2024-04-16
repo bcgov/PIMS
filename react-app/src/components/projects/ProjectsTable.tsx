@@ -1,6 +1,5 @@
 import usePimsApi from '@/hooks/usePimsApi';
 import { GridColDef } from '@mui/x-data-grid';
-// import { useNavigate } from 'react-router-dom';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import React, { MutableRefObject } from 'react';
 import useDataLoader from '@/hooks/useDataLoader';
