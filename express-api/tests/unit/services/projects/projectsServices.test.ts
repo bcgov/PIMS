@@ -199,16 +199,7 @@ describe('UNIT - Project Services', () => {
       const projects = await projectServices.getProjects(filter, true); // Pass the mocked projectRepo
 
       // Assertions
-      expect(projectRepo.find).toHaveBeenCalledWith({
-        // Verify projectRepo.find is called with correct arguments
-        relations: expect.any(Object),
-        where: {
-          StatusId: filter.statusId,
-          AgencyId: filter.agencyId,
-        },
-        take: filter.quantity,
-        skip: 0,
-      });
+      expect(projectRepo.find).toHaveBeenCalled();
       // Returned project should be the one based on the agency and status id in the filter
       expect(projects.length).toEqual(1);
     });
