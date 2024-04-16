@@ -4,9 +4,10 @@ import { GridColDef } from '@mui/x-data-grid';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import React, { MutableRefObject } from 'react';
 import useDataLoader from '@/hooks/useDataLoader';
-import { dateFormatter, projectStatusChipFormatter } from '@/utilities/formatters';
+import { dateFormatter, formatMoney, projectStatusChipFormatter } from '@/utilities/formatters';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
+import { User } from '@/hooks/api/useUsersApi';
 
 const ProjectsTable = () => {
   const api = usePimsApi();
@@ -24,6 +25,7 @@ const ProjectsTable = () => {
       field: 'ProjectNumber',
       headerName: 'Project No.',
       flex: 1,
+      maxWidth: 120,
       sortComparator: (a, b) => parseIntFromProjectNo(a) - parseIntFromProjectNo(b),
     },
     {
@@ -48,22 +50,29 @@ const ProjectsTable = () => {
       field: 'NetBook',
       headerName: 'Net Book Value',
       flex: 1,
+      maxWidth: 150,
+      valueFormatter: (value) => formatMoney(value),
     },
     {
       field: 'Market',
       headerName: 'Market Value',
       flex: 1,
+      maxWidth: 150,
+      valueFormatter: (value) => formatMoney(value),
     },
     {
       field: 'UpdatedOn',
       headerName: 'Updated On',
       flex: 1,
       valueFormatter: (date) => dateFormatter(date),
+      maxWidth: 125,
     },
     {
       field: 'UpdatedBy',
       headerName: 'Updated By',
       flex: 1,
+      maxWidth: 150,
+      valueGetter: (user: User) => `${user?.FirstName ?? ''} ${user?.LastName ?? ''}`,
     },
   ];
 

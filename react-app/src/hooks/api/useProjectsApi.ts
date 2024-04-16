@@ -38,9 +38,15 @@ const projects = [
       Name: 'Approved for Exemption',
     },
     UpdatedOn: new Date(),
+    UpdatedBy: {
+      FirstName: 'Joe',
+      LastName: 'Shmoe',
+    },
   },
 ];
 
+// TODO: remove eslint diable once absolute fetch is used
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const useProjectsApi = (absoluteFetch: IFetch) => {
   const getProjects = async () => {
     return projects;
