@@ -28,7 +28,7 @@ const PropertyAssessedValueTable = (props: IPropertyAssessedValueTable) => {
         field: `Building${idx + 1}`,
         headerName: `Building (${idx + 1})`,
         flex: willOverflow ? 0 : 1,
-        valueGetter: (params) => (params.value ? params.value : 'N/A'),
+        valueGetter: (value) => (value ? value : 'N/A'),
       }),
     ),
   ];
