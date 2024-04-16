@@ -4,7 +4,7 @@ import { GridColDef } from '@mui/x-data-grid';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import React, { MutableRefObject } from 'react';
 import useDataLoader from '@/hooks/useDataLoader';
-import { dateFormatter, formatMoney, projectStatusChipFormatter } from '@/utilities/formatters';
+import { dateFormatter, projectStatusChipFormatter } from '@/utilities/formatters';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { User } from '@/hooks/api/useUsersApi';
@@ -51,14 +51,12 @@ const ProjectsTable = () => {
       headerName: 'Net Book Value',
       flex: 1,
       maxWidth: 150,
-      valueFormatter: (value) => formatMoney(value),
     },
     {
       field: 'Market',
       headerName: 'Market Value',
       flex: 1,
       maxWidth: 150,
-      valueFormatter: (value) => formatMoney(value),
     },
     {
       field: 'UpdatedOn',
