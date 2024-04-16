@@ -5,7 +5,7 @@ import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
-import { DeepPartial, FindOptionsOrder } from 'typeorm';
+import { DeepPartial, FindOptionsOrder, In } from 'typeorm';
 import { ProjectFilter } from '@/services/projects/projectSchema';
 
 const projectRepo = AppDataSource.getRepository(Project);
@@ -138,7 +138,9 @@ const getProjects = async (filter: ProjectFilter, includeRelations: boolean = fa
     },
     where: {
       StatusId: filter.statusId,
-      AgencyId: filter.agencyId,
+      AgencyId: filter.agencyId
+        ? In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId)
+        : undefined,
       ProjectNumber: filter.projectNumber,
     },
     take: filter.quantity,

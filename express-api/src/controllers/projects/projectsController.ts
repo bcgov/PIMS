@@ -1,7 +1,37 @@
-import { ProjectFilterSchema } from '@/services/projects/projectSchema';
+import { ProjectFilterSchema, ProjectFilter } from '@/services/projects/projectSchema';
 import { stubResponse } from '../../utilities/stubResponse';
 import { Request, Response } from 'express';
 import projectServices from '@/services/projects/projectsServices';
+import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import userServices from '@/services/users/usersServices';
+import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
+
+/**
+ * @description Function to filter users based on agencies
+ * @param {Request}     req Incoming request.
+ * @param {Response}    res Outgoing response.
+ * @param {KeycloakUser}    kcUser Incoming Keycloak user.
+ * @returns {Project[]}      An array of projects.
+ */
+const filterProjectsByAgencies = async (req: Request, res: Response, kcUser: KeycloakUser) => {
+  const filter = ProjectFilterSchema.safeParse(req.query);
+  const includeRelations = req.query.includeRelations === 'true';
+  if (!filter.success) {
+    return res.status(400).send('Failed to parse filter query.');
+  }
+  const filterResult = filter.data;
+
+  let projects;
+  if (isAdmin(kcUser) || isAuditor(kcUser)) {
+    projects = await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
+  } else {
+    // Get projects associated with the requesting user
+    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+    filterResult.agencyId = usersAgencies;
+    projects = await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
+  }
+  return projects;
+};
 
 /**
  * @description Get disposal project by either the numeric id or projectNumber.
@@ -248,14 +278,14 @@ export const searchProjects = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status with the an array of projects.
  */
 export const filterProjects = async (req: Request, res: Response) => {
-  const includeRelations = req.query.includeRelations === 'true';
   const filter = ProjectFilterSchema.safeParse(req.query);
-  if (filter.success) {
-    const response = await projectServices.getProjects(filter.data, includeRelations);
-    return res.status(200).send(response);
-  } else {
+  const kcUser = req.user as unknown as KeycloakUser;
+  if (!filter.success) {
+    // const response = await projectServices.getProjects(filter.data, includeRelations);
     return res.status(400).send('Could not parse filter.');
   }
+  const projects = await filterProjectsByAgencies(req, res, kcUser);
+  return res.status(200).send(projects);
 };
 
 /**
