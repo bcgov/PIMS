@@ -63,10 +63,11 @@ export interface Project {
   TierLevelId: number;
   TierLevel: TierLevel;
   StatusId: number;
-  Status?: ProjectStatus;
+  Status: ProjectStatus;
   RiskId: number;
   Risk?: ProjectRisk;
   CreatedOn: string;
+  UpdatedOn: string;
 }
 
 const useProjectsApi = (absoluteFetch: IFetch) => {
