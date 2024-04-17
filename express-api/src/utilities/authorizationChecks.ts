@@ -1,6 +1,6 @@
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { Roles } from '@/constants/roles';
-import { getUser } from '@/services/users/usersServices';
+import userServices, { getUser } from '@/services/users/usersServices';
 /**
  * @description Function to check if user is an admin
  * @param {KeycloakUser}     user Incoming Keycloak user.
@@ -55,4 +55,17 @@ export const isUserDisabled = async (kcUser: KeycloakUser): Promise<boolean> => 
 export const isUserActive = async (kcUser: KeycloakUser): Promise<boolean> => {
   const user = await getUser(kcUser.preferred_username);
   return user.Status === 'Active';
+};
+
+export const checkUserPermission = async (
+  kcUser: KeycloakUser,
+  agencyIds: number[],
+): Promise<boolean> => {
+  if (!isAdmin(kcUser) && !isAuditor(kcUser)) {
+    // check if current user belongs to any of the specified agencies
+    const userAgencies = await userServices.hasAgencies(kcUser.preferred_username, agencyIds);
+    return userAgencies;
+  }
+  // Admins and auditors have permission by default
+  return true;
 };
