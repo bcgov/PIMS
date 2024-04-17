@@ -53,7 +53,7 @@ interface IClassificationInline {
 
 export const ClassificationInline = (props: IClassificationInline) => {
   return (
-    <Box display={'flex'} flexDirection={'row'} alignItems={'center'} gap={'12px'}>
+    <Box display={'inline-flex'} flexDirection={'row'} alignItems={'center'} gap={'12px'}>
       <Box
         display={'flex'}
         alignItems={'center'}
