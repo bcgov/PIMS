@@ -135,6 +135,10 @@ const PropertyDetail = (props: IPropertyDetail) => {
             <MetresSquared />
           </>
         );
+      case 'LandArea':
+        return (
+            <Typography>{`${val} Hectares`}</Typography>
+        )
       default:
         return <Typography>{val}</Typography>;
     }
@@ -161,7 +165,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
         info.TotalArea = (data as Building).TotalArea;
         info.UsableArea = (data as Building).RentableArea;
       } else {
-        info.LandArea = `${(data as Parcel).LandArea} Hectares`;
+        info.LandArea = (data as Parcel).LandArea;
         info.Owned = !(data as Parcel).NotOwned;
       }
       return info;
