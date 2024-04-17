@@ -1,5 +1,13 @@
 import React from 'react';
-import { Autocomplete, SxProps, TextField, Paper, Box, autocompleteClasses } from '@mui/material';
+import {
+  Autocomplete,
+  SxProps,
+  TextField,
+  Paper,
+  Box,
+  autocompleteClasses,
+  FilterOptionsState,
+} from '@mui/material';
 import { ISelectMenuItem } from './SelectFormField';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -13,6 +21,10 @@ type AutocompleteFormProps = {
   disableOptionsFunction?: (option: ISelectMenuItem) => boolean;
   disableClearable?: boolean;
   defaultValue?: ISelectMenuItem | null;
+  customOptionsFilter?: (
+    options: ISelectMenuItem[],
+    state: FilterOptionsState<ISelectMenuItem>,
+  ) => ISelectMenuItem[];
 };
 
 const CustomPaper = (props) => {
@@ -30,8 +42,16 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
     allowNestedIndent,
     disableClearable,
     disableOptionsFunction,
+    customOptionsFilter,
     ...rest
   } = props;
+
+  const defaultOptionsFilter = (
+    options: ISelectMenuItem[],
+    state: FilterOptionsState<ISelectMenuItem>,
+  ) => options.filter((item) => item.label.toLowerCase().includes(state.inputValue.toLowerCase()));
+
+  const optionsFilter = customOptionsFilter ? customOptionsFilter : defaultOptionsFilter;
 
   return (
     <Controller
@@ -48,7 +68,7 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
           disableClearable={disableClearable}
           getOptionLabel={(option: ISelectMenuItem) => option.label}
           getOptionDisabled={disableOptionsFunction}
-          filterOptions={(x) => x}
+          filterOptions={optionsFilter}
           renderOption={(props, option, state, ownerState) => (
             <Box
               sx={{
@@ -74,7 +94,7 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
             />
           )}
           onChange={(_, data) => {
-            onChange(data.value);
+            if (data) onChange(data.value);
           }}
           isOptionEqualToValue={(option, value) => option.value === value.value}
           value={options.find((option) => option.value === getValues()[name]) ?? null}
