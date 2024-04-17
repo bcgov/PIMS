@@ -1,55 +1,136 @@
+import { BaseEntityInterface } from '@/interfaces/IBaseEntity';
 import { IFetch } from '../useFetch';
+import { Agency } from './useAgencyApi';
+import { User } from '@/hooks/api/useUsersApi';
 
-const projects = [
-  {
-    Id: 1,
-    ProjectNumber: 'SFP-1000',
-    Name: 'Project Example 1',
-    ReportedFiscalYear: 2024,
-    ActualFiscalYear: 2024,
-    Description: 'Lorem ipsum',
-    NetBook: 120000,
-    Market: 150000,
-    Assessed: 199000,
-    Appraised: 234000,
-    Agency: {
-      Name: 'Test Agency',
-    },
-    Status: {
-      Name: 'In ERP',
-    },
-    UpdatedOn: new Date(),
-  },
-  {
-    Id: 2,
-    ProjectNumber: 'SFP-1111',
-    Name: 'Project Example 2',
-    ReportedFiscalYear: 2012,
-    ActualFiscalYear: 2013,
-    Description: 'Lorem ipsum',
-    NetBook: 3341414,
-    Market: 124213123,
-    Assessed: 12414441,
-    Appraised: 1241244,
-    Agency: {
-      Name: 'Test Agency 2',
-    },
-    Status: {
-      Name: 'Approved for Exemption',
-    },
-    UpdatedOn: new Date(),
-    UpdatedBy: {
-      FirstName: 'Joe',
-      LastName: 'Shmoe',
-    },
-  },
-];
+export interface TierLevel extends BaseEntityInterface {
+  Id: number;
+  Name: string;
+  IsDisabled: boolean;
+  SortOrder: number;
+  Description?: string;
+}
+export interface ProjectStatus extends BaseEntityInterface {
+  Id: number;
+  Name: string;
+  IsDisabled: boolean;
+  SortOrder: number;
+  Description?: string;
+  Code: string;
+  GroupName?: string;
+  IsMilestone: boolean;
+  IsTerminal: boolean;
+  Route: string;
+}
+export interface Workflow extends BaseEntityInterface {
+  Id: number;
+  Name: string;
+  IsDisabled: boolean;
+  SortOrder: number;
+  Description?: string;
+  Code: string;
+}
+export interface ProjectRisk extends BaseEntityInterface {
+  Id: number;
+  Name: string;
+  IsDisabled: boolean;
+  SortOrder: number;
+  Description?: string;
+  Code: string;
+}
+export interface Project {
+  Id: number;
+  ProjectNumber: string;
+  Name: string;
+  Manager?: string;
+  ReportedFiscalYear: string;
+  ActualFiscalYear: number;
+  Description?: string;
+  SubmittedOn?: Date;
+  ApprovedOn?: Date;
+  DeniedOn?: Date;
+  CancelledOn?: Date;
+  CompletedOn?: Date;
+  NetBook?: number;
+  Market?: number;
+  Assessed?: number;
+  Appraised?: number;
+  ProjectType: number;
+  AgencyId: number;
+  Agency?: Agency;
+  WorkflowId: number;
+  Workflow?: Workflow;
+  TierLevelId: number;
+  TierLevel?: TierLevel;
+  StatusId: number;
+  Status?: ProjectStatus;
+  RiskId: number;
+  Risk?: ProjectRisk;
+  CreatedOn: string;
+  CreatedBy?: User;
+  UpdatedOn?: string;
+  UpdatedBy?: User;
+  Metadata?: ProjectMetadata;
+}
 
-// TODO: remove eslint diable once absolute fetch is used
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export interface ProjectMetadata {
+  // Exemption Fields
+  exemptionRequested?: boolean;
+  exemptionApprovedOn?: Date;
+  // ERP Fields
+  initialNotificationSentOn?: Date;
+  thirtyDayNotificationSentOn?: Date;
+  sixtyDayNotificationSentOn?: Date;
+  ninetyDayNotificationSentOn?: Date;
+  onHoldNotificationSentOn?: Date;
+  interestReceivedOn?: Date;
+  transferredWithinGreOn?: Date;
+  clearanceNotificationSentOn?: Date;
+  // SPL Fields
+  requestForSplReceivedOn?: Date;
+  approvedForSplOn?: Date;
+  marketedOn?: Date;
+  purchaser?: string;
+  offerAcceptedOn?: Date;
+  adjustedOn?: Date;
+  preliminaryFormSignedOn?: Date;
+  finalFormSignedOn?: Date;
+  priorYearAdjustmentOn?: Date;
+  disposedOn?: Date;
+  // Removing from SPL
+  removalFromSplRequestOn?: Date;
+  removalFromSplApprovedOn?: Date;
+  // Financials
+  assessedOn?: Date;
+  appraisedBy?: string;
+  appraisedOn?: Date;
+  salesCost?: number;
+  netProceeds?: number;
+  programCost?: number;
+  gainLost?: number;
+  sppCapitalization?: number;
+  gainBeforeSpl?: number;
+  ocgFinancialStatement?: number;
+  interestComponent?: number;
+  plannedFutureUse?: string;
+  offerAmount?: number;
+  saleWithLeaseInPlace?: boolean;
+  priorYearAdjustment?: boolean;
+  priorYearAdjustmentAmount?: number;
+  realtor?: string;
+  realtorRate?: string;
+  realtorCommission?: number;
+  preliminaryFormSignedBy?: string;
+  finalFormSignedBy?: string;
+}
+
 const useProjectsApi = (absoluteFetch: IFetch) => {
   const getProjects = async () => {
-    return projects;
+    const { parsedBody } = await absoluteFetch.get('/projects', { includeRelations: true });
+    if (parsedBody.error) {
+      return [];
+    }
+    return parsedBody as Project[];
   };
 
   return {
