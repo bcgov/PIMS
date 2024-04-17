@@ -15,6 +15,8 @@ import {
 } from 'tests/testUtils/factories';
 import { DeepPartial } from 'typeorm';
 
+const projectRepo = AppDataSource.getRepository(Project);
+
 const _projectsSave = jest
   .spyOn(AppDataSource.getRepository(Project), 'save')
   .mockImplementation(async (project: DeepPartial<Project> & Project) => project);
@@ -169,6 +171,37 @@ describe('UNIT - Project Services', () => {
       ).rejects.toThrow(
         new ErrorWithCode(`Building with ID 1 already belongs to another project.`, 400),
       );
+    });
+  });
+
+  describe('getProjects', () => {
+    it('should return projects based on filter conditions', async () => {
+      const filter = {
+        statusId: 1,
+        agencyId: 3,
+        quantity: 10,
+        page: 0,
+      };
+
+      const mockProjects: Project[] = [
+        produceProject({ Id: 1, Name: 'Project 1', StatusId: 1, AgencyId: 3 }),
+        produceProject({ Id: 2, Name: 'Project 2', StatusId: 4, AgencyId: 14 }),
+      ];
+
+      jest.spyOn(projectRepo, 'find').mockImplementation(async () => {
+        // Check if the project matches the filter conditions
+        return mockProjects.filter(
+          (project) => filter.statusId === project.StatusId && filter.agencyId === project.AgencyId,
+        );
+      });
+
+      // Call the service function
+      const projects = await projectServices.getProjects(filter, true); // Pass the mocked projectRepo
+
+      // Assertions
+      expect(projectRepo.find).toHaveBeenCalled();
+      // Returned project should be the one based on the agency and status id in the filter
+      expect(projects.length).toEqual(1);
     });
   });
 });
