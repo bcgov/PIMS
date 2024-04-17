@@ -52,12 +52,9 @@ export const useGroupedAgenciesApi = () => {
         children: agency.children.map((child) => child.Id),
       });
       if (agency.children && agency.children.length > 0) {
-        // Custom sorting logic for children agencies that contain numeric values
-        agency.children = agency.children.sort((a: Agency, b: Agency) => {
-          const numA = parseInt(a.Name.match(/\d+/)?.[0] || '0');
-          const numB = parseInt(b.Name.match(/\d+/)?.[0] || '0');
-          return numA - numB;
-        });
+        agency.children = agency.children.sort((a: Agency, b: Agency) =>
+          a.Name.localeCompare(b.Name, undefined, { numeric: true, sensitivity: 'base' }),
+        );
         agency.children.forEach((childAgency) => {
           options.push({
             label: childAgency.Name,
