@@ -136,9 +136,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           </>
         );
       case 'LandArea':
-        return (
-            <Typography>{`${val} Hectares`}</Typography>
-        )
+        return <Typography>{`${val} Hectares`}</Typography>;
       default:
         return <Typography>{val}</Typography>;
     }
