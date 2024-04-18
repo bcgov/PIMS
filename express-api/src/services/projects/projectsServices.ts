@@ -101,7 +101,9 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
   project.ProjectType = ProjectType.DISPOSAL;
 
   // What type of submission is this? Regular (7) or Exemption (8)?
-  project.StatusId = project.Metadata?.exemptionRequested ? ProjectStatus.SUBMITTED_EXEMPTION : ProjectStatus.SUBMITTED;
+  project.StatusId = project.Metadata?.exemptionRequested
+    ? ProjectStatus.SUBMITTED_EXEMPTION
+    : ProjectStatus.SUBMITTED;
 
   // Get a project number from the sequence
   const [{ nextval }] = await AppDataSource.query("SELECT NEXTVAL('project_num_seq')");

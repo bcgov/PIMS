@@ -13,6 +13,9 @@ export const healthCheck = async (req: Request, res: Response) => {
    * #swagger.description = 'Returns a 200 (OK) status if API is reached.'
    */
   const sample_project = await projectServices.getProjectById(9);
-const result = await projectServices.updateProject(sample_project, {parcels:[7479], buildings:[]});
+  const result = await projectServices.updateProject(sample_project, {
+    parcels: [7479],
+    buildings: [],
+  });
   return res.status(200).send(result);
 };
