@@ -313,7 +313,7 @@ const updateProject = async (project: DeepPartial<Project>, propertyIds: Project
    */
 
   const queryRunner = await AppDataSource.createQueryRunner();
-  queryRunner.startTransaction();
+  await queryRunner.startTransaction();
   try {
     // Metadata field is not preserved if a metadata property is set. It is overwritten.
     // Construct the proper metadata before continuing.
@@ -330,7 +330,7 @@ const updateProject = async (project: DeepPartial<Project>, propertyIds: Project
     }
 
     // Update Project
-    await projectRepo.update({ Id: project.Id }, { ...project, Metadata: newMetadata });
+    await projectRepo.save({ ...project, Metadata: newMetadata });
 
     // Update related Project Properties
     const existingProjectProperties = await projectPropertiesRepo.find({
@@ -392,7 +392,7 @@ const deleteProjectById = async (id: number) => {
     throw new ErrorWithCode('Project does not exist.', 404);
   }
   const queryRunner = await AppDataSource.createQueryRunner();
-  queryRunner.startTransaction();
+  await queryRunner.startTransaction();
   try {
     // Remove Project Properties relations
     await projectPropertiesRepo.delete({ ProjectId: id });
