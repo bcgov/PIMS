@@ -1,4 +1,7 @@
 import { AppDataSource } from '@/appDataSource';
+import { ProjectStatus } from '@/constants/projectStatus';
+import { ProjectType } from '@/constants/projectType';
+import { ProjectWorkflow } from '@/constants/projectWorkflow';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { Building } from '@/typeorm/Entities/Building';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
@@ -90,14 +93,14 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
     throw new ErrorWithCode(`Agency with ID ${project.AgencyId} not found.`, 404);
   }
 
-  // Workflow ID during submission will always be the submit entry
-  project.WorkflowId = 1; // 1 == Submit Disposal
+  // Workflow ID during submission will always be the submit disposal
+  project.WorkflowId = ProjectWorkflow.SUBMIT_DISPOSAL;
 
   // Only project type at the moment is 1 (Disposal)
-  project.ProjectType = 1;
+  project.ProjectType = ProjectType.DISPOSAL;
 
   // What type of submission is this? Regular (7) or Exemption (8)?
-  project.StatusId = project.Metadata?.exemptionRequested ? 8 : 7;
+  project.StatusId = project.Metadata?.exemptionRequested ? ProjectStatus.SUBMITTED_EXEMPTION : ProjectStatus.SUBMITTED;
 
   // Get a project number from the sequence
   const [{ nextval }] = await AppDataSource.query("SELECT NEXTVAL('project_num_seq')");
@@ -137,17 +140,26 @@ const addProjectParcelRelations = async (project: Project, parcelIds: number[]) 
       if (!existingParcel) {
         throw new ErrorWithCode(`Parcel with ID ${parcelId} does not exist.`, 404);
       }
+      // Check that property doesn't belong to another active project
+      // Could be in Cancelled (23) or Denied (16) projects
+      const allowedStatusIds = [ProjectStatus.CANCELLED, ProjectStatus.DENIED];
+      const existingProjectProperties = await projectPropertiesRepo.find({
+        where: {
+          ParcelId: parcelId,
+        },
+        relations: {
+          Project: true,
+        },
+      });
       if (
-        await projectPropertiesRepo.exists({
-          where: {
-            ProjectId: project.Id,
-            PropertyTypeId: 1,
-            ParcelId: parcelId,
-          },
-        })
+        existingProjectProperties.some(
+          (relation) =>
+            relation.ProjectId !== project.Id &&
+            allowedStatusIds.includes(relation.Project.StatusId),
+        )
       ) {
         throw new ErrorWithCode(
-          `Parcel with ID ${parcelId} already belongs to another project.`,
+          `Parcel with ID ${parcelId} already belongs to another active project.`,
           400,
         );
       }
@@ -159,7 +171,17 @@ const addProjectParcelRelations = async (project: Project, parcelIds: number[]) 
         PropertyTypeId: propertyType,
         ParcelId: parcelId,
       };
-      await projectPropertiesRepo.save(entry);
+      // Only try to add if this realtion doesn't exist yet
+      if (
+        !(await projectPropertiesRepo.exists({
+          where: {
+            ProjectId: project.Id,
+            ParcelId: parcelId,
+          },
+        }))
+      ) {
+        await projectPropertiesRepo.save(entry);
+      }
     }),
   );
 };
@@ -179,17 +201,26 @@ const addProjectBuildingRelations = async (project: Project, buildingIds: number
       if (!existingBuilding) {
         throw new ErrorWithCode(`Building with ID ${buildingId} does not exist.`, 404);
       }
+      // Check that property doesn't belong to another active project
+      // Could be in Cancelled (23) or Denied (16) projects
+      const allowedStatusIds = [ProjectStatus.CANCELLED, ProjectStatus.DENIED];
+      const existingProjectProperties = await projectPropertiesRepo.find({
+        where: {
+          BuildingId: buildingId,
+        },
+        relations: {
+          Project: true,
+        },
+      });
       if (
-        await projectPropertiesRepo.exists({
-          where: {
-            ProjectId: project.Id,
-            PropertyTypeId: 1,
-            BuildingId: buildingId,
-          },
-        })
+        existingProjectProperties.some(
+          (relation) =>
+            relation.ProjectId !== project.Id &&
+            allowedStatusIds.includes(relation.Project.StatusId),
+        )
       ) {
         throw new ErrorWithCode(
-          `Building with ID ${buildingId} already belongs to another project.`,
+          `Building with ID ${buildingId} already belongs to another active project.`,
           400,
         );
       }
@@ -200,7 +231,17 @@ const addProjectBuildingRelations = async (project: Project, buildingIds: number
         PropertyTypeId: 1,
         BuildingId: buildingId,
       };
-      await projectPropertiesRepo.save(entry);
+      // Only try to add if this relation doesn't exist yet
+      if (
+        !(await projectPropertiesRepo.exists({
+          where: {
+            ProjectId: project.Id,
+            BuildingId: buildingId,
+          },
+        }))
+      ) {
+        await projectPropertiesRepo.save(entry);
+      }
     }),
   );
 };
