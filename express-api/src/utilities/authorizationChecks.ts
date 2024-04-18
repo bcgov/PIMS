@@ -64,7 +64,7 @@ export const isUserActive = async (kcUser: KeycloakUser): Promise<boolean> => {
  * @param agencyIds - An array of agency IDs to check against the user's membership.
  * @returns A Promise that resolves to a boolean indicating whether the user has read permission.
  */
-export const checkReadPermission = async (
+export const checkUserAgencyPermission = async (
   kcUser: KeycloakUser,
   agencyIds: number[],
 ): Promise<boolean> => {
