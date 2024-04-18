@@ -1,4 +1,3 @@
-import projectServices from '@/services/projects/projectsServices';
 import { Request, Response } from 'express';
 
 /**
@@ -12,10 +11,5 @@ export const healthCheck = async (req: Request, res: Response) => {
    * #swagger.tags = ['Health']
    * #swagger.description = 'Returns a 200 (OK) status if API is reached.'
    */
-  const sample_project = await projectServices.getProjectById(9);
-  const result = await projectServices.updateProject(sample_project, {
-    parcels: [7479],
-    buildings: [],
-  });
-  return res.status(200).send(result);
+  return res.status(200).send('/health endpoint reached. API running.');
 };
