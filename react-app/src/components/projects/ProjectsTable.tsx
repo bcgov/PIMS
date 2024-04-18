@@ -1,18 +1,15 @@
 import usePimsApi from '@/hooks/usePimsApi';
 import { GridColDef } from '@mui/x-data-grid';
-// import { useNavigate } from 'react-router-dom';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import React, { MutableRefObject } from 'react';
 import useDataLoader from '@/hooks/useDataLoader';
-import { dateFormatter, formatMoney, projectStatusChipFormatter } from '@/utilities/formatters';
+import { dateFormatter, projectStatusChipFormatter } from '@/utilities/formatters';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { User } from '@/hooks/api/useUsersApi';
 
 const ProjectsTable = () => {
   const api = usePimsApi();
-  //const navigate = useNavigate();
-
   const { data, loadOnce } = useDataLoader(api.projects.getProjects);
   loadOnce();
 
@@ -44,21 +41,19 @@ const ProjectsTable = () => {
       field: 'Agency',
       headerName: 'Agency',
       flex: 1,
-      valueGetter: (value: Agency) => value?.Name ?? 'N/A',
+      valueGetter: (value: Agency) => value?.Name ?? '',
     },
     {
       field: 'NetBook',
       headerName: 'Net Book Value',
       flex: 1,
       maxWidth: 150,
-      valueFormatter: (value) => formatMoney(value),
     },
     {
       field: 'Market',
       headerName: 'Market Value',
       flex: 1,
       maxWidth: 150,
-      valueFormatter: (value) => formatMoney(value),
     },
     {
       field: 'UpdatedOn',
@@ -117,6 +112,9 @@ const ProjectsTable = () => {
       name={'projects'}
       columns={columns}
       rows={data ?? []}
+      initialState={{
+        sorting: { sortModel: [{ field: 'UpdatedOn', sort: 'desc' }] },
+      }}
     />
   );
 };

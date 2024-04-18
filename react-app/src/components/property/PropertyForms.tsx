@@ -22,6 +22,7 @@ import ParcelMap from '../map/ParcelMap';
 import { Controller, useFormContext } from 'react-hook-form';
 import { FeatureCollection } from 'geojson';
 import { arrayUniqueBy } from '@/utilities/helperFunctions';
+import MetresSquared from '@/components/text/MetresSquared';
 
 export type PropertyType = 'Building' | 'Parcel';
 
@@ -288,7 +289,7 @@ export const ParcelInformationForm = (props: IParcelInformationForm) => {
             label={'Lot size'}
             name={'LandArea'}
             InputProps={{
-              endAdornment: <InputAdornment position="end">Hectacres</InputAdornment>,
+              endAdornment: <InputAdornment position="end">Hectares</InputAdornment>,
             }}
           />
         </Grid>
@@ -387,7 +388,13 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
             fullWidth
             required
             numeric
-            InputProps={{ endAdornment: <InputAdornment position="end">Sq. M</InputAdornment> }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <MetresSquared />
+                </InputAdornment>
+              ),
+            }}
           />
         </Grid>
         <Grid item xs={6}>
@@ -402,7 +409,13 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
             label={'Net usable area'}
             fullWidth
             numeric
-            InputProps={{ endAdornment: <InputAdornment position="end">Sq. M</InputAdornment> }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <MetresSquared />
+                </InputAdornment>
+              ),
+            }}
           />
         </Grid>
         <Grid item xs={6}>
