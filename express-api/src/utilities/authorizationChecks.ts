@@ -57,7 +57,7 @@ export const isUserActive = async (kcUser: KeycloakUser): Promise<boolean> => {
   return user.Status === 'Active';
 };
 
-export const checkUserPermission = async (
+export const checkReadPermission = async (
   kcUser: KeycloakUser,
   agencyIds: number[],
 ): Promise<boolean> => {
