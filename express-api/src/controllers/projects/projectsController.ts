@@ -1,5 +1,38 @@
+import { ProjectFilterSchema, ProjectFilter } from '@/services/projects/projectSchema';
 import { stubResponse } from '../../utilities/stubResponse';
 import { Request, Response } from 'express';
+import projectServices from '@/services/projects/projectsServices';
+import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import userServices from '@/services/users/usersServices';
+import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
+
+/**
+ * @description Function to filter users based on agencies
+ * @param {Request}     req Incoming request.
+ * @param {Response}    res Outgoing response.
+ * @returns {Project[]}      An array of projects.
+ */
+const filterProjectsByAgencies = async (req: Request, res: Response) => {
+  const filter = ProjectFilterSchema.safeParse(req.query);
+  const includeRelations = req.query.includeRelations === 'true';
+  const kcUser = req.user as unknown as KeycloakUser;
+  if (!filter.success) {
+    return res.status(400).send('Could not parse filter.');
+  }
+  const filterResult = filter.data;
+
+  let projects;
+  if (isAdmin(kcUser) || isAuditor(kcUser)) {
+    projects = await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
+  } else {
+    // get array of user's agencies
+    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+    filterResult.agencyId = usersAgencies;
+    // Get projects associated with agencies of the requesting user
+    projects = await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
+  }
+  return projects;
+};
 
 /**
  * @description Get disposal project by either the numeric id or projectNumber.
@@ -246,14 +279,8 @@ export const searchProjects = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status with the an array of projects.
  */
 export const filterProjects = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Projects']
-   * #swagger.description = 'Filter projects based on specified criteria.'
-   * #swagger.security = [{
-   *   "bearerAuth" : []
-   * }]
-   */
-  return stubResponse(res);
+  const projects = await filterProjectsByAgencies(req, res);
+  return res.status(200).send(projects);
 };
 
 /**

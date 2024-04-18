@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import DataCard from '../display/DataCard';
 import { Box, Chip, Grid, Typography } from '@mui/material';
 import { dateFormatter, statusChipFormatter } from '@/utilities/formatters';
@@ -13,9 +13,11 @@ import { Agency } from '@/hooks/api/useAgencyApi';
 import TextFormField from '../form/TextFormField';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import EmailChipFormField from '@/components/form/EmailChipFormField';
 import SingleSelectBoxFormField from '@/components/form/SingleSelectBoxFormField';
+import { AuthContext } from '@/contexts/authContext';
+import { Roles } from '@/constants/roles';
 
 interface IAgencyDetail {
   onClose: () => void;
@@ -28,8 +30,13 @@ interface AgencyStatus extends Agency {
 }
 
 const AgencyDetail = ({ onClose }: IAgencyDetail) => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const api = usePimsApi();
+  const userContext = useContext(AuthContext);
+  if (!userContext.keycloak.hasRole([Roles.ADMIN, Roles.AUDITOR], { requireAllRoles: false })) {
+    navigate('/');
+  }
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openStatusDialog, setOpenStatusDialog] = useState(false);

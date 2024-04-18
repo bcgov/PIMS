@@ -15,6 +15,7 @@ import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUs
 import { IAddressModel } from '@/services/geocoder/interfaces/IAddressModel';
 import { ISitePidsResponseModel } from '@/services/geocoder/interfaces/ISitePidsResponseModel';
 import { RegionalDistrict } from '@/typeorm/Entities/RegionalDistrict';
+import { TierLevel } from '@/typeorm/Entities/TierLevel';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 
@@ -403,6 +404,23 @@ export const producePidsResponse = (): ISitePidsResponseModel => {
     pids: String(faker.number.int({ min: 11111111, max: 99999999 })),
   };
   return pidResponse;
+};
+
+export const produceTierLevels = (): TierLevel => {
+  const tier: TierLevel = {
+    Id: faker.number.int(),
+    Name: `Tier ${faker.number.int()}`,
+    IsDisabled: false,
+    SortOrder: faker.number.int(),
+    Description: faker.lorem.sentence(),
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+  };
+  return tier;
 };
 
 export const produceProject = (

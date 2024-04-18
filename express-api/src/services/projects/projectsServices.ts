@@ -15,7 +15,8 @@ import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import logger from '@/utilities/winstonLogger';
-import { DeepPartial } from 'typeorm';
+import { DeepPartial, FindManyOptions, FindOptionsOrder, In } from 'typeorm';
+import { ProjectFilter } from '@/services/projects/projectSchema';
 
 const projectRepo = AppDataSource.getRepository(Project);
 const projectPropertiesRepo = AppDataSource.getRepository(ProjectProperty);
@@ -423,11 +424,40 @@ const deleteProjectById = async (id: number) => {
   }
 };
 
+const getProjects = async (filter: ProjectFilter, includeRelations: boolean = false) => {
+  const queryOptions: FindManyOptions<Project> = {
+    select: {
+      Agency: {
+        Name: true,
+      },
+    },
+    where: {
+      StatusId: filter.statusId,
+      AgencyId: filter.agencyId
+        ? In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId)
+        : undefined,
+      ProjectNumber: filter.projectNumber,
+    },
+    take: filter.quantity,
+    skip: (filter.page ?? 0) * (filter.quantity ?? 0),
+    order: filter.sort as FindOptionsOrder<Project>,
+  };
+
+  // Conditionally include relations if includeRelations is true
+  if (includeRelations) {
+    queryOptions.relations = ['ProjectProperties', 'Agency', 'Status', 'CreatedBy', 'UpdatedBy'];
+  }
+
+  const projects = await projectRepo.find(queryOptions);
+  return projects;
+};
+
 const projectServices = {
   addProject,
   getProjectById,
   deleteProjectById,
   updateProject,
+  getProjects,
 };
 
 export default projectServices;

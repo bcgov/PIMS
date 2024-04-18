@@ -23,6 +23,7 @@ import AddAgency from '@/components/agencies/AddAgency';
 import AdminAreasManagement from './pages/AdminAreasManagement';
 import AddAdministrativeArea from './components/adminAreas/AddAdministrativeArea';
 import AdministrativeAreaDetail from './components/adminAreas/AdministrativeAreaDetail';
+import ProjectManagement from './pages/ProjectManagement';
 
 const Router = () => {
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ const Router = () => {
         <Route
           path="adminAreas"
           element={
-            <BaseLayout>
+            <BaseLayout displayFooter>
               <AuthRouteGuard>
                 <AdminAreasManagement />
               </AuthRouteGuard>
@@ -174,6 +175,16 @@ const Router = () => {
           <BaseLayout>
             <AuthRouteGuard>
               <UserDetail onClose={() => navigate('/users')} />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="projects"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <ProjectManagement />
             </AuthRouteGuard>
           </BaseLayout>
         }

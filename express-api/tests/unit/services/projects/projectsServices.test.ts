@@ -96,6 +96,7 @@ const _projectPropertiesFind = jest
   .mockImplementation(
     async () => [{ ParcelId: 3, BuildingId: 4, ProjectId: 1 }] as ProjectProperty[],
   );
+const _projectFind = jest.spyOn(AppDataSource.getRepository(Project), 'find');
 
 // UPDATE mocks
 const _projectUpdate = jest
@@ -398,6 +399,37 @@ describe('UNIT - Project Services', () => {
             {},
           ),
       ).rejects.toThrow(new ErrorWithCode('Project Agency may not be changed.', 403));
+    });
+
+    describe('getProjects', () => {
+      it('should return projects based on filter conditions', async () => {
+        const filter = {
+          statusId: 1,
+          agencyId: 3,
+          quantity: 10,
+          page: 0,
+        };
+
+        _projectFind.mockImplementationOnce(async () => {
+          const mockProjects: Project[] = [
+            produceProject({ Id: 1, Name: 'Project 1', StatusId: 1, AgencyId: 3 }),
+            produceProject({ Id: 2, Name: 'Project 2', StatusId: 4, AgencyId: 14 }),
+          ];
+          // Check if the project matches the filter conditions
+          return mockProjects.filter(
+            (project) =>
+              filter.statusId === project.StatusId && filter.agencyId === project.AgencyId,
+          );
+        });
+
+        // Call the service function
+        const projects = await projectServices.getProjects(filter, true); // Pass the mocked projectRepo
+
+        // Assertions
+        expect(_projectFind).toHaveBeenCalled();
+        // Returned project should be the one based on the agency and status id in the filter
+        expect(projects.length).toEqual(1);
+      });
     });
   });
 });

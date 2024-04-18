@@ -10,6 +10,8 @@ export interface Classification extends LookupObject {
   IsVisible: boolean;
 }
 
+export type RegionalDistrict = Omit<LookupObject, 'SortOrder'>;
+
 const useLookupApi = (absoluteFetch: IFetch) => {
   const getClassifications = async () => {
     const { parsedBody } = await absoluteFetch.get('/lookup/property/classifications');
@@ -28,7 +30,12 @@ const useLookupApi = (absoluteFetch: IFetch) => {
 
   const getRegionalDistricts = async () => {
     const { parsedBody } = await absoluteFetch.get('/lookup/regionalDistricts');
-    return parsedBody as Omit<LookupObject, 'SortOrder'>[];
+    return parsedBody as RegionalDistrict[];
+  };
+
+  const getProjectTierLevels = async () => {
+    const { parsedBody } = await absoluteFetch.get('/lookup/project/tier/levels');
+    return parsedBody as LookupObject[];
   };
 
   return {
@@ -36,6 +43,7 @@ const useLookupApi = (absoluteFetch: IFetch) => {
     getConstructionTypes,
     getPredominateUses,
     getRegionalDistricts,
+    getProjectTierLevels,
   };
 };
 
