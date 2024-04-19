@@ -28,6 +28,23 @@ export interface ProjectPropertyIds {
   buildings?: number[];
 }
 
+export interface ProjectWithTasks extends Project {
+  Tasks: {
+    surplusDeclarationReadiness?: boolean;
+    tripleBottomLine?: boolean;
+    reviewCompletedErp?: boolean;
+    reviewCompletedErpExempt?: boolean;
+    documentsReceivedReviewCompleted?: boolean;
+    appaisalOrdered?: boolean;
+    appraisalReceived?: boolean;
+    preparationDueDiligence?: boolean;
+    firstNationsConsultationUnderway?: boolean;
+    firstNationsConsultationComplete?: boolean;
+    notificationExemptionToAdm?: boolean;
+    confirmationReceivedFromAdm?: boolean;
+  };
+}
+
 /**
  * Retrieves a project by its ID.
  *
@@ -86,7 +103,10 @@ const getProjectById = async (id: number) => {
  * @returns The newly created project.
  * @throws ErrorWithCode - If the project name is missing, agency is not found, or there is an error creating the project.
  */
-const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPropertyIds) => {
+const addProject = async (
+  project: DeepPartial<ProjectWithTasks>,
+  propertyIds: ProjectPropertyIds,
+) => {
   // Does the project have a name?
   if (!project.Name) throw new ErrorWithCode('Projects must have a name.', 400);
 
@@ -115,7 +135,9 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
   await queryRunner.startTransaction();
   try {
     const newProject = await projectRepo.save(project);
-    // After project is saved, add parcel/building relations
+    // TODO: Add Project Tasks
+
+    // Add parcel/building relations
     const { parcels, buildings } = propertyIds;
     if (parcels) await addProjectParcelRelations(newProject, parcels);
     if (buildings) await addProjectBuildingRelations(newProject, buildings);
@@ -296,7 +318,10 @@ const removeProjectBuildingRelations = async (project: Project, buildingIds: num
  * @returns The result of the project update.
  * @throws {ErrorWithCode} If the project name is empty or null, if the project does not exist, if the project number or agency cannot be changed, or if there is an error updating the project.
  */
-const updateProject = async (project: DeepPartial<Project>, propertyIds: ProjectPropertyIds) => {
+const updateProject = async (
+  project: DeepPartial<ProjectWithTasks>,
+  propertyIds: ProjectPropertyIds,
+) => {
   // Project must still have a name
   // undefined is allowed because it is not always updated
   if (project.Name === null || project.Name === '') {
@@ -337,6 +362,8 @@ const updateProject = async (project: DeepPartial<Project>, propertyIds: Project
 
     // Update Project
     await projectRepo.save({ ...project, Metadata: newMetadata });
+
+    // TODO: Update Project Tasks
 
     // Update related Project Properties
     const existingProjectProperties = await projectPropertiesRepo.find({
