@@ -215,11 +215,13 @@ const AddProject = () => {
       Metadata: {
         salesCost: undefined,
         programCost: undefined,
-        surplusDeclaration: false, // Currently a Task, not metadata
-        tripleBottomLine: false, // Currently a Task, not metadata
         exemptionRequested: false,
       },
       Approval: false,
+      Tasks: {
+        surplusDeclarationReadiness: false, // Currently a Task, not metadata
+        tripleBottomLine: false, // Currently a Task, not metadata
+      },
     },
   });
 
@@ -345,13 +347,13 @@ const AddProject = () => {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <SingleSelectBoxFormField
-              name={'Metadata.surplusDeclaration'}
+              name={'Tasks.surplusDeclarationReadiness'}
               label={'Surplus declaration & readiness checklist document emailed to SRES.'}
             />
           </Grid>
           <Grid item xs={12}>
             <SingleSelectBoxFormField
-              name={'Metadata.tripleBottomLine'}
+              name={'Tasks.tripleBottomLine'}
               label={'Triple bottom line document emailed to SRES or Project is in Tier 1'}
             />
           </Grid>
@@ -378,15 +380,15 @@ const AddProject = () => {
         onClick={async () => {
           const isValid = await formMethods.trigger();
           setShowNoPropertiesError(!rows.length);
-          if (isValid){
+          if (isValid) {
             const formValues = formMethods.getValues();
             const projectProperties: ProjectPropertyIds = {
               parcels: [],
               buildings: [],
-            }
-            api.projects.postProject(
-              {...formValues }, projectProperties
-            ).then(() => navigate('/projects'))
+            };
+            api.projects
+              .postProject({ ...formValues }, projectProperties)
+              .then(() => navigate('/projects'));
           }
         }}
         variant="contained"

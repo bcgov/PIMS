@@ -124,8 +124,25 @@ export interface ProjectMetadata {
   finalFormSignedBy?: string;
 }
 
+export interface ProjectWithTasks extends Project {
+  Tasks:{
+    surplusDeclarationReadiness?: boolean,
+    tripleBottomLine?: boolean,
+    reviewCompletedErp?: boolean,
+    reviewCompletedErpExempt?: boolean,
+    documentsReceivedReviewCompleted?: boolean,
+    appaisalOrdered?: boolean,
+    appraisalReceived?: boolean,
+    preparationDueDiligence?: boolean,
+    firstNationsConsultationUnderway?: boolean,
+    firstNationsConsultationComplete?: boolean,
+    notificationExemptionToAdm?: boolean,
+    confirmationReceivedFromAdm?: boolean,
+  }
+}
+
 export type ProjectAdd = Omit<
-  Project,
+  ProjectWithTasks,
   | 'Id'
   | 'CreatedOn'
   | 'CreatedById'
@@ -157,10 +174,10 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
 
   const postProject = async (project: ProjectAdd, projectPropertyIds: ProjectPropertyIds) => {
     const postBody = {
-      projectBody: project,
-      projectProperties: projectPropertyIds,
+      project,
+      projectPropertyIds,
     };
-    const { parsedBody, status } = await absoluteFetch.post('/projects/', postBody);
+    const { parsedBody, status } = await absoluteFetch.post('/projects/disposal', postBody);
     return { parsedBody, status };
   };
 
