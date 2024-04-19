@@ -1,4 +1,7 @@
 import { AppDataSource } from '@/appDataSource';
+import { ProjectStatus } from '@/constants/projectStatus';
+import { ProjectType } from '@/constants/projectType';
+import { ProjectWorkflow } from '@/constants/projectWorkflow';
 import projectServices from '@/services/projects/projectsServices';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { Building } from '@/typeorm/Entities/Building';
@@ -18,6 +21,7 @@ import {
   produceParcel,
   produceProject,
   produceProjectProperty,
+  productProjectStatusHistory,
 } from 'tests/testUtils/factories';
 import { DeepPartial } from 'typeorm';
 
@@ -34,6 +38,14 @@ const _projectsSave = jest
 const _projectPropertySave = jest
   .spyOn(AppDataSource.getRepository(ProjectProperty), 'save')
   .mockImplementation(async () => produceProjectProperty({}));
+
+const _projectUpdate = jest
+  .spyOn(AppDataSource.getRepository(Project), 'save')
+  .mockImplementation(async () => produceProject());
+
+const _projectStatusHistoryInsert = jest
+  .spyOn(AppDataSource.getRepository(ProjectStatusHistory), 'save')
+  .mockImplementation(async () => productProjectStatusHistory());
 
 // EXIST mocks
 const _agencyExists = jest
@@ -94,30 +106,17 @@ const _projectFindOne = jest
 const _projectPropertiesFind = jest
   .spyOn(AppDataSource.getRepository(ProjectProperty), 'find')
   .mockImplementation(
-    async () => [{ ParcelId: 3, BuildingId: 4, ProjectId: 1 }] as ProjectProperty[],
+    async () =>
+      [
+        {
+          ParcelId: 3,
+          BuildingId: 4,
+          ProjectId: 1,
+          Project: produceProject({ StatusId: ProjectStatus.CANCELLED }),
+        },
+      ] as ProjectProperty[],
   );
 const _projectFind = jest.spyOn(AppDataSource.getRepository(Project), 'find');
-
-// UPDATE mocks
-const _projectUpdate = jest
-  .spyOn(AppDataSource.getRepository(Project), 'update')
-  .mockImplementation(async () => ({
-    generatedMaps: [],
-    affected: 1,
-    raw: [],
-  }));
-
-// INSERT mocks
-const _projectStatusHistoryInsert = jest
-  .spyOn(AppDataSource.getRepository(ProjectStatusHistory), 'insert')
-  .mockImplementation(
-    async () =>
-      await {
-        identifiers: [],
-        raw: [],
-        generatedMaps: [],
-      },
-  );
 
 // QUERY mocks
 const _getNextSequence = jest.spyOn(AppDataSource, 'query').mockImplementation(async () => [
@@ -126,7 +125,7 @@ const _getNextSequence = jest.spyOn(AppDataSource, 'query').mockImplementation(a
   },
 ]);
 
-const _mockStartTransaction = jest.fn().mockImplementation(async () => {});
+const _mockStartTransaction = jest.fn(async () => {});
 const _mockRollbackTransaction = jest.fn(async () => {});
 const _mockCommitTransaction = jest.fn(async () => {});
 
@@ -143,7 +142,11 @@ describe('UNIT - Project Services', () => {
     beforeEach(() => {
       jest.clearAllMocks();
     });
+
     it('should add a project and its relevant project property entries', async () => {
+      _projectsSave.mockImplementationOnce(
+        async (project: DeepPartial<Project> & Project) => project,
+      );
       const project = produceProject({ Name: 'Test Project' });
       const result = await projectServices.addProject(project, {
         parcels: [3],
@@ -164,9 +167,9 @@ describe('UNIT - Project Services', () => {
       expect(_buildingFindOne).toHaveBeenCalledTimes(1);
       // The created project has the expected values
       expect(result.Name).toEqual('Test Project');
-      expect(result.WorkflowId).toEqual(1);
-      expect(result.ProjectType).toEqual(1);
-      expect(result.StatusId).toEqual(7);
+      expect(result.WorkflowId).toEqual(ProjectWorkflow.SUBMIT_DISPOSAL);
+      expect(result.ProjectType).toEqual(ProjectType.DISPOSAL);
+      expect(result.StatusId).toEqual(ProjectStatus.SUBMITTED);
       expect(result.ProjectNumber).toMatch(/^SPP-\d+$/);
     });
 
@@ -220,6 +223,7 @@ describe('UNIT - Project Services', () => {
     });
 
     it('should throw an error if the building attached to project does not exist', async () => {
+      jest.clearAllMocks();
       _buildingFindOne.mockImplementationOnce(async () => null);
       const project = produceProject({});
       expect(
@@ -232,28 +236,46 @@ describe('UNIT - Project Services', () => {
     });
 
     it('should throw an error if the parcel belongs to another project', async () => {
-      _projectPropertyExists.mockImplementationOnce(async () => true);
-      const project = produceProject({});
+      const existingProject = produceProject({ StatusId: ProjectStatus.IN_ERP });
+      const project = produceProject({ Id: existingProject.Id + 1 });
+      _projectPropertiesFind.mockImplementationOnce(async () => {
+        return [
+          produceProjectProperty({
+            Id: project.Id,
+            ProjectId: existingProject.Id,
+            Project: existingProject,
+          }),
+        ];
+      });
       expect(
         async () =>
           await projectServices.addProject(project, {
             parcels: [1],
           }),
       ).rejects.toThrow(
-        new ErrorWithCode(`Parcel with ID 1 already belongs to another project.`, 400),
+        new ErrorWithCode(`Parcel with ID 1 already belongs to another active project.`, 400),
       );
     });
 
     it('should throw an error if the building belongs to another project', async () => {
-      _projectPropertyExists.mockImplementationOnce(async () => true);
-      const project = produceProject({});
+      const existingProject = produceProject({ StatusId: ProjectStatus.IN_ERP });
+      const project = produceProject({ Id: existingProject.Id + 1 });
+      _projectPropertiesFind.mockImplementationOnce(async () => {
+        return [
+          produceProjectProperty({
+            Id: project.Id,
+            ProjectId: existingProject.Id,
+            Project: existingProject,
+          }),
+        ];
+      });
       expect(
         async () =>
           await projectServices.addProject(project, {
             buildings: [1],
           }),
       ).rejects.toThrow(
-        new ErrorWithCode(`Building with ID 1 already belongs to another project.`, 400),
+        new ErrorWithCode(`Building with ID 1 already belongs to another active project.`, 400),
       );
     });
   });
@@ -319,7 +341,7 @@ describe('UNIT - Project Services', () => {
       jest.clearAllMocks();
     });
 
-    const originalProject = produceProject({});
+    const originalProject = produceProject({ StatusId: ProjectStatus.CANCELLED });
 
     const projectUpdate = {
       ...originalProject,
@@ -331,13 +353,24 @@ describe('UNIT - Project Services', () => {
       _projectFindOne
         .mockImplementationOnce(async () => originalProject)
         .mockImplementationOnce(async () => projectUpdate);
+      _projectPropertiesFind.mockImplementationOnce(
+        async () =>
+          [
+            {
+              ParcelId: 3,
+              BuildingId: 4,
+              ProjectId: originalProject.Id + 1,
+              Project: originalProject,
+            },
+          ] as ProjectProperty[],
+      );
       const result = await projectServices.updateProject(projectUpdate, {
         parcels: [1, 3],
         buildings: [4, 5],
       });
       expect(result.StatusId).toBe(2);
       expect(result.Name).toBe('New Name');
-      expect(_projectPropertiesFind).toHaveBeenCalledTimes(1);
+      expect(_projectPropertiesFind).toHaveBeenCalledTimes(3);
       expect(_projectStatusHistoryInsert).toHaveBeenCalledTimes(1);
       expect(_projectUpdate).toHaveBeenCalledTimes(1);
     });
@@ -402,6 +435,9 @@ describe('UNIT - Project Services', () => {
     });
 
     describe('getProjects', () => {
+      beforeEach(() => {
+        jest.clearAllMocks();
+      });
       it('should return projects based on filter conditions', async () => {
         const filter = {
           statusId: 1,

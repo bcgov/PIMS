@@ -17,6 +17,7 @@ import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import logger from '@/utilities/winstonLogger';
 import { DeepPartial, FindManyOptions, FindOptionsOrder, In } from 'typeorm';
 import { ProjectFilter } from '@/services/projects/projectSchema';
+import { PropertyType } from '@/constants/propertyType';
 
 const projectRepo = AppDataSource.getRepository(Project);
 const projectPropertiesRepo = AppDataSource.getRepository(ProjectProperty);
@@ -158,7 +159,7 @@ const addProjectParcelRelations = async (project: Project, parcelIds: number[]) 
         existingProjectProperties.some(
           (relation) =>
             relation.ProjectId !== project.Id &&
-            allowedStatusIds.includes(relation.Project.StatusId),
+            !allowedStatusIds.includes(relation.Project.StatusId),
         )
       ) {
         throw new ErrorWithCode(
@@ -167,7 +168,9 @@ const addProjectParcelRelations = async (project: Project, parcelIds: number[]) 
         );
       }
       // Is this a land (0) or subdivision (2)
-      const propertyType = existingParcel.ParentParcelId ? 2 : 0;
+      const propertyType = existingParcel.ParentParcelId
+        ? PropertyType.SUBDIVISION
+        : PropertyType.LAND;
       const entry: Partial<ProjectProperty> = {
         CreatedById: project.CreatedById,
         ProjectId: project.Id,
@@ -219,7 +222,7 @@ const addProjectBuildingRelations = async (project: Project, buildingIds: number
         existingProjectProperties.some(
           (relation) =>
             relation.ProjectId !== project.Id &&
-            allowedStatusIds.includes(relation.Project.StatusId),
+            !allowedStatusIds.includes(relation.Project.StatusId),
         )
       ) {
         throw new ErrorWithCode(
@@ -231,7 +234,7 @@ const addProjectBuildingRelations = async (project: Project, buildingIds: number
       const entry: Partial<ProjectProperty> = {
         CreatedById: project.CreatedById,
         ProjectId: project.Id,
-        PropertyTypeId: 1,
+        PropertyTypeId: PropertyType.BUILDING,
         BuildingId: buildingId,
       };
       // Only try to add if this relation doesn't exist yet
@@ -324,7 +327,7 @@ const updateProject = async (project: DeepPartial<Project>, propertyIds: Project
 
     // If status was changed, write result to Project Status History table.
     if (originalProject.StatusId !== project.StatusId) {
-      await AppDataSource.getRepository(ProjectStatusHistory).insert({
+      await AppDataSource.getRepository(ProjectStatusHistory).save({
         CreatedById: project.UpdatedById,
         ProjectId: project.Id,
         WorkflowId: project.WorkflowId,
