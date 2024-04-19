@@ -125,20 +125,20 @@ export interface ProjectMetadata {
 }
 
 export interface ProjectWithTasks extends Project {
-  Tasks:{
-    surplusDeclarationReadiness?: boolean,
-    tripleBottomLine?: boolean,
-    reviewCompletedErp?: boolean,
-    reviewCompletedErpExempt?: boolean,
-    documentsReceivedReviewCompleted?: boolean,
-    appaisalOrdered?: boolean,
-    appraisalReceived?: boolean,
-    preparationDueDiligence?: boolean,
-    firstNationsConsultationUnderway?: boolean,
-    firstNationsConsultationComplete?: boolean,
-    notificationExemptionToAdm?: boolean,
-    confirmationReceivedFromAdm?: boolean,
-  }
+  Tasks: {
+    surplusDeclarationReadiness?: boolean;
+    tripleBottomLine?: boolean;
+    reviewCompletedErp?: boolean;
+    reviewCompletedErpExempt?: boolean;
+    documentsReceivedReviewCompleted?: boolean;
+    appaisalOrdered?: boolean;
+    appraisalReceived?: boolean;
+    preparationDueDiligence?: boolean;
+    firstNationsConsultationUnderway?: boolean;
+    firstNationsConsultationComplete?: boolean;
+    notificationExemptionToAdm?: boolean;
+    confirmationReceivedFromAdm?: boolean;
+  };
 }
 
 export type ProjectAdd = Omit<
