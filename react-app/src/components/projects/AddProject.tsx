@@ -17,12 +17,13 @@ import { FormProvider, useForm } from 'react-hook-form';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Delete, Search } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import usePimsApi from '@/hooks/usePimsApi';
 import { Parcel, ParcelEvaluation } from '@/hooks/api/useParcelsApi';
 import { Building, BuildingEvaluation } from '@/hooks/api/useBuildingsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { Agency } from '@/hooks/api/useAgencyApi';
+import { ProjectPropertyIds } from '@/hooks/api/useProjectsApi';
 
 interface IDisposalProjectSearch {
   rows: any[];
@@ -201,21 +202,22 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
 };
 
 const AddProject = () => {
+  const navigate = useNavigate();
   const formMethods = useForm({
     defaultValues: {
       Name: '',
       TierLevelId: null,
       Notes: '',
-      Assessed: '',
-      NetBook: '',
-      Estimated: '',
-      Appraised: '',
+      Assessed: undefined,
+      NetBook: undefined,
+      Estimated: undefined,
+      Appraised: undefined,
       Metadata: {
-        estimatedSalesCost: '',
-        estimatedProgramRecoveryFees: '',
-        surplusDeclaration: false,
-        tripleBottomLine: false,
-        applyForEnhancedExemption: false,
+        salesCost: undefined,
+        programCost: undefined,
+        surplusDeclaration: false, // Currently a Task, not metadata
+        tripleBottomLine: false, // Currently a Task, not metadata
+        exemptionRequested: false,
       },
       Approval: false,
     },
@@ -374,11 +376,18 @@ const AddProject = () => {
       </FormProvider>
       <Button
         onClick={async () => {
-          await formMethods.trigger();
-
+          const isValid = await formMethods.trigger();
           setShowNoPropertiesError(!rows.length);
-
-          console.log(formMethods.getValues());
+          if (isValid){
+            const formValues = formMethods.getValues();
+            const projectProperties: ProjectPropertyIds = {
+              parcels: [],
+              buildings: [],
+            }
+            api.projects.postProject(
+              {...formValues }, projectProperties
+            ).then(() => navigate('/projects'))
+          }
         }}
         variant="contained"
         color="primary"

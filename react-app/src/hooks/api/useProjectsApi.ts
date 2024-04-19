@@ -124,6 +124,28 @@ export interface ProjectMetadata {
   finalFormSignedBy?: string;
 }
 
+export type ProjectAdd = Omit<
+  Project,
+  | 'Id'
+  | 'CreatedOn'
+  | 'CreatedById'
+  | 'UpdatedOn'
+  | 'UpdatedById'
+  | 'ProjectNumber' // Determined in API
+  | 'AgencyId' // Determined in API (from user's agency)
+  | 'WorkflowId' // Determined in API
+  | 'StatusId' // Determined in API
+  | 'ProjectType' // Determined in API (Disposal)
+  | 'RiskId' // Determined in API
+  | 'ActualFiscalYear' // TODO: Do we need this?
+  | 'ReportedFiscalYear' // TODO: Do we need this?
+>;
+
+export interface ProjectPropertyIds {
+  parcels?: number[];
+  buildings?: number[];
+}
+
 const useProjectsApi = (absoluteFetch: IFetch) => {
   const getProjects = async () => {
     const { parsedBody } = await absoluteFetch.get('/projects', { includeRelations: true });
@@ -133,8 +155,18 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
     return parsedBody as Project[];
   };
 
+  const postProject = async (project: ProjectAdd, projectPropertyIds: ProjectPropertyIds) => {
+    const postBody = {
+      projectBody: project,
+      projectProperties: projectPropertyIds,
+    };
+    const { parsedBody, status } = await absoluteFetch.post('/projects/', postBody);
+    return { parsedBody, status };
+  };
+
   return {
     getProjects,
+    postProject,
   };
 };
 
