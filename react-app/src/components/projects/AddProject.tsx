@@ -325,7 +325,7 @@ const AddProject = () => {
               }}
               numeric
               fullWidth
-              name={'Metadata.estimatedSalesCost'}
+              name={'Metadata.salesCost'}
               label={'Estimated sales cost'}
             />
           </Grid>
@@ -336,7 +336,7 @@ const AddProject = () => {
               }}
               numeric
               fullWidth
-              name={'Metadata.estimatedProgramRecoveryFees'}
+              name={'Metadata.programCost'}
               label={'Estimated program recovery fees'}
             />
           </Grid>
@@ -357,7 +357,7 @@ const AddProject = () => {
           </Grid>
           <Grid item xs={12}>
             <SingleSelectBoxFormField
-              name={'Metadata.applyForEnhancedExemption'}
+              name={'Metadata.exemptionRequested'}
               label={'Apply for enhanced referral process exemption'}
             />
           </Grid>
