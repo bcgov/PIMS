@@ -31,7 +31,15 @@ export class UpdateIDSequences1713814960226 implements MigrationInterface {
       const sequence = `${table}_id_seq`;
       try {
         console.log(`Restarting sequence ${sequence}...`);
-        await queryRunner.query(`ALTER SEQUENCE "${sequence}" RESTART WITH 1;`);
+        // Query the maximum ID from the table
+        const result = await queryRunner.query(
+          `SELECT COALESCE(MAX(id), 0) AS max_id FROM ${table};`,
+        );
+        const maxId = parseInt(result[0].max_id) || 0;
+
+        // Reset the sequence to max ID + 1
+        await queryRunner.query(`ALTER SEQUENCE "${sequence}" RESTART WITH ${maxId + 1};`);
+
         console.log(`Sequence ${sequence} restarted successfully.`);
       } catch (error) {
         console.error(`Error restarting sequence ${sequence}:`, error);
