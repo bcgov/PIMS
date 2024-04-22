@@ -5,6 +5,13 @@ import projectServices from '@/services/projects/projectsServices';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import userServices from '@/services/users/usersServices';
 import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
+import { DeepPartial } from 'typeorm';
+import { Project } from '@/typeorm/Entities/Project';
+
+interface ProjectPropertyIds {
+  parcels?: number[];
+  buildings?: number[];
+}
 
 /**
  * @description Function to filter users based on agencies
@@ -92,14 +99,20 @@ export const deleteDisposalProject = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status with the new project.
  */
 export const addDisposalProject = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Projects']
-   * #swagger.description = 'Add a new disposal project.'
-   * #swagger.security = [{
-   *   "bearerAuth" : []
-   * }]
-   */
-  return stubResponse(res);
+  // Extract project data from request body
+  // Extract projectData and propertyIds from the request body
+  const {
+    project,
+    propertyIds,
+  }: { project: DeepPartial<Project>; propertyIds: ProjectPropertyIds } = req.body;
+  const user = await userServices.getUser((req.user as KeycloakUser).preferred_username);
+  const addBody = { ...project, CreatedById: user.Id };
+
+  // Call the addProject service function with the project data
+  const newProject = await projectServices.addProject(addBody, propertyIds);
+
+  // Return the new project in the response
+  return res.status(200).json(newProject);
 };
 
 /**
