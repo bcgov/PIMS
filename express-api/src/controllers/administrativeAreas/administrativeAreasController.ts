@@ -28,7 +28,7 @@ export const getAdministrativeAreas = async (req: Request, res: Response, next: 
     const filter = AdministrativeAreaFilterSchema.safeParse(req.query);
     if (filter.success) {
       const adminAreas = await administrativeAreasServices.getAdministrativeAreas(filter.data);
-      if (!ssoUser.client_roles || !ssoUser.client_roles.includes(Roles.ADMIN)) {
+      if (!ssoUser.client_roles || !ssoUser.hasRoles(['Administrator'])) {
         const trimmed = AdministrativeAreaPublicResponseSchema.array().parse(adminAreas);
         return res.status(200).send(trimmed);
       }

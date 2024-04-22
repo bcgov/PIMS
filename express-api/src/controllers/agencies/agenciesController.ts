@@ -21,7 +21,7 @@ export const getAgencies = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  const ssoUser = req.user as SSOUser;
+  const ssoUser = req.user;
   const filter = AgencyFilterSchema.safeParse(req.query);
   if (filter.success) {
     const includeRelations = req.query.includeRelations === 'true';
