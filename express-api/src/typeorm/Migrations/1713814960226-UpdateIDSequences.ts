@@ -1,3 +1,4 @@
+import logger from '@/utilities/winstonLogger';
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 const tables = [
@@ -15,22 +16,17 @@ const tables = [
 
 export class UpdateIDSequences1713814960226 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    console.log('Executing up method of migration...');
     for (const table of tables) {
-      console.log(`Updating sequence for table ${table}...`);
       await queryRunner.query(
         `SELECT setval('${table}_id_seq', (SELECT COALESCE(MAX(id), 0) FROM ${table}));`,
       );
     }
-
-    console.log('Migration up method executed successfully.');
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     for (const table of tables) {
       const sequence = `${table}_id_seq`;
       try {
-        console.log(`Restarting sequence ${sequence}...`);
         // Query the maximum ID from the table
         const result = await queryRunner.query(
           `SELECT COALESCE(MAX(id), 0) AS max_id FROM ${table};`,
@@ -39,13 +35,9 @@ export class UpdateIDSequences1713814960226 implements MigrationInterface {
 
         // Reset the sequence to max ID + 1
         await queryRunner.query(`ALTER SEQUENCE "${sequence}" RESTART WITH ${maxId + 1};`);
-
-        console.log(`Sequence ${sequence} restarted successfully.`);
       } catch (error) {
-        console.error(`Error restarting sequence ${sequence}:`, error);
+        logger.error(`Error restarting sequence ${sequence}:`, error);
       }
     }
-
-    console.log('Migration down method executed successfully.');
   }
 }
