@@ -1,17 +1,12 @@
 import { ProjectFilterSchema, ProjectFilter } from '@/services/projects/projectSchema';
 import { stubResponse } from '../../utilities/stubResponse';
 import { Request, Response } from 'express';
-import projectServices from '@/services/projects/projectsServices';
+import projectServices, { ProjectPropertyIds } from '@/services/projects/projectsServices';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import userServices from '@/services/users/usersServices';
 import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 import { DeepPartial } from 'typeorm';
 import { Project } from '@/typeorm/Entities/Project';
-
-interface ProjectPropertyIds {
-  parcels?: number[];
-  buildings?: number[];
-}
 
 /**
  * @description Function to filter users based on agencies
