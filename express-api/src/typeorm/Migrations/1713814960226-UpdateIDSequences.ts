@@ -13,6 +13,7 @@ const tables = [
   'project_property',
   'project_report',
   'project_snapshot',
+  'project_status_history',
 ];
 
 export class UpdateIDSequences1713814960226 implements MigrationInterface {
