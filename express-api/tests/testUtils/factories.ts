@@ -63,8 +63,8 @@ export class MockReq {
       last_name: 'Doe',
       email: 'john.doe@gov.bc.ca',
       client_roles: [] as string[],
-      hasRoles: (roles: string[], options: unknown) => true,
-      //originalData: 
+      hasRoles: () => true,
+      //originalData:
     };
     this.user = {
       ...defaultUserObject,
