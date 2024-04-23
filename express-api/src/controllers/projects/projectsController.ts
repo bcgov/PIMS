@@ -112,7 +112,7 @@ export const addDisposalProject = async (req: Request, res: Response) => {
   const newProject = await projectServices.addProject(addBody, propertyIds);
 
   // Return the new project in the response
-  return res.status(200).json(newProject);
+  return res.status(201).json(newProject);
 };
 
 /**

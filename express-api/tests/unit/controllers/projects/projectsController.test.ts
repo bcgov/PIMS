@@ -13,6 +13,13 @@ import { AppDataSource } from '@/appDataSource';
 const agencyRepo = AppDataSource.getRepository(Agency);
 
 jest.spyOn(agencyRepo, 'exists').mockImplementation(async () => true);
+
+const _addProject = jest.fn().mockImplementation(() => produceProject());
+
+jest.mock('@/services/projects/projectsServices', () => ({
+  addProject: () => _addProject(),
+}));
+
 jest.mock('@/services/users/usersServices', () => ({
   getUser: (guid: string) => _getUser(guid),
 }));
