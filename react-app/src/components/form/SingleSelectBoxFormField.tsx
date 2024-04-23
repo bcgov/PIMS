@@ -17,7 +17,7 @@ const SingleSelectBoxFormField = (props: SingleSelectBoxFormFieldProps) => {
     <Controller
       name={name}
       control={control}
-      rules={{ value: required ? { value: true, message: 'Required field.' } : undefined }}
+      rules={{ validate: (value) => !required || value || 'Required field.' }}
       render={({ field: { onChange }, fieldState: { error } }) => (
         <>
           <Box
@@ -30,7 +30,7 @@ const SingleSelectBoxFormField = (props: SingleSelectBoxFormFieldProps) => {
               id={`single-checkbox-${name}`}
               onChange={(_, data) => onChange(data)}
               checked={getValues()[name]}
-              required={props.required}
+              required={required}
             />
             <Typography>
               {label} {required ? <sup>{'*'}</sup> : <></>}
