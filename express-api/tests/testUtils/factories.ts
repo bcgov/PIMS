@@ -18,6 +18,7 @@ import { RegionalDistrict } from '@/typeorm/Entities/RegionalDistrict';
 import { TierLevel } from '@/typeorm/Entities/TierLevel';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
+import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 
 export class MockRes {
   statusValue: any;
@@ -426,7 +427,7 @@ export const produceTierLevels = (): TierLevel => {
 };
 
 export const produceProject = (
-  props: Partial<Project>,
+  props?: Partial<Project>,
   projectProperties?: ProjectProperty[],
 ): Project => {
   const projectId = faker.number.int();
@@ -475,7 +476,7 @@ export const produceProject = (
   return project;
 };
 
-export const produceProjectProperty = (props: Partial<ProjectProperty>): ProjectProperty => {
+export const produceProjectProperty = (props?: Partial<ProjectProperty>): ProjectProperty => {
   const projectProperty: ProjectProperty = {
     Id: faker.number.int(),
     CreatedById: randomUUID(),
@@ -495,4 +496,24 @@ export const produceProjectProperty = (props: Partial<ProjectProperty>): Project
     ...props,
   };
   return projectProperty;
+};
+
+export const productProjectStatusHistory = (props?: Partial<ProjectStatusHistory>) => {
+  const history: ProjectStatusHistory = {
+    Id: faker.number.int(),
+    CreatedById: randomUUID(),
+    CreatedBy: null,
+    CreatedOn: new Date(),
+    UpdatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: null,
+    WorkflowId: faker.number.int(),
+    Workflow: null,
+    StatusId: faker.number.int(),
+    Status: null,
+    ProjectId: faker.number.int(),
+    Project: null,
+    ...props,
+  };
+  return history;
 };

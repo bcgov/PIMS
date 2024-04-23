@@ -25,6 +25,7 @@ const {
   getProjectStatusTasks,
   getProjectWorkflowStatuses,
   getProjectWorkflowTasks,
+  filterProjects,
 } = controllers;
 
 //These originally had a separate route for numeric id and projectNumber, but I don't think express supports this pattern.
@@ -54,7 +55,7 @@ router
 router.route(`${PROJECT_REPORTS}/refresh/:reportId`).get(catchErrors(refreshProjectSnapshots));
 
 //Omitting search endpoints.
-
+router.route('/').get(catchErrors(filterProjects));
 router.route(`/projects/status`).get(catchErrors(getAllProjectStatus));
 router.route(`/projects/status/:statusCode/tasks`).get(catchErrors(getProjectStatusTasks));
 router
