@@ -65,7 +65,7 @@ export const isUserActive = async (kcUser: SSOUser): Promise<boolean> => {
  * @returns A Promise that resolves to a boolean indicating whether the user has read permission.
  */
 export const checkUserAgencyPermission = async (
-  kcUser: KeycloakUser,
+  kcUser: SSOUser,
   agencyIds: number[],
 ): Promise<boolean> => {
   if (!isAdmin(kcUser) && !isAuditor(kcUser)) {
