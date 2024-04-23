@@ -2,7 +2,7 @@ import { ProjectFilterSchema, ProjectFilter } from '@/services/projects/projectS
 import { stubResponse } from '../../utilities/stubResponse';
 import { Request, Response } from 'express';
 import projectServices from '@/services/projects/projectsServices';
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import userServices from '@/services/users/usersServices';
 import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 
@@ -15,7 +15,7 @@ import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 const filterProjectsByAgencies = async (req: Request, res: Response) => {
   const filter = ProjectFilterSchema.safeParse(req.query);
   const includeRelations = req.query.includeRelations === 'true';
-  const kcUser = req.user as unknown as KeycloakUser;
+  const kcUser = req.user as unknown as SSOUser;
   if (!filter.success) {
     return res.status(400).send('Could not parse filter.');
   }

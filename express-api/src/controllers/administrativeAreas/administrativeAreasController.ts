@@ -24,7 +24,7 @@ export const getAdministrativeAreas = async (req: Request, res: Response, next: 
       }]
    */
   try {
-    const ssoUser = req.user as SSOUser;
+    const ssoUser = req.user;
     const filter = AdministrativeAreaFilterSchema.safeParse(req.query);
     if (filter.success) {
       const adminAreas = await administrativeAreasServices.getAdministrativeAreas(filter.data);

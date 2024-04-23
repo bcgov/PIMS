@@ -53,16 +53,18 @@ export class MockReq {
 
   public setUser = (userData: object) => {
     const defaultUserObject = {
-      idir_user_guid: 'W7802F34D2390EFA9E7JK15923770279',
+      guid: 'W7802F34D2390EFA9E7JK15923770279',
       identity_provider: 'idir',
-      idir_username: 'JOHNDOE',
+      username: 'JOHNDOE',
       name: 'Doe, John CITZ:EX',
       preferred_username: 'a7254c34i2755fea9e7ed15918356158@idir',
-      given_name: 'John',
+      first_name: 'John',
       display_name: 'Doe, John CITZ:EX',
-      family_name: 'Doe',
+      last_name: 'Doe',
       email: 'john.doe@gov.bc.ca',
       client_roles: [] as string[],
+      hasRoles: (roles: string[], options: unknown) => true,
+      //originalData: 
     };
     this.user = {
       ...defaultUserObject,
