@@ -43,7 +43,7 @@ export interface Project {
   ProjectNumber: string;
   Name: string;
   Manager?: string;
-  ReportedFiscalYear: string;
+  ReportedFiscalYear: number;
   ActualFiscalYear: number;
   Description?: string;
   SubmittedOn?: Date;
@@ -125,18 +125,15 @@ export interface ProjectMetadata {
 }
 const useProjectsApi = (absoluteFetch: IFetch) => {
   const getProjectById = async (id: number): Promise<Project> => {
-    const { parsedBody } = await absoluteFetch.get(`/project/${id}`);
+    const { parsedBody } = await absoluteFetch.get(`/projects/disposal/${id}`);
     return parsedBody as Project;
   };
-  const updateProject = async (
-    id: number,
-    project: Omit<Project, 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById'>,
-  ): Promise<Project> => {
-    const { parsedBody } = await absoluteFetch.put(`/project/${id}`, project);
+  const updateProject = async (id: number, project: Partial<Project>): Promise<Project> => {
+    const { parsedBody } = await absoluteFetch.put(`/projects/disposal/${id}`, project);
     return parsedBody as Project;
   };
   const deleteProjectById = async (id: number) => {
-    const { status } = await absoluteFetch.del(`/project/${id}`);
+    const { status } = await absoluteFetch.del(`/projects/disposal/${id}`);
     return status;
   };
   const getProjects = async () => {
