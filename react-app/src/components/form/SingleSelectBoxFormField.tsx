@@ -1,5 +1,5 @@
 import React from 'react';
-import { SxProps, Checkbox, Typography, Box } from '@mui/material';
+import { SxProps, Checkbox, Typography, Box, useTheme } from '@mui/material';
 import { Controller, useFormContext } from 'react-hook-form';
 
 interface SingleSelectBoxFormFieldProps {
@@ -11,25 +11,41 @@ interface SingleSelectBoxFormFieldProps {
 
 const SingleSelectBoxFormField = (props: SingleSelectBoxFormFieldProps) => {
   const { control, getValues } = useFormContext();
-  const { name, label } = props;
+  const theme = useTheme();
+  const { name, label, required } = props;
   return (
     <Controller
       name={name}
       control={control}
-      render={({ field: { onChange } }) => (
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          <Checkbox
-            id={`single-checkbox-${name}`}
-            onChange={(_, data) => onChange(data)}
-            checked={getValues()[name]}
-          />
-          <Typography>{label}</Typography>
-        </Box>
+      rules={{ value: required ? { value: true, message: 'Required field.' } : undefined }}
+      render={({ field: { onChange }, fieldState: { error } }) => (
+        <>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <Checkbox
+              id={`single-checkbox-${name}`}
+              onChange={(_, data) => onChange(data)}
+              checked={getValues()[name]}
+              required={props.required}
+            />
+            <Typography>
+              {label} {required ? <sup>{'*'}</sup> : <></>}
+            </Typography>
+          </Box>
+          {!!error && !!error.message ? (
+            <Box>
+              <Typography ml={'3.2em'} fontSize={'smaller'} color={theme.palette.error.main}>
+                {error.message}
+              </Typography>
+            </Box>
+          ) : (
+            <></>
+          )}
+        </>
       )}
     />
   );

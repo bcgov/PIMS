@@ -37,7 +37,7 @@ const TextFormField = (props: TextFormFieldProps) => {
             value={value ?? defaultVal}
             fullWidth
             label={label}
-            type="text"
+            type={numeric ? 'number' : 'text'}
             error={!!error && !!error.message}
             helperText={error?.message}
           />
