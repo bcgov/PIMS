@@ -16,8 +16,6 @@ import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 import { useParams } from 'react-router-dom';
 import EmailChipFormField from '@/components/form/EmailChipFormField';
 import SingleSelectBoxFormField from '@/components/form/SingleSelectBoxFormField';
-import { Roles } from '@/constants/roles';
-import { insufficientRoleRedirect } from '@/utilities/permissionChecks';
 
 interface IAgencyDetail {
   onClose: () => void;
@@ -32,9 +30,6 @@ interface AgencyStatus extends Agency {
 const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   const { id } = useParams();
   const api = usePimsApi();
-
-  // Redirect from page if not permitted to view
-  insufficientRoleRedirect([Roles.ADMIN, Roles.AUDITOR]);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
