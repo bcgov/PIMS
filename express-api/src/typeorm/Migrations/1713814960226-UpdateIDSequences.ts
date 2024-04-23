@@ -20,7 +20,7 @@ export class UpdateIDSequences1713814960226 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     for (const table of tables) {
       await queryRunner.query(
-        `SELECT setval('${table}_id_seq', (SELECT COALESCE(MAX(id), 0) FROM ${table}));`,
+        `SELECT setval('${table}_id_seq', (SELECT COALESCE(MAX(id), 1) FROM ${table}));`,
       );
     }
   }
@@ -31,9 +31,9 @@ export class UpdateIDSequences1713814960226 implements MigrationInterface {
       try {
         // Query the maximum ID from the table
         const result = await queryRunner.query(
-          `SELECT COALESCE(MAX(id), 0) AS max_id FROM ${table};`,
+          `SELECT COALESCE(MAX(id), 1) AS max_id FROM ${table};`,
         );
-        const maxId = parseInt(result[0].max_id) || 0;
+        const maxId = parseInt(result[0].max_id) || 1;
 
         // Reset the sequence to max ID + 1
         await queryRunner.query(`ALTER SEQUENCE "${sequence}" RESTART WITH ${maxId + 1};`);
