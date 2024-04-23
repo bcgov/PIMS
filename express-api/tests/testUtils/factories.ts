@@ -427,7 +427,7 @@ export const produceTierLevels = (): TierLevel => {
 export const produceProject = (
   props?: Partial<Project>,
   projectProperties?: ProjectProperty[],
-): { project: Project } => {
+): Project => {
   const projectId = faker.number.int();
   const project: Project = {
     Id: projectId,
@@ -471,7 +471,7 @@ export const produceProject = (
     ],
     ...props,
   };
-  return { project };
+  return project;
 };
 
 export const produceProjectProperty = (props?: Partial<ProjectProperty>): ProjectProperty => {
