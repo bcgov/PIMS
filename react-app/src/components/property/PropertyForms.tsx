@@ -388,6 +388,11 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
             fullWidth
             required
             numeric
+            rules={{
+              validate: (val, formVals) =>
+                val <= formVals.RentableArea ||
+                `Cannot be larger than Net usable area: ${val} <= ${formVals?.RentableArea}`,
+            }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -400,11 +405,6 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
         <Grid item xs={6}>
           <TextFormField
             name={`RentableArea`}
-            rules={{
-              validate: (val, formVals) =>
-                val <= formVals.TotalArea ||
-                `Cannot be larger than Total area: ${val} <= ${formVals?.TotalArea}`,
-            }}
             required
             label={'Net usable area'}
             fullWidth

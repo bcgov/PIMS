@@ -21,6 +21,7 @@ import {
 } from './PropertyDialog';
 import { PropertyType } from './PropertyForms';
 import MetresSquared from '@/components/text/MetresSquared';
+import { zeroPadPID } from '@/utilities/formatters';
 
 interface IPropertyDetail {
   onClose: () => void;
@@ -150,7 +151,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
     } else {
       const info: any = {
         Classification: data.Classification,
-        PID: data.PID,
+        PID: data.PID ? zeroPadPID(data.PID) : undefined,
         PIN: data.PIN,
         PostalCode: data.Postal,
         AdministrativeArea: data.AdministrativeArea?.Name,

@@ -81,3 +81,7 @@ export const parseIntOrNull = (int: string) => {
 export const parseFloatOrNull = (flt: string) => {
   return flt.length > 0 ? parseFloat(flt) : null;
 };
+
+export const zeroPadPID = (pid: number | string): string => {
+  return String(pid).padStart(9, '0');
+};
