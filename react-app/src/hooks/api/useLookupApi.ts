@@ -39,7 +39,7 @@ const useLookupApi = (absoluteFetch: IFetch) => {
     return parsedBody as LookupObject[];
   };
 
-  const getProjectStatus = async () => {
+  const getProjectStatuses = async () => {
     const { parsedBody } = await absoluteFetch.get('/lookup/project/projectStatus');
     return parsedBody as ProjectStatus[];
   };
@@ -50,7 +50,7 @@ const useLookupApi = (absoluteFetch: IFetch) => {
     getPredominateUses,
     getRegionalDistricts,
     getTierLevels,
-    getProjectStatus,
+    getProjectStatuses,
   };
 };
 

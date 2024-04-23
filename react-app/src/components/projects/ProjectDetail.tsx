@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import DataCard from '../display/DataCard';
 import { Box, Grid, Typography } from '@mui/material';
-import { ClassificationInline } from '@/components/property/ClassificationIcon';
-import { useClassificationStyle } from '@/components/property//PropertyTable';
+// import { ClassificationInline } from '@/components/property/ClassificationIcon';
+// import { useClassificationStyle } from '@/components/property//PropertyTable';
 import DeleteDialog from '../dialog/DeleteDialog';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -39,6 +39,7 @@ const ProjectDetail = (props: IProjectDetail) => {
   const { data: projectStatus, loadOnce: loadProjStatus } = useDataLoader(
     api.lookup.getProjectStatus,
   );
+  console.log('ProjStatus', projectStatus);
   loadProjStatus();
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);

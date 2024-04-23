@@ -8,11 +8,13 @@ import {
   PredominateUsePublicResponseSchema,
   RegionalDistrictPublicResponseSchema,
   TierLevelPublicResponseSchema,
+  ProjectStatusPublicResponseSchema,
 } from './lookupSchema';
 import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUse';
 import { BuildingConstructionType } from '@/typeorm/Entities/BuildingConstructionType';
 import { RegionalDistrict } from '@/typeorm/Entities/RegionalDistrict';
 import { TierLevel } from '@/typeorm/Entities/TierLevel';
+import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 
 // TODO: What controllers here could just be replaced by existing GET requests?
 
@@ -139,6 +141,25 @@ export const lookupProjectTierLevels = async (req: Request, res: Response) => {
   );
   const filtered = tiers.filter((u) => !u.IsDisabled);
   const parsed = TierLevelPublicResponseSchema.array().safeParse(filtered);
+  if (parsed.success) {
+    return res.status(200).send(parsed.data);
+  } else {
+    return res.status(400).send(parsed);
+  }
+};
+
+/**
+ * @description Get all project project status entries.
+ * @param {Request}     req Incoming request
+ * @param {Response}    res Outgoing response
+ * @returns {Response}      A 200 status and a list of project statuses.
+ */
+export const lookupProjectStatuses = async (req: Request, res: Response) => {
+  const status = (await AppDataSource.getRepository(ProjectStatus).find()).sort(
+    (a, b) => a.SortOrder - b.SortOrder,
+  );
+  const filtered = status.filter((u) => !u.IsDisabled);
+  const parsed = ProjectStatusPublicResponseSchema.array().safeParse(filtered);
   if (parsed.success) {
     return res.status(200).send(parsed.data);
   } else {

@@ -30,3 +30,10 @@ export const TierLevelPublicResponseSchema = z.object({
   Id: z.number(),
   SortOrder: z.number(),
 });
+
+export const ProjectStatusPublicResponseSchema = z.object({
+  Name: z.string(),
+  Id: z.number(),
+  SortOrder: z.number(),
+  IsDisabled: z.boolean(),
+});

@@ -14,6 +14,7 @@ const {
   lookupBuildingConstructionType,
   lookupBuildingPredominateUse,
   lookupRegionalDistricts,
+  lookupProjectStatuses,
 } = controllers;
 
 router.route('/agencies').get(catchErrors(lookupAgencies));
@@ -24,6 +25,7 @@ router.route('/property/predominateUses').get(catchErrors(lookupBuildingPredomin
 router.route('/property/constructionTypes').get(catchErrors(lookupBuildingConstructionType));
 router.route('/project/tierLevels').get(catchErrors(lookupProjectTierLevels));
 router.route('/project/risks').get(catchErrors(lookupProjectRisks));
+router.route('/project/status').get(catchErrors(lookupProjectStatuses));
 router.route('/all').get(catchErrors(lookupAll));
 
 export default router;
