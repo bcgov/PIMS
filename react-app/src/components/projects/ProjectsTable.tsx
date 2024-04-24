@@ -7,8 +7,10 @@ import { dateFormatter, projectStatusChipFormatter } from '@/utilities/formatter
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { User } from '@/hooks/api/useUsersApi';
+import { useNavigate } from 'react-router-dom';
 
 const ProjectsTable = () => {
+  const navigate = useNavigate();
   const api = usePimsApi();
   const { data, loadOnce } = useDataLoader(api.projects.getProjects);
   loadOnce();
@@ -88,6 +90,7 @@ const ProjectsTable = () => {
 
   return (
     <FilterSearchDataGrid
+      onAddButtonClick={() => navigate('/projects/add')}
       onPresetFilterChange={selectPresetFilter}
       defaultFilter={'All Projects'}
       presetFilterSelectOptions={[
