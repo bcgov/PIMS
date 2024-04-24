@@ -174,7 +174,7 @@ const getAgencies = async (username: string) => {
   const user = await getUser(username);
 
   // TODO: we need to handle if no user is found from getUser instead of the app crashing
-  if( !user ){
+  if (!user) {
     return [];
   }
 
