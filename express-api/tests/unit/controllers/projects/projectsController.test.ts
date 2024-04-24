@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import controllers from '@/controllers';
 import { Agency } from '@/typeorm/Entities/Agency';
+import { ProjectFilterSchema } from '@/services/projects/projectSchema';
 import {
   MockReq,
   MockRes,
@@ -9,6 +10,8 @@ import {
   produceProject,
 } from '../../../testUtils/factories';
 import { AppDataSource } from '@/appDataSource';
+import { z } from 'zod';
+import { Roles } from '@/constants/roles';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
 
@@ -18,10 +21,15 @@ const _addProject = jest.fn().mockImplementation(() => produceProject());
 
 jest.mock('@/services/projects/projectsServices', () => ({
   addProject: () => _addProject(),
+  getProjects: jest.fn().mockResolvedValue([
+    { id: 1, name: 'Project 1' },
+    { id: 2, name: 'Project 2' },
+  ]),
 }));
 
 jest.mock('@/services/users/usersServices', () => ({
   getUser: (guid: string) => _getUser(guid),
+  getAgencies: jest.fn().mockResolvedValue([1, 2]),
 }));
 
 const _getUser = jest
@@ -35,7 +43,48 @@ describe('UNIT - Testing controllers for users routes.', () => {
     mockRequest = mockReq;
     mockResponse = mockRes;
   });
+  describe('GET /projects/', () => {
+    it('should return projects for admin user', async () => {
+      // Mock an admin user
+      const { mockReq, mockRes } = getRequestHandlerMocks();
+      mockRequest = mockReq;
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockResponse = mockRes;
 
+      // Call filterProjects controller function
+      await controllers.filterProjects(mockRequest, mockResponse);
+
+      // Assert response status and content
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.send).toHaveBeenCalledWith([
+        { id: 1, name: 'Project 1' },
+        { id: 2, name: 'Project 2' },
+      ]);
+    });
+
+    // it('should return projects for non-admin user', async () => {
+    //   // Mock a non-admin user
+    //   (mockRequest.user as any) = { userType: 'regular' };
+
+    //   // Call filterProjects controller function
+    //   await filterProjects(mockRequest, mockResponse);
+
+    //   // Assert response status and content
+    //   expect(mockResponse.status).toHaveBeenCalledWith(200);
+    //   expect(mockResponse.send).toHaveBeenCalledWith([{ id: 1, name: 'Project 1' }, { id: 2, name: 'Project 2' }]);
+    // });
+
+    it('should return 400 if filter cannot be parsed', async () => {
+      jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValue({
+        success: false,
+        error: new z.ZodError([]), // Pass an empty array of errors
+      });
+
+      await controllers.filterProjects(mockRequest, mockResponse);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.send).toHaveBeenCalledWith('Could not parse filter.');
+    });
+  });
   describe('GET /projects/disposal/:projectId', () => {
     it('should return stub response 501', async () => {
       await controllers.getDisposalProject(mockRequest, mockResponse);

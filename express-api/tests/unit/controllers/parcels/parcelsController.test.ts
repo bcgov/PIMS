@@ -9,6 +9,7 @@ import {
 } from '../../../testUtils/factories';
 import { DeleteResult } from 'typeorm';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import { Roles } from '@/constants/roles';
 
 const _getParcelById = jest.fn().mockImplementation(() => produceParcel());
 const _updateParcel = jest.fn().mockImplementation(() => produceParcel());
@@ -134,6 +135,16 @@ describe('UNIT - Parcels', () => {
   });
 
   describe('GET /properties/parcels', () => {
+    it('should return 200 with an admin user', async () => {
+      // Mock an admin user
+      const { mockReq, mockRes } = getRequestHandlerMocks();
+      mockRequest = mockReq;
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockResponse = mockRes;
+      await controllers.getParcels(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(Array.isArray(mockResponse.sendValue)).toBeTruthy();
+    });
     it('should return 200 with a correct response body', async () => {
       mockRequest.query.pid = '1';
       await controllers.getParcels(mockRequest, mockResponse);
