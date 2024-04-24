@@ -37,7 +37,7 @@ const ProjectDetail = (props: IProjectDetail) => {
   }
   const { data, refreshData } = useDataLoader(() => api.projects.getProjectById(Number(id)));
   const { data: projectStatus, loadOnce: loadProjStatus } = useDataLoader(
-    api.lookup.getProjectStatus,
+    api.lookup.getProjectStatuses,
   );
   console.log('ProjStatus', projectStatus);
   loadProjStatus();
