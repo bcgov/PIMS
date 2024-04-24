@@ -7,12 +7,12 @@ import { Building } from '@/typeorm/Entities/Building';
 import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 
 /**
- * @description Function to filter buildings based on agencies
- * @param {Request}     req Incoming request.
- * @param {Response}    res Outgoing response.
- * @returns {Building[]}      An array of buildings.
+ * @description Gets all buildings satisfying the filter parameters.
+ * @param {Request}     req Incoming Request. May contain query strings for filter.
+ * @param {Response}    res Outgoing Response
+ * @returns {Response}      A 200 status with a response body containing an array of building data.
  */
-const filterBuildingsByAgencies = async (req: Request, res: Response) => {
+export const getBuildings = async (req: Request, res: Response) => {
   const filter = BuildingFilterSchema.safeParse(req.query);
   const includeRelations = req.query.includeRelations === 'true';
   const kcUser = req.user as unknown as SSOUser;
@@ -36,17 +36,6 @@ const filterBuildingsByAgencies = async (req: Request, res: Response) => {
       includeRelations,
     );
   }
-  return buildings;
-};
-
-/**
- * @description Gets all buildings satisfying the filter parameters.
- * @param {Request}     req Incoming Request. May contain query strings for filter.
- * @param {Response}    res Outgoing Response
- * @returns {Response}      A 200 status with a response body containing an array of building data.
- */
-export const getBuildings = async (req: Request, res: Response) => {
-  const buildings = await filterBuildingsByAgencies(req, res);
   return res.status(200).send(buildings);
 };
 

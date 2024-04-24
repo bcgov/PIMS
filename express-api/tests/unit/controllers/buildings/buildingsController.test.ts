@@ -25,6 +25,7 @@ jest.mock('@/services/buildings/buildingServices', () => ({
 
 jest.mock('@/services/users/usersServices', () => ({
   getUser: jest.fn().mockImplementation(() => produceUser()),
+  getAgencies: jest.fn().mockResolvedValue([1, 2]),
 }));
 
 describe('UNIT - Buildings', () => {

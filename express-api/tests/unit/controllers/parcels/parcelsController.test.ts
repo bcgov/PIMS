@@ -24,6 +24,7 @@ jest.mock('@/services/parcels/parcelServices', () => ({
 }));
 jest.mock('@/services/users/usersServices', () => ({
   getUser: jest.fn().mockImplementation(() => produceUser()),
+  getAgencies: jest.fn().mockResolvedValue([1, 2]),
 }));
 describe('UNIT - Parcels', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
