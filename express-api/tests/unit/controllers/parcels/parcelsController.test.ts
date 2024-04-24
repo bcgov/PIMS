@@ -145,6 +145,11 @@ describe('UNIT - Parcels', () => {
       await controllers.getParcels(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
+    it('should return 400 on parcel id that is a string', async () => {
+      mockRequest.params.parcelId = 'invalidParcelId';
+      await controllers.getParcel(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
     it('should throw an error when getParcels service throws an error', async () => {
       mockRequest.query.pid = '1';
       _getParcels.mockImplementationOnce(() => {
