@@ -24,6 +24,7 @@ import AdminAreasManagement from './pages/AdminAreasManagement';
 import AddAdministrativeArea from './components/adminAreas/AddAdministrativeArea';
 import AdministrativeAreaDetail from './components/adminAreas/AdministrativeAreaDetail';
 import ProjectManagement from './pages/ProjectManagement';
+import AddProject from '@/components/projects/AddProject';
 import { Roles } from '@/constants/roles';
 
 const Router = () => {
@@ -186,6 +187,16 @@ const Router = () => {
           <BaseLayout>
             <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
               <ProjectManagement />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="projects/add"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
+              <AddProject />
             </AuthRouteGuard>
           </BaseLayout>
         }
