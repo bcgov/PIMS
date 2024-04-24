@@ -69,7 +69,7 @@ const Header: React.FC = () => {
     if (isAuthenticated) {
       logout();
     } else {
-      login({ idpHint: 'idir' });
+      login();
     }
   };
 
