@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import pendingImage from '@/assets/images/pending.svg';
 import { Box, Button, Grid, Paper, Typography } from '@mui/material';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
-import { useKeycloak } from '@bcgov/citz-imb-kc-react';
+import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { accessPendingBlurb, signupTermsAndConditionsClaim } from '@/constants/jsxSnippets';
 import usePimsApi from '@/hooks/usePimsApi';
@@ -28,7 +28,7 @@ const AccessPending = () => {
 };
 
 const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => {
-  const keycloak = useKeycloak();
+  const keycloak = useSSO();
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
 
   const formMethods = useForm({

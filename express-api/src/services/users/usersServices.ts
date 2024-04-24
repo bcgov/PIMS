@@ -1,6 +1,6 @@
 import { User, UserStatus } from '@/typeorm/Entities/User';
 import { AppDataSource } from '@/appDataSource';
-import { KeycloakBCeIDUser, KeycloakIdirUser, KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { SSOBCeIDUser, SSOIdirUser, SSOUser } from '@bcgov/citz-imb-sso-express';
 import { DeepPartial, In } from 'typeorm';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { randomUUID, UUID } from 'crypto';
@@ -9,8 +9,8 @@ import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { UserFiltering } from '@/controllers/users/usersSchema';
 
 interface NormalizedKeycloakUser {
-  given_name: string;
-  family_name: string;
+  first_name: string;
+  last_name: string;
   username: string;
   guid: string;
   email: string;
@@ -24,31 +24,31 @@ export const getUser = async (username: string): Promise<User | null> => {
   return user;
 };
 
-const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => {
+// TODO: UPDATE THIS
+const normalizeKeycloakUser = (kcUser: SSOUser): NormalizedKeycloakUser => {
   const provider = kcUser.identity_provider;
   const normalizeUuid = (keycloakUuid: string) =>
     keycloakUuid.toLowerCase().replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/g, '$1-$2-$3-$4-$5');
-  let user;
   switch (provider) {
     case 'idir':
-      user = kcUser as KeycloakIdirUser;
+      kcUser as SSOIdirUser;
       return {
-        given_name: user.given_name,
-        family_name: user.family_name,
+        first_name: kcUser.first_name,
+        last_name: kcUser.last_name,
         username: kcUser.preferred_username,
         email: kcUser.email,
         display_name: kcUser.display_name,
-        guid: normalizeUuid(user.idir_user_guid),
+        guid: normalizeUuid(kcUser.guid),
       };
     case 'bceidbasic':
-      user = kcUser as KeycloakBCeIDUser;
+      kcUser as SSOBCeIDUser;
       return {
-        given_name: '',
-        family_name: '',
+        first_name: '',
+        last_name: '',
         username: kcUser.preferred_username,
         email: kcUser.email,
         display_name: kcUser.display_name,
-        guid: normalizeUuid(user.bceid_user_guid),
+        guid: normalizeUuid(kcUser.guid),
       };
     default:
       throw new Error();
@@ -60,15 +60,15 @@ const normalizeKeycloakUser = (kcUser: KeycloakUser): NormalizedKeycloakUser => 
 //   return getUser(normalized.guid ?? normalized.username);
 // };
 
-const activateUser = async (kcUser: KeycloakUser) => {
-  const normalizedUser = normalizeKeycloakUser(kcUser);
-  const internalUser = await getUser(kcUser.preferred_username);
+const activateUser = async (ssoUser: SSOUser) => {
+  const normalizedUser = normalizeKeycloakUser(ssoUser);
+  const internalUser = await getUser(ssoUser.preferred_username);
   if (!internalUser) {
-    const { given_name, family_name, username, guid } = normalizedUser;
+    const { first_name, last_name, username, guid } = normalizedUser;
     AppDataSource.getRepository(User).insert({
       Username: username,
-      FirstName: given_name,
-      LastName: family_name,
+      FirstName: first_name,
+      LastName: last_name,
       KeycloakUserId: guid,
     });
   } else {
@@ -117,7 +117,7 @@ const activateUser = async (kcUser: KeycloakUser) => {
 // };
 
 const addKeycloakUserOnHold = async (
-  kcUser: KeycloakUser,
+  ssoUser: SSOUser,
   agencyId: number,
   position: string,
   note: string,
@@ -129,14 +129,14 @@ const addKeycloakUserOnHold = async (
     throw new Error('Null argument.');
   }
   //Iterating through agencies and roles no longer necessary here?
-  const normalizedKc = normalizeKeycloakUser(kcUser);
+  const normalizedKc = normalizeKeycloakUser(ssoUser);
   const systemUser = await AppDataSource.getRepository(User).findOne({
     where: { Username: 'system' },
   });
   const result = await AppDataSource.getRepository(User).insert({
     Id: randomUUID(),
-    FirstName: normalizedKc.given_name,
-    LastName: normalizedKc.family_name,
+    FirstName: normalizedKc.first_name,
+    LastName: normalizedKc.last_name,
     Email: normalizedKc.email,
     DisplayName: normalizedKc.display_name,
     KeycloakUserId: normalizedKc.guid,
@@ -172,6 +172,12 @@ const addKeycloakUserOnHold = async (
 
 const getAgencies = async (username: string) => {
   const user = await getUser(username);
+
+  // TODO: we need to handle if no user is found from getUser instead of the app crashing
+  if (!user) {
+    return [];
+  }
+
   const userAgencies = await AppDataSource.getRepository(User).findOneOrFail({
     relations: {
       Agency: true,
