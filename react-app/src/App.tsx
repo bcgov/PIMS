@@ -24,6 +24,8 @@ import AdminAreasManagement from './pages/AdminAreasManagement';
 import AddAdministrativeArea from './components/adminAreas/AddAdministrativeArea';
 import AdministrativeAreaDetail from './components/adminAreas/AdministrativeAreaDetail';
 import ProjectManagement from './pages/ProjectManagement';
+import AddProject from '@/components/projects/AddProject';
+import { Roles } from '@/constants/roles';
 
 const Router = () => {
   const navigate = useNavigate();
@@ -41,7 +43,7 @@ const Router = () => {
         path="/access-request"
         element={
           <BaseLayout displayFooter>
-            <AuthRouteGuard>
+            <AuthRouteGuard ignoreStatus>
               <AccessRequest />
             </AuthRouteGuard>
           </BaseLayout>
@@ -51,7 +53,7 @@ const Router = () => {
         path="/dev"
         element={
           <BaseLayout>
-            <AuthRouteGuard>
+            <AuthRouteGuard ignoreStatus>
               <Dev />
             </AuthRouteGuard>
           </BaseLayout>
@@ -62,7 +64,7 @@ const Router = () => {
           path="adminAreas"
           element={
             <BaseLayout displayFooter>
-              <AuthRouteGuard>
+              <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR]}>
                 <AdminAreasManagement />
               </AuthRouteGuard>
             </BaseLayout>
@@ -72,7 +74,7 @@ const Router = () => {
           path="adminAreas/:id"
           element={
             <BaseLayout>
-              <AuthRouteGuard>
+              <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR]}>
                 <AdministrativeAreaDetail />
               </AuthRouteGuard>
             </BaseLayout>
@@ -82,7 +84,7 @@ const Router = () => {
           path="adminAreas/add"
           element={
             <BaseLayout>
-              <AuthRouteGuard>
+              <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR]}>
                 <AddAdministrativeArea />
               </AuthRouteGuard>
             </BaseLayout>
@@ -92,7 +94,7 @@ const Router = () => {
           path="agencies"
           element={
             <BaseLayout>
-              <AuthRouteGuard>
+              <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR]}>
                 <AgencyManagement />
               </AuthRouteGuard>
             </BaseLayout>
@@ -102,7 +104,7 @@ const Router = () => {
           path="agencies/:id"
           element={
             <BaseLayout>
-              <AuthRouteGuard>
+              <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR]}>
                 <AgencyDetail onClose={() => navigate('/admin/agencies')} />
               </AuthRouteGuard>
             </BaseLayout>
@@ -112,7 +114,7 @@ const Router = () => {
           path="agencies/add"
           element={
             <BaseLayout>
-              <AuthRouteGuard>
+              <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR]}>
                 <AddAgency />
               </AuthRouteGuard>
             </BaseLayout>
@@ -123,7 +125,7 @@ const Router = () => {
         path="properties"
         element={
           <BaseLayout>
-            <AuthRouteGuard>
+            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
               <ActiveInventory />
             </AuthRouteGuard>
           </BaseLayout>
@@ -133,7 +135,7 @@ const Router = () => {
         path="users"
         element={
           <BaseLayout>
-            <AuthRouteGuard>
+            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
               <UsersManagement />
             </AuthRouteGuard>
           </BaseLayout>
@@ -143,7 +145,7 @@ const Router = () => {
         path="properties/add"
         element={
           <BaseLayout>
-            <AuthRouteGuard>
+            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
               <AddProperty />
             </AuthRouteGuard>
           </BaseLayout>
@@ -153,7 +155,7 @@ const Router = () => {
         path="properties/building/:buildingId"
         element={
           <BaseLayout>
-            <AuthRouteGuard>
+            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
               <PropertyDetail onClose={() => navigate('/properties/')} />
             </AuthRouteGuard>
           </BaseLayout>
@@ -163,7 +165,7 @@ const Router = () => {
         path="properties/parcel/:parcelId"
         element={
           <BaseLayout>
-            <AuthRouteGuard>
+            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
               <PropertyDetail onClose={() => navigate('/properties/')} />
             </AuthRouteGuard>
           </BaseLayout>
@@ -173,7 +175,7 @@ const Router = () => {
         path="users/:id"
         element={
           <BaseLayout>
-            <AuthRouteGuard>
+            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
               <UserDetail onClose={() => navigate('/users')} />
             </AuthRouteGuard>
           </BaseLayout>
@@ -183,8 +185,18 @@ const Router = () => {
         path="projects"
         element={
           <BaseLayout>
-            <AuthRouteGuard>
+            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
               <ProjectManagement />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="projects/add"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
+              <AddProject />
             </AuthRouteGuard>
           </BaseLayout>
         }

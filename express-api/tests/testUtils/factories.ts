@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker';
 import { UUID, randomUUID } from 'crypto';
 import { Request, Response } from 'express';
 import { Role as RolesEntity } from '@/typeorm/Entities/Role';
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Building } from '@/typeorm/Entities/Building';
 import { EmailBody, IChesStatusResponse, IEmail } from '@/services/ches/chesServices';
@@ -18,6 +18,7 @@ import { RegionalDistrict } from '@/typeorm/Entities/RegionalDistrict';
 import { TierLevel } from '@/typeorm/Entities/TierLevel';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
+import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 
 export class MockRes {
   statusValue: any;
@@ -52,16 +53,18 @@ export class MockReq {
 
   public setUser = (userData: object) => {
     const defaultUserObject = {
-      idir_user_guid: 'W7802F34D2390EFA9E7JK15923770279',
+      guid: 'W7802F34D2390EFA9E7JK15923770279',
       identity_provider: 'idir',
-      idir_username: 'JOHNDOE',
+      username: 'JOHNDOE',
       name: 'Doe, John CITZ:EX',
       preferred_username: 'a7254c34i2755fea9e7ed15918356158@idir',
-      given_name: 'John',
+      first_name: 'John',
       display_name: 'Doe, John CITZ:EX',
-      family_name: 'Doe',
+      last_name: 'Doe',
       email: 'john.doe@gov.bc.ca',
       client_roles: [] as string[],
+      hasRoles: () => true,
+      //originalData:
     };
     this.user = {
       ...defaultUserObject,
@@ -163,7 +166,7 @@ export const produceRole = (): RolesEntity => {
   };
 };
 
-export const produceKeycloak = (): KeycloakUser => {
+export const produceSSO = (): SSOUser => {
   return {
     name: faker.string.alphanumeric(),
     preferred_username: faker.string.alphanumeric(),
@@ -171,10 +174,12 @@ export const produceKeycloak = (): KeycloakUser => {
     display_name: faker.string.alphanumeric(),
     client_roles: [faker.string.alphanumeric()],
     identity_provider: 'idir',
-    idir_user_guid: faker.string.uuid(),
-    idir_username: faker.string.alphanumeric(),
-    given_name: faker.person.firstName(),
-    family_name: faker.person.lastName(),
+    guid: faker.string.uuid(),
+    username: faker.string.alphanumeric(),
+    first_name: faker.person.firstName(),
+    last_name: faker.person.lastName(),
+    originalData: null,
+    hasRoles: null,
   };
 };
 
@@ -424,7 +429,7 @@ export const produceTierLevels = (): TierLevel => {
 };
 
 export const produceProject = (
-  props: Partial<Project>,
+  props?: Partial<Project>,
   projectProperties?: ProjectProperty[],
 ): Project => {
   const projectId = faker.number.int();
@@ -473,7 +478,7 @@ export const produceProject = (
   return project;
 };
 
-export const produceProjectProperty = (props: Partial<ProjectProperty>): ProjectProperty => {
+export const produceProjectProperty = (props?: Partial<ProjectProperty>): ProjectProperty => {
   const projectProperty: ProjectProperty = {
     Id: faker.number.int(),
     CreatedById: randomUUID(),
@@ -493,4 +498,24 @@ export const produceProjectProperty = (props: Partial<ProjectProperty>): Project
     ...props,
   };
   return projectProperty;
+};
+
+export const productProjectStatusHistory = (props?: Partial<ProjectStatusHistory>) => {
+  const history: ProjectStatusHistory = {
+    Id: faker.number.int(),
+    CreatedById: randomUUID(),
+    CreatedBy: null,
+    CreatedOn: new Date(),
+    UpdatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: null,
+    WorkflowId: faker.number.int(),
+    Workflow: null,
+    StatusId: faker.number.int(),
+    Status: null,
+    ProjectId: faker.number.int(),
+    Project: null,
+    ...props,
+  };
+  return history;
 };

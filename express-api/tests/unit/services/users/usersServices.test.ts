@@ -4,9 +4,9 @@ import { IKeycloakRole } from '@/services/keycloak/IKeycloakRole';
 import userServices from '@/services/users/usersServices';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { User } from '@/typeorm/Entities/User';
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { faker } from '@faker-js/faker';
-import { produceAgency, produceUser } from 'tests/testUtils/factories';
+import { produceAgency, produceUser, produceSSO } from 'tests/testUtils/factories';
 import { DeepPartial } from 'typeorm';
 import { z } from 'zod';
 
@@ -83,16 +83,7 @@ describe('UNIT - User services', () => {
     jest.clearAllMocks();
   });
 
-  const kcUser: KeycloakUser = {
-    preferred_username: 'test',
-    email: 'test@gov.bc.ca',
-    display_name: 'test',
-    identity_provider: 'idir',
-    idir_user_guid: 'test',
-    idir_username: 'test',
-    given_name: 'test',
-    family_name: 'test',
-  };
+  const ssoUser: SSOUser = produceSSO();
 
   describe('getUser', () => {
     const user = produceUser();
@@ -118,13 +109,13 @@ describe('UNIT - User services', () => {
       const found = produceUser();
       found.Username = 'test';
       _usersFindOneBy.mockResolvedValueOnce(found);
-      const user = await userServices.activateUser(kcUser);
+      const user = await userServices.activateUser(ssoUser);
       expect(_usersFindOneBy).toHaveBeenCalledTimes(1);
       expect(_usersUpdate).toHaveBeenCalledTimes(1);
     });
     it('adds a new user based off the kc username', async () => {
       _usersFindOneBy.mockResolvedValueOnce(null);
-      const user = await userServices.activateUser(kcUser);
+      const user = await userServices.activateUser(ssoUser);
       expect(_usersFindOneBy).toHaveBeenCalledTimes(1);
       expect(_usersInsert).toHaveBeenCalledTimes(1);
     });
@@ -171,7 +162,7 @@ describe('UNIT - User services', () => {
     it('should add and return an access request', async () => {
       const agencyId = faker.number.int();
       //const roleId = faker.string.uuid();
-      const req = await userServices.addKeycloakUserOnHold(kcUser, agencyId, '', '');
+      const req = await userServices.addKeycloakUserOnHold(ssoUser, agencyId, '', '');
       expect(_usersInsert).toHaveBeenCalledTimes(1);
     });
   });
@@ -210,10 +201,10 @@ describe('UNIT - User services', () => {
 
   describe('normalizeKeycloakUser', () => {
     it('should return a normalized user from IDIR', () => {
-      const result = userServices.normalizeKeycloakUser(kcUser);
-      expect(result.given_name).toBe(kcUser.given_name);
-      expect(result.family_name).toBe(kcUser.family_name);
-      expect(result.username).toBe(kcUser.preferred_username);
+      const result = userServices.normalizeKeycloakUser(ssoUser);
+      expect(result.first_name).toBe(ssoUser.first_name);
+      expect(result.last_name).toBe(ssoUser.last_name);
+      expect(result.username).toBe(ssoUser.preferred_username);
     });
 
     // TODO: This function looks like it should handle BCeID users, but the param type doesn't fit
