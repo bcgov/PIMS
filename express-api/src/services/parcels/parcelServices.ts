@@ -15,11 +15,6 @@ const parcelRepo = AppDataSource.getRepository(Parcel);
 const addParcel = async (parcel: DeepPartial<Parcel>) => {
   const inPID = Number(parcel.PID);
 
-  const matchPID = inPID.toString().search(/^\d{9}$/);
-  if (parcel.PID != null && matchPID === -1) {
-    throw new ErrorWithCode('PID must be a number and in the format #########');
-  }
-
   const existingParcel = parcel.PID != null ? await getParcelByPid(inPID) : undefined;
 
   if (existingParcel) {
