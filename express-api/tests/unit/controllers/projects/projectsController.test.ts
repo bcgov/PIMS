@@ -1,7 +1,32 @@
 import { Request, Response } from 'express';
 import controllers from '@/controllers';
-import { MockReq, MockRes, getRequestHandlerMocks } from '../../../testUtils/factories';
+import { Agency } from '@/typeorm/Entities/Agency';
+import {
+  MockReq,
+  MockRes,
+  getRequestHandlerMocks,
+  produceUser,
+  produceProject,
+} from '../../../testUtils/factories';
+import { AppDataSource } from '@/appDataSource';
 
+const agencyRepo = AppDataSource.getRepository(Agency);
+
+jest.spyOn(agencyRepo, 'exists').mockImplementation(async () => true);
+
+const _addProject = jest.fn().mockImplementation(() => produceProject());
+
+jest.mock('@/services/projects/projectsServices', () => ({
+  addProject: () => _addProject(),
+}));
+
+jest.mock('@/services/users/usersServices', () => ({
+  getUser: (guid: string) => _getUser(guid),
+}));
+
+const _getUser = jest
+  .fn()
+  .mockImplementation((guid: string) => ({ ...produceUser(), KeycloakUserId: guid }));
 describe('UNIT - Testing controllers for users routes.', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
@@ -69,12 +94,8 @@ describe('UNIT - Testing controllers for users routes.', () => {
   });
 
   describe('POST /projects/disposal', () => {
-    it('should return stub response 501', async () => {
-      await controllers.addDisposalProject(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 201 on successful project addition', async () => {
+    it('should return status 201 on successful project addition', async () => {
+      mockRequest.body = produceProject();
       await controllers.addDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(201);
     });

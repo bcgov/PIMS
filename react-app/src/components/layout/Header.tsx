@@ -14,7 +14,7 @@ import {
   MenuItem,
 } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { useKeycloak } from '@bcgov/citz-imb-kc-react';
+import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { Roles } from '@/constants/roles';
 
 const AppBrand = () => {
@@ -61,7 +61,7 @@ const AppBrand = () => {
 };
 
 const Header: React.FC = () => {
-  const { logout, isAuthenticated, login, user } = useKeycloak();
+  const { logout, isAuthenticated, login, user } = useSSO();
   const theme = useTheme();
   const navigate = useNavigate();
 

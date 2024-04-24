@@ -15,7 +15,7 @@ describe('UNIT - Testing controllers for /ltsa routes', () => {
       email: 'john.doe@gov.bc.ca',
       client_roles: ['Admin'],
     },
-  } as Request;
+  } as unknown as Request;
   const mockResponse = {
     send: jest.fn().mockReturnThis(),
     status: jest.fn().mockReturnThis(),
