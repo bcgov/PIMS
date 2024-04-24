@@ -193,7 +193,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
               validate: (val, formVals) =>
                 (val.length <= 9 &&
                   (val.length > 0 || formVals['PIN'].length > 0 || propertyType === 'Building')) ||
-                'Must have set either PID or PIN',
+                'Must have set either PID or PIN not exceeding 9 digits.',
             }}
           />
         </Grid>
@@ -213,7 +213,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
               validate: (val, formVals) =>
                 (val.length <= 9 &&
                   (val.length > 0 || formVals['PID'].length > 0 || propertyType === 'Building')) ||
-                'Must have set either PID or PIN',
+                'Must have set either PID or PIN not exceeding 9 digits.',
             }}
           />
         </Grid>

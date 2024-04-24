@@ -13,9 +13,14 @@ const parcelRepo = AppDataSource.getRepository(Parcel);
  * @throws ErrorWithCode If the parcel already exists or is unable to be added.
  */
 const addParcel = async (parcel: DeepPartial<Parcel>) => {
-  const inPID = Number(parcel.PID);
+  const numberPID = Number(parcel.PID);
 
-  const existingParcel = parcel.PID != null ? await getParcelByPid(inPID) : undefined;
+  const stringPID = numberPID.toString();
+  if (parcel.PID != null && (stringPID.length > 9 || isNaN(numberPID))) {
+    throw new ErrorWithCode('PID must be a number and in the format #########');
+  }
+
+  const existingParcel = parcel.PID != null ? await getParcelByPid(numberPID) : undefined;
 
   if (existingParcel) {
     throw new ErrorWithCode('Parcel already exists.', 409);
