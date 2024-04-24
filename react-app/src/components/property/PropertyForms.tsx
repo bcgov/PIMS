@@ -407,7 +407,7 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
             rules={{
               validate: (val, formVals) =>
                 val <= formVals.TotalArea ||
-                `Cannot be larger than Net usable area: ${val} <= ${formVals?.TotalArea}`,
+                `Cannot be larger than Total Area: ${val} <= ${formVals?.TotalArea}`,
             }}
             InputProps={{
               endAdornment: (
