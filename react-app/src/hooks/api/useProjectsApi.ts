@@ -123,6 +123,46 @@ export interface ProjectMetadata {
   preliminaryFormSignedBy?: string;
   finalFormSignedBy?: string;
 }
+
+export interface ProjectWithTasks extends Project {
+  Tasks: {
+    surplusDeclarationReadiness?: boolean;
+    tripleBottomLine?: boolean;
+    reviewCompletedErp?: boolean;
+    reviewCompletedErpExempt?: boolean;
+    documentsReceivedReviewCompleted?: boolean;
+    appaisalOrdered?: boolean;
+    appraisalReceived?: boolean;
+    preparationDueDiligence?: boolean;
+    firstNationsConsultationUnderway?: boolean;
+    firstNationsConsultationComplete?: boolean;
+    notificationExemptionToAdm?: boolean;
+    confirmationReceivedFromAdm?: boolean;
+  };
+}
+
+export type ProjectAdd = Omit<
+  ProjectWithTasks,
+  | 'Id'
+  | 'CreatedOn'
+  | 'CreatedById'
+  | 'UpdatedOn'
+  | 'UpdatedById'
+  | 'ProjectNumber' // Determined in API
+  | 'AgencyId' // Determined in API (from user's agency)
+  | 'WorkflowId' // Determined in API
+  | 'StatusId' // Determined in API
+  | 'ProjectType' // Determined in API (Disposal)
+  | 'RiskId' // Determined in API
+  | 'ActualFiscalYear' // TODO: Do we need this?
+  | 'ReportedFiscalYear' // TODO: Do we need this?
+>;
+
+export interface ProjectPropertyIds {
+  parcels?: number[];
+  buildings?: number[];
+}
+
 const useProjectsApi = (absoluteFetch: IFetch) => {
   const getProjectById = async (id: number): Promise<Project> => {
     const { parsedBody } = await absoluteFetch.get(`/projects/disposal/${id}`);
@@ -144,11 +184,21 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
     return parsedBody as Project[];
   };
 
+  const postProject = async (project: ProjectAdd, projectPropertyIds: ProjectPropertyIds) => {
+    const postBody = {
+      project,
+      projectPropertyIds,
+    };
+    const { parsedBody, status } = await absoluteFetch.post('/projects/disposal', postBody);
+    return { parsedBody, status };
+  };
+
   return {
     getProjectById,
     updateProject,
     deleteProjectById,
     getProjects,
+    postProject,
   };
 };
 

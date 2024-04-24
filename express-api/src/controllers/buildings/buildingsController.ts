@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import * as buildingService from '@/services/buildings/buildingServices';
 import { BuildingFilterSchema } from '@/services/buildings/buildingSchema';
 import userServices from '@/services/users/usersServices';
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Building } from '@/typeorm/Entities/Building';
 
 /**
@@ -65,7 +65,7 @@ export const updateBuilding = async (req: Request, res: Response) => {
   if (isNaN(buildingId) || buildingId !== req.body.Id) {
     return res.status(400).send('Building ID was invalid or mismatched with body.');
   }
-  const user = await userServices.getUser((req.user as KeycloakUser).preferred_username);
+  const user = await userServices.getUser((req.user as SSOUser).preferred_username);
   const updateBody = { ...req.body, UpdatedById: user.Id };
   const building = await buildingService.updateBuildingById(updateBody);
   return res.status(200).send(building);
@@ -108,7 +108,7 @@ export const addBuilding = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  const user = await userServices.getUser((req.user as KeycloakUser).preferred_username);
+  const user = await userServices.getUser((req.user as SSOUser).preferred_username);
   const createBody: Building = { ...req.body, CreatedById: user.Id };
   createBody.Evaluations = createBody.Evaluations?.map((evaluation) => ({
     ...evaluation,

@@ -3,8 +3,8 @@ import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../ta
 import { Box, Chip, SxProps } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { GridColDef, GridEventListener } from '@mui/x-data-grid';
+import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { dateFormatter, statusChipFormatter } from '@/utilities/formatters';
-import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,8 +19,9 @@ interface IAgencyTable {
 const AgencyTable = (props: IAgencyTable) => {
   const { rowClickHandler, data, isLoading, refreshData, error } = props;
   const [agencies, setAgencies] = useState<Agency[]>([]);
-  const { state } = useKeycloak();
+  const { state } = useSSO();
   const navigate = useNavigate();
+
   useEffect(() => {
     if (error) {
       console.error(error);
