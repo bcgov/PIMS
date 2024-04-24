@@ -208,13 +208,13 @@ const AddProject = () => {
       Name: '',
       TierLevelId: null,
       Notes: '',
-      Assessed: undefined,
-      NetBook: undefined,
-      Estimated: undefined,
-      Appraised: undefined,
+      Assessed: 0,
+      NetBook: 0,
+      Estimated: 0,
+      Appraised: 0,
       Metadata: {
-        salesCost: undefined,
-        programCost: undefined,
+        salesCost: 0,
+        programCost: 0,
         exemptionRequested: false,
       },
       Approval: false,
@@ -290,7 +290,7 @@ const AddProject = () => {
               label={'Assessed value'}
               rules={{
                 min: {
-                  value: 1,
+                  value: 0.01,
                   message: 'Must be greater than 0.',
                 },
               }}
@@ -308,7 +308,7 @@ const AddProject = () => {
               label={'Net book value'}
               rules={{
                 min: {
-                  value: 1,
+                  value: 0.01,
                   message: 'Must be greater than 0.',
                 },
               }}
@@ -326,7 +326,7 @@ const AddProject = () => {
               label={'Estimated market value'}
               rules={{
                 min: {
-                  value: 1,
+                  value: 0.01,
                   message: 'Must be greater than 0.',
                 },
               }}
@@ -383,6 +383,9 @@ const AddProject = () => {
               required
             />
           </Grid>
+        </Grid>
+        <Typography variant="h5">ERP Exemption</Typography>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
             <SingleSelectBoxFormField
               name={'Metadata.exemptionRequested'}
