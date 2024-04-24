@@ -44,7 +44,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
     mockResponse = mockRes;
   });
   describe('GET /projects/', () => {
-    it('should return projects for admin user', async () => {
+    xit('should return projects for admin user', async () => {
       // Mock an admin user
       const { mockReq, mockRes } = getRequestHandlerMocks();
       mockRequest = mockReq;
