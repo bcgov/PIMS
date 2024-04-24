@@ -1,9 +1,43 @@
 import { Request, Response } from 'express';
 import * as buildingService from '@/services/buildings/buildingServices';
-import { BuildingFilterSchema } from '@/services/buildings/buildingSchema';
+import { BuildingFilter, BuildingFilterSchema } from '@/services/buildings/buildingSchema';
 import userServices from '@/services/users/usersServices';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import { Building } from '@/typeorm/Entities/Building';
+import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
+
+/**
+ * @description Function to filter buildings based on agencies
+ * @param {Request}     req Incoming request.
+ * @param {Response}    res Outgoing response.
+ * @returns {Building[]}      An array of buildings.
+ */
+const filterBuildingsByAgencies = async (req: Request, res: Response) => {
+  const filter = BuildingFilterSchema.safeParse(req.query);
+  const includeRelations = req.query.includeRelations === 'true';
+  const kcUser = req.user as unknown as KeycloakUser;
+  if (!filter.success) {
+    return res.status(400).send('Could not parse filter.');
+  }
+  const filterResult = filter.data;
+  let buildings;
+  if (isAdmin(kcUser) || isAuditor(kcUser)) {
+    buildings = await buildingService.getBuildings(
+      filterResult as BuildingFilter,
+      includeRelations,
+    );
+  } else {
+    // get array of user's agencies
+    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+    filterResult.agencyId = usersAgencies;
+    // Get parcels associated with agencies of the requesting user
+    buildings = await buildingService.getBuildings(
+      filterResult as BuildingFilter,
+      includeRelations,
+    );
+  }
+  return buildings;
+};
 
 /**
  * @description Gets all buildings satisfying the filter parameters.
@@ -12,14 +46,8 @@ import { Building } from '@/typeorm/Entities/Building';
  * @returns {Response}      A 200 status with a response body containing an array of building data.
  */
 export const getBuildings = async (req: Request, res: Response) => {
-  const includeRelations = req.query.includeRelations === 'true';
-  const filter = BuildingFilterSchema.safeParse(req.query);
-  if (filter.success) {
-    const response = await buildingService.getBuildings(filter.data, includeRelations);
-    return res.status(200).send(response);
-  } else {
-    return res.status(400).send('Could not parse filter.');
-  }
+  const buildings = await filterBuildingsByAgencies(req, res);
+  return res.status(200).send(buildings);
 };
 
 /**

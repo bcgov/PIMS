@@ -1,10 +1,38 @@
 import { Request, Response } from 'express';
 import { stubResponse } from '@/utilities/stubResponse';
 import parcelServices from '@/services/parcels/parcelServices';
-import { ParcelFilterSchema } from '@/services/parcels/parcelSchema';
+import { ParcelFilter, ParcelFilterSchema } from '@/services/parcels/parcelSchema';
 import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import userServices from '@/services/users/usersServices';
 import { Parcel } from '@/typeorm/Entities/Parcel';
+import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
+
+/**
+ * @description Function to filter parcels based on agencies
+ * @param {Request}     req Incoming request.
+ * @param {Response}    res Outgoing response.
+ * @returns {Parcel[]}      An array of parcels.
+ */
+const filterParcelsByAgencies = async (req: Request, res: Response) => {
+  const filter = ParcelFilterSchema.safeParse(req.query);
+  const includeRelations = req.query.includeRelations === 'true';
+  const kcUser = req.user as unknown as KeycloakUser;
+  if (!filter.success) {
+    return res.status(400).send('Could not parse filter.');
+  }
+  const filterResult = filter.data;
+  let parcels;
+  if (isAdmin(kcUser) || isAuditor(kcUser)) {
+    parcels = await parcelServices.getParcels(filterResult as ParcelFilter, includeRelations);
+  } else {
+    // get array of user's agencies
+    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+    filterResult.agencyId = usersAgencies;
+    // Get parcels associated with agencies of the requesting user
+    parcels = await parcelServices.getParcels(filterResult as ParcelFilter, includeRelations);
+  }
+  return parcels;
+};
 
 /**
  * @description Gets information about a particular parcel by the Id provided in the URL parameter.
@@ -87,14 +115,8 @@ export const deleteParcel = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status with a response body containing an array of parcel data.
  */
 export const getParcels = async (req: Request, res: Response) => {
-  const includeRelations = req.query.includeRelations === 'true';
-  const filter = ParcelFilterSchema.safeParse(req.query);
-  if (filter.success) {
-    const response = await parcelServices.getParcels(filter.data, includeRelations);
-    return res.status(200).send(response);
-  } else {
-    return res.status(400).send('Could not parse filter.');
-  }
+  const parcels = await filterParcelsByAgencies(req, res);
+  return res.status(200).send(parcels);
 };
 
 /* Perhaps the above two methods could be consolidated into one? 

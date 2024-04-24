@@ -2,7 +2,7 @@ import { Parcel } from '@/typeorm/Entities/Parcel';
 import { AppDataSource } from '@/appDataSource';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { ParcelFilter } from '@/services/parcels/parcelSchema';
-import { DeepPartial, FindOptionsOrder } from 'typeorm';
+import { DeepPartial, FindOptionsOrder, In } from 'typeorm';
 
 const parcelRepo = AppDataSource.getRepository(Parcel);
 
@@ -61,7 +61,9 @@ const getParcels = async (filter: ParcelFilter, includeRelations: boolean = fals
     where: {
       PID: filter.pid,
       ClassificationId: filter.classificationId,
-      AgencyId: filter.agencyId,
+      AgencyId: filter.agencyId
+        ? In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId)
+        : undefined,
       AdministrativeAreaId: filter.administrativeAreaId,
       PropertyTypeId: filter.propertyTypeId,
       IsSensitive: filter.isSensitive,
