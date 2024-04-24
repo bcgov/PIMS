@@ -1,7 +1,7 @@
 import { Roles } from '@/constants/roles';
 import controllers from '@/controllers';
 import catchErrors from '@/utilities/controllerErrorWrapper';
-import { protectedRoute } from '@bcgov/citz-imb-kc-express';
+import { protectedRoute } from '@bcgov/citz-imb-sso-express';
 import express from 'express';
 
 const router = express.Router();
