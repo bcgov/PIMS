@@ -26,7 +26,7 @@ const AuthRouteGuard = (props: AuthGuardProps) => {
       // Redirect from page if lacking roles
       if (
         permittedRoles &&
-        !authStateContext.keycloak.hasRole(permittedRoles, { requireAllRoles: false })
+        !authStateContext.keycloak.hasRoles(permittedRoles, { requireAllRoles: false })
       ) {
         navigate(redirectRoute ?? '/');
       }

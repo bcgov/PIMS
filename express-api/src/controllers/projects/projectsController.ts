@@ -1,8 +1,8 @@
 import { ProjectFilterSchema, ProjectFilter } from '@/services/projects/projectSchema';
 import { stubResponse } from '../../utilities/stubResponse';
 import { Request, Response } from 'express';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import projectServices, { ProjectPropertyIds } from '@/services/projects/projectsServices';
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 import userServices from '@/services/users/usersServices';
 import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 import { DeepPartial } from 'typeorm';
@@ -17,7 +17,7 @@ import { Project } from '@/typeorm/Entities/Project';
 const filterProjectsByAgencies = async (req: Request, res: Response) => {
   const filter = ProjectFilterSchema.safeParse(req.query);
   const includeRelations = req.query.includeRelations === 'true';
-  const kcUser = req.user as unknown as KeycloakUser;
+  const kcUser = req.user as unknown as SSOUser;
   if (!filter.success) {
     return res.status(400).send('Could not parse filter.');
   }
@@ -100,7 +100,7 @@ export const addDisposalProject = async (req: Request, res: Response) => {
     project,
     propertyIds,
   }: { project: DeepPartial<Project>; propertyIds: ProjectPropertyIds } = req.body;
-  const user = await userServices.getUser((req.user as KeycloakUser).preferred_username);
+  const user = await userServices.getUser((req.user as SSOUser).preferred_username);
   const addBody = { ...project, CreatedById: user.Id };
 
   // Call the addProject service function with the project data

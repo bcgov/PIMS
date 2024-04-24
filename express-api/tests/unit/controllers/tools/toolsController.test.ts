@@ -6,8 +6,8 @@ import {
   getRequestHandlerMocks,
   produceEmail,
   produceEmailStatus,
+  produceSSO,
   produceGeocoderAddress,
-  produceKeycloak,
   producePidsResponse,
 } from '../../../testUtils/factories';
 import { randomUUID } from 'crypto';
@@ -149,7 +149,7 @@ describe('UNIT - Tools', () => {
   describe('POST /tools/ches', () => {
     it('should return status 201', async () => {
       mockRequest.body = produceEmail({});
-      mockRequest.user = produceKeycloak();
+      mockRequest.user = produceSSO();
       await controllers.sendChesMessage(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(201);
     });

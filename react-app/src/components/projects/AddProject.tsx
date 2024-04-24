@@ -17,12 +17,13 @@ import { FormProvider, useForm } from 'react-hook-form';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Delete, Search } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import usePimsApi from '@/hooks/usePimsApi';
 import { Parcel, ParcelEvaluation } from '@/hooks/api/useParcelsApi';
 import { Building, BuildingEvaluation } from '@/hooks/api/useBuildingsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { Agency } from '@/hooks/api/useAgencyApi';
+import { ProjectPropertyIds } from '@/hooks/api/useProjectsApi';
 
 interface IDisposalProjectSearch {
   rows: any[];
@@ -201,23 +202,26 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
 };
 
 const AddProject = () => {
+  const navigate = useNavigate();
   const formMethods = useForm({
     defaultValues: {
       Name: '',
       TierLevelId: null,
       Notes: '',
-      Assessed: '',
-      NetBook: '',
-      Estimated: '',
-      Appraised: '',
+      Assessed: 0,
+      NetBook: 0,
+      Estimated: 0,
+      Appraised: 0,
       Metadata: {
-        estimatedSalesCost: '',
-        estimatedProgramRecoveryFees: '',
-        surplusDeclaration: false,
-        tripleBottomLine: false,
-        applyForEnhancedExemption: false,
+        salesCost: 0,
+        programCost: 0,
+        exemptionRequested: false,
       },
       Approval: false,
+      Tasks: {
+        surplusDeclarationReadiness: false,
+        tripleBottomLine: false,
+      },
     },
   });
 
@@ -240,7 +244,10 @@ const AddProject = () => {
       boxShadow={'2em'}
     >
       <Box>
-        <NavigateBackButton navigateBackTitle={'Back'} onBackClick={() => {}} />
+        <NavigateBackButton
+          navigateBackTitle={'Back to Disposal Projects'}
+          onBackClick={() => {}}
+        />
       </Box>
       <Typography variant={'h2'} mb={'2rem'}>
         Create disposal project
@@ -281,6 +288,13 @@ const AddProject = () => {
               numeric
               name={'Assessed'}
               label={'Assessed value'}
+              rules={{
+                min: {
+                  value: 0.01,
+                  message: 'Must be greater than 0.',
+                },
+              }}
+              required
             />
           </Grid>
           <Grid item xs={6}>
@@ -292,6 +306,13 @@ const AddProject = () => {
               numeric
               name={'NetBook'}
               label={'Net book value'}
+              rules={{
+                min: {
+                  value: 0.01,
+                  message: 'Must be greater than 0.',
+                },
+              }}
+              required
             />
           </Grid>
           <Grid item xs={6}>
@@ -303,6 +324,13 @@ const AddProject = () => {
               fullWidth
               name={'Estimated'}
               label={'Estimated market value'}
+              rules={{
+                min: {
+                  value: 0.01,
+                  message: 'Must be greater than 0.',
+                },
+              }}
+              required
             />
           </Grid>
           <Grid item xs={6}>
@@ -323,7 +351,7 @@ const AddProject = () => {
               }}
               numeric
               fullWidth
-              name={'Metadata.estimatedSalesCost'}
+              name={'Metadata.salesCost'}
               label={'Estimated sales cost'}
             />
           </Grid>
@@ -334,7 +362,7 @@ const AddProject = () => {
               }}
               numeric
               fullWidth
-              name={'Metadata.estimatedProgramRecoveryFees'}
+              name={'Metadata.programCost'}
               label={'Estimated program recovery fees'}
             />
           </Grid>
@@ -343,19 +371,24 @@ const AddProject = () => {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <SingleSelectBoxFormField
-              name={'Metadata.surplusDeclaration'}
+              name={'Tasks.surplusDeclarationReadiness'}
               label={'Surplus declaration & readiness checklist document emailed to SRES.'}
+              required
             />
           </Grid>
           <Grid item xs={12}>
             <SingleSelectBoxFormField
-              name={'Metadata.tripleBottomLine'}
+              name={'Tasks.tripleBottomLine'}
               label={'Triple bottom line document emailed to SRES or Project is in Tier 1'}
+              required
             />
           </Grid>
+        </Grid>
+        <Typography variant="h5">ERP Exemption</Typography>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
             <SingleSelectBoxFormField
-              name={'Metadata.applyForEnhancedExemption'}
+              name={'Metadata.exemptionRequested'}
               label={'Apply for enhanced referral process exemption'}
             />
           </Grid>
@@ -368,17 +401,34 @@ const AddProject = () => {
               label={
                 'My ministry/agency has approval/authority to submit the disposal project to SRES for review.'
               }
+              required
             />
           </Grid>
         </Grid>
       </FormProvider>
       <Button
         onClick={async () => {
-          await formMethods.trigger();
-
+          const isValid = await formMethods.trigger();
           setShowNoPropertiesError(!rows.length);
-
-          console.log(formMethods.getValues());
+          if (isValid && rows.length) {
+            const formValues = formMethods.getValues();
+            // Construct project properties arrays
+            const projectProperties: ProjectPropertyIds = {
+              parcels: [],
+              buildings: [],
+            };
+            rows.forEach((row: ParcelWithType | BuildingWithType) => {
+              if (row.Type === 'Parcel') {
+                projectProperties.parcels.push(row.Id);
+              } else if (row.Type === 'Building') {
+                projectProperties.buildings.push(row.Id);
+              }
+            });
+            // Send to API hook
+            api.projects
+              .postProject({ ...formValues }, projectProperties)
+              .then(() => navigate('/projects'));
+          }
         }}
         variant="contained"
         color="primary"

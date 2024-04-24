@@ -5,11 +5,11 @@ import {
   MockReq,
   MockRes,
   getRequestHandlerMocks,
-  produceKeycloak,
+  produceSSO,
   produceUser,
 } from '../../../testUtils/factories';
 import { faker } from '@faker-js/faker';
-import { KeycloakIdirUser, KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { SSOIdirUser, SSOUser } from '@bcgov/citz-imb-sso-express';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { Roles } from '@/constants/roles';
 import { UUID } from 'crypto';
@@ -35,7 +35,7 @@ const {
 const _activateUser = jest.fn();
 const _addKeycloakUserOnHold = jest
   .fn()
-  .mockImplementation((kc: KeycloakUser, agencyId: string, position: string, note: string) => ({
+  .mockImplementation((kc: SSOUser, agencyId: string, position: string, note: string) => ({
     ...produceUser(),
     AgencyId: agencyId,
     Position: position,
@@ -74,7 +74,7 @@ const _hasAgencies = jest.fn().mockImplementation(() => true);
 
 jest.mock('@/services/users/usersServices', () => ({
   activateUser: () => _activateUser(),
-  addKeycloakUserOnHold: (kc: KeycloakUser, agencyId: string, position: string, note: string) =>
+  addKeycloakUserOnHold: (kc: SSOUser, agencyId: string, position: string, note: string) =>
     _addKeycloakUserOnHold(kc, agencyId, position, note),
   getAgencies: () => _getAgencies(),
   getAdministrators: () => _getAdministrators(),
@@ -193,7 +193,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
 
   describe('submitUserAccessRequest', () => {
     it('should return status 201 and an access request', async () => {
-      mockRequest.user = produceKeycloak();
+      mockRequest.user = produceSSO();
       mockRequest.body = { agencyId: 'bch' };
       await submitUserAccessRequest(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
@@ -229,9 +229,9 @@ describe('UNIT - Testing controllers for users routes.', () => {
 
   describe('getSelf', () => {
     it('should return the internal user corresponding to this keycloak', async () => {
-      const kcUser = produceKeycloak();
+      const kcUser = produceSSO();
       _normalizeKeycloakUser.mockImplementationOnce(() => ({
-        guid: (kcUser as KeycloakIdirUser).idir_user_guid,
+        guid: (kcUser as SSOIdirUser).idir_user_guid,
       }));
       mockRequest.user = kcUser;
       await getSelf(mockRequest, mockResponse);
@@ -239,9 +239,9 @@ describe('UNIT - Testing controllers for users routes.', () => {
     });
 
     it('should return no data', async () => {
-      const kcUser = produceKeycloak();
+      const kcUser = produceSSO();
       _normalizeKeycloakUser.mockImplementationOnce(() => ({
-        guid: (kcUser as KeycloakIdirUser).idir_user_guid,
+        guid: (kcUser as SSOIdirUser).idir_user_guid,
       }));
       _getUser.mockImplementationOnce(() => null);
       mockRequest.user = kcUser;
@@ -250,7 +250,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
     });
 
     it('should throw an error if normalizeKeycloakUser throws an error', async () => {
-      const kcUser = produceKeycloak();
+      const kcUser = produceSSO();
       _normalizeKeycloakUser.mockImplementationOnce(() => {
         throw new Error();
       });
