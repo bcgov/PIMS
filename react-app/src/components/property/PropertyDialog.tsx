@@ -15,7 +15,7 @@ import {
   PropertyType,
   NetBookValue,
 } from './PropertyForms';
-import { parseFloatOrNull, parseIntOrNull } from '@/utilities/formatters';
+import { parseFloatOrNull, parseIntOrNull, zeroPadPID } from '@/utilities/formatters';
 
 interface IParcelInformationEditDialog {
   initialValues: Parcel;
@@ -59,8 +59,8 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
     infoFormMethods.reset({
       NotOwned: initialValues?.NotOwned,
       Address1: initialValues?.Address1,
+      PID: initialValues?.PID ? zeroPadPID(initialValues.PID) : '',
       PIN: String(initialValues?.PIN ?? ''),
-      PID: String(initialValues?.PID ?? ''),
       Postal: initialValues?.Postal,
       AdministrativeAreaId: initialValues?.AdministrativeAreaId,
       LandArea: String(initialValues?.LandArea ?? ''),
@@ -155,7 +155,7 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
       TotalArea: '',
       RentableArea: '',
       BuildingTenancy: '',
-      BuildingTenancyUpdatedOn: dayjs(),
+      BuildingTenancyUpdatedOn: null,
       Location: null,
     },
   });
@@ -164,7 +164,7 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
     infoFormMethods.reset({
       Address1: initialValues?.Address1,
       PIN: String(initialValues?.PIN ?? ''),
-      PID: String(initialValues?.PID ?? ''),
+      PID: initialValues?.PID ? zeroPadPID(initialValues.PID) : '',
       Postal: initialValues?.Postal,
       AdministrativeAreaId: initialValues?.AdministrativeAreaId,
       IsSensitive: initialValues?.IsSensitive,
@@ -176,7 +176,9 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
       TotalArea: String(initialValues?.TotalArea ?? ''),
       RentableArea: String(initialValues?.RentableArea ?? ''),
       BuildingTenancy: initialValues?.BuildingTenancy,
-      BuildingTenancyUpdatedOn: dayjs(initialValues?.BuildingTenancyUpdatedOn),
+      BuildingTenancyUpdatedOn: initialValues?.BuildingTenancyUpdatedOn
+        ? dayjs(initialValues?.BuildingTenancyUpdatedOn)
+        : null,
       Location: initialValues?.Location,
     });
   }, [initialValues]);
@@ -193,7 +195,8 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
           formValues.PIN = parseIntOrNull(formValues.PIN);
           formValues.TotalArea = parseFloatOrNull(formValues.TotalArea);
           formValues.RentableArea = parseFloatOrNull(formValues.RentableArea);
-          formValues.BuildingTenancyUpdatedOn = formValues.BuildingTenancyUpdatedOn.toDate();
+          formValues.BuildingTenancyUpdatedOn =
+            formValues.BuildingTenancyUpdatedOn?.toDate() ?? null;
           api.buildings.updateBuildingById(initialValues.Id, formValues).then(() => postSubmit());
         }
       }}

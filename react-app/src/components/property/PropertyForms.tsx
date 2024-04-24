@@ -191,9 +191,11 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             }}
             rules={{
               validate: (val, formVals) =>
-                (val.length <= 9 &&
-                  (val.length > 0 || formVals['PIN'].length > 0 || propertyType === 'Building')) ||
-                'Must have set either PID or PIN',
+                (String(val).length <= 9 &&
+                  (String(val).length > 0 ||
+                    String(formVals['PIN']).length > 0 ||
+                    propertyType === 'Building')) ||
+                'Must have set either PID or PIN not exceeding 9 digits.',
             }}
           />
         </Grid>
@@ -211,9 +213,11 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             }}
             rules={{
               validate: (val, formVals) =>
-                (val.length <= 9 &&
-                  (val.length > 0 || formVals['PID'].length > 0 || propertyType === 'Building')) ||
-                'Must have set either PID or PIN',
+                (String(val).length <= 9 &&
+                  (String(val).length > 0 ||
+                    String(formVals['PID']).length > 0 ||
+                    propertyType === 'Building')) ||
+                'Must have set either PID or PIN not exceeding 9 digits.',
             }}
           />
         </Grid>
@@ -400,15 +404,15 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
         <Grid item xs={6}>
           <TextFormField
             name={`RentableArea`}
-            rules={{
-              validate: (val, formVals) =>
-                val <= formVals.TotalArea ||
-                `Cannot be larger than Total area: ${val} <= ${formVals?.TotalArea}`,
-            }}
             required
             label={'Net usable area'}
             fullWidth
             numeric
+            rules={{
+              validate: (val, formVals) =>
+                val <= formVals.TotalArea ||
+                `Cannot be larger than Total Area: ${val} <= ${formVals?.TotalArea}`,
+            }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
