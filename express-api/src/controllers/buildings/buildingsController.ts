@@ -15,7 +15,7 @@ import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 const filterBuildingsByAgencies = async (req: Request, res: Response) => {
   const filter = BuildingFilterSchema.safeParse(req.query);
   const includeRelations = req.query.includeRelations === 'true';
-  const kcUser = req.user as unknown as KeycloakUser;
+  const kcUser = req.user as unknown as SSOUser;
   if (!filter.success) {
     return res.status(400).send('Could not parse filter.');
   }
