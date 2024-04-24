@@ -388,11 +388,6 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
             fullWidth
             required
             numeric
-            rules={{
-              validate: (val, formVals) =>
-                val <= formVals.RentableArea ||
-                `Cannot be larger than Net usable area: ${val} <= ${formVals?.RentableArea}`,
-            }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -409,6 +404,11 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
             label={'Net usable area'}
             fullWidth
             numeric
+            rules={{
+              validate: (val, formVals) =>
+                val <= formVals.TotalArea ||
+                `Cannot be larger than Net usable area: ${val} <= ${formVals?.TotalArea}`,
+            }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
