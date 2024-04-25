@@ -14,6 +14,7 @@ import { ProjectRisk } from '@/typeorm/Entities/ProjectRisk';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Agency } from './Agency';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
+import { ProjectTask } from './ProjectTask';
 
 export interface ProjectMetadata {
   // Exemption Fields
@@ -174,4 +175,7 @@ export class Project extends BaseEntity {
 
   @OneToMany(() => ProjectProperty, (ProjectProperty) => ProjectProperty.Project)
   ProjectProperties: ProjectProperty[];
+
+  @OneToMany(() => ProjectTask, (ProjectTask) => ProjectTask.Project)
+  ProjectTasks: ProjectTask[];
 }

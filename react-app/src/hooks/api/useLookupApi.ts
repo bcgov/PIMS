@@ -40,7 +40,7 @@ const useLookupApi = (absoluteFetch: IFetch) => {
   };
 
   const getProjectStatuses = async () => {
-    const { parsedBody } = await absoluteFetch.get('/lookup/project/projectStatus');
+    const { parsedBody } = await absoluteFetch.get('/lookup/project/status');
     return parsedBody as ProjectStatus[];
   };
 

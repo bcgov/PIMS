@@ -63,6 +63,7 @@ const getProjectById = async (id: number) => {
       Status: true,
       Risk: true,
       ProjectProperties: true,
+      ProjectTasks: true,
     },
     select: {
       Workflow: {
