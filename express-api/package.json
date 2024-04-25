@@ -10,7 +10,7 @@
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write \"./**/*.{js,ts,json}\"",
     "check": "prettier --check \"./**/*.{js,ts,json}\"",
-    "test": "DOTENV_CONFIG_PATH=../.env jest",
+    "test": "set DOTENV_CONFIG_PATH=../.env && jest",
     "coverage": "jest --coverage",
     "test:unit": "jest --testPathPattern=/tests/unit",
     "test:integration": "jest --testPathPattern=/tests/integration",
