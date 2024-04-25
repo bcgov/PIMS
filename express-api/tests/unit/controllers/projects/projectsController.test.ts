@@ -74,17 +74,35 @@ describe('UNIT - Testing controllers for users routes.', () => {
       ]);
     });
 
-    // it('should return projects for non-admin user', async () => {
-    //   // Mock a non-admin user
-    //   (mockRequest.user as any) = { userType: 'regular' };
+    it('should return projects for a general user', async () => {
+      // Mock an admin user
+      const { mockReq, mockRes } = getRequestHandlerMocks();
+      mockRequest = mockReq;
+      mockRequest.setUser({ client_roles: [Roles.GENERAL_USER] });
+      mockResponse = mockRes;
+      jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValue({
+        success: true,
+        data: {
+          projectNumber: '123',
+          name: 'Project Name',
+          statusId: 1,
+          agencyId: [1, 2],
+          page: 1,
+          quantity: 10,
+          sort: 'asc',
+        },
+      });
 
-    //   // Call filterProjects controller function
-    //   await filterProjects(mockRequest, mockResponse);
+      // Call filterProjects controller function
+      await controllers.filterProjects(mockRequest, mockResponse);
 
-    //   // Assert response status and content
-    //   expect(mockResponse.status).toHaveBeenCalledWith(200);
-    //   expect(mockResponse.send).toHaveBeenCalledWith([{ id: 1, name: 'Project 1' }, { id: 2, name: 'Project 2' }]);
-    // });
+      // Assert response status and content
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.send).toHaveBeenCalledWith([
+        { id: 1, name: 'Project 1' },
+        { id: 2, name: 'Project 2' },
+      ]);
+    });
 
     it('should return 400 if filter cannot be parsed', async () => {
       jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValue({
