@@ -44,12 +44,24 @@ describe('UNIT - Testing controllers for users routes.', () => {
     mockResponse = mockRes;
   });
   describe('GET /projects/', () => {
-    xit('should return projects for admin user', async () => {
+    it('should return projects for admin user', async () => {
       // Mock an admin user
       const { mockReq, mockRes } = getRequestHandlerMocks();
       mockRequest = mockReq;
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
       mockResponse = mockRes;
+      jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValue({
+        success: true,
+        data: {
+          projectNumber: '123',
+          name: 'Project Name',
+          statusId: 1,
+          agencyId: [1, 2],
+          page: 1,
+          quantity: 10,
+          sort: 'asc',
+        },
+      });
 
       // Call filterProjects controller function
       await controllers.filterProjects(mockRequest, mockResponse);
