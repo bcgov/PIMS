@@ -40,7 +40,6 @@ export interface ProjectRisk extends BaseEntityInterface {
   Description?: string;
   Code: string;
 }
-
 export interface ProjectTask {
   TaskId: number;
   IsCompleted: boolean;
@@ -79,7 +78,6 @@ export interface Project {
   UpdatedOn?: string;
   UpdatedBy?: User;
   Metadata?: ProjectMetadata;
-  ProjectProperties?: ProjectProperties[];
 }
 
 export interface ProjectGet extends Project {
@@ -175,10 +173,6 @@ export type ProjectAdd = Omit<
 export interface ProjectPropertyIds {
   parcels?: number[];
   buildings?: number[];
-}
-export interface ProjectProperties {
-  parcel?: Parcel[];
-  building?: Building[];
 }
 
 const useProjectsApi = (absoluteFetch: IFetch) => {

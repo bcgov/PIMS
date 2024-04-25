@@ -8,20 +8,17 @@ import {
   Grid,
   InputAdornment,
   Typography,
-  //useTheme,
 } from '@mui/material';
-// import { ClassificationInline } from '@/components/property/ClassificationIcon';
-// import { useClassificationStyle } from '@/components/property//PropertyTable';
 import DeleteDialog from '../dialog/DeleteDialog';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import { FormProvider, useForm } from 'react-hook-form';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
-import { Project, ProjectMetadata, TierLevel, ProjectWithTasks } from '@/hooks/api/useProjectsApi';
+import { ProjectMetadata, TierLevel, ProjectWithTasks } from '@/hooks/api/useProjectsApi';
 import TextFormField from '../form/TextFormField';
 import DetailViewNavigation from '../display/DetailViewNavigation';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '@/contexts/authContext';
 import { Roles } from '@/constants/roles';
 import { ProjectStatus } from '@/hooks/api/useLookupApi';
@@ -302,7 +299,7 @@ const ProjectDetail = (props: IProjectDetail) => {
         values={undefined}
         title={'Disposal Properties'}
         onEdit={() => {}}
-        /*onEdit={() => setOpenDisposalPropDialog(true)}*/
+        //onEdit={() => setOpenDisposalPropDialog(true)}
       >
         <DisposalPropertiesTable
           rows={[
@@ -515,7 +512,7 @@ const ProjectDetail = (props: IProjectDetail) => {
         onConfirm={async () => {
           const isValid = await documentationFormMethods.trigger();
           if (isValid) {
-            const { SurplusDeclaration, TripleBottom } = documentationFormMethods.getValues();
+            //const { SurplusDeclaration, TripleBottom } = documentationFormMethods.getValues();
             api.projects
               .updateProject(+id, {
                 // Tasks: {

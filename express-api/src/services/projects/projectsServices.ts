@@ -91,7 +91,6 @@ const getProjectById = async (id: number) => {
         Code: true,
         Description: true,
       },
-      ProjectProperties: true,
     },
   });
   return project;
