@@ -1,3 +1,4 @@
+import { Agency } from '@/hooks/api/useAgencyApi';
 import { Box, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
@@ -16,21 +17,29 @@ const DisposalPropertiesTable = (props: IDisposalPropertiesTable) => {
       field: 'PID/Address',
       headerName: 'PID/Address',
       flex: 1,
+      valueGetter: (value, row) => row.PID ?? row.PIN ?? row.Address1,
     },
     {
       field: 'Agency',
       headerName: 'Agency',
       flex: 1,
+      valueGetter: (value: Agency) => value.Name,
     },
     {
       field: 'FiscalYear',
       headerName: 'Year',
       flex: 1,
+      valueGetter: (value, row) => {
+        return row.Fiscals?.map((a) => a.FiscalYear)?.sort((a, b) => b - a)?.[0] ?? 'N/A'; //Sort in reverse order to obtain most recent year.
+      },
     },
     {
       field: 'AssessedValue',
       headerName: 'Assessed',
       flex: 1,
+      valueGetter: (value, row) => {
+        return row.Evaluations?.sort((a, b) => b.Year - a.Year)?.[0]?.Value ?? 'N/A';
+      }
     },
   ];
 
@@ -53,7 +62,7 @@ const DisposalPropertiesTable = (props: IDisposalPropertiesTable) => {
         },
       }}
       hideFooter
-      getRowId={(row) => row.PropertyType}
+      getRowId={(row) => row.Id + row.PropertyType}
       columns={columns}
       rows={props.rows ?? []}
     />

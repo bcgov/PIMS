@@ -82,6 +82,11 @@ export interface Project {
   ProjectProperties?: ProjectProperties[];
 }
 
+export interface ProjectGet extends Project {
+  Buildings: Building[];
+  Parcels: Parcel[];
+}
+
 export interface ProjectMetadata {
   // Exemption Fields
   exemptionRequested?: boolean;
@@ -163,8 +168,8 @@ export type ProjectAdd = Omit<
   | 'StatusId' // Determined in API
   | 'ProjectType' // Determined in API (Disposal)
   | 'RiskId' // Determined in API
-  | 'ActualFiscalYear' // TODO: Do we need this?
-  | 'ReportedFiscalYear' // TODO: Do we need this?
+  // | 'ActualFiscalYear' // TODO: Do we need this?
+  // | 'ReportedFiscalYear' // TODO: Do we need this?
 >;
 
 export interface ProjectPropertyIds {
@@ -177,10 +182,10 @@ export interface ProjectProperties {
 }
 
 const useProjectsApi = (absoluteFetch: IFetch) => {
-  const getProjectById = async (id: number): Promise<Project> => {
+  const getProjectById = async (id: number): Promise<ProjectGet> => {
     const { parsedBody } = await absoluteFetch.get(`/projects/disposal/${id}`);
     console.log('ParsedBody:', parsedBody);
-    return parsedBody as Project;
+    return parsedBody as ProjectGet;
   };
   const updateProject = async (id: number, project: Partial<Project>): Promise<Project> => {
     const { parsedBody } = await absoluteFetch.put(`/projects/disposal/${id}`, project);

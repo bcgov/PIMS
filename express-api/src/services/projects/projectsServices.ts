@@ -62,8 +62,8 @@ const getProjectById = async (id: number) => {
       TierLevel: true,
       Status: true,
       Risk: true,
-      ProjectProperties: true,
       ProjectTasks: true,
+      ProjectProperties: true,
     },
     select: {
       Workflow: {
@@ -91,30 +91,9 @@ const getProjectById = async (id: number) => {
         Code: true,
         Description: true,
       },
-      ProjectProperties: {
-        PropertyType: {
-          Name: true,
-        },
-        Parcel: {
-          Id: true,
-          PID: true,
-          Evaluations: {
-            Year: true,
-            Value: true,
-          },
-        },
-        Building: {
-          Id: true,
-          Address1: true,
-          Evaluations: {
-            Year: true,
-            Value: true,
-          },
-        },
-      },
+      ProjectProperties: true,
     },
   });
-  console.log('ProjectData', project);
   return project;
 };
 

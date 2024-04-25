@@ -229,7 +229,7 @@ const AddProject = () => {
   const [rows, setRows] = useState([]);
   const theme = useTheme();
   const api = usePimsApi();
-  const { data: tierData, loadOnce: loadTiers } = useDataLoader(api.lookup.getProjectTierLevels);
+  const { data: tierData, loadOnce: loadTiers } = useDataLoader(api.lookup.getTierLevels);
   loadTiers();
 
   return (
@@ -426,7 +426,14 @@ const AddProject = () => {
             });
             // Send to API hook
             api.projects
-              .postProject({ ...formValues }, projectProperties)
+              .postProject(
+                {
+                  ...formValues,
+                  ReportedFiscalYear: new Date().getFullYear(), //TODO: Should we have fields for this?
+                  ActualFiscalYear: new Date().getFullYear(),
+                },
+                projectProperties,
+              )
               .then(() => navigate('/projects'));
           }
         }}

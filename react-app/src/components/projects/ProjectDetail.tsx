@@ -95,16 +95,6 @@ const ProjectDetail = (props: IProjectDetail) => {
     Notes: data?.Description,
   };
 
-  const properties = useMemo(() => {
-    if (parcelId && parcel) {
-      return parcel;
-    } else if (buildingId && building) {
-      return building;
-    } else {
-      return [];
-    }
-  }, [parcel, building]);
-
   // const columns: GridColDef[] = [
   //   {
   //     field: 'Type',
@@ -167,8 +157,8 @@ const ProjectDetail = (props: IProjectDetail) => {
   };
 
   const DocumentationOrApprovalData = {
-    SurplusDeclaration: data?.ProjectTasks?.find((task) => task.TaskId === 1).IsCompleted,
-    TripleBottom: data?.ProjectTasks?.find((task) => task.TaskId === 2).IsCompleted,
+    SurplusDeclaration: true, //data?.ProjectTasks?.find((task) => task.TaskId === 1).IsCompleted,
+    TripleBottom: true, //data?.ProjectTasks?.find((task) => task.TaskId === 2).IsCompleted, //TODO: Uncomment once tasks become array
   };
 
   // const classification = useClassificationStyle();
@@ -311,9 +301,15 @@ const ProjectDetail = (props: IProjectDetail) => {
         id={`$Disposal Properties`}
         values={undefined}
         title={'Disposal Properties'}
-        onEdit={() => setOpenDisposalPropDialog(true)}
+        onEdit={() => {}}
+        /*onEdit={() => setOpenDisposalPropDialog(true)}*/
       >
-        <DisposalPropertiesTable rows={rows} />
+        <DisposalPropertiesTable
+          rows={[
+            ...(data?.Parcels?.map((p) => ({ ...p, PropertyType: 'Parcel' })) ?? []),
+            ...(data?.Buildings?.map((b) => ({ ...b, PropertyType: 'Building' })) ?? []),
+          ]}
+        />
       </DataCard>
       <DataCard
         customFormatter={customFormatter}
@@ -522,10 +518,10 @@ const ProjectDetail = (props: IProjectDetail) => {
             const { SurplusDeclaration, TripleBottom } = documentationFormMethods.getValues();
             api.projects
               .updateProject(+id, {
-                Tasks: {
-                  surplusDeclarationReadiness: SurplusDeclaration,
-                  tripleBottomLine: TripleBottom,
-                },
+                // Tasks: {
+                //   surplusDeclarationReadiness: SurplusDeclaration,
+                //   tripleBottomLine: TripleBottom,
+                // },
               })
               .then(() => refreshData());
             setOpenDocumentationDialog(false);

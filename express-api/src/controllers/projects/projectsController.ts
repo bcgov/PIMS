@@ -5,8 +5,11 @@ import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import projectServices, { ProjectPropertyIds } from '@/services/projects/projectsServices';
 import userServices from '@/services/users/usersServices';
 import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
-import { DeepPartial } from 'typeorm';
+import { DeepPartial, In } from 'typeorm';
 import { Project } from '@/typeorm/Entities/Project';
+import { AppDataSource } from '@/appDataSource';
+import { Parcel } from '@/typeorm/Entities/Parcel';
+import { Building } from '@/typeorm/Entities/Building';
 
 /**
  * @description Function to filter users based on agencies
@@ -55,10 +58,32 @@ export const getDisposalProject = async (req: Request, res: Response) => {
     return res.status(400).send('Project ID was invalid.');
   }
   const project = await projectServices.getProjectById(projectId);
+  const parcelIds = project.ProjectProperties?.filter((p) => p.ParcelId != null).map(
+    (p) => p.ParcelId,
+  );
+  const buildingIds = project.ProjectProperties?.filter((b) => b.BuildingId != null).map(
+    (b) => b.BuildingId,
+  );
+  const parcels = await AppDataSource.getRepository(Parcel).find({
+    relations: {
+      Agency: true,
+      Evaluations: true,
+      Fiscals: true,
+    },
+    where: { Id: In(parcelIds ?? []) },
+  });
+  const buildings = await AppDataSource.getRepository(Building).find({
+    relations: {
+      Agency: true,
+      Evaluations: true,
+      Fiscals: true,
+    },
+    where: { Id: In(buildingIds ?? []) },
+  });
   if (!project) {
     return res.status(404).send('Project matching this internal ID not found.');
   }
-  return res.status(200).send(project);
+  return res.status(200).send({ ...project, Buildings: buildings, Parcels: parcels });
 };
 
 /**
