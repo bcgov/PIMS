@@ -130,21 +130,23 @@ const PropertyTable = (props: IPropertyTable) => {
         );
       },
       renderCell: (params) => {
-        const classificationName = classifications?.find((cl) => cl.Id === params.value)?.Name;
+        //const classificationName = classifications?.find((cl) => cl.Id === params.value)?.Name;
         return (
           <ClassificationInline
             color={classification[params.row.ClassificationId].textColor}
             backgroundColor={classification[params.row.ClassificationId].bgColor}
-            title={classificationName ?? ''}
+            title={params.value}
           />
         );
       },
+      valueGetter: (_value, row) =>
+        classifications?.find((cl) => cl.Id === row.ClassificationId)?.Name ?? '',
     },
     {
       field: 'PID',
       headerName: 'PID',
       flex: 1,
-      valueFormatter: (value: number | null) => value ?? 'N/A',
+      valueGetter: (value: number | null) => (value ? String(value).padStart(9, '0') : 'N/A'),
     },
     {
       field: 'AgencyId',
