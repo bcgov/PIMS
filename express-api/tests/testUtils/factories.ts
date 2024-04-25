@@ -19,6 +19,7 @@ import { TierLevel } from '@/typeorm/Entities/TierLevel';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
+import { Task } from '@/typeorm/Entities/Task';
 
 export class MockRes {
   statusValue: any;
@@ -426,6 +427,26 @@ export const produceTierLevels = (): TierLevel => {
     UpdatedOn: new Date(),
   };
   return tier;
+};
+
+export const produceTask = (): Task => {
+  const task: Task = {
+    Id: faker.number.int(),
+    Name: faker.commerce.product(),
+    IsDisabled: faker.datatype.boolean(),
+    SortOrder: 0,
+    Description: faker.lorem.sentence(),
+    IsOptional: false,
+    StatusId: faker.number.int(),
+    Status: undefined,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+  };
+  return task;
 };
 
 export const produceProject = (
