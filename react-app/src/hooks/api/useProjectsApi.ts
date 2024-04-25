@@ -2,6 +2,8 @@ import { BaseEntityInterface } from '@/interfaces/IBaseEntity';
 import { IFetch } from '../useFetch';
 import { Agency } from './useAgencyApi';
 import { User } from '@/hooks/api/useUsersApi';
+import { Parcel } from './useParcelsApi';
+import { Building } from './useBuildingsApi';
 
 export interface TierLevel extends BaseEntityInterface {
   Id: number;
@@ -77,6 +79,7 @@ export interface Project {
   UpdatedOn?: string;
   UpdatedBy?: User;
   Metadata?: ProjectMetadata;
+  ProjectProperties?: ProjectProperties[];
 }
 
 export interface ProjectMetadata {
@@ -168,10 +171,15 @@ export interface ProjectPropertyIds {
   parcels?: number[];
   buildings?: number[];
 }
+export interface ProjectProperties {
+  parcel?: Parcel[];
+  building?: Building[];
+}
 
 const useProjectsApi = (absoluteFetch: IFetch) => {
   const getProjectById = async (id: number): Promise<Project> => {
     const { parsedBody } = await absoluteFetch.get(`/projects/disposal/${id}`);
+    console.log('ParsedBody:', parsedBody);
     return parsedBody as Project;
   };
   const updateProject = async (id: number, project: Partial<Project>): Promise<Project> => {

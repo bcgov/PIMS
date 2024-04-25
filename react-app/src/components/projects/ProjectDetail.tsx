@@ -8,6 +8,7 @@ import {
   Grid,
   InputAdornment,
   Typography,
+  //useTheme,
 } from '@mui/material';
 // import { ClassificationInline } from '@/components/property/ClassificationIcon';
 // import { useClassificationStyle } from '@/components/property//PropertyTable';
@@ -20,22 +21,24 @@ import useDataLoader from '@/hooks/useDataLoader';
 import { Project, ProjectMetadata, TierLevel, ProjectWithTasks } from '@/hooks/api/useProjectsApi';
 import TextFormField from '../form/TextFormField';
 import DetailViewNavigation from '../display/DetailViewNavigation';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { AuthContext } from '@/contexts/authContext';
 import { Roles } from '@/constants/roles';
 import { ProjectStatus } from '@/hooks/api/useLookupApi';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
-import { CheckBox, DisplaySettings, Task } from '@mui/icons-material';
+//import DisposalPropertiesTable from './DisposalPropertiestable';
+//import { DataGrid, GridColDef } from '@mui/x-data-grid';
+// import { Parcel, ParcelEvaluation } from '@/hooks/api/useParcelsApi';
+// import { Building, BuildingEvaluation } from '@/hooks/api/useBuildingsApi';
+// import { Agency } from '@/hooks/api/useAgencyApi';
 
 interface IProjectDetail {
   onClose: () => void;
 }
 interface ProjectInfo extends ProjectWithTasks {
   Classification: ProjectStatus;
-  // ProjectNumber: string;
   AssignTier: TierLevel;
   Notes: string;
-  // Name: string;
   AssessedValue: number;
   NetBookValue: number;
   EstimatedMarketValue: number;
@@ -49,6 +52,7 @@ const ProjectDetail = (props: IProjectDetail) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const api = usePimsApi();
+  // const theme = useTheme();
   const userContext = useContext(AuthContext);
   if (!userContext.keycloak.hasRoles([Roles.ADMIN, Roles.AUDITOR], { requireAllRoles: false })) {
     navigate('/');
@@ -60,10 +64,26 @@ const ProjectDetail = (props: IProjectDetail) => {
   );
   console.log('ProjStatus', projectStatus);
   loadProjStatus();
+  // const parcelId = isNaN(Number(id.)) ? null : Number(params.parcelId);
+  // const buildingId = isNaN(Number(id.buildingId)) ? null : Number(params.buildingId);
+  // const { data: parcel, refreshData: refreshParcel } = useDataLoader(() => {
+  //   if (parcelId) {
+  //     return api.parcels.getParcelById(parcelId);
+  //   } else {
+  //     return null;
+  //   }
+  // });
+  // const { data: building, refreshData: refreshBuilding } = useDataLoader(() => {
+  //   if (buildingId) {
+  //     return api.buildings.getBuildingById(buildingId);
+  //   } else {
+  //     return null;
+  //   }
+  // });
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openProjectInfoDialog, setOpenProjectInfoDialog] = useState(false);
-  // const [openDisposalPropDialog, setOpenDisposalPropDialog] = useState(false);
+  //const [openDisposalPropDialog, setOpenDisposalPropDialog] = useState(false);
   const [openFinancialInfoDialog, setOpenFinancialInfoDialog] = useState(false);
   const [openDocumentationDialog, setOpenDocumentationDialog] = useState(false);
 
@@ -75,9 +95,67 @@ const ProjectDetail = (props: IProjectDetail) => {
     Notes: data?.Description,
   };
 
-  // const DisposalPropertiesData = {
-  //   //Need to be filled in
-  // };
+  // const properties = useMemo(() => {
+  //   if (parcelId && parcel) {
+  //     return parcel;
+  //   } else if (buildingId && building) {
+  //     return building;
+  //   } else {
+  //     return [];
+  //   }
+  // }, [parcel, building]);
+
+  // const columns: GridColDef[] = [
+  //   {
+  //     field: 'Type',
+  //     headerName: 'Type',
+  //     flex: 1,
+  //     maxWidth: 75,
+  //   },
+  //   {
+  //     field: 'PID_Address',
+  //     headerName: 'PID/Address',
+  //     flex: 1,
+  //     renderCell: (params) => {
+  //       return (
+  //         <Link
+  //           to={`/properties/${params.row.Type.toLowerCase()}/${params.row.Id}`}
+  //           target="_blank"
+  //           rel="noopener noreferrer"
+  //           style={{ color: theme.palette.primary.main }}
+  //         >
+  //           {params.row.Type === 'Building' && params.row.Address1
+  //             ? params.row.Address1
+  //             : params.row.PID}
+  //         </Link>
+  //       ) as ReactNode;
+  //     },
+  //   },
+  //   {
+  //     field: 'Agency',
+  //     headerName: 'Agency',
+  //     valueGetter: (value: Agency) => value?.Name ?? 'N/A',
+  //     flex: 1,
+  //   },
+  //   {
+  //     field: 'EvaluationYears',
+  //     headerName: 'Year',
+  //     flex: 1,
+  //     maxWidth: 75,
+  //     valueGetter: (evaluationYears: number[]) => {
+  //       return evaluationYears?.sort((a, b) => b - a)?.[0] ?? 'N/A'; //Sort in reverse order to obtain most recent year.
+  //     },
+  //   },
+  //   {
+  //     field: 'Evaluations',
+  //     headerName: 'Assessed',
+  //     maxWidth: 120,
+  //     valueGetter: (evaluations: ParcelEvaluation[] | BuildingEvaluation[]) => {
+  //       return evaluations?.sort((a, b) => b.Year - a.Year)[0]?.Value ?? 'N/A';
+  //     },
+  //     flex: 1,
+  //   },
+  // ];
 
   const FinancialInformationData = {
     AssessedValue: data?.Assessed,
@@ -229,6 +307,14 @@ const ProjectDetail = (props: IProjectDetail) => {
         title={'Project Information'}
         onEdit={() => setOpenProjectInfoDialog(true)}
       />
+      <DataCard
+        id={`$Disposal Properties`}
+        values={undefined}
+        title={'Disposal Properties'}
+        onEdit={() => setOpenDisposalPropDialog(true)}
+      >
+        <DisposalPropertiesTable rows={rows} />
+      </DataCard>
       <DataCard
         customFormatter={customFormatter}
         values={FinancialInformationData}
