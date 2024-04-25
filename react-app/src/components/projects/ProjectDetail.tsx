@@ -26,7 +26,7 @@ import { AuthContext } from '@/contexts/authContext';
 import { Roles } from '@/constants/roles';
 import { ProjectStatus } from '@/hooks/api/useLookupApi';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
-//import DisposalPropertiesTable from './DisposalPropertiestable';
+import DisposalPropertiesTable from './DisposalPropertiestable';
 //import { DataGrid, GridColDef } from '@mui/x-data-grid';
 // import { Parcel, ParcelEvaluation } from '@/hooks/api/useParcelsApi';
 // import { Building, BuildingEvaluation } from '@/hooks/api/useBuildingsApi';
@@ -95,15 +95,15 @@ const ProjectDetail = (props: IProjectDetail) => {
     Notes: data?.Description,
   };
 
-  // const properties = useMemo(() => {
-  //   if (parcelId && parcel) {
-  //     return parcel;
-  //   } else if (buildingId && building) {
-  //     return building;
-  //   } else {
-  //     return [];
-  //   }
-  // }, [parcel, building]);
+  const properties = useMemo(() => {
+    if (parcelId && parcel) {
+      return parcel;
+    } else if (buildingId && building) {
+      return building;
+    } else {
+      return [];
+    }
+  }, [parcel, building]);
 
   // const columns: GridColDef[] = [
   //   {
