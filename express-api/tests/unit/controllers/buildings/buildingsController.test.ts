@@ -8,6 +8,7 @@ import {
   produceUser,
 } from '../../../testUtils/factories';
 import { DeleteResult } from 'typeorm';
+import { Roles } from '@/constants/roles';
 
 const _getBuildingById = jest.fn().mockImplementation(() => produceBuilding());
 const _getBuildings = jest.fn().mockImplementation(() => [produceBuilding()]);
@@ -96,6 +97,13 @@ describe('UNIT - Buildings', () => {
       mockRequest.query.pid = [{ a: 'a' }];
       await controllers.getBuildings(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
+    });
+    it('should return 200 with an admin user', async () => {
+      // Mock an admin user
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      await controllers.getBuildings(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(Array.isArray(mockResponse.sendValue)).toBeTruthy();
     });
   });
 

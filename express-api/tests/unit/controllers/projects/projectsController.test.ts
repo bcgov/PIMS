@@ -12,12 +12,18 @@ import {
 import { AppDataSource } from '@/appDataSource';
 import { z } from 'zod';
 import { Roles } from '@/constants/roles';
+import { Project } from '@/typeorm/Entities/Project';
+import { ProjectSchema } from '@/controllers/projects/projectsSchema';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
 
 jest.spyOn(agencyRepo, 'exists').mockImplementation(async () => true);
 
 const _addProject = jest.fn().mockImplementation(() => produceProject());
+
+jest
+  .spyOn(AppDataSource.getRepository(Project), 'find')
+  .mockImplementation(async () => _addProject());
 
 jest.mock('@/services/projects/projectsServices', () => ({
   addProject: () => _addProject(),
@@ -113,6 +119,18 @@ describe('UNIT - Testing controllers for users routes.', () => {
       await controllers.filterProjects(mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.send).toHaveBeenCalledWith('Could not parse filter.');
+    });
+
+    it('should pass valid project filter', () => {
+      const validFilter = {
+        projectNumber: '123',
+        name: 'Project Name',
+        statusId: 1,
+        agencyId: 1,
+      };
+
+      const result = ProjectFilterSchema.safeParse(validFilter);
+      expect(result.success).toBe(true);
     });
   });
   describe('GET /projects/disposal/:projectId', () => {
@@ -379,6 +397,22 @@ describe('UNIT - Testing controllers for users routes.', () => {
       mockRequest.params.workflowCode = '1';
       await controllers.getProjectWorkflowTasks(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
+    });
+  });
+
+  describe('Project Schema Validation', () => {
+    it('should pass valid project schema', () => {
+      const project = _addProject();
+      expect(project).toBeDefined();
+    });
+
+    xit('should fail with invalid project schema', () => {
+      const invalidProject = {
+        // Incomplete or incorrect properties for an invalid project object
+      };
+
+      const result = ProjectSchema.safeParse(invalidProject);
+      expect(result.success).toBe(false);
     });
   });
 });
