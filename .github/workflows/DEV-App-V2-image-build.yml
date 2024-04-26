@@ -31,17 +31,17 @@ jobs:
       # Login to BC Gov Docker Image Repository
       - name: Login to Openshift Docker
         run : |
-          docker login ${{ secrets.ARTIFACTORY_IMAGE_REPOSITORY }} -u ${{ secrets.ARTIFACTORY_SA_USERNAME }} -p ${{ secrets.ARTIFACTORY_SA_PASSWORD }}
+         docker login ${{ secrets.PUBLIC_IMAGE_REPOSITORY }} -u ${{ secrets.OPENSHIFT_SA_NAME }} -p ${{ secrets.OPENSHIFT_SA_TOOLS_TOKEN }}
 
       # Build the APP image
       - name: Build APP Image
         run: |
-          cd react-app && docker build -t ${{ secrets.ARTIFACTORY_IMAGE_REPOSITORY }}/${{ secrets.ARTIFACTORY_REPOSITORY_NAME }}/pims-app-v2:${{github.event.pull_request.number}} -f Dockerfile .
+          cd react-app && docker build -t ${{ secrets.PUBLIC_IMAGE_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/pims-app-v2:${{github.event.pull_request.number}} -f Dockerfile .
 
       # Push the APP image
       - name: Push APP Image
         run: |
-          docker push ${{ secrets.ARTIFACTORY_IMAGE_REPOSITORY }}/${{ secrets.ARTIFACTORY_REPOSITORY_NAME }}/pims-app-v2:${{github.event.pull_request.number}}
+          docker push ${{ secrets.PUBLIC_IMAGE_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/pims-app-v2:${{github.event.pull_request.number}}
 
   # Job to update the wiki with the latest build image tag information    
   Update_Wiki_Tags:
