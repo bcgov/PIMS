@@ -1,7 +1,7 @@
 import { Building } from '@/typeorm/Entities/Building';
 import { AppDataSource } from '@/appDataSource';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
-import { DeepPartial, FindOptionsOrder } from 'typeorm';
+import { DeepPartial, FindOptionsOrder, In } from 'typeorm';
 import { BuildingFilter } from '@/services/buildings/buildingSchema';
 
 const buildingRepo = AppDataSource.getRepository(Building);
@@ -95,7 +95,9 @@ export const getBuildings = async (filter: BuildingFilter, includeRelations: boo
     where: {
       PID: filter.pid,
       ClassificationId: filter.classificationId,
-      AgencyId: filter.agencyId,
+      AgencyId: filter.agencyId
+        ? In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId)
+        : undefined,
       AdministrativeAreaId: filter.administrativeAreaId,
       PropertyTypeId: filter.propertyTypeId,
       BuildingConstructionTypeId: filter.buildingConstructionTypeId,
