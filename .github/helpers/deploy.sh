@@ -26,4 +26,5 @@ else
             -p VAULT_ENVIRONMENT=$VAULT_ENVIRONMENT \
             -p ENVIRONMENT=$ENVIRONMENT | \
             oc apply -f -
+    fi
 fi
