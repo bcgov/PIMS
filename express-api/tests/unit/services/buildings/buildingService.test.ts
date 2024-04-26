@@ -3,7 +3,7 @@ import { Building } from '@/typeorm/Entities/Building';
 import { produceBuilding } from 'tests/testUtils/factories';
 import { DeepPartial } from 'typeorm';
 import * as buildingService from '@/services/buildings/buildingServices';
-import { BuildingFilterSchema } from '@/services/buildings/buildingSchema';
+import { BuildingFilter, BuildingFilterSchema } from '@/services/buildings/buildingSchema';
 
 const buildingRepo = AppDataSource.getRepository(Building);
 
@@ -64,6 +64,13 @@ describe('getBuildings', () => {
   beforeEach(() => jest.clearAllMocks());
   it('should return a list of buildings', async () => {
     const building = await buildingService.getBuildings({});
+    expect(building).toHaveLength(1);
+  });
+  it('should use the agency filter to return a list of buildings', async () => {
+    const filter: BuildingFilter = {
+      agencyId: 1, // Assuming the agencyId you want to filter by
+    };
+    const building = await buildingService.getBuildings(filter);
     expect(building).toHaveLength(1);
   });
 });
