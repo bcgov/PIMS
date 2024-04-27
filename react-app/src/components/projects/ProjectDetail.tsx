@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import DataCard from '../display/DataCard';
 import { Box, Checkbox, FormControlLabel, FormGroup, Typography } from '@mui/material';
 import DeleteDialog from '../dialog/DeleteDialog';
-import { useForm } from 'react-hook-form';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { ProjectMetadata, TierLevel, ProjectWithTasks } from '@/hooks/api/useProjectsApi';
@@ -16,6 +15,7 @@ import {
   ProjectDocumentationDialog,
   ProjectFinancialDialog,
   ProjectGeneralInfoDialog,
+  ProjectPropertiesDialog,
 } from './ProjectDialog';
 
 interface IProjectDetail {
@@ -53,7 +53,7 @@ const ProjectDetail = (props: IProjectDetail) => {
 
   const ProjectInfoData = {
     Classification: data?.Status,
-    Id: data?.ProjectNumber,
+    ProjectNumber: data?.ProjectNumber,
     Name: data?.Name,
     AssignTier: data?.TierLevel,
     Notes: data?.Description,
@@ -91,7 +91,6 @@ const ProjectDetail = (props: IProjectDetail) => {
       case 'SurplusDeclaration':
         return (
           <>
-            <Typography variant="h5">Documentation</Typography>
             <FormGroup>
               <FormControlLabel
                 control={<Checkbox />}
@@ -133,60 +132,10 @@ const ProjectDetail = (props: IProjectDetail) => {
         return <Typography>{val}</Typography>;
     }
   };
-  // const projectFormMethods = useForm({
-  //   defaultValues: {
-  //     Classification: undefined,
-  //     Id: '',
-  //     Name: '',
-  //     AssignTier: undefined,
-  //     Notes: '',
-  //   },
-  // });
-
-  // const financialFormMethods = useForm({
-  //   defaultValues: {
-  //     AssessedValue: 0,
-  //     NetBookValue: 0,
-  //     EstimatedMarketValue: 0,
-  //     AppraisedValue: 0,
-  //     EstimatedSalesCost: 0,
-  //     EstimatedProgramRecoveryFees: 0,
-  //   },
-  // });
-
-  // const documentationFormMethods = useForm({
-  //   defaultValues: {
-  //     SurplusDeclaration: false,
-  //     TripleBottom: false,
-  //     Approval: false,
-  //   },
-  // });
 
   useEffect(() => {
     refreshData();
   }, [id]);
-
-  // useEffect(() => {
-  //   projectFormMethods.reset({
-  //     Classification: ProjectInfoData.Classification,
-  //     Id: ProjectInfoData.Id,
-  //     Name: ProjectInfoData.Name,
-  //     AssignTier: ProjectInfoData.AssignTier,
-  //     Notes: ProjectInfoData.Notes,
-  //   });
-  //   financialFormMethods.reset({
-  //     AssessedValue: FinancialInformationData.AssessedValue,
-  //     NetBookValue: FinancialInformationData.NetBookValue,
-  //     EstimatedMarketValue: FinancialInformationData.EstimatedMarketValue,
-  //     AppraisedValue: FinancialInformationData.AppraisedValue,
-  //     EstimatedSalesCost: FinancialInformationData.EstimatedSalesCost,
-  //     EstimatedProgramRecoveryFees: FinancialInformationData.EstimatedProgramRecoveryFees,
-  //   });
-  //   documentationFormMethods.reset({
-  //     SurplusDeclaration: DocumentationOrApprovalData.SurplusDeclaration,
-  //     TripleBottom: DocumentationOrApprovalData.TripleBottom,
-  //   });
-  // }, [data]);
 
   return (
     <Box
@@ -267,6 +216,15 @@ const ProjectDetail = (props: IProjectDetail) => {
           refreshData();
         }}
         onCancel={() => setOpenDocumentationDialog(false)}
+      />
+      <ProjectPropertiesDialog
+        initialValues={data}
+        open={openDisposalPropDialog}
+        postSubmit={() => {
+          setOpenDisposalPropDialog(false);
+          refreshData();
+        }}
+        onCancel={() => setOpenDisposalPropDialog(false)}
       />
     </Box>
   );

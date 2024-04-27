@@ -1,7 +1,7 @@
 import usePimsApi from '@/hooks/usePimsApi';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ConfirmDialog from '../dialog/ConfirmDialog';
-import { Project } from '@/hooks/api/useProjectsApi';
+import { Project, ProjectGet } from '@/hooks/api/useProjectsApi';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
   ProjectDocumentationForm,
@@ -9,6 +9,8 @@ import {
   ProjectGeneralInfoForm,
 } from './ProjectForms';
 import useDataLoader from '@/hooks/useDataLoader';
+import DisposalProjectSearch from './DisposalPropertiesSearchTable';
+import { Box } from '@mui/material';
 
 interface IProjectGeneralInfoDialog {
   initialValues: Project;
@@ -27,7 +29,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   const projectFormMethods = useForm({
     defaultValues: {
       StatusId: undefined,
-      Id: '',
+      ProjectNumber: '',
       Name: '',
       TierLevelId: undefined,
       Description: '',
@@ -36,7 +38,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   useEffect(() => {
     projectFormMethods.reset({
       StatusId: initialValues?.StatusId,
-      Id: String(initialValues?.Id),
+      ProjectNumber: initialValues?.ProjectNumber,
       Name: initialValues?.Name,
       TierLevelId: initialValues?.TierLevelId,
       Description: initialValues?.Description,
@@ -175,6 +177,39 @@ export const ProjectDocumentationDialog = (props: IProjectFinancialDialog) => {
       <FormProvider {...documentationFormMethods}>
         <ProjectDocumentationForm />
       </FormProvider>
+    </ConfirmDialog>
+  );
+};
+
+interface IProjectPropertiesDialog {
+  initialValues: ProjectGet;
+  open: boolean;
+  postSubmit: () => void;
+  onCancel: () => void;
+}
+
+export const ProjectPropertiesDialog = (props: IProjectPropertiesDialog) => {
+  const api = usePimsApi();
+  const { initialValues, open, postSubmit, onCancel } = props;
+  const [rows, setRows] = useState([]);
+  useEffect(() => {
+    setRows([
+      ...(initialValues?.Parcels?.map((p) => ({ ...p, Type: 'Parcel' })) ?? []),
+      ...(initialValues?.Buildings?.map((b) => ({ ...b, Type: 'Building' })) ?? []),
+    ]);
+  }, [initialValues]);
+  return (
+    <ConfirmDialog
+      title={'Edit Properties List'}
+      open={open}
+      onConfirm={async () => {
+        api.projects.updateProject(initialValues.Id, {}).then(() => postSubmit());
+      }}
+      onCancel={async () => onCancel()}
+    >
+      <Box minWidth={'500px'} paddingTop={'1rem'}>
+        <DisposalProjectSearch rows={rows} setRows={setRows} />
+      </Box>
     </ConfirmDialog>
   );
 };

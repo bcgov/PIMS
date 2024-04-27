@@ -4,12 +4,17 @@ import AutocompleteFormField from '../form/AutocompleteFormField';
 import TextFormField from '../form/TextFormField';
 import { ISelectMenuItem } from '../form/SelectFormField';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
+import usePimsApi from '@/hooks/usePimsApi';
+import useDataLoader from '@/hooks/useDataLoader';
 
 interface IProjectGeneralInfoForm {
   projectStatuses: ISelectMenuItem[];
 }
 
 export const ProjectGeneralInfoForm = (props: IProjectGeneralInfoForm) => {
+  const api = usePimsApi();
+  const { data: tiers, loadOnce } = useDataLoader(api.lookup.getTierLevels);
+  loadOnce();
   return (
     <Grid mt={'1rem'} spacing={2} container>
       <Grid item xs={6}>
@@ -21,22 +26,17 @@ export const ProjectGeneralInfoForm = (props: IProjectGeneralInfoForm) => {
         />
       </Grid>
       <Grid item xs={12}>
-        <TextFormField required fullWidth name={'ProjectNumber'} label={'Id'} />
+        <TextFormField required fullWidth name={'ProjectNumber'} label={'Project Number'} />
       </Grid>
       <Grid item xs={6}>
         <TextFormField required fullWidth name={'Name'} label={'Name'} />
       </Grid>
       <Grid item xs={6}>
         <AutocompleteFormField
-          name={'Tier'}
+          name={'TierLevelId'}
           label={'Assign Tier'}
           required
-          options={[
-            { label: 'Tier 1', value: 'Tier 1' },
-            { label: 'Tier 2', value: 'Tier 2' },
-            { label: 'Tier 3', value: 'Tier 3' },
-            { label: 'Tier 4', value: 'Tier 4' },
-          ]}
+          options={tiers?.map((t) => ({ label: t.Name, value: t.Id })) ?? []}
         />
       </Grid>
       <Grid item xs={12}>

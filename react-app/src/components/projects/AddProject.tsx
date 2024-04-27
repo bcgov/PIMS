@@ -12,7 +12,7 @@ import { ProjectPropertyIds } from '@/hooks/api/useProjectsApi';
 import DisposalProjectSearch, {
   BuildingWithType,
   ParcelWithType,
-} from './DisposalProjectSearchTable';
+} from './DisposalPropertiesSearchTable';
 import React from 'react';
 
 const AddProject = () => {
