@@ -1,4 +1,5 @@
 import controllers from '@/controllers';
+import { lookupTasks } from '@/controllers/lookup/lookupController';
 import catchErrors from '@/utilities/controllerErrorWrapper';
 import express from 'express';
 
@@ -26,6 +27,7 @@ router.route('/property/constructionTypes').get(catchErrors(lookupBuildingConstr
 router.route('/project/tierLevels').get(catchErrors(lookupProjectTierLevels));
 router.route('/project/risks').get(catchErrors(lookupProjectRisks));
 router.route('/project/status').get(catchErrors(lookupProjectStatuses));
+router.route('/tasks').get(catchErrors(lookupTasks));
 router.route('/all').get(catchErrors(lookupAll));
 
 export default router;

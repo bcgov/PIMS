@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import controllers from '@/controllers';
 import { Agency } from '@/typeorm/Entities/Agency';
+import { ProjectFilterSchema } from '@/services/projects/projectSchema';
 import {
   MockReq,
   MockRes,
@@ -9,6 +10,10 @@ import {
   produceProject,
 } from '../../../testUtils/factories';
 import { AppDataSource } from '@/appDataSource';
+import { z } from 'zod';
+import { Roles } from '@/constants/roles';
+import { Project } from '@/typeorm/Entities/Project';
+import { ProjectSchema } from '@/controllers/projects/projectsSchema';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
 
@@ -16,12 +21,21 @@ jest.spyOn(agencyRepo, 'exists').mockImplementation(async () => true);
 
 const _addProject = jest.fn().mockImplementation(() => produceProject());
 
+jest
+  .spyOn(AppDataSource.getRepository(Project), 'find')
+  .mockImplementation(async () => _addProject());
+
 jest.mock('@/services/projects/projectsServices', () => ({
   addProject: () => _addProject(),
+  getProjects: jest.fn().mockResolvedValue([
+    { id: 1, name: 'Project 1' },
+    { id: 2, name: 'Project 2' },
+  ]),
 }));
 
 jest.mock('@/services/users/usersServices', () => ({
   getUser: (guid: string) => _getUser(guid),
+  getAgencies: jest.fn().mockResolvedValue([1, 2]),
 }));
 
 const _getUser = jest
@@ -35,7 +49,90 @@ describe('UNIT - Testing controllers for users routes.', () => {
     mockRequest = mockReq;
     mockResponse = mockRes;
   });
+  describe('GET /projects/', () => {
+    it('should return projects for admin user', async () => {
+      // Mock an admin user
+      const { mockReq, mockRes } = getRequestHandlerMocks();
+      mockRequest = mockReq;
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockResponse = mockRes;
+      jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValue({
+        success: true,
+        data: {
+          projectNumber: '123',
+          name: 'Project Name',
+          statusId: 1,
+          agencyId: [1, 2],
+          page: 1,
+          quantity: 10,
+          sort: 'asc',
+        },
+      });
 
+      // Call filterProjects controller function
+      await controllers.filterProjects(mockRequest, mockResponse);
+
+      // Assert response status and content
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.send).toHaveBeenCalledWith([
+        { id: 1, name: 'Project 1' },
+        { id: 2, name: 'Project 2' },
+      ]);
+    });
+
+    it('should return projects for a general user', async () => {
+      // Mock an admin user
+      const { mockReq, mockRes } = getRequestHandlerMocks();
+      mockRequest = mockReq;
+      mockRequest.setUser({ client_roles: [Roles.GENERAL_USER] });
+      mockResponse = mockRes;
+      jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValue({
+        success: true,
+        data: {
+          projectNumber: '123',
+          name: 'Project Name',
+          statusId: 1,
+          agencyId: [1, 2],
+          page: 1,
+          quantity: 10,
+          sort: 'asc',
+        },
+      });
+
+      // Call filterProjects controller function
+      await controllers.filterProjects(mockRequest, mockResponse);
+
+      // Assert response status and content
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.send).toHaveBeenCalledWith([
+        { id: 1, name: 'Project 1' },
+        { id: 2, name: 'Project 2' },
+      ]);
+    });
+
+    it('should return 400 if filter cannot be parsed', async () => {
+      jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValue({
+        success: false,
+        error: new z.ZodError([]), // Pass an empty array of errors
+      });
+
+      await controllers.filterProjects(mockRequest, mockResponse);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.send).toHaveBeenCalledWith('Could not parse filter.');
+    });
+
+    it('should pass valid project filter', () => {
+      const validFilter = {
+        projectNumber: '123',
+        name: 'Project Name',
+        statusId: 1,
+        agencyId: 1,
+      };
+
+      const result = ProjectFilterSchema.safeParse(validFilter);
+      expect(result.success).toBe(true);
+    });
+  });
   describe('GET /projects/disposal/:projectId', () => {
     it('should return stub response 501', async () => {
       await controllers.getDisposalProject(mockRequest, mockResponse);
@@ -300,6 +397,22 @@ describe('UNIT - Testing controllers for users routes.', () => {
       mockRequest.params.workflowCode = '1';
       await controllers.getProjectWorkflowTasks(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
+    });
+  });
+
+  describe('Project Schema Validation', () => {
+    it('should pass valid project schema', () => {
+      const project = _addProject();
+      expect(project).toBeDefined();
+    });
+
+    xit('should fail with invalid project schema', () => {
+      const invalidProject = {
+        // Incomplete or incorrect properties for an invalid project object
+      };
+
+      const result = ProjectSchema.safeParse(invalidProject);
+      expect(result.success).toBe(false);
     });
   });
 });

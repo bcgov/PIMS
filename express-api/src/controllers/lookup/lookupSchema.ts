@@ -37,3 +37,11 @@ export const ProjectStatusPublicResponseSchema = z.object({
   SortOrder: z.number(),
   IsDisabled: z.boolean(),
 });
+
+export const TaskPublicResponseSchema = z.object({
+  Name: z.string(),
+  Id: z.number(),
+  Description: z.string(),
+  IsOptional: z.boolean(),
+  StatusId: z.number(),
+});

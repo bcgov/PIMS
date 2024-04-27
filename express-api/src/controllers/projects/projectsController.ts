@@ -12,34 +12,6 @@ import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Building } from '@/typeorm/Entities/Building';
 
 /**
- * @description Function to filter users based on agencies
- * @param {Request}     req Incoming request.
- * @param {Response}    res Outgoing response.
- * @returns {Project[]}      An array of projects.
- */
-const filterProjectsByAgencies = async (req: Request, res: Response) => {
-  const filter = ProjectFilterSchema.safeParse(req.query);
-  const includeRelations = req.query.includeRelations === 'true';
-  const kcUser = req.user as unknown as SSOUser;
-  if (!filter.success) {
-    return res.status(400).send('Could not parse filter.');
-  }
-  const filterResult = filter.data;
-
-  let projects;
-  if (isAdmin(kcUser) || isAuditor(kcUser)) {
-    projects = await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
-  } else {
-    // get array of user's agencies
-    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
-    filterResult.agencyId = usersAgencies;
-    // Get projects associated with agencies of the requesting user
-    projects = await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
-  }
-  return projects;
-};
-
-/**
  * @description Get disposal project by either the numeric id or projectNumber.
  * @param {Request}     req Incoming request.
  * @param {Response}    res Outgoing response.
@@ -320,7 +292,24 @@ export const searchProjects = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status with the an array of projects.
  */
 export const filterProjects = async (req: Request, res: Response) => {
-  const projects = await filterProjectsByAgencies(req, res);
+  const filter = ProjectFilterSchema.safeParse(req.query);
+  const includeRelations = req.query.includeRelations === 'true';
+  const kcUser = req.user as unknown as SSOUser;
+  if (!filter.success) {
+    return res.status(400).send('Could not parse filter.');
+  }
+  const filterResult = filter.data;
+
+  let projects;
+  if (isAdmin(kcUser) || isAuditor(kcUser)) {
+    projects = await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
+  } else {
+    // get array of user's agencies
+    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+    filterResult.agencyId = usersAgencies;
+    // Get projects associated with agencies of the requesting user
+    projects = await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
+  }
   return res.status(200).send(projects);
 };
 
