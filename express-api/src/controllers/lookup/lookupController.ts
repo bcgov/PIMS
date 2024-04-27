@@ -15,11 +15,8 @@ import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUs
 import { BuildingConstructionType } from '@/typeorm/Entities/BuildingConstructionType';
 import { RegionalDistrict } from '@/typeorm/Entities/RegionalDistrict';
 import { TierLevel } from '@/typeorm/Entities/TierLevel';
-<<<<<<< HEAD
 import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
-=======
 import { Task } from '@/typeorm/Entities/Task';
->>>>>>> main
 
 // TODO: What controllers here could just be replaced by existing GET requests?
 

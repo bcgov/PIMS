@@ -39,7 +39,7 @@ const DisposalPropertiesTable = (props: IDisposalPropertiesTable) => {
       flex: 1,
       valueGetter: (value, row) => {
         return row.Evaluations?.sort((a, b) => b.Year - a.Year)?.[0]?.Value ?? 'N/A';
-      }
+      },
     },
   ];
 
