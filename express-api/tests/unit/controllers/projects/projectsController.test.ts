@@ -17,8 +17,6 @@ import { z } from 'zod';
 import { Roles } from '@/constants/roles';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectSchema } from '@/controllers/projects/projectsSchema';
-import { Parcel } from '@/typeorm/Entities/Parcel';
-import { Building } from '@/typeorm/Entities/Building';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
