@@ -16,7 +16,7 @@ const router = express.Router();
 // Endpoints for Admin Agencies
 router
   .route(`/`)
-  .get(protectedRoute(), activeUserCheck, catchErrors(getAgencies))
+  .get(protectedRoute(), catchErrors(getAgencies))
   .post(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(addAgency));
 
 router
