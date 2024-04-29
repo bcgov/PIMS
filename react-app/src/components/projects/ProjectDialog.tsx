@@ -85,10 +85,10 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
   const { initialValues, open, postSubmit, onCancel } = props;
   const financialFormMethods = useForm({
     defaultValues: {
-      AssessedValue: 0,
-      NetBookValue: 0,
-      EstimatedMarketValue: 0,
-      AppraisedValue: 0,
+      Assessed: 0,
+      NetBook: 0,
+      Market: 0,
+      Appraised: 0,
       Metadata: {
         salesCost: 0,
         programCost: 0,
@@ -98,10 +98,10 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
   useEffect(() => {
     //console.log(`useEffect called! ${JSON.stringify(initialValues, null, 2)}`);
     financialFormMethods.reset({
-      AssessedValue: initialValues?.Assessed,
-      NetBookValue: initialValues?.NetBook,
-      EstimatedMarketValue: initialValues?.Market,
-      AppraisedValue: initialValues?.Appraised,
+      Assessed: initialValues?.Assessed,
+      NetBook: initialValues?.NetBook,
+      Market: initialValues?.Market,
+      Appraised: initialValues?.Appraised,
       Metadata: initialValues?.Metadata,
     });
   }, [initialValues]);
@@ -112,14 +112,14 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
       onConfirm={async () => {
         const isValid = await financialFormMethods.trigger();
         if (isValid) {
-          const { AssessedValue, NetBookValue, EstimatedMarketValue, AppraisedValue, Metadata } =
+          const { Assessed, NetBook, Market, Appraised, Metadata } =
             financialFormMethods.getValues();
           api.projects
             .updateProject(initialValues.Id, {
-              Assessed: AssessedValue,
-              NetBook: NetBookValue,
-              Market: EstimatedMarketValue,
-              Appraised: AppraisedValue,
+              Assessed: Assessed,
+              NetBook: NetBook,
+              Market: Market,
+              Appraised: Appraised,
               Metadata: Metadata,
             })
             .then(() => postSubmit());

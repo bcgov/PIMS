@@ -92,7 +92,7 @@ export const ProjectFinancialInfoForm = () => {
           }}
           numeric
           fullWidth
-          name={'Estimated'}
+          name={'Market'}
           label={'Estimated market value'}
           rules={{
             min: {

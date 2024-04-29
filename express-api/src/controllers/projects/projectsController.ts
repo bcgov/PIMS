@@ -5,11 +5,10 @@ import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import projectServices, { ProjectPropertyIds } from '@/services/projects/projectsServices';
 import userServices from '@/services/users/usersServices';
 import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
-import { DeepPartial, In } from 'typeorm';
+import { DeepPartial } from 'typeorm';
 import { Project } from '@/typeorm/Entities/Project';
 import { AppDataSource } from '@/appDataSource';
-import { Parcel } from '@/typeorm/Entities/Parcel';
-import { Building } from '@/typeorm/Entities/Building';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 
 /**
  * @description Get disposal project by either the numeric id or projectNumber.
@@ -33,28 +32,23 @@ export const getDisposalProject = async (req: Request, res: Response) => {
   if (!project) {
     return res.status(404).send('Project matching this internal ID not found.');
   }
-  const parcelIds = project.ProjectProperties?.filter((p) => p.ParcelId != null).map(
-    (p) => p.ParcelId,
-  );
-  const buildingIds = project.ProjectProperties?.filter((b) => b.BuildingId != null).map(
-    (b) => b.BuildingId,
-  );
-  const parcels = await AppDataSource.getRepository(Parcel).find({
+  const properties = await AppDataSource.getRepository(ProjectProperty).find({
+    where: { ProjectId: project.Id },
     relations: {
-      Agency: true,
-      Evaluations: true,
-      Fiscals: true,
+      Parcel: {
+        Agency: true,
+        Evaluations: true,
+        Fiscals: true,
+      },
+      Building: {
+        Agency: true,
+        Evaluations: true,
+        Fiscals: true,
+      },
     },
-    where: { Id: In(parcelIds ?? []) },
   });
-  const buildings = await AppDataSource.getRepository(Building).find({
-    relations: {
-      Agency: true,
-      Evaluations: true,
-      Fiscals: true,
-    },
-    where: { Id: In(buildingIds ?? []) },
-  });
+  const buildings = properties.filter((a) => a.Building != null).map((a) => a.Building);
+  const parcels = properties.filter((p) => p.Parcel != null).map((p) => p.Parcel);
   return res.status(200).send({ ...project, Buildings: buildings, Parcels: parcels });
 };
 

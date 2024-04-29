@@ -10,6 +10,7 @@ import {
   produceProject,
   produceParcel,
   produceBuilding,
+  produceProjectProperty,
 } from '../../../testUtils/factories';
 import { AppDataSource } from '@/appDataSource';
 import { z } from 'zod';
@@ -18,6 +19,7 @@ import { Project } from '@/typeorm/Entities/Project';
 import { ProjectSchema } from '@/controllers/projects/projectsSchema';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Building } from '@/typeorm/Entities/Building';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
 
@@ -45,12 +47,11 @@ jest.mock('@/services/users/usersServices', () => ({
 }));
 
 jest
-  .spyOn(AppDataSource.getRepository(Parcel), 'find')
-  .mockImplementation(async () => [produceParcel()]);
-
-jest
-  .spyOn(AppDataSource.getRepository(Building), 'find')
-  .mockImplementation(async () => [produceBuilding()]);
+  .spyOn(AppDataSource.getRepository(ProjectProperty), 'find')
+  .mockImplementation(async () => [
+    produceProjectProperty({ Parcel: produceParcel() }),
+    produceProjectProperty({ Building: produceBuilding() }),
+  ]);
 
 const _getUser = jest
   .fn()
