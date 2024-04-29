@@ -4,7 +4,7 @@ import { BuildingFilter, BuildingFilterSchema } from '@/services/buildings/build
 import userServices from '@/services/users/usersServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Building } from '@/typeorm/Entities/Building';
-import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
+import { checkUserAgencyPermission, isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 
 /**
  * @description Gets all buildings satisfying the filter parameters.
@@ -59,13 +59,12 @@ export const getBuilding = async (req: Request, res: Response) => {
   }
 
   const kcUser = req.user as unknown as SSOUser;
-  const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
   const building = await buildingService.getBuildingById(buildingId);
+  const userHasAccess = await checkUserAgencyPermission(kcUser, [building.AgencyId]);
 
   if (!building) {
     return res.status(404).send('Building matching this ID was not found.');
-  } else if (!usersAgencies.includes(building.AgencyId)) {
-    // check to see if the building's agency belongs to the users's agencies
+  } else if (!userHasAccess) {
     return res.status(403).send('You are not authorized to view this building.');
   }
   return res.status(200).send(building);
