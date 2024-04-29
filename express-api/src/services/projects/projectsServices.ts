@@ -434,6 +434,7 @@ const updateProject = async (
   } catch (e) {
     await queryRunner.rollbackTransaction();
     logger.warn(e.message);
+    console.log(e.message);
     if (e instanceof ErrorWithCode) throw e;
     throw new ErrorWithCode('Error updating project.', 500);
   }
