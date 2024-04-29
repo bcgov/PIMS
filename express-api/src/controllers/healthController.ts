@@ -7,7 +7,7 @@ import nunjucks from 'nunjucks';
  * @param {Response}    res Outgoing response
  * @returns {Response}      A 200 status indicating API is healthy and running
  */
-export const healthCheck = (req: Request, res: Response) => {
+export const healthCheck = async (req: Request, res: Response) => {
   /**
    * #swagger.tags = ['Health']
    * #swagger.description = 'Returns a 200 (OK) status if API is reached.'
