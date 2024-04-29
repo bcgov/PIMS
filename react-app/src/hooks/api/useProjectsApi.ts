@@ -178,7 +178,6 @@ export interface ProjectPropertyIds {
 const useProjectsApi = (absoluteFetch: IFetch) => {
   const getProjectById = async (id: number): Promise<ProjectGet> => {
     const { parsedBody } = await absoluteFetch.get(`/projects/disposal/${id}`);
-    console.log('ParsedBody:', parsedBody);
     return parsedBody as ProjectGet;
   };
   const updateProject = async (id: number, project: Partial<Project>): Promise<Project> => {
