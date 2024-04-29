@@ -434,6 +434,22 @@ describe('UNIT - Project Services', () => {
       ).rejects.toThrow(new ErrorWithCode('Project Agency may not be changed.', 403));
     });
 
+    it('should handle error in transaction by rolling back', async () => {
+      _projectsSave.mockImplementationOnce(() => {
+        throw Error('bad save');
+      });
+      expect(
+        async () =>
+          await projectServices.updateProject(
+            {},
+            {
+              parcels: [1, 3],
+              buildings: [4, 5],
+            },
+          ),
+      ).rejects.toThrow(new ErrorWithCode('Error updating project.', 500));
+    });
+
     describe('getProjects', () => {
       beforeEach(() => {
         jest.clearAllMocks();
