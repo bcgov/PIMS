@@ -8,18 +8,23 @@ import {
   getRequestHandlerMocks,
   produceUser,
   produceProject,
+  produceParcel,
+  produceBuilding,
 } from '../../../testUtils/factories';
 import { AppDataSource } from '@/appDataSource';
 import { z } from 'zod';
 import { Roles } from '@/constants/roles';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectSchema } from '@/controllers/projects/projectsSchema';
+import { Parcel } from '@/typeorm/Entities/Parcel';
+import { Building } from '@/typeorm/Entities/Building';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
 
 jest.spyOn(agencyRepo, 'exists').mockImplementation(async () => true);
 
 const _addProject = jest.fn().mockImplementation(() => produceProject());
+const _getProjectById = jest.fn().mockImplementation(() => produceProject());
 
 jest
   .spyOn(AppDataSource.getRepository(Project), 'find')
@@ -31,12 +36,21 @@ jest.mock('@/services/projects/projectsServices', () => ({
     { id: 1, name: 'Project 1' },
     { id: 2, name: 'Project 2' },
   ]),
+  getProjectById: () => _getProjectById(),
 }));
 
 jest.mock('@/services/users/usersServices', () => ({
   getUser: (guid: string) => _getUser(guid),
   getAgencies: jest.fn().mockResolvedValue([1, 2]),
 }));
+
+jest
+  .spyOn(AppDataSource.getRepository(Parcel), 'find')
+  .mockImplementation(async () => [produceParcel()]);
+
+jest
+  .spyOn(AppDataSource.getRepository(Building), 'find')
+  .mockImplementation(async () => [produceBuilding()]);
 
 const _getUser = jest
   .fn()
@@ -111,7 +125,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
     });
 
     it('should return 400 if filter cannot be parsed', async () => {
-      jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValue({
+      jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValueOnce({
         success: false,
         error: new z.ZodError([]), // Pass an empty array of errors
       });
@@ -134,18 +148,14 @@ describe('UNIT - Testing controllers for users routes.', () => {
     });
   });
   describe('GET /projects/disposal/:projectId', () => {
-    it('should return stub response 501', async () => {
-      await controllers.getDisposalProject(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and a project', async () => {
+    it('should return status 200 and a project', async () => {
       mockRequest.params.projectId = '1';
       await controllers.getDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
 
-    xit('should return status 404 on no resource', async () => {
+    it('should return status 404 on no resource', async () => {
+      _getProjectById.mockImplementationOnce(() => null);
       mockRequest.params.projectId = '-1';
       await controllers.getDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(404);

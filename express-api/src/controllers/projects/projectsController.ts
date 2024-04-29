@@ -30,6 +30,9 @@ export const getDisposalProject = async (req: Request, res: Response) => {
     return res.status(400).send('Project ID was invalid.');
   }
   const project = await projectServices.getProjectById(projectId);
+  if (!project) {
+    return res.status(404).send('Project matching this internal ID not found.');
+  }
   const parcelIds = project.ProjectProperties?.filter((p) => p.ParcelId != null).map(
     (p) => p.ParcelId,
   );
@@ -52,9 +55,6 @@ export const getDisposalProject = async (req: Request, res: Response) => {
     },
     where: { Id: In(buildingIds ?? []) },
   });
-  if (!project) {
-    return res.status(404).send('Project matching this internal ID not found.');
-  }
   return res.status(200).send({ ...project, Buildings: buildings, Parcels: parcels });
 };
 
