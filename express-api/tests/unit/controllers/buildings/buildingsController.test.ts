@@ -40,7 +40,11 @@ describe('UNIT - Buildings', () => {
 
   describe('GET /properties/buildings/:buildingId', () => {
     it('should return 200 with a correct response body', async () => {
+      const buildingWithAgencyId1 = {
+        AgencyId: 1,
+      };
       mockRequest.params.buildingId = '1';
+      _getBuildingById.mockImplementationOnce(() => buildingWithAgencyId1);
       await controllers.getBuilding(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });

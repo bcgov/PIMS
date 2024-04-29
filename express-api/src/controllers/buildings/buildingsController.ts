@@ -57,9 +57,16 @@ export const getBuilding = async (req: Request, res: Response) => {
   if (isNaN(buildingId)) {
     return res.status(400).send('Building Id is invalid.');
   }
+
+  const kcUser = req.user as unknown as SSOUser;
+  const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
   const building = await buildingService.getBuildingById(buildingId);
+
   if (!building) {
     return res.status(404).send('Building matching this ID was not found.');
+  } else if (!usersAgencies.includes(building.AgencyId)) {
+    // check to see if the building's agency belongs to the users's agencies
+    return res.status(403).send('You are not authorized to view this building.');
   }
   return res.status(200).send(building);
 };
