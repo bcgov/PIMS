@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import { stubResponse } from '@/utilities/stubResponse';
 import parcelServices from '@/services/parcels/parcelServices';
-import { ParcelFilterSchema } from '@/services/parcels/parcelSchema';
+import { ParcelFilter, ParcelFilterSchema } from '@/services/parcels/parcelSchema';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import userServices from '@/services/users/usersServices';
+import { Parcel } from '@/typeorm/Entities/Parcel';
+import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 
 /**
  * @description Gets information about a particular parcel by the Id provided in the URL parameter.
@@ -17,19 +21,15 @@ export const getParcel = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  try {
-    const parcelId = Number(req.params.parcelId);
-    if (isNaN(parcelId)) {
-      return res.status(400).send('Parcel ID was invalid.');
-    }
-    const parcel = await parcelServices.getParcelById(parcelId);
-    if (!parcel) {
-      return res.status(404).send('Parcel matching this internal ID not found.');
-    }
-    return res.status(200).send(parcel);
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong.');
+  const parcelId = Number(req.params.parcelId);
+  if (isNaN(parcelId)) {
+    return res.status(400).send('Parcel ID was invalid.');
   }
+  const parcel = await parcelServices.getParcelById(parcelId);
+  if (!parcel) {
+    return res.status(404).send('Parcel matching this internal ID not found.');
+  }
+  return res.status(200).send(parcel);
 };
 
 /**
@@ -46,19 +46,17 @@ export const updateParcel = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  try {
-    const parcelId = Number(req.params.parcelId);
-    if (isNaN(parcelId) || parcelId !== req.body.Id) {
-      return res.status(400).send('Parcel ID was invalid or mismatched with body.');
-    }
-    const parcel = await parcelServices.updateParcel(req.body);
-    if (!parcel) {
-      return res.status(404).send('Parcel matching this internal ID not found.');
-    }
-    return res.status(200).send(parcel);
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong.');
+  const parcelId = Number(req.params.parcelId);
+  if (isNaN(parcelId) || parcelId !== req.body.Id) {
+    return res.status(400).send('Parcel ID was invalid or mismatched with body.');
   }
+  const user = await userServices.getUser((req.user as SSOUser).preferred_username);
+  const updateBody = { ...req.body, UpdatedById: user.Id };
+  const parcel = await parcelServices.updateParcel(updateBody);
+  if (!parcel) {
+    return res.status(404).send('Parcel matching this internal ID not found.');
+  }
+  return res.status(200).send(parcel);
 };
 
 /**
@@ -75,16 +73,12 @@ export const deleteParcel = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  try {
-    const parcelId = Number(req.params.parcelId);
-    if (isNaN(parcelId)) {
-      return res.status(400).send('Parcel ID was invalid.');
-    }
-    const delResult = await parcelServices.deleteParcelById(parcelId);
-    return res.status(200).send(delResult);
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong.');
+  const parcelId = Number(req.params.parcelId);
+  if (isNaN(parcelId)) {
+    return res.status(400).send('Parcel ID was invalid.');
   }
+  const delResult = await parcelServices.deleteParcelById(parcelId);
+  return res.status(200).send(delResult);
 };
 
 /**
@@ -93,18 +87,25 @@ export const deleteParcel = async (req: Request, res: Response) => {
  * @param {Response}    res Outgoing Response
  * @returns {Response}      A 200 status with a response body containing an array of parcel data.
  */
-export const filterParcelsQueryString = async (req: Request, res: Response) => {
-  try {
-    const filter = ParcelFilterSchema.safeParse(req.query);
-    if (filter.success) {
-      const response = await parcelServices.getParcels(filter.data);
-      return res.status(200).send(response);
-    } else {
-      return res.status(400).send('Could not parse filter.');
-    }
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong.');
+export const getParcels = async (req: Request, res: Response) => {
+  const filter = ParcelFilterSchema.safeParse(req.query);
+  const includeRelations = req.query.includeRelations === 'true';
+  const kcUser = req.user as unknown as SSOUser;
+  if (!filter.success) {
+    return res.status(400).send('Could not parse filter.');
   }
+  const filterResult = filter.data;
+  let parcels;
+  if (isAdmin(kcUser) || isAuditor(kcUser)) {
+    parcels = await parcelServices.getParcels(filterResult as ParcelFilter, includeRelations);
+  } else {
+    // get array of user's agencies
+    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+    filterResult.agencyId = usersAgencies;
+    // Get parcels associated with agencies of the requesting user
+    parcels = await parcelServices.getParcels(filterResult as ParcelFilter, includeRelations);
+  }
+  return res.status(200).send(parcels);
 };
 
 /* Perhaps the above two methods could be consolidated into one? 
@@ -128,12 +129,15 @@ export const addParcel = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  try {
-    const response = await parcelServices.addParcel(req.body);
-    return res.status(201).send(response);
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong.');
-  }
+  const user = await userServices.getUser((req.user as SSOUser).preferred_username);
+  const parcel: Parcel = { ...req.body, CreatedById: user.Id };
+  parcel.Evaluations = parcel.Evaluations?.map((evaluation) => ({
+    ...evaluation,
+    CreatedById: user.Id,
+  }));
+  parcel.Fiscals = parcel.Fiscals?.map((fiscal) => ({ ...fiscal, CreatedById: user.Id }));
+  const response = await parcelServices.addParcel(parcel);
+  return res.status(201).send(response);
 };
 
 /**

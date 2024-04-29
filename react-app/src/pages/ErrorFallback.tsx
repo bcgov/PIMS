@@ -6,7 +6,7 @@ import errorImage from '@/assets/images/error.svg';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import { useKeycloak } from '@bcgov/citz-imb-kc-react';
+import { useSSO } from '@bcgov/citz-imb-sso-react';
 import usePimsApi from '@/hooks/usePimsApi';
 
 /**
@@ -21,7 +21,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
   // Call resetErrorBoundary() to reset the error boundary and retry the render.
   const [state, setState] = useState<string>('');
   const [text, setText] = useState<string>('');
-  const keycloak = useKeycloak();
+  const sso = useSSO();
   const api = usePimsApi();
 
   const commonResultStyle = {
@@ -125,7 +125,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
                 onClick={() => {
                   api.reports
                     .postErrorReport({
-                      user: keycloak.user,
+                      user: sso.user,
                       error: {
                         message: error.message,
                         stack: error.stack,

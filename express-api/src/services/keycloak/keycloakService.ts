@@ -20,11 +20,11 @@ import {
   unassignUserRole,
   IDIRUserQuery,
 } from '@bcgov/citz-imb-kc-css-api';
-import rolesServices from '@/services/admin/rolesServices';
+import rolesServices from '@/services/roles/rolesServices';
 import { randomUUID } from 'crypto';
 import { AppDataSource } from '@/appDataSource';
 import { DeepPartial, In, Not } from 'typeorm';
-import userServices from '@/services/admin/usersServices';
+import userServices from '@/services/users/usersServices';
 import { Role } from '@/typeorm/Entities/Role';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { User } from '@/typeorm/Entities/User';
@@ -106,10 +106,14 @@ const syncKeycloakRoles = async () => {
  * @returns {IKeycloakRoles[]}  A list of roles from Keycloak.
  */
 const getKeycloakRoles = async () => {
-  // Get roles available in Keycloak
-  const keycloakRoles: IKeycloakRolesResponse = await getRoles();
-  // Return the list of roles
-  return keycloakRoles.data;
+  try {
+    // Get roles available in Keycloak
+    const keycloakRoles: IKeycloakRolesResponse = await getRoles();
+    // Return the list of roles
+    return keycloakRoles.data;
+  } catch (e) {
+    throw new ErrorWithCode('Something went wrong getting Keycloak roles.');
+  }
 };
 
 /**

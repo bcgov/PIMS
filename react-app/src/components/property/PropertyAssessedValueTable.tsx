@@ -1,7 +1,7 @@
 import React from 'react';
 import { PinnedColumnDataGrid } from '../table/DataTable';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { formatMoney } from '@/utils/formatters';
+import { Box, Typography } from '@mui/material';
 
 interface IPropertyAssessedValueTable {
   rows: Record<string, any>[];
@@ -22,15 +22,24 @@ const PropertyAssessedValueTable = (props: IPropertyAssessedValueTable) => {
       field: isBuilding ? 'Value' : 'Land',
       headerName: isBuilding ? 'Value' : 'Land',
       flex: willOverflow ? 0 : 1,
-      valueFormatter: (params) => formatMoney(params.value),
     },
-    ...[...Array(parcelRelatedBuildingsNum).keys()].map((idx) => ({
-      field: `Building${idx + 1}`,
-      headerName: `Building (${idx + 1})`,
-      flex: willOverflow ? 0 : 1,
-      valueFormatter: (params) => formatMoney(params.value),
-    })),
+    ...[...Array(parcelRelatedBuildingsNum).keys()].map(
+      (idx): GridColDef => ({
+        field: `Building${idx + 1}`,
+        headerName: `Building (${idx + 1})`,
+        flex: willOverflow ? 0 : 1,
+        valueGetter: (value) => (value ? value : 'N/A'),
+      }),
+    ),
   ];
+
+  if (!rows.length) {
+    return (
+      <Box display={'flex'} justifyContent={'center'}>
+        <Typography>No assessed values recorded.</Typography>
+      </Box>
+    );
+  }
 
   return willOverflow ? (
     <PinnedColumnDataGrid

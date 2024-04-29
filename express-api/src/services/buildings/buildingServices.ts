@@ -1,7 +1,7 @@
 import { Building } from '@/typeorm/Entities/Building';
 import { AppDataSource } from '@/appDataSource';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
-import { DeepPartial, FindOptionsOrder } from 'typeorm';
+import { DeepPartial, FindOptionsOrder, In } from 'typeorm';
 import { BuildingFilter } from '@/services/buildings/buildingSchema';
 
 const buildingRepo = AppDataSource.getRepository(Building);
@@ -13,7 +13,7 @@ const buildingRepo = AppDataSource.getRepository(Building);
  * @throws ErrorWithCode If the building already exists or is unable to be added.
  */
 export const addBuilding = async (building: DeepPartial<Building>) => {
-  const existingBuilding = await getBuildingById(building.Id);
+  const existingBuilding = building.Id ? await getBuildingById(building.Id) : null;
   if (existingBuilding) {
     throw new ErrorWithCode('Building already exists.', 409);
   }
@@ -28,6 +28,17 @@ export const addBuilding = async (building: DeepPartial<Building>) => {
  */
 export const getBuildingById = async (buildingId: number) => {
   const findBuilding = await buildingRepo.findOne({
+    relations: {
+      Agency: true,
+      AdministrativeArea: true,
+      Classification: true,
+      PropertyType: true,
+      BuildingConstructionType: true,
+      BuildingPredominateUse: true,
+      BuildingOccupantType: true,
+      Evaluations: true,
+      Fiscals: true,
+    },
     where: { Id: buildingId },
   });
   return findBuilding;
@@ -43,7 +54,7 @@ export const updateBuildingById = async (building: DeepPartial<Building>) => {
   if (!existingBuilding) {
     throw new ErrorWithCode('Building does not exists.', 404);
   }
-  await buildingRepo.update(building.Id, building);
+  await buildingRepo.save(building);
   //update function doesn't return data on the row changed. Have to get the changed row again
   const newBuilding = await getBuildingById(building.Id);
   return newBuilding;
@@ -78,11 +89,15 @@ export const getBuildings = async (filter: BuildingFilter, includeRelations: boo
       BuildingConstructionType: includeRelations,
       BuildingPredominateUse: includeRelations,
       BuildingOccupantType: includeRelations,
+      Evaluations: includeRelations,
+      Fiscals: includeRelations,
     },
     where: {
       PID: filter.pid,
       ClassificationId: filter.classificationId,
-      AgencyId: filter.agencyId,
+      AgencyId: filter.agencyId
+        ? In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId)
+        : undefined,
       AdministrativeAreaId: filter.administrativeAreaId,
       PropertyTypeId: filter.propertyTypeId,
       BuildingConstructionTypeId: filter.buildingConstructionTypeId,

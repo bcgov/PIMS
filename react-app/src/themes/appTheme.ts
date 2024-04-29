@@ -169,6 +169,21 @@ const appTheme = createTheme({
         },
       },
     },
+    MuiMenu: {
+      styleOverrides: {
+        root: {
+          top: '5px',
+        },
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          fontWeight: 500,
+          fontSize: '0.9rem',
+        },
+      },
+    },
   },
 });
 

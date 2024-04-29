@@ -14,7 +14,7 @@ type TextFormFieldProps = {
 } & TextFieldProps;
 
 const TextFormField = (props: TextFormFieldProps) => {
-  const { control } = useFormContext();
+  const { control, setValue } = useFormContext();
   const { name, label, rules, numeric, defaultVal, ...restProps } = props;
   return (
     <Controller
@@ -25,19 +25,24 @@ const TextFormField = (props: TextFormFieldProps) => {
         return (
           <TextField
             {...restProps}
+            onBlur={(event) => {
+              if (numeric && parseFloat(event.currentTarget.value)) {
+                setValue(name, parseFloat(event.currentTarget.value));
+              }
+            }}
             onChange={(event) => {
               if (numeric === undefined) {
                 onChange(event);
                 return;
               }
-              if (event.target.value === '' || /^[0-9]*\.?[0-9]*$/.test(event.target.value)) {
+              if (event.target.value === '' || /^[0-9]*\.?[0-9]{0,2}$/.test(event.target.value)) {
                 onChange(event);
               }
             }}
             value={value ?? defaultVal}
             fullWidth
             label={label}
-            type="text"
+            type={'text'}
             error={!!error && !!error.message}
             helperText={error?.message}
           />

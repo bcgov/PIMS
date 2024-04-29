@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { stubResponse } from '@/utilities/stubResponse';
+import propertyServices from '@/services/properties/propertiesServices';
 
 /**
  * @description Used to retrieve all properties.
@@ -16,8 +17,27 @@ export const getProperties = async (req: Request, res: Response) => {
       }]
    */
 
-  // TODO: Replace stub response with controller logic
   return stubResponse(res);
+};
+
+/**
+ * @description Search for a single keyword across multiple different fields in both parcels and buildings.
+ * @param   {Request}     req Incoming request
+ * @param   {Response}    res Outgoing response
+ * @returns {Response}        A 200 status with a list of properties.
+ */
+export const getPropertiesFuzzySearch = async (req: Request, res: Response) => {
+  /**
+   * #swagger.tags = ['Properties']
+   * #swagger.description = 'Returns a list of fuzzy searched properties.'
+   * #swagger.security = [{
+            "bearerAuth": []
+      }]
+   */
+  const keyword = String(req.query.keyword);
+  const take = req.query.take ? Number(req.query.take) : undefined;
+  const result = await propertyServices.propertiesFuzzySearch(keyword, take);
+  return res.status(200).send(result);
 };
 
 /**

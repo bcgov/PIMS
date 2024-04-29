@@ -1,9 +1,21 @@
 import React from 'react';
 import headerImageLarge from '@/assets/images/BCGOV_logo.svg';
 import headerImageSmall from '@/assets/images/BCID_V_rgb_pos.png';
-import { AppBar, Link, Box, Button, Divider, Toolbar, Typography, useTheme } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
-import { useKeycloak } from '@bcgov/citz-imb-kc-react';
+import {
+  AppBar,
+  Link,
+  Box,
+  Button,
+  Divider,
+  Toolbar,
+  Typography,
+  useTheme,
+  Menu,
+  MenuItem,
+} from '@mui/material';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useSSO } from '@bcgov/citz-imb-sso-react';
+import { Roles } from '@/constants/roles';
 
 const AppBrand = () => {
   const theme = useTheme();
@@ -49,14 +61,26 @@ const AppBrand = () => {
 };
 
 const Header: React.FC = () => {
-  const { logout, isAuthenticated, login } = useKeycloak();
+  const { logout, isAuthenticated, login, user } = useSSO();
   const theme = useTheme();
+  const navigate = useNavigate();
+
   const handleLoginButton = () => {
     if (isAuthenticated) {
       logout();
     } else {
       login({ idpHint: 'idir' });
     }
+  };
+
+  // Admin menu controls
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
   };
   return (
     <AppBar
@@ -79,13 +103,62 @@ const Header: React.FC = () => {
         <Box textAlign={'center'} alignItems={'center'} gap={'32px'} display={'flex'}>
           {isAuthenticated && (
             <>
-              <Link underline="none" href="#" variant="h5">
+              {user.client_roles?.includes(Roles.ADMIN) ? (
+                <>
+                  <Typography
+                    id="admin-button"
+                    aria-controls={open ? 'admin-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                    onClick={handleClick}
+                    sx={{
+                      color: '#000',
+                      fontWeight: 500,
+                      '&:hover': {
+                        cursor: 'pointer',
+                      },
+                    }}
+                    variant="h5"
+                  >
+                    Administration
+                  </Typography>
+                  <Menu
+                    id="admin-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                      'aria-labelledby': 'admin-menu-button',
+                    }}
+                  >
+                    <MenuItem
+                      onClick={() => {
+                        navigate('/admin/agencies');
+                        setAnchorEl(undefined);
+                      }}
+                    >
+                      Agencies
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        navigate('/admin/adminAreas');
+                        setAnchorEl(undefined);
+                      }}
+                    >
+                      Administrative Areas
+                    </MenuItem>
+                  </Menu>
+                </>
+              ) : (
+                <></>
+              )}
+              <Link underline="none" href="/properties" variant="h5">
                 Active Inventory
               </Link>
-              <Link underline="none" href="#" variant="h5">
+              <Link underline="none" href="/projects" variant="h5">
                 Disposal Inventory
               </Link>
-              <Link underline="none" href="/admin/users" variant="h5">
+              <Link underline="none" href="/users" variant="h5">
                 Users
               </Link>
             </>

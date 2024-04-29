@@ -1,4 +1,4 @@
-import { useKeycloak } from '@bcgov/citz-imb-kc-react';
+import { useSSO } from '@bcgov/citz-imb-sso-react';
 import usePimsApi from './usePimsApi';
 import useDataLoader from './useDataLoader';
 import { User } from './api/useUsersApi';
@@ -10,7 +10,7 @@ export interface IPimsUser {
 }
 
 const usePimsUser = () => {
-  const keycloak = useKeycloak();
+  const keycloak = useSSO();
   const api = usePimsApi();
   const { data, refreshData, isLoading, loadOnce } = useDataLoader(api.users.getSelf, () => {});
 

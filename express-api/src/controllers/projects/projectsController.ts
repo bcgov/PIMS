@@ -1,5 +1,12 @@
+import { ProjectFilterSchema, ProjectFilter } from '@/services/projects/projectSchema';
 import { stubResponse } from '../../utilities/stubResponse';
 import { Request, Response } from 'express';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import projectServices, { ProjectPropertyIds } from '@/services/projects/projectsServices';
+import userServices from '@/services/users/usersServices';
+import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
+import { DeepPartial } from 'typeorm';
+import { Project } from '@/typeorm/Entities/Project';
 
 /**
  * @description Get disposal project by either the numeric id or projectNumber.
@@ -59,14 +66,20 @@ export const deleteDisposalProject = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status with the new project.
  */
 export const addDisposalProject = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Projects']
-   * #swagger.description = 'Add a new disposal project.'
-   * #swagger.security = [{
-   *   "bearerAuth" : []
-   * }]
-   */
-  return stubResponse(res);
+  // Extract project data from request body
+  // Extract projectData and propertyIds from the request body
+  const {
+    project,
+    propertyIds,
+  }: { project: DeepPartial<Project>; propertyIds: ProjectPropertyIds } = req.body;
+  const user = await userServices.getUser((req.user as SSOUser).preferred_username);
+  const addBody = { ...project, CreatedById: user.Id };
+
+  // Call the addProject service function with the project data
+  const newProject = await projectServices.addProject(addBody, propertyIds);
+
+  // Return the new project in the response
+  return res.status(201).json(newProject);
 };
 
 /**
@@ -246,14 +259,25 @@ export const searchProjects = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status with the an array of projects.
  */
 export const filterProjects = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Projects']
-   * #swagger.description = 'Filter projects based on specified criteria.'
-   * #swagger.security = [{
-   *   "bearerAuth" : []
-   * }]
-   */
-  return stubResponse(res);
+  const filter = ProjectFilterSchema.safeParse(req.query);
+  const includeRelations = req.query.includeRelations === 'true';
+  const kcUser = req.user as unknown as SSOUser;
+  if (!filter.success) {
+    return res.status(400).send('Could not parse filter.');
+  }
+  const filterResult = filter.data;
+
+  let projects;
+  if (isAdmin(kcUser) || isAuditor(kcUser)) {
+    projects = await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
+  } else {
+    // get array of user's agencies
+    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+    filterResult.agencyId = usersAgencies;
+    // Get projects associated with agencies of the requesting user
+    projects = await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
+  }
+  return res.status(200).send(projects);
 };
 
 /**

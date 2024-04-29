@@ -1,24 +1,58 @@
 import React from 'react';
-import { Autocomplete, SxProps, TextField, Paper, Box, autocompleteClasses } from '@mui/material';
+import {
+  Autocomplete,
+  SxProps,
+  TextField,
+  Paper,
+  Box,
+  autocompleteClasses,
+  FilterOptionsState,
+} from '@mui/material';
 import { ISelectMenuItem } from './SelectFormField';
 import { Controller, useFormContext } from 'react-hook-form';
 
-interface IAutocompleteProps {
+type AutocompleteFormProps = {
   name: string;
   label: string;
   options: ISelectMenuItem[];
   sx?: SxProps;
   required?: boolean;
   allowNestedIndent?: boolean;
-}
+  disableOptionsFunction?: (option: ISelectMenuItem) => boolean;
+  disableClearable?: boolean;
+  defaultValue?: ISelectMenuItem | null;
+  customOptionsFilter?: (
+    options: ISelectMenuItem[],
+    state: FilterOptionsState<ISelectMenuItem>,
+  ) => ISelectMenuItem[];
+};
 
 const CustomPaper = (props) => {
   return <Paper elevation={4} {...props} />;
 };
 
-const AutocompleteFormField = (props: IAutocompleteProps) => {
+const AutocompleteFormField = (props: AutocompleteFormProps) => {
   const { control, getValues, formState } = useFormContext();
-  const { name, options, label, sx, required, allowNestedIndent, ...rest } = props;
+  const {
+    name,
+    options,
+    label,
+    sx,
+    required,
+    allowNestedIndent,
+    disableClearable,
+    disableOptionsFunction,
+    customOptionsFilter,
+    ...rest
+  } = props;
+
+  const defaultOptionsFilter = (
+    options: ISelectMenuItem[],
+    state: FilterOptionsState<ISelectMenuItem>,
+  ) => options.filter((item) => item.label.toLowerCase().includes(state.inputValue.toLowerCase()));
+
+  const optionsFilter = customOptionsFilter ? customOptionsFilter : defaultOptionsFilter;
+
   return (
     <Controller
       name={name}
@@ -26,14 +60,15 @@ const AutocompleteFormField = (props: IAutocompleteProps) => {
       rules={{ required: required }}
       render={({ field: { onChange } }) => (
         <Autocomplete
-          freeSolo={false}
           disablePortal={false}
           id={`autocompleteinput-${label}`}
           options={options}
           PaperComponent={CustomPaper}
           sx={sx}
-          disableClearable={true}
+          disableClearable={disableClearable}
           getOptionLabel={(option: ISelectMenuItem) => option.label}
+          getOptionDisabled={disableOptionsFunction}
+          filterOptions={optionsFilter}
           renderOption={(props, option, state, ownerState) => (
             <Box
               sx={{
@@ -58,7 +93,10 @@ const AutocompleteFormField = (props: IAutocompleteProps) => {
               helperText={formState.errors?.[name] ? 'This field is required.' : undefined}
             />
           )}
-          onChange={(_, data) => onChange(data.value)}
+          onChange={(_, data) => {
+            if (data) onChange(data.value);
+          }}
+          isOptionEqualToValue={(option, value) => option.value === value.value}
           value={options.find((option) => option.value === getValues()[name]) ?? null}
           {...rest}
         />

@@ -3,7 +3,8 @@ import { stubResponse } from '../../utilities/stubResponse';
 import { Request, Response } from 'express';
 import chesServices from '@/services/ches/chesServices';
 import { ChesFilterSchema } from './toolsSchema';
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import geocoderService from '@/services/geocoder/geocoderService';
 
 /**
  * @description Gets the status of a CHES message.
@@ -19,16 +20,12 @@ export const getChesMessageStatusById = async (req: Request, res: Response) => {
       "bearerAuth" : []
       }]
    */
-  try {
-    const messageId = z.string().uuid().safeParse(req.params.messageId);
-    if (messageId.success) {
-      const status = await chesServices.getStatusByIdAsync(messageId.data);
-      return res.status(200).send(status);
-    } else {
-      throw res.status(400).send('Message ID was malformed or missing.');
-    }
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong.');
+  const messageId = z.string().uuid().safeParse(req.params.messageId);
+  if (messageId.success) {
+    const status = await chesServices.getStatusByIdAsync(messageId.data);
+    return res.status(200).send(status);
+  } else {
+    return res.status(400).send('Message ID was malformed or missing.');
   }
 };
 
@@ -46,16 +43,12 @@ export const getChesMessageStatuses = async (req: Request, res: Response) => {
       "bearerAuth" : []
       }]
    */
-  try {
-    const filter = ChesFilterSchema.safeParse(req.query);
-    if (filter.success) {
-      const status = await chesServices.getStatusesAsync(filter.data);
-      return res.status(200).send(status);
-    } else {
-      return res.status(400).send('Could not parse filter.');
-    }
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong.');
+  const filter = ChesFilterSchema.safeParse(req.query);
+  if (filter.success) {
+    const status = await chesServices.getStatusesAsync(filter.data);
+    return res.status(200).send(status);
+  } else {
+    return res.status(400).send('Could not parse filter.');
   }
 };
 
@@ -73,16 +66,12 @@ export const cancelChesMessageById = async (req: Request, res: Response) => {
         "bearerAuth" : []
         }]
      */
-  try {
-    const messageId = z.string().uuid().safeParse(req.params.messageId);
-    if (messageId.success) {
-      const status = await chesServices.cancelEmailByIdAsync(messageId.data);
-      return res.status(200).send(status);
-    } else {
-      return res.status(400).send('Message ID was missing or malformed.');
-    }
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong');
+  const messageId = z.string().uuid().safeParse(req.params.messageId);
+  if (messageId.success) {
+    const status = await chesServices.cancelEmailByIdAsync(messageId.data);
+    return res.status(200).send(status);
+  } else {
+    return res.status(400).send('Message ID was missing or malformed.');
   }
 };
 
@@ -100,29 +89,21 @@ export const cancelChesMessages = async (req: Request, res: Response) => {
         "bearerAuth" : []
         }]
      */
-  try {
-    const filter = ChesFilterSchema.safeParse(req.query);
-    if (filter.success) {
-      const status = await chesServices.cancelEmailsAsync(filter.data);
-      return res.status(200).send(status);
-    } else {
-      return res.status(400).send('Could not parse filter.');
-    }
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message ?? 'Something went wrong.');
+  const filter = ChesFilterSchema.safeParse(req.query);
+  if (filter.success) {
+    const status = await chesServices.cancelEmailsAsync(filter.data);
+    return res.status(200).send(status);
+  } else {
+    return res.status(400).send('Could not parse filter.');
   }
 };
 
 // Will likely not make it into final release, excluding from api docs.
 export const sendChesMessage = async (req: Request, res: Response) => {
-  try {
-    const email = req.body;
-    const kcUser = req.user as KeycloakUser;
-    const response = await chesServices.sendEmailAsync(email, kcUser);
-    return res.status(201).send(response);
-  } catch (e) {
-    return res.status(e?.code ?? 400).send(e?.message ?? 'Bad request.');
-  }
+  const email = req.body;
+  const ssoUser = req.user as SSOUser;
+  const response = await chesServices.sendEmailAsync(email, ssoUser);
+  return res.status(201).send(response);
 };
 
 /**
@@ -139,7 +120,11 @@ export const searchGeocoderAddresses = async (req: Request, res: Response) => {
         "bearerAuth" : []
         }]
      */
-  return stubResponse(res);
+  const address = String(req.query.address);
+  const minScore = isNaN(Number(req.query.minScore)) ? undefined : String(req.query.minScore);
+  const maxResults = isNaN(Number(req.query.maxResults)) ? undefined : String(req.query.maxResults);
+  const geoReturn = await geocoderService.getSiteAddresses(address, minScore, maxResults);
+  return res.status(200).send(geoReturn);
 };
 
 /**
@@ -156,7 +141,9 @@ export const searchGeocoderSiteId = async (req: Request, res: Response) => {
         "bearerAuth" : []
         }]
      */
-  return stubResponse(res);
+  const siteId = String(req.params.siteId);
+  const result = await geocoderService.getPids(siteId);
+  return res.status(200).send(result);
 };
 
 /**

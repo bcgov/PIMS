@@ -6,7 +6,9 @@ import {
   getRequestHandlerMocks,
   produceEmail,
   produceEmailStatus,
-  produceKeycloak,
+  produceSSO,
+  produceGeocoderAddress,
+  producePidsResponse,
 } from '../../../testUtils/factories';
 import { randomUUID } from 'crypto';
 
@@ -36,6 +38,14 @@ jest.mock('@/services/ches/chesServices.ts', () => ({
   sendEmailAsync: () => _sendEmailAsync(),
 }));
 
+const _getSiteAddresses = jest.fn().mockImplementation(() => [produceGeocoderAddress()]);
+const _getPids = jest.fn().mockImplementation(() => producePidsResponse());
+
+jest.mock('@/services/geocoder/geocoderService', () => ({
+  getSiteAddresses: () => _getSiteAddresses(),
+  getPids: () => _getPids(),
+}));
+
 describe('UNIT - Tools', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
@@ -58,13 +68,14 @@ describe('UNIT - Tools', () => {
       expect(mockResponse.statusValue).toBe(400);
     });
 
-    it('should return thrown code', async () => {
+    it('should throw an error when getChesMessageStatusById throws an error', async () => {
       _getChesMessageStatusById.mockImplementationOnce(() => {
         throw new Error();
       });
       mockRequest.params.messageId = randomUUID();
-      await controllers.getChesMessageStatusById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(
+        async () => await controllers.getChesMessageStatusById(mockRequest, mockResponse),
+      ).rejects.toThrow();
     });
   });
 
@@ -80,13 +91,14 @@ describe('UNIT - Tools', () => {
       await controllers.getChesMessageStatuses(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
-    it('should return thrown code', async () => {
+    it('should throw an error when getChesMessageStatuses throws an error', async () => {
       mockRequest.query.status = 'pending';
       _getChesMessageStatuses.mockImplementationOnce(() => {
         throw new Error();
       });
-      await controllers.getChesMessageStatuses(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(
+        async () => await controllers.getChesMessageStatuses(mockRequest, mockResponse),
+      ).rejects.toThrow();
     });
   });
 
@@ -101,13 +113,14 @@ describe('UNIT - Tools', () => {
       await controllers.cancelChesMessageById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
-    it('should return thrown code', async () => {
+    it('should throw an error when cancelEmailByIdAsync throws an error', async () => {
       mockRequest.params.messageId = randomUUID();
       _cancelEmailByIdAsync.mockImplementationOnce(() => {
         throw new Error();
       });
-      await controllers.cancelChesMessageById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(
+        async () => await controllers.cancelChesMessageById(mockRequest, mockResponse),
+      ).rejects.toThrow();
     });
   });
 
@@ -122,68 +135,61 @@ describe('UNIT - Tools', () => {
       await controllers.cancelChesMessages(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
-    it('should return thrown code', async () => {
+    it('should throw an error when cancelEmailAsync throws an error', async () => {
       _cancelEmailsAsync.mockImplementationOnce(() => {
         throw new Error();
       });
       mockRequest.query.status = 'pending';
-      await controllers.cancelChesMessages(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(
+        async () => await controllers.cancelChesMessages(mockRequest, mockResponse),
+      ).rejects.toThrow();
     });
   });
 
   describe('POST /tools/ches', () => {
     it('should return status 201', async () => {
       mockRequest.body = produceEmail({});
-      mockRequest.user = produceKeycloak();
+      mockRequest.user = produceSSO();
       await controllers.sendChesMessage(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(201);
     });
-    it('should return status 400', async () => {
+    it('should throw an error when sendEmailAsync throws an error', async () => {
       _sendEmailAsync.mockImplementationOnce(() => {
         throw new Error();
       });
-      await controllers.sendChesMessage(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
-    });
-    it('should return thrown code', async () => {
-      _sendEmailAsync.mockImplementationOnce(() => {
-        throw new Error();
-      });
-      await controllers.sendChesMessage(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(
+        async () => await controllers.sendChesMessage(mockRequest, mockResponse),
+      ).rejects.toThrow();
     });
   });
 
   describe('GET /tools/geocoder/addresses', () => {
-    it('should return stub response 501', async () => {
+    it('should return 200 on just an address', async () => {
+      mockRequest.query.address = '1999 Tester St';
       await controllers.searchGeocoderAddresses(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
+      expect(mockResponse.statusValue).toBe(200);
     });
-
-    xit('should return status 200 and an address object', async () => {
-      mockRequest.query.address = 'eeeeee';
+    it('should return 200 on maxResults and minScore provided', async () => {
+      mockRequest.query.address = '1999 Tester St';
+      mockRequest.query.maxResults = '1';
+      mockRequest.query.minScore = '1';
+      await controllers.searchGeocoderAddresses(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+    });
+    it('should 200 and ignore poorly formatted maxResults and minScore', async () => {
+      mockRequest.query.address = '1999 Tester St';
+      mockRequest.query.maxResults = 'aaabbb';
+      mockRequest.query.minScore = 'aaabbb';
       await controllers.searchGeocoderAddresses(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
   });
 
   describe('GET /tools/geocoder/parcels/pids/:siteId', () => {
-    it('should return stub response 501', async () => {
-      await controllers.searchGeocoderAddresses(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and an address object', async () => {
-      mockRequest.params.siteId = 'eeeeee';
+    it('should return 200', async () => {
+      mockRequest.params.siteId = randomUUID();
       await controllers.searchGeocoderAddresses(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
-    });
-
-    xit('should return status 404 on no resource', async () => {
-      mockRequest.params.siteId = '-1111';
-      await controllers.searchGeocoderAddresses(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(404);
     });
   });
 

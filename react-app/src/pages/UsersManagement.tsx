@@ -16,7 +16,7 @@ const UsersManagement = () => {
         // Checking length of selection so it only navigates if user isn't trying to select something
         const selection = window.getSelection().toString();
         if (!selection.length) {
-          navigate(`/admin/users/${params.id}`);
+          navigate(`/users/${params.id}`);
         }
       }}
       data={data}

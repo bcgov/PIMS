@@ -2,7 +2,7 @@ import { Parcel } from '@/typeorm/Entities/Parcel';
 import { AppDataSource } from '@/appDataSource';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { ParcelFilter } from '@/services/parcels/parcelSchema';
-import { DeepPartial, FindOptionsOrder } from 'typeorm';
+import { DeepPartial, FindOptionsOrder, In } from 'typeorm';
 
 const parcelRepo = AppDataSource.getRepository(Parcel);
 
@@ -13,17 +13,14 @@ const parcelRepo = AppDataSource.getRepository(Parcel);
  * @throws ErrorWithCode If the parcel already exists or is unable to be added.
  */
 const addParcel = async (parcel: DeepPartial<Parcel>) => {
-  const inPID = Number(parcel.PID);
-  if (inPID == undefined || Number.isNaN(inPID)) {
-    throw new ErrorWithCode('Must include PID in parcel data.', 400);
-  }
+  const numberPID = Number(parcel.PID);
 
-  const matchPID = inPID.toString().search(/^\d{9}$/);
-  if (matchPID === -1) {
+  const stringPID = numberPID.toString();
+  if (parcel.PID != null && (stringPID.length > 9 || isNaN(numberPID))) {
     throw new ErrorWithCode('PID must be a number and in the format #########');
   }
 
-  const existingParcel = await getParcelByPid(inPID);
+  const existingParcel = parcel.PID != null ? await getParcelByPid(numberPID) : undefined;
 
   if (existingParcel) {
     throw new ErrorWithCode('Parcel already exists.', 409);
@@ -64,7 +61,9 @@ const getParcels = async (filter: ParcelFilter, includeRelations: boolean = fals
     where: {
       PID: filter.pid,
       ClassificationId: filter.classificationId,
-      AgencyId: filter.agencyId,
+      AgencyId: filter.agencyId
+        ? In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId)
+        : undefined,
       AdministrativeAreaId: filter.administrativeAreaId,
       PropertyTypeId: filter.propertyTypeId,
       IsSensitive: filter.isSensitive,
@@ -83,17 +82,15 @@ const getParcels = async (filter: ParcelFilter, includeRelations: boolean = fals
  * @throws Error with code if parcel is not found or if an unexpected error is hit on update
  */
 const updateParcel = async (incomingParcel: DeepPartial<Parcel>) => {
-  if (incomingParcel.PID == undefined) {
-    throw new ErrorWithCode('Must include PID in parcel data.', 400);
+  if (incomingParcel.PID == null && incomingParcel.PIN == null) {
+    throw new ErrorWithCode('Must include PID or PIN in parcel data.', 400);
   }
   const findParcel = await getParcelById(incomingParcel.Id);
   if (findParcel == null || findParcel.Id !== incomingParcel.Id) {
     throw new ErrorWithCode('Parcel not found', 404);
   }
-  await parcelRepo.update({ Id: findParcel.Id }, incomingParcel);
-  // update function doesn't return data on the row changed. Have to get the changed row again
-  const newParcel = await getParcelById(incomingParcel.Id);
-  return newParcel;
+
+  return parcelRepo.save(incomingParcel);
 };
 
 /**
@@ -102,7 +99,7 @@ const updateParcel = async (incomingParcel: DeepPartial<Parcel>) => {
  * @returns     findParcel Parcel data matching PID passed in.
  */
 const getParcelByPid = async (parcelPid: number) => {
-  return parcelRepo.findOne({
+  return await parcelRepo.findOne({
     where: { PID: parcelPid },
   });
 };
@@ -113,7 +110,18 @@ const getParcelByPid = async (parcelPid: number) => {
  * @returns     findParcel Parcel data matching ID passed in.
  */
 const getParcelById = async (parcelId: number) => {
-  return parcelRepo.findOne({ where: { Id: parcelId } });
+  return parcelRepo.findOne({
+    relations: {
+      ParentParcel: true,
+      Agency: true,
+      AdministrativeArea: true,
+      Classification: true,
+      PropertyType: true,
+      Evaluations: true,
+      Fiscals: true,
+    },
+    where: { Id: parcelId },
+  });
 };
 
 const parcelServices = {

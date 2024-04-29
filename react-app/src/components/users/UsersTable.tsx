@@ -3,10 +3,12 @@ import { FilterSearchDataGrid } from '@/components/table/DataTable';
 import { Box, SxProps, useTheme, ListSubheader, MenuItem } from '@mui/material';
 import { GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { MutableRefObject, PropsWithChildren, useEffect, useState } from 'react';
-import { useKeycloak } from '@bcgov/citz-imb-kc-react';
+import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { IUser } from '@/interfaces/IUser';
-import { dateFormatter, statusChipFormatter } from '@/utils/formatters';
+import { dateFormatter, statusChipFormatter } from '@/utilities/formatters';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
+import { Agency } from '@/hooks/api/useAgencyApi';
+import { Role } from '@/hooks/api/useRolesApi';
 
 const CustomMenuItem = (props: PropsWithChildren & { value: string }) => {
   const theme = useTheme();
@@ -54,7 +56,7 @@ const UsersTable = (props: IUsersTable) => {
   // States and contexts
   const { refreshData, data, error, isLoading, rowClickHandler } = props;
   const [users, setUsers] = useState([]);
-  const { state } = useKeycloak();
+  const { state } = useSSO();
 
   useEffect(() => {
     if (error) {
@@ -153,9 +155,9 @@ const UsersTable = (props: IUsersTable) => {
       field: 'Username',
       headerName: 'Provider',
       width: 125,
-      valueGetter: (params) => {
-        const username: string = params.value;
-        if (!username.includes('@')) return undefined;
+      valueGetter: (value) => {
+        const username: string = value;
+        if (username && !username.includes('@')) return undefined;
         const provider = username.split('@').at(1);
         switch (provider) {
           case 'idir':
@@ -170,7 +172,7 @@ const UsersTable = (props: IUsersTable) => {
       headerName: 'Agency',
       minWidth: 125,
       flex: 1,
-      valueGetter: (params) => params.value?.Name ?? ``,
+      valueGetter: (value?: Agency) => value?.Name ?? ``,
     },
     {
       field: 'Position',
@@ -183,20 +185,20 @@ const UsersTable = (props: IUsersTable) => {
       headerName: 'Role',
       minWidth: 150,
       flex: 1,
-      valueGetter: (params) => params.value?.Name ?? `No Role`,
+      valueGetter: (value?: Role) => value?.Name ?? `No Role`,
     },
     {
       field: 'CreatedOn',
       headerName: 'Created',
       minWidth: 120,
-      valueFormatter: (params) => dateFormatter(params.value),
+      valueFormatter: (value) => dateFormatter(value),
       type: 'date',
     },
     {
       field: 'LastLogin',
       headerName: 'Last Login',
       minWidth: 120,
-      valueFormatter: (params) => dateFormatter(params.value),
+      valueFormatter: (value) => dateFormatter(value),
       type: 'date',
     },
   ];
@@ -214,6 +216,8 @@ const UsersTable = (props: IUsersTable) => {
       }
     >
       <FilterSearchDataGrid
+        name="users"
+        onAddButtonClick={() => {}}
         onRowClick={rowClickHandler}
         defaultFilter="All Users"
         tableHeader="Users Overview"

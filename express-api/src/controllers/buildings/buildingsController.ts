@@ -1,5 +1,43 @@
 import { Request, Response } from 'express';
-import { stubResponse } from '@/utilities/stubResponse';
+import * as buildingService from '@/services/buildings/buildingServices';
+import { BuildingFilter, BuildingFilterSchema } from '@/services/buildings/buildingSchema';
+import userServices from '@/services/users/usersServices';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import { Building } from '@/typeorm/Entities/Building';
+import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
+
+/**
+ * @description Gets all buildings satisfying the filter parameters.
+ * @param {Request}     req Incoming Request. May contain query strings for filter.
+ * @param {Response}    res Outgoing Response
+ * @returns {Response}      A 200 status with a response body containing an array of building data.
+ */
+export const getBuildings = async (req: Request, res: Response) => {
+  const filter = BuildingFilterSchema.safeParse(req.query);
+  const includeRelations = req.query.includeRelations === 'true';
+  const kcUser = req.user as unknown as SSOUser;
+  if (!filter.success) {
+    return res.status(400).send('Could not parse filter.');
+  }
+  const filterResult = filter.data;
+  let buildings;
+  if (isAdmin(kcUser) || isAuditor(kcUser)) {
+    buildings = await buildingService.getBuildings(
+      filterResult as BuildingFilter,
+      includeRelations,
+    );
+  } else {
+    // get array of user's agencies
+    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+    filterResult.agencyId = usersAgencies;
+    // Get parcels associated with agencies of the requesting user
+    buildings = await buildingService.getBuildings(
+      filterResult as BuildingFilter,
+      includeRelations,
+    );
+  }
+  return res.status(200).send(buildings);
+};
 
 /**
  * @description Gets information about a particular building by the Id provided in the URL parameter
@@ -15,7 +53,15 @@ export const getBuilding = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  return stubResponse(res);
+  const buildingId = Number(req.params.buildingId);
+  if (isNaN(buildingId)) {
+    return res.status(400).send('Building Id is invalid.');
+  }
+  const building = await buildingService.getBuildingById(buildingId);
+  if (!building) {
+    return res.status(404).send('Building matching this ID was not found.');
+  }
+  return res.status(200).send(building);
 };
 
 /**
@@ -32,7 +78,14 @@ export const updateBuilding = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  return stubResponse(res);
+  const buildingId = Number(req.params.buildingId);
+  if (isNaN(buildingId) || buildingId !== req.body.Id) {
+    return res.status(400).send('Building ID was invalid or mismatched with body.');
+  }
+  const user = await userServices.getUser((req.user as SSOUser).preferred_username);
+  const updateBody = { ...req.body, UpdatedById: user.Id };
+  const building = await buildingService.updateBuildingById(updateBody);
+  return res.status(200).send(building);
 };
 
 /**
@@ -49,48 +102,13 @@ export const deleteBuilding = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  return stubResponse(res);
+  const buildingId = Number(req.params.buildingId);
+  if (isNaN(buildingId)) {
+    return res.status(400).send('Building ID was invalid.');
+  }
+  const delResult = await buildingService.deleteBuildingById(buildingId);
+  return res.status(200).send(delResult);
 };
-
-/**
- * @description Gets all buildings satisfying the filter parameters.
- * @param {Request}     req Incoming Request. May contain query strings for filter.
- * @param {Response}    res Outgoing Response
- * @returns {Response}      A 200 status with a response body containing an array of building data.
- */
-export const filterBuildingsQueryString = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['building']
-   * #swagger.description = 'Gets all buildings that satisfy the filters.'
-   * #swagger.security = [{
-   * "bearerAuth": []
-   * }]
-   */
-  return stubResponse(res);
-};
-
-/**
- * @description Gets all buildings satisfying the filter parameters.
- * @param {Request}     req Incoming Request. Body should contain filter parameters.
- * @param {Response}    res Outgoing Response
- * @returns {Response}      A 200 status with a response body containing an array of building data.
- */
-export const filterBuildingsRequestBody = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['building']
-   * #swagger.description = 'Creates a new building in the datasource.'
-   * #swagger.security = [{
-   * "bearerAuth": []
-   * }]
-   */
-  return stubResponse(res);
-};
-
-/* Perhaps the above two methods could be consolidated into one? 
-  In the original implementation they are separated into a GET and POST endpoint, but obviously
-  a POST endpoint could accept both query strings and request body. Whether that's RESTful or not 
-  is another discussion though.
-*/
 
 /**
  * @description Add a new building to the datasource for the current user.
@@ -107,22 +125,13 @@ export const addBuilding = async (req: Request, res: Response) => {
    * "bearerAuth": []
    * }]
    */
-  return stubResponse(res);
-};
-
-/**
- * @description Update the specified building financials values in the datasource if permitted.
- * @param {Request}     req Incoming Request. Request body should contain entire building.
- * @param {Response}    res Outgoing Response
- * @returns {Response}      A 200 status with a response body of the updated building.
- */
-export const updateBuildingFinancial = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['building']
-   * #swagger.description = 'Updates a building's financial values.'
-   * #swagger.security = [{
-   * "bearerAuth": []
-   * }]
-   */
-  return stubResponse(res);
+  const user = await userServices.getUser((req.user as SSOUser).preferred_username);
+  const createBody: Building = { ...req.body, CreatedById: user.Id };
+  createBody.Evaluations = createBody.Evaluations?.map((evaluation) => ({
+    ...evaluation,
+    CreatedById: user.Id,
+  }));
+  createBody.Fiscals = createBody.Fiscals?.map((fiscal) => ({ ...fiscal, CreatedById: user.Id }));
+  const response = await buildingService.addBuilding(createBody);
+  return res.status(201).send(response);
 };

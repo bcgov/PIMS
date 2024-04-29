@@ -1,4 +1,6 @@
 import controllers from '@/controllers';
+import { lookupTasks } from '@/controllers/lookup/lookupController';
+import catchErrors from '@/utilities/controllerErrorWrapper';
 import express from 'express';
 
 const router = express.Router();
@@ -12,15 +14,18 @@ const {
   lookupRoles,
   lookupBuildingConstructionType,
   lookupBuildingPredominateUse,
+  lookupRegionalDistricts,
 } = controllers;
 
-router.route('/agencies').get(lookupAgencies);
-router.route('/roles').get(lookupRoles);
-router.route('/property/classifications').get(lookupPropertyClassifications);
-router.route('/property/predominateUses').get(lookupBuildingPredominateUse);
-router.route('/property/constructionTypes').get(lookupBuildingConstructionType);
-router.route('/project/tier/levels').get(lookupProjectTierLevels);
-router.route('/project/risks').get(lookupProjectRisks);
-router.route('/all').get(lookupAll);
+router.route('/agencies').get(catchErrors(lookupAgencies));
+router.route('/roles').get(catchErrors(lookupRoles));
+router.route('/regionalDistricts').get(catchErrors(lookupRegionalDistricts));
+router.route('/property/classifications').get(catchErrors(lookupPropertyClassifications));
+router.route('/property/predominateUses').get(catchErrors(lookupBuildingPredominateUse));
+router.route('/property/constructionTypes').get(catchErrors(lookupBuildingConstructionType));
+router.route('/project/tier/levels').get(catchErrors(lookupProjectTierLevels));
+router.route('/project/risks').get(catchErrors(lookupProjectRisks));
+router.route('/tasks').get(catchErrors(lookupTasks));
+router.route('/all').get(catchErrors(lookupAll));
 
 export default router;

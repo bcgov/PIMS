@@ -14,6 +14,18 @@ import UsersManagement from './pages/UsersManagement';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from '@/pages/ErrorFallback';
 import UserDetail from '@/components/users/UserDetail';
+import ActiveInventory from './pages/ActiveInventory';
+import PropertyDetail from './components/property/PropertyDetail';
+import AddProperty from './components/property/AddProperty';
+import AgencyManagement from '@/pages/AgencyManagement';
+import AgencyDetail from '@/components/agencies/AgencyDetails';
+import AddAgency from '@/components/agencies/AddAgency';
+import AdminAreasManagement from './pages/AdminAreasManagement';
+import AddAdministrativeArea from './components/adminAreas/AddAdministrativeArea';
+import AdministrativeAreaDetail from './components/adminAreas/AdministrativeAreaDetail';
+import ProjectManagement from './pages/ProjectManagement';
+import AddProject from '@/components/projects/AddProject';
+import { Roles } from '@/constants/roles';
 
 const Router = () => {
   const navigate = useNavigate();
@@ -31,7 +43,7 @@ const Router = () => {
         path="/access-request"
         element={
           <BaseLayout displayFooter>
-            <AuthRouteGuard>
+            <AuthRouteGuard ignoreStatus>
               <AccessRequest />
             </AuthRouteGuard>
           </BaseLayout>
@@ -41,7 +53,7 @@ const Router = () => {
         path="/dev"
         element={
           <BaseLayout>
-            <AuthRouteGuard>
+            <AuthRouteGuard ignoreStatus>
               <Dev />
             </AuthRouteGuard>
           </BaseLayout>
@@ -49,26 +61,146 @@ const Router = () => {
       />
       <Route path="/admin">
         <Route
-          path="users"
+          path="adminAreas"
           element={
-            <BaseLayout>
-              <AuthRouteGuard>
-                <UsersManagement />
+            <BaseLayout displayFooter>
+              <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR]}>
+                <AdminAreasManagement />
               </AuthRouteGuard>
             </BaseLayout>
           }
         />
         <Route
-          path="users/:id"
+          path="adminAreas/:id"
           element={
             <BaseLayout>
-              <AuthRouteGuard>
-                <UserDetail onClose={() => navigate('/admin/users')} />
+              <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR]}>
+                <AdministrativeAreaDetail />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
+        <Route
+          path="adminAreas/add"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR]}>
+                <AddAdministrativeArea />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
+        <Route
+          path="agencies"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR]}>
+                <AgencyManagement />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
+        <Route
+          path="agencies/:id"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR]}>
+                <AgencyDetail onClose={() => navigate('/admin/agencies')} />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
+        <Route
+          path="agencies/add"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR]}>
+                <AddAgency />
               </AuthRouteGuard>
             </BaseLayout>
           }
         />
       </Route>
+      <Route
+        path="properties"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
+              <ActiveInventory />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="users"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
+              <UsersManagement />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="properties/add"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
+              <AddProperty />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="properties/building/:buildingId"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
+              <PropertyDetail onClose={() => navigate('/properties/')} />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="properties/parcel/:parcelId"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
+              <PropertyDetail onClose={() => navigate('/properties/')} />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="users/:id"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
+              <UserDetail onClose={() => navigate('/users')} />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="projects"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
+              <ProjectManagement />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="projects/add"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
+              <AddProject />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
     </Routes>
   );
 };

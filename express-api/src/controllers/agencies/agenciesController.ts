@@ -1,9 +1,11 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import * as agencyService from '@/services/agencies/agencyServices';
 import { AgencyFilterSchema, AgencyPublicResponseSchema } from '@/services/agencies/agencySchema';
 import { z } from 'zod';
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Roles } from '@/constants/roles';
+import userServices from '@/services/users/usersServices';
+import { Agency } from '@/typeorm/Entities/Agency';
 
 /**
  * @description Gets a paged list of agencies.
@@ -11,7 +13,7 @@ import { Roles } from '@/constants/roles';
  * @param   {Response}    res Outgoing response
  * @returns {Response}        A 200 status with a list of agencies.
  */
-export const getAgencies = async (req: Request, res: Response, next: NextFunction) => {
+export const getAgencies = async (req: Request, res: Response) => {
   /**
    * #swagger.tags = ['Agencies - Admin']
    * #swagger.description = 'Gets a paged list of agencies.'
@@ -19,21 +21,18 @@ export const getAgencies = async (req: Request, res: Response, next: NextFunctio
             "bearerAuth": []
       }]
    */
-  try {
-    const kcUser = req.user as KeycloakUser;
-    const filter = AgencyFilterSchema.safeParse(req.query);
-    if (filter.success) {
-      const agencies = await agencyService.getAgencies(filter.data);
-      if (!kcUser.client_roles || !kcUser.client_roles.includes(Roles.ADMIN)) {
-        const trimmed = AgencyPublicResponseSchema.array().parse(agencies);
-        return res.status(200).send(trimmed);
-      }
-      return res.status(200).send(agencies);
-    } else {
-      return res.status(400).send('Could not parse filter.');
+  const ssoUser = req.user;
+  const filter = AgencyFilterSchema.safeParse(req.query);
+  if (filter.success) {
+    const includeRelations = req.query.includeRelations === 'true';
+    const agencies = await agencyService.getAgencies(filter.data, includeRelations);
+    if (!ssoUser.client_roles || !ssoUser.client_roles.includes(Roles.ADMIN)) {
+      const trimmed = AgencyPublicResponseSchema.array().parse(agencies);
+      return res.status(200).send(trimmed);
     }
-  } catch (e) {
-    next(e);
+    return res.status(200).send(agencies);
+  } else {
+    return res.status(400).send('Could not parse filter.');
   }
 };
 
@@ -51,12 +50,11 @@ export const addAgency = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  try {
-    const agency = await agencyService.postAgency(req.body);
-    return res.status(201).send(agency);
-  } catch (e) {
-    return res.status(400).send(e.message);
-  }
+
+  const user = await userServices.getUser((req.user as SSOUser).preferred_username);
+  const agency = await agencyService.addAgency({ ...req.body, CreatedById: user.Id });
+
+  return res.status(201).send(agency);
 };
 
 /**
@@ -74,15 +72,11 @@ export const getAgencyById = async (req: Request, res: Response) => {
       }]
    */
 
-  try {
-    const agency = await agencyService.getAgencyById(parseInt(req.params.id));
-    if (!agency) {
-      return res.status(404).send('Agency does not exist.');
-    }
-    return res.status(200).send(agency);
-  } catch (e) {
-    return res.status(400).send(e.message);
+  const agency = await agencyService.getAgencyById(parseInt(req.params.id));
+  if (!agency) {
+    return res.status(404).send('Agency does not exist.');
   }
+  return res.status(200).send(agency);
 };
 
 /**
@@ -99,16 +93,21 @@ export const updateAgencyById = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  const id = z.string().parse(req.params.id);
-  if (id != req.body.Id) {
+  const idParse = z.string().safeParse(req.params.id);
+  if (!idParse.success) {
+    return res.status(400).send(idParse);
+  }
+  const updateInfo: Partial<Agency> = req.body;
+  if (idParse.data != updateInfo.Id.toString()) {
     return res.status(400).send('The param ID does not match the request body.');
   }
-  try {
-    const agency = await agencyService.updateAgencyById(req.body);
-    return res.status(200).send(agency);
-  } catch (e) {
-    return res.status(400).send(e.message);
+  // Make sure you can't assign an agency as its own parent
+  if (updateInfo.ParentId != null && updateInfo.ParentId === updateInfo.Id) {
+    return res.status(403).send('An agency cannot be its own parent.');
   }
+  const user = await userServices.getUser((req.user as SSOUser).preferred_username);
+  const agency = await agencyService.updateAgencyById({ ...req.body, UpdatedById: user.Id });
+  return res.status(200).send(agency);
 };
 
 /**
@@ -125,11 +124,10 @@ export const deleteAgencyById = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  const id = z.string().parse(req.params.id);
-  try {
-    const agency = await agencyService.deleteAgencyById(parseInt(id));
-    return res.status(200).send(agency);
-  } catch (e) {
-    return res.status(400).send(e.message);
+  const idParse = z.string().safeParse(req.params.id);
+  if (!idParse.success) {
+    return res.status(400).send(idParse);
   }
+  await agencyService.deleteAgencyById(parseInt(idParse.data));
+  return res.status(204).send();
 };

@@ -3,7 +3,7 @@ import { Building } from '@/typeorm/Entities/Building';
 import { produceBuilding } from 'tests/testUtils/factories';
 import { DeepPartial } from 'typeorm';
 import * as buildingService from '@/services/buildings/buildingServices';
-import { BuildingFilterSchema } from '@/services/buildings/buildingSchema';
+import { BuildingFilter, BuildingFilterSchema } from '@/services/buildings/buildingSchema';
 
 const buildingRepo = AppDataSource.getRepository(Building);
 
@@ -19,9 +19,9 @@ const _buildingFindOne = jest
   .spyOn(buildingRepo, 'findOne')
   .mockImplementation(async () => produceBuilding());
 
-const _buildingUpdate = jest
-  .spyOn(buildingRepo, 'update')
-  .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
+// const _buildingUpdate = jest
+//   .spyOn(buildingRepo, 'update')
+//   .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
 
 jest.spyOn(buildingRepo, 'find').mockImplementation(async () => [produceBuilding()]);
 
@@ -66,6 +66,13 @@ describe('getBuildings', () => {
     const building = await buildingService.getBuildings({});
     expect(building).toHaveLength(1);
   });
+  it('should use the agency filter to return a list of buildings', async () => {
+    const filter: BuildingFilter = {
+      agencyId: 1, // Assuming the agencyId you want to filter by
+    };
+    const building = await buildingService.getBuildings(filter);
+    expect(building).toHaveLength(1);
+  });
 });
 
 describe('updateBuildingById', () => {
@@ -73,7 +80,7 @@ describe('updateBuildingById', () => {
   it('should update an existing building', async () => {
     const updateBuilding = produceBuilding();
     await buildingService.updateBuildingById(updateBuilding);
-    expect(_buildingUpdate).toHaveBeenCalledTimes(1);
+    expect(_buildingSave).toHaveBeenCalledTimes(1);
   });
   it('should throw an error if the building is not found.', async () => {
     const updateBuilding = produceBuilding();

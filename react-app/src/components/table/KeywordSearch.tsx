@@ -1,5 +1,5 @@
 import { SxProps, TextField, InputAdornment, useTheme } from '@mui/material';
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -25,6 +25,11 @@ const KeywordSearch = (props: IKeywordSearchProps) => {
     ? optionalExternalState
     : useState<string>('');
   const theme = useTheme();
+
+  // To reopen field when state restored from cookie
+  useEffect(() => {
+    if (fieldContents) setIsOpen(true);
+  }, [fieldContents]);
 
   // Style shared when both open and closed
   const commonStyle: SxProps = {

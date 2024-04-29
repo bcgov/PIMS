@@ -10,13 +10,16 @@ const agencyRepo = AppDataSource.getRepository(Agency);
  * @description Gets and returns a list of all agencies.
  * @returns { Agency[] } A list of all agencies in the database
  */
-export const getAgencies = async (filter: AgencyFilter) => {
+export const getAgencies = async (filter: AgencyFilter, includeRelations: boolean = false) => {
   const allAgencies = await agencyRepo.find({
     where: {
       Name: filter.name,
       IsDisabled: filter.isDisabled,
       SortOrder: filter.sortOrder,
       Id: filter.id,
+    },
+    relations: {
+      Parent: includeRelations,
     },
     take: filter.quantity,
     skip: (filter.quantity ?? 0) * (filter.page ?? 0),
@@ -31,10 +34,12 @@ export const getAgencies = async (filter: AgencyFilter) => {
  * @returns Status and information on the added agency
  * @throws ErrorWithCode if agency already exists
  */
-export const postAgency = async (agency: Agency) => {
-  const existingAgency = await getAgencyById(agency.Id);
-  if (existingAgency) {
-    throw new ErrorWithCode('Agency already exists', 409);
+export const addAgency = async (agency: Agency) => {
+  const existingAgencies = await agencyRepo.find({
+    where: [{ Name: agency.Name }, { Code: agency.Code }], // OR check
+  });
+  if (existingAgencies.length > 0) {
+    throw new ErrorWithCode('Agency with that name or code already exists', 409);
   }
   const newAgency = AppDataSource.getRepository(Agency).save(agency);
   return newAgency;
@@ -48,6 +53,9 @@ export const postAgency = async (agency: Agency) => {
 export const getAgencyById = async (agencyId: number) => {
   const findAgency = await agencyRepo.findOne({
     where: { Id: agencyId },
+    relations: {
+      Parent: true,
+    },
   });
   return findAgency;
 };

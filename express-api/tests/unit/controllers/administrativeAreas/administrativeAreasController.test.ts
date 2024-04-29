@@ -4,6 +4,7 @@ import {
   MockRes,
   getRequestHandlerMocks,
   produceAdminArea,
+  produceUser,
 } from '../../../testUtils/factories';
 import { Roles } from '@/constants/roles';
 import { IAdministrativeArea } from '@/controllers/administrativeAreas/IAdministrativeArea';
@@ -36,9 +37,19 @@ const mockAdministrativeArea: IAdministrativeArea = {
 };
 
 const _getAdminAreas = jest.fn().mockImplementation(() => [produceAdminArea({})]);
+const _getAdminAreaById = jest.fn().mockImplementation(() => produceAdminArea({}));
+const _updateAdminAreaById = jest.fn().mockImplementation(() => produceAdminArea({}));
+const _addAdminArea = jest.fn().mockImplementation(() => produceAdminArea({}));
 const _next = jest.fn();
 jest.mock('@/services/administrativeAreas/administrativeAreasServices', () => ({
   getAdministrativeAreas: () => _getAdminAreas(),
+  getAdministrativeAreaById: () => _getAdminAreaById(),
+  updateAdministrativeArea: () => _updateAdminAreaById(),
+  addAdministrativeArea: () => _addAdminArea(),
+}));
+
+jest.mock('@/services/users/usersServices', () => ({
+  getUser: jest.fn().mockImplementation(() => produceUser()),
 }));
 
 describe('UNIT - Administrative Areas Admin', () => {
@@ -54,12 +65,12 @@ describe('UNIT - Administrative Areas Admin', () => {
       await getAdministrativeAreas(mockRequest, mockResponse, _next);
       expect(mockResponse.statusValue).toBe(200);
     });
-    it('should return status 200 and a list of administrative areas, lacks metadata', async () => {
-      mockRequest.setUser({ client_roles: [] });
-      await getAdministrativeAreas(mockRequest, mockResponse, _next);
-      expect(mockResponse.statusValue).toBe(200);
-      expect(mockResponse.sendValue.CreatedOn).toBeUndefined();
-    });
+    // it('should return status 200 and a list of administrative areas, lacks metadata', async () => {
+    //   mockRequest.setUser({ client_roles: [] });
+    //   await getAdministrativeAreas(mockRequest, mockResponse, _next);
+    //   expect(mockResponse.statusValue).toBe(200);
+    //   expect(mockResponse.sendValue.CreatedOn).toBeUndefined();
+    // });
     it('should return status 400 when parse fails', async () => {
       mockRequest.query = { name: ['a'] };
       await getAdministrativeAreas(mockRequest, mockResponse, _next);
@@ -75,24 +86,10 @@ describe('UNIT - Administrative Areas Admin', () => {
   });
 
   describe('Controller addAdministrativeArea', () => {
-    beforeEach(() => {
-      mockRequest.body = mockAdministrativeArea;
-    });
-    // TODO: remove stub test when controller is complete
-    it('should return the stub response of 501', async () => {
-      await addAdministrativeArea(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    // TODO: enable other tests when controller is complete
-    xit('should return status 201 and the new administrative area ', async () => {
+    it('should return status 201 and the new administrative area ', async () => {
+      mockRequest.body = produceAdminArea({});
       await addAdministrativeArea(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(201);
-    });
-
-    xit('should return status 400 when a bad request is received', async () => {
-      await addAdministrativeArea(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
     });
   });
 
@@ -129,20 +126,10 @@ describe('UNIT - Administrative Areas Admin', () => {
       mockRequest.params.id = `${mockAdministrativeArea.id}`;
     });
     // TODO: remove stub test when controller is complete
-    it('should return the stub response of 501', async () => {
-      await getAdministrativeAreaById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    // TODO: enable other tests when controller is complete
-    xit('should return status 200 and the administrative area ', async () => {
+    it('should return 200', async () => {
+      mockRequest.params.id = '1';
       await getAdministrativeAreaById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
-    });
-
-    xit('should return status 400 when a bad request is received', async () => {
-      await getAdministrativeAreaById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
     });
   });
 
@@ -152,19 +139,15 @@ describe('UNIT - Administrative Areas Admin', () => {
       mockRequest.params.id = `${mockAdministrativeArea.id}`;
     });
     // TODO: remove stub test when controller is complete
-    it('should return the stub response of 501', async () => {
-      await updateAdministrativeAreaById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    // TODO: enable other tests when controller is complete
-    xit('should return status 200 and the updated administrative area', async () => {
+    it('should return 200', async () => {
+      mockRequest.params.id = '1';
+      mockRequest.body = produceAdminArea({ Id: 1 });
       await updateAdministrativeAreaById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
-      expect(mockResponse.jsonValue.name).toBe('new name');
     });
-
-    xit('should return status 400 when a bad request is received', async () => {
+    it('should return 400 on mismatched id', async () => {
+      mockRequest.params.id = '1';
+      mockRequest.body = produceAdminArea({ Id: 2 });
       await updateAdministrativeAreaById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });

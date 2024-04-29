@@ -1,10 +1,11 @@
 import { EvaluationKey } from '@/typeorm/Entities/EvaluationKey';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
-import { Column, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
-export abstract class Evaluation extends BaseEntity {
-  @PrimaryColumn('timestamp')
-  Date: Date;
+@Entity()
+export class Evaluation extends BaseEntity {
+  @PrimaryColumn({ name: 'year', type: 'int' })
+  Year: number;
 
   @PrimaryColumn({ name: 'evaluation_key_id', type: 'int' })
   EvaluationKeyId: number;

@@ -4,13 +4,12 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
-import { keycloak, protectedRoute } from '@bcgov/citz-imb-kc-express';
+import { sso, protectedRoute } from '@bcgov/citz-imb-sso-express';
 import router from '@/routes';
 import middleware from '@/middleware';
 import constants from '@/constants';
-import { KEYCLOAK_OPTIONS } from '@/middleware/keycloak/keycloakOptions';
+import { SSO_OPTIONS } from '@/middleware/keycloak/keycloakOptions';
 import swaggerUi from 'swagger-ui-express';
-import { Roles } from '@/constants/roles';
 import swaggerJSON from '@/swagger/swagger-output.json';
 import errorHandler from '@/middleware/errorHandler';
 import { EndpointNotFound404 } from '@/constants/errors';
@@ -58,8 +57,8 @@ const { headerHandler, morganMiddleware } = middleware;
 // Logging Middleware
 app.use(morganMiddleware);
 
-// Keycloak initialization
-keycloak(app, KEYCLOAK_OPTIONS);
+// SSO initialization
+sso(app, SSO_OPTIONS);
 
 // Nunjucks configuration
 nunjucks.configure('src/notificationTemplates', { autoescape: true, express: app, noCache: true });
@@ -72,14 +71,14 @@ app.use(`/v2/health`, router.healthRouter);
 
 // Protected Routes
 app.use(`/v2/ltsa`, protectedRoute(), router.ltsaRouter);
-app.use(`/v2/admin`, protectedRoute([Roles.ADMIN]), router.adminRouter);
 app.use(`/v2/administrativeAreas`, protectedRoute(), router.administrativeAreasRouter);
 app.use(`/v2/agencies`, protectedRoute(), router.agenciesRouter);
 app.use('/v2/lookup', protectedRoute(), router.lookupRouter);
 app.use(`/v2/users`, protectedRoute(), router.usersRouter);
+app.use(`/v2/roles`, protectedRoute(), router.rolesRouter);
 app.use(`/v2/properties`, protectedRoute(), router.propertiesRouter);
-app.use(`/v2/properties`, protectedRoute(), router.parcelsRouter);
-app.use(`/v2/properties`, protectedRoute(), router.buildingsRouter);
+app.use(`/v2/parcels`, protectedRoute(), router.parcelsRouter);
+app.use(`/v2/buildings`, protectedRoute(), router.buildingsRouter);
 app.use(`/v2/notifications`, protectedRoute(), router.notificationsRouter);
 app.use(`/v2/projects`, protectedRoute(), router.projectsRouter);
 app.use(`/v2/reports`, protectedRoute(), router.reportsRouter);

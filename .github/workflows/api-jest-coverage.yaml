@@ -20,6 +20,10 @@ jobs:
     env:
       GIT_BRANCH: ${{ github.event.pull_request.head.ref }}
       GIT_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+      FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+      BACKEND_URL: ${{ secrets.BACKEND_URL }}
+      SSO_CLIENT_ID: ${{ secrets.SSO_CLIENT_ID }}
+      SSO_CLIENT_SECRET: ${{ secrets.SSO_CLIENT_SECRET }}
       CC_TEST_REPORTER_ID: 37fdb6f058122c17fc2419b78b02b1d5582694f7cd84a2b735de8eec235e9c5b
 
     steps:

@@ -41,26 +41,26 @@ const useUsersApi = (absoluteFetch: IFetch) => {
     return parsedBody as User;
   };
   const getAllUsers = async () => {
-    const { parsedBody } = await absoluteFetch.get('/admin/users');
+    const { parsedBody } = await absoluteFetch.get('/users');
     if (parsedBody.error) {
       return [];
     }
     return parsedBody;
   };
   const getUserById = async (userId: string): Promise<User> => {
-    const { parsedBody } = await absoluteFetch.get(`/admin/users/${userId}`);
+    const { parsedBody } = await absoluteFetch.get(`/users/${userId}`);
     return parsedBody as User;
   };
   const updateUser = async (userId: string, user: Partial<User>) => {
-    const { parsedBody } = await absoluteFetch.put(`/admin/users/${userId}`, user);
+    const { parsedBody } = await absoluteFetch.put(`/users/${userId}`, user);
     return parsedBody;
   };
   const updateUserRole = async (username: string, role: string) => {
-    const { parsedBody } = await absoluteFetch.put(`/admin/users/roles/${username}`, [role]);
+    const { parsedBody } = await absoluteFetch.put(`/users/roles/${username}`, [role]);
     return parsedBody as KeycloakRole[];
   };
   const deleteUser = async (userId: string) => {
-    const { parsedBody } = await absoluteFetch.del(`/admin/users/${userId}`, { Id: userId });
+    const { parsedBody } = await absoluteFetch.del(`/users/${userId}`, { Id: userId });
     return parsedBody;
   };
   return {

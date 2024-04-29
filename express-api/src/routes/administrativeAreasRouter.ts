@@ -6,7 +6,8 @@ import {
   updateAdministrativeAreaById,
   deleteAdministrativeAreaById,
 } from '@/controllers/administrativeAreas/administrativeAreasController';
-import { protectedRoute } from '@bcgov/citz-imb-kc-express';
+import catchErrors from '@/utilities/controllerErrorWrapper';
+import { protectedRoute } from '@bcgov/citz-imb-sso-express';
 import express from 'express';
 
 const router = express.Router();
@@ -15,12 +16,12 @@ const router = express.Router();
 router
   .route(`/`)
   .get(getAdministrativeAreas)
-  .post(protectedRoute([Roles.ADMIN]), addAdministrativeArea);
+  .post(protectedRoute([Roles.ADMIN]), catchErrors(addAdministrativeArea));
 
 router
   .route(`/:id`)
   .get(getAdministrativeAreaById)
-  .put(protectedRoute([Roles.ADMIN]), updateAdministrativeAreaById) // TODO: Should this be a patch?
-  .delete(protectedRoute([Roles.ADMIN]), deleteAdministrativeAreaById);
+  .put(protectedRoute([Roles.ADMIN]), catchErrors(updateAdministrativeAreaById)) // TODO: Should this be a patch?
+  .delete(protectedRoute([Roles.ADMIN]), catchErrors(deleteAdministrativeAreaById));
 
 export default router;
