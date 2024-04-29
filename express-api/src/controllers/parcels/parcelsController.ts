@@ -25,9 +25,15 @@ export const getParcel = async (req: Request, res: Response) => {
   if (isNaN(parcelId)) {
     return res.status(400).send('Parcel ID was invalid.');
   }
+
+  const kcUser = req.user as unknown as SSOUser;
+  const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
   const parcel = await parcelServices.getParcelById(parcelId);
   if (!parcel) {
     return res.status(404).send('Parcel matching this internal ID not found.');
+  } else if (!usersAgencies.includes(parcel.AgencyId)) {
+    // check to see if the building's agency belongs to the users's agencies
+    return res.status(403).send('You are not authorized to view this parcel.');
   }
   return res.status(200).send(parcel);
 };
