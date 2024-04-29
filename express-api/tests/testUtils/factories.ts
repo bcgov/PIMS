@@ -89,7 +89,7 @@ export const getRequestHandlerMocks = () => {
   return { mockReq, mockRes /*mockNext*/ };
 };
 
-export const produceUser = (): User => {
+export const produceUser = (props?: Partial<User>): User => {
   const id = faker.string.uuid() as UUID;
   return {
     CreatedOn: faker.date.anytime(),
@@ -120,6 +120,7 @@ export const produceUser = (): User => {
     Agency: produceAgency(id),
     AgencyId: undefined,
     IsDisabled: false,
+    ...props,
   };
 };
 
