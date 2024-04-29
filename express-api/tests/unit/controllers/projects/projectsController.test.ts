@@ -136,6 +136,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
     });
 
     it('should pass valid project filter', () => {
+      jest.spyOn(ProjectFilterSchema, 'safeParse').mockRestore();
       const validFilter = {
         projectNumber: '123',
         name: 'Project Name',
@@ -143,6 +144,18 @@ describe('UNIT - Testing controllers for users routes.', () => {
         agencyId: 1,
       };
 
+      const result = ProjectFilterSchema.safeParse(validFilter);
+      expect(result.success).toBe(true);
+    });
+
+    it('should pass valid project filter', () => {
+      jest.spyOn(ProjectFilterSchema, 'safeParse').mockRestore();
+      const validFilter = {
+        projectNumber: '123',
+        name: 'Project Name',
+        statusId: 1,
+        agencyId: [1, 2],
+      };
       const result = ProjectFilterSchema.safeParse(validFilter);
       expect(result.success).toBe(true);
     });
