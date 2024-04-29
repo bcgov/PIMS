@@ -30,3 +30,11 @@ export const TierLevelPublicResponseSchema = z.object({
   Id: z.number(),
   SortOrder: z.number(),
 });
+
+export const TaskPublicResponseSchema = z.object({
+  Name: z.string(),
+  Id: z.number(),
+  Description: z.string(),
+  IsOptional: z.boolean(),
+  StatusId: z.number(),
+});

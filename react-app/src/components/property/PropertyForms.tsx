@@ -191,8 +191,10 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             }}
             rules={{
               validate: (val, formVals) =>
-                (val.length <= 9 &&
-                  (val.length > 0 || formVals['PIN'].length > 0 || propertyType === 'Building')) ||
+                (String(val).length <= 9 &&
+                  (String(val).length > 0 ||
+                    String(formVals['PIN']).length > 0 ||
+                    propertyType === 'Building')) ||
                 'Must have set either PID or PIN not exceeding 9 digits.',
             }}
           />
@@ -211,8 +213,10 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             }}
             rules={{
               validate: (val, formVals) =>
-                (val.length <= 9 &&
-                  (val.length > 0 || formVals['PID'].length > 0 || propertyType === 'Building')) ||
+                (String(val).length <= 9 &&
+                  (String(val).length > 0 ||
+                    String(formVals['PID']).length > 0 ||
+                    propertyType === 'Building')) ||
                 'Must have set either PID or PIN not exceeding 9 digits.',
             }}
           />
@@ -407,7 +411,7 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
             rules={{
               validate: (val, formVals) =>
                 val <= formVals.TotalArea ||
-                `Cannot be larger than Net usable area: ${val} <= ${formVals?.TotalArea}`,
+                `Cannot be larger than Total Area: ${val} <= ${formVals?.TotalArea}`,
             }}
             InputProps={{
               endAdornment: (

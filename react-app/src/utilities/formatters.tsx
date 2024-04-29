@@ -74,11 +74,17 @@ export const formatMoney = (value?: number | ''): string => {
   return formatter.format(value || 0);
 };
 
-export const parseIntOrNull = (int: string) => {
+export const parseIntOrNull = (int: string | number) => {
+  if (typeof int === 'number') {
+    return int;
+  }
   return int.length > 0 ? parseInt(int) : null;
 };
 
-export const parseFloatOrNull = (flt: string) => {
+export const parseFloatOrNull = (flt: string | number) => {
+  if (typeof flt === 'number') {
+    return flt;
+  }
   return flt.length > 0 ? parseFloat(flt) : null;
 };
 

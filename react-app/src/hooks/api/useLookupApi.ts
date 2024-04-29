@@ -10,6 +10,14 @@ export interface Classification extends LookupObject {
   IsVisible: boolean;
 }
 
+export interface Task {
+  Name: string;
+  Id: number;
+  Description: string;
+  IsOptional: boolean;
+  StatusId: number;
+}
+
 export type RegionalDistrict = Omit<LookupObject, 'SortOrder'>;
 
 const useLookupApi = (absoluteFetch: IFetch) => {
@@ -38,12 +46,18 @@ const useLookupApi = (absoluteFetch: IFetch) => {
     return parsedBody as LookupObject[];
   };
 
+  const getTasks = async (statusId?: number) => {
+    const { parsedBody } = await absoluteFetch.get('/lookup/tasks', { statusId: statusId });
+    return parsedBody as Task[];
+  };
+
   return {
     getClassifications,
     getConstructionTypes,
     getPredominateUses,
     getRegionalDistricts,
     getProjectTierLevels,
+    getTasks,
   };
 };
 
