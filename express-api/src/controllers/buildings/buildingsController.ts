@@ -60,11 +60,10 @@ export const getBuilding = async (req: Request, res: Response) => {
 
   const kcUser = req.user as unknown as SSOUser;
   const building = await buildingService.getBuildingById(buildingId);
-  const userHasAccess = await checkUserAgencyPermission(kcUser, [building.AgencyId]);
 
   if (!building) {
     return res.status(404).send('Building matching this ID was not found.');
-  } else if (!userHasAccess) {
+  } else if (!(await checkUserAgencyPermission(kcUser, [building.AgencyId]))) {
     return res.status(403).send('You are not authorized to view this building.');
   }
   return res.status(200).send(building);

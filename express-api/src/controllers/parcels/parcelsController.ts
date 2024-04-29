@@ -28,10 +28,9 @@ export const getParcel = async (req: Request, res: Response) => {
 
   const kcUser = req.user as unknown as SSOUser;
   const parcel = await parcelServices.getParcelById(parcelId);
-  const userHasAccess = await checkUserAgencyPermission(kcUser, [parcel.AgencyId]);
   if (!parcel) {
     return res.status(404).send('Parcel matching this internal ID not found.');
-  } else if (!userHasAccess) {
+  } else if (!(await checkUserAgencyPermission(kcUser, [parcel.AgencyId]))) {
     return res.status(403).send('You are not authorized to view this parcel.');
   }
   return res.status(200).send(parcel);
