@@ -20,6 +20,8 @@ import {
   PropertyNetBookValueEditDialog,
 } from './PropertyDialog';
 import { PropertyType } from './PropertyForms';
+import MetresSquared from '@/components/text/MetresSquared';
+import { zeroPadPID } from '@/utilities/formatters';
 
 interface IPropertyDetail {
   onClose: () => void;
@@ -112,20 +114,33 @@ const PropertyDetail = (props: IPropertyDetail) => {
   }, [parcel, building]);
 
   const customFormatter = (key: any, val: any) => {
-    if (key === 'Agency' && val) {
-      return <Typography>{val.Name}</Typography>;
-    } else if (key === 'Classification' && val) {
-      return (
-        <ClassificationInline
-          color={classification[val.Id].textColor}
-          backgroundColor={classification[val.Id].bgColor}
-          title={val.Name}
-        />
-      );
-    } else if (key === 'IsSensitive' || key === 'Owned') {
-      return val ? <Typography>Yes</Typography> : <Typography>No</Typography>;
+    switch (key) {
+      case 'Agency':
+        return <Typography>{val.Name}</Typography>;
+      case 'Classification':
+        return (
+          <ClassificationInline
+            color={classification[val.Id].textColor}
+            backgroundColor={classification[val.Id].bgColor}
+            title={val.Name}
+          />
+        );
+      case 'IsSensitive':
+      case 'Owned':
+        return val ? <Typography>Yes</Typography> : <Typography>No</Typography>;
+      case 'TotalArea':
+      case 'UsableArea':
+        return (
+          <>
+            <Typography display={'inline'}>{val}</Typography>
+            <MetresSquared />
+          </>
+        );
+      case 'LandArea':
+        return <Typography>{`${val} Hectares`}</Typography>;
+      default:
+        return <Typography>{val}</Typography>;
     }
-    return <Typography>{val}</Typography>;
   };
 
   const buildingOrParcel: PropertyType = building != null ? 'Building' : 'Parcel';
@@ -136,7 +151,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
     } else {
       const info: any = {
         Classification: data.Classification,
-        PID: data.PID,
+        PID: data.PID ? zeroPadPID(data.PID) : undefined,
         PIN: data.PIN,
         PostalCode: data.Postal,
         AdministrativeArea: data.AdministrativeArea?.Name,

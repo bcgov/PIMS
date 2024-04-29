@@ -24,3 +24,17 @@ export const RegionalDistrictPublicResponseSchema = z.object({
   Id: z.number(),
   Abbreviation: z.string(),
 });
+
+export const TierLevelPublicResponseSchema = z.object({
+  Name: z.string(),
+  Id: z.number(),
+  SortOrder: z.number(),
+});
+
+export const TaskPublicResponseSchema = z.object({
+  Name: z.string(),
+  Id: z.number(),
+  Description: z.string(),
+  IsOptional: z.boolean(),
+  StatusId: z.number(),
+});

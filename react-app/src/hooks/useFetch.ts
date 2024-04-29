@@ -1,4 +1,4 @@
-import { useKeycloak } from '@bcgov/citz-imb-kc-react';
+import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { useMemo } from 'react';
 
 export type FetchResponse = Response & { parsedBody?: Record<string, any> };
@@ -24,7 +24,7 @@ export interface IFetch {
  * @returns
  */
 const useFetch = (baseUrl?: string) => {
-  const keycloak = useKeycloak();
+  const keycloak = useSSO();
 
   return useMemo(() => {
     const absoluteFetch = async (url: string, params?: RequestInit): Promise<FetchResponse> => {
@@ -66,6 +66,7 @@ const useFetch = (baseUrl?: string) => {
         return '';
       }
       const q = Object.entries(params)
+        .filter(([, v]) => v !== undefined)
         .map(([k, value]) => {
           return `${k}=${encodeURIComponent(value)}`;
         })

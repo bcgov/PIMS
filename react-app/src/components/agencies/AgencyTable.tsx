@@ -3,8 +3,8 @@ import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../ta
 import { Box, Chip, SxProps } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { GridColDef, GridEventListener } from '@mui/x-data-grid';
+import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { dateFormatter, statusChipFormatter } from '@/utilities/formatters';
-import { useKeycloak } from '@bcgov/citz-imb-kc-react';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,8 +19,9 @@ interface IAgencyTable {
 const AgencyTable = (props: IAgencyTable) => {
   const { rowClickHandler, data, isLoading, refreshData, error } = props;
   const [agencies, setAgencies] = useState<Agency[]>([]);
-  const { state } = useKeycloak();
+  const { state } = useSSO();
   const navigate = useNavigate();
+
   useEffect(() => {
     if (error) {
       console.error(error);
@@ -60,8 +61,8 @@ const AgencyTable = (props: IAgencyTable) => {
       field: 'Parent',
       headerName: 'Parent Agency',
       flex: 1,
-      valueFormatter: (params) => {
-        if (params.value) return params.value.Name;
+      valueFormatter: (value?: Agency) => {
+        if (value) return value.Name;
         return '';
       },
     },
@@ -69,7 +70,7 @@ const AgencyTable = (props: IAgencyTable) => {
       field: 'SendEmail',
       headerName: 'Notification',
       flex: 1,
-      valueFormatter: (params) => (params.value ? 'Yes' : 'No'),
+      valueFormatter: (value: boolean) => (value ? 'Yes' : 'No'),
       maxWidth: 120,
     },
     {
@@ -92,14 +93,14 @@ const AgencyTable = (props: IAgencyTable) => {
       field: 'CreatedOn',
       headerName: 'Created',
       flex: 1,
-      valueFormatter: (params) => dateFormatter(params.value),
+      valueFormatter: (value) => dateFormatter(value),
       maxWidth: 150,
     },
     {
       field: 'UpdatedOn',
       headerName: 'Last Update',
       flex: 1,
-      valueFormatter: (params) => dateFormatter(params.value),
+      valueFormatter: (value) => dateFormatter(value),
       maxWidth: 150,
     },
   ];

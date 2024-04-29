@@ -1,12 +1,12 @@
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Roles } from '@/constants/roles';
-import { getUser } from '@/services/users/usersServices';
+import userServices, { getUser } from '@/services/users/usersServices';
 /**
  * @description Function to check if user is an admin
- * @param {KeycloakUser}     user Incoming Keycloak user.
+ * @param {SSOUser}     user Incoming Keycloak user.
  * @returns {boolean}      A boolean for whether admin or not.
  */
-export const isAdmin = (user: KeycloakUser): boolean => {
+export const isAdmin = (user: SSOUser): boolean => {
   // Check if the user has the ADMIN role
   return user.client_roles?.includes(Roles.ADMIN);
 };
@@ -14,10 +14,10 @@ export const isAdmin = (user: KeycloakUser): boolean => {
 /**
  * Function to check if user is an auditor (view only role).
  *
- * @param {KeycloakUser} user - The user object containing information about the user.
+ * @param {SSOUser} user - The user object containing information about the user.
  * @returns True if the user has the AUDITOR role, false otherwise.
  */
-export const isAuditor = (user: KeycloakUser): boolean => {
+export const isAuditor = (user: SSOUser): boolean => {
   // Check if the user has the AUDITOR role
   return user.client_roles?.includes(Roles.AUDITOR);
 };
@@ -28,7 +28,7 @@ export const isAuditor = (user: KeycloakUser): boolean => {
  * @param user - The user object containing information about the user.
  * @returns A boolean value indicating whether the user can edit or not.
  */
-export const canUserEdit = (user: KeycloakUser): boolean => {
+export const canUserEdit = (user: SSOUser): boolean => {
   // as they are not an auditor the user can edit
   return (
     user.client_roles?.includes(Roles.GENERAL_USER) || user.client_roles?.includes(Roles.ADMIN)
@@ -41,7 +41,7 @@ export const canUserEdit = (user: KeycloakUser): boolean => {
  * @param kcUser - The KeycloakUser object representing the user.
  * @returns A Promise that resolves to a boolean indicating whether the user is disabled.
  */
-export const isUserDisabled = async (kcUser: KeycloakUser): Promise<boolean> => {
+export const isUserDisabled = async (kcUser: SSOUser): Promise<boolean> => {
   const user = await getUser(kcUser.preferred_username);
   return user.IsDisabled;
 };
@@ -52,7 +52,27 @@ export const isUserDisabled = async (kcUser: KeycloakUser): Promise<boolean> => 
  * @param kcUser - The KeycloakUser object representing the user.
  * @returns A Promise that resolves to a boolean indicating if the user is active.
  */
-export const isUserActive = async (kcUser: KeycloakUser): Promise<boolean> => {
+export const isUserActive = async (kcUser: SSOUser): Promise<boolean> => {
   const user = await getUser(kcUser.preferred_username);
   return user.Status === 'Active';
+};
+
+/**
+ * Checks if a user has read permission based on their role and agency membership.
+ *
+ * @param kcUser - The KeycloakUser object representing the user.
+ * @param agencyIds - An array of agency IDs to check against the user's membership.
+ * @returns A Promise that resolves to a boolean indicating whether the user has read permission.
+ */
+export const checkUserAgencyPermission = async (
+  kcUser: SSOUser,
+  agencyIds: number[],
+): Promise<boolean> => {
+  if (!isAdmin(kcUser) && !isAuditor(kcUser)) {
+    // check if current user belongs to any of the specified agencies
+    const userAgencies = await userServices.hasAgencies(kcUser.preferred_username, agencyIds);
+    return userAgencies;
+  }
+  // Admins and auditors have permission by default
+  return true;
 };

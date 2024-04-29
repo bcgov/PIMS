@@ -14,7 +14,7 @@ import {
   MenuItem,
 } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { useKeycloak } from '@bcgov/citz-imb-kc-react';
+import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { Roles } from '@/constants/roles';
 
 const AppBrand = () => {
@@ -61,7 +61,7 @@ const AppBrand = () => {
 };
 
 const Header: React.FC = () => {
-  const { logout, isAuthenticated, login, user } = useKeycloak();
+  const { logout, isAuthenticated, login, user } = useSSO();
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -155,7 +155,7 @@ const Header: React.FC = () => {
               <Link underline="none" href="/properties" variant="h5">
                 Active Inventory
               </Link>
-              <Link underline="none" href="#" variant="h5">
+              <Link underline="none" href="/projects" variant="h5">
                 Disposal Inventory
               </Link>
               <Link underline="none" href="/users" variant="h5">

@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker';
 import { UUID, randomUUID } from 'crypto';
 import { Request, Response } from 'express';
 import { Role as RolesEntity } from '@/typeorm/Entities/Role';
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Building } from '@/typeorm/Entities/Building';
 import { EmailBody, IChesStatusResponse, IEmail } from '@/services/ches/chesServices';
@@ -15,6 +15,11 @@ import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUs
 import { IAddressModel } from '@/services/geocoder/interfaces/IAddressModel';
 import { ISitePidsResponseModel } from '@/services/geocoder/interfaces/ISitePidsResponseModel';
 import { RegionalDistrict } from '@/typeorm/Entities/RegionalDistrict';
+import { TierLevel } from '@/typeorm/Entities/TierLevel';
+import { Project } from '@/typeorm/Entities/Project';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
+import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
+import { Task } from '@/typeorm/Entities/Task';
 
 export class MockRes {
   statusValue: any;
@@ -49,16 +54,18 @@ export class MockReq {
 
   public setUser = (userData: object) => {
     const defaultUserObject = {
-      idir_user_guid: 'W7802F34D2390EFA9E7JK15923770279',
+      guid: 'W7802F34D2390EFA9E7JK15923770279',
       identity_provider: 'idir',
-      idir_username: 'JOHNDOE',
+      username: 'JOHNDOE',
       name: 'Doe, John CITZ:EX',
       preferred_username: 'a7254c34i2755fea9e7ed15918356158@idir',
-      given_name: 'John',
+      first_name: 'John',
       display_name: 'Doe, John CITZ:EX',
-      family_name: 'Doe',
+      last_name: 'Doe',
       email: 'john.doe@gov.bc.ca',
       client_roles: [] as string[],
+      hasRoles: () => true,
+      //originalData:
     };
     this.user = {
       ...defaultUserObject,
@@ -160,7 +167,7 @@ export const produceRole = (): RolesEntity => {
   };
 };
 
-export const produceKeycloak = (): KeycloakUser => {
+export const produceSSO = (): SSOUser => {
   return {
     name: faker.string.alphanumeric(),
     preferred_username: faker.string.alphanumeric(),
@@ -168,10 +175,12 @@ export const produceKeycloak = (): KeycloakUser => {
     display_name: faker.string.alphanumeric(),
     client_roles: [faker.string.alphanumeric()],
     identity_provider: 'idir',
-    idir_user_guid: faker.string.uuid(),
-    idir_username: faker.string.alphanumeric(),
-    given_name: faker.person.firstName(),
-    family_name: faker.person.lastName(),
+    guid: faker.string.uuid(),
+    username: faker.string.alphanumeric(),
+    first_name: faker.person.firstName(),
+    last_name: faker.person.lastName(),
+    originalData: null,
+    hasRoles: null,
   };
 };
 
@@ -401,4 +410,133 @@ export const producePidsResponse = (): ISitePidsResponseModel => {
     pids: String(faker.number.int({ min: 11111111, max: 99999999 })),
   };
   return pidResponse;
+};
+
+export const produceTierLevels = (): TierLevel => {
+  const tier: TierLevel = {
+    Id: faker.number.int(),
+    Name: `Tier ${faker.number.int()}`,
+    IsDisabled: false,
+    SortOrder: faker.number.int(),
+    Description: faker.lorem.sentence(),
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+  };
+  return tier;
+};
+
+export const produceTask = (): Task => {
+  const task: Task = {
+    Id: faker.number.int(),
+    Name: faker.commerce.product(),
+    IsDisabled: faker.datatype.boolean(),
+    SortOrder: 0,
+    Description: faker.lorem.sentence(),
+    IsOptional: false,
+    StatusId: faker.number.int(),
+    Status: undefined,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+  };
+  return task;
+};
+
+export const produceProject = (
+  props?: Partial<Project>,
+  projectProperties?: ProjectProperty[],
+): Project => {
+  const projectId = faker.number.int();
+  const project: Project = {
+    Id: projectId,
+    Name: faker.lorem.word(),
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ProjectNumber: `SPP-${faker.number.int()}`,
+    Manager: faker.person.fullName(),
+    ReportedFiscalYear: faker.number.int({ min: 1990, max: 2040 }),
+    ActualFiscalYear: faker.number.int({ min: 1990, max: 2040 }),
+    Description: faker.string.sample(),
+    Metadata: null,
+    SubmittedOn: null,
+    ApprovedOn: null,
+    DeniedOn: null,
+    CancelledOn: null,
+    CompletedOn: null,
+    NetBook: faker.number.int(),
+    Assessed: faker.number.int(),
+    Appraised: faker.number.int(),
+    Market: faker.number.int(),
+    ProjectType: 1,
+    WorkflowId: 1,
+    Workflow: null, // TODO: produceWorkflow
+    AgencyId: 1,
+    Agency: produceAgency(),
+    TierLevelId: 1,
+    TierLevel: null, // TODO: produceTier
+    StatusId: 1,
+    Status: null, // TODO: produceStatus
+    RiskId: 1,
+    Risk: null, // TODO: produceRisk
+    ProjectProperties: projectProperties ?? [
+      produceProjectProperty({
+        ProjectId: projectId,
+      }),
+    ],
+    ...props,
+  };
+  return project;
+};
+
+export const produceProjectProperty = (props?: Partial<ProjectProperty>): ProjectProperty => {
+  const projectProperty: ProjectProperty = {
+    Id: faker.number.int(),
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ProjectId: faker.number.int(),
+    Project: null,
+    PropertyTypeId: faker.number.int({ min: 0, max: 2 }),
+    PropertyType: null,
+    ParcelId: faker.number.int(),
+    Parcel: null,
+    BuildingId: faker.number.int(),
+    Building: null,
+    ...props,
+  };
+  return projectProperty;
+};
+
+export const productProjectStatusHistory = (props?: Partial<ProjectStatusHistory>) => {
+  const history: ProjectStatusHistory = {
+    Id: faker.number.int(),
+    CreatedById: randomUUID(),
+    CreatedBy: null,
+    CreatedOn: new Date(),
+    UpdatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: null,
+    WorkflowId: faker.number.int(),
+    Workflow: null,
+    StatusId: faker.number.int(),
+    Status: null,
+    ProjectId: faker.number.int(),
+    Project: null,
+    ...props,
+  };
+  return history;
 };

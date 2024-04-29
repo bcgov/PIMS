@@ -2,7 +2,7 @@ import { Parcel } from '@/typeorm/Entities/Parcel';
 import { AppDataSource } from '@/appDataSource';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { ParcelFilter } from '@/services/parcels/parcelSchema';
-import { DeepPartial, FindOptionsOrder } from 'typeorm';
+import { DeepPartial, FindOptionsOrder, In } from 'typeorm';
 
 const parcelRepo = AppDataSource.getRepository(Parcel);
 
@@ -13,14 +13,14 @@ const parcelRepo = AppDataSource.getRepository(Parcel);
  * @throws ErrorWithCode If the parcel already exists or is unable to be added.
  */
 const addParcel = async (parcel: DeepPartial<Parcel>) => {
-  const inPID = Number(parcel.PID);
+  const numberPID = Number(parcel.PID);
 
-  const matchPID = inPID.toString().search(/^\d{9}$/);
-  if (parcel.PID != null && matchPID === -1) {
+  const stringPID = numberPID.toString();
+  if (parcel.PID != null && (stringPID.length > 9 || isNaN(numberPID))) {
     throw new ErrorWithCode('PID must be a number and in the format #########');
   }
 
-  const existingParcel = parcel.PID != null ? await getParcelByPid(inPID) : undefined;
+  const existingParcel = parcel.PID != null ? await getParcelByPid(numberPID) : undefined;
 
   if (existingParcel) {
     throw new ErrorWithCode('Parcel already exists.', 409);
@@ -61,7 +61,9 @@ const getParcels = async (filter: ParcelFilter, includeRelations: boolean = fals
     where: {
       PID: filter.pid,
       ClassificationId: filter.classificationId,
-      AgencyId: filter.agencyId,
+      AgencyId: filter.agencyId
+        ? In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId)
+        : undefined,
       AdministrativeAreaId: filter.administrativeAreaId,
       PropertyTypeId: filter.propertyTypeId,
       IsSensitive: filter.isSensitive,

@@ -1,6 +1,6 @@
 import userServices from '@/services/users/usersServices';
 import { Request, Response } from 'express';
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { decodeJWT } from '@/utilities/decodeJWT';
 import { stubResponse } from '@/utilities/stubResponse';
 import { UserFiltering, UserFilteringSchema } from '@/controllers/users/usersSchema';
@@ -10,10 +10,10 @@ import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
  * @description Function to filter users based on agencies
  * @param {Request}     req Incoming request.
  * @param {Response}    res Outgoing response.
- * @param {KeycloakUser}    kcUser Incoming Keycloak user.
+ * @param {SSOUser}    ssoUser Incoming SSO user.
  * @returns {User[]}      An array of users.
  */
-const filterUsersByAgencies = async (req: Request, res: Response, kcUser: KeycloakUser) => {
+const filterUsersByAgencies = async (req: Request, res: Response, ssoUser: SSOUser) => {
   const filter = UserFilteringSchema.safeParse(req.query);
   if (!filter.success) {
     return res.status(400).send('Failed to parse filter query.');
@@ -21,11 +21,11 @@ const filterUsersByAgencies = async (req: Request, res: Response, kcUser: Keyclo
   const filterResult = filter.data;
 
   let users;
-  if (isAdmin(kcUser) || isAuditor(kcUser)) {
+  if (isAdmin(ssoUser) || isAuditor(ssoUser)) {
     users = await userServices.getUsers(filterResult as UserFiltering);
   } else {
     // Get agencies associated with the requesting user
-    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+    const usersAgencies = await userServices.getAgencies(ssoUser.preferred_username);
     filterResult.agencyId = usersAgencies;
     users = await userServices.getUsers(filterResult as UserFiltering);
   }
@@ -105,7 +105,7 @@ export const submitUserAccessRequest = async (req: Request, res: Response) => {
       }]
    */
   const result = await userServices.addKeycloakUserOnHold(
-    req.user as KeycloakUser,
+    req.user as SSOUser,
     Number(req.body.AgencyId),
     req.body.Position,
     req.body.Note,
@@ -186,7 +186,7 @@ export const getUserAgencies = async (req: Request, res: Response) => {
 };
 
 export const getSelf = async (req: Request, res: Response) => {
-  const user = userServices.normalizeKeycloakUser(req.user as KeycloakUser);
+  const user = userServices.normalizeKeycloakUser(req.user as SSOUser);
   const result = await userServices.getUser(user.username);
   if (result) {
     return res.status(200).send(result);
@@ -213,8 +213,8 @@ export const getUsers = async (req: Request, res: Response) => {
   if (!filter.success) {
     return res.status(400).send('Failed to parse filter query.');
   }
-  const kcUser = req.user as unknown as KeycloakUser;
-  const users = await filterUsersByAgencies(req, res, kcUser);
+  const ssoUser = req.user as unknown as SSOUser;
+  const users = await filterUsersByAgencies(req, res, ssoUser);
   return res.status(200).send(users);
 };
 
@@ -256,14 +256,14 @@ export const getUserById = async (req: Request, res: Response) => {
    */
   const id = req.params.id;
   const uuid = z.string().uuid().safeParse(id);
-  const kcUser = req.user as unknown as KeycloakUser;
+  const ssoUser = req.user as unknown as SSOUser;
   if (uuid.success) {
     const user = await userServices.getUserById(uuid.data);
 
     if (user) {
-      if (!isAdmin(kcUser) && !isAuditor(kcUser)) {
+      if (!isAdmin(ssoUser) && !isAuditor(ssoUser)) {
         // check if user has the correct agencies
-        const usersAgencies = await userServices.hasAgencies(kcUser.preferred_username, [
+        const usersAgencies = await userServices.hasAgencies(ssoUser.preferred_username, [
           user.AgencyId,
         ]);
         if (!usersAgencies) {

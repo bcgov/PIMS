@@ -3,7 +3,7 @@ import { stubResponse } from '../../utilities/stubResponse';
 import { Request, Response } from 'express';
 import chesServices from '@/services/ches/chesServices';
 import { ChesFilterSchema } from './toolsSchema';
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import geocoderService from '@/services/geocoder/geocoderService';
 
 /**
@@ -101,8 +101,8 @@ export const cancelChesMessages = async (req: Request, res: Response) => {
 // Will likely not make it into final release, excluding from api docs.
 export const sendChesMessage = async (req: Request, res: Response) => {
   const email = req.body;
-  const kcUser = req.user as KeycloakUser;
-  const response = await chesServices.sendEmailAsync(email, kcUser);
+  const ssoUser = req.user as SSOUser;
+  const response = await chesServices.sendEmailAsync(email, ssoUser);
   return res.status(201).send(response);
 };
 

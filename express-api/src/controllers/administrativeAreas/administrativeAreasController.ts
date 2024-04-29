@@ -1,9 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import { stubResponse } from '@/utilities/stubResponse';
-import { AdministrativeAreaFilterSchema } from '@/services/administrativeAreas/administrativeAreaSchema';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import {
+  AdministrativeAreaFilterSchema,
+  AdministrativeAreaPublicResponseSchema,
+} from '@/services/administrativeAreas/administrativeAreaSchema';
 import administrativeAreasServices from '@/services/administrativeAreas/administrativeAreasServices';
+import { Roles } from '@/constants/roles';
 import userServices from '@/services/users/usersServices';
-import { KeycloakUser } from '@bcgov/citz-imb-kc-express';
 
 /**
  * @description Gets a list of administrative areas.
@@ -20,9 +24,14 @@ export const getAdministrativeAreas = async (req: Request, res: Response, next: 
       }]
    */
   try {
+    const ssoUser = req.user;
     const filter = AdministrativeAreaFilterSchema.safeParse(req.query);
     if (filter.success) {
       const adminAreas = await administrativeAreasServices.getAdministrativeAreas(filter.data);
+      if (!ssoUser.hasRoles([Roles.ADMIN])) {
+        const trimmed = AdministrativeAreaPublicResponseSchema.array().parse(adminAreas);
+        return res.status(200).send(trimmed);
+      }
       return res.status(200).send(adminAreas);
     } else {
       return res.status(400).send('Could not parse filter.');
@@ -46,7 +55,7 @@ export const addAdministrativeArea = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  const user = await userServices.getUser((req.user as KeycloakUser).preferred_username);
+  const user = await userServices.getUser((req.user as SSOUser).preferred_username);
   const addBody = { ...req.body, CreatedById: user.Id };
   const response = await administrativeAreasServices.addAdministrativeArea(addBody);
   return res.status(201).send(response);
