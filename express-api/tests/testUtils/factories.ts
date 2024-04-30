@@ -203,7 +203,7 @@ export const produceParcel = (): Parcel => {
     Description: faker.string.alphanumeric(),
     ClassificationId: undefined,
     Classification: undefined,
-    AgencyId: undefined,
+    AgencyId: 1,
     Agency: undefined,
     AdministrativeAreaId: undefined,
     AdministrativeArea: undefined,
