@@ -57,6 +57,41 @@ const getParcels = async (filter: ParcelFilter, includeRelations: boolean = fals
       AdministrativeArea: includeRelations,
       Classification: includeRelations,
       PropertyType: includeRelations,
+      Evaluations: includeRelations,
+      Fiscals: includeRelations,
+    },
+    select: {
+      Agency: {
+        Id: true,
+        Name: true,
+        Parent: {
+          Id: true,
+          Name: true,
+        },
+      },
+      AdministrativeArea: {
+        Id: true,
+        Name: true,
+      },
+      Classification: {
+        Id: true,
+        Name: true,
+      },
+      PropertyType: {
+        Id: true,
+        Name: true,
+      },
+      ParentParcel: {
+        Id: true,
+      },
+      Evaluations: {
+        Year: true,
+        Value: true,
+      },
+      Fiscals: {
+        FiscalYear: true,
+        Value: true,
+      },
     },
     where: {
       PID: filter.pid,

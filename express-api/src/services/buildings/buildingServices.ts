@@ -82,7 +82,9 @@ export const deleteBuildingById = async (buildingId: number) => {
 export const getBuildings = async (filter: BuildingFilter, includeRelations: boolean = false) => {
   const buildings = await buildingRepo.find({
     relations: {
-      Agency: includeRelations,
+      Agency: {
+        Parent: includeRelations,
+      },
       AdministrativeArea: includeRelations,
       Classification: includeRelations,
       PropertyType: includeRelations,
@@ -91,6 +93,48 @@ export const getBuildings = async (filter: BuildingFilter, includeRelations: boo
       BuildingOccupantType: includeRelations,
       Evaluations: includeRelations,
       Fiscals: includeRelations,
+    },
+    select: {
+      Agency: {
+        Id: true,
+        Name: true,
+        Parent: {
+          Id: true,
+          Name: true,
+        },
+      },
+      AdministrativeArea: {
+        Id: true,
+        Name: true,
+      },
+      Classification: {
+        Id: true,
+        Name: true,
+      },
+      PropertyType: {
+        Id: true,
+        Name: true,
+      },
+      BuildingConstructionType: {
+        Id: true,
+        Name: true,
+      },
+      BuildingOccupantType: {
+        Id: true,
+        Name: true,
+      },
+      BuildingPredominateUse: {
+        Id: true,
+        Name: true,
+      },
+      Evaluations: {
+        Year: true,
+        Value: true,
+      },
+      Fiscals: {
+        FiscalYear: true,
+        Value: true,
+      },
     },
     where: {
       PID: filter.pid,
