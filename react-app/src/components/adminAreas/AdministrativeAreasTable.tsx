@@ -1,5 +1,5 @@
 import React, { MutableRefObject } from 'react';
-import { GridColDef } from '@mui/x-data-grid';
+import { GridColDef, gridFilteredSortedRowEntriesSelector, GridRowId, GridValidRowModel } from '@mui/x-data-grid';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
@@ -8,6 +8,7 @@ import { Check } from '@mui/icons-material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { useNavigate } from 'react-router-dom';
 import { RegionalDistrict } from '@/hooks/api/useLookupApi';
+import { AdministrativeArea } from '@/hooks/api/useAdministrativeAreaApi';
 
 const AdministrativeAreasTable = () => {
   const api = usePimsApi();
@@ -75,6 +76,30 @@ const AdministrativeAreasTable = () => {
     }
   };
 
+  const getExcelData: (
+    ref: MutableRefObject<GridApiCommunity>,
+  ) => Promise<{ id: GridRowId; model: GridValidRowModel }[]> = async (
+    ref: MutableRefObject<GridApiCommunity>,
+  ) => {
+    if (ref?.current?.exportState) {
+      const rows = gridFilteredSortedRowEntriesSelector(ref);
+      return rows.map((row) => {
+        const { id, model } = row;
+        const areaModel = model as AdministrativeArea;
+        return {
+          id,
+          model: {
+           Name: areaModel.Name,
+           RegionalDistrict: areaModel.RegionalDistrict?.Name ?? '',
+           CreatedOn: areaModel.CreatedOn,
+           Disabled: areaModel.IsDisabled,
+          },
+        };
+      });
+    }
+    return [];
+  };
+
   return (
     <FilterSearchDataGrid
       name="adminAreas"
@@ -96,6 +121,7 @@ const AdministrativeAreasTable = () => {
       ]}
       tableHeader={'Administrative Areas'}
       excelTitle={'Administrative Areas Table'}
+      customExcelData={getExcelData}
       addTooltip={'Add admin area'}
       columns={columns}
       getRowId={(row) => row.Id}
