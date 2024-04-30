@@ -224,14 +224,14 @@ const UsersTable = (props: IUsersTable) => {
           id,
           model: {
             Username: userModel.Username,
-            FirstName: userModel.FirstName,
-            LastName: userModel.LastName,
+            'First Name': userModel.FirstName,
+            'Last Name': userModel.LastName,
             Email: userModel.Email,
             Status: userModel.Status,
             Agency: userModel.Agency?.Name,
-            LastLogin: userModel.LastLogin,
+            'Last Login': userModel.LastLogin,
             Role: userModel.Role?.Name,
-            CreatedOn: userModel.CreatedOn,
+            'Created On': userModel.CreatedOn,
             Position: userModel.Position,
           },
         };

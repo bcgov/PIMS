@@ -236,11 +236,11 @@ const PropertyTable = (props: IPropertyTable) => {
             Ministry: propertyModel.Agency?.Parent?.Name,
             Agency: propertyModel.Agency?.Name,
             Address: propertyModel.Address1,
-            AdministrativeArea: propertyModel.AdministrativeArea?.Name,
+            'Administrative Area': propertyModel.AdministrativeArea?.Name,
             Postal: propertyModel.Postal,
             PID: propertyModel.PID,
             PIN: propertyModel.PIN,
-            AssessedValue: propertyModel.Evaluations?.length
+            'Assessed Value': propertyModel.Evaluations?.length
               ? propertyModel.Evaluations.sort(
                   (
                     a: ParcelEvaluation | BuildingEvaluation,
@@ -248,7 +248,7 @@ const PropertyTable = (props: IPropertyTable) => {
                   ) => b.Year - a.Year,
                 ).at(0).Value
               : '',
-            AssessmentYear: propertyModel.Evaluations?.length
+            'Assessment Year': propertyModel.Evaluations?.length
               ? propertyModel.Evaluations.sort(
                   (
                     a: ParcelEvaluation | BuildingEvaluation,
@@ -256,35 +256,35 @@ const PropertyTable = (props: IPropertyTable) => {
                   ) => b.Year - a.Year,
                 ).at(0).Year
               : '',
-            NetbookValue: propertyModel.Fiscals?.length
+            'Netbook Value': propertyModel.Fiscals?.length
               ? propertyModel.Fiscals.sort(
                   (a: ParcelFiscal | BuildingFiscal, b: ParcelFiscal | BuildingFiscal) =>
                     b.FiscalYear - a.FiscalYear,
                 ).at(0).Value
               : '',
-            NetbookYear: propertyModel.Fiscals?.length
+            'Netbook Year': propertyModel.Fiscals?.length
               ? propertyModel.Fiscals.sort(
                   (a: ParcelFiscal | BuildingFiscal, b: ParcelFiscal | BuildingFiscal) =>
                     b.FiscalYear - a.FiscalYear,
                 ).at(0).FiscalYear
               : '',
-            ParcelLandArea:
+            'Parcel Land Area':
               propertyModel.PropertyTypeId === PropertyTypes.LAND
                 ? (propertyModel as Parcel).LandArea
                 : '',
-            BuildingTotalArea:
+            'Building Total Area':
               propertyModel.PropertyTypeId === PropertyTypes.BUILDING
                 ? (propertyModel as Building).TotalArea
                 : '',
-            BuildingPredominateUse:
+            'Building Predominate Use':
               propertyModel.PropertyTypeId === PropertyTypes.BUILDING
                 ? (propertyModel as Building).BuildingPredominateUse?.Name
                 : '',
-            BuildingConstructionType:
+            'Building Construction Type':
               propertyModel.PropertyTypeId === PropertyTypes.BUILDING
                 ? (propertyModel as Building).BuildingConstructionType?.Name
                 : '',
-            BuildingTenancy:
+            'Building Tenancy':
               propertyModel.PropertyTypeId === PropertyTypes.BUILDING
                 ? (propertyModel as Building).BuildingTenancy
                 : '',

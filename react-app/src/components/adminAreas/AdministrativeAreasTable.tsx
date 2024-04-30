@@ -90,8 +90,8 @@ const AdministrativeAreasTable = () => {
           id,
           model: {
            Name: areaModel.Name,
-           RegionalDistrict: areaModel.RegionalDistrict?.Name ?? '',
-           CreatedOn: areaModel.CreatedOn,
+           'Regional District': areaModel.RegionalDistrict?.Name ?? '',
+           'Created On': areaModel.CreatedOn,
            Disabled: areaModel.IsDisabled,
           },
         };
