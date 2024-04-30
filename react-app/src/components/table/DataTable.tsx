@@ -28,8 +28,10 @@ import {
   DataGridProps,
   GridOverlay,
   GridRenderCellParams,
+  GridRowId,
   GridState,
   GridTreeNodeWithRender,
+  GridValidRowModel,
   gridFilteredSortedRowEntriesSelector,
   useGridApiRef,
 } from '@mui/x-data-grid';
@@ -167,6 +169,12 @@ type FilterSearchDataGridProps = {
   presetFilterSelectOptions: JSX.Element[];
   tableHeader: string;
   excelTitle: string;
+  customExcelData?: (ref: MutableRefObject<GridApiCommunity>) => Promise<
+    {
+      id: GridRowId;
+      model: GridValidRowModel;
+    }[]
+  >;
   addTooltip: string;
   name: string;
   initialState?: GridInitialStateCommunity;
@@ -396,9 +404,11 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           </Tooltip>
           <Tooltip title="Export to Excel">
             <IconButton
-              onClick={() => {
+              onClick={async () => {
                 downloadExcelFile({
-                  data: gridFilteredSortedRowEntriesSelector(tableApiRef),
+                  data: props.customExcelData
+                    ? await props.customExcelData(tableApiRef)
+                    : gridFilteredSortedRowEntriesSelector(tableApiRef),
                   tableName: props.excelTitle,
                   filterName: selectValue,
                   includeDate: true,
