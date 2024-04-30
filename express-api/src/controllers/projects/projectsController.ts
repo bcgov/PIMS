@@ -5,8 +5,11 @@ import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import projectServices, { ProjectPropertyIds } from '@/services/projects/projectsServices';
 import userServices from '@/services/users/usersServices';
 import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
-import { DeepPartial } from 'typeorm';
+import { DeepPartial, In } from 'typeorm';
 import { Project } from '@/typeorm/Entities/Project';
+import { AppDataSource } from '@/appDataSource';
+import { Parcel } from '@/typeorm/Entities/Parcel';
+import { Building } from '@/typeorm/Entities/Building';
 
 /**
  * @description Function to filter users based on agencies
@@ -50,11 +53,41 @@ export const getDisposalProject = async (req: Request, res: Response) => {
    *   "bearerAuth" : []
    * }]
    */
-  return stubResponse(res);
+  const projectId = Number(req.params.projectId);
+  if (isNaN(projectId)) {
+    return res.status(400).send('Project ID was invalid.');
+  }
+  const project = await projectServices.getProjectById(projectId);
+  const parcelIds = project.ProjectProperties?.filter((p) => p.ParcelId != null).map(
+    (p) => p.ParcelId,
+  );
+  const buildingIds = project.ProjectProperties?.filter((b) => b.BuildingId != null).map(
+    (b) => b.BuildingId,
+  );
+  const parcels = await AppDataSource.getRepository(Parcel).find({
+    relations: {
+      Agency: true,
+      Evaluations: true,
+      Fiscals: true,
+    },
+    where: { Id: In(parcelIds ?? []) },
+  });
+  const buildings = await AppDataSource.getRepository(Building).find({
+    relations: {
+      Agency: true,
+      Evaluations: true,
+      Fiscals: true,
+    },
+    where: { Id: In(buildingIds ?? []) },
+  });
+  if (!project) {
+    return res.status(404).send('Project matching this internal ID not found.');
+  }
+  return res.status(200).send({ ...project, Buildings: buildings, Parcels: parcels });
 };
 
 /**
- * @description Update disposal project by either the numeric id or projectNumber.
+ * @description Update disposal project by either the numeric id.
  * @param {Request}     req Incoming request.
  * @param {Response}    res Outgoing response.
  * @returns {Response}      A 200 status with the updated project.
@@ -67,7 +100,24 @@ export const updateDisposalProject = async (req: Request, res: Response) => {
    *   "bearerAuth" : []
    * }]
    */
-  return stubResponse(res);
+  const projectId = Number(req.params.projectId);
+  if (isNaN(projectId)) {
+    return res.status(400).send('Invalid Project ID');
+  }
+
+  if (!req.body.Project || !req.body.PropertyIds || !req.body.Tasks) {
+    return res
+      .status(400)
+      .send('Request must include the following: {Project:..., PropertyIds:..., Tasks:...}');
+  }
+
+  if (projectId != req.body.Project.Id) {
+    return res.status(400).send('The param ID does not match the request body.');
+  }
+
+  const project = 'woo got it to match';
+  //const project = await projectServices.updateProject(req.body.project, req.body.propertyIds);
+  return res.status(200).send(project);
 };
 
 /**
@@ -84,7 +134,13 @@ export const deleteDisposalProject = async (req: Request, res: Response) => {
    *   "bearerAuth" : []
    * }]
    */
-  return stubResponse(res);
+  const projectId = Number(req.params.projectId);
+  if (isNaN(projectId)) {
+    return res.status(400).send('Invalid Project ID');
+  }
+
+  const delProject = projectServices.deleteProjectById(projectId);
+  return res.status(200).send(delProject);
 };
 
 /**
