@@ -210,8 +210,6 @@ const UsersTable = (props: IUsersTable) => {
     },
   ];
 
-  // ref: MutableRefObject<GridApiCommunity>
-
   const getExcelData: (
     ref: MutableRefObject<GridApiCommunity>,
   ) => Promise<{ id: GridRowId; model: GridValidRowModel }[]> = async (
