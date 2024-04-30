@@ -1,0 +1,13 @@
+ <html> 
+    <head>
+        <title>{{ Title }}</title>
+    </head> 
+    <body>
+        {% set note = Project.Notes | filterByAttr('NoteType', 22) | first %}
+        {# 22 -> ErpNotification #}
+        <p>Good morning / Good afternoon,</p>
+        <p>Your project {{ Project.ProjectNumber }} has been approved. Signin to <a href={{ Uri }}>PIMS</a> to review the progress.</p>
+        <p>{{ note.Note }}</p>
+        <p>Sincerely Real Property Division</p>
+    </body>
+</html>
