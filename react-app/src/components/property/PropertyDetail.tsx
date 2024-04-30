@@ -22,6 +22,9 @@ import {
 import { PropertyType } from './PropertyForms';
 import MetresSquared from '@/components/text/MetresSquared';
 import { zeroPadPID } from '@/utilities/formatters';
+import ParcelMap from '../map/ParcelMap';
+import { Map } from 'leaflet';
+import { Room } from '@mui/icons-material';
 
 interface IPropertyDetail {
   onClose: () => void;
@@ -69,6 +72,14 @@ const PropertyDetail = (props: IPropertyDetail) => {
   }, [parcel]);
 
   const classification = useClassificationStyle();
+  const [map, setMap] = useState<Map>(null);
+  useEffect(() => {
+    if (building) {
+      map?.setView([building.Location.y, building.Location.x], 17);
+    } else if (parcel) {
+      map?.setView([parcel.Location.y, parcel.Location.x], 17);
+    }
+  }, [building, parcel, map]);
 
   const assessedValues = useMemo(() => {
     if (parcelId && parcel) {
@@ -228,6 +239,14 @@ const PropertyDetail = (props: IPropertyDetail) => {
             parcelRelatedBuildingsNum={relatedBuildings?.length ?? 0}
           />
         </DataCard>
+        <ParcelMap height={'500px'} mapRef={setMap} movable={false}>
+          <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height={'100%'}>
+            <Room
+              color="primary"
+              sx={{ zIndex: 400, position: 'relative', marginBottom: '12px' }}
+            />
+          </Box>
+        </ParcelMap>
       </Box>
       <>
         {buildingOrParcel === 'Parcel' ? (
