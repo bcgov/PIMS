@@ -6,6 +6,7 @@ import {
   getAgencyById,
   updateAgencyById,
 } from '@/controllers/agencies/agenciesController';
+import activeUserCheck from '@/middleware/activeUserCheck';
 import catchErrors from '@/utilities/controllerErrorWrapper';
 import { protectedRoute } from '@bcgov/citz-imb-sso-express';
 import express from 'express';
@@ -16,12 +17,12 @@ const router = express.Router();
 router
   .route(`/`)
   .get(protectedRoute(), catchErrors(getAgencies))
-  .post(protectedRoute([Roles.ADMIN]), catchErrors(addAgency));
+  .post(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(addAgency));
 
 router
   .route(`/:id`)
-  .get(protectedRoute(), catchErrors(getAgencyById))
-  .patch(protectedRoute([Roles.ADMIN]), catchErrors(updateAgencyById))
-  .delete(protectedRoute([Roles.ADMIN]), catchErrors(deleteAgencyById));
+  .get(protectedRoute(), activeUserCheck, catchErrors(getAgencyById))
+  .patch(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(updateAgencyById))
+  .delete(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(deleteAgencyById));
 
 export default router;

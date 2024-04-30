@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { stubResponse } from '@/utilities/stubResponse';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import {
@@ -15,7 +15,7 @@ import userServices from '@/services/users/usersServices';
  * @param   {Response}    res Outgoing response
  * @returns {Response}        A 200 status with a list of administrative areas.
  */
-export const getAdministrativeAreas = async (req: Request, res: Response, next: NextFunction) => {
+export const getAdministrativeAreas = async (req: Request, res: Response) => {
   /**
    * #swagger.tags = ['Administrative Areas - Admin']
    * #swagger.description = 'Returns a paged list of administrative areas from the datasource.'
@@ -23,21 +23,17 @@ export const getAdministrativeAreas = async (req: Request, res: Response, next: 
             "bearerAuth": []
       }]
    */
-  try {
-    const ssoUser = req.user;
-    const filter = AdministrativeAreaFilterSchema.safeParse(req.query);
-    if (filter.success) {
-      const adminAreas = await administrativeAreasServices.getAdministrativeAreas(filter.data);
-      if (!ssoUser.hasRoles([Roles.ADMIN])) {
-        const trimmed = AdministrativeAreaPublicResponseSchema.array().parse(adminAreas);
-        return res.status(200).send(trimmed);
-      }
-      return res.status(200).send(adminAreas);
-    } else {
-      return res.status(400).send('Could not parse filter.');
+  const ssoUser = req.user;
+  const filter = AdministrativeAreaFilterSchema.safeParse(req.query);
+  if (filter.success) {
+    const adminAreas = await administrativeAreasServices.getAdministrativeAreas(filter.data);
+    if (!ssoUser.hasRoles([Roles.ADMIN])) {
+      const trimmed = AdministrativeAreaPublicResponseSchema.array().parse(adminAreas);
+      return res.status(200).send(trimmed);
     }
-  } catch (e) {
-    next(e);
+    return res.status(200).send(adminAreas);
+  } else {
+    return res.status(400).send('Could not parse filter.');
   }
 };
 
