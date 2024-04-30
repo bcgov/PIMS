@@ -7,8 +7,6 @@ import userServices from '@/services/users/usersServices';
 import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 import { DeepPartial } from 'typeorm';
 import { Project } from '@/typeorm/Entities/Project';
-import { AppDataSource } from '@/appDataSource';
-import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 
 /**
  * @description Get disposal project by either the numeric id or projectNumber.
@@ -32,23 +30,10 @@ export const getDisposalProject = async (req: Request, res: Response) => {
   if (!project) {
     return res.status(404).send('Project matching this internal ID not found.');
   }
-  const properties = await AppDataSource.getRepository(ProjectProperty).find({
-    where: { ProjectId: project.Id },
-    relations: {
-      Parcel: {
-        Agency: true,
-        Evaluations: true,
-        Fiscals: true,
-      },
-      Building: {
-        Agency: true,
-        Evaluations: true,
-        Fiscals: true,
-      },
-    },
-  });
-  const buildings = properties.filter((a) => a.Building != null).map((a) => a.Building);
-  const parcels = properties.filter((p) => p.Parcel != null).map((p) => p.Parcel);
+  const buildings = project.ProjectProperties.filter((a) => a.Building != null).map(
+    (a) => a.Building,
+  );
+  const parcels = project.ProjectProperties.filter((p) => p.Parcel != null).map((p) => p.Parcel);
   return res.status(200).send({ ...project, Buildings: buildings, Parcels: parcels });
 };
 

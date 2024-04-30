@@ -514,9 +514,9 @@ export const produceProjectProperty = (props?: Partial<ProjectProperty>): Projec
     PropertyTypeId: faker.number.int({ min: 0, max: 2 }),
     PropertyType: null,
     ParcelId: faker.number.int(),
-    Parcel: null,
+    Parcel: produceParcel(),
     BuildingId: faker.number.int(),
-    Building: null,
+    Building: produceBuilding(),
     ...props,
   };
   return projectProperty;
