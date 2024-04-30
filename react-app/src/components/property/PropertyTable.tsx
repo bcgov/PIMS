@@ -3,12 +3,16 @@ import { CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, SxProps, Tooltip, lighten, useTheme } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { Check } from '@mui/icons-material';
-import { GridColDef, GridColumnHeaderTitle, GridEventListener } from '@mui/x-data-grid';
+import { GridColDef, GridColumnHeaderTitle, GridEventListener, gridFilteredSortedRowEntriesSelector, GridRowId, GridValidRowModel } from '@mui/x-data-grid';
 import { dateFormatter } from '@/utilities/formatters';
 import { ClassificationInline } from './ClassificationIcon';
 import { useNavigate } from 'react-router-dom';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
+import { Property } from '@/interfaces/IProperty';
+import { Parcel } from '@/hooks/api/useParcelsApi';
+import { Building } from '@/hooks/api/useBuildingsApi';
+import { propertyTypeMapper, PropertyTypes } from '@/constants/propertyTypes';
 
 interface IPropertyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
@@ -202,6 +206,27 @@ const PropertyTable = (props: IPropertyTable) => {
     }
   };
 
+  const getExcelData: (
+    ref: MutableRefObject<GridApiCommunity>,
+  ) => Promise<{ id: GridRowId; model: GridValidRowModel }[]> = async (
+    ref: MutableRefObject<GridApiCommunity>,
+  ) => {
+    if (ref?.current?.exportState) {
+      const rows = gridFilteredSortedRowEntriesSelector(ref);
+      return rows.map((row) => {
+        const { id, model } = row;
+        const propertyModel = model as Parcel | Building;
+        return {
+          id,
+          model: {
+            Type: propertyTypeMapper(propertyModel.PropertyTypeId),
+          },
+        };
+      });
+    }
+    return [];
+  };
+
   return (
     <Box
       sx={
@@ -235,6 +260,7 @@ const PropertyTable = (props: IPropertyTable) => {
         loading={loading}
         tableHeader={'Properties Overview'}
         excelTitle={'Properties'}
+        customExcelData={getExcelData}
         columns={columns}
         rows={properties}
         addTooltip="Add a new property"
