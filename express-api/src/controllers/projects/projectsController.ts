@@ -82,13 +82,13 @@ export const addDisposalProject = async (req: Request, res: Response) => {
   // Extract projectData and propertyIds from the request body
   const {
     project,
-    propertyIds,
-  }: { project: DeepPartial<Project>; propertyIds: ProjectPropertyIds } = req.body;
+    projectPropertyIds,
+  }: { project: DeepPartial<Project>; projectPropertyIds: ProjectPropertyIds } = req.body;
   const user = await userServices.getUser((req.user as SSOUser).preferred_username);
-  const addBody = { ...project, CreatedById: user.Id };
+  const addBody = { ...project, CreatedById: user.Id, AgencyId: user.AgencyId };
 
   // Call the addProject service function with the project data
-  const newProject = await projectServices.addProject(addBody, propertyIds);
+  const newProject = await projectServices.addProject(addBody, projectPropertyIds);
 
   // Return the new project in the response
   return res.status(201).json(newProject);

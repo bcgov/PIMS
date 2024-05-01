@@ -159,10 +159,10 @@ export const ProjectDocumentationDialog = (props: IProjectFinancialDialog) => {
       Tasks: {
         surplusDeclarationReadiness: initialValues?.ProjectTasks?.find(
           (task) => task.TaskId === ProjectTask.SURPLUS_DECLARATION_READINESS,
-        ).IsCompleted,
+        )?.IsCompleted,
         tripleBottomLine: initialValues?.ProjectTasks?.find(
           (task) => task.TaskId === ProjectTask.TRIPLE_BOTTOM_LINE,
-        ).IsCompleted,
+        )?.IsCompleted,
       },
       Approval: initialValues?.ApprovedOn ? true : false,
     });
@@ -174,7 +174,7 @@ export const ProjectDocumentationDialog = (props: IProjectFinancialDialog) => {
       onConfirm={async () => {
         const isValid = await documentationFormMethods.trigger();
         if (isValid) {
-          const { Tasks, Approval } = documentationFormMethods.getValues();
+          const { Tasks } = documentationFormMethods.getValues();
           api.projects
             .updateProject(initialValues.Id, {
               Tasks: [
@@ -184,10 +184,9 @@ export const ProjectDocumentationDialog = (props: IProjectFinancialDialog) => {
                 },
                 {
                   TaskId: ProjectTask.TRIPLE_BOTTOM_LINE,
-                  IsCompleted: Approval ? Tasks.tripleBottomLine : undefined,
+                  IsCompleted: Tasks.tripleBottomLine,
                 },
               ],
-              ApprovedOn: new Date(),
             })
             .then(() => postSubmit());
         }

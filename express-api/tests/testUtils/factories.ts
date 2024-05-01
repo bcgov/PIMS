@@ -492,7 +492,7 @@ export const produceProject = (
     Status: null, // TODO: produceStatus
     RiskId: 1,
     Risk: null, // TODO: produceRisk
-    Tasks: [],
+    Tasks: [produceProjectTask()],
     ProjectProperties: projectProperties ?? [
       produceProjectProperty({
         ProjectId: projectId,

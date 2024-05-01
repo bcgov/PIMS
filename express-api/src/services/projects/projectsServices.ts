@@ -19,6 +19,7 @@ import { DeepPartial, FindManyOptions, FindOptionsOrder, In, IsNull } from 'type
 import { ProjectFilter } from '@/services/projects/projectSchema';
 import { PropertyType } from '@/constants/propertyType';
 import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
+import { ProjectRisk } from '@/constants/projectRisk';
 
 const projectRepo = AppDataSource.getRepository(Project);
 const projectPropertiesRepo = AppDataSource.getRepository(ProjectProperty);
@@ -121,6 +122,13 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
     ? ProjectStatus.SUBMITTED_EXEMPTION
     : ProjectStatus.SUBMITTED;
 
+  // Set default RiskId
+  project.RiskId = project.RiskId ?? ProjectRisk.GREEN;
+
+  // Removing and storing for later
+  const tasks: DeepPartial<ProjectTask[]> = project.Tasks;
+  project.Tasks = undefined;
+
   // Get a project number from the sequence
   const [{ nextval }] = await AppDataSource.query("SELECT NEXTVAL('project_num_seq')");
 
@@ -134,7 +142,7 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
     const { parcels, buildings } = propertyIds;
     if (parcels) await addProjectParcelRelations(newProject, parcels);
     if (buildings) await addProjectBuildingRelations(newProject, buildings);
-    await handleProjectTasks(newProject);
+    await handleProjectTasks(newProject, tasks);
     await queryRunner.commitTransaction();
     return newProject;
   } catch (e) {
@@ -325,17 +333,20 @@ const handleProjectNotifications = async (
   }
 };
 
-const handleProjectTasks = async (project: DeepPartial<Project>) => {
-  if (project.Tasks?.length) {
-    for (const task of project.Tasks) {
-      const exists = await AppDataSource.getRepository(ProjectTask).exists({
+const handleProjectTasks = async (
+  project: DeepPartial<Project>,
+  tasks: DeepPartial<ProjectTask[]>,
+) => {
+  if (tasks?.length) {
+    for (const task of tasks) {
+      const existingTask = await AppDataSource.getRepository(ProjectTask).findOne({
         where: { ProjectId: project.Id, TaskId: task.TaskId },
       });
       const taskEntity: DeepPartial<ProjectTask> = {
         ...task,
         ProjectId: project.Id,
-        CreatedById: exists ? undefined : project.CreatedById,
-        UpdatedById: exists ? project.UpdatedById : undefined,
+        CreatedById: existingTask ? existingTask.CreatedById : project.CreatedById,
+        UpdatedById: existingTask ? project.UpdatedById : undefined,
         CompletedOn: task.IsCompleted ? new Date() : undefined,
       };
       await AppDataSource.getRepository(ProjectTask).save(taskEntity);
@@ -369,6 +380,10 @@ const updateProject = async (project: DeepPartial<Project>, propertyIds: Project
     throw new ErrorWithCode('Project Agency may not be changed.', 403);
   }
 
+  // Removing and storing for later
+  const tasks: DeepPartial<ProjectTask[]> = project.Tasks;
+  project.Tasks = undefined;
+
   /* TODO: Need something that checks for valid changes between status, workflow, etc.
    * Can address this when business logic is determined.
    */
@@ -390,7 +405,7 @@ const updateProject = async (project: DeepPartial<Project>, propertyIds: Project
     }
 
     await handleProjectNotifications(originalProject, project);
-    await handleProjectTasks(project);
+    await handleProjectTasks(project, tasks);
 
     // Update Project
     await projectRepo.save({ ...project, Metadata: newMetadata });

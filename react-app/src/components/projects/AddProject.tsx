@@ -265,7 +265,9 @@ const AddProject = () => {
                 },
                 projectProperties,
               )
-              .then(() => navigate('/projects'));
+              .then((response) => {
+                if (response.status === 201) navigate('/projects');
+              });
           }
         }}
         variant="contained"

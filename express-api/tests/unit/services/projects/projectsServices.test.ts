@@ -299,6 +299,7 @@ describe('UNIT - Project Services', () => {
       jest.clearAllMocks();
     });
     it('should return a project if it is found', async () => {
+      _projectFindOne.mockImplementationOnce(async () => produceProject());
       const result = await projectServices.getProjectById(1);
       expect(_projectFindOne).toHaveBeenCalledTimes(1);
       expect(result).toBeTruthy();

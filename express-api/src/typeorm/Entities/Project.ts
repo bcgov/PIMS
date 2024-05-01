@@ -181,25 +181,21 @@ export class Project extends BaseEntity {
 
   @OneToMany(() => ProjectTask, (ProjectTask) => ProjectTask.Project, {
     nullable: true,
-    cascade: true,
   })
   Tasks: ProjectTask[];
 
   @OneToMany(() => NotificationQueue, (NotificationQueue) => NotificationQueue.Project, {
     nullable: true,
-    cascade: true,
   })
   Notifications: NotificationQueue[];
 
   @OneToMany(() => ProjectStatusHistory, (ProjectStatusHistory) => ProjectStatusHistory.Project, {
     nullable: true,
-    cascade: true,
   })
   StatusHistory: ProjectStatusHistory[];
 
   @OneToMany(() => ProjectNote, (ProjectNote) => ProjectNote.Project, {
     nullable: true,
-    cascade: true,
   })
   Notes: ProjectNote[];
 }
