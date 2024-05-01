@@ -361,7 +361,7 @@ describe('UNIT - Project Services', () => {
       ...originalProject,
       Name: 'New Name',
       StatusId: 2,
-      Tasks: [{ Id: 1, IsCompleted: false }],
+      Tasks: [produceProjectTask({ TaskId: 1, IsCompleted: false })],
     };
 
     it('should update values of a project', async () => {
