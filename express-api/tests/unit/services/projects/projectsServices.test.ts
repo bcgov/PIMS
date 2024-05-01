@@ -126,8 +126,8 @@ const _notificationFind = jest
   .mockImplementation(async () => [produceProjectNotification()]);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _projectTaskFind = jest
-  .spyOn(AppDataSource.getRepository(ProjectTask), 'exists')
-  .mockImplementation(async () => true);
+  .spyOn(AppDataSource.getRepository(ProjectTask), 'findOne')
+  .mockImplementation(async () => produceProjectTask());
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _projectTaskSave = jest
   .spyOn(AppDataSource.getRepository(ProjectTask), 'save')
