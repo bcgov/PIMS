@@ -57,6 +57,60 @@ const getParcels = async (filter: ParcelFilter, includeRelations: boolean = fals
       AdministrativeArea: includeRelations,
       Classification: includeRelations,
       PropertyType: includeRelations,
+    },
+    select: {
+      Agency: {
+        Id: true,
+        Name: true,
+        Parent: {
+          Id: true,
+          Name: true,
+        },
+      },
+      AdministrativeArea: {
+        Id: true,
+        Name: true,
+      },
+      Classification: {
+        Id: true,
+        Name: true,
+      },
+      PropertyType: {
+        Id: true,
+        Name: true,
+      },
+      ParentParcel: {
+        Id: true,
+      },
+    },
+    where: {
+      PID: filter.pid,
+      ClassificationId: filter.classificationId,
+      AgencyId: filter.agencyId
+        ? In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId)
+        : undefined,
+      AdministrativeAreaId: filter.administrativeAreaId,
+      PropertyTypeId: filter.propertyTypeId,
+      IsSensitive: filter.isSensitive,
+    },
+    take: filter.quantity,
+    skip: (filter.page ?? 0) * (filter.quantity ?? 0),
+    order: filter.sort as FindOptionsOrder<Parcel>,
+  });
+  return parcels;
+};
+
+const getParcelsForExcelExport = async (
+  filter: ParcelFilter,
+  includeRelations: boolean = false,
+) => {
+  const parcels = await parcelRepo.find({
+    relations: {
+      ParentParcel: includeRelations,
+      Agency: includeRelations,
+      AdministrativeArea: includeRelations,
+      Classification: includeRelations,
+      PropertyType: includeRelations,
       Evaluations: includeRelations,
       Fiscals: includeRelations,
     },
@@ -103,9 +157,6 @@ const getParcels = async (filter: ParcelFilter, includeRelations: boolean = fals
       PropertyTypeId: filter.propertyTypeId,
       IsSensitive: filter.isSensitive,
     },
-    take: filter.quantity,
-    skip: (filter.page ?? 0) * (filter.quantity ?? 0),
-    order: filter.sort as FindOptionsOrder<Parcel>,
   });
   return parcels;
 };
@@ -166,6 +217,7 @@ const parcelServices = {
   updateParcel,
   deleteParcelById,
   addParcel,
+  getParcelsForExcelExport,
 };
 
 export default parcelServices;

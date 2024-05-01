@@ -217,7 +217,10 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
   };
 
   const getProjectsForExcelExport = async () => {
-    const { parsedBody } = await absoluteFetch.get('/projects', { includeRelations: true, excelExport: true });
+    const { parsedBody } = await absoluteFetch.get('/projects', {
+      includeRelations: true,
+      excelExport: true,
+    });
     if (parsedBody.error) {
       return [];
     }

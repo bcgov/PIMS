@@ -88,6 +88,61 @@ export const getBuildings = async (filter: BuildingFilter, includeRelations: boo
       AdministrativeArea: includeRelations,
       Classification: includeRelations,
       PropertyType: includeRelations,
+    },
+    select: {
+      Agency: {
+        Id: true,
+        Name: true,
+        Parent: {
+          Id: true,
+          Name: true,
+        },
+      },
+      AdministrativeArea: {
+        Id: true,
+        Name: true,
+      },
+      Classification: {
+        Id: true,
+        Name: true,
+      },
+      PropertyType: {
+        Id: true,
+        Name: true,
+      },
+    },
+    where: {
+      PID: filter.pid,
+      ClassificationId: filter.classificationId,
+      AgencyId: filter.agencyId
+        ? In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId)
+        : undefined,
+      AdministrativeAreaId: filter.administrativeAreaId,
+      PropertyTypeId: filter.propertyTypeId,
+      BuildingConstructionTypeId: filter.buildingConstructionTypeId,
+      BuildingPredominateUseId: filter.buildingPredominateUseId,
+      BuildingOccupantTypeId: filter.buildingOccupantTypeId,
+      IsSensitive: filter.isSensitive,
+    },
+    take: filter.quantity,
+    skip: (filter.page ?? 0) * (filter.quantity ?? 0),
+    order: filter.sort as FindOptionsOrder<Building>,
+  });
+  return buildings;
+};
+
+export const getBuildingsForExcelExport = async (
+  filter: BuildingFilter,
+  includeRelations: boolean = false,
+) => {
+  const buildings = await buildingRepo.find({
+    relations: {
+      Agency: {
+        Parent: includeRelations,
+      },
+      AdministrativeArea: includeRelations,
+      Classification: includeRelations,
+      PropertyType: includeRelations,
       BuildingConstructionType: includeRelations,
       BuildingPredominateUse: includeRelations,
       BuildingOccupantType: includeRelations,

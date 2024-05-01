@@ -1,5 +1,10 @@
 import React, { MutableRefObject } from 'react';
-import { GridColDef, gridFilteredSortedRowEntriesSelector, GridRowId, GridValidRowModel } from '@mui/x-data-grid';
+import {
+  GridColDef,
+  gridFilteredSortedRowEntriesSelector,
+  GridRowId,
+  GridValidRowModel,
+} from '@mui/x-data-grid';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
@@ -89,10 +94,10 @@ const AdministrativeAreasTable = () => {
         return {
           id,
           model: {
-           Name: areaModel.Name,
-           'Regional District': areaModel.RegionalDistrict?.Name ?? '',
-           'Created On': areaModel.CreatedOn,
-           Disabled: areaModel.IsDisabled,
+            Name: areaModel.Name,
+            'Regional District': areaModel.RegionalDistrict?.Name ?? '',
+            'Created On': areaModel.CreatedOn,
+            Disabled: areaModel.IsDisabled,
           },
         };
       });

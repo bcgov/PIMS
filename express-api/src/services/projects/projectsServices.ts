@@ -89,10 +89,7 @@ const getProjectById = async (id: number) => {
  * @returns The newly created project.
  * @throws ErrorWithCode - If the project name is missing, agency is not found, or there is an error creating the project.
  */
-const addProject = async (
-  project: DeepPartial<Project>,
-  propertyIds: ProjectPropertyIds,
-) => {
+const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPropertyIds) => {
   // Does the project have a name?
   if (!project.Name) throw new ErrorWithCode('Projects must have a name.', 400);
 
@@ -304,10 +301,7 @@ const removeProjectBuildingRelations = async (project: Project, buildingIds: num
  * @returns The result of the project update.
  * @throws {ErrorWithCode} If the project name is empty or null, if the project does not exist, if the project number or agency cannot be changed, or if there is an error updating the project.
  */
-const updateProject = async (
-  project: DeepPartial<Project>,
-  propertyIds: ProjectPropertyIds,
-) => {
+const updateProject = async (project: DeepPartial<Project>, propertyIds: ProjectPropertyIds) => {
   // Project must still have a name
   // undefined is allowed because it is not always updated
   if (project.Name === null || project.Name === '') {
@@ -446,7 +440,7 @@ const getProjects = async (filter: ProjectFilter, includeRelations: boolean = fa
   const queryOptions: FindManyOptions<Project> = {
     relations: {
       Agency: {
-        Parent: includeRelations
+        Parent: includeRelations,
       },
       Status: includeRelations,
       UpdatedBy: includeRelations,
@@ -461,10 +455,7 @@ const getProjects = async (filter: ProjectFilter, includeRelations: boolean = fa
       Status: {
         Name: true,
       },
-      UpdatedBy:
-      {Id: true,
-        FirstName: true,
-        LastName: true},
+      UpdatedBy: { Id: true, FirstName: true, LastName: true },
     },
     where: {
       StatusId: filter.statusId,
@@ -486,7 +477,7 @@ const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boo
   const queryOptions: FindManyOptions<Project> = {
     relations: {
       Agency: {
-        Parent: includeRelations
+        Parent: includeRelations,
       },
       TierLevel: includeRelations,
       Risk: includeRelations,
@@ -507,10 +498,10 @@ const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boo
         },
       },
       TierLevel: {
-        Name: true
+        Name: true,
       },
       Risk: {
-        Name: true
+        Name: true,
       },
       Status: {
         Name: true,
@@ -518,14 +509,11 @@ const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boo
       CreatedBy: {
         Id: true,
         FirstName: true,
-        LastName: true
+        LastName: true,
       },
-      UpdatedBy:
-      {Id: true,
-        FirstName: true,
-        LastName: true},
-      Workflow:{
-        Name: true
+      UpdatedBy: { Id: true, FirstName: true, LastName: true },
+      Workflow: {
+        Name: true,
       },
       Tasks: {
         CompletedOn: true,
@@ -540,7 +528,7 @@ const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boo
       Notes: {
         NoteType: true,
         Note: true,
-      }
+      },
     },
     where: {
       StatusId: filter.statusId,

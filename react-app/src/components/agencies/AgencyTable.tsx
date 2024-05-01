@@ -2,7 +2,13 @@ import React, { MutableRefObject, useEffect, useState } from 'react';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, Chip, SxProps } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
-import { GridColDef, GridEventListener, gridFilteredSortedRowEntriesSelector, GridRowId, GridValidRowModel } from '@mui/x-data-grid';
+import {
+  GridColDef,
+  GridEventListener,
+  gridFilteredSortedRowEntriesSelector,
+  GridRowId,
+  GridValidRowModel,
+} from '@mui/x-data-grid';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { dateFormatter, statusChipFormatter } from '@/utilities/formatters';
 import { Agency } from '@/hooks/api/useAgencyApi';

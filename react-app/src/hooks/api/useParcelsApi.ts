@@ -54,7 +54,8 @@ export type ParcelAdd = Omit<
 
 export interface IParcelsGetParams {
   pid?: number;
-  includeRelations: boolean;
+  includeRelations?: boolean;
+  excelExport?: boolean;
 }
 
 const useParcelsApi = (absoluteFetch: IFetch) => {

@@ -15,27 +15,24 @@ import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 export const getBuildings = async (req: Request, res: Response) => {
   const filter = BuildingFilterSchema.safeParse(req.query);
   const includeRelations = req.query.includeRelations === 'true';
+  const forExcelExport = req.query.excelExport === 'true';
   const kcUser = req.user as unknown as SSOUser;
   if (!filter.success) {
     return res.status(400).send('Could not parse filter.');
   }
   const filterResult = filter.data;
-  let buildings;
-  if (isAdmin(kcUser) || isAuditor(kcUser)) {
-    buildings = await buildingService.getBuildings(
-      filterResult as BuildingFilter,
-      includeRelations,
-    );
-  } else {
+  if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
     // get array of user's agencies
     const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
     filterResult.agencyId = usersAgencies;
-    // Get parcels associated with agencies of the requesting user
-    buildings = await buildingService.getBuildings(
-      filterResult as BuildingFilter,
-      includeRelations,
-    );
   }
+  // Get parcels associated with agencies of the requesting user
+  const buildings = forExcelExport
+    ? await buildingService.getBuildingsForExcelExport(
+        filterResult as BuildingFilter,
+        includeRelations,
+      )
+    : await buildingService.getBuildings(filterResult as BuildingFilter, includeRelations);
   return res.status(200).send(buildings);
 };
 

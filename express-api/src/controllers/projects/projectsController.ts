@@ -267,21 +267,15 @@ export const filterProjects = async (req: Request, res: Response) => {
     return res.status(400).send('Could not parse filter.');
   }
   const filterResult = filter.data;
-
-  let projects;
-  if (isAdmin(kcUser) || isAuditor(kcUser)) {
-    projects = forExcelExport
-      ? await projectServices.getProjectsForExport(filterResult as ProjectFilter, includeRelations)
-      : await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
-  } else {
+  if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
     // get array of user's agencies
     const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
     filterResult.agencyId = usersAgencies;
-    // Get projects associated with agencies of the requesting user
-    projects = forExcelExport
-      ? await projectServices.getProjectsForExport(filterResult as ProjectFilter, includeRelations)
-      : await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
   }
+  // Get projects associated with agencies of the requesting user
+  const projects = forExcelExport
+    ? await projectServices.getProjectsForExport(filterResult as ProjectFilter, includeRelations)
+    : await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
   return res.status(200).send(projects);
 };
 
