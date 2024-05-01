@@ -55,17 +55,19 @@ export const updateDisposalProject = async (req: Request, res: Response) => {
     return res.status(400).send('Invalid Project ID');
   }
 
-  if (!req.body.Project || !req.body.PropertyIds || !req.body.Tasks) {
+  if (!req.body.project || !req.body.propertyIds) {
     return res
       .status(400)
-      .send('Request must include the following: {Project:..., PropertyIds:..., Tasks:...}');
+      .send('Request must include the following: {project:..., propertyIds:...}');
   }
 
-  if (projectId != req.body.Project.Id) {
+  if (projectId != req.body.project.Id) {
     return res.status(400).send('The param ID does not match the request body.');
   }
   // need to coordinate how we want tasks to be translated
-  const project = await projectServices.updateProject(req.body.project, req.body.propertyIds);
+  const user = await userServices.getUser(req.user.preferred_username);
+  const updateBody = { ...req.body.project, UpdatedById: user.Id };
+  const project = await projectServices.updateProject(updateBody, req.body.propertyIds);
   return res.status(200).send(project);
 };
 
