@@ -14,6 +14,7 @@ import DisposalProjectSearch, {
   ParcelWithType,
 } from './DisposalPropertiesSearchTable';
 import React from 'react';
+import { ProjectTask } from '@/constants/projectTasks';
 
 const AddProject = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const AddProject = () => {
     defaultValues: {
       Name: '',
       TierLevelId: null,
-      Notes: '',
+      Description: '',
       Assessed: 0,
       NetBook: 0,
       Estimated: 0,
@@ -81,7 +82,13 @@ const AddProject = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <TextFormField multiline minRows={3} fullWidth name={'Notes'} label={'Notes'} />
+            <TextFormField
+              multiline
+              minRows={3}
+              fullWidth
+              name={'Description'}
+              label={'Description'}
+            />
           </Grid>
         </Grid>
         <Typography variant="h5">Disposal properties</Typography>
@@ -243,8 +250,18 @@ const AddProject = () => {
               .postProject(
                 {
                   ...formValues,
-                  ReportedFiscalYear: new Date().getFullYear(), //TODO: Should we have fields for this?
+                  ReportedFiscalYear: new Date().getFullYear(),
                   ActualFiscalYear: new Date().getFullYear(),
+                  Tasks: [
+                    {
+                      TaskId: ProjectTask.SURPLUS_DECLARATION_READINESS,
+                      IsCompleted: formValues.Tasks.surplusDeclarationReadiness,
+                    },
+                    {
+                      TaskId: ProjectTask.TRIPLE_BOTTOM_LINE,
+                      IsCompleted: formValues.Tasks.tripleBottomLine,
+                    },
+                  ],
                 },
                 projectProperties,
               )

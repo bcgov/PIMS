@@ -40,7 +40,7 @@ export const ProjectGeneralInfoForm = (props: IProjectGeneralInfoForm) => {
         />
       </Grid>
       <Grid item xs={12}>
-        <TextFormField fullWidth multiline name={'Description'} label={'Notes'} minRows={3} />
+        <TextFormField fullWidth multiline name={'Description'} label={'Description'} minRows={3} />
       </Grid>
     </Grid>
   );
@@ -148,14 +148,14 @@ export const ProjectDocumentationForm = () => {
         {/* <Grid container spacing={2}></Grid> */}
         <Grid item xs={12}>
           <SingleSelectBoxFormField
-            name={'Task.surplusDeclarationReadiness'}
+            name={'Tasks.surplusDeclarationReadiness'}
             label={'Surplus declaration & readiness checklist document emailed to SRES.'}
             required
           />
         </Grid>
         <Grid item xs={12}>
           <SingleSelectBoxFormField
-            name={'Task.tripleBottomLine'}
+            name={'Tasks.tripleBottomLine'}
             label={'Triple bottom line document emailed to SRES or Project is in Tier 1'}
             required
           />

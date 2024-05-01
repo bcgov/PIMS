@@ -4,7 +4,7 @@ import { Box, Checkbox, FormControlLabel, FormGroup, Typography } from '@mui/mat
 import DeleteDialog from '../dialog/DeleteDialog';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
-import { ProjectMetadata, TierLevel, ProjectWithTasks } from '@/hooks/api/useProjectsApi';
+import { Project, ProjectMetadata, TierLevel } from '@/hooks/api/useProjectsApi';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '@/contexts/authContext';
@@ -21,10 +21,9 @@ import {
 interface IProjectDetail {
   onClose: () => void;
 }
-interface ProjectInfo extends ProjectWithTasks {
+interface ProjectInfo extends Project {
   Classification: ProjectStatus;
   AssignTier: TierLevel;
-  Notes: string;
   AssessedValue: number;
   NetBookValue: number;
   EstimatedMarketValue: number;

@@ -11,6 +11,7 @@ import {
 import useDataLoader from '@/hooks/useDataLoader';
 import DisposalProjectSearch from './DisposalPropertiesSearchTable';
 import { Box } from '@mui/material';
+import { ProjectTask } from '@/constants/projectTasks';
 
 interface IProjectGeneralInfoDialog {
   initialValues: Project;
@@ -146,12 +147,24 @@ export const ProjectDocumentationDialog = (props: IProjectFinancialDialog) => {
   const api = usePimsApi();
   const documentationFormMethods = useForm({
     defaultValues: {
-      ProjectTasks: [],
+      Tasks: {
+        surplusDeclarationReadiness: false,
+        tripleBottomLine: false,
+      },
+      Approval: false,
     },
   });
   useEffect(() => {
     documentationFormMethods.reset({
-      ProjectTasks: initialValues?.ProjectTasks,
+      Tasks: {
+        surplusDeclarationReadiness: initialValues?.ProjectTasks?.find(
+          (task) => task.TaskId === ProjectTask.SURPLUS_DECLARATION_READINESS,
+        ).IsCompleted,
+        tripleBottomLine: initialValues?.ProjectTasks?.find(
+          (task) => task.TaskId === ProjectTask.TRIPLE_BOTTOM_LINE,
+        ).IsCompleted,
+      },
+      Approval: initialValues?.ApprovedOn ? true : false,
     });
   }, [initialValues]);
   return (
@@ -161,13 +174,20 @@ export const ProjectDocumentationDialog = (props: IProjectFinancialDialog) => {
       onConfirm={async () => {
         const isValid = await documentationFormMethods.trigger();
         if (isValid) {
-          //const { SurplusDeclaration, TripleBottom } = documentationFormMethods.getValues();
+          const { Tasks, Approval } = documentationFormMethods.getValues();
           api.projects
             .updateProject(initialValues.Id, {
-              // Tasks: {
-              //   surplusDeclarationReadiness: SurplusDeclaration,
-              //   tripleBottomLine: TripleBottom,
-              // },
+              Tasks: [
+                {
+                  TaskId: ProjectTask.SURPLUS_DECLARATION_READINESS,
+                  IsCompleted: Tasks.surplusDeclarationReadiness,
+                },
+                {
+                  TaskId: ProjectTask.TRIPLE_BOTTOM_LINE,
+                  IsCompleted: Approval ? Tasks.tripleBottomLine : undefined,
+                },
+              ],
+              ApprovedOn: new Date(),
             })
             .then(() => postSubmit());
         }

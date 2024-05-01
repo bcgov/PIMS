@@ -40,10 +40,7 @@ export interface ProjectRisk extends BaseEntityInterface {
   Description?: string;
   Code: string;
 }
-export interface ProjectTask {
-  TaskId: number;
-  IsCompleted: boolean;
-}
+
 export interface Project {
   Id: number;
   ProjectNumber: string;
