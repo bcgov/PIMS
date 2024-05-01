@@ -205,7 +205,7 @@ export const produceParcel = (): Parcel => {
     Description: faker.string.alphanumeric(),
     ClassificationId: undefined,
     Classification: undefined,
-    AgencyId: undefined,
+    AgencyId: 1,
     Agency: undefined,
     AdministrativeAreaId: undefined,
     AdministrativeArea: undefined,
@@ -415,7 +415,7 @@ export const producePidsResponse = (): ISitePidsResponseModel => {
   return pidResponse;
 };
 
-export const produceTierLevels = (): TierLevel => {
+export const produceTierLevel = (): TierLevel => {
   const tier: TierLevel = {
     Id: faker.number.int(),
     Name: `Tier ${faker.number.int()}`,
@@ -492,6 +492,7 @@ export const produceProject = (
     Status: null, // TODO: produceStatus
     RiskId: 1,
     Risk: null, // TODO: produceRisk
+    ProjectTasks: [],
     ProjectProperties: projectProperties ?? [
       produceProjectProperty({
         ProjectId: projectId,
@@ -516,9 +517,9 @@ export const produceProjectProperty = (props?: Partial<ProjectProperty>): Projec
     PropertyTypeId: faker.number.int({ min: 0, max: 2 }),
     PropertyType: null,
     ParcelId: faker.number.int(),
-    Parcel: null,
+    Parcel: produceParcel(),
     BuildingId: faker.number.int(),
-    Building: null,
+    Building: produceBuilding(),
     ...props,
   };
   return projectProperty;

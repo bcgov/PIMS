@@ -27,12 +27,14 @@ jest.mock('@/services/buildings/buildingServices', () => ({
 jest.mock('@/services/users/usersServices', () => ({
   getUser: jest.fn().mockImplementation(() => produceUser()),
   getAgencies: jest.fn().mockResolvedValue([1, 2]),
+  hasAgencies: jest.fn().mockImplementation(() => true),
 }));
 
 describe('UNIT - Buildings', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
   beforeEach(() => {
+    jest.clearAllMocks();
     const { mockReq, mockRes } = getRequestHandlerMocks();
     mockRequest = mockReq;
     mockResponse = mockRes;
@@ -40,7 +42,11 @@ describe('UNIT - Buildings', () => {
 
   describe('GET /properties/buildings/:buildingId', () => {
     it('should return 200 with a correct response body', async () => {
+      const buildingWithAgencyId1 = {
+        AgencyId: 1,
+      };
       mockRequest.params.buildingId = '1';
+      _getBuildingById.mockImplementationOnce(() => buildingWithAgencyId1);
       await controllers.getBuilding(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
