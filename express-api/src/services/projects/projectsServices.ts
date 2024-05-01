@@ -15,9 +15,10 @@ import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import logger from '@/utilities/winstonLogger';
-import { DeepPartial, FindManyOptions, FindOptionsOrder, In } from 'typeorm';
+import { DeepPartial, FindManyOptions, FindOptionsOrder, In, IsNull } from 'typeorm';
 import { ProjectFilter } from '@/services/projects/projectSchema';
 import { PropertyType } from '@/constants/propertyType';
+import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
 
 const projectRepo = AppDataSource.getRepository(Project);
 const projectPropertiesRepo = AppDataSource.getRepository(ProjectProperty);
@@ -29,20 +30,7 @@ export interface ProjectPropertyIds {
 }
 
 export interface ProjectWithTasks extends Project {
-  Tasks: {
-    surplusDeclarationReadiness?: boolean;
-    tripleBottomLine?: boolean;
-    reviewCompletedErp?: boolean;
-    reviewCompletedErpExempt?: boolean;
-    documentsReceivedReviewCompleted?: boolean;
-    appaisalOrdered?: boolean;
-    appraisalReceived?: boolean;
-    preparationDueDiligence?: boolean;
-    firstNationsConsultationUnderway?: boolean;
-    firstNationsConsultationComplete?: boolean;
-    notificationExemptionToAdm?: boolean;
-    confirmationReceivedFromAdm?: boolean;
-  };
+  Tasks: Pick<ProjectTask, 'TaskId' | 'IsCompleted'>[];
 }
 
 /**
@@ -62,7 +50,19 @@ const getProjectById = async (id: number) => {
       TierLevel: true,
       Status: true,
       Risk: true,
-      ProjectProperties: true,
+      ProjectTasks: true,
+      ProjectProperties: {
+        Parcel: {
+          Agency: true,
+          Evaluations: true,
+          Fiscals: true,
+        },
+        Building: {
+          Agency: true,
+          Evaluations: true,
+          Fiscals: true,
+        },
+      },
     },
     select: {
       Workflow: {
@@ -135,12 +135,11 @@ const addProject = async (
   await queryRunner.startTransaction();
   try {
     const newProject = await projectRepo.save(project);
-    // TODO: Add Project Tasks
-
     // Add parcel/building relations
     const { parcels, buildings } = propertyIds;
     if (parcels) await addProjectParcelRelations(newProject, parcels);
     if (buildings) await addProjectBuildingRelations(newProject, buildings);
+    await handleProjectTasks(newProject);
     await queryRunner.commitTransaction();
     return newProject;
   } catch (e) {
@@ -310,6 +309,45 @@ const removeProjectBuildingRelations = async (project: Project, buildingIds: num
   );
 };
 
+const handleProjectNotifications = async (
+  oldProject: DeepPartial<ProjectWithTasks>,
+  newProject: DeepPartial<ProjectWithTasks>,
+) => {
+  const fromId = oldProject.StatusId;
+  const toId = newProject.StatusId;
+  const notifications = await AppDataSource.getRepository(ProjectStatusNotification).find({
+    where: [
+      { FromStatusId: IsNull(), ToStatusId: toId },
+      { FromStatusId: fromId, ToStatusId: toId },
+    ],
+  });
+  for (const notification of notifications) {
+    // eslint-disable-next-line no-console
+    console.log(
+      `Queue notification with id ${notification.Id}, template ${notification.TemplateId}`,
+    );
+    //Actually queue the notification once this is implemented.
+  }
+};
+
+const handleProjectTasks = async (project: DeepPartial<ProjectWithTasks>) => {
+  if (project.Tasks?.length) {
+    for (const task of project.Tasks) {
+      const exists = await AppDataSource.getRepository(ProjectTask).exists({
+        where: { ProjectId: project.Id, TaskId: task.TaskId },
+      });
+      const taskEntity: Partial<ProjectTask> = {
+        ...task,
+        ProjectId: project.Id,
+        CreatedById: exists ? undefined : project.CreatedById,
+        UpdatedById: exists ? project.UpdatedById : undefined,
+        CompletedOn: task.IsCompleted ? new Date() : undefined,
+      };
+      await AppDataSource.getRepository(ProjectTask).save(taskEntity);
+    }
+  }
+};
+
 /**
  * Updates a project with the given changes and property IDs.
  *
@@ -342,7 +380,6 @@ const updateProject = async (
   /* TODO: Need something that checks for valid changes between status, workflow, etc.
    * Can address this when business logic is determined.
    */
-
   const queryRunner = await AppDataSource.createQueryRunner();
   await queryRunner.startTransaction();
   try {
@@ -360,10 +397,11 @@ const updateProject = async (
       });
     }
 
+    await handleProjectNotifications(originalProject, project);
+    await handleProjectTasks(project);
+
     // Update Project
     await projectRepo.save({ ...project, Metadata: newMetadata });
-
-    // TODO: Update Project Tasks
 
     // Update related Project Properties
     const existingProjectProperties = await projectPropertiesRepo.find({

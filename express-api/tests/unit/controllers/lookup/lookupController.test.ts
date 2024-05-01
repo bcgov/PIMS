@@ -9,7 +9,7 @@ import {
   producePredominateUse,
   produceRegionalDistrict,
   produceTask,
-  produceTierLevels,
+  produceTierLevel,
 } from '../../../testUtils/factories';
 import { AppDataSource } from '@/appDataSource';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
@@ -39,7 +39,7 @@ const _findClassification = jest.fn().mockImplementation(() => [produceClassific
 const _findUses = jest.fn().mockImplementation(() => [producePredominateUse({})]);
 const _findConstruction = jest.fn().mockImplementation(() => [produceConstructionType({})]);
 const _findRegionalDistricts = jest.fn().mockImplementation(() => [produceRegionalDistrict({})]);
-const _findTierLevels = jest.fn().mockImplementation(() => [produceTierLevels()]);
+const _findTierLevel = jest.fn().mockImplementation(() => [produceTierLevel()]);
 const _findTasks = jest.fn().mockImplementation(() => [produceTask()]);
 
 jest
@@ -57,7 +57,7 @@ jest
 
 jest
   .spyOn(AppDataSource.getRepository(TierLevel), 'find')
-  .mockImplementation(() => _findTierLevels());
+  .mockImplementation(() => _findTierLevel());
 
 jest.spyOn(AppDataSource.getRepository(Task), 'find').mockImplementation(() => _findTasks());
 
@@ -185,15 +185,29 @@ describe('UNIT - Lookup Controller', () => {
     });
   });
 
-  describe('GET /lookup/project/tier/levels', () => {
+  describe('GET /lookup/project/tierLevels', () => {
     it('should return status 200 and a list of project tier levels', async () => {
       await lookupProjectTierLevels(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
+    it('should return status 200 and a list of trimmed project tier levels', async () => {
+      mockRequest.setUser({ client_roles: [] });
+      await lookupProjectTierLevels(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(mockResponse.sendValue.CreatedOn).toBeUndefined();
+    });
     it('should return 400 on bad parse', async () => {
-      _findTierLevels.mockImplementationOnce(() => [{ Name: [] }]);
+      _findTierLevel.mockImplementationOnce(() => [{ Name: [] }]);
       await lookupProjectTierLevels(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
+    });
+    it('should throw an error when findTierLevel throws an error', async () => {
+      _findTierLevel.mockImplementationOnce(() => {
+        throw new Error();
+      });
+      expect(
+        async () => await lookupProjectTierLevels(mockRequest, mockResponse),
+      ).rejects.toThrow();
     });
   });
 
