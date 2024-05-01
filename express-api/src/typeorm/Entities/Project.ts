@@ -14,6 +14,10 @@ import { ProjectRisk } from '@/typeorm/Entities/ProjectRisk';
 import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Agency } from './Agency';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
+import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
+import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
+import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
+import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
 
 export interface ProjectMetadata {
   // Exemption Fields
@@ -174,4 +178,28 @@ export class Project extends BaseEntity {
 
   @OneToMany(() => ProjectProperty, (ProjectProperty) => ProjectProperty.Project)
   ProjectProperties: ProjectProperty[];
+
+  @OneToMany(() => ProjectTask, (ProjectTask) => ProjectTask.Project, {
+    nullable: true,
+    cascade: true,
+  })
+  Tasks: ProjectTask[];
+
+  @OneToMany(() => NotificationQueue, (NotificationQueue) => NotificationQueue.Project, {
+    nullable: true,
+    cascade: true,
+  })
+  Notifications: NotificationQueue[];
+
+  @OneToMany(() => ProjectStatusHistory, (ProjectStatusHistory) => ProjectStatusHistory.Project, {
+    nullable: true,
+    cascade: true,
+  })
+  StatusHistory: ProjectStatusHistory[];
+
+  @OneToMany(() => ProjectNote, (ProjectNote) => ProjectNote.Project, {
+    nullable: true,
+    cascade: true,
+  })
+  Notes: ProjectNote[];
 }

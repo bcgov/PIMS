@@ -130,7 +130,7 @@ const AgencyTable = (props: IAgencyTable) => {
   ) => Promise<{ id: GridRowId; model: GridValidRowModel }[]> = async (
     ref: MutableRefObject<GridApiCommunity>,
   ) => {
-    if (ref?.current?.exportState) {
+    if (ref?.current) {
       const rows = gridFilteredSortedRowEntriesSelector(ref);
       return rows.map((row) => {
         const { id, model } = row;

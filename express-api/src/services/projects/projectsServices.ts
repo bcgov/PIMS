@@ -28,23 +28,6 @@ export interface ProjectPropertyIds {
   buildings?: number[];
 }
 
-export interface ProjectWithTasks extends Project {
-  Tasks: {
-    surplusDeclarationReadiness?: boolean;
-    tripleBottomLine?: boolean;
-    reviewCompletedErp?: boolean;
-    reviewCompletedErpExempt?: boolean;
-    documentsReceivedReviewCompleted?: boolean;
-    appaisalOrdered?: boolean;
-    appraisalReceived?: boolean;
-    preparationDueDiligence?: boolean;
-    firstNationsConsultationUnderway?: boolean;
-    firstNationsConsultationComplete?: boolean;
-    notificationExemptionToAdm?: boolean;
-    confirmationReceivedFromAdm?: boolean;
-  };
-}
-
 /**
  * Retrieves a project by its ID.
  *
@@ -63,6 +46,9 @@ const getProjectById = async (id: number) => {
       Status: true,
       Risk: true,
       ProjectProperties: true,
+      Tasks: true,
+      StatusHistory: true,
+      Notifications: true,
     },
     select: {
       Workflow: {
@@ -104,7 +90,7 @@ const getProjectById = async (id: number) => {
  * @throws ErrorWithCode - If the project name is missing, agency is not found, or there is an error creating the project.
  */
 const addProject = async (
-  project: DeepPartial<ProjectWithTasks>,
+  project: DeepPartial<Project>,
   propertyIds: ProjectPropertyIds,
 ) => {
   // Does the project have a name?
@@ -319,7 +305,7 @@ const removeProjectBuildingRelations = async (project: Project, buildingIds: num
  * @throws {ErrorWithCode} If the project name is empty or null, if the project does not exist, if the project number or agency cannot be changed, or if there is an error updating the project.
  */
 const updateProject = async (
-  project: DeepPartial<ProjectWithTasks>,
+  project: DeepPartial<Project>,
   propertyIds: ProjectPropertyIds,
 ) => {
   // Project must still have a name
@@ -458,10 +444,27 @@ const deleteProjectById = async (id: number) => {
 
 const getProjects = async (filter: ProjectFilter, includeRelations: boolean = false) => {
   const queryOptions: FindManyOptions<Project> = {
+    relations: {
+      Agency: {
+        Parent: includeRelations
+      },
+      Status: includeRelations,
+      UpdatedBy: includeRelations,
+    },
     select: {
       Agency: {
         Name: true,
+        Parent: {
+          Name: true,
+        },
       },
+      Status: {
+        Name: true,
+      },
+      UpdatedBy:
+      {Id: true,
+        FirstName: true,
+        LastName: true},
     },
     where: {
       StatusId: filter.statusId,
@@ -475,10 +478,81 @@ const getProjects = async (filter: ProjectFilter, includeRelations: boolean = fa
     order: filter.sort as FindOptionsOrder<Project>,
   };
 
-  // Conditionally include relations if includeRelations is true
-  if (includeRelations) {
-    queryOptions.relations = ['ProjectProperties', 'Agency', 'Status', 'CreatedBy', 'UpdatedBy'];
-  }
+  const projects = await projectRepo.find(queryOptions);
+  return projects;
+};
+
+const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boolean = false) => {
+  const queryOptions: FindManyOptions<Project> = {
+    relations: {
+      Agency: {
+        Parent: includeRelations
+      },
+      TierLevel: includeRelations,
+      Risk: includeRelations,
+      Status: includeRelations,
+      Workflow: includeRelations,
+      CreatedBy: includeRelations,
+      UpdatedBy: includeRelations,
+      StatusHistory: includeRelations,
+      Tasks: includeRelations,
+      Notes: includeRelations,
+      Notifications: false, // Don't include this. It can be very large.
+    },
+    select: {
+      Agency: {
+        Name: true,
+        Parent: {
+          Name: true,
+        },
+      },
+      TierLevel: {
+        Name: true
+      },
+      Risk: {
+        Name: true
+      },
+      Status: {
+        Name: true,
+      },
+      CreatedBy: {
+        Id: true,
+        FirstName: true,
+        LastName: true
+      },
+      UpdatedBy:
+      {Id: true,
+        FirstName: true,
+        LastName: true},
+      Workflow:{
+        Name: true
+      },
+      Tasks: {
+        CompletedOn: true,
+        TaskId: true,
+        IsCompleted: true,
+      },
+      StatusHistory: {
+        StatusId: true,
+        UpdatedOn: true,
+        CreatedOn: true,
+      },
+      Notes: {
+        NoteType: true,
+        Note: true,
+      }
+    },
+    where: {
+      StatusId: filter.statusId,
+      AgencyId: filter.agencyId
+        ? In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId)
+        : undefined,
+      ProjectNumber: filter.projectNumber,
+    },
+    take: filter.quantity,
+    skip: (filter.page ?? 0) * (filter.quantity ?? 0),
+    order: filter.sort as FindOptionsOrder<Project>,
+  };
 
   const projects = await projectRepo.find(queryOptions);
   return projects;
@@ -490,6 +564,7 @@ const projectServices = {
   deleteProjectById,
   updateProject,
   getProjects,
+  getProjectsForExport,
 };
 
 export default projectServices;
