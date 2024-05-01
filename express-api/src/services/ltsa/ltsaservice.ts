@@ -1,4 +1,4 @@
-import urls from '@/constants/urls';
+// import urls from '@/constants/urls';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
 export const getTokenAsync = async () => {
@@ -8,7 +8,7 @@ export const getTokenAsync = async () => {
     myLtsaUserName: process.env.Ltsa__UserName,
     myLtsaUserPassword: process.env.Ltsa__UserPassword,
   };
-  const response = await fetch(urls.LTSA.AUTHURL, {
+  const response = await fetch(process.env.AUTH_URL, {
     headers: {
       'Content-Type': 'application/json',
     },
