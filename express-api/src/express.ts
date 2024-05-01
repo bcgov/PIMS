@@ -61,7 +61,18 @@ app.use(morganMiddleware);
 sso(app, SSO_OPTIONS);
 
 // Nunjucks configuration
-nunjucks.configure('src/notificationTemplates', { autoescape: true, express: app, noCache: true });
+const nj = nunjucks.configure('src/notificationTemplates', {
+  autoescape: true,
+  express: app,
+  noCache: true,
+});
+nj.addFilter(
+  'filterByAttr',
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function (arr: Array<Record<string, any>>, property: string, value: any) {
+    return arr.filter((a) => a[property] === value);
+  },
+);
 
 // Set headers for response
 app.use(`/v2`, headerHandler as RequestHandler);
