@@ -20,6 +20,8 @@ import { Project } from '@/typeorm/Entities/Project';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 import { Task } from '@/typeorm/Entities/Task';
+import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
+import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
 
 export class MockRes {
   statusValue: any;
@@ -413,7 +415,7 @@ export const producePidsResponse = (): ISitePidsResponseModel => {
   return pidResponse;
 };
 
-export const produceTierLevels = (): TierLevel => {
+export const produceTierLevel = (): TierLevel => {
   const tier: TierLevel = {
     Id: faker.number.int(),
     Name: `Tier ${faker.number.int()}`,
@@ -490,6 +492,7 @@ export const produceProject = (
     Status: null, // TODO: produceStatus
     RiskId: 1,
     Risk: null, // TODO: produceRisk
+    ProjectTasks: [],
     ProjectProperties: projectProperties ?? [
       produceProjectProperty({
         ProjectId: projectId,
@@ -514,9 +517,9 @@ export const produceProjectProperty = (props?: Partial<ProjectProperty>): Projec
     PropertyTypeId: faker.number.int({ min: 0, max: 2 }),
     PropertyType: null,
     ParcelId: faker.number.int(),
-    Parcel: null,
+    Parcel: produceParcel(),
     BuildingId: faker.number.int(),
-    Building: null,
+    Building: produceBuilding(),
     ...props,
   };
   return projectProperty;
@@ -540,4 +543,44 @@ export const productProjectStatusHistory = (props?: Partial<ProjectStatusHistory
     ...props,
   };
   return history;
+};
+
+export const produceProjectTask = () => {
+  const task: ProjectTask = {
+    ProjectId: faker.number.int(),
+    Project: undefined,
+    TaskId: faker.number.int(),
+    Task: undefined,
+    IsCompleted: faker.datatype.boolean(),
+    CompletedOn: new Date(),
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+  };
+  return task;
+};
+
+export const produceProjectNotification = () => {
+  const notif: ProjectStatusNotification = {
+    Id: faker.number.int(),
+    TemplateId: faker.number.int(),
+    Template: undefined,
+    FromStatusId: faker.number.int(),
+    FromStatus: undefined,
+    ToStatusId: faker.number.int(),
+    ToStatus: undefined,
+    Priority: faker.number.int(),
+    Delay: faker.number.int(),
+    DelayDays: faker.number.int(),
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+  };
+  return notif;
 };

@@ -26,6 +26,7 @@ import AdministrativeAreaDetail from './components/adminAreas/AdministrativeArea
 import ProjectManagement from './pages/ProjectManagement';
 import AddProject from '@/components/projects/AddProject';
 import { Roles } from '@/constants/roles';
+import ProjectDetail from '@/components/projects/ProjectDetail';
 
 const Router = () => {
   const navigate = useNavigate();
@@ -197,6 +198,16 @@ const Router = () => {
           <BaseLayout>
             <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
               <AddProject />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="/projects/:id"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard>
+              <ProjectDetail onClose={() => navigate('/projects')} />
             </AuthRouteGuard>
           </BaseLayout>
         }

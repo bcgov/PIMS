@@ -22,7 +22,19 @@ export const getDisposalProject = async (req: Request, res: Response) => {
    *   "bearerAuth" : []
    * }]
    */
-  return stubResponse(res);
+  const projectId = Number(req.params.projectId);
+  if (isNaN(projectId)) {
+    return res.status(400).send('Project ID was invalid.');
+  }
+  const project = await projectServices.getProjectById(projectId);
+  if (!project) {
+    return res.status(404).send('Project matching this internal ID not found.');
+  }
+  const buildings = project.ProjectProperties.filter((a) => a.Building != null).map(
+    (a) => a.Building,
+  );
+  const parcels = project.ProjectProperties.filter((p) => p.Parcel != null).map((p) => p.Parcel);
+  return res.status(200).send({ ...project, Buildings: buildings, Parcels: parcels });
 };
 
 /**

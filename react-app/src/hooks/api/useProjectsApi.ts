@@ -2,6 +2,8 @@ import { BaseEntityInterface } from '@/interfaces/IBaseEntity';
 import { IFetch } from '../useFetch';
 import { Agency } from './useAgencyApi';
 import { User } from '@/hooks/api/useUsersApi';
+import { Parcel } from './useParcelsApi';
+import { Building } from './useBuildingsApi';
 
 export interface TierLevel extends BaseEntityInterface {
   Id: number;
@@ -38,12 +40,16 @@ export interface ProjectRisk extends BaseEntityInterface {
   Description?: string;
   Code: string;
 }
+export interface ProjectTask {
+  TaskId: number;
+  IsCompleted: boolean;
+}
 export interface Project {
   Id: number;
   ProjectNumber: string;
   Name: string;
   Manager?: string;
-  ReportedFiscalYear: string;
+  ReportedFiscalYear: number;
   ActualFiscalYear: number;
   Description?: string;
   SubmittedOn?: Date;
@@ -66,6 +72,7 @@ export interface Project {
   Status?: ProjectStatus;
   RiskId: number;
   Risk?: ProjectRisk;
+  ProjectTasks?: ProjectTask[];
   CreatedOn: string;
   CreatedBy?: User;
   UpdatedOn?: string;
@@ -120,6 +127,11 @@ export interface ProjectNotification {
   ToAgencyId?: number;
   UpdatedById?: string;
   UpdatedOn?: Date;
+}
+
+export interface ProjectGet extends Project {
+  Buildings: Building[];
+  Parcels: Parcel[];
 }
 
 export interface ProjectMetadata {
@@ -198,8 +210,8 @@ export type ProjectAdd = Omit<
   | 'StatusId' // Determined in API
   | 'ProjectType' // Determined in API (Disposal)
   | 'RiskId' // Determined in API
-  | 'ActualFiscalYear' // TODO: Do we need this?
-  | 'ReportedFiscalYear' // TODO: Do we need this?
+  // | 'ActualFiscalYear' // TODO: Do we need this?
+  // | 'ReportedFiscalYear' // TODO: Do we need this?
 >;
 
 export interface ProjectPropertyIds {
@@ -208,6 +220,18 @@ export interface ProjectPropertyIds {
 }
 
 const useProjectsApi = (absoluteFetch: IFetch) => {
+  const getProjectById = async (id: number): Promise<ProjectGet> => {
+    const { parsedBody } = await absoluteFetch.get(`/projects/disposal/${id}`);
+    return parsedBody as ProjectGet;
+  };
+  const updateProject = async (id: number, project: Partial<Project>): Promise<Project> => {
+    const { parsedBody } = await absoluteFetch.put(`/projects/disposal/${id}`, project);
+    return parsedBody as Project;
+  };
+  const deleteProjectById = async (id: number) => {
+    const { status } = await absoluteFetch.del(`/projects/disposal/${id}`);
+    return status;
+  };
   const getProjects = async () => {
     const { parsedBody } = await absoluteFetch.get('/projects', { includeRelations: true });
     if (parsedBody.error) {
@@ -237,6 +261,9 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
   };
 
   return {
+    getProjectById,
+    updateProject,
+    deleteProjectById,
     getProjects,
     getProjectsForExcelExport,
     postProject,
