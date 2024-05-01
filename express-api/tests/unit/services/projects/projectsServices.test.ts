@@ -13,6 +13,7 @@ import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectSnapshot } from '@/typeorm/Entities/ProjectSnapshot';
 import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
+import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { faker } from '@faker-js/faker';
@@ -20,7 +21,9 @@ import {
   produceBuilding,
   produceParcel,
   produceProject,
+  produceProjectNotification,
   produceProjectProperty,
+  produceProjectTask,
   productProjectStatusHistory,
 } from 'tests/testUtils/factories';
 import { DeepPartial } from 'typeorm';
@@ -117,7 +120,18 @@ const _projectPropertiesFind = jest
       ] as ProjectProperty[],
   );
 const _projectFind = jest.spyOn(AppDataSource.getRepository(Project), 'find');
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _notificationFind = jest
+  .spyOn(AppDataSource.getRepository(ProjectStatusNotification), 'find')
+  .mockImplementation(async () => [produceProjectNotification()]);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _projectTaskFind = jest
+  .spyOn(AppDataSource.getRepository(ProjectTask), 'exists')
+  .mockImplementation(async () => true);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _projectTaskSave = jest
+  .spyOn(AppDataSource.getRepository(ProjectTask), 'save')
+  .mockImplementation(async () => produceProjectTask());
 // QUERY mocks
 const _getNextSequence = jest.spyOn(AppDataSource, 'query').mockImplementation(async () => [
   {
@@ -347,6 +361,7 @@ describe('UNIT - Project Services', () => {
       ...originalProject,
       Name: 'New Name',
       StatusId: 2,
+      Tasks: [{ Id: 1, IsCompleted: false }],
     };
 
     it('should update values of a project', async () => {
@@ -432,6 +447,22 @@ describe('UNIT - Project Services', () => {
             {},
           ),
       ).rejects.toThrow(new ErrorWithCode('Project Agency may not be changed.', 403));
+    });
+
+    it('should handle error in transaction by rolling back', async () => {
+      _projectsSave.mockImplementationOnce(() => {
+        throw Error('bad save');
+      });
+      expect(
+        async () =>
+          await projectServices.updateProject(
+            {},
+            {
+              parcels: [1, 3],
+              buildings: [4, 5],
+            },
+          ),
+      ).rejects.toThrow(new ErrorWithCode('Error updating project.', 500));
     });
 
     describe('getProjects', () => {
