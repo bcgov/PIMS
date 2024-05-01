@@ -57,6 +57,13 @@ describe('UNIT - Properties', () => {
       expect(Array.isArray(mockResponse.sendValue.Parcels)).toBe(true);
       expect(Array.isArray(mockResponse.sendValue.Buildings)).toBe(true);
     });
+    it('should return 200 with a list of properties', async () => {
+      mockRequest.query.keyword = '123';
+      await getPropertiesFuzzySearch(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(Array.isArray(mockResponse.sendValue.Parcels)).toBe(true);
+      expect(Array.isArray(mockResponse.sendValue.Buildings)).toBe(true);
+    });
   });
 
   describe('POST /properties/search/filter', () => {
