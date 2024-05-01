@@ -58,6 +58,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
   beforeEach(() => {
+    jest.clearAllMocks();
     const { mockReq, mockRes } = getRequestHandlerMocks();
     mockRequest = mockReq;
     mockResponse = mockRes;
@@ -69,7 +70,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
       mockRequest = mockReq;
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
       mockResponse = mockRes;
-      jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValue({
+      jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValueOnce({
         success: true,
         data: {
           projectNumber: '123',
@@ -99,7 +100,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
       mockRequest = mockReq;
       mockRequest.setUser({ client_roles: [Roles.GENERAL_USER] });
       mockResponse = mockRes;
-      jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValue({
+      jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValueOnce({
         success: true,
         data: {
           projectNumber: '123',
