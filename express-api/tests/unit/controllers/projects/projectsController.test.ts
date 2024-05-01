@@ -18,6 +18,7 @@ import { Roles } from '@/constants/roles';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectSchema } from '@/controllers/projects/projectsSchema';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
+import { DeleteResult } from 'typeorm';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
 
@@ -25,7 +26,12 @@ jest.spyOn(agencyRepo, 'exists').mockImplementation(async () => true);
 
 const _addProject = jest.fn().mockImplementation(() => produceProject());
 const _getProjectById = jest.fn().mockImplementation(() => produceProject());
-
+const _updateProject = jest.fn().mockImplementation(() => produceProject());
+const _deleteProjectById = jest.fn().mockImplementation(
+  (): DeleteResult => ({
+    raw: {},
+  }),
+);
 jest
   .spyOn(AppDataSource.getRepository(Project), 'find')
   .mockImplementation(async () => _addProject());
@@ -37,6 +43,8 @@ jest.mock('@/services/projects/projectsServices', () => ({
     { id: 2, name: 'Project 2' },
   ]),
   getProjectById: () => _getProjectById(),
+  updateProject: () => _updateProject(),
+  deleteProjectById: () => _deleteProjectById(),
 }));
 
 jest.mock('@/services/users/usersServices', () => ({
@@ -176,40 +184,59 @@ describe('UNIT - Testing controllers for users routes.', () => {
   });
 
   describe('PUT /projects/disposal/:projectId', () => {
-    it('should return stub response 501', async () => {
-      await controllers.updateDisposalProject(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 on successful update', async () => {
+    it('should return status 200 on successful update', async () => {
       mockRequest.params.projectId = '1';
+      mockRequest.body = {
+        project: produceProject({ Id: 1 }),
+        propertyIds: [],
+      };
       await controllers.updateDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
 
-    xit('should return status 404 on no resource', async () => {
-      mockRequest.params.projectId = '-1';
+    it('should return status 400 on mistmatched id', async () => {
+      mockRequest.params.projectId = '1';
+      mockRequest.body = {
+        project: {
+          Id: 3,
+        },
+        propertyIds: [],
+      };
       await controllers.updateDisposalProject(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(404);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+    it('should return status 400 on invalid id', async () => {
+      mockRequest.params.projectId = 'abc';
+      mockRequest.body = {
+        project: {
+          Id: 3,
+        },
+        propertyIds: [],
+      };
+      await controllers.updateDisposalProject(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+    it('should return status 400 on missing fields', async () => {
+      mockRequest.params.projectId = '1';
+      mockRequest.body = {
+        Id: 1,
+      };
+      await controllers.updateDisposalProject(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
     });
   });
 
   describe('DELETE /projects/disposal/:projectId', () => {
-    it('should return stub response 501', async () => {
-      await controllers.deleteDisposalProject(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 on successful deletion', async () => {
+    it('should return status 200 on successful deletion', async () => {
       mockRequest.params.projectId = '1';
       await controllers.deleteDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
 
-    xit('should return status 404 on no resource', async () => {
-      mockRequest.params.projectId = '-1';
+    it('should return status 404 on no resource', async () => {
+      mockRequest.params.projectId = 'abc';
       await controllers.deleteDisposalProject(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(404);
+      expect(mockResponse.statusValue).toBe(400);
     });
   });
 
