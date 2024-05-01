@@ -41,6 +41,7 @@ jobs:
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
           APPLICATION_NAME: 'pims-api-v2'
           LICENSE_PLATE: '${{ secrets.LICENSE_PLATE }}'
+          VAULT_ENVIRONMENT: 'prod'
         run: |
           ./.github/helpers/deploy.sh
 

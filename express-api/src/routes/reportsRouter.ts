@@ -1,4 +1,5 @@
 import controllers from '@/controllers';
+import activeUserCheck from '@/middleware/activeUserCheck';
 import catchErrors from '@/utilities/controllerErrorWrapper';
 import express from 'express';
 
@@ -11,7 +12,7 @@ const {
   submitErrorReport,
 } = controllers;
 
-router.route('/projects').get(catchErrors(getSpreadsheetProjectsReports));
+router.route('/projects').get(activeUserCheck, catchErrors(getSpreadsheetProjectsReports));
 
 /**
  * I'm pretty sure this is not necessary but perhaps someone can weigh in. Why do we need an endpoint specifically for
@@ -21,8 +22,8 @@ router.route('/projects').get(catchErrors(getSpreadsheetProjectsReports));
  */
 //router.route('/projects/surplus/properties').get(getSpreadsheetSurplusPropertiesReport);
 
-router.route('/properties').get(catchErrors(getSpreadsheetPropertiesReports));
-router.route('/users').get(catchErrors(getSpreadsheetUsersReports));
+router.route('/properties').get(activeUserCheck, catchErrors(getSpreadsheetPropertiesReports));
+router.route('/users').get(activeUserCheck, catchErrors(getSpreadsheetUsersReports));
 
 /**
  * As per other routers, filter is omitted.

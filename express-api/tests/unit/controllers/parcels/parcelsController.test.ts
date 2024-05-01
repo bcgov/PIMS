@@ -9,6 +9,7 @@ import {
 } from '../../../testUtils/factories';
 import { DeleteResult } from 'typeorm';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import { Roles } from '@/constants/roles';
 
 const _getParcelById = jest.fn().mockImplementation(() => produceParcel());
 const _updateParcel = jest.fn().mockImplementation(() => produceParcel());
@@ -24,11 +25,15 @@ jest.mock('@/services/parcels/parcelServices', () => ({
 }));
 jest.mock('@/services/users/usersServices', () => ({
   getUser: jest.fn().mockImplementation(() => produceUser()),
+  getAgencies: jest.fn().mockResolvedValue([1, 2]),
+  hasAgencies: jest.fn().mockImplementation(() => true),
 }));
 describe('UNIT - Parcels', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
   beforeEach(() => {
+    jest.clearAllMocks();
+
     const { mockReq, mockRes } = getRequestHandlerMocks();
     mockRequest = mockReq;
     mockResponse = mockRes;
@@ -133,6 +138,16 @@ describe('UNIT - Parcels', () => {
   });
 
   describe('GET /properties/parcels', () => {
+    it('should return 200 with an admin user', async () => {
+      // Mock an admin user
+      const { mockReq, mockRes } = getRequestHandlerMocks();
+      mockRequest = mockReq;
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockResponse = mockRes;
+      await controllers.getParcels(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(Array.isArray(mockResponse.sendValue)).toBeTruthy();
+    });
     it('should return 200 with a correct response body', async () => {
       mockRequest.query.pid = '1';
       await controllers.getParcels(mockRequest, mockResponse);
@@ -142,6 +157,11 @@ describe('UNIT - Parcels', () => {
     it('should return 400 on incorrect filter', async () => {
       mockRequest.query.isSensitive = {};
       await controllers.getParcels(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+    it('should return 400 on parcel id that is a string', async () => {
+      mockRequest.params.parcelId = 'invalidParcelId';
+      await controllers.getParcel(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
     it('should throw an error when getParcels service throws an error', async () => {

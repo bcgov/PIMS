@@ -1,5 +1,6 @@
 import { Roles } from '@/constants/roles';
 import controllers from '@/controllers';
+import activeUserCheck from '@/middleware/activeUserCheck';
 import catchErrors from '@/utilities/controllerErrorWrapper';
 import { protectedRoute } from '@bcgov/citz-imb-sso-express';
 import express from 'express';
@@ -28,26 +29,26 @@ router.route(`/self`).get(catchErrors(getSelf));
 router.route(`/access/requests`).post(catchErrors(submitUserAccessRequest));
 // router.route(`/access/requests/:requestId`).get(getUserAccessRequestById);
 // router.route(`/access/requests/:requestId`).put(updateUserAccessRequest);
-router.route(`/agencies/:username`).get(catchErrors(getUserAgencies));
+router.route(`/agencies/:username`).get(activeUserCheck, catchErrors(getUserAgencies));
 
 router
   .route(`/`)
-  .get(catchErrors(getUsers))
-  .post(protectedRoute([Roles.ADMIN]), catchErrors(addUser));
+  .get(activeUserCheck, catchErrors(getUsers))
+  .post(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(addUser));
 
-router.route(`/my/agency`).post(catchErrors(getUsersSameAgency)); // TODO: Should this just be generic: get users from an agency?
+router.route(`/my/agency`).post(activeUserCheck, catchErrors(getUsersSameAgency)); // TODO: Should this just be generic: get users from an agency?
 
-router.route(`/roles`).get(catchErrors(getAllRoles));
+router.route(`/roles`).get(activeUserCheck, catchErrors(getAllRoles));
 
 router
   .route(`/roles/:username`)
-  .get(catchErrors(getUserRolesByName))
-  .put(protectedRoute([Roles.ADMIN]), catchErrors(updateUserRolesByName));
+  .get(activeUserCheck, catchErrors(getUserRolesByName))
+  .put(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(updateUserRolesByName));
 
 router
   .route(`/:id`)
-  .get(catchErrors(getUserById))
-  .put(protectedRoute([Roles.ADMIN]), catchErrors(updateUserById)) // TODO: should put be a patch?
-  .delete(protectedRoute([Roles.ADMIN]), deleteUserById);
+  .get(activeUserCheck, catchErrors(getUserById))
+  .put(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(updateUserById)) // TODO: should put be a patch?
+  .delete(protectedRoute([Roles.ADMIN]), activeUserCheck, deleteUserById);
 
 export default router;

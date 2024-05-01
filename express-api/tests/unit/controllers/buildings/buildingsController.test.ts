@@ -8,6 +8,7 @@ import {
   produceUser,
 } from '../../../testUtils/factories';
 import { DeleteResult } from 'typeorm';
+import { Roles } from '@/constants/roles';
 
 const _getBuildingById = jest.fn().mockImplementation(() => produceBuilding());
 const _getBuildings = jest.fn().mockImplementation(() => [produceBuilding()]);
@@ -25,12 +26,15 @@ jest.mock('@/services/buildings/buildingServices', () => ({
 
 jest.mock('@/services/users/usersServices', () => ({
   getUser: jest.fn().mockImplementation(() => produceUser()),
+  getAgencies: jest.fn().mockResolvedValue([1, 2]),
+  hasAgencies: jest.fn().mockImplementation(() => true),
 }));
 
 describe('UNIT - Buildings', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
   beforeEach(() => {
+    jest.clearAllMocks();
     const { mockReq, mockRes } = getRequestHandlerMocks();
     mockRequest = mockReq;
     mockResponse = mockRes;
@@ -38,7 +42,11 @@ describe('UNIT - Buildings', () => {
 
   describe('GET /properties/buildings/:buildingId', () => {
     it('should return 200 with a correct response body', async () => {
+      const buildingWithAgencyId1 = {
+        AgencyId: 1,
+      };
       mockRequest.params.buildingId = '1';
+      _getBuildingById.mockImplementationOnce(() => buildingWithAgencyId1);
       await controllers.getBuilding(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
@@ -95,6 +103,13 @@ describe('UNIT - Buildings', () => {
       mockRequest.query.pid = [{ a: 'a' }];
       await controllers.getBuildings(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
+    });
+    it('should return 200 with an admin user', async () => {
+      // Mock an admin user
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      await controllers.getBuildings(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(Array.isArray(mockResponse.sendValue)).toBeTruthy();
     });
   });
 

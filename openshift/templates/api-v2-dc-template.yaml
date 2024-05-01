@@ -31,6 +31,15 @@ objects:
       activeDeadlineSeconds: 21600
     triggers:
       - type: ConfigChange
+      - type: ImageChange
+        imageChangeParams:
+          automatic: true
+          containerNames:
+            - pims-api-v2
+          from:
+            kind: ImageStreamTag
+            namespace: ${LICENSE_PLATE}-tools
+            name: 'pims-api-v2:${IMAGE_TAG}'
     replicas: 2
     revisionHistoryLimit: 10
     test: false
@@ -128,9 +137,7 @@ objects:
                 protocol: TCP
             imagePullPolicy: IfNotPresent
             terminationMessagePolicy: File
-            image: artifacts.developer.gov.bc.ca/t354-pims-image-repository/pims-api-v2:${IMAGE_TAG}
-            imagePullSecrets:
-            - name: artifactory-creds
+            image: image-registry.openshift-image-registry.svc:5000/${LICENSE_PLATE}-tools/pims-api-v2:${IMAGE_TAG}
         restartPolicy: Always
         terminationGracePeriodSeconds: 30
         dnsPolicy: ClusterFirst
