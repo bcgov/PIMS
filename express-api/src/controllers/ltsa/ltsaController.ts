@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import { stubResponse } from '@/utilities/stubResponse';
+import ltsaService from '@/services/ltsa/ltsaService';
+
 // import * as ltsaService from '@/services/ltsa/ltsaservice';
 
 // export const getToken = async (req: Request, res: Response) => {
@@ -20,7 +21,10 @@ export const getLTSA = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
+  const pid = req.query.pid as string;
+  const getLandTitleInfo = await ltsaService.processLTSARequest(pid);
 
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  if (!getLandTitleInfo) {
+    return res.status(404).send('Land Title information matching this internal PID not found.');
+  } else return res.status(200).send(getLandTitleInfo);
 };
