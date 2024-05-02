@@ -1,13 +1,20 @@
 import { AppDataSource } from '@/appDataSource';
+import { Agency } from '@/typeorm/Entities/Agency';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { NotificationTemplate } from '@/typeorm/Entities/NotificationTemplate';
-import { randomUUID } from 'crypto';
+import { Project } from '@/typeorm/Entities/Project';
+import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
+import { User } from '@/typeorm/Entities/User';
+import { UUID, randomUUID } from 'crypto';
 import nunjucks from 'nunjucks';
-
-interface BasicNotificationData {
-  Title: string;
-  Uri: string;
-}
+import { IsNull } from 'typeorm';
+import chesServices, {
+  EmailBody,
+  EmailEncoding,
+  EmailPriority,
+  IEmail,
+} from '../ches/chesServices';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 
 interface AccessRequestData {
   FirstName: string;
@@ -22,8 +29,37 @@ enum NotificationStatus {
   Completed = 4,
 }
 
+enum NotificationAudience {
+  ProjectOwner = 'ProjectOwner',
+  OwningAgency = 'OwningAgency',
+  Agencies = 'Agencies',
+  ParentAgencies = 'ParentAgencies',
+  Default = 'Default',
+  WatchingAgencies = 'WatchingAgencies',
+}
+
 const Title = 'PIMS';
 const Uri = '';
+
+const flattenProjectProperties = (project: Project) => {
+  const flattenedProperties = project.ProjectProperties.map((projectProperty) => {
+    if (projectProperty.Building != null) {
+      return {
+        ...projectProperty.Parcel,
+        Type: 'Parcel',
+      };
+    } else {
+      return {
+        ...projectProperty.Building,
+        Type: 'Building',
+      };
+    }
+  });
+  return {
+    ...project,
+    Properties: flattenedProperties,
+  };
+};
 
 const generateAccessRequestNotification = async (
   accessRequest: AccessRequestData,
@@ -53,14 +89,116 @@ const generateAccessRequestNotification = async (
   return AppDataSource.getRepository(NotificationQueue).save(queueObject);
 };
 
-const buildProjectNotification = () => {};
+const insertProjectNotificationQueue = async (
+  template: NotificationTemplate,
+  projStatusNotif: ProjectStatusNotification,
+  project: Project,
+  agency?: Agency,
+  overrideTo?: string,
+) => {
+  const sendDate = new Date();
+  sendDate.setDate(sendDate.getDate() + projStatusNotif.DelayDays);
+  const queueObject = {
+    Key: randomUUID(),
+    Status: NotificationStatus.Pending,
+    Priority: template.Priority,
+    Encoding: template.Encoding,
+    SendOn: sendDate,
+    Subject: nunjucks.renderString(template.Subject, { Project: project }),
+    Body: nunjucks.renderString(template.Body, {
+      Title: Title,
+      Uri: Uri,
+      ToAgency: agency,
+      Project: flattenProjectProperties(project),
+    }),
+    TemplateId: template.Id,
+    To: [overrideTo ?? agency?.Email, template.To].filter((a) => a).join(';'),
+    Cc: [agency?.CCEmail, template.Cc].filter((a) => a).join(';'),
+    Bcc: template.Bcc,
+  };
+  const insertedNotif = await AppDataSource.getRepository(NotificationQueue).save(queueObject);
+  return insertedNotif;
+};
 
-const sendNotification = () => {
-  AppDataSource.getRepository(NotificationQueue).save({});
+const generateProjectNotifications = async (project: Project, previousStatusId: number) => {
+  const projectStatusNotif1 = await AppDataSource.getRepository(ProjectStatusNotification).find({
+    where: { FromStatusId: previousStatusId, ToStatusId: project.StatusId },
+  });
+  const projectStatusNotif2 = await AppDataSource.getRepository(ProjectStatusNotification).find({
+    where: { FromStatusId: IsNull(), ToStatusId: project.StatusId },
+  });
+  const projectStatusNotifications = [...projectStatusNotif1, ...projectStatusNotif2];
+  const returnNotifications = [];
+  for (const projStatusNotif of projectStatusNotifications) {
+    const template = await AppDataSource.getRepository(NotificationTemplate).findOne({
+      where: { Id: projStatusNotif.Id },
+    });
+
+    const sendDate = new Date();
+    sendDate.setDate(sendDate.getDate() + projStatusNotif.DelayDays);
+
+    let overrideTo: string | null = null;
+    if (template.Audience == NotificationAudience.ProjectOwner) {
+      const owningUser = await AppDataSource.getRepository(User).findOne({
+        where: { Id: project.CreatedById },
+      });
+      overrideTo = owningUser.Email;
+      returnNotifications.push(
+        insertProjectNotificationQueue(
+          template,
+          projStatusNotif,
+          project,
+          project.Agency,
+          overrideTo,
+        ),
+      );
+    } else if (template.Audience == NotificationAudience.OwningAgency) {
+      returnNotifications.push(
+        insertProjectNotificationQueue(template, projStatusNotif, project, project.Agency),
+      );
+    } else if (template.Audience == NotificationAudience.Agencies) {
+      //Dunno if we really have/plan to have the ProjectAgencyResponses implemented?
+    } else if (template.Audience == NotificationAudience.ParentAgencies) {
+      //Same here
+    } else if (template.Audience == NotificationAudience.WatchingAgencies) {
+      //Same here
+    } else if (template.Audience == NotificationAudience.Default) {
+      returnNotifications.push(insertProjectNotificationQueue(template, projStatusNotif, project));
+    }
+  }
+  return returnNotifications;
+};
+
+const sendNotification = async (notification: NotificationQueue, user: SSOUser) => {
+  try {
+    const email: IEmail = {
+      to: notification.To.split(';').map((a) => a.trim()),
+      cc: notification.Cc.split(';').map((a) => a.trim()),
+      bcc: notification.Bcc.split(';').map((a) => a.trim()),
+      bodyType: notification.BodyType.toLowerCase() as EmailBody,
+      subject: notification.Subject,
+      body: notification.Body,
+      encoding: notification.Encoding.toLowerCase() as EmailEncoding,
+      priority: notification.Priority.toLowerCase() as EmailPriority,
+      tag: notification.Tag,
+      delayTS: notification.SendOn.getTime(),
+    };
+    const response = await chesServices.sendEmailAsync(email, user);
+    await AppDataSource.getRepository(NotificationQueue).save({
+      ...notification,
+      ChesTransactionId: response.txId as UUID,
+      ChesMessageId: response.messages[0].msgId as UUID,
+    });
+  } catch (e) {
+    await AppDataSource.getRepository(NotificationQueue).save({
+      ...notification,
+      Status: NotificationStatus.Failed,
+    });
+  }
 };
 
 const notificationServices = {
-  buildProjectNotification,
+  generateProjectNotifications,
   generateAccessRequestNotification,
   sendNotification,
 };
