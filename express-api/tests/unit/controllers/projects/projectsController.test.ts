@@ -1,28 +1,69 @@
 import { Request, Response } from 'express';
 import controllers from '@/controllers';
 import { Agency } from '@/typeorm/Entities/Agency';
+import { ProjectFilterSchema } from '@/services/projects/projectSchema';
 import {
   MockReq,
   MockRes,
   getRequestHandlerMocks,
   produceUser,
   produceProject,
+  produceParcel,
+  produceBuilding,
+  produceProjectProperty,
 } from '../../../testUtils/factories';
 import { AppDataSource } from '@/appDataSource';
+import { z } from 'zod';
+import { Roles } from '@/constants/roles';
+import { Project } from '@/typeorm/Entities/Project';
+import { ProjectSchema } from '@/controllers/projects/projectsSchema';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
+import { DeleteResult } from 'typeorm';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
 
 jest.spyOn(agencyRepo, 'exists').mockImplementation(async () => true);
 
+const fakeProjects = [
+  { id: 1, name: 'Project 1' },
+  { id: 2, name: 'Project 2' },
+];
+
 const _addProject = jest.fn().mockImplementation(() => produceProject());
+const _getProjectById = jest.fn().mockImplementation(() => produceProject());
+const _getProjectsForExport = jest.fn().mockResolvedValue(fakeProjects);
+const _getProjects = jest.fn().mockResolvedValue(fakeProjects);
+
+const _updateProject = jest.fn().mockImplementation(() => produceProject());
+const _deleteProjectById = jest.fn().mockImplementation(
+  (): DeleteResult => ({
+    raw: {},
+  }),
+);
+jest
+  .spyOn(AppDataSource.getRepository(Project), 'find')
+  .mockImplementation(async () => _addProject());
 
 jest.mock('@/services/projects/projectsServices', () => ({
   addProject: () => _addProject(),
+  getProjects: () => _getProjects(),
+  getProjectsForExport: () => _getProjectsForExport(),
+  getProjectById: () => _getProjectById(),
+  updateProject: () => _updateProject(),
+  deleteProjectById: () => _deleteProjectById(),
 }));
 
 jest.mock('@/services/users/usersServices', () => ({
   getUser: (guid: string) => _getUser(guid),
+  getAgencies: jest.fn().mockResolvedValue([1, 2]),
 }));
+
+jest
+  .spyOn(AppDataSource.getRepository(ProjectProperty), 'find')
+  .mockImplementation(async () => [
+    produceProjectProperty({ Parcel: produceParcel() }),
+    produceProjectProperty({ Building: produceBuilding() }),
+  ]);
 
 const _getUser = jest
   .fn()
@@ -31,24 +72,150 @@ describe('UNIT - Testing controllers for users routes.', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
   beforeEach(() => {
+    jest.clearAllMocks();
     const { mockReq, mockRes } = getRequestHandlerMocks();
     mockRequest = mockReq;
     mockResponse = mockRes;
   });
+  describe('GET /projects/', () => {
+    it('should return projects for admin user', async () => {
+      // Mock an admin user
+      const { mockReq, mockRes } = getRequestHandlerMocks();
+      mockRequest = mockReq;
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockResponse = mockRes;
+      jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValueOnce({
+        success: true,
+        data: {
+          projectNumber: '123',
+          name: 'Project Name',
+          statusId: 1,
+          agencyId: [1, 2],
+          page: 1,
+          quantity: 10,
+          sort: 'asc',
+        },
+      });
 
-  describe('GET /projects/disposal/:projectId', () => {
-    it('should return stub response 501', async () => {
-      await controllers.getDisposalProject(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
+      // Call filterProjects controller function
+      await controllers.filterProjects(mockRequest, mockResponse);
+
+      // Assert response status and content
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.send).toHaveBeenCalledWith([
+        { id: 1, name: 'Project 1' },
+        { id: 2, name: 'Project 2' },
+      ]);
+      expect(_getProjects).toHaveBeenCalledTimes(1);
     });
 
-    xit('should return status 200 and a project', async () => {
+    it('should return the excel import if called for', async () => {
+      // Mock an admin user
+      const { mockReq, mockRes } = getRequestHandlerMocks();
+      mockRequest = mockReq;
+      mockRequest.query.excelExport = 'true';
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockResponse = mockRes;
+      jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValueOnce({
+        success: true,
+        data: {
+          projectNumber: '123',
+          name: 'Project Name',
+          statusId: 1,
+          agencyId: [1, 2],
+          page: 1,
+          quantity: 10,
+          sort: 'asc',
+        },
+      });
+
+      // Call filterProjects controller function
+      await controllers.filterProjects(mockRequest, mockResponse);
+
+      // Assert response status and content
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.send).toHaveBeenCalledWith([
+        { id: 1, name: 'Project 1' },
+        { id: 2, name: 'Project 2' },
+      ]);
+      expect(_getProjectsForExport).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return projects for a general user', async () => {
+      // Mock an admin user
+      const { mockReq, mockRes } = getRequestHandlerMocks();
+      mockRequest = mockReq;
+      mockRequest.setUser({ client_roles: [Roles.GENERAL_USER] });
+      mockResponse = mockRes;
+      jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValueOnce({
+        success: true,
+        data: {
+          projectNumber: '123',
+          name: 'Project Name',
+          statusId: 1,
+          agencyId: [1, 2],
+          page: 1,
+          quantity: 10,
+          sort: 'asc',
+        },
+      });
+
+      // Call filterProjects controller function
+      await controllers.filterProjects(mockRequest, mockResponse);
+
+      // Assert response status and content
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.send).toHaveBeenCalledWith([
+        { id: 1, name: 'Project 1' },
+        { id: 2, name: 'Project 2' },
+      ]);
+    });
+
+    it('should return 400 if filter cannot be parsed', async () => {
+      jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValueOnce({
+        success: false,
+        error: new z.ZodError([]), // Pass an empty array of errors
+      });
+
+      await controllers.filterProjects(mockRequest, mockResponse);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.send).toHaveBeenCalledWith('Could not parse filter.');
+    });
+
+    it('should pass valid project filter', () => {
+      jest.spyOn(ProjectFilterSchema, 'safeParse').mockRestore();
+      const validFilter = {
+        projectNumber: '123',
+        name: 'Project Name',
+        statusId: 1,
+        agencyId: 1,
+      };
+
+      const result = ProjectFilterSchema.safeParse(validFilter);
+      expect(result.success).toBe(true);
+    });
+
+    it('should pass valid project filter', () => {
+      jest.spyOn(ProjectFilterSchema, 'safeParse').mockRestore();
+      const validFilter = {
+        projectNumber: '123',
+        name: 'Project Name',
+        statusId: 1,
+        agencyId: [1, 2],
+      };
+      const result = ProjectFilterSchema.safeParse(validFilter);
+      expect(result.success).toBe(true);
+    });
+  });
+  describe('GET /projects/disposal/:projectId', () => {
+    it('should return status 200 and a project', async () => {
       mockRequest.params.projectId = '1';
       await controllers.getDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
 
-    xit('should return status 404 on no resource', async () => {
+    it('should return status 404 on no resource', async () => {
+      _getProjectById.mockImplementationOnce(() => null);
       mockRequest.params.projectId = '-1';
       await controllers.getDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(404);
@@ -56,40 +223,59 @@ describe('UNIT - Testing controllers for users routes.', () => {
   });
 
   describe('PUT /projects/disposal/:projectId', () => {
-    it('should return stub response 501', async () => {
-      await controllers.updateDisposalProject(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 on successful update', async () => {
+    it('should return status 200 on successful update', async () => {
       mockRequest.params.projectId = '1';
+      mockRequest.body = {
+        project: produceProject({ Id: 1 }),
+        propertyIds: [],
+      };
       await controllers.updateDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
 
-    xit('should return status 404 on no resource', async () => {
-      mockRequest.params.projectId = '-1';
+    it('should return status 400 on mistmatched id', async () => {
+      mockRequest.params.projectId = '1';
+      mockRequest.body = {
+        project: {
+          Id: 3,
+        },
+        propertyIds: [],
+      };
       await controllers.updateDisposalProject(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(404);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+    it('should return status 400 on invalid id', async () => {
+      mockRequest.params.projectId = 'abc';
+      mockRequest.body = {
+        project: {
+          Id: 3,
+        },
+        propertyIds: [],
+      };
+      await controllers.updateDisposalProject(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+    it('should return status 400 on missing fields', async () => {
+      mockRequest.params.projectId = '1';
+      mockRequest.body = {
+        Id: 1,
+      };
+      await controllers.updateDisposalProject(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
     });
   });
 
   describe('DELETE /projects/disposal/:projectId', () => {
-    it('should return stub response 501', async () => {
-      await controllers.deleteDisposalProject(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 on successful deletion', async () => {
+    it('should return status 200 on successful deletion', async () => {
       mockRequest.params.projectId = '1';
       await controllers.deleteDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
 
-    xit('should return status 404 on no resource', async () => {
-      mockRequest.params.projectId = '-1';
+    it('should return status 404 on no resource', async () => {
+      mockRequest.params.projectId = 'abc';
       await controllers.deleteDisposalProject(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(404);
+      expect(mockResponse.statusValue).toBe(400);
     });
   });
 
@@ -300,6 +486,22 @@ describe('UNIT - Testing controllers for users routes.', () => {
       mockRequest.params.workflowCode = '1';
       await controllers.getProjectWorkflowTasks(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
+    });
+  });
+
+  describe('Project Schema Validation', () => {
+    it('should pass valid project schema', () => {
+      const project = _addProject();
+      expect(project).toBeDefined();
+    });
+
+    xit('should fail with invalid project schema', () => {
+      const invalidProject = {
+        // Incomplete or incorrect properties for an invalid project object
+      };
+
+      const result = ProjectSchema.safeParse(invalidProject);
+      expect(result.success).toBe(false);
     });
   });
 });

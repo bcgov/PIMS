@@ -81,7 +81,8 @@ export type BuildingAdd = Omit<
 
 export interface IBuildingsGetParams {
   pid?: number;
-  includeRelations: boolean;
+  includeRelations?: boolean;
+  excelExport?: boolean;
 }
 
 const useBuildingsApi = (absoluteFetch: IFetch) => {

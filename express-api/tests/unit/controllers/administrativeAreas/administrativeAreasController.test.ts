@@ -40,7 +40,7 @@ const _getAdminAreas = jest.fn().mockImplementation(() => [produceAdminArea({})]
 const _getAdminAreaById = jest.fn().mockImplementation(() => produceAdminArea({}));
 const _updateAdminAreaById = jest.fn().mockImplementation(() => produceAdminArea({}));
 const _addAdminArea = jest.fn().mockImplementation(() => produceAdminArea({}));
-const _next = jest.fn();
+
 jest.mock('@/services/administrativeAreas/administrativeAreasServices', () => ({
   getAdministrativeAreas: () => _getAdminAreas(),
   getAdministrativeAreaById: () => _getAdminAreaById(),
@@ -62,7 +62,7 @@ describe('UNIT - Administrative Areas Admin', () => {
   describe('Controller getAdministrativeAreas', () => {
     // TODO: enable other tests when controller is complete
     it('should return status 200 and a list of administrative areas', async () => {
-      await getAdministrativeAreas(mockRequest, mockResponse, _next);
+      await getAdministrativeAreas(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
     // it('should return status 200 and a list of administrative areas, lacks metadata', async () => {
@@ -73,15 +73,14 @@ describe('UNIT - Administrative Areas Admin', () => {
     // });
     it('should return status 400 when parse fails', async () => {
       mockRequest.query = { name: ['a'] };
-      await getAdministrativeAreas(mockRequest, mockResponse, _next);
+      await getAdministrativeAreas(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
-    it('should return status 400 when parse fails', async () => {
+    it('should throw an error if the service does', async () => {
       _getAdminAreas.mockImplementationOnce(() => {
-        throw Error();
+        throw new Error();
       });
-      await getAdministrativeAreas(mockRequest, mockResponse, _next);
-      expect(_next).toHaveBeenCalled();
+      expect(async () => await getAdministrativeAreas(mockRequest, mockResponse)).rejects.toThrow();
     });
   });
 

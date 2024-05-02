@@ -30,17 +30,17 @@ jobs:
       # Login to BC Gov Docker Image Repository
       - name: Login to Openshift Docker
         run: |
-          docker login ${{ secrets.ARTIFACTORY_IMAGE_REPOSITORY }} -u ${{ secrets.ARTIFACTORY_SA_USERNAME }} -p ${{ secrets.ARTIFACTORY_SA_PASSWORD }}
+          docker login ${{ secrets.PUBLIC_IMAGE_REPOSITORY }} -u ${{ secrets.OPENSHIFT_SA_NAME }} -p ${{ secrets.OPENSHIFT_SA_TOOLS_TOKEN }}
 
       # Build the API Image 
       - name: Build API Image
         run: |
-          cd express-api && docker build -t ${{ secrets.ARTIFACTORY_IMAGE_REPOSITORY }}/${{ secrets.ARTIFACTORY_REPOSITORY_NAME }}/pims-api-v2:${{github.event.pull_request.number}} -f Dockerfile .
+          cd express-api && docker build -t ${{ secrets.PUBLIC_IMAGE_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/pims-api-v2:${{github.event.pull_request.number}} -f Dockerfile .
 
       # Push the API Image
       - name: Push API Image
         run: |
-          docker push ${{ secrets.ARTIFACTORY_IMAGE_REPOSITORY }}/${{ secrets.ARTIFACTORY_REPOSITORY_NAME }}/pims-api-v2:${{github.event.pull_request.number}}
+          docker push ${{ secrets.PUBLIC_IMAGE_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/pims-api-v2:${{github.event.pull_request.number}}
 
   Update_Wiki_Tags:
     needs: [PIMS-API-V2-Build-Tag-Push]

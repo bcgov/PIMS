@@ -10,6 +10,7 @@ const PARCEL_LAYER_URL =
 type ParcelMapProps = {
   height: string;
   mapRef?: React.Ref<Map>;
+  movable?: boolean;
 } & PropsWithChildren;
 
 interface PopupData {
@@ -42,17 +43,19 @@ const ParcelMap = (props: ParcelMapProps) => {
     return null;
   };
   const [clickPosition, setClickPosition] = useState<PopupData>(null);
-  const { height, mapRef } = props;
+  const { height, mapRef, movable = true } = props;
   return (
     <Box height={height}>
       <MapContainer
-        scrollWheelZoom={'center'}
+        scrollWheelZoom={movable}
         style={{ height: '100%' }}
         ref={mapRef}
         bounds={[
           [51.2516, -129.371],
           [48.129, -122.203],
         ]}
+        dragging={movable}
+        zoomControl={true}
       >
         <TileLayer url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <WMSTileLayer

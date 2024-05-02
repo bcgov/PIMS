@@ -13,6 +13,7 @@ import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectSnapshot } from '@/typeorm/Entities/ProjectSnapshot';
 import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
+import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { faker } from '@faker-js/faker';
@@ -20,7 +21,9 @@ import {
   produceBuilding,
   produceParcel,
   produceProject,
+  produceProjectNotification,
   produceProjectProperty,
+  produceProjectTask,
   productProjectStatusHistory,
 } from 'tests/testUtils/factories';
 import { DeepPartial } from 'typeorm';
@@ -117,7 +120,18 @@ const _projectPropertiesFind = jest
       ] as ProjectProperty[],
   );
 const _projectFind = jest.spyOn(AppDataSource.getRepository(Project), 'find');
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _notificationFind = jest
+  .spyOn(AppDataSource.getRepository(ProjectStatusNotification), 'find')
+  .mockImplementation(async () => [produceProjectNotification()]);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _projectTaskFind = jest
+  .spyOn(AppDataSource.getRepository(ProjectTask), 'findOne')
+  .mockImplementation(async () => produceProjectTask());
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _projectTaskSave = jest
+  .spyOn(AppDataSource.getRepository(ProjectTask), 'save')
+  .mockImplementation(async () => produceProjectTask());
 // QUERY mocks
 const _getNextSequence = jest.spyOn(AppDataSource, 'query').mockImplementation(async () => [
   {
@@ -285,6 +299,7 @@ describe('UNIT - Project Services', () => {
       jest.clearAllMocks();
     });
     it('should return a project if it is found', async () => {
+      _projectFindOne.mockImplementationOnce(async () => produceProject());
       const result = await projectServices.getProjectById(1);
       expect(_projectFindOne).toHaveBeenCalledTimes(1);
       expect(result).toBeTruthy();
@@ -347,6 +362,7 @@ describe('UNIT - Project Services', () => {
       ...originalProject,
       Name: 'New Name',
       StatusId: 2,
+      Tasks: [produceProjectTask({ TaskId: 1, IsCompleted: false })],
     };
 
     it('should update values of a project', async () => {
@@ -434,6 +450,22 @@ describe('UNIT - Project Services', () => {
       ).rejects.toThrow(new ErrorWithCode('Project Agency may not be changed.', 403));
     });
 
+    it('should handle error in transaction by rolling back', async () => {
+      _projectsSave.mockImplementationOnce(() => {
+        throw Error('bad save');
+      });
+      expect(
+        async () =>
+          await projectServices.updateProject(
+            {},
+            {
+              parcels: [1, 3],
+              buildings: [4, 5],
+            },
+          ),
+      ).rejects.toThrow(new ErrorWithCode('Error updating project.', 500));
+    });
+
     describe('getProjects', () => {
       beforeEach(() => {
         jest.clearAllMocks();
@@ -460,6 +492,40 @@ describe('UNIT - Project Services', () => {
 
         // Call the service function
         const projects = await projectServices.getProjects(filter, true); // Pass the mocked projectRepo
+
+        // Assertions
+        expect(_projectFind).toHaveBeenCalled();
+        // Returned project should be the one based on the agency and status id in the filter
+        expect(projects.length).toEqual(1);
+      });
+    });
+
+    describe('getProjectsForExport', () => {
+      beforeEach(() => {
+        jest.clearAllMocks();
+      });
+      it('should return projects based on filter conditions', async () => {
+        const filter = {
+          statusId: 1,
+          agencyId: 3,
+          quantity: 10,
+          page: 0,
+        };
+
+        _projectFind.mockImplementationOnce(async () => {
+          const mockProjects: Project[] = [
+            produceProject({ Id: 1, Name: 'Project 1', StatusId: 1, AgencyId: 3 }),
+            produceProject({ Id: 2, Name: 'Project 2', StatusId: 4, AgencyId: 14 }),
+          ];
+          // Check if the project matches the filter conditions
+          return mockProjects.filter(
+            (project) =>
+              filter.statusId === project.StatusId && filter.agencyId === project.AgencyId,
+          );
+        });
+
+        // Call the service function
+        const projects = await projectServices.getProjectsForExport(filter, true); // Pass the mocked projectRepo
 
         // Assertions
         expect(_projectFind).toHaveBeenCalled();

@@ -2,6 +2,8 @@ import { BaseEntityInterface } from '@/interfaces/IBaseEntity';
 import { IFetch } from '../useFetch';
 import { Agency } from './useAgencyApi';
 import { User } from '@/hooks/api/useUsersApi';
+import { Parcel } from './useParcelsApi';
+import { Building } from './useBuildingsApi';
 
 export interface TierLevel extends BaseEntityInterface {
   Id: number;
@@ -38,12 +40,13 @@ export interface ProjectRisk extends BaseEntityInterface {
   Description?: string;
   Code: string;
 }
+
 export interface Project {
   Id: number;
   ProjectNumber: string;
   Name: string;
   Manager?: string;
-  ReportedFiscalYear: string;
+  ReportedFiscalYear: number;
   ActualFiscalYear: number;
   Description?: string;
   SubmittedOn?: Date;
@@ -66,11 +69,66 @@ export interface Project {
   Status?: ProjectStatus;
   RiskId: number;
   Risk?: ProjectRisk;
+  ProjectTasks?: ProjectTask[];
   CreatedOn: string;
   CreatedBy?: User;
   UpdatedOn?: string;
   UpdatedBy?: User;
   Metadata?: ProjectMetadata;
+  Tasks?: ProjectTask[];
+  Notifications?: ProjectNotification[];
+  StatusHistory?: ProjectStatusHistory[];
+  Notes?: ProjectNote[];
+}
+
+export interface ProjectNote {
+  CreatedById?: string;
+  CreatedOn?: Date;
+  Id?: number;
+  Note?: string;
+  NoteType?: number;
+  ProjectId?: number;
+  UpdatedById?: string;
+  UpdatedOn?: Date;
+}
+export interface ProjectStatusHistory {
+  CreatedById?: string;
+  CreatedOn?: Date;
+  Id?: number;
+  ProjectId?: number;
+  StatusId?: number;
+  UpdatedById?: string;
+  UpdatedOn?: Date;
+  WorkflowId?: number;
+}
+export interface ProjectNotification {
+  Bcc?: string;
+  Body?: string;
+  BodyType?: string;
+  Cc?: string;
+  ChesMessageId?: string;
+  ChesTransactionId?: string;
+  CreatedById?: string;
+  CreatedOn?: Date;
+  Encoding?: string;
+  Id?: number;
+  Key?: string;
+  Priority?: string;
+  ProjectId?: number;
+  SendOn?: Date;
+  Status?: number;
+  Subject?: string;
+  Tag?: string;
+  TemplateId?: number;
+  To?: string;
+  ToAgencyId?: number;
+  UpdatedById?: string;
+  UpdatedOn?: Date;
+}
+
+export interface ProjectGet extends Project {
+  Buildings: Building[];
+  Parcels: Parcel[];
 }
 
 export interface ProjectMetadata {
@@ -107,7 +165,7 @@ export interface ProjectMetadata {
   salesCost?: number;
   netProceeds?: number;
   programCost?: number;
-  gainLost?: number;
+  gainLoss?: number;
   sppCapitalization?: number;
   gainBeforeSpl?: number;
   ocgFinancialStatement?: number;
@@ -124,25 +182,20 @@ export interface ProjectMetadata {
   finalFormSignedBy?: string;
 }
 
-export interface ProjectWithTasks extends Project {
-  Tasks: {
-    surplusDeclarationReadiness?: boolean;
-    tripleBottomLine?: boolean;
-    reviewCompletedErp?: boolean;
-    reviewCompletedErpExempt?: boolean;
-    documentsReceivedReviewCompleted?: boolean;
-    appaisalOrdered?: boolean;
-    appraisalReceived?: boolean;
-    preparationDueDiligence?: boolean;
-    firstNationsConsultationUnderway?: boolean;
-    firstNationsConsultationComplete?: boolean;
-    notificationExemptionToAdm?: boolean;
-    confirmationReceivedFromAdm?: boolean;
-  };
+// All values optional because it's not clear what filter will be used.
+export interface ProjectTask {
+  CompletedOn?: Date;
+  CreatedById?: string;
+  CreatedOn?: Date;
+  IsCompleted?: boolean;
+  ProjectId?: number;
+  TaskId?: number;
+  UpdatedById?: string;
+  UpdatedOn?: Date;
 }
 
 export type ProjectAdd = Omit<
-  ProjectWithTasks,
+  Project,
   | 'Id'
   | 'CreatedOn'
   | 'CreatedById'
@@ -154,8 +207,8 @@ export type ProjectAdd = Omit<
   | 'StatusId' // Determined in API
   | 'ProjectType' // Determined in API (Disposal)
   | 'RiskId' // Determined in API
-  | 'ActualFiscalYear' // TODO: Do we need this?
-  | 'ReportedFiscalYear' // TODO: Do we need this?
+  // | 'ActualFiscalYear' // TODO: Do we need this?
+  // | 'ReportedFiscalYear' // TODO: Do we need this?
 >;
 
 export interface ProjectPropertyIds {
@@ -164,8 +217,31 @@ export interface ProjectPropertyIds {
 }
 
 const useProjectsApi = (absoluteFetch: IFetch) => {
+  const getProjectById = async (id: number): Promise<ProjectGet> => {
+    const { parsedBody } = await absoluteFetch.get(`/projects/disposal/${id}`);
+    return parsedBody as ProjectGet;
+  };
+  const updateProject = async (id: number, project: Partial<Project>): Promise<Project> => {
+    const { parsedBody } = await absoluteFetch.put(`/projects/disposal/${id}`, project);
+    return parsedBody as Project;
+  };
+  const deleteProjectById = async (id: number) => {
+    const { status } = await absoluteFetch.del(`/projects/disposal/${id}`);
+    return status;
+  };
   const getProjects = async () => {
     const { parsedBody } = await absoluteFetch.get('/projects', { includeRelations: true });
+    if (parsedBody.error) {
+      return [];
+    }
+    return parsedBody as Project[];
+  };
+
+  const getProjectsForExcelExport = async () => {
+    const { parsedBody } = await absoluteFetch.get('/projects', {
+      includeRelations: true,
+      excelExport: true,
+    });
     if (parsedBody.error) {
       return [];
     }
@@ -182,7 +258,11 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
   };
 
   return {
+    getProjectById,
+    updateProject,
+    deleteProjectById,
     getProjects,
+    getProjectsForExcelExport,
     postProject,
   };
 };
