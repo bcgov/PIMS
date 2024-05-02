@@ -7,7 +7,6 @@ import userServices from '@/services/users/usersServices';
 import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 import { DeepPartial } from 'typeorm';
 import { Project } from '@/typeorm/Entities/Project';
-
 /**
  * @description Get disposal project by either the numeric id or projectNumber.
  * @param {Request}     req Incoming request.
@@ -38,7 +37,7 @@ export const getDisposalProject = async (req: Request, res: Response) => {
 };
 
 /**
- * @description Update disposal project by either the numeric id or projectNumber.
+ * @description Update disposal project by either the numeric id.
  * @param {Request}     req Incoming request.
  * @param {Response}    res Outgoing response.
  * @returns {Response}      A 200 status with the updated project.
@@ -51,7 +50,25 @@ export const updateDisposalProject = async (req: Request, res: Response) => {
    *   "bearerAuth" : []
    * }]
    */
-  return stubResponse(res);
+  const projectId = Number(req.params.projectId);
+  if (isNaN(projectId)) {
+    return res.status(400).send('Invalid Project ID');
+  }
+
+  if (!req.body.project || !req.body.propertyIds) {
+    return res
+      .status(400)
+      .send('Request must include the following: {project:..., propertyIds:...}');
+  }
+
+  if (projectId != req.body.project.Id) {
+    return res.status(400).send('The param ID does not match the request body.');
+  }
+  // need to coordinate how we want tasks to be translated
+  const user = await userServices.getUser(req.user.preferred_username);
+  const updateBody = { ...req.body.project, UpdatedById: user.Id };
+  const project = await projectServices.updateProject(updateBody, req.body.propertyIds);
+  return res.status(200).send(project);
 };
 
 /**
@@ -68,7 +85,13 @@ export const deleteDisposalProject = async (req: Request, res: Response) => {
    *   "bearerAuth" : []
    * }]
    */
-  return stubResponse(res);
+  const projectId = Number(req.params.projectId);
+  if (isNaN(projectId)) {
+    return res.status(400).send('Invalid Project ID');
+  }
+
+  const delProject = projectServices.deleteProjectById(projectId);
+  return res.status(200).send(delProject);
 };
 
 /**

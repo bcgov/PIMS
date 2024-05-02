@@ -162,7 +162,7 @@ INSERT INTO notification_template (id,created_by_id,created_on,updated_by_id,upd
 </p>
 <p>Your Ministry, SUCH Sector Organization or BPS Entity is provided with 90 days from this notification to submit a Business Case to SRES expressing your interest in acquiring the surplus property.  Reminder notifications will be sent at both 30 days and 60 days from this initial notification.</p>
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
-<p>If you have any questions regarding this matter, please contact Chris Seltenrich A/Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
+<p>If you have any questions regarding this matter, please contact Chris Seltenrich Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
 <p>Thank you.</p>
 <p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
 	 (6,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'30 day ERP notification - Owning Agency',N'ERP 30 expiration notification to inform owning agency of time remaining in ERP',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ProjectOwner',N'Utf8',N'Html',N'Normal',N'Notification of Surplus Real Property - 30 Day Reminder Notification of Surplus Real Property','
@@ -232,7 +232,7 @@ INSERT INTO notification_template (id,created_by_id,created_on,updated_by_id,upd
     </ol>
 </p>
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
-<p>If you have any questions regarding this matter, please contact Chris Seltenrich A/Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
+<p>If you have any questions regarding this matter, please contact Chris Seltenrich Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
 <p>Thank you.</p>
 <p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
 	 (7,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'60 day ERP notification - Owning Agency',N'ERP 60 expiration notification to inform owning agency of time remaining in ERP',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ProjectOwner',N'Utf8',N'Html',N'Normal',N'Notification of Surplus Real Property - 60 Day Reminder Notification of Surplus Real Property','
@@ -302,7 +302,7 @@ INSERT INTO notification_template (id,created_by_id,created_on,updated_by_id,upd
     </ol>
 </p>
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
-<p>If you have any questions regarding this matter, please contact Chris Seltenrich A/Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
+<p>If you have any questions regarding this matter, please contact Chris Seltenrich Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
 <p>Thank you.</p>
 <p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
 	 (8,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'90 day ERP notification - Owning Agency',N'ERP 90 expiration notification to inform owning agency ERP is complete.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ProjectOwner',N'Utf8',N'Html',N'Normal',N'Notification of Surplus Real Property - Completion of 90 Day Enhanced Referral Period for Notification of Surplus Real Property','
@@ -372,7 +372,7 @@ INSERT INTO notification_template (id,created_by_id,created_on,updated_by_id,upd
     </ol>
 </p>
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
-<p>If you have any questions regarding this matter, please contact Chris Seltenrich A/Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
+<p>If you have any questions regarding this matter, please contact Chris Seltenrich Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
 <p>Thank you.</p>
 <p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
 	 (9,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'30 day ERP notification - Parent Agencies',N'ERP 30 notification to inform agencies or properties available in ERP.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ParentAgencies',N'Utf8',N'Html',N'High',N'ACTION REQUIRED - Notification of Surplus Real Property - 30 Day Reminder Notification of Surplus Real Property','
@@ -445,7 +445,7 @@ INSERT INTO notification_template (id,created_by_id,created_on,updated_by_id,upd
 </p>
 <p>Your Ministry, SUCH Sector Organization or BPS Entity is provided with 60 days from this notification to submit a Business Case to SRES expressing your interest in acquiring the surplus property.  An additional reminder notification will be sent 30 days before this internal listing expires.</p>
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
-<p>If you have any questions regarding this matter, please contact Chris Seltenrich A/Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
+<p>If you have any questions regarding this matter, please contact Chris Seltenrich Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
 <p>Thank you.</p>
 <p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
 	 (10,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'60 day ERP notification - Parent Agencies',N'ERP 60 notification to inform agencies or properties available in ERP.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ParentAgencies',N'Utf8',N'Html',N'High',N'ACTION REQUIRED - Notification of Surplus Real Property - 60 Day Reminder Notification of Surplus Real Property','
@@ -518,7 +518,7 @@ INSERT INTO notification_template (id,created_by_id,created_on,updated_by_id,upd
 </p>
 <p>Your Ministry, SUCH Sector Organization or BPS Entity is provided with 30 days from this notification to submit a Business Case to SRES expressing your interest in acquiring the surplus property.</p>
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
-<p>If you have any questions regarding this matter, please contact Chris Seltenrich A/Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
+<p>If you have any questions regarding this matter, please contact Chris Seltenrich Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
 <p>Thank you.</p>
 <p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
 	 (11,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'90 day ERP notification - Parent Agencies',N'ERP 90 expiration notification to inform agencies.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'ParentAgencies',N'Utf8',N'Html',N'High',N'ACTION REQUIRED - Notification of Surplus Real Property - Completion of 90 Day Enhanced Referral Period for Notification of Surplus Real Property','
@@ -591,7 +591,7 @@ INSERT INTO notification_template (id,created_by_id,created_on,updated_by_id,upd
 </p>
 <p>An Enhanced Referral Notification Letter will be sent to the owning Ministry / Agency at the end of the week advising of next steps in the process.</p>
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
-<p>If you have any questions regarding this matter, please contact Chris Seltenrich A/Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
+<p>If you have any questions regarding this matter, please contact Chris Seltenrich Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
 <p>Thank you.</p>
 <p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
 	 (12,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'30 day ERP notification - Purchasing Agencies',N'ERP 30 notification to inform purchasing agencies to submit business case.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'WatchingAgencies',N'Utf8',N'Html',N'Normal',N'ACTION REQUIRED - Notification of Surplus Real Property - 30 Day Reminder Notification of Surplus Real Property','
@@ -662,7 +662,7 @@ INSERT INTO notification_template (id,created_by_id,created_on,updated_by_id,upd
 </p>
 <p>Your Ministry, SUCH Sector Organization or BPS Entity is provided with 60 days from this notification to submit a Business Case to SRES expressing your interest in acquiring the surplus property.</p>
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
-<p>If you have any questions regarding this matter, please contact Chris Seltenrich A/Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
+<p>If you have any questions regarding this matter, please contact Chris Seltenrich Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
 <p>Thank you.</p>
 <p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
 	 (13,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'60 day ERP notification - Purchasing Agencies',N'ERP 60 notification to inform purchasing agencies to submit business case.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'WatchingAgencies',N'Utf8',N'Html',N'Normal',N'ACTION REQUIRED - Notification of Surplus Real Property - 60 Day Reminder Notification of Surplus Real Property','
@@ -733,7 +733,7 @@ INSERT INTO notification_template (id,created_by_id,created_on,updated_by_id,upd
 </p>
 <p>Your Ministry, SUCH Sector Organization or BPS Entity is provided with 30 days from this notification to submit a Business Case to SRES expressing your interest in acquiring the surplus property.</p>
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
-<p>If you have any questions regarding this matter, please contact Chris Seltenrich A/Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
+<p>If you have any questions regarding this matter, please contact Chris Seltenrich Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
 <p>Thank you.</p>
 <p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
 	 (14,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'90 day ERP notification - Purchasing Agencies',N'ERP 90 expiration notification to inform purchasing agencies to submit business case.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'WatchingAgencies',N'Utf8',N'Html',N'Normal',N'ACTION REQUIRED - Notification of Surplus Real Property - Completion of 90 Day Enhanced Referral Period for Notification of Surplus Real Property','
@@ -805,7 +805,7 @@ INSERT INTO notification_template (id,created_by_id,created_on,updated_by_id,upd
 <p>Your Ministry, SUCH Sector Organization or BPS Entity is provided with until the end of this week from this notification to submit a Business Case to SRES expressing your interest in acquiring the surplus property.</p>
 <p>An Enhanced Referral Notification Letter will be sent to the owning Ministry / Agency at the end of the week advising of next steps in the process.</p>
 <p>@Model.Project.Notes.FirstOrDefault(n => n.NoteType == NoteTypes.ErpNotification)?.Note</p>
-<p>If you have any questions regarding this matter, please contact Chris Seltenrich A/Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
+<p>If you have any questions regarding this matter, please contact Chris Seltenrich Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
 <p>Thank you.</p>
 <p>Strategic Real Estate Services, Real Property Division</p></body></html>',false,N'ERP'),
 	 (15,'00000000-0000-0000-0000-000000000000','2023-01-17 17:58:34.7500000',NULL,NULL,N'Access Request',N'A new authenticated user has requested access.',N'',N'',N'RealPropertyDivision.Disposals@gov.bc.ca',N'Default',N'Utf8',N'Html',N'High',N'PIMS - Access Request','

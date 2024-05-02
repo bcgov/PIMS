@@ -391,13 +391,13 @@ const updateProject = async (project: DeepPartial<Project>, propertyIds: Project
       await AppDataSource.getRepository(ProjectStatusHistory).save({
         CreatedById: project.UpdatedById,
         ProjectId: project.Id,
-        WorkflowId: project.WorkflowId,
-        StatusId: project.StatusId,
+        WorkflowId: originalProject.WorkflowId,
+        StatusId: originalProject.StatusId, //I'm assuming that workflow and status should actually be from the now outdated version right?
       });
     }
 
     await handleProjectNotifications(originalProject, project);
-    await handleProjectTasks(project, project.Tasks);
+    await handleProjectTasks({ ...project, CreatedById: project.UpdatedById }, project.Tasks);
 
     // Update Project
     await projectRepo.save({ ...project, Metadata: newMetadata });
