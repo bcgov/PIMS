@@ -7,7 +7,6 @@ import userServices from '@/services/users/usersServices';
 import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 import { DeepPartial } from 'typeorm';
 import { Project } from '@/typeorm/Entities/Project';
-
 /**
  * @description Get disposal project by either the numeric id or projectNumber.
  * @param {Request}     req Incoming request.
@@ -38,7 +37,7 @@ export const getDisposalProject = async (req: Request, res: Response) => {
 };
 
 /**
- * @description Update disposal project by either the numeric id or projectNumber.
+ * @description Update disposal project by either the numeric id.
  * @param {Request}     req Incoming request.
  * @param {Response}    res Outgoing response.
  * @returns {Response}      A 200 status with the updated project.
@@ -51,7 +50,25 @@ export const updateDisposalProject = async (req: Request, res: Response) => {
    *   "bearerAuth" : []
    * }]
    */
-  return stubResponse(res);
+  const projectId = Number(req.params.projectId);
+  if (isNaN(projectId)) {
+    return res.status(400).send('Invalid Project ID');
+  }
+
+  if (!req.body.project || !req.body.propertyIds) {
+    return res
+      .status(400)
+      .send('Request must include the following: {project:..., propertyIds:...}');
+  }
+
+  if (projectId != req.body.project.Id) {
+    return res.status(400).send('The param ID does not match the request body.');
+  }
+  // need to coordinate how we want tasks to be translated
+  const user = await userServices.getUser(req.user.preferred_username);
+  const updateBody = { ...req.body.project, UpdatedById: user.Id };
+  const project = await projectServices.updateProject(updateBody, req.body.propertyIds);
+  return res.status(200).send(project);
 };
 
 /**
@@ -68,7 +85,13 @@ export const deleteDisposalProject = async (req: Request, res: Response) => {
    *   "bearerAuth" : []
    * }]
    */
-  return stubResponse(res);
+  const projectId = Number(req.params.projectId);
+  if (isNaN(projectId)) {
+    return res.status(400).send('Invalid Project ID');
+  }
+
+  const delProject = projectServices.deleteProjectById(projectId);
+  return res.status(200).send(delProject);
 };
 
 /**
@@ -82,13 +105,13 @@ export const addDisposalProject = async (req: Request, res: Response) => {
   // Extract projectData and propertyIds from the request body
   const {
     project,
-    propertyIds,
-  }: { project: DeepPartial<Project>; propertyIds: ProjectPropertyIds } = req.body;
+    projectPropertyIds,
+  }: { project: DeepPartial<Project>; projectPropertyIds: ProjectPropertyIds } = req.body;
   const user = await userServices.getUser((req.user as SSOUser).preferred_username);
-  const addBody = { ...project, CreatedById: user.Id };
+  const addBody = { ...project, CreatedById: user.Id, AgencyId: user.AgencyId };
 
   // Call the addProject service function with the project data
-  const newProject = await projectServices.addProject(addBody, propertyIds);
+  const newProject = await projectServices.addProject(addBody, projectPropertyIds);
 
   // Return the new project in the response
   return res.status(201).json(newProject);
@@ -273,22 +296,21 @@ export const searchProjects = async (req: Request, res: Response) => {
 export const filterProjects = async (req: Request, res: Response) => {
   const filter = ProjectFilterSchema.safeParse(req.query);
   const includeRelations = req.query.includeRelations === 'true';
+  const forExcelExport = req.query.excelExport === 'true';
   const kcUser = req.user as unknown as SSOUser;
   if (!filter.success) {
     return res.status(400).send('Could not parse filter.');
   }
   const filterResult = filter.data;
-
-  let projects;
-  if (isAdmin(kcUser) || isAuditor(kcUser)) {
-    projects = await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
-  } else {
+  if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
     // get array of user's agencies
     const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
     filterResult.agencyId = usersAgencies;
-    // Get projects associated with agencies of the requesting user
-    projects = await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
   }
+  // Get projects associated with agencies of the requesting user
+  const projects = forExcelExport
+    ? await projectServices.getProjectsForExport(filterResult as ProjectFilter, includeRelations)
+    : await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
   return res.status(200).send(projects);
 };
 

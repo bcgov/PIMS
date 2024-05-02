@@ -13,6 +13,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJSON from '@/swagger/swagger-output.json';
 import errorHandler from '@/middleware/errorHandler';
 import { EndpointNotFound404 } from '@/constants/errors';
+import nunjucks from 'nunjucks';
 
 const app: Application = express();
 
@@ -58,6 +59,20 @@ app.use(morganMiddleware);
 
 // SSO initialization
 sso(app, SSO_OPTIONS);
+
+// Nunjucks configuration
+const nj = nunjucks.configure('src/notificationTemplates', {
+  autoescape: true,
+  express: app,
+  noCache: true,
+});
+nj.addFilter(
+  'filterByAttr',
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function (arr: Array<Record<string, any>>, property: string, value: any) {
+    return arr.filter((a) => a[property] === value);
+  },
+);
 
 // Set headers for response
 app.use(`/v2`, headerHandler as RequestHandler);

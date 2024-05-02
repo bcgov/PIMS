@@ -19,6 +19,7 @@ import { DeepPartial, FindManyOptions, FindOptionsOrder, In, IsNull } from 'type
 import { ProjectFilter } from '@/services/projects/projectSchema';
 import { PropertyType } from '@/constants/propertyType';
 import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
+import { ProjectRisk } from '@/constants/projectRisk';
 
 const projectRepo = AppDataSource.getRepository(Project);
 const projectPropertiesRepo = AppDataSource.getRepository(ProjectProperty);
@@ -27,10 +28,6 @@ const buildingRepo = AppDataSource.getRepository(Building);
 export interface ProjectPropertyIds {
   parcels?: number[];
   buildings?: number[];
-}
-
-export interface ProjectWithTasks extends Project {
-  Tasks: Pick<ProjectTask, 'TaskId' | 'IsCompleted'>[];
 }
 
 /**
@@ -50,7 +47,9 @@ const getProjectById = async (id: number) => {
       TierLevel: true,
       Status: true,
       Risk: true,
-      ProjectTasks: true,
+      Tasks: true,
+      StatusHistory: true,
+      Notifications: true,
       ProjectProperties: {
         Parcel: {
           Agency: true,
@@ -103,10 +102,7 @@ const getProjectById = async (id: number) => {
  * @returns The newly created project.
  * @throws ErrorWithCode - If the project name is missing, agency is not found, or there is an error creating the project.
  */
-const addProject = async (
-  project: DeepPartial<ProjectWithTasks>,
-  propertyIds: ProjectPropertyIds,
-) => {
+const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPropertyIds) => {
   // Does the project have a name?
   if (!project.Name) throw new ErrorWithCode('Projects must have a name.', 400);
 
@@ -126,6 +122,9 @@ const addProject = async (
     ? ProjectStatus.SUBMITTED_EXEMPTION
     : ProjectStatus.SUBMITTED;
 
+  // Set default RiskId
+  project.RiskId = project.RiskId ?? ProjectRisk.GREEN;
+
   // Get a project number from the sequence
   const [{ nextval }] = await AppDataSource.query("SELECT NEXTVAL('project_num_seq')");
 
@@ -139,7 +138,7 @@ const addProject = async (
     const { parcels, buildings } = propertyIds;
     if (parcels) await addProjectParcelRelations(newProject, parcels);
     if (buildings) await addProjectBuildingRelations(newProject, buildings);
-    await handleProjectTasks(newProject);
+    await handleProjectTasks(newProject, project.Tasks);
     await queryRunner.commitTransaction();
     return newProject;
   } catch (e) {
@@ -310,8 +309,8 @@ const removeProjectBuildingRelations = async (project: Project, buildingIds: num
 };
 
 const handleProjectNotifications = async (
-  oldProject: DeepPartial<ProjectWithTasks>,
-  newProject: DeepPartial<ProjectWithTasks>,
+  oldProject: DeepPartial<Project>,
+  newProject: DeepPartial<Project>,
 ) => {
   const fromId = oldProject.StatusId;
   const toId = newProject.StatusId;
@@ -330,17 +329,20 @@ const handleProjectNotifications = async (
   }
 };
 
-const handleProjectTasks = async (project: DeepPartial<ProjectWithTasks>) => {
-  if (project.Tasks?.length) {
-    for (const task of project.Tasks) {
-      const exists = await AppDataSource.getRepository(ProjectTask).exists({
+const handleProjectTasks = async (
+  project: DeepPartial<Project>,
+  tasks: DeepPartial<ProjectTask[]>,
+) => {
+  if (tasks?.length) {
+    for (const task of tasks) {
+      const existingTask = await AppDataSource.getRepository(ProjectTask).findOne({
         where: { ProjectId: project.Id, TaskId: task.TaskId },
       });
-      const taskEntity: Partial<ProjectTask> = {
+      const taskEntity: DeepPartial<ProjectTask> = {
         ...task,
         ProjectId: project.Id,
-        CreatedById: exists ? undefined : project.CreatedById,
-        UpdatedById: exists ? project.UpdatedById : undefined,
+        CreatedById: existingTask ? existingTask.CreatedById : project.CreatedById,
+        UpdatedById: existingTask ? project.UpdatedById : undefined,
         CompletedOn: task.IsCompleted ? new Date() : undefined,
       };
       await AppDataSource.getRepository(ProjectTask).save(taskEntity);
@@ -356,10 +358,7 @@ const handleProjectTasks = async (project: DeepPartial<ProjectWithTasks>) => {
  * @returns The result of the project update.
  * @throws {ErrorWithCode} If the project name is empty or null, if the project does not exist, if the project number or agency cannot be changed, or if there is an error updating the project.
  */
-const updateProject = async (
-  project: DeepPartial<ProjectWithTasks>,
-  propertyIds: ProjectPropertyIds,
-) => {
+const updateProject = async (project: DeepPartial<Project>, propertyIds: ProjectPropertyIds) => {
   // Project must still have a name
   // undefined is allowed because it is not always updated
   if (project.Name === null || project.Name === '') {
@@ -392,13 +391,13 @@ const updateProject = async (
       await AppDataSource.getRepository(ProjectStatusHistory).save({
         CreatedById: project.UpdatedById,
         ProjectId: project.Id,
-        WorkflowId: project.WorkflowId,
-        StatusId: project.StatusId,
+        WorkflowId: originalProject.WorkflowId,
+        StatusId: originalProject.StatusId, //I'm assuming that workflow and status should actually be from the now outdated version right?
       });
     }
 
     await handleProjectNotifications(originalProject, project);
-    await handleProjectTasks(project);
+    await handleProjectTasks({ ...project, CreatedById: project.UpdatedById }, project.Tasks);
 
     // Update Project
     await projectRepo.save({ ...project, Metadata: newMetadata });
@@ -496,9 +495,96 @@ const deleteProjectById = async (id: number) => {
 
 const getProjects = async (filter: ProjectFilter, includeRelations: boolean = false) => {
   const queryOptions: FindManyOptions<Project> = {
+    relations: {
+      Agency: {
+        Parent: includeRelations,
+      },
+      Status: includeRelations,
+      UpdatedBy: includeRelations,
+    },
     select: {
       Agency: {
         Name: true,
+        Parent: {
+          Name: true,
+        },
+      },
+      Status: {
+        Name: true,
+      },
+      UpdatedBy: { Id: true, FirstName: true, LastName: true },
+    },
+    where: {
+      StatusId: filter.statusId,
+      AgencyId: filter.agencyId
+        ? In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId)
+        : undefined,
+      ProjectNumber: filter.projectNumber,
+    },
+    take: filter.quantity,
+    skip: (filter.page ?? 0) * (filter.quantity ?? 0),
+    order: filter.sort as FindOptionsOrder<Project>,
+  };
+
+  const projects = await projectRepo.find(queryOptions);
+  return projects;
+};
+
+const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boolean = false) => {
+  const queryOptions: FindManyOptions<Project> = {
+    relations: {
+      Agency: {
+        Parent: includeRelations,
+      },
+      TierLevel: includeRelations,
+      Risk: includeRelations,
+      Status: includeRelations,
+      Workflow: includeRelations,
+      CreatedBy: includeRelations,
+      UpdatedBy: includeRelations,
+      StatusHistory: includeRelations,
+      Tasks: includeRelations,
+      Notes: includeRelations,
+      Notifications: false, // Don't include this. It can be very large.
+    },
+    select: {
+      Agency: {
+        Name: true,
+        Parent: {
+          Name: true,
+        },
+      },
+      TierLevel: {
+        Name: true,
+      },
+      Risk: {
+        Name: true,
+      },
+      Status: {
+        Name: true,
+      },
+      CreatedBy: {
+        Id: true,
+        FirstName: true,
+        LastName: true,
+      },
+      UpdatedBy: { Id: true, FirstName: true, LastName: true },
+      Workflow: {
+        Name: true,
+      },
+      Tasks: {
+        CompletedOn: true,
+        TaskId: true,
+        IsCompleted: true,
+      },
+      StatusHistory: {
+        StatusId: true,
+        UpdatedOn: true,
+        CreatedOn: true,
+      },
+      Notes: {
+        NoteType: true,
+        Note: true,
       },
     },
     where: {
@@ -513,11 +599,6 @@ const getProjects = async (filter: ProjectFilter, includeRelations: boolean = fa
     order: filter.sort as FindOptionsOrder<Project>,
   };
 
-  // Conditionally include relations if includeRelations is true
-  if (includeRelations) {
-    queryOptions.relations = ['ProjectProperties', 'Agency', 'Status', 'CreatedBy', 'UpdatedBy'];
-  }
-
   const projects = await projectRepo.find(queryOptions);
   return projects;
 };
@@ -528,6 +609,7 @@ const projectServices = {
   deleteProjectById,
   updateProject,
   getProjects,
+  getProjectsForExport,
 };
 
 export default projectServices;

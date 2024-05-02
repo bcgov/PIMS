@@ -1,0 +1,58 @@
+<html>
+<head>
+    <title>{{ Title }}</title>
+</head>
+<body>
+   <p>{{ ToAgency.AddressTo if ToAgency.AddressTo else  "Good morning / Good afternoon" }},</p>
+    <p>This email is to provide confirmation that the 90 Day Enhanced Referral Period as detailed in the initial Notification of Surplus Real Property below is now complete.</p>
+    <p>As detailed in the <a href="https://intranet.gov.bc.ca/assets/intranet/mtics/real-property/who-we-are/branch-sres/process_manual_for_the_surplus_properties_program_-_feb_2020_-_version_2.pdf">Surplus Properties Program Process Manual</a>, the Strategic Real Estate Services Branch (SRES) has committed to proactively notifying all other Ministries, SUCH Sector Organization and Broader Public Sector (BPS) Entities of the availability of a new surplus property.</p>
+    <p>This email is to advise that the following property has been identified as surplus by the current holder of the property and is available for redeployment if there is a need by your Ministry, SUCH Sector Organization or BPS Entity:</p>
+    <p><b>{{ Project.ProjectNumber }} :</b></p>
+    <p>
+        <ol>
+            {% for property in Project.Properties %}
+                <li>
+                    {% if property.PropertyType == PropertyTypes.Land %}
+                        <span>
+                            Site Address: {{ property.Address1 }}<br>
+                            Site Description: {{ property.Name }}<br>
+                            Site Size: {{ property.LandArea }} ha<br>
+                            Zoned: {{ property.Zoning }}<br>
+                            PID: {{ property.PID }} <br>
+                            Legal: {{ property.LandLegalDescription }}<br>
+                            Current Holder of the Property: {{ property.Agency?.Name }} <br>
+                            {% if Project.Appraised != null and Project.Appraised.Value > 0 %}
+                                <span>Appraised Value: ${{ Project.Appraised.Value }}</span>
+                            {% elif Project.Assessed != null and Project.Assessed.Value > 0 %}
+                                <span>Assessed Value: ${{ Project.Assessed.Value }}</span>
+                            {% endif %}
+                        </span>
+                    {% else %}
+                        <span>
+                            Site Address: {{ property.Address1 }}<br>
+                            Site Description: {{ property.Name }}<br>
+                            Rentable Area: {{ property.RentableArea }} Sq. M<br>
+                            Building Floors: {{ property.BuildingFloorCount }} <br>
+                            Predominate Use: {{ property.BuildingPredominateUse?.Name }}<br>
+                            Tenancy: {{ property.BuildingTenancy }}<br>
+                            Current Holder of the Property: {{ property.Agency?.Name }} <br>
+                            {% if Project.Appraised != null and Project.Appraised.Value > 0 %}
+                                <span>Appraised Value: ${{ Project.Appraised.Value }}</span>
+                            {% elif Project.Assessed != null and Project.Assessed.Value > 0 %}
+                                <span>Assessed Value: ${{ Project.Assessed.Value }}</span>
+                            {% endif %}
+                        </span>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ol>
+    </p>
+    {% set note = Project.Notes | filterByAttr('NoteType', 22) | first %}
+   <p>Your Ministry, SUCH Sector Organization or BPS Entity is provided with until the end of this week from this notification to submit a Business Case to SRES expressing your interest in acquiring the surplus property.</p> 
+   <p>An Enhanced Referral Notification Letter will be sent to the owning Ministry / Agency at the end of the week advising of next steps in the process.</p>
+    <p>{{ note.Note }}</p>
+    <p>If you have any questions regarding this matter, please contact Chris Seltenrich Executive Director of the Strategic Real Estate Services Branch at 778-698-3195.</p>
+    <p>Thank you.</p>
+    <p>Strategic Real Estate Services, Real Property Division</p>
+</body>
+</html>

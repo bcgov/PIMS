@@ -1,0 +1,12 @@
+<html>
+    <head>
+        <title>{{ Title }}</title>
+    </head> 
+    <body>
+        {# 1 -> Public #}
+        {% set note = Project.Notes | selectattr('NoteType', 1) | first %}
+        <p>Dear {{ Project.Manager if Project.Manager else "Property Manager" }},</p>
+        <p>Your project {{ Project.ProjectNumber }} has been updated with the following note,</p>
+        <p>{{ note.Note }}</p>
+    </body>
+</html>

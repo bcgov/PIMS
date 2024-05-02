@@ -94,21 +94,21 @@ export const deleteParcel = async (req: Request, res: Response) => {
 export const getParcels = async (req: Request, res: Response) => {
   const filter = ParcelFilterSchema.safeParse(req.query);
   const includeRelations = req.query.includeRelations === 'true';
+  const forExcelExport = req.query.excelExport === 'true';
   const kcUser = req.user as unknown as SSOUser;
   if (!filter.success) {
     return res.status(400).send('Could not parse filter.');
   }
   const filterResult = filter.data;
-  let parcels;
-  if (isAdmin(kcUser) || isAuditor(kcUser)) {
-    parcels = await parcelServices.getParcels(filterResult as ParcelFilter, includeRelations);
-  } else {
+  if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
     // get array of user's agencies
     const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
     filterResult.agencyId = usersAgencies;
-    // Get parcels associated with agencies of the requesting user
-    parcels = await parcelServices.getParcels(filterResult as ParcelFilter, includeRelations);
   }
+  // Get parcels associated with agencies of the requesting user
+  const parcels = forExcelExport
+    ? await parcelServices.getParcelsForExcelExport(filterResult as ParcelFilter, includeRelations)
+    : await parcelServices.getParcels(filterResult as ParcelFilter, includeRelations);
   return res.status(200).send(parcels);
 };
 
