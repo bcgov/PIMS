@@ -126,8 +126,8 @@ const _notificationFind = jest
   .mockImplementation(async () => [produceProjectNotification()]);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _projectTaskFind = jest
-  .spyOn(AppDataSource.getRepository(ProjectTask), 'exists')
-  .mockImplementation(async () => true);
+  .spyOn(AppDataSource.getRepository(ProjectTask), 'findOne')
+  .mockImplementation(async () => produceProjectTask());
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _projectTaskSave = jest
   .spyOn(AppDataSource.getRepository(ProjectTask), 'save')
@@ -299,6 +299,7 @@ describe('UNIT - Project Services', () => {
       jest.clearAllMocks();
     });
     it('should return a project if it is found', async () => {
+      _projectFindOne.mockImplementationOnce(async () => produceProject());
       const result = await projectServices.getProjectById(1);
       expect(_projectFindOne).toHaveBeenCalledTimes(1);
       expect(result).toBeTruthy();
@@ -361,7 +362,7 @@ describe('UNIT - Project Services', () => {
       ...originalProject,
       Name: 'New Name',
       StatusId: 2,
-      Tasks: [{ Id: 1, IsCompleted: false }],
+      Tasks: [produceProjectTask({ TaskId: 1, IsCompleted: false })],
     };
 
     it('should update values of a project', async () => {
@@ -491,6 +492,40 @@ describe('UNIT - Project Services', () => {
 
         // Call the service function
         const projects = await projectServices.getProjects(filter, true); // Pass the mocked projectRepo
+
+        // Assertions
+        expect(_projectFind).toHaveBeenCalled();
+        // Returned project should be the one based on the agency and status id in the filter
+        expect(projects.length).toEqual(1);
+      });
+    });
+
+    describe('getProjectsForExport', () => {
+      beforeEach(() => {
+        jest.clearAllMocks();
+      });
+      it('should return projects based on filter conditions', async () => {
+        const filter = {
+          statusId: 1,
+          agencyId: 3,
+          quantity: 10,
+          page: 0,
+        };
+
+        _projectFind.mockImplementationOnce(async () => {
+          const mockProjects: Project[] = [
+            produceProject({ Id: 1, Name: 'Project 1', StatusId: 1, AgencyId: 3 }),
+            produceProject({ Id: 2, Name: 'Project 2', StatusId: 4, AgencyId: 14 }),
+          ];
+          // Check if the project matches the filter conditions
+          return mockProjects.filter(
+            (project) =>
+              filter.statusId === project.StatusId && filter.agencyId === project.AgencyId,
+          );
+        });
+
+        // Call the service function
+        const projects = await projectServices.getProjectsForExport(filter, true); // Pass the mocked projectRepo
 
         // Assertions
         expect(_projectFind).toHaveBeenCalled();
