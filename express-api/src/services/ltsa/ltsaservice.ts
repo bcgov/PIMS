@@ -49,7 +49,6 @@ export const getTitleSummary = async (accessToken: string, pid: string) => {
   const url = process.env.HOST_URI + 'titleSummaries';
   const queryparams = `filter=parcelIdentifier:${pid}`;
   const requrl = `${url}?${queryparams}`;
-
   const response = await fetch(requrl, {
     headers: {
       Accept: 'application/vnd.ltsa.astra.titleSummaries+json',
@@ -57,7 +56,6 @@ export const getTitleSummary = async (accessToken: string, pid: string) => {
     },
     method: 'GET',
   });
-
   if (!response.ok) {
     throw new ErrorWithCode(
       `Failed to retrieve title summary for parcel id: ${pid}`,
@@ -72,7 +70,6 @@ export const createOrderAsync = async (
   landTitleDistrictCode: string,
 ) => {
   const url = process.env.HOST_URI + 'orders';
-
   const order = {
     order: {
       productType: 'title',
@@ -84,7 +81,6 @@ export const createOrderAsync = async (
       },
     },
   };
-
   const response = await fetch(url, {
     headers: {
       Accept: 'application/vnd.ltsa.astra.orders+json',
@@ -94,7 +90,6 @@ export const createOrderAsync = async (
     body: JSON.stringify(order),
     method: 'POST',
   });
-
   if (!response.ok) {
     throw new ErrorWithCode(
       'Failed to create an order. An error occurred during the HTTP request.',
