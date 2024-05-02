@@ -1,7 +1,13 @@
 import React from 'react';
 import { FilterSearchDataGrid } from '@/components/table/DataTable';
 import { Box, SxProps, useTheme, ListSubheader, MenuItem } from '@mui/material';
-import { GridColDef, GridEventListener } from '@mui/x-data-grid';
+import {
+  GridColDef,
+  GridEventListener,
+  gridFilteredSortedRowEntriesSelector,
+  GridRowId,
+  GridValidRowModel,
+} from '@mui/x-data-grid';
 import { MutableRefObject, PropsWithChildren, useEffect, useState } from 'react';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { IUser } from '@/interfaces/IUser';
@@ -9,6 +15,7 @@ import { dateFormatter, statusChipFormatter } from '@/utilities/formatters';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { Role } from '@/hooks/api/useRolesApi';
+import { User } from '@/hooks/api/useUsersApi';
 
 const CustomMenuItem = (props: PropsWithChildren & { value: string }) => {
   const theme = useTheme();
@@ -203,6 +210,36 @@ const UsersTable = (props: IUsersTable) => {
     },
   ];
 
+  const getExcelData: (
+    ref: MutableRefObject<GridApiCommunity>,
+  ) => Promise<{ id: GridRowId; model: GridValidRowModel }[]> = async (
+    ref: MutableRefObject<GridApiCommunity>,
+  ) => {
+    if (ref?.current) {
+      const rows = gridFilteredSortedRowEntriesSelector(ref);
+      return rows.map((row) => {
+        const { id, model } = row;
+        const userModel = model as User;
+        return {
+          id,
+          model: {
+            Username: userModel.Username,
+            'First Name': userModel.FirstName,
+            'Last Name': userModel.LastName,
+            Email: userModel.Email,
+            Status: userModel.Status,
+            Agency: userModel.Agency?.Name,
+            'Last Login': userModel.LastLogin,
+            Role: userModel.Role?.Name,
+            'Created On': userModel.CreatedOn,
+            Position: userModel.Position,
+          },
+        };
+      });
+    }
+    return [];
+  };
+
   return (
     <Box
       sx={
@@ -222,6 +259,7 @@ const UsersTable = (props: IUsersTable) => {
         defaultFilter="All Users"
         tableHeader="Users Overview"
         excelTitle="Users Table"
+        customExcelData={getExcelData}
         addTooltip="Adding a new user from this table is not supported yet. Please advise users to use the access request form."
         getRowId={(row) => row.Id}
         columns={columns}

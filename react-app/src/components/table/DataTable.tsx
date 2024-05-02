@@ -28,8 +28,10 @@ import {
   DataGridProps,
   GridOverlay,
   GridRenderCellParams,
+  GridRowId,
   GridState,
   GridTreeNodeWithRender,
+  GridValidRowModel,
   gridFilteredSortedRowEntriesSelector,
   useGridApiRef,
 } from '@mui/x-data-grid';
@@ -40,6 +42,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import AddIcon from '@mui/icons-material/Add';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { GridInitialStateCommunity } from '@mui/x-data-grid/models/gridStateCommunity';
+import CircularProgress from '@mui/material/CircularProgress';
 
 type RenderCellParams = GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
 
@@ -167,6 +170,12 @@ type FilterSearchDataGridProps = {
   presetFilterSelectOptions: JSX.Element[];
   tableHeader: string;
   excelTitle: string;
+  customExcelData?: (ref: MutableRefObject<GridApiCommunity>) => Promise<
+    {
+      id: GridRowId;
+      model: GridValidRowModel;
+    }[]
+  >;
   addTooltip: string;
   name: string;
   initialState?: GridInitialStateCommunity;
@@ -177,6 +186,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   const [keywordSearchContents, setKeywordSearchContents] = useState<string>('');
   const [gridFilterItems, setGridFilterItems] = useState([]);
   const [selectValue, setSelectValue] = useState<string>(props.defaultFilter);
+  const [isExporting, setIsExporting] = useState<boolean>(false);
   const tableApiRef = useGridApiRef(); // Ref to MUI DataGrid
 
   /**
@@ -396,16 +406,20 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           </Tooltip>
           <Tooltip title="Export to Excel">
             <IconButton
-              onClick={() => {
+              onClick={async () => {
+                setIsExporting(true);
                 downloadExcelFile({
-                  data: gridFilteredSortedRowEntriesSelector(tableApiRef),
+                  data: props.customExcelData
+                    ? await props.customExcelData(tableApiRef)
+                    : gridFilteredSortedRowEntriesSelector(tableApiRef),
                   tableName: props.excelTitle,
                   filterName: selectValue,
                   includeDate: true,
                 });
+                setIsExporting(false);
               }}
             >
-              <DownloadIcon />
+              {isExporting ? <CircularProgress size={24} /> : <DownloadIcon />}
             </IconButton>
           </Tooltip>
           <Select

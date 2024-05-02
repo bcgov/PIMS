@@ -47,6 +47,13 @@ const useFetch = (baseUrl?: string) => {
       } else {
         response = await fetch(url, params);
       }
+
+      // If token has expired
+      if (response.status === 401) {
+        const currentLocation = window.location.pathname;
+        keycloak.login({ postLoginRedirectURL: currentLocation });
+      }
+
       const text = await response.text();
       if (text.length) {
         let parsedBody: any | undefined;
