@@ -26,7 +26,7 @@ jest.spyOn(agencyRepo, 'exists').mockImplementation(async () => true);
 const fakeProjects = [
   { id: 1, name: 'Project 1' },
   { id: 2, name: 'Project 2' },
-]
+];
 
 const _addProject = jest.fn().mockImplementation(() => produceProject());
 const _getProjectById = jest.fn().mockImplementation(() => produceProject());
