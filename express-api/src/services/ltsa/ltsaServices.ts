@@ -62,10 +62,11 @@ export const getTitleSummary: (
     method: 'GET',
   });
   if (!response.ok) {
-    throw new ErrorWithCode(
-      `Failed to retrieve title summary for parcel id: ${pid}`,
-      response.status,
-    );
+    const error: {
+      errorMessages?: string[];
+    } = JSON.parse(await response.text());
+    const message = error.errorMessages?.at(0) ?? `Invalid PID request (${pid})`;
+    throw new ErrorWithCode(`(LTSA) ${message}`, response.status);
   } else return await response.json();
 };
 
