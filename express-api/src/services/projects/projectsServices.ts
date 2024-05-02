@@ -125,10 +125,6 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
   // Set default RiskId
   project.RiskId = project.RiskId ?? ProjectRisk.GREEN;
 
-  // Removing and storing for later
-  const tasks: DeepPartial<ProjectTask[]> = project.Tasks;
-  project.Tasks = undefined;
-
   // Get a project number from the sequence
   const [{ nextval }] = await AppDataSource.query("SELECT NEXTVAL('project_num_seq')");
 
@@ -142,7 +138,7 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
     const { parcels, buildings } = propertyIds;
     if (parcels) await addProjectParcelRelations(newProject, parcels);
     if (buildings) await addProjectBuildingRelations(newProject, buildings);
-    await handleProjectTasks(newProject, tasks);
+    await handleProjectTasks(newProject, project.Tasks);
     await queryRunner.commitTransaction();
     return newProject;
   } catch (e) {
@@ -380,10 +376,6 @@ const updateProject = async (project: DeepPartial<Project>, propertyIds: Project
     throw new ErrorWithCode('Project Agency may not be changed.', 403);
   }
 
-  // Removing and storing for later
-  const tasks: DeepPartial<ProjectTask[]> = project.Tasks;
-  project.Tasks = undefined;
-
   /* TODO: Need something that checks for valid changes between status, workflow, etc.
    * Can address this when business logic is determined.
    */
@@ -405,7 +397,7 @@ const updateProject = async (project: DeepPartial<Project>, propertyIds: Project
     }
 
     await handleProjectNotifications(originalProject, project);
-    await handleProjectTasks(project, tasks);
+    await handleProjectTasks(project, project.Tasks);
 
     // Update Project
     await projectRepo.save({ ...project, Metadata: newMetadata });

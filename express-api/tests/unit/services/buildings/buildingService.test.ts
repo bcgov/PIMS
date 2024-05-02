@@ -75,6 +75,21 @@ describe('getBuildings', () => {
   });
 });
 
+describe('getBuildingsForExcelExport', () => {
+  beforeEach(() => jest.clearAllMocks());
+  it('should return a list of buildings', async () => {
+    const building = await buildingService.getBuildingsForExcelExport({});
+    expect(building).toHaveLength(1);
+  });
+  it('should use the agency filter to return a list of buildings', async () => {
+    const filter: BuildingFilter = {
+      agencyId: 1, // Assuming the agencyId you want to filter by
+    };
+    const building = await buildingService.getBuildingsForExcelExport(filter);
+    expect(building).toHaveLength(1);
+  });
+});
+
 describe('updateBuildingById', () => {
   beforeEach(() => jest.clearAllMocks());
   it('should update an existing building', async () => {

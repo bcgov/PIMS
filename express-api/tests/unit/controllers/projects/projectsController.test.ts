@@ -23,8 +23,15 @@ const agencyRepo = AppDataSource.getRepository(Agency);
 
 jest.spyOn(agencyRepo, 'exists').mockImplementation(async () => true);
 
+const fakeProjects = [
+  { id: 1, name: 'Project 1' },
+  { id: 2, name: 'Project 2' },
+]
+
 const _addProject = jest.fn().mockImplementation(() => produceProject());
 const _getProjectById = jest.fn().mockImplementation(() => produceProject());
+const _getProjectsForExport = jest.fn().mockResolvedValue(fakeProjects);
+const _getProjects = jest.fn().mockResolvedValue(fakeProjects);
 
 jest
   .spyOn(AppDataSource.getRepository(Project), 'find')
@@ -32,10 +39,8 @@ jest
 
 jest.mock('@/services/projects/projectsServices', () => ({
   addProject: () => _addProject(),
-  getProjects: jest.fn().mockResolvedValue([
-    { id: 1, name: 'Project 1' },
-    { id: 2, name: 'Project 2' },
-  ]),
+  getProjects: () => _getProjects(),
+  getProjectsForExport: () => _getProjectsForExport(),
   getProjectById: () => _getProjectById(),
 }));
 
@@ -92,6 +97,39 @@ describe('UNIT - Testing controllers for users routes.', () => {
         { id: 1, name: 'Project 1' },
         { id: 2, name: 'Project 2' },
       ]);
+      expect(_getProjects).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return the excel import if called for', async () => {
+      // Mock an admin user
+      const { mockReq, mockRes } = getRequestHandlerMocks();
+      mockRequest = mockReq;
+      mockRequest.query.excelExport = 'true';
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockResponse = mockRes;
+      jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValueOnce({
+        success: true,
+        data: {
+          projectNumber: '123',
+          name: 'Project Name',
+          statusId: 1,
+          agencyId: [1, 2],
+          page: 1,
+          quantity: 10,
+          sort: 'asc',
+        },
+      });
+
+      // Call filterProjects controller function
+      await controllers.filterProjects(mockRequest, mockResponse);
+
+      // Assert response status and content
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.send).toHaveBeenCalledWith([
+        { id: 1, name: 'Project 1' },
+        { id: 2, name: 'Project 2' },
+      ]);
+      expect(_getProjectsForExport).toHaveBeenCalledTimes(1);
     });
 
     it('should return projects for a general user', async () => {
