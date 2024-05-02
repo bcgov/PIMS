@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import ltsaService from '@/services/ltsa/ltsaService';
+import ltsaService from '@/services/ltsa/ltsaServices';
 
 /**
  * @description Used to retrieve property information from LTSA.
