@@ -3,6 +3,8 @@ import {
   ILtsaTitleSummaryModel,
   ILtsaTitleSummaryResponse,
 } from './interfaces/ILtsaTitleSummaryModel';
+import { ILtsaTokens } from '@/services/ltsa/interfaces/ILtsaTokens';
+import { ILtsaOrder } from '@/services/ltsa/interfaces/ILtsaOrder';
 
 export const processLTSARequest = async (pid: string) => {
   // make a request to get an access token from LTSA
@@ -26,7 +28,7 @@ export const processLTSARequest = async (pid: string) => {
   return order;
 };
 
-export const getTokenAsync = async () => {
+export const getTokenAsync: () => Promise<ILtsaTokens> = async () => {
   const cred = {
     integratorUsername: process.env.Ltsa__IntegratorUsername,
     integratorPassword: process.env.Ltsa__IntegratorPassword,
@@ -45,7 +47,10 @@ export const getTokenAsync = async () => {
   } else return await response.json();
 };
 
-export const getTitleSummary = async (accessToken: string, pid: string) => {
+export const getTitleSummary: (
+  accessToken: string,
+  pid: string,
+) => Promise<ILtsaTitleSummaryResponse> = async (accessToken: string, pid: string) => {
   const url = process.env.HOST_URI + 'titleSummaries';
   const queryparams = `filter=parcelIdentifier:${pid}`;
   const requrl = `${url}?${queryparams}`;
@@ -64,7 +69,11 @@ export const getTitleSummary = async (accessToken: string, pid: string) => {
   } else return await response.json();
 };
 
-export const createOrderAsync = async (
+export const createOrderAsync: (
+  accessToken: string,
+  titleNumber: string,
+  landTitleDistrictCode: string,
+) => Promise<ILtsaOrder> = async (
   accessToken: string,
   titleNumber: string,
   landTitleDistrictCode: string,
