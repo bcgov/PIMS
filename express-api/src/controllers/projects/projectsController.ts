@@ -21,6 +21,9 @@ export const getDisposalProject = async (req: Request, res: Response) => {
    *   "bearerAuth" : []
    * }]
    */
+  console.log("!!!!!!!!!!!!!!!!!!!!!!")
+  const user = req.user as SSOUser;
+  console.log(user.first_name, user.client_roles)
   const projectId = Number(req.params.projectId);
   if (isNaN(projectId)) {
     return res.status(400).send('Project ID was invalid.');
@@ -298,6 +301,8 @@ export const filterProjects = async (req: Request, res: Response) => {
   const includeRelations = req.query.includeRelations === 'true';
   const forExcelExport = req.query.excelExport === 'true';
   const kcUser = req.user as unknown as SSOUser;
+  console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+  console.log("kcuser: ", kcUser.display_name, kcUser.client_roles);
   if (!filter.success) {
     return res.status(400).send('Could not parse filter.');
   }
