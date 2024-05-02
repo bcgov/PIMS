@@ -105,13 +105,13 @@ export const addDisposalProject = async (req: Request, res: Response) => {
   // Extract projectData and propertyIds from the request body
   const {
     project,
-    propertyIds,
-  }: { project: DeepPartial<Project>; propertyIds: ProjectPropertyIds } = req.body;
+    projectPropertyIds,
+  }: { project: DeepPartial<Project>; projectPropertyIds: ProjectPropertyIds } = req.body;
   const user = await userServices.getUser((req.user as SSOUser).preferred_username);
-  const addBody = { ...project, CreatedById: user.Id };
+  const addBody = { ...project, CreatedById: user.Id, AgencyId: user.AgencyId };
 
   // Call the addProject service function with the project data
-  const newProject = await projectServices.addProject(addBody, propertyIds);
+  const newProject = await projectServices.addProject(addBody, projectPropertyIds);
 
   // Return the new project in the response
   return res.status(201).json(newProject);
@@ -296,22 +296,21 @@ export const searchProjects = async (req: Request, res: Response) => {
 export const filterProjects = async (req: Request, res: Response) => {
   const filter = ProjectFilterSchema.safeParse(req.query);
   const includeRelations = req.query.includeRelations === 'true';
+  const forExcelExport = req.query.excelExport === 'true';
   const kcUser = req.user as unknown as SSOUser;
   if (!filter.success) {
     return res.status(400).send('Could not parse filter.');
   }
   const filterResult = filter.data;
-
-  let projects;
-  if (isAdmin(kcUser) || isAuditor(kcUser)) {
-    projects = await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
-  } else {
+  if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
     // get array of user's agencies
     const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
     filterResult.agencyId = usersAgencies;
-    // Get projects associated with agencies of the requesting user
-    projects = await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
   }
+  // Get projects associated with agencies of the requesting user
+  const projects = forExcelExport
+    ? await projectServices.getProjectsForExport(filterResult as ProjectFilter, includeRelations)
+    : await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
   return res.status(200).send(projects);
 };
 

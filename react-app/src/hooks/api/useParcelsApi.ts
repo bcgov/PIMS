@@ -52,6 +52,12 @@ export type ParcelAdd = Omit<
   'Id' | 'CreatedOn' | 'CreatedById' | 'UpdatedOn' | 'UpdatedById' | 'Evaluations' | 'Fiscals'
 > & { Evaluations: ParcelEvaluationAdd[]; Fiscals: ParcelFiscalAdd[] };
 
+export interface IParcelsGetParams {
+  pid?: number;
+  includeRelations?: boolean;
+  excelExport?: boolean;
+}
+
 const useParcelsApi = (absoluteFetch: IFetch) => {
   const addParcel = async (parcel: ParcelAdd) => {
     const { parsedBody, status } = await absoluteFetch.post('/parcels', parcel);
@@ -61,8 +67,12 @@ const useParcelsApi = (absoluteFetch: IFetch) => {
     const { parsedBody } = await absoluteFetch.put(`/parcels/${id}`, parcel);
     return parsedBody as Parcel;
   };
-  const getParcels = async () => {
-    const { parsedBody } = await absoluteFetch.get('/parcels');
+  const getParcels = async (params?: IParcelsGetParams) => {
+    const noNullParam = params
+      ? // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        Object.fromEntries(Object.entries(params).filter(([_, v]) => v != null))
+      : undefined;
+    const { parsedBody } = await absoluteFetch.get('/parcels', noNullParam);
     if (parsedBody.error) {
       return [];
     }

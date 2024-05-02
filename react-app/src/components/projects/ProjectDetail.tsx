@@ -4,7 +4,7 @@ import { Box, Checkbox, FormControlLabel, FormGroup, Typography } from '@mui/mat
 import DeleteDialog from '../dialog/DeleteDialog';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
-import { ProjectMetadata, TierLevel, ProjectWithTasks } from '@/hooks/api/useProjectsApi';
+import { Project, ProjectMetadata, TierLevel } from '@/hooks/api/useProjectsApi';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '@/contexts/authContext';
@@ -17,14 +17,14 @@ import {
   ProjectGeneralInfoDialog,
   ProjectPropertiesDialog,
 } from './ProjectDialog';
+import { ProjectTask as ProjectTaskEnum } from '@/constants/projectTasks';
 
 interface IProjectDetail {
   onClose: () => void;
 }
-interface ProjectInfo extends ProjectWithTasks {
+interface ProjectInfo extends Project {
   Classification: ProjectStatus;
   AssignTier: TierLevel;
-  Notes: string;
   AssessedValue: number;
   NetBookValue: number;
   EstimatedMarketValue: number;
@@ -69,8 +69,11 @@ const ProjectDetail = (props: IProjectDetail) => {
   };
 
   const DocumentationOrApprovalData = {
-    SurplusDeclaration: true, //data?.ProjectTasks?.find((task) => task.TaskId === 1).IsCompleted,
-    TripleBottom: true, //data?.ProjectTasks?.find((task) => task.TaskId === 2).IsCompleted, //TODO: Uncomment once tasks become array
+    SurplusDeclaration: data?.Tasks?.find(
+      (task) => task.TaskId === ProjectTaskEnum.SURPLUS_DECLARATION_READINESS,
+    )?.IsCompleted,
+    TripleBottom: data?.Tasks?.find((task) => task.TaskId === ProjectTaskEnum.TRIPLE_BOTTOM_LINE)
+      ?.IsCompleted,
   };
 
   // const classification = useClassificationStyle();
@@ -95,7 +98,7 @@ const ProjectDetail = (props: IProjectDetail) => {
               <FormControlLabel
                 control={<Checkbox />}
                 style={{ pointerEvents: 'none' }}
-                value={val ? '1' : '0'}
+                value={val}
                 label={'Surplus declaration & readiness checklist document emailed to SRES'}
                 disabled={false}
               />
@@ -108,7 +111,7 @@ const ProjectDetail = (props: IProjectDetail) => {
             <FormControlLabel
               control={<Checkbox />}
               style={{ pointerEvents: 'none' }}
-              value={val ? '0' : '1'}
+              value={val}
               label={'Triple bottom line document emailed to SRES or Project is in Tier 1'}
               disabled={false}
             />

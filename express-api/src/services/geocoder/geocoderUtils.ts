@@ -24,12 +24,12 @@ export const getAddress1 = (properties: IPropertyModel): string => {
 
   if (properties.streetName) address.push(properties.streetName);
 
+  if (!properties.isStreetTypePrefix && properties.streetType) address.push(properties.streetType);
+
   if (properties.streetQualifier) address.push(properties.streetQualifier);
 
   if (!properties.isStreetDirectionPrefix && properties.streetDirection)
     address.push(properties.streetDirection);
-
-  if (!properties.isStreetTypePrefix && properties.streetType) address.push(properties.streetType);
 
   return address.join(' ');
 };
