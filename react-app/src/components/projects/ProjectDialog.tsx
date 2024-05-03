@@ -54,7 +54,11 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
         if (isValid) {
           const values = projectFormMethods.getValues();
           api.projects
-            .updateProject(+initialValues.Id, { ...values, Id: +initialValues.Id })
+            .updateProject(+initialValues.Id, {
+              ...values,
+              Id: initialValues.Id,
+              ProjectProperties: initialValues.ProjectProperties,
+            })
             .then(() => postSubmit());
         }
       }}
@@ -118,6 +122,7 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
               Market: Market,
               Appraised: Appraised,
               Metadata: Metadata,
+              ProjectProperties: initialValues.ProjectProperties,
             })
             .then(() => postSubmit());
         }
@@ -218,7 +223,16 @@ export const ProjectPropertiesDialog = (props: IProjectPropertiesDialog) => {
       title={'Edit Properties List'}
       open={open}
       onConfirm={async () => {
-        api.projects.updateProject(initialValues.Id, {}).then(() => postSubmit());
+        api.projects
+          .updateProject(
+            initialValues.Id,
+            { Id: initialValues.Id },
+            {
+              parcels: rows.filter((a) => a.Type == 'Parcel').map((a) => a.Id),
+              buildings: rows.filter((a) => a.Type == 'Building').map((a) => a.Id),
+            },
+          )
+          .then(() => postSubmit());
       }}
       onCancel={async () => onCancel()}
     >
