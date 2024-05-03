@@ -5,9 +5,9 @@ export class UpdateViews1714761366641 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`CREATE VIEW "map_properties" AS 
-  (SELECT id, pid, pin, location, property_type_id FROM parcel)
+  (SELECT id, pid, pin, location, property_type_id, address1, classification_id, agency_id, is_visible_to_other_agencies, administrative_area_id, name FROM parcel)
   UNION ALL
-  (SELECT id, pid, pin, location, property_type_id FROM building);
+  (SELECT id, pid, pin, location, property_type_id, address1, classification_id, agency_id, is_visible_to_other_agencies, administrative_area_id, name FROM building);
   `);
     await queryRunner.query(
       `INSERT INTO "typeorm_metadata"("database", "schema", "table", "type", "name", "value") VALUES (DEFAULT, $1, DEFAULT, $2, $3, $4)`,
@@ -15,7 +15,7 @@ export class UpdateViews1714761366641 implements MigrationInterface {
         'public',
         'VIEW',
         'map_properties',
-        '(SELECT id, pid, pin, location, property_type_id FROM parcel)\n  UNION ALL\n  (SELECT id, pid, pin, location, property_type_id FROM building);',
+        '(SELECT id, pid, pin, location, property_type_id, address1, classification_id, agency_id, is_visible_to_other_agencies, administrative_area_id, name FROM parcel)\n  UNION ALL\n  (SELECT id, pid, pin, location, property_type_id, address1, classification_id, agency_id, is_visible_to_other_agencies, administrative_area_id, name FROM building);',
       ],
     );
   }
