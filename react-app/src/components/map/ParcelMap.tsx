@@ -5,6 +5,7 @@ import { Map } from 'leaflet';
 import usePimsApi from '@/hooks/usePimsApi';
 import MapLayers from '@/components/map/MapLayers';
 import { ParcelPopup, PopupData } from '@/components/map/ParcelPopup';
+import { InventoryLayer } from '@/components/map/InventoryLayer';
 
 type ParcelMapProps = {
   height: string;
@@ -57,6 +58,7 @@ const ParcelMap = (props: ParcelMapProps) => {
         <MapLayers />
         {clickPosition?.position && <ParcelPopup clickPosition={clickPosition} />}
         <MapEvents />
+        <InventoryLayer />
         {props.children}
       </MapContainer>
     </Box>
