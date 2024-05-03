@@ -593,7 +593,7 @@ export const produceProjectNotification = (props?: Partial<ProjectStatusNotifica
     UpdatedById: randomUUID(),
     UpdatedBy: undefined,
     UpdatedOn: new Date(),
-    ...props
+    ...props,
   };
   return notif;
 };
