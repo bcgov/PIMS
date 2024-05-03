@@ -5,7 +5,9 @@ import {
 } from './interfaces/ILtsaTitleSummaryModel';
 import { ILtsaTokens } from '@/services/ltsa/interfaces/ILtsaTokens';
 import { ILtsaOrder } from '@/services/ltsa/interfaces/ILtsaOrder';
+import getConfig from '@/constants/config';
 
+const ltsaConfig = getConfig().ltsa;
 export const processLTSARequest = async (pid: string) => {
   // make a request to get an access token from LTSA
   const ltsatoken = await getTokenAsync();
@@ -30,12 +32,12 @@ export const processLTSARequest = async (pid: string) => {
 
 export const getTokenAsync: () => Promise<ILtsaTokens> = async () => {
   const cred = {
-    integratorUsername: process.env.LTSA_INTEGRATOR_USERNAME,
-    integratorPassword: process.env.LTSA_INTEGRATOR_PASSWORD,
-    myLtsaUserName: process.env.LTSA_USERNAME,
-    myLtsaUserPassword: process.env.LTSA_PASSWORD,
+    integratorUsername: ltsaConfig.integratorUsername,
+    integratorPassword: ltsaConfig.integratorPassword,
+    myLtsaUserName: ltsaConfig.username,
+    myLtsaUserPassword: ltsaConfig.password,
   };
-  const response = await fetch(process.env.LTSA_AUTH_URL, {
+  const response = await fetch(ltsaConfig.authurl, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -51,7 +53,7 @@ export const getTitleSummary: (
   accessToken: string,
   pid: string,
 ) => Promise<ILtsaTitleSummaryResponse> = async (accessToken: string, pid: string) => {
-  const url = process.env.LTSA_HOST_URL + 'titleSummaries';
+  const url = ltsaConfig.hosturl + 'titleSummaries';
   const queryparams = `filter=parcelIdentifier:${pid}`;
   const requrl = `${url}?${queryparams}`;
   const response = await fetch(requrl, {
@@ -79,7 +81,7 @@ export const createOrderAsync: (
   titleNumber: string,
   landTitleDistrictCode: string,
 ) => {
-  const url = process.env.LTSA_HOST_URL + 'orders';
+  const url = ltsaConfig.hosturl + 'orders';
   const order = {
     order: {
       productType: 'title',
