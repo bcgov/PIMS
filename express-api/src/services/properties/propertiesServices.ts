@@ -1,6 +1,7 @@
 import { AppDataSource } from '@/appDataSource';
 import { Building } from '@/typeorm/Entities/Building';
 import { Parcel } from '@/typeorm/Entities/Parcel';
+import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
 
 const propertiesFuzzySearch = async (keyword: string, limit?: number) => {
   const parcels = await AppDataSource.getRepository(Parcel)
@@ -35,8 +36,26 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number) => {
   };
 };
 
+const getPropertiesForMap = async () => {
+  // TODO: Use where to add search parameters
+  const properties = await AppDataSource.getRepository(MapProperties).find({
+    // Select only the properties needed to render map markers
+    select: {
+      Id: true,
+      Location: {
+        x: true,
+        y: true,
+      },
+      PropertyTypeId: true,
+      ClassificationId: true,
+    }
+  })
+  return properties;
+}
+
 const propertyServices = {
   propertiesFuzzySearch,
+  getPropertiesForMap,
 };
 
 export default propertyServices;
