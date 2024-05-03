@@ -2,7 +2,13 @@ import React, { MutableRefObject, useEffect, useState } from 'react';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, Chip, SxProps } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
-import { GridColDef, GridEventListener } from '@mui/x-data-grid';
+import {
+  GridColDef,
+  GridEventListener,
+  gridFilteredSortedRowEntriesSelector,
+  GridRowId,
+  GridValidRowModel,
+} from '@mui/x-data-grid';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { dateFormatter, statusChipFormatter } from '@/utilities/formatters';
 import { Agency } from '@/hooks/api/useAgencyApi';
@@ -125,6 +131,31 @@ const AgencyTable = (props: IAgencyTable) => {
     }
   };
 
+  const getExcelData: (
+    ref: MutableRefObject<GridApiCommunity>,
+  ) => Promise<{ id: GridRowId; model: GridValidRowModel }[]> = async (
+    ref: MutableRefObject<GridApiCommunity>,
+  ) => {
+    if (ref?.current) {
+      const rows = gridFilteredSortedRowEntriesSelector(ref);
+      return rows.map((row) => {
+        const { id, model } = row;
+        const agencyModel = model as Agency;
+        return {
+          id,
+          model: {
+            Name: agencyModel.Name,
+            Ministry: agencyModel.Parent?.Name ?? agencyModel.Name,
+            Code: agencyModel.Code,
+            Created: agencyModel.CreatedOn,
+            Disabled: agencyModel.IsDisabled,
+          },
+        };
+      });
+    }
+    return [];
+  };
+
   return (
     <Box
       sx={
@@ -163,6 +194,7 @@ const AgencyTable = (props: IAgencyTable) => {
         loading={isLoading}
         tableHeader={'Agencies Overview'}
         excelTitle={'Agencies'}
+        customExcelData={getExcelData}
         columns={columns}
         rows={agencies}
         addTooltip="Add a new agency"

@@ -40,10 +40,7 @@ export interface ProjectRisk extends BaseEntityInterface {
   Description?: string;
   Code: string;
 }
-export interface ProjectTask {
-  TaskId: number;
-  IsCompleted: boolean;
-}
+
 export interface Project {
   Id: number;
   ProjectNumber: string;
@@ -78,6 +75,55 @@ export interface Project {
   UpdatedOn?: string;
   UpdatedBy?: User;
   Metadata?: ProjectMetadata;
+  Tasks?: ProjectTask[];
+  Notifications?: ProjectNotification[];
+  StatusHistory?: ProjectStatusHistory[];
+  Notes?: ProjectNote[];
+}
+
+export interface ProjectNote {
+  CreatedById?: string;
+  CreatedOn?: Date;
+  Id?: number;
+  Note?: string;
+  NoteType?: number;
+  ProjectId?: number;
+  UpdatedById?: string;
+  UpdatedOn?: Date;
+}
+export interface ProjectStatusHistory {
+  CreatedById?: string;
+  CreatedOn?: Date;
+  Id?: number;
+  ProjectId?: number;
+  StatusId?: number;
+  UpdatedById?: string;
+  UpdatedOn?: Date;
+  WorkflowId?: number;
+}
+export interface ProjectNotification {
+  Bcc?: string;
+  Body?: string;
+  BodyType?: string;
+  Cc?: string;
+  ChesMessageId?: string;
+  ChesTransactionId?: string;
+  CreatedById?: string;
+  CreatedOn?: Date;
+  Encoding?: string;
+  Id?: number;
+  Key?: string;
+  Priority?: string;
+  ProjectId?: number;
+  SendOn?: Date;
+  Status?: number;
+  Subject?: string;
+  Tag?: string;
+  TemplateId?: number;
+  To?: string;
+  ToAgencyId?: number;
+  UpdatedById?: string;
+  UpdatedOn?: Date;
 }
 
 export interface ProjectGet extends Project {
@@ -119,7 +165,7 @@ export interface ProjectMetadata {
   salesCost?: number;
   netProceeds?: number;
   programCost?: number;
-  gainLost?: number;
+  gainLoss?: number;
   sppCapitalization?: number;
   gainBeforeSpl?: number;
   ocgFinancialStatement?: number;
@@ -136,25 +182,20 @@ export interface ProjectMetadata {
   finalFormSignedBy?: string;
 }
 
-export interface ProjectWithTasks extends Project {
-  Tasks: {
-    surplusDeclarationReadiness?: boolean;
-    tripleBottomLine?: boolean;
-    reviewCompletedErp?: boolean;
-    reviewCompletedErpExempt?: boolean;
-    documentsReceivedReviewCompleted?: boolean;
-    appaisalOrdered?: boolean;
-    appraisalReceived?: boolean;
-    preparationDueDiligence?: boolean;
-    firstNationsConsultationUnderway?: boolean;
-    firstNationsConsultationComplete?: boolean;
-    notificationExemptionToAdm?: boolean;
-    confirmationReceivedFromAdm?: boolean;
-  };
+// All values optional because it's not clear what filter will be used.
+export interface ProjectTask {
+  CompletedOn?: Date;
+  CreatedById?: string;
+  CreatedOn?: Date;
+  IsCompleted?: boolean;
+  ProjectId?: number;
+  TaskId?: number;
+  UpdatedById?: string;
+  UpdatedOn?: Date;
 }
 
 export type ProjectAdd = Omit<
-  ProjectWithTasks,
+  Project,
   | 'Id'
   | 'CreatedOn'
   | 'CreatedById'
@@ -196,6 +237,17 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
     return parsedBody as Project[];
   };
 
+  const getProjectsForExcelExport = async () => {
+    const { parsedBody } = await absoluteFetch.get('/projects', {
+      includeRelations: true,
+      excelExport: true,
+    });
+    if (parsedBody.error) {
+      return [];
+    }
+    return parsedBody as Project[];
+  };
+
   const postProject = async (project: ProjectAdd, projectPropertyIds: ProjectPropertyIds) => {
     const postBody = {
       project,
@@ -210,6 +262,7 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
     updateProject,
     deleteProjectById,
     getProjects,
+    getProjectsForExcelExport,
     postProject,
   };
 };
