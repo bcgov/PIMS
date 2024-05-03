@@ -1,35 +1,48 @@
 import usePimsApi from '@/hooks/usePimsApi';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Marker, useMap } from 'react-leaflet';
+import { Marker } from 'react-leaflet';
 import L from 'leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
+import useDataLoader from '@/hooks/useDataLoader';
+import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
 
 export const InventoryLayer = () => {
   const api = usePimsApi();
-  const map = useMap();
-  // const { data, loadOnce } = useDataLoader(api.parcels.getParcels);
-  const [properties, setProperties] = useState([]);
-  // loadOnce();
+  const { data, refreshData, isLoading, loadOnce } = useDataLoader(api.properties.propertiesGeoSearch);
+  const [properties, setProperties] = useState<PropertyGeo[]>([]);
+  const [filter, setFilter] = useState({});
 
+  // const setMarkers = useCallback(async () => {
+  //   console.log('useCallback')
+  //   console.log(data)
+  //   await refreshData();
+  //   if (data) {
+  //     console.log('properties set')
+  //     setProperties(data)};
+  // }, [filter]);
 
-  const setMarkers = useCallback(() => {
-    api.parcels.getParcels().then((parcels) => setProperties(parcels));
-    api.buildings.getBuildings().then((buildings) => setProperties([...properties,...buildings]));
-  }, [map]);
+  // useEffect(() => {
+  //   console.log('useEffect')
+  //   setMarkers();
+  // }, []);
 
   useEffect(() => {
-    setMarkers();
-  }, [0])
+    if (data && data.length > 0) {
+      setProperties(data as PropertyGeo[]);
+    } else {
+      refreshData();
+    }
+  }, [data]);
 
   return (
-    <MarkerClusterGroup chunkedLoading>
-      {properties.map((parcel) => (
+    <MarkerClusterGroup chunkedLoading removeOutsideVisibleBounds chunkInterval={100} chunkDelay={200}>
+      {properties.map((property: PropertyGeo) => (
         <Marker
-          key={parcel.Id}
-          position={[parcel.Location.y, parcel.Location.x]}
+          key={`${property.Id} + ${property.PropertyTypeId}`}
+          position={[property.Location.y, property.Location.x]}
           icon={
             new L.DivIcon({
-              html: `<div><span>${parcel.Id}</span></div>`,
+              html: `<div><span>${property.Id}</span></div>`,
               className: `marker-cluster marker-cluster`,
               iconSize: [40, 40],
             })
@@ -38,22 +51,4 @@ export const InventoryLayer = () => {
       ))}
     </MarkerClusterGroup>
   );
-  // if (!data) return <></>;
-  // return (
-  //   <>
-  //     {data.map((parcel) => (
-  //       <Marker
-  //         key={parcel.Id}
-  //         position={[parcel.Location.y, parcel.Location.x]}
-  //         icon={
-  //           new L.DivIcon({
-  //             html: `<div><span>${parcel.Id}</span></div>`,
-  //             className: `marker-cluster marker-cluster`,
-  //             iconSize: [40, 40],
-  //           })
-  //         }
-  //       />
-  //     ))}
-  //   </>
-  // );
 };

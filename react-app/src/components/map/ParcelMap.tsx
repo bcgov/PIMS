@@ -54,6 +54,7 @@ const ParcelMap = (props: ParcelMapProps) => {
         touchZoom={zoomable}
         boxZoom={zoomable}
         doubleClickZoom={zoomable}
+        preferCanvas
       >
         <MapLayers />
         {clickPosition?.position && <ParcelPopup clickPosition={clickPosition} />}
