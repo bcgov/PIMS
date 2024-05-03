@@ -222,7 +222,10 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
     return parsedBody as ProjectGet;
   };
   const updateProject = async (id: number, project: Partial<Project>): Promise<Project> => {
-    const { parsedBody } = await absoluteFetch.put(`/projects/disposal/${id}`, project);
+    const { parsedBody } = await absoluteFetch.put(`/projects/disposal/${id}`, {
+      project: project,
+      propertyIds: [],
+    });
     return parsedBody as Project;
   };
   const deleteProjectById = async (id: number) => {

@@ -59,13 +59,14 @@ const ProjectDetail = (props: IProjectDetail) => {
     Notes: data?.Description,
   };
 
+  const currencyFormatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
   const FinancialInformationData = {
     AssessedValue: data?.Assessed,
     NetBookValue: data?.NetBook,
     EstimatedMarketValue: data?.Market,
     AppraisedValue: data?.Appraised,
-    EstimatedSalesCost: data?.Metadata?.salesCost,
-    EstimatedProgramRecoveryFees: data?.Metadata?.programCost,
+    EstimatedSalesCost: currencyFormatter.format(data?.Metadata?.salesCost),
+    EstimatedProgramRecoveryFees: currencyFormatter.format(data?.Metadata?.programCost),
   };
 
   const DocumentationOrApprovalData = {
@@ -79,14 +80,6 @@ const ProjectDetail = (props: IProjectDetail) => {
   // const classification = useClassificationStyle();
   const customFormatter = (key: keyof ProjectInfo, val: any) => {
     switch (key) {
-      // case 'Classification':
-      //   return (
-      //     <ClassificationInline
-      //       color={classification[val.Id].textColor}
-      //       backgroundColor={classification[val.Id].bgColor}
-      //       title={val.Name}
-      //     />
-      //   );
       case 'Classification':
         return <Typography>{(val as ProjectStatus)?.Name}</Typography>;
       case 'AssignTier':
@@ -117,20 +110,6 @@ const ProjectDetail = (props: IProjectDetail) => {
             />
           </FormGroup>
         );
-      // case 'Approval':
-      //   return (
-      //     <FormGroup>
-      //       <FormControlLabel
-      //         control={<Checkbox />}
-      //         style={{ pointerEvents: 'none' }}
-      //         value={val ? '1' : '0'}
-      //         label={
-      //           'My ministry/agency has approval/authority to submit the disposal project to SRES for review.'
-      //         }
-      //         disabled={false}
-      //       />
-      //     </FormGroup>
-      //   );
       default:
         return <Typography>{val}</Typography>;
     }

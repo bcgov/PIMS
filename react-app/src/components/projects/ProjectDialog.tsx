@@ -54,12 +54,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
         if (isValid) {
           const values = projectFormMethods.getValues();
           api.projects
-            .updateProject(+initialValues.Id, {
-              StatusId: values.StatusId,
-              Name: values.Name,
-              TierLevelId: values.TierLevelId,
-              Description: values.Description,
-            })
+            .updateProject(+initialValues.Id, { ...values, Id: +initialValues.Id })
             .then(() => postSubmit());
         }
       }}
@@ -99,10 +94,10 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
   useEffect(() => {
     //console.log(`useEffect called! ${JSON.stringify(initialValues, null, 2)}`);
     financialFormMethods.reset({
-      Assessed: initialValues?.Assessed,
-      NetBook: initialValues?.NetBook,
-      Market: initialValues?.Market,
-      Appraised: initialValues?.Appraised,
+      Assessed: +initialValues?.Assessed?.toString().replace(/[$,]/g, ''),
+      NetBook: +initialValues?.NetBook?.toString().replace(/[$,]/g, ''),
+      Market: +initialValues?.Market?.toString().replace(/[$,]/g, ''),
+      Appraised: +initialValues?.Appraised?.toString().replace(/[$,]/g, ''),
       Metadata: initialValues?.Metadata,
     });
   }, [initialValues]);
@@ -117,6 +112,7 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
             financialFormMethods.getValues();
           api.projects
             .updateProject(initialValues.Id, {
+              Id: initialValues.Id,
               Assessed: Assessed,
               NetBook: NetBook,
               Market: Market,

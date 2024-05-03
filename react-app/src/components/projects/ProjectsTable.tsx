@@ -203,6 +203,7 @@ const ProjectsTable = () => {
         </CustomMenuItem>,
       ]}
       getRowId={(row) => row.Id}
+      onRowClick={(params) => navigate(`/projects/${params.row.Id}`)}
       tableHeader={'Disposal Projects'}
       excelTitle={'Projects'}
       customExcelData={getExcelData}
