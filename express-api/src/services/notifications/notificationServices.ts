@@ -21,7 +21,7 @@ interface AccessRequestData {
   LastName: string;
 }
 
-enum NotificationStatus {
+export enum NotificationStatus {
   Accepted = 0,
   Pending = 1,
   Cancelled = 2,
@@ -29,7 +29,7 @@ enum NotificationStatus {
   Completed = 4,
 }
 
-enum NotificationAudience {
+export enum NotificationAudience {
   ProjectOwner = 'ProjectOwner',
   OwningAgency = 'OwningAgency',
   Agencies = 'Agencies',
@@ -184,13 +184,13 @@ const sendNotification = async (notification: NotificationQueue, user: SSOUser) 
       delayTS: notification.SendOn.getTime(),
     };
     const response = await chesServices.sendEmailAsync(email, user);
-    await AppDataSource.getRepository(NotificationQueue).save({
+    return AppDataSource.getRepository(NotificationQueue).save({
       ...notification,
       ChesTransactionId: response.txId as UUID,
       ChesMessageId: response.messages[0].msgId as UUID,
     });
   } catch (e) {
-    await AppDataSource.getRepository(NotificationQueue).save({
+    return AppDataSource.getRepository(NotificationQueue).save({
       ...notification,
       Status: NotificationStatus.Failed,
     });
