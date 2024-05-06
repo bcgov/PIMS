@@ -6,7 +6,12 @@ import useDataLoader from '@/hooks/useDataLoader';
 import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import { getMatchingPropertyPin } from '@/components/map/markers/propertyPins';
 
-export const InventoryLayer = () => {
+export interface InventoryLayerProps {
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export const InventoryLayer = (props: InventoryLayerProps) => {
+  const { setLoading } = props;
   const api = usePimsApi();
   const { data, refreshData } = useDataLoader(api.properties.propertiesGeoSearch);
   const [properties, setProperties] = useState<PropertyGeo[]>([]);
@@ -20,7 +25,18 @@ export const InventoryLayer = () => {
   }, [data]);
 
   return (
-    <MarkerClusterGroup chunkedLoading removeOutsideVisibleBounds showCoverageOnHover>
+    <MarkerClusterGroup
+      chunkedLoading={true}
+      removeOutsideVisibleBounds
+      showCoverageOnHover
+      chunkProgress={(processedMarkers: number, totalMarkers: number) => {
+        if (processedMarkers === totalMarkers) {
+          setLoading(false);
+        } else {
+          setLoading(true);
+        }
+      }}
+    >
       {properties.map((property: PropertyGeo) => (
         <Marker
           key={`${property.Id} + ${property.PropertyTypeId}`}

@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import React, { PropsWithChildren, useState } from 'react';
 import { MapContainer, useMapEvents, useMap } from 'react-leaflet';
 import { Map } from 'leaflet';
@@ -38,9 +38,11 @@ const ParcelMap = (props: ParcelMapProps) => {
     return null;
   };
   const [clickPosition, setClickPosition] = useState<PopupData>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const { height, mapRef, movable = true, zoomable = true } = props;
   return (
     <Box height={height}>
+      <LoadingCover show={loading} />
       <MapContainer
         style={{ height: '100%' }}
         ref={mapRef}
@@ -59,11 +61,36 @@ const ParcelMap = (props: ParcelMapProps) => {
         <MapLayers />
         {clickPosition?.position && <ParcelPopup clickPosition={clickPosition} />}
         <MapEvents />
-        <InventoryLayer />
+        <InventoryLayer setLoading={setLoading} />
         {props.children}
       </MapContainer>
     </Box>
   );
+};
+export interface LoadingCoverProps {
+  show?: boolean;
+}
+
+const LoadingCover: React.FC<LoadingCoverProps> = ({ show }) => {
+  return show ? (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        position: 'absolute',
+        zIndex: '999',
+        left: '0',
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        display: 'flex',
+        alignItems: 'center',
+        alignContent: 'center',
+        justifyItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <CircularProgress />
+    </div>
+  ) : null;
 };
 
 export default ParcelMap;
