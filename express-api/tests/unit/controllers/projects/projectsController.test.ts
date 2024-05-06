@@ -19,7 +19,6 @@ import { Project } from '@/typeorm/Entities/Project';
 import { ProjectSchema } from '@/controllers/projects/projectsSchema';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { DeleteResult } from 'typeorm';
-import { checkUserAgencyPermission } from '@/utilities/authorizationChecks';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
 
