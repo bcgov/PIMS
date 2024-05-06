@@ -19,6 +19,7 @@ import { Project } from '@/typeorm/Entities/Project';
 import { ProjectSchema } from '@/controllers/projects/projectsSchema';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { DeleteResult } from 'typeorm';
+import { checkUserAgencyPermission } from '@/utilities/authorizationChecks';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
 
@@ -40,6 +41,7 @@ const _deleteProjectById = jest.fn().mockImplementation(
     raw: {},
   }),
 );
+
 jest
   .spyOn(AppDataSource.getRepository(Project), 'find')
   .mockImplementation(async () => _addProject());
@@ -208,8 +210,16 @@ describe('UNIT - Testing controllers for users routes.', () => {
     });
   });
   describe('GET /projects/disposal/:projectId', () => {
-    it('should return status 200 and a project', async () => {
+    it('should return status 200 and a project when user is admin', async () => {
       mockRequest.params.projectId = '1';
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      await controllers.getDisposalProject(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+    });
+
+    it('should return status 200 and a project when user is auditor', async () => {
+      mockRequest.params.projectId = '1';
+      mockRequest.setUser({ client_roles: [Roles.AUDITOR] });
       await controllers.getDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
