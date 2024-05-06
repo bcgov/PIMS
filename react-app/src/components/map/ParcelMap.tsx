@@ -12,6 +12,7 @@ type ParcelMapProps = {
   mapRef?: React.Ref<Map>;
   movable?: boolean;
   zoomable?: boolean;
+  loadProperties?: boolean;
 } & PropsWithChildren;
 
 const ParcelMap = (props: ParcelMapProps) => {
@@ -39,7 +40,7 @@ const ParcelMap = (props: ParcelMapProps) => {
   };
   const [clickPosition, setClickPosition] = useState<PopupData>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const { height, mapRef, movable = true, zoomable = true } = props;
+  const { height, mapRef, movable = true, zoomable = true, loadProperties = false } = props;
   return (
     <Box height={height}>
       <LoadingCover show={loading} />
@@ -61,7 +62,7 @@ const ParcelMap = (props: ParcelMapProps) => {
         <MapLayers />
         {clickPosition?.position && <ParcelPopup clickPosition={clickPosition} />}
         <MapEvents />
-        <InventoryLayer setLoading={setLoading} />
+        {loadProperties ? <InventoryLayer setLoading={setLoading} /> : <></>}
         {props.children}
       </MapContainer>
     </Box>
