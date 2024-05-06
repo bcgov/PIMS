@@ -45,13 +45,13 @@ const flattenProjectProperties = (project: Project) => {
   const flattenedProperties = project.ProjectProperties.map((projectProperty) => {
     if (projectProperty.Building != null) {
       return {
-        ...projectProperty.Parcel,
-        Type: 'Parcel',
+        ...projectProperty.Building,
+        Type: 'Building',
       };
     } else {
       return {
-        ...projectProperty.Building,
-        Type: 'Building',
+        ...projectProperty.Parcel,
+        Type: 'Parcel',
       };
     }
   });
@@ -66,6 +66,9 @@ const generateAccessRequestNotification = async (
   templateId: number,
   to?: string,
 ): Promise<NotificationQueue> => {
+  const systemUser = await AppDataSource.getRepository(User).findOne({
+    where: { Username: 'system' },
+  });
   const template = await AppDataSource.getRepository(NotificationTemplate).findOne({
     where: { Id: templateId },
   });
@@ -85,6 +88,7 @@ const generateAccessRequestNotification = async (
     To: to ?? template.To,
     Body: body,
     TemplateId: template.Id,
+    CreatedById: systemUser.Id,
   };
   return AppDataSource.getRepository(NotificationQueue).save(queueObject);
 };
@@ -101,10 +105,11 @@ const insertProjectNotificationQueue = async (
   const queueObject = {
     Key: randomUUID(),
     Status: NotificationStatus.Pending,
-    Priority: template.Priority,
-    Encoding: template.Encoding,
+    Priority: EmailPriority[template.Priority as keyof typeof EmailPriority],
+    Encoding: EmailPriority[template.Priority as keyof typeof EmailPriority],
     SendOn: sendDate,
     Subject: nunjucks.renderString(template.Subject, { Project: project }),
+    BodyType: template.BodyType,
     Body: nunjucks.renderString(template.Body, {
       Title: Title,
       Uri: Uri,
@@ -115,6 +120,7 @@ const insertProjectNotificationQueue = async (
     To: [overrideTo ?? agency?.Email, template.To].filter((a) => a).join(';'),
     Cc: [agency?.CCEmail, template.Cc].filter((a) => a).join(';'),
     Bcc: template.Bcc,
+    CreatedById: project.UpdatedById ?? project.CreatedById,
   };
   const insertedNotif = await AppDataSource.getRepository(NotificationQueue).save(queueObject);
   return insertedNotif;
@@ -133,9 +139,6 @@ const generateProjectNotifications = async (project: Project, previousStatusId: 
     const template = await AppDataSource.getRepository(NotificationTemplate).findOne({
       where: { Id: projStatusNotif.Id },
     });
-
-    const sendDate = new Date();
-    sendDate.setDate(sendDate.getDate() + projStatusNotif.DelayDays);
 
     let overrideTo: string | null = null;
     if (template.Audience == NotificationAudience.ProjectOwner) {
@@ -157,7 +160,7 @@ const generateProjectNotifications = async (project: Project, previousStatusId: 
         insertProjectNotificationQueue(template, projStatusNotif, project, project.Agency),
       );
     } else if (template.Audience == NotificationAudience.Agencies) {
-      //Dunno if we really have/plan to have the ProjectAgencyResponses implemented?
+      //Will eventually integrate agency interest response lookup here.
     } else if (template.Audience == NotificationAudience.ParentAgencies) {
       //Same here
     } else if (template.Audience == NotificationAudience.WatchingAgencies) {
@@ -166,7 +169,7 @@ const generateProjectNotifications = async (project: Project, previousStatusId: 
       returnNotifications.push(insertProjectNotificationQueue(template, projStatusNotif, project));
     }
   }
-  return returnNotifications;
+  return await Promise.all(returnNotifications);
 };
 
 const sendNotification = async (notification: NotificationQueue, user: SSOUser) => {
@@ -175,11 +178,11 @@ const sendNotification = async (notification: NotificationQueue, user: SSOUser) 
       to: notification.To.split(';').map((a) => a.trim()),
       cc: notification.Cc.split(';').map((a) => a.trim()),
       bcc: notification.Bcc.split(';').map((a) => a.trim()),
-      bodyType: notification.BodyType.toLowerCase() as EmailBody,
+      bodyType: EmailBody[notification.BodyType as keyof typeof EmailBody],
       subject: notification.Subject,
       body: notification.Body,
-      encoding: notification.Encoding.toLowerCase() as EmailEncoding,
-      priority: notification.Priority.toLowerCase() as EmailPriority,
+      encoding: EmailEncoding[notification.Encoding as keyof typeof EmailEncoding],
+      priority: EmailPriority[notification.Priority as keyof typeof EmailPriority],
       tag: notification.Tag,
       delayTS: notification.SendOn.getTime(),
     };
