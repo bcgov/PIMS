@@ -10,7 +10,6 @@ const {
   getProperties,
   getPropertiesFilter,
   getPropertiesForMap,
-  getPropertiesForMapFilter,
   getPropertiesPaged,
   getPropertiesPagedFilter,
 } = controllers;
@@ -23,7 +22,6 @@ router.route('/search').get(activeUserCheck, catchErrors(getProperties));
 router.route('/search/filter').post(activeUserCheck, catchErrors(getPropertiesFilter));
 
 router.route('/search/geo').get(activeUserCheck, catchErrors(getPropertiesForMap)); // Formerly wfs route
-router.route('/search/geo/filter').post(activeUserCheck, catchErrors(getPropertiesForMapFilter));
 
 router.route('/search/page').get(activeUserCheck, catchErrors(getPropertiesPaged));
 router.route('/search/page/filter').post(activeUserCheck, catchErrors(getPropertiesPagedFilter));
