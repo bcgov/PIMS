@@ -33,7 +33,7 @@ export const getMatchingPropertyPin = (propertyType: PropertyTypes) => {
     default:
       return geocoderIcon;
   }
-}
+};
 
 // default icon values
 const defaults: Partial<IconOptions> = {

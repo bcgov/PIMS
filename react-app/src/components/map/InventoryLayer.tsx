@@ -7,7 +7,7 @@ import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import { getMatchingPropertyPin } from '@/components/map/markers/propertyPins';
 
 export interface InventoryLayerProps {
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const InventoryLayer = (props: InventoryLayerProps) => {

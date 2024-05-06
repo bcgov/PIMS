@@ -39,9 +39,9 @@ import { User } from '@/typeorm/Entities/User';
 import { Workflow } from '@/typeorm/Entities/Workflow';
 import { WorkflowProjectStatus } from '@/typeorm/Entities/WorkflowProjectStatus';
 import { BuildingRelations } from '@/typeorm/Entities/views/BuildingRelationsView';
-import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
+import { MapProperty } from '@/typeorm/Entities/views/MapPropertiesView';
 
-const views = [BuildingRelations, MapProperties];
+const views = [BuildingRelations, MapProperty];
 
 export default [
   AdministrativeArea,
