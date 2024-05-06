@@ -504,12 +504,15 @@ export const produceProject = (
     Status: null, // TODO: produceStatus
     RiskId: 1,
     Risk: null, // TODO: produceRisk
-    ProjectTasks: [],
+    Tasks: [produceProjectTask()],
     ProjectProperties: projectProperties ?? [
       produceProjectProperty({
         ProjectId: projectId,
       }),
     ],
+    Notifications: [],
+    StatusHistory: [],
+    Notes: [],
     ...props,
   };
   return project;
@@ -557,7 +560,7 @@ export const productProjectStatusHistory = (props?: Partial<ProjectStatusHistory
   return history;
 };
 
-export const produceProjectTask = () => {
+export const produceProjectTask = (props?: Partial<ProjectTask>) => {
   const task: ProjectTask = {
     ProjectId: faker.number.int(),
     Project: undefined,
@@ -571,6 +574,7 @@ export const produceProjectTask = () => {
     UpdatedById: randomUUID(),
     UpdatedBy: undefined,
     UpdatedOn: new Date(),
+    ...props,
   };
   return task;
 };

@@ -16,12 +16,14 @@ const _updateParcel = jest.fn().mockImplementation(() => produceParcel());
 const _deleteParcel = jest.fn().mockImplementation((): DeleteResult => ({ raw: {} }));
 const _addParcel = jest.fn().mockImplementation(() => produceParcel());
 const _getParcels = jest.fn().mockImplementation(() => [produceParcel()]);
+const _getParcelsForExcelExport = jest.fn().mockImplementation(() => [produceParcel()]);
 jest.mock('@/services/parcels/parcelServices', () => ({
   getParcelById: () => _getParcelById(),
   updateParcel: () => _updateParcel(),
   deleteParcelById: () => _deleteParcel(),
   getParcels: () => _getParcels(),
   addParcel: () => _addParcel(),
+  getParcelsForExcelExport: () => _getParcelsForExcelExport(),
 }));
 jest.mock('@/services/users/usersServices', () => ({
   getUser: jest.fn().mockImplementation(() => produceUser()),
@@ -153,6 +155,12 @@ describe('UNIT - Parcels', () => {
       await controllers.getParcels(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(Array.isArray(mockResponse.sendValue)).toBeTruthy();
+    });
+    it('should retrieve the Excel export data if asked for', async () => {
+      mockRequest.query.excelExport = 'true';
+      await controllers.getParcels(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(_getParcelsForExcelExport).toHaveBeenCalledTimes(1);
     });
     it('should return 400 on incorrect filter', async () => {
       mockRequest.query.isSensitive = {};
