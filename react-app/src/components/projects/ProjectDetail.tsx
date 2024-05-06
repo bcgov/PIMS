@@ -40,7 +40,11 @@ const ProjectDetail = (props: IProjectDetail) => {
   const api = usePimsApi();
   // const theme = useTheme();
   const userContext = useContext(AuthContext);
-  if (!userContext.keycloak.hasRoles([Roles.ADMIN, Roles.GENERAL_USER, Roles.AUDITOR], { requireAllRoles: false })) {
+  if (
+    !userContext.keycloak.hasRoles([Roles.ADMIN, Roles.GENERAL_USER, Roles.AUDITOR], {
+      requireAllRoles: false,
+    })
+  ) {
     navigate('/');
   }
   const { data, refreshData } = useDataLoader(() => api.projects.getProjectById(Number(id)));
