@@ -2,7 +2,7 @@ import { AppDataSource } from '@/appDataSource';
 import propertyServices from '@/services/properties/propertiesServices';
 import { Building } from '@/typeorm/Entities/Building';
 import { Parcel } from '@/typeorm/Entities/Parcel';
-import { MapProperty } from '@/typeorm/Entities/views/MapPropertiesView';
+import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
 import { produceParcel, produceBuilding } from 'tests/testUtils/factories';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -33,7 +33,7 @@ jest
   .spyOn(AppDataSource.getRepository(Building), 'createQueryBuilder')
   .mockImplementation(() => _buildingsCreateQueryBuilder);
 
-jest.spyOn(AppDataSource.getRepository(MapProperty), 'find').mockImplementation(async () => [
+jest.spyOn(AppDataSource.getRepository(MapProperties), 'find').mockImplementation(async () => [
   {
     Id: 1,
     Location: {
@@ -42,7 +42,7 @@ jest.spyOn(AppDataSource.getRepository(MapProperty), 'find').mockImplementation(
     },
     PropertyTypeId: 0,
     ClassificationId: 3,
-  } as MapProperty,
+  } as MapProperties,
 ]);
 
 describe('UNIT - Property Services', () => {

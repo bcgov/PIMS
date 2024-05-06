@@ -9,7 +9,7 @@ import { ViewColumn, ViewEntity } from 'typeorm';
   (SELECT id, pid, pin, location, property_type_id, address1, classification_id, agency_id, is_visible_to_other_agencies, administrative_area_id, name FROM building);
   `,
 })
-export class MapProperty {
+export class MapProperties {
   @ViewColumn({ name: 'id' })
   Id: number;
 
