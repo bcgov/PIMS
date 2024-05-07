@@ -15,11 +15,12 @@ import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import logger from '@/utilities/winstonLogger';
-import { DeepPartial, FindManyOptions, FindOptionsOrder, In, IsNull } from 'typeorm';
+import { DeepPartial, FindManyOptions, FindOptionsOrder, In } from 'typeorm';
 import { ProjectFilter } from '@/services/projects/projectSchema';
 import { PropertyType } from '@/constants/propertyType';
-import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
 import { ProjectRisk } from '@/constants/projectRisk';
+import notificationServices from '../notifications/notificationServices';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 
 const projectRepo = AppDataSource.getRepository(Project);
 const projectPropertiesRepo = AppDataSource.getRepository(ProjectProperty);
@@ -146,6 +147,8 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
     logger.warn(e.message);
     if (e instanceof ErrorWithCode) throw e;
     throw new ErrorWithCode('Error creating project.', 500);
+  } finally {
+    await queryRunner.release();
   }
 };
 
@@ -316,25 +319,31 @@ const removeProjectBuildingRelations = async (project: Project, buildingIds: num
   );
 };
 
-const handleProjectNotifications = async (
-  oldProject: DeepPartial<Project>,
-  newProject: DeepPartial<Project>,
-) => {
-  const fromId = oldProject.StatusId;
-  const toId = newProject.StatusId;
-  const notifications = await AppDataSource.getRepository(ProjectStatusNotification).find({
-    where: [
-      { FromStatusId: IsNull(), ToStatusId: toId },
-      { FromStatusId: fromId, ToStatusId: toId },
-    ],
+const handleProjectNotifications = async (oldProject: DeepPartial<Project>, user: SSOUser) => {
+  const projectWithRelations = await AppDataSource.getRepository(Project).findOne({
+    relations: {
+      Agency: true,
+      ProjectProperties: {
+        Building: {
+          Evaluations: true,
+          Fiscals: true,
+        },
+        Parcel: {
+          Evaluations: true,
+          Fiscals: true,
+        },
+      },
+      Notes: true,
+    },
+    where: {
+      Id: oldProject.Id,
+    },
   });
-  for (const notification of notifications) {
-    // eslint-disable-next-line no-console
-    console.log(
-      `Queue notification with id ${notification.Id}, template ${notification.TemplateId}`,
-    );
-    //Actually queue the notification once this is implemented.
-  }
+  const notifs = await notificationServices.generateProjectNotifications(
+    projectWithRelations,
+    oldProject.StatusId,
+  );
+  return Promise.all(notifs.map((notif) => notificationServices.sendNotification(notif, user)));
 };
 
 const handleProjectTasks = async (
@@ -351,7 +360,8 @@ const handleProjectTasks = async (
         ProjectId: project.Id,
         CreatedById: existingTask ? existingTask.CreatedById : project.CreatedById,
         UpdatedById: existingTask ? project.UpdatedById : undefined,
-        CompletedOn: task.IsCompleted ? new Date() : undefined,
+        IsCompleted: task.IsCompleted,
+        CompletedOn: !existingTask && task.IsCompleted ? new Date() : undefined,
       };
       await AppDataSource.getRepository(ProjectTask).save(taskEntity);
     }
@@ -366,7 +376,11 @@ const handleProjectTasks = async (
  * @returns The result of the project update.
  * @throws {ErrorWithCode} If the project name is empty or null, if the project does not exist, if the project number or agency cannot be changed, or if there is an error updating the project.
  */
-const updateProject = async (project: DeepPartial<Project>, propertyIds: ProjectPropertyIds) => {
+const updateProject = async (
+  project: DeepPartial<Project>,
+  propertyIds: ProjectPropertyIds,
+  user: SSOUser,
+) => {
   // Project must still have a name
   // undefined is allowed because it is not always updated
   if (project.Name === null || project.Name === '') {
@@ -400,15 +414,17 @@ const updateProject = async (project: DeepPartial<Project>, propertyIds: Project
         CreatedById: project.UpdatedById,
         ProjectId: project.Id,
         WorkflowId: originalProject.WorkflowId,
-        StatusId: originalProject.StatusId, //I'm assuming that workflow and status should actually be from the now outdated version right?
+        StatusId: originalProject.StatusId,
       });
+      await handleProjectNotifications(originalProject, user); //Assuming that this needs to be here, I don't think notifications should send unless a status transition happens.
     }
 
-    await handleProjectNotifications(originalProject, project);
     await handleProjectTasks({ ...project, CreatedById: project.UpdatedById }, project.Tasks);
 
     // Update Project
-    await projectRepo.save({ ...project, Metadata: newMetadata });
+    await projectRepo.save({ ...project, Metadata: newMetadata, Tasks: undefined });
+    //Seems this save will also try to save Tasks array if present, but if missing the ProjectId it will do weird stuff.
+    //So we could consolidate handleProjectTasks to here if we wanted, but then it might be annoying trying to get the more specific behavior in that function.
 
     // Update related Project Properties
     const existingProjectProperties = await projectPropertiesRepo.find({
@@ -445,7 +461,7 @@ const updateProject = async (project: DeepPartial<Project>, propertyIds: Project
     await queryRunner.rollbackTransaction();
     logger.warn(e.message);
     if (e instanceof ErrorWithCode) throw e;
-    throw new ErrorWithCode('Error updating project.', 500);
+    throw new ErrorWithCode(`Error updating project: ${e.message}`, 500);
   } finally {
     await queryRunner.release();
   }
@@ -491,6 +507,8 @@ const deleteProjectById = async (id: number) => {
     logger.warn(e.message);
     if (e instanceof ErrorWithCode) throw e;
     throw new ErrorWithCode('Error deleting project.', 500);
+  } finally {
+    await queryRunner.release();
   }
 };
 

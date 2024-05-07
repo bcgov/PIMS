@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import DataCard from '../display/DataCard';
 import { Box, Checkbox, FormControlLabel, FormGroup, Typography } from '@mui/material';
 import DeleteDialog from '../dialog/DeleteDialog';
@@ -17,7 +17,6 @@ import {
   ProjectGeneralInfoDialog,
   ProjectPropertiesDialog,
 } from './ProjectDialog';
-import { ProjectTask as ProjectTaskEnum } from '@/constants/projectTasks';
 
 interface IProjectDetail {
   onClose: () => void;
@@ -45,6 +44,34 @@ const ProjectDetail = (props: IProjectDetail) => {
   }
   const { data, refreshData } = useDataLoader(() => api.projects.getProjectById(Number(id)));
 
+  const { data: tasks, loadOnce: loadTasks } = useDataLoader(() => api.lookup.getTasks());
+  loadTasks();
+
+  const { data: statuses, loadOnce: loadStatuses } = useDataLoader(() =>
+    api.lookup.getProjectStatuses(),
+  );
+  loadStatuses();
+
+  const collectedTasksByStatus = useMemo((): Record<string, Array<any>> => {
+    if (!data || !tasks || !statuses) {
+      return {};
+    }
+    //Somewhat evil reduce where we collect information from the status and tasks lookup so that we can
+    //get data for the status and task names to be displayed when we enumarete the tasks associated to the project itself
+    //in the documentation history section.
+    return data?.Tasks.reduce((acc: Record<string, Array<any>>, curr) => {
+      const fullTask = tasks.find((a) => a.Id === curr.TaskId);
+      const fullStatus = statuses.find((a) => a.Id === fullTask.StatusId);
+      if (!acc[fullStatus.Name]) {
+        acc[fullStatus.Name] = [{ ...curr, Name: fullTask.Name }];
+        return acc;
+      } else {
+        acc[fullStatus.Name].push({ ...curr, Name: fullTask.Name });
+        return acc;
+      }
+    }, {});
+  }, [data, tasks, statuses]);
+
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openProjectInfoDialog, setOpenProjectInfoDialog] = useState(false);
   const [openDisposalPropDialog, setOpenDisposalPropDialog] = useState(false);
@@ -69,47 +96,12 @@ const ProjectDetail = (props: IProjectDetail) => {
     EstimatedProgramRecoveryFees: currencyFormatter.format(data?.Metadata?.programCost),
   };
 
-  const DocumentationOrApprovalData = {
-    SurplusDeclaration: data?.Tasks?.find(
-      (task) => task.TaskId === ProjectTaskEnum.SURPLUS_DECLARATION_READINESS,
-    )?.IsCompleted,
-    TripleBottom: data?.Tasks?.find((task) => task.TaskId === ProjectTaskEnum.TRIPLE_BOTTOM_LINE)
-      ?.IsCompleted,
-  };
-
-  // const classification = useClassificationStyle();
   const customFormatter = (key: keyof ProjectInfo, val: any) => {
     switch (key) {
       case 'Classification':
         return <Typography>{(val as ProjectStatus)?.Name}</Typography>;
       case 'AssignTier':
         return <Typography>{(val as TierLevel)?.Name}</Typography>;
-      case 'SurplusDeclaration':
-        return (
-          <>
-            <FormGroup>
-              <FormControlLabel
-                control={<Checkbox />}
-                style={{ pointerEvents: 'none' }}
-                value={val}
-                label={'Surplus declaration & readiness checklist document emailed to SRES'}
-                disabled={false}
-              />
-            </FormGroup>
-          </>
-        );
-      case 'TripleBottom':
-        return (
-          <FormGroup>
-            <FormControlLabel
-              control={<Checkbox />}
-              style={{ pointerEvents: 'none' }}
-              value={val}
-              label={'Triple bottom line document emailed to SRES or Project is in Tier 1'}
-              disabled={false}
-            />
-          </FormGroup>
-        );
       default:
         return <Typography>{val}</Typography>;
     }
@@ -161,10 +153,34 @@ const ProjectDetail = (props: IProjectDetail) => {
       />
       <DataCard
         customFormatter={customFormatter}
-        values={DocumentationOrApprovalData}
-        title={'Documentation/Approval'}
+        values={undefined}
+        disableEdit={true}
+        title={'Documentation History'}
         onEdit={() => setOpenDocumentationDialog(true)}
-      />
+      >
+        {Object.entries(collectedTasksByStatus)?.map(
+          (
+            [key, value], //Each key here is a status name. Each value a list of tasks.
+          ) => (
+            <Box key={`${key}-group`}>
+              <Typography variant="h5" mt={'1rem'}>
+                {key}
+              </Typography>
+              {value.map((task) => (
+                <FormGroup key={`${task.TaskId}-task-formgroup`}>
+                  <FormControlLabel
+                    control={<Checkbox checked={task.IsCompleted} />}
+                    style={{ pointerEvents: 'none' }}
+                    value={task.IsCompleted}
+                    label={task.Name}
+                    disabled={false}
+                  />
+                </FormGroup>
+              ))}
+            </Box>
+          ),
+        )}
+      </DataCard>
       <DeleteDialog
         open={openDeleteDialog}
         title={'Delete property'}
