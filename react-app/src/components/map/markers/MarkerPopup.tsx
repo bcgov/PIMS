@@ -9,9 +9,9 @@ export interface MarkerPopupProps {
 }
 export const MarkerPopup = (props: MarkerPopupProps) => {
   const { propertyData } = props;
-  console.log(propertyData)
 
-  return propertyData ? <Popup minWidth={500}>
+  return propertyData ? (
+    <Popup minWidth={500}>
       <Grid container>
         <Grid item xs={12}>
           <Typography variant="h5">{`Parcel Info`}</Typography>
@@ -47,6 +47,8 @@ export const MarkerPopup = (props: MarkerPopupProps) => {
           {propertyData?.Classification?.Name}
         </Grid>
       </Grid>
-    </Popup> : <></>
-  
+    </Popup>
+  ) : (
+    <></>
+  );
 };

@@ -22,7 +22,7 @@ import subdivSplHighlightPng from '@/assets/markers/subdiv-spl-highlight.png';
 import { PropertyTypes } from '@/constants/propertyTypes';
 
 // TODO: Expand to handle more Property Pin types
-export const getMatchingPropertyPin = (propertyType: PropertyTypes, isSelected: boolean) => {
+export const getMatchingPropertyPin = (propertyType: PropertyTypes, isSelected?: boolean) => {
   switch (true) {
     case propertyType === PropertyTypes.LAND:
       return isSelected ? parcelIconSelect : parcelIcon;
