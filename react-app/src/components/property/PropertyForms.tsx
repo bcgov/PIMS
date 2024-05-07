@@ -241,7 +241,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <ParcelMap height={'500px'} mapRef={setMap}>
+          <ParcelMap height={'500px'} mapRef={setMap} movable={false}>
             <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height={'100%'}>
               <Room
                 color="primary"
@@ -450,6 +450,28 @@ interface INetBookValue {
 export const NetBookValue = (props: INetBookValue) => {
   return (
     <Grid container spacing={2}>
+      {/* Render default form fields if props.years is empty */}
+      {props.years.length === 0 && (
+        <React.Fragment>
+          <Grid item xs={4}>
+            <TextFormField disabled name={`Fiscals.0.FiscalYear`} label={'Fiscal year'} />
+          </Grid>
+          <Grid item xs={4}>
+            <DateFormField name={`Fiscals.0.EffectiveDate`} label={'Effective date'} />
+          </Grid>
+          <Grid item xs={4}>
+            <TextFormField
+              name={`Fiscals.0.Value`}
+              label={'Net book value'}
+              numeric
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+              }}
+            />
+          </Grid>
+        </React.Fragment>
+      )}
+      {/* Render form fields for each fiscal year */}
       {props.years.map((yr, idx) => {
         return (
           <React.Fragment key={`netbookgrid${yr}`}>
@@ -485,50 +507,68 @@ interface IAssessedValue {
   years: number[];
   title?: string;
   topLevelKey?: string;
+  showCurrentYear: boolean;
 }
 
 export const AssessedValue = (props: IAssessedValue) => {
   const { years, title, topLevelKey } = props;
+  const currentYear = new Date().getFullYear();
+
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
       <Typography mt={2} variant="h5">
         {title ?? 'Assessed Value'}
       </Typography>
-      {!years.length ? (
-        <Typography alignSelf={'center'}>No values.</Typography>
-      ) : (
-        <Box overflow={'auto'} paddingTop={'8px'}>
-          {years.map((yr, idx) => {
-            return (
-              <Box
-                mb={2}
-                gap={2}
-                key={`assessedvaluerow-${yr}${'-' + topLevelKey}`}
-                display={'flex'}
-                width={'100%'}
-                flexDirection={'row'}
-              >
-                <TextFormField
-                  sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-                  name={`${topLevelKey ?? ''}Evaluations.${idx}.Year`}
-                  label={'Year'}
-                  value={yr}
-                  disabled
-                />
-                <TextFormField
-                  InputProps={{
-                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                  }}
-                  sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-                  name={`${topLevelKey ?? ''}Evaluations.${idx}.Value`}
-                  numeric
-                  label={'Value'}
-                />
-              </Box>
-            );
-          })}
-        </Box>
-      )}
+      <Box overflow={'auto'} paddingTop={'8px'}>
+        {years.map((yr, idx) => (
+          <Box
+            mb={2}
+            gap={2}
+            key={`assessedvaluerow-${yr}${'-' + topLevelKey}`}
+            display={'flex'}
+            width={'100%'}
+            flexDirection={'row'}
+          >
+            <TextFormField
+              sx={{ minWidth: 'calc(33.3% - 1rem)' }}
+              name={`${topLevelKey ?? ''}Evaluations.${idx}.Year`}
+              label={'Year'}
+              value={yr}
+              disabled
+            />
+            <TextFormField
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+              }}
+              sx={{ minWidth: 'calc(33.3% - 1rem)' }}
+              name={`${topLevelKey ?? ''}Evaluations.${idx}.Value`}
+              numeric
+              label={'Value'}
+            />
+          </Box>
+        ))}
+        {/* Render input fields for the current year if it's not in the list */}
+        {!years.includes(currentYear) && (
+          <Box mb={2} gap={2} display={'flex'} width={'100%'} flexDirection={'row'}>
+            <TextFormField
+              sx={{ minWidth: 'calc(33.3% - 1rem)' }}
+              name={`${topLevelKey ?? ''}Evaluations.${years.length}.Year`}
+              label={'Year'}
+              value={currentYear}
+              disabled
+            />
+            <TextFormField
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+              }}
+              sx={{ minWidth: 'calc(33.3% - 1rem)' }}
+              name={`${topLevelKey ?? ''}Evaluations.${years.length}.Value`}
+              numeric
+              label={'Value'}
+            />
+          </Box>
+        )}
+      </Box>
     </Box>
   );
 };

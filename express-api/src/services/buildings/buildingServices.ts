@@ -3,6 +3,8 @@ import { AppDataSource } from '@/appDataSource';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { DeepPartial, FindOptionsOrder, In } from 'typeorm';
 import { BuildingFilter } from '@/services/buildings/buildingSchema';
+import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
+import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
 
 const buildingRepo = AppDataSource.getRepository(Building);
 
@@ -53,6 +55,44 @@ export const updateBuildingById = async (building: DeepPartial<Building>) => {
   const existingBuilding = await getBuildingById(building.Id);
   if (!existingBuilding) {
     throw new ErrorWithCode('Building does not exists.', 404);
+  }
+  if (building.Fiscals && building.Fiscals.length) {
+    building.Fiscals = await Promise.all(
+      building.Fiscals.map(async (fiscal) => {
+        const exists = await AppDataSource.getRepository(BuildingFiscal).exists({
+          where: {
+            BuildingId: building.Id,
+            FiscalYear: fiscal.FiscalYear,
+            FiscalKeyId: fiscal.FiscalKeyId,
+          },
+        });
+        const fiscalEntity: DeepPartial<BuildingFiscal> = {
+          ...fiscal,
+          CreatedById: exists ? undefined : building.UpdatedById,
+          UpdatedById: exists ? building.UpdatedById : undefined,
+        };
+        return fiscalEntity;
+      }),
+    );
+  }
+  if (building.Evaluations && building.Evaluations.length) {
+    building.Evaluations = await Promise.all(
+      building.Evaluations.map(async (evaluation) => {
+        const exists = await AppDataSource.getRepository(BuildingEvaluation).exists({
+          where: {
+            BuildingId: building.Id,
+            Year: evaluation.Year,
+            EvaluationKeyId: evaluation.EvaluationKeyId,
+          },
+        });
+        const fiscalEntity: DeepPartial<BuildingFiscal> = {
+          ...evaluation,
+          CreatedById: exists ? undefined : building.UpdatedById,
+          UpdatedById: exists ? building.UpdatedById : undefined,
+        };
+        return fiscalEntity;
+      }),
+    );
   }
   await buildingRepo.save(building);
   //update function doesn't return data on the row changed. Have to get the changed row again

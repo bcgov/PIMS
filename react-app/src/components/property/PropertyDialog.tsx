@@ -231,8 +231,7 @@ interface IPropertyAssessedValueEditDialog {
 }
 
 export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEditDialog) => {
-  const { initialValues, initialRelatedBuildings, open, onCancel, propertyType, postSubmit } =
-    props;
+  const { initialValues, initialRelatedBuildings, open, onCancel, postSubmit } = props;
   const api = usePimsApi();
   const assessedFormMethods = useForm({
     defaultValues: {
@@ -240,50 +239,95 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
       RelatedBuildings: [],
     },
   });
-  useEffect(() => {
-    assessedFormMethods.reset({
-      Evaluations: initialValues?.Evaluations?.map((evalu) => ({
-        ...evalu,
-        Value: evalu.Value.replace(/[$,]/g, ''), // TODO: Consider some more robust handling for this at the TypeORM level.
-      })),
-      RelatedBuildings: initialRelatedBuildings?.map((building) => ({
-        Id: building.Id,
-        Evaluations: building.Evaluations?.map((evalu) => ({
-          ...evalu,
-          Value: evalu.Value.replace(/[$,]/g, ''), // Obviously this double map is pretty evil so suggestions welcome.
-        })),
-      })),
-    });
-  }, [initialValues, initialRelatedBuildings]);
 
+  const currentYear = new Date().getFullYear();
+  const years = [currentYear];
+  const defaultParcelValues = years.map((year) => ({
+    Year: year,
+    Value: 0,
+    EffectiveDate: Date(),
+    EvaluationKeyId: 0,
+    ParcelId: initialValues?.Id || null,
+  }));
+
+  useEffect(() => {
+    if (!initialValues?.Evaluations || initialValues.Evaluations.length === 0) {
+      console.log('resetting????');
+      assessedFormMethods.reset({ Evaluations: defaultParcelValues });
+    } else {
+      assessedFormMethods.reset({
+        Evaluations: initialValues?.Evaluations?.map((evalu) => ({
+          ...evalu,
+          Value: evalu.Value.replace(/[$,]/g, ''), // TODO: Consider some more robust handling for this at the TypeORM level.
+        })),
+        RelatedBuildings: initialRelatedBuildings?.map((building) => ({
+          Id: building.Id,
+          Evaluations: building.Evaluations?.map((evalu) => ({
+            ...evalu,
+            Value: evalu.Value.replace(/[$,]/g, ''), // Obviously this double map is pretty evil so suggestions welcome.
+          })),
+        })),
+      });
+    }
+  }, [initialValues, initialRelatedBuildings]);
+  if (!initialValues || Object.keys(initialValues).length === 0) {
+    return null; // Or any other JSX to handle the case of empty initialValues
+  }
   return (
     <ConfirmDialog
       title={'Edit assessed values'}
       open={open}
       onConfirm={async () => {
         const formValues = assessedFormMethods.getValues();
-        const evalus = { Id: initialValues.Id, PID: initialValues.PID, ...formValues };
-        if (propertyType === 'Parcel') {
-          await api.parcels.updateParcelById(initialValues.Id, evalus);
-          for (const building of formValues.RelatedBuildings) {
-            if (building.Evaluations.length) {
-              await api.buildings.updateBuildingById(building.Id, building);
-            }
-          }
-          postSubmit();
-        } else {
-          api.buildings.updateBuildingById(initialValues.Id, evalus).then(() => postSubmit());
-        }
+        const parcelUpdatePromise = api.parcels.updateParcelById(initialValues.Id, {
+          Id: initialValues.Id,
+          PID: initialValues.PID,
+          ...formValues,
+        });
+
+        const buildingUpdatePromises = formValues.RelatedBuildings.map(async (building) => {
+          const updatedBuilding: Partial<Building> = {
+            ...building, // Copy existing building properties
+            Evaluations: building.Evaluations.map((evaluation) => ({
+              ...evaluation, // Copy existing evaluation properties
+              Value: parseFloat(evaluation.Value), // Parse the value to a float
+              EvaluationKeyId: 0,
+              Year: evaluation.Year,
+            })),
+          };
+          await api.buildings.updateBuildingById(building.Id, updatedBuilding); // Update the building
+        });
+
+        // Wait for both parcel update and building assessment updates to complete
+        await Promise.all([parcelUpdatePromise, ...buildingUpdatePromises]);
+        postSubmit();
       }}
       onCancel={async () => onCancel()}
     >
       <FormProvider {...assessedFormMethods}>
-        <AssessedValue years={initialValues?.Evaluations?.map((evalu) => evalu.Year)} />
+        <AssessedValue
+          years={
+            initialValues?.Evaluations
+              ? initialValues.Evaluations.map((evalu) => evalu.Year)
+              : [
+                  ...new Set([
+                    new Date().getFullYear(),
+                    ...(initialValues?.Evaluations?.map((evalu) => evalu.Year) || []),
+                  ]),
+                ]
+          }
+          showCurrentYear={
+            !initialValues?.Evaluations?.some((evalu) => evalu.Year === new Date().getFullYear())
+          }
+        />
         {initialRelatedBuildings?.map((building, idx) => (
           <AssessedValue
-            title={`Building (${idx + 1}) ${building.Address1 ?? ''}`}
+            title={`Building (${idx + 1}) - ${building.Name + ' - ' + building.Address1 ?? ''}`}
             key={`assessed-value-${building.Id}`}
             years={building?.Evaluations?.map((evalu) => evalu.Year)}
+            showCurrentYear={
+              !building?.Evaluations?.some((evalu) => evalu.Year === new Date().getFullYear())
+            }
             topLevelKey={`RelatedBuildings.${idx}.`}
           />
         ))}
@@ -306,15 +350,30 @@ export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditD
   const netBookFormMethods = useForm({
     defaultValues: { Fiscals: [] },
   });
+  const currentYear = new Date().getFullYear();
+  const years = [currentYear];
+  const defaultValues = years.map((year) => ({
+    FiscalYear: year,
+    Value: 0,
+    EffectiveDate: undefined,
+    FiscalKeyId: 0,
+    ParcelId: initialValues?.Id || null,
+  }));
 
   useEffect(() => {
-    netBookFormMethods.reset({
-      Fiscals: initialValues?.Fiscals?.map((fisc) => ({
-        ...fisc,
-        Value: String(fisc.Value).replace(/[$,]/g, ''),
-        EffectiveDate: dayjs(fisc.EffectiveDate),
-      })),
-    });
+    if (!initialValues?.Fiscals || initialValues.Fiscals.length === 0) {
+      // use default values if there are no initial values for fiscal years
+      netBookFormMethods.reset({ Fiscals: defaultValues });
+    } else {
+      console.log('initial values are', initialValues.Fiscals);
+      netBookFormMethods.reset({
+        Fiscals: initialValues.Fiscals.map((fisc) => ({
+          ...fisc,
+          Value: String(fisc.Value).replace(/[$,]/g, ''),
+          EffectiveDate: dayjs(fisc.EffectiveDate),
+        })),
+      });
+    }
   }, [initialValues]);
 
   return (
@@ -323,6 +382,7 @@ export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditD
       open={open}
       onConfirm={async () => {
         const formValues: any = netBookFormMethods.getValues();
+        console.log('were here', formValues);
         if (propertyType === 'Parcel') {
           api.parcels
             .updateParcelById(initialValues.Id, {
@@ -344,7 +404,9 @@ export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditD
     >
       <FormProvider {...netBookFormMethods}>
         <Box paddingTop={'1rem'}>
-          <NetBookValue years={initialValues?.Fiscals?.map((f) => f.FiscalYear) ?? []} />
+          <NetBookValue
+            years={initialValues?.Fiscals ? initialValues.Fiscals.map((f) => f.FiscalYear) : []}
+          />
         </Box>
       </FormProvider>
     </ConfirmDialog>

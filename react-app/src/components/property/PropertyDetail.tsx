@@ -221,7 +221,6 @@ const PropertyDetail = (props: IPropertyDetail) => {
           id={`${buildingOrParcel} net book value`}
           values={undefined}
           title={`${buildingOrParcel} net book value`}
-          disableEdit={!netBookValues?.length}
           onEdit={() => setOpenNetBookDialog(true)}
         >
           <PropertyNetValueTable rows={netBookValues} />
@@ -230,7 +229,6 @@ const PropertyDetail = (props: IPropertyDetail) => {
           id={'Assessed value'}
           values={undefined}
           title={'Assessed value'}
-          disableEdit={!assessedValues?.length}
           onEdit={() => setOpenAssessedValueDialog(true)}
         >
           <PropertyAssessedValueTable

@@ -3,6 +3,8 @@ import { AppDataSource } from '@/appDataSource';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { ParcelFilter } from '@/services/parcels/parcelSchema';
 import { DeepPartial, FindOptionsOrder, In } from 'typeorm';
+import { ParcelFiscal } from '@/typeorm/Entities/ParcelFiscal';
+import { ParcelEvaluation } from '@/typeorm/Entities/ParcelEvaluation';
 
 const parcelRepo = AppDataSource.getRepository(Parcel);
 
@@ -88,6 +90,44 @@ const updateParcel = async (incomingParcel: DeepPartial<Parcel>) => {
   const findParcel = await getParcelById(incomingParcel.Id);
   if (findParcel == null || findParcel.Id !== incomingParcel.Id) {
     throw new ErrorWithCode('Parcel not found', 404);
+  }
+  if (incomingParcel.Fiscals && incomingParcel.Fiscals.length) {
+    incomingParcel.Fiscals = await Promise.all(
+      incomingParcel.Fiscals.map(async (fiscal) => {
+        const exists = await AppDataSource.getRepository(ParcelFiscal).exists({
+          where: {
+            ParcelId: incomingParcel.Id,
+            FiscalYear: fiscal.FiscalYear,
+            FiscalKeyId: fiscal.FiscalKeyId,
+          },
+        });
+        const fiscalEntity: DeepPartial<ParcelFiscal> = {
+          ...fiscal,
+          CreatedById: exists ? undefined : incomingParcel.UpdatedById,
+          UpdatedById: exists ? incomingParcel.UpdatedById : undefined,
+        };
+        return fiscalEntity;
+      }),
+    );
+  }
+  if (incomingParcel.Evaluations && incomingParcel.Evaluations.length) {
+    incomingParcel.Evaluations = await Promise.all(
+      incomingParcel.Evaluations.map(async (evaluation) => {
+        const exists = await AppDataSource.getRepository(ParcelEvaluation).exists({
+          where: {
+            ParcelId: incomingParcel.Id,
+            Year: evaluation.Year,
+            EvaluationKeyId: evaluation.EvaluationKeyId,
+          },
+        });
+        const fiscalEntity: DeepPartial<ParcelFiscal> = {
+          ...evaluation,
+          CreatedById: exists ? undefined : incomingParcel.UpdatedById,
+          UpdatedById: exists ? incomingParcel.UpdatedById : undefined,
+        };
+        return fiscalEntity;
+      }),
+    );
   }
 
   return parcelRepo.save(incomingParcel);
