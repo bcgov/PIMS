@@ -33,53 +33,52 @@ export interface ILtsaOrder {
           applicationReceivedDate: string;
           enteredDate: string;
           titleRemarks: string;
-          rootOfTitle: string;
           marketValueAmount: string;
-          fromTitles: string[];
-          natureOfTransfers: [
-            {
-              transferReason: string;
-            },
-          ];
+          fromTitles: { titleNumber: string; landTitleDistrict: string }[];
+          natureOfTransfers: {
+            transferReason: string;
+          }[];
         };
-        ownershipGroups: [
-          {
-            jointTenancyIndication: boolean;
-            interestFractionNumerator: string;
-            interestFractionDenominator: string;
-            ownershipRemarks: string;
-            titleOwners: [
-              {
-                lastNameOrCorpName1: string;
-                givenName: string;
-                incorporationNumber: string;
-                occupationDescription: string;
-                address: {
-                  addressLine1: string;
-                  addressLine2: string;
-                  city: string;
-                  province: string;
-                  provinceName: string;
-                  country: string;
-                  postalCode: string;
-                };
-              },
-            ];
-          },
-        ];
-        taxAuthorities: [
-          {
-            authorityName: string;
-          },
-        ];
-        descriptionsOfLand: [
-          {
-            parcelIdentifier: string;
-            fullLegalDescription: string;
-            parcelStatus: string;
-          },
-        ];
-        legalNotationsOnTitle: string[];
+        ownershipGroups: {
+          jointTenancyIndication: boolean;
+          interestFractionNumerator: string;
+          interestFractionDenominator: string;
+          ownershipRemarks: string;
+          titleOwners: {
+            lastNameOrCorpName1: string;
+            givenName: string;
+            incorporationNumber: string;
+            occupationDescription: string;
+            address: {
+              addressLine1: string;
+              addressLine2: string;
+              city: string;
+              province: string;
+              provinceName: string;
+              country: string;
+              postalCode: string;
+            };
+          }[];
+        }[];
+
+        taxAuthorities: {
+          authorityName: string;
+        }[];
+
+        descriptionsOfLand: {
+          parcelIdentifier: string;
+          fullLegalDescription: string;
+          parcelStatus: string;
+        }[];
+
+        legalNotationsOnTitle: {
+          legalNotationNumber: string;
+          status: string;
+          legalNotation: {
+            originalLegalNotationNumber: string;
+            legalNotationText: string;
+          };
+        }[];
         duplicateCertificatesOfTitle: string[];
         titleTransfersOrDispositions: string[];
       };
