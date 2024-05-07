@@ -87,14 +87,14 @@ export enum EmailBody {
   Text = 'text',
 }
 
-enum EmailEncoding {
+export enum EmailEncoding {
   Utf8 = 'utf-8',
   Base64 = 'base64',
   Binary = 'binary',
   Hex = 'hex',
 }
 
-enum EmailPriority {
+export enum EmailPriority {
   Low = 'low',
   Medium = 'medium',
   High = 'high',
