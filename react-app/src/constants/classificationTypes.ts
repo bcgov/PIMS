@@ -1,0 +1,9 @@
+export enum ClassificationType {
+  CORE_OPERATIONAL = 0,
+  CORE_STRATEGIC = 1,
+  SURPLUS_ACTIVE = 2,
+  SURPLUS_ENCUMBERED = 3,
+  DISPOSED = 4,
+  DEMOLISHED = 5,
+  SUBDIVIDED = 6,
+}

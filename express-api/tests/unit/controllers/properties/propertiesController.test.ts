@@ -13,7 +13,6 @@ const {
   getPropertiesFuzzySearch,
   getPropertiesFilter,
   getPropertiesForMap,
-  getPropertiesForMapFilter,
   getPropertiesPaged,
   getPropertiesPagedFilter,
 } = controllers;
@@ -22,8 +21,21 @@ const _propertiesFuzzySearch = jest
   .fn()
   .mockImplementation(() => ({ Parcels: [produceParcel()], Buildings: [produceBuilding()] }));
 
+const _getPropertiesForMap = jest.fn().mockImplementation(async () => [
+  {
+    Id: 1,
+    Location: {
+      x: -122.873862825,
+      y: 49.212751465,
+    },
+    PropertyTypeId: 0,
+    ClassificationId: 3,
+  },
+]);
+
 jest.mock('@/services/properties/propertiesServices', () => ({
   propertiesFuzzySearch: () => _propertiesFuzzySearch(),
+  getPropertiesForMap: () => _getPropertiesForMap(),
 }));
 
 describe('UNIT - Properties', () => {
@@ -81,29 +93,10 @@ describe('UNIT - Properties', () => {
   });
 
   describe('GET /properties/search/geo', () => {
-    it('should return the stub response of 501', async () => {
-      await getPropertiesForMap(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return 200 with a list of properties', async () => {
+    it('should return 200 with a list of properties', async () => {
       await getPropertiesForMap(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
-      expect(mockResponse.jsonValue.length).toBeGreaterThanOrEqual(1);
-    });
-  });
-
-  describe('POST /properties/search/geo/filter', () => {
-    it('should return the stub response of 501', async () => {
-      await getPropertiesForMapFilter(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return 200 with a list of properties', async () => {
-      mockRequest.body = {}; // Add filter parameters
-      await getPropertiesForMapFilter(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-      expect(mockResponse.jsonValue.length).toBeGreaterThanOrEqual(1);
+      expect(mockResponse.sendValue.length).toBeGreaterThanOrEqual(1);
     });
   });
 

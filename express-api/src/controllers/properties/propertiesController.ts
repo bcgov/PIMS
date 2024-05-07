@@ -111,26 +111,8 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
-};
-
-/**
- * @description Used to retrieve all property geolocation information that matches the incoming filter.
- * @param   {Request}     req Incoming request
- * @param   {Response}    res Outgoing response
- * @returns {Response}        A 200 status with a list of property geolocation information.
- */
-export const getPropertiesForMapFilter = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Properties']
-   * #swagger.description = 'Returns a list of all property geolocation information that matches the incoming filter.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  // TODO: parse for filter
+  // TODO: check for user agency restrictions
+  const properties = await propertyServices.getPropertiesForMap();
+  return res.status(200).send(properties);
 };
