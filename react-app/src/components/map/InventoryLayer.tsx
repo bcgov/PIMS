@@ -1,10 +1,9 @@
 import usePimsApi from '@/hooks/usePimsApi';
 import React, { useEffect, useState } from 'react';
-import { Marker } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import useDataLoader from '@/hooks/useDataLoader';
 import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
-import { getMatchingPropertyPin } from '@/components/map/markers/propertyPins';
+import PropertyMarker from '@/components/map/markers/PropertyMarker';
 
 export interface InventoryLayerProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -15,6 +14,10 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
   const api = usePimsApi();
   const { data, refreshData } = useDataLoader(api.properties.propertiesGeoSearch);
   const [properties, setProperties] = useState<PropertyGeo[]>([]);
+  const [selectedIdentifer, setSelectedIdentifier] = useState({
+    id: undefined,
+    type: undefined,
+  });
 
   useEffect(() => {
     if (data && data.length > 0) {
@@ -25,6 +28,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
   }, [data]);
 
   return (
+    
     <MarkerClusterGroup
       chunkedLoading={true}
       removeOutsideVisibleBounds
@@ -38,13 +42,15 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
       }}
     >
       {properties.map((property: PropertyGeo) => (
-        <Marker
+        <PropertyMarker
           key={`${property.Id} + ${property.PropertyTypeId}`}
-          position={[property.Location.y, property.Location.x]}
-          icon={getMatchingPropertyPin(property.PropertyTypeId)}
-        >
-          {/* TODO: Marker popup goes here */}
-        </Marker>
+          property={property}
+          isSelected={
+            selectedIdentifer.id === property.Id &&
+            selectedIdentifer.type === property.PropertyTypeId
+          }
+          setSelectedIdentifier={setSelectedIdentifier}
+        />
       ))}
     </MarkerClusterGroup>
   );

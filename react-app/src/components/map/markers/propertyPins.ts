@@ -22,14 +22,14 @@ import subdivSplHighlightPng from '@/assets/markers/subdiv-spl-highlight.png';
 import { PropertyTypes } from '@/constants/propertyTypes';
 
 // TODO: Expand to handle more Property Pin types
-export const getMatchingPropertyPin = (propertyType: PropertyTypes) => {
+export const getMatchingPropertyPin = (propertyType: PropertyTypes, isSelected: boolean) => {
   switch (true) {
     case propertyType === PropertyTypes.LAND:
-      return parcelIcon;
+      return isSelected ? parcelIconSelect : parcelIcon;
     case propertyType === PropertyTypes.BUILDING:
-      return buildingIcon;
+      return isSelected ? buildingIconSelect : buildingIcon;
     case propertyType === PropertyTypes.SUBDIVISION:
-      return subdivisionIcon;
+      return isSelected ? subdivisionIconSelect : subdivisionIcon;
     default:
       return geocoderIcon;
   }
