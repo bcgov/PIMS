@@ -1,4 +1,5 @@
 import { Agency } from '@/hooks/api/useAgencyApi';
+import { RegionalDistrict } from '@/hooks/api/useLookupApi';
 import { BaseEntityInterface } from '@/interfaces/IBaseEntity';
 
 export interface PropertyClassification extends BaseEntityInterface {
@@ -12,6 +13,7 @@ export interface PropertyClassification extends BaseEntityInterface {
 interface AdministrativeArea {
   Id: number;
   Name: string;
+  RegionalDistrict: RegionalDistrict;
 }
 
 export type GeoPoint = {
