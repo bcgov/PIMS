@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import DataCard from '../display/DataCard';
-import { Box, Checkbox, FormControlLabel, FormGroup, Typography } from '@mui/material';
+import { Box, Checkbox, FormControlLabel, FormGroup, Typography, Skeleton } from '@mui/material';
 import DeleteDialog from '../dialog/DeleteDialog';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
@@ -42,7 +42,9 @@ const ProjectDetail = (props: IProjectDetail) => {
   if (!userContext.keycloak.hasRoles([Roles.ADMIN, Roles.AUDITOR], { requireAllRoles: false })) {
     navigate('/');
   }
-  const { data, refreshData } = useDataLoader(() => api.projects.getProjectById(Number(id)));
+  const { data, refreshData, isLoading } = useDataLoader(() =>
+    api.projects.getProjectById(Number(id)),
+  );
 
   const { data: tasks, loadOnce: loadTasks } = useDataLoader(() => api.lookup.getTasks());
   loadTasks();
@@ -127,6 +129,7 @@ const ProjectDetail = (props: IProjectDetail) => {
         onBackClick={() => props.onClose()}
       />
       <DataCard
+        loading={isLoading}
         customFormatter={customFormatter}
         values={ProjectInfoData}
         title={'Project Information'}
@@ -138,14 +141,19 @@ const ProjectDetail = (props: IProjectDetail) => {
         title={'Disposal Properties'}
         onEdit={() => setOpenDisposalPropDialog(true)}
       >
-        <DisposalPropertiesTable
-          rows={[
-            ...(data?.Parcels?.map((p) => ({ ...p, PropertyType: 'Parcel' })) ?? []),
-            ...(data?.Buildings?.map((b) => ({ ...b, PropertyType: 'Building' })) ?? []),
-          ]}
-        />
+        {isLoading ? (
+          <Skeleton variant="rectangular" height={'150px'} />
+        ) : (
+          <DisposalPropertiesTable
+            rows={[
+              ...(data?.Parcels?.map((p) => ({ ...p, PropertyType: 'Parcel' })) ?? []),
+              ...(data?.Buildings?.map((b) => ({ ...b, PropertyType: 'Building' })) ?? []),
+            ]}
+          />
+        )}
       </DataCard>
       <DataCard
+        loading={isLoading}
         customFormatter={customFormatter}
         values={FinancialInformationData}
         title={'Financial Information'}
