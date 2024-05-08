@@ -1,11 +1,33 @@
 import { Box, CircularProgress } from '@mui/material';
-import React, { PropsWithChildren, useState } from 'react';
+import React, { createContext, PropsWithChildren, useState } from 'react';
 import { MapContainer, useMapEvents, useMap } from 'react-leaflet';
 import { Map } from 'leaflet';
 import usePimsApi from '@/hooks/usePimsApi';
 import MapLayers from '@/components/map/MapLayers';
 import { ParcelPopup, PopupData } from '@/components/map/ParcelPopup';
 import { InventoryLayer } from '@/components/map/InventoryLayer';
+import MapPropertyDetails from '@/components/map/MapPropertyDetails';
+
+export interface ParcelData {
+  PARCEL_FABRIC_POLY_ID: number;
+  PARCEL_NAME: string;
+  PLAN_NUMBER: string;
+  PIN: number;
+  PID: string;
+  PID_FORMATTED: string;
+  PID_NUMBER: number;
+  PARCEL_STATUS: string;
+  PARCEL_CLASS: string;
+  OWNER_TYPE: string;
+  PARCEL_START_DATE: string;
+  MUNICIPALITY: string;
+  REGIONAL_DISTRICT: string;
+  WHEN_UPDATED: string;
+  FEATURE_AREA_SQM: number;
+  FEATURE_LENGTH_M: number;
+  OBJECTID: number;
+  SE_ANNO_CAD_DATA: unknown;
+}
 
 type ParcelMapProps = {
   height: string;
@@ -14,6 +36,8 @@ type ParcelMapProps = {
   zoomable?: boolean;
   loadProperties?: boolean;
 } & PropsWithChildren;
+
+export const SelectedMarkerContext = createContext(null);
 
 const ParcelMap = (props: ParcelMapProps) => {
   const api = usePimsApi();
@@ -28,7 +52,7 @@ const ParcelMap = (props: ParcelMapProps) => {
             if (response.features.length) {
               setClickPosition({
                 position: e.latlng,
-                pid: response.features[0].properties.PID,
+                pid: response.features[0].properties.PID_FORMATTED,
                 pin: response.features[0].properties.PIN,
               });
             }
@@ -40,32 +64,45 @@ const ParcelMap = (props: ParcelMapProps) => {
   };
   const [clickPosition, setClickPosition] = useState<PopupData>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [selectedMarker, setSelectedMarker] = useState({
+    id: undefined,
+    type: undefined,
+  });
+
   const { height, mapRef, movable = true, zoomable = true, loadProperties = false } = props;
   return (
-    <Box height={height}>
-      <LoadingCover show={loading} />
-      <MapContainer
-        style={{ height: '100%' }}
-        ref={mapRef}
-        bounds={[
-          [51.2516, -129.371],
-          [48.129, -122.203],
-        ]}
-        dragging={movable}
-        zoomControl={zoomable}
-        scrollWheelZoom={zoomable}
-        touchZoom={zoomable}
-        boxZoom={zoomable}
-        doubleClickZoom={zoomable}
-        preferCanvas
-      >
-        <MapLayers />
-        {clickPosition?.position && <ParcelPopup clickPosition={clickPosition} />}
-        <MapEvents />
-        {loadProperties ? <InventoryLayer setLoading={setLoading} /> : <></>}
-        {props.children}
-      </MapContainer>
-    </Box>
+    <SelectedMarkerContext.Provider
+      value={{
+        selectedMarker,
+        setSelectedMarker,
+      }}
+    >
+      <Box height={height}>
+        <LoadingCover show={loading} />
+        <MapPropertyDetails property={selectedMarker} />
+        <MapContainer
+          style={{ height: '100%' }}
+          ref={mapRef}
+          bounds={[
+            [51.2516, -129.371],
+            [48.129, -122.203],
+          ]}
+          dragging={movable}
+          zoomControl={zoomable}
+          scrollWheelZoom={zoomable}
+          touchZoom={zoomable}
+          boxZoom={zoomable}
+          doubleClickZoom={zoomable}
+          preferCanvas
+        >
+          <MapLayers />
+          {clickPosition?.position && <ParcelPopup clickPosition={clickPosition} />}
+          <MapEvents />
+          {loadProperties ? <InventoryLayer setLoading={setLoading} /> : <></>}
+          {props.children}
+        </MapContainer>
+      </Box>
+    </SelectedMarkerContext.Provider>
   );
 };
 export interface LoadingCoverProps {
