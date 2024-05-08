@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DataCard from '../display/DataCard';
 import { Box, Checkbox, FormControlLabel, FormGroup, Typography } from '@mui/material';
 import DeleteDialog from '../dialog/DeleteDialog';
@@ -6,9 +6,7 @@ import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { Project, ProjectMetadata, TierLevel } from '@/hooks/api/useProjectsApi';
 import DetailViewNavigation from '../display/DetailViewNavigation';
-import { useNavigate, useParams } from 'react-router-dom';
-import { AuthContext } from '@/contexts/authContext';
-import { Roles } from '@/constants/roles';
+import { useParams } from 'react-router-dom';
 import { ProjectStatus } from '@/hooks/api/useLookupApi';
 import DisposalPropertiesTable from './DisposalPropertiesSimpleTable';
 import {
@@ -35,11 +33,9 @@ interface ProjectInfo extends Project {
   TripleBottom: boolean;
 }
 const ProjectDetail = (props: IProjectDetail) => {
-  const navigate = useNavigate();
   const { id } = useParams();
   const api = usePimsApi();
   // const theme = useTheme();
-  const userContext = useContext(AuthContext);
   const { data, refreshData } = useDataLoader(() => api.projects.getProjectById(Number(id)));
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
