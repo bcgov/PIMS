@@ -114,5 +114,13 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
   // TODO: parse for filter
   // TODO: check for user agency restrictions
   const properties = await propertyServices.getPropertiesForMap();
-  return res.status(200).send(properties);
+  const mapFeatures = properties.map((property) => ({
+    type: 'Feature',
+    properties: { cluster: false, ...property },
+    geometry: {
+      type: 'Point',
+      coordinates: [property.Location.y, property.Location.x],
+    },
+  }));
+  return res.status(200).send(mapFeatures);
 };

@@ -14,16 +14,16 @@ const PropertyMarker = (props: PropertyMarkerProps) => {
   const { selectedMarker, setSelectedMarker } = useContext(SelectedMarkerContext);
   return (
     <Marker
-      position={[property.Location.y, property.Location.x]}
+      position={property.geometry.coordinates}
       icon={getMatchingPropertyPin(
-        property.PropertyTypeId,
-        selectedMarker?.id === property.Id && selectedMarker?.type === property.PropertyTypeId,
+        property.properties.PropertyTypeId,
+        selectedMarker?.id === property.properties.Id && selectedMarker?.type === property.properties.PropertyTypeId,
       )}
       eventHandlers={{
         click: () => {
           const selectedIdentifer: SelectedPropertyIdentifier = {
-            id: property.Id,
-            type: property.PropertyTypeId,
+            id: property.properties.Id,
+            type: property.properties.PropertyTypeId,
           };
           setSelectedMarker(selectedIdentifer);
         },

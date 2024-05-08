@@ -11,10 +11,18 @@ export interface PropertyFuzzySearch {
 }
 
 export interface PropertyGeo {
-  Id: number;
-  Location: GeoPoint;
-  PropertyTypeId: PropertyTypes;
-  ClassificationId: ClassificationType;
+  type: 'Feature';
+  properties: {
+    cluster: boolean;
+    Id: number;
+    Location: GeoPoint;
+    PropertyTypeId: PropertyTypes;
+    ClassificationId: ClassificationType;
+  };
+  geometry: {
+    type: 'Point';
+    coordinates: [49.212751465, -122.873862825];
+  };
 }
 
 const usePropertiesApi = (absoluteFetch: IFetch) => {

@@ -37,7 +37,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
       }}
     >
       {properties.map((property: PropertyGeo) => (
-        <PropertyMarker key={`${property.Id} + ${property.PropertyTypeId}`} property={property} />
+        <PropertyMarker key={`${property.properties.Id} + ${property.properties.PropertyTypeId}`} property={property} />
       ))}
     </MarkerClusterGroup>
   );
