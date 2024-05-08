@@ -26,7 +26,13 @@ export const ProjectGeneralInfoForm = (props: IProjectGeneralInfoForm) => {
         />
       </Grid>
       <Grid item xs={12}>
-        <TextFormField required fullWidth name={'ProjectNumber'} label={'Project Number'} />
+        <TextFormField
+          disabled
+          required
+          fullWidth
+          name={'ProjectNumber'}
+          label={'Project Number'}
+        />
       </Grid>
       <Grid item xs={6}>
         <TextFormField required fullWidth name={'Name'} label={'Name'} />

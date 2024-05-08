@@ -10,7 +10,7 @@ interface SingleSelectBoxFormFieldProps {
 }
 
 const SingleSelectBoxFormField = (props: SingleSelectBoxFormFieldProps) => {
-  const { control, getValues } = useFormContext();
+  const { control } = useFormContext();
   const theme = useTheme();
   const { name, label, required } = props;
   return (
@@ -18,7 +18,7 @@ const SingleSelectBoxFormField = (props: SingleSelectBoxFormFieldProps) => {
       name={name}
       control={control}
       rules={{ validate: (value) => !required || value || 'Required field.' }}
-      render={({ field: { onChange }, fieldState: { error } }) => (
+      render={({ field: { onChange, value }, fieldState: { error } }) => (
         <>
           <Box
             sx={{
@@ -29,7 +29,7 @@ const SingleSelectBoxFormField = (props: SingleSelectBoxFormFieldProps) => {
             <Checkbox
               id={`single-checkbox-${name}`}
               onChange={(_, data) => onChange(data)}
-              checked={getValues()[name]}
+              checked={!!value}
               required={required}
             />
             <Typography>

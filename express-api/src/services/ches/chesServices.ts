@@ -96,7 +96,7 @@ export enum EmailEncoding {
 
 export enum EmailPriority {
   Low = 'low',
-  Medium = 'medium',
+  Normal = 'normal',
   High = 'high',
 }
 

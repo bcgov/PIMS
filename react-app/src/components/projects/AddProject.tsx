@@ -1,5 +1,5 @@
 import { Box, Button, Grid, InputAdornment, Typography, useTheme } from '@mui/material';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { NavigateBackButton } from '../display/DetailViewNavigation';
 import TextFormField from '../form/TextFormField';
 import AutocompleteFormField from '../form/AutocompleteFormField';
@@ -14,7 +14,6 @@ import DisposalProjectSearch, {
   ParcelWithType,
 } from './DisposalPropertiesSearchTable';
 import React from 'react';
-import { ProjectTask } from '@/constants/projectTasks';
 
 const AddProject = () => {
   const navigate = useNavigate();
@@ -33,10 +32,7 @@ const AddProject = () => {
         exemptionRequested: false,
       },
       Approval: false,
-      Tasks: {
-        surplusDeclarationReadiness: false,
-        tripleBottomLine: false,
-      },
+      Tasks: [],
     },
   });
 
@@ -46,6 +42,21 @@ const AddProject = () => {
   const api = usePimsApi();
   const { data: tierData, loadOnce: loadTiers } = useDataLoader(api.lookup.getTierLevels);
   loadTiers();
+  const { data: statuses, loadOnce: loadStatuses } = useDataLoader(api.lookup.getProjectStatuses);
+  loadStatuses();
+  const { data: tasks, loadOnce: loadTasks } = useDataLoader(api.lookup.getTasks);
+  loadTasks();
+
+  const tasksForAddState = useMemo(() => {
+    if (!statuses || !tasks) {
+      return [];
+    } else {
+      const defaultState = statuses.find((a) => a.Name === 'Required Documentation');
+      const addTasks = tasks.filter((task) => task.StatusId === defaultState.Id);
+      addTasks.forEach((task, i) => formMethods.setValue(`Tasks.${i}.TaskId`, task.Id));
+      return addTasks;
+    }
+  }, [statuses, tasks]);
 
   return (
     <Box
@@ -190,20 +201,15 @@ const AddProject = () => {
         </Grid>
         <Typography variant="h5">Documentation</Typography>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <SingleSelectBoxFormField
-              name={'Tasks.surplusDeclarationReadiness'}
-              label={'Surplus declaration & readiness checklist document emailed to SRES.'}
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <SingleSelectBoxFormField
-              name={'Tasks.tripleBottomLine'}
-              label={'Triple bottom line document emailed to SRES or Project is in Tier 1'}
-              required
-            />
-          </Grid>
+          {tasksForAddState.map((task, idx) => (
+            <Grid key={`${task.Id}-task-grid`} item xs={12}>
+              <SingleSelectBoxFormField
+                name={`Tasks.${idx}.IsCompleted`}
+                label={task.Name}
+                required
+              />
+            </Grid>
+          ))}
         </Grid>
         <Typography variant="h5">ERP Exemption</Typography>
         <Grid container spacing={2}>
@@ -252,16 +258,6 @@ const AddProject = () => {
                   ...formValues,
                   ReportedFiscalYear: new Date().getFullYear(),
                   ActualFiscalYear: new Date().getFullYear(),
-                  Tasks: [
-                    {
-                      TaskId: ProjectTask.SURPLUS_DECLARATION_READINESS,
-                      IsCompleted: formValues.Tasks.surplusDeclarationReadiness,
-                    },
-                    {
-                      TaskId: ProjectTask.TRIPLE_BOTTOM_LINE,
-                      IsCompleted: formValues.Tasks.tripleBottomLine,
-                    },
-                  ],
                 },
                 projectProperties,
               )
