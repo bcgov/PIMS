@@ -208,16 +208,7 @@ const addProjectParcelRelations = async (project: Project, parcelIds: number[]) 
           ParcelId: parcelId,
         };
         // Only try to add if this realtion doesn't exist yet
-        if (
-          !(await projectPropertiesRepo.exists({
-            where: {
-              ProjectId: project.Id,
-              ParcelId: parcelId,
-            },
-          }))
-        ) {
-          await projectPropertiesRepo.save(entry);
-        }
+        await projectPropertiesRepo.save(entry);
       }
     }),
   );
