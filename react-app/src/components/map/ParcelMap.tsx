@@ -1,5 +1,5 @@
 import { Box, CircularProgress } from '@mui/material';
-import React, { PropsWithChildren, useState } from 'react';
+import React, { createContext, PropsWithChildren, useContext, useState } from 'react';
 import { MapContainer, useMapEvents, useMap } from 'react-leaflet';
 import { Map } from 'leaflet';
 import usePimsApi from '@/hooks/usePimsApi';
@@ -37,7 +37,28 @@ type ParcelMapProps = {
   loadProperties?: boolean;
 } & PropsWithChildren;
 
-const ParcelMap = (props: ParcelMapProps) => {
+export const SelectedMarkerContext = createContext(null);
+
+const MapStateWrapper = (props: ParcelMapProps) => {
+  const [selectedMarker, setSelectedMarker] = useState({
+    id: undefined,
+    type: undefined,
+  });
+
+  return (
+    <SelectedMarkerContext.Provider
+      value={{
+        selectedMarker,
+        setSelectedMarker,
+      }}
+    >
+      <ParcelMap {...props} />
+    </SelectedMarkerContext.Provider>
+  );
+};
+
+export const ParcelMap = (props: ParcelMapProps) => {
+  const { selectedMarker } = useContext(SelectedMarkerContext);
   const api = usePimsApi();
   const MapEvents = () => {
     const map = useMap();
@@ -62,15 +83,12 @@ const ParcelMap = (props: ParcelMapProps) => {
   };
   const [clickPosition, setClickPosition] = useState<PopupData>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedIdentifer, setSelectedIdentifier] = useState({
-    id: undefined,
-    type: undefined,
-  });
+
   const { height, mapRef, movable = true, zoomable = true, loadProperties = false } = props;
   return (
     <Box height={height}>
       <LoadingCover show={loading} />
-      <MapPropertyDetails property={selectedIdentifer} />
+      <MapPropertyDetails property={selectedMarker} />
       <MapContainer
         style={{ height: '100%' }}
         ref={mapRef}
@@ -89,11 +107,7 @@ const ParcelMap = (props: ParcelMapProps) => {
         <MapLayers />
         {clickPosition?.position && <ParcelPopup clickPosition={clickPosition} />}
         <MapEvents />
-        {loadProperties ? (
-          <InventoryLayer setLoading={setLoading} setSelectedIdentifier={setSelectedIdentifier} />
-        ) : (
-          <></>
-        )}
+        {loadProperties ? <InventoryLayer setLoading={setLoading} /> : <></>}
         {props.children}
       </MapContainer>
     </Box>
@@ -125,4 +139,4 @@ const LoadingCover: React.FC<LoadingCoverProps> = ({ show }) => {
   ) : null;
 };
 
-export default ParcelMap;
+export default MapStateWrapper;

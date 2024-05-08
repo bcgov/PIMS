@@ -4,15 +4,13 @@ import MarkerClusterGroup from 'react-leaflet-cluster';
 import useDataLoader from '@/hooks/useDataLoader';
 import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import PropertyMarker from '@/components/map/markers/PropertyMarker';
-import { SelectedPropertyIdentifier } from '@/components/map/MapPropertyDetails';
 
 export interface InventoryLayerProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedIdentifier: React.Dispatch<React.SetStateAction<SelectedPropertyIdentifier>>;
 }
 
 export const InventoryLayer = (props: InventoryLayerProps) => {
-  const { setLoading, setSelectedIdentifier } = props;
+  const { setLoading } = props;
   const api = usePimsApi();
   const { data, refreshData } = useDataLoader(api.properties.propertiesGeoSearch);
   const [properties, setProperties] = useState<PropertyGeo[]>([]);
@@ -39,11 +37,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
       }}
     >
       {properties.map((property: PropertyGeo) => (
-        <PropertyMarker
-          key={`${property.Id} + ${property.PropertyTypeId}`}
-          property={property}
-          setSelectedIdentifier={setSelectedIdentifier}
-        />
+        <PropertyMarker key={`${property.Id} + ${property.PropertyTypeId}`} property={property} />
       ))}
     </MarkerClusterGroup>
   );

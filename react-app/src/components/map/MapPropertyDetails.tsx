@@ -164,12 +164,12 @@ const DrawerContents = (props: ContentsProps) => {
   const api = usePimsApi();
 
   useEffect(() => {
-    if (property.id != null && property.type != null) getPropertyData();
+    if (property?.id != null && property?.type != null) getPropertyData();
   }, [property]);
 
   const getPropertyData = async () => {
     let returnedProperty: Parcel | Building;
-    if (property.type === PropertyTypes.BUILDING) {
+    if (property?.type === PropertyTypes.BUILDING) {
       returnedProperty = await api.buildings.getBuildingById(property.id);
     } else {
       returnedProperty = await api.parcels.getParcelById(property.id);
@@ -229,7 +229,7 @@ const DrawerContents = (props: ContentsProps) => {
       <RightGridColumn>{propertyData?.AdministrativeArea?.RegionalDistrict?.Name}</RightGridColumn>
 
       {/* PARCEL LAYER DATA */}
-      {property.type !== PropertyTypes.BUILDING && parcelLayerData ? (
+      {property?.type !== PropertyTypes.BUILDING && parcelLayerData ? (
         <>
           <DividerGrid />
           <Grid item xs={12}>
@@ -243,7 +243,7 @@ const DrawerContents = (props: ContentsProps) => {
       )}
 
       {/* BUILDING INFO */}
-      {property.type === PropertyTypes.BUILDING ? (
+      {property?.type === PropertyTypes.BUILDING ? (
         <>
           <DividerGrid />
           <Grid item xs={12}>
