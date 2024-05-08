@@ -1,9 +1,11 @@
 import { ParcelData } from '@/components/map/ParcelMap';
+import MetresSquared from '@/components/text/MetresSquared';
 import { PropertyTypes } from '@/constants/propertyTypes';
 import { Building } from '@/hooks/api/useBuildingsApi';
 import { Parcel } from '@/hooks/api/useParcelsApi';
 import usePimsApi from '@/hooks/usePimsApi';
 import { pidFormatter } from '@/utilities/formatters';
+import { Close } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -11,6 +13,7 @@ import {
   Divider,
   Drawer,
   Grid,
+  IconButton,
   Typography,
   useTheme,
 } from '@mui/material';
@@ -31,13 +34,15 @@ const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
   const { property } = props;
   const [propertyData, setPropertyData] = useState(undefined);
   const [parcelLayerData, setParcelLayerData] = useState<ParcelData>(undefined);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const api = usePimsApi();
   const navigate = useNavigate();
   const theme = useTheme();
 
   const getPropertyData = async () => {
+    setIsLoading(true);
     let returnedProperty: Parcel | Building;
     if (property.type === PropertyTypes.BUILDING) {
       returnedProperty = await api.buildings.getBuildingById(property.id);
@@ -54,6 +59,7 @@ const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
         setParcelLayerData(undefined);
       }
     });
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -96,14 +102,16 @@ const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
     </Grid>
   );
 
+  if (isLoading) return <CircularProgress />;
+
   return (
     <Drawer
       anchor={'right'}
+      variant="persistent"
       open={open}
       onClose={handleClose}
       ModalProps={{
         sx: {
-          marginTop: '10em',
           marginLeft: 'auto',
           right: '0',
           padding: '1em',
@@ -111,10 +119,10 @@ const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
       }}
       PaperProps={{
         sx: {
+          marginTop: '10em',
           position: 'absolute',
           maxWidth: '400px',
           height: 'fit-content',
-          maxHeight: '600px',
           overflowX: 'clip',
           borderRadius: '10px 0px 0px 10px',
         },
@@ -127,11 +135,20 @@ const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
       >
         {propertyData ? (
           <Grid container gap={1}>
-            <Grid item xs={12}>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
               <Button
                 variant="contained"
                 onClick={() => {
-                  navigate(`/properties/parcel/${property.id}`);
+                  navigate(
+                    `/properties/${property.type === PropertyTypes.BUILDING ? 'building' : 'parcel'}/${property.id}`,
+                  );
                 }}
                 sx={{
                   width: '100%',
@@ -139,6 +156,14 @@ const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
               >
                 View Full Details
               </Button>
+              <IconButton
+                sx={{
+                  marginLeft: '0.5em',
+                }}
+                onClick={() => setOpen(false)}
+              >
+                <Close />
+              </IconButton>
             </Grid>
             <DividerGrid />
 
@@ -185,7 +210,7 @@ const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
             </RightGridColumn>
 
             {/* PARCEL LAYER DATA */}
-            {parcelLayerData ? (
+            {property.type !== PropertyTypes.BUILDING && parcelLayerData ? (
               <>
                 <DividerGrid />
                 <Grid item xs={12}>
@@ -193,6 +218,36 @@ const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
                 </Grid>
                 <LeftGridColumn>Lot Size</LeftGridColumn>
                 <RightGridColumn>{`${(parcelLayerData?.FEATURE_AREA_SQM / 10000).toFixed(2)} hectares`}</RightGridColumn>
+              </>
+            ) : (
+              <></>
+            )}
+
+            {/* BUILDING INFO */}
+            {property.type === PropertyTypes.BUILDING ? (
+              <>
+                <DividerGrid />
+                <Grid item xs={12}>
+                  <Typography variant="h4">{`Building Info`}</Typography>
+                </Grid>
+                <LeftGridColumn>Predominate Use</LeftGridColumn>
+                <RightGridColumn>
+                  {(propertyData as Building)?.BuildingPredominateUse.Name}
+                </RightGridColumn>
+                <LeftGridColumn>Description</LeftGridColumn>
+                <RightGridColumn>{(propertyData as Building)?.Description}</RightGridColumn>
+                <LeftGridColumn>Total Area</LeftGridColumn>
+                <RightGridColumn>
+                  {(propertyData as Building)?.TotalArea}
+                  <MetresSquared />
+                </RightGridColumn>
+                <LeftGridColumn>Rentable Area</LeftGridColumn>
+                <RightGridColumn>
+                  {(propertyData as Building)?.RentableArea}
+                  <MetresSquared />
+                </RightGridColumn>
+                <LeftGridColumn>Tenancy</LeftGridColumn>
+                <RightGridColumn>{`${(propertyData as Building)?.BuildingTenancy} %`}</RightGridColumn>
               </>
             ) : (
               <></>
