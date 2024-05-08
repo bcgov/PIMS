@@ -19,7 +19,7 @@ import {
 } from '@mui/material';
 import L, { LatLng } from 'leaflet';
 import React, { PropsWithChildren, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export interface SelectedPropertyIdentifier {
   id: number;
@@ -38,6 +38,8 @@ const LeftGridColumn = (props: PropsWithChildren) => (
     typography={typographyStyle}
     sx={{
       fontWeight: 'bold',
+      display: 'flex',
+      alignItems: 'center',
     }}
   >
     {props.children}
@@ -48,6 +50,15 @@ const RightGridColumn = (props: PropsWithChildren) => (
     {props.children}
   </Grid>
 );
+
+const GridColumnPair = ({ leftValue, rightValue }) => {
+  return (
+    <>
+      <LeftGridColumn>{leftValue}</LeftGridColumn>
+      <RightGridColumn>{rightValue}</RightGridColumn>
+    </>
+  );
+};
 const DividerGrid = () => {
   const theme = useTheme();
   return (
@@ -68,8 +79,6 @@ const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
   const { property } = props;
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const navigate = useNavigate();
 
   const handleClose = () => {
     setOpen(false);
@@ -113,19 +122,23 @@ const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
               alignItems: 'center',
             }}
           >
-            <Button
-              variant="contained"
-              onClick={() => {
-                navigate(
-                  `/properties/${property.type === PropertyTypes.BUILDING ? 'building' : 'parcel'}/${property.id}`,
-                );
-              }}
-              sx={{
+            <Link
+              target="_blank"
+              rel="noopener noreferrer"
+              to={`/properties/${property.type === PropertyTypes.BUILDING ? 'building' : 'parcel'}/${property.id}`}
+              style={{
                 width: '100%',
               }}
             >
-              View Full Details
-            </Button>
+              <Button
+                variant="contained"
+                sx={{
+                  width: '100%',
+                }}
+              >
+                View Full Details
+              </Button>
+            </Link>
             <IconButton
               sx={{
                 marginLeft: '0.5em',
@@ -193,40 +206,30 @@ const DrawerContents = (props: ContentsProps) => {
         <Typography variant="h4">{`Property Info`}</Typography>
       </Grid>
       {propertyData?.PID ? (
-        <>
-          <LeftGridColumn>PID</LeftGridColumn>
-          <RightGridColumn>{pidFormatter(propertyData?.PID)}</RightGridColumn>
-        </>
+        <GridColumnPair leftValue={'PID'} rightValue={pidFormatter(propertyData?.PID)} />
       ) : (
-        <>
-          <LeftGridColumn>PIN</LeftGridColumn>
-          <RightGridColumn>{propertyData?.PIN}</RightGridColumn>
-        </>
+        <GridColumnPair leftValue={'PIN'} rightValue={propertyData?.PIN} />
       )}
-      <LeftGridColumn>Name</LeftGridColumn>
-      <RightGridColumn>{propertyData?.Name}</RightGridColumn>
-      <LeftGridColumn>Ministry</LeftGridColumn>
-      <RightGridColumn>
-        {propertyData?.Agency?.Parent?.Name ?? propertyData?.Agency?.Name}
-      </RightGridColumn>
-      <LeftGridColumn>Agency</LeftGridColumn>
-      <RightGridColumn>{propertyData?.Agency?.Name}</RightGridColumn>
-      <LeftGridColumn>Classification</LeftGridColumn>
-      <RightGridColumn>{propertyData?.Classification?.Name}</RightGridColumn>
+      <GridColumnPair leftValue={'Name'} rightValue={propertyData?.Name} />
+      <GridColumnPair leftValue={'Ministry'} rightValue={propertyData?.Agency?.Name} />
+      <GridColumnPair leftValue={'Agency'} rightValue={propertyData?.Name} />
+      <GridColumnPair
+        leftValue={'Classification'}
+        rightValue={propertyData?.Classification?.Name}
+      />
 
       {/* LOCATION SECTION */}
       <DividerGrid />
       <Grid item xs={12}>
         <Typography variant="h4">{`Location`}</Typography>
       </Grid>
-      <LeftGridColumn>Address</LeftGridColumn>
-      <RightGridColumn>{propertyData?.Address1}</RightGridColumn>
-      <LeftGridColumn>City</LeftGridColumn>
-      <RightGridColumn>{propertyData?.AdministrativeArea?.Name}</RightGridColumn>
-      <LeftGridColumn>Postal</LeftGridColumn>
-      <RightGridColumn>{propertyData?.Postal}</RightGridColumn>
-      <LeftGridColumn>Regional Dist.</LeftGridColumn>
-      <RightGridColumn>{propertyData?.AdministrativeArea?.RegionalDistrict?.Name}</RightGridColumn>
+      <GridColumnPair leftValue={'Address'} rightValue={propertyData?.Address1} />
+      <GridColumnPair leftValue={'City'} rightValue={propertyData?.AdministrativeArea?.Name} />
+      <GridColumnPair leftValue={'Postal'} rightValue={propertyData?.Postal} />
+      <GridColumnPair
+        leftValue={'Regional Dist.'}
+        rightValue={propertyData?.AdministrativeArea?.RegionalDistrict?.Name}
+      />
 
       {/* PARCEL LAYER DATA */}
       {property?.type !== PropertyTypes.BUILDING && parcelLayerData ? (
@@ -235,8 +238,10 @@ const DrawerContents = (props: ContentsProps) => {
           <Grid item xs={12}>
             <Typography variant="h4">{`Parcel Layer`}</Typography>
           </Grid>
-          <LeftGridColumn>Lot Size</LeftGridColumn>
-          <RightGridColumn>{`${(parcelLayerData?.FEATURE_AREA_SQM / 10000).toFixed(2)} hectares`}</RightGridColumn>
+          <GridColumnPair
+            leftValue={'Lot Size'}
+            rightValue={`${(parcelLayerData?.FEATURE_AREA_SQM / 10000).toFixed(2)} hectares`}
+          />
         </>
       ) : (
         <></>
@@ -249,12 +254,14 @@ const DrawerContents = (props: ContentsProps) => {
           <Grid item xs={12}>
             <Typography variant="h4">{`Building Info`}</Typography>
           </Grid>
-          <LeftGridColumn>Predominate Use</LeftGridColumn>
-          <RightGridColumn>
-            {(propertyData as Building)?.BuildingPredominateUse?.Name}
-          </RightGridColumn>
-          <LeftGridColumn>Description</LeftGridColumn>
-          <RightGridColumn>{(propertyData as Building)?.Description}</RightGridColumn>
+          <GridColumnPair
+            leftValue={'Predominate Use'}
+            rightValue={(propertyData as Building)?.BuildingPredominateUse?.Name}
+          />
+          <GridColumnPair
+            leftValue={'Description'}
+            rightValue={(propertyData as Building)?.Description}
+          />
           <LeftGridColumn>Total Area</LeftGridColumn>
           <RightGridColumn>
             {(propertyData as Building)?.TotalArea}
@@ -265,8 +272,10 @@ const DrawerContents = (props: ContentsProps) => {
             {(propertyData as Building)?.RentableArea}
             <MetresSquared />
           </RightGridColumn>
-          <LeftGridColumn>Tenancy</LeftGridColumn>
-          <RightGridColumn>{`${(propertyData as Building)?.BuildingTenancy} %`}</RightGridColumn>
+          <GridColumnPair
+            leftValue={'Tenancy'}
+            rightValue={`${(propertyData as Building)?.BuildingTenancy} %`}
+          />
         </>
       ) : (
         <></>
