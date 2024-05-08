@@ -38,8 +38,6 @@ const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
   const theme = useTheme();
 
   const getPropertyData = async () => {
-    setPropertyData(undefined);
-    setOpen(true);
     let returnedProperty: Parcel | Building;
     if (property.type === PropertyTypes.BUILDING) {
       returnedProperty = await api.buildings.getBuildingById(property.id);
@@ -47,6 +45,7 @@ const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
       returnedProperty = await api.parcels.getParcelById(property.id);
     }
     setPropertyData(returnedProperty);
+    if (returnedProperty) setOpen(true);
     const latlng: LatLng = L.latLng(returnedProperty.Location.y, returnedProperty.Location.x);
     api.parcelLayer.getParcelByLatLng(latlng).then((response) => {
       if (response.features.length) {
@@ -102,7 +101,6 @@ const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
       anchor={'right'}
       open={open}
       onClose={handleClose}
-      sx={{}}
       ModalProps={{
         sx: {
           marginTop: '10em',
