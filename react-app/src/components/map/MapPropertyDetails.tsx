@@ -65,7 +65,7 @@ const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
     setOpen(false);
   };
 
-  const typographyStyle = (theme) => ({ ...theme.typography.body1 });
+  const typographyStyle = (theme) => ({ ...theme.typography.body2 });
   const LeftGridColumn = (props: PropsWithChildren) => (
     <Grid
       item
