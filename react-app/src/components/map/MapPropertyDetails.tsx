@@ -165,7 +165,7 @@ const DrawerContents = (props: ContentsProps) => {
 
   useEffect(() => {
     if (property.id != null && property.type != null) getPropertyData();
-  }, [property])
+  }, [property]);
 
   const getPropertyData = async () => {
     let returnedProperty: Parcel | Building;
