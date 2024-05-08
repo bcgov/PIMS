@@ -3,12 +3,30 @@ import { CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, SxProps, Tooltip, lighten, useTheme } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { Check } from '@mui/icons-material';
-import { GridColDef, GridColumnHeaderTitle, GridEventListener } from '@mui/x-data-grid';
+import {
+  GridColDef,
+  GridColumnHeaderTitle,
+  GridEventListener,
+  gridFilteredSortedRowEntriesSelector,
+  GridRowId,
+  GridValidRowModel,
+} from '@mui/x-data-grid';
 import { dateFormatter } from '@/utilities/formatters';
 import { ClassificationInline } from './ClassificationIcon';
 import { useNavigate } from 'react-router-dom';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
+import { Parcel, ParcelEvaluation, ParcelFiscal } from '@/hooks/api/useParcelsApi';
+import {
+  Building,
+  BuildingEvaluation,
+  BuildingFiscal,
+  PropertyType,
+} from '@/hooks/api/useBuildingsApi';
+import { propertyTypeMapper, PropertyTypes } from '@/constants/propertyTypes';
+import { AdministrativeArea } from '@/hooks/api/useAdministrativeAreaApi';
+import { Agency } from '@/hooks/api/useAgencyApi';
+import { Classification } from '@/hooks/api/useLookupApi';
 
 interface IPropertyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
@@ -58,10 +76,7 @@ const PropertyTable = (props: IPropertyTable) => {
     isLoading: buildingsLoading,
     loadOnce: loadBuildings,
   } = useDataLoader(api.buildings.getBuildings);
-  const { data: agencies, loadOnce: loadAgencies } = useDataLoader(api.agencies.getAgencies);
-  const { data: classifications, loadOnce: loadClassifications } = useDataLoader(
-    api.lookup.getClassifications,
-  );
+
   const properties = useMemo(
     () => [
       ...(buildings?.map((b) => ({ ...b, Type: 'Building' })) ?? []),
@@ -73,22 +88,21 @@ const PropertyTable = (props: IPropertyTable) => {
   const loading = parcelsLoading || buildingsLoading;
 
   const loadAll = () => {
-    loadParcels();
-    loadBuildings();
+    loadParcels({ includeRelations: true });
+    loadBuildings({ includeRelations: true });
   };
 
   const classification = useClassificationStyle();
   const theme = useTheme();
 
   loadAll();
-  loadAgencies();
-  loadClassifications();
 
   const columns: GridColDef[] = [
     {
-      field: 'Type',
+      field: 'PropertyType',
       headerName: 'Type',
       flex: 1,
+      valueGetter: (value?: PropertyType) => value?.Name,
     },
     {
       field: 'ClassificationId',
@@ -130,29 +144,33 @@ const PropertyTable = (props: IPropertyTable) => {
         );
       },
       renderCell: (params) => {
-        //const classificationName = classifications?.find((cl) => cl.Id === params.value)?.Name;
         return (
           <ClassificationInline
             color={classification[params.row.ClassificationId].textColor}
             backgroundColor={classification[params.row.ClassificationId].bgColor}
-            title={params.value}
+            title={params.row.Classification?.Name ?? ''}
           />
         );
       },
-      valueGetter: (_value, row) =>
-        classifications?.find((cl) => cl.Id === row.ClassificationId)?.Name ?? '',
+      valueGetter: (value?: Classification) => value?.Name,
     },
     {
       field: 'PID',
       headerName: 'PID',
       flex: 1,
       valueGetter: (value: number | null) => (value ? String(value).padStart(9, '0') : 'N/A'),
+      renderCell: (params) => {
+        if (params.value !== 'N/A') {
+          return params.value.match(/\d{3}/g).join('-');
+        }
+        return params.value;
+      },
     },
     {
-      field: 'AgencyId',
+      field: 'Agency',
       headerName: 'Agency',
       flex: 1,
-      valueGetter: (value) => agencies?.find((ag) => ag.Id === value)?.Name ?? '',
+      valueGetter: (value?: Agency) => value?.Name,
     },
     {
       field: 'Address1',
@@ -160,15 +178,10 @@ const PropertyTable = (props: IPropertyTable) => {
       flex: 1,
     },
     {
-      field: 'Corporation',
-      headerName: 'Corporation',
+      field: 'AdministrativeArea',
+      headerName: 'Administrative Area',
       flex: 1,
-    },
-    {
-      field: 'Ownership',
-      headerName: 'Ownership',
-      flex: 1,
-      renderCell: (params) => (params.value ? `${params.value}%` : ''),
+      valueGetter: (value?: AdministrativeArea) => value?.Name,
     },
     {
       field: 'IsSensitive',
@@ -200,6 +213,107 @@ const PropertyTable = (props: IPropertyTable) => {
       default:
         ref.current.setFilterModel({ items: [] });
     }
+  };
+
+  const getExcelData: (
+    ref: MutableRefObject<GridApiCommunity>,
+  ) => Promise<{ id: GridRowId; model: GridValidRowModel }[]> = async (
+    ref: MutableRefObject<GridApiCommunity>,
+  ) => {
+    if (ref?.current) {
+      try {
+        const buildingsWithExtras = await api.buildings.getBuildings({
+          includeRelations: true,
+          excelExport: true,
+        });
+        const parcelsWithExtras = await api.parcels.getParcels({
+          includeRelations: true,
+          excelExport: true,
+        });
+
+        if (!buildingsWithExtras || !parcelsWithExtras) {
+          throw new Error('Buildings or Parcels could not be reached. Refresh and try again.');
+        }
+        const properties = [
+          ...(buildingsWithExtras?.map((b) => ({ ...b, Type: 'Building' })) ?? []),
+          ...(parcelsWithExtras?.map((p) => ({ ...p, Type: 'Parcel' })) ?? []),
+        ];
+        ref.current.setRows(properties);
+        const rows = gridFilteredSortedRowEntriesSelector(ref);
+        return rows.map((row) => {
+          const { id, model } = row;
+          const propertyModel = model as Parcel | Building;
+          return {
+            id,
+            model: {
+              Type: propertyTypeMapper(propertyModel.PropertyTypeId),
+              Classification: propertyModel.Classification?.Name,
+              Name: propertyModel.Name,
+              Description: propertyModel.Description,
+              Ministry: propertyModel.Agency?.Parent?.Name,
+              Agency: propertyModel.Agency?.Name,
+              Address: propertyModel.Address1,
+              'Administrative Area': propertyModel.AdministrativeArea?.Name,
+              Postal: propertyModel.Postal,
+              PID: propertyModel.PID,
+              PIN: propertyModel.PIN,
+              'Assessed Value': propertyModel.Evaluations?.length
+                ? propertyModel.Evaluations.sort(
+                    (
+                      a: ParcelEvaluation | BuildingEvaluation,
+                      b: ParcelEvaluation | BuildingEvaluation,
+                    ) => b.Year - a.Year,
+                  ).at(0).Value
+                : '',
+              'Assessment Year': propertyModel.Evaluations?.length
+                ? propertyModel.Evaluations.sort(
+                    (
+                      a: ParcelEvaluation | BuildingEvaluation,
+                      b: ParcelEvaluation | BuildingEvaluation,
+                    ) => b.Year - a.Year,
+                  ).at(0).Year
+                : '',
+              'Netbook Value': propertyModel.Fiscals?.length
+                ? propertyModel.Fiscals.sort(
+                    (a: ParcelFiscal | BuildingFiscal, b: ParcelFiscal | BuildingFiscal) =>
+                      b.FiscalYear - a.FiscalYear,
+                  ).at(0).Value
+                : '',
+              'Netbook Year': propertyModel.Fiscals?.length
+                ? propertyModel.Fiscals.sort(
+                    (a: ParcelFiscal | BuildingFiscal, b: ParcelFiscal | BuildingFiscal) =>
+                      b.FiscalYear - a.FiscalYear,
+                  ).at(0).FiscalYear
+                : '',
+              'Parcel Land Area':
+                propertyModel.PropertyTypeId === PropertyTypes.LAND
+                  ? (propertyModel as Parcel).LandArea
+                  : '',
+              'Building Total Area':
+                propertyModel.PropertyTypeId === PropertyTypes.BUILDING
+                  ? (propertyModel as Building).TotalArea
+                  : '',
+              'Building Predominate Use':
+                propertyModel.PropertyTypeId === PropertyTypes.BUILDING
+                  ? (propertyModel as Building).BuildingPredominateUse?.Name
+                  : '',
+              'Building Construction Type':
+                propertyModel.PropertyTypeId === PropertyTypes.BUILDING
+                  ? (propertyModel as Building).BuildingConstructionType?.Name
+                  : '',
+              'Building Tenancy':
+                propertyModel.PropertyTypeId === PropertyTypes.BUILDING
+                  ? (propertyModel as Building).BuildingTenancy
+                  : '',
+            },
+          };
+        });
+      } catch (e) {
+        // TODO: Error notification here.
+        return [];
+      }
+    }
+    return [];
   };
 
   return (
@@ -235,9 +349,15 @@ const PropertyTable = (props: IPropertyTable) => {
         loading={loading}
         tableHeader={'Properties Overview'}
         excelTitle={'Properties'}
+        customExcelData={getExcelData}
         columns={columns}
         rows={properties}
         addTooltip="Add a new property"
+        initialState={{
+          sorting: {
+            sortModel: [{ sort: 'desc', field: 'UpdatedOn' }],
+          },
+        }}
       />
     </Box>
   );

@@ -1,23 +1,19 @@
-import { Box, Typography } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import React, { PropsWithChildren, useState } from 'react';
-import { MapContainer, WMSTileLayer, TileLayer, useMapEvents, Popup, useMap } from 'react-leaflet';
-import { LatLng, Map } from 'leaflet';
+import { MapContainer, useMapEvents, useMap } from 'react-leaflet';
+import { Map } from 'leaflet';
 import usePimsApi from '@/hooks/usePimsApi';
-
-const PARCEL_LAYER_URL =
-  'https://openmaps.gov.bc.ca/geo/pub/WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW/ows';
+import MapLayers from '@/components/map/MapLayers';
+import { ParcelPopup, PopupData } from '@/components/map/ParcelPopup';
+import { InventoryLayer } from '@/components/map/InventoryLayer';
 
 type ParcelMapProps = {
   height: string;
   mapRef?: React.Ref<Map>;
   movable?: boolean;
+  zoomable?: boolean;
+  loadProperties?: boolean;
 } & PropsWithChildren;
-
-interface PopupData {
-  position: LatLng | null;
-  pin: number | string;
-  pid: number | string;
-}
 
 const ParcelMap = (props: ParcelMapProps) => {
   const api = usePimsApi();
@@ -43,11 +39,12 @@ const ParcelMap = (props: ParcelMapProps) => {
     return null;
   };
   const [clickPosition, setClickPosition] = useState<PopupData>(null);
-  const { height, mapRef, movable = true } = props;
+  const [loading, setLoading] = useState<boolean>(false);
+  const { height, mapRef, movable = true, zoomable = true, loadProperties = false } = props;
   return (
     <Box height={height}>
+      <LoadingCover show={loading} />
       <MapContainer
-        scrollWheelZoom={movable}
         style={{ height: '100%' }}
         ref={mapRef}
         bounds={[
@@ -55,27 +52,46 @@ const ParcelMap = (props: ParcelMapProps) => {
           [48.129, -122.203],
         ]}
         dragging={movable}
-        zoomControl={true}
+        zoomControl={zoomable}
+        scrollWheelZoom={zoomable}
+        touchZoom={zoomable}
+        boxZoom={zoomable}
+        doubleClickZoom={zoomable}
+        preferCanvas
       >
-        <TileLayer url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <WMSTileLayer
-          url={PARCEL_LAYER_URL}
-          format="image/png; mode=8bit"
-          transparent={true}
-          opacity={0.5}
-          layers="WHSE_CADASTRE.PMBC_PARCEL_FABRIC_POLY_SVW"
-        />
-        {clickPosition?.position && (
-          <Popup autoPan={false} position={clickPosition.position}>
-            <Typography>{`PID: ${clickPosition?.pid ?? 'None'}`}</Typography>
-            <Typography>{`PIN: ${clickPosition?.pin ?? 'None'}`}</Typography>
-          </Popup>
-        )}
+        <MapLayers />
+        {clickPosition?.position && <ParcelPopup clickPosition={clickPosition} />}
         <MapEvents />
+        {loadProperties ? <InventoryLayer setLoading={setLoading} /> : <></>}
         {props.children}
       </MapContainer>
     </Box>
   );
+};
+export interface LoadingCoverProps {
+  show?: boolean;
+}
+
+const LoadingCover: React.FC<LoadingCoverProps> = ({ show }) => {
+  return show ? (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        position: 'absolute',
+        zIndex: '999',
+        left: '0',
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        display: 'flex',
+        alignItems: 'center',
+        alignContent: 'center',
+        justifyItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <CircularProgress />
+    </div>
+  ) : null;
 };
 
 export default ParcelMap;

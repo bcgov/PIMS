@@ -1,7 +1,7 @@
 import { ViewColumn, ViewEntity } from 'typeorm';
 
 @ViewEntity({
-  materialized: true,
+  materialized: false,
   expression: `
     SELECT b.id AS "building_id", b.pid, b.pin, p.id as "parcel_id"
     FROM building b

@@ -1,5 +1,10 @@
 import usePimsApi from '@/hooks/usePimsApi';
-import { GridColDef } from '@mui/x-data-grid';
+import {
+  GridColDef,
+  gridFilteredSortedRowEntriesSelector,
+  GridRowId,
+  GridValidRowModel,
+} from '@mui/x-data-grid';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import React, { MutableRefObject } from 'react';
 import useDataLoader from '@/hooks/useDataLoader';
@@ -8,6 +13,8 @@ import { Agency } from '@/hooks/api/useAgencyApi';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { User } from '@/hooks/api/useUsersApi';
 import { useNavigate } from 'react-router-dom';
+import { Project } from '@/hooks/api/useProjectsApi';
+import { NoteTypes } from '@/constants/noteTypes';
 
 const ProjectsTable = () => {
   const navigate = useNavigate();
@@ -88,6 +95,93 @@ const ProjectsTable = () => {
     }
   };
 
+  const getExcelData: (
+    ref: MutableRefObject<GridApiCommunity>,
+  ) => Promise<{ id: GridRowId; model: GridValidRowModel }[]> = async (
+    ref: MutableRefObject<GridApiCommunity>,
+  ) => {
+    if (ref?.current) {
+      try {
+        const projectsWithExtras = await api.projects.getProjectsForExcelExport();
+        if (!projectsWithExtras) {
+          throw new Error('Projects could not be reached. Refresh and try again.');
+        }
+        ref.current.setRows(projectsWithExtras);
+        const rows = gridFilteredSortedRowEntriesSelector(ref);
+        return rows.map((row) => {
+          const { id, model } = row;
+          const projectModel = model as Project;
+          return {
+            id,
+            model: {
+              'Project Number': projectModel.ProjectNumber,
+              Name: projectModel.Name,
+              Description: projectModel.Description,
+              'Reported Fiscal Year': projectModel.ReportedFiscalYear,
+              'Actual Fiscal Year': projectModel.ActualFiscalYear,
+              Workflow: projectModel.Workflow?.Name,
+              Status: projectModel.Status?.Name,
+              'Tier Level': projectModel.TierLevel?.Name,
+              Risk: projectModel.Risk?.Name,
+              Ministry: projectModel.Agency?.Parent?.Name ?? projectModel.Agency?.Name,
+              Agency: projectModel.Agency?.Name,
+              'Created By': `${projectModel.CreatedBy?.FirstName} ${projectModel.CreatedBy?.LastName}`,
+              'Created On': projectModel.CreatedOn,
+              'Exemption Requested': projectModel.Metadata?.exemptionRequested,
+              'Exemption Rationale': projectModel.Notes?.find(
+                (note) => note.NoteType === NoteTypes.EXEMPTION,
+              )?.Note,
+              'NetBook	Value': projectModel.NetBook,
+              Assessed: projectModel.Assessed,
+              Appraised: projectModel.Appraised,
+              'Sales Cost': projectModel.Metadata?.salesCost,
+              'Net Proceeds': projectModel.Metadata?.netProceeds,
+              'Program Cost': projectModel.Metadata?.programCost,
+              'Gain Loss': projectModel.Metadata?.gainLoss,
+              'OCG Financial Statement': projectModel.Metadata?.ocgFinancialStatement,
+              'Interest Component': projectModel.Metadata?.interestComponent,
+              'Offer Amount': projectModel.Metadata?.offerAmount,
+              'Sale With Lease In Place': projectModel.Metadata?.saleWithLeaseInPlace,
+              Note: projectModel.Notes?.find((note) => note.NoteType === NoteTypes.GENERAL)?.Note,
+              PublicNote: projectModel.Notes?.find((note) => note.NoteType === NoteTypes.PUBLIC)
+                ?.Note,
+              PrivateNote: projectModel.Notes?.find((note) => note.NoteType === NoteTypes.PRIVATE)
+                ?.Note,
+              AppraisedNote: projectModel.Notes?.find(
+                (note) => note.NoteType === NoteTypes.APPRAISAL,
+              )?.Note,
+              AgencyResponseNote: projectModel.Notes?.find(
+                (note) => note.NoteType === NoteTypes.AGENCY_INTEREST,
+              )?.Note,
+              'Submitted On': projectModel.SubmittedOn,
+              'Approved On': projectModel.ApprovedOn,
+              'ERP Initial Notification Sent On': projectModel.Metadata?.initialNotificationSentOn,
+              'ERP Thirty Day Notification Sent On':
+                projectModel.Metadata?.thirtyDayNotificationSentOn,
+              'ERP Sixty Day Notification Sent On':
+                projectModel.Metadata?.sixtyDayNotificationSentOn,
+              'ERP Ninety Day Notification Sent On':
+                projectModel.Metadata?.ninetyDayNotificationSentOn,
+              'ERP On Hold Notification Sent On': projectModel.Metadata?.onHoldNotificationSentOn,
+              'Transferred Within GRE On': projectModel.Metadata?.transferredWithinGreOn,
+              'ERP Clearance Notification Sent On':
+                projectModel.Metadata?.clearanceNotificationSentOn,
+              'Disposed On': projectModel.Metadata?.disposedOn,
+              'Marketed On': projectModel.Metadata?.marketedOn,
+              'Offers Note': projectModel.Notes?.find((note) => note.NoteType === NoteTypes.OFFER)
+                ?.Note,
+              Purchaser: projectModel.Metadata?.purchaser,
+            },
+          };
+        });
+      } catch (e) {
+        // TODO: Error notification here.
+        return [];
+      }
+    }
+    return [];
+  };
+
   return (
     <FilterSearchDataGrid
       onAddButtonClick={() => navigate('/projects/add')}
@@ -111,6 +205,7 @@ const ProjectsTable = () => {
       getRowId={(row) => row.Id}
       tableHeader={'Disposal Projects'}
       excelTitle={'Projects'}
+      customExcelData={getExcelData}
       addTooltip={'Create new project'}
       name={'projects'}
       columns={columns}

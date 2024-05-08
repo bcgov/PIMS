@@ -241,7 +241,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <ParcelMap height={'500px'} mapRef={setMap} movable={false}>
+          <ParcelMap height={'500px'} mapRef={setMap} movable={false} zoomable={false}>
             <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height={'100%'}>
               <Room
                 color="primary"

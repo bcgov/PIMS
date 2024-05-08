@@ -8,7 +8,13 @@ import { Role as RolesEntity } from '@/typeorm/Entities/Role';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Building } from '@/typeorm/Entities/Building';
-import { EmailBody, IChesStatusResponse, IEmail } from '@/services/ches/chesServices';
+import {
+  EmailBody,
+  EmailEncoding,
+  EmailPriority,
+  IChesStatusResponse,
+  IEmail,
+} from '@/services/ches/chesServices';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
 import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUse';
@@ -22,6 +28,12 @@ import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 import { Task } from '@/typeorm/Entities/Task';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
+import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
+import {
+  NotificationAudience,
+  NotificationStatus,
+} from '@/services/notifications/notificationServices';
+import { NotificationTemplate } from '@/typeorm/Entities/NotificationTemplate';
 
 export class MockRes {
   statusValue: any;
@@ -492,12 +504,15 @@ export const produceProject = (
     Status: null, // TODO: produceStatus
     RiskId: 1,
     Risk: null, // TODO: produceRisk
-    ProjectTasks: [],
+    Tasks: [produceProjectTask()],
     ProjectProperties: projectProperties ?? [
       produceProjectProperty({
         ProjectId: projectId,
       }),
     ],
+    Notifications: [],
+    StatusHistory: [],
+    Notes: [],
     ...props,
   };
   return project;
@@ -545,7 +560,7 @@ export const productProjectStatusHistory = (props?: Partial<ProjectStatusHistory
   return history;
 };
 
-export const produceProjectTask = () => {
+export const produceProjectTask = (props?: Partial<ProjectTask>) => {
   const task: ProjectTask = {
     ProjectId: faker.number.int(),
     Project: undefined,
@@ -559,11 +574,12 @@ export const produceProjectTask = () => {
     UpdatedById: randomUUID(),
     UpdatedBy: undefined,
     UpdatedOn: new Date(),
+    ...props,
   };
   return task;
 };
 
-export const produceProjectNotification = () => {
+export const produceProjectNotification = (props?: Partial<ProjectStatusNotification>) => {
   const notif: ProjectStatusNotification = {
     Id: faker.number.int(),
     TemplateId: faker.number.int(),
@@ -581,6 +597,67 @@ export const produceProjectNotification = () => {
     UpdatedById: randomUUID(),
     UpdatedBy: undefined,
     UpdatedOn: new Date(),
+    ...props,
   };
   return notif;
+};
+
+export const produceNotificationQueue = () => {
+  const queue: NotificationQueue = {
+    Id: faker.number.int(),
+    Key: randomUUID(),
+    Status: NotificationStatus.Pending,
+    Priority: EmailPriority.Medium,
+    Encoding: EmailEncoding.Utf8,
+    SendOn: new Date(),
+    To: faker.internet.email(),
+    Subject: faker.lorem.word(),
+    BodyType: EmailBody.Html,
+    Body: faker.lorem.sentences(),
+    Bcc: '',
+    Cc: '',
+    Tag: faker.lorem.word(),
+    ProjectId: faker.number.int(),
+    Project: undefined,
+    ToAgencyId: faker.number.int(),
+    ToAgency: undefined,
+    TemplateId: faker.number.int(),
+    Template: undefined,
+    ChesMessageId: null,
+    ChesTransactionId: null,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+  };
+  return queue;
+};
+
+export const produceNotificationTemplate = (props?: Partial<NotificationTemplate>) => {
+  const template: NotificationTemplate = {
+    Id: faker.number.int(),
+    Name: faker.lorem.word(),
+    Description: faker.lorem.lines(),
+    To: faker.internet.email(),
+    Cc: '',
+    Bcc: '',
+    Audience: NotificationAudience.Default,
+    Encoding: EmailEncoding.Utf8,
+    BodyType: EmailBody.Html,
+    Priority: EmailPriority.High,
+    Subject: faker.lorem.word(),
+    Body: faker.lorem.sentences(),
+    IsDisabled: false,
+    Tag: faker.lorem.word(),
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return template;
 };
