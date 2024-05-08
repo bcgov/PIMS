@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import DataCard from '../display/DataCard';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography, useTheme } from '@mui/material';
 import { statusChipFormatter } from '@/utilities/formatters';
 import DeleteDialog from '../dialog/DeleteDialog';
 import { deleteAccountConfirmText } from '@/constants/strings';
@@ -17,6 +17,7 @@ import TextFormField from '../form/TextFormField';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 import { useParams } from 'react-router-dom';
+import { SnackBarContext } from '@/contexts/snackbarContext';
 
 interface IUserDetail {
   onClose: () => void;
@@ -114,7 +115,8 @@ const UserDetail = ({ onClose }: IUserDetail) => {
       Role: userStatusData.Role?.Name,
     });
   }, [data]);
-
+  const snackbar = useContext(SnackBarContext);
+  const theme = useTheme();
   return (
     <Box
       display={'flex'}
@@ -172,6 +174,11 @@ const UserDetail = ({ onClose }: IUserDetail) => {
               })
               .then(() => refreshData());
             setOpenProfileDialog(false);
+            snackbar.setMessageState({
+              open: true,
+              text: 'Successfully submitted user details.',
+              style: { backgroundColor: theme.palette.success.main },
+            });
           }
         }}
         onCancel={async () => setOpenProfileDialog(false)}
