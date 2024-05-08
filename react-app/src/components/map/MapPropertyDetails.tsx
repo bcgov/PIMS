@@ -3,6 +3,7 @@ import { PropertyTypes } from '@/constants/propertyTypes';
 import { Building } from '@/hooks/api/useBuildingsApi';
 import { Parcel } from '@/hooks/api/useParcelsApi';
 import usePimsApi from '@/hooks/usePimsApi';
+import { pidFormatter } from '@/utilities/formatters';
 import {
   Box,
   Button,
@@ -145,12 +146,12 @@ const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
 
             {/* PARCEL INFO SECTION */}
             <Grid item xs={12}>
-              <Typography variant="h4">{`Parcel Info`}</Typography>
+              <Typography variant="h4">{`Property Info`}</Typography>
             </Grid>
             {propertyData?.PID ? (
               <>
                 <LeftGridColumn>PID</LeftGridColumn>
-                <RightGridColumn>{propertyData?.PID}</RightGridColumn>
+                <RightGridColumn>{pidFormatter(propertyData?.PID)}</RightGridColumn>
               </>
             ) : (
               <>
@@ -178,6 +179,8 @@ const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
             <RightGridColumn>{propertyData?.Address1}</RightGridColumn>
             <LeftGridColumn>City</LeftGridColumn>
             <RightGridColumn>{propertyData?.AdministrativeArea?.Name}</RightGridColumn>
+            <LeftGridColumn>Postal</LeftGridColumn>
+            <RightGridColumn>{propertyData?.Postal}</RightGridColumn>
             <LeftGridColumn>Regional Dist.</LeftGridColumn>
             <RightGridColumn>
               {propertyData?.AdministrativeArea?.RegionalDistrict?.Name}
