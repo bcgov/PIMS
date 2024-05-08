@@ -1,5 +1,5 @@
 import { Box, CircularProgress } from '@mui/material';
-import React, { createContext, PropsWithChildren, useContext, useState } from 'react';
+import React, { createContext, PropsWithChildren, useState } from 'react';
 import { MapContainer, useMapEvents, useMap } from 'react-leaflet';
 import { Map } from 'leaflet';
 import usePimsApi from '@/hooks/usePimsApi';
@@ -39,26 +39,7 @@ type ParcelMapProps = {
 
 export const SelectedMarkerContext = createContext(null);
 
-const MapStateWrapper = (props: ParcelMapProps) => {
-  const [selectedMarker, setSelectedMarker] = useState({
-    id: undefined,
-    type: undefined,
-  });
-
-  return (
-    <SelectedMarkerContext.Provider
-      value={{
-        selectedMarker,
-        setSelectedMarker,
-      }}
-    >
-      <ParcelMap {...props} />
-    </SelectedMarkerContext.Provider>
-  );
-};
-
-export const ParcelMap = (props: ParcelMapProps) => {
-  const { selectedMarker } = useContext(SelectedMarkerContext);
+const ParcelMap = (props: ParcelMapProps) => {
   const api = usePimsApi();
   const MapEvents = () => {
     const map = useMap();
@@ -83,34 +64,45 @@ export const ParcelMap = (props: ParcelMapProps) => {
   };
   const [clickPosition, setClickPosition] = useState<PopupData>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [selectedMarker, setSelectedMarker] = useState({
+    id: undefined,
+    type: undefined,
+  });
 
   const { height, mapRef, movable = true, zoomable = true, loadProperties = false } = props;
   return (
-    <Box height={height}>
-      <LoadingCover show={loading} />
-      <MapPropertyDetails property={selectedMarker} />
-      <MapContainer
-        style={{ height: '100%' }}
-        ref={mapRef}
-        bounds={[
-          [51.2516, -129.371],
-          [48.129, -122.203],
-        ]}
-        dragging={movable}
-        zoomControl={zoomable}
-        scrollWheelZoom={zoomable}
-        touchZoom={zoomable}
-        boxZoom={zoomable}
-        doubleClickZoom={zoomable}
-        preferCanvas
-      >
-        <MapLayers />
-        {clickPosition?.position && <ParcelPopup clickPosition={clickPosition} />}
-        <MapEvents />
-        {loadProperties ? <InventoryLayer setLoading={setLoading} /> : <></>}
-        {props.children}
-      </MapContainer>
-    </Box>
+    <SelectedMarkerContext.Provider
+      value={{
+        selectedMarker,
+        setSelectedMarker,
+      }}
+    >
+      <Box height={height}>
+        <LoadingCover show={loading} />
+        <MapPropertyDetails property={selectedMarker} />
+        <MapContainer
+          style={{ height: '100%' }}
+          ref={mapRef}
+          bounds={[
+            [51.2516, -129.371],
+            [48.129, -122.203],
+          ]}
+          dragging={movable}
+          zoomControl={zoomable}
+          scrollWheelZoom={zoomable}
+          touchZoom={zoomable}
+          boxZoom={zoomable}
+          doubleClickZoom={zoomable}
+          preferCanvas
+        >
+          <MapLayers />
+          {clickPosition?.position && <ParcelPopup clickPosition={clickPosition} />}
+          <MapEvents />
+          {loadProperties ? <InventoryLayer setLoading={setLoading} /> : <></>}
+          {props.children}
+        </MapContainer>
+      </Box>
+    </SelectedMarkerContext.Provider>
   );
 };
 export interface LoadingCoverProps {
@@ -139,4 +131,4 @@ const LoadingCover: React.FC<LoadingCoverProps> = ({ show }) => {
   ) : null;
 };
 
-export default MapStateWrapper;
+export default ParcelMap;
