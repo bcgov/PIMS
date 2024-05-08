@@ -251,8 +251,9 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
   }));
 
   useEffect(() => {
+    console.log('Initial Values:', initialValues);
+    console.log('Initial Related Buildings:', initialRelatedBuildings);
     if (!initialValues?.Evaluations || initialValues.Evaluations.length === 0) {
-      console.log('resetting????');
       assessedFormMethods.reset({ Evaluations: defaultParcelValues });
     } else {
       assessedFormMethods.reset({
@@ -283,9 +284,13 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
           Id: initialValues.Id,
           PID: initialValues.PID,
           ...formValues,
+          Evaluations: formValues.Evaluations.map((evaluation) => ({
+            ...evaluation,
+          })),
         });
-
+        console.log('RelatedBuildings array:', formValues.RelatedBuildings);
         const buildingUpdatePromises = formValues.RelatedBuildings.map(async (building) => {
+          console.log('RelatedBuildings are:', building);
           const updatedBuilding: Partial<Building> = {
             ...building, // Copy existing building properties
             Evaluations: building.Evaluations.map((evaluation) => ({
