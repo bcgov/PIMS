@@ -35,7 +35,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
 
-  const { data, refreshData } = useDataLoader(() => api.users.getUserById(id));
+  const { data, refreshData, isLoading } = useDataLoader(() => api.users.getUserById(id));
 
   const { data: rolesData, loadOnce: loadRoles } = useDataLoader(api.roles.getInternalRoles);
   loadRoles();
@@ -132,12 +132,14 @@ const UserDetail = ({ onClose }: IUserDetail) => {
         deleteButtonProps={{ disabled: pimsUser.data?.Id === id }}
       />
       <DataCard
+        loading={isLoading}
         customFormatter={customFormatterStatus}
         values={userStatusData}
         title={'User Status'}
         onEdit={() => setOpenStatusDialog(true)}
       />
       <DataCard
+        loading={isLoading}
         customFormatter={customFormatterProfile}
         values={userProfileData}
         title={'User Profile'}
