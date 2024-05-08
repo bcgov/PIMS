@@ -520,35 +520,36 @@ export const AssessedValue = (props: IAssessedValue) => {
         {title ?? 'Assessed Value'}
       </Typography>
       <Box overflow={'auto'} paddingTop={'8px'}>
-        {years.map((yr, idx) => (
-          <Box
-            mb={2}
-            gap={2}
-            key={`assessedvaluerow-${yr}${'-' + topLevelKey}`}
-            display={'flex'}
-            width={'100%'}
-            flexDirection={'row'}
-          >
-            <TextFormField
-              sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-              name={`${topLevelKey ?? ''}Evaluations.${idx}.Year`}
-              label={'Year'}
-              value={yr}
-              disabled
-            />
-            <TextFormField
-              InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
-              }}
-              sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-              name={`${topLevelKey ?? ''}Evaluations.${idx}.Value`}
-              numeric
-              label={'Value'}
-            />
-          </Box>
-        ))}
+        {years &&
+          years.map((yr, idx) => (
+            <Box
+              mb={2}
+              gap={2}
+              key={`assessedvaluerow-${yr}${'-' + topLevelKey}`}
+              display={'flex'}
+              width={'100%'}
+              flexDirection={'row'}
+            >
+              <TextFormField
+                sx={{ minWidth: 'calc(33.3% - 1rem)' }}
+                name={`${topLevelKey ?? ''}Evaluations.${idx}.Year`}
+                label={'Year'}
+                value={yr}
+                disabled
+              />
+              <TextFormField
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                }}
+                sx={{ minWidth: 'calc(33.3% - 1rem)' }}
+                name={`${topLevelKey ?? ''}Evaluations.${idx}.Value`}
+                numeric
+                label={'Value'}
+              />
+            </Box>
+          ))}
         {/* Render input fields for the current year if it's not in the list */}
-        {!years.includes(currentYear) && (
+        {years && !years.includes(currentYear) && (
           <Box mb={2} gap={2} display={'flex'} width={'100%'} flexDirection={'row'}>
             <TextFormField
               sx={{ minWidth: 'calc(33.3% - 1rem)' }}

@@ -322,7 +322,7 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
         />
         {initialRelatedBuildings?.map((building, idx) => (
           <AssessedValue
-            title={`Building (${idx + 1}) - ${building.Name + ' - ' + building.Address1 ?? ''}`}
+            title={`Building (${idx + 1}) - ${building.Name + ' - ' + building.Address1}`}
             key={`assessed-value-${building.Id}`}
             years={building?.Evaluations?.map((evalu) => evalu.Year)}
             showCurrentYear={
