@@ -17,8 +17,5 @@ export const getLTSA = async (req: Request, res: Response) => {
    */
   const pid = req.query.pid as string;
   const getLandTitleInfo = await ltsaService.processLTSARequest(pid);
-
-  if (!getLandTitleInfo) {
-    return res.status(404).send('Land Title information matching this internal PID not found.');
-  } else return res.status(200).send(getLandTitleInfo);
+  return res.status(200).send(getLandTitleInfo);
 };
