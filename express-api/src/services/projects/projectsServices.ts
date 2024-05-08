@@ -352,7 +352,9 @@ const handleProjectTasks = async (
         CreatedById: existingTask ? existingTask.CreatedById : project.CreatedById,
         UpdatedById: existingTask ? project.UpdatedById : undefined,
         IsCompleted: task.IsCompleted,
-        CompletedOn: !existingTask && task.IsCompleted ? new Date() : undefined,
+        CompletedOn: !existingTask?.CompletedOn && task.IsCompleted ? new Date() : undefined,
+        //This CompletedOn logic basically means that you will only ever set the CompletedOn date once, even if you transition between IsCompleted true/false 
+        //multiple times. Doing that wouldn't really be the intended flow anyways so this seemed like the safest bet.
       };
       await AppDataSource.getRepository(ProjectTask).save(taskEntity);
     }
