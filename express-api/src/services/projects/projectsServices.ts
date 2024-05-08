@@ -15,11 +15,12 @@ import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import logger from '@/utilities/winstonLogger';
-import { DeepPartial, FindManyOptions, FindOptionsOrder, In, IsNull } from 'typeorm';
+import { DeepPartial, FindManyOptions, FindOptionsOrder, In } from 'typeorm';
 import { ProjectFilter } from '@/services/projects/projectSchema';
 import { PropertyType } from '@/constants/propertyType';
-import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
 import { ProjectRisk } from '@/constants/projectRisk';
+import notificationServices from '../notifications/notificationServices';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 
 const projectRepo = AppDataSource.getRepository(Project);
 const projectPropertiesRepo = AppDataSource.getRepository(ProjectProperty);
@@ -146,6 +147,8 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
     logger.warn(e.message);
     if (e instanceof ErrorWithCode) throw e;
     throw new ErrorWithCode('Error creating project.', 500);
+  } finally {
+    await queryRunner.release();
   }
 };
 
@@ -160,52 +163,51 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
 const addProjectParcelRelations = async (project: Project, parcelIds: number[]) => {
   await Promise.all(
     parcelIds?.map(async (parcelId) => {
-      const existingParcel = await parcelRepo.findOne({ where: { Id: parcelId } });
-      if (!existingParcel) {
-        throw new ErrorWithCode(`Parcel with ID ${parcelId} does not exist.`, 404);
-      }
-      // Check that property doesn't belong to another active project
-      // Could be in Cancelled (23) or Denied (16) projects
-      const allowedStatusIds = [ProjectStatus.CANCELLED, ProjectStatus.DENIED];
-      const existingProjectProperties = await projectPropertiesRepo.find({
+      const relationExists = await projectPropertiesRepo.exists({
         where: {
+          ProjectId: project.Id,
           ParcelId: parcelId,
         },
-        relations: {
-          Project: true,
-        },
       });
-      if (
-        existingProjectProperties.some(
-          (relation) =>
-            relation.ProjectId !== project.Id &&
-            !allowedStatusIds.includes(relation.Project.StatusId),
-        )
-      ) {
-        throw new ErrorWithCode(
-          `Parcel with ID ${parcelId} already belongs to another active project.`,
-          400,
-        );
-      }
-      // Is this a land (0) or subdivision (2)
-      const propertyType = existingParcel.ParentParcelId
-        ? PropertyType.SUBDIVISION
-        : PropertyType.LAND;
-      const entry: Partial<ProjectProperty> = {
-        CreatedById: project.CreatedById,
-        ProjectId: project.Id,
-        PropertyTypeId: propertyType,
-        ParcelId: parcelId,
-      };
-      // Only try to add if this realtion doesn't exist yet
-      if (
-        !(await projectPropertiesRepo.exists({
+      if (!relationExists) {
+        const existingParcel = await parcelRepo.findOne({ where: { Id: parcelId } });
+        if (!existingParcel) {
+          throw new ErrorWithCode(`Parcel with ID ${parcelId} does not exist.`, 404);
+        }
+        // Check that property doesn't belong to another active project
+        // Could be in Cancelled (23) or Denied (16) projects
+        const allowedStatusIds = [ProjectStatus.CANCELLED, ProjectStatus.DENIED];
+        const existingProjectProperties = await projectPropertiesRepo.find({
           where: {
-            ProjectId: project.Id,
             ParcelId: parcelId,
           },
-        }))
-      ) {
+          relations: {
+            Project: true,
+          },
+        });
+        if (
+          existingProjectProperties.some(
+            (relation) =>
+              relation.ProjectId !== project.Id &&
+              !allowedStatusIds.includes(relation.Project.StatusId),
+          )
+        ) {
+          throw new ErrorWithCode(
+            `Parcel with ID ${parcelId} already belongs to another active project.`,
+            400,
+          );
+        }
+        // Is this a land (0) or subdivision (2)
+        const propertyType = existingParcel.ParentParcelId
+          ? PropertyType.SUBDIVISION
+          : PropertyType.LAND;
+        const entry: Partial<ProjectProperty> = {
+          CreatedById: project.CreatedById,
+          ProjectId: project.Id,
+          PropertyTypeId: propertyType,
+          ParcelId: parcelId,
+        };
+        // Only try to add if this realtion doesn't exist yet
         await projectPropertiesRepo.save(entry);
       }
     }),
@@ -223,49 +225,49 @@ const addProjectParcelRelations = async (project: Project, parcelIds: number[]) 
 const addProjectBuildingRelations = async (project: Project, buildingIds: number[]) => {
   await Promise.all(
     buildingIds?.map(async (buildingId) => {
-      const existingBuilding = await buildingRepo.findOne({ where: { Id: buildingId } });
-      if (!existingBuilding) {
-        throw new ErrorWithCode(`Building with ID ${buildingId} does not exist.`, 404);
-      }
-      // Check that property doesn't belong to another active project
-      // Could be in Cancelled (23) or Denied (16) projects
-      const allowedStatusIds = [ProjectStatus.CANCELLED, ProjectStatus.DENIED];
-      const existingProjectProperties = await projectPropertiesRepo.find({
+      const relationExists = await projectPropertiesRepo.exists({
         where: {
+          ProjectId: project.Id,
           BuildingId: buildingId,
         },
-        relations: {
-          Project: true,
-        },
       });
-      if (
-        existingProjectProperties.some(
-          (relation) =>
-            relation.ProjectId !== project.Id &&
-            !allowedStatusIds.includes(relation.Project.StatusId),
-        )
-      ) {
-        throw new ErrorWithCode(
-          `Building with ID ${buildingId} already belongs to another active project.`,
-          400,
-        );
-      }
-      // Property type building (1)
-      const entry: Partial<ProjectProperty> = {
-        CreatedById: project.CreatedById,
-        ProjectId: project.Id,
-        PropertyTypeId: PropertyType.BUILDING,
-        BuildingId: buildingId,
-      };
-      // Only try to add if this relation doesn't exist yet
-      if (
-        !(await projectPropertiesRepo.exists({
+      if (!relationExists) {
+        const existingBuilding = await buildingRepo.findOne({ where: { Id: buildingId } });
+        if (!existingBuilding) {
+          throw new ErrorWithCode(`Building with ID ${buildingId} does not exist.`, 404);
+        }
+        // Check that property doesn't belong to another active project
+        // Could be in Cancelled (23) or Denied (16) projects
+        const allowedStatusIds = [ProjectStatus.CANCELLED, ProjectStatus.DENIED];
+        const existingProjectProperties = await projectPropertiesRepo.find({
           where: {
-            ProjectId: project.Id,
             BuildingId: buildingId,
           },
-        }))
-      ) {
+          relations: {
+            Project: true,
+          },
+        });
+        if (
+          existingProjectProperties.some(
+            (relation) =>
+              relation.ProjectId !== project.Id &&
+              !allowedStatusIds.includes(relation.Project.StatusId),
+          )
+        ) {
+          throw new ErrorWithCode(
+            `Building with ID ${buildingId} already belongs to another active project.`,
+            400,
+          );
+        }
+        // Property type building (1)
+        const entry: Partial<ProjectProperty> = {
+          CreatedById: project.CreatedById,
+          ProjectId: project.Id,
+          PropertyTypeId: PropertyType.BUILDING,
+          BuildingId: buildingId,
+        };
+        // Only try to add if this relation doesn't exist yet
+
         await projectPropertiesRepo.save(entry);
       }
     }),
@@ -308,25 +310,31 @@ const removeProjectBuildingRelations = async (project: Project, buildingIds: num
   );
 };
 
-const handleProjectNotifications = async (
-  oldProject: DeepPartial<Project>,
-  newProject: DeepPartial<Project>,
-) => {
-  const fromId = oldProject.StatusId;
-  const toId = newProject.StatusId;
-  const notifications = await AppDataSource.getRepository(ProjectStatusNotification).find({
-    where: [
-      { FromStatusId: IsNull(), ToStatusId: toId },
-      { FromStatusId: fromId, ToStatusId: toId },
-    ],
+const handleProjectNotifications = async (oldProject: DeepPartial<Project>, user: SSOUser) => {
+  const projectWithRelations = await AppDataSource.getRepository(Project).findOne({
+    relations: {
+      Agency: true,
+      ProjectProperties: {
+        Building: {
+          Evaluations: true,
+          Fiscals: true,
+        },
+        Parcel: {
+          Evaluations: true,
+          Fiscals: true,
+        },
+      },
+      Notes: true,
+    },
+    where: {
+      Id: oldProject.Id,
+    },
   });
-  for (const notification of notifications) {
-    // eslint-disable-next-line no-console
-    console.log(
-      `Queue notification with id ${notification.Id}, template ${notification.TemplateId}`,
-    );
-    //Actually queue the notification once this is implemented.
-  }
+  const notifs = await notificationServices.generateProjectNotifications(
+    projectWithRelations,
+    oldProject.StatusId,
+  );
+  return Promise.all(notifs.map((notif) => notificationServices.sendNotification(notif, user)));
 };
 
 const handleProjectTasks = async (
@@ -343,7 +351,10 @@ const handleProjectTasks = async (
         ProjectId: project.Id,
         CreatedById: existingTask ? existingTask.CreatedById : project.CreatedById,
         UpdatedById: existingTask ? project.UpdatedById : undefined,
-        CompletedOn: task.IsCompleted ? new Date() : undefined,
+        IsCompleted: task.IsCompleted,
+        CompletedOn: !existingTask?.CompletedOn && task.IsCompleted ? new Date() : undefined,
+        //This CompletedOn logic basically means that you will only ever set the CompletedOn date once, even if you transition between IsCompleted true/false
+        //multiple times. Doing that wouldn't really be the intended flow anyways so this seemed like the safest bet.
       };
       await AppDataSource.getRepository(ProjectTask).save(taskEntity);
     }
@@ -358,7 +369,11 @@ const handleProjectTasks = async (
  * @returns The result of the project update.
  * @throws {ErrorWithCode} If the project name is empty or null, if the project does not exist, if the project number or agency cannot be changed, or if there is an error updating the project.
  */
-const updateProject = async (project: DeepPartial<Project>, propertyIds: ProjectPropertyIds) => {
+const updateProject = async (
+  project: DeepPartial<Project>,
+  propertyIds: ProjectPropertyIds,
+  user: SSOUser,
+) => {
   // Project must still have a name
   // undefined is allowed because it is not always updated
   if (project.Name === null || project.Name === '') {
@@ -392,15 +407,17 @@ const updateProject = async (project: DeepPartial<Project>, propertyIds: Project
         CreatedById: project.UpdatedById,
         ProjectId: project.Id,
         WorkflowId: originalProject.WorkflowId,
-        StatusId: originalProject.StatusId, //I'm assuming that workflow and status should actually be from the now outdated version right?
+        StatusId: originalProject.StatusId,
       });
+      await handleProjectNotifications(originalProject, user); //Assuming that this needs to be here, I don't think notifications should send unless a status transition happens.
     }
 
-    await handleProjectNotifications(originalProject, project);
     await handleProjectTasks({ ...project, CreatedById: project.UpdatedById }, project.Tasks);
 
     // Update Project
-    await projectRepo.save({ ...project, Metadata: newMetadata });
+    await projectRepo.save({ ...project, Metadata: newMetadata, Tasks: undefined });
+    //Seems this save will also try to save Tasks array if present, but if missing the ProjectId it will do weird stuff.
+    //So we could consolidate handleProjectTasks to here if we wanted, but then it might be annoying trying to get the more specific behavior in that function.
 
     // Update related Project Properties
     const existingProjectProperties = await projectPropertiesRepo.find({
@@ -413,27 +430,18 @@ const updateProject = async (project: DeepPartial<Project>, propertyIds: Project
       .map((record) => record.BuildingId)
       .filter((id) => id);
     // Adding new Project Properties
-    const propertiesToAdd: ProjectPropertyIds = {
-      parcels: propertyIds.parcels
-        ? propertyIds.parcels.filter((id) => !existingParcelIds.includes(id))
-        : [],
-      buildings: propertyIds.buildings
-        ? propertyIds.buildings.filter((id) => !existingBuildingIds.includes(id))
-        : [],
-    };
-
-    const { parcels: parcelsToAdd, buildings: buildingsToAdd } = propertiesToAdd;
+    const { parcels: parcelsToAdd, buildings: buildingsToAdd } = propertyIds;
     if (parcelsToAdd) await addProjectParcelRelations(originalProject, parcelsToAdd);
     if (buildingsToAdd) await addProjectBuildingRelations(originalProject, buildingsToAdd);
 
     // Removing the old project properties
-    const propertiesToRemove: ProjectPropertyIds = {
-      parcels: parcelsToAdd ? existingParcelIds.filter((id) => !parcelsToAdd.includes(id)) : [],
-      buildings: buildingsToAdd
-        ? existingBuildingIds.filter((id) => !buildingsToAdd.includes(id))
-        : [],
-    };
-    const { parcels: parcelsToRemove, buildings: buildingsToRemove } = propertiesToRemove;
+    const parcelsToRemove = existingParcelIds.filter(
+      (id) => !parcelsToAdd.includes(id) && existingParcelIds.includes(id),
+    );
+    const buildingsToRemove = existingBuildingIds.filter(
+      (id) => !buildingsToAdd.includes(id) && existingBuildingIds.includes(id),
+    );
+
     if (parcelsToRemove) await removeProjectParcelRelations(originalProject, parcelsToRemove);
     if (buildingsToRemove) await removeProjectBuildingRelations(originalProject, buildingsToRemove);
 
@@ -446,7 +454,9 @@ const updateProject = async (project: DeepPartial<Project>, propertyIds: Project
     await queryRunner.rollbackTransaction();
     logger.warn(e.message);
     if (e instanceof ErrorWithCode) throw e;
-    throw new ErrorWithCode('Error updating project.', 500);
+    throw new ErrorWithCode(`Error updating project: ${e.message}`, 500);
+  } finally {
+    await queryRunner.release();
   }
 };
 
@@ -490,6 +500,8 @@ const deleteProjectById = async (id: number) => {
     logger.warn(e.message);
     if (e instanceof ErrorWithCode) throw e;
     throw new ErrorWithCode('Error deleting project.', 500);
+  } finally {
+    await queryRunner.release();
   }
 };
 
