@@ -54,7 +54,12 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
       b.getNorthEast().lng,
       b.getNorthEast().lat,
     ]);
-    setClusterZoom(map.getZoom());
+    const zoom = map.getZoom();
+    setClusterZoom(zoom);
+    if (zoom < 16) {
+      setSpider({});
+      setSelectedCluster(undefined);
+    }
   };
 
   // Update map once upon load
@@ -78,12 +83,12 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
       const consideredBig = 1000;
       const colourScore = (1 - count / consideredBig) * maxHue;
       const hue = Math.max(0, Math.min(maxHue, colourScore)).toString(10);
-      return ['hsl(', hue, ',80%,50%)'].join('');
+      return ['hsl(', hue, ',60%,70%)'].join('');
     };
 
     if (!icons[count]) {
       icons[count] = L.divIcon({
-        html: `<div class="cluster-marker" style="width: ${size}px; height: ${size}px; background-color: ${getColor()}">
+        html: `<div class="cluster-marker" style="width: ${size}px; height: ${size}px; background-color: ${getColor()}; border: solid 1px white">
         ${count}
       </div>`,
       });
@@ -136,11 +141,6 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
       updateMap();
     },
     moveend: updateMap,
-    click: () => {
-      spiderfier.unspiderfy();
-      setSpider({});
-      setSelectedCluster(undefined);
-    },
   });
 
   return (
@@ -157,8 +157,14 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
               )}
               eventHandlers={{
                 click: () => {
-                  setSelectedCluster(property);
-                  zoomOrSpiderfy(property);
+                  if (spider.markers) {
+                    spiderfier.unspiderfy();
+                    setSpider({});
+                    setSelectedCluster(undefined);
+                  } else {
+                    setSelectedCluster(property);
+                    zoomOrSpiderfy(property);
+                  }
                 },
               }}
             />
