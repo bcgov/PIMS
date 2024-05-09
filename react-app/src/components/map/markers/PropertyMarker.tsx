@@ -5,9 +5,11 @@ import React, { useContext } from 'react';
 import { SelectedPropertyIdentifier } from '@/components/map/MapPropertyDetails';
 import { SelectedMarkerContext } from '@/components/map/ParcelMap';
 import { ClusterGeo } from '@/components/map/InventoryLayer';
+import { LatLngExpression } from 'leaflet';
 
 export interface PropertyMarkerProps {
   property: PropertyGeo & ClusterGeo;
+  position?: LatLngExpression;
 }
 
 const PropertyMarker = (props: PropertyMarkerProps) => {
@@ -18,7 +20,8 @@ const PropertyMarker = (props: PropertyMarkerProps) => {
       position={[property.geometry.coordinates[1], property.geometry.coordinates[0]]}
       icon={getMatchingPropertyPin(
         property.properties.PropertyTypeId,
-        selectedMarker?.id === property.properties.Id && selectedMarker?.type === property.properties.PropertyTypeId,
+        selectedMarker?.id === property.properties.Id &&
+          selectedMarker?.type === property.properties.PropertyTypeId,
       )}
       eventHandlers={{
         click: () => {
@@ -29,6 +32,7 @@ const PropertyMarker = (props: PropertyMarkerProps) => {
           setSelectedMarker(selectedIdentifer);
         },
       }}
+      {...props}
     >
       {/* Popup can go here */}
     </Marker>

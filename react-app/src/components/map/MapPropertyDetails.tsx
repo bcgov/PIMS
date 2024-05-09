@@ -79,11 +79,11 @@ const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
   const { property } = props;
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { setSelectedMarker } = useContext(SelectedMarkerContext)
+  const { setSelectedMarker } = useContext(SelectedMarkerContext);
 
   const handleClose = () => {
     setOpen(false);
-    setSelectedMarker(undefined)
+    setSelectedMarker(undefined);
   };
 
   return (
