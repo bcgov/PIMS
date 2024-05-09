@@ -43,7 +43,6 @@ export const getBuildingById = async (buildingId: number) => {
     },
     where: { Id: buildingId },
   });
-  console.log('******************************************getBuildingById called: ', findBuilding);
   return findBuilding;
 };
 
