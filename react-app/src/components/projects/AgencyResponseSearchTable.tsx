@@ -1,7 +1,7 @@
 import React from 'react';
 import { Building } from '@/hooks/api/useBuildingsApi';
 import { Parcel } from '@/hooks/api/useParcelsApi';
-import { Search } from '@mui/icons-material';
+import { Delete, Search } from '@mui/icons-material';
 import {
   Box,
   Autocomplete,
@@ -10,6 +10,7 @@ import {
   Chip,
   autocompleteClasses,
   SxProps,
+  IconButton,
 } from '@mui/material';
 import { GridColDef, DataGrid } from '@mui/x-data-grid';
 import { useState } from 'react';
@@ -30,6 +31,7 @@ export type BuildingWithType = Building & {
 
 interface IAgencySimpleTable {
   rows: any[];
+  additionalColumns?: GridColDef[];
   sx?: SxProps;
 }
 
@@ -82,7 +84,7 @@ export const AgencySimpleTable = (props: IAgencySimpleTable) => {
       getRowId={(row) => row.Id}
       autoHeight
       hideFooter
-      columns={columns}
+      columns={[...columns, ...(props.additionalColumns ?? [])]}
       sx={props.sx}
       rows={props.rows}
     />
@@ -100,6 +102,7 @@ const AgencySearchTable = (props: IAgencySearchTable) => {
         clearOnBlur={true}
         blurOnSelect={true}
         options={agencyOptions}
+        filterOptions={(options) => options.filter((x) => !rows.find((row) => row.Id === x.value))}
         onChange={(event, data) => {
           const row = ungroupedAgencies.find((a) => a.Id === data.value);
           if (row) {
@@ -141,7 +144,31 @@ const AgencySearchTable = (props: IAgencySearchTable) => {
           />
         )}
       />
-      <AgencySimpleTable rows={rows} />
+      <AgencySimpleTable
+        additionalColumns={[
+          {
+            field: 'Actions',
+            headerName: '',
+            flex: 1,
+            maxWidth: 60,
+            renderCell: (params) => {
+              return (
+                <IconButton
+                  onClick={() => {
+                    const index = rows.findIndex((x) => x.Id === params.row.Id);
+                    if (index != null) {
+                      setRows([...rows.slice(0, index), ...rows.slice(index + 1)]);
+                    }
+                  }}
+                >
+                  <Delete />
+                </IconButton>
+              );
+            },
+          },
+        ]}
+        rows={rows}
+      />
     </Box>
   );
 };
