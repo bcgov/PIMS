@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import useDataLoader from '@/hooks/useDataLoader';
 import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import PropertyMarker from '@/components/map/markers/PropertyMarker';
-import { Marker, useMap } from 'react-leaflet';
+import { Marker, useMap, useMapEvents } from 'react-leaflet';
 import useSupercluster from 'use-supercluster';
 import './clusters.css';
 import L from 'leaflet';
@@ -42,7 +42,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
     }
   }, [data, isLoading]);
 
-  function updateMap() {
+  const updateMap = () => {
     const b = map.getBounds();
     setClusterBounds([
       b.getSouthWest().lng,
@@ -57,15 +57,16 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
     updateMap();
   }, []);
 
-  map.addEventListener('zoom', () => updateMap())
-  map.addEventListener('move', () => updateMap())
-
+  useMapEvents({
+    zoomend: updateMap,
+    moveend: updateMap,
+  })
 
   const { clusters, supercluster } = useSupercluster({
     points: properties,
     bounds: clusterBounds,
     zoom: clusterZoom,
-    options: { radius: clusterZoom * 10, maxZoom: 18 },
+    options: { radius: 65, maxZoom: 18, minZoom: 0, extent: 500 },
     disableRefresh: isLoading,
   });
 
