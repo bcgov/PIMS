@@ -87,16 +87,6 @@ export class Spiderfier {
     // add expanded cluster points to map
     const results = this.addToMap(centerLatlng, children, positions);
 
-    // dim cluster icon
-    this.map.eachLayer((layer) => {
-      if (this.layerMatchesCluster(layer, this.cluster)) {
-        const clusterMarker = layer as Marker;
-        if (clusterMarker.setOpacity) {
-          clusterMarker.setOpacity(0.75);
-        }
-      }
-    });
-
     return results;
   }
 
@@ -106,6 +96,7 @@ export class Spiderfier {
     positions: Array<LeafletPoint>,
   ): { lines?: any[]; markers?: any[] } {
     const { spiderLegPolylineOptions: legOptions } = this.options;
+
     let newPos: LatLng;
     let geojson: PropertyGeo;
     const markers: any[] = [];

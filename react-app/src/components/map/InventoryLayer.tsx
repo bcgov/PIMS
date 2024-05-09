@@ -157,18 +157,6 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
             />
           );
         }
-        // if (!spider.markers?.find((spiderMarker: PropertyGeo & ClusterGeo) => {
-        //   property.geometry.coordinates[0] === spiderMarker.geometry.coordinates[0] &&
-        //   property.geometry.coordinates[1] === spiderMarker.geometry.coordinates[1]
-        // })){
-        //   (
-        //     <PropertyMarker
-        //       key={`${property.properties.Id} + ${property.properties.PropertyTypeId}`}
-        //       property={property}
-        //     />
-        //   );
-        // }
-        // return <></>
         return (
           <PropertyMarker
             key={`${property.properties.Id} + ${property.properties.PropertyTypeId}`}
