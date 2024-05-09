@@ -72,7 +72,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
     points: properties,
     bounds: clusterBounds,
     zoom: clusterZoom,
-    options: { radius: clusterZoom * 10, maxZoom, minZoom: 0, extent: 500 },
+    options: { radius: 65, maxZoom, minZoom: 0, extent: 400 },
     disableRefresh: isLoading,
   });
   // Create icons for clusters
