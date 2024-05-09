@@ -267,7 +267,7 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
           Evaluations: building.Evaluations?.map((evalu) => ({
             ...evalu,
             Value: evalu.Value.replace(/[$,]/g, ''), // Obviously this double map is pretty evil so suggestions welcome.
-          })),
+          })).sort((a, b) => b.Year - a.Year),
         })),
       });
     }

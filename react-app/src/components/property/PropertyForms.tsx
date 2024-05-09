@@ -513,7 +513,7 @@ export const AssessedValue = (props: IAssessedValue) => {
   const { years, title, topLevelKey } = props;
   // Sort the years array in descending order
   const sortedYears = years.sort((a, b) => b - a);
-  console.log('sorting the years:', sortedYears);
+  console.log('sorting the years:', sortedYears, title, topLevelKey);
 
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
