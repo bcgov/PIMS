@@ -116,10 +116,11 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
   const properties = await propertyServices.getPropertiesForMap();
   const mapFeatures = properties.map((property) => ({
     type: 'Feature',
-    properties: { cluster: false, ...property },
+    properties: { ...property },
     geometry: {
       type: 'Point',
-      coordinates: [property.Location.y, property.Location.x],
+      // Coordinates are backward compared to most places. Needed for Superclusterer
+      coordinates: [property.Location.x, property.Location.y], 
     },
   }));
   return res.status(200).send(mapFeatures);

@@ -4,9 +4,10 @@ import { Marker } from 'react-leaflet';
 import React, { useContext } from 'react';
 import { SelectedPropertyIdentifier } from '@/components/map/MapPropertyDetails';
 import { SelectedMarkerContext } from '@/components/map/ParcelMap';
+import { ClusterGeo } from '@/components/map/InventoryLayer';
 
 export interface PropertyMarkerProps {
-  property: PropertyGeo;
+  property: PropertyGeo & ClusterGeo;
 }
 
 const PropertyMarker = (props: PropertyMarkerProps) => {
@@ -14,7 +15,7 @@ const PropertyMarker = (props: PropertyMarkerProps) => {
   const { selectedMarker, setSelectedMarker } = useContext(SelectedMarkerContext);
   return (
     <Marker
-      position={property.geometry.coordinates}
+      position={[property.geometry.coordinates[1], property.geometry.coordinates[0]]}
       icon={getMatchingPropertyPin(
         property.properties.PropertyTypeId,
         selectedMarker?.id === property.properties.Id && selectedMarker?.type === property.properties.PropertyTypeId,

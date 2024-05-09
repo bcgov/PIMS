@@ -13,7 +13,6 @@ export interface PropertyFuzzySearch {
 export interface PropertyGeo {
   type: 'Feature';
   properties: {
-    cluster: boolean;
     Id: number;
     Location: GeoPoint;
     PropertyTypeId: PropertyTypes;
