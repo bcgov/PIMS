@@ -1,10 +1,9 @@
 import usePimsApi from '@/hooks/usePimsApi';
 import React, { useEffect, useState } from 'react';
-import { Marker } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import useDataLoader from '@/hooks/useDataLoader';
 import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
-import { getMatchingPropertyPin } from '@/components/map/markers/propertyPins';
+import PropertyMarker from '@/components/map/markers/PropertyMarker';
 
 export interface InventoryLayerProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -38,13 +37,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
       }}
     >
       {properties.map((property: PropertyGeo) => (
-        <Marker
-          key={`${property.Id} + ${property.PropertyTypeId}`}
-          position={[property.Location.y, property.Location.x]}
-          icon={getMatchingPropertyPin(property.PropertyTypeId)}
-        >
-          {/* TODO: Marker popup goes here */}
-        </Marker>
+        <PropertyMarker key={`${property.Id} + ${property.PropertyTypeId}`} property={property} />
       ))}
     </MarkerClusterGroup>
   );

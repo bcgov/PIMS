@@ -105,8 +105,8 @@ const insertProjectNotificationQueue = async (
   const queueObject = {
     Key: randomUUID(),
     Status: NotificationStatus.Pending,
-    Priority: EmailPriority[template.Priority as keyof typeof EmailPriority],
-    Encoding: EmailPriority[template.Priority as keyof typeof EmailPriority],
+    Priority: template.Priority,
+    Encoding: template.Encoding,
     SendOn: sendDate,
     Subject: nunjucks.renderString(template.Subject, { Project: project }),
     BodyType: template.BodyType,
@@ -121,7 +121,10 @@ const insertProjectNotificationQueue = async (
     Cc: [agency?.CCEmail, template.Cc].filter((a) => a).join(';'),
     Bcc: template.Bcc,
     CreatedById: project.UpdatedById ?? project.CreatedById,
+    ProjectId: project.Id,
+    ToAgencyId: agency?.Id,
   };
+
   const insertedNotif = await AppDataSource.getRepository(NotificationQueue).save(queueObject);
   return insertedNotif;
 };
@@ -137,7 +140,7 @@ const generateProjectNotifications = async (project: Project, previousStatusId: 
   const returnNotifications = [];
   for (const projStatusNotif of projectStatusNotifications) {
     const template = await AppDataSource.getRepository(NotificationTemplate).findOne({
-      where: { Id: projStatusNotif.Id },
+      where: { Id: projStatusNotif.TemplateId },
     });
 
     let overrideTo: string | null = null;
