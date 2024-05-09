@@ -4,12 +4,11 @@
 }
 
 .cluster-marker {
-  color: #fff;
-  background: #1978c8;
+  color: black;
+  font-weight: 400;
+  background: rgb(100, 30, 0);
   border-radius: 50%;
   padding: 10px;
-  width: 10px;
-  height: 10px;
   display: flex;
   justify-content: center;
   align-items: center;

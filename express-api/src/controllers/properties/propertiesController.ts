@@ -120,7 +120,7 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
     geometry: {
       type: 'Point',
       // Coordinates are backward compared to most places. Needed for Superclusterer
-      coordinates: [property.Location.x, property.Location.y], 
+      coordinates: [property.Location.x, property.Location.y],
     },
   }));
   return res.status(200).send(mapFeatures);

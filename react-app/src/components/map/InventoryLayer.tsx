@@ -70,13 +70,20 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
     options: { radius: clusterZoom * 10, maxZoom, minZoom: 0, extent: 500 },
     disableRefresh: isLoading,
   });
-
   // Create icons for clusters
   const icons = {};
-  const fetchIcon = (count, size) => {
+  const makeClusterIcon = (count, size) => {
+    const getColor = () => {
+      const maxHue = 120;
+      const consideredBig = 1000;
+      const colourScore = (1 - count / consideredBig) * maxHue;
+      const hue = Math.max(0, Math.min(maxHue, colourScore)).toString(10);
+      return ['hsl(', hue, ',80%,50%)'].join('');
+    };
+
     if (!icons[count]) {
       icons[count] = L.divIcon({
-        html: `<div class="cluster-marker" style="width: ${size}px; height: ${size}px;">
+        html: `<div class="cluster-marker" style="width: ${size}px; height: ${size}px; background-color: ${getColor()}">
         ${count}
       </div>`,
       });
@@ -144,7 +151,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
             <Marker
               key={`cluster-${property.properties.cluster_id}`}
               position={[property.geometry.coordinates[1], property.geometry.coordinates[0]]} // Flip this back to leaflet-expected positions
-              icon={fetchIcon(
+              icon={makeClusterIcon(
                 property.properties.point_count,
                 10 + (property.properties.point_count / properties.length) * 40,
               )}
