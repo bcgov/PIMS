@@ -211,8 +211,11 @@ const DrawerContents = (props: ContentsProps) => {
         <GridColumnPair leftValue={'PIN'} rightValue={propertyData?.PIN} />
       )}
       <GridColumnPair leftValue={'Name'} rightValue={propertyData?.Name} />
-      <GridColumnPair leftValue={'Ministry'} rightValue={propertyData?.Agency?.Name} />
-      <GridColumnPair leftValue={'Agency'} rightValue={propertyData?.Name} />
+      <GridColumnPair
+        leftValue={'Ministry'}
+        rightValue={propertyData?.Agency?.Parent?.Name ?? propertyData?.Agency?.Name}
+      />
+      <GridColumnPair leftValue={'Agency'} rightValue={propertyData?.Agency?.Name} />
       <GridColumnPair
         leftValue={'Classification'}
         rightValue={propertyData?.Classification?.Name}
@@ -274,7 +277,11 @@ const DrawerContents = (props: ContentsProps) => {
           </RightGridColumn>
           <GridColumnPair
             leftValue={'Tenancy'}
-            rightValue={`${(propertyData as Building)?.BuildingTenancy} %`}
+            rightValue={
+              isNaN(+(propertyData as Building)?.BuildingTenancy)
+                ? (propertyData as Building)?.BuildingTenancy
+                : `${(propertyData as Building)?.BuildingTenancy} %`
+            }
           />
         </>
       ) : (
