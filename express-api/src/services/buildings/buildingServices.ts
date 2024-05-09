@@ -89,12 +89,12 @@ export const updateBuildingById = async (building: DeepPartial<Building>) => {
             EvaluationKeyId: evaluation.EvaluationKeyId,
           },
         });
-        const fiscalEntity: DeepPartial<BuildingFiscal> = {
+        const evaluationEntity: DeepPartial<BuildingEvaluation> = {
           ...evaluation,
           CreatedById: exists ? undefined : building.UpdatedById,
           UpdatedById: exists ? building.UpdatedById : undefined,
         };
-        return fiscalEntity;
+        return evaluationEntity;
       }),
     );
   }
@@ -132,6 +132,7 @@ export const getBuildings = async (filter: BuildingFilter, includeRelations: boo
       AdministrativeArea: includeRelations,
       Classification: includeRelations,
       PropertyType: includeRelations,
+      Evaluations: includeRelations,
     },
     select: {
       Agency: {
@@ -153,6 +154,11 @@ export const getBuildings = async (filter: BuildingFilter, includeRelations: boo
       PropertyType: {
         Id: true,
         Name: true,
+      },
+      Evaluations: {
+        EvaluationKeyId: true,
+        Year: true,
+        Value: true,
       },
     },
     where: {

@@ -507,12 +507,13 @@ interface IAssessedValue {
   years: number[];
   title?: string;
   topLevelKey?: string;
-  showCurrentYear: boolean;
 }
 
 export const AssessedValue = (props: IAssessedValue) => {
-  const { years, title, topLevelKey, showCurrentYear } = props;
-  const currentYear = new Date().getFullYear();
+  const { years, title, topLevelKey } = props;
+  // Sort the years array in descending order
+  const sortedYears = years.sort((a, b) => b - a);
+  console.log('sorting the years:', sortedYears);
 
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
@@ -520,54 +521,38 @@ export const AssessedValue = (props: IAssessedValue) => {
         {title ?? 'Assessed Value'}
       </Typography>
 
-      {/* Render input fields for the current year if it's not in the list */}
-      {showCurrentYear && (!years || !years.includes(currentYear)) && (
-        <Box mb={2} gap={2} display={'flex'} width={'100%'} flexDirection={'row'}>
-          <TextFormField
-            sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-            name={`${topLevelKey ?? ''}Evaluations.${years ? years.length : currentYear}.Year`}
-            label={'Year'}
-            value={`${currentYear}`}
-          />
-          <TextFormField
-            InputProps={{
-              startAdornment: <InputAdornment position="start">$</InputAdornment>,
-            }}
-            sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-            name={`${topLevelKey ?? ''}Evaluations.${years ? years.length : currentYear}.Value`}
-            numeric
-            label={'Value'}
-          />
-        </Box>
-      )}
       <Box overflow={'auto'} paddingTop={'8px'}>
-        {years &&
-          years.map((yr, idx) => (
-            <Box
-              mb={2}
-              gap={2}
-              key={`assessedvaluerow-${yr}${'-' + topLevelKey}`}
-              display={'flex'}
-              width={'100%'}
-              flexDirection={'row'}
-            >
-              <TextFormField
-                sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-                name={`${topLevelKey ?? ''}Evaluations.${idx}.Year`}
-                label={'Year'}
-                value={yr}
-              />
-              <TextFormField
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                }}
-                sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-                name={`${topLevelKey ?? ''}Evaluations.${idx}.Value`}
-                numeric
-                label={'Value'}
-              />
-            </Box>
-          ))}
+        {sortedYears &&
+          sortedYears.map((yr, idx) => {
+            console.log(`Year: ${yr}, Index: ${idx}`);
+            // Your existing code for rendering the component based on yr and idx
+            return (
+              <Box
+                mb={2}
+                gap={2}
+                key={`assessedvaluerow-${yr}${'-' + topLevelKey}`}
+                display={'flex'}
+                width={'100%'}
+                flexDirection={'row'}
+              >
+                <TextFormField
+                  sx={{ minWidth: 'calc(33.3% - 1rem)' }}
+                  name={`${topLevelKey ?? ''}Evaluations.${idx}.Year`}
+                  label={'Year'}
+                  value={yr}
+                />
+                <TextFormField
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  }}
+                  sx={{ minWidth: 'calc(33.3% - 1rem)' }}
+                  name={`${topLevelKey ?? ''}Evaluations.${idx}.Value`}
+                  numeric
+                  label={'Value'}
+                />
+              </Box>
+            );
+          })}
       </Box>
     </Box>
   );

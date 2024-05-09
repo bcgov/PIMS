@@ -231,7 +231,8 @@ interface IPropertyAssessedValueEditDialog {
 }
 
 export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEditDialog) => {
-  const { initialValues, initialRelatedBuildings, open, onCancel, postSubmit } = props;
+  const { initialValues, initialRelatedBuildings, open, onCancel, propertyType, postSubmit } =
+    props;
   const api = usePimsApi();
   const assessedFormMethods = useForm({
     defaultValues: {
@@ -280,62 +281,81 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
       open={open}
       onConfirm={async () => {
         const formValues = assessedFormMethods.getValues();
-        const parcelUpdatePromise = api.parcels.updateParcelById(initialValues.Id, {
-          Id: initialValues.Id,
-          PID: initialValues.PID,
-          ...formValues,
-          Evaluations: formValues.Evaluations.map((evaluation) => ({
-            ...evaluation,
-          })),
-        });
-        console.log('RelatedBuildings array:', formValues.RelatedBuildings);
-        const buildingUpdatePromises = formValues.RelatedBuildings.map(async (building) => {
-          console.log('RelatedBuildings are:', building);
-          const updatedBuilding: Partial<Building> = {
-            ...building, // Copy existing building properties
-            Evaluations: building.Evaluations.map((evaluation) => ({
-              ...evaluation, // Copy existing evaluation properties
-              Value: parseFloat(evaluation.Value), // Parse the value to a float
+        const evalus = { Id: initialValues.Id, PID: initialValues.PID, ...formValues };
+        if (propertyType === 'Parcel') {
+          const parcelUpdatePromise = api.parcels.updateParcelById(initialValues.Id, {
+            Id: initialValues.Id,
+            PID: initialValues.PID,
+            ...formValues,
+            Evaluations: formValues.Evaluations.map((evaluation) => ({
+              ...evaluation,
+              Value: parseFloat(evaluation.Value),
               EvaluationKeyId: 0,
               Year: evaluation.Year,
             })),
-          };
-          await api.buildings.updateBuildingById(building.Id, updatedBuilding); // Update the building
-        });
+          });
+          console.log('RelatedBuildings array:', formValues.RelatedBuildings);
+          let buildingUpdatePromises = [];
 
-        // Wait for both parcel update and building assessment updates to complete
-        await Promise.all([parcelUpdatePromise, ...buildingUpdatePromises]);
+          if (formValues.RelatedBuildings) {
+            buildingUpdatePromises = formValues.RelatedBuildings.map(async (building) => {
+              console.log('RelatedBuildings are:', building);
+              const updatedBuilding: Partial<Building> = {
+                ...building,
+                Evaluations: building.Evaluations.map((evaluation) => ({
+                  ...evaluation,
+                  Value: parseFloat(evaluation.Value),
+                  EvaluationKeyId: 0,
+                  Year: evaluation.Year,
+                })),
+              };
+              await api.buildings.updateBuildingById(building.Id, updatedBuilding); // Update the building
+            });
+          }
+          await Promise.all(buildingUpdatePromises); // Await building updates if there are any
+          await parcelUpdatePromise; // Await parcel update
+        } else if (propertyType === 'Building') {
+          api.buildings.updateBuildingById(initialValues.Id, evalus).then(() => postSubmit());
+        }
         postSubmit();
       }}
       onCancel={async () => onCancel()}
     >
       <FormProvider {...assessedFormMethods}>
-        <AssessedValue
-          years={
-            initialValues?.Evaluations
-              ? initialValues.Evaluations.map((evalu) => evalu.Year)
-              : [
-                  ...new Set([
-                    new Date().getFullYear(),
-                    ...(initialValues?.Evaluations?.map((evalu) => evalu.Year) || []),
-                  ]),
-                ]
+        {/* Initialize yearsFromEvaluations variable */}
+        {(() => {
+          const evaluationYears = initialValues?.Evaluations?.map((evalu) => evalu.Year) ?? [];
+          const currentYear = new Date().getFullYear();
+
+          // Check if currentYear is not in yearsFromEvaluations array
+          if (!evaluationYears.includes(currentYear)) {
+            // Add currentYear to yearsFromEvaluations array
+            evaluationYears.unshift(currentYear);
           }
-          showCurrentYear={
-            !initialValues?.Evaluations?.some((evalu) => evalu.Year === new Date().getFullYear())
-          }
-        />
-        {initialRelatedBuildings?.map((building, idx) => (
-          <AssessedValue
-            title={`Building (${idx + 1}) - ${building.Name + ' - ' + building.Address1}`}
-            key={`assessed-value-${building.Id}`}
-            years={building?.Evaluations?.map((evalu) => evalu.Year)}
-            showCurrentYear={
-              !building?.Evaluations?.some((evalu) => evalu.Year === new Date().getFullYear())
-            }
-            topLevelKey={`RelatedBuildings.${idx}.`}
-          />
-        ))}
+          console.log('yearsFromEvaluations', evaluationYears);
+          return (
+            <>
+              {/* Render top-level AssessedValue with yearsFromEvaluations */}
+              <AssessedValue years={evaluationYears} />
+              {/* Map through initialRelatedBuildings and render AssessedValue components */}
+              {initialRelatedBuildings?.map((building, idx) => {
+                const buildingEvals = building?.Evaluations?.map((evalu) => evalu.Year) ?? [];
+                if (!buildingEvals.includes(currentYear)) {
+                  // Add currentYear to yearsFromEvaluations array
+                  buildingEvals.unshift(currentYear);
+                }
+                return (
+                  <AssessedValue
+                    title={`Building (${idx + 1}) - ${building.Name + ' - ' + building.Address1}`}
+                    key={`assessed-value-${building.Id}`}
+                    years={buildingEvals}
+                    topLevelKey={`RelatedBuildings.${idx}.`}
+                  />
+                );
+              })}
+            </>
+          );
+        })()}
       </FormProvider>
     </ConfirmDialog>
   );
