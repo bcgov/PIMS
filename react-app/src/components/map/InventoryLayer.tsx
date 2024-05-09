@@ -9,6 +9,10 @@ import './clusters.css';
 import L from 'leaflet';
 import { BBox } from 'geojson';
 
+export interface InventoryLayerProps {
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 export interface ClusterGeo {
   properties: {
     // Optionals only on clustered points.
@@ -18,7 +22,8 @@ export interface ClusterGeo {
   };
 }
 
-export const InventoryLayer = () => {
+export const InventoryLayer = (props: InventoryLayerProps) => {
+  const { setLoading } = props;
   const api = usePimsApi();
   const map = useMap();
   const { data, refreshData, isLoading } = useDataLoader(api.properties.propertiesGeoSearch);
@@ -30,7 +35,9 @@ export const InventoryLayer = () => {
   useEffect(() => {
     if (data && data.length > 0) {
       setProperties(data as PropertyGeo[]);
+      setLoading(false);
     } else {
+      setLoading(true);
       refreshData();
     }
   }, [data, isLoading]);
