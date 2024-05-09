@@ -1,4 +1,4 @@
-import { ParcelData } from '@/components/map/ParcelMap';
+import { ParcelData, SelectedMarkerContext } from '@/components/map/ParcelMap';
 import MetresSquared from '@/components/text/MetresSquared';
 import { PropertyTypes } from '@/constants/propertyTypes';
 import { Building } from '@/hooks/api/useBuildingsApi';
@@ -18,7 +18,7 @@ import {
   useTheme,
 } from '@mui/material';
 import L, { LatLng } from 'leaflet';
-import React, { PropsWithChildren, useEffect, useState } from 'react';
+import React, { PropsWithChildren, useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export interface SelectedPropertyIdentifier {
@@ -79,9 +79,11 @@ const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
   const { property } = props;
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { setSelectedMarker } = useContext(SelectedMarkerContext)
 
   const handleClose = () => {
     setOpen(false);
+    setSelectedMarker(undefined)
   };
 
   return (
@@ -125,7 +127,7 @@ const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
             <Link
               target="_blank"
               rel="noopener noreferrer"
-              to={`/properties/${property.type === PropertyTypes.BUILDING ? 'building' : 'parcel'}/${property.id}`}
+              to={`/properties/${property?.type === PropertyTypes.BUILDING ? 'building' : 'parcel'}/${property?.id}`}
               style={{
                 width: '100%',
               }}
@@ -143,7 +145,7 @@ const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
               sx={{
                 marginLeft: '0.5em',
               }}
-              onClick={() => setOpen(false)}
+              onClick={handleClose}
             >
               <Close />
             </IconButton>
