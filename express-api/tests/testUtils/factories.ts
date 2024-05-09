@@ -607,7 +607,7 @@ export const produceNotificationQueue = () => {
     Id: faker.number.int(),
     Key: randomUUID(),
     Status: NotificationStatus.Pending,
-    Priority: EmailPriority.Medium,
+    Priority: EmailPriority.Normal,
     Encoding: EmailEncoding.Utf8,
     SendOn: new Date(),
     To: faker.internet.email(),

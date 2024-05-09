@@ -239,8 +239,12 @@ const getParcelById = async (parcelId: number) => {
   return parcelRepo.findOne({
     relations: {
       ParentParcel: true,
-      Agency: true,
-      AdministrativeArea: true,
+      Agency: {
+        Parent: true,
+      },
+      AdministrativeArea: {
+        RegionalDistrict: true,
+      },
       Classification: true,
       PropertyType: true,
       Evaluations: true,
