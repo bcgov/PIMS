@@ -12,11 +12,13 @@ import { Roles } from '@/constants/roles';
 import { ProjectStatus } from '@/hooks/api/useLookupApi';
 import DisposalPropertiesTable from './DisposalPropertiesSimpleTable';
 import {
+  ProjectAgencyResponseDialog,
   ProjectDocumentationDialog,
   ProjectFinancialDialog,
   ProjectGeneralInfoDialog,
   ProjectPropertiesDialog,
 } from './ProjectDialog';
+import { AgencySimpleTable } from './AgencyResponseSearchTable';
 
 interface IProjectDetail {
   onClose: () => void;
@@ -79,6 +81,7 @@ const ProjectDetail = (props: IProjectDetail) => {
   const [openDisposalPropDialog, setOpenDisposalPropDialog] = useState(false);
   const [openFinancialInfoDialog, setOpenFinancialInfoDialog] = useState(false);
   const [openDocumentationDialog, setOpenDocumentationDialog] = useState(false);
+  const [openAgencyInterestDialog, setOpenAgencyInterestDialog] = useState(false);
 
   const ProjectInfoData = {
     Classification: data?.Status,
@@ -160,6 +163,31 @@ const ProjectDetail = (props: IProjectDetail) => {
         onEdit={() => setOpenFinancialInfoDialog(true)}
       />
       <DataCard
+        title={'Agency Interest'}
+        values={undefined}
+        onEdit={() => setOpenAgencyInterestDialog(true)}
+      >
+        {!data ? ( //TODO: Logic will depend on precense of agency responses
+          <Box display={'flex'} justifyContent={'center'}>
+            <Typography>No agencies registered.</Typography>
+          </Box>
+        ) : (
+          <AgencySimpleTable
+            sx={{
+              borderStyle: 'none',
+              '& .MuiDataGrid-columnHeaders': {
+                borderBottom: 'none',
+              },
+              '& div div div div >.MuiDataGrid-cell': {
+                borderBottom: 'none',
+                borderTop: '1px solid rgba(224, 224, 224, 1)',
+              },
+            }}
+            rows={[]}
+          />
+        )}
+      </DataCard>
+      <DataCard
         customFormatter={customFormatter}
         values={undefined}
         disableEdit={true}
@@ -231,6 +259,16 @@ const ProjectDetail = (props: IProjectDetail) => {
           refreshData();
         }}
         onCancel={() => setOpenDisposalPropDialog(false)}
+      />
+      <ProjectAgencyResponseDialog
+        initialValues={undefined}
+        open={openAgencyInterestDialog}
+        postSubmit={() => {
+          setOpenAgencyInterestDialog(false);
+        }}
+        onCancel={() => {
+          setOpenAgencyInterestDialog(false);
+        }}
       />
     </Box>
   );
