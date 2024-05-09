@@ -73,8 +73,6 @@ export class Spiderfier {
     this.unspiderfy();
     this.cluster = cluster;
     const centerLatlng = GeoJSON.coordsToLatLng(cluster?.geometry?.coordinates as [number, number]);
-    console.log('coords', cluster?.geometry?.coordinates);
-    console.log('centerLatLng', centerLatlng);
     const centerXY = this.map.latLngToLayerPoint(centerLatlng); // screen coordinates
     const clusterId = getClusterId(cluster);
     const children = getClusterPoints(clusterId).map((p) => cloneDeep(p)); // work with a copy of the data
@@ -108,8 +106,6 @@ export class Spiderfier {
     positions: Array<LeafletPoint>,
   ): { lines?: any[]; markers?: any[] } {
     const { spiderLegPolylineOptions: legOptions } = this.options;
-    console.log(centerLatLng);
-
     let newPos: LatLng;
     let geojson: PropertyGeo;
     const markers: any[] = [];

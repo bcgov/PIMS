@@ -102,10 +102,9 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
         supercluster.getClusterExpansionZoom(cluster.properties.cluster_id),
         maxZoom,
       );
-      console.log(expansionZoom);
+
       const showCluster = () => {
         const res = spiderfier.spiderfy(cluster);
-        console.log('spider res', res);
         setSpider(res);
       };
       // already at maxZoom, need to spiderfy child markers
@@ -187,7 +186,6 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
               };
             },
         ) => {
-          // console.log('marker', property);
           return (
             <PropertyMarker
               key={`spider-marker-${spiderMarker.properties.Id} + ${spiderMarker.properties.PropertyTypeId}`}
@@ -208,7 +206,6 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
           },
           index: number,
         ) => {
-          console.log('line', line);
           return <Polyline key={index} positions={line.coords} {...line.options} />;
         },
       )}
