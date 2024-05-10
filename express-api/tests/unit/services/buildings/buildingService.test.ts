@@ -63,6 +63,12 @@ describe('deleteBuildingById', () => {
     await buildingService.deleteBuildingById(buildingToDelete.Id);
     expect(_buildingDelete).toHaveBeenCalledTimes(1);
   });
+  it('should throw a 404 error when the building does not exist', async () => {
+    const buildingToDelete = produceBuilding();
+    _buildingFindOne.mockResolvedValueOnce(null);
+    // Act & Assert
+    await expect(buildingService.deleteBuildingById(buildingToDelete.Id)).rejects.toThrow();
+  });
 });
 describe('getBuildingById', () => {
   beforeEach(() => jest.clearAllMocks());
