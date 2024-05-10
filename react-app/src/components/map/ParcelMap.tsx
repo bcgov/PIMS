@@ -17,12 +17,30 @@ type ParcelMapProps = {
 
 export const SelectedMarkerContext = createContext(null);
 
+/**
+ * ParcelMap component renders a map with various layers and functionalities.
+ *
+ * @param {ParcelMapProps} props - The props object containing the height, mapRef, movable, zoomable, and loadProperties properties.
+ * @returns {JSX.Element} The ParcelMap component.
+ *
+ * @example
+ * ```tsx
+ * <ParcelMap
+ *   height="500px"
+ *   mapRef={mapRef}
+ *   movable={true}
+ *   zoomable={true}
+ *   loadProperties={false}
+ * >
+ *   {children}
+ * </ParcelMap>
+ * ```
+ */
 const ParcelMap = (props: ParcelMapProps) => {
   const MapEvents = () => {
     useMapEvents({});
     return null;
   };
-  // const [clickPosition, setClickPosition] = useState<LatLng>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedMarker, setSelectedMarker] = useState({
     id: undefined,

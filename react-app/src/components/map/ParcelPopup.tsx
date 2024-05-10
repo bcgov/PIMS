@@ -8,14 +8,22 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Popup, useMap, useMapEvents } from 'react-leaflet';
 import './parcelPopup.css';
 
+/**
+ * Renders a popup component that displays information about a parcel on the map.
+ * The popup is triggered by a click event on the map and shows details such as parcel ID, name, class, plan number, owner type, municipality, regional district, and area.
+ * If there are multiple parcels at the clicked location, a select component is displayed to allow the user to choose a specific parcel.
+ *
+ * @returns {JSX.Element} The ParcelPopup component.
+ */
 export const ParcelPopup = () => {
-  const [parcelData, setParcelData] = useState<ParcelData[]>(undefined);
+  const [parcelData, setParcelData] = useState<ParcelData[]>(undefined); // All parcels at that click location.
   const [clickPosition, setClickPosition] = useState<LatLng>(null);
-  const [parcelIndex, setParcelIndex] = useState<number>(0);
+  const [parcelIndex, setParcelIndex] = useState<number>(0); // If multiple, which parcel to show info for.
 
   const map = useMap();
   const api = usePimsApi();
 
+  // If click position changes, refresh parcelData
   useEffect(() => {
     getParcelData();
   }, [clickPosition]);
@@ -54,6 +62,7 @@ export const ParcelPopup = () => {
       <Box display={'inline-flex'}>
         {parcelData ? (
           <>
+            {/* Render a list of PIDs/PINs if there's more than one parcel feature here. */}
             {parcelData.length > 1 ? (
               <ParcelPopupSelect
                 parcelData={parcelData}
@@ -77,6 +86,14 @@ export const ParcelPopup = () => {
 interface ParcelLayerDetailsProps {
   parcel: ParcelData;
 }
+
+/**
+ * Renders the details of a parcel layer.
+ *
+ * @param {ParcelLayerDetailsProps} props - The props for the component.
+ * @param {ParcelData} props.parcel - The parcel data to display.
+ * @returns {JSX.Element} The rendered component.
+ */
 const ParcelLayerDetails = (props: ParcelLayerDetailsProps) => {
   const { parcel } = props;
   return (
@@ -120,6 +137,14 @@ interface ParcelPopupSelectProps {
   onClick?: (index: number) => void;
 }
 
+/**
+ * Renders a list of parcels for selection in the ParcelPopup component.
+ *
+ * @param {ParcelPopupSelectProps} props - The props for the ParcelPopupSelect component.
+ * @param {ParcelData[]} props.parcelData - The array of parcel data to be displayed.
+ * @param {function} props.onClick - The function to be called when a parcel is clicked.
+ * @returns {JSX.Element} The rendered ParcelPopupSelect component.
+ */
 const ParcelPopupSelect = (props: ParcelPopupSelectProps) => {
   const theme = useTheme();
   const { parcelData, onClick } = props;
