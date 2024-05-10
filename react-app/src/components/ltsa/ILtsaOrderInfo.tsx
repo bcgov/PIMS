@@ -80,6 +80,32 @@ export interface ILtsaOrderInfo {
           },
         ];
         legalNotationsOnTitle: string[];
+        chargesOnTitle?: {
+          chargeNumber: string;
+          status: string;
+          enteredDate: string;
+          interAlia: string;
+          chargeRemarks: string;
+          charge: {
+            chargeNumber: string;
+            transactionType: string;
+            applicationReceivedDate: string;
+            chargeOwnershipGroups: {
+              jointTenancyIndication: boolean;
+              interestFractionNumerator: string;
+              interestFractionDenominator: string;
+              ownershipRemarks: string;
+              chargeOwners: {
+                lastNameOrCorpName1: string;
+                incorporationNumber: string;
+              }[];
+            }[];
+            certificatesOfCharge: [];
+            correctionsAltos1: [];
+            corrections: [];
+          };
+          chargeRelease: object;
+        }[];
         duplicateCertificatesOfTitle: string[];
         titleTransfersOrDispositions: string[];
       };
