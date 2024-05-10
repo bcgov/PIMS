@@ -114,5 +114,15 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
   // TODO: parse for filter
   // TODO: check for user agency restrictions
   const properties = await propertyServices.getPropertiesForMap();
-  return res.status(200).send(properties);
+  const mapFeatures = properties.map((property) => ({
+    type: 'Feature',
+    properties: { ...property },
+    geometry: {
+      type: 'Point',
+      // Coordinates are backward compared to most places. Needed for Superclusterer.
+      // Superclusterer expects the exact opposite lat,lng compared to Leaflet
+      coordinates: [property.Location.x, property.Location.y],
+    },
+  }));
+  return res.status(200).send(mapFeatures);
 };
