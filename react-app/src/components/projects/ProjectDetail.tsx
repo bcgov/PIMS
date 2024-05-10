@@ -6,7 +6,9 @@ import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { Project, ProjectMetadata, TierLevel } from '@/hooks/api/useProjectsApi';
 import DetailViewNavigation from '../display/DetailViewNavigation';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { AuthContext } from '@/contexts/authContext';
+import { Roles } from '@/constants/roles';
 import { ProjectStatus } from '@/hooks/api/useLookupApi';
 import DisposalPropertiesTable from './DisposalPropertiesSimpleTable';
 import {
@@ -32,18 +34,19 @@ interface ProjectInfo extends Project {
   TripleBottom: boolean;
 }
 const ProjectDetail = (props: IProjectDetail) => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const api = usePimsApi();
   // const theme = useTheme();
-  const { data, refreshData } = useDataLoader(() => api.projects.getProjectById(Number(id)));
+  const { data, refreshData, isLoading } = useDataLoader(() =>
+    api.projects.getProjectById(Number(id)),
+  );
 
   const userContext = useContext(AuthContext);
   if (!userContext.keycloak.hasRoles([Roles.ADMIN, Roles.AUDITOR], { requireAllRoles: false })) {
     navigate('/');
   }
-  const { data, refreshData, isLoading } = useDataLoader(() =>
-    api.projects.getProjectById(Number(id)),
-  );
+
 
   const { data: tasks, loadOnce: loadTasks } = useDataLoader(() => api.lookup.getTasks());
   loadTasks();
