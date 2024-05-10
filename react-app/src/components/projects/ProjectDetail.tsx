@@ -45,16 +45,13 @@ const ProjectDetail = (props: IProjectDetail) => {
     api.projects.getProjectById(Number(id)),
   );
 
-  const authCheck = () => {
-    try{
-      if (data.retStatus == 403){
-        // TODO: display message with permission error 
-        return false; // look into maybe using redirect
-      };
-    } catch (e) {
-      // do nothing, we get 2 undefined statuses before the real data is sent
+  try{
+    if (data.retStatus == 403){
+      // TODO: display message with permission error 
+      navigate("/"); // look into maybe using redirect
     };
-    return true;
+  } catch (e) {
+    // do nothing, we get 2 undefined statuses before the real data is sent
   };
 
   const { data: tasks, loadOnce: loadTasks } = useDataLoader(() => api.lookup.getTasks());
@@ -176,8 +173,8 @@ const ProjectDetail = (props: IProjectDetail) => {
           ) : (
             <DisposalPropertiesTable
               rows={[
-                ...(data?.Parcels?.map((p) => ({ ...p, PropertyType: 'Parcel' })) ?? []),
-                ...(data?.Buildings?.map((b) => ({ ...b, PropertyType: 'Building' })) ?? []),
+                ...(data?.parsedBody?.Parcels?.map((p) => ({ ...p, PropertyType: 'Parcel' })) ?? []),
+                ...(data?.parsedBody?.Buildings?.map((b) => ({ ...b, PropertyType: 'Building' })) ?? []),
               ]}
             />
           )}
@@ -255,7 +252,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           onClose={async () => setOpenDeleteDialog(false)}
         />
         <ProjectGeneralInfoDialog
-          initialValues={data}
+          initialValues={data?.parsedBody}
           open={openProjectInfoDialog}
           postSubmit={() => {
             setOpenProjectInfoDialog(false);
@@ -264,7 +261,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           onCancel={() => setOpenProjectInfoDialog(false)}
         />
         <ProjectFinancialDialog
-          initialValues={data}
+          initialValues={data?.parsedBody}
           open={openFinancialInfoDialog}
           postSubmit={() => {
             setOpenFinancialInfoDialog(false);
@@ -273,7 +270,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           onCancel={() => setOpenFinancialInfoDialog(false)}
         />
         <ProjectDocumentationDialog
-          initialValues={data}
+          initialValues={data?.parsedBody}
           open={openDocumentationDialog}
           postSubmit={() => {
             setOpenDocumentationDialog(false);
@@ -282,7 +279,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           onCancel={() => setOpenDocumentationDialog(false)}
         />
         <ProjectPropertiesDialog
-          initialValues={data}
+          initialValues={data?.parsedBody}
           open={openDisposalPropDialog}
           postSubmit={() => {
             setOpenDisposalPropDialog(false);
