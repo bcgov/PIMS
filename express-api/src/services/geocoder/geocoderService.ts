@@ -37,7 +37,7 @@ export const getSiteAddresses = async (
 
   const response = await fetch(url.toString(), {
     headers: {
-      apiKey: process.env.GEOCODER__KEY,
+      apiKey: constants.GEOCODER.KEY,
     },
   });
 
@@ -64,7 +64,7 @@ export const getPids = async (siteId: string) => {
   const url = new URL(`/parcels/pids/${siteId}.json`, constants.GEOCODER.HOSTURI);
   const result = await fetch(url.toString(), {
     headers: {
-      apiKey: process.env.GEOCODER_KEY,
+      apiKey: constants.GEOCODER.KEY,
     },
   });
 
