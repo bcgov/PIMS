@@ -16,7 +16,7 @@ import AutocompleteFormField from '../form/AutocompleteFormField';
 const AdministrativeAreaDetail = () => {
   const { id } = useParams();
   const api = usePimsApi();
-  const { data, refreshData } = useDataLoader(() =>
+  const { data, refreshData, isLoading } = useDataLoader(() =>
     api.administrativeAreas.getAdminAreaById(Number(id)),
   );
   const { data: regionalDistricts, loadOnce: loadDistricts } = useDataLoader(
@@ -76,6 +76,7 @@ const AdministrativeAreaDetail = () => {
         onBackClick={() => navigate('/admin/adminAreas')}
       />
       <DataCard
+        loading={isLoading}
         customFormatter={customFormatter}
         values={adminAreaData}
         title={'Administrative area'}

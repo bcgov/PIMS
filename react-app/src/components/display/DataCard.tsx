@@ -1,5 +1,13 @@
 import { columnNameFormatter, dateFormatter } from '@/utilities/formatters';
-import { Button, CardContent, CardHeader, Divider, Grid, Typography } from '@mui/material';
+import {
+  Button,
+  CardContent,
+  CardHeader,
+  Divider,
+  Grid,
+  Skeleton,
+  Typography,
+} from '@mui/material';
 import Card from '@mui/material/Card';
 import React, { PropsWithChildren } from 'react';
 
@@ -7,13 +15,14 @@ type DataCardProps<T> = {
   id?: string;
   values: T;
   title: string;
+  loading?: boolean;
   onEdit: () => void;
   customFormatter?: (key: keyof T, value: any) => string | JSX.Element | undefined;
   disableEdit?: boolean;
 } & PropsWithChildren;
 
 const DataCard = <T,>(props: DataCardProps<T>) => {
-  const { values, title, customFormatter, onEdit, disableEdit } = props;
+  const { values, title, customFormatter, onEdit, disableEdit, loading } = props;
 
   const defaultFormatter = (key: keyof T, val: any) => {
     const customFormat = customFormatter?.(key, val);
@@ -25,6 +34,28 @@ const DataCard = <T,>(props: DataCardProps<T>) => {
     }
 
     return <Typography>{val}</Typography>;
+  };
+
+  const getContent = (children: React.ReactNode) => {
+    if (children) {
+      return loading ? <Skeleton variant="rectangular" height={'150px'} /> : children;
+    } else {
+      return Object.keys(values).map((key, idx) => (
+        <React.Fragment key={`card-data-fragment-${idx}-${key}`}>
+          <Grid container display={'flex'} flexDirection={'row'}>
+            <Grid item xs={3}>
+              <Typography width={'150px'} fontWeight={'bold'}>
+                {columnNameFormatter(key)}
+              </Typography>
+            </Grid>
+            <Grid item xs={9}>
+              {loading ? <Skeleton /> : defaultFormatter(key as keyof T, values[key])}
+            </Grid>
+          </Grid>
+          {idx < Object.keys(values).length - 1 && <Divider sx={{ mt: '1rem', mb: '1rem' }} />}
+        </React.Fragment>
+      ));
+    }
   };
 
   return (
@@ -51,24 +82,7 @@ const DataCard = <T,>(props: DataCardProps<T>) => {
           </Button>
         }
       />
-      <CardContent>
-        {props.children ??
-          Object.keys(values ?? {}).map((key, idx) => (
-            <React.Fragment key={`card-data-fragment-${idx}-${key}`}>
-              <Grid container display={'flex'} flexDirection={'row'}>
-                <Grid item xs={3}>
-                  <Typography width={'150px'} fontWeight={'bold'}>
-                    {columnNameFormatter(key)}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  {defaultFormatter(key as keyof T, values[key])}
-                </Grid>
-              </Grid>
-              {idx < Object.keys(values).length - 1 && <Divider sx={{ mt: '1rem', mb: '1rem' }} />}
-            </React.Fragment>
-          ))}
-      </CardContent>
+      <CardContent>{getContent(props.children)}</CardContent>
     </Card>
   );
 };
