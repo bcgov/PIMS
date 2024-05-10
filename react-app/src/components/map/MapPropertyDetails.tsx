@@ -75,6 +75,13 @@ const DividerGrid = () => {
   );
 };
 
+/**
+ * Renders a drawer component that displays property details.
+ *
+ * @param {MapPropertyDetailsProps} props - The properties passed to the component.
+ * @param {SelectedPropertyIdentifier} props.property - The selected property identifier.
+ * @returns {JSX.Element} The rendered component.
+ */
 const MapPropertyDetails = (props: MapPropertyDetailsProps) => {
   const { property } = props;
   const [open, setOpen] = useState(false);

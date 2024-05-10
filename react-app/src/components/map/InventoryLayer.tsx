@@ -24,6 +24,12 @@ export interface ClusterGeo {
   };
 }
 
+/**
+ * Renders an inventory layer on the map.
+ *
+ * @param {InventoryLayerProps} props - The props for the InventoryLayer component.
+ * @returns {JSX.Element} The rendered InventoryLayer component.
+ */
 export const InventoryLayer = (props: InventoryLayerProps) => {
   const { setLoading } = props;
   const api = usePimsApi();
@@ -56,6 +62,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
     ]);
     const zoom = map.getZoom();
     setClusterZoom(zoom);
+    // If zooming out too far, close the spidered cluster
     if (zoom < 16) {
       setSpider({});
       setSelectedCluster(undefined);
@@ -72,23 +79,26 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
     points: properties,
     bounds: clusterBounds,
     zoom: clusterZoom,
-    options: { radius: 65, maxZoom, minZoom: 0, extent: 400 },
-    disableRefresh: isLoading,
+    options: { radius: 65, maxZoom, minZoom: 0, extent: 400 }, // Controls how markers cluster
+    disableRefresh: isLoading, // So we don't refresh while loading
   });
+
   // Create icons for clusters
   const icons = {};
   const makeClusterIcon = (count, size) => {
-    const getColor = () => {
-      const maxHue = 120;
-      const consideredBig = 1000;
+    // Gets colour based on count of cluster
+    const getColour = () => {
+      const maxHue = 120; // 120 is max for a nice green
+      const consideredBig = 1000; // Change this to affect how the colour scales
       const colourScore = (1 - count / consideredBig) * maxHue;
       const hue = Math.max(0, Math.min(maxHue, colourScore)).toString(10);
       return ['hsl(', hue, ',60%,70%)'].join('');
     };
 
+    // Only make one icon per identical count
     if (!icons[count]) {
       icons[count] = L.divIcon({
-        html: `<div class="cluster-marker" style="width: ${size}px; height: ${size}px; background-color: ${getColor()}; border: solid 1px white">
+        html: `<div class="cluster-marker" style="width: ${size}px; height: ${size}px; background-color: ${getColour()}; border: solid 1px white">
         ${count}
       </div>`,
       });
@@ -101,10 +111,12 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
     getClusterPoints: (clusterId) => supercluster?.getLeaves(clusterId, Infinity) ?? [],
     spiderfyDistanceMultiplier: map.getZoom() * 0.1,
   });
+  // Track the spider object
   const [spider, setSpider] = useState<any>({});
+  // Track the currently selected cluster
   const [selectedCluster, setSelectedCluster] = useState(undefined);
 
-  // on-click handler
+  // Decide if clusters should zoom or expand into spider
   const zoomOrSpiderfy = useCallback(
     (cluster: PropertyGeo & ClusterGeo) => {
       if (!supercluster || !spiderfier || !cluster) {
@@ -123,6 +135,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
       if (expansionZoom === map.getZoom()) {
         showCluster();
       } else {
+        // Zoom towards cluster
         map.setView(
           [cluster.geometry.coordinates[1], cluster.geometry.coordinates[0]],
           expansionZoom,
@@ -137,15 +150,15 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
 
   // Update map after these actions
   useMapEvents({
-    zoomend: () => {
-      updateMap();
-    },
+    zoomend: updateMap,
     moveend: updateMap,
   });
 
   return (
     <>
+      {/* For all cluster objects */}
       {clusters.map((property: PropertyGeo & ClusterGeo) => {
+        // Return a cluster circle if it's a cluster
         if (property.properties.cluster) {
           return (
             <Marker
@@ -170,6 +183,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
             />
           );
         }
+        // Not a cluster, return a regular marker
         return (
           <PropertyMarker
             key={`${property.properties.Id} + ${property.properties.PropertyTypeId}`}
@@ -177,6 +191,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
           />
         );
       })}
+      {/* For all markers on spidered clusters, return a marker */}
       {spider.markers?.map(
         (
           spiderMarker: PropertyGeo &

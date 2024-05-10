@@ -12,6 +12,14 @@ export interface PropertyMarkerProps {
   position?: LatLngExpression;
 }
 
+/**
+ * Renders a marker for a property on a map.
+ *
+ * @param {PropertyMarkerProps} props - The properties for the marker.
+ * @param {PropertyGeo & ClusterGeo} props.property - The property data.
+ * @param {LatLngExpression} [props.position] - The position of the marker.
+ * @returns {JSX.Element} The rendered marker component.
+ */
 const PropertyMarker = (props: PropertyMarkerProps) => {
   const { property } = props;
   const { selectedMarker, setSelectedMarker } = useContext(SelectedMarkerContext);

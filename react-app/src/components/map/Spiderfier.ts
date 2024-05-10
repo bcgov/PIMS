@@ -30,7 +30,9 @@ const defaultOptions: SpiderfierOptions = {
   getClusterPoints: null as any,
 };
 
-/** Deals with overlapping markers in the Leaflet maps API, Google Earth-style */
+/**
+ * Spiderfier class for expanding and displaying cluster points on a map.
+ */
 export class Spiderfier {
   private twoPI = Math.PI * 2;
   private circleFootSeparation = 25; // related to circumference of circle
@@ -60,7 +62,12 @@ export class Spiderfier {
       throw new Error('Must supply getClusterPoints callback');
   }
 
-  // expand a cluster (spiderfy)
+  /**
+   * Expands a cluster and displays its individual points on the map.
+   *
+   * @param cluster - The cluster to be expanded, represented by a PropertyGeo object with ClusterGeo properties.
+   * @returns An object with optional properties 'lines' and 'markers' representing the added lines and markers on the map.
+   */
   spiderfy(cluster: PropertyGeo & ClusterGeo): { lines?: any[]; markers?: any[] } {
     const { getClusterPoints } = this.options;
 
@@ -75,8 +82,10 @@ export class Spiderfier {
     const centerLatlng = GeoJSON.coordsToLatLng(cluster?.geometry?.coordinates as [number, number]);
     const centerXY = this.map.latLngToLayerPoint(centerLatlng); // screen coordinates
     const clusterId = getClusterId(cluster);
+    // cloneDeep from lodash was in the orginal. Not in our package, but seems to work regardless.
     const children = getClusterPoints(clusterId).map((p) => cloneDeep(p)); // work with a copy of the data
 
+    // To spiral or to circle
     let positions: LeafletPoint[];
     if (children.length >= this.circleSpiralSwitchover) {
       positions = this.generatePointsSpiral(children.length, centerXY);
@@ -90,6 +99,14 @@ export class Spiderfier {
     return results;
   }
 
+  /**
+   * Adds the expanded cluster points to the map.
+   *
+   * @param centerLatLng - The center LatLng of the cluster.
+   * @param points - An array of PropertyGeo objects representing the cluster points.
+   * @param positions - An array of LeafletPoint objects representing the positions of the cluster points on the map.
+   * @returns An object with optional properties 'lines' and 'markers' representing the added lines and markers on the map.
+   */
   private addToMap(
     centerLatLng: LatLng,
     points: Array<PropertyGeo>,
@@ -118,7 +135,11 @@ export class Spiderfier {
     return { lines, markers };
   }
 
-  // shrink an expanded cluster (unspiderfy)
+  /**
+   * Removes the spiderfied state from the map by removing the spiderfied markers and restoring the opacity of the cluster markers.
+   *
+   * @returns void
+   */
   unspiderfy() {
     this.map.eachLayer((layer: Layer & AnyProps) => {
       if (layer._spiderfied) {
@@ -138,6 +159,13 @@ export class Spiderfier {
     this.cluster = null;
   }
 
+  /**
+   * Checks if a layer matches a cluster based on their IDs.
+   *
+   * @param layer - The layer to be checked.
+   * @param cluster - The cluster to be compared with.
+   * @returns True if the layer matches the cluster, false otherwise.
+   */
   private layerMatchesCluster(layer: Layer, cluster: (PropertyGeo & ClusterGeo) | null): boolean {
     if (!layer || !cluster) {
       return false;
@@ -148,6 +176,13 @@ export class Spiderfier {
     return id !== null && id !== undefined && id === targetId;
   }
 
+  /**
+   * Generates an array of LeafletPoint objects representing the positions of the cluster points on the map in a circular pattern.
+   *
+   * @param count - The number of cluster points.
+   * @param center - The center LeafletPoint of the cluster.
+   * @returns An array of LeafletPoint objects representing the positions of the cluster points on the map.
+   */
   private generatePointsCircle(count: number, center: LeafletPoint): LeafletPoint[] {
     const circumference =
       this.options.spiderfyDistanceMultiplier * this.circleFootSeparation * (2 + count);
@@ -172,6 +207,13 @@ export class Spiderfier {
     return result;
   }
 
+  /**
+   * Generates an array of LeafletPoint objects representing the positions of the cluster points on the map in a spiral pattern.
+   *
+   * @param count - The number of cluster points.
+   * @param center - The center LeafletPoint of the cluster.
+   * @returns An array of LeafletPoint objects representing the positions of the cluster points on the map.
+   */
   private generatePointsSpiral(count: number, center: LeafletPoint): LeafletPoint[] {
     const spiderfyDistanceMultiplier = this.options.spiderfyDistanceMultiplier;
     const separation = spiderfyDistanceMultiplier * this.spiralFootSeparation;

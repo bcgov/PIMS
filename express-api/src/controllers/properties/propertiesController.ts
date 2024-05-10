@@ -119,7 +119,8 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
     properties: { ...property },
     geometry: {
       type: 'Point',
-      // Coordinates are backward compared to most places. Needed for Superclusterer
+      // Coordinates are backward compared to most places. Needed for Superclusterer.
+      // Superclusterer expects the exact opposite lat,lng compared to Leaflet
       coordinates: [property.Location.x, property.Location.y],
     },
   }));
