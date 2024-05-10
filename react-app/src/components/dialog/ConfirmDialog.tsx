@@ -1,4 +1,4 @@
-import { ButtonProps } from '@mui/material';
+import { ButtonProps, DialogProps } from '@mui/material';
 import BaseDialog from './BaseDialog';
 import DualActionButtons from './DualActionButtons';
 import React, { PropsWithChildren } from 'react';
@@ -10,15 +10,25 @@ interface IConfirmDialog extends PropsWithChildren {
   onCancel: () => Promise<void>;
   confirmButtonText?: string;
   confirmButtonProps?: ButtonProps;
+  dialogProps?: Omit<DialogProps, 'open'>;
 }
 
 const ConfirmDialog = (props: IConfirmDialog) => {
-  const { title, open, onConfirm, onCancel, confirmButtonProps, confirmButtonText, children } =
-    props;
+  const {
+    title,
+    open,
+    onConfirm,
+    onCancel,
+    confirmButtonProps,
+    confirmButtonText,
+    children,
+    dialogProps,
+  } = props;
   return (
     <BaseDialog
       open={open}
       title={title}
+      dialogProps={dialogProps}
       actions={
         <DualActionButtons
           onCancel={onCancel}
