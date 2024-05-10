@@ -48,21 +48,8 @@ const getProjectById = async (id: number) => {
       TierLevel: true,
       Status: true,
       Risk: true,
-      Tasks: true,
       StatusHistory: true,
       Notifications: true,
-      ProjectProperties: {
-        Parcel: {
-          Agency: true,
-          Evaluations: true,
-          Fiscals: true,
-        },
-        Building: {
-          Agency: true,
-          Evaluations: true,
-          Fiscals: true,
-        },
-      },
     },
     select: {
       Workflow: {
@@ -92,7 +79,42 @@ const getProjectById = async (id: number) => {
       },
     },
   });
-  return project;
+  if (!project) {
+    return null;
+  }
+  const projectProperties = await AppDataSource.getRepository(ProjectProperty).find({
+    relations: {
+      Parcel: {
+        Agency: true,
+        Evaluations: true,
+        Fiscals: true,
+      },
+      Building: {
+        Agency: true,
+        Evaluations: true,
+        Fiscals: true,
+      },
+    },
+    where: {
+      ProjectId: id,
+    },
+  });
+  const agencyResponses = await AppDataSource.getRepository(ProjectAgencyResponse).find({
+    where: {
+      ProjectId: id,
+    },
+  });
+  const projectTasks = await AppDataSource.getRepository(ProjectTask).find({
+    where: {
+      ProjectId: id,
+    },
+  });
+  return {
+    ...project,
+    ProjectProperties: projectProperties,
+    AgencyResponses: agencyResponses,
+    Tasks: projectTasks,
+  };
 };
 
 /**
@@ -139,7 +161,7 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
     const { parcels, buildings } = propertyIds;
     if (parcels) await addProjectParcelRelations(newProject, parcels);
     if (buildings) await addProjectBuildingRelations(newProject, buildings);
-    await handleProjectTasks(newProject, project.Tasks);
+    await handleProjectTasks(newProject);
     await queryRunner.commitTransaction();
     return newProject;
   } catch (e) {
@@ -337,12 +359,9 @@ const handleProjectNotifications = async (oldProject: DeepPartial<Project>, user
   return Promise.all(notifs.map((notif) => notificationServices.sendNotification(notif, user)));
 };
 
-const handleProjectTasks = async (
-  project: DeepPartial<Project>,
-  tasks: DeepPartial<ProjectTask[]>,
-) => {
-  if (tasks?.length) {
-    for (const task of tasks) {
+const handleProjectTasks = async (project: DeepPartial<Project>) => {
+  if (project?.Tasks?.length) {
+    for (const task of project.Tasks) {
       const existingTask = await AppDataSource.getRepository(ProjectTask).findOne({
         where: { ProjectId: project.Id, TaskId: task.TaskId },
       });
@@ -358,6 +377,30 @@ const handleProjectTasks = async (
       };
       await AppDataSource.getRepository(ProjectTask).save(taskEntity);
     }
+  }
+};
+
+const handleProjectAgencyResponses = async (newProject: DeepPartial<Project>) => {
+  if (newProject.AgencyResponses) {
+    const existingResponses = await AppDataSource.getRepository(ProjectAgencyResponse).find({
+      where: {
+        ProjectId: newProject.Id,
+      },
+    });
+    const removeResponses = existingResponses.filter(
+      (r) => !newProject.AgencyResponses.find((a) => a.AgencyId === r.AgencyId),
+    );
+    await AppDataSource.getRepository(ProjectAgencyResponse).delete({
+      AgencyId: In(removeResponses.map((a) => a.AgencyId)),
+      ProjectId: newProject.Id,
+    });
+    await AppDataSource.getRepository(ProjectAgencyResponse).save(
+      newProject.AgencyResponses.map((resp) => ({
+        ...resp,
+        ProjectId: newProject.Id,
+        CreatedById: newProject.CreatedById,
+      })),
+    );
   }
 };
 
@@ -379,7 +422,9 @@ const updateProject = async (
   if (project.Name === null || project.Name === '') {
     throw new ErrorWithCode('Projects must have a name.', 400);
   }
-  const originalProject = await projectRepo.findOne({ where: { Id: project.Id } });
+  const originalProject = await projectRepo.findOne({
+    where: { Id: project.Id },
+  });
   if (!originalProject) {
     throw new ErrorWithCode('Project does not exist.', 404);
   }
@@ -412,12 +457,19 @@ const updateProject = async (
       await handleProjectNotifications(originalProject, user); //Assuming that this needs to be here, I don't think notifications should send unless a status transition happens.
     }
 
-    await handleProjectTasks({ ...project, CreatedById: project.UpdatedById }, project.Tasks);
+    await handleProjectTasks({ ...project, CreatedById: project.UpdatedById });
+    await handleProjectAgencyResponses({ ...project, CreatedById: project.UpdatedById });
 
     // Update Project
-    await projectRepo.save({ ...project, Metadata: newMetadata, Tasks: undefined });
+    await projectRepo.save({
+      ...project,
+      Metadata: newMetadata,
+      Tasks: undefined,
+      AgencyResponses: undefined,
+    });
     //Seems this save will also try to save Tasks array if present, but if missing the ProjectId it will do weird stuff.
     //So we could consolidate handleProjectTasks to here if we wanted, but then it might be annoying trying to get the more specific behavior in that function.
+    //Same deal with AgencyResponses
 
     // Update related Project Properties
     const existingProjectProperties = await projectPropertiesRepo.find({
