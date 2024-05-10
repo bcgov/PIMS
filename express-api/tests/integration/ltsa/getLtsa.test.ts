@@ -1,4 +1,4 @@
-import { ILtsaOrder } from '@/controllers/ltsa/ILtsaOrder';
+import { ILtsaOrder } from '@/services/ltsa/interfaces/ILtsaOrder';
 import app from '@/express';
 import supertest from 'supertest';
 

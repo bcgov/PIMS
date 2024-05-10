@@ -7,6 +7,14 @@ const config = {
     secondsToDelay: process.env.CHES_SECONDS_TO_DELAY, // Added in seconds to the delayTS to delay the email send date.
     emailEnabled: process.env.CHES_EMAIL_ENABLED === 'true', // If false, emails will not send at all.
   },
+  ltsa: {
+    authurl: process.env.LTSA_AUTH_URL,
+    hosturl: process.env.LTSA_HOST_URL,
+    integratorUsername: process.env.LTSA_INTEGRATOR_USERNAME,
+    integratorPassword: process.env.LTSA_INTEGRATOR_PASSWORD,
+    username: process.env.LTSA_USERNAME,
+    password: process.env.LTSA_PASSWORD,
+  },
 };
 
 const getConfig = () => {
