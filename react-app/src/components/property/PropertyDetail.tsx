@@ -25,9 +25,14 @@ import { zeroPadPID } from '@/utilities/formatters';
 import ParcelMap from '../map/ParcelMap';
 import { Map } from 'leaflet';
 import { Room } from '@mui/icons-material';
+import { ILtsaOrderInfo } from '../ltsa/ILtsaOrderInfo';
 
 interface IPropertyDetail {
   onClose: () => void;
+}
+interface ILtsaInfo {
+  ltsa: ILtsaOrderInfo;
+  pid?: string;
 }
 
 const PropertyDetail = (props: IPropertyDetail) => {
@@ -89,6 +94,17 @@ const PropertyDetail = (props: IPropertyDetail) => {
       map?.setView([parcel.Location.y, parcel.Location.x], 17);
     }
   }, [building, parcel, map]);
+
+ const PropertyDetail = (props: IPropertyDetail) => {
+    if (parcelId && parcel){
+      TitleNumber: 
+      LegalDescription:
+      TitleStatus: 
+      SalesHistory:
+      ApplicationReceived:
+      EnteredOn:
+      }
+        };
 
   const assessedValues = useMemo(() => {
     if (parcelId && parcel) {
@@ -193,6 +209,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const [openInformationDialog, setOpenInformationDialog] = useState(false);
   const [openNetBookDialog, setOpenNetBookDialog] = useState(false);
   const [openAssessedValueDialog, setOpenAssessedValueDialog] = useState(false);
+  const [openLTSADialog, setOpenLTSADialog] = useState(false);
 
   return (
     <CollapsibleSidebar
@@ -226,7 +243,17 @@ const PropertyDetail = (props: IPropertyDetail) => {
           onEdit={() => setOpenInformationDialog(true)}
         />
         <DataCard
+<<<<<<< Updated upstream
           loading={propertyLoading}
+=======
+          customFormatter={customFormatter}
+          values={LtsaData}
+          title={'Title & Ownership details'}
+          disableEdit={true}
+          onEdit={() => setOpenLTSADialog(false)}
+        />
+        <DataCard
+>>>>>>> Stashed changes
           id={`${buildingOrParcel} net book value`}
           values={undefined}
           title={`${buildingOrParcel} net book value`}
