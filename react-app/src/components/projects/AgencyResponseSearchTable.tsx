@@ -14,11 +14,14 @@ import {
 } from '@mui/material';
 import { GridColDef, DataGrid } from '@mui/x-data-grid';
 import { useState } from 'react';
-import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
+import { ISelectMenuItem } from '../form/SelectFormField';
+import { Agency } from '@/hooks/api/useAgencyApi';
 
 interface IAgencySearchTable {
   rows: any[];
   setRows: (a: any[]) => void;
+  options: ISelectMenuItem[];
+  agencies: Agency[];
 }
 
 export type ParcelWithType = Parcel & {
@@ -92,19 +95,18 @@ export const AgencySimpleTable = (props: IAgencySimpleTable) => {
 };
 
 const AgencySearchTable = (props: IAgencySearchTable) => {
-  const { rows, setRows } = props;
+  const { rows, setRows, agencies, options } = props;
   const [autoCompleteVal, setAutoCompleteVal] = useState(null);
-  const { agencyOptions, ungroupedAgencies } = useGroupedAgenciesApi();
 
   return (
     <Box display={'flex'} minWidth={'700px'} flexDirection={'column'} gap={'1rem'}>
       <Autocomplete
         clearOnBlur={true}
         blurOnSelect={true}
-        options={agencyOptions}
+        options={options}
         filterOptions={(options) => options.filter((x) => !rows.find((row) => row.Id === x.value))}
         onChange={(event, data) => {
-          const row = ungroupedAgencies.find((a) => a.Id === data.value);
+          const row = agencies.find((a) => a.Id === data.value);
           if (row) {
             setRows([...rows, row]);
             setAutoCompleteVal('');

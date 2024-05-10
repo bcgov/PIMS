@@ -20,6 +20,7 @@ import {
 } from './ProjectDialog';
 import { AgencySimpleTable } from './AgencyResponseSearchTable';
 import CollapsibleSidebar from '../layout/CollapsibleSidebar';
+import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
 
 interface IProjectDetail {
   onClose: () => void;
@@ -56,6 +57,8 @@ const ProjectDetail = (props: IProjectDetail) => {
     api.lookup.getProjectStatuses(),
   );
   loadStatuses();
+
+  const { ungroupedAgencies, agencyOptions } = useGroupedAgenciesApi();
 
   const collectedTasksByStatus = useMemo((): Record<string, Array<any>> => {
     if (!data || !tasks || !statuses) {
@@ -181,12 +184,13 @@ const ProjectDetail = (props: IProjectDetail) => {
           onEdit={() => setOpenFinancialInfoDialog(true)}
         />
         <DataCard
+          loading={isLoading}
           title={agencyInterest}
           values={undefined}
           id={agencyInterest}
           onEdit={() => setOpenAgencyInterestDialog(true)}
         >
-          {!data ? ( //TODO: Logic will depend on precense of agency responses
+          {!data?.AgencyResponses?.length ? ( //TODO: Logic will depend on precense of agency responses
             <Box display={'flex'} justifyContent={'center'}>
               <Typography>No agencies registered.</Typography>
             </Box>
@@ -202,7 +206,13 @@ const ProjectDetail = (props: IProjectDetail) => {
                   borderTop: '1px solid rgba(224, 224, 224, 1)',
                 },
               }}
-              rows={[]}
+              rows={
+                data?.AgencyResponses && ungroupedAgencies
+                  ? data?.AgencyResponses?.map((resp) =>
+                      ungroupedAgencies?.find((agc) => agc.Id === resp.AgencyId),
+                    )
+                  : []
+              }
             />
           )}
         </DataCard>
@@ -281,10 +291,13 @@ const ProjectDetail = (props: IProjectDetail) => {
           onCancel={() => setOpenDisposalPropDialog(false)}
         />
         <ProjectAgencyResponseDialog
-          initialValues={undefined}
+          agencies={ungroupedAgencies}
+          options={agencyOptions}
+          initialValues={data}
           open={openAgencyInterestDialog}
           postSubmit={() => {
             setOpenAgencyInterestDialog(false);
+            refreshData();
           }}
           onCancel={() => {
             setOpenAgencyInterestDialog(false);
