@@ -5,10 +5,10 @@ import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import PropertyMarker from '@/components/map/markers/PropertyMarker';
 import { Marker, Polyline, useMap, useMapEvents } from 'react-leaflet';
 import useSupercluster from 'use-supercluster';
-import './clusters.css';
+import './clusterHelpers/clusters.css';
 import L from 'leaflet';
 import { BBox } from 'geojson';
-import { Spiderfier } from '@/components/map/Spiderfier';
+import { Spiderfier } from '@/components/map/clusterHelpers/Spiderfier';
 
 export interface InventoryLayerProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
