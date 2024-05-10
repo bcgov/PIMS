@@ -1,7 +1,7 @@
 /* Overriding unsettable popup width of 301px */
 .full-size {
   width: auto;
-  .leaflet-popup-content-wrapper{
+  .leaflet-popup-content-wrapper {
     .leaflet-popup-content {
       width: auto !important;
       min-width: 400px;
