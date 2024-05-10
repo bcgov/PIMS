@@ -6,9 +6,9 @@ import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { Project, ProjectMetadata, TierLevel } from '@/hooks/api/useProjectsApi';
 import DetailViewNavigation from '../display/DetailViewNavigation';
-import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '@/contexts/authContext';
 import { Roles } from '@/constants/roles';
+import { redirect, useNavigate, useParams } from 'react-router-dom';
 import { ProjectStatus } from '@/hooks/api/useLookupApi';
 import DisposalPropertiesTable from './DisposalPropertiesSimpleTable';
 import {
@@ -42,11 +42,17 @@ const ProjectDetail = (props: IProjectDetail) => {
     api.projects.getProjectById(Number(id)),
   );
 
-  const userContext = useContext(AuthContext);
-  if (!userContext.keycloak.hasRoles([Roles.ADMIN, Roles.AUDITOR], { requireAllRoles: false })) {
-    navigate('/');
-  }
-
+  const authCheck = () => {
+    try{
+      if (data.retStatus == 403){
+        // TODO: display message with permission error 
+        return false; // look into maybe using redirect
+      };
+    } catch (e) {
+      // do nothing, we get 2 undefined statuses before the real data is sent
+    };
+    return true;
+  };
 
   const { data: tasks, loadOnce: loadTasks } = useDataLoader(() => api.lookup.getTasks());
   loadTasks();
@@ -63,7 +69,7 @@ const ProjectDetail = (props: IProjectDetail) => {
     //Somewhat evil reduce where we collect information from the status and tasks lookup so that we can
     //get data for the status and task names to be displayed when we enumarete the tasks associated to the project itself
     //in the documentation history section.
-    return data?.Tasks.reduce((acc: Record<string, Array<any>>, curr) => {
+    return data?.parsedBody.Tasks.reduce((acc: Record<string, Array<any>>, curr) => {
       const fullTask = tasks.find((a) => a.Id === curr.TaskId);
       const fullStatus = statuses.find((a) => a.Id === fullTask.StatusId);
       if (!acc[fullStatus.Name]) {
@@ -83,23 +89,25 @@ const ProjectDetail = (props: IProjectDetail) => {
   const [openDocumentationDialog, setOpenDocumentationDialog] = useState(false);
 
   const ProjectInfoData = {
-    Classification: data?.Status,
-    ProjectNumber: data?.ProjectNumber,
-    Name: data?.Name,
-    AssignTier: data?.TierLevel,
-    Notes: data?.Description,
+    Classification: data?.parsedBody.Status,
+    ProjectNumber: data?.parsedBody.ProjectNumber,
+    Name: data?.parsedBody.Name,
+    AssignTier: data?.parsedBody.TierLevel,
+    Notes: data?.parsedBody.Description,
   };
 
   const currencyFormatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
   const FinancialInformationData = {
-    AssessedValue: data?.Assessed,
-    NetBookValue: data?.NetBook,
-    EstimatedMarketValue: data?.Market,
-    AppraisedValue: data?.Appraised,
-    EstimatedSalesCost: currencyFormatter.format(data?.Metadata?.salesCost),
-    EstimatedProgramRecoveryFees: currencyFormatter.format(data?.Metadata?.programCost),
+
+    AssessedValue: data?.parsedBody.Assessed,
+    NetBookValue: data?.parsedBody.NetBook,
+    EstimatedMarketValue: data?.parsedBody.Market,
+    AppraisedValue: data?.parsedBody.Appraised,
+    EstimatedSalesCost: data?.parsedBody.Metadata?.salesCost,
+    EstimatedProgramRecoveryFees: data?.parsedBody.Metadata?.programCost,
   };
 
+  // const classification = useClassificationStyle();
   const customFormatter = (key: keyof ProjectInfo, val: any) => {
     switch (key) {
       case 'Classification':
@@ -148,8 +156,8 @@ const ProjectDetail = (props: IProjectDetail) => {
         ) : (
           <DisposalPropertiesTable
             rows={[
-              ...(data?.Parcels?.map((p) => ({ ...p, PropertyType: 'Parcel' })) ?? []),
-              ...(data?.Buildings?.map((b) => ({ ...b, PropertyType: 'Building' })) ?? []),
+              ...(data?.parsedBody.Parcels?.map((p) => ({ ...p, PropertyType: 'Parcel' })) ?? []),
+              ...(data?.parsedBody.Buildings?.map((b) => ({ ...b, PropertyType: 'Building' })) ?? []),
             ]}
           />
         )}
@@ -199,7 +207,7 @@ const ProjectDetail = (props: IProjectDetail) => {
         onClose={async () => setOpenDeleteDialog(false)}
       />
       <ProjectGeneralInfoDialog
-        initialValues={data}
+        initialValues={data.parsedBody}
         open={openProjectInfoDialog}
         postSubmit={() => {
           setOpenProjectInfoDialog(false);
@@ -208,7 +216,7 @@ const ProjectDetail = (props: IProjectDetail) => {
         onCancel={() => setOpenProjectInfoDialog(false)}
       />
       <ProjectFinancialDialog
-        initialValues={data}
+        initialValues={data.parsedBody}
         open={openFinancialInfoDialog}
         postSubmit={() => {
           setOpenFinancialInfoDialog(false);
@@ -217,7 +225,7 @@ const ProjectDetail = (props: IProjectDetail) => {
         onCancel={() => setOpenFinancialInfoDialog(false)}
       />
       <ProjectDocumentationDialog
-        initialValues={data}
+        initialValues={data.parsedBody}
         open={openDocumentationDialog}
         postSubmit={() => {
           setOpenDocumentationDialog(false);
@@ -226,7 +234,7 @@ const ProjectDetail = (props: IProjectDetail) => {
         onCancel={() => setOpenDocumentationDialog(false)}
       />
       <ProjectPropertiesDialog
-        initialValues={data}
+        initialValues={data.parsedBody}
         open={openDisposalPropDialog}
         postSubmit={() => {
           setOpenDisposalPropDialog(false);
@@ -235,6 +243,7 @@ const ProjectDetail = (props: IProjectDetail) => {
         onCancel={() => setOpenDisposalPropDialog(false)}
       />
     </Box>
+
   );
 };
 
