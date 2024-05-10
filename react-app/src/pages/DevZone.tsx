@@ -4,7 +4,7 @@ import ParcelMap from '@/components/map/ParcelMap';
 import React from 'react';
 
 const Dev = () => {
-  return <ParcelMap height="100%" loadProperties />;
+  return <ParcelMap height="100%" loadProperties={false} />;
 };
 
 export default Dev;
