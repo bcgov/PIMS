@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import controllers from '@/controllers';
+import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
 describe('UNIT - Testing controllers for /ltsa routes', () => {
   const mockRequest = {
@@ -22,32 +23,25 @@ describe('UNIT - Testing controllers for /ltsa routes', () => {
     json: jest.fn().mockReturnThis(),
   } as unknown as Response;
 
-  // TODO: remove stub test when controller is complete
-  it('should return the stub response of 501', async () => {
+  it('should return status 200 and LTSA information', async () => {
     mockRequest.query = {
-      id: '000382345',
-    };
-
-    await controllers.getLTSA(mockRequest, mockResponse);
-    expect(mockResponse.status).toHaveBeenLastCalledWith(501);
-  });
-
-  // TODO: enable other tests when controller is complete
-  xit('should return status 200 and LTSA information', async () => {
-    mockRequest.query = {
-      id: '000382345',
+      pid: '000382345',
     };
 
     await controllers.getLTSA(mockRequest, mockResponse);
     expect(mockResponse.status).toHaveBeenLastCalledWith(200);
   });
 
-  xit('should return status 404 when PID is not found', async () => {
+  it('should throw an error if the when PID is invalid', async () => {
     mockRequest.query = {
-      id: 'notapid',
+      pid: 'notapid',
     };
 
-    await controllers.getLTSA(mockRequest, mockResponse);
-    expect(mockResponse.status).toHaveBeenLastCalledWith(404);
+    expect(async () => await controllers.getLTSA(mockRequest, mockResponse)).rejects.toThrow(
+      new ErrorWithCode(
+        '(LTSA) notapid is an invalid parcel identifier (PID) format. Please check your records and try again. [50201]',
+        400,
+      ),
+    );
   });
 });
