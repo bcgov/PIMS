@@ -1,10 +1,12 @@
 import { AppDataSource } from '@/appDataSource';
 import { Parcel } from '@/typeorm/Entities/Parcel';
-import { produceParcel } from 'tests/testUtils/factories';
+import { produceParcel, produceParcelFiscal } from 'tests/testUtils/factories';
 import { DeepPartial } from 'typeorm';
 import parcelService from '@/services/parcels/parcelServices';
 import { ParcelFilterSchema } from '@/services/parcels/parcelSchema';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import { ParcelFiscal } from '@/typeorm/Entities/ParcelFiscal';
+import { ParcelEvaluation } from '@/typeorm/Entities/ParcelEvaluation';
 
 //jest.setTimeout(30000);
 
@@ -18,9 +20,20 @@ const _parcelDelete = jest
   .spyOn(parcelRepo, 'delete')
   .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
 
-const _parcelFindOne = jest
-  .spyOn(parcelRepo, 'findOne')
-  .mockImplementation(async () => produceParcel());
+const _parcelFindOne = jest.spyOn(parcelRepo, 'findOne').mockImplementation(async () => {
+  const parcel = produceParcel();
+  const { Id } = parcel;
+  produceParcelFiscal(Id);
+  return parcel;
+});
+
+const _parcelFiscalExists = jest
+  .spyOn(AppDataSource.getRepository(ParcelFiscal), 'exists')
+  .mockImplementation(async () => true);
+
+const _parcelEvaluationExists = jest
+  .spyOn(AppDataSource.getRepository(ParcelEvaluation), 'exists')
+  .mockImplementation(async () => true);
 
 jest.spyOn(parcelRepo, 'find').mockImplementation(async () => [produceParcel(), produceParcel()]);
 
@@ -125,6 +138,15 @@ describe('UNIT - Parcel Services', () => {
     it('should throw an error if PID is not in schema', () => {
       const parcel = {};
       expect(async () => await parcelService.updateParcel(parcel)).rejects.toThrow();
+    });
+
+    it('should update Fiscals and Evaluations when they exist in the building object', async () => {
+      const updateParcel = produceParcel();
+      _parcelFindOne.mockResolvedValueOnce(updateParcel);
+
+      await parcelService.updateParcel(updateParcel);
+      expect(_parcelFiscalExists).toHaveBeenCalledTimes(1);
+      expect(_parcelEvaluationExists).toHaveBeenCalledTimes(1);
     });
   });
 

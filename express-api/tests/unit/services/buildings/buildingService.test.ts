@@ -1,9 +1,11 @@
 import { AppDataSource } from '@/appDataSource';
 import { Building } from '@/typeorm/Entities/Building';
-import { produceBuilding } from 'tests/testUtils/factories';
+import { produceBuilding, produceBuildingFiscal } from 'tests/testUtils/factories';
 import { DeepPartial } from 'typeorm';
 import * as buildingService from '@/services/buildings/buildingServices';
 import { BuildingFilter, BuildingFilterSchema } from '@/services/buildings/buildingSchema';
+import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
+import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
 
 const buildingRepo = AppDataSource.getRepository(Building);
 
@@ -15,9 +17,20 @@ const _buildingDelete = jest
   .spyOn(buildingRepo, 'delete')
   .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
 
-const _buildingFindOne = jest
-  .spyOn(buildingRepo, 'findOne')
-  .mockImplementation(async () => produceBuilding());
+const _buildingFindOne = jest.spyOn(buildingRepo, 'findOne').mockImplementation(async () => {
+  const building = produceBuilding();
+  const { Id } = building;
+  produceBuildingFiscal(Id);
+  return building;
+});
+
+const _buildingFiscalExists = jest
+  .spyOn(AppDataSource.getRepository(BuildingFiscal), 'exists')
+  .mockImplementation(async () => true);
+
+const _buildingEvaluationExists = jest
+  .spyOn(AppDataSource.getRepository(BuildingEvaluation), 'exists')
+  .mockImplementation(async () => true);
 
 // const _buildingUpdate = jest
 //   .spyOn(buildingRepo, 'update')
@@ -101,6 +114,15 @@ describe('updateBuildingById', () => {
     const updateBuilding = produceBuilding();
     _buildingFindOne.mockResolvedValueOnce(null);
     expect(async () => await buildingService.updateBuildingById(updateBuilding)).rejects.toThrow();
+  });
+
+  it('should update Fiscals and Evaluations when they exist in the building object', async () => {
+    const updateBuilding = produceBuilding();
+    _buildingFindOne.mockResolvedValueOnce(updateBuilding);
+
+    await buildingService.updateBuildingById(updateBuilding);
+    expect(_buildingFiscalExists).toHaveBeenCalledTimes(1);
+    expect(_buildingEvaluationExists).toHaveBeenCalledTimes(1);
   });
 });
 

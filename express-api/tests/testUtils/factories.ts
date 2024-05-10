@@ -34,6 +34,10 @@ import {
   NotificationStatus,
 } from '@/services/notifications/notificationServices';
 import { NotificationTemplate } from '@/typeorm/Entities/NotificationTemplate';
+import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
+import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
+import { ParcelFiscal } from '@/typeorm/Entities/ParcelFiscal';
+import { ParcelEvaluation } from '@/typeorm/Entities/ParcelEvaluation';
 
 export class MockRes {
   statusValue: any;
@@ -200,6 +204,7 @@ export const produceSSO = (): SSOUser => {
 };
 
 export const produceParcel = (): Parcel => {
+  const id = faker.number.int({ max: 10 });
   return {
     Id: faker.number.int({ max: 10 }),
     CreatedOn: faker.date.anytime(),
@@ -235,8 +240,8 @@ export const produceParcel = (): Parcel => {
     CreatedBy: undefined,
     UpdatedById: undefined,
     UpdatedBy: undefined,
-    Fiscals: [],
-    Evaluations: [],
+    Fiscals: produceParcelFiscal(id),
+    Evaluations: produceParcelEvaluation(id),
   };
 };
 
@@ -264,7 +269,8 @@ export const produceEmail = (props: Partial<IEmail>): IEmail => {
 };
 
 export const produceBuilding = (): Building => {
-  const id = faker.string.uuid() as UUID;
+  const agencyId = faker.string.uuid() as UUID;
+  const id = faker.number.int({ max: 10 });
   return {
     Id: faker.number.int({ max: 10 }),
     CreatedOn: faker.date.anytime(),
@@ -289,7 +295,7 @@ export const produceBuilding = (): Building => {
     ClassificationId: undefined,
     Classification: undefined,
     AgencyId: undefined,
-    Agency: produceAgency(id),
+    Agency: produceAgency(agencyId),
     AdministrativeAreaId: undefined,
     AdministrativeArea: undefined,
     IsSensitive: undefined,
@@ -306,12 +312,59 @@ export const produceBuilding = (): Building => {
     CreatedBy: undefined,
     UpdatedById: undefined,
     UpdatedBy: undefined,
-    Fiscals: undefined,
-    Evaluations: undefined,
+    Fiscals: produceBuildingFiscal(id),
+    Evaluations: produceBuildingEvaluation(id),
     PID: undefined,
     PIN: undefined,
   };
 };
+
+export const produceBuildingEvaluation = (buildingId: number): BuildingEvaluation[] => {
+  const evaluation: BuildingEvaluation = new BuildingEvaluation();
+
+  evaluation.BuildingId = buildingId;
+  evaluation.Year = faker.date.past().getFullYear();
+  evaluation.EvaluationKeyId = 0;
+  evaluation.Value = 20000;
+  evaluation.EvaluationKey = undefined;
+  evaluation.Note = undefined;
+
+  return [evaluation];
+};
+
+export const produceBuildingFiscal = (buildingId: number): BuildingFiscal[] => {
+  const fiscal: BuildingFiscal = new BuildingFiscal();
+  fiscal.BuildingId = buildingId;
+  fiscal.FiscalYear = faker.date.past().getFullYear();
+  fiscal.FiscalKeyId = 0;
+  fiscal.Value = 20000;
+
+  return [fiscal];
+};
+
+export const produceParcelEvaluation = (parcelId: number): ParcelEvaluation[] => {
+  const evaluation: ParcelEvaluation = new ParcelEvaluation();
+
+  evaluation.ParcelId = parcelId;
+  evaluation.Year = faker.date.past().getFullYear();
+  evaluation.EvaluationKeyId = 0;
+  evaluation.Value = 20000;
+  evaluation.EvaluationKey = undefined;
+  evaluation.Note = undefined;
+
+  return [evaluation];
+};
+
+export const produceParcelFiscal = (parcelId: number): ParcelFiscal[] => {
+  const fiscal: ParcelFiscal = new ParcelFiscal();
+  fiscal.ParcelId = parcelId;
+  fiscal.FiscalYear = faker.date.past().getFullYear();
+  fiscal.FiscalKeyId = 0;
+  fiscal.Value = 1000000;
+
+  return [fiscal];
+};
+
 export const produceAdminArea = (props: Partial<AdministrativeArea>): AdministrativeArea => {
   const adminArea: AdministrativeArea = {
     Id: faker.number.int(),
