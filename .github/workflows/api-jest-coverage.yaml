@@ -70,7 +70,7 @@ jobs:
       - name: Run Coverage Report
         working-directory: ./express-api
         run: |
-          npm run coverage
+          npm test
 
       # Use lcov to format coverage for Code Climate
       # -t is for coverage type
