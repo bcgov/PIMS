@@ -13,6 +13,7 @@ import DisposalProjectSearch from './DisposalPropertiesSearchTable';
 import { Box, Typography } from '@mui/material';
 import { ProjectTask } from '@/constants/projectTasks';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
+import AgencySearchTable from './AgencyResponseSearchTable';
 
 interface IProjectGeneralInfoDialog {
   initialValues: Project;
@@ -246,6 +247,7 @@ export const ProjectPropertiesDialog = (props: IProjectPropertiesDialog) => {
     <ConfirmDialog
       title={'Edit Properties List'}
       open={open}
+      dialogProps={{ maxWidth: 'lg' }}
       onConfirm={async () => {
         api.projects
           .updateProject(
@@ -260,8 +262,37 @@ export const ProjectPropertiesDialog = (props: IProjectPropertiesDialog) => {
       }}
       onCancel={async () => onCancel()}
     >
-      <Box minWidth={'500px'} paddingTop={'1rem'}>
+      <Box minWidth={'700px'} paddingTop={'1rem'}>
         <DisposalProjectSearch rows={rows} setRows={setRows} />
+      </Box>
+    </ConfirmDialog>
+  );
+};
+
+interface IProjectAgencyResponseDialog {
+  initialValues: ProjectGet;
+  open: boolean;
+  postSubmit: () => void;
+  onCancel: () => void;
+}
+
+export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { initialValues, open, postSubmit, onCancel } = props;
+  const [rows, setRows] = useState([]);
+  //useEffect here to set from initialValues once implemented
+  return (
+    <ConfirmDialog
+      dialogProps={{ maxWidth: 'lg' }}
+      title={'Edit agency interest responses'}
+      open={open}
+      onConfirm={async () => {
+        postSubmit();
+      }}
+      onCancel={async () => onCancel()}
+    >
+      <Box paddingTop={'1rem'}>
+        <AgencySearchTable rows={rows} setRows={setRows} />
       </Box>
     </ConfirmDialog>
   );

@@ -44,8 +44,8 @@ const ParcelMap = (props: ParcelMapProps) => {
           style={{ height: '100%' }}
           ref={mapRef}
           bounds={[
-            [51.2516, -129.371],
-            [48.129, -122.203],
+            [54.2516, -129.371],
+            [49.129, -117.203],
           ]}
           dragging={movable}
           zoomControl={zoomable}

@@ -18,6 +18,7 @@ import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { faker } from '@faker-js/faker';
 import {
+  produceAgencyResponse,
   produceBuilding,
   produceNotificationQueue,
   produceParcel,
@@ -51,6 +52,15 @@ const _projectUpdate = jest
 const _projectStatusHistoryInsert = jest
   .spyOn(AppDataSource.getRepository(ProjectStatusHistory), 'save')
   .mockImplementation(async () => productProjectStatusHistory());
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _projectTaskSave = jest
+  .spyOn(AppDataSource.getRepository(ProjectTask), 'save')
+  .mockImplementation(async () => produceProjectTask());
+
+jest
+  .spyOn(AppDataSource.getRepository(ProjectAgencyResponse), 'save')
+  .mockImplementation(async () => produceAgencyResponse());
 
 // EXIST mocks
 const _agencyExists = jest
@@ -130,10 +140,13 @@ const _notificationFind = jest
 const _projectTaskFind = jest
   .spyOn(AppDataSource.getRepository(ProjectTask), 'findOne')
   .mockImplementation(async () => produceProjectTask());
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _projectTaskSave = jest
-  .spyOn(AppDataSource.getRepository(ProjectTask), 'save')
-  .mockImplementation(async () => produceProjectTask());
+jest
+  .spyOn(AppDataSource.getRepository(ProjectTask), 'find')
+  .mockImplementation(async () => [produceProjectTask()]);
+
+jest
+  .spyOn(AppDataSource.getRepository(ProjectAgencyResponse), 'find')
+  .mockImplementation(async () => [produceAgencyResponse()]);
 // QUERY mocks
 const _getNextSequence = jest.spyOn(AppDataSource, 'query').mockImplementation(async () => [
   {
