@@ -35,7 +35,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
   const [openNotificationsDialog, setOpenNotificationsDialog] = useState(false);
 
-  const { data, refreshData } = useDataLoader(() => api.agencies.getAgencyById(+id));
+  const { data, refreshData, isLoading } = useDataLoader(() => api.agencies.getAgencyById(+id));
 
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
 
@@ -128,12 +128,14 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
         onBackClick={() => onClose()}
       />
       <DataCard
+        loading={isLoading}
         customFormatter={customFormatter}
         values={agencyStatusData}
         title={'Agency Details'}
         onEdit={() => setOpenStatusDialog(true)}
       />
       <DataCard
+        loading={isLoading}
         customFormatter={customFormatter}
         values={notificationsSettingsData}
         title={'Notification Settings'}

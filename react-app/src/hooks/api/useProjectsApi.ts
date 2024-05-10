@@ -79,6 +79,7 @@ export interface Project {
   Notifications?: ProjectNotification[];
   StatusHistory?: ProjectStatusHistory[];
   Notes?: ProjectNote[];
+  ProjectProperties?: ProjectProperty[];
 }
 
 export interface ProjectNote {
@@ -129,6 +130,20 @@ export interface ProjectNotification {
 export interface ProjectGet extends Project {
   Buildings: Building[];
   Parcels: Parcel[];
+}
+
+export interface ProjectProperty {
+  CreatedById: string;
+  CreatedOn: string;
+  UpdatedById: string;
+  UpdatedOn: string;
+  Id: number;
+  ProjectId: number;
+  PropertyTypeId: number;
+  ParcelId: number | null;
+  BuildingId: number | null;
+  Parcel: Parcel | null;
+  Building: Building | null;
 }
 
 export interface ProjectMetadata {
@@ -221,8 +236,21 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
     const { parsedBody } = await absoluteFetch.get(`/projects/disposal/${id}`);
     return parsedBody as ProjectGet;
   };
-  const updateProject = async (id: number, project: Partial<Project>): Promise<Project> => {
-    const { parsedBody } = await absoluteFetch.put(`/projects/disposal/${id}`, project);
+  const updateProject = async (
+    id: number,
+    project: Partial<ProjectGet>,
+    projectPropertyIds?: ProjectPropertyIds,
+  ): Promise<Project> => {
+    let propertyIds = projectPropertyIds;
+    propertyIds ??= {
+      //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_assignment
+      parcels: project.ProjectProperties.filter((a) => a.Parcel).map((a) => a.ParcelId),
+      buildings: project.ProjectProperties.filter((a) => a.Building).map((a) => a.BuildingId),
+    };
+    const { parsedBody } = await absoluteFetch.put(`/projects/disposal/${id}`, {
+      project: project,
+      propertyIds: propertyIds,
+    });
     return parsedBody as Project;
   };
   const deleteProjectById = async (id: number) => {

@@ -24,6 +24,12 @@ jobs:
       BACKEND_URL: ${{ secrets.BACKEND_URL }}
       SSO_CLIENT_ID: ${{ secrets.SSO_CLIENT_ID }}
       SSO_CLIENT_SECRET: ${{ secrets.SSO_CLIENT_SECRET }}
+      LTSA_AUTH_URL: ${{ secrets.LTSA_AUTH_URL }}
+      LTSA_HOST_URL: ${{ secrets.LTSA_HOST_URL }}
+      LTSA_INTEGRATOR_USERNAME: ${{ secrets.LTSA_INTEGRATOR_USERNAME }}
+      LTSA_INTEGRATOR_PASSWORD: ${{ secrets.LTSA_INTEGRATOR_PASSWORD }}
+      LTSA_USERNAME: ${{ secrets.LTSA_USERNAME }}
+      LTSA_PASSWORD: ${{ secrets.LTSA_PASSWORD }}
       CC_TEST_REPORTER_ID: 37fdb6f058122c17fc2419b78b02b1d5582694f7cd84a2b735de8eec235e9c5b
 
     steps:

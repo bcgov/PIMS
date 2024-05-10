@@ -58,14 +58,15 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
       name={name}
       control={control}
       rules={{ required: required }}
-      render={({ field: { onChange } }) => (
+      render={({ field: { onChange, onBlur } }) => (
         <Autocomplete
+          onBlur={onBlur}
           disablePortal={false}
           id={`autocompleteinput-${label}`}
           options={options}
           PaperComponent={CustomPaper}
           sx={sx}
-          disableClearable={disableClearable}
+          disableClearable={disableClearable ?? true}
           getOptionLabel={(option: ISelectMenuItem) => option.label}
           getOptionDisabled={disableOptionsFunction}
           filterOptions={optionsFilter}

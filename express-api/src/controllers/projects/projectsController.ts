@@ -74,7 +74,7 @@ export const updateDisposalProject = async (req: Request, res: Response) => {
   // need to coordinate how we want tasks to be translated
   const user = await userServices.getUser(req.user.preferred_username);
   const updateBody = { ...req.body.project, UpdatedById: user.Id };
-  const project = await projectServices.updateProject(updateBody, req.body.propertyIds);
+  const project = await projectServices.updateProject(updateBody, req.body.propertyIds, req.user);
   return res.status(200).send(project);
 };
 
