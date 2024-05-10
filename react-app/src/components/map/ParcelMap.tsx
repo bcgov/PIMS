@@ -1,33 +1,11 @@
 import { Box, CircularProgress } from '@mui/material';
 import React, { createContext, PropsWithChildren, useState } from 'react';
-import { MapContainer, useMapEvents, useMap } from 'react-leaflet';
+import { MapContainer, useMapEvents } from 'react-leaflet';
 import { Map } from 'leaflet';
-import usePimsApi from '@/hooks/usePimsApi';
 import MapLayers from '@/components/map/MapLayers';
-import { ParcelPopup, PopupData } from '@/components/map/ParcelPopup';
+import { ParcelPopup } from '@/components/map/ParcelPopup';
 import { InventoryLayer } from '@/components/map/InventoryLayer';
 import MapPropertyDetails from '@/components/map/MapPropertyDetails';
-
-export interface ParcelData {
-  PARCEL_FABRIC_POLY_ID: number;
-  PARCEL_NAME: string;
-  PLAN_NUMBER: string;
-  PIN: number;
-  PID: string;
-  PID_FORMATTED: string;
-  PID_NUMBER: number;
-  PARCEL_STATUS: string;
-  PARCEL_CLASS: string;
-  OWNER_TYPE: string;
-  PARCEL_START_DATE: string;
-  MUNICIPALITY: string;
-  REGIONAL_DISTRICT: string;
-  WHEN_UPDATED: string;
-  FEATURE_AREA_SQM: number;
-  FEATURE_LENGTH_M: number;
-  OBJECTID: number;
-  SE_ANNO_CAD_DATA: unknown;
-}
 
 type ParcelMapProps = {
   height: string;
@@ -39,30 +17,30 @@ type ParcelMapProps = {
 
 export const SelectedMarkerContext = createContext(null);
 
+/**
+ * ParcelMap component renders a map with various layers and functionalities.
+ *
+ * @param {ParcelMapProps} props - The props object containing the height, mapRef, movable, zoomable, and loadProperties properties.
+ * @returns {JSX.Element} The ParcelMap component.
+ *
+ * @example
+ * ```tsx
+ * <ParcelMap
+ *   height="500px"
+ *   mapRef={mapRef}
+ *   movable={true}
+ *   zoomable={true}
+ *   loadProperties={false}
+ * >
+ *   {children}
+ * </ParcelMap>
+ * ```
+ */
 const ParcelMap = (props: ParcelMapProps) => {
-  const api = usePimsApi();
   const MapEvents = () => {
-    const map = useMap();
-    useMapEvents({
-      click: (e) => {
-        //zoom check here since I don't think it makes sense to allow this at anything more zoomed out than this
-        //can't really click on any parcel with much accurancy beyond that point
-        if (map.getZoom() > 10) {
-          api.parcelLayer.getParcelByLatLng(e.latlng).then((response) => {
-            if (response.features.length) {
-              setClickPosition({
-                position: e.latlng,
-                pid: response.features[0].properties.PID_FORMATTED,
-                pin: response.features[0].properties.PIN,
-              });
-            }
-          });
-        }
-      },
-    });
+    useMapEvents({});
     return null;
   };
-  const [clickPosition, setClickPosition] = useState<PopupData>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedMarker, setSelectedMarker] = useState({
     id: undefined,
@@ -96,7 +74,7 @@ const ParcelMap = (props: ParcelMapProps) => {
           preferCanvas
         >
           <MapLayers />
-          {clickPosition?.position && <ParcelPopup clickPosition={clickPosition} />}
+          <ParcelPopup />
           <MapEvents />
           {loadProperties ? <InventoryLayer setLoading={setLoading} /> : <></>}
           {props.children}
