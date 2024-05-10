@@ -38,6 +38,7 @@ import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
 import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
 import { ParcelFiscal } from '@/typeorm/Entities/ParcelFiscal';
 import { ParcelEvaluation } from '@/typeorm/Entities/ParcelEvaluation';
+import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
 
 export class MockRes {
   statusValue: any;
@@ -566,6 +567,7 @@ export const produceProject = (
     Notifications: [],
     StatusHistory: [],
     Notes: [],
+    AgencyResponses: [],
     ...props,
   };
   return project;
@@ -713,4 +715,28 @@ export const produceNotificationTemplate = (props?: Partial<NotificationTemplate
     ...props,
   };
   return template;
+};
+
+export const produceAgencyResponse = (props?: Partial<ProjectAgencyResponse>) => {
+  const response: ProjectAgencyResponse = {
+    ProjectId: faker.number.int(),
+    Project: undefined,
+    AgencyId: faker.number.int(),
+    Agency: undefined,
+    OfferAmount: 123,
+    NotificationId: faker.number.int(),
+    Notification: undefined,
+    Response: 1,
+    ReceivedOn: new Date(),
+    Note: faker.lorem.lines(),
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+
+  return response;
 };
