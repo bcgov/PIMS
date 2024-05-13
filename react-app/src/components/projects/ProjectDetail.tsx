@@ -91,7 +91,6 @@ const ProjectDetail = (props: IProjectDetail) => {
     Notes: data?.parsedBody.Description,
   };
 
-  const currencyFormatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
   const FinancialInformationData = {
     AssessedValue: data?.parsedBody.Assessed,
     NetBookValue: data?.parsedBody.NetBook,
