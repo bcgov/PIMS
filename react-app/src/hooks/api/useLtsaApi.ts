@@ -50,23 +50,21 @@ export interface Ltsa {
             interestFractionNumerator: string;
             interestFractionDenominator: string;
             ownershipRemarks: string;
-            titleOwners: [
-              {
-                lastNameOrCorpName1: string;
-                givenName: string;
-                incorporationNumber: string;
-                occupationDescription: string;
-                address: {
-                  addressLine1: string;
-                  addressLine2: string;
-                  city: string;
-                  province: string;
-                  provinceName: string;
-                  country: string;
-                  postalCode: string;
-                };
-              },
-            ];
+            titleOwners: {
+              lastNameOrCorpName1: string;
+              givenName: string;
+              incorporationNumber: string;
+              occupationDescription: string;
+              address: {
+                addressLine1: string;
+                addressLine2: string;
+                city: string;
+                province: string;
+                provinceName: string;
+                country: string;
+                postalCode: string;
+              };
+            }[];
           },
         ];
         taxAuthorities: [
@@ -82,6 +80,32 @@ export interface Ltsa {
           },
         ];
         legalNotationsOnTitle: string[];
+        chargesOnTitle?: {
+          chargeNumber: string;
+          status: string;
+          enteredDate: string;
+          interAlia: string;
+          chargeRemarks: string;
+          charge: {
+            chargeNumber: string;
+            transactionType: string;
+            applicationReceivedDate: string;
+            chargeOwnershipGroups: {
+              jointTenancyIndication: boolean;
+              interestFractionNumerator: string;
+              interestFractionDenominator: string;
+              ownershipRemarks: string;
+              chargeOwners: {
+                lastNameOrCorpName1: string;
+                incorporationNumber: string;
+              }[];
+            }[];
+            certificatesOfCharge: [];
+            correctionsAltos1: [];
+            corrections: [];
+          };
+          chargeRelease: object;
+        }[];
         duplicateCertificatesOfTitle: string[];
         titleTransfersOrDispositions: string[];
       };
@@ -91,7 +115,7 @@ export interface Ltsa {
 
 const useLtsaApi = (absoluteFetch: IFetch) => {
   const getLtsabyPid = async (pid: number): Promise<Ltsa> => {
-    const { parsedBody } = await absoluteFetch.get(`/ltsa/land/title/?pid=${pid}`);
+    const { parsedBody } = await absoluteFetch.get(`/ltsa/land/title?pid=${pid}`);
     return parsedBody as Ltsa;
   };
   return { getLtsabyPid };
