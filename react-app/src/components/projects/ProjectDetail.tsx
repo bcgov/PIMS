@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import DataCard from '../display/DataCard';
 import { Box, Checkbox, FormControlLabel, FormGroup, Typography, Skeleton } from '@mui/material';
 import DeleteDialog from '../dialog/DeleteDialog';
@@ -6,9 +6,7 @@ import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { Project, ProjectMetadata, TierLevel } from '@/hooks/api/useProjectsApi';
 import DetailViewNavigation from '../display/DetailViewNavigation';
-import { AuthContext } from '@/contexts/authContext';
-import { Roles } from '@/constants/roles';
-import { redirect, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ProjectStatus } from '@/hooks/api/useLookupApi';
 import DisposalPropertiesTable from './DisposalPropertiesSimpleTable';
 import {
@@ -45,14 +43,10 @@ const ProjectDetail = (props: IProjectDetail) => {
     api.projects.getProjectById(Number(id)),
   );
 
-  try{
-    if (data.retStatus == 403){
-      // TODO: display message with permission error 
-      navigate("/"); // look into maybe using redirect
-    };
-  } catch (e) {
-    // do nothing, we get 2 undefined statuses before the real data is sent
-  };
+  if (data && data.retStatus == 403) {
+    // TODO: display message with permission error
+    navigate('/'); // look into maybe using redirect
+  }
 
   const { data: tasks, loadOnce: loadTasks } = useDataLoader(() => api.lookup.getTasks());
   loadTasks();
@@ -99,7 +93,6 @@ const ProjectDetail = (props: IProjectDetail) => {
 
   const currencyFormatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
   const FinancialInformationData = {
-
     AssessedValue: data?.parsedBody.Assessed,
     NetBookValue: data?.parsedBody.NetBook,
     EstimatedMarketValue: data?.parsedBody.Market,
@@ -173,8 +166,10 @@ const ProjectDetail = (props: IProjectDetail) => {
           ) : (
             <DisposalPropertiesTable
               rows={[
-                ...(data?.parsedBody?.Parcels?.map((p) => ({ ...p, PropertyType: 'Parcel' })) ?? []),
-                ...(data?.parsedBody?.Buildings?.map((b) => ({ ...b, PropertyType: 'Building' })) ?? []),
+                ...(data?.parsedBody?.Parcels?.map((p) => ({ ...p, PropertyType: 'Parcel' })) ??
+                  []),
+                ...(data?.parsedBody?.Buildings?.map((b) => ({ ...b, PropertyType: 'Building' })) ??
+                  []),
               ]}
             />
           )}
