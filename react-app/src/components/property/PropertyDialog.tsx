@@ -1,5 +1,5 @@
-import { Building } from '@/hooks/api/useBuildingsApi';
-import { Parcel } from '@/hooks/api/useParcelsApi';
+import { Building, BuildingEvaluation } from '@/hooks/api/useBuildingsApi';
+import { Parcel, ParcelEvaluation } from '@/hooks/api/useParcelsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
 import { Box } from '@mui/material';
@@ -251,9 +251,20 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
     ParcelId: initialValues?.Id || null,
   }));
 
+  const evaluationMapToRequest = (
+    evaluations: Partial<ParcelEvaluation>[] | Partial<BuildingEvaluation>[],
+  ) => {
+    return evaluations
+      .filter((evaluation) => evaluation.Value != null)
+      .map((evaluation) => ({
+        ...evaluation,
+        Value: parseFloat(evaluation.Value),
+        EvaluationKeyId: 0,
+        Year: evaluation.Year,
+      }));
+  };
+
   useEffect(() => {
-    console.log('Initial Values:', initialValues);
-    console.log('Initial Related Buildings:', initialRelatedBuildings);
     if (!initialValues?.Evaluations || initialValues.Evaluations.length === 0) {
       assessedFormMethods.reset({ Evaluations: defaultParcelValues });
     } else {
@@ -281,43 +292,27 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
       open={open}
       onConfirm={async () => {
         const formValues = assessedFormMethods.getValues();
-        const evalus = { Id: initialValues.Id, PID: initialValues.PID, ...formValues };
+        const evalus = {
+          Id: initialValues.Id,
+          PID: initialValues.PID,
+          Evaluations: evaluationMapToRequest(formValues.Evaluations),
+        };
         if (propertyType === 'Parcel') {
-          const parcelUpdatePromise = api.parcels.updateParcelById(initialValues.Id, {
-            Id: initialValues.Id,
-            PID: initialValues.PID,
-            ...formValues,
-            Evaluations: formValues.Evaluations.map((evaluation) => ({
-              ...evaluation,
-              Value: parseFloat(evaluation.Value),
-              EvaluationKeyId: 0,
-              Year: evaluation.Year,
-            })),
-          });
-          console.log('RelatedBuildings array:', formValues.RelatedBuildings);
-          let buildingUpdatePromises = [];
-
+          const parcelUpdatePromise = api.parcels.updateParcelById(initialValues.Id, evalus);
           if (formValues.RelatedBuildings) {
-            buildingUpdatePromises = formValues.RelatedBuildings.map(async (building) => {
-              console.log('RelatedBuildings are:', building);
+            const buildingUpdatePromises = formValues.RelatedBuildings.map(async (building) => {
               const updatedBuilding: Partial<Building> = {
                 ...building,
-                Evaluations: building.Evaluations.map((evaluation) => ({
-                  ...evaluation,
-                  Value: parseFloat(evaluation.Value),
-                  EvaluationKeyId: 0,
-                  Year: evaluation.Year,
-                })),
+                Evaluations: evaluationMapToRequest(building.Evaluations),
               };
-              await api.buildings.updateBuildingById(building.Id, updatedBuilding); // Update the building
+              return api.buildings.updateBuildingById(building.Id, updatedBuilding); // Update the building
             });
+            await Promise.all(buildingUpdatePromises);
           }
-          await Promise.all(buildingUpdatePromises); // Await building updates if there are any
-          await parcelUpdatePromise; // Await parcel update
+          parcelUpdatePromise.then(() => postSubmit()); // Await parcel update
         } else if (propertyType === 'Building') {
           api.buildings.updateBuildingById(initialValues.Id, evalus).then(() => postSubmit());
         }
-        postSubmit();
       }}
       onCancel={async () => onCancel()}
     >
