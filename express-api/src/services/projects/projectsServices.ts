@@ -346,6 +346,7 @@ const handleProjectNotifications = async (oldProject: DeepPartial<Project>, user
           Fiscals: true,
         },
       },
+      AgencyResponses: true,
       Notes: true,
     },
     where: {
@@ -446,17 +447,6 @@ const updateProject = async (
     // Construct the proper metadata before continuing.
     const newMetadata = { ...originalProject.Metadata, ...project.Metadata };
 
-    // If status was changed, write result to Project Status History table.
-    if (originalProject.StatusId !== project.StatusId) {
-      await AppDataSource.getRepository(ProjectStatusHistory).save({
-        CreatedById: project.UpdatedById,
-        ProjectId: project.Id,
-        WorkflowId: originalProject.WorkflowId,
-        StatusId: originalProject.StatusId,
-      });
-      await handleProjectNotifications(originalProject, user); //Assuming that this needs to be here, I don't think notifications should send unless a status transition happens.
-    }
-
     await handleProjectTasks({ ...project, CreatedById: project.UpdatedById });
     await handleProjectAgencyResponses({ ...project, CreatedById: project.UpdatedById });
 
@@ -496,6 +486,17 @@ const updateProject = async (
 
     if (parcelsToRemove) await removeProjectParcelRelations(originalProject, parcelsToRemove);
     if (buildingsToRemove) await removeProjectBuildingRelations(originalProject, buildingsToRemove);
+
+    // If status was changed, write result to Project Status History table.
+    if (originalProject.StatusId !== project.StatusId) {
+      await AppDataSource.getRepository(ProjectStatusHistory).save({
+        CreatedById: project.UpdatedById,
+        ProjectId: project.Id,
+        WorkflowId: originalProject.WorkflowId,
+        StatusId: originalProject.StatusId,
+      });
+      await handleProjectNotifications(originalProject, user); //Assuming that this needs to be here, I don't think notifications should send unless a status transition happens.
+    }
 
     queryRunner.commitTransaction();
 

@@ -104,14 +104,21 @@ const AgencySearchTable = (props: IAgencySearchTable) => {
         clearOnBlur={true}
         blurOnSelect={true}
         options={options}
-        filterOptions={(options) => options.filter((x) => !rows.find((row) => row.Id === x.value))}
+        filterOptions={(options, state) =>
+          options.filter(
+            (x) =>
+              !rows.find((row) => row.Id === x.value) &&
+              x.label.toLowerCase().includes(state.inputValue.toLowerCase()),
+          )
+        }
         onChange={(event, data) => {
-          const row = agencies.find((a) => a.Id === data.value);
+          const row = agencies.find((a) => a.Id === data?.value);
           if (row) {
             setRows([...rows, row]);
             setAutoCompleteVal('');
           }
         }}
+        isOptionEqualToValue={(option, value) => option.value === value.value}
         renderOption={(props, option, state, ownerState) => (
           <Box
             sx={{
@@ -123,6 +130,7 @@ const AgencySearchTable = (props: IAgencySearchTable) => {
             }}
             component="li"
             {...props}
+            key={option.value}
           >
             {ownerState.getOptionLabel(option)}
           </Box>

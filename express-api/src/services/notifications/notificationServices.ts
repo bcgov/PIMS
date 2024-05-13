@@ -7,7 +7,7 @@ import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotif
 import { User } from '@/typeorm/Entities/User';
 import { UUID, randomUUID } from 'crypto';
 import nunjucks from 'nunjucks';
-import { IsNull } from 'typeorm';
+import { In, IsNull } from 'typeorm';
 import chesServices, {
   EmailBody,
   EmailEncoding,
@@ -36,6 +36,12 @@ export enum NotificationAudience {
   ParentAgencies = 'ParentAgencies',
   Default = 'Default',
   WatchingAgencies = 'WatchingAgencies',
+}
+
+export enum AgencyResponseType {
+  Unsubscribe = 0,
+  Subscribe = 1,
+  Watch = 2,
 }
 
 const Title = 'PIMS';
@@ -163,11 +169,42 @@ const generateProjectNotifications = async (project: Project, previousStatusId: 
         insertProjectNotificationQueue(template, projStatusNotif, project, project.Agency),
       );
     } else if (template.Audience == NotificationAudience.Agencies) {
-      //Will eventually integrate agency interest response lookup here.
+      const agencies = await AppDataSource.getRepository(Agency).find({
+        where: {
+          Id: In(
+            project.AgencyResponses.filter(
+              (resp) => resp.Response == AgencyResponseType.Subscribe,
+            ).map((a) => a.AgencyId),
+          ),
+          IsDisabled: false,
+          SendEmail: true,
+        },
+      });
+      agencies.forEach((agc) =>
+        returnNotifications.push(
+          insertProjectNotificationQueue(template, projStatusNotif, project, agc),
+        ),
+      );
     } else if (template.Audience == NotificationAudience.ParentAgencies) {
-      //Same here
+      const agencies = await AppDataSource.getRepository(Agency).find({
+        where: {
+          Id: In(
+            project.AgencyResponses.filter(
+              (resp) => resp.Response == AgencyResponseType.Subscribe,
+            ).map((a) => a.AgencyId),
+          ),
+          IsDisabled: false,
+          SendEmail: true,
+          ParentId: IsNull(),
+        },
+      });
+      agencies.forEach((agc) =>
+        returnNotifications.push(
+          insertProjectNotificationQueue(template, projStatusNotif, project, agc),
+        ),
+      );
     } else if (template.Audience == NotificationAudience.WatchingAgencies) {
-      //Same here
+      // Do we need this distinction?
     } else if (template.Audience == NotificationAudience.Default) {
       returnNotifications.push(insertProjectNotificationQueue(template, projStatusNotif, project));
     }
