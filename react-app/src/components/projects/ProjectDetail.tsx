@@ -196,6 +196,7 @@ const ProjectDetail = (props: IProjectDetail) => {
             </Box>
           ) : (
             <AgencySimpleTable
+              editMode={false}
               sx={{
                 borderStyle: 'none',
                 '& .MuiDataGrid-columnHeaders': {
@@ -208,9 +209,11 @@ const ProjectDetail = (props: IProjectDetail) => {
               }}
               rows={
                 data?.AgencyResponses && ungroupedAgencies
-                  ? data?.AgencyResponses?.map((resp) =>
-                      ungroupedAgencies?.find((agc) => agc.Id === resp.AgencyId),
-                    )
+                  ? data?.AgencyResponses?.map((resp) => ({
+                      ...ungroupedAgencies?.find((agc) => agc.Id === resp.AgencyId),
+                      ReceivedOn: resp.ReceivedOn,
+                      Note: resp.Note,
+                    }))
                   : []
               }
             />

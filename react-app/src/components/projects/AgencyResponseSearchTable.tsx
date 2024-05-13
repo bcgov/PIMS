@@ -11,11 +11,13 @@ import {
   autocompleteClasses,
   SxProps,
   IconButton,
+  useTheme,
 } from '@mui/material';
-import { GridColDef, DataGrid } from '@mui/x-data-grid';
+import { GridColDef, DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { useState } from 'react';
 import { ISelectMenuItem } from '../form/SelectFormField';
 import { Agency } from '@/hooks/api/useAgencyApi';
+import { dateFormatter } from '@/utilities/formatters';
 
 interface IAgencySearchTable {
   rows: any[];
@@ -33,31 +35,49 @@ export type BuildingWithType = Building & {
 };
 
 interface IAgencySimpleTable {
-  rows: any[];
+  rows: Array<Agency & { ReceivedOn: Date; Note: string }>;
   additionalColumns?: GridColDef[];
   sx?: SxProps;
+  dataGridProps?: Omit<DataGridProps, 'columns'>;
+  editMode: boolean;
 }
 
 export const AgencySimpleTable = (props: IAgencySimpleTable) => {
+  const theme = useTheme();
+  const edit = props.editMode;
   const columns: GridColDef[] = [
     {
       field: 'Name',
       headerName: 'Name',
       flex: 1,
-      minWidth: 200,
+      minWidth: 150,
     },
     {
-      field: 'Code',
-      headerName: 'Short Name',
+      field: 'ReceivedOn',
+      headerName: 'Received On',
       flex: 1,
-      maxWidth: 150,
+      editable: edit,
+      type: 'date',
+      valueGetter: (value) => new Date(value),
+      renderCell: (params) =>
+        params.value ? (
+          dateFormatter(params.value)
+        ) : (
+          <Box sx={{ color: theme.palette.gray.main }}>{edit ? 'Double click / Enter' : 'N/A'}</Box>
+        ),
     },
     {
-      field: 'SendEmail',
-      headerName: 'Notification',
+      field: 'Note',
+      headerName: 'Note',
       flex: 1,
-      valueFormatter: (value: boolean) => (value ? 'Yes' : 'No'),
-      maxWidth: 120,
+      editable: edit,
+      type: 'string',
+      renderCell: (params) =>
+        params.value ? (
+          params.value
+        ) : (
+          <Box sx={{ color: theme.palette.gray.main }}>{edit ? 'Double click / Enter' : 'N/A'}</Box>
+        ),
     },
     {
       field: 'Email',
@@ -90,6 +110,7 @@ export const AgencySimpleTable = (props: IAgencySimpleTable) => {
       columns={[...columns, ...(props.additionalColumns ?? [])]}
       sx={props.sx}
       rows={props.rows}
+      {...props.dataGridProps}
     />
   );
 };
@@ -155,6 +176,7 @@ const AgencySearchTable = (props: IAgencySearchTable) => {
         )}
       />
       <AgencySimpleTable
+        editMode={true}
         additionalColumns={[
           {
             field: 'Actions',
@@ -178,6 +200,13 @@ const AgencySearchTable = (props: IAgencySearchTable) => {
           },
         ]}
         rows={rows}
+        dataGridProps={{
+          processRowUpdate: (newRow) => {
+            setRows(rows.map((row) => (row.Id === newRow.Id ? newRow : row)));
+            return newRow;
+          },
+          onProcessRowUpdateError: (error) => console.log(error),
+        }}
       />
     </Box>
   );

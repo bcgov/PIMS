@@ -488,7 +488,7 @@ const updateProject = async (
     if (buildingsToRemove) await removeProjectBuildingRelations(originalProject, buildingsToRemove);
 
     // If status was changed, write result to Project Status History table.
-    if (originalProject.StatusId !== project.StatusId) {
+    if (project.StatusId !== undefined && originalProject.StatusId !== project.StatusId) {
       await AppDataSource.getRepository(ProjectStatusHistory).save({
         CreatedById: project.UpdatedById,
         ProjectId: project.Id,

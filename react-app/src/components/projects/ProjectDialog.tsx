@@ -288,9 +288,11 @@ export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog)
   useEffect(() => {
     if (initialValues && agencies) {
       setRows(
-        initialValues.AgencyResponses?.map((resp) =>
-          agencies.find((agc) => agc.Id === resp.AgencyId),
-        ),
+        initialValues.AgencyResponses?.map((resp) => ({
+          ...agencies.find((agc) => agc.Id === resp.AgencyId),
+          ReceivedOn: resp.ReceivedOn,
+          Note: resp.Note,
+        })),
       );
     }
   }, [initialValues, agencies]);
@@ -308,6 +310,8 @@ export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog)
               AgencyId: agc.Id,
               OfferAmount: 0,
               Response: AgencyResponseType.Subscribe,
+              ReceivedOn: agc.ReceivedOn,
+              Note: agc.Note,
             })),
           })
           .then(() => postSubmit());
