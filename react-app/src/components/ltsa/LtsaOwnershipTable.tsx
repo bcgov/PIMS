@@ -4,20 +4,18 @@ import React from 'react';
 
 interface IOwnershipRowProps {
   row: {
-    length: any;
-    rows: Record<string, any>[];
+    length: number;
+    rows: any[];
     jointTenancyIndication: boolean;
     interestFractionNumerator: string;
     interestFractionDenominator: string;
-    titleOwners: [
-      {
-        lastNameOrCorpName1: string;
-        givenName: string;
-        incorporationNumber: string;
-      },
-    ];
+    titleOwners: {
+      lastNameOrCorpName1: string;
+      givenName: string;
+      incorporationNumber: string;
+    }[];
   };
-  index: number;
+  // index: number;
 }
 
 const LtsaOwnershipTable = (props: IOwnershipRowProps) => {
@@ -38,12 +36,14 @@ const LtsaOwnershipTable = (props: IOwnershipRowProps) => {
       field: 'ownerName',
       headerName: 'Owner(s) / Corporation(s)',
       valueGetter: () =>
-        `${row.titleOwners[0].lastNameOrCorpName1}, ${row.titleOwners[0].givenName}`,
+        row.titleOwners
+          .map((owner) => `${owner.lastNameOrCorpName1}, ${owner.givenName}`)
+          .join('; '),
     },
     {
       field: 'incorporationNumber',
       headerName: 'Incorporation #',
-      valueGetter: () => row.titleOwners[0].incorporationNumber,
+      valueGetter: () => row.titleOwners.map((owner) => owner.incorporationNumber),
     },
   ];
 

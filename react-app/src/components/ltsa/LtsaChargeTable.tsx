@@ -89,7 +89,7 @@ const LtsaChargeTable = (props: IChargeRowProps) => {
       hideFooter
       getRowId={(row) => row.Id + row.ChargeNumber}
       columns={columns}
-      rows={props.row ?? []}
+      rows={row.rows ?? []}
     />
   );
 };
