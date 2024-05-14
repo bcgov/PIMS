@@ -58,7 +58,7 @@ export const AgencySimpleTable = (props: IAgencySimpleTable) => {
       flex: 1,
       editable: edit,
       type: 'date',
-      valueGetter: (value) => new Date(value),
+      valueGetter: (value) => (value == null ? null : new Date(value)),
       renderCell: (params) =>
         params.value ? (
           dateFormatter(params.value)
