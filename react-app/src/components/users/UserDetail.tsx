@@ -174,13 +174,15 @@ const UserDetail = ({ onClose }: IUserDetail) => {
                 Id: id,
                 ...formValues,
               })
-              .then(() => refreshData());
+              .then(() => {
+                refreshData();
+                snackbar.setMessageState({
+                  open: true,
+                  text: 'Successfully submitted user details.',
+                  style: { backgroundColor: theme.palette.success.main },
+                });
+              });
             setOpenProfileDialog(false);
-            snackbar.setMessageState({
-              open: true,
-              text: 'Successfully submitted user details.',
-              style: { backgroundColor: theme.palette.success.main },
-            });
           }
         }}
         onCancel={async () => setOpenProfileDialog(false)}
