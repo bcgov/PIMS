@@ -18,6 +18,7 @@ import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
+import { ProjectAgencyResponse } from './ProjectAgencyResponse';
 
 export interface ProjectMetadata {
   // Exemption Fields
@@ -198,4 +199,11 @@ export class Project extends BaseEntity {
     nullable: true,
   })
   Notes: ProjectNote[];
+
+  @OneToMany(
+    () => ProjectAgencyResponse,
+    (ProjectAgencyResponse) => ProjectAgencyResponse.Project,
+    { nullable: true },
+  )
+  AgencyResponses: ProjectAgencyResponse[];
 }

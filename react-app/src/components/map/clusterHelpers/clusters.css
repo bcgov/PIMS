@@ -1,0 +1,15 @@
+.leaflet-div-icon {
+  background: none !important;
+  border: none !important;
+}
+
+.cluster-marker {
+  color: black;
+  font-weight: 400;
+  border-radius: 50%;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: -1;
+}

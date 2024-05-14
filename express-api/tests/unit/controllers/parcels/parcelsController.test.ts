@@ -17,6 +17,7 @@ const _deleteParcel = jest.fn().mockImplementation((): DeleteResult => ({ raw: {
 const _addParcel = jest.fn().mockImplementation(() => produceParcel());
 const _getParcels = jest.fn().mockImplementation(() => [produceParcel()]);
 const _getParcelsForExcelExport = jest.fn().mockImplementation(() => [produceParcel()]);
+const _hasAgencies = jest.fn();
 jest.mock('@/services/parcels/parcelServices', () => ({
   getParcelById: () => _getParcelById(),
   updateParcel: () => _updateParcel(),
@@ -28,7 +29,7 @@ jest.mock('@/services/parcels/parcelServices', () => ({
 jest.mock('@/services/users/usersServices', () => ({
   getUser: jest.fn().mockImplementation(() => produceUser()),
   getAgencies: jest.fn().mockResolvedValue([1, 2]),
-  hasAgencies: jest.fn().mockImplementation(() => true),
+  hasAgencies: jest.fn(() => _hasAgencies()),
 }));
 describe('UNIT - Parcels', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
@@ -44,6 +45,7 @@ describe('UNIT - Parcels', () => {
   describe('GET /properties/parcels/:parcelId', () => {
     it('should return 200 with a correct response body', async () => {
       mockRequest.params.parcelId = '1';
+      _hasAgencies.mockImplementationOnce(() => true);
       await controllers.getParcel(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
@@ -67,6 +69,13 @@ describe('UNIT - Parcels', () => {
       });
       mockRequest.params.parcelId = '1';
       expect(async () => await controllers.getParcel(mockRequest, mockResponse)).rejects.toThrow();
+    });
+    it('should return with status 403 when user doenst have permission to view parcel', async () => {
+      mockRequest.params.parcelId = '1';
+      mockRequest.setUser({ client_roles: [Roles.GENERAL_USER] });
+      _hasAgencies.mockImplementationOnce(() => false);
+      await controllers.getParcel(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(403);
     });
   });
 

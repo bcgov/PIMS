@@ -33,13 +33,14 @@ const _addProject = jest.fn().mockImplementation(() => produceProject());
 const _getProjectById = jest.fn().mockImplementation(() => produceProject());
 const _getProjectsForExport = jest.fn().mockResolvedValue(fakeProjects);
 const _getProjects = jest.fn().mockResolvedValue(fakeProjects);
-
+const _hasAgencies = jest.fn();
 const _updateProject = jest.fn().mockImplementation(() => produceProject());
 const _deleteProjectById = jest.fn().mockImplementation(
   (): DeleteResult => ({
     raw: {},
   }),
 );
+
 jest
   .spyOn(AppDataSource.getRepository(Project), 'find')
   .mockImplementation(async () => _addProject());
@@ -56,6 +57,7 @@ jest.mock('@/services/projects/projectsServices', () => ({
 jest.mock('@/services/users/usersServices', () => ({
   getUser: (guid: string) => _getUser(guid),
   getAgencies: jest.fn().mockResolvedValue([1, 2]),
+  hasAgencies: jest.fn(() => _hasAgencies()),
 }));
 
 jest
@@ -208,12 +210,30 @@ describe('UNIT - Testing controllers for users routes.', () => {
     });
   });
   describe('GET /projects/disposal/:projectId', () => {
-    it('should return status 200 and a project', async () => {
+    it('should return status 200 and a project when user is admin', async () => {
       mockRequest.params.projectId = '1';
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
       await controllers.getDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
-
+    it('should return status 200 and a project when user is auditor', async () => {
+      mockRequest.params.projectId = '1';
+      mockRequest.setUser({ client_roles: [Roles.AUDITOR] });
+      await controllers.getDisposalProject(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+    });
+    it('should return status 403 when user does not have correct agencies', async () => {
+      mockRequest.params.projectId = '1';
+      mockRequest.setUser({ client_roles: [Roles.GENERAL_USER] });
+      _hasAgencies.mockImplementationOnce(() => false);
+      await controllers.getDisposalProject(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(403);
+    });
+    it('should return status 400 on misformatted id', async () => {
+      mockRequest.params.projectId = 'a';
+      await controllers.getDisposalProject(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
     it('should return status 404 on no resource', async () => {
       _getProjectById.mockImplementationOnce(() => null);
       mockRequest.params.projectId = '-1';
