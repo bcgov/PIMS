@@ -21,6 +21,8 @@ import {
 import { AgencySimpleTable } from './AgencyResponseSearchTable';
 import CollapsibleSidebar from '../layout/CollapsibleSidebar';
 import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
+import { enumReverseLookup } from '@/utilities/helperFunctions';
+import { AgencyResponseType } from '@/constants/agencyResponseTypes';
 
 interface IProjectDetail {
   onClose: () => void;
@@ -213,6 +215,7 @@ const ProjectDetail = (props: IProjectDetail) => {
                       ...ungroupedAgencies?.find((agc) => agc.Id === resp.AgencyId),
                       ReceivedOn: resp.ReceivedOn,
                       Note: resp.Note,
+                      Response: enumReverseLookup(AgencyResponseType, resp.Response),
                     }))
                   : []
               }

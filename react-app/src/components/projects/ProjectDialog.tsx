@@ -17,6 +17,7 @@ import AgencySearchTable from './AgencyResponseSearchTable';
 import { ISelectMenuItem } from '../form/SelectFormField';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { AgencyResponseType } from '@/constants/agencyResponseTypes';
+import { enumReverseLookup } from '@/utilities/helperFunctions';
 
 interface IProjectGeneralInfoDialog {
   initialValues: Project;
@@ -292,6 +293,7 @@ export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog)
           ...agencies.find((agc) => agc.Id === resp.AgencyId),
           ReceivedOn: resp.ReceivedOn,
           Note: resp.Note,
+          Response: enumReverseLookup(AgencyResponseType, resp.Response),
         })),
       );
     }
@@ -309,7 +311,7 @@ export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog)
             AgencyResponses: rows.map((agc) => ({
               AgencyId: agc.Id,
               OfferAmount: 0,
-              Response: AgencyResponseType.Subscribe,
+              Response: Number(AgencyResponseType[agc.Response]),
               ReceivedOn: agc.ReceivedOn,
               Note: agc.Note,
             })),

@@ -7,7 +7,6 @@ import {
   Autocomplete,
   TextField,
   InputAdornment,
-  Chip,
   autocompleteClasses,
   SxProps,
   IconButton,
@@ -18,6 +17,7 @@ import { useState } from 'react';
 import { ISelectMenuItem } from '../form/SelectFormField';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { dateFormatter } from '@/utilities/formatters';
+import { AgencyResponseType } from '@/constants/agencyResponseTypes';
 
 interface IAgencySearchTable {
   rows: any[];
@@ -80,26 +80,12 @@ export const AgencySimpleTable = (props: IAgencySimpleTable) => {
         ),
     },
     {
-      field: 'Email',
-      headerName: 'Send To',
+      field: 'Response',
+      headerName: 'Response',
       flex: 1,
-      maxWidth: 250,
-      renderCell: (params) =>
-        params.value
-          ?.split(';')
-          .map((email) =>
-            email ? (
-              <Chip
-                title={email}
-                key={email}
-                label={email}
-                variant="outlined"
-                sx={{ marginRight: '5px' }}
-              />
-            ) : (
-              ''
-            ),
-          ),
+      editable: edit,
+      type: 'singleSelect',
+      valueOptions: Object.keys(AgencyResponseType).filter((key) => isNaN(Number(key))),
     },
   ];
   return (
