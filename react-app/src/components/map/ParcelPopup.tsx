@@ -8,6 +8,11 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Popup, useMap, useMapEvents } from 'react-leaflet';
 import './parcelPopup.css';
 
+interface ParcelPopupProps {
+  size?: 'small' | 'large';
+  scrollOnClick?: boolean;
+}
+
 /**
  * Renders a popup component that displays information about a parcel on the map.
  * The popup is triggered by a click event on the map and shows details such as parcel ID, name, class, plan number, owner type, municipality, regional district, and area.
@@ -15,10 +20,11 @@ import './parcelPopup.css';
  *
  * @returns {JSX.Element} The ParcelPopup component.
  */
-export const ParcelPopup = () => {
+export const ParcelPopup = (props: ParcelPopupProps) => {
   const [parcelData, setParcelData] = useState<ParcelData[]>(undefined); // All parcels at that click location.
   const [clickPosition, setClickPosition] = useState<LatLng>(null);
   const [parcelIndex, setParcelIndex] = useState<number>(0); // If multiple, which parcel to show info for.
+  const { size = 'large', scrollOnClick } = props;
 
   const map = useMap();
   const api = usePimsApi();
@@ -50,31 +56,53 @@ export const ParcelPopup = () => {
               }),
           );
           setParcelIndex(0);
-          map.setView(clickPosition);
+          if (scrollOnClick) map.setView(clickPosition);
         }
       });
     }
   }, [clickPosition]);
 
   if (!clickPosition) return <></>;
+
+  if (size === 'large')
+    return (
+      <Popup autoPan={false} position={clickPosition} className="full-size">
+        <Box display={'inline-flex'}>
+          {parcelData ? (
+            <>
+              {/* Render a list of PIDs/PINs if there's more than one parcel feature here. */}
+              {parcelData.length > 1 ? (
+                <ParcelPopupSelect
+                  parcelData={parcelData}
+                  onClick={(index: number) => {
+                    setParcelIndex(index);
+                  }}
+                  currentIndex={parcelIndex}
+                />
+              ) : (
+                <></>
+              )}
+              <ParcelLayerDetails parcel={parcelData.at(parcelIndex)} />
+            </>
+          ) : (
+            <></>
+          )}
+        </Box>
+      </Popup>
+    );
+
   return (
     <Popup autoPan={false} position={clickPosition} className="full-size">
-      <Box display={'inline-flex'}>
+      <Box display={'inline-flex'} width={150}>
         {parcelData ? (
-          <>
-            {/* Render a list of PIDs/PINs if there's more than one parcel feature here. */}
-            {parcelData.length > 1 ? (
-              <ParcelPopupSelect
-                parcelData={parcelData}
-                onClick={(index: number) => {
-                  setParcelIndex(index);
-                }}
-              />
-            ) : (
-              <></>
-            )}
-            <ParcelLayerDetails parcel={parcelData.at(parcelIndex)} />
-          </>
+          <Grid container>
+            <GridColumnPair
+              leftValue={parcelData.at(parcelIndex).PID_FORMATTED ? 'PID' : 'PIN'}
+              rightValue={
+                parcelData.at(parcelIndex).PID_FORMATTED ?? parcelData.at(parcelIndex).PIN
+              }
+            />
+          </Grid>
         ) : (
           <></>
         )}
@@ -108,7 +136,6 @@ const ParcelLayerDetails = (props: ParcelLayerDetailsProps) => {
           <></>
         )}
         {parcel.PIN != null ? <GridColumnPair leftValue={'PIN'} rightValue={parcel.PIN} /> : <></>}
-        <GridColumnPair leftValue={'Name'} rightValue={parcel.PARCEL_NAME} />
         {/* 
         // TODO: Has to come from LTSA
         <GridColumnPair leftValue={'Legal Description'} rightValue={parcel.} /> 
@@ -135,6 +162,7 @@ const ParcelLayerDetails = (props: ParcelLayerDetailsProps) => {
 interface ParcelPopupSelectProps {
   parcelData: ParcelData[];
   onClick?: (index: number) => void;
+  currentIndex: number;
 }
 
 /**
@@ -147,7 +175,7 @@ interface ParcelPopupSelectProps {
  */
 const ParcelPopupSelect = (props: ParcelPopupSelectProps) => {
   const theme = useTheme();
-  const { parcelData, onClick } = props;
+  const { parcelData, onClick, currentIndex } = props;
   return (
     <Box minWidth={'200px'} marginRight={'2em'}>
       <Typography variant="h4">Select Parcel</Typography>
@@ -170,6 +198,7 @@ const ParcelPopupSelect = (props: ParcelPopupSelectProps) => {
               '&:hover': {
                 backgroundColor: theme.palette.divider,
               },
+              backgroundColor: currentIndex === index ? theme.palette.divider : undefined,
             }}
             onClick={() => {
               onClick(index);
