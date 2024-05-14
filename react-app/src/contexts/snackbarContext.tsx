@@ -16,8 +16,8 @@ import { SnackbarContent, useTheme } from '@mui/material';
 
 /**
  * @interface
- * @description Properties passed to ErrorWrapper.
- * @property {ReactNode} children The child elements within the ErrorWrapper.
+ * @description Properties passed to SnackbarContext.
+ * @property {ReactNode} children The child elements within the SnackbarContext.
  */
 interface ISnackBarContext {
   children: ReactNode;
@@ -56,7 +56,7 @@ const initialContext = {
 };
 /**
  * @constant
- * @description The context provided by the ErrorWrapper.
+ * @description The context provided by the SnackbarContext.
  */
 export const SnackBarContext = createContext(initialContext);
 
