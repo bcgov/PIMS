@@ -2,10 +2,12 @@ import { GridColumnPair } from '@/components/map/MapPropertyDetails';
 import MetresSquared from '@/components/text/MetresSquared';
 import { ParcelData } from '@/hooks/api/useParcelLayerApi';
 import usePimsApi from '@/hooks/usePimsApi';
-import { Box, Grid, List, ListItem, Typography, useTheme } from '@mui/material';
+import { Box, Grid, IconButton, List, ListItem, Typography, useTheme } from '@mui/material';
 import { LatLng } from 'leaflet';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Popup, useMap, useMapEvents } from 'react-leaflet';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import './parcelPopup.css';
 
 interface ParcelPopupProps {
@@ -102,6 +104,35 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
                 parcelData.at(parcelIndex).PID_FORMATTED ?? parcelData.at(parcelIndex).PIN
               }
             />
+            {parcelData?.length > 1 ? (
+              <Grid
+                item
+                xs={12}
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <IconButton
+                  size="small"
+                  onClick={() => setParcelIndex(Math.max(0, parcelIndex - 1))}
+                >
+                  <KeyboardDoubleArrowLeftIcon fontSize="small" />
+                </IconButton>
+                <Typography variant="caption">
+                  {parcelIndex + 1} of {parcelData.length}
+                </Typography>
+                <IconButton
+                  size="small"
+                  onClick={() => setParcelIndex(Math.min(parcelData.length - 1, parcelIndex + 1))}
+                >
+                  <KeyboardDoubleArrowRightIcon fontSize="small" />
+                </IconButton>
+              </Grid>
+            ) : (
+              <></>
+            )}
           </Grid>
         ) : (
           <></>
