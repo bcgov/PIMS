@@ -2,6 +2,7 @@ import { AppDataSource } from '@/appDataSource';
 import { Building } from '@/typeorm/Entities/Building';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
+import { In, Like } from 'typeorm';
 
 const propertiesFuzzySearch = async (keyword: string, limit?: number) => {
   const parcels = await AppDataSource.getRepository(Parcel)
@@ -36,8 +37,18 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number) => {
   };
 };
 
-const getPropertiesForMap = async () => {
-  // TODO: Use where to add search parameters
+export interface MapPropertiesFilter {
+  PID?: number;
+  PIN?: number;
+  Address?: string;
+  AgencyIds?: number[];
+  AdministrativeAreaIds?: number[];
+  ClassificationIds?: number[];
+  PropertyTypeIds?: number[];
+  Name?: string;
+}
+
+const getPropertiesForMap = async (filter?: MapPropertiesFilter) => {
   const properties = await AppDataSource.getRepository(MapProperties).find({
     // Select only the properties needed to render map markers
     select: {
@@ -48,6 +59,18 @@ const getPropertiesForMap = async () => {
       },
       PropertyTypeId: true,
       ClassificationId: true,
+    },
+    where: {
+      ClassificationId: filter.ClassificationIds ? In(filter.ClassificationIds) : undefined,
+      AgencyId: filter.AgencyIds ? In(filter.AgencyIds) : undefined,
+      AdministrativeAreaId: filter.AdministrativeAreaIds
+        ? In(filter.AdministrativeAreaIds)
+        : undefined,
+      PID: filter.PID,
+      PIN: filter.PIN,
+      Address1: filter.Address ? Like(filter.Address) : undefined,
+      Name: filter.Name ? Like(filter.Name) : undefined,
+      PropertyTypeId: filter.PropertyTypeIds ? In(filter.PropertyTypeIds) : undefined,
     },
   });
   return properties;

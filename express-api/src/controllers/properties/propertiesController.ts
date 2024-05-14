@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 import { stubResponse } from '@/utilities/stubResponse';
 import propertyServices from '@/services/properties/propertiesServices';
+import { MapFilterSchema } from '@/controllers/properties/mapFilterSchema';
+import { checkUserAgencyPermission, isAdmin, isAuditor } from '@/utilities/authorizationChecks';
+import userServices from '@/services/users/usersServices';
 
 /**
  * @description Used to retrieve all properties.
@@ -111,9 +114,27 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-  // TODO: parse for filter
-  // TODO: check for user agency restrictions
-  const properties = await propertyServices.getPropertiesForMap();
+  // parse for filter
+  const filter = await MapFilterSchema.safeParse(req.query);
+  if (filter.error) {
+    return res.status(400).send(filter.error);
+  }
+
+  // Controlling for agency search visibility
+  const kcUser = req.user;
+  const filterResult = filter.data;
+  // Admins and auditors see all
+  if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
+    const requestedAgencies = filterResult.AgencyIds;
+    const userHasAgencies = await checkUserAgencyPermission(kcUser, requestedAgencies);
+    if (!requestedAgencies || !userHasAgencies) {
+      // Then only show that user's agencies instead.
+      const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+      filterResult.AgencyIds = usersAgencies;
+    }
+  }
+
+  const properties = await propertyServices.getPropertiesForMap(filterResult);
   const mapFeatures = properties.map((property) => ({
     type: 'Feature',
     properties: { ...property },

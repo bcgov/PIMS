@@ -6,7 +6,11 @@ import {
   getRequestHandlerMocks,
   produceBuilding,
   produceParcel,
+  produceUser,
 } from '../../../testUtils/factories';
+import { checkUserAgencyPermission } from '@/utilities/authorizationChecks';
+import { Roles } from '@/constants/roles';
+import { BaseSSOUser } from '@bcgov/citz-imb-sso-express';
 
 const {
   getProperties,
@@ -94,6 +98,10 @@ describe('UNIT - Properties', () => {
 
   describe('GET /properties/search/geo', () => {
     it('should return 200 with a list of properties', async () => {
+      jest.mock('@/utilities/authorizationChecks', () => ({
+        checkUserAgencyPermission: async () => true,
+      }))
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
       await getPropertiesForMap(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.length).toBeGreaterThanOrEqual(1);

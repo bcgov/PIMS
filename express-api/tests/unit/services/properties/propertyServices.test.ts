@@ -46,6 +46,10 @@ jest.spyOn(AppDataSource.getRepository(MapProperties), 'find').mockImplementatio
 ]);
 
 describe('UNIT - Property Services', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('fuzzySearchProperties', () => {
     it('should return an object with parcels and buildings', async () => {
       const result = await propertyServices.propertiesFuzzySearch('123', 3);
@@ -56,7 +60,7 @@ describe('UNIT - Property Services', () => {
 
   describe('getPropertiesForMap', () => {
     it('should return a list of map property objects', async () => {
-      const result = await propertyServices.getPropertiesForMap();
+      const result = await propertyServices.getPropertiesForMap({});
       expect(Array.isArray(result)).toBe(true);
       expect(result.at(0)).toHaveProperty('Id');
       expect(result.at(0)).toHaveProperty('Location');
