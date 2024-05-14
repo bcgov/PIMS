@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import DataCard from '../display/DataCard';
-import { Box, Grid, Typography, useTheme } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import { statusChipFormatter } from '@/utilities/formatters';
 import DeleteDialog from '../dialog/DeleteDialog';
 import { deleteAccountConfirmText } from '@/constants/strings';
@@ -116,7 +116,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
     });
   }, [data]);
   const snackbar = useContext(SnackBarContext);
-  const theme = useTheme();
+
   return (
     <Box
       display={'flex'}
@@ -179,7 +179,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
                 snackbar.setMessageState({
                   open: true,
                   text: 'Successfully submitted user details.',
-                  style: { backgroundColor: theme.palette.success.main },
+                  style: snackbar.styles.success,
                 });
               });
             setOpenProfileDialog(false);

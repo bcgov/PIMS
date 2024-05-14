@@ -53,6 +53,10 @@ const initialContext = {
   messageState: initialState,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setMessageState: (() => {}) as Dispatch<SetStateAction<MessageState>>,
+  styles: {
+    success: {},
+    warning: {},
+  },
 };
 /**
  * @constant
@@ -67,10 +71,18 @@ export const SnackBarContext = createContext(initialContext);
  */
 const SnackBarContextProvider = (props: ISnackBarContext) => {
   const theme = useTheme();
+  const snackbarStyles = {
+    success: { backgroundColor: theme.palette.success.main },
+    warning: { backgroundColor: theme.palette.warning.main },
+  };
   const [messageState, setMessageState] = useState(initialState);
   // Value passed into context later
   const value = useMemo(
-    () => ({ messageState: messageState, setMessageState: setMessageState }),
+    () => ({
+      messageState: messageState,
+      setMessageState: setMessageState,
+      styles: snackbarStyles,
+    }),
     [messageState],
   );
 
@@ -100,7 +112,7 @@ const SnackBarContextProvider = (props: ISnackBarContext) => {
       {children}
       <Snackbar open={messageState.open} autoHideDuration={6000} onClose={handleClose}>
         <SnackbarContent
-          sx={messageState.style || { backgroundColor: theme.palette.warning.main }}
+          sx={messageState.style || snackbarStyles.warning}
           message={messageState.text}
           action={action}
         />
