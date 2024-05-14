@@ -1,4 +1,5 @@
 import {
+  Alert,
   Autocomplete,
   Box,
   Grid,
@@ -520,13 +521,19 @@ export const AssessedValue = (props: IAssessedValue) => {
   // Sort the years array in descending order
   const sortedYears = years.sort((a, b) => b - a);
   console.log('sorting the years:', sortedYears, title, topLevelKey);
+  // const [duplicateYearWarning, setDuplicateYearWarning] = useState(false);
 
+  const handleYearChange = (idx: number, year: number) => {
+    // Check if the year being added already exists in the list
+    alert('here');
+    const isValid = years.some((existingYear) => existingYear === year);
+    return isValid;
+  };
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
       <Typography mt={2} variant="h5">
         {title ?? 'Assessed Value'}
       </Typography>
-
       <Box overflow={'auto'} paddingTop={'8px'}>
         {sortedYears &&
           sortedYears.map((yr, idx) => {
@@ -546,6 +553,15 @@ export const AssessedValue = (props: IAssessedValue) => {
                   name={`${topLevelKey ?? ''}Evaluations.${idx}.Year`}
                   label={'Year'}
                   value={yr}
+                  disabled={idx !== sortedYears.length - 1}
+                  onBlur={(event) => {
+                    handleYearChange(idx, parseInt(event.target.value));
+                  }}
+                  rules={{
+                    validate: (value) => {
+                      return handleYearChange(idx, parseInt(value)); // Return the boolean value directly
+                    },
+                  }}
                 />
                 <TextFormField
                   InputProps={{
@@ -555,6 +571,14 @@ export const AssessedValue = (props: IAssessedValue) => {
                   name={`${topLevelKey ?? ''}Evaluations.${idx}.Value`}
                   numeric
                   label={'Value'}
+                  onBlur={(event) => {
+                    handleYearChange(idx, parseInt(event.target.value));
+                  }}
+                  rules={{
+                    validate: (value) => {
+                      return handleYearChange(idx, parseInt(value)); // Return the boolean value directly
+                    },
+                  }}
                 />
               </Box>
             );
