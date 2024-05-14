@@ -58,8 +58,10 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
               }),
           );
           setParcelIndex(0);
-          if (scrollOnClick) map.setView(clickPosition);
+        } else {
+          setParcelData(undefined);
         }
+        if (scrollOnClick) map.setView(clickPosition);
       });
     }
   }, [clickPosition]);
@@ -67,10 +69,10 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
   if (!clickPosition) return <></>;
 
   if (size === 'large')
-    return (
+    return parcelData ? (
       <Popup autoPan={false} position={clickPosition} className="full-size">
         <Box display={'inline-flex'}>
-          {parcelData ? (
+          {
             <>
               {/* Render a list of PIDs/PINs if there's more than one parcel feature here. */}
               {parcelData.length > 1 ? (
@@ -86,59 +88,52 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
               )}
               <ParcelLayerDetails parcel={parcelData.at(parcelIndex)} />
             </>
+          }
+        </Box>
+      </Popup>
+    ) : (
+      <></>
+    );
+
+  return parcelData ? (
+    <Popup autoPan={false} position={clickPosition} className="full-size">
+      <Box display={'inline-flex'} width={150}>
+        <Grid container>
+          <GridColumnPair
+            leftValue={parcelData.at(parcelIndex).PID_FORMATTED ? 'PID' : 'PIN'}
+            rightValue={parcelData.at(parcelIndex).PID_FORMATTED ?? parcelData.at(parcelIndex).PIN}
+          />
+          {parcelData?.length > 1 ? (
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <IconButton size="small" onClick={() => setParcelIndex(Math.max(0, parcelIndex - 1))}>
+                <KeyboardDoubleArrowLeftIcon fontSize="small" />
+              </IconButton>
+              <Typography variant="caption">
+                {parcelIndex + 1} of {parcelData.length}
+              </Typography>
+              <IconButton
+                size="small"
+                onClick={() => setParcelIndex(Math.min(parcelData.length - 1, parcelIndex + 1))}
+              >
+                <KeyboardDoubleArrowRightIcon fontSize="small" />
+              </IconButton>
+            </Grid>
           ) : (
             <></>
           )}
-        </Box>
-      </Popup>
-    );
-
-  return (
-    <Popup autoPan={false} position={clickPosition} className="full-size">
-      <Box display={'inline-flex'} width={150}>
-        {parcelData ? (
-          <Grid container>
-            <GridColumnPair
-              leftValue={parcelData.at(parcelIndex).PID_FORMATTED ? 'PID' : 'PIN'}
-              rightValue={
-                parcelData.at(parcelIndex).PID_FORMATTED ?? parcelData.at(parcelIndex).PIN
-              }
-            />
-            {parcelData?.length > 1 ? (
-              <Grid
-                item
-                xs={12}
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                <IconButton
-                  size="small"
-                  onClick={() => setParcelIndex(Math.max(0, parcelIndex - 1))}
-                >
-                  <KeyboardDoubleArrowLeftIcon fontSize="small" />
-                </IconButton>
-                <Typography variant="caption">
-                  {parcelIndex + 1} of {parcelData.length}
-                </Typography>
-                <IconButton
-                  size="small"
-                  onClick={() => setParcelIndex(Math.min(parcelData.length - 1, parcelIndex + 1))}
-                >
-                  <KeyboardDoubleArrowRightIcon fontSize="small" />
-                </IconButton>
-              </Grid>
-            ) : (
-              <></>
-            )}
-          </Grid>
-        ) : (
-          <></>
-        )}
+        </Grid>
       </Box>
     </Popup>
+  ) : (
+    <></>
   );
 };
 
