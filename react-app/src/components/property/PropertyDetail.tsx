@@ -247,7 +247,13 @@ const PropertyDetail = (props: IPropertyDetail) => {
             parcelRelatedBuildingsNum={relatedBuildings?.length ?? 0}
           />
         </DataCard>
-        <ParcelMap height={'500px'} mapRef={setMap} movable={false} zoomable={false}>
+        <ParcelMap
+          height={'500px'}
+          mapRef={setMap}
+          movable={false}
+          zoomable={false}
+          popupSize="small"
+        >
           <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height={'100%'}>
             <Room
               color="primary"
