@@ -7,7 +7,7 @@ import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotif
 import { User } from '@/typeorm/Entities/User';
 import { UUID, randomUUID } from 'crypto';
 import nunjucks from 'nunjucks';
-import { In, IsNull } from 'typeorm';
+import { IsNull } from 'typeorm';
 import chesServices, {
   EmailBody,
   EmailEncoding,
@@ -15,6 +15,7 @@ import chesServices, {
   IEmail,
 } from '../ches/chesServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
 
 interface AccessRequestData {
   FirstName: string;
@@ -169,42 +170,80 @@ const generateProjectNotifications = async (project: Project, previousStatusId: 
         insertProjectNotificationQueue(template, projStatusNotif, project, project.Agency),
       );
     } else if (template.Audience == NotificationAudience.Agencies) {
-      const agencies = await AppDataSource.getRepository(Agency).find({
-        where: {
-          Id: In(
-            project.AgencyResponses.filter(
-              (resp) => resp.Response == AgencyResponseType.Subscribe,
-            ).map((a) => a.AgencyId),
-          ),
-          IsDisabled: false,
-          SendEmail: true,
-        },
-      });
+      const agencies = await AppDataSource.getRepository(Agency)
+        .createQueryBuilder('a')
+        .leftJoin(
+          ProjectAgencyResponse,
+          'par',
+          'a.id = par.agency_id AND par.project_id = :projectId',
+          {
+            projectId: 5287,
+          },
+        )
+        .andWhere('a.is_disabled = false')
+        .andWhere('a.send_email = true')
+        .andWhere(
+          '(par.agency_id IS NULL OR (par.response != :unsubscribe AND par.response != :watch))',
+          {
+            unsubscribe: AgencyResponseType.Unsubscribe,
+            watch: AgencyResponseType.Watch,
+          },
+        )
+        .getMany();
       agencies.forEach((agc) =>
         returnNotifications.push(
           insertProjectNotificationQueue(template, projStatusNotif, project, agc),
         ),
       );
     } else if (template.Audience == NotificationAudience.ParentAgencies) {
-      const agencies = await AppDataSource.getRepository(Agency).find({
-        where: {
-          Id: In(
-            project.AgencyResponses.filter(
-              (resp) => resp.Response == AgencyResponseType.Subscribe,
-            ).map((a) => a.AgencyId),
-          ),
-          IsDisabled: false,
-          SendEmail: true,
-          ParentId: IsNull(),
-        },
-      });
+      const agencies = await AppDataSource.getRepository(Agency)
+        .createQueryBuilder('a')
+        .leftJoin(
+          ProjectAgencyResponse,
+          'par',
+          'a.id = par.agency_id AND par.project_id = :projectId',
+          {
+            projectId: 5287,
+          },
+        )
+        .where('a.parent_id IS NULL')
+        .andWhere('a.is_disabled = false')
+        .andWhere('a.send_email = true')
+        .andWhere(
+          '(par.agency_id IS NULL OR (par.response != :unsubscribe AND par.response != :watch))',
+          {
+            unsubscribe: AgencyResponseType.Unsubscribe,
+            watch: AgencyResponseType.Watch,
+          },
+        )
+        .getMany();
       agencies.forEach((agc) =>
         returnNotifications.push(
           insertProjectNotificationQueue(template, projStatusNotif, project, agc),
         ),
       );
     } else if (template.Audience == NotificationAudience.WatchingAgencies) {
-      // Do we need this distinction?
+      const agencies = await AppDataSource.getRepository(Agency)
+        .createQueryBuilder('a')
+        .leftJoin(
+          ProjectAgencyResponse,
+          'par',
+          'a.id = par.agency_id AND par.project_id = :projectId',
+          {
+            projectId: 5287,
+          },
+        )
+        .andWhere('a.is_disabled = false')
+        .andWhere('a.send_email = true')
+        .andWhere('(par.agency_id IS NOT NULL AND par.response = :watch)', {
+          watch: AgencyResponseType.Watch,
+        })
+        .getMany();
+      agencies.forEach((agc) =>
+        returnNotifications.push(
+          insertProjectNotificationQueue(template, projStatusNotif, project, agc),
+        ),
+      );
     } else if (template.Audience == NotificationAudience.Default) {
       returnNotifications.push(insertProjectNotificationQueue(template, projStatusNotif, project));
     }

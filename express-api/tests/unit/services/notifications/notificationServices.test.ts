@@ -6,6 +6,7 @@ import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { faker } from '@faker-js/faker';
 import { randomUUID } from 'crypto';
 import {
+  produceAgency,
   produceNotificationQueue,
   produceNotificationTemplate,
   produceProject,
@@ -18,6 +19,7 @@ import chesServices from '@/services/ches/chesServices';
 import { NotificationTemplate } from '@/typeorm/Entities/NotificationTemplate';
 import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
 import { User } from '@/typeorm/Entities/User';
+import { Agency } from '@/typeorm/Entities/Agency';
 
 jest
   .spyOn(AppDataSource.getRepository(NotificationQueue), 'save')
@@ -47,6 +49,19 @@ jest
         .ToStatusId as number,
     }),
   ]);
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const _agenciesQueryBuilder: any = {
+  select: () => _agenciesQueryBuilder,
+  leftJoin: () => _agenciesQueryBuilder,
+  where: () => _agenciesQueryBuilder,
+  andWhere: () => _agenciesQueryBuilder,
+  getMany: () => [produceAgency()],
+};
+
+jest
+  .spyOn(AppDataSource.getRepository(Agency), 'createQueryBuilder')
+  .mockImplementation(() => _agenciesQueryBuilder);
 
 const _sendEmailAsync = jest.fn().mockImplementation(() => ({
   messages: [{ msgId: randomUUID(), to: faker.internet.email() }],
