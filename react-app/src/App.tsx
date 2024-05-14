@@ -206,7 +206,7 @@ const Router = () => {
         path="/projects/:id"
         element={
           <BaseLayout>
-            <AuthRouteGuard>
+            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
               <ProjectDetail onClose={() => navigate('/projects')} />
             </AuthRouteGuard>
           </BaseLayout>

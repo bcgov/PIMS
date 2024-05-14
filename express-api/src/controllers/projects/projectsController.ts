@@ -4,9 +4,10 @@ import { Request, Response } from 'express';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import projectServices, { ProjectPropertyIds } from '@/services/projects/projectsServices';
 import userServices from '@/services/users/usersServices';
-import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
+import { isAdmin, isAuditor, checkUserAgencyPermission } from '@/utilities/authorizationChecks';
 import { DeepPartial } from 'typeorm';
 import { Project } from '@/typeorm/Entities/Project';
+
 /**
  * @description Get disposal project by either the numeric id or projectNumber.
  * @param {Request}     req Incoming request.
@@ -21,6 +22,7 @@ export const getDisposalProject = async (req: Request, res: Response) => {
    *   "bearerAuth" : []
    * }]
    */
+  const user = req.user as SSOUser;
   const projectId = Number(req.params.projectId);
   if (isNaN(projectId)) {
     return res.status(400).send('Project ID was invalid.');
@@ -29,6 +31,11 @@ export const getDisposalProject = async (req: Request, res: Response) => {
   if (!project) {
     return res.status(404).send('Project matching this internal ID not found.');
   }
+
+  if (!(await checkUserAgencyPermission(user, [project.AgencyId]))) {
+    return res.status(403).send('You are not authorized to view this project.');
+  }
+
   const buildings = project.ProjectProperties.filter((a) => a.Building != null).map(
     (a) => a.Building,
   );

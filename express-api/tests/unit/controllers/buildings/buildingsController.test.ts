@@ -16,6 +16,7 @@ const _getBuildingsForExcelExport = jest.fn().mockImplementation(() => [produceB
 const _addBuilding = jest.fn().mockImplementation(() => produceBuilding());
 const _deleteBuilding = jest.fn().mockImplementation((): DeleteResult => ({ raw: {} }));
 const _updateBuilding = jest.fn().mockImplementation(() => produceBuilding());
+const _hasAgencies = jest.fn();
 
 jest.mock('@/services/buildings/buildingServices', () => ({
   getBuildingById: () => _getBuildingById(),
@@ -29,7 +30,7 @@ jest.mock('@/services/buildings/buildingServices', () => ({
 jest.mock('@/services/users/usersServices', () => ({
   getUser: jest.fn().mockImplementation(() => produceUser()),
   getAgencies: jest.fn().mockResolvedValue([1, 2]),
-  hasAgencies: jest.fn().mockImplementation(() => true),
+  hasAgencies: jest.fn(() => _hasAgencies()),
 }));
 
 describe('UNIT - Buildings', () => {
@@ -48,6 +49,7 @@ describe('UNIT - Buildings', () => {
         AgencyId: 1,
       };
       mockRequest.params.buildingId = '1';
+      _hasAgencies.mockImplementationOnce(() => true);
       _getBuildingById.mockImplementationOnce(() => buildingWithAgencyId1);
       await controllers.getBuilding(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
@@ -64,6 +66,17 @@ describe('UNIT - Buildings', () => {
       _getBuildingById.mockImplementationOnce(() => null);
       await controllers.getBuilding(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(404);
+    });
+
+    it('should return 403 when user does not have correct agencies', async () => {
+      const buildingWithAgencyId1 = {
+        AgencyId: 1,
+      };
+      mockRequest.params.buildingId = '1';
+      _hasAgencies.mockImplementationOnce(() => false);
+      _getBuildingById.mockImplementationOnce(() => buildingWithAgencyId1);
+      await controllers.getBuilding(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(403);
     });
   });
 
