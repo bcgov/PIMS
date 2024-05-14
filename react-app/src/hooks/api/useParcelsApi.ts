@@ -3,12 +3,13 @@ import { IFetch } from '../useFetch';
 import { BaseEntityInterface } from '@/interfaces/IBaseEntity';
 import { EvaluationKey } from '@/interfaces/IEvaluationKey';
 import { FiscalKey } from '@/interfaces/IFiscalKey';
+import { DeepPartial } from 'react-hook-form';
 
 export interface ParcelEvaluation extends BaseEntityInterface {
   ParcelId: number;
   Parcel?: Parcel;
   Year: number;
-  Value: string;
+  Value: string | number;
   Firm?: string;
   EvaluationKeyId: number;
   EvaluationKey?: EvaluationKey;
@@ -27,7 +28,7 @@ type ParcelFiscalAdd = Omit<
 export interface ParcelFiscal extends BaseEntityInterface {
   FiscalYear: number;
   EffectiveDate: Date;
-  Value: string;
+  Value: string | number;
   Note?: string;
   FiscalKeyId: number;
   FiscalKey?: FiscalKey;
@@ -63,7 +64,7 @@ const useParcelsApi = (absoluteFetch: IFetch) => {
     const { parsedBody, status } = await absoluteFetch.post('/parcels', parcel);
     return { parsedBody, status };
   };
-  const updateParcelById = async (id: number, parcel: ParcelUpdate) => {
+  const updateParcelById = async (id: number, parcel: DeepPartial<ParcelUpdate>) => {
     const { parsedBody } = await absoluteFetch.put(`/parcels/${id}`, parcel);
     return parsedBody as Parcel;
   };

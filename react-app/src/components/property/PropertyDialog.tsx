@@ -258,7 +258,9 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
       .filter((evaluation) => evaluation.Value != null)
       .map((evaluation) => ({
         ...evaluation,
-        Value: parseFloat(evaluation.Value),
+        BuildingId: (evaluation as BuildingEvaluation).BuildingId,
+        ParcelId: (evaluation as ParcelEvaluation).ParcelId,
+        Value: parseFloat(String(evaluation.Value)),
         EvaluationKeyId: 0,
         Year: evaluation.Year,
       }));
@@ -277,7 +279,7 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
           Id: building.Id,
           Evaluations: building.Evaluations?.map((evalu) => ({
             ...evalu,
-            Value: evalu.Value.replace(/[$,]/g, ''), // Obviously this double map is pretty evil so suggestions welcome.
+            Value: String(evalu.Value).replace(/[$,]/g, ''), // Obviously this double map is pretty evil so suggestions welcome.
           })).sort((a, b) => b.Year - a.Year),
         })),
       });

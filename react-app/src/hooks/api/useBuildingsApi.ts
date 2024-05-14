@@ -3,12 +3,13 @@ import { IFetch } from '../useFetch';
 import { BaseEntityInterface } from '@/interfaces/IBaseEntity';
 import { EvaluationKey } from '@/interfaces/IEvaluationKey';
 import { FiscalKey } from '@/interfaces/IFiscalKey';
+import { DeepPartial } from 'react-hook-form';
 
 export interface BuildingEvaluation extends BaseEntityInterface {
   BuildingId: number;
   Building?: Building;
   Year: number;
-  Value: string;
+  Value: string | number;
   EvaluationKeyId: number;
   EvaluationKey?: EvaluationKey;
   Note?: string;
@@ -90,7 +91,7 @@ const useBuildingsApi = (absoluteFetch: IFetch) => {
     const { parsedBody, status } = await absoluteFetch.post('/buildings', building);
     return { parsedBody, status };
   };
-  const updateBuildingById = async (id: number, building: BuildingUpdate) => {
+  const updateBuildingById = async (id: number, building: DeepPartial<BuildingUpdate>) => {
     const { parsedBody } = await absoluteFetch.put(`/buildings/${id}`, building);
     return parsedBody as Building;
   };
