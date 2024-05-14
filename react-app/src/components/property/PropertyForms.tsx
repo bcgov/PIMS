@@ -525,7 +525,6 @@ export const AssessedValue = (props: IAssessedValue) => {
 
   const handleYearChange = (idx: number, year: number) => {
     // Check if the year being added already exists in the list
-    alert('here');
     const isValid = years.some((existingYear) => existingYear === year);
     return isValid;
   };
