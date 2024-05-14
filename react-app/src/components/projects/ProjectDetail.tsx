@@ -43,10 +43,12 @@ const ProjectDetail = (props: IProjectDetail) => {
     api.projects.getProjectById(Number(id)),
   );
 
-  if (data && data.retStatus == 403) {
-    // TODO: display message with permission error
-    navigate('/'); // look into maybe using redirect
-  }
+  useEffect(() => {
+    if (data && data.retStatus == 403) {
+      // TODO: display message with permission error
+      navigate('/'); // look into maybe using redirect
+    }
+  }, [data]);
 
   const { data: tasks, loadOnce: loadTasks } = useDataLoader(() => api.lookup.getTasks());
   loadTasks();
@@ -60,6 +62,8 @@ const ProjectDetail = (props: IProjectDetail) => {
     if (!data || !tasks || !statuses) {
       return {};
     }
+    if (!data.parsedBody?.Tasks) return {};
+
     //Somewhat evil reduce where we collect information from the status and tasks lookup so that we can
     //get data for the status and task names to be displayed when we enumarete the tasks associated to the project itself
     //in the documentation history section.
