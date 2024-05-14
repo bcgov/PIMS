@@ -2,11 +2,18 @@ import { GridColumnPair } from '@/components/map/MapPropertyDetails';
 import MetresSquared from '@/components/text/MetresSquared';
 import { ParcelData } from '@/hooks/api/useParcelLayerApi';
 import usePimsApi from '@/hooks/usePimsApi';
-import { Box, Grid, List, ListItem, Typography, useTheme } from '@mui/material';
+import { Box, Grid, IconButton, List, ListItem, Typography, useTheme } from '@mui/material';
 import { LatLng } from 'leaflet';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Popup, useMap, useMapEvents } from 'react-leaflet';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import './parcelPopup.css';
+
+interface ParcelPopupProps {
+  size?: 'small' | 'large';
+  scrollOnClick?: boolean;
+}
 
 /**
  * Renders a popup component that displays information about a parcel on the map.
@@ -15,10 +22,11 @@ import './parcelPopup.css';
  *
  * @returns {JSX.Element} The ParcelPopup component.
  */
-export const ParcelPopup = () => {
+export const ParcelPopup = (props: ParcelPopupProps) => {
   const [parcelData, setParcelData] = useState<ParcelData[]>(undefined); // All parcels at that click location.
   const [clickPosition, setClickPosition] = useState<LatLng>(null);
   const [parcelIndex, setParcelIndex] = useState<number>(0); // If multiple, which parcel to show info for.
+  const { size = 'large', scrollOnClick } = props;
 
   const map = useMap();
   const api = usePimsApi();
@@ -50,36 +58,82 @@ export const ParcelPopup = () => {
               }),
           );
           setParcelIndex(0);
-          map.setView(clickPosition);
+        } else {
+          setParcelData(undefined);
         }
+        if (scrollOnClick) map.setView(clickPosition);
       });
     }
   }, [clickPosition]);
 
   if (!clickPosition) return <></>;
-  return (
+
+  if (size === 'large')
+    return parcelData ? (
+      <Popup autoPan={false} position={clickPosition} className="full-size">
+        <Box display={'inline-flex'}>
+          {
+            <>
+              {/* Render a list of PIDs/PINs if there's more than one parcel feature here. */}
+              {parcelData.length > 1 ? (
+                <ParcelPopupSelect
+                  parcelData={parcelData}
+                  onClick={(index: number) => {
+                    setParcelIndex(index);
+                  }}
+                  currentIndex={parcelIndex}
+                />
+              ) : (
+                <></>
+              )}
+              <ParcelLayerDetails parcel={parcelData.at(parcelIndex)} />
+            </>
+          }
+        </Box>
+      </Popup>
+    ) : (
+      <></>
+    );
+
+  return parcelData ? (
     <Popup autoPan={false} position={clickPosition} className="full-size">
-      <Box display={'inline-flex'}>
-        {parcelData ? (
-          <>
-            {/* Render a list of PIDs/PINs if there's more than one parcel feature here. */}
-            {parcelData.length > 1 ? (
-              <ParcelPopupSelect
-                parcelData={parcelData}
-                onClick={(index: number) => {
-                  setParcelIndex(index);
-                }}
-              />
-            ) : (
-              <></>
-            )}
-            <ParcelLayerDetails parcel={parcelData.at(parcelIndex)} />
-          </>
-        ) : (
-          <></>
-        )}
+      <Box display={'inline-flex'} width={150}>
+        <Grid container>
+          <GridColumnPair
+            leftValue={parcelData.at(parcelIndex).PID_FORMATTED ? 'PID' : 'PIN'}
+            rightValue={parcelData.at(parcelIndex).PID_FORMATTED ?? parcelData.at(parcelIndex).PIN}
+          />
+          {parcelData?.length > 1 ? (
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <IconButton size="small" onClick={() => setParcelIndex(Math.max(0, parcelIndex - 1))}>
+                <KeyboardDoubleArrowLeftIcon fontSize="small" />
+              </IconButton>
+              <Typography variant="caption">
+                {parcelIndex + 1} of {parcelData.length}
+              </Typography>
+              <IconButton
+                size="small"
+                onClick={() => setParcelIndex(Math.min(parcelData.length - 1, parcelIndex + 1))}
+              >
+                <KeyboardDoubleArrowRightIcon fontSize="small" />
+              </IconButton>
+            </Grid>
+          ) : (
+            <></>
+          )}
+        </Grid>
       </Box>
     </Popup>
+  ) : (
+    <></>
   );
 };
 
@@ -108,7 +162,6 @@ const ParcelLayerDetails = (props: ParcelLayerDetailsProps) => {
           <></>
         )}
         {parcel.PIN != null ? <GridColumnPair leftValue={'PIN'} rightValue={parcel.PIN} /> : <></>}
-        <GridColumnPair leftValue={'Name'} rightValue={parcel.PARCEL_NAME} />
         {/* 
         // TODO: Has to come from LTSA
         <GridColumnPair leftValue={'Legal Description'} rightValue={parcel.} /> 
@@ -135,6 +188,7 @@ const ParcelLayerDetails = (props: ParcelLayerDetailsProps) => {
 interface ParcelPopupSelectProps {
   parcelData: ParcelData[];
   onClick?: (index: number) => void;
+  currentIndex: number;
 }
 
 /**
@@ -147,7 +201,7 @@ interface ParcelPopupSelectProps {
  */
 const ParcelPopupSelect = (props: ParcelPopupSelectProps) => {
   const theme = useTheme();
-  const { parcelData, onClick } = props;
+  const { parcelData, onClick, currentIndex } = props;
   return (
     <Box minWidth={'200px'} marginRight={'2em'}>
       <Typography variant="h4">Select Parcel</Typography>
@@ -170,6 +224,7 @@ const ParcelPopupSelect = (props: ParcelPopupSelectProps) => {
               '&:hover': {
                 backgroundColor: theme.palette.divider,
               },
+              backgroundColor: currentIndex === index ? theme.palette.divider : undefined,
             }}
             onClick={() => {
               onClick(index);

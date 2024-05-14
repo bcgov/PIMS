@@ -13,6 +13,8 @@ type ParcelMapProps = {
   movable?: boolean;
   zoomable?: boolean;
   loadProperties?: boolean;
+  popupSize?: 'small' | 'large';
+  scrollOnClick?: boolean;
 } & PropsWithChildren;
 
 export const SelectedMarkerContext = createContext(null);
@@ -47,7 +49,16 @@ const ParcelMap = (props: ParcelMapProps) => {
     type: undefined,
   });
 
-  const { height, mapRef, movable = true, zoomable = true, loadProperties = false } = props;
+  const {
+    height,
+    mapRef,
+    movable = true,
+    zoomable = true,
+    loadProperties = false,
+    popupSize,
+    scrollOnClick,
+  } = props;
+
   return (
     <SelectedMarkerContext.Provider
       value={{
@@ -74,7 +85,7 @@ const ParcelMap = (props: ParcelMapProps) => {
           preferCanvas
         >
           <MapLayers />
-          <ParcelPopup />
+          <ParcelPopup size={popupSize} scrollOnClick={scrollOnClick} />
           <MapEvents />
           {loadProperties ? <InventoryLayer setLoading={setLoading} /> : <></>}
           {props.children}
