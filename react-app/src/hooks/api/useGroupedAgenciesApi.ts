@@ -68,7 +68,7 @@ export const useGroupedAgenciesApi = () => {
     return options;
   }, [groupedAgencies]);
 
-  return { groupedAgencies, agencyOptions };
+  return { groupedAgencies, ungroupedAgencies: agencyData, agencyOptions };
 };
 
 export default useGroupedAgenciesApi;

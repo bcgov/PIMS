@@ -49,7 +49,7 @@ const getTokenAsync = async (username: string, password: string): Promise<TokenR
 };
 
 const generateUrl = (endpoint: string) => {
-  return `${process.env.CHES_HOST_URI}${endpoint}`;
+  return `${urls.CHES.HOST}${endpoint}`;
 };
 
 const refreshTokenAsync = async () => {
@@ -96,7 +96,7 @@ export enum EmailEncoding {
 
 export enum EmailPriority {
   Low = 'low',
-  Medium = 'medium',
+  Normal = 'normal',
   High = 'high',
 }
 

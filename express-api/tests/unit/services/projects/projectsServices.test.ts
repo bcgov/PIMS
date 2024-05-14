@@ -18,12 +18,15 @@ import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { faker } from '@faker-js/faker';
 import {
+  produceAgencyResponse,
   produceBuilding,
+  produceNotificationQueue,
   produceParcel,
   produceProject,
   produceProjectNotification,
   produceProjectProperty,
   produceProjectTask,
+  produceSSO,
   productProjectStatusHistory,
 } from 'tests/testUtils/factories';
 import { DeepPartial } from 'typeorm';
@@ -49,6 +52,15 @@ const _projectUpdate = jest
 const _projectStatusHistoryInsert = jest
   .spyOn(AppDataSource.getRepository(ProjectStatusHistory), 'save')
   .mockImplementation(async () => productProjectStatusHistory());
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _projectTaskSave = jest
+  .spyOn(AppDataSource.getRepository(ProjectTask), 'save')
+  .mockImplementation(async () => produceProjectTask());
+
+jest
+  .spyOn(AppDataSource.getRepository(ProjectAgencyResponse), 'save')
+  .mockImplementation(async () => produceAgencyResponse());
 
 // EXIST mocks
 const _agencyExists = jest
@@ -128,10 +140,13 @@ const _notificationFind = jest
 const _projectTaskFind = jest
   .spyOn(AppDataSource.getRepository(ProjectTask), 'findOne')
   .mockImplementation(async () => produceProjectTask());
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _projectTaskSave = jest
-  .spyOn(AppDataSource.getRepository(ProjectTask), 'save')
-  .mockImplementation(async () => produceProjectTask());
+jest
+  .spyOn(AppDataSource.getRepository(ProjectTask), 'find')
+  .mockImplementation(async () => [produceProjectTask()]);
+
+jest
+  .spyOn(AppDataSource.getRepository(ProjectAgencyResponse), 'find')
+  .mockImplementation(async () => [produceAgencyResponse()]);
 // QUERY mocks
 const _getNextSequence = jest.spyOn(AppDataSource, 'query').mockImplementation(async () => [
   {
@@ -149,7 +164,14 @@ const _queryRunner = jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnVa
   startTransaction: _mockStartTransaction,
   rollbackTransaction: _mockRollbackTransaction,
   commitTransaction: _mockCommitTransaction,
+  release: jest.fn(async () => {}),
 });
+
+jest.mock('@/services/notifications/notificationServices', () => ({
+  generateProjectNotifications: jest.fn(async () => [produceNotificationQueue()]),
+  sendNotification: jest.fn(async () => produceNotificationQueue()),
+  NotificationStatus: { Accepted: 0, Pending: 1, Cancelled: 2, Failed: 3, Completed: 4 },
+}));
 
 describe('UNIT - Project Services', () => {
   describe('addProject', () => {
@@ -368,6 +390,7 @@ describe('UNIT - Project Services', () => {
     it('should update values of a project', async () => {
       _projectFindOne
         .mockImplementationOnce(async () => originalProject)
+        .mockImplementationOnce(async () => originalProject)
         .mockImplementationOnce(async () => projectUpdate);
       _projectPropertiesFind.mockImplementationOnce(
         async () =>
@@ -380,13 +403,17 @@ describe('UNIT - Project Services', () => {
             },
           ] as ProjectProperty[],
       );
-      const result = await projectServices.updateProject(projectUpdate, {
-        parcels: [1, 3],
-        buildings: [4, 5],
-      });
+      const result = await projectServices.updateProject(
+        projectUpdate,
+        {
+          parcels: [1, 3],
+          buildings: [4, 5],
+        },
+        produceSSO(),
+      );
       expect(result.StatusId).toBe(2);
       expect(result.Name).toBe('New Name');
-      expect(_projectPropertiesFind).toHaveBeenCalledTimes(3);
+      expect(_projectPropertiesFind).toHaveBeenCalledTimes(5);
       expect(_projectStatusHistoryInsert).toHaveBeenCalledTimes(1);
       expect(_projectUpdate).toHaveBeenCalledTimes(1);
     });
@@ -400,6 +427,7 @@ describe('UNIT - Project Services', () => {
               StatusId: 2,
             },
             {},
+            produceSSO(),
           ),
       ).rejects.toThrow(new ErrorWithCode('Projects must have a name.', 400));
     });
@@ -414,6 +442,7 @@ describe('UNIT - Project Services', () => {
               StatusId: 2,
             },
             {},
+            produceSSO(),
           ),
       ).rejects.toThrow(new ErrorWithCode('Project does not exist.', 404));
     });
@@ -431,6 +460,7 @@ describe('UNIT - Project Services', () => {
               ProjectNumber: 'not a number',
             },
             {},
+            produceSSO(),
           ),
       ).rejects.toThrow(new ErrorWithCode('Project Number may not be changed.', 403));
     });
@@ -446,6 +476,7 @@ describe('UNIT - Project Services', () => {
               AgencyId: 5,
             },
             {},
+            produceSSO(),
           ),
       ).rejects.toThrow(new ErrorWithCode('Project Agency may not be changed.', 403));
     });
@@ -462,8 +493,9 @@ describe('UNIT - Project Services', () => {
               parcels: [1, 3],
               buildings: [4, 5],
             },
+            produceSSO(),
           ),
-      ).rejects.toThrow(new ErrorWithCode('Error updating project.', 500));
+      ).rejects.toThrow(new ErrorWithCode('Error updating project: bad save', 500));
     });
 
     describe('getProjects', () => {

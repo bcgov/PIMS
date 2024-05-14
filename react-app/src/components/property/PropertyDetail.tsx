@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import DetailViewNavigation from '../display/DetailViewNavigation';
-import { Box, Typography } from '@mui/material';
+import { Box, Skeleton, Typography } from '@mui/material';
 import DataCard from '../display/DataCard';
 import { ClassificationInline } from './ClassificationIcon';
 import CollapsibleSidebar from '../layout/CollapsibleSidebar';
@@ -35,20 +35,29 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const parcelId = isNaN(Number(params.parcelId)) ? null : Number(params.parcelId);
   const buildingId = isNaN(Number(params.buildingId)) ? null : Number(params.buildingId);
   const api = usePimsApi();
-  const { data: parcel, refreshData: refreshParcel } = useDataLoader(() => {
+  const {
+    data: parcel,
+    refreshData: refreshParcel,
+    isLoading: parcelsLoading,
+  } = useDataLoader(() => {
     if (parcelId) {
       return api.parcels.getParcelById(parcelId);
     } else {
       return null;
     }
   });
-  const { data: building, refreshData: refreshBuilding } = useDataLoader(() => {
+  const {
+    data: building,
+    refreshData: refreshBuilding,
+    isLoading: buildingsLoading,
+  } = useDataLoader(() => {
     if (buildingId) {
       return api.buildings.getBuildingById(buildingId);
     } else {
       return null;
     }
   });
+  const propertyLoading = buildingsLoading || parcelsLoading;
   const { data: relatedBuildings, refreshData: refreshRelated } = useDataLoader(
     () => parcel?.PID && api.buildings.getBuildings({ pid: parcel.PID, includeRelations: true }),
   );
@@ -129,7 +138,9 @@ const PropertyDetail = (props: IPropertyDetail) => {
       case 'Agency':
         return <Typography>{val.Name}</Typography>;
       case 'Classification':
-        return (
+        return !val || propertyLoading ? (
+          <Skeleton />
+        ) : (
           <ClassificationInline
             color={classification[val.Id].textColor}
             backgroundColor={classification[val.Id].bgColor}
@@ -157,29 +168,25 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const buildingOrParcel: PropertyType = building != null ? 'Building' : 'Parcel';
   const mainInformation = useMemo(() => {
     const data: Parcel | Building = buildingOrParcel === 'Building' ? building : parcel;
-    if (!data) {
-      return {};
+    const info: any = {
+      Classification: data?.Classification,
+      PID: data?.PID ? zeroPadPID(data.PID) : undefined,
+      PIN: data?.PIN,
+      PostalCode: data?.Postal,
+      AdministrativeArea: data?.AdministrativeArea?.Name,
+      Address: data?.Address1,
+      IsSensitive: data?.IsSensitive,
+      Description: data?.Description,
+    };
+    if (buildingOrParcel === 'Building') {
+      info.Name = (data as Building)?.Name;
+      info.TotalArea = (data as Building)?.TotalArea;
+      info.UsableArea = (data as Building)?.RentableArea;
     } else {
-      const info: any = {
-        Classification: data.Classification,
-        PID: data.PID ? zeroPadPID(data.PID) : undefined,
-        PIN: data.PIN,
-        PostalCode: data.Postal,
-        AdministrativeArea: data.AdministrativeArea?.Name,
-        Address: data.Address1,
-        IsSensitive: data.IsSensitive,
-        Description: data.Description,
-      };
-      if (buildingOrParcel === 'Building') {
-        info.Name = (data as Building).Name;
-        info.TotalArea = (data as Building).TotalArea;
-        info.UsableArea = (data as Building).RentableArea;
-      } else {
-        info.LandArea = (data as Parcel).LandArea;
-        info.Owned = !(data as Parcel).NotOwned;
-      }
-      return info;
+      info.LandArea = (data as Parcel)?.LandArea;
+      info.Owned = !(data as Parcel)?.NotOwned;
     }
+    return info;
   }, [parcel, building]);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -211,6 +218,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           onBackClick={() => props.onClose()}
         />
         <DataCard
+          loading={propertyLoading}
           id={`${buildingOrParcel} information`}
           customFormatter={customFormatter}
           values={mainInformation}
@@ -218,6 +226,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           onEdit={() => setOpenInformationDialog(true)}
         />
         <DataCard
+          loading={propertyLoading}
           id={`${buildingOrParcel} net book value`}
           values={undefined}
           title={`${buildingOrParcel} net book value`}
@@ -227,6 +236,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           <PropertyNetValueTable rows={netBookValues} />
         </DataCard>
         <DataCard
+          loading={propertyLoading}
           id={'Assessed value'}
           values={undefined}
           title={'Assessed value'}
@@ -239,7 +249,13 @@ const PropertyDetail = (props: IPropertyDetail) => {
             parcelRelatedBuildingsNum={relatedBuildings?.length ?? 0}
           />
         </DataCard>
-        <ParcelMap height={'500px'} mapRef={setMap} movable={false} zoomable={false}>
+        <ParcelMap
+          height={'500px'}
+          mapRef={setMap}
+          movable={false}
+          zoomable={false}
+          popupSize="small"
+        >
           <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height={'100%'}>
             <Room
               color="primary"

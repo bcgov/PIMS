@@ -1,11 +1,6 @@
 import { Request, Response } from 'express';
-import { stubResponse } from '@/utilities/stubResponse';
-// import * as ltsaService from '@/services/ltsa/ltsaservice';
+import ltsaService from '@/services/ltsa/ltsaServices';
 
-// export const getToken = async (req: Request, res: Response) => {
-//   const token = await ltsaService.getTokenAsync();
-//   return res.status(200).send(token);
-// };
 /**
  * @description Used to retrieve property information from LTSA.
  * @param   {Request}     req Incoming request
@@ -20,7 +15,7 @@ export const getLTSA = async (req: Request, res: Response) => {
             "bearerAuth": []
       }]
    */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  const pid = req.query.pid as string;
+  const getLandTitleInfo = await ltsaService.processLTSARequest(pid);
+  return res.status(200).send(getLandTitleInfo);
 };

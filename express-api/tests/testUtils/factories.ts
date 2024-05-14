@@ -34,6 +34,7 @@ import {
   NotificationStatus,
 } from '@/services/notifications/notificationServices';
 import { NotificationTemplate } from '@/typeorm/Entities/NotificationTemplate';
+import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
 
 export class MockRes {
   statusValue: any;
@@ -513,6 +514,7 @@ export const produceProject = (
     Notifications: [],
     StatusHistory: [],
     Notes: [],
+    AgencyResponses: [],
     ...props,
   };
   return project;
@@ -607,7 +609,7 @@ export const produceNotificationQueue = () => {
     Id: faker.number.int(),
     Key: randomUUID(),
     Status: NotificationStatus.Pending,
-    Priority: EmailPriority.Medium,
+    Priority: EmailPriority.Normal,
     Encoding: EmailEncoding.Utf8,
     SendOn: new Date(),
     To: faker.internet.email(),
@@ -660,4 +662,28 @@ export const produceNotificationTemplate = (props?: Partial<NotificationTemplate
     ...props,
   };
   return template;
+};
+
+export const produceAgencyResponse = (props?: Partial<ProjectAgencyResponse>) => {
+  const response: ProjectAgencyResponse = {
+    ProjectId: faker.number.int(),
+    Project: undefined,
+    AgencyId: faker.number.int(),
+    Agency: undefined,
+    OfferAmount: 123,
+    NotificationId: faker.number.int(),
+    Notification: undefined,
+    Response: 1,
+    ReceivedOn: new Date(),
+    Note: faker.lorem.lines(),
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+
+  return response;
 };
