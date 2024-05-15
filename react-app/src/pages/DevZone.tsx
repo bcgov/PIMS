@@ -1,11 +1,10 @@
 /* eslint-disable no-console */
 //Simple component testing area.
-import AgencySearchTable from '@/components/projects/AgencyResponseSearchTable';
-import React, { useState } from 'react';
+import ParcelMap from '@/components/map/ParcelMap';
+import React from 'react';
 
 const Dev = () => {
-  const [rows, setRows] = useState([]);
-  return <AgencySearchTable rows={rows} setRows={setRows} />;
+  return <ParcelMap height="100%" loadProperties={true} popupSize="large" scrollOnClick />;
 };
 
 export default Dev;

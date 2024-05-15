@@ -1,4 +1,5 @@
-import { ParcelData, SelectedMarkerContext } from '@/components/map/ParcelMap';
+import { ParcelData } from '@/hooks/api/useParcelLayerApi';
+import { SelectedMarkerContext } from '@/components/map/ParcelMap';
 import MetresSquared from '@/components/text/MetresSquared';
 import { PropertyTypes } from '@/constants/propertyTypes';
 import { Building } from '@/hooks/api/useBuildingsApi';
@@ -31,7 +32,7 @@ export interface MapPropertyDetailsProps {
 }
 
 const typographyStyle = (theme) => ({ ...theme.typography.body2 });
-const LeftGridColumn = (props: PropsWithChildren) => (
+export const LeftGridColumn = (props: PropsWithChildren & { alignment?: string }) => (
   <Grid
     item
     xs={4}
@@ -39,23 +40,46 @@ const LeftGridColumn = (props: PropsWithChildren) => (
     sx={{
       fontWeight: 'bold',
       display: 'flex',
-      alignItems: 'center',
+      alignItems: props.alignment ?? 'center',
     }}
   >
     {props.children}
   </Grid>
 );
-const RightGridColumn = (props: PropsWithChildren) => (
-  <Grid item xs={7} typography={typographyStyle}>
-    {props.children}
+export const RightGridColumn = (props: PropsWithChildren & { alignment?: string }) => (
+  <Grid
+    item
+    xs={7}
+    typography={typographyStyle}
+    sx={{
+      display: 'flex',
+      alignItems: props.alignment ?? 'center',
+    }}
+  >
+    {props.children ?? ''}
   </Grid>
 );
 
-const GridColumnPair = ({ leftValue, rightValue }) => {
+export interface GridColumnPairProps {
+  leftValue: any;
+  rightValue: any;
+  alignment?: string;
+}
+
+/**
+ * Renders a pair of grid columns with a left value and a right value.
+ *
+ * @param {GridColumnPairProps} props - The props for the GridColumnPair component.
+ * @param {any} props.leftValue - The value to be displayed in the left column.
+ * @param {any} props.rightValue - The value to be displayed in the right column.
+ * @param {string} [props.alignment] - The alignment of the columns. Defaults to 'center'.
+ * @returns {JSX.Element} The rendered GridColumnPair component.
+ */
+export const GridColumnPair = (props: GridColumnPairProps) => {
   return (
     <>
-      <LeftGridColumn>{leftValue}</LeftGridColumn>
-      <RightGridColumn>{rightValue}</RightGridColumn>
+      <LeftGridColumn alignment={props.alignment}>{props.leftValue}</LeftGridColumn>
+      <RightGridColumn alignment={props.alignment}>{props.rightValue}</RightGridColumn>
     </>
   );
 };
@@ -274,16 +298,24 @@ const DrawerContents = (props: ContentsProps) => {
             leftValue={'Description'}
             rightValue={(propertyData as Building)?.Description}
           />
-          <LeftGridColumn>Total Area</LeftGridColumn>
-          <RightGridColumn>
-            {(propertyData as Building)?.TotalArea}
-            <MetresSquared />
-          </RightGridColumn>
-          <LeftGridColumn>Rentable Area</LeftGridColumn>
-          <RightGridColumn>
-            {(propertyData as Building)?.RentableArea}
-            <MetresSquared />
-          </RightGridColumn>
+          <GridColumnPair
+            leftValue={'Total Area'}
+            rightValue={
+              <>
+                <span>{`${(propertyData as Building)?.TotalArea}`}</span>
+                <MetresSquared />
+              </>
+            }
+          />
+          <GridColumnPair
+            leftValue={'Rentable Area'}
+            rightValue={
+              <>
+                <span>{`${(propertyData as Building)?.RentableArea}`}</span>
+                <MetresSquared />
+              </>
+            }
+          />
           <GridColumnPair
             leftValue={'Tenancy'}
             rightValue={

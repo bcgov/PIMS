@@ -249,9 +249,9 @@ export interface ProjectPropertyIds {
 }
 
 const useProjectsApi = (absoluteFetch: IFetch) => {
-  const getProjectById = async (id: number): Promise<ProjectGet> => {
-    const { parsedBody } = await absoluteFetch.get(`/projects/disposal/${id}`);
-    return parsedBody as ProjectGet;
+  const getProjectById = async (id: number) => {
+    const { parsedBody, status } = await absoluteFetch.get(`/projects/disposal/${id}`);
+    return { parsedBody, retStatus: status } as { parsedBody: ProjectGet; retStatus: number };
   };
   const updateProject = async (
     id: number,

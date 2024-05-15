@@ -11,9 +11,8 @@
     "format": "prettier --write \"./**/*.{js,ts,json}\"",
     "check": "prettier --check \"./**/*.{js,ts,json}\"",
     "test": "cross-env DOTENV_CONFIG_PATH=../.env jest",
-    "coverage": "jest --coverage",
-    "test:unit": "jest --testPathPattern=/tests/unit",
-    "test:integration": "jest --testPathPattern=/tests/integration",
+    "test:unit": "npm run test -- --testPathPattern=/tests/unit",
+    "test:integration": "npm run test -- --testPathPattern=/tests/integration",
     "swagger": "node ./src/swagger/swagger.mjs",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
     "migration": "sh ./src/typeorm/utilities/helperScripts/migrationScript.sh"
