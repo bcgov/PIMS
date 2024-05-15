@@ -17,7 +17,7 @@ import TextFormField from '../form/TextFormField';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 import { useParams } from 'react-router-dom';
-import { SnackBarContext } from '@/contexts/snackbarContext';
+import useDataSubmitter from '@/hooks/useDataSubmitter';
 
 interface IUserDetail {
   onClose: () => void;
@@ -40,6 +40,8 @@ const UserDetail = ({ onClose }: IUserDetail) => {
 
   const { data: rolesData, loadOnce: loadRoles } = useDataLoader(api.roles.getInternalRoles);
   loadRoles();
+
+  const { submit } = useDataSubmitter(api.users.updateUser);
 
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
 
@@ -115,7 +117,6 @@ const UserDetail = ({ onClose }: IUserDetail) => {
       Role: userStatusData.Role?.Name,
     });
   }, [data]);
-  const snackbar = useContext(SnackBarContext);
 
   return (
     <Box
@@ -167,22 +168,14 @@ const UserDetail = ({ onClose }: IUserDetail) => {
           const isValid = await profileFormMethods.trigger();
           if (isValid) {
             const formValues = profileFormMethods.getValues();
-            // Remove Provider. Field is frontend only.
             formValues.Provider = undefined;
-            api.users
-              .updateUser(id, {
-                Id: id,
-                ...formValues,
-              })
-              .then(() => {
-                refreshData();
-                snackbar.setMessageState({
-                  open: true,
-                  text: 'Successfully submitted user details.',
-                  style: snackbar.styles.success,
-                });
-              });
-            setOpenProfileDialog(false);
+            submit(id, {
+              Id: id,
+              ...formValues,
+            }).then(() => {
+              refreshData();
+              setOpenProfileDialog(false);
+            });
           }
         }}
         onCancel={async () => setOpenProfileDialog(false)}

@@ -17,11 +17,9 @@ const useAdministrativeAreaApi = (absoluteFetch: IFetch) => {
     return parsedBody as AdministrativeArea[];
   };
 
-  const addAdministrativeArea = async (
-    adminArea: Omit<AdministrativeArea, 'Id' | 'CreatedOn'>,
-  ): Promise<AdministrativeArea> => {
-    const { parsedBody } = await absoluteFetch.post(`/administrativeAreas`, adminArea);
-    return parsedBody as AdministrativeArea;
+  const addAdministrativeArea = async (adminArea: Omit<AdministrativeArea, 'Id' | 'CreatedOn'>) => {
+    const { parsedBody, status } = await absoluteFetch.post(`/administrativeAreas`, adminArea);
+    return { parsedBody, status };
   };
 
   const getAdminAreaById = async (id: number): Promise<AdministrativeArea> => {
@@ -29,12 +27,9 @@ const useAdministrativeAreaApi = (absoluteFetch: IFetch) => {
     return parsedBody as AdministrativeArea;
   };
 
-  const updateAdminArea = async (
-    id: number,
-    adminArea: Partial<AdministrativeArea>,
-  ): Promise<AdministrativeArea> => {
-    const { parsedBody } = await absoluteFetch.put(`/administrativeAreas/${id}`, adminArea);
-    return parsedBody as AdministrativeArea;
+  const updateAdminArea = async (id: number, adminArea: Partial<AdministrativeArea>) => {
+    const { parsedBody, status } = await absoluteFetch.put(`/administrativeAreas/${id}`, adminArea);
+    return { parsedBody, status };
   };
 
   return {
