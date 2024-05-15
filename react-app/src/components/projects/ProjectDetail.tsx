@@ -197,7 +197,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           id={agencyInterest}
           onEdit={() => setOpenAgencyInterestDialog(true)}
         >
-          {!data?.AgencyResponses?.length ? ( //TODO: Logic will depend on precense of agency responses
+          {!data?.parsedBody.AgencyResponses?.length ? ( //TODO: Logic will depend on precense of agency responses
             <Box display={'flex'} justifyContent={'center'}>
               <Typography>No agencies registered.</Typography>
             </Box>
@@ -215,8 +215,8 @@ const ProjectDetail = (props: IProjectDetail) => {
                 },
               }}
               rows={
-                data?.AgencyResponses && ungroupedAgencies
-                  ? data?.AgencyResponses?.map((resp) => ({
+                data?.parsedBody.AgencyResponses && ungroupedAgencies
+                  ? data?.parsedBody.AgencyResponses?.map((resp) => ({
                       ...ungroupedAgencies?.find((agc) => agc.Id === resp.AgencyId),
                       ReceivedOn: resp.ReceivedOn,
                       Note: resp.Note,
@@ -304,7 +304,7 @@ const ProjectDetail = (props: IProjectDetail) => {
         <ProjectAgencyResponseDialog
           agencies={ungroupedAgencies}
           options={agencyOptions}
-          initialValues={data}
+          initialValues={data.parsedBody}
           open={openAgencyInterestDialog}
           postSubmit={() => {
             setOpenAgencyInterestDialog(false);
