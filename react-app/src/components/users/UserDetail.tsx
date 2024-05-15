@@ -17,6 +17,7 @@ import TextFormField from '../form/TextFormField';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 import { useParams } from 'react-router-dom';
+import { SnackBarContext } from '@/contexts/snackbarContext';
 
 interface IUserDetail {
   onClose: () => void;
@@ -114,6 +115,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
       Role: userStatusData.Role?.Name,
     });
   }, [data]);
+  const snackbar = useContext(SnackBarContext);
 
   return (
     <Box
@@ -172,7 +174,14 @@ const UserDetail = ({ onClose }: IUserDetail) => {
                 Id: id,
                 ...formValues,
               })
-              .then(() => refreshData());
+              .then(() => {
+                refreshData();
+                snackbar.setMessageState({
+                  open: true,
+                  text: 'Successfully submitted user details.',
+                  style: snackbar.styles.success,
+                });
+              });
             setOpenProfileDialog(false);
           }
         }}
