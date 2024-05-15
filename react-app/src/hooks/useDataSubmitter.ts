@@ -2,21 +2,21 @@ import { useContext } from 'react';
 import { AsyncFunction } from './useAsync';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 import useDataLoader from './useDataLoader';
+import { FetchResponse } from './useFetch';
 
 const useDataSubmitter = <AFArgs extends any[], AFError = unknown>(
-  dataFetcher: AsyncFunction<AFArgs, { parsedBody; status: number }>,
+  dataFetcher: AsyncFunction<AFArgs, FetchResponse>,
   errorHandler: (error: AFError) => void = () => {},
 ) => {
   const snackbar = useContext(SnackBarContext);
   const { refreshData, isLoading, data, error } = useDataLoader(dataFetcher, errorHandler);
   const wrapDataFetcher = async (...args: AFArgs) => {
-    refreshData(...args)
+    return refreshData(...args)
       .then((response) => {
-        const status = response?.status;
-        if (status && Number(status) >= 400) {
+        if (!response?.ok) {
           snackbar.setMessageState({
             open: true,
-            text: `Submission failed with code ${status}.`,
+            text: `Submission failed with code ${response?.status}. Message: ${response?.parsedBody ?? 'No message.'}`,
             style: snackbar.styles.warning,
           });
         } else {
@@ -26,6 +26,7 @@ const useDataSubmitter = <AFArgs extends any[], AFError = unknown>(
             style: snackbar.styles.success,
           });
         }
+        return response;
       })
       .catch((e) => {
         snackbar.setMessageState({
@@ -35,7 +36,7 @@ const useDataSubmitter = <AFArgs extends any[], AFError = unknown>(
         });
       });
   };
-  return { submit: wrapDataFetcher, isLoading, data, error };
+  return { submit: wrapDataFetcher, submitting: isLoading, data, error };
 };
 
 export default useDataSubmitter;

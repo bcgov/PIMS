@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, Button } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import TextFormField from '../form/TextFormField';
@@ -7,6 +7,8 @@ import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { NavigateBackButton } from '../display/DetailViewNavigation';
 import { useNavigate } from 'react-router-dom';
+import useDataSubmitter from '@/hooks/useDataSubmitter';
+import { LoadingButton } from '@mui/lab';
 
 const AddAdministrativeArea = () => {
   const api = usePimsApi();
@@ -14,6 +16,7 @@ const AddAdministrativeArea = () => {
     api.lookup.getRegionalDistricts,
   );
   loadRegional();
+  const { submit, submitting } = useDataSubmitter(api.administrativeAreas.addAdministrativeArea);
   const navigate = useNavigate();
   const formMethods = useForm({
     defaultValues: {
@@ -58,19 +61,20 @@ const AddAdministrativeArea = () => {
             />
           </Grid>
         </Grid>
-        <Button
+        <LoadingButton
+          loading={submitting}
           onClick={async () => {
             const isValid = await formMethods.trigger();
             const formValues = formMethods.getValues();
             if (isValid) {
-              api.administrativeAreas
-                .addAdministrativeArea({
-                  ...formValues,
-                  IsDisabled: false,
-                  ProvinceId: 'BC',
-                  SortOrder: Number(formValues.SortOrder),
-                })
-                .then(() => navigate('/admin/adminAreas'));
+              submit({
+                ...formValues,
+                IsDisabled: false,
+                ProvinceId: 'BC',
+                SortOrder: Number(formValues.SortOrder),
+              }).then((resp) => {
+                if (resp && resp.ok) navigate('/admin/adminAreas');
+              });
             } else {
               console.log('Error!');
             }
@@ -80,7 +84,7 @@ const AddAdministrativeArea = () => {
           sx={{ padding: '8px', width: '6rem', marginX: 'auto' }}
         >
           Submit
-        </Button>
+        </LoadingButton>
       </FormProvider>
     </Box>
   );

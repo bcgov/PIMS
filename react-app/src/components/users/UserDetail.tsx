@@ -41,7 +41,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
   const { data: rolesData, loadOnce: loadRoles } = useDataLoader(api.roles.getInternalRoles);
   loadRoles();
 
-  const { submit } = useDataSubmitter(api.users.updateUser);
+  const { submit, submitting } = useDataSubmitter(api.users.updateUser);
 
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
 
@@ -164,6 +164,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
       <ConfirmDialog
         title={'Update User Profile'}
         open={openProfileDialog}
+        confirmButtonProps={{ loading: submitting }}
         onConfirm={async () => {
           const isValid = await profileFormMethods.trigger();
           if (isValid) {
@@ -211,17 +212,18 @@ const UserDetail = ({ onClose }: IUserDetail) => {
       <ConfirmDialog
         title={'Update User Status'}
         open={openStatusDialog}
+        confirmButtonProps={{ loading: submitting }}
         onConfirm={async () => {
           const isValid = await statusFormMethods.trigger();
           if (isValid) {
             await api.users.updateUserRole(data.Username, statusFormMethods.getValues().Role);
-            api.users
-              .updateUser(id, {
-                Id: id,
-                Status: statusFormMethods.getValues().Status,
-              })
-              .then(() => refreshData());
-            setOpenStatusDialog(false);
+            submit(id, {
+              Id: id,
+              Status: statusFormMethods.getValues().Status,
+            }).then(() => {
+              refreshData();
+              setOpenStatusDialog(false);
+            });
           }
         }}
         onCancel={async () => setOpenStatusDialog(false)}
