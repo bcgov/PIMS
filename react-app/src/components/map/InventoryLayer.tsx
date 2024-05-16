@@ -9,6 +9,8 @@ import './clusterHelpers/clusters.css';
 import L from 'leaflet';
 import { BBox } from 'geojson';
 import { Spiderfier } from '@/components/map/clusterHelpers/Spiderfier';
+import ControlsGroup from '@/components/map/controls/ControlsGroup';
+import FilterControl from '@/components/map/controls/FilterControl';
 
 export interface InventoryLayerProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -156,6 +158,9 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
 
   return (
     <>
+      <ControlsGroup position="topleft">
+        <FilterControl />
+      </ControlsGroup>
       {/* For all cluster objects */}
       {clusters.map((property: PropertyGeo & ClusterGeo) => {
         // Return a cluster circle if it's a cluster
