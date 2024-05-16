@@ -1,4 +1,4 @@
-import { Box, Button, RadioGroup, Typography } from '@mui/material';
+import { Box, RadioGroup, Typography } from '@mui/material';
 import React, { useContext, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
@@ -21,6 +21,8 @@ import { ParcelAdd } from '@/hooks/api/useParcelsApi';
 import { BuildingAdd } from '@/hooks/api/useBuildingsApi';
 import { AuthContext } from '@/contexts/authContext';
 import { parseFloatOrNull, parseIntOrNull } from '@/utilities/formatters';
+import useDataSubmitter from '@/hooks/useDataSubmitter';
+import { LoadingButton } from '@mui/lab';
 
 const AddProperty = () => {
   const years = [new Date().getFullYear(), new Date().getFullYear() - 1];
@@ -41,7 +43,12 @@ const AddProperty = () => {
   const { data: constructionTypeData, loadOnce: loadConstructionTypeData } = useDataLoader(
     api.lookup.getConstructionTypes,
   );
-
+  const { submit: submitParcel, submitting: submittingParcel } = useDataSubmitter(
+    api.parcels.addParcel,
+  );
+  const { submit: submitBuilding, submitting: submittingBuilding } = useDataSubmitter(
+    api.buildings.addBuilding,
+  );
   loadAdminAreas();
   loadClassifications();
   loadPredominateUse();
@@ -153,7 +160,8 @@ const AddProperty = () => {
           Please correct issues in the form input.
         </Typography>
       )}
-      <Button
+      <LoadingButton
+        loading={submittingBuilding || submittingParcel}
         onClick={async () => {
           const isValid = await formMethods.trigger();
           if (isValid && formMethods.getValues()['Location'] != null) {
@@ -175,8 +183,8 @@ const AddProperty = () => {
               };
               addParcel.Evaluations = addParcel.Evaluations.filter((a) => a.Value);
               addParcel.Fiscals = addParcel.Fiscals.filter((a) => a.Value);
-              api.parcels.addParcel(addParcel).then((ret) => {
-                if (ret.status == 201) navigate('/properties');
+              submitParcel(addParcel).then((ret) => {
+                if (ret && ret.ok) navigate('/properties');
               });
             } else {
               const formValues = formMethods.getValues();
@@ -198,8 +206,8 @@ const AddProperty = () => {
               };
               addBuilding.Evaluations = addBuilding.Evaluations.filter((a) => a.Value);
               addBuilding.Fiscals = addBuilding.Fiscals.filter((a) => a.Value);
-              api.buildings.addBuilding(addBuilding).then((ret) => {
-                if (ret.status == 201) navigate('/properties');
+              submitBuilding(addBuilding).then((ret) => {
+                if (ret && ret.ok) navigate('/properties');
               });
             }
           } else {
@@ -212,7 +220,7 @@ const AddProperty = () => {
         sx={{ padding: '8px', width: '6rem', marginX: 'auto' }}
       >
         Submit
-      </Button>
+      </LoadingButton>
     </Box>
   );
 };

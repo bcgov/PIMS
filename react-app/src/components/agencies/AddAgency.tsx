@@ -1,5 +1,5 @@
 import TextFormField from '@/components/form/TextFormField';
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import { FormProvider, useForm } from 'react-hook-form';
 import React, { useState } from 'react';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
@@ -10,13 +10,15 @@ import SingleSelectBoxFormField from '@/components/form/SingleSelectBoxFormField
 import { NavigateBackButton } from '@/components/display/DetailViewNavigation';
 import { useNavigate } from 'react-router-dom';
 import { AgencyAdd } from '@/hooks/api/useAgencyApi';
+import useDataSubmitter from '@/hooks/useDataSubmitter';
+import { LoadingButton } from '@mui/lab';
 
 const AddAgency = () => {
   const [showErrorText, setShowErrorText] = useState(false);
 
   const api = usePimsApi();
   const navigate = useNavigate();
-
+  const { submit, submitting } = useDataSubmitter(api.agencies.addAgency);
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
 
   const formMethods = useForm({
@@ -101,7 +103,8 @@ const AddAgency = () => {
           Please correct issues in the form input.
         </Typography>
       )}
-      <Button
+      <LoadingButton
+        loading={submitting}
         onClick={async () => {
           const isValid = await formMethods.trigger();
           if (isValid) {
@@ -118,8 +121,8 @@ const AddAgency = () => {
               IsDisabled: false,
               SortOrder: 0,
             };
-            api.agencies.addAgency(newAgency).then((res) => {
-              if (res.status === 201) navigate('/admin/agencies');
+            submit(newAgency).then((res) => {
+              if (res && res.ok) navigate('/admin/agencies');
               // TODO: What do we do if it wasn't successful?
             });
           } else {
@@ -132,7 +135,7 @@ const AddAgency = () => {
         sx={{ padding: '8px', width: '6rem', marginX: 'auto' }}
       >
         Submit
-      </Button>
+      </LoadingButton>
     </Box>
   );
 };

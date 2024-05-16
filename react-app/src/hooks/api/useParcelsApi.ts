@@ -60,12 +60,12 @@ export interface IParcelsGetParams {
 
 const useParcelsApi = (absoluteFetch: IFetch) => {
   const addParcel = async (parcel: ParcelAdd) => {
-    const { parsedBody, status } = await absoluteFetch.post('/parcels', parcel);
-    return { parsedBody, status };
+    const response = await absoluteFetch.post('/parcels', parcel);
+    return response;
   };
   const updateParcelById = async (id: number, parcel: ParcelUpdate) => {
-    const { parsedBody } = await absoluteFetch.put(`/parcels/${id}`, parcel);
-    return parsedBody as Parcel;
+    const response = await absoluteFetch.put(`/parcels/${id}`, parcel);
+    return response;
   };
   const getParcels = async (params?: IParcelsGetParams) => {
     const noNullParam = params
