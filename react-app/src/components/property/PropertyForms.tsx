@@ -1,5 +1,4 @@
 import {
-  Alert,
   Autocomplete,
   Box,
   Grid,
@@ -521,13 +520,21 @@ export const AssessedValue = (props: IAssessedValue) => {
   // Sort the years array in descending order
   const sortedYears = years.sort((a, b) => b - a);
   console.log('sorting the years:', sortedYears, title, topLevelKey);
-  // const [duplicateYearWarning, setDuplicateYearWarning] = useState(false);
+  const [duplicateYearWarning, setDuplicateYearWarning] = useState(false);
 
-  const handleYearChange = (idx: number, year: number) => {
+  const handleYearChange = (year: number) => {
     // Check if the year being added already exists in the list
-    const isValid = years.some((existingYear) => existingYear === year);
-    return isValid;
+    const isDuplicate = years.some((existingYear) => existingYear === year);
+    if (isDuplicate) {
+      // Display a warning if there's a duplicate year
+      setDuplicateYearWarning(true);
+    } else {
+      // If no duplicate, clear any existing warning
+      setDuplicateYearWarning(false);
+      // Proceed with whatever action you want to take for adding the year
+    }
   };
+
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
       <Typography mt={2} variant="h5">
@@ -537,7 +544,6 @@ export const AssessedValue = (props: IAssessedValue) => {
         {sortedYears &&
           sortedYears.map((yr, idx) => {
             console.log(`Year: ${yr}, Index: ${idx}`);
-            // Your existing code for rendering the component based on yr and idx
             return (
               <Box
                 mb={2}
@@ -553,14 +559,15 @@ export const AssessedValue = (props: IAssessedValue) => {
                   label={'Year'}
                   value={yr}
                   disabled={idx !== sortedYears.length - 1}
+                  error={duplicateYearWarning}
                   onBlur={(event) => {
-                    handleYearChange(idx, parseInt(event.target.value));
+                    handleYearChange(parseInt(event.target.value));
                   }}
-                  rules={{
-                    validate: (value) => {
-                      return handleYearChange(idx, parseInt(value)); // Return the boolean value directly
-                    },
-                  }}
+                  // rules={{
+                  //   validate: (value) => {
+                  //     return handleYearChange(parseInt(value));
+                  //   },
+                  // }}
                 />
                 <TextFormField
                   InputProps={{
@@ -570,14 +577,16 @@ export const AssessedValue = (props: IAssessedValue) => {
                   name={`${topLevelKey ?? ''}Evaluations.${idx}.Value`}
                   numeric
                   label={'Value'}
+                  error={true}
                   onBlur={(event) => {
-                    handleYearChange(idx, parseInt(event.target.value));
+                    handleYearChange(parseInt(event.target.value));
                   }}
-                  rules={{
-                    validate: (value) => {
-                      return handleYearChange(idx, parseInt(value)); // Return the boolean value directly
-                    },
-                  }}
+                  // rules={{
+                  //   validate: (value, formVals) => {
+                  //     alert(formVals);
+                  //     return handleYearChange(parseInt(value));
+                  //   },
+                  // }}
                 />
               </Box>
             );
