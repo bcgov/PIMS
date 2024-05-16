@@ -177,7 +177,7 @@ const generateProjectNotifications = async (project: Project, previousStatusId: 
           'par',
           'a.id = par.agency_id AND par.project_id = :projectId',
           {
-            projectId: 5287,
+            projectId: project.Id,
           },
         )
         .andWhere('a.is_disabled = false')
@@ -203,7 +203,7 @@ const generateProjectNotifications = async (project: Project, previousStatusId: 
           'par',
           'a.id = par.agency_id AND par.project_id = :projectId',
           {
-            projectId: 5287,
+            projectId: project.Id,
           },
         )
         .where('a.parent_id IS NULL')
@@ -230,7 +230,7 @@ const generateProjectNotifications = async (project: Project, previousStatusId: 
           'par',
           'a.id = par.agency_id AND par.project_id = :projectId',
           {
-            projectId: 5287,
+            projectId: project.Id,
           },
         )
         .andWhere('a.is_disabled = false')
