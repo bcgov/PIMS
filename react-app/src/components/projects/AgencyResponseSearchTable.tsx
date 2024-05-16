@@ -18,6 +18,7 @@ import { ISelectMenuItem } from '../form/SelectFormField';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { dateFormatter } from '@/utilities/formatters';
 import { AgencyResponseType } from '@/constants/agencyResponseTypes';
+import { enumReverseLookup } from '@/utilities/helperFunctions';
 
 interface IAgencySearchTable {
   rows: any[];
@@ -119,10 +120,13 @@ const AgencySearchTable = (props: IAgencySearchTable) => {
           )
         }
         onChange={(event, data) => {
-          const row = agencies.find((a) => a.Id === data?.value);
+          const row = {
+            ...agencies.find((a) => a.Id === data?.value),
+            Response: enumReverseLookup(AgencyResponseType, AgencyResponseType.Unsubscribe),
+          };
           if (row) {
             setRows([...rows, row]);
-            setAutoCompleteVal('');
+            setAutoCompleteVal(null);
           }
         }}
         isOptionEqualToValue={(option, value) => option.value === value.value}
@@ -147,7 +151,7 @@ const AgencySearchTable = (props: IAgencySearchTable) => {
           <TextField
             {...params}
             onBlur={() => {
-              setAutoCompleteVal('');
+              setAutoCompleteVal(null);
             }}
             InputProps={{
               ...params.InputProps,

@@ -304,7 +304,7 @@ const ProjectDetail = (props: IProjectDetail) => {
         <ProjectAgencyResponseDialog
           agencies={ungroupedAgencies}
           options={agencyOptions}
-          initialValues={data.parsedBody}
+          initialValues={data?.parsedBody}
           open={openAgencyInterestDialog}
           postSubmit={() => {
             setOpenAgencyInterestDialog(false);
