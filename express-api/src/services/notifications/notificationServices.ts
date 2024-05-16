@@ -7,7 +7,7 @@ import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotif
 import { User } from '@/typeorm/Entities/User';
 import { UUID, randomUUID } from 'crypto';
 import nunjucks from 'nunjucks';
-import { IsNull } from 'typeorm';
+import { IsNull, QueryRunner } from 'typeorm';
 import chesServices, {
   EmailBody,
   EmailEncoding,
@@ -99,7 +99,9 @@ const insertProjectNotificationQueue = async (
   project: Project,
   agency?: Agency,
   overrideTo?: string,
+  queryRunner?: QueryRunner,
 ) => {
+  const query = queryRunner ?? AppDataSource.createQueryRunner();
   const sendDate = new Date();
   sendDate.setDate(sendDate.getDate() + projStatusNotif.DelayDays);
   const queueObject = {
@@ -125,27 +127,32 @@ const insertProjectNotificationQueue = async (
     ToAgencyId: agency?.Id,
   };
 
-  const insertedNotif = await AppDataSource.getRepository(NotificationQueue).save(queueObject);
+  const insertedNotif = await query.manager.save(NotificationQueue, queueObject);
   return insertedNotif;
 };
 
-const generateProjectNotifications = async (project: Project, previousStatusId: number) => {
-  const projectStatusNotif1 = await AppDataSource.getRepository(ProjectStatusNotification).find({
+const generateProjectNotifications = async (
+  project: Project,
+  previousStatusId: number,
+  queryRunner?: QueryRunner,
+) => {
+  const query = queryRunner ?? AppDataSource.createQueryRunner();
+  const projectStatusNotif1 = await query.manager.find(ProjectStatusNotification, {
     where: { FromStatusId: previousStatusId, ToStatusId: project.StatusId },
   });
-  const projectStatusNotif2 = await AppDataSource.getRepository(ProjectStatusNotification).find({
+  const projectStatusNotif2 = await query.manager.find(ProjectStatusNotification, {
     where: { FromStatusId: IsNull(), ToStatusId: project.StatusId },
   });
   const projectStatusNotifications = [...projectStatusNotif1, ...projectStatusNotif2];
   const returnNotifications = [];
   for (const projStatusNotif of projectStatusNotifications) {
-    const template = await AppDataSource.getRepository(NotificationTemplate).findOne({
+    const template = await query.manager.findOne(NotificationTemplate, {
       where: { Id: projStatusNotif.TemplateId },
     });
 
     let overrideTo: string | null = null;
     if (template.Audience == NotificationAudience.ProjectOwner) {
-      const owningUser = await AppDataSource.getRepository(User).findOne({
+      const owningUser = await query.manager.findOne(User, {
         where: { Id: project.CreatedById },
       });
       overrideTo = owningUser.Email;
@@ -156,11 +163,19 @@ const generateProjectNotifications = async (project: Project, previousStatusId: 
           project,
           project.Agency,
           overrideTo,
+          queryRunner,
         ),
       );
     } else if (template.Audience == NotificationAudience.OwningAgency) {
       returnNotifications.push(
-        insertProjectNotificationQueue(template, projStatusNotif, project, project.Agency),
+        insertProjectNotificationQueue(
+          template,
+          projStatusNotif,
+          project,
+          project.Agency,
+          undefined,
+          queryRunner,
+        ),
       );
     } else if (template.Audience == NotificationAudience.Agencies) {
       //Will eventually integrate agency interest response lookup here.
@@ -169,13 +184,27 @@ const generateProjectNotifications = async (project: Project, previousStatusId: 
     } else if (template.Audience == NotificationAudience.WatchingAgencies) {
       //Same here
     } else if (template.Audience == NotificationAudience.Default) {
-      returnNotifications.push(insertProjectNotificationQueue(template, projStatusNotif, project));
+      returnNotifications.push(
+        insertProjectNotificationQueue(
+          template,
+          projStatusNotif,
+          project,
+          undefined,
+          undefined,
+          queryRunner,
+        ),
+      );
     }
   }
   return await Promise.all(returnNotifications);
 };
 
-const sendNotification = async (notification: NotificationQueue, user: SSOUser) => {
+const sendNotification = async (
+  notification: NotificationQueue,
+  user: SSOUser,
+  queryRunner?: QueryRunner,
+) => {
+  const query = queryRunner ?? AppDataSource.createQueryRunner();
   try {
     const email: IEmail = {
       to: notification.To.split(';').map((a) => a.trim()),
@@ -190,13 +219,13 @@ const sendNotification = async (notification: NotificationQueue, user: SSOUser) 
       delayTS: notification.SendOn.getTime(),
     };
     const response = await chesServices.sendEmailAsync(email, user);
-    return AppDataSource.getRepository(NotificationQueue).save({
+    return query.manager.save(NotificationQueue, {
       ...notification,
       ChesTransactionId: response.txId as UUID,
       ChesMessageId: response.messages[0].msgId as UUID,
     });
   } catch (e) {
-    return AppDataSource.getRepository(NotificationQueue).save({
+    return query.manager.save(NotificationQueue, {
       ...notification,
       Status: NotificationStatus.Failed,
     });
