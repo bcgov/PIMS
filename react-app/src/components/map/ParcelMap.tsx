@@ -3,7 +3,7 @@ import React, { createContext, PropsWithChildren, useState } from 'react';
 import { MapContainer, useMapEvents } from 'react-leaflet';
 import { Map } from 'leaflet';
 import MapLayers from '@/components/map/MapLayers';
-import { ParcelPopup } from '@/components/map/ParcelPopup';
+import { ParcelPopup } from '@/components/map/parcelPopup/ParcelPopup';
 import { InventoryLayer } from '@/components/map/InventoryLayer';
 import MapPropertyDetails from '@/components/map/MapPropertyDetails';
 
