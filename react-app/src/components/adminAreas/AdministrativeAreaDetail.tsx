@@ -12,6 +12,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import TextFormField from '../form/TextFormField';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
 import AutocompleteFormField from '../form/AutocompleteFormField';
+import useDataSubmitter from '@/hooks/useDataSubmitter';
 
 const AdministrativeAreaDetail = () => {
   const { id } = useParams();
@@ -23,6 +24,7 @@ const AdministrativeAreaDetail = () => {
     api.lookup.getRegionalDistricts,
   );
   loadDistricts();
+  const { submit, submitting } = useDataSubmitter(api.administrativeAreas.updateAdminArea);
   const navigate = useNavigate();
   useEffect(() => {
     refreshData();
@@ -85,19 +87,22 @@ const AdministrativeAreaDetail = () => {
       <ConfirmDialog
         title={'Update administrative area'}
         open={openEditDialog}
+        confirmButtonProps={{
+          loading: submitting,
+        }}
         onConfirm={async () => {
           const valid = await formMethods.trigger();
           if (valid) {
             const formValues = formMethods.getValues();
             const idAsNumber = Number(id);
-            api.administrativeAreas
-              .updateAdminArea(idAsNumber, {
-                ...formValues,
-                Id: idAsNumber,
-                SortOrder: Number(formValues.SortOrder),
-              })
-              .then(() => refreshData());
-            setOpenEditDialog(false);
+            submit(idAsNumber, {
+              ...formValues,
+              Id: idAsNumber,
+              SortOrder: Number(formValues.SortOrder),
+            }).then(() => {
+              refreshData();
+              setOpenEditDialog(false);
+            });
           }
         }}
         onCancel={async () => setOpenEditDialog(false)}
