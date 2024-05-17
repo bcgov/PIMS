@@ -1,12 +1,14 @@
 import MultiselectFormField from '@/components/form/MultiselectFormField';
 import TextFormField from '@/components/form/TextFormField';
+import { Roles } from '@/constants/roles';
+import { AuthContext } from '@/contexts/authContext';
 import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
 import { MapFilter } from '@/hooks/api/usePropertiesApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
 import { Close, FilterAlt } from '@mui/icons-material';
 import { Box, Paper, SxProps, Typography, useTheme, Grid, IconButton, Button } from '@mui/material';
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useContext, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 interface FilterControlProps {
@@ -19,6 +21,7 @@ const FilterControl = (props: FilterControlProps) => {
   const [fading, setFading] = useState<boolean>(false);
   const theme = useTheme();
   const api = usePimsApi();
+  const user = useContext(AuthContext);
 
   // Get lists for dropdowns
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
@@ -32,9 +35,13 @@ const FilterControl = (props: FilterControlProps) => {
   const { data: propertyTypesData, loadOnce: loadPropertyTypes } = useDataLoader(
     api.lookup.getPropertyTypes,
   );
+  const { data: usersAgencies, loadOnce: loadUsersAgencies } = useDataLoader(() =>
+    api.users.getUsersAgencyIds(user.pimsUser.data?.Username),
+  );
   loadAdminAreas();
   loadClassifications();
   loadPropertyTypes();
+  loadUsersAgencies();
 
   const closedStyle: SxProps = {
     height: '25px',
@@ -115,7 +122,12 @@ const FilterControl = (props: FilterControlProps) => {
               <MultiselectFormField
                 name={'Agencies'}
                 label={'Agencies'}
-                options={agencyOptions}
+                options={agencyOptions.filter(
+                  (option) =>
+                    user.keycloak.hasRoles([Roles.ADMIN, Roles.AUDITOR], {
+                      requireAllRoles: false,
+                    }) || usersAgencies.includes(option.value),
+                )}
                 allowNestedIndent
               />
               <MultiselectFormField
