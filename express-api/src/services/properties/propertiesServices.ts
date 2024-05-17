@@ -2,7 +2,7 @@ import { AppDataSource } from '@/appDataSource';
 import { Building } from '@/typeorm/Entities/Building';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
-import { In, Like } from 'typeorm';
+import { ILike, In } from 'typeorm';
 
 const propertiesFuzzySearch = async (keyword: string, limit?: number) => {
   const parcels = await AppDataSource.getRepository(Parcel)
@@ -68,8 +68,8 @@ const getPropertiesForMap = async (filter?: MapPropertiesFilter) => {
         : undefined,
       PID: filter.PID,
       PIN: filter.PIN,
-      Address1: filter.Address ? Like(filter.Address) : undefined,
-      Name: filter.Name ? Like(filter.Name) : undefined,
+      Address1: filter.Address ? ILike(`%${filter.Address}%`) : undefined,
+      Name: filter.Name ? ILike(`%${filter.Name}%`) : undefined,
       PropertyTypeId: filter.PropertyTypeIds ? In(filter.PropertyTypeIds) : undefined,
     },
   });

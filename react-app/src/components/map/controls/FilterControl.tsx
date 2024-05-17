@@ -1,14 +1,20 @@
 import MultiselectFormField from '@/components/form/MultiselectFormField';
 import TextFormField from '@/components/form/TextFormField';
 import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
+import { MapFilter } from '@/hooks/api/usePropertiesApi';
 // import useDataLoader from '@/hooks/useDataLoader';
 // import usePimsApi from '@/hooks/usePimsApi';
 import { Close, FilterAlt } from '@mui/icons-material';
 import { Box, Paper, SxProps, Typography, useTheme, Grid, IconButton, Button } from '@mui/material';
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-const FilterControl = () => {
+interface FilterControlProps {
+  setFilter: Dispatch<SetStateAction<{}>>;
+}
+
+const FilterControl = (props: FilterControlProps) => {
+  const {setFilter} = props;
   const [open, setOpen] = useState<boolean>(false);
   const [fading, setFading] = useState<boolean>(false);
   const theme = useTheme();
@@ -38,10 +44,10 @@ const FilterControl = () => {
       PID: '',
       PIN: '',
       Address: '',
-      AgencyIds: [],
-      AdministrativeAreaIds: [],
-      ClassificationIds: [],
-      PropertyTypeIds: [],
+      Agencies: [],
+      AdministrativeAreas: [],
+      Classifications: [],
+      PropertyTypes: [],
       Name: '',
     },
   });
@@ -54,7 +60,7 @@ const FilterControl = () => {
         transition: 'all 0.1s ease-in-out',
         ...style,
       }}
-      onClick={() => {
+      onClick={(e) => {
         // Handles a delayed fade in if opening the filter
         if (!open) {
           setFading(true);
@@ -82,9 +88,9 @@ const FilterControl = () => {
                 justifyContent={'space-between'}
                 mb={'1em'}
               >
-                <Typography variant="h4">Filter Properties</Typography>
+                <Typography variant="h4">Inventory Filter</Typography>
                 <IconButton
-                  onClick={() => {
+                  onClick={(e) => {
                     setOpen(false);
                   }}
                 >
@@ -92,11 +98,11 @@ const FilterControl = () => {
                 </IconButton>
               </Grid>
               <TextFormField fullWidth name={'PID'} label={`PID`}></TextFormField>
-              <TextFormField fullWidth name={'PIN'} label={`PIN`}></TextFormField>
+              <TextFormField fullWidth numeric name={'PIN'} label={`PIN`}></TextFormField>
               <TextFormField fullWidth name={'Address'} label={`Address`}></TextFormField>
               <TextFormField fullWidth name={'Name'} label={`Name`}></TextFormField>
               <MultiselectFormField
-                name={'AgencyIds'}
+                name={'Agencies'}
                 label={'Agencies'}
                 options={agencyOptions}
                 allowNestedIndent
@@ -106,10 +112,25 @@ const FilterControl = () => {
               />
 
               <Grid item xs={12} justifyContent={'space-between'} display={'inline-flex'} gap={1}>
-                <Button variant="outlined" fullWidth>
+                <Button variant="outlined" fullWidth onClick={() => {
+                  setFilter({});
+                  formMethods.reset();
+                }}>
                   Clear
                 </Button>
-                <Button variant="contained" fullWidth>
+                <Button variant="contained" fullWidth onClick={() => {
+                  const formValues = formMethods.getValues();
+                  console.log(formValues)
+                  const newFilter: MapFilter = {
+                    PID: !isNaN(parseInt(formValues.PID.replace(/-/g,'').trim())) ? parseInt(formValues.PID.replace(/-/g,'').trim()) :  undefined,
+                    PIN: !isNaN(parseInt(formValues.PIN)) ? parseInt(formValues.PIN) : undefined,
+                    Name: formValues.Name && formValues.Name.trim().length ? formValues.Name.trim() : undefined,
+                    Address: formValues.Address && formValues.Address.trim().length ? formValues.Address.trim() : undefined,
+                    AgencyIds: formValues.Agencies.map(a => a.value),
+                  }
+                  console.log(newFilter)
+                  setFilter(newFilter);
+                }}>
                   Filter
                 </Button>
               </Grid>

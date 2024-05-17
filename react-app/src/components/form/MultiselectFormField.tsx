@@ -1,5 +1,13 @@
 import React from 'react';
-import { Autocomplete, SxProps, TextField, Paper, Chip, Box, autocompleteClasses } from '@mui/material';
+import {
+  Autocomplete,
+  SxProps,
+  TextField,
+  Paper,
+  Chip,
+  Box,
+  autocompleteClasses,
+} from '@mui/material';
 import { Controller, useFormContext } from 'react-hook-form';
 import { ISelectMenuItem } from '@/components/form/SelectFormField';
 
@@ -39,8 +47,11 @@ const MultiselectFormField = (props: MultiselectFormFieldProps) => {
           fullWidth
           disableClearable={true}
           getOptionLabel={(option: ISelectMenuItem) => option.label}
-          isOptionEqualToValue={(sourceOption, selectedOption) => sourceOption.value === selectedOption.value }
-          renderTags={(selectedOptions, props) => selectedOptions.map((option, index) => (
+          isOptionEqualToValue={(sourceOption, selectedOption) =>
+            sourceOption.value === selectedOption.value
+          }
+          renderTags={(selectedOptions, props) =>
+            selectedOptions.map((option, index) => (
               <Chip
                 key={option.value}
                 label={option.label ?? 'N/A'}
@@ -75,7 +86,6 @@ const MultiselectFormField = (props: MultiselectFormFieldProps) => {
             </Box>
           )}
           onChange={(_, data) => {
-            console.log(data)
             return data && onChange(data);
           }}
           value={getValues()[name]}

@@ -120,9 +120,22 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
     return res.status(400).send(filter.error);
   }
 
+  // Converts comma-separated lists to arrays, see schema
+  // Must remove empty arrays for TypeORM to work
+  const filterResult = {
+    ...filter.data,
+    AgencyIds: filter.data.AgencyIds.length ? filter.data.AgencyIds : undefined,
+    ClassificationIds: filter.data.ClassificationIds.length
+      ? filter.data.ClassificationIds
+      : undefined,
+    AdministrativeAreaIds: filter.data.AdministrativeAreaIds.length
+      ? filter.data.AdministrativeAreaIds
+      : undefined,
+    PropertyTypeIds: filter.data.PropertyTypeIds.length ? filter.data.PropertyTypeIds : undefined,
+  };
+
   // Controlling for agency search visibility
   const kcUser = req.user;
-  const filterResult = filter.data;
   // Admins and auditors see all
   if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
     const requestedAgencies = filterResult.AgencyIds;

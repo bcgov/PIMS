@@ -1,12 +1,26 @@
-import z from 'zod';
+import z, { ZodTypeAny } from 'zod';
+
+const arrayFromString = <T extends ZodTypeAny>(schema: T) => {
+  return z.preprocess((obj) => {
+    if (Array.isArray(obj)) {
+      return obj;
+    } else if (typeof obj === "string") {
+      return obj.split(",");
+    } else {
+      return [];
+    }
+  }, z.array(schema));
+};
+
+const numberSchema = z.coerce.number().nonnegative().optional()
 
 export const MapFilterSchema = z.object({
-  PID: z.coerce.number().nonnegative().optional(),
-  PIN: z.coerce.number().nonnegative().optional(),
+  PID: numberSchema,
+  PIN: numberSchema,
   Address: z.string().optional(),
-  AgencyIds: z.array(z.coerce.number().int().nonnegative()).optional(),
-  AdministrativeAreaIds: z.array(z.coerce.number().int().nonnegative()).optional(),
-  ClassificationIds: z.array(z.coerce.number().int().nonnegative()).optional(),
-  PropertyTypeIds: z.array(z.coerce.number().int().nonnegative()).optional(),
+  AgencyIds: arrayFromString(numberSchema),
+  AdministrativeAreaIds: arrayFromString(numberSchema),
+  ClassificationIds: arrayFromString(numberSchema),
+  PropertyTypeIds: arrayFromString(numberSchema),
   Name: z.string().optional(),
 });

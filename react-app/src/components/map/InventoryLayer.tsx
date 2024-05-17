@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import usePimsApi from '@/hooks/usePimsApi';
 import React, { useCallback, useEffect, useState } from 'react';
 import useDataLoader from '@/hooks/useDataLoader';
@@ -6,7 +7,7 @@ import PropertyMarker from '@/components/map/markers/PropertyMarker';
 import { Marker, Polyline, useMap, useMapEvents } from 'react-leaflet';
 import useSupercluster from 'use-supercluster';
 import './clusterHelpers/clusters.css';
-import L from 'leaflet';
+import L, { LatLngExpression } from 'leaflet';
 import { BBox } from 'geojson';
 import { Spiderfier } from '@/components/map/clusterHelpers/Spiderfier';
 import ControlsGroup from '@/components/map/controls/ControlsGroup';
@@ -36,22 +37,50 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
   const { setLoading } = props;
   const api = usePimsApi();
   const map = useMap();
-  const { data, refreshData, isLoading } = useDataLoader(api.properties.propertiesGeoSearch);
   const [properties, setProperties] = useState<PropertyGeo[]>([]);
   const [clusterBounds, setClusterBounds] = useState<BBox>();
   const [clusterZoom, setClusterZoom] = useState<number>(14);
+  const [filter, setFilter] = useState({});
+  const { data, refreshData, isLoading } = useDataLoader(() =>
+    api.properties.propertiesGeoSearch(filter),
+  );
+
   const maxZoom = 18;
 
   // Get the property data for mapping
   useEffect(() => {
-    if (data && data.length > 0) {
-      setProperties(data as PropertyGeo[]);
-      setLoading(false);
+    if (data) {
+      if (data.length) {
+        setProperties(data as PropertyGeo[]);
+        setLoading(false);
+        // Set map bounds based on received data. Eliminate outliers (outside BC)
+        const coordsArray = (data as PropertyGeo[])
+        .map((d) => [d.geometry.coordinates[1], d.geometry.coordinates[0]])
+        .filter(
+          (coords) =>
+            coords[0] > 40 && coords[0] < 60 && coords[1] > -140 && coords[1] < -110,
+        ) as LatLngExpression[]
+        map.fitBounds(
+          L.latLngBounds(
+            coordsArray.length ? coordsArray : [
+              [54.2516, -129.371],
+              [49.129, -117.203],
+            ]
+          ),
+        );
+        updateMap();
+      } else {
+        // TODO: No properties found error
+      }
     } else {
       setLoading(true);
       refreshData();
     }
   }, [data, isLoading]);
+
+  useEffect(() => {
+    refreshData();
+  }, [filter]);
 
   // Updating the map for the clusterer
   const updateMap = () => {
@@ -159,7 +188,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
   return (
     <>
       <ControlsGroup position="topleft">
-        <FilterControl />
+        <FilterControl setFilter={setFilter} />
       </ControlsGroup>
       {/* For all cluster objects */}
       {clusters.map((property: PropertyGeo & ClusterGeo) => {
