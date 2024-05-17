@@ -26,39 +26,37 @@ const TitleOwnership = () => {
     EnteredOn: data?.order.orderedProduct.fieldedData.tombstone?.enteredDate,
   };
 
-  const ownershipDetails = {
-    rows: [],
-    length: data?.order.orderedProduct.fieldedData.ownershipGroups.length || 0,
-    jointTenancyIndication:
-      data?.order.orderedProduct.fieldedData.ownershipGroups[0]?.jointTenancyIndication || false,
-    interestFractionNumerator:
-      data?.order.orderedProduct.fieldedData.ownershipGroups[0]?.interestFractionNumerator || '',
-    interestFractionDenominator:
-      data?.order.orderedProduct.fieldedData.ownershipGroups[0]?.interestFractionDenominator || '',
-    titleOwners:
-      data?.order.orderedProduct.fieldedData.ownershipGroups.map((group) => ({
-        lastNameOrCorpName1: group.titleOwners[0].lastNameOrCorpName1,
-        givenName: group.titleOwners[0].givenName,
-        incorporationNumber: group.titleOwners[0].incorporationNumber,
-      })) || [],
-  };
+  // const ownershipDetails = {
+  //   jointTenancyIndication:
+  //     data?.order.orderedProduct.fieldedData.ownershipGroups[0]?.jointTenancyIndication || false,
+  //   interestFractionNumerator:
+  //     data?.order.orderedProduct.fieldedData.ownershipGroups[0]?.interestFractionNumerator || '',
+  //   interestFractionDenominator:
+  //     data?.order.orderedProduct.fieldedData.ownershipGroups[0]?.interestFractionDenominator || '',
+  //   titleOwners:
+  //     data?.order.orderedProduct.fieldedData.ownershipGroups.map((group) => ({
+  //       lastNameOrCorpName1: group.titleOwners[0].lastNameOrCorpName1,
+  //       givenName: group.titleOwners[0].givenName,
+  //       incorporationNumber: group.titleOwners[0].incorporationNumber,
+  //     })) || [],
+  // };
 
-  const chargeDetails = {
-    rows: [],
-    length: data?.order.orderedProduct.fieldedData.chargesOnTitle?.length || 0,
-    chargeNumber: data?.order.orderedProduct.fieldedData.chargesOnTitle[0]?.chargeNumber,
-    status: data?.order.orderedProduct.fieldedData.chargesOnTitle[0]?.status,
-    enteredDate: data?.order.orderedProduct.fieldedData.chargesOnTitle[0]?.enteredDate,
-    chargeRemarks: data?.order.orderedProduct.fieldedData.chargesOnTitle[0]?.chargeRemarks,
-    ineteralia: data?.order.orderedProduct.fieldedData.chargesOnTitle[0]?.interAlia,
-    charge: data?.order.orderedProduct.fieldedData.chargesOnTitle?.map((group) => ({
-      receivedDate: group.charge.applicationReceivedDate,
-      chargeNumber: group.charge.chargeNumber,
-      transactionType: group.charge.transactionType,
-      chargeOwnershipGroups: group.charge.chargeOwnershipGroups,
-    })),
-    chargeRelease: {},
-  };
+  // const chargeDetails = {
+  //   rows: [],
+  //   length: data?.order.orderedProduct.fieldedData.chargesOnTitle?.length || 0,
+  //   chargeNumber: data?.order.orderedProduct.fieldedData.chargesOnTitle[0]?.chargeNumber,
+  //   status: data?.order.orderedProduct.fieldedData.chargesOnTitle[0]?.status,
+  //   enteredDate: data?.order.orderedProduct.fieldedData.chargesOnTitle[0]?.enteredDate,
+  //   chargeRemarks: data?.order.orderedProduct.fieldedData.chargesOnTitle[0]?.chargeRemarks,
+  //   interAlia: data?.order.orderedProduct.fieldedData.chargesOnTitle[0]?.interAlia,
+  //   charge: data?.order.orderedProduct.fieldedData.chargesOnTitle?.map((group) => ({
+  //     receivedDate: group.charge.applicationReceivedDate,
+  //     chargeNumber: group.charge.chargeNumber,
+  //     transactionType: group.charge.transactionType,
+  //     chargeOwnershipGroups: group.charge.chargeOwnershipGroups,
+  //   })),
+  //   chargeRelease: {},
+  // };
 
   return (
     <>
@@ -84,7 +82,7 @@ const TitleOwnership = () => {
         disableEdit={true}
         onEdit={undefined}
       >
-        <LtsaOwnershipTable row={ownershipDetails} />
+        <LtsaOwnershipTable rows={data?.order.orderedProduct.fieldedData.ownershipGroups} />
       </DataCard>
       <DataCard
         loading={isLoading}
@@ -93,7 +91,7 @@ const TitleOwnership = () => {
         disableEdit={true}
         onEdit={undefined}
       >
-        <LtsaChargeTable row={chargeDetails} />
+        <LtsaChargeTable rows={data?.order.orderedProduct.fieldedData.chargesOnTitle} />
       </DataCard>
     </>
   );

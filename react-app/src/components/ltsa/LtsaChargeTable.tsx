@@ -3,9 +3,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 
 interface IChargeRowProps {
-  length: any;
-  row: {
-    rows: Record<string, any>[];
+  rows: {
     chargeNumber: string;
     status: string;
     enteredDate: string;
@@ -30,47 +28,51 @@ interface IChargeRowProps {
       corrections: [];
     };
     chargeRelease: object;
-  };
-  index: number;
+  }[];
 }
 
 const LtsaChargeTable = (props: IChargeRowProps) => {
-  const { row } = props;
+  const { rows } = props;
+  const newRows = rows?.map((row, index) => ({
+    ...row,
+    enteredDate: new Date(row.enteredDate).toLocaleDateString(),
+    applicationReceivedDate: new Date(row.charge.applicationReceivedDate).toLocaleDateString(),
+    id: index,
+  }));
   const columns: GridColDef[] = [
     {
-      field: 'ChargeNumber',
+      field: 'chargeNumber',
       headerName: 'Charge#',
-      valueGetter: () => `${row.chargeNumber}`,
+      width: 150,
     },
     {
-      field: 'Status',
+      field: 'status',
       headerName: 'Status',
-      valueGetter: () => `${row.status}`,
+      width: 150,
     },
     {
-      field: 'Entered Date',
+      field: 'enteredDate',
       headerName: 'Entered Date',
-      valueGetter: () => new Date(`${row.enteredDate}`).toLocaleDateString(),
+      width: 350,
     },
     {
-      field: 'Received Date',
+      field: 'applicationReceivedDate',
       headerName: 'Received Date',
-      valueGetter: () => new Date(`${row.charge.applicationReceivedDate}`).toLocaleDateString(),
+      width: 350,
     },
     {
-      field: 'Transaction Type',
+      field: 'transactionType',
       headerName: 'Transaction Type',
-      valueGetter: () => `${row.charge.transactionType}`,
+      width: 200,
     },
-    {
-      field: 'Remarks',
-      headerName: 'Remarks',
-      valueGetter: () => `${row.chargeRemarks}`,
-    },
+    // {
+    //   field: 'chargeRemarks',
+    //   headerName: 'Remarks',
+    // },
   ];
-  if (!props.row) return <></>;
+  if (!rows) return <></>;
 
-  return !props.length ? (
+  return !rows.length ? (
     <Box display={'flex'} justifyContent={'center'}>
       <Typography>No available charges information.</Typography>
     </Box>
@@ -87,9 +89,9 @@ const LtsaChargeTable = (props: IChargeRowProps) => {
         },
       }}
       hideFooter
-      getRowId={(row) => row.Id + row.ChargeNumber}
+      getRowId={(row) => row.Id}
       columns={columns}
-      rows={row.rows ?? []}
+      rows={newRows ?? []}
     />
   );
 };

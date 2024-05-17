@@ -1,11 +1,9 @@
-import { Box, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Box, Chip, Typography } from '@mui/material';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import React from 'react';
 
 interface IOwnershipRowProps {
-  row: {
-    length: number;
-    rows: any[];
+  rows: {
     jointTenancyIndication: boolean;
     interestFractionNumerator: string;
     interestFractionDenominator: string;
@@ -14,42 +12,66 @@ interface IOwnershipRowProps {
       givenName: string;
       incorporationNumber: string;
     }[];
-  };
-  // index: number;
+  }[];
 }
 
 const LtsaOwnershipTable = (props: IOwnershipRowProps) => {
-  const { row } = props;
+  const { rows } = props;
   const getPercentage = (numerator: string, denominator: string) => {
     const value = (parseInt(numerator) / parseInt(denominator)) * 100;
     // If it's a whole number, just return it. Otherwise, crop to 2 decimal places
     return value % 1 === 0 ? value : value.toFixed(2);
   };
+  const newRows = rows?.map((row, index) => ({
+    ...row,
+    ownershipPercentage: getPercentage(
+      row.interestFractionNumerator,
+      row.interestFractionDenominator,
+    ),
+    ownerNames: row.titleOwners.map((owner) => `${owner.lastNameOrCorpName1}, ${owner.givenName}`),
+    incorporationNumbers: row.titleOwners.map((owner) => owner.incorporationNumber),
+    id: index,
+  }));
+
+  const renderOwnerNamesCell = (params: GridRenderCellParams) => (
+    <Box>
+      {params.value.map((ownerName: string, index: number) => (
+        <Chip key={index} label={ownerName} style={{ marginRight: '5px' }} />
+      ))}
+    </Box>
+  );
+
+  const renderIncorporationNumbersCell = (params: GridRenderCellParams) => {
+    const { value } = params;
+    if (Array.isArray(value) && value.length > 0 && value.every((val) => val.trim() !== '')) {
+      return value.join('; ');
+    }
+    return '';
+  };
+
   const columns: GridColDef[] = [
     {
       field: 'ownershipPercentage',
       headerName: 'Ownership %',
-      valueGetter: () =>
-        getPercentage(row.interestFractionNumerator, row.interestFractionDenominator).toString(),
+      width: 150,
     },
     {
-      field: 'ownerName',
+      field: 'ownerNames',
       headerName: 'Owner(s) / Corporation(s)',
-      valueGetter: () =>
-        row.titleOwners
-          .map((owner) => `${owner.lastNameOrCorpName1}, ${owner.givenName}`)
-          .join('; '),
+      renderCell: renderOwnerNamesCell,
+      width: 700,
     },
     {
-      field: 'incorporationNumber',
+      field: 'incorporationNumbers',
       headerName: 'Incorporation #',
-      valueGetter: () => row.titleOwners.map((owner) => owner.incorporationNumber),
+      renderCell: renderIncorporationNumbersCell,
+      width: 250,
     },
   ];
 
-  if (!props.row) return <></>;
+  if (!rows) return <></>;
 
-  return !props.row.length ? (
+  return !rows.length ? (
     <Box display={'flex'} justifyContent={'center'}>
       <Typography>No available ownership information.</Typography>
     </Box>
@@ -66,9 +88,9 @@ const LtsaOwnershipTable = (props: IOwnershipRowProps) => {
         },
       }}
       hideFooter
-      getRowId={(row) => row.Id}
+      getRowId={(row) => row.id}
       columns={columns}
-      rows={row.rows ?? []}
+      rows={newRows ?? []}
     />
   );
 };
