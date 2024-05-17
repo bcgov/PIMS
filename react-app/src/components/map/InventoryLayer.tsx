@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import usePimsApi from '@/hooks/usePimsApi';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import useDataLoader from '@/hooks/useDataLoader';
 import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import PropertyMarker from '@/components/map/markers/PropertyMarker';
@@ -12,6 +12,7 @@ import { BBox } from 'geojson';
 import { Spiderfier } from '@/components/map/clusterHelpers/Spiderfier';
 import ControlsGroup from '@/components/map/controls/ControlsGroup';
 import FilterControl from '@/components/map/controls/FilterControl';
+import { SnackBarContext } from '@/contexts/snackbarContext';
 
 export interface InventoryLayerProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -35,6 +36,7 @@ export interface ClusterGeo {
  */
 export const InventoryLayer = (props: InventoryLayerProps) => {
   const { setLoading } = props;
+  const snackbar = useContext(SnackBarContext);
   const api = usePimsApi();
   const map = useMap();
   const [properties, setProperties] = useState<PropertyGeo[]>([]);
@@ -69,13 +71,21 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
         );
         updateClusters();
         setLoading(false);
+        snackbar.setMessageState({
+          open: true,
+          text: `${data.length} properties found.`,
+          style: snackbar.styles.success,
+        })
       } else {
-        // TODO: No properties found error
+        snackbar.setMessageState({
+          open: true,
+          text: `No properties found matching filter criteria.`,
+          style: snackbar.styles.warning,
+        })
         setProperties([]);
         map.fitBounds([[54.2516, -129.371],
           [49.129, -117.203]],)
           setLoading(false);
-
       }
     } else {
       setLoading(true);
