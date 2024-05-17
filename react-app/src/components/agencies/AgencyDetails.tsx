@@ -36,7 +36,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   const { data, refreshData, isLoading } = useDataLoader(() => api.agencies.getAgencyById(+id));
   const { submit, submitting } = useDataSubmitter(api.agencies.updateAgencyById);
 
-  const agencyOptions = useGroupedAgenciesApi().agencyOptions;
+  const { agencyOptions } = useGroupedAgenciesApi();
 
   const agencyStatusData = {
     Status: data?.IsDisabled ? 'Disabled' : 'Active',
@@ -202,7 +202,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
                     option.value === +id || // Can't assign to self
                     agencyOptions
                       .find((parent) => parent.value === +id)
-                      .children.includes(option.value) // Can't assign to current children
+                      ?.children?.includes(option.value) // Can't assign to current children
                 }
               />
             </Grid>
