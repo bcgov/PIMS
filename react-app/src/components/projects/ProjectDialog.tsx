@@ -14,6 +14,10 @@ import { Box, Typography } from '@mui/material';
 import { ProjectTask } from '@/constants/projectTasks';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
 import AgencySearchTable from './AgencyResponseSearchTable';
+import { ISelectMenuItem } from '../form/SelectFormField';
+import { Agency } from '@/hooks/api/useAgencyApi';
+import { AgencyResponseType } from '@/constants/agencyResponseTypes';
+import { enumReverseLookup } from '@/utilities/helperFunctions';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 
 interface IProjectGeneralInfoDialog {
@@ -274,27 +278,52 @@ export const ProjectPropertiesDialog = (props: IProjectPropertiesDialog) => {
 interface IProjectAgencyResponseDialog {
   initialValues: ProjectGet;
   open: boolean;
+  agencies: Agency[];
+  options: ISelectMenuItem[];
   postSubmit: () => void;
   onCancel: () => void;
 }
 
 export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { initialValues, open, postSubmit, onCancel } = props;
+  const api = usePimsApi();
+  const { initialValues, open, postSubmit, onCancel, options, agencies } = props;
+  const { submit, submitting } = useDataSubmitter(api.projects.updateProject);
   const [rows, setRows] = useState([]);
-  //useEffect here to set from initialValues once implemented
+  useEffect(() => {
+    if (initialValues && agencies) {
+      setRows(
+        initialValues.AgencyResponses?.map((resp) => ({
+          ...agencies.find((agc) => agc.Id === resp.AgencyId),
+          ReceivedOn: resp.ReceivedOn,
+          Note: resp.Note,
+          Response: enumReverseLookup(AgencyResponseType, resp.Response),
+        })),
+      );
+    }
+  }, [initialValues, agencies]);
   return (
     <ConfirmDialog
       dialogProps={{ maxWidth: 'lg' }}
       title={'Edit agency interest responses'}
       open={open}
+      confirmButtonProps={{ loading: submitting }}
       onConfirm={async () => {
-        postSubmit();
+        submit(initialValues.Id, {
+          Id: initialValues.Id,
+          ProjectProperties: initialValues.ProjectProperties,
+          AgencyResponses: rows.map((agc) => ({
+            AgencyId: agc.Id,
+            OfferAmount: 0,
+            Response: Number(AgencyResponseType[agc.Response]),
+            ReceivedOn: agc.ReceivedOn,
+            Note: agc.Note,
+          })),
+        }).then(() => postSubmit());
       }}
       onCancel={async () => onCancel()}
     >
       <Box paddingTop={'1rem'}>
-        <AgencySearchTable rows={rows} setRows={setRows} />
+        <AgencySearchTable agencies={agencies} options={options} rows={rows} setRows={setRows} />
       </Box>
     </ConfirmDialog>
   );
