@@ -38,25 +38,25 @@ const useDataLoader = <AFArgs extends any[], AFResponse = unknown, AFError = unk
   const refreshData = async (...args: AFArgs) => {
     setIsLoading(true);
     setError(undefined);
-
+    let response: AFResponse = undefined;
     try {
-      const response = await getData(...args);
-
-      if (!isMounted) {
+      response = await getData(...args);
+      if (!isMounted()) {
         return;
       }
       setData(response);
     } catch (e) {
-      if (!isMounted) {
+      if (!isMounted()) {
         return;
       }
       setError(e);
       errorHandler?.(e);
     } finally {
-      if (isMounted) {
+      if (isMounted()) {
         setIsLoading(false);
       }
     }
+    return response;
   };
 
   const loadOnce = async (...args: AFArgs) => {

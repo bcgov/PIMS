@@ -257,18 +257,18 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
     id: number,
     project: DeepPartial<ProjectGet>,
     projectPropertyIds?: ProjectPropertyIds,
-  ): Promise<Project> => {
+  ) => {
     let propertyIds = projectPropertyIds;
     propertyIds ??= {
       //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_assignment
       parcels: project.ProjectProperties.filter((a) => a.Parcel).map((a) => a.ParcelId),
       buildings: project.ProjectProperties.filter((a) => a.Building).map((a) => a.BuildingId),
     };
-    const { parsedBody } = await absoluteFetch.put(`/projects/disposal/${id}`, {
+    const response = await absoluteFetch.put(`/projects/disposal/${id}`, {
       project: project,
       propertyIds: propertyIds,
     });
-    return parsedBody as Project;
+    return response;
   };
   const deleteProjectById = async (id: number) => {
     const { status } = await absoluteFetch.del(`/projects/disposal/${id}`);
@@ -298,8 +298,8 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
       project,
       projectPropertyIds,
     };
-    const { parsedBody, status } = await absoluteFetch.post('/projects/disposal', postBody);
-    return { parsedBody, status };
+    const response = await absoluteFetch.post('/projects/disposal', postBody);
+    return response;
   };
 
   return {

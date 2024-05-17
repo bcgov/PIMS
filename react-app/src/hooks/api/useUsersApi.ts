@@ -52,8 +52,8 @@ const useUsersApi = (absoluteFetch: IFetch) => {
     return parsedBody as User;
   };
   const updateUser = async (userId: string, user: Partial<User>) => {
-    const { parsedBody } = await absoluteFetch.put(`/users/${userId}`, user);
-    return parsedBody;
+    const response = await absoluteFetch.put(`/users/${userId}`, user);
+    return response;
   };
   const updateUserRole = async (username: string, role: string) => {
     const { parsedBody } = await absoluteFetch.put(`/users/roles/${username}`, [role]);

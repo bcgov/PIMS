@@ -5,7 +5,7 @@ import { User } from './api/useUsersApi';
 
 export interface IPimsUser {
   data?: User;
-  refreshData: () => Promise<void>;
+  refreshData: () => Promise<User>;
   isLoading: boolean;
 }
 

@@ -1,4 +1,5 @@
-import { Box, Button, ButtonProps } from '@mui/material';
+import { Box, Button } from '@mui/material';
+import LoadingButton, { LoadingButtonProps } from '@mui/lab/LoadingButton';
 import React from 'react';
 
 interface IDualActionButtons {
@@ -6,7 +7,7 @@ interface IDualActionButtons {
   onConfirm: () => void;
   confirmText: string;
   cancelText: string;
-  confirmButtonProps?: ButtonProps;
+  confirmButtonProps?: LoadingButtonProps;
 }
 
 const DualActionButtons = (props: IDualActionButtons) => {
@@ -20,14 +21,14 @@ const DualActionButtons = (props: IDualActionButtons) => {
       >
         {cancelText}
       </Button>
-      <Button
+      <LoadingButton
         sx={{ fontWeight: 'bold' }}
         variant="contained"
         onClick={() => onConfirm()}
         {...confirmButtonProps}
       >
         {confirmText}
-      </Button>
+      </LoadingButton>
     </Box>
   );
 };

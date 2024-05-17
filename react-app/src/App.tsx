@@ -27,6 +27,7 @@ import ProjectManagement from './pages/ProjectManagement';
 import AddProject from '@/components/projects/AddProject';
 import { Roles } from '@/constants/roles';
 import ProjectDetail from '@/components/projects/ProjectDetail';
+import SnackBarContextProvider from './contexts/snackbarContext';
 
 const Router = () => {
   const navigate = useNavigate();
@@ -222,7 +223,9 @@ const App = () => {
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <ConfigContextProvider>
           <AuthContextProvider>
-            <Router />
+            <SnackBarContextProvider>
+              <Router />
+            </SnackBarContextProvider>
           </AuthContextProvider>
         </ConfigContextProvider>
       </ErrorBoundary>
