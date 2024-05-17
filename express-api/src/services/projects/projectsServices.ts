@@ -524,7 +524,7 @@ const updateProject = async (
 
     // If status was changed, write result to Project Status History table.
     if (project.StatusId !== undefined && originalProject.StatusId !== project.StatusId) {
-      await AppDataSource.getRepository(ProjectStatusHistory).save({
+      await queryRunner.manager.save(ProjectStatusHistory, {
         CreatedById: project.UpdatedById,
         ProjectId: project.Id,
         WorkflowId: originalProject.WorkflowId,
