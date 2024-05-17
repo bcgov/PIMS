@@ -17,6 +17,7 @@ import TextFormField from '../form/TextFormField';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 import { useParams } from 'react-router-dom';
+import useDataSubmitter from '@/hooks/useDataSubmitter';
 
 interface IUserDetail {
   onClose: () => void;
@@ -39,6 +40,8 @@ const UserDetail = ({ onClose }: IUserDetail) => {
 
   const { data: rolesData, loadOnce: loadRoles } = useDataLoader(api.roles.getInternalRoles);
   loadRoles();
+
+  const { submit, submitting } = useDataSubmitter(api.users.updateUser);
 
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
 
@@ -161,19 +164,19 @@ const UserDetail = ({ onClose }: IUserDetail) => {
       <ConfirmDialog
         title={'Update User Profile'}
         open={openProfileDialog}
+        confirmButtonProps={{ loading: submitting }}
         onConfirm={async () => {
           const isValid = await profileFormMethods.trigger();
           if (isValid) {
             const formValues = profileFormMethods.getValues();
-            // Remove Provider. Field is frontend only.
             formValues.Provider = undefined;
-            api.users
-              .updateUser(id, {
-                Id: id,
-                ...formValues,
-              })
-              .then(() => refreshData());
-            setOpenProfileDialog(false);
+            submit(id, {
+              Id: id,
+              ...formValues,
+            }).then(() => {
+              refreshData();
+              setOpenProfileDialog(false);
+            });
           }
         }}
         onCancel={async () => setOpenProfileDialog(false)}
@@ -209,17 +212,18 @@ const UserDetail = ({ onClose }: IUserDetail) => {
       <ConfirmDialog
         title={'Update User Status'}
         open={openStatusDialog}
+        confirmButtonProps={{ loading: submitting }}
         onConfirm={async () => {
           const isValid = await statusFormMethods.trigger();
           if (isValid) {
             await api.users.updateUserRole(data.Username, statusFormMethods.getValues().Role);
-            api.users
-              .updateUser(id, {
-                Id: id,
-                Status: statusFormMethods.getValues().Status,
-              })
-              .then(() => refreshData());
-            setOpenStatusDialog(false);
+            submit(id, {
+              Id: id,
+              Status: statusFormMethods.getValues().Status,
+            }).then(() => {
+              refreshData();
+              setOpenStatusDialog(false);
+            });
           }
         }}
         onCancel={async () => setOpenStatusDialog(false)}

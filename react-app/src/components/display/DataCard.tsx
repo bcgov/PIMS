@@ -76,7 +76,7 @@ const DataCard = <T,>(props: DataCardProps<T>) => {
             sx={{ minWidth: '50px', fontWeight: 'bold' }}
             onClick={() => onEdit()}
             color={'primary'}
-            disabled={disableEdit}
+            disabled={disableEdit || loading}
           >
             Edit
           </Button>

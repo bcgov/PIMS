@@ -1,4 +1,4 @@
-import { Box, Button, Grid, InputAdornment, Typography, useTheme } from '@mui/material';
+import { Box, Grid, InputAdornment, Typography, useTheme } from '@mui/material';
 import { useMemo, useState } from 'react';
 import { NavigateBackButton } from '../display/DetailViewNavigation';
 import TextFormField from '../form/TextFormField';
@@ -14,6 +14,8 @@ import DisposalProjectSearch, {
   ParcelWithType,
 } from './DisposalPropertiesSearchTable';
 import React from 'react';
+import useDataSubmitter from '@/hooks/useDataSubmitter';
+import { LoadingButton } from '@mui/lab';
 
 const AddProject = () => {
   const navigate = useNavigate();
@@ -46,6 +48,7 @@ const AddProject = () => {
   loadStatuses();
   const { data: tasks, loadOnce: loadTasks } = useDataLoader(api.lookup.getTasks);
   loadTasks();
+  const { submit, submitting } = useDataSubmitter(api.projects.postProject);
 
   const tasksForAddState = useMemo(() => {
     if (!statuses || !tasks) {
@@ -72,7 +75,7 @@ const AddProject = () => {
       <Box>
         <NavigateBackButton
           navigateBackTitle={'Back to Disposal Projects'}
-          onBackClick={() => {}}
+          onBackClick={() => navigate('/projects')}
         />
       </Box>
       <Typography variant={'h2'} mb={'2rem'}>
@@ -233,7 +236,8 @@ const AddProject = () => {
           </Grid>
         </Grid>
       </FormProvider>
-      <Button
+      <LoadingButton
+        loading={submitting}
         onClick={async () => {
           const isValid = await formMethods.trigger();
           setShowNoPropertiesError(!rows.length);
@@ -252,18 +256,16 @@ const AddProject = () => {
               }
             });
             // Send to API hook
-            api.projects
-              .postProject(
-                {
-                  ...formValues,
-                  ReportedFiscalYear: new Date().getFullYear(),
-                  ActualFiscalYear: new Date().getFullYear(),
-                },
-                projectProperties,
-              )
-              .then((response) => {
-                if (response.status === 201) navigate('/projects');
-              });
+            submit(
+              {
+                ...formValues,
+                ReportedFiscalYear: new Date().getFullYear(),
+                ActualFiscalYear: new Date().getFullYear(),
+              },
+              projectProperties,
+            ).then((response) => {
+              if (response && response.ok) navigate('/projects');
+            });
           }
         }}
         variant="contained"
@@ -271,7 +273,7 @@ const AddProject = () => {
         sx={{ padding: '8px', width: '6rem', marginX: 'auto' }}
       >
         Submit
-      </Button>
+      </LoadingButton>
     </Box>
   );
 };
