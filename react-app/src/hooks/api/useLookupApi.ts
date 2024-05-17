@@ -21,6 +21,13 @@ export interface Task {
 export type RegionalDistrict = Omit<LookupObject, 'SortOrder'>;
 export type ProjectStatus = Omit<LookupObject, 'SortOrder'>;
 
+export interface PropertyType {
+  Name: string;
+  Id:  number;
+  IsDisabled: boolean;
+  SortOrder: number;
+}
+
 const useLookupApi = (absoluteFetch: IFetch) => {
   const getClassifications = async () => {
     const { parsedBody } = await absoluteFetch.get('/lookup/property/classifications');
@@ -57,6 +64,11 @@ const useLookupApi = (absoluteFetch: IFetch) => {
     return parsedBody as Task[];
   };
 
+  const getPropertyTypes = async () => {
+    const { parsedBody } = await absoluteFetch.get('/lookup/propertyTypes');
+    return parsedBody as PropertyType[];
+  };
+
   return {
     getClassifications,
     getConstructionTypes,
@@ -65,6 +77,7 @@ const useLookupApi = (absoluteFetch: IFetch) => {
     getProjectStatuses,
     getTierLevels,
     getTasks,
+    getPropertyTypes,
   };
 };
 

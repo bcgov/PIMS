@@ -17,6 +17,7 @@ import { RegionalDistrict } from '@/typeorm/Entities/RegionalDistrict';
 import { TierLevel } from '@/typeorm/Entities/TierLevel';
 import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { Task } from '@/typeorm/Entities/Task';
+import { PropertyType } from '@/typeorm/Entities/PropertyType';
 
 // TODO: What controllers here could just be replaced by existing GET requests?
 
@@ -186,6 +187,13 @@ export const lookupTasks = async (req: Request, res: Response) => {
   } else {
     return res.status(400).send(parsed);
   }
+};
+
+export const lookupPropertyTypes = async (req: Request, res: Response) => {
+  const types = (
+    await AppDataSource.getRepository(PropertyType).find()
+  );
+    return res.status(200).send(types);
 };
 
 /**

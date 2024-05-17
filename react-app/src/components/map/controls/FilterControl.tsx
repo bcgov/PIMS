@@ -1,9 +1,10 @@
 import MultiselectFormField from '@/components/form/MultiselectFormField';
+import { ISelectMenuItem } from '@/components/form/SelectFormField';
 import TextFormField from '@/components/form/TextFormField';
 import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
 import { MapFilter } from '@/hooks/api/usePropertiesApi';
-// import useDataLoader from '@/hooks/useDataLoader';
-// import usePimsApi from '@/hooks/usePimsApi';
+import useDataLoader from '@/hooks/useDataLoader';
+import usePimsApi from '@/hooks/usePimsApi';
 import { Close, FilterAlt } from '@mui/icons-material';
 import { Box, Paper, SxProps, Typography, useTheme, Grid, IconButton, Button } from '@mui/material';
 import React, { Dispatch, SetStateAction, useState } from 'react';
@@ -18,12 +19,17 @@ const FilterControl = (props: FilterControlProps) => {
   const [open, setOpen] = useState<boolean>(false);
   const [fading, setFading] = useState<boolean>(false);
   const theme = useTheme();
-  // const api = usePimsApi();
+  const api = usePimsApi();
 
   // Get lists for dropdowns
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
 
-  // const {data, loadOnce} = useDataLoader(api)
+  const {data: adminAreasData, loadOnce: loadAdminAreas} = useDataLoader(api.administrativeAreas.getAdministrativeAreas)
+  const {data: classificationsData, loadOnce: loadClassifications} = useDataLoader(api.lookup.getClassifications)
+  const {data: propertyTypesData, loadOnce: loadPropertyTypes} = useDataLoader(api.lookup.getPropertyTypes);
+  loadAdminAreas();
+  loadClassifications();
+  loadPropertyTypes();
 
   const closedStyle: SxProps = {
     height: '25px',
@@ -34,7 +40,7 @@ const FilterControl = (props: FilterControlProps) => {
     },
   };
   const openStyle: SxProps = {
-    height: '500px',
+    height: 'auto',
     width: '300px',
   };
   const style = open ? openStyle : closedStyle;
@@ -106,11 +112,31 @@ const FilterControl = (props: FilterControlProps) => {
                 label={'Agencies'}
                 options={agencyOptions}
                 allowNestedIndent
-                {...{
-                  limitTags: 2,
-                }}
               />
-
+              <MultiselectFormField
+                name={'AdministrativeAreas'}
+                label='Administrative Areas'
+                options={adminAreasData.filter(aa => !aa.IsDisabled).map(aa => ({
+                  label: aa.Name,
+                  value: aa.Id,
+                }))}
+              />
+              <MultiselectFormField
+                name={'Classifications'}
+                label='Classifications'
+                options={classificationsData.map(c => ({
+                  label: c.Name,
+                  value: c.Id,
+                }))}
+              />
+              <MultiselectFormField
+              name={'PropertyTypes'}
+              label='Property Types'
+              options={propertyTypesData.filter(pt => !pt.IsDisabled).map(pt => ({
+                label: pt.Name,
+                value: pt.Id
+              }))}
+              />
               <Grid item xs={12} justifyContent={'space-between'} display={'inline-flex'} gap={1}>
                 <Button variant="outlined" fullWidth onClick={() => {
                   setFilter({});
@@ -120,15 +146,16 @@ const FilterControl = (props: FilterControlProps) => {
                 </Button>
                 <Button variant="contained" fullWidth onClick={() => {
                   const formValues = formMethods.getValues();
-                  console.log(formValues)
                   const newFilter: MapFilter = {
                     PID: !isNaN(parseInt(formValues.PID.replace(/-/g,'').trim())) ? parseInt(formValues.PID.replace(/-/g,'').trim()) :  undefined,
                     PIN: !isNaN(parseInt(formValues.PIN)) ? parseInt(formValues.PIN) : undefined,
                     Name: formValues.Name && formValues.Name.trim().length ? formValues.Name.trim() : undefined,
                     Address: formValues.Address && formValues.Address.trim().length ? formValues.Address.trim() : undefined,
-                    AgencyIds: formValues.Agencies.map(a => a.value),
+                    AgencyIds: formValues.Agencies.map(option => option.value),
+                    ClassificationIds: formValues.Classifications.map(option => option.value),
+                    PropertyTypeIds: formValues.PropertyTypes.map(option => option.value),
+                    AdministrativeAreaIds: formValues.AdministrativeAreas.map(option => option.value),
                   }
-                  console.log(newFilter)
                   setFilter(newFilter);
                 }}>
                   Filter

@@ -52,7 +52,6 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
     if (data) {
       if (data.length) {
         setProperties(data as PropertyGeo[]);
-        setLoading(false);
         // Set map bounds based on received data. Eliminate outliers (outside BC)
         const coordsArray = (data as PropertyGeo[])
         .map((d) => [d.geometry.coordinates[1], d.geometry.coordinates[0]])
@@ -68,9 +67,15 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
             ]
           ),
         );
-        updateMap();
+        updateClusters();
+        setLoading(false);
       } else {
         // TODO: No properties found error
+        setProperties([]);
+        map.fitBounds([[54.2516, -129.371],
+          [49.129, -117.203]],)
+          setLoading(false);
+
       }
     } else {
       setLoading(true);
@@ -83,7 +88,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
   }, [filter]);
 
   // Updating the map for the clusterer
-  const updateMap = () => {
+  const updateClusters = () => {
     const b = map.getBounds();
     setClusterBounds([
       b.getSouthWest().lng,
@@ -100,9 +105,9 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
     }
   };
 
-  // Update map once upon load
+  // Update clusters once upon load
   useEffect(() => {
-    updateMap();
+    updateClusters();
   }, []);
 
   // Create clustered markers
@@ -181,8 +186,8 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
 
   // Update map after these actions
   useMapEvents({
-    zoomend: updateMap,
-    moveend: updateMap,
+    zoomend: updateClusters,
+    moveend: updateClusters,
   });
 
   return (

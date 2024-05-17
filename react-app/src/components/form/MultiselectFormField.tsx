@@ -44,6 +44,7 @@ const MultiselectFormField = (props: MultiselectFormFieldProps) => {
           options={options}
           PaperComponent={CustomPaper}
           sx={sx}
+          limitTags={2}
           fullWidth
           disableClearable={true}
           getOptionLabel={(option: ISelectMenuItem) => option.label}
