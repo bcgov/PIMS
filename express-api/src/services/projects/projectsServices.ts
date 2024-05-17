@@ -530,11 +530,13 @@ const updateProject = async (
         WorkflowId: originalProject.WorkflowId,
         StatusId: originalProject.StatusId,
       });
-      await handleProjectNotifications(originalProject, user, queryRunner); //Assuming that this needs to be here, I don't think notifications should send unless a status transition happens.
     }
 
     queryRunner.commitTransaction();
 
+    if (project.StatusId !== undefined && originalProject.StatusId !== project.StatusId) {
+      await handleProjectNotifications(originalProject, user, queryRunner); //Do this after committing transaction so that we don't send emails to CHES unless the rest of the project metadata actually saved.
+    }
     // Get project to return
     const returnProject = await projectRepo.findOne({ where: { Id: originalProject.Id } });
     return returnProject;
