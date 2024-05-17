@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import DataCard from '../display/DataCard';
 import { Box, Chip, Grid, Typography } from '@mui/material';
 import { dateFormatter, statusChipFormatter } from '@/utilities/formatters';
-import DeleteDialog from '../dialog/DeleteDialog';
-import { deleteAgencyConfirmText } from '@/constants/strings';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import { FormProvider, useForm } from 'react-hook-form';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
@@ -32,7 +30,6 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   const { id } = useParams();
   const api = usePimsApi();
 
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
   const [openNotificationsDialog, setOpenNotificationsDialog] = useState(false);
 
@@ -126,7 +123,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
       <DetailViewNavigation
         navigateBackTitle={'Back to Agency Overview'}
         deleteTitle={'Delete Agency'}
-        onDeleteClick={() => setOpenDeleteDialog(true)}
+        disableDelete={true}
         onBackClick={() => onClose()}
       />
       <DataCard
@@ -142,19 +139,6 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
         values={notificationsSettingsData}
         title={'Notification Settings'}
         onEdit={() => setOpenNotificationsDialog(true)}
-      />
-      <DeleteDialog
-        open={openDeleteDialog}
-        title={'Delete Agency'}
-        message={deleteAgencyConfirmText}
-        deleteText="Delete Agency"
-        onDelete={async () => {
-          api.agencies.deleteAgencyById(+id).then(() => {
-            setOpenDeleteDialog(false);
-            onClose();
-          });
-        }}
-        onClose={async () => setOpenDeleteDialog(false)}
       />
       <ConfirmDialog
         title={'Update Agency'}

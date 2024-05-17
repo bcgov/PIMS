@@ -37,7 +37,7 @@ const AdministrativeAreasTable = () => {
       headerName: 'Is Disabled',
       flex: 1,
       renderCell: (value) => {
-        if (value) {
+        if (!value) {
           return <Check />;
         } else return <></>;
       },
