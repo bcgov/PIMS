@@ -115,9 +115,9 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
       }]
    */
   // parse for filter
-  const filter = await MapFilterSchema.safeParse(req.query);
-  if (filter.error) {
-    return res.status(400).send(filter.error);
+  const filter = MapFilterSchema.safeParse(req.query);
+  if (!filter.success) {
+    return res.status(400).send(filter);
   }
 
   // Converts comma-separated lists to arrays, see schema
