@@ -51,14 +51,14 @@ const useAgencyApi = (absoluteFetch: IFetch) => {
     return status;
   };
 
-  const updateAgencyById = async (id: number, agency: Partial<Agency>): Promise<Agency> => {
-    const { parsedBody } = await absoluteFetch.patch(`/agencies/${id}`, agency);
-    return parsedBody as Agency;
+  const updateAgencyById = async (id: number, agency: Partial<Agency>) => {
+    const response = await absoluteFetch.patch(`/agencies/${id}`, agency);
+    return response;
   };
 
   const addAgency = async (agency: AgencyAdd) => {
-    const { parsedBody, status } = await absoluteFetch.post('/agencies', agency);
-    return { parsedBody, status };
+    const response = await absoluteFetch.post('/agencies', agency);
+    return response;
   };
 
   return {

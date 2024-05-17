@@ -159,8 +159,8 @@ const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentR
     }
   }
   email.to = email.to.filter((a) => !!a);
-  email.cc = email.cc?.filter((a) => !!a);
-  email.bcc = email.bcc?.filter((a) => !!a);
+  email.cc = cfg.ches.overrideTo ? [] : email.cc?.filter((a) => !!a);
+  email.bcc = cfg.ches.overrideTo ? [] : email.bcc?.filter((a) => !!a);
 
   if (cfg.ches.emailEnabled) {
     return sendAsync('/email', 'POST', email);

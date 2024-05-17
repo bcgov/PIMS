@@ -81,6 +81,7 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
               }}
               component="li"
               {...props}
+              key={option.label}
             >
               {ownerState.getOptionLabel(option)}
             </Box>

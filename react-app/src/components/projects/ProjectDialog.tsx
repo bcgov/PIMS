@@ -14,6 +14,11 @@ import { Box, Typography } from '@mui/material';
 import { ProjectTask } from '@/constants/projectTasks';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
 import AgencySearchTable from './AgencyResponseSearchTable';
+import { ISelectMenuItem } from '../form/SelectFormField';
+import { Agency } from '@/hooks/api/useAgencyApi';
+import { AgencyResponseType } from '@/constants/agencyResponseTypes';
+import { enumReverseLookup } from '@/utilities/helperFunctions';
+import useDataSubmitter from '@/hooks/useDataSubmitter';
 
 interface IProjectGeneralInfoDialog {
   initialValues: Project;
@@ -33,6 +38,8 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   } = useDataLoader(api.lookup.getProjectStatuses);
 
   loadProjStatus();
+
+  const { submit, submitting } = useDataSubmitter(api.projects.updateProject);
 
   const projectFormMethods = useForm({
     defaultValues: {
@@ -79,17 +86,16 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
     <ConfirmDialog
       title={'Update Project'}
       open={open}
+      confirmButtonProps={{ loading: submitting }}
       onConfirm={async () => {
         const isValid = await projectFormMethods.trigger();
         if (!loadingTasks && isValid) {
           const values = projectFormMethods.getValues();
-          api.projects
-            .updateProject(+initialValues.Id, {
-              ...values,
-              Id: initialValues.Id,
-              ProjectProperties: initialValues.ProjectProperties,
-            })
-            .then(() => postSubmit());
+          submit(+initialValues.Id, {
+            ...values,
+            Id: initialValues.Id,
+            ProjectProperties: initialValues.ProjectProperties,
+          }).then(() => postSubmit());
         }
       }}
       onCancel={async () => onCancel()}
@@ -127,6 +133,7 @@ interface IProjectFinancialDialog {
 export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
   const api = usePimsApi();
   const { initialValues, open, postSubmit, onCancel } = props;
+  const { submit, submitting } = useDataSubmitter(api.projects.updateProject);
   const financialFormMethods = useForm({
     defaultValues: {
       Assessed: 0,
@@ -153,22 +160,21 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
     <ConfirmDialog
       title={'Update Financial Information'}
       open={open}
+      confirmButtonProps={{ loading: submitting }}
       onConfirm={async () => {
         const isValid = await financialFormMethods.trigger();
         if (isValid) {
           const { Assessed, NetBook, Market, Appraised, Metadata } =
             financialFormMethods.getValues();
-          api.projects
-            .updateProject(initialValues.Id, {
-              Id: initialValues.Id,
-              Assessed: Assessed,
-              NetBook: NetBook,
-              Market: Market,
-              Appraised: Appraised,
-              Metadata: Metadata,
-              ProjectProperties: initialValues.ProjectProperties,
-            })
-            .then(() => postSubmit());
+          submit(initialValues.Id, {
+            Id: initialValues.Id,
+            Assessed: Assessed,
+            NetBook: NetBook,
+            Market: Market,
+            Appraised: Appraised,
+            Metadata: Metadata,
+            ProjectProperties: initialValues.ProjectProperties,
+          }).then(() => postSubmit());
         }
       }}
       onCancel={async () => onCancel()}
@@ -236,6 +242,7 @@ interface IProjectPropertiesDialog {
 export const ProjectPropertiesDialog = (props: IProjectPropertiesDialog) => {
   const api = usePimsApi();
   const { initialValues, open, postSubmit, onCancel } = props;
+  const { submit, submitting } = useDataSubmitter(api.projects.updateProject);
   const [rows, setRows] = useState([]);
   useEffect(() => {
     setRows([
@@ -247,18 +254,17 @@ export const ProjectPropertiesDialog = (props: IProjectPropertiesDialog) => {
     <ConfirmDialog
       title={'Edit Properties List'}
       open={open}
+      confirmButtonProps={{ loading: submitting }}
       dialogProps={{ maxWidth: 'lg' }}
       onConfirm={async () => {
-        api.projects
-          .updateProject(
-            initialValues.Id,
-            { Id: initialValues.Id },
-            {
-              parcels: rows.filter((a) => a.Type == 'Parcel').map((a) => a.Id),
-              buildings: rows.filter((a) => a.Type == 'Building').map((a) => a.Id),
-            },
-          )
-          .then(() => postSubmit());
+        submit(
+          initialValues.Id,
+          { Id: initialValues.Id },
+          {
+            parcels: rows.filter((a) => a.Type == 'Parcel').map((a) => a.Id),
+            buildings: rows.filter((a) => a.Type == 'Building').map((a) => a.Id),
+          },
+        ).then(() => postSubmit());
       }}
       onCancel={async () => onCancel()}
     >
@@ -272,27 +278,52 @@ export const ProjectPropertiesDialog = (props: IProjectPropertiesDialog) => {
 interface IProjectAgencyResponseDialog {
   initialValues: ProjectGet;
   open: boolean;
+  agencies: Agency[];
+  options: ISelectMenuItem[];
   postSubmit: () => void;
   onCancel: () => void;
 }
 
 export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { initialValues, open, postSubmit, onCancel } = props;
+  const api = usePimsApi();
+  const { initialValues, open, postSubmit, onCancel, options, agencies } = props;
+  const { submit, submitting } = useDataSubmitter(api.projects.updateProject);
   const [rows, setRows] = useState([]);
-  //useEffect here to set from initialValues once implemented
+  useEffect(() => {
+    if (initialValues && agencies) {
+      setRows(
+        initialValues.AgencyResponses?.map((resp) => ({
+          ...agencies.find((agc) => agc.Id === resp.AgencyId),
+          ReceivedOn: resp.ReceivedOn,
+          Note: resp.Note,
+          Response: enumReverseLookup(AgencyResponseType, resp.Response),
+        })),
+      );
+    }
+  }, [initialValues, agencies]);
   return (
     <ConfirmDialog
       dialogProps={{ maxWidth: 'lg' }}
       title={'Edit agency interest responses'}
       open={open}
+      confirmButtonProps={{ loading: submitting }}
       onConfirm={async () => {
-        postSubmit();
+        submit(initialValues.Id, {
+          Id: initialValues.Id,
+          ProjectProperties: initialValues.ProjectProperties,
+          AgencyResponses: rows.map((agc) => ({
+            AgencyId: agc.Id,
+            OfferAmount: 0,
+            Response: Number(AgencyResponseType[agc.Response]),
+            ReceivedOn: agc.ReceivedOn,
+            Note: agc.Note,
+          })),
+        }).then(() => postSubmit());
       }}
       onCancel={async () => onCancel()}
     >
       <Box paddingTop={'1rem'}>
-        <AgencySearchTable rows={rows} setRows={setRows} />
+        <AgencySearchTable agencies={agencies} options={options} rows={rows} setRows={setRows} />
       </Box>
     </ConfirmDialog>
   );

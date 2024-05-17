@@ -368,6 +368,7 @@ const handleProjectNotifications = async (
           Fiscals: true,
         },
       },
+      AgencyResponses: true,
       Notes: true,
     },
     where: {
@@ -475,17 +476,6 @@ const updateProject = async (
     // Construct the proper metadata before continuing.
     const newMetadata = { ...originalProject.Metadata, ...project.Metadata };
 
-    // If status was changed, write result to Project Status History table.
-    if (originalProject.StatusId !== project.StatusId) {
-      await queryRunner.manager.save(ProjectStatusHistory, {
-        CreatedById: project.UpdatedById,
-        ProjectId: project.Id,
-        WorkflowId: originalProject.WorkflowId,
-        StatusId: originalProject.StatusId,
-      });
-      await handleProjectNotifications(originalProject, user, queryRunner); //Assuming that this needs to be here, I don't think notifications should send unless a status transition happens.
-    }
-
     await handleProjectTasks({ ...project, CreatedById: project.UpdatedById }, queryRunner);
     await handleProjectAgencyResponses(
       { ...project, CreatedById: project.UpdatedById },
@@ -531,6 +521,17 @@ const updateProject = async (
       await removeProjectParcelRelations(originalProject, parcelsToRemove, queryRunner);
     if (buildingsToRemove)
       await removeProjectBuildingRelations(originalProject, buildingsToRemove, queryRunner);
+
+    // If status was changed, write result to Project Status History table.
+    if (project.StatusId !== undefined && originalProject.StatusId !== project.StatusId) {
+      await AppDataSource.getRepository(ProjectStatusHistory).save({
+        CreatedById: project.UpdatedById,
+        ProjectId: project.Id,
+        WorkflowId: originalProject.WorkflowId,
+        StatusId: originalProject.StatusId,
+      });
+      await handleProjectNotifications(originalProject, user, queryRunner); //Assuming that this needs to be here, I don't think notifications should send unless a status transition happens.
+    }
 
     queryRunner.commitTransaction();
 
