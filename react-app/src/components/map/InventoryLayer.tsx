@@ -125,7 +125,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
     // Gets colour based on count of cluster
     const getColour = () => {
       const maxHue = 120; // 120 is max for a nice green
-      const consideredBig = 1000; // Change this to affect how the colour scales
+      const consideredBig = data?.length ? data?.length / 5 : 1000; // Change this to affect how the colour scales
       const colourScore = (1 - count / consideredBig) * maxHue;
       const hue = Math.max(0, Math.min(maxHue, colourScore)).toString(10);
       return ['hsl(', hue, ',60%,70%)'].join('');
