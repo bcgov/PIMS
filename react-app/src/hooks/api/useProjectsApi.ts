@@ -4,6 +4,7 @@ import { Agency } from './useAgencyApi';
 import { User } from '@/hooks/api/useUsersApi';
 import { Parcel } from './useParcelsApi';
 import { Building } from './useBuildingsApi';
+import { DeepPartial } from 'react-hook-form';
 
 export interface TierLevel extends BaseEntityInterface {
   Id: number;
@@ -80,6 +81,7 @@ export interface Project {
   StatusHistory?: ProjectStatusHistory[];
   Notes?: ProjectNote[];
   ProjectProperties?: ProjectProperty[];
+  AgencyResponses?: ProjectAgencyResponse[];
 }
 
 export interface ProjectNote {
@@ -144,6 +146,21 @@ export interface ProjectProperty {
   BuildingId: number | null;
   Parcel: Parcel | null;
   Building: Building | null;
+}
+
+export interface ProjectAgencyResponse {
+  CreatedById: string;
+  CreatedOn: string;
+  UpdatedById: string | null;
+  UpdatedOn: string | null;
+  Id: number;
+  ProjectId: number;
+  AgencyId: number;
+  OfferAmount: string | number;
+  NotificationId: number | null;
+  Response: number;
+  ReceivedOn: Date | null;
+  Note: string | null;
 }
 
 export interface ProjectMetadata {
@@ -238,7 +255,7 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
   };
   const updateProject = async (
     id: number,
-    project: Partial<ProjectGet>,
+    project: DeepPartial<ProjectGet>,
     projectPropertyIds?: ProjectPropertyIds,
   ) => {
     let propertyIds = projectPropertyIds;

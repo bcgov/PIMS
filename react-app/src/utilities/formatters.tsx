@@ -2,6 +2,10 @@ import { Chip, useTheme } from '@mui/material';
 import React from 'react';
 
 export const dateFormatter = (input: any) => {
+  const asDate = new Date(input);
+  if (!isFinite(asDate.getTime())) {
+    return 'Invalid Date';
+  }
   return input
     ? new Intl.DateTimeFormat('en-US', {
         month: 'short',

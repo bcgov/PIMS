@@ -15,6 +15,7 @@ import chesServices, {
   IEmail,
 } from '../ches/chesServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
 
 interface AccessRequestData {
   FirstName: string;
@@ -36,6 +37,12 @@ export enum NotificationAudience {
   ParentAgencies = 'ParentAgencies',
   Default = 'Default',
   WatchingAgencies = 'WatchingAgencies',
+}
+
+export enum AgencyResponseType {
+  Unsubscribe = 0,
+  Subscribe = 1,
+  Watch = 2,
 }
 
 const Title = 'PIMS';
@@ -163,11 +170,80 @@ const generateProjectNotifications = async (project: Project, previousStatusId: 
         insertProjectNotificationQueue(template, projStatusNotif, project, project.Agency),
       );
     } else if (template.Audience == NotificationAudience.Agencies) {
-      //Will eventually integrate agency interest response lookup here.
+      const agencies = await AppDataSource.getRepository(Agency)
+        .createQueryBuilder('a')
+        .leftJoin(
+          ProjectAgencyResponse,
+          'par',
+          'a.id = par.agency_id AND par.project_id = :projectId',
+          {
+            projectId: project.Id,
+          },
+        )
+        .andWhere('a.is_disabled = false')
+        .andWhere('a.send_email = true')
+        .andWhere(
+          '(par.agency_id IS NULL OR (par.response != :unsubscribe AND par.response != :watch))',
+          {
+            unsubscribe: AgencyResponseType.Unsubscribe,
+            watch: AgencyResponseType.Watch,
+          },
+        )
+        .getMany();
+      agencies.forEach((agc) =>
+        returnNotifications.push(
+          insertProjectNotificationQueue(template, projStatusNotif, project, agc),
+        ),
+      );
     } else if (template.Audience == NotificationAudience.ParentAgencies) {
-      //Same here
+      const agencies = await AppDataSource.getRepository(Agency)
+        .createQueryBuilder('a')
+        .leftJoin(
+          ProjectAgencyResponse,
+          'par',
+          'a.id = par.agency_id AND par.project_id = :projectId',
+          {
+            projectId: project.Id,
+          },
+        )
+        .where('a.parent_id IS NULL')
+        .andWhere('a.is_disabled = false')
+        .andWhere('a.send_email = true')
+        .andWhere(
+          '(par.agency_id IS NULL OR (par.response != :unsubscribe AND par.response != :watch))',
+          {
+            unsubscribe: AgencyResponseType.Unsubscribe,
+            watch: AgencyResponseType.Watch,
+          },
+        )
+        .getMany();
+      agencies.forEach((agc) =>
+        returnNotifications.push(
+          insertProjectNotificationQueue(template, projStatusNotif, project, agc),
+        ),
+      );
     } else if (template.Audience == NotificationAudience.WatchingAgencies) {
-      //Same here
+      const agencies = await AppDataSource.getRepository(Agency)
+        .createQueryBuilder('a')
+        .leftJoin(
+          ProjectAgencyResponse,
+          'par',
+          'a.id = par.agency_id AND par.project_id = :projectId',
+          {
+            projectId: project.Id,
+          },
+        )
+        .andWhere('a.is_disabled = false')
+        .andWhere('a.send_email = true')
+        .andWhere('(par.agency_id IS NOT NULL AND par.response = :watch)', {
+          watch: AgencyResponseType.Watch,
+        })
+        .getMany();
+      agencies.forEach((agc) =>
+        returnNotifications.push(
+          insertProjectNotificationQueue(template, projStatusNotif, project, agc),
+        ),
+      );
     } else if (template.Audience == NotificationAudience.Default) {
       returnNotifications.push(insertProjectNotificationQueue(template, projStatusNotif, project));
     }
