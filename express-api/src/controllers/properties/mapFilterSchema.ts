@@ -4,15 +4,15 @@ const arrayFromString = <T extends ZodTypeAny>(schema: T) => {
   return z.preprocess((obj) => {
     if (Array.isArray(obj)) {
       return obj;
-    } else if (typeof obj === "string") {
-      return obj.split(",");
+    } else if (typeof obj === 'string') {
+      return obj.split(',');
     } else {
       return [];
     }
   }, z.array(schema));
 };
 
-const numberSchema = z.coerce.number().nonnegative().optional()
+const numberSchema = z.coerce.number().nonnegative().optional();
 
 export const MapFilterSchema = z.object({
   PID: numberSchema,

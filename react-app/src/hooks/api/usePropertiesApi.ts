@@ -25,14 +25,14 @@ export interface PropertyGeo {
 }
 
 export interface MapFilter {
-  PID?: number,
-  PIN?: number,
-  Address?: string,
-  AgencyIds?: number[],
-  AdministrativeAreaIds?: number[],
-  ClassificationIds?: number[],
-  PropertyTypeIds?: number[],
-  Name?: string,
+  PID?: number;
+  PIN?: number;
+  Address?: string;
+  AgencyIds?: number[];
+  AdministrativeAreaIds?: number[];
+  ClassificationIds?: number[];
+  PropertyTypeIds?: number[];
+  Name?: string;
 }
 
 const usePropertiesApi = (absoluteFetch: IFetch) => {
@@ -46,13 +46,15 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
 
   const propertiesGeoSearch = async (filter: MapFilter) => {
     const noNullParam = filter
-      ? // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        Object.fromEntries(Object.entries(filter).filter(([_, v]) => {
-          // No empty arrays
-          if (Array.isArray(v) && v.length === 0) return false;
-          // No undefined or null
-          return v != null;
-        } ))
+      ? Object.fromEntries(
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          Object.entries(filter).filter(([_, v]) => {
+            // No empty arrays
+            if (Array.isArray(v) && v.length === 0) return false;
+            // No undefined or null
+            return v != null;
+          }),
+        )
       : undefined;
     const { parsedBody } = await absoluteFetch.get('/properties/search/geo', noNullParam);
     return parsedBody as PropertyGeo[];

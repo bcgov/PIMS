@@ -190,10 +190,8 @@ export const lookupTasks = async (req: Request, res: Response) => {
 };
 
 export const lookupPropertyTypes = async (req: Request, res: Response) => {
-  const types = (
-    await AppDataSource.getRepository(PropertyType).find()
-  );
-    return res.status(200).send(types);
+  const types = await AppDataSource.getRepository(PropertyType).find();
+  return res.status(200).send(types);
 };
 
 /**

@@ -23,7 +23,7 @@ export type ProjectStatus = Omit<LookupObject, 'SortOrder'>;
 
 export interface PropertyType {
   Name: string;
-  Id:  number;
+  Id: number;
   IsDisabled: boolean;
   SortOrder: number;
 }

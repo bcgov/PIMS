@@ -1,5 +1,4 @@
 import MultiselectFormField from '@/components/form/MultiselectFormField';
-import { ISelectMenuItem } from '@/components/form/SelectFormField';
 import TextFormField from '@/components/form/TextFormField';
 import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
 import { MapFilter } from '@/hooks/api/usePropertiesApi';
@@ -11,11 +10,11 @@ import React, { Dispatch, SetStateAction, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 interface FilterControlProps {
-  setFilter: Dispatch<SetStateAction<{}>>;
+  setFilter: Dispatch<SetStateAction<object>>;
 }
 
 const FilterControl = (props: FilterControlProps) => {
-  const {setFilter} = props;
+  const { setFilter } = props;
   const [open, setOpen] = useState<boolean>(false);
   const [fading, setFading] = useState<boolean>(false);
   const theme = useTheme();
@@ -24,9 +23,15 @@ const FilterControl = (props: FilterControlProps) => {
   // Get lists for dropdowns
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
 
-  const {data: adminAreasData, loadOnce: loadAdminAreas} = useDataLoader(api.administrativeAreas.getAdministrativeAreas)
-  const {data: classificationsData, loadOnce: loadClassifications} = useDataLoader(api.lookup.getClassifications)
-  const {data: propertyTypesData, loadOnce: loadPropertyTypes} = useDataLoader(api.lookup.getPropertyTypes);
+  const { data: adminAreasData, loadOnce: loadAdminAreas } = useDataLoader(
+    api.administrativeAreas.getAdministrativeAreas,
+  );
+  const { data: classificationsData, loadOnce: loadClassifications } = useDataLoader(
+    api.lookup.getClassifications,
+  );
+  const { data: propertyTypesData, loadOnce: loadPropertyTypes } = useDataLoader(
+    api.lookup.getPropertyTypes,
+  );
   loadAdminAreas();
   loadClassifications();
   loadPropertyTypes();
@@ -66,7 +71,7 @@ const FilterControl = (props: FilterControlProps) => {
         transition: 'all 0.1s ease-in-out',
         ...style,
       }}
-      onClick={(e) => {
+      onClick={() => {
         // Handles a delayed fade in if opening the filter
         if (!open) {
           setFading(true);
@@ -96,7 +101,7 @@ const FilterControl = (props: FilterControlProps) => {
               >
                 <Typography variant="h4">Inventory Filter</Typography>
                 <IconButton
-                  onClick={(e) => {
+                  onClick={() => {
                     setOpen(false);
                   }}
                 >
@@ -115,49 +120,71 @@ const FilterControl = (props: FilterControlProps) => {
               />
               <MultiselectFormField
                 name={'AdministrativeAreas'}
-                label='Administrative Areas'
-                options={adminAreasData.filter(aa => !aa.IsDisabled).map(aa => ({
-                  label: aa.Name,
-                  value: aa.Id,
-                }))}
+                label="Administrative Areas"
+                options={adminAreasData
+                  .filter((aa) => !aa.IsDisabled)
+                  .map((aa) => ({
+                    label: aa.Name,
+                    value: aa.Id,
+                  }))}
               />
               <MultiselectFormField
                 name={'Classifications'}
-                label='Classifications'
-                options={classificationsData.map(c => ({
+                label="Classifications"
+                options={classificationsData.map((c) => ({
                   label: c.Name,
                   value: c.Id,
                 }))}
               />
               <MultiselectFormField
-              name={'PropertyTypes'}
-              label='Property Types'
-              options={propertyTypesData.filter(pt => !pt.IsDisabled).map(pt => ({
-                label: pt.Name,
-                value: pt.Id
-              }))}
+                name={'PropertyTypes'}
+                label="Property Types"
+                options={propertyTypesData
+                  .filter((pt) => !pt.IsDisabled)
+                  .map((pt) => ({
+                    label: pt.Name,
+                    value: pt.Id,
+                  }))}
               />
               <Grid item xs={12} justifyContent={'space-between'} display={'inline-flex'} gap={1}>
-                <Button variant="outlined" fullWidth onClick={() => {
-                  setFilter({});
-                  formMethods.reset();
-                }}>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  onClick={() => {
+                    setFilter({});
+                    formMethods.reset();
+                  }}
+                >
                   Clear
                 </Button>
-                <Button variant="contained" fullWidth onClick={() => {
-                  const formValues = formMethods.getValues();
-                  const newFilter: MapFilter = {
-                    PID: !isNaN(parseInt(formValues.PID.replace(/-/g,'').trim())) ? parseInt(formValues.PID.replace(/-/g,'').trim()) :  undefined,
-                    PIN: !isNaN(parseInt(formValues.PIN)) ? parseInt(formValues.PIN) : undefined,
-                    Name: formValues.Name && formValues.Name.trim().length ? formValues.Name.trim() : undefined,
-                    Address: formValues.Address && formValues.Address.trim().length ? formValues.Address.trim() : undefined,
-                    AgencyIds: formValues.Agencies.map(option => option.value),
-                    ClassificationIds: formValues.Classifications.map(option => option.value),
-                    PropertyTypeIds: formValues.PropertyTypes.map(option => option.value),
-                    AdministrativeAreaIds: formValues.AdministrativeAreas.map(option => option.value),
-                  }
-                  setFilter(newFilter);
-                }}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={() => {
+                    const formValues = formMethods.getValues();
+                    const newFilter: MapFilter = {
+                      PID: !isNaN(parseInt(formValues.PID.replace(/-/g, '').trim()))
+                        ? parseInt(formValues.PID.replace(/-/g, '').trim())
+                        : undefined,
+                      PIN: !isNaN(parseInt(formValues.PIN)) ? parseInt(formValues.PIN) : undefined,
+                      Name:
+                        formValues.Name && formValues.Name.trim().length
+                          ? formValues.Name.trim()
+                          : undefined,
+                      Address:
+                        formValues.Address && formValues.Address.trim().length
+                          ? formValues.Address.trim()
+                          : undefined,
+                      AgencyIds: formValues.Agencies.map((option) => option.value),
+                      ClassificationIds: formValues.Classifications.map((option) => option.value),
+                      PropertyTypeIds: formValues.PropertyTypes.map((option) => option.value),
+                      AdministrativeAreaIds: formValues.AdministrativeAreas.map(
+                        (option) => option.value,
+                      ),
+                    };
+                    setFilter(newFilter);
+                  }}
+                >
                   Filter
                 </Button>
               </Grid>
