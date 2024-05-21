@@ -78,6 +78,7 @@ const MultiselectFormField = (props: MultiselectFormFieldProps) => {
           )}
           renderOption={(props, option) => (
             <Box
+              {...props}
               sx={{
                 fontWeight: option.parent ? 900 : 500,
                 [`&.${autocompleteClasses.option}`]: {
@@ -87,7 +88,6 @@ const MultiselectFormField = (props: MultiselectFormFieldProps) => {
               }}
               component="li"
               key={option.value}
-              {...props}
             >
               {option.label ?? 'N/A'}
             </Box>
