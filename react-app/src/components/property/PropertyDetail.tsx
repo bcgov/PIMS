@@ -286,7 +286,14 @@ const PropertyDetail = (props: IPropertyDetail) => {
         )}
       </>
       <PropertyAssessedValueEditDialog
-        initialRelatedBuildings={relatedBuildings}
+        initialRelatedBuildings={
+          !relatedBuildings
+            ? []
+            : relatedBuildings?.map((a) => ({
+                ...a,
+                Evaluations: a.Evaluations.sort((a, b) => b.Year - a.Year),
+              }))
+        }
         propertyType={buildingOrParcel}
         initialValues={buildingOrParcel === 'Building' ? building : parcel}
         open={openAssessedValueDialog}

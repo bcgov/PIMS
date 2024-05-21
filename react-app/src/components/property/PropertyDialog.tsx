@@ -239,6 +239,7 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
       Evaluations: [],
       RelatedBuildings: [],
     },
+    mode: 'onBlur',
   });
 
   const currentYear = new Date().getFullYear();
@@ -293,6 +294,10 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
       title={'Edit assessed values'}
       open={open}
       onConfirm={async () => {
+        const isValid = await assessedFormMethods.trigger();
+        if (!isValid) {
+          return;
+        }
         const formValues = assessedFormMethods.getValues();
         const evalus = {
           Id: initialValues.Id,
@@ -321,19 +326,28 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
       <FormProvider {...assessedFormMethods}>
         {/* Initialize yearsFromEvaluations variable */}
         {(() => {
+          console.log('These are the evaluations:', initialValues?.Evaluations);
           const evaluationYears = initialValues?.Evaluations?.map((evalu) => evalu.Year) ?? [];
           const currentYear = new Date().getFullYear();
+          let hasCurrentYear = true;
 
           // Check if currentYear is not in yearsFromEvaluations array
           if (!evaluationYears.includes(currentYear)) {
             // Add currentYear to yearsFromEvaluations array
             evaluationYears.unshift(currentYear);
+            hasCurrentYear = false;
           }
           console.log('yearsFromEvaluations', evaluationYears);
           return (
             <>
               {/* Render top-level AssessedValue with yearsFromEvaluations */}
-              <AssessedValue years={evaluationYears} />
+              <AssessedValue
+                hasCurrentYear={hasCurrentYear}
+                years={evaluationYears}
+                title={
+                  propertyType === 'Building' ? 'Assessed Building Value' : 'Assessed Land Value'
+                }
+              />
               {/* Map through initialRelatedBuildings and render AssessedValue components */}
               {initialRelatedBuildings?.map((building, idx) => {
                 const buildingEvals = building?.Evaluations?.map((evalu) => evalu.Year) ?? [];

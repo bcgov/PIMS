@@ -250,7 +250,12 @@ const getParcelById = async (parcelId: number) => {
       Evaluations: true,
       Fiscals: true,
     },
-    where: { Id: parcelId },
+    where: { Id: parcelId, Evaluations: { EvaluationKeyId: 0 } },
+    order: {
+      Evaluations: {
+        Year: 'DESC',
+      },
+    },
   });
 };
 

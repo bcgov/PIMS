@@ -513,26 +513,34 @@ interface IAssessedValue {
   years: number[];
   title?: string;
   topLevelKey?: string;
+  hasCurrentYear?: boolean;
 }
 
 export const AssessedValue = (props: IAssessedValue) => {
-  const { years, title, topLevelKey } = props;
+  const { years, title, topLevelKey, hasCurrentYear } = props;
   // Sort the years array in descending order
   const sortedYears = years.sort((a, b) => b - a);
-  console.log('sorting the years:', sortedYears, title, topLevelKey);
-  const [duplicateYearWarning, setDuplicateYearWarning] = useState(false);
+  console.log('sorting the years & topLevelKey:', sortedYears, title, topLevelKey);
+  const currentYear = sortedYears[sortedYears.length - 1];
+  const { getValues } = useFormContext();
 
-  const handleYearChange = (year: number) => {
-    // Check if the year being added already exists in the list
-    const isDuplicate = years.some((existingYear) => existingYear === year);
-    if (isDuplicate) {
-      // Display a warning if there's a duplicate year
-      setDuplicateYearWarning(true);
-    } else {
-      // If no duplicate, clear any existing warning
-      setDuplicateYearWarning(false);
-      // Proceed with whatever action you want to take for adding the year
+  const handleYearChange = () => {
+    const currentValues = getValues();
+    // Collect all the year values from the form
+    const yearValues = currentValues.Evaluations.map((evaluation) => parseInt(evaluation.Year));
+
+    // Check for duplicates in the yearValues array
+    const yearCounts = yearValues.reduce((acc, year) => {
+      acc[year] = (acc[year] || 0) + 1;
+      return acc;
+    }, {});
+
+    for (const year in yearCounts) {
+      if (yearCounts[year] > 1) {
+        return `There is already an assessment value for the year ${year}`;
+      }
     }
+    return true;
   };
 
   return (
@@ -541,56 +549,70 @@ export const AssessedValue = (props: IAssessedValue) => {
         {title ?? 'Assessed Value'}
       </Typography>
       <Box overflow={'auto'} paddingTop={'8px'}>
-        {sortedYears &&
-          sortedYears.map((yr, idx) => {
-            console.log(`Year: ${yr}, Index: ${idx}`);
-            return (
-              <Box
-                mb={2}
-                gap={2}
-                key={`assessedvaluerow-${yr}${'-' + topLevelKey}`}
-                display={'flex'}
-                width={'100%'}
-                flexDirection={'row'}
-              >
-                <TextFormField
-                  sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-                  name={`${topLevelKey ?? ''}Evaluations.${idx}.Year`}
-                  label={'Year'}
-                  value={yr}
-                  disabled={idx !== sortedYears.length - 1}
-                  error={duplicateYearWarning}
-                  onBlur={(event) => {
-                    handleYearChange(parseInt(event.target.value));
-                  }}
-                  // rules={{
-                  //   validate: (value) => {
-                  //     return handleYearChange(parseInt(value));
-                  //   },
-                  // }}
-                />
-                <TextFormField
-                  InputProps={{
-                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                  }}
-                  sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-                  name={`${topLevelKey ?? ''}Evaluations.${idx}.Value`}
-                  numeric
-                  label={'Value'}
-                  error={true}
-                  onBlur={(event) => {
-                    handleYearChange(parseInt(event.target.value));
-                  }}
-                  // rules={{
-                  //   validate: (value, formVals) => {
-                  //     alert(formVals);
-                  //     return handleYearChange(parseInt(value));
-                  //   },
-                  // }}
-                />
-              </Box>
-            );
-          })}
+        {/* Render the current year row first */}
+        <Box
+          mb={2}
+          gap={2}
+          display={'flex'}
+          width={'100%'}
+          flexDirection={'row'}
+          key={`assessedvaluerow-current${'-' + topLevelKey}`}
+        >
+          <TextFormField
+            sx={{ minWidth: 'calc(33.3% - 1rem)' }}
+            name={`${topLevelKey ?? ''}Evaluations.${hasCurrentYear ? 0 : currentYear}.Year`}
+            label={'Year'}
+            value={currentYear}
+            onBlur={handleYearChange}
+            rules={{
+              validate: () => {
+                const result = handleYearChange();
+                console.log('return value:', result);
+                return result;
+              },
+            }}
+          />
+          <TextFormField
+            InputProps={{
+              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+            }}
+            sx={{ minWidth: 'calc(33.3% - 1rem)' }}
+            name={`${topLevelKey ?? ''}Evaluations.${hasCurrentYear ? 0 : currentYear}.Value`}
+            numeric
+            label={'Value'}
+          />
+        </Box>
+        {/* Render only if there are other evaluations */}
+        {sortedYears.slice(1).map((yr, idx) => {
+          return (
+            <Box
+              mb={2}
+              gap={2}
+              key={`assessedvaluerow-${yr}${'-' + topLevelKey}`}
+              display={'flex'}
+              width={'100%'}
+              flexDirection={'row'}
+            >
+              <TextFormField
+                sx={{ minWidth: 'calc(33.3% - 1rem)' }}
+                name={`${topLevelKey ?? ''}Evaluations.${hasCurrentYear ? idx + 1 : idx}.Year`}
+                label={'Year'}
+                value={yr}
+                disabled={true}
+              />
+              <TextFormField
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                }}
+                sx={{ minWidth: 'calc(33.3% - 1rem)' }}
+                name={`${topLevelKey ?? ''}Evaluations.${hasCurrentYear ? idx + 1 : idx}.Value`}
+                numeric
+                label={'Value'}
+                disabled={true}
+              />
+            </Box>
+          );
+        })}
       </Box>
     </Box>
   );
