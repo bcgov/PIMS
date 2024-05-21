@@ -60,10 +60,10 @@ const MultiselectFormField = (props: MultiselectFormFieldProps) => {
           renderTags={(selectedOptions, props) =>
             selectedOptions.map((option, index) => (
               <Chip
+                {...props({ index })}
                 key={option.value}
                 label={option.label ?? 'N/A'}
                 variant="outlined"
-                {...props({ index })}
               />
             ))
           }
