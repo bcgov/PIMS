@@ -1,7 +1,7 @@
 import usePimsApi from '@/hooks/usePimsApi';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import useDataLoader from '@/hooks/useDataLoader';
-import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
+import { MapFilter, PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import PropertyMarker from '@/components/map/markers/PropertyMarker';
 import { Marker, Polyline, useMap, useMapEvents } from 'react-leaflet';
 import useSupercluster from 'use-supercluster';
@@ -9,12 +9,11 @@ import './clusterHelpers/clusters.css';
 import L, { LatLngExpression } from 'leaflet';
 import { BBox } from 'geojson';
 import { Spiderfier } from '@/components/map/clusterHelpers/Spiderfier';
-import ControlsGroup from '@/components/map/controls/ControlsGroup';
-import FilterControl from '@/components/map/controls/FilterControl';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 
 export interface InventoryLayerProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  filter: MapFilter;
 }
 
 // Properties added to PropertyGeo types after clustering
@@ -34,14 +33,13 @@ export interface ClusterGeo {
  * @returns {JSX.Element} The rendered InventoryLayer component.
  */
 export const InventoryLayer = (props: InventoryLayerProps) => {
-  const { setLoading } = props;
+  const { setLoading, filter } = props;
   const snackbar = useContext(SnackBarContext);
   const api = usePimsApi();
   const map = useMap();
   const [properties, setProperties] = useState<PropertyGeo[]>([]);
   const [clusterBounds, setClusterBounds] = useState<BBox>(); // Affects clustering
   const [clusterZoom, setClusterZoom] = useState<number>(14); // Affects clustering
-  const [filter, setFilter] = useState({}); // Applies when request for properties is made
   const { data, refreshData, isLoading } = useDataLoader(() =>
     api.properties.propertiesGeoSearch(filter),
   );
@@ -206,10 +204,6 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
 
   return (
     <>
-      {/* All map controls fit here */}
-      <ControlsGroup position="topleft">
-        <FilterControl setFilter={setFilter} />
-      </ControlsGroup>
       {/* For all cluster objects */}
       {clusters.map((property: PropertyGeo & ClusterGeo) => {
         // Return a cluster circle if it's a cluster

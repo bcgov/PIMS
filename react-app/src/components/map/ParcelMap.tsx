@@ -6,6 +6,8 @@ import MapLayers from '@/components/map/MapLayers';
 import { ParcelPopup } from '@/components/map/parcelPopup/ParcelPopup';
 import { InventoryLayer } from '@/components/map/InventoryLayer';
 import MapPropertyDetails from '@/components/map/MapPropertyDetails';
+import ControlsGroup from '@/components/map/controls/ControlsGroup';
+import FilterControl from '@/components/map/controls/FilterControl';
 
 type ParcelMapProps = {
   height: string;
@@ -48,6 +50,7 @@ const ParcelMap = (props: ParcelMapProps) => {
     id: undefined,
     type: undefined,
   });
+  const [filter, setFilter] = useState({}); // Applies when request for properties is made
 
   const {
     height,
@@ -68,6 +71,10 @@ const ParcelMap = (props: ParcelMapProps) => {
     >
       <Box height={height}>
         <LoadingCover show={loading} />
+        {/* All map controls fit here */}
+        <ControlsGroup position="topleft">
+          <FilterControl setFilter={setFilter} />
+        </ControlsGroup>
         <MapPropertyDetails property={selectedMarker} />
         <MapContainer
           style={{ height: '100%' }}
@@ -87,7 +94,7 @@ const ParcelMap = (props: ParcelMapProps) => {
           <MapLayers />
           <ParcelPopup size={popupSize} scrollOnClick={scrollOnClick} />
           <MapEvents />
-          {loadProperties ? <InventoryLayer setLoading={setLoading} /> : <></>}
+          {loadProperties ? <InventoryLayer filter={filter} setLoading={setLoading} /> : <></>}
           {props.children}
         </MapContainer>
       </Box>

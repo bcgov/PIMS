@@ -23,7 +23,7 @@ const ControlsGroup = (props: PropsWithChildren & { position: string }) => {
         className={`leaflet-control leaflet-bar`}
         style={{
           position: 'absolute',
-          top: '80px',
+          top: '140px',
         }}
       >
         {props.children}
