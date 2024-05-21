@@ -44,6 +44,7 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
     return parsedBody as PropertyFuzzySearch;
   };
 
+  // Retrieves properties for map population
   const propertiesGeoSearch = async (filter: MapFilter) => {
     const noNullParam = filter
       ? Object.fromEntries(

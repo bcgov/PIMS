@@ -48,6 +48,11 @@ export interface MapPropertiesFilter {
   Name?: string;
 }
 
+/**
+ * Retrieves properties based on the provided filter criteria to render map markers.
+ * @param filter - An optional object containing filter criteria for properties.
+ * @returns A promise that resolves to an array of properties matching the filter criteria.
+ */
 const getPropertiesForMap = async (filter?: MapPropertiesFilter) => {
   const properties = await AppDataSource.getRepository(MapProperties).find({
     // Select only the properties needed to render map markers

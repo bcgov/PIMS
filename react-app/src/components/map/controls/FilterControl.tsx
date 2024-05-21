@@ -16,16 +16,25 @@ interface FilterControlProps {
   setFilter: Dispatch<SetStateAction<object>>;
 }
 
+/**
+ * FilterControl component renders a filter control interface for filtering inventory items.
+ * It includes dropdowns for selecting agencies, administrative areas, classifications, and property types.
+ * Users can input PID, PIN, Address, and Name for filtering purposes.
+ * The component allows users to clear the filter or apply the selected filter criteria.
+ *
+ * @param {FilterControlProps} props - Props for the FilterControl component.
+ * @returns {JSX.Element} A React component representing the filter control interface.
+ */
 const FilterControl = (props: FilterControlProps) => {
   const { setFilter } = props;
   const [open, setOpen] = useState<boolean>(false);
-  const [fading, setFading] = useState<boolean>(false);
+  const [fading, setFading] = useState<boolean>(false); // Controls the fade in/out
   const theme = useTheme();
   const api = usePimsApi();
   const user = useContext(AuthContext);
 
+  // This ref tracking prevents clicking through the control and activating the map/popup
   const ref = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (ref.current) {
       L.DomEvent.disableClickPropagation(ref.current);
@@ -34,7 +43,6 @@ const FilterControl = (props: FilterControlProps) => {
 
   // Get lists for dropdowns
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
-
   const { data: adminAreasData, loadOnce: loadAdminAreas } = useDataLoader(
     api.administrativeAreas.getAdministrativeAreas,
   );
@@ -52,6 +60,7 @@ const FilterControl = (props: FilterControlProps) => {
   loadPropertyTypes();
   loadUsersAgencies();
 
+  // Define styles for control in different states
   const closedStyle: SxProps = {
     height: '25px',
     width: '25px',
@@ -66,6 +75,7 @@ const FilterControl = (props: FilterControlProps) => {
   };
   const style = open ? openStyle : closedStyle;
 
+  // Initial form values
   const formMethods = useForm({
     defaultValues: {
       PID: '',
@@ -132,6 +142,7 @@ const FilterControl = (props: FilterControlProps) => {
               <MultiselectFormField
                 name={'Agencies'}
                 label={'Agencies'}
+                // Only return options that should be visible based on user's agency/role
                 options={agencyOptions.filter(
                   (option) =>
                     user.keycloak.hasRoles([Roles.ADMIN, Roles.AUDITOR], {

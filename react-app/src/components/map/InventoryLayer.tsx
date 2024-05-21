@@ -39,9 +39,9 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
   const api = usePimsApi();
   const map = useMap();
   const [properties, setProperties] = useState<PropertyGeo[]>([]);
-  const [clusterBounds, setClusterBounds] = useState<BBox>();
-  const [clusterZoom, setClusterZoom] = useState<number>(14);
-  const [filter, setFilter] = useState({});
+  const [clusterBounds, setClusterBounds] = useState<BBox>(); // Affects clustering
+  const [clusterZoom, setClusterZoom] = useState<number>(14); // Affects clustering
+  const [filter, setFilter] = useState({}); // Applies when request for properties is made
   const { data, refreshData, isLoading } = useDataLoader(() =>
     api.properties.propertiesGeoSearch(filter),
   );
@@ -83,6 +83,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
           style: snackbar.styles.warning,
         });
         setProperties([]);
+        // Reset back to BC view
         map.fitBounds([
           [54.2516, -129.371],
           [49.129, -117.203],
@@ -95,6 +96,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
     }
   }, [data, isLoading]);
 
+  // Refresh the data if the filter changes
   useEffect(() => {
     refreshData();
   }, [filter]);
@@ -204,6 +206,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
 
   return (
     <>
+      {/* All map controls fit here */}
       <ControlsGroup position="topleft">
         <FilterControl setFilter={setFilter} />
       </ControlsGroup>

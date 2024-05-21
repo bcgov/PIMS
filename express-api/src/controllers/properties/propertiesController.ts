@@ -136,10 +136,11 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
 
   // Controlling for agency search visibility
   const kcUser = req.user;
-  // Admins and auditors see all
+  // Admins and auditors see all, otherwise...
   if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
     const requestedAgencies = filterResult.AgencyIds;
     const userHasAgencies = await checkUserAgencyPermission(kcUser, requestedAgencies);
+    // If not agencies were requested or if the user doesn't have those requested agencies
     if (!requestedAgencies || !userHasAgencies) {
       // Then only show that user's agencies instead.
       const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
@@ -148,6 +149,7 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
   }
 
   const properties = await propertyServices.getPropertiesForMap(filterResult);
+  // Convert to GeoJSON format
   const mapFeatures = properties.map((property) => ({
     type: 'Feature',
     properties: { ...property },

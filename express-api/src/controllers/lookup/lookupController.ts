@@ -189,6 +189,13 @@ export const lookupTasks = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Retrieves all property types from the database and sends them as a response.
+ *
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns A response with all property types and status code 200.
+ */
 export const lookupPropertyTypes = async (req: Request, res: Response) => {
   const types = await AppDataSource.getRepository(PropertyType).find();
   return res.status(200).send(types);

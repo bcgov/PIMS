@@ -24,6 +24,12 @@ const CustomPaper = (props) => {
   return <Paper elevation={4} {...props} />;
 };
 
+/**
+ * MultiselectFormField component for rendering a multiselect form field with autocomplete functionality.
+ *
+ * @param {MultiselectFormFieldProps} props - The props object containing the necessary configurations for the multiselect field.
+ * @returns {JSX.Element} - Returns the JSX element for the MultiselectFormField component.
+ */
 const MultiselectFormField = (props: MultiselectFormFieldProps) => {
   const { control, getValues, formState } = useFormContext();
   const { name, label, sx, required, options, allowNestedIndent, ...rest } = props;
