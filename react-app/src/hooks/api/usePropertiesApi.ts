@@ -24,6 +24,17 @@ export interface PropertyGeo {
   };
 }
 
+export interface MapFilter {
+  PID?: number;
+  PIN?: number;
+  Address?: string;
+  AgencyIds?: number[];
+  AdministrativeAreaIds?: number[];
+  ClassificationIds?: number[];
+  PropertyTypeIds?: number[];
+  Name?: string;
+}
+
 const usePropertiesApi = (absoluteFetch: IFetch) => {
   const propertiesFuzzySearch = async (keyword: string) => {
     const { parsedBody } = await absoluteFetch.get('/properties/search/fuzzy', {
@@ -33,8 +44,20 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
     return parsedBody as PropertyFuzzySearch;
   };
 
-  const propertiesGeoSearch = async () => {
-    const { parsedBody } = await absoluteFetch.get('/properties/search/geo');
+  // Retrieves properties for map population
+  const propertiesGeoSearch = async (filter: MapFilter) => {
+    const noNullParam = filter
+      ? Object.fromEntries(
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          Object.entries(filter).filter(([_, v]) => {
+            // No empty arrays
+            if (Array.isArray(v) && v.length === 0) return false;
+            // No undefined or null
+            return v != null;
+          }),
+        )
+      : undefined;
+    const { parsedBody } = await absoluteFetch.get('/properties/search/geo', noNullParam);
     return parsedBody as PropertyGeo[];
   };
 
