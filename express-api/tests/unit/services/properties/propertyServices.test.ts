@@ -60,7 +60,24 @@ describe('UNIT - Property Services', () => {
 
   describe('getPropertiesForMap', () => {
     it('should return a list of map property objects', async () => {
-      const result = await propertyServices.getPropertiesForMap({});
+      const result = await propertyServices.getPropertiesForMap({
+        Name: 'some name',
+      });
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.at(0)).toHaveProperty('Id');
+      expect(result.at(0)).toHaveProperty('Location');
+      expect(result.at(0)).toHaveProperty('PropertyTypeId');
+      expect(result.at(0)).toHaveProperty('ClassificationId');
+    });
+
+    it('should return a list of map property objects, assuming arrays are also sent', async () => {
+      const result = await propertyServices.getPropertiesForMap({
+        Address: 'some address',
+        AgencyIds: [1, 2],
+        PropertyTypeIds: [1],
+        ClassificationIds: [5, 6],
+        AdministrativeAreaIds: [12, 34],
+      });
       expect(Array.isArray(result)).toBe(true);
       expect(result.at(0)).toHaveProperty('Id');
       expect(result.at(0)).toHaveProperty('Location');
