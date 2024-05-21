@@ -8,7 +8,8 @@ import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
 import { Close, FilterAlt } from '@mui/icons-material';
 import { Box, Paper, SxProps, Typography, useTheme, Grid, IconButton, Button } from '@mui/material';
-import React, { Dispatch, SetStateAction, useContext, useState } from 'react';
+import L from 'leaflet';
+import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 interface FilterControlProps {
