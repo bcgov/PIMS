@@ -219,7 +219,7 @@ const Router = () => {
         element={
           <BaseLayout>
             <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
-              <ParcelMap height="100%" loadProperties={true} popupSize="large" />
+              <ParcelMap height="100%" loadProperties={true} popupSize="large" scrollOnClick />
             </AuthRouteGuard>
           </BaseLayout>
         }

@@ -8,7 +8,8 @@ import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
 import { Close, FilterAlt } from '@mui/icons-material';
 import { Box, Paper, SxProps, Typography, useTheme, Grid, IconButton, Button } from '@mui/material';
-import React, { Dispatch, SetStateAction, useContext, useState } from 'react';
+import L from 'leaflet';
+import React, { Dispatch, SetStateAction, useContext, useRef, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 interface FilterControlProps {
@@ -22,6 +23,14 @@ const FilterControl = (props: FilterControlProps) => {
   const theme = useTheme();
   const api = usePimsApi();
   const user = useContext(AuthContext);
+
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      L.DomEvent.disableClickPropagation(ref.current);
+    }
+  });
 
   // Get lists for dropdowns
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
@@ -72,6 +81,7 @@ const FilterControl = (props: FilterControlProps) => {
 
   return (
     <Box
+      ref={ref}
       component={Paper}
       sx={{
         padding: '1em',
