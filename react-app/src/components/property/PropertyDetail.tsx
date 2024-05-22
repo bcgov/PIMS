@@ -9,7 +9,7 @@ import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { useClassificationStyle } from './PropertyTable';
 import PropertyAssessedValueTable from './PropertyAssessedValueTable';
-import {  useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Parcel } from '@/hooks/api/useParcelsApi';
 import { Building } from '@/hooks/api/useBuildingsApi';
 import DeleteDialog from '../dialog/DeleteDialog';
