@@ -6,7 +6,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import DataCard from '../display/DataCard';
 import { AdministrativeArea } from '@/hooks/api/useAdministrativeAreaApi';
-import DeleteDialog from '../dialog/DeleteDialog';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import { FormProvider, useForm } from 'react-hook-form';
 import TextFormField from '../form/TextFormField';
@@ -29,7 +28,6 @@ const AdministrativeAreaDetail = () => {
   useEffect(() => {
     refreshData();
   }, [id]);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const customFormatter = (key: keyof AdministrativeArea, val: any) => {
     if (key === 'IsDisabled') {
@@ -74,8 +72,8 @@ const AdministrativeAreaDetail = () => {
       <DetailViewNavigation
         navigateBackTitle="Back to Administrative Areas"
         deleteTitle="Delete Area"
-        onDeleteClick={() => setOpenDeleteDialog(true)}
         onBackClick={() => navigate('/admin/adminAreas')}
+        disableDelete={true}
       />
       <DataCard
         loading={isLoading}
@@ -132,15 +130,6 @@ const AdministrativeAreaDetail = () => {
           </Grid>
         </FormProvider>
       </ConfirmDialog>
-      <DeleteDialog
-        open={openDeleteDialog}
-        title={'Delete administrative area'}
-        message={
-          'Are you sure you want to delete the administrative area? This operation may fail if properties already depend on it.'
-        }
-        onDelete={async () => {}}
-        onClose={async () => setOpenDeleteDialog(false)}
-      />
     </Box>
   );
 };
