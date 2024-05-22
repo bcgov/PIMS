@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useMemo, useState } from 'react';
 import DataCard from '../display/DataCard';
 import { Box, Grid, Typography } from '@mui/material';
 import { statusChipFormatter } from '@/utilities/formatters';
-import DeleteDialog from '../dialog/DeleteDialog';
-import { deleteAccountConfirmText } from '@/constants/strings';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import { FormProvider, useForm } from 'react-hook-form';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
@@ -32,7 +30,6 @@ const UserDetail = ({ onClose }: IUserDetail) => {
   const { pimsUser } = useContext(AuthContext);
   const api = usePimsApi();
 
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
 
@@ -128,9 +125,9 @@ const UserDetail = ({ onClose }: IUserDetail) => {
       marginX={'auto'}
     >
       <DetailViewNavigation
+        disableDelete={true}
         navigateBackTitle={'Back to User Overview'}
         deleteTitle={'Delete Account'}
-        onDeleteClick={() => setOpenDeleteDialog(true)}
         onBackClick={() => onClose()}
         deleteButtonProps={{ disabled: pimsUser.data?.Id === id }}
       />
@@ -147,19 +144,6 @@ const UserDetail = ({ onClose }: IUserDetail) => {
         values={userProfileData}
         title={'User Profile'}
         onEdit={() => setOpenProfileDialog(true)}
-      />
-      <DeleteDialog
-        open={openDeleteDialog}
-        title={'Delete account'}
-        message={deleteAccountConfirmText}
-        deleteText="Delete Account"
-        onDelete={async () => {
-          api.users.deleteUser(id).then(() => {
-            setOpenDeleteDialog(false);
-            onClose();
-          });
-        }}
-        onClose={async () => setOpenDeleteDialog(false)}
       />
       <ConfirmDialog
         title={'Update User Profile'}
