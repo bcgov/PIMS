@@ -1,5 +1,5 @@
-import React, { MutableRefObject, useMemo } from 'react';
-import { CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
+import React, { MutableRefObject, useContext, useMemo } from 'react';
+import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, SxProps, Tooltip, lighten, useTheme } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { Check } from '@mui/icons-material';
@@ -11,7 +11,7 @@ import {
   GridRowId,
   GridValidRowModel,
 } from '@mui/x-data-grid';
-import { dateFormatter } from '@/utilities/formatters';
+import { dateFormatter, pidFormatter, zeroPadPID } from '@/utilities/formatters';
 import { ClassificationInline } from './ClassificationIcon';
 import { useNavigate } from 'react-router-dom';
 import usePimsApi from '@/hooks/usePimsApi';
@@ -27,6 +27,7 @@ import { propertyTypeMapper, PropertyTypes } from '@/constants/propertyTypes';
 import { AdministrativeArea } from '@/hooks/api/useAdministrativeAreaApi';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { Classification } from '@/hooks/api/useLookupApi';
+import { SnackBarContext } from '@/contexts/snackbarContext';
 
 interface IPropertyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
@@ -66,6 +67,7 @@ export const useClassificationStyle = () => {
 const PropertyTable = (props: IPropertyTable) => {
   const api = usePimsApi();
   const navigate = useNavigate();
+  const snackbar = useContext(SnackBarContext);
   const {
     data: parcels,
     isLoading: parcelsLoading,
@@ -105,7 +107,7 @@ const PropertyTable = (props: IPropertyTable) => {
       valueGetter: (value?: PropertyType) => value?.Name,
     },
     {
-      field: 'ClassificationId',
+      field: 'Classification',
       headerName: 'Classification',
       flex: 1,
       minWidth: 200,
@@ -146,8 +148,8 @@ const PropertyTable = (props: IPropertyTable) => {
       renderCell: (params) => {
         return (
           <ClassificationInline
-            color={classification[params.row.ClassificationId].textColor}
-            backgroundColor={classification[params.row.ClassificationId].bgColor}
+            color={classification[params.row.Classification.Id].textColor}
+            backgroundColor={classification[params.row.Classification.Id].bgColor}
             title={params.row.Classification?.Name ?? ''}
           />
         );
@@ -158,13 +160,11 @@ const PropertyTable = (props: IPropertyTable) => {
       field: 'PID',
       headerName: 'PID',
       flex: 1,
-      valueGetter: (value: number | null) => (value ? String(value).padStart(9, '0') : 'N/A'),
-      renderCell: (params) => {
-        if (params.value !== 'N/A') {
-          return params.value.match(/\d{3}/g).join('-');
-        }
-        return params.value;
-      },
+      // This odd logic is to allow for search with or without hyphens.
+      // It concatinates a non-hyphenated and hyphenated version together for searching, then uses the second for presentation.
+      valueGetter: (value: number | null) =>
+        value ? `${zeroPadPID(value)},${pidFormatter(zeroPadPID(value))}` : 'N/A',
+      renderCell: (params) => (params.value !== 'N/A' ? params.value.split(',').at(1) : 'N/A'),
     },
     {
       field: 'Agency',
@@ -186,8 +186,8 @@ const PropertyTable = (props: IPropertyTable) => {
     {
       field: 'IsSensitive',
       headerName: 'Sensitive',
-      renderCell: (value) => {
-        if (value) {
+      renderCell: (params) => {
+        if (params.value) {
           return <Check />;
         } else return <></>;
       },
@@ -207,8 +207,10 @@ const PropertyTable = (props: IPropertyTable) => {
         ref.current.setFilterModel({ items: [] });
         break;
       case 'Building':
-      case 'Parcel':
-        ref.current.setFilterModel({ items: [{ value, operator: 'contains', field: 'Type' }] });
+      case 'Land':
+        ref.current.setFilterModel({
+          items: [{ value, operator: 'contains', field: 'PropertyType' }],
+        });
         break;
       default:
         ref.current.setFilterModel({ items: [] });
@@ -309,7 +311,11 @@ const PropertyTable = (props: IPropertyTable) => {
           };
         });
       } catch (e) {
-        // TODO: Error notification here.
+        snackbar.setMessageState({
+          open: true,
+          style: snackbar.styles.warning,
+          text: e.message ?? 'Error exporting Excel file.',
+        });
         return [];
       }
     }
@@ -339,11 +345,12 @@ const PropertyTable = (props: IPropertyTable) => {
           <CustomMenuItem key={'All Properties'} value={'All Properties'}>
             All Properties
           </CustomMenuItem>,
+          <CustomListSubheader key={'Type'}>Property Type</CustomListSubheader>,
           <CustomMenuItem key={'Building'} value={'Building'}>
-            Buildings
+            Building
           </CustomMenuItem>,
-          <CustomMenuItem key={'Parcel'} value={'Parcel'}>
-            Parcels
+          <CustomMenuItem key={'Land'} value={'Land'}>
+            Land
           </CustomMenuItem>,
         ]}
         loading={loading}
