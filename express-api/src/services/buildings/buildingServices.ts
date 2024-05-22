@@ -59,7 +59,7 @@ export const updateBuildingById = async (building: DeepPartial<Building>) => {
     throw new ErrorWithCode('Building does not exists.', 404);
   }
   // Rebuild metadata to avoid overwriting the whole field.
-  if (building.LeasedLandMetadata) {
+  if (existingBuilding.LeasedLandMetadata) {
     building.LeasedLandMetadata = {
       ...existingBuilding.LeasedLandMetadata,
       ...building.LeasedLandMetadata,
