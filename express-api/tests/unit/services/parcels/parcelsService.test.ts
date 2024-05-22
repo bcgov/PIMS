@@ -6,6 +6,7 @@ import parcelService from '@/services/parcels/parcelServices';
 import { ParcelFilterSchema } from '@/services/parcels/parcelSchema';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import userServices from '@/services/users/usersServices';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 
 //jest.setTimeout(30000);
 
@@ -18,6 +19,8 @@ const _parcelSave = jest
 const _parcelFindOne = jest
   .spyOn(parcelRepo, 'findOne')
   .mockImplementation(async () => produceParcel());
+
+jest.spyOn(AppDataSource.getRepository(ProjectProperty), 'find').mockImplementation(async () => []);
 
 jest.spyOn(parcelRepo, 'find').mockImplementation(async () => [produceParcel(), produceParcel()]);
 

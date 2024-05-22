@@ -5,6 +5,7 @@ import { DeepPartial, UpdateResult } from 'typeorm';
 import * as buildingService from '@/services/buildings/buildingServices';
 import { BuildingFilter, BuildingFilterSchema } from '@/services/buildings/buildingSchema';
 import userServices from '@/services/users/usersServices';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 
 const buildingRepo = AppDataSource.getRepository(Building);
 jest.spyOn(userServices, 'getUser').mockImplementation(async () => produceUser());
@@ -28,6 +29,8 @@ const _mockBuildinglUpdate = jest.fn(async (): Promise<UpdateResult> => {
 const _mockEntityManager = {
   update: () => _mockBuildinglUpdate(),
 };
+
+jest.spyOn(AppDataSource.getRepository(ProjectProperty), 'find').mockImplementation(async () => []);
 
 jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
   ...jest.requireActual('@/appDataSource').createQueryRunner,

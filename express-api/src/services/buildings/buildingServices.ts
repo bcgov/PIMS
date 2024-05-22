@@ -7,6 +7,7 @@ import userServices from '../users/usersServices';
 import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
 import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
 import logger from '@/utilities/winstonLogger';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 
 const buildingRepo = AppDataSource.getRepository(Building);
 
@@ -77,6 +78,15 @@ export const deleteBuildingById = async (buildingId: number, username: string) =
   const existingBuilding = await getBuildingById(buildingId);
   if (!existingBuilding) {
     throw new ErrorWithCode('Building does not exists.', 404);
+  }
+  const linkedProjects = await AppDataSource.getRepository(ProjectProperty).find({
+    where: { BuildingId: buildingId },
+  });
+  if (linkedProjects.length) {
+    throw new ErrorWithCode(
+      `Building is involved in one or more projects with ID(s) ${linkedProjects.map((proj) => proj.ProjectId).join(', ')}`,
+      403,
+    );
   }
   const user = await userServices.getUser(username);
   const queryRunner = await AppDataSource.createQueryRunner();
