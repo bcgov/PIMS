@@ -68,7 +68,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
 
   const customFormatterStatus = (key: keyof User, val: any) => {
     if (key === 'Status') {
-      return statusChipFormatter(val);
+      return val ? statusChipFormatter(val) : <></>;
     } else if (key === 'Role' && val) {
       return <Typography>{(val as Role).Name}</Typography>;
     }
