@@ -1,5 +1,5 @@
-import React, { MutableRefObject, useMemo } from 'react';
-import { CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
+import React, { MutableRefObject, useContext, useMemo } from 'react';
+import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, SxProps, Tooltip, lighten, useTheme } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { Check } from '@mui/icons-material';
@@ -27,6 +27,7 @@ import { propertyTypeMapper, PropertyTypes } from '@/constants/propertyTypes';
 import { AdministrativeArea } from '@/hooks/api/useAdministrativeAreaApi';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { Classification } from '@/hooks/api/useLookupApi';
+import { SnackBarContext } from '@/contexts/snackbarContext';
 
 interface IPropertyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
@@ -66,6 +67,7 @@ export const useClassificationStyle = () => {
 const PropertyTable = (props: IPropertyTable) => {
   const api = usePimsApi();
   const navigate = useNavigate();
+  const snackbar = useContext(SnackBarContext);
   const {
     data: parcels,
     isLoading: parcelsLoading,
@@ -186,8 +188,8 @@ const PropertyTable = (props: IPropertyTable) => {
     {
       field: 'IsSensitive',
       headerName: 'Sensitive',
-      renderCell: (value) => {
-        if (value) {
+      renderCell: (params) => {
+        if (params.value) {
           return <Check />;
         } else return <></>;
       },
@@ -207,8 +209,10 @@ const PropertyTable = (props: IPropertyTable) => {
         ref.current.setFilterModel({ items: [] });
         break;
       case 'Building':
-      case 'Parcel':
-        ref.current.setFilterModel({ items: [{ value, operator: 'contains', field: 'Type' }] });
+      case 'Land':
+        ref.current.setFilterModel({
+          items: [{ value, operator: 'contains', field: 'PropertyType' }],
+        });
         break;
       default:
         ref.current.setFilterModel({ items: [] });
@@ -309,7 +313,11 @@ const PropertyTable = (props: IPropertyTable) => {
           };
         });
       } catch (e) {
-        // TODO: Error notification here.
+        snackbar.setMessageState({
+          open: true,
+          style: snackbar.styles.warning,
+          text: e.message ?? 'Error exporting Excel file.',
+        });
         return [];
       }
     }
@@ -339,11 +347,12 @@ const PropertyTable = (props: IPropertyTable) => {
           <CustomMenuItem key={'All Properties'} value={'All Properties'}>
             All Properties
           </CustomMenuItem>,
+          <CustomListSubheader key={'Type'}>Property Type</CustomListSubheader>,
           <CustomMenuItem key={'Building'} value={'Building'}>
-            Buildings
+            Building
           </CustomMenuItem>,
-          <CustomMenuItem key={'Parcel'} value={'Parcel'}>
-            Parcels
+          <CustomMenuItem key={'Land'} value={'Land'}>
+            Land
           </CustomMenuItem>,
         ]}
         loading={loading}
