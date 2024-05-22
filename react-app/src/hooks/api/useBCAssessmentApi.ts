@@ -35,7 +35,7 @@ const useBCAssessmentApi = (absoluteFetch: IFetch) => {
       {},
       {
         headers: {
-          'Access-Control-Allow-Headers': 'Content-Type, Authroization, Origin',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization, Origin',
           'Access-Control-Allow-Origin': '*',
         },
       },
