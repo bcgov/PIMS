@@ -216,10 +216,11 @@ const UserDetail = ({ onClose }: IUserDetail) => {
         onConfirm={async () => {
           const isValid = await statusFormMethods.trigger();
           if (isValid) {
-            await api.users.updateUserRole(data.Username, statusFormMethods.getValues().Role);
+            const formValues = statusFormMethods.getValues();
             submit(id, {
               Id: id,
-              Status: statusFormMethods.getValues().Status,
+              Status: formValues.Status,
+              Role: rolesData.find((role) => role.Name === formValues.Role),
             }).then(() => {
               refreshData();
               setOpenStatusDialog(false);
