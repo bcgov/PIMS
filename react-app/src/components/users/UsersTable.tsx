@@ -254,7 +254,6 @@ const UsersTable = (props: IUsersTable) => {
     >
       <FilterSearchDataGrid
         name="users"
-        onAddButtonClick={() => {}}
         onRowClick={rowClickHandler}
         defaultFilter="All Users"
         tableHeader="Users Overview"
