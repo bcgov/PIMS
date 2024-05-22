@@ -48,6 +48,7 @@ const PropertyAssessedValueTable = (props: IPropertyAssessedValueTable) => {
       pinnedFields={['Year', 'Land']}
       columns={assesValCol}
       rows={rows}
+      disableRowSelectionOnClick
       scrollableSxProps={{
         borderStyle: 'none',
         '& .MuiDataGrid-columnHeaders': {
@@ -57,6 +58,10 @@ const PropertyAssessedValueTable = (props: IPropertyAssessedValueTable) => {
           borderBottom: 'none',
           borderTop: '1px solid rgba(224, 224, 224, 1)',
         },
+        '& .MuiDataGrid-row:hover': {
+          backgroundColor: 'transparent',
+          cursor: 'pointer',
+        },
       }}
       pinnedSxProps={{
         borderStyle: 'none',
@@ -65,6 +70,9 @@ const PropertyAssessedValueTable = (props: IPropertyAssessedValueTable) => {
         },
         '& div div div div >.MuiDataGrid-cell': {
           borderBottom: 'none',
+        },
+        '& .MuiDataGrid-row:hover': {
+          backgroundColor: 'transparent',
         },
       }}
     />
@@ -79,7 +87,11 @@ const PropertyAssessedValueTable = (props: IPropertyAssessedValueTable) => {
           borderBottom: 'none',
           borderTop: '1px solid rgba(224, 224, 224, 1)',
         },
+        '& .MuiDataGrid-row:hover': {
+          backgroundColor: 'transparent',
+        },
       }}
+      disableRowSelectionOnClick
       hideFooter
       columns={assesValCol}
       rows={rows}
