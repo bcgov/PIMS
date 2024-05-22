@@ -1,10 +1,11 @@
 import { AppDataSource } from '@/appDataSource';
 import { Parcel } from '@/typeorm/Entities/Parcel';
-import { produceParcel } from 'tests/testUtils/factories';
-import { DeepPartial } from 'typeorm';
+import { produceParcel, produceUser } from 'tests/testUtils/factories';
+import { DeepPartial, UpdateResult } from 'typeorm';
 import parcelService from '@/services/parcels/parcelServices';
 import { ParcelFilterSchema } from '@/services/parcels/parcelSchema';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import userServices from '@/services/users/usersServices';
 
 //jest.setTimeout(30000);
 
@@ -14,15 +15,36 @@ const _parcelSave = jest
   .spyOn(parcelRepo, 'save')
   .mockImplementation(async (parcel: DeepPartial<Parcel> & Parcel) => parcel);
 
-const _parcelDelete = jest
-  .spyOn(parcelRepo, 'delete')
-  .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
-
 const _parcelFindOne = jest
   .spyOn(parcelRepo, 'findOne')
   .mockImplementation(async () => produceParcel());
 
 jest.spyOn(parcelRepo, 'find').mockImplementation(async () => [produceParcel(), produceParcel()]);
+
+jest.spyOn(userServices, 'getUser').mockImplementation(async () => produceUser());
+
+const _mockStartTransaction = jest.fn(async () => {});
+const _mockRollbackTransaction = jest.fn(async () => {});
+const _mockCommitTransaction = jest.fn(async () => {});
+const _mockParcelUpdate = jest.fn(async (): Promise<UpdateResult> => {
+  return {
+    raw: {},
+    generatedMaps: [],
+  };
+});
+
+const _mockEntityManager = {
+  update: () => _mockParcelUpdate(),
+};
+
+jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
+  ...jest.requireActual('@/appDataSource').createQueryRunner,
+  startTransaction: _mockStartTransaction,
+  rollbackTransaction: _mockRollbackTransaction,
+  commitTransaction: _mockCommitTransaction,
+  release: jest.fn(async () => {}),
+  manager: _mockEntityManager,
+});
 
 describe('UNIT - Parcel Services', () => {
   describe('addParcel', () => {
@@ -66,23 +88,25 @@ describe('UNIT - Parcel Services', () => {
     it('should delete a parcel and return a 204 status code', async () => {
       const parcelToDelete = produceParcel();
       _parcelFindOne.mockResolvedValueOnce(parcelToDelete);
-      await parcelService.deleteParcelById(parcelToDelete.Id);
-      expect(_parcelDelete).toHaveBeenCalledTimes(1);
+      await parcelService.deleteParcelById(parcelToDelete.Id, '');
+      expect(_mockParcelUpdate).toHaveBeenCalledTimes(3);
     });
     it('should throw an error if the PID does not exist in the parcel table', () => {
       const parcelToDelete = produceParcel();
       _parcelFindOne.mockResolvedValueOnce(null);
-      expect(async () => await parcelService.deleteParcelById(parcelToDelete.Id)).rejects.toThrow();
+      expect(
+        async () => await parcelService.deleteParcelById(parcelToDelete.Id, ''),
+      ).rejects.toThrow();
     });
     it('should throw an error if the Parcel has a child Parcel relationship', async () => {
       const newParentParcel = produceParcel();
       const errorMessage = `update or delete on table "parcel" violates foreign key constraint "FK_9720341fe17e4c22decf0a0b87f" on table "parcel"`;
       _parcelFindOne.mockResolvedValueOnce(newParentParcel);
-      _parcelDelete.mockImplementationOnce(() => {
+      _mockParcelUpdate.mockImplementationOnce(() => {
         throw new ErrorWithCode(errorMessage);
       });
       expect(
-        async () => await parcelService.deleteParcelById(newParentParcel.Id),
+        async () => await parcelService.deleteParcelById(newParentParcel.Id, ''),
       ).rejects.toThrow();
     });
   });
