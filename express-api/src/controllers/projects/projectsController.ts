@@ -97,7 +97,7 @@ export const deleteDisposalProject = async (req: Request, res: Response) => {
     return res.status(400).send('Invalid Project ID');
   }
 
-  const delProject = projectServices.deleteProjectById(projectId);
+  const delProject = projectServices.deleteProjectById(projectId, req.user.preferred_username);
   return res.status(200).send(delProject);
 };
 

@@ -1,11 +1,11 @@
-import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { Project } from '@/typeorm/Entities/Project';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { Agency } from './Agency';
+import { SoftDeleteEntity } from './abstractEntities/SoftDeleteEntity';
 
 @Entity()
-export class ProjectAgencyResponse extends BaseEntity {
+export class ProjectAgencyResponse extends SoftDeleteEntity {
   // Project Relation
   @PrimaryColumn({ name: 'project_id', type: 'int' })
   ProjectId: number;
