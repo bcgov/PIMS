@@ -1,10 +1,19 @@
 /* eslint-disable no-console */
 //Simple component testing area.
-import ParcelMap from '@/components/map/ParcelMap';
-import React from 'react';
+import useDataLoader from '@/hooks/useDataLoader';
+import usePimsApi from '@/hooks/usePimsApi';
+import React, { useEffect } from 'react';
 
 const Dev = () => {
-  return <ParcelMap height="100%" loadProperties={true} popupSize="large" />;
+  const api = usePimsApi();
+  const { data, refreshData } = useDataLoader(() =>
+    api.bcAssessment.getBCAssessmentByLocation('-123.36905121803285', '48.41397415311252'),
+  );
+  useEffect(() => {
+    refreshData();
+  }, []);
+  console.log(data);
+  return <></>;
 };
 
 export default Dev;

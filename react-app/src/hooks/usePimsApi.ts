@@ -13,6 +13,7 @@ import usePropertiesApi from './api/usePropertiesApi';
 import useToolsApi from './api/useToolsApi';
 import useParcelLayerApi from './api/useParcelLayerApi';
 import useProjectsApi from './api/useProjectsApi';
+import useBCAssessmentApi from '@/hooks/api/useBCAssessmentApi';
 
 /**
  * usePimsApi - This stores all the sub-hooks we need to make calls to our API and helps manage authentication state for them.
@@ -34,6 +35,7 @@ const usePimsApi = () => {
   const tools = useToolsApi(fetch);
   const parcelLayer = useParcelLayerApi(fetch);
   const projects = useProjectsApi(fetch);
+  const bcAssessment = useBCAssessmentApi(fetch);
 
   return {
     users,
@@ -48,6 +50,7 @@ const usePimsApi = () => {
     tools,
     parcelLayer,
     projects,
+    bcAssessment,
   };
 };
 
