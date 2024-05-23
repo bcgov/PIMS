@@ -454,20 +454,57 @@ interface INetBookValue {
 
 // Property.Fiscals
 export const NetBookValue = (props: INetBookValue) => {
+  const { years } = props;
+  // Sort the years array in descending order
+  const sortedYears = years.sort((a, b) => b - a);
+  const currentYear = sortedYears.at(0);
+  const { getValues } = useFormContext();
+
+  const handletheYearChange = () => {
+    const currentValues = getValues();
+    // Collect all the year values from the form
+    const yearValues = currentValues.Fiscals.map((fiscal: { FiscalYear: string }) =>
+      parseInt(fiscal.FiscalYear),
+    );
+    // Check for duplicates in the yearValues array
+    const yearCounts = yearValues.reduce((acc, year) => {
+      acc[year] = (acc[year] || 0) + 1;
+      return acc;
+    }, {});
+
+    for (const year in yearCounts) {
+      if (yearCounts[year] > 1) {
+        return `There is already a net book value for the year ${year}`;
+      }
+    }
+    return true;
+  };
   return (
     <Grid container spacing={2}>
-      {/* Render default form fields if props.years is empty */}
-      {props.years.length === 0 && (
+      {/* Render the current year row first */}
+      {sortedYears.length > 0 && (
         <React.Fragment>
           <Grid item xs={4}>
-            <TextFormField disabled name={`Fiscals.0.FiscalYear`} label={'Fiscal year'} />
+            <TextFormField
+              name={`Fiscals.${0}.FiscalYear`}
+              label={'Fiscal year'}
+              disabled={false}
+              value={currentYear}
+              onBlur={handletheYearChange}
+              rules={{
+                validate: () => {
+                  const result = handletheYearChange();
+                  return result;
+                },
+              }}
+            />
           </Grid>
           <Grid item xs={4}>
-            <DateFormField name={`Fiscals.0.EffectiveDate`} label={'Effective date'} />
+            <DateFormField name={`Fiscals.${0}.EffectiveDate`} label={'Effective date'} />
           </Grid>
           <Grid item xs={4}>
             <TextFormField
-              name={`Fiscals.0.Value`}
+              name={`Fiscals.${0}.Value`}
               label={'Net book value'}
               numeric
               InputProps={{
@@ -477,34 +514,32 @@ export const NetBookValue = (props: INetBookValue) => {
           </Grid>
         </React.Fragment>
       )}
-      {/* Render form fields for each fiscal year */}
-      {props.years.map((yr, idx) => {
-        return (
-          <React.Fragment key={`netbookgrid${yr}`}>
-            <Grid item xs={4}>
-              <TextFormField
-                value={yr}
-                disabled
-                name={`Fiscals.${idx}.FiscalYear`}
-                label={'Fiscal year'}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <DateFormField name={`Fiscals.${idx}.EffectiveDate`} label={'Effective date'} />
-            </Grid>
-            <Grid item xs={4}>
-              <TextFormField
-                name={`Fiscals.${idx}.Value`}
-                label={'Net book value'}
-                numeric
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                }}
-              />
-            </Grid>
-          </React.Fragment>
-        );
-      })}
+      {/* Render the most recent previous year, if it exists */}
+      {sortedYears.length > 1 && (
+        <React.Fragment>
+          <Grid item xs={4}>
+            <TextFormField
+              value={sortedYears[0]}
+              disabled={true}
+              name={`Fiscals.${1}.FiscalYear`}
+              label={'Fiscal year'}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <DateFormField name={`Fiscals.${1}.EffectiveDate`} label={'Effective date'} />
+          </Grid>
+          <Grid item xs={4}>
+            <TextFormField
+              name={`Fiscals.${1}.Value`}
+              label={'Net book value'}
+              numeric
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+              }}
+            />
+          </Grid>
+        </React.Fragment>
+      )}
     </Grid>
   );
 };
@@ -520,7 +555,6 @@ export const AssessedValue = (props: IAssessedValue) => {
   const { years, title, topLevelKey, hasCurrentYear } = props;
   // Sort the years array in descending order
   const sortedYears = years.sort((a, b) => b - a);
-  console.log('sorting the years & topLevelKey:', sortedYears, title, topLevelKey);
   const currentYear = sortedYears[sortedYears.length - 1];
   const { getValues } = useFormContext();
 
@@ -567,7 +601,6 @@ export const AssessedValue = (props: IAssessedValue) => {
             rules={{
               validate: () => {
                 const result = handleYearChange();
-                console.log('return value:', result);
                 return result;
               },
             }}

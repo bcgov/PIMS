@@ -46,6 +46,9 @@ export const getBuildingById = async (buildingId: number) => {
       Evaluations: {
         Year: 'DESC',
       },
+      Fiscals: {
+        FiscalYear: 'DESC',
+      },
     },
   });
   return findBuilding;

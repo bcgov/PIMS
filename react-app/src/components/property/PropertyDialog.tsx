@@ -1,5 +1,5 @@
-import { Building, BuildingEvaluation } from '@/hooks/api/useBuildingsApi';
-import { Parcel, ParcelEvaluation } from '@/hooks/api/useParcelsApi';
+import { Building, BuildingEvaluation, BuildingFiscal } from '@/hooks/api/useBuildingsApi';
+import { Parcel, ParcelEvaluation, ParcelFiscal } from '@/hooks/api/useParcelsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
 import { Box } from '@mui/material';
@@ -324,12 +324,21 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
       onCancel={async () => onCancel()}
     >
       <FormProvider {...assessedFormMethods}>
-        {/* Initialize yearsFromEvaluations variable */}
         {(() => {
-          console.log('These are the evaluations:', initialValues?.Evaluations);
           const evaluationYears = initialValues?.Evaluations?.map((evalu) => evalu.Year) ?? [];
           const currentYear = new Date().getFullYear();
-          let hasCurrentYear = true;
+
+          // Add current year and previous year if they are not already in the list
+          let hasCurrentYear = evaluationYears.includes(currentYear);
+          if (!hasCurrentYear) {
+            evaluationYears.push(currentYear);
+          }
+
+          // Sort the years in descending order
+          const sortedYears = evaluationYears.sort((a, b) => b - a);
+
+          // Get the current year and the previous year, ensuring we have at most 2 years
+          const mostRecentYears = sortedYears.slice(0, 2);
 
           // Check if currentYear is not in yearsFromEvaluations array
           if (!evaluationYears.includes(currentYear)) {
@@ -337,13 +346,12 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
             evaluationYears.unshift(currentYear);
             hasCurrentYear = false;
           }
-          console.log('yearsFromEvaluations', evaluationYears);
           return (
             <>
               {/* Render top-level AssessedValue with yearsFromEvaluations */}
               <AssessedValue
                 hasCurrentYear={hasCurrentYear}
-                years={evaluationYears}
+                years={mostRecentYears}
                 title={
                   propertyType === 'Building' ? 'Assessed Building Value' : 'Assessed Land Value'
                 }
@@ -355,11 +363,13 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
                   // Add currentYear to yearsFromEvaluations array
                   buildingEvals.unshift(currentYear);
                 }
+
+                const past2BuildingAssessments = buildingEvals.slice(0, 2);
                 return (
                   <AssessedValue
                     title={`Building (${idx + 1}) - ${building.Name + ' - ' + building.Address1}`}
                     key={`assessed-value-${building.Id}`}
-                    years={buildingEvals}
+                    years={past2BuildingAssessments}
                     topLevelKey={`RelatedBuildings.${idx}.`}
                   />
                 );
@@ -385,6 +395,7 @@ export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditD
   const api = usePimsApi();
   const netBookFormMethods = useForm({
     defaultValues: { Fiscals: [] },
+    mode: 'onBlur',
   });
   const currentYear = new Date().getFullYear();
   const years = [currentYear];
@@ -393,7 +404,8 @@ export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditD
     Value: 0,
     EffectiveDate: undefined,
     FiscalKeyId: 0,
-    ParcelId: initialValues?.Id || null,
+    PropertyType: initialValues?.PropertyTypeId || null,
+    Id: initialValues?.Id || null,
   }));
 
   useEffect(() => {
@@ -401,29 +413,69 @@ export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditD
       // use default values if there are no initial values for fiscal years
       netBookFormMethods.reset({ Fiscals: defaultValues });
     } else {
-      console.log('initial values are', initialValues.Fiscals);
+      const fiscalYears =
+        initialValues?.Fiscals?.map((fiscal: { FiscalYear: any }) => fiscal.FiscalYear) ?? [];
+
+      const fiscalValues = initialValues.Fiscals.map((fisc) => ({
+        ...fisc,
+        Value: String(fisc.Value).replace(/[$,]/g, ''),
+        EffectiveDate: dayjs(fisc.EffectiveDate),
+      }));
+      // Check if currentYear is not in yearsFromEvaluations array
+      if (!fiscalYears.includes(currentYear)) {
+        // Add currentYear to yearsFromEvaluations array
+        fiscalYears.unshift(currentYear);
+        fiscalValues.unshift({
+          FiscalYear: currentYear,
+          Value: 0,
+          EffectiveDate: undefined,
+          FiscalKeyId: 0,
+          PropertyType: initialValues?.PropertyTypeId,
+          Id: initialValues?.Id,
+        });
+      }
       netBookFormMethods.reset({
-        Fiscals: initialValues.Fiscals.map((fisc) => ({
-          ...fisc,
-          Value: String(fisc.Value).replace(/[$,]/g, ''),
-          EffectiveDate: dayjs(fisc.EffectiveDate),
-        })),
+        Fiscals: fiscalValues.sort((a, b) => b.FiscalYear - a.FiscalYear),
       });
     }
   }, [initialValues]);
 
+  const fiscalMapToRequest = (fiscals: Partial<ParcelFiscal>[] | Partial<BuildingFiscal>[]) => {
+    return fiscals
+      .filter((fiscal) => fiscal.Value != null)
+      .map((fiscal) => ({
+        ...fiscal,
+        // BuildingId: (fiscal as BuildingFiscal).BuildingId,
+        // ParcelId: (fiscal as ParcelFiscal).ParcelId,
+        Value: parseFloat(String(fiscal.Value)),
+        FiscalKeyId: 0,
+        FiscalYear: fiscal.FiscalYear,
+        EffectiveDate: fiscal.EffectiveDate,
+      }));
+  };
+
+  const fiscalYears =
+    initialValues?.Fiscals?.map((fiscal: { FiscalYear: any }) => fiscal.FiscalYear) ?? [];
+
+  // Check if currentYear is not in yearsFromEvaluations array
+  if (!fiscalYears.includes(currentYear)) {
+    // Add currentYear to yearsFromEvaluations array
+    fiscalYears.unshift(currentYear);
+  }
+  // get 2 most recent fiscal years
+  const lastTwoFiscalYears = fiscalYears.slice(0, 2);
   return (
     <ConfirmDialog
       title={'Edit net book values'}
       open={open}
       onConfirm={async () => {
         const formValues: any = netBookFormMethods.getValues();
-        console.log('were here', formValues);
         if (propertyType === 'Parcel') {
           api.parcels
             .updateParcelById(initialValues.Id, {
               Id: initialValues.Id,
               PID: initialValues.PID,
+              Fiscals: fiscalMapToRequest(formValues.Fiscals),
               ...formValues,
             })
             .then(() => postSubmit());
@@ -431,6 +483,7 @@ export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditD
           api.buildings
             .updateBuildingById(initialValues.Id, {
               Id: initialValues.Id,
+              Fiscals: fiscalMapToRequest(formValues.Fiscals),
               ...formValues,
             })
             .then(() => postSubmit());
@@ -440,9 +493,7 @@ export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditD
     >
       <FormProvider {...netBookFormMethods}>
         <Box paddingTop={'1rem'}>
-          <NetBookValue
-            years={initialValues?.Fiscals ? initialValues.Fiscals.map((f) => f.FiscalYear) : []}
-          />
+          <NetBookValue years={initialValues?.Fiscals ? lastTwoFiscalYears : []} />
         </Box>
       </FormProvider>
     </ConfirmDialog>
