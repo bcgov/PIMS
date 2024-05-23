@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import DataCard from '../display/DataCard';
 import { Box, Chip, Grid, Typography } from '@mui/material';
 import { dateFormatter, statusChipFormatter } from '@/utilities/formatters';
-import DeleteDialog from '../dialog/DeleteDialog';
-import { deleteAgencyConfirmText } from '@/constants/strings';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import { FormProvider, useForm } from 'react-hook-form';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
@@ -16,6 +14,7 @@ import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 import { useParams } from 'react-router-dom';
 import EmailChipFormField from '@/components/form/EmailChipFormField';
 import SingleSelectBoxFormField from '@/components/form/SingleSelectBoxFormField';
+import useDataSubmitter from '@/hooks/useDataSubmitter';
 
 interface IAgencyDetail {
   onClose: () => void;
@@ -31,13 +30,13 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   const { id } = useParams();
   const api = usePimsApi();
 
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
   const [openNotificationsDialog, setOpenNotificationsDialog] = useState(false);
 
   const { data, refreshData, isLoading } = useDataLoader(() => api.agencies.getAgencyById(+id));
+  const { submit, submitting } = useDataSubmitter(api.agencies.updateAgencyById);
 
-  const agencyOptions = useGroupedAgenciesApi().agencyOptions;
+  const { agencyOptions } = useGroupedAgenciesApi();
 
   const agencyStatusData = {
     Status: data?.IsDisabled ? 'Disabled' : 'Active',
@@ -124,7 +123,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
       <DetailViewNavigation
         navigateBackTitle={'Back to Agency Overview'}
         deleteTitle={'Delete Agency'}
-        onDeleteClick={() => setOpenDeleteDialog(true)}
+        disableDelete={true}
         onBackClick={() => onClose()}
       />
       <DataCard
@@ -141,37 +140,25 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
         title={'Notification Settings'}
         onEdit={() => setOpenNotificationsDialog(true)}
       />
-      <DeleteDialog
-        open={openDeleteDialog}
-        title={'Delete Agency'}
-        message={deleteAgencyConfirmText}
-        deleteText="Delete Agency"
-        onDelete={async () => {
-          api.agencies.deleteAgencyById(+id).then(() => {
-            setOpenDeleteDialog(false);
-            onClose();
-          });
-        }}
-        onClose={async () => setOpenDeleteDialog(false)}
-      />
       <ConfirmDialog
         title={'Update Agency'}
         open={openStatusDialog}
+        confirmButtonProps={{ loading: submitting }}
         onConfirm={async () => {
           const isValid = await agencyFormMethods.trigger();
           if (isValid) {
             const { Status, ParentId, Name, Code, Description } = agencyFormMethods.getValues();
-            api.agencies
-              .updateAgencyById(+id, {
-                Id: +id,
-                IsDisabled: Status === 'Disabled',
-                ParentId,
-                Name,
-                Code,
-                Description,
-              })
-              .then(() => refreshData());
-            setOpenStatusDialog(false);
+            submit(+id, {
+              Id: +id,
+              IsDisabled: Status === 'Disabled',
+              ParentId,
+              Name,
+              Code,
+              Description,
+            }).then(() => {
+              refreshData();
+              setOpenStatusDialog(false);
+            });
           }
         }}
         onCancel={async () => setOpenStatusDialog(false)}
@@ -215,7 +202,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
                     option.value === +id || // Can't assign to self
                     agencyOptions
                       .find((parent) => parent.value === +id)
-                      .children.includes(option.value) // Can't assign to current children
+                      ?.children?.includes(option.value) // Can't assign to current children
                 }
               />
             </Grid>
@@ -225,20 +212,21 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
       <ConfirmDialog
         title={'Update Notification Settings'}
         open={openNotificationsDialog}
+        confirmButtonProps={{ loading: submitting }}
         onConfirm={async () => {
           const isValid = await notificationsFormMethods.trigger();
 
           if (isValid) {
             const { CC, To, SendEmail } = notificationsFormMethods.getValues();
-            api.agencies
-              .updateAgencyById(+id, {
-                Id: +id,
-                CCEmail: CC.join(';'),
-                Email: To.join(';'),
-                SendEmail,
-              })
-              .then(() => refreshData());
-            setOpenNotificationsDialog(false);
+            submit(+id, {
+              Id: +id,
+              CCEmail: CC.join(';'),
+              Email: To.join(';'),
+              SendEmail,
+            }).then(() => {
+              refreshData();
+              setOpenNotificationsDialog(false);
+            });
           }
         }}
         onCancel={async () => setOpenNotificationsDialog(false)}

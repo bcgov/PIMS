@@ -102,6 +102,13 @@ export const updateBuildingById = async (building: DeepPartial<Building>) => {
       }),
     );
   }
+  // Rebuild metadata to avoid overwriting the whole field.
+  if (existingBuilding.LeasedLandMetadata) {
+    building.LeasedLandMetadata = {
+      ...existingBuilding.LeasedLandMetadata,
+      ...building.LeasedLandMetadata,
+    };
+  }
   await buildingRepo.save(building);
   //update function doesn't return data on the row changed. Have to get the changed row again
   const newBuilding = await getBuildingById(building.Id);

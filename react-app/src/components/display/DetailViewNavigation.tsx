@@ -5,8 +5,9 @@ import { mdiArrowLeft } from '@mdi/js';
 
 type DetailViewNavigtionProps = {
   deleteTitle: string;
-  onDeleteClick: () => void;
+  onDeleteClick?: () => void;
   deleteButtonProps?: ButtonProps;
+  disableDelete?: boolean;
 } & NavigateBackButtonProps;
 
 type NavigateBackButtonProps = {
@@ -37,13 +38,15 @@ const DetailViewNavigation = (props: DetailViewNavigtionProps) => {
   return (
     <Box display={'flex'} alignItems={'center'}>
       <NavigateBackButton onBackClick={onBackClick} navigateBackTitle={navigateBackTitle} />
-      <Button
-        onClick={() => onDeleteClick()}
-        sx={{ fontWeight: 'bold', color: theme.palette.warning.main, marginLeft: 'auto' }}
-        {...deleteButtonProps}
-      >
-        {deleteTitle}
-      </Button>
+      {!props.disableDelete && (
+        <Button
+          onClick={() => onDeleteClick?.()}
+          sx={{ fontWeight: 'bold', color: theme.palette.warning.main, marginLeft: 'auto' }}
+          {...deleteButtonProps}
+        >
+          {deleteTitle}
+        </Button>
+      )}
     </Box>
   );
 };

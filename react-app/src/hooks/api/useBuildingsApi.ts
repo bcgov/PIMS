@@ -88,12 +88,12 @@ export interface IBuildingsGetParams {
 
 const useBuildingsApi = (absoluteFetch: IFetch) => {
   const addBuilding = async (building: BuildingAdd) => {
-    const { parsedBody, status } = await absoluteFetch.post('/buildings', building);
-    return { parsedBody, status };
+    const response = await absoluteFetch.post('/buildings', building);
+    return response;
   };
   const updateBuildingById = async (id: number, building: DeepPartial<BuildingUpdate>) => {
-    const { parsedBody } = await absoluteFetch.put(`/buildings/${id}`, building);
-    return parsedBody as Building;
+    const response = await absoluteFetch.put(`/buildings/${id}`, building);
+    return response;
   };
 
   const getBuildings = async (params?: IBuildingsGetParams) => {

@@ -16,6 +16,7 @@ import {
   NetBookValue,
 } from './PropertyForms';
 import { parseFloatOrNull, parseIntOrNull, zeroPadPID } from '@/utilities/formatters';
+import useDataSubmitter from '@/hooks/useDataSubmitter';
 
 interface IParcelInformationEditDialog {
   initialValues: Parcel;
@@ -35,7 +36,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
   const { data: classificationData, loadOnce: classificationLoad } = useDataLoader(
     api.lookup.getClassifications,
   );
-
+  const { submit, submitting } = useDataSubmitter(api.parcels.updateParcelById);
   adminLoad();
   classificationLoad();
 
@@ -74,6 +75,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
     <ConfirmDialog
       title={'Edit parcel information'}
       open={props.open}
+      confirmButtonProps={{ loading: submitting }}
       onConfirm={async () => {
         const isValid = await infoFormMethods.trigger();
         if (isValid) {
@@ -81,7 +83,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
           formValues.PID = parseIntOrNull(formValues.PID);
           formValues.PIN = parseIntOrNull(formValues.PIN);
           formValues.LandArea = parseFloatOrNull(formValues.LandArea);
-          api.parcels.updateParcelById(initialValues.Id, formValues).then(() => postSubmit());
+          submit(initialValues.Id, formValues).then(() => postSubmit());
         }
       }}
       onCancel={async () => props.onCancel()}
@@ -130,6 +132,7 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
   const { data: constructionTypeData, loadOnce: constructionLoad } = useDataLoader(
     api.lookup.getConstructionTypes,
   );
+  const { submit, submitting } = useDataSubmitter(api.buildings.updateBuildingById);
 
   adminLoad();
   classificationLoad();
@@ -187,6 +190,7 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
     <ConfirmDialog
       title={'Edit building information'}
       open={open}
+      confirmButtonProps={{ loading: submitting }}
       onConfirm={async () => {
         const isValid = await infoFormMethods.trigger();
         if (isValid) {
@@ -197,7 +201,7 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
           formValues.RentableArea = parseFloatOrNull(formValues.RentableArea);
           formValues.BuildingTenancyUpdatedOn =
             formValues.BuildingTenancyUpdatedOn?.toDate() ?? null;
-          api.buildings.updateBuildingById(initialValues.Id, formValues).then(() => postSubmit());
+          submit(initialValues.Id, formValues).then(() => postSubmit());
         }
       }}
       onCancel={async () => onCancel()}
@@ -241,6 +245,29 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
     },
     mode: 'onBlur',
   });
+
+  const { submit: submitParcel, submitting: submittingParcel } = useDataSubmitter(
+    api.parcels.updateParcelById,
+  );
+  const { submit: submitBuilding, submitting: submittingBuilding } = useDataSubmitter(
+    api.buildings.updateBuildingById,
+  );
+
+  useEffect(() => {
+    assessedFormMethods.reset({
+      Evaluations: initialValues?.Evaluations?.map((evalu) => ({
+        ...evalu,
+        Value: evalu.Value.replace(/[$,]/g, ''), // TODO: Consider some more robust handling for this at the TypeORM level.
+      })),
+      RelatedBuildings: initialRelatedBuildings?.map((building) => ({
+        Id: building.Id,
+        Evaluations: building.Evaluations?.map((evalu) => ({
+          ...evalu,
+          Value: String(evalu.Value).replace(/[$,]/g, ''), // Obviously this double map is pretty evil so suggestions welcome.
+        })),
+      })),
+    });
+  }, [initialValues, initialRelatedBuildings]);
 
   const currentYear = new Date().getFullYear();
   const years = [currentYear];
@@ -291,6 +318,7 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
   }
   return (
     <ConfirmDialog
+      confirmButtonProps={{ loading: submittingParcel || submittingBuilding }}
       title={'Edit assessed values'}
       open={open}
       onConfirm={async () => {
@@ -305,20 +333,21 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
           Evaluations: evaluationMapToRequest(formValues.Evaluations),
         };
         if (propertyType === 'Parcel') {
-          const parcelUpdatePromise = api.parcels.updateParcelById(initialValues.Id, evalus);
+          const parcelUpdateResponse = await submitParcel(initialValues.Id, evalus);
           if (formValues.RelatedBuildings) {
             const buildingUpdatePromises = formValues.RelatedBuildings.map(async (building) => {
               const updatedBuilding: Partial<Building> = {
                 ...building,
                 Evaluations: evaluationMapToRequest(building.Evaluations),
               };
-              return api.buildings.updateBuildingById(building.Id, updatedBuilding); // Update the building
+              await submitBuilding(building.Id, updatedBuilding); // Update the building
             });
             await Promise.all(buildingUpdatePromises);
           }
-          parcelUpdatePromise.then(() => postSubmit()); // Await parcel update
+          await parcelUpdateResponse;
+          postSubmit();
         } else if (propertyType === 'Building') {
-          api.buildings.updateBuildingById(initialValues.Id, evalus).then(() => postSubmit());
+          await submitBuilding(initialValues.Id, evalus).then(() => postSubmit());
         }
       }}
       onCancel={async () => onCancel()}
@@ -393,6 +422,12 @@ interface IPropertyNetBookValueEditDialog {
 export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditDialog) => {
   const { open, onClose, initialValues, propertyType, postSubmit } = props;
   const api = usePimsApi();
+  const { submit: submitParcel, submitting: submittingParcel } = useDataSubmitter(
+    api.parcels.updateParcelById,
+  );
+  const { submit: submitBuilding, submitting: submittingBuilding } = useDataSubmitter(
+    api.buildings.updateBuildingById,
+  );
   const netBookFormMethods = useForm({
     defaultValues: { Fiscals: [] },
     mode: 'onBlur',
@@ -468,25 +503,22 @@ export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditD
     <ConfirmDialog
       title={'Edit net book values'}
       open={open}
+      confirmButtonProps={{ loading: submittingParcel || submittingBuilding }}
       onConfirm={async () => {
         const formValues: any = netBookFormMethods.getValues();
         if (propertyType === 'Parcel') {
-          api.parcels
-            .updateParcelById(initialValues.Id, {
-              Id: initialValues.Id,
-              PID: initialValues.PID,
-              Fiscals: fiscalMapToRequest(formValues.Fiscals),
-              ...formValues,
-            })
-            .then(() => postSubmit());
+          submitParcel(initialValues.Id, {
+            Id: initialValues.Id,
+            PID: initialValues.PID,
+            Fiscals: fiscalMapToRequest(formValues.Fiscals),
+            ...formValues,
+          }).then(() => postSubmit());
         } else {
-          api.buildings
-            .updateBuildingById(initialValues.Id, {
-              Id: initialValues.Id,
-              Fiscals: fiscalMapToRequest(formValues.Fiscals),
-              ...formValues,
-            })
-            .then(() => postSubmit());
+          submitBuilding(initialValues.Id, {
+            Id: initialValues.Id,
+            Fiscals: fiscalMapToRequest(formValues.Fiscals),
+            ...formValues,
+          }).then(() => postSubmit());
         }
       }}
       onCancel={async () => onClose()}

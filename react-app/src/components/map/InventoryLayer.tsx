@@ -1,17 +1,19 @@
 import usePimsApi from '@/hooks/usePimsApi';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import useDataLoader from '@/hooks/useDataLoader';
-import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
+import { MapFilter, PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import PropertyMarker from '@/components/map/markers/PropertyMarker';
 import { Marker, Polyline, useMap, useMapEvents } from 'react-leaflet';
 import useSupercluster from 'use-supercluster';
 import './clusterHelpers/clusters.css';
-import L from 'leaflet';
+import L, { LatLngExpression } from 'leaflet';
 import { BBox } from 'geojson';
 import { Spiderfier } from '@/components/map/clusterHelpers/Spiderfier';
+import { SnackBarContext } from '@/contexts/snackbarContext';
 
 export interface InventoryLayerProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  filter: MapFilter;
 }
 
 // Properties added to PropertyGeo types after clustering
@@ -31,28 +33,74 @@ export interface ClusterGeo {
  * @returns {JSX.Element} The rendered InventoryLayer component.
  */
 export const InventoryLayer = (props: InventoryLayerProps) => {
-  const { setLoading } = props;
+  const { setLoading, filter } = props;
+  const snackbar = useContext(SnackBarContext);
   const api = usePimsApi();
   const map = useMap();
-  const { data, refreshData, isLoading } = useDataLoader(api.properties.propertiesGeoSearch);
   const [properties, setProperties] = useState<PropertyGeo[]>([]);
-  const [clusterBounds, setClusterBounds] = useState<BBox>();
-  const [clusterZoom, setClusterZoom] = useState<number>(14);
+  const [clusterBounds, setClusterBounds] = useState<BBox>(); // Affects clustering
+  const [clusterZoom, setClusterZoom] = useState<number>(14); // Affects clustering
+  const { data, refreshData, isLoading } = useDataLoader(() =>
+    api.properties.propertiesGeoSearch(filter),
+  );
+
   const maxZoom = 18;
 
   // Get the property data for mapping
   useEffect(() => {
-    if (data && data.length > 0) {
-      setProperties(data as PropertyGeo[]);
-      setLoading(false);
+    if (data) {
+      if (data.length) {
+        setProperties(data as PropertyGeo[]);
+        // Set map bounds based on received data. Eliminate outliers (outside BC)
+        const coordsArray = (data as PropertyGeo[])
+          .map((d) => [d.geometry.coordinates[1], d.geometry.coordinates[0]])
+          .filter(
+            (coords) => coords[0] > 40 && coords[0] < 60 && coords[1] > -140 && coords[1] < -110,
+          ) as LatLngExpression[];
+        map.fitBounds(
+          L.latLngBounds(
+            coordsArray.length
+              ? coordsArray
+              : [
+                  [54.2516, -129.371],
+                  [49.129, -117.203],
+                ],
+          ),
+        );
+        updateClusters();
+        setLoading(false);
+        snackbar.setMessageState({
+          open: true,
+          text: `${data.length} properties found.`,
+          style: snackbar.styles.success,
+        });
+      } else {
+        snackbar.setMessageState({
+          open: true,
+          text: `No properties found matching filter criteria.`,
+          style: snackbar.styles.warning,
+        });
+        setProperties([]);
+        // Reset back to BC view
+        map.fitBounds([
+          [54.2516, -129.371],
+          [49.129, -117.203],
+        ]);
+        setLoading(false);
+      }
     } else {
       setLoading(true);
       refreshData();
     }
   }, [data, isLoading]);
 
+  // Refresh the data if the filter changes
+  useEffect(() => {
+    refreshData();
+  }, [filter]);
+
   // Updating the map for the clusterer
-  const updateMap = () => {
+  const updateClusters = () => {
     const b = map.getBounds();
     setClusterBounds([
       b.getSouthWest().lng,
@@ -69,9 +117,9 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
     }
   };
 
-  // Update map once upon load
+  // Update clusters once upon load
   useEffect(() => {
-    updateMap();
+    updateClusters();
   }, []);
 
   // Create clustered markers
@@ -89,7 +137,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
     // Gets colour based on count of cluster
     const getColour = () => {
       const maxHue = 120; // 120 is max for a nice green
-      const consideredBig = 1000; // Change this to affect how the colour scales
+      const consideredBig = data?.length ? data?.length / 5 : 1000; // Change this to affect how the colour scales
       const colourScore = (1 - count / consideredBig) * maxHue;
       const hue = Math.max(0, Math.min(maxHue, colourScore)).toString(10);
       return ['hsl(', hue, ',60%,70%)'].join('');
@@ -150,8 +198,8 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
 
   // Update map after these actions
   useMapEvents({
-    zoomend: updateMap,
-    moveend: updateMap,
+    zoomend: updateClusters,
+    moveend: updateClusters,
   });
 
   return (
