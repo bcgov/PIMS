@@ -32,10 +32,7 @@ const TextFormField = (props: TextFormFieldProps) => {
               }
             }}
             onChange={(event) => {
-              if (
-                isPid &&
-                (event.target.value === '' || /^[0-9-]*\.?[0-9]{0,2}$/.test(event.target.value))
-              ) {
+              if (isPid) {
                 event.target.value = pidFormatter(parseInt(event.target.value.replace(/-/g, '')));
                 onChange(event);
                 return;
