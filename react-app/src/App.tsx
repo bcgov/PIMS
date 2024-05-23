@@ -58,7 +58,7 @@ const Router = () => {
         element={
           <BaseLayout>
             <AuthRouteGuard ignoreStatus>
-              <TitleOwnership />
+              <TitleOwnership pid={''} />
             </AuthRouteGuard>
           </BaseLayout>
         }
