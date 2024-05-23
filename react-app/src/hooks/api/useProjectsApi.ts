@@ -4,6 +4,7 @@ import { Agency } from './useAgencyApi';
 import { User } from '@/hooks/api/useUsersApi';
 import { Parcel } from './useParcelsApi';
 import { Building } from './useBuildingsApi';
+import { DeepPartial } from 'react-hook-form';
 
 export interface TierLevel extends BaseEntityInterface {
   Id: number;
@@ -80,6 +81,7 @@ export interface Project {
   StatusHistory?: ProjectStatusHistory[];
   Notes?: ProjectNote[];
   ProjectProperties?: ProjectProperty[];
+  AgencyResponses?: ProjectAgencyResponse[];
 }
 
 export interface ProjectNote {
@@ -144,6 +146,21 @@ export interface ProjectProperty {
   BuildingId: number | null;
   Parcel: Parcel | null;
   Building: Building | null;
+}
+
+export interface ProjectAgencyResponse {
+  CreatedById: string;
+  CreatedOn: string;
+  UpdatedById: string | null;
+  UpdatedOn: string | null;
+  Id: number;
+  ProjectId: number;
+  AgencyId: number;
+  OfferAmount: string | number;
+  NotificationId: number | null;
+  Response: number;
+  ReceivedOn: Date | null;
+  Note: string | null;
 }
 
 export interface ProjectMetadata {
@@ -238,24 +255,24 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
   };
   const updateProject = async (
     id: number,
-    project: Partial<ProjectGet>,
+    project: DeepPartial<ProjectGet>,
     projectPropertyIds?: ProjectPropertyIds,
-  ): Promise<Project> => {
+  ) => {
     let propertyIds = projectPropertyIds;
     propertyIds ??= {
       //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_assignment
       parcels: project.ProjectProperties.filter((a) => a.Parcel).map((a) => a.ParcelId),
       buildings: project.ProjectProperties.filter((a) => a.Building).map((a) => a.BuildingId),
     };
-    const { parsedBody } = await absoluteFetch.put(`/projects/disposal/${id}`, {
+    const response = await absoluteFetch.put(`/projects/disposal/${id}`, {
       project: project,
       propertyIds: propertyIds,
     });
-    return parsedBody as Project;
+    return response;
   };
   const deleteProjectById = async (id: number) => {
-    const { status } = await absoluteFetch.del(`/projects/disposal/${id}`);
-    return status;
+    const response = await absoluteFetch.del(`/projects/disposal/${id}`);
+    return response;
   };
   const getProjects = async () => {
     const { parsedBody } = await absoluteFetch.get('/projects', { includeRelations: true });
@@ -281,8 +298,8 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
       project,
       projectPropertyIds,
     };
-    const { parsedBody, status } = await absoluteFetch.post('/projects/disposal', postBody);
-    return { parsedBody, status };
+    const response = await absoluteFetch.post('/projects/disposal', postBody);
+    return response;
   };
 
   return {

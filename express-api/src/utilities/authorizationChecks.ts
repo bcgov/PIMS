@@ -68,6 +68,10 @@ export const checkUserAgencyPermission = async (
   kcUser: SSOUser,
   agencyIds: number[],
 ): Promise<boolean> => {
+  // Check if undefined, has length of 0, or if the only element is undefined
+  if (!agencyIds || agencyIds.length === 0 || !agencyIds.at(0)) {
+    return false;
+  }
   if (!isAdmin(kcUser) && !isAuditor(kcUser)) {
     // check if current user belongs to any of the specified agencies
     const userAgencies = await userServices.hasAgencies(kcUser.preferred_username, agencyIds);

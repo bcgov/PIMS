@@ -2,6 +2,10 @@ import { Chip, useTheme } from '@mui/material';
 import React from 'react';
 
 export const dateFormatter = (input: any) => {
+  const asDate = new Date(input);
+  if (!isFinite(asDate.getTime())) {
+    return 'Invalid Date';
+  }
   return input
     ? new Intl.DateTimeFormat('en-US', {
         month: 'short',
@@ -32,7 +36,10 @@ export const statusChipFormatter = (value: ChipStatus) => {
           color: theme.palette[colorMap[value] ?? 'warning']['main'],
           backgroundColor: theme.palette[colorMap[value] ?? 'warning']['light'],
         }}
-        label={value}
+        label={value
+          .match(/([A-Z]?[^A-Z]*)/g)
+          .slice(0, -1)
+          .join(' ')}
       />
     </>
   );

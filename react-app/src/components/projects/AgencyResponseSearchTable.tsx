@@ -7,18 +7,24 @@ import {
   Autocomplete,
   TextField,
   InputAdornment,
-  Chip,
   autocompleteClasses,
   SxProps,
   IconButton,
+  useTheme,
 } from '@mui/material';
-import { GridColDef, DataGrid } from '@mui/x-data-grid';
+import { GridColDef, DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { useState } from 'react';
-import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
+import { ISelectMenuItem } from '../form/SelectFormField';
+import { Agency } from '@/hooks/api/useAgencyApi';
+import { dateFormatter } from '@/utilities/formatters';
+import { AgencyResponseType } from '@/constants/agencyResponseTypes';
+import { enumReverseLookup } from '@/utilities/helperFunctions';
 
 interface IAgencySearchTable {
   rows: any[];
   setRows: (a: any[]) => void;
+  options: ISelectMenuItem[];
+  agencies: Agency[];
 }
 
 export type ParcelWithType = Parcel & {
@@ -30,53 +36,57 @@ export type BuildingWithType = Building & {
 };
 
 interface IAgencySimpleTable {
-  rows: any[];
+  rows: Array<Agency & { ReceivedOn: Date; Note: string }>;
   additionalColumns?: GridColDef[];
   sx?: SxProps;
+  dataGridProps?: Omit<DataGridProps, 'columns'>;
+  editMode: boolean;
 }
 
 export const AgencySimpleTable = (props: IAgencySimpleTable) => {
+  const theme = useTheme();
+  const edit = props.editMode;
   const columns: GridColDef[] = [
     {
       field: 'Name',
       headerName: 'Name',
       flex: 1,
-      minWidth: 200,
+      minWidth: 150,
     },
     {
-      field: 'Code',
-      headerName: 'Short Name',
+      field: 'ReceivedOn',
+      headerName: 'Received On',
       flex: 1,
-      maxWidth: 150,
-    },
-    {
-      field: 'SendEmail',
-      headerName: 'Notification',
-      flex: 1,
-      valueFormatter: (value: boolean) => (value ? 'Yes' : 'No'),
-      maxWidth: 120,
-    },
-    {
-      field: 'Email',
-      headerName: 'Send To',
-      flex: 1,
-      maxWidth: 250,
+      editable: edit,
+      type: 'date',
+      valueGetter: (value) => (value == null ? null : new Date(value)),
       renderCell: (params) =>
-        params.value
-          ?.split(';')
-          .map((email) =>
-            email ? (
-              <Chip
-                title={email}
-                key={email}
-                label={email}
-                variant="outlined"
-                sx={{ marginRight: '5px' }}
-              />
-            ) : (
-              ''
-            ),
-          ),
+        params.value ? (
+          dateFormatter(params.value)
+        ) : (
+          <Box sx={{ color: theme.palette.gray.main }}>{edit ? 'Double click / Enter' : 'N/A'}</Box>
+        ),
+    },
+    {
+      field: 'Note',
+      headerName: 'Note',
+      flex: 1,
+      editable: edit,
+      type: 'string',
+      renderCell: (params) =>
+        params.value ? (
+          params.value
+        ) : (
+          <Box sx={{ color: theme.palette.gray.main }}>{edit ? 'Double click / Enter' : 'N/A'}</Box>
+        ),
+    },
+    {
+      field: 'Response',
+      headerName: 'Response',
+      flex: 1,
+      editable: edit,
+      type: 'singleSelect',
+      valueOptions: Object.keys(AgencyResponseType).filter((key) => isNaN(Number(key))),
     },
   ];
   return (
@@ -84,32 +94,48 @@ export const AgencySimpleTable = (props: IAgencySimpleTable) => {
       getRowId={(row) => row.Id}
       autoHeight
       hideFooter
+      disableRowSelectionOnClick
       columns={[...columns, ...(props.additionalColumns ?? [])]}
-      sx={props.sx}
+      sx={{
+        ...props.sx,
+        '& .MuiDataGrid-row:hover': {
+          backgroundColor: 'transparent',
+        },
+      }}
       rows={props.rows}
+      {...props.dataGridProps}
     />
   );
 };
 
 const AgencySearchTable = (props: IAgencySearchTable) => {
-  const { rows, setRows } = props;
+  const { rows, setRows, agencies, options } = props;
   const [autoCompleteVal, setAutoCompleteVal] = useState(null);
-  const { agencyOptions, ungroupedAgencies } = useGroupedAgenciesApi();
 
   return (
     <Box display={'flex'} minWidth={'700px'} flexDirection={'column'} gap={'1rem'}>
       <Autocomplete
         clearOnBlur={true}
         blurOnSelect={true}
-        options={agencyOptions}
-        filterOptions={(options) => options.filter((x) => !rows.find((row) => row.Id === x.value))}
+        options={options}
+        filterOptions={(options, state) =>
+          options.filter(
+            (x) =>
+              !rows.find((row) => row.Id === x.value) &&
+              x.label.toLowerCase().includes(state.inputValue.toLowerCase()),
+          )
+        }
         onChange={(event, data) => {
-          const row = ungroupedAgencies.find((a) => a.Id === data.value);
+          const row = {
+            ...agencies.find((a) => a.Id === data?.value),
+            Response: enumReverseLookup(AgencyResponseType, AgencyResponseType.Unsubscribe),
+          };
           if (row) {
             setRows([...rows, row]);
-            setAutoCompleteVal('');
+            setAutoCompleteVal(null);
           }
         }}
+        isOptionEqualToValue={(option, value) => option.value === value.value}
         renderOption={(props, option, state, ownerState) => (
           <Box
             sx={{
@@ -121,6 +147,7 @@ const AgencySearchTable = (props: IAgencySearchTable) => {
             }}
             component="li"
             {...props}
+            key={option.value}
           >
             {ownerState.getOptionLabel(option)}
           </Box>
@@ -130,7 +157,7 @@ const AgencySearchTable = (props: IAgencySearchTable) => {
           <TextField
             {...params}
             onBlur={() => {
-              setAutoCompleteVal('');
+              setAutoCompleteVal(null);
             }}
             InputProps={{
               ...params.InputProps,
@@ -145,6 +172,7 @@ const AgencySearchTable = (props: IAgencySearchTable) => {
         )}
       />
       <AgencySimpleTable
+        editMode={true}
         additionalColumns={[
           {
             field: 'Actions',
@@ -168,6 +196,13 @@ const AgencySearchTable = (props: IAgencySearchTable) => {
           },
         ]}
         rows={rows}
+        dataGridProps={{
+          processRowUpdate: (newRow) => {
+            setRows(rows.map((row) => (row.Id === newRow.Id ? newRow : row)));
+            return newRow;
+          },
+          onProcessRowUpdateError: (error) => console.log(error),
+        }}
       />
     </Box>
   );

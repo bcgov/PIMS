@@ -1,13 +1,13 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Index, Column } from 'typeorm';
-import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Project } from '@/typeorm/Entities/Project';
 import { Building } from '@/typeorm/Entities/Building';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { PropertyType } from './PropertyType';
+import { SoftDeleteEntity } from './abstractEntities/SoftDeleteEntity';
 
 @Entity()
 @Index(['ProjectId', 'PropertyType', 'ParcelId', 'BuildingId'], { unique: true })
-export class ProjectProperty extends BaseEntity {
+export class ProjectProperty extends SoftDeleteEntity {
   @PrimaryGeneratedColumn()
   Id: number;
 

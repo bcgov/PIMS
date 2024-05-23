@@ -4,9 +4,15 @@ import {
   MockReq,
   MockRes,
   getRequestHandlerMocks,
+  produceAgency,
   produceBuilding,
   produceParcel,
+  produceUser,
 } from '../../../testUtils/factories';
+import { Roles } from '@/constants/roles';
+import { AppDataSource } from '@/appDataSource';
+import { User } from '@/typeorm/Entities/User';
+import { Agency } from '@/typeorm/Entities/Agency';
 
 const {
   getProperties,
@@ -42,6 +48,7 @@ describe('UNIT - Properties', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
   beforeEach(() => {
+    jest.clearAllMocks();
     const { mockReq, mockRes } = getRequestHandlerMocks();
     mockRequest = mockReq;
     mockResponse = mockRes;
@@ -93,7 +100,55 @@ describe('UNIT - Properties', () => {
   });
 
   describe('GET /properties/search/geo', () => {
+    const _checkUserAgencyPermission = jest.fn().mockImplementation(async () => true);
+    jest.mock('@/utilities/authorizationChecks', () => ({
+      checkUserAgencyPermission: _checkUserAgencyPermission,
+    }));
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
     it('should return 200 with a list of properties', async () => {
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      await getPropertiesForMap(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(mockResponse.sendValue.length).toBeGreaterThanOrEqual(1);
+      expect(_checkUserAgencyPermission).toHaveBeenCalledTimes(0);
+    });
+
+    it('should return 200 with a list of properties when filtered by the array fields', async () => {
+      mockRequest.setUser({ client_roles: [Roles.AUDITOR] });
+      mockRequest.query = {
+        AgencyIds: '12,13',
+        ClassificationIds: '1,2',
+        PropertyTypeIds: '1,2',
+        AdministrativeAreaIds: '1,2',
+      };
+      await getPropertiesForMap(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(mockResponse.sendValue.length).toBeGreaterThanOrEqual(1);
+      expect(_checkUserAgencyPermission).toHaveBeenCalledTimes(0);
+    });
+
+    it('should return 400 if the query params do not pass the schema', async () => {
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockRequest.query = {
+        AgencyIds: ['h'],
+      };
+      await getPropertiesForMap(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+
+    it('should follow the path to restrict filter agency if user is not an admin', async () => {
+      jest
+        .spyOn(AppDataSource.getRepository(User), 'findOneBy')
+        .mockImplementation(async () => produceUser());
+      jest
+        .spyOn(AppDataSource.getRepository(User), 'findOneOrFail')
+        .mockImplementation(async () => produceUser());
+      jest
+        .spyOn(AppDataSource.getRepository(Agency), 'find')
+        .mockImplementation(async () => [produceAgency()]);
       await getPropertiesForMap(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.length).toBeGreaterThanOrEqual(1);

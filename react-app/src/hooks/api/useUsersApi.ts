@@ -52,8 +52,8 @@ const useUsersApi = (absoluteFetch: IFetch) => {
     return parsedBody as User;
   };
   const updateUser = async (userId: string, user: Partial<User>) => {
-    const { parsedBody } = await absoluteFetch.put(`/users/${userId}`, user);
-    return parsedBody;
+    const response = await absoluteFetch.put(`/users/${userId}`, user);
+    return response;
   };
   const updateUserRole = async (username: string, role: string) => {
     const { parsedBody } = await absoluteFetch.put(`/users/roles/${username}`, [role]);
@@ -62,6 +62,10 @@ const useUsersApi = (absoluteFetch: IFetch) => {
   const deleteUser = async (userId: string) => {
     const { parsedBody } = await absoluteFetch.del(`/users/${userId}`, { Id: userId });
     return parsedBody;
+  };
+  const getUsersAgencyIds = async (username: string): Promise<number[]> => {
+    const { parsedBody } = await absoluteFetch.get(`/users/agencies/${username}`);
+    return parsedBody as number[];
   };
   return {
     getLatestAccessRequest,
@@ -72,6 +76,7 @@ const useUsersApi = (absoluteFetch: IFetch) => {
     updateUser,
     deleteUser,
     updateUserRole,
+    getUsersAgencyIds,
   };
 };
 

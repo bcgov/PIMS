@@ -99,10 +99,17 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
     <Popup autoPan={false} position={clickPosition} className="full-size">
       <Box display={'inline-flex'} width={150}>
         <Grid container>
-          <GridColumnPair
-            leftValue={parcelData.at(parcelIndex).PID_FORMATTED ? 'PID' : 'PIN'}
-            rightValue={parcelData.at(parcelIndex).PID_FORMATTED ?? parcelData.at(parcelIndex).PIN}
-          />
+          {parcelData.at(parcelIndex)?.PID_FORMATTED != null ||
+          parcelData.at(parcelIndex)?.PIN != null ? (
+            <GridColumnPair
+              leftValue={parcelData.at(parcelIndex)?.PID_FORMATTED ? 'PID' : 'PIN'}
+              rightValue={
+                parcelData.at(parcelIndex)?.PID_FORMATTED ?? parcelData.at(parcelIndex)?.PIN
+              }
+            />
+          ) : (
+            <>No PID/PIN.</>
+          )}
           {parcelData?.length > 1 ? (
             <Grid
               item
@@ -156,30 +163,36 @@ const ParcelLayerDetails = (props: ParcelLayerDetailsProps) => {
         <Grid item xs={12}>
           <Typography variant="h4">Parcel Layer</Typography>
         </Grid>
-        {parcel.PID_FORMATTED ? (
-          <GridColumnPair leftValue={'PID'} rightValue={parcel.PID_FORMATTED} />
+        {parcel ? (
+          <>
+            {parcel.PID_FORMATTED ? (
+              <GridColumnPair leftValue={'PID'} rightValue={parcel.PID_FORMATTED} />
+            ) : (
+              <></>
+            )}
+            {parcel.PIN != null ? (
+              <GridColumnPair leftValue={'PIN'} rightValue={parcel.PIN} />
+            ) : (
+              <></>
+            )}
+            <GridColumnPair leftValue={'Class'} rightValue={parcel.PARCEL_CLASS} />
+            <GridColumnPair leftValue={'Plan Number'} rightValue={parcel.PLAN_NUMBER} />
+            <GridColumnPair leftValue={'Owner Type'} rightValue={parcel.OWNER_TYPE} />
+            <GridColumnPair leftValue={'Municipality'} rightValue={parcel.MUNICIPALITY} />
+            <GridColumnPair leftValue={'Regional District'} rightValue={parcel.REGIONAL_DISTRICT} />
+            <GridColumnPair
+              leftValue={'Area'}
+              rightValue={
+                <>
+                  <span>{`${parcel.FEATURE_AREA_SQM}`}</span>
+                  <MetresSquared />
+                </>
+              }
+            />
+          </>
         ) : (
-          <></>
+          <Typography variant="body2">No parcel data available.</Typography>
         )}
-        {parcel.PIN != null ? <GridColumnPair leftValue={'PIN'} rightValue={parcel.PIN} /> : <></>}
-        {/* 
-        // TODO: Has to come from LTSA
-        <GridColumnPair leftValue={'Legal Description'} rightValue={parcel.} /> 
-        */}
-        <GridColumnPair leftValue={'Class'} rightValue={parcel.PARCEL_CLASS} />
-        <GridColumnPair leftValue={'Plan Number'} rightValue={parcel.PLAN_NUMBER} />
-        <GridColumnPair leftValue={'Owner Type'} rightValue={parcel.OWNER_TYPE} />
-        <GridColumnPair leftValue={'Municipality'} rightValue={parcel.MUNICIPALITY} />
-        <GridColumnPair leftValue={'Regional District'} rightValue={parcel.REGIONAL_DISTRICT} />
-        <GridColumnPair
-          leftValue={'Area'}
-          rightValue={
-            <>
-              <span>{`${parcel.FEATURE_AREA_SQM}`}</span>
-              <MetresSquared />
-            </>
-          }
-        />
       </Grid>
     </Box>
   );

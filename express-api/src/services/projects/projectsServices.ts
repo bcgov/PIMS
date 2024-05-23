@@ -4,7 +4,7 @@ import { ProjectType } from '@/constants/projectType';
 import { ProjectWorkflow } from '@/constants/projectWorkflow';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { Building } from '@/typeorm/Entities/Building';
-import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
+// import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
@@ -15,17 +15,16 @@ import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import logger from '@/utilities/winstonLogger';
-import { DeepPartial, FindManyOptions, FindOptionsOrder, In } from 'typeorm';
+import { DeepPartial, FindManyOptions, FindOptionsOrder, In, QueryRunner } from 'typeorm';
 import { ProjectFilter } from '@/services/projects/projectSchema';
 import { PropertyType } from '@/constants/propertyType';
 import { ProjectRisk } from '@/constants/projectRisk';
 import notificationServices from '../notifications/notificationServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import userServices from '../users/usersServices';
 
 const projectRepo = AppDataSource.getRepository(Project);
-const projectPropertiesRepo = AppDataSource.getRepository(ProjectProperty);
-const parcelRepo = AppDataSource.getRepository(Parcel);
-const buildingRepo = AppDataSource.getRepository(Building);
+
 export interface ProjectPropertyIds {
   parcels?: number[];
   buildings?: number[];
@@ -156,12 +155,12 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
   const queryRunner = AppDataSource.createQueryRunner();
   await queryRunner.startTransaction();
   try {
-    const newProject = await projectRepo.save(project);
+    const newProject = await queryRunner.manager.save(Project, project);
     // Add parcel/building relations
     const { parcels, buildings } = propertyIds;
-    if (parcels) await addProjectParcelRelations(newProject, parcels);
-    if (buildings) await addProjectBuildingRelations(newProject, buildings);
-    await handleProjectTasks(newProject);
+    if (parcels) await addProjectParcelRelations(newProject, parcels, queryRunner);
+    if (buildings) await addProjectBuildingRelations(newProject, buildings, queryRunner);
+    await handleProjectTasks(newProject, queryRunner);
     await queryRunner.commitTransaction();
     return newProject;
   } catch (e) {
@@ -182,24 +181,30 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
  * @throws {ErrorWithCode} - If the parcel with the given ID does not exist or already belongs to another project.
  * @returns {Promise<void>} - A promise that resolves when the parcel relations have been added.
  */
-const addProjectParcelRelations = async (project: Project, parcelIds: number[]) => {
+const addProjectParcelRelations = async (
+  project: DeepPartial<Project>,
+  parcelIds: number[],
+  queryRunner: QueryRunner,
+) => {
   await Promise.all(
     parcelIds?.map(async (parcelId) => {
-      const relationExists = await projectPropertiesRepo.exists({
+      const relationExists = await queryRunner.manager.findOne(ProjectProperty, {
         where: {
           ProjectId: project.Id,
           ParcelId: parcelId,
         },
       });
       if (!relationExists) {
-        const existingParcel = await parcelRepo.findOne({ where: { Id: parcelId } });
+        const existingParcel = await queryRunner.manager.findOne(Parcel, {
+          where: { Id: parcelId },
+        });
         if (!existingParcel) {
           throw new ErrorWithCode(`Parcel with ID ${parcelId} does not exist.`, 404);
         }
         // Check that property doesn't belong to another active project
         // Could be in Cancelled (23) or Denied (16) projects
         const allowedStatusIds = [ProjectStatus.CANCELLED, ProjectStatus.DENIED];
-        const existingProjectProperties = await projectPropertiesRepo.find({
+        const existingProjectProperties = await queryRunner.manager.find(ProjectProperty, {
           where: {
             ParcelId: parcelId,
           },
@@ -230,7 +235,7 @@ const addProjectParcelRelations = async (project: Project, parcelIds: number[]) 
           ParcelId: parcelId,
         };
         // Only try to add if this realtion doesn't exist yet
-        await projectPropertiesRepo.save(entry);
+        await queryRunner.manager.save(ProjectProperty, entry);
       }
     }),
   );
@@ -244,24 +249,30 @@ const addProjectParcelRelations = async (project: Project, parcelIds: number[]) 
  * @returns {Promise<void>} - A promise that resolves when the building relations have been added.
  * @throws {ErrorWithCode} - If a building with the given ID does not exist or if the building already belongs to another project.
  */
-const addProjectBuildingRelations = async (project: Project, buildingIds: number[]) => {
+const addProjectBuildingRelations = async (
+  project: DeepPartial<Project>,
+  buildingIds: number[],
+  queryRunner: QueryRunner,
+) => {
   await Promise.all(
     buildingIds?.map(async (buildingId) => {
-      const relationExists = await projectPropertiesRepo.exists({
+      const relationExists = await queryRunner.manager.findOne(ProjectProperty, {
         where: {
           ProjectId: project.Id,
           BuildingId: buildingId,
         },
       });
       if (!relationExists) {
-        const existingBuilding = await buildingRepo.findOne({ where: { Id: buildingId } });
+        const existingBuilding = await queryRunner.manager.findOne(Building, {
+          where: { Id: buildingId },
+        });
         if (!existingBuilding) {
           throw new ErrorWithCode(`Building with ID ${buildingId} does not exist.`, 404);
         }
         // Check that property doesn't belong to another active project
         // Could be in Cancelled (23) or Denied (16) projects
         const allowedStatusIds = [ProjectStatus.CANCELLED, ProjectStatus.DENIED];
-        const existingProjectProperties = await projectPropertiesRepo.find({
+        const existingProjectProperties = await queryRunner.manager.find(ProjectProperty, {
           where: {
             BuildingId: buildingId,
           },
@@ -290,7 +301,7 @@ const addProjectBuildingRelations = async (project: Project, buildingIds: number
         };
         // Only try to add if this relation doesn't exist yet
 
-        await projectPropertiesRepo.save(entry);
+        await queryRunner.manager.save(ProjectProperty, entry);
       }
     }),
   );
@@ -303,13 +314,21 @@ const addProjectBuildingRelations = async (project: Project, buildingIds: number
  * @param {number[]} parcelIds - An array of parcel IDs to remove the relations for.
  * @returns {Promise<void>} - A promise that resolves when the relations have been removed.
  */
-const removeProjectParcelRelations = async (project: Project, parcelIds: number[]) => {
-  await Promise.all(
-    parcelIds?.map(async (parcelId) => {
-      await projectPropertiesRepo.delete({
-        ProjectId: project.Id,
-        ParcelId: parcelId,
-      });
+const removeProjectParcelRelations = async (
+  project: Project,
+  parcelIds: number[],
+  queryRunner: QueryRunner,
+) => {
+  return Promise.all(
+    parcelIds?.map((parcelId) => {
+      return queryRunner.manager.update(
+        ProjectProperty,
+        {
+          ProjectId: project.Id,
+          ParcelId: parcelId,
+        },
+        { DeletedById: project.UpdatedById, DeletedOn: new Date() },
+      );
     }),
   );
 };
@@ -321,19 +340,31 @@ const removeProjectParcelRelations = async (project: Project, parcelIds: number[
  * @param {number[]} buildingIds - An array of building IDs to be removed from the project.
  * @returns {Promise<void>} - A promise that resolves when the building relationships have been removed.
  */
-const removeProjectBuildingRelations = async (project: Project, buildingIds: number[]) => {
-  await Promise.all(
+const removeProjectBuildingRelations = async (
+  project: Project,
+  buildingIds: number[],
+  queryRunner: QueryRunner,
+) => {
+  return Promise.all(
     buildingIds?.map(async (buildingId) => {
-      await projectPropertiesRepo.delete({
-        ProjectId: project.Id,
-        BuildingId: buildingId,
-      });
+      return queryRunner.manager.update(
+        ProjectProperty,
+        {
+          ProjectId: project.Id,
+          BuildingId: buildingId,
+        },
+        { DeletedById: project.UpdatedById, DeletedOn: new Date() },
+      );
     }),
   );
 };
 
-const handleProjectNotifications = async (oldProject: DeepPartial<Project>, user: SSOUser) => {
-  const projectWithRelations = await AppDataSource.getRepository(Project).findOne({
+const handleProjectNotifications = async (
+  oldProject: DeepPartial<Project>,
+  user: SSOUser,
+  queryRunner: QueryRunner,
+) => {
+  const projectWithRelations = await queryRunner.manager.findOne(Project, {
     relations: {
       Agency: true,
       ProjectProperties: {
@@ -346,6 +377,7 @@ const handleProjectNotifications = async (oldProject: DeepPartial<Project>, user
           Fiscals: true,
         },
       },
+      AgencyResponses: true,
       Notes: true,
     },
     where: {
@@ -355,14 +387,17 @@ const handleProjectNotifications = async (oldProject: DeepPartial<Project>, user
   const notifs = await notificationServices.generateProjectNotifications(
     projectWithRelations,
     oldProject.StatusId,
+    queryRunner,
   );
-  return Promise.all(notifs.map((notif) => notificationServices.sendNotification(notif, user)));
+  return Promise.all(
+    notifs.map((notif) => notificationServices.sendNotification(notif, user, queryRunner)),
+  );
 };
 
-const handleProjectTasks = async (project: DeepPartial<Project>) => {
+const handleProjectTasks = async (project: DeepPartial<Project>, queryRunner: QueryRunner) => {
   if (project?.Tasks?.length) {
     for (const task of project.Tasks) {
-      const existingTask = await AppDataSource.getRepository(ProjectTask).findOne({
+      const existingTask = await queryRunner.manager.findOne(ProjectTask, {
         where: { ProjectId: project.Id, TaskId: task.TaskId },
       });
       const taskEntity: DeepPartial<ProjectTask> = {
@@ -375,14 +410,17 @@ const handleProjectTasks = async (project: DeepPartial<Project>) => {
         //This CompletedOn logic basically means that you will only ever set the CompletedOn date once, even if you transition between IsCompleted true/false
         //multiple times. Doing that wouldn't really be the intended flow anyways so this seemed like the safest bet.
       };
-      await AppDataSource.getRepository(ProjectTask).save(taskEntity);
+      await queryRunner.manager.save(ProjectTask, taskEntity);
     }
   }
 };
 
-const handleProjectAgencyResponses = async (newProject: DeepPartial<Project>) => {
+const handleProjectAgencyResponses = async (
+  newProject: DeepPartial<Project>,
+  queryRunner: QueryRunner,
+) => {
   if (newProject.AgencyResponses) {
-    const existingResponses = await AppDataSource.getRepository(ProjectAgencyResponse).find({
+    const existingResponses = await queryRunner.manager.find(ProjectAgencyResponse, {
       where: {
         ProjectId: newProject.Id,
       },
@@ -390,15 +428,22 @@ const handleProjectAgencyResponses = async (newProject: DeepPartial<Project>) =>
     const removeResponses = existingResponses.filter(
       (r) => !newProject.AgencyResponses.find((a) => a.AgencyId === r.AgencyId),
     );
-    await AppDataSource.getRepository(ProjectAgencyResponse).delete({
-      AgencyId: In(removeResponses.map((a) => a.AgencyId)),
-      ProjectId: newProject.Id,
-    });
-    await AppDataSource.getRepository(ProjectAgencyResponse).save(
+    await queryRunner.manager.update(
+      ProjectAgencyResponse,
+      {
+        AgencyId: In(removeResponses.map((a) => a.AgencyId)),
+        ProjectId: newProject.Id,
+      },
+      { DeletedById: newProject.CreatedById, DeletedOn: new Date() },
+    );
+    await queryRunner.manager.save(
+      ProjectAgencyResponse,
       newProject.AgencyResponses.map((resp) => ({
         ...resp,
         ProjectId: newProject.Id,
         CreatedById: newProject.CreatedById,
+        DeletedById: null,
+        DeletedOn: null,
       })),
     );
   }
@@ -439,29 +484,21 @@ const updateProject = async (
   /* TODO: Need something that checks for valid changes between status, workflow, etc.
    * Can address this when business logic is determined.
    */
-  const queryRunner = await AppDataSource.createQueryRunner();
+  const queryRunner = AppDataSource.createQueryRunner();
   await queryRunner.startTransaction();
   try {
     // Metadata field is not preserved if a metadata property is set. It is overwritten.
     // Construct the proper metadata before continuing.
     const newMetadata = { ...originalProject.Metadata, ...project.Metadata };
 
-    // If status was changed, write result to Project Status History table.
-    if (originalProject.StatusId !== project.StatusId) {
-      await AppDataSource.getRepository(ProjectStatusHistory).save({
-        CreatedById: project.UpdatedById,
-        ProjectId: project.Id,
-        WorkflowId: originalProject.WorkflowId,
-        StatusId: originalProject.StatusId,
-      });
-      await handleProjectNotifications(originalProject, user); //Assuming that this needs to be here, I don't think notifications should send unless a status transition happens.
-    }
-
-    await handleProjectTasks({ ...project, CreatedById: project.UpdatedById });
-    await handleProjectAgencyResponses({ ...project, CreatedById: project.UpdatedById });
+    await handleProjectTasks({ ...project, CreatedById: project.UpdatedById }, queryRunner);
+    await handleProjectAgencyResponses(
+      { ...project, CreatedById: project.UpdatedById },
+      queryRunner,
+    );
 
     // Update Project
-    await projectRepo.save({
+    await queryRunner.manager.save(Project, {
       ...project,
       Metadata: newMetadata,
       Tasks: undefined,
@@ -472,7 +509,7 @@ const updateProject = async (
     //Same deal with AgencyResponses
 
     // Update related Project Properties
-    const existingProjectProperties = await projectPropertiesRepo.find({
+    const existingProjectProperties = await queryRunner.manager.find(ProjectProperty, {
       where: { ProjectId: originalProject.Id },
     });
     const existingParcelIds = existingProjectProperties
@@ -483,8 +520,9 @@ const updateProject = async (
       .filter((id) => id);
     // Adding new Project Properties
     const { parcels: parcelsToAdd, buildings: buildingsToAdd } = propertyIds;
-    if (parcelsToAdd) await addProjectParcelRelations(originalProject, parcelsToAdd);
-    if (buildingsToAdd) await addProjectBuildingRelations(originalProject, buildingsToAdd);
+    if (parcelsToAdd) await addProjectParcelRelations(originalProject, parcelsToAdd, queryRunner);
+    if (buildingsToAdd)
+      await addProjectBuildingRelations(originalProject, buildingsToAdd, queryRunner);
 
     // Removing the old project properties
     const parcelsToRemove = existingParcelIds.filter(
@@ -494,11 +532,26 @@ const updateProject = async (
       (id) => !buildingsToAdd.includes(id) && existingBuildingIds.includes(id),
     );
 
-    if (parcelsToRemove) await removeProjectParcelRelations(originalProject, parcelsToRemove);
-    if (buildingsToRemove) await removeProjectBuildingRelations(originalProject, buildingsToRemove);
+    if (parcelsToRemove)
+      await removeProjectParcelRelations(originalProject, parcelsToRemove, queryRunner);
+    if (buildingsToRemove)
+      await removeProjectBuildingRelations(originalProject, buildingsToRemove, queryRunner);
+
+    // If status was changed, write result to Project Status History table.
+    if (project.StatusId !== undefined && originalProject.StatusId !== project.StatusId) {
+      await queryRunner.manager.save(ProjectStatusHistory, {
+        CreatedById: project.UpdatedById,
+        ProjectId: project.Id,
+        WorkflowId: originalProject.WorkflowId,
+        StatusId: originalProject.StatusId,
+      });
+    }
 
     queryRunner.commitTransaction();
 
+    if (project.StatusId !== undefined && originalProject.StatusId !== project.StatusId) {
+      await handleProjectNotifications(originalProject, user, queryRunner); //Do this after committing transaction so that we don't send emails to CHES unless the rest of the project metadata actually saved.
+    }
     // Get project to return
     const returnProject = await projectRepo.findOne({ where: { Id: originalProject.Id } });
     return returnProject;
@@ -519,33 +572,63 @@ const updateProject = async (
  * @returns {Promise<DeleteResult>} - A promise that resolves to the delete result.
  * @throws {ErrorWithCode} - If the project does not exist, or if there is an error deleting the project.
  */
-const deleteProjectById = async (id: number) => {
+const deleteProjectById = async (id: number, username: string) => {
   if (!(await projectRepo.exists({ where: { Id: id } }))) {
     throw new ErrorWithCode('Project does not exist.', 404);
   }
+  const user = await userServices.getUser(username);
   const queryRunner = await AppDataSource.createQueryRunner();
   await queryRunner.startTransaction();
   try {
     // Remove Project Properties relations
-    await projectPropertiesRepo.delete({ ProjectId: id });
+    await queryRunner.manager.update(
+      ProjectProperty,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
     // Remove Project Status History
-    await AppDataSource.getRepository(ProjectStatusHistory).delete({ ProjectId: id });
+    await queryRunner.manager.update(
+      ProjectStatusHistory,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
     // Remove Project Notes
-    await AppDataSource.getRepository(ProjectNote).delete({ ProjectId: id });
+    await queryRunner.manager.update(
+      ProjectNote,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
     // Remove Project Snapshots
-    await AppDataSource.getRepository(ProjectSnapshot).delete({ ProjectId: id });
+    await queryRunner.manager.update(
+      ProjectSnapshot,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
     // Remove Project Tasks
-    await AppDataSource.getRepository(ProjectTask).delete({ ProjectId: id });
+    await queryRunner.manager.update(
+      ProjectTask,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
     // Remove Project Agency Responses
-    await AppDataSource.getRepository(ProjectAgencyResponse).delete({ ProjectId: id });
+    await queryRunner.manager.update(
+      ProjectAgencyResponse,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
     // Remove Notifications from Project
     /* FIXME: This should eventually be done with the notifications service.
-     * Otherwise, any notifications sent to CHES won't be cancelled.
+     * Otherwise, any notifications sent to CHES won't be cancelled. -Dylan
+     * This is true ^ I think it's best to comment out this delete call for now. -Graham
      */
-    await AppDataSource.getRepository(NotificationQueue).delete({ ProjectId: id });
+    // await queryRunner.manager.delete(NotificationQueue, { ProjectId: id });
     // Delete the project
-    const deleteResult = await projectRepo.delete({ Id: id });
-    queryRunner.commitTransaction();
+    const deleteResult = await queryRunner.manager.update(
+      Project,
+      { Id: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
+    await queryRunner.commitTransaction();
     return deleteResult;
   } catch (e) {
     await queryRunner.rollbackTransaction();

@@ -29,6 +29,7 @@ import { Roles } from '@/constants/roles';
 import ProjectDetail from '@/components/projects/ProjectDetail';
 import TitleOwnership from './components/ltsa/TitleOwnership';
 import SnackBarContextProvider from './contexts/snackbarContext';
+import ParcelMap from '@/components/map/ParcelMap';
 
 const Router = () => {
   const navigate = useNavigate();
@@ -210,6 +211,16 @@ const Router = () => {
           <BaseLayout>
             <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
               <ProjectDetail onClose={() => navigate('/projects')} />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
+      <Route
+        path="/map"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
+              <ParcelMap height="100%" loadProperties={true} popupSize="large" scrollOnClick />
             </AuthRouteGuard>
           </BaseLayout>
         }

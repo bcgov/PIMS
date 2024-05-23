@@ -14,3 +14,19 @@ export const arrayUniqueBy = <T>(arr: Array<T>, key: (a: T) => string) => {
     return seen.hasOwnProperty(k) ? false : (seen[k] = true);
   });
 };
+
+/**
+ * In the event that you have the numeric value of an enum, and you need to find the string key
+ * which points to that number, you can use this function.
+ *
+ * Given:
+ *  enum Action { Subscribe = 0, Unsubscribe = 1 }
+ *  enumReverseLookup(Actions, 0) -> "Subscribe"
+ *
+ * @param enumObj Typescript enumerated type
+ * @param value number that enum resolves to
+ * @returns {string}
+ */
+export const enumReverseLookup = <T>(enumObj: T, value: number): keyof T | undefined => {
+  return Object.keys(enumObj).find((key) => (enumObj as any)[key] === value) as keyof T | undefined;
+};
