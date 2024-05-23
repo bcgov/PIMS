@@ -4,7 +4,7 @@ import { ProjectType } from '@/constants/projectType';
 import { ProjectWorkflow } from '@/constants/projectWorkflow';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { Building } from '@/typeorm/Entities/Building';
-import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
+// import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
@@ -21,6 +21,7 @@ import { PropertyType } from '@/constants/propertyType';
 import { ProjectRisk } from '@/constants/projectRisk';
 import notificationServices from '../notifications/notificationServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import userServices from '../users/usersServices';
 
 const projectRepo = AppDataSource.getRepository(Project);
 
@@ -187,7 +188,7 @@ const addProjectParcelRelations = async (
 ) => {
   await Promise.all(
     parcelIds?.map(async (parcelId) => {
-      const relationExists = await queryRunner.manager.exists(ProjectProperty, {
+      const relationExists = await queryRunner.manager.findOne(ProjectProperty, {
         where: {
           ProjectId: project.Id,
           ParcelId: parcelId,
@@ -255,7 +256,7 @@ const addProjectBuildingRelations = async (
 ) => {
   await Promise.all(
     buildingIds?.map(async (buildingId) => {
-      const relationExists = await queryRunner.manager.exists(ProjectProperty, {
+      const relationExists = await queryRunner.manager.findOne(ProjectProperty, {
         where: {
           ProjectId: project.Id,
           BuildingId: buildingId,
@@ -320,10 +321,14 @@ const removeProjectParcelRelations = async (
 ) => {
   return Promise.all(
     parcelIds?.map((parcelId) => {
-      return queryRunner.manager.delete(ProjectProperty, {
-        ProjectId: project.Id,
-        ParcelId: parcelId,
-      });
+      return queryRunner.manager.update(
+        ProjectProperty,
+        {
+          ProjectId: project.Id,
+          ParcelId: parcelId,
+        },
+        { DeletedById: project.UpdatedById, DeletedOn: new Date() },
+      );
     }),
   );
 };
@@ -342,10 +347,14 @@ const removeProjectBuildingRelations = async (
 ) => {
   return Promise.all(
     buildingIds?.map(async (buildingId) => {
-      return queryRunner.manager.delete(ProjectProperty, {
-        ProjectId: project.Id,
-        BuildingId: buildingId,
-      });
+      return queryRunner.manager.update(
+        ProjectProperty,
+        {
+          ProjectId: project.Id,
+          BuildingId: buildingId,
+        },
+        { DeletedById: project.UpdatedById, DeletedOn: new Date() },
+      );
     }),
   );
 };
@@ -419,16 +428,22 @@ const handleProjectAgencyResponses = async (
     const removeResponses = existingResponses.filter(
       (r) => !newProject.AgencyResponses.find((a) => a.AgencyId === r.AgencyId),
     );
-    await queryRunner.manager.delete(ProjectAgencyResponse, {
-      AgencyId: In(removeResponses.map((a) => a.AgencyId)),
-      ProjectId: newProject.Id,
-    });
+    await queryRunner.manager.update(
+      ProjectAgencyResponse,
+      {
+        AgencyId: In(removeResponses.map((a) => a.AgencyId)),
+        ProjectId: newProject.Id,
+      },
+      { DeletedById: newProject.CreatedById, DeletedOn: new Date() },
+    );
     await queryRunner.manager.save(
       ProjectAgencyResponse,
       newProject.AgencyResponses.map((resp) => ({
         ...resp,
         ProjectId: newProject.Id,
         CreatedById: newProject.CreatedById,
+        DeletedById: null,
+        DeletedOn: null,
       })),
     );
   }
@@ -557,33 +572,63 @@ const updateProject = async (
  * @returns {Promise<DeleteResult>} - A promise that resolves to the delete result.
  * @throws {ErrorWithCode} - If the project does not exist, or if there is an error deleting the project.
  */
-const deleteProjectById = async (id: number) => {
+const deleteProjectById = async (id: number, username: string) => {
   if (!(await projectRepo.exists({ where: { Id: id } }))) {
     throw new ErrorWithCode('Project does not exist.', 404);
   }
+  const user = await userServices.getUser(username);
   const queryRunner = await AppDataSource.createQueryRunner();
   await queryRunner.startTransaction();
   try {
     // Remove Project Properties relations
-    await queryRunner.manager.delete(ProjectProperty, { ProjectId: id });
+    await queryRunner.manager.update(
+      ProjectProperty,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
     // Remove Project Status History
-    await queryRunner.manager.delete(ProjectStatusHistory, { ProjectId: id });
+    await queryRunner.manager.update(
+      ProjectStatusHistory,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
     // Remove Project Notes
-    await queryRunner.manager.delete(ProjectNote, { ProjectId: id });
+    await queryRunner.manager.update(
+      ProjectNote,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
     // Remove Project Snapshots
-    await queryRunner.manager.delete(ProjectSnapshot, { ProjectId: id });
+    await queryRunner.manager.update(
+      ProjectSnapshot,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
     // Remove Project Tasks
-    await queryRunner.manager.delete(ProjectTask, { ProjectId: id });
+    await queryRunner.manager.update(
+      ProjectTask,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
     // Remove Project Agency Responses
-    await queryRunner.manager.delete(ProjectAgencyResponse, { ProjectId: id });
+    await queryRunner.manager.update(
+      ProjectAgencyResponse,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
     // Remove Notifications from Project
     /* FIXME: This should eventually be done with the notifications service.
-     * Otherwise, any notifications sent to CHES won't be cancelled.
+     * Otherwise, any notifications sent to CHES won't be cancelled. -Dylan
+     * This is true ^ I think it's best to comment out this delete call for now. -Graham
      */
-    await queryRunner.manager.delete(NotificationQueue, { ProjectId: id });
+    // await queryRunner.manager.delete(NotificationQueue, { ProjectId: id });
     // Delete the project
-    const deleteResult = await queryRunner.manager.delete(Project, { Id: id });
-    queryRunner.commitTransaction();
+    const deleteResult = await queryRunner.manager.update(
+      Project,
+      { Id: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
+    await queryRunner.commitTransaction();
     return deleteResult;
   } catch (e) {
     await queryRunner.rollbackTransaction();

@@ -1,28 +1,45 @@
 import { AppDataSource } from '@/appDataSource';
 import { Building } from '@/typeorm/Entities/Building';
-import { produceBuilding } from 'tests/testUtils/factories';
-import { DeepPartial } from 'typeorm';
+import { produceBuilding, produceUser } from 'tests/testUtils/factories';
+import { DeepPartial, UpdateResult } from 'typeorm';
 import * as buildingService from '@/services/buildings/buildingServices';
 import { BuildingFilter, BuildingFilterSchema } from '@/services/buildings/buildingSchema';
+import userServices from '@/services/users/usersServices';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 
 const buildingRepo = AppDataSource.getRepository(Building);
-
+jest.spyOn(userServices, 'getUser').mockImplementation(async () => produceUser());
 const _buildingSave = jest
   .spyOn(buildingRepo, 'save')
   .mockImplementation(async (building: DeepPartial<Building> & Building) => building);
-
-const _buildingDelete = jest
-  .spyOn(buildingRepo, 'delete')
-  .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
 
 const _buildingFindOne = jest
   .spyOn(buildingRepo, 'findOne')
   .mockImplementation(async () => produceBuilding());
 
-// const _buildingUpdate = jest
-//   .spyOn(buildingRepo, 'update')
-//   .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
+const _mockStartTransaction = jest.fn(async () => {});
+const _mockRollbackTransaction = jest.fn(async () => {});
+const _mockCommitTransaction = jest.fn(async () => {});
+const _mockBuildinglUpdate = jest.fn(async (): Promise<UpdateResult> => {
+  return {
+    raw: {},
+    generatedMaps: [],
+  };
+});
+const _mockEntityManager = {
+  update: () => _mockBuildinglUpdate(),
+};
 
+jest.spyOn(AppDataSource.getRepository(ProjectProperty), 'find').mockImplementation(async () => []);
+
+jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
+  ...jest.requireActual('@/appDataSource').createQueryRunner,
+  startTransaction: _mockStartTransaction,
+  rollbackTransaction: _mockRollbackTransaction,
+  commitTransaction: _mockCommitTransaction,
+  release: jest.fn(async () => {}),
+  manager: _mockEntityManager,
+});
 jest.spyOn(buildingRepo, 'find').mockImplementation(async () => [produceBuilding()]);
 
 describe('UNIT - Building Services', () => {
@@ -47,8 +64,8 @@ describe('deleteBuildingById', () => {
   it('should delete a building and return a 204 status code', async () => {
     const buildingToDelete = produceBuilding();
     _buildingFindOne.mockResolvedValueOnce(buildingToDelete);
-    await buildingService.deleteBuildingById(buildingToDelete.Id);
-    expect(_buildingDelete).toHaveBeenCalledTimes(1);
+    await buildingService.deleteBuildingById(buildingToDelete.Id, '');
+    expect(_mockBuildinglUpdate).toHaveBeenCalledTimes(3);
   });
 });
 describe('getBuildingById', () => {

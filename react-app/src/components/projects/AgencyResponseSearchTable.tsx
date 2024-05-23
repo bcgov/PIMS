@@ -94,8 +94,14 @@ export const AgencySimpleTable = (props: IAgencySimpleTable) => {
       getRowId={(row) => row.Id}
       autoHeight
       hideFooter
+      disableRowSelectionOnClick
       columns={[...columns, ...(props.additionalColumns ?? [])]}
-      sx={props.sx}
+      sx={{
+        ...props.sx,
+        '& .MuiDataGrid-row:hover': {
+          backgroundColor: 'transparent',
+        },
+      }}
       rows={props.rows}
       {...props.dataGridProps}
     />
