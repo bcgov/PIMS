@@ -11,7 +11,6 @@ import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { Workflow } from '@/typeorm/Entities/Workflow';
 import { TierLevel } from '@/typeorm/Entities/TierLevel';
 import { ProjectRisk } from '@/typeorm/Entities/ProjectRisk';
-import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Agency } from './Agency';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
@@ -19,6 +18,7 @@ import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
 import { ProjectAgencyResponse } from './ProjectAgencyResponse';
+import { SoftDeleteEntity } from './abstractEntities/SoftDeleteEntity';
 
 export interface ProjectMetadata {
   // Exemption Fields
@@ -74,7 +74,7 @@ export interface ProjectMetadata {
 @Entity()
 @Index(['Assessed', 'NetBook', 'Market', 'ReportedFiscalYear', 'ActualFiscalYear'])
 @Index(['StatusId', 'TierLevelId', 'AgencyId'])
-export class Project extends BaseEntity {
+export class Project extends SoftDeleteEntity {
   @PrimaryGeneratedColumn()
   Id: number;
 

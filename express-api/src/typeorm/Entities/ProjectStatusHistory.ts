@@ -8,11 +8,11 @@ import {
 } from 'typeorm';
 import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { Workflow } from '@/typeorm/Entities/Workflow';
-import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Project } from '@/typeorm/Entities/Project';
+import { SoftDeleteEntity } from './abstractEntities/SoftDeleteEntity';
 
 @Entity()
-export class ProjectStatusHistory extends BaseEntity {
+export class ProjectStatusHistory extends SoftDeleteEntity {
   @PrimaryGeneratedColumn()
   Id: number;
 
