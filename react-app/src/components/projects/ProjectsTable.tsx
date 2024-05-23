@@ -6,7 +6,7 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
-import React, { MutableRefObject } from 'react';
+import React, { MutableRefObject, useContext } from 'react';
 import useDataLoader from '@/hooks/useDataLoader';
 import { dateFormatter, projectStatusChipFormatter } from '@/utilities/formatters';
 import { Agency } from '@/hooks/api/useAgencyApi';
@@ -15,10 +15,12 @@ import { User } from '@/hooks/api/useUsersApi';
 import { useNavigate } from 'react-router-dom';
 import { Project } from '@/hooks/api/useProjectsApi';
 import { NoteTypes } from '@/constants/noteTypes';
+import { SnackBarContext } from '@/contexts/snackbarContext';
 
 const ProjectsTable = () => {
   const navigate = useNavigate();
   const api = usePimsApi();
+  const snackbar = useContext(SnackBarContext);
   const { data, loadOnce } = useDataLoader(api.projects.getProjects);
   loadOnce();
 
@@ -175,7 +177,11 @@ const ProjectsTable = () => {
           };
         });
       } catch (e) {
-        // TODO: Error notification here.
+        snackbar.setMessageState({
+          open: true,
+          style: snackbar.styles.warning,
+          text: e.message ?? 'Error exporting Excel file.',
+        });
         return [];
       }
     }

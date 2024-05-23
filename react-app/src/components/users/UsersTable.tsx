@@ -86,9 +86,9 @@ const UsersTable = (props: IUsersTable) => {
         break;
       // All Status filters
       case 'Active':
-      case 'Pending':
-      case 'On Hold':
+      case 'OnHold':
       case 'Disabled':
+      case 'Denied':
         ref.current.setFilterModel({
           items: [
             {
@@ -254,7 +254,6 @@ const UsersTable = (props: IUsersTable) => {
     >
       <FilterSearchDataGrid
         name="users"
-        onAddButtonClick={() => {}}
         onRowClick={rowClickHandler}
         defaultFilter="All Users"
         tableHeader="Users Overview"
@@ -279,21 +278,21 @@ const UsersTable = (props: IUsersTable) => {
           <CustomMenuItem key={'Active'} value={'Active'}>
             Active
           </CustomMenuItem>,
-          <CustomMenuItem key={'Pending'} value={'Pending'}>
-            Pending
-          </CustomMenuItem>,
-          <CustomMenuItem key={'On Hold'} value={'On Hold'}>
+          <CustomMenuItem key={'On Hold'} value={'OnHold'}>
             On Hold
           </CustomMenuItem>,
           <CustomMenuItem key={'Disabled'} value={'Disabled'}>
             Disabled
+          </CustomMenuItem>,
+          <CustomMenuItem key={'Denied'} value={'Denied'}>
+            Denied
           </CustomMenuItem>,
           <CustomListSubheader key={'Role'}>Role</CustomListSubheader>,
           <CustomMenuItem key={'User'} value={'User'}>
             General User
           </CustomMenuItem>,
           <CustomMenuItem key={'Admin'} value={'Admin'}>
-            System Admin
+            Administrator
           </CustomMenuItem>,
           <CustomMenuItem key={'Auditor'} value={'Auditor'}>
             Auditor

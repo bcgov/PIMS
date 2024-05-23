@@ -63,6 +63,10 @@ const useUsersApi = (absoluteFetch: IFetch) => {
     const { parsedBody } = await absoluteFetch.del(`/users/${userId}`, { Id: userId });
     return parsedBody;
   };
+  const getUsersAgencyIds = async (username: string): Promise<number[]> => {
+    const { parsedBody } = await absoluteFetch.get(`/users/agencies/${username}`);
+    return parsedBody as number[];
+  };
   return {
     getLatestAccessRequest,
     getSelf,
@@ -72,6 +76,7 @@ const useUsersApi = (absoluteFetch: IFetch) => {
     updateUser,
     deleteUser,
     updateUserRole,
+    getUsersAgencyIds,
   };
 };
 

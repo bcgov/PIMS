@@ -2,6 +2,7 @@ import { AppDataSource } from '@/appDataSource';
 import { Building } from '@/typeorm/Entities/Building';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
+import { ILike, In } from 'typeorm';
 
 const propertiesFuzzySearch = async (keyword: string, limit?: number) => {
   const parcels = await AppDataSource.getRepository(Parcel)
@@ -36,8 +37,23 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number) => {
   };
 };
 
-const getPropertiesForMap = async () => {
-  // TODO: Use where to add search parameters
+export interface MapPropertiesFilter {
+  PID?: number;
+  PIN?: number;
+  Address?: string;
+  AgencyIds?: number[];
+  AdministrativeAreaIds?: number[];
+  ClassificationIds?: number[];
+  PropertyTypeIds?: number[];
+  Name?: string;
+}
+
+/**
+ * Retrieves properties based on the provided filter criteria to render map markers.
+ * @param filter - An optional object containing filter criteria for properties.
+ * @returns A promise that resolves to an array of properties matching the filter criteria.
+ */
+const getPropertiesForMap = async (filter?: MapPropertiesFilter) => {
   const properties = await AppDataSource.getRepository(MapProperties).find({
     // Select only the properties needed to render map markers
     select: {
@@ -48,6 +64,18 @@ const getPropertiesForMap = async () => {
       },
       PropertyTypeId: true,
       ClassificationId: true,
+    },
+    where: {
+      ClassificationId: filter.ClassificationIds ? In(filter.ClassificationIds) : undefined,
+      AgencyId: filter.AgencyIds ? In(filter.AgencyIds) : undefined,
+      AdministrativeAreaId: filter.AdministrativeAreaIds
+        ? In(filter.AdministrativeAreaIds)
+        : undefined,
+      PID: filter.PID,
+      PIN: filter.PIN,
+      Address1: filter.Address ? ILike(`%${filter.Address}%`) : undefined,
+      Name: filter.Name ? ILike(`%${filter.Name}%`) : undefined,
+      PropertyTypeId: filter.PropertyTypeIds ? In(filter.PropertyTypeIds) : undefined,
     },
   });
   return properties;
