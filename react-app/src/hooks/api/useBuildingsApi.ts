@@ -112,8 +112,8 @@ const useBuildingsApi = (absoluteFetch: IFetch) => {
     return parsedBody as Building;
   };
   const deleteBuildingById = async (id: number) => {
-    const { parsedBody } = await absoluteFetch.del(`/buildings/${id}`);
-    return parsedBody as Building;
+    const response = await absoluteFetch.del(`/buildings/${id}`);
+    return response;
   };
   return {
     addBuilding,

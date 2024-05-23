@@ -243,6 +243,9 @@ export const produceParcel = (): Parcel => {
     UpdatedBy: undefined,
     Fiscals: produceParcelFiscal(id),
     Evaluations: produceParcelEvaluation(id),
+    DeletedById: null,
+    DeletedOn: null,
+    DeletedBy: undefined,
   };
 };
 
@@ -317,6 +320,9 @@ export const produceBuilding = (): Building => {
     Evaluations: produceBuildingEvaluation(id),
     PID: undefined,
     PIN: undefined,
+    DeletedById: null,
+    DeletedOn: null,
+    DeletedBy: undefined,
   };
 };
 
@@ -568,6 +574,9 @@ export const produceProject = (
     StatusHistory: [],
     Notes: [],
     AgencyResponses: [],
+    DeletedBy: undefined,
+    DeletedById: null,
+    DeletedOn: null,
     ...props,
   };
   return project;
@@ -590,6 +599,9 @@ export const produceProjectProperty = (props?: Partial<ProjectProperty>): Projec
     Parcel: produceParcel(),
     BuildingId: faker.number.int(),
     Building: produceBuilding(),
+    DeletedById: null,
+    DeletedOn: null,
+    DeletedBy: undefined,
     ...props,
   };
   return projectProperty;
@@ -610,6 +622,9 @@ export const productProjectStatusHistory = (props?: Partial<ProjectStatusHistory
     Status: null,
     ProjectId: faker.number.int(),
     Project: null,
+    DeletedById: null,
+    DeletedOn: null,
+    DeletedBy: undefined,
     ...props,
   };
   return history;
@@ -629,6 +644,9 @@ export const produceProjectTask = (props?: Partial<ProjectTask>) => {
     UpdatedById: randomUUID(),
     UpdatedBy: undefined,
     UpdatedOn: new Date(),
+    DeletedById: null,
+    DeletedOn: null,
+    DeletedBy: undefined,
     ...props,
   };
   return task;
@@ -735,6 +753,9 @@ export const produceAgencyResponse = (props?: Partial<ProjectAgencyResponse>) =>
     UpdatedById: randomUUID(),
     UpdatedBy: undefined,
     UpdatedOn: new Date(),
+    DeletedById: null,
+    DeletedOn: null,
+    DeletedBy: undefined,
     ...props,
   };
 
