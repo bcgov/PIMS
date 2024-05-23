@@ -1,4 +1,6 @@
+import { PropertyTypes } from '@/constants/propertyTypes';
 import { Agency } from '@/hooks/api/useAgencyApi';
+import { pidFormatter } from '@/utilities/formatters';
 import { Box, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
@@ -17,7 +19,10 @@ const DisposalPropertiesTable = (props: IDisposalPropertiesTable) => {
       field: 'PID/Address',
       headerName: 'PID/Address',
       flex: 1,
-      valueGetter: (value, row) => row.PID ?? row.PIN ?? row.Address1,
+      valueGetter: (value, row) =>
+        row.PropertyTypeId === PropertyTypes.BUILDING && row.Address1
+          ? row.Address1
+          : pidFormatter(row.PID) ?? row.PIN,
     },
     {
       field: 'Agency',

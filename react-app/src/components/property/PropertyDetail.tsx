@@ -21,7 +21,7 @@ import {
 } from './PropertyDialog';
 import { PropertyType } from './PropertyForms';
 import MetresSquared from '@/components/text/MetresSquared';
-import { zeroPadPID } from '@/utilities/formatters';
+import { pidFormatter, zeroPadPID } from '@/utilities/formatters';
 import ParcelMap from '../map/ParcelMap';
 import { Map } from 'leaflet';
 import { Room } from '@mui/icons-material';
@@ -135,6 +135,8 @@ const PropertyDetail = (props: IPropertyDetail) => {
 
   const customFormatter = (key: any, val: any) => {
     switch (key) {
+      case 'PID':
+        return <Typography>{pidFormatter(val)}</Typography>;
       case 'Agency':
         return <Typography>{val.Name}</Typography>;
       case 'Classification':

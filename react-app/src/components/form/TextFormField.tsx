@@ -1,12 +1,14 @@
 import React from 'react';
 import { TextField, TextFieldProps } from '@mui/material';
 import { Controller, FieldValues, RegisterOptions, useFormContext } from 'react-hook-form';
+import { pidFormatter } from '@/utilities/formatters';
 
 type TextFormFieldProps = {
   defaultVal?: string;
   name: string;
   label: string;
   numeric?: boolean;
+  isPid?: boolean;
   rules?: Omit<
     RegisterOptions<FieldValues, string>,
     'disabled' | 'valueAsNumber' | 'valueAsDate' | 'setValueAs'
@@ -15,7 +17,7 @@ type TextFormFieldProps = {
 
 const TextFormField = (props: TextFormFieldProps) => {
   const { control, setValue } = useFormContext();
-  const { name, label, rules, numeric, defaultVal, ...restProps } = props;
+  const { name, label, rules, numeric, isPid, defaultVal, ...restProps } = props;
   return (
     <Controller
       control={control}
@@ -24,19 +26,27 @@ const TextFormField = (props: TextFormFieldProps) => {
       render={({ field: { onChange, value }, fieldState: { error } }) => {
         return (
           <TextField
-            {...restProps}
             onBlur={(event) => {
               if (numeric && parseFloat(event.currentTarget.value)) {
                 setValue(name, parseFloat(event.currentTarget.value));
               }
             }}
             onChange={(event) => {
-              if (numeric === undefined) {
+              if (
+                isPid &&
+                (event.target.value === '' || /^[0-9-]*\.?[0-9]{0,2}$/.test(event.target.value))
+              ) {
+                event.target.value = pidFormatter(parseInt(event.target.value.replace(/-/g, '')));
                 onChange(event);
                 return;
-              }
-              if (event.target.value === '' || /^[0-9]*\.?[0-9]{0,2}$/.test(event.target.value)) {
+              } else if (
+                numeric &&
+                (event.target.value === '' || /^[0-9]*\.?[0-9]{0,2}$/.test(event.target.value))
+              ) {
                 onChange(event);
+              } else if (numeric === undefined) {
+                onChange(event);
+                return;
               }
             }}
             value={value ?? defaultVal}
@@ -45,6 +55,7 @@ const TextFormField = (props: TextFormFieldProps) => {
             type={'text'}
             error={!!error && !!error.message}
             helperText={error?.message}
+            {...restProps}
           />
         );
       }}

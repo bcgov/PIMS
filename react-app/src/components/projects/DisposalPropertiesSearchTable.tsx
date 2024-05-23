@@ -8,6 +8,7 @@ import { GridColDef, DataGrid } from '@mui/x-data-grid';
 import { useState, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import React from 'react';
+import { pidFormatter } from '@/utilities/formatters';
 
 interface IDisposalProjectSearch {
   rows: any[];
@@ -36,7 +37,7 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
     }
 
     if (input.PID) {
-      return `${input.Type} - PID: ${input.PID}`;
+      return `${input.Type} - PID: ${pidFormatter(input.PID)}`;
     } else if (input.PIN) {
       return `${input.Type} - PIN: ${input.PIN}`;
     } else if (input.Address1) {
@@ -67,7 +68,7 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
           >
             {params.row.Type === 'Building' && params.row.Address1
               ? params.row.Address1
-              : params.row.PID}
+              : pidFormatter(params.row.PID)}
           </Link>
         ) as ReactNode;
       },

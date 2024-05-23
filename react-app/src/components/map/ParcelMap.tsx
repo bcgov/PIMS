@@ -85,7 +85,7 @@ const ParcelMap = (props: ParcelMapProps) => {
           ]}
           dragging={movable}
           zoomControl={zoomable}
-          scrollWheelZoom={zoomable}
+          scrollWheelZoom={false}
           touchZoom={zoomable}
           boxZoom={zoomable}
           doubleClickZoom={zoomable}
