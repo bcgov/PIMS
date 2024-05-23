@@ -9,11 +9,11 @@ import {
 } from 'typeorm';
 import { Project } from './Project';
 import { Task } from './Task';
-import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
+import { SoftDeleteEntity } from './abstractEntities/SoftDeleteEntity';
 
 @Entity()
 @Index(['ProjectId', 'TaskId', 'IsCompleted', 'CompletedOn'])
-export class ProjectTask extends BaseEntity {
+export class ProjectTask extends SoftDeleteEntity {
   // Project Relation
   @PrimaryColumn({ name: 'project_id', type: 'int' })
   ProjectId: number;

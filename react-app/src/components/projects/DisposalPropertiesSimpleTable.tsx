@@ -65,7 +65,11 @@ const DisposalPropertiesTable = (props: IDisposalPropertiesTable) => {
           borderBottom: 'none',
           borderTop: '1px solid rgba(224, 224, 224, 1)',
         },
+        '& .MuiDataGrid-row:hover': {
+          backgroundColor: 'transparent',
+        },
       }}
+      disableRowSelectionOnClick
       hideFooter
       getRowId={(row) => row.Id + row.PropertyType}
       columns={columns}

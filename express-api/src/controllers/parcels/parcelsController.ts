@@ -81,7 +81,7 @@ export const deleteParcel = async (req: Request, res: Response) => {
   if (isNaN(parcelId)) {
     return res.status(400).send('Parcel ID was invalid.');
   }
-  const delResult = await parcelServices.deleteParcelById(parcelId);
+  const delResult = await parcelServices.deleteParcelById(parcelId, req.user.preferred_username);
   return res.status(200).send(delResult);
 };
 

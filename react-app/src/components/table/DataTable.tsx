@@ -476,9 +476,9 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           '& .MuiDataGrid-row.Mui-hovered': {
             backgroundColor: 'transparent',
           },
-          // Take out the hover colour
+          // We want hover colour and pointer cursor
           '& .MuiDataGrid-row:hover': {
-            backgroundColor: 'transparent',
+            cursor: 'pointer',
           },
           '& .MuiDataGrid-cell:focus-within': {
             outline: 'none',

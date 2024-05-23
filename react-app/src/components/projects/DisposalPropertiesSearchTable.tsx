@@ -181,6 +181,12 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
         hideFooter
         columns={columns}
         rows={rows}
+        disableRowSelectionOnClick
+        sx={{
+          '& .MuiDataGrid-row:hover': {
+            backgroundColor: 'transparent',
+          },
+        }}
       />
     </Box>
   );
