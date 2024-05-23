@@ -116,7 +116,7 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
    */
   // parse for filter
   const filter = await MapFilterSchema.safeParse(req.query);
-  if (filter.error) {
+  if (filter.success == false) {
     return res.status(400).send(filter.error);
   }
 
