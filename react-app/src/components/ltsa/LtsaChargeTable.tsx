@@ -35,46 +35,48 @@ const LtsaChargeTable = (props: IChargeRowProps) => {
   const { rows } = props;
   const newRows = rows?.map((row, index) => ({
     ...row,
+    transactionType: row.charge.transactionType,
     enteredDate: new Date(row.enteredDate).toLocaleDateString(),
     applicationReceivedDate: new Date(row.charge.applicationReceivedDate).toLocaleDateString(),
-    id: index,
+    id: `${row.chargeNumber}_${index}`,
   }));
   const columns: GridColDef[] = [
     {
       field: 'chargeNumber',
       headerName: 'Charge#',
-      width: 150,
+      width: 100,
     },
     {
       field: 'status',
       headerName: 'Status',
-      width: 150,
+      width: 120,
     },
     {
       field: 'enteredDate',
-      headerName: 'Entered Date',
-      width: 350,
+      headerName: 'Entered',
+      width: 100,
     },
     {
       field: 'applicationReceivedDate',
-      headerName: 'Received Date',
-      width: 350,
+      headerName: 'Received',
+      width: 100,
     },
     {
       field: 'transactionType',
       headerName: 'Transaction Type',
-      width: 200,
+      width: 150,
     },
-    // {
-    //   field: 'chargeRemarks',
-    //   headerName: 'Remarks',
-    // },
+    {
+      field: 'chargeRemarks',
+      headerName: 'Remarks',
+      flex: 1,
+    },
   ];
   if (!rows) return <></>;
 
   return !rows.length ? (
     <Box display={'flex'} justifyContent={'center'}>
-      <Typography>No available charges information.</Typography>
+      <Typography>No charge information is available for this parcel.</Typography>
     </Box>
   ) : (
     <DataGrid
@@ -89,7 +91,7 @@ const LtsaChargeTable = (props: IChargeRowProps) => {
         },
       }}
       hideFooter
-      getRowId={(row) => row.Id}
+      getRowId={(row) => row.id}
       columns={columns}
       rows={newRows ?? []}
     />

@@ -53,19 +53,19 @@ const LtsaOwnershipTable = (props: IOwnershipRowProps) => {
     {
       field: 'ownershipPercentage',
       headerName: 'Ownership %',
-      width: 150,
+      width: 120,
     },
     {
       field: 'ownerNames',
       headerName: 'Owner(s) / Corporation(s)',
       renderCell: renderOwnerNamesCell,
-      width: 700,
+      width: 500,
     },
     {
       field: 'incorporationNumbers',
       headerName: 'Incorporation #',
       renderCell: renderIncorporationNumbersCell,
-      width: 250,
+      width: 100,
     },
   ];
 
