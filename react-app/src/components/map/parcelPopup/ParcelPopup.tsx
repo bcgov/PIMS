@@ -99,10 +99,17 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
     <Popup autoPan={false} position={clickPosition} className="full-size">
       <Box display={'inline-flex'} width={150}>
         <Grid container>
-          <GridColumnPair
-            leftValue={parcelData.at(parcelIndex).PID_FORMATTED ? 'PID' : 'PIN'}
-            rightValue={parcelData.at(parcelIndex).PID_FORMATTED ?? parcelData.at(parcelIndex).PIN}
-          />
+          {parcelData.at(parcelIndex)?.PID_FORMATTED != null ||
+          parcelData.at(parcelIndex)?.PIN != null ? (
+            <GridColumnPair
+              leftValue={parcelData.at(parcelIndex)?.PID_FORMATTED ? 'PID' : 'PIN'}
+              rightValue={
+                parcelData.at(parcelIndex)?.PID_FORMATTED ?? parcelData.at(parcelIndex)?.PIN
+              }
+            />
+          ) : (
+            <>No PID/PIN.</>
+          )}
           {parcelData?.length > 1 ? (
             <Grid
               item

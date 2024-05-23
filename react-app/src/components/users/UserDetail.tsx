@@ -65,7 +65,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
 
   const customFormatterStatus = (key: keyof User, val: any) => {
     if (key === 'Status') {
-      return statusChipFormatter(val);
+      return val ? statusChipFormatter(val) : <></>;
     } else if (key === 'Role' && val) {
       return <Typography>{(val as Role).Name}</Typography>;
     }
@@ -200,10 +200,11 @@ const UserDetail = ({ onClose }: IUserDetail) => {
         onConfirm={async () => {
           const isValid = await statusFormMethods.trigger();
           if (isValid) {
-            await api.users.updateUserRole(data.Username, statusFormMethods.getValues().Role);
+            const formValues = statusFormMethods.getValues();
             submit(id, {
               Id: id,
-              Status: statusFormMethods.getValues().Status,
+              Status: formValues.Status,
+              Role: rolesData.find((role) => role.Name === formValues.Role),
             }).then(() => {
               refreshData();
               setOpenStatusDialog(false);

@@ -1,10 +1,10 @@
 import { FiscalKey } from '@/typeorm/Entities/FiscalKey';
-import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Entity, Column, Index, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { SoftDeleteEntity } from './SoftDeleteEntity';
 
 @Entity()
 @Index(['FiscalYear', 'FiscalKeyId', 'Value'])
-export class Fiscal extends BaseEntity {
+export class Fiscal extends SoftDeleteEntity {
   @PrimaryColumn('int')
   FiscalYear: number;
 

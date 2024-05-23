@@ -3,6 +3,11 @@ import { AppDataSource } from '@/appDataSource';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { DeepPartial, FindOptionsOrder, In } from 'typeorm';
 import { BuildingFilter } from '@/services/buildings/buildingSchema';
+import userServices from '../users/usersServices';
+import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
+import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
+import logger from '@/utilities/winstonLogger';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 
 const buildingRepo = AppDataSource.getRepository(Building);
 
@@ -58,6 +63,13 @@ export const updateBuildingById = async (building: DeepPartial<Building>) => {
   if (!existingBuilding) {
     throw new ErrorWithCode('Building does not exists.', 404);
   }
+  // Rebuild metadata to avoid overwriting the whole field.
+  if (existingBuilding.LeasedLandMetadata) {
+    building.LeasedLandMetadata = {
+      ...existingBuilding.LeasedLandMetadata,
+      ...building.LeasedLandMetadata,
+    };
+  }
   await buildingRepo.save(building);
   //update function doesn't return data on the row changed. Have to get the changed row again
   const newBuilding = await getBuildingById(building.Id);
@@ -69,13 +81,54 @@ export const updateBuildingById = async (building: DeepPartial<Building>) => {
  * @param       buildingId  - Number representing building we want to delete.
  * @returns     findBuilding - Building data matching Id passed in.
  */
-export const deleteBuildingById = async (buildingId: number) => {
+export const deleteBuildingById = async (buildingId: number, username: string) => {
   const existingBuilding = await getBuildingById(buildingId);
   if (!existingBuilding) {
     throw new ErrorWithCode('Building does not exists.', 404);
   }
-  const removeBuilding = await buildingRepo.delete(existingBuilding.Id);
-  return removeBuilding;
+  const linkedProjects = await AppDataSource.getRepository(ProjectProperty).find({
+    where: { BuildingId: buildingId },
+  });
+  if (linkedProjects.length) {
+    throw new ErrorWithCode(
+      `Building is involved in one or more projects with ID(s) ${linkedProjects.map((proj) => proj.ProjectId).join(', ')}`,
+      403,
+    );
+  }
+  const user = await userServices.getUser(username);
+  const queryRunner = await AppDataSource.createQueryRunner();
+  await queryRunner.startTransaction();
+  try {
+    const removeBuilding = await queryRunner.manager.update(Building, existingBuilding.Id, {
+      DeletedById: user.Id,
+      DeletedOn: new Date(),
+    });
+    await queryRunner.manager.update(
+      BuildingEvaluation,
+      { BuildingId: existingBuilding.Id },
+      {
+        DeletedById: user.Id,
+        DeletedOn: new Date(),
+      },
+    );
+    await queryRunner.manager.update(
+      BuildingFiscal,
+      { BuildingId: existingBuilding.Id },
+      {
+        DeletedById: user.Id,
+        DeletedOn: new Date(),
+      },
+    );
+    await queryRunner.commitTransaction();
+    return removeBuilding;
+  } catch (e) {
+    await queryRunner.rollbackTransaction();
+    logger.warn(e.message);
+    if (e instanceof ErrorWithCode) throw e;
+    throw new ErrorWithCode(`Error updating project: ${e.message}`, 500);
+  } finally {
+    await queryRunner.release();
+  }
 };
 
 /**
