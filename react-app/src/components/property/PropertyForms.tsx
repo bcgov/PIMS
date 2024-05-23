@@ -252,6 +252,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             mapRef={setMap}
             movable={true}
             zoomable={true}
+            zoomOnScroll={false}
             popupSize="small"
           >
             <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height={'100%'}>

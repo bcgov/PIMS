@@ -256,6 +256,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           mapRef={setMap}
           movable={false}
           zoomable={false}
+          zoomOnScroll={false}
           popupSize="small"
         >
           <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height={'100%'}>
