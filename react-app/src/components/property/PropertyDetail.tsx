@@ -237,7 +237,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
             disableEdit={true}
             onEdit={undefined}
           >
-            <TitleOwnership pid={zeroPadPID(parcel?.PID)} /> <></>
+            <TitleOwnership pid={parcel?.PID ? zeroPadPID(Number(parcel?.PID)) : undefined} /> <></>
           </DataCard>
         )}
         <DataCard

@@ -7,7 +7,7 @@ import LtsaChargeTable from './LtsaChargeTable';
 import { Box, Typography } from '@mui/material';
 
 interface TitleOwnershipProps {
-  pid: number;
+  pid: string;
 }
 
 const TitleOwnership = (props: TitleOwnershipProps) => {
