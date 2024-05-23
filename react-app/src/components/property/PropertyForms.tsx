@@ -254,6 +254,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             zoomable={true}
             zoomOnScroll={false}
             popupSize="small"
+            hideControls
           >
             <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height={'100%'}>
               <Room

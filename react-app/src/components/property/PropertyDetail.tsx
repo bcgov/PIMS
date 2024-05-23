@@ -258,6 +258,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           zoomable={false}
           zoomOnScroll={false}
           popupSize="small"
+          hideControls
         >
           <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height={'100%'}>
             <Room
