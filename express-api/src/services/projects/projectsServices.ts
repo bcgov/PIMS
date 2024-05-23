@@ -449,6 +449,23 @@ const handleProjectAgencyResponses = async (
   }
 };
 
+const handleProjectNotes = async (newProject: DeepPartial<Project>, queryRunner: QueryRunner) => {
+  const saveNotes = newProject.Notes.map(async (note): Promise<ProjectNote | void> => {
+    if (note.ProjectId == null || note.NoteType == null) {
+      throw new ErrorWithCode('Provided note was missing a required field.', 400);
+    }
+    await queryRunner.manager.exists(ProjectNote, {
+      where: { ProjectId: newProject.Id, NoteType: note.NoteType },
+    });
+    queryRunner.manager.save(ProjectNote, {
+      ProjectId: newProject.Id,
+      Note: note.Note,
+      NoteType: note.NoteType,
+    });
+  });
+  return Promise.all(saveNotes);
+};
+
 /**
  * Updates a project with the given changes and property IDs.
  *
