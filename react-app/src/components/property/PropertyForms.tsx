@@ -449,7 +449,13 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
           <DateFormField name={`BuildingTenancyUpdatedOn`} label={'Tenancy date'} />
         </Grid>
         <Grid item xs={12}>
-          <TextFormField multiline label={'Description'} name={'Description'} fullWidth />
+          <TextFormField
+            multiline
+            label={'Description'}
+            name={'Description'}
+            fullWidth
+            minRows={2}
+          />
         </Grid>
       </Grid>
     </>
