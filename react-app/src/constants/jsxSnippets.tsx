@@ -8,6 +8,14 @@ export const accessPendingBlurb = (
   </>
 );
 
+export const accountInactiveBlurb = (
+  <>
+    This account is currently inactive and cannot access PIMS. If you believe this is an error or
+    require the account to be reactivated, please feel free to reach out to us at{' '}
+    <a href="mailto: pimshelp@gov.bc.ca">pimshelp@gov.bc.ca</a>.
+  </>
+);
+
 export const signupTermsAndConditionsClaim = (
   <>
     By signing up, you agree to the <a href="#">Terms and Conditions</a> and confirm that you have
