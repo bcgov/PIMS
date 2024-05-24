@@ -1,10 +1,10 @@
-import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Entity, PrimaryGeneratedColumn, Column, Index, ManyToOne, JoinColumn } from 'typeorm';
 import { Project } from '@/typeorm/Entities/Project';
+import { SoftDeleteEntity } from './abstractEntities/SoftDeleteEntity';
 
 @Entity()
 @Index(['ProjectId', 'NoteType'])
-export class ProjectNote extends BaseEntity {
+export class ProjectNote extends SoftDeleteEntity {
   @PrimaryGeneratedColumn()
   Id: number;
 

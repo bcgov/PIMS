@@ -43,7 +43,11 @@ const PropertyNetValueTable = (props: IPropertyNetValueTable) => {
           borderBottom: 'none',
           borderTop: '1px solid rgba(224, 224, 224, 1)',
         },
+        '& .MuiDataGrid-row:hover': {
+          backgroundColor: 'transparent',
+        },
       }}
+      disableRowSelectionOnClick
       hideFooter
       getRowId={(row) => row.FiscalYear}
       columns={columns}

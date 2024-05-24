@@ -21,6 +21,7 @@ import CollapsibleSidebar from '../layout/CollapsibleSidebar';
 import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
 import { enumReverseLookup } from '@/utilities/helperFunctions';
 import { AgencyResponseType } from '@/constants/agencyResponseTypes';
+import useDataSubmitter from '@/hooks/useDataSubmitter';
 
 interface IProjectDetail {
   onClose: () => void;
@@ -60,6 +61,10 @@ const ProjectDetail = (props: IProjectDetail) => {
     api.lookup.getProjectStatuses(),
   );
   loadStatuses();
+
+  const { submit: deleteProject, submitting: deletingProject } = useDataSubmitter(
+    api.projects.deleteProjectById,
+  );
 
   const { ungroupedAgencies, agencyOptions } = useGroupedAgenciesApi();
 
@@ -260,9 +265,10 @@ const ProjectDetail = (props: IProjectDetail) => {
         </DataCard>
         <DeleteDialog
           open={openDeleteDialog}
+          confirmButtonProps={{ loading: deletingProject }}
           title={'Delete property'}
           message={'Are you sure you want to delete this project?'}
-          onDelete={async () => {}} //Purposefully omitted for now.
+          onDelete={async () => deleteProject(+id).then(() => navigate('/projects'))}
           onClose={async () => setOpenDeleteDialog(false)}
         />
         <ProjectGeneralInfoDialog

@@ -9,7 +9,7 @@ import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { useClassificationStyle } from './PropertyTable';
 import PropertyAssessedValueTable from './PropertyAssessedValueTable';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Parcel } from '@/hooks/api/useParcelsApi';
 import { Building } from '@/hooks/api/useBuildingsApi';
 import DeleteDialog from '../dialog/DeleteDialog';
@@ -21,16 +21,18 @@ import {
 } from './PropertyDialog';
 import { PropertyType } from './PropertyForms';
 import MetresSquared from '@/components/text/MetresSquared';
-import { zeroPadPID } from '@/utilities/formatters';
+import { pidFormatter, zeroPadPID } from '@/utilities/formatters';
 import ParcelMap from '../map/ParcelMap';
 import { Map } from 'leaflet';
 import { Room } from '@mui/icons-material';
+import useDataSubmitter from '@/hooks/useDataSubmitter';
 
 interface IPropertyDetail {
   onClose: () => void;
 }
 
 const PropertyDetail = (props: IPropertyDetail) => {
+  const navigate = useNavigate();
   const params = useParams();
   const parcelId = isNaN(Number(params.parcelId)) ? null : Number(params.parcelId);
   const buildingId = isNaN(Number(params.buildingId)) ? null : Number(params.buildingId);
@@ -57,6 +59,15 @@ const PropertyDetail = (props: IPropertyDetail) => {
       return null;
     }
   });
+
+  const { submit: deleteProperty, submitting: deletingProperty } = useDataSubmitter(() => {
+    if (parcelId && parcel) {
+      return api.parcels.deleteParcelById(parcelId);
+    } else {
+      return api.buildings.deleteBuildingById(buildingId);
+    }
+  });
+
   const propertyLoading = buildingsLoading || parcelsLoading;
   const { data: relatedBuildings, refreshData: refreshRelated } = useDataLoader(
     () => parcel?.PID && api.buildings.getBuildings({ pid: parcel.PID, includeRelations: true }),
@@ -135,6 +146,8 @@ const PropertyDetail = (props: IPropertyDetail) => {
 
   const customFormatter = (key: any, val: any) => {
     switch (key) {
+      case 'PID':
+        return <Typography>{pidFormatter(val)}</Typography>;
       case 'Agency':
         return <Typography>{val.Name}</Typography>;
       case 'Classification':
@@ -254,7 +267,9 @@ const PropertyDetail = (props: IPropertyDetail) => {
           mapRef={setMap}
           movable={false}
           zoomable={false}
+          zoomOnScroll={false}
           popupSize="small"
+          hideControls
         >
           <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height={'100%'}>
             <Room
@@ -312,7 +327,8 @@ const PropertyDetail = (props: IPropertyDetail) => {
         open={openDeleteDialog}
         title={'Delete property'}
         message={'Are you sure you want to delete this property?'}
-        onDelete={async () => {}} //Purposefully omitted for now.
+        confirmButtonProps={{ loading: deletingProperty }}
+        onDelete={async () => deleteProperty().then(() => navigate('/properties'))}
         onClose={async () => setOpenDeleteDialog(false)}
       />
     </CollapsibleSidebar>
