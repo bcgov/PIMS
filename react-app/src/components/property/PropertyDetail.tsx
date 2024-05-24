@@ -191,7 +191,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
     };
     if (buildingOrParcel === 'Building') {
       info.Name = (data as Building)?.Name;
-      info.MainUsage = (data as Building)?.BuildingPredominateUse?.Name || ''
+      info.MainUsage = (data as Building)?.BuildingPredominateUse?.Name || '';
       info.ConstructionType = (data as Building)?.BuildingConstructionType?.Name || '';
       info.TotalArea = (data as Building)?.TotalArea;
       info.UsableArea = (data as Building)?.RentableArea;
