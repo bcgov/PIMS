@@ -278,18 +278,6 @@ export const ParcelInformationForm = (props: IParcelInformationForm) => {
   return (
     <>
       <Typography mt={'2rem'} variant="h5">
-        Does your agency own the parcel?
-      </Typography>
-      <SelectFormField
-        name={'NotOwned'}
-        label={'Owned'}
-        options={[
-          { label: 'Yes', value: false },
-          { label: 'No', value: true },
-        ]}
-        required={true}
-      />
-      <Typography mt={'2rem'} variant="h5">
         Parcel information
       </Typography>
       <Grid container spacing={2}>

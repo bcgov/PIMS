@@ -159,7 +159,6 @@ const PropertyDetail = (props: IPropertyDetail) => {
           />
         );
       case 'IsSensitive':
-      case 'Owned':
         return val ? <Typography>Yes</Typography> : <Typography>No</Typography>;
       case 'TotalArea':
       case 'UsableArea':
@@ -200,7 +199,6 @@ const PropertyDetail = (props: IPropertyDetail) => {
       info.TenancyDate = dateFormatter((data as Building)?.BuildingTenancyUpdatedOn);
     } else {
       info.LotSize = (data as Parcel)?.LandArea;
-      info.Owned = !(data as Parcel)?.NotOwned;
     }
     return info;
   }, [parcel, building]);
