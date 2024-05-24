@@ -331,7 +331,7 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
                 ...building,
                 Evaluations: evaluationMapToRequest(building.Evaluations),
               };
-              await submitBuilding(building.Id, updatedBuilding); // Update the building
+              return api.buildings.updateBuildingById(building.Id, updatedBuilding); // Update the building
             });
             await Promise.all(buildingUpdatePromises);
           }

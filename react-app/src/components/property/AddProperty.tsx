@@ -153,7 +153,7 @@ const AddProperty = () => {
           Net book value
         </Typography>
         <NetBookValue years={years} />
-        <AssessedValue years={years} />
+        <AssessedValue evaluations={years.map((yr) => ({ Year: yr, Value: 0 }))} />
       </FormProvider>
       {showErrorText && (
         <Typography alignSelf={'center'} variant="h5" color={'error'}>

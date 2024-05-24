@@ -462,7 +462,7 @@ export const NetBookValue = (props: INetBookValue) => {
   const currentYear = sortedYears.at(0);
   const { getValues } = useFormContext();
 
-  const handletheYearChange = () => {
+  const handleFiscalYearChange = () => {
     const currentValues = getValues();
     // Collect all the year values from the form
     const yearValues = currentValues.Fiscals.map((fiscal: { FiscalYear: string }) =>
@@ -492,10 +492,9 @@ export const NetBookValue = (props: INetBookValue) => {
               label={'Fiscal year'}
               disabled={false}
               value={currentYear}
-              onBlur={handletheYearChange}
               rules={{
                 validate: () => {
-                  const result = handletheYearChange();
+                  const result = handleFiscalYearChange();
                   return result;
                 },
               }}
@@ -549,14 +548,13 @@ export const NetBookValue = (props: INetBookValue) => {
 interface IAssessedValue {
   title?: string;
   topLevelKey?: string;
-  evaluations: ParcelEvaluation[] | BuildingEvaluation[];
+  evaluations: Partial<ParcelEvaluation>[] | Partial<BuildingEvaluation>[];
 }
 
 export const AssessedValue = (props: IAssessedValue) => {
   const { title, topLevelKey, evaluations } = props;
 
   const handleAssessmentYearChange = (inputValue: string, formValues: FieldValues) => {
-    console.log(inputValue);
     if (String(inputValue) == '' || inputValue == null) {
       return true;
     }
