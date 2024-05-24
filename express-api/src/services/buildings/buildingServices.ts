@@ -32,6 +32,14 @@ export const addBuilding = async (building: DeepPartial<Building>) => {
  * @returns     findBuilding - Building data matching Id passed in.
  */
 export const getBuildingById = async (buildingId: number) => {
+  const evaluations = await AppDataSource.getRepository(BuildingEvaluation).find({
+    where: { BuildingId: buildingId, EvaluationKeyId: 0 },
+    order: { Year: 'DESC' },
+  });
+  const fiscals = await AppDataSource.getRepository(BuildingFiscal).find({
+    where: { BuildingId: buildingId },
+    order: { FiscalYear: 'DESC' },
+  });
   const findBuilding = await buildingRepo.findOne({
     relations: {
       Agency: true,
@@ -41,20 +49,18 @@ export const getBuildingById = async (buildingId: number) => {
       BuildingConstructionType: true,
       BuildingPredominateUse: true,
       BuildingOccupantType: true,
-      Evaluations: true,
-      Fiscals: true,
     },
-    where: { Id: buildingId, Evaluations: { EvaluationKeyId: 0 } },
-    order: {
-      Evaluations: {
-        Year: 'DESC',
-      },
-      Fiscals: {
-        FiscalYear: 'DESC',
-      },
-    },
+    where: { Id: buildingId },
   });
-  return findBuilding;
+  if (findBuilding) {
+    return {
+      ...findBuilding,
+      Evaluations: evaluations,
+      Fiscals: fiscals,
+    };
+  } else {
+    return null;
+  }
 };
 
 /**

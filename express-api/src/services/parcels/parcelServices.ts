@@ -280,7 +280,13 @@ const getParcelByPid = async (parcelPid: number) => {
  * @returns     findParcel Parcel data matching ID passed in.
  */
 const getParcelById = async (parcelId: number) => {
-  return parcelRepo.findOne({
+  const evaluations = await AppDataSource.getRepository(ParcelEvaluation).find({
+    where: { ParcelId: parcelId, EvaluationKeyId: 0 },
+  });
+  const fiscals = await AppDataSource.getRepository(ParcelFiscal).find({
+    where: { ParcelId: parcelId },
+  });
+  const parcel = await parcelRepo.findOne({
     relations: {
       ParentParcel: true,
       Agency: {
@@ -291,16 +297,18 @@ const getParcelById = async (parcelId: number) => {
       },
       Classification: true,
       PropertyType: true,
-      Evaluations: true,
-      Fiscals: true,
     },
-    where: { Id: parcelId, Evaluations: { EvaluationKeyId: 0 } },
-    order: {
-      Evaluations: {
-        Year: 'DESC',
-      },
-    },
+    where: { Id: parcelId },
   });
+  if (parcel) {
+    return {
+      ...parcel,
+      Evaluations: evaluations,
+      Fiscals: fiscals,
+    };
+  } else {
+    return null;
+  }
 };
 
 const parcelServices = {

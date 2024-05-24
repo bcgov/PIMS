@@ -19,7 +19,7 @@ import { LatLng, Map } from 'leaflet';
 import usePimsApi from '@/hooks/usePimsApi';
 import { centroid } from '@turf/turf';
 import ParcelMap from '../map/ParcelMap';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, FieldValues, useFormContext } from 'react-hook-form';
 import { FeatureCollection } from 'geojson';
 import { arrayUniqueBy } from '@/utilities/helperFunctions';
 import MetresSquared from '@/components/text/MetresSquared';
@@ -556,25 +556,25 @@ export const AssessedValue = (props: IAssessedValue) => {
   // Sort the years array in descending order
   const sortedYears = years.sort((a, b) => b - a);
   const currentYear = sortedYears[sortedYears.length - 1];
-  const { getValues } = useFormContext();
 
-  const handleYearChange = () => {
-    const currentValues = getValues();
-    // Collect all the year values from the form
-    const yearValues = currentValues.Evaluations.map((evaluation) => parseInt(evaluation.Year));
-
-    // Check for duplicates in the yearValues array
-    const yearCounts = yearValues.reduce((acc, year) => {
-      acc[year] = (acc[year] || 0) + 1;
-      return acc;
-    }, {});
-
-    for (const year in yearCounts) {
-      if (yearCounts[year] > 1) {
-        return `There is already an assessment value for the year ${year}`;
-      }
+  const handleAssessmentYearChange = (inputValue: string, formValues: FieldValues) => {
+    const inputYear = parseInt(inputValue);
+    if (isNaN(inputYear)) {
+      return 'Invalid input.';
     }
-    return true;
+    const yearValues: number[] = formValues.Evaluations.map((evaluation): number =>
+      parseInt(evaluation.Year),
+    );
+    if (yearValues.filter((yr) => yr === inputYear).length > 1) {
+      return `There is already an assessment value for the year ${inputYear}`;
+    } else {
+      const currentYear = new Date().getFullYear();
+      return (
+        inputYear === currentYear ||
+        inputYear === currentYear - 1 ||
+        `You may only enter current assessment values.`
+      );
+    }
   };
 
   return (
@@ -597,12 +597,8 @@ export const AssessedValue = (props: IAssessedValue) => {
             name={`${topLevelKey ?? ''}Evaluations.${hasCurrentYear ? 0 : currentYear}.Year`}
             label={'Year'}
             value={currentYear}
-            onBlur={handleYearChange}
             rules={{
-              validate: () => {
-                const result = handleYearChange();
-                return result;
-              },
+              validate: handleAssessmentYearChange,
             }}
           />
           <TextFormField
