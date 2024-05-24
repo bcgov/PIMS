@@ -17,6 +17,8 @@ type ParcelMapProps = {
   loadProperties?: boolean;
   popupSize?: 'small' | 'large';
   scrollOnClick?: boolean;
+  zoomOnScroll?: boolean;
+  hideControls?: boolean;
 } & PropsWithChildren;
 
 export const SelectedMarkerContext = createContext(null);
@@ -60,6 +62,8 @@ const ParcelMap = (props: ParcelMapProps) => {
     loadProperties = false,
     popupSize,
     scrollOnClick,
+    zoomOnScroll = true,
+    hideControls = false,
   } = props;
 
   return (
@@ -72,9 +76,13 @@ const ParcelMap = (props: ParcelMapProps) => {
       <Box height={height}>
         <LoadingCover show={loading} />
         {/* All map controls fit here */}
-        <ControlsGroup position="topleft">
-          <FilterControl setFilter={setFilter} />
-        </ControlsGroup>
+        {hideControls ? (
+          <></>
+        ) : (
+          <ControlsGroup position="topleft">
+            <FilterControl setFilter={setFilter} />
+          </ControlsGroup>
+        )}
         <MapPropertyDetails property={selectedMarker} />
         <MapContainer
           style={{ height: '100%' }}
@@ -85,7 +93,7 @@ const ParcelMap = (props: ParcelMapProps) => {
           ]}
           dragging={movable}
           zoomControl={zoomable}
-          scrollWheelZoom={zoomable}
+          scrollWheelZoom={zoomOnScroll}
           touchZoom={zoomable}
           boxZoom={zoomable}
           doubleClickZoom={zoomable}

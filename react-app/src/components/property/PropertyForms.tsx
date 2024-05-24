@@ -182,16 +182,19 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             fullWidth
             name={'PID'}
             label={'PID'}
-            numeric
+            isPid
             onBlur={(event) => {
-              map.closePopup();
-              api.parcelLayer
-                .getParcelByPid(event.target.value)
-                .then(handleFeatureCollectionResponse);
+              // Only do this if there's a value here
+              if (event.target.value) {
+                map.closePopup();
+                api.parcelLayer
+                  .getParcelByPid(event.target.value)
+                  .then(handleFeatureCollectionResponse);
+              }
             }}
             rules={{
               validate: (val, formVals) =>
-                (String(val).length <= 9 &&
+                (String(val.replace(/-/g, '')).length <= 9 &&
                   (String(val).length > 0 ||
                     String(formVals['PIN']).length > 0 ||
                     propertyType === 'Building')) ||
@@ -206,10 +209,13 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             name={'PIN'}
             label={'PIN'}
             onBlur={(event) => {
-              map.closePopup();
-              api.parcelLayer
-                .getParcelByPin(event.target.value)
-                .then(handleFeatureCollectionResponse);
+              // Only do this if there's a value here
+              if (event.target.value) {
+                map.closePopup();
+                api.parcelLayer
+                  .getParcelByPin(event.target.value)
+                  .then(handleFeatureCollectionResponse);
+              }
             }}
             rules={{
               validate: (val, formVals) =>
@@ -244,9 +250,11 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
           <ParcelMap
             height={'500px'}
             mapRef={setMap}
-            movable={false}
-            zoomable={false}
+            movable={true}
+            zoomable={true}
+            zoomOnScroll={false}
             popupSize="small"
+            hideControls
           >
             <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height={'100%'}>
               <Room
