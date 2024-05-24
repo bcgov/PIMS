@@ -212,7 +212,6 @@ export const produceParcel = (): Parcel => {
     LandArea: undefined,
     Zoning: undefined,
     ZoningPotential: undefined,
-    NotOwned: undefined,
     ParentParcelId: undefined,
     ParentParcel: undefined,
     Description: faker.string.alphanumeric(),
