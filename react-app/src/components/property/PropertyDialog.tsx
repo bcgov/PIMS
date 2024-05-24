@@ -15,7 +15,7 @@ import {
   PropertyType,
   NetBookValue,
 } from './PropertyForms';
-import { parseFloatOrNull, parseIntOrNull, zeroPadPID } from '@/utilities/formatters';
+import { parseFloatOrNull, parseIntOrNull, pidFormatter } from '@/utilities/formatters';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 
 interface IParcelInformationEditDialog {
@@ -60,7 +60,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
     infoFormMethods.reset({
       NotOwned: initialValues?.NotOwned,
       Address1: initialValues?.Address1,
-      PID: initialValues?.PID ? zeroPadPID(initialValues.PID) : '',
+      PID: initialValues?.PID ? pidFormatter(initialValues.PID) : '',
       PIN: String(initialValues?.PIN ?? ''),
       Postal: initialValues?.Postal,
       AdministrativeAreaId: initialValues?.AdministrativeAreaId,
@@ -80,7 +80,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
         const isValid = await infoFormMethods.trigger();
         if (isValid) {
           const formValues: any = { ...infoFormMethods.getValues(), Id: initialValues.Id };
-          formValues.PID = parseIntOrNull(formValues.PID);
+          formValues.PID = parseIntOrNull(formValues.PID.replace(/-/g, ''));
           formValues.PIN = parseIntOrNull(formValues.PIN);
           formValues.LandArea = parseFloatOrNull(formValues.LandArea);
           submit(initialValues.Id, formValues).then(() => postSubmit());
@@ -167,7 +167,7 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
     infoFormMethods.reset({
       Address1: initialValues?.Address1,
       PIN: String(initialValues?.PIN ?? ''),
-      PID: initialValues?.PID ? zeroPadPID(initialValues.PID) : '',
+      PID: initialValues?.PID ? pidFormatter(initialValues.PID) : '',
       Postal: initialValues?.Postal,
       AdministrativeAreaId: initialValues?.AdministrativeAreaId,
       IsSensitive: initialValues?.IsSensitive,
@@ -195,7 +195,7 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
         const isValid = await infoFormMethods.trigger();
         if (isValid) {
           const formValues: any = { ...infoFormMethods.getValues(), Id: initialValues.Id };
-          formValues.PID = parseIntOrNull(formValues.PID);
+          formValues.PID = parseIntOrNull(formValues.PID.replace(/-/g, ''));
           formValues.PIN = parseIntOrNull(formValues.PIN);
           formValues.TotalArea = parseFloatOrNull(formValues.TotalArea);
           formValues.RentableArea = parseFloatOrNull(formValues.RentableArea);
