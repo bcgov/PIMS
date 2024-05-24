@@ -253,37 +253,18 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
     api.buildings.updateBuildingById,
   );
 
-  useEffect(() => {
-    assessedFormMethods.reset({
-      Evaluations: initialValues?.Evaluations?.map((evalu) => ({
-        ...evalu,
-        Value: evalu.Value.replace(/[$,]/g, ''), // TODO: Consider some more robust handling for this at the TypeORM level.
-      })),
-      RelatedBuildings: initialRelatedBuildings?.map((building) => ({
-        Id: building.Id,
-        Evaluations: building.Evaluations?.map((evalu) => ({
-          ...evalu,
-          Value: String(evalu.Value).replace(/[$,]/g, ''), // Obviously this double map is pretty evil so suggestions welcome.
-        })),
-      })),
-    });
-  }, [initialValues, initialRelatedBuildings]);
-
-  const currentYear = new Date().getFullYear();
-  const years = [currentYear];
-  const defaultParcelValues = years.map((year) => ({
-    Year: year,
-    Value: 0,
-    EffectiveDate: Date(),
+  const defaultParcelValues = {
+    Year: '',
+    Value: '',
+    EffectiveDate: new Date(),
     EvaluationKeyId: 0,
-    ParcelId: initialValues?.Id || null,
-  }));
+  };
 
   const evaluationMapToRequest = (
     evaluations: Partial<ParcelEvaluation>[] | Partial<BuildingEvaluation>[],
   ) => {
     return evaluations
-      .filter((evaluation) => evaluation.Value != null)
+      .filter((evaluation) => evaluation.Value != null && evaluation.Year)
       .map((evaluation) => ({
         ...evaluation,
         BuildingId: (evaluation as BuildingEvaluation).BuildingId,
@@ -294,28 +275,38 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
       }));
   };
 
-  useEffect(() => {
-    if (!initialValues?.Evaluations || initialValues.Evaluations.length === 0) {
-      assessedFormMethods.reset({ Evaluations: defaultParcelValues });
-    } else {
-      assessedFormMethods.reset({
-        Evaluations: initialValues?.Evaluations?.map((evalu) => ({
+  const evaluationMapToFormValues = (
+    evaluations: Partial<ParcelEvaluation>[] | Partial<BuildingEvaluation>[],
+  ) => {
+    const currentYear = new Date().getFullYear();
+    const existingEvaluations =
+      evaluations
+        ?.map((evalu) => ({
           ...evalu,
-          Value: evalu.Value.replace(/[$,]/g, ''), // TODO: Consider some more robust handling for this at the TypeORM level.
-        })),
-        RelatedBuildings: initialRelatedBuildings?.map((building) => ({
-          Id: building.Id,
-          Evaluations: building.Evaluations?.map((evalu) => ({
-            ...evalu,
-            Value: String(evalu.Value).replace(/[$,]/g, ''), // Obviously this double map is pretty evil so suggestions welcome.
-          })).sort((a, b) => b.Year - a.Year),
-        })),
-      });
-    }
+          Value: evalu.Value.replace(/[$,]/g, ''),
+        }))
+        ?.sort((a, b) => b.Year - a.Year) ?? [];
+    const currentYearEvaluation = evaluations?.find((yr) => yr.Year === currentYear)
+      ? []
+      : [defaultParcelValues];
+    return [...currentYearEvaluation, ...existingEvaluations];
+  };
+
+  useEffect(() => {
+    const relatedBuildings = initialRelatedBuildings?.map((building) => ({
+      Id: building.Id,
+      Evaluations: evaluationMapToFormValues(building.Evaluations),
+    }));
+    assessedFormMethods.reset({
+      Evaluations: evaluationMapToFormValues(initialValues?.Evaluations),
+      RelatedBuildings: relatedBuildings,
+    });
   }, [initialValues, initialRelatedBuildings]);
+
   if (!initialValues || Object.keys(initialValues).length === 0) {
     return null; // Or any other JSX to handle the case of empty initialValues
   }
+
   return (
     <ConfirmDialog
       confirmButtonProps={{ loading: submittingParcel || submittingBuilding }}
@@ -333,7 +324,7 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
           Evaluations: evaluationMapToRequest(formValues.Evaluations),
         };
         if (propertyType === 'Parcel') {
-          const parcelUpdateResponse = await submitParcel(initialValues.Id, evalus);
+          await submitParcel(initialValues.Id, evalus);
           if (formValues.RelatedBuildings) {
             const buildingUpdatePromises = formValues.RelatedBuildings.map(async (building) => {
               const updatedBuilding: Partial<Building> = {
@@ -344,7 +335,6 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
             });
             await Promise.all(buildingUpdatePromises);
           }
-          await parcelUpdateResponse;
           postSubmit();
         } else if (propertyType === 'Building') {
           await submitBuilding(initialValues.Id, evalus).then(() => postSubmit());
@@ -353,59 +343,29 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
       onCancel={async () => onCancel()}
     >
       <FormProvider {...assessedFormMethods}>
-        {(() => {
-          const evaluationYears = initialValues?.Evaluations?.map((evalu) => evalu.Year) ?? [];
-          const currentYear = new Date().getFullYear();
+        {/* Render top-level AssessedValue with yearsFromEvaluations */}
+        <AssessedValue
+          evaluations={assessedFormMethods.getValues()['Evaluations']}
+          title={propertyType === 'Building' ? 'Assessed Building Value' : 'Assessed Land Value'}
+        />
+        {/* Map through initialRelatedBuildings and render AssessedValue components */}
+        {initialRelatedBuildings?.map((building, idx) => {
+          // const buildingEvals = building?.Evaluations?.map((evalu) => evalu.Year) ?? [];
+          // if (!buildingEvals.includes(currentYear)) {
+          //   // Add currentYear to yearsFromEvaluations array
+          //   buildingEvals.unshift(currentYear);
+          // }
 
-          // Add current year and previous year if they are not already in the list
-          let hasCurrentYear = evaluationYears.includes(currentYear);
-          if (!hasCurrentYear) {
-            evaluationYears.push(currentYear);
-          }
-
-          // Sort the years in descending order
-          const sortedYears = evaluationYears.sort((a, b) => b - a);
-
-          // Get the current year and the previous year, ensuring we have at most 2 years
-          const mostRecentYears = sortedYears.slice(0, 2);
-
-          // Check if currentYear is not in yearsFromEvaluations array
-          if (!evaluationYears.includes(currentYear)) {
-            // Add currentYear to yearsFromEvaluations array
-            evaluationYears.unshift(currentYear);
-            hasCurrentYear = false;
-          }
+          // const past2BuildingAssessments = buildingEvals.slice(0, 2);
           return (
-            <>
-              {/* Render top-level AssessedValue with yearsFromEvaluations */}
-              <AssessedValue
-                hasCurrentYear={hasCurrentYear}
-                years={mostRecentYears}
-                title={
-                  propertyType === 'Building' ? 'Assessed Building Value' : 'Assessed Land Value'
-                }
-              />
-              {/* Map through initialRelatedBuildings and render AssessedValue components */}
-              {initialRelatedBuildings?.map((building, idx) => {
-                const buildingEvals = building?.Evaluations?.map((evalu) => evalu.Year) ?? [];
-                if (!buildingEvals.includes(currentYear)) {
-                  // Add currentYear to yearsFromEvaluations array
-                  buildingEvals.unshift(currentYear);
-                }
-
-                const past2BuildingAssessments = buildingEvals.slice(0, 2);
-                return (
-                  <AssessedValue
-                    title={`Building (${idx + 1}) - ${building.Name + ' - ' + building.Address1}`}
-                    key={`assessed-value-${building.Id}`}
-                    years={past2BuildingAssessments}
-                    topLevelKey={`RelatedBuildings.${idx}.`}
-                  />
-                );
-              })}
-            </>
+            <AssessedValue
+              title={`Building (${idx + 1}) - ${building.Name + ' - ' + building.Address1}`}
+              key={`assessed-value-${building.Id}`}
+              evaluations={assessedFormMethods.getValues()[`RelatedBuildings`].at(idx)?.Evaluations}
+              topLevelKey={`RelatedBuildings.${idx}.`}
+            />
           );
-        })()}
+        })}
       </FormProvider>
     </ConfirmDialog>
   );

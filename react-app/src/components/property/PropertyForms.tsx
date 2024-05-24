@@ -23,6 +23,8 @@ import { Controller, FieldValues, useFormContext } from 'react-hook-form';
 import { FeatureCollection } from 'geojson';
 import { arrayUniqueBy } from '@/utilities/helperFunctions';
 import MetresSquared from '@/components/text/MetresSquared';
+import { ParcelEvaluation } from '@/hooks/api/useParcelsApi';
+import { BuildingEvaluation } from '@/hooks/api/useBuildingsApi';
 
 export type PropertyType = 'Building' | 'Parcel';
 
@@ -545,19 +547,19 @@ export const NetBookValue = (props: INetBookValue) => {
 };
 
 interface IAssessedValue {
-  years: number[];
   title?: string;
   topLevelKey?: string;
-  hasCurrentYear?: boolean;
+  evaluations: ParcelEvaluation[] | BuildingEvaluation[];
 }
 
 export const AssessedValue = (props: IAssessedValue) => {
-  const { years, title, topLevelKey, hasCurrentYear } = props;
-  // Sort the years array in descending order
-  const sortedYears = years.sort((a, b) => b - a);
-  const currentYear = sortedYears[sortedYears.length - 1];
+  const { title, topLevelKey, evaluations } = props;
 
   const handleAssessmentYearChange = (inputValue: string, formValues: FieldValues) => {
+    console.log(inputValue);
+    if (String(inputValue) == '' || inputValue == null) {
+      return true;
+    }
     const inputYear = parseInt(inputValue);
     if (isNaN(inputYear)) {
       return 'Invalid input.';
@@ -583,65 +585,41 @@ export const AssessedValue = (props: IAssessedValue) => {
         {title ?? 'Assessed Value'}
       </Typography>
       <Box overflow={'auto'} paddingTop={'8px'}>
-        {/* Render the current year row first */}
-        <Box
-          mb={2}
-          gap={2}
-          display={'flex'}
-          width={'100%'}
-          flexDirection={'row'}
-          key={`assessedvaluerow-current${'-' + topLevelKey}`}
-        >
-          <TextFormField
-            sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-            name={`${topLevelKey ?? ''}Evaluations.${hasCurrentYear ? 0 : currentYear}.Year`}
-            label={'Year'}
-            value={currentYear}
-            rules={{
-              validate: handleAssessmentYearChange,
-            }}
-          />
-          <TextFormField
-            InputProps={{
-              startAdornment: <InputAdornment position="start">$</InputAdornment>,
-            }}
-            sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-            name={`${topLevelKey ?? ''}Evaluations.${hasCurrentYear ? 0 : currentYear}.Value`}
-            numeric
-            label={'Value'}
-          />
-        </Box>
-        {/* Render only if there are other evaluations */}
-        {sortedYears.slice(1).map((yr, idx) => {
-          return (
-            <Box
-              mb={2}
-              gap={2}
-              key={`assessedvaluerow-${yr}${'-' + topLevelKey}`}
-              display={'flex'}
-              width={'100%'}
-              flexDirection={'row'}
-            >
-              <TextFormField
-                sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-                name={`${topLevelKey ?? ''}Evaluations.${hasCurrentYear ? idx + 1 : idx}.Year`}
-                label={'Year'}
-                value={yr}
-                disabled={true}
-              />
-              <TextFormField
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                }}
-                sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-                name={`${topLevelKey ?? ''}Evaluations.${hasCurrentYear ? idx + 1 : idx}.Value`}
-                numeric
-                label={'Value'}
-                disabled={true}
-              />
-            </Box>
-          );
-        })}
+        {evaluations?.map((evaluation, idx) => (
+          <Box
+            mb={2}
+            gap={2}
+            display={'flex'}
+            width={'100%'}
+            flexDirection={'row'}
+            key={`${topLevelKey ?? ''}assessedvaluerow-current-${idx}`}
+          >
+            <TextFormField
+              sx={{ minWidth: 'calc(33.3% - 1rem)' }}
+              name={`${topLevelKey ?? ''}Evaluations.${idx}.Year`}
+              label={'Year'}
+              numeric
+              disabled={idx > 0}
+              rules={
+                idx == 0
+                  ? {
+                      validate: handleAssessmentYearChange,
+                    }
+                  : undefined
+              }
+            />
+            <TextFormField
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+              }}
+              sx={{ minWidth: 'calc(33.3% - 1rem)' }}
+              name={`${topLevelKey ?? ''}Evaluations.${idx}.Value`}
+              disabled={idx > 0}
+              numeric
+              label={'Value'}
+            />
+          </Box>
+        ))}
       </Box>
     </Box>
   );
