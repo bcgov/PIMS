@@ -42,7 +42,6 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
 
   const infoFormMethods = useForm({
     defaultValues: {
-      NotOwned: true,
       Address1: '',
       PIN: '',
       PID: '',
@@ -58,7 +57,6 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
 
   useEffect(() => {
     infoFormMethods.reset({
-      NotOwned: initialValues?.NotOwned,
       Address1: initialValues?.Address1,
       PID: initialValues?.PID ? pidFormatter(initialValues.PID) : '',
       PIN: String(initialValues?.PIN ?? ''),
@@ -142,7 +140,6 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
   const { initialValues, open, onCancel, postSubmit } = props;
   const infoFormMethods = useForm({
     defaultValues: {
-      NotOwned: true,
       Address1: '',
       PIN: '',
       PID: '',
