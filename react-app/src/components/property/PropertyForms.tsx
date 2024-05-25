@@ -1,6 +1,7 @@
 import {
   Autocomplete,
   Box,
+  Button,
   Grid,
   InputAdornment,
   TextField,
@@ -19,13 +20,10 @@ import { LatLng, Map } from 'leaflet';
 import usePimsApi from '@/hooks/usePimsApi';
 import { centroid } from '@turf/turf';
 import ParcelMap from '../map/ParcelMap';
-import { Controller, FieldValues, useFormContext } from 'react-hook-form';
+import { Controller, FieldValues, useFieldArray, useFormContext } from 'react-hook-form';
 import { FeatureCollection } from 'geojson';
-import { arrayUniqueBy } from '@/utilities/helperFunctions';
+import { arrayUniqueBy, getValueByNestedKey } from '@/utilities/helperFunctions';
 import MetresSquared from '@/components/text/MetresSquared';
-import { ParcelEvaluation } from '@/hooks/api/useParcelsApi';
-import { BuildingEvaluation } from '@/hooks/api/useBuildingsApi';
-
 export type PropertyType = 'Building' | 'Parcel';
 
 interface IParcelInformationForm {
@@ -546,15 +544,16 @@ export const NetBookValue = (props: INetBookValue) => {
 };
 
 interface IAssessedValue {
+  name: string;
+  maxRows: number;
   title?: string;
-  topLevelKey?: string;
-  evaluations: Partial<ParcelEvaluation>[] | Partial<BuildingEvaluation>[];
 }
 
 export const AssessedValue = (props: IAssessedValue) => {
-  const { title, topLevelKey, evaluations } = props;
-
+  const { title, name, maxRows } = props;
   const handleAssessmentYearChange = (inputValue: string, formValues: FieldValues) => {
+    // console.log(`input: ${inputValue}, formVals: ${JSON.stringify(formValues, null, 2)}`);
+    // return 'temp';
     if (String(inputValue) == '' || inputValue == null) {
       return true;
     }
@@ -562,7 +561,7 @@ export const AssessedValue = (props: IAssessedValue) => {
     if (isNaN(inputYear)) {
       return 'Invalid input.';
     }
-    const yearValues: number[] = formValues.Evaluations.map((evaluation): number =>
+    const yearValues: number[] = getValueByNestedKey(formValues, name).map((evaluation): number =>
       parseInt(evaluation.Year),
     );
     if (yearValues.filter((yr) => yr === inputYear).length > 1) {
@@ -576,30 +575,36 @@ export const AssessedValue = (props: IAssessedValue) => {
       );
     }
   };
+  const { control } = useFormContext();
+  const { fields, prepend } = useFieldArray({
+    //Ideally we provide typing for this but too annoying right now
+    control: control,
+    name: name,
+  });
 
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
-      <Typography mt={2} variant="h5">
+      <Typography mt={4} variant="h5">
         {title ?? 'Assessed Value'}
       </Typography>
       <Box overflow={'auto'} paddingTop={'8px'}>
-        {evaluations?.map((evaluation, idx) => (
+        {fields?.map((evaluation, idx) => (
           <Box
             mb={2}
             gap={2}
             display={'flex'}
             width={'100%'}
             flexDirection={'row'}
-            key={`${topLevelKey ?? ''}assessedvaluerow-current-${idx}`}
+            key={`${name}-assessedvaluerow-current-${evaluation.id}`}
           >
             <TextFormField
               sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-              name={`${topLevelKey ?? ''}Evaluations.${idx}.Year`}
+              name={`${name}.${idx}.Year`}
               label={'Year'}
               numeric
-              disabled={idx > 0}
+              disabled={!evaluation['isNew']} //Could be improved with better typing
               rules={
-                idx == 0
+                evaluation['isNew']
                   ? {
                       validate: handleAssessmentYearChange,
                     }
@@ -611,14 +616,22 @@ export const AssessedValue = (props: IAssessedValue) => {
                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
               }}
               sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-              name={`${topLevelKey ?? ''}Evaluations.${idx}.Value`}
-              disabled={idx > 0}
+              name={`${name}.${idx}.Value`}
+              disabled={!evaluation['isNew']}
               numeric
               label={'Value'}
             />
           </Box>
         ))}
       </Box>
+      <Button
+        sx={{ maxWidth: '14rem', alignSelf: 'center' }}
+        variant="outlined"
+        disabled={fields.length >= maxRows}
+        onClick={() => prepend({ EvaluationKeyId: 0, Value: '', Year: '', isNew: true })}
+      >
+        Add Current Assessment
+      </Button>
     </Box>
   );
 };

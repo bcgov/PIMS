@@ -238,6 +238,7 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
   const { initialValues, initialRelatedBuildings, open, onCancel, propertyType, postSubmit } =
     props;
   const api = usePimsApi();
+
   const assessedFormMethods = useForm({
     defaultValues: {
       Evaluations: [],
@@ -252,13 +253,6 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
   const { submit: submitBuilding, submitting: submittingBuilding } = useDataSubmitter(
     api.buildings.updateBuildingById,
   );
-
-  const defaultParcelValues = {
-    Year: '',
-    Value: '',
-    EffectiveDate: new Date(),
-    EvaluationKeyId: 0,
-  };
 
   const evaluationMapToRequest = (
     evaluations: Partial<ParcelEvaluation>[] | Partial<BuildingEvaluation>[],
@@ -278,7 +272,6 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
   const evaluationMapToFormValues = (
     evaluations: Partial<ParcelEvaluation>[] | Partial<BuildingEvaluation>[],
   ) => {
-    const currentYear = new Date().getFullYear();
     const existingEvaluations =
       evaluations
         ?.map((evalu) => ({
@@ -286,10 +279,7 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
           Value: evalu.Value.replace(/[$,]/g, ''),
         }))
         ?.sort((a, b) => b.Year - a.Year) ?? [];
-    const currentYearEvaluation = evaluations?.find((yr) => yr.Year === currentYear)
-      ? []
-      : [defaultParcelValues];
-    return [...currentYearEvaluation, ...existingEvaluations];
+    return existingEvaluations;
   };
 
   useEffect(() => {
@@ -345,7 +335,8 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
       <FormProvider {...assessedFormMethods}>
         {/* Render top-level AssessedValue with yearsFromEvaluations */}
         <AssessedValue
-          evaluations={assessedFormMethods.getValues()['Evaluations']}
+          maxRows={(initialValues?.Evaluations?.length ?? 0) + 1}
+          name={'Evaluations'}
           title={propertyType === 'Building' ? 'Assessed Building Value' : 'Assessed Land Value'}
         />
         {/* Map through initialRelatedBuildings and render AssessedValue components */}
@@ -359,10 +350,10 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
           // const past2BuildingAssessments = buildingEvals.slice(0, 2);
           return (
             <AssessedValue
+              maxRows={(building.Evaluations?.length ?? 0) + 1}
               title={`Building (${idx + 1}) - ${building.Name + ' - ' + building.Address1}`}
               key={`assessed-value-${building.Id}`}
-              evaluations={assessedFormMethods.getValues()[`RelatedBuildings`].at(idx)?.Evaluations}
-              topLevelKey={`RelatedBuildings.${idx}.`}
+              name={`RelatedBuildings.${idx}.Evaluations`}
             />
           );
         })}
