@@ -73,6 +73,21 @@ objects:
             export POSTGRES_DB="{{ .Data.data.POSTGRES_DB }}"
             export POSTGRES_USER="{{ .Data.data.POSTGRES_USER }}"
             export POSTGRES_PASSWORD="{{ .Data.data.POSTGRES_PASSWORD }}"
+            export LTSA_AUTH_URL="{{ .Data.data.LTSA_AUTH_URL }}"
+            export LTSA_HOST_URL="{{ .Data.data.LTSA_HOST_URL }}"
+            export LTSA_INTEGRATOR_PASSWORD="{{ .Data.data.LTSA_INTEGRATOR_PASSWORD }}"
+            export LTSA_INTEGRATOR_USERNAME="{{ .Data.data.LTSA_INTEGRATOR_USERNAME }}"
+            export LTSA_PASSWORD="{{ .Data.data.LTSA_PASSWORD }}"
+            export LTSA_USERNAME="{{ .Data.data.LTSA_USERNAME }}"
+            export CHES_AUTH_URL="{{ .Data.data.CHES_AUTH_URL }}"
+            export CHES_DEFAULT_FROM="{{ .Data.data.CHES_DEFAULT_FROM }}"
+            export CHES_EMAIL_ENABLED="{{ .Data.data.CHES_EMAIL_ENABLED }}"
+            export CHES_HOST_URL="{{ .Data.data.CHES_HOST_URL }}"
+            export CHES_PASSWORD="{{ .Data.data.CHES_PASSWORD }}"
+            export CHES_BCC_USER="{{ .Data.data.CHES_BCC_USER }}"
+            export CHES_ALWAYS_BCC="{{ .Data.data.CHES_ALWAYS_BCC }}"
+            export CHES_SECONDS_TO_DELAY="{{ .Data.data.CHES_SECONDS_TO_DELAY }}"
+            export CHES_OVERRIDE_TO="{{ .Data.data.CHES_OVERRIDE_TO }}"
             {{- end }}
         labels:
           app: pims-v2
