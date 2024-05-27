@@ -4,7 +4,11 @@ import { Box, Button, Grid, Paper, Typography } from '@mui/material';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { accessPendingBlurb, signupTermsAndConditionsClaim } from '@/constants/jsxSnippets';
+import {
+  accessPendingBlurb,
+  accountInactiveBlurb,
+  signupTermsAndConditionsClaim,
+} from '@/constants/jsxSnippets';
 import usePimsApi from '@/hooks/usePimsApi';
 import { AccessRequest as AccessRequestType } from '@/hooks/api/useUsersApi';
 import { AuthContext } from '@/contexts/authContext';
@@ -12,7 +16,11 @@ import { Navigate } from 'react-router-dom';
 import TextFormField from '@/components/form/TextFormField';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 
-const AccessPending = () => {
+interface StatusPageTemplateProps {
+  blurb: JSX.Element;
+}
+const StatusPageTemplate = (props: StatusPageTemplateProps) => {
+  const { blurb } = props;
   return (
     <Box
       display={'flex'}
@@ -22,7 +30,7 @@ const AccessPending = () => {
       gap={'2rem'}
     >
       <img width={'300px'} src={pendingImage} />
-      <Typography>{accessPendingBlurb}</Typography>
+      <Typography>{blurb}</Typography>
     </Box>
   );
 };
@@ -120,6 +128,39 @@ export const AccessRequest = () => {
     return <Navigate replace to={'/'} />;
   }
 
+  const selectPageContent = () => {
+    switch (auth.pimsUser.data.Status) {
+      case 'OnHold':
+        return (
+          <>
+            <Typography mb={'2rem'} variant="h2">
+              Access Pending
+            </Typography>
+            <StatusPageTemplate blurb={accessPendingBlurb} />
+          </>
+        );
+      case 'Disabled':
+      case 'Denied':
+        return (
+          <>
+            <Typography mb={'2rem'} variant="h2">
+              Account Inactive
+            </Typography>
+            <StatusPageTemplate blurb={accountInactiveBlurb} />
+          </>
+        );
+      default:
+        return (
+          <>
+            <Typography mb={'2rem'} variant="h2">
+              Access Request
+            </Typography>
+            <RequestForm submitHandler={onSubmit} />
+          </>
+        );
+    }
+  };
+
   return (
     <Box
       display="flex"
@@ -136,14 +177,7 @@ export const AccessRequest = () => {
           boxShadow: '0px 8px 20px 0px rgba(0, 0, 0, 0.04)',
         }}
       >
-        <Typography mb={'2rem'} variant="h2">
-          {auth.pimsUser.data ? 'Access Pending' : 'Access Request'}
-        </Typography>
-        {auth.pimsUser?.data?.Status && auth.pimsUser.data.Status === 'OnHold' ? (
-          <AccessPending />
-        ) : (
-          <RequestForm submitHandler={onSubmit} />
-        )}
+        {selectPageContent()}
       </Paper>
 
       <Typography

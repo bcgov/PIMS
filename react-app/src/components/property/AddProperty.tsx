@@ -171,7 +171,7 @@ const AddProperty = () => {
               const addParcel: ParcelAdd = {
                 ...formValues,
                 LandArea: parseFloatOrNull(formValues.LandArea),
-                PID: parseIntOrNull(formValues.PID),
+                PID: parseIntOrNull(formValues.PID.replace(/-/g, '')),
                 PIN: parseIntOrNull(formValues.PIN),
                 PropertyTypeId: 0,
                 AgencyId: userContext.pimsUser.data.AgencyId,
@@ -190,7 +190,7 @@ const AddProperty = () => {
               const formValues = formMethods.getValues();
               const addBuilding: BuildingAdd = {
                 ...formValues,
-                PID: parseIntOrNull(formValues.PID),
+                PID: parseIntOrNull(formValues.PID.replace(/-/g, '')),
                 PIN: parseIntOrNull(formValues.PIN),
                 RentableArea: parseFloatOrNull(formValues.RentableArea),
                 TotalArea: parseFloatOrNull(formValues.TotalArea),
