@@ -32,6 +32,7 @@ export interface ParcelFiscal extends BaseEntityInterface {
   Note?: string;
   FiscalKeyId: number;
   FiscalKey?: FiscalKey;
+  ParcelId?: number;
 }
 
 export interface Parcel extends Property {

@@ -24,6 +24,8 @@ import { Controller, FieldValues, useFieldArray, useFormContext } from 'react-ho
 import { FeatureCollection } from 'geojson';
 import { arrayUniqueBy, getValueByNestedKey } from '@/utilities/helperFunctions';
 import MetresSquared from '@/components/text/MetresSquared';
+import { ParcelFiscal } from '@/hooks/api/useParcelsApi';
+import { BuildingFiscal } from '@/hooks/api/useBuildingsApi';
 export type PropertyType = 'Building' | 'Parcel';
 
 interface IParcelInformationForm {
@@ -449,97 +451,100 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
 };
 
 interface INetBookValue {
-  years: number[];
+  name: string;
+  maxRows: number;
 }
 
 // Property.Fiscals
 export const NetBookValue = (props: INetBookValue) => {
-  const { years } = props;
-  // Sort the years array in descending order
-  const sortedYears = years.sort((a, b) => b - a);
-  const currentYear = sortedYears.at(0);
-  const { getValues } = useFormContext();
+  const { name, maxRows } = props;
+  const { control } = useFormContext();
+  const { fields, prepend } = useFieldArray({
+    control: control,
+    name: name,
+  });
 
-  const handleFiscalYearChange = () => {
-    const currentValues = getValues();
-    // Collect all the year values from the form
-    const yearValues = currentValues.Fiscals.map((fiscal: { FiscalYear: string }) =>
-      parseInt(fiscal.FiscalYear),
-    );
-    // Check for duplicates in the yearValues array
-    const yearCounts = yearValues.reduce((acc, year) => {
-      acc[year] = (acc[year] || 0) + 1;
-      return acc;
-    }, {});
-
-    for (const year in yearCounts) {
-      if (yearCounts[year] > 1) {
-        return `There is already a net book value for the year ${year}`;
-      }
+  const handleFiscalYearChange = (inputValue: string, formValues: FieldValues) => {
+    if (String(inputValue) == '' || inputValue == null) {
+      return true;
     }
-    return true;
+    const inputYear = parseInt(inputValue);
+    if (isNaN(inputYear)) {
+      return 'Invalid input.';
+    }
+    const yearValues: number[] = getValueByNestedKey(formValues, name).map(
+      (evaluation: ParcelFiscal | BuildingFiscal): number =>
+        parseInt(String(evaluation.FiscalYear)),
+    );
+    if (yearValues.filter((yr) => yr === inputYear).length > 1) {
+      return `There is already a net book value for the year ${inputYear}`;
+    } else {
+      const currentYear = new Date().getFullYear();
+      return (
+        inputYear === currentYear ||
+        inputYear === currentYear - 1 ||
+        `You may only enter current net book values.`
+      );
+    }
   };
   return (
-    <Grid container spacing={2}>
-      {/* Render the current year row first */}
-      {sortedYears.length > 0 && (
-        <React.Fragment>
-          <Grid item xs={4}>
-            <TextFormField
-              name={`Fiscals.${0}.FiscalYear`}
-              label={'Fiscal year'}
-              disabled={false}
-              value={currentYear}
-              rules={{
-                validate: () => {
-                  const result = handleFiscalYearChange();
-                  return result;
-                },
-              }}
-            />
-          </Grid>
-          <Grid item xs={4}>
-            <DateFormField name={`Fiscals.${0}.EffectiveDate`} label={'Effective date'} />
-          </Grid>
-          <Grid item xs={4}>
-            <TextFormField
-              name={`Fiscals.${0}.Value`}
-              label={'Net book value'}
-              numeric
-              InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
-              }}
-            />
-          </Grid>
-        </React.Fragment>
-      )}
-      {/* Render the most recent previous year, if it exists */}
-      {sortedYears.length > 1 && (
-        <React.Fragment>
-          <Grid item xs={4}>
-            <TextFormField
-              value={sortedYears[0]}
-              disabled={true}
-              name={`Fiscals.${1}.FiscalYear`}
-              label={'Fiscal year'}
-            />
-          </Grid>
-          <Grid item xs={4}>
-            <DateFormField name={`Fiscals.${1}.EffectiveDate`} label={'Effective date'} />
-          </Grid>
-          <Grid item xs={4}>
-            <TextFormField
-              name={`Fiscals.${1}.Value`}
-              label={'Net book value'}
-              numeric
-              InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
-              }}
-            />
-          </Grid>
-        </React.Fragment>
-      )}
-    </Grid>
+    <Box display={'flex'} flexDirection={'column'} gap={'2rem'}>
+      <Grid container spacing={2}>
+        {/* Render the current year row first */}
+        {fields?.map((netbook, idx) => (
+          <React.Fragment key={`netbook-item-${netbook.id}`}>
+            <Grid item xs={4}>
+              <TextFormField
+                name={`${name}.${idx}.FiscalYear`}
+                label={'Fiscal year'}
+                disabled={!netbook['isNew']}
+                rules={
+                  netbook['isNew']
+                    ? {
+                        validate: handleFiscalYearChange,
+                      }
+                    : undefined
+                }
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <DateFormField
+                disabled={!netbook['isNew']}
+                name={`${name}.${idx}.EffectiveDate`}
+                label={'Effective date'}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextFormField
+                name={`${name}.${idx}.Value`}
+                label={'Net book value'}
+                disabled={!netbook['isNew']}
+                numeric
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                }}
+              />
+            </Grid>
+          </React.Fragment>
+        ))}
+      </Grid>
+      <Button
+        sx={{ maxWidth: '14rem', alignSelf: 'center' }}
+        variant="outlined"
+        disabled={fields.length >= maxRows}
+        onClick={() =>
+          prepend({
+            FiscalYear: '',
+            Value: '',
+            EffectiveDate: null,
+            FiscalKeyId: 0,
+            isNew: true,
+          })
+        }
+      >
+        Add Current Value
+      </Button>
+    </Box>
   );
 };
 
@@ -552,8 +557,6 @@ interface IAssessedValue {
 export const AssessedValue = (props: IAssessedValue) => {
   const { title, name, maxRows } = props;
   const handleAssessmentYearChange = (inputValue: string, formValues: FieldValues) => {
-    // console.log(`input: ${inputValue}, formVals: ${JSON.stringify(formValues, null, 2)}`);
-    // return 'temp';
     if (String(inputValue) == '' || inputValue == null) {
       return true;
     }
