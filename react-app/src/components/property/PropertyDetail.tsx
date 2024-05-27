@@ -212,7 +212,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
     { title: 'Assessed value' },
   ];
 
-  if (buildingOrParcel === 'Parcel') sideBarItems.push({ title: 'LTSA information' });
+  if (buildingOrParcel === 'Parcel') sideBarItems.splice(1, 0, { title: 'LTSA information' });
 
   return (
     <CollapsibleSidebar items={sideBarItems}>
