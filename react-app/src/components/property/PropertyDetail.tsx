@@ -25,6 +25,7 @@ import { dateFormatter, pidFormatter, zeroPadPID } from '@/utilities/formatters'
 import ParcelMap from '../map/ParcelMap';
 import { Map } from 'leaflet';
 import { Room } from '@mui/icons-material';
+import TitleOwnership from '../ltsa/TitleOwnership';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 
 interface IPropertyDetail {
@@ -212,21 +213,23 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const [openNetBookDialog, setOpenNetBookDialog] = useState(false);
   const [openAssessedValueDialog, setOpenAssessedValueDialog] = useState(false);
 
+  const sideBarItems = [
+    { title: `${buildingOrParcel} information` },
+    { title: `${buildingOrParcel} net book value` },
+    { title: 'Assessed value' },
+  ];
+
+  if (buildingOrParcel === 'Parcel') sideBarItems.splice(1, 0, { title: 'LTSA information' });
+
   return (
-    <CollapsibleSidebar
-      items={[
-        { title: `${buildingOrParcel} information` },
-        { title: `${buildingOrParcel} net book value` },
-        { title: 'Assessed value' },
-      ]}
-    >
+    <CollapsibleSidebar items={sideBarItems}>
       <Box
         display={'flex'}
         gap={'1rem'}
         mt={'2rem'}
         mb={'2rem'}
         flexDirection={'column'}
-        width={'46rem'}
+        width={'60rem'}
         marginX={'auto'}
       >
         <DetailViewNavigation
@@ -243,8 +246,19 @@ const PropertyDetail = (props: IPropertyDetail) => {
           title={`${buildingOrParcel} information`}
           onEdit={() => setOpenInformationDialog(true)}
         />
+        {buildingOrParcel === 'Parcel' && (
+          <DataCard
+            loading={propertyLoading}
+            id={'LTSA information'}
+            values={undefined}
+            title={'LTSA information'}
+            disableEdit={true}
+            onEdit={undefined}
+          >
+            <TitleOwnership pid={parcel?.PID ? zeroPadPID(Number(parcel?.PID)) : null} /> <></>
+          </DataCard>
+        )}
         <DataCard
-          loading={propertyLoading}
           id={`${buildingOrParcel} net book value`}
           values={undefined}
           title={`${buildingOrParcel} net book value`}
