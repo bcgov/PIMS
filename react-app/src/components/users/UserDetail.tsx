@@ -16,6 +16,7 @@ import DetailViewNavigation from '../display/DetailViewNavigation';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 import { useParams } from 'react-router-dom';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
+import { Roles } from '@/constants/roles';
 
 interface IUserDetail {
   onClose: () => void;
@@ -27,8 +28,9 @@ interface UserProfile extends User {
 
 const UserDetail = ({ onClose }: IUserDetail) => {
   const { id } = useParams();
-  const { pimsUser } = useContext(AuthContext);
+  const user = useContext(AuthContext);
   const api = usePimsApi();
+  const pimsUser = { user };
 
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
@@ -96,6 +98,11 @@ const UserDetail = ({ onClose }: IUserDetail) => {
     mode: 'onBlur',
   });
 
+  let canEdit = false;
+  if (user.keycloak.hasRoles([Roles.ADMIN])) {
+    canEdit = true;
+  };
+
   useEffect(() => {
     refreshData();
   }, [id]);
@@ -129,13 +136,14 @@ const UserDetail = ({ onClose }: IUserDetail) => {
         navigateBackTitle={'Back to User Overview'}
         deleteTitle={'Delete Account'}
         onBackClick={() => onClose()}
-        deleteButtonProps={{ disabled: pimsUser.data?.Id === id }}
+        deleteButtonProps={{ disabled: pimsUser.user.pimsUser.data?.Id === id }}
       />
       <DataCard
         loading={isLoading}
         customFormatter={customFormatterStatus}
         values={userStatusData}
         title={'User Status'}
+        disableEdit={!canEdit}
         onEdit={() => setOpenStatusDialog(true)}
       />
       <DataCard
@@ -143,6 +151,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
         customFormatter={customFormatterProfile}
         values={userProfileData}
         title={'User Profile'}
+        disableEdit={!canEdit}
         onEdit={() => setOpenProfileDialog(true)}
       />
       <ConfirmDialog
