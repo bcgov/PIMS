@@ -42,5 +42,8 @@ COPY --from=prod-build /app/build .
 # Provide nginx directory the required permissions
 RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx
 
+# Add curl for health check
+RUN apt-get update && apt-get install -y curl
+
 # Run nginx with global directives and daemon off
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
