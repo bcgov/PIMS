@@ -5,7 +5,7 @@ export interface AdministrativeArea {
   Name: string;
   ProvinceId: string;
   IsDisabled: boolean;
-  SortOrder: number;
+  SortOrder?: number;
   RegionalDistrictId: number;
   RegionalDistrict?: Record<string, any>;
   CreatedOn: string;
