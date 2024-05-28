@@ -98,11 +98,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
     mode: 'onBlur',
   });
 
-  let canEdit = false;
-  if (user.keycloak.hasRoles([Roles.ADMIN])) {
-    canEdit = true;
-  }
-
+  const canEdit = user.keycloak.hasRoles([Roles.ADMIN]);
   useEffect(() => {
     refreshData();
   }, [id]);
