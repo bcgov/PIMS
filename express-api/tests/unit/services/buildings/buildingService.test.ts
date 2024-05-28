@@ -1,6 +1,11 @@
 import { AppDataSource } from '@/appDataSource';
 import { Building } from '@/typeorm/Entities/Building';
-import { produceBuilding, produceBuildingFiscal, produceUser } from 'tests/testUtils/factories';
+import {
+  produceBuilding,
+  produceBuildingEvaluation,
+  produceBuildingFiscal,
+  produceUser,
+} from 'tests/testUtils/factories';
 import * as buildingService from '@/services/buildings/buildingServices';
 import { BuildingFilter, BuildingFilterSchema } from '@/services/buildings/buildingSchema';
 import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
@@ -22,16 +27,28 @@ const _buildingFindOne = jest.spyOn(buildingRepo, 'findOne').mockImplementation(
   return building;
 });
 
-const _buildingFiscalExists = jest
-  .spyOn(AppDataSource.getRepository(BuildingFiscal), 'exists')
-  .mockImplementation(async () => true);
+// const _buildingFiscalExists = jest
+//   .spyOn(AppDataSource.getRepository(BuildingFiscal), 'exists')
+//   .mockImplementation(async () => true);
 
-const _buildingEvaluationExists = jest
-  .spyOn(AppDataSource.getRepository(BuildingEvaluation), 'exists')
-  .mockImplementation(async () => true);
+// const _buildingEvaluationExists = jest
+//   .spyOn(AppDataSource.getRepository(BuildingEvaluation), 'exists')
+//   .mockImplementation(async () => true);
+const _buildingFiscalFindOne = jest
+  .spyOn(AppDataSource.getRepository(BuildingFiscal), 'findOne')
+  .mockImplementation(async () => produceBuildingFiscal(1)[0]);
+const _buildingEvaluationFindOne = jest
+  .spyOn(AppDataSource.getRepository(BuildingEvaluation), 'findOne')
+  .mockImplementation(async () => produceBuildingEvaluation(1)[0]);
 // const _buildingFindOne = jest
 //   .spyOn(buildingRepo, 'findOne')
 //   .mockImplementation(async () => produceBuilding());
+jest
+  .spyOn(AppDataSource.getRepository(BuildingFiscal), 'find')
+  .mockImplementation(async () => produceBuildingFiscal(1));
+jest
+  .spyOn(AppDataSource.getRepository(BuildingEvaluation), 'find')
+  .mockImplementation(async () => produceBuildingEvaluation(1));
 
 const _mockStartTransaction = jest.fn(async () => {});
 const _mockRollbackTransaction = jest.fn(async () => {});
@@ -147,8 +164,8 @@ describe('updateBuildingById', () => {
     _buildingFindOne.mockResolvedValueOnce(updateBuilding);
 
     await buildingService.updateBuildingById(updateBuilding);
-    expect(_buildingFiscalExists).toHaveBeenCalledTimes(1);
-    expect(_buildingEvaluationExists).toHaveBeenCalledTimes(1);
+    expect(_buildingFiscalFindOne).toHaveBeenCalledTimes(1);
+    expect(_buildingEvaluationFindOne).toHaveBeenCalledTimes(1);
   });
 });
 
