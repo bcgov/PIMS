@@ -16,6 +16,7 @@ import DetailViewNavigation from '../display/DetailViewNavigation';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 import { useParams } from 'react-router-dom';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
+import { Roles } from '@/constants/roles';
 
 interface IUserDetail {
   onClose: () => void;
@@ -27,7 +28,7 @@ interface UserProfile extends User {
 
 const UserDetail = ({ onClose }: IUserDetail) => {
   const { id } = useParams();
-  const { pimsUser } = useContext(AuthContext);
+  const { keycloak, pimsUser } = useContext(AuthContext);
   const api = usePimsApi();
 
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
@@ -96,6 +97,8 @@ const UserDetail = ({ onClose }: IUserDetail) => {
     mode: 'onBlur',
   });
 
+  const canEdit = keycloak.hasRoles([Roles.ADMIN]);
+
   useEffect(() => {
     refreshData();
   }, [id]);
@@ -136,6 +139,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
         customFormatter={customFormatterStatus}
         values={userStatusData}
         title={'User Status'}
+        disableEdit={!canEdit}
         onEdit={() => setOpenStatusDialog(true)}
       />
       <DataCard
@@ -143,6 +147,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
         customFormatter={customFormatterProfile}
         values={userProfileData}
         title={'User Profile'}
+        disableEdit={!canEdit}
         onEdit={() => setOpenProfileDialog(true)}
       />
       <ConfirmDialog
