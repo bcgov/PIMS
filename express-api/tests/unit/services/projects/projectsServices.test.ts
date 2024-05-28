@@ -10,6 +10,7 @@ import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
+import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
@@ -17,6 +18,7 @@ import { faker } from '@faker-js/faker';
 import {
   produceAgencyResponse,
   produceBuilding,
+  produceNote,
   produceNotificationQueue,
   produceParcel,
   produceProject,
@@ -70,6 +72,9 @@ jest.spyOn(AppDataSource.getRepository(ProjectProperty), 'find').mockImplementat
     ] as ProjectProperty[],
 );
 const _projectFind = jest.spyOn(AppDataSource.getRepository(Project), 'find');
+jest
+  .spyOn(AppDataSource.getRepository(ProjectNote), 'find')
+  .mockImplementation(async () => [produceNote()]);
 
 jest
   .spyOn(AppDataSource.getRepository(ProjectTask), 'find')

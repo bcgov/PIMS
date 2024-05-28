@@ -115,11 +115,17 @@ const getProjectById = async (id: number) => {
       ProjectId: id,
     },
   });
+  const projectNotes = await AppDataSource.getRepository(ProjectNote).find({
+    where: {
+      ProjectId: id,
+    },
+  });
   return {
     ...project,
     ProjectProperties: projectProperties,
     AgencyResponses: agencyResponses,
     Tasks: projectTasks,
+    Notes: projectNotes,
   };
 };
 
