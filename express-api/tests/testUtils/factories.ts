@@ -35,6 +35,7 @@ import {
 } from '@/services/notifications/notificationServices';
 import { NotificationTemplate } from '@/typeorm/Entities/NotificationTemplate';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
+import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
 
 export class MockRes {
   statusValue: any;
@@ -519,7 +520,7 @@ export const produceProject = (
     ],
     Notifications: [],
     StatusHistory: [],
-    Notes: [],
+    Notes: [produceNote()],
     AgencyResponses: [],
     DeletedBy: undefined,
     DeletedById: null,
@@ -527,6 +528,27 @@ export const produceProject = (
     ...props,
   };
   return project;
+};
+
+export const produceNote = (props?: Partial<ProjectNote>): ProjectNote => {
+  const note: ProjectNote = {
+    Id: faker.number.int(),
+    ProjectId: faker.number.int(),
+    Project: undefined,
+    NoteType: faker.number.int(),
+    Note: faker.lorem.lines(),
+    DeletedBy: undefined,
+    DeletedById: null,
+    DeletedOn: null,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return note;
 };
 
 export const produceProjectProperty = (props?: Partial<ProjectProperty>): ProjectProperty => {

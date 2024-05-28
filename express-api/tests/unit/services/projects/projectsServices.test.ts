@@ -25,7 +25,14 @@ import {
   produceSSO,
   produceUser,
 } from 'tests/testUtils/factories';
-import { DeepPartial, DeleteResult, EntityTarget, ObjectLiteral, UpdateResult } from 'typeorm';
+import {
+  DeepPartial,
+  DeleteResult,
+  EntityTarget,
+  InsertResult,
+  ObjectLiteral,
+  UpdateResult,
+} from 'typeorm';
 
 const _getDeleteResponse = (amount: number) => ({
   raw: {},
@@ -155,7 +162,6 @@ const _mockEntityManager = {
     }
   },
   delete: async <Entity extends ObjectLiteral>(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     entityClass: EntityTarget<Entity>,
   ): Promise<DeleteResult> => {
     if (entityClass === Project) {
@@ -165,7 +171,6 @@ const _mockEntityManager = {
     }
   },
   exists: async <Entity extends ObjectLiteral>(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     entityClass: EntityTarget<Entity>,
   ): Promise<boolean> => {
     if (entityClass === Project) {
@@ -178,6 +183,13 @@ const _mockEntityManager = {
   },
   update: async (): Promise<UpdateResult> => {
     return {
+      raw: {},
+      generatedMaps: [],
+    };
+  },
+  upsert: async (): Promise<InsertResult> => {
+    return {
+      identifiers: [],
       raw: {},
       generatedMaps: [],
     };

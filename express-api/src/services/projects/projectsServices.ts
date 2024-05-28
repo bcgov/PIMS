@@ -15,7 +15,14 @@ import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import logger from '@/utilities/winstonLogger';
-import { DeepPartial, FindManyOptions, FindOptionsOrder, In, QueryRunner } from 'typeorm';
+import {
+  DeepPartial,
+  FindManyOptions,
+  FindOptionsOrder,
+  In,
+  InsertResult,
+  QueryRunner,
+} from 'typeorm';
 import { ProjectFilter } from '@/services/projects/projectSchema';
 import { PropertyType } from '@/constants/propertyType';
 import { ProjectRisk } from '@/constants/projectRisk';
@@ -450,20 +457,28 @@ const handleProjectAgencyResponses = async (
 };
 
 const handleProjectNotes = async (newProject: DeepPartial<Project>, queryRunner: QueryRunner) => {
-  const saveNotes = newProject.Notes.map(async (note): Promise<ProjectNote | void> => {
-    if (note.ProjectId == null || note.NoteType == null) {
-      throw new ErrorWithCode('Provided note was missing a required field.', 400);
-    }
-    await queryRunner.manager.exists(ProjectNote, {
-      where: { ProjectId: newProject.Id, NoteType: note.NoteType },
+  if (newProject?.Notes?.length) {
+    const saveNotes = newProject.Notes.map(async (note): Promise<InsertResult | void> => {
+      if (note.ProjectId == null || note.NoteType == null) {
+        throw new ErrorWithCode('Provided note was missing a required field.', 400);
+      }
+      const exists = await queryRunner.manager.findOne(ProjectNote, {
+        where: { ProjectId: newProject.Id, NoteType: note.NoteType },
+      });
+      return queryRunner.manager.upsert(
+        ProjectNote,
+        {
+          ProjectId: newProject.Id,
+          Note: note.Note,
+          NoteType: note.NoteType,
+          CreatedById: exists ? exists.CreatedById : newProject.CreatedById,
+          UpdatedById: exists ? newProject.UpdatedById : undefined,
+        },
+        ['ProjectId', 'NoteType'],
+      );
     });
-    queryRunner.manager.save(ProjectNote, {
-      ProjectId: newProject.Id,
-      Note: note.Note,
-      NoteType: note.NoteType,
-    });
-  });
-  return Promise.all(saveNotes);
+    return Promise.all(saveNotes);
+  }
 };
 
 /**
@@ -513,6 +528,7 @@ const updateProject = async (
       { ...project, CreatedById: project.UpdatedById },
       queryRunner,
     );
+    await handleProjectNotes({ ...project, CreatedById: project.UpdatedById }, queryRunner);
 
     // Update Project
     await queryRunner.manager.save(Project, {
@@ -520,6 +536,7 @@ const updateProject = async (
       Metadata: newMetadata,
       Tasks: undefined,
       AgencyResponses: undefined,
+      Notes: undefined,
     });
     //Seems this save will also try to save Tasks array if present, but if missing the ProjectId it will do weird stuff.
     //So we could consolidate handleProjectTasks to here if we wanted, but then it might be annoying trying to get the more specific behavior in that function.
