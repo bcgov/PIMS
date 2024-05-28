@@ -28,9 +28,8 @@ interface UserProfile extends User {
 
 const UserDetail = ({ onClose }: IUserDetail) => {
   const { id } = useParams();
-  const user = useContext(AuthContext);
+  const { keycloak, pimsUser } = useContext(AuthContext);
   const api = usePimsApi();
-  const pimsUser = { user };
 
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
@@ -98,7 +97,8 @@ const UserDetail = ({ onClose }: IUserDetail) => {
     mode: 'onBlur',
   });
 
-  const canEdit = user.keycloak.hasRoles([Roles.ADMIN]);
+  const canEdit = keycloak.hasRoles([Roles.ADMIN]);
+
   useEffect(() => {
     refreshData();
   }, [id]);
@@ -132,7 +132,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
         navigateBackTitle={'Back to User Overview'}
         deleteTitle={'Delete Account'}
         onBackClick={() => onClose()}
-        deleteButtonProps={{ disabled: pimsUser.user.pimsUser.data?.Id === id }}
+        deleteButtonProps={{ disabled: pimsUser.data?.Id === id }}
       />
       <DataCard
         loading={isLoading}
