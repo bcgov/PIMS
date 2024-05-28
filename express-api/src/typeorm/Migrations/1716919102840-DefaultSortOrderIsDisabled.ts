@@ -4,8 +4,6 @@ export class DefaultSortOrderIsDisabled1716919102840 implements MigrationInterfa
   name = 'DefaultSortOrderIsDisabled1716919102840';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`ALTER TABLE "building_evaluation" DROP COLUMN "Date"`);
-    await queryRunner.query(`ALTER TABLE "parcel_evaluation" DROP COLUMN "date"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_fc733694343c53375cd9457b88"`);
     await queryRunner.query(
       `ALTER TABLE "administrative_area" ALTER COLUMN "is_disabled" SET DEFAULT false`,
@@ -267,7 +265,5 @@ export class DefaultSortOrderIsDisabled1716919102840 implements MigrationInterfa
     await queryRunner.query(
       `CREATE INDEX "IDX_fc733694343c53375cd9457b88" ON "administrative_area" ("name", "is_disabled", "sort_order") `,
     );
-    await queryRunner.query(`ALTER TABLE "parcel_evaluation" ADD "date" character varying(10)`);
-    await queryRunner.query(`ALTER TABLE "building_evaluation" ADD "Date" character varying(10)`);
   }
 }
