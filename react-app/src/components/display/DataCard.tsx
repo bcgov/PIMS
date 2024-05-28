@@ -7,6 +7,7 @@ import {
   Grid,
   Skeleton,
   Typography,
+  TypographyProps,
 } from '@mui/material';
 import Card from '@mui/material/Card';
 import React, { PropsWithChildren } from 'react';
@@ -19,10 +20,12 @@ type DataCardProps<T> = {
   onEdit: () => void;
   customFormatter?: (key: keyof T, value: any) => string | JSX.Element | undefined;
   disableEdit?: boolean;
+  titleTypographyProps?: TypographyProps;
 } & PropsWithChildren;
 
 const DataCard = <T,>(props: DataCardProps<T>) => {
-  const { values, title, customFormatter, onEdit, disableEdit, loading } = props;
+  const { values, title, customFormatter, onEdit, disableEdit, loading, titleTypographyProps } =
+    props;
 
   const defaultFormatter = (key: keyof T, val: any) => {
     const customFormat = customFormatter?.(key, val);
@@ -62,7 +65,7 @@ const DataCard = <T,>(props: DataCardProps<T>) => {
     <Card variant="outlined" sx={{ padding: '2rem', minWidth: '34rem', backgroundColor: 'white' }}>
       <CardHeader
         id={props.id}
-        titleTypographyProps={{ variant: 'h1' }}
+        titleTypographyProps={{ variant: 'h1', ...titleTypographyProps }}
         sx={{
           '.MuiCardHeader-action': {
             alignSelf: 'center',
@@ -72,14 +75,16 @@ const DataCard = <T,>(props: DataCardProps<T>) => {
         }}
         title={title}
         action={
-          <Button
-            sx={{ minWidth: '50px', fontWeight: 'bold' }}
-            onClick={() => onEdit()}
-            color={'primary'}
-            disabled={disableEdit || loading}
-          >
-            Edit
-          </Button>
+          disableEdit ? undefined : (
+            <Button
+              sx={{ minWidth: '50px', fontWeight: 'bold' }}
+              onClick={() => onEdit()}
+              color={'primary'}
+              disabled={loading}
+            >
+              Edit
+            </Button>
+          )
         }
       />
       <CardContent>{getContent(props.children)}</CardContent>

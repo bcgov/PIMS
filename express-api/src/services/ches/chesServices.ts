@@ -127,7 +127,7 @@ export interface IEmailSentResponse {
   txId: string;
 }
 
-const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentResponse> => {
+const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentResponse | null> => {
   const cfg = config();
   if (email == null) {
     throw new ErrorWithCode('Null argument for email.', 400);
@@ -164,6 +164,8 @@ const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentR
 
   if (cfg.ches.emailEnabled) {
     return sendAsync('/email', 'POST', email);
+  } else {
+    return null;
   }
 };
 

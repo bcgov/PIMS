@@ -295,11 +295,19 @@ const sendNotification = async (
       delayTS: notification.SendOn.getTime(),
     };
     const response = await chesServices.sendEmailAsync(email, user);
-    return query.manager.save(NotificationQueue, {
-      ...notification,
-      ChesTransactionId: response.txId as UUID,
-      ChesMessageId: response.messages[0].msgId as UUID,
-    });
+    if (response) {
+      // Note: Email may be intentionally disabled, thus yielding null response.
+      return query.manager.save(NotificationQueue, {
+        ...notification,
+        ChesTransactionId: response.txId as UUID,
+        ChesMessageId: response.messages[0].msgId as UUID,
+      });
+    } else {
+      return query.manager.save(NotificationQueue, {
+        ...notification,
+        Status: NotificationStatus.Failed,
+      });
+    }
   } catch (e) {
     return query.manager.save(NotificationQueue, {
       ...notification,
