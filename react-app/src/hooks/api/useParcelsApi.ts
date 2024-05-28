@@ -9,7 +9,7 @@ export interface ParcelEvaluation extends BaseEntityInterface {
   ParcelId: number;
   Parcel?: Parcel;
   Year: number;
-  Value: string | number;
+  Value: number;
   Firm?: string;
   EvaluationKeyId: number;
   EvaluationKey?: EvaluationKey;
@@ -28,7 +28,7 @@ type ParcelFiscalAdd = Omit<
 export interface ParcelFiscal extends BaseEntityInterface {
   FiscalYear: number;
   EffectiveDate: Date;
-  Value: string | number;
+  Value: number;
   Note?: string;
   FiscalKeyId: number;
   FiscalKey?: FiscalKey;
