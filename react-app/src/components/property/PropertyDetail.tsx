@@ -170,6 +170,10 @@ const PropertyDetail = (props: IPropertyDetail) => {
         );
       case 'LotSize':
         return <Typography>{`${val} Hectares`}</Typography>;
+      case 'Tenancy':
+        return (
+          <Typography>{`${val}${/^(0|[1-9]\d*)?(\.\d+)?(?<=\d)$/.test(val) ? ' %' : ''}`}</Typography>
+        );
       default:
         return <Typography>{val}</Typography>;
     }

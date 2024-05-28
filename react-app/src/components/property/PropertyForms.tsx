@@ -428,9 +428,24 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
           <TextFormField
             name={`BuildingTenancy`}
             label={'Tenancy'}
-            numeric
             fullWidth
             InputProps={{ endAdornment: <InputAdornment position="end">%</InputAdornment> }}
+            rules={{
+              validate: (value) => {
+                /*  Need to make sure this string only contains valid numbers, while still allowing
+                    for old data that was a mix of text and numbers. Using numeric prop stops any 
+                    edit of text values, even removal.
+                 */
+                if (!/^(0|[1-9]\d*)?(\.\d+)?(?<=\d)$/.test(value)) {
+                  return 'This value is a percentage and must be a number greater than or equal to 0.';
+                }
+                const parsedValue = parseFloat(value);
+                if (parsedValue < 0 || parsedValue > 100) {
+                  return 'Tenancy value must be between 0 - 100';
+                }
+                return true;
+              },
+            }}
           />
         </Grid>
         <Grid item xs={6}>
