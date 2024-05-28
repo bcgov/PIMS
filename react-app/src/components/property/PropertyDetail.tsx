@@ -21,10 +21,11 @@ import {
 } from './PropertyDialog';
 import { PropertyType } from './PropertyForms';
 import MetresSquared from '@/components/text/MetresSquared';
-import { zeroPadPID } from '@/utilities/formatters';
+import { pidFormatter, zeroPadPID } from '@/utilities/formatters';
 import ParcelMap from '../map/ParcelMap';
 import { Map } from 'leaflet';
 import { Room } from '@mui/icons-material';
+import TitleOwnership from '../ltsa/TitleOwnership';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 
 interface IPropertyDetail {
@@ -146,6 +147,8 @@ const PropertyDetail = (props: IPropertyDetail) => {
 
   const customFormatter = (key: any, val: any) => {
     switch (key) {
+      case 'PID':
+        return <Typography>{pidFormatter(val)}</Typography>;
       case 'Agency':
         return <Typography>{val.Name}</Typography>;
       case 'Classification':
@@ -205,21 +208,23 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const [openNetBookDialog, setOpenNetBookDialog] = useState(false);
   const [openAssessedValueDialog, setOpenAssessedValueDialog] = useState(false);
 
+  const sideBarItems = [
+    { title: `${buildingOrParcel} information` },
+    { title: `${buildingOrParcel} net book value` },
+    { title: 'Assessed value' },
+  ];
+
+  if (buildingOrParcel === 'Parcel') sideBarItems.splice(1, 0, { title: 'LTSA information' });
+
   return (
-    <CollapsibleSidebar
-      items={[
-        { title: `${buildingOrParcel} information` },
-        { title: `${buildingOrParcel} net book value` },
-        { title: 'Assessed value' },
-      ]}
-    >
+    <CollapsibleSidebar items={sideBarItems}>
       <Box
         display={'flex'}
         gap={'1rem'}
         mt={'2rem'}
         mb={'2rem'}
         flexDirection={'column'}
-        width={'46rem'}
+        width={'60rem'}
         marginX={'auto'}
       >
         <DetailViewNavigation
@@ -236,8 +241,19 @@ const PropertyDetail = (props: IPropertyDetail) => {
           title={`${buildingOrParcel} information`}
           onEdit={() => setOpenInformationDialog(true)}
         />
+        {buildingOrParcel === 'Parcel' && (
+          <DataCard
+            loading={propertyLoading}
+            id={'LTSA information'}
+            values={undefined}
+            title={'LTSA information'}
+            disableEdit={true}
+            onEdit={undefined}
+          >
+            <TitleOwnership pid={parcel?.PID ? zeroPadPID(Number(parcel?.PID)) : null} /> <></>
+          </DataCard>
+        )}
         <DataCard
-          loading={propertyLoading}
           id={`${buildingOrParcel} net book value`}
           values={undefined}
           title={`${buildingOrParcel} net book value`}
@@ -265,7 +281,9 @@ const PropertyDetail = (props: IPropertyDetail) => {
           mapRef={setMap}
           movable={false}
           zoomable={false}
+          zoomOnScroll={false}
           popupSize="small"
+          hideControls
         >
           <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height={'100%'}>
             <Room

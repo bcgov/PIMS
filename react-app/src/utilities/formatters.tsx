@@ -96,9 +96,10 @@ export const parseFloatOrNull = (flt: string | number) => {
 };
 
 export const zeroPadPID = (pid: number | string): string => {
-  return String(pid).padStart(9, '0');
+  return String(pid).replace(/[^\d]/g, '').padStart(9, '0');
 };
 
 export const pidFormatter = (pid: number | string): string => {
+  if (pid == null) return '';
   return zeroPadPID(pid).match(/\d{3}/g).join('-');
 };
