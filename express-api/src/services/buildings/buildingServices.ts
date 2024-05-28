@@ -76,7 +76,7 @@ export const updateBuildingById = async (building: DeepPartial<Building>) => {
   if (building.Fiscals && building.Fiscals.length) {
     building.Fiscals = await Promise.all(
       building.Fiscals.map(async (fiscal) => {
-        const exists = await AppDataSource.getRepository(BuildingFiscal).exists({
+        const exists = await AppDataSource.getRepository(BuildingFiscal).findOne({
           where: {
             BuildingId: building.Id,
             FiscalYear: fiscal.FiscalYear,
@@ -85,7 +85,7 @@ export const updateBuildingById = async (building: DeepPartial<Building>) => {
         });
         const fiscalEntity: DeepPartial<BuildingFiscal> = {
           ...fiscal,
-          CreatedById: exists ? undefined : building.UpdatedById,
+          CreatedById: exists ? exists.CreatedById : building.UpdatedById,
           UpdatedById: exists ? building.UpdatedById : undefined,
         };
         return fiscalEntity;
@@ -95,7 +95,7 @@ export const updateBuildingById = async (building: DeepPartial<Building>) => {
   if (building.Evaluations && building.Evaluations.length) {
     building.Evaluations = await Promise.all(
       building.Evaluations.map(async (evaluation) => {
-        const exists = await AppDataSource.getRepository(BuildingEvaluation).exists({
+        const exists = await AppDataSource.getRepository(BuildingEvaluation).findOne({
           where: {
             BuildingId: building.Id,
             Year: evaluation.Year,
@@ -104,7 +104,7 @@ export const updateBuildingById = async (building: DeepPartial<Building>) => {
         });
         const evaluationEntity: DeepPartial<BuildingEvaluation> = {
           ...evaluation,
-          CreatedById: exists ? undefined : building.UpdatedById,
+          CreatedById: exists ? exists.CreatedById : building.UpdatedById,
           UpdatedById: exists ? building.UpdatedById : undefined,
         };
         return evaluationEntity;

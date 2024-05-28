@@ -257,6 +257,14 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
   const evaluationMapToRequest = (
     evaluations: Partial<ParcelEvaluation>[] | Partial<BuildingEvaluation>[],
   ) => {
+    for (const newEntry of evaluations.filter((f) => f['isNew'])) {
+      const oldEntry = evaluations.findIndex(
+        (f) => Number(f.Year) === Number(newEntry.Year) && !f['isNew'],
+      );
+      if (oldEntry > -1) {
+        evaluations = [...evaluations.slice(0, oldEntry), ...evaluations.slice(oldEntry + 1)];
+      }
+    }
     return evaluations
       .filter((evaluation) => evaluation.Value != null && evaluation.Year)
       .map((evaluation) => ({
@@ -419,6 +427,14 @@ export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditD
   }, [initialValues]);
 
   const fiscalMapToRequest = (fiscals: Partial<ParcelFiscal>[] | Partial<BuildingFiscal>[]) => {
+    for (const newEntry of fiscals.filter((f) => f['isNew'])) {
+      const oldEntry = fiscals.findIndex(
+        (f) => Number(f.FiscalYear) === Number(newEntry.FiscalYear) && !f['isNew'],
+      );
+      if (oldEntry > -1) {
+        fiscals = [...fiscals.slice(0, oldEntry), ...fiscals.slice(oldEntry + 1)];
+      }
+    }
     return fiscals
       .filter((fiscal) => fiscal.Value != null && fiscal.FiscalYear)
       .map((fiscal) => ({
@@ -427,7 +443,7 @@ export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditD
         ParcelId: propertyType === 'Parcel' ? initialValues.Id : undefined,
         Value: parseFloat(String(fiscal.Value)),
         FiscalKeyId: 0,
-        FiscalYear: fiscal.FiscalYear,
+        FiscalYear: Number(fiscal.FiscalYear),
         EffectiveDate: fiscal.EffectiveDate,
       }));
   };

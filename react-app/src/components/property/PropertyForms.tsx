@@ -20,12 +20,10 @@ import { LatLng, Map } from 'leaflet';
 import usePimsApi from '@/hooks/usePimsApi';
 import { centroid } from '@turf/turf';
 import ParcelMap from '../map/ParcelMap';
-import { Controller, FieldValues, useFieldArray, useFormContext } from 'react-hook-form';
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { FeatureCollection } from 'geojson';
-import { arrayUniqueBy, getValueByNestedKey } from '@/utilities/helperFunctions';
+import { arrayUniqueBy } from '@/utilities/helperFunctions';
 import MetresSquared from '@/components/text/MetresSquared';
-import { ParcelFiscal } from '@/hooks/api/useParcelsApi';
-import { BuildingFiscal } from '@/hooks/api/useBuildingsApi';
 export type PropertyType = 'Building' | 'Parcel';
 
 interface IParcelInformationForm {
@@ -464,7 +462,7 @@ export const NetBookValue = (props: INetBookValue) => {
     name: name,
   });
 
-  const handleFiscalYearChange = (inputValue: string, formValues: FieldValues) => {
+  const handleFiscalYearChange = (inputValue: string) => {
     if (String(inputValue) == '' || inputValue == null) {
       return true;
     }
@@ -472,20 +470,16 @@ export const NetBookValue = (props: INetBookValue) => {
     if (isNaN(inputYear)) {
       return 'Invalid input.';
     }
-    const yearValues: number[] = getValueByNestedKey(formValues, name).map(
-      (evaluation: ParcelFiscal | BuildingFiscal): number =>
-        parseInt(String(evaluation.FiscalYear)),
+    // const yearValues: number[] = getValueByNestedKey(formValues, name).map(
+    //   (evaluation: ParcelFiscal | BuildingFiscal): number =>
+    //     parseInt(String(evaluation.FiscalYear)),
+    // );
+    const currentYear = new Date().getFullYear();
+    return (
+      inputYear === currentYear ||
+      inputYear === currentYear - 1 ||
+      `You may only enter current net book values.`
     );
-    if (yearValues.filter((yr) => yr === inputYear).length > 1) {
-      return `There is already a net book value for the year ${inputYear}`;
-    } else {
-      const currentYear = new Date().getFullYear();
-      return (
-        inputYear === currentYear ||
-        inputYear === currentYear - 1 ||
-        `You may only enter current net book values.`
-      );
-    }
   };
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'2rem'}>
@@ -556,7 +550,7 @@ interface IAssessedValue {
 
 export const AssessedValue = (props: IAssessedValue) => {
   const { title, name, maxRows } = props;
-  const handleAssessmentYearChange = (inputValue: string, formValues: FieldValues) => {
+  const handleAssessmentYearChange = (inputValue: string) => {
     if (String(inputValue) == '' || inputValue == null) {
       return true;
     }
@@ -564,19 +558,15 @@ export const AssessedValue = (props: IAssessedValue) => {
     if (isNaN(inputYear)) {
       return 'Invalid input.';
     }
-    const yearValues: number[] = getValueByNestedKey(formValues, name).map((evaluation): number =>
-      parseInt(evaluation.Year),
+    // const yearValues: number[] = getValueByNestedKey(formValues, name).map((evaluation): number =>
+    //   parseInt(evaluation.Year),
+    // );
+    const currentYear = new Date().getFullYear();
+    return (
+      inputYear === currentYear ||
+      inputYear === currentYear - 1 ||
+      `You may only enter current assessment values.`
     );
-    if (yearValues.filter((yr) => yr === inputYear).length > 1) {
-      return `There is already an assessment value for the year ${inputYear}`;
-    } else {
-      const currentYear = new Date().getFullYear();
-      return (
-        inputYear === currentYear ||
-        inputYear === currentYear - 1 ||
-        `You may only enter current assessment values.`
-      );
-    }
   };
   const { control } = useFormContext();
   const { fields, prepend } = useFieldArray({

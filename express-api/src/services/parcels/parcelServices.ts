@@ -224,7 +224,7 @@ const updateParcel = async (incomingParcel: DeepPartial<Parcel>) => {
   if (incomingParcel.Fiscals && incomingParcel.Fiscals.length) {
     incomingParcel.Fiscals = await Promise.all(
       incomingParcel.Fiscals.map(async (fiscal) => {
-        const exists = await AppDataSource.getRepository(ParcelFiscal).exists({
+        const exists = await AppDataSource.getRepository(ParcelFiscal).findOne({
           where: {
             ParcelId: incomingParcel.Id,
             FiscalYear: fiscal.FiscalYear,
@@ -233,7 +233,7 @@ const updateParcel = async (incomingParcel: DeepPartial<Parcel>) => {
         });
         const fiscalEntity: DeepPartial<ParcelFiscal> = {
           ...fiscal,
-          CreatedById: exists ? undefined : incomingParcel.UpdatedById,
+          CreatedById: exists ? exists.CreatedById : incomingParcel.UpdatedById,
           UpdatedById: exists ? incomingParcel.UpdatedById : undefined,
         };
         return fiscalEntity;
@@ -243,7 +243,7 @@ const updateParcel = async (incomingParcel: DeepPartial<Parcel>) => {
   if (incomingParcel.Evaluations && incomingParcel.Evaluations.length) {
     incomingParcel.Evaluations = await Promise.all(
       incomingParcel.Evaluations.map(async (evaluation) => {
-        const exists = await AppDataSource.getRepository(ParcelEvaluation).exists({
+        const exists = await AppDataSource.getRepository(ParcelEvaluation).findOne({
           where: {
             ParcelId: incomingParcel.Id,
             Year: evaluation.Year,
@@ -252,7 +252,7 @@ const updateParcel = async (incomingParcel: DeepPartial<Parcel>) => {
         });
         const fiscalEntity: DeepPartial<ParcelFiscal> = {
           ...evaluation,
-          CreatedById: exists ? undefined : incomingParcel.UpdatedById,
+          CreatedById: exists ? exists.CreatedById : incomingParcel.UpdatedById,
           UpdatedById: exists ? incomingParcel.UpdatedById : undefined,
         };
         return fiscalEntity;
