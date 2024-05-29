@@ -14,7 +14,7 @@ export interface ErrorReport {
 const useReportsApi = (absoluteFetch: IFetch) => {
   const postErrorReport = async (error: ErrorReport): Promise<FetchResponse> => {
     // Specified url base because this call is outside of the ConfigContext
-    const response = await absoluteFetch.post(`/api/v2/reports/error`, error);
+    const response = await absoluteFetch.post(`/reports/error`, error);
     return response;
   };
 

@@ -32,8 +32,6 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
       sessionStorage.setItem('errorCount', '0');
       navigate('/');
       resetErrorBoundary();
-    } else {
-      sessionStorage.setItem('errorCount', '1');
     }
   }, [errorCount]);
 
@@ -173,6 +171,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
             <Button
               variant="contained"
               onClick={() => {
+                sessionStorage.setItem('errorCount', '1');
                 resetErrorBoundary();
               }}
               sx={{ marginRight: '1em', width: '7.5em' }}
