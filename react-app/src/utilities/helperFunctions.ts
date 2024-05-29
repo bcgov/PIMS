@@ -30,3 +30,24 @@ export const arrayUniqueBy = <T>(arr: Array<T>, key: (a: T) => string) => {
 export const enumReverseLookup = <T>(enumObj: T, value: number): keyof T | undefined => {
   return Object.keys(enumObj).find((key) => (enumObj as any)[key] === value) as keyof T | undefined;
 };
+
+/**
+ * Traverse an arbitrary object type using a string representing its key structure.
+ * Ex:
+ * getValueByNestedKey({ a: [ { b: 1 } ], 'a.0.b') -> 1
+ * @param obj Some object type
+ * @param key String representation of object keys
+ * @returns {any}
+ */
+export const getValueByNestedKey = <T extends Record<string, any>>(obj: T, key: string) => {
+  const nestedKeys = key.split('.');
+  let result = obj;
+  for (const key of nestedKeys) {
+    if (result && typeof result === 'object' && key in result) {
+      result = result[key];
+    } else {
+      return undefined;
+    }
+  }
+  return result;
+};
