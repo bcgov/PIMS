@@ -304,7 +304,7 @@ export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog)
   return (
     <ConfirmDialog
       dialogProps={{ maxWidth: 'lg' }}
-      title={'Edit agency interest responses'}
+      title={'Edit Agency Interest Responses'}
       open={open}
       confirmButtonProps={{ loading: submitting }}
       onConfirm={async () => {
