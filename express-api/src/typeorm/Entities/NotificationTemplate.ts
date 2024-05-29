@@ -41,7 +41,7 @@ export class NotificationTemplate extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   Body: string;
 
-  @Column('boolean')
+  @Column('boolean', { default: false })
   IsDisabled: boolean;
 
   @Column({ type: 'character varying', length: 50, nullable: true })
