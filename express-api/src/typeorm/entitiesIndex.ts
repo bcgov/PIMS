@@ -40,6 +40,7 @@ import { Workflow } from '@/typeorm/Entities/Workflow';
 import { WorkflowProjectStatus } from '@/typeorm/Entities/WorkflowProjectStatus';
 import { BuildingRelations } from '@/typeorm/Entities/views/BuildingRelationsView';
 import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
+import { NoteType } from './Entities/NoteType';
 
 const views = [BuildingRelations, MapProperties];
 
@@ -84,5 +85,6 @@ export default [
   User,
   Workflow,
   WorkflowProjectStatus,
+  NoteType,
   ...views,
 ];
