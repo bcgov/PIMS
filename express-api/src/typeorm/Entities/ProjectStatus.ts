@@ -10,10 +10,10 @@ export class ProjectStatus extends BaseEntity {
   @Column({ type: 'character varying', length: 150 })
   Name: string;
 
-  @Column('boolean')
+  @Column('boolean', { default: false })
   IsDisabled: boolean;
 
-  @Column('int')
+  @Column('int', { default: 0 })
   SortOrder: number;
 
   @Column({ type: 'character varying', length: 10 })

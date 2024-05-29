@@ -10,6 +10,7 @@ import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
+import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
@@ -17,6 +18,7 @@ import { faker } from '@faker-js/faker';
 import {
   produceAgencyResponse,
   produceBuilding,
+  produceNote,
   produceNotificationQueue,
   produceParcel,
   produceProject,
@@ -25,7 +27,14 @@ import {
   produceSSO,
   produceUser,
 } from 'tests/testUtils/factories';
-import { DeepPartial, DeleteResult, EntityTarget, ObjectLiteral, UpdateResult } from 'typeorm';
+import {
+  DeepPartial,
+  DeleteResult,
+  EntityTarget,
+  InsertResult,
+  ObjectLiteral,
+  UpdateResult,
+} from 'typeorm';
 
 const _getDeleteResponse = (amount: number) => ({
   raw: {},
@@ -63,6 +72,9 @@ jest.spyOn(AppDataSource.getRepository(ProjectProperty), 'find').mockImplementat
     ] as ProjectProperty[],
 );
 const _projectFind = jest.spyOn(AppDataSource.getRepository(Project), 'find');
+jest
+  .spyOn(AppDataSource.getRepository(ProjectNote), 'find')
+  .mockImplementation(async () => [produceNote()]);
 
 jest
   .spyOn(AppDataSource.getRepository(ProjectTask), 'find')
@@ -155,7 +167,6 @@ const _mockEntityManager = {
     }
   },
   delete: async <Entity extends ObjectLiteral>(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     entityClass: EntityTarget<Entity>,
   ): Promise<DeleteResult> => {
     if (entityClass === Project) {
@@ -165,7 +176,6 @@ const _mockEntityManager = {
     }
   },
   exists: async <Entity extends ObjectLiteral>(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     entityClass: EntityTarget<Entity>,
   ): Promise<boolean> => {
     if (entityClass === Project) {
@@ -178,6 +188,13 @@ const _mockEntityManager = {
   },
   update: async (): Promise<UpdateResult> => {
     return {
+      raw: {},
+      generatedMaps: [],
+    };
+  },
+  upsert: async (): Promise<InsertResult> => {
+    return {
+      identifiers: [],
       raw: {},
       generatedMaps: [],
     };

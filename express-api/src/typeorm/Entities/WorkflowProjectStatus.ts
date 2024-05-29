@@ -23,7 +23,7 @@ export class WorkflowProjectStatus extends BaseEntity {
   @JoinColumn({ name: 'status_id' })
   Status: ProjectStatus;
 
-  @Column('int')
+  @Column('int', { default: 0 })
   SortOrder: number;
 
   @Column('boolean')

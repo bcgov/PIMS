@@ -18,9 +18,6 @@ export class Parcel extends Property {
   @Column({ type: 'character varying', length: 50, nullable: true })
   ZoningPotential: string;
 
-  @Column({ type: 'boolean' })
-  NotOwned: boolean;
-
   @Column({ name: 'parent_parcel_id', type: 'int', nullable: true })
   ParentParcelId: number;
 
