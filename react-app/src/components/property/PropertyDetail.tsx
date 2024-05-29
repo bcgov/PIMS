@@ -218,12 +218,12 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const [openAssessedValueDialog, setOpenAssessedValueDialog] = useState(false);
 
   const sideBarItems = [
-    { title: `${buildingOrParcel} information` },
-    { title: `${buildingOrParcel} net book value` },
-    { title: 'Assessed value' },
+    { title: `${buildingOrParcel} Information` },
+    { title: `${buildingOrParcel} Net Book Value` },
+    { title: 'Assessed Value' },
   ];
 
-  if (buildingOrParcel === 'Parcel') sideBarItems.splice(1, 0, { title: 'LTSA information' });
+  if (buildingOrParcel === 'Parcel') sideBarItems.splice(1, 0, { title: 'LTSA Information' });
 
   return (
     <CollapsibleSidebar items={sideBarItems}>
@@ -244,18 +244,18 @@ const PropertyDetail = (props: IPropertyDetail) => {
         />
         <DataCard
           loading={propertyLoading}
-          id={`${buildingOrParcel} information`}
+          id={`${buildingOrParcel} Information`}
           customFormatter={customFormatter}
           values={mainInformation}
-          title={`${buildingOrParcel} information`}
+          title={`${buildingOrParcel} Information`}
           onEdit={() => setOpenInformationDialog(true)}
         />
         {buildingOrParcel === 'Parcel' && (
           <DataCard
             loading={propertyLoading}
-            id={'LTSA information'}
+            id={'LTSA Information'}
             values={undefined}
-            title={'LTSA information'}
+            title={'LTSA Information'}
             disableEdit={true}
             onEdit={undefined}
           >
@@ -263,18 +263,18 @@ const PropertyDetail = (props: IPropertyDetail) => {
           </DataCard>
         )}
         <DataCard
-          id={`${buildingOrParcel} net book value`}
+          id={`${buildingOrParcel} Net Book Value`}
           values={undefined}
-          title={`${buildingOrParcel} net book value`}
+          title={`${buildingOrParcel} Net Book Value`}
           onEdit={() => setOpenNetBookDialog(true)}
         >
           <PropertyNetValueTable rows={netBookValues} />
         </DataCard>
         <DataCard
           loading={propertyLoading}
-          id={'Assessed value'}
+          id={'Assessed Value'}
           values={undefined}
-          title={'Assessed value'}
+          title={'Assessed Value'}
           onEdit={() => setOpenAssessedValueDialog(true)}
         >
           <PropertyAssessedValueTable
