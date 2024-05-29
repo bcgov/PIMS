@@ -17,6 +17,7 @@ const useBCAssessmentApi = (absoluteFetch: IFetch) => {
           'Access-Control-Allow-Headers': 'Content-Type, Authorization, Origin',
           'Access-Control-Allow-Origin': '*',
         },
+        credentials: 'include',
       },
     );
     return parsedBody as FeatureCollection;

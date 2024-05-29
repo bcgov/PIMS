@@ -35,6 +35,7 @@ const useFetch = (baseUrl?: string) => {
           Authorization: keycloak.getAuthorizationHeaderValue(),
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         ...params,
       };
 
