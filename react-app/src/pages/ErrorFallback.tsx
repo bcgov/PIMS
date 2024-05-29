@@ -25,15 +25,27 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
   const sso = useSSO();
   const api = usePimsApi();
   const navigate = useNavigate();
-  const errorCount = sessionStorage.getItem('errorCount');
+  const errorTracker = JSON.parse(sessionStorage.getItem('errorTracker'));
 
+  // If errorTracker changes, we navigate to home if an error has occurred more than 0 times on this page.
+  // The first time, it's okay to show this page.
   useEffect(() => {
-    if (errorCount && parseInt(errorCount) > 0) {
-      sessionStorage.setItem('errorCount', '0');
+    if (
+      errorTracker &&
+      errorTracker.count > 0 &&
+      errorTracker.location === window.location.pathname
+    ) {
+      sessionStorage.setItem(
+        'errorTracker',
+        JSON.stringify({
+          count: 0,
+          location: '/',
+        }),
+      );
       navigate('/');
       resetErrorBoundary();
     }
-  }, [errorCount]);
+  }, [errorTracker]);
 
   const commonResultStyle = {
     display: 'flex',
@@ -171,7 +183,14 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
             <Button
               variant="contained"
               onClick={() => {
-                sessionStorage.setItem('errorCount', '1');
+                // Set that we've experienced one error at this location already.
+                sessionStorage.setItem(
+                  'errorTracker',
+                  JSON.stringify({
+                    count: 1,
+                    location: window.location.pathname,
+                  }),
+                );
                 resetErrorBoundary();
               }}
               sx={{ marginRight: '1em', width: '7.5em' }}
