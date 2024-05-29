@@ -1,13 +1,14 @@
 import BaseLayout from '@/components/layout/BaseLayout';
 import appTheme from '@/themes/appTheme';
 import { Button, Grid, IconButton, SxProps, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import errorImage from '@/assets/images/error.svg';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import usePimsApi from '@/hooks/usePimsApi';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * Renders an error fallback component that displays an error message and provides options for handling the error.
@@ -23,6 +24,18 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
   const [text, setText] = useState<string>('');
   const sso = useSSO();
   const api = usePimsApi();
+  const navigate = useNavigate();
+  const errorCount = sessionStorage.getItem('errorCount');
+
+  useEffect(() => {
+    if (errorCount && parseInt(errorCount) > 0) {
+      sessionStorage.setItem('errorCount', '0');
+      navigate('/');
+      resetErrorBoundary();
+    } else {
+      sessionStorage.setItem('errorCount', '1');
+    }
+  }, [errorCount]);
 
   const commonResultStyle = {
     display: 'flex',
