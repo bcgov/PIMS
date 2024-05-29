@@ -22,7 +22,6 @@ const AddAdministrativeArea = () => {
     defaultValues: {
       Name: '',
       RegionalDistrictId: null,
-      SortOrder: '0',
     },
   });
   return (
@@ -37,20 +36,17 @@ const AddAdministrativeArea = () => {
     >
       <Box>
         <NavigateBackButton
-          navigateBackTitle={'Back to administrative areas'}
+          navigateBackTitle={'Back to Administrative Area Overview'}
           onBackClick={() => navigate('/admin/adminAreas')}
         />
       </Box>
       <FormProvider {...formMethods}>
         <Typography mb={'2rem'} variant="h2">
-          Add new administrative area
+          Add New Administrative Area
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextFormField required name={'Name'} label={'Name'} />
-          </Grid>
-          <Grid item xs={12}>
-            <TextFormField required name={'SortOrder'} label={'Sort Order'} numeric />
           </Grid>
           <Grid item xs={12}>
             <AutocompleteFormField
@@ -71,7 +67,6 @@ const AddAdministrativeArea = () => {
                 ...formValues,
                 IsDisabled: false,
                 ProvinceId: 'BC',
-                SortOrder: Number(formValues.SortOrder),
               }).then((resp) => {
                 if (resp && resp.ok) navigate('/admin/adminAreas');
               });

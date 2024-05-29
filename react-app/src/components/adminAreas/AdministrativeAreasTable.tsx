@@ -44,7 +44,7 @@ const AdministrativeAreasTable = () => {
     },
     {
       field: 'CreatedOn',
-      headerName: 'CreatedOn',
+      headerName: 'Created On',
       flex: 1,
       valueFormatter: (value) => dateFormatter(value),
       type: 'date',
@@ -124,10 +124,10 @@ const AdministrativeAreasTable = () => {
           Disabled
         </CustomMenuItem>,
       ]}
-      tableHeader={'Administrative Areas'}
+      tableHeader={'Administrative Areas Overview'}
       excelTitle={'Administrative Areas Table'}
       customExcelData={getExcelData}
-      addTooltip={'Add admin area'}
+      addTooltip={'Create New Administration Area'}
       columns={columns}
       getRowId={(row) => row.Id}
       rows={data ?? []}

@@ -47,7 +47,7 @@ export class User extends BaseEntity {
   @Column({ type: 'character varying', length: 100, nullable: true })
   Position: string;
 
-  @Column('boolean')
+  @Column('boolean', { default: false })
   IsDisabled: boolean;
 
   @Column('boolean')
