@@ -155,7 +155,7 @@ const ProjectDetail = (props: IProjectDetail) => {
         marginX={'auto'}
       >
         <DetailViewNavigation
-          navigateBackTitle={'Back to disposal Overview'}
+          navigateBackTitle={'Back to Disposal Project Overview'}
           deleteTitle={'Delete project'}
           onDeleteClick={() => setOpenDeleteDialog(true)}
           onBackClick={() => props.onClose()}

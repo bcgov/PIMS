@@ -213,7 +213,7 @@ const ProjectsTable = () => {
       tableHeader={'Disposal Projects Overview'}
       excelTitle={'Projects'}
       customExcelData={getExcelData}
-      addTooltip={'Create new project'}
+      addTooltip={'Create New Disposal Project'}
       name={'projects'}
       columns={columns}
       rows={data ?? []}

@@ -37,13 +37,13 @@ const AddAdministrativeArea = () => {
     >
       <Box>
         <NavigateBackButton
-          navigateBackTitle={'Back to administrative areas'}
+          navigateBackTitle={'Back to Administrative Area Overview'}
           onBackClick={() => navigate('/admin/adminAreas')}
         />
       </Box>
       <FormProvider {...formMethods}>
         <Typography mb={'2rem'} variant="h2">
-          Add new administrative area
+          Add New Administrative Area
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12}>

@@ -278,7 +278,7 @@ export const ParcelInformationForm = (props: IParcelInformationForm) => {
   return (
     <>
       <Typography mt={'2rem'} variant="h5">
-        Does your agency own the parcel?
+        Does Your Agency Own the Parcel?
       </Typography>
       <SelectFormField
         name={'NotOwned'}
@@ -290,7 +290,7 @@ export const ParcelInformationForm = (props: IParcelInformationForm) => {
         required={true}
       />
       <Typography mt={'2rem'} variant="h5">
-        Parcel information
+        Parcel Information
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
@@ -354,7 +354,7 @@ interface IBuildingInformationForm {
 export const BuildingInformationForm = (props: IBuildingInformationForm) => {
   return (
     <>
-      <Typography mt={'2rem'} variant="h5">{`Building information`}</Typography>
+      <Typography mt={'2rem'} variant="h5">{`Building Information`}</Typography>
 
       <Grid container spacing={2}>
         <Grid item xs={12} paddingTop={'1rem'}>
@@ -481,7 +481,7 @@ export const NetBookValue = (props: INetBookValue) => {
             <Grid item xs={4}>
               <TextFormField
                 name={`Fiscals.${idx}.Value`}
-                label={'Net book value'}
+                label={'Net Book Value'}
                 numeric
                 InputProps={{
                   startAdornment: <InputAdornment position="start">$</InputAdornment>,

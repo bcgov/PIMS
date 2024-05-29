@@ -127,7 +127,7 @@ const AdministrativeAreasTable = () => {
       tableHeader={'Administrative Areas Overview'}
       excelTitle={'Administrative Areas Table'}
       customExcelData={getExcelData}
-      addTooltip={'Add admin area'}
+      addTooltip={'Create New Admin Area'}
       columns={columns}
       getRowId={(row) => row.Id}
       rows={data ?? []}

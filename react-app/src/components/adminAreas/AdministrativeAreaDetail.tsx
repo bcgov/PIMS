@@ -70,7 +70,7 @@ const AdministrativeAreaDetail = () => {
       marginX={'auto'}
     >
       <DetailViewNavigation
-        navigateBackTitle="Back to Administrative Areas"
+        navigateBackTitle="Back to Administrative Area Overview"
         deleteTitle="Delete Area"
         onBackClick={() => navigate('/admin/adminAreas')}
         disableDelete={true}

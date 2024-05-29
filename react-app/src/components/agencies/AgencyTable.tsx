@@ -197,7 +197,7 @@ const AgencyTable = (props: IAgencyTable) => {
         customExcelData={getExcelData}
         columns={columns}
         rows={agencies}
-        addTooltip="Add a new agency"
+        addTooltip="Create New Agency"
         onAddButtonClick={() => navigate('/admin/agencies/add')}
       />
     </Box>

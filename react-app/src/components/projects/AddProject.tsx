@@ -74,7 +74,7 @@ const AddProject = () => {
     >
       <Box>
         <NavigateBackButton
-          navigateBackTitle={'Back to Disposal Projects'}
+          navigateBackTitle={'Back to Disposal Project Overview'}
           onBackClick={() => navigate('/projects')}
         />
       </Box>
@@ -140,7 +140,7 @@ const AddProject = () => {
               fullWidth
               numeric
               name={'NetBook'}
-              label={'Net book value'}
+              label={'Net Book Value'}
               rules={{
                 min: {
                   value: 0.01,

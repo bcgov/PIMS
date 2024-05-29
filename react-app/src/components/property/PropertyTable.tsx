@@ -359,7 +359,7 @@ const PropertyTable = (props: IPropertyTable) => {
         customExcelData={getExcelData}
         columns={columns}
         rows={properties}
-        addTooltip="Add a new property"
+        addTooltip="Create New Property"
         initialState={{
           sorting: {
             sortModel: [{ sort: 'desc', field: 'UpdatedOn' }],
