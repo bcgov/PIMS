@@ -36,6 +36,7 @@ import {
 import { NotificationTemplate } from '@/typeorm/Entities/NotificationTemplate';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
 import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
+import { ILtsaOrder } from '@/services/ltsa/interfaces/ILtsaOrder';
 
 export class MockRes {
   statusValue: any;
@@ -730,3 +731,126 @@ export const produceAgencyResponse = (props?: Partial<ProjectAgencyResponse>) =>
 
   return response;
 };
+
+export const produceLtsaOrder = (): ILtsaOrder => ({
+  order: {
+    productType: 'title',
+    fileReference: 'Test',
+    productOrderParameters: {
+      titleNumber: 'ABC123',
+      landTitleDistrictCode: 'VI',
+      includeCancelledInfo: false,
+    },
+    orderId: faker.string.uuid(),
+    status: 'Processing',
+    billingInfo: {
+      billingModel: 'PROV',
+      productName: 'Searches',
+      productCode: 'Search',
+      feeExempted: true,
+      productFee: 0,
+      serviceCharge: 0,
+      subtotalFee: 0,
+      productFeeTax: 0,
+      serviceChargeTax: 0,
+      totalTax: 0,
+      totalFee: 0,
+    },
+    orderedProduct: {
+      fieldedData: {
+        titleStatus: 'REGISTERED',
+        titleIdentifier: { titleNumber: 'ABC123', landTitleDistrict: 'VICTORIA' },
+        tombstone: {
+          applicationReceivedDate: '2002-05-01T17:50:00Z',
+          enteredDate: '2002-05-29T14:59:26Z',
+          titleRemarks: '',
+          marketValueAmount: '',
+          fromTitles: [{ titleNumber: 'DEF456', landTitleDistrict: 'VICTORIA' }],
+          natureOfTransfers: [{ transferReason: 'FEE SIMPLE' }],
+        },
+        ownershipGroups: [
+          {
+            jointTenancyIndication: false,
+            interestFractionNumerator: '1',
+            interestFractionDenominator: '1',
+            ownershipRemarks: '',
+            titleOwners: [
+              {
+                lastNameOrCorpName1: 'CORP NAME',
+                givenName: '',
+                incorporationNumber: '',
+                occupationDescription: '',
+                address: {
+                  addressLine1: 'STREET NAME',
+                  addressLine2: '',
+                  city: 'VICTORIA',
+                  province: 'BC',
+                  provinceName: 'BRITISH COLUMBIA',
+                  country: 'CANADA',
+                  postalCode: 'POSTAL CODE',
+                },
+              },
+            ],
+          },
+        ],
+        taxAuthorities: [{ authorityName: 'MUNICIPALITY NAME' }],
+        descriptionsOfLand: [
+          {
+            parcelIdentifier: '000-000-000',
+            fullLegalDescription: 'LEGAL DESC',
+            parcelStatus: 'A',
+          },
+        ],
+        legalNotationsOnTitle: [
+          {
+            legalNotationNumber: 'AB123213',
+            status: 'ACTIVE',
+            legalNotation: {
+              originalLegalNotationNumber: 'AB123213',
+              legalNotationText: 'LEGAL TEXT',
+            },
+          },
+          {
+            legalNotationNumber: 'AB123214',
+            status: 'ACTIVE',
+            legalNotation: {
+              originalLegalNotationNumber: 'AB123214',
+              legalNotationText: 'MORE LEGAL TEXT',
+            },
+          },
+        ],
+        chargesOnTitle: [
+          {
+            chargeNumber: 'EF1232131',
+            status: 'REGISTERED',
+            enteredDate: '2002-05-29T14:59:26Z',
+            interAlia: 'No',
+            chargeRemarks: 'LEGAL TEXT\n',
+            charge: {
+              chargeNumber: 'AB123123',
+              transactionType: 'LEASE',
+              applicationReceivedDate: '1994-08-30T18:13:00Z',
+              chargeOwnershipGroups: [
+                {
+                  jointTenancyIndication: false,
+                  interestFractionNumerator: '1',
+                  interestFractionDenominator: '1',
+                  ownershipRemarks: '',
+                  chargeOwners: [
+                    { lastNameOrCorpName1: 'REGIONAL DISTRICT', incorporationNumber: '' },
+                  ],
+                },
+              ],
+              certificatesOfCharge: [],
+              correctionsAltos1: [],
+              corrections: [],
+            },
+            chargeRelease: {},
+          },
+        ],
+        duplicateCertificatesOfTitle: [],
+        titleTransfersOrDispositions: [],
+      },
+    },
+  },
+});

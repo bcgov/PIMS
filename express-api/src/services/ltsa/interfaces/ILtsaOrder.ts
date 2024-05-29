@@ -79,6 +79,30 @@ export interface ILtsaOrder {
             legalNotationText: string;
           };
         }[];
+        chargesOnTitle: {
+          chargeNumber: string;
+          status: string;
+          enteredDate: string; // '1994-08-30T18:13:00Z'
+          interAlia: string;
+          chargeRemarks: string;
+          charge: {
+            chargeNumber: string;
+            transactionType: string;
+            applicationReceivedDate: string; // '1994-08-30T18:13:00Z'
+            chargeOwnershipGroups: {
+              jointTenancyIndication: boolean;
+              interestFractionNumerator: string; // number as string
+              interestFractionDenominator: string; // number as string
+              ownershipRemarks: string;
+              chargeOwners: { lastNameOrCorpName1: string; incorporationNumber: string }[];
+            }[];
+
+            certificatesOfCharge: unknown[];
+            correctionsAltos1: unknown[];
+            corrections: unknown[];
+          };
+          chargeRelease: object;
+        }[];
         duplicateCertificatesOfTitle: string[];
         titleTransfersOrDispositions: string[];
       };
