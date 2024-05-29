@@ -1,6 +1,7 @@
 import {
   Autocomplete,
   Box,
+  Button,
   Grid,
   InputAdornment,
   TextField,
@@ -19,11 +20,10 @@ import { LatLng, Map } from 'leaflet';
 import usePimsApi from '@/hooks/usePimsApi';
 import { centroid } from '@turf/turf';
 import ParcelMap from '../map/ParcelMap';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { FeatureCollection } from 'geojson';
 import { arrayUniqueBy } from '@/utilities/helperFunctions';
 import MetresSquared from '@/components/text/MetresSquared';
-
 export type PropertyType = 'Building' | 'Parcel';
 
 interface IParcelInformationForm {
@@ -466,31 +466,70 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
 };
 
 interface INetBookValue {
-  years: number[];
+  name: string;
+  maxRows: number;
 }
 
 // Property.Fiscals
 export const NetBookValue = (props: INetBookValue) => {
+  const { name, maxRows } = props;
+  const { control } = useFormContext();
+  const { fields, prepend } = useFieldArray({
+    control: control,
+    name: name,
+  });
+
+  const handleFiscalYearChange = (inputValue: string) => {
+    if (String(inputValue) == '' || inputValue == null) {
+      return true;
+    }
+    const inputYear = parseInt(inputValue);
+    if (isNaN(inputYear)) {
+      return 'Invalid input.';
+    }
+    // const yearValues: number[] = getValueByNestedKey(formValues, name).map(
+    //   (evaluation: ParcelFiscal | BuildingFiscal): number =>
+    //     parseInt(String(evaluation.FiscalYear)),
+    // );
+    const currentYear = new Date().getFullYear();
+    return (
+      inputYear === currentYear ||
+      inputYear === currentYear - 1 ||
+      `You may only enter current net book values.`
+    );
+  };
   return (
-    <Grid container spacing={2}>
-      {props.years.map((yr, idx) => {
-        return (
-          <React.Fragment key={`netbookgrid${yr}`}>
+    <Box display={'flex'} flexDirection={'column'} gap={'2rem'}>
+      <Grid container spacing={2}>
+        {/* Render the current year row first */}
+        {fields?.map((netbook, idx) => (
+          <React.Fragment key={`netbook-item-${netbook.id}`}>
             <Grid item xs={4}>
               <TextFormField
-                value={yr}
-                disabled
-                name={`Fiscals.${idx}.FiscalYear`}
+                name={`${name}.${idx}.FiscalYear`}
                 label={'Fiscal year'}
+                disabled={!netbook['isNew']}
+                rules={
+                  netbook['isNew']
+                    ? {
+                        validate: handleFiscalYearChange,
+                      }
+                    : undefined
+                }
               />
             </Grid>
             <Grid item xs={4}>
-              <DateFormField name={`Fiscals.${idx}.EffectiveDate`} label={'Effective date'} />
+              <DateFormField
+                disabled={!netbook['isNew']}
+                name={`${name}.${idx}.EffectiveDate`}
+                label={'Effective date'}
+              />
             </Grid>
             <Grid item xs={4}>
               <TextFormField
-                name={`Fiscals.${idx}.Value`}
+                name={`${name}.${idx}.Value`}
                 label={'Net book value'}
+                disabled={!netbook['isNew']}
                 numeric
                 InputProps={{
                   startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -498,60 +537,111 @@ export const NetBookValue = (props: INetBookValue) => {
               />
             </Grid>
           </React.Fragment>
-        );
-      })}
-    </Grid>
+        ))}
+      </Grid>
+      <Button
+        sx={{ maxWidth: '14rem', alignSelf: 'center' }}
+        variant="outlined"
+        disabled={fields.length >= maxRows}
+        onClick={() =>
+          prepend({
+            FiscalYear: '',
+            Value: '',
+            EffectiveDate: null,
+            FiscalKeyId: 0,
+            isNew: true,
+          })
+        }
+      >
+        Add Current Value
+      </Button>
+    </Box>
   );
 };
 
 interface IAssessedValue {
-  years: number[];
+  name: string;
+  maxRows: number;
   title?: string;
-  topLevelKey?: string;
 }
 
 export const AssessedValue = (props: IAssessedValue) => {
-  const { years, title, topLevelKey } = props;
+  const { title, name, maxRows } = props;
+  const handleAssessmentYearChange = (inputValue: string) => {
+    if (String(inputValue) == '' || inputValue == null) {
+      return true;
+    }
+    const inputYear = parseInt(inputValue);
+    if (isNaN(inputYear)) {
+      return 'Invalid input.';
+    }
+    // const yearValues: number[] = getValueByNestedKey(formValues, name).map((evaluation): number =>
+    //   parseInt(evaluation.Year),
+    // );
+    const currentYear = new Date().getFullYear();
+    return (
+      inputYear === currentYear ||
+      inputYear === currentYear - 1 ||
+      `You may only enter current assessment values.`
+    );
+  };
+  const { control } = useFormContext();
+  const { fields, prepend } = useFieldArray({
+    //Ideally we provide typing for this but too annoying right now
+    control: control,
+    name: name,
+  });
+
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
-      <Typography mt={2} variant="h5">
+      <Typography mt={4} variant="h5">
         {title ?? 'Assessed Value'}
       </Typography>
-      {!years.length ? (
-        <Typography alignSelf={'center'}>No values.</Typography>
-      ) : (
-        <Box overflow={'auto'} paddingTop={'8px'}>
-          {years.map((yr, idx) => {
-            return (
-              <Box
-                mb={2}
-                gap={2}
-                key={`assessedvaluerow-${yr}${'-' + topLevelKey}`}
-                display={'flex'}
-                width={'100%'}
-                flexDirection={'row'}
-              >
-                <TextFormField
-                  sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-                  name={`${topLevelKey ?? ''}Evaluations.${idx}.Year`}
-                  label={'Year'}
-                  value={yr}
-                  disabled
-                />
-                <TextFormField
-                  InputProps={{
-                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                  }}
-                  sx={{ minWidth: 'calc(33.3% - 1rem)' }}
-                  name={`${topLevelKey ?? ''}Evaluations.${idx}.Value`}
-                  numeric
-                  label={'Value'}
-                />
-              </Box>
-            );
-          })}
-        </Box>
-      )}
+      <Box overflow={'auto'} paddingTop={'8px'}>
+        {fields?.map((evaluation, idx) => (
+          <Box
+            mb={2}
+            gap={2}
+            display={'flex'}
+            width={'100%'}
+            flexDirection={'row'}
+            key={`${name}-assessedvaluerow-current-${evaluation.id}`}
+          >
+            <TextFormField
+              sx={{ minWidth: 'calc(33.3% - 1rem)' }}
+              name={`${name}.${idx}.Year`}
+              label={'Year'}
+              numeric
+              disabled={!evaluation['isNew']} //Could be improved with better typing
+              rules={
+                evaluation['isNew']
+                  ? {
+                      validate: handleAssessmentYearChange,
+                    }
+                  : undefined
+              }
+            />
+            <TextFormField
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+              }}
+              sx={{ minWidth: 'calc(33.3% - 1rem)' }}
+              name={`${name}.${idx}.Value`}
+              disabled={!evaluation['isNew']}
+              numeric
+              label={'Value'}
+            />
+          </Box>
+        ))}
+      </Box>
+      <Button
+        sx={{ maxWidth: '14rem', alignSelf: 'center' }}
+        variant="outlined"
+        disabled={fields.length >= maxRows}
+        onClick={() => prepend({ EvaluationKeyId: 0, Value: '', Year: '', isNew: true })}
+      >
+        Add Current Assessment
+      </Button>
     </Box>
   );
 };

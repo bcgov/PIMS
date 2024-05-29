@@ -1,10 +1,17 @@
 import { AppDataSource } from '@/appDataSource';
 import { Parcel } from '@/typeorm/Entities/Parcel';
-import { produceParcel, produceUser } from 'tests/testUtils/factories';
-import { DeepPartial, UpdateResult } from 'typeorm';
+import {
+  produceParcel,
+  produceParcelEvaluation,
+  produceParcelFiscal,
+  produceUser,
+} from 'tests/testUtils/factories';
 import parcelService from '@/services/parcels/parcelServices';
 import { ParcelFilterSchema } from '@/services/parcels/parcelSchema';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import { ParcelFiscal } from '@/typeorm/Entities/ParcelFiscal';
+import { ParcelEvaluation } from '@/typeorm/Entities/ParcelEvaluation';
+import { DeepPartial, UpdateResult } from 'typeorm';
 import userServices from '@/services/users/usersServices';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 
@@ -16,15 +23,44 @@ const _parcelSave = jest
   .spyOn(parcelRepo, 'save')
   .mockImplementation(async (parcel: DeepPartial<Parcel> & Parcel) => parcel);
 
-const _parcelFindOne = jest
-  .spyOn(parcelRepo, 'findOne')
-  .mockImplementation(async () => produceParcel());
+const _parcelFindOne = jest.spyOn(parcelRepo, 'findOne').mockImplementation(async () => {
+  const parcel = produceParcel();
+  const { Id } = parcel;
+  produceParcelFiscal(Id);
+  return parcel;
+});
+
+// const _parcelFiscalExists = jest
+//   .spyOn(AppDataSource.getRepository(ParcelFiscal), 'exists')
+//   .mockImplementation(async () => true);
+
+// const _parcelEvaluationExists = jest
+//   .spyOn(AppDataSource.getRepository(ParcelEvaluation), 'exists')
+//   .mockImplementation(async () => true);
+
+const _parcelEvaluationFindOne = jest
+  .spyOn(AppDataSource.getRepository(ParcelEvaluation), 'findOne')
+  .mockImplementation(async () => produceParcelEvaluation(1)[0]);
+const _parcelFiscalFindOne = jest
+  .spyOn(AppDataSource.getRepository(ParcelFiscal), 'findOne')
+  .mockImplementation(async () => produceParcelFiscal(1)[0]);
+
+// const _parcelFindOne = jest
+//   .spyOn(parcelRepo, 'findOne')
+//   .mockImplementation(async () => produceParcel());
 
 jest.spyOn(AppDataSource.getRepository(ProjectProperty), 'find').mockImplementation(async () => []);
 
 jest.spyOn(parcelRepo, 'find').mockImplementation(async () => [produceParcel(), produceParcel()]);
 
 jest.spyOn(userServices, 'getUser').mockImplementation(async () => produceUser());
+
+jest
+  .spyOn(AppDataSource.getRepository(ParcelEvaluation), 'find')
+  .mockImplementation(async () => produceParcelEvaluation(1));
+jest
+  .spyOn(AppDataSource.getRepository(ParcelFiscal), 'find')
+  .mockImplementation(async () => produceParcelFiscal(1));
 
 const _mockStartTransaction = jest.fn(async () => {});
 const _mockRollbackTransaction = jest.fn(async () => {});
@@ -152,6 +188,15 @@ describe('UNIT - Parcel Services', () => {
     it('should throw an error if PID is not in schema', () => {
       const parcel = {};
       expect(async () => await parcelService.updateParcel(parcel)).rejects.toThrow();
+    });
+
+    it('should update Fiscals and Evaluations when they exist in the building object', async () => {
+      const updateParcel = produceParcel();
+      _parcelFindOne.mockResolvedValueOnce(updateParcel);
+
+      await parcelService.updateParcel(updateParcel);
+      expect(_parcelFiscalFindOne).toHaveBeenCalledTimes(1);
+      expect(_parcelEvaluationFindOne).toHaveBeenCalledTimes(1);
     });
   });
 

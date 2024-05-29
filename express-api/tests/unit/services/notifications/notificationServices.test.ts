@@ -56,6 +56,7 @@ const _statusNotifFind = jest.fn().mockImplementation(async (options) => [
 
 jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
   ...jest.requireActual('@/appDataSource').createQueryRunner,
+  release: () => {},
   manager: {
     find: async <Entity extends ObjectLiteral>(
       entityClass: EntityTarget<Entity>,

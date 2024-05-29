@@ -32,25 +32,35 @@ export const addBuilding = async (building: DeepPartial<Building>) => {
  * @returns     findBuilding - Building data matching Id passed in.
  */
 export const getBuildingById = async (buildingId: number) => {
+  const evaluations = await AppDataSource.getRepository(BuildingEvaluation).find({
+    where: { BuildingId: buildingId, EvaluationKeyId: 0 },
+    order: { Year: 'DESC' },
+  });
+  const fiscals = await AppDataSource.getRepository(BuildingFiscal).find({
+    where: { BuildingId: buildingId },
+    order: { FiscalYear: 'DESC' },
+  });
   const findBuilding = await buildingRepo.findOne({
     relations: {
-      Agency: {
-        Parent: true,
-      },
-      AdministrativeArea: {
-        RegionalDistrict: true,
-      },
+      Agency: true,
+      AdministrativeArea: true,
       Classification: true,
       PropertyType: true,
       BuildingConstructionType: true,
       BuildingPredominateUse: true,
       BuildingOccupantType: true,
-      Evaluations: true,
-      Fiscals: true,
     },
     where: { Id: buildingId },
   });
-  return findBuilding;
+  if (findBuilding) {
+    return {
+      ...findBuilding,
+      Evaluations: evaluations,
+      Fiscals: fiscals,
+    };
+  } else {
+    return null;
+  }
 };
 
 /**
@@ -62,6 +72,44 @@ export const updateBuildingById = async (building: DeepPartial<Building>) => {
   const existingBuilding = await getBuildingById(building.Id);
   if (!existingBuilding) {
     throw new ErrorWithCode('Building does not exists.', 404);
+  }
+  if (building.Fiscals && building.Fiscals.length) {
+    building.Fiscals = await Promise.all(
+      building.Fiscals.map(async (fiscal) => {
+        const exists = await AppDataSource.getRepository(BuildingFiscal).findOne({
+          where: {
+            BuildingId: building.Id,
+            FiscalYear: fiscal.FiscalYear,
+            FiscalKeyId: fiscal.FiscalKeyId,
+          },
+        });
+        const fiscalEntity: DeepPartial<BuildingFiscal> = {
+          ...fiscal,
+          CreatedById: exists ? exists.CreatedById : building.UpdatedById,
+          UpdatedById: exists ? building.UpdatedById : undefined,
+        };
+        return fiscalEntity;
+      }),
+    );
+  }
+  if (building.Evaluations && building.Evaluations.length) {
+    building.Evaluations = await Promise.all(
+      building.Evaluations.map(async (evaluation) => {
+        const exists = await AppDataSource.getRepository(BuildingEvaluation).findOne({
+          where: {
+            BuildingId: building.Id,
+            Year: evaluation.Year,
+            EvaluationKeyId: evaluation.EvaluationKeyId,
+          },
+        });
+        const evaluationEntity: DeepPartial<BuildingEvaluation> = {
+          ...evaluation,
+          CreatedById: exists ? exists.CreatedById : building.UpdatedById,
+          UpdatedById: exists ? building.UpdatedById : undefined,
+        };
+        return evaluationEntity;
+      }),
+    );
   }
   // Rebuild metadata to avoid overwriting the whole field.
   if (existingBuilding.LeasedLandMetadata) {
@@ -145,6 +193,7 @@ export const getBuildings = async (filter: BuildingFilter, includeRelations: boo
       AdministrativeArea: includeRelations,
       Classification: includeRelations,
       PropertyType: includeRelations,
+      Evaluations: includeRelations,
     },
     select: {
       Agency: {
@@ -166,6 +215,11 @@ export const getBuildings = async (filter: BuildingFilter, includeRelations: boo
       PropertyType: {
         Id: true,
         Name: true,
+      },
+      Evaluations: {
+        EvaluationKeyId: true,
+        Year: true,
+        Value: true,
       },
     },
     where: {
