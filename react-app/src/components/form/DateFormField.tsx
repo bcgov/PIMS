@@ -6,11 +6,12 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 type DateFieldFormProps = {
   name: string;
   label: string;
+  disabled?: boolean;
 };
 
 const DateFormField = (props: DateFieldFormProps) => {
   const { control } = useFormContext();
-  const { name, label } = props;
+  const { name, label, disabled } = props;
   return (
     <Controller
       control={control}
@@ -18,7 +19,14 @@ const DateFormField = (props: DateFieldFormProps) => {
       render={({ field: { onChange, value } }) => {
         return (
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateField fullWidth onChange={onChange} value={value} label={label} format={'LL'} />
+            <DateField
+              disabled={disabled}
+              fullWidth
+              onChange={onChange}
+              value={value}
+              label={label}
+              format={'LL'}
+            />
           </LocalizationProvider>
         );
       }}

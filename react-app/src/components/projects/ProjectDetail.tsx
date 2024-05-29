@@ -102,7 +102,7 @@ const ProjectDetail = (props: IProjectDetail) => {
     ProjectNumber: data?.parsedBody.ProjectNumber,
     Name: data?.parsedBody.Name,
     AssignTier: data?.parsedBody.TierLevel,
-    Notes: data?.parsedBody.Description,
+    Description: data?.parsedBody.Description,
   };
 
   const FinancialInformationData = {

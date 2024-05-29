@@ -25,7 +25,7 @@ import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LoadingButton } from '@mui/lab';
 
 const AddProperty = () => {
-  const years = [new Date().getFullYear(), new Date().getFullYear() - 1];
+  //const years = [new Date().getFullYear(), new Date().getFullYear() - 1];
   const [propertyType, setPropertyType] = useState<PropertyType>('Parcel');
   const [showErrorText, setShowErrorTest] = useState(false);
   const navigate = useNavigate();
@@ -77,17 +77,19 @@ const AddProperty = () => {
       BuildingTenancy: '',
       Location: null,
       BuildingTenancyUpdatedOn: dayjs(),
-      Fiscals: years.map((yr) => ({
-        FiscalYear: yr,
-        Value: '',
-        FiscalKeyId: 0,
-        EffectiveDate: dayjs(),
-      })),
-      Evaluations: years.map((yr) => ({
-        Year: yr,
-        EvaluationKeyId: 0,
-        Value: '',
-      })),
+      Fiscals: [],
+      Evaluations: [],
+      // Fiscals: years.map((yr) => ({
+      //   FiscalYear: yr,
+      //   Value: '',
+      //   FiscalKeyId: 0,
+      //   EffectiveDate: dayjs(),
+      // })),
+      // Evaluations: years.map((yr) => ({
+      //   Year: yr,
+      //   EvaluationKeyId: 0,
+      //   Value: '',
+      // })),
     },
   });
 
@@ -152,8 +154,8 @@ const AddProperty = () => {
         <Typography mt={'2rem'} variant="h5">
           Net Book Value
         </Typography>
-        <NetBookValue years={years} />
-        <AssessedValue years={years} />
+        <NetBookValue name="Fiscals" maxRows={1} />
+        <AssessedValue name="Evaluations" maxRows={1} />
       </FormProvider>
       {showErrorText && (
         <Typography alignSelf={'center'} variant="h5" color={'error'}>
@@ -178,7 +180,12 @@ const AddProperty = () => {
                 IsVisibleToOtherAgencies: false,
                 Fiscals: formValues.Fiscals.map((a) => ({
                   ...a,
+                  Value: Number(a?.Value),
                   EffectiveDate: a?.EffectiveDate?.toDate(),
+                })),
+                Evaluations: formValues.Evaluations.map((a) => ({
+                  ...a,
+                  Value: Number(a?.Value),
                 })),
               };
               addParcel.Evaluations = addParcel.Evaluations.filter((a) => a.Value);
@@ -200,7 +207,12 @@ const AddProperty = () => {
                 IsVisibleToOtherAgencies: false,
                 Fiscals: formValues.Fiscals.map((a) => ({
                   ...a,
+                  Value: Number(a?.Value),
                   EffectiveDate: a?.EffectiveDate?.toDate(),
+                })),
+                Evaluations: formValues.Evaluations.map((a) => ({
+                  ...a,
+                  Value: Number(a.Value),
                 })),
                 BuildingTenancyUpdatedOn: formValues.BuildingTenancyUpdatedOn.toDate(),
               };
