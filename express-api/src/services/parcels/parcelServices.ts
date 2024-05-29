@@ -221,6 +221,44 @@ const updateParcel = async (incomingParcel: DeepPartial<Parcel>) => {
   if (findParcel == null || findParcel.Id !== incomingParcel.Id) {
     throw new ErrorWithCode('Parcel not found', 404);
   }
+  if (incomingParcel.Fiscals && incomingParcel.Fiscals.length) {
+    incomingParcel.Fiscals = await Promise.all(
+      incomingParcel.Fiscals.map(async (fiscal) => {
+        const exists = await AppDataSource.getRepository(ParcelFiscal).findOne({
+          where: {
+            ParcelId: incomingParcel.Id,
+            FiscalYear: fiscal.FiscalYear,
+            FiscalKeyId: fiscal.FiscalKeyId,
+          },
+        });
+        const fiscalEntity: DeepPartial<ParcelFiscal> = {
+          ...fiscal,
+          CreatedById: exists ? exists.CreatedById : incomingParcel.UpdatedById,
+          UpdatedById: exists ? incomingParcel.UpdatedById : undefined,
+        };
+        return fiscalEntity;
+      }),
+    );
+  }
+  if (incomingParcel.Evaluations && incomingParcel.Evaluations.length) {
+    incomingParcel.Evaluations = await Promise.all(
+      incomingParcel.Evaluations.map(async (evaluation) => {
+        const exists = await AppDataSource.getRepository(ParcelEvaluation).findOne({
+          where: {
+            ParcelId: incomingParcel.Id,
+            Year: evaluation.Year,
+            EvaluationKeyId: evaluation.EvaluationKeyId,
+          },
+        });
+        const fiscalEntity: DeepPartial<ParcelFiscal> = {
+          ...evaluation,
+          CreatedById: exists ? exists.CreatedById : incomingParcel.UpdatedById,
+          UpdatedById: exists ? incomingParcel.UpdatedById : undefined,
+        };
+        return fiscalEntity;
+      }),
+    );
+  }
 
   return parcelRepo.save(incomingParcel);
 };
@@ -242,7 +280,13 @@ const getParcelByPid = async (parcelPid: number) => {
  * @returns     findParcel Parcel data matching ID passed in.
  */
 const getParcelById = async (parcelId: number) => {
-  return parcelRepo.findOne({
+  const evaluations = await AppDataSource.getRepository(ParcelEvaluation).find({
+    where: { ParcelId: parcelId, EvaluationKeyId: 0 },
+  });
+  const fiscals = await AppDataSource.getRepository(ParcelFiscal).find({
+    where: { ParcelId: parcelId },
+  });
+  const parcel = await parcelRepo.findOne({
     relations: {
       ParentParcel: true,
       Agency: {
@@ -253,11 +297,18 @@ const getParcelById = async (parcelId: number) => {
       },
       Classification: true,
       PropertyType: true,
-      Evaluations: true,
-      Fiscals: true,
     },
     where: { Id: parcelId },
   });
+  if (parcel) {
+    return {
+      ...parcel,
+      Evaluations: evaluations,
+      Fiscals: fiscals,
+    };
+  } else {
+    return null;
+  }
 };
 
 const parcelServices = {
