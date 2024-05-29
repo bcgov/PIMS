@@ -3,7 +3,7 @@ import { Project } from '@/typeorm/Entities/Project';
 import { SoftDeleteEntity } from './abstractEntities/SoftDeleteEntity';
 
 @Entity()
-@Index(['ProjectId', 'NoteType'])
+@Index(['ProjectId', 'NoteType'], { unique: true })
 export class ProjectNote extends SoftDeleteEntity {
   @PrimaryGeneratedColumn()
   Id: number;

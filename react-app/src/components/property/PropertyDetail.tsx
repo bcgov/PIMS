@@ -137,9 +137,13 @@ const PropertyDetail = (props: IPropertyDetail) => {
 
   const netBookValues = useMemo(() => {
     if (parcelId && parcel) {
-      return parcel.Fiscals.map((v) => v).sort((a, b) => b.FiscalYear - a.FiscalYear);
+      return parcel.Fiscals.map((v) => v)
+        .sort((a, b) => b.FiscalYear - a.FiscalYear)
+        .slice(0, 2);
     } else if (buildingId && building) {
-      return building.Fiscals.map((v) => v).sort((a, b) => b.FiscalYear - a.FiscalYear);
+      return building.Fiscals.map((v) => v)
+        .sort((a, b) => b.FiscalYear - a.FiscalYear)
+        .slice(0, 2);
     } else {
       return [];
     }
@@ -257,7 +261,6 @@ const PropertyDetail = (props: IPropertyDetail) => {
           id={`${buildingOrParcel} net book value`}
           values={undefined}
           title={`${buildingOrParcel} net book value`}
-          disableEdit={!netBookValues?.length}
           onEdit={() => setOpenNetBookDialog(true)}
         >
           <PropertyNetValueTable rows={netBookValues} />
@@ -267,7 +270,6 @@ const PropertyDetail = (props: IPropertyDetail) => {
           id={'Assessed value'}
           values={undefined}
           title={'Assessed value'}
-          disableEdit={!assessedValues?.length}
           onEdit={() => setOpenAssessedValueDialog(true)}
         >
           <PropertyAssessedValueTable
@@ -317,7 +319,14 @@ const PropertyDetail = (props: IPropertyDetail) => {
         )}
       </>
       <PropertyAssessedValueEditDialog
-        initialRelatedBuildings={relatedBuildings}
+        initialRelatedBuildings={
+          !relatedBuildings
+            ? []
+            : relatedBuildings?.map((a) => ({
+                ...a,
+                Evaluations: a.Evaluations.sort((a, b) => b.Year - a.Year),
+              }))
+        }
         propertyType={buildingOrParcel}
         initialValues={buildingOrParcel === 'Building' ? building : parcel}
         open={openAssessedValueDialog}
