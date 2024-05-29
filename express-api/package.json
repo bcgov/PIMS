@@ -42,7 +42,6 @@
     "winston": "3.13.0",
     "zod": "3.23.3"
   },
-  
   "devDependencies": {
     "@faker-js/faker": "8.4.0",
     "@types/compression": "1.7.4",
