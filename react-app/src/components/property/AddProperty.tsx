@@ -56,7 +56,6 @@ const AddProperty = () => {
 
   const formMethods = useForm({
     defaultValues: {
-      NotOwned: true,
       Address1: '',
       PIN: '',
       PID: '',

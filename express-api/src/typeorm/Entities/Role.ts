@@ -13,10 +13,10 @@ export class Role extends BaseEntity {
   @Index({ unique: true })
   Name: string;
 
-  @Column('boolean')
+  @Column('boolean', { default: false })
   IsDisabled: boolean;
 
-  @Column('int')
+  @Column('int', { default: 0 })
   SortOrder: number;
 
   @Column('uuid', { nullable: true })

@@ -22,7 +22,6 @@ const AddAdministrativeArea = () => {
     defaultValues: {
       Name: '',
       RegionalDistrictId: null,
-      SortOrder: '0',
     },
   });
   return (
@@ -50,9 +49,6 @@ const AddAdministrativeArea = () => {
             <TextFormField required name={'Name'} label={'Name'} />
           </Grid>
           <Grid item xs={12}>
-            <TextFormField required name={'SortOrder'} label={'Sort Order'} numeric />
-          </Grid>
-          <Grid item xs={12}>
             <AutocompleteFormField
               required
               name={'RegionalDistrictId'}
@@ -71,7 +67,6 @@ const AddAdministrativeArea = () => {
                 ...formValues,
                 IsDisabled: false,
                 ProvinceId: 'BC',
-                SortOrder: Number(formValues.SortOrder),
               }).then((resp) => {
                 if (resp && resp.ok) navigate('/admin/adminAreas');
               });
