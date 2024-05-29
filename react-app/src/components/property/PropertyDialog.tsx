@@ -71,7 +71,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
   }, [initialValues]);
   return (
     <ConfirmDialog
-      title={'Edit parcel information'}
+      title={'Edit Parcel Information'}
       open={props.open}
       confirmButtonProps={{ loading: submitting }}
       onConfirm={async () => {
@@ -185,7 +185,7 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
 
   return (
     <ConfirmDialog
-      title={'Edit building information'}
+      title={'Edit Building Information'}
       open={open}
       confirmButtonProps={{ loading: submitting }}
       onConfirm={async () => {
@@ -305,7 +305,7 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
   return (
     <ConfirmDialog
       confirmButtonProps={{ loading: submittingParcel || submittingBuilding }}
-      title={'Edit assessed values'}
+      title={'Edit Assessed Values'}
       open={open}
       onConfirm={async () => {
         const isValid = await assessedFormMethods.trigger();
@@ -447,7 +447,7 @@ export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditD
 
   return (
     <ConfirmDialog
-      title={'Edit net book values'}
+      title={'Edit Net Book Values'}
       open={open}
       confirmButtonProps={{ loading: submittingParcel || submittingBuilding }}
       onConfirm={async () => {

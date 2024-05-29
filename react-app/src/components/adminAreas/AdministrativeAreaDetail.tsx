@@ -76,11 +76,11 @@ const AdministrativeAreaDetail = () => {
         loading={isLoading}
         customFormatter={customFormatter}
         values={adminAreaData}
-        title={'Administrative area'}
+        title={'Administrative Area Details'}
         onEdit={() => setOpenEditDialog(true)}
       />
       <ConfirmDialog
-        title={'Update administrative area'}
+        title={'Update Administrative Area'}
         open={openEditDialog}
         confirmButtonProps={{
           loading: submitting,
