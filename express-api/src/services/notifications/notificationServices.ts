@@ -133,7 +133,10 @@ const insertProjectNotificationQueue = async (
     ProjectId: project.Id,
     ToAgencyId: agency?.Id,
   };
-
+  if (queryRunner === undefined) {
+    //If no arg passed we spawned a new query runner and we must release that!
+    await query.release();
+  }
   const insertedNotif = await query.manager.save(NotificationQueue, queueObject);
   return insertedNotif;
 };
@@ -207,7 +210,14 @@ const generateProjectNotifications = async (
         .getMany();
       agencies.forEach((agc) =>
         returnNotifications.push(
-          insertProjectNotificationQueue(template, projStatusNotif, project, agc),
+          insertProjectNotificationQueue(
+            template,
+            projStatusNotif,
+            project,
+            agc,
+            undefined,
+            queryRunner,
+          ),
         ),
       );
     } else if (template.Audience == NotificationAudience.ParentAgencies) {
@@ -234,7 +244,14 @@ const generateProjectNotifications = async (
         .getMany();
       agencies.forEach((agc) =>
         returnNotifications.push(
-          insertProjectNotificationQueue(template, projStatusNotif, project, agc),
+          insertProjectNotificationQueue(
+            template,
+            projStatusNotif,
+            project,
+            agc,
+            undefined,
+            queryRunner,
+          ),
         ),
       );
     } else if (template.Audience == NotificationAudience.WatchingAgencies) {
@@ -256,7 +273,14 @@ const generateProjectNotifications = async (
         .getMany();
       agencies.forEach((agc) =>
         returnNotifications.push(
-          insertProjectNotificationQueue(template, projStatusNotif, project, agc),
+          insertProjectNotificationQueue(
+            template,
+            projStatusNotif,
+            project,
+            agc,
+            undefined,
+            queryRunner,
+          ),
         ),
       );
     } else if (template.Audience == NotificationAudience.Default) {
@@ -271,6 +295,9 @@ const generateProjectNotifications = async (
         ),
       );
     }
+  }
+  if (queryRunner === undefined) {
+    await query.release();
   }
   return await Promise.all(returnNotifications);
 };
@@ -295,16 +322,28 @@ const sendNotification = async (
       delayTS: notification.SendOn.getTime(),
     };
     const response = await chesServices.sendEmailAsync(email, user);
-    return query.manager.save(NotificationQueue, {
-      ...notification,
-      ChesTransactionId: response.txId as UUID,
-      ChesMessageId: response.messages[0].msgId as UUID,
-    });
+    if (response) {
+      // Note: Email may be intentionally disabled, thus yielding null response.
+      return query.manager.save(NotificationQueue, {
+        ...notification,
+        ChesTransactionId: response.txId as UUID,
+        ChesMessageId: response.messages[0].msgId as UUID,
+      });
+    } else {
+      return query.manager.save(NotificationQueue, {
+        ...notification,
+        Status: NotificationStatus.Failed,
+      });
+    }
   } catch (e) {
     return query.manager.save(NotificationQueue, {
       ...notification,
       Status: NotificationStatus.Failed,
     });
+  } finally {
+    if (queryRunner === undefined) {
+      await query.release();
+    }
   }
 };
 

@@ -9,7 +9,7 @@ import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { useClassificationStyle } from './PropertyTable';
 import PropertyAssessedValueTable from './PropertyAssessedValueTable';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Parcel } from '@/hooks/api/useParcelsApi';
 import { Building } from '@/hooks/api/useBuildingsApi';
 import DeleteDialog from '../dialog/DeleteDialog';
@@ -21,16 +21,19 @@ import {
 } from './PropertyDialog';
 import { PropertyType } from './PropertyForms';
 import MetresSquared from '@/components/text/MetresSquared';
-import { zeroPadPID } from '@/utilities/formatters';
+import { pidFormatter, zeroPadPID } from '@/utilities/formatters';
 import ParcelMap from '../map/ParcelMap';
 import { Map } from 'leaflet';
 import { Room } from '@mui/icons-material';
+import TitleOwnership from '../ltsa/TitleOwnership';
+import useDataSubmitter from '@/hooks/useDataSubmitter';
 
 interface IPropertyDetail {
   onClose: () => void;
 }
 
 const PropertyDetail = (props: IPropertyDetail) => {
+  const navigate = useNavigate();
   const params = useParams();
   const parcelId = isNaN(Number(params.parcelId)) ? null : Number(params.parcelId);
   const buildingId = isNaN(Number(params.buildingId)) ? null : Number(params.buildingId);
@@ -57,6 +60,15 @@ const PropertyDetail = (props: IPropertyDetail) => {
       return null;
     }
   });
+
+  const { submit: deleteProperty, submitting: deletingProperty } = useDataSubmitter(() => {
+    if (parcelId && parcel) {
+      return api.parcels.deleteParcelById(parcelId);
+    } else {
+      return api.buildings.deleteBuildingById(buildingId);
+    }
+  });
+
   const propertyLoading = buildingsLoading || parcelsLoading;
   const { data: relatedBuildings, refreshData: refreshRelated } = useDataLoader(
     () => parcel?.PID && api.buildings.getBuildings({ pid: parcel.PID, includeRelations: true }),
@@ -135,6 +147,8 @@ const PropertyDetail = (props: IPropertyDetail) => {
 
   const customFormatter = (key: any, val: any) => {
     switch (key) {
+      case 'PID':
+        return <Typography>{pidFormatter(val)}</Typography>;
       case 'Agency':
         return <Typography>{val.Name}</Typography>;
       case 'Classification':
@@ -194,21 +208,23 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const [openNetBookDialog, setOpenNetBookDialog] = useState(false);
   const [openAssessedValueDialog, setOpenAssessedValueDialog] = useState(false);
 
+  const sideBarItems = [
+    { title: `${buildingOrParcel} information` },
+    { title: `${buildingOrParcel} net book value` },
+    { title: 'Assessed value' },
+  ];
+
+  if (buildingOrParcel === 'Parcel') sideBarItems.splice(1, 0, { title: 'LTSA information' });
+
   return (
-    <CollapsibleSidebar
-      items={[
-        { title: `${buildingOrParcel} information` },
-        { title: `${buildingOrParcel} net book value` },
-        { title: 'Assessed value' },
-      ]}
-    >
+    <CollapsibleSidebar items={sideBarItems}>
       <Box
         display={'flex'}
         gap={'1rem'}
         mt={'2rem'}
         mb={'2rem'}
         flexDirection={'column'}
-        width={'46rem'}
+        width={'60rem'}
         marginX={'auto'}
       >
         <DetailViewNavigation
@@ -225,8 +241,19 @@ const PropertyDetail = (props: IPropertyDetail) => {
           title={`${buildingOrParcel} information`}
           onEdit={() => setOpenInformationDialog(true)}
         />
+        {buildingOrParcel === 'Parcel' && (
+          <DataCard
+            loading={propertyLoading}
+            id={'LTSA information'}
+            values={undefined}
+            title={'LTSA information'}
+            disableEdit={true}
+            onEdit={undefined}
+          >
+            <TitleOwnership pid={parcel?.PID ? zeroPadPID(Number(parcel?.PID)) : null} /> <></>
+          </DataCard>
+        )}
         <DataCard
-          loading={propertyLoading}
           id={`${buildingOrParcel} net book value`}
           values={undefined}
           title={`${buildingOrParcel} net book value`}
@@ -254,7 +281,9 @@ const PropertyDetail = (props: IPropertyDetail) => {
           mapRef={setMap}
           movable={false}
           zoomable={false}
+          zoomOnScroll={false}
           popupSize="small"
+          hideControls
         >
           <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height={'100%'}>
             <Room
@@ -312,7 +341,8 @@ const PropertyDetail = (props: IPropertyDetail) => {
         open={openDeleteDialog}
         title={'Delete property'}
         message={'Are you sure you want to delete this property?'}
-        onDelete={async () => {}} //Purposefully omitted for now.
+        confirmButtonProps={{ loading: deletingProperty }}
+        onDelete={async () => deleteProperty().then(() => navigate('/properties'))}
         onClose={async () => setOpenDeleteDialog(false)}
       />
     </CollapsibleSidebar>

@@ -1,4 +1,3 @@
-import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import {
   Entity,
   Column,
@@ -9,10 +8,11 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Project, ProjectMetadata } from '@/typeorm/Entities/Project';
+import { SoftDeleteEntity } from './abstractEntities/SoftDeleteEntity';
 
 @Entity()
 @Index(['ProjectId', 'SnapshotOn'])
-export class ProjectSnapshot extends BaseEntity {
+export class ProjectSnapshot extends SoftDeleteEntity {
   @PrimaryGeneratedColumn()
   Id: number;
 
