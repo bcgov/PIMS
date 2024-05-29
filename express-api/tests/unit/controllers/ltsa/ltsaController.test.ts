@@ -44,7 +44,7 @@ describe('UNIT - Testing controllers for /ltsa routes', () => {
 
   it('should throw an error if ltsaService throws an error', async () => {
     mockRequest.query = {
-      pid: '000382345',
+      pid: 'notapid',
     };
     const error = new ErrorWithCode(
       '(LTSA) notapid is an invalid parcel identifier (PID) format. Please check your records and try again. [50201]',
