@@ -195,7 +195,7 @@ const PropertyTable = (props: IPropertyTable) => {
     },
     {
       field: 'UpdatedOn',
-      headerName: 'Last Update',
+      headerName: 'Updated On',
       flex: 1,
       valueFormatter: (value) => dateFormatter(value),
     },

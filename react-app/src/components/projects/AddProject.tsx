@@ -79,10 +79,10 @@ const AddProject = () => {
         />
       </Box>
       <Typography variant={'h2'} mb={'2rem'}>
-        Create disposal project
+        Create Disposal Project
       </Typography>
       <FormProvider {...formMethods}>
-        <Typography variant="h5">Project information</Typography>
+        <Typography variant="h5">Project Information</Typography>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextFormField required fullWidth name={'Name'} label={'Name'} />
@@ -105,14 +105,14 @@ const AddProject = () => {
             />
           </Grid>
         </Grid>
-        <Typography variant="h5">Disposal properties</Typography>
+        <Typography variant="h5">Disposal Project Properties</Typography>
         <DisposalProjectSearch rows={rows} setRows={setRows} />
         {showNoPropertiesError && (
           <Typography textAlign={'center'} color={theme.palette.error.main}>
             You must include at least one property.
           </Typography>
         )}
-        <Typography variant="h5">Financial information</Typography>
+        <Typography variant="h5">Financial Information</Typography>
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextFormField
@@ -219,7 +219,7 @@ const AddProject = () => {
           <Grid item xs={12}>
             <SingleSelectBoxFormField
               name={'Metadata.exemptionRequested'}
-              label={'Apply for enhanced referral process exemption'}
+              label={'Apply for Enhanced Referral Process exemption'}
             />
           </Grid>
         </Grid>
@@ -229,7 +229,7 @@ const AddProject = () => {
             <SingleSelectBoxFormField
               name={'Approval'}
               label={
-                'My ministry/agency has approval/authority to submit the disposal project to SRES for review.'
+                'My Ministry/agency has approval/authority to submit the disposal project to SRES for review.'
               }
               required
             />

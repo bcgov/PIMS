@@ -97,14 +97,14 @@ const AgencyTable = (props: IAgencyTable) => {
     },
     {
       field: 'CreatedOn',
-      headerName: 'Created',
+      headerName: 'Created On',
       flex: 1,
       valueFormatter: (value) => dateFormatter(value),
       maxWidth: 150,
     },
     {
       field: 'UpdatedOn',
-      headerName: 'Last Update',
+      headerName: 'Updated On',
       flex: 1,
       valueFormatter: (value) => dateFormatter(value),
       maxWidth: 150,
