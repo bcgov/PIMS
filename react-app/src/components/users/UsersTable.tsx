@@ -3,9 +3,12 @@ import { FilterSearchDataGrid } from '@/components/table/DataTable';
 import { Box, SxProps, useTheme, ListSubheader, MenuItem } from '@mui/material';
 import {
   GridColDef,
+  GridComparatorFn,
   GridEventListener,
   gridFilteredSortedRowEntriesSelector,
+  GridRenderCellParams,
   GridRowId,
+  gridStringOrNumberComparator,
   GridValidRowModel,
 } from '@mui/x-data-grid';
 import { MutableRefObject, PropsWithChildren, useEffect, useState } from 'react';
@@ -58,6 +61,14 @@ interface IUsersTable {
   refreshData: () => void;
   error: unknown;
 }
+
+  const statusComparitor: GridComparatorFn = (v1, v2) => {
+    if (v1 == 'OnHold') return 1;
+    if (v2 == 'OnHold') return -1; 
+    if (v1 == 'Disabled' || v1 == 'Denied') return -1;
+    if (v2 == 'Disabled' || v2 == 'Denied') return 1;
+    return 0;
+  }
 
 const UsersTable = (props: IUsersTable) => {
   // States and contexts
@@ -150,6 +161,7 @@ const UsersTable = (props: IUsersTable) => {
         if (!params.value) return <></>;
         return statusChipFormatter(params.value);
       },
+      sortComparator: statusComparitor,
       width: 150,
     },
     {
@@ -266,7 +278,7 @@ const UsersTable = (props: IUsersTable) => {
         loading={isLoading}
         initialState={{
           sorting: {
-            sortModel: [{ field: 'CreatedOn', sort: 'desc' }],
+            sortModel: [{ field: 'Status', sort: 'desc' }],
           },
         }}
         onPresetFilterChange={selectPresetFilter}
