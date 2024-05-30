@@ -21,7 +21,7 @@ import {
 } from './PropertyDialog';
 import { PropertyType } from './PropertyForms';
 import MetresSquared from '@/components/text/MetresSquared';
-import { pidFormatter, zeroPadPID } from '@/utilities/formatters';
+import { dateFormatter, pidFormatter, zeroPadPID } from '@/utilities/formatters';
 import ParcelMap from '../map/ParcelMap';
 import { Map } from 'leaflet';
 import { Room } from '@mui/icons-material';
@@ -153,8 +153,6 @@ const PropertyDetail = (props: IPropertyDetail) => {
     switch (key) {
       case 'PID':
         return <Typography>{pidFormatter(val)}</Typography>;
-      case 'Agency':
-        return <Typography>{val.Name}</Typography>;
       case 'Classification':
         return !val || propertyLoading ? (
           <Skeleton />
@@ -166,7 +164,6 @@ const PropertyDetail = (props: IPropertyDetail) => {
           />
         );
       case 'IsSensitive':
-      case 'Owned':
         return val ? <Typography>Yes</Typography> : <Typography>No</Typography>;
       case 'TotalArea':
       case 'UsableArea':
@@ -176,8 +173,12 @@ const PropertyDetail = (props: IPropertyDetail) => {
             <MetresSquared />
           </>
         );
-      case 'LandArea':
+      case 'LotSize':
         return <Typography>{`${val} Hectares`}</Typography>;
+      case 'Tenancy':
+        return (
+          <Typography>{`${val}${/^(0|[1-9]\d*)?(\.\d+)?(?<=\d)$/.test(val) ? ' %' : ''}`}</Typography>
+        );
       default:
         return <Typography>{val}</Typography>;
     }
@@ -191,6 +192,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
       PID: data?.PID ? zeroPadPID(data.PID) : undefined,
       PIN: data?.PIN,
       PostalCode: data?.Postal,
+      Agency: data?.Agency?.Name,
       AdministrativeArea: data?.AdministrativeArea?.Name,
       Address: data?.Address1,
       IsSensitive: data?.IsSensitive,
@@ -198,11 +200,14 @@ const PropertyDetail = (props: IPropertyDetail) => {
     };
     if (buildingOrParcel === 'Building') {
       info.Name = (data as Building)?.Name;
+      info.MainUsage = (data as Building)?.BuildingPredominateUse?.Name || '';
+      info.ConstructionType = (data as Building)?.BuildingConstructionType?.Name || '';
       info.TotalArea = (data as Building)?.TotalArea;
       info.UsableArea = (data as Building)?.RentableArea;
+      info.Tenancy = (data as Building)?.BuildingTenancy;
+      info.TenancyDate = dateFormatter((data as Building)?.BuildingTenancyUpdatedOn);
     } else {
-      info.LandArea = (data as Parcel)?.LandArea;
-      info.Owned = !(data as Parcel)?.NotOwned;
+      info.LotSize = (data as Parcel)?.LandArea;
     }
     return info;
   }, [parcel, building]);
@@ -213,12 +218,12 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const [openAssessedValueDialog, setOpenAssessedValueDialog] = useState(false);
 
   const sideBarItems = [
-    { title: `${buildingOrParcel} information` },
-    { title: `${buildingOrParcel} net book value` },
-    { title: 'Assessed value' },
+    { title: `${buildingOrParcel} Information` },
+    { title: `${buildingOrParcel} Net Book Value` },
+    { title: 'Assessed Value' },
   ];
 
-  if (buildingOrParcel === 'Parcel') sideBarItems.splice(1, 0, { title: 'LTSA information' });
+  if (buildingOrParcel === 'Parcel') sideBarItems.splice(1, 0, { title: 'LTSA Information' });
 
   return (
     <CollapsibleSidebar items={sideBarItems}>
@@ -239,18 +244,18 @@ const PropertyDetail = (props: IPropertyDetail) => {
         />
         <DataCard
           loading={propertyLoading}
-          id={`${buildingOrParcel} information`}
+          id={`${buildingOrParcel} Information`}
           customFormatter={customFormatter}
           values={mainInformation}
-          title={`${buildingOrParcel} information`}
+          title={`${buildingOrParcel} Information`}
           onEdit={() => setOpenInformationDialog(true)}
         />
         {buildingOrParcel === 'Parcel' && (
           <DataCard
             loading={propertyLoading}
-            id={'LTSA information'}
+            id={'LTSA Information'}
             values={undefined}
-            title={'LTSA information'}
+            title={'LTSA Information'}
             disableEdit={true}
             onEdit={undefined}
           >
@@ -258,18 +263,18 @@ const PropertyDetail = (props: IPropertyDetail) => {
           </DataCard>
         )}
         <DataCard
-          id={`${buildingOrParcel} net book value`}
+          id={`${buildingOrParcel} Net Book Value`}
           values={undefined}
-          title={`${buildingOrParcel} net book value`}
+          title={`${buildingOrParcel} Net Book Value`}
           onEdit={() => setOpenNetBookDialog(true)}
         >
           <PropertyNetValueTable rows={netBookValues} />
         </DataCard>
         <DataCard
           loading={propertyLoading}
-          id={'Assessed value'}
+          id={'Assessed Value'}
           values={undefined}
-          title={'Assessed value'}
+          title={'Assessed Value'}
           onEdit={() => setOpenAssessedValueDialog(true)}
         >
           <PropertyAssessedValueTable

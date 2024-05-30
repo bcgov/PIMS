@@ -206,7 +206,7 @@ const UsersTable = (props: IUsersTable) => {
     },
     {
       field: 'CreatedOn',
-      headerName: 'Created',
+      headerName: 'Created On',
       minWidth: 120,
       valueFormatter: (value) => dateFormatter(value),
       type: 'date',

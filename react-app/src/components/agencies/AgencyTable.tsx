@@ -97,14 +97,14 @@ const AgencyTable = (props: IAgencyTable) => {
     },
     {
       field: 'CreatedOn',
-      headerName: 'Created',
+      headerName: 'Created On',
       flex: 1,
       valueFormatter: (value) => dateFormatter(value),
       maxWidth: 150,
     },
     {
       field: 'UpdatedOn',
-      headerName: 'Last Update',
+      headerName: 'Updated On',
       flex: 1,
       valueFormatter: (value) => dateFormatter(value),
       maxWidth: 150,
@@ -197,7 +197,7 @@ const AgencyTable = (props: IAgencyTable) => {
         customExcelData={getExcelData}
         columns={columns}
         rows={agencies}
-        addTooltip="Add a new agency"
+        addTooltip="Create New Agency"
         onAddButtonClick={() => navigate('/admin/agencies/add')}
       />
     </Box>

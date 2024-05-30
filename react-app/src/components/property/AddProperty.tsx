@@ -56,7 +56,6 @@ const AddProperty = () => {
 
   const formMethods = useForm({
     defaultValues: {
-      NotOwned: true,
       Address1: '',
       PIN: '',
       PID: '',
@@ -105,15 +104,15 @@ const AddProperty = () => {
     >
       <Box>
         <NavigateBackButton
-          navigateBackTitle={'Back to properties'}
+          navigateBackTitle={'Back to Property Overview'}
           onBackClick={() => navigate('/properties')}
         />
       </Box>
       <FormProvider {...formMethods}>
         <Typography mb={'2rem'} variant="h2">
-          Add new property
+          Add New Property
         </Typography>
-        <Typography variant="h5">Property type</Typography>
+        <Typography variant="h5">Property Type</Typography>
         <RadioGroup name="controlled-radio-property-type">
           <BoxedIconRadio
             onClick={() => setPropertyType('Parcel')}
@@ -152,7 +151,7 @@ const AddProperty = () => {
           />
         )}
         <Typography mt={'2rem'} variant="h5">
-          Net book value
+          Net Book Value
         </Typography>
         <NetBookValue name="Fiscals" maxRows={1} />
         <AssessedValue name="Evaluations" maxRows={1} />
