@@ -1,18 +1,10 @@
+import { IOwnershipGroup } from '@/hooks/api/useLtsaApi';
 import { Box, Chip, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import React from 'react';
 
 interface IOwnershipRowProps {
-  rows: {
-    jointTenancyIndication: boolean;
-    interestFractionNumerator: string;
-    interestFractionDenominator: string;
-    titleOwners: {
-      lastNameOrCorpName1: string;
-      givenName: string;
-      incorporationNumber: string;
-    }[];
-  }[];
+  rows: IOwnershipGroup[];
 }
 
 const LtsaOwnershipTable = (props: IOwnershipRowProps) => {

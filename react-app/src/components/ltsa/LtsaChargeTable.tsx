@@ -1,34 +1,10 @@
+import { IChargeOnTitle } from '@/hooks/api/useLtsaApi';
 import { Box, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 
 interface IChargeRowProps {
-  rows: {
-    chargeNumber: string;
-    status: string;
-    enteredDate: string;
-    interAlia: string;
-    chargeRemarks: string;
-    charge: {
-      chargeNumber: string;
-      transactionType: string;
-      applicationReceivedDate: string;
-      chargeOwnershipGroups: {
-        jointTenancyIndication: boolean;
-        interestFractionNumerator: string;
-        interestFractionDenominator: string;
-        ownershipRemarks: string;
-        chargeOwners: {
-          lastNameOrCorpName1: string;
-          incorporationNumber: string;
-        }[];
-      }[];
-      certificatesOfCharge: [];
-      correctionsAltos1: [];
-      corrections: [];
-    };
-    chargeRelease: object;
-  }[];
+  rows: IChargeOnTitle[];
 }
 
 const LtsaChargeTable = (props: IChargeRowProps) => {

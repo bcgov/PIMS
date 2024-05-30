@@ -14,9 +14,9 @@ export class ProjectType extends BaseEntity {
   @Column('text', { nullable: true })
   Description: string;
 
-  @Column('boolean')
+  @Column('boolean', { default: false })
   IsDisabled: boolean;
 
-  @Column('int')
+  @Column('int', { default: 0 })
   SortOrder: number;
 }

@@ -22,10 +22,10 @@ export class AdministrativeArea extends BaseEntity {
   @Index()
   Name: string;
 
-  @Column('boolean')
+  @Column('boolean', { default: false })
   IsDisabled: boolean;
 
-  @Column('int')
+  @Column('int', { default: 0 })
   SortOrder: number;
 
   // Regional District Relations

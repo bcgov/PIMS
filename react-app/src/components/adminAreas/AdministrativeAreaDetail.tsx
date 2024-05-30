@@ -39,7 +39,6 @@ const AdministrativeAreaDetail = () => {
     Name: data?.Name,
     IsDisabled: data?.IsDisabled,
     CreatedOn: data?.CreatedOn,
-    SortOrder: data?.SortOrder,
     RegionalDistrict: data?.RegionalDistrict?.Name,
   };
 
@@ -47,7 +46,6 @@ const AdministrativeAreaDetail = () => {
     defaultValues: {
       Name: '',
       IsDisabled: null,
-      SortOrder: '',
       RegionalDistrictId: null,
     },
   });
@@ -56,7 +54,6 @@ const AdministrativeAreaDetail = () => {
     formMethods.reset({
       Name: data?.Name,
       IsDisabled: data?.IsDisabled,
-      SortOrder: String(data?.SortOrder),
       RegionalDistrictId: data?.RegionalDistrictId,
     });
   }, [data]);
@@ -70,7 +67,7 @@ const AdministrativeAreaDetail = () => {
       marginX={'auto'}
     >
       <DetailViewNavigation
-        navigateBackTitle="Back to Administrative Areas"
+        navigateBackTitle="Back to Administrative Area Overview"
         deleteTitle="Delete Area"
         onBackClick={() => navigate('/admin/adminAreas')}
         disableDelete={true}
@@ -79,11 +76,11 @@ const AdministrativeAreaDetail = () => {
         loading={isLoading}
         customFormatter={customFormatter}
         values={adminAreaData}
-        title={'Administrative area'}
+        title={'Administrative Area Details'}
         onEdit={() => setOpenEditDialog(true)}
       />
       <ConfirmDialog
-        title={'Update administrative area'}
+        title={'Update Administrative Area'}
         open={openEditDialog}
         confirmButtonProps={{
           loading: submitting,
@@ -96,7 +93,6 @@ const AdministrativeAreaDetail = () => {
             submit(idAsNumber, {
               ...formValues,
               Id: idAsNumber,
-              SortOrder: Number(formValues.SortOrder),
             }).then(() => {
               refreshData();
               setOpenEditDialog(false);
@@ -109,10 +105,6 @@ const AdministrativeAreaDetail = () => {
           <Grid spacing={2} container>
             <Grid mt={2} item xs={12}>
               <TextFormField required fullWidth name={'Name'} label={'Name'} />
-            </Grid>
-
-            <Grid item xs={12}>
-              <TextFormField required numeric fullWidth name={'SortOrder'} label={'Sort Order'} />
             </Grid>
             <Grid item xs={12}>
               <AutocompleteFormField

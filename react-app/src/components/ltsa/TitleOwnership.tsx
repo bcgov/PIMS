@@ -41,8 +41,9 @@ const TitleOwnership = (props: TitleOwnershipProps) => {
   };
 
   return (
-    <>
+    <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
       <DataCard
+        titleTypographyProps={{ variant: 'h3' }}
         loading={isLoading}
         values={TitleDetails}
         title={'Title Details'}
@@ -50,6 +51,7 @@ const TitleOwnership = (props: TitleOwnershipProps) => {
         onEdit={undefined}
       />
       <DataCard
+        titleTypographyProps={{ variant: 'h3' }}
         loading={isLoading}
         values={undefined}
         title={'Ownership Information by Interest Fraction'}
@@ -59,6 +61,7 @@ const TitleOwnership = (props: TitleOwnershipProps) => {
         <LtsaOwnershipTable rows={data?.order.orderedProduct.fieldedData.ownershipGroups} />
       </DataCard>
       <DataCard
+        titleTypographyProps={{ variant: 'h3' }}
         loading={isLoading}
         values={undefined}
         title={'Charge Details'}
@@ -67,7 +70,7 @@ const TitleOwnership = (props: TitleOwnershipProps) => {
       >
         <LtsaChargeTable rows={data?.order.orderedProduct.fieldedData.chargesOnTitle} />
       </DataCard>
-    </>
+    </Box>
   );
 };
 

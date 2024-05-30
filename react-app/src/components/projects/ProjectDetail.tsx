@@ -102,7 +102,7 @@ const ProjectDetail = (props: IProjectDetail) => {
     ProjectNumber: data?.parsedBody.ProjectNumber,
     Name: data?.parsedBody.Name,
     AssignTier: data?.parsedBody.TierLevel,
-    Notes: data?.parsedBody.Description,
+    Description: data?.parsedBody.Description,
   };
 
   const FinancialInformationData = {
@@ -155,7 +155,7 @@ const ProjectDetail = (props: IProjectDetail) => {
         marginX={'auto'}
       >
         <DetailViewNavigation
-          navigateBackTitle={'Back to disposal Overview'}
+          navigateBackTitle={'Back to Disposal Project Overview'}
           deleteTitle={'Delete project'}
           onDeleteClick={() => setOpenDeleteDialog(true)}
           onBackClick={() => props.onClose()}
