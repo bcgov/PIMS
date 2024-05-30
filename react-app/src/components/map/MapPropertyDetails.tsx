@@ -207,11 +207,18 @@ const DrawerContents = (props: ContentsProps) => {
   const { property, afterPropertyLoad } = props;
   const [propertyData, setPropertyData] = useState(undefined);
   const [parcelLayerData, setParcelLayerData] = useState<ParcelData>(undefined);
+  // const [setLtsa] = useState<ltsaOrder>(undefined);
   const api = usePimsApi();
 
   useEffect(() => {
     if (property?.id != null && property?.type != null) getPropertyData();
   }, [property]);
+
+  useEffect(() => {
+    if (propertyData?.PID) {
+      api.ltsa.getLtsabyPid(propertyData.PID);
+    }
+  }, [propertyData]);
 
   const getPropertyData = async () => {
     let returnedProperty: Parcel | Building;
@@ -230,6 +237,19 @@ const DrawerContents = (props: ContentsProps) => {
       }
     });
     afterPropertyLoad();
+  };
+
+  const getLTSAData = async () => {
+    try {
+      const ltsaData = await api.ltsa.getLtsabyPid(propertyData.PID);
+      setLtsa(ltsaData);
+
+      propertyData[
+        ltsaData?.order.orderedProduct.fieldedData.descriptionsOfLand[0].fullLegalDescription ?? ''
+      ];
+    } catch (e) {
+      setLtsa(undefined);
+    }
   };
 
   return (
