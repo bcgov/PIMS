@@ -465,7 +465,7 @@ const handleProjectAgencyResponses = async (
 const handleProjectNotes = async (newProject: DeepPartial<Project>, queryRunner: QueryRunner) => {
   if (newProject?.Notes?.length) {
     const saveNotes = newProject.Notes.map(async (note): Promise<InsertResult | void> => {
-      if (note.ProjectId == null || note.NoteType == null) {
+      if (note.ProjectId == null || note.NoteTypeId == null) {
         throw new ErrorWithCode('Provided note was missing a required field.', 400);
       }
       const exists = await queryRunner.manager.findOne(ProjectNote, {
@@ -476,7 +476,7 @@ const handleProjectNotes = async (newProject: DeepPartial<Project>, queryRunner:
         {
           ProjectId: newProject.Id,
           Note: note.Note,
-          NoteType: note.NoteType,
+          NoteTypeId: note.NoteTypeId,
           CreatedById: exists ? exists.CreatedById : newProject.CreatedById,
           UpdatedById: exists ? newProject.UpdatedById : undefined,
         },

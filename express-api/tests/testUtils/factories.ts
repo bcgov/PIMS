@@ -542,9 +542,9 @@ export const produceNoteType = (): NoteType => {
     UpdatedById: randomUUID(),
     UpdatedBy: undefined,
     UpdatedOn: new Date(),
-  }
+  };
   return noteType;
-}
+};
 
 export const produceProject = (
   props?: Partial<Project>,
