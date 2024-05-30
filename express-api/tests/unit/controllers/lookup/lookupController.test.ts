@@ -6,6 +6,7 @@ import {
   getRequestHandlerMocks,
   produceClassification,
   produceConstructionType,
+  produceNoteType,
   producePredominateUse,
   produceRegionalDistrict,
   produceTask,
@@ -18,12 +19,14 @@ import { BuildingConstructionType } from '@/typeorm/Entities/BuildingConstructio
 import {
   lookupBuildingConstructionType,
   lookupBuildingPredominateUse,
+  lookupNoteTypes,
   lookupRegionalDistricts,
   lookupTasks,
 } from '@/controllers/lookup/lookupController';
 import { RegionalDistrict } from '@/typeorm/Entities/RegionalDistrict';
 import { TierLevel } from '@/typeorm/Entities/TierLevel';
 import { Task } from '@/typeorm/Entities/Task';
+import { NoteType } from '@/typeorm/Entities/NoteType';
 
 const {
   lookupAgencies,
@@ -41,6 +44,7 @@ const _findConstruction = jest.fn().mockImplementation(() => [produceConstructio
 const _findRegionalDistricts = jest.fn().mockImplementation(() => [produceRegionalDistrict({})]);
 const _findTierLevel = jest.fn().mockImplementation(() => [produceTierLevel()]);
 const _findTasks = jest.fn().mockImplementation(() => [produceTask()]);
+const _findNoteTypes = jest.fn().mockImplementation(() => [produceNoteType()]);
 
 jest
   .spyOn(AppDataSource.getRepository(PropertyClassification), 'find')
@@ -60,6 +64,10 @@ jest
   .mockImplementation(() => _findTierLevel());
 
 jest.spyOn(AppDataSource.getRepository(Task), 'find').mockImplementation(() => _findTasks());
+
+jest
+  .spyOn(AppDataSource.getRepository(NoteType), 'find')
+  .mockImplementation(() => _findNoteTypes());
 
 describe('UNIT - Lookup Controller', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
@@ -219,6 +227,18 @@ describe('UNIT - Lookup Controller', () => {
     it('should return 400 on bad parse', async () => {
       _findTasks.mockImplementationOnce(() => [{ Name: [] }]);
       await lookupTasks(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+  });
+
+  describe('GET /lookup/noteTypes', () => {
+    it('should return status 200 and a list of note types', async () => {
+      await lookupNoteTypes(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+    });
+    it('should return 400 on bad parse', async () => {
+      _findNoteTypes.mockImplementationOnce(() => [{ Name: [] }]);
+      await lookupNoteTypes(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
   });
