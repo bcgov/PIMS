@@ -61,11 +61,11 @@ interface IUsersTable {
 }
 
 const statusComparitor: GridComparatorFn = (v1, v2) => {
-  if (v1 == 'OnHold') return 1;
-  if (v2 == 'OnHold') return -1;
-  if (v1 == 'Disabled' || v1 == 'Denied') return -1;
-  if (v2 == 'Disabled' || v2 == 'Denied') return 1;
-  return 0;
+  const statusOrder = ['OnHold', 'Active', 'Disabled', 'Denied'];
+  const indx1 = statusOrder.indexOf(v1);
+  const indx2 = statusOrder.indexOf(v2);
+  if (indx1 < 0 || indx2 < 0) return 0;
+  else return indx2 - indx1;
 };
 
 const UsersTable = (props: IUsersTable) => {
