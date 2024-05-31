@@ -19,6 +19,7 @@ import { Agency } from '@/hooks/api/useAgencyApi';
 import { AgencyResponseType } from '@/constants/agencyResponseTypes';
 import { enumReverseLookup } from '@/utilities/helperFunctions';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
+import TextFormField from '../form/TextFormField';
 
 interface IProjectGeneralInfoDialog {
   initialValues: Project;
@@ -49,6 +50,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
       TierLevelId: undefined,
       Description: '',
       Tasks: [],
+      Notes: [],
     },
     mode: 'all',
   });
@@ -67,8 +69,13 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
     api.lookup.getTasks(projectFormMethods.getValues()['StatusId']),
   );
 
+  const { data: noteTypes, refreshData: refreshNotes } = useDataLoader(() =>
+    api.lookup.getProjectNoteTypes(projectFormMethods.getValues()['StatusId']),
+  );
+
   useEffect(() => {
     refreshTasks();
+    refreshNotes();
   }, [projectFormMethods.watch('StatusId')]); //When status id changes, fetch a new set of tasks possible for this status...
 
   useEffect(() => {
@@ -81,6 +88,17 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
       })) ?? [],
     );
   }, [tasks, initialValues]);
+
+  useEffect(() => {
+    //Similarly for notes, we should set a blank value for any notes related to this status and scan for existing values to prepopulate.
+    projectFormMethods.setValue(
+      'Notes',
+      noteTypes?.map((note) => ({
+        NoteTypeId: note.Id,
+        Note: initialValues?.Notes?.find((a) => a.NoteTypeId == note.Id) ?? '',
+      })) ?? [],
+    );
+  });
 
   return (
     <ConfirmDialog
@@ -116,6 +134,26 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
                   label={task.Name}
                 />
               ))}
+            </Box>
+          )}
+        {initialValues &&
+          initialValues?.StatusId !== projectFormMethods.getValues()['StatusId'] &&
+          noteTypes?.length > 0 && (
+            <Box mt={'1rem'}>
+              <Typography variant="h5" mb={'1rem'}>
+                Confirm Notes
+              </Typography>
+              <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
+                {noteTypes?.map((note, idx) => (
+                  <TextFormField
+                    minRows={2}
+                    multiline
+                    key={`${note.Id}-${idx}`}
+                    name={`Notes.${idx}.Note`}
+                    label={note.Description}
+                  />
+                ))}
+              </Box>
             </Box>
           )}
       </FormProvider>
