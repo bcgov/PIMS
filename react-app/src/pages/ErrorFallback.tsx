@@ -1,13 +1,14 @@
 import BaseLayout from '@/components/layout/BaseLayout';
 import appTheme from '@/themes/appTheme';
 import { Button, Grid, IconButton, SxProps, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import errorImage from '@/assets/images/error.svg';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import usePimsApi from '@/hooks/usePimsApi';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * Renders an error fallback component that displays an error message and provides options for handling the error.
@@ -23,6 +24,28 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
   const [text, setText] = useState<string>('');
   const sso = useSSO();
   const api = usePimsApi();
+  const navigate = useNavigate();
+  const errorTracker = JSON.parse(sessionStorage.getItem('errorTracker'));
+
+  // If errorTracker changes, we navigate to home if an error has occurred more than 0 times on this page.
+  // The first time, it's okay to show this page.
+  useEffect(() => {
+    if (
+      errorTracker &&
+      errorTracker.count > 0 &&
+      errorTracker.location === window.location.pathname
+    ) {
+      sessionStorage.setItem(
+        'errorTracker',
+        JSON.stringify({
+          count: 0,
+          location: '/',
+        }),
+      );
+      navigate('/');
+      resetErrorBoundary();
+    }
+  }, [errorTracker]);
 
   const commonResultStyle = {
     display: 'flex',
@@ -160,6 +183,14 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
             <Button
               variant="contained"
               onClick={() => {
+                // Set that we've experienced one error at this location already.
+                sessionStorage.setItem(
+                  'errorTracker',
+                  JSON.stringify({
+                    count: 1,
+                    location: window.location.pathname,
+                  }),
+                );
                 resetErrorBoundary();
               }}
               sx={{ marginRight: '1em', width: '7.5em' }}
