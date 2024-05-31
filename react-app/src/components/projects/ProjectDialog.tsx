@@ -95,10 +95,10 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
       'Notes',
       noteTypes?.map((note) => ({
         NoteTypeId: note.Id,
-        Note: initialValues?.Notes?.find((a) => a.NoteTypeId == note.Id) ?? '',
+        Note: initialValues?.Notes?.find((a) => a.NoteTypeId == note.Id)?.Note ?? '',
       })) ?? [],
     );
-  });
+  }, [noteTypes, initialValues]);
 
   return (
     <ConfirmDialog
