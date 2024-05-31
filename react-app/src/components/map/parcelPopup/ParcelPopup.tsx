@@ -137,7 +137,7 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
                   >
                     <Tab label="Parcel Layer" value="0" />
                     <Tab label="LTSA" value="1" />
-                    <Tab label="BCA" value="2" />
+                    {/* <Tab label="BCA" value="2" /> */}
                   </TabList>
 
                   <TabPanel value="0" sx={tabPanelStyle}>
@@ -146,7 +146,7 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
                   <TabPanel value="1" sx={tabPanelStyle}>
                     <LtsaDetails ltsaData={ltsaData} isLoading={ltsaLoading} />
                   </TabPanel>
-                  <TabPanel value="2" sx={tabPanelStyle}></TabPanel>
+                  {/* <TabPanel value="2" sx={tabPanelStyle}> TODO: BCA Data Goes Here </TabPanel> */}
                 </TabContext>
               </Box>
             </>
@@ -390,8 +390,7 @@ const LtsaDetails = (props: LtsaDetailsProps) => {
             <GridSubtitle>Ownership by Interest</GridSubtitle>
             <Grid container item xs={12}>
               <Grid item xs={2}>
-                {' '}
-                %{' '}
+                %
               </Grid>
               <Grid container item xs={10}>
                 <Grid item xs={9}>
@@ -405,21 +404,23 @@ const LtsaDetails = (props: LtsaDetailsProps) => {
 
             {ltsaData.order.orderedProduct.fieldedData.ownershipGroups.map((group, index) => (
               <Grid item container xs={12} key={index}>
-                <Grid
-                  item
-                  xs={2}
-                >{`${((parseFloat(group.interestFractionNumerator) / parseFloat(group.interestFractionDenominator)) * 100).toFixed(2)}%`}</Grid>
+                <Grid item xs={2}>
+                  <Typography variant="smallTable">
+                    {`${((parseFloat(group.interestFractionNumerator) / parseFloat(group.interestFractionDenominator)) * 100).toFixed(2)}%`}{' '}
+                  </Typography>
+                </Grid>
                 <Grid item xs={10} container>
                   {ltsaData.order.orderedProduct.fieldedData.ownershipGroups
                     .at(index)
                     .titleOwners.map((owner, subindex) => (
                       <Grid item container xs={12} key={subindex}>
-                        <Grid
-                          item
-                          xs={9}
-                        >{`${owner.lastNameOrCorpName1}${owner.givenName ? `, ${owner.givenName}` : ''}`}</Grid>
+                        <Grid item xs={9}>
+                          <Typography variant="smallTable">
+                            {`${owner.lastNameOrCorpName1}${owner.givenName ? `, ${owner.givenName}` : ''}`}{' '}
+                          </Typography>
+                        </Grid>
                         <Grid item xs={3}>
-                          {owner.incorporationNumber}
+                          <Typography variant="smallTable">{owner.incorporationNumber}</Typography>
                         </Grid>
                       </Grid>
                     ))}
@@ -428,6 +429,55 @@ const LtsaDetails = (props: LtsaDetailsProps) => {
             ))}
 
             {/* CHARGES */}
+            <GridSubtitle>Charge Details</GridSubtitle>
+            {ltsaData.order.orderedProduct.fieldedData.chargesOnTitle ? (
+              <>
+                <Grid container item xs={12}>
+                  <Grid item xs={2}>
+                    #
+                  </Grid>
+                  <Grid item xs={2}>
+                    Status
+                  </Grid>
+                  <Grid item xs={2}>
+                    Received
+                  </Grid>
+                  <Grid item xs={3}>
+                    Transaction Type
+                  </Grid>
+                  <Grid item xs={3}>
+                    Remarks
+                  </Grid>
+                </Grid>
+                {ltsaData.order.orderedProduct.fieldedData.chargesOnTitle.map(
+                  (chargeOnTitle, index) => (
+                    <Grid key={index} item container xs={12}>
+                      <Grid item xs={2}>
+                        <Typography variant="smallTable">{chargeOnTitle.chargeNumber}</Typography>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <Typography variant="smallTable">{chargeOnTitle.status}</Typography>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <Typography variant="smallTable">
+                          {dateFormatter(chargeOnTitle.charge.applicationReceivedDate)}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={3}>
+                        <Typography variant="smallTable">
+                          {chargeOnTitle.charge.transactionType}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={3}>
+                        <Typography variant="smallTable">{chargeOnTitle.chargeRemarks}</Typography>
+                      </Grid>
+                    </Grid>
+                  ),
+                )}
+              </>
+            ) : (
+              <Typography variant="caption">No charge information available.</Typography>
+            )}
           </>
         ) : (
           <Typography variant="body2">No LTSA information available.</Typography>
