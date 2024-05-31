@@ -41,6 +41,7 @@ import { ParcelEvaluation } from '@/typeorm/Entities/ParcelEvaluation';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
 import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
 import { ILtsaOrder } from '@/services/ltsa/interfaces/ILtsaOrder';
+import { NoteType } from '@/typeorm/Entities/NoteType';
 
 export class MockRes {
   statusValue: any;
@@ -525,6 +526,26 @@ export const produceTask = (): Task => {
   return task;
 };
 
+export const produceNoteType = (): NoteType => {
+  const noteType: NoteType = {
+    Id: faker.number.int(),
+    Name: faker.commerce.product(),
+    IsDisabled: faker.datatype.boolean(),
+    SortOrder: 0,
+    Description: faker.lorem.sentence(),
+    IsOptional: false,
+    StatusId: faker.number.int(),
+    Status: undefined,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+  };
+  return noteType;
+};
+
 export const produceProject = (
   props?: Partial<Project>,
   projectProperties?: ProjectProperty[],
@@ -588,7 +609,8 @@ export const produceNote = (props?: Partial<ProjectNote>): ProjectNote => {
     Id: faker.number.int(),
     ProjectId: faker.number.int(),
     Project: undefined,
-    NoteType: faker.number.int(),
+    NoteTypeId: faker.number.int(),
+    NoteType: undefined,
     Note: faker.lorem.lines(),
     DeletedBy: undefined,
     DeletedById: null,
