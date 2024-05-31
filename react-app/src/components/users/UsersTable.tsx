@@ -3,6 +3,7 @@ import { FilterSearchDataGrid } from '@/components/table/DataTable';
 import { Box, SxProps, useTheme, ListSubheader, MenuItem } from '@mui/material';
 import {
   GridColDef,
+  GridComparatorFn,
   GridEventListener,
   gridFilteredSortedRowEntriesSelector,
   GridRowId,
@@ -58,6 +59,14 @@ interface IUsersTable {
   refreshData: () => void;
   error: unknown;
 }
+
+const statusComparitor: GridComparatorFn = (v1, v2) => {
+  const statusOrder = ['OnHold', 'Active', 'Disabled', 'Denied'];
+  const indx1 = statusOrder.indexOf(v1);
+  const indx2 = statusOrder.indexOf(v2);
+  if (indx1 < 0 || indx2 < 0) return 0;
+  else return indx2 - indx1;
+};
 
 const UsersTable = (props: IUsersTable) => {
   // States and contexts
@@ -150,6 +159,7 @@ const UsersTable = (props: IUsersTable) => {
         if (!params.value) return <></>;
         return statusChipFormatter(params.value);
       },
+      sortComparator: statusComparitor,
       width: 150,
     },
     {
@@ -266,7 +276,7 @@ const UsersTable = (props: IUsersTable) => {
         loading={isLoading}
         initialState={{
           sorting: {
-            sortModel: [{ field: 'CreatedOn', sort: 'desc' }],
+            sortModel: [{ field: 'Status', sort: 'desc' }],
           },
         }}
         onPresetFilterChange={selectPresetFilter}
