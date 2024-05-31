@@ -152,15 +152,30 @@ const Header: React.FC = () => {
               ) : (
                 <></>
               )}
-              <Link underline="none" href="/properties" variant="h5">
-                Active Inventory
-              </Link>
-              <Link underline="none" href="/projects" variant="h5">
-                Disposal Projects
-              </Link>
-              <Link underline="none" href="/users" variant="h5">
-                Users
-              </Link>
+              <RouterLink
+                style={{ color: theme.palette.black.main, textDecoration: 'none' }}
+                to="/properties"
+              >
+                <Typography fontWeight={500} variant="h5">
+                  Active Inventory
+                </Typography>
+              </RouterLink>
+              <RouterLink
+                style={{ color: theme.palette.black.main, textDecoration: 'none' }}
+                to="/projects"
+              >
+                <Typography fontWeight={500} variant="h5">
+                  Disposal Projects
+                </Typography>
+              </RouterLink>
+              <RouterLink
+                style={{ color: theme.palette.black.main, textDecoration: 'none' }}
+                to="/users"
+              >
+                <Typography fontWeight={500} variant="h5">
+                  Users
+                </Typography>
+              </RouterLink>
             </>
           )}
           <Button onClick={() => handleLoginButton()} color="secondary" variant="contained">
