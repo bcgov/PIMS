@@ -14,10 +14,10 @@ const useBCAssessmentApi = (absoluteFetch: IFetch) => {
       finalUrl,
       {},
       {
-        // headers: {
-        //   'Access-Control-Allow-Headers': 'Origin',
-        //   'Access-Control-Allow-Origin': '*',
-        // },
+        headers: {
+          // 'Access-Control-Allow-Headers': 'Origin',
+          // 'Access-Control-Allow-Origin': '*',
+        },
         credentials: 'include',
       },
     );
