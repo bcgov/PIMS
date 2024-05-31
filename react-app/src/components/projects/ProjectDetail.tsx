@@ -92,7 +92,7 @@ const ProjectDetail = (props: IProjectDetail) => {
     Notes: Array<ProjectNote & { Name: string }>;
     Tasks: Array<ProjectTask & { Name: string }>;
   }
-  const collectedTasksByStatus = useMemo((): Record<string, IStatusHistoryStruct> => {
+  const collectedDocumentationByStatus = useMemo((): Record<string, IStatusHistoryStruct> => {
     if (!data || !tasks || !statuses) {
       return {};
     }
@@ -104,7 +104,9 @@ const ProjectDetail = (props: IProjectDetail) => {
     const reduceMap = data?.parsedBody.Tasks.reduce(
       (acc: Record<string, IStatusHistoryStruct>, curr) => {
         const fullTask = tasks.find((a) => a.Id === curr.TaskId);
-        const fullStatus = statuses.find((a) => a.Id === fullTask.StatusId);
+        const fullStatus = statuses.find((a) => a.Id === fullTask.StatusId) ?? {
+          Name: 'Uncategorized',
+        };
         if (!acc[fullStatus.Name]) {
           acc[fullStatus.Name] = { Tasks: [{ ...curr, Name: fullTask.Name }], Notes: [] };
           return acc;
@@ -115,17 +117,22 @@ const ProjectDetail = (props: IProjectDetail) => {
       },
       {},
     );
-    return data?.parsedBody.Notes.reduce((acc: Record<string, IStatusHistoryStruct>, curr) => {
-      const fullNote = noteTypes.find((a) => a.Id === curr.NoteTypeId);
-      const fullStatus = statuses.find((a) => a.Id === fullNote.StatusId);
-      if (!acc[fullStatus.Name]) {
-        acc[fullStatus.Name] = { Notes: [{ ...curr, Name: fullNote.Description }], Tasks: [] };
-        return acc;
-      } else {
-        acc[fullStatus.Name].Notes.push({ ...curr, Name: fullNote.Description });
-        return acc;
-      }
-    }, reduceMap);
+    return data?.parsedBody.Notes.filter((a) => a.Note).reduce(
+      (acc: Record<string, IStatusHistoryStruct>, curr) => {
+        const fullNote = noteTypes.find((a) => a.Id === curr.NoteTypeId);
+        const fullStatus = statuses.find((a) => a.Id === fullNote.StatusId) ?? {
+          Name: 'Uncategorized',
+        };
+        if (!acc[fullStatus.Name]) {
+          acc[fullStatus.Name] = { Notes: [{ ...curr, Name: fullNote.Description }], Tasks: [] };
+          return acc;
+        } else {
+          acc[fullStatus.Name].Notes.push({ ...curr, Name: fullNote.Description });
+          return acc;
+        }
+      },
+      reduceMap,
+    );
   }, [data, tasks, statuses]);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -279,7 +286,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           onEdit={() => setOpenDocumentationDialog(true)}
         >
           <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
-            {Object.entries(collectedTasksByStatus)?.map(
+            {Object.entries(collectedDocumentationByStatus)?.map(
               (
                 [key, value], //Each key here is a status name. Each value a list of tasks.
               ) => (
