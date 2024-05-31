@@ -3,7 +3,6 @@ import headerImageLarge from '@/assets/images/BCGOV_logo.svg';
 import headerImageSmall from '@/assets/images/BCID_V_rgb_pos.png';
 import {
   AppBar,
-  Link,
   Box,
   Button,
   Divider,
