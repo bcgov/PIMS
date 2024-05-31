@@ -232,15 +232,15 @@ const Router = () => {
 const App = () => {
   return (
     <ThemeProvider theme={appTheme}>
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <ConfigContextProvider>
+      <ConfigContextProvider>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
           <AuthContextProvider>
             <SnackBarContextProvider>
               <Router />
             </SnackBarContextProvider>
           </AuthContextProvider>
-        </ConfigContextProvider>
-      </ErrorBoundary>
+        </ErrorBoundary>
+      </ConfigContextProvider>
     </ThemeProvider>
   );
 };
