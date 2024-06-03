@@ -18,6 +18,14 @@ export interface Task {
   StatusId: number;
 }
 
+export interface NoteType {
+  Name: string;
+  Id: number;
+  Description: string;
+  IsOptional: boolean;
+  StatusId: number;
+}
+
 export type RegionalDistrict = Omit<LookupObject, 'SortOrder'>;
 export type ProjectStatus = Omit<LookupObject, 'SortOrder'>;
 
@@ -69,6 +77,11 @@ const useLookupApi = (absoluteFetch: IFetch) => {
     return parsedBody as PropertyType[];
   };
 
+  const getProjectNoteTypes = async (statusId?: number) => {
+    const { parsedBody } = await absoluteFetch.get('/lookup/noteTypes', { statusId: statusId });
+    return parsedBody as NoteType[];
+  };
+
   return {
     getClassifications,
     getConstructionTypes,
@@ -78,6 +91,7 @@ const useLookupApi = (absoluteFetch: IFetch) => {
     getTierLevels,
     getTasks,
     getPropertyTypes,
+    getProjectNoteTypes,
   };
 };
 
