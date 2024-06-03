@@ -465,22 +465,22 @@ const handleProjectAgencyResponses = async (
 const handleProjectNotes = async (newProject: DeepPartial<Project>, queryRunner: QueryRunner) => {
   if (newProject?.Notes?.length) {
     const saveNotes = newProject.Notes.map(async (note): Promise<InsertResult | void> => {
-      if (note.ProjectId == null || note.NoteType == null) {
+      if (note.NoteTypeId == null) {
         throw new ErrorWithCode('Provided note was missing a required field.', 400);
       }
       const exists = await queryRunner.manager.findOne(ProjectNote, {
-        where: { ProjectId: newProject.Id, NoteType: note.NoteType },
+        where: { ProjectId: newProject.Id, NoteTypeId: note.NoteTypeId },
       });
       return queryRunner.manager.upsert(
         ProjectNote,
         {
           ProjectId: newProject.Id,
           Note: note.Note,
-          NoteType: note.NoteType,
+          NoteTypeId: note.NoteTypeId,
           CreatedById: exists ? exists.CreatedById : newProject.CreatedById,
           UpdatedById: exists ? newProject.UpdatedById : undefined,
         },
-        ['ProjectId', 'NoteType'],
+        ['ProjectId', 'NoteTypeId'],
       );
     });
     return Promise.all(saveNotes);
@@ -770,7 +770,6 @@ const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boo
         CreatedOn: true,
       },
       Notes: {
-        NoteType: true,
         Note: true,
       },
     },

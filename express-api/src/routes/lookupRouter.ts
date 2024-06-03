@@ -1,5 +1,5 @@
 import controllers from '@/controllers';
-import { lookupTasks } from '@/controllers/lookup/lookupController';
+import { lookupNoteTypes, lookupTasks } from '@/controllers/lookup/lookupController';
 import catchErrors from '@/utilities/controllerErrorWrapper';
 import express from 'express';
 
@@ -30,6 +30,7 @@ router.route('/project/risks').get(catchErrors(lookupProjectRisks));
 router.route('/project/status').get(catchErrors(lookupProjectStatuses));
 router.route('/tasks').get(catchErrors(lookupTasks));
 router.route('/propertyTypes').get(catchErrors(lookupPropertyTypes));
+router.route('/noteTypes').get(catchErrors(lookupNoteTypes));
 router.route('/all').get(catchErrors(lookupAll));
 
 export default router;

@@ -89,7 +89,7 @@ export interface ProjectNote {
   CreatedOn?: Date;
   Id?: number;
   Note?: string;
-  NoteType?: number;
+  NoteTypeId?: number;
   ProjectId?: number;
   UpdatedById?: string;
   UpdatedOn?: Date;
