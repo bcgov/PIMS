@@ -103,6 +103,9 @@ const ProjectDetail = (props: IProjectDetail) => {
     //in the documentation history section.
     const reduceMap = data?.parsedBody.Tasks.reduce(
       (acc: Record<string, IStatusHistoryStruct>, curr) => {
+        if (!curr.IsCompleted) {
+          return acc; //Since this is just for display purposes, no point showing non-completed in results.
+        }
         const fullTask = tasks.find((a) => a.Id === curr.TaskId);
         const fullStatus = statuses.find((a) => a.Id === fullTask.StatusId) ?? {
           Name: 'Uncategorized',
@@ -297,21 +300,28 @@ const ProjectDetail = (props: IProjectDetail) => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
-                        {value.Tasks.filter((a) => a.IsCompleted).map((task) => (
+                        {value.Tasks.map((task) => (
                           <FormGroup key={`${task.TaskId}-task-formgroup`}>
                             <FormControlLabel
                               sx={{
                                 '& .MuiButtonBase-root': {
                                   padding: 0,
                                   paddingX: '9px',
-                                  color: 'rgba(0,0,0,0.26)',
                                 },
                               }}
-                              control={<Checkbox checked={task.IsCompleted} />}
+                              control={
+                                <Checkbox
+                                  checked={task.IsCompleted}
+                                  sx={{
+                                    '&.MuiCheckbox-root': {
+                                      color: 'rgba(0, 0, 0, 0.26)',
+                                    },
+                                  }}
+                                />
+                              }
                               style={{ pointerEvents: 'none' }}
                               value={task.IsCompleted}
                               label={task.Name}
-                              disabled={false}
                             />
                           </FormGroup>
                         ))}
