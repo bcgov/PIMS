@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import DataCard from '../display/DataCard';
 import {
   Box,
@@ -38,6 +38,8 @@ import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
 import { enumReverseLookup } from '@/utilities/helperFunctions';
 import { AgencyResponseType } from '@/constants/agencyResponseTypes';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
+import { Roles } from '@/constants/roles';
+import { AuthContext } from '@/contexts/authContext';
 import { ExpandMoreOutlined } from '@mui/icons-material';
 
 interface IProjectDetail {
@@ -58,6 +60,7 @@ interface ProjectInfo extends Project {
 const ProjectDetail = (props: IProjectDetail) => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { keycloak } = useContext(AuthContext);
   const api = usePimsApi();
   // const theme = useTheme();
   const { data, refreshData, isLoading } = useDataLoader(() =>
@@ -70,6 +73,8 @@ const ProjectDetail = (props: IProjectDetail) => {
       navigate('/'); // look into maybe using redirect
     }
   }, [data]);
+
+  const isAuditor = keycloak.hasRoles([Roles.AUDITOR]);
 
   const { data: tasks, loadOnce: loadTasks } = useDataLoader(() => api.lookup.getTasks());
   loadTasks();
@@ -207,6 +212,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           deleteTitle={'Delete project'}
           onDeleteClick={() => setOpenDeleteDialog(true)}
           onBackClick={() => props.onClose()}
+          disableDelete={isAuditor}
         />
         <DataCard
           loading={isLoading}
@@ -215,12 +221,14 @@ const ProjectDetail = (props: IProjectDetail) => {
           id={projectInformation}
           title={projectInformation}
           onEdit={() => setOpenProjectInfoDialog(true)}
+          disableEdit={isAuditor}
         />
         <DataCard
           values={undefined}
           id={disposalProperties}
           title={disposalProperties}
           onEdit={() => setOpenDisposalPropDialog(true)}
+          disableEdit={isAuditor}
         >
           {isLoading ? (
             <Skeleton variant="rectangular" height={'150px'} />
@@ -242,6 +250,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           title={financialInformation}
           id={financialInformation}
           onEdit={() => setOpenFinancialInfoDialog(true)}
+          disableEdit={isAuditor}
         />
         <DataCard
           loading={isLoading}
@@ -249,6 +258,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           values={undefined}
           id={agencyInterest}
           onEdit={() => setOpenAgencyInterestDialog(true)}
+          disableEdit={isAuditor}
         >
           {!data?.parsedBody.AgencyResponses?.length ? ( //TODO: Logic will depend on precense of agency responses
             <Box display={'flex'} justifyContent={'center'}>
