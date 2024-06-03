@@ -30,6 +30,8 @@ interface ParcelPopupProps {
   scrollOnClick?: boolean;
 }
 
+const POPUP_WIDTH = '500px';
+
 /**
  * Renders a popup component that displays information about a parcel on the map.
  * The popup is triggered by a click event on the map and shows details such as parcel ID, name, class, plan number, owner type, municipality, regional district, and area.
@@ -103,7 +105,7 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
   if (size === 'large')
     return parcelData ? (
       <Popup autoPan={false} position={clickPosition} className="full-size">
-        <Box display={'inline-flex'} minHeight={325} minWidth={325}>
+        <Box display={'inline-flex'} minWidth={POPUP_WIDTH} height={'375px'}>
           {
             <>
               {/* Render a list of PIDs/PINs if there's more than one parcel feature here. */}
@@ -220,7 +222,7 @@ interface ParcelLayerDetailsProps {
 const ParcelLayerDetails = (props: ParcelLayerDetailsProps) => {
   const { parcel } = props;
   return (
-    <Box minWidth={'300px'}>
+    <Box minWidth={POPUP_WIDTH}>
       <Grid container gap={1}>
         {parcel ? (
           <>
@@ -319,7 +321,7 @@ const LtsaDetails = (props: LtsaDetailsProps) => {
 
   if (isLoading)
     return (
-      <Box display="flex" justifyContent={'center'} paddingTop={'2em'}>
+      <Box display="flex" justifyContent={'center'} paddingTop={'2em'} minWidth={POPUP_WIDTH}>
         <CircularProgress />
       </Box>
     );
@@ -341,7 +343,7 @@ const LtsaDetails = (props: LtsaDetailsProps) => {
   );
 
   return (
-    <Box minWidth={'500px'} height={'300px'} overflow={'scroll'}>
+    <Box minWidth={POPUP_WIDTH} height={'300px'} overflow={'scroll'}>
       <Grid container gap={1}>
         {ltsaData && ltsaData.order ? (
           <>
