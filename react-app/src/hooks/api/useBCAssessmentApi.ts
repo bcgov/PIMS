@@ -17,6 +17,8 @@ const useBCAssessmentApi = (absoluteFetch: IFetch) => {
         headers: {
           // 'Access-Control-Allow-Headers': 'Origin',
           // 'Access-Control-Allow-Origin': '*',
+          Origin: 'https://pims-v2-dev.apps.silver.devops.gov.bc.ca',
+          Referer: 'https://pims-v2-dev.apps.silver.devops.gov.bc.ca',
         },
         credentials: 'include',
       },
