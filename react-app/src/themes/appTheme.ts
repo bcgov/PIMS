@@ -19,6 +19,25 @@ declare module '@mui/material/styles/createPalette' {
   }
 }
 
+// Add custom styles for typography variants
+declare module '@mui/material/styles' {
+  interface TypographyVariants {
+    smallTable: React.CSSProperties;
+  }
+
+  // allow configuration using `createTheme`
+  interface TypographyVariantsOptions {
+    smallTable?: React.CSSProperties;
+  }
+}
+
+// Update the Typography's variant prop options
+declare module '@mui/material/Typography' {
+  interface TypographyPropsVariantOverrides {
+    smallTable: true;
+  }
+}
+
 const appTheme = createTheme({
   palette: {
     gold: {
@@ -84,6 +103,9 @@ const appTheme = createTheme({
     h5: {
       fontSize: '0.9rem',
       fontWeight: 700,
+    },
+    smallTable: {
+      fontSize: '0.75rem',
     },
   },
   components: {
