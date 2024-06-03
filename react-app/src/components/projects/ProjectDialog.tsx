@@ -122,40 +122,36 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
         <ProjectGeneralInfoForm
           projectStatuses={projectStatus?.map((st) => ({ value: st.Id, label: st.Name }))}
         />
-        {initialValues &&
-          initialValues?.StatusId !== projectFormMethods.getValues()['StatusId'] &&
-          tasks?.length > 0 && (
-            <Box mt={'1rem'}>
-              <Typography variant="h5">Confirm Tasks</Typography>
-              {tasks?.map((task, idx) => (
-                <SingleSelectBoxFormField
-                  key={`${task.Id}-${idx}`}
-                  name={`Tasks.${idx}.IsCompleted`}
-                  label={task.Name}
+        {initialValues && tasks?.length > 0 && (
+          <Box mt={'1rem'}>
+            <Typography variant="h5">Confirm Tasks</Typography>
+            {tasks?.map((task, idx) => (
+              <SingleSelectBoxFormField
+                key={`${task.Id}-${idx}`}
+                name={`Tasks.${idx}.IsCompleted`}
+                label={task.Name}
+              />
+            ))}
+          </Box>
+        )}
+        {initialValues && noteTypes?.length > 0 && (
+          <Box mt={'1rem'}>
+            <Typography variant="h5" mb={'1rem'}>
+              Confirm Notes
+            </Typography>
+            <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
+              {noteTypes?.map((note, idx) => (
+                <TextFormField
+                  minRows={2}
+                  multiline
+                  key={`${note.Id}-${idx}`}
+                  name={`Notes.${idx}.Note`}
+                  label={note.Description}
                 />
               ))}
             </Box>
-          )}
-        {initialValues &&
-          initialValues?.StatusId !== projectFormMethods.getValues()['StatusId'] &&
-          noteTypes?.length > 0 && (
-            <Box mt={'1rem'}>
-              <Typography variant="h5" mb={'1rem'}>
-                Confirm Notes
-              </Typography>
-              <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
-                {noteTypes?.map((note, idx) => (
-                  <TextFormField
-                    minRows={2}
-                    multiline
-                    key={`${note.Id}-${idx}`}
-                    name={`Notes.${idx}.Note`}
-                    label={note.Description}
-                  />
-                ))}
-              </Box>
-            </Box>
-          )}
+          </Box>
+        )}
       </FormProvider>
     </ConfirmDialog>
   );
