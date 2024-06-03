@@ -297,13 +297,14 @@ const ProjectDetail = (props: IProjectDetail) => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
-                        {value.Tasks.map((task) => (
+                        {value.Tasks.filter((a) => a.IsCompleted).map((task) => (
                           <FormGroup key={`${task.TaskId}-task-formgroup`}>
                             <FormControlLabel
                               sx={{
                                 '& .MuiButtonBase-root': {
                                   padding: 0,
                                   paddingX: '9px',
+                                  color: 'rgba(0,0,0,0.26)',
                                 },
                               }}
                               control={<Checkbox checked={task.IsCompleted} />}
