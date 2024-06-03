@@ -131,7 +131,7 @@ const ProjectsTable = () => {
               'Created On': projectModel.CreatedOn,
               'Exemption Requested': projectModel.Metadata?.exemptionRequested,
               'Exemption Rationale': projectModel.Notes?.find(
-                (note) => note.NoteType === NoteTypes.EXEMPTION,
+                (note) => note.NoteTypeId === NoteTypes.EXEMPTION,
               )?.Note,
               'NetBook	Value': projectModel.NetBook,
               Assessed: projectModel.Assessed,
@@ -144,16 +144,16 @@ const ProjectsTable = () => {
               'Interest Component': projectModel.Metadata?.interestComponent,
               'Offer Amount': projectModel.Metadata?.offerAmount,
               'Sale With Lease In Place': projectModel.Metadata?.saleWithLeaseInPlace,
-              Note: projectModel.Notes?.find((note) => note.NoteType === NoteTypes.GENERAL)?.Note,
-              PublicNote: projectModel.Notes?.find((note) => note.NoteType === NoteTypes.PUBLIC)
+              Note: projectModel.Notes?.find((note) => note.NoteTypeId === NoteTypes.GENERAL)?.Note,
+              PublicNote: projectModel.Notes?.find((note) => note.NoteTypeId === NoteTypes.PUBLIC)
                 ?.Note,
-              PrivateNote: projectModel.Notes?.find((note) => note.NoteType === NoteTypes.PRIVATE)
+              PrivateNote: projectModel.Notes?.find((note) => note.NoteTypeId === NoteTypes.PRIVATE)
                 ?.Note,
               AppraisedNote: projectModel.Notes?.find(
-                (note) => note.NoteType === NoteTypes.APPRAISAL,
+                (note) => note.NoteTypeId === NoteTypes.APPRAISAL,
               )?.Note,
               AgencyResponseNote: projectModel.Notes?.find(
-                (note) => note.NoteType === NoteTypes.AGENCY_INTEREST,
+                (note) => note.NoteTypeId === NoteTypes.AGENCY_INTEREST,
               )?.Note,
               'Submitted On': projectModel.SubmittedOn,
               'Approved On': projectModel.ApprovedOn,
@@ -170,7 +170,7 @@ const ProjectsTable = () => {
                 projectModel.Metadata?.clearanceNotificationSentOn,
               'Disposed On': projectModel.Metadata?.disposedOn,
               'Marketed On': projectModel.Metadata?.marketedOn,
-              'Offers Note': projectModel.Notes?.find((note) => note.NoteType === NoteTypes.OFFER)
+              'Offers Note': projectModel.Notes?.find((note) => note.NoteTypeId === NoteTypes.OFFER)
                 ?.Note,
               Purchaser: projectModel.Metadata?.purchaser,
             },

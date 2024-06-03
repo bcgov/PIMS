@@ -1,10 +1,26 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import DataCard from '../display/DataCard';
-import { Box, Checkbox, FormControlLabel, FormGroup, Typography, Skeleton } from '@mui/material';
+import {
+  Box,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Typography,
+  Skeleton,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from '@mui/material';
 import DeleteDialog from '../dialog/DeleteDialog';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
-import { Project, ProjectMetadata, TierLevel } from '@/hooks/api/useProjectsApi';
+import {
+  Project,
+  ProjectMetadata,
+  ProjectNote,
+  ProjectTask,
+  TierLevel,
+} from '@/hooks/api/useProjectsApi';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ProjectStatus } from '@/hooks/api/useLookupApi';
@@ -22,6 +38,7 @@ import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
 import { enumReverseLookup } from '@/utilities/helperFunctions';
 import { AgencyResponseType } from '@/constants/agencyResponseTypes';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
+import { ExpandMoreOutlined } from '@mui/icons-material';
 
 interface IProjectDetail {
   onClose: () => void;
@@ -56,6 +73,10 @@ const ProjectDetail = (props: IProjectDetail) => {
 
   const { data: tasks, loadOnce: loadTasks } = useDataLoader(() => api.lookup.getTasks());
   loadTasks();
+  const { data: noteTypes, loadOnce: loadNotes } = useDataLoader(() =>
+    api.lookup.getProjectNoteTypes(),
+  );
+  loadNotes();
 
   const { data: statuses, loadOnce: loadStatuses } = useDataLoader(() =>
     api.lookup.getProjectStatuses(),
@@ -67,8 +88,11 @@ const ProjectDetail = (props: IProjectDetail) => {
   );
 
   const { ungroupedAgencies, agencyOptions } = useGroupedAgenciesApi();
-
-  const collectedTasksByStatus = useMemo((): Record<string, Array<any>> => {
+  interface IStatusHistoryStruct {
+    Notes: Array<ProjectNote & { Name: string }>;
+    Tasks: Array<ProjectTask & { Name: string }>;
+  }
+  const collectedDocumentationByStatus = useMemo((): Record<string, IStatusHistoryStruct> => {
     if (!data || !tasks || !statuses) {
       return {};
     }
@@ -77,17 +101,41 @@ const ProjectDetail = (props: IProjectDetail) => {
     //Somewhat evil reduce where we collect information from the status and tasks lookup so that we can
     //get data for the status and task names to be displayed when we enumarete the tasks associated to the project itself
     //in the documentation history section.
-    return data?.parsedBody.Tasks.reduce((acc: Record<string, Array<any>>, curr) => {
-      const fullTask = tasks.find((a) => a.Id === curr.TaskId);
-      const fullStatus = statuses.find((a) => a.Id === fullTask.StatusId);
-      if (!acc[fullStatus.Name]) {
-        acc[fullStatus.Name] = [{ ...curr, Name: fullTask.Name }];
-        return acc;
-      } else {
-        acc[fullStatus.Name].push({ ...curr, Name: fullTask.Name });
-        return acc;
-      }
-    }, {});
+    const reduceMap = data?.parsedBody.Tasks.reduce(
+      (acc: Record<string, IStatusHistoryStruct>, curr) => {
+        if (!curr.IsCompleted) {
+          return acc; //Since this is just for display purposes, no point showing non-completed in results.
+        }
+        const fullTask = tasks.find((a) => a.Id === curr.TaskId);
+        const fullStatus = statuses.find((a) => a.Id === fullTask.StatusId) ?? {
+          Name: 'Uncategorized',
+        };
+        if (!acc[fullStatus.Name]) {
+          acc[fullStatus.Name] = { Tasks: [{ ...curr, Name: fullTask.Name }], Notes: [] };
+          return acc;
+        } else {
+          acc[fullStatus.Name].Tasks.push({ ...curr, Name: fullTask.Name });
+          return acc;
+        }
+      },
+      {},
+    );
+    return data?.parsedBody.Notes.filter((a) => a.Note).reduce(
+      (acc: Record<string, IStatusHistoryStruct>, curr) => {
+        const fullNote = noteTypes.find((a) => a.Id === curr.NoteTypeId);
+        const fullStatus = statuses.find((a) => a.Id === fullNote.StatusId) ?? {
+          Name: 'Uncategorized',
+        };
+        if (!acc[fullStatus.Name]) {
+          acc[fullStatus.Name] = { Notes: [{ ...curr, Name: fullNote.Description }], Tasks: [] };
+          return acc;
+        } else {
+          acc[fullStatus.Name].Notes.push({ ...curr, Name: fullNote.Description });
+          return acc;
+        }
+      },
+      reduceMap,
+    );
   }, [data, tasks, statuses]);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -240,28 +288,56 @@ const ProjectDetail = (props: IProjectDetail) => {
           id={documentationHistory}
           onEdit={() => setOpenDocumentationDialog(true)}
         >
-          {Object.entries(collectedTasksByStatus)?.map(
-            (
-              [key, value], //Each key here is a status name. Each value a list of tasks.
-            ) => (
-              <Box key={`${key}-group`}>
-                <Typography variant="h5" mt={'1rem'}>
-                  {key}
-                </Typography>
-                {value.map((task) => (
-                  <FormGroup key={`${task.TaskId}-task-formgroup`}>
-                    <FormControlLabel
-                      control={<Checkbox checked={task.IsCompleted} />}
-                      style={{ pointerEvents: 'none' }}
-                      value={task.IsCompleted}
-                      label={task.Name}
-                      disabled={false}
-                    />
-                  </FormGroup>
-                ))}
-              </Box>
-            ),
-          )}
+          <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
+            {Object.entries(collectedDocumentationByStatus)?.map(
+              (
+                [key, value], //Each key here is a status name. Each value a list of tasks.
+              ) => (
+                <Box key={`${key}-group`}>
+                  <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMoreOutlined />}>
+                      <Typography>{key}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
+                        {value.Tasks.map((task) => (
+                          <FormGroup key={`${task.TaskId}-task-formgroup`}>
+                            <FormControlLabel
+                              sx={{
+                                '& .MuiButtonBase-root': {
+                                  padding: 0,
+                                  paddingX: '9px',
+                                },
+                              }}
+                              control={
+                                <Checkbox
+                                  checked={task.IsCompleted}
+                                  sx={{
+                                    '&.MuiCheckbox-root': {
+                                      color: 'rgba(0, 0, 0, 0.26)',
+                                    },
+                                  }}
+                                />
+                              }
+                              style={{ pointerEvents: 'none' }}
+                              value={task.IsCompleted}
+                              label={task.Name}
+                            />
+                          </FormGroup>
+                        ))}
+                        {value.Notes.map((note) => (
+                          <Box key={`${note.NoteTypeId}-note`}>
+                            <Typography variant="h5">{note.Name}</Typography>
+                            <Typography>{note.Note}</Typography>
+                          </Box>
+                        ))}
+                      </Box>
+                    </AccordionDetails>
+                  </Accordion>
+                </Box>
+              ),
+            )}
+          </Box>
         </DataCard>
         <DeleteDialog
           open={openDeleteDialog}
