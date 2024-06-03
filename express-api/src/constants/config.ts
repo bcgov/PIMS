@@ -15,6 +15,10 @@ const config = {
     username: process.env.LTSA_USERNAME,
     password: process.env.LTSA_PASSWORD,
   },
+  accessRequest: {
+    notificationTemplate: 15,
+    notificationTemplateRPD: 17,
+  },
 };
 
 const getConfig = () => {
