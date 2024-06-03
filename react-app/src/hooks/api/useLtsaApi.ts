@@ -55,7 +55,7 @@ export interface IChargeOnTitle {
   charge: IChargeItem;
 }
 
-export interface Ltsa {
+export interface LtsaOrder {
   order: {
     productType: string;
     fileReference: string;
@@ -122,9 +122,9 @@ export interface Ltsa {
 }
 
 const useLtsaApi = (absoluteFetch: IFetch) => {
-  const getLtsabyPid = async (pid: number): Promise<Ltsa> => {
+  const getLtsabyPid = async (pid: number): Promise<LtsaOrder> => {
     const { parsedBody } = await absoluteFetch.get(`/ltsa/land/title?pid=${pid}`);
-    return parsedBody as Ltsa;
+    return parsedBody as LtsaOrder;
   };
   return { getLtsabyPid };
 };
