@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import { Box, Skeleton, Typography } from '@mui/material';
 import DataCard from '../display/DataCard';
@@ -27,6 +27,8 @@ import { Map } from 'leaflet';
 import { Room } from '@mui/icons-material';
 import TitleOwnership from '../ltsa/TitleOwnership';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
+import { AuthContext } from '@/contexts/authContext';
+import { Roles } from '@/constants/roles';
 
 interface IPropertyDetail {
   onClose: () => void;
@@ -35,6 +37,7 @@ interface IPropertyDetail {
 const PropertyDetail = (props: IPropertyDetail) => {
   const navigate = useNavigate();
   const params = useParams();
+  const { keycloak } = useContext(AuthContext);
   const parcelId = isNaN(Number(params.parcelId)) ? null : Number(params.parcelId);
   const buildingId = isNaN(Number(params.buildingId)) ? null : Number(params.buildingId);
   const api = usePimsApi();
@@ -73,6 +76,9 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const { data: relatedBuildings, refreshData: refreshRelated } = useDataLoader(
     () => parcel?.PID && api.buildings.getBuildings({ pid: parcel.PID, includeRelations: true }),
   );
+
+  const isAuditor = keycloak.hasRoles([Roles.AUDITOR]);
+
   const refreshEither = () => {
     if (parcelId) {
       refreshParcel();
@@ -238,6 +244,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
       >
         <DetailViewNavigation
           navigateBackTitle={'Back to Property Overview'}
+          disableDelete={isAuditor}
           deleteTitle={`Delete ${buildingOrParcel}`}
           onDeleteClick={() => setOpenDeleteDialog(true)}
           onBackClick={() => props.onClose()}
@@ -249,6 +256,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           values={mainInformation}
           title={`${buildingOrParcel} Information`}
           onEdit={() => setOpenInformationDialog(true)}
+          disableEdit={isAuditor}
         />
         {buildingOrParcel === 'Parcel' && (
           <DataCard
@@ -267,6 +275,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           values={undefined}
           title={`${buildingOrParcel} Net Book Value`}
           onEdit={() => setOpenNetBookDialog(true)}
+          disableEdit={isAuditor}
         >
           <PropertyNetValueTable rows={netBookValues} />
         </DataCard>
@@ -276,6 +285,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           values={undefined}
           title={'Assessed Value'}
           onEdit={() => setOpenAssessedValueDialog(true)}
+          disableEdit={isAuditor}
         >
           <PropertyAssessedValueTable
             rows={assessedValues}
