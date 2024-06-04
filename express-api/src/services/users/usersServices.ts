@@ -264,10 +264,6 @@ const addUser = async (user: User) => {
 };
 
 const updateUser = async (user: DeepPartial<User>) => {
-  console.log(
-    '**************************************************updating user and the role name is',
-    user.Role.Name,
-  );
   const roleName = user.Role?.Name;
   const resource = await AppDataSource.getRepository(User).findOne({ where: { Id: user.Id } });
   if (!resource) {
@@ -277,8 +273,7 @@ const updateUser = async (user: DeepPartial<User>) => {
     ...user,
     DisplayName: `${user.LastName}, ${user.FirstName}`,
   });
-  console.log('**************************************user is', resource);
-  await updateKeycloakUserRoles(resource.Username, [roleName]);
+  await KeycloakService.updateKeycloakUserRoles(resource.Username, [roleName]);
   return retUser.generatedMaps[0];
 };
 

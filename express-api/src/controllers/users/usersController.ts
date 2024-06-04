@@ -301,7 +301,6 @@ export const updateUserById = async (req: Request, res: Response) => {
     return res.status(400).send('The param ID does not match the request body.');
   }
   const user = await userServices.updateUser(req.body);
-  // await userServices.updateKeycloakUserRoles(req.params.username,);
   return res.status(200).send(user);
 };
 
