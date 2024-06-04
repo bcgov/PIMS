@@ -273,7 +273,9 @@ const updateUser = async (user: DeepPartial<User>) => {
     ...user,
     DisplayName: `${user.LastName}, ${user.FirstName}`,
   });
-  await KeycloakService.updateKeycloakUserRoles(resource.Username, [roleName]);
+  if (roleName) {
+    await KeycloakService.updateKeycloakUserRoles(resource.Username, [roleName]);
+  }
   return retUser.generatedMaps[0];
 };
 

@@ -266,33 +266,18 @@ const updateKeycloakUserRoles = async (username: string, roles: string[]) => {
     const existingRolesResponse = await getKeycloakUserRoles(username);
 
     // User is found in Keycloak.
-    // Ensure existingRolesResponse is an array of roles
-    let existingRoles: IKeycloakRole[] = [];
-    if (Array.isArray(existingRolesResponse)) {
-      existingRoles = existingRolesResponse;
-    } else if (existingRolesResponse && typeof existingRolesResponse === 'object') {
-      const response = existingRolesResponse as { data?: IKeycloakRole[] }; // Type assertion
-      existingRoles = response.data || [];
-    } else {
-      throw new Error('Unexpected structure of existingRolesResponse');
-    }
+    const existingRoles: string[] = existingRolesResponse.map((role) => role.name);
 
     // Find roles that are in Keycloak but are not in new user info.
-    const rolesToRemove = existingRoles.filter(
-      (existingRole) => !roles.includes(existingRole.name),
-    );
+    const rolesToRemove = existingRoles.filter((existingRole) => !roles.includes(existingRole));
     // Remove old roles
-    for (const role of rolesToRemove) {
-      if (!role || !role.name) {
-        continue; // Skip this iteration
-      }
-      await unassignUserRole(username, role.name);
-    }
+    // No call to remove all as list, so have to loop.
+    rolesToRemove.forEach(async (role) => {
+      await unassignUserRole(username, role);
+    });
 
     // Find new roles that aren't in Keycloak already.
-    const rolesToAdd = roles.filter(
-      (newRole) => !existingRoles.some((existingRole) => existingRole.name === newRole),
-    );
+    const rolesToAdd = roles.filter((newRole) => !existingRoles.includes(newRole));
     // Add new roles
     const updatedRoles: IKeycloakRolesResponse = await assignUserRoles(username, rolesToAdd);
 
