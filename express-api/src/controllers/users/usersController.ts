@@ -119,7 +119,10 @@ export const submitUserAccessRequest = async (req: Request, res: Response) => {
     role: 'Administrator',
     agencyId: user.AgencyId,
   });
-
+  const adminEmails = adminUsers.map((user) => user.Email);
+  while (adminEmails.join(';').length > 500) {
+    adminEmails.shift();
+  }
   try {
     const notif = await notificationServices.generateAccessRequestNotification(
       {
@@ -127,7 +130,7 @@ export const submitUserAccessRequest = async (req: Request, res: Response) => {
         LastName: user.LastName,
       },
       config.accessRequest.notificationTemplate,
-      adminUsers.map((user) => user.Email).join(';'),
+      adminEmails.join(';'),
     );
     const notifRPD = await notificationServices.generateAccessRequestNotification(
       {
