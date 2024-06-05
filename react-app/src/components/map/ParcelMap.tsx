@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Paper, useTheme } from '@mui/material';
+import { Avatar, Box, CircularProgress, Icon, IconButton, Paper, useTheme } from '@mui/material';
 import React, {
   createContext,
   CSSProperties,
@@ -19,6 +19,7 @@ import useDataLoader from '@/hooks/useDataLoader';
 import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import usePimsApi from '@/hooks/usePimsApi';
 import { SnackBarContext } from '@/contexts/snackbarContext';
+import sideBarIcon from '@/assets/icons/SidebarLeft-Linear.svg';
 
 type ParcelMapProps = {
   height: string;
@@ -126,7 +127,7 @@ const ParcelMap = (props: ParcelMapProps) => {
   const MapSidebar = (props: MapSidebarProps) => {
     const { properties, map } = props;
     const [propertiesInBounds, setPropertiesInBounds] = useState<PropertyGeo[]>(properties ?? []);
-    const [open, setOpen] = useState<boolean>(true);
+    const [open, setOpen] = useState<boolean>(false);
     const theme = useTheme();
 
     const definePropertiesInBounds = () => {
@@ -163,6 +164,7 @@ const ParcelMap = (props: ParcelMapProps) => {
           }}
           onClick={() => setOpen(!open)}
         >
+          <Box height={60} sx={{ backgroundColor: theme.palette.gray.main}}></Box>
           {propertiesInBounds.slice(0, 10).map((property) => (
             <Box
               key={`${property.properties.PropertyTypeId ? 'Building' : 'Land'}-${property.properties.Id}`}
@@ -172,7 +174,7 @@ const ParcelMap = (props: ParcelMapProps) => {
           ))}
         </Box>
         {/* Sidebar button that is shown when sidebar is closed */}
-        <div
+        <Box
           id="sidebar-button"
           style={
             {
@@ -185,11 +187,39 @@ const ParcelMap = (props: ParcelMapProps) => {
               borderTopLeftRadius: '50px',
               borderBottomLeftRadius: '50px',
               backgroundColor: theme.palette.blue.main,
-              zIndex: 1001,
+              zIndex: 1000,
+              display: 'flex',
             } as unknown as CSSProperties
           }
+        >
+          {/* All this just to get the SVG white */}
+          <div
           onClick={() => setOpen(true)}
-        ></div>
+            style={{
+              margin: 'auto',
+              transform: `rotate(${!open ? '3.142rad' : '0'})`,
+              transition: 'ease-in-out 0.5s',
+              maskImage: `url(${sideBarIcon})`,
+              WebkitMaskImage: `url(${sideBarIcon})`,
+              maskSize: '100%',
+              WebkitMaskSize: 'cover',
+              maskRepeat: 'no-repeat',
+              WebkitMaskRepeat: 'no-repeat',
+              maskPosition: 'center',
+              width: '40%',
+              height: '40%',
+              backgroundColor: 'white',
+            }}
+          ></div>
+          {/* <Icon sx={{ mb: '2px', fill: 'red' }}>
+                <img
+                  height={18}
+                  width={18}
+                  src={sideBarIcon}
+                  style={{ transform: `rotate(${!open ? '3.142rad' : '0'})` }}
+                />
+              </Icon> */}
+        </Box>
       </>
     );
   };
