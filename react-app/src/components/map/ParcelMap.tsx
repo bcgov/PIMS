@@ -1,6 +1,14 @@
-import { Box, CircularProgress, Paper, SxProps, useTheme } from '@mui/material';
-import React, { createContext, CSSProperties, PropsWithChildren, useContext, useEffect, useState } from 'react';
-import { MapContainer, useMap, useMapEvents } from 'react-leaflet';
+import { Box, CircularProgress, Paper, useTheme } from '@mui/material';
+import React, {
+  createContext,
+  CSSProperties,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import { MapContainer, useMapEvents } from 'react-leaflet';
 import { LatLngBoundsExpression, Map } from 'leaflet';
 import MapLayers from '@/components/map/MapLayers';
 import { ParcelPopup } from '@/components/map/parcelPopup/ParcelPopup';
@@ -66,7 +74,6 @@ const ParcelMap = (props: ParcelMapProps) => {
 
   const {
     height,
-    mapRef,
     movable = true,
     zoomable = true,
     loadProperties = false,
@@ -75,6 +82,8 @@ const ParcelMap = (props: ParcelMapProps) => {
     zoomOnScroll = true,
     hideControls = false,
   } = props;
+
+  const mapRef = useRef<Map>();
 
   const defaultBounds = [
     [54.2516, -129.371],
@@ -111,18 +120,18 @@ const ParcelMap = (props: ParcelMapProps) => {
 
   interface MapSidebarProps {
     properties: PropertyGeo[];
+    map: React.MutableRefObject<Map>;
   }
 
   const MapSidebar = (props: MapSidebarProps) => {
-    const [propertiesInBounds, setPropertiesInBounds] = useState<PropertyGeo[]>([]);
+    const { properties, map } = props;
+    const [propertiesInBounds, setPropertiesInBounds] = useState<PropertyGeo[]>(properties ?? []);
     const [open, setOpen] = useState<boolean>(true);
-    const { properties } = props;
-    const map = useMap();
     const theme = useTheme();
 
     const definePropertiesInBounds = () => {
       if (properties && properties.length) {
-        const newBounds = map.getBounds();
+        const newBounds = map.current.getBounds();
         setPropertiesInBounds(
           properties.filter((property) =>
             newBounds.contains([
@@ -134,74 +143,53 @@ const ParcelMap = (props: ParcelMapProps) => {
       }
     };
 
-    useMapEvents({
-      zoomend: definePropertiesInBounds,
-      moveend: definePropertiesInBounds,
-    });
-
-    const sidebarOpenStyle: SxProps = {
-      transition: 'all 1s',
+    if (map.current) {
+      map.current.addEventListener('zoomend', definePropertiesInBounds);
+      map.current.addEventListener('moveend', definePropertiesInBounds);
     }
 
-    const sidebarClosedStyle: SxProps = {
-      transition: 'all 1s',
-      width: '0px',
-    }
-
-    const sidebarStyle = open ? sidebarOpenStyle : sidebarClosedStyle;
-
-    const sidebarButtonOpenStyle: SxProps = {
-      transition: 'all 1s',
-      right: '-70px'
-    }
-
-    const sidebarButtonClosedStyle: SxProps = {
-      transition: 'all 1s',
-    }
-
-    const sidebarButtonStyle = open ? sidebarButtonOpenStyle : sidebarButtonClosedStyle;
-
-    return (<>
-      <Box
-        id="map-sidebar"
-        zIndex={1000}
-        position={'absolute'}
-        right={0}
-        height={'100%'}
-        component={Paper}
-        width={'400px'}
-        sx={{
-         ...sidebarStyle
-        }}
-        onClick={() => setOpen(!open)}
-      >
-        {propertiesInBounds.slice(0, 10).map((property) => (
-          <Box
-            key={`${property.properties.PropertyTypeId ? 'Building' : 'Land'}-${property.properties.Id}`}
-          >
-            {property.properties.Id}
-          </Box>
-        ))}
-      </Box>
-      {/* Sidebar button that is shown when sidebar is closed */}
-      <div
-        id='sidebar-button'
-        style={{
-          position: 'absolute',
-          top: '15px',
-          right: 0,
-          width: '70px',
-          height: '70px',
-          borderTopLeftRadius: '50px',
-          borderBottomLeftRadius: '50px',
-          backgroundColor: theme.palette.blue.main,
-          zIndex: 1001,
-          ...sidebarButtonStyle
-        } as unknown as CSSProperties}
-        onClick={() => setOpen(true)}
-      >
-        
-      </div>
+    return (
+      <>
+        <Box
+          id="map-sidebar"
+          zIndex={1000}
+          position={'fixed'}
+          right={0}
+          height={'100%'}
+          component={Paper}
+          width={open ? '400px' : '0px'}
+          sx={{
+            transition: 'all 1s',
+          }}
+          onClick={() => setOpen(!open)}
+        >
+          {propertiesInBounds.slice(0, 10).map((property) => (
+            <Box
+              key={`${property.properties.PropertyTypeId ? 'Building' : 'Land'}-${property.properties.Id}`}
+            >
+              {property.properties.Id}
+            </Box>
+          ))}
+        </Box>
+        {/* Sidebar button that is shown when sidebar is closed */}
+        <div
+          id="sidebar-button"
+          style={
+            {
+              transition: 'all 1s',
+              position: 'absolute',
+              top: '100px',
+              right: open ? '-70px' : 0,
+              width: '70px',
+              height: '70px',
+              borderTopLeftRadius: '50px',
+              borderBottomLeftRadius: '50px',
+              backgroundColor: theme.palette.blue.main,
+              zIndex: 1001,
+            } as unknown as CSSProperties
+          }
+          onClick={() => setOpen(true)}
+        ></div>
       </>
     );
   };
@@ -213,8 +201,8 @@ const ParcelMap = (props: ParcelMapProps) => {
         setSelectedMarker,
       }}
     >
-      <Box height={height}>
-        <LoadingCover show={isLoading} />
+      <Box height={height} display={'flex'}>
+        { loadProperties ? <LoadingCover show={isLoading} /> : <></>}
         {/* All map controls fit here */}
         {!hideControls && loadProperties ? (
           <ControlsGroup position="topleft">
@@ -224,7 +212,7 @@ const ParcelMap = (props: ParcelMapProps) => {
           <></>
         )}
         <MapContainer
-          style={{ height: '100%' }}
+          style={{ height: '100%', width: '100%' }}
           ref={mapRef}
           bounds={defaultBounds as LatLngBoundsExpression}
           dragging={movable}
@@ -243,9 +231,9 @@ const ParcelMap = (props: ParcelMapProps) => {
           ) : (
             <></>
           )}
-          <MapSidebar properties={properties} />
           {props.children}
         </MapContainer>
+        { loadProperties ? <MapSidebar properties={properties} map={mapRef} /> : <></>}
       </Box>
     </SelectedMarkerContext.Provider>
   );
