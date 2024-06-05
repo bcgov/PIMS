@@ -288,7 +288,10 @@ const updateKeycloakUserRoles = async (username: string, roles: string[]) => {
       (e as IKeycloakErrorResponse).message
     }`;
     logger.warn(message);
-    throw new Error(message);
+    throw new ErrorWithCode(
+      `Failed to update user ${username}'s Keycloak roles. User's Keycloak account may not be active.`,
+      500,
+    );
   }
 };
 
