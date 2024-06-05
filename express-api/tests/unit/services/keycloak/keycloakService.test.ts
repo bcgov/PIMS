@@ -249,7 +249,7 @@ describe('UNIT - KeycloakService', () => {
       (getUserRoles as jest.Mock).mockResolvedValueOnce({ message: 'no user found' });
 
       expect(KeycloakService.updateKeycloakUserRoles(mockUser.username, ['role1'])).rejects.toThrow(
-        `keycloakService.updateKeycloakUserRoles: `,
+        /^Failed to update user/,
       );
       expect(getUserRoles).toHaveBeenCalledTimes(1);
     });

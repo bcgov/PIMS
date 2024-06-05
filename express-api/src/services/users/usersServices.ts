@@ -264,6 +264,7 @@ const addUser = async (user: User) => {
 };
 
 const updateUser = async (user: DeepPartial<User>) => {
+  const roleName = user.Role?.Name;
   const resource = await AppDataSource.getRepository(User).findOne({ where: { Id: user.Id } });
   if (!resource) {
     throw new ErrorWithCode('Resource does not exist.', 404);
@@ -272,6 +273,9 @@ const updateUser = async (user: DeepPartial<User>) => {
     ...user,
     DisplayName: `${user.LastName}, ${user.FirstName}`,
   });
+  if (roleName) {
+    await KeycloakService.updateKeycloakUserRoles(resource.Username, [roleName]);
+  }
   return retUser.generatedMaps[0];
 };
 
