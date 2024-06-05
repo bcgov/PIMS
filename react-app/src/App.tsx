@@ -1,12 +1,12 @@
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import Home from '@/pages/Home';
-import React from 'react';
+import React, { useContext } from 'react';
 import '@/App.css';
 import { ThemeProvider } from '@emotion/react';
 import appTheme from './themes/appTheme';
 // import Dev from './pages/DevZone';
 import { ConfigContextProvider } from './contexts/configContext';
-import AuthContextProvider from './contexts/authContext';
+import AuthContextProvider, { AuthContext } from './contexts/authContext';
 import AuthRouteGuard from './guards/AuthRouteGuard';
 import BaseLayout from './components/layout/BaseLayout';
 import { AccessRequest } from './pages/AccessRequest';
@@ -33,14 +33,28 @@ import ParcelMap from '@/components/map/ParcelMap';
 
 const Router = () => {
   const navigate = useNavigate();
+  const auth = useContext(AuthContext);
+
+  const showMap = () => (
+    <BaseLayout>
+      <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
+        <ParcelMap height="100%" loadProperties={true} popupSize="large" scrollOnClick />
+      </AuthRouteGuard>
+    </BaseLayout>
+  );
+
   return (
     <Routes>
       <Route
         index
         element={
-          <BaseLayout displayFooter>
-            <Home />
-          </BaseLayout>
+          auth.keycloak.isAuthenticated && auth.pimsUser.data?.Status === 'Active' ? (
+            showMap()
+          ) : (
+            <BaseLayout displayFooter>
+              <Home />
+            </BaseLayout>
+          )
         }
       />
       <Route
@@ -215,16 +229,7 @@ const Router = () => {
           </BaseLayout>
         }
       />
-      <Route
-        path="/map"
-        element={
-          <BaseLayout>
-            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
-              <ParcelMap height="100%" loadProperties={true} popupSize="large" scrollOnClick />
-            </AuthRouteGuard>
-          </BaseLayout>
-        }
-      />
+      <Route path="/map" element={showMap()} />
     </Routes>
   );
 };
