@@ -115,23 +115,9 @@ export const submitUserAccessRequest = async (req: Request, res: Response) => {
   );
   const config = getConfig();
   const user = await userServices.getUser(req.user.preferred_username);
-  const adminUsers = await userServices.getUsers({
-    role: 'Administrator',
-    agencyId: user.AgencyId,
-  });
-  const adminEmails = adminUsers.map((user) => user.Email);
-  while (adminEmails.join(';').length > 500) {
-    adminEmails.shift();
-  }
+  //Note: old PIMS has code that suggests administrator users should be enumerated here and sent notifications.
+  //However, current POs no longer desire this functionality. Just the one notification to the common RPD mailbox is fine.
   try {
-    const notif = await notificationServices.generateAccessRequestNotification(
-      {
-        FirstName: user.FirstName,
-        LastName: user.LastName,
-      },
-      config.accessRequest.notificationTemplate,
-      adminEmails.join(';'),
-    );
     const notifRPD = await notificationServices.generateAccessRequestNotification(
       {
         FirstName: user.FirstName,
@@ -139,7 +125,6 @@ export const submitUserAccessRequest = async (req: Request, res: Response) => {
       },
       config.accessRequest.notificationTemplateRPD,
     );
-    await notificationServices.sendNotification(notif, req.user);
     await notificationServices.sendNotification(notifRPD, req.user);
   } catch (e) {
     logger.error(`Failed to deliver access request notification: ${e.message}`);
