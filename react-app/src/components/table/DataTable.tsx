@@ -2,6 +2,7 @@ import React, {
   MutableRefObject,
   PropsWithChildren,
   useCallback,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useState,
@@ -27,6 +28,7 @@ import {
   DataGrid,
   DataGridProps,
   GridOverlay,
+  GridPaginationModel,
   GridRenderCellParams,
   GridRowId,
   GridState,
@@ -43,6 +45,8 @@ import AddIcon from '@mui/icons-material/Add';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { GridInitialStateCommunity } from '@mui/x-data-grid/models/gridStateCommunity';
 import CircularProgress from '@mui/material/CircularProgress';
+import { CommonFiltering } from '@/interfaces/ICommonFiltering';
+import useDataLoader from '@/hooks/useDataLoader';
 
 type RenderCellParams = GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
 
@@ -164,6 +168,7 @@ export const CustomListSubheader = (props: PropsWithChildren) => {
 };
 
 type FilterSearchDataGridProps = {
+  dataSource: (filter: CommonFiltering) => Promise<any[]>;
   onPresetFilterChange: (value: string, ref: MutableRefObject<GridApiCommunity>) => void;
   onAddButtonClick?: React.MouseEventHandler<HTMLButtonElement>;
   defaultFilter: string;
@@ -182,12 +187,22 @@ type FilterSearchDataGridProps = {
 } & DataGridProps;
 
 export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
+  const [rows, setRows] = useState([]);
+  const [pagination, setPagination] = useState<GridPaginationModel>({ page: 0, pageSize: 10 });
   const [rowCount, setRowCount] = useState<number>(0);
   const [keywordSearchContents, setKeywordSearchContents] = useState<string>('');
   const [gridFilterItems, setGridFilterItems] = useState([]);
   const [selectValue, setSelectValue] = useState<string>(props.defaultFilter);
   const [isExporting, setIsExporting] = useState<boolean>(false);
   const tableApiRef = useGridApiRef(); // Ref to MUI DataGrid
+
+  useEffect(() => {
+    console.log(`New pagination value: ${JSON.stringify(pagination)}`);
+    tableApiRef.current.setPaginationModel(pagination);
+    props
+      .dataSource({ quantity: pagination.pageSize, page: pagination.page })
+      .then((ret) => setRows(ret));
+  }, [pagination]);
 
   /**
    * @interface
@@ -200,6 +215,8 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     columnFilterValue?: string;
     columnSortName?: string;
     columnSortValue?: 'asc' | 'desc';
+    page?: number;
+    pageSize?: number;
   }
 
   /**
@@ -258,6 +275,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
    */
   useLayoutEffect(() => {
     const query = getQuery();
+    console.log(`Ran layoutEffect: ${JSON.stringify(query, null, 2)}`);
     // If query strings exist, prioritize that for preset filters, etc.
     if (Boolean(Object.keys(query).length)) {
       // Set keyword filter
@@ -290,6 +308,10 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             sort: query.columnSortValue,
           },
         ]);
+      }
+      //Set pagination
+      if (query.page && query.pageSize) {
+        setPagination({ page: Number(query.page), pageSize: Number(query.pageSize) });
       }
     } else {
       // Setting the table's state from sessionStorage cookies
@@ -461,9 +483,18 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             setQuery({ columnSortName: undefined, columnSortValue: undefined });
           }
         }}
+        paginationMode="server"
+        rowCount={-1}
+        paginationMeta={{ hasNextPage: rows.length === pagination.pageSize }}
+        onPaginationModelChange={(model) => {
+          setPagination(model);
+          setQuery({ page: model.page, pageSize: model.pageSize });
+        }}
         apiRef={tableApiRef}
         initialState={{
-          pagination: { paginationModel: { pageSize: 10 } },
+          pagination: {
+            paginationModel: { pageSize: getQuery().pageSize ?? 10, page: getQuery().page ?? 0 },
+          },
           ...props.initialState,
         }}
         pageSizeOptions={[10, 20, 30, 100]} // DataGrid max is 100
@@ -486,6 +517,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         }}
         slots={{ toolbar: KeywordSearch, noRowsOverlay: NoRowsOverlay }}
         {...props}
+        rows={rows ?? []}
       />
     </>
   );

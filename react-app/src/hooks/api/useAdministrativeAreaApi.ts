@@ -1,3 +1,4 @@
+import { CommonFiltering } from '@/interfaces/ICommonFiltering';
 import { IFetch } from '../useFetch';
 
 export interface AdministrativeArea {
@@ -12,8 +13,8 @@ export interface AdministrativeArea {
 }
 
 const useAdministrativeAreaApi = (absoluteFetch: IFetch) => {
-  const getAdministrativeAreas = async (): Promise<AdministrativeArea[]> => {
-    const { parsedBody } = await absoluteFetch.get(`/administrativeAreas`);
+  const getAdministrativeAreas = async (sort?: CommonFiltering): Promise<AdministrativeArea[]> => {
+    const { parsedBody } = await absoluteFetch.get(`/administrativeAreas`, { ...sort });
     return parsedBody as AdministrativeArea[];
   };
 

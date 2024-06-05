@@ -1,4 +1,4 @@
-import React, { MutableRefObject } from 'react';
+import React, { MutableRefObject, useEffect, useState } from 'react';
 import {
   GridColDef,
   gridFilteredSortedRowEntriesSelector,
@@ -18,8 +18,7 @@ import { AdministrativeArea } from '@/hooks/api/useAdministrativeAreaApi';
 const AdministrativeAreasTable = () => {
   const api = usePimsApi();
   const navigate = useNavigate();
-  const { data, loadOnce } = useDataLoader(api.administrativeAreas.getAdministrativeAreas);
-  loadOnce();
+
   const columns: GridColDef[] = [
     {
       field: 'Name',
@@ -107,6 +106,7 @@ const AdministrativeAreasTable = () => {
 
   return (
     <FilterSearchDataGrid
+      dataSource={api.administrativeAreas.getAdministrativeAreas}
       name="adminAreas"
       onRowClick={(params) => navigate(`${params.row.Id}`)}
       onPresetFilterChange={selectPresetFilter}
@@ -130,7 +130,7 @@ const AdministrativeAreasTable = () => {
       addTooltip={'Create New Administration Area'}
       columns={columns}
       getRowId={(row) => row.Id}
-      rows={data ?? []}
+      //rows={data ?? []}
       initialState={{
         pagination: {
           paginationModel: { pageSize: 10, page: 0 },
