@@ -89,14 +89,17 @@ const Header: React.FC = () => {
         backgroundColor: theme.palette.white.main,
         height: '74px',
         display: 'flex',
-        position: 'fixed',
+        position: 'relative',
         justifyContent: 'center',
         borderBottom: '1px solid',
         borderBottomColor: theme.palette.gray.main,
         zIndex: theme.zIndex.drawer + 1,
       }}
     >
-      <Toolbar>
+      <Toolbar sx={{
+        // border: 'solid 1px black',
+        height: '100%'
+      }}>
         <AppBrand />
         <Box flexGrow={1}></Box>
         <Box textAlign={'center'} alignItems={'center'} gap={'32px'} display={'flex'}>
