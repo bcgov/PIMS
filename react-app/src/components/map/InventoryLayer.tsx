@@ -1,17 +1,14 @@
-import usePimsApi from '@/hooks/usePimsApi';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import useDataLoader from '@/hooks/useDataLoader';
-import { MapFilter, PropertyGeo } from '@/hooks/api/usePropertiesApi';
+import React, { useCallback, useEffect, useState } from 'react';
+import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import { Marker, useMap, useMapEvents } from 'react-leaflet';
 import useSupercluster from 'use-supercluster';
 import './clusterHelpers/clusters.css';
 import L, { LatLngExpression } from 'leaflet';
 import { BBox } from 'geojson';
-import { SnackBarContext } from '@/contexts/snackbarContext';
 
 export interface InventoryLayerProps {
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  filter: MapFilter;
+  isLoading: boolean;
+  properties: PropertyGeo[];
 }
 
 // Properties added to PropertyGeo types after clustering
@@ -31,26 +28,18 @@ export interface ClusterGeo {
  * @returns {JSX.Element} The rendered InventoryLayer component.
  */
 export const InventoryLayer = (props: InventoryLayerProps) => {
-  const { setLoading, filter } = props;
-  const snackbar = useContext(SnackBarContext);
-  const api = usePimsApi();
+  const { isLoading, properties } = props;
   const map = useMap();
-  const [properties, setProperties] = useState<PropertyGeo[]>([]);
   const [clusterBounds, setClusterBounds] = useState<BBox>(); // Affects clustering
   const [clusterZoom, setClusterZoom] = useState<number>(14); // Affects clustering
-  const { data, refreshData, isLoading } = useDataLoader(() =>
-    api.properties.propertiesGeoSearch(filter),
-  );
 
   const maxZoom = 18;
 
-  // Get the property data for mapping
   useEffect(() => {
-    if (data) {
-      if (data.length) {
-        setProperties(data as PropertyGeo[]);
+    if (properties) {
+      if (properties.length) {
         // Set map bounds based on received data. Eliminate outliers (outside BC)
-        const coordsArray = (data as PropertyGeo[])
+        const coordsArray = properties
           .map((d) => [d.geometry.coordinates[1], d.geometry.coordinates[0]])
           .filter(
             (coords) => coords[0] > 40 && coords[0] < 60 && coords[1] > -140 && coords[1] < -110,
@@ -66,36 +55,15 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
           ),
         );
         updateClusters();
-        setLoading(false);
-        snackbar.setMessageState({
-          open: true,
-          text: `${data.length} properties found.`,
-          style: snackbar.styles.success,
-        });
       } else {
-        snackbar.setMessageState({
-          open: true,
-          text: `No properties found matching filter criteria.`,
-          style: snackbar.styles.warning,
-        });
-        setProperties([]);
         // Reset back to BC view
         map.fitBounds([
           [54.2516, -129.371],
           [49.129, -117.203],
         ]);
-        setLoading(false);
       }
-    } else {
-      setLoading(true);
-      refreshData();
     }
-  }, [data, isLoading]);
-
-  // Refresh the data if the filter changes
-  useEffect(() => {
-    refreshData();
-  }, [filter]);
+  }, [properties]);
 
   // Updating the map for the clusterer
   const updateClusters = () => {

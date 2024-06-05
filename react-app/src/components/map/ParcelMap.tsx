@@ -1,13 +1,16 @@
 import { Box, CircularProgress } from '@mui/material';
-import React, { createContext, PropsWithChildren, useState } from 'react';
+import React, { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import { MapContainer, useMapEvents } from 'react-leaflet';
 import { Map } from 'leaflet';
 import MapLayers from '@/components/map/MapLayers';
 import { ParcelPopup } from '@/components/map/parcelPopup/ParcelPopup';
 import { InventoryLayer } from '@/components/map/InventoryLayer';
-import MapPropertyDetails from '@/components/map/MapPropertyDetails';
 import ControlsGroup from '@/components/map/controls/ControlsGroup';
 import FilterControl from '@/components/map/controls/FilterControl';
+import useDataLoader from '@/hooks/useDataLoader';
+import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
+import usePimsApi from '@/hooks/usePimsApi';
+import { SnackBarContext } from '@/contexts/snackbarContext';
 
 type ParcelMapProps = {
   height: string;
@@ -47,12 +50,19 @@ const ParcelMap = (props: ParcelMapProps) => {
     useMapEvents({});
     return null;
   };
-  const [loading, setLoading] = useState<boolean>(false);
+  const api = usePimsApi();
+  const snackbar = useContext(SnackBarContext);
+
   const [selectedMarker, setSelectedMarker] = useState({
     id: undefined,
     type: undefined,
   });
   const [filter, setFilter] = useState({}); // Applies when request for properties is made
+  const [properties, setProperties] = useState<PropertyGeo[]>([]);
+
+  const { data, refreshData, isLoading } = useDataLoader(() =>
+    api.properties.propertiesGeoSearch(filter),
+  );
 
   const {
     height,
@@ -66,6 +76,34 @@ const ParcelMap = (props: ParcelMapProps) => {
     hideControls = false,
   } = props;
 
+  // Get the property data for mapping
+  useEffect(() => {
+    if (data) {
+      if (data.length) {
+        setProperties(data as PropertyGeo[]);
+        snackbar.setMessageState({
+          open: true,
+          text: `${data.length} properties found.`,
+          style: snackbar.styles.success,
+        });
+      } else {
+        snackbar.setMessageState({
+          open: true,
+          text: `No properties found matching filter criteria.`,
+          style: snackbar.styles.warning,
+        });
+        setProperties([]);
+      }
+    } else {
+      refreshData();
+    }
+  }, [data, isLoading]);
+
+  // Refresh the data if the filter changes
+  useEffect(() => {
+    refreshData();
+  }, [filter]);
+
   return (
     <SelectedMarkerContext.Provider
       value={{
@@ -74,16 +112,15 @@ const ParcelMap = (props: ParcelMapProps) => {
       }}
     >
       <Box height={height}>
-        <LoadingCover show={loading} />
+        <LoadingCover show={isLoading} />
         {/* All map controls fit here */}
-        {hideControls ? (
-          <></>
-        ) : (
+        {!hideControls && loadProperties ? (
           <ControlsGroup position="topleft">
             <FilterControl setFilter={setFilter} />
           </ControlsGroup>
+        ) : (
+          <></>
         )}
-        <MapPropertyDetails property={selectedMarker} />
         <MapContainer
           style={{ height: '100%' }}
           ref={mapRef}
@@ -102,7 +139,11 @@ const ParcelMap = (props: ParcelMapProps) => {
           <MapLayers />
           <ParcelPopup size={popupSize} scrollOnClick={scrollOnClick} />
           <MapEvents />
-          {loadProperties ? <InventoryLayer filter={filter} setLoading={setLoading} /> : <></>}
+          {loadProperties ? (
+            <InventoryLayer isLoading={isLoading} properties={properties} />
+          ) : (
+            <></>
+          )}
           {props.children}
         </MapContainer>
       </Box>
