@@ -22,7 +22,7 @@ import MapSidebar from '@/components/map/sidebar/MapSidebar';
 
 type ParcelMapProps = {
   height: string;
-  mapRef?: React.Ref<Map>;
+  mapRef?: React.MutableRefObject<Map>;
   movable?: boolean;
   zoomable?: boolean;
   loadProperties?: boolean;
@@ -74,6 +74,7 @@ const ParcelMap = (props: ParcelMapProps) => {
 
   const {
     height,
+    mapRef,
     movable = true,
     zoomable = true,
     loadProperties = false,
@@ -83,7 +84,7 @@ const ParcelMap = (props: ParcelMapProps) => {
     hideControls = false,
   } = props;
 
-  const mapRef = useRef<Map>();
+  const localMapRef = mapRef ?? useRef<Map>();
 
   const defaultBounds = [
     [54.2516, -129.371],
@@ -141,7 +142,7 @@ const ParcelMap = (props: ParcelMapProps) => {
         )}
         <MapContainer
           style={{ height: '100%', width: '100%' }}
-          ref={mapRef}
+          ref={localMapRef}
           bounds={defaultBounds as LatLngBoundsExpression}
           dragging={movable}
           zoomControl={zoomable}
@@ -161,7 +162,7 @@ const ParcelMap = (props: ParcelMapProps) => {
           )}
           {props.children}
         </MapContainer>
-        {loadProperties ? <MapSidebar properties={properties} map={mapRef} /> : <></>}
+        {loadProperties ? <MapSidebar properties={properties} map={localMapRef} /> : <></>}
       </Box>
     </SelectedMarkerContext.Provider>
   );
