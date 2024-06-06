@@ -35,6 +35,7 @@ const Router = () => {
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
 
+  // Reusable piece to show map on many routes
   const showMap = () => (
     <BaseLayout>
       <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>

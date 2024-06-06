@@ -12,6 +12,12 @@ interface PropertyRowProps {
   content2: string;
 }
 
+/**
+ * Renders a row for a list of properties that displays an icon, a title, and two text fields.
+ *
+ * @param {PropertyRowProps} props - The props object used for ParcelRow component.
+ * @returns {JSX.Element} The ParcelRow component.
+ */
 const PropertyRow = (props: PropertyRowProps) => {
   const { id, propertyTypeId, title, content1, content2 } = props;
   const theme = useTheme();

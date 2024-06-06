@@ -15,6 +15,12 @@ interface MapSidebarProps {
   map: React.MutableRefObject<Map>;
 }
 
+/**
+ * Used alongside the MapSidebar to display a list of visible properties.
+ *
+ * @param {MapSidebarProps} props - The props object used for MapSidebar component.
+ * @returns {JSX.Element} The MapSidebar component.
+ */
 const MapSidebar = (props: MapSidebarProps) => {
   const { properties, map } = props;
   const [propertiesInBounds, setPropertiesInBounds] = useState<PropertyGeo[]>(properties ?? []);
@@ -22,8 +28,9 @@ const MapSidebar = (props: MapSidebarProps) => {
   const [open, setOpen] = useState<boolean>(true);
   const theme = useTheme();
   const api = usePimsApi();
-  const propertyPageSize = 10;
+  const propertyPageSize = 10; // Affects paging size
 
+  // Get related data for lookups
   const { data: agencyData, loadOnce: loadAgencies } = useDataLoader(api.agencies.getAgencies);
   const { data: adminAreaData, loadOnce: loadAdminAreas } = useDataLoader(
     api.administrativeAreas.getAdministrativeAreas,
@@ -31,6 +38,7 @@ const MapSidebar = (props: MapSidebarProps) => {
   loadAgencies();
   loadAdminAreas();
 
+  // Sets the properties that are in the map's bounds at current view. Resets the page index.
   const definePropertiesInBounds = () => {
     if (properties && properties.length) {
       const newBounds = map.current.getBounds();
@@ -43,6 +51,7 @@ const MapSidebar = (props: MapSidebarProps) => {
     }
   };
 
+  // Event listeners. Must be this style because we are outside of MapContainer.
   if (map.current) {
     map.current.addEventListener('zoomend', definePropertiesInBounds);
     map.current.addEventListener('moveend', definePropertiesInBounds);
@@ -63,6 +72,7 @@ const MapSidebar = (props: MapSidebarProps) => {
           transition: 'ease-in-out 0.5s',
         }}
       >
+        {/* Sidebar Header */}
         <Grid container height={50} sx={{ backgroundColor: 'rgb(221,221,221)' }}>
           <Grid item xs={2} display={'flex'} justifyContent={'center'} alignItems={'center'}>
             <IconButton>
@@ -103,6 +113,8 @@ const MapSidebar = (props: MapSidebarProps) => {
             </IconButton>
           </Grid>
         </Grid>
+
+        {/* List of Properties */}
         <Box overflow={'scroll'} height={'95%'}>
           {propertiesInBounds
             .slice(pageIndex * propertyPageSize, pageIndex * propertyPageSize + propertyPageSize)

@@ -15,6 +15,11 @@ type ClassificationIconType = {
   showBadge?: boolean;
 };
 
+/**
+ * Icon of either building or parcel. Option to include amount that is displayed as small circle in bottom right.
+ * @param {ClassificationIconType} props Props needed to display the Icon
+ * @returns Classification Icon
+ */
 export const ClassificationIcon = (props: ClassificationIconType) => {
   const {
     amount,
@@ -32,6 +37,7 @@ export const ClassificationIcon = (props: ClassificationIconType) => {
         transform: `scale(${scale})`,
       }}
     >
+      {/* Handles the small circle for the amount */}
       <Badge
         overlap="circular"
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
@@ -52,6 +58,7 @@ export const ClassificationIcon = (props: ClassificationIconType) => {
           },
         }}
       >
+        {/* Large circle with either building or parcel */}
         <Avatar style={{ backgroundColor: '#eee', height: 40, width: 40 }}>
           <Icon>
             <img height={22} width={22} src={iconType === 'building' ? BuildingIcon : ParcelIcon} />

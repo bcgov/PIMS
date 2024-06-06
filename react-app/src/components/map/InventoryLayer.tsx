@@ -35,6 +35,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
 
   const maxZoom = 18;
 
+  // When properties change, set map bounds and remake clusters
   useEffect(() => {
     if (properties) {
       if (properties.length) {

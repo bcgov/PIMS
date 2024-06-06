@@ -37,7 +37,7 @@ export const SelectedMarkerContext = createContext(null);
 /**
  * ParcelMap component renders a map with various layers and functionalities.
  *
- * @param {ParcelMapProps} props - The props object containing the height, mapRef, movable, zoomable, and loadProperties properties.
+ * @param {ParcelMapProps} props - The props object used for ParcelMap component.
  * @returns {JSX.Element} The ParcelMap component.
  *
  * @example
@@ -68,6 +68,7 @@ const ParcelMap = (props: ParcelMapProps) => {
   const [filter, setFilter] = useState({}); // Applies when request for properties is made
   const [properties, setProperties] = useState<PropertyGeo[]>([]);
 
+  // Get properties for map.
   const { data, refreshData, isLoading } = useDataLoader(() =>
     api.properties.propertiesGeoSearch(filter),
   );
@@ -84,8 +85,10 @@ const ParcelMap = (props: ParcelMapProps) => {
     hideControls = false,
   } = props;
 
+  // To access map outside of MapContainer
   const localMapRef = mapRef ?? useRef<Map>();
 
+  // Default for BC view
   const defaultBounds = [
     [54.2516, -129.371],
     [49.129, -117.203],
