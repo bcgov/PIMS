@@ -1,4 +1,13 @@
-import { Avatar, Box, CircularProgress, Icon, IconButton, Paper, useTheme } from '@mui/material';
+import {
+  Box,
+  CircularProgress,
+  Grid,
+  Icon,
+  IconButton,
+  Paper,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import React, {
   createContext,
   CSSProperties,
@@ -20,6 +29,8 @@ import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import usePimsApi from '@/hooks/usePimsApi';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 import sideBarIcon from '@/assets/icons/SidebarLeft-Linear.svg';
+import { ArrowCircleLeft, ArrowCircleRight, FilterList } from '@mui/icons-material';
+import { formatNumber } from '@/utilities/formatters';
 
 type ParcelMapProps = {
   height: string;
@@ -127,8 +138,10 @@ const ParcelMap = (props: ParcelMapProps) => {
   const MapSidebar = (props: MapSidebarProps) => {
     const { properties, map } = props;
     const [propertiesInBounds, setPropertiesInBounds] = useState<PropertyGeo[]>(properties ?? []);
-    const [open, setOpen] = useState<boolean>(false);
+    const [pageIndex, setPageIndex] = useState<number>(0);
+    const [open, setOpen] = useState<boolean>(true);
     const theme = useTheme();
+    const propertyPageSize = 10;
 
     const definePropertiesInBounds = () => {
       if (properties && properties.length) {
@@ -141,6 +154,7 @@ const ParcelMap = (props: ParcelMapProps) => {
             ]),
           ),
         );
+        setPageIndex(0);
       }
     };
 
@@ -148,30 +162,70 @@ const ParcelMap = (props: ParcelMapProps) => {
       map.current.addEventListener('zoomend', definePropertiesInBounds);
       map.current.addEventListener('moveend', definePropertiesInBounds);
     }
-
+    console.log(propertiesInBounds);
     return (
       <>
         <Box
           id="map-sidebar"
           zIndex={1000}
           position={'fixed'}
-          right={0}
+          right={open ? 0 : '-400px'}
           height={'100%'}
           component={Paper}
-          width={open ? '400px' : '0px'}
+          width={'350px'}
           sx={{
-            transition: 'all 1s',
+            transition: 'ease-in-out 0.5s',
           }}
-          onClick={() => setOpen(!open)}
         >
-          <Box height={60} sx={{ backgroundColor: theme.palette.gray.main}}></Box>
-          {propertiesInBounds.slice(0, 10).map((property) => (
-            <Box
-              key={`${property.properties.PropertyTypeId ? 'Building' : 'Land'}-${property.properties.Id}`}
-            >
-              {property.properties.Id}
-            </Box>
-          ))}
+          <Grid container height={50} sx={{ backgroundColor: 'rgb(221,221,221)' }}>
+            <Grid item xs={2} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+              <IconButton>
+                <FilterList />
+              </IconButton>
+            </Grid>
+            <Grid item xs={8} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+              <IconButton
+                size="small"
+                onClick={() => {
+                  if (pageIndex > 0) {
+                    setPageIndex(pageIndex - 1);
+                  }
+                }}
+              >
+                <ArrowCircleLeft fontSize="small" />
+              </IconButton>
+              <Typography
+                margin={'0 0.5em'}
+                fontSize={'0.8em'}
+              >{`${pageIndex + 1} of ${formatNumber(Math.ceil(propertiesInBounds.length / propertyPageSize))} (${formatNumber(propertiesInBounds.length)} items)`}</Typography>
+              <IconButton
+                size="small"
+                onClick={() => {
+                  if (pageIndex + 1 < Math.ceil(propertiesInBounds.length / propertyPageSize)) {
+                    setPageIndex(pageIndex + 1);
+                  }
+                }}
+              >
+                <ArrowCircleRight fontSize="small" />
+              </IconButton>
+            </Grid>
+            <Grid item xs={2} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+              <IconButton onClick={() => setOpen(false)}>
+                <Icon sx={{ mb: '2px' }}>
+                  <img height={18} width={18} src={sideBarIcon} />
+                </Icon>
+              </IconButton>
+            </Grid>
+          </Grid>
+          {propertiesInBounds
+            .slice(pageIndex * propertyPageSize, pageIndex * propertyPageSize + propertyPageSize)
+            .map((property) => (
+              <Box
+                key={`${property.properties.PropertyTypeId ? 'Building' : 'Land'}-${property.properties.Id}`}
+              >
+                {property.properties.Id}
+              </Box>
+            ))}
         </Box>
         {/* Sidebar button that is shown when sidebar is closed */}
         <Box
@@ -189,12 +243,13 @@ const ParcelMap = (props: ParcelMapProps) => {
               backgroundColor: theme.palette.blue.main,
               zIndex: 1000,
               display: 'flex',
+              cursor: 'pointer',
             } as unknown as CSSProperties
           }
+          onClick={() => setOpen(true)}
         >
           {/* All this just to get the SVG white */}
           <div
-          onClick={() => setOpen(true)}
             style={{
               margin: 'auto',
               transform: `rotate(${!open ? '3.142rad' : '0'})`,
@@ -209,16 +264,9 @@ const ParcelMap = (props: ParcelMapProps) => {
               width: '40%',
               height: '40%',
               backgroundColor: 'white',
+              borderRadius: '100%',
             }}
           ></div>
-          {/* <Icon sx={{ mb: '2px', fill: 'red' }}>
-                <img
-                  height={18}
-                  width={18}
-                  src={sideBarIcon}
-                  style={{ transform: `rotate(${!open ? '3.142rad' : '0'})` }}
-                />
-              </Icon> */}
         </Box>
       </>
     );
@@ -232,7 +280,7 @@ const ParcelMap = (props: ParcelMapProps) => {
       }}
     >
       <Box height={height} display={'flex'}>
-        { loadProperties ? <LoadingCover show={isLoading} /> : <></>}
+        {loadProperties ? <LoadingCover show={isLoading} /> : <></>}
         {/* All map controls fit here */}
         {!hideControls && loadProperties ? (
           <ControlsGroup position="topleft">
@@ -263,7 +311,7 @@ const ParcelMap = (props: ParcelMapProps) => {
           )}
           {props.children}
         </MapContainer>
-        { loadProperties ? <MapSidebar properties={properties} map={mapRef} /> : <></>}
+        {loadProperties ? <MapSidebar properties={properties} map={mapRef} /> : <></>}
       </Box>
     </SelectedMarkerContext.Provider>
   );
