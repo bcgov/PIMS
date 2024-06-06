@@ -109,13 +109,17 @@ const ParcelMap = (props: ParcelMapProps) => {
         setProperties([]);
       }
     } else {
-      refreshData();
+      if (loadProperties) {
+        refreshData();
+      }
     }
   }, [data, isLoading]);
 
   // Refresh the data if the filter changes
   useEffect(() => {
-    refreshData();
+    if (loadProperties) {
+      refreshData();
+    }
   }, [filter]);
 
   return (
