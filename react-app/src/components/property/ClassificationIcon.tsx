@@ -16,7 +16,15 @@ type ClassificationIconType = {
 };
 
 export const ClassificationIcon = (props: ClassificationIconType) => {
-  const { amount, badgeScale, iconType, textColor, badgeColor, scale = 1, showBadge = true } = props;
+  const {
+    amount,
+    badgeScale,
+    iconType,
+    textColor,
+    badgeColor,
+    scale = 1,
+    showBadge = true,
+  } = props;
   const badgeContent = amount != null ? amount : '';
   return (
     <Box
