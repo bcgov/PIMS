@@ -7,6 +7,7 @@ import { randomUUID, UUID } from 'crypto';
 import KeycloakService from '@/services/keycloak/keycloakService';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { UserFiltering } from '@/controllers/users/usersSchema';
+import notificationServices, { AccessRequestData } from '../notifications/notificationServices';
 
 interface NormalizedKeycloakUser {
   first_name: string;
@@ -150,6 +151,19 @@ const addKeycloakUserOnHold = async (
     Note: note,
     CreatedById: systemUser.Id,
   });
+  const newAccessRequest: AccessRequestData = {
+    FirstName: normalizedKc.first_name,
+    LastName: normalizedKc.last_name,
+  };
+  // The notification template name that will be used when sending an email to administrators.
+  const RPDNotificationTemplate = 17;
+  if (result) {
+    const notif = await notificationServices.generateAccessRequestNotification(
+      newAccessRequest,
+      RPDNotificationTemplate,
+    );
+    await notificationServices.sendNotification(notif);
+  }
   return result.generatedMaps[0];
 };
 

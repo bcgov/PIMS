@@ -127,7 +127,10 @@ export interface IEmailSentResponse {
   txId: string;
 }
 
-const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentResponse | null> => {
+const sendEmailAsync = async (
+  email: IEmail,
+  user?: SSOUser,
+): Promise<IEmailSentResponse | null> => {
   const cfg = config();
   if (email == null) {
     throw new ErrorWithCode('Null argument for email.', 400);
@@ -136,18 +139,13 @@ const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentR
   email.from = email.from ?? cfg.ches.defaultFrom;
 
   if (cfg.ches.bccCurrentUser) {
-    email.bcc = [user.email, ...(email.bcc ?? [])];
+    email.bcc = [user?.email, ...(email.bcc ?? [])];
   }
   if (cfg.ches.usersToBcc && typeof cfg.ches.usersToBcc === 'string') {
     email.bcc = [
       ...email.bcc,
       ...(cfg.ches.usersToBcc?.split(';').map((email) => email.trim()) ?? []),
     ];
-  }
-  if (cfg.ches.overrideTo) {
-    email.to = cfg.ches.overrideTo
-      ? cfg.ches.overrideTo?.split(';').map((email) => email.trim()) ?? []
-      : [user.email];
   }
   if (cfg.ches.secondsToDelay) {
     const numSeconds = parseInt(cfg.ches.secondsToDelay);
@@ -158,7 +156,12 @@ const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentR
       email.delayTS += Number(cfg.ches.secondsToDelay);
     }
   }
-  email.to = email.to.filter((a) => !!a);
+  email.to = cfg.ches.overrideTo
+    ? cfg.ches.overrideTo
+        .split(';')
+        .map((email) => email.trim())
+        .filter((email) => email !== '') // needed to add this because without it, we would be sending an array with the original to email along with an empty string
+    : email.to?.filter((a) => !!a);
   email.cc = cfg.ches.overrideTo ? [] : email.cc?.filter((a) => !!a);
   email.bcc = cfg.ches.overrideTo ? [] : email.bcc?.filter((a) => !!a);
 

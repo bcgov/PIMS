@@ -18,7 +18,7 @@ import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
 import logger from '@/utilities/winstonLogger';
 
-interface AccessRequestData {
+export interface AccessRequestData {
   FirstName: string;
   LastName: string;
 }
@@ -307,16 +307,16 @@ const generateProjectNotifications = async (
 
 const sendNotification = async (
   notification: NotificationQueue,
-  user: SSOUser,
+  user?: SSOUser,
   queryRunner?: QueryRunner,
 ) => {
   const query = queryRunner ?? AppDataSource.createQueryRunner();
   let retNotif: NotificationQueue = null;
   try {
     const email: IEmail = {
-      to: notification.To.split(';').map((a) => a.trim()),
-      cc: notification.Cc.split(';').map((a) => a.trim()),
-      bcc: notification.Bcc.split(';').map((a) => a.trim()),
+      to: notification.To?.split(';').map((a) => a.trim()) ?? [],
+      cc: notification.Cc?.split(';').map((a) => a.trim()) ?? [],
+      bcc: notification.Bcc?.split(';').map((a) => a.trim()) ?? [],
       bodyType: EmailBody[notification.BodyType as keyof typeof EmailBody],
       subject: notification.Subject,
       body: notification.Body,
