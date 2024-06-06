@@ -123,6 +123,7 @@ const MapSidebar = (props: MapSidebarProps) => {
                 key={`${property.properties.PropertyTypeId === PropertyTypes.BUILDING ? 'Building' : 'Land'}-${property.properties.Id}`}
                 id={property.properties.Id}
                 propertyTypeId={property.properties.PropertyTypeId}
+                classificationId={property.properties.ClassificationId}
                 title={
                   property.properties.PropertyTypeId === PropertyTypes.BUILDING
                     ? property.properties.Name

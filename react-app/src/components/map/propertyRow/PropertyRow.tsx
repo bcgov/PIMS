@@ -1,4 +1,5 @@
 import { ClassificationIcon } from '@/components/property/ClassificationIcon';
+import { useClassificationStyle } from '@/components/property/PropertyTable';
 import { PropertyTypes } from '@/constants/propertyTypes';
 import { Grid, Typography, useTheme } from '@mui/material';
 import React from 'react';
@@ -7,6 +8,7 @@ import { Link } from 'react-router-dom';
 interface PropertyRowProps {
   id: number;
   propertyTypeId: number;
+  classificationId?: number;
   title: string;
   content1: string;
   content2: string;
@@ -19,9 +21,17 @@ interface PropertyRowProps {
  * @returns {JSX.Element} The ParcelRow component.
  */
 const PropertyRow = (props: PropertyRowProps) => {
-  const { id, propertyTypeId, title, content1, content2 } = props;
+  const { id, propertyTypeId, title, content1, content2, classificationId } = props;
   const theme = useTheme();
   const propertyType = propertyTypeId === PropertyTypes.BUILDING ? 'building' : 'parcel';
+
+  // For classification colours
+  const classification = useClassificationStyle();
+  const classificationColour =
+    classificationId != null
+      ? classification[classificationId].textColor
+      : theme.palette.black.main;
+
   return (
     <Grid
       container
@@ -34,7 +44,7 @@ const PropertyRow = (props: PropertyRowProps) => {
           <ClassificationIcon
             iconType={propertyType}
             textColor={theme.palette.text.primary}
-            badgeColor={'red'}
+            badgeColor={classificationColour}
             scale={1.2}
             badgeScale={1}
           />
