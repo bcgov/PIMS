@@ -1,10 +1,14 @@
 import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
-import { formatNumber } from '@/utilities/formatters';
+import { formatNumber, pidFormatter } from '@/utilities/formatters';
 import { FilterList, ArrowCircleLeft, ArrowCircleRight } from '@mui/icons-material';
 import { Box, Paper, Grid, IconButton, Typography, Icon, useTheme } from '@mui/material';
 import sideBarIcon from '@/assets/icons/SidebarLeft-Linear.svg';
 import { Map } from 'leaflet';
 import React, { CSSProperties, useState } from 'react';
+import PropertyRow from '@/components/map/propertyRow/PropertyRow';
+import { PropertyTypes } from '@/constants/propertyTypes';
+import useDataLoader from '@/hooks/useDataLoader';
+import usePimsApi from '@/hooks/usePimsApi';
 
 interface MapSidebarProps {
   properties: PropertyGeo[];
@@ -17,7 +21,15 @@ const MapSidebar = (props: MapSidebarProps) => {
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [open, setOpen] = useState<boolean>(true);
   const theme = useTheme();
+  const api = usePimsApi();
   const propertyPageSize = 10;
+
+  const { data: agencyData, loadOnce: loadAgencies } = useDataLoader(api.agencies.getAgencies);
+  const { data: adminAreaData, loadOnce: loadAdminAreas } = useDataLoader(
+    api.administrativeAreas.getAdministrativeAreas,
+  );
+  loadAgencies();
+  loadAdminAreas();
 
   const definePropertiesInBounds = () => {
     if (properties && properties.length) {
@@ -35,7 +47,7 @@ const MapSidebar = (props: MapSidebarProps) => {
     map.current.addEventListener('zoomend', definePropertiesInBounds);
     map.current.addEventListener('moveend', definePropertiesInBounds);
   }
-  console.log(propertiesInBounds);
+
   return (
     <>
       <Box
@@ -43,9 +55,10 @@ const MapSidebar = (props: MapSidebarProps) => {
         zIndex={1000}
         position={'fixed'}
         right={open ? 0 : '-400px'}
-        height={'100%'}
+        height={'90%'}
         component={Paper}
         width={'350px'}
+        overflow={'hidden'}
         sx={{
           transition: 'ease-in-out 0.5s',
         }}
@@ -90,15 +103,30 @@ const MapSidebar = (props: MapSidebarProps) => {
             </IconButton>
           </Grid>
         </Grid>
-        {propertiesInBounds
-          .slice(pageIndex * propertyPageSize, pageIndex * propertyPageSize + propertyPageSize)
-          .map((property) => (
-            <Box
-              key={`${property.properties.PropertyTypeId ? 'Building' : 'Land'}-${property.properties.Id}`}
-            >
-              {property.properties.Id}
-            </Box>
-          ))}
+        <Box overflow={'scroll'} height={'95%'}>
+          {propertiesInBounds
+            .slice(pageIndex * propertyPageSize, pageIndex * propertyPageSize + propertyPageSize)
+            .map((property) => (
+              <PropertyRow
+                key={`${property.properties.PropertyTypeId === PropertyTypes.BUILDING ? 'Building' : 'Land'}-${property.properties.Id}`}
+                id={property.properties.Id}
+                propertyTypeId={property.properties.PropertyTypeId}
+                title={
+                  property.properties.PropertyTypeId === PropertyTypes.BUILDING
+                    ? property.properties.Name
+                    : pidFormatter(property.properties.PID) ?? String(property.properties.PIN)
+                }
+                content1={
+                  adminAreaData?.find((aa) => aa.Id === property.properties.AdministrativeAreaId)
+                    ?.Name ?? 'No Administrative Area'
+                }
+                content2={
+                  agencyData?.find((a) => a.Id === property.properties.AgencyId)?.Name ??
+                  'No Agency'
+                }
+              />
+            ))}
+        </Box>
       </Box>
       {/* Sidebar button that is shown when sidebar is closed */}
       <Box
@@ -106,7 +134,7 @@ const MapSidebar = (props: MapSidebarProps) => {
         style={
           {
             transition: 'all 1s',
-            position: 'absolute',
+            position: 'fixed',
             top: '100px',
             right: open ? '-70px' : 0,
             width: '70px',

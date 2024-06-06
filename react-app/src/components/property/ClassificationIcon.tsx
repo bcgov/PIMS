@@ -8,40 +8,49 @@ type IconType = 'building' | 'parcel';
 type ClassificationIconType = {
   amount?: number;
   iconType: IconType;
-  textColor: string;
-  backgroundColor: string;
+  textColor?: string;
+  badgeColor?: string;
   scale?: number;
+  badgeScale?: number;
+  showBadge?: boolean;
 };
 
 export const ClassificationIcon = (props: ClassificationIconType) => {
-  const { amount, iconType, textColor, backgroundColor, scale } = props;
-  const internalScale = scale ?? 1;
+  const { amount, badgeScale, iconType, textColor, badgeColor, scale = 1, showBadge = true } = props;
+  const badgeContent = amount != null ? amount : '';
   return (
-    <Badge
-      overlap="circular"
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      badgeContent={amount ?? 0}
+    <Box
       sx={{
-        '& .MuiBadge-badge': {
-          color: textColor,
-          backgroundColor: backgroundColor,
-        },
-        width: 32 * internalScale,
-        height: 32 * internalScale,
+        transform: `scale(${scale})`,
       }}
     >
-      <Avatar
-        style={{ backgroundColor: '#eee', height: 32 * internalScale, width: 32 * internalScale }}
+      <Badge
+        overlap="circular"
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        badgeContent={badgeContent}
+        invisible={!showBadge}
+        showZero
+        sx={{
+          '& .MuiBadge-badge': {
+            padding: '0.5em',
+            color: textColor,
+            backgroundColor: badgeColor,
+            fontSize: Math.max(4 * (badgeScale ?? scale), 6),
+            minHeight: '5px',
+            minWidth: '5px',
+            height: 10 * (badgeScale ?? scale),
+            width: 10 * (badgeScale ?? scale),
+            borderRadius: '100%',
+          },
+        }}
       >
-        <Icon>
-          <img
-            height={18 * internalScale}
-            width={18 * internalScale}
-            src={iconType === 'building' ? BuildingIcon : ParcelIcon}
-          />
-        </Icon>
-      </Avatar>
-    </Badge>
+        <Avatar style={{ backgroundColor: '#eee', height: 40, width: 40 }}>
+          <Icon>
+            <img height={22} width={22} src={iconType === 'building' ? BuildingIcon : ParcelIcon} />
+          </Icon>
+        </Avatar>
+      </Badge>
+    </Box>
   );
 };
 
