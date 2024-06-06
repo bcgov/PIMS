@@ -7,7 +7,6 @@ import { randomUUID, UUID } from 'crypto';
 import KeycloakService from '@/services/keycloak/keycloakService';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { UserFiltering } from '@/controllers/users/usersSchema';
-import notificationServices, { AccessRequestData } from '../notifications/notificationServices';
 
 interface NormalizedKeycloakUser {
   first_name: string;
@@ -55,11 +54,6 @@ const normalizeKeycloakUser = (kcUser: SSOUser): NormalizedKeycloakUser => {
       throw new Error();
   }
 };
-
-// const getUserFromKeycloak = async (kcUser: KeycloakUser) => {
-//   const normalized = normalizeKeycloakUser(kcUser);
-//   return getUser(normalized.guid ?? normalized.username);
-// };
 
 const activateUser = async (ssoUser: SSOUser) => {
   const normalizedUser = normalizeKeycloakUser(ssoUser);
@@ -151,19 +145,6 @@ const addKeycloakUserOnHold = async (
     Note: note,
     CreatedById: systemUser.Id,
   });
-  const newAccessRequest: AccessRequestData = {
-    FirstName: normalizedKc.first_name,
-    LastName: normalizedKc.last_name,
-  };
-  // The notification template name that will be used when sending an email to administrators.
-  const RPDNotificationTemplate = 17;
-  if (result) {
-    const notif = await notificationServices.generateAccessRequestNotification(
-      newAccessRequest,
-      RPDNotificationTemplate,
-    );
-    await notificationServices.sendNotification(notif);
-  }
   return result.generatedMaps[0];
 };
 
