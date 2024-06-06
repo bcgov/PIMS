@@ -133,6 +133,7 @@ const ProjectsTable = () => {
               'Exemption Rationale': projectModel.Notes?.find(
                 (note) => note.NoteTypeId === NoteTypes.EXEMPTION,
               )?.Note,
+              'Current Market value': projectModel.Market,
               'NetBook	Value': projectModel.NetBook,
               Assessed: projectModel.Assessed,
               Appraised: projectModel.Appraised,
