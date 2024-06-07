@@ -154,10 +154,10 @@ const MapSidebar = (props: MapSidebarProps) => {
           {
             transition: 'all 1s',
             position: 'fixed',
-            top: '100px',
+            top: '80px',
             right: open ? '-70px' : 0,
-            width: '70px',
-            height: '70px',
+            width: '50px',
+            height: '50px',
             borderTopLeftRadius: '50px',
             borderBottomLeftRadius: '50px',
             backgroundColor: theme.palette.blue.main,
