@@ -6,6 +6,9 @@ import { stubResponse } from '@/utilities/stubResponse';
 import { UserFiltering, UserFilteringSchema } from '@/controllers/users/usersSchema';
 import { z } from 'zod';
 import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
+import notificationServices from '@/services/notifications/notificationServices';
+import getConfig from '@/constants/config';
+import logger from '@/utilities/winstonLogger';
 /**
  * @description Function to filter users based on agencies
  * @param {Request}     req Incoming request.
@@ -110,6 +113,23 @@ export const submitUserAccessRequest = async (req: Request, res: Response) => {
     req.body.Position,
     req.body.Note,
   );
+  const config = getConfig();
+  const user = await userServices.getUser(req.user.preferred_username);
+  //Note: old PIMS has code that suggests administrator users should be enumerated here and sent notifications.
+  //However, current POs no longer desire this functionality. Just the one notification to the common RPD mailbox is fine.
+  try {
+    const notifRPD = await notificationServices.generateAccessRequestNotification(
+      {
+        FirstName: user.FirstName,
+        LastName: user.LastName,
+      },
+      config.accessRequest.notificationTemplateRPD,
+    );
+    await notificationServices.sendNotification(notifRPD, req.user);
+  } catch (e) {
+    logger.error(`Failed to deliver access request notification: ${e.message}`);
+  }
+
   return res.status(200).send(result);
 };
 
