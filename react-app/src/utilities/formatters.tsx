@@ -103,3 +103,5 @@ export const pidFormatter = (pid: number | string): string => {
   if (pid == null) return '';
   return zeroPadPID(pid).match(/\d{3}/g).join('-');
 };
+
+export const formatNumber = (num: number) => num.toLocaleString();

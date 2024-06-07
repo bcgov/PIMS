@@ -89,7 +89,7 @@ const Header: React.FC = () => {
         backgroundColor: theme.palette.white.main,
         height: '74px',
         display: 'flex',
-        position: 'fixed',
+        position: 'relative',
         justifyContent: 'center',
         borderBottom: '1px solid',
         borderBottomColor: theme.palette.gray.main,
