@@ -41,6 +41,10 @@ import { WorkflowProjectStatus } from '@/typeorm/Entities/WorkflowProjectStatus'
 import { BuildingRelations } from '@/typeorm/Entities/views/BuildingRelationsView';
 import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
 import { NoteType } from './Entities/NoteType';
+import { ProjectMonetary } from './Entities/ProjectMonetary';
+import { ProjectTimestamp } from './Entities/ProjectTimestamp';
+import { MonetaryType } from './Entities/MonetaryType';
+import { TimestampType } from './Entities/TimestampType';
 
 const views = [BuildingRelations, MapProperties];
 
@@ -74,6 +78,8 @@ export default [
   ProjectStatusTransition,
   ProjectTask,
   ProjectType,
+  ProjectMonetary,
+  ProjectTimestamp,
   PropertyClassification,
   PropertyType,
   Province,
@@ -81,6 +87,8 @@ export default [
   ReportType,
   Role,
   Task,
+  MonetaryType,
+  TimestampType,
   TierLevel,
   User,
   Workflow,
