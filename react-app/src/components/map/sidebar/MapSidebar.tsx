@@ -16,7 +16,7 @@ interface MapSidebarProps {
 }
 
 /**
- * Used alongside the MapSidebar to display a list of visible properties.
+ * Used alongside the Map to display a list of visible properties.
  *
  * @param {MapSidebarProps} props - The props object used for MapSidebar component.
  * @returns {JSX.Element} The MapSidebar component.
