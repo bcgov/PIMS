@@ -158,7 +158,7 @@ const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentR
         .split(';')
         .map((email) => email.trim())
         .filter((email) => !!email)
-    : [user.email];
+    : email.to?.filter((a) => !!a);
   email.cc = cfg.ches.overrideTo ? [] : email.cc?.filter((a) => !!a);
   email.bcc = cfg.ches.overrideTo ? [] : email.bcc?.filter((a) => !!a);
 
