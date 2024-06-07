@@ -64,6 +64,12 @@ const getPropertiesForMap = async (filter?: MapPropertiesFilter) => {
       },
       PropertyTypeId: true,
       ClassificationId: true,
+      Name: true,
+      PID: true,
+      PIN: true,
+      AdministrativeAreaId: true,
+      AgencyId: true,
+      Address1: true,
     },
     where: {
       ClassificationId: filter.ClassificationIds ? In(filter.ClassificationIds) : undefined,

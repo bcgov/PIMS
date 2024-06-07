@@ -17,6 +17,12 @@ export interface PropertyGeo {
     Location: GeoPoint;
     PropertyTypeId: PropertyTypes;
     ClassificationId: ClassificationType;
+    Name: string;
+    AdministrativeAreaId: number;
+    AgencyId: number;
+    PID?: number;
+    PIN?: number;
+    Address1: string;
   };
   geometry: {
     type: 'Point';
