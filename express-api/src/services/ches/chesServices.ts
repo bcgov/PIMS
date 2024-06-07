@@ -127,10 +127,7 @@ export interface IEmailSentResponse {
   txId: string;
 }
 
-const sendEmailAsync = async (
-  email: IEmail,
-  user?: SSOUser,
-): Promise<IEmailSentResponse | null> => {
+const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentResponse | null> => {
   const cfg = config();
   if (email == null) {
     throw new ErrorWithCode('Null argument for email.', 400);
@@ -139,7 +136,7 @@ const sendEmailAsync = async (
   email.from = email.from ?? cfg.ches.defaultFrom;
 
   if (cfg.ches.bccCurrentUser) {
-    email.bcc = [user?.email, ...(email.bcc ?? [])];
+    email.bcc = [user.email, ...(email.bcc ?? [])];
   }
   if (cfg.ches.usersToBcc && typeof cfg.ches.usersToBcc === 'string') {
     email.bcc = [
@@ -160,8 +157,8 @@ const sendEmailAsync = async (
     ? cfg.ches.overrideTo
         .split(';')
         .map((email) => email.trim())
-        .filter((email) => email !== '') // needed to add this because without it, we would be sending an array with the original to email along with an empty string
-    : email.to?.filter((a) => !!a);
+        .filter((email) => !!email)
+    : [user.email];
   email.cc = cfg.ches.overrideTo ? [] : email.cc?.filter((a) => !!a);
   email.bcc = cfg.ches.overrideTo ? [] : email.bcc?.filter((a) => !!a);
 

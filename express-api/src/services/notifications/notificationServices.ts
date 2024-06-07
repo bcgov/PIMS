@@ -307,7 +307,7 @@ const generateProjectNotifications = async (
 
 const sendNotification = async (
   notification: NotificationQueue,
-  user?: SSOUser,
+  user: SSOUser,
   queryRunner?: QueryRunner,
 ) => {
   const query = queryRunner ?? AppDataSource.createQueryRunner();
