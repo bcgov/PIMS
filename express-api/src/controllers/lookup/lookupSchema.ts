@@ -41,7 +41,7 @@ export const ProjectStatusPublicResponseSchema = z.object({
 export const TaskPublicResponseSchema = z.object({
   Name: z.string(),
   Id: z.number(),
-  Description: z.string(),
+  Description: z.string().nullable(),
   IsOptional: z.boolean(),
   StatusId: z.number(),
 });
@@ -49,7 +49,7 @@ export const TaskPublicResponseSchema = z.object({
 export const NoteTypePublicResponseSchema = z.object({
   Name: z.string(),
   Id: z.number(),
-  Description: z.string(),
+  Description: z.string().nullable(),
   IsOptional: z.boolean(),
   StatusId: z.number().nullable(),
 });
