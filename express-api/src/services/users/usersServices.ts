@@ -55,11 +55,6 @@ const normalizeKeycloakUser = (kcUser: SSOUser): NormalizedKeycloakUser => {
   }
 };
 
-// const getUserFromKeycloak = async (kcUser: KeycloakUser) => {
-//   const normalized = normalizeKeycloakUser(kcUser);
-//   return getUser(normalized.guid ?? normalized.username);
-// };
-
 const activateUser = async (ssoUser: SSOUser) => {
   const normalizedUser = normalizeKeycloakUser(ssoUser);
   const internalUser = await getUser(ssoUser.preferred_username);
