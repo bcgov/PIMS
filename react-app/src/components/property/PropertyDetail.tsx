@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import { Box, Skeleton, Typography } from '@mui/material';
 import DataCard from '../display/DataCard';
@@ -99,12 +99,12 @@ const PropertyDetail = (props: IPropertyDetail) => {
   }, [parcel]);
 
   const classification = useClassificationStyle();
-  const [map, setMap] = useState<Map>(null);
+  const map = useRef<Map>();
   useEffect(() => {
     if (building) {
-      map?.setView([building.Location.y, building.Location.x], 17);
+      map.current?.setView([building.Location.y, building.Location.x], 17);
     } else if (parcel) {
-      map?.setView([parcel.Location.y, parcel.Location.x], 17);
+      map.current?.setView([parcel.Location.y, parcel.Location.x], 17);
     }
   }, [building, parcel, map]);
 
@@ -295,7 +295,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
         </DataCard>
         <ParcelMap
           height={'500px'}
-          mapRef={setMap}
+          mapRef={map}
           movable={false}
           zoomable={false}
           zoomOnScroll={false}
