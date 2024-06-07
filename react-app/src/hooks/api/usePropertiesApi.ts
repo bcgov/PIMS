@@ -22,6 +22,7 @@ export interface PropertyGeo {
     AgencyId: number;
     PID?: number;
     PIN?: number;
+    Address1: string;
   };
   geometry: {
     type: 'Point';

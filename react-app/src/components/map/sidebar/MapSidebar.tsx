@@ -64,7 +64,7 @@ const MapSidebar = (props: MapSidebarProps) => {
         zIndex={1000}
         position={'fixed'}
         right={open ? 0 : '-400px'}
-        height={'calc(100vh - 100px)'}
+        height={'calc(100vh - 75px)'}
         component={Paper}
         width={'350px'}
         overflow={'hidden'}
@@ -127,8 +127,12 @@ const MapSidebar = (props: MapSidebarProps) => {
                 propertyTypeId={property.properties.PropertyTypeId}
                 classificationId={property.properties.ClassificationId}
                 title={
+                  // Buildings get name, unless it's all numbers or empty, then get address
+                  // Parcels use PID or PIN
                   property.properties.PropertyTypeId === PropertyTypes.BUILDING
-                    ? property.properties.Name
+                    ? property.properties.Name.match(/^\d*$/) || property.properties.Name == ''
+                      ? property.properties.Address1
+                      : property.properties.Name
                     : pidFormatter(property.properties.PID) ?? String(property.properties.PIN)
                 }
                 content1={
