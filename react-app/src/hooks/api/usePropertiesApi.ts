@@ -38,6 +38,7 @@ export interface MapFilter {
   AdministrativeAreaIds?: number[];
   ClassificationIds?: number[];
   PropertyTypeIds?: number[];
+  RegionalDistrictIds?: number[];
   Name?: string;
 }
 

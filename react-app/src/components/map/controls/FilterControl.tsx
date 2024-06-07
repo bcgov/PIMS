@@ -39,13 +39,17 @@ const FilterControl = (props: FilterControlProps) => {
   const { data: propertyTypesData, loadOnce: loadPropertyTypes } = useDataLoader(
     api.lookup.getPropertyTypes,
   );
-  const { data: usersAgencies, loadOnce: loadUsersAgencies } = useDataLoader(() =>
+  const { data: usersAgenciesData, loadOnce: loadUsersAgencies } = useDataLoader(() =>
     api.users.getUsersAgencyIds(user.pimsUser.data?.Username),
+  );
+  const { data: regionalDistrictsData, loadOnce: loadRegionalDistricts } = useDataLoader(
+    api.lookup.getRegionalDistricts,
   );
   loadAdminAreas();
   loadClassifications();
   loadPropertyTypes();
   loadUsersAgencies();
+  loadRegionalDistricts();
 
   // Initial form values
   const formMethods = useForm({
@@ -57,6 +61,7 @@ const FilterControl = (props: FilterControlProps) => {
       AdministrativeAreas: [],
       Classifications: [],
       PropertyTypes: [],
+      RegionalDistricts: [],
       Name: '',
     },
   });
@@ -92,7 +97,7 @@ const FilterControl = (props: FilterControlProps) => {
                 (option) =>
                   user.keycloak.hasRoles([Roles.ADMIN, Roles.AUDITOR], {
                     requireAllRoles: false,
-                  }) || usersAgencies.includes(option.value),
+                  }) || usersAgenciesData.includes(option.value),
               ) ?? []
             }
             allowNestedIndent
@@ -107,6 +112,16 @@ const FilterControl = (props: FilterControlProps) => {
                   label: aa.Name,
                   value: aa.Id,
                 })) ?? []
+            }
+          />
+          <MultiselectFormField
+            name={'RegionalDistricts'}
+            label="Regional Districts"
+            options={
+              regionalDistrictsData?.map((rd) => ({
+                label: rd.Name,
+                value: rd.Id,
+              })) ?? []
             }
           />
           <MultiselectFormField
@@ -166,6 +181,7 @@ const FilterControl = (props: FilterControlProps) => {
                   AdministrativeAreaIds: formValues.AdministrativeAreas.map(
                     (option) => option.value,
                   ),
+                  RegionalDistrictIds: formValues.RegionalDistricts.map((option) => option.value),
                 };
                 setFilter(newFilter);
               }}
