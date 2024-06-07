@@ -17,7 +17,7 @@ const BaseLayout = (props: IBaseLayoutProps) => {
       }}
     >
       <Header />
-      <Box component="main" flex="1 1 auto">
+      <Box component="main" flex="1 1 auto" height={'100%'} overflow={'scroll'}>
         {props.children}
       </Box>
       {props.displayFooter && <Footer />}
