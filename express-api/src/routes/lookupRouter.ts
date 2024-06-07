@@ -1,5 +1,10 @@
 import controllers from '@/controllers';
-import { lookupMonetaryTypes, lookupNoteTypes, lookupTasks, lookupTimestampTypes } from '@/controllers/lookup/lookupController';
+import {
+  lookupMonetaryTypes,
+  lookupNoteTypes,
+  lookupTasks,
+  lookupTimestampTypes,
+} from '@/controllers/lookup/lookupController';
 import catchErrors from '@/utilities/controllerErrorWrapper';
 import express from 'express';
 
