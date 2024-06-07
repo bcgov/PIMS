@@ -46,6 +46,7 @@ export interface MapPropertiesFilter {
   ClassificationIds?: number[];
   PropertyTypeIds?: number[];
   Name?: string;
+  RegionalDistrictIds?: number[];
 }
 
 /**
@@ -55,7 +56,7 @@ export interface MapPropertiesFilter {
  */
 const getPropertiesForMap = async (filter?: MapPropertiesFilter) => {
   const properties = await AppDataSource.getRepository(MapProperties).find({
-    // Select only the properties needed to render map markers
+    // Select only the properties needed to render map markers and sidebar
     select: {
       Id: true,
       Location: {
@@ -82,6 +83,7 @@ const getPropertiesForMap = async (filter?: MapPropertiesFilter) => {
       Address1: filter.Address ? ILike(`%${filter.Address}%`) : undefined,
       Name: filter.Name ? ILike(`%${filter.Name}%`) : undefined,
       PropertyTypeId: filter.PropertyTypeIds ? In(filter.PropertyTypeIds) : undefined,
+      RegionalDistrictId: filter.RegionalDistrictIds ? In(filter.RegionalDistrictIds) : undefined,
     },
   });
   return properties;

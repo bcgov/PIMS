@@ -132,6 +132,9 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
       ? filter.data.AdministrativeAreaIds
       : undefined,
     PropertyTypeIds: filter.data.PropertyTypeIds.length ? filter.data.PropertyTypeIds : undefined,
+    RegionalDistrictIds: filter.data.RegionalDistrictIds.length
+      ? filter.data.RegionalDistrictIds
+      : undefined,
   };
 
   // Controlling for agency search visibility
