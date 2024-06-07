@@ -23,6 +23,6 @@ export class ProjectTimestamp extends SoftDeleteEntity {
   @JoinColumn({ name: 'timestamp_type_id' })
   TimestampType: TimestampType;
 
-  @CreateDateColumn()
-  Value: Date;
+  @CreateDateColumn({ name: 'date' })
+  Date: Date;
 }

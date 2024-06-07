@@ -41,7 +41,7 @@ export class CreateProjectMonetaryAndTimestampEntities1717624230710 implements M
       `CREATE INDEX "IDX_5ff99bd5ebd96101df9985109c" ON "timestamp_type" ("updated_by_id") `,
     );
     await queryRunner.query(
-      `CREATE TABLE "project_timestamp" ("created_by_id" uuid NOT NULL, "created_on" TIMESTAMP NOT NULL DEFAULT now(), "updated_by_id" uuid, "updated_on" TIMESTAMP DEFAULT now(), "deleted_by_id" uuid, "deleted_on" TIMESTAMP, "project_id" integer NOT NULL, "timestamp_type_id" integer NOT NULL, "value" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_1f0cef6f1e6e37c76af8a8fb403" PRIMARY KEY ("project_id", "timestamp_type_id"))`,
+      `CREATE TABLE "project_timestamp" ("created_by_id" uuid NOT NULL, "created_on" TIMESTAMP NOT NULL DEFAULT now(), "updated_by_id" uuid, "updated_on" TIMESTAMP DEFAULT now(), "deleted_by_id" uuid, "deleted_on" TIMESTAMP, "project_id" integer NOT NULL, "timestamp_type_id" integer NOT NULL, "date" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_1f0cef6f1e6e37c76af8a8fb403" PRIMARY KEY ("project_id", "timestamp_type_id"))`,
     );
     await queryRunner.query(
       `CREATE INDEX "IDX_6a09afddbf4e75214fbe9b6cba" ON "project_timestamp" ("created_by_id") `,

@@ -16,7 +16,7 @@ export class MoveMetadataToTables1717629146741 implements MigrationInterface {
       Code: 'CLS-OUT',
       Description: 'Status related to filling out the close out form.',
       IsMilestone: true,
-      IsTerminal: true,
+      IsTerminal: false,
       Route: '/place/holder',
       CreatedById: systemId,
     });
@@ -37,7 +37,7 @@ export class MoveMetadataToTables1717629146741 implements MigrationInterface {
       { Name: 'RemovalFromSplApprovedOn', IsOptional: true, StatusId: 21, CreatedById: systemId }, //ProjectSPLApproval
       { Name: 'RemovalFromSplRequestOn', IsOptional: true, StatusId: 21, CreatedById: systemId }, //ProjectSPLApproval
       { Name: 'RequestForSplReceivedOn', IsOptional: true, StatusId: 14, CreatedById: systemId }, //ProjectERPComplete, ProjectSPLApproval
-      { Name: 'TransferredWithinGreOn', IsOptional: true, StatusId: 14, CreatedById: systemId }, //ProjectERPComplete, ProjectNotSPL
+      { Name: 'TransferredWithinGreOn', IsOptional: true, StatusId: 20, CreatedById: systemId }, //ProjectERPComplete, ProjectNotSPL
     ]);
 
     await queryRunner.manager.insert(NoteType, [
