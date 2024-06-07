@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Badge, Box, Icon, Typography } from '@mui/material';
+import { Avatar, Badge, Box, Typography } from '@mui/material';
 import BuildingIcon from '@/assets/icons/building.svg';
 import ParcelIcon from '@/assets/icons/parcel.svg';
 
@@ -60,9 +60,7 @@ export const ClassificationIcon = (props: ClassificationIconType) => {
       >
         {/* Large circle with either building or parcel */}
         <Avatar style={{ backgroundColor: '#eee', height: 40, width: 40 }}>
-          <Icon>
-            <img height={22} width={22} src={iconType === 'building' ? BuildingIcon : ParcelIcon} />
-          </Icon>
+          <img height={22} width={22} src={iconType === 'building' ? BuildingIcon : ParcelIcon} />
         </Avatar>
       </Badge>
     </Box>
