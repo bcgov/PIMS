@@ -64,10 +64,12 @@ const MapSidebar = (props: MapSidebarProps) => {
         zIndex={1000}
         position={'fixed'}
         right={open ? 0 : '-400px'}
-        height={'90%'}
+        height={'calc(100vh - 100px)'}
         component={Paper}
         width={'350px'}
         overflow={'hidden'}
+        display={'flex'}
+        flexDirection={'column'}
         sx={{
           transition: 'ease-in-out 0.5s',
         }}
@@ -115,7 +117,7 @@ const MapSidebar = (props: MapSidebarProps) => {
         </Grid>
 
         {/* List of Properties */}
-        <Box overflow={'scroll'} height={'95%'}>
+        <Box overflow={'scroll'} height={'100%'} display={'flex'} flexDirection={'column'}>
           {propertiesInBounds
             .slice(pageIndex * propertyPageSize, pageIndex * propertyPageSize + propertyPageSize)
             .map((property) => (
