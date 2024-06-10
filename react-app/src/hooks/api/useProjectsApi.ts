@@ -81,7 +81,7 @@ export interface Project {
   StatusHistory?: ProjectStatusHistory[];
   Notes?: ProjectNote[];
   Monetaries?: ProjectMonetary[];
-  Timestamps?: ProjectTimestamp[]; 
+  Timestamps?: ProjectTimestamp[];
   ProjectProperties?: ProjectProperty[];
   AgencyResponses?: ProjectAgencyResponse[];
 }

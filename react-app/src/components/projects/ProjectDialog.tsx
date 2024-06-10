@@ -56,7 +56,6 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
       Timestamps: [],
       Monetaries: [],
     },
-    mode: 'all',
   });
 
   useEffect(() => {
@@ -66,6 +65,10 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
       Name: initialValues?.Name,
       TierLevelId: initialValues?.TierLevelId,
       Description: initialValues?.Description,
+      Tasks: [],
+      Notes: [],
+      Timestamps: [],
+      Monetaries: [],
     });
   }, [initialValues]);
 
@@ -127,15 +130,12 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   useEffect(() => {
     projectFormMethods.setValue(
       'Monetaries',
-      monetaryTypes?.map((mon) => ({
-        MonetaryTypeId: mon.Id,
-        Value: parseFloatOrNull(
-          initialValues?.Monetaries?.find((m) => m.MonetaryTypeId == mon.Id)?.Value ?? '',
-        ),
+      monetaryTypes?.map((ts) => ({
+        MonetaryTypeId: ts.Id,
+        Value: initialValues?.Monetaries?.find((d) => d.MonetaryTypeId == ts.Id)?.Value ?? '',
       })),
     );
-  }),
-    [monetaryTypes, initialValues];
+  }, [monetaryTypes, initialValues]);
 
   return (
     <ConfirmDialog
@@ -197,6 +197,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
             <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
               {monetaryTypes?.map((mon, idx) => (
                 <TextFormField
+                  defaultVal=""
                   numeric
                   key={`${mon.Id}-${idx}`}
                   name={`Monetaries.${idx}.Value`}
