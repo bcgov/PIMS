@@ -20,6 +20,8 @@ import { AgencyResponseType } from '@/constants/agencyResponseTypes';
 import { enumReverseLookup } from '@/utilities/helperFunctions';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import TextFormField from '../form/TextFormField';
+import { columnNameFormatter, parseFloatOrNull } from '@/utilities/formatters';
+import DateFormField from '../form/DateFormField';
 
 interface IProjectGeneralInfoDialog {
   initialValues: Project;
@@ -51,6 +53,8 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
       Description: '',
       Tasks: [],
       Notes: [],
+      Timestamps: [],
+      Monetaries: [],
     },
     mode: 'all',
   });
@@ -73,9 +77,19 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
     api.lookup.getProjectNoteTypes(projectFormMethods.getValues()['StatusId']),
   );
 
+  const { data: monetaryTypes, refreshData: refreshMonetary } = useDataLoader(() =>
+    api.lookup.getProjectMonetaryTypes(projectFormMethods.getValues()['StatusId']),
+  );
+
+  const { data: timestampTypes, refreshData: refreshTimestamps } = useDataLoader(() =>
+    api.lookup.getProjectTimestampTypes(projectFormMethods.getValues()['StatusId']),
+  );
+
   useEffect(() => {
     refreshTasks();
     refreshNotes();
+    refreshMonetary();
+    refreshTimestamps();
   }, [projectFormMethods.watch('StatusId')]); //When status id changes, fetch a new set of tasks possible for this status...
 
   useEffect(() => {
@@ -99,6 +113,29 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
       })) ?? [],
     );
   }, [noteTypes, initialValues]);
+
+  useEffect(() => {
+    projectFormMethods.setValue(
+      'Timestamps',
+      timestampTypes?.map((ts) => ({
+        TimestampTypeId: ts.Id,
+        Date: initialValues?.Timestamps?.find((d) => d.TimestampTypeId == ts.Id)?.Date ?? null,
+      })),
+    );
+  }, [timestampTypes, initialValues]);
+
+  useEffect(() => {
+    projectFormMethods.setValue(
+      'Monetaries',
+      monetaryTypes?.map((mon) => ({
+        MonetaryTypeId: mon.Id,
+        Value: parseFloatOrNull(
+          initialValues?.Monetaries?.find((m) => m.MonetaryTypeId == mon.Id)?.Value ?? '',
+        ),
+      })),
+    );
+  }),
+    [monetaryTypes, initialValues];
 
   return (
     <ConfirmDialog
@@ -146,7 +183,40 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
                   multiline
                   key={`${note.Id}-${idx}`}
                   name={`Notes.${idx}.Note`}
-                  label={note.Description}
+                  label={note.Description ?? columnNameFormatter(note.Name)}
+                />
+              ))}
+            </Box>
+          </Box>
+        )}
+        {initialValues && monetaryTypes?.length > 0 && (
+          <Box mt={'1rem'}>
+            <Typography variant="h5" mb={'1rem'}>
+              Confirm Monetary
+            </Typography>
+            <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
+              {monetaryTypes?.map((mon, idx) => (
+                <TextFormField
+                  numeric
+                  key={`${mon.Id}-${idx}`}
+                  name={`Monetaries.${idx}.Value`}
+                  label={columnNameFormatter(mon.Name)}
+                />
+              ))}
+            </Box>
+          </Box>
+        )}
+        {initialValues && timestampTypes?.length > 0 && (
+          <Box mt={'1rem'}>
+            <Typography variant="h5" mb={'1rem'}>
+              Confirm Dates
+            </Typography>
+            <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
+              {timestampTypes?.map((ts, idx) => (
+                <DateFormField
+                  key={`${ts.Id}-${idx}`}
+                  name={`Timestamps.${idx}.Date`}
+                  label={columnNameFormatter(ts.Name)}
                 />
               ))}
             </Box>
