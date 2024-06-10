@@ -20,7 +20,7 @@ import { AgencyResponseType } from '@/constants/agencyResponseTypes';
 import { enumReverseLookup } from '@/utilities/helperFunctions';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import TextFormField from '../form/TextFormField';
-import { columnNameFormatter, parseFloatOrNull } from '@/utilities/formatters';
+import { columnNameFormatter } from '@/utilities/formatters';
 import DateFormField from '../form/DateFormField';
 
 interface IProjectGeneralInfoDialog {
@@ -238,6 +238,8 @@ interface IProjectFinancialDialog {
 export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
   const api = usePimsApi();
   const { initialValues, open, postSubmit, onCancel } = props;
+  const { data: monetaryTypes, loadOnce: loadMonetary } = useDataLoader(api.lookup.getProjectMonetaryTypes);
+  loadMonetary();
   const { submit, submitting } = useDataSubmitter(api.projects.updateProject);
   const financialFormMethods = useForm({
     defaultValues: {
@@ -254,10 +256,10 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
   useEffect(() => {
     //console.log(`useEffect called! ${JSON.stringify(initialValues, null, 2)}`);
     financialFormMethods.reset({
-      Assessed: +initialValues?.Assessed?.toString().replace(/[$,]/g, ''),
-      NetBook: +initialValues?.NetBook?.toString().replace(/[$,]/g, ''),
-      Market: +initialValues?.Market?.toString().replace(/[$,]/g, ''),
-      Appraised: +initialValues?.Appraised?.toString().replace(/[$,]/g, ''),
+      Assessed: +(initialValues?.Assessed ?? 0).toString().replace(/[$,]/g, ''),
+      NetBook: +(initialValues?.NetBook ?? 0).toString().replace(/[$,]/g, ''),
+      Market: +(initialValues?.Market ?? 0).toString().replace(/[$,]/g, ''),
+      Appraised: +(initialValues?.Appraised ?? 0).toString().replace(/[$,]/g, ''),
       Metadata: initialValues?.Metadata,
     });
   }, [initialValues]);
@@ -277,7 +279,16 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
             NetBook: NetBook,
             Market: Market,
             Appraised: Appraised,
-            Metadata: Metadata,
+            Monetaries: [
+              {
+                MonetaryTypeId: monetaryTypes.find((a) => a.Name === 'SalesCost')?.Id,
+                Value: String(Metadata.salesCost),
+              },
+              {
+                MonetaryTypeId: monetaryTypes.find((a) => a.Name === 'ProgramCost')?.Id,
+                Value: String(Metadata.salesCost),
+              },
+            ],
             ProjectProperties: initialValues.ProjectProperties,
           }).then(() => postSubmit());
         }
