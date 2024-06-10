@@ -10,7 +10,7 @@ import {
 } from './ProjectForms';
 import useDataLoader from '@/hooks/useDataLoader';
 import DisposalProjectSearch from './DisposalPropertiesSearchTable';
-import { Box, Typography } from '@mui/material';
+import { Box, Grid, InputAdornment, Typography } from '@mui/material';
 import { ProjectTask } from '@/constants/projectTasks';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
 import AgencySearchTable from './AgencyResponseSearchTable';
@@ -194,17 +194,22 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
             <Typography variant="h5" mb={'1rem'}>
               Confirm Monetary
             </Typography>
-            <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
+            <Grid container spacing={2}>
               {monetaryTypes?.map((mon, idx) => (
-                <TextFormField
-                  defaultVal=""
-                  numeric
-                  key={`${mon.Id}-${idx}`}
-                  name={`Monetaries.${idx}.Value`}
-                  label={columnNameFormatter(mon.Name)}
-                />
+                <Grid item xs={6} key={`mon-grid-${idx}`}>
+                  <TextFormField
+                    InputProps={{
+                      startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                    }}
+                    defaultVal=""
+                    numeric
+                    key={`${mon.Id}-${idx}`}
+                    name={`Monetaries.${idx}.Value`}
+                    label={columnNameFormatter(mon.Name)}
+                  />
+                </Grid>
               ))}
-            </Box>
+            </Grid>
           </Box>
         )}
         {initialValues && timestampTypes?.length > 0 && (
@@ -212,15 +217,17 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
             <Typography variant="h5" mb={'1rem'}>
               Confirm Dates
             </Typography>
-            <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
+            <Grid container spacing={2}>
               {timestampTypes?.map((ts, idx) => (
-                <DateFormField
-                  key={`${ts.Id}-${idx}`}
-                  name={`Timestamps.${idx}.Date`}
-                  label={columnNameFormatter(ts.Name)}
-                />
+                <Grid key={`ts-grid-${idx}`} item xs={6}>
+                  <DateFormField
+                    key={`${ts.Id}-${idx}`}
+                    name={`Timestamps.${idx}.Date`}
+                    label={columnNameFormatter(ts.Name)}
+                  />
+                </Grid>
               ))}
-            </Box>
+            </Grid>
           </Box>
         )}
       </FormProvider>
@@ -238,7 +245,9 @@ interface IProjectFinancialDialog {
 export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
   const api = usePimsApi();
   const { initialValues, open, postSubmit, onCancel } = props;
-  const { data: monetaryTypes, loadOnce: loadMonetary } = useDataLoader(api.lookup.getProjectMonetaryTypes);
+  const { data: monetaryTypes, loadOnce: loadMonetary } = useDataLoader(
+    api.lookup.getProjectMonetaryTypes,
+  );
   loadMonetary();
   const { submit, submitting } = useDataSubmitter(api.projects.updateProject);
   const financialFormMethods = useForm({
