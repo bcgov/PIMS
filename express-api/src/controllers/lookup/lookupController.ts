@@ -7,10 +7,10 @@ import {
   ClassificationPublicResponseSchema,
   PredominateUsePublicResponseSchema,
   RegionalDistrictPublicResponseSchema,
-  TaskPublicResponseSchema,
   TierLevelPublicResponseSchema,
   ProjectStatusPublicResponseSchema,
-  NoteTypePublicResponseSchema,
+  ProjectMetadataTypeSchema,
+  TaskPublicResponseSchema,
 } from './lookupSchema';
 import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUse';
 import { BuildingConstructionType } from '@/typeorm/Entities/BuildingConstructionType';
@@ -20,6 +20,8 @@ import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { Task } from '@/typeorm/Entities/Task';
 import { PropertyType } from '@/typeorm/Entities/PropertyType';
 import { NoteType } from '@/typeorm/Entities/NoteType';
+import { MonetaryType } from '@/typeorm/Entities/MonetaryType';
+import { TimestampType } from '@/typeorm/Entities/TimestampType';
 
 // TODO: What controllers here could just be replaced by existing GET requests?
 
@@ -214,7 +216,33 @@ export const lookupNoteTypes = async (req: Request, res: Response) => {
   const types = (
     await AppDataSource.getRepository(NoteType).find({ where: { StatusId: statusId } })
   ).sort((a, b) => a.SortOrder - b.SortOrder);
-  const parsed = NoteTypePublicResponseSchema.array().safeParse(types);
+  const parsed = ProjectMetadataTypeSchema.array().safeParse(types);
+  if (parsed.success) {
+    return res.status(200).send(parsed.data);
+  } else {
+    return res.status(400).send(parsed);
+  }
+};
+
+export const lookupMonetaryTypes = async (req: Request, res: Response) => {
+  const statusId = req.query.statusId ? parseInt(req.query.statusId.toString()) : undefined;
+  const types = (
+    await AppDataSource.getRepository(MonetaryType).find({ where: { StatusId: statusId } })
+  ).sort((a, b) => a.SortOrder - b.SortOrder);
+  const parsed = ProjectMetadataTypeSchema.array().safeParse(types);
+  if (parsed.success) {
+    return res.status(200).send(parsed.data);
+  } else {
+    return res.status(400).send(parsed);
+  }
+};
+
+export const lookupTimestampTypes = async (req: Request, res: Response) => {
+  const statusId = req.query.statusId ? parseInt(req.query.statusId.toString()) : undefined;
+  const types = (
+    await AppDataSource.getRepository(TimestampType).find({ where: { StatusId: statusId } })
+  ).sort((a, b) => a.SortOrder - b.SortOrder);
+  const parsed = ProjectMetadataTypeSchema.array().safeParse(types);
   if (parsed.success) {
     return res.status(200).send(parsed.data);
   } else {

@@ -46,7 +46,7 @@ export const TaskPublicResponseSchema = z.object({
   StatusId: z.number(),
 });
 
-export const NoteTypePublicResponseSchema = z.object({
+export const ProjectMetadataTypeSchema = z.object({
   Name: z.string(),
   Id: z.number(),
   Description: z.string().nullable(),
