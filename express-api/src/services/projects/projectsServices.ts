@@ -29,6 +29,8 @@ import { ProjectRisk } from '@/constants/projectRisk';
 import notificationServices from '../notifications/notificationServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import userServices from '../users/usersServices';
+import { ProjectTimestamp } from '@/typeorm/Entities/ProjectTimestamp';
+import { ProjectMonetary } from '@/typeorm/Entities/ProjectMonetary';
 
 const projectRepo = AppDataSource.getRepository(Project);
 
@@ -120,12 +122,24 @@ const getProjectById = async (id: number) => {
       ProjectId: id,
     },
   });
+  const projectMonetary = await AppDataSource.getRepository(ProjectMonetary).find({
+    where: {
+      ProjectId: id,
+    },
+  });
+  const projectTimestamps = await AppDataSource.getRepository(ProjectTimestamp).find({
+    where: {
+      ProjectId: id,
+    },
+  });
   return {
     ...project,
     ProjectProperties: projectProperties,
     AgencyResponses: agencyResponses,
     Tasks: projectTasks,
     Notes: projectNotes,
+    Monetaries: projectMonetary,
+    Timestamps: projectTimestamps,
   };
 };
 
@@ -174,6 +188,9 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
     if (parcels) await addProjectParcelRelations(newProject, parcels, queryRunner);
     if (buildings) await addProjectBuildingRelations(newProject, buildings, queryRunner);
     await handleProjectTasks(newProject, queryRunner);
+    await handleProjectMonetary(newProject, queryRunner);
+    await handleProjectNotes(newProject, queryRunner);
+    await handleProjectTimestamps(newProject, queryRunner);
     await queryRunner.commitTransaction();
     return newProject;
   } catch (e) {
@@ -487,6 +504,66 @@ const handleProjectNotes = async (newProject: DeepPartial<Project>, queryRunner:
   }
 };
 
+const handleProjectTimestamps = async (
+  newProject: DeepPartial<Project>,
+  queryRunner: QueryRunner,
+) => {
+  if (newProject?.Timestamps?.length) {
+    const saveTimestamps = newProject.Timestamps.map(
+      async (timestamp): Promise<InsertResult | void> => {
+        if (timestamp.TimestampTypeId == null) {
+          throw new ErrorWithCode('Provided timestamp was missing a required field.', 400);
+        }
+        const exists = await queryRunner.manager.findOne(ProjectTimestamp, {
+          where: { ProjectId: newProject.Id, TimestampTypeId: timestamp.TimestampTypeId },
+        });
+        return queryRunner.manager.upsert(
+          ProjectTimestamp,
+          {
+            ProjectId: newProject.Id,
+            Date: timestamp.Date,
+            TimestampTypeId: timestamp.TimestampTypeId,
+            CreatedById: exists ? exists.CreatedById : newProject.CreatedById,
+            UpdatedById: exists ? newProject.UpdatedById : undefined,
+          },
+          ['ProjectId', 'TimestampTypeId'],
+        );
+      },
+    );
+    return Promise.all(saveTimestamps);
+  }
+};
+
+const handleProjectMonetary = async (
+  newProject: DeepPartial<Project>,
+  queryRunner: QueryRunner,
+) => {
+  if (newProject?.Monetaries?.length) {
+    const saveTimestamps = newProject.Monetaries.map(
+      async (monetary): Promise<InsertResult | void> => {
+        if (monetary.MonetaryTypeId == null) {
+          throw new ErrorWithCode('Provided monetary was missing a required field.', 400);
+        }
+        const exists = await queryRunner.manager.findOne(ProjectMonetary, {
+          where: { ProjectId: newProject.Id, MonetaryTypeId: monetary.MonetaryTypeId },
+        });
+        return queryRunner.manager.upsert(
+          ProjectMonetary,
+          {
+            ProjectId: newProject.Id,
+            Value: monetary.Value,
+            MonetaryTypeId: monetary.MonetaryTypeId,
+            CreatedById: exists ? exists.CreatedById : newProject.CreatedById,
+            UpdatedById: exists ? newProject.UpdatedById : undefined,
+          },
+          ['ProjectId', 'MonetaryTypeId'],
+        );
+      },
+    );
+    return Promise.all(saveTimestamps);
+  }
+};
+
 /**
  * Updates a project with the given changes and property IDs.
  *
@@ -535,6 +612,8 @@ const updateProject = async (
       queryRunner,
     );
     await handleProjectNotes({ ...project, CreatedById: project.UpdatedById }, queryRunner);
+    await handleProjectMonetary({ ...project, CreatedById: project.UpdatedById }, queryRunner);
+    await handleProjectTimestamps({ ...project, CreatedById: project.UpdatedById }, queryRunner);
 
     // Update Project
     await queryRunner.manager.save(Project, {
@@ -543,6 +622,8 @@ const updateProject = async (
       Tasks: undefined,
       AgencyResponses: undefined,
       Notes: undefined,
+      Timestamps: undefined,
+      Monetaries: undefined,
     });
     //Seems this save will also try to save Tasks array if present, but if missing the ProjectId it will do weird stuff.
     //So we could consolidate handleProjectTasks to here if we wanted, but then it might be annoying trying to get the more specific behavior in that function.
@@ -647,6 +728,18 @@ const deleteProjectById = async (id: number, username: string) => {
     // Remove Project Tasks
     await queryRunner.manager.update(
       ProjectTask,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
+    // Remove Project Timestamps
+    await queryRunner.manager.update(
+      ProjectTimestamp,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
+    // Remove Project Monetary
+    await queryRunner.manager.update(
+      ProjectMonetary,
       { ProjectId: id },
       { DeletedById: user.Id, DeletedOn: new Date() },
     );
