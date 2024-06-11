@@ -4,9 +4,15 @@ import { ViewColumn, ViewEntity } from 'typeorm';
 @ViewEntity({
   materialized: false,
   expression: `
-  (SELECT id, pid, pin, location, property_type_id, address1, classification_id, agency_id, is_visible_to_other_agencies, administrative_area_id, name FROM parcel)
-  UNION ALL
-  (SELECT id, pid, pin, location, property_type_id, address1, classification_id, agency_id, is_visible_to_other_agencies, administrative_area_id, name FROM building);
+    SELECT c.id, c.pid, c.pin, c.location, c.property_type_id, c.address1, c.classification_id, c.agency_id, c.is_visible_to_other_agencies, c.administrative_area_id, c.name, aa.regional_district_id as regional_district_id
+    FROM (
+      SELECT id, pid, pin, location, property_type_id, address1, classification_id, agency_id, is_visible_to_other_agencies, administrative_area_id, name 
+      FROM parcel
+      UNION ALL
+      SELECT id, pid, pin, location, property_type_id, address1, classification_id, agency_id, is_visible_to_other_agencies, administrative_area_id, name 
+      FROM building
+    ) c
+    LEFT JOIN administrative_area aa ON c.administrative_area_id = aa.id;  
   `,
 })
 export class MapProperties {
@@ -42,4 +48,7 @@ export class MapProperties {
 
   @ViewColumn({ name: 'name' })
   Name: string;
+
+  @ViewColumn({ name: 'regional_district_id' })
+  RegionalDistrictId: number;
 }
