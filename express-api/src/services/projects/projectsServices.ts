@@ -512,7 +512,7 @@ const handleProjectTimestamps = async (
     const saveTimestamps = newProject.Timestamps.map(
       async (timestamp): Promise<InsertResult | void> => {
         if (timestamp.TimestampTypeId == null) {
-          throw new ErrorWithCode('Provided note was missing a required field.', 400);
+          throw new ErrorWithCode('Provided timestamp was missing a required field.', 400);
         }
         const exists = await queryRunner.manager.findOne(ProjectTimestamp, {
           where: { ProjectId: newProject.Id, TimestampTypeId: timestamp.TimestampTypeId },
@@ -542,7 +542,7 @@ const handleProjectMonetary = async (
     const saveTimestamps = newProject.Monetaries.map(
       async (monetary): Promise<InsertResult | void> => {
         if (monetary.MonetaryTypeId == null) {
-          throw new ErrorWithCode('Provided note was missing a required field.', 400);
+          throw new ErrorWithCode('Provided monetary was missing a required field.', 400);
         }
         const exists = await queryRunner.manager.findOne(ProjectMonetary, {
           where: { ProjectId: newProject.Id, MonetaryTypeId: monetary.MonetaryTypeId },
