@@ -165,7 +165,11 @@ const ParcelMap = (props: ParcelMapProps) => {
           )}
           {props.children}
         </MapContainer>
-        {loadProperties ? <MapSidebar properties={properties} map={localMapRef} /> : <></>}
+        {loadProperties ? (
+          <MapSidebar properties={properties} map={localMapRef} setFilter={setFilter} />
+        ) : (
+          <></>
+        )}
       </Box>
     </SelectedMarkerContext.Provider>
   );

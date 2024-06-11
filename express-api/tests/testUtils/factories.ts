@@ -44,6 +44,8 @@ import { ILtsaOrder } from '@/services/ltsa/interfaces/ILtsaOrder';
 import { NoteType } from '@/typeorm/Entities/NoteType';
 import { ProjectTimestamp } from '@/typeorm/Entities/ProjectTimestamp';
 import { ProjectMonetary } from '@/typeorm/Entities/ProjectMonetary';
+import { MonetaryType } from '@/typeorm/Entities/MonetaryType';
+import { TimestampType } from '@/typeorm/Entities/TimestampType';
 
 export class MockRes {
   statusValue: any;
@@ -546,6 +548,46 @@ export const produceNoteType = (): NoteType => {
     UpdatedOn: new Date(),
   };
   return noteType;
+};
+
+export const produceMonetaryType = (): MonetaryType => {
+  const monetaryType: MonetaryType = {
+    Id: faker.number.int(),
+    Name: faker.commerce.product(),
+    IsDisabled: faker.datatype.boolean(),
+    SortOrder: 0,
+    Description: faker.lorem.sentence(),
+    IsOptional: false,
+    StatusId: faker.number.int(),
+    Status: undefined,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+  };
+  return monetaryType;
+};
+
+export const produceTimestampType = (): TimestampType => {
+  const timestampType: TimestampType = {
+    Id: faker.number.int(),
+    Name: faker.commerce.product(),
+    IsDisabled: faker.datatype.boolean(),
+    SortOrder: 0,
+    Description: faker.lorem.sentence(),
+    IsOptional: false,
+    StatusId: faker.number.int(),
+    Status: undefined,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+  };
+  return timestampType;
 };
 
 export const produceProject = (
