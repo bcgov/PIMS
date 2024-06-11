@@ -31,4 +31,5 @@ export const MapFilterSchema = z.object({
   ClassificationIds: arrayFromString(numberSchema),
   PropertyTypeIds: arrayFromString(numberSchema),
   Name: z.string().optional(),
+  RegionalDistrictIds: arrayFromString(numberSchema),
 });
