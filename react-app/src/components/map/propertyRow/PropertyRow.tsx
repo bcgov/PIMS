@@ -36,6 +36,7 @@ const PropertyRow = (props: PropertyRowProps) => {
       onClick={() => window.open(`/properties/${propertyType}/${id}`)}
       sx={{
         cursor: 'pointer',
+        backgroundColor: theme.palette.white.main,
         '& :hover': {
           backgroundColor: theme.palette.gray.main,
         },

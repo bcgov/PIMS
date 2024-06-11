@@ -9,6 +9,7 @@ import { BBox } from 'geojson';
 export interface InventoryLayerProps {
   isLoading: boolean;
   properties: PropertyGeo[];
+  setPopupProperties:  React.Dispatch<React.SetStateAction<(PropertyGeo & ClusterGeo)[]>>;
 }
 
 // Properties added to PropertyGeo types after clustering
@@ -28,7 +29,7 @@ export interface ClusterGeo {
  * @returns {JSX.Element} The rendered InventoryLayer component.
  */
 export const InventoryLayer = (props: InventoryLayerProps) => {
-  const { isLoading, properties } = props;
+  const { isLoading, properties, setPopupProperties } = props;
   const map = useMap();
   const [clusterBounds, setClusterBounds] = useState<BBox>(); // Affects clustering
   const [clusterZoom, setClusterZoom] = useState<number>(14); // Affects clustering
@@ -132,6 +133,22 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
     [map, supercluster],
   );
 
+  // For expanding the cluster popup
+  const openClusterPopup = (cluster: PropertyGeo & ClusterGeo) => {
+    // If it's a cluster of more than 1
+    if (cluster.properties.cluster) {
+      const newClusterProperties: (PropertyGeo & ClusterGeo)[] = supercluster.getLeaves(
+        cluster.properties.cluster_id,
+        10, // size of page
+        0 // offset
+      );
+      setPopupProperties(newClusterProperties); 
+    } else {
+      // Cluster marker of 1
+      setPopupProperties([cluster]); 
+    }
+  };
+
   // Update map after these actions
   useMapEvents({
     zoomend: updateClusters,
@@ -151,6 +168,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
               icon={makeClusterIcon(property.properties.point_count)}
               eventHandlers={{
                 click: () => zoomOnCluster(property),
+                mouseover: () => openClusterPopup(property),
               }}
             />
           );
@@ -172,6 +190,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
                     },
                   );
                 },
+                mouseover: () => openClusterPopup(property),
               }}
             />
           );
