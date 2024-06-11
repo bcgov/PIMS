@@ -90,7 +90,7 @@ export interface ProjectMonetary {
   CreatedById?: string;
   CreatedOn?: Date;
   Id?: number;
-  Value?: string;
+  Value?: string | number;
   MonetaryTypeId?: number;
   ProjectId?: number;
   UpdatedById?: string;

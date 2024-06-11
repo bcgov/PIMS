@@ -43,7 +43,7 @@ import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { Roles } from '@/constants/roles';
 import { AuthContext } from '@/contexts/authContext';
 import { ExpandMoreOutlined } from '@mui/icons-material';
-import { dateFormatter, formatMoney } from '@/utilities/formatters';
+import { columnNameFormatter, dateFormatter, formatMoney } from '@/utilities/formatters';
 
 interface IProjectDetail {
   onClose: () => void;
@@ -191,14 +191,22 @@ const ProjectDetail = (props: IProjectDetail) => {
     Description: data?.parsedBody.Description,
   };
 
-  const FinancialInformationData = {
-    AssessedValue: data?.parsedBody.Assessed,
-    NetBookValue: data?.parsedBody.NetBook,
-    EstimatedMarketValue: data?.parsedBody.Market,
-    AppraisedValue: data?.parsedBody.Appraised,
-    EstimatedSalesCost: data?.parsedBody.Metadata?.salesCost,
-    EstimatedProgramRecoveryFees: data?.parsedBody.Metadata?.programCost,
-  };
+  const FinancialInformationData = useMemo(() => {
+    const salesCostType = monetaryTypes?.find((a) => a.Name === 'SalesCost');
+    const programCostType = monetaryTypes?.find((a) => a.Name === 'ProgramCost');
+    return {
+      AssessedValue: data?.parsedBody.Assessed,
+      NetBookValue: data?.parsedBody.NetBook,
+      EstimatedMarketValue: data?.parsedBody.Market,
+      AppraisedValue: data?.parsedBody.Appraised,
+      EstimatedSalesCost: data?.parsedBody.Monetaries?.find(
+        (a) => a.MonetaryTypeId === salesCostType.Id,
+      )?.Value,
+      EstimatedProgramRecoveryFees: data?.parsedBody.Monetaries?.find(
+        (a) => a.MonetaryTypeId === programCostType.Id,
+      )?.Value,
+    };
+  }, [data, monetaryTypes]);
 
   // const classification = useClassificationStyle();
   const customFormatter = (key: keyof ProjectInfo, val: any) => {
@@ -236,6 +244,7 @@ const ProjectDetail = (props: IProjectDetail) => {
         display={'flex'}
         gap={'1rem'}
         mt={'2rem'}
+        mb={'2rem'}
         flexDirection={'column'}
         width={'46rem'}
         marginX={'auto'}
@@ -282,7 +291,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           values={Object.fromEntries(
             Object.entries(FinancialInformationData).map(([k, v]) => [
               k,
-              formatMoney(v ? Number(String(v).replace(/[$,]/g, '')) : 0), //This cast spaghetti sucks but hard to avoid when receiving money as a string from the API.
+              formatMoney(v != null ? Number(String(v).replace(/[$,]/g, '')) : 0), //This cast spaghetti sucks but hard to avoid when receiving money as a string from the API.
             ]),
           )}
           title={financialInformation}
@@ -339,7 +348,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
             {Object.entries(collectedDocumentationByStatus)?.map(
               (
-                [key, value], //Each key here is a status name. Each value a list of tasks.
+                [key, value], //Each key here is a status name. Each value contains an array for each field type.
               ) => (
                 <Box key={`${key}-group`}>
                   <Accordion>
@@ -380,14 +389,14 @@ const ProjectDetail = (props: IProjectDetail) => {
                           </Box>
                         ))}
                         {value.Timestamps.map((ts) => (
-                          <Box key={`${ts.TimestampTypeId}-note`}>
-                            <Typography variant="h5">{ts.Name}</Typography>
+                          <Box key={`${ts.TimestampTypeId}-timestamp`}>
+                            <Typography variant="h5">{columnNameFormatter(ts.Name)}</Typography>
                             <Typography>{dateFormatter(ts.Date)}</Typography>
                           </Box>
                         ))}
                         {value.Monetaries.map((mon) => (
-                          <Box key={`${mon.MonetaryTypeId}-note`}>
-                            <Typography variant="h5">{mon.Name}</Typography>
+                          <Box key={`${mon.MonetaryTypeId}-monetary`}>
+                            <Typography variant="h5">{columnNameFormatter(mon.Name)}</Typography>
                             <Typography>{formatMoney(Number(mon.Value))}</Typography>
                           </Box>
                         ))}

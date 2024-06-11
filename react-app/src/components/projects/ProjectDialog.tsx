@@ -1,7 +1,7 @@
 import usePimsApi from '@/hooks/usePimsApi';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import ConfirmDialog from '../dialog/ConfirmDialog';
-import { Project, ProjectGet } from '@/hooks/api/useProjectsApi';
+import { Project, ProjectGet, ProjectMonetary, ProjectTimestamp } from '@/hooks/api/useProjectsApi';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
   ProjectDocumentationForm,
@@ -22,6 +22,7 @@ import useDataSubmitter from '@/hooks/useDataSubmitter';
 import TextFormField from '../form/TextFormField';
 import { columnNameFormatter } from '@/utilities/formatters';
 import DateFormField from '../form/DateFormField';
+import dayjs from 'dayjs';
 
 interface IProjectGeneralInfoDialog {
   initialValues: Project;
@@ -117,22 +118,38 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
     );
   }, [noteTypes, initialValues]);
 
+  const getTimestampOrNull = (timestamps: ProjectTimestamp[], typeId: number) => {
+    const found = timestamps?.find((d) => d.TimestampTypeId == typeId);
+    if (found) {
+      return dayjs(found.Date);
+    } else {
+      return null;
+    }
+  };
   useEffect(() => {
     projectFormMethods.setValue(
       'Timestamps',
       timestampTypes?.map((ts) => ({
         TimestampTypeId: ts.Id,
-        Date: initialValues?.Timestamps?.find((d) => d.TimestampTypeId == ts.Id)?.Date ?? null,
+        Date: getTimestampOrNull(initialValues?.Timestamps, ts.Id),
       })),
     );
   }, [timestampTypes, initialValues]);
 
+  const getMonetaryOrEmptyString = (monetaries: ProjectMonetary[], typeId: number) => {
+    const found = monetaries?.find((m) => m.MonetaryTypeId == typeId);
+    if (found) {
+      return Number(String(found.Value).replace(/[$,]/g, ''));
+    } else {
+      return '';
+    }
+  };
   useEffect(() => {
     projectFormMethods.setValue(
       'Monetaries',
       monetaryTypes?.map((ts) => ({
         MonetaryTypeId: ts.Id,
-        Value: initialValues?.Monetaries?.find((d) => d.MonetaryTypeId == ts.Id)?.Value ?? '',
+        Value: getMonetaryOrEmptyString(initialValues?.Monetaries, ts.Id),
       })),
     );
   }, [monetaryTypes, initialValues]);
@@ -150,6 +167,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
             ...values,
             Id: initialValues.Id,
             ProjectProperties: initialValues.ProjectProperties,
+            Timestamps: values.Timestamps.filter((a) => dayjs(a.Date).isValid()),
           }).then(() => postSubmit());
         }
       }}
@@ -245,9 +263,11 @@ interface IProjectFinancialDialog {
 export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
   const api = usePimsApi();
   const { initialValues, open, postSubmit, onCancel } = props;
-  const { data: monetaryTypes, loadOnce: loadMonetary } = useDataLoader(
-    api.lookup.getProjectMonetaryTypes,
-  );
+  const {
+    data: monetaryTypes,
+    loadOnce: loadMonetary,
+    isLoading: monetaryLoading,
+  } = useDataLoader(api.lookup.getProjectMonetaryTypes);
   loadMonetary();
   const { submit, submitting } = useDataSubmitter(api.projects.updateProject);
   const financialFormMethods = useForm({
@@ -256,12 +276,18 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
       NetBook: 0,
       Market: 0,
       Appraised: 0,
-      Metadata: {
-        salesCost: 0,
-        programCost: 0,
-      },
+      SalesCost: 0,
+      ProgramCost: 0,
     },
   });
+  const salesCostType = useMemo(
+    () => monetaryTypes?.find((a) => a.Name === 'SalesCost'),
+    [monetaryTypes],
+  );
+  const programCostType = useMemo(
+    () => monetaryTypes?.find((a) => a.Name === 'ProgramCost'),
+    [monetaryTypes],
+  );
   useEffect(() => {
     //console.log(`useEffect called! ${JSON.stringify(initialValues, null, 2)}`);
     financialFormMethods.reset({
@@ -269,18 +295,27 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
       NetBook: +(initialValues?.NetBook ?? 0).toString().replace(/[$,]/g, ''),
       Market: +(initialValues?.Market ?? 0).toString().replace(/[$,]/g, ''),
       Appraised: +(initialValues?.Appraised ?? 0).toString().replace(/[$,]/g, ''),
-      Metadata: initialValues?.Metadata,
+      SalesCost: +(
+        initialValues?.Monetaries?.find((a) => a.MonetaryTypeId === salesCostType?.Id)?.Value ?? 0
+      )
+        .toString()
+        .replace(/[$,]/g, ''),
+      ProgramCost: +(
+        initialValues?.Monetaries?.find((a) => a.MonetaryTypeId === programCostType?.Id)?.Value ?? 0
+      )
+        .toString()
+        .replace(/[$,]/g, ''),
     });
-  }, [initialValues]);
+  }, [initialValues, monetaryTypes]);
   return (
     <ConfirmDialog
       title={'Update Financial Information'}
       open={open}
-      confirmButtonProps={{ loading: submitting }}
+      confirmButtonProps={{ loading: submitting, disabled: monetaryLoading }}
       onConfirm={async () => {
         const isValid = await financialFormMethods.trigger();
         if (isValid) {
-          const { Assessed, NetBook, Market, Appraised, Metadata } =
+          const { Assessed, NetBook, Market, Appraised, ProgramCost, SalesCost } =
             financialFormMethods.getValues();
           submit(initialValues.Id, {
             Id: initialValues.Id,
@@ -291,11 +326,11 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
             Monetaries: [
               {
                 MonetaryTypeId: monetaryTypes.find((a) => a.Name === 'SalesCost')?.Id,
-                Value: String(Metadata.salesCost),
+                Value: ProgramCost,
               },
               {
                 MonetaryTypeId: monetaryTypes.find((a) => a.Name === 'ProgramCost')?.Id,
-                Value: String(Metadata.salesCost),
+                Value: SalesCost,
               },
             ],
             ProjectProperties: initialValues.ProjectProperties,
