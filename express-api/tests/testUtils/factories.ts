@@ -42,6 +42,8 @@ import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse'
 import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
 import { ILtsaOrder } from '@/services/ltsa/interfaces/ILtsaOrder';
 import { NoteType } from '@/typeorm/Entities/NoteType';
+import { ProjectTimestamp } from '@/typeorm/Entities/ProjectTimestamp';
+import { ProjectMonetary } from '@/typeorm/Entities/ProjectMonetary';
 import { MonetaryType } from '@/typeorm/Entities/MonetaryType';
 import { TimestampType } from '@/typeorm/Entities/TimestampType';
 
@@ -634,6 +636,8 @@ export const produceProject = (
         ProjectId: projectId,
       }),
     ],
+    Timestamps: [produceProjectTimestamp()],
+    Monetaries: [produceProjectMonetary()],
     Notifications: [],
     StatusHistory: [],
     Notes: [produceNote()],
@@ -736,6 +740,48 @@ export const produceProjectTask = (props?: Partial<ProjectTask>) => {
     ...props,
   };
   return task;
+};
+
+export const produceProjectTimestamp = (props?: Partial<ProjectTimestamp>) => {
+  const ts: ProjectTimestamp = {
+    ProjectId: faker.number.int(),
+    Project: undefined,
+    TimestampType: undefined,
+    TimestampTypeId: faker.number.int(),
+    Date: undefined,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    DeletedById: null,
+    DeletedOn: null,
+    DeletedBy: undefined,
+    ...props,
+  };
+  return ts;
+};
+
+export const produceProjectMonetary = (props?: Partial<ProjectMonetary>) => {
+  const monetary: ProjectMonetary = {
+    ProjectId: faker.number.int(),
+    Project: undefined,
+    MonetaryType: undefined,
+    MonetaryTypeId: faker.number.int(),
+    Value: Number(faker.commerce.price()),
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    DeletedById: null,
+    DeletedOn: null,
+    DeletedBy: undefined,
+    ...props,
+  };
+  return monetary;
 };
 
 export const produceProjectNotification = (props?: Partial<ProjectStatusNotification>) => {

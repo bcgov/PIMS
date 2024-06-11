@@ -10,9 +10,11 @@ import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
+import { ProjectMonetary } from '@/typeorm/Entities/ProjectMonetary';
 import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
+import { ProjectTimestamp } from '@/typeorm/Entities/ProjectTimestamp';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { faker } from '@faker-js/faker';
 import {
@@ -22,8 +24,10 @@ import {
   produceNotificationQueue,
   produceParcel,
   produceProject,
+  produceProjectMonetary,
   produceProjectProperty,
   produceProjectTask,
+  produceProjectTimestamp,
   produceSSO,
   produceUser,
 } from 'tests/testUtils/factories';
@@ -79,6 +83,14 @@ jest
 jest
   .spyOn(AppDataSource.getRepository(ProjectTask), 'find')
   .mockImplementation(async () => [produceProjectTask()]);
+
+jest
+  .spyOn(AppDataSource.getRepository(ProjectTimestamp), 'find')
+  .mockImplementation(async () => [produceProjectTimestamp()]);
+
+jest
+  .spyOn(AppDataSource.getRepository(ProjectMonetary), 'find')
+  .mockImplementation(async () => [produceProjectMonetary()]);
 
 jest
   .spyOn(AppDataSource.getRepository(ProjectAgencyResponse), 'find')
