@@ -55,11 +55,17 @@ export const ClassificationIcon = (props: ClassificationIconType) => {
             height: 10 * (badgeScale ?? scale),
             width: 10 * (badgeScale ?? scale),
             borderRadius: '100%',
+            pointerEvents: 'none',
           },
         }}
       >
         {/* Large circle with either building or parcel */}
-        <Avatar style={{ backgroundColor: '#eee', height: 40, width: 40 }}>
+        <Avatar
+          style={{ backgroundColor: '#eee', height: 40, width: 40 }}
+          sx={{
+            pointerEvents: 'none',
+          }}
+        >
           <img height={22} width={22} src={iconType === 'building' ? BuildingIcon : ParcelIcon} />
         </Avatar>
       </Badge>
