@@ -1,12 +1,4 @@
-import {
-  Entity,
-  Column,
-  CreateDateColumn,
-  Index,
-  ManyToOne,
-  PrimaryColumn,
-  JoinColumn,
-} from 'typeorm';
+import { Entity, Column, Index, ManyToOne, PrimaryColumn, JoinColumn } from 'typeorm';
 import { Project } from './Project';
 import { Task } from './Task';
 import { SoftDeleteEntity } from './abstractEntities/SoftDeleteEntity';
@@ -34,6 +26,6 @@ export class ProjectTask extends SoftDeleteEntity {
   @Column('boolean')
   IsCompleted: boolean;
 
-  @CreateDateColumn({ nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   CompletedOn: Date;
 }
