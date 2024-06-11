@@ -19,6 +19,8 @@ import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
 import { ProjectAgencyResponse } from './ProjectAgencyResponse';
 import { SoftDeleteEntity } from './abstractEntities/SoftDeleteEntity';
+import { ProjectTimestamp } from './ProjectTimestamp';
+import { ProjectMonetary } from './ProjectMonetary';
 
 export interface ProjectMetadata {
   // Exemption Fields
@@ -199,6 +201,16 @@ export class Project extends SoftDeleteEntity {
     nullable: true,
   })
   Notes: ProjectNote[];
+
+  @OneToMany(() => ProjectTimestamp, (ProjectTimestamp) => ProjectTimestamp.Project, {
+    nullable: true,
+  })
+  Timestamps: ProjectTimestamp[];
+
+  @OneToMany(() => ProjectMonetary, (ProjectMonetary) => ProjectMonetary.Project, {
+    nullable: true,
+  })
+  Monetaries: ProjectMonetary[];
 
   @OneToMany(
     () => ProjectAgencyResponse,
