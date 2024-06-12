@@ -8,7 +8,7 @@ import React, {
   useState,
 } from 'react';
 import { MapContainer, useMapEvents } from 'react-leaflet';
-import { LatLngBoundsExpression, Map } from 'leaflet';
+import { LatLngBoundsExpression, Map, Point } from 'leaflet';
 import MapLayers from '@/components/map/MapLayers';
 import { ParcelPopup } from '@/components/map/parcelPopup/ParcelPopup';
 import { InventoryLayer } from '@/components/map/InventoryLayer';
@@ -19,6 +19,7 @@ import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import usePimsApi from '@/hooks/usePimsApi';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 import MapSidebar from '@/components/map/sidebar/MapSidebar';
+import ClusterPopup, { PopupState } from '@/components/map/clusterPopup/ClusterPopup';
 
 type ParcelMapProps = {
   height: string;
@@ -72,6 +73,16 @@ const ParcelMap = (props: ParcelMapProps) => {
   const { data, refreshData, isLoading } = useDataLoader(() =>
     api.properties.propertiesGeoSearch(filter),
   );
+
+  // Controls ClusterPopup contents
+  const [popupState, setPopupState] = useState<PopupState>({
+    open: false,
+    properties: [],
+    position: new Point(500, 500),
+    pageSize: 10,
+    pageIndex: 0,
+    total: 0,
+  });
 
   const {
     height,
@@ -159,14 +170,22 @@ const ParcelMap = (props: ParcelMapProps) => {
           <ParcelPopup size={popupSize} scrollOnClick={scrollOnClick} />
           <MapEvents />
           {loadProperties ? (
-            <InventoryLayer isLoading={isLoading} properties={properties} />
+            <InventoryLayer
+              isLoading={isLoading}
+              properties={properties}
+              popupState={popupState}
+              setPopupState={setPopupState}
+            />
           ) : (
             <></>
           )}
           {props.children}
         </MapContainer>
         {loadProperties ? (
-          <MapSidebar properties={properties} map={localMapRef} setFilter={setFilter} />
+          <>
+            <MapSidebar properties={properties} map={localMapRef} setFilter={setFilter} />
+            <ClusterPopup popupState={popupState} setPopupState={setPopupState} />
+          </>
         ) : (
           <></>
         )}
