@@ -293,7 +293,6 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
     [monetaryTypes],
   );
   useEffect(() => {
-    //console.log(`useEffect called! ${JSON.stringify(initialValues, null, 2)}`);
     financialFormMethods.reset({
       Assessed: +(initialValues?.Assessed ?? 0).toString().replace(/[$,]/g, ''),
       NetBook: +(initialValues?.NetBook ?? 0).toString().replace(/[$,]/g, ''),
