@@ -5,7 +5,7 @@ import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
 import { formatNumber, pidFormatter } from '@/utilities/formatters';
-import { ArrowCircleLeft, ArrowCircleRight } from '@mui/icons-material';
+import { ArrowCircleLeft, ArrowCircleRight, Close } from '@mui/icons-material';
 import { Box, Grid, IconButton, Typography } from '@mui/material';
 import { Point } from 'leaflet';
 import React, { useEffect } from 'react';
@@ -26,6 +26,14 @@ interface ClusterPopupProps {
   setPopupState: React.Dispatch<React.SetStateAction<PopupState>>;
 }
 
+/**
+ * Renders a popup displaying clustered properties based on the provided popup state.
+ * Determines the direction and position of the popup based on the screen size and mouse event quadrant.
+ * Allows navigation through clustered properties with pagination controls.
+ *
+ * @param {ClusterPopupProps} props - The properties to configure the ClusterPopup component.
+ * @returns {JSX.Element} A React component representing the ClusterPopup.
+ */
 const ClusterPopup = (props: ClusterPopupProps) => {
   const { popupState, setPopupState } = props;
   const api = usePimsApi();
@@ -80,6 +88,7 @@ const ClusterPopup = (props: ClusterPopupProps) => {
       break;
   }
 
+  // Handles updating visible properties when the page changes
   useEffect(() => {
     if (popupState.clusterId && popupState.supercluster) {
       const newClusterProperties: (PropertyGeo & ClusterGeo)[] = popupState.supercluster.getLeaves(
@@ -110,7 +119,10 @@ const ClusterPopup = (props: ClusterPopupProps) => {
       borderRadius={'10px'}
     >
       <Grid container height={30} sx={{ backgroundColor: 'rgb(221,221,221)' }}>
-        <Grid item xs={12} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+        <Grid item xs={1} >
+         {/* EMPTY FOR SPACING */}
+        </Grid>
+        <Grid item xs={10} display={'flex'} justifyContent={'center'} alignItems={'center'}>
           <IconButton
             size="small"
             onClick={() => {
@@ -141,6 +153,12 @@ const ClusterPopup = (props: ClusterPopupProps) => {
           >
             <ArrowCircleRight fontSize="small" />
           </IconButton>
+        </Grid>
+        <Grid item xs={1} >
+          <IconButton size='small' onClick={() => setPopupState({
+            ...popupState,
+            open: false,
+          })}><Close fontSize='small' /></IconButton>
         </Grid>
       </Grid>
       {popupState.properties.map((property) => (
