@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useLayoutEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import Icon from '@mdi/react';
@@ -31,6 +32,7 @@ import {
   GridPaginationModel,
   GridRenderCellParams,
   GridRowId,
+  GridSortModel,
   GridState,
   GridTreeNodeWithRender,
   GridValidRowModel,
@@ -46,7 +48,6 @@ import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { GridInitialStateCommunity } from '@mui/x-data-grid/models/gridStateCommunity';
 import CircularProgress from '@mui/material/CircularProgress';
 import { CommonFiltering } from '@/interfaces/ICommonFiltering';
-import useDataLoader from '@/hooks/useDataLoader';
 
 type RenderCellParams = GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
 
@@ -168,7 +169,8 @@ export const CustomListSubheader = (props: PropsWithChildren) => {
 };
 
 type FilterSearchDataGridProps = {
-  dataSource: (filter: CommonFiltering) => Promise<any[]>;
+  dataSource: (filter: CommonFiltering, signal: AbortSignal) => Promise<any[]>;
+  nestedFieldKeyMap: Record<string, string>;
   onPresetFilterChange: (value: string, ref: MutableRefObject<GridApiCommunity>) => void;
   onAddButtonClick?: React.MouseEventHandler<HTMLButtonElement>;
   defaultFilter: string;
@@ -188,21 +190,60 @@ type FilterSearchDataGridProps = {
 
 export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   const [rows, setRows] = useState([]);
-  const [pagination, setPagination] = useState<GridPaginationModel>({ page: 0, pageSize: 10 });
+  //const [pagination, setPagination] = useState<GridPaginationModel>({ page: 0, pageSize: 10 });
   const [rowCount, setRowCount] = useState<number>(0);
   const [keywordSearchContents, setKeywordSearchContents] = useState<string>('');
   const [gridFilterItems, setGridFilterItems] = useState([]);
   const [selectValue, setSelectValue] = useState<string>(props.defaultFilter);
   const [isExporting, setIsExporting] = useState<boolean>(false);
   const tableApiRef = useGridApiRef(); // Ref to MUI DataGrid
+  const previousController = useRef<AbortController>();
 
-  useEffect(() => {
-    console.log(`New pagination value: ${JSON.stringify(pagination)}`);
-    tableApiRef.current.setPaginationModel(pagination);
+  interface ITableModelCollection {
+    pagination: GridPaginationModel;
+    sort?: GridSortModel;
+  }
+
+  const dataSourceUpdate = (models: ITableModelCollection) => {
+    const { pagination, sort } = models;
+    if (previousController.current) {
+      previousController.current.abort();
+    }
+    //We use this AbortController to cancel requests that haven't finished yet everytime we start a new one.
+    const controller = new AbortController();
+    const signal = controller.signal;
+    previousController.current = controller;
+    let sortObj: { sortKey?: string; sortOrder?: string; sortRelation?: string } = {};
+    if (sort?.length) {
+      sortObj = { sortKey: sort[0].field, sortOrder: sort[0].sort };
+      if (props.nestedFieldKeyMap[sort[0].field]) {
+        sortObj.sortKey = props.nestedFieldKeyMap[sort[0].field];
+        sortObj.sortRelation = sort[0].field;
+      }
+    }
     props
-      .dataSource({ quantity: pagination.pageSize, page: pagination.page })
-      .then((ret) => setRows(ret));
-  }, [pagination]);
+      .dataSource(
+        {
+          quantity: pagination.pageSize,
+          page: pagination.page,
+          ...sortObj,
+        },
+        signal,
+      )
+      .then((resolved) => {
+        setRows(resolved);
+        tableApiRef.current.setPaginationMeta({
+          hasNextPage: resolved.length === pagination.pageSize,
+        });
+      })
+      .catch((e) => {
+        if (!(e instanceof DOMException)) {
+          //Represses DOMException which is the expected result of aborting the connection.
+          //If something else happens though, we may want to rethrow that.
+          throw e;
+        }
+      });
+  };
 
   /**
    * @interface
@@ -275,8 +316,12 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
    */
   useLayoutEffect(() => {
     const query = getQuery();
-    console.log(`Ran layoutEffect: ${JSON.stringify(query, null, 2)}`);
     // If query strings exist, prioritize that for preset filters, etc.
+    console.log(query);
+    const model: ITableModelCollection = {
+      pagination: { page: 0, pageSize: 10 },
+      sort: undefined,
+    };
     if (Boolean(Object.keys(query).length)) {
       // Set keyword filter
       if (query.keywordFilter) {
@@ -302,17 +347,20 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
       }
       // Set sorting options
       if (query.columnSortName && query.columnSortValue) {
+        model.sort = [{ field: query.columnSortName, sort: query.columnSortValue }];
         tableApiRef.current.setSortModel([
-          {
-            field: query.columnSortName,
-            sort: query.columnSortValue,
-          },
+          { field: query.columnSortName, sort: query.columnSortValue },
         ]);
       }
       //Set pagination
       if (query.page && query.pageSize) {
-        setPagination({ page: Number(query.page), pageSize: Number(query.pageSize) });
+        model.pagination = { page: Number(query.page), pageSize: Number(query.pageSize) };
+        tableApiRef.current.setPaginationModel({
+          page: Number(query.page),
+          pageSize: Number(query.pageSize),
+        });
       }
+      dataSourceUpdate(model);
     } else {
       // Setting the table's state from sessionStorage cookies
       const stateFromLocalStorage = sessionStorage?.getItem(props.name);
@@ -478,16 +526,24 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           // Can only sort by 1 at a time without DataGrid Pro
           if (e.length > 0) {
             const item = e.at(0);
+            dataSourceUpdate({
+              pagination: { page: getQuery().page, pageSize: getQuery().pageSize },
+              sort: e,
+            });
             setQuery({ columnSortName: item.field, columnSortValue: item.sort });
           } else {
+            dataSourceUpdate({
+              pagination: { page: getQuery().page, pageSize: getQuery().pageSize },
+              sort: undefined,
+            });
             setQuery({ columnSortName: undefined, columnSortValue: undefined });
           }
         }}
         paginationMode="server"
         rowCount={-1}
-        paginationMeta={{ hasNextPage: rows.length === pagination.pageSize }}
+        paginationMeta={{ hasNextPage: rows.length === (getQuery().pageSize ?? 10) }}
         onPaginationModelChange={(model) => {
-          setPagination(model);
+          dataSourceUpdate({ pagination: model, sort: tableApiRef.current.getSortModel() });
           setQuery({ page: model.page, pageSize: model.pageSize });
         }}
         apiRef={tableApiRef}

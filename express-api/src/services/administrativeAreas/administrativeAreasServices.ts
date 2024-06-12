@@ -1,10 +1,16 @@
 import { AppDataSource } from '@/appDataSource';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 import { AdministrativeAreaFilter } from './administrativeAreaSchema';
-import { DeepPartial, FindOptionsOrder } from 'typeorm';
+import { DeepPartial } from 'typeorm';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
 const getAdministrativeAreas = (filter: AdministrativeAreaFilter) => {
+  let order = undefined;
+  if (filter.sortRelation) {
+    order = { [filter.sortRelation]: { [filter.sortKey]: filter.sortOrder } };
+  } else {
+    order = { [filter.sortKey]: filter.sortOrder };
+  }
   return AppDataSource.getRepository(AdministrativeArea).find({
     relations: {
       RegionalDistrict: true,
@@ -12,10 +18,11 @@ const getAdministrativeAreas = (filter: AdministrativeAreaFilter) => {
     where: {
       Name: filter.name,
       ProvinceId: filter.provinceId,
+      RegionalDistrict: { Name: filter.regionalDistrict },
     },
     take: filter.quantity,
     skip: (filter.quantity ?? 0) * (filter.page ?? 0),
-    order: filter.sort as FindOptionsOrder<AdministrativeArea>,
+    order: order,
   });
 };
 

@@ -13,8 +13,11 @@ export interface AdministrativeArea {
 }
 
 const useAdministrativeAreaApi = (absoluteFetch: IFetch) => {
-  const getAdministrativeAreas = async (sort?: CommonFiltering): Promise<AdministrativeArea[]> => {
-    const { parsedBody } = await absoluteFetch.get(`/administrativeAreas`, { ...sort });
+  const getAdministrativeAreas = async (
+    sort: CommonFiltering,
+    signal?: AbortSignal,
+  ): Promise<AdministrativeArea[]> => {
+    const { parsedBody } = await absoluteFetch.get(`/administrativeAreas`, { ...sort }, { signal });
     return parsedBody as AdministrativeArea[];
   };
 

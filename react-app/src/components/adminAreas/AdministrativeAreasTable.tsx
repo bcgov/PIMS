@@ -106,6 +106,7 @@ const AdministrativeAreasTable = () => {
 
   return (
     <FilterSearchDataGrid
+      nestedFieldKeyMap={{ RegionalDistrict: 'Name' }}
       dataSource={api.administrativeAreas.getAdministrativeAreas}
       name="adminAreas"
       onRowClick={(params) => navigate(`${params.row.Id}`)}
