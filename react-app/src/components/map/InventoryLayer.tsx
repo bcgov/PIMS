@@ -134,44 +134,51 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
     },
     [map, supercluster],
   );
-
+  let timeoutID = undefined;
   // For expanding the cluster popup
   const openClusterPopup = (cluster: PropertyGeo & ClusterGeo, point: Point) => {
-    // If it's a cluster of more than 1
+    // Prevent reseting state if entering the same cluster marker
     if (popupState.open && cluster.properties.cluster_id === popupState.clusterId) {
       return;
     }
-    if (cluster.properties.cluster) {
-      const newClusterProperties: (PropertyGeo & ClusterGeo)[] = supercluster.getLeaves(
-        cluster.properties.cluster_id, // id of cluster containing properties
-        popupState.pageSize, // size of page
-        popupState.pageSize * popupState.pageIndex, // offset
-      );
-      const totalProperties: (PropertyGeo & ClusterGeo)[] = supercluster.getLeaves(
-        cluster.properties.cluster_id,
-        Infinity,
-      );
-      setPopupState({
-        ...popupState,
-        properties: newClusterProperties,
-        open: true,
-        position: point,
-        pageIndex: 0,
-        total: totalProperties.length,
-        supercluster: supercluster,
-        clusterId: cluster.properties.cluster_id,
-      });
-    } else {
-      // Cluster marker of 1
-      setPopupState({
-        ...popupState,
-        properties: [cluster],
-        open: true,
-        position: point,
-        pageIndex: 0,
-        total: 1,
-      });
-    }
+    timeoutID = setTimeout(() => {
+      // If it's a cluster of more than 1
+      if (cluster.properties.cluster) {
+        const newClusterProperties: (PropertyGeo & ClusterGeo)[] = supercluster.getLeaves(
+          cluster.properties.cluster_id, // id of cluster containing properties
+          popupState.pageSize, // size of page
+          popupState.pageSize * popupState.pageIndex, // offset
+        );
+        const totalProperties: (PropertyGeo & ClusterGeo)[] = supercluster.getLeaves(
+          cluster.properties.cluster_id,
+          Infinity,
+        );
+        setPopupState({
+          ...popupState,
+          properties: newClusterProperties,
+          open: true,
+          position: point,
+          pageIndex: 0,
+          total: totalProperties.length,
+          supercluster: supercluster,
+          clusterId: cluster.properties.cluster_id,
+        });
+      } else {
+        // Cluster marker of 1
+        setPopupState({
+          ...popupState,
+          properties: [cluster],
+          open: true,
+          position: point,
+          pageIndex: 0,
+          total: 1,
+        });
+      }
+    }, 350);
+  };
+
+  const cancelOpenPopup = () => {
+    clearTimeout(timeoutID);
   };
 
   // Update map after these actions
@@ -212,6 +219,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
                 mouseover: (e) => {
                   openClusterPopup(property, e.containerPoint);
                 },
+                mouseout: cancelOpenPopup,
               }}
             />
           );
@@ -234,6 +242,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
                   );
                 },
                 mouseover: (e) => openClusterPopup(property, e.containerPoint),
+                mouseout: cancelOpenPopup,
               }}
             />
           );
