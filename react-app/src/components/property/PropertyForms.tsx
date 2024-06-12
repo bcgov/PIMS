@@ -118,7 +118,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
 
   const handleFeatureCollectionResponse = (response: FeatureCollection) => {
     if (response.features.length) {
-      const coordArr: [number, number] = centroid(response.features[0]).geometry.coordinates;
+      const coordArr = centroid(response.features[0]).geometry.coordinates as [number, number];
       map.current?.setView([coordArr[1], coordArr[0]], 17);
     }
   };
