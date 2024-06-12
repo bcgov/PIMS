@@ -138,6 +138,9 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
   // For expanding the cluster popup
   const openClusterPopup = (cluster: PropertyGeo & ClusterGeo, point: Point) => {
     // If it's a cluster of more than 1
+    if (popupState.open && cluster.properties.cluster_id === popupState.clusterId) {
+      return;
+    }
     if (cluster.properties.cluster) {
       const newClusterProperties: (PropertyGeo & ClusterGeo)[] = supercluster.getLeaves(
         cluster.properties.cluster_id, // id of cluster containing properties
@@ -206,7 +209,9 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
               icon={makeClusterIcon(property.properties.point_count)}
               eventHandlers={{
                 click: () => zoomOnCluster(property),
-                mousemove: (e) => openClusterPopup(property, e.containerPoint),
+                mouseover: (e) => {
+                  openClusterPopup(property, e.containerPoint);
+                },
               }}
             />
           );
@@ -228,7 +233,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
                     },
                   );
                 },
-                mousemove: (e) => openClusterPopup(property, e.containerPoint),
+                mouseover: (e) => openClusterPopup(property, e.containerPoint),
               }}
             />
           );
