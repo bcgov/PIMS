@@ -106,7 +106,7 @@ const ProjectDetail = (props: IProjectDetail) => {
     Monetaries: Array<ProjectMonetary & { Name: string }>;
   }
   const collectedDocumentationByStatus = useMemo((): Record<string, IStatusHistoryStruct> => {
-    if (!data || !tasks || !statuses) {
+    if (!data || !tasks || !statuses || !noteTypes || !timestampTypes || !monetaryTypes) {
       return {};
     }
     if (!data.parsedBody?.Tasks) return {};
@@ -174,7 +174,7 @@ const ProjectDetail = (props: IProjectDetail) => {
       reduceMap,
     );
     return reduceMap;
-  }, [data, tasks, statuses]);
+  }, [data, tasks, statuses, timestampTypes, monetaryTypes, noteTypes]);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openProjectInfoDialog, setOpenProjectInfoDialog] = useState(false);

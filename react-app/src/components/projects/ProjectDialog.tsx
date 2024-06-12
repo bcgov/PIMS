@@ -73,21 +73,25 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
     });
   }, [initialValues]);
 
-  const { data: tasks, refreshData: refreshTasks } = useDataLoader(() =>
-    api.lookup.getTasks(projectFormMethods.getValues()['StatusId']),
-  );
+  const { data: tasks, refreshData: refreshTasks } = useDataLoader(() => {
+    const statusId = projectFormMethods.getValues()['StatusId'];
+    return statusId != null ? api.lookup.getTasks(statusId) : undefined;
+  });
 
-  const { data: noteTypes, refreshData: refreshNotes } = useDataLoader(() =>
-    api.lookup.getProjectNoteTypes(projectFormMethods.getValues()['StatusId']),
-  );
+  const { data: noteTypes, refreshData: refreshNotes } = useDataLoader(() => {
+    const statusId = projectFormMethods.getValues()['StatusId'];
+    return statusId != null ? api.lookup.getProjectNoteTypes(statusId) : undefined;
+  });
 
-  const { data: monetaryTypes, refreshData: refreshMonetary } = useDataLoader(() =>
-    api.lookup.getProjectMonetaryTypes(projectFormMethods.getValues()['StatusId']),
-  );
+  const { data: monetaryTypes, refreshData: refreshMonetary } = useDataLoader(() => {
+    const statusId = projectFormMethods.getValues()['StatusId'];
+    return statusId ? api.lookup.getProjectMonetaryTypes(statusId) : undefined;
+  });
 
-  const { data: timestampTypes, refreshData: refreshTimestamps } = useDataLoader(() =>
-    api.lookup.getProjectTimestampTypes(projectFormMethods.getValues()['StatusId']),
-  );
+  const { data: timestampTypes, refreshData: refreshTimestamps } = useDataLoader(() => {
+    const statusId = projectFormMethods.getValues()['StatusId'];
+    return statusId ? api.lookup.getProjectTimestampTypes(statusId) : undefined;
+  });
 
   useEffect(() => {
     refreshTasks();
