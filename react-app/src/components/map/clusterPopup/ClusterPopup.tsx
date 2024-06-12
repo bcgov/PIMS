@@ -119,8 +119,8 @@ const ClusterPopup = (props: ClusterPopupProps) => {
       borderRadius={'10px'}
     >
       <Grid container height={30} sx={{ backgroundColor: 'rgb(221,221,221)' }}>
-        <Grid item xs={1} >
-         {/* EMPTY FOR SPACING */}
+        <Grid item xs={1}>
+          {/* EMPTY FOR SPACING */}
         </Grid>
         <Grid item xs={10} display={'flex'} justifyContent={'center'} alignItems={'center'}>
           <IconButton
@@ -154,11 +154,18 @@ const ClusterPopup = (props: ClusterPopupProps) => {
             <ArrowCircleRight fontSize="small" />
           </IconButton>
         </Grid>
-        <Grid item xs={1} >
-          <IconButton size='small' onClick={() => setPopupState({
-            ...popupState,
-            open: false,
-          })}><Close fontSize='small' /></IconButton>
+        <Grid item xs={1}>
+          <IconButton
+            size="small"
+            onClick={() =>
+              setPopupState({
+                ...popupState,
+                open: false,
+              })
+            }
+          >
+            <Close fontSize="small" />
+          </IconButton>
         </Grid>
       </Grid>
       {popupState.properties.map((property) => (
