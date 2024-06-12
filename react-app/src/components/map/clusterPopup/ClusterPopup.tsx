@@ -117,6 +117,13 @@ const ClusterPopup = (props: ClusterPopupProps) => {
       flexDirection={'column'}
       overflow={'scroll'}
       borderRadius={'10px'}
+      onMouseLeave={() =>
+        setPopupState({
+          ...popupState,
+          properties: [],
+          open: false,
+        })
+      }
     >
       <Grid container height={30} sx={{ backgroundColor: 'rgb(221,221,221)' }}>
         <Grid item xs={1}>
