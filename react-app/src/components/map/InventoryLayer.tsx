@@ -3,13 +3,15 @@ import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import { Marker, useMap, useMapEvents } from 'react-leaflet';
 import useSupercluster from 'use-supercluster';
 import './clusterHelpers/clusters.css';
-import L, { LatLngExpression } from 'leaflet';
+import L, { LatLngExpression, Point } from 'leaflet';
 import { BBox } from 'geojson';
+import { PopupState } from '@/components/map/clusterPopup/ClusterPopup';
 
 export interface InventoryLayerProps {
   isLoading: boolean;
   properties: PropertyGeo[];
-  setPopupProperties:  React.Dispatch<React.SetStateAction<(PropertyGeo & ClusterGeo)[]>>;
+  popupState: PopupState;
+  setPopupState: React.Dispatch<React.SetStateAction<PopupState>>;
 }
 
 // Properties added to PropertyGeo types after clustering
@@ -29,7 +31,7 @@ export interface ClusterGeo {
  * @returns {JSX.Element} The rendered InventoryLayer component.
  */
 export const InventoryLayer = (props: InventoryLayerProps) => {
-  const { isLoading, properties, setPopupProperties } = props;
+  const { isLoading, properties, popupState, setPopupState } = props;
   const map = useMap();
   const [clusterBounds, setClusterBounds] = useState<BBox>(); // Affects clustering
   const [clusterZoom, setClusterZoom] = useState<number>(14); // Affects clustering
@@ -113,6 +115,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
   // Zoom towards cluster enough to break into small clusters
   const zoomOnCluster = useCallback(
     (cluster: PropertyGeo & ClusterGeo) => {
+      console.log('click');
       if (!supercluster || !cluster) {
         return;
       }
@@ -134,18 +137,38 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
   );
 
   // For expanding the cluster popup
-  const openClusterPopup = (cluster: PropertyGeo & ClusterGeo) => {
+  const openClusterPopup = (cluster: PropertyGeo & ClusterGeo, point: Point) => {
     // If it's a cluster of more than 1
     if (cluster.properties.cluster) {
       const newClusterProperties: (PropertyGeo & ClusterGeo)[] = supercluster.getLeaves(
-        cluster.properties.cluster_id,
-        10, // size of page
-        0 // offset
+        cluster.properties.cluster_id, // id of cluster containing properties
+        popupState.pageSize, // size of page
+        popupState.pageSize * popupState.pageIndex, // offset
       );
-      setPopupProperties(newClusterProperties); 
+      const totalProperties: (PropertyGeo & ClusterGeo)[] = supercluster.getLeaves(
+        cluster.properties.cluster_id,
+        Infinity,
+      );
+      setPopupState({
+        ...popupState,
+        properties: newClusterProperties,
+        open: true,
+        position: point,
+        pageIndex: 0,
+        total: totalProperties.length,
+        supercluster: supercluster,
+        clusterId: cluster.properties.cluster_id,
+      });
     } else {
       // Cluster marker of 1
-      setPopupProperties([cluster]); 
+      setPopupState({
+        ...popupState,
+        properties: [cluster],
+        open: true,
+        position: point,
+        pageIndex: 0,
+        total: 1,
+      });
     }
   };
 
@@ -153,6 +176,22 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
   useMapEvents({
     zoomend: updateClusters,
     moveend: updateClusters,
+    zoomstart: () =>
+      setPopupState({
+        ...popupState,
+        properties: [],
+        open: false,
+        position: new Point(0, 0),
+        pageIndex: 0,
+      }),
+    movestart: () =>
+      setPopupState({
+        ...popupState,
+        properties: [],
+        open: false,
+        position: new Point(0, 0),
+        pageIndex: 0,
+      }),
   });
 
   return (
@@ -168,7 +207,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
               icon={makeClusterIcon(property.properties.point_count)}
               eventHandlers={{
                 click: () => zoomOnCluster(property),
-                mouseover: () => openClusterPopup(property),
+                mouseover: (e) => openClusterPopup(property, e.containerPoint),
               }}
             />
           );
@@ -190,7 +229,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
                     },
                   );
                 },
-                mouseover: () => openClusterPopup(property),
+                mouseover: (e) => openClusterPopup(property, e.containerPoint),
               }}
             />
           );

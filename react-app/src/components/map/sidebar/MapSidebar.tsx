@@ -31,7 +31,7 @@ const MapSidebar = (props: MapSidebarProps) => {
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const theme = useTheme();
   const api = usePimsApi();
-  const propertyPageSize = 10; // Affects paging size
+  const propertyPageSize = 20; // Affects paging size
   const sidebarWidth = 350;
 
   // Get related data for lookups
@@ -56,6 +56,7 @@ const MapSidebar = (props: MapSidebarProps) => {
   };
 
   // Event listeners. Must be this style because we are outside of MapContainer.
+  // TODO: I think this causes slowdown over time as more re-renders happen. Need a way to deallocate event listeners.
   if (map.current) {
     map.current.addEventListener('zoomend', definePropertiesInBounds);
     map.current.addEventListener('moveend', definePropertiesInBounds);

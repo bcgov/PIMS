@@ -93,6 +93,8 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
         }
         if (scrollOnClick) map.setView(clickPosition);
       });
+    } else {
+      setParcelData(undefined);
     }
   }, [clickPosition]);
 

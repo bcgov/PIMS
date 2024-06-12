@@ -45,7 +45,7 @@ const PropertyRow = (props: PropertyRowProps) => {
       <Grid
         container
         width={'100%'}
-        padding={'1em 0'}
+        padding={'1em'}
         borderBottom={`solid 1px ${theme.palette.gray.main}`}
       >
         <Grid item xs={3} display={'flex'} alignItems={'center'} justifyContent={'center'}>
