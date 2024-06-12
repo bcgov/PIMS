@@ -115,7 +115,6 @@ const ClusterPopup = (props: ClusterPopupProps) => {
       zIndex={900}
       display={popupState.open ? 'flex' : 'none'}
       flexDirection={'column'}
-      // overflow={'scroll'}
       overflow={'clip'}
       borderRadius={'10px'}
       onMouseLeave={() =>
