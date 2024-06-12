@@ -26,6 +26,14 @@ interface ClusterPopupProps {
   setPopupState: React.Dispatch<React.SetStateAction<PopupState>>;
 }
 
+/**
+ * Renders a popup displaying clustered properties based on the provided popup state.
+ * Determines the direction and position of the popup based on the screen size and mouse event quadrant.
+ * Allows navigation through clustered properties with pagination controls.
+ *
+ * @param {ClusterPopupProps} props - The properties to configure the ClusterPopup component.
+ * @returns {JSX.Element} A React component representing the ClusterPopup.
+ */
 const ClusterPopup = (props: ClusterPopupProps) => {
   const { popupState, setPopupState } = props;
   const api = usePimsApi();
@@ -80,6 +88,7 @@ const ClusterPopup = (props: ClusterPopupProps) => {
       break;
   }
 
+  // Handles updating visible properties when the page changes
   useEffect(() => {
     if (popupState.clusterId && popupState.supercluster) {
       const newClusterProperties: (PropertyGeo & ClusterGeo)[] = popupState.supercluster.getLeaves(
