@@ -109,7 +109,7 @@ const ClusterPopup = (props: ClusterPopupProps) => {
       overflow={'scroll'}
       borderRadius={'10px'}
     >
-      <Grid container height={50} sx={{ backgroundColor: 'rgb(221,221,221)' }}>
+      <Grid container height={30} sx={{ backgroundColor: 'rgb(221,221,221)' }}>
         <Grid item xs={12} display={'flex'} justifyContent={'center'} alignItems={'center'}>
           <IconButton
             size="small"
