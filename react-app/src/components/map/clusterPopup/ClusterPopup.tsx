@@ -5,7 +5,7 @@ import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
 import { formatNumber, pidFormatter } from '@/utilities/formatters';
-import { ArrowCircleLeft, ArrowCircleRight, Close } from '@mui/icons-material';
+import { ArrowCircleLeft, ArrowCircleRight } from '@mui/icons-material';
 import { Box, Grid, IconButton, Typography } from '@mui/material';
 import { Point } from 'leaflet';
 import React, { useEffect } from 'react';
@@ -115,7 +115,8 @@ const ClusterPopup = (props: ClusterPopupProps) => {
       zIndex={900}
       display={popupState.open ? 'flex' : 'none'}
       flexDirection={'column'}
-      overflow={'scroll'}
+      // overflow={'scroll'}
+      overflow={'clip'}
       borderRadius={'10px'}
       onMouseLeave={() =>
         setPopupState({
@@ -125,11 +126,8 @@ const ClusterPopup = (props: ClusterPopupProps) => {
         })
       }
     >
-      <Grid container height={30} sx={{ backgroundColor: 'rgb(221,221,221)' }}>
-        <Grid item xs={1}>
-          {/* EMPTY FOR SPACING */}
-        </Grid>
-        <Grid item xs={10} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+      <Grid container minHeight={40} sx={{ backgroundColor: 'rgb(221,221,221)' }}>
+        <Grid item xs={12} display={'flex'} justifyContent={'center'} alignItems={'center'}>
           <IconButton
             size="small"
             onClick={() => {
@@ -161,44 +159,33 @@ const ClusterPopup = (props: ClusterPopupProps) => {
             <ArrowCircleRight fontSize="small" />
           </IconButton>
         </Grid>
-        <Grid item xs={1}>
-          <IconButton
-            size="small"
-            onClick={() =>
-              setPopupState({
-                ...popupState,
-                open: false,
-              })
-            }
-          >
-            <Close fontSize="small" />
-          </IconButton>
-        </Grid>
       </Grid>
-      {popupState.properties.map((property) => (
-        <PropertyRow
-          key={`${property.properties.PropertyTypeId === PropertyTypes.BUILDING ? 'Building' : 'Land'}-${property.properties.Id}`}
-          id={property.properties.Id}
-          propertyTypeId={property.properties.PropertyTypeId}
-          classificationId={property.properties.ClassificationId}
-          title={
-            // Buildings get name, unless it's all numbers or empty, then get address
-            // Parcels use PID or PIN
-            property.properties.PropertyTypeId === PropertyTypes.BUILDING
-              ? property.properties.Name.match(/^\d*$/) || property.properties.Name == ''
-                ? property.properties.Address1
-                : property.properties.Name
-              : pidFormatter(property.properties.PID) ?? String(property.properties.PIN)
-          }
-          content1={
-            adminAreaData?.find((aa) => aa.Id === property.properties.AdministrativeAreaId)?.Name ??
-            'No Administrative Area'
-          }
-          content2={
-            agencyData?.find((a) => a.Id === property.properties.AgencyId)?.Name ?? 'No Agency'
-          }
-        />
-      ))}
+      <Box overflow={'scroll'}>
+        {popupState.properties.map((property) => (
+          <PropertyRow
+            key={`${property.properties.PropertyTypeId === PropertyTypes.BUILDING ? 'Building' : 'Land'}-${property.properties.Id}`}
+            id={property.properties.Id}
+            propertyTypeId={property.properties.PropertyTypeId}
+            classificationId={property.properties.ClassificationId}
+            title={
+              // Buildings get name, unless it's all numbers or empty, then get address
+              // Parcels use PID or PIN
+              property.properties.PropertyTypeId === PropertyTypes.BUILDING
+                ? property.properties.Name.match(/^\d*$/) || property.properties.Name == ''
+                  ? property.properties.Address1
+                  : property.properties.Name
+                : pidFormatter(property.properties.PID) ?? String(property.properties.PIN)
+            }
+            content1={
+              adminAreaData?.find((aa) => aa.Id === property.properties.AdministrativeAreaId)
+                ?.Name ?? 'No Administrative Area'
+            }
+            content2={
+              agencyData?.find((a) => a.Id === property.properties.AgencyId)?.Name ?? 'No Agency'
+            }
+          />
+        ))}
+      </Box>
     </Box>
   );
 };
