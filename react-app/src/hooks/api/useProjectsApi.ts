@@ -89,7 +89,7 @@ export interface ProjectNote {
   CreatedOn?: Date;
   Id?: number;
   Note?: string;
-  NoteType?: number;
+  NoteTypeId?: number;
   ProjectId?: number;
   UpdatedById?: string;
   UpdatedOn?: Date;
@@ -271,8 +271,8 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
     return response;
   };
   const deleteProjectById = async (id: number) => {
-    const { status } = await absoluteFetch.del(`/projects/disposal/${id}`);
-    return status;
+    const response = await absoluteFetch.del(`/projects/disposal/${id}`);
+    return response;
   };
   const getProjects = async () => {
     const { parsedBody } = await absoluteFetch.get('/projects', { includeRelations: true });

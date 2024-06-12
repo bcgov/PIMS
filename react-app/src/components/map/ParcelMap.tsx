@@ -1,22 +1,35 @@
 import { Box, CircularProgress } from '@mui/material';
-import React, { createContext, PropsWithChildren, useState } from 'react';
+import React, {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { MapContainer, useMapEvents } from 'react-leaflet';
-import { Map } from 'leaflet';
+import { LatLngBoundsExpression, Map } from 'leaflet';
 import MapLayers from '@/components/map/MapLayers';
 import { ParcelPopup } from '@/components/map/parcelPopup/ParcelPopup';
 import { InventoryLayer } from '@/components/map/InventoryLayer';
-import MapPropertyDetails from '@/components/map/MapPropertyDetails';
 import ControlsGroup from '@/components/map/controls/ControlsGroup';
 import FilterControl from '@/components/map/controls/FilterControl';
+import useDataLoader from '@/hooks/useDataLoader';
+import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
+import usePimsApi from '@/hooks/usePimsApi';
+import { SnackBarContext } from '@/contexts/snackbarContext';
+import MapSidebar from '@/components/map/sidebar/MapSidebar';
 
 type ParcelMapProps = {
   height: string;
-  mapRef?: React.Ref<Map>;
+  mapRef?: React.MutableRefObject<Map>;
   movable?: boolean;
   zoomable?: boolean;
   loadProperties?: boolean;
   popupSize?: 'small' | 'large';
   scrollOnClick?: boolean;
+  zoomOnScroll?: boolean;
+  hideControls?: boolean;
 } & PropsWithChildren;
 
 export const SelectedMarkerContext = createContext(null);
@@ -24,7 +37,7 @@ export const SelectedMarkerContext = createContext(null);
 /**
  * ParcelMap component renders a map with various layers and functionalities.
  *
- * @param {ParcelMapProps} props - The props object containing the height, mapRef, movable, zoomable, and loadProperties properties.
+ * @param {ParcelMapProps} props - The props object used for ParcelMap component.
  * @returns {JSX.Element} The ParcelMap component.
  *
  * @example
@@ -45,12 +58,20 @@ const ParcelMap = (props: ParcelMapProps) => {
     useMapEvents({});
     return null;
   };
-  const [loading, setLoading] = useState<boolean>(false);
+  const api = usePimsApi();
+  const snackbar = useContext(SnackBarContext);
+
   const [selectedMarker, setSelectedMarker] = useState({
     id: undefined,
     type: undefined,
   });
   const [filter, setFilter] = useState({}); // Applies when request for properties is made
+  const [properties, setProperties] = useState<PropertyGeo[]>([]);
+
+  // Get properties for map.
+  const { data, refreshData, isLoading } = useDataLoader(() =>
+    api.properties.propertiesGeoSearch(filter),
+  );
 
   const {
     height,
@@ -60,7 +81,50 @@ const ParcelMap = (props: ParcelMapProps) => {
     loadProperties = false,
     popupSize,
     scrollOnClick,
+    zoomOnScroll = true,
+    hideControls = false,
   } = props;
+
+  // To access map outside of MapContainer
+  const localMapRef = mapRef ?? useRef<Map>();
+
+  // Default for BC view
+  const defaultBounds = [
+    [54.2516, -129.371],
+    [49.129, -117.203],
+  ];
+
+  // Get the property data for mapping
+  useEffect(() => {
+    if (data) {
+      if (data.length) {
+        setProperties(data as PropertyGeo[]);
+        snackbar.setMessageState({
+          open: true,
+          text: `${data.length} properties found.`,
+          style: snackbar.styles.success,
+        });
+      } else {
+        snackbar.setMessageState({
+          open: true,
+          text: `No properties found matching filter criteria.`,
+          style: snackbar.styles.warning,
+        });
+        setProperties([]);
+      }
+    } else {
+      if (loadProperties) {
+        refreshData();
+      }
+    }
+  }, [data, isLoading]);
+
+  // Refresh the data if the filter changes
+  useEffect(() => {
+    if (loadProperties) {
+      refreshData();
+    }
+  }, [filter]);
 
   return (
     <SelectedMarkerContext.Provider
@@ -69,23 +133,23 @@ const ParcelMap = (props: ParcelMapProps) => {
         setSelectedMarker,
       }}
     >
-      <Box height={height}>
-        <LoadingCover show={loading} />
+      <Box height={height} display={'flex'}>
+        {loadProperties ? <LoadingCover show={isLoading} /> : <></>}
         {/* All map controls fit here */}
-        <ControlsGroup position="topleft">
-          <FilterControl setFilter={setFilter} />
-        </ControlsGroup>
-        <MapPropertyDetails property={selectedMarker} />
+        {!hideControls && loadProperties ? (
+          <ControlsGroup position="topleft">
+            <FilterControl setFilter={setFilter} />
+          </ControlsGroup>
+        ) : (
+          <></>
+        )}
         <MapContainer
-          style={{ height: '100%' }}
-          ref={mapRef}
-          bounds={[
-            [54.2516, -129.371],
-            [49.129, -117.203],
-          ]}
+          style={{ height: '100%', width: '100%' }}
+          ref={localMapRef}
+          bounds={defaultBounds as LatLngBoundsExpression}
           dragging={movable}
           zoomControl={zoomable}
-          scrollWheelZoom={zoomable}
+          scrollWheelZoom={zoomOnScroll}
           touchZoom={zoomable}
           boxZoom={zoomable}
           doubleClickZoom={zoomable}
@@ -94,9 +158,18 @@ const ParcelMap = (props: ParcelMapProps) => {
           <MapLayers />
           <ParcelPopup size={popupSize} scrollOnClick={scrollOnClick} />
           <MapEvents />
-          {loadProperties ? <InventoryLayer filter={filter} setLoading={setLoading} /> : <></>}
+          {loadProperties ? (
+            <InventoryLayer isLoading={isLoading} properties={properties} />
+          ) : (
+            <></>
+          )}
           {props.children}
         </MapContainer>
+        {loadProperties ? (
+          <MapSidebar properties={properties} map={localMapRef} setFilter={setFilter} />
+        ) : (
+          <></>
+        )}
       </Box>
     </SelectedMarkerContext.Provider>
   );

@@ -3,12 +3,13 @@ import { IFetch } from '../useFetch';
 import { BaseEntityInterface } from '@/interfaces/IBaseEntity';
 import { EvaluationKey } from '@/interfaces/IEvaluationKey';
 import { FiscalKey } from '@/interfaces/IFiscalKey';
+import { DeepPartial } from 'react-hook-form';
 
 export interface ParcelEvaluation extends BaseEntityInterface {
   ParcelId: number;
   Parcel?: Parcel;
   Year: number;
-  Value: string;
+  Value: number;
   Firm?: string;
   EvaluationKeyId: number;
   EvaluationKey?: EvaluationKey;
@@ -27,10 +28,11 @@ type ParcelFiscalAdd = Omit<
 export interface ParcelFiscal extends BaseEntityInterface {
   FiscalYear: number;
   EffectiveDate: Date;
-  Value: string;
+  Value: number;
   Note?: string;
   FiscalKeyId: number;
   FiscalKey?: FiscalKey;
+  ParcelId?: number;
 }
 
 export interface Parcel extends Property {
@@ -42,7 +44,6 @@ export interface Parcel extends Property {
   ZoningPotential?: string;
   ParentParcelId?: number;
   ParentParcel?: Parcel;
-  NotOwned?: boolean;
   PropertyTypeId: number;
 }
 
@@ -63,7 +64,7 @@ const useParcelsApi = (absoluteFetch: IFetch) => {
     const response = await absoluteFetch.post('/parcels', parcel);
     return response;
   };
-  const updateParcelById = async (id: number, parcel: ParcelUpdate) => {
+  const updateParcelById = async (id: number, parcel: DeepPartial<ParcelUpdate>) => {
     const response = await absoluteFetch.put(`/parcels/${id}`, parcel);
     return response;
   };
@@ -90,8 +91,8 @@ const useParcelsApi = (absoluteFetch: IFetch) => {
     return parsedBody as Parcel;
   };
   const deleteParcelById = async (id: number) => {
-    const { parsedBody } = await absoluteFetch.del(`/parcels/${id}`);
-    return parsedBody as Parcel;
+    const response = await absoluteFetch.del(`/parcels/${id}`);
+    return response;
   };
   return {
     addParcel,

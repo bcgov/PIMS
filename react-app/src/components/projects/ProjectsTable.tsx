@@ -6,7 +6,7 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
-import React, { MutableRefObject } from 'react';
+import React, { MutableRefObject, useContext } from 'react';
 import useDataLoader from '@/hooks/useDataLoader';
 import { dateFormatter, projectStatusChipFormatter } from '@/utilities/formatters';
 import { Agency } from '@/hooks/api/useAgencyApi';
@@ -15,10 +15,12 @@ import { User } from '@/hooks/api/useUsersApi';
 import { useNavigate } from 'react-router-dom';
 import { Project } from '@/hooks/api/useProjectsApi';
 import { NoteTypes } from '@/constants/noteTypes';
+import { SnackBarContext } from '@/contexts/snackbarContext';
 
 const ProjectsTable = () => {
   const navigate = useNavigate();
   const api = usePimsApi();
+  const snackbar = useContext(SnackBarContext);
   const { data, loadOnce } = useDataLoader(api.projects.getProjects);
   loadOnce();
 
@@ -129,7 +131,7 @@ const ProjectsTable = () => {
               'Created On': projectModel.CreatedOn,
               'Exemption Requested': projectModel.Metadata?.exemptionRequested,
               'Exemption Rationale': projectModel.Notes?.find(
-                (note) => note.NoteType === NoteTypes.EXEMPTION,
+                (note) => note.NoteTypeId === NoteTypes.EXEMPTION,
               )?.Note,
               'NetBook	Value': projectModel.NetBook,
               Assessed: projectModel.Assessed,
@@ -142,16 +144,16 @@ const ProjectsTable = () => {
               'Interest Component': projectModel.Metadata?.interestComponent,
               'Offer Amount': projectModel.Metadata?.offerAmount,
               'Sale With Lease In Place': projectModel.Metadata?.saleWithLeaseInPlace,
-              Note: projectModel.Notes?.find((note) => note.NoteType === NoteTypes.GENERAL)?.Note,
-              PublicNote: projectModel.Notes?.find((note) => note.NoteType === NoteTypes.PUBLIC)
+              Note: projectModel.Notes?.find((note) => note.NoteTypeId === NoteTypes.GENERAL)?.Note,
+              PublicNote: projectModel.Notes?.find((note) => note.NoteTypeId === NoteTypes.PUBLIC)
                 ?.Note,
-              PrivateNote: projectModel.Notes?.find((note) => note.NoteType === NoteTypes.PRIVATE)
+              PrivateNote: projectModel.Notes?.find((note) => note.NoteTypeId === NoteTypes.PRIVATE)
                 ?.Note,
               AppraisedNote: projectModel.Notes?.find(
-                (note) => note.NoteType === NoteTypes.APPRAISAL,
+                (note) => note.NoteTypeId === NoteTypes.APPRAISAL,
               )?.Note,
               AgencyResponseNote: projectModel.Notes?.find(
-                (note) => note.NoteType === NoteTypes.AGENCY_INTEREST,
+                (note) => note.NoteTypeId === NoteTypes.AGENCY_INTEREST,
               )?.Note,
               'Submitted On': projectModel.SubmittedOn,
               'Approved On': projectModel.ApprovedOn,
@@ -168,14 +170,18 @@ const ProjectsTable = () => {
                 projectModel.Metadata?.clearanceNotificationSentOn,
               'Disposed On': projectModel.Metadata?.disposedOn,
               'Marketed On': projectModel.Metadata?.marketedOn,
-              'Offers Note': projectModel.Notes?.find((note) => note.NoteType === NoteTypes.OFFER)
+              'Offers Note': projectModel.Notes?.find((note) => note.NoteTypeId === NoteTypes.OFFER)
                 ?.Note,
               Purchaser: projectModel.Metadata?.purchaser,
             },
           };
         });
       } catch (e) {
-        // TODO: Error notification here.
+        snackbar.setMessageState({
+          open: true,
+          style: snackbar.styles.warning,
+          text: e.message ?? 'Error exporting Excel file.',
+        });
         return [];
       }
     }
@@ -204,10 +210,10 @@ const ProjectsTable = () => {
       ]}
       getRowId={(row) => row.Id}
       onRowClick={(params) => navigate(`/projects/${params.row.Id}`)}
-      tableHeader={'Disposal Projects'}
+      tableHeader={'Disposal Projects Overview'}
       excelTitle={'Projects'}
       customExcelData={getExcelData}
-      addTooltip={'Create new project'}
+      addTooltip={'Create New Disposal Project'}
       name={'projects'}
       columns={columns}
       rows={data ?? []}

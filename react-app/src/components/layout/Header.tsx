@@ -3,7 +3,6 @@ import headerImageLarge from '@/assets/images/BCGOV_logo.svg';
 import headerImageSmall from '@/assets/images/BCID_V_rgb_pos.png';
 import {
   AppBar,
-  Link,
   Box,
   Button,
   Divider,
@@ -90,7 +89,7 @@ const Header: React.FC = () => {
         backgroundColor: theme.palette.white.main,
         height: '74px',
         display: 'flex',
-        position: 'fixed',
+        position: 'relative',
         justifyContent: 'center',
         borderBottom: '1px solid',
         borderBottomColor: theme.palette.gray.main,
@@ -152,15 +151,30 @@ const Header: React.FC = () => {
               ) : (
                 <></>
               )}
-              <Link underline="none" href="/properties" variant="h5">
-                Active Inventory
-              </Link>
-              <Link underline="none" href="/projects" variant="h5">
-                Disposal Inventory
-              </Link>
-              <Link underline="none" href="/users" variant="h5">
-                Users
-              </Link>
+              <RouterLink
+                style={{ color: theme.palette.black.main, textDecoration: 'none' }}
+                to="/properties"
+              >
+                <Typography fontWeight={500} variant="h5">
+                  Active Inventory
+                </Typography>
+              </RouterLink>
+              <RouterLink
+                style={{ color: theme.palette.black.main, textDecoration: 'none' }}
+                to="/projects"
+              >
+                <Typography fontWeight={500} variant="h5">
+                  Disposal Projects
+                </Typography>
+              </RouterLink>
+              <RouterLink
+                style={{ color: theme.palette.black.main, textDecoration: 'none' }}
+                to="/users"
+              >
+                <Typography fontWeight={500} variant="h5">
+                  Users
+                </Typography>
+              </RouterLink>
             </>
           )}
           <Button onClick={() => handleLoginButton()} color="secondary" variant="contained">

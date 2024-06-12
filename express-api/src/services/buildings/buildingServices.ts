@@ -3,6 +3,11 @@ import { AppDataSource } from '@/appDataSource';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { DeepPartial, FindOptionsOrder, In } from 'typeorm';
 import { BuildingFilter } from '@/services/buildings/buildingSchema';
+import userServices from '../users/usersServices';
+import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
+import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
+import logger from '@/utilities/winstonLogger';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 
 const buildingRepo = AppDataSource.getRepository(Building);
 
@@ -27,25 +32,35 @@ export const addBuilding = async (building: DeepPartial<Building>) => {
  * @returns     findBuilding - Building data matching Id passed in.
  */
 export const getBuildingById = async (buildingId: number) => {
+  const evaluations = await AppDataSource.getRepository(BuildingEvaluation).find({
+    where: { BuildingId: buildingId, EvaluationKeyId: 0 },
+    order: { Year: 'DESC' },
+  });
+  const fiscals = await AppDataSource.getRepository(BuildingFiscal).find({
+    where: { BuildingId: buildingId },
+    order: { FiscalYear: 'DESC' },
+  });
   const findBuilding = await buildingRepo.findOne({
     relations: {
-      Agency: {
-        Parent: true,
-      },
-      AdministrativeArea: {
-        RegionalDistrict: true,
-      },
+      Agency: true,
+      AdministrativeArea: true,
       Classification: true,
       PropertyType: true,
       BuildingConstructionType: true,
       BuildingPredominateUse: true,
       BuildingOccupantType: true,
-      Evaluations: true,
-      Fiscals: true,
     },
     where: { Id: buildingId },
   });
-  return findBuilding;
+  if (findBuilding) {
+    return {
+      ...findBuilding,
+      Evaluations: evaluations,
+      Fiscals: fiscals,
+    };
+  } else {
+    return null;
+  }
 };
 
 /**
@@ -58,6 +73,51 @@ export const updateBuildingById = async (building: DeepPartial<Building>) => {
   if (!existingBuilding) {
     throw new ErrorWithCode('Building does not exists.', 404);
   }
+  if (building.Fiscals && building.Fiscals.length) {
+    building.Fiscals = await Promise.all(
+      building.Fiscals.map(async (fiscal) => {
+        const exists = await AppDataSource.getRepository(BuildingFiscal).findOne({
+          where: {
+            BuildingId: building.Id,
+            FiscalYear: fiscal.FiscalYear,
+            FiscalKeyId: fiscal.FiscalKeyId,
+          },
+        });
+        const fiscalEntity: DeepPartial<BuildingFiscal> = {
+          ...fiscal,
+          CreatedById: exists ? exists.CreatedById : building.UpdatedById,
+          UpdatedById: exists ? building.UpdatedById : undefined,
+        };
+        return fiscalEntity;
+      }),
+    );
+  }
+  if (building.Evaluations && building.Evaluations.length) {
+    building.Evaluations = await Promise.all(
+      building.Evaluations.map(async (evaluation) => {
+        const exists = await AppDataSource.getRepository(BuildingEvaluation).findOne({
+          where: {
+            BuildingId: building.Id,
+            Year: evaluation.Year,
+            EvaluationKeyId: evaluation.EvaluationKeyId,
+          },
+        });
+        const evaluationEntity: DeepPartial<BuildingEvaluation> = {
+          ...evaluation,
+          CreatedById: exists ? exists.CreatedById : building.UpdatedById,
+          UpdatedById: exists ? building.UpdatedById : undefined,
+        };
+        return evaluationEntity;
+      }),
+    );
+  }
+  // Rebuild metadata to avoid overwriting the whole field.
+  if (existingBuilding.LeasedLandMetadata) {
+    building.LeasedLandMetadata = {
+      ...existingBuilding.LeasedLandMetadata,
+      ...building.LeasedLandMetadata,
+    };
+  }
   await buildingRepo.save(building);
   //update function doesn't return data on the row changed. Have to get the changed row again
   const newBuilding = await getBuildingById(building.Id);
@@ -69,13 +129,54 @@ export const updateBuildingById = async (building: DeepPartial<Building>) => {
  * @param       buildingId  - Number representing building we want to delete.
  * @returns     findBuilding - Building data matching Id passed in.
  */
-export const deleteBuildingById = async (buildingId: number) => {
+export const deleteBuildingById = async (buildingId: number, username: string) => {
   const existingBuilding = await getBuildingById(buildingId);
   if (!existingBuilding) {
     throw new ErrorWithCode('Building does not exists.', 404);
   }
-  const removeBuilding = await buildingRepo.delete(existingBuilding.Id);
-  return removeBuilding;
+  const linkedProjects = await AppDataSource.getRepository(ProjectProperty).find({
+    where: { BuildingId: buildingId },
+  });
+  if (linkedProjects.length) {
+    throw new ErrorWithCode(
+      `Building is involved in one or more projects with ID(s) ${linkedProjects.map((proj) => proj.ProjectId).join(', ')}`,
+      403,
+    );
+  }
+  const user = await userServices.getUser(username);
+  const queryRunner = await AppDataSource.createQueryRunner();
+  await queryRunner.startTransaction();
+  try {
+    const removeBuilding = await queryRunner.manager.update(Building, existingBuilding.Id, {
+      DeletedById: user.Id,
+      DeletedOn: new Date(),
+    });
+    await queryRunner.manager.update(
+      BuildingEvaluation,
+      { BuildingId: existingBuilding.Id },
+      {
+        DeletedById: user.Id,
+        DeletedOn: new Date(),
+      },
+    );
+    await queryRunner.manager.update(
+      BuildingFiscal,
+      { BuildingId: existingBuilding.Id },
+      {
+        DeletedById: user.Id,
+        DeletedOn: new Date(),
+      },
+    );
+    await queryRunner.commitTransaction();
+    return removeBuilding;
+  } catch (e) {
+    await queryRunner.rollbackTransaction();
+    logger.warn(e.message);
+    if (e instanceof ErrorWithCode) throw e;
+    throw new ErrorWithCode(`Error updating project: ${e.message}`, 500);
+  } finally {
+    await queryRunner.release();
+  }
 };
 
 /**
@@ -92,6 +193,7 @@ export const getBuildings = async (filter: BuildingFilter, includeRelations: boo
       AdministrativeArea: includeRelations,
       Classification: includeRelations,
       PropertyType: includeRelations,
+      Evaluations: includeRelations,
     },
     select: {
       Agency: {
@@ -113,6 +215,11 @@ export const getBuildings = async (filter: BuildingFilter, includeRelations: boo
       PropertyType: {
         Id: true,
         Name: true,
+      },
+      Evaluations: {
+        EvaluationKeyId: true,
+        Year: true,
+        Value: true,
       },
     },
     where: {

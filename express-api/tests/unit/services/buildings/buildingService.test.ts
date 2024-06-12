@@ -1,28 +1,78 @@
 import { AppDataSource } from '@/appDataSource';
 import { Building } from '@/typeorm/Entities/Building';
-import { produceBuilding } from 'tests/testUtils/factories';
-import { DeepPartial } from 'typeorm';
+import {
+  produceBuilding,
+  produceBuildingEvaluation,
+  produceBuildingFiscal,
+  produceUser,
+} from 'tests/testUtils/factories';
 import * as buildingService from '@/services/buildings/buildingServices';
 import { BuildingFilter, BuildingFilterSchema } from '@/services/buildings/buildingSchema';
+import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
+import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
+import { DeepPartial, UpdateResult } from 'typeorm';
+import userServices from '@/services/users/usersServices';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 
 const buildingRepo = AppDataSource.getRepository(Building);
-
+jest.spyOn(userServices, 'getUser').mockImplementation(async () => produceUser());
 const _buildingSave = jest
   .spyOn(buildingRepo, 'save')
   .mockImplementation(async (building: DeepPartial<Building> & Building) => building);
 
-const _buildingDelete = jest
-  .spyOn(buildingRepo, 'delete')
-  .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
+const _buildingFindOne = jest.spyOn(buildingRepo, 'findOne').mockImplementation(async () => {
+  const building = produceBuilding();
+  const { Id } = building;
+  produceBuildingFiscal(Id);
+  return building;
+});
 
-const _buildingFindOne = jest
-  .spyOn(buildingRepo, 'findOne')
-  .mockImplementation(async () => produceBuilding());
+// const _buildingFiscalExists = jest
+//   .spyOn(AppDataSource.getRepository(BuildingFiscal), 'exists')
+//   .mockImplementation(async () => true);
 
-// const _buildingUpdate = jest
-//   .spyOn(buildingRepo, 'update')
-//   .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
+// const _buildingEvaluationExists = jest
+//   .spyOn(AppDataSource.getRepository(BuildingEvaluation), 'exists')
+//   .mockImplementation(async () => true);
+const _buildingFiscalFindOne = jest
+  .spyOn(AppDataSource.getRepository(BuildingFiscal), 'findOne')
+  .mockImplementation(async () => produceBuildingFiscal(1)[0]);
+const _buildingEvaluationFindOne = jest
+  .spyOn(AppDataSource.getRepository(BuildingEvaluation), 'findOne')
+  .mockImplementation(async () => produceBuildingEvaluation(1)[0]);
+// const _buildingFindOne = jest
+//   .spyOn(buildingRepo, 'findOne')
+//   .mockImplementation(async () => produceBuilding());
+jest
+  .spyOn(AppDataSource.getRepository(BuildingFiscal), 'find')
+  .mockImplementation(async () => produceBuildingFiscal(1));
+jest
+  .spyOn(AppDataSource.getRepository(BuildingEvaluation), 'find')
+  .mockImplementation(async () => produceBuildingEvaluation(1));
 
+const _mockStartTransaction = jest.fn(async () => {});
+const _mockRollbackTransaction = jest.fn(async () => {});
+const _mockCommitTransaction = jest.fn(async () => {});
+const _mockBuildinglUpdate = jest.fn(async (): Promise<UpdateResult> => {
+  return {
+    raw: {},
+    generatedMaps: [],
+  };
+});
+const _mockEntityManager = {
+  update: () => _mockBuildinglUpdate(),
+};
+
+jest.spyOn(AppDataSource.getRepository(ProjectProperty), 'find').mockImplementation(async () => []);
+
+jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
+  ...jest.requireActual('@/appDataSource').createQueryRunner,
+  startTransaction: _mockStartTransaction,
+  rollbackTransaction: _mockRollbackTransaction,
+  commitTransaction: _mockCommitTransaction,
+  release: jest.fn(async () => {}),
+  manager: _mockEntityManager,
+});
 jest.spyOn(buildingRepo, 'find').mockImplementation(async () => [produceBuilding()]);
 
 describe('UNIT - Building Services', () => {
@@ -47,8 +97,14 @@ describe('deleteBuildingById', () => {
   it('should delete a building and return a 204 status code', async () => {
     const buildingToDelete = produceBuilding();
     _buildingFindOne.mockResolvedValueOnce(buildingToDelete);
-    await buildingService.deleteBuildingById(buildingToDelete.Id);
-    expect(_buildingDelete).toHaveBeenCalledTimes(1);
+    await buildingService.deleteBuildingById(buildingToDelete.Id, '');
+    expect(_mockBuildinglUpdate).toHaveBeenCalledTimes(3);
+  });
+  it('should throw a 404 error when the building does not exist', async () => {
+    const buildingToDelete = produceBuilding();
+    _buildingFindOne.mockResolvedValueOnce(null);
+    // Act & Assert
+    await expect(buildingService.deleteBuildingById(buildingToDelete.Id, '')).rejects.toThrow();
   });
 });
 describe('getBuildingById', () => {
@@ -101,6 +157,15 @@ describe('updateBuildingById', () => {
     const updateBuilding = produceBuilding();
     _buildingFindOne.mockResolvedValueOnce(null);
     expect(async () => await buildingService.updateBuildingById(updateBuilding)).rejects.toThrow();
+  });
+
+  it('should update Fiscals and Evaluations when they exist in the building object', async () => {
+    const updateBuilding = produceBuilding();
+    _buildingFindOne.mockResolvedValueOnce(updateBuilding);
+
+    await buildingService.updateBuildingById(updateBuilding);
+    expect(_buildingFiscalFindOne).toHaveBeenCalledTimes(1);
+    expect(_buildingEvaluationFindOne).toHaveBeenCalledTimes(1);
   });
 });
 

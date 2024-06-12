@@ -4,7 +4,7 @@ import { ProjectType } from '@/constants/projectType';
 import { ProjectWorkflow } from '@/constants/projectWorkflow';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { Building } from '@/typeorm/Entities/Building';
-import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
+// import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
@@ -15,12 +15,22 @@ import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import logger from '@/utilities/winstonLogger';
-import { DeepPartial, FindManyOptions, FindOptionsOrder, In, QueryRunner } from 'typeorm';
+import {
+  DeepPartial,
+  FindManyOptions,
+  FindOptionsOrder,
+  In,
+  InsertResult,
+  QueryRunner,
+} from 'typeorm';
 import { ProjectFilter } from '@/services/projects/projectSchema';
 import { PropertyType } from '@/constants/propertyType';
 import { ProjectRisk } from '@/constants/projectRisk';
 import notificationServices from '../notifications/notificationServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import userServices from '../users/usersServices';
+import { ProjectTimestamp } from '@/typeorm/Entities/ProjectTimestamp';
+import { ProjectMonetary } from '@/typeorm/Entities/ProjectMonetary';
 
 const projectRepo = AppDataSource.getRepository(Project);
 
@@ -107,11 +117,29 @@ const getProjectById = async (id: number) => {
       ProjectId: id,
     },
   });
+  const projectNotes = await AppDataSource.getRepository(ProjectNote).find({
+    where: {
+      ProjectId: id,
+    },
+  });
+  const projectMonetary = await AppDataSource.getRepository(ProjectMonetary).find({
+    where: {
+      ProjectId: id,
+    },
+  });
+  const projectTimestamps = await AppDataSource.getRepository(ProjectTimestamp).find({
+    where: {
+      ProjectId: id,
+    },
+  });
   return {
     ...project,
     ProjectProperties: projectProperties,
     AgencyResponses: agencyResponses,
     Tasks: projectTasks,
+    Notes: projectNotes,
+    Monetaries: projectMonetary,
+    Timestamps: projectTimestamps,
   };
 };
 
@@ -160,6 +188,9 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
     if (parcels) await addProjectParcelRelations(newProject, parcels, queryRunner);
     if (buildings) await addProjectBuildingRelations(newProject, buildings, queryRunner);
     await handleProjectTasks(newProject, queryRunner);
+    await handleProjectMonetary(newProject, queryRunner);
+    await handleProjectNotes(newProject, queryRunner);
+    await handleProjectTimestamps(newProject, queryRunner);
     await queryRunner.commitTransaction();
     return newProject;
   } catch (e) {
@@ -187,7 +218,7 @@ const addProjectParcelRelations = async (
 ) => {
   await Promise.all(
     parcelIds?.map(async (parcelId) => {
-      const relationExists = await queryRunner.manager.exists(ProjectProperty, {
+      const relationExists = await queryRunner.manager.findOne(ProjectProperty, {
         where: {
           ProjectId: project.Id,
           ParcelId: parcelId,
@@ -255,7 +286,7 @@ const addProjectBuildingRelations = async (
 ) => {
   await Promise.all(
     buildingIds?.map(async (buildingId) => {
-      const relationExists = await queryRunner.manager.exists(ProjectProperty, {
+      const relationExists = await queryRunner.manager.findOne(ProjectProperty, {
         where: {
           ProjectId: project.Id,
           BuildingId: buildingId,
@@ -320,10 +351,14 @@ const removeProjectParcelRelations = async (
 ) => {
   return Promise.all(
     parcelIds?.map((parcelId) => {
-      return queryRunner.manager.delete(ProjectProperty, {
-        ProjectId: project.Id,
-        ParcelId: parcelId,
-      });
+      return queryRunner.manager.update(
+        ProjectProperty,
+        {
+          ProjectId: project.Id,
+          ParcelId: parcelId,
+        },
+        { DeletedById: project.UpdatedById, DeletedOn: new Date() },
+      );
     }),
   );
 };
@@ -342,10 +377,14 @@ const removeProjectBuildingRelations = async (
 ) => {
   return Promise.all(
     buildingIds?.map(async (buildingId) => {
-      return queryRunner.manager.delete(ProjectProperty, {
-        ProjectId: project.Id,
-        BuildingId: buildingId,
-      });
+      return queryRunner.manager.update(
+        ProjectProperty,
+        {
+          ProjectId: project.Id,
+          BuildingId: buildingId,
+        },
+        { DeletedById: project.UpdatedById, DeletedOn: new Date() },
+      );
     }),
   );
 };
@@ -419,18 +458,109 @@ const handleProjectAgencyResponses = async (
     const removeResponses = existingResponses.filter(
       (r) => !newProject.AgencyResponses.find((a) => a.AgencyId === r.AgencyId),
     );
-    await queryRunner.manager.delete(ProjectAgencyResponse, {
-      AgencyId: In(removeResponses.map((a) => a.AgencyId)),
-      ProjectId: newProject.Id,
-    });
+    await queryRunner.manager.update(
+      ProjectAgencyResponse,
+      {
+        AgencyId: In(removeResponses.map((a) => a.AgencyId)),
+        ProjectId: newProject.Id,
+      },
+      { DeletedById: newProject.CreatedById, DeletedOn: new Date() },
+    );
     await queryRunner.manager.save(
       ProjectAgencyResponse,
       newProject.AgencyResponses.map((resp) => ({
         ...resp,
         ProjectId: newProject.Id,
         CreatedById: newProject.CreatedById,
+        DeletedById: null,
+        DeletedOn: null,
       })),
     );
+  }
+};
+
+const handleProjectNotes = async (newProject: DeepPartial<Project>, queryRunner: QueryRunner) => {
+  if (newProject?.Notes?.length) {
+    const saveNotes = newProject.Notes.map(async (note): Promise<InsertResult | void> => {
+      if (note.NoteTypeId == null) {
+        throw new ErrorWithCode('Provided note was missing a required field.', 400);
+      }
+      const exists = await queryRunner.manager.findOne(ProjectNote, {
+        where: { ProjectId: newProject.Id, NoteTypeId: note.NoteTypeId },
+      });
+      return queryRunner.manager.upsert(
+        ProjectNote,
+        {
+          ProjectId: newProject.Id,
+          Note: note.Note,
+          NoteTypeId: note.NoteTypeId,
+          CreatedById: exists ? exists.CreatedById : newProject.CreatedById,
+          UpdatedById: exists ? newProject.UpdatedById : undefined,
+        },
+        ['ProjectId', 'NoteTypeId'],
+      );
+    });
+    return Promise.all(saveNotes);
+  }
+};
+
+const handleProjectTimestamps = async (
+  newProject: DeepPartial<Project>,
+  queryRunner: QueryRunner,
+) => {
+  if (newProject?.Timestamps?.length) {
+    const saveTimestamps = newProject.Timestamps.map(
+      async (timestamp): Promise<InsertResult | void> => {
+        if (timestamp.TimestampTypeId == null) {
+          throw new ErrorWithCode('Provided timestamp was missing a required field.', 400);
+        }
+        const exists = await queryRunner.manager.findOne(ProjectTimestamp, {
+          where: { ProjectId: newProject.Id, TimestampTypeId: timestamp.TimestampTypeId },
+        });
+        return queryRunner.manager.upsert(
+          ProjectTimestamp,
+          {
+            ProjectId: newProject.Id,
+            Date: timestamp.Date,
+            TimestampTypeId: timestamp.TimestampTypeId,
+            CreatedById: exists ? exists.CreatedById : newProject.CreatedById,
+            UpdatedById: exists ? newProject.UpdatedById : undefined,
+          },
+          ['ProjectId', 'TimestampTypeId'],
+        );
+      },
+    );
+    return Promise.all(saveTimestamps);
+  }
+};
+
+const handleProjectMonetary = async (
+  newProject: DeepPartial<Project>,
+  queryRunner: QueryRunner,
+) => {
+  if (newProject?.Monetaries?.length) {
+    const saveTimestamps = newProject.Monetaries.map(
+      async (monetary): Promise<InsertResult | void> => {
+        if (monetary.MonetaryTypeId == null) {
+          throw new ErrorWithCode('Provided monetary was missing a required field.', 400);
+        }
+        const exists = await queryRunner.manager.findOne(ProjectMonetary, {
+          where: { ProjectId: newProject.Id, MonetaryTypeId: monetary.MonetaryTypeId },
+        });
+        return queryRunner.manager.upsert(
+          ProjectMonetary,
+          {
+            ProjectId: newProject.Id,
+            Value: monetary.Value,
+            MonetaryTypeId: monetary.MonetaryTypeId,
+            CreatedById: exists ? exists.CreatedById : newProject.CreatedById,
+            UpdatedById: exists ? newProject.UpdatedById : undefined,
+          },
+          ['ProjectId', 'MonetaryTypeId'],
+        );
+      },
+    );
+    return Promise.all(saveTimestamps);
   }
 };
 
@@ -481,6 +611,9 @@ const updateProject = async (
       { ...project, CreatedById: project.UpdatedById },
       queryRunner,
     );
+    await handleProjectNotes({ ...project, CreatedById: project.UpdatedById }, queryRunner);
+    await handleProjectMonetary({ ...project, CreatedById: project.UpdatedById }, queryRunner);
+    await handleProjectTimestamps({ ...project, CreatedById: project.UpdatedById }, queryRunner);
 
     // Update Project
     await queryRunner.manager.save(Project, {
@@ -488,6 +621,9 @@ const updateProject = async (
       Metadata: newMetadata,
       Tasks: undefined,
       AgencyResponses: undefined,
+      Notes: undefined,
+      Timestamps: undefined,
+      Monetaries: undefined,
     });
     //Seems this save will also try to save Tasks array if present, but if missing the ProjectId it will do weird stuff.
     //So we could consolidate handleProjectTasks to here if we wanted, but then it might be annoying trying to get the more specific behavior in that function.
@@ -557,33 +693,75 @@ const updateProject = async (
  * @returns {Promise<DeleteResult>} - A promise that resolves to the delete result.
  * @throws {ErrorWithCode} - If the project does not exist, or if there is an error deleting the project.
  */
-const deleteProjectById = async (id: number) => {
+const deleteProjectById = async (id: number, username: string) => {
   if (!(await projectRepo.exists({ where: { Id: id } }))) {
     throw new ErrorWithCode('Project does not exist.', 404);
   }
+  const user = await userServices.getUser(username);
   const queryRunner = await AppDataSource.createQueryRunner();
   await queryRunner.startTransaction();
   try {
     // Remove Project Properties relations
-    await queryRunner.manager.delete(ProjectProperty, { ProjectId: id });
+    await queryRunner.manager.update(
+      ProjectProperty,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
     // Remove Project Status History
-    await queryRunner.manager.delete(ProjectStatusHistory, { ProjectId: id });
+    await queryRunner.manager.update(
+      ProjectStatusHistory,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
     // Remove Project Notes
-    await queryRunner.manager.delete(ProjectNote, { ProjectId: id });
+    await queryRunner.manager.update(
+      ProjectNote,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
     // Remove Project Snapshots
-    await queryRunner.manager.delete(ProjectSnapshot, { ProjectId: id });
+    await queryRunner.manager.update(
+      ProjectSnapshot,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
     // Remove Project Tasks
-    await queryRunner.manager.delete(ProjectTask, { ProjectId: id });
+    await queryRunner.manager.update(
+      ProjectTask,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
+    // Remove Project Timestamps
+    await queryRunner.manager.update(
+      ProjectTimestamp,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
+    // Remove Project Monetary
+    await queryRunner.manager.update(
+      ProjectMonetary,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
     // Remove Project Agency Responses
-    await queryRunner.manager.delete(ProjectAgencyResponse, { ProjectId: id });
+    await queryRunner.manager.update(
+      ProjectAgencyResponse,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
     // Remove Notifications from Project
     /* FIXME: This should eventually be done with the notifications service.
-     * Otherwise, any notifications sent to CHES won't be cancelled.
+     * Otherwise, any notifications sent to CHES won't be cancelled. -Dylan
+     * This is true ^ I think it's best to comment out this delete call for now. -Graham
      */
-    await queryRunner.manager.delete(NotificationQueue, { ProjectId: id });
+    // await queryRunner.manager.delete(NotificationQueue, { ProjectId: id });
     // Delete the project
-    const deleteResult = await queryRunner.manager.delete(Project, { Id: id });
-    queryRunner.commitTransaction();
+    const deleteResult = await queryRunner.manager.update(
+      Project,
+      { Id: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
+    await queryRunner.commitTransaction();
     return deleteResult;
   } catch (e) {
     await queryRunner.rollbackTransaction();
@@ -685,7 +863,6 @@ const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boo
         CreatedOn: true,
       },
       Notes: {
-        NoteType: true,
         Note: true,
       },
     },

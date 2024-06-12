@@ -15,6 +15,13 @@ const config = {
     username: process.env.LTSA_USERNAME,
     password: process.env.LTSA_PASSWORD,
   },
+  accessRequest: {
+    // In previous PIMS, this is also a hardcoded value.
+    // May be more robust to make this an environment variable or even a name, but I imagine these values
+    // will basically never change.
+    notificationTemplate: 15,
+    notificationTemplateRPD: 17,
+  },
 };
 
 const getConfig = () => {

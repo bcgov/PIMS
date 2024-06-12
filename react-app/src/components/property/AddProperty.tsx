@@ -25,7 +25,7 @@ import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LoadingButton } from '@mui/lab';
 
 const AddProperty = () => {
-  const years = [new Date().getFullYear(), new Date().getFullYear() - 1];
+  //const years = [new Date().getFullYear(), new Date().getFullYear() - 1];
   const [propertyType, setPropertyType] = useState<PropertyType>('Parcel');
   const [showErrorText, setShowErrorTest] = useState(false);
   const navigate = useNavigate();
@@ -56,7 +56,6 @@ const AddProperty = () => {
 
   const formMethods = useForm({
     defaultValues: {
-      NotOwned: true,
       Address1: '',
       PIN: '',
       PID: '',
@@ -77,17 +76,19 @@ const AddProperty = () => {
       BuildingTenancy: '',
       Location: null,
       BuildingTenancyUpdatedOn: dayjs(),
-      Fiscals: years.map((yr) => ({
-        FiscalYear: yr,
-        Value: '',
-        FiscalKeyId: 0,
-        EffectiveDate: dayjs(),
-      })),
-      Evaluations: years.map((yr) => ({
-        Year: yr,
-        EvaluationKeyId: 0,
-        Value: '',
-      })),
+      Fiscals: [],
+      Evaluations: [],
+      // Fiscals: years.map((yr) => ({
+      //   FiscalYear: yr,
+      //   Value: '',
+      //   FiscalKeyId: 0,
+      //   EffectiveDate: dayjs(),
+      // })),
+      // Evaluations: years.map((yr) => ({
+      //   Year: yr,
+      //   EvaluationKeyId: 0,
+      //   Value: '',
+      // })),
     },
   });
 
@@ -103,15 +104,15 @@ const AddProperty = () => {
     >
       <Box>
         <NavigateBackButton
-          navigateBackTitle={'Back to properties'}
+          navigateBackTitle={'Back to Property Overview'}
           onBackClick={() => navigate('/properties')}
         />
       </Box>
       <FormProvider {...formMethods}>
         <Typography mb={'2rem'} variant="h2">
-          Add new property
+          Add New Property
         </Typography>
-        <Typography variant="h5">Property type</Typography>
+        <Typography variant="h5">Property Type</Typography>
         <RadioGroup name="controlled-radio-property-type">
           <BoxedIconRadio
             onClick={() => setPropertyType('Parcel')}
@@ -150,10 +151,10 @@ const AddProperty = () => {
           />
         )}
         <Typography mt={'2rem'} variant="h5">
-          Net book value
+          Net Book Value
         </Typography>
-        <NetBookValue years={years} />
-        <AssessedValue years={years} />
+        <NetBookValue name="Fiscals" maxRows={1} />
+        <AssessedValue name="Evaluations" maxRows={1} />
       </FormProvider>
       {showErrorText && (
         <Typography alignSelf={'center'} variant="h5" color={'error'}>
@@ -171,14 +172,19 @@ const AddProperty = () => {
               const addParcel: ParcelAdd = {
                 ...formValues,
                 LandArea: parseFloatOrNull(formValues.LandArea),
-                PID: parseIntOrNull(formValues.PID),
+                PID: parseIntOrNull(formValues.PID.replace(/-/g, '')),
                 PIN: parseIntOrNull(formValues.PIN),
                 PropertyTypeId: 0,
                 AgencyId: userContext.pimsUser.data.AgencyId,
                 IsVisibleToOtherAgencies: false,
                 Fiscals: formValues.Fiscals.map((a) => ({
                   ...a,
+                  Value: Number(a?.Value),
                   EffectiveDate: a?.EffectiveDate?.toDate(),
+                })),
+                Evaluations: formValues.Evaluations.map((a) => ({
+                  ...a,
+                  Value: Number(a?.Value),
                 })),
               };
               addParcel.Evaluations = addParcel.Evaluations.filter((a) => a.Value);
@@ -190,7 +196,7 @@ const AddProperty = () => {
               const formValues = formMethods.getValues();
               const addBuilding: BuildingAdd = {
                 ...formValues,
-                PID: parseIntOrNull(formValues.PID),
+                PID: parseIntOrNull(formValues.PID.replace(/-/g, '')),
                 PIN: parseIntOrNull(formValues.PIN),
                 RentableArea: parseFloatOrNull(formValues.RentableArea),
                 TotalArea: parseFloatOrNull(formValues.TotalArea),
@@ -200,7 +206,12 @@ const AddProperty = () => {
                 IsVisibleToOtherAgencies: false,
                 Fiscals: formValues.Fiscals.map((a) => ({
                   ...a,
+                  Value: Number(a?.Value),
                   EffectiveDate: a?.EffectiveDate?.toDate(),
+                })),
+                Evaluations: formValues.Evaluations.map((a) => ({
+                  ...a,
+                  Value: Number(a.Value),
                 })),
                 BuildingTenancyUpdatedOn: formValues.BuildingTenancyUpdatedOn.toDate(),
               };

@@ -34,7 +34,18 @@ import {
   NotificationStatus,
 } from '@/services/notifications/notificationServices';
 import { NotificationTemplate } from '@/typeorm/Entities/NotificationTemplate';
+import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
+import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
+import { ParcelFiscal } from '@/typeorm/Entities/ParcelFiscal';
+import { ParcelEvaluation } from '@/typeorm/Entities/ParcelEvaluation';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
+import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
+import { ILtsaOrder } from '@/services/ltsa/interfaces/ILtsaOrder';
+import { NoteType } from '@/typeorm/Entities/NoteType';
+import { ProjectTimestamp } from '@/typeorm/Entities/ProjectTimestamp';
+import { ProjectMonetary } from '@/typeorm/Entities/ProjectMonetary';
+import { MonetaryType } from '@/typeorm/Entities/MonetaryType';
+import { TimestampType } from '@/typeorm/Entities/TimestampType';
 
 export class MockRes {
   statusValue: any;
@@ -201,6 +212,7 @@ export const produceSSO = (): SSOUser => {
 };
 
 export const produceParcel = (): Parcel => {
+  const id = faker.number.int({ max: 10 });
   return {
     Id: faker.number.int({ max: 10 }),
     CreatedOn: faker.date.anytime(),
@@ -212,7 +224,6 @@ export const produceParcel = (): Parcel => {
     LandArea: undefined,
     Zoning: undefined,
     ZoningPotential: undefined,
-    NotOwned: undefined,
     ParentParcelId: undefined,
     ParentParcel: undefined,
     Description: faker.string.alphanumeric(),
@@ -236,8 +247,11 @@ export const produceParcel = (): Parcel => {
     CreatedBy: undefined,
     UpdatedById: undefined,
     UpdatedBy: undefined,
-    Fiscals: [],
-    Evaluations: [],
+    Fiscals: produceParcelFiscal(id),
+    Evaluations: produceParcelEvaluation(id),
+    DeletedById: null,
+    DeletedOn: null,
+    DeletedBy: undefined,
   };
 };
 
@@ -265,7 +279,8 @@ export const produceEmail = (props: Partial<IEmail>): IEmail => {
 };
 
 export const produceBuilding = (): Building => {
-  const id = faker.string.uuid() as UUID;
+  const agencyId = faker.string.uuid() as UUID;
+  const id = faker.number.int({ max: 10 });
   return {
     Id: faker.number.int({ max: 10 }),
     CreatedOn: faker.date.anytime(),
@@ -290,7 +305,7 @@ export const produceBuilding = (): Building => {
     ClassificationId: undefined,
     Classification: undefined,
     AgencyId: undefined,
-    Agency: produceAgency(id),
+    Agency: produceAgency(agencyId),
     AdministrativeAreaId: undefined,
     AdministrativeArea: undefined,
     IsSensitive: undefined,
@@ -307,12 +322,62 @@ export const produceBuilding = (): Building => {
     CreatedBy: undefined,
     UpdatedById: undefined,
     UpdatedBy: undefined,
-    Fiscals: undefined,
-    Evaluations: undefined,
+    Fiscals: produceBuildingFiscal(id),
+    Evaluations: produceBuildingEvaluation(id),
     PID: undefined,
     PIN: undefined,
+    DeletedById: null,
+    DeletedOn: null,
+    DeletedBy: undefined,
   };
 };
+
+export const produceBuildingEvaluation = (buildingId: number): BuildingEvaluation[] => {
+  const evaluation: BuildingEvaluation = new BuildingEvaluation();
+
+  evaluation.BuildingId = buildingId;
+  evaluation.Year = faker.date.past().getFullYear();
+  evaluation.EvaluationKeyId = 0;
+  evaluation.Value = 20000;
+  evaluation.EvaluationKey = undefined;
+  evaluation.Note = undefined;
+
+  return [evaluation];
+};
+
+export const produceBuildingFiscal = (buildingId: number): BuildingFiscal[] => {
+  const fiscal: BuildingFiscal = new BuildingFiscal();
+  fiscal.BuildingId = buildingId;
+  fiscal.FiscalYear = faker.date.past().getFullYear();
+  fiscal.FiscalKeyId = 0;
+  fiscal.Value = 20000;
+
+  return [fiscal];
+};
+
+export const produceParcelEvaluation = (parcelId: number): ParcelEvaluation[] => {
+  const evaluation: ParcelEvaluation = new ParcelEvaluation();
+
+  evaluation.ParcelId = parcelId;
+  evaluation.Year = faker.date.past().getFullYear();
+  evaluation.EvaluationKeyId = 0;
+  evaluation.Value = 20000;
+  evaluation.EvaluationKey = undefined;
+  evaluation.Note = undefined;
+
+  return [evaluation];
+};
+
+export const produceParcelFiscal = (parcelId: number): ParcelFiscal[] => {
+  const fiscal: ParcelFiscal = new ParcelFiscal();
+  fiscal.ParcelId = parcelId;
+  fiscal.FiscalYear = faker.date.past().getFullYear();
+  fiscal.FiscalKeyId = 0;
+  fiscal.Value = 1000000;
+
+  return [fiscal];
+};
+
 export const produceAdminArea = (props: Partial<AdministrativeArea>): AdministrativeArea => {
   const adminArea: AdministrativeArea = {
     Id: faker.number.int(),
@@ -465,6 +530,66 @@ export const produceTask = (): Task => {
   return task;
 };
 
+export const produceNoteType = (): NoteType => {
+  const noteType: NoteType = {
+    Id: faker.number.int(),
+    Name: faker.commerce.product(),
+    IsDisabled: faker.datatype.boolean(),
+    SortOrder: 0,
+    Description: faker.lorem.sentence(),
+    IsOptional: false,
+    StatusId: faker.number.int(),
+    Status: undefined,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+  };
+  return noteType;
+};
+
+export const produceMonetaryType = (): MonetaryType => {
+  const monetaryType: MonetaryType = {
+    Id: faker.number.int(),
+    Name: faker.commerce.product(),
+    IsDisabled: faker.datatype.boolean(),
+    SortOrder: 0,
+    Description: faker.lorem.sentence(),
+    IsOptional: false,
+    StatusId: faker.number.int(),
+    Status: undefined,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+  };
+  return monetaryType;
+};
+
+export const produceTimestampType = (): TimestampType => {
+  const timestampType: TimestampType = {
+    Id: faker.number.int(),
+    Name: faker.commerce.product(),
+    IsDisabled: faker.datatype.boolean(),
+    SortOrder: 0,
+    Description: faker.lorem.sentence(),
+    IsOptional: false,
+    StatusId: faker.number.int(),
+    Status: undefined,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+  };
+  return timestampType;
+};
+
 export const produceProject = (
   props?: Partial<Project>,
   projectProperties?: ProjectProperty[],
@@ -511,13 +636,40 @@ export const produceProject = (
         ProjectId: projectId,
       }),
     ],
+    Timestamps: [produceProjectTimestamp()],
+    Monetaries: [produceProjectMonetary()],
     Notifications: [],
     StatusHistory: [],
-    Notes: [],
+    Notes: [produceNote()],
     AgencyResponses: [],
+    DeletedBy: undefined,
+    DeletedById: null,
+    DeletedOn: null,
     ...props,
   };
   return project;
+};
+
+export const produceNote = (props?: Partial<ProjectNote>): ProjectNote => {
+  const note: ProjectNote = {
+    Id: faker.number.int(),
+    ProjectId: faker.number.int(),
+    Project: undefined,
+    NoteTypeId: faker.number.int(),
+    NoteType: undefined,
+    Note: faker.lorem.lines(),
+    DeletedBy: undefined,
+    DeletedById: null,
+    DeletedOn: null,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return note;
 };
 
 export const produceProjectProperty = (props?: Partial<ProjectProperty>): ProjectProperty => {
@@ -537,6 +689,9 @@ export const produceProjectProperty = (props?: Partial<ProjectProperty>): Projec
     Parcel: produceParcel(),
     BuildingId: faker.number.int(),
     Building: produceBuilding(),
+    DeletedById: null,
+    DeletedOn: null,
+    DeletedBy: undefined,
     ...props,
   };
   return projectProperty;
@@ -557,6 +712,9 @@ export const productProjectStatusHistory = (props?: Partial<ProjectStatusHistory
     Status: null,
     ProjectId: faker.number.int(),
     Project: null,
+    DeletedById: null,
+    DeletedOn: null,
+    DeletedBy: undefined,
     ...props,
   };
   return history;
@@ -576,9 +734,54 @@ export const produceProjectTask = (props?: Partial<ProjectTask>) => {
     UpdatedById: randomUUID(),
     UpdatedBy: undefined,
     UpdatedOn: new Date(),
+    DeletedById: null,
+    DeletedOn: null,
+    DeletedBy: undefined,
     ...props,
   };
   return task;
+};
+
+export const produceProjectTimestamp = (props?: Partial<ProjectTimestamp>) => {
+  const ts: ProjectTimestamp = {
+    ProjectId: faker.number.int(),
+    Project: undefined,
+    TimestampType: undefined,
+    TimestampTypeId: faker.number.int(),
+    Date: undefined,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    DeletedById: null,
+    DeletedOn: null,
+    DeletedBy: undefined,
+    ...props,
+  };
+  return ts;
+};
+
+export const produceProjectMonetary = (props?: Partial<ProjectMonetary>) => {
+  const monetary: ProjectMonetary = {
+    ProjectId: faker.number.int(),
+    Project: undefined,
+    MonetaryType: undefined,
+    MonetaryTypeId: faker.number.int(),
+    Value: Number(faker.commerce.price()),
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    DeletedById: null,
+    DeletedOn: null,
+    DeletedBy: undefined,
+    ...props,
+  };
+  return monetary;
 };
 
 export const produceProjectNotification = (props?: Partial<ProjectStatusNotification>) => {
@@ -682,8 +885,134 @@ export const produceAgencyResponse = (props?: Partial<ProjectAgencyResponse>) =>
     UpdatedById: randomUUID(),
     UpdatedBy: undefined,
     UpdatedOn: new Date(),
+    DeletedById: null,
+    DeletedOn: null,
+    DeletedBy: undefined,
     ...props,
   };
 
   return response;
 };
+
+export const produceLtsaOrder = (): ILtsaOrder => ({
+  order: {
+    productType: 'title',
+    fileReference: 'Test',
+    productOrderParameters: {
+      titleNumber: 'ABC123',
+      landTitleDistrictCode: 'VI',
+      includeCancelledInfo: false,
+    },
+    orderId: faker.string.uuid(),
+    status: 'Processing',
+    billingInfo: {
+      billingModel: 'PROV',
+      productName: 'Searches',
+      productCode: 'Search',
+      feeExempted: true,
+      productFee: 0,
+      serviceCharge: 0,
+      subtotalFee: 0,
+      productFeeTax: 0,
+      serviceChargeTax: 0,
+      totalTax: 0,
+      totalFee: 0,
+    },
+    orderedProduct: {
+      fieldedData: {
+        titleStatus: 'REGISTERED',
+        titleIdentifier: { titleNumber: 'ABC123', landTitleDistrict: 'VICTORIA' },
+        tombstone: {
+          applicationReceivedDate: '2002-05-01T17:50:00Z',
+          enteredDate: '2002-05-29T14:59:26Z',
+          titleRemarks: '',
+          marketValueAmount: '',
+          fromTitles: [{ titleNumber: 'DEF456', landTitleDistrict: 'VICTORIA' }],
+          natureOfTransfers: [{ transferReason: 'FEE SIMPLE' }],
+        },
+        ownershipGroups: [
+          {
+            jointTenancyIndication: false,
+            interestFractionNumerator: '1',
+            interestFractionDenominator: '1',
+            ownershipRemarks: '',
+            titleOwners: [
+              {
+                lastNameOrCorpName1: 'CORP NAME',
+                givenName: '',
+                incorporationNumber: '',
+                occupationDescription: '',
+                address: {
+                  addressLine1: 'STREET NAME',
+                  addressLine2: '',
+                  city: 'VICTORIA',
+                  province: 'BC',
+                  provinceName: 'BRITISH COLUMBIA',
+                  country: 'CANADA',
+                  postalCode: 'POSTAL CODE',
+                },
+              },
+            ],
+          },
+        ],
+        taxAuthorities: [{ authorityName: 'MUNICIPALITY NAME' }],
+        descriptionsOfLand: [
+          {
+            parcelIdentifier: '000-000-000',
+            fullLegalDescription: 'LEGAL DESC',
+            parcelStatus: 'A',
+          },
+        ],
+        legalNotationsOnTitle: [
+          {
+            legalNotationNumber: 'AB123213',
+            status: 'ACTIVE',
+            legalNotation: {
+              originalLegalNotationNumber: 'AB123213',
+              legalNotationText: 'LEGAL TEXT',
+            },
+          },
+          {
+            legalNotationNumber: 'AB123214',
+            status: 'ACTIVE',
+            legalNotation: {
+              originalLegalNotationNumber: 'AB123214',
+              legalNotationText: 'MORE LEGAL TEXT',
+            },
+          },
+        ],
+        chargesOnTitle: [
+          {
+            chargeNumber: 'EF1232131',
+            status: 'REGISTERED',
+            enteredDate: '2002-05-29T14:59:26Z',
+            interAlia: 'No',
+            chargeRemarks: 'LEGAL TEXT\n',
+            charge: {
+              chargeNumber: 'AB123123',
+              transactionType: 'LEASE',
+              applicationReceivedDate: '1994-08-30T18:13:00Z',
+              chargeOwnershipGroups: [
+                {
+                  jointTenancyIndication: false,
+                  interestFractionNumerator: '1',
+                  interestFractionDenominator: '1',
+                  ownershipRemarks: '',
+                  chargeOwners: [
+                    { lastNameOrCorpName1: 'REGIONAL DISTRICT', incorporationNumber: '' },
+                  ],
+                },
+              ],
+              certificatesOfCharge: [],
+              correctionsAltos1: [],
+              corrections: [],
+            },
+            chargeRelease: {},
+          },
+        ],
+        duplicateCertificatesOfTitle: [],
+        titleTransfersOrDispositions: [],
+      },
+    },
+  },
+});

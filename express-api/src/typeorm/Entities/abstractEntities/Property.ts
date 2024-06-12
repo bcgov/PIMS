@@ -2,8 +2,8 @@ import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
 import { PropertyType } from '@/typeorm/Entities/PropertyType';
-import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Column, ManyToOne, JoinColumn, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { SoftDeleteEntity } from './SoftDeleteEntity';
 
 // Custom type to easily handle points without PostGIS
 export type GeoPoint = {
@@ -11,7 +11,7 @@ export type GeoPoint = {
   y: number;
 };
 
-export abstract class Property extends BaseEntity {
+export abstract class Property extends SoftDeleteEntity {
   @PrimaryGeneratedColumn()
   Id: number;
 

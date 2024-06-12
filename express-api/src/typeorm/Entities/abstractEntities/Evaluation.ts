@@ -1,9 +1,9 @@
 import { EvaluationKey } from '@/typeorm/Entities/EvaluationKey';
-import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { SoftDeleteEntity } from './SoftDeleteEntity';
 
 @Entity()
-export class Evaluation extends BaseEntity {
+export class Evaluation extends SoftDeleteEntity {
   @PrimaryColumn({ name: 'year', type: 'int' })
   Year: number;
 

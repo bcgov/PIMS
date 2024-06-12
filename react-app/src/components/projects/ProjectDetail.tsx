@@ -1,10 +1,26 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import DataCard from '../display/DataCard';
-import { Box, Checkbox, FormControlLabel, FormGroup, Typography, Skeleton } from '@mui/material';
+import {
+  Box,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Typography,
+  Skeleton,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from '@mui/material';
 import DeleteDialog from '../dialog/DeleteDialog';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
-import { Project, ProjectMetadata, TierLevel } from '@/hooks/api/useProjectsApi';
+import {
+  Project,
+  ProjectMetadata,
+  ProjectNote,
+  ProjectTask,
+  TierLevel,
+} from '@/hooks/api/useProjectsApi';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ProjectStatus } from '@/hooks/api/useLookupApi';
@@ -21,6 +37,10 @@ import CollapsibleSidebar from '../layout/CollapsibleSidebar';
 import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
 import { enumReverseLookup } from '@/utilities/helperFunctions';
 import { AgencyResponseType } from '@/constants/agencyResponseTypes';
+import useDataSubmitter from '@/hooks/useDataSubmitter';
+import { Roles } from '@/constants/roles';
+import { AuthContext } from '@/contexts/authContext';
+import { ExpandMoreOutlined } from '@mui/icons-material';
 
 interface IProjectDetail {
   onClose: () => void;
@@ -40,6 +60,7 @@ interface ProjectInfo extends Project {
 const ProjectDetail = (props: IProjectDetail) => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { keycloak } = useContext(AuthContext);
   const api = usePimsApi();
   // const theme = useTheme();
   const { data, refreshData, isLoading } = useDataLoader(() =>
@@ -53,17 +74,30 @@ const ProjectDetail = (props: IProjectDetail) => {
     }
   }, [data]);
 
+  const isAuditor = keycloak.hasRoles([Roles.AUDITOR]);
+
   const { data: tasks, loadOnce: loadTasks } = useDataLoader(() => api.lookup.getTasks());
   loadTasks();
+  const { data: noteTypes, loadOnce: loadNotes } = useDataLoader(() =>
+    api.lookup.getProjectNoteTypes(),
+  );
+  loadNotes();
 
   const { data: statuses, loadOnce: loadStatuses } = useDataLoader(() =>
     api.lookup.getProjectStatuses(),
   );
   loadStatuses();
 
-  const { ungroupedAgencies, agencyOptions } = useGroupedAgenciesApi();
+  const { submit: deleteProject, submitting: deletingProject } = useDataSubmitter(
+    api.projects.deleteProjectById,
+  );
 
-  const collectedTasksByStatus = useMemo((): Record<string, Array<any>> => {
+  const { ungroupedAgencies, agencyOptions } = useGroupedAgenciesApi();
+  interface IStatusHistoryStruct {
+    Notes: Array<ProjectNote & { Name: string }>;
+    Tasks: Array<ProjectTask & { Name: string }>;
+  }
+  const collectedDocumentationByStatus = useMemo((): Record<string, IStatusHistoryStruct> => {
     if (!data || !tasks || !statuses) {
       return {};
     }
@@ -72,17 +106,41 @@ const ProjectDetail = (props: IProjectDetail) => {
     //Somewhat evil reduce where we collect information from the status and tasks lookup so that we can
     //get data for the status and task names to be displayed when we enumarete the tasks associated to the project itself
     //in the documentation history section.
-    return data?.parsedBody.Tasks.reduce((acc: Record<string, Array<any>>, curr) => {
-      const fullTask = tasks.find((a) => a.Id === curr.TaskId);
-      const fullStatus = statuses.find((a) => a.Id === fullTask.StatusId);
-      if (!acc[fullStatus.Name]) {
-        acc[fullStatus.Name] = [{ ...curr, Name: fullTask.Name }];
-        return acc;
-      } else {
-        acc[fullStatus.Name].push({ ...curr, Name: fullTask.Name });
-        return acc;
-      }
-    }, {});
+    const reduceMap = data?.parsedBody.Tasks.reduce(
+      (acc: Record<string, IStatusHistoryStruct>, curr) => {
+        if (!curr.IsCompleted) {
+          return acc; //Since this is just for display purposes, no point showing non-completed in results.
+        }
+        const fullTask = tasks.find((a) => a.Id === curr.TaskId);
+        const fullStatus = statuses.find((a) => a.Id === fullTask.StatusId) ?? {
+          Name: 'Uncategorized',
+        };
+        if (!acc[fullStatus.Name]) {
+          acc[fullStatus.Name] = { Tasks: [{ ...curr, Name: fullTask.Name }], Notes: [] };
+          return acc;
+        } else {
+          acc[fullStatus.Name].Tasks.push({ ...curr, Name: fullTask.Name });
+          return acc;
+        }
+      },
+      {},
+    );
+    return data?.parsedBody.Notes.filter((a) => a.Note).reduce(
+      (acc: Record<string, IStatusHistoryStruct>, curr) => {
+        const fullNote = noteTypes.find((a) => a.Id === curr.NoteTypeId);
+        const fullStatus = statuses.find((a) => a.Id === fullNote.StatusId) ?? {
+          Name: 'Uncategorized',
+        };
+        if (!acc[fullStatus.Name]) {
+          acc[fullStatus.Name] = { Notes: [{ ...curr, Name: fullNote.Description }], Tasks: [] };
+          return acc;
+        } else {
+          acc[fullStatus.Name].Notes.push({ ...curr, Name: fullNote.Description });
+          return acc;
+        }
+      },
+      reduceMap,
+    );
   }, [data, tasks, statuses]);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -97,7 +155,7 @@ const ProjectDetail = (props: IProjectDetail) => {
     ProjectNumber: data?.parsedBody.ProjectNumber,
     Name: data?.parsedBody.Name,
     AssignTier: data?.parsedBody.TierLevel,
-    Notes: data?.parsedBody.Description,
+    Description: data?.parsedBody.Description,
   };
 
   const FinancialInformationData = {
@@ -150,10 +208,11 @@ const ProjectDetail = (props: IProjectDetail) => {
         marginX={'auto'}
       >
         <DetailViewNavigation
-          navigateBackTitle={'Back to disposal Overview'}
+          navigateBackTitle={'Back to Disposal Project Overview'}
           deleteTitle={'Delete project'}
           onDeleteClick={() => setOpenDeleteDialog(true)}
           onBackClick={() => props.onClose()}
+          disableDelete={isAuditor}
         />
         <DataCard
           loading={isLoading}
@@ -162,12 +221,14 @@ const ProjectDetail = (props: IProjectDetail) => {
           id={projectInformation}
           title={projectInformation}
           onEdit={() => setOpenProjectInfoDialog(true)}
+          disableEdit={isAuditor}
         />
         <DataCard
           values={undefined}
           id={disposalProperties}
           title={disposalProperties}
           onEdit={() => setOpenDisposalPropDialog(true)}
+          disableEdit={isAuditor}
         >
           {isLoading ? (
             <Skeleton variant="rectangular" height={'150px'} />
@@ -189,6 +250,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           title={financialInformation}
           id={financialInformation}
           onEdit={() => setOpenFinancialInfoDialog(true)}
+          disableEdit={isAuditor}
         />
         <DataCard
           loading={isLoading}
@@ -196,6 +258,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           values={undefined}
           id={agencyInterest}
           onEdit={() => setOpenAgencyInterestDialog(true)}
+          disableEdit={isAuditor}
         >
           {!data?.parsedBody.AgencyResponses?.length ? ( //TODO: Logic will depend on precense of agency responses
             <Box display={'flex'} justifyContent={'center'}>
@@ -235,34 +298,63 @@ const ProjectDetail = (props: IProjectDetail) => {
           id={documentationHistory}
           onEdit={() => setOpenDocumentationDialog(true)}
         >
-          {Object.entries(collectedTasksByStatus)?.map(
-            (
-              [key, value], //Each key here is a status name. Each value a list of tasks.
-            ) => (
-              <Box key={`${key}-group`}>
-                <Typography variant="h5" mt={'1rem'}>
-                  {key}
-                </Typography>
-                {value.map((task) => (
-                  <FormGroup key={`${task.TaskId}-task-formgroup`}>
-                    <FormControlLabel
-                      control={<Checkbox checked={task.IsCompleted} />}
-                      style={{ pointerEvents: 'none' }}
-                      value={task.IsCompleted}
-                      label={task.Name}
-                      disabled={false}
-                    />
-                  </FormGroup>
-                ))}
-              </Box>
-            ),
-          )}
+          <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
+            {Object.entries(collectedDocumentationByStatus)?.map(
+              (
+                [key, value], //Each key here is a status name. Each value a list of tasks.
+              ) => (
+                <Box key={`${key}-group`}>
+                  <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMoreOutlined />}>
+                      <Typography>{key}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
+                        {value.Tasks.map((task) => (
+                          <FormGroup key={`${task.TaskId}-task-formgroup`}>
+                            <FormControlLabel
+                              sx={{
+                                '& .MuiButtonBase-root': {
+                                  padding: 0,
+                                  paddingX: '9px',
+                                },
+                              }}
+                              control={
+                                <Checkbox
+                                  checked={task.IsCompleted}
+                                  sx={{
+                                    '&.MuiCheckbox-root': {
+                                      color: 'rgba(0, 0, 0, 0.26)',
+                                    },
+                                  }}
+                                />
+                              }
+                              style={{ pointerEvents: 'none' }}
+                              value={task.IsCompleted}
+                              label={task.Name}
+                            />
+                          </FormGroup>
+                        ))}
+                        {value.Notes.map((note) => (
+                          <Box key={`${note.NoteTypeId}-note`}>
+                            <Typography variant="h5">{note.Name}</Typography>
+                            <Typography>{note.Note}</Typography>
+                          </Box>
+                        ))}
+                      </Box>
+                    </AccordionDetails>
+                  </Accordion>
+                </Box>
+              ),
+            )}
+          </Box>
         </DataCard>
         <DeleteDialog
           open={openDeleteDialog}
+          confirmButtonProps={{ loading: deletingProject }}
           title={'Delete property'}
           message={'Are you sure you want to delete this project?'}
-          onDelete={async () => {}} //Purposefully omitted for now.
+          onDelete={async () => deleteProject(+id).then(() => navigate('/projects'))}
           onClose={async () => setOpenDeleteDialog(false)}
         />
         <ProjectGeneralInfoDialog

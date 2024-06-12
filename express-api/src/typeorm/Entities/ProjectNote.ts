@@ -1,10 +1,11 @@
-import { BaseEntity } from '@/typeorm/Entities/abstractEntities/BaseEntity';
 import { Entity, PrimaryGeneratedColumn, Column, Index, ManyToOne, JoinColumn } from 'typeorm';
 import { Project } from '@/typeorm/Entities/Project';
+import { SoftDeleteEntity } from './abstractEntities/SoftDeleteEntity';
+import { NoteType } from './NoteType';
 
 @Entity()
-@Index(['ProjectId', 'NoteType'])
-export class ProjectNote extends BaseEntity {
+@Index(['ProjectId', 'NoteType'], { unique: true })
+export class ProjectNote extends SoftDeleteEntity {
   @PrimaryGeneratedColumn()
   Id: number;
 
@@ -17,7 +18,11 @@ export class ProjectNote extends BaseEntity {
   Project: Project;
 
   @Column('int')
-  NoteType: number;
+  NoteTypeId: number;
+
+  @ManyToOne(() => NoteType, (NoteType) => NoteType.Id)
+  @JoinColumn({ name: 'note_type_id' })
+  NoteType: NoteType;
 
   @Column('text')
   Note: string;

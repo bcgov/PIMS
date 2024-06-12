@@ -3,12 +3,13 @@ import { IFetch } from '../useFetch';
 import { BaseEntityInterface } from '@/interfaces/IBaseEntity';
 import { EvaluationKey } from '@/interfaces/IEvaluationKey';
 import { FiscalKey } from '@/interfaces/IFiscalKey';
+import { DeepPartial } from 'react-hook-form';
 
 export interface BuildingEvaluation extends BaseEntityInterface {
   BuildingId: number;
   Building?: Building;
   Year: number;
-  Value: string;
+  Value: number;
   EvaluationKeyId: number;
   EvaluationKey?: EvaluationKey;
   Note?: string;
@@ -17,10 +18,11 @@ export interface BuildingEvaluation extends BaseEntityInterface {
 export interface BuildingFiscal extends BaseEntityInterface {
   FiscalYear: number;
   EffectiveDate: Date;
-  Value: string;
+  Value: number;
   Note?: string;
   FiscalKeyId: number;
   FiscalKey?: FiscalKey;
+  BuildingId?: number;
 }
 
 export interface BuildingConstructionType extends BaseEntityInterface {
@@ -90,7 +92,7 @@ const useBuildingsApi = (absoluteFetch: IFetch) => {
     const response = await absoluteFetch.post('/buildings', building);
     return response;
   };
-  const updateBuildingById = async (id: number, building: BuildingUpdate) => {
+  const updateBuildingById = async (id: number, building: DeepPartial<BuildingUpdate>) => {
     const response = await absoluteFetch.put(`/buildings/${id}`, building);
     return response;
   };
@@ -111,8 +113,8 @@ const useBuildingsApi = (absoluteFetch: IFetch) => {
     return parsedBody as Building;
   };
   const deleteBuildingById = async (id: number) => {
-    const { parsedBody } = await absoluteFetch.del(`/buildings/${id}`);
-    return parsedBody as Building;
+    const response = await absoluteFetch.del(`/buildings/${id}`);
+    return response;
   };
   return {
     addBuilding,

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import { Box, Skeleton, Typography } from '@mui/material';
 import DataCard from '../display/DataCard';
@@ -9,7 +9,7 @@ import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { useClassificationStyle } from './PropertyTable';
 import PropertyAssessedValueTable from './PropertyAssessedValueTable';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Parcel } from '@/hooks/api/useParcelsApi';
 import { Building } from '@/hooks/api/useBuildingsApi';
 import DeleteDialog from '../dialog/DeleteDialog';
@@ -21,17 +21,23 @@ import {
 } from './PropertyDialog';
 import { PropertyType } from './PropertyForms';
 import MetresSquared from '@/components/text/MetresSquared';
-import { zeroPadPID } from '@/utilities/formatters';
+import { dateFormatter, pidFormatter, zeroPadPID } from '@/utilities/formatters';
 import ParcelMap from '../map/ParcelMap';
 import { Map } from 'leaflet';
 import { Room } from '@mui/icons-material';
+import TitleOwnership from '../ltsa/TitleOwnership';
+import useDataSubmitter from '@/hooks/useDataSubmitter';
+import { AuthContext } from '@/contexts/authContext';
+import { Roles } from '@/constants/roles';
 
 interface IPropertyDetail {
   onClose: () => void;
 }
 
 const PropertyDetail = (props: IPropertyDetail) => {
+  const navigate = useNavigate();
   const params = useParams();
+  const { keycloak } = useContext(AuthContext);
   const parcelId = isNaN(Number(params.parcelId)) ? null : Number(params.parcelId);
   const buildingId = isNaN(Number(params.buildingId)) ? null : Number(params.buildingId);
   const api = usePimsApi();
@@ -57,10 +63,22 @@ const PropertyDetail = (props: IPropertyDetail) => {
       return null;
     }
   });
+
+  const { submit: deleteProperty, submitting: deletingProperty } = useDataSubmitter(() => {
+    if (parcelId && parcel) {
+      return api.parcels.deleteParcelById(parcelId);
+    } else {
+      return api.buildings.deleteBuildingById(buildingId);
+    }
+  });
+
   const propertyLoading = buildingsLoading || parcelsLoading;
   const { data: relatedBuildings, refreshData: refreshRelated } = useDataLoader(
     () => parcel?.PID && api.buildings.getBuildings({ pid: parcel.PID, includeRelations: true }),
   );
+
+  const isAuditor = keycloak.hasRoles([Roles.AUDITOR]);
+
   const refreshEither = () => {
     if (parcelId) {
       refreshParcel();
@@ -81,12 +99,12 @@ const PropertyDetail = (props: IPropertyDetail) => {
   }, [parcel]);
 
   const classification = useClassificationStyle();
-  const [map, setMap] = useState<Map>(null);
+  const map = useRef<Map>();
   useEffect(() => {
     if (building) {
-      map?.setView([building.Location.y, building.Location.x], 17);
+      map.current?.setView([building.Location.y, building.Location.x], 17);
     } else if (parcel) {
-      map?.setView([parcel.Location.y, parcel.Location.x], 17);
+      map.current?.setView([parcel.Location.y, parcel.Location.x], 17);
     }
   }, [building, parcel, map]);
 
@@ -125,9 +143,13 @@ const PropertyDetail = (props: IPropertyDetail) => {
 
   const netBookValues = useMemo(() => {
     if (parcelId && parcel) {
-      return parcel.Fiscals.map((v) => v).sort((a, b) => b.FiscalYear - a.FiscalYear);
+      return parcel.Fiscals.map((v) => v)
+        .sort((a, b) => b.FiscalYear - a.FiscalYear)
+        .slice(0, 2);
     } else if (buildingId && building) {
-      return building.Fiscals.map((v) => v).sort((a, b) => b.FiscalYear - a.FiscalYear);
+      return building.Fiscals.map((v) => v)
+        .sort((a, b) => b.FiscalYear - a.FiscalYear)
+        .slice(0, 2);
     } else {
       return [];
     }
@@ -135,8 +157,8 @@ const PropertyDetail = (props: IPropertyDetail) => {
 
   const customFormatter = (key: any, val: any) => {
     switch (key) {
-      case 'Agency':
-        return <Typography>{val.Name}</Typography>;
+      case 'PID':
+        return <Typography>{pidFormatter(val)}</Typography>;
       case 'Classification':
         return !val || propertyLoading ? (
           <Skeleton />
@@ -148,7 +170,6 @@ const PropertyDetail = (props: IPropertyDetail) => {
           />
         );
       case 'IsSensitive':
-      case 'Owned':
         return val ? <Typography>Yes</Typography> : <Typography>No</Typography>;
       case 'TotalArea':
       case 'UsableArea':
@@ -158,8 +179,12 @@ const PropertyDetail = (props: IPropertyDetail) => {
             <MetresSquared />
           </>
         );
-      case 'LandArea':
+      case 'LotSize':
         return <Typography>{`${val} Hectares`}</Typography>;
+      case 'Tenancy':
+        return (
+          <Typography>{`${val}${/^(0|[1-9]\d*)?(\.\d+)?(?<=\d)$/.test(val) ? ' %' : ''}`}</Typography>
+        );
       default:
         return <Typography>{val}</Typography>;
     }
@@ -173,6 +198,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
       PID: data?.PID ? zeroPadPID(data.PID) : undefined,
       PIN: data?.PIN,
       PostalCode: data?.Postal,
+      Agency: data?.Agency?.Name,
       AdministrativeArea: data?.AdministrativeArea?.Name,
       Address: data?.Address1,
       IsSensitive: data?.IsSensitive,
@@ -180,11 +206,14 @@ const PropertyDetail = (props: IPropertyDetail) => {
     };
     if (buildingOrParcel === 'Building') {
       info.Name = (data as Building)?.Name;
+      info.MainUsage = (data as Building)?.BuildingPredominateUse?.Name || '';
+      info.ConstructionType = (data as Building)?.BuildingConstructionType?.Name || '';
       info.TotalArea = (data as Building)?.TotalArea;
       info.UsableArea = (data as Building)?.RentableArea;
+      info.Tenancy = (data as Building)?.BuildingTenancy;
+      info.TenancyDate = dateFormatter((data as Building)?.BuildingTenancyUpdatedOn);
     } else {
-      info.LandArea = (data as Parcel)?.LandArea;
-      info.Owned = !(data as Parcel)?.NotOwned;
+      info.LotSize = (data as Parcel)?.LandArea;
     }
     return info;
   }, [parcel, building]);
@@ -194,54 +223,69 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const [openNetBookDialog, setOpenNetBookDialog] = useState(false);
   const [openAssessedValueDialog, setOpenAssessedValueDialog] = useState(false);
 
+  const sideBarItems = [
+    { title: `${buildingOrParcel} Information` },
+    { title: `${buildingOrParcel} Net Book Value` },
+    { title: 'Assessed Value' },
+  ];
+
+  if (buildingOrParcel === 'Parcel') sideBarItems.splice(1, 0, { title: 'LTSA Information' });
+
   return (
-    <CollapsibleSidebar
-      items={[
-        { title: `${buildingOrParcel} information` },
-        { title: `${buildingOrParcel} net book value` },
-        { title: 'Assessed value' },
-      ]}
-    >
+    <CollapsibleSidebar items={sideBarItems}>
       <Box
         display={'flex'}
         gap={'1rem'}
         mt={'2rem'}
         mb={'2rem'}
         flexDirection={'column'}
-        width={'46rem'}
+        width={'60rem'}
         marginX={'auto'}
       >
         <DetailViewNavigation
           navigateBackTitle={'Back to Property Overview'}
+          disableDelete={isAuditor}
           deleteTitle={`Delete ${buildingOrParcel}`}
           onDeleteClick={() => setOpenDeleteDialog(true)}
           onBackClick={() => props.onClose()}
         />
         <DataCard
           loading={propertyLoading}
-          id={`${buildingOrParcel} information`}
+          id={`${buildingOrParcel} Information`}
           customFormatter={customFormatter}
           values={mainInformation}
-          title={`${buildingOrParcel} information`}
+          title={`${buildingOrParcel} Information`}
           onEdit={() => setOpenInformationDialog(true)}
+          disableEdit={isAuditor}
         />
+        {buildingOrParcel === 'Parcel' && (
+          <DataCard
+            loading={propertyLoading}
+            id={'LTSA Information'}
+            values={undefined}
+            title={'LTSA Information'}
+            disableEdit={true}
+            onEdit={undefined}
+          >
+            <TitleOwnership pid={parcel?.PID ? zeroPadPID(Number(parcel?.PID)) : null} /> <></>
+          </DataCard>
+        )}
         <DataCard
-          loading={propertyLoading}
-          id={`${buildingOrParcel} net book value`}
+          id={`${buildingOrParcel} Net Book Value`}
           values={undefined}
-          title={`${buildingOrParcel} net book value`}
-          disableEdit={!netBookValues?.length}
+          title={`${buildingOrParcel} Net Book Value`}
           onEdit={() => setOpenNetBookDialog(true)}
+          disableEdit={isAuditor}
         >
           <PropertyNetValueTable rows={netBookValues} />
         </DataCard>
         <DataCard
           loading={propertyLoading}
-          id={'Assessed value'}
+          id={'Assessed Value'}
           values={undefined}
-          title={'Assessed value'}
-          disableEdit={!assessedValues?.length}
+          title={'Assessed Value'}
           onEdit={() => setOpenAssessedValueDialog(true)}
+          disableEdit={isAuditor}
         >
           <PropertyAssessedValueTable
             rows={assessedValues}
@@ -251,10 +295,12 @@ const PropertyDetail = (props: IPropertyDetail) => {
         </DataCard>
         <ParcelMap
           height={'500px'}
-          mapRef={setMap}
+          mapRef={map}
           movable={false}
           zoomable={false}
+          zoomOnScroll={false}
           popupSize="small"
+          hideControls
         >
           <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height={'100%'}>
             <Room
@@ -288,7 +334,14 @@ const PropertyDetail = (props: IPropertyDetail) => {
         )}
       </>
       <PropertyAssessedValueEditDialog
-        initialRelatedBuildings={relatedBuildings}
+        initialRelatedBuildings={
+          !relatedBuildings
+            ? []
+            : relatedBuildings?.map((a) => ({
+                ...a,
+                Evaluations: a.Evaluations.sort((a, b) => b.Year - a.Year),
+              }))
+        }
         propertyType={buildingOrParcel}
         initialValues={buildingOrParcel === 'Building' ? building : parcel}
         open={openAssessedValueDialog}
@@ -312,7 +365,8 @@ const PropertyDetail = (props: IPropertyDetail) => {
         open={openDeleteDialog}
         title={'Delete property'}
         message={'Are you sure you want to delete this property?'}
-        onDelete={async () => {}} //Purposefully omitted for now.
+        confirmButtonProps={{ loading: deletingProperty }}
+        onDelete={async () => deleteProperty().then(() => navigate('/properties'))}
         onClose={async () => setOpenDeleteDialog(false)}
       />
     </CollapsibleSidebar>

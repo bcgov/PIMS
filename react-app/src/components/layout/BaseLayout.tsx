@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import { Box, Toolbar } from '@mui/material';
+import { Box } from '@mui/material';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
@@ -17,8 +17,7 @@ const BaseLayout = (props: IBaseLayoutProps) => {
       }}
     >
       <Header />
-      <Toolbar />
-      <Box component="main" flex="1 1 auto">
+      <Box component="main" flex="1 1 auto" height={'100%'} overflow={'scroll'}>
         {props.children}
       </Box>
       {props.displayFooter && <Footer />}

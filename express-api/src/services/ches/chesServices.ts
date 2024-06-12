@@ -127,7 +127,7 @@ export interface IEmailSentResponse {
   txId: string;
 }
 
-const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentResponse> => {
+const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentResponse | null> => {
   const cfg = config();
   if (email == null) {
     throw new ErrorWithCode('Null argument for email.', 400);
@@ -144,11 +144,6 @@ const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentR
       ...(cfg.ches.usersToBcc?.split(';').map((email) => email.trim()) ?? []),
     ];
   }
-  if (cfg.ches.overrideTo) {
-    email.to = cfg.ches.overrideTo
-      ? cfg.ches.overrideTo?.split(';').map((email) => email.trim()) ?? []
-      : [user.email];
-  }
   if (cfg.ches.secondsToDelay) {
     const numSeconds = parseInt(cfg.ches.secondsToDelay);
     if (!isNaN(numSeconds)) {
@@ -158,12 +153,19 @@ const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentR
       email.delayTS += Number(cfg.ches.secondsToDelay);
     }
   }
-  email.to = email.to.filter((a) => !!a);
+  email.to = cfg.ches.overrideTo
+    ? cfg.ches.overrideTo
+        .split(';')
+        .map((email) => email.trim())
+        .filter((email) => !!email)
+    : email.to?.filter((a) => !!a);
   email.cc = cfg.ches.overrideTo ? [] : email.cc?.filter((a) => !!a);
   email.bcc = cfg.ches.overrideTo ? [] : email.bcc?.filter((a) => !!a);
 
   if (cfg.ches.emailEnabled) {
     return sendAsync('/email', 'POST', email);
+  } else {
+    return null;
   }
 };
 

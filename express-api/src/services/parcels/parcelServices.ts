@@ -3,6 +3,11 @@ import { AppDataSource } from '@/appDataSource';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { ParcelFilter } from '@/services/parcels/parcelSchema';
 import { DeepPartial, FindOptionsOrder, In } from 'typeorm';
+import { ParcelEvaluation } from '@/typeorm/Entities/ParcelEvaluation';
+import { ParcelFiscal } from '@/typeorm/Entities/ParcelFiscal';
+import userServices from '../users/usersServices';
+import logger from '@/utilities/winstonLogger';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 
 const parcelRepo = AppDataSource.getRepository(Parcel);
 
@@ -35,13 +40,54 @@ const addParcel = async (parcel: DeepPartial<Parcel>) => {
  * @returns object with data on number of rows affected.
  * @throws ErrorWithCode if no parcels have the ID sent in
  */
-const deleteParcelById = async (parcelId: number) => {
+const deleteParcelById = async (parcelId: number, username: string) => {
   const existingParcel = await getParcelById(parcelId);
   if (!existingParcel) {
     throw new ErrorWithCode('Parcel PID was not found.', 404);
   }
-  const removeParcel = await parcelRepo.delete(existingParcel.Id);
-  return removeParcel;
+  const linkedProjects = await AppDataSource.getRepository(ProjectProperty).find({
+    where: { ParcelId: parcelId },
+  });
+  if (linkedProjects.length) {
+    throw new ErrorWithCode(
+      `Parcel is involved in one or more projects with ID(s) ${linkedProjects.map((proj) => proj.ProjectId).join(', ')}`,
+      403,
+    );
+  }
+  const user = await userServices.getUser(username);
+  const queryRunner = await AppDataSource.createQueryRunner();
+  await queryRunner.startTransaction();
+  try {
+    const removeParcel = await queryRunner.manager.update(Parcel, existingParcel.Id, {
+      DeletedById: user.Id,
+      DeletedOn: new Date(),
+    });
+    await queryRunner.manager.update(
+      ParcelEvaluation,
+      { ParcelId: existingParcel.Id },
+      {
+        DeletedById: user.Id,
+        DeletedOn: new Date(),
+      },
+    );
+    await queryRunner.manager.update(
+      ParcelFiscal,
+      { ParcelId: existingParcel.Id },
+      {
+        DeletedById: user.Id,
+        DeletedOn: new Date(),
+      },
+    );
+    await queryRunner.commitTransaction();
+    return removeParcel;
+  } catch (e) {
+    await queryRunner.rollbackTransaction();
+    logger.warn(e.message);
+    if (e instanceof ErrorWithCode) throw e;
+    throw new ErrorWithCode(`Error updating project: ${e.message}`, 500);
+  } finally {
+    await queryRunner.release();
+  }
 };
 
 /**
@@ -175,6 +221,44 @@ const updateParcel = async (incomingParcel: DeepPartial<Parcel>) => {
   if (findParcel == null || findParcel.Id !== incomingParcel.Id) {
     throw new ErrorWithCode('Parcel not found', 404);
   }
+  if (incomingParcel.Fiscals && incomingParcel.Fiscals.length) {
+    incomingParcel.Fiscals = await Promise.all(
+      incomingParcel.Fiscals.map(async (fiscal) => {
+        const exists = await AppDataSource.getRepository(ParcelFiscal).findOne({
+          where: {
+            ParcelId: incomingParcel.Id,
+            FiscalYear: fiscal.FiscalYear,
+            FiscalKeyId: fiscal.FiscalKeyId,
+          },
+        });
+        const fiscalEntity: DeepPartial<ParcelFiscal> = {
+          ...fiscal,
+          CreatedById: exists ? exists.CreatedById : incomingParcel.UpdatedById,
+          UpdatedById: exists ? incomingParcel.UpdatedById : undefined,
+        };
+        return fiscalEntity;
+      }),
+    );
+  }
+  if (incomingParcel.Evaluations && incomingParcel.Evaluations.length) {
+    incomingParcel.Evaluations = await Promise.all(
+      incomingParcel.Evaluations.map(async (evaluation) => {
+        const exists = await AppDataSource.getRepository(ParcelEvaluation).findOne({
+          where: {
+            ParcelId: incomingParcel.Id,
+            Year: evaluation.Year,
+            EvaluationKeyId: evaluation.EvaluationKeyId,
+          },
+        });
+        const fiscalEntity: DeepPartial<ParcelFiscal> = {
+          ...evaluation,
+          CreatedById: exists ? exists.CreatedById : incomingParcel.UpdatedById,
+          UpdatedById: exists ? incomingParcel.UpdatedById : undefined,
+        };
+        return fiscalEntity;
+      }),
+    );
+  }
 
   return parcelRepo.save(incomingParcel);
 };
@@ -196,7 +280,13 @@ const getParcelByPid = async (parcelPid: number) => {
  * @returns     findParcel Parcel data matching ID passed in.
  */
 const getParcelById = async (parcelId: number) => {
-  return parcelRepo.findOne({
+  const evaluations = await AppDataSource.getRepository(ParcelEvaluation).find({
+    where: { ParcelId: parcelId, EvaluationKeyId: 0 },
+  });
+  const fiscals = await AppDataSource.getRepository(ParcelFiscal).find({
+    where: { ParcelId: parcelId },
+  });
+  const parcel = await parcelRepo.findOne({
     relations: {
       ParentParcel: true,
       Agency: {
@@ -207,11 +297,18 @@ const getParcelById = async (parcelId: number) => {
       },
       Classification: true,
       PropertyType: true,
-      Evaluations: true,
-      Fiscals: true,
     },
     where: { Id: parcelId },
   });
+  if (parcel) {
+    return {
+      ...parcel,
+      Evaluations: evaluations,
+      Fiscals: fiscals,
+    };
+  } else {
+    return null;
+  }
 };
 
 const parcelServices = {

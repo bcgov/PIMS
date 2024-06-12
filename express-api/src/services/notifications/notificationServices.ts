@@ -16,8 +16,9 @@ import chesServices, {
 } from '../ches/chesServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
+import logger from '@/utilities/winstonLogger';
 
-interface AccessRequestData {
+export interface AccessRequestData {
   FirstName: string;
   LastName: string;
 }
@@ -93,6 +94,8 @@ const generateAccessRequestNotification = async (
     Subject: template.Subject,
     BodyType: template.BodyType,
     To: to ?? template.To,
+    Cc: template.Cc,
+    Bcc: template.Bcc,
     Body: body,
     TemplateId: template.Id,
     CreatedById: systemUser.Id,
@@ -133,7 +136,10 @@ const insertProjectNotificationQueue = async (
     ProjectId: project.Id,
     ToAgencyId: agency?.Id,
   };
-
+  if (queryRunner === undefined) {
+    //If no arg passed we spawned a new query runner and we must release that!
+    await query.release();
+  }
   const insertedNotif = await query.manager.save(NotificationQueue, queueObject);
   return insertedNotif;
 };
@@ -207,7 +213,14 @@ const generateProjectNotifications = async (
         .getMany();
       agencies.forEach((agc) =>
         returnNotifications.push(
-          insertProjectNotificationQueue(template, projStatusNotif, project, agc),
+          insertProjectNotificationQueue(
+            template,
+            projStatusNotif,
+            project,
+            agc,
+            undefined,
+            queryRunner,
+          ),
         ),
       );
     } else if (template.Audience == NotificationAudience.ParentAgencies) {
@@ -234,7 +247,14 @@ const generateProjectNotifications = async (
         .getMany();
       agencies.forEach((agc) =>
         returnNotifications.push(
-          insertProjectNotificationQueue(template, projStatusNotif, project, agc),
+          insertProjectNotificationQueue(
+            template,
+            projStatusNotif,
+            project,
+            agc,
+            undefined,
+            queryRunner,
+          ),
         ),
       );
     } else if (template.Audience == NotificationAudience.WatchingAgencies) {
@@ -256,7 +276,14 @@ const generateProjectNotifications = async (
         .getMany();
       agencies.forEach((agc) =>
         returnNotifications.push(
-          insertProjectNotificationQueue(template, projStatusNotif, project, agc),
+          insertProjectNotificationQueue(
+            template,
+            projStatusNotif,
+            project,
+            agc,
+            undefined,
+            queryRunner,
+          ),
         ),
       );
     } else if (template.Audience == NotificationAudience.Default) {
@@ -272,6 +299,9 @@ const generateProjectNotifications = async (
       );
     }
   }
+  if (queryRunner === undefined) {
+    await query.release();
+  }
   return await Promise.all(returnNotifications);
 };
 
@@ -281,11 +311,12 @@ const sendNotification = async (
   queryRunner?: QueryRunner,
 ) => {
   const query = queryRunner ?? AppDataSource.createQueryRunner();
+  let retNotif: NotificationQueue = null;
   try {
     const email: IEmail = {
-      to: notification.To.split(';').map((a) => a.trim()),
-      cc: notification.Cc.split(';').map((a) => a.trim()),
-      bcc: notification.Bcc.split(';').map((a) => a.trim()),
+      to: notification.To?.split(';').map((a) => a.trim()) ?? [],
+      cc: notification.Cc?.split(';').map((a) => a.trim()) ?? [],
+      bcc: notification.Bcc?.split(';').map((a) => a.trim()) ?? [],
       bodyType: EmailBody[notification.BodyType as keyof typeof EmailBody],
       subject: notification.Subject,
       body: notification.Body,
@@ -295,17 +326,31 @@ const sendNotification = async (
       delayTS: notification.SendOn.getTime(),
     };
     const response = await chesServices.sendEmailAsync(email, user);
-    return query.manager.save(NotificationQueue, {
-      ...notification,
-      ChesTransactionId: response.txId as UUID,
-      ChesMessageId: response.messages[0].msgId as UUID,
-    });
+    if (response) {
+      // Note: Email may be intentionally disabled, thus yielding null response.
+      retNotif = await query.manager.save(NotificationQueue, {
+        ...notification,
+        ChesTransactionId: response.txId as UUID,
+        ChesMessageId: response.messages[0].msgId as UUID,
+      });
+    } else {
+      retNotif = await query.manager.save(NotificationQueue, {
+        ...notification,
+        Status: NotificationStatus.Failed,
+      });
+    }
   } catch (e) {
-    return query.manager.save(NotificationQueue, {
+    logger.error(e.message);
+    retNotif = await query.manager.save(NotificationQueue, {
       ...notification,
       Status: NotificationStatus.Failed,
     });
+  } finally {
+    if (queryRunner === undefined) {
+      await query.release();
+    }
   }
+  return retNotif;
 };
 
 const notificationServices = {

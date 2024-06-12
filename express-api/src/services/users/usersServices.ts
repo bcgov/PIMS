@@ -55,11 +55,6 @@ const normalizeKeycloakUser = (kcUser: SSOUser): NormalizedKeycloakUser => {
   }
 };
 
-// const getUserFromKeycloak = async (kcUser: KeycloakUser) => {
-//   const normalized = normalizeKeycloakUser(kcUser);
-//   return getUser(normalized.guid ?? normalized.username);
-// };
-
 const activateUser = async (ssoUser: SSOUser) => {
   const normalizedUser = normalizeKeycloakUser(ssoUser);
   const internalUser = await getUser(ssoUser.preferred_username);
@@ -264,6 +259,7 @@ const addUser = async (user: User) => {
 };
 
 const updateUser = async (user: DeepPartial<User>) => {
+  const roleName = user.Role?.Name;
   const resource = await AppDataSource.getRepository(User).findOne({ where: { Id: user.Id } });
   if (!resource) {
     throw new ErrorWithCode('Resource does not exist.', 404);
@@ -272,6 +268,9 @@ const updateUser = async (user: DeepPartial<User>) => {
     ...user,
     DisplayName: `${user.LastName}, ${user.FirstName}`,
   });
+  if (roleName) {
+    await KeycloakService.updateKeycloakUserRoles(resource.Username, [roleName]);
+  }
   return retUser.generatedMaps[0];
 };
 

@@ -20,10 +20,10 @@ export class Agency extends BaseEntity {
   @Column({ type: 'character varying', length: 150 })
   Name: string;
 
-  @Column({ type: 'boolean' })
+  @Column({ type: 'boolean', default: false })
   IsDisabled: boolean;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 0 })
   SortOrder: number;
 
   @Column({ type: 'character varying', length: 6 })

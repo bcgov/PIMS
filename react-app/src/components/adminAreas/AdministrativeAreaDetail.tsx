@@ -6,7 +6,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import DataCard from '../display/DataCard';
 import { AdministrativeArea } from '@/hooks/api/useAdministrativeAreaApi';
-import DeleteDialog from '../dialog/DeleteDialog';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import { FormProvider, useForm } from 'react-hook-form';
 import TextFormField from '../form/TextFormField';
@@ -29,7 +28,6 @@ const AdministrativeAreaDetail = () => {
   useEffect(() => {
     refreshData();
   }, [id]);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const customFormatter = (key: keyof AdministrativeArea, val: any) => {
     if (key === 'IsDisabled') {
@@ -41,7 +39,6 @@ const AdministrativeAreaDetail = () => {
     Name: data?.Name,
     IsDisabled: data?.IsDisabled,
     CreatedOn: data?.CreatedOn,
-    SortOrder: data?.SortOrder,
     RegionalDistrict: data?.RegionalDistrict?.Name,
   };
 
@@ -49,7 +46,6 @@ const AdministrativeAreaDetail = () => {
     defaultValues: {
       Name: '',
       IsDisabled: null,
-      SortOrder: '',
       RegionalDistrictId: null,
     },
   });
@@ -58,7 +54,6 @@ const AdministrativeAreaDetail = () => {
     formMethods.reset({
       Name: data?.Name,
       IsDisabled: data?.IsDisabled,
-      SortOrder: String(data?.SortOrder),
       RegionalDistrictId: data?.RegionalDistrictId,
     });
   }, [data]);
@@ -72,20 +67,20 @@ const AdministrativeAreaDetail = () => {
       marginX={'auto'}
     >
       <DetailViewNavigation
-        navigateBackTitle="Back to Administrative Areas"
+        navigateBackTitle="Back to Administrative Area Overview"
         deleteTitle="Delete Area"
-        onDeleteClick={() => setOpenDeleteDialog(true)}
         onBackClick={() => navigate('/admin/adminAreas')}
+        disableDelete={true}
       />
       <DataCard
         loading={isLoading}
         customFormatter={customFormatter}
         values={adminAreaData}
-        title={'Administrative area'}
+        title={'Administrative Area Details'}
         onEdit={() => setOpenEditDialog(true)}
       />
       <ConfirmDialog
-        title={'Update administrative area'}
+        title={'Update Administrative Area'}
         open={openEditDialog}
         confirmButtonProps={{
           loading: submitting,
@@ -98,7 +93,6 @@ const AdministrativeAreaDetail = () => {
             submit(idAsNumber, {
               ...formValues,
               Id: idAsNumber,
-              SortOrder: Number(formValues.SortOrder),
             }).then(() => {
               refreshData();
               setOpenEditDialog(false);
@@ -111,10 +105,6 @@ const AdministrativeAreaDetail = () => {
           <Grid spacing={2} container>
             <Grid mt={2} item xs={12}>
               <TextFormField required fullWidth name={'Name'} label={'Name'} />
-            </Grid>
-
-            <Grid item xs={12}>
-              <TextFormField required numeric fullWidth name={'SortOrder'} label={'Sort Order'} />
             </Grid>
             <Grid item xs={12}>
               <AutocompleteFormField
@@ -132,15 +122,6 @@ const AdministrativeAreaDetail = () => {
           </Grid>
         </FormProvider>
       </ConfirmDialog>
-      <DeleteDialog
-        open={openDeleteDialog}
-        title={'Delete administrative area'}
-        message={
-          'Are you sure you want to delete the administrative area? This operation may fail if properties already depend on it.'
-        }
-        onDelete={async () => {}}
-        onClose={async () => setOpenDeleteDialog(false)}
-      />
     </Box>
   );
 };
