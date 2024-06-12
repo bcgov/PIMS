@@ -115,7 +115,6 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
   // Zoom towards cluster enough to break into small clusters
   const zoomOnCluster = useCallback(
     (cluster: PropertyGeo & ClusterGeo) => {
-      console.log('click');
       if (!supercluster || !cluster) {
         return;
       }
@@ -207,7 +206,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
               icon={makeClusterIcon(property.properties.point_count)}
               eventHandlers={{
                 click: () => zoomOnCluster(property),
-                mouseover: (e) => openClusterPopup(property, e.containerPoint),
+                mousemove: (e) => openClusterPopup(property, e.containerPoint),
               }}
             />
           );
@@ -229,7 +228,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
                     },
                   );
                 },
-                mouseover: (e) => openClusterPopup(property, e.containerPoint),
+                mousemove: (e) => openClusterPopup(property, e.containerPoint),
               }}
             />
           );
