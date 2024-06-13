@@ -96,85 +96,65 @@ const MapLayers = () => (
       <TileLayer url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" />
     </LayersControl.BaseLayer>
 
-    <LayersControl.Overlay name="Administrative Boundaries">
-      <div style={{ marginLeft: '10px' }}>
-        {LAYER_CONFIGS.administrativeBoundaries.map(({ name, url, layers }) => (
-          <LayersControl.Overlay key={name} name={name}>
-            <WMSTileLayer
-              url={url}
-              format="image/png"
-              transparent={true}
-              layers={layers}
-              opacity={0.5}
-            />
-          </LayersControl.Overlay>
-        ))}
-      </div>
-    </LayersControl.Overlay>
+    {LAYER_CONFIGS.administrativeBoundaries.map(({ name, url, layers }) => (
+      <LayersControl.Overlay key={name} name={name}>
+        <WMSTileLayer
+          url={url}
+          format="image/png"
+          transparent={true}
+          layers={layers}
+          opacity={0.5}
+        />
+      </LayersControl.Overlay>
+    ))}
 
-    <LayersControl.Overlay name="First Nations">
-      <div style={{ marginLeft: '10px' }}>
-        {LAYER_CONFIGS.firstNations.map(({ name, url, layers }) => (
-          <LayersControl.Overlay key={name} name={name}>
-            <WMSTileLayer
-              url={url}
-              format="image/png"
-              transparent={true}
-              layers={layers}
-              opacity={0.5}
-            />
-          </LayersControl.Overlay>
-        ))}
-      </div>
-    </LayersControl.Overlay>
+    {LAYER_CONFIGS.firstNations.map(({ name, url, layers }) => (
+      <LayersControl.Overlay key={name} name={name}>
+        <WMSTileLayer
+          url={url}
+          format="image/png"
+          transparent={true}
+          layers={layers}
+          opacity={0.5}
+        />
+      </LayersControl.Overlay>
+    ))}
 
-    <LayersControl.Overlay name="Land Ownership">
-      <div style={{ marginLeft: '10px' }}>
-        {LAYER_CONFIGS.landOwnership.map(({ name, url, layers }) => (
-          <LayersControl.Overlay key={name} name={name} checked={name === 'Parcel Boundaries'}>
-            <WMSTileLayer
-              url={url}
-              format="image/png"
-              transparent={true}
-              layers={layers}
-              opacity={0.5}
-            />
-          </LayersControl.Overlay>
-        ))}
-      </div>
-    </LayersControl.Overlay>
+    {LAYER_CONFIGS.landOwnership.map(({ name, url, layers }) => (
+      <LayersControl.Overlay key={name} name={name} checked={name === 'Parcel Boundaries'}>
+        <WMSTileLayer
+          url={url}
+          format="image/png"
+          transparent={true}
+          layers={layers}
+          opacity={0.5}
+        />
+      </LayersControl.Overlay>
+    ))}
 
-    <LayersControl.Overlay name="Zoning">
-      <div style={{ marginLeft: '10px' }}>
-        {LAYER_CONFIGS.zoning.map(({ name, url, layers }) => (
-          <LayersControl.Overlay key={name} name={name}>
-            <WMSTileLayer
-              url={url}
-              format="image/png"
-              transparent={true}
-              layers={layers}
-              opacity={0.5}
-            />
-          </LayersControl.Overlay>
-        ))}
-      </div>
-    </LayersControl.Overlay>
+    {LAYER_CONFIGS.zoning.map(({ name, url, layers }) => (
+      <LayersControl.Overlay key={name} name={name}>
+        <WMSTileLayer
+          url={url}
+          format="image/png"
+          transparent={true}
+          layers={layers}
+          opacity={0.5}
+        />
+      </LayersControl.Overlay>
+    ))}
 
-    <LayersControl.Overlay name="Disturbances">
-      <div style={{ marginLeft: '10px' }}>
-        {LAYER_CONFIGS.disturbances.map(({ name, url, layers }) => (
-          <LayersControl.Overlay key={name} name={name}>
-            <WMSTileLayer
-              url={url}
-              format="image/png"
-              transparent={true}
-              layers={layers}
-              opacity={0.5}
-            />
-          </LayersControl.Overlay>
-        ))}
-      </div>
-    </LayersControl.Overlay>
+    {LAYER_CONFIGS.disturbances.map(({ name, url, layers }) => (
+      <LayersControl.Overlay key={name} name={name}>
+        <WMSTileLayer
+          url={url}
+          format="image/png"
+          transparent={true}
+          layers={layers}
+          opacity={0.5}
+        />
+      </LayersControl.Overlay>
+    ))}
   </LayersControl>
 );
 
