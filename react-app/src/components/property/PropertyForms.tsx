@@ -21,9 +21,9 @@ import usePimsApi from '@/hooks/usePimsApi';
 import { centroid } from '@turf/turf';
 import ParcelMap from '../map/ParcelMap';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
-import { FeatureCollection } from 'geojson';
 import { arrayUniqueBy } from '@/utilities/helperFunctions';
 import MetresSquared from '@/components/text/MetresSquared';
+import { FeatureCollection } from '@/hooks/api/useParcelLayerApi';
 export type PropertyType = 'Building' | 'Parcel';
 
 interface IParcelInformationForm {
