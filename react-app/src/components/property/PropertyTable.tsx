@@ -196,6 +196,7 @@ const PropertyTable = (props: IPropertyTable) => {
       flex: 1,
       maxWidth: 125,
       valueFormatter: (value) => dateFormatter(value),
+      type: 'date',
     },
   ];
 
