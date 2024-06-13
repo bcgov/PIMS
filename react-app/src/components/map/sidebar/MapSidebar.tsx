@@ -61,11 +61,14 @@ const MapSidebar = (props: MapSidebarProps) => {
     if (map.current) {
       map.current.addEventListener('zoomend', definePropertiesInBounds);
       map.current.addEventListener('moveend', definePropertiesInBounds);
-      return () => {
+    }
+
+    return () => {
+      if (map.current) {
         map.current.removeEventListener('zoomend', definePropertiesInBounds);
         map.current.removeEventListener('moveend', definePropertiesInBounds);
-      };
-    }
+      }
+    };
   });
 
   return (
