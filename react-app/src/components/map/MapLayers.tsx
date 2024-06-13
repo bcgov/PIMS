@@ -1,7 +1,5 @@
 import React from 'react';
 import { LayersControl, TileLayer, WMSTileLayer } from 'react-leaflet';
-// import { Accordion, AccordionSummary, AccordionDetails, Typography, Box } from '@mui/material';
-// import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 // Define URLs and layers
 const LAYER_CONFIGS = {
@@ -179,45 +177,5 @@ const MapLayers = () => (
     </LayersControl.Overlay>
   </LayersControl>
 );
-
-/**Using Accordion for layer tree structure**/
-// const administrativeBoundaries = LAYER_CONFIGS.administrativeBoundaries;
-
-/* const MapLayers = () => {
-  return (
-    <>
-      <LayersControl position="topright">
-        <LayersControl.BaseLayer checked name="Street Map">
-          <TileLayer url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        </LayersControl.BaseLayer>
-
-        <LayersControl.Overlay name="Administrative Boundaries">
-          <Box className="layer-accordion">
-            <Accordion defaultExpanded={true}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="h6">Administrative Boundaries</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Box ml={2}>
-                  {administrativeBoundaries.map(({ name, url, layers }) => (
-                    <LayersControl.Overlay key={name} name={name}>
-                      <WMSTileLayer
-                        url={url}
-                        format="image/png"
-                        transparent={true}
-                        layers={layers}
-                        opacity={0.5}
-                      />
-                    </LayersControl.Overlay>
-                  ))}
-                </Box>
-              </AccordionDetails>
-            </Accordion>
-          </Box>
-        </LayersControl.Overlay>
-      </LayersControl>
-    </>
-  );
-}; */
 
 export default MapLayers;
