@@ -58,6 +58,7 @@ export class MoveMetadataToTables1717629146741 implements MigrationInterface {
       { Name: 'GainBeforeSPL', IsOptional: true, StatusId: result.Id, CreatedById: systemId },
       { Name: 'InterestComponent', IsOptional: true, StatusId: result.Id, CreatedById: systemId },
       { Name: 'NetProceeds', IsOptional: true, StatusId: result.Id, CreatedById: systemId },
+      { Name: 'OCGGainLoss', IsOptional: true, StatusId: result.Id, CreatedById: systemId },
       {
         Name: 'OCGFinancialStatement',
         IsOptional: true,
@@ -148,6 +149,7 @@ export class MoveMetadataToTables1717629146741 implements MigrationInterface {
         'GainBeforeSPL',
         'InterestComponent',
         'NetProceeds',
+        'OCGGainLoss',
         'OCGFinancialStatement',
         'OfferAmount',
         'ProgramCost',
