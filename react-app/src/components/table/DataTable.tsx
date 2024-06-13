@@ -505,6 +505,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
               updateSearchValue(e);
               setTableModel({
                 ...tableModel,
+                pagination: { page: 0, pageSize: tableModel.pagination.pageSize },
                 quickFilter: e.split(' ').filter((word) => word !== ''),
               });
             }}
@@ -550,16 +551,17 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         </Box>
       </Box>
       <CustomDataGrid
-        onStateChange={(e) => {
-          // Keep track of row count separately
-          setRowCount(Object.values(e.filter.filteredRowsLookup).filter((value) => value).length);
-        }}
+        // onStateChange={(e) => {
+        //   // Keep track of row count separately
+        //   setRowCount(Object.values(e.filter.filteredRowsLookup).filter((value) => value).length);
+        // }}
         onFilterModelChange={(e) => {
           // Can only filter by 1 at a time without DataGrid Pro
           if (e.items.length > 0) {
             const item = e.items.at(0);
             setTableModel({
               ...tableModel,
+              pagination: { page: 0, pageSize: getQuery().pageSize },
               filter: e,
             });
             setQuery({ columnFilterName: item.field, columnFilterValue: item.value });

@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useEffect, useState } from 'react';
+import React, { MutableRefObject } from 'react';
 import {
   GridColDef,
   gridFilteredSortedRowEntriesSelector,
@@ -7,7 +7,6 @@ import {
 } from '@mui/x-data-grid';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import usePimsApi from '@/hooks/usePimsApi';
-import useDataLoader from '@/hooks/useDataLoader';
 import { dateFormatter } from '@/utilities/formatters';
 import { Check } from '@mui/icons-material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
@@ -106,7 +105,6 @@ const AdministrativeAreasTable = () => {
 
   return (
     <FilterSearchDataGrid
-      nestedFieldKeyMap={{ RegionalDistrict: 'Name' }}
       dataSource={api.administrativeAreas.getAdministrativeAreas}
       name="adminAreas"
       onRowClick={(params) => navigate(`${params.row.Id}`)}

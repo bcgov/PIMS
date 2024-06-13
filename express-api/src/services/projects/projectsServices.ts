@@ -19,6 +19,7 @@ import {
   DeepPartial,
   FindManyOptions,
   FindOptionsOrder,
+  FindOptionsOrderValue,
   In,
   InsertResult,
   QueryRunner,
@@ -29,6 +30,7 @@ import { ProjectRisk } from '@/constants/projectRisk';
 import notificationServices from '../notifications/notificationServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import userServices from '../users/usersServices';
+import { constructFindOptionFromQuery } from '@/utilities/helperFunctions';
 
 const projectRepo = AppDataSource.getRepository(Project);
 
@@ -680,6 +682,33 @@ const deleteProjectById = async (id: number, username: string) => {
   }
 };
 
+const sortKeyMapping = (
+  sortKey: string,
+  sortDirection: FindOptionsOrderValue,
+): FindOptionsOrder<Project> => {
+  switch (sortKey) {
+    case 'Status':
+      return { Status: { Name: sortDirection } };
+    case 'Agency':
+      return { Agency: { Name: sortDirection } };
+    case 'UpdatedBy':
+      return { UpdatedBy: { LastName: sortDirection } };
+    default:
+      return { [sortKey]: sortDirection };
+  }
+};
+
+const collectFindOptions = (filter: ProjectFilter) => {
+  const options = [];
+  if (filter.name) options.push(constructFindOptionFromQuery('Name', filter.name));
+  if (filter.agency) options.push({ Agency: constructFindOptionFromQuery('Name', filter.agency) });
+  if (filter.status) options.push({ Status: constructFindOptionFromQuery('Name', filter.status) });
+  if (filter.projectNumber) {
+    options.push(constructFindOptionFromQuery('ProjectNumber', filter.projectNumber));
+  }
+  return options;
+};
+
 const getProjects = async (filter: ProjectFilter, includeRelations: boolean = false) => {
   const queryOptions: FindManyOptions<Project> = {
     relations: {
@@ -701,16 +730,10 @@ const getProjects = async (filter: ProjectFilter, includeRelations: boolean = fa
       },
       UpdatedBy: { Id: true, FirstName: true, LastName: true },
     },
-    where: {
-      StatusId: filter.statusId,
-      AgencyId: filter.agencyId
-        ? In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId)
-        : undefined,
-      ProjectNumber: filter.projectNumber,
-    },
+    where: collectFindOptions(filter),
     take: filter.quantity,
     skip: (filter.page ?? 0) * (filter.quantity ?? 0),
-    order: filter.sort as FindOptionsOrder<Project>,
+    order: sortKeyMapping(filter.sortKey, filter.sortOrder as FindOptionsOrderValue),
   };
 
   const projects = await projectRepo.find(queryOptions);
@@ -782,7 +805,7 @@ const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boo
     },
     take: filter.quantity,
     skip: (filter.page ?? 0) * (filter.quantity ?? 0),
-    order: filter.sort as FindOptionsOrder<Project>,
+    order: sortKeyMapping(filter.sortKey, filter.sortOrder as FindOptionsOrderValue),
   };
 
   const projects = await projectRepo.find(queryOptions);
