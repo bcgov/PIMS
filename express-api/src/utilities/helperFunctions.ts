@@ -1,6 +1,6 @@
 import { Equal, FindOptionsWhere, ILike } from 'typeorm';
 
-export const ConstructFindOptionFromQuery = <T>(
+export const constructFindOptionFromQuery = <T>(
   column: keyof T,
   operatorValuePair: string, //format: "operator,value"
 ): FindOptionsWhere<T> => {

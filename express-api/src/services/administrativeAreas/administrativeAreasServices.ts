@@ -1,31 +1,41 @@
 import { AppDataSource } from '@/appDataSource';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 import { AdministrativeAreaFilter } from './administrativeAreaSchema';
-import { DeepPartial } from 'typeorm';
+import { DeepPartial, FindOptionsOrder, FindOptionsOrderValue } from 'typeorm';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
-import { ConstructFindOptionFromQuery } from '@/utilities/helperFunctions';
+import { constructFindOptionFromQuery } from '@/utilities/helperFunctions';
+
+const sortKeyMapping = (
+  sortKey: string,
+  sortDirection: FindOptionsOrderValue,
+): FindOptionsOrder<AdministrativeArea> => {
+  switch (sortKey) {
+    case 'RegionalDistrict':
+      return { RegionalDistrict: { Name: sortDirection } };
+    default:
+      return { [sortKey]: sortDirection };
+  }
+};
+
+const collectFindOptions = (filter: AdministrativeAreaFilter) => {
+  const options = [];
+  if (filter.name) options.push(constructFindOptionFromQuery('Name', filter.name));
+  if (filter.regionalDistrict)
+    options.push({
+      RegionalDistrict: constructFindOptionFromQuery('Name', filter.regionalDistrict),
+    });
+  return options;
+};
 
 const getAdministrativeAreas = (filter: AdministrativeAreaFilter) => {
-  let order = undefined;
-  if (filter.sortRelation) {
-    order = { [filter.sortRelation]: { [filter.sortKey]: filter.sortOrder } };
-  } else {
-    order = { [filter.sortKey]: filter.sortOrder };
-  }
-  const filterOptions = [];
-  if (filter.name) filterOptions.push(ConstructFindOptionFromQuery('Name', filter.name));
-  if (filter.regionalDistrict)
-    filterOptions.push({
-      RegionalDistrict: ConstructFindOptionFromQuery('Name', filter.regionalDistrict),
-    });
   return AppDataSource.getRepository(AdministrativeArea).find({
     relations: {
       RegionalDistrict: true,
     },
-    where: filterOptions,
+    where: collectFindOptions(filter),
     take: filter.quantity,
     skip: (filter.quantity ?? 0) * (filter.page ?? 0),
-    order: order,
+    order: sortKeyMapping(filter.sortKey, filter.sortOrder as FindOptionsOrderValue),
   });
 };
 

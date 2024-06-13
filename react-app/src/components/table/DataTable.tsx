@@ -172,7 +172,6 @@ export const CustomListSubheader = (props: PropsWithChildren) => {
 
 type FilterSearchDataGridProps = {
   dataSource: (filter: CommonFiltering, signal: AbortSignal) => Promise<any[]>;
-  nestedFieldKeyMap: Record<string, string>;
   onPresetFilterChange: (value: string, ref: MutableRefObject<GridApiCommunity>) => void;
   onAddButtonClick?: React.MouseEventHandler<HTMLButtonElement>;
   defaultFilter: string;
@@ -223,10 +222,6 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     let sortObj: { sortKey?: string; sortOrder?: string; sortRelation?: string } = {};
     if (sort?.length) {
       sortObj = { sortKey: sort[0].field, sortOrder: sort[0].sort };
-      if (props.nestedFieldKeyMap[sort[0].field]) {
-        sortObj.sortKey = props.nestedFieldKeyMap[sort[0].field];
-        sortObj.sortRelation = sort[0].field;
-      }
     }
     const filterObj = {};
     if (filter?.items) {
@@ -257,9 +252,6 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
       )
       .then((resolved) => {
         setRows(resolved);
-        tableApiRef.current.setPaginationMeta({
-          hasNextPage: resolved.length === pagination.pageSize,
-        });
       })
       .catch((e) => {
         if (!(e instanceof DOMException)) {
@@ -596,7 +588,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         }}
         paginationMode="server"
         rowCount={-1}
-        paginationMeta={{ hasNextPage: rows.length === (getQuery().pageSize ?? 10) }}
+        paginationMeta={{ hasNextPage: false }}
         onPaginationModelChange={(model) => {
           setTableModel({ ...tableModel, pagination: model });
           setQuery({ page: model.page, pageSize: model.pageSize });
