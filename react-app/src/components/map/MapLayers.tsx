@@ -91,7 +91,7 @@ const LAYER_CONFIGS = {
 };
 
 const MapLayers = () => (
-  <LayersControl position="topright">
+  <LayersControl position="topleft">
     <LayersControl.BaseLayer checked name="Street Map">
       <TileLayer url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" />
     </LayersControl.BaseLayer>
@@ -131,7 +131,7 @@ const MapLayers = () => (
     <LayersControl.Overlay name="Land Ownership">
       <div style={{ marginLeft: '10px' }}>
         {LAYER_CONFIGS.landOwnership.map(({ name, url, layers }) => (
-          <LayersControl.Overlay key={name} name={name}>
+          <LayersControl.Overlay key={name} name={name} checked={name === 'Parcel Boundaries'}>
             <WMSTileLayer
               url={url}
               format="image/png"
