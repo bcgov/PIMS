@@ -328,12 +328,12 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
             Appraised: Appraised,
             Monetaries: [
               {
-                MonetaryTypeId: monetaryTypes.find((a) => a.Name === 'SalesCost')?.Id,
-                Value: ProgramCost,
+                MonetaryTypeId: salesCostType.Id,
+                Value: SalesCost,
               },
               {
-                MonetaryTypeId: monetaryTypes.find((a) => a.Name === 'ProgramCost')?.Id,
-                Value: SalesCost,
+                MonetaryTypeId: programCostType.Id,
+                Value: ProgramCost,
               },
             ],
             ProjectProperties: initialValues.ProjectProperties,
