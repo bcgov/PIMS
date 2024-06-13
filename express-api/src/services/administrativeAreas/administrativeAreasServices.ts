@@ -1,8 +1,9 @@
 import { AppDataSource } from '@/appDataSource';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 import { AdministrativeAreaFilter } from './administrativeAreaSchema';
-import { DeepPartial } from 'typeorm';
+import { DeepPartial, ILike } from 'typeorm';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import { ILikeWrapper } from '@/utilities/helperFunctions';
 
 const getAdministrativeAreas = (filter: AdministrativeAreaFilter) => {
   let order = undefined;
@@ -15,11 +16,11 @@ const getAdministrativeAreas = (filter: AdministrativeAreaFilter) => {
     relations: {
       RegionalDistrict: true,
     },
-    where: {
-      Name: filter.name,
-      ProvinceId: filter.provinceId,
-      RegionalDistrict: { Name: filter.regionalDistrict },
-    },
+    where: [
+      { Name: ILikeWrapper(filter.name) },
+      { ProvinceId: filter.provinceId },
+      { RegionalDistrict: { Name: ILikeWrapper(filter.regionalDistrict) } },
+    ],
     take: filter.quantity,
     skip: (filter.quantity ?? 0) * (filter.page ?? 0),
     order: order,

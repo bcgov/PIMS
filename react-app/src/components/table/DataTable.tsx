@@ -28,6 +28,7 @@ import {
 import {
   DataGrid,
   DataGridProps,
+  GridFilterModel,
   GridOverlay,
   GridPaginationModel,
   GridRenderCellParams,
@@ -202,6 +203,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   interface ITableModelCollection {
     pagination: GridPaginationModel;
     sort?: GridSortModel;
+    filter?: GridFilterModel;
   }
 
   const dataSourceUpdate = (models: ITableModelCollection) => {
@@ -413,7 +415,9 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   // Sets quickfilter value of DataGrid. newValue is a string input.
   const updateSearchValue = useMemo(() => {
     return debounce((newValue) => {
+      console.log(`updateSearchValue: ${JSON.stringify(newValue)}`);
       tableApiRef.current.setQuickFilterValues(newValue.split(' ').filter((word) => word !== ''));
+      //dataSourceUpdate({ pagination: { page: getQuery().page, pageSize: getQuery().pageSize }, sort: tableApiRef.current.getSortModel(), })
       setQuery({
         keywordFilter: newValue,
       });
