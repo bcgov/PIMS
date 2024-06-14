@@ -28,11 +28,8 @@ const AddProject = () => {
       NetBook: 0,
       Estimated: 0,
       Appraised: 0,
-      Metadata: {
-        salesCost: 0,
-        programCost: 0,
-        exemptionRequested: false,
-      },
+      ProgramCost: 0,
+      SalesCost: 0,
       Approval: false,
       Tasks: [],
     },
@@ -48,8 +45,13 @@ const AddProject = () => {
   loadStatuses();
   const { data: tasks, loadOnce: loadTasks } = useDataLoader(api.lookup.getTasks);
   loadTasks();
+  const {
+    data: monetary,
+    loadOnce: loadMonetary,
+    isLoading: monetaryLoading,
+  } = useDataLoader(api.lookup.getProjectMonetaryTypes);
+  loadMonetary();
   const { submit, submitting } = useDataSubmitter(api.projects.postProject);
-
   const tasksForAddState = useMemo(() => {
     if (!statuses || !tasks) {
       return [];
@@ -60,7 +62,11 @@ const AddProject = () => {
       return addTasks;
     }
   }, [statuses, tasks]);
-
+  const salesCostType = useMemo(() => monetary?.find((a) => a.Name === 'SalesCost'), [monetary]);
+  const programCostType = useMemo(
+    () => monetary?.find((a) => a.Name === 'ProgramCost'),
+    [monetary],
+  );
   return (
     <Box
       display={'flex'}
@@ -186,7 +192,7 @@ const AddProject = () => {
               }}
               numeric
               fullWidth
-              name={'Metadata.salesCost'}
+              name={'SalesCost'}
               label={'Estimated sales cost'}
             />
           </Grid>
@@ -197,7 +203,7 @@ const AddProject = () => {
               }}
               numeric
               fullWidth
-              name={'Metadata.programCost'}
+              name={'ProgramCost'}
               label={'Estimated program recovery fees'}
             />
           </Grid>
@@ -238,6 +244,7 @@ const AddProject = () => {
       </FormProvider>
       <LoadingButton
         loading={submitting}
+        disabled={monetaryLoading}
         onClick={async () => {
           const isValid = await formMethods.trigger();
           setShowNoPropertiesError(!rows.length);
@@ -261,6 +268,10 @@ const AddProject = () => {
                 ...formValues,
                 ReportedFiscalYear: new Date().getFullYear(),
                 ActualFiscalYear: new Date().getFullYear(),
+                Monetaries: [
+                  { MonetaryTypeId: programCostType.Id, Value: formValues.ProgramCost },
+                  { MonetaryTypeId: salesCostType.Id, Value: formValues.SalesCost },
+                ],
               },
               projectProperties,
             ).then((response) => {

@@ -17,8 +17,10 @@ import useDataLoader from '@/hooks/useDataLoader';
 import {
   Project,
   ProjectMetadata,
+  ProjectMonetary,
   ProjectNote,
   ProjectTask,
+  ProjectTimestamp,
   TierLevel,
 } from '@/hooks/api/useProjectsApi';
 import DetailViewNavigation from '../display/DetailViewNavigation';
@@ -41,6 +43,7 @@ import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { Roles } from '@/constants/roles';
 import { AuthContext } from '@/contexts/authContext';
 import { ExpandMoreOutlined } from '@mui/icons-material';
+import { columnNameFormatter, dateFormatter, formatMoney } from '@/utilities/formatters';
 
 interface IProjectDetail {
   onClose: () => void;
@@ -76,16 +79,19 @@ const ProjectDetail = (props: IProjectDetail) => {
 
   const isAuditor = keycloak.hasRoles([Roles.AUDITOR]);
 
-  const { data: tasks, loadOnce: loadTasks } = useDataLoader(() => api.lookup.getTasks());
+  const { data: tasks, loadOnce: loadTasks } = useDataLoader(api.lookup.getTasks);
   loadTasks();
-  const { data: noteTypes, loadOnce: loadNotes } = useDataLoader(() =>
-    api.lookup.getProjectNoteTypes(),
-  );
+  const { data: noteTypes, loadOnce: loadNotes } = useDataLoader(api.lookup.getProjectNoteTypes);
   loadNotes();
-
-  const { data: statuses, loadOnce: loadStatuses } = useDataLoader(() =>
-    api.lookup.getProjectStatuses(),
+  const { data: monetaryTypes, loadOnce: loadMonetary } = useDataLoader(
+    api.lookup.getProjectMonetaryTypes,
   );
+  loadMonetary();
+  const { data: timestampTypes, loadOnce: loadTimestamps } = useDataLoader(
+    api.lookup.getProjectTimestampTypes,
+  );
+  loadTimestamps();
+  const { data: statuses, loadOnce: loadStatuses } = useDataLoader(api.lookup.getProjectStatuses);
   loadStatuses();
 
   const { submit: deleteProject, submitting: deletingProject } = useDataSubmitter(
@@ -96,9 +102,11 @@ const ProjectDetail = (props: IProjectDetail) => {
   interface IStatusHistoryStruct {
     Notes: Array<ProjectNote & { Name: string }>;
     Tasks: Array<ProjectTask & { Name: string }>;
+    Timestamps: Array<ProjectTimestamp & { Name: string }>;
+    Monetaries: Array<ProjectMonetary & { Name: string }>;
   }
   const collectedDocumentationByStatus = useMemo((): Record<string, IStatusHistoryStruct> => {
-    if (!data || !tasks || !statuses) {
+    if (!data || !tasks || !statuses || !noteTypes || !timestampTypes || !monetaryTypes) {
       return {};
     }
     if (!data.parsedBody?.Tasks) return {};
@@ -116,32 +124,57 @@ const ProjectDetail = (props: IProjectDetail) => {
           Name: 'Uncategorized',
         };
         if (!acc[fullStatus.Name]) {
-          acc[fullStatus.Name] = { Tasks: [{ ...curr, Name: fullTask.Name }], Notes: [] };
-          return acc;
-        } else {
-          acc[fullStatus.Name].Tasks.push({ ...curr, Name: fullTask.Name });
-          return acc;
+          acc[fullStatus.Name] = { Tasks: [], Notes: [], Timestamps: [], Monetaries: [] };
         }
+        acc[fullStatus.Name].Tasks.push({ ...curr, Name: fullTask.Name });
+        return acc;
       },
       {},
     );
-    return data?.parsedBody.Notes.filter((a) => a.Note).reduce(
+    data?.parsedBody.Notes.filter((a) => a.Note).reduce(
       (acc: Record<string, IStatusHistoryStruct>, curr) => {
         const fullNote = noteTypes.find((a) => a.Id === curr.NoteTypeId);
         const fullStatus = statuses.find((a) => a.Id === fullNote.StatusId) ?? {
           Name: 'Uncategorized',
         };
         if (!acc[fullStatus.Name]) {
-          acc[fullStatus.Name] = { Notes: [{ ...curr, Name: fullNote.Description }], Tasks: [] };
-          return acc;
-        } else {
-          acc[fullStatus.Name].Notes.push({ ...curr, Name: fullNote.Description });
-          return acc;
+          acc[fullStatus.Name] = { Tasks: [], Notes: [], Timestamps: [], Monetaries: [] };
         }
+        acc[fullStatus.Name].Notes.push({ ...curr, Name: fullNote.Description });
+        return acc;
       },
       reduceMap,
     );
-  }, [data, tasks, statuses]);
+    data?.parsedBody?.Monetaries?.filter((a) => a.Value).reduce(
+      (acc: Record<string, IStatusHistoryStruct>, curr) => {
+        const fullMonetary = monetaryTypes.find((a) => a.Id === curr.MonetaryTypeId);
+        const fullStatus = statuses.find((a) => a.Id === fullMonetary.StatusId) ?? {
+          Name: 'Uncategorized',
+        };
+        if (!acc[fullStatus.Name]) {
+          acc[fullStatus.Name] = { Tasks: [], Notes: [], Timestamps: [], Monetaries: [] };
+        }
+        acc[fullStatus.Name].Monetaries.push({ ...curr, Name: fullMonetary.Name });
+        return acc;
+      },
+      reduceMap,
+    );
+    data?.parsedBody?.Timestamps?.filter((a) => a.Date).reduce(
+      (acc: Record<string, IStatusHistoryStruct>, curr) => {
+        const fullTimestamp = timestampTypes.find((a) => a.Id === curr.TimestampTypeId);
+        const fullStatus = statuses.find((a) => a.Id === fullTimestamp.StatusId) ?? {
+          Name: 'Uncategorized',
+        };
+        if (!acc[fullStatus.Name]) {
+          acc[fullStatus.Name] = { Tasks: [], Notes: [], Timestamps: [], Monetaries: [] };
+        }
+        acc[fullStatus.Name].Timestamps.push({ ...curr, Name: fullTimestamp.Name });
+        return acc;
+      },
+      reduceMap,
+    );
+    return reduceMap;
+  }, [data, tasks, statuses, timestampTypes, monetaryTypes, noteTypes]);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openProjectInfoDialog, setOpenProjectInfoDialog] = useState(false);
@@ -158,14 +191,22 @@ const ProjectDetail = (props: IProjectDetail) => {
     Description: data?.parsedBody.Description,
   };
 
-  const FinancialInformationData = {
-    AssessedValue: data?.parsedBody.Assessed,
-    NetBookValue: data?.parsedBody.NetBook,
-    EstimatedMarketValue: data?.parsedBody.Market,
-    AppraisedValue: data?.parsedBody.Appraised,
-    EstimatedSalesCost: data?.parsedBody.Metadata?.salesCost,
-    EstimatedProgramRecoveryFees: data?.parsedBody.Metadata?.programCost,
-  };
+  const FinancialInformationData = useMemo(() => {
+    const salesCostType = monetaryTypes?.find((a) => a.Name === 'SalesCost');
+    const programCostType = monetaryTypes?.find((a) => a.Name === 'ProgramCost');
+    return {
+      AssessedValue: data?.parsedBody.Assessed,
+      NetBookValue: data?.parsedBody.NetBook,
+      EstimatedMarketValue: data?.parsedBody.Market,
+      AppraisedValue: data?.parsedBody.Appraised,
+      EstimatedSalesCost: data?.parsedBody.Monetaries?.find(
+        (a) => a.MonetaryTypeId === salesCostType.Id,
+      )?.Value,
+      EstimatedProgramRecoveryFees: data?.parsedBody.Monetaries?.find(
+        (a) => a.MonetaryTypeId === programCostType.Id,
+      )?.Value,
+    };
+  }, [data, monetaryTypes]);
 
   // const classification = useClassificationStyle();
   const customFormatter = (key: keyof ProjectInfo, val: any) => {
@@ -203,6 +244,7 @@ const ProjectDetail = (props: IProjectDetail) => {
         display={'flex'}
         gap={'1rem'}
         mt={'2rem'}
+        mb={'2rem'}
         flexDirection={'column'}
         width={'46rem'}
         marginX={'auto'}
@@ -246,7 +288,12 @@ const ProjectDetail = (props: IProjectDetail) => {
         <DataCard
           loading={isLoading}
           customFormatter={customFormatter}
-          values={FinancialInformationData}
+          values={Object.fromEntries(
+            Object.entries(FinancialInformationData).map(([k, v]) => [
+              k,
+              formatMoney(v != null ? Number(String(v).replace(/[$,]/g, '')) : 0), //This cast spaghetti sucks but hard to avoid when receiving money as a string from the API.
+            ]),
+          )}
           title={financialInformation}
           id={financialInformation}
           onEdit={() => setOpenFinancialInfoDialog(true)}
@@ -301,7 +348,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
             {Object.entries(collectedDocumentationByStatus)?.map(
               (
-                [key, value], //Each key here is a status name. Each value a list of tasks.
+                [key, value], //Each key here is a status name. Each value contains an array for each field type.
               ) => (
                 <Box key={`${key}-group`}>
                   <Accordion>
@@ -339,6 +386,18 @@ const ProjectDetail = (props: IProjectDetail) => {
                           <Box key={`${note.NoteTypeId}-note`}>
                             <Typography variant="h5">{note.Name}</Typography>
                             <Typography>{note.Note}</Typography>
+                          </Box>
+                        ))}
+                        {value.Timestamps.map((ts) => (
+                          <Box key={`${ts.TimestampTypeId}-timestamp`}>
+                            <Typography variant="h5">{columnNameFormatter(ts.Name)}</Typography>
+                            <Typography>{dateFormatter(ts.Date)}</Typography>
+                          </Box>
+                        ))}
+                        {value.Monetaries.map((mon) => (
+                          <Box key={`${mon.MonetaryTypeId}-monetary`}>
+                            <Typography variant="h5">{columnNameFormatter(mon.Name)}</Typography>
+                            <Typography>{formatMoney(Number(mon.Value))}</Typography>
                           </Box>
                         ))}
                       </Box>

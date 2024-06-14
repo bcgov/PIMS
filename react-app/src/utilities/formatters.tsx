@@ -16,7 +16,7 @@ export const dateFormatter = (input: any) => {
 };
 
 export const columnNameFormatter = (input: string) => {
-  return input.replace(/([a-z])([A-Z])/g, '$1 $2');
+  return input.replace('OCG', 'OCG ').replace(/([a-z])([A-Z])/g, '$1 $2'); //ExampleHeaderHere -> Example Header Here
 };
 
 type ChipStatus = 'OnHold' | 'Active' | 'Disabled' | 'Denied'; //Replace with a better type eventually.
