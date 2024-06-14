@@ -7,7 +7,6 @@ import {
 } from '@mui/x-data-grid';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import React, { MutableRefObject, useContext } from 'react';
-import useDataLoader from '@/hooks/useDataLoader';
 import { dateFormatter, projectStatusChipFormatter } from '@/utilities/formatters';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
@@ -190,7 +189,7 @@ const ProjectsTable = () => {
   };
 
   return (
-    <Box sx={{ height: '80vh' }}>
+    <Box sx={{ height: 'calc(100vh - 160px)' }}>
       <FilterSearchDataGrid
         dataSource={api.projects.getProjects}
         onAddButtonClick={() => navigate('/projects/add')}
@@ -220,6 +219,7 @@ const ProjectsTable = () => {
         name={'projects'}
         columns={columns}
         initialState={{
+          pagination: { paginationModel: { page: 0, pageSize: 100 } },
           sorting: { sortModel: [{ field: 'UpdatedOn', sort: 'desc' }] },
         }}
       />

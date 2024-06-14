@@ -15,7 +15,6 @@ import {
   IconButton,
   LinearProgress,
   ListItemIcon,
-  ListItemSecondaryAction,
   ListSubheader,
   Menu,
   MenuItem,
@@ -191,20 +190,24 @@ type FilterSearchDataGridProps = {
 
 export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   const [rows, setRows] = useState([]);
-  //const [pagination, setPagination] = useState<GridPaginationModel>({ page: 0, pageSize: 10 });
-  const [rowCount, setRowCount] = useState<number>(0);
+  const [rowCount] = useState<number>(0);
   const [tableModel, setTableModel] = useState<ITableModelCollection>({
-    pagination: { page: 0, pageSize: 10 },
+    pagination: {
+      page: props.initialState?.pagination?.paginationModel?.page ?? 0,
+      pageSize: props.initialState?.pagination?.paginationModel?.pageSize ?? 10,
+    },
+    sort: props.initialState?.sorting?.sortModel ?? undefined,
   });
   const [keywordSearchContents, setKeywordSearchContents] = useState<string>('');
   const [gridFilterItems, setGridFilterItems] = useState([]);
   const [selectValue, setSelectValue] = useState<string>(props.defaultFilter);
   const [isExporting, setIsExporting] = useState<boolean>(false);
+  const [dataSourceLoading, setDataSourceLoading] = useState<boolean>(false);
   const tableApiRef = useGridApiRef(); // Ref to MUI DataGrid
   const previousController = useRef<AbortController>();
 
   interface ITableModelCollection {
-    pagination: GridPaginationModel;
+    pagination?: GridPaginationModel;
     sort?: GridSortModel;
     filter?: GridFilterModel;
     quickFilter?: string[];
@@ -240,6 +243,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         }
       }
     }
+    setDataSourceLoading(true);
     props
       .dataSource(
         {
@@ -259,12 +263,21 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           //If something else happens though, we may want to rethrow that.
           throw e;
         }
+      })
+      .finally(() => {
+        setDataSourceLoading(false);
       });
   };
 
   useEffect(() => {
     dataSourceUpdate(tableModel);
   }, [tableModel]);
+
+  useEffect(() => {
+    if (props.initialState?.sorting?.sortModel) {
+      tableApiRef.current.setSortModel(props.initialState.sorting.sortModel);
+    }
+  }, []); //Empty array makes this fire only on first render.
 
   /**
    * @interface
@@ -481,6 +494,9 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
                   setSelectValue(props.defaultFilter);
                   // Clear query params
                   clearQuery();
+                  setTableModel({
+                    pagination: { page: 0, pageSize: tableModel.pagination.pageSize },
+                  });
                 }}
               >
                 <FilterAltOffIcon />
@@ -502,10 +518,13 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         >
           <KeywordSearch
             onChange={(e) => {
+              const defaultpagesize = { page: 0, pageSize: tableModel.pagination.pageSize };
               updateSearchValue(e);
+              tableApiRef.current.setPaginationModel(defaultpagesize);
+              setQuery(defaultpagesize);
               setTableModel({
                 ...tableModel,
-                pagination: { page: 0, pageSize: tableModel.pagination.pageSize },
+                pagination: defaultpagesize,
                 quickFilter: e.split(' ').filter((word) => word !== ''),
               });
             }}
@@ -589,6 +608,8 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           }
         }}
         paginationMode="server"
+        sortingMode="server"
+        filterMode="server"
         rowCount={-1}
         paginationMeta={{ hasNextPage: false }}
         onPaginationModelChange={(model) => {
@@ -620,6 +641,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             outline: 'none',
           },
         }}
+        loading={dataSourceLoading}
         slots={{ toolbar: KeywordSearch, noRowsOverlay: NoRowsOverlay }}
         {...props}
         rows={rows ?? []}
