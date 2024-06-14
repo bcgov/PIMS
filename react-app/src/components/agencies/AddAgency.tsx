@@ -77,8 +77,11 @@ const AddAgency = () => {
             <AutocompleteFormField
               name={'ParentId'}
               label={'Parent Agency'}
-              options={agencyOptions}
-              allowNestedIndent={true}
+              // Only agencies that don't have a parent can be chosen.
+              // Set parent to false to avoid bold font.
+              options={agencyOptions
+                .filter((agency) => agency.parentId == null)
+                .map((agency) => ({ ...agency, parent: false }))}
             />
           </Grid>
           <Grid item xs={12}>

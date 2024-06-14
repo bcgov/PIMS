@@ -76,10 +76,10 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
           renderOption={(props, option, state, ownerState) => (
             <Box
               sx={{
-                fontWeight: option.parent ? 900 : 500,
+                fontWeight: allowNestedIndent && !option.parentId ? 900 : 500,
                 [`&.${autocompleteClasses.option}`]: {
                   padding: 1,
-                  paddingLeft: allowNestedIndent && !option.parent ? 2 : 1,
+                  paddingLeft: allowNestedIndent && option.parentId ? 2 : 1,
                 },
               }}
               component="li"

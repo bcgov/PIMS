@@ -37,7 +37,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   const { submit, submitting } = useDataSubmitter(api.agencies.updateAgencyById);
 
   const { agencyOptions } = useGroupedAgenciesApi();
-  const isParent = agencyOptions.find((agency) => agency.value === +id)?.parent;
+  const isParent = agencyOptions.some((agency) => agency.parentId === +id);
 
   const agencyStatusData = {
     Status: data?.IsDisabled ? 'Disabled' : 'Active',
@@ -194,10 +194,13 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
             </Grid>
             <Grid item xs={12}>
               <AutocompleteFormField
-                allowNestedIndent
                 name={'ParentId'}
                 label={'Parent Agency'}
-                options={agencyOptions.filter((agency) => agency.parent)}
+                // Only agencies that don't have a parent can be chosen.
+                // Set parent to false to avoid bold font.
+                options={agencyOptions
+                  .filter((agency) => agency.parentId == null)
+                  .map((agency) => ({ ...agency, parent: false }))}
                 disabled={isParent} // Cannot set parent if already a parent
                 disableOptionsFunction={
                   (option) =>
