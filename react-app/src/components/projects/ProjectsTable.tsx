@@ -137,6 +137,8 @@ const ProjectsTable = () => {
               'NetBook	Value': projectModel.NetBook,
               Assessed: projectModel.Assessed,
               Appraised: projectModel.Appraised,
+              Manager: projectModel.Manager,
+              'Interest Received On': projectModel.Metadata?.interestReceivedOn,
               'Sales Cost': projectModel.Metadata?.salesCost,
               'Net Proceeds': projectModel.Metadata?.netProceeds,
               'Program Cost': projectModel.Metadata?.programCost,
@@ -145,6 +147,9 @@ const ProjectsTable = () => {
               'Interest Component': projectModel.Metadata?.interestComponent,
               'Offer Amount': projectModel.Metadata?.offerAmount,
               'Sale With Lease In Place': projectModel.Metadata?.saleWithLeaseInPlace,
+              'Financial Notes': projectModel.Notes?.find(
+                (note) => note.NoteTypeId === NoteTypes.FINANCIAL,
+              )?.Note,
               Note: projectModel.Notes?.find((note) => note.NoteTypeId === NoteTypes.GENERAL)?.Note,
               PublicNote: projectModel.Notes?.find((note) => note.NoteTypeId === NoteTypes.PUBLIC)
                 ?.Note,
