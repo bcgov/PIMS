@@ -24,6 +24,7 @@ import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { arrayUniqueBy } from '@/utilities/helperFunctions';
 import MetresSquared from '@/components/text/MetresSquared';
 import { FeatureCollection } from '@/hooks/api/useParcelLayerApi';
+import { Feature } from 'geojson';
 export type PropertyType = 'Building' | 'Parcel';
 
 interface IParcelInformationForm {
@@ -98,14 +99,14 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
       map.current?.setView([vals.Location.y, vals.Location.x], 17);
       onMove();
     }
-  }, [formContext, map]);
+  }, [formContext, map.current]);
 
   const onMove = useCallback(() => {
     if (map.current) {
       setPosition(map.current.getCenter());
       updateLocation(map.current.getCenter());
     }
-  }, [map]);
+  }, [map.current]);
 
   useEffect(() => {
     if (map) {
@@ -118,7 +119,8 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
 
   const handleFeatureCollectionResponse = (response: FeatureCollection) => {
     if (response.features.length) {
-      const coordArr = centroid(response.features[0]).geometry.coordinates as [number, number];
+      const coordArr = centroid(response.features[0] as unknown as Feature).geometry
+        .coordinates as [number, number];
       map.current?.setView([coordArr[1], coordArr[0]], 17);
     }
   };

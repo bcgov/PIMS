@@ -1,4 +1,4 @@
-import { Feature, MultiPolygon, Polygon } from 'geojson';
+import { Feature } from 'geojson';
 import { IFetch } from '../useFetch';
 import { LatLng } from 'leaflet';
 
@@ -30,12 +30,12 @@ export interface ParcelLayerFeature {
     type: 'Polygon' | 'MultiPolygon';
   };
   id: string;
-  type: string;
+  type: Feature;
   properties: ParcelData;
 }
 
 export interface FeatureCollection {
-  features: Feature<Polygon | MultiPolygon, ParcelData>[];
+  features: ParcelLayerFeature[];
   numberMatched: number;
   numberReturned: number;
   timeStamp: string;
