@@ -102,7 +102,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
       Status: agencyStatusData.Status,
       Name: agencyStatusData.Name,
       Code: agencyStatusData.Code,
-      ParentId: agencyStatusData.Parent?.Id,
+      ParentId: agencyStatusData.Parent?.Id ?? null,
       Description: agencyStatusData.Description,
     });
     notificationsFormMethods.reset({
@@ -201,6 +201,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
                 options={agencyOptions
                   .filter((agency) => agency.parentId == null)
                   .map((agency) => ({ ...agency, parent: false }))}
+                disableClearable={false}
                 disabled={isParent} // Cannot set parent if already a parent
                 disableOptionsFunction={
                   (option) =>

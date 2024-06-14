@@ -100,6 +100,7 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
           )}
           onChange={(_, data) => {
             if (data) onChange(data.value);
+            else onChange(null);
           }}
           isOptionEqualToValue={(option, value) => option.value === value.value}
           value={options.find((option) => option.value === getValues()[name]) ?? null}

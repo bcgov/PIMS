@@ -82,6 +82,7 @@ const AddAgency = () => {
               options={agencyOptions
                 .filter((agency) => agency.parentId == null)
                 .map((agency) => ({ ...agency, parent: false }))}
+              disableClearable={false}
             />
           </Grid>
           <Grid item xs={12}>
