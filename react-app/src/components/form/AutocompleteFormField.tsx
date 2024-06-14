@@ -20,6 +20,7 @@ type AutocompleteFormProps = {
   allowNestedIndent?: boolean;
   disableOptionsFunction?: (option: ISelectMenuItem) => boolean;
   disableClearable?: boolean;
+  disabled?: boolean;
   defaultValue?: ISelectMenuItem | null;
   customOptionsFilter?: (
     options: ISelectMenuItem[],
@@ -41,6 +42,7 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
     required,
     allowNestedIndent,
     disableClearable,
+    disabled,
     disableOptionsFunction,
     customOptionsFilter,
     ...rest
@@ -67,6 +69,7 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
           PaperComponent={CustomPaper}
           sx={sx}
           disableClearable={disableClearable ?? true}
+          disabled={disabled}
           getOptionLabel={(option: ISelectMenuItem) => option.label}
           getOptionDisabled={disableOptionsFunction}
           filterOptions={optionsFilter}

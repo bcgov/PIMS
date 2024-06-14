@@ -37,6 +37,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   const { submit, submitting } = useDataSubmitter(api.agencies.updateAgencyById);
 
   const { agencyOptions } = useGroupedAgenciesApi();
+  const isParent = agencyOptions.find((agency) => agency.value === +id)?.parent;
 
   const agencyStatusData = {
     Status: data?.IsDisabled ? 'Disabled' : 'Active',
@@ -196,7 +197,8 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
                 allowNestedIndent
                 name={'ParentId'}
                 label={'Parent Agency'}
-                options={agencyOptions}
+                options={agencyOptions.filter((agency) => agency.parent)}
+                disabled={isParent} // Cannot set parent if already a parent
                 disableOptionsFunction={
                   (option) =>
                     option.value === +id || // Can't assign to self
@@ -205,6 +207,13 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
                       ?.children?.includes(option.value) // Can't assign to current children
                 }
               />
+              {isParent ? (
+                <Typography variant="caption">
+                  Cannot set Parent Agency on existing Parent Agencies.
+                </Typography>
+              ) : (
+                <></>
+              )}
             </Grid>
           </Grid>
         </FormProvider>
