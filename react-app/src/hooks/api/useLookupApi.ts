@@ -18,7 +18,7 @@ export interface Task {
   StatusId: number;
 }
 
-export interface NoteType {
+export interface MetadataType {
   Name: string;
   Id: number;
   Description: string;
@@ -79,7 +79,19 @@ const useLookupApi = (absoluteFetch: IFetch) => {
 
   const getProjectNoteTypes = async (statusId?: number) => {
     const { parsedBody } = await absoluteFetch.get('/lookup/noteTypes', { statusId: statusId });
-    return parsedBody as NoteType[];
+    return parsedBody as MetadataType[];
+  };
+
+  const getProjectMonetaryTypes = async (statusId?: number) => {
+    const { parsedBody } = await absoluteFetch.get('/lookup/monetaryTypes', { statusId: statusId });
+    return parsedBody as MetadataType[];
+  };
+
+  const getProjectTimestampTypes = async (statusId?: number) => {
+    const { parsedBody } = await absoluteFetch.get('/lookup/timestampTypes', {
+      statusId: statusId,
+    });
+    return parsedBody as MetadataType[];
   };
 
   return {
@@ -92,6 +104,8 @@ const useLookupApi = (absoluteFetch: IFetch) => {
     getTasks,
     getPropertyTypes,
     getProjectNoteTypes,
+    getProjectMonetaryTypes,
+    getProjectTimestampTypes,
   };
 };
 

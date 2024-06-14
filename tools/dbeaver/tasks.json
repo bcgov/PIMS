@@ -240,12 +240,12 @@
 				}
 			],
 			"configuration": {
-				"maxJobCount": 1,
+				"maxJobCount": 1.0,
 				"showFinalMessage": true,
 				"DatabaseTransferProducer": {
 					"extractType": "SEGMENTS",
-					"segmentSize": 1000,
-					"fetchSize": 10000,
+					"segmentSize": 1000.0,
+					"fetchSize": 10000.0,
 					"openNewConnections": true,
 					"queryRowCount": false,
 					"selectedColumnsOnly": false,
@@ -255,9 +255,9 @@
 					"entityId": "postgres-jdbc-18dd2b052a7-539b625bbf9f91bf/pims/public",
 					"openNewConnections": true,
 					"useTransactions": true,
-					"commitAfterRows": 1000,
+					"commitAfterRows": 1000.0,
 					"useMultiRowInsert": false,
-					"multiRowInsertBatch": 500,
+					"multiRowInsertBatch": 500.0,
 					"skipBindValues": false,
 					"disableUsingBatches": true,
 					"ignoreDuplicateRows": true,
@@ -3032,9 +3032,63 @@
 						"project": "General",
 						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/NotificationQueue"
 					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
+						"defaultCatalog": "pims",
+						"defaultSchema": "dbo",
+						"query": "\r\n/* query to extract from project.metadata table and into project_note table */\r\nSELECT \r\n    p.id AS project_id,\r\n    kv.[key] AS metadata_key,\r\n\tCASE \r\n\t\tWHEN kv.[key] \u003d \u0027appraisedBy\u0027 THEN 17\r\n\t\tWHEN kv.[key] \u003d \u0027finalFormSignedBy\u0027 THEN 23\r\n\t\tWHEN kv.[key] \u003d \u0027plannedFutureUse\u0027 THEN 24\r\n\t\tWHEN kv.[key] \u003d \u0027preliminaryFormSignedBy\u0027 THEN 25\r\n\t\tWHEN kv.[key] \u003d \u0027purchaser\u0027 THEN 26\r\n\t\tWHEN kv.[key] \u003d \u0027realtor\u0027 THEN 27\r\n\t\tWHEN kv.[key] \u003d \u0027realtorRate\u0027 THEN 28\r\n\tEND AS note_type_id,\r\n    kv.[value] AS \"note\",\r\n    \u002700000000-0000-0000-0000-000000000000\u0027 as \"created_by_id\",\r\n    GETDATE() as \"created_on\",\r\n\tp.UpdatedOn as \"updated_on\",\r\n\tp.UpdatedById as \"updated_by_id\"\r\nFROM \r\n    Projects p\r\nCROSS APPLY \r\n    OPENJSON(p.metadata) AS kv\r\nWHERE \r\n    kv.[key] IN (\u0027purchaser\u0027, \u0027appraisedBy\u0027, \u0027finalFormSignedBy\u0027, \u0027plannedFutureUse\u0027, \u0027preliminaryFormSignedBy\u0027, \u0027realtor\u0027 , \u0027realtorRate\u0027 );\r\n"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
+						"defaultCatalog": "pims",
+						"defaultSchema": "dbo",
+						"query": "/* query to extract from project.metadata table and into project_timestamp table */\r\nSELECT \r\n    p.id AS project_id,\r\n    kv.[key] AS metadata_key,\r\n\tCASE \r\n\t\tWHEN kv.[key] \u003d \u0027adjustedOn\u0027 THEN 1\r\n\t\tWHEN kv.[key] \u003d \u0027approvedForSplOn\u0027 THEN 2\r\n\t\tWHEN kv.[key] \u003d \u0027clearanceNotificationSentOn\u0027 THEN 3\r\n\t\tWHEN kv.[key] \u003d \u0027disposedOn\u0027 THEN 4\r\n\t\tWHEN kv.[key] \u003d \u0027exemptionApprovedOn\u0027 THEN 5\r\n\t\tWHEN kv.[key] \u003d \u0027finalFormSignedOn\u0027 THEN 6\r\n\t\tWHEN kv.[key] \u003d \u0027interestedReceivedOn\u0027 THEN 7\r\n\t\tWHEN kv.[key] \u003d \u0027offerAcceptedOn\u0027 THEN 8\r\n\t\tWHEN kv.[key] \u003d \u0027removalFromSplApprovedOn\u0027 THEN 9\r\n\t\tWHEN kv.[key] \u003d \u0027removalFromSplRequestOn\u0027 THEN 10\r\n\t\tWHEN kv.[key] \u003d \u0027requestForSplReceivedOn\u0027 THEN 11\r\n\t\tWHEN kv.[key] \u003d \u0027transferredWithinGreOn\u0027 THEN 12\r\n\tEND AS timestamp_type_id,\r\n    CONVERT(datetime, REPLACE(kv.[value], \u0027T\u0027, \u0027 \u0027), 120) AS [date],\r\n    \u002700000000-0000-0000-0000-000000000000\u0027 as \"created_by_id\",\r\n    GETDATE() as \"created_on\",\r\n\tp.UpdatedOn as \"updated_on\",\r\n\tp.UpdatedById as \"updated_by_id\"\r\n\r\nFROM \r\n    Projects p\r\nCROSS APPLY \r\n    OPENJSON(p.metadata) AS kv\r\nWHERE \r\n    kv.[key] IN (\u0027adjustedOn\u0027, \u0027approvedForSplOn\u0027, \u0027clearanceNotificationSentOn\u0027, \u0027disposedOn\u0027, \u0027exemptionApprovedOn\u0027, \u0027finalFormSignedOn\u0027, \u0027interestedReceivedOn\u0027, \u0027offerAcceptedOn\u0027, \u0027removalFromSplApprovedOn\u0027, \u0027removalFromSplRequestOn\u0027, \u0027requestForSplReceivedOn\u0027, \u0027transferredWithinGreOn\u0027 );\r\n"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
+						"defaultCatalog": "pims",
+						"query": "/* query to extract from project.metadata table and into project_monetary table */\r\nSELECT \r\n    p.id AS project_id,\r\n    kv.[key] AS metadata_key,\r\n\tCASE \r\n\t\tWHEN kv.[key] \u003d \u0027gainBeforeSpl\u0027 THEN 1\r\n\t\tWHEN kv.[key] \u003d \u0027interestComponent\u0027 THEN 2\r\n\t\tWHEN kv.[key] \u003d \u0027netProceeds\u0027 THEN 3\r\n\t\tWHEN kv.[key] \u003d \u0027gainLoss\u0027 THEN 4\r\n\t\tWHEN kv.[key] \u003d \u0027ocgFinancialStatement\u0027 THEN 5\r\n\t\tWHEN kv.[key] \u003d \u0027offerAmount\u0027 THEN 6\r\n\t\tWHEN kv.[key] \u003d \u0027programCost\u0027 THEN 7\r\n\t\tWHEN kv.[key] \u003d \u0027realtorCommission\u0027 THEN 8\r\n\t\tWHEN kv.[key] \u003d \u0027salesCost\u0027 THEN 9\r\n\tEND AS monetary_type_id,\r\n    kv.[value] AS \"value\" ,\r\n    \u002700000000-0000-0000-0000-000000000000\u0027 as \"created_by_id\",\r\n    GETDATE() as \"created_on\",\r\n\tp.UpdatedOn as \"updated_on\",\r\n\tp.UpdatedById as \"updated_by_id\"\r\n\r\nFROM \r\n    Projects p\r\nCROSS APPLY \r\n    OPENJSON(p.metadata) AS kv\r\nWHERE \r\n    kv.[key] IN (\u0027gainBeforeSpl\u0027, \u0027interestComponent\u0027, \u0027netProceeds\u0027, \u0027gainLoss\u0027, \u0027ocgFinancialStatement\u0027, \u0027offerAmount\u0027, \u0027programCost\u0027, \u0027realtorCommission\u0027, \u0027salesCost\u0027 );\r\n"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
+						"defaultCatalog": "pims",
+						"query": "/* Query to extract relevant data from project.metadata table and into project_task table */\r\nSELECT \r\n    p.id AS project_id,\r\n    kv.[key] AS metadata_key,\r\n    CASE \r\n        WHEN kv.[value] \u003d \u0027true\u0027 THEN 1\r\n        WHEN kv.[value] \u003d \u0027false\u0027 THEN 0\r\n        ELSE NULL\r\n    END AS is_completed,\r\n    CASE \r\n        WHEN kv.[key] \u003d \u0027exemptionRequested\u0027 THEN 16\r\n        WHEN kv.[key] \u003d \u0027priorYearAdjustment\u0027 THEN 17\r\n\tEND AS \"task_id\",\r\n    CASE \r\n        WHEN kv.[key] \u003d \u0027priorYearAdjustment\u0027 THEN \r\n            CASE \r\n                WHEN kv.[value] \u003d \u0027true\u0027 THEN JSON_VALUE(p.metadata, \u0027$.priorYearAdjustmentOn\u0027)\r\n                ELSE NULL\r\n            END\r\n        WHEN kv.[key] \u003d \u0027exemptionRequested\u0027 THEN \r\n            CASE \r\n                WHEN kv.[value] \u003d \u0027true\u0027 THEN p.CreatedOn\r\n                ELSE NULL\r\n            END\r\n        ELSE NULL\r\n    END AS completed_on,\r\n    \u002700000000-0000-0000-0000-000000000000\u0027 as \"created_by_id\",\r\n    GETDATE() as \"created_on\",\r\n\tp.UpdatedOn as \"updated_on\",\r\n\tp.UpdatedById as \"updated_by_id\"\r\n\r\nFROM \r\n    Projects p\r\nCROSS APPLY \r\n    OPENJSON(p.metadata) AS kv\r\nWHERE \r\n    kv.[key] IN (\u0027priorYearAdjustment\u0027, \u0027exemptionRequested\u0027)\r\n\torder by kv.[key]"
+					}
 				}
 			],
 			"consumers": [
+				{
+					"type": "databaseTransferConsumer"
+				},
+				{
+					"type": "databaseTransferConsumer"
+				},
+				{
+					"type": "databaseTransferConsumer"
+				},
+				{
+					"type": "databaseTransferConsumer"
+				},
 				{
 					"type": "databaseTransferConsumer"
 				},
@@ -3143,7 +3197,7 @@
 									"targetName": "updated_on",
 									"mappingType": "existing"
 								},
-								"Name": {
+								"name": {
 									"targetName": "name",
 									"mappingType": "existing"
 								},
@@ -3315,7 +3369,7 @@
 									"targetName": "updated_on",
 									"mappingType": "existing"
 								},
-								"Name": {
+								"name": {
 									"targetName": "name",
 									"mappingType": "existing"
 								},
@@ -3365,7 +3419,7 @@
 								},
 								"notowned": {
 									"targetName": "not_owned",
-									"mappingType": "existing"
+									"mappingType": "skip"
 								},
 								"Location": {
 									"targetName": "\"location\"",
@@ -3479,7 +3533,7 @@
 								},
 								"transfer_lease_on_sale": {
 									"targetName": "transfer_lease_on_sale",
-									"mappingType": "existing"
+									"mappingType": "skip"
 								},
 								"building_tenancy_updated_on": {
 									"targetName": "building_tenancy_updated_on",
@@ -3491,7 +3545,7 @@
 								},
 								"leased_land_metadata": {
 									"targetName": "leased_land_metadata",
-									"mappingType": "existing"
+									"mappingType": "skip"
 								},
 								"total_area": {
 									"targetName": "total_area",
@@ -3743,7 +3797,7 @@
 									"targetName": "project_number",
 									"mappingType": "existing"
 								},
-								"Name": {
+								"name": {
 									"targetName": "name",
 									"mappingType": "existing"
 								},
@@ -3785,7 +3839,7 @@
 								},
 								"metadata": {
 									"targetName": "metadata",
-									"mappingType": "existing"
+									"mappingType": "skip"
 								},
 								"submittedon": {
 									"targetName": "submitted_on",
@@ -4009,7 +4063,7 @@
 									"targetName": "is_final",
 									"mappingType": "existing"
 								},
-								"Name": {
+								"name": {
 									"targetName": "name",
 									"mappingType": "existing"
 								},
@@ -4081,7 +4135,7 @@
 								},
 								"metadata": {
 									"targetName": "metadata",
-									"mappingType": "existing"
+									"mappingType": "skip"
 								}
 							}
 						},
@@ -4164,7 +4218,7 @@
 									"mappingType": "existing"
 								},
 								"notetype": {
-									"targetName": "note_type",
+									"targetName": "note_type_id",
 									"mappingType": "existing"
 								},
 								"note": {
@@ -4267,6 +4321,162 @@
 								},
 								"chestransactionid": {
 									"targetName": "ches_transaction_id",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/\r\n/* query to extract from project.metadata table and into project_note table */\r\nSELECT \r\n    p.id AS project_id,\r\n    kv.[key] AS metadata_key,\r\n\tCASE \r\n\t\tWHEN kv.[key] \u003d \u0027appraisedBy\u0027 THEN 17\r\n\t\tWHEN kv.[key] \u003d \u0027finalFormSignedBy\u0027 THEN 23\r\n\t\tWHEN kv.[key] \u003d \u0027plannedFutureUse\u0027 THEN 24\r\n\t\tWHEN kv.[key] \u003d \u0027preliminaryFormSignedBy\u0027 THEN 25\r\n\t\tWHEN kv.[key] \u003d \u0027purchaser\u0027 THEN 26\r\n\t\tWHEN kv.[key] \u003d \u0027realtor\u0027 THEN 27\r\n\t\tWHEN kv.[key] \u003d \u0027realtorRate\u0027 THEN 28\r\n\tEND AS note_type_id,\r\n    kv.[value] AS \"note\",\r\n    \u002700000000-0000-0000-0000-000000000000\u0027 as \"created_by_id\",\r\n    GETDATE() as \"created_on\",\r\n\tp.UpdatedOn as \"updated_on\",\r\n\tp.UpdatedById as \"updated_by_id\"\r\nFROM \r\n    Projects p\r\nCROSS APPLY \r\n    OPENJSON(p.metadata) AS kv\r\nWHERE \r\n    kv.[key] IN (\u0027purchaser\u0027, \u0027appraisedBy\u0027, \u0027finalFormSignedBy\u0027, \u0027plannedFutureUse\u0027, \u0027preliminaryFormSignedBy\u0027, \u0027realtor\u0027 , \u0027realtorRate\u0027 );\r\n": {
+							"targetName": "project_note",
+							"mappingType": "existing",
+							"attributes": {
+								"project_id": {
+									"targetName": "project_id",
+									"mappingType": "existing"
+								},
+								"metadata_key": {
+									"targetName": "metadata_key",
+									"mappingType": "skip"
+								},
+								"note_type_id": {
+									"targetName": "note_type_id",
+									"mappingType": "existing"
+								},
+								"note": {
+									"targetName": "note",
+									"mappingType": "existing"
+								},
+								"created_by_id": {
+									"targetName": "created_by_id",
+									"mappingType": "existing"
+								},
+								"created_on": {
+									"targetName": "created_on",
+									"mappingType": "existing"
+								},
+								"updated_on": {
+									"targetName": "updated_on",
+									"mappingType": "existing"
+								},
+								"updated_by_id": {
+									"targetName": "updated_by_id",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14//* query to extract from project.metadata table and into project_timestamp table */\r\nSELECT \r\n    p.id AS project_id,\r\n    kv.[key] AS metadata_key,\r\n\tCASE \r\n\t\tWHEN kv.[key] \u003d \u0027adjustedOn\u0027 THEN 1\r\n\t\tWHEN kv.[key] \u003d \u0027approvedForSplOn\u0027 THEN 2\r\n\t\tWHEN kv.[key] \u003d \u0027clearanceNotificationSentOn\u0027 THEN 3\r\n\t\tWHEN kv.[key] \u003d \u0027disposedOn\u0027 THEN 4\r\n\t\tWHEN kv.[key] \u003d \u0027exemptionApprovedOn\u0027 THEN 5\r\n\t\tWHEN kv.[key] \u003d \u0027finalFormSignedOn\u0027 THEN 6\r\n\t\tWHEN kv.[key] \u003d \u0027interestedReceivedOn\u0027 THEN 7\r\n\t\tWHEN kv.[key] \u003d \u0027offerAcceptedOn\u0027 THEN 8\r\n\t\tWHEN kv.[key] \u003d \u0027removalFromSplApprovedOn\u0027 THEN 9\r\n\t\tWHEN kv.[key] \u003d \u0027removalFromSplRequestOn\u0027 THEN 10\r\n\t\tWHEN kv.[key] \u003d \u0027requestForSplReceivedOn\u0027 THEN 11\r\n\t\tWHEN kv.[key] \u003d \u0027transferredWithinGreOn\u0027 THEN 12\r\n\tEND AS timestamp_type_id,\r\n    CONVERT(datetime, REPLACE(kv.[value], \u0027T\u0027, \u0027 \u0027), 120) AS [date],\r\n    \u002700000000-0000-0000-0000-000000000000\u0027 as \"created_by_id\",\r\n    GETDATE() as \"created_on\",\r\n\tp.UpdatedOn as \"updated_on\",\r\n\tp.UpdatedById as \"updated_by_id\"\r\n\r\nFROM \r\n    Projects p\r\nCROSS APPLY \r\n    OPENJSON(p.metadata) AS kv\r\nWHERE \r\n    kv.[key] IN (\u0027adjustedOn\u0027, \u0027approvedForSplOn\u0027, \u0027clearanceNotificationSentOn\u0027, \u0027disposedOn\u0027, \u0027exemptionApprovedOn\u0027, \u0027finalFormSignedOn\u0027, \u0027interestedReceivedOn\u0027, \u0027offerAcceptedOn\u0027, \u0027removalFromSplApprovedOn\u0027, \u0027removalFromSplRequestOn\u0027, \u0027requestForSplReceivedOn\u0027, \u0027transferredWithinGreOn\u0027 );\r\n": {
+							"targetName": "project_timestamp",
+							"mappingType": "existing",
+							"attributes": {
+								"project_id": {
+									"targetName": "project_id",
+									"mappingType": "existing"
+								},
+								"metadata_key": {
+									"targetName": "metadata_key",
+									"mappingType": "skip"
+								},
+								"timestamp_type_id": {
+									"targetName": "timestamp_type_id",
+									"mappingType": "existing"
+								},
+								"date": {
+									"targetName": "\"date\"",
+									"mappingType": "existing"
+								},
+								"created_by_id": {
+									"targetName": "created_by_id",
+									"mappingType": "existing"
+								},
+								"created_on": {
+									"targetName": "created_on",
+									"mappingType": "existing"
+								},
+								"updated_on": {
+									"targetName": "updated_on",
+									"mappingType": "existing"
+								},
+								"updated_by_id": {
+									"targetName": "updated_by_id",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14//* query to extract from project.metadata table and into project_monetary table */\r\nSELECT \r\n    p.id AS project_id,\r\n    kv.[key] AS metadata_key,\r\n\tCASE \r\n\t\tWHEN kv.[key] \u003d \u0027gainBeforeSpl\u0027 THEN 1\r\n\t\tWHEN kv.[key] \u003d \u0027interestComponent\u0027 THEN 2\r\n\t\tWHEN kv.[key] \u003d \u0027netProceeds\u0027 THEN 3\r\n\t\tWHEN kv.[key] \u003d \u0027gainLoss\u0027 THEN 4\r\n\t\tWHEN kv.[key] \u003d \u0027ocgFinancialStatement\u0027 THEN 5\r\n\t\tWHEN kv.[key] \u003d \u0027offerAmount\u0027 THEN 6\r\n\t\tWHEN kv.[key] \u003d \u0027programCost\u0027 THEN 7\r\n\t\tWHEN kv.[key] \u003d \u0027realtorCommission\u0027 THEN 8\r\n\t\tWHEN kv.[key] \u003d \u0027salesCost\u0027 THEN 9\r\n\tEND AS monetary_type_id,\r\n    kv.[value] AS \"value\" ,\r\n    \u002700000000-0000-0000-0000-000000000000\u0027 as \"created_by_id\",\r\n    GETDATE() as \"created_on\",\r\n\tp.UpdatedOn as \"updated_on\",\r\n\tp.UpdatedById as \"updated_by_id\"\r\n\r\nFROM \r\n    Projects p\r\nCROSS APPLY \r\n    OPENJSON(p.metadata) AS kv\r\nWHERE \r\n    kv.[key] IN (\u0027gainBeforeSpl\u0027, \u0027interestComponent\u0027, \u0027netProceeds\u0027, \u0027gainLoss\u0027, \u0027ocgFinancialStatement\u0027, \u0027offerAmount\u0027, \u0027programCost\u0027, \u0027realtorCommission\u0027, \u0027salesCost\u0027 );\r\n": {
+							"targetName": "project_monetary",
+							"mappingType": "existing",
+							"attributes": {
+								"project_id": {
+									"targetName": "project_id",
+									"mappingType": "existing"
+								},
+								"metadata_key": {
+									"targetName": "metadata_key",
+									"mappingType": "skip"
+								},
+								"monetary_type_id": {
+									"targetName": "monetary_type_id",
+									"mappingType": "existing"
+								},
+								"value": {
+									"targetName": "value",
+									"mappingType": "existing"
+								},
+								"created_by_id": {
+									"targetName": "created_by_id",
+									"mappingType": "existing"
+								},
+								"created_on": {
+									"targetName": "created_on",
+									"mappingType": "existing"
+								},
+								"updated_on": {
+									"targetName": "updated_on",
+									"mappingType": "existing"
+								},
+								"updated_by_id": {
+									"targetName": "updated_by_id",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14//* Query to extract relevant data from project.metadata table and into project_task table */\r\nSELECT \r\n    p.id AS project_id,\r\n    kv.[key] AS metadata_key,\r\n    CASE \r\n        WHEN kv.[value] \u003d \u0027true\u0027 THEN 1\r\n        WHEN kv.[value] \u003d \u0027false\u0027 THEN 0\r\n        ELSE NULL\r\n    END AS is_completed,\r\n    CASE \r\n        WHEN kv.[key] \u003d \u0027exemptionRequested\u0027 THEN 16\r\n        WHEN kv.[key] \u003d \u0027priorYearAdjustment\u0027 THEN 17\r\n\tEND AS \"task_id\",\r\n    CASE \r\n        WHEN kv.[key] \u003d \u0027priorYearAdjustment\u0027 THEN \r\n            CASE \r\n                WHEN kv.[value] \u003d \u0027true\u0027 THEN JSON_VALUE(p.metadata, \u0027$.priorYearAdjustmentOn\u0027)\r\n                ELSE NULL\r\n            END\r\n        WHEN kv.[key] \u003d \u0027exemptionRequested\u0027 THEN \r\n            CASE \r\n                WHEN kv.[value] \u003d \u0027true\u0027 THEN p.CreatedOn\r\n                ELSE NULL\r\n            END\r\n        ELSE NULL\r\n    END AS completed_on,\r\n    \u002700000000-0000-0000-0000-000000000000\u0027 as \"created_by_id\",\r\n    GETDATE() as \"created_on\",\r\n\tp.UpdatedOn as \"updated_on\",\r\n\tp.UpdatedById as \"updated_by_id\"\r\n\r\nFROM \r\n    Projects p\r\nCROSS APPLY \r\n    OPENJSON(p.metadata) AS kv\r\nWHERE \r\n    kv.[key] IN (\u0027priorYearAdjustment\u0027, \u0027exemptionRequested\u0027)\r\n\torder by kv.[key]": {
+							"targetName": "project_task",
+							"mappingType": "existing",
+							"attributes": {
+								"project_id": {
+									"targetName": "project_id",
+									"mappingType": "existing"
+								},
+								"metadata_key": {
+									"targetName": "metadata_key",
+									"mappingType": "skip"
+								},
+								"is_completed": {
+									"targetName": "is_completed",
+									"mappingType": "existing"
+								},
+								"task_id": {
+									"targetName": "task_id",
+									"mappingType": "existing"
+								},
+								"completed_on": {
+									"targetName": "completed_on",
+									"mappingType": "existing"
+								},
+								"created_by_id": {
+									"targetName": "created_by_id",
+									"mappingType": "existing"
+								},
+								"created_on": {
+									"targetName": "created_on",
+									"mappingType": "existing"
+								},
+								"updated_on": {
+									"targetName": "updated_on",
+									"mappingType": "existing"
+								},
+								"updated_by_id": {
+									"targetName": "updated_by_id",
 									"mappingType": "existing"
 								}
 							}

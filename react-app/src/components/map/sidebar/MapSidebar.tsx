@@ -4,7 +4,7 @@ import { FilterList, ArrowCircleLeft, ArrowCircleRight } from '@mui/icons-materi
 import { Box, Paper, Grid, IconButton, Typography, Icon, useTheme } from '@mui/material';
 import sideBarIcon from '@/assets/icons/SidebarLeft-Linear.svg';
 import { Map } from 'leaflet';
-import React, { CSSProperties, Dispatch, SetStateAction, useState } from 'react';
+import React, { CSSProperties, Dispatch, SetStateAction, useLayoutEffect, useState } from 'react';
 import PropertyRow from '@/components/map/propertyRow/PropertyRow';
 import { PropertyTypes } from '@/constants/propertyTypes';
 import useDataLoader from '@/hooks/useDataLoader';
@@ -15,6 +15,8 @@ interface MapSidebarProps {
   properties: PropertyGeo[];
   map: React.MutableRefObject<Map>;
   setFilter: Dispatch<SetStateAction<object>>;
+  sidebarOpen: boolean;
+  setSidebarOpen: Dispatch<React.SetStateAction<boolean>>;
 }
 
 /**
@@ -24,14 +26,13 @@ interface MapSidebarProps {
  * @returns {JSX.Element} The MapSidebar component.
  */
 const MapSidebar = (props: MapSidebarProps) => {
-  const { properties, map, setFilter } = props;
+  const { properties, map, setFilter, sidebarOpen, setSidebarOpen } = props;
   const [propertiesInBounds, setPropertiesInBounds] = useState<PropertyGeo[]>(properties ?? []);
   const [pageIndex, setPageIndex] = useState<number>(0);
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const theme = useTheme();
   const api = usePimsApi();
-  const propertyPageSize = 10; // Affects paging size
+  const propertyPageSize = 20; // Affects paging size
   const sidebarWidth = 350;
 
   // Get related data for lookups
@@ -56,10 +57,20 @@ const MapSidebar = (props: MapSidebarProps) => {
   };
 
   // Event listeners. Must be this style because we are outside of MapContainer.
-  if (map.current) {
-    map.current.addEventListener('zoomend', definePropertiesInBounds);
-    map.current.addEventListener('moveend', definePropertiesInBounds);
-  }
+  // hook and return used to keep event listeners from stacking
+  useLayoutEffect(() => {
+    if (map.current) {
+      map.current.addEventListener('zoomend', definePropertiesInBounds);
+      map.current.addEventListener('moveend', definePropertiesInBounds);
+    }
+
+    return () => {
+      if (map.current) {
+        map.current.removeEventListener('zoomend', definePropertiesInBounds);
+        map.current.removeEventListener('moveend', definePropertiesInBounds);
+      }
+    };
+  });
 
   return (
     <>

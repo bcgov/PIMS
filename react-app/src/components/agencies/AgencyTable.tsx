@@ -67,7 +67,7 @@ const AgencyTable = (props: IAgencyTable) => {
       field: 'Parent',
       headerName: 'Parent Agency',
       flex: 1,
-      valueFormatter: (value?: Agency) => {
+      valueGetter: (value?: Agency) => {
         if (value) return value.Name;
         return '';
       },
@@ -76,7 +76,7 @@ const AgencyTable = (props: IAgencyTable) => {
       field: 'SendEmail',
       headerName: 'Notification',
       flex: 1,
-      valueFormatter: (value: boolean) => (value ? 'Yes' : 'No'),
+      valueGetter: (value: boolean) => (value ? 'Yes' : 'No'),
       maxWidth: 120,
     },
     {
@@ -101,6 +101,7 @@ const AgencyTable = (props: IAgencyTable) => {
       flex: 1,
       valueFormatter: (value) => dateFormatter(value),
       maxWidth: 150,
+      type: 'date',
     },
     {
       field: 'UpdatedOn',
@@ -108,6 +109,7 @@ const AgencyTable = (props: IAgencyTable) => {
       flex: 1,
       valueFormatter: (value) => dateFormatter(value),
       maxWidth: 150,
+      type: 'date',
     },
   ];
 
