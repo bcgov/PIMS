@@ -863,6 +863,7 @@ const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boo
         CreatedOn: true,
       },
       Notes: {
+        NoteTypeId: true,
         Note: true,
       },
     },
