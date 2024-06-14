@@ -15,6 +15,8 @@ interface MapSidebarProps {
   properties: PropertyGeo[];
   map: React.MutableRefObject<Map>;
   setFilter: Dispatch<SetStateAction<object>>;
+  sidebarOpen: boolean;
+  setSidebarOpen: Dispatch<React.SetStateAction<boolean>>;
 }
 
 /**
@@ -24,10 +26,9 @@ interface MapSidebarProps {
  * @returns {JSX.Element} The MapSidebar component.
  */
 const MapSidebar = (props: MapSidebarProps) => {
-  const { properties, map, setFilter } = props;
+  const { properties, map, setFilter, sidebarOpen, setSidebarOpen } = props;
   const [propertiesInBounds, setPropertiesInBounds] = useState<PropertyGeo[]>(properties ?? []);
   const [pageIndex, setPageIndex] = useState<number>(0);
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const theme = useTheme();
   const api = usePimsApi();
@@ -61,11 +62,14 @@ const MapSidebar = (props: MapSidebarProps) => {
     if (map.current) {
       map.current.addEventListener('zoomend', definePropertiesInBounds);
       map.current.addEventListener('moveend', definePropertiesInBounds);
-      return () => {
+    }
+
+    return () => {
+      if (map.current) {
         map.current.removeEventListener('zoomend', definePropertiesInBounds);
         map.current.removeEventListener('moveend', definePropertiesInBounds);
-      };
-    }
+      }
+    };
   });
 
   return (
