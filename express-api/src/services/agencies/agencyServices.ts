@@ -70,6 +70,24 @@ export const updateAgencyById = async (agencyIn: Agency) => {
   if (findAgency == null) {
     throw new ErrorWithCode('Agency not found', 404);
   }
+
+  // Was a parent agency included?
+  if (agencyIn.ParentId) {
+    const findParentAgency = await getAgencyById(agencyIn.ParentId);
+    if (findParentAgency == null) {
+      throw new ErrorWithCode(`Requested Parent Agency Id ${agencyIn.ParentId} not found.`, 404);
+    }
+    // If updated agency is already a parent, it cannot be assigned a parent.
+    const agencies = await getAgencies({});
+    const isParent = agencies.some((agency) => agency.ParentId === agencyIn.Id);
+    if (isParent) {
+      throw new ErrorWithCode('Cannot assign Parent Agency to existing Parent Agency.', 400);
+    }
+    // If the requested parent has its own parent, it cannot be the parent for the updated agency
+    if (findParentAgency.ParentId != null) {
+      throw new ErrorWithCode('Cannot assign a child agency as a Parent Agency.', 400);
+    }
+  }
   const update = await agencyRepo.update({ Id: agencyIn.Id }, agencyIn);
   return update.raw[0];
 };
