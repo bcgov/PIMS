@@ -66,19 +66,19 @@ export const getAgencyById = async (agencyId: number) => {
  * @returns Status and information on updated agency.
  */
 export const updateAgencyById = async (agencyIn: Agency) => {
-  const findAgency = await getAgencyById(agencyIn.Id);
+  const agencies = await getAgencies({});
+  const findAgency = agencies.find((agency) => agency.Id === agencyIn.Id);
   if (findAgency == null) {
-    throw new ErrorWithCode('Agency not found', 404);
+    throw new ErrorWithCode('Agency not found.', 404);
   }
 
   // Was a parent agency included?
-  if (agencyIn.ParentId) {
-    const findParentAgency = await getAgencyById(agencyIn.ParentId);
+  if (agencyIn.ParentId != null) {
+    const findParentAgency = agencies.find((agency) => agency.Id === agencyIn.ParentId);
     if (findParentAgency == null) {
       throw new ErrorWithCode(`Requested Parent Agency Id ${agencyIn.ParentId} not found.`, 404);
     }
     // If updated agency is already a parent, it cannot be assigned a parent.
-    const agencies = await getAgencies({});
     const isParent = agencies.some((agency) => agency.ParentId === agencyIn.Id);
     if (isParent) {
       throw new ErrorWithCode('Cannot assign Parent Agency to existing Parent Agency.', 400);
@@ -88,8 +88,8 @@ export const updateAgencyById = async (agencyIn: Agency) => {
       throw new ErrorWithCode('Cannot assign a child agency as a Parent Agency.', 400);
     }
   }
-  const update = await agencyRepo.update({ Id: agencyIn.Id }, agencyIn);
-  return update.raw[0];
+  const updatedAgency = await agencyRepo.save(agencyIn);
+  return updatedAgency;
 };
 
 /**
@@ -100,7 +100,7 @@ export const updateAgencyById = async (agencyIn: Agency) => {
 export const deleteAgencyById = async (agencyId: number) => {
   const findAgency = await getAgencyById(agencyId);
   if (findAgency == null) {
-    throw new ErrorWithCode('Agency not found', 404);
+    throw new ErrorWithCode('Agency not found.', 404);
   }
   const deleted = await agencyRepo.delete(findAgency.Id);
   return deleted;
