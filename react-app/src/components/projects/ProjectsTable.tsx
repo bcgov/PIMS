@@ -80,8 +80,7 @@ const ProjectsTable = () => {
       headerName: 'Updated By',
       flex: 1,
       maxWidth: 150,
-      valueFormatter: (user: User) => `${user?.FirstName ?? ''} ${user?.LastName ?? ''}`,
-      type: 'date',
+      valueGetter: (user: User) => `${user?.FirstName ?? ''} ${user?.LastName ?? ''}`,
     },
   ];
 
