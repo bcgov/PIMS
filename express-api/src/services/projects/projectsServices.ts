@@ -799,6 +799,7 @@ const collectFindOptions = (filter: ProjectFilter) => {
   if (filter.projectNumber) {
     options.push(constructFindOptionFromQuery('ProjectNumber', filter.projectNumber));
   }
+  if (filter.updatedOn) options.push(constructFindOptionFromQuery('UpdatedOn', filter.updatedOn));
   return options;
 };
 

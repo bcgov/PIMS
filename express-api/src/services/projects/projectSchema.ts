@@ -8,6 +8,7 @@ export const ProjectFilterSchema = z.object({
   agencyId: z.union([z.number().optional(), z.array(z.number().int().nonnegative()).optional()]),
   agency: z.string().optional(),
   page: z.coerce.number().optional(),
+  updatedOn: z.string().optional(),
   quantity: z.coerce.number().optional(),
   sortKey: z.string().optional(),
   sortOrder: z.string().optional(),
