@@ -72,7 +72,7 @@ export class MoveMetadataToTables1717629146741 implements MigrationInterface {
     ]);
     await queryRunner.query(`SELECT setval('task_id_seq', (SELECT MAX(id) FROM task), true) `);
     await queryRunner.manager.insert(Task, [
-      { Name: 'Exemption requested', IsOptional: true, StatusId: 8, CreatedById: systemId }, //Seems to be associated with approving the project, so probably place in the Add form in new design?
+      { Name: 'Exemption requested', IsOptional: true, StatusId: 4, CreatedById: systemId }, //Seems to be associated with approving the project, so probably place in the Add form in new design?
       {
         Name: 'Prior year adjustment',
         IsOptional: true,
