@@ -821,6 +821,7 @@ const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boo
       Status: includeRelations,
       Workflow: includeRelations,
       CreatedBy: includeRelations,
+      UpdatedBy: includeRelations,
       // Don't include these joins below. It can be very large.
       Tasks: false,
       Notes: false,
@@ -845,6 +846,11 @@ const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boo
         Name: true,
       },
       CreatedBy: {
+        Id: true,
+        FirstName: true,
+        LastName: true,
+      },
+      UpdatedBy: {
         Id: true,
         FirstName: true,
         LastName: true,
