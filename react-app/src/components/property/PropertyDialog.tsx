@@ -37,7 +37,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
     api.lookup.getClassifications,
   );
   const { submit, submitting } = useDataSubmitter(api.parcels.updateParcelById);
-  adminLoad();
+  adminLoad({});
   classificationLoad();
 
   const infoFormMethods = useForm({
@@ -132,7 +132,7 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
   );
   const { submit, submitting } = useDataSubmitter(api.buildings.updateBuildingById);
 
-  adminLoad();
+  adminLoad({});
   classificationLoad();
   predominateUseLoad();
   constructionLoad();

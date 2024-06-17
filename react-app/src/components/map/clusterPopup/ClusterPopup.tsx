@@ -41,8 +41,8 @@ const ClusterPopup = (props: ClusterPopupProps) => {
   const { data: adminAreaData, loadOnce: loadAdminAreas } = useDataLoader(
     api.administrativeAreas.getAdministrativeAreas,
   );
-  loadAgencies();
-  loadAdminAreas();
+  loadAgencies({});
+  loadAdminAreas({});
 
   /**
    * The following block of code determines which direction and position the popup should open with.

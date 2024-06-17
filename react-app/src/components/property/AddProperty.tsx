@@ -49,7 +49,7 @@ const AddProperty = () => {
   const { submit: submitBuilding, submitting: submittingBuilding } = useDataSubmitter(
     api.buildings.addBuilding,
   );
-  loadAdminAreas();
+  loadAdminAreas({});
   loadClassifications();
   loadPredominateUse();
   loadConstructionTypeData();

@@ -7,7 +7,7 @@ import { ISelectMenuItem } from '@/components/form/SelectFormField';
 export const useGroupedAgenciesApi = () => {
   const api = usePimsApi();
   const { loadOnce: agencyLoad, data: agencyData } = useDataLoader(api.agencies.getAgencies);
-  agencyLoad();
+  agencyLoad({});
 
   const groupedAgencies = useMemo(() => {
     const groups: { [parentName: string]: Agency[] } = {};
