@@ -16,7 +16,7 @@ export const dateFormatter = (input: any) => {
 };
 
 export const columnNameFormatter = (input: string) => {
-  return input.replace(/([a-z])([A-Z])/g, '$1 $2');
+  return input.replace('OCG', 'OCG ').replace(/([a-z])([A-Z])/g, '$1 $2'); //ExampleHeaderHere -> Example Header Here
 };
 
 type ChipStatus = 'OnHold' | 'Active' | 'Disabled' | 'Denied'; //Replace with a better type eventually.
@@ -103,3 +103,5 @@ export const pidFormatter = (pid: number | string): string => {
   if (pid == null) return '';
   return zeroPadPID(pid).match(/\d{3}/g).join('-');
 };
+
+export const formatNumber = (num: number) => num.toLocaleString();

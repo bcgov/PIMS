@@ -45,6 +45,7 @@ const ProjectsTable = () => {
       field: 'Status',
       headerName: 'Status',
       flex: 1,
+      maxWidth: 250,
       valueGetter: (value: any) => value?.Name ?? 'N/A',
       renderCell: (params) => projectStatusChipFormatter(params.value ?? 'N/A'),
     },
@@ -72,6 +73,7 @@ const ProjectsTable = () => {
       flex: 1,
       valueFormatter: (date) => dateFormatter(date),
       maxWidth: 125,
+      type: 'date',
     },
     {
       field: 'UpdatedBy',

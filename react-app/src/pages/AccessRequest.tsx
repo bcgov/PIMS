@@ -129,7 +129,7 @@ export const AccessRequest = () => {
   }
 
   const selectPageContent = () => {
-    switch (auth.pimsUser.data.Status) {
+    switch (auth.pimsUser.data?.Status) {
       case 'OnHold':
         return (
           <>

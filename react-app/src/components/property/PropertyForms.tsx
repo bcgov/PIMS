@@ -21,9 +21,10 @@ import usePimsApi from '@/hooks/usePimsApi';
 import { centroid } from '@turf/turf';
 import ParcelMap from '../map/ParcelMap';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
-import { FeatureCollection } from 'geojson';
 import { arrayUniqueBy } from '@/utilities/helperFunctions';
 import MetresSquared from '@/components/text/MetresSquared';
+import { FeatureCollection } from '@/hooks/api/useParcelLayerApi';
+import { Feature } from 'geojson';
 export type PropertyType = 'Building' | 'Parcel';
 
 interface IParcelInformationForm {
@@ -84,7 +85,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
     }
   };
 
-  const [map, setMap] = useState<Map>(null);
+  const map = useRef<Map>();
   const [position, setPosition] = useState<LatLng>(null);
 
   const updateLocation = (latlng: LatLng) => {
@@ -95,31 +96,32 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
   useEffect(() => {
     const vals = formContext?.getValues();
     if (vals?.Location) {
-      map?.setView([vals.Location.y, vals.Location.x], 17);
+      map.current?.setView([vals.Location.y, vals.Location.x], 17);
       onMove();
     }
-  }, [formContext, map]);
+  }, [formContext, map.current]);
 
   const onMove = useCallback(() => {
-    if (map) {
-      setPosition(map.getCenter());
-      updateLocation(map.getCenter());
+    if (map.current) {
+      setPosition(map.current.getCenter());
+      updateLocation(map.current.getCenter());
     }
-  }, [map]);
+  }, [map.current]);
 
   useEffect(() => {
     if (map) {
-      map.on('move', onMove);
+      map.current?.on('move', onMove);
       return () => {
-        map.off('move', onMove);
+        map.current?.off('move', onMove);
       };
     }
-  }, [map, onMove]);
+  }, [map.current, onMove]);
 
   const handleFeatureCollectionResponse = (response: FeatureCollection) => {
     if (response.features.length) {
-      const coordArr: [number, number] = centroid(response.features[0]).geometry.coordinates;
-      map.setView([coordArr[1], coordArr[0]], 17);
+      const coordArr = centroid(response.features[0] as unknown as Feature).geometry
+        .coordinates as [number, number];
+      map.current?.setView([coordArr[1], coordArr[0]], 17);
     }
   };
 
@@ -158,7 +160,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
                   onChange={(e, value) => {
                     if (value != null) {
                       if (typeof value !== 'string') {
-                        map.setView(new LatLng(value.latitude, value.longitude), 17);
+                        map.current?.setView(new LatLng(value.latitude, value.longitude), 17);
                         field.onChange(value.fullAddress);
                       } else {
                         field.onChange(value);
@@ -186,7 +188,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             onBlur={(event) => {
               // Only do this if there's a value here
               if (event.target.value) {
-                map.closePopup();
+                map.current?.closePopup();
                 api.parcelLayer
                   .getParcelByPid(event.target.value)
                   .then(handleFeatureCollectionResponse);
@@ -211,7 +213,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             onBlur={(event) => {
               // Only do this if there's a value here
               if (event.target.value) {
-                map.closePopup();
+                map.current?.closePopup();
                 api.parcelLayer
                   .getParcelByPin(event.target.value)
                   .then(handleFeatureCollectionResponse);
@@ -249,7 +251,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
         <Grid item xs={12}>
           <ParcelMap
             height={'500px'}
-            mapRef={setMap}
+            mapRef={map}
             movable={true}
             zoomable={true}
             zoomOnScroll={false}

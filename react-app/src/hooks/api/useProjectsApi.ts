@@ -81,8 +81,32 @@ export interface Project {
   Notifications?: ProjectNotification[];
   StatusHistory?: ProjectStatusHistory[];
   Notes?: ProjectNote[];
+  Monetaries?: ProjectMonetary[];
+  Timestamps?: ProjectTimestamp[];
   ProjectProperties?: ProjectProperty[];
   AgencyResponses?: ProjectAgencyResponse[];
+}
+
+export interface ProjectMonetary {
+  CreatedById?: string;
+  CreatedOn?: Date;
+  Id?: number;
+  Value?: string | number;
+  MonetaryTypeId?: number;
+  ProjectId?: number;
+  UpdatedById?: string;
+  UpdatedOn?: Date;
+}
+
+export interface ProjectTimestamp {
+  CreatedById?: string;
+  CreatedOn?: Date;
+  Id?: number;
+  Date?: Date;
+  TimestampTypeId?: number;
+  ProjectId?: number;
+  UpdatedById?: string;
+  UpdatedOn?: Date;
 }
 
 export interface ProjectNote {
