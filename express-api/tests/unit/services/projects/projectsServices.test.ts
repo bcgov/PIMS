@@ -237,10 +237,15 @@ describe('UNIT - Project Services', () => {
 
     it('should add a project and its relevant project property entries', async () => {
       const project = produceProject({ Name: 'Test Project' });
-      const result = await projectServices.addProject(project, {
-        parcels: [3],
-        buildings: [1],
-      });
+      const keycloak = produceSSO();
+      const result = await projectServices.addProject(
+        project,
+        {
+          parcels: [3],
+          buildings: [1],
+        },
+        keycloak,
+      );
       // Agency is checked for existance
       expect(_agencyExists).toHaveBeenCalledTimes(1);
       // The sequence is called
@@ -264,24 +269,34 @@ describe('UNIT - Project Services', () => {
 
     it('should throw an error if the project is missing a name', async () => {
       const project = produceProject({ Name: undefined });
+      const keycloak = produceSSO();
       expect(
         async () =>
-          await projectServices.addProject(project, {
-            parcels: [1],
-            buildings: [1],
-          }),
+          await projectServices.addProject(
+            project,
+            {
+              parcels: [1],
+              buildings: [1],
+            },
+            keycloak,
+          ),
       ).rejects.toThrow(new ErrorWithCode('Projects must have a name.', 400));
     });
 
     it('should throw an error if the agency does not exist', async () => {
       _agencyExists.mockImplementationOnce(async () => false);
       const project = produceProject({});
+      const keycloak = produceSSO();
       expect(
         async () =>
-          await projectServices.addProject(project, {
-            parcels: [1],
-            buildings: [1],
-          }),
+          await projectServices.addProject(
+            project,
+            {
+              parcels: [1],
+              buildings: [1],
+            },
+            keycloak,
+          ),
       ).rejects.toThrow(new ErrorWithCode(`Agency with ID ${project.AgencyId} not found.`, 404));
     });
 
@@ -290,24 +305,34 @@ describe('UNIT - Project Services', () => {
         throw new Error();
       });
       const project = produceProject({});
+      const keycloak = produceSSO();
       expect(
         async () =>
-          await projectServices.addProject(project, {
-            parcels: [1],
-            buildings: [1],
-          }),
+          await projectServices.addProject(
+            project,
+            {
+              parcels: [1],
+              buildings: [1],
+            },
+            keycloak,
+          ),
       ).rejects.toThrow(new ErrorWithCode('Error creating project.', 500));
     });
 
     it('should throw an error if the parcel attached to project does not exist', async () => {
       _parcelManagerFindOne.mockImplementationOnce(async () => null);
       const project = produceProject({});
+      const keycloak = produceSSO();
       expect(
         async () =>
-          await projectServices.addProject(project, {
-            parcels: [1],
-            buildings: [1],
-          }),
+          await projectServices.addProject(
+            project,
+            {
+              parcels: [1],
+              buildings: [1],
+            },
+            keycloak,
+          ),
       ).rejects.toThrow(new ErrorWithCode(`Parcel with ID 1 does not exist.`, 404));
     });
 
@@ -315,18 +340,24 @@ describe('UNIT - Project Services', () => {
       jest.clearAllMocks();
       _buildingManagerFindOne.mockImplementationOnce(async () => null);
       const project = produceProject({});
+      const keycloak = produceSSO();
       expect(
         async () =>
-          await projectServices.addProject(project, {
-            parcels: [1],
-            buildings: [1],
-          }),
+          await projectServices.addProject(
+            project,
+            {
+              parcels: [1],
+              buildings: [1],
+            },
+            keycloak,
+          ),
       ).rejects.toThrow(new ErrorWithCode(`Building with ID 1 does not exist.`, 404));
     });
 
     it('should throw an error if the parcel belongs to another project', async () => {
       const existingProject = produceProject({ StatusId: ProjectStatus.IN_ERP });
       const project = produceProject({ Id: existingProject.Id + 1 });
+      const keycloak = produceSSO();
       _projectPropertiesManagerFind.mockImplementationOnce(async () => {
         return [
           produceProjectProperty({
@@ -338,9 +369,13 @@ describe('UNIT - Project Services', () => {
       });
       expect(
         async () =>
-          await projectServices.addProject(project, {
-            parcels: [1],
-          }),
+          await projectServices.addProject(
+            project,
+            {
+              parcels: [1],
+            },
+            keycloak,
+          ),
       ).rejects.toThrow(
         new ErrorWithCode(`Parcel with ID 1 already belongs to another active project.`, 400),
       );
@@ -349,6 +384,7 @@ describe('UNIT - Project Services', () => {
     it('should throw an error if the building belongs to another project', async () => {
       const existingProject = produceProject({ StatusId: ProjectStatus.IN_ERP });
       const project = produceProject({ Id: existingProject.Id + 1 });
+      const keycloak = produceSSO();
       _projectPropertiesManagerFindOne.mockImplementationOnce(async () => null);
       _projectPropertiesManagerFind.mockImplementationOnce(async () => {
         return [
@@ -361,9 +397,13 @@ describe('UNIT - Project Services', () => {
       });
       expect(
         async () =>
-          await projectServices.addProject(project, {
-            buildings: [1],
-          }),
+          await projectServices.addProject(
+            project,
+            {
+              buildings: [1],
+            },
+            keycloak,
+          ),
       ).rejects.toThrow(
         new ErrorWithCode(`Building with ID 1 already belongs to another active project.`, 400),
       );
