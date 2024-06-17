@@ -59,12 +59,6 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
           ),
         );
         updateClusters();
-      } else {
-        // Reset back to BC view
-        map.fitBounds([
-          [54.2516, -129.371],
-          [49.129, -117.203],
-        ]);
       }
     }
   }, [properties]);
