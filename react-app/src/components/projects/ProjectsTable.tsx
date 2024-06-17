@@ -193,16 +193,18 @@ const ProjectsTable = () => {
                 (n) => n.TemplateId === NotificationType.NINTY_DAY_ERP_NOTIFICATION_PARENT_AGENCIES,
               )?.SendOn,
               'Transferred Within GRE On': projectModel.Timestamps.find(
-                (timestamp) => timestamp.Id === TimestampType.TRANSFERRED_WITHIN_GRE_ON,
+                (timestamp) =>
+                  timestamp.TimestampTypeId === TimestampType.TRANSFERRED_WITHIN_GRE_ON,
               )?.Date,
               'ERP Clearance Notification Sent On': projectModel.Timestamps.find(
-                (timestamp) => timestamp.Id === TimestampType.CLEARANCE_NOTIFICATION_SENT_ON,
+                (timestamp) =>
+                  timestamp.TimestampTypeId === TimestampType.CLEARANCE_NOTIFICATION_SENT_ON,
               )?.Date,
               'Disposed On': projectModel.Timestamps.find(
-                (timestamp) => timestamp.Id === TimestampType.DISPOSED_ON,
+                (timestamp) => timestamp.TimestampTypeId === TimestampType.DISPOSED_ON,
               )?.Date,
               'Marketed On': projectModel.Timestamps.find(
-                (timestamp) => timestamp.Id === TimestampType.MARKETED_ON,
+                (timestamp) => timestamp.TimestampTypeId === TimestampType.MARKETED_ON,
               )?.Date,
               'Offers Note': projectModel.Notes?.find((note) => note.NoteTypeId === NoteTypes.OFFER)
                 ?.Note,
