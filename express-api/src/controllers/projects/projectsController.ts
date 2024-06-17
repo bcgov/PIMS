@@ -118,7 +118,11 @@ export const addDisposalProject = async (req: Request, res: Response) => {
   const addBody = { ...project, CreatedById: user.Id, AgencyId: user.AgencyId };
 
   // Call the addProject service function with the project data
-  const newProject = await projectServices.addProject(addBody, projectPropertyIds);
+  const newProject = await projectServices.addProject(
+    addBody,
+    projectPropertyIds,
+    req.user as SSOUser,
+  );
 
   // Return the new project in the response
   return res.status(201).json(newProject);
