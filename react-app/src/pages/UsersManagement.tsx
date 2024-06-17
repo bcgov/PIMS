@@ -20,7 +20,7 @@ const UsersManagement = () => {
         }
       }}
       data={data}
-      refreshData={refreshData}
+      refreshData={() => refreshData({})}
       isLoading={isLoading}
       error={error}
     />

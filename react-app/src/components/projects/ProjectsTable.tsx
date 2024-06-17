@@ -191,6 +191,7 @@ const ProjectsTable = () => {
   return (
     <Box sx={{ height: 'calc(100vh - 160px)' }}>
       <FilterSearchDataGrid
+        tableOperationMode="server"
         dataSource={api.projects.getProjects}
         onAddButtonClick={() => navigate('/projects/add')}
         onPresetFilterChange={selectPresetFilter}

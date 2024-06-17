@@ -170,7 +170,8 @@ export const CustomListSubheader = (props: PropsWithChildren) => {
 };
 
 type FilterSearchDataGridProps = {
-  dataSource: (filter: CommonFiltering, signal: AbortSignal) => Promise<any[]>;
+  dataSource?: (filter: CommonFiltering, signal: AbortSignal) => Promise<any[]>;
+  tableOperationMode: 'client' | 'server';
   onPresetFilterChange: (value: string, ref: MutableRefObject<GridApiCommunity>) => void;
   onAddButtonClick?: React.MouseEventHandler<HTMLButtonElement>;
   defaultFilter: string;
@@ -189,8 +190,8 @@ type FilterSearchDataGridProps = {
 } & DataGridProps;
 
 export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
-  const [rows, setRows] = useState([]);
-  const [rowCount] = useState<number>(0);
+  const [dataSourceRows, setDataSourceRows] = useState([]);
+  const [rowCount, setRowCount] = useState<number>(0);
   const [tableModel, setTableModel] = useState<ITableModelCollection>({
     pagination: {
       page: props.initialState?.pagination?.paginationModel?.page ?? 0,
@@ -255,7 +256,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         signal,
       )
       .then((resolved) => {
-        setRows(resolved);
+        setDataSourceRows(resolved);
       })
       .catch((e) => {
         if (!(e instanceof DOMException)) {
@@ -270,7 +271,9 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   };
 
   useEffect(() => {
-    dataSourceUpdate(tableModel);
+    if (props.dataSource) {
+      dataSourceUpdate(tableModel);
+    }
   }, [tableModel]);
 
   useEffect(() => {
@@ -570,10 +573,12 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         </Box>
       </Box>
       <CustomDataGrid
-        // onStateChange={(e) => {
-        //   // Keep track of row count separately
-        //   setRowCount(Object.values(e.filter.filteredRowsLookup).filter((value) => value).length);
-        // }}
+        onStateChange={(e) => {
+          // Keep track of row count separately
+          if (!props.dataSource) {
+            setRowCount(Object.values(e.filter.filteredRowsLookup).filter((value) => value).length);
+          }
+        }}
         onFilterModelChange={(e) => {
           // Can only filter by 1 at a time without DataGrid Pro
           if (e.items.length > 0) {
@@ -607,11 +612,11 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             setQuery({ columnSortName: undefined, columnSortValue: undefined });
           }
         }}
-        paginationMode="server"
-        sortingMode="server"
-        filterMode="server"
-        rowCount={-1}
-        paginationMeta={{ hasNextPage: false }}
+        paginationMode={props.tableOperationMode}
+        sortingMode={props.tableOperationMode}
+        filterMode={props.tableOperationMode}
+        rowCount={props.dataSource ? -1 : undefined}
+        paginationMeta={props.dataSource ? { hasNextPage: false } : undefined}
         onPaginationModelChange={(model) => {
           setTableModel({ ...tableModel, pagination: model });
           setQuery({ page: model.page, pageSize: model.pageSize });
@@ -644,7 +649,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         loading={dataSourceLoading}
         slots={{ toolbar: KeywordSearch, noRowsOverlay: NoRowsOverlay }}
         {...props}
-        rows={rows ?? []}
+        rows={dataSourceRows && props.dataSource ? dataSourceRows : props.rows}
       />
     </>
   );

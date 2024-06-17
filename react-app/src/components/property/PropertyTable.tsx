@@ -339,6 +339,7 @@ const PropertyTable = (props: IPropertyTable) => {
         onPresetFilterChange={selectPresetFilter}
         getRowId={(row) => row.Id + row.Type}
         defaultFilter={'All Properties'}
+        tableOperationMode="client"
         onRowClick={props.rowClickHandler}
         onAddButtonClick={() => navigate('add')}
         presetFilterSelectOptions={[
