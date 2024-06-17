@@ -230,9 +230,11 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     const filterObj = {};
     if (filter?.items) {
       for (const f of filter.items) {
+        const asCamelCase = f.field.charAt(0).toLowerCase() + f.field.slice(1);
         if (f.value != undefined) {
-          const asCamelCase = f.field.charAt(0).toLowerCase() + f.field.slice(1);
           filterObj[asCamelCase] = `${f.operator},${f.value}`;
+        } else if (f.operator === 'isNotEmpty' || f.operator === 'isEmpty') {
+          filterObj[asCamelCase] = f.operator;
         }
       }
     } else if (quickFilter) {
@@ -581,15 +583,21 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         }}
         onFilterModelChange={(e) => {
           // Can only filter by 1 at a time without DataGrid Pro
+          console.log(e);
           if (e.items.length > 0) {
             const item = e.items.at(0);
             setTableModel({
               ...tableModel,
-              pagination: { page: 0, pageSize: getQuery().pageSize },
+              pagination: { page: 0, pageSize: tableModel.pagination.pageSize },
               filter: e,
             });
             setQuery({ columnFilterName: item.field, columnFilterValue: item.value });
           } else {
+            setTableModel({
+              ...tableModel,
+              pagination: { page: 0, pageSize: tableModel.pagination.pageSize },
+              filter: undefined,
+            });
             setQuery({ columnFilterName: undefined, columnFilterValue: undefined });
           }
           // Get the filter items from MUI, filter out blanks, set state

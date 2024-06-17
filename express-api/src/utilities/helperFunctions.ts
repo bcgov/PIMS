@@ -1,4 +1,4 @@
-import { Equal, FindOptionsWhere, ILike, Raw } from 'typeorm';
+import { Equal, FindOptionsWhere, ILike, IsNull, Not, Raw } from 'typeorm';
 
 export const constructFindOptionFromQuery = <T>(
   column: keyof T,
@@ -43,6 +43,12 @@ export const constructFindOptionFromQuery = <T>(
       return {
         [column]: Raw((alias) => `${alias} <= '${toPostgresTimestamp(new Date(value))}'`),
       } as FindOptionsWhere<T>;
+    case 'isNotEmpty':
+      internalMatcher = () => Not(IsNull());
+      break;
+    case 'isEmpty':
+      internalMatcher = IsNull;
+      break;
     default:
       return { [column]: undefined } as FindOptionsWhere<T>;
   }
