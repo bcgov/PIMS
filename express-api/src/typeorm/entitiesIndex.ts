@@ -45,6 +45,7 @@ import { ProjectMonetary } from './Entities/ProjectMonetary';
 import { ProjectTimestamp } from './Entities/ProjectTimestamp';
 import { MonetaryType } from './Entities/MonetaryType';
 import { TimestampType } from './Entities/TimestampType';
+import { PropertyUnion } from './Entities/views/PropertyUnionView';
 
 const views = [BuildingRelations, MapProperties];
 
@@ -94,5 +95,6 @@ export default [
   Workflow,
   WorkflowProjectStatus,
   NoteType,
+  PropertyUnion,
   ...views,
 ];
