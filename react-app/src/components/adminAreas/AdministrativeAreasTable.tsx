@@ -106,6 +106,7 @@ const AdministrativeAreasTable = () => {
   return (
     <FilterSearchDataGrid
       dataSource={api.administrativeAreas.getAdministrativeAreas}
+      tableOperationMode="server"
       name="adminAreas"
       onRowClick={(params) => navigate(`${params.row.Id}`)}
       onPresetFilterChange={selectPresetFilter}
