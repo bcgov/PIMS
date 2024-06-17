@@ -2,9 +2,29 @@ import { AppDataSource } from '@/appDataSource';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { AgencyFilter } from './agencySchema';
-import { FindOptionsOrder } from 'typeorm';
+import { constructFindOptionFromQuery } from '@/utilities/helperFunctions';
+import { FindOptionsOrderValue, FindOptionsOrder } from 'typeorm';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
+
+const collectFindOptions = (filter: AgencyFilter) => {
+  const options = [];
+  if (filter.name) options.push(constructFindOptionFromQuery('Name', filter.name));
+  if (filter.parent) options.push({ Parent: constructFindOptionFromQuery('Name', filter.parent) });
+  return options;
+};
+
+const sortKeyMapping = (
+  sortKey: string,
+  sortDirection: FindOptionsOrderValue,
+): FindOptionsOrder<Agency> => {
+  switch (sortKey) {
+    case 'Parent':
+      return { Parent: { Name: sortDirection } };
+    default:
+      return { [sortKey]: sortDirection };
+  }
+};
 
 /**
  * @description Gets and returns a list of all agencies.
@@ -12,18 +32,13 @@ const agencyRepo = AppDataSource.getRepository(Agency);
  */
 export const getAgencies = async (filter: AgencyFilter, includeRelations: boolean = false) => {
   const allAgencies = await agencyRepo.find({
-    where: {
-      Name: filter.name,
-      IsDisabled: filter.isDisabled,
-      SortOrder: filter.sortOrder,
-      Id: filter.id,
-    },
+    where: collectFindOptions(filter),
     relations: {
       Parent: includeRelations,
     },
     take: filter.quantity,
     skip: (filter.quantity ?? 0) * (filter.page ?? 0),
-    order: filter.sort as FindOptionsOrder<Agency>,
+    order: sortKeyMapping(filter.sortKey, filter.sortOrder as FindOptionsOrderValue),
   });
   return allAgencies;
 };

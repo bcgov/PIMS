@@ -23,11 +23,12 @@ export const AgencyCreationSchema = z.object({
 export const AgencyFilterSchema = z.object({
   name: z.string().optional(),
   parentId: z.coerce.number().int().optional(),
+  parent: z.string().optional(),
   isDisabled: z.coerce.boolean().optional(),
-  sortOrder: z.coerce.number().optional(),
+  sortOrder: z.string().optional(),
   page: z.coerce.number().optional(),
   quantity: z.coerce.number().optional(),
-  sort: z.string().optional(),
+  sortKey: z.string().optional(),
   id: z.coerce.number().optional(),
 });
 
