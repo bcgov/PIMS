@@ -63,6 +63,22 @@ body:
         - Linux
     validations:
       required: true
+  - type: markdown
+    attributes:
+      value: |
+        ## For Developers
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment (Optional)
+      multiple: false
+      options:
+        - Local
+        - Production
+        - Test
+        - Dev
+    validations:
+      required: false
   - type: textarea
     id: code
     attributes:
