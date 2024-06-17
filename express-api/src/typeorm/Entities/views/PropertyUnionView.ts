@@ -12,7 +12,8 @@ import { ViewColumn, ViewEntity } from 'typeorm';
 	address1,
 	administrative_area_id,
 	is_sensitive,
-	updated_on
+	updated_on,
+	land_area
 FROM parcel p
 UNION ALL
 SELECT 
@@ -25,7 +26,8 @@ SELECT
 	address1,
 	administrative_area_id,
 	is_sensitive,
-	updated_on
+	updated_on,
+	NULL AS land_area
 FROM building b)
 SELECT 
 	property.*, 
@@ -76,4 +78,7 @@ export class PropertyUnion {
 
   @ViewColumn({ name: 'administrative_area_name' })
   AdministrativeArea: string;
+
+  @ViewColumn({ name: 'land_area' })
+  LandArea: number;
 }
