@@ -1,0 +1,71 @@
+name: Issue Report
+description: Submit found issues with PIMS
+title: "[Issue]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this issue report!
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details (Optional)
+      description: How can we get in touch with you if we need more info?
+      placeholder: ex. email@example.com
+    validations:
+      required: false
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: What was the expected outcome? What actually happened?
+      placeholder: Pictures welcome.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce (Optional)
+      description: Please provide the steps to reproduce this issue if possible. It helps us determine exactly what is happening.
+  - type: dropdown
+    id: version
+    attributes:
+      label: Issue Type
+      description: What type of issue is this?
+      options:
+        - Visual
+        - Unexpected Behaviour
+        - Security & Permissions
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: What browsers are you seeing the problem on?
+      multiple: true
+      options:
+        - Firefox
+        - Chrome
+        - Safari
+        - Microsoft Edge
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: What Operating System are you using?
+      multiple: false
+      options:
+        - Windows
+        - Mac (OSX)
+        - Linux
+    validations:
+      required: true
+  - type: textarea
+    id: code
+    attributes:
+      label: Relevant Code (Optional)
+      description: If you think you know where this issue is coming from, please paste the relevant code here. This will be automatically formatted into code, so no need for backticks.
+      render: typescript
