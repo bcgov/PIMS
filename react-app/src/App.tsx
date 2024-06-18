@@ -4,7 +4,7 @@ import React, { useContext } from 'react';
 import '@/App.css';
 import { ThemeProvider } from '@emotion/react';
 import appTheme from './themes/appTheme';
-// import Dev from './pages/DevZone';
+import Dev from './pages/DevZone';
 import { ConfigContextProvider } from './contexts/configContext';
 import AuthContextProvider, { AuthContext } from './contexts/authContext';
 import AuthRouteGuard from './guards/AuthRouteGuard';
@@ -27,7 +27,6 @@ import ProjectManagement from './pages/ProjectManagement';
 import AddProject from '@/components/projects/AddProject';
 import { Roles } from '@/constants/roles';
 import ProjectDetail from '@/components/projects/ProjectDetail';
-import TitleOwnership from './components/ltsa/TitleOwnership';
 import SnackBarContextProvider from './contexts/snackbarContext';
 import ParcelMap from '@/components/map/ParcelMap';
 
@@ -70,16 +69,6 @@ const Router = () => {
           <BaseLayout displayFooter>
             <AuthRouteGuard ignoreStatus>
               <AccessRequest />
-            </AuthRouteGuard>
-          </BaseLayout>
-        }
-      />
-      <Route
-        path="/:pid"
-        element={
-          <BaseLayout>
-            <AuthRouteGuard ignoreStatus>
-              <TitleOwnership pid={''} />
             </AuthRouteGuard>
           </BaseLayout>
         }
@@ -237,6 +226,16 @@ const Router = () => {
         }
       />
       <Route path="/map" element={showMap()} />
+      <Route
+        path="/dev"
+        element={
+          <BaseLayout>
+            <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
+              <Dev />
+            </AuthRouteGuard>
+          </BaseLayout>
+        }
+      />
     </Routes>
   );
 };

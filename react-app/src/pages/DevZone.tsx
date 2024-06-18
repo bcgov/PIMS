@@ -1,10 +1,15 @@
 /* eslint-disable no-console */
 //Simple component testing area.
-import ParcelMap from '@/components/map/ParcelMap';
 import React from 'react';
+import usePimsApi from '@/hooks/usePimsApi';
+import useDataLoader from '@/hooks/useDataLoader';
 
 const Dev = () => {
-  return <ParcelMap height="100%" loadProperties={true} popupSize="large" />;
+  const api = usePimsApi();
+  const { data, loadOnce } = useDataLoader(api.lookup.getAll);
+  loadOnce();
+  console.log(data);
+  return <></>;
 };
 
 export default Dev;
