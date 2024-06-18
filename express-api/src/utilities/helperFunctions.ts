@@ -1,4 +1,4 @@
-import { Equal, FindOptionsWhere, ILike, IsNull, Not, Raw } from 'typeorm';
+import { Equal, FindOptionsWhere, IsNull, Not, Raw } from 'typeorm';
 
 export const constructFindOptionFromQuery = <T>(
   column: keyof T,
@@ -20,29 +20,23 @@ export const constructFindOptionFromQuery = <T>(
       internalMatcher = (str: string) => ILikeWrapper(str, 'endsWith');
       break;
     case 'is':
-      return {
-        [column]: Raw((alias) => `${alias} = '${toPostgresTimestamp(new Date(value))}'`),
-      } as FindOptionsWhere<T>;
+      internalMatcher = (str: string) => TimestampComparisonWrapper(str, '=');
+      break;
     case 'not':
-      return {
-        [column]: Raw((alias) => `${alias} != '${toPostgresTimestamp(new Date(value))}'`),
-      } as FindOptionsWhere<T>;
+      internalMatcher = (str: string) => TimestampComparisonWrapper(str, '!=');
+      break;
     case 'after':
-      return {
-        [column]: Raw((alias) => `${alias} > '${toPostgresTimestamp(new Date(value))}'`),
-      } as FindOptionsWhere<T>;
+      internalMatcher = (str: string) => TimestampComparisonWrapper(str, '>');
+      break;
     case 'before':
-      return {
-        [column]: Raw((alias) => `${alias} < '${toPostgresTimestamp(new Date(value))}'`),
-      } as FindOptionsWhere<T>;
+      internalMatcher = (str: string) => TimestampComparisonWrapper(str, '<');
+      break;
     case 'onOrAfter':
-      return {
-        [column]: Raw((alias) => `${alias} >= '${toPostgresTimestamp(new Date(value))}'`),
-      } as FindOptionsWhere<T>;
+      internalMatcher = (str: string) => TimestampComparisonWrapper(str, '>=');
+      break;
     case 'onOrBefore':
-      return {
-        [column]: Raw((alias) => `${alias} <= '${toPostgresTimestamp(new Date(value))}'`),
-      } as FindOptionsWhere<T>;
+      internalMatcher = (str: string) => TimestampComparisonWrapper(str, '<=');
+      break;
     case 'isNotEmpty':
       internalMatcher = () => Not(IsNull());
       break;
@@ -68,11 +62,25 @@ export const ILikeWrapper = (query: string | undefined, mode: ILikeWrapperMode =
     } else {
       searchText = `%${query}%`;
     }
-    return ILike(searchText);
+    return Raw((alias) => `${fixColumnAlias(alias)}::text ILIKE '${searchText}'`);
   }
 };
 
-function toPostgresTimestamp(date: Date) {
+type TimestampOperator = '=' | '!=' | '<=' | '>=' | '<' | '>';
+export const TimestampComparisonWrapper = (tsValue: string, operator: TimestampOperator) => {
+  return Raw((alias) => `${alias} ${operator} '${toPostgresTimestamp(new Date(tsValue))}'`);
+};
+
+const fixColumnAlias = (str: string) => {
+  const [tableAlias, columnAlias] = str.split('.');
+  const fixedColumn = columnAlias
+    .split(/\.?(?=[A-Z])/)
+    .join('_')
+    .toLowerCase();
+  return `"${tableAlias}".${fixedColumn}`;
+};
+
+const toPostgresTimestamp = (date: Date) => {
   const pad = (num: number, size = 2) => {
     let s = String(num);
     while (s.length < size) s = '0' + s;
@@ -87,4 +95,4 @@ function toPostgresTimestamp(date: Date) {
   const seconds = pad(date.getSeconds());
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-}
+};

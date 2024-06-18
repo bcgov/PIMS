@@ -469,7 +469,16 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   const updateSearchValue = useMemo(() => {
     return debounce((newValue) => {
       //tableApiRef.current.setQuickFilterValues(newValue.split(' ').filter((word) => word !== ''));
+      const defaultpagesize = { page: 0, pageSize: tableModel.pagination.pageSize };
+      tableApiRef.current.setPaginationModel(defaultpagesize);
+      setQuery(defaultpagesize);
+      setTableModel({
+        ...tableModel,
+        pagination: defaultpagesize,
+        quickFilter: newValue.split(' ').filter((word) => word !== ''),
+      });
       setQuery({
+        ...defaultpagesize,
         keywordFilter: newValue,
       });
     }, 100);
@@ -523,15 +532,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         >
           <KeywordSearch
             onChange={(e) => {
-              const defaultpagesize = { page: 0, pageSize: tableModel.pagination.pageSize };
               updateSearchValue(e);
-              tableApiRef.current.setPaginationModel(defaultpagesize);
-              setQuery(defaultpagesize);
-              setTableModel({
-                ...tableModel,
-                pagination: defaultpagesize,
-                quickFilter: e.split(' ').filter((word) => word !== ''),
-              });
             }}
             optionalExternalState={[keywordSearchContents, setKeywordSearchContents]}
           />
@@ -583,7 +584,6 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         }}
         onFilterModelChange={(e) => {
           // Can only filter by 1 at a time without DataGrid Pro
-          console.log(e);
           if (e.items.length > 0) {
             const item = e.items.at(0);
             setTableModel({
