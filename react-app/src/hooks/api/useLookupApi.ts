@@ -94,6 +94,11 @@ const useLookupApi = (absoluteFetch: IFetch) => {
     return parsedBody as MetadataType[];
   };
 
+  const getAll = async () => {
+    const { parsedBody } = await absoluteFetch.get('/lookup/all');
+    return parsedBody;
+  };
+
   return {
     getClassifications,
     getConstructionTypes,
@@ -106,6 +111,7 @@ const useLookupApi = (absoluteFetch: IFetch) => {
     getProjectNoteTypes,
     getProjectMonetaryTypes,
     getProjectTimestampTypes,
+    getAll,
   };
 };
 
