@@ -267,6 +267,7 @@ const AddProject = () => {
                   { MonetaryTypeId: programCostType.Id, Value: formValues.ProgramCost },
                   { MonetaryTypeId: salesCostType.Id, Value: formValues.SalesCost },
                 ],
+                Tasks: formValues.Tasks.filter((a) => a.IsCompleted),
               },
               projectProperties,
             ).then((response) => {

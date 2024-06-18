@@ -171,7 +171,7 @@ const addProject = async (
   project.ProjectType = ProjectType.DISPOSAL;
 
   // What type of submission is this? Regular (7) or Exemption (8)?
-  project.StatusId = project.Metadata?.exemptionRequested
+  project.StatusId = project?.Tasks?.find((task) => task.TaskId === 16) //Task labelled Exemption requested
     ? ProjectStatus.SUBMITTED_EXEMPTION
     : ProjectStatus.SUBMITTED;
 
