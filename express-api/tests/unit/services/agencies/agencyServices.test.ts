@@ -26,7 +26,22 @@ describe('UNIT - agency services', () => {
   });
   describe('getAgencies', () => {
     it('should get a list of agencies', async () => {
-      const agencies = await agencyServices.getAgencies({});
+      const agencies = await agencyServices.getAgencies({
+        name: 'contains,aaa',
+        parent: 'equals,aaa',
+        isDisabled: 'equals,aaa',
+      });
+      expect(_agencyFind).toHaveBeenCalledTimes(1);
+      expect(Array.isArray(agencies)).toBe(true);
+    });
+  });
+  describe('getAgencies', () => {
+    it('should get a list of agencies', async () => {
+      const agencies = await agencyServices.getAgencies({
+        name: 'startsWith,aaa',
+        sortKey: 'Parent',
+        sortOrder: 'asc',
+      });
       expect(_agencyFind).toHaveBeenCalledTimes(1);
       expect(Array.isArray(agencies)).toBe(true);
     });
