@@ -24,6 +24,8 @@ const collectFindOptions = (filter: AdministrativeAreaFilter) => {
     options.push({
       RegionalDistrict: constructFindOptionFromQuery('Name', filter.regionalDistrict),
     });
+  if (filter.isDisabled)
+    options.push(constructFindOptionFromQuery('IsDisabled', filter.isDisabled));
   return options;
 };
 

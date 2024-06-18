@@ -88,7 +88,7 @@ const Router = () => {
         <Route
           path="adminAreas"
           element={
-            <BaseLayout displayFooter>
+            <BaseLayout>
               <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR]}>
                 <AdminAreasManagement />
               </AuthRouteGuard>

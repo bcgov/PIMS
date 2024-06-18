@@ -24,7 +24,7 @@ export const AgencyFilterSchema = z.object({
   name: z.string().optional(),
   parentId: z.coerce.number().int().optional(),
   parent: z.string().optional(),
-  isDisabled: z.coerce.boolean().optional(),
+  isDisabled: z.string().optional(),
   sortOrder: z.string().optional(),
   page: z.coerce.number().optional(),
   quantity: z.coerce.number().optional(),

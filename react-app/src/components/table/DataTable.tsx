@@ -190,12 +190,15 @@ type FilterSearchDataGridProps = {
 } & DataGridProps;
 
 export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
+  const DEFAULT_PAGE = 0;
+  const DEFAULT_PAGESIZE = 100;
+
   const [dataSourceRows, setDataSourceRows] = useState([]);
   const [rowCount, setRowCount] = useState<number>(0);
   const [tableModel, setTableModel] = useState<ITableModelCollection>({
     pagination: {
-      page: props.initialState?.pagination?.paginationModel?.page ?? 0,
-      pageSize: props.initialState?.pagination?.paginationModel?.pageSize ?? 10,
+      page: props.initialState?.pagination?.paginationModel?.page ?? DEFAULT_PAGE,
+      pageSize: props.initialState?.pagination?.paginationModel?.pageSize ?? DEFAULT_PAGESIZE,
     },
     sort: props.initialState?.sorting?.sortModel ?? undefined,
   });
@@ -278,12 +281,6 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     }
   }, [tableModel]);
 
-  useEffect(() => {
-    if (props.initialState?.sorting?.sortModel) {
-      tableApiRef.current.setSortModel(props.initialState.sorting.sortModel);
-    }
-  }, []); //Empty array makes this fire only on first render.
-
   /**
    * @interface
    * @description Defines possible query parameters for table state
@@ -357,7 +354,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     const query = getQuery();
     // If query strings exist, prioritize that for preset filters, etc.
     const model: ITableModelCollection = {
-      pagination: { page: 0, pageSize: 10 },
+      pagination: { page: DEFAULT_PAGE, pageSize: DEFAULT_PAGESIZE },
       sort: undefined,
       filter: undefined,
       quickFilter: undefined,
@@ -484,6 +481,10 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     }, 100);
   }, [tableApiRef]);
 
+  const tableHeaderRowCount = useMemo(() => {
+    return props.tableOperationMode === 'client' ? `(${rowCount ?? 0} rows)` : '';
+  }, [props.tableOperationMode, rowCount]);
+
   return (
     <>
       <Box
@@ -495,7 +496,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
       >
         <Box display={'flex'}>
           <Typography variant="h4" alignSelf={'center'} marginRight={'1em'}>
-            {`${props.tableHeader} (${rowCount ?? 0} rows)`}
+            {`${props.tableHeader} ${tableHeaderRowCount}`}
           </Typography>
           {keywordSearchContents || gridFilterItems.length > 0 ? (
             <Tooltip title="Clear Filter">

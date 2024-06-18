@@ -155,41 +155,43 @@ const AgencyTable = (props: IAgencyTable) => {
         } as SxProps
       }
     >
-      <FilterSearchDataGrid
-        name="agencies"
-        tableOperationMode="server"
-        dataSource={api.agencies.getAgencies}
-        onPresetFilterChange={selectPresetFilter}
-        getRowId={(row: Agency) => row.Id}
-        defaultFilter={'All Agencies'}
-        onRowClick={rowClickHandler}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 10 },
-          },
-          sorting: {
-            sortModel: [{ field: 'Name', sort: 'asc' }],
-          },
-        }}
-        presetFilterSelectOptions={[
-          <CustomMenuItem key={'All Agencies'} value={'All Agencies'}>
-            All Agencies
-          </CustomMenuItem>,
-          <CustomListSubheader key={'Status'}>Status</CustomListSubheader>,
-          <CustomMenuItem key={'Active'} value={'Active'}>
-            Active
-          </CustomMenuItem>,
-          <CustomMenuItem key={'Disabled'} value={'Disabled'}>
-            Disabled
-          </CustomMenuItem>,
-        ]}
-        tableHeader={'Agencies Overview'}
-        excelTitle={'Agencies'}
-        customExcelData={getExcelData}
-        columns={columns}
-        addTooltip="Create New Agency"
-        onAddButtonClick={() => navigate('/admin/agencies/add')}
-      />
+      <Box height={'calc(100vh - 180px)'}>
+        <FilterSearchDataGrid
+          name="agencies"
+          tableOperationMode="server"
+          dataSource={api.agencies.getAgencies}
+          onPresetFilterChange={selectPresetFilter}
+          getRowId={(row: Agency) => row.Id}
+          defaultFilter={'All Agencies'}
+          onRowClick={rowClickHandler}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 100 },
+            },
+            sorting: {
+              sortModel: [{ field: 'Name', sort: 'asc' }],
+            },
+          }}
+          presetFilterSelectOptions={[
+            <CustomMenuItem key={'All Agencies'} value={'All Agencies'}>
+              All Agencies
+            </CustomMenuItem>,
+            <CustomListSubheader key={'Status'}>Status</CustomListSubheader>,
+            <CustomMenuItem key={'Active'} value={'Active'}>
+              Active
+            </CustomMenuItem>,
+            <CustomMenuItem key={'Disabled'} value={'Disabled'}>
+              Disabled
+            </CustomMenuItem>,
+          ]}
+          tableHeader={'Agencies Overview'}
+          excelTitle={'Agencies'}
+          customExcelData={getExcelData}
+          columns={columns}
+          addTooltip="Create New Agency"
+          onAddButtonClick={() => navigate('/admin/agencies/add')}
+        />
+      </Box>
     </Box>
   );
 };

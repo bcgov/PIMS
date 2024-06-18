@@ -21,8 +21,6 @@ const ProjectsTable = () => {
   const navigate = useNavigate();
   const api = usePimsApi();
   const snackbar = useContext(SnackBarContext);
-  // const { data, loadOnce } = useDataLoader(api.projects.getProjects);
-  // loadOnce();
 
   const parseIntFromProjectNo = (projectNo: string) => {
     return Number(projectNo.match(/[a-zA-Z]+-?(\d+)/)[1]);
@@ -191,7 +189,7 @@ const ProjectsTable = () => {
   };
 
   return (
-    <Box sx={{ height: 'calc(100vh - 160px)' }}>
+    <Box sx={{ height: 'calc(100vh - 180px)' }}>
       <FilterSearchDataGrid
         tableOperationMode="server"
         dataSource={api.projects.getProjects}

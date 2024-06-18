@@ -11,6 +11,8 @@ const collectFindOptions = (filter: AgencyFilter) => {
   const options = [];
   if (filter.name) options.push(constructFindOptionFromQuery('Name', filter.name));
   if (filter.parent) options.push({ Parent: constructFindOptionFromQuery('Name', filter.parent) });
+  if (filter.isDisabled)
+    options.push(constructFindOptionFromQuery('IsDisabled', filter.isDisabled));
   return options;
 };
 
