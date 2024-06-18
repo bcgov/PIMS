@@ -95,6 +95,10 @@ jest
 jest
   .spyOn(AppDataSource.getRepository(ProjectAgencyResponse), 'find')
   .mockImplementation(async () => [produceAgencyResponse()]);
+
+jest
+  .spyOn(AppDataSource.getRepository(NotificationQueue), 'find')
+  .mockImplementation(async () => [produceNotificationQueue()]);
 // QUERY mocks
 const _getNextSequence = jest.spyOn(AppDataSource, 'query').mockImplementation(async () => [
   {
