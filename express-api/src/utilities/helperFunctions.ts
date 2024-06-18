@@ -71,12 +71,17 @@ export const TimestampComparisonWrapper = (tsValue: string, operator: TimestampO
   return Raw((alias) => `${alias} ${operator} '${toPostgresTimestamp(new Date(tsValue))}'`);
 };
 
+//The behavior of the Raw function seems bugged under certain query formats.
+//It will use the correct table alias name, but not the correct column.
+//ie. It will pass Project.ProjectNumber instead of "Project_project_number" (correct column alias constructed by TypeORM)
+//or "Project".project_number (correct table alias plus non-aliased column access)
+//Thankfully, it's not too difficult to manually format this.
 const fixColumnAlias = (str: string) => {
   const [tableAlias, columnAlias] = str.split('.');
   const fixedColumn = columnAlias
     .split(/\.?(?=[A-Z])/)
     .join('_')
-    .toLowerCase();
+    .toLowerCase(); // ExamplePascalCase -> example_pascal_case
   return `"${tableAlias}".${fixedColumn}`;
 };
 
