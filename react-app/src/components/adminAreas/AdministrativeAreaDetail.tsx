@@ -1,6 +1,6 @@
 import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Checkbox, Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import DetailViewNavigation from '../display/DetailViewNavigation';
@@ -31,7 +31,15 @@ const AdministrativeAreaDetail = () => {
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const customFormatter = (key: keyof AdministrativeArea, val: any) => {
     if (key === 'IsDisabled') {
-      return <Typography>{val ? 'True' : 'False'}</Typography>;
+      return (
+        <Checkbox
+          checked={val}
+          disabled
+          sx={{
+            padding: 0,
+          }}
+        />
+      );
     }
   };
 
