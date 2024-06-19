@@ -30,6 +30,11 @@ export const AgencyFilterSchema = z.object({
   quantity: z.coerce.number().optional(),
   sortKey: z.string().optional(),
   id: z.coerce.number().optional(),
+  status: z.string().optional(),
+  email: z.string().optional(),
+  updatedOn: z.string().optional(),
+  createdOn: z.string().optional(),
+  code: z.string().optional(),
 });
 
 export const AgencyPublicResponseSchema = z.object({

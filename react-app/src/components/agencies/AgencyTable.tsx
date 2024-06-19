@@ -13,6 +13,7 @@ import { dateFormatter, statusChipFormatter } from '@/utilities/formatters';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { useNavigate } from 'react-router-dom';
 import usePimsApi from '@/hooks/usePimsApi';
+import { Check } from '@mui/icons-material';
 
 interface IAgencyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
@@ -37,12 +38,15 @@ const AgencyTable = (props: IAgencyTable) => {
     },
     {
       field: 'IsDisabled',
-      headerName: 'Status',
+      headerName: 'Is Disabled',
       flex: 1,
       renderCell: (params) => {
-        if (params.value === undefined) return <></>; // Checked for undefined specifically
-        if (params.value) return statusChipFormatter('Disabled');
-        return statusChipFormatter('Active');
+        // if (params.value === undefined) return <></>; // Checked for undefined specifically
+        // if (params.value) return statusChipFormatter('Disabled');
+        // return statusChipFormatter('Active');
+        if (params.value) {
+          return <Check />;
+        } else return <></>;
       },
       maxWidth: 120,
     },
