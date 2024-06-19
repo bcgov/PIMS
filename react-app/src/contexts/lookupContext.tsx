@@ -2,9 +2,13 @@ import { AuthContext } from '@/contexts/authContext';
 import { LookupAll } from '@/hooks/api/useLookupApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
 
-export const LookupContext = createContext<LookupAll | undefined>(undefined);
+type LookupContextValue = {
+  data: LookupAll | undefined;
+  getLookupValueById: (a: keyof LookupAll, b: number) => any | undefined;
+};
+export const LookupContext = createContext<LookupContextValue>(undefined);
 
 /**
  * Lookup context that provides values in a central context.
@@ -19,7 +23,29 @@ export const LookupContextProvider: React.FC<React.PropsWithChildren> = (props) 
   if (keycloak.isAuthenticated) {
     loadOnce();
   }
-  return <LookupContext.Provider value={data}>{props.children}</LookupContext.Provider>;
+  const lookupTables = useMemo(() => {
+    const ret = {};
+    if (data) {
+      for (const k of Object.keys(data)) {
+        ret[k] = (data[k] as Record<string, any>[]).reduce(
+          (acc, curr) => ({ ...acc, [curr.Id]: curr }),
+          {},
+        );
+      }
+      return ret;
+    } else {
+      return undefined;
+    }
+  }, [data]);
+  const getLookupValueById = (tableName: keyof LookupAll, id: number) => {
+    if (lookupTables === undefined) {
+      return {};
+    } else {
+      return lookupTables[tableName][id];
+    }
+  };
+  const contextValue = { data, getLookupValueById };
+  return <LookupContext.Provider value={contextValue}>{props.children}</LookupContext.Provider>;
 };
 
 export default LookupContextProvider;
