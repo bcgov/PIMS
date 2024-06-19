@@ -290,6 +290,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     quickSelectFilter?: string;
     columnFilterName?: string;
     columnFilterValue?: string;
+    columnFilterMode?: string;
     columnSortName?: string;
     columnSortValue?: 'asc' | 'desc';
     page?: number;
@@ -372,13 +373,13 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         props.onPresetFilterChange(query.quickSelectFilter, tableApiRef);
       }
       // Set other column filter
-      if (query.columnFilterName && query.columnFilterValue) {
+      if (query.columnFilterName && query.columnFilterValue && query.columnFilterMode) {
         model.quickFilter = undefined;
         const modelObj: GridFilterModel = {
           items: [
             {
               value: query.columnFilterValue,
-              operator: 'contains',
+              operator: query.columnFilterMode,
               field: query.columnFilterName,
             },
           ],
@@ -592,14 +593,22 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
               pagination: { page: 0, pageSize: tableModel.pagination.pageSize },
               filter: e,
             });
-            setQuery({ columnFilterName: item.field, columnFilterValue: item.value });
+            setQuery({
+              columnFilterName: item.field,
+              columnFilterValue: item.value,
+              columnFilterMode: item.operator,
+            });
           } else {
             setTableModel({
               ...tableModel,
               pagination: { page: 0, pageSize: tableModel.pagination.pageSize },
               filter: undefined,
             });
-            setQuery({ columnFilterName: undefined, columnFilterValue: undefined });
+            setQuery({
+              columnFilterName: undefined,
+              columnFilterValue: undefined,
+              columnFilterMode: undefined,
+            });
           }
           // Get the filter items from MUI, filter out blanks, set state
           setGridFilterItems(e.items.filter((item) => item.value));

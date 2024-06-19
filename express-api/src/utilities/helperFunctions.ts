@@ -90,6 +90,17 @@ type TimestampOperator = '=' | '!=' | '<=' | '>=' | '<' | '>';
  * @returns FindOptionsWhere<T>
  */
 export const TimestampComparisonWrapper = (tsValue: string, operator: TimestampOperator) => {
+  if (operator === '=') {
+    return Raw(
+      (alias) =>
+        `${fixColumnAlias(alias)}::date = '${toPostgresTimestamp(new Date(tsValue))}'::date`,
+    );
+  } else if (operator === '!=') {
+    return Raw(
+      (alias) =>
+        `${fixColumnAlias(alias)}::date != '${toPostgresTimestamp(new Date(tsValue))}'::date`,
+    );
+  }
   return Raw((alias) => `${alias} ${operator} '${toPostgresTimestamp(new Date(tsValue))}'`);
 };
 
@@ -113,7 +124,6 @@ const fixColumnAlias = (str: string) => {
  * @returns string
  */
 const toPostgresTimestamp = (date: Date) => {
-  console.log(`date obj in: ${date.toUTCString()}`);
   const pad = (num: number, size = 2) => {
     let s = String(num);
     while (s.length < size) s = '0' + s;
@@ -126,6 +136,5 @@ const toPostgresTimestamp = (date: Date) => {
   const hours = pad(date.getUTCHours());
   const minutes = pad(date.getUTCMinutes());
   const seconds = pad(date.getUTCSeconds());
-  console.log(`date obj out: ${year}-${month}-${day} ${hours}:${minutes}:${seconds}`);
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
