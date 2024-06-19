@@ -23,6 +23,8 @@ export const LookupContextProvider: React.FC<React.PropsWithChildren> = (props) 
   if (keycloak.isAuthenticated) {
     loadOnce();
   }
+
+  // Memoizes a lookup table to facilitate finding records by their Id.
   const lookupTables = useMemo(() => {
     const ret = {};
     if (data) {
@@ -37,6 +39,8 @@ export const LookupContextProvider: React.FC<React.PropsWithChildren> = (props) 
       return undefined;
     }
   }, [data]);
+
+  // Retrieves record from lookupTables based on table name and record Id.
   const getLookupValueById = (tableName: keyof LookupAll, id: number) => {
     if (lookupTables === undefined) {
       return {};
@@ -44,6 +48,7 @@ export const LookupContextProvider: React.FC<React.PropsWithChildren> = (props) 
       return lookupTables[tableName][id];
     }
   };
+
   const contextValue = { data, getLookupValueById };
   return <LookupContext.Provider value={contextValue}>{props.children}</LookupContext.Provider>;
 };
