@@ -16,6 +16,10 @@ import { useNavigate } from 'react-router-dom';
 import { Project } from '@/hooks/api/useProjectsApi';
 import { NoteTypes } from '@/constants/noteTypes';
 import { SnackBarContext } from '@/contexts/snackbarContext';
+import { TimestampType } from '@/constants/timestampTypes';
+import { ProjectTask } from '@/constants/projectTasks';
+import { NotificationType } from '@/constants/notificationTypes';
+import { MonetaryType } from '@/constants/monetaryTypes';
 
 const ProjectsTable = () => {
   const navigate = useNavigate();
@@ -45,6 +49,7 @@ const ProjectsTable = () => {
       field: 'Status',
       headerName: 'Status',
       flex: 1,
+      maxWidth: 250,
       valueGetter: (value: any) => value?.Name ?? 'N/A',
       renderCell: (params) => projectStatusChipFormatter(params.value ?? 'N/A'),
     },
@@ -72,6 +77,7 @@ const ProjectsTable = () => {
       flex: 1,
       valueFormatter: (date) => dateFormatter(date),
       maxWidth: 125,
+      type: 'date',
     },
     {
       field: 'UpdatedBy',
@@ -129,21 +135,37 @@ const ProjectsTable = () => {
               Agency: projectModel.Agency?.Name,
               'Created By': `${projectModel.CreatedBy?.FirstName} ${projectModel.CreatedBy?.LastName}`,
               'Created On': projectModel.CreatedOn,
-              'Exemption Requested': projectModel.Metadata?.exemptionRequested,
+              'Exemption Requested': projectModel.Tasks?.find(
+                (task) => task.TaskId === ProjectTask.EXEMPTION_REQUESTED,
+              )?.IsCompleted,
               'Exemption Rationale': projectModel.Notes?.find(
                 (note) => note.NoteTypeId === NoteTypes.EXEMPTION,
               )?.Note,
+              'Current Market value': projectModel.Market,
               'NetBook	Value': projectModel.NetBook,
               Assessed: projectModel.Assessed,
               Appraised: projectModel.Appraised,
-              'Sales Cost': projectModel.Metadata?.salesCost,
-              'Net Proceeds': projectModel.Metadata?.netProceeds,
-              'Program Cost': projectModel.Metadata?.programCost,
-              'Gain Loss': projectModel.Metadata?.gainLoss,
-              'OCG Financial Statement': projectModel.Metadata?.ocgFinancialStatement,
-              'Interest Component': projectModel.Metadata?.interestComponent,
-              'Offer Amount': projectModel.Metadata?.offerAmount,
-              'Sale With Lease In Place': projectModel.Metadata?.saleWithLeaseInPlace,
+              'Sales Cost': projectModel.Monetaries.find(
+                (m) => m.MonetaryTypeId === MonetaryType.SALES_COST,
+              )?.Value,
+              'Net Proceeds': projectModel.Monetaries.find(
+                (m) => m.MonetaryTypeId === MonetaryType.NET_PROCEEDS,
+              )?.Value,
+              'Program Cost': projectModel.Monetaries.find(
+                (m) => m.MonetaryTypeId === MonetaryType.PROGRAM_COST,
+              )?.Value,
+              'Gain Loss': projectModel.Monetaries.find(
+                (m) => m.MonetaryTypeId === MonetaryType.OCG_GAIN_LOSS,
+              )?.Value,
+              'OCG Financial Statement': projectModel.Monetaries.find(
+                (m) => m.MonetaryTypeId === MonetaryType.OCG_FINANCIAL_STATEMENT,
+              )?.Value,
+              'Interest Component': projectModel.Monetaries.find(
+                (m) => m.MonetaryTypeId === MonetaryType.INTEREST_COMPONENT,
+              )?.Value,
+              'Offer Amount': projectModel.Monetaries.find(
+                (m) => m.MonetaryTypeId === MonetaryType.OFFER_AMOUNT,
+              )?.Value,
               Note: projectModel.Notes?.find((note) => note.NoteTypeId === NoteTypes.GENERAL)?.Note,
               PublicNote: projectModel.Notes?.find((note) => note.NoteTypeId === NoteTypes.PUBLIC)
                 ?.Note,
@@ -157,22 +179,37 @@ const ProjectsTable = () => {
               )?.Note,
               'Submitted On': projectModel.SubmittedOn,
               'Approved On': projectModel.ApprovedOn,
-              'ERP Initial Notification Sent On': projectModel.Metadata?.initialNotificationSentOn,
-              'ERP Thirty Day Notification Sent On':
-                projectModel.Metadata?.thirtyDayNotificationSentOn,
-              'ERP Sixty Day Notification Sent On':
-                projectModel.Metadata?.sixtyDayNotificationSentOn,
-              'ERP Ninety Day Notification Sent On':
-                projectModel.Metadata?.ninetyDayNotificationSentOn,
-              'ERP On Hold Notification Sent On': projectModel.Metadata?.onHoldNotificationSentOn,
-              'Transferred Within GRE On': projectModel.Metadata?.transferredWithinGreOn,
-              'ERP Clearance Notification Sent On':
-                projectModel.Metadata?.clearanceNotificationSentOn,
-              'Disposed On': projectModel.Metadata?.disposedOn,
-              'Marketed On': projectModel.Metadata?.marketedOn,
+              'ERP Initial Notification Sent On': projectModel.Notifications.find(
+                (n) => n.TemplateId === NotificationType.NEW_PROPERTIES_ON_ERP,
+              )?.SendOn,
+              'ERP Thirty Day Notification Sent On': projectModel.Notifications.find(
+                (n) =>
+                  n.TemplateId === NotificationType.THIRTY_DAY_ERP_NOTIFICATION_PARENT_AGENCIES,
+              )?.SendOn,
+              'ERP Sixty Day Notification Sent On': projectModel.Notifications.find(
+                (n) => n.TemplateId === NotificationType.SIXTY_DAY_ERP_NOTIFICATION_PARENT_AGENCIES,
+              )?.SendOn,
+              'ERP Ninety Day Notification Sent On': projectModel.Notifications.find(
+                (n) => n.TemplateId === NotificationType.NINTY_DAY_ERP_NOTIFICATION_PARENT_AGENCIES,
+              )?.SendOn,
+              'Transferred Within GRE On': projectModel.Timestamps.find(
+                (timestamp) =>
+                  timestamp.TimestampTypeId === TimestampType.TRANSFERRED_WITHIN_GRE_ON,
+              )?.Date,
+              'ERP Clearance Notification Sent On': projectModel.Timestamps.find(
+                (timestamp) =>
+                  timestamp.TimestampTypeId === TimestampType.CLEARANCE_NOTIFICATION_SENT_ON,
+              )?.Date,
+              'Disposed On': projectModel.Timestamps.find(
+                (timestamp) => timestamp.TimestampTypeId === TimestampType.DISPOSED_ON,
+              )?.Date,
+              'Marketed On': projectModel.Timestamps.find(
+                (timestamp) => timestamp.TimestampTypeId === TimestampType.MARKETED_ON,
+              )?.Date,
               'Offers Note': projectModel.Notes?.find((note) => note.NoteTypeId === NoteTypes.OFFER)
                 ?.Note,
-              Purchaser: projectModel.Metadata?.purchaser,
+              Purchaser: projectModel.Notes?.find((note) => note.NoteTypeId === NoteTypes.PURCHASER)
+                ?.Note,
             },
           };
         });

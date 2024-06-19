@@ -1,4 +1,4 @@
-import { FeatureCollection } from 'geojson';
+import { Feature } from 'geojson';
 import { IFetch } from '../useFetch';
 import { LatLng } from 'leaflet';
 
@@ -21,6 +21,32 @@ export interface ParcelData {
   FEATURE_LENGTH_M: number;
   OBJECTID: number;
   SE_ANNO_CAD_DATA: unknown;
+}
+
+export interface ParcelLayerFeature {
+  geometry_name: string;
+  geometry: {
+    coordinates: [number, number][] | [number, number][][];
+    type: 'Polygon' | 'MultiPolygon';
+  };
+  id: string;
+  type: Feature;
+  properties: ParcelData;
+}
+
+export interface FeatureCollection {
+  features: ParcelLayerFeature[];
+  numberMatched: number;
+  numberReturned: number;
+  timeStamp: string;
+  totalFeatures: number;
+  type: 'FeatureCollection';
+  crs: {
+    type: string;
+    properties: {
+      name: string;
+    };
+  };
 }
 
 const useParcelLayerApi = (absoluteFetch: IFetch) => {

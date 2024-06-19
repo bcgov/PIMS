@@ -7,7 +7,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { MapContainer, useMapEvents } from 'react-leaflet';
+import { MapContainer, Polygon, useMapEvents } from 'react-leaflet';
 import { LatLngBoundsExpression, Map, Point } from 'leaflet';
 import MapLayers from '@/components/map/MapLayers';
 import { ParcelPopup } from '@/components/map/parcelPopup/ParcelPopup';
@@ -15,11 +15,12 @@ import { InventoryLayer } from '@/components/map/InventoryLayer';
 import ControlsGroup from '@/components/map/controls/ControlsGroup';
 import FilterControl from '@/components/map/controls/FilterControl';
 import useDataLoader from '@/hooks/useDataLoader';
-import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
+import { MapFilter, PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import usePimsApi from '@/hooks/usePimsApi';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 import MapSidebar from '@/components/map/sidebar/MapSidebar';
 import ClusterPopup, { PopupState } from '@/components/map/clusterPopup/ClusterPopup';
+import { ParcelLayerFeature } from '@/hooks/api/useParcelLayerApi';
 
 type ParcelMapProps = {
   height: string;
@@ -61,12 +62,7 @@ const ParcelMap = (props: ParcelMapProps) => {
   };
   const api = usePimsApi();
   const snackbar = useContext(SnackBarContext);
-
-  const [selectedMarker, setSelectedMarker] = useState({
-    id: undefined,
-    type: undefined,
-  });
-  const [filter, setFilter] = useState({}); // Applies when request for properties is made
+  const [filter, setFilter] = useState<MapFilter>({}); // Applies when request for properties is made
   const [properties, setProperties] = useState<PropertyGeo[]>([]);
 
   // Get properties for map.
@@ -83,6 +79,12 @@ const ParcelMap = (props: ParcelMapProps) => {
     pageIndex: 0,
     total: 0,
   });
+
+  // Store polygon overlay data for parcel layer
+  const [polygon, setPolygon] = useState([]);
+
+  // Elevated state for the sidebar
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
 
   const {
     height,
@@ -108,27 +110,96 @@ const ParcelMap = (props: ParcelMapProps) => {
   // Get the property data for mapping
   useEffect(() => {
     if (data) {
-      if (data.length) {
-        setProperties(data as PropertyGeo[]);
-        snackbar.setMessageState({
-          open: true,
-          text: `${data.length} properties found.`,
-          style: snackbar.styles.success,
-        });
-      } else {
-        snackbar.setMessageState({
-          open: true,
-          text: `No properties found matching filter criteria.`,
-          style: snackbar.styles.warning,
-        });
-        setProperties([]);
-      }
+      handleDataChange();
     } else {
       if (loadProperties) {
         refreshData();
       }
     }
   }, [data, isLoading]);
+
+  // Loops through any array and pairs it down to a flat list of its base elements
+  // Used here for breaking shape geography down to bounds coordinates
+  const extractLowestElements: (arr: any[]) => [number, number][] = (arr) => {
+    return arr.reduce((acc, item) => {
+      if (Array.isArray(item[0])) {
+        return acc.concat(extractLowestElements(item));
+      } else {
+        acc.push(item);
+        return acc;
+      }
+    }, []);
+  };
+
+  const handleDataChange = async () => {
+    setPolygon([]);
+    if (data.length) {
+      setProperties(data as PropertyGeo[]);
+      snackbar.setMessageState({
+        open: true,
+        text: `${data.length} properties found.`,
+        style: snackbar.styles.success,
+      });
+    } else {
+      setProperties([]);
+      // No properties in inventory. Check the parcel layer.
+      const parcelLayerFeatures: ParcelLayerFeature[] = [];
+      if (filter.PID) {
+        await api.parcelLayer.getParcelByPid(String(filter.PID)).then((response) => {
+          parcelLayerFeatures.push(...response.features);
+        });
+      }
+      if (filter.PIN) {
+        await api.parcelLayer.getParcelByPin(String(filter.PIN)).then((response) => {
+          parcelLayerFeatures.push(...response.features);
+        });
+      }
+      // Were any parcels found that match?
+      if (parcelLayerFeatures.length) {
+        snackbar.setMessageState({
+          open: true,
+          text: `No inventory found, but ${parcelLayerFeatures.length} match${parcelLayerFeatures.length > 1 ? 'es' : ''} found on Parcel Layer.`,
+          style: snackbar.styles.success,
+        });
+        // Place feature shapes on map
+        if (localMapRef.current) {
+          const polygonShapes = [];
+          /** Will be one of two types:
+           * Polygon for a single shape
+           * MultiPolygon for many shapes
+           * Coordinates have to be switched to work with Leaflet
+           */
+          parcelLayerFeatures.forEach((feature) => {
+            if (feature.geometry.type === 'Polygon') {
+              polygonShapes.push(
+                feature.geometry.coordinates
+                  .at(0)
+                  .map((coordinate) => [coordinate[1], coordinate[0]]),
+              );
+            } else if (feature.geometry.type === 'MultiPolygon') {
+              feature.geometry.coordinates.forEach((coordinateList) => {
+                coordinateList.forEach((list) => {
+                  polygonShapes.push(list.map((pair) => [pair[1], pair[0]]));
+                });
+              });
+            }
+          });
+          setPolygon(polygonShapes);
+          // Centres map to encompass all found features. Accepts flat list of coordinate pairs
+          localMapRef.current.fitBounds(extractLowestElements(polygonShapes));
+          // Hide the sidebar
+          setSidebarOpen(false);
+        }
+      } else {
+        // No properties in inventory or in parcel layer
+        snackbar.setMessageState({
+          open: true,
+          text: `No properties or parcels found matching filter criteria.`,
+          style: snackbar.styles.warning,
+        });
+      }
+    }
+  };
 
   // Refresh the data if the filter changes
   useEffect(() => {
@@ -137,60 +208,63 @@ const ParcelMap = (props: ParcelMapProps) => {
     }
   }, [filter]);
 
+  // TODO: Remove selected marker context
   return (
-    <SelectedMarkerContext.Provider
-      value={{
-        selectedMarker,
-        setSelectedMarker,
-      }}
-    >
-      <Box height={height} display={'flex'}>
-        {loadProperties ? <LoadingCover show={isLoading} /> : <></>}
-        {/* All map controls fit here */}
-        {!hideControls && loadProperties ? (
-          <ControlsGroup position="topleft">
-            <FilterControl setFilter={setFilter} />
-          </ControlsGroup>
-        ) : (
-          <></>
-        )}
-        <MapContainer
-          style={{ height: '100%', width: '100%' }}
-          ref={localMapRef}
-          bounds={defaultBounds as LatLngBoundsExpression}
-          dragging={movable}
-          zoomControl={zoomable}
-          scrollWheelZoom={zoomOnScroll}
-          touchZoom={zoomable}
-          boxZoom={zoomable}
-          doubleClickZoom={zoomable}
-          preferCanvas
-        >
-          <MapLayers />
-          <ParcelPopup size={popupSize} scrollOnClick={scrollOnClick} />
-          <MapEvents />
-          {loadProperties ? (
-            <InventoryLayer
-              isLoading={isLoading}
-              properties={properties}
-              popupState={popupState}
-              setPopupState={setPopupState}
-            />
-          ) : (
-            <></>
-          )}
-          {props.children}
-        </MapContainer>
+    <Box height={height} display={'flex'}>
+      {loadProperties ? <LoadingCover show={isLoading} /> : <></>}
+      {/* All map controls fit here */}
+      {!hideControls && loadProperties ? (
+        <ControlsGroup position="topleft">
+          <FilterControl setFilter={setFilter} />
+        </ControlsGroup>
+      ) : (
+        <></>
+      )}
+      <MapContainer
+        style={{ height: '100%', width: '100%' }}
+        ref={localMapRef}
+        bounds={defaultBounds as LatLngBoundsExpression}
+        dragging={movable}
+        zoomControl={zoomable}
+        scrollWheelZoom={zoomOnScroll}
+        touchZoom={zoomable}
+        boxZoom={zoomable}
+        doubleClickZoom={zoomable}
+        preferCanvas
+      >
+        <MapLayers />
+        <ParcelPopup size={popupSize} scrollOnClick={scrollOnClick} />
+        <MapEvents />
         {loadProperties ? (
-          <>
-            <MapSidebar properties={properties} map={localMapRef} setFilter={setFilter} />
-            <ClusterPopup popupState={popupState} setPopupState={setPopupState} />
-          </>
+          <InventoryLayer
+            isLoading={isLoading}
+            properties={properties}
+            popupState={popupState}
+            setPopupState={setPopupState}
+          />
         ) : (
           <></>
         )}
-      </Box>
-    </SelectedMarkerContext.Provider>
+        {polygon.map((coordinates, index) => (
+          <Polygon key={index} pathOptions={{ color: 'blue' }} positions={coordinates} />
+        ))}
+        {props.children}
+      </MapContainer>
+      {loadProperties ? (
+        <>
+          <MapSidebar
+            properties={properties}
+            map={localMapRef}
+            setFilter={setFilter}
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen}
+          />
+          <ClusterPopup popupState={popupState} setPopupState={setPopupState} />
+        </>
+      ) : (
+        <></>
+      )}
+    </Box>
   );
 };
 export interface LoadingCoverProps {

@@ -1,4 +1,4 @@
-import { GridColumnPair } from '@/components/map/MapPropertyDetails';
+import { GridColumnPair } from '@/components/common/GridHelpers';
 import MetresSquared from '@/components/text/MetresSquared';
 import { ParcelData } from '@/hooks/api/useParcelLayerApi';
 import usePimsApi from '@/hooks/usePimsApi';

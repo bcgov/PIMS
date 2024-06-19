@@ -58,6 +58,10 @@ const AddProject = () => {
     } else {
       const defaultState = statuses.find((a) => a.Name === 'Required Documentation');
       const addTasks = tasks.filter((task) => task.StatusId === defaultState.Id);
+      const exemptionTask = tasks.find((a) => a.Name === 'Exemption requested');
+      if (exemptionTask) {
+        addTasks.push({ ...exemptionTask, Name: 'Apply for Enhanced Referral Process exemption' });
+      }
       addTasks.forEach((task, i) => formMethods.setValue(`Tasks.${i}.TaskId`, task.Id));
       return addTasks;
     }
@@ -215,19 +219,10 @@ const AddProject = () => {
               <SingleSelectBoxFormField
                 name={`Tasks.${idx}.IsCompleted`}
                 label={task.Name}
-                required
+                required={!task.IsOptional}
               />
             </Grid>
           ))}
-        </Grid>
-        <Typography variant="h5">ERP Exemption</Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <SingleSelectBoxFormField
-              name={'Metadata.exemptionRequested'}
-              label={'Apply for Enhanced Referral Process exemption'}
-            />
-          </Grid>
         </Grid>
         <Typography variant="h5">Approval</Typography>
         <Grid container spacing={2}>
@@ -272,6 +267,7 @@ const AddProject = () => {
                   { MonetaryTypeId: programCostType.Id, Value: formValues.ProgramCost },
                   { MonetaryTypeId: salesCostType.Id, Value: formValues.SalesCost },
                 ],
+                Tasks: formValues.Tasks.filter((a) => a.IsCompleted),
               },
               projectProperties,
             ).then((response) => {
