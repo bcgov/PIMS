@@ -234,7 +234,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     if (filter?.items) {
       for (const f of filter.items) {
         const asCamelCase = f.field.charAt(0).toLowerCase() + f.field.slice(1);
-        if (f.value != undefined) {
+        if (f.value != undefined && String(f.value) !== 'Invalid Date') {
           filterObj[asCamelCase] = `${f.operator},${f.value}`;
         } else if (f.operator === 'isNotEmpty' || f.operator === 'isEmpty') {
           filterObj[asCamelCase] = f.operator;

@@ -11,7 +11,8 @@ export const constructFindOptionFromQuery = <T>(
   column: keyof T,
   operatorValuePair: string, //format: "operator,value"
 ): FindOptionsWhere<T> => {
-  const [operator, value] = operatorValuePair.split(',').map((a) => a.trim());
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, operator, value] = operatorValuePair.match(/([^,]*),(.*)/).map((a) => a.trim());
   let internalMatcher;
   switch (operator) {
     case 'equals':
@@ -112,6 +113,7 @@ const fixColumnAlias = (str: string) => {
  * @returns string
  */
 const toPostgresTimestamp = (date: Date) => {
+  console.log(`date obj in: ${date.toUTCString()}`);
   const pad = (num: number, size = 2) => {
     let s = String(num);
     while (s.length < size) s = '0' + s;
@@ -119,11 +121,11 @@ const toPostgresTimestamp = (date: Date) => {
   };
 
   const year = date.getFullYear();
-  const month = pad(date.getMonth() + 1); // getMonth() is zero-based
-  const day = pad(date.getDate());
-  const hours = pad(date.getHours());
-  const minutes = pad(date.getMinutes());
-  const seconds = pad(date.getSeconds());
-
+  const month = pad(date.getUTCMonth() + 1); // getMonth() is zero-based
+  const day = pad(date.getUTCDate());
+  const hours = pad(date.getUTCHours());
+  const minutes = pad(date.getUTCMinutes());
+  const seconds = pad(date.getUTCSeconds());
+  console.log(`date obj out: ${year}-${month}-${day} ${hours}:${minutes}:${seconds}`);
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };

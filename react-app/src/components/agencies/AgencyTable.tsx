@@ -14,6 +14,7 @@ import { Agency } from '@/hooks/api/useAgencyApi';
 import { useNavigate } from 'react-router-dom';
 import usePimsApi from '@/hooks/usePimsApi';
 import { Check } from '@mui/icons-material';
+import { dateColumnType } from '../table/CustomColumns';
 
 interface IAgencyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
@@ -81,6 +82,7 @@ const AgencyTable = (props: IAgencyTable) => {
     },
     {
       field: 'CreatedOn',
+      ...dateColumnType,
       headerName: 'Created On',
       flex: 1,
       valueFormatter: (value) => dateFormatter(value),
@@ -89,6 +91,7 @@ const AgencyTable = (props: IAgencyTable) => {
     },
     {
       field: 'UpdatedOn',
+      ...dateColumnType,
       headerName: 'Updated On',
       flex: 1,
       valueFormatter: (value) => dateFormatter(value),
