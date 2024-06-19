@@ -29,6 +29,7 @@ import { Roles } from '@/constants/roles';
 import ProjectDetail from '@/components/projects/ProjectDetail';
 import SnackBarContextProvider from './contexts/snackbarContext';
 import ParcelMap from '@/components/map/ParcelMap';
+import LookupContextProvider from '@/contexts/lookupContext';
 
 const Router = () => {
   const navigate = useNavigate();
@@ -246,9 +247,11 @@ const App = () => {
       <ConfigContextProvider>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <AuthContextProvider>
-            <SnackBarContextProvider>
-              <Router />
-            </SnackBarContextProvider>
+            <LookupContextProvider>
+              <SnackBarContextProvider>
+                <Router />
+              </SnackBarContextProvider>
+            </LookupContextProvider>
           </AuthContextProvider>
         </ErrorBoundary>
       </ConfigContextProvider>
