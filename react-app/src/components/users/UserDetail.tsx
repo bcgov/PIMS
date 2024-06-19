@@ -109,7 +109,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
       Email: userProfileData.Email,
       FirstName: userProfileData.FirstName,
       LastName: userProfileData.LastName,
-      AgencyId: userProfileData.Agency?.Id,
+      AgencyId: userProfileData.Agency?.Id ?? null,
       Position: userProfileData.Position,
     });
     statusFormMethods.reset({
@@ -190,6 +190,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
                 name={'AgencyId'}
                 label={'Agency'}
                 options={agencyOptions}
+                disableClearable={false}
               />
             </Grid>
             <Grid item xs={12}>
