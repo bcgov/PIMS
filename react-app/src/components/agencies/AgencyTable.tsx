@@ -9,7 +9,7 @@ import {
   GridRowId,
   GridValidRowModel,
 } from '@mui/x-data-grid';
-import { dateFormatter, statusChipFormatter } from '@/utilities/formatters';
+import { dateFormatter } from '@/utilities/formatters';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { useNavigate } from 'react-router-dom';
 import usePimsApi from '@/hooks/usePimsApi';
@@ -41,9 +41,6 @@ const AgencyTable = (props: IAgencyTable) => {
       headerName: 'Is Disabled',
       flex: 1,
       renderCell: (params) => {
-        // if (params.value === undefined) return <></>; // Checked for undefined specifically
-        // if (params.value) return statusChipFormatter('Disabled');
-        // return statusChipFormatter('Active');
         if (params.value) {
           return <Check />;
         } else return <></>;
