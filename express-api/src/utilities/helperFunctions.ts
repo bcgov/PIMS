@@ -1,5 +1,12 @@
 import { Equal, FindOptionsWhere, IsNull, Not, Raw } from 'typeorm';
 
+/**
+ * Accepts a column alias and produces a FindOptionsWhere style object.
+ * This lets you plug in the return value to typeorm functions such as .find, findOne, etc.
+ * @param column column name, should be a key of the TypeORM entity
+ * @param operatorValuePair should be in the format of "operator,value", where operator is one of the supported statements below
+ * @returns FindOptionsWhere<T>
+ */
 export const constructFindOptionFromQuery = <T>(
   column: keyof T,
   operatorValuePair: string, //format: "operator,value"
@@ -50,6 +57,14 @@ export const constructFindOptionFromQuery = <T>(
 };
 
 type ILikeWrapperMode = 'contains' | 'startsWith' | 'endsWith';
+/**
+ * Returns a FindOptionsWhere type object formatted to provide common ILIKE style matching.
+ * The column will be automatically cast to Postgres text type for maximum compatibility.
+ * Ex: { Name: ILikeWrapper('foo') } will produce SQL like "... WHERE name::text ILIKE '%foo%' "
+ * @param query string to match against
+ * @param mode contains | startsWith | endsWith, determines wildcard char position
+ * @returns FindOperatorWhere<T>
+ */
 export const ILikeWrapper = (query: string | undefined, mode: ILikeWrapperMode = 'contains') => {
   if (query == undefined) {
     return undefined;
@@ -67,6 +82,12 @@ export const ILikeWrapper = (query: string | undefined, mode: ILikeWrapperMode =
 };
 
 type TimestampOperator = '=' | '!=' | '<=' | '>=' | '<' | '>';
+/**
+ * Simple wrapper that takes a JS style date string and yields a postgres time comparison.
+ * @param tsValue JS Style date string
+ * @param operator '=' | '!=' | '<=' | '>=' | '<' | '>'
+ * @returns FindOptionsWhere<T>
+ */
 export const TimestampComparisonWrapper = (tsValue: string, operator: TimestampOperator) => {
   return Raw((alias) => `${alias} ${operator} '${toPostgresTimestamp(new Date(tsValue))}'`);
 };
@@ -85,6 +106,11 @@ const fixColumnAlias = (str: string) => {
   return `"${tableAlias}".${fixedColumn}`;
 };
 
+/**
+ * Converstion of JS Date object type to the equivalent Postgres timestamp format string.
+ * @param date JS Date object
+ * @returns string
+ */
 const toPostgresTimestamp = (date: Date) => {
   const pad = (num: number, size = 2) => {
     let s = String(num);
