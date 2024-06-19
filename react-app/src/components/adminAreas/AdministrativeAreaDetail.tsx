@@ -1,7 +1,7 @@
 import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
 import { Box, Grid, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import DataCard from '../display/DataCard';
@@ -12,6 +12,7 @@ import TextFormField from '../form/TextFormField';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
 import AutocompleteFormField from '../form/AutocompleteFormField';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
+import { LookupContext } from '@/contexts/lookupContext';
 
 const AdministrativeAreaDetail = () => {
   const { id } = useParams();
@@ -19,10 +20,7 @@ const AdministrativeAreaDetail = () => {
   const { data, refreshData, isLoading } = useDataLoader(() =>
     api.administrativeAreas.getAdminAreaById(Number(id)),
   );
-  const { data: regionalDistricts, loadOnce: loadDistricts } = useDataLoader(
-    api.lookup.getRegionalDistricts,
-  );
-  loadDistricts();
+  const { data: lookupData, getLookupValueById } = useContext(LookupContext);
   const { submit, submitting } = useDataSubmitter(api.administrativeAreas.updateAdminArea);
   const navigate = useNavigate();
   useEffect(() => {
@@ -39,7 +37,7 @@ const AdministrativeAreaDetail = () => {
     Name: data?.Name,
     IsDisabled: data?.IsDisabled,
     CreatedOn: data?.CreatedOn,
-    RegionalDistrict: data?.RegionalDistrict?.Name,
+    RegionalDistrict: getLookupValueById('RegionalDistricts', data?.RegionalDistrictId)?.Name,
   };
 
   const formMethods = useForm({
@@ -110,7 +108,10 @@ const AdministrativeAreaDetail = () => {
               <AutocompleteFormField
                 required
                 options={
-                  regionalDistricts?.map((dist) => ({ label: dist.Name, value: dist.Id })) ?? []
+                  lookupData?.RegionalDistricts?.map((dist) => ({
+                    label: dist.Name,
+                    value: dist.Id,
+                  })) ?? []
                 }
                 name={'RegionalDistrictId'}
                 label={'Regional District'}
