@@ -48,4 +48,10 @@ export enum NoteTypes {
   DOCUMENTATION = 21,
   /** Notes displayed on ERP notifications. */
   ERP_NOTIFICATION = 22,
+  FINAL_FORM_SIGNED_BY = 23,
+  PLANNED_FUTURE_USE = 24,
+  PRELIMINARY_FORM_SIGNED_BY = 25,
+  PURCHASER = 26,
+  REALTOR = 27,
+  REALTOR_RATE = 28,
 }
