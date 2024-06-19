@@ -34,11 +34,14 @@ describe('UNIT - agency services', () => {
       expect(_agencyFind).toHaveBeenCalledTimes(1);
       expect(Array.isArray(agencies)).toBe(true);
     });
-  });
-  describe('getAgencies', () => {
+
     it('should get a list of agencies', async () => {
       const agencies = await agencyServices.getAgencies({
         name: 'startsWith,aaa',
+        code: 'code',
+        email: 'email',
+        createdOn: 'new Date()',
+        updatedOn: 'new Date()',
         sortKey: 'Parent',
         sortOrder: 'asc',
       });
