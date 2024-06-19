@@ -478,7 +478,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         ...defaultpagesize,
         keywordFilter: newValue,
       });
-    }, 100);
+    }, 300);
   }, [tableApiRef]);
 
   const tableHeaderRowCount = useMemo(() => {
