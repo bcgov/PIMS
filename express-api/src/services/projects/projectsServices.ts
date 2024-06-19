@@ -151,7 +151,11 @@ const getProjectById = async (id: number) => {
  * @returns The newly created project.
  * @throws ErrorWithCode - If the project name is missing, agency is not found, or there is an error creating the project.
  */
-const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPropertyIds) => {
+const addProject = async (
+  project: DeepPartial<Project>,
+  propertyIds: ProjectPropertyIds,
+  ssoUser: SSOUser,
+) => {
   // Does the project have a name?
   if (!project.Name) throw new ErrorWithCode('Projects must have a name.', 400);
 
@@ -167,7 +171,7 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
   project.ProjectType = ProjectType.DISPOSAL;
 
   // What type of submission is this? Regular (7) or Exemption (8)?
-  project.StatusId = project.Metadata?.exemptionRequested
+  project.StatusId = project?.Tasks?.find((task) => task.TaskId === 16) //Task labelled Exemption requested
     ? ProjectStatus.SUBMITTED_EXEMPTION
     : ProjectStatus.SUBMITTED;
 
@@ -191,6 +195,7 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
     await handleProjectMonetary(newProject, queryRunner);
     await handleProjectNotes(newProject, queryRunner);
     await handleProjectTimestamps(newProject, queryRunner);
+    await handleProjectNotifications(newProject, ssoUser, queryRunner);
     await queryRunner.commitTransaction();
     return newProject;
   } catch (e) {
