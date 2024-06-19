@@ -17,7 +17,8 @@ const BaseLayout = (props: IBaseLayoutProps) => {
       }}
     >
       <Header />
-      <Box component="main" flex="1 1 auto" height={'100%'} marginTop={'75px'}>
+      {/* Margin on box should be exactly the same size as the header. */}
+      <Box component="main" flex="1 1 auto" height={'100%'} marginTop={'74px'}>
         {props.children}
       </Box>
       {props.displayFooter && <Footer />}
