@@ -46,6 +46,10 @@ import { ProjectTimestamp } from '@/typeorm/Entities/ProjectTimestamp';
 import { ProjectMonetary } from '@/typeorm/Entities/ProjectMonetary';
 import { MonetaryType } from '@/typeorm/Entities/MonetaryType';
 import { TimestampType } from '@/typeorm/Entities/TimestampType';
+import { ProjectRisk } from '@/typeorm/Entities/ProjectRisk';
+import { PropertyType } from '@/typeorm/Entities/PropertyType';
+import { ProjectType } from '@/typeorm/Entities/ProjectType';
+import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 
 export class MockRes {
   statusValue: any;
@@ -378,7 +382,7 @@ export const produceParcelFiscal = (parcelId: number): ParcelFiscal[] => {
   return [fiscal];
 };
 
-export const produceAdminArea = (props: Partial<AdministrativeArea>): AdministrativeArea => {
+export const produceAdminArea = (props?: Partial<AdministrativeArea>): AdministrativeArea => {
   const adminArea: AdministrativeArea = {
     Id: faker.number.int(),
     Name: faker.location.city(),
@@ -648,6 +652,65 @@ export const produceProject = (
     ...props,
   };
   return project;
+};
+
+export const produceRisk = (props?: Partial<ProjectRisk>): ProjectRisk => {
+  const risk: ProjectRisk = {
+    Id: faker.number.int(),
+    Name: 'Green',
+    IsDisabled: false,
+    SortOrder: 0,
+    Code: 'GREEN',
+    Description: 'Low risk',
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return risk;
+};
+
+export const produceProjectStatus = (props?: Partial<ProjectStatus>): ProjectStatus => {
+  const status: ProjectStatus = {
+    Id: faker.number.int(),
+    Name: 'Submitted',
+    IsDisabled: false,
+    SortOrder: 0,
+    Description: '',
+    Code: 'SUB',
+    IsMilestone: false,
+    IsTerminal: false,
+    GroupName: 'Submitted',
+    Route: '/route',
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return status;
+};
+export const producePropertyType = (props?: Partial<PropertyType>): PropertyType => {
+  const type: ProjectType = {
+    Id: faker.number.int(),
+    Name: 'Parcel',
+    IsDisabled: false,
+    SortOrder: 0,
+    Description: '',
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return type;
 };
 
 export const produceNote = (props?: Partial<ProjectNote>): ProjectNote => {
