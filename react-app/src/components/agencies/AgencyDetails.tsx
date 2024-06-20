@@ -37,6 +37,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   const { submit, submitting } = useDataSubmitter(api.agencies.updateAgencyById);
 
   const { agencyOptions } = useGroupedAgenciesApi();
+  const isParent = agencyOptions.some((agency) => agency.parentId === +id);
 
   const agencyStatusData = {
     Name: data?.Name,
@@ -108,7 +109,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
     agencyFormMethods.reset({
       Name: agencyStatusData.Name,
       Code: agencyStatusData.Code,
-      ParentId: agencyStatusData.Parent?.Id,
+      ParentId: agencyStatusData.Parent?.Id ?? null,
       Description: agencyStatusData.Description,
       IsDisabled: agencyStatusData.IsDisabled,
     });
@@ -190,10 +191,15 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
             </Grid>
             <Grid item xs={12}>
               <AutocompleteFormField
-                allowNestedIndent
                 name={'ParentId'}
                 label={'Parent Agency'}
-                options={agencyOptions}
+                // Only agencies that don't have a parent can be chosen.
+                // Set parent to false to avoid bold font.
+                options={agencyOptions
+                  .filter((agency) => agency.parentId == null)
+                  .map((agency) => ({ ...agency, parent: false }))}
+                disableClearable={false}
+                disabled={isParent} // Cannot set parent if already a parent
                 disableOptionsFunction={
                   (option) =>
                     option.value === +id || // Can't assign to self
@@ -202,6 +208,13 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
                       ?.children?.includes(option.value) // Can't assign to current children
                 }
               />
+              {isParent ? (
+                <Typography variant="caption">
+                  Cannot set Parent Agency on existing Parent Agencies.
+                </Typography>
+              ) : (
+                <></>
+              )}
             </Grid>
             <Grid item xs={12}>
               <SingleSelectBoxFormField name={'IsDisabled'} label={'Is Disabled'} />

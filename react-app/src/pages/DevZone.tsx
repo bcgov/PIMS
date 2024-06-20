@@ -1,10 +1,20 @@
 /* eslint-disable no-console */
 //Simple component testing area.
-import ParcelMap from '@/components/map/ParcelMap';
-import React from 'react';
+import { LookupContext } from '@/contexts/lookupContext';
+import React, { useContext } from 'react';
 
 const Dev = () => {
-  return <ParcelMap height="100%" loadProperties={true} popupSize="large" />;
+  const { data, getLookupValueById } = useContext(LookupContext);
+  console.log(data);
+  if (getLookupValueById) {
+    console.log(
+      `Get AdministrativeArea with ID 1: ${JSON.stringify(getLookupValueById('AdministrativeAreas', 1))}`,
+    );
+    console.log(
+      `Get RegionalDistrict with ID 19: ${JSON.stringify(getLookupValueById('RegionalDistricts', 19))}`,
+    );
+  }
+  return <></>;
 };
 
 export default Dev;

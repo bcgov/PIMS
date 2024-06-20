@@ -4,12 +4,18 @@ import {
   MockReq,
   MockRes,
   getRequestHandlerMocks,
+  produceAdminArea,
+  produceAgency,
   produceClassification,
   produceConstructionType,
   produceMonetaryType,
   produceNoteType,
   producePredominateUse,
+  produceProjectStatus,
+  producePropertyType,
   produceRegionalDistrict,
+  produceRisk,
+  produceRole,
   produceTask,
   produceTierLevel,
   produceTimestampType,
@@ -33,6 +39,12 @@ import { Task } from '@/typeorm/Entities/Task';
 import { NoteType } from '@/typeorm/Entities/NoteType';
 import { TimestampType } from '@/typeorm/Entities/TimestampType';
 import { MonetaryType } from '@/typeorm/Entities/MonetaryType';
+import { ProjectRisk } from '@/typeorm/Entities/ProjectRisk';
+import { PropertyType } from '@/typeorm/Entities/PropertyType';
+import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
+import { Role } from '@/typeorm/Entities/Role';
+import { Agency } from '@/typeorm/Entities/Agency';
+import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 
 const {
   lookupAgencies,
@@ -53,7 +65,29 @@ const _findTasks = jest.fn().mockImplementation(() => [produceTask()]);
 const _findNoteTypes = jest.fn().mockImplementation(() => [produceNoteType()]);
 const _findTimestampTypes = jest.fn().mockImplementation(() => [produceTimestampType()]);
 const _findMonetaryTypes = jest.fn().mockImplementation(() => [produceMonetaryType()]);
+const _findProjectRisks = jest.fn().mockImplementation(() => [produceRisk()]);
+const _findPropertyTypes = jest.fn().mockImplementation(() => [producePropertyType()]);
+const _findProjectStatuses = jest.fn().mockImplementation(() => [produceProjectStatus]);
+const _findRoles = jest.fn().mockImplementation(() => [produceRole()]);
+const _findAgencies = jest.fn().mockImplementation(() => [produceAgency()]);
+const _findAdminAreas = jest.fn().mockImplementation(() => [produceAdminArea()]);
 
+jest
+  .spyOn(AppDataSource.getRepository(AdministrativeArea), 'find')
+  .mockImplementation(async () => _findAdminAreas());
+jest
+  .spyOn(AppDataSource.getRepository(Agency), 'find')
+  .mockImplementation(async () => _findAgencies());
+jest.spyOn(AppDataSource.getRepository(Role), 'find').mockImplementation(async () => _findRoles());
+jest
+  .spyOn(AppDataSource.getRepository(ProjectStatus), 'find')
+  .mockImplementation(async () => _findProjectStatuses());
+jest
+  .spyOn(AppDataSource.getRepository(PropertyType), 'find')
+  .mockImplementation(async () => _findPropertyTypes());
+jest
+  .spyOn(AppDataSource.getRepository(ProjectRisk), 'find')
+  .mockImplementation(async () => _findProjectRisks());
 jest
   .spyOn(AppDataSource.getRepository(PropertyClassification), 'find')
   .mockImplementation(async () => _findClassification());
@@ -296,14 +330,15 @@ describe('UNIT - Lookup Controller', () => {
   });
 
   describe('GET /lookup/all', () => {
-    it('should return the stub response of 501', async () => {
-      await lookupAll(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and a list all lookup values', async () => {
+    it('should return status 200 and a list all lookup values', async () => {
       await lookupAll(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
+      // Check that something was returned
+      expect(mockResponse.sendValue.AdministrativeAreas).toHaveLength(1);
+      expect(mockResponse.sendValue.Roles).toHaveLength(1);
+      expect(mockResponse.sendValue.Agencies).toHaveLength(1);
+      expect(mockResponse.sendValue.Classifications).toHaveLength(1);
+      expect(mockResponse.sendValue.Tasks).toHaveLength(1);
     });
   });
 });
