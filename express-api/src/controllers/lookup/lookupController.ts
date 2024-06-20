@@ -22,6 +22,10 @@ import { PropertyType } from '@/typeorm/Entities/PropertyType';
 import { NoteType } from '@/typeorm/Entities/NoteType';
 import { MonetaryType } from '@/typeorm/Entities/MonetaryType';
 import { TimestampType } from '@/typeorm/Entities/TimestampType';
+import { ProjectRisk } from '@/typeorm/Entities/ProjectRisk';
+import { Role } from '@/typeorm/Entities/Role';
+import { Agency } from '@/typeorm/Entities/Agency';
+import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 
 // TODO: What controllers here could just be replaced by existing GET requests?
 
@@ -270,20 +274,173 @@ export const lookupProjectRisks = async (req: Request, res: Response) => {
 };
 
 /**
- * @description Get all entries. // TODO: Not clear what this means.
+ * @description Get all entries for frontend lookup context.
  * @param {Request}     req Incoming request
  * @param {Response}    res Outgoing response
  * @returns {Response}      A 200 status and a list entries.
  */
 export const lookupAll = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Lookup']
-   * #swagger.description = 'Get all entries.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
+  const Risks = await AppDataSource.getRepository(ProjectRisk).find({
+    select: {
+      Id: true,
+      Name: true,
+      Code: true,
+      Description: true,
+    },
+    order: {
+      SortOrder: 'asc',
+    },
+    where: { IsDisabled: false },
+  });
+  const TimestampTypes = await AppDataSource.getRepository(TimestampType).find({
+    select: {
+      Id: true,
+      Name: true,
+      IsOptional: true,
+      Description: true,
+      StatusId: true,
+    },
+    order: {
+      SortOrder: 'asc',
+    },
+    where: { IsDisabled: false },
+  });
+  const MonetaryTypes = await AppDataSource.getRepository(MonetaryType).find({
+    select: {
+      Id: true,
+      Name: true,
+      IsOptional: true,
+      Description: true,
+      StatusId: true,
+    },
+    order: {
+      SortOrder: 'asc',
+    },
+    where: { IsDisabled: false },
+  });
+  const NoteTypes = await AppDataSource.getRepository(NoteType).find({
+    select: {
+      Id: true,
+      Name: true,
+      IsOptional: true,
+      Description: true,
+      StatusId: true,
+    },
+    order: {
+      SortOrder: 'asc',
+    },
+    where: { IsDisabled: false },
+  });
+  const PropertyTypes = await AppDataSource.getRepository(PropertyType).find({
+    select: {
+      Id: true,
+      Name: true,
+    },
+    where: {
+      IsDisabled: false,
+    },
+  });
+  const Tasks = await AppDataSource.getRepository(Task).find({
+    select: {
+      Id: true,
+      Name: true,
+      IsOptional: true,
+      Description: true,
+      StatusId: true,
+    },
+    order: {
+      SortOrder: 'asc',
+    },
+    where: {
+      IsDisabled: false,
+    },
+  });
+  const ProjectStatuses = await AppDataSource.getRepository(ProjectStatus).find({
+    select: { Name: true, Id: true },
+    order: { SortOrder: 'asc' },
+    where: { IsDisabled: false },
+  });
+  const ProjectTiers = await AppDataSource.getRepository(TierLevel).find({
+    select: {
+      Name: true,
+      Id: true,
+    },
+    order: { SortOrder: 'asc' },
+    where: { IsDisabled: false },
+  });
+  const RegionalDistricts = await AppDataSource.getRepository(RegionalDistrict).find({
+    select: {
+      Id: true,
+      Name: true,
+    },
+  });
+  const ConstructionTypes = await AppDataSource.getRepository(BuildingConstructionType).find({
+    select: {
+      Name: true,
+      Id: true,
+    },
+    order: { SortOrder: 'asc' },
+    where: { IsDisabled: false },
+  });
+  const PredominateUses = await AppDataSource.getRepository(BuildingPredominateUse).find({
+    select: {
+      Id: true,
+      Name: true,
+    },
+    order: { SortOrder: 'asc' },
+    where: { IsDisabled: false },
+  });
+  const Classifications = await AppDataSource.getRepository(PropertyClassification).find({
+    select: { Id: true, Name: true, IsVisible: true },
+    order: { SortOrder: 'asc' },
+    where: { IsDisabled: false },
+  });
+  const Roles = await AppDataSource.getRepository(Role).find({
+    select: {
+      Id: true,
+      Name: true,
+    },
+    order: { SortOrder: 'asc' },
+    where: { IsDisabled: false },
+  });
+  const Agencies = await AppDataSource.getRepository(Agency).find({
+    select: {
+      Id: true,
+      Name: true,
+      Code: true,
+      ParentId: true,
+    },
+    order: { SortOrder: 'asc' },
+    where: { IsDisabled: false },
+  });
+  const AdministrativeAreas = await AppDataSource.getRepository(AdministrativeArea).find({
+    select: {
+      Id: true,
+      Name: true,
+      RegionalDistrictId: true,
+    },
+    order: { SortOrder: 'asc' },
+    where: { IsDisabled: false },
+  });
 
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
+  const returnObj = {
+    Risks,
+    TimestampTypes,
+    MonetaryTypes,
+    NoteTypes,
+    PropertyTypes,
+    Tasks,
+    ProjectStatuses,
+    ProjectTiers,
+    ConstructionTypes,
+    PredominateUses,
+    Classifications,
+    Roles,
+    Agencies,
+    AdministrativeAreas,
+    RegionalDistricts: (await RegionalDistricts).sort((a, b) =>
+      a.Name.toLowerCase().localeCompare(b.Name.toLowerCase()),
+    ),
+  };
+  return res.status(200).send(returnObj);
 };
