@@ -1,7 +1,7 @@
 import { User, UserStatus } from '@/typeorm/Entities/User';
 import { AppDataSource } from '@/appDataSource';
 import { SSOBCeIDUser, SSOIdirUser, SSOUser } from '@bcgov/citz-imb-sso-express';
-import { DeepPartial, In } from 'typeorm';
+import { DeepPartial, FindOptionsOrderValue, In } from 'typeorm';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { randomUUID, UUID } from 'crypto';
 import KeycloakService from '@/services/keycloak/keycloakService';
@@ -210,6 +210,17 @@ const getAdministrators = async (agencyIds: string[]) => {
   return admins;
 };
 
+const sortKeyMapping = (sortKey: string, sortDirection: FindOptionsOrderValue) => {
+  switch (sortKey) {
+    case 'Agency':
+      return { Agency: { Name: sortDirection } };
+    case 'Role':
+      return { Role: { Name: sortDirection } };
+    default:
+      return { [sortKey]: sortDirection };
+  }
+};
+
 const getUsers = async (filter: UserFiltering) => {
   const users = await AppDataSource.getRepository(User).find({
     relations: {
@@ -233,6 +244,7 @@ const getUsers = async (filter: UserFiltering) => {
     },
     take: filter.quantity,
     skip: (filter.page ?? 0) * (filter.quantity ?? 0),
+    order: sortKeyMapping(filter.sortKey, filter.sortOrder as FindOptionsOrderValue),
   });
   return users;
 };

@@ -45,7 +45,7 @@ const FilterControl = (props: FilterControlProps) => {
   const { data: regionalDistrictsData, loadOnce: loadRegionalDistricts } = useDataLoader(
     api.lookup.getRegionalDistricts,
   );
-  loadAdminAreas();
+  loadAdminAreas({});
   loadClassifications();
   loadPropertyTypes();
   loadUsersAgencies();

@@ -607,6 +607,13 @@ describe('UNIT - Project Services', () => {
           agencyId: 3,
           quantity: 10,
           page: 0,
+          agency: 'contains,aaa',
+          status: 'contains,aaa',
+          projectNumber: 'contains,aaa',
+          name: 'contains,Project',
+          updatedOn: 'before,' + new Date(),
+          sortOrder: 'asc',
+          sortKey: 'Status',
         };
 
         _projectFind.mockImplementationOnce(async () => {

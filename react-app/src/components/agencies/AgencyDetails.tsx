@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DataCard from '../display/DataCard';
-import { Box, Chip, Grid, Typography } from '@mui/material';
-import { dateFormatter, statusChipFormatter } from '@/utilities/formatters';
+import { Box, Checkbox, Chip, Grid, Typography } from '@mui/material';
+import { dateFormatter } from '@/utilities/formatters';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import { FormProvider, useForm } from 'react-hook-form';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
@@ -40,11 +40,11 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   const isParent = agencyOptions.some((agency) => agency.parentId === +id);
 
   const agencyStatusData = {
-    Status: data?.IsDisabled ? 'Disabled' : 'Active',
-    Code: data?.Code,
     Name: data?.Name,
+    Code: data?.Code,
     Description: data?.Description,
     Parent: data?.Parent,
+    IsDisabled: data?.IsDisabled,
     UpdatedOn: data?.UpdatedOn,
   };
 
@@ -56,8 +56,16 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
 
   const customFormatter = (key: keyof AgencyStatus, val: any) => {
     switch (key) {
-      case 'Status':
-        return statusChipFormatter(val);
+      case 'IsDisabled':
+        return (
+          <Checkbox
+            checked={val}
+            disabled
+            sx={{
+              padding: 0,
+            }}
+          />
+        );
       case 'UpdatedOn':
         return <Typography>{dateFormatter(val)}</Typography>;
       case 'Parent':
@@ -76,11 +84,11 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
 
   const agencyFormMethods = useForm({
     defaultValues: {
-      Status: '',
       Name: '',
       Code: '',
       ParentId: undefined,
       Description: '',
+      IsDisabled: false,
     },
   });
 
@@ -99,11 +107,11 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
 
   useEffect(() => {
     agencyFormMethods.reset({
-      Status: agencyStatusData.Status,
       Name: agencyStatusData.Name,
       Code: agencyStatusData.Code,
       ParentId: agencyStatusData.Parent?.Id ?? null,
       Description: agencyStatusData.Description,
+      IsDisabled: agencyStatusData.IsDisabled,
     });
     notificationsFormMethods.reset({
       SendEmail: notificationsSettingsData.SendEmail,
@@ -148,10 +156,10 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
         onConfirm={async () => {
           const isValid = await agencyFormMethods.trigger();
           if (isValid) {
-            const { Status, ParentId, Name, Code, Description } = agencyFormMethods.getValues();
+            const { IsDisabled, ParentId, Name, Code, Description } = agencyFormMethods.getValues();
             submit(+id, {
               Id: +id,
-              IsDisabled: Status === 'Disabled',
+              IsDisabled,
               ParentId,
               Name,
               Code,
@@ -166,22 +174,11 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
       >
         <FormProvider {...agencyFormMethods}>
           <Grid mt={'1rem'} spacing={2} container>
-            <Grid item xs={6}>
-              <AutocompleteFormField
-                name={'Status'}
-                label={'Status'}
-                required
-                options={[
-                  { label: 'Active', value: 'Active' },
-                  { label: 'Disabled', value: 'Disabled' },
-                ]}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextFormField required fullWidth name={'Code'} label={'Code'} />
-            </Grid>
             <Grid item xs={12}>
               <TextFormField required fullWidth name={'Name'} label={'Name'} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextFormField required fullWidth name={'Code'} label={'Code'} />
             </Grid>
             <Grid item xs={12}>
               <TextFormField
@@ -218,6 +215,9 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
               ) : (
                 <></>
               )}
+            </Grid>
+            <Grid item xs={12}>
+              <SingleSelectBoxFormField name={'IsDisabled'} label={'Is Disabled'} />
             </Grid>
           </Grid>
         </FormProvider>

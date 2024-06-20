@@ -40,8 +40,8 @@ const MapSidebar = (props: MapSidebarProps) => {
   const { data: adminAreaData, loadOnce: loadAdminAreas } = useDataLoader(
     api.administrativeAreas.getAdministrativeAreas,
   );
-  loadAgencies();
-  loadAdminAreas();
+  loadAgencies({});
+  loadAdminAreas({});
 
   // Sets the properties that are in the map's bounds at current view. Resets the page index.
   const definePropertiesInBounds = () => {

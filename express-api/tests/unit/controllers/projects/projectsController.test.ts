@@ -95,7 +95,6 @@ describe('UNIT - Testing controllers for users routes.', () => {
           agencyId: [1, 2],
           page: 1,
           quantity: 10,
-          sort: 'asc',
         },
       });
 
@@ -127,7 +126,8 @@ describe('UNIT - Testing controllers for users routes.', () => {
           agencyId: [1, 2],
           page: 1,
           quantity: 10,
-          sort: 'asc',
+          sortOrder: 'asc',
+          sortKey: 'ProjectNumber',
         },
       });
 
@@ -158,7 +158,8 @@ describe('UNIT - Testing controllers for users routes.', () => {
           agencyId: [1, 2],
           page: 1,
           quantity: 10,
-          sort: 'asc',
+          sortOrder: 'asc',
+          sortKey: 'ProjectNumber',
         },
       });
 
