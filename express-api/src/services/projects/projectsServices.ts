@@ -4,7 +4,6 @@ import { ProjectType } from '@/constants/projectType';
 import { ProjectWorkflow } from '@/constants/projectWorkflow';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { Building } from '@/typeorm/Entities/Building';
-// import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
@@ -31,6 +30,7 @@ import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import userServices from '../users/usersServices';
 import { ProjectTimestamp } from '@/typeorm/Entities/ProjectTimestamp';
 import { ProjectMonetary } from '@/typeorm/Entities/ProjectMonetary';
+import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 
 const projectRepo = AppDataSource.getRepository(Project);
 
@@ -151,7 +151,11 @@ const getProjectById = async (id: number) => {
  * @returns The newly created project.
  * @throws ErrorWithCode - If the project name is missing, agency is not found, or there is an error creating the project.
  */
-const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPropertyIds) => {
+const addProject = async (
+  project: DeepPartial<Project>,
+  propertyIds: ProjectPropertyIds,
+  ssoUser: SSOUser,
+) => {
   // Does the project have a name?
   if (!project.Name) throw new ErrorWithCode('Projects must have a name.', 400);
 
@@ -167,7 +171,7 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
   project.ProjectType = ProjectType.DISPOSAL;
 
   // What type of submission is this? Regular (7) or Exemption (8)?
-  project.StatusId = project.Metadata?.exemptionRequested
+  project.StatusId = project?.Tasks?.find((task) => task.TaskId === 16) //Task labelled Exemption requested
     ? ProjectStatus.SUBMITTED_EXEMPTION
     : ProjectStatus.SUBMITTED;
 
@@ -191,6 +195,7 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
     await handleProjectMonetary(newProject, queryRunner);
     await handleProjectNotes(newProject, queryRunner);
     await handleProjectTimestamps(newProject, queryRunner);
+    await handleProjectNotifications(newProject, ssoUser, queryRunner);
     await queryRunner.commitTransaction();
     return newProject;
   } catch (e) {
@@ -822,10 +827,12 @@ const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boo
       Workflow: includeRelations,
       CreatedBy: includeRelations,
       UpdatedBy: includeRelations,
-      StatusHistory: includeRelations,
-      Tasks: includeRelations,
-      Notes: includeRelations,
-      Notifications: false, // Don't include this. It can be very large.
+      // Don't include these joins below. It can be very large.
+      Tasks: false,
+      Notes: false,
+      Timestamps: false,
+      Monetaries: false,
+      Notifications: false,
     },
     select: {
       Agency: {
@@ -848,22 +855,13 @@ const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boo
         FirstName: true,
         LastName: true,
       },
-      UpdatedBy: { Id: true, FirstName: true, LastName: true },
+      UpdatedBy: {
+        Id: true,
+        FirstName: true,
+        LastName: true,
+      },
       Workflow: {
         Name: true,
-      },
-      Tasks: {
-        CompletedOn: true,
-        TaskId: true,
-        IsCompleted: true,
-      },
-      StatusHistory: {
-        StatusId: true,
-        UpdatedOn: true,
-        CreatedOn: true,
-      },
-      Notes: {
-        Note: true,
       },
     },
     where: {
@@ -877,9 +875,26 @@ const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boo
     skip: (filter.page ?? 0) * (filter.quantity ?? 0),
     order: filter.sort as FindOptionsOrder<Project>,
   };
-
   const projects = await projectRepo.find(queryOptions);
-  return projects;
+
+  /**
+   * Separated these queries intentionally.
+   * Joining them with the projects call is much slower.
+   */
+  const tasks = await AppDataSource.getRepository(ProjectTask).find();
+  const notes = await AppDataSource.getRepository(ProjectNote).find();
+  const monetaries = await AppDataSource.getRepository(ProjectMonetary).find();
+  const timestamps = await AppDataSource.getRepository(ProjectTimestamp).find();
+  const notifications = await AppDataSource.getRepository(NotificationQueue).find();
+
+  return projects.map((project) => ({
+    ...project,
+    Tasks: tasks.filter((task) => task.ProjectId === project.Id),
+    Notes: notes.filter((note) => note.ProjectId === project.Id),
+    Monetaries: monetaries.filter((mon) => mon.ProjectId === project.Id),
+    Timestamps: timestamps.filter((time) => time.ProjectId === project.Id),
+    Notifications: notifications.filter((notification) => notification.ProjectId === project.Id),
+  }));
 };
 
 const projectServices = {

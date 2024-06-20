@@ -147,14 +147,14 @@ export const produceUser = (props?: Partial<User>): User => {
     KeycloakUserId: faker.string.uuid() as UUID,
     Role: produceRole(),
     RoleId: undefined,
-    Agency: produceAgency(id),
+    Agency: produceAgency(),
     AgencyId: undefined,
     IsDisabled: false,
     ...props,
   };
 };
 
-export const produceAgency = (code?: string): Agency => {
+export const produceAgency = (props?: Partial<Agency>): Agency => {
   const agency: Agency = {
     Id: faker.number.int({ max: 10 }),
     Name: faker.company.name(),
@@ -163,7 +163,7 @@ export const produceAgency = (code?: string): Agency => {
     Description: '',
     ParentId: undefined,
     Parent: undefined,
-    Code: code ?? faker.string.alpha({ length: 4 }),
+    Code: faker.string.alpha({ length: 4 }),
     Email: faker.internet.email(),
     SendEmail: false,
     AddressTo: '',
@@ -175,6 +175,7 @@ export const produceAgency = (code?: string): Agency => {
     UpdatedBy: undefined,
     UpdatedOn: new Date(),
     Users: [],
+    ...props,
   };
   return agency;
 };
@@ -283,7 +284,7 @@ export const produceEmail = (props: Partial<IEmail>): IEmail => {
 };
 
 export const produceBuilding = (): Building => {
-  const agencyId = faker.string.uuid() as UUID;
+  const agencyId = faker.number.int();
   const id = faker.number.int({ max: 10 });
   return {
     Id: faker.number.int({ max: 10 }),
@@ -309,7 +310,7 @@ export const produceBuilding = (): Building => {
     ClassificationId: undefined,
     Classification: undefined,
     AgencyId: undefined,
-    Agency: produceAgency(agencyId),
+    Agency: produceAgency({ Id: agencyId }),
     AdministrativeAreaId: undefined,
     AdministrativeArea: undefined,
     IsSensitive: undefined,
