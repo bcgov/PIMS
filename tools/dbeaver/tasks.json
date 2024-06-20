@@ -222,6 +222,17 @@
 						"defaultCatalog": "pims",
 						"query": "/* Query to extract relevant data from project.metadata table and into project_task table */\r\nSELECT \r\n    p.id AS project_id,\r\n    kv.[key] AS metadata_key,\r\n    CASE \r\n        WHEN kv.[value] \u003d \u0027true\u0027 THEN 1\r\n        WHEN kv.[value] \u003d \u0027false\u0027 THEN 0\r\n        ELSE NULL\r\n    END AS is_completed,\r\n    CASE \r\n        WHEN kv.[key] \u003d \u0027exemptionRequested\u0027 THEN 16\r\n        WHEN kv.[key] \u003d \u0027priorYearAdjustment\u0027 THEN 17\r\n\tEND AS \"task_id\",\r\n    CASE \r\n        WHEN kv.[key] \u003d \u0027priorYearAdjustment\u0027 THEN \r\n            CASE \r\n                WHEN kv.[value] \u003d \u0027true\u0027 THEN JSON_VALUE(p.metadata, \u0027$.priorYearAdjustmentOn\u0027)\r\n                ELSE NULL\r\n            END\r\n        WHEN kv.[key] \u003d \u0027exemptionRequested\u0027 THEN \r\n            CASE \r\n                WHEN kv.[value] \u003d \u0027true\u0027 THEN p.CreatedOn\r\n                ELSE NULL\r\n            END\r\n        ELSE NULL\r\n    END AS completed_on,\r\n    \u002700000000-0000-0000-0000-000000000000\u0027 as \"created_by_id\",\r\n    GETDATE() as \"created_on\",\r\n\tp.UpdatedOn as \"updated_on\",\r\n\tp.UpdatedById as \"updated_by_id\"\r\n\r\nFROM \r\n    Projects p\r\nCROSS APPLY \r\n    OPENJSON(p.metadata) AS kv\r\nWHERE \r\n    kv.[key] IN (\u0027priorYearAdjustment\u0027, \u0027exemptionRequested\u0027)\r\n\torder by kv.[key]"
 					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "postgres-jdbc-18ceb57db81-643fa3bb56d54f2f",
+						"defaultCatalog": "postgres",
+						"defaultSchema": "public",
+						"query": "SELECT setval(\u0027parcel_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM parcel));\r\nSELECT setval(\u0027building_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM building));\r\nSELECT setval(\u0027agency_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM agency));\r\nSELECT setval(\u0027project_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project));\r\nSELECT setval(\u0027project_note_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_note));\r\nSELECT setval(\u0027notification_queue_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM notification_queue));\r\nSELECT setval(\u0027project_property_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_property));\r\nSELECT setval(\u0027project_report_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_report));\r\nSELECT setval(\u0027project_status_history_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM  project_status_history));"
+					}
 				}
 			],
 			"consumers": [
@@ -290,15 +301,18 @@
 				},
 				{
 					"type": "databaseTransferConsumer"
+				},
+				{
+					"type": "databaseTransferConsumer"
 				}
 			],
 			"configuration": {
-				"maxJobCount": 1.0,
+				"maxJobCount": 1,
 				"showFinalMessage": true,
 				"DatabaseTransferProducer": {
 					"extractType": "SEGMENTS",
-					"segmentSize": 1000.0,
-					"fetchSize": 10000.0,
+					"segmentSize": 1000,
+					"fetchSize": 10000,
 					"openNewConnections": true,
 					"queryRowCount": false,
 					"selectedColumnsOnly": false,
@@ -308,9 +322,9 @@
 					"entityId": "postgres-jdbc-18ceb57db81-643fa3bb56d54f2f/postgres/public",
 					"openNewConnections": true,
 					"useTransactions": true,
-					"commitAfterRows": 1000.0,
+					"commitAfterRows": 1000,
 					"useMultiRowInsert": false,
-					"multiRowInsertBatch": 500.0,
+					"multiRowInsertBatch": 500,
 					"skipBindValues": false,
 					"disableUsingBatches": true,
 					"ignoreDuplicateRows": true,
@@ -345,8 +359,8 @@
 									"targetName": "updated_on",
 									"mappingType": "existing"
 								},
-								"name": {
-									"targetName": "name",
+								"Name": {
+									"targetName": "Name",
 									"mappingType": "existing"
 								},
 								"isdisabled": {
@@ -517,8 +531,8 @@
 									"targetName": "updated_on",
 									"mappingType": "existing"
 								},
-								"name": {
-									"targetName": "name",
+								"Name": {
+									"targetName": "Name",
 									"mappingType": "existing"
 								},
 								"description": {
@@ -945,8 +959,8 @@
 									"targetName": "project_number",
 									"mappingType": "existing"
 								},
-								"name": {
-									"targetName": "name",
+								"Name": {
+									"targetName": "Name",
 									"mappingType": "existing"
 								},
 								"workflowid": {
@@ -1211,8 +1225,8 @@
 									"targetName": "is_final",
 									"mappingType": "existing"
 								},
-								"name": {
-									"targetName": "name",
+								"Name": {
+									"targetName": "Name",
 									"mappingType": "existing"
 								},
 								"From": {
@@ -1628,6 +1642,16 @@
 									"mappingType": "existing"
 								}
 							}
+						},
+						"postgres-jdbc-18ceb57db81-643fa3bb56d54f2f/SELECT setval(\u0027parcel_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM parcel));\r\nSELECT setval(\u0027building_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM building));\r\nSELECT setval(\u0027agency_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM agency));\r\nSELECT setval(\u0027project_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project));\r\nSELECT setval(\u0027project_note_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_note));\r\nSELECT setval(\u0027notification_queue_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM notification_queue));\r\nSELECT setval(\u0027project_property_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_property));\r\nSELECT setval(\u0027project_report_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_report));\r\nSELECT setval(\u0027project_status_history_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM  project_status_history));": {
+							"targetName": "\"SELECT setval(\u0027parcel_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM parcel));\r\nSELECT setval(\u0027building_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM building));\r\nSELECT setval(\u0027agency_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM agency));\r\nSELECT setval(\u0027project_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project));\r\nSELECT setval(\u0027project_note_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_note));\r\nSELECT setval(\u0027notification_queue_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM notification_queue));\r\nSELECT setval(\u0027project_property_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_property));\r\nSELECT setval(\u0027project_report_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_report));\r\nSELECT setval(\u0027project_status_history_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM  project_status_history));\"",
+							"mappingType": "skip",
+							"attributes": {
+								"setval": {
+									"targetName": "setval",
+									"mappingType": "skip"
+								}
+							}
 						}
 					}
 				},
@@ -1856,9 +1880,23 @@
 						"defaultCatalog": "pims",
 						"query": "/* Query to extract relevant data from project.metadata table and into project_task table */\r\nSELECT \r\n    p.id AS project_id,\r\n    kv.[key] AS metadata_key,\r\n    CASE \r\n        WHEN kv.[value] \u003d \u0027true\u0027 THEN 1\r\n        WHEN kv.[value] \u003d \u0027false\u0027 THEN 0\r\n        ELSE NULL\r\n    END AS is_completed,\r\n    CASE \r\n        WHEN kv.[key] \u003d \u0027exemptionRequested\u0027 THEN 16\r\n        WHEN kv.[key] \u003d \u0027priorYearAdjustment\u0027 THEN 17\r\n\tEND AS \"task_id\",\r\n    CASE \r\n        WHEN kv.[key] \u003d \u0027priorYearAdjustment\u0027 THEN \r\n            CASE \r\n                WHEN kv.[value] \u003d \u0027true\u0027 THEN JSON_VALUE(p.metadata, \u0027$.priorYearAdjustmentOn\u0027)\r\n                ELSE NULL\r\n            END\r\n        WHEN kv.[key] \u003d \u0027exemptionRequested\u0027 THEN \r\n            CASE \r\n                WHEN kv.[value] \u003d \u0027true\u0027 THEN p.CreatedOn\r\n                ELSE NULL\r\n            END\r\n        ELSE NULL\r\n    END AS completed_on,\r\n    \u002700000000-0000-0000-0000-000000000000\u0027 as \"created_by_id\",\r\n    GETDATE() as \"created_on\",\r\n\tp.UpdatedOn as \"updated_on\",\r\n\tp.UpdatedById as \"updated_by_id\"\r\n\r\nFROM \r\n    Projects p\r\nCROSS APPLY \r\n    OPENJSON(p.metadata) AS kv\r\nWHERE \r\n    kv.[key] IN (\u0027priorYearAdjustment\u0027, \u0027exemptionRequested\u0027)\r\n\torder by kv.[key]"
 					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "postgres-jdbc-18dd2b052a7-539b625bbf9f91bf",
+						"defaultCatalog": "pims",
+						"defaultSchema": "public",
+						"query": "SELECT setval(\u0027parcel_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM parcel));\r\nSELECT setval(\u0027building_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM building));\r\nSELECT setval(\u0027agency_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM agency));\r\nSELECT setval(\u0027project_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project));\r\nSELECT setval(\u0027project_note_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_note));\r\nSELECT setval(\u0027notification_queue_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM notification_queue));\r\nSELECT setval(\u0027project_property_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_property));\r\nSELECT setval(\u0027project_report_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_report));\r\nSELECT setval(\u0027project_status_history_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM  project_status_history));"
+					}
 				}
 			],
 			"consumers": [
+				{
+					"type": "databaseTransferConsumer"
+				},
 				{
 					"type": "databaseTransferConsumer"
 				},
@@ -1980,7 +2018,7 @@
 									"mappingType": "existing"
 								},
 								"Name": {
-									"targetName": "Name",
+									"targetName": "name",
 									"mappingType": "existing"
 								},
 								"isdisabled": {
@@ -2152,7 +2190,7 @@
 									"mappingType": "existing"
 								},
 								"Name": {
-									"targetName": "Name",
+									"targetName": "name",
 									"mappingType": "existing"
 								},
 								"description": {
@@ -2580,7 +2618,7 @@
 									"mappingType": "existing"
 								},
 								"Name": {
-									"targetName": "Name",
+									"targetName": "name",
 									"mappingType": "existing"
 								},
 								"workflowid": {
@@ -3260,6 +3298,16 @@
 								"updated_by_id": {
 									"targetName": "updated_by_id",
 									"mappingType": "existing"
+								}
+							}
+						},
+						"postgres-jdbc-18dd2b052a7-539b625bbf9f91bf/SELECT setval(\u0027parcel_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM parcel));\r\nSELECT setval(\u0027building_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM building));\r\nSELECT setval(\u0027agency_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM agency));\r\nSELECT setval(\u0027project_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project));\r\nSELECT setval(\u0027project_note_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_note));\r\nSELECT setval(\u0027notification_queue_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM notification_queue));\r\nSELECT setval(\u0027project_property_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_property));\r\nSELECT setval(\u0027project_report_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_report));\r\nSELECT setval(\u0027project_status_history_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM  project_status_history));": {
+							"targetName": "SELECT setval(\u0027parcel_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM parcel));\r\nSELECT setval(\u0027building_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM building));\r\nSELECT setval(\u0027agency_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM agency));\r\nSELECT setval(\u0027project_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project));\r\nSELECT setval(\u0027project_note_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_note));\r\nSELECT setval(\u0027notification_queue_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM notification_queue));\r\nSELECT setval(\u0027project_property_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_property));\r\nSELECT setval(\u0027project_report_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_report));\r\nSELECT setval(\u0027project_status_history_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM  project_status_history));",
+							"mappingType": "skip",
+							"attributes": {
+								"setval": {
+									"targetName": "setval",
+									"mappingType": "skip"
 								}
 							}
 						}
