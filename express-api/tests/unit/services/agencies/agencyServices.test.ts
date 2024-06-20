@@ -38,10 +38,10 @@ describe('UNIT - agency services', () => {
     it('should get a list of agencies', async () => {
       const agencies = await agencyServices.getAgencies({
         name: 'startsWith,aaa',
-        code: 'code',
-        email: 'email',
-        createdOn: 'new Date()',
-        updatedOn: 'new Date()',
+        code: 'endsWith,code',
+        email: 'contains,email',
+        createdOn: `is,${new Date()}`,
+        updatedOn: `after,${new Date()}`,
         sortKey: 'Parent',
         sortOrder: 'asc',
       });
