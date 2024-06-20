@@ -25,7 +25,21 @@ describe('UNIT - admin area services', () => {
   });
   describe('getAdminstrativeAreas', () => {
     it('should return a list of admin areas', async () => {
-      const areas = await administrativeAreasServices.getAdministrativeAreas({});
+      const areas = await administrativeAreasServices.getAdministrativeAreas({
+        name: 'endsWith,aaa',
+        regionalDistrict: 'contains,aaa',
+        isDisabled: 'contains,aaa',
+        sortKey: 'RegionalDistrict',
+        sortOrder: 'asc',
+      });
+      expect(_adminAreaFind).toHaveBeenCalled();
+      expect(Array.isArray(areas)).toBe(true);
+    });
+    it('should return a list of admin areas', async () => {
+      const areas = await administrativeAreasServices.getAdministrativeAreas({
+        sortKey: 'Name',
+        sortOrder: 'desc',
+      });
       expect(_adminAreaFind).toHaveBeenCalled();
       expect(Array.isArray(areas)).toBe(true);
     });

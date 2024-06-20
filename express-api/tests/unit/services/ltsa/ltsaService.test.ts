@@ -3,18 +3,18 @@ import ltsaServices from './../../../../src/services/ltsa/ltsaServices';
 import { ILtsaOrder } from '@/services/ltsa/interfaces/ILtsaOrder';
 import { produceLtsaOrder } from 'tests/testUtils/factories';
 
-const _fetchtoken = jest.fn().mockImplementation(() => {
+const _fetchtoken = jest.fn().mockImplementation((ok: boolean = true) => {
   return {
-    ok: true,
+    ok,
     json: () => ({
       accessToken: 'accesstoken',
       refreshToken: 'refreshtoken',
     }),
   };
 });
-const _fetchsummary = jest.fn().mockImplementation(() => {
+const _fetchsummary = jest.fn().mockImplementation((ok: boolean = true) => {
   return {
-    ok: true,
+    ok,
     json: () => ({
       titleSummaries: [
         {
@@ -27,11 +27,12 @@ const _fetchsummary = jest.fn().mockImplementation(() => {
         },
       ],
     }),
+    text: async () => '{ "errorMessages": [] }',
   };
 });
-const _fetchorder = jest.fn().mockImplementation(() => {
+const _fetchorder = jest.fn().mockImplementation((ok: boolean = true) => {
   return {
-    ok: true,
+    ok,
     json: () => produceLtsaOrder(),
   };
 });
@@ -47,6 +48,10 @@ describe('UNIT - LTSA Services', () => {
       expect(result).toBeDefined();
       expect(result.accessToken).toEqual('accesstoken');
       expect(result.refreshToken).toEqual('refreshtoken');
+    });
+    it('should return an error code', async () => {
+      jest.spyOn(global, 'fetch').mockImplementationOnce(() => _fetchtoken(false));
+      expect(async () => await ltsaServices.getTokenAsync()).rejects.toThrow();
     });
   });
 
@@ -73,6 +78,14 @@ describe('UNIT - LTSA Services', () => {
       expect(expectedResponse.titleSummaries[0].landTitleDistrict).toEqual(
         result.titleSummaries[0].landTitleDistrict,
       );
+    });
+    it('should return a error code', async () => {
+      const accessToken = 'accesstokentitlesummary';
+      jest.spyOn(global, 'fetch').mockImplementationOnce(() => _fetchsummary(false));
+      const parcelIdentifier = '005-666-767';
+      expect(
+        async () => await ltsaServices.getTitleSummary(accessToken, parcelIdentifier),
+      ).rejects.toThrow();
     });
   });
 });

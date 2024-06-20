@@ -7,7 +7,6 @@ import {
 } from '@mui/x-data-grid';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import React, { MutableRefObject, useContext } from 'react';
-import useDataLoader from '@/hooks/useDataLoader';
 import { dateFormatter, projectStatusChipFormatter } from '@/utilities/formatters';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
@@ -16,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { Project } from '@/hooks/api/useProjectsApi';
 import { NoteTypes } from '@/constants/noteTypes';
 import { SnackBarContext } from '@/contexts/snackbarContext';
+import { Box } from '@mui/material';
 import { TimestampType } from '@/constants/timestampTypes';
 import { ProjectTask } from '@/constants/projectTasks';
 import { NotificationType } from '@/constants/notificationTypes';
@@ -25,8 +25,6 @@ const ProjectsTable = () => {
   const navigate = useNavigate();
   const api = usePimsApi();
   const snackbar = useContext(SnackBarContext);
-  const { data, loadOnce } = useDataLoader(api.projects.getProjects);
-  loadOnce();
 
   const parseIntFromProjectNo = (projectNo: string) => {
     return Number(projectNo.match(/[a-zA-Z]+-?(\d+)/)[1]);
@@ -226,38 +224,42 @@ const ProjectsTable = () => {
   };
 
   return (
-    <FilterSearchDataGrid
-      onAddButtonClick={() => navigate('/projects/add')}
-      onPresetFilterChange={selectPresetFilter}
-      defaultFilter={'All Projects'}
-      presetFilterSelectOptions={[
-        <CustomMenuItem key={'All Projects'} value={'All Projects'}>
-          All Projects
-        </CustomMenuItem>,
-        <CustomListSubheader key={'Status'}>Status</CustomListSubheader>,
-        <CustomMenuItem key={'In ERP'} value={'In ERP'}>
-          In ERP
-        </CustomMenuItem>,
-        <CustomMenuItem key={'Approved for ERP'} value={'Approved for ERP'}>
-          Approved for ERP
-        </CustomMenuItem>,
-        <CustomMenuItem key={'Approved for Exemption'} value={'Approved for Exemption'}>
-          Approved for Exemption
-        </CustomMenuItem>,
-      ]}
-      getRowId={(row) => row.Id}
-      onRowClick={(params) => navigate(`/projects/${params.row.Id}`)}
-      tableHeader={'Disposal Projects Overview'}
-      excelTitle={'Projects'}
-      customExcelData={getExcelData}
-      addTooltip={'Create New Disposal Project'}
-      name={'projects'}
-      columns={columns}
-      rows={data ?? []}
-      initialState={{
-        sorting: { sortModel: [{ field: 'UpdatedOn', sort: 'desc' }] },
-      }}
-    />
+    <Box sx={{ height: 'calc(100vh - 180px)' }}>
+      <FilterSearchDataGrid
+        tableOperationMode="server"
+        dataSource={api.projects.getProjects}
+        onAddButtonClick={() => navigate('/projects/add')}
+        onPresetFilterChange={selectPresetFilter}
+        defaultFilter={'All Projects'}
+        presetFilterSelectOptions={[
+          <CustomMenuItem key={'All Projects'} value={'All Projects'}>
+            All Projects
+          </CustomMenuItem>,
+          <CustomListSubheader key={'Status'}>Status</CustomListSubheader>,
+          <CustomMenuItem key={'In ERP'} value={'In ERP'}>
+            In ERP
+          </CustomMenuItem>,
+          <CustomMenuItem key={'Approved for ERP'} value={'Approved for ERP'}>
+            Approved for ERP
+          </CustomMenuItem>,
+          <CustomMenuItem key={'Approved for Exemption'} value={'Approved for Exemption'}>
+            Approved for Exemption
+          </CustomMenuItem>,
+        ]}
+        getRowId={(row) => row.Id}
+        onRowClick={(params) => navigate(`/projects/${params.row.Id}`)}
+        tableHeader={'Disposal Projects Overview'}
+        excelTitle={'Projects'}
+        customExcelData={getExcelData}
+        addTooltip={'Create New Disposal Project'}
+        name={'projects'}
+        columns={columns}
+        initialState={{
+          pagination: { paginationModel: { page: 0, pageSize: 100 } },
+          sorting: { sortModel: [{ field: 'UpdatedOn', sort: 'desc' }] },
+        }}
+      />
+    </Box>
   );
 };
 

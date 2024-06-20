@@ -262,56 +262,59 @@ const UsersTable = (props: IUsersTable) => {
         } as SxProps
       }
     >
-      <FilterSearchDataGrid
-        name="users"
-        onRowClick={rowClickHandler}
-        defaultFilter="All Users"
-        tableHeader="Users Overview"
-        excelTitle="Users Table"
-        customExcelData={getExcelData}
-        addTooltip="Adding a new user from this table is not supported yet. Please advise users to use the access request form."
-        getRowId={(row) => row.Id}
-        columns={columns}
-        rows={users}
-        loading={isLoading}
-        initialState={{
-          sorting: {
-            sortModel: [{ field: 'Status', sort: 'desc' }],
-          },
-        }}
-        onPresetFilterChange={selectPresetFilter}
-        presetFilterSelectOptions={[
-          <CustomMenuItem key={'All Users'} value={'All Users'}>
-            All Users
-          </CustomMenuItem>,
-          <CustomListSubheader key={'Status'}>Status</CustomListSubheader>,
-          <CustomMenuItem key={'Active'} value={'Active'}>
-            Active
-          </CustomMenuItem>,
-          <CustomMenuItem key={'On Hold'} value={'OnHold'}>
-            On Hold
-          </CustomMenuItem>,
-          <CustomMenuItem key={'Disabled'} value={'Disabled'}>
-            Disabled
-          </CustomMenuItem>,
-          <CustomMenuItem key={'Denied'} value={'Denied'}>
-            Denied
-          </CustomMenuItem>,
-          <CustomListSubheader key={'Role'}>Role</CustomListSubheader>,
-          <CustomMenuItem key={'User'} value={'User'}>
-            General User
-          </CustomMenuItem>,
-          <CustomMenuItem key={'Admin'} value={'Admin'}>
-            Administrator
-          </CustomMenuItem>,
-          <CustomMenuItem key={'Auditor'} value={'Auditor'}>
-            Auditor
-          </CustomMenuItem>,
-          <CustomMenuItem key={'No Role'} value={'No Role'}>
-            No Role
-          </CustomMenuItem>,
-        ]}
-      />
+      <Box sx={{ height: 'calc(100vh - 180px)' }}>
+        <FilterSearchDataGrid
+          name="users"
+          onRowClick={rowClickHandler}
+          tableOperationMode="client"
+          defaultFilter="All Users"
+          tableHeader="Users Overview"
+          excelTitle="Users Table"
+          customExcelData={getExcelData}
+          addTooltip="Adding a new user from this table is not supported yet. Please advise users to use the access request form."
+          getRowId={(row) => row.Id}
+          columns={columns}
+          rows={users}
+          loading={isLoading}
+          initialState={{
+            sorting: {
+              sortModel: [{ field: 'Status', sort: 'desc' }],
+            },
+          }}
+          onPresetFilterChange={selectPresetFilter}
+          presetFilterSelectOptions={[
+            <CustomMenuItem key={'All Users'} value={'All Users'}>
+              All Users
+            </CustomMenuItem>,
+            <CustomListSubheader key={'Status'}>Status</CustomListSubheader>,
+            <CustomMenuItem key={'Active'} value={'Active'}>
+              Active
+            </CustomMenuItem>,
+            <CustomMenuItem key={'On Hold'} value={'OnHold'}>
+              On Hold
+            </CustomMenuItem>,
+            <CustomMenuItem key={'Disabled'} value={'Disabled'}>
+              Disabled
+            </CustomMenuItem>,
+            <CustomMenuItem key={'Denied'} value={'Denied'}>
+              Denied
+            </CustomMenuItem>,
+            <CustomListSubheader key={'Role'}>Role</CustomListSubheader>,
+            <CustomMenuItem key={'User'} value={'User'}>
+              General User
+            </CustomMenuItem>,
+            <CustomMenuItem key={'Admin'} value={'Admin'}>
+              Administrator
+            </CustomMenuItem>,
+            <CustomMenuItem key={'Auditor'} value={'Auditor'}>
+              Auditor
+            </CustomMenuItem>,
+            <CustomMenuItem key={'No Role'} value={'No Role'}>
+              No Role
+            </CustomMenuItem>,
+          ]}
+        />
+      </Box>
     </Box>
   );
 };

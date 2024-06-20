@@ -5,6 +5,7 @@ import { User } from '@/hooks/api/useUsersApi';
 import { Parcel } from './useParcelsApi';
 import { Building } from './useBuildingsApi';
 import { DeepPartial } from 'react-hook-form';
+import { CommonFiltering } from '@/interfaces/ICommonFiltering';
 
 export interface TierLevel extends BaseEntityInterface {
   Id: number;
@@ -298,8 +299,17 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
     const response = await absoluteFetch.del(`/projects/disposal/${id}`);
     return response;
   };
-  const getProjects = async () => {
-    const { parsedBody } = await absoluteFetch.get('/projects', { includeRelations: true });
+  const getProjects = async (sort: CommonFiltering, signal?: AbortSignal) => {
+    const { parsedBody } = await absoluteFetch.get(
+      '/projects',
+      {
+        includeRelations: true,
+        ...sort,
+      },
+      {
+        signal,
+      },
+    );
     if (parsedBody.error) {
       return [];
     }

@@ -3,9 +3,13 @@ import { z } from 'zod';
 export const AdministrativeAreaFilterSchema = z.object({
   page: z.coerce.number().optional(),
   quantity: z.coerce.number().optional(),
-  sort: z.string().optional(),
+  sortKey: z.string().optional(),
+  sortOrder: z.string().optional(),
+  sortRelation: z.string().optional(),
   name: z.string().optional(),
   provinceId: z.string().optional(),
+  regionalDistrict: z.string().optional(),
+  isDisabled: z.string().optional(),
 });
 
 export const AdministrativeAreaPublicResponseSchema = z.object({
