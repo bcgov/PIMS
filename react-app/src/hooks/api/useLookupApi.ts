@@ -1,4 +1,10 @@
+import { ProjectRisk, TierLevel } from '@/hooks/api/useProjectsApi';
 import { IFetch } from '../useFetch';
+import { BuildingConstructionType, BuildingPredominateUse } from '@/hooks/api/useBuildingsApi';
+import { PropertyClassification } from '@/interfaces/IProperty';
+import { Role } from '@/hooks/api/useRolesApi';
+import { Agency } from '@/hooks/api/useAgencyApi';
+import { AdministrativeArea } from '@/hooks/api/useAdministrativeAreaApi';
 
 export interface LookupObject {
   Name: string;
@@ -34,6 +40,24 @@ export interface PropertyType {
   Id: number;
   IsDisabled: boolean;
   SortOrder: number;
+}
+
+export interface LookupAll {
+  Risks: Partial<ProjectRisk>[];
+  TimestampTypes: Partial<MetadataType>[];
+  MonetaryTypes: Partial<MetadataType>[];
+  NoteTypes: Partial<MetadataType>[];
+  PropertyTypes: Partial<MetadataType>[];
+  Tasks: Partial<Task>[];
+  ProjectStatuses: Partial<ProjectStatus>[];
+  ProjectTiers: Partial<TierLevel>[];
+  ConstructionTypes: Partial<BuildingConstructionType>[];
+  PredominateUses: Partial<BuildingPredominateUse>[];
+  Classifications: Partial<PropertyClassification>[];
+  Roles: Partial<Role>[];
+  Agencies: Partial<Agency>[];
+  AdministrativeAreas: Partial<AdministrativeArea>[];
+  RegionalDistricts: Partial<RegionalDistrict>[];
 }
 
 const useLookupApi = (absoluteFetch: IFetch) => {
@@ -94,6 +118,11 @@ const useLookupApi = (absoluteFetch: IFetch) => {
     return parsedBody as MetadataType[];
   };
 
+  const getAll = async () => {
+    const { parsedBody } = await absoluteFetch.get('/lookup/all');
+    return parsedBody as LookupAll;
+  };
+
   return {
     getClassifications,
     getConstructionTypes,
@@ -106,6 +135,7 @@ const useLookupApi = (absoluteFetch: IFetch) => {
     getProjectNoteTypes,
     getProjectMonetaryTypes,
     getProjectTimestampTypes,
+    getAll,
   };
 };
 
