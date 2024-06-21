@@ -3,7 +3,8 @@ import propertyServices from '@/services/properties/propertiesServices';
 import { Building } from '@/typeorm/Entities/Building';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
-import { produceParcel, produceBuilding } from 'tests/testUtils/factories';
+import { PropertyUnion } from '@/typeorm/Entities/views/PropertyUnionView';
+import { produceParcel, produceBuilding, producePropertyUnion } from 'tests/testUtils/factories';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const _parcelsCreateQueryBuilder: any = {
@@ -45,6 +46,10 @@ jest.spyOn(AppDataSource.getRepository(MapProperties), 'find').mockImplementatio
   } as MapProperties,
 ]);
 
+jest
+  .spyOn(AppDataSource.getRepository(PropertyUnion), 'find')
+  .mockImplementation(async () => [producePropertyUnion({})]);
+
 describe('UNIT - Property Services', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -55,6 +60,30 @@ describe('UNIT - Property Services', () => {
       const result = await propertyServices.propertiesFuzzySearch('123', 3);
       expect(Array.isArray(result.Parcels)).toBe(true);
       expect(Array.isArray(result.Buildings)).toBe(true);
+    });
+  });
+
+  describe('getPropertyUnion', () => {
+    it('should return a list of buildings and parcels', async () => {
+      const result = await propertyServices.getPropertiesUnion({
+        pid: 'contains,123',
+        pin: 'contains,456',
+        administrativeArea: 'contains,aaa',
+        agency: 'startsWith,aaa',
+        propertyType: 'contains,Building',
+        sortKey: 'Agency',
+        sortOrder: 'DESC',
+        landArea: 'startsWith,1',
+        updatedOn: 'after,' + new Date(),
+      });
+      expect(Array.isArray(result));
+      expect(result.at(0)).toHaveProperty('PropertyType');
+      expect(result.at(0)).toHaveProperty('Id');
+      expect(result.at(0)).toHaveProperty('PIN');
+      expect(result.at(0)).toHaveProperty('PID');
+      expect(result.at(0)).toHaveProperty('Agency');
+      expect(result.at(0)).toHaveProperty('Classification');
+      expect(result.at(0)).toHaveProperty('AdministrativeArea');
     });
   });
 
