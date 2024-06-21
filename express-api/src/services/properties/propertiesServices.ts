@@ -95,7 +95,8 @@ const collectFindOptions = (filter: PropertyUnionFilter) => {
   if (filter.address) options.push(constructFindOptionFromQuery('Address', filter.address));
   if (filter.updatedOn) options.push(constructFindOptionFromQuery('UpdatedOn', filter.updatedOn));
   if (filter.classification)
-    options.push(constructFindOptionFromQuery('LandArea', filter.landArea));
+    options.push(constructFindOptionFromQuery('Classification', filter.classification));
+  if (filter.landArea) options.push(constructFindOptionFromQuery('LandArea', filter.landArea));
   if (filter.administrativeArea)
     options.push(constructFindOptionFromQuery('AdministrativeArea', filter.administrativeArea));
   if (filter.propertyType)
