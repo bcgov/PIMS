@@ -4,6 +4,7 @@ import propertyServices from '@/services/properties/propertiesServices';
 import { MapFilterSchema } from '@/controllers/properties/mapFilterSchema';
 import { checkUserAgencyPermission, isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 import userServices from '@/services/users/usersServices';
+import xlsx from 'xlsx';
 
 /**
  * @description Used to retrieve all properties.
@@ -164,4 +165,13 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
     },
   }));
   return res.status(200).send(mapFeatures);
+};
+
+export const importProperties = async (req: Request, res: Response) => {
+  const filePath = req.file.path;
+  const file = xlsx.readFile(filePath);
+  const sheetName = file.SheetNames[0];
+  const worksheet = file.Sheets[sheetName];
+  const result = await propertyServices.importPropertiesAsJSON(worksheet, req.user);
+  return res.status(200).send(result);
 };
