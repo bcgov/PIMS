@@ -22,7 +22,7 @@ export const ProjectGeneralInfoForm = (props: IProjectGeneralInfoForm) => {
           required
           options={props.projectStatuses}
           name={'StatusId'}
-          label={'Classification'}
+          label={'Status'}
         />
       </Grid>
       <Grid item xs={12}>
