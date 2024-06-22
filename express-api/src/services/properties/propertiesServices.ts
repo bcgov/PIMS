@@ -4,7 +4,7 @@ import { Building } from '@/typeorm/Entities/Building';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
 import { PropertyUnion } from '@/typeorm/Entities/views/PropertyUnionView';
-import { constructFindOptionFromQuery } from '@/utilities/helperFunctions';
+import { constructFindOptionFromQuery, constructFindOptionFromQueryPid } from '@/utilities/helperFunctions';
 import { FindOptionsOrder, FindOptionsOrderValue, ILike, In } from 'typeorm';
 
 const propertiesFuzzySearch = async (keyword: string, limit?: number) => {
@@ -90,8 +90,8 @@ const sortKeyMapping = (
 const collectFindOptions = (filter: PropertyUnionFilter) => {
   const options = [];
   if (filter.agency) options.push(constructFindOptionFromQuery('Agency', filter.agency));
-  if (filter.pid) options.push(constructFindOptionFromQuery('PID', filter.pid));
-  if (filter.pin) options.push(constructFindOptionFromQuery('PIN', filter.pin));
+  if (filter.pid) options.push(constructFindOptionFromQueryPid('PID', filter.pid));
+  if (filter.pin) options.push(constructFindOptionFromQueryPid('PIN', filter.pin));
   if (filter.address) options.push(constructFindOptionFromQuery('Address', filter.address));
   if (filter.updatedOn) options.push(constructFindOptionFromQuery('UpdatedOn', filter.updatedOn));
   if (filter.classification)
