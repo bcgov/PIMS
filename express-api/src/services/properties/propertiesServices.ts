@@ -4,7 +4,10 @@ import { Building } from '@/typeorm/Entities/Building';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
 import { PropertyUnion } from '@/typeorm/Entities/views/PropertyUnionView';
-import { constructFindOptionFromQuery, constructFindOptionFromQueryPid } from '@/utilities/helperFunctions';
+import {
+  constructFindOptionFromQuery,
+  constructFindOptionFromQueryPid,
+} from '@/utilities/helperFunctions';
 import { FindOptionsOrder, FindOptionsOrderValue, ILike, In } from 'typeorm';
 
 const propertiesFuzzySearch = async (keyword: string, limit?: number) => {
