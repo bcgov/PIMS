@@ -175,13 +175,12 @@ const ClusterPopup = (props: ClusterPopupProps) => {
                   : property.properties.Name
                 : pidFormatter(property.properties.PID) ?? String(property.properties.PIN)
             }
-            content1={
+            content={[
+              property.properties.Address1,
               adminAreaData?.find((aa) => aa.Id === property.properties.AdministrativeAreaId)
-                ?.Name ?? 'No Administrative Area'
-            }
-            content2={
-              agencyData?.find((a) => a.Id === property.properties.AgencyId)?.Name ?? 'No Agency'
-            }
+                ?.Name ?? 'No Administrative Area',
+              agencyData?.find((a) => a.Id === property.properties.AgencyId)?.Name ?? 'No Agency',
+            ]}
           />
         ))}
       </Box>

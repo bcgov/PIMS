@@ -9,18 +9,17 @@ interface PropertyRowProps {
   propertyTypeId: number;
   classificationId?: number;
   title: string;
-  content1: string;
-  content2: string;
+  content: string[];
 }
 
 /**
- * Renders a row for a list of properties that displays an icon, a title, and two text fields.
+ * Renders a row for a list of properties that displays an icon, a title, and content fields.
  *
  * @param {PropertyRowProps} props - The props object used for ParcelRow component.
  * @returns {JSX.Element} The ParcelRow component.
  */
 const PropertyRow = (props: PropertyRowProps) => {
-  const { id, propertyTypeId, title, content1, content2, classificationId } = props;
+  const { id, propertyTypeId, title, content, classificationId } = props;
   const theme = useTheme();
   const propertyType = propertyTypeId === PropertyTypes.BUILDING ? 'building' : 'parcel';
 
@@ -61,8 +60,11 @@ const PropertyRow = (props: PropertyRowProps) => {
           <Typography color={theme.palette.blue.main} fontSize={'0.8em'} fontWeight={'bold'}>
             {title}
           </Typography>
-          <Typography fontSize={'0.8em'}>{content1}</Typography>
-          <Typography fontSize={'0.8em'}>{content2}</Typography>
+          {content.map((c, index) => (
+            <Typography key={index} fontSize={'0.8em'}>
+              {c}
+            </Typography>
+          ))}
         </Grid>
       </Grid>
     </Box>
