@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useContext, useMemo } from 'react';
+import React, { MutableRefObject, useContext } from 'react';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, SxProps, Tooltip, lighten, useTheme } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
@@ -14,18 +14,9 @@ import { dateFormatter, pidFormatter, zeroPadPID } from '@/utilities/formatters'
 import { ClassificationInline } from './ClassificationIcon';
 import { useNavigate } from 'react-router-dom';
 import usePimsApi from '@/hooks/usePimsApi';
-import useDataLoader from '@/hooks/useDataLoader';
 import { Parcel, ParcelEvaluation, ParcelFiscal } from '@/hooks/api/useParcelsApi';
-import {
-  Building,
-  BuildingEvaluation,
-  BuildingFiscal,
-  PropertyType,
-} from '@/hooks/api/useBuildingsApi';
+import { Building, BuildingEvaluation, BuildingFiscal } from '@/hooks/api/useBuildingsApi';
 import { propertyTypeMapper, PropertyTypes } from '@/constants/propertyTypes';
-import { AdministrativeArea } from '@/hooks/api/useAdministrativeAreaApi';
-import { Agency } from '@/hooks/api/useAgencyApi';
-import { Classification } from '@/hooks/api/useLookupApi';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 
 interface IPropertyTable {
@@ -67,36 +58,9 @@ const PropertyTable = (props: IPropertyTable) => {
   const api = usePimsApi();
   const navigate = useNavigate();
   const snackbar = useContext(SnackBarContext);
-  const {
-    data: parcels,
-    isLoading: parcelsLoading,
-    loadOnce: loadParcels,
-  } = useDataLoader(api.parcels.getParcels);
-  const {
-    data: buildings,
-    isLoading: buildingsLoading,
-    loadOnce: loadBuildings,
-  } = useDataLoader(api.buildings.getBuildings);
-
-  const properties = useMemo(
-    () => [
-      ...(buildings?.map((b) => ({ ...b, Type: 'Building' })) ?? []),
-      ...(parcels?.map((p) => ({ ...p, Type: 'Parcel' })) ?? []),
-    ],
-    [buildings, parcels],
-  );
-
-  const loading = parcelsLoading || buildingsLoading;
-
-  const loadAll = () => {
-    loadParcels({ includeRelations: true });
-    loadBuildings({ includeRelations: true });
-  };
 
   const classification = useClassificationStyle();
   const theme = useTheme();
-
-  loadAll();
 
   const columns: GridColDef[] = [
     {
@@ -104,7 +68,6 @@ const PropertyTable = (props: IPropertyTable) => {
       headerName: 'Type',
       flex: 1,
       maxWidth: 130,
-      valueGetter: (value?: PropertyType) => value?.Name,
     },
     {
       field: 'Classification',
@@ -148,13 +111,12 @@ const PropertyTable = (props: IPropertyTable) => {
       renderCell: (params) => {
         return (
           <ClassificationInline
-            color={classification[params.row.Classification.Id].textColor}
-            backgroundColor={classification[params.row.Classification.Id].bgColor}
-            title={params.row.Classification?.Name ?? ''}
+            color={classification[params.row.ClassificationId].textColor}
+            backgroundColor={classification[params.row.ClassificationId].bgColor}
+            title={params.row.Classification ?? ''}
           />
         );
       },
-      valueGetter: (value?: Classification) => value?.Name,
     },
     {
       field: 'PID',
@@ -171,10 +133,9 @@ const PropertyTable = (props: IPropertyTable) => {
       field: 'Agency',
       headerName: 'Agency',
       flex: 1,
-      valueGetter: (value?: Agency) => value?.Name,
     },
     {
-      field: 'Address1',
+      field: 'Address',
       headerName: 'Main Address',
       flex: 1,
     },
@@ -182,7 +143,6 @@ const PropertyTable = (props: IPropertyTable) => {
       field: 'AdministrativeArea',
       headerName: 'Administrative Area',
       flex: 1,
-      valueGetter: (value?: AdministrativeArea) => value?.Name,
     },
     {
       field: 'LandArea',
@@ -333,39 +293,40 @@ const PropertyTable = (props: IPropertyTable) => {
         } as SxProps
       }
     >
-      <FilterSearchDataGrid
-        name="properties"
-        onPresetFilterChange={selectPresetFilter}
-        getRowId={(row) => row.Id + row.Type}
-        defaultFilter={'All Properties'}
-        tableOperationMode="client"
-        onRowClick={props.rowClickHandler}
-        onAddButtonClick={() => navigate('add')}
-        presetFilterSelectOptions={[
-          <CustomMenuItem key={'All Properties'} value={'All Properties'}>
-            All Properties
-          </CustomMenuItem>,
-          <CustomListSubheader key={'Type'}>Property Type</CustomListSubheader>,
-          <CustomMenuItem key={'Building'} value={'Building'}>
-            Building
-          </CustomMenuItem>,
-          <CustomMenuItem key={'Land'} value={'Land'}>
-            Land
-          </CustomMenuItem>,
-        ]}
-        loading={loading}
-        tableHeader={'Properties Overview'}
-        excelTitle={'Properties'}
-        customExcelData={getExcelData}
-        columns={columns}
-        rows={properties}
-        addTooltip="Create New Property"
-        initialState={{
-          sorting: {
-            sortModel: [{ sort: 'desc', field: 'UpdatedOn' }],
-          },
-        }}
-      />
+      <Box height={'calc(100vh - 180px)'}>
+        <FilterSearchDataGrid
+          name="properties"
+          dataSource={api.properties.getPropertiesUnion}
+          onPresetFilterChange={selectPresetFilter}
+          getRowId={(row) => row.Id + row.PropertyType}
+          defaultFilter={'All Properties'}
+          tableOperationMode="server"
+          onRowClick={props.rowClickHandler}
+          onAddButtonClick={() => navigate('add')}
+          presetFilterSelectOptions={[
+            <CustomMenuItem key={'All Properties'} value={'All Properties'}>
+              All Properties
+            </CustomMenuItem>,
+            <CustomListSubheader key={'Type'}>Property Type</CustomListSubheader>,
+            <CustomMenuItem key={'Building'} value={'Building'}>
+              Building
+            </CustomMenuItem>,
+            <CustomMenuItem key={'Land'} value={'Land'}>
+              Land
+            </CustomMenuItem>,
+          ]}
+          tableHeader={'Properties Overview'}
+          excelTitle={'Properties'}
+          customExcelData={getExcelData}
+          columns={columns}
+          addTooltip="Create New Property"
+          initialState={{
+            sorting: {
+              sortModel: [{ sort: 'desc', field: 'UpdatedOn' }],
+            },
+          }}
+        />
+      </Box>
     </Box>
   );
 };
