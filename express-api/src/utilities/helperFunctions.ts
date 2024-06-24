@@ -78,7 +78,7 @@ export const ILikeWrapper = (query: string | undefined, mode: ILikeWrapperMode =
     } else {
       searchText = `%${query}%`;
     }
-    return Raw((alias) => `${fixColumnAlias(alias)}::text ILIKE '${searchText}'`);
+    return Raw((alias) => `(${alias})::TEXT ILIKE '${searchText}'`);
   }
 };
 
@@ -91,15 +91,9 @@ type TimestampOperator = '=' | '!=' | '<=' | '>=' | '<' | '>';
  */
 export const TimestampComparisonWrapper = (tsValue: string, operator: TimestampOperator) => {
   if (operator === '=') {
-    return Raw(
-      (alias) =>
-        `${fixColumnAlias(alias)}::date = '${toPostgresTimestamp(new Date(tsValue))}'::date`,
-    );
+    return Raw((alias) => `(${alias})::DATE = '${toPostgresTimestamp(new Date(tsValue))}'::DATE`);
   } else if (operator === '!=') {
-    return Raw(
-      (alias) =>
-        `${fixColumnAlias(alias)}::date != '${toPostgresTimestamp(new Date(tsValue))}'::date`,
-    );
+    return Raw((alias) => `(${alias})::DATE != '${toPostgresTimestamp(new Date(tsValue))}'::DATE`);
   }
   return Raw((alias) => `${alias} ${operator} '${toPostgresTimestamp(new Date(tsValue))}'`);
 };
@@ -109,6 +103,7 @@ export const TimestampComparisonWrapper = (tsValue: string, operator: TimestampO
 //ie. It will pass Project.ProjectNumber instead of "Project_project_number" (correct column alias constructed by TypeORM)
 //or "Project".project_number (correct table alias plus non-aliased column access)
 //Thankfully, it's not too difficult to manually format this.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const fixColumnAlias = (str: string) => {
   const [tableAlias, columnAlias] = str.split('.');
   const fixedColumn = columnAlias
