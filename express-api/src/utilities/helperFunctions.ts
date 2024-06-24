@@ -15,7 +15,7 @@ export const constructFindOptionFromQueryPid = <T>(
 ): FindOptionsWhere<T> => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, operator, value] = operatorValuePair.match(/([^,]*),(.*)/).map((a) => a.trim());
-  const trimmedValue = value.replace(/[^\d]/, ''); //remove all non digit characters;
+  const trimmedValue = value.replace(/[^\d]/g, ''); //remove all non digit characters;
   let internalMatcher;
   switch (operator) {
     case 'equals':
