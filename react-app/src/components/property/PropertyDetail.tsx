@@ -158,7 +158,6 @@ const PropertyDetail = (props: IPropertyDetail) => {
   }, [parcel, building]);
 
   const customFormatter = (key: any, val: any) => {
-    console.log(val);
     switch (key) {
       case 'PID':
         return <Typography>{pidFormatter(val)}</Typography>;
