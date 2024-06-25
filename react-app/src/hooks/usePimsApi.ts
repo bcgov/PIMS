@@ -36,7 +36,7 @@ const usePimsApi = () => {
   const tools = useToolsApi(fetch);
   const parcelLayer = useParcelLayerApi(fetch);
   const projects = useProjectsApi(fetch);
-  const bcAssessment = useBCAssessmentApi(fetch);
+  const bcAssessment = useBCAssessmentApi();
   const ltsa = useLtsaApi(fetch);
 
   return {
