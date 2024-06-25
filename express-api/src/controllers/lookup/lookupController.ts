@@ -357,7 +357,7 @@ export const lookupAll = async (req: Request, res: Response) => {
   });
   const ProjectStatuses = await AppDataSource.getRepository(ProjectStatus).find({
     select: { Name: true, Id: true },
-    order: { SortOrder: 'asc' },
+    order: { SortOrder: 'asc', Name: 'asc' },
     where: { IsDisabled: false },
   });
   const ProjectTiers = await AppDataSource.getRepository(TierLevel).find({
@@ -365,7 +365,7 @@ export const lookupAll = async (req: Request, res: Response) => {
       Name: true,
       Id: true,
     },
-    order: { SortOrder: 'asc' },
+    order: { SortOrder: 'asc', Name: 'asc' },
     where: { IsDisabled: false },
   });
   const RegionalDistricts = await AppDataSource.getRepository(RegionalDistrict).find({
@@ -379,7 +379,7 @@ export const lookupAll = async (req: Request, res: Response) => {
       Name: true,
       Id: true,
     },
-    order: { SortOrder: 'asc' },
+    order: { SortOrder: 'asc', Name: 'asc' },
     where: { IsDisabled: false },
   });
   const PredominateUses = await AppDataSource.getRepository(BuildingPredominateUse).find({
@@ -387,12 +387,12 @@ export const lookupAll = async (req: Request, res: Response) => {
       Id: true,
       Name: true,
     },
-    order: { SortOrder: 'asc' },
+    order: { SortOrder: 'asc', Name: 'asc' },
     where: { IsDisabled: false },
   });
   const Classifications = await AppDataSource.getRepository(PropertyClassification).find({
     select: { Id: true, Name: true, IsVisible: true },
-    order: { SortOrder: 'asc' },
+    order: { SortOrder: 'asc', Name: 'asc' },
     where: { IsDisabled: false },
   });
   const Roles = await AppDataSource.getRepository(Role).find({
@@ -400,7 +400,7 @@ export const lookupAll = async (req: Request, res: Response) => {
       Id: true,
       Name: true,
     },
-    order: { SortOrder: 'asc' },
+    order: { SortOrder: 'asc', Name: 'asc' },
     where: { IsDisabled: false },
   });
   const Agencies = await AppDataSource.getRepository(Agency).find({
@@ -410,7 +410,7 @@ export const lookupAll = async (req: Request, res: Response) => {
       Code: true,
       ParentId: true,
     },
-    order: { SortOrder: 'asc' },
+    order: { SortOrder: 'asc', Name: 'asc' },
     where: { IsDisabled: false },
   });
   const AdministrativeAreas = await AppDataSource.getRepository(AdministrativeArea).find({
@@ -419,7 +419,7 @@ export const lookupAll = async (req: Request, res: Response) => {
       Name: true,
       RegionalDistrictId: true,
     },
-    order: { SortOrder: 'asc' },
+    order: { SortOrder: 'asc', Name: 'asc' },
     where: { IsDisabled: false },
   });
 

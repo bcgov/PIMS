@@ -43,7 +43,7 @@ export const LookupContextProvider: React.FC<React.PropsWithChildren> = (props) 
   // Retrieves record from lookupTables based on table name and record Id.
   const getLookupValueById = (tableName: keyof LookupAll, id: number) => {
     if (lookupTables === undefined) {
-      return {};
+      return undefined;
     } else {
       return lookupTables[tableName][id];
     }
