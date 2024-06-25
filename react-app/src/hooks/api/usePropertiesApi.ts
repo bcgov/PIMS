@@ -4,6 +4,7 @@ import { Building } from './useBuildingsApi';
 import { Parcel } from './useParcelsApi';
 import { PropertyTypes } from '@/constants/propertyTypes';
 import { ClassificationType } from '@/constants/classificationTypes';
+import { CommonFiltering } from '@/interfaces/ICommonFiltering';
 
 export interface PropertyFuzzySearch {
   Parcels: Parcel[];
@@ -42,6 +43,18 @@ export interface MapFilter {
   Name?: string;
 }
 
+export interface PropertyUnion {
+  PID?: number;
+  PIN?: number;
+  Address: string;
+  Agency: string;
+  AdministrativeArea: string;
+  RegionalDistrict: string;
+  Name: string;
+  UpdatedOn: Date;
+  PropertyType: string;
+}
+
 const usePropertiesApi = (absoluteFetch: IFetch) => {
   const propertiesFuzzySearch = async (keyword: string) => {
     const { parsedBody } = await absoluteFetch.get('/properties/search/fuzzy', {
@@ -68,9 +81,15 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
     return parsedBody as PropertyGeo[];
   };
 
+  const getPropertiesUnion = async (filter: CommonFiltering, signal?: AbortSignal) => {
+    const { parsedBody } = await absoluteFetch.get('/properties', filter, { signal });
+    return parsedBody as PropertyUnion[];
+  };
+
   return {
     propertiesFuzzySearch,
     propertiesGeoSearch,
+    getPropertiesUnion,
   };
 };
 

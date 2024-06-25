@@ -1,6 +1,6 @@
 import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
-import { Box, Checkbox, Grid } from '@mui/material';
+import { Box, Checkbox, Grid, Typography } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import DetailViewNavigation from '../display/DetailViewNavigation';
@@ -13,6 +13,7 @@ import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
 import AutocompleteFormField from '../form/AutocompleteFormField';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LookupContext } from '@/contexts/lookupContext';
+import { dateFormatter } from '@/utilities/formatters';
 
 const AdministrativeAreaDetail = () => {
   const { id } = useParams();
@@ -39,6 +40,7 @@ const AdministrativeAreaDetail = () => {
         />
       );
     }
+    if (key === 'CreatedOn') return <Typography>{dateFormatter(val)}</Typography>;
   };
 
   const adminAreaData = {

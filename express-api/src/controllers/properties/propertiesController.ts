@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
 import { stubResponse } from '@/utilities/stubResponse';
 import propertyServices from '@/services/properties/propertiesServices';
-import { MapFilterSchema } from '@/controllers/properties/mapFilterSchema';
+import {
+  MapFilterSchema,
+  PropertyUnionFilterSchema,
+} from '@/controllers/properties/propertiesSchema';
 import { checkUserAgencyPermission, isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 import userServices from '@/services/users/usersServices';
 
@@ -115,7 +118,7 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
       }]
    */
   // parse for filter
-  const filter = await MapFilterSchema.safeParse(req.query);
+  const filter = MapFilterSchema.safeParse(req.query);
   if (filter.success == false) {
     return res.status(400).send(filter.error);
   }
@@ -164,4 +167,13 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
     },
   }));
   return res.status(200).send(mapFeatures);
+};
+
+export const getPropertyUnion = async (req: Request, res: Response) => {
+  const filter = PropertyUnionFilterSchema.safeParse(req.query);
+  if (filter.success == false) {
+    return res.status(400).send(filter.error);
+  }
+  const properties = await propertyServices.getPropertiesUnion(filter.data);
+  return res.status(200).send(properties);
 };

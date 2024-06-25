@@ -17,6 +17,7 @@ import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 import { useParams } from 'react-router-dom';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { Roles } from '@/constants/roles';
+import { LookupContext } from '@/contexts/lookupContext';
 
 interface IUserDetail {
   onClose: () => void;
@@ -29,28 +30,25 @@ interface UserProfile extends User {
 const UserDetail = ({ onClose }: IUserDetail) => {
   const { id } = useParams();
   const { keycloak, pimsUser } = useContext(AuthContext);
+  const { data: lookupData, getLookupValueById } = useContext(LookupContext);
   const api = usePimsApi();
 
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
 
   const { data, refreshData, isLoading } = useDataLoader(() => api.users.getUserById(id));
-
-  const { data: rolesData, loadOnce: loadRoles } = useDataLoader(api.roles.getInternalRoles);
-  loadRoles();
-
   const { submit, submitting } = useDataSubmitter(api.users.updateUser);
 
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
 
   const rolesOptions = useMemo(
-    () => rolesData?.map((role) => ({ label: role.Name, value: role.Name })) ?? [],
-    [rolesData],
+    () => lookupData?.Roles.map((role) => ({ label: role.Name, value: role.Name })) ?? [],
+    [lookupData],
   );
 
   const userStatusData = {
     Status: data?.Status,
-    Role: data?.Role,
+    Role: lookupData.Roles.find((role) => role.Id === data?.RoleId),
   };
 
   const userProfileData = {
@@ -58,7 +56,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
     Email: data?.Email,
     FirstName: data?.FirstName,
     LastName: data?.LastName,
-    Agency: data?.Agency,
+    Agency: getLookupValueById('Agencies', data?.AgencyId),
     Position: data?.Position,
     CreatedOn: data?.CreatedOn ? new Date(data?.CreatedOn) : undefined,
     LastLogin: data?.LastLogin ? new Date(data?.LastLogin) : undefined,
@@ -210,7 +208,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
             submit(id, {
               Id: id,
               Status: formValues.Status,
-              Role: rolesData.find((role) => role.Name === formValues.Role),
+              Role: lookupData?.Roles.find((role) => role.Name === formValues.Role) as Role,
             }).then(() => {
               refreshData();
               setOpenStatusDialog(false);

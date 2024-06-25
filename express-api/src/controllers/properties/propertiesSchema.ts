@@ -33,3 +33,24 @@ export const MapFilterSchema = z.object({
   Name: z.string().optional(),
   RegionalDistrictIds: arrayFromString(numberSchema),
 });
+
+export type MapFilter = z.infer<typeof MapFilterSchema>;
+
+export const PropertyUnionFilterSchema = z.object({
+  pid: z.string().optional(),
+  pin: z.string().optional(),
+  status: z.string().optional(),
+  classification: z.string().optional(),
+  agency: z.string().optional(),
+  propertyType: z.string().optional(),
+  address: z.string().optional(),
+  administrativeArea: z.string().optional(),
+  landArea: z.string().optional(),
+  updatedOn: z.string().optional(),
+  sortKey: z.string().optional(),
+  sortOrder: z.string().optional(),
+  page: z.coerce.number().optional(),
+  quantity: z.coerce.number().optional(),
+});
+
+export type PropertyUnionFilter = z.infer<typeof PropertyUnionFilterSchema>;

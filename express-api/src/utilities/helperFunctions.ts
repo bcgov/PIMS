@@ -1,6 +1,45 @@
 import { Equal, FindOptionsWhere, IsNull, Not, Raw } from 'typeorm';
 
 /**
+ * Special case for PID/PIN matching, as general text comparison is not sufficient.
+ * We need to pad the results of the SELECT with LPAD() so that you can, for example,
+ * query '000244' and have that match against PID 000-244-299, which is stored as the integer 244299.
+ * Doing "...WHERE pid::text ILIKE '%000244%'; " fails, but doing "... WHERE LPAD(pid::text, 9, '0') ILIKE '%000244%'; " succeeds.
+ * @param column
+ * @param operatorValuePair
+ * @returns
+ */
+export const constructFindOptionFromQueryPid = <T>(
+  column: keyof T,
+  operatorValuePair: string,
+): FindOptionsWhere<T> => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, operator, value] = operatorValuePair.match(/([^,]*),(.*)/).map((a) => a.trim());
+  const trimmedValue = value.replace(/[^\d]/g, ''); //remove all non digit characters;
+  let internalMatcher;
+  switch (operator) {
+    case 'equals':
+      internalMatcher = Equal;
+      break;
+    case 'contains':
+      internalMatcher = (str: string) =>
+        Raw((alias) => `LPAD( (${alias})::TEXT, 9, '0') ILIKE '%${str}%'`);
+      break;
+    case 'startsWith':
+      internalMatcher = (str: string) =>
+        Raw((alias) => `LPAD( (${alias})::TEXT, 9, '0') ILIKE '${str}%'`);
+      break;
+    case 'endsWith':
+      internalMatcher = (str: string) =>
+        Raw((alias) => `LPAD( (${alias})::TEXT, 9, '0') ILIKE '%${str}'`);
+      break;
+    default:
+      return constructFindOptionFromQuery(column, operatorValuePair);
+  }
+  return { [column]: internalMatcher(trimmedValue) } as FindOptionsWhere<T>;
+};
+
+/**
  * Accepts a column alias and produces a FindOptionsWhere style object.
  * This lets you plug in the return value to typeorm functions such as .find, findOne, etc.
  * @param column column name, should be a key of the TypeORM entity
@@ -78,7 +117,7 @@ export const ILikeWrapper = (query: string | undefined, mode: ILikeWrapperMode =
     } else {
       searchText = `%${query}%`;
     }
-    return Raw((alias) => `${fixColumnAlias(alias)}::text ILIKE '${searchText}'`);
+    return Raw((alias) => `(${alias})::TEXT ILIKE '${searchText}'`);
   }
 };
 
@@ -91,15 +130,9 @@ type TimestampOperator = '=' | '!=' | '<=' | '>=' | '<' | '>';
  */
 export const TimestampComparisonWrapper = (tsValue: string, operator: TimestampOperator) => {
   if (operator === '=') {
-    return Raw(
-      (alias) =>
-        `${fixColumnAlias(alias)}::date = '${toPostgresTimestamp(new Date(tsValue))}'::date`,
-    );
+    return Raw((alias) => `(${alias})::DATE = '${toPostgresTimestamp(new Date(tsValue))}'::DATE`);
   } else if (operator === '!=') {
-    return Raw(
-      (alias) =>
-        `${fixColumnAlias(alias)}::date != '${toPostgresTimestamp(new Date(tsValue))}'::date`,
-    );
+    return Raw((alias) => `(${alias})::DATE != '${toPostgresTimestamp(new Date(tsValue))}'::DATE`);
   }
   return Raw((alias) => `${alias} ${operator} '${toPostgresTimestamp(new Date(tsValue))}'`);
 };
@@ -109,6 +142,7 @@ export const TimestampComparisonWrapper = (tsValue: string, operator: TimestampO
 //ie. It will pass Project.ProjectNumber instead of "Project_project_number" (correct column alias constructed by TypeORM)
 //or "Project".project_number (correct table alias plus non-aliased column access)
 //Thankfully, it's not too difficult to manually format this.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const fixColumnAlias = (str: string) => {
   const [tableAlias, columnAlias] = str.split('.');
   const fixedColumn = columnAlias

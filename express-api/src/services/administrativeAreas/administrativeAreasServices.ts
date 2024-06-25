@@ -53,9 +53,6 @@ const addAdministrativeArea = async (adminArea: AdministrativeArea) => {
 
 const getAdministrativeAreaById = (id: number) => {
   return AppDataSource.getRepository(AdministrativeArea).findOne({
-    relations: {
-      RegionalDistrict: true,
-    },
     where: { Id: id },
   });
 };

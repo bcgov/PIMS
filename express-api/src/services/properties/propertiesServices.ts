@@ -1,8 +1,14 @@
 import { AppDataSource } from '@/appDataSource';
+import { MapFilter, PropertyUnionFilter } from '@/controllers/properties/propertiesSchema';
 import { Building } from '@/typeorm/Entities/Building';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
-import { ILike, In } from 'typeorm';
+import { PropertyUnion } from '@/typeorm/Entities/views/PropertyUnionView';
+import {
+  constructFindOptionFromQuery,
+  constructFindOptionFromQueryPid,
+} from '@/utilities/helperFunctions';
+import { FindOptionsOrder, FindOptionsOrderValue, ILike, In } from 'typeorm';
 
 const propertiesFuzzySearch = async (keyword: string, limit?: number) => {
   const parcels = await AppDataSource.getRepository(Parcel)
@@ -37,24 +43,12 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number) => {
   };
 };
 
-export interface MapPropertiesFilter {
-  PID?: number;
-  PIN?: number;
-  Address?: string;
-  AgencyIds?: number[];
-  AdministrativeAreaIds?: number[];
-  ClassificationIds?: number[];
-  PropertyTypeIds?: number[];
-  Name?: string;
-  RegionalDistrictIds?: number[];
-}
-
 /**
  * Retrieves properties based on the provided filter criteria to render map markers.
  * @param filter - An optional object containing filter criteria for properties.
  * @returns A promise that resolves to an array of properties matching the filter criteria.
  */
-const getPropertiesForMap = async (filter?: MapPropertiesFilter) => {
+const getPropertiesForMap = async (filter?: MapFilter) => {
   const properties = await AppDataSource.getRepository(MapProperties).find({
     // Select only the properties needed to render map markers and sidebar
     select: {
@@ -89,9 +83,43 @@ const getPropertiesForMap = async (filter?: MapPropertiesFilter) => {
   return properties;
 };
 
+const sortKeyMapping = (
+  sortKey: string,
+  sortDirection: FindOptionsOrderValue,
+): FindOptionsOrder<PropertyUnion> => {
+  return { [sortKey]: sortDirection };
+};
+
+const collectFindOptions = (filter: PropertyUnionFilter) => {
+  const options = [];
+  if (filter.agency) options.push(constructFindOptionFromQuery('Agency', filter.agency));
+  if (filter.pid) options.push(constructFindOptionFromQueryPid('PID', filter.pid));
+  if (filter.pin) options.push(constructFindOptionFromQueryPid('PIN', filter.pin));
+  if (filter.address) options.push(constructFindOptionFromQuery('Address', filter.address));
+  if (filter.updatedOn) options.push(constructFindOptionFromQuery('UpdatedOn', filter.updatedOn));
+  if (filter.classification)
+    options.push(constructFindOptionFromQuery('Classification', filter.classification));
+  if (filter.landArea) options.push(constructFindOptionFromQuery('LandArea', filter.landArea));
+  if (filter.administrativeArea)
+    options.push(constructFindOptionFromQuery('AdministrativeArea', filter.administrativeArea));
+  if (filter.propertyType)
+    options.push(constructFindOptionFromQuery('PropertyType', filter.propertyType));
+  return options;
+};
+
+const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
+  return AppDataSource.getRepository(PropertyUnion).find({
+    where: collectFindOptions(filter),
+    take: filter.quantity,
+    skip: (filter.page ?? 0) * (filter.quantity ?? 0),
+    order: sortKeyMapping(filter.sortKey, filter.sortOrder as FindOptionsOrderValue),
+  });
+};
+
 const propertyServices = {
   propertiesFuzzySearch,
   getPropertiesForMap,
+  getPropertiesUnion,
 };
 
 export default propertyServices;

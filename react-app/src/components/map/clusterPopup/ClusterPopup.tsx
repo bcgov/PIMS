@@ -1,14 +1,13 @@
 import { ClusterGeo } from '@/components/map/InventoryLayer';
 import PropertyRow from '@/components/map/propertyRow/PropertyRow';
 import { PropertyTypes } from '@/constants/propertyTypes';
+import { LookupContext } from '@/contexts/lookupContext';
 import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
-import useDataLoader from '@/hooks/useDataLoader';
-import usePimsApi from '@/hooks/usePimsApi';
 import { formatNumber, pidFormatter } from '@/utilities/formatters';
 import { ArrowCircleLeft, ArrowCircleRight } from '@mui/icons-material';
 import { Box, Grid, IconButton, Typography } from '@mui/material';
 import { Point } from 'leaflet';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 export interface PopupState {
   open: boolean;
@@ -36,13 +35,7 @@ interface ClusterPopupProps {
  */
 const ClusterPopup = (props: ClusterPopupProps) => {
   const { popupState, setPopupState } = props;
-  const api = usePimsApi();
-  const { data: agencyData, loadOnce: loadAgencies } = useDataLoader(api.agencies.getAgencies);
-  const { data: adminAreaData, loadOnce: loadAdminAreas } = useDataLoader(
-    api.administrativeAreas.getAdministrativeAreas,
-  );
-  loadAgencies({});
-  loadAdminAreas({});
+  const { getLookupValueById } = useContext(LookupContext);
 
   /**
    * The following block of code determines which direction and position the popup should open with.
@@ -175,13 +168,12 @@ const ClusterPopup = (props: ClusterPopupProps) => {
                   : property.properties.Name
                 : pidFormatter(property.properties.PID) ?? String(property.properties.PIN)
             }
-            content1={
-              adminAreaData?.find((aa) => aa.Id === property.properties.AdministrativeAreaId)
-                ?.Name ?? 'No Administrative Area'
-            }
-            content2={
-              agencyData?.find((a) => a.Id === property.properties.AgencyId)?.Name ?? 'No Agency'
-            }
+            content={[
+              property.properties.Address1,
+              getLookupValueById('AdministrativeAreas', property.properties.AdministrativeAreaId)
+                ?.Name ?? 'No Administrative Area',
+              getLookupValueById('Agencies', property.properties.AgencyId)?.Name ?? 'No Agency',
+            ]}
           />
         ))}
       </Box>
