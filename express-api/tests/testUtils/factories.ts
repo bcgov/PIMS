@@ -50,6 +50,7 @@ import { ProjectRisk } from '@/typeorm/Entities/ProjectRisk';
 import { PropertyType } from '@/typeorm/Entities/PropertyType';
 import { ProjectType } from '@/typeorm/Entities/ProjectType';
 import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
+import { PropertyUnion } from '@/typeorm/Entities/views/PropertyUnionView';
 
 export class MockRes {
   statusValue: any;
@@ -956,6 +957,27 @@ export const produceAgencyResponse = (props?: Partial<ProjectAgencyResponse>) =>
   };
 
   return response;
+};
+
+export const producePropertyUnion = (props: Partial<PropertyUnion>) => {
+  const union: PropertyUnion = {
+    Id: faker.number.int(),
+    PID: faker.number.int({ max: 999999999 }),
+    PIN: faker.number.int({ max: 999999999 }),
+    PropertyType: ['Building', 'Parcel'][faker.number.int({ min: 0, max: 1 })],
+    AgencyId: faker.number.int(),
+    Agency: faker.company.name(),
+    Address: faker.location.streetAddress(),
+    IsSensitive: false,
+    UpdatedOn: new Date(),
+    ClassificationId: faker.number.int(),
+    Classification: faker.company.buzzNoun(),
+    AdministrativeAreaId: faker.number.int(),
+    AdministrativeArea: faker.location.city(),
+    LandArea: faker.number.float({ max: 99999 }),
+    ...props,
+  };
+  return union;
 };
 
 export const produceLtsaOrder = (): ILtsaOrder => ({

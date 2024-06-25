@@ -1,25 +1,24 @@
-import { useMemo } from 'react';
-import useDataLoader from '@/hooks/useDataLoader';
-import usePimsApi from '@/hooks/usePimsApi';
+import { useContext, useMemo } from 'react';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { ISelectMenuItem } from '@/components/form/SelectFormField';
+import { LookupContext } from '@/contexts/lookupContext';
 
 export const useGroupedAgenciesApi = () => {
-  const api = usePimsApi();
-  const { loadOnce: agencyLoad, data: agencyData } = useDataLoader(api.agencies.getAgencies);
-  agencyLoad({});
+  const { data: lookupData } = useContext(LookupContext);
 
   const groupedAgencies = useMemo(() => {
     const groups: { [parentName: string]: Agency[] } = {};
     const parentAgencies: Agency[] = [];
 
     // Populate groups
-    agencyData?.forEach((agency) => {
+    lookupData?.Agencies?.forEach((agency: Agency) => {
       if (!agency.IsDisabled) {
         if (agency.ParentId === null) {
           parentAgencies.push(agency);
         } else {
-          const parentAgency = agencyData.find((parent) => parent.Id === agency.ParentId);
+          const parentAgency = lookupData?.Agencies?.find(
+            (parent) => parent.Id === agency.ParentId,
+          );
           if (parentAgency) {
             if (!groups[parentAgency.Name]) {
               groups[parentAgency.Name] = [];
@@ -39,7 +38,7 @@ export const useGroupedAgenciesApi = () => {
     }));
 
     return groupedAgencies;
-  }, [agencyData]);
+  }, [lookupData]);
 
   const agencyOptions: ISelectMenuItem[] = useMemo(() => {
     const options: ISelectMenuItem[] = [];
@@ -67,7 +66,7 @@ export const useGroupedAgenciesApi = () => {
     return options;
   }, [groupedAgencies]);
 
-  return { groupedAgencies, ungroupedAgencies: agencyData, agencyOptions };
+  return { groupedAgencies, ungroupedAgencies: lookupData?.Agencies, agencyOptions };
 };
 
 export default useGroupedAgenciesApi;

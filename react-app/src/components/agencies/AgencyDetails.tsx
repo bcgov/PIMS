@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import DataCard from '../display/DataCard';
 import { Box, Checkbox, Chip, Grid, Typography } from '@mui/material';
 import { dateFormatter } from '@/utilities/formatters';
@@ -15,6 +15,7 @@ import { useParams } from 'react-router-dom';
 import EmailChipFormField from '@/components/form/EmailChipFormField';
 import SingleSelectBoxFormField from '@/components/form/SingleSelectBoxFormField';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
+import { LookupContext } from '@/contexts/lookupContext';
 
 interface IAgencyDetail {
   onClose: () => void;
@@ -29,6 +30,7 @@ interface AgencyStatus extends Agency {
 const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   const { id } = useParams();
   const api = usePimsApi();
+  const { getLookupValueById } = useContext(LookupContext);
 
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
   const [openNotificationsDialog, setOpenNotificationsDialog] = useState(false);
@@ -43,7 +45,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
     Name: data?.Name,
     Code: data?.Code,
     Description: data?.Description,
-    Parent: data?.Parent,
+    Parent: getLookupValueById('Agencies', data?.ParentId),
     IsDisabled: data?.IsDisabled,
     UpdatedOn: data?.UpdatedOn,
   };

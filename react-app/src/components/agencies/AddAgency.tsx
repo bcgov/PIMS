@@ -1,7 +1,7 @@
 import TextFormField from '@/components/form/TextFormField';
 import { Box, Grid, Typography } from '@mui/material';
 import { FormProvider, useForm } from 'react-hook-form';
-import React, { useState } from 'react';
+import React from 'react';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
 import usePimsApi from '@/hooks/usePimsApi';
 import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
@@ -14,8 +14,6 @@ import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LoadingButton } from '@mui/lab';
 
 const AddAgency = () => {
-  const [showErrorText, setShowErrorText] = useState(false);
-
   const api = usePimsApi();
   const navigate = useNavigate();
   const { submit, submitting } = useDataSubmitter(api.agencies.addAgency);
@@ -102,17 +100,11 @@ const AddAgency = () => {
           </Grid>
         </Grid>
       </FormProvider>
-      {showErrorText && (
-        <Typography alignSelf={'center'} variant="h5" color={'error'}>
-          Please correct issues in the form input.
-        </Typography>
-      )}
       <LoadingButton
         loading={submitting}
         onClick={async () => {
           const isValid = await formMethods.trigger();
           if (isValid) {
-            setShowErrorText(false);
             const formValues = formMethods.getValues();
             const newAgency: AgencyAdd = {
               Name: formValues.Name,
@@ -127,11 +119,7 @@ const AddAgency = () => {
             };
             submit(newAgency).then((res) => {
               if (res && res.ok) navigate('/admin/agencies');
-              // TODO: What do we do if it wasn't successful?
             });
-          } else {
-            console.log('Error!');
-            setShowErrorText(true);
           }
         }}
         variant="contained"
