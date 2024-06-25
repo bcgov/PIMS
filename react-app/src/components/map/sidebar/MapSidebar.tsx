@@ -150,15 +150,13 @@ const MapSidebar = (props: MapSidebarProps) => {
                       : property.properties.Name
                     : pidFormatter(property.properties.PID) ?? String(property.properties.PIN)
                 }
-                content1={
-                  getLookupValueById(
-                    'AdministrativeAreas',
-                    property.properties.AdministrativeAreaId,
-                  )?.Name ?? 'No Administrative Area'
-                }
-                content2={
-                  getLookupValueById('Agencies', property.properties.AgencyId)?.Name ?? 'No Agency'
-                }
+                content={[
+                  property.properties.Address1,
+                  adminAreaData?.find((aa) => aa.Id === property.properties.AdministrativeAreaId)
+                    ?.Name ?? 'No Administrative Area',
+                  agencyData?.find((a) => a.Id === property.properties.AgencyId)?.Name ??
+                    'No Agency',
+                ]}
               />
             ))}
         </Box>

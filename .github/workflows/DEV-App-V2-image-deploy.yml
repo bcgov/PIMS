@@ -52,7 +52,8 @@ jobs:
   
           git config user.email "manish.sihag@gov.bc.ca"
           git config user.name "ManishSihag"
-  
+
+          git pull origin main
           git add "$FILE_PATH"
           git commit -m "Update frontend image tag to $NEW_TAG"
           git push
