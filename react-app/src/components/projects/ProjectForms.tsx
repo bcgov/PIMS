@@ -127,7 +127,7 @@ export const ProjectFinancialInfoForm = () => {
           }}
           numeric
           fullWidth
-          name={'Metadata.salesCost'}
+          name={'SalesCost'}
           label={'Estimated sales cost'}
         />
       </Grid>
@@ -138,7 +138,7 @@ export const ProjectFinancialInfoForm = () => {
           }}
           numeric
           fullWidth
-          name={'Metadata.programCost'}
+          name={'ProgramCost'}
           label={'Estimated program recovery fees'}
         />
       </Grid>

@@ -1,12 +1,12 @@
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import Home from '@/pages/Home';
-import React from 'react';
+import React, { useContext } from 'react';
 import '@/App.css';
 import { ThemeProvider } from '@emotion/react';
 import appTheme from './themes/appTheme';
 import Dev from './pages/DevZone';
 import { ConfigContextProvider } from './contexts/configContext';
-import AuthContextProvider from './contexts/authContext';
+import AuthContextProvider, { AuthContext } from './contexts/authContext';
 import AuthRouteGuard from './guards/AuthRouteGuard';
 import BaseLayout from './components/layout/BaseLayout';
 import { AccessRequest } from './pages/AccessRequest';
@@ -29,17 +29,39 @@ import { Roles } from '@/constants/roles';
 import ProjectDetail from '@/components/projects/ProjectDetail';
 import SnackBarContextProvider from './contexts/snackbarContext';
 import ParcelMap from '@/components/map/ParcelMap';
+import LookupContextProvider from '@/contexts/lookupContext';
 
 const Router = () => {
   const navigate = useNavigate();
+  const auth = useContext(AuthContext);
+
+  // Reusable piece to show map on many routes
+  const showMap = () => (
+    <BaseLayout>
+      <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
+        <ParcelMap
+          height="100%"
+          loadProperties={true}
+          popupSize="large"
+          scrollOnClick
+          hideControls
+        />
+      </AuthRouteGuard>
+    </BaseLayout>
+  );
+
   return (
     <Routes>
       <Route
         index
         element={
-          <BaseLayout displayFooter>
-            <Home />
-          </BaseLayout>
+          auth.keycloak.isAuthenticated && auth.pimsUser.data?.Status === 'Active' ? (
+            showMap()
+          ) : (
+            <BaseLayout displayFooter>
+              <Home />
+            </BaseLayout>
+          )
         }
       />
       <Route
@@ -52,21 +74,11 @@ const Router = () => {
           </BaseLayout>
         }
       />
-      <Route
-        path="/dev"
-        element={
-          <BaseLayout>
-            <AuthRouteGuard ignoreStatus>
-              <Dev />
-            </AuthRouteGuard>
-          </BaseLayout>
-        }
-      />
       <Route path="/admin">
         <Route
           path="adminAreas"
           element={
-            <BaseLayout displayFooter>
+            <BaseLayout>
               <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR]}>
                 <AdminAreasManagement />
               </AuthRouteGuard>
@@ -214,12 +226,13 @@ const Router = () => {
           </BaseLayout>
         }
       />
+      <Route path="/map" element={showMap()} />
       <Route
-        path="/map"
+        path="/dev"
         element={
           <BaseLayout>
             <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
-              <ParcelMap height="100%" loadProperties={true} popupSize="large" scrollOnClick />
+              <Dev />
             </AuthRouteGuard>
           </BaseLayout>
         }
@@ -234,9 +247,11 @@ const App = () => {
       <ConfigContextProvider>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <AuthContextProvider>
-            <SnackBarContextProvider>
-              <Router />
-            </SnackBarContextProvider>
+            <LookupContextProvider>
+              <SnackBarContextProvider>
+                <Router />
+              </SnackBarContextProvider>
+            </LookupContextProvider>
           </AuthContextProvider>
         </ErrorBoundary>
       </ConfigContextProvider>

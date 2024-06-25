@@ -41,6 +41,15 @@ import { ParcelEvaluation } from '@/typeorm/Entities/ParcelEvaluation';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
 import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
 import { ILtsaOrder } from '@/services/ltsa/interfaces/ILtsaOrder';
+import { NoteType } from '@/typeorm/Entities/NoteType';
+import { ProjectTimestamp } from '@/typeorm/Entities/ProjectTimestamp';
+import { ProjectMonetary } from '@/typeorm/Entities/ProjectMonetary';
+import { MonetaryType } from '@/typeorm/Entities/MonetaryType';
+import { TimestampType } from '@/typeorm/Entities/TimestampType';
+import { ProjectRisk } from '@/typeorm/Entities/ProjectRisk';
+import { PropertyType } from '@/typeorm/Entities/PropertyType';
+import { ProjectType } from '@/typeorm/Entities/ProjectType';
+import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 
 export class MockRes {
   statusValue: any;
@@ -138,14 +147,14 @@ export const produceUser = (props?: Partial<User>): User => {
     KeycloakUserId: faker.string.uuid() as UUID,
     Role: produceRole(),
     RoleId: undefined,
-    Agency: produceAgency(id),
+    Agency: produceAgency(),
     AgencyId: undefined,
     IsDisabled: false,
     ...props,
   };
 };
 
-export const produceAgency = (code?: string): Agency => {
+export const produceAgency = (props?: Partial<Agency>): Agency => {
   const agency: Agency = {
     Id: faker.number.int({ max: 10 }),
     Name: faker.company.name(),
@@ -154,7 +163,7 @@ export const produceAgency = (code?: string): Agency => {
     Description: '',
     ParentId: undefined,
     Parent: undefined,
-    Code: code ?? faker.string.alpha({ length: 4 }),
+    Code: faker.string.alpha({ length: 4 }),
     Email: faker.internet.email(),
     SendEmail: false,
     AddressTo: '',
@@ -166,6 +175,7 @@ export const produceAgency = (code?: string): Agency => {
     UpdatedBy: undefined,
     UpdatedOn: new Date(),
     Users: [],
+    ...props,
   };
   return agency;
 };
@@ -274,7 +284,7 @@ export const produceEmail = (props: Partial<IEmail>): IEmail => {
 };
 
 export const produceBuilding = (): Building => {
-  const agencyId = faker.string.uuid() as UUID;
+  const agencyId = faker.number.int();
   const id = faker.number.int({ max: 10 });
   return {
     Id: faker.number.int({ max: 10 }),
@@ -300,7 +310,7 @@ export const produceBuilding = (): Building => {
     ClassificationId: undefined,
     Classification: undefined,
     AgencyId: undefined,
-    Agency: produceAgency(agencyId),
+    Agency: produceAgency({ Id: agencyId }),
     AdministrativeAreaId: undefined,
     AdministrativeArea: undefined,
     IsSensitive: undefined,
@@ -373,7 +383,7 @@ export const produceParcelFiscal = (parcelId: number): ParcelFiscal[] => {
   return [fiscal];
 };
 
-export const produceAdminArea = (props: Partial<AdministrativeArea>): AdministrativeArea => {
+export const produceAdminArea = (props?: Partial<AdministrativeArea>): AdministrativeArea => {
   const adminArea: AdministrativeArea = {
     Id: faker.number.int(),
     Name: faker.location.city(),
@@ -525,6 +535,66 @@ export const produceTask = (): Task => {
   return task;
 };
 
+export const produceNoteType = (): NoteType => {
+  const noteType: NoteType = {
+    Id: faker.number.int(),
+    Name: faker.commerce.product(),
+    IsDisabled: faker.datatype.boolean(),
+    SortOrder: 0,
+    Description: faker.lorem.sentence(),
+    IsOptional: false,
+    StatusId: faker.number.int(),
+    Status: undefined,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+  };
+  return noteType;
+};
+
+export const produceMonetaryType = (): MonetaryType => {
+  const monetaryType: MonetaryType = {
+    Id: faker.number.int(),
+    Name: faker.commerce.product(),
+    IsDisabled: faker.datatype.boolean(),
+    SortOrder: 0,
+    Description: faker.lorem.sentence(),
+    IsOptional: false,
+    StatusId: faker.number.int(),
+    Status: undefined,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+  };
+  return monetaryType;
+};
+
+export const produceTimestampType = (): TimestampType => {
+  const timestampType: TimestampType = {
+    Id: faker.number.int(),
+    Name: faker.commerce.product(),
+    IsDisabled: faker.datatype.boolean(),
+    SortOrder: 0,
+    Description: faker.lorem.sentence(),
+    IsOptional: false,
+    StatusId: faker.number.int(),
+    Status: undefined,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+  };
+  return timestampType;
+};
+
 export const produceProject = (
   props?: Partial<Project>,
   projectProperties?: ProjectProperty[],
@@ -571,6 +641,8 @@ export const produceProject = (
         ProjectId: projectId,
       }),
     ],
+    Timestamps: [produceProjectTimestamp()],
+    Monetaries: [produceProjectMonetary()],
     Notifications: [],
     StatusHistory: [],
     Notes: [produceNote()],
@@ -583,12 +655,72 @@ export const produceProject = (
   return project;
 };
 
+export const produceRisk = (props?: Partial<ProjectRisk>): ProjectRisk => {
+  const risk: ProjectRisk = {
+    Id: faker.number.int(),
+    Name: 'Green',
+    IsDisabled: false,
+    SortOrder: 0,
+    Code: 'GREEN',
+    Description: 'Low risk',
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return risk;
+};
+
+export const produceProjectStatus = (props?: Partial<ProjectStatus>): ProjectStatus => {
+  const status: ProjectStatus = {
+    Id: faker.number.int(),
+    Name: 'Submitted',
+    IsDisabled: false,
+    SortOrder: 0,
+    Description: '',
+    Code: 'SUB',
+    IsMilestone: false,
+    IsTerminal: false,
+    GroupName: 'Submitted',
+    Route: '/route',
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return status;
+};
+export const producePropertyType = (props?: Partial<PropertyType>): PropertyType => {
+  const type: ProjectType = {
+    Id: faker.number.int(),
+    Name: 'Parcel',
+    IsDisabled: false,
+    SortOrder: 0,
+    Description: '',
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return type;
+};
+
 export const produceNote = (props?: Partial<ProjectNote>): ProjectNote => {
   const note: ProjectNote = {
     Id: faker.number.int(),
     ProjectId: faker.number.int(),
     Project: undefined,
-    NoteType: faker.number.int(),
+    NoteTypeId: faker.number.int(),
+    NoteType: undefined,
     Note: faker.lorem.lines(),
     DeletedBy: undefined,
     DeletedById: null,
@@ -672,6 +804,48 @@ export const produceProjectTask = (props?: Partial<ProjectTask>) => {
     ...props,
   };
   return task;
+};
+
+export const produceProjectTimestamp = (props?: Partial<ProjectTimestamp>) => {
+  const ts: ProjectTimestamp = {
+    ProjectId: faker.number.int(),
+    Project: undefined,
+    TimestampType: undefined,
+    TimestampTypeId: faker.number.int(),
+    Date: undefined,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    DeletedById: null,
+    DeletedOn: null,
+    DeletedBy: undefined,
+    ...props,
+  };
+  return ts;
+};
+
+export const produceProjectMonetary = (props?: Partial<ProjectMonetary>) => {
+  const monetary: ProjectMonetary = {
+    ProjectId: faker.number.int(),
+    Project: undefined,
+    MonetaryType: undefined,
+    MonetaryTypeId: faker.number.int(),
+    Value: Number(faker.commerce.price()),
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    DeletedById: null,
+    DeletedOn: null,
+    DeletedBy: undefined,
+    ...props,
+  };
+  return monetary;
 };
 
 export const produceProjectNotification = (props?: Partial<ProjectStatusNotification>) => {

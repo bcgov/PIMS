@@ -20,6 +20,7 @@ type AutocompleteFormProps = {
   allowNestedIndent?: boolean;
   disableOptionsFunction?: (option: ISelectMenuItem) => boolean;
   disableClearable?: boolean;
+  disabled?: boolean;
   defaultValue?: ISelectMenuItem | null;
   customOptionsFilter?: (
     options: ISelectMenuItem[],
@@ -41,6 +42,7 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
     required,
     allowNestedIndent,
     disableClearable,
+    disabled,
     disableOptionsFunction,
     customOptionsFilter,
     ...rest
@@ -67,16 +69,17 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
           PaperComponent={CustomPaper}
           sx={sx}
           disableClearable={disableClearable ?? true}
+          disabled={disabled}
           getOptionLabel={(option: ISelectMenuItem) => option.label}
           getOptionDisabled={disableOptionsFunction}
           filterOptions={optionsFilter}
           renderOption={(props, option, state, ownerState) => (
             <Box
               sx={{
-                fontWeight: option.parent ? 900 : 500,
+                fontWeight: allowNestedIndent && !option.parentId ? 900 : 500,
                 [`&.${autocompleteClasses.option}`]: {
                   padding: 1,
-                  paddingLeft: allowNestedIndent && !option.parent ? 2 : 1,
+                  paddingLeft: allowNestedIndent && option.parentId ? 2 : 1,
                 },
               }}
               component="li"
@@ -97,6 +100,7 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
           )}
           onChange={(_, data) => {
             if (data) onChange(data.value);
+            else onChange(null);
           }}
           isOptionEqualToValue={(option, value) => option.value === value.value}
           value={options.find((option) => option.value === getValues()[name]) ?? null}

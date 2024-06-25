@@ -1,3 +1,4 @@
+import { CommonFiltering } from '@/interfaces/ICommonFiltering';
 import { IFetch } from '../useFetch';
 
 export interface Agency {
@@ -26,8 +27,12 @@ export type AgencyAdd = Omit<
 >;
 
 const useAgencyApi = (absoluteFetch: IFetch) => {
-  const getAgencies = async (): Promise<Agency[]> => {
-    const { parsedBody } = await absoluteFetch.get(`/agencies`);
+  const getAgencies = async (sort: CommonFiltering, signal?: AbortSignal): Promise<Agency[]> => {
+    const { parsedBody } = await absoluteFetch.get(
+      `/agencies`,
+      { ...sort, includeRelations: true },
+      { signal },
+    );
     return parsedBody as Agency[];
   };
 

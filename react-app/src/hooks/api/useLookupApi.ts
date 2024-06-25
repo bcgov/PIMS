@@ -1,4 +1,10 @@
+import { ProjectRisk, TierLevel } from '@/hooks/api/useProjectsApi';
 import { IFetch } from '../useFetch';
+import { BuildingConstructionType, BuildingPredominateUse } from '@/hooks/api/useBuildingsApi';
+import { PropertyClassification } from '@/interfaces/IProperty';
+import { Role } from '@/hooks/api/useRolesApi';
+import { Agency } from '@/hooks/api/useAgencyApi';
+import { AdministrativeArea } from '@/hooks/api/useAdministrativeAreaApi';
 
 export interface LookupObject {
   Name: string;
@@ -18,6 +24,14 @@ export interface Task {
   StatusId: number;
 }
 
+export interface MetadataType {
+  Name: string;
+  Id: number;
+  Description: string;
+  IsOptional: boolean;
+  StatusId: number;
+}
+
 export type RegionalDistrict = Omit<LookupObject, 'SortOrder'>;
 export type ProjectStatus = Omit<LookupObject, 'SortOrder'>;
 
@@ -26,6 +40,24 @@ export interface PropertyType {
   Id: number;
   IsDisabled: boolean;
   SortOrder: number;
+}
+
+export interface LookupAll {
+  Risks: Partial<ProjectRisk>[];
+  TimestampTypes: Partial<MetadataType>[];
+  MonetaryTypes: Partial<MetadataType>[];
+  NoteTypes: Partial<MetadataType>[];
+  PropertyTypes: Partial<MetadataType>[];
+  Tasks: Partial<Task>[];
+  ProjectStatuses: Partial<ProjectStatus>[];
+  ProjectTiers: Partial<TierLevel>[];
+  ConstructionTypes: Partial<BuildingConstructionType>[];
+  PredominateUses: Partial<BuildingPredominateUse>[];
+  Classifications: Partial<PropertyClassification>[];
+  Roles: Partial<Role>[];
+  Agencies: Partial<Agency>[];
+  AdministrativeAreas: Partial<AdministrativeArea>[];
+  RegionalDistricts: Partial<RegionalDistrict>[];
 }
 
 const useLookupApi = (absoluteFetch: IFetch) => {
@@ -69,6 +101,28 @@ const useLookupApi = (absoluteFetch: IFetch) => {
     return parsedBody as PropertyType[];
   };
 
+  const getProjectNoteTypes = async (statusId?: number) => {
+    const { parsedBody } = await absoluteFetch.get('/lookup/noteTypes', { statusId: statusId });
+    return parsedBody as MetadataType[];
+  };
+
+  const getProjectMonetaryTypes = async (statusId?: number) => {
+    const { parsedBody } = await absoluteFetch.get('/lookup/monetaryTypes', { statusId: statusId });
+    return parsedBody as MetadataType[];
+  };
+
+  const getProjectTimestampTypes = async (statusId?: number) => {
+    const { parsedBody } = await absoluteFetch.get('/lookup/timestampTypes', {
+      statusId: statusId,
+    });
+    return parsedBody as MetadataType[];
+  };
+
+  const getAll = async () => {
+    const { parsedBody } = await absoluteFetch.get('/lookup/all');
+    return parsedBody as LookupAll;
+  };
+
   return {
     getClassifications,
     getConstructionTypes,
@@ -78,6 +132,10 @@ const useLookupApi = (absoluteFetch: IFetch) => {
     getTierLevels,
     getTasks,
     getPropertyTypes,
+    getProjectNoteTypes,
+    getProjectMonetaryTypes,
+    getProjectTimestampTypes,
+    getAll,
   };
 };
 

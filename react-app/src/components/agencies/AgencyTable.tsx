@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useEffect, useState } from 'react';
+import React, { MutableRefObject } from 'react';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, Chip, SxProps } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
@@ -9,35 +9,20 @@ import {
   GridRowId,
   GridValidRowModel,
 } from '@mui/x-data-grid';
-import { useSSO } from '@bcgov/citz-imb-sso-react';
-import { dateFormatter, statusChipFormatter } from '@/utilities/formatters';
+import { dateFormatter } from '@/utilities/formatters';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { useNavigate } from 'react-router-dom';
+import usePimsApi from '@/hooks/usePimsApi';
+import { Check } from '@mui/icons-material';
+import { dateColumnType } from '../table/CustomColumns';
 
 interface IAgencyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
-  data: Record<string, any>[];
-  isLoading: boolean;
-  refreshData: () => void;
-  error: unknown;
 }
 
 const AgencyTable = (props: IAgencyTable) => {
-  const { rowClickHandler, data, isLoading, refreshData, error } = props;
-  const [agencies, setAgencies] = useState<Agency[]>([]);
-  const { state } = useSSO();
+  const { rowClickHandler } = props;
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (error) {
-      console.error(error);
-    }
-    if (data && data.length > 0) {
-      setAgencies(data as Agency[]);
-    } else {
-      refreshData();
-    }
-  }, [state, data]);
 
   const columns: GridColDef[] = [
     {
@@ -54,12 +39,12 @@ const AgencyTable = (props: IAgencyTable) => {
     },
     {
       field: 'IsDisabled',
-      headerName: 'Status',
+      headerName: 'Is Disabled',
       flex: 1,
       renderCell: (params) => {
-        if (params.value === undefined) return <></>; // Checked for undefined specifically
-        if (params.value) return statusChipFormatter('Disabled');
-        return statusChipFormatter('Active');
+        if (params.value) {
+          return <Check />;
+        } else return <></>;
       },
       maxWidth: 120,
     },
@@ -67,7 +52,7 @@ const AgencyTable = (props: IAgencyTable) => {
       field: 'Parent',
       headerName: 'Parent Agency',
       flex: 1,
-      valueFormatter: (value?: Agency) => {
+      valueGetter: (value?: Agency) => {
         if (value) return value.Name;
         return '';
       },
@@ -76,7 +61,7 @@ const AgencyTable = (props: IAgencyTable) => {
       field: 'SendEmail',
       headerName: 'Notification',
       flex: 1,
-      valueFormatter: (value: boolean) => (value ? 'Yes' : 'No'),
+      valueGetter: (value: boolean) => (value ? 'Yes' : 'No'),
       maxWidth: 120,
     },
     {
@@ -97,17 +82,21 @@ const AgencyTable = (props: IAgencyTable) => {
     },
     {
       field: 'CreatedOn',
+      ...dateColumnType,
       headerName: 'Created On',
       flex: 1,
       valueFormatter: (value) => dateFormatter(value),
       maxWidth: 150,
+      type: 'date',
     },
     {
       field: 'UpdatedOn',
+      ...dateColumnType,
       headerName: 'Updated On',
       flex: 1,
       valueFormatter: (value) => dateFormatter(value),
       maxWidth: 150,
+      type: 'date',
     },
   ];
 
@@ -156,6 +145,8 @@ const AgencyTable = (props: IAgencyTable) => {
     return [];
   };
 
+  const api = usePimsApi();
+
   return (
     <Box
       sx={
@@ -168,38 +159,43 @@ const AgencyTable = (props: IAgencyTable) => {
         } as SxProps
       }
     >
-      <FilterSearchDataGrid
-        name="agencies"
-        onPresetFilterChange={selectPresetFilter}
-        getRowId={(row: Agency) => row.Id}
-        defaultFilter={'All Agencies'}
-        onRowClick={rowClickHandler}
-        initialState={{
-          sorting: {
-            sortModel: [{ field: 'Name', sort: 'asc' }],
-          },
-        }}
-        presetFilterSelectOptions={[
-          <CustomMenuItem key={'All Agencies'} value={'All Agencies'}>
-            All Agencies
-          </CustomMenuItem>,
-          <CustomListSubheader key={'Status'}>Status</CustomListSubheader>,
-          <CustomMenuItem key={'Active'} value={'Active'}>
-            Active
-          </CustomMenuItem>,
-          <CustomMenuItem key={'Disabled'} value={'Disabled'}>
-            Disabled
-          </CustomMenuItem>,
-        ]}
-        loading={isLoading}
-        tableHeader={'Agencies Overview'}
-        excelTitle={'Agencies'}
-        customExcelData={getExcelData}
-        columns={columns}
-        rows={agencies}
-        addTooltip="Create New Agency"
-        onAddButtonClick={() => navigate('/admin/agencies/add')}
-      />
+      <Box height={'calc(100vh - 180px)'}>
+        <FilterSearchDataGrid
+          name="agencies"
+          tableOperationMode="server"
+          dataSource={api.agencies.getAgencies}
+          onPresetFilterChange={selectPresetFilter}
+          getRowId={(row: Agency) => row.Id}
+          defaultFilter={'All Agencies'}
+          onRowClick={rowClickHandler}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 100 },
+            },
+            sorting: {
+              sortModel: [{ field: 'Name', sort: 'asc' }],
+            },
+          }}
+          presetFilterSelectOptions={[
+            <CustomMenuItem key={'All Agencies'} value={'All Agencies'}>
+              All Agencies
+            </CustomMenuItem>,
+            <CustomListSubheader key={'Status'}>Status</CustomListSubheader>,
+            <CustomMenuItem key={'Active'} value={'Active'}>
+              Active
+            </CustomMenuItem>,
+            <CustomMenuItem key={'Disabled'} value={'Disabled'}>
+              Disabled
+            </CustomMenuItem>,
+          ]}
+          tableHeader={'Agencies Overview'}
+          excelTitle={'Agencies'}
+          customExcelData={getExcelData}
+          columns={columns}
+          addTooltip="Create New Agency"
+          onAddButtonClick={() => navigate('/admin/agencies/add')}
+        />
+      </Box>
     </Box>
   );
 };

@@ -4,7 +4,6 @@ import { ProjectType } from '@/constants/projectType';
 import { ProjectWorkflow } from '@/constants/projectWorkflow';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { Building } from '@/typeorm/Entities/Building';
-// import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
@@ -19,6 +18,7 @@ import {
   DeepPartial,
   FindManyOptions,
   FindOptionsOrder,
+  FindOptionsOrderValue,
   In,
   InsertResult,
   QueryRunner,
@@ -29,6 +29,10 @@ import { ProjectRisk } from '@/constants/projectRisk';
 import notificationServices from '../notifications/notificationServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import userServices from '../users/usersServices';
+import { constructFindOptionFromQuery } from '@/utilities/helperFunctions';
+import { ProjectTimestamp } from '@/typeorm/Entities/ProjectTimestamp';
+import { ProjectMonetary } from '@/typeorm/Entities/ProjectMonetary';
+import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 
 const projectRepo = AppDataSource.getRepository(Project);
 
@@ -120,12 +124,24 @@ const getProjectById = async (id: number) => {
       ProjectId: id,
     },
   });
+  const projectMonetary = await AppDataSource.getRepository(ProjectMonetary).find({
+    where: {
+      ProjectId: id,
+    },
+  });
+  const projectTimestamps = await AppDataSource.getRepository(ProjectTimestamp).find({
+    where: {
+      ProjectId: id,
+    },
+  });
   return {
     ...project,
     ProjectProperties: projectProperties,
     AgencyResponses: agencyResponses,
     Tasks: projectTasks,
     Notes: projectNotes,
+    Monetaries: projectMonetary,
+    Timestamps: projectTimestamps,
   };
 };
 
@@ -137,7 +153,11 @@ const getProjectById = async (id: number) => {
  * @returns The newly created project.
  * @throws ErrorWithCode - If the project name is missing, agency is not found, or there is an error creating the project.
  */
-const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPropertyIds) => {
+const addProject = async (
+  project: DeepPartial<Project>,
+  propertyIds: ProjectPropertyIds,
+  ssoUser: SSOUser,
+) => {
   // Does the project have a name?
   if (!project.Name) throw new ErrorWithCode('Projects must have a name.', 400);
 
@@ -153,7 +173,7 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
   project.ProjectType = ProjectType.DISPOSAL;
 
   // What type of submission is this? Regular (7) or Exemption (8)?
-  project.StatusId = project.Metadata?.exemptionRequested
+  project.StatusId = project?.Tasks?.find((task) => task.TaskId === 16) //Task labelled Exemption requested
     ? ProjectStatus.SUBMITTED_EXEMPTION
     : ProjectStatus.SUBMITTED;
 
@@ -174,6 +194,10 @@ const addProject = async (project: DeepPartial<Project>, propertyIds: ProjectPro
     if (parcels) await addProjectParcelRelations(newProject, parcels, queryRunner);
     if (buildings) await addProjectBuildingRelations(newProject, buildings, queryRunner);
     await handleProjectTasks(newProject, queryRunner);
+    await handleProjectMonetary(newProject, queryRunner);
+    await handleProjectNotes(newProject, queryRunner);
+    await handleProjectTimestamps(newProject, queryRunner);
+    await handleProjectNotifications(newProject, ssoUser, queryRunner);
     await queryRunner.commitTransaction();
     return newProject;
   } catch (e) {
@@ -465,25 +489,85 @@ const handleProjectAgencyResponses = async (
 const handleProjectNotes = async (newProject: DeepPartial<Project>, queryRunner: QueryRunner) => {
   if (newProject?.Notes?.length) {
     const saveNotes = newProject.Notes.map(async (note): Promise<InsertResult | void> => {
-      if (note.ProjectId == null || note.NoteType == null) {
+      if (note.NoteTypeId == null) {
         throw new ErrorWithCode('Provided note was missing a required field.', 400);
       }
       const exists = await queryRunner.manager.findOne(ProjectNote, {
-        where: { ProjectId: newProject.Id, NoteType: note.NoteType },
+        where: { ProjectId: newProject.Id, NoteTypeId: note.NoteTypeId },
       });
       return queryRunner.manager.upsert(
         ProjectNote,
         {
           ProjectId: newProject.Id,
           Note: note.Note,
-          NoteType: note.NoteType,
+          NoteTypeId: note.NoteTypeId,
           CreatedById: exists ? exists.CreatedById : newProject.CreatedById,
           UpdatedById: exists ? newProject.UpdatedById : undefined,
         },
-        ['ProjectId', 'NoteType'],
+        ['ProjectId', 'NoteTypeId'],
       );
     });
     return Promise.all(saveNotes);
+  }
+};
+
+const handleProjectTimestamps = async (
+  newProject: DeepPartial<Project>,
+  queryRunner: QueryRunner,
+) => {
+  if (newProject?.Timestamps?.length) {
+    const saveTimestamps = newProject.Timestamps.map(
+      async (timestamp): Promise<InsertResult | void> => {
+        if (timestamp.TimestampTypeId == null) {
+          throw new ErrorWithCode('Provided timestamp was missing a required field.', 400);
+        }
+        const exists = await queryRunner.manager.findOne(ProjectTimestamp, {
+          where: { ProjectId: newProject.Id, TimestampTypeId: timestamp.TimestampTypeId },
+        });
+        return queryRunner.manager.upsert(
+          ProjectTimestamp,
+          {
+            ProjectId: newProject.Id,
+            Date: timestamp.Date,
+            TimestampTypeId: timestamp.TimestampTypeId,
+            CreatedById: exists ? exists.CreatedById : newProject.CreatedById,
+            UpdatedById: exists ? newProject.UpdatedById : undefined,
+          },
+          ['ProjectId', 'TimestampTypeId'],
+        );
+      },
+    );
+    return Promise.all(saveTimestamps);
+  }
+};
+
+const handleProjectMonetary = async (
+  newProject: DeepPartial<Project>,
+  queryRunner: QueryRunner,
+) => {
+  if (newProject?.Monetaries?.length) {
+    const saveTimestamps = newProject.Monetaries.map(
+      async (monetary): Promise<InsertResult | void> => {
+        if (monetary.MonetaryTypeId == null) {
+          throw new ErrorWithCode('Provided monetary was missing a required field.', 400);
+        }
+        const exists = await queryRunner.manager.findOne(ProjectMonetary, {
+          where: { ProjectId: newProject.Id, MonetaryTypeId: monetary.MonetaryTypeId },
+        });
+        return queryRunner.manager.upsert(
+          ProjectMonetary,
+          {
+            ProjectId: newProject.Id,
+            Value: monetary.Value,
+            MonetaryTypeId: monetary.MonetaryTypeId,
+            CreatedById: exists ? exists.CreatedById : newProject.CreatedById,
+            UpdatedById: exists ? newProject.UpdatedById : undefined,
+          },
+          ['ProjectId', 'MonetaryTypeId'],
+        );
+      },
+    );
+    return Promise.all(saveTimestamps);
   }
 };
 
@@ -535,6 +619,8 @@ const updateProject = async (
       queryRunner,
     );
     await handleProjectNotes({ ...project, CreatedById: project.UpdatedById }, queryRunner);
+    await handleProjectMonetary({ ...project, CreatedById: project.UpdatedById }, queryRunner);
+    await handleProjectTimestamps({ ...project, CreatedById: project.UpdatedById }, queryRunner);
 
     // Update Project
     await queryRunner.manager.save(Project, {
@@ -543,6 +629,8 @@ const updateProject = async (
       Tasks: undefined,
       AgencyResponses: undefined,
       Notes: undefined,
+      Timestamps: undefined,
+      Monetaries: undefined,
     });
     //Seems this save will also try to save Tasks array if present, but if missing the ProjectId it will do weird stuff.
     //So we could consolidate handleProjectTasks to here if we wanted, but then it might be annoying trying to get the more specific behavior in that function.
@@ -650,6 +738,18 @@ const deleteProjectById = async (id: number, username: string) => {
       { ProjectId: id },
       { DeletedById: user.Id, DeletedOn: new Date() },
     );
+    // Remove Project Timestamps
+    await queryRunner.manager.update(
+      ProjectTimestamp,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
+    // Remove Project Monetary
+    await queryRunner.manager.update(
+      ProjectMonetary,
+      { ProjectId: id },
+      { DeletedById: user.Id, DeletedOn: new Date() },
+    );
     // Remove Project Agency Responses
     await queryRunner.manager.update(
       ProjectAgencyResponse,
@@ -680,6 +780,34 @@ const deleteProjectById = async (id: number, username: string) => {
   }
 };
 
+const sortKeyMapping = (
+  sortKey: string,
+  sortDirection: FindOptionsOrderValue,
+): FindOptionsOrder<Project> => {
+  switch (sortKey) {
+    case 'Status':
+      return { Status: { Name: sortDirection } };
+    case 'Agency':
+      return { Agency: { Name: sortDirection } };
+    case 'UpdatedBy':
+      return { UpdatedBy: { LastName: sortDirection } };
+    default:
+      return { [sortKey]: sortDirection };
+  }
+};
+
+const collectFindOptions = (filter: ProjectFilter) => {
+  const options = [];
+  if (filter.name) options.push(constructFindOptionFromQuery('Name', filter.name));
+  if (filter.agency) options.push({ Agency: constructFindOptionFromQuery('Name', filter.agency) });
+  if (filter.status) options.push({ Status: constructFindOptionFromQuery('Name', filter.status) });
+  if (filter.projectNumber) {
+    options.push(constructFindOptionFromQuery('ProjectNumber', filter.projectNumber));
+  }
+  if (filter.updatedOn) options.push(constructFindOptionFromQuery('UpdatedOn', filter.updatedOn));
+  return options;
+};
+
 const getProjects = async (filter: ProjectFilter, includeRelations: boolean = false) => {
   const queryOptions: FindManyOptions<Project> = {
     relations: {
@@ -701,16 +829,10 @@ const getProjects = async (filter: ProjectFilter, includeRelations: boolean = fa
       },
       UpdatedBy: { Id: true, FirstName: true, LastName: true },
     },
-    where: {
-      StatusId: filter.statusId,
-      AgencyId: filter.agencyId
-        ? In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId)
-        : undefined,
-      ProjectNumber: filter.projectNumber,
-    },
+    where: collectFindOptions(filter),
     take: filter.quantity,
     skip: (filter.page ?? 0) * (filter.quantity ?? 0),
-    order: filter.sort as FindOptionsOrder<Project>,
+    order: sortKeyMapping(filter.sortKey, filter.sortOrder as FindOptionsOrderValue),
   };
 
   const projects = await projectRepo.find(queryOptions);
@@ -729,10 +851,12 @@ const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boo
       Workflow: includeRelations,
       CreatedBy: includeRelations,
       UpdatedBy: includeRelations,
-      StatusHistory: includeRelations,
-      Tasks: includeRelations,
-      Notes: includeRelations,
-      Notifications: false, // Don't include this. It can be very large.
+      // Don't include these joins below. It can be very large.
+      Tasks: false,
+      Notes: false,
+      Timestamps: false,
+      Monetaries: false,
+      Notifications: false,
     },
     select: {
       Agency: {
@@ -755,23 +879,13 @@ const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boo
         FirstName: true,
         LastName: true,
       },
-      UpdatedBy: { Id: true, FirstName: true, LastName: true },
+      UpdatedBy: {
+        Id: true,
+        FirstName: true,
+        LastName: true,
+      },
       Workflow: {
         Name: true,
-      },
-      Tasks: {
-        CompletedOn: true,
-        TaskId: true,
-        IsCompleted: true,
-      },
-      StatusHistory: {
-        StatusId: true,
-        UpdatedOn: true,
-        CreatedOn: true,
-      },
-      Notes: {
-        NoteType: true,
-        Note: true,
       },
     },
     where: {
@@ -783,11 +897,28 @@ const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boo
     },
     take: filter.quantity,
     skip: (filter.page ?? 0) * (filter.quantity ?? 0),
-    order: filter.sort as FindOptionsOrder<Project>,
+    order: sortKeyMapping(filter.sortKey, filter.sortOrder as FindOptionsOrderValue),
   };
-
   const projects = await projectRepo.find(queryOptions);
-  return projects;
+
+  /**
+   * Separated these queries intentionally.
+   * Joining them with the projects call is much slower.
+   */
+  const tasks = await AppDataSource.getRepository(ProjectTask).find();
+  const notes = await AppDataSource.getRepository(ProjectNote).find();
+  const monetaries = await AppDataSource.getRepository(ProjectMonetary).find();
+  const timestamps = await AppDataSource.getRepository(ProjectTimestamp).find();
+  const notifications = await AppDataSource.getRepository(NotificationQueue).find();
+
+  return projects.map((project) => ({
+    ...project,
+    Tasks: tasks.filter((task) => task.ProjectId === project.Id),
+    Notes: notes.filter((note) => note.ProjectId === project.Id),
+    Monetaries: monetaries.filter((mon) => mon.ProjectId === project.Id),
+    Timestamps: timestamps.filter((time) => time.ProjectId === project.Id),
+    Notifications: notifications.filter((notification) => notification.ProjectId === project.Id),
+  }));
 };
 
 const projectServices = {

@@ -10,10 +10,14 @@ export const UserFilteringSchema = z.object({
   firstName: z.string().optional(),
   email: z.string().optional(),
   agencyId: z.number().optional() || z.array(z.number().int().nonnegative()).optional(),
+  agency: z.string().optional(),
   role: z.string().optional(),
   position: z.string().optional(),
   id: z.string().uuid().optional(),
   guid: z.string().uuid().optional(),
+  status: z.string().optional(),
+  sortOrder: z.string().optional(),
+  sortKey: z.string().optional(),
 });
 
 export type UserFiltering = z.infer<typeof UserFilteringSchema> & { id?: UUID }; //Kinda hacky, but the type expected in typeorm is more strict than what zod infers here.

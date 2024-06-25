@@ -7,7 +7,7 @@ import { ISelectMenuItem } from '@/components/form/SelectFormField';
 export const useGroupedAgenciesApi = () => {
   const api = usePimsApi();
   const { loadOnce: agencyLoad, data: agencyData } = useDataLoader(api.agencies.getAgencies);
-  agencyLoad();
+  agencyLoad({});
 
   const groupedAgencies = useMemo(() => {
     const groups: { [parentName: string]: Agency[] } = {};
@@ -48,7 +48,6 @@ export const useGroupedAgenciesApi = () => {
       options.push({
         label: agency.Name,
         value: agency.Id,
-        parent: true,
         children: agency.children.map((child) => child.Id),
       });
       if (agency.children && agency.children.length > 0) {
@@ -59,7 +58,7 @@ export const useGroupedAgenciesApi = () => {
           options.push({
             label: childAgency.Name,
             value: childAgency.Id,
-            parent: false,
+            parentId: agency.Id,
           });
         });
       }

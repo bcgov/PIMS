@@ -3,6 +3,7 @@ import { Agency } from '@/typeorm/Entities/Agency';
 import { produceAgency } from 'tests/testUtils/factories';
 import * as agencyServices from '@/services/agencies/agencyServices';
 import { DeepPartial } from 'typeorm';
+import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
 const _agencyFind = jest
   .spyOn(AppDataSource.getRepository(Agency), 'find')
@@ -13,9 +14,6 @@ const _agencySave = jest
 const _agencyFindOne = jest
   .spyOn(AppDataSource.getRepository(Agency), 'findOne')
   .mockImplementation(async () => produceAgency());
-const _agencyUpdate = jest
-  .spyOn(AppDataSource.getRepository(Agency), 'update')
-  .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
 const _agencyDelete = jest
   .spyOn(AppDataSource.getRepository(Agency), 'delete')
   .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
@@ -26,7 +24,25 @@ describe('UNIT - agency services', () => {
   });
   describe('getAgencies', () => {
     it('should get a list of agencies', async () => {
-      const agencies = await agencyServices.getAgencies({});
+      const agencies = await agencyServices.getAgencies({
+        name: 'contains,aaa',
+        parent: 'equals,aaa',
+        isDisabled: 'equals,aaa',
+      });
+      expect(_agencyFind).toHaveBeenCalledTimes(1);
+      expect(Array.isArray(agencies)).toBe(true);
+    });
+
+    it('should get a list of agencies', async () => {
+      const agencies = await agencyServices.getAgencies({
+        name: 'startsWith,aaa',
+        code: 'endsWith,code',
+        email: 'contains,email',
+        createdOn: `is,${new Date()}`,
+        updatedOn: `after,${new Date()}`,
+        sortKey: 'Parent',
+        sortOrder: 'asc',
+      });
       expect(_agencyFind).toHaveBeenCalledTimes(1);
       expect(Array.isArray(agencies)).toBe(true);
     });
@@ -58,15 +74,63 @@ describe('UNIT - agency services', () => {
   describe('updateAgencyById', () => {
     it('should update an agency and return it', async () => {
       const upagency = produceAgency();
+      _agencyFind.mockImplementationOnce(async () => [upagency]);
       await agencyServices.updateAgencyById(upagency);
-      expect(_agencyUpdate).toHaveBeenCalledTimes(1);
+      expect(_agencySave).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw an error if the agency is not found', async () => {
+      _agencyFind.mockImplementationOnce(async () => []);
+      const upagency = produceAgency();
+      expect(async () => await agencyServices.updateAgencyById(upagency)).rejects.toThrow(
+        new ErrorWithCode(`Agency not found.`, 404),
+      );
+    });
+
+    it('should throw an error if the parent Id is not found', async () => {
+      const agencyId = 1;
+      const upagency = produceAgency({ Id: agencyId, ParentId: agencyId + 1 });
+      _agencyFind.mockImplementationOnce(async () => [upagency]);
+      expect(async () => await agencyServices.updateAgencyById(upagency)).rejects.toThrow(
+        new ErrorWithCode(`Requested Parent Agency Id ${upagency.ParentId} not found.`, 404),
+      );
+    });
+
+    it('should throw an error if the updated agency is already a parent agency', async () => {
+      const agencyId = 1;
+      const childAgency = produceAgency({ Id: agencyId + 2, ParentId: agencyId });
+      const parentAgency = produceAgency({ Id: agencyId - 1 });
+      const upagency = produceAgency({ Id: agencyId, ParentId: parentAgency.Id });
+      _agencyFind.mockImplementationOnce(async () => [upagency, childAgency, parentAgency]);
+      expect(async () => await agencyServices.updateAgencyById(upagency)).rejects.toThrow(
+        new ErrorWithCode('Cannot assign Parent Agency to existing Parent Agency.', 400),
+      );
+    });
+
+    it('should throw an error if the parent agency id belongs to a child agency', async () => {
+      const agencyId = 1;
+      const parentAgency = produceAgency({ Id: agencyId - 1, ParentId: agencyId + 1 });
+      const upagency = produceAgency({ Id: agencyId, ParentId: parentAgency.Id });
+      _agencyFind.mockImplementationOnce(async () => [upagency, parentAgency]);
+      expect(async () => await agencyServices.updateAgencyById(upagency)).rejects.toThrow(
+        new ErrorWithCode('Cannot assign a child agency as a Parent Agency.', 400),
+      );
     });
   });
+
   describe('deleteAgencyById', () => {
     it('should delete an agency and return it', async () => {
       const delagency = produceAgency();
       await agencyServices.deleteAgencyById(delagency.Id);
       expect(_agencyDelete).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw an error if the agency is not found', async () => {
+      _agencyFindOne.mockImplementationOnce(async () => null);
+      const delagency = produceAgency();
+      expect(async () => await agencyServices.deleteAgencyById(delagency.Id)).rejects.toThrow(
+        new ErrorWithCode(`Agency not found.`, 404),
+      );
     });
   });
 });

@@ -1,7 +1,7 @@
 import { User, UserStatus } from '@/typeorm/Entities/User';
 import { AppDataSource } from '@/appDataSource';
 import { SSOBCeIDUser, SSOIdirUser, SSOUser } from '@bcgov/citz-imb-sso-express';
-import { DeepPartial, In } from 'typeorm';
+import { DeepPartial, FindOptionsOrderValue, In } from 'typeorm';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { randomUUID, UUID } from 'crypto';
 import KeycloakService from '@/services/keycloak/keycloakService';
@@ -54,11 +54,6 @@ const normalizeKeycloakUser = (kcUser: SSOUser): NormalizedKeycloakUser => {
       throw new Error();
   }
 };
-
-// const getUserFromKeycloak = async (kcUser: KeycloakUser) => {
-//   const normalized = normalizeKeycloakUser(kcUser);
-//   return getUser(normalized.guid ?? normalized.username);
-// };
 
 const activateUser = async (ssoUser: SSOUser) => {
   const normalizedUser = normalizeKeycloakUser(ssoUser);
@@ -215,6 +210,17 @@ const getAdministrators = async (agencyIds: string[]) => {
   return admins;
 };
 
+const sortKeyMapping = (sortKey: string, sortDirection: FindOptionsOrderValue) => {
+  switch (sortKey) {
+    case 'Agency':
+      return { Agency: { Name: sortDirection } };
+    case 'Role':
+      return { Role: { Name: sortDirection } };
+    default:
+      return { [sortKey]: sortDirection };
+  }
+};
+
 const getUsers = async (filter: UserFiltering) => {
   const users = await AppDataSource.getRepository(User).find({
     relations: {
@@ -238,6 +244,7 @@ const getUsers = async (filter: UserFiltering) => {
     },
     take: filter.quantity,
     skip: (filter.page ?? 0) * (filter.quantity ?? 0),
+    order: sortKeyMapping(filter.sortKey, filter.sortOrder as FindOptionsOrderValue),
   });
   return users;
 };
@@ -264,6 +271,7 @@ const addUser = async (user: User) => {
 };
 
 const updateUser = async (user: DeepPartial<User>) => {
+  const roleName = user.Role?.Name;
   const resource = await AppDataSource.getRepository(User).findOne({ where: { Id: user.Id } });
   if (!resource) {
     throw new ErrorWithCode('Resource does not exist.', 404);
@@ -272,6 +280,9 @@ const updateUser = async (user: DeepPartial<User>) => {
     ...user,
     DisplayName: `${user.LastName}, ${user.FirstName}`,
   });
+  if (roleName) {
+    await KeycloakService.updateKeycloakUserRoles(resource.Username, [roleName]);
+  }
   return retUser.generatedMaps[0];
 };
 

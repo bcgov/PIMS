@@ -2,7 +2,6 @@ import React, { MutableRefObject, useContext, useMemo } from 'react';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, SxProps, Tooltip, lighten, useTheme } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
-import { Check } from '@mui/icons-material';
 import {
   GridColDef,
   GridColumnHeaderTitle,
@@ -104,6 +103,7 @@ const PropertyTable = (props: IPropertyTable) => {
       field: 'PropertyType',
       headerName: 'Type',
       flex: 1,
+      maxWidth: 130,
       valueGetter: (value?: PropertyType) => value?.Name,
     },
     {
@@ -160,6 +160,7 @@ const PropertyTable = (props: IPropertyTable) => {
       field: 'PID',
       headerName: 'PID',
       flex: 1,
+      maxWidth: 150,
       // This odd logic is to allow for search with or without hyphens.
       // It concatinates a non-hyphenated and hyphenated version together for searching, then uses the second for presentation.
       valueGetter: (value: number | null) =>
@@ -184,20 +185,18 @@ const PropertyTable = (props: IPropertyTable) => {
       valueGetter: (value?: AdministrativeArea) => value?.Name,
     },
     {
-      field: 'IsSensitive',
-      headerName: 'Sensitive',
-      renderCell: (params) => {
-        if (params.value) {
-          return <Check />;
-        } else return <></>;
-      },
-      flex: 1,
+      field: 'LandArea',
+      headerName: 'Land Area',
+      width: 120,
+      valueFormatter: (value) => (value ? `${(value as number).toFixed(2)} ha` : ''),
     },
     {
       field: 'UpdatedOn',
       headerName: 'Updated On',
       flex: 1,
+      maxWidth: 125,
       valueFormatter: (value) => dateFormatter(value),
+      type: 'date',
     },
   ];
 
@@ -339,6 +338,7 @@ const PropertyTable = (props: IPropertyTable) => {
         onPresetFilterChange={selectPresetFilter}
         getRowId={(row) => row.Id + row.Type}
         defaultFilter={'All Properties'}
+        tableOperationMode="client"
         onRowClick={props.rowClickHandler}
         onAddButtonClick={() => navigate('add')}
         presetFilterSelectOptions={[

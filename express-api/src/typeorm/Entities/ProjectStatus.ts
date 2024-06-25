@@ -33,5 +33,5 @@ export class ProjectStatus extends BaseEntity {
   IsTerminal: boolean;
 
   @Column({ type: 'character varying', length: 150 })
-  Route: boolean;
+  Route: string;
 }

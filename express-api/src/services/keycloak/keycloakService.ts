@@ -241,17 +241,17 @@ const getKeycloakUser = async (guid: string) => {
  * @returns {IKeycloakRole[]} A list of the user's roles.
  * @throws If the user is not found.
  */
-const getKeycloakUserRoles = async (username: string) => {
+const getKeycloakUserRoles = async (username: string): Promise<IKeycloakRole[]> => {
   const existingRolesResponse: IKeycloakRolesResponse | IKeycloakErrorResponse =
     await getUserRoles(username);
+
   if (!keycloakUserRolesSchema.safeParse(existingRolesResponse).success) {
-    const message = `keycloakService.getKeycloakUserRoles: ${
-      (existingRolesResponse as IKeycloakErrorResponse).message
-    }`;
+    const message = `keycloakService.getKeycloakUserRoles: ${(existingRolesResponse as IKeycloakErrorResponse).message}`;
     logger.warn(message);
     throw new Error(message);
   }
-  return (existingRolesResponse as IKeycloakRolesResponse).data;
+  // Ensure the response always returns an array of roles
+  return (existingRolesResponse as IKeycloakRolesResponse).data || [];
 };
 
 /**
@@ -288,7 +288,10 @@ const updateKeycloakUserRoles = async (username: string, roles: string[]) => {
       (e as IKeycloakErrorResponse).message
     }`;
     logger.warn(message);
-    throw new Error(message);
+    throw new ErrorWithCode(
+      `Failed to update user ${username}'s Keycloak roles. User's Keycloak account may not be active.`,
+      500,
+    );
   }
 };
 

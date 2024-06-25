@@ -5,6 +5,7 @@ import { User } from '@/hooks/api/useUsersApi';
 import { Parcel } from './useParcelsApi';
 import { Building } from './useBuildingsApi';
 import { DeepPartial } from 'react-hook-form';
+import { CommonFiltering } from '@/interfaces/ICommonFiltering';
 
 export interface TierLevel extends BaseEntityInterface {
   Id: number;
@@ -80,8 +81,32 @@ export interface Project {
   Notifications?: ProjectNotification[];
   StatusHistory?: ProjectStatusHistory[];
   Notes?: ProjectNote[];
+  Monetaries?: ProjectMonetary[];
+  Timestamps?: ProjectTimestamp[];
   ProjectProperties?: ProjectProperty[];
   AgencyResponses?: ProjectAgencyResponse[];
+}
+
+export interface ProjectMonetary {
+  CreatedById?: string;
+  CreatedOn?: Date;
+  Id?: number;
+  Value?: string | number;
+  MonetaryTypeId?: number;
+  ProjectId?: number;
+  UpdatedById?: string;
+  UpdatedOn?: Date;
+}
+
+export interface ProjectTimestamp {
+  CreatedById?: string;
+  CreatedOn?: Date;
+  Id?: number;
+  Date?: Date;
+  TimestampTypeId?: number;
+  ProjectId?: number;
+  UpdatedById?: string;
+  UpdatedOn?: Date;
 }
 
 export interface ProjectNote {
@@ -89,7 +114,7 @@ export interface ProjectNote {
   CreatedOn?: Date;
   Id?: number;
   Note?: string;
-  NoteType?: number;
+  NoteTypeId?: number;
   ProjectId?: number;
   UpdatedById?: string;
   UpdatedOn?: Date;
@@ -274,8 +299,17 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
     const response = await absoluteFetch.del(`/projects/disposal/${id}`);
     return response;
   };
-  const getProjects = async () => {
-    const { parsedBody } = await absoluteFetch.get('/projects', { includeRelations: true });
+  const getProjects = async (sort: CommonFiltering, signal?: AbortSignal) => {
+    const { parsedBody } = await absoluteFetch.get(
+      '/projects',
+      {
+        includeRelations: true,
+        ...sort,
+      },
+      {
+        signal,
+      },
+    );
     if (parsedBody.error) {
       return [];
     }
