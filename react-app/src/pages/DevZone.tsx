@@ -1,19 +1,18 @@
 /* eslint-disable no-console */
 //Simple component testing area.
-import { LookupContext } from '@/contexts/lookupContext';
-import React, { useContext } from 'react';
+import useDataLoader from '@/hooks/useDataLoader';
+import usePimsApi from '@/hooks/usePimsApi';
+import React, { useEffect } from 'react';
 
 const Dev = () => {
-  const { data, getLookupValueById } = useContext(LookupContext);
+  const api = usePimsApi();
+  const { data, refreshData } = useDataLoader(() =>
+    api.bcAssessment.getBCAssessmentByLocation('-123.36905121803285', '48.41397415311252'),
+  );
+  useEffect(() => {
+    refreshData();
+  }, []);
   console.log(data);
-  if (getLookupValueById) {
-    console.log(
-      `Get AdministrativeArea with ID 1: ${JSON.stringify(getLookupValueById('AdministrativeAreas', 1))}`,
-    );
-    console.log(
-      `Get RegionalDistrict with ID 19: ${JSON.stringify(getLookupValueById('RegionalDistricts', 19))}`,
-    );
-  }
   return <></>;
 };
 
