@@ -8,6 +8,7 @@ export const AdministrativeAreaFilterSchema = z.object({
   sortRelation: z.string().optional(),
   name: z.string().optional(),
   provinceId: z.string().optional(),
+  regionalDistrictId: z.number().int().optional(),
   regionalDistrict: z.string().optional(),
   isDisabled: z.string().optional(),
 });

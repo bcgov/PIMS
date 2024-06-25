@@ -29,6 +29,7 @@ import TitleOwnership from '../ltsa/TitleOwnership';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { AuthContext } from '@/contexts/authContext';
 import { Roles } from '@/constants/roles';
+import { LookupContext } from '@/contexts/lookupContext';
 
 interface IPropertyDetail {
   onClose: () => void;
@@ -38,6 +39,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const navigate = useNavigate();
   const params = useParams();
   const { keycloak } = useContext(AuthContext);
+  const { getLookupValueById } = useContext(LookupContext);
   const parcelId = isNaN(Number(params.parcelId)) ? null : Number(params.parcelId);
   const buildingId = isNaN(Number(params.buildingId)) ? null : Number(params.buildingId);
   const api = usePimsApi();
@@ -179,7 +181,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
             <MetresSquared />
           </>
         );
-      case 'LotSize':
+      case 'LandArea':
         return <Typography>{`${val} Hectares`}</Typography>;
       case 'Tenancy':
         return (
@@ -194,26 +196,33 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const mainInformation = useMemo(() => {
     const data: Parcel | Building = buildingOrParcel === 'Building' ? building : parcel;
     const info: any = {
-      Classification: data?.Classification,
+      Classification: getLookupValueById('Classifications', data?.ClassificationId),
       PID: data?.PID ? zeroPadPID(data.PID) : undefined,
       PIN: data?.PIN,
       PostalCode: data?.Postal,
-      Agency: data?.Agency?.Name,
-      AdministrativeArea: data?.AdministrativeArea?.Name,
+      Agency: getLookupValueById('Agencies', data?.AgencyId)?.Name,
+      AdministrativeArea: getLookupValueById('AdministrativeAreas', data?.AdministrativeAreaId)
+        ?.Name,
       Address: data?.Address1,
       IsSensitive: data?.IsSensitive,
       Description: data?.Description,
     };
     if (buildingOrParcel === 'Building') {
       info.Name = (data as Building)?.Name;
-      info.MainUsage = (data as Building)?.BuildingPredominateUse?.Name || '';
-      info.ConstructionType = (data as Building)?.BuildingConstructionType?.Name || '';
+      info.MainUsage = getLookupValueById(
+        'PredominateUses',
+        (data as Building)?.BuildingPredominateUseId,
+      )?.Name;
+      info.ConstructionType = getLookupValueById(
+        'ConstructionTypes',
+        (data as Building)?.BuildingConstructionTypeId,
+      )?.Name;
       info.TotalArea = (data as Building)?.TotalArea;
       info.UsableArea = (data as Building)?.RentableArea;
       info.Tenancy = (data as Building)?.BuildingTenancy;
       info.TenancyDate = dateFormatter((data as Building)?.BuildingTenancyUpdatedOn);
     } else {
-      info.LotSize = (data as Parcel)?.LandArea;
+      info.LandArea = (data as Parcel)?.LandArea;
     }
     return info;
   }, [parcel, building]);

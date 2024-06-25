@@ -294,7 +294,7 @@ export const ParcelInformationForm = (props: IParcelInformationForm) => {
         <Grid item xs={6}>
           <TextFormField
             fullWidth
-            label={'Lot size'}
+            label={'Land Area'}
             name={'LandArea'}
             InputProps={{
               endAdornment: <InputAdornment position="end">Hectares</InputAdornment>,

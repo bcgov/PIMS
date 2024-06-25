@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 import BuildingIcon from '@/assets/icons/building.svg';
 import ParcelIcon from '@/assets/icons/parcel.svg';
 import BoxedIconRadio from '../form/BoxedIconRadio';
-import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
 import {
   AssessedValue,
@@ -18,11 +17,17 @@ import {
 import { NavigateBackButton } from '../display/DetailViewNavigation';
 import { useNavigate } from 'react-router-dom';
 import { ParcelAdd } from '@/hooks/api/useParcelsApi';
-import { BuildingAdd } from '@/hooks/api/useBuildingsApi';
+import {
+  BuildingAdd,
+  BuildingConstructionType,
+  BuildingPredominateUse,
+} from '@/hooks/api/useBuildingsApi';
 import { AuthContext } from '@/contexts/authContext';
 import { parseFloatOrNull, parseIntOrNull } from '@/utilities/formatters';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LoadingButton } from '@mui/lab';
+import { LookupContext } from '@/contexts/lookupContext';
+import { Classification } from '@/hooks/api/useLookupApi';
 
 const AddProperty = () => {
   //const years = [new Date().getFullYear(), new Date().getFullYear() - 1];
@@ -31,28 +36,13 @@ const AddProperty = () => {
   const navigate = useNavigate();
   const api = usePimsApi();
   const userContext = useContext(AuthContext);
-  const { data: adminAreasData, loadOnce: loadAdminAreas } = useDataLoader(
-    api.administrativeAreas.getAdministrativeAreas,
-  );
-  const { data: classificationData, loadOnce: loadClassifications } = useDataLoader(
-    api.lookup.getClassifications,
-  );
-  const { data: predominateUseData, loadOnce: loadPredominateUse } = useDataLoader(
-    api.lookup.getPredominateUses,
-  );
-  const { data: constructionTypeData, loadOnce: loadConstructionTypeData } = useDataLoader(
-    api.lookup.getConstructionTypes,
-  );
+  const { data: lookupData } = useContext(LookupContext);
   const { submit: submitParcel, submitting: submittingParcel } = useDataSubmitter(
     api.parcels.addParcel,
   );
   const { submit: submitBuilding, submitting: submittingBuilding } = useDataSubmitter(
     api.buildings.addBuilding,
   );
-  loadAdminAreas({});
-  loadClassifications();
-  loadPredominateUse();
-  loadConstructionTypeData();
 
   const formMethods = useForm({
     defaultValues: {
@@ -78,17 +68,6 @@ const AddProperty = () => {
       BuildingTenancyUpdatedOn: dayjs(),
       Fiscals: [],
       Evaluations: [],
-      // Fiscals: years.map((yr) => ({
-      //   FiscalYear: yr,
-      //   Value: '',
-      //   FiscalKeyId: 0,
-      //   EffectiveDate: dayjs(),
-      // })),
-      // Evaluations: years.map((yr) => ({
-      //   Year: yr,
-      //   EvaluationKeyId: 0,
-      //   Value: '',
-      // })),
     },
   });
 
@@ -134,20 +113,23 @@ const AddProperty = () => {
         </RadioGroup>
         <GeneralInformationForm
           propertyType={propertyType}
-          adminAreas={adminAreasData?.map((area) => ({ label: area.Name, value: area.Id })) ?? []}
+          adminAreas={
+            lookupData?.AdministrativeAreas.map((area) => ({ label: area.Name, value: area.Id })) ??
+            []
+          }
         />
         {propertyType === 'Parcel' ? (
           <ParcelInformationForm
-            classificationOptions={classificationData?.map((classif) => ({
+            classificationOptions={lookupData?.Classifications.map((classif) => ({
               label: classif.Name,
               value: classif.Id,
             }))}
           />
         ) : (
           <BuildingInformationForm
-            predominateUseOptions={predominateUseData}
-            classificationOptions={classificationData}
-            constructionOptions={constructionTypeData}
+            predominateUseOptions={lookupData?.PredominateUses as BuildingPredominateUse[]}
+            classificationOptions={lookupData?.Classifications as Classification[]}
+            constructionOptions={lookupData?.ConstructionTypes as BuildingConstructionType[]}
           />
         )}
         <Typography mt={'2rem'} variant="h5">

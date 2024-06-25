@@ -476,7 +476,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   // Sets quickfilter value of DataGrid. newValue is a string input.
   const updateSearchValue = useMemo(() => {
     return debounce((newValue) => {
-      //tableApiRef.current.setQuickFilterValues(newValue.split(' ').filter((word) => word !== ''));
+      tableApiRef.current.setQuickFilterValues(newValue.split(' ').filter((word) => word !== ''));
       const defaultpagesize = { page: 0, pageSize: tableModel.pagination.pageSize };
       tableApiRef.current.setPaginationModel(defaultpagesize);
       setQuery(defaultpagesize);

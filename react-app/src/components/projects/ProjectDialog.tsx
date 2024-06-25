@@ -1,5 +1,5 @@
 import usePimsApi from '@/hooks/usePimsApi';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import { Project, ProjectGet, ProjectMonetary, ProjectTimestamp } from '@/hooks/api/useProjectsApi';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -8,7 +8,6 @@ import {
   ProjectFinancialInfoForm,
   ProjectGeneralInfoForm,
 } from './ProjectForms';
-import useDataLoader from '@/hooks/useDataLoader';
 import DisposalProjectSearch from './DisposalPropertiesSearchTable';
 import { Box, Grid, InputAdornment, Typography } from '@mui/material';
 import { ProjectTask } from '@/constants/projectTasks';
@@ -23,6 +22,7 @@ import TextFormField from '../form/TextFormField';
 import { columnNameFormatter } from '@/utilities/formatters';
 import DateFormField from '../form/DateFormField';
 import dayjs from 'dayjs';
+import { LookupContext } from '@/contexts/lookupContext';
 
 interface IProjectGeneralInfoDialog {
   initialValues: Project;
@@ -34,14 +34,7 @@ interface IProjectGeneralInfoDialog {
 export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   const { open, postSubmit, onCancel, initialValues } = props;
   const api = usePimsApi();
-
-  const {
-    data: projectStatus,
-    loadOnce: loadProjStatus,
-    isLoading: loadingTasks,
-  } = useDataLoader(api.lookup.getProjectStatuses);
-
-  loadProjStatus();
+  const { data: lookupData } = useContext(LookupContext);
 
   const { submit, submitting } = useDataSubmitter(api.projects.updateProject);
 
@@ -73,54 +66,51 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
     });
   }, [initialValues]);
 
-  const { data: tasks, refreshData: refreshTasks } = useDataLoader(() => {
-    const statusId = projectFormMethods.getValues()['StatusId'];
-    return statusId != null ? api.lookup.getTasks(statusId) : undefined;
+  const [statusTypes, setStatusTypes] = useState({
+    Tasks: [],
+    NoteTypes: [],
+    MonetaryTypes: [],
+    TimestampTypes: [],
   });
-
-  const { data: noteTypes, refreshData: refreshNotes } = useDataLoader(() => {
-    const statusId = projectFormMethods.getValues()['StatusId'];
-    return statusId != null ? api.lookup.getProjectNoteTypes(statusId) : undefined;
-  });
-
-  const { data: monetaryTypes, refreshData: refreshMonetary } = useDataLoader(() => {
-    const statusId = projectFormMethods.getValues()['StatusId'];
-    return statusId ? api.lookup.getProjectMonetaryTypes(statusId) : undefined;
-  });
-
-  const { data: timestampTypes, refreshData: refreshTimestamps } = useDataLoader(() => {
-    const statusId = projectFormMethods.getValues()['StatusId'];
-    return statusId ? api.lookup.getProjectTimestampTypes(statusId) : undefined;
-  });
-
   useEffect(() => {
-    refreshTasks();
-    refreshNotes();
-    refreshMonetary();
-    refreshTimestamps();
+    const statusId = projectFormMethods.getValues()['StatusId'];
+    if (statusId) {
+      const NoteTypes = lookupData?.NoteTypes.filter((type) => type.StatusId === statusId);
+      const Tasks = lookupData?.Tasks.filter((task) => task.StatusId === statusId);
+      const MonetaryTypes = lookupData?.MonetaryTypes.filter((type) => type.StatusId === statusId);
+      const TimestampTypes = lookupData?.TimestampTypes.filter(
+        (type) => type.StatusId === statusId,
+      );
+      setStatusTypes({
+        NoteTypes,
+        Tasks,
+        MonetaryTypes,
+        TimestampTypes,
+      });
+    }
   }, [projectFormMethods.watch('StatusId')]); //When status id changes, fetch a new set of tasks possible for this status...
 
   useEffect(() => {
     //Subsequently, we need to default the values of the form either to the already present value in the Project data blob, or just set it to false.
     projectFormMethods.setValue(
       'Tasks',
-      tasks?.map((task) => ({
+      statusTypes?.Tasks?.map((task) => ({
         TaskId: task.Id,
         IsCompleted: initialValues?.Tasks?.find((a) => a.TaskId == task.Id)?.IsCompleted ?? false,
       })) ?? [],
     );
-  }, [tasks, initialValues]);
+  }, [statusTypes, initialValues]);
 
   useEffect(() => {
     //Similarly for notes, we should set a blank value for any notes related to this status and scan for existing values to prepopulate.
     projectFormMethods.setValue(
       'Notes',
-      noteTypes?.map((note) => ({
+      statusTypes.NoteTypes?.map((note) => ({
         NoteTypeId: note.Id,
         Note: initialValues?.Notes?.find((a) => a.NoteTypeId == note.Id)?.Note ?? '',
       })) ?? [],
     );
-  }, [noteTypes, initialValues]);
+  }, [statusTypes, initialValues]);
 
   const getTimestampOrNull = (timestamps: ProjectTimestamp[], typeId: number) => {
     const found = timestamps?.find((d) => d.TimestampTypeId == typeId);
@@ -133,12 +123,12 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   useEffect(() => {
     projectFormMethods.setValue(
       'Timestamps',
-      timestampTypes?.map((ts) => ({
+      statusTypes.TimestampTypes?.map((ts) => ({
         TimestampTypeId: ts.Id,
         Date: getTimestampOrNull(initialValues?.Timestamps, ts.Id),
       })),
     );
-  }, [timestampTypes, initialValues]);
+  }, [statusTypes, initialValues]);
 
   const getMonetaryOrEmptyString = (monetaries: ProjectMonetary[], typeId: number) => {
     const found = monetaries?.find((m) => m.MonetaryTypeId == typeId);
@@ -151,12 +141,12 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   useEffect(() => {
     projectFormMethods.setValue(
       'Monetaries',
-      monetaryTypes?.map((ts) => ({
+      statusTypes.MonetaryTypes?.map((ts) => ({
         MonetaryTypeId: ts.Id,
         Value: getMonetaryOrEmptyString(initialValues?.Monetaries, ts.Id),
       })),
     );
-  }, [monetaryTypes, initialValues]);
+  }, [statusTypes, initialValues]);
 
   return (
     <ConfirmDialog
@@ -165,7 +155,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
       confirmButtonProps={{ loading: submitting }}
       onConfirm={async () => {
         const isValid = await projectFormMethods.trigger();
-        if (!loadingTasks && isValid) {
+        if (lookupData && isValid) {
           const values = projectFormMethods.getValues();
           submit(+initialValues.Id, {
             ...values,
@@ -179,12 +169,15 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
     >
       <FormProvider {...projectFormMethods}>
         <ProjectGeneralInfoForm
-          projectStatuses={projectStatus?.map((st) => ({ value: st.Id, label: st.Name }))}
+          projectStatuses={lookupData?.ProjectStatuses?.map((st) => ({
+            value: st.Id,
+            label: st.Name,
+          }))}
         />
-        {initialValues && tasks?.length > 0 && (
+        {initialValues && statusTypes.Tasks?.length > 0 && (
           <Box mt={'1rem'}>
             <Typography variant="h5">Confirm Tasks</Typography>
-            {tasks?.map((task, idx) => (
+            {statusTypes.Tasks?.map((task, idx) => (
               <SingleSelectBoxFormField
                 key={`${task.Id}-${idx}`}
                 name={`Tasks.${idx}.IsCompleted`}
@@ -193,13 +186,13 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
             ))}
           </Box>
         )}
-        {initialValues && noteTypes?.length > 0 && (
+        {initialValues && statusTypes.NoteTypes?.length > 0 && (
           <Box mt={'1rem'}>
             <Typography variant="h5" mb={'1rem'}>
               Confirm Notes
             </Typography>
             <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
-              {noteTypes?.map((note, idx) => (
+              {statusTypes.NoteTypes?.map((note, idx) => (
                 <TextFormField
                   minRows={2}
                   multiline
@@ -211,13 +204,13 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
             </Box>
           </Box>
         )}
-        {initialValues && monetaryTypes?.length > 0 && (
+        {initialValues && statusTypes.MonetaryTypes?.length > 0 && (
           <Box mt={'1rem'}>
             <Typography variant="h5" mb={'1rem'}>
               Confirm Monetary
             </Typography>
             <Grid container spacing={2}>
-              {monetaryTypes?.map((mon, idx) => (
+              {statusTypes.MonetaryTypes?.map((mon, idx) => (
                 <Grid item xs={6} key={`mon-grid-${idx}`}>
                   <TextFormField
                     InputProps={{
@@ -234,13 +227,13 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
             </Grid>
           </Box>
         )}
-        {initialValues && timestampTypes?.length > 0 && (
+        {initialValues && statusTypes.TimestampTypes?.length > 0 && (
           <Box mt={'1rem'}>
             <Typography variant="h5" mb={'1rem'}>
               Confirm Dates
             </Typography>
             <Grid container spacing={2}>
-              {timestampTypes?.map((ts, idx) => (
+              {statusTypes.TimestampTypes?.map((ts, idx) => (
                 <Grid key={`ts-grid-${idx}`} item xs={6}>
                   <DateFormField
                     key={`${ts.Id}-${idx}`}
@@ -267,12 +260,7 @@ interface IProjectFinancialDialog {
 export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
   const api = usePimsApi();
   const { initialValues, open, postSubmit, onCancel } = props;
-  const {
-    data: monetaryTypes,
-    loadOnce: loadMonetary,
-    isLoading: monetaryLoading,
-  } = useDataLoader(api.lookup.getProjectMonetaryTypes);
-  loadMonetary();
+  const { data: lookupData } = useContext(LookupContext);
   const { submit, submitting } = useDataSubmitter(api.projects.updateProject);
   const financialFormMethods = useForm({
     defaultValues: {
@@ -285,12 +273,12 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
     },
   });
   const salesCostType = useMemo(
-    () => monetaryTypes?.find((a) => a.Name === 'SalesCost'),
-    [monetaryTypes],
+    () => lookupData?.MonetaryTypes?.find((a) => a.Name === 'SalesCost'),
+    [lookupData],
   );
   const programCostType = useMemo(
-    () => monetaryTypes?.find((a) => a.Name === 'ProgramCost'),
-    [monetaryTypes],
+    () => lookupData?.MonetaryTypes?.find((a) => a.Name === 'ProgramCost'),
+    [lookupData],
   );
   useEffect(() => {
     financialFormMethods.reset({
@@ -309,12 +297,12 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
         .toString()
         .replace(/[$,]/g, ''),
     });
-  }, [initialValues, monetaryTypes]);
+  }, [initialValues, lookupData]);
   return (
     <ConfirmDialog
       title={'Update Financial Information'}
       open={open}
-      confirmButtonProps={{ loading: submitting, disabled: monetaryLoading }}
+      confirmButtonProps={{ loading: submitting }}
       onConfirm={async () => {
         const isValid = await financialFormMethods.trigger();
         if (isValid) {

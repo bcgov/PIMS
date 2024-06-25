@@ -52,7 +52,6 @@ const MultiselectFormField = (props: MultiselectFormFieldProps) => {
           sx={sx}
           limitTags={2}
           fullWidth
-          disableClearable={true}
           getOptionLabel={(option: ISelectMenuItem) => option.label}
           isOptionEqualToValue={(sourceOption, selectedOption) =>
             sourceOption.value === selectedOption.value
@@ -76,20 +75,20 @@ const MultiselectFormField = (props: MultiselectFormFieldProps) => {
               helperText={(formState.errors?.[name]?.message as string) ?? undefined}
             />
           )}
-          renderOption={(props, option) => (
+          renderOption={(props, option, state, ownerState) => (
             <Box
-              {...props}
               sx={{
-                fontWeight: option.parent ? 900 : 500,
+                fontWeight: allowNestedIndent && !option.parentId ? 900 : 500,
                 [`&.${autocompleteClasses.option}`]: {
                   padding: 1,
-                  paddingLeft: allowNestedIndent && !option.parent ? 2 : 1,
+                  paddingLeft: allowNestedIndent && option.parentId ? 2 : 1,
                 },
               }}
               component="li"
-              key={option.value}
+              {...props}
+              key={option.label}
             >
-              {option.label ?? 'N/A'}
+              {ownerState.getOptionLabel(option)}
             </Box>
           )}
           onChange={(_, data) => {
