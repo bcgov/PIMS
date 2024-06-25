@@ -102,6 +102,8 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
 
   const tabPanelStyle: SxProps = {
     padding: '1em 0 0 0',
+    height: '100%',
+    overflow: 'scroll',
   };
 
   if (size === 'large')
@@ -123,7 +125,7 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
                 <></>
               )}
 
-              <Box minWidth={'300px'}>
+              <Box minWidth={'300px'} id="popup-right" display={'flex'} flexDirection={'column'}>
                 {parcelData.at(parcelIndex).PID_FORMATTED ? (
                   <Typography variant="h4">{`PID: ${parcelData.at(parcelIndex).PID_FORMATTED}`}</Typography>
                 ) : (
@@ -224,8 +226,8 @@ interface ParcelLayerDetailsProps {
 const ParcelLayerDetails = (props: ParcelLayerDetailsProps) => {
   const { parcel } = props;
   return (
-    <Box minWidth={POPUP_WIDTH}>
-      <Grid container gap={1}>
+    <Box id="parcel-layer-details" minWidth={POPUP_WIDTH}>
+      <Grid container gap={1} height={'100%'}>
         {parcel ? (
           <>
             <GridColumnPair leftValue={'Class'} rightValue={parcel.PARCEL_CLASS} />
@@ -277,7 +279,7 @@ const ParcelPopupSelect = (props: ParcelPopupSelectProps) => {
   const theme = useTheme();
   const { parcelData, onClick, currentIndex } = props;
   return (
-    <Box minWidth={'200px'} marginRight={'2em'}>
+    <Box id="parcel-select" minWidth={'200px'} marginRight={'2em'}>
       <Typography variant="h4">Select Parcel</Typography>
       <Typography variant="caption">(PID/PIN)</Typography>
       <List
@@ -345,7 +347,7 @@ const LtsaDetails = (props: LtsaDetailsProps) => {
   );
 
   return (
-    <Box minWidth={POPUP_WIDTH} height={'300px'} overflow={'scroll'}>
+    <Box id="ltsa-details" minWidth={POPUP_WIDTH} overflow={'scroll'}>
       <Grid container gap={1}>
         {ltsaData && ltsaData.order ? (
           <>
