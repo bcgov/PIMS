@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AppDataSource } from '@/appDataSource';
 import { Building } from '@/typeorm/Entities/Building';
 import { Parcel } from '@/typeorm/Entities/Parcel';
@@ -5,12 +6,13 @@ import { PropertyClassification } from '@/typeorm/Entities/PropertyClassificatio
 import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
 import logger from '@/utilities/winstonLogger';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
-import { EntityTarget, FindOptionsWhere, ILike, In, QueryRunner } from 'typeorm';
+import { ILike, In } from 'typeorm';
 import xlsx, { WorkSheet } from 'xlsx';
 import userServices from '../users/usersServices';
-import parcelServices from '../parcels/parcelServices';
 import { ParcelFiscal } from '@/typeorm/Entities/ParcelFiscal';
 import { ParcelEvaluation } from '@/typeorm/Entities/ParcelEvaluation';
+import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
+import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
 
 const propertiesFuzzySearch = async (keyword: string, limit?: number) => {
   const parcels = await AppDataSource.getRepository(Parcel)
@@ -130,6 +132,16 @@ const obtainCellValueAtHeader = (
 //   });
 //   return entityValue;
 // };
+const generateBuildingName = (name: string, desc: string = null, localId: string = null) => {
+  return (
+    (localId == null ? '' : localId) +
+    (name != null ? name : desc?.substring(0, 150 < desc.length ? 150 : desc.length).trim())
+  );
+};
+const numberOrNull = (value: any) => {
+  if (value == '' || value == null) return null;
+  return typeof value === 'number' ? value : Number(value.replace?.(/-/g, ''));
+};
 const importPropertiesAsJSON = async (worksheet: WorkSheet, user: SSOUser) => {
   const dbUser = await userServices.getUser(user.preferred_username);
   const sheetObj: Record<string, any>[] = xlsx.utils.sheet_to_json(worksheet);
@@ -137,8 +149,8 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, user: SSOUser) => {
     select: { Name: true, Id: true },
   });
   const results = { inserted: 0, updated: 0, failed: 0, ignored: 0 };
-  const insertionPromises = [];
   let queuedParcels = [];
+  let queuedBuildings = [];
   const queryRunner = AppDataSource.createQueryRunner();
   await queryRunner.startTransaction();
   try {
@@ -151,13 +163,24 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, user: SSOUser) => {
       if (row.PropertyType === 'Land') {
         const classificationId = classifications.find((a) => a.Name === row.Classification)?.Id;
         const existentParcel = await queryRunner.manager.findOne(Parcel, {
-          where: { PID: Number(row.PID.replace?.(/-/g, '')) },
+          where: { PID: numberOrNull(row.PID) },
         });
+        if (existentParcel) {
+          const evaluations = await queryRunner.manager.find(ParcelEvaluation, {
+            where: { ParcelId: existentParcel.Id },
+          });
+          const fiscals = await queryRunner.manager.find(ParcelFiscal, {
+            where: { ParcelId: existentParcel.Id },
+          });
+          existentParcel.Evaluations = evaluations;
+          existentParcel.Fiscals = fiscals;
+        }
+
         existentParcel ? results.updated++ : results.inserted++;
-        const fiscals: Array<Partial<ParcelFiscal>> = [];
-        const evaluations: Array<Partial<ParcelEvaluation>> = [];
+        const currRowEvaluations: Array<Partial<ParcelEvaluation>> = [];
+        const currRowFiscals: Array<Partial<ParcelFiscal>> = [];
         if (row.NetBook && !existentParcel?.Fiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
-          fiscals.push({
+          currRowFiscals.push({
             Value: row.NetBook,
             FiscalKeyId: 0,
             FiscalYear: row.FiscalYear,
@@ -169,7 +192,7 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, user: SSOUser) => {
           row.Assessed &&
           !existentParcel?.Evaluations.some((a) => a.Year == row.EvaluationYear)
         ) {
-          evaluations.push({
+          currRowEvaluations.push({
             Value: row.Assessed,
             EvaluationKeyId: 0,
             Year: row.FiscalYear, //Change to EvaluationYear later.
@@ -179,8 +202,8 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, user: SSOUser) => {
         }
         queuedParcels.push({
           Id: existentParcel?.Id,
-          PID: row.PID.replace?.(/-/g, ''),
-          PIN: row.PIN?.replace?.(/-/g, ''),
+          PID: numberOrNull(row.PID),
+          PIN: numberOrNull(row.PIN),
           ClassificationId: classificationId,
           Name: row.Name,
           CreatedById: dbUser.Id,
@@ -193,19 +216,84 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, user: SSOUser) => {
           IsSensitive: false,
           IsVisibleToOtherAgencies: true,
           PropertyTypeId: 0,
-          Fiscals: fiscals,
-          Evaluations: evaluations,
+          Evaluations: currRowEvaluations,
+          Fiscals: currRowFiscals,
+        });
+      } else if (row.PropertyType === 'Building') {
+        const generatedName = generateBuildingName(row.Name, row.Description, row.LocalId);
+        const classificationId = classifications.find((a) => a.Name === row.Classification)?.Id;
+        const existentBuilding = await queryRunner.manager.findOne(Building, {
+          where: { PID: numberOrNull(row.PID), Name: generatedName },
+        });
+        if (existentBuilding) {
+          const evaluations = await queryRunner.manager.find(BuildingEvaluation, {
+            where: { BuildingId: existentBuilding.Id },
+          });
+          const fiscals = await queryRunner.manager.find(BuildingFiscal, {
+            where: { BuildingId: existentBuilding.Id },
+          });
+          existentBuilding.Evaluations = evaluations;
+          existentBuilding.Fiscals = fiscals;
+        }
+        existentBuilding ? results.updated++ : results.inserted++;
+        const currRowEvaluations: Array<Partial<BuildingEvaluation>> = [];
+        const currRowFiscals: Array<Partial<BuildingFiscal>> = [];
+        if (row.NetBook && !existentBuilding?.Fiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
+          currRowFiscals.push({
+            Value: row.NetBook,
+            FiscalKeyId: 0,
+            FiscalYear: row.FiscalYear,
+            CreatedById: dbUser.Id,
+            CreatedOn: new Date(),
+          });
+        }
+        if (
+          row.Assessed &&
+          !existentBuilding?.Evaluations.some((a) => a.Year == row.EvaluationYear)
+        ) {
+          currRowEvaluations.push({
+            Value: row.Assessed,
+            EvaluationKeyId: 0,
+            Year: row.FiscalYear, //Change to EvaluationYear later.
+            CreatedById: dbUser.Id,
+            CreatedOn: new Date(),
+          });
+        }
+        queuedBuildings.push({
+          Id: existentBuilding?.Id,
+          PID: numberOrNull(row.PID),
+          PIN: numberOrNull(row.PIN),
+          ClassificationId: classificationId,
+          Name: row.Name,
+          CreatedById: dbUser.Id,
+          CreatedOn: new Date(),
+          Location: {
+            x: row.Longitude,
+            y: row.Latitude,
+          },
+          AdministrativeAreaId: 6,
+          IsSensitive: false,
+          IsVisibleToOtherAgencies: true,
+          PropertyTypeId: 0,
+          Evaluations: currRowEvaluations,
+          Fiscals: currRowFiscals,
         });
       }
-      if (rowNum % 100) {
-        insertionPromises.push(queryRunner.manager.save(Parcel, queuedParcels));
+      if (queuedParcels.length >= 100) {
+        await queryRunner.manager.save(Parcel, queuedParcels);
         queuedParcels = [];
+      }
+      if (queuedBuildings.length >= 100) {
+        await queryRunner.manager.save(Building, queuedBuildings);
+        queuedBuildings = [];
       }
     }
     if (queuedParcels.length) {
-      insertionPromises.push(queryRunner.manager.save(Parcel, queuedParcels));
+      await queryRunner.manager.save(Parcel, queuedParcels);
     }
-    await Promise.all(insertionPromises);
+    if (queuedBuildings.length) {
+      await queryRunner.manager.save(Building, queuedBuildings);
+    }
   } catch (e) {
     logger.warn(e.message);
     logger.warn(e.stack);

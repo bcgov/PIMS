@@ -18,14 +18,14 @@ export class CustomWinstonLogger extends AbstractLogger {
           logger.info(message.message);
           break;
 
-        // case 'info':
-        // case 'query':
-        //   if (message.prefix) {
-        //     logger.info(`${message.prefix} ${message.message}`);
-        //   } else {
-        //     logger.info(message.message);
-        //   }
-        //   break;
+        case 'info':
+        case 'query':
+          if (message.prefix) {
+            logger.info(`${message.prefix} ${message.message}`);
+          } else {
+            logger.info(message.message);
+          }
+          break;
 
         case 'warn':
         case 'query-slow':
