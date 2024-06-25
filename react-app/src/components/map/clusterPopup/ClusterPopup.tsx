@@ -170,9 +170,9 @@ const ClusterPopup = (props: ClusterPopupProps) => {
             }
             content={[
               property.properties.Address1,
-              adminAreaData?.find((aa) => aa.Id === property.properties.AdministrativeAreaId)
+              getLookupValueById('AdministrativeAreas', property.properties.AdministrativeAreaId)
                 ?.Name ?? 'No Administrative Area',
-              agencyData?.find((a) => a.Id === property.properties.AgencyId)?.Name ?? 'No Agency',
+              getLookupValueById('Agencies', property.properties.AgencyId)?.Name ?? 'No Agency',
             ]}
           />
         ))}

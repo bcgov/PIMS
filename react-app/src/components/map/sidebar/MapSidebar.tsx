@@ -152,10 +152,11 @@ const MapSidebar = (props: MapSidebarProps) => {
                 }
                 content={[
                   property.properties.Address1,
-                  adminAreaData?.find((aa) => aa.Id === property.properties.AdministrativeAreaId)
-                    ?.Name ?? 'No Administrative Area',
-                  agencyData?.find((a) => a.Id === property.properties.AgencyId)?.Name ??
-                    'No Agency',
+                  getLookupValueById(
+                    'AdministrativeAreas',
+                    property.properties.AdministrativeAreaId,
+                  )?.Name ?? 'No Administrative Area',
+                  getLookupValueById('Agencies', property.properties.AgencyId)?.Name ?? 'No Agency',
                 ]}
               />
             ))}
