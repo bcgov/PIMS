@@ -287,17 +287,6 @@ const getParcelById = async (parcelId: number) => {
     where: { ParcelId: parcelId },
   });
   const parcel = await parcelRepo.findOne({
-    relations: {
-      ParentParcel: true,
-      Agency: {
-        Parent: true,
-      },
-      AdministrativeArea: {
-        RegionalDistrict: true,
-      },
-      Classification: true,
-      PropertyType: true,
-    },
     where: { Id: parcelId },
   });
   if (parcel) {

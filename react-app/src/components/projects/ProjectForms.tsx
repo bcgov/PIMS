@@ -1,20 +1,17 @@
 import { Grid, InputAdornment, Typography } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
 import AutocompleteFormField from '../form/AutocompleteFormField';
 import TextFormField from '../form/TextFormField';
 import { ISelectMenuItem } from '../form/SelectFormField';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
-import usePimsApi from '@/hooks/usePimsApi';
-import useDataLoader from '@/hooks/useDataLoader';
+import { LookupContext } from '@/contexts/lookupContext';
 
 interface IProjectGeneralInfoForm {
   projectStatuses: ISelectMenuItem[];
 }
 
 export const ProjectGeneralInfoForm = (props: IProjectGeneralInfoForm) => {
-  const api = usePimsApi();
-  const { data: tiers, loadOnce } = useDataLoader(api.lookup.getTierLevels);
-  loadOnce();
+  const { data: lookupData } = useContext(LookupContext);
   return (
     <Grid mt={'1rem'} spacing={2} container>
       <Grid item xs={6}>
@@ -22,7 +19,7 @@ export const ProjectGeneralInfoForm = (props: IProjectGeneralInfoForm) => {
           required
           options={props.projectStatuses}
           name={'StatusId'}
-          label={'Classification'}
+          label={'Status'}
         />
       </Grid>
       <Grid item xs={12}>
@@ -42,7 +39,7 @@ export const ProjectGeneralInfoForm = (props: IProjectGeneralInfoForm) => {
           name={'TierLevelId'}
           label={'Assign Tier'}
           required
-          options={tiers?.map((t) => ({ label: t.Name, value: t.Id })) ?? []}
+          options={lookupData?.ProjectTiers?.map((t) => ({ label: t.Name, value: t.Id })) ?? []}
         />
       </Grid>
       <Grid item xs={12}>

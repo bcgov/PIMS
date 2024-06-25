@@ -7,7 +7,7 @@ const ActiveInventory = () => {
   return (
     <PropertyTable
       rowClickHandler={(params) => {
-        if (params.row.Type === 'Building') {
+        if (params.row.PropertyType === 'Building') {
           navigate(`building/${params.row.Id}`);
         } else {
           navigate(`parcel/${params.row.Id}`);

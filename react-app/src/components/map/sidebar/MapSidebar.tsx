@@ -4,12 +4,18 @@ import { FilterList, ArrowCircleLeft, ArrowCircleRight } from '@mui/icons-materi
 import { Box, Paper, Grid, IconButton, Typography, Icon, useTheme } from '@mui/material';
 import sideBarIcon from '@/assets/icons/SidebarLeft-Linear.svg';
 import { Map } from 'leaflet';
-import React, { CSSProperties, Dispatch, SetStateAction, useLayoutEffect, useState } from 'react';
+import React, {
+  CSSProperties,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import PropertyRow from '@/components/map/propertyRow/PropertyRow';
 import { PropertyTypes } from '@/constants/propertyTypes';
-import useDataLoader from '@/hooks/useDataLoader';
-import usePimsApi from '@/hooks/usePimsApi';
 import FilterControl from '@/components/map/controls/FilterControl';
+import { LookupContext } from '@/contexts/lookupContext';
 
 interface MapSidebarProps {
   properties: PropertyGeo[];
@@ -31,17 +37,11 @@ const MapSidebar = (props: MapSidebarProps) => {
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const theme = useTheme();
-  const api = usePimsApi();
   const propertyPageSize = 20; // Affects paging size
   const sidebarWidth = 350;
 
   // Get related data for lookups
-  const { data: agencyData, loadOnce: loadAgencies } = useDataLoader(api.agencies.getAgencies);
-  const { data: adminAreaData, loadOnce: loadAdminAreas } = useDataLoader(
-    api.administrativeAreas.getAdministrativeAreas,
-  );
-  loadAgencies({});
-  loadAdminAreas({});
+  const { getLookupValueById } = useContext(LookupContext);
 
   // Sets the properties that are in the map's bounds at current view. Resets the page index.
   const definePropertiesInBounds = () => {
@@ -152,10 +152,11 @@ const MapSidebar = (props: MapSidebarProps) => {
                 }
                 content={[
                   property.properties.Address1,
-                  adminAreaData?.find((aa) => aa.Id === property.properties.AdministrativeAreaId)
-                    ?.Name ?? 'No Administrative Area',
-                  agencyData?.find((a) => a.Id === property.properties.AgencyId)?.Name ??
-                    'No Agency',
+                  getLookupValueById(
+                    'AdministrativeAreas',
+                    property.properties.AdministrativeAreaId,
+                  )?.Name ?? 'No Administrative Area',
+                  getLookupValueById('Agencies', property.properties.AgencyId)?.Name ?? 'No Agency',
                 ]}
               />
             ))}
