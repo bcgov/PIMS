@@ -5,14 +5,15 @@ import { Parcel } from '@/typeorm/Entities/Parcel';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
 import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
 import logger from '@/utilities/winstonLogger';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { ILike, In } from 'typeorm';
 import xlsx, { WorkSheet } from 'xlsx';
-import userServices from '../users/usersServices';
 import { ParcelFiscal } from '@/typeorm/Entities/ParcelFiscal';
 import { ParcelEvaluation } from '@/typeorm/Entities/ParcelEvaluation';
 import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
 import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
+import { BuildingConstructionType } from '@/typeorm/Entities/BuildingConstructionType';
+import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUse';
+import { UUID } from 'crypto';
 
 const propertiesFuzzySearch = async (keyword: string, limit?: number) => {
   const parcels = await AppDataSource.getRepository(Parcel)
@@ -99,39 +100,7 @@ const getPropertiesForMap = async (filter?: MapPropertiesFilter) => {
   return properties;
 };
 
-const obtainCellValueAtHeader = (
-  worksheet: WorkSheet,
-  headerLookup: Record<string, number>,
-  header: string,
-  row: number,
-) => {
-  const colNum = headerLookup[header];
-  if (colNum === undefined) {
-    return undefined;
-  }
-  const cell = worksheet[xlsx.utils.encode_cell({ r: row, c: colNum })];
-  return cell ? cell.v : undefined;
-};
-
-// const obtainCellValueFromEntity = async <T>(
-//   worksheet: WorkSheet,
-//   headerLookup: Record<string, number>,
-//   header: string,
-//   row: number,
-//   entity: EntityTarget<T>,
-//   entityKey: keyof T,
-//   queryRunner: QueryRunner,
-// ) => {
-//   const cellValue = obtainCellValueAtHeader(worksheet, headerLookup, header, row);
-//   if (!cellValue) {
-//     return undefined;
-//   }
-//   const findOption = { [entityKey]: cellValue } as FindOptionsWhere<T>;
-//   const entityValue = await queryRunner.manager.getRepository(entity).findOne({
-//     where: findOption,
-//   });
-//   return entityValue;
-// };
+const BATCH_SIZE = 100;
 const generateBuildingName = (name: string, desc: string = null, localId: string = null) => {
   return (
     (localId == null ? '' : localId) +
@@ -142,10 +111,15 @@ const numberOrNull = (value: any) => {
   if (value == '' || value == null) return null;
   return typeof value === 'number' ? value : Number(value.replace?.(/-/g, ''));
 };
-const importPropertiesAsJSON = async (worksheet: WorkSheet, user: SSOUser) => {
-  const dbUser = await userServices.getUser(user.preferred_username);
+const importPropertiesAsJSON = async (worksheet: WorkSheet, userId: UUID) => {
   const sheetObj: Record<string, any>[] = xlsx.utils.sheet_to_json(worksheet);
   const classifications = await AppDataSource.getRepository(PropertyClassification).find({
+    select: { Name: true, Id: true },
+  });
+  const constructionTypes = await AppDataSource.getRepository(BuildingConstructionType).find({
+    select: { Name: true, Id: true },
+  });
+  const buildingPredominate = await AppDataSource.getRepository(BuildingPredominateUse).find({
     select: { Name: true, Id: true },
   });
   const results = { inserted: 0, updated: 0, failed: 0, ignored: 0 };
@@ -183,8 +157,8 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, user: SSOUser) => {
           currRowFiscals.push({
             Value: row.NetBook,
             FiscalKeyId: 0,
-            FiscalYear: row.FiscalYear,
-            CreatedById: dbUser.Id,
+            FiscalYear: row.FiscalYear ?? 2024,
+            CreatedById: userId,
             CreatedOn: new Date(),
           });
         }
@@ -195,8 +169,8 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, user: SSOUser) => {
           currRowEvaluations.push({
             Value: row.Assessed,
             EvaluationKeyId: 0,
-            Year: row.FiscalYear, //Change to EvaluationYear later.
-            CreatedById: dbUser.Id,
+            Year: row.AssessedYear ?? 2024, //Change to EvaluationYear later.
+            CreatedById: userId,
             CreatedOn: new Date(),
           });
         }
@@ -206,7 +180,7 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, user: SSOUser) => {
           PIN: numberOrNull(row.PIN),
           ClassificationId: classificationId,
           Name: row.Name,
-          CreatedById: dbUser.Id,
+          CreatedById: userId,
           CreatedOn: new Date(),
           Location: {
             x: row.Longitude,
@@ -243,7 +217,7 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, user: SSOUser) => {
             Value: row.NetBook,
             FiscalKeyId: 0,
             FiscalYear: row.FiscalYear,
-            CreatedById: dbUser.Id,
+            CreatedById: userId,
             CreatedOn: new Date(),
           });
         }
@@ -254,8 +228,8 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, user: SSOUser) => {
           currRowEvaluations.push({
             Value: row.Assessed,
             EvaluationKeyId: 0,
-            Year: row.FiscalYear, //Change to EvaluationYear later.
-            CreatedById: dbUser.Id,
+            Year: row.AssessedYear, //Change to EvaluationYear later.
+            CreatedById: userId,
             CreatedOn: new Date(),
           });
         }
@@ -265,7 +239,7 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, user: SSOUser) => {
           PIN: numberOrNull(row.PIN),
           ClassificationId: classificationId,
           Name: row.Name,
-          CreatedById: dbUser.Id,
+          CreatedById: userId,
           CreatedOn: new Date(),
           Location: {
             x: row.Longitude,
@@ -275,15 +249,21 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, user: SSOUser) => {
           IsSensitive: false,
           IsVisibleToOtherAgencies: true,
           PropertyTypeId: 0,
+          BuildingPredominateUseId: buildingPredominate[0].Id,
+          BuildingConstructionTypeId: constructionTypes[0].Id,
+          RentableArea: 0,
+          BuildingTenancy: '123',
+          BuildingFloorCount: 0,
+          TotalArea: 0,
           Evaluations: currRowEvaluations,
           Fiscals: currRowFiscals,
         });
       }
-      if (queuedParcels.length >= 100) {
+      if (queuedParcels.length >= BATCH_SIZE) {
         await queryRunner.manager.save(Parcel, queuedParcels);
         queuedParcels = [];
       }
-      if (queuedBuildings.length >= 100) {
+      if (queuedBuildings.length >= BATCH_SIZE) {
         await queryRunner.manager.save(Building, queuedBuildings);
         queuedBuildings = [];
       }
@@ -306,72 +286,9 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, user: SSOUser) => {
   return results;
 };
 
-const importProperties = async (worksheet: WorkSheet, user: SSOUser) => {
-  let rowNum: number;
-  //let colNum: number;
-  const dbUser = await userServices.getUser(user.preferred_username);
-  const range = xlsx.utils.decode_range(worksheet['!ref']);
-  const classifications = await AppDataSource.getRepository(PropertyClassification).find({
-    select: { Name: true, Id: true },
-  });
-  const queryRunner = AppDataSource.createQueryRunner();
-  await queryRunner.startTransaction();
-  try {
-    const headers: Record<string, number> = {};
-    for (let headerCol = range.s.c; headerCol <= range.e.c; headerCol++) {
-      const headerName = worksheet[xlsx.utils.encode_cell({ r: range.s.r, c: headerCol })];
-      headers[headerName.v] = headerCol;
-    }
-    let queuedParcels = [];
-    for (rowNum = range.s.r + 1; rowNum <= range.e.r; rowNum++) {
-      const propertyType = obtainCellValueAtHeader(worksheet, headers, 'PropertyType', rowNum);
-      if (!propertyType) {
-        continue;
-      }
-      if (propertyType === 'Land') {
-        const classificationId = classifications.find(
-          (a) => a.Name === obtainCellValueAtHeader(worksheet, headers, 'Classification', rowNum),
-        )?.Id;
-        const parcel = {
-          PID: obtainCellValueAtHeader(worksheet, headers, 'PID', rowNum)?.replace?.(/-/g, ''),
-          PIN: obtainCellValueAtHeader(worksheet, headers, 'PIN', rowNum)?.replace?.(/-/g, ''),
-          ClassificationId: classificationId,
-          Name: obtainCellValueAtHeader(worksheet, headers, 'Name', rowNum),
-          CreatedById: dbUser.Id,
-          CreatedOn: new Date(),
-          Location: {
-            x: obtainCellValueAtHeader(worksheet, headers, 'Longitude', rowNum),
-            y: obtainCellValueAtHeader(worksheet, headers, 'Latitude', rowNum),
-          },
-          AdministrativeAreaId: 6,
-          IsSensitive: false,
-          IsVisibleToOtherAgencies: true,
-          PropertyTypeId: 0,
-        };
-        queuedParcels.push(parcel);
-        if (rowNum % 50) {
-          await queryRunner.manager.save(Parcel, queuedParcels);
-          queuedParcels = [];
-        }
-      }
-    }
-
-    if (queuedParcels.length) {
-      await queryRunner.manager.save(Parcel, queuedParcels);
-    }
-  } catch (e) {
-    logger.error(e.message);
-    logger.error(e.stack);
-  } finally {
-    await queryRunner.rollbackTransaction();
-    await queryRunner.release();
-  }
-};
-
 const propertyServices = {
   propertiesFuzzySearch,
   getPropertiesForMap,
-  importProperties,
   importPropertiesAsJSON,
 };
 

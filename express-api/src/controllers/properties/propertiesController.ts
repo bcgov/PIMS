@@ -1,10 +1,13 @@
+/* eslint-disable no-console */
 import { Request, Response } from 'express';
 import { stubResponse } from '@/utilities/stubResponse';
 import propertyServices from '@/services/properties/propertiesServices';
 import { MapFilterSchema } from '@/controllers/properties/mapFilterSchema';
 import { checkUserAgencyPermission, isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 import userServices from '@/services/users/usersServices';
-import xlsx from 'xlsx';
+import { Worker } from 'worker_threads';
+import path from 'path';
+import fs from 'fs';
 
 /**
  * @description Used to retrieve all properties.
@@ -169,9 +172,31 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
 
 export const importProperties = async (req: Request, res: Response) => {
   const filePath = req.file.path;
-  const file = xlsx.readFile(filePath);
-  const sheetName = file.SheetNames[0];
-  const worksheet = file.Sheets[sheetName];
-  const result = await propertyServices.importPropertiesAsJSON(worksheet, req.user);
-  return res.status(200).send(result);
+  const userCreateId = (await userServices.getUser(req.user.preferred_username)).Id;
+  const worker = new Worker(
+    path.resolve(__dirname, '../../services/properties/propertyWorker.ts'),
+    {
+      workerData: { filePath, userId: userCreateId },
+      execArgv: [
+        '--require',
+        'ts-node/register',
+        '--require',
+        'tsconfig-paths/register',
+        '--require',
+        'dotenv/config',
+      ],
+    },
+  );
+  worker.on('message', (msg) => {
+    console.log('Worker thread message --', msg);
+  });
+  worker.on('error', (err) => console.log('Worker errored out with error: ' + err.message));
+  worker.on('exit', (code) => {
+    console.log(`Worker hit exit code ${code}`);
+
+    fs.unlink(filePath, (err) => {
+      if (err) console.error('Failed to cleanup file from file upload.');
+    });
+  });
+  return res.status(200).send('Received file.');
 };
