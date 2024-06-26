@@ -1,4 +1,4 @@
-import { GridColumnPair } from '@/components/common/GridHelpers';
+import { GridColumnPair, GridSubtitle } from '@/components/common/GridHelpers';
 import MetresSquared from '@/components/text/MetresSquared';
 import { ParcelData } from '@/hooks/api/useParcelLayerApi';
 import usePimsApi from '@/hooks/usePimsApi';
@@ -15,7 +15,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { LatLng } from 'leaflet';
-import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Popup, useMap, useMapEvents } from 'react-leaflet';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
@@ -24,6 +24,7 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { LtsaOrder } from '@/hooks/api/useLtsaApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { dateFormatter, formatMoney } from '@/utilities/formatters';
+import { BCAssessmentProperties } from '@/hooks/api/useBCAssessmentApi';
 
 interface ParcelPopupProps {
   size?: 'small' | 'large';
@@ -52,6 +53,10 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
     isLoading: ltsaLoading,
   } = useDataLoader(() => api.ltsa.getLtsabyPid(parcelData?.at(parcelIndex)?.PID_NUMBER));
 
+  const { data: bcAssessmentData, refreshData: refreshBCA } = useDataLoader(() =>
+    api.bcAssessment.getBCAssessmentByLocation(clickPosition.lng, clickPosition.lat),
+  );
+
   const map = useMap();
   const api = usePimsApi();
 
@@ -61,8 +66,9 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
   }, [clickPosition]);
 
   useEffect(() => {
-    if (parcelData) {
+    if (parcelData && clickPosition) {
       refreshLtsa();
+      refreshBCA();
     }
   }, [parcelData, parcelIndex]);
 
@@ -141,7 +147,7 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
                   >
                     <Tab label="Parcel Layer" value="0" />
                     <Tab label="LTSA" value="1" />
-                    {/* <Tab label="BCA" value="2" /> */}
+                    <Tab label="BCA" value="2" />
                   </TabList>
 
                   <TabPanel value="0" sx={tabPanelStyle}>
@@ -150,7 +156,16 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
                   <TabPanel value="1" sx={tabPanelStyle}>
                     <LtsaDetails ltsaData={ltsaData} isLoading={ltsaLoading} />
                   </TabPanel>
-                  {/* <TabPanel value="2" sx={tabPanelStyle}> TODO: BCA Data Goes Here </TabPanel> */}
+                  <TabPanel value="2" sx={tabPanelStyle}>
+                    <BCAssessmentDetails
+                      // TODO: Get more than just the first entry for a parcel
+                      property={
+                        bcAssessmentData?.features.length
+                          ? bcAssessmentData?.features.at(0).properties
+                          : ({} as BCAssessmentProperties)
+                      }
+                    />
+                  </TabPanel>
                 </TabContext>
               </Box>
             </>
@@ -328,22 +343,6 @@ const LtsaDetails = (props: LtsaDetailsProps) => {
       </Box>
     );
 
-  const GridSubtitle = (props: PropsWithChildren) => (
-    <>
-      <Grid item xs={12}>
-        <Typography
-          variant="h4"
-          sx={{
-            margin: 0,
-          }}
-        >
-          {props.children}
-        </Typography>
-      </Grid>
-      <Grid item xs={12} sx={{ borderTop: 'solid 1px gray' }} />
-    </>
-  );
-
   return (
     <Box minWidth={POPUP_WIDTH} height={'300px'} overflow={'scroll'}>
       <Grid container gap={1}>
@@ -486,6 +485,51 @@ const LtsaDetails = (props: LtsaDetailsProps) => {
         ) : (
           <Typography variant="body2">No LTSA information available.</Typography>
         )}
+      </Grid>
+    </Box>
+  );
+};
+
+interface BCAssessmentDetailsProps {
+  property: BCAssessmentProperties;
+}
+
+const BCAssessmentDetails = (props: BCAssessmentDetailsProps) => {
+  const { property } = props;
+  const leftColumnSize = 5;
+  return (
+    <Box minWidth={POPUP_WIDTH} height={'300px'}>
+      <Grid container gap={1}>
+        <GridColumnPair
+          leftValue={'Folio ID'}
+          rightValue={property.FOLIO_ID}
+          leftSize={leftColumnSize}
+        />
+        <GridColumnPair
+          leftValue={'Roll Number'}
+          rightValue={property.ROLL_NUMBER}
+          leftSize={leftColumnSize}
+        />
+        <GridColumnPair
+          leftValue={'Net Improvement Value'}
+          rightValue={property.GEN_NET_IMPROVEMENT_VALUE}
+          leftSize={leftColumnSize}
+        />
+        <GridColumnPair
+          leftValue={'Net Land Value'}
+          rightValue={property.GEN_NET_LAND_VALUE}
+          leftSize={leftColumnSize}
+        />
+        <GridColumnPair
+          leftValue={'Gross Improvement Value'}
+          rightValue={property.GEN_GROSS_IMPROVEMENT_VALUE}
+          leftSize={leftColumnSize}
+        />
+        <GridColumnPair
+          leftValue={'Gross Land Value'}
+          rightValue={property.GEN_GROSS_LAND_VALUE}
+          leftSize={leftColumnSize}
+        />
       </Grid>
     </Box>
   );
