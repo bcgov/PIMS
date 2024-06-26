@@ -12,7 +12,8 @@ const processFile = async (filePath: string, userId: UUID) => {
     const sheetName = file.SheetNames[0];
     const worksheet = file.Sheets[sheetName];
 
-    await propertyServices.importPropertiesAsJSON(worksheet, userId); // Note that this return still works with finally as long as return is not called from finally block.
+    const results = await propertyServices.importPropertiesAsJSON(worksheet, userId); // Note that this return still works with finally as long as return is not called from finally block.
+    return results;
   } catch (e) {
     parentPort.postMessage('Aborting file upload: ' + e.message);
   } finally {
@@ -21,8 +22,12 @@ const processFile = async (filePath: string, userId: UUID) => {
 };
 
 processFile(workerData.filePath, workerData.userId)
-  .then(() => {
+  .then((results) => {
     parentPort.postMessage('File processing succeeded.');
+    parentPort.postMessage(
+      'Errored results: ' +
+        JSON.stringify(results.filter((a) => a.action === 'error').map((a) => a.reason)),
+    );
   })
   .catch((err) => {
     parentPort.postMessage('Worked thread failed with message: ' + err.message);

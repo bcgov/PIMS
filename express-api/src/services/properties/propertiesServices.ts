@@ -5,7 +5,7 @@ import { Parcel } from '@/typeorm/Entities/Parcel';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
 import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
 import logger from '@/utilities/winstonLogger';
-import { ILike, In } from 'typeorm';
+import { ILike, In, QueryRunner } from 'typeorm';
 import xlsx, { WorkSheet } from 'xlsx';
 import { ParcelFiscal } from '@/typeorm/Entities/ParcelFiscal';
 import { ParcelEvaluation } from '@/typeorm/Entities/ParcelEvaluation';
@@ -14,6 +14,8 @@ import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
 import { BuildingConstructionType } from '@/typeorm/Entities/BuildingConstructionType';
 import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUse';
 import { UUID } from 'crypto';
+import { Agency } from '@/typeorm/Entities/Agency';
+import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 
 const propertiesFuzzySearch = async (keyword: string, limit?: number) => {
   const parcels = await AppDataSource.getRepository(Parcel)
@@ -111,6 +113,179 @@ const numberOrNull = (value: any) => {
   if (value == '' || value == null) return null;
   return typeof value === 'number' ? value : Number(value.replace?.(/-/g, ''));
 };
+const getOrCreateAgency = (row: Record<string, any>, agencies: Agency[]) => {
+  const agencyCode = row.AgencyCode;
+  const agency = agencies.find((a) => a.Code == agencyCode);
+  return agency;
+};
+const compareWithoutCase = (str1: string, str2: string) => {
+  if (str1.localeCompare(str2, 'en', { sensitivity: 'base' }) == 0) return true;
+  else return false;
+};
+const makeParcelUpsertObject = async (
+  row: Record<string, any>,
+  userId: UUID,
+  lookups: Lookups,
+  queryRunner: QueryRunner,
+  existentParcel: Parcel = null,
+) => {
+  if (existentParcel) {
+    const evaluations = await queryRunner.manager.find(ParcelEvaluation, {
+      where: { ParcelId: existentParcel.Id },
+    });
+    const fiscals = await queryRunner.manager.find(ParcelFiscal, {
+      where: { ParcelId: existentParcel.Id },
+    });
+    existentParcel.Evaluations = evaluations;
+    existentParcel.Fiscals = fiscals;
+  }
+  const currRowEvaluations: Array<Partial<ParcelEvaluation>> = [];
+  const currRowFiscals: Array<Partial<ParcelFiscal>> = [];
+  if (row.NetBook && !existentParcel?.Fiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
+    currRowFiscals.push({
+      Value: row.NetBook,
+      FiscalKeyId: 0,
+      FiscalYear: row.FiscalYear ?? 2024,
+      CreatedById: userId,
+      CreatedOn: new Date(),
+    });
+  }
+  if (row.Assessed && !existentParcel?.Evaluations.some((a) => a.Year == row.EvaluationYear)) {
+    currRowEvaluations.push({
+      Value: row.Assessed,
+      EvaluationKeyId: 0,
+      Year: row.AssessedYear ?? 2024, //Change to EvaluationYear later.
+      CreatedById: userId,
+      CreatedOn: new Date(),
+    });
+  }
+
+  let classificationId: number = null;
+  if (compareWithoutCase(String(row.Status), 'Active')) {
+    classificationId = lookups.classifications.find((a) =>
+      compareWithoutCase(row.Classification, a.Name),
+    )?.Id;
+    if (classificationId == null)
+      throw new Error(`Classification "${row.Classification}" is not supported.`);
+  } else {
+    classificationId = lookups.classifications.find((a) => a.Name === 'Disposed')?.Id;
+    if (classificationId == null) throw new Error(`Unable to classify this parcel.`);
+  }
+
+  let adminAreaId = null;
+  if (row.City)
+    adminAreaId = lookups.adminAreas.find((a) => compareWithoutCase(a.Name, row.City))?.Id;
+  else if (row.AdministrativeArea)
+    adminAreaId = lookups.adminAreas.find((a) =>
+      compareWithoutCase(a.Name, row.AdministrativeArea),
+    )?.Id;
+  if (adminAreaId == null) {
+    throw new Error(
+      `Could not determine administrative area for ${row.City ?? row.AdministrativeArea}. Please provide a valid name in column AdministrativeArea or City.`,
+    );
+  }
+
+  return {
+    Id: existentParcel?.Id,
+    AgencyId: getOrCreateAgency(row, lookups.agencies).Id,
+    PID: numberOrNull(row.PID),
+    PIN: numberOrNull(row.PIN),
+    ClassificationId: classificationId,
+    Name: row.Name,
+    CreatedById: userId,
+    CreatedOn: new Date(),
+    Location: {
+      x: row.Longitude,
+      y: row.Latitude,
+    },
+    Address1: row.Address,
+    AdministrativeAreaId: adminAreaId,
+    IsSensitive: false,
+    IsVisibleToOtherAgencies: true,
+    PropertyTypeId: 0,
+    Description: row.Description,
+    LandLegalDescription: row.LandLegalDescription,
+    Evaluations: currRowEvaluations,
+    Fiscals: currRowFiscals,
+  };
+};
+
+const makeBuildingUpsertObject = async (
+  row: Record<string, any>,
+  userId: UUID,
+  lookups: Lookups,
+  queryRunner: QueryRunner,
+  existentBuilding: Building = null,
+) => {
+  const classificationId = lookups.classifications.find((a) => a.Name === row.Classification)?.Id;
+  if (existentBuilding) {
+    const evaluations = await queryRunner.manager.find(BuildingEvaluation, {
+      where: { BuildingId: existentBuilding.Id },
+    });
+    const fiscals = await queryRunner.manager.find(BuildingFiscal, {
+      where: { BuildingId: existentBuilding.Id },
+    });
+    existentBuilding.Evaluations = evaluations;
+    existentBuilding.Fiscals = fiscals;
+  }
+  const currRowEvaluations: Array<Partial<BuildingEvaluation>> = [];
+  const currRowFiscals: Array<Partial<BuildingFiscal>> = [];
+  if (row.NetBook && !existentBuilding?.Fiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
+    currRowFiscals.push({
+      Value: row.NetBook,
+      FiscalKeyId: 0,
+      FiscalYear: row.FiscalYear,
+      CreatedById: userId,
+      CreatedOn: new Date(),
+    });
+  }
+  if (row.Assessed && !existentBuilding?.Evaluations.some((a) => a.Year == row.EvaluationYear)) {
+    currRowEvaluations.push({
+      Value: row.Assessed,
+      EvaluationKeyId: 0,
+      Year: row.AssessedYear, //Change to EvaluationYear later.
+      CreatedById: userId,
+      CreatedOn: new Date(),
+    });
+  }
+  return {
+    Id: existentBuilding?.Id,
+    PID: numberOrNull(row.PID),
+    PIN: numberOrNull(row.PIN),
+    ClassificationId: classificationId,
+    Name: generateBuildingName(row.Name, row.Description, row.LocalId),
+    CreatedById: userId,
+    CreatedOn: new Date(),
+    Location: {
+      x: row.Longitude,
+      y: row.Latitude,
+    },
+    AdministrativeAreaId: 6,
+    IsSensitive: false,
+    IsVisibleToOtherAgencies: true,
+    PropertyTypeId: 0,
+    BuildingPredominateUseId: lookups.predominateUses[0].Id,
+    BuildingConstructionTypeId: lookups.constructionTypes[0].Id,
+    RentableArea: 0,
+    BuildingTenancy: '123',
+    BuildingFloorCount: 0,
+    TotalArea: 0,
+    Evaluations: currRowEvaluations,
+    Fiscals: currRowFiscals,
+  };
+};
+
+type Lookups = {
+  classifications: PropertyClassification[];
+  constructionTypes: BuildingConstructionType[];
+  predominateUses: BuildingPredominateUse[];
+  agencies: Agency[];
+  adminAreas: AdministrativeArea[];
+};
+type BulkUploadRowResult = {
+  action: 'inserted' | 'updated' | 'ignored' | 'error';
+  reason?: string;
+};
 const importPropertiesAsJSON = async (worksheet: WorkSheet, userId: UUID) => {
   const sheetObj: Record<string, any>[] = xlsx.utils.sheet_to_json(worksheet);
   const classifications = await AppDataSource.getRepository(PropertyClassification).find({
@@ -119,10 +294,23 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, userId: UUID) => {
   const constructionTypes = await AppDataSource.getRepository(BuildingConstructionType).find({
     select: { Name: true, Id: true },
   });
-  const buildingPredominate = await AppDataSource.getRepository(BuildingPredominateUse).find({
+  const predominateUses = await AppDataSource.getRepository(BuildingPredominateUse).find({
     select: { Name: true, Id: true },
   });
-  const results = { inserted: 0, updated: 0, failed: 0, ignored: 0 };
+  const agencies = await AppDataSource.getRepository(Agency).find({
+    select: { Name: true, Id: true, Code: true },
+  });
+  const adminAreas = await AppDataSource.getRepository(AdministrativeArea).find({
+    select: { Name: true, Id: true },
+  });
+  const lookups: Lookups = {
+    classifications,
+    constructionTypes,
+    predominateUses,
+    agencies,
+    adminAreas,
+  };
+  const results: Array<BulkUploadRowResult> = [];
   let queuedParcels = [];
   let queuedBuildings = [];
   const queryRunner = AppDataSource.createQueryRunner();
@@ -131,134 +319,46 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, userId: UUID) => {
     for (let rowNum = 0; rowNum < sheetObj.length; rowNum++) {
       const row = sheetObj[rowNum];
       if (row.PropertyType === undefined) {
-        results.ignored++;
+        results.push({ action: 'ignored', reason: 'Must specify PropertyType for this row.' });
+        continue;
       }
-
       if (row.PropertyType === 'Land') {
-        const classificationId = classifications.find((a) => a.Name === row.Classification)?.Id;
         const existentParcel = await queryRunner.manager.findOne(Parcel, {
           where: { PID: numberOrNull(row.PID) },
         });
-        if (existentParcel) {
-          const evaluations = await queryRunner.manager.find(ParcelEvaluation, {
-            where: { ParcelId: existentParcel.Id },
-          });
-          const fiscals = await queryRunner.manager.find(ParcelFiscal, {
-            where: { ParcelId: existentParcel.Id },
-          });
-          existentParcel.Evaluations = evaluations;
-          existentParcel.Fiscals = fiscals;
+        try {
+          const parcelToUpsert = await makeParcelUpsertObject(
+            row,
+            userId,
+            lookups,
+            queryRunner,
+            existentParcel,
+          );
+          queuedParcels.push(parcelToUpsert);
+          results.push({ action: existentParcel ? 'updated' : 'inserted' });
+        } catch (e) {
+          results.push({ action: 'error', reason: e.message });
         }
-
-        existentParcel ? results.updated++ : results.inserted++;
-        const currRowEvaluations: Array<Partial<ParcelEvaluation>> = [];
-        const currRowFiscals: Array<Partial<ParcelFiscal>> = [];
-        if (row.NetBook && !existentParcel?.Fiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
-          currRowFiscals.push({
-            Value: row.NetBook,
-            FiscalKeyId: 0,
-            FiscalYear: row.FiscalYear ?? 2024,
-            CreatedById: userId,
-            CreatedOn: new Date(),
-          });
-        }
-        if (
-          row.Assessed &&
-          !existentParcel?.Evaluations.some((a) => a.Year == row.EvaluationYear)
-        ) {
-          currRowEvaluations.push({
-            Value: row.Assessed,
-            EvaluationKeyId: 0,
-            Year: row.AssessedYear ?? 2024, //Change to EvaluationYear later.
-            CreatedById: userId,
-            CreatedOn: new Date(),
-          });
-        }
-        queuedParcels.push({
-          Id: existentParcel?.Id,
-          PID: numberOrNull(row.PID),
-          PIN: numberOrNull(row.PIN),
-          ClassificationId: classificationId,
-          Name: row.Name,
-          CreatedById: userId,
-          CreatedOn: new Date(),
-          Location: {
-            x: row.Longitude,
-            y: row.Latitude,
-          },
-          AdministrativeAreaId: 6,
-          IsSensitive: false,
-          IsVisibleToOtherAgencies: true,
-          PropertyTypeId: 0,
-          Evaluations: currRowEvaluations,
-          Fiscals: currRowFiscals,
-        });
       } else if (row.PropertyType === 'Building') {
         const generatedName = generateBuildingName(row.Name, row.Description, row.LocalId);
-        const classificationId = classifications.find((a) => a.Name === row.Classification)?.Id;
         const existentBuilding = await queryRunner.manager.findOne(Building, {
           where: { PID: numberOrNull(row.PID), Name: generatedName },
         });
-        if (existentBuilding) {
-          const evaluations = await queryRunner.manager.find(BuildingEvaluation, {
-            where: { BuildingId: existentBuilding.Id },
-          });
-          const fiscals = await queryRunner.manager.find(BuildingFiscal, {
-            where: { BuildingId: existentBuilding.Id },
-          });
-          existentBuilding.Evaluations = evaluations;
-          existentBuilding.Fiscals = fiscals;
+        try {
+          const buildingForUpsert = await makeBuildingUpsertObject(
+            row,
+            userId,
+            lookups,
+            queryRunner,
+            existentBuilding,
+          );
+          queuedBuildings.push(buildingForUpsert);
+          results.push({ action: existentBuilding ? 'updated' : 'inserted' });
+        } catch (e) {
+          results.push({ action: 'error', reason: e.message });
         }
-        existentBuilding ? results.updated++ : results.inserted++;
-        const currRowEvaluations: Array<Partial<BuildingEvaluation>> = [];
-        const currRowFiscals: Array<Partial<BuildingFiscal>> = [];
-        if (row.NetBook && !existentBuilding?.Fiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
-          currRowFiscals.push({
-            Value: row.NetBook,
-            FiscalKeyId: 0,
-            FiscalYear: row.FiscalYear,
-            CreatedById: userId,
-            CreatedOn: new Date(),
-          });
-        }
-        if (
-          row.Assessed &&
-          !existentBuilding?.Evaluations.some((a) => a.Year == row.EvaluationYear)
-        ) {
-          currRowEvaluations.push({
-            Value: row.Assessed,
-            EvaluationKeyId: 0,
-            Year: row.AssessedYear, //Change to EvaluationYear later.
-            CreatedById: userId,
-            CreatedOn: new Date(),
-          });
-        }
-        queuedBuildings.push({
-          Id: existentBuilding?.Id,
-          PID: numberOrNull(row.PID),
-          PIN: numberOrNull(row.PIN),
-          ClassificationId: classificationId,
-          Name: row.Name,
-          CreatedById: userId,
-          CreatedOn: new Date(),
-          Location: {
-            x: row.Longitude,
-            y: row.Latitude,
-          },
-          AdministrativeAreaId: 6,
-          IsSensitive: false,
-          IsVisibleToOtherAgencies: true,
-          PropertyTypeId: 0,
-          BuildingPredominateUseId: buildingPredominate[0].Id,
-          BuildingConstructionTypeId: constructionTypes[0].Id,
-          RentableArea: 0,
-          BuildingTenancy: '123',
-          BuildingFloorCount: 0,
-          TotalArea: 0,
-          Evaluations: currRowEvaluations,
-          Fiscals: currRowFiscals,
-        });
       }
+      // Little benefit to batching these when mass updating, but appreciable benefits when batching inserts.
       if (queuedParcels.length >= BATCH_SIZE) {
         await queryRunner.manager.save(Parcel, queuedParcels);
         queuedParcels = [];
@@ -268,6 +368,7 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, userId: UUID) => {
         queuedBuildings = [];
       }
     }
+    //Make sure to flush any remaining entries from the queue before exit.
     if (queuedParcels.length) {
       await queryRunner.manager.save(Parcel, queuedParcels);
     }
@@ -277,7 +378,6 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, userId: UUID) => {
   } catch (e) {
     logger.warn(e.message);
     logger.warn(e.stack);
-    results.failed++;
   } finally {
     await queryRunner.rollbackTransaction();
     await queryRunner.release();
