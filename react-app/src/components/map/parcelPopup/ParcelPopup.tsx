@@ -15,7 +15,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { LatLng } from 'leaflet';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Popup, useMap, useMapEvents } from 'react-leaflet';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
@@ -25,6 +25,9 @@ import { LtsaOrder } from '@/hooks/api/useLtsaApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { dateFormatter, formatMoney } from '@/utilities/formatters';
 import { BCAssessmentProperties } from '@/hooks/api/useBCAssessmentApi';
+import { FeatureCollection, Geometry } from 'geojson';
+import { AuthContext } from '@/contexts/authContext';
+import { Roles } from '@/constants/roles';
 
 interface ParcelPopupProps {
   size?: 'small' | 'large';
@@ -47,13 +50,19 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
   const [tabValue, setTabValue] = useState<string>('0');
   const { size = 'large', scrollOnClick } = props;
 
+  const { keycloak } = useContext(AuthContext);
+
   const {
     data: ltsaData,
     refreshData: refreshLtsa,
     isLoading: ltsaLoading,
   } = useDataLoader(() => api.ltsa.getLtsabyPid(parcelData?.at(parcelIndex)?.PID_NUMBER));
 
-  const { data: bcAssessmentData, refreshData: refreshBCA } = useDataLoader(() =>
+  const {
+    data: bcAssessmentData,
+    refreshData: refreshBCA,
+    isLoading: bcaLoading,
+  } = useDataLoader(() =>
     api.bcAssessment.getBCAssessmentByLocation(clickPosition.lng, clickPosition.lat),
   );
 
@@ -68,7 +77,9 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
   useEffect(() => {
     if (parcelData && clickPosition) {
       refreshLtsa();
-      refreshBCA();
+      if (keycloak.hasRoles([Roles.ADMIN])) {
+        refreshBCA();
+      }
     }
   }, [parcelData, parcelIndex]);
 
@@ -147,7 +158,7 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
                   >
                     <Tab label="Parcel Layer" value="0" />
                     <Tab label="LTSA" value="1" />
-                    <Tab label="BCA" value="2" />
+                    {keycloak.hasRoles([Roles.ADMIN]) ? <Tab label="BCA" value="2" /> : <></>}
                   </TabList>
 
                   <TabPanel value="0" sx={tabPanelStyle}>
@@ -157,14 +168,7 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
                     <LtsaDetails ltsaData={ltsaData} isLoading={ltsaLoading} />
                   </TabPanel>
                   <TabPanel value="2" sx={tabPanelStyle}>
-                    <BCAssessmentDetails
-                      // TODO: Get more than just the first entry for a parcel
-                      property={
-                        bcAssessmentData?.features.length
-                          ? bcAssessmentData?.features.at(0).properties
-                          : ({} as BCAssessmentProperties)
-                      }
-                    />
+                    <BCAssessmentDetails data={bcAssessmentData} isLoading={bcaLoading} />
                   </TabPanel>
                 </TabContext>
               </Box>
@@ -336,12 +340,13 @@ interface LtsaDetailsProps {
 const LtsaDetails = (props: LtsaDetailsProps) => {
   const { ltsaData, isLoading } = props;
 
-  if (isLoading)
+  if (isLoading) {
     return (
       <Box display="flex" justifyContent={'center'} paddingTop={'2em'} minWidth={POPUP_WIDTH}>
         <CircularProgress />
       </Box>
     );
+  }
 
   return (
     <Box minWidth={POPUP_WIDTH} height={'300px'} overflow={'scroll'}>
@@ -491,46 +496,62 @@ const LtsaDetails = (props: LtsaDetailsProps) => {
 };
 
 interface BCAssessmentDetailsProps {
-  property: BCAssessmentProperties;
+  data: FeatureCollection<Geometry, BCAssessmentProperties>;
+  isLoading: boolean;
 }
 
 const BCAssessmentDetails = (props: BCAssessmentDetailsProps) => {
-  const { property } = props;
+  const { data, isLoading } = props;
+
+  if (isLoading) {
+    return (
+      <Box display="flex" justifyContent={'center'} paddingTop={'2em'} minWidth={POPUP_WIDTH}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  // TODO: Handle more than one property.
+  const property = data?.features.at(0).properties;
   const leftColumnSize = 5;
   return (
     <Box minWidth={POPUP_WIDTH} height={'300px'}>
-      <Grid container gap={1}>
-        <GridColumnPair
-          leftValue={'Folio ID'}
-          rightValue={property.FOLIO_ID}
-          leftSize={leftColumnSize}
-        />
-        <GridColumnPair
-          leftValue={'Roll Number'}
-          rightValue={property.ROLL_NUMBER}
-          leftSize={leftColumnSize}
-        />
-        <GridColumnPair
-          leftValue={'Net Improvement Value'}
-          rightValue={property.GEN_NET_IMPROVEMENT_VALUE}
-          leftSize={leftColumnSize}
-        />
-        <GridColumnPair
-          leftValue={'Net Land Value'}
-          rightValue={property.GEN_NET_LAND_VALUE}
-          leftSize={leftColumnSize}
-        />
-        <GridColumnPair
-          leftValue={'Gross Improvement Value'}
-          rightValue={property.GEN_GROSS_IMPROVEMENT_VALUE}
-          leftSize={leftColumnSize}
-        />
-        <GridColumnPair
-          leftValue={'Gross Land Value'}
-          rightValue={property.GEN_GROSS_LAND_VALUE}
-          leftSize={leftColumnSize}
-        />
-      </Grid>
+      {data && data.features.length ? (
+        <Grid container gap={1}>
+          <GridColumnPair
+            leftValue={'Folio ID'}
+            rightValue={property.FOLIO_ID}
+            leftSize={leftColumnSize}
+          />
+          <GridColumnPair
+            leftValue={'Roll Number'}
+            rightValue={property.ROLL_NUMBER}
+            leftSize={leftColumnSize}
+          />
+          <GridColumnPair
+            leftValue={'Net Improvement Value'}
+            rightValue={property.GEN_NET_IMPROVEMENT_VALUE}
+            leftSize={leftColumnSize}
+          />
+          <GridColumnPair
+            leftValue={'Net Land Value'}
+            rightValue={property.GEN_NET_LAND_VALUE}
+            leftSize={leftColumnSize}
+          />
+          <GridColumnPair
+            leftValue={'Gross Improvement Value'}
+            rightValue={property.GEN_GROSS_IMPROVEMENT_VALUE}
+            leftSize={leftColumnSize}
+          />
+          <GridColumnPair
+            leftValue={'Gross Land Value'}
+            rightValue={property.GEN_GROSS_LAND_VALUE}
+            leftSize={leftColumnSize}
+          />
+        </Grid>
+      ) : (
+        <Typography variant="body2">No BC Assessment information available.</Typography>
+      )}
     </Box>
   );
 };
