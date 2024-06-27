@@ -49,6 +49,12 @@ jest.mock('@/services/properties/propertiesServices', () => ({
   getPropertiesUnion: () => _getPropertyUnion(),
 }));
 
+const _getAgencies = jest.fn().mockImplementation(async () => [1, 2, 3]);
+
+jest.mock('@/services/users/usersServices', () => ({
+  getAgencies: () => _getAgencies(),
+}));
+
 describe('UNIT - Properties', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
