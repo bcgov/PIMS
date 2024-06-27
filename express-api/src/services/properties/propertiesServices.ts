@@ -118,6 +118,60 @@ const getOrCreateAgency = (row: Record<string, any>, agencies: Agency[]) => {
   const agency = agencies.find((a) => a.Code == agencyCode);
   return agency;
 };
+const getClassificationOrThrow = (
+  row: Record<string, any>,
+  classifications: PropertyClassification[],
+) => {
+  let classificationId: number = null;
+  if (compareWithoutCase(String(row.Status), 'Active')) {
+    classificationId = classifications.find((a) =>
+      compareWithoutCase(row.Classification, a.Name),
+    )?.Id;
+    if (classificationId == null)
+      throw new Error(`Classification "${row.Classification}" is not supported.`);
+  } else {
+    classificationId = classifications.find((a) => a.Name === 'Disposed')?.Id;
+    if (classificationId == null) throw new Error(`Unable to classify this parcel.`);
+  }
+  return classificationId;
+};
+const getAdministrativeAreaOrThrow = (
+  row: Record<string, any>,
+  adminAreas: AdministrativeArea[],
+) => {
+  if (row.City) return adminAreas.find((a) => compareWithoutCase(a.Name, row.City))?.Id;
+  else if (row.AdministrativeArea)
+    return adminAreas.find((a) => compareWithoutCase(a.Name, row.AdministrativeArea))?.Id;
+  else {
+    throw new Error(
+      `Could not determine administrative area for ${row.City ?? row.AdministrativeArea ?? 'Undefined'}. Please provide a valid name in column AdministrativeArea or City.`,
+    );
+  }
+};
+const getBuildingPredominateUseOrThrow = (
+  row: Record<string, any>,
+  predominateUses: BuildingPredominateUse[],
+) => {
+  if (row.PredominateUse) {
+    return predominateUses.find((a) => compareWithoutCase(row.PredominateUse, a.Name))?.Id;
+  } else {
+    throw new Error(
+      `Could not determine predominate use for ${row.PredominateUse ?? 'Undefined'}. Please provide a valid predominate use in column PredominateUse`,
+    );
+  }
+};
+const getBuildingConstructionTypeOrThrow = (
+  row: Record<string, any>,
+  constructionTypes: BuildingConstructionType[],
+) => {
+  if (row.ConstructionType) {
+    return constructionTypes.find((a) => compareWithoutCase(row.ConstructionType, a.Name))?.Id;
+  } else {
+    throw new Error(
+      `Could not determine construction type for ${row.ConstructionType ?? 'Undefined'}. Please provide a valid construction type in column ConstructionType.`,
+    );
+  }
+};
 const compareWithoutCase = (str1: string, str2: string) => {
   if (str1.localeCompare(str2, 'en', { sensitivity: 'base' }) == 0) return true;
   else return false;
@@ -145,7 +199,7 @@ const makeParcelUpsertObject = async (
     currRowFiscals.push({
       Value: row.NetBook,
       FiscalKeyId: 0,
-      FiscalYear: row.FiscalYear ?? 2024,
+      FiscalYear: row.FiscalYear,
       CreatedById: userId,
       CreatedOn: new Date(),
     });
@@ -154,36 +208,15 @@ const makeParcelUpsertObject = async (
     currRowEvaluations.push({
       Value: row.Assessed,
       EvaluationKeyId: 0,
-      Year: row.AssessedYear ?? 2024, //Change to EvaluationYear later.
+      Year: row.AssessedYear,
       CreatedById: userId,
       CreatedOn: new Date(),
     });
   }
 
-  let classificationId: number = null;
-  if (compareWithoutCase(String(row.Status), 'Active')) {
-    classificationId = lookups.classifications.find((a) =>
-      compareWithoutCase(row.Classification, a.Name),
-    )?.Id;
-    if (classificationId == null)
-      throw new Error(`Classification "${row.Classification}" is not supported.`);
-  } else {
-    classificationId = lookups.classifications.find((a) => a.Name === 'Disposed')?.Id;
-    if (classificationId == null) throw new Error(`Unable to classify this parcel.`);
-  }
+  const classificationId: number = getClassificationOrThrow(row, lookups.classifications);
 
-  let adminAreaId = null;
-  if (row.City)
-    adminAreaId = lookups.adminAreas.find((a) => compareWithoutCase(a.Name, row.City))?.Id;
-  else if (row.AdministrativeArea)
-    adminAreaId = lookups.adminAreas.find((a) =>
-      compareWithoutCase(a.Name, row.AdministrativeArea),
-    )?.Id;
-  if (adminAreaId == null) {
-    throw new Error(
-      `Could not determine administrative area for ${row.City ?? row.AdministrativeArea}. Please provide a valid name in column AdministrativeArea or City.`,
-    );
-  }
+  const adminAreaId: number = getAdministrativeAreaOrThrow(row, lookups.adminAreas);
 
   return {
     Id: existentParcel?.Id,
@@ -192,8 +225,10 @@ const makeParcelUpsertObject = async (
     PIN: numberOrNull(row.PIN),
     ClassificationId: classificationId,
     Name: row.Name,
-    CreatedById: userId,
-    CreatedOn: new Date(),
+    CreatedById: existentParcel ? undefined : userId,
+    UpdatedById: existentParcel ? userId : undefined,
+    UpdatedOn: existentParcel ? new Date() : undefined,
+    CreatedOn: existentParcel ? undefined : new Date(),
     Location: {
       x: row.Longitude,
       y: row.Latitude,
@@ -217,7 +252,6 @@ const makeBuildingUpsertObject = async (
   queryRunner: QueryRunner,
   existentBuilding: Building = null,
 ) => {
-  const classificationId = lookups.classifications.find((a) => a.Name === row.Classification)?.Id;
   if (existentBuilding) {
     const evaluations = await queryRunner.manager.find(BuildingEvaluation, {
       where: { BuildingId: existentBuilding.Id },
@@ -248,24 +282,32 @@ const makeBuildingUpsertObject = async (
       CreatedOn: new Date(),
     });
   }
+
+  const classificationId = getClassificationOrThrow(row, lookups.classifications);
+  const constructionTypeId = getBuildingConstructionTypeOrThrow(row, lookups.constructionTypes);
+  const predominateUseId = getBuildingPredominateUseOrThrow(row, lookups.predominateUses);
+  const adminAreaId = getAdministrativeAreaOrThrow(row, lookups.adminAreas);
+
   return {
     Id: existentBuilding?.Id,
     PID: numberOrNull(row.PID),
     PIN: numberOrNull(row.PIN),
     ClassificationId: classificationId,
+    BuildingConstructionTypeId: constructionTypeId,
+    BuildingPredominateUseId: predominateUseId,
     Name: generateBuildingName(row.Name, row.Description, row.LocalId),
-    CreatedById: userId,
-    CreatedOn: new Date(),
+    CreatedById: existentBuilding ? undefined : userId,
+    UpdatedById: existentBuilding ? userId : undefined,
+    UpdatedOn: existentBuilding ? new Date() : undefined,
+    CreatedOn: existentBuilding ? undefined : new Date(),
     Location: {
       x: row.Longitude,
       y: row.Latitude,
     },
-    AdministrativeAreaId: 6,
+    AdministrativeAreaId: adminAreaId,
     IsSensitive: false,
     IsVisibleToOtherAgencies: true,
     PropertyTypeId: 0,
-    BuildingPredominateUseId: lookups.predominateUses[0].Id,
-    BuildingConstructionTypeId: lookups.constructionTypes[0].Id,
     RentableArea: 0,
     BuildingTenancy: '123',
     BuildingFloorCount: 0,

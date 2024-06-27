@@ -7,13 +7,13 @@ import { AppDataSource } from '@/appDataSource';
 const processFile = async (filePath: string, userId: UUID) => {
   await AppDataSource.initialize(); //Since this function is going to be called from a new process, requires a new database connection.
   try {
-    parentPort.postMessage('Database connection has been initialized');
-    const file = xlsx.readFile(filePath);
+    parentPort.postMessage('Database connection for worker thread has been initialized');
+    const file = xlsx.readFile(filePath); //It's better to do the read here rather than the parent process because any arguments passed to this function are copied rather than referenced.
     const sheetName = file.SheetNames[0];
     const worksheet = file.Sheets[sheetName];
 
-    const results = await propertyServices.importPropertiesAsJSON(worksheet, userId); // Note that this return still works with finally as long as return is not called from finally block.
-    return results;
+    const results = await propertyServices.importPropertiesAsJSON(worksheet, userId);
+    return results; // Note that this return still works with finally as long as return is not called from finally block.
   } catch (e) {
     parentPort.postMessage('Aborting file upload: ' + e.message);
   } finally {
@@ -25,8 +25,7 @@ processFile(workerData.filePath, workerData.userId)
   .then((results) => {
     parentPort.postMessage('File processing succeeded.');
     parentPort.postMessage(
-      'Errored results: ' +
-        JSON.stringify(results.filter((a) => a.action === 'error').map((a) => a.reason)),
+      `Upload results: ${results.filter((x) => x.action === 'inserted').length} inserted, ${results.filter((x) => x.action === 'updated').length} updated, ${results.filter((x) => x.action === 'error').length} errored, ${results.filter((x) => x.action === 'ignored').length} ignored`,
     );
   })
   .catch((err) => {
