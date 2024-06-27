@@ -3,6 +3,7 @@ import { formatNumber, pidFormatter } from '@/utilities/formatters';
 import { FilterList, ArrowCircleLeft, ArrowCircleRight } from '@mui/icons-material';
 import { Box, Paper, Grid, IconButton, Typography, Icon, useTheme } from '@mui/material';
 import sideBarIcon from '@/assets/icons/SidebarLeft-Linear.svg';
+import sideBarClosedIcon from '@/assets/icons/SidebarLeft-Linear-White.svg';
 import { Map } from 'leaflet';
 import React, {
   CSSProperties,
@@ -184,24 +185,19 @@ const MapSidebar = (props: MapSidebarProps) => {
         onClick={() => setSidebarOpen(true)}
       >
         {/* All this just to get the SVG white */}
-        <div
+        <img
           style={{
             margin: 'auto',
             transform: `rotate(${!sidebarOpen ? '3.142rad' : '0'})`,
             transition: 'ease-in-out 0.5s',
-            maskImage: `url(${sideBarIcon})`,
-            WebkitMaskImage: `url(${sideBarIcon})`,
-            maskSize: '100%',
-            WebkitMaskSize: 'cover',
-            maskRepeat: 'no-repeat',
-            WebkitMaskRepeat: 'no-repeat',
-            maskPosition: 'center',
             width: '40%',
             height: '40%',
-            backgroundColor: 'white',
             borderRadius: '100%',
           }}
-        ></div>
+          height={18}
+          width={18}
+          src={sideBarClosedIcon}
+        />
       </Box>
 
       {/* Filter Container */}

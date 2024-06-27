@@ -1,13 +1,13 @@
 // CONFIG FILE for specifying options in the NPM Dependency Report workflow.
 {
   // Check package.json files for dependency updates.
-  packageJsonPaths: ["frontend", "react-app", "express-api"],
+  packageJsonPaths: ["react-app", "express-api"],
 
   // Do not report on the following packages.
   ignorePackages: {
     // Path to package.json file.
-    "src/frontend": [], // Add names of packages such as ["typescript"].
-    "src/backend": [],
+    "src/react-app": [], // Add names of packages such as ["typescript"].
+    "src/express-api": [],
   },
 
   // The env variables below are used to update the create_tickets.py script

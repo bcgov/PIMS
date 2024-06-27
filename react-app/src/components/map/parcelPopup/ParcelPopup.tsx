@@ -107,6 +107,8 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
 
   const tabPanelStyle: SxProps = {
     padding: '1em 0 0 0',
+    height: '100%',
+    overflow: 'scroll',
   };
 
   if (size === 'large')
@@ -128,7 +130,7 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
                 <></>
               )}
 
-              <Box minWidth={'300px'}>
+              <Box minWidth={'300px'} id="popup-right" display={'flex'} flexDirection={'column'}>
                 {parcelData.at(parcelIndex).PID_FORMATTED ? (
                   <Typography variant="h4">{`PID: ${parcelData.at(parcelIndex).PID_FORMATTED}`}</Typography>
                 ) : (
