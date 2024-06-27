@@ -16,6 +16,7 @@ import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUs
 import { UUID } from 'crypto';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
+import { ImportResult } from '@/typeorm/Entities/ImportResult';
 
 const propertiesFuzzySearch = async (keyword: string, limit?: number) => {
   const parcels = await AppDataSource.getRepository(Parcel)
@@ -324,11 +325,13 @@ type Lookups = {
   agencies: Agency[];
   adminAreas: AdministrativeArea[];
 };
+
 type BulkUploadRowResult = {
   action: 'inserted' | 'updated' | 'ignored' | 'error';
   reason?: string;
 };
-const importPropertiesAsJSON = async (worksheet: WorkSheet, userId: UUID) => {
+
+const importPropertiesAsJSON = async (worksheet: WorkSheet, userId: UUID, resultId: number) => {
   const sheetObj: Record<string, any>[] = xlsx.utils.sheet_to_json(worksheet);
   const classifications = await AppDataSource.getRepository(PropertyClassification).find({
     select: { Name: true, Id: true },
@@ -408,6 +411,12 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, userId: UUID) => {
       if (queuedBuildings.length >= BATCH_SIZE) {
         await queryRunner.manager.save(Building, queuedBuildings);
         queuedBuildings = [];
+      }
+      if (rowNum % 100) {
+        queryRunner.manager.save(ImportResult, {
+          Id: resultId,
+          CompletionPercentage: rowNum / sheetObj.length,
+        });
       }
     }
     //Make sure to flush any remaining entries from the queue before exit.
