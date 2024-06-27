@@ -2,10 +2,10 @@ const https = require("https");
 const path = require("path");
 
 const LOCAL_TEST = false;
-const TEST_PACKAGEJSON_PATHS = ["src/frontend", "src/backend"];
+const TEST_PACKAGEJSON_PATHS = ["src/react-app", "src/express-api"];
 const TEST_IGNORE_PACKAGES = {
-  "src/frontend": [],
-  "src/backend": [],
+  "src/react-app": [],
+  "src/express-api": [],
 };
 
 /**
