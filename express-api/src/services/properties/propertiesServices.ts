@@ -104,6 +104,11 @@ const collectFindOptions = (filter: PropertyUnionFilter) => {
     options.push(constructFindOptionFromQuery('AdministrativeArea', filter.administrativeArea));
   if (filter.propertyType)
     options.push(constructFindOptionFromQuery('PropertyType', filter.propertyType));
+  if (filter.agencyId && filter.agencyId.length > 0) {
+    filter.agencyId.forEach((id) => {
+      options.push(constructFindOptionFromQuery('AgencyId', `in,${String(id)}`));
+    });
+  }
   return options;
 };
 

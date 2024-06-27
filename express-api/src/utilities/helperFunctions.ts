@@ -1,4 +1,4 @@
-import { Equal, FindOptionsWhere, IsNull, Not, Raw } from 'typeorm';
+import { Equal, FindOptionsWhere, In, IsNull, Not, Raw } from 'typeorm';
 
 /**
  * Special case for PID/PIN matching, as general text comparison is not sufficient.
@@ -69,6 +69,9 @@ export const constructFindOptionFromQuery = <T>(
     case 'is':
       internalMatcher = (str: string) => TimestampComparisonWrapper(str, '=');
       break;
+    case 'in':
+      // Assuming value is an array of numbers
+      return { [column]: In(value.split(',').map(Number)) } as FindOptionsWhere<T>;
     case 'not':
       internalMatcher = (str: string) => TimestampComparisonWrapper(str, '!=');
       break;
