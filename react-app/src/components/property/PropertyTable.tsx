@@ -166,7 +166,7 @@ const PropertyTable = (props: IPropertyTable) => {
         ref.current.setFilterModel({ items: [] });
         break;
       case 'Building':
-      case 'Land':
+      case 'Parcel':
         ref.current.setFilterModel({
           items: [{ value, operator: 'contains', field: 'PropertyType' }],
         });
@@ -311,8 +311,8 @@ const PropertyTable = (props: IPropertyTable) => {
             <CustomMenuItem key={'Building'} value={'Building'}>
               Building
             </CustomMenuItem>,
-            <CustomMenuItem key={'Land'} value={'Land'}>
-              Land
+            <CustomMenuItem key={'Parcel'} value={'Parcel'}>
+              Parcel
             </CustomMenuItem>,
           ]}
           tableHeader={'Properties Overview'}
