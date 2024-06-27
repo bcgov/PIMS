@@ -1,19 +1,7 @@
-import { GridColumnPair, GridSubtitle } from '@/components/common/GridHelpers';
-import MetresSquared from '@/components/text/MetresSquared';
+import { GridColumnPair } from '@/components/common/GridHelpers';
 import { ParcelData } from '@/hooks/api/useParcelLayerApi';
 import usePimsApi from '@/hooks/usePimsApi';
-import {
-  Box,
-  Grid,
-  IconButton,
-  List,
-  ListItem,
-  Typography,
-  useTheme,
-  Tab,
-  SxProps,
-  CircularProgress,
-} from '@mui/material';
+import { Box, Grid, IconButton, Typography, Tab, SxProps } from '@mui/material';
 import { LatLng } from 'leaflet';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Popup, useMap, useMapEvents } from 'react-leaflet';
@@ -21,13 +9,13 @@ import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrow
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import './parcelPopup.css';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { LtsaOrder } from '@/hooks/api/useLtsaApi';
 import useDataLoader from '@/hooks/useDataLoader';
-import { dateFormatter, formatMoney } from '@/utilities/formatters';
-import { BCAssessmentProperties } from '@/hooks/api/useBCAssessmentApi';
-import { FeatureCollection, Geometry } from 'geojson';
 import { AuthContext } from '@/contexts/authContext';
 import { Roles } from '@/constants/roles';
+import BCAssessmentDetails from '@/components/map/parcelPopup/BCAssessmentDetails';
+import LtsaDetails from '@/components/map/parcelPopup/LtsaDetails';
+import ParcelLayerDetails from '@/components/map/parcelPopup/ParcelLayerDeatils';
+import ParcelPopupSelect from '@/components/map/parcelPopup/ParcelPopupSelect';
 
 interface ParcelPopupProps {
   size?: 'small' | 'large';
@@ -162,13 +150,21 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
                   </TabList>
 
                   <TabPanel value="0" sx={tabPanelStyle}>
-                    <ParcelLayerDetails parcel={parcelData.at(parcelIndex)} />
+                    <ParcelLayerDetails parcel={parcelData.at(parcelIndex)} width={POPUP_WIDTH} />
                   </TabPanel>
                   <TabPanel value="1" sx={tabPanelStyle}>
-                    <LtsaDetails ltsaData={ltsaData} isLoading={ltsaLoading} />
+                    <LtsaDetails ltsaData={ltsaData} isLoading={ltsaLoading} width={POPUP_WIDTH} />
                   </TabPanel>
                   <TabPanel value="2" sx={tabPanelStyle}>
-                    <BCAssessmentDetails data={bcAssessmentData} isLoading={bcaLoading} />
+                    <BCAssessmentDetails
+                      data={
+                        bcAssessmentData && bcAssessmentData.features.length
+                          ? bcAssessmentData.features.at(0).properties
+                          : undefined
+                      }
+                      isLoading={bcaLoading}
+                      width={POPUP_WIDTH}
+                    />
                   </TabPanel>
                 </TabContext>
               </Box>
@@ -226,332 +222,5 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
     </Popup>
   ) : (
     <></>
-  );
-};
-
-interface ParcelLayerDetailsProps {
-  parcel: ParcelData;
-}
-
-/**
- * Renders the details of a parcel layer.
- *
- * @param {ParcelLayerDetailsProps} props - The props for the component.
- * @param {ParcelData} props.parcel - The parcel data to display.
- * @returns {JSX.Element} The rendered component.
- */
-const ParcelLayerDetails = (props: ParcelLayerDetailsProps) => {
-  const { parcel } = props;
-  return (
-    <Box minWidth={POPUP_WIDTH}>
-      <Grid container gap={1}>
-        {parcel ? (
-          <>
-            <GridColumnPair leftValue={'Class'} rightValue={parcel.PARCEL_CLASS} />
-            <GridColumnPair leftValue={'Plan Number'} rightValue={parcel.PLAN_NUMBER} />
-            <GridColumnPair leftValue={'Owner Type'} rightValue={parcel.OWNER_TYPE} />
-            <GridColumnPair
-              leftValue={'Municipality'}
-              rightValue={parcel.MUNICIPALITY}
-              alignment="start"
-            />
-            <GridColumnPair
-              leftValue={'Regional District'}
-              rightValue={parcel.REGIONAL_DISTRICT}
-              alignment="start"
-            />
-            <GridColumnPair
-              leftValue={'Area'}
-              rightValue={
-                <>
-                  <span>{`${parcel.FEATURE_AREA_SQM}`}</span>
-                  <MetresSquared />
-                </>
-              }
-            />
-          </>
-        ) : (
-          <Typography variant="body2">No parcel data available.</Typography>
-        )}
-      </Grid>
-    </Box>
-  );
-};
-
-interface ParcelPopupSelectProps {
-  parcelData: ParcelData[];
-  onClick?: (index: number) => void;
-  currentIndex: number;
-}
-
-/**
- * Renders a list of parcels for selection in the ParcelPopup component.
- *
- * @param {ParcelPopupSelectProps} props - The props for the ParcelPopupSelect component.
- * @param {ParcelData[]} props.parcelData - The array of parcel data to be displayed.
- * @param {function} props.onClick - The function to be called when a parcel is clicked.
- * @returns {JSX.Element} The rendered ParcelPopupSelect component.
- */
-const ParcelPopupSelect = (props: ParcelPopupSelectProps) => {
-  const theme = useTheme();
-  const { parcelData, onClick, currentIndex } = props;
-  return (
-    <Box minWidth={'200px'} marginRight={'2em'}>
-      <Typography variant="h4">Select Parcel</Typography>
-      <Typography variant="caption">(PID/PIN)</Typography>
-      <List
-        sx={{
-          overflowY: 'scroll',
-          maxHeight: '300px',
-          border: `3px solid ${theme.palette.divider}`,
-          borderRadius: '10px',
-        }}
-      >
-        {parcelData.map((parcel, index) => (
-          <ListItem
-            key={parcel.PARCEL_FABRIC_POLY_ID}
-            sx={{
-              height: '2em',
-              borderTop: `solid 1px ${theme.palette.divider}`,
-              cursor: 'pointer',
-              '&:hover': {
-                backgroundColor: theme.palette.divider,
-              },
-              backgroundColor: currentIndex === index ? theme.palette.divider : undefined,
-            }}
-            onClick={() => {
-              onClick(index);
-            }}
-          >
-            <Typography> {parcel.PID_FORMATTED ?? parcel.PIN}</Typography>
-          </ListItem>
-        ))}
-        <ListItem></ListItem>
-      </List>
-    </Box>
-  );
-};
-
-interface LtsaDetailsProps {
-  ltsaData: LtsaOrder;
-  isLoading: boolean;
-}
-
-const LtsaDetails = (props: LtsaDetailsProps) => {
-  const { ltsaData, isLoading } = props;
-
-  if (isLoading) {
-    return (
-      <Box display="flex" justifyContent={'center'} paddingTop={'2em'} minWidth={POPUP_WIDTH}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  return (
-    <Box minWidth={POPUP_WIDTH} height={'300px'} overflow={'scroll'}>
-      <Grid container gap={1}>
-        {ltsaData && ltsaData.order ? (
-          <>
-            {/* TITLE DETAILS */}
-            <GridSubtitle>Title Details</GridSubtitle>
-            <GridColumnPair
-              leftValue={'Title Number'}
-              rightValue={ltsaData?.order.productOrderParameters.titleNumber}
-              alignment="start"
-            />
-            <GridColumnPair
-              leftValue={'Legal Description'}
-              rightValue={
-                ltsaData?.order.orderedProduct.fieldedData.descriptionsOfLand.at(0)
-                  .fullLegalDescription
-              }
-              alignment="start"
-            />
-            <GridColumnPair
-              leftValue={'Title Status'}
-              rightValue={ltsaData?.order.status}
-              alignment="start"
-            />
-            <GridColumnPair
-              leftValue={'Sales History'}
-              rightValue={formatMoney(
-                parseInt(ltsaData?.order.orderedProduct.fieldedData.tombstone.marketValueAmount),
-              )}
-              alignment="start"
-            />
-            <GridColumnPair
-              leftValue={'Application Received'}
-              rightValue={dateFormatter(
-                ltsaData?.order.orderedProduct.fieldedData.tombstone.applicationReceivedDate,
-              )}
-              alignment="start"
-            />
-            <GridColumnPair
-              leftValue={'Entered On'}
-              rightValue={dateFormatter(
-                ltsaData?.order.orderedProduct.fieldedData.tombstone.enteredDate,
-              )}
-              alignment="start"
-            />
-            {/* OWNERSHIP */}
-            <GridSubtitle>Ownership by Interest</GridSubtitle>
-            <Grid container item xs={12}>
-              <Grid item xs={2}>
-                %
-              </Grid>
-              <Grid container item xs={10}>
-                <Grid item xs={9}>
-                  {'Owner(s)'}
-                </Grid>
-                <Grid item xs={3}>
-                  {'Incorporation #'}
-                </Grid>
-              </Grid>
-            </Grid>
-
-            {ltsaData.order.orderedProduct.fieldedData.ownershipGroups.map((group, index) => (
-              <Grid item container xs={12} key={index}>
-                <Grid item xs={2}>
-                  <Typography variant="smallTable">
-                    {`${((parseFloat(group.interestFractionNumerator) / parseFloat(group.interestFractionDenominator)) * 100).toFixed(2)}%`}{' '}
-                  </Typography>
-                </Grid>
-                <Grid item xs={10} container>
-                  {ltsaData.order.orderedProduct.fieldedData.ownershipGroups
-                    .at(index)
-                    .titleOwners.map((owner, subindex) => (
-                      <Grid item container xs={12} key={subindex}>
-                        <Grid item xs={9}>
-                          <Typography variant="smallTable">
-                            {`${owner.lastNameOrCorpName1}${owner.givenName ? `, ${owner.givenName}` : ''}`}{' '}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={3}>
-                          <Typography variant="smallTable">{owner.incorporationNumber}</Typography>
-                        </Grid>
-                      </Grid>
-                    ))}
-                </Grid>
-              </Grid>
-            ))}
-
-            {/* CHARGES */}
-            <GridSubtitle>Charge Details</GridSubtitle>
-            {ltsaData.order.orderedProduct.fieldedData.chargesOnTitle ? (
-              <>
-                <Grid container item xs={12}>
-                  <Grid item xs={2}>
-                    #
-                  </Grid>
-                  <Grid item xs={2}>
-                    Status
-                  </Grid>
-                  <Grid item xs={2}>
-                    Received
-                  </Grid>
-                  <Grid item xs={3}>
-                    Transaction Type
-                  </Grid>
-                  <Grid item xs={3}>
-                    Remarks
-                  </Grid>
-                </Grid>
-                {ltsaData.order.orderedProduct.fieldedData.chargesOnTitle.map(
-                  (chargeOnTitle, index) => (
-                    <Grid key={index} item container xs={12}>
-                      <Grid item xs={2}>
-                        <Typography variant="smallTable">{chargeOnTitle.chargeNumber}</Typography>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <Typography variant="smallTable">{chargeOnTitle.status}</Typography>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <Typography variant="smallTable">
-                          {dateFormatter(chargeOnTitle.charge.applicationReceivedDate)}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={3}>
-                        <Typography variant="smallTable">
-                          {chargeOnTitle.charge.transactionType}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={3}>
-                        <Typography variant="smallTable">{chargeOnTitle.chargeRemarks}</Typography>
-                      </Grid>
-                    </Grid>
-                  ),
-                )}
-              </>
-            ) : (
-              <Typography variant="caption">No charge information available.</Typography>
-            )}
-          </>
-        ) : (
-          <Typography variant="body2">No LTSA information available.</Typography>
-        )}
-      </Grid>
-    </Box>
-  );
-};
-
-interface BCAssessmentDetailsProps {
-  data: FeatureCollection<Geometry, BCAssessmentProperties>;
-  isLoading: boolean;
-}
-
-const BCAssessmentDetails = (props: BCAssessmentDetailsProps) => {
-  const { data, isLoading } = props;
-
-  if (isLoading) {
-    return (
-      <Box display="flex" justifyContent={'center'} paddingTop={'2em'} minWidth={POPUP_WIDTH}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  // TODO: Handle more than one property.
-  const property = data?.features.at(0).properties;
-  const leftColumnSize = 5;
-  return (
-    <Box minWidth={POPUP_WIDTH} height={'300px'}>
-      {data && data.features.length ? (
-        <Grid container gap={1}>
-          <GridColumnPair
-            leftValue={'Folio ID'}
-            rightValue={property.FOLIO_ID}
-            leftSize={leftColumnSize}
-          />
-          <GridColumnPair
-            leftValue={'Roll Number'}
-            rightValue={property.ROLL_NUMBER}
-            leftSize={leftColumnSize}
-          />
-          <GridColumnPair
-            leftValue={'Net Improvement Value'}
-            rightValue={property.GEN_NET_IMPROVEMENT_VALUE}
-            leftSize={leftColumnSize}
-          />
-          <GridColumnPair
-            leftValue={'Net Land Value'}
-            rightValue={property.GEN_NET_LAND_VALUE}
-            leftSize={leftColumnSize}
-          />
-          <GridColumnPair
-            leftValue={'Gross Improvement Value'}
-            rightValue={property.GEN_GROSS_IMPROVEMENT_VALUE}
-            leftSize={leftColumnSize}
-          />
-          <GridColumnPair
-            leftValue={'Gross Land Value'}
-            rightValue={property.GEN_GROSS_LAND_VALUE}
-            leftSize={leftColumnSize}
-          />
-        </Grid>
-      ) : (
-        <Typography variant="body2">No BC Assessment information available.</Typography>
-      )}
-    </Box>
   );
 };
