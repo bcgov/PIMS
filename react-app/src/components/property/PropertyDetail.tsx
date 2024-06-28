@@ -103,17 +103,19 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const classification = useClassificationStyle();
   const map = useRef<Map>();
   useEffect(() => {
-    if (building) {
-      map.current?.setView([building.Location.y, building.Location.x], 17);
-    } else if (parcel) {
-      map.current?.setView([parcel.Location.y, parcel.Location.x], 17);
+    if (building?.Location || parcel?.Location) {
+      if (building) {
+        map.current?.setView([building.Location.y, building.Location.x], 17);
+      } else if (parcel) {
+        map.current?.setView([parcel.Location.y, parcel.Location.x], 17);
+      }
     }
   }, [building, parcel, map]);
 
   const assessedValues = useMemo(() => {
     if (parcelId && parcel) {
       //We only want latest two years accroding to PO requirements.
-      const lastTwoYrs = parcel.Evaluations?.sort((a, b) => b.Year - a.Year).slice(0, 2);
+      const lastTwoYrs = parcel.Evaluations?.sort((a, b) => b.Year - a.Year).slice(0, 2) ?? [];
       const evaluations = [];
       if (lastTwoYrs) {
         for (const parcelEval of lastTwoYrs) {
@@ -133,7 +135,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
       }
       return evaluations;
     } else if (buildingId && building) {
-      const lastTwoYrs = building.Evaluations?.sort((a, b) => b.Year - a.Year).slice(0, 2);
+      const lastTwoYrs = building.Evaluations?.sort((a, b) => b.Year - a.Year).slice(0, 2) ?? [];
       return lastTwoYrs?.map((ev) => ({
         Year: ev.Year,
         Value: ev.Value,
@@ -145,13 +147,17 @@ const PropertyDetail = (props: IPropertyDetail) => {
 
   const netBookValues = useMemo(() => {
     if (parcelId && parcel) {
-      return parcel.Fiscals.map((v) => v)
-        .sort((a, b) => b.FiscalYear - a.FiscalYear)
-        .slice(0, 2);
+      return (
+        parcel.Fiscals?.map((v) => v)
+          .sort((a, b) => b.FiscalYear - a.FiscalYear)
+          .slice(0, 2) ?? []
+      );
     } else if (buildingId && building) {
-      return building.Fiscals.map((v) => v)
-        .sort((a, b) => b.FiscalYear - a.FiscalYear)
-        .slice(0, 2);
+      return (
+        building.Fiscals?.map((v) => v)
+          .sort((a, b) => b.FiscalYear - a.FiscalYear)
+          .slice(0, 2) ?? []
+      );
     } else {
       return [];
     }
