@@ -93,6 +93,10 @@ const sortKeyMapping = (
 const collectFindOptions = (filter: PropertyUnionFilter) => {
   const options = [];
   if (filter.agency) options.push(constructFindOptionFromQuery('Agency', filter.agency));
+  if (filter.agencyId)
+    options.push({
+      AgencyId: In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId),
+    });
   if (filter.pid) options.push(constructFindOptionFromQueryPid('PID', filter.pid));
   if (filter.pin) options.push(constructFindOptionFromQueryPid('PIN', filter.pin));
   if (filter.address) options.push(constructFindOptionFromQuery('Address', filter.address));

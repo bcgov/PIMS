@@ -7,6 +7,7 @@ import {
 } from '@/controllers/properties/propertiesSchema';
 import { checkUserAgencyPermission, isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 import userServices from '@/services/users/usersServices';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 
 /**
  * @description Used to retrieve all properties.
@@ -174,6 +175,14 @@ export const getPropertyUnion = async (req: Request, res: Response) => {
   if (filter.success == false) {
     return res.status(400).send(filter.error);
   }
-  const properties = await propertyServices.getPropertiesUnion(filter.data);
+  // Prevent getting back unrelated agencies for general users
+  const kcUser = req.user as unknown as SSOUser;
+  const filterResult = filter.data;
+  if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
+    // get array of user's agencies
+    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+    filterResult.agencyId = usersAgencies;
+  }
+  const properties = await propertyServices.getPropertiesUnion(filterResult);
   return res.status(200).send(properties);
 };
