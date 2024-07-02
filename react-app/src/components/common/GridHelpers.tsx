@@ -1,11 +1,15 @@
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import React, { PropsWithChildren } from 'react';
 
 const typographyStyle = (theme) => ({ ...theme.typography.body2 });
-export const LeftGridColumn = (props: PropsWithChildren & { alignment?: string }) => (
+interface GridColumnProps extends PropsWithChildren {
+  alignment?: string;
+  size?: number;
+}
+export const LeftGridColumn = (props: GridColumnProps) => (
   <Grid
     item
-    xs={4}
+    xs={props.size ?? 4}
     typography={typographyStyle}
     sx={{
       fontWeight: 'bold',
@@ -16,10 +20,10 @@ export const LeftGridColumn = (props: PropsWithChildren & { alignment?: string }
     {props.children}
   </Grid>
 );
-export const RightGridColumn = (props: PropsWithChildren & { alignment?: string }) => (
+export const RightGridColumn = (props: GridColumnProps) => (
   <Grid
     item
-    xs={7}
+    xs={props.size ?? 7}
     typography={typographyStyle}
     sx={{
       display: 'flex',
@@ -34,6 +38,7 @@ export interface GridColumnPairProps {
   leftValue: any;
   rightValue: any;
   alignment?: string;
+  leftSize?: number;
 }
 
 /**
@@ -46,10 +51,31 @@ export interface GridColumnPairProps {
  * @returns {JSX.Element} The rendered GridColumnPair component.
  */
 export const GridColumnPair = (props: GridColumnPairProps) => {
+  const rightSize = props.leftSize ? 12 - props.leftSize : undefined;
   return (
     <>
-      <LeftGridColumn alignment={props.alignment}>{props.leftValue}</LeftGridColumn>
-      <RightGridColumn alignment={props.alignment}>{props.rightValue}</RightGridColumn>
+      <LeftGridColumn alignment={props.alignment} size={props.leftSize}>
+        {props.leftValue}
+      </LeftGridColumn>
+      <RightGridColumn alignment={props.alignment} size={rightSize}>
+        {props.rightValue}
+      </RightGridColumn>
     </>
   );
 };
+
+export const GridSubtitle = (props: PropsWithChildren) => (
+  <>
+    <Grid item xs={12}>
+      <Typography
+        variant="h4"
+        sx={{
+          margin: 0,
+        }}
+      >
+        {props.children}
+      </Typography>
+    </Grid>
+    <Grid item xs={12} sx={{ borderTop: 'solid 1px gray' }} />
+  </>
+);

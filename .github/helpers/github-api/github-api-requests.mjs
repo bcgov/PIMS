@@ -39,9 +39,9 @@
  *         run: node .github/helpers/script.js
  */
 
+import { Octokit } from '@octokit/rest';
 const { GITHUB_TOKEN, GITHUB_REPOSITORY } = process.env;
-const [GITHUB_OWNER, GITHUB_REPO] = GITHUB_REPOSITORY.split("/");
-const { Octokit } = require("@octokit/rest");
+const [GITHUB_OWNER, GITHUB_REPO] = GITHUB_REPOSITORY.split('/');
 
 // Create a personal access token at https://github.com/settings/tokens/new?scopes=repo
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
@@ -54,7 +54,7 @@ const octokit = new Octokit({ auth: GITHUB_TOKEN });
  * @example
  * createIssue('My Issue', 'An example issue');
  */
-async function createIssue(title, body) {
+export async function createIssue(title, body) {
   const request = await octokit.rest.issues.create({
     owner: GITHUB_OWNER,
     repo: GITHUB_REPO,
@@ -72,12 +72,12 @@ async function createIssue(title, body) {
  * @example
  * closeIssue(1044);
  */
-async function closeIssue(issue_number) {
+export async function closeIssue(issue_number) {
   const request = await octokit.rest.issues.update({
     owner: GITHUB_OWNER,
     repo: GITHUB_REPO,
     issue_number,
-    state: "closed",
+    state: 'closed',
   });
   console.log(request.data);
   return request;
@@ -91,7 +91,7 @@ async function closeIssue(issue_number) {
  * @example
  * findIssueByTitle('My Issue');
  */
-async function findIssueByTitle(title, state = "open") {
+export async function findIssueByTitle(title, state = 'open') {
   const { data: issues } = await octokit.rest.issues.listForRepo({
     owner: GITHUB_OWNER,
     repo: GITHUB_REPO,
@@ -106,7 +106,7 @@ async function findIssueByTitle(title, state = "open") {
   return null; // Return null if no issue found.
 }
 
-module.exports = {
+export default {
   createIssue,
   closeIssue,
   findIssueByTitle,

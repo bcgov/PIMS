@@ -7,7 +7,7 @@ import React, { useEffect } from 'react';
 const Dev = () => {
   const api = usePimsApi();
   const { data, refreshData } = useDataLoader(() =>
-    api.bcAssessment.getBCAssessmentByLocation('-123.36905121803285', '48.41397415311252'),
+    api.bcAssessment.getBCAssessmentByLocation(-123.36905121803285, 48.41397415311252),
   );
   useEffect(() => {
     refreshData();
