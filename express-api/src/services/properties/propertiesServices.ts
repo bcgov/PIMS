@@ -107,7 +107,6 @@ const sortKeyTranslator: Record<string, string> = {
 
 const collectFindOptions = (filter: PropertyUnionFilter) => {
   const options = [];
-  // Has to handle if agency searched by name or set by users agencies
   if (filter.agency) options.push(constructFindOptionFromQuery('Agency', filter.agency));
   if (filter.pid) options.push(constructFindOptionFromQueryPid('PID', filter.pid));
   if (filter.pin) options.push(constructFindOptionFromQueryPid('PIN', filter.pin));
@@ -133,6 +132,7 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
       }),
     );
 
+  // Restricts based on user's agencies
   if (filter.agencyId) {
     query.andWhere('agency_id IN(:list)', {
       list: filter.agencyId.join(','),
