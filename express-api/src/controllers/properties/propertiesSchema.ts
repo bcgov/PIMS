@@ -42,6 +42,7 @@ export const PropertyUnionFilterSchema = z.object({
   status: z.string().optional(),
   classification: z.string().optional(),
   agency: z.string().optional(),
+  agencyId: z.array(z.number()).optional(),
   propertyType: z.string().optional(),
   address: z.string().optional(),
   administrativeArea: z.string().optional(),
