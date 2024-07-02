@@ -24,6 +24,7 @@ import {
   constructFindOptionFromQueryPid,
 } from '@/utilities/helperFunctions';
 import { QueryRunner, Brackets, FindOptionsOrder, FindOptionsOrderValue, ILike, In } from 'typeorm';
+import userServices from '../users/usersServices';
 
 const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?: number[]) => {
   const parcelsQuery = await AppDataSource.getRepository(Parcel)
@@ -137,16 +138,15 @@ const numberOrNull = (value: any) => {
 };
 const getAgencyOrThrowIfMismatched = (
   row: Record<string, any>,
-  agencies: Agency[],
-  internalUser: User,
+  lookups: Lookups,
   roles: string[],
 ) => {
   const agencyCode = row.AgencyCode;
-  const agency = agencies.find((a) => a.Code == agencyCode);
+  const agency = lookups.agencies.find((a) => a.Code == agencyCode);
   if (!agency) {
     throw new Error(`The agency with code ${agencyCode ?? 'Undefined'} is not supported.`);
   }
-  if (roles.includes(Roles.ADMIN) || agency.Id !== internalUser.AgencyId) {
+  if (roles.includes(Roles.ADMIN) || lookups.userAgencies.includes(agency.Id)) {
     return agency;
   } else {
     throw new Error(`You do not have permission to add properties for agency ${agency.Name}`);
@@ -285,7 +285,7 @@ const makeParcelUpsertObject = async (
 
   return {
     Id: existentParcel?.Id,
-    AgencyId: getAgencyOrThrowIfMismatched(row, lookups.agencies, user, roles).Id,
+    AgencyId: getAgencyOrThrowIfMismatched(row, lookups, roles).Id,
     PID: numberOrNull(row.PID),
     PIN: numberOrNull(row.PIN),
     ClassificationId: classificationId,
@@ -359,7 +359,7 @@ const makeBuildingUpsertObject = async (
     Id: existentBuilding?.Id,
     PID: numberOrNull(row.PID),
     PIN: numberOrNull(row.PIN),
-    AgencyId: getAgencyOrThrowIfMismatched(row, lookups.agencies, user, roles).Id,
+    AgencyId: getAgencyOrThrowIfMismatched(row, lookups, roles).Id,
     ClassificationId: classificationId,
     BuildingConstructionTypeId: constructionTypeId,
     BuildingPredominateUseId: predominateUseId,
@@ -391,6 +391,7 @@ type Lookups = {
   predominateUses: BuildingPredominateUse[];
   agencies: Agency[];
   adminAreas: AdministrativeArea[];
+  userAgencies: number[];
 };
 
 type BulkUploadRowResult = {
@@ -420,12 +421,14 @@ const importPropertiesAsJSON = async (
   const adminAreas = await AppDataSource.getRepository(AdministrativeArea).find({
     select: { Name: true, Id: true },
   });
+  const userAgencies = await userServices.getAgencies(user.Username);
   const lookups: Lookups = {
     classifications,
     constructionTypes,
     predominateUses,
     agencies,
     adminAreas,
+    userAgencies,
   };
   const results: Array<BulkUploadRowResult> = [];
   let queuedParcels = [];
