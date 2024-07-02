@@ -12,6 +12,7 @@ const _parcelsCreateQueryBuilder: any = {
   leftJoinAndSelect: () => _parcelsCreateQueryBuilder,
   where: () => _parcelsCreateQueryBuilder,
   orWhere: () => _parcelsCreateQueryBuilder,
+  andWhere: () => _parcelsCreateQueryBuilder,
   take: () => _parcelsCreateQueryBuilder,
   getMany: () => [produceParcel()],
 };
@@ -22,6 +23,7 @@ const _buildingsCreateQueryBuilder: any = {
   leftJoinAndSelect: () => _parcelsCreateQueryBuilder,
   where: () => _parcelsCreateQueryBuilder,
   orWhere: () => _parcelsCreateQueryBuilder,
+  andWhere: () => _parcelsCreateQueryBuilder,
   take: () => _parcelsCreateQueryBuilder,
   getMany: () => [produceBuilding()],
 };
