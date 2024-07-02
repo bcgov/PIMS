@@ -8,7 +8,8 @@ import {
   constructFindOptionFromQuery,
   constructFindOptionFromQueryPid,
 } from '@/utilities/helperFunctions';
-import { FindOptionsOrder, FindOptionsOrderValue, ILike, In } from 'typeorm';
+import logger from '@/utilities/winstonLogger';
+import { Brackets, FindOptionsOrder, FindOptionsOrderValue, ILike, In } from 'typeorm';
 
 const propertiesFuzzySearch = async (keyword: string, limit?: number) => {
   const parcels = await AppDataSource.getRepository(Parcel)
@@ -83,23 +84,31 @@ const getPropertiesForMap = async (filter?: MapFilter) => {
   return properties;
 };
 
-const sortKeyMapping = (
+export const sortKeyMapping = (
   sortKey: string,
   sortDirection: FindOptionsOrderValue,
 ): FindOptionsOrder<PropertyUnion> => {
   return { [sortKey]: sortDirection };
 };
 
+type SortOrders = 'ASC' | 'DESC';
+
+const sortKeyTranslator: Record<string, string> = {
+  Agency: 'agency_name',
+  PID: 'pid',
+  PIN: 'pin',
+  Address: 'address1',
+  UpdatedOn: 'updated_on',
+  Classification: 'property_classification_name',
+  LandArea: 'land_area',
+  AdministrativeArea: 'administrative_area_name',
+  PropertyType: 'property_type',
+};
+
 const collectFindOptions = (filter: PropertyUnionFilter) => {
   const options = [];
   // Has to handle if agency searched by name or set by users agencies
-  if (filter.agency || filter.agencyId)
-    options.push({
-      ...constructFindOptionFromQuery('Agency', filter.agency),
-      AgencyId: filter.agencyId
-        ? In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId)
-        : undefined,
-    });
+  if (filter.agency) options.push(constructFindOptionFromQuery('Agency', filter.agency));
   if (filter.pid) options.push(constructFindOptionFromQueryPid('PID', filter.pid));
   if (filter.pin) options.push(constructFindOptionFromQueryPid('PIN', filter.pin));
   if (filter.address) options.push(constructFindOptionFromQuery('Address', filter.address));
@@ -115,12 +124,34 @@ const collectFindOptions = (filter: PropertyUnionFilter) => {
 };
 
 const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
-  return AppDataSource.getRepository(PropertyUnion).find({
-    where: collectFindOptions(filter),
-    take: filter.quantity,
-    skip: (filter.page ?? 0) * (filter.quantity ?? 0),
-    order: sortKeyMapping(filter.sortKey, filter.sortOrder as FindOptionsOrderValue),
-  });
+  const options = collectFindOptions(filter);
+  const query = AppDataSource.getRepository(PropertyUnion)
+    .createQueryBuilder()
+    .where(
+      new Brackets((qb) => {
+        options.forEach((option) => qb.orWhere(option));
+      }),
+    );
+
+  if (filter.agencyId) {
+    query.andWhere('agency_id IN(:list)', {
+      list: filter.agencyId.join(','),
+    });
+  }
+
+  if (filter.quantity) query.take(filter.quantity);
+  if (filter.page && filter.quantity) query.skip((filter.page ?? 0) * (filter.quantity ?? 0));
+  if (filter.sortKey && filter.sortOrder) {
+    if (sortKeyTranslator[filter.sortKey]) {
+      query.orderBy(
+        sortKeyTranslator[filter.sortKey],
+        filter.sortOrder.toUpperCase() as SortOrders,
+      );
+    } else {
+      logger.error('PropertyUnion Service - Invalid Sort Key');
+    }
+  }
+  return await query.getMany();
 };
 
 const propertyServices = {
