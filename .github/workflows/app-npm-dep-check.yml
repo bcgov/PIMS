@@ -132,7 +132,7 @@ jobs:
       # Run Node Script to Create GitHub Issue.
       - name: Create GitHub Issues
         run: |
-          node .github/helpers/create-npm-dep-report-issues
+          node .github/helpers/create-npm-dep-report-issues.cjs
   
   create-tickets:
     needs: 
