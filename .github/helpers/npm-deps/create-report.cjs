@@ -1,21 +1,19 @@
-const path = require("path");
-const outdatedDeps = require(path.resolve(
-  __dirname,
-  `../../outdatedDeps.json`
-));
+
+const path = require('path');
+const outdatedDeps = require(path.resolve(__dirname, `../../../outdatedDeps.json`));
 
 const LOCAL_TEST = false;
-const TEST_PACKAGEJSON_PATHS = ["src/react-app", "src/express-api"];
+const TEST_PACKAGEJSON_PATHS = ['src/frontend', 'src/backend'];
 
 /**
  * THIS FILE DOES NOT REQUIRE ANY EDITING.
- * Place within .github/helpers/
+ * Place within .github/helpers/npm-deps/
  *
  * To test this file locally,
  * - Generate output from parse-npm-deps.js
  * - Set LOCAL_TEST variable to true.
  * - Edit TEST_PACKAGEJSON_PATHS if necessary.
- * - From root, run "node .github/helpers/create-npm-dep-report > outputText.json"
+ * - From root, run "node .github/helpers/npm-deps/create-npm-dep-report.cjs > outputText.json"
  * - Check the outputText.json file, then delete it.
  */
 
@@ -28,18 +26,18 @@ const packageJsonPaths = LOCAL_TEST
 let results = {};
 
 // Emojis.
-const check = "✔️";
-const attention = "⚠️";
+const check = '✔️';
+const attention = '⚠️';
 
 // Badge color codes (checked for WCAG standards).
-const red = "701807"; // White text.
-const orange = "9e3302"; // White text.
-const yellow = "f5c60c"; // Black text.
-const green = "0B6018"; // White text.
-const blue = "0859A1"; // White text.
+const red = '701807'; // White text.
+const orange = '9e3302'; // White text.
+const yellow = 'f5c60c'; // Black text.
+const green = '0B6018'; // White text.
+const blue = '0859A1'; // White text.
 
 // GitHub Markdown Formatting.
-const heading = (text, size) => `${"#".repeat(size)} ${text}\n`;
+const heading = (text, size) => `${'#'.repeat(size)} ${text}\n`;
 const codeBlock = (text, language) => `\`\`\`${language}\n${text}\n\`\`\`\n\n`;
 const lineBreak = () => `\n<br />\n`;
 const line = (text) => `${text}\n`;
@@ -53,17 +51,17 @@ const getFormattedDate = () => {
 
   // Determine the ordinal suffix.
   const ordinal = (day) => {
-    const s = ["th", "st", "nd", "rd"];
+    const s = ['th', 'st', 'nd', 'rd'];
     const v = day % 100;
     return day + (s[(v - 20) % 10] || s[v] || s[0]);
   };
 
   // Formatter for the rest of the date.
-  const formatter = new Intl.DateTimeFormat("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
   });
 
   // Format the date and replace the day number with ordinal.
@@ -73,9 +71,9 @@ const getFormattedDate = () => {
 // Messages.
 const title = `NPM Dependency Report - ${getFormattedDate()}`;
 const subTitle =
-  "Versions of npm packages have been checked against their latest versions from the npm registry.";
-const upToDateMsg = "dependencies are all up-to-date.";
-const outOfDateMsg = "dependencies are out-of-date.";
+  'Versions of npm packages have been checked against their latest versions from the npm registry.';
+const upToDateMsg = 'dependencies are all up-to-date.';
+const outOfDateMsg = 'dependencies are out-of-date.';
 
 // Calculate percentage of packages up to date.
 const calculateUpToDatePercentage = (total, outdated) => {
@@ -88,28 +86,16 @@ const calculateUpToDatePercentage = (total, outdated) => {
 
 // Output a command to install all dependencies in array.
 const outputMultiPackageInstallCmd = (dependencies, packagePath, isDevDep) => {
-  let installCmd = `npm install${isDevDep ? " -D" : ""} `;
-  installCmd += dependencies
-    .map((obj) => `${obj.dependency}@${obj.latestVersion}`)
-    .join(" ");
+  let installCmd = `npm install${isDevDep ? ' -D' : ''} `;
+  installCmd += dependencies.map((obj) => `${obj.dependency}@${obj.latestVersion}`).join(' ');
 
-  results[packagePath] += `${codeBlock(installCmd, "")}\n`;
+  results[packagePath] += `${codeBlock(installCmd, '')}\n`;
 };
 
 // Output Dependencies in an array.
-const outputDepsByVersionChange = (
-  dependencies,
-  versionChange,
-  packagePath,
-  isDevDep
-) => {
+const outputDepsByVersionChange = (dependencies, versionChange, packagePath, isDevDep) => {
   const headerTag = isDevDep ? `${versionChange}_dev` : `${versionChange}`;
-  const badgeColor =
-    versionChange === "major"
-      ? orange
-      : versionChange === "minor"
-      ? blue
-      : green;
+  const badgeColor = versionChange === 'major' ? orange : versionChange === 'minor' ? blue : green;
 
   // Output header.
   results[packagePath] += `${line(`![${headerTag}]`)}\n\n`;
@@ -117,9 +103,7 @@ const outputDepsByVersionChange = (
   // Output start of spoiler.
   results[packagePath] += `${line(`<details>`)}\n`;
   results[packagePath] += `${line(`<summary>`)}`;
-  results[packagePath] += `${line(
-    `Expand to see individual installs. <br /><br />\n`
-  )}`;
+  results[packagePath] += `${line(`Expand to see individual installs. <br /><br />\n`)}`;
 
   // Output a command to install all dependencies in array.
   outputMultiPackageInstallCmd(dependencies, packagePath, isDevDep);
@@ -132,11 +116,11 @@ const outputDepsByVersionChange = (
     const { dependency, version, latestVersion } = dependencies[key];
 
     results[packagePath] += `${line(
-      `- [ ] \`${dependency}\` Update from version \`${version}\` to \`${latestVersion}\` by running...`
+      `- [ ] \`${dependency}\` Update from version \`${version}\` to \`${latestVersion}\` by running...`,
     )}`;
     results[packagePath] += `${codeBlock(
-      `npm install${isDevDep ? " -D" : ""} ${dependency}@${latestVersion}`,
-      ""
+      `npm install${isDevDep ? ' -D' : ''} ${dependency}@${latestVersion}`,
+      '',
     )}`;
   }
 
@@ -145,7 +129,7 @@ const outputDepsByVersionChange = (
 
   // Add Header text
   results[packagePath] += `${line(
-    `[${headerTag}]: https://img.shields.io/badge/${versionChange}_updates_(${dependencies.length})-${badgeColor}?style=for-the-badge \n`
+    `[${headerTag}]: https://img.shields.io/badge/${versionChange}_updates_(${dependencies.length})-${badgeColor}?style=for-the-badge \n`,
   )}`;
 
   results[packagePath] += `${lineBreak()}\n`;
@@ -158,41 +142,30 @@ const outputDeps = (dependenciesObj, packagePath, isDevDep) => {
 
   // Output title.
   results[packagePath] += `${lineBreak()}\n`;
-  if (isDevDep)
-    results[packagePath] += `${heading(
-      "Development Dependencies to Update:",
-      3
-    )}`;
-  else
-    results[packagePath] += `${heading(
-      "Production Dependencies to Update:",
-      3
-    )}`;
+  if (isDevDep) results[packagePath] += `${heading('Development Dependencies to Update:', 3)}`;
+  else results[packagePath] += `${heading('Production Dependencies to Update:', 3)}`;
 
   // Output MAJOR depedencies to update.
   const major = dependenciesObj.major;
-  if (major.length > 0)
-    outputDepsByVersionChange(major, "major", packagePath, isDevDep);
+  if (major.length > 0) outputDepsByVersionChange(major, 'major', packagePath, isDevDep);
 
   // Output MINOR depedencies to update.
   const minor = dependenciesObj.minor;
-  if (minor.length > 0)
-    outputDepsByVersionChange(minor, "minor", packagePath, isDevDep);
+  if (minor.length > 0) outputDepsByVersionChange(minor, 'minor', packagePath, isDevDep);
 
   // Output PATCH depedencies to update.
   const patch = dependenciesObj.patch;
-  if (patch.length > 0)
-    outputDepsByVersionChange(patch, "patch", packagePath, isDevDep);
+  if (patch.length > 0) outputDepsByVersionChange(patch, 'patch', packagePath, isDevDep);
 };
 
 // Escape special characters for GitHub Actions.
 const escapeForGitHubActions = (str) =>
-  str.replace(/%/g, "%25").replace(/\n/g, "%0A").replace(/\r/g, "%0D");
+  str.replace(/%/g, '%25').replace(/\n/g, '%0A').replace(/\r/g, '%0D');
 
 (async () => {
   // Create an array of promises for each packageJsonPath.
   const promises = packageJsonPaths.map(async (packagePath) => {
-    results[packagePath] = "";
+    results[packagePath] = '';
 
     // Read the outdatedDeps file and get dependencies and devDependencies.
     const deps = outdatedDeps[packagePath].deps ?? {};
@@ -205,7 +178,7 @@ const escapeForGitHubActions = (str) =>
     // Get percentage of packages up to date.
     const percentageUpToDate = calculateUpToDatePercentage(
       deps.total + devDeps.total,
-      deps.outdated + devDeps.outdated
+      deps.outdated + devDeps.outdated,
     );
 
     let percentageColor = green;
@@ -214,9 +187,9 @@ const escapeForGitHubActions = (str) =>
     else if (percentageUpToDate <= 90) percentageColor = yellow;
 
     // Output percentage.
-    results[packagePath] += `${line("![COVERAGE_PERCENTAGE]\n")}`;
+    results[packagePath] += `${line('![COVERAGE_PERCENTAGE]\n')}`;
     results[packagePath] += `${line(
-      `\n[COVERAGE_PERCENTAGE]: https://img.shields.io/badge/percentage_of_dependencies_up_to_date-${percentageUpToDate}-${percentageColor}?style=for-the-badge \n\n`
+      `\n[COVERAGE_PERCENTAGE]: https://img.shields.io/badge/percentage_of_dependencies_up_to_date-${percentageUpToDate}-${percentageColor}?style=for-the-badge \n\n`,
     )}`;
 
     // Output summary.
@@ -224,24 +197,22 @@ const escapeForGitHubActions = (str) =>
       results[packagePath] += `${line(`${check} - Production ${upToDateMsg}`)}`;
     else
       results[packagePath] += `${line(
-        `${attention} - ${deps.outdated} Production ${outOfDateMsg}`
+        `${attention} - ${deps.outdated} Production ${outOfDateMsg}`,
       )}`;
 
     if (devDeps.outdated === 0)
-      results[packagePath] += `${line(
-        `${check} - Development ${upToDateMsg}`
-      )}`;
+      results[packagePath] += `${line(`${check} - Development ${upToDateMsg}`)}`;
     else
       results[packagePath] += `${line(
-        `${attention} - ${devDeps.outdated} Development ${outOfDateMsg}`
+        `${attention} - ${devDeps.outdated} Development ${outOfDateMsg}`,
       )}`;
 
     // Output reminder.
-    if (deps.outdated > 0 || devDeps.outdated > 0) {
+    if (packagePath !== '.' && (deps.outdated > 0 || devDeps.outdated > 0)) {
       results[packagePath] += `${line(
-        `\n**Make sure to change directory to where the package.json is located using...**`
+        `\n**Make sure to change directory to where the package.json is located using...**`,
       )}`;
-      results[packagePath] += `${codeBlock(`cd ${packagePath}`, "")}`;
+      results[packagePath] += `${codeBlock(`cd ${packagePath}`, '')}`;
     }
 
     // Await the completion of output for both dependencies and devDependencies.
