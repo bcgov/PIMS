@@ -42,7 +42,12 @@ export const getPropertiesFuzzySearch = async (req: Request, res: Response) => {
    */
   const keyword = String(req.query.keyword);
   const take = req.query.take ? Number(req.query.take) : undefined;
-  const result = await propertyServices.propertiesFuzzySearch(keyword, take);
+  const kcUser = req.user;
+  let userAgencies;
+  if (!isAdmin(kcUser)) {
+    userAgencies = await userServices.getAgencies(kcUser.preferred_username);
+  }
+  const result = await propertyServices.propertiesFuzzySearch(keyword, take, userAgencies);
   return res.status(200).send(result);
 };
 

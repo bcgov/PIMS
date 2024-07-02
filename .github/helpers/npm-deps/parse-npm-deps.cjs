@@ -1,21 +1,22 @@
-const https = require("https");
-const path = require("path");
+
+const https = require('https');
+const path = require('path');
 
 const LOCAL_TEST = false;
-const TEST_PACKAGEJSON_PATHS = ["src/react-app", "src/express-api"];
+const TEST_PACKAGEJSON_PATHS = ['src/frontend', 'src/backend'];
 const TEST_IGNORE_PACKAGES = {
-  "src/react-app": [],
-  "src/express-api": [],
+  'src/frontend': [],
+  'src/backend': [],
 };
 
 /**
  * THIS FILE DOES NOT REQUIRE ANY EDITING.
- * Place within .github/helpers/
+ * Place within .github/helpers/npm-deps/
  *
  * To test this file locally,
  * - Set LOCAL_TEST variable to true.
  * - Edit TEST_PACKAGEJSON_PATHS and TEST_IGNORE_PACKAGES if necessary.
- * - From root, run "node .github/helpers/parse-npm-deps > outdatedDeps.json"
+ * - From root, run "node .github/helpers/npm-deps/parse-npm-deps.cjs > outdatedDeps.json"
  * - Check the outdatedDeps.json file, then delete it.
  */
 
@@ -25,30 +26,21 @@ const packageJsonPaths = LOCAL_TEST
   : JSON.parse(process.env.packageJsonPaths);
 
 // Ignore packages from env.
-const ignorePackages = LOCAL_TEST
-  ? TEST_IGNORE_PACKAGES
-  : JSON.parse(process.env.ignorePackages);
+const ignorePackages = LOCAL_TEST ? TEST_IGNORE_PACKAGES : JSON.parse(process.env.ignorePackages);
 
 // Save results to json.
 let results = {};
 
 // Save information on the dependency including latestVersion to the above results arrays.
-const saveDependencyResults = (
-  packagePath,
-  isDevDep,
-  dependency,
-  version,
-  latestVersion
-) => {
+const saveDependencyResults = (packagePath, isDevDep, dependency, version, latestVersion) => {
   // Create arrays of version triplets  ie. 2.7.4  >>  [2, 7, 4]
-  const versionTriplet = version.split(".");
-  const latestVersionTriplet = latestVersion.split(".");
+  const versionTriplet = version.split('.');
+  const latestVersionTriplet = latestVersion.split('.');
 
   // Determine version change.
-  let versionChange = "patch";
-  if (versionTriplet[0] !== latestVersionTriplet[0]) versionChange = "major";
-  else if (versionTriplet[1] !== latestVersionTriplet[1])
-    versionChange = "minor";
+  let versionChange = 'patch';
+  if (versionTriplet[0] !== latestVersionTriplet[0]) versionChange = 'major';
+  else if (versionTriplet[1] !== latestVersionTriplet[1]) versionChange = 'minor';
 
   // Save results.
   const saveInfo = {
@@ -84,14 +76,14 @@ const checkVersions = async (dependencyList, packagePath, isDevDep) => {
       // Make an http request to the npm registry.
       const data = await new Promise((resolve, reject) => {
         https.get(url, (res) => {
-          let data = "";
-          res.on("data", (chunk) => {
+          let data = '';
+          res.on('data', (chunk) => {
             data += chunk;
           });
-          res.on("end", () => {
+          res.on('end', () => {
             resolve(data);
           });
-          res.on("error", (error) => {
+          res.on('error', (error) => {
             reject(error);
           });
         });
@@ -101,31 +93,21 @@ const checkVersions = async (dependencyList, packagePath, isDevDep) => {
       const latestVersion = JSON.parse(data).version;
 
       // Check if theres a difference in version and latestVersion.
-      if (
-        latestVersion &&
-        latestVersion !== "0.0.0" &&
-        latestVersion !== version
-      ) {
-        if (!latestVersion.includes("-"))
-          saveDependencyResults(
-            packagePath,
-            isDevDep,
-            dependency,
-            version,
-            latestVersion
-          );
+      if (latestVersion && latestVersion !== '0.0.0' && latestVersion !== version) {
+        if (!latestVersion.includes('-'))
+          saveDependencyResults(packagePath, isDevDep, dependency, version, latestVersion);
         else {
           // Latest version includes '-'.
           const data = await new Promise((resolve, reject) => {
             https.get(`https://registry.npmjs.org/${dependency}`, (res) => {
-              let data = "";
-              res.on("data", (chunk) => {
+              let data = '';
+              res.on('data', (chunk) => {
                 data += chunk;
               });
-              res.on("end", () => {
+              res.on('end', () => {
                 resolve(data);
               });
-              res.on("error", (error) => {
+              res.on('error', (error) => {
                 reject(error);
               });
             });
@@ -133,20 +115,11 @@ const checkVersions = async (dependencyList, packagePath, isDevDep) => {
 
           const versions = Object.keys(JSON.parse(data).versions);
           // Remove all versions containing '-' and select the last item in the array.
-          const filteredLatestVersions = versions.filter(
-            (item) => !item.includes("-")
-          );
-          const latestVersion =
-            filteredLatestVersions[filteredLatestVersions.length - 1];
+          const filteredLatestVersions = versions.filter((item) => !item.includes('-'));
+          const latestVersion = filteredLatestVersions[filteredLatestVersions.length - 1];
 
           if (latestVersion !== version)
-            saveDependencyResults(
-              packagePath,
-              isDevDep,
-              dependency,
-              version,
-              latestVersion
-            );
+            saveDependencyResults(packagePath, isDevDep, dependency, version, latestVersion);
         }
 
         // Add to outdated sum.
@@ -162,10 +135,7 @@ const checkVersions = async (dependencyList, packagePath, isDevDep) => {
 (async () => {
   // Create an array of promises for each packageJsonPath.
   const promises = packageJsonPaths.map(async (packagePath) => {
-    const packageJson = require(path.resolve(
-      __dirname,
-      `../../${packagePath}/package.json`
-    ));
+    const packageJson = require(path.resolve(__dirname, `../../../${packagePath}/package.json`));
     results[packagePath] = {
       deps: { total: 0, outdated: 0, major: [], minor: [], patch: [] },
       devDeps: { total: 0, outdated: 0, major: [], minor: [], patch: [] },
