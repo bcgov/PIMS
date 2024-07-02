@@ -13,10 +13,11 @@ import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
 import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
 import { BuildingConstructionType } from '@/typeorm/Entities/BuildingConstructionType';
 import { BuildingPredominateUse } from '@/typeorm/Entities/BuildingPredominateUse';
-import { UUID } from 'crypto';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 import { ImportResult } from '@/typeorm/Entities/ImportResult';
+import { User } from '@/typeorm/Entities/User';
+import { Roles } from '@/constants/roles';
 
 const propertiesFuzzySearch = async (keyword: string, limit?: number) => {
   const parcels = await AppDataSource.getRepository(Parcel)
@@ -114,10 +115,22 @@ const numberOrNull = (value: any) => {
   if (value == '' || value == null) return null;
   return typeof value === 'number' ? value : Number(value.replace?.(/-/g, ''));
 };
-const getOrCreateAgency = (row: Record<string, any>, agencies: Agency[]) => {
+const getAgencyOrThrowIfMismatched = (
+  row: Record<string, any>,
+  agencies: Agency[],
+  internalUser: User,
+  roles: string[],
+) => {
   const agencyCode = row.AgencyCode;
   const agency = agencies.find((a) => a.Code == agencyCode);
-  return agency;
+  if (!agency) {
+    throw new Error(`The agency with code ${agencyCode ?? 'Undefined'} is not supported.`);
+  }
+  if (roles.includes(Roles.ADMIN) || agency.Id !== internalUser.AgencyId) {
+    return agency;
+  } else {
+    throw new Error(`You do not have permission to add properties for agency ${agency.Name}`);
+  }
 };
 const getClassificationOrThrow = (
   row: Record<string, any>,
@@ -140,37 +153,55 @@ const getAdministrativeAreaOrThrow = (
   row: Record<string, any>,
   adminAreas: AdministrativeArea[],
 ) => {
-  if (row.City) return adminAreas.find((a) => compareWithoutCase(a.Name, row.City))?.Id;
-  else if (row.AdministrativeArea)
-    return adminAreas.find((a) => compareWithoutCase(a.Name, row.AdministrativeArea))?.Id;
-  else {
+  let adminArea: number;
+  if (row.City) {
+    adminArea = adminAreas.find((a) => compareWithoutCase(a.Name, row.City))?.Id;
+  } else if (row.AdministrativeArea) {
+    adminArea = adminAreas.find((a) => compareWithoutCase(a.Name, row.AdministrativeArea))?.Id;
+  }
+
+  if (adminArea == undefined) {
     throw new Error(
       `Could not determine administrative area for ${row.City ?? row.AdministrativeArea ?? 'Undefined'}. Please provide a valid name in column AdministrativeArea or City.`,
     );
+  } else {
+    return adminArea;
   }
 };
 const getBuildingPredominateUseOrThrow = (
   row: Record<string, any>,
   predominateUses: BuildingPredominateUse[],
 ) => {
+  let predominateUse: number;
   if (row.PredominateUse) {
-    return predominateUses.find((a) => compareWithoutCase(row.PredominateUse, a.Name))?.Id;
-  } else {
+    predominateUse = predominateUses.find((a) =>
+      compareWithoutCase(row.PredominateUse, a.Name),
+    )?.Id;
+  }
+  if (predominateUse == undefined) {
     throw new Error(
       `Could not determine predominate use for ${row.PredominateUse ?? 'Undefined'}. Please provide a valid predominate use in column PredominateUse`,
     );
+  } else {
+    return predominateUse;
   }
 };
 const getBuildingConstructionTypeOrThrow = (
   row: Record<string, any>,
   constructionTypes: BuildingConstructionType[],
 ) => {
+  let constructionType: number;
   if (row.ConstructionType) {
-    return constructionTypes.find((a) => compareWithoutCase(row.ConstructionType, a.Name))?.Id;
-  } else {
+    constructionType = constructionTypes.find((a) =>
+      compareWithoutCase(row.ConstructionType, a.Name),
+    )?.Id;
+  }
+  if (constructionType == undefined) {
     throw new Error(
       `Could not determine construction type for ${row.ConstructionType ?? 'Undefined'}. Please provide a valid construction type in column ConstructionType.`,
     );
+  } else {
+    return constructionType;
   }
 };
 // const isEvaluationInDataSourceMoreRecent = (
@@ -191,7 +222,8 @@ const compareWithoutCase = (str1: string, str2: string) => {
 };
 const makeParcelUpsertObject = async (
   row: Record<string, any>,
-  userId: UUID,
+  user: User,
+  roles: string[],
   lookups: Lookups,
   queryRunner: QueryRunner,
   existentParcel: Parcel = null,
@@ -213,7 +245,7 @@ const makeParcelUpsertObject = async (
       Value: row.NetBook,
       FiscalKeyId: 0,
       FiscalYear: row.FiscalYear,
-      CreatedById: userId,
+      CreatedById: user.Id,
       CreatedOn: new Date(),
     });
   }
@@ -222,7 +254,7 @@ const makeParcelUpsertObject = async (
       Value: row.Assessed,
       EvaluationKeyId: 0,
       Year: row.AssessedYear,
-      CreatedById: userId,
+      CreatedById: user.Id,
       CreatedOn: new Date(),
     });
   }
@@ -233,13 +265,13 @@ const makeParcelUpsertObject = async (
 
   return {
     Id: existentParcel?.Id,
-    AgencyId: getOrCreateAgency(row, lookups.agencies).Id,
+    AgencyId: getAgencyOrThrowIfMismatched(row, lookups.agencies, user, roles).Id,
     PID: numberOrNull(row.PID),
     PIN: numberOrNull(row.PIN),
     ClassificationId: classificationId,
     Name: row.Name,
-    CreatedById: existentParcel ? undefined : userId,
-    UpdatedById: existentParcel ? userId : undefined,
+    CreatedById: existentParcel ? undefined : user.Id,
+    UpdatedById: existentParcel ? user.Id : undefined,
     UpdatedOn: existentParcel ? new Date() : undefined,
     CreatedOn: existentParcel ? undefined : new Date(),
     Location: {
@@ -260,7 +292,8 @@ const makeParcelUpsertObject = async (
 
 const makeBuildingUpsertObject = async (
   row: Record<string, any>,
-  userId: UUID,
+  user: User,
+  roles: string[],
   lookups: Lookups,
   queryRunner: QueryRunner,
   existentBuilding: Building = null,
@@ -283,7 +316,7 @@ const makeBuildingUpsertObject = async (
       Value: row.NetBook,
       FiscalKeyId: 0,
       FiscalYear: row.FiscalYear,
-      CreatedById: userId,
+      CreatedById: user.Id,
       CreatedOn: new Date(),
     });
   }
@@ -292,7 +325,7 @@ const makeBuildingUpsertObject = async (
       Value: row.Assessed,
       EvaluationKeyId: 0,
       Year: row.AssessedYear,
-      CreatedById: userId,
+      CreatedById: user.Id,
       CreatedOn: new Date(),
     });
   }
@@ -306,12 +339,13 @@ const makeBuildingUpsertObject = async (
     Id: existentBuilding?.Id,
     PID: numberOrNull(row.PID),
     PIN: numberOrNull(row.PIN),
+    AgencyId: getAgencyOrThrowIfMismatched(row, lookups.agencies, user, roles).Id,
     ClassificationId: classificationId,
     BuildingConstructionTypeId: constructionTypeId,
     BuildingPredominateUseId: predominateUseId,
     Name: generateBuildingName(row.Name, row.Description, row.LocalId),
-    CreatedById: existentBuilding ? undefined : userId,
-    UpdatedById: existentBuilding ? userId : undefined,
+    CreatedById: existentBuilding ? undefined : user.Id,
+    UpdatedById: existentBuilding ? user.Id : undefined,
     UpdatedOn: existentBuilding ? new Date() : undefined,
     CreatedOn: existentBuilding ? undefined : new Date(),
     Location: {
@@ -344,7 +378,12 @@ type BulkUploadRowResult = {
   reason?: string;
 };
 
-const importPropertiesAsJSON = async (worksheet: WorkSheet, userId: UUID, resultId: number) => {
+const importPropertiesAsJSON = async (
+  worksheet: WorkSheet,
+  user: User,
+  roles: string[],
+  resultId: number,
+) => {
   const sheetObj: Record<string, any>[] = xlsx.utils.sheet_to_json(worksheet);
   const classifications = await AppDataSource.getRepository(PropertyClassification).find({
     select: { Name: true, Id: true },
@@ -387,7 +426,8 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, userId: UUID, result
         try {
           const parcelToUpsert = await makeParcelUpsertObject(
             row,
-            userId,
+            user,
+            roles,
             lookups,
             queryRunner,
             existentParcel,
@@ -405,7 +445,8 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, userId: UUID, result
         try {
           const buildingForUpsert = await makeBuildingUpsertObject(
             row,
-            userId,
+            user,
+            roles,
             lookups,
             queryRunner,
             existentBuilding,
@@ -425,7 +466,7 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, userId: UUID, result
         await queryRunner.manager.save(Building, queuedBuildings);
         queuedBuildings = [];
       }
-      if (rowNum % 100) {
+      if (rowNum % 100 == 0) {
         queryRunner.manager.save(ImportResult, {
           Id: resultId,
           CompletionPercentage: rowNum / sheetObj.length,
@@ -443,7 +484,7 @@ const importPropertiesAsJSON = async (worksheet: WorkSheet, userId: UUID, result
     logger.warn(e.message);
     logger.warn(e.stack);
   } finally {
-    await queryRunner.rollbackTransaction();
+    await queryRunner.rollbackTransaction(); //NOTE: This rollback provided for testing convenience. Will be removed for final merge.
     await queryRunner.release();
   }
 

@@ -1,11 +1,11 @@
 import { parentPort, workerData } from 'worker_threads';
 import propertyServices from './propertiesServices';
 import xlsx from 'xlsx';
-import { UUID } from 'crypto';
 import { AppDataSource } from '@/appDataSource';
 import { ImportResult } from '@/typeorm/Entities/ImportResult';
+import { User } from '@/typeorm/Entities/User';
 
-const processFile = async (filePath: string, fileName: string, userId: UUID) => {
+const processFile = async (filePath: string, fileName: string, user: User, roles: string[]) => {
   await AppDataSource.initialize(); //Since this function is going to be called from a new process, requires a new database connection.
   try {
     parentPort.postMessage('Database connection for worker thread has been initialized');
@@ -15,15 +15,20 @@ const processFile = async (filePath: string, fileName: string, userId: UUID) => 
     const resultRow = await AppDataSource.getRepository(ImportResult).save({
       FileName: fileName,
       CompletionPercentage: 0,
-      CreatedById: userId,
+      CreatedById: user.Id,
       CreatedOn: new Date(),
     });
-    const results = await propertyServices.importPropertiesAsJSON(worksheet, userId, resultRow.Id);
+    const results = await propertyServices.importPropertiesAsJSON(
+      worksheet,
+      user,
+      roles,
+      resultRow.Id,
+    );
     await AppDataSource.getRepository(ImportResult).save({
       Id: resultRow.Id,
       CompletionPercentage: 100,
       Results: results,
-      UpdatedById: userId,
+      UpdatedById: user.Id,
       UpdatedOn: new Date(),
     });
     return results; // Note that this return still works with finally as long as return is not called from finally block.
@@ -34,7 +39,7 @@ const processFile = async (filePath: string, fileName: string, userId: UUID) => 
   }
 };
 
-processFile(workerData.filePath, workerData.fileName, workerData.userId)
+processFile(workerData.filePath, workerData.fileName, workerData.user, workerData.roles)
   .then((results) => {
     parentPort.postMessage('File processing succeeded.');
     parentPort.postMessage(

@@ -173,11 +173,13 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
 export const importProperties = async (req: Request, res: Response) => {
   const filePath = req.file.path;
   const fileName = req.file.filename;
-  const userId = (await userServices.getUser(req.user.preferred_username)).Id;
+  const ssoUser = req.user;
+  const user = await userServices.getUser(ssoUser.preferred_username);
+  const roles = ssoUser.client_roles;
   const worker = new Worker(
     path.resolve(__dirname, '../../services/properties/propertyWorker.ts'),
     {
-      workerData: { filePath, fileName, userId },
+      workerData: { filePath, fileName, user, roles },
       execArgv: [
         '--require',
         'ts-node/register',
