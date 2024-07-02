@@ -1,15 +1,23 @@
-name: App NPM Dependency Updates
+name: NPM Dependency Reports
 
 on:
   schedule:
-    - cron: '0 16 * * 2' # Every Tuesday at 8:00-9:00am Pacific Time.
+    - cron: '0 15 * * 2' # Tuesday morning at 7:00-8:00am Pacific Time.
   workflow_dispatch:
 
 # START HERE! v
 
-# This workflow makes use of the env file found in .github/config 
-# Set the necessary env vars there: 
+# ADD REQUIRED FILES:
+# - .github/helpers/parse-json5-config.js
+# - .github/helpers/npm-deps/parse-npm-deps.cjs
+# - .github/helpers/npm-deps/create-report.cjs
+# - .github/helpers/npm-deps/create-report-issues.cjs
+# - .github/helpers/github-api/github-api-requests.cjs
+# - .github/helpers/github-api/create-and-close-existing-issue.cjs
+# - .github/config/dep-report.json5
 
+# EDIT .github/config/dep-report.json5
+# DO NOT Edit below env variables.
 env:
   GITHUB_REPOSITORY: ${{ github.repository }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -35,6 +43,7 @@ jobs:
         - name: Run Script
           id: parse_config
           run: node .github/helpers/parse-json5-config .github/config/dep-report.json5
+
   # Check package versions for updates.
   parse-package-versions:
     runs-on: ubuntu-22.04
@@ -55,7 +64,7 @@ jobs:
       - name: Run NPM DEP Check Node.js script
         id: check_versions
         run: |
-          node .github/helpers/parse-npm-deps.js > outdatedDeps.json
+          node .github/helpers/npm-deps/parse-npm-deps.cjs > outdatedDeps.json
 
       # Upload the output as an artifact.
       - name: Upload output
@@ -92,7 +101,7 @@ jobs:
       - name: Run NPM DEP Check Node.js script
         id: check_versions
         run: |
-          node .github/helpers/create-npm-dep-report.js > outputText.json
+          node .github/helpers/npm-deps/create-report.cjs > outputText.json
 
       # Upload the output as an artifact.
       - name: Upload output
@@ -132,7 +141,7 @@ jobs:
       # Run Node Script to Create GitHub Issue.
       - name: Create GitHub Issues
         run: |
-          node .github/helpers/create-npm-dep-report-issues.cjs
+          node .github/helpers/npm-deps/create-report-issues.cjs
   
   create-tickets:
     needs: 
