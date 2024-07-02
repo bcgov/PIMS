@@ -1,4 +1,5 @@
 import { AppDataSource } from '@/appDataSource';
+import { SortOrders } from '@/constants/types';
 import { MapFilter, PropertyUnionFilter } from '@/controllers/properties/propertiesSchema';
 import { Building } from '@/typeorm/Entities/Building';
 import { Parcel } from '@/typeorm/Entities/Parcel';
@@ -117,8 +118,6 @@ export const sortKeyMapping = (
   return { [sortKey]: sortDirection };
 };
 
-type SortOrders = 'ASC' | 'DESC';
-
 const sortKeyTranslator: Record<string, string> = {
   Agency: 'agency_name',
   PID: 'pid',
@@ -145,11 +144,6 @@ const collectFindOptions = (filter: PropertyUnionFilter) => {
     options.push(constructFindOptionFromQuery('AdministrativeArea', filter.administrativeArea));
   if (filter.propertyType)
     options.push(constructFindOptionFromQuery('PropertyType', filter.propertyType));
-  if (filter.agencyId && filter.agencyId.length > 0) {
-    filter.agencyId.forEach((id) => {
-      options.push(constructFindOptionFromQuery('AgencyId', `in,${String(id)}`));
-    });
-  }
   return options;
 };
 

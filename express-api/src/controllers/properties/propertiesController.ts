@@ -176,18 +176,7 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
 };
 
 export const getPropertyUnion = async (req: Request, res: Response) => {
-  const kcUser = req.user;
   const filter = PropertyUnionFilterSchema.safeParse(req.query);
-  if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
-    const requestedAgencies = filter.data.agencyId;
-    const userHasAgencies = await checkUserAgencyPermission(kcUser, requestedAgencies);
-    // If not agencies were requested or if the user doesn't have those requested agencies
-    if (!requestedAgencies || !userHasAgencies) {
-      // Then only show that user's agencies instead.
-      const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
-      filter.data.agencyId = usersAgencies;
-    }
-  }
   if (filter.success == false) {
     return res.status(400).send(filter.error);
   }
