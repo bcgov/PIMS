@@ -44,6 +44,8 @@ import { Roles } from '@/constants/roles';
 import { AuthContext } from '@/contexts/authContext';
 import { ExpandMoreOutlined } from '@mui/icons-material';
 import { columnNameFormatter, dateFormatter, formatMoney } from '@/utilities/formatters';
+import { LookupContext } from '@/contexts/lookupContext';
+import { Agency } from '@/hooks/api/useAgencyApi';
 
 interface IProjectDetail {
   onClose: () => void;
@@ -65,7 +67,7 @@ const ProjectDetail = (props: IProjectDetail) => {
   const { id } = useParams();
   const { keycloak } = useContext(AuthContext);
   const api = usePimsApi();
-  // const theme = useTheme();
+  const { data: lookupData, getLookupValueById } = useContext(LookupContext);
   const { data, refreshData, isLoading } = useDataLoader(() =>
     api.projects.getProjectById(Number(id)),
   );
@@ -79,21 +81,6 @@ const ProjectDetail = (props: IProjectDetail) => {
 
   const isAuditor = keycloak.hasRoles([Roles.AUDITOR]);
 
-  const { data: tasks, loadOnce: loadTasks } = useDataLoader(api.lookup.getTasks);
-  loadTasks();
-  const { data: noteTypes, loadOnce: loadNotes } = useDataLoader(api.lookup.getProjectNoteTypes);
-  loadNotes();
-  const { data: monetaryTypes, loadOnce: loadMonetary } = useDataLoader(
-    api.lookup.getProjectMonetaryTypes,
-  );
-  loadMonetary();
-  const { data: timestampTypes, loadOnce: loadTimestamps } = useDataLoader(
-    api.lookup.getProjectTimestampTypes,
-  );
-  loadTimestamps();
-  const { data: statuses, loadOnce: loadStatuses } = useDataLoader(api.lookup.getProjectStatuses);
-  loadStatuses();
-
   const { submit: deleteProject, submitting: deletingProject } = useDataSubmitter(
     api.projects.deleteProjectById,
   );
@@ -106,7 +93,7 @@ const ProjectDetail = (props: IProjectDetail) => {
     Monetaries: Array<ProjectMonetary & { Name: string }>;
   }
   const collectedDocumentationByStatus = useMemo((): Record<string, IStatusHistoryStruct> => {
-    if (!data || !tasks || !statuses || !noteTypes || !timestampTypes || !monetaryTypes) {
+    if (!data || !lookupData) {
       return {};
     }
     if (!data.parsedBody?.Tasks) return {};
@@ -119,8 +106,8 @@ const ProjectDetail = (props: IProjectDetail) => {
         if (!curr.IsCompleted) {
           return acc; //Since this is just for display purposes, no point showing non-completed in results.
         }
-        const fullTask = tasks.find((a) => a.Id === curr.TaskId);
-        const fullStatus = statuses.find((a) => a.Id === fullTask.StatusId) ?? {
+        const fullTask = lookupData?.Tasks.find((a) => a.Id === curr.TaskId);
+        const fullStatus = lookupData?.ProjectStatuses.find((a) => a.Id === fullTask.StatusId) ?? {
           Name: 'Uncategorized',
         };
         if (!acc[fullStatus.Name]) {
@@ -133,8 +120,8 @@ const ProjectDetail = (props: IProjectDetail) => {
     );
     data?.parsedBody.Notes.filter((a) => a.Note).reduce(
       (acc: Record<string, IStatusHistoryStruct>, curr) => {
-        const fullNote = noteTypes.find((a) => a.Id === curr.NoteTypeId);
-        const fullStatus = statuses.find((a) => a.Id === fullNote.StatusId) ?? {
+        const fullNote = lookupData?.NoteTypes.find((a) => a.Id === curr.NoteTypeId);
+        const fullStatus = lookupData?.ProjectStatuses.find((a) => a.Id === fullNote.StatusId) ?? {
           Name: 'Uncategorized',
         };
         if (!acc[fullStatus.Name]) {
@@ -147,8 +134,10 @@ const ProjectDetail = (props: IProjectDetail) => {
     );
     data?.parsedBody?.Monetaries?.filter((a) => a.Value).reduce(
       (acc: Record<string, IStatusHistoryStruct>, curr) => {
-        const fullMonetary = monetaryTypes.find((a) => a.Id === curr.MonetaryTypeId);
-        const fullStatus = statuses.find((a) => a.Id === fullMonetary.StatusId) ?? {
+        const fullMonetary = lookupData?.MonetaryTypes.find((a) => a.Id === curr.MonetaryTypeId);
+        const fullStatus = lookupData?.ProjectStatuses.find(
+          (a) => a.Id === fullMonetary.StatusId,
+        ) ?? {
           Name: 'Uncategorized',
         };
         if (!acc[fullStatus.Name]) {
@@ -161,8 +150,10 @@ const ProjectDetail = (props: IProjectDetail) => {
     );
     data?.parsedBody?.Timestamps?.filter((a) => a.Date).reduce(
       (acc: Record<string, IStatusHistoryStruct>, curr) => {
-        const fullTimestamp = timestampTypes.find((a) => a.Id === curr.TimestampTypeId);
-        const fullStatus = statuses.find((a) => a.Id === fullTimestamp.StatusId) ?? {
+        const fullTimestamp = lookupData?.TimestampTypes.find((a) => a.Id === curr.TimestampTypeId);
+        const fullStatus = lookupData?.ProjectStatuses.find(
+          (a) => a.Id === fullTimestamp.StatusId,
+        ) ?? {
           Name: 'Uncategorized',
         };
         if (!acc[fullStatus.Name]) {
@@ -174,7 +165,7 @@ const ProjectDetail = (props: IProjectDetail) => {
       reduceMap,
     );
     return reduceMap;
-  }, [data, tasks, statuses, timestampTypes, monetaryTypes, noteTypes]);
+  }, [data, lookupData]);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openProjectInfoDialog, setOpenProjectInfoDialog] = useState(false);
@@ -184,16 +175,16 @@ const ProjectDetail = (props: IProjectDetail) => {
   const [openAgencyInterestDialog, setOpenAgencyInterestDialog] = useState(false);
 
   const ProjectInfoData = {
-    Classification: data?.parsedBody.Status,
+    Status: getLookupValueById('ProjectStatuses', data?.parsedBody.StatusId),
     ProjectNumber: data?.parsedBody.ProjectNumber,
     Name: data?.parsedBody.Name,
-    AssignTier: data?.parsedBody.TierLevel,
+    AssignTier: getLookupValueById('ProjectTiers', data?.parsedBody.TierLevelId),
     Description: data?.parsedBody.Description,
   };
 
   const FinancialInformationData = useMemo(() => {
-    const salesCostType = monetaryTypes?.find((a) => a.Name === 'SalesCost');
-    const programCostType = monetaryTypes?.find((a) => a.Name === 'ProgramCost');
+    const salesCostType = lookupData?.MonetaryTypes?.find((a) => a.Name === 'SalesCost');
+    const programCostType = lookupData?.MonetaryTypes?.find((a) => a.Name === 'ProgramCost');
     return {
       AssessedValue: data?.parsedBody.Assessed,
       NetBookValue: data?.parsedBody.NetBook,
@@ -206,12 +197,11 @@ const ProjectDetail = (props: IProjectDetail) => {
         (a) => a.MonetaryTypeId === programCostType.Id,
       )?.Value,
     };
-  }, [data, monetaryTypes]);
+  }, [data, lookupData]);
 
-  // const classification = useClassificationStyle();
   const customFormatter = (key: keyof ProjectInfo, val: any) => {
     switch (key) {
-      case 'Classification':
+      case 'Status':
         return <Typography>{(val as ProjectStatus)?.Name}</Typography>;
       case 'AssignTier':
         return <Typography>{(val as TierLevel)?.Name}</Typography>;
@@ -326,12 +316,12 @@ const ProjectDetail = (props: IProjectDetail) => {
               }}
               rows={
                 data?.parsedBody.AgencyResponses && ungroupedAgencies
-                  ? data?.parsedBody.AgencyResponses?.map((resp) => ({
+                  ? (data?.parsedBody.AgencyResponses?.map((resp) => ({
                       ...ungroupedAgencies?.find((agc) => agc.Id === resp.AgencyId),
                       ReceivedOn: resp.ReceivedOn,
                       Note: resp.Note,
                       Response: enumReverseLookup(AgencyResponseType, resp.Response),
-                    }))
+                    })) as (Agency & { ReceivedOn: Date; Note: string })[])
                   : []
               }
             />
@@ -453,7 +443,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           onCancel={() => setOpenDisposalPropDialog(false)}
         />
         <ProjectAgencyResponseDialog
-          agencies={ungroupedAgencies}
+          agencies={ungroupedAgencies as Agency[]}
           options={agencyOptions}
           initialValues={data?.parsedBody}
           open={openAgencyInterestDialog}

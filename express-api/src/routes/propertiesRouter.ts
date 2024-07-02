@@ -1,5 +1,4 @@
 import controllers from '@/controllers';
-import { getPropertiesFuzzySearch } from '@/controllers/properties/propertiesController';
 import activeUserCheck from '@/middleware/activeUserCheck';
 import catchErrors from '@/utilities/controllerErrorWrapper';
 import express from 'express';
@@ -14,6 +13,8 @@ const {
   getPropertiesPaged,
   getPropertiesPagedFilter,
   importProperties,
+  getPropertiesFuzzySearch,
+  getPropertyUnion,
 } = controllers;
 
 // TODO: Could these just be GET requests with query params? Then no need for /filter routes. Would cut controllers in half too.
@@ -32,5 +33,6 @@ const upload = multer({ dest: 'uploads/' });
 router
   .route('/import')
   .post(activeUserCheck, upload.single('spreadsheet'), catchErrors(importProperties));
+router.route('/').get(activeUserCheck, catchErrors(getPropertyUnion));
 
 export default router;

@@ -1,20 +1,11 @@
-const {
-  createIssue,
-  closeIssue,
-  findIssueByTitle,
-} = require("./github-api-requests");
+import { createIssue, closeIssue, findIssueByTitle } from './github-api-requests.mjs';
 
 /**
  * FILE DOES NOT NEED TO BE EDITED.
  * Place within .github/helpers/github-api/
  */
 
-const createAndCloseExistingIssue = async (packageJsonPath, issueBody) => {
-  const issueTitle =
-    packageJsonPath !== "."
-      ? `${packageJsonPath} NPM Dependency Report`
-      : "NPM Dependency Report";
-
+export const createAndCloseExistingIssue = async (issueTitle, issueBody) => {
   // Check for existing Issue.
   const existingIssueNumber = await findIssueByTitle(issueTitle);
 
@@ -27,4 +18,4 @@ const createAndCloseExistingIssue = async (packageJsonPath, issueBody) => {
   await createIssue(issueTitle, decodeURIComponent(issueBody));
 };
 
-module.exports = createAndCloseExistingIssue;
+export default createAndCloseExistingIssue;

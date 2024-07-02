@@ -2,7 +2,10 @@
 import { Request, Response } from 'express';
 import { stubResponse } from '@/utilities/stubResponse';
 import propertyServices from '@/services/properties/propertiesServices';
-import { MapFilterSchema } from '@/controllers/properties/mapFilterSchema';
+import {
+  MapFilterSchema,
+  PropertyUnionFilterSchema,
+} from '@/controllers/properties/propertiesSchema';
 import { checkUserAgencyPermission, isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 import userServices from '@/services/users/usersServices';
 import { Worker } from 'worker_threads';
@@ -43,7 +46,12 @@ export const getPropertiesFuzzySearch = async (req: Request, res: Response) => {
    */
   const keyword = String(req.query.keyword);
   const take = req.query.take ? Number(req.query.take) : undefined;
-  const result = await propertyServices.propertiesFuzzySearch(keyword, take);
+  const kcUser = req.user;
+  let userAgencies;
+  if (!isAdmin(kcUser)) {
+    userAgencies = await userServices.getAgencies(kcUser.preferred_username);
+  }
+  const result = await propertyServices.propertiesFuzzySearch(keyword, take, userAgencies);
   return res.status(200).send(result);
 };
 
@@ -119,7 +127,7 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
       }]
    */
   // parse for filter
-  const filter = await MapFilterSchema.safeParse(req.query);
+  const filter = MapFilterSchema.safeParse(req.query);
   if (filter.success == false) {
     return res.status(400).send(filter.error);
   }
@@ -202,4 +210,13 @@ export const importProperties = async (req: Request, res: Response) => {
     });
   });
   return res.status(200).send('Received file.');
+};
+
+export const getPropertyUnion = async (req: Request, res: Response) => {
+  const filter = PropertyUnionFilterSchema.safeParse(req.query);
+  if (filter.success == false) {
+    return res.status(400).send(filter.error);
+  }
+  const properties = await propertyServices.getPropertiesUnion(filter.data);
+  return res.status(200).send(properties);
 };

@@ -7,12 +7,14 @@ import {
   produceAgency,
   produceBuilding,
   produceParcel,
+  producePropertyUnion,
   produceUser,
 } from '../../../testUtils/factories';
 import { Roles } from '@/constants/roles';
 import { AppDataSource } from '@/appDataSource';
 import { User } from '@/typeorm/Entities/User';
 import { Agency } from '@/typeorm/Entities/Agency';
+import { getPropertyUnion } from '@/controllers/properties/propertiesController';
 
 const {
   getProperties,
@@ -39,9 +41,18 @@ const _getPropertiesForMap = jest.fn().mockImplementation(async () => [
   },
 ]);
 
+const _getPropertyUnion = jest.fn().mockImplementation(async () => [producePropertyUnion]);
+
 jest.mock('@/services/properties/propertiesServices', () => ({
   propertiesFuzzySearch: () => _propertiesFuzzySearch(),
   getPropertiesForMap: () => _getPropertiesForMap(),
+  getPropertiesUnion: () => _getPropertyUnion(),
+}));
+
+const _getAgencies = jest.fn().mockImplementation(async () => [1, 2, 3]);
+
+jest.mock('@/services/users/usersServices', () => ({
+  getAgencies: () => _getAgencies(),
 }));
 
 describe('UNIT - Properties', () => {
@@ -179,6 +190,14 @@ describe('UNIT - Properties', () => {
       await getPropertiesPagedFilter(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.jsonValue.length).toBeGreaterThanOrEqual(1);
+    });
+  });
+
+  describe('GET /properties/', () => {
+    it('should return status 200', async () => {
+      await getPropertyUnion(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(Array.isArray(mockResponse.sendValue)).toBe(true);
     });
   });
 });

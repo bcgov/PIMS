@@ -3,13 +3,20 @@ import { formatNumber, pidFormatter } from '@/utilities/formatters';
 import { FilterList, ArrowCircleLeft, ArrowCircleRight } from '@mui/icons-material';
 import { Box, Paper, Grid, IconButton, Typography, Icon, useTheme } from '@mui/material';
 import sideBarIcon from '@/assets/icons/SidebarLeft-Linear.svg';
+import sideBarClosedIcon from '@/assets/icons/SidebarLeft-Linear-White.svg';
 import { Map } from 'leaflet';
-import React, { CSSProperties, Dispatch, SetStateAction, useLayoutEffect, useState } from 'react';
+import React, {
+  CSSProperties,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import PropertyRow from '@/components/map/propertyRow/PropertyRow';
 import { PropertyTypes } from '@/constants/propertyTypes';
-import useDataLoader from '@/hooks/useDataLoader';
-import usePimsApi from '@/hooks/usePimsApi';
 import FilterControl from '@/components/map/controls/FilterControl';
+import { LookupContext } from '@/contexts/lookupContext';
 
 interface MapSidebarProps {
   properties: PropertyGeo[];
@@ -31,17 +38,11 @@ const MapSidebar = (props: MapSidebarProps) => {
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const theme = useTheme();
-  const api = usePimsApi();
   const propertyPageSize = 20; // Affects paging size
   const sidebarWidth = 350;
 
   // Get related data for lookups
-  const { data: agencyData, loadOnce: loadAgencies } = useDataLoader(api.agencies.getAgencies);
-  const { data: adminAreaData, loadOnce: loadAdminAreas } = useDataLoader(
-    api.administrativeAreas.getAdministrativeAreas,
-  );
-  loadAgencies({});
-  loadAdminAreas({});
+  const { getLookupValueById } = useContext(LookupContext);
 
   // Sets the properties that are in the map's bounds at current view. Resets the page index.
   const definePropertiesInBounds = () => {
@@ -150,14 +151,14 @@ const MapSidebar = (props: MapSidebarProps) => {
                       : property.properties.Name
                     : pidFormatter(property.properties.PID) ?? String(property.properties.PIN)
                 }
-                content1={
-                  adminAreaData?.find((aa) => aa.Id === property.properties.AdministrativeAreaId)
-                    ?.Name ?? 'No Administrative Area'
-                }
-                content2={
-                  agencyData?.find((a) => a.Id === property.properties.AgencyId)?.Name ??
-                  'No Agency'
-                }
+                content={[
+                  property.properties.Address1,
+                  getLookupValueById(
+                    'AdministrativeAreas',
+                    property.properties.AdministrativeAreaId,
+                  )?.Name ?? 'No Administrative Area',
+                  getLookupValueById('Agencies', property.properties.AgencyId)?.Name ?? 'No Agency',
+                ]}
               />
             ))}
         </Box>
@@ -184,24 +185,19 @@ const MapSidebar = (props: MapSidebarProps) => {
         onClick={() => setSidebarOpen(true)}
       >
         {/* All this just to get the SVG white */}
-        <div
+        <img
           style={{
             margin: 'auto',
             transform: `rotate(${!sidebarOpen ? '3.142rad' : '0'})`,
             transition: 'ease-in-out 0.5s',
-            maskImage: `url(${sideBarIcon})`,
-            WebkitMaskImage: `url(${sideBarIcon})`,
-            maskSize: '100%',
-            WebkitMaskSize: 'cover',
-            maskRepeat: 'no-repeat',
-            WebkitMaskRepeat: 'no-repeat',
-            maskPosition: 'center',
             width: '40%',
             height: '40%',
-            backgroundColor: 'white',
             borderRadius: '100%',
           }}
-        ></div>
+          height={18}
+          width={18}
+          src={sideBarClosedIcon}
+        />
       </Box>
 
       {/* Filter Container */}

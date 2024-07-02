@@ -2,6 +2,7 @@ import MultiselectFormField from '@/components/form/MultiselectFormField';
 import TextFormField from '@/components/form/TextFormField';
 import { Roles } from '@/constants/roles';
 import { AuthContext } from '@/contexts/authContext';
+import { LookupContext } from '@/contexts/lookupContext';
 import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
 import { MapFilter } from '@/hooks/api/usePropertiesApi';
 import useDataLoader from '@/hooks/useDataLoader';
@@ -27,29 +28,15 @@ const FilterControl = (props: FilterControlProps) => {
   const { setFilter } = props;
   const api = usePimsApi();
   const user = useContext(AuthContext);
+  const { data: lookupData } = useContext(LookupContext);
 
   // Get lists for dropdowns
-  const agencyOptions = useGroupedAgenciesApi().agencyOptions;
-  const { data: adminAreasData, loadOnce: loadAdminAreas } = useDataLoader(
-    api.administrativeAreas.getAdministrativeAreas,
-  );
-  const { data: classificationsData, loadOnce: loadClassifications } = useDataLoader(
-    api.lookup.getClassifications,
-  );
-  const { data: propertyTypesData, loadOnce: loadPropertyTypes } = useDataLoader(
-    api.lookup.getPropertyTypes,
-  );
+  const { agencyOptions } = useGroupedAgenciesApi();
   const { data: usersAgenciesData, loadOnce: loadUsersAgencies } = useDataLoader(() =>
     api.users.getUsersAgencyIds(user.pimsUser.data?.Username),
   );
-  const { data: regionalDistrictsData, loadOnce: loadRegionalDistricts } = useDataLoader(
-    api.lookup.getRegionalDistricts,
-  );
-  loadAdminAreas({});
-  loadClassifications();
-  loadPropertyTypes();
+
   loadUsersAgencies();
-  loadRegionalDistricts();
 
   // Initial form values
   const formMethods = useForm({
@@ -97,7 +84,7 @@ const FilterControl = (props: FilterControlProps) => {
                 (option) =>
                   user.keycloak.hasRoles([Roles.ADMIN, Roles.AUDITOR], {
                     requireAllRoles: false,
-                  }) || usersAgenciesData.includes(option.value),
+                  }) || usersAgenciesData?.includes(option.value),
               ) ?? []
             }
             allowNestedIndent
@@ -106,19 +93,17 @@ const FilterControl = (props: FilterControlProps) => {
             name={'AdministrativeAreas'}
             label="Administrative Areas"
             options={
-              adminAreasData
-                ?.filter((aa) => !aa.IsDisabled)
-                .map((aa) => ({
-                  label: aa.Name,
-                  value: aa.Id,
-                })) ?? []
+              lookupData?.AdministrativeAreas.filter((aa) => !aa.IsDisabled).map((aa) => ({
+                label: aa.Name,
+                value: aa.Id,
+              })) ?? []
             }
           />
           <MultiselectFormField
             name={'RegionalDistricts'}
             label="Regional Districts"
             options={
-              regionalDistrictsData?.map((rd) => ({
+              lookupData?.RegionalDistricts.map((rd) => ({
                 label: rd.Name,
                 value: rd.Id,
               })) ?? []
@@ -128,7 +113,7 @@ const FilterControl = (props: FilterControlProps) => {
             name={'Classifications'}
             label="Classifications"
             options={
-              classificationsData?.map((c) => ({
+              lookupData?.Classifications.map((c) => ({
                 label: c.Name,
                 value: c.Id,
               })) ?? []
@@ -138,12 +123,10 @@ const FilterControl = (props: FilterControlProps) => {
             name={'PropertyTypes'}
             label="Property Types"
             options={
-              propertyTypesData
-                ?.filter((pt) => !pt.IsDisabled)
-                .map((pt) => ({
-                  label: pt.Name,
-                  value: pt.Id,
-                })) ?? []
+              lookupData?.PropertyTypes.map((pt) => ({
+                label: pt.Name,
+                value: pt.Id,
+              })) ?? []
             }
           />
           <Grid item xs={12} justifyContent={'space-between'} display={'inline-flex'} gap={1}>

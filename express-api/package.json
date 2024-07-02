@@ -21,7 +21,7 @@
   "license": "ISC",
   "dependencies": {
     "@bcgov/citz-imb-kc-css-api": "https://github.com/bcgov/citz-imb-kc-css-api/releases/download/v1.4.0/bcgov-citz-imb-kc-css-api-1.4.0.tgz",
-    "@bcgov/citz-imb-sso-express": "1.0.0-alpha6",
+    "@bcgov/citz-imb-sso-express": "1.0.0-rc2",
     "@types/multer": "^1.4.11",
     "axios": "1.7.1",
     "body-parser": "1.20.2",
@@ -58,8 +58,8 @@
     "@types/nunjucks": "3.2.6",
     "@types/supertest": "6.0.2",
     "@types/swagger-ui-express": "4.1.6",
-    "@typescript-eslint/eslint-plugin": "7.12.0",
-    "@typescript-eslint/parser": "7.12.0",
+    "@typescript-eslint/eslint-plugin": "7.13.1",
+    "@typescript-eslint/parser": "7.13.1",
     "cross-env": "7.0.3",
     "eslint": "8.57.0",
     "eslint-config-prettier": "9.1.0",
@@ -73,6 +73,6 @@
     "ts-node": "10.9.1",
     "tsc-alias": "1.8.8",
     "tsconfig-paths": "4.2.0",
-    "typescript": "5.4.2"
+    "typescript": "5.5.2"
   }
 }

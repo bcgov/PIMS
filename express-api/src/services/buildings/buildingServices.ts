@@ -41,15 +41,6 @@ export const getBuildingById = async (buildingId: number) => {
     order: { FiscalYear: 'DESC' },
   });
   const findBuilding = await buildingRepo.findOne({
-    relations: {
-      Agency: true,
-      AdministrativeArea: true,
-      Classification: true,
-      PropertyType: true,
-      BuildingConstructionType: true,
-      BuildingPredominateUse: true,
-      BuildingOccupantType: true,
-    },
     where: { Id: buildingId },
   });
   if (findBuilding) {

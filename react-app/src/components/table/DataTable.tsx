@@ -217,6 +217,16 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     quickFilter?: string[];
   }
 
+  const formatHeaderToFilterKey = (headerName: string) => {
+    switch (headerName) {
+      case 'PID':
+      case 'PIN':
+        return headerName.toLowerCase();
+      default:
+        return headerName.charAt(0).toLowerCase() + headerName.slice(1);
+    }
+  };
+
   const dataSourceUpdate = (models: ITableModelCollection) => {
     const { pagination, sort, filter, quickFilter } = models;
     if (previousController.current) {
@@ -233,7 +243,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     const filterObj = {};
     if (filter?.items) {
       for (const f of filter.items) {
-        const asCamelCase = f.field.charAt(0).toLowerCase() + f.field.slice(1);
+        const asCamelCase = formatHeaderToFilterKey(f.field);
         if (f.value != undefined && String(f.value) !== 'Invalid Date') {
           filterObj[asCamelCase] = `${f.operator},${f.value}`;
         } else if (f.operator === 'isNotEmpty' || f.operator === 'isEmpty') {
@@ -466,7 +476,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   // Sets quickfilter value of DataGrid. newValue is a string input.
   const updateSearchValue = useMemo(() => {
     return debounce((newValue) => {
-      //tableApiRef.current.setQuickFilterValues(newValue.split(' ').filter((word) => word !== ''));
+      tableApiRef.current.setQuickFilterValues(newValue.split(' ').filter((word) => word !== ''));
       const defaultpagesize = { page: 0, pageSize: tableModel.pagination.pageSize };
       tableApiRef.current.setPaginationModel(defaultpagesize);
       setQuery(defaultpagesize);

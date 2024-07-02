@@ -1,21 +1,18 @@
 import { Box, Grid, Typography } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import TextFormField from '../form/TextFormField';
 import AutocompleteFormField from '../form/AutocompleteFormField';
 import usePimsApi from '@/hooks/usePimsApi';
-import useDataLoader from '@/hooks/useDataLoader';
 import { NavigateBackButton } from '../display/DetailViewNavigation';
 import { useNavigate } from 'react-router-dom';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LoadingButton } from '@mui/lab';
+import { LookupContext } from '@/contexts/lookupContext';
 
 const AddAdministrativeArea = () => {
   const api = usePimsApi();
-  const { data: regionalDistricts, loadOnce: loadRegional } = useDataLoader(
-    api.lookup.getRegionalDistricts,
-  );
-  loadRegional();
+  const { data: lookupData } = useContext(LookupContext);
   const { submit, submitting } = useDataSubmitter(api.administrativeAreas.addAdministrativeArea);
   const navigate = useNavigate();
   const formMethods = useForm({
@@ -53,7 +50,10 @@ const AddAdministrativeArea = () => {
               required
               name={'RegionalDistrictId'}
               label={'Regional District'}
-              options={regionalDistricts?.map((reg) => ({ value: reg.Id, label: reg.Name })) ?? []}
+              options={
+                lookupData?.RegionalDistricts?.map((reg) => ({ value: reg.Id, label: reg.Name })) ??
+                []
+              }
             />
           </Grid>
         </Grid>
