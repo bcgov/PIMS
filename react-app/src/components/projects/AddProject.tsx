@@ -1,5 +1,5 @@
 import { Box, Grid, InputAdornment, Typography, useTheme } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { NavigateBackButton } from '../display/DetailViewNavigation';
 import TextFormField from '../form/TextFormField';
 import AutocompleteFormField from '../form/AutocompleteFormField';
@@ -7,7 +7,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
 import { useNavigate } from 'react-router-dom';
 import usePimsApi from '@/hooks/usePimsApi';
-import useDataLoader from '@/hooks/useDataLoader';
 import { ProjectPropertyIds } from '@/hooks/api/useProjectsApi';
 import DisposalProjectSearch, {
   BuildingWithType,
@@ -16,6 +15,7 @@ import DisposalProjectSearch, {
 import React from 'react';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LoadingButton } from '@mui/lab';
+import { LookupContext } from '@/contexts/lookupContext';
 
 const AddProject = () => {
   const navigate = useNavigate();
@@ -39,37 +39,32 @@ const AddProject = () => {
   const [rows, setRows] = useState([]);
   const theme = useTheme();
   const api = usePimsApi();
-  const { data: tierData, loadOnce: loadTiers } = useDataLoader(api.lookup.getTierLevels);
-  loadTiers();
-  const { data: statuses, loadOnce: loadStatuses } = useDataLoader(api.lookup.getProjectStatuses);
-  loadStatuses();
-  const { data: tasks, loadOnce: loadTasks } = useDataLoader(api.lookup.getTasks);
-  loadTasks();
-  const {
-    data: monetary,
-    loadOnce: loadMonetary,
-    isLoading: monetaryLoading,
-  } = useDataLoader(api.lookup.getProjectMonetaryTypes);
-  loadMonetary();
+  const { data: lookupData } = useContext(LookupContext);
+
   const { submit, submitting } = useDataSubmitter(api.projects.postProject);
   const tasksForAddState = useMemo(() => {
-    if (!statuses || !tasks) {
+    if (!lookupData) {
       return [];
     } else {
-      const defaultState = statuses.find((a) => a.Name === 'Required Documentation');
-      const addTasks = tasks.filter((task) => task.StatusId === defaultState.Id);
-      const exemptionTask = tasks.find((a) => a.Name === 'Exemption requested');
+      const defaultState = lookupData?.ProjectStatuses.find(
+        (a) => a.Name === 'Required Documentation',
+      );
+      const addTasks = lookupData?.Tasks.filter((task) => task.StatusId === defaultState.Id);
+      const exemptionTask = lookupData?.Tasks.find((a) => a.Name === 'Exemption requested');
       if (exemptionTask) {
         addTasks.push({ ...exemptionTask, Name: 'Apply for Enhanced Referral Process exemption' });
       }
       addTasks.forEach((task, i) => formMethods.setValue(`Tasks.${i}.TaskId`, task.Id));
       return addTasks;
     }
-  }, [statuses, tasks]);
-  const salesCostType = useMemo(() => monetary?.find((a) => a.Name === 'SalesCost'), [monetary]);
+  }, [lookupData]);
+  const salesCostType = useMemo(
+    () => lookupData?.MonetaryTypes?.find((a) => a.Name === 'SalesCost'),
+    [lookupData],
+  );
   const programCostType = useMemo(
-    () => monetary?.find((a) => a.Name === 'ProgramCost'),
-    [monetary],
+    () => lookupData?.MonetaryTypes?.find((a) => a.Name === 'ProgramCost'),
+    [lookupData],
   );
   return (
     <Box
@@ -102,7 +97,10 @@ const AddProject = () => {
               required
               name={'TierLevelId'}
               label={'Assign tier'}
-              options={tierData?.map((tier) => ({ value: tier.Id, label: tier.Name })) ?? []}
+              options={
+                lookupData?.ProjectTiers?.map((tier) => ({ value: tier.Id, label: tier.Name })) ??
+                []
+              }
             />
           </Grid>
           <Grid item xs={12}>
@@ -239,7 +237,6 @@ const AddProject = () => {
       </FormProvider>
       <LoadingButton
         loading={submitting}
-        disabled={monetaryLoading}
         onClick={async () => {
           const isValid = await formMethods.trigger();
           setShowNoPropertiesError(!rows.length);

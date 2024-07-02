@@ -1,10 +1,15 @@
-import { Building, BuildingEvaluation, BuildingFiscal } from '@/hooks/api/useBuildingsApi';
+import {
+  Building,
+  BuildingConstructionType,
+  BuildingEvaluation,
+  BuildingFiscal,
+  BuildingPredominateUse,
+} from '@/hooks/api/useBuildingsApi';
 import { Parcel, ParcelEvaluation, ParcelFiscal } from '@/hooks/api/useParcelsApi';
-import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
 import { Box } from '@mui/material';
 import dayjs from 'dayjs';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import {
@@ -17,6 +22,8 @@ import {
 } from './PropertyForms';
 import { parseFloatOrNull, parseIntOrNull, pidFormatter } from '@/utilities/formatters';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
+import { LookupContext } from '@/contexts/lookupContext';
+import { Classification } from '@/hooks/api/useLookupApi';
 
 interface IParcelInformationEditDialog {
   initialValues: Parcel;
@@ -29,16 +36,9 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
   const { initialValues, postSubmit } = props;
 
   const api = usePimsApi();
+  const { data: lookupData } = useContext(LookupContext);
 
-  const { data: adminAreasData, loadOnce: adminLoad } = useDataLoader(
-    api.administrativeAreas.getAdministrativeAreas,
-  );
-  const { data: classificationData, loadOnce: classificationLoad } = useDataLoader(
-    api.lookup.getClassifications,
-  );
   const { submit, submitting } = useDataSubmitter(api.parcels.updateParcelById);
-  adminLoad({});
-  classificationLoad();
 
   const infoFormMethods = useForm({
     defaultValues: {
@@ -91,12 +91,15 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
           <GeneralInformationForm
             propertyType={'Parcel'}
             adminAreas={
-              adminAreasData?.map((admin) => ({ label: admin.Name, value: admin.Id })) ?? []
+              lookupData?.AdministrativeAreas?.map((admin) => ({
+                label: admin.Name,
+                value: admin.Id,
+              })) ?? []
             }
           />
           <ParcelInformationForm
             classificationOptions={
-              classificationData?.map((classif) => ({
+              lookupData?.Classifications.map((classif) => ({
                 label: classif.Name,
                 value: classif.Id,
               })) ?? []
@@ -117,25 +120,9 @@ interface IBuildingInformationEditDialog {
 
 export const BuildingInformationEditDialog = (props: IBuildingInformationEditDialog) => {
   const api = usePimsApi();
+  const { data: lookupData } = useContext(LookupContext);
 
-  const { data: adminAreasData, loadOnce: adminLoad } = useDataLoader(
-    api.administrativeAreas.getAdministrativeAreas,
-  );
-  const { data: classificationData, loadOnce: classificationLoad } = useDataLoader(
-    api.lookup.getClassifications,
-  );
-  const { data: predominateUseData, loadOnce: predominateUseLoad } = useDataLoader(
-    api.lookup.getPredominateUses,
-  );
-  const { data: constructionTypeData, loadOnce: constructionLoad } = useDataLoader(
-    api.lookup.getConstructionTypes,
-  );
   const { submit, submitting } = useDataSubmitter(api.buildings.updateBuildingById);
-
-  adminLoad({});
-  classificationLoad();
-  predominateUseLoad();
-  constructionLoad();
 
   const { initialValues, open, onCancel, postSubmit } = props;
   const infoFormMethods = useForm({
@@ -208,13 +195,16 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
           <GeneralInformationForm
             propertyType={'Building'}
             adminAreas={
-              adminAreasData?.map((admin) => ({ label: admin.Name, value: admin.Id })) ?? []
+              lookupData?.AdministrativeAreas.map((admin) => ({
+                label: admin.Name,
+                value: admin.Id,
+              })) ?? []
             }
           />
           <BuildingInformationForm
-            classificationOptions={classificationData}
-            constructionOptions={constructionTypeData}
-            predominateUseOptions={predominateUseData}
+            classificationOptions={lookupData?.Classifications as Classification[]}
+            constructionOptions={lookupData?.ConstructionTypes as BuildingConstructionType[]}
+            predominateUseOptions={lookupData?.PredominateUses as BuildingPredominateUse[]}
           />
         </Box>
       </FormProvider>
@@ -346,13 +336,6 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
         />
         {/* Map through initialRelatedBuildings and render AssessedValue components */}
         {initialRelatedBuildings?.map((building, idx) => {
-          // const buildingEvals = building?.Evaluations?.map((evalu) => evalu.Year) ?? [];
-          // if (!buildingEvals.includes(currentYear)) {
-          //   // Add currentYear to yearsFromEvaluations array
-          //   buildingEvals.unshift(currentYear);
-          // }
-
-          // const past2BuildingAssessments = buildingEvals.slice(0, 2);
           return (
             <AssessedValue
               maxRows={(building.Evaluations?.length ?? 0) + 1}
@@ -388,16 +371,6 @@ export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditD
     defaultValues: { Fiscals: [] },
     mode: 'onBlur',
   });
-  // const currentYear = new Date().getFullYear();
-  // const years = [currentYear];
-  // const defaultValues = years.map((year) => ({
-  //   FiscalYear: year,
-  //   Value: 0,
-  //   EffectiveDate: undefined,
-  //   FiscalKeyId: 0,
-  //   PropertyType: initialValues?.PropertyTypeId || null,
-  //   Id: initialValues?.Id || null,
-  // }));
 
   useEffect(() => {
     const fiscalValues = initialValues?.Fiscals.map((fisc) => ({
@@ -405,19 +378,6 @@ export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditD
       Value: String(fisc.Value).replace(/[$,]/g, ''),
       EffectiveDate: fisc.EffectiveDate == null ? null : dayjs(fisc.EffectiveDate),
     }));
-    // // Check if currentYear is not in yearsFromEvaluations array
-    // if (!fiscalYears.includes(currentYear)) {
-    //   // Add currentYear to yearsFromEvaluations array
-    //   fiscalYears.unshift(currentYear);
-    //   fiscalValues.unshift({
-    //     FiscalYear: currentYear,
-    //     Value: 0,
-    //     EffectiveDate: undefined,
-    //     FiscalKeyId: 0,
-    //     PropertyType: initialValues?.PropertyTypeId,
-    //     Id: initialValues?.Id,
-    //   });
-    // }
     netBookFormMethods.reset({
       Fiscals: fiscalValues?.sort((a, b) => b.FiscalYear - a.FiscalYear),
     });

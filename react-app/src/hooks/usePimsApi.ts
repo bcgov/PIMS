@@ -13,6 +13,7 @@ import usePropertiesApi from './api/usePropertiesApi';
 import useToolsApi from './api/useToolsApi';
 import useParcelLayerApi from './api/useParcelLayerApi';
 import useProjectsApi from './api/useProjectsApi';
+import useBCAssessmentApi from '@/hooks/api/useBCAssessmentApi';
 import useLtsaApi from './api/useLtsaApi';
 
 /**
@@ -35,6 +36,7 @@ const usePimsApi = () => {
   const tools = useToolsApi(fetch);
   const parcelLayer = useParcelLayerApi(fetch);
   const projects = useProjectsApi(fetch);
+  const bcAssessment = useBCAssessmentApi();
   const ltsa = useLtsaApi(fetch);
 
   return {
@@ -50,6 +52,7 @@ const usePimsApi = () => {
     tools,
     parcelLayer,
     projects,
+    bcAssessment,
     ltsa,
   };
 };

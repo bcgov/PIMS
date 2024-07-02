@@ -4,36 +4,65 @@ import { Building } from '@/typeorm/Entities/Building';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
 import { PropertyUnion } from '@/typeorm/Entities/views/PropertyUnionView';
-import { constructFindOptionFromQuery } from '@/utilities/helperFunctions';
-import { FindOptionsOrder, FindOptionsOrderValue, ILike, In } from 'typeorm';
+import {
+  constructFindOptionFromQuery,
+  constructFindOptionFromQueryPid,
+} from '@/utilities/helperFunctions';
+import { Brackets, FindOptionsOrder, FindOptionsOrderValue, ILike, In } from 'typeorm';
 
-const propertiesFuzzySearch = async (keyword: string, limit?: number) => {
-  const parcels = await AppDataSource.getRepository(Parcel)
+const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?: number[]) => {
+  const parcelsQuery = await AppDataSource.getRepository(Parcel)
     .createQueryBuilder('parcel')
     .leftJoinAndSelect('parcel.Agency', 'agency')
     .leftJoinAndSelect('parcel.AdministrativeArea', 'adminArea')
     .leftJoinAndSelect('parcel.Evaluations', 'evaluations')
     .leftJoinAndSelect('parcel.Fiscals', 'fiscals')
-    .where(`parcel.pid::text like '%${keyword}%'`)
-    .orWhere(`parcel.pin::text like '%${keyword}%'`)
-    .orWhere(`agency.name like '%${keyword}%'`)
-    .orWhere(`adminArea.name like '%${keyword}%'`)
-    .orWhere(`parcel.address1 like '%${keyword}%'`)
-    .take(limit)
-    .getMany();
-  const buildings = await AppDataSource.getRepository(Building)
+    .leftJoinAndSelect('parcel.Classification', 'classification')
+    .where(
+      new Brackets((qb) => {
+        qb.where(`parcel.pid::text like '%${keyword}%'`)
+          .orWhere(`parcel.pin::text like '%${keyword}%'`)
+          .orWhere(`agency.name like '%${keyword}%'`)
+          .orWhere(`adminArea.name like '%${keyword}%'`)
+          .orWhere(`parcel.address1 like '%${keyword}%'`);
+      }),
+    )
+    .andWhere(`classification.Name in ('Surplus Encumbered', 'Surplus Active')`);
+
+  // Add the optional agencyIds filter if provided
+  if (agencyIds && agencyIds.length > 0) {
+    parcelsQuery.andWhere(`parcel.agency_id IN (:...agencyIds)`, { agencyIds });
+  }
+  if (limit) {
+    parcelsQuery.take(limit);
+  }
+  const parcels = await parcelsQuery.getMany();
+
+  const buildingsQuery = await AppDataSource.getRepository(Building)
     .createQueryBuilder('building')
     .leftJoinAndSelect('building.Agency', 'agency')
     .leftJoinAndSelect('building.AdministrativeArea', 'adminArea')
     .leftJoinAndSelect('building.Evaluations', 'evaluations')
     .leftJoinAndSelect('building.Fiscals', 'fiscals')
-    .where(`building.pid::text like '%${keyword}%'`)
-    .orWhere(`building.pin::text like '%${keyword}%'`)
-    .orWhere(`agency.name like '%${keyword}%'`)
-    .orWhere(`adminArea.name like '%${keyword}%'`)
-    .orWhere(`building.address1 like '%${keyword}%'`)
-    .take(limit)
-    .getMany();
+    .leftJoinAndSelect('building.Classification', 'classification')
+    .where(
+      new Brackets((qb) => {
+        qb.where(`building.pid::text like :keyword`, { keyword: `%${keyword}%` })
+          .orWhere(`building.pin::text like :keyword`, { keyword: `%${keyword}%` })
+          .orWhere(`agency.name like :keyword`, { keyword: `%${keyword}%` })
+          .orWhere(`adminArea.name like :keyword`, { keyword: `%${keyword}%` })
+          .orWhere(`building.address1 like :keyword`, { keyword: `%${keyword}%` });
+      }),
+    )
+    .andWhere(`classification.Name in ('Surplus Encumbered', 'Surplus Active')`);
+
+  if (agencyIds && agencyIds.length > 0) {
+    buildingsQuery.andWhere(`building.agency_id IN (:...agencyIds)`, { agencyIds });
+  }
+  if (limit) {
+    buildingsQuery.take(limit);
+  }
+  const buildings = await buildingsQuery.getMany();
   return {
     Parcels: parcels,
     Buildings: buildings,
@@ -90,8 +119,8 @@ const sortKeyMapping = (
 const collectFindOptions = (filter: PropertyUnionFilter) => {
   const options = [];
   if (filter.agency) options.push(constructFindOptionFromQuery('Agency', filter.agency));
-  if (filter.pid) options.push(constructFindOptionFromQuery('PID', filter.pid));
-  if (filter.pin) options.push(constructFindOptionFromQuery('PIN', filter.pin));
+  if (filter.pid) options.push(constructFindOptionFromQueryPid('PID', filter.pid));
+  if (filter.pin) options.push(constructFindOptionFromQueryPid('PIN', filter.pin));
   if (filter.address) options.push(constructFindOptionFromQuery('Address', filter.address));
   if (filter.updatedOn) options.push(constructFindOptionFromQuery('UpdatedOn', filter.updatedOn));
   if (filter.classification)
