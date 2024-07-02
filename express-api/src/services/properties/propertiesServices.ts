@@ -173,6 +173,18 @@ const getBuildingConstructionTypeOrThrow = (
     );
   }
 };
+// const isEvaluationInDataSourceMoreRecent = (
+//   row: Record<string, any>,
+//   evaluations: ParcelEvaluation[] | BuildingEvaluation[],
+// ) => {
+//   return evaluations.some((a) => a.Year > row.AssessedYear);
+// };
+// const isFiscalInDataSourceMoreRecent = (
+//   row: Record<string, any>,
+//   fiscals: ParcelFiscal[] | BuildingFiscal[],
+// ) => {
+//   return fiscals.some((a) => a.FiscalYear > row.FiscalYear);
+// };
 const compareWithoutCase = (str1: string, str2: string) => {
   if (str1.localeCompare(str2, 'en', { sensitivity: 'base' }) == 0) return true;
   else return false;
@@ -184,6 +196,8 @@ const makeParcelUpsertObject = async (
   queryRunner: QueryRunner,
   existentParcel: Parcel = null,
 ) => {
+  const currRowEvaluations: Array<Partial<ParcelEvaluation>> = [];
+  const currRowFiscals: Array<Partial<ParcelFiscal>> = [];
   if (existentParcel) {
     const evaluations = await queryRunner.manager.find(ParcelEvaluation, {
       where: { ParcelId: existentParcel.Id },
@@ -191,12 +205,10 @@ const makeParcelUpsertObject = async (
     const fiscals = await queryRunner.manager.find(ParcelFiscal, {
       where: { ParcelId: existentParcel.Id },
     });
-    existentParcel.Evaluations = evaluations;
-    existentParcel.Fiscals = fiscals;
+    currRowEvaluations.push(...evaluations);
+    currRowFiscals.push(...fiscals);
   }
-  const currRowEvaluations: Array<Partial<ParcelEvaluation>> = [];
-  const currRowFiscals: Array<Partial<ParcelFiscal>> = [];
-  if (row.NetBook && !existentParcel?.Fiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
+  if (row.NetBook && !currRowFiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
     currRowFiscals.push({
       Value: row.NetBook,
       FiscalKeyId: 0,
@@ -205,7 +217,7 @@ const makeParcelUpsertObject = async (
       CreatedOn: new Date(),
     });
   }
-  if (row.Assessed && !existentParcel?.Evaluations.some((a) => a.Year == row.EvaluationYear)) {
+  if (row.Assessed && !currRowEvaluations.some((a) => a.Year == row.EvaluationYear)) {
     currRowEvaluations.push({
       Value: row.Assessed,
       EvaluationKeyId: 0,
@@ -253,6 +265,8 @@ const makeBuildingUpsertObject = async (
   queryRunner: QueryRunner,
   existentBuilding: Building = null,
 ) => {
+  const currRowEvaluations: Array<Partial<BuildingEvaluation>> = [];
+  const currRowFiscals: Array<Partial<BuildingFiscal>> = [];
   if (existentBuilding) {
     const evaluations = await queryRunner.manager.find(BuildingEvaluation, {
       where: { BuildingId: existentBuilding.Id },
@@ -260,12 +274,11 @@ const makeBuildingUpsertObject = async (
     const fiscals = await queryRunner.manager.find(BuildingFiscal, {
       where: { BuildingId: existentBuilding.Id },
     });
-    existentBuilding.Evaluations = evaluations;
-    existentBuilding.Fiscals = fiscals;
+    currRowEvaluations.push(...evaluations);
+    currRowFiscals.push(...fiscals);
   }
-  const currRowEvaluations: Array<Partial<BuildingEvaluation>> = [];
-  const currRowFiscals: Array<Partial<BuildingFiscal>> = [];
-  if (row.NetBook && !existentBuilding?.Fiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
+
+  if (row.NetBook && !currRowFiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
     currRowFiscals.push({
       Value: row.NetBook,
       FiscalKeyId: 0,
@@ -274,11 +287,11 @@ const makeBuildingUpsertObject = async (
       CreatedOn: new Date(),
     });
   }
-  if (row.Assessed && !existentBuilding?.Evaluations.some((a) => a.Year == row.EvaluationYear)) {
+  if (row.Assessed && !currRowEvaluations.some((a) => a.Year == row.EvaluationYear)) {
     currRowEvaluations.push({
       Value: row.Assessed,
       EvaluationKeyId: 0,
-      Year: row.AssessedYear, //Change to EvaluationYear later.
+      Year: row.AssessedYear,
       CreatedById: userId,
       CreatedOn: new Date(),
     });
