@@ -123,6 +123,7 @@ export interface LtsaOrder {
 
 const useLtsaApi = (absoluteFetch: IFetch) => {
   const getLtsabyPid = async (pid: number): Promise<LtsaOrder> => {
+    if (pid === 0) return undefined;
     const { parsedBody } = await absoluteFetch.get(`/ltsa/land/title?pid=${pid}`);
     return parsedBody as LtsaOrder;
   };

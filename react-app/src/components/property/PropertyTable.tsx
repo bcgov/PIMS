@@ -51,6 +51,10 @@ export const useClassificationStyle = () => {
       textColor: lighten(theme.palette.warning.main, 0.2),
       bgColor: theme.palette.warning.light,
     },
+    undefined: {
+      textColor: lighten(theme.palette.warning.main, 0.2),
+      bgColor: theme.palette.black.main,
+    },
   };
 };
 
@@ -298,7 +302,7 @@ const PropertyTable = (props: IPropertyTable) => {
           name="properties"
           dataSource={api.properties.getPropertiesUnion}
           onPresetFilterChange={selectPresetFilter}
-          getRowId={(row) => row.Id + row.PropertyType}
+          getRowId={(row) => `${row.Id}_${row.PropertyType}`}
           defaultFilter={'All Properties'}
           tableOperationMode="server"
           onRowClick={props.rowClickHandler}

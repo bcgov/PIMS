@@ -50,6 +50,7 @@ export const constructFindOptionFromQuery = <T>(
   column: keyof T,
   operatorValuePair: string, //format: "operator,value"
 ): FindOptionsWhere<T> => {
+  if (operatorValuePair == null) return { [column]: undefined } as FindOptionsWhere<T>;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, operator, value] = operatorValuePair.match(/([^,]*),(.*)/).map((a) => a.trim());
   let internalMatcher;
