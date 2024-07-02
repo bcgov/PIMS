@@ -959,7 +959,7 @@ export const produceAgencyResponse = (props?: Partial<ProjectAgencyResponse>) =>
   return response;
 };
 
-export const producePropertyUnion = (props: Partial<PropertyUnion>) => {
+export const producePropertyUnion = (props?: Partial<PropertyUnion>) => {
   const union: PropertyUnion = {
     Id: faker.number.int(),
     PID: faker.number.int({ max: 999999999 }),

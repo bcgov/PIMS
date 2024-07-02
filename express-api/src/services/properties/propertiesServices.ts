@@ -159,7 +159,7 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
     );
 
   // Restricts based on user's agencies
-  if (filter.agencyId) {
+  if (filter.agencyId?.length) {
     query.andWhere('agency_id IN(:list)', {
       list: filter.agencyId.join(','),
     });
