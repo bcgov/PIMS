@@ -12,7 +12,10 @@ const _parcelsCreateQueryBuilder: any = {
   leftJoinAndSelect: () => _parcelsCreateQueryBuilder,
   where: () => _parcelsCreateQueryBuilder,
   orWhere: () => _parcelsCreateQueryBuilder,
+  andWhere: () => _parcelsCreateQueryBuilder,
   take: () => _parcelsCreateQueryBuilder,
+  skip: () => _parcelsCreateQueryBuilder,
+  orderBy: () => _parcelsCreateQueryBuilder,
   getMany: () => [produceParcel()],
 };
 
@@ -22,8 +25,24 @@ const _buildingsCreateQueryBuilder: any = {
   leftJoinAndSelect: () => _parcelsCreateQueryBuilder,
   where: () => _parcelsCreateQueryBuilder,
   orWhere: () => _parcelsCreateQueryBuilder,
+  andWhere: () => _parcelsCreateQueryBuilder,
   take: () => _parcelsCreateQueryBuilder,
+  skip: () => _parcelsCreateQueryBuilder,
+  orderBy: () => _parcelsCreateQueryBuilder,
   getMany: () => [produceBuilding()],
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const _propertyUnionCreateQueryBuilder: any = {
+  select: () => _parcelsCreateQueryBuilder,
+  leftJoinAndSelect: () => _parcelsCreateQueryBuilder,
+  where: () => _parcelsCreateQueryBuilder,
+  orWhere: () => _parcelsCreateQueryBuilder,
+  andWhere: () => _parcelsCreateQueryBuilder,
+  take: () => _parcelsCreateQueryBuilder,
+  skip: () => _parcelsCreateQueryBuilder,
+  orderBy: () => _parcelsCreateQueryBuilder,
+  getMany: () => [producePropertyUnion()],
 };
 
 jest
@@ -47,8 +66,8 @@ jest.spyOn(AppDataSource.getRepository(MapProperties), 'find').mockImplementatio
 ]);
 
 jest
-  .spyOn(AppDataSource.getRepository(PropertyUnion), 'find')
-  .mockImplementation(async () => [producePropertyUnion({})]);
+  .spyOn(AppDataSource.getRepository(PropertyUnion), 'createQueryBuilder')
+  .mockImplementation(() => _propertyUnionCreateQueryBuilder);
 
 describe('UNIT - Property Services', () => {
   beforeEach(() => {
@@ -74,6 +93,11 @@ describe('UNIT - Property Services', () => {
         sortKey: 'Agency',
         sortOrder: 'DESC',
         landArea: 'startsWith,1',
+        address: 'contains,742 Evergreen Terr.',
+        classification: 'contains,core',
+        agencyId: [1],
+        quantity: 2,
+        page: 1,
         updatedOn: 'after,' + new Date(),
       });
       expect(Array.isArray(result));

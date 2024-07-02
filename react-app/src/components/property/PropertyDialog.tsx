@@ -373,13 +373,14 @@ export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditD
   });
 
   useEffect(() => {
-    const fiscalValues = initialValues?.Fiscals.map((fisc) => ({
-      ...fisc,
-      Value: String(fisc.Value).replace(/[$,]/g, ''),
-      EffectiveDate: fisc.EffectiveDate == null ? null : dayjs(fisc.EffectiveDate),
-    }));
+    const fiscalValues =
+      initialValues?.Fiscals?.map((fisc) => ({
+        ...fisc,
+        Value: String(fisc.Value).replace(/[$,]/g, ''),
+        EffectiveDate: fisc.EffectiveDate == null ? null : dayjs(fisc.EffectiveDate),
+      })) ?? [];
     netBookFormMethods.reset({
-      Fiscals: fiscalValues?.sort((a, b) => b.FiscalYear - a.FiscalYear),
+      Fiscals: fiscalValues?.sort((a, b) => b.FiscalYear - a.FiscalYear) ?? [],
     });
   }, [initialValues]);
 
