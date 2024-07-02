@@ -42,13 +42,13 @@ const UserDetail = ({ onClose }: IUserDetail) => {
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
 
   const rolesOptions = useMemo(
-    () => lookupData?.Roles.map((role) => ({ label: role.Name, value: role.Name })) ?? [],
+    () => lookupData?.Roles?.map((role) => ({ label: role.Name, value: role.Name })) ?? [],
     [lookupData],
   );
 
   const userStatusData = {
     Status: data?.Status,
-    Role: lookupData.Roles.find((role) => role.Id === data?.RoleId),
+    Role: lookupData?.Roles?.find((role) => role.Id === data?.RoleId),
   };
 
   const userProfileData = {
