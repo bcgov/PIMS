@@ -109,8 +109,8 @@ const useBuildingsApi = (absoluteFetch: IFetch) => {
     return parsedBody as Building[];
   };
   const getBuildingById = async (id: number) => {
-    const { parsedBody } = await absoluteFetch.get(`/buildings/${id}`);
-    return parsedBody as Building;
+    const { parsedBody, status } = await absoluteFetch.get(`/buildings/${id}`);
+    return { parsedBody: parsedBody as Building, status };
   };
   const deleteBuildingById = async (id: number) => {
     const response = await absoluteFetch.del(`/buildings/${id}`);

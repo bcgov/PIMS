@@ -87,8 +87,8 @@ const useParcelsApi = (absoluteFetch: IFetch) => {
     return parsedBody as Parcel[];
   };
   const getParcelById = async (id: number) => {
-    const { parsedBody } = await absoluteFetch.get(`/parcels/${id}`);
-    return parsedBody as Parcel;
+    const { parsedBody, status } = await absoluteFetch.get(`/parcels/${id}`);
+    return { parsedBody: parsedBody as Parcel, status };
   };
   const deleteParcelById = async (id: number) => {
     const response = await absoluteFetch.del(`/parcels/${id}`);
