@@ -308,11 +308,11 @@ export const filterProjects = async (req: Request, res: Response) => {
   const filter = ProjectFilterSchema.safeParse(req.query);
   const includeRelations = req.query.includeRelations === 'true';
   const forExcelExport = req.query.excelExport === 'true';
-  const kcUser = req.user as unknown as SSOUser;
   if (!filter.success) {
     return res.status(400).send('Could not parse filter.');
   }
   const filterResult = filter.data;
+  const kcUser = req.user as unknown as SSOUser;
   if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
     // get array of user's agencies
     const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);

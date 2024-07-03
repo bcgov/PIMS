@@ -118,6 +118,7 @@ export const sortKeyMapping = (
   return { [sortKey]: sortDirection };
 };
 
+// No joins, so database column names are used for sort
 const sortKeyTranslator: Record<string, string> = {
   Agency: 'agency_name',
   PID: 'pid',

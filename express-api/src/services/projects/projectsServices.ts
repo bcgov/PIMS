@@ -15,6 +15,7 @@ import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import logger from '@/utilities/winstonLogger';
 import {
+  Brackets,
   DeepPartial,
   FindManyOptions,
   FindOptionsOrder,
@@ -33,6 +34,7 @@ import { constructFindOptionFromQuery } from '@/utilities/helperFunctions';
 import { ProjectTimestamp } from '@/typeorm/Entities/ProjectTimestamp';
 import { ProjectMonetary } from '@/typeorm/Entities/ProjectMonetary';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
+import { SortOrders } from '@/constants/types';
 
 const projectRepo = AppDataSource.getRepository(Project);
 
@@ -773,6 +775,7 @@ const sortKeyMapping = (
 
 const collectFindOptions = (filter: ProjectFilter) => {
   const options = [];
+  // TODO: Add market value and updated by searches
   if (filter.name) options.push(constructFindOptionFromQuery('Name', filter.name));
   if (filter.agency) options.push({ Agency: constructFindOptionFromQuery('Name', filter.agency) });
   if (filter.status) options.push({ Status: constructFindOptionFromQuery('Name', filter.status) });
@@ -783,35 +786,85 @@ const collectFindOptions = (filter: ProjectFilter) => {
   return options;
 };
 
-const getProjects = async (filter: ProjectFilter, includeRelations: boolean = false) => {
-  const queryOptions: FindManyOptions<Project> = {
-    relations: {
-      Agency: {
-        Parent: includeRelations,
-      },
-      Status: includeRelations,
-      UpdatedBy: includeRelations,
-    },
-    select: {
-      Agency: {
-        Name: true,
-        Parent: {
-          Name: true,
-        },
-      },
-      Status: {
-        Name: true,
-      },
-      UpdatedBy: { Id: true, FirstName: true, LastName: true },
-    },
-    where: collectFindOptions(filter),
-    take: filter.quantity,
-    skip: (filter.page ?? 0) * (filter.quantity ?? 0),
-    order: sortKeyMapping(filter.sortKey, filter.sortOrder as FindOptionsOrderValue),
-  };
+// Because leftJoinAndSelect is used, sort uses the Entity column name, not database column name
+const sortKeyTranslator: Record<string, string> = {
+  ProjectNumber: 'Project.ProjectNumber',
+  Name: 'Project.Name',
+  Status: 'Status.Name',
+  Agency: 'Agency.Name',
+  NetBook: 'Project.NetBook',
+  Market: 'Project.Market',
+  UpdatedOn: 'Project.UpdatedOn',
+  UpdatedBy: 'UpdatedBy.FirstName',
+};
 
-  const projects = await projectRepo.find(queryOptions);
-  return projects;
+const getProjects = async (filter: ProjectFilter, includeRelations: boolean = false) => {
+  console.log('filter >>>>>>> ', filter)
+  const options = collectFindOptions(filter);
+  const query = projectRepo
+    .createQueryBuilder('Project')
+    .leftJoinAndSelect('Project.Agency', 'Agency')
+    .leftJoinAndSelect('Project.Status', 'Status', 'Project.StatusId = Status.Id')
+    .leftJoinAndSelect('Project.UpdatedBy', 'UpdatedBy');
+
+  console.log('query >>>>>', query.expressionMap.joinAttributes);
+  console.log('options >>>>>', options);
+  query.where(
+    new Brackets((qb) => {
+      options.forEach((option) => qb.orWhere(option));
+    }),
+  );
+
+  // Restricts based on user's agencies
+  if (filter.agencyId?.length) {
+    query.andWhere('agency_id IN(:list)', {
+      list: filter.agencyId.join(','),
+    });
+  }
+
+  if (filter.quantity) query.take(filter.quantity);
+  if (filter.page && filter.quantity) query.skip((filter.page ?? 0) * (filter.quantity ?? 0));
+  if (filter.sortKey && filter.sortOrder) {
+    console.log('filter.sortKey >>>>>>>>>>>>>>>>>>>>>>>', filter.sortKey);
+    if (sortKeyTranslator[filter.sortKey]) {
+      query.orderBy(
+        sortKeyTranslator[filter.sortKey],
+        filter.sortOrder.toUpperCase() as SortOrders,
+      );
+    } else {
+      logger.error('PropertyUnion Service - Invalid Sort Key');
+    }
+  }
+  console.log('SQL HERE >>>>>', query.getSql());
+  return await query.getMany();
+  // const queryOptions: FindManyOptions<Project> = {
+  //   relations: {
+  //     Agency: {
+  //       Parent: includeRelations,
+  //     },
+  //     Status: includeRelations,
+  //     UpdatedBy: includeRelations,
+  //   },
+  //   select: {
+  //     Agency: {
+  //       Name: true,
+  //       Parent: {
+  //         Name: true,
+  //       },
+  //     },
+  //     Status: {
+  //       Name: true,
+  //     },
+  //     UpdatedBy: { Id: true, FirstName: true, LastName: true },
+  //   },
+  //   where: collectFindOptions(filter),
+  //   take: filter.quantity,
+  //   skip: (filter.page ?? 0) * (filter.quantity ?? 0),
+  //   order: sortKeyMapping(filter.sortKey, filter.sortOrder as FindOptionsOrderValue),
+  // };
+
+  // const projects = await projectRepo.find(queryOptions);
+  // return projects;
 };
 
 const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boolean = false) => {
