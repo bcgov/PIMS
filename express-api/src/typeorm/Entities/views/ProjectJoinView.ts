@@ -24,7 +24,8 @@ LEFT JOIN agency agc ON
 LEFT JOIN project_status ps ON
 	p.status_id = ps.id
 LEFT JOIN "user" u ON 
-	p.updated_by_id = u.id;
+	p.updated_by_id = u.id
+WHERE p.deleted_on IS NULL;
     `,
 })
 export class ProjectJoin {
