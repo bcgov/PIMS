@@ -779,7 +779,7 @@ const collectFindOptions = (filter: ProjectFilter) => {
   // TODO: Add market value and updated by searches
   if (filter.name) options.push(constructFindOptionFromQuery('Name', filter.name));
   if (filter.agency) options.push(constructFindOptionFromQuery('Agency', filter.agency));
-  if (filter.status) options.push({ Status: constructFindOptionFromQuery('Name', filter.status) });
+  if (filter.status) options.push(constructFindOptionFromQuery('Status', filter.status));
   if (filter.projectNumber) {
     options.push(constructFindOptionFromQuery('ProjectNumber', filter.projectNumber));
   }
