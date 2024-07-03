@@ -1,5 +1,6 @@
 import { GridColumnPair } from '@/components/common/GridHelpers';
 import { BCAssessmentProperties } from '@/hooks/api/useBCAssessmentApi';
+import { formatMoney } from '@/utilities/formatters';
 import { Box, CircularProgress, Grid, Typography } from '@mui/material';
 import React from 'react';
 
@@ -24,7 +25,7 @@ const BCAssessmentDetails = (props: BCAssessmentDetailsProps) => {
   return (
     <Box minWidth={width} height={'300px'}>
       {data ? (
-        <Grid container gap={1}>
+        <Grid container rowGap={1}>
           <GridColumnPair
             leftValue={'Folio ID'}
             rightValue={data.FOLIO_ID}
@@ -37,22 +38,32 @@ const BCAssessmentDetails = (props: BCAssessmentDetailsProps) => {
           />
           <GridColumnPair
             leftValue={'Net Improvement Value'}
-            rightValue={data.GEN_NET_IMPROVEMENT_VALUE}
+            rightValue={formatMoney(data.GEN_NET_IMPROVEMENT_VALUE)}
             leftSize={leftColumnSize}
           />
           <GridColumnPair
             leftValue={'Net Land Value'}
-            rightValue={data.GEN_NET_LAND_VALUE}
+            rightValue={formatMoney(data.GEN_NET_LAND_VALUE)}
             leftSize={leftColumnSize}
           />
           <GridColumnPair
             leftValue={'Gross Improvement Value'}
-            rightValue={data.GEN_GROSS_IMPROVEMENT_VALUE}
+            rightValue={formatMoney(data.GEN_GROSS_IMPROVEMENT_VALUE)}
             leftSize={leftColumnSize}
           />
           <GridColumnPair
             leftValue={'Gross Land Value'}
-            rightValue={data.GEN_GROSS_LAND_VALUE}
+            rightValue={formatMoney(data.GEN_GROSS_LAND_VALUE)}
+            leftSize={leftColumnSize}
+          />
+          <GridColumnPair
+            leftValue={'Juristiction'}
+            rightValue={data.JURISDICTION}
+            leftSize={leftColumnSize}
+          />
+          <GridColumnPair
+            leftValue={'Property Class'}
+            rightValue={data.GEN_PROPERTY_CLASS_DESC}
             leftSize={leftColumnSize}
           />
         </Grid>
