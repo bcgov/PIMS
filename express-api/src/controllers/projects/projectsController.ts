@@ -321,7 +321,7 @@ export const filterProjects = async (req: Request, res: Response) => {
   // Get projects associated with agencies of the requesting user
   const projects = forExcelExport
     ? await projectServices.getProjectsForExport(filterResult as ProjectFilter, includeRelations)
-    : await projectServices.getProjects(filterResult as ProjectFilter, includeRelations);
+    : await projectServices.getProjects(filterResult as ProjectFilter);
   return res.status(200).send(projects);
 };
 
