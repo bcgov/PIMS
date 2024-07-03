@@ -89,3 +89,18 @@ def get_point(str_point):
     points[1] = float(points[1])
 
     return points
+
+def get_shapes(shape_list, data_in):
+    """ Go through data in and pull out shapes """
+    polygon_type = data_in["features"][0]["geometry"]["type"]
+    coords = data_in["features"][0]["geometry"]["coordinates"]
+
+    if polygon_type == "Polygon":
+        # we have one shape
+        in_shape = coords[0]
+        shape_list.append(in_shape)
+    elif polygon_type == "MultiPolygon":
+        # we have 2+ shapes 
+        for shape in coords:
+            in_shape = shape[0]
+            shape_list.append(in_shape)

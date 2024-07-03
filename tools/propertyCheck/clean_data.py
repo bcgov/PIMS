@@ -36,23 +36,25 @@ def process(pims_data):
         pid_match = True
         point_in_parcel = True
 
+        # get data point from csv
         pims_address = row[pims_address_index]
         pims_city = row[pims_city_index]
         pims_point = row[pims_point_index]
         pims_point = helpers.get_point(pims_point)
         pims_pid = helpers.remove_leading_zeros(row[pims_pid_index])
 
+        # if we dont have this information we cant move forward
         if (pims_city == "" or pims_address == ""):
             #if our database doesnt have an address or a city we have to check it manually
             row.append("Missing city or address cant validate")
             manual_check_li.append(row)
             continue
 
-        # get information from geocoder
         set_back = 0
         point = 0
 
         while point == 0 and set_back <= MAX_SET_BACK:
+            # get information from geocoder
             result = geocoder_connection.call_geocoder(pims_address, pims_city, set_back)
             result_readable = json.loads(result)
             point = geocoder_connection.get_point_from_geo_data(result_readable)
@@ -64,9 +66,11 @@ def process(pims_data):
             continue
 
         point_str = "(" + str(point[0]) + " " + str(point[1]) + ")"
+        # get parcel layer data
         parcel_layer_data_point = parcel_layer_connection.request_data_by_point(point_str)
 
         try:
+            # try reading data from parcel layer
             readable_data = json.loads(parcel_layer_data_point)
         except: # pylint: disable=bare-except
             # no data from parcel layer
@@ -80,6 +84,7 @@ def process(pims_data):
             manual_check_li.append(row)
             continue
 
+        # pid from parcel layer
         pl_pid = readable_data["features"][0]["properties"]["PID"]
 
         if pl_pid is None:
@@ -89,6 +94,7 @@ def process(pims_data):
             continue
 
         pl_pid = helpers.remove_leading_zeros(pl_pid)
+        # get data from parcel layer
         parcel_layer_data_pid = parcel_layer_connection.request_data_by_pid(pl_pid)
 
         if parcel_layer_data_pid["numberMatched"] <= 0:
@@ -98,16 +104,8 @@ def process(pims_data):
             continue
 
         shapes = []
-        polygon_type = parcel_layer_data_pid["features"][0]["geometry"]["type"]
-        coords = parcel_layer_data_pid["features"][0]["geometry"]["coordinates"]
-
-        if polygon_type == "Polygon":
-            in_shape = coords[0]
-            shapes.append(in_shape)
-        elif polygon_type == "MultiPolygon":
-            for shape in coords:
-                in_shape = shape[0]
-                shapes.append(in_shape)
+        # update shapes list to hold the shapes returned from parcel layer
+        helpers.get_shapes(shapes, parcel_layer_data_pid)
 
         if pims_pid != pl_pid:
             pid_match = False
