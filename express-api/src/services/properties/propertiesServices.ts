@@ -10,7 +10,14 @@ import {
   constructFindOptionFromQueryPid,
 } from '@/utilities/helperFunctions';
 import logger from '@/utilities/winstonLogger';
-import { Brackets, FindOptionsOrder, FindOptionsOrderValue, ILike, In } from 'typeorm';
+import {
+  Brackets,
+  FindOptionsOrder,
+  FindOptionsOrderValue,
+  FindOptionsWhere,
+  ILike,
+  In,
+} from 'typeorm';
 
 const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?: number[]) => {
   const parcelsQuery = await AppDataSource.getRepository(Parcel)
@@ -159,10 +166,31 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
     );
 
   // Restricts based on user's agencies
-  if (filter.agencyId?.length) {
-    query.andWhere('agency_id IN(:list)', {
-      list: filter.agencyId.join(','),
+  if (filter.agencyIds?.length) {
+    query.andWhere('agency_id IN(:...list)', {
+      list: filter.agencyIds,
     });
+  }
+
+  // Add quickfilter part
+  if (filter.quickFilter) {
+    // TODO: Make this more concise
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const quickFilterOptions: FindOptionsWhere<any>[] = [];
+    quickFilterOptions.push(constructFindOptionFromQuery('Agency', filter.quickFilter));
+    quickFilterOptions.push(constructFindOptionFromQuery('PID', filter.quickFilter)); // Cannot use PID constructor, always true with strings
+    quickFilterOptions.push(constructFindOptionFromQuery('PIN', filter.quickFilter));
+    quickFilterOptions.push(constructFindOptionFromQuery('Address', filter.quickFilter));
+    quickFilterOptions.push(constructFindOptionFromQuery('UpdatedOn', filter.quickFilter));
+    quickFilterOptions.push(constructFindOptionFromQuery('Classification', filter.quickFilter));
+    quickFilterOptions.push(constructFindOptionFromQuery('LandArea', filter.quickFilter));
+    quickFilterOptions.push(constructFindOptionFromQuery('AdministrativeArea', filter.quickFilter));
+    quickFilterOptions.push(constructFindOptionFromQuery('PropertyType', filter.quickFilter));
+    query.andWhere(
+      new Brackets((qb) => {
+        quickFilterOptions.forEach((option) => qb.orWhere(option));
+      }),
+    );
   }
 
   if (filter.quantity) query.take(filter.quantity);
