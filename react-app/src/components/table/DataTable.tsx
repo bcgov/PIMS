@@ -241,6 +241,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
       sortObj = { sortKey: sort[0].field, sortOrder: sort[0].sort };
     }
     const filterObj = {};
+    console.log('filter', filter);
     if (filter?.items) {
       for (const f of filter.items) {
         const asCamelCase = formatHeaderToFilterKey(f.field);
@@ -250,14 +251,16 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           filterObj[asCamelCase] = f.operator;
         }
       }
-    } else if (quickFilter) {
+    }
+    if (quickFilter) {
       const keyword = quickFilter[0];
-      for (const fieldName of tableApiRef.current.getAllColumns().map((col) => col.field)) {
-        if (keyword != undefined) {
-          const asCamelCase = fieldName.charAt(0).toLowerCase() + fieldName.slice(1);
-          filterObj[asCamelCase] = `contains,${keyword}`;
-        }
-      }
+      if (keyword) filterObj['quickFilter'] = `contains,${keyword}`;
+      // for (const fieldName of tableApiRef.current.getAllColumns().map((col) => col.field)) {
+      //   if (keyword != undefined) {
+      //     const asCamelCase = fieldName.charAt(0).toLowerCase() + fieldName.slice(1);
+      //     filterObj[asCamelCase] = `contains,${keyword}`;
+      //   }
+      // }
     }
     setDataSourceLoading(true);
     props
@@ -287,6 +290,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
 
   useEffect(() => {
     if (props.dataSource) {
+      console.log('tableModel', tableModel);
       dataSourceUpdate(tableModel);
     }
   }, [tableModel]);
@@ -375,7 +379,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
       if (query.keywordFilter) {
         setKeywordSearchContents(query.keywordFilter);
         updateSearchValue(query.keywordFilter);
-        model.quickFilter = query.keywordFilter.split(' ').filter((e) => e);
+        // model.quickFilter = query.keywordFilter.split(' ').filter((e) => e);
       }
       // Set quick select filter
       if (query.quickSelectFilter) {
@@ -384,7 +388,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
       }
       // Set other column filter
       if (query.columnFilterName && query.columnFilterValue && query.columnFilterMode) {
-        model.quickFilter = undefined;
+        // model.quickFilter = undefined;
         const modelObj: GridFilterModel = {
           items: [
             {
@@ -394,7 +398,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             },
           ],
         };
-        model.filter = modelObj;
+        // model.filter = modelObj;
         tableApiRef.current.setFilterModel(modelObj);
       }
       // Set sorting options
@@ -412,7 +416,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           pageSize: Number(query.pageSize),
         });
       }
-      setTableModel(model);
+      // setTableModel(model);
     } else {
       // Setting the table's state from sessionStorage cookies
       const model: ITableModelCollection = {
@@ -479,7 +483,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
       tableApiRef.current.setQuickFilterValues(newValue.split(' ').filter((word) => word !== ''));
       const defaultpagesize = { page: 0, pageSize: tableModel.pagination.pageSize };
       tableApiRef.current.setPaginationModel(defaultpagesize);
-      setQuery(defaultpagesize);
+      console.log('tableModel before debounce', tableModel);
       setTableModel({
         ...tableModel,
         pagination: defaultpagesize,
@@ -577,7 +581,8 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             onChange={(e) => {
               setKeywordSearchContents('');
               setSelectValue(e.target.value);
-              setQuery({ quickSelectFilter: e.target.value, keywordFilter: undefined });
+              setQuery({ quickSelectFilter: e.target.value, keywordFilter: undefined }); // Clear keywordFilter too
+              setTableModel({ ...tableModel, filter: undefined }); // Clear existing column filters
               props.onPresetFilterChange(`${e.target.value}`, tableApiRef);
             }}
             sx={{ width: '10em', marginLeft: '0.5em' }}
@@ -596,6 +601,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         }}
         onFilterModelChange={(e) => {
           // Can only filter by 1 at a time without DataGrid Pro
+          console.log('onFilterModelChange', e.items)
           if (e.items.length > 0) {
             const item = e.items.at(0);
             setTableModel({
