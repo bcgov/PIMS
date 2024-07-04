@@ -395,6 +395,7 @@ type Lookups = {
 };
 
 type BulkUploadRowResult = {
+  rowNumber: number;
   action: 'inserted' | 'updated' | 'ignored' | 'error';
   reason?: string;
 };
@@ -431,15 +432,15 @@ const importPropertiesAsJSON = async (
     userAgencies,
   };
   const results: Array<BulkUploadRowResult> = [];
-  let queuedParcels = [];
-  let queuedBuildings = [];
+  // let queuedParcels = [];
+  // let queuedBuildings = [];
   const queryRunner = AppDataSource.createQueryRunner();
   await queryRunner.startTransaction();
   try {
     for (let rowNum = 0; rowNum < sheetObj.length; rowNum++) {
       const row = sheetObj[rowNum];
       if (row.PropertyType === undefined) {
-        results.push({ action: 'ignored', reason: 'Must specify PropertyType for this row.' });
+        results.push({ action: 'ignored', reason: 'Must specify PropertyType for this row.', rowNumber: rowNum });
         continue;
       }
       if (row.PropertyType === 'Land') {
@@ -455,10 +456,11 @@ const importPropertiesAsJSON = async (
             queryRunner,
             existentParcel,
           );
-          queuedParcels.push(parcelToUpsert);
-          results.push({ action: existentParcel ? 'updated' : 'inserted' });
+          //queuedParcels.push(parcelToUpsert);
+          await queryRunner.manager.save(Parcel, parcelToUpsert);
+          results.push({ action: existentParcel ? 'updated' : 'inserted', rowNumber: rowNum });
         } catch (e) {
-          results.push({ action: 'error', reason: e.message });
+          results.push({ action: 'error', reason: e.message, rowNumber: rowNum });
         }
       } else if (row.PropertyType === 'Building') {
         const generatedName = generateBuildingName(row.Name, row.Description, row.LocalId);
@@ -474,34 +476,19 @@ const importPropertiesAsJSON = async (
             queryRunner,
             existentBuilding,
           );
-          queuedBuildings.push(buildingForUpsert);
-          results.push({ action: existentBuilding ? 'updated' : 'inserted' });
+          //queuedBuildings.push(buildingForUpsert);
+          await queryRunner.manager.save(Building, buildingForUpsert);
+          results.push({ action: existentBuilding ? 'updated' : 'inserted', rowNumber: rowNum });
         } catch (e) {
-          results.push({ action: 'error', reason: e.message });
+          results.push({ action: 'error', reason: e.message, rowNumber: rowNum });
         }
       }
-      // Little benefit to batching these when mass updating, but appreciable benefits when batching inserts.
-      if (queuedParcels.length >= BATCH_SIZE) {
-        await queryRunner.manager.save(Parcel, queuedParcels);
-        queuedParcels = [];
-      }
-      if (queuedBuildings.length >= BATCH_SIZE) {
-        await queryRunner.manager.save(Building, queuedBuildings);
-        queuedBuildings = [];
-      }
       if (rowNum % 100 == 0) {
-        queryRunner.manager.save(ImportResult, {
+        await queryRunner.manager.save(ImportResult, {
           Id: resultId,
           CompletionPercentage: rowNum / sheetObj.length,
         });
       }
-    }
-    //Make sure to flush any remaining entries from the queue before exit.
-    if (queuedParcels.length) {
-      await queryRunner.manager.save(Parcel, queuedParcels);
-    }
-    if (queuedBuildings.length) {
-      await queryRunner.manager.save(Building, queuedBuildings);
     }
   } catch (e) {
     logger.warn(e.message);
