@@ -174,9 +174,7 @@ const getAdministrativeAreaOrThrow = (
   adminAreas: AdministrativeArea[],
 ) => {
   let adminArea: number;
-  if (row.City) {
-    adminArea = adminAreas.find((a) => compareWithoutCase(a.Name, row.City))?.Id;
-  } else if (row.AdministrativeArea) {
+  if (row.AdministrativeArea) {
     adminArea = adminAreas.find((a) => compareWithoutCase(a.Name, row.AdministrativeArea))?.Id;
   }
 
