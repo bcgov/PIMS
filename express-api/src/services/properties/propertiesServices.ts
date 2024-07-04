@@ -125,7 +125,7 @@ const getPropertiesForMap = async (filter?: MapFilter) => {
   return properties;
 };
 
-const BATCH_SIZE = 100;
+//const BATCH_SIZE = 100;
 const generateBuildingName = (name: string, desc: string = null, localId: string = null) => {
   return (
     (localId == null ? '' : localId) +
@@ -440,7 +440,11 @@ const importPropertiesAsJSON = async (
     for (let rowNum = 0; rowNum < sheetObj.length; rowNum++) {
       const row = sheetObj[rowNum];
       if (row.PropertyType === undefined) {
-        results.push({ action: 'ignored', reason: 'Must specify PropertyType for this row.', rowNumber: rowNum });
+        results.push({
+          action: 'ignored',
+          reason: 'Must specify PropertyType for this row.',
+          rowNumber: rowNum,
+        });
         continue;
       }
       if (row.PropertyType === 'Land') {
