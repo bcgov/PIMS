@@ -20,82 +20,42 @@ jobs:
     name: Deploy to OpenShift
     runs-on: ubuntu-latest
     steps:
-      # Checkout the repository
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-    
-      - name: Login to OpenShift
-        uses: redhat-actions/oc-login@v1
-        with:
-          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
-          openshift_token: ${{env.OPENSHIFT_TOKEN}}
-          namespace: ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }}
+    # Install yaml Parser
+    - name: Install yaml Parser (yq)
+      run: |
+        curl -Lo yq "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64"
+        chmod +x yq
+        mv yq /home/runner/bin
 
-      # Process and Apply API DeploymentConfig
-      - name: Process and Apply API DeploymentConfig
-        env:
-          NAMESPACE: ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }}
-          DC_TEMPLATE: 'api-v2-dc-template.yaml'
-          IMAGE_TAG: ${{ env.IMAGE_TAG }}
-          APPLICATION_NAME: 'pims-api-v2'
-          LICENSE_PLATE: '${{ secrets.LICENSE_PLATE }}'
-        run: |
-          ./.github/helpers/deploy.sh
+    # Add deploy key to runner
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.MANIFEST_REPO_DEPLOY_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+    # Make changes to image tag in values.yaml within GitOps repo
+    - name: Clone, Update, and Commit Changes
+      run: |
+        git clone git@github.com:bcgov-c/tenant-gitops-354028.git
+        cd tenant-gitops-354028
 
-  # Job to check the health of the deployed API
-  Health-Check:
-    name: Check Deployment Health
-    runs-on: ubuntu-latest
-    needs: [Deploy-To-OpenShift]
-    steps:
-      # Login to OpenShift
-      - name: Login to OpenShift
-        uses: redhat-actions/oc-login@v1
-        env:
-          OPENSHIFT_USER: github-actions
-          OPENSHIFT_PROJECT: ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }}
-        with:
-          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
-          openshift_token: ${{env.OPENSHIFT_TOKEN}}
-          namespace: ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }}
+        FILE_PATH="pims-v2/values-test.yaml"
+        NEW_TAG="${{ env.IMAGE_TAG }}"
 
-      # Check Deployment Status
-      - name: Check Deployment Status
-        run: |
-          oc rollout status -n ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }} dc/pims-api-v2 --watch
+        yq e ".backend.image.tag = \"$NEW_TAG\"" -i "$FILE_PATH"
 
-  # Job to clean up previous objects in OpenShift
-  Clean-Up:
-    name: Clean Up
-    runs-on: ubuntu-latest
-    needs: [Health-Check]
-    steps:
-      # Login to OpenShift
-      - name: Login to OpenShift
-        uses: redhat-actions/oc-login@v1
-        env:
-          OPENSHIFT_USER: github-actions
-          OPENSHIFT_PROJECT: ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }}
-        with:
-          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
-          openshift_token: ${{env.OPENSHIFT_TOKEN}}
-          namespace: ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }}
-
-      # Remove previous objects
-      - name: Remove previous objects
-        run: |
-          oc delete pod -n ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }} --field-selector status.phase=Succeeded
-
-      # Remove previous replication controllers
-      - name: Remove previous replication controllers
-        run: |
-          oc delete rc -n ${{ format('{0}-{1}', secrets.LICENSE_PLATE, env.ENVIRONMENT) }} --field-selector status.replicas=0
+        git config user.email "manish.sihag@gov.bc.ca"
+        git config user.name "ManishSihag"
+        
+        git pull origin main
+        git add "$FILE_PATH"
+        git commit -m "Update backend image tag to $NEW_TAG"
+        git push
 
   # Job to update the wiki with deployed image tag information
   Update_Wiki_Tags:
-    needs: [Health-Check, Deploy-To-OpenShift]
+    needs: [ Deploy-To-OpenShift]
     name: Update table in wiki
     runs-on: ubuntu-latest
     env:
