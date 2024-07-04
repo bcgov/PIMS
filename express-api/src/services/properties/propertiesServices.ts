@@ -257,8 +257,6 @@ const makeParcelUpsertObject = async (
     const fiscals = await queryRunner.manager.find(ParcelFiscal, {
       where: { ParcelId: existentParcel.Id },
     });
-    console.log(evaluations);
-  console.log(fiscals);
     currRowEvaluations.push(...evaluations);
     currRowFiscals.push(...fiscals);
   }

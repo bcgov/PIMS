@@ -319,7 +319,6 @@ describe('UNIT - Property Services', () => {
         [Roles.ADMIN],
         1,
       );
-      console.log(result);
       expect(Array.isArray(result)).toBe(true);
     });
   });
