@@ -257,12 +257,14 @@ const makeParcelUpsertObject = async (
     const fiscals = await queryRunner.manager.find(ParcelFiscal, {
       where: { ParcelId: existentParcel.Id },
     });
+    console.log(evaluations);
+  console.log(fiscals);
     currRowEvaluations.push(...evaluations);
     currRowFiscals.push(...fiscals);
   }
-  if (row.NetBook && !currRowFiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
+  if (row.Netbook && !currRowFiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
     currRowFiscals.push({
-      Value: row.NetBook,
+      Value: row.Netbook,
       FiscalKeyId: 0,
       FiscalYear: row.FiscalYear,
       CreatedById: user.Id,
@@ -331,9 +333,9 @@ const makeBuildingUpsertObject = async (
     currRowFiscals.push(...fiscals);
   }
 
-  if (row.NetBook && !currRowFiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
+  if (row.Netbook && !currRowFiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
     currRowFiscals.push({
-      Value: row.NetBook,
+      Value: row.Netbook,
       FiscalKeyId: 0,
       FiscalYear: row.FiscalYear,
       CreatedById: user.Id,
@@ -439,14 +441,6 @@ const importPropertiesAsJSON = async (
   try {
     for (let rowNum = 0; rowNum < sheetObj.length; rowNum++) {
       const row = sheetObj[rowNum];
-      if (row.PropertyType === undefined) {
-        results.push({
-          action: 'ignored',
-          reason: 'Must specify PropertyType for this row.',
-          rowNumber: rowNum,
-        });
-        continue;
-      }
       if (row.PropertyType === 'Land') {
         const existentParcel = await queryRunner.manager.findOne(Parcel, {
           where: { PID: numberOrNull(row.PID) },
@@ -486,6 +480,12 @@ const importPropertiesAsJSON = async (
         } catch (e) {
           results.push({ action: 'error', reason: e.message, rowNumber: rowNum });
         }
+      } else {
+        results.push({
+          action: 'ignored',
+          reason: 'Must specify PropertyType of Building or Land for this row.',
+          rowNumber: rowNum,
+        });
       }
       if (rowNum % 100 == 0) {
         await queryRunner.manager.save(ImportResult, {
