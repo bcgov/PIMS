@@ -180,7 +180,7 @@ const getAdministrativeAreaOrThrow = (
 
   if (adminArea == undefined) {
     throw new Error(
-      `Could not determine administrative area for ${row.City ?? row.AdministrativeArea ?? 'Undefined'}. Please provide a valid name in column AdministrativeArea or City.`,
+      `Could not determine administrative area for ${row.AdministrativeArea ?? 'Undefined'}. Please provide a valid name in column AdministrativeArea.`,
     );
   } else {
     return adminArea;
