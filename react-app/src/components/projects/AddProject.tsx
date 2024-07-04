@@ -72,6 +72,7 @@ const AddProject = () => {
       gap={'1rem'}
       mt={'2rem'}
       mb={'2rem'}
+      pb={'2rem'}
       flexDirection={'column'}
       width={'38rem'}
       marginX={'auto'}
