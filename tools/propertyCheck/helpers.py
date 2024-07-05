@@ -66,27 +66,31 @@ def get_point(str_point):
     Takes a string point of a form similar to 'POINT (x y) and transforms it
     into a list of the points: ex. [x, y]
     """
-    # break the string into a list on the '('
-    str_point = str_point.split("(")
-    # if the list only has 0 or one element we cant continue
-    if len(str_point) <= 1:
+    try:
+        # break the string into a list on the '('
+        str_point = str_point.split("(")
+        # if the list only has 0 or one element we cant continue
+        if len(str_point) <= 1:
+            return None
+        # get the second element in the list (ex. ['POINT ', 'x y)'])
+        str_point = str_point[1]
+
+        # break the closing braket off
+        str_point = str_point.split(")")
+        # get the fist element of the list (ex. ['x y', ''])
+        str_point = str_point[0]
+        # change points to list of points
+        points = str_point.split(" ")
+
+        if points[0] is None:
+            return None
+
+        # change the string values into floats
+        points[0] = float(points[0])
+        points[1] = float(points[1])
+    except: # pylint: disable=bare-except
+        # if we hit an error parsing the point return None
         return None
-    # get the second element in the list (ex. ['POINT ', 'x y)'])
-    str_point = str_point[1]
-
-    # break the closing braket off
-    str_point = str_point.split(")")
-    # get the fist element of the list (ex. ['x y', ''])
-    str_point = str_point[0]
-    # change points to list of points
-    points = str_point.split(" ")
-
-    if points[0] is None:
-        return None
-
-    # change the string values into floats
-    points[0] = float(points[0])
-    points[1] = float(points[1])
 
     return points
 

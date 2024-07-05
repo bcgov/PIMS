@@ -121,7 +121,15 @@ def process(data_in):
             continue
 
         pl_pid = helpers.remove_leading_zeros(pl_pid)
-        parcel_layer_data_pid = parcel_layer_connection.request_data_by_pid(pl_pid)
+        pl_data = parcel_layer_connection.request_data_by_pid(pl_pid)
+
+        try:
+            parcel_layer_data_pid = readable_data = json.loads(pl_data.decode("utf-8"))
+        except: # pylint: disable=bare-except
+            # error reading data from parcel layer
+            row.append("Parcel layer data read error")
+            manual_check_li.append(row)
+            continue
 
         if parcel_layer_data_pid["numberMatched"] <= 0:
             # no data from parcel layer
@@ -134,7 +142,7 @@ def process(data_in):
 
         if pims_pid != pl_pid:
             pid_match = False
-        if pims_point is None:
+        if pims_point is None or pims_point == 0:
             point_in_parcel = False
         else:
             point_shape_data = helpers.is_point_in_shapes(pims_point, shapes)

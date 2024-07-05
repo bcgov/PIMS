@@ -147,15 +147,15 @@ def main():
     # change current dir to the one we need
     os.chdir('./tools/propertyCheck/')
 
-    in_file = "in_buildings.csv"
+    in_file = "building.csv"
 
     rows = read_csv(in_file)
 
     good_li, bad_li, log_str = process_data.process(rows)
     # write good file
-    write_csv_file(good_li, "building_good")
-    write_csv_file(bad_li, "building_bad")
-    helpers.write_txt_file(log_str, "building_log")
+    write_csv_file(good_li, "good_building")
+    write_csv_file(bad_li, "bad_building")
+    helpers.write_txt_file(log_str, "log_building")
 
     #headers, bad_rows = process_data_flags(arg_li, rows)
 

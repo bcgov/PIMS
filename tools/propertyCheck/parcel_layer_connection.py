@@ -34,9 +34,8 @@ def request_data_by_pid(in_pid):
     conn.request("GET", full_req_str , payload, headers)
     res = conn.getresponse()
     data = res.read()
-    readable_data = json.loads(data.decode("utf-8"))
 
-    return readable_data
+    return data
 
 def request_data_by_point(in_point):
     """ Send request to parcel layer to get information on point"""
