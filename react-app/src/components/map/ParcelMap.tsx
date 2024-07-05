@@ -57,7 +57,11 @@ export const SelectedMarkerContext = createContext(null);
  */
 const ParcelMap = (props: ParcelMapProps) => {
   const MapEvents = () => {
-    useMapEvents({});
+    useMapEvents({
+      resize: () => {
+        setPopupState({ ...popupState, open: false });
+      },
+    });
     return null;
   };
   const api = usePimsApi();
