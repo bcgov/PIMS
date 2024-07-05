@@ -10,6 +10,7 @@ import {
   constructFindOptionFromQueryPid,
 } from '@/utilities/helperFunctions';
 import logger from '@/utilities/winstonLogger';
+<<<<<<< HEAD
 import {
   Brackets,
   FindOptionsOrder,
@@ -18,6 +19,9 @@ import {
   ILike,
   In,
 } from 'typeorm';
+=======
+import { Brackets, FindOptionsOrder, FindOptionsOrderValue, ILike, In } from 'typeorm';
+>>>>>>> main
 
 const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?: number[]) => {
   const parcelsQuery = await AppDataSource.getRepository(Parcel)
@@ -125,7 +129,12 @@ export const sortKeyMapping = (
   return { [sortKey]: sortDirection };
 };
 
+<<<<<<< HEAD
 // No joins, so database column names are used for sort
+=======
+type SortOrders = 'ASC' | 'DESC';
+
+>>>>>>> main
 const sortKeyTranslator: Record<string, string> = {
   Agency: 'agency_name',
   PID: 'pid',
