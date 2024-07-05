@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AppDataSource } from '@/appDataSource';
+import { SortOrders } from '@/constants/types';
 import { MapFilter, PropertyUnionFilter } from '@/controllers/properties/propertiesSchema';
 import { Building } from '@/typeorm/Entities/Building';
 import { Parcel } from '@/typeorm/Entities/Parcel';
@@ -23,8 +24,16 @@ import {
   constructFindOptionFromQuery,
   constructFindOptionFromQueryPid,
 } from '@/utilities/helperFunctions';
-import { QueryRunner, Brackets, FindOptionsOrder, FindOptionsOrderValue, ILike, In } from 'typeorm';
 import userServices from '../users/usersServices';
+import {
+  Brackets,
+  FindOptionsOrder,
+  FindOptionsOrderValue,
+  FindOptionsWhere,
+  ILike,
+  In,
+  QueryRunner,
+} from 'typeorm';
 
 const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?: number[]) => {
   const parcelsQuery = await AppDataSource.getRepository(Parcel)
@@ -508,8 +517,7 @@ export const sortKeyMapping = (
   return { [sortKey]: sortDirection };
 };
 
-type SortOrders = 'ASC' | 'DESC';
-
+// No joins, so database column names are used for sort
 const sortKeyTranslator: Record<string, string> = {
   Agency: 'agency_name',
   PID: 'pid',
@@ -550,10 +558,31 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
     );
 
   // Restricts based on user's agencies
-  if (filter.agencyId?.length) {
-    query.andWhere('agency_id IN(:list)', {
-      list: filter.agencyId.join(','),
+  if (filter.agencyIds?.length) {
+    query.andWhere('agency_id IN(:...list)', {
+      list: filter.agencyIds,
     });
+  }
+
+  // Add quickfilter part
+  if (filter.quickFilter) {
+    // TODO: Make this more concise
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const quickFilterOptions: FindOptionsWhere<any>[] = [];
+    quickFilterOptions.push(constructFindOptionFromQuery('Agency', filter.quickFilter));
+    quickFilterOptions.push(constructFindOptionFromQuery('PID', filter.quickFilter)); // Cannot use PID constructor, always true with strings
+    quickFilterOptions.push(constructFindOptionFromQuery('PIN', filter.quickFilter));
+    quickFilterOptions.push(constructFindOptionFromQuery('Address', filter.quickFilter));
+    quickFilterOptions.push(constructFindOptionFromQuery('UpdatedOn', filter.quickFilter));
+    quickFilterOptions.push(constructFindOptionFromQuery('Classification', filter.quickFilter));
+    quickFilterOptions.push(constructFindOptionFromQuery('LandArea', filter.quickFilter));
+    quickFilterOptions.push(constructFindOptionFromQuery('AdministrativeArea', filter.quickFilter));
+    quickFilterOptions.push(constructFindOptionFromQuery('PropertyType', filter.quickFilter));
+    query.andWhere(
+      new Brackets((qb) => {
+        quickFilterOptions.forEach((option) => qb.orWhere(option));
+      }),
+    );
   }
 
   if (filter.quantity) query.take(filter.quantity);

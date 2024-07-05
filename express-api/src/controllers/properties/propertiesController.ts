@@ -224,7 +224,7 @@ export const getPropertyUnion = async (req: Request, res: Response) => {
   if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
     // get array of user's agencies
     const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
-    filterResult.agencyId = usersAgencies;
+    filterResult.agencyIds = usersAgencies;
   }
   const properties = await propertyServices.getPropertiesUnion(filterResult);
   return res.status(200).send(properties);

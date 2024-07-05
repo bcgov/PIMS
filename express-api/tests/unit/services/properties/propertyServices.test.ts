@@ -210,7 +210,7 @@ describe('UNIT - Property Services', () => {
         landArea: 'startsWith,1',
         address: 'contains,742 Evergreen Terr.',
         classification: 'contains,core',
-        agencyId: [1],
+        agencyIds: [1],
         quantity: 2,
         page: 1,
         updatedOn: 'after,' + new Date(),

@@ -47,6 +47,7 @@ import { MonetaryType } from './Entities/MonetaryType';
 import { TimestampType } from './Entities/TimestampType';
 import { PropertyUnion } from './Entities/views/PropertyUnionView';
 import { ImportResult } from './Entities/ImportResult';
+import { ProjectJoin } from './Entities/views/ProjectJoinView';
 
 const views = [BuildingRelations, MapProperties];
 
@@ -98,5 +99,6 @@ export default [
   NoteType,
   PropertyUnion,
   ImportResult,
+  ProjectJoin,
   ...views,
 ];

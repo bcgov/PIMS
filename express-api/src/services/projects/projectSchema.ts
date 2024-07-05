@@ -5,7 +5,7 @@ export const ProjectFilterSchema = z.object({
   name: z.string().optional(),
   statusId: z.coerce.number().nonnegative().optional(),
   status: z.string().optional(),
-  agencyId: z.union([z.number().optional(), z.array(z.number().int().nonnegative()).optional()]),
+  agencyId: z.array(z.number().int().nonnegative()).optional(),
   agency: z.string().optional(),
   page: z.coerce.number().optional(),
   updatedOn: z.string().optional(),
