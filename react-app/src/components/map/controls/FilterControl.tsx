@@ -71,7 +71,7 @@ const FilterControl = (props: FilterControlProps) => {
           >
             <Typography variant="h4">Inventory Filter</Typography>
           </Grid>
-          <TextFormField fullWidth name={'PID'} label={`PID`}></TextFormField>
+          <TextFormField fullWidth name={'PID'} label={`PID`} isPid ></TextFormField>
           <TextFormField fullWidth numeric name={'PIN'} label={`PIN`}></TextFormField>
           <TextFormField fullWidth name={'Address'} label={`Address`}></TextFormField>
           <TextFormField fullWidth name={'Name'} label={`Name`}></TextFormField>
