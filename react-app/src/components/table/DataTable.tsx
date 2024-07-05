@@ -675,7 +675,6 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         sx={{
           width: '100%',
           minHeight: '200px',
-          overflow: 'scroll',
           // Neutralize the hover colour (causing a flash)
           '& .MuiDataGrid-row.Mui-hovered': {
             backgroundColor: 'transparent',
