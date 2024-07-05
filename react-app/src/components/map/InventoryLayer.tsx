@@ -94,13 +94,14 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
   const icons = {};
   const makeClusterIcon = (count: number) => {
     // Only make one icon per identical count
-    const size = 10 + (count / properties.length) * 40;
+    const size = 10 + (count / properties.length) * 20;
     if (!icons[count]) {
       const displayCount = count < 1000 ? count : `${(count / 1000).toFixed(1)}K`;
       return (icons[count] = L.divIcon({
         html: `<div class="cluster-marker" style="width: ${size}px; height: ${size}px; background-color: rgb(120,120,120); color: white;">
         ${displayCount}
       </div>`,
+        iconAnchor: [size, size], // This helps to centre the icon on the location. Otherwise anchored top-left.
       }));
     }
     return icons[count];

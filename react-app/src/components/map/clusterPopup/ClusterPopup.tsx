@@ -43,12 +43,12 @@ const ClusterPopup = (props: ClusterPopupProps) => {
    */
   const screenCentre = { x: window.innerWidth / 2 - 100, y: window.innerHeight / 2 }; // -100 to account for the side menu being open
   let offset: { x: number; y: number } = { x: 0, y: 0 };
-  // Depending on how many properties are available, y displacement changes. 1 = -30, 2 = -120, else -210
+  // Depending on how many properties are available, y displacement changes. 1 = -60, 2 = -180, else -220
   const bottomYOffset =
-    popupState.properties.length < 3 ? (popupState.properties.length === 2 ? -120 : -30) : -210;
+    popupState.properties.length < 3 ? (popupState.properties.length === 2 ? -180 : -60) : -220;
   // Determine quadrant and set offset
-  const leftXOffset = 25;
-  const rightXOffset = -405;
+  const leftXOffset = 5;
+  const rightXOffset = -415;
   const topYOffset = 80;
   switch (true) {
     // Top-left quadant
