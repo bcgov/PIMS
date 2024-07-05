@@ -51,6 +51,7 @@ import { PropertyType } from '@/typeorm/Entities/PropertyType';
 import { ProjectType } from '@/typeorm/Entities/ProjectType';
 import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { PropertyUnion } from '@/typeorm/Entities/views/PropertyUnionView';
+import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
 
 export class MockRes {
   statusValue: any;
@@ -651,6 +652,24 @@ export const produceProject = (
     DeletedBy: undefined,
     DeletedById: null,
     DeletedOn: null,
+    ...props,
+  };
+  return project;
+};
+
+export const produceProjectJoin = (props?: Partial<ProjectJoin>) => {
+  const project: ProjectJoin = {
+    Id: faker.number.int(),
+    ProjectNumber: 'SPP-' + faker.number.int(),
+    Name: faker.company.name(),
+    StatusId: faker.number.int(),
+    AgencyId: faker.number.int(),
+    Agency: faker.company.name(),
+    Status: faker.commerce.department(),
+    Market: '$' + faker.number.int(),
+    NetBook: '$' + faker.number.int(),
+    UpdatedBy: faker.person.fullName(),
+    UpdatedOn: new Date(),
     ...props,
   };
   return project;
