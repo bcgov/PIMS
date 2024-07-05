@@ -191,7 +191,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
         projectNumber: '123',
         name: 'Project Name',
         statusId: 1,
-        agencyId: 1,
+        agencyId: [1],
       };
 
       const result = ProjectFilterSchema.safeParse(validFilter);

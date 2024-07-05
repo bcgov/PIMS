@@ -250,14 +250,16 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           filterObj[asCamelCase] = f.operator;
         }
       }
-    } else if (quickFilter) {
+    }
+    if (quickFilter) {
       const keyword = quickFilter[0];
-      for (const fieldName of tableApiRef.current.getAllColumns().map((col) => col.field)) {
-        if (keyword != undefined) {
-          const asCamelCase = fieldName.charAt(0).toLowerCase() + fieldName.slice(1);
-          filterObj[asCamelCase] = `contains,${keyword}`;
-        }
-      }
+      if (keyword) filterObj['quickFilter'] = `contains,${keyword}`;
+      // for (const fieldName of tableApiRef.current.getAllColumns().map((col) => col.field)) {
+      //   if (keyword != undefined) {
+      //     const asCamelCase = fieldName.charAt(0).toLowerCase() + fieldName.slice(1);
+      //     filterObj[asCamelCase] = `contains,${keyword}`;
+      //   }
+      // }
     }
     setDataSourceLoading(true);
     props
@@ -364,55 +366,60 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   useLayoutEffect(() => {
     const query = getQuery();
     // If query strings exist, prioritize that for preset filters, etc.
-    const model: ITableModelCollection = {
-      pagination: { page: DEFAULT_PAGE, pageSize: DEFAULT_PAGESIZE },
-      sort: undefined,
-      filter: undefined,
-      quickFilter: undefined,
-    };
+    // const model: ITableModelCollection = {
+    //   pagination: { page: DEFAULT_PAGE, pageSize: DEFAULT_PAGESIZE },
+    //   sort: undefined,
+    //   filter: undefined,
+    //   quickFilter: undefined,
+    // };
     if (Boolean(Object.keys(query).length)) {
-      // Set keyword filter
-      if (query.keywordFilter) {
-        setKeywordSearchContents(query.keywordFilter);
-        updateSearchValue(query.keywordFilter);
-        model.quickFilter = query.keywordFilter.split(' ').filter((e) => e);
-      }
       // Set quick select filter
       if (query.quickSelectFilter) {
         setSelectValue(query.quickSelectFilter);
         props.onPresetFilterChange(query.quickSelectFilter, tableApiRef);
       }
       // Set other column filter
-      if (query.columnFilterName && query.columnFilterValue && query.columnFilterMode) {
-        model.quickFilter = undefined;
+      if (
+        (query.columnFilterName && query.columnFilterValue && query.columnFilterMode) ||
+        query.quickSelectFilter
+      ) {
+        // model.quickFilter = undefined;
         const modelObj: GridFilterModel = {
-          items: [
+          items: undefined,
+          quickFilterValues: undefined,
+        };
+        if (query.columnFilterName && query.columnFilterValue && query.columnFilterMode) {
+          modelObj.items = [
             {
               value: query.columnFilterValue,
               operator: query.columnFilterMode,
               field: query.columnFilterName,
             },
-          ],
-        };
-        model.filter = modelObj;
+          ];
+        }
+        if (query.keywordFilter) {
+          setKeywordSearchContents(query.keywordFilter);
+          modelObj.quickFilterValues = query.keywordFilter.split(' ').filter((a) => a !== '');
+        }
+        //model.filter = modelObj;
         tableApiRef.current.setFilterModel(modelObj);
       }
       // Set sorting options
       if (query.columnSortName && query.columnSortValue) {
-        model.sort = [{ field: query.columnSortName, sort: query.columnSortValue }];
+        //model.sort = [{ field: query.columnSortName, sort: query.columnSortValue }];
         tableApiRef.current.setSortModel([
           { field: query.columnSortName, sort: query.columnSortValue },
         ]);
       }
       //Set pagination
       if (query.page && query.pageSize) {
-        model.pagination = { page: Number(query.page), pageSize: Number(query.pageSize) };
+        //model.pagination = { page: Number(query.page), pageSize: Number(query.pageSize) };
         tableApiRef.current.setPaginationModel({
           page: Number(query.page),
           pageSize: Number(query.pageSize),
         });
       }
-      setTableModel(model);
+      //setTableModel(model);
     } else {
       // Setting the table's state from sessionStorage cookies
       const model: ITableModelCollection = {
@@ -479,16 +486,16 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
       tableApiRef.current.setQuickFilterValues(newValue.split(' ').filter((word) => word !== ''));
       const defaultpagesize = { page: 0, pageSize: tableModel.pagination.pageSize };
       tableApiRef.current.setPaginationModel(defaultpagesize);
-      setQuery(defaultpagesize);
-      setTableModel({
-        ...tableModel,
-        pagination: defaultpagesize,
-        quickFilter: newValue.split(' ').filter((word) => word !== ''),
-      });
-      setQuery({
-        ...defaultpagesize,
-        keywordFilter: newValue,
-      });
+      // console.log(`updateSearchValue: ${JSON.stringify(tableModel)}`);
+      // setTableModel({
+      //   ...tableModel,
+      //   pagination: defaultpagesize,
+      //   quickFilter: newValue.split(' ').filter((word) => word !== ''),
+      // });
+      // setQuery({
+      //   ...defaultpagesize,
+      //   keywordFilter: newValue,
+      // });
     }, 300);
   }, [tableApiRef]);
 
@@ -577,7 +584,8 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             onChange={(e) => {
               setKeywordSearchContents('');
               setSelectValue(e.target.value);
-              setQuery({ quickSelectFilter: e.target.value, keywordFilter: undefined });
+              setQuery({ quickSelectFilter: e.target.value, keywordFilter: undefined }); // Clear keywordFilter too
+              setTableModel({ ...tableModel, filter: undefined }); // Clear existing column filters
               props.onPresetFilterChange(`${e.target.value}`, tableApiRef);
             }}
             sx={{ width: '10em', marginLeft: '0.5em' }}
@@ -596,30 +604,36 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         }}
         onFilterModelChange={(e) => {
           // Can only filter by 1 at a time without DataGrid Pro
+          const model: ITableModelCollection = {};
           if (e.items.length > 0) {
             const item = e.items.at(0);
-            setTableModel({
-              ...tableModel,
-              pagination: { page: 0, pageSize: tableModel.pagination.pageSize },
-              filter: e,
-            });
+            model.filter = e;
             setQuery({
               columnFilterName: item.field,
               columnFilterValue: item.value,
               columnFilterMode: item.operator,
             });
           } else {
-            setTableModel({
-              ...tableModel,
-              pagination: { page: 0, pageSize: tableModel.pagination.pageSize },
-              filter: undefined,
-            });
+            model.filter = e;
             setQuery({
               columnFilterName: undefined,
               columnFilterValue: undefined,
               columnFilterMode: undefined,
             });
           }
+
+          if (e.quickFilterValues) {
+            model.quickFilter = e.quickFilterValues;
+            setQuery({ keywordFilter: e.quickFilterValues.join(' ') });
+          } else {
+            model.quickFilter = undefined;
+            setQuery({ keywordFilter: undefined });
+          }
+          setTableModel({
+            ...tableModel,
+            ...model,
+            pagination: { page: 0, pageSize: DEFAULT_PAGESIZE },
+          });
           // Get the filter items from MUI, filter out blanks, set state
           setGridFilterItems(e.items.filter((item) => item.value));
         }}
