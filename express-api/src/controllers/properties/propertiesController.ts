@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Request, Response } from 'express';
 import { stubResponse } from '@/utilities/stubResponse';
 import propertyServices from '@/services/properties/propertiesServices';
@@ -7,6 +8,9 @@ import {
 } from '@/controllers/properties/propertiesSchema';
 import { checkUserAgencyPermission, isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 import userServices from '@/services/users/usersServices';
+import { Worker } from 'worker_threads';
+import path from 'path';
+import fs from 'fs';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 
 /**
@@ -173,6 +177,40 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
     },
   }));
   return res.status(200).send(mapFeatures);
+};
+
+export const importProperties = async (req: Request, res: Response) => {
+  const filePath = req.file.path;
+  const fileName = req.file.filename;
+  const ssoUser = req.user;
+  const user = await userServices.getUser(ssoUser.preferred_username);
+  const roles = ssoUser.client_roles;
+  const worker = new Worker(
+    path.resolve(__dirname, '../../services/properties/propertyWorker.ts'),
+    {
+      workerData: { filePath, fileName, user, roles },
+      execArgv: [
+        '--require',
+        'ts-node/register',
+        '--require',
+        'tsconfig-paths/register',
+        '--require',
+        'dotenv/config',
+      ],
+    },
+  );
+  worker.on('message', (msg) => {
+    console.log('Worker thread message --', msg);
+  });
+  worker.on('error', (err) => console.log('Worker errored out with error: ' + err.message));
+  worker.on('exit', (code) => {
+    console.log(`Worker hit exit code ${code}`);
+
+    fs.unlink(filePath, (err) => {
+      if (err) console.error('Failed to cleanup file from file upload.');
+    });
+  });
+  return res.status(200).send('Received file.');
 };
 
 export const getPropertyUnion = async (req: Request, res: Response) => {

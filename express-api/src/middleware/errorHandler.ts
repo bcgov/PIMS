@@ -29,6 +29,7 @@ const errorHandler = (
   // Report through logger
   if (code === 500) {
     logger.error(message);
+    logger.error((err as Error).stack);
   } else {
     logger.warn(message);
   }

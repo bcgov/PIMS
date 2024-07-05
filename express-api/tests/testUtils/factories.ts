@@ -51,6 +51,7 @@ import { PropertyType } from '@/typeorm/Entities/PropertyType';
 import { ProjectType } from '@/typeorm/Entities/ProjectType';
 import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { PropertyUnion } from '@/typeorm/Entities/views/PropertyUnionView';
+import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
 
 export class MockRes {
@@ -339,8 +340,11 @@ export const produceBuilding = (): Building => {
   };
 };
 
-export const produceBuildingEvaluation = (buildingId: number): BuildingEvaluation[] => {
-  const evaluation: BuildingEvaluation = new BuildingEvaluation();
+export const produceBuildingEvaluation = (
+  buildingId: number,
+  props?: Partial<BuildingEvaluation>,
+): BuildingEvaluation[] => {
+  let evaluation: BuildingEvaluation = new BuildingEvaluation();
 
   evaluation.BuildingId = buildingId;
   evaluation.Year = faker.date.past().getFullYear();
@@ -349,21 +353,30 @@ export const produceBuildingEvaluation = (buildingId: number): BuildingEvaluatio
   evaluation.EvaluationKey = undefined;
   evaluation.Note = undefined;
 
+  evaluation = { ...evaluation, ...props };
   return [evaluation];
 };
 
-export const produceBuildingFiscal = (buildingId: number): BuildingFiscal[] => {
-  const fiscal: BuildingFiscal = new BuildingFiscal();
+export const produceBuildingFiscal = (
+  buildingId: number,
+  props?: Partial<BuildingFiscal>,
+): BuildingFiscal[] => {
+  let fiscal: BuildingFiscal = new BuildingFiscal();
   fiscal.BuildingId = buildingId;
   fiscal.FiscalYear = faker.date.past().getFullYear();
   fiscal.FiscalKeyId = 0;
   fiscal.Value = 20000;
 
+  fiscal = { ...fiscal, ...props };
+
   return [fiscal];
 };
 
-export const produceParcelEvaluation = (parcelId: number): ParcelEvaluation[] => {
-  const evaluation: ParcelEvaluation = new ParcelEvaluation();
+export const produceParcelEvaluation = (
+  parcelId: number,
+  props?: Partial<ParcelEvaluation>,
+): ParcelEvaluation[] => {
+  let evaluation: ParcelEvaluation = new ParcelEvaluation();
 
   evaluation.ParcelId = parcelId;
   evaluation.Year = faker.date.past().getFullYear();
@@ -372,16 +385,21 @@ export const produceParcelEvaluation = (parcelId: number): ParcelEvaluation[] =>
   evaluation.EvaluationKey = undefined;
   evaluation.Note = undefined;
 
+  evaluation = { ...evaluation, ...props };
+
   return [evaluation];
 };
 
-export const produceParcelFiscal = (parcelId: number): ParcelFiscal[] => {
-  const fiscal: ParcelFiscal = new ParcelFiscal();
+export const produceParcelFiscal = (
+  parcelId: number,
+  props?: Partial<ParcelFiscal>,
+): ParcelFiscal[] => {
+  let fiscal: ParcelFiscal = new ParcelFiscal();
   fiscal.ParcelId = parcelId;
   fiscal.FiscalYear = faker.date.past().getFullYear();
   fiscal.FiscalKeyId = 0;
   fiscal.Value = 1000000;
-
+  fiscal = { ...fiscal, ...props };
   return [fiscal];
 };
 
@@ -997,6 +1015,26 @@ export const producePropertyUnion = (props?: Partial<PropertyUnion>) => {
     ...props,
   };
   return union;
+};
+
+export const produceImportResult = (props?: Partial<ImportResult>) => {
+  const importResult: ImportResult = {
+    Id: faker.number.int(),
+    FileName: faker.person.firstName() + '.csv',
+    CompletionPercentage: 0,
+    Results: [],
+    DeletedBy: undefined,
+    DeletedById: randomUUID(),
+    DeletedOn: null,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return importResult;
 };
 
 export const produceLtsaOrder = (): ILtsaOrder => ({
