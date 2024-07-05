@@ -1,3 +1,22 @@
+import EventEmitter from 'events';
+class MockWorker extends EventEmitter {
+  postMessage: unknown;
+  constructor() {
+    super();
+    this.on = jest.fn();
+    this.postMessage = jest.fn((message) => {
+      // Simulate worker processing
+      process.nextTick(() => {
+        this.emit('message', message + ' processed');
+      });
+    });
+  }
+}
+
+jest.mock('worker_threads', () => ({
+  Worker: MockWorker,
+}));
+
 import controllers from '@/controllers';
 import { Request, Response } from 'express';
 import {
@@ -8,13 +27,14 @@ import {
   produceBuilding,
   produceParcel,
   producePropertyUnion,
+  produceSSO,
   produceUser,
 } from '../../../testUtils/factories';
 import { Roles } from '@/constants/roles';
 import { AppDataSource } from '@/appDataSource';
 import { User } from '@/typeorm/Entities/User';
 import { Agency } from '@/typeorm/Entities/Agency';
-import { getPropertyUnion } from '@/controllers/properties/propertiesController';
+import { getPropertyUnion, importProperties } from '@/controllers/properties/propertiesController';
 
 const {
   getProperties,
@@ -53,6 +73,7 @@ const _getAgencies = jest.fn().mockImplementation(async () => [1, 2, 3]);
 
 jest.mock('@/services/users/usersServices', () => ({
   getAgencies: () => _getAgencies(),
+  getUser: () => produceUser(),
 }));
 
 describe('UNIT - Properties', () => {
@@ -198,6 +219,16 @@ describe('UNIT - Properties', () => {
       await getPropertyUnion(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(Array.isArray(mockResponse.sendValue)).toBe(true);
+    });
+  });
+
+  describe('POST /properties/import', () => {
+    it('should return status 200', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      mockRequest.file = { path: '/a/b', filename: 'aaa' } as any;
+      mockRequest.user = produceSSO();
+      await importProperties(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
     });
   });
 });

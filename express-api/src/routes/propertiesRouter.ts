@@ -2,6 +2,7 @@ import controllers from '@/controllers';
 import activeUserCheck from '@/middleware/activeUserCheck';
 import catchErrors from '@/utilities/controllerErrorWrapper';
 import express from 'express';
+import multer from 'multer';
 
 const router = express.Router();
 
@@ -11,6 +12,7 @@ const {
   getPropertiesForMap,
   getPropertiesPaged,
   getPropertiesPagedFilter,
+  importProperties,
   getPropertiesFuzzySearch,
   getPropertyUnion,
 } = controllers;
@@ -27,6 +29,10 @@ router.route('/search/geo').get(activeUserCheck, catchErrors(getPropertiesForMap
 router.route('/search/page').get(activeUserCheck, catchErrors(getPropertiesPaged));
 router.route('/search/page/filter').post(activeUserCheck, catchErrors(getPropertiesPagedFilter));
 
+const upload = multer({ dest: 'uploads/' });
+router
+  .route('/import')
+  .post(activeUserCheck, upload.single('spreadsheet'), catchErrors(importProperties));
 router.route('/').get(activeUserCheck, catchErrors(getPropertyUnion));
 
 export default router;
