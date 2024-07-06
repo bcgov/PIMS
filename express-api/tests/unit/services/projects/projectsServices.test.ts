@@ -15,6 +15,7 @@ import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ProjectTimestamp } from '@/typeorm/Entities/ProjectTimestamp';
+import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { faker } from '@faker-js/faker';
 import {
@@ -24,6 +25,7 @@ import {
   produceNotificationQueue,
   produceParcel,
   produceProject,
+  produceProjectJoin,
   produceProjectMonetary,
   produceProjectProperty,
   produceProjectTask,
@@ -226,6 +228,19 @@ const _queryRunner = jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnVa
   release: jest.fn(async () => {}),
   manager: _mockEntityManager,
 });
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const projectJoinQueryBuilder: any = {
+  orderBy: () => projectJoinQueryBuilder,
+  andWhere: () => projectJoinQueryBuilder,
+  where: () => projectJoinQueryBuilder,
+  take: () => projectJoinQueryBuilder,
+  skip: () => projectJoinQueryBuilder,
+  getMany: () => [produceProjectJoin()],
+};
+jest
+  .spyOn(AppDataSource.getRepository(ProjectJoin), 'createQueryBuilder')
+  .mockImplementation(() => projectJoinQueryBuilder);
 
 jest.mock('@/services/notifications/notificationServices', () => ({
   generateProjectNotifications: jest.fn(async () => [produceNotificationQueue()]),
@@ -604,7 +619,7 @@ describe('UNIT - Project Services', () => {
       it('should return projects based on filter conditions', async () => {
         const filter = {
           statusId: 1,
-          agencyId: 3,
+          agencyId: [3],
           quantity: 10,
           page: 0,
           agency: 'contains,aaa',
@@ -616,23 +631,8 @@ describe('UNIT - Project Services', () => {
           sortKey: 'Status',
         };
 
-        _projectFind.mockImplementationOnce(async () => {
-          const mockProjects: Project[] = [
-            produceProject({ Id: 1, Name: 'Project 1', StatusId: 1, AgencyId: 3 }),
-            produceProject({ Id: 2, Name: 'Project 2', StatusId: 4, AgencyId: 14 }),
-          ];
-          // Check if the project matches the filter conditions
-          return mockProjects.filter(
-            (project) =>
-              filter.statusId === project.StatusId && filter.agencyId === project.AgencyId,
-          );
-        });
-
         // Call the service function
-        const projects = await projectServices.getProjects(filter, true); // Pass the mocked projectRepo
-
-        // Assertions
-        expect(_projectFind).toHaveBeenCalled();
+        const projects = await projectServices.getProjects(filter); // Pass the mocked projectRepo
         // Returned project should be the one based on the agency and status id in the filter
         expect(projects.length).toEqual(1);
       });
@@ -645,7 +645,7 @@ describe('UNIT - Project Services', () => {
       it('should return projects based on filter conditions', async () => {
         const filter = {
           statusId: 1,
-          agencyId: 3,
+          agencyId: [3],
           quantity: 10,
           page: 0,
         };
@@ -658,7 +658,7 @@ describe('UNIT - Project Services', () => {
           // Check if the project matches the filter conditions
           return mockProjects.filter(
             (project) =>
-              filter.statusId === project.StatusId && filter.agencyId === project.AgencyId,
+              filter.statusId === project.StatusId && filter.agencyId.includes(project.AgencyId),
           );
         });
 

@@ -111,7 +111,7 @@ const MapSidebar = (props: MapSidebarProps) => {
             <Typography
               margin={'0 0.5em'}
               fontSize={'0.8em'}
-            >{`${pageIndex + 1} of ${formatNumber(Math.ceil(propertiesInBounds.length / propertyPageSize))} (${formatNumber(propertiesInBounds.length)} items)`}</Typography>
+            >{`${pageIndex + 1} of ${formatNumber(Math.max(Math.ceil(propertiesInBounds.length / propertyPageSize), 1))} (${formatNumber(propertiesInBounds.length)} items)`}</Typography>
             <IconButton
               size="small"
               onClick={() => {

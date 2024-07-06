@@ -8,9 +8,7 @@ import {
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import React, { MutableRefObject, useContext } from 'react';
 import { dateFormatter, projectStatusChipFormatter } from '@/utilities/formatters';
-import { Agency } from '@/hooks/api/useAgencyApi';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
-import { User } from '@/hooks/api/useUsersApi';
 import { useNavigate } from 'react-router-dom';
 import { Project } from '@/hooks/api/useProjectsApi';
 import { NoteTypes } from '@/constants/noteTypes';
@@ -48,14 +46,12 @@ const ProjectsTable = () => {
       headerName: 'Status',
       flex: 1,
       maxWidth: 250,
-      valueGetter: (value: any) => value?.Name ?? 'N/A',
       renderCell: (params) => projectStatusChipFormatter(params.value ?? 'N/A'),
     },
     {
       field: 'Agency',
       headerName: 'Agency',
       flex: 1,
-      valueGetter: (value: Agency) => value?.Name ?? '',
     },
     {
       field: 'NetBook',
@@ -82,7 +78,6 @@ const ProjectsTable = () => {
       headerName: 'Updated By',
       flex: 1,
       maxWidth: 150,
-      valueGetter: (user: User) => `${user?.FirstName ?? ''} ${user?.LastName ?? ''}`,
     },
   ];
 
