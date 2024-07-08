@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AppDataSource } from '@/appDataSource';
 import { SortOrders } from '@/constants/types';
-import { MapFilter, PropertyUnionFilter } from '@/controllers/properties/propertiesSchema';
+import {
+  ImportResultFilter,
+  MapFilter,
+  PropertyUnionFilter,
+} from '@/controllers/properties/propertiesSchema';
 import { Building } from '@/typeorm/Entities/Building';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
@@ -34,6 +38,7 @@ import {
   In,
   QueryRunner,
 } from 'typeorm';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 
 const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?: number[]) => {
   const parcelsQuery = await AppDataSource.getRepository(Parcel)
@@ -510,6 +515,18 @@ const importPropertiesAsJSON = async (
   return results;
 };
 
+const getImportResults = async (filter: ImportResultFilter, ssoUser: SSOUser) => {
+  const user = await userServices.getUser(ssoUser.preferred_username);
+  return AppDataSource.getRepository(ImportResult).find({
+    where: {
+      CreatedById: user.Id,
+    },
+    order: { [filter.sortKey]: filter.sortOrder },
+    skip: (filter.page ?? 0) * (filter.quantity ?? 0),
+    take: filter.quantity,
+  });
+};
+
 export const sortKeyMapping = (
   sortKey: string,
   sortDirection: FindOptionsOrderValue,
@@ -605,6 +622,7 @@ const propertyServices = {
   getPropertiesForMap,
   importPropertiesAsJSON,
   getPropertiesUnion,
+  getImportResults,
 };
 
 export default propertyServices;

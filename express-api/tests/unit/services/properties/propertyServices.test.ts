@@ -14,6 +14,7 @@ import { Parcel } from '@/typeorm/Entities/Parcel';
 import { ParcelEvaluation } from '@/typeorm/Entities/ParcelEvaluation';
 import { ParcelFiscal } from '@/typeorm/Entities/ParcelFiscal';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
+import { User } from '@/typeorm/Entities/User';
 import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
 import { PropertyUnion } from '@/typeorm/Entities/views/PropertyUnionView';
 import {
@@ -31,6 +32,7 @@ import {
   produceParcelFiscal,
   produceBuildingEvaluation,
   produceBuildingFiscal,
+  produceSSO,
 } from 'tests/testUtils/factories';
 import { DeepPartial, EntityTarget, ObjectLiteral } from 'typeorm';
 import xlsx, { WorkSheet } from 'xlsx';
@@ -129,6 +131,12 @@ jest.spyOn(userServices, 'getAgencies').mockImplementation(async () => [1]);
 jest
   .spyOn(AppDataSource.getRepository(ImportResult), 'save')
   .mockImplementation(async () => produceImportResult());
+jest
+  .spyOn(AppDataSource.getRepository(ImportResult), 'find')
+  .mockImplementation(async () => [produceImportResult()]);
+jest
+  .spyOn(AppDataSource.getRepository(User), 'findOneBy')
+  .mockImplementation(async () => produceUser());
 
 const _mockStartTransaction = jest.fn(async () => {});
 const _mockRollbackTransaction = jest.fn(async () => {});
@@ -251,6 +259,19 @@ describe('UNIT - Property Services', () => {
       expect(result.at(0)).toHaveProperty('Location');
       expect(result.at(0)).toHaveProperty('PropertyTypeId');
       expect(result.at(0)).toHaveProperty('ClassificationId');
+    });
+  });
+
+  describe('getImportResults', () => {
+    it('should return a list of import results', async () => {
+      const result = await propertyServices.getImportResults(
+        {
+          quantity: 1,
+        },
+        produceSSO(),
+      );
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.at(0)).toHaveProperty('CompletionPercentage');
     });
   });
 
