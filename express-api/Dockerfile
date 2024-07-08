@@ -46,5 +46,7 @@ COPY --from=base /express-api/dist .
 # Copy seed SQL files. Typescript compiler ignores these.
 COPY --from=base /express-api/src/typeorm/Migrations/Seeds ./src/typeorm/Migrations/Seeds
 
+RUN chmod g+rwx /express-api
+
 CMD [ "node", "src/server.js" ]
 
