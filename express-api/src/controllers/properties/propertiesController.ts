@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { stubResponse } from '@/utilities/stubResponse';
 import propertyServices from '@/services/properties/propertiesServices';
 import {
+  ImportResultFilterSchema,
   MapFilterSchema,
   PropertyUnionFilterSchema,
 } from '@/controllers/properties/propertiesSchema';
@@ -181,7 +182,7 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
 
 export const importProperties = async (req: Request, res: Response) => {
   const filePath = req.file.path;
-  const fileName = req.file.filename;
+  const fileName = req.file.originalname;
   const ssoUser = req.user;
   const user = await userServices.getUser(ssoUser.preferred_username);
   const roles = ssoUser.client_roles;
@@ -211,6 +212,16 @@ export const importProperties = async (req: Request, res: Response) => {
     });
   });
   return res.status(200).send('Received file.');
+};
+
+export const getImportResults = async (req: Request, res: Response) => {
+  const kcUser = req.user as SSOUser;
+  const filter = ImportResultFilterSchema.safeParse(req.query);
+  if (filter.success == false) {
+    return res.status(400).send(filter.error);
+  }
+  const results = await propertyServices.getImportResults(filter.data, kcUser);
+  return res.status(200).send(results);
 };
 
 export const getPropertyUnion = async (req: Request, res: Response) => {
