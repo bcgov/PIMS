@@ -30,6 +30,7 @@ import ProjectDetail from '@/components/projects/ProjectDetail';
 import SnackBarContextProvider from './contexts/snackbarContext';
 import ParcelMap from '@/components/map/ParcelMap';
 import LookupContextProvider from '@/contexts/lookupContext';
+import BulkUpload from './pages/BulkUpload';
 
 const Router = () => {
   const navigate = useNavigate();
@@ -75,6 +76,16 @@ const Router = () => {
         }
       />
       <Route path="/admin">
+        <Route
+          path="bulk"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR]}>
+                <BulkUpload />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
         <Route
           path="adminAreas"
           element={
