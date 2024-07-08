@@ -1,6 +1,8 @@
 import FileUploadArea from '@/components/fileHandling/FileUploadArea';
+import { ImportResult } from '@/hooks/api/usePropertiesApi';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import usePimsApi from '@/hooks/usePimsApi';
+import { dateFormatter } from '@/utilities/formatters';
 import { ExpandMoreOutlined } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import {
@@ -12,14 +14,62 @@ import {
   List,
   ListItem,
   ListItemText,
+  Paper,
   Typography,
 } from '@mui/material';
-import React, { useState } from 'react';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import React, { useMemo, useState } from 'react';
 
 const BulkUpload = () => {
   const [file, setFile] = useState<File>();
   const api = usePimsApi();
   const { submit, submitting } = useDataSubmitter(api.properties.uploadBulkSpreadsheet);
+  const columns: GridColDef[] = [
+    {
+      field: 'rowNumber',
+      headerName: 'Row No.',
+    },
+    {
+      field: 'action',
+      headerName: 'Action',
+    },
+    {
+      field: 'reason',
+      headerName: 'Reason',
+      flex: 1,
+    },
+  ];
+  const exampleData: ImportResult[] = [
+    {
+      CompletionPercentage: 100,
+      Results: [
+        {
+          action: 'inserted',
+          rowNumber: 0,
+        },
+        {
+          action: 'updated',
+          rowNumber: 1,
+        },
+        {
+          action: 'error',
+          rowNumber: 2,
+        },
+        {
+          action: 'ignored',
+          rowNumber: 3,
+        },
+      ],
+      FileName: 'TestFile.csv',
+      Id: 0,
+      CreatedById: '',
+      CreatedOn: new Date(),
+    },
+  ];
+  const resultRows = useMemo(
+    () => exampleData.at(0).Results.sort((a, b) => a.rowNumber - b.rowNumber),
+    [exampleData],
+  );
   return (
     <Box
       display={'flex'}
@@ -41,9 +91,8 @@ const BulkUpload = () => {
           <List sx={{ listStyle: 'decimal', pl: 4 }}>
             {[
               'Drag and drop a file or select the file upload area to choose a file.',
-              'Select the Start Upload button.',
-              'Stay on the results page until the upload is complete.',
-              '(Optional) Select Download Results to receive a CSV file with each PID and its success status.',
+              'Click the Upload button.',
+              'Wait for the upload to complete. Results will be displayed below the progress bar.',
             ].map((a, idx) => (
               <ListItem key={`steps-li-${idx}`} sx={{ display: 'list-item' }}>
                 <ListItemText primary={a} />
@@ -108,6 +157,32 @@ const BulkUpload = () => {
           Upload
         </LoadingButton>
       </Box>
+      <Paper sx={{ padding: '2rem' }}>
+        <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
+          <Typography variant="h4">Recent upload result</Typography>
+          <Typography>{`Filename: ${exampleData.at(0).FileName}`}</Typography>
+          <Typography>{`Uploaded at: ${dateFormatter(exampleData.at(0).CreatedOn)}`}</Typography>
+          <DataGrid
+            sx={{
+              borderStyle: 'none',
+              '& .MuiDataGrid-columnHeaders': {
+                borderBottom: 'none',
+              },
+              '& div div div div >.MuiDataGrid-cell': {
+                borderBottom: 'none',
+                borderTop: '1px solid rgba(224, 224, 224, 1)',
+              },
+              '& .MuiDataGrid-row:hover': {
+                backgroundColor: 'transparent',
+              },
+            }}
+            getRowId={(row) => row.rowNumber}
+            columns={columns}
+            rows={resultRows}
+            disableRowSelectionOnClick
+          />
+        </Box>
+      </Paper>
     </Box>
   );
 };

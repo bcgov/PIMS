@@ -58,6 +58,21 @@ export interface PropertyUnion {
   PropertyType: string;
 }
 
+export interface ImportResult {
+  FileName: string;
+  CompletionPercentage: number;
+  Id: number;
+  Results: {
+    action: 'inserted' | 'updated' | 'error' | 'ignored';
+    rowNumber: number;
+    reason?: string;
+  }[];
+  CreatedById: string;
+  CreatedOn: Date;
+  UpdatedById?: string;
+  UpdatedOn?: Date;
+}
+
 const usePropertiesApi = (absoluteFetch: IFetch) => {
   const config = useContext(ConfigContext);
   const keycloak = useSSO();
@@ -102,11 +117,17 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
     });
   };
 
+  const getImportResults = async (filter: CommonFiltering, signal?: AbortSignal) => {
+    const { parsedBody } = await absoluteFetch.get('/properties', filter, { signal });
+    return parsedBody as ImportResult[];
+  };
+
   return {
     propertiesFuzzySearch,
     propertiesGeoSearch,
     getPropertiesUnion,
     uploadBulkSpreadsheet,
+    getImportResults,
   };
 };
 
