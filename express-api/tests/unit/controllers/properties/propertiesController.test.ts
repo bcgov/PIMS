@@ -25,6 +25,7 @@ import {
   getRequestHandlerMocks,
   produceAgency,
   produceBuilding,
+  produceImportResult,
   produceParcel,
   producePropertyUnion,
   produceSSO,
@@ -34,7 +35,11 @@ import { Roles } from '@/constants/roles';
 import { AppDataSource } from '@/appDataSource';
 import { User } from '@/typeorm/Entities/User';
 import { Agency } from '@/typeorm/Entities/Agency';
-import { getPropertyUnion, importProperties } from '@/controllers/properties/propertiesController';
+import {
+  getImportResults,
+  getPropertyUnion,
+  importProperties,
+} from '@/controllers/properties/propertiesController';
 
 const {
   getProperties,
@@ -61,12 +66,15 @@ const _getPropertiesForMap = jest.fn().mockImplementation(async () => [
   },
 ]);
 
-const _getPropertyUnion = jest.fn().mockImplementation(async () => [producePropertyUnion]);
+const _getPropertyUnion = jest.fn().mockImplementation(async () => [producePropertyUnion()]);
+
+const _getImportResults = jest.fn().mockImplementation(async () => [produceImportResult()]);
 
 jest.mock('@/services/properties/propertiesServices', () => ({
   propertiesFuzzySearch: () => _propertiesFuzzySearch(),
   getPropertiesForMap: () => _getPropertiesForMap(),
   getPropertiesUnion: () => _getPropertyUnion(),
+  getImportResults: () => _getImportResults(),
 }));
 
 const _getAgencies = jest.fn().mockImplementation(async () => [1, 2, 3]);
@@ -229,6 +237,21 @@ describe('UNIT - Properties', () => {
       mockRequest.user = produceSSO();
       await importProperties(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
+    });
+  });
+
+  describe('GET /properties/import/results', () => {
+    it('should return status 200', async () => {
+      mockRequest.query = { quantity: '1' };
+      mockRequest.user = produceSSO();
+      await getImportResults(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+    });
+    it('should return status 400', async () => {
+      mockRequest.query = { quantity: [{}] };
+      mockRequest.user = produceSSO();
+      await getImportResults(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
     });
   });
 });

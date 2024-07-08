@@ -56,3 +56,12 @@ export const PropertyUnionFilterSchema = z.object({
 });
 
 export type PropertyUnionFilter = z.infer<typeof PropertyUnionFilterSchema>;
+
+export const ImportResultFilterSchema = z.object({
+  page: z.coerce.number().optional(),
+  quantity: z.coerce.number().optional(),
+  sortKey: z.string().optional(),
+  sortOrder: z.string().optional(),
+});
+
+export type ImportResultFilter = z.infer<typeof ImportResultFilterSchema>;
