@@ -5,6 +5,9 @@ import { Parcel } from './useParcelsApi';
 import { PropertyTypes } from '@/constants/propertyTypes';
 import { ClassificationType } from '@/constants/classificationTypes';
 import { CommonFiltering } from '@/interfaces/ICommonFiltering';
+import { useContext } from 'react';
+import { ConfigContext } from '@/contexts/configContext';
+import { useSSO } from '@bcgov/citz-imb-sso-react';
 
 export interface PropertyFuzzySearch {
   Parcels: Parcel[];
@@ -56,6 +59,9 @@ export interface PropertyUnion {
 }
 
 const usePropertiesApi = (absoluteFetch: IFetch) => {
+  const config = useContext(ConfigContext);
+  const keycloak = useSSO();
+
   const propertiesFuzzySearch = async (keyword: string) => {
     const { parsedBody } = await absoluteFetch.get('/properties/search/fuzzy', {
       keyword,
@@ -86,10 +92,21 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
     return parsedBody as PropertyUnion[];
   };
 
+  const uploadBulkSpreadsheet = async (file: File) => {
+    const form = new FormData();
+    form.append('spreadsheet', file, file.name);
+    return fetch(config.API_HOST + '/properties/import', {
+      method: 'POST',
+      body: form, //Using standard fetch here instead of the wrapper so that we can handle this form-data body without converting to JSON.
+      headers: { Authorization: keycloak.getAuthorizationHeaderValue() },
+    });
+  };
+
   return {
     propertiesFuzzySearch,
     propertiesGeoSearch,
     getPropertiesUnion,
+    uploadBulkSpreadsheet,
   };
 };
 

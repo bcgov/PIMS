@@ -1,4 +1,6 @@
 import FileUploadArea from '@/components/fileHandling/FileUploadArea';
+import useDataSubmitter from '@/hooks/useDataSubmitter';
+import usePimsApi from '@/hooks/usePimsApi';
 import { ExpandMoreOutlined } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import {
@@ -16,6 +18,8 @@ import React, { useState } from 'react';
 
 const BulkUpload = () => {
   const [file, setFile] = useState<File>();
+  const api = usePimsApi();
+  const { submit, submitting } = useDataSubmitter(api.properties.uploadBulkSpreadsheet);
   return (
     <Box
       display={'flex'}
@@ -94,7 +98,13 @@ const BulkUpload = () => {
           value={50}
           sx={{ width: '80%', height: '20px', borderRadius: '5px' }}
         />
-        <LoadingButton disabled={file == undefined} sx={{ width: '20%' }} variant="contained">
+        <LoadingButton
+          onClick={() => submit(file)}
+          loading={submitting}
+          disabled={file == undefined}
+          sx={{ width: '20%' }}
+          variant="contained"
+        >
           Upload
         </LoadingButton>
       </Box>
