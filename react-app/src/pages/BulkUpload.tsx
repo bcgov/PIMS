@@ -15,6 +15,7 @@ import {
   ListItem,
   ListItemText,
   Paper,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
@@ -37,6 +38,11 @@ const BulkUpload = () => {
       field: 'reason',
       headerName: 'Reason',
       flex: 1,
+      renderCell: (params) => (
+        <Tooltip title={params.value}>
+          <span>{params.value}</span>
+        </Tooltip>
+      ),
     },
   ];
   const exampleData: ImportResult[] = [
@@ -54,10 +60,13 @@ const BulkUpload = () => {
         {
           action: 'error',
           rowNumber: 2,
+          reason:
+            'duplicate key value violates unique constraint duplicate key value violates unique constraint',
         },
         {
           action: 'ignored',
           rowNumber: 3,
+          reason: 'duplicate key value violates unique constraint',
         },
       ],
       FileName: 'TestFile.csv',
@@ -148,7 +157,13 @@ const BulkUpload = () => {
           sx={{ width: '80%', height: '20px', borderRadius: '5px' }}
         />
         <LoadingButton
-          onClick={() => submit(file)}
+          onClick={() =>
+            submit(file).then((resp) => {
+              if (resp && resp.ok) {
+                setFile(null);
+              }
+            })
+          }
           loading={submitting}
           disabled={file == undefined}
           sx={{ width: '20%' }}
