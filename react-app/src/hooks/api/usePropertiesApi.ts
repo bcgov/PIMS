@@ -118,7 +118,9 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
   };
 
   const getImportResults = async (filter: CommonFiltering, signal?: AbortSignal) => {
-    const { parsedBody } = await absoluteFetch.get('/properties', filter, { signal });
+    const { parsedBody } = await absoluteFetch.get('/properties/import/results', filter, {
+      signal,
+    });
     return parsedBody as ImportResult[];
   };
 
