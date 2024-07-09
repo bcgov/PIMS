@@ -242,10 +242,12 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             fullWidth
             name={'Postal'}
             label={'Postal code'}
-            isPostalCode
             rules={{
               validate: (val) =>
-                val.length == 0 || val.length == 6 || 'Should be exactly 6 characters.',
+                val.length == 0 ||
+                val.length == 6 ||
+                (val.length == 7 && val[3] == ' ') ||
+                'Should be exactly 6 characters.',
             }}
           />
         </Grid>

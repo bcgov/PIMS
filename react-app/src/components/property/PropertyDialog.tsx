@@ -80,6 +80,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
           const formValues: any = { ...infoFormMethods.getValues(), Id: initialValues.Id };
           formValues.PID = parseIntOrNull(formValues.PID.replace(/-/g, ''));
           formValues.PIN = parseIntOrNull(formValues.PIN);
+          formValues.Postal = formValues.Postal.replace(' ', '');
           formValues.LandArea = parseFloatOrNull(formValues.LandArea);
           submit(initialValues.Id, formValues).then(() => postSubmit());
         }

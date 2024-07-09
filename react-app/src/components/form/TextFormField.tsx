@@ -9,7 +9,6 @@ type TextFormFieldProps = {
   label: string;
   numeric?: boolean;
   isPid?: boolean;
-  isPostalCode?: boolean;
   rules?: Omit<
     RegisterOptions<FieldValues, string>,
     'disabled' | 'valueAsNumber' | 'valueAsDate' | 'setValueAs'
@@ -18,7 +17,7 @@ type TextFormFieldProps = {
 
 const TextFormField = (props: TextFormFieldProps) => {
   const { control, setValue } = useFormContext();
-  const { name, label, rules, numeric, isPid, isPostalCode, defaultVal, ...restProps } = props;
+  const { name, label, rules, numeric, isPid, defaultVal, ...restProps } = props;
   return (
     <Controller
       control={control}
@@ -35,10 +34,6 @@ const TextFormField = (props: TextFormFieldProps) => {
             onChange={(event) => {
               if (isPid) {
                 event.target.value = pidFormatter(parseInt(event.target.value.replace(/-/g, '')));
-                onChange(event);
-                return;
-              } else if (isPostalCode) {
-                event.target.value = event.target.value.replace(' ', '');
                 onChange(event);
                 return;
               } else if (
