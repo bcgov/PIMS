@@ -7,6 +7,7 @@ import {
   Box,
   autocompleteClasses,
   FilterOptionsState,
+  Tooltip,
 } from '@mui/material';
 import { ISelectMenuItem } from './SelectFormField';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -74,20 +75,22 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
           getOptionDisabled={disableOptionsFunction}
           filterOptions={optionsFilter}
           renderOption={(props, option, state, ownerState) => (
-            <Box
-              sx={{
-                fontWeight: allowNestedIndent && !option.parentId ? 900 : 500,
-                [`&.${autocompleteClasses.option}`]: {
-                  padding: 1,
-                  paddingLeft: allowNestedIndent && option.parentId ? 2 : 1,
-                },
-              }}
-              component="li"
-              {...props}
-              key={option.label}
-            >
-              {ownerState.getOptionLabel(option)}
-            </Box>
+            <Tooltip title={option.tooltip}>
+              <Box
+                sx={{
+                  fontWeight: allowNestedIndent && !option.parentId ? 900 : 500,
+                  [`&.${autocompleteClasses.option}`]: {
+                    padding: 1,
+                    paddingLeft: allowNestedIndent && option.parentId ? 2 : 1,
+                  },
+                }}
+                component="li"
+                {...props}
+                key={option.label}
+              >
+                {ownerState.getOptionLabel(option)}
+              </Box>
+            </Tooltip>
           )}
           renderInput={(params) => (
             <TextField
