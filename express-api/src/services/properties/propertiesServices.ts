@@ -317,6 +317,7 @@ const makeParcelUpsertObject = async (
     PropertyTypeId: 0,
     Description: row.Description,
     LandLegalDescription: row.LandLegalDescription,
+    LandArea: numberOrNull(row.LandArea),
     Evaluations: currRowEvaluations,
     Fiscals: currRowFiscals,
   };
@@ -388,8 +389,8 @@ const makeBuildingUpsertObject = async (
     IsSensitive: false,
     IsVisibleToOtherAgencies: true,
     PropertyTypeId: 0,
-    RentableArea: 0,
-    BuildingTenancy: '123',
+    RentableArea: numberOrNull(row.RentableArea) ?? 0,
+    BuildingTenancy: row.Tenancy,
     BuildingFloorCount: 0,
     TotalArea: 0,
     Evaluations: currRowEvaluations,
