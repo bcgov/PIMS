@@ -1,8 +1,8 @@
 import FileUploadArea from '@/components/fileHandling/FileUploadArea';
+import { ImportResult } from '@/hooks/api/usePropertiesApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import usePimsApi from '@/hooks/usePimsApi';
-import { dateFormatter } from '@/utilities/formatters';
 import { ExpandMoreOutlined } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import {
@@ -15,22 +15,78 @@ import {
   ListItem,
   ListItemText,
   Paper,
-  Tooltip,
   Typography,
 } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, gridClasses, GridColDef } from '@mui/x-data-grid';
 import React, { useEffect, useMemo, useState } from 'react';
+
+const ResultsPaper = (props: {
+  results: ImportResult[];
+  rows: Array<Record<string, unknown>>;
+  columns: GridColDef[];
+}): JSX.Element => {
+  const { results, columns, rows } = props;
+  if (!results?.length) {
+    return <></>;
+  } else {
+    if (results.at(0).CompletionPercentage < 1.0) {
+      return (
+        <Paper sx={{ padding: '2rem' }}>
+          <Typography variant="h4">Processing spreadsheet...</Typography>
+        </Paper>
+      );
+    } else {
+      return (
+        <Paper sx={{ padding: '2rem' }}>
+          <Box display={'flex'} flexDirection={'column'} gap={'1rem'} height={'38rem'}>
+            <Typography variant="h4">Recent upload result</Typography>
+            <Typography>{`Filename: ${results.at(0).FileName}`}</Typography>
+            <Typography>{`Uploaded at: ${results.at(0).CreatedOn}`}</Typography>
+            <DataGrid
+              getRowHeight={() => 'auto'}
+              sx={{
+                borderStyle: 'none',
+                '& .MuiDataGrid-columnHeaders': {
+                  borderBottom: 'none',
+                },
+                '& div div div div >.MuiDataGrid-cell': {
+                  borderBottom: 'none',
+                  borderTop: '1px solid rgba(224, 224, 224, 1)',
+                },
+                '& .MuiDataGrid-row:hover': {
+                  backgroundColor: 'transparent',
+                },
+                [`& .${gridClasses.cell}`]: {
+                  py: 1,
+                },
+              }}
+              getRowId={(row) => row.rowNumber}
+              columns={columns}
+              rows={rows}
+              disableRowSelectionOnClick
+            />
+          </Box>
+        </Paper>
+      );
+    }
+  }
+};
 
 const BulkUpload = () => {
   const [file, setFile] = useState<File>();
+  const [fileProgress, setFileProgress] = useState(0);
   const api = usePimsApi();
   const { submit, submitting } = useDataSubmitter(api.properties.uploadBulkSpreadsheet);
   const { refreshData: refreshResults, data: importResults } = useDataLoader(() =>
     api.properties.getImportResults({ quantity: 1, sortKey: 'CreatedOn', sortOrder: 'DESC' }),
   );
   useEffect(() => {
-    refreshResults();
-    const interval = setInterval(() => refreshResults(), 5000);
+    refreshResults().then((resp) => setFileProgress(resp?.at(0)?.CompletionPercentage ?? 0));
+    const interval = setInterval(
+      () =>
+        refreshResults().then((resp) => setFileProgress(resp?.at(0)?.CompletionPercentage ?? 0)),
+      2000,
+    );
     return () => {
       clearInterval(interval);
     };
@@ -48,18 +104,17 @@ const BulkUpload = () => {
       field: 'reason',
       headerName: 'Reason',
       flex: 1,
-      renderCell: (params) => (
-        <Tooltip title={params.value}>
-          <span>{params.value}</span>
-        </Tooltip>
-      ),
     },
   ];
   const resultRows = useMemo(() => {
-    if (importResults?.length)
-      return importResults.at(0).Results.sort((a, b) => a.rowNumber - b.rowNumber);
+    if (importResults?.length && importResults.at(0).Results != null)
+      return importResults
+        .at(0)
+        .Results.slice()
+        .sort((a, b) => a.rowNumber - b.rowNumber);
     else return [];
   }, [importResults]);
+
   return (
     <Box
       display={'flex'}
@@ -81,8 +136,8 @@ const BulkUpload = () => {
           <List sx={{ listStyle: 'decimal', pl: 4 }}>
             {[
               'Drag and drop a file or select the file upload area to choose a file.',
-              'Click the Upload button.',
-              'Wait for the upload to complete. Results will be displayed below the progress bar.',
+              'Click the Upload button. Once you see the green submission confirmation message, you are free to navigate away from the page.',
+              'Once the upload is complete, results of the submission will appear below the loading bar.',
             ].map((a, idx) => (
               <ListItem key={`steps-li-${idx}`} sx={{ display: 'list-item' }}>
                 <ListItemText primary={a} />
@@ -134,7 +189,7 @@ const BulkUpload = () => {
       <Box alignItems={'center'} display={'flex'} gap={'1rem'}>
         <LinearProgress
           variant="determinate"
-          value={50}
+          value={fileProgress != null ? fileProgress * 100 : 0}
           sx={{ width: '80%', height: '20px', borderRadius: '5px' }}
         />
         <LoadingButton
@@ -142,6 +197,7 @@ const BulkUpload = () => {
             submit(file).then((resp) => {
               if (resp && resp.ok) {
                 setFile(null);
+                setFileProgress(resp.parsedBody?.CompletionPercentage ?? 0);
               }
             })
           }
@@ -153,34 +209,7 @@ const BulkUpload = () => {
           Upload
         </LoadingButton>
       </Box>
-      {importResults?.length && (
-        <Paper sx={{ padding: '2rem' }}>
-          <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
-            <Typography variant="h4">Recent upload result</Typography>
-            <Typography>{`Filename: ${importResults.at(0).FileName}`}</Typography>
-            <Typography>{`Uploaded at: ${dateFormatter(importResults.at(0).CreatedOn)}`}</Typography>
-            <DataGrid
-              sx={{
-                borderStyle: 'none',
-                '& .MuiDataGrid-columnHeaders': {
-                  borderBottom: 'none',
-                },
-                '& div div div div >.MuiDataGrid-cell': {
-                  borderBottom: 'none',
-                  borderTop: '1px solid rgba(224, 224, 224, 1)',
-                },
-                '& .MuiDataGrid-row:hover': {
-                  backgroundColor: 'transparent',
-                },
-              }}
-              getRowId={(row) => row.rowNumber}
-              columns={columns}
-              rows={resultRows}
-              disableRowSelectionOnClick
-            />
-          </Box>
-        </Paper>
-      )}
+      <ResultsPaper rows={resultRows} results={importResults} columns={columns} />
     </Box>
   );
 };

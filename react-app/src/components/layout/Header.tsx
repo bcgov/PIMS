@@ -146,6 +146,14 @@ const Header: React.FC = () => {
                     >
                       Administrative Areas
                     </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        navigate('/admin/bulk');
+                        setAnchorEl(undefined);
+                      }}
+                    >
+                      Bulk Upload
+                    </MenuItem>
                   </Menu>
                 </>
               ) : (

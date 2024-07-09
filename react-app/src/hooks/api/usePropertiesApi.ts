@@ -1,5 +1,5 @@
 import { GeoPoint } from '@/interfaces/IProperty';
-import { IFetch } from '../useFetch';
+import { FetchResponse, IFetch } from '../useFetch';
 import { Building } from './useBuildingsApi';
 import { Parcel } from './useParcelsApi';
 import { PropertyTypes } from '@/constants/propertyTypes';
@@ -110,11 +110,14 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
   const uploadBulkSpreadsheet = async (file: File) => {
     const form = new FormData();
     form.append('spreadsheet', file, file.name);
-    return fetch(config.API_HOST + '/properties/import', {
+    const result = await fetch(config.API_HOST + '/properties/import', {
       method: 'POST',
       body: form, //Using standard fetch here instead of the wrapper so that we can handle this form-data body without converting to JSON.
       headers: { Authorization: keycloak.getAuthorizationHeaderValue() },
     });
+    const text = await result.text();
+    (result as FetchResponse).parsedBody = JSON.parse(text);
+    return result;
   };
 
   const getImportResults = async (filter: CommonFiltering, signal?: AbortSignal) => {

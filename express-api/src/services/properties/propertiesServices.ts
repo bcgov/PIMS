@@ -406,7 +406,7 @@ type Lookups = {
   userAgencies: number[];
 };
 
-type BulkUploadRowResult = {
+export type BulkUploadRowResult = {
   rowNumber: number;
   action: 'inserted' | 'updated' | 'ignored' | 'error';
   reason?: string;
@@ -447,7 +447,7 @@ const importPropertiesAsJSON = async (
   // let queuedParcels = [];
   // let queuedBuildings = [];
   const queryRunner = AppDataSource.createQueryRunner();
-  await queryRunner.startTransaction();
+  // await queryRunner.startTransaction();
   try {
     for (let rowNum = 0; rowNum < sheetObj.length; rowNum++) {
       const row = sheetObj[rowNum];
@@ -508,7 +508,7 @@ const importPropertiesAsJSON = async (
     logger.warn(e.message);
     logger.warn(e.stack);
   } finally {
-    await queryRunner.rollbackTransaction(); //NOTE: This rollback provided for testing convenience. Will be removed for final merge.
+    // await queryRunner.rollbackTransaction(); //NOTE: This rollback provided for testing convenience. Will be removed for final merge.
     await queryRunner.release();
   }
 
