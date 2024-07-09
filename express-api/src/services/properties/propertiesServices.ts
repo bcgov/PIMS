@@ -583,18 +583,22 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
 
   // Add quickfilter part
   if (filter.quickFilter) {
-    // TODO: Make this more concise
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const quickFilterOptions: FindOptionsWhere<any>[] = [];
-    quickFilterOptions.push(constructFindOptionFromQuery('Agency', filter.quickFilter));
-    quickFilterOptions.push(constructFindOptionFromQuery('PID', filter.quickFilter)); // Cannot use PID constructor, always true with strings
-    quickFilterOptions.push(constructFindOptionFromQuery('PIN', filter.quickFilter));
-    quickFilterOptions.push(constructFindOptionFromQuery('Address', filter.quickFilter));
-    quickFilterOptions.push(constructFindOptionFromQuery('UpdatedOn', filter.quickFilter));
-    quickFilterOptions.push(constructFindOptionFromQuery('Classification', filter.quickFilter));
-    quickFilterOptions.push(constructFindOptionFromQuery('LandArea', filter.quickFilter));
-    quickFilterOptions.push(constructFindOptionFromQuery('AdministrativeArea', filter.quickFilter));
-    quickFilterOptions.push(constructFindOptionFromQuery('PropertyType', filter.quickFilter));
+    const quickfilterFields = [
+      'Agency',
+      'PID',
+      'PIN',
+      'Address',
+      'UpdatedOn',
+      'Classification',
+      'LandArea',
+      'AdministrativeArea',
+      'PropertyType',
+    ];
+    quickfilterFields.forEach((field) =>
+      quickFilterOptions.push(constructFindOptionFromQuery(field, filter.quickFilter)),
+    );
     query.andWhere(
       new Brackets((qb) => {
         quickFilterOptions.forEach((option) => qb.orWhere(option));

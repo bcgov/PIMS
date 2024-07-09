@@ -20,6 +20,7 @@ import {
   FindManyOptions,
   FindOptionsOrder,
   FindOptionsOrderValue,
+  FindOptionsWhere,
   In,
   InsertResult,
   QueryRunner,
@@ -814,6 +815,30 @@ const getProjects = async (filter: ProjectFilter) => {
     query.andWhere('agency_id IN(:...list)', {
       list: filter.agencyId,
     });
+  }
+
+  // Add quickfilter part
+  if (filter.quickFilter) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const quickFilterOptions: FindOptionsWhere<any>[] = [];
+    const quickfilterFields = [
+      'ProjectNumber',
+      'Name',
+      'Status',
+      'Agency',
+      'NetBook',
+      'Market',
+      'UpdatedOn',
+      'UpdatedBy',
+    ];
+    quickfilterFields.forEach((field) =>
+      quickFilterOptions.push(constructFindOptionFromQuery(field, filter.quickFilter)),
+    );
+    query.andWhere(
+      new Brackets((qb) => {
+        quickFilterOptions.forEach((option) => qb.orWhere(option));
+      }),
+    );
   }
 
   if (filter.quantity) query.take(filter.quantity);

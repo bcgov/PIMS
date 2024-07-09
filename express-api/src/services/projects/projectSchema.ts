@@ -12,6 +12,7 @@ export const ProjectFilterSchema = z.object({
   quantity: z.coerce.number().optional(),
   sortKey: z.string().optional(),
   sortOrder: z.string().optional(),
+  quickFilter: z.string().optional(),
 });
 
 export type ProjectFilter = z.infer<typeof ProjectFilterSchema>;
