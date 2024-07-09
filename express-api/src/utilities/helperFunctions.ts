@@ -144,7 +144,7 @@ export const TimestampComparisonWrapper = (tsValue: string, operator: TimestampO
 //or "Project".project_number (correct table alias plus non-aliased column access)
 //Thankfully, it's not too difficult to manually format this.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const fixColumnAlias = (str: string) => {
+export const fixColumnAlias = (str: string) => {
   const [tableAlias, columnAlias] = str.split('.');
   const fixedColumn = columnAlias
     .split(/\.?(?=[A-Z])/)
@@ -158,7 +158,7 @@ const fixColumnAlias = (str: string) => {
  * @param date JS Date object
  * @returns string
  */
-const toPostgresTimestamp = (date: Date) => {
+export const toPostgresTimestamp = (date: Date) => {
   const pad = (num: number, size = 2) => {
     let s = String(num);
     while (s.length < size) s = '0' + s;

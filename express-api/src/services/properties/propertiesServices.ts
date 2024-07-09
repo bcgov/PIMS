@@ -50,11 +50,11 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
     .leftJoinAndSelect('parcel.Classification', 'classification')
     .where(
       new Brackets((qb) => {
-        qb.where(`parcel.pid::text like '%${keyword}%'`)
-          .orWhere(`parcel.pin::text like '%${keyword}%'`)
-          .orWhere(`agency.name like '%${keyword}%'`)
-          .orWhere(`adminArea.name like '%${keyword}%'`)
-          .orWhere(`parcel.address1 like '%${keyword}%'`);
+        qb.where(`LPAD(parcel.pid::text, 9, '0') ILIKE '%${keyword.replaceAll('-', '')}%'`)
+          .orWhere(`parcel.pin::text ILIKE '%${keyword}%'`)
+          .orWhere(`agency.name ILIKE '%${keyword}%'`)
+          .orWhere(`adminArea.name ILIKE '%${keyword}%'`)
+          .orWhere(`parcel.address1 ILIKE '%${keyword}%'`);
       }),
     )
     .andWhere(`classification.Name in ('Surplus Encumbered', 'Surplus Active')`);
