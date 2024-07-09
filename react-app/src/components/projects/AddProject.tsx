@@ -1,5 +1,5 @@
 import { Box, Grid, InputAdornment, Typography, useTheme } from '@mui/material';
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { NavigateBackButton } from '../display/DetailViewNavigation';
 import TextFormField from '../form/TextFormField';
 import AutocompleteFormField from '../form/AutocompleteFormField';
@@ -30,6 +30,7 @@ const AddProject = () => {
       Appraised: 0,
       ProgramCost: 0,
       SalesCost: 0,
+      ExemptionNote: '',
       Approval: false,
       Tasks: [],
     },
@@ -40,24 +41,12 @@ const AddProject = () => {
   const theme = useTheme();
   const api = usePimsApi();
   const { data: lookupData } = useContext(LookupContext);
-
+  const [tasksForAddState, setTasksForAddState] = useState([]);
   const { submit, submitting } = useDataSubmitter(api.projects.postProject);
-  const tasksForAddState = useMemo(() => {
-    if (!lookupData) {
-      return [];
-    } else {
-      const defaultState = lookupData?.ProjectStatuses.find(
-        (a) => a.Name === 'Required Documentation',
-      );
-      const addTasks = lookupData?.Tasks.filter((task) => task.StatusId === defaultState.Id);
-      const exemptionTask = lookupData?.Tasks.find((a) => a.Name === 'Exemption requested');
-      if (exemptionTask) {
-        addTasks.push({ ...exemptionTask, Name: 'Apply for Enhanced Referral Process exemption' });
-      }
-      addTasks.forEach((task, i) => formMethods.setValue(`Tasks.${i}.TaskId`, task.Id));
-      return addTasks;
-    }
-  }, [lookupData]);
+  const exemptionTask = useMemo(
+    () => lookupData?.Tasks.find((a) => a.Name === 'Exemption requested'),
+    [lookupData],
+  );
   const salesCostType = useMemo(
     () => lookupData?.MonetaryTypes?.find((a) => a.Name === 'SalesCost'),
     [lookupData],
@@ -66,6 +55,22 @@ const AddProject = () => {
     () => lookupData?.MonetaryTypes?.find((a) => a.Name === 'ProgramCost'),
     [lookupData],
   );
+  useEffect(() => {
+    if (!lookupData) {
+      return;
+    } else {
+      const defaultState = lookupData?.ProjectStatuses.find(
+        (a) => a.Name === 'Required Documentation',
+      );
+      const addTasks = lookupData?.Tasks.filter((task) => task.StatusId === defaultState.Id);
+      if (exemptionTask) {
+        addTasks.push({ ...exemptionTask, Name: 'Apply for Enhanced Referral Process exemption' });
+      }
+      addTasks.forEach((t, idx) => formMethods.setValue(`Tasks.${idx}.TaskId`, t.Id));
+      setTasksForAddState(addTasks);
+    }
+  }, [lookupData, exemptionTask, formMethods]);
+  const watch = formMethods.watch('Tasks');
   return (
     <Box
       display={'flex'}
@@ -221,6 +226,14 @@ const AddProject = () => {
               />
             </Grid>
           ))}
+          <Grid item xs={12}>
+            <TextFormField
+              disabled={watch.find((a) => a.TaskId === exemptionTask.Id)?.IsCompleted != true}
+              fullWidth
+              name={'ExemptionNote'}
+              label={'Exemption rationale note'}
+            />
+          </Grid>
         </Grid>
         <Typography variant="h5">Approval</Typography>
         <Grid container spacing={2}>
