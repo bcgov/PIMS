@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import headerImageLarge from '@/assets/images/BCGOV_logo.svg';
 import headerImageSmall from '@/assets/images/BCID_V_rgb_pos.png';
 import {
@@ -15,6 +15,7 @@ import {
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { Roles } from '@/constants/roles';
+import { AuthContext } from '@/contexts/authContext';
 
 const AppBrand = () => {
   const theme = useTheme();
@@ -60,6 +61,7 @@ const AppBrand = () => {
 };
 
 const Header: React.FC = () => {
+  const auth = useContext(AuthContext);
   const { logout, isAuthenticated, login, user } = useSSO();
   const theme = useTheme();
   const navigate = useNavigate();
@@ -81,6 +83,7 @@ const Header: React.FC = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  
   return (
     <AppBar
       elevation={0}
@@ -100,7 +103,7 @@ const Header: React.FC = () => {
         <AppBrand />
         <Box flexGrow={1}></Box>
         <Box textAlign={'center'} alignItems={'center'} gap={'32px'} display={'flex'}>
-          {isAuthenticated && (
+          {isAuthenticated && auth.pimsUser.data?.Status === 'Active' && (
             <>
               {user.client_roles?.includes(Roles.ADMIN) ? (
                 <>
