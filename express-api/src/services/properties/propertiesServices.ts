@@ -602,6 +602,8 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
     );
   }
 
+  const totalCount = await query.getCount();
+
   if (filter.quantity) query.take(filter.quantity);
   if (filter.page && filter.quantity) query.skip((filter.page ?? 0) * (filter.quantity ?? 0));
   if (filter.sortKey && filter.sortOrder) {
@@ -614,7 +616,8 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
       logger.error('PropertyUnion Service - Invalid Sort Key');
     }
   }
-  return await query.getMany();
+  const properties = await query.getMany();
+  return { properties, totalCount };
 };
 
 const propertyServices = {

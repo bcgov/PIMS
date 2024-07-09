@@ -223,14 +223,14 @@ describe('UNIT - Property Services', () => {
         page: 1,
         updatedOn: 'after,' + new Date(),
       });
-      expect(Array.isArray(result));
-      expect(result.at(0)).toHaveProperty('PropertyType');
-      expect(result.at(0)).toHaveProperty('Id');
-      expect(result.at(0)).toHaveProperty('PIN');
-      expect(result.at(0)).toHaveProperty('PID');
-      expect(result.at(0)).toHaveProperty('Agency');
-      expect(result.at(0)).toHaveProperty('Classification');
-      expect(result.at(0)).toHaveProperty('AdministrativeArea');
+      expect(Array.isArray(result.properties)).toBe(true);
+      expect(result.properties.at(0)).toHaveProperty('PropertyType');
+      expect(result.properties.at(0)).toHaveProperty('Id');
+      expect(result.properties.at(0)).toHaveProperty('PIN');
+      expect(result.properties.at(0)).toHaveProperty('PID');
+      expect(result.properties.at(0)).toHaveProperty('Agency');
+      expect(result.properties.at(0)).toHaveProperty('Classification');
+      expect(result.properties.at(0)).toHaveProperty('AdministrativeArea');
     });
   });
 

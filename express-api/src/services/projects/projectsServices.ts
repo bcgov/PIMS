@@ -816,6 +816,8 @@ const getProjects = async (filter: ProjectFilter) => {
     });
   }
 
+  const totalCount = await query.getCount();
+
   if (filter.quantity) query.take(filter.quantity);
   if (filter.page && filter.quantity) query.skip((filter.page ?? 0) * (filter.quantity ?? 0));
   if (filter.sortKey && filter.sortOrder) {
@@ -828,7 +830,8 @@ const getProjects = async (filter: ProjectFilter) => {
       logger.error('PropertyUnion Service - Invalid Sort Key');
     }
   }
-  return await query.getMany();
+  const projects = await query.getMany();
+  return { projects, totalCount };
 };
 
 const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boolean = false) => {
