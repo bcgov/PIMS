@@ -3,12 +3,25 @@ import { Building, BuildingEvaluation } from '@/hooks/api/useBuildingsApi';
 import { Parcel, ParcelEvaluation } from '@/hooks/api/useParcelsApi';
 import usePimsApi from '@/hooks/usePimsApi';
 import { Delete, Search } from '@mui/icons-material';
-import { IconButton, Box, Autocomplete, TextField, InputAdornment, useTheme } from '@mui/material';
+import {
+  IconButton,
+  Box,
+  Autocomplete,
+  TextField,
+  InputAdornment,
+  useTheme,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Grid,
+} from '@mui/material';
 import { GridColDef, DataGrid } from '@mui/x-data-grid';
 import { useState, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import React from 'react';
 import { pidFormatter } from '@/utilities/formatters';
+import { ClassificationIcon } from '@/components/property/ClassificationIcon';
+import { useClassificationStyle } from '@/components/property/PropertyTable';
 
 interface IDisposalProjectSearch {
   rows: any[];
@@ -30,21 +43,31 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
   const [loadingOptions, setLoadingOptions] = useState(false);
   const api = usePimsApi();
   const theme = useTheme();
+  const classification = useClassificationStyle();
 
-  const getAutoCompleteLabel = (input: ParcelWithType | BuildingWithType | string) => {
+  const getPidPinLabel = (input: ParcelWithType | BuildingWithType | string) => {
     if (typeof input === 'string') {
       return '';
     }
 
     if (input.PID) {
-      return `${input.Type} - PID: ${pidFormatter(input.PID)}`;
+      return `PID: ${pidFormatter(input.PID)}`;
     } else if (input.PIN) {
-      return `${input.Type} - PIN: ${input.PIN}`;
-    } else if (input.Address1) {
-      return `${input.Type} - Address: ${input.Address1}`;
+      return `PIN: ${input.PIN}`;
     } else {
-      return `${input.Type} - No identifying info.`;
+      return `No PID/PIN.`;
     }
+  };
+
+  const getAddressLabel = (input: ParcelWithType | BuildingWithType) => {
+    const address = [];
+    if (input.Address1) {
+      address.push(input.Address1);
+    }
+    if (input.AdministrativeArea) {
+      address.push(input.AdministrativeArea.Name);
+    }
+    return address.join(', ');
   };
 
   const columns: GridColDef[] = [
@@ -61,7 +84,7 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
       renderCell: (params) => {
         return (
           <Link
-            to={`/properties/${params.row.Type.toLowerCase()}/${params.row.Id}`}
+            to={`/properties/${params.row.Type?.toLowerCase()}/${params.row.Id}`}
             target="_blank"
             rel="noopener noreferrer"
             style={{ color: theme.palette.primary.main }}
@@ -134,22 +157,57 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
             setFuzzySearchOptions([]);
           }
         }}
-        getOptionLabel={(option) => getAutoCompleteLabel(option)}
+        getOptionLabel={() => ''} // No label, because field should clear on select.
+        renderOption={(props, option) => {
+          const classificationColour =
+            option.ClassificationId != null
+              ? classification[option.ClassificationId].textColor
+              : theme.palette.black.main;
+          return (
+            <ListItem {...props} key={`${option.Id},${option.PropertyTypeId}`}>
+              <Grid container>
+                <Grid item xs={1} pt={1} mr={1}>
+                  <ListItemAvatar>
+                    <ClassificationIcon
+                      iconType={option.PropertyTypeId}
+                      textColor={theme.palette.text.primary}
+                      badgeColor={classificationColour}
+                      scale={1.2}
+                      badgeScale={1}
+                    />
+                  </ListItemAvatar>
+                </Grid>
+                <Grid item xs={5}>
+                  <ListItemText
+                    primary={getPidPinLabel(option)}
+                    secondary={getAddressLabel(option)}
+                  />
+                </Grid>
+                <Grid item xs={5}>
+                  <ListItemText
+                    primary={option.Agency?.Name ?? 'No Agency'}
+                    secondary={option.Name && option.Name !== '' ? option.Name : 'No Name'}
+                  />
+                </Grid>
+              </Grid>
+            </ListItem>
+          );
+        }}
         getOptionKey={(option) => option.Id + option.Type}
         onInputChange={(_event, value) => {
           setLoadingOptions(true);
           api.properties.propertiesFuzzySearch(value).then((response) => {
             setLoadingOptions(false);
             setFuzzySearchOptions([
-              ...response.Parcels.map((a) => ({
+              ...response.Parcels?.map((a) => ({
                 ...a,
                 Type: 'Parcel',
-                EvaluationYears: a.Evaluations.map((e) => e.Year),
+                EvaluationYears: a.Evaluations?.map((e) => e.Year),
               })),
-              ...response.Buildings.map((a) => ({
+              ...response.Buildings?.map((a) => ({
                 ...a,
                 Type: 'Building',
-                EvaluationYears: a.Evaluations.map((e) => e.Year),
+                EvaluationYears: a.Evaluations?.map((e) => e.Year),
               })),
             ]);
           });
