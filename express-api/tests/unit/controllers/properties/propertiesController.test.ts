@@ -40,6 +40,7 @@ import {
   getPropertyUnion,
   importProperties,
 } from '@/controllers/properties/propertiesController';
+import { ImportResult } from '@/typeorm/Entities/ImportResult';
 
 const {
   getProperties,
@@ -69,6 +70,10 @@ const _getPropertiesForMap = jest.fn().mockImplementation(async () => [
 const _getPropertyUnion = jest.fn().mockImplementation(async () => [producePropertyUnion()]);
 
 const _getImportResults = jest.fn().mockImplementation(async () => [produceImportResult()]);
+
+jest
+  .spyOn(AppDataSource.getRepository(ImportResult), 'save')
+  .mockImplementation(async () => produceImportResult());
 
 jest.mock('@/services/properties/propertiesServices', () => ({
   propertiesFuzzySearch: () => _propertiesFuzzySearch(),
