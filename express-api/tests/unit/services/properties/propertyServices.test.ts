@@ -17,6 +17,7 @@ import { PropertyClassification } from '@/typeorm/Entities/PropertyClassificatio
 import { User } from '@/typeorm/Entities/User';
 import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
 import { PropertyUnion } from '@/typeorm/Entities/views/PropertyUnionView';
+import logger from '@/utilities/winstonLogger';
 import {
   produceParcel,
   produceBuilding,
@@ -199,7 +200,7 @@ describe('UNIT - Property Services', () => {
 
   describe('fuzzySearchProperties', () => {
     it('should return an object with parcels and buildings', async () => {
-      const result = await propertyServices.propertiesFuzzySearch('123', 3);
+      const result = await propertyServices.propertiesFuzzySearch('123', 3, [3]);
       expect(Array.isArray(result.Parcels)).toBe(true);
       expect(Array.isArray(result.Buildings)).toBe(true);
     });
@@ -222,6 +223,7 @@ describe('UNIT - Property Services', () => {
         quantity: 2,
         page: 1,
         updatedOn: 'after,' + new Date(),
+        quickFilter: 'contains,someWord',
       });
       expect(Array.isArray(result));
       expect(result.at(0)).toHaveProperty('PropertyType');
@@ -231,6 +233,15 @@ describe('UNIT - Property Services', () => {
       expect(result.at(0)).toHaveProperty('Agency');
       expect(result.at(0)).toHaveProperty('Classification');
       expect(result.at(0)).toHaveProperty('AdministrativeArea');
+    });
+
+    it('should log an invalid sort key if the key is invalid', async () => {
+      const loggerErrorSpy = jest.spyOn(logger, 'error');
+      await propertyServices.getPropertiesUnion({
+        sortKey: 'aaaaa',
+        sortOrder: 'DESC',
+      });
+      expect(loggerErrorSpy).toHaveBeenCalledWith('PropertyUnion Service - Invalid Sort Key');
     });
   });
 
