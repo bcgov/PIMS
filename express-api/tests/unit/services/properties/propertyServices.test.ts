@@ -53,28 +53,29 @@ const _parcelsCreateQueryBuilder: any = {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const _buildingsCreateQueryBuilder: any = {
-  select: () => _parcelsCreateQueryBuilder,
-  leftJoinAndSelect: () => _parcelsCreateQueryBuilder,
-  where: () => _parcelsCreateQueryBuilder,
-  orWhere: () => _parcelsCreateQueryBuilder,
-  andWhere: () => _parcelsCreateQueryBuilder,
-  take: () => _parcelsCreateQueryBuilder,
-  skip: () => _parcelsCreateQueryBuilder,
-  orderBy: () => _parcelsCreateQueryBuilder,
+  select: () => _buildingsCreateQueryBuilder,
+  leftJoinAndSelect: () => _buildingsCreateQueryBuilder,
+  where: () => _buildingsCreateQueryBuilder,
+  orWhere: () => _buildingsCreateQueryBuilder,
+  andWhere: () => _buildingsCreateQueryBuilder,
+  take: () => _buildingsCreateQueryBuilder,
+  skip: () => _buildingsCreateQueryBuilder,
+  orderBy: () => _buildingsCreateQueryBuilder,
   getMany: () => [produceBuilding()],
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const _propertyUnionCreateQueryBuilder: any = {
-  select: () => _parcelsCreateQueryBuilder,
-  leftJoinAndSelect: () => _parcelsCreateQueryBuilder,
-  where: () => _parcelsCreateQueryBuilder,
-  orWhere: () => _parcelsCreateQueryBuilder,
-  andWhere: () => _parcelsCreateQueryBuilder,
-  take: () => _parcelsCreateQueryBuilder,
-  skip: () => _parcelsCreateQueryBuilder,
-  orderBy: () => _parcelsCreateQueryBuilder,
+  select: () => _propertyUnionCreateQueryBuilder,
+  leftJoinAndSelect: () => _propertyUnionCreateQueryBuilder,
+  where: () => _propertyUnionCreateQueryBuilder,
+  orWhere: () => _propertyUnionCreateQueryBuilder,
+  andWhere: () => _propertyUnionCreateQueryBuilder,
+  take: () => _propertyUnionCreateQueryBuilder,
+  skip: () => _propertyUnionCreateQueryBuilder,
+  orderBy: () => _propertyUnionCreateQueryBuilder,
   getMany: () => [producePropertyUnion()],
+  getManyAndCount: () => [[producePropertyUnion()], 1],
 };
 
 jest

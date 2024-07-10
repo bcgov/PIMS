@@ -237,6 +237,7 @@ const projectJoinQueryBuilder: any = {
   take: () => projectJoinQueryBuilder,
   skip: () => projectJoinQueryBuilder,
   getMany: () => [produceProjectJoin()],
+  getManyAndCount: () => [[produceProjectJoin()], 1],
 };
 jest
   .spyOn(AppDataSource.getRepository(ProjectJoin), 'createQueryBuilder')
@@ -634,6 +635,7 @@ describe('UNIT - Project Services', () => {
         // Call the service function
         const projectsResponse = await projectServices.getProjects(filter); // Pass the mocked projectRepo
         // Returned project should be the one based on the agency and status id in the filter
+        expect(projectsResponse.totalCount).toEqual(1);
         expect(projectsResponse.projects.length).toEqual(1);
       });
     });
