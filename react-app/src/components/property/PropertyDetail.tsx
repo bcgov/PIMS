@@ -210,6 +210,12 @@ const PropertyDetail = (props: IPropertyDetail) => {
         return (
           <Typography>{`${val}${/^(0|[1-9]\d*)?(\.\d+)?(?<=\d)$/.test(val) ? ' %' : ''}`}</Typography>
         );
+      case 'PostalCode':
+        if (val == null) return '';
+        // eslint-disable-next-line no-case-declarations
+        const match = val.match(/^(?<first>[\w\d]{3})(?<second>[\w\d]{3})$/i);
+        if (match == null) return '';
+        return <Typography>{`${match.groups.first} ${match.groups.second}`}</Typography>;
       default:
         return <Typography>{val}</Typography>;
     }
