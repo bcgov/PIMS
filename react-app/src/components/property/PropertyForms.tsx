@@ -85,6 +85,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
     }
   };
 
+  // check for a valid postal code
   const regex = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ ]?\d[ABCEGHJ-NPRSTV-Z]\d$/i;
 
   const map = useRef<Map>();

@@ -156,7 +156,7 @@ const AddProperty = () => {
                 LandArea: parseFloatOrNull(formValues.LandArea),
                 PID: parseIntOrNull(formValues.PID.replace(/-/g, '')),
                 PIN: parseIntOrNull(formValues.PIN),
-                Postal: formValues.Postal.replace(' ', ''),
+                Postal: formValues.Postal.replace(' ', '').toUpperCase(),
                 PropertyTypeId: 0,
                 AgencyId: userContext.pimsUser.data.AgencyId,
                 IsVisibleToOtherAgencies: false,
