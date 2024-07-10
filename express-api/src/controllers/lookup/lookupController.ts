@@ -356,7 +356,7 @@ export const lookupAll = async (req: Request, res: Response) => {
     },
   });
   const ProjectStatuses = await AppDataSource.getRepository(ProjectStatus).find({
-    select: { Name: true, Id: true },
+    select: { Name: true, Id: true, Description: true },
     order: { SortOrder: 'asc', Name: 'asc' },
     where: { IsDisabled: false },
   });
@@ -364,6 +364,7 @@ export const lookupAll = async (req: Request, res: Response) => {
     select: {
       Name: true,
       Id: true,
+      Description: true,
     },
     order: { SortOrder: 'asc', Name: 'asc' },
     where: { IsDisabled: false },
@@ -399,6 +400,7 @@ export const lookupAll = async (req: Request, res: Response) => {
     select: {
       Id: true,
       Name: true,
+      Description: true,
     },
     order: { SortOrder: 'asc', Name: 'asc' },
     where: { IsDisabled: false },
