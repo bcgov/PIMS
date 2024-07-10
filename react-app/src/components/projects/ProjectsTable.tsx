@@ -6,7 +6,7 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
-import React, { MutableRefObject, useContext } from 'react';
+import React, { MutableRefObject, useContext, useState } from 'react';
 import { dateFormatter, projectStatusChipFormatter } from '@/utilities/formatters';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +20,7 @@ import { NotificationType } from '@/constants/notificationTypes';
 import { MonetaryType } from '@/constants/monetaryTypes';
 
 const ProjectsTable = () => {
+  const [totalCount, setTotalCount] = useState(0);
   const navigate = useNavigate();
   const api = usePimsApi();
   const snackbar = useContext(SnackBarContext);
@@ -217,12 +218,31 @@ const ProjectsTable = () => {
     }
     return [];
   };
+  const handleDataChange = async (filter: any, signal: AbortSignal): Promise<any[]> => {
+    try {
+      const { projects, totalCount } = await api.projects.projectsDataSource(filter, signal);
+      setTotalCount(totalCount);
+      snackbar.setMessageState({
+        open: true,
+        text: `${totalCount} projects found.`,
+        style: snackbar.styles.success,
+      });
+      return projects;
+    } catch (error) {
+      snackbar.setMessageState({
+        open: true,
+        text: 'Error loading projects.',
+        style: snackbar.styles.warning,
+      });
+      return [];
+    }
+  };
 
   return (
     <Box sx={{ height: 'calc(100vh - 180px)' }}>
       <FilterSearchDataGrid
         tableOperationMode="server"
-        dataSource={api.projects.getProjects}
+        dataSource={handleDataChange}
         onAddButtonClick={() => navigate('/projects/add')}
         onPresetFilterChange={selectPresetFilter}
         defaultFilter={'All Projects'}
@@ -241,6 +261,8 @@ const ProjectsTable = () => {
             Approved for Exemption
           </CustomMenuItem>,
         ]}
+        rowCountProp={totalCount}
+        rowCount={totalCount}
         getRowId={(row) => row.Id}
         onRowClick={(params) => navigate(`/projects/${params.row.Id}`)}
         tableHeader={'Disposal Projects Overview'}
