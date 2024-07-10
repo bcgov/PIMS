@@ -13,7 +13,6 @@ import { mdiDotsHorizontal } from '@mdi/js';
 import {
   Box,
   IconButton,
-  LinearProgress,
   ListItemIcon,
   ListSubheader,
   Menu,
@@ -138,7 +137,8 @@ export const CustomDataGrid = (props: DataGridProps) => {
           variant: 'linear-progress',
           noRowsVariant: 'skeleton',
         },
-      }} />
+      }}
+    />
   );
 };
 
