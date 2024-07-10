@@ -80,7 +80,7 @@ const Router = () => {
           path="bulk"
           element={
             <BaseLayout>
-              <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR]}>
+              <AuthRouteGuard permittedRoles={[Roles.ADMIN]}>
                 <BulkUpload />
               </AuthRouteGuard>
             </BaseLayout>

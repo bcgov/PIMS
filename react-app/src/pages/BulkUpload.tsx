@@ -196,7 +196,7 @@ const BulkUpload = () => {
                   'PredominateUse (Buildings only)',
                   'ConstructionType (Buildings only)',
                 ].map((a, idx) => (
-                  <ListItem key={`req-header-${idx}`} sx={{ display: 'list-item' }}>
+                  <ListItem key={`req-header-${idx}`} sx={{ display: 'list-item', py: '2px' }}>
                     <ListItemText primary={a} />
                   </ListItem>
                 ))}
@@ -217,7 +217,7 @@ const BulkUpload = () => {
                   'RentableArea (for Buildings)',
                   'LandArea (for Land)',
                 ].map((a, idx) => (
-                  <ListItem key={`req-header-${idx}`} sx={{ display: 'list-item' }}>
+                  <ListItem key={`req-header-${idx}`} sx={{ display: 'list-item', py: '2px' }}>
                     <ListItemText primary={a} />
                   </ListItem>
                 ))}
