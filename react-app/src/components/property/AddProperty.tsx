@@ -172,7 +172,6 @@ const AddProperty = () => {
               };
               addParcel.Evaluations = addParcel.Evaluations.filter((a) => a.Value);
               addParcel.Fiscals = addParcel.Fiscals.filter((a) => a.Value);
-              console.log(addParcel);
               submitParcel(addParcel).then((ret) => {
                 if (ret && ret.ok) navigate('/properties');
               });
@@ -182,7 +181,7 @@ const AddProperty = () => {
                 ...formValues,
                 PID: parseIntOrNull(formValues.PID.replace(/-/g, '')),
                 PIN: parseIntOrNull(formValues.PIN),
-                Postal: formValues.Postal.replace(' ', ''),
+                Postal: formValues.Postal.replace(' ', '').toUpperCase(),
                 RentableArea: parseFloatOrNull(formValues.RentableArea),
                 TotalArea: parseFloatOrNull(formValues.TotalArea),
                 BuildingFloorCount: 0,
@@ -202,15 +201,12 @@ const AddProperty = () => {
               };
               addBuilding.Evaluations = addBuilding.Evaluations.filter((a) => a.Value);
               addBuilding.Fiscals = addBuilding.Fiscals.filter((a) => a.Value);
-              console.log(addBuilding);
               submitBuilding(addBuilding).then((ret) => {
                 if (ret && ret.ok) navigate('/properties');
               });
             }
           } else {
-            const formValues = formMethods.getValues();
             console.log('Error!');
-            console.log(formValues.Postal);
             setShowErrorTest(true);
           }
         }}

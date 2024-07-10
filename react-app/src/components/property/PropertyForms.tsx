@@ -85,6 +85,8 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
     }
   };
 
+  const regex = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ ]?\d[ABCEGHJ-NPRSTV-Z]\d$/i;
+
   const map = useRef<Map>();
   const [position, setPosition] = useState<LatLng>(null);
 
@@ -245,9 +247,8 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             rules={{
               validate: (val) =>
                 val.length == 0 ||
-                val.length == 6 ||
-                (val.length == 7 && val[3] == ' ') ||
-                'Should be exactly 6 characters.',
+                String(val).match(regex) ||
+                'Should be a valid postal code or left blank.',
             }}
           />
         </Grid>
