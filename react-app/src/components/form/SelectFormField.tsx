@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormControl, InputLabel, Select, MenuItem, Tooltip } from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem, ListItemText } from '@mui/material';
 import { Controller, useFormContext } from 'react-hook-form';
 
 export interface ISelectMenuItem {
@@ -29,11 +29,15 @@ const SelectFormField = (props: ISelectInputProps) => {
           <InputLabel id={`select-inputlabel-${label}`}>{label}</InputLabel>
           <Select labelId={`select-label-${label}`} id={`select-${label}`} label={label} {...field}>
             {options.map((option) => (
-              <Tooltip key={`tooltip-${label}-${option.label}`} title={option.tooltip}>
-                <MenuItem key={`menu-item-${label}-${option.label}`} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              </Tooltip>
+              <MenuItem key={`menu-item-${label}-${option.label}`} value={option.value}>
+                <ListItemText
+                  primary={option.label}
+                  secondary={option.tooltip}
+                  sx={{
+                    margin: 0,
+                  }}
+                />{' '}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
