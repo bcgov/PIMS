@@ -47,6 +47,10 @@ const AddProject = () => {
     () => lookupData?.Tasks.find((a) => a.Name === 'Exemption requested'),
     [lookupData],
   );
+  const exemptionNote = useMemo(
+    () => lookupData?.NoteTypes.find((a) => a.Name === 'Exemption'),
+    [lookupData],
+  );
   const salesCostType = useMemo(
     () => lookupData?.MonetaryTypes?.find((a) => a.Name === 'SalesCost'),
     [lookupData],
@@ -278,6 +282,7 @@ const AddProject = () => {
                   { MonetaryTypeId: salesCostType.Id, Value: formValues.SalesCost },
                 ],
                 Tasks: formValues.Tasks.filter((a) => a.IsCompleted),
+                Notes: [{ NoteTypeId: exemptionNote.Id, Note: formValues.ExemptionNote }],
               },
               projectProperties,
             ).then((response) => {
