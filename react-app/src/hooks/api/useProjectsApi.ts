@@ -273,6 +273,11 @@ export interface ProjectPropertyIds {
   buildings?: number[];
 }
 
+export interface ProjectResponse {
+  projects: Project[];
+  totalCount: number;
+}
+
 const useProjectsApi = (absoluteFetch: IFetch) => {
   const getProjectById = async (id: number) => {
     const { parsedBody, status } = await absoluteFetch.get(`/projects/disposal/${id}`);
@@ -300,20 +305,60 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
     return response;
   };
   const getProjects = async (sort: CommonFiltering, signal?: AbortSignal) => {
-    const { parsedBody } = await absoluteFetch.get(
-      '/projects',
-      {
-        includeRelations: true,
-        ...sort,
-      },
-      {
-        signal,
-      },
-    );
-    if (parsedBody.error) {
-      return [];
+    try {
+      const { parsedBody } = await absoluteFetch.get(
+        '/projects',
+        {
+          includeRelations: true,
+          ...sort,
+        },
+        {
+          signal,
+        },
+      );
+
+      if (parsedBody.error) {
+        return {
+          projects: [],
+          filteredCount: 0,
+          totalCount: 0,
+        };
+      }
+
+      return parsedBody as ProjectResponse;
+    } catch (error) {
+      return {
+        projects: [],
+        filteredCount: 0,
+        totalCount: 0,
+      };
     }
-    return parsedBody as Project[];
+  };
+
+  const projectsDataSource = async (
+    filter: CommonFiltering,
+    signal?: AbortSignal,
+  ): Promise<ProjectResponse> => {
+    try {
+      const response = await getProjects(filter, signal);
+
+      const { projects, totalCount } = response;
+
+      return {
+        projects,
+        totalCount,
+      };
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        console.warn('Fetch aborted');
+      } else {
+        console.error('Error fetching projects:', error);
+      }
+      return {
+        projects: [],
+        totalCount: 0,
+      };
+    }
   };
 
   const getProjectsForExcelExport = async () => {
@@ -341,6 +386,7 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
     updateProject,
     deleteProjectById,
     getProjects,
+    projectsDataSource,
     getProjectsForExcelExport,
     postProject,
   };
