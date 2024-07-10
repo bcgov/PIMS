@@ -86,7 +86,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
   };
 
   // check for a valid postal code
-  const regex = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ ]?\d[ABCEGHJ-NPRSTV-Z]\d$/i;
+  const postalRegex = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ ]?\d[ABCEGHJ-NPRSTV-Z]\d$/i;
 
   const map = useRef<Map>();
   const [position, setPosition] = useState<LatLng>(null);
@@ -247,8 +247,8 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             label={'Postal code'}
             rules={{
               validate: (val) =>
-                val.length == 0 ||
-                String(val).match(regex) ||
+                val.length === 0 ||
+                !!String(val).replace(/ /g, '').match(postalRegex) ||
                 'Should be a valid postal code or left blank.',
             }}
           />
