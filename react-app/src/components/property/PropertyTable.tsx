@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useContext } from 'react';
+import React, { MutableRefObject, useContext, useState } from 'react';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, SxProps, Tooltip, lighten, useTheme } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
@@ -18,6 +18,7 @@ import { Parcel, ParcelEvaluation, ParcelFiscal } from '@/hooks/api/useParcelsAp
 import { Building, BuildingEvaluation, BuildingFiscal } from '@/hooks/api/useBuildingsApi';
 import { propertyTypeMapper, PropertyTypes } from '@/constants/propertyTypes';
 import { SnackBarContext } from '@/contexts/snackbarContext';
+import { CommonFiltering } from '@/interfaces/ICommonFiltering';
 
 interface IPropertyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
@@ -59,6 +60,7 @@ export const useClassificationStyle = () => {
 };
 
 const PropertyTable = (props: IPropertyTable) => {
+  const [totalCount, setTotalCount] = useState(0);
   const api = usePimsApi();
   const navigate = useNavigate();
   const snackbar = useContext(SnackBarContext);
@@ -285,6 +287,27 @@ const PropertyTable = (props: IPropertyTable) => {
     return [];
   };
 
+  const handleDataChange = async (filter: CommonFiltering, signal: AbortSignal): Promise<any[]> => {
+    try {
+      const { properties, totalCount } = await api.properties.propertiesDataSource(filter, signal);
+      console.log('Total count', totalCount);
+      setTotalCount(totalCount);
+      snackbar.setMessageState({
+        open: true,
+        text: `${totalCount} properties found.`,
+        style: snackbar.styles.success,
+      });
+      return properties;
+    } catch (error) {
+      snackbar.setMessageState({
+        open: true,
+        text: 'Error loading properties.',
+        style: snackbar.styles.warning,
+      });
+      return [];
+    }
+  };
+
   return (
     <Box
       sx={
@@ -300,7 +323,7 @@ const PropertyTable = (props: IPropertyTable) => {
       <Box height={'calc(100vh - 180px)'}>
         <FilterSearchDataGrid
           name="properties"
-          dataSource={api.properties.getPropertiesUnion}
+          dataSource={handleDataChange}
           onPresetFilterChange={selectPresetFilter}
           getRowId={(row) => `${row.Id}_${row.PropertyType}`}
           defaultFilter={'All Properties'}
@@ -320,6 +343,8 @@ const PropertyTable = (props: IPropertyTable) => {
             </CustomMenuItem>,
           ]}
           tableHeader={'Properties Overview'}
+          rowCountProp={totalCount}
+          rowCount={totalCount}
           excelTitle={'Properties'}
           customExcelData={getExcelData}
           columns={columns}

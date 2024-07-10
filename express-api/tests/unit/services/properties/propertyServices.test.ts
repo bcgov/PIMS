@@ -53,28 +53,29 @@ const _parcelsCreateQueryBuilder: any = {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const _buildingsCreateQueryBuilder: any = {
-  select: () => _parcelsCreateQueryBuilder,
-  leftJoinAndSelect: () => _parcelsCreateQueryBuilder,
-  where: () => _parcelsCreateQueryBuilder,
-  orWhere: () => _parcelsCreateQueryBuilder,
-  andWhere: () => _parcelsCreateQueryBuilder,
-  take: () => _parcelsCreateQueryBuilder,
-  skip: () => _parcelsCreateQueryBuilder,
-  orderBy: () => _parcelsCreateQueryBuilder,
+  select: () => _buildingsCreateQueryBuilder,
+  leftJoinAndSelect: () => _buildingsCreateQueryBuilder,
+  where: () => _buildingsCreateQueryBuilder,
+  orWhere: () => _buildingsCreateQueryBuilder,
+  andWhere: () => _buildingsCreateQueryBuilder,
+  take: () => _buildingsCreateQueryBuilder,
+  skip: () => _buildingsCreateQueryBuilder,
+  orderBy: () => _buildingsCreateQueryBuilder,
   getMany: () => [produceBuilding()],
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const _propertyUnionCreateQueryBuilder: any = {
-  select: () => _parcelsCreateQueryBuilder,
-  leftJoinAndSelect: () => _parcelsCreateQueryBuilder,
-  where: () => _parcelsCreateQueryBuilder,
-  orWhere: () => _parcelsCreateQueryBuilder,
-  andWhere: () => _parcelsCreateQueryBuilder,
-  take: () => _parcelsCreateQueryBuilder,
-  skip: () => _parcelsCreateQueryBuilder,
-  orderBy: () => _parcelsCreateQueryBuilder,
+  select: () => _propertyUnionCreateQueryBuilder,
+  leftJoinAndSelect: () => _propertyUnionCreateQueryBuilder,
+  where: () => _propertyUnionCreateQueryBuilder,
+  orWhere: () => _propertyUnionCreateQueryBuilder,
+  andWhere: () => _propertyUnionCreateQueryBuilder,
+  take: () => _propertyUnionCreateQueryBuilder,
+  skip: () => _propertyUnionCreateQueryBuilder,
+  orderBy: () => _propertyUnionCreateQueryBuilder,
   getMany: () => [producePropertyUnion()],
+  getManyAndCount: () => [[producePropertyUnion()], 1],
 };
 
 jest
@@ -225,14 +226,14 @@ describe('UNIT - Property Services', () => {
         updatedOn: 'after,' + new Date(),
         quickFilter: 'contains,someWord',
       });
-      expect(Array.isArray(result));
-      expect(result.at(0)).toHaveProperty('PropertyType');
-      expect(result.at(0)).toHaveProperty('Id');
-      expect(result.at(0)).toHaveProperty('PIN');
-      expect(result.at(0)).toHaveProperty('PID');
-      expect(result.at(0)).toHaveProperty('Agency');
-      expect(result.at(0)).toHaveProperty('Classification');
-      expect(result.at(0)).toHaveProperty('AdministrativeArea');
+      expect(Array.isArray(result.properties)).toBe(true);
+      expect(result.properties.at(0)).toHaveProperty('PropertyType');
+      expect(result.properties.at(0)).toHaveProperty('Id');
+      expect(result.properties.at(0)).toHaveProperty('PIN');
+      expect(result.properties.at(0)).toHaveProperty('PID');
+      expect(result.properties.at(0)).toHaveProperty('Agency');
+      expect(result.properties.at(0)).toHaveProperty('Classification');
+      expect(result.properties.at(0)).toHaveProperty('AdministrativeArea');
     });
 
     it('should log an invalid sort key if the key is invalid', async () => {

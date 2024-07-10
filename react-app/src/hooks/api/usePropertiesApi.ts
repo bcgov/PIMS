@@ -73,6 +73,11 @@ export interface ImportResult {
   UpdatedOn?: Date;
 }
 
+export interface PropertiesUnionResponse {
+  properties: PropertyUnion[];
+  totalCount: number;
+}
+
 const usePropertiesApi = (absoluteFetch: IFetch) => {
   const config = useContext(ConfigContext);
   const keycloak = useSSO();
@@ -104,7 +109,35 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
 
   const getPropertiesUnion = async (filter: CommonFiltering, signal?: AbortSignal) => {
     const { parsedBody } = await absoluteFetch.get('/properties', filter, { signal });
-    return parsedBody as PropertyUnion[];
+    return parsedBody as PropertiesUnionResponse;
+  };
+
+  const propertiesDataSource = async (
+    filter: CommonFiltering,
+    signal?: AbortSignal,
+  ): Promise<PropertiesUnionResponse> => {
+    try {
+      const response = await getPropertiesUnion(filter, signal);
+
+      // Extract properties and totalCount from the response
+      const { properties } = response;
+      const totalCount = response.totalCount;
+
+      return {
+        properties,
+        totalCount,
+      };
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        console.warn('Fetch aborted');
+      } else {
+        console.error('Error fetching properties:', error);
+      }
+      return {
+        properties: [],
+        totalCount: 0,
+      };
+    }
   };
 
   const uploadBulkSpreadsheet = async (file: File) => {
@@ -133,6 +166,7 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
     getPropertiesUnion,
     uploadBulkSpreadsheet,
     getImportResults,
+    propertiesDataSource,
   };
 };
 

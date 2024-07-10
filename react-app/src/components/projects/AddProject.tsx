@@ -98,8 +98,11 @@ const AddProject = () => {
               name={'TierLevelId'}
               label={'Assign tier'}
               options={
-                lookupData?.ProjectTiers?.map((tier) => ({ value: tier.Id, label: tier.Name })) ??
-                []
+                lookupData?.ProjectTiers?.map((tier) => ({
+                  value: tier.Id,
+                  label: tier.Name,
+                  tooltip: tier.Description,
+                })) ?? []
               }
             />
           </Grid>
@@ -165,7 +168,7 @@ const AddProject = () => {
               }}
               numeric
               fullWidth
-              name={'Estimated'}
+              name={'Market'}
               label={'Estimated market value'}
               rules={{
                 min: {
