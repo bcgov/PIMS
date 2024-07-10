@@ -311,7 +311,7 @@ export const ParcelInformationForm = (props: IParcelInformationForm) => {
             label={
               <Box display={'inline-flex'} alignItems={'center'}>
                 Sensitive information{' '}
-                <Tooltip title="Some blurb about sensitive information will go here I don't know what it should say.">
+                <Tooltip title="Could disclosure of this information threaten another person's safety, mental or physical health, or interfere with public safety?">
                   <Help sx={{ ml: '4px' }} fontSize="small" />
                 </Tooltip>
               </Box>
