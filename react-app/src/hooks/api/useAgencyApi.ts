@@ -41,11 +41,6 @@ const useAgencyApi = (absoluteFetch: IFetch) => {
     return parsedBody as Agency[];
   };
 
-  const getAgenciesWithParent = async (): Promise<Agency[]> => {
-    const { parsedBody } = await absoluteFetch.get(`/agencies?includeRelations=true`);
-    return parsedBody as Agency[];
-  };
-
   const getAgencyById = async (id: number): Promise<Agency> => {
     const { parsedBody } = await absoluteFetch.get(`/agencies/${id}`);
     return parsedBody as Agency;
@@ -69,7 +64,6 @@ const useAgencyApi = (absoluteFetch: IFetch) => {
   return {
     getAgencies,
     getAgenciesNotDisabled,
-    getAgenciesWithParent,
     getAgencyById,
     deleteAgencyById,
     updateAgencyById,
