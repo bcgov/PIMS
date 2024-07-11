@@ -788,7 +788,6 @@ const collectFindOptions = (filter: ProjectFilter) => {
   return options;
 };
 
-// Because leftJoinAndSelect is used, sort uses the Entity column name, not database column name
 const sortKeyTranslator: Record<string, string> = {
   ProjectNumber: 'project_number',
   Name: 'name',
@@ -848,9 +847,10 @@ const getProjects = async (filter: ProjectFilter) => {
       query.orderBy(
         sortKeyTranslator[filter.sortKey],
         filter.sortOrder.toUpperCase() as SortOrders,
+        'NULLS LAST',
       );
     } else {
-      logger.error('PropertyUnion Service - Invalid Sort Key');
+      logger.error('getProjects Service - Invalid Sort Key');
     }
   }
   return await query.getMany();

@@ -613,6 +613,7 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
       query.orderBy(
         sortKeyTranslator[filter.sortKey],
         filter.sortOrder.toUpperCase() as SortOrders,
+        'NULLS LAST',
       );
     } else {
       logger.error('PropertyUnion Service - Invalid Sort Key');
