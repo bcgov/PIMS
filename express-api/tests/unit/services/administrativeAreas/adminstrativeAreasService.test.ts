@@ -27,7 +27,7 @@ describe('UNIT - admin area services', () => {
     it('should return a list of admin areas', async () => {
       const areas = await administrativeAreasServices.getAdministrativeAreas({
         name: 'endsWith,aaa',
-        regionalDistrict: 'contains,aaa',
+        regionalDistrictName: 'contains,aaa',
         isDisabled: 'contains,aaa',
         sortKey: 'RegionalDistrict',
         sortOrder: 'asc',

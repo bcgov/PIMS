@@ -26,7 +26,7 @@ describe('UNIT - agency services', () => {
     it('should get a list of agencies', async () => {
       const agencies = await agencyServices.getAgencies({
         name: 'contains,aaa',
-        parent: 'equals,aaa',
+        parentName: 'equals,aaa',
         isDisabled: 'equals,aaa',
       });
       expect(_agencyFind).toHaveBeenCalledTimes(1);
