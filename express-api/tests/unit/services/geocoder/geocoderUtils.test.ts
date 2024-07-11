@@ -5,10 +5,10 @@ describe('UNIT - geocoderUtils', () => {
     it('should create and address from passed properties', () => {
       const address = getAddress1({
         civicNumber: '123',
-        isStreetTypePrefix: "false",
+        isStreetTypePrefix: 'false',
         streetType: 'Street',
         streetName: 'Johnson',
-        isStreetDirectionPrefix: "false",
+        isStreetDirectionPrefix: 'false',
         streetDirection: 'SW',
         streetQualifier: 'Bridge',
         fullAddress: '',
@@ -42,10 +42,10 @@ describe('UNIT - geocoderUtils', () => {
     it('should create and address from passed properties, using prefixes', () => {
       const address = getAddress1({
         civicNumber: '123',
-        isStreetTypePrefix: "true",
+        isStreetTypePrefix: 'true',
         streetType: 'Street',
         streetName: 'Johnson',
-        isStreetDirectionPrefix: "true",
+        isStreetDirectionPrefix: 'true',
         streetDirection: 'SW',
         streetQualifier: 'Bridge',
         fullAddress: '',
