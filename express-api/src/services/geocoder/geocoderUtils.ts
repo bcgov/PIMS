@@ -17,14 +17,16 @@ export const getAddress1 = (properties: IPropertyModel): string => {
 
   if (properties.civicNumber) address.push(properties.civicNumber);
 
-  if (properties.isStreetTypePrefix == 'true' && properties.streetType) address.push(properties.streetType);
+  if (properties.isStreetTypePrefix == 'true' && properties.streetType)
+    address.push(properties.streetType);
 
   if (properties.isStreetDirectionPrefix == 'true' && properties.streetDirection)
     address.push(properties.streetDirection);
 
   if (properties.streetName) address.push(properties.streetName);
 
-  if (properties.isStreetTypePrefix != 'true' && properties.streetType) address.push(properties.streetType);
+  if (properties.isStreetTypePrefix != 'true' && properties.streetType)
+    address.push(properties.streetType);
 
   if (properties.streetQualifier) address.push(properties.streetQualifier);
 
