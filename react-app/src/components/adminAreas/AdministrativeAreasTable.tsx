@@ -22,7 +22,10 @@ const AdministrativeAreasTable = () => {
 
   const handleDataChange = async (filter: any, signal: AbortSignal): Promise<any[]> => {
     try {
-      const { data, totalCount } = await api.administrativeAreas.getAdministrativeAreas(filter, signal);
+      const { data, totalCount } = await api.administrativeAreas.getAdministrativeAreas(
+        filter,
+        signal,
+      );
       setTotalCount(totalCount);
       return data;
     } catch (error) {

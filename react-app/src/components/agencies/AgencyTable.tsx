@@ -1,4 +1,4 @@
-import React, { MutableRefObject } from 'react';
+import React, { MutableRefObject, useContext, useState } from 'react';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, Chip, SxProps } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
@@ -14,6 +14,7 @@ import { Agency } from '@/hooks/api/useAgencyApi';
 import { useNavigate } from 'react-router-dom';
 import usePimsApi from '@/hooks/usePimsApi';
 import { dateColumnType } from '../table/CustomColumns';
+import { SnackBarContext } from '@/contexts/snackbarContext';
 
 interface IAgencyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
@@ -22,6 +23,24 @@ interface IAgencyTable {
 const AgencyTable = (props: IAgencyTable) => {
   const { rowClickHandler } = props;
   const navigate = useNavigate();
+  const snackbar = useContext(SnackBarContext);
+  const [totalCount, setTotalCount] = useState(0);
+
+  const handleDataChange = async (filter: any, signal: AbortSignal): Promise<any[]> => {
+    try {
+      const { data, totalCount } = await api.agencies.getAgencies(filter, signal);
+      setTotalCount(totalCount);
+      return data;
+    } catch (error) {
+      setTotalCount(0);
+      snackbar.setMessageState({
+        open: true,
+        text: error.message,
+        style: snackbar.styles.warning,
+      });
+      return [];
+    }
+  };
 
   const columns: GridColDef[] = [
     {
@@ -154,9 +173,11 @@ const AgencyTable = (props: IAgencyTable) => {
         <FilterSearchDataGrid
           name="agencies"
           tableOperationMode="server"
-          dataSource={api.agencies.getAgencies}
+          dataSource={handleDataChange}
           onPresetFilterChange={selectPresetFilter}
           getRowId={(row: Agency) => row.Id}
+          rowCount={totalCount}
+          rowCountProp={totalCount}
           defaultFilter={'All Agencies'}
           onRowClick={rowClickHandler}
           initialState={{

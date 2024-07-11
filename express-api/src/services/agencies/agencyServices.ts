@@ -82,7 +82,8 @@ export const getAgencies = async (filter: AgencyFilter) => {
       logger.error('getAgencies Service - Invalid Sort Key');
     }
   }
-  return await query.getMany();
+  const [data, totalCount] = await query.getManyAndCount();
+  return { data, totalCount };
 };
 
 /**
@@ -120,7 +121,7 @@ export const getAgencyById = async (agencyId: number) => {
  * @returns Status and information on updated agency.
  */
 export const updateAgencyById = async (agencyIn: Agency) => {
-  const agencies = await getAgencies({});
+  const { data: agencies } = await getAgencies({});
   const findAgency = agencies.find((agency) => agency.Id === agencyIn.Id);
   if (findAgency == null) {
     throw new ErrorWithCode('Agency not found.', 404);

@@ -27,7 +27,10 @@ export const getAgencies = async (req: Request, res: Response) => {
     const agencies = await agencyService.getAgencies(filter.data);
     if (!ssoUser.client_roles || !ssoUser.client_roles.includes(Roles.ADMIN)) {
       const trimmed = AgencyPublicResponseSchema.array().parse(agencies);
-      return res.status(200).send(trimmed);
+      return res.status(200).send({
+        ...agencies,
+        data: trimmed,
+      });
     }
     return res.status(200).send(agencies);
   } else {
