@@ -192,9 +192,9 @@ const AgencyTable = (props: IAgencyTable) => {
             <CustomMenuItem key={'All Agencies'} value={'All Agencies'}>
               All Agencies
             </CustomMenuItem>,
-            <CustomListSubheader key={'Status'}>Status</CustomListSubheader>,
-            <CustomMenuItem key={'Active'} value={'Active'}>
-              Active
+            <CustomListSubheader key={'Status'}>Disabled Status</CustomListSubheader>,
+            <CustomMenuItem key={'Enabled'} value={'Enabled'}>
+              Enabled
             </CustomMenuItem>,
             <CustomMenuItem key={'Disabled'} value={'Disabled'}>
               Disabled

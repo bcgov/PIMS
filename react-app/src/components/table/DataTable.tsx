@@ -294,8 +294,8 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
    * @description Defines possible query parameters for table state
    */
   interface QueryStrings {
-    keywordFilter?: string;
-    quickSelectFilter?: string;
+    keywordFilter?: string; // refers to the keyword search bar
+    quickSelectFilter?: string; // refers to the select input with preset filters
     columnFilterName?: string;
     columnFilterValue?: string;
     columnFilterMode?: string;
@@ -361,25 +361,18 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
    */
   useLayoutEffect(() => {
     const query = getQuery();
-    // If query strings exist, prioritize that for preset filters, etc.
-    // const model: ITableModelCollection = {
-    //   pagination: { page: DEFAULT_PAGE, pageSize: DEFAULT_PAGESIZE },
-    //   sort: undefined,
-    //   filter: undefined,
-    //   quickFilter: undefined,
-    // };
     if (Boolean(Object.keys(query).length)) {
+      if (query.keywordFilter) {
+        setKeywordSearchContents(query.keywordFilter);
+        updateSearchValue(query.keywordFilter);
+      }
       // Set quick select filter
       if (query.quickSelectFilter) {
         setSelectValue(query.quickSelectFilter);
         props.onPresetFilterChange(query.quickSelectFilter, tableApiRef);
       }
       // Set other column filter
-      if (
-        (query.columnFilterName && query.columnFilterValue && query.columnFilterMode) ||
-        query.quickSelectFilter
-      ) {
-        // model.quickFilter = undefined;
+      if (query.columnFilterName && query.columnFilterValue && query.columnFilterMode) {
         const modelObj: GridFilterModel = {
           items: undefined,
           quickFilterValues: undefined,
@@ -393,29 +386,21 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             },
           ];
         }
-        if (query.keywordFilter) {
-          setKeywordSearchContents(query.keywordFilter);
-          modelObj.quickFilterValues = query.keywordFilter.split(' ').filter((a) => a !== '');
-        }
-        //model.filter = modelObj;
         tableApiRef.current.setFilterModel(modelObj);
       }
       // Set sorting options
       if (query.columnSortName && query.columnSortValue) {
-        //model.sort = [{ field: query.columnSortName, sort: query.columnSortValue }];
         tableApiRef.current.setSortModel([
           { field: query.columnSortName, sort: query.columnSortValue },
         ]);
       }
       //Set pagination
       if (query.page && query.pageSize) {
-        //model.pagination = { page: Number(query.page), pageSize: Number(query.pageSize) };
         tableApiRef.current.setPaginationModel({
           page: Number(query.page),
           pageSize: Number(query.pageSize),
         });
       }
-      //setTableModel(model);
     } else {
       // Setting the table's state from sessionStorage cookies
       const model: ITableModelCollection = {
@@ -482,16 +467,6 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
       tableApiRef.current.setQuickFilterValues(newValue.split(' ').filter((word) => word !== ''));
       const defaultpagesize = { page: 0, pageSize: tableModel.pagination.pageSize };
       tableApiRef.current.setPaginationModel(defaultpagesize);
-      // console.log(`updateSearchValue: ${JSON.stringify(tableModel)}`);
-      // setTableModel({
-      //   ...tableModel,
-      //   pagination: defaultpagesize,
-      //   quickFilter: newValue.split(' ').filter((word) => word !== ''),
-      // });
-      // setQuery({
-      //   ...defaultpagesize,
-      //   keywordFilter: newValue,
-      // });
     }, 300);
   }, [tableApiRef]);
 
