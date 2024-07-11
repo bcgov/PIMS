@@ -8,10 +8,8 @@ import {
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import usePimsApi from '@/hooks/usePimsApi';
 import { dateFormatter } from '@/utilities/formatters';
-import { Check } from '@mui/icons-material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { useNavigate } from 'react-router-dom';
-import { RegionalDistrict } from '@/hooks/api/useLookupApi';
 import { AdministrativeArea } from '@/hooks/api/useAdministrativeAreaApi';
 import { Box } from '@mui/material';
 
@@ -26,20 +24,15 @@ const AdministrativeAreasTable = () => {
       flex: 1,
     },
     {
-      field: 'RegionalDistrict',
+      field: 'RegionalDistrictName',
       headerName: 'Regional District',
       flex: 1,
-      valueGetter: (value: RegionalDistrict) => value?.Name ?? 'N/A',
     },
     {
       field: 'IsDisabled',
       headerName: 'Is Disabled',
       flex: 1,
-      renderCell: (params) => {
-        if (params.value) {
-          return <Check />;
-        } else return <></>;
-      },
+      type: 'boolean',
     },
     {
       field: 'CreatedOn',
@@ -59,8 +52,8 @@ const AdministrativeAreasTable = () => {
         ref.current.setFilterModel({
           items: [
             {
-              value: 'false',
-              operator: 'equals',
+              value: false,
+              operator: 'is',
               field: 'IsDisabled',
             },
           ],
@@ -70,8 +63,8 @@ const AdministrativeAreasTable = () => {
         ref.current.setFilterModel({
           items: [
             {
-              value: 'true',
-              operator: 'equals',
+              value: true,
+              operator: 'is',
               field: 'IsDisabled',
             },
           ],

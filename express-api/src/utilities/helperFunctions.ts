@@ -51,7 +51,7 @@ export const constructFindOptionFromQueryBoolean = <T>(
   const [_, operator, value] = operatorValuePair.match(/([^,]*),(.*)/).map((a) => a.trim());
   let internalMatcher;
   // Empty string for when table searches for 'any'
-  if (value === '')  return { [column]: undefined } as FindOptionsWhere<T>;
+  if (value === '') return { [column]: undefined } as FindOptionsWhere<T>;
   switch (operator) {
     case 'is':
       internalMatcher = (str: string) => Raw((alias) => `${alias} = ${str.toUpperCase()}`);
