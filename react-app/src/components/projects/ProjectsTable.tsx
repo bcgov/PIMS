@@ -222,11 +222,6 @@ const ProjectsTable = () => {
     try {
       const { projects, totalCount } = await api.projects.projectsDataSource(filter, signal);
       setTotalCount(totalCount);
-      snackbar.setMessageState({
-        open: true,
-        text: `${totalCount} projects found.`,
-        style: snackbar.styles.success,
-      });
       return projects;
     } catch (error) {
       snackbar.setMessageState({

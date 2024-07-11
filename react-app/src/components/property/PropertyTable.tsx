@@ -291,11 +291,6 @@ const PropertyTable = (props: IPropertyTable) => {
     try {
       const { properties, totalCount } = await api.properties.propertiesDataSource(filter, signal);
       setTotalCount(totalCount);
-      snackbar.setMessageState({
-        open: true,
-        text: `${totalCount} properties found.`,
-        style: snackbar.styles.success,
-      });
       return properties;
     } catch (error) {
       snackbar.setMessageState({
