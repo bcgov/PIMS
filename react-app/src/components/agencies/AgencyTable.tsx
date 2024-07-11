@@ -13,7 +13,6 @@ import { dateFormatter } from '@/utilities/formatters';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { useNavigate } from 'react-router-dom';
 import usePimsApi from '@/hooks/usePimsApi';
-import { Check } from '@mui/icons-material';
 import { dateColumnType } from '../table/CustomColumns';
 
 interface IAgencyTable {
@@ -41,27 +40,19 @@ const AgencyTable = (props: IAgencyTable) => {
       field: 'IsDisabled',
       headerName: 'Is Disabled',
       flex: 1,
-      renderCell: (params) => {
-        if (params.value) {
-          return <Check />;
-        } else return <></>;
-      },
+      type: 'boolean',
       maxWidth: 120,
     },
     {
-      field: 'Parent',
+      field: 'ParentName',
       headerName: 'Parent Agency',
       flex: 1,
-      valueGetter: (value?: Agency) => {
-        if (value) return value.Name;
-        return '';
-      },
     },
     {
       field: 'SendEmail',
       headerName: 'Notification',
       flex: 1,
-      valueGetter: (value: boolean) => (value ? 'Yes' : 'No'),
+      type: 'boolean',
       maxWidth: 120,
     },
     {

@@ -24,8 +24,7 @@ export const getAgencies = async (req: Request, res: Response) => {
   const ssoUser = req.user;
   const filter = AgencyFilterSchema.safeParse(req.query);
   if (filter.success) {
-    const includeRelations = req.query.includeRelations === 'true';
-    const agencies = await agencyService.getAgencies(filter.data, includeRelations);
+    const agencies = await agencyService.getAgencies(filter.data);
     if (!ssoUser.client_roles || !ssoUser.client_roles.includes(Roles.ADMIN)) {
       const trimmed = AgencyPublicResponseSchema.array().parse(agencies);
       return res.status(200).send(trimmed);

@@ -28,11 +28,7 @@ export type AgencyAdd = Omit<
 
 const useAgencyApi = (absoluteFetch: IFetch) => {
   const getAgencies = async (sort: CommonFiltering, signal?: AbortSignal): Promise<Agency[]> => {
-    const { parsedBody } = await absoluteFetch.get(
-      `/agencies`,
-      { ...sort, includeRelations: true },
-      { signal },
-    );
+    const { parsedBody } = await absoluteFetch.get(`/agencies`, { ...sort }, { signal });
     return parsedBody as Agency[];
   };
 
