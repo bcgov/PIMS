@@ -243,6 +243,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     const filterObj = {};
     if (filter?.items) {
       for (const f of filter.items) {
+        if (f.value == '') continue; // Skip empty fields
         const asCamelCase = formatHeaderToFilterKey(f.field);
         if (f.value != undefined && String(f.value) !== 'Invalid Date') {
           filterObj[asCamelCase] = `${f.operator},${f.value}`;
@@ -254,12 +255,6 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     if (quickFilter) {
       const keyword = quickFilter[0];
       if (keyword) filterObj['quickFilter'] = `contains,${keyword}`;
-      // for (const fieldName of tableApiRef.current.getAllColumns().map((col) => col.field)) {
-      //   if (keyword != undefined) {
-      //     const asCamelCase = fieldName.charAt(0).toLowerCase() + fieldName.slice(1);
-      //     filterObj[asCamelCase] = `contains,${keyword}`;
-      //   }
-      // }
     }
     setDataSourceLoading(true);
     props
