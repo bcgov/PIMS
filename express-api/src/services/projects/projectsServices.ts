@@ -853,7 +853,8 @@ const getProjects = async (filter: ProjectFilter) => {
       logger.error('getProjects Service - Invalid Sort Key');
     }
   }
-  return await query.getMany();
+  const [projects, totalCount] = await query.getManyAndCount();
+  return { projects, totalCount };
 };
 
 const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boolean = false) => {

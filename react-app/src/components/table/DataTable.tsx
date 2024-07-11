@@ -174,6 +174,7 @@ type FilterSearchDataGridProps = {
   tableOperationMode: 'client' | 'server';
   onPresetFilterChange: (value: string, ref: MutableRefObject<GridApiCommunity>) => void;
   onAddButtonClick?: React.MouseEventHandler<HTMLButtonElement>;
+  rowCountProp?: number;
   defaultFilter: string;
   presetFilterSelectOptions: JSX.Element[];
   tableHeader: string;
@@ -495,8 +496,10 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   }, [tableApiRef]);
 
   const tableHeaderRowCount = useMemo(() => {
-    return props.tableOperationMode === 'client' ? `(${rowCount ?? 0} rows)` : '';
-  }, [props.tableOperationMode, rowCount]);
+    return props.tableOperationMode === 'client'
+      ? `(${rowCount ?? 0} rows)`
+      : `(${props.rowCountProp ?? 0} rows)`;
+  }, [props.tableOperationMode, rowCount, props.rowCountProp]);
 
   return (
     <>

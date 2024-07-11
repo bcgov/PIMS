@@ -39,7 +39,13 @@ export const ProjectGeneralInfoForm = (props: IProjectGeneralInfoForm) => {
           name={'TierLevelId'}
           label={'Assign Tier'}
           required
-          options={lookupData?.ProjectTiers?.map((t) => ({ label: t.Name, value: t.Id })) ?? []}
+          options={
+            lookupData?.ProjectTiers?.map((t) => ({
+              label: t.Name,
+              value: t.Id,
+              tooltip: t.Description,
+            })) ?? []
+          }
         />
       </Grid>
       <Grid item xs={12}>

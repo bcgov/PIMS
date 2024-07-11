@@ -206,6 +206,15 @@ const appTheme = createTheme({
         },
       },
     },
+    MuiList: {
+      styleOverrides: {
+        root: {
+          '& li': {
+            fontFamily: ['BC Sans', 'Verdana', 'Arial', 'sans-serif'].join(','),
+          },
+        },
+      },
+    },
   },
 });
 
