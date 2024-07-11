@@ -147,7 +147,7 @@ def main():
     # change current dir to the one we need
     os.chdir('./tools/propertyCheck/')
 
-    in_file = "building.csv"
+    in_file = "buildings.csv"
 
     rows = read_csv(in_file)
 

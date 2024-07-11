@@ -35,9 +35,36 @@ def get_shapes(shapes, parcel_info):
             in_shape = shape[0]
             shapes.append(in_shape)
 
+def pims_point_in_pl(pims_point, pims_pid):
+    """ Checks if the point in pims falls within the boundary of the parcel from parcel layer """
+    pl_data = parcel_layer_connection.request_data_by_pid(pims_pid)
+    try:
+        parcel_layer_data_pid = json.loads(pl_data.decode("utf-8"))
+    except: # pylint: disable=bare-except
+        # error reading data from parcel layer
+        return False
+
+    if parcel_layer_data_pid["numberMatched"] <= 0:
+        # no data from parcel layer
+        return False
+
+    shapes = []
+    get_shapes(shapes, parcel_layer_data_pid)
+    point_in_shape = helpers.is_point_in_shapes(pims_point, shapes)
+    if point_in_shape[0]:
+        return True
+
+def hang_on_user_input():
+    """
+    Stop process and wait for user to enter y. If any other character is entered script exits.
+    """
+    user_input = input("Press 'y' to continue. Press anything else to exit.\n")
+    if user_input.lower() != 'y':
+        exit()
+
 def process(data_in):
     """
-    Go thorough elements. Try to clean them. 
+    Go through elements. Try to clean them. 
     """
     manual_check_li = []
     final_li = []
@@ -54,8 +81,9 @@ def process(data_in):
         # add header row to our new files
         if index == 0:
             final_li.append(row)
-            row.append("Problem")
-            manual_check_li.append(row)
+            temp_row = row
+            temp_row.append("Problem")
+            manual_check_li.append(temp_row)
             continue
 
         helpers.print_percentage(index, total_rows)
@@ -76,6 +104,11 @@ def process(data_in):
             #if our database doesnt have an address or a city we have to check it manually
             row.append("Missing city or address cant validate")
             manual_check_li.append(row)
+            continue
+
+        if pims_point_in_pl(pims_point, pims_pid):
+            # if the point we have stored in pims falls within the parcel we have valid data
+            final_li.append(row)
             continue
 
         while set_back <= MAX_SET_BACK:
@@ -170,6 +203,7 @@ def process(data_in):
             center_point = helpers.get_center(match_parcel)
             row[pims_point_index] = center_point
             new_point_str = str(center_point)
+            final_li.append(row)
             info = "  Updated POINT from " + str(pims_point) + " to " + new_point_str
             log_str = log_str + '\n' + str(update_num) + " " + str(row) + "\n" + info
             continue
