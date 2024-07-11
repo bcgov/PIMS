@@ -98,12 +98,12 @@ const AgencyTable = (props: IAgencyTable) => {
         break;
       case 'Active':
         ref.current.setFilterModel({
-          items: [{ value: 'false', operator: 'equals', field: 'IsDisabled' }],
+          items: [{ value: false, operator: 'is', field: 'IsDisabled' }],
         });
         break;
       case 'Disabled':
         ref.current.setFilterModel({
-          items: [{ value: 'true', operator: 'equals', field: 'IsDisabled' }],
+          items: [{ value: true, operator: 'is', field: 'IsDisabled' }],
         });
         break;
       default:
