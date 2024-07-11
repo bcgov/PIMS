@@ -1,4 +1,4 @@
-import React, { MutableRefObject } from 'react';
+import React, { MutableRefObject, useContext, useState } from 'react';
 import {
   GridColDef,
   gridFilteredSortedRowEntriesSelector,
@@ -12,10 +12,29 @@ import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { useNavigate } from 'react-router-dom';
 import { AdministrativeArea } from '@/hooks/api/useAdministrativeAreaApi';
 import { Box } from '@mui/material';
+import { SnackBarContext } from '@/contexts/snackbarContext';
 
 const AdministrativeAreasTable = () => {
   const api = usePimsApi();
   const navigate = useNavigate();
+  const snackbar = useContext(SnackBarContext);
+  const [totalCount, setTotalCount] = useState(0);
+
+  const handleDataChange = async (filter: any, signal: AbortSignal): Promise<any[]> => {
+    try {
+      const { data, totalCount } = await api.administrativeAreas.getAdministrativeAreas(filter, signal);
+      setTotalCount(totalCount);
+      return data;
+    } catch (error) {
+      setTotalCount(0);
+      snackbar.setMessageState({
+        open: true,
+        text: error.message,
+        style: snackbar.styles.warning,
+      });
+      return [];
+    }
+  };
 
   const columns: GridColDef[] = [
     {
@@ -100,7 +119,7 @@ const AdministrativeAreasTable = () => {
   return (
     <Box height={'calc(100vh - 180px)'}>
       <FilterSearchDataGrid
-        dataSource={api.administrativeAreas.getAdministrativeAreas}
+        dataSource={handleDataChange}
         tableOperationMode="server"
         name="adminAreas"
         onRowClick={(params) => navigate(`${params.row.Id}`)}
@@ -125,7 +144,8 @@ const AdministrativeAreasTable = () => {
         addTooltip={'Create New Administration Area'}
         columns={columns}
         getRowId={(row) => row.Id}
-        //rows={data ?? []}
+        rowCount={totalCount}
+        rowCountProp={totalCount}
         initialState={{
           pagination: { paginationModel: { page: 0, pageSize: 100 } },
           sorting: {

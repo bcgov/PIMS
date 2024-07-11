@@ -12,13 +12,38 @@ export interface AdministrativeArea {
   CreatedOn: string;
 }
 
+export interface GetManyResponse<T> {
+  data: Array<T>;
+  totalCount: number;
+}
+
 const useAdministrativeAreaApi = (absoluteFetch: IFetch) => {
   const getAdministrativeAreas = async (
     sort: CommonFiltering,
     signal?: AbortSignal,
-  ): Promise<AdministrativeArea[]> => {
-    const { parsedBody } = await absoluteFetch.get(`/administrativeAreas`, { ...sort }, { signal });
-    return parsedBody as AdministrativeArea[];
+  ): Promise<GetManyResponse<AdministrativeArea>> => {
+    try {
+
+    
+    const response = await absoluteFetch.get(`/administrativeAreas`, { ...sort }, { signal });
+    if (response.ok) {
+      return response.parsedBody as GetManyResponse<AdministrativeArea>;
+    }
+    return {
+      data: [],
+      totalCount: 0,
+    }
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      console.warn('Fetch aborted');
+    } else {
+      console.error('Error fetching administrative areas:', error);
+    }
+    return {
+      data: [],
+      totalCount: 0,
+    };
+  }
   };
 
   const addAdministrativeArea = async (adminArea: Omit<AdministrativeArea, 'Id' | 'CreatedOn'>) => {

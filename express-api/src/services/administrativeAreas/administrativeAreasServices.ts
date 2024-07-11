@@ -69,7 +69,8 @@ const getAdministrativeAreas = async (filter: AdministrativeAreaFilter) => {
       logger.error('getAdministrativeAreas Service - Invalid Sort Key');
     }
   }
-  return await query.getMany();
+   const [data, totalCount] = await query.getManyAndCount();
+   return {data, totalCount}
 };
 
 const addAdministrativeArea = async (adminArea: AdministrativeArea) => {
