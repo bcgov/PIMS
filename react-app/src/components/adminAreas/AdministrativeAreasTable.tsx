@@ -67,14 +67,11 @@ const AdministrativeAreasTable = () => {
 
   const selectPresetFilter = (value: string, ref: MutableRefObject<GridApiCommunity>) => {
     switch (value) {
-      case 'All':
-        ref.current.setFilterModel({ items: [] });
-        break;
       case 'Enabled':
         ref.current.setFilterModel({
           items: [
             {
-              value: false,
+              value: 'false',
               operator: 'is',
               field: 'IsDisabled',
             },
@@ -85,13 +82,15 @@ const AdministrativeAreasTable = () => {
         ref.current.setFilterModel({
           items: [
             {
-              value: true,
+              value: 'true',
               operator: 'is',
               field: 'IsDisabled',
             },
           ],
         });
         break;
+      default:
+        ref.current.setFilterModel({ items: [] });
     }
   };
 

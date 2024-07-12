@@ -435,7 +435,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             model.filter = state.filter.filterModel;
             setSelectValue(state.filter.filterModel.items.at(0).value);
             setQuery({
-              quickSelectFilter: state.filter.filterModel.items.at(0).value,
+              quickSelectFilter: state.filter.filterModel.items.at(0).value.toString(),
             });
           }
           // Set keyword search bar

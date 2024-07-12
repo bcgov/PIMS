@@ -112,17 +112,14 @@ const AgencyTable = (props: IAgencyTable) => {
 
   const selectPresetFilter = (value: string, ref: MutableRefObject<GridApiCommunity>) => {
     switch (value) {
-      case 'All Agencies':
-        ref.current.setFilterModel({ items: [] });
-        break;
-      case 'Active':
+      case 'Enabled':
         ref.current.setFilterModel({
-          items: [{ value: false, operator: 'is', field: 'IsDisabled' }],
+          items: [{ value: 'false', operator: 'is', field: 'IsDisabled' }],
         });
         break;
       case 'Disabled':
         ref.current.setFilterModel({
-          items: [{ value: true, operator: 'is', field: 'IsDisabled' }],
+          items: [{ value: 'true', operator: 'is', field: 'IsDisabled' }],
         });
         break;
       default:
@@ -178,7 +175,7 @@ const AgencyTable = (props: IAgencyTable) => {
           getRowId={(row: Agency) => row.Id}
           rowCount={totalCount}
           rowCountProp={totalCount}
-          defaultFilter={'All Agencies'}
+          defaultFilter={'All'}
           onRowClick={rowClickHandler}
           initialState={{
             pagination: {
@@ -189,7 +186,7 @@ const AgencyTable = (props: IAgencyTable) => {
             },
           }}
           presetFilterSelectOptions={[
-            <CustomMenuItem key={'All Agencies'} value={'All Agencies'}>
+            <CustomMenuItem key={'All'} value={'All'}>
               All Agencies
             </CustomMenuItem>,
             <CustomListSubheader key={'Status'}>Disabled Status</CustomListSubheader>,
