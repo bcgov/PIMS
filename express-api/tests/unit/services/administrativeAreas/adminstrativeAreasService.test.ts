@@ -1,11 +1,8 @@
 import { AppDataSource } from '@/appDataSource';
 import administrativeAreasServices from '@/services/administrativeAreas/administrativeAreasServices';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
+import { AdministrativeAreaJoinView } from '@/typeorm/Entities/views/AdministrativeAreaJoinView';
 import { produceAdminArea } from 'tests/testUtils/factories';
-
-const _adminAreaFind = jest
-  .spyOn(AppDataSource.getRepository(AdministrativeArea), 'find')
-  .mockImplementation(async () => [produceAdminArea({})]);
 
 const _adminAreaFindOne = jest
   .spyOn(AppDataSource.getRepository(AdministrativeArea), 'findOne')
@@ -18,6 +15,24 @@ const _adminAreaUpdate = jest
 const _adminAreaSave = jest
   .spyOn(AppDataSource.getRepository(AdministrativeArea), 'save')
   .mockImplementation(async () => produceAdminArea({}));
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const _adminAreaJoinView: any = {
+  select: () => _adminAreaJoinView,
+  leftJoinAndSelect: () => _adminAreaJoinView,
+  where: () => _adminAreaJoinView,
+  orWhere: () => _adminAreaJoinView,
+  andWhere: () => _adminAreaJoinView,
+  take: () => _adminAreaJoinView,
+  skip: () => _adminAreaJoinView,
+  orderBy: () => _adminAreaJoinView,
+  getMany: () => [produceAdminArea()],
+  getManyAndCount: () => [[produceAdminArea()], 1],
+};
+
+jest
+  .spyOn(AppDataSource.getRepository(AdministrativeAreaJoinView), 'createQueryBuilder')
+  .mockImplementation(() => _adminAreaJoinView);
 
 describe('UNIT - admin area services', () => {
   beforeEach(() => {
@@ -32,16 +47,16 @@ describe('UNIT - admin area services', () => {
         sortKey: 'RegionalDistrict',
         sortOrder: 'asc',
       });
-      expect(_adminAreaFind).toHaveBeenCalled();
-      expect(Array.isArray(areas)).toBe(true);
+      expect(Array.isArray(areas.data)).toBe(true);
+      expect(areas.totalCount).toBe(1);
     });
     it('should return a list of admin areas', async () => {
       const areas = await administrativeAreasServices.getAdministrativeAreas({
         sortKey: 'Name',
         sortOrder: 'desc',
       });
-      expect(_adminAreaFind).toHaveBeenCalled();
-      expect(Array.isArray(areas)).toBe(true);
+      expect(Array.isArray(areas.data)).toBe(true);
+      expect(areas.totalCount).toBe(1);
     });
   });
   describe('getAdministrativeAreaById', () => {
