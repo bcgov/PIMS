@@ -26,7 +26,7 @@ const AddProject = () => {
       Description: '',
       Assessed: 0,
       NetBook: 0,
-      Estimated: 0,
+      Market: 0,
       Appraised: 0,
       ProgramCost: 0,
       SalesCost: 0,
@@ -75,6 +75,8 @@ const AddProject = () => {
     }
   }, [lookupData, exemptionTask, formMethods]);
   const watch = formMethods.watch('Tasks');
+  const exemptionWasRequested =
+    watch.find((a) => a.TaskId === exemptionTask.Id)?.IsCompleted === true;
   return (
     <Box
       display={'flex'}
@@ -231,12 +233,19 @@ const AddProject = () => {
             </Grid>
           ))}
           <Grid item xs={12}>
-            <TextFormField
-              disabled={watch.find((a) => a.TaskId === exemptionTask.Id)?.IsCompleted != true}
-              fullWidth
-              name={'ExemptionNote'}
-              label={'Exemption rationale note'}
-            />
+            {exemptionWasRequested && (
+              <TextFormField
+                fullWidth
+                name={'ExemptionNote'}
+                label={'Exemption rationale note'}
+                required
+                multiline
+                minRows={2}
+                rules={{
+                  required: 'Rationale required when requesting exemption.',
+                }}
+              />
+            )}
           </Grid>
         </Grid>
         <Typography variant="h5">Approval</Typography>
@@ -282,7 +291,9 @@ const AddProject = () => {
                   { MonetaryTypeId: salesCostType.Id, Value: formValues.SalesCost },
                 ],
                 Tasks: formValues.Tasks.filter((a) => a.IsCompleted),
-                Notes: [{ NoteTypeId: exemptionNote.Id, Note: formValues.ExemptionNote }],
+                Notes: exemptionWasRequested
+                  ? [{ NoteTypeId: exemptionNote.Id, Note: formValues.ExemptionNote }]
+                  : undefined,
               },
               projectProperties,
             ).then((response) => {
