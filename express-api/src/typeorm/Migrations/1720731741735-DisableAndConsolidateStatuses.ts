@@ -106,7 +106,12 @@ export class DisableAndConsolidateStatuses1720731741735 implements MigrationInte
     );
 
     await queryRunner.manager.update(NoteType, { Name: 'Appraisal' }, { StatusId: 14 });
-
+    await queryRunner.manager.query(
+      `SELECT setval('task_id_seq', (SELECT MAX(id) FROM task), true)`,
+    );
+    await queryRunner.manager.query(
+      `SELECT setval('note_type_id_seq', (SELECT MAX(id) FROM note_type), true)`,
+    );
     await queryRunner.query(
       //Making an Approved for Exemption version for each of these fields.
       `INSERT INTO task (name, sort_order, is_disabled, description, is_optional, status_id, created_by_id) 
