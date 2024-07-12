@@ -622,14 +622,18 @@ describe('UNIT - Project Services', () => {
           statusId: 1,
           agencyId: [3],
           quantity: 10,
-          page: 0,
+          page: 1,
+          market: '$12',
+          netBook: '$12',
           agency: 'contains,aaa',
           status: 'contains,aaa',
           projectNumber: 'contains,aaa',
           name: 'contains,Project',
           updatedOn: 'before,' + new Date(),
+          updatedBy: 'Jane',
           sortOrder: 'asc',
           sortKey: 'Status',
+          quickFilter: 'hi',
         };
 
         // Call the service function

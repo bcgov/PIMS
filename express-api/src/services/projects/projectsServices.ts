@@ -777,7 +777,6 @@ const sortKeyMapping = (
 
 const collectFindOptions = (filter: ProjectFilter) => {
   const options = [];
-  // TODO: Add market value and updated by searches
   if (filter.name) options.push(constructFindOptionFromQuery('Name', filter.name));
   if (filter.agency) options.push(constructFindOptionFromQuery('Agency', filter.agency));
   if (filter.status) options.push(constructFindOptionFromQuery('Status', filter.status));
@@ -785,6 +784,9 @@ const collectFindOptions = (filter: ProjectFilter) => {
     options.push(constructFindOptionFromQuery('ProjectNumber', filter.projectNumber));
   }
   if (filter.updatedOn) options.push(constructFindOptionFromQuery('UpdatedOn', filter.updatedOn));
+  if (filter.updatedBy) options.push(constructFindOptionFromQuery('UpdatedBy', filter.updatedBy));
+  if (filter.market) options.push(constructFindOptionFromQuery('Market', filter.market));
+  if (filter.netBook) options.push(constructFindOptionFromQuery('NetBook', filter.netBook));
   return options;
 };
 
