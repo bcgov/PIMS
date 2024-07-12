@@ -2,6 +2,7 @@ import { AppDataSource } from '@/appDataSource';
 import administrativeAreasServices from '@/services/administrativeAreas/administrativeAreasServices';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 import { AdministrativeAreaJoinView } from '@/typeorm/Entities/views/AdministrativeAreaJoinView';
+import { faker } from '@faker-js/faker';
 import { produceAdminArea } from 'tests/testUtils/factories';
 
 const _adminAreaFindOne = jest
@@ -44,15 +45,20 @@ describe('UNIT - admin area services', () => {
         name: 'endsWith,aaa',
         regionalDistrictName: 'contains,aaa',
         isDisabled: 'contains,aaa',
-        sortKey: 'RegionalDistrict',
+        sortKey: 'RegionalDistrictName',
         sortOrder: 'asc',
+        quantity: 1,
+        page: 1,
+        quickFilter: 'wow',
+        createdOn: faker.date.recent().toUTCString(),
+        updatedOn: faker.date.recent().toUTCString(),
       });
       expect(Array.isArray(areas.data)).toBe(true);
       expect(areas.totalCount).toBe(1);
     });
-    it('should return a list of admin areas', async () => {
+    it('should return a list of admin areas and trigger invalid sort key', async () => {
       const areas = await administrativeAreasServices.getAdministrativeAreas({
-        sortKey: 'Name',
+        sortKey: 'wow',
         sortOrder: 'desc',
       });
       expect(Array.isArray(areas.data)).toBe(true);

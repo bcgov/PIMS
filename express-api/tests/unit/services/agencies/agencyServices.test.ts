@@ -48,21 +48,27 @@ describe('UNIT - agency services', () => {
       const agencies = await agencyServices.getAgencies({
         name: 'contains,aaa',
         parentName: 'equals,aaa',
-        isDisabled: 'equals,aaa',
+        isDisabled: 'equals,true',
+        sortKey: 'ParentName',
+        sortOrder: 'asc',
+        page: 1,
+        quantity: 1,
       });
       expect(Array.isArray(agencies.data)).toBe(true);
       expect(agencies.totalCount).toBe(1);
     });
 
-    it('should get a list of agencies', async () => {
+    it('should get a list of agencies and trigger invalid sort key', async () => {
       const agencies = await agencyServices.getAgencies({
         name: 'startsWith,aaa',
         code: 'endsWith,code',
         email: 'contains,email',
+        sendEmail: 'true',
         createdOn: `is,${new Date()}`,
         updatedOn: `after,${new Date()}`,
-        sortKey: 'Parent',
+        sortKey: 'wow',
         sortOrder: 'asc',
+        quickFilter: 'hi',
       });
       expect(Array.isArray(agencies.data)).toBe(true);
       expect(agencies.totalCount).toBe(1);
