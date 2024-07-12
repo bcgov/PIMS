@@ -290,7 +290,6 @@ const PropertyTable = (props: IPropertyTable) => {
   const handleDataChange = async (filter: CommonFiltering, signal: AbortSignal): Promise<any[]> => {
     try {
       const { properties, totalCount } = await api.properties.propertiesDataSource(filter, signal);
-      console.log('Total count', totalCount);
       setTotalCount(totalCount);
       snackbar.setMessageState({
         open: true,
