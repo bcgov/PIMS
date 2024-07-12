@@ -108,7 +108,7 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
   const tabPanelStyle: SxProps = {
     padding: '1em 0 0 0',
     height: '100%',
-    overflow: 'scroll',
+    overflowY: 'scroll',
   };
 
   if (size === 'large')
