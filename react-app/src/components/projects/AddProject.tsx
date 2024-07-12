@@ -26,7 +26,7 @@ const AddProject = () => {
       Description: '',
       Assessed: 0,
       NetBook: 0,
-      Estimated: 0,
+      Market: 0,
       Appraised: 0,
       ProgramCost: 0,
       SalesCost: 0,
