@@ -22,7 +22,7 @@ const LtsaDetails = (props: LtsaDetailsProps) => {
   }
 
   return (
-    <Box minWidth={width} height={'300px'} overflow={'scroll'}>
+    <Box minWidth={width} height={'300px'}>
       <Grid container gap={1}>
         {ltsaData && ltsaData.order ? (
           <>
