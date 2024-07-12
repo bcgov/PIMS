@@ -41,7 +41,7 @@
     "typeorm": "0.3.20",
     "typeorm-naming-strategies": "4.1.0",
     "winston": "3.13.0",
-    "xlsx": "0.18.5",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz",
     "zod": "3.23.3"
   },
   "devDependencies": {
