@@ -107,12 +107,16 @@ export class DisableAndConsolidateStatuses1720731741735 implements MigrationInte
 
     await queryRunner.manager.update(NoteType, { Name: 'Appraisal' }, { StatusId: 14 });
 
-    await queryRunner.query(
+    await queryRunner.query( //Making an Approved for Exemption version for each of these fields.
       `INSERT INTO task (name, sort_order, is_disabled, description, is_optional, status_id, created_by_id) 
       SELECT name, sort_order, is_disabled, description, is_optional, 15, $1
       FROM task WHERE name IN (${tasksToDuplicate.map((_, id) => `$${id + 2}`)}) AND status_id = 14`,
       [systemUser.Id, ...tasksToDuplicate],
     );
+    //This is cloning existing project entries filed under the original version of these fields.
+    //We do one join to get the set of the original versions, then we do an additional self join which
+    //maps us from the task_id's under status_id 14 (for ERP) to the equivalent task_id under status_id 15 (for Exemption)
+    //We then select only the relevant fields to use as the values list in a bulk insertion operation.
     await queryRunner.query(
       `INSERT INTO project_task (project_id, task_id, is_completed, completed_on, created_by_id)
         SELECT
