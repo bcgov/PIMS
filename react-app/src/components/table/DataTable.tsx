@@ -551,6 +551,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             <IconButton
               onClick={async () => {
                 setIsExporting(true);
+                let rows;
                 if (props.tableOperationMode === 'server') {
                   const controller = new AbortController();
                   const signal = controller.signal;
@@ -558,28 +559,26 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
                     ...createSortObj(tableModel.sort),
                     ...createFilterObject(tableModel.filter, tableModel.quickFilter),
                   };
-                  let response = props.excelDataSource
+                  rows = props.excelDataSource
                     ? await props.excelDataSource(sortFilterObj, signal)
                     : await props.dataSource(sortFilterObj, signal);
-                  if (props.customExcelMap) response = props.customExcelMap(response);
-                  downloadExcelFile({
-                    data: response.map((r, i) => ({
-                      model: r,
-                      id: i,
-                    })),
-                    tableName: props.excelTitle,
-                    filterName: selectValue,
-                    includeDate: true,
-                  });
+                  if (props.customExcelMap) rows = props.customExcelMap(rows);
                 } else {
                   // Client-side tables
-                  downloadExcelFile({
-                    data: gridFilteredSortedRowEntriesSelector(tableApiRef),
-                    tableName: props.excelTitle,
-                    filterName: selectValue,
-                    includeDate: true,
-                  });
+                  rows = gridFilteredSortedRowEntriesSelector(tableApiRef).map((row) => row.model);
+                  if (props.customExcelMap) rows = props.customExcelMap(rows);
                 }
+                // Convert back to MUI table model
+                rows = rows.map((r, i) => ({
+                  model: r,
+                  id: i,
+                }));
+                downloadExcelFile({
+                  data: rows,
+                  tableName: props.excelTitle,
+                  filterName: selectValue,
+                  includeDate: true,
+                });
                 setIsExporting(false);
               }}
             >
