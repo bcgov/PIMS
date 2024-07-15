@@ -37,7 +37,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   const { data: lookupData } = useContext(LookupContext);
 
   const { submit, submitting } = useDataSubmitter(api.projects.updateProject);
-
+  const [approvedStatus, setApprovedStatus] = useState<number>(null);
   const projectFormMethods = useForm({
     defaultValues: {
       StatusId: undefined,
@@ -45,6 +45,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
       Name: '',
       TierLevelId: undefined,
       Description: '',
+      ConfirmNotifications: false,
       Tasks: [],
       Notes: [],
       Timestamps: [],
@@ -59,6 +60,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
       Name: initialValues?.Name,
       TierLevelId: initialValues?.TierLevelId,
       Description: initialValues?.Description,
+      ConfirmNotifications: false,
       Tasks: [],
       Notes: [],
       Timestamps: [],
@@ -148,11 +150,20 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
     );
   }, [statusTypes, initialValues]);
 
+  useEffect(() => {
+    setApprovedStatus(lookupData?.ProjectStatuses?.find((a) => a.Name === 'Approved for ERP')?.Id);
+  }, [lookupData]);
+  const status = projectFormMethods.watch('StatusId');
+  const requireNotificationAcknowledge =
+    approvedStatus == status && status !== initialValues?.StatusId;
+
   return (
     <ConfirmDialog
       title={'Update Project'}
       open={open}
-      confirmButtonProps={{ loading: submitting }}
+      confirmButtonProps={{
+        loading: submitting,
+      }}
       onConfirm={async () => {
         const isValid = await projectFormMethods.trigger();
         if (lookupData && isValid) {
@@ -243,6 +254,15 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
                 </Grid>
               ))}
             </Grid>
+          </Box>
+        )}
+        {requireNotificationAcknowledge && (
+          <Box sx={{ mt: '1rem' }}>
+            <SingleSelectBoxFormField
+              required={requireNotificationAcknowledge}
+              name={'ConfirmNotifications'}
+              label={'I acknowledge that notifications will be sent out when I submit this form.'}
+            />
           </Box>
         )}
       </FormProvider>
