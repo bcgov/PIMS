@@ -4,6 +4,7 @@ import { ViewColumn, ViewEntity } from 'typeorm';
   materialized: false,
   expression: `WITH property AS (SELECT 
 	'Parcel' AS property_type,
+  property_type_id,
 	id,
 	classification_id,
 	pid,
@@ -18,6 +19,7 @@ FROM parcel p
 UNION ALL
 SELECT 
 	'Building' AS property_type,
+  property_type_id,
 	id,
 	classification_id,
 	pid,
@@ -48,6 +50,9 @@ export class PropertyUnion {
 
   @ViewColumn({ name: 'pin' })
   PIN: number;
+
+  @ViewColumn({ name: 'property_type_id' })
+  PropertyTypeId: number;
 
   @ViewColumn({ name: 'property_type' })
   PropertyType: string;
