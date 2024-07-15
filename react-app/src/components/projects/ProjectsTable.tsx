@@ -184,14 +184,9 @@ const ProjectsTable = () => {
 
   const handleDataChange = async (filter: any, signal: AbortSignal): Promise<any[]> => {
     try {
-      const { projects, totalCount } = await api.projects.projectsDataSource(filter, signal);
+      const { data, totalCount } = await api.projects.getProjects(filter, signal);
       setTotalCount(totalCount);
-      snackbar.setMessageState({
-        open: true,
-        text: `${totalCount} projects found.`,
-        style: snackbar.styles.success,
-      });
-      return projects;
+      return data;
     } catch (error) {
       snackbar.setMessageState({
         open: true,

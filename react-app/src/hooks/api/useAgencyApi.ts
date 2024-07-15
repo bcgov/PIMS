@@ -1,5 +1,6 @@
 import { CommonFiltering } from '@/interfaces/ICommonFiltering';
 import { IFetch } from '../useFetch';
+import { GetManyResponse } from '@/interfaces/GetManyResponse';
 
 export interface Agency {
   Id: number;
@@ -27,23 +28,30 @@ export type AgencyAdd = Omit<
 >;
 
 const useAgencyApi = (absoluteFetch: IFetch) => {
-  const getAgencies = async (sort: CommonFiltering, signal?: AbortSignal): Promise<Agency[]> => {
-    const { parsedBody } = await absoluteFetch.get(
-      `/agencies`,
-      { ...sort, includeRelations: true },
-      { signal },
-    );
-    return parsedBody as Agency[];
-  };
-
-  const getAgenciesNotDisabled = async (): Promise<Agency[]> => {
-    const { parsedBody } = await absoluteFetch.get(`/agencies?isDisabled=false`);
-    return parsedBody as Agency[];
-  };
-
-  const getAgenciesWithParent = async (): Promise<Agency[]> => {
-    const { parsedBody } = await absoluteFetch.get(`/agencies?includeRelations=true`);
-    return parsedBody as Agency[];
+  const getAgencies = async (
+    sort: CommonFiltering,
+    signal?: AbortSignal,
+  ): Promise<GetManyResponse<Agency>> => {
+    try {
+      const response = await absoluteFetch.get(`/agencies`, { ...sort }, { signal });
+      if (response.ok) {
+        return response.parsedBody as GetManyResponse<Agency>;
+      }
+      return {
+        data: [],
+        totalCount: 0,
+      };
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        console.warn('Fetch aborted');
+      } else {
+        console.error('Error fetching agencies:', error);
+      }
+      return {
+        data: [],
+        totalCount: 0,
+      };
+    }
   };
 
   const getAgencyById = async (id: number): Promise<Agency> => {
@@ -68,8 +76,6 @@ const useAgencyApi = (absoluteFetch: IFetch) => {
 
   return {
     getAgencies,
-    getAgenciesNotDisabled,
-    getAgenciesWithParent,
     getAgencyById,
     deleteAgencyById,
     updateAgencyById,

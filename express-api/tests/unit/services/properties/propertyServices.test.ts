@@ -226,14 +226,14 @@ describe('UNIT - Property Services', () => {
         updatedOn: 'after,' + new Date(),
         quickFilter: 'contains,someWord',
       });
-      expect(Array.isArray(result.properties)).toBe(true);
-      expect(result.properties.at(0)).toHaveProperty('PropertyType');
-      expect(result.properties.at(0)).toHaveProperty('Id');
-      expect(result.properties.at(0)).toHaveProperty('PIN');
-      expect(result.properties.at(0)).toHaveProperty('PID');
-      expect(result.properties.at(0)).toHaveProperty('Agency');
-      expect(result.properties.at(0)).toHaveProperty('Classification');
-      expect(result.properties.at(0)).toHaveProperty('AdministrativeArea');
+      expect(Array.isArray(result.data)).toBe(true);
+      expect(result.data.at(0)).toHaveProperty('PropertyType');
+      expect(result.data.at(0)).toHaveProperty('Id');
+      expect(result.data.at(0)).toHaveProperty('PIN');
+      expect(result.data.at(0)).toHaveProperty('PID');
+      expect(result.data.at(0)).toHaveProperty('Agency');
+      expect(result.data.at(0)).toHaveProperty('Classification');
+      expect(result.data.at(0)).toHaveProperty('AdministrativeArea');
     });
 
     it('should log an invalid sort key if the key is invalid', async () => {
