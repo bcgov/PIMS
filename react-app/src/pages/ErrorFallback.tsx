@@ -35,6 +35,9 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
       errorTracker.count > 0 &&
       errorTracker.location === window.location.pathname
     ) {
+      // Removes existing cookie from this pathname. Mostly used for tables.
+      sessionStorage.removeItem(window.location.pathname.slice(1));
+      // Reset error tracker count.
       sessionStorage.setItem(
         'errorTracker',
         JSON.stringify({

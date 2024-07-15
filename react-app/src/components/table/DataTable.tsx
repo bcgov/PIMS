@@ -381,7 +381,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
       // Set other column filter
       if (query.columnFilterName && query.columnFilterValue && query.columnFilterMode) {
         const modelObj: GridFilterModel = {
-          items: undefined,
+          items: [],
           quickFilterValues: undefined,
         };
         if (query.columnFilterName && query.columnFilterValue && query.columnFilterMode) {
