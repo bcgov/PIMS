@@ -3,8 +3,7 @@ import { ProjectStatus } from '../Entities/ProjectStatus';
 import { Task } from '../Entities/Task';
 import { User } from '../Entities/User';
 import { NoteType } from '../Entities/NoteType';
-import { ProjectTask } from '../Entities/ProjectTask';
-import { ProjectNote } from '../Entities/ProjectNote';
+
 const disableBatch = [
   'Select Properties',
   'Update Information',
