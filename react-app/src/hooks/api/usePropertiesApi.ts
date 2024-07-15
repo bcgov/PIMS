@@ -8,6 +8,7 @@ import { CommonFiltering } from '@/interfaces/ICommonFiltering';
 import { useContext } from 'react';
 import { ConfigContext } from '@/contexts/configContext';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
+import { GetManyResponse } from '@/interfaces/GetManyResponse';
 
 export interface PropertyFuzzySearch {
   Parcels: Parcel[];
@@ -115,17 +116,15 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
   const propertiesDataSource = async (
     filter: CommonFiltering,
     signal?: AbortSignal,
-  ): Promise<PropertiesUnionResponse> => {
+  ): Promise<GetManyResponse<PropertyUnion>> => {
     try {
-      const response = await getPropertiesUnion(filter, signal);
-
-      // Extract properties and totalCount from the response
-      const { properties } = response;
-      const totalCount = response.totalCount;
-
+      const response = await absoluteFetch.get('/properties', filter, { signal });
+      if (response.ok) {
+        return response.parsedBody as GetManyResponse<PropertyUnion>;
+      }
       return {
-        properties,
-        totalCount,
+        data: [],
+        totalCount: 0,
       };
     } catch (error) {
       if (error.name === 'AbortError') {
@@ -134,7 +133,7 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
         console.error('Error fetching properties:', error);
       }
       return {
-        properties: [],
+        data: [],
         totalCount: 0,
       };
     }

@@ -20,6 +20,7 @@ import {
   FindManyOptions,
   FindOptionsOrder,
   FindOptionsOrderValue,
+  FindOptionsWhere,
   In,
   InsertResult,
   QueryRunner,
@@ -776,7 +777,6 @@ const sortKeyMapping = (
 
 const collectFindOptions = (filter: ProjectFilter) => {
   const options = [];
-  // TODO: Add market value and updated by searches
   if (filter.name) options.push(constructFindOptionFromQuery('Name', filter.name));
   if (filter.agency) options.push(constructFindOptionFromQuery('Agency', filter.agency));
   if (filter.status) options.push(constructFindOptionFromQuery('Status', filter.status));
@@ -784,10 +784,12 @@ const collectFindOptions = (filter: ProjectFilter) => {
     options.push(constructFindOptionFromQuery('ProjectNumber', filter.projectNumber));
   }
   if (filter.updatedOn) options.push(constructFindOptionFromQuery('UpdatedOn', filter.updatedOn));
+  if (filter.updatedBy) options.push(constructFindOptionFromQuery('UpdatedBy', filter.updatedBy));
+  if (filter.market) options.push(constructFindOptionFromQuery('Market', filter.market));
+  if (filter.netBook) options.push(constructFindOptionFromQuery('NetBook', filter.netBook));
   return options;
 };
 
-// Because leftJoinAndSelect is used, sort uses the Entity column name, not database column name
 const sortKeyTranslator: Record<string, string> = {
   ProjectNumber: 'project_number',
   Name: 'name',
@@ -816,6 +818,30 @@ const getProjects = async (filter: ProjectFilter) => {
     });
   }
 
+  // Add quickfilter part
+  if (filter.quickFilter) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const quickFilterOptions: FindOptionsWhere<any>[] = [];
+    const quickfilterFields = [
+      'ProjectNumber',
+      'Name',
+      'Status',
+      'Agency',
+      'NetBook',
+      'Market',
+      'UpdatedOn',
+      'UpdatedBy',
+    ];
+    quickfilterFields.forEach((field) =>
+      quickFilterOptions.push(constructFindOptionFromQuery(field, filter.quickFilter)),
+    );
+    query.andWhere(
+      new Brackets((qb) => {
+        quickFilterOptions.forEach((option) => qb.orWhere(option));
+      }),
+    );
+  }
+
   if (filter.quantity) query.take(filter.quantity);
   if (filter.page && filter.quantity) query.skip((filter.page ?? 0) * (filter.quantity ?? 0));
   if (filter.sortKey && filter.sortOrder) {
@@ -823,13 +849,14 @@ const getProjects = async (filter: ProjectFilter) => {
       query.orderBy(
         sortKeyTranslator[filter.sortKey],
         filter.sortOrder.toUpperCase() as SortOrders,
+        'NULLS LAST',
       );
     } else {
-      logger.error('PropertyUnion Service - Invalid Sort Key');
+      logger.error('getProjects Service - Invalid Sort Key');
     }
   }
-  const [projects, totalCount] = await query.getManyAndCount();
-  return { projects, totalCount };
+  const [data, totalCount] = await query.getManyAndCount();
+  return { data, totalCount };
 };
 
 const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boolean = false) => {
