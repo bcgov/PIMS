@@ -167,8 +167,6 @@ export class DisableAndConsolidateStatuses1720731741735 implements MigrationInte
         where: { Name: 'Appraisal', StatusId: 15 },
       })
     ).Id;
-    await queryRunner.manager.delete(ProjectTask, { TaskId: In(deletingTaskIds) });
-    await queryRunner.manager.delete(ProjectNote, { NoteTypeId: deletingNoteId });
 
     await queryRunner.manager.delete(Task, { Id: In(deletingTaskIds) });
     await queryRunner.manager.delete(NoteType, { Id: deletingNoteId });
