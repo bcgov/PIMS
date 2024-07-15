@@ -31,11 +31,9 @@ import {
   GridOverlay,
   GridPaginationModel,
   GridRenderCellParams,
-  GridRowId,
   GridSortModel,
   GridState,
   GridTreeNodeWithRender,
-  GridValidRowModel,
   gridFilteredSortedRowEntriesSelector,
   useGridApiRef,
 } from '@mui/x-data-grid';
@@ -178,6 +176,7 @@ export const CustomListSubheader = (props: PropsWithChildren) => {
 
 type FilterSearchDataGridProps = {
   dataSource?: (filter: CommonFiltering, signal: AbortSignal) => Promise<any[]>;
+  excelDataSource?: (filter: CommonFiltering, signal: AbortSignal) => Promise<any[]>;
   tableOperationMode: 'client' | 'server';
   onPresetFilterChange: (value: string, ref: MutableRefObject<GridApiCommunity>) => void;
   onAddButtonClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -186,12 +185,7 @@ type FilterSearchDataGridProps = {
   presetFilterSelectOptions: JSX.Element[];
   tableHeader: string;
   excelTitle: string;
-  customExcelData?: (ref: MutableRefObject<GridApiCommunity>) => Promise<
-    {
-      id: GridRowId;
-      model: GridValidRowModel;
-    }[]
-  >;
+  customExcelMap?: (data: unknown[]) => Record<string, unknown>[];
   addTooltip: string;
   name: string;
   initialState?: GridInitialStateCommunity;
@@ -235,22 +229,11 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     }
   };
 
-  const dataSourceUpdate = (models: ITableModelCollection) => {
-    const { pagination, sort, filter, quickFilter } = models;
-    if (previousController.current) {
-      previousController.current.abort();
-    }
-    //We use this AbortController to cancel requests that haven't finished yet everytime we start a new one.
-    const controller = new AbortController();
-    const signal = controller.signal;
-    previousController.current = controller;
-    let sortObj: { sortKey?: string; sortOrder?: string; sortRelation?: string } = {};
-    if (sort?.length) {
-      sortObj = { sortKey: sort[0].field, sortOrder: sort[0].sort };
-    }
+  const createFilterObject = (filter: GridFilterModel, quickFilter: string[]) => {
     const filterObj = {};
     if (filter?.items) {
       for (const f of filter.items) {
+        if (f.value == '') continue; // Skip empty fields
         const asCamelCase = formatHeaderToFilterKey(f.field);
         if (f.value != undefined && String(f.value) !== 'Invalid Date') {
           filterObj[asCamelCase] = `${f.operator},${f.value}`;
@@ -262,13 +245,30 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     if (quickFilter) {
       const keyword = quickFilter[0];
       if (keyword) filterObj['quickFilter'] = `contains,${keyword}`;
-      // for (const fieldName of tableApiRef.current.getAllColumns().map((col) => col.field)) {
-      //   if (keyword != undefined) {
-      //     const asCamelCase = fieldName.charAt(0).toLowerCase() + fieldName.slice(1);
-      //     filterObj[asCamelCase] = `contains,${keyword}`;
-      //   }
-      // }
     }
+    return filterObj;
+  };
+
+  const createSortObj = (sort: GridSortModel) => {
+    let sortObj: { sortKey?: string; sortOrder?: string; sortRelation?: string } = {};
+    if (sort?.length) {
+      sortObj = { sortKey: sort[0].field, sortOrder: sort[0].sort };
+    }
+    return sortObj;
+  };
+
+  const dataSourceUpdate = (models: ITableModelCollection) => {
+    const { pagination, sort, filter, quickFilter } = models;
+    if (previousController.current) {
+      previousController.current.abort();
+    }
+    //We use this AbortController to cancel requests that haven't finished yet everytime we start a new one.
+    const controller = new AbortController();
+    const signal = controller.signal;
+    previousController.current = controller;
+
+    const sortObj = createSortObj(sort);
+    const filterObj = createFilterObject(filter, quickFilter);
     setDataSourceLoading(true);
     props
       .dataSource(
@@ -576,14 +576,35 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             <IconButton
               onClick={async () => {
                 setIsExporting(true);
-                downloadExcelFile({
-                  data: props.customExcelData
-                    ? await props.customExcelData(tableApiRef)
-                    : gridFilteredSortedRowEntriesSelector(tableApiRef),
-                  tableName: props.excelTitle,
-                  filterName: selectValue,
-                  includeDate: true,
-                });
+                if (props.tableOperationMode === 'server') {
+                  const controller = new AbortController();
+                  const signal = controller.signal;
+                  const sortFilterObj = {
+                    ...createSortObj(tableModel.sort),
+                    ...createFilterObject(tableModel.filter, tableModel.quickFilter),
+                  };
+                  let response = props.excelDataSource
+                    ? await props.excelDataSource(sortFilterObj, signal)
+                    : await props.dataSource(sortFilterObj, signal);
+                  if (props.customExcelMap) response = props.customExcelMap(response);
+                  downloadExcelFile({
+                    data: response.map((r, i) => ({
+                      model: r,
+                      id: i,
+                    })),
+                    tableName: props.excelTitle,
+                    filterName: selectValue,
+                    includeDate: true,
+                  });
+                } else {
+                  // Client-side tables
+                  downloadExcelFile({
+                    data: gridFilteredSortedRowEntriesSelector(tableApiRef),
+                    tableName: props.excelTitle,
+                    filterName: selectValue,
+                    includeDate: true,
+                  });
+                }
                 setIsExporting(false);
               }}
             >

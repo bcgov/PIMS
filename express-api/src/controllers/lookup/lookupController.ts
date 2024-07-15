@@ -26,6 +26,7 @@ import { ProjectRisk } from '@/typeorm/Entities/ProjectRisk';
 import { Role } from '@/typeorm/Entities/Role';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
+import { Workflow } from '@/typeorm/Entities/Workflow';
 
 // TODO: What controllers here could just be replaced by existing GET requests?
 
@@ -424,6 +425,14 @@ export const lookupAll = async (req: Request, res: Response) => {
     order: { SortOrder: 'asc', Name: 'asc' },
     where: { IsDisabled: false },
   });
+  const Workflows = await AppDataSource.getRepository(Workflow).find({
+    select: {
+      Id: true,
+      Name: true,
+    },
+    order: { SortOrder: 'asc', Name: 'asc' },
+    where: { IsDisabled: false },
+  });
 
   const returnObj = {
     Risks,
@@ -443,6 +452,7 @@ export const lookupAll = async (req: Request, res: Response) => {
     RegionalDistricts: (await RegionalDistricts).sort((a, b) =>
       a.Name.toLowerCase().localeCompare(b.Name.toLowerCase()),
     ),
+    Workflows,
   };
   return res.status(200).send(returnObj);
 };

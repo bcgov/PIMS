@@ -304,9 +304,8 @@ export const searchProjects = async (req: Request, res: Response) => {
  * @param {Response}    res Outgoing response.
  * @returns {Response}      A 200 status with the an array of projects.
  */
-export const filterProjects = async (req: Request, res: Response) => {
+export const getProjects = async (req: Request, res: Response) => {
   const filter = ProjectFilterSchema.safeParse(req.query);
-  const includeRelations = req.query.includeRelations === 'true';
   const forExcelExport = req.query.excelExport === 'true';
   if (!filter.success) {
     return res.status(400).send('Could not parse filter.');
@@ -320,7 +319,7 @@ export const filterProjects = async (req: Request, res: Response) => {
   }
   // Get projects associated with agencies of the requesting user
   const projects = forExcelExport
-    ? await projectServices.getProjectsForExport(filterResult as ProjectFilter, includeRelations)
+    ? await projectServices.getProjectsForExport(filterResult as ProjectFilter)
     : await projectServices.getProjects(filterResult as ProjectFilter);
   return res.status(200).send(projects);
 };

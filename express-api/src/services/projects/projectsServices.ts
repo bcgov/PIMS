@@ -14,16 +14,7 @@ import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import logger from '@/utilities/winstonLogger';
-import {
-  Brackets,
-  DeepPartial,
-  FindManyOptions,
-  FindOptionsOrder,
-  FindOptionsOrderValue,
-  In,
-  InsertResult,
-  QueryRunner,
-} from 'typeorm';
+import { Brackets, DeepPartial, FindManyOptions, In, InsertResult, QueryRunner } from 'typeorm';
 import { ProjectFilter } from '@/services/projects/projectSchema';
 import { PropertyType } from '@/constants/propertyType';
 import { ProjectRisk } from '@/constants/projectRisk';
@@ -758,22 +749,6 @@ const deleteProjectById = async (id: number, username: string) => {
   }
 };
 
-const sortKeyMapping = (
-  sortKey: string,
-  sortDirection: FindOptionsOrderValue,
-): FindOptionsOrder<Project> => {
-  switch (sortKey) {
-    case 'Status':
-      return { Status: { Name: sortDirection } };
-    case 'Agency':
-      return { Agency: { Name: sortDirection } };
-    case 'UpdatedBy':
-      return { UpdatedBy: { LastName: sortDirection } };
-    default:
-      return { [sortKey]: sortDirection };
-  }
-};
-
 const collectFindOptions = (filter: ProjectFilter) => {
   const options = [];
   // TODO: Add market value and updated by searches
@@ -832,18 +807,14 @@ const getProjects = async (filter: ProjectFilter) => {
   return { projects, totalCount };
 };
 
-const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boolean = false) => {
+const getProjectsForExport = async (filter: ProjectFilter) => {
+  const result = await getProjects(filter);
+  const filteredProjects = result.projects;
+  // Use IDs from selected projects to get those projects with joins
   const queryOptions: FindManyOptions<Project> = {
     relations: {
-      Agency: {
-        Parent: includeRelations,
-      },
-      TierLevel: includeRelations,
-      Risk: includeRelations,
-      Status: includeRelations,
-      Workflow: includeRelations,
-      CreatedBy: includeRelations,
-      UpdatedBy: includeRelations,
+      CreatedBy: true,
+      UpdatedBy: true,
       // Don't include these joins below. It can be very large.
       Tasks: false,
       Notes: false,
@@ -852,21 +823,6 @@ const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boo
       Notifications: false,
     },
     select: {
-      Agency: {
-        Name: true,
-        Parent: {
-          Name: true,
-        },
-      },
-      TierLevel: {
-        Name: true,
-      },
-      Risk: {
-        Name: true,
-      },
-      Status: {
-        Name: true,
-      },
       CreatedBy: {
         Id: true,
         FirstName: true,
@@ -877,20 +833,10 @@ const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boo
         FirstName: true,
         LastName: true,
       },
-      Workflow: {
-        Name: true,
-      },
     },
     where: {
-      StatusId: filter.statusId,
-      AgencyId: filter.agencyId
-        ? In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId)
-        : undefined,
-      ProjectNumber: filter.projectNumber,
+      Id: In(filteredProjects.map((p) => p.Id)),
     },
-    take: filter.quantity,
-    skip: (filter.page ?? 0) * (filter.quantity ?? 0),
-    order: sortKeyMapping(filter.sortKey, filter.sortOrder as FindOptionsOrderValue),
   };
   const projects = await projectRepo.find(queryOptions);
 
