@@ -551,7 +551,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             <IconButton
               onClick={async () => {
                 setIsExporting(true);
-                let rows;
+                let rows = [];
                 if (props.tableOperationMode === 'server') {
                   const controller = new AbortController();
                   const signal = controller.signal;
