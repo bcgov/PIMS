@@ -7,6 +7,7 @@ import {
   Chip,
   Box,
   autocompleteClasses,
+  ListItemText,
 } from '@mui/material';
 import { Controller, useFormContext } from 'react-hook-form';
 import { ISelectMenuItem } from '@/components/form/SelectFormField';
@@ -75,10 +76,9 @@ const MultiselectFormField = (props: MultiselectFormFieldProps) => {
               helperText={(formState.errors?.[name]?.message as string) ?? undefined}
             />
           )}
-          renderOption={(props, option, state, ownerState) => (
+          renderOption={(props, option) => (
             <Box
               sx={{
-                fontWeight: allowNestedIndent && !option.parentId ? 900 : 500,
                 [`&.${autocompleteClasses.option}`]: {
                   padding: 1,
                   paddingLeft: allowNestedIndent && option.parentId ? 2 : 1,
@@ -88,7 +88,18 @@ const MultiselectFormField = (props: MultiselectFormFieldProps) => {
               {...props}
               key={option.label}
             >
-              {ownerState.getOptionLabel(option)}
+              <ListItemText
+                primary={option.label}
+                secondary={option.tooltip}
+                sx={{
+                  margin: 0,
+                }}
+                primaryTypographyProps={{
+                  sx: {
+                    fontWeight: allowNestedIndent && !option.parentId ? 900 : 500,
+                  },
+                }}
+              />
             </Box>
           )}
           onChange={(_, data) => {

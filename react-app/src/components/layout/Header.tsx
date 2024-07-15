@@ -103,7 +103,7 @@ const Header: React.FC = () => {
         <AppBrand />
         <Box flexGrow={1}></Box>
         <Box textAlign={'center'} alignItems={'center'} gap={'32px'} display={'flex'}>
-          {isAuthenticated && auth.pimsUser.data?.Status === 'Active' && (
+          {isAuthenticated && auth?.pimsUser?.data?.Status === 'Active' && (
             <>
               {user.client_roles?.includes(Roles.ADMIN) ? (
                 <>
@@ -148,6 +148,14 @@ const Header: React.FC = () => {
                       }}
                     >
                       Administrative Areas
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        navigate('/admin/bulk');
+                        setAnchorEl(undefined);
+                      }}
+                    >
+                      Bulk Upload
                     </MenuItem>
                   </Menu>
                 </>
