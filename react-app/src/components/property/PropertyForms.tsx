@@ -486,7 +486,7 @@ export const NetBookValue = (props: INetBookValue) => {
     name: name,
   });
 
-  const handleFiscalYearChange = (inputValue: string) => {
+  const handleFiscalYearChange = (inputValue: string, otherYears: number[]) => {
     if (String(inputValue) == '' || inputValue == null) {
       return true;
     }
@@ -494,11 +494,11 @@ export const NetBookValue = (props: INetBookValue) => {
     if (isNaN(inputYear)) {
       return 'Invalid input.';
     }
-    // const yearValues: number[] = getValueByNestedKey(formValues, name).map(
-    //   (evaluation: ParcelFiscal | BuildingFiscal): number =>
-    //     parseInt(String(evaluation.FiscalYear)),
-    // );
+
     const currentYear = new Date().getFullYear();
+    if (otherYears.includes(Number(inputValue))) {
+      return `An entry already exists for this fiscal year.`;
+    }
     return (
       inputYear === currentYear ||
       inputYear === currentYear - 1 ||
@@ -519,24 +519,23 @@ export const NetBookValue = (props: INetBookValue) => {
                 rules={
                   netbook['isNew']
                     ? {
-                        validate: handleFiscalYearChange,
+                        validate: (value) =>
+                          handleFiscalYearChange(
+                            value,
+                            fields.filter((a) => !a['isNew']).map((a) => a['FiscalYear']),
+                          ),
                       }
                     : undefined
                 }
               />
             </Grid>
             <Grid item xs={4}>
-              <DateFormField
-                disabled={!netbook['isNew']}
-                name={`${name}.${idx}.EffectiveDate`}
-                label={'Effective date'}
-              />
+              <DateFormField name={`${name}.${idx}.EffectiveDate`} label={'Effective date'} />
             </Grid>
             <Grid item xs={4}>
               <TextFormField
                 name={`${name}.${idx}.Value`}
                 label={'Net Book Value'}
-                disabled={!netbook['isNew']}
                 numeric
                 InputProps={{
                   startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -574,7 +573,7 @@ interface IAssessedValue {
 
 export const AssessedValue = (props: IAssessedValue) => {
   const { title, name, maxRows } = props;
-  const handleAssessmentYearChange = (inputValue: string) => {
+  const handleAssessmentYearChange = (inputValue: string, otherYears: number[]) => {
     if (String(inputValue) == '' || inputValue == null) {
       return true;
     }
@@ -582,9 +581,9 @@ export const AssessedValue = (props: IAssessedValue) => {
     if (isNaN(inputYear)) {
       return 'Invalid input.';
     }
-    // const yearValues: number[] = getValueByNestedKey(formValues, name).map((evaluation): number =>
-    //   parseInt(evaluation.Year),
-    // );
+    if (otherYears.includes(Number(inputValue))) {
+      return `An entry already exists for this assessment year.`;
+    }
     const currentYear = new Date().getFullYear();
     return (
       inputYear === currentYear ||
@@ -623,7 +622,11 @@ export const AssessedValue = (props: IAssessedValue) => {
               rules={
                 evaluation['isNew']
                   ? {
-                      validate: handleAssessmentYearChange,
+                      validate: (value) =>
+                        handleAssessmentYearChange(
+                          value,
+                          fields.filter((a) => !a['isNew']).map((a) => a['Year']),
+                        ),
                     }
                   : undefined
               }
@@ -634,7 +637,6 @@ export const AssessedValue = (props: IAssessedValue) => {
               }}
               sx={{ minWidth: 'calc(33.3% - 1rem)' }}
               name={`${name}.${idx}.Value`}
-              disabled={!evaluation['isNew']}
               numeric
               label={'Value'}
             />
