@@ -2,51 +2,88 @@ import { AppDataSource } from '@/appDataSource';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { AgencyFilter } from './agencySchema';
-import { constructFindOptionFromQuery } from '@/utilities/helperFunctions';
-import { FindOptionsOrderValue, FindOptionsOrder } from 'typeorm';
+import {
+  constructFindOptionFromQuery,
+  constructFindOptionFromQueryBoolean,
+} from '@/utilities/helperFunctions';
+import { Brackets, FindOptionsWhere } from 'typeorm';
+import logger from '@/utilities/winstonLogger';
+import { SortOrders } from '@/constants/types';
+import { AgencyJoinView } from '@/typeorm/Entities/views/AgencyJoinView';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
 
 const collectFindOptions = (filter: AgencyFilter) => {
   const options = [];
   if (filter.name) options.push(constructFindOptionFromQuery('Name', filter.name));
-  if (filter.parent) options.push({ Parent: constructFindOptionFromQuery('Name', filter.parent) });
-  if (filter.isDisabled)
-    options.push(constructFindOptionFromQuery('IsDisabled', filter.isDisabled));
   if (filter.code) options.push(constructFindOptionFromQuery('Code', filter.code));
+  if (filter.isDisabled)
+    options.push(constructFindOptionFromQueryBoolean('IsDisabled', filter.isDisabled));
+  if (filter.parentName)
+    options.push(constructFindOptionFromQuery('ParentName', filter.parentName));
+  if (filter.sendEmail)
+    options.push(constructFindOptionFromQueryBoolean('SendEmail', filter.sendEmail));
   if (filter.email) options.push(constructFindOptionFromQuery('Email', filter.email));
   if (filter.createdOn) options.push(constructFindOptionFromQuery('CreatedOn', filter.createdOn));
   if (filter.updatedOn) options.push(constructFindOptionFromQuery('UpdatedOn', filter.updatedOn));
   return options;
 };
 
-const sortKeyMapping = (
-  sortKey: string,
-  sortDirection: FindOptionsOrderValue,
-): FindOptionsOrder<Agency> => {
-  switch (sortKey) {
-    case 'Parent':
-      return { Parent: { Name: sortDirection } };
-    default:
-      return { [sortKey]: sortDirection };
-  }
+const sortKeyTranslator: Record<string, string> = {
+  Name: 'name',
+  Code: 'code',
+  IsDisabled: 'is_disabled',
+  ParentName: 'parent_name',
+  SendEmail: 'send_email',
+  Email: 'email',
+  CreatedOn: 'created_on',
+  UpdatedOn: 'updated_on',
 };
 
 /**
  * @description Gets and returns a list of all agencies.
  * @returns { Agency[] } A list of all agencies in the database
  */
-export const getAgencies = async (filter: AgencyFilter, includeRelations: boolean = false) => {
-  const allAgencies = await agencyRepo.find({
-    where: collectFindOptions(filter),
-    relations: {
-      Parent: includeRelations,
-    },
-    take: filter.quantity,
-    skip: (filter.quantity ?? 0) * (filter.page ?? 0),
-    order: sortKeyMapping(filter.sortKey, filter.sortOrder as FindOptionsOrderValue),
-  });
-  return allAgencies;
+export const getAgencies = async (filter: AgencyFilter) => {
+  const options = collectFindOptions(filter);
+  const query = AppDataSource.getRepository(AgencyJoinView)
+    .createQueryBuilder()
+    .where(
+      new Brackets((qb) => {
+        options.forEach((option) => qb.orWhere(option));
+      }),
+    );
+
+  // Add quickfilter part
+  if (filter.quickFilter) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const quickFilterOptions: FindOptionsWhere<any>[] = [];
+    const quickfilterFields = ['Name', 'Code', 'ParentName', 'Email', 'UpdatedOn', 'CreatedOn'];
+    quickfilterFields.forEach((field) =>
+      quickFilterOptions.push(constructFindOptionFromQuery(field, filter.quickFilter)),
+    );
+    query.andWhere(
+      new Brackets((qb) => {
+        quickFilterOptions.forEach((option) => qb.orWhere(option));
+      }),
+    );
+  }
+
+  if (filter.quantity) query.take(filter.quantity);
+  if (filter.page && filter.quantity) query.skip((filter.page ?? 0) * (filter.quantity ?? 0));
+  if (filter.sortKey && filter.sortOrder) {
+    if (sortKeyTranslator[filter.sortKey]) {
+      query.orderBy(
+        sortKeyTranslator[filter.sortKey],
+        filter.sortOrder.toUpperCase() as SortOrders,
+        'NULLS LAST',
+      );
+    } else {
+      logger.error('getAgencies Service - Invalid Sort Key');
+    }
+  }
+  const [data, totalCount] = await query.getManyAndCount();
+  return { data, totalCount };
 };
 
 /**
@@ -84,7 +121,7 @@ export const getAgencyById = async (agencyId: number) => {
  * @returns Status and information on updated agency.
  */
 export const updateAgencyById = async (agencyIn: Agency) => {
-  const agencies = await getAgencies({});
+  const { data: agencies } = await getAgencies({});
   const findAgency = agencies.find((agency) => agency.Id === agencyIn.Id);
   if (findAgency == null) {
     throw new ErrorWithCode('Agency not found.', 404);

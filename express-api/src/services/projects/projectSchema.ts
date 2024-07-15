@@ -9,9 +9,13 @@ export const ProjectFilterSchema = z.object({
   agency: z.string().optional(),
   page: z.coerce.number().optional(),
   updatedOn: z.string().optional(),
+  updatedBy: z.string().optional(),
+  market: z.string().optional(),
+  netBook: z.string().optional(),
   quantity: z.coerce.number().optional(),
   sortKey: z.string().optional(),
   sortOrder: z.string().optional(),
+  quickFilter: z.string().optional(),
 });
 
 export type ProjectFilter = z.infer<typeof ProjectFilterSchema>;
