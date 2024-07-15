@@ -1,5 +1,6 @@
 import { CommonFiltering } from '@/interfaces/ICommonFiltering';
 import { IFetch } from '../useFetch';
+import { GetManyResponse } from '@/interfaces/GetManyResponse';
 
 export interface AdministrativeArea {
   Id: number;
@@ -16,9 +17,27 @@ const useAdministrativeAreaApi = (absoluteFetch: IFetch) => {
   const getAdministrativeAreas = async (
     sort: CommonFiltering,
     signal?: AbortSignal,
-  ): Promise<AdministrativeArea[]> => {
-    const { parsedBody } = await absoluteFetch.get(`/administrativeAreas`, { ...sort }, { signal });
-    return parsedBody as AdministrativeArea[];
+  ): Promise<GetManyResponse<AdministrativeArea>> => {
+    try {
+      const response = await absoluteFetch.get(`/administrativeAreas`, { ...sort }, { signal });
+      if (response.ok) {
+        return response.parsedBody as GetManyResponse<AdministrativeArea>;
+      }
+      return {
+        data: [],
+        totalCount: 0,
+      };
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        console.warn('Fetch aborted');
+      } else {
+        console.error('Error fetching administrative areas:', error);
+      }
+      return {
+        data: [],
+        totalCount: 0,
+      };
+    }
   };
 
   const addAdministrativeArea = async (adminArea: Omit<AdministrativeArea, 'Id' | 'CreatedOn'>) => {

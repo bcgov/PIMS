@@ -4,6 +4,7 @@ import { produceAgency } from 'tests/testUtils/factories';
 import * as agencyServices from '@/services/agencies/agencyServices';
 import { DeepPartial } from 'typeorm';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import { AgencyJoinView } from '@/typeorm/Entities/views/AgencyJoinView';
 
 const _agencyFind = jest
   .spyOn(AppDataSource.getRepository(Agency), 'find')
@@ -18,6 +19,26 @@ const _agencyDelete = jest
   .spyOn(AppDataSource.getRepository(Agency), 'delete')
   .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
 
+const _getManyAndCountAgencies = jest.fn().mockImplementation(async () => [[produceAgency()], 1]);
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const _agenciesJoinView: any = {
+  select: () => _agenciesJoinView,
+  leftJoinAndSelect: () => _agenciesJoinView,
+  where: () => _agenciesJoinView,
+  orWhere: () => _agenciesJoinView,
+  andWhere: () => _agenciesJoinView,
+  take: () => _agenciesJoinView,
+  skip: () => _agenciesJoinView,
+  orderBy: () => _agenciesJoinView,
+  getMany: () => [produceAgency()],
+  getManyAndCount: _getManyAndCountAgencies,
+};
+
+jest
+  .spyOn(AppDataSource.getRepository(AgencyJoinView), 'createQueryBuilder')
+  .mockImplementation(() => _agenciesJoinView);
+
 describe('UNIT - agency services', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -26,25 +47,31 @@ describe('UNIT - agency services', () => {
     it('should get a list of agencies', async () => {
       const agencies = await agencyServices.getAgencies({
         name: 'contains,aaa',
-        parent: 'equals,aaa',
-        isDisabled: 'equals,aaa',
+        parentName: 'equals,aaa',
+        isDisabled: 'equals,true',
+        sortKey: 'ParentName',
+        sortOrder: 'asc',
+        page: 1,
+        quantity: 1,
       });
-      expect(_agencyFind).toHaveBeenCalledTimes(1);
-      expect(Array.isArray(agencies)).toBe(true);
+      expect(Array.isArray(agencies.data)).toBe(true);
+      expect(agencies.totalCount).toBe(1);
     });
 
-    it('should get a list of agencies', async () => {
+    it('should get a list of agencies and trigger invalid sort key', async () => {
       const agencies = await agencyServices.getAgencies({
         name: 'startsWith,aaa',
         code: 'endsWith,code',
         email: 'contains,email',
+        sendEmail: 'true',
         createdOn: `is,${new Date()}`,
         updatedOn: `after,${new Date()}`,
-        sortKey: 'Parent',
+        sortKey: 'wow',
         sortOrder: 'asc',
+        quickFilter: 'hi',
       });
-      expect(_agencyFind).toHaveBeenCalledTimes(1);
-      expect(Array.isArray(agencies)).toBe(true);
+      expect(Array.isArray(agencies.data)).toBe(true);
+      expect(agencies.totalCount).toBe(1);
     });
   });
   describe('getAgencyById', () => {
@@ -74,6 +101,7 @@ describe('UNIT - agency services', () => {
   describe('updateAgencyById', () => {
     it('should update an agency and return it', async () => {
       const upagency = produceAgency();
+      _getManyAndCountAgencies.mockImplementationOnce(async () => [[upagency], 1]);
       _agencyFind.mockImplementationOnce(async () => [upagency]);
       await agencyServices.updateAgencyById(upagency);
       expect(_agencySave).toHaveBeenCalledTimes(1);
@@ -90,7 +118,7 @@ describe('UNIT - agency services', () => {
     it('should throw an error if the parent Id is not found', async () => {
       const agencyId = 1;
       const upagency = produceAgency({ Id: agencyId, ParentId: agencyId + 1 });
-      _agencyFind.mockImplementationOnce(async () => [upagency]);
+      _getManyAndCountAgencies.mockImplementationOnce(async () => [[upagency], 1]);
       expect(async () => await agencyServices.updateAgencyById(upagency)).rejects.toThrow(
         new ErrorWithCode(`Requested Parent Agency Id ${upagency.ParentId} not found.`, 404),
       );
@@ -101,7 +129,10 @@ describe('UNIT - agency services', () => {
       const childAgency = produceAgency({ Id: agencyId + 2, ParentId: agencyId });
       const parentAgency = produceAgency({ Id: agencyId - 1 });
       const upagency = produceAgency({ Id: agencyId, ParentId: parentAgency.Id });
-      _agencyFind.mockImplementationOnce(async () => [upagency, childAgency, parentAgency]);
+      _getManyAndCountAgencies.mockImplementationOnce(async () => [
+        [upagency, childAgency, parentAgency],
+        3,
+      ]);
       expect(async () => await agencyServices.updateAgencyById(upagency)).rejects.toThrow(
         new ErrorWithCode('Cannot assign Parent Agency to existing Parent Agency.', 400),
       );
@@ -111,7 +142,8 @@ describe('UNIT - agency services', () => {
       const agencyId = 1;
       const parentAgency = produceAgency({ Id: agencyId - 1, ParentId: agencyId + 1 });
       const upagency = produceAgency({ Id: agencyId, ParentId: parentAgency.Id });
-      _agencyFind.mockImplementationOnce(async () => [upagency, parentAgency]);
+      _getManyAndCountAgencies.mockImplementationOnce(async () => [[upagency, parentAgency], 2]);
+      _agencyFind.mockImplementationOnce(async () => [upagency]);
       expect(async () => await agencyServices.updateAgencyById(upagency)).rejects.toThrow(
         new ErrorWithCode('Cannot assign a child agency as a Parent Agency.', 400),
       );

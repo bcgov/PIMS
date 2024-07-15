@@ -1,44 +1,76 @@
 import { AppDataSource } from '@/appDataSource';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 import { AdministrativeAreaFilter } from './administrativeAreaSchema';
-import { DeepPartial, FindOptionsOrder, FindOptionsOrderValue } from 'typeorm';
+import { Brackets, DeepPartial, FindOptionsWhere } from 'typeorm';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
-import { constructFindOptionFromQuery } from '@/utilities/helperFunctions';
+import {
+  constructFindOptionFromQuery,
+  constructFindOptionFromQueryBoolean,
+} from '@/utilities/helperFunctions';
+import { AdministrativeAreaJoinView } from '@/typeorm/Entities/views/AdministrativeAreaJoinView';
+import { SortOrders } from '@/constants/types';
+import logger from '@/utilities/winstonLogger';
 
-const sortKeyMapping = (
-  sortKey: string,
-  sortDirection: FindOptionsOrderValue,
-): FindOptionsOrder<AdministrativeArea> => {
-  switch (sortKey) {
-    case 'RegionalDistrict':
-      return { RegionalDistrict: { Name: sortDirection } };
-    default:
-      return { [sortKey]: sortDirection };
-  }
+const sortKeyTranslator: Record<string, string> = {
+  Name: 'name',
+  IsDisabled: 'is_disabled',
+  RegionalDistrictName: 'regional_district_name',
+  CreatedOn: 'created_on',
+  UpdatedOn: 'updated_on',
 };
 
 const collectFindOptions = (filter: AdministrativeAreaFilter) => {
   const options = [];
   if (filter.name) options.push(constructFindOptionFromQuery('Name', filter.name));
-  if (filter.regionalDistrict)
-    options.push({
-      RegionalDistrict: constructFindOptionFromQuery('Name', filter.regionalDistrict),
-    });
+  if (filter.regionalDistrictName)
+    options.push(constructFindOptionFromQuery('RegionalDistrictName', filter.regionalDistrictName));
   if (filter.isDisabled)
-    options.push(constructFindOptionFromQuery('IsDisabled', filter.isDisabled));
+    options.push(constructFindOptionFromQueryBoolean('IsDisabled', filter.isDisabled));
+  if (filter.createdOn) options.push(constructFindOptionFromQuery('CreatedOn', filter.createdOn));
+  if (filter.updatedOn) options.push(constructFindOptionFromQuery('UpdatedOn', filter.updatedOn));
   return options;
 };
 
-const getAdministrativeAreas = (filter: AdministrativeAreaFilter) => {
-  return AppDataSource.getRepository(AdministrativeArea).find({
-    relations: {
-      RegionalDistrict: true,
-    },
-    where: collectFindOptions(filter),
-    take: filter.quantity,
-    skip: (filter.quantity ?? 0) * (filter.page ?? 0),
-    order: sortKeyMapping(filter.sortKey, filter.sortOrder as FindOptionsOrderValue),
-  });
+const getAdministrativeAreas = async (filter: AdministrativeAreaFilter) => {
+  const options = collectFindOptions(filter);
+  const query = AppDataSource.getRepository(AdministrativeAreaJoinView)
+    .createQueryBuilder()
+    .where(
+      new Brackets((qb) => {
+        options.forEach((option) => qb.orWhere(option));
+      }),
+    );
+
+  // Add quickfilter part
+  if (filter.quickFilter) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const quickFilterOptions: FindOptionsWhere<any>[] = [];
+    const quickfilterFields = ['Name', 'RegionalDistrictName', 'CreatedOn'];
+    quickfilterFields.forEach((field) =>
+      quickFilterOptions.push(constructFindOptionFromQuery(field, filter.quickFilter)),
+    );
+    query.andWhere(
+      new Brackets((qb) => {
+        quickFilterOptions.forEach((option) => qb.orWhere(option));
+      }),
+    );
+  }
+
+  if (filter.quantity) query.take(filter.quantity);
+  if (filter.page && filter.quantity) query.skip((filter.page ?? 0) * (filter.quantity ?? 0));
+  if (filter.sortKey && filter.sortOrder) {
+    if (sortKeyTranslator[filter.sortKey]) {
+      query.orderBy(
+        sortKeyTranslator[filter.sortKey],
+        filter.sortOrder.toUpperCase() as SortOrders,
+        'NULLS LAST',
+      );
+    } else {
+      logger.error('getAdministrativeAreas Service - Invalid Sort Key');
+    }
+  }
+  const [data, totalCount] = await query.getManyAndCount();
+  return { data, totalCount };
 };
 
 const addAdministrativeArea = async (adminArea: AdministrativeArea) => {
