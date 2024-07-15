@@ -164,7 +164,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
                     if (value != null) {
                       if (typeof value !== 'string') {
                         map.current?.setView(new LatLng(value.latitude, value.longitude), 17);
-                        field.onChange(value.fullAddress);
+                        field.onChange(value.fullAddress.split(',')[0]);
                       } else {
                         field.onChange(value);
                       }
