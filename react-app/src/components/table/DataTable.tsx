@@ -13,7 +13,6 @@ import { mdiDotsHorizontal } from '@mdi/js';
 import {
   Box,
   IconButton,
-  LinearProgress,
   ListItemIcon,
   ListSubheader,
   Menu,
@@ -131,7 +130,15 @@ export const DataGridFloatingMenu = (props: IDataGridFloatingMenuProps) => {
 
 export const CustomDataGrid = (props: DataGridProps) => {
   return (
-    <DataGrid {...props} slots={{ noRowsOverlay: NoRowsOverlay, loadingOverlay: LinearProgress }} />
+    <DataGrid
+      {...props}
+      slotProps={{
+        loadingOverlay: {
+          variant: 'linear-progress',
+          noRowsVariant: 'skeleton',
+        },
+      }}
+    />
   );
 };
 
@@ -661,7 +668,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           },
         }}
         loading={dataSourceLoading}
-        slots={{ toolbar: KeywordSearch, noRowsOverlay: NoRowsOverlay }}
+        slots={{ noRowsOverlay: NoRowsOverlay }}
         {...props}
         rows={dataSourceRows && props.dataSource ? dataSourceRows : props.rows}
       />
