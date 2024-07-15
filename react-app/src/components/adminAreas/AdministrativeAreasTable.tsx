@@ -1,10 +1,5 @@
 import React, { MutableRefObject, useContext, useState } from 'react';
-import {
-  GridColDef,
-  gridFilteredSortedRowEntriesSelector,
-  GridRowId,
-  GridValidRowModel,
-} from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import usePimsApi from '@/hooks/usePimsApi';
 import { dateFormatter } from '@/utilities/formatters';
@@ -13,11 +8,13 @@ import { useNavigate } from 'react-router-dom';
 import { AdministrativeArea } from '@/hooks/api/useAdministrativeAreaApi';
 import { Box } from '@mui/material';
 import { SnackBarContext } from '@/contexts/snackbarContext';
+import { LookupContext } from '@/contexts/lookupContext';
 
 const AdministrativeAreasTable = () => {
   const api = usePimsApi();
   const navigate = useNavigate();
   const snackbar = useContext(SnackBarContext);
+  const lookup = useContext(LookupContext);
   const [totalCount, setTotalCount] = useState(0);
 
   const handleDataChange = async (filter: any, signal: AbortSignal): Promise<any[]> => {
@@ -94,28 +91,18 @@ const AdministrativeAreasTable = () => {
     }
   };
 
-  const getExcelData: (
-    ref: MutableRefObject<GridApiCommunity>,
-  ) => Promise<{ id: GridRowId; model: GridValidRowModel }[]> = async (
-    ref: MutableRefObject<GridApiCommunity>,
-  ) => {
-    if (ref?.current) {
-      const rows = gridFilteredSortedRowEntriesSelector(ref);
-      return rows.map((row) => {
-        const { id, model } = row;
-        const areaModel = model as AdministrativeArea;
-        return {
-          id,
-          model: {
-            Name: areaModel.Name,
-            'Regional District': areaModel.RegionalDistrict?.Name ?? '',
-            'Created On': areaModel.CreatedOn,
-            Disabled: areaModel.IsDisabled,
-          },
-        };
-      });
-    }
-    return [];
+  const excelDataMap = (data: AdministrativeArea[]) => {
+    return data.map((adminArea) => {
+      return {
+        Name: adminArea.Name,
+        'Regional District': lookup.getLookupValueById(
+          'RegionalDistricts',
+          adminArea.RegionalDistrictId,
+        )?.Name,
+        'Created On': adminArea.CreatedOn,
+        Disabled: adminArea.IsDisabled,
+      };
+    });
   };
 
   return (
@@ -142,7 +129,7 @@ const AdministrativeAreasTable = () => {
         ]}
         tableHeader={'Administrative Areas Overview'}
         excelTitle={'Administrative Areas Table'}
-        customExcelData={getExcelData}
+        customExcelMap={excelDataMap}
         addTooltip={'Create New Administration Area'}
         columns={columns}
         getRowId={(row) => row.Id}
