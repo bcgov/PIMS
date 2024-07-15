@@ -393,7 +393,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
       ) {
         // model.quickFilter = undefined;
         const modelObj: GridFilterModel = {
-          items: undefined,
+          items: [],
           quickFilterValues: undefined,
         };
         if (query.columnFilterName && query.columnFilterValue && query.columnFilterMode) {
