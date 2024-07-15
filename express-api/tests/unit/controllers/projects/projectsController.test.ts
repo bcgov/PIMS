@@ -99,7 +99,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
       });
 
       // Call filterProjects controller function
-      await controllers.filterProjects(mockRequest, mockResponse);
+      await controllers.getProjects(mockRequest, mockResponse);
 
       // Assert response status and content
       expect(mockResponse.status).toHaveBeenCalledWith(200);
@@ -132,7 +132,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
       });
 
       // Call filterProjects controller function
-      await controllers.filterProjects(mockRequest, mockResponse);
+      await controllers.getProjects(mockRequest, mockResponse);
 
       // Assert response status and content
       expect(mockResponse.status).toHaveBeenCalledWith(200);
@@ -164,7 +164,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
       });
 
       // Call filterProjects controller function
-      await controllers.filterProjects(mockRequest, mockResponse);
+      await controllers.getProjects(mockRequest, mockResponse);
 
       // Assert response status and content
       expect(mockResponse.status).toHaveBeenCalledWith(200);
@@ -180,7 +180,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
         error: new z.ZodError([]), // Pass an empty array of errors
       });
 
-      await controllers.filterProjects(mockRequest, mockResponse);
+      await controllers.getProjects(mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.send).toHaveBeenCalledWith('Could not parse filter.');
     });

@@ -53,6 +53,7 @@ import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { PropertyUnion } from '@/typeorm/Entities/views/PropertyUnionView';
 import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
+import { Workflow } from '@/typeorm/Entities/Workflow';
 
 export class MockRes {
   statusValue: any;
@@ -942,6 +943,25 @@ export const produceNotificationQueue = () => {
   return queue;
 };
 
+export const produceWorkflow = (props?: Partial<Workflow>) => {
+  const workflow: Workflow = {
+    Id: faker.number.int(),
+    Name: faker.lorem.word(),
+    IsDisabled: false,
+    SortOrder: 0,
+    Description: faker.lorem.lines(),
+    Code: 'TEST',
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return workflow;
+};
+
 export const produceNotificationTemplate = (props?: Partial<NotificationTemplate>) => {
   const template: NotificationTemplate = {
     Id: faker.number.int(),
@@ -997,11 +1017,13 @@ export const produceAgencyResponse = (props?: Partial<ProjectAgencyResponse>) =>
 };
 
 export const producePropertyUnion = (props?: Partial<PropertyUnion>) => {
+  const propertyTypeId = faker.number.int({ min: 0, max: 1 });
   const union: PropertyUnion = {
     Id: faker.number.int(),
     PID: faker.number.int({ max: 999999999 }),
     PIN: faker.number.int({ max: 999999999 }),
-    PropertyType: ['Building', 'Parcel'][faker.number.int({ min: 0, max: 1 })],
+    PropertyType: ['Building', 'Parcel'][propertyTypeId],
+    PropertyTypeId: propertyTypeId,
     AgencyId: faker.number.int(),
     Agency: faker.company.name(),
     Address: faker.location.streetAddress(),
