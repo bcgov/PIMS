@@ -233,6 +233,7 @@ export const getImportResults = async (req: Request, res: Response) => {
 };
 
 export const getPropertyUnion = async (req: Request, res: Response) => {
+  const forExcelExport = req.query.excelExport === 'true';
   const filter = PropertyUnionFilterSchema.safeParse(req.query);
   if (filter.success == false) {
     return res.status(400).send(filter.error);
@@ -245,6 +246,10 @@ export const getPropertyUnion = async (req: Request, res: Response) => {
     const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
     filterResult.agencyIds = usersAgencies;
   }
-  const properties = await propertyServices.getPropertiesUnion(filterResult);
+
+  const properties = forExcelExport
+    ? await propertyServices.getPropertiesForExport(filterResult)
+    : await propertyServices.getPropertiesUnion(filterResult);
+
   return res.status(200).send(properties);
 };

@@ -19,6 +19,7 @@ import {
   produceTask,
   produceTierLevel,
   produceTimestampType,
+  produceWorkflow,
 } from '../../../testUtils/factories';
 import { AppDataSource } from '@/appDataSource';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
@@ -45,6 +46,7 @@ import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { Role } from '@/typeorm/Entities/Role';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
+import { Workflow } from '@/typeorm/Entities/Workflow';
 
 const {
   lookupAgencies,
@@ -71,7 +73,11 @@ const _findProjectStatuses = jest.fn().mockImplementation(() => [produceProjectS
 const _findRoles = jest.fn().mockImplementation(() => [produceRole()]);
 const _findAgencies = jest.fn().mockImplementation(() => [produceAgency()]);
 const _findAdminAreas = jest.fn().mockImplementation(() => [produceAdminArea()]);
+const _findWorkflows = jest.fn().mockImplementation(() => [produceWorkflow()]);
 
+jest
+  .spyOn(AppDataSource.getRepository(Workflow), 'find')
+  .mockImplementation(async () => _findWorkflows());
 jest
   .spyOn(AppDataSource.getRepository(AdministrativeArea), 'find')
   .mockImplementation(async () => _findAdminAreas());
