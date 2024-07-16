@@ -387,7 +387,7 @@ const ProjectDetail = (props: IProjectDetail) => {
                         {value.Monetaries.map((mon) => (
                           <Box key={`${mon.MonetaryTypeId}-monetary`}>
                             <Typography variant="h5">{columnNameFormatter(mon.Name)}</Typography>
-                            <Typography>{formatMoney(Number(mon.Value))}</Typography>
+                            <Typography>{formatMoney(mon.Value)}</Typography>
                           </Box>
                         ))}
                       </Box>
