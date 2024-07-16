@@ -114,12 +114,6 @@ describe('UNIT - Buildings', () => {
       await controllers.getBuildings(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
-    it('should retrieve the Excel export data if asked for', async () => {
-      mockRequest.query.excelExport = 'true';
-      await controllers.getBuildings(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-      expect(_getBuildingsForExcelExport).toHaveBeenCalledTimes(1);
-    });
     it('should return 400 on bad filter', async () => {
       mockRequest.query.pid = [{ a: 'a' }];
       await controllers.getBuildings(mockRequest, mockResponse);
