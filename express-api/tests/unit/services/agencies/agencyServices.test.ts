@@ -102,13 +102,11 @@ describe('UNIT - agency services', () => {
     it('should update an agency and return it', async () => {
       const upagency = produceAgency();
       _getManyAndCountAgencies.mockImplementationOnce(async () => [[upagency], 1]);
-      _agencyFind.mockImplementationOnce(async () => [upagency]);
       await agencyServices.updateAgencyById(upagency);
       expect(_agencySave).toHaveBeenCalledTimes(1);
     });
 
     it('should throw an error if the agency is not found', async () => {
-      _agencyFind.mockImplementationOnce(async () => []);
       const upagency = produceAgency();
       expect(async () => await agencyServices.updateAgencyById(upagency)).rejects.toThrow(
         new ErrorWithCode(`Agency not found.`, 404),
@@ -143,7 +141,7 @@ describe('UNIT - agency services', () => {
       const parentAgency = produceAgency({ Id: agencyId - 1, ParentId: agencyId + 1 });
       const upagency = produceAgency({ Id: agencyId, ParentId: parentAgency.Id });
       _getManyAndCountAgencies.mockImplementationOnce(async () => [[upagency, parentAgency], 2]);
-      _agencyFind.mockImplementationOnce(async () => [upagency]);
+      //_agencyFind.mockImplementationOnce(async () => [upagency]);
       expect(async () => await agencyServices.updateAgencyById(upagency)).rejects.toThrow(
         new ErrorWithCode('Cannot assign a child agency as a Parent Agency.', 400),
       );
