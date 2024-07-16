@@ -17,11 +17,12 @@ type TextFormFieldProps = {
 
 const TextFormField = (props: TextFormFieldProps) => {
   const { control, setValue } = useFormContext();
-  const { name, label, rules, numeric, isPid, defaultVal, ...restProps } = props;
+  const { name, label, rules, numeric, isPid, defaultVal, disabled, ...restProps } = props;
   return (
     <Controller
       control={control}
       name={name}
+      disabled={disabled}
       rules={{ required: props.required ? 'Required field.' : undefined, ...rules }}
       render={({ field: { onChange, value }, fieldState: { error } }) => {
         return (
@@ -52,6 +53,7 @@ const TextFormField = (props: TextFormFieldProps) => {
             type={'text'}
             error={!!error && !!error.message}
             helperText={error?.message}
+            disabled={disabled}
             {...restProps}
           />
         );
