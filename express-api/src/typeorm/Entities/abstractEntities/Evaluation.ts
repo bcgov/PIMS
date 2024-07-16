@@ -1,6 +1,7 @@
 import { EvaluationKey } from '@/typeorm/Entities/EvaluationKey';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { SoftDeleteEntity } from './SoftDeleteEntity';
+import MoneyTransfomer from '@/typeorm/Transformers/MoneyTransformer';
 
 @Entity()
 export class Evaluation extends SoftDeleteEntity {
@@ -14,7 +15,10 @@ export class Evaluation extends SoftDeleteEntity {
   @JoinColumn({ name: 'evaluation_key_id' })
   EvaluationKey: EvaluationKey;
 
-  @Column({ type: 'money' })
+  @Column({
+    type: 'money',
+    transformer: MoneyTransfomer,
+  })
   Value: number;
 
   @Column({ type: 'character varying', length: 500, nullable: true })

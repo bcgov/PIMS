@@ -19,7 +19,7 @@ import { GridColDef, DataGrid } from '@mui/x-data-grid';
 import { useState, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import React from 'react';
-import { pidFormatter } from '@/utilities/formatters';
+import { formatMoney, pidFormatter } from '@/utilities/formatters';
 import { ClassificationIcon } from '@/components/property/ClassificationIcon';
 import { useClassificationStyle } from '@/components/property/PropertyTable';
 
@@ -118,6 +118,7 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
       valueGetter: (evaluations: ParcelEvaluation[] | BuildingEvaluation[]) => {
         return evaluations?.sort((a, b) => b.Year - a.Year)[0]?.Value ?? 'N/A';
       },
+      valueFormatter: formatMoney,
       flex: 1,
     },
     {

@@ -2,6 +2,7 @@ import React from 'react';
 import { PinnedColumnDataGrid } from '../table/DataTable';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Box, Typography } from '@mui/material';
+import { formatMoney } from '@/utilities/formatters';
 
 interface IPropertyAssessedValueTable {
   rows: Record<string, any>[];
@@ -22,6 +23,7 @@ const PropertyAssessedValueTable = (props: IPropertyAssessedValueTable) => {
       field: isBuilding ? 'Value' : 'Land',
       headerName: isBuilding ? 'Value' : 'Land',
       flex: willOverflow ? 0 : 1,
+      valueFormatter: formatMoney,
     },
     ...[...Array(parcelRelatedBuildingsNum).keys()].map(
       (idx): GridColDef => ({
@@ -29,6 +31,7 @@ const PropertyAssessedValueTable = (props: IPropertyAssessedValueTable) => {
         headerName: `Building (${idx + 1})`,
         flex: willOverflow ? 0 : 1,
         valueGetter: (value) => (value ? value : 'N/A'),
+        valueFormatter: formatMoney,
       }),
     ),
   ];
