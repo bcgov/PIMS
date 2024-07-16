@@ -16,7 +16,7 @@ import { ViewColumn, ViewEntity } from 'typeorm';
 	u.first_name AS user_first_name,
 	u.last_name AS user_last_name,
 	u.last_name || ', ' || u.first_name AS user_full_name,
-	ps.updated_on 
+	p.updated_on 
 FROM
 	project p
 LEFT JOIN agency agc ON

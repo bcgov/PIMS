@@ -304,7 +304,7 @@ export const searchProjects = async (req: Request, res: Response) => {
  * @param {Response}    res Outgoing response.
  * @returns {Response}      A 200 status with the an array of projects.
  */
-export const filterProjects = async (req: Request, res: Response) => {
+export const getProjects = async (req: Request, res: Response) => {
   const filter = ProjectFilterSchema.safeParse(req.query);
   const forExcelExport = req.query.excelExport === 'true';
   if (!filter.success) {

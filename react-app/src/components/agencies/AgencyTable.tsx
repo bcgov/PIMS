@@ -2,13 +2,7 @@ import React, { MutableRefObject, useContext, useState } from 'react';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, Chip, SxProps } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
-import {
-  GridColDef,
-  GridEventListener,
-  gridFilteredSortedRowEntriesSelector,
-  GridRowId,
-  GridValidRowModel,
-} from '@mui/x-data-grid';
+import { GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { dateFormatter } from '@/utilities/formatters';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { useNavigate } from 'react-router-dom';
@@ -127,29 +121,19 @@ const AgencyTable = (props: IAgencyTable) => {
     }
   };
 
-  const getExcelData: (
-    ref: MutableRefObject<GridApiCommunity>,
-  ) => Promise<{ id: GridRowId; model: GridValidRowModel }[]> = async (
-    ref: MutableRefObject<GridApiCommunity>,
-  ) => {
-    if (ref?.current) {
-      const rows = gridFilteredSortedRowEntriesSelector(ref);
-      return rows.map((row) => {
-        const { id, model } = row;
-        const agencyModel = model as Agency;
-        return {
-          id,
-          model: {
-            Name: agencyModel.Name,
-            Ministry: agencyModel.Parent?.Name ?? agencyModel.Name,
-            Code: agencyModel.Code,
-            Created: agencyModel.CreatedOn,
-            Disabled: agencyModel.IsDisabled,
-          },
-        };
-      });
-    }
-    return [];
+  const excelDataMap = (data: Agency[]) => {
+    return data.map((agency) => {
+      return {
+        Name: agency.Name,
+        Code: agency.Code,
+        'Parent Agency': agency.Parent?.Name ?? agency.Name,
+        Disabled: agency.IsDisabled,
+        Notifications: agency.SendEmail,
+        SendTo: agency.Email,
+        Created: agency.CreatedOn,
+        Updated: agency.UpdatedOn,
+      };
+    });
   };
 
   const api = usePimsApi();
@@ -199,7 +183,7 @@ const AgencyTable = (props: IAgencyTable) => {
           ]}
           tableHeader={'Agencies Overview'}
           excelTitle={'Agencies'}
-          customExcelData={getExcelData}
+          customExcelMap={excelDataMap}
           columns={columns}
           addTooltip="Create New Agency"
           onAddButtonClick={() => navigate('/admin/agencies/add')}

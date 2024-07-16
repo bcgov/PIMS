@@ -113,6 +113,21 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
     return parsedBody as PropertiesUnionResponse;
   };
 
+  const getPropertiesForExcelExport = async (filter: CommonFiltering, signal?: AbortSignal) => {
+    const { parsedBody } = await absoluteFetch.get(
+      '/properties',
+      {
+        ...filter,
+        excelExport: true,
+      },
+      { signal },
+    );
+    if (parsedBody.error) {
+      return [];
+    }
+    return parsedBody as (Parcel | Building)[];
+  };
+
   const propertiesDataSource = async (
     filter: CommonFiltering,
     signal?: AbortSignal,
@@ -166,6 +181,7 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
     uploadBulkSpreadsheet,
     getImportResults,
     propertiesDataSource,
+    getPropertiesForExcelExport,
   };
 };
 
