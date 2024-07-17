@@ -4,6 +4,7 @@ import urls from '@/constants/urls';
 import { ChesFilter } from '@/controllers/tools/toolsSchema';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { decodeJWT } from '@/utilities/decodeJWT';
+import logger from '@/utilities/winstonLogger';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 
 let _token: TokenResponse = null;
@@ -186,7 +187,7 @@ const getStatusByIdAsync = async (messageId: string): Promise<IChesStatusRespons
     }
     return await response; // Assuming response is JSON
   } catch (error) {
-    console.error(
+    logger.error(
       `>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Error fetching status for messageId ${messageId}:`,
       error,
     );
