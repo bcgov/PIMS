@@ -2,6 +2,7 @@ import { Entity, Index, ManyToOne, PrimaryColumn, JoinColumn, Column } from 'typ
 import { Project } from './Project';
 import { SoftDeleteEntity } from './abstractEntities/SoftDeleteEntity';
 import { MonetaryType } from './MonetaryType';
+import MoneyTransfomer from '../Transformers/MoneyTransformer';
 
 @Entity()
 @Index(['ProjectId', 'MonetaryTypeId'])
@@ -23,6 +24,6 @@ export class ProjectMonetary extends SoftDeleteEntity {
   @JoinColumn({ name: 'monetary_type_id' })
   MonetaryType: MonetaryType;
 
-  @Column({ type: 'money' })
+  @Column({ type: 'money', transformer: MoneyTransfomer })
   Value: number;
 }

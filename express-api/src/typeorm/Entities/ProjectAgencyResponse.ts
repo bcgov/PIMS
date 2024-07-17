@@ -3,6 +3,7 @@ import { Project } from '@/typeorm/Entities/Project';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { Agency } from './Agency';
 import { SoftDeleteEntity } from './abstractEntities/SoftDeleteEntity';
+import MoneyTransfomer from '../Transformers/MoneyTransformer';
 
 @Entity()
 export class ProjectAgencyResponse extends SoftDeleteEntity {
@@ -22,7 +23,7 @@ export class ProjectAgencyResponse extends SoftDeleteEntity {
   @JoinColumn({ name: 'agency_id' })
   Agency: Agency;
 
-  @Column({ type: 'money' })
+  @Column({ type: 'money', transformer: MoneyTransfomer })
   OfferAmount: number;
 
   // Notification Relation

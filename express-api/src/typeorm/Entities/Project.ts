@@ -21,6 +21,7 @@ import { ProjectAgencyResponse } from './ProjectAgencyResponse';
 import { SoftDeleteEntity } from './abstractEntities/SoftDeleteEntity';
 import { ProjectTimestamp } from './ProjectTimestamp';
 import { ProjectMonetary } from './ProjectMonetary';
+import MoneyTransfomer from '../Transformers/MoneyTransformer';
 
 export interface ProjectMetadata {
   // Exemption Fields
@@ -119,16 +120,16 @@ export class Project extends SoftDeleteEntity {
   @Column('timestamp', { nullable: true })
   CompletedOn: Date;
 
-  @Column('money', { nullable: true })
+  @Column('money', { nullable: true, transformer: MoneyTransfomer })
   NetBook: number;
 
-  @Column('money', { nullable: true })
+  @Column('money', { nullable: true, transformer: MoneyTransfomer })
   Market: number;
 
-  @Column('money', { nullable: true })
+  @Column('money', { nullable: true, transformer: MoneyTransfomer })
   Assessed: number;
 
-  @Column('money', { nullable: true })
+  @Column('money', { nullable: true, transformer: MoneyTransfomer })
   Appraised: number;
 
   @Column('int')
