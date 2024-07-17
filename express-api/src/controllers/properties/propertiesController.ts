@@ -189,11 +189,9 @@ export const importProperties = async (req: Request, res: Response) => {
   const ssoUser = req.user;
   const user = await userServices.getUser(ssoUser.preferred_username);
   const roles = ssoUser.client_roles;
-  console.log(`RECEIVED FILE: ${req.file.path}`);
   try {
     readFile(filePath, { WTF: true }); //With this read option disabled it will throw if unexpected data is present.
   } catch (e) {
-    console.log(`FS UNLINK SYNC HAPPENS.`);
     fs.unlinkSync(filePath);
     return res.status(400).send(e.message);
   }
