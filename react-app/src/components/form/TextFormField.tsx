@@ -22,7 +22,6 @@ const TextFormField = (props: TextFormFieldProps) => {
     <Controller
       control={control}
       name={name}
-      disabled={disabled}
       rules={{ required: props.required ? 'Required field.' : undefined, ...rules }}
       render={({ field: { onChange, value }, fieldState: { error } }) => {
         return (

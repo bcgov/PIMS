@@ -23,15 +23,16 @@ const PropertyAssessedValueTable = (props: IPropertyAssessedValueTable) => {
       field: isBuilding ? 'Value' : 'Land',
       headerName: isBuilding ? 'Value' : 'Land',
       flex: willOverflow ? 0 : 1,
-      valueFormatter: formatMoney,
+      valueGetter: (value) => (value != null ? value : 'N/A'),
+      valueFormatter: (val) => (typeof val === 'string' ? val : formatMoney(val)),
     },
     ...[...Array(parcelRelatedBuildingsNum).keys()].map(
       (idx): GridColDef => ({
         field: `Building${idx + 1}`,
         headerName: `Building (${idx + 1})`,
         flex: willOverflow ? 0 : 1,
-        valueGetter: (value) => (value ? value : 'N/A'),
-        valueFormatter: formatMoney,
+        valueGetter: (value) => (value != null ? value : 'N/A'),
+        valueFormatter: (val) => (typeof val === 'string' ? val : formatMoney(val)),
       }),
     ),
   ];
