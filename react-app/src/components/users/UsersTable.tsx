@@ -1,14 +1,7 @@
 import React from 'react';
 import { FilterSearchDataGrid } from '@/components/table/DataTable';
 import { Box, SxProps, useTheme, ListSubheader, MenuItem } from '@mui/material';
-import {
-  GridColDef,
-  GridComparatorFn,
-  GridEventListener,
-  gridFilteredSortedRowEntriesSelector,
-  GridRowId,
-  GridValidRowModel,
-} from '@mui/x-data-grid';
+import { GridColDef, GridComparatorFn, GridEventListener } from '@mui/x-data-grid';
 import { MutableRefObject, PropsWithChildren, useEffect, useState } from 'react';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { IUser } from '@/interfaces/IUser';
@@ -220,34 +213,21 @@ const UsersTable = (props: IUsersTable) => {
     },
   ];
 
-  const getExcelData: (
-    ref: MutableRefObject<GridApiCommunity>,
-  ) => Promise<{ id: GridRowId; model: GridValidRowModel }[]> = async (
-    ref: MutableRefObject<GridApiCommunity>,
-  ) => {
-    if (ref?.current) {
-      const rows = gridFilteredSortedRowEntriesSelector(ref);
-      return rows.map((row) => {
-        const { id, model } = row;
-        const userModel = model as User;
-        return {
-          id,
-          model: {
-            Username: userModel.Username,
-            'First Name': userModel.FirstName,
-            'Last Name': userModel.LastName,
-            Email: userModel.Email,
-            Status: userModel.Status,
-            Agency: userModel.Agency?.Name,
-            'Last Login': userModel.LastLogin,
-            Role: userModel.Role?.Name,
-            'Created On': userModel.CreatedOn,
-            Position: userModel.Position,
-          },
-        };
-      });
-    }
-    return [];
+  const excelDataMap = (data: User[]) => {
+    return data.map((user) => {
+      return {
+        Username: user.Username,
+        'First Name': user.FirstName,
+        'Last Name': user.LastName,
+        Email: user.Email,
+        Status: user.Status,
+        Agency: user.Agency?.Name,
+        'Last Login': user.LastLogin,
+        Role: user.Role?.Name,
+        'Created On': user.CreatedOn,
+        Position: user.Position,
+      };
+    });
   };
 
   return (
@@ -270,7 +250,7 @@ const UsersTable = (props: IUsersTable) => {
           defaultFilter="All Users"
           tableHeader="Users Overview"
           excelTitle="Users Table"
-          customExcelData={getExcelData}
+          customExcelMap={excelDataMap}
           addTooltip="Adding a new user from this table is not supported yet. Please advise users to use the access request form."
           getRowId={(row) => row.Id}
           columns={columns}

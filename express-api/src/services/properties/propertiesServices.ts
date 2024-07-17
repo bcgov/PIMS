@@ -31,6 +31,7 @@ import {
 import userServices from '../users/usersServices';
 import {
   Brackets,
+  FindManyOptions,
   FindOptionsOrder,
   FindOptionsOrderValue,
   FindOptionsWhere,
@@ -39,6 +40,7 @@ import {
   QueryRunner,
 } from 'typeorm';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import { PropertyType } from '@/constants/propertyType';
 
 const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?: number[]) => {
   const parcelsQuery = await AppDataSource.getRepository(Parcel)
@@ -622,12 +624,56 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
   return { data, totalCount };
 };
 
+const getPropertiesForExport = async (filter: PropertyUnionFilter) => {
+  const result = await getPropertiesUnion(filter);
+  const filteredProperties = result.data;
+  const parcelIds = filteredProperties
+    .filter(
+      (p) =>
+        p.PropertyTypeId === PropertyType.LAND || p.PropertyTypeId === PropertyType.SUBDIVISION,
+    )
+    .map((p) => p.Id);
+  const buildingIds = filteredProperties
+    .filter((p) => p.PropertyTypeId === PropertyType.BUILDING)
+    .map((b) => b.Id);
+  // Use IDs from filtered properties to get those properites with joins
+  const parcelQueryOptions: FindManyOptions<Parcel> = {
+    relations: {
+      CreatedBy: true,
+      UpdatedBy: true,
+      Evaluations: true,
+      Fiscals: true,
+    },
+    where: {
+      Id: In(parcelIds),
+    },
+  };
+  const buildingQueryOptions: FindManyOptions<Building> = {
+    relations: {
+      CreatedBy: true,
+      UpdatedBy: true,
+      Evaluations: true,
+      Fiscals: true,
+    },
+    where: { Id: In(buildingIds) },
+  };
+  let properties: (Parcel | Building)[] = [];
+  properties = properties.concat(
+    await AppDataSource.getRepository(Parcel).find(parcelQueryOptions),
+  );
+  properties = properties.concat(
+    await AppDataSource.getRepository(Building).find(buildingQueryOptions),
+  );
+  return properties;
+};
+
 const propertyServices = {
   propertiesFuzzySearch,
   getPropertiesForMap,
   importPropertiesAsJSON,
   getPropertiesUnion,
   getImportResults,
+  getPropertiesForExport,
 };
 
 export default propertyServices;

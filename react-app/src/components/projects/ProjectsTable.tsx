@@ -1,10 +1,5 @@
 import usePimsApi from '@/hooks/usePimsApi';
-import {
-  GridColDef,
-  gridFilteredSortedRowEntriesSelector,
-  GridRowId,
-  GridValidRowModel,
-} from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import React, { MutableRefObject, useContext, useState } from 'react';
 import { dateFormatter, projectStatusChipFormatter } from '@/utilities/formatters';
@@ -18,12 +13,14 @@ import { TimestampType } from '@/constants/timestampTypes';
 import { ProjectTask } from '@/constants/projectTasks';
 import { NotificationType } from '@/constants/notificationTypes';
 import { MonetaryType } from '@/constants/monetaryTypes';
+import { LookupContext } from '@/contexts/lookupContext';
 
 const ProjectsTable = () => {
   const [totalCount, setTotalCount] = useState(0);
   const navigate = useNavigate();
   const api = usePimsApi();
   const snackbar = useContext(SnackBarContext);
+  const lookup = useContext(LookupContext);
 
   const parseIntFromProjectNo = (projectNo: string) => {
     return Number(projectNo.match(/[a-zA-Z]+-?(\d+)/)[1]);
@@ -97,127 +94,94 @@ const ProjectsTable = () => {
     }
   };
 
-  const getExcelData: (
-    ref: MutableRefObject<GridApiCommunity>,
-  ) => Promise<{ id: GridRowId; model: GridValidRowModel }[]> = async (
-    ref: MutableRefObject<GridApiCommunity>,
-  ) => {
-    if (ref?.current) {
-      try {
-        const projectsWithExtras = await api.projects.getProjectsForExcelExport();
-        if (!projectsWithExtras) {
-          throw new Error('Projects could not be reached. Refresh and try again.');
-        }
-        ref.current.setRows(projectsWithExtras);
-        const rows = gridFilteredSortedRowEntriesSelector(ref);
-        return rows.map((row) => {
-          const { id, model } = row;
-          const projectModel = model as Project;
-          return {
-            id,
-            model: {
-              'Project Number': projectModel.ProjectNumber,
-              Name: projectModel.Name,
-              Description: projectModel.Description,
-              'Reported Fiscal Year': projectModel.ReportedFiscalYear,
-              'Actual Fiscal Year': projectModel.ActualFiscalYear,
-              Workflow: projectModel.Workflow?.Name,
-              Status: projectModel.Status?.Name,
-              'Tier Level': projectModel.TierLevel?.Name,
-              Risk: projectModel.Risk?.Name,
-              Ministry: projectModel.Agency?.Parent?.Name ?? projectModel.Agency?.Name,
-              Agency: projectModel.Agency?.Name,
-              'Created By': `${projectModel.CreatedBy?.FirstName} ${projectModel.CreatedBy?.LastName}`,
-              'Created On': projectModel.CreatedOn,
-              'Exemption Requested': projectModel.Tasks?.find(
-                (task) => task.TaskId === ProjectTask.EXEMPTION_REQUESTED,
-              )?.IsCompleted,
-              'Exemption Rationale': projectModel.Notes?.find(
-                (note) => note.NoteTypeId === NoteTypes.EXEMPTION,
-              )?.Note,
-              'Current Market value': projectModel.Market,
-              'NetBook	Value': projectModel.NetBook,
-              Assessed: projectModel.Assessed,
-              Appraised: projectModel.Appraised,
-              'Sales Cost': projectModel.Monetaries.find(
-                (m) => m.MonetaryTypeId === MonetaryType.SALES_COST,
-              )?.Value,
-              'Net Proceeds': projectModel.Monetaries.find(
-                (m) => m.MonetaryTypeId === MonetaryType.NET_PROCEEDS,
-              )?.Value,
-              'Program Cost': projectModel.Monetaries.find(
-                (m) => m.MonetaryTypeId === MonetaryType.PROGRAM_COST,
-              )?.Value,
-              'Gain Loss': projectModel.Monetaries.find(
-                (m) => m.MonetaryTypeId === MonetaryType.OCG_GAIN_LOSS,
-              )?.Value,
-              'OCG Financial Statement': projectModel.Monetaries.find(
-                (m) => m.MonetaryTypeId === MonetaryType.OCG_FINANCIAL_STATEMENT,
-              )?.Value,
-              'Interest Component': projectModel.Monetaries.find(
-                (m) => m.MonetaryTypeId === MonetaryType.INTEREST_COMPONENT,
-              )?.Value,
-              'Offer Amount': projectModel.Monetaries.find(
-                (m) => m.MonetaryTypeId === MonetaryType.OFFER_AMOUNT,
-              )?.Value,
-              Note: projectModel.Notes?.find((note) => note.NoteTypeId === NoteTypes.GENERAL)?.Note,
-              PublicNote: projectModel.Notes?.find((note) => note.NoteTypeId === NoteTypes.PUBLIC)
-                ?.Note,
-              PrivateNote: projectModel.Notes?.find((note) => note.NoteTypeId === NoteTypes.PRIVATE)
-                ?.Note,
-              AppraisedNote: projectModel.Notes?.find(
-                (note) => note.NoteTypeId === NoteTypes.APPRAISAL,
-              )?.Note,
-              AgencyResponseNote: projectModel.Notes?.find(
-                (note) => note.NoteTypeId === NoteTypes.AGENCY_INTEREST,
-              )?.Note,
-              'Submitted On': projectModel.SubmittedOn,
-              'Approved On': projectModel.ApprovedOn,
-              'ERP Initial Notification Sent On': projectModel.Notifications.find(
-                (n) => n.TemplateId === NotificationType.NEW_PROPERTIES_ON_ERP,
-              )?.SendOn,
-              'ERP Thirty Day Notification Sent On': projectModel.Notifications.find(
-                (n) =>
-                  n.TemplateId === NotificationType.THIRTY_DAY_ERP_NOTIFICATION_PARENT_AGENCIES,
-              )?.SendOn,
-              'ERP Sixty Day Notification Sent On': projectModel.Notifications.find(
-                (n) => n.TemplateId === NotificationType.SIXTY_DAY_ERP_NOTIFICATION_PARENT_AGENCIES,
-              )?.SendOn,
-              'ERP Ninety Day Notification Sent On': projectModel.Notifications.find(
-                (n) => n.TemplateId === NotificationType.NINTY_DAY_ERP_NOTIFICATION_PARENT_AGENCIES,
-              )?.SendOn,
-              'Transferred Within GRE On': projectModel.Timestamps.find(
-                (timestamp) =>
-                  timestamp.TimestampTypeId === TimestampType.TRANSFERRED_WITHIN_GRE_ON,
-              )?.Date,
-              'ERP Clearance Notification Sent On': projectModel.Timestamps.find(
-                (timestamp) =>
-                  timestamp.TimestampTypeId === TimestampType.CLEARANCE_NOTIFICATION_SENT_ON,
-              )?.Date,
-              'Disposed On': projectModel.Timestamps.find(
-                (timestamp) => timestamp.TimestampTypeId === TimestampType.DISPOSED_ON,
-              )?.Date,
-              'Marketed On': projectModel.Timestamps.find(
-                (timestamp) => timestamp.TimestampTypeId === TimestampType.MARKETED_ON,
-              )?.Date,
-              'Offers Note': projectModel.Notes?.find((note) => note.NoteTypeId === NoteTypes.OFFER)
-                ?.Note,
-              Purchaser: projectModel.Notes?.find((note) => note.NoteTypeId === NoteTypes.PURCHASER)
-                ?.Note,
-            },
-          };
-        });
-      } catch (e) {
-        snackbar.setMessageState({
-          open: true,
-          style: snackbar.styles.warning,
-          text: e.message ?? 'Error exporting Excel file.',
-        });
-        return [];
-      }
-    }
-    return [];
+  const excelDataMap = (data: Project[]) => {
+    return data.map((project: Project) => {
+      return {
+        'Project Number': project.ProjectNumber,
+        Name: project.Name,
+        Description: project.Description,
+        'Reported Fiscal Year': project.ReportedFiscalYear,
+        'Actual Fiscal Year': project.ActualFiscalYear,
+        Workflow: lookup.getLookupValueById('Workflows', project.WorkflowId)?.Name,
+        Status: lookup.getLookupValueById('ProjectStatuses', project.StatusId)?.Name,
+        'Tier Level': lookup.getLookupValueById('ProjectTiers', project.TierLevelId)?.Name,
+        Risk: lookup.getLookupValueById('Risks', project.RiskId)?.Name,
+        Ministry: lookup.getLookupValueById('Agencies', project.AgencyId)?.ParentId
+          ? lookup.data.Agencies.find(
+              (a) => a.Id === lookup.getLookupValueById('Agencies', project.AgencyId)?.ParentId,
+            )?.Name
+          : lookup.getLookupValueById('Agencies', project.AgencyId)?.Name,
+        Agency: lookup.getLookupValueById('Agencies', project.AgencyId)?.Name,
+        'Created By': `${project.CreatedBy?.FirstName} ${project.CreatedBy?.LastName}`,
+        'Created On': project.CreatedOn,
+        'Exemption Requested': project.Tasks?.find(
+          (task) => task.TaskId === ProjectTask.EXEMPTION_REQUESTED,
+        )?.IsCompleted,
+        'Exemption Rationale': project.Notes?.find(
+          (note) => note.NoteTypeId === NoteTypes.EXEMPTION,
+        )?.Note,
+        'Current Market value': project.Market,
+        'NetBook	Value': project.NetBook,
+        Assessed: project.Assessed,
+        Appraised: project.Appraised,
+        'Sales Cost': project.Monetaries.find((m) => m.MonetaryTypeId === MonetaryType.SALES_COST)
+          ?.Value,
+        'Net Proceeds': project.Monetaries.find(
+          (m) => m.MonetaryTypeId === MonetaryType.NET_PROCEEDS,
+        )?.Value,
+        'Program Cost': project.Monetaries.find(
+          (m) => m.MonetaryTypeId === MonetaryType.PROGRAM_COST,
+        )?.Value,
+        'Gain Loss': project.Monetaries.find((m) => m.MonetaryTypeId === MonetaryType.OCG_GAIN_LOSS)
+          ?.Value,
+        'OCG Financial Statement': project.Monetaries.find(
+          (m) => m.MonetaryTypeId === MonetaryType.OCG_FINANCIAL_STATEMENT,
+        )?.Value,
+        'Interest Component': project.Monetaries.find(
+          (m) => m.MonetaryTypeId === MonetaryType.INTEREST_COMPONENT,
+        )?.Value,
+        'Offer Amount': project.Monetaries.find(
+          (m) => m.MonetaryTypeId === MonetaryType.OFFER_AMOUNT,
+        )?.Value,
+        Note: project.Notes?.find((note) => note.NoteTypeId === NoteTypes.GENERAL)?.Note,
+        PublicNote: project.Notes?.find((note) => note.NoteTypeId === NoteTypes.PUBLIC)?.Note,
+        PrivateNote: project.Notes?.find((note) => note.NoteTypeId === NoteTypes.PRIVATE)?.Note,
+        AppraisedNote: project.Notes?.find((note) => note.NoteTypeId === NoteTypes.APPRAISAL)?.Note,
+        AgencyResponseNote: project.Notes?.find(
+          (note) => note.NoteTypeId === NoteTypes.AGENCY_INTEREST,
+        )?.Note,
+        'Submitted On': project.SubmittedOn,
+        'Approved On': project.ApprovedOn,
+        'ERP Initial Notification Sent On': project.Notifications.find(
+          (n) => n.TemplateId === NotificationType.NEW_PROPERTIES_ON_ERP,
+        )?.SendOn,
+        'ERP Thirty Day Notification Sent On': project.Notifications.find(
+          (n) => n.TemplateId === NotificationType.THIRTY_DAY_ERP_NOTIFICATION_PARENT_AGENCIES,
+        )?.SendOn,
+        'ERP Sixty Day Notification Sent On': project.Notifications.find(
+          (n) => n.TemplateId === NotificationType.SIXTY_DAY_ERP_NOTIFICATION_PARENT_AGENCIES,
+        )?.SendOn,
+        'ERP Ninety Day Notification Sent On': project.Notifications.find(
+          (n) => n.TemplateId === NotificationType.NINTY_DAY_ERP_NOTIFICATION_PARENT_AGENCIES,
+        )?.SendOn,
+        'Transferred Within GRE On': project.Timestamps.find(
+          (timestamp) => timestamp.TimestampTypeId === TimestampType.TRANSFERRED_WITHIN_GRE_ON,
+        )?.Date,
+        'ERP Clearance Notification Sent On': project.Timestamps.find(
+          (timestamp) => timestamp.TimestampTypeId === TimestampType.CLEARANCE_NOTIFICATION_SENT_ON,
+        )?.Date,
+        'Disposed On': project.Timestamps.find(
+          (timestamp) => timestamp.TimestampTypeId === TimestampType.DISPOSED_ON,
+        )?.Date,
+        'Marketed On': project.Timestamps.find(
+          (timestamp) => timestamp.TimestampTypeId === TimestampType.MARKETED_ON,
+        )?.Date,
+        'Offers Note': project.Notes?.find((note) => note.NoteTypeId === NoteTypes.OFFER)?.Note,
+        Purchaser: project.Notes?.find((note) => note.NoteTypeId === NoteTypes.PURCHASER)?.Note,
+      };
+    });
   };
+
   const handleDataChange = async (filter: any, signal: AbortSignal): Promise<any[]> => {
     try {
       const { data, totalCount } = await api.projects.getProjects(filter, signal);
@@ -238,6 +202,7 @@ const ProjectsTable = () => {
       <FilterSearchDataGrid
         tableOperationMode="server"
         dataSource={handleDataChange}
+        excelDataSource={api.projects.getProjectsForExcelExport}
         onAddButtonClick={() => navigate('/projects/add')}
         onPresetFilterChange={selectPresetFilter}
         defaultFilter={'All Projects'}
@@ -262,7 +227,7 @@ const ProjectsTable = () => {
         onRowClick={(params) => navigate(`/projects/${params.row.Id}`)}
         tableHeader={'Disposal Projects Overview'}
         excelTitle={'Projects'}
-        customExcelData={getExcelData}
+        customExcelMap={excelDataMap}
         addTooltip={'Create New Disposal Project'}
         name={'projects'}
         columns={columns}

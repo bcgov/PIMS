@@ -669,7 +669,7 @@ describe('UNIT - Project Services', () => {
         });
 
         // Call the service function
-        const projects = await projectServices.getProjectsForExport(filter, true); // Pass the mocked projectRepo
+        const projects = await projectServices.getProjectsForExport(filter); // Pass the mocked projectRepo
 
         // Assertions
         expect(_projectFind).toHaveBeenCalled();

@@ -15,7 +15,6 @@ import { checkUserAgencyPermission, isAdmin, isAuditor } from '@/utilities/autho
 export const getBuildings = async (req: Request, res: Response) => {
   const filter = BuildingFilterSchema.safeParse(req.query);
   const includeRelations = req.query.includeRelations === 'true';
-  const forExcelExport = req.query.excelExport === 'true';
   const kcUser = req.user as unknown as SSOUser;
   if (!filter.success) {
     return res.status(400).send('Could not parse filter.');
@@ -27,12 +26,10 @@ export const getBuildings = async (req: Request, res: Response) => {
     filterResult.agencyId = usersAgencies;
   }
   // Get parcels associated with agencies of the requesting user
-  const buildings = forExcelExport
-    ? await buildingService.getBuildingsForExcelExport(
-        filterResult as BuildingFilter,
-        includeRelations,
-      )
-    : await buildingService.getBuildings(filterResult as BuildingFilter, includeRelations);
+  const buildings = await buildingService.getBuildings(
+    filterResult as BuildingFilter,
+    includeRelations,
+  );
   return res.status(200).send(buildings);
 };
 

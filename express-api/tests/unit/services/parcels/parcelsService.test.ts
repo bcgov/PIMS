@@ -157,13 +157,6 @@ describe('UNIT - Parcel Services', () => {
     });
   });
 
-  describe('getParcelsForExcelExport', () => {
-    it('should return a list of parcels', async () => {
-      const parcels = await parcelService.getParcelsForExcelExport({});
-      expect(parcels).toHaveLength(2);
-    });
-  });
-
   describe('updateParcels', () => {
     beforeEach(() => jest.clearAllMocks());
     it('should update an existing parcel', async () => {

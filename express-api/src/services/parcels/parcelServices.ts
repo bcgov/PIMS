@@ -146,67 +146,6 @@ const getParcels = async (filter: ParcelFilter, includeRelations: boolean = fals
   return parcels;
 };
 
-const getParcelsForExcelExport = async (
-  filter: ParcelFilter,
-  includeRelations: boolean = false,
-) => {
-  const parcels = await parcelRepo.find({
-    relations: {
-      ParentParcel: includeRelations,
-      Agency: includeRelations,
-      AdministrativeArea: includeRelations,
-      Classification: includeRelations,
-      PropertyType: includeRelations,
-      Evaluations: includeRelations,
-      Fiscals: includeRelations,
-    },
-    select: {
-      Agency: {
-        Id: true,
-        Name: true,
-        Parent: {
-          Id: true,
-          Name: true,
-        },
-      },
-      AdministrativeArea: {
-        Id: true,
-        Name: true,
-      },
-      Classification: {
-        Id: true,
-        Name: true,
-      },
-      PropertyType: {
-        Id: true,
-        Name: true,
-      },
-      ParentParcel: {
-        Id: true,
-      },
-      Evaluations: {
-        Year: true,
-        Value: true,
-      },
-      Fiscals: {
-        FiscalYear: true,
-        Value: true,
-      },
-    },
-    where: {
-      PID: filter.pid,
-      ClassificationId: filter.classificationId,
-      AgencyId: filter.agencyId
-        ? In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId)
-        : undefined,
-      AdministrativeAreaId: filter.administrativeAreaId,
-      PropertyTypeId: filter.propertyTypeId,
-      IsSensitive: filter.isSensitive,
-    },
-  });
-  return parcels;
-};
-
 /**
  * @description Finds and updates parcel based on the incoming PID
  * @param incomingParcel incoming parcel information to be updated
@@ -307,7 +246,6 @@ const parcelServices = {
   updateParcel,
   deleteParcelById,
   addParcel,
-  getParcelsForExcelExport,
 };
 
 export default parcelServices;
