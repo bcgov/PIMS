@@ -12,6 +12,7 @@ import chesServices, {
   EmailBody,
   EmailEncoding,
   EmailPriority,
+  // IChesStatusResponse,
   IEmail,
 } from '../ches/chesServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
@@ -44,6 +45,24 @@ export enum AgencyResponseType {
   Unsubscribe = 0,
   Subscribe = 1,
   Watch = 2,
+}
+export interface ProjectNotificationFilter {
+  projectId: number;
+  pageNumber?: number;
+  pageSize?: number;
+}
+export interface NotificationQueueModel {
+  id: number;
+  chesMessageId?: string;
+  status: string;
+  sendOn: Date;
+  to: string;
+  subject: string;
+}
+export interface PageModel<T> {
+  items: T[];
+  pageNumber: number;
+  pageSize: number;
 }
 
 const Title = 'PIMS';
@@ -353,10 +372,104 @@ const sendNotification = async (
   return retNotif;
 };
 
+const convertChesStatusToNotificationStatus = (chesStatus: string): NotificationStatus => {
+  switch (chesStatus) {
+    case 'accepted':
+      return NotificationStatus.Accepted;
+    case 'pending':
+      return NotificationStatus.Pending;
+    case 'cancelled':
+      return NotificationStatus.Cancelled;
+    case 'failed':
+      return NotificationStatus.Failed;
+    case 'completed':
+      return NotificationStatus.Completed;
+    default:
+      return NotificationStatus.Failed;
+  }
+};
+
+const updateNotificationStatus = async (
+  notificationId: number,
+  user: User,
+  queryRunner?: QueryRunner,
+) => {
+  const query = queryRunner ?? AppDataSource.createQueryRunner();
+  try {
+    //await query.startTransaction(); // Start transaction if queryRunner is provided
+
+    const notification = await query.manager.findOne(NotificationQueue, {
+      where: { Id: notificationId },
+    });
+
+    if (!notification) {
+      throw new Error(`Notification with id ${notificationId} not found.`);
+    }
+
+    const statusResponse = await chesServices.getStatusByIdAsync(notification.ChesMessageId);
+
+    if (statusResponse) {
+      notification.Status = convertChesStatusToNotificationStatus(statusResponse.status);
+      notification.UpdatedOn = new Date();
+      notification.UpdatedById = user.Id;
+      const updatedNotification = await query.manager.save(NotificationQueue, notification);
+
+      return updatedNotification;
+    } else {
+      throw new Error(`Failed to retrieve status for notification with id ${notificationId}.`);
+    }
+  } catch (error) {
+    await query.rollbackTransaction(); // Rollback transaction on error
+
+    throw error; // Rethrow the error for handling elsewhere if needed
+  } finally {
+    if (!queryRunner) {
+      await query.release(); // Release queryRunner if it was created locally
+    }
+  }
+};
+
+const getProjectNotificationsInQueue = async (
+  filter: ProjectNotificationFilter,
+  user: User,
+): Promise<PageModel<NotificationQueue>> => {
+  const { projectId, pageNumber, pageSize } = filter;
+  const notifications = await AppDataSource.getRepository(NotificationQueue).find({
+    where: {
+      ProjectId: projectId,
+    },
+    skip: (pageNumber ?? 0) * (pageSize ?? 0),
+    take: pageSize ?? 0,
+    order: { SendOn: 'ASC' },
+  });
+
+  const updatedNotifications: NotificationQueue[] = [];
+
+  for (const notification of notifications) {
+    // run the updates for notifications that are in Pending or Accepted status as the other statuses are final
+    if (
+      notification.Status === NotificationStatus.Pending ||
+      notification.Status === NotificationStatus.Accepted
+    ) {
+      const updatedNotification = await updateNotificationStatus(notification.Id, user);
+      updatedNotifications.push(updatedNotification);
+    } else {
+      updatedNotifications.push(notification);
+    }
+  }
+  return {
+    items: updatedNotifications,
+    pageNumber: pageNumber,
+    pageSize: pageSize,
+  };
+};
+
 const notificationServices = {
   generateProjectNotifications,
   generateAccessRequestNotification,
   sendNotification,
+  updateNotificationStatus,
+  getProjectNotificationsInQueue,
 };
 
 export default notificationServices;

@@ -23,6 +23,8 @@ import { columnNameFormatter } from '@/utilities/formatters';
 import DateFormField from '../form/DateFormField';
 import dayjs from 'dayjs';
 import { LookupContext } from '@/contexts/lookupContext';
+import ProjectNotificationsTable from './ProjectNotificationsTable';
+import { getStatusString } from '@/constants/chesNotificationStatus';
 
 interface IProjectGeneralInfoDialog {
   initialValues: Project;
@@ -475,6 +477,69 @@ export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog)
     >
       <Box paddingTop={'1rem'}>
         <AgencySearchTable agencies={agencies} options={options} rows={rows} setRows={setRows} />
+      </Box>
+    </ConfirmDialog>
+  );
+};
+
+interface INotificationDialog {
+  initialValues: ProjectGet;
+  open: boolean;
+  ungroupedAgencies: Partial<Agency>[];
+  postSubmit: () => void;
+  onCancel: () => void;
+}
+
+export const ProjectNotificationDialog = (props: INotificationDialog) => {
+  const api = usePimsApi();
+  const { initialValues, open, postSubmit, onCancel } = props;
+  const [rows, setRows] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
+  useEffect(() => {
+    if (initialValues) {
+      setRows(
+        initialValues.Notifications?.map((resp) => ({
+          id: resp.ChesMessageId,
+          agency: props.ungroupedAgencies?.find((agc) => agc.Id === resp.ToAgencyId)?.Name,
+          to: resp.To,
+          subject: resp.Subject,
+          status: getStatusString(resp.Status),
+          sendOn: resp.SendOn,
+          projectNumber: props.initialValues.ProjectNumber,
+        })),
+      );
+    }
+  }, [initialValues]);
+
+  const fetchUpdatedNotifications = async (projectId: number) => {
+    setSubmitting(true);
+    try {
+      const notifications = await api.notifications.getNotificationsByProjectId(projectId);
+      setRows(notifications);
+    } catch (error) {
+      console.error('Error fetching updated notifications:', error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+  return (
+    <ConfirmDialog
+      dialogProps={{ maxWidth: 'xl', fullWidth: true }}
+      title={'Update Project Notifications'}
+      open={open}
+      confirmButtonProps={{ loading: submitting }}
+      confirmButtonText="Update Notifications"
+      onConfirm={async () => {
+        await fetchUpdatedNotifications(initialValues.Id);
+        postSubmit();
+      }}
+      onCancel={async () => onCancel()}
+    >
+      <Box paddingTop={'1rem'}>
+        <ProjectNotificationsTable
+          rows={rows}
+          noteText='The notifications of "pending" status may not reflect the actual status, click on the "Updated Notifications" below in order to update all notifications in a pending or active status.'
+        />
       </Box>
     </ConfirmDialog>
   );

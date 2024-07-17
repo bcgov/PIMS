@@ -1,4 +1,7 @@
+import notificationServices from '@/services/notifications/notificationServices';
+import userServices from '@/services/users/usersServices';
 import { stubResponse } from '@/utilities/stubResponse';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Request, Response } from 'express';
 
 /**
@@ -102,6 +105,40 @@ export const getNotificationInQueueById = async (req: Request, res: Response) =>
         }]
      */
   return stubResponse(res);
+};
+
+/**
+ * @description Get all notifications for a specific project.
+ * @param {Request}     req Incoming request.
+ * @param {Response}    res Outgoing response.
+ * @returns {Response}      A 200 status with an object containing the specified notifications in the queue.
+ */
+export const getNotificationsByProjectId = async (req: Request, res: Response) => {
+  try {
+    const { projectId } = req.query;
+    const user = await userServices.getUser((req.user as SSOUser).preferred_username);
+
+    if (!projectId) {
+      return res.status(400).send({ message: 'Project ID is required.' });
+    }
+
+    // Fetch notifications in the queue for this project
+    const notificationFilter = {
+      projectId: Number(projectId), // Ensure projectId is a number
+      pageNumber: Number(req.query.pageNumber) || 0, // Default to page 0 if not provided
+      pageSize: Number(req.query.pageSize) || 0, // Default to 10 if not provided
+    };
+
+    const notificationsResult = await notificationServices.getProjectNotificationsInQueue(
+      notificationFilter,
+      user,
+    );
+
+    return res.status(200).send(notificationsResult);
+  } catch (error) {
+    // not sure if the error codes can be handled better here?
+    return res.status(500).send({ message: 'Error fetching notifications' });
+  }
 };
 
 export const updateNotificationInQueueById = async (req: Request, res: Response) => {

@@ -27,12 +27,14 @@ import DetailViewNavigation from '../display/DetailViewNavigation';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ProjectStatus } from '@/hooks/api/useLookupApi';
 import DisposalPropertiesTable from './DisposalPropertiesSimpleTable';
+import ProjectNotificationsTable from './ProjectNotificationsTable';
 import {
   ProjectAgencyResponseDialog,
   ProjectDocumentationDialog,
   ProjectFinancialDialog,
   ProjectGeneralInfoDialog,
   ProjectPropertiesDialog,
+  ProjectNotificationDialog,
 } from './ProjectDialog';
 import { AgencySimpleTable } from './AgencyResponseSearchTable';
 import CollapsibleSidebar from '../layout/CollapsibleSidebar';
@@ -46,6 +48,7 @@ import { ExpandMoreOutlined } from '@mui/icons-material';
 import { columnNameFormatter, dateFormatter, formatMoney } from '@/utilities/formatters';
 import { LookupContext } from '@/contexts/lookupContext';
 import { Agency } from '@/hooks/api/useAgencyApi';
+import { getStatusString } from '@/constants/chesNotificationStatus';
 
 interface IProjectDetail {
   onClose: () => void;
@@ -173,6 +176,7 @@ const ProjectDetail = (props: IProjectDetail) => {
   const [openFinancialInfoDialog, setOpenFinancialInfoDialog] = useState(false);
   const [openDocumentationDialog, setOpenDocumentationDialog] = useState(false);
   const [openAgencyInterestDialog, setOpenAgencyInterestDialog] = useState(false);
+  const [openNotificationDialog, setOpenNotificationDialog] = useState(false);
 
   const ProjectInfoData = {
     Status: getLookupValueById('ProjectStatuses', data?.parsedBody.StatusId),
@@ -219,6 +223,7 @@ const ProjectDetail = (props: IProjectDetail) => {
   const financialInformation = 'Financial Information';
   const agencyInterest = 'Agency Interest';
   const documentationHistory = 'Documentation History';
+  const notifications = 'Notifications';
 
   return (
     <CollapsibleSidebar
@@ -228,6 +233,7 @@ const ProjectDetail = (props: IProjectDetail) => {
         { title: financialInformation },
         { title: agencyInterest },
         { title: documentationHistory },
+        { title: notifications },
       ]}
     >
       <Box
@@ -398,6 +404,39 @@ const ProjectDetail = (props: IProjectDetail) => {
             )}
           </Box>
         </DataCard>
+        <DataCard
+          loading={isLoading}
+          title={notifications}
+          values={undefined}
+          id={notifications}
+          onEdit={() => setOpenNotificationDialog(true)}
+          disableEdit={isAuditor}
+          editButtonText="View Updated Notifications"
+        >
+          {!data?.parsedBody.Notifications?.length ? ( //TODO: Logic will depend on precense of agency responses
+            <Box display={'flex'} justifyContent={'center'}>
+              <Typography>No notifications were sent for this project.</Typography>
+            </Box>
+          ) : (
+            <ProjectNotificationsTable
+              rows={
+                data?.parsedBody.Notifications
+                  ? data?.parsedBody.Notifications.sort(
+                      (a, b) => new Date(a.SendOn).getTime() - new Date(b.SendOn).getTime(),
+                    ).map((resp) => ({
+                      agency: ungroupedAgencies?.find((agc) => agc.Id === resp.ToAgencyId)?.Name,
+                      id: resp.ChesMessageId,
+                      projectNumber: data?.parsedBody.ProjectNumber,
+                      status: getStatusString(resp.Status),
+                      sendOn: resp.SendOn,
+                      to: resp.To,
+                      subject: resp.Subject,
+                    }))
+                  : []
+              }
+            />
+          )}
+        </DataCard>
         <DeleteDialog
           open={openDeleteDialog}
           confirmButtonProps={{ loading: deletingProject }}
@@ -453,6 +492,18 @@ const ProjectDetail = (props: IProjectDetail) => {
           }}
           onCancel={() => {
             setOpenAgencyInterestDialog(false);
+          }}
+        />
+        <ProjectNotificationDialog
+          ungroupedAgencies={ungroupedAgencies as Agency[]}
+          initialValues={data?.parsedBody}
+          open={openNotificationDialog}
+          postSubmit={() => {
+            setOpenNotificationDialog(false);
+            refreshData();
+          }}
+          onCancel={() => {
+            setOpenNotificationDialog(false);
           }}
         />
       </Box>

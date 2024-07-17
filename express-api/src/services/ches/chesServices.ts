@@ -177,7 +177,21 @@ export interface IChesStatusResponse {
   createdTS: number;
 }
 const getStatusByIdAsync = async (messageId: string): Promise<IChesStatusResponse> => {
-  return sendAsync(`/status/${messageId}`, 'GET');
+  try {
+    const response: IChesStatusResponse = await sendAsync(`/status/${messageId}`, 'GET');
+    if (!response) {
+      throw new Error(
+        `>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Failed to fetch status for messageId ${messageId}`,
+      );
+    }
+    return await response; // Assuming response is JSON
+  } catch (error) {
+    console.error(
+      `>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Error fetching status for messageId ${messageId}:`,
+      error,
+    );
+    return null; // Or handle the error appropriately based on your application logic
+  }
 };
 
 const getStatusesAsync = async (filter: ChesFilter) => {
