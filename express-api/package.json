@@ -38,10 +38,12 @@
     "pg": "8.12.0",
     "reflect-metadata": "0.2.1",
     "swagger-ui-express": "5.0.0",
+    "ts-node": "10.9.1",
+    "tsconfig-paths": "4.2.0",
     "typeorm": "0.3.20",
     "typeorm-naming-strategies": "4.1.0",
     "winston": "3.13.0",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz",
+    "xlsx": "0.18.5",
     "zod": "3.23.3"
   },
   "devDependencies": {
@@ -70,9 +72,7 @@
     "supertest": "7.0.0",
     "swagger-autogen": "2.23.7",
     "ts-jest": "29.2.0",
-    "ts-node": "10.9.1",
     "tsc-alias": "1.8.8",
-    "tsconfig-paths": "4.2.0",
     "typescript": "5.5.2"
   }
 }
