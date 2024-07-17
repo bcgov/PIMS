@@ -264,7 +264,7 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
       evaluations
         ?.map((evalu) => ({
           ...evalu,
-          Value: evalu.Value.replace(/[$,]/g, ''),
+          Value: evalu.Value,
         }))
         ?.sort((a, b) => b.Year - a.Year) ?? [];
     return existingEvaluations;
@@ -369,7 +369,6 @@ export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditD
     const fiscalValues =
       initialValues?.Fiscals?.map((fisc) => ({
         ...fisc,
-        Value: String(fisc.Value).replace(/[$,]/g, ''),
         EffectiveDate: fisc.EffectiveDate == null ? null : dayjs(fisc.EffectiveDate),
       })) ?? [];
     netBookFormMethods.reset({
