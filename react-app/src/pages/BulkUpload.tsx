@@ -19,7 +19,7 @@ import {
   Typography,
 } from '@mui/material';
 import { DataGrid, gridClasses, GridColDef } from '@mui/x-data-grid';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import xlsx from 'node-xlsx';
 
 const ResultsPaper = (props: {
@@ -91,17 +91,17 @@ const BulkUpload = () => {
   const { refreshData: refreshResults, data: importResults } = useDataLoader(() =>
     api.properties.getImportResults({ quantity: 1, sortKey: 'CreatedOn', sortOrder: 'DESC' }),
   );
-  useEffect(() => {
-    refreshResults().then((resp) => setFileProgress(resp?.at(0)?.CompletionPercentage ?? 0));
-    const interval = setInterval(
-      () =>
-        refreshResults().then((resp) => setFileProgress(resp?.at(0)?.CompletionPercentage ?? 0)),
-      2000,
-    );
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+  // useEffect(() => {
+  //   refreshResults().then((resp) => setFileProgress(resp?.at(0)?.CompletionPercentage ?? 0));
+  //   const interval = setInterval(
+  //     () =>
+  //       refreshResults().then((resp) => setFileProgress(resp?.at(0)?.CompletionPercentage ?? 0)),
+  //     2000,
+  //   );
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, []);
   const columns: GridColDef[] = [
     {
       field: 'rowNumber',

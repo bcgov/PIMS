@@ -21,7 +21,9 @@ const useAsync = <AFArgs extends any[], AFResponse>(
     //This evaluation is the crux of it. If we already have a reference to the async function
     //and isPending is true, then we already called this and we can just return the reference to the current
     //async call instead of making a new one.
+    console.log('invoking async wrapper');
     if (promiseResponse.current && isPending.current) {
+      console.log(`will return current reference in useAsync`);
       return promiseResponse.current;
     }
 

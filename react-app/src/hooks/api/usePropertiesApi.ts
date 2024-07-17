@@ -157,13 +157,20 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
   const uploadBulkSpreadsheet = async (file: File) => {
     const form = new FormData();
     form.append('spreadsheet', file, file.name);
+    console.log('Before fetch.');
     const result = await fetch(config.API_HOST + '/properties/import', {
       method: 'POST',
       body: form, //Using standard fetch here instead of the wrapper so that we can handle this form-data body without converting to JSON.
       headers: { Authorization: keycloak.getAuthorizationHeaderValue() },
+      signal: AbortSignal.timeout(5000),
     });
+    console.log('After fetch');
     const text = await result.text();
-    (result as FetchResponse).parsedBody = JSON.parse(text);
+    try {
+      (result as FetchResponse).parsedBody = JSON.parse(text);
+    } catch {
+      (result as FetchResponse).parsedBody = text as any;
+    }
     return result;
   };
 
