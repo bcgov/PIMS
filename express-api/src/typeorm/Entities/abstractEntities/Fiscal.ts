@@ -1,6 +1,7 @@
 import { FiscalKey } from '@/typeorm/Entities/FiscalKey';
 import { Entity, Column, Index, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { SoftDeleteEntity } from './SoftDeleteEntity';
+import MoneyTransfomer from '@/typeorm/Transformers/MoneyTransformer';
 
 @Entity()
 @Index(['FiscalYear', 'FiscalKeyId', 'Value'])
@@ -15,7 +16,7 @@ export class Fiscal extends SoftDeleteEntity {
   @JoinColumn({ name: 'fiscal_key_id' })
   FiscalKey: FiscalKey;
 
-  @Column('money')
+  @Column({ type: 'money', transformer: MoneyTransfomer })
   Value: number;
 
   @Column('text', { nullable: true })

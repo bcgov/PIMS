@@ -1,20 +1,14 @@
-import React, { MutableRefObject } from 'react';
+import React, { MutableRefObject, useContext, useState } from 'react';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, Chip, SxProps } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
-import {
-  GridColDef,
-  GridEventListener,
-  gridFilteredSortedRowEntriesSelector,
-  GridRowId,
-  GridValidRowModel,
-} from '@mui/x-data-grid';
+import { GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { dateFormatter } from '@/utilities/formatters';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { useNavigate } from 'react-router-dom';
 import usePimsApi from '@/hooks/usePimsApi';
-import { Check } from '@mui/icons-material';
 import { dateColumnType } from '../table/CustomColumns';
+import { SnackBarContext } from '@/contexts/snackbarContext';
 
 interface IAgencyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
@@ -23,6 +17,24 @@ interface IAgencyTable {
 const AgencyTable = (props: IAgencyTable) => {
   const { rowClickHandler } = props;
   const navigate = useNavigate();
+  const snackbar = useContext(SnackBarContext);
+  const [totalCount, setTotalCount] = useState(0);
+
+  const handleDataChange = async (filter: any, signal: AbortSignal): Promise<any[]> => {
+    try {
+      const { data, totalCount } = await api.agencies.getAgencies(filter, signal);
+      setTotalCount(totalCount);
+      return data;
+    } catch (error) {
+      setTotalCount(0);
+      snackbar.setMessageState({
+        open: true,
+        text: error.message,
+        style: snackbar.styles.warning,
+      });
+      return [];
+    }
+  };
 
   const columns: GridColDef[] = [
     {
@@ -41,27 +53,19 @@ const AgencyTable = (props: IAgencyTable) => {
       field: 'IsDisabled',
       headerName: 'Is Disabled',
       flex: 1,
-      renderCell: (params) => {
-        if (params.value) {
-          return <Check />;
-        } else return <></>;
-      },
+      type: 'boolean',
       maxWidth: 120,
     },
     {
-      field: 'Parent',
+      field: 'ParentName',
       headerName: 'Parent Agency',
       flex: 1,
-      valueGetter: (value?: Agency) => {
-        if (value) return value.Name;
-        return '';
-      },
     },
     {
       field: 'SendEmail',
       headerName: 'Notification',
       flex: 1,
-      valueGetter: (value: boolean) => (value ? 'Yes' : 'No'),
+      type: 'boolean',
       maxWidth: 120,
     },
     {
@@ -102,17 +106,14 @@ const AgencyTable = (props: IAgencyTable) => {
 
   const selectPresetFilter = (value: string, ref: MutableRefObject<GridApiCommunity>) => {
     switch (value) {
-      case 'All Agencies':
-        ref.current.setFilterModel({ items: [] });
-        break;
-      case 'Active':
+      case 'Enabled':
         ref.current.setFilterModel({
-          items: [{ value: 'false', operator: 'equals', field: 'IsDisabled' }],
+          items: [{ value: 'false', operator: 'is', field: 'IsDisabled' }],
         });
         break;
       case 'Disabled':
         ref.current.setFilterModel({
-          items: [{ value: 'true', operator: 'equals', field: 'IsDisabled' }],
+          items: [{ value: 'true', operator: 'is', field: 'IsDisabled' }],
         });
         break;
       default:
@@ -120,29 +121,19 @@ const AgencyTable = (props: IAgencyTable) => {
     }
   };
 
-  const getExcelData: (
-    ref: MutableRefObject<GridApiCommunity>,
-  ) => Promise<{ id: GridRowId; model: GridValidRowModel }[]> = async (
-    ref: MutableRefObject<GridApiCommunity>,
-  ) => {
-    if (ref?.current) {
-      const rows = gridFilteredSortedRowEntriesSelector(ref);
-      return rows.map((row) => {
-        const { id, model } = row;
-        const agencyModel = model as Agency;
-        return {
-          id,
-          model: {
-            Name: agencyModel.Name,
-            Ministry: agencyModel.Parent?.Name ?? agencyModel.Name,
-            Code: agencyModel.Code,
-            Created: agencyModel.CreatedOn,
-            Disabled: agencyModel.IsDisabled,
-          },
-        };
-      });
-    }
-    return [];
+  const excelDataMap = (data: Agency[]) => {
+    return data.map((agency) => {
+      return {
+        Name: agency.Name,
+        Code: agency.Code,
+        'Parent Agency': agency.Parent?.Name ?? agency.Name,
+        Disabled: agency.IsDisabled,
+        Notifications: agency.SendEmail,
+        SendTo: agency.Email,
+        Created: agency.CreatedOn,
+        Updated: agency.UpdatedOn,
+      };
+    });
   };
 
   const api = usePimsApi();
@@ -163,10 +154,12 @@ const AgencyTable = (props: IAgencyTable) => {
         <FilterSearchDataGrid
           name="agencies"
           tableOperationMode="server"
-          dataSource={api.agencies.getAgencies}
+          dataSource={handleDataChange}
           onPresetFilterChange={selectPresetFilter}
           getRowId={(row: Agency) => row.Id}
-          defaultFilter={'All Agencies'}
+          rowCount={totalCount}
+          rowCountProp={totalCount}
+          defaultFilter={'All'}
           onRowClick={rowClickHandler}
           initialState={{
             pagination: {
@@ -177,12 +170,12 @@ const AgencyTable = (props: IAgencyTable) => {
             },
           }}
           presetFilterSelectOptions={[
-            <CustomMenuItem key={'All Agencies'} value={'All Agencies'}>
+            <CustomMenuItem key={'All'} value={'All'}>
               All Agencies
             </CustomMenuItem>,
-            <CustomListSubheader key={'Status'}>Status</CustomListSubheader>,
-            <CustomMenuItem key={'Active'} value={'Active'}>
-              Active
+            <CustomListSubheader key={'Status'}>Disabled Status</CustomListSubheader>,
+            <CustomMenuItem key={'Enabled'} value={'Enabled'}>
+              Enabled
             </CustomMenuItem>,
             <CustomMenuItem key={'Disabled'} value={'Disabled'}>
               Disabled
@@ -190,7 +183,7 @@ const AgencyTable = (props: IAgencyTable) => {
           ]}
           tableHeader={'Agencies Overview'}
           excelTitle={'Agencies'}
-          customExcelData={getExcelData}
+          customExcelMap={excelDataMap}
           columns={columns}
           addTooltip="Create New Agency"
           onAddButtonClick={() => navigate('/admin/agencies/add')}

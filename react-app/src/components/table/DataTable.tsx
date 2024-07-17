@@ -13,7 +13,6 @@ import { mdiDotsHorizontal } from '@mdi/js';
 import {
   Box,
   IconButton,
-  LinearProgress,
   ListItemIcon,
   ListSubheader,
   Menu,
@@ -32,11 +31,9 @@ import {
   GridOverlay,
   GridPaginationModel,
   GridRenderCellParams,
-  GridRowId,
   GridSortModel,
   GridState,
   GridTreeNodeWithRender,
-  GridValidRowModel,
   gridFilteredSortedRowEntriesSelector,
   useGridApiRef,
 } from '@mui/x-data-grid';
@@ -131,7 +128,15 @@ export const DataGridFloatingMenu = (props: IDataGridFloatingMenuProps) => {
 
 export const CustomDataGrid = (props: DataGridProps) => {
   return (
-    <DataGrid {...props} slots={{ noRowsOverlay: NoRowsOverlay, loadingOverlay: LinearProgress }} />
+    <DataGrid
+      {...props}
+      slotProps={{
+        loadingOverlay: {
+          variant: 'linear-progress',
+          noRowsVariant: 'skeleton',
+        },
+      }}
+    />
   );
 };
 
@@ -171,6 +176,7 @@ export const CustomListSubheader = (props: PropsWithChildren) => {
 
 type FilterSearchDataGridProps = {
   dataSource?: (filter: CommonFiltering, signal: AbortSignal) => Promise<any[]>;
+  excelDataSource?: (filter: CommonFiltering, signal: AbortSignal) => Promise<any[]>;
   tableOperationMode: 'client' | 'server';
   onPresetFilterChange: (value: string, ref: MutableRefObject<GridApiCommunity>) => void;
   onAddButtonClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -179,12 +185,7 @@ type FilterSearchDataGridProps = {
   presetFilterSelectOptions: JSX.Element[];
   tableHeader: string;
   excelTitle: string;
-  customExcelData?: (ref: MutableRefObject<GridApiCommunity>) => Promise<
-    {
-      id: GridRowId;
-      model: GridValidRowModel;
-    }[]
-  >;
+  customExcelMap?: (data: unknown[]) => Record<string, unknown>[];
   addTooltip: string;
   name: string;
   initialState?: GridInitialStateCommunity;
@@ -228,22 +229,11 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     }
   };
 
-  const dataSourceUpdate = (models: ITableModelCollection) => {
-    const { pagination, sort, filter, quickFilter } = models;
-    if (previousController.current) {
-      previousController.current.abort();
-    }
-    //We use this AbortController to cancel requests that haven't finished yet everytime we start a new one.
-    const controller = new AbortController();
-    const signal = controller.signal;
-    previousController.current = controller;
-    let sortObj: { sortKey?: string; sortOrder?: string; sortRelation?: string } = {};
-    if (sort?.length) {
-      sortObj = { sortKey: sort[0].field, sortOrder: sort[0].sort };
-    }
+  const createFilterObject = (filter: GridFilterModel, quickFilter: string[]) => {
     const filterObj = {};
     if (filter?.items) {
       for (const f of filter.items) {
+        if (f.value == '') continue; // Skip empty fields
         const asCamelCase = formatHeaderToFilterKey(f.field);
         if (f.value != undefined && String(f.value) !== 'Invalid Date') {
           filterObj[asCamelCase] = `${f.operator},${f.value}`;
@@ -255,13 +245,30 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     if (quickFilter) {
       const keyword = quickFilter[0];
       if (keyword) filterObj['quickFilter'] = `contains,${keyword}`;
-      // for (const fieldName of tableApiRef.current.getAllColumns().map((col) => col.field)) {
-      //   if (keyword != undefined) {
-      //     const asCamelCase = fieldName.charAt(0).toLowerCase() + fieldName.slice(1);
-      //     filterObj[asCamelCase] = `contains,${keyword}`;
-      //   }
-      // }
     }
+    return filterObj;
+  };
+
+  const createSortObj = (sort: GridSortModel) => {
+    let sortObj: { sortKey?: string; sortOrder?: string; sortRelation?: string } = {};
+    if (sort?.length) {
+      sortObj = { sortKey: sort[0].field, sortOrder: sort[0].sort };
+    }
+    return sortObj;
+  };
+
+  const dataSourceUpdate = (models: ITableModelCollection) => {
+    const { pagination, sort, filter, quickFilter } = models;
+    if (previousController.current) {
+      previousController.current.abort();
+    }
+    //We use this AbortController to cancel requests that haven't finished yet everytime we start a new one.
+    const controller = new AbortController();
+    const signal = controller.signal;
+    previousController.current = controller;
+
+    const sortObj = createSortObj(sort);
+    const filterObj = createFilterObject(filter, quickFilter);
     setDataSourceLoading(true);
     props
       .dataSource(
@@ -299,8 +306,8 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
    * @description Defines possible query parameters for table state
    */
   interface QueryStrings {
-    keywordFilter?: string;
-    quickSelectFilter?: string;
+    keywordFilter?: string; // refers to the keyword search bar
+    quickSelectFilter?: string; // refers to the select input with preset filters
     columnFilterName?: string;
     columnFilterValue?: string;
     columnFilterMode?: string;
@@ -366,27 +373,20 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
    */
   useLayoutEffect(() => {
     const query = getQuery();
-    // If query strings exist, prioritize that for preset filters, etc.
-    // const model: ITableModelCollection = {
-    //   pagination: { page: DEFAULT_PAGE, pageSize: DEFAULT_PAGESIZE },
-    //   sort: undefined,
-    //   filter: undefined,
-    //   quickFilter: undefined,
-    // };
     if (Boolean(Object.keys(query).length)) {
+      if (query.keywordFilter) {
+        setKeywordSearchContents(query.keywordFilter);
+        updateSearchValue(query.keywordFilter);
+      }
       // Set quick select filter
       if (query.quickSelectFilter) {
         setSelectValue(query.quickSelectFilter);
         props.onPresetFilterChange(query.quickSelectFilter, tableApiRef);
       }
       // Set other column filter
-      if (
-        (query.columnFilterName && query.columnFilterValue && query.columnFilterMode) ||
-        query.quickSelectFilter
-      ) {
-        // model.quickFilter = undefined;
+      if (query.columnFilterName && query.columnFilterValue && query.columnFilterMode) {
         const modelObj: GridFilterModel = {
-          items: undefined,
+          items: [],
           quickFilterValues: undefined,
         };
         if (query.columnFilterName && query.columnFilterValue && query.columnFilterMode) {
@@ -398,29 +398,21 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             },
           ];
         }
-        if (query.keywordFilter) {
-          setKeywordSearchContents(query.keywordFilter);
-          modelObj.quickFilterValues = query.keywordFilter.split(' ').filter((a) => a !== '');
-        }
-        //model.filter = modelObj;
         tableApiRef.current.setFilterModel(modelObj);
       }
       // Set sorting options
       if (query.columnSortName && query.columnSortValue) {
-        //model.sort = [{ field: query.columnSortName, sort: query.columnSortValue }];
         tableApiRef.current.setSortModel([
           { field: query.columnSortName, sort: query.columnSortValue },
         ]);
       }
       //Set pagination
       if (query.page && query.pageSize) {
-        //model.pagination = { page: Number(query.page), pageSize: Number(query.pageSize) };
         tableApiRef.current.setPaginationModel({
           page: Number(query.page),
           pageSize: Number(query.pageSize),
         });
       }
-      //setTableModel(model);
     } else {
       // Setting the table's state from sessionStorage cookies
       const model: ITableModelCollection = {
@@ -455,7 +447,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             model.filter = state.filter.filterModel;
             setSelectValue(state.filter.filterModel.items.at(0).value);
             setQuery({
-              quickSelectFilter: state.filter.filterModel.items.at(0).value,
+              quickSelectFilter: state.filter.filterModel.items.at(0).value.toString(),
             });
           }
           // Set keyword search bar
@@ -487,16 +479,6 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
       tableApiRef.current.setQuickFilterValues(newValue.split(' ').filter((word) => word !== ''));
       const defaultpagesize = { page: 0, pageSize: tableModel.pagination.pageSize };
       tableApiRef.current.setPaginationModel(defaultpagesize);
-      // console.log(`updateSearchValue: ${JSON.stringify(tableModel)}`);
-      // setTableModel({
-      //   ...tableModel,
-      //   pagination: defaultpagesize,
-      //   quickFilter: newValue.split(' ').filter((word) => word !== ''),
-      // });
-      // setQuery({
-      //   ...defaultpagesize,
-      //   keywordFilter: newValue,
-      // });
     }, 300);
   }, [tableApiRef]);
 
@@ -569,10 +551,30 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             <IconButton
               onClick={async () => {
                 setIsExporting(true);
+                let rows = [];
+                if (props.tableOperationMode === 'server') {
+                  const controller = new AbortController();
+                  const signal = controller.signal;
+                  const sortFilterObj = {
+                    ...createSortObj(tableModel.sort),
+                    ...createFilterObject(tableModel.filter, tableModel.quickFilter),
+                  };
+                  rows = props.excelDataSource
+                    ? await props.excelDataSource(sortFilterObj, signal)
+                    : await props.dataSource(sortFilterObj, signal);
+                  if (props.customExcelMap) rows = props.customExcelMap(rows);
+                } else {
+                  // Client-side tables
+                  rows = gridFilteredSortedRowEntriesSelector(tableApiRef).map((row) => row.model);
+                  if (props.customExcelMap) rows = props.customExcelMap(rows);
+                }
+                // Convert back to MUI table model
+                rows = rows.map((r, i) => ({
+                  model: r,
+                  id: i,
+                }));
                 downloadExcelFile({
-                  data: props.customExcelData
-                    ? await props.customExcelData(tableApiRef)
-                    : gridFilteredSortedRowEntriesSelector(tableApiRef),
+                  data: rows,
                   tableName: props.excelTitle,
                   filterName: selectValue,
                   includeDate: true,
@@ -691,7 +693,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           },
         }}
         loading={dataSourceLoading}
-        slots={{ toolbar: KeywordSearch, noRowsOverlay: NoRowsOverlay }}
+        slots={{ noRowsOverlay: NoRowsOverlay }}
         {...props}
         rows={dataSourceRows && props.dataSource ? dataSourceRows : props.rows}
       />

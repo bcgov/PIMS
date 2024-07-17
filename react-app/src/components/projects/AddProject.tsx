@@ -1,5 +1,5 @@
 import { Box, Grid, InputAdornment, Typography, useTheme } from '@mui/material';
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { NavigateBackButton } from '../display/DetailViewNavigation';
 import TextFormField from '../form/TextFormField';
 import AutocompleteFormField from '../form/AutocompleteFormField';
@@ -16,6 +16,9 @@ import React from 'react';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LoadingButton } from '@mui/lab';
 import { LookupContext } from '@/contexts/lookupContext';
+import { ProjectTask } from '@/constants/projectTasks';
+import { MonetaryType } from '@/constants/monetaryTypes';
+import { NoteTypes } from '@/constants/noteTypes';
 
 const AddProject = () => {
   const navigate = useNavigate();
@@ -26,10 +29,11 @@ const AddProject = () => {
       Description: '',
       Assessed: 0,
       NetBook: 0,
-      Estimated: 0,
+      Market: 0,
       Appraised: 0,
       ProgramCost: 0,
       SalesCost: 0,
+      ExemptionNote: '',
       Approval: false,
       Tasks: [],
     },
@@ -40,32 +44,28 @@ const AddProject = () => {
   const theme = useTheme();
   const api = usePimsApi();
   const { data: lookupData } = useContext(LookupContext);
-
+  const [tasksForAddState, setTasksForAddState] = useState([]);
   const { submit, submitting } = useDataSubmitter(api.projects.postProject);
-  const tasksForAddState = useMemo(() => {
+
+  useEffect(() => {
     if (!lookupData) {
-      return [];
+      return;
     } else {
       const defaultState = lookupData?.ProjectStatuses.find(
         (a) => a.Name === 'Required Documentation',
       );
       const addTasks = lookupData?.Tasks.filter((task) => task.StatusId === defaultState.Id);
-      const exemptionTask = lookupData?.Tasks.find((a) => a.Name === 'Exemption requested');
-      if (exemptionTask) {
-        addTasks.push({ ...exemptionTask, Name: 'Apply for Enhanced Referral Process exemption' });
-      }
-      addTasks.forEach((task, i) => formMethods.setValue(`Tasks.${i}.TaskId`, task.Id));
-      return addTasks;
+      addTasks.push({
+        Id: ProjectTask.EXEMPTION_REQUESTED,
+        Name: 'Apply for Enhanced Referral Process exemption',
+      });
+      addTasks.forEach((t, idx) => formMethods.setValue(`Tasks.${idx}.TaskId`, t.Id));
+      setTasksForAddState(addTasks);
     }
-  }, [lookupData]);
-  const salesCostType = useMemo(
-    () => lookupData?.MonetaryTypes?.find((a) => a.Name === 'SalesCost'),
-    [lookupData],
-  );
-  const programCostType = useMemo(
-    () => lookupData?.MonetaryTypes?.find((a) => a.Name === 'ProgramCost'),
-    [lookupData],
-  );
+  }, [lookupData, formMethods]);
+  const watch = formMethods.watch('Tasks');
+  const exemptionWasRequested =
+    watch.find((a) => a.TaskId === ProjectTask.EXEMPTION_REQUESTED)?.IsCompleted === true;
   return (
     <Box
       display={'flex'}
@@ -98,8 +98,11 @@ const AddProject = () => {
               name={'TierLevelId'}
               label={'Assign tier'}
               options={
-                lookupData?.ProjectTiers?.map((tier) => ({ value: tier.Id, label: tier.Name })) ??
-                []
+                lookupData?.ProjectTiers?.map((tier) => ({
+                  value: tier.Id,
+                  label: tier.Name,
+                  tooltip: tier.Description,
+                })) ?? []
               }
             />
           </Grid>
@@ -221,6 +224,21 @@ const AddProject = () => {
               />
             </Grid>
           ))}
+          <Grid item xs={12}>
+            {exemptionWasRequested && (
+              <TextFormField
+                fullWidth
+                name={'ExemptionNote'}
+                label={'Exemption rationale note'}
+                required
+                multiline
+                minRows={2}
+                rules={{
+                  required: 'Rationale required when requesting exemption.',
+                }}
+              />
+            )}
+          </Grid>
         </Grid>
         <Typography variant="h5">Approval</Typography>
         <Grid container spacing={2}>
@@ -261,10 +279,13 @@ const AddProject = () => {
                 ReportedFiscalYear: new Date().getFullYear(),
                 ActualFiscalYear: new Date().getFullYear(),
                 Monetaries: [
-                  { MonetaryTypeId: programCostType.Id, Value: formValues.ProgramCost },
-                  { MonetaryTypeId: salesCostType.Id, Value: formValues.SalesCost },
+                  { MonetaryTypeId: MonetaryType.PROGRAM_COST, Value: formValues.ProgramCost },
+                  { MonetaryTypeId: MonetaryType.SALES_COST, Value: formValues.SalesCost },
                 ],
                 Tasks: formValues.Tasks.filter((a) => a.IsCompleted),
+                Notes: exemptionWasRequested
+                  ? [{ NoteTypeId: NoteTypes.EXEMPTION, Note: formValues.ExemptionNote }]
+                  : undefined,
               },
               projectProperties,
             ).then((response) => {

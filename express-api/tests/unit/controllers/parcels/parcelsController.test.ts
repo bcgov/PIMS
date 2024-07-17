@@ -165,12 +165,6 @@ describe('UNIT - Parcels', () => {
       expect(mockResponse.statusValue).toBe(200);
       expect(Array.isArray(mockResponse.sendValue)).toBeTruthy();
     });
-    it('should retrieve the Excel export data if asked for', async () => {
-      mockRequest.query.excelExport = 'true';
-      await controllers.getParcels(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-      expect(_getParcelsForExcelExport).toHaveBeenCalledTimes(1);
-    });
     it('should return 400 on incorrect filter', async () => {
       mockRequest.query.isSensitive = {};
       await controllers.getParcels(mockRequest, mockResponse);

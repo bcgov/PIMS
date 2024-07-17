@@ -80,6 +80,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
           const formValues: any = { ...infoFormMethods.getValues(), Id: initialValues.Id };
           formValues.PID = parseIntOrNull(formValues.PID.replace(/-/g, ''));
           formValues.PIN = parseIntOrNull(formValues.PIN);
+          formValues.Postal = formValues.Postal.replace(/ /g, '').toUpperCase();
           formValues.LandArea = parseFloatOrNull(formValues.LandArea);
           submit(initialValues.Id, formValues).then(() => postSubmit());
         }
@@ -244,14 +245,6 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
   const evaluationMapToRequest = (
     evaluations: Partial<ParcelEvaluation>[] | Partial<BuildingEvaluation>[],
   ) => {
-    for (const newEntry of evaluations.filter((f) => f['isNew'])) {
-      const oldEntry = evaluations.findIndex(
-        (f) => Number(f.Year) === Number(newEntry.Year) && !f['isNew'],
-      );
-      if (oldEntry > -1) {
-        evaluations = [...evaluations.slice(0, oldEntry), ...evaluations.slice(oldEntry + 1)];
-      }
-    }
     return evaluations
       .filter((evaluation) => evaluation.Value != null && evaluation.Year)
       .map((evaluation) => ({
@@ -271,7 +264,7 @@ export const PropertyAssessedValueEditDialog = (props: IPropertyAssessedValueEdi
       evaluations
         ?.map((evalu) => ({
           ...evalu,
-          Value: evalu.Value.replace(/[$,]/g, ''),
+          Value: evalu.Value,
         }))
         ?.sort((a, b) => b.Year - a.Year) ?? [];
     return existingEvaluations;
@@ -376,7 +369,6 @@ export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditD
     const fiscalValues =
       initialValues?.Fiscals?.map((fisc) => ({
         ...fisc,
-        Value: String(fisc.Value).replace(/[$,]/g, ''),
         EffectiveDate: fisc.EffectiveDate == null ? null : dayjs(fisc.EffectiveDate),
       })) ?? [];
     netBookFormMethods.reset({
@@ -385,14 +377,6 @@ export const PropertyNetBookValueEditDialog = (props: IPropertyNetBookValueEditD
   }, [initialValues]);
 
   const fiscalMapToRequest = (fiscals: Partial<ParcelFiscal>[] | Partial<BuildingFiscal>[]) => {
-    for (const newEntry of fiscals.filter((f) => f['isNew'])) {
-      const oldEntry = fiscals.findIndex(
-        (f) => Number(f.FiscalYear) === Number(newEntry.FiscalYear) && !f['isNew'],
-      );
-      if (oldEntry > -1) {
-        fiscals = [...fiscals.slice(0, oldEntry), ...fiscals.slice(oldEntry + 1)];
-      }
-    }
     return fiscals
       .filter((fiscal) => fiscal.Value != null && fiscal.FiscalYear)
       .map((fiscal) => ({

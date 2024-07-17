@@ -14,9 +14,9 @@ export interface IPropertyModel {
   civicNumberSuffix: string;
   streetName: string;
   streetType: string;
-  isStreetTypePrefix: boolean;
+  isStreetTypePrefix: string;
   streetDirection: string;
-  isStreetDirectionPrefix: boolean;
+  isStreetDirectionPrefix: string;
   streetQualifier: string;
   localityName: string;
   localityType: string;

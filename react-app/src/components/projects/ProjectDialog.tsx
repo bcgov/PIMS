@@ -1,5 +1,5 @@
 import usePimsApi from '@/hooks/usePimsApi';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import { Project, ProjectGet, ProjectMonetary, ProjectTimestamp } from '@/hooks/api/useProjectsApi';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -25,6 +25,7 @@ import dayjs from 'dayjs';
 import { LookupContext } from '@/contexts/lookupContext';
 import ProjectNotificationsTable from './ProjectNotificationsTable';
 import { getStatusString } from '@/constants/chesNotificationStatus';
+import { MonetaryType } from '@/constants/monetaryTypes';
 
 interface IProjectGeneralInfoDialog {
   initialValues: Project;
@@ -39,7 +40,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   const { data: lookupData } = useContext(LookupContext);
 
   const { submit, submitting } = useDataSubmitter(api.projects.updateProject);
-
+  const [approvedStatus, setApprovedStatus] = useState<number>(null);
   const projectFormMethods = useForm({
     defaultValues: {
       StatusId: undefined,
@@ -47,6 +48,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
       Name: '',
       TierLevelId: undefined,
       Description: '',
+      ConfirmNotifications: false,
       Tasks: [],
       Notes: [],
       Timestamps: [],
@@ -61,6 +63,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
       Name: initialValues?.Name,
       TierLevelId: initialValues?.TierLevelId,
       Description: initialValues?.Description,
+      ConfirmNotifications: false,
       Tasks: [],
       Notes: [],
       Timestamps: [],
@@ -135,7 +138,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   const getMonetaryOrEmptyString = (monetaries: ProjectMonetary[], typeId: number) => {
     const found = monetaries?.find((m) => m.MonetaryTypeId == typeId);
     if (found) {
-      return Number(String(found.Value).replace(/[$,]/g, ''));
+      return found.Value;
     } else {
       return '';
     }
@@ -150,11 +153,20 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
     );
   }, [statusTypes, initialValues]);
 
+  useEffect(() => {
+    setApprovedStatus(lookupData?.ProjectStatuses?.find((a) => a.Name === 'Approved for ERP')?.Id);
+  }, [lookupData]);
+  const status = projectFormMethods.watch('StatusId');
+  const requireNotificationAcknowledge =
+    approvedStatus == status && status !== initialValues?.StatusId;
+
   return (
     <ConfirmDialog
       title={'Update Project'}
       open={open}
-      confirmButtonProps={{ loading: submitting }}
+      confirmButtonProps={{
+        loading: submitting,
+      }}
       onConfirm={async () => {
         const isValid = await projectFormMethods.trigger();
         if (lookupData && isValid) {
@@ -247,6 +259,15 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
             </Grid>
           </Box>
         )}
+        {requireNotificationAcknowledge && (
+          <Box sx={{ mt: '1rem' }}>
+            <SingleSelectBoxFormField
+              required={requireNotificationAcknowledge}
+              name={'ConfirmNotifications'}
+              label={'I acknowledge that notifications will be sent out when I submit this form.'}
+            />
+          </Box>
+        )}
       </FormProvider>
     </ConfirmDialog>
   );
@@ -274,30 +295,19 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
       ProgramCost: 0,
     },
   });
-  const salesCostType = useMemo(
-    () => lookupData?.MonetaryTypes?.find((a) => a.Name === 'SalesCost'),
-    [lookupData],
-  );
-  const programCostType = useMemo(
-    () => lookupData?.MonetaryTypes?.find((a) => a.Name === 'ProgramCost'),
-    [lookupData],
-  );
+
   useEffect(() => {
     financialFormMethods.reset({
-      Assessed: +(initialValues?.Assessed ?? 0).toString().replace(/[$,]/g, ''),
-      NetBook: +(initialValues?.NetBook ?? 0).toString().replace(/[$,]/g, ''),
-      Market: +(initialValues?.Market ?? 0).toString().replace(/[$,]/g, ''),
-      Appraised: +(initialValues?.Appraised ?? 0).toString().replace(/[$,]/g, ''),
-      SalesCost: +(
-        initialValues?.Monetaries?.find((a) => a.MonetaryTypeId === salesCostType?.Id)?.Value ?? 0
-      )
-        .toString()
-        .replace(/[$,]/g, ''),
-      ProgramCost: +(
-        initialValues?.Monetaries?.find((a) => a.MonetaryTypeId === programCostType?.Id)?.Value ?? 0
-      )
-        .toString()
-        .replace(/[$,]/g, ''),
+      Assessed: initialValues?.Assessed ?? 0,
+      NetBook: initialValues?.NetBook ?? 0,
+      Market: initialValues?.Market ?? 0,
+      Appraised: initialValues?.Appraised ?? 0,
+      SalesCost:
+        initialValues?.Monetaries?.find((a) => a.MonetaryTypeId === MonetaryType.SALES_COST)
+          ?.Value ?? 0,
+      ProgramCost:
+        initialValues?.Monetaries?.find((a) => a.MonetaryTypeId === MonetaryType.PROGRAM_COST)
+          ?.Value ?? 0,
     });
   }, [initialValues, lookupData]);
   return (
@@ -318,11 +328,11 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
             Appraised: Appraised,
             Monetaries: [
               {
-                MonetaryTypeId: salesCostType.Id,
+                MonetaryTypeId: MonetaryType.SALES_COST,
                 Value: SalesCost,
               },
               {
-                MonetaryTypeId: programCostType.Id,
+                MonetaryTypeId: MonetaryType.PROGRAM_COST,
                 Value: ProgramCost,
               },
             ],

@@ -622,21 +622,25 @@ describe('UNIT - Project Services', () => {
           statusId: 1,
           agencyId: [3],
           quantity: 10,
-          page: 0,
+          page: 1,
+          market: '$12',
+          netBook: '$12',
           agency: 'contains,aaa',
           status: 'contains,aaa',
           projectNumber: 'contains,aaa',
           name: 'contains,Project',
           updatedOn: 'before,' + new Date(),
+          updatedBy: 'Jane',
           sortOrder: 'asc',
           sortKey: 'Status',
+          quickFilter: 'hi',
         };
 
         // Call the service function
         const projectsResponse = await projectServices.getProjects(filter); // Pass the mocked projectRepo
         // Returned project should be the one based on the agency and status id in the filter
         expect(projectsResponse.totalCount).toEqual(1);
-        expect(projectsResponse.projects.length).toEqual(1);
+        expect(projectsResponse.data.length).toEqual(1);
       });
     });
 
@@ -665,7 +669,7 @@ describe('UNIT - Project Services', () => {
         });
 
         // Call the service function
-        const projects = await projectServices.getProjectsForExport(filter, true); // Pass the mocked projectRepo
+        const projects = await projectServices.getProjectsForExport(filter); // Pass the mocked projectRepo
 
         // Assertions
         expect(_projectFind).toHaveBeenCalled();

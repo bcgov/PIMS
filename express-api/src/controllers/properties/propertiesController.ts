@@ -13,6 +13,8 @@ import { Worker } from 'worker_threads';
 import path from 'path';
 import fs from 'fs';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import { AppDataSource } from '@/appDataSource';
+import { ImportResult } from '@/typeorm/Entities/ImportResult';
 
 /**
  * @description Used to retrieve all properties.
@@ -186,10 +188,16 @@ export const importProperties = async (req: Request, res: Response) => {
   const ssoUser = req.user;
   const user = await userServices.getUser(ssoUser.preferred_username);
   const roles = ssoUser.client_roles;
+  const resultRow = await AppDataSource.getRepository(ImportResult).save({
+    FileName: fileName,
+    CompletionPercentage: 0,
+    CreatedById: user.Id,
+    CreatedOn: new Date(),
+  });
   const worker = new Worker(
     path.resolve(__dirname, '../../services/properties/propertyWorker.ts'),
     {
-      workerData: { filePath, fileName, user, roles },
+      workerData: { filePath, resultRowId: resultRow.Id, user, roles },
       execArgv: [
         '--require',
         'ts-node/register',
@@ -211,7 +219,7 @@ export const importProperties = async (req: Request, res: Response) => {
       if (err) console.error('Failed to cleanup file from file upload.');
     });
   });
-  return res.status(200).send('Received file.');
+  return res.status(200).send(resultRow);
 };
 
 export const getImportResults = async (req: Request, res: Response) => {
@@ -225,6 +233,7 @@ export const getImportResults = async (req: Request, res: Response) => {
 };
 
 export const getPropertyUnion = async (req: Request, res: Response) => {
+  const forExcelExport = req.query.excelExport === 'true';
   const filter = PropertyUnionFilterSchema.safeParse(req.query);
   if (filter.success == false) {
     return res.status(400).send(filter.error);
@@ -237,6 +246,10 @@ export const getPropertyUnion = async (req: Request, res: Response) => {
     const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
     filterResult.agencyIds = usersAgencies;
   }
-  const properties = await propertyServices.getPropertiesUnion(filterResult);
+
+  const properties = forExcelExport
+    ? await propertyServices.getPropertiesForExport(filterResult)
+    : await propertyServices.getPropertiesUnion(filterResult);
+
   return res.status(200).send(properties);
 };

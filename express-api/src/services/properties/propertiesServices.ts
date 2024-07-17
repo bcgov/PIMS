@@ -31,6 +31,7 @@ import {
 import userServices from '../users/usersServices';
 import {
   Brackets,
+  FindManyOptions,
   FindOptionsOrder,
   FindOptionsOrderValue,
   FindOptionsWhere,
@@ -39,6 +40,7 @@ import {
   QueryRunner,
 } from 'typeorm';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import { PropertyType } from '@/constants/propertyType';
 
 const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?: number[]) => {
   const parcelsQuery = await AppDataSource.getRepository(Parcel)
@@ -317,6 +319,7 @@ const makeParcelUpsertObject = async (
     PropertyTypeId: 0,
     Description: row.Description,
     LandLegalDescription: row.LandLegalDescription,
+    LandArea: numberOrNull(row.LandArea),
     Evaluations: currRowEvaluations,
     Fiscals: currRowFiscals,
   };
@@ -388,8 +391,8 @@ const makeBuildingUpsertObject = async (
     IsSensitive: false,
     IsVisibleToOtherAgencies: true,
     PropertyTypeId: 0,
-    RentableArea: 0,
-    BuildingTenancy: '123',
+    RentableArea: numberOrNull(row.RentableArea) ?? 0,
+    BuildingTenancy: row.Tenancy,
     BuildingFloorCount: 0,
     TotalArea: 0,
     Evaluations: currRowEvaluations,
@@ -406,7 +409,7 @@ type Lookups = {
   userAgencies: number[];
 };
 
-type BulkUploadRowResult = {
+export type BulkUploadRowResult = {
   rowNumber: number;
   action: 'inserted' | 'updated' | 'ignored' | 'error';
   reason?: string;
@@ -447,7 +450,6 @@ const importPropertiesAsJSON = async (
   // let queuedParcels = [];
   // let queuedBuildings = [];
   const queryRunner = AppDataSource.createQueryRunner();
-  await queryRunner.startTransaction();
   try {
     for (let rowNum = 0; rowNum < sheetObj.length; rowNum++) {
       const row = sheetObj[rowNum];
@@ -508,7 +510,6 @@ const importPropertiesAsJSON = async (
     logger.warn(e.message);
     logger.warn(e.stack);
   } finally {
-    await queryRunner.rollbackTransaction(); //NOTE: This rollback provided for testing convenience. Will be removed for final merge.
     await queryRunner.release();
   }
 
@@ -583,18 +584,22 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
 
   // Add quickfilter part
   if (filter.quickFilter) {
-    // TODO: Make this more concise
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const quickFilterOptions: FindOptionsWhere<any>[] = [];
-    quickFilterOptions.push(constructFindOptionFromQuery('Agency', filter.quickFilter));
-    quickFilterOptions.push(constructFindOptionFromQuery('PID', filter.quickFilter)); // Cannot use PID constructor, always true with strings
-    quickFilterOptions.push(constructFindOptionFromQuery('PIN', filter.quickFilter));
-    quickFilterOptions.push(constructFindOptionFromQuery('Address', filter.quickFilter));
-    quickFilterOptions.push(constructFindOptionFromQuery('UpdatedOn', filter.quickFilter));
-    quickFilterOptions.push(constructFindOptionFromQuery('Classification', filter.quickFilter));
-    quickFilterOptions.push(constructFindOptionFromQuery('LandArea', filter.quickFilter));
-    quickFilterOptions.push(constructFindOptionFromQuery('AdministrativeArea', filter.quickFilter));
-    quickFilterOptions.push(constructFindOptionFromQuery('PropertyType', filter.quickFilter));
+    const quickfilterFields = [
+      'Agency',
+      'PID',
+      'PIN',
+      'Address',
+      'UpdatedOn',
+      'Classification',
+      'LandArea',
+      'AdministrativeArea',
+      'PropertyType',
+    ];
+    quickfilterFields.forEach((field) =>
+      quickFilterOptions.push(constructFindOptionFromQuery(field, filter.quickFilter)),
+    );
     query.andWhere(
       new Brackets((qb) => {
         quickFilterOptions.forEach((option) => qb.orWhere(option));
@@ -609,13 +614,57 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
       query.orderBy(
         sortKeyTranslator[filter.sortKey],
         filter.sortOrder.toUpperCase() as SortOrders,
+        'NULLS LAST',
       );
     } else {
       logger.error('PropertyUnion Service - Invalid Sort Key');
     }
   }
-  const [properties, totalCount] = await query.getManyAndCount();
-  return { properties, totalCount };
+  const [data, totalCount] = await query.getManyAndCount();
+  return { data, totalCount };
+};
+
+const getPropertiesForExport = async (filter: PropertyUnionFilter) => {
+  const result = await getPropertiesUnion(filter);
+  const filteredProperties = result.data;
+  const parcelIds = filteredProperties
+    .filter(
+      (p) =>
+        p.PropertyTypeId === PropertyType.LAND || p.PropertyTypeId === PropertyType.SUBDIVISION,
+    )
+    .map((p) => p.Id);
+  const buildingIds = filteredProperties
+    .filter((p) => p.PropertyTypeId === PropertyType.BUILDING)
+    .map((b) => b.Id);
+  // Use IDs from filtered properties to get those properites with joins
+  const parcelQueryOptions: FindManyOptions<Parcel> = {
+    relations: {
+      CreatedBy: true,
+      UpdatedBy: true,
+      Evaluations: true,
+      Fiscals: true,
+    },
+    where: {
+      Id: In(parcelIds),
+    },
+  };
+  const buildingQueryOptions: FindManyOptions<Building> = {
+    relations: {
+      CreatedBy: true,
+      UpdatedBy: true,
+      Evaluations: true,
+      Fiscals: true,
+    },
+    where: { Id: In(buildingIds) },
+  };
+  let properties: (Parcel | Building)[] = [];
+  properties = properties.concat(
+    await AppDataSource.getRepository(Parcel).find(parcelQueryOptions),
+  );
+  properties = properties.concat(
+    await AppDataSource.getRepository(Building).find(buildingQueryOptions),
+  );
+  return properties;
 };
 
 const propertyServices = {
@@ -624,6 +673,7 @@ const propertyServices = {
   importPropertiesAsJSON,
   getPropertiesUnion,
   getImportResults,
+  getPropertiesForExport,
 };
 
 export default propertyServices;

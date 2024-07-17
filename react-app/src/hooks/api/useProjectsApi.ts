@@ -6,6 +6,7 @@ import { Parcel } from './useParcelsApi';
 import { Building } from './useBuildingsApi';
 import { DeepPartial } from 'react-hook-form';
 import { CommonFiltering } from '@/interfaces/ICommonFiltering';
+import { GetManyResponse } from '@/interfaces/GetManyResponse';
 
 export interface TierLevel extends BaseEntityInterface {
   Id: number;
@@ -91,7 +92,7 @@ export interface ProjectMonetary {
   CreatedById?: string;
   CreatedOn?: Date;
   Id?: number;
-  Value?: string | number;
+  Value?: number;
   MonetaryTypeId?: number;
   ProjectId?: number;
   UpdatedById?: string;
@@ -273,11 +274,6 @@ export interface ProjectPropertyIds {
   buildings?: number[];
 }
 
-export interface ProjectResponse {
-  projects: Project[];
-  totalCount: number;
-}
-
 const useProjectsApi = (absoluteFetch: IFetch) => {
   const getProjectById = async (id: number) => {
     const { parsedBody, status } = await absoluteFetch.get(`/projects/disposal/${id}`);
@@ -300,53 +296,21 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
     });
     return response;
   };
+
   const deleteProjectById = async (id: number) => {
     const response = await absoluteFetch.del(`/projects/disposal/${id}`);
     return response;
   };
+
   const getProjects = async (sort: CommonFiltering, signal?: AbortSignal) => {
     try {
-      const { parsedBody } = await absoluteFetch.get(
-        '/projects',
-        {
-          includeRelations: true,
-          ...sort,
-        },
-        {
-          signal,
-        },
-      );
-
-      if (parsedBody.error) {
-        return {
-          projects: [],
-          filteredCount: 0,
-          totalCount: 0,
-        };
+      const response = await absoluteFetch.get(`/projects`, { ...sort }, { signal });
+      if (response.ok) {
+        return response.parsedBody as GetManyResponse<Project>;
       }
-
-      return parsedBody as ProjectResponse;
-    } catch (error) {
       return {
-        projects: [],
-        filteredCount: 0,
+        data: [],
         totalCount: 0,
-      };
-    }
-  };
-
-  const projectsDataSource = async (
-    filter: CommonFiltering,
-    signal?: AbortSignal,
-  ): Promise<ProjectResponse> => {
-    try {
-      const response = await getProjects(filter, signal);
-
-      const { projects, totalCount } = response;
-
-      return {
-        projects,
-        totalCount,
       };
     } catch (error) {
       if (error.name === 'AbortError') {
@@ -355,17 +319,21 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
         console.error('Error fetching projects:', error);
       }
       return {
-        projects: [],
+        data: [],
         totalCount: 0,
       };
     }
   };
 
-  const getProjectsForExcelExport = async () => {
-    const { parsedBody } = await absoluteFetch.get('/projects', {
-      includeRelations: true,
-      excelExport: true,
-    });
+  const getProjectsForExcelExport = async (sort: CommonFiltering, signal?: AbortSignal) => {
+    const { parsedBody } = await absoluteFetch.get(
+      '/projects',
+      {
+        ...sort,
+        excelExport: true,
+      },
+      { signal },
+    );
     if (parsedBody.error) {
       return [];
     }
@@ -386,7 +354,6 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
     updateProject,
     deleteProjectById,
     getProjects,
-    projectsDataSource,
     getProjectsForExcelExport,
     postProject,
   };
