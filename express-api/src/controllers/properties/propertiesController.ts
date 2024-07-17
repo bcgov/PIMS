@@ -192,7 +192,9 @@ export const importProperties = async (req: Request, res: Response) => {
   try {
     readFile(filePath, { WTF: true }); //With this read option disabled it will throw if unexpected data is present.
   } catch (e) {
-    fs.unlinkSync(filePath);
+    if (filePath.startsWith('uploads/')) {
+      fs.unlinkSync(filePath);
+    }
     return res.status(400).send(e.message);
   }
 
