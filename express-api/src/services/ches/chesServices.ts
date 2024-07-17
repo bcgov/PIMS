@@ -185,13 +185,13 @@ const getStatusByIdAsync = async (messageId: string): Promise<IChesStatusRespons
         `>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Failed to fetch status for messageId ${messageId}`,
       );
     }
-    return await response; // Assuming response is JSON
+    return await response;
   } catch (error) {
     logger.error(
       `>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Error fetching status for messageId ${messageId}:`,
       error,
     );
-    return null; // Or handle the error appropriately based on your application logic
+    return null;
   }
 };
 
