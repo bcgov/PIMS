@@ -1,6 +1,6 @@
 import { PropertyTypes } from '@/constants/propertyTypes';
 import { Agency } from '@/hooks/api/useAgencyApi';
-import { pidFormatter } from '@/utilities/formatters';
+import { formatMoney, pidFormatter } from '@/utilities/formatters';
 import { Box, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
@@ -45,6 +45,7 @@ const DisposalPropertiesTable = (props: IDisposalPropertiesTable) => {
       valueGetter: (value, row) => {
         return row.Evaluations?.sort((a, b) => b.Year - a.Year)?.[0]?.Value ?? 'N/A';
       },
+      valueFormatter: formatMoney,
     },
   ];
 

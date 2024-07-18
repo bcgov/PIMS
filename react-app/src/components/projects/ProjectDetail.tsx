@@ -281,7 +281,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           values={Object.fromEntries(
             Object.entries(FinancialInformationData).map(([k, v]) => [
               k,
-              formatMoney(v != null ? Number(String(v).replace(/[$,]/g, '')) : 0), //This cast spaghetti sucks but hard to avoid when receiving money as a string from the API.
+              formatMoney(v != null ? v : 0), //This cast spaghetti sucks but hard to avoid when receiving money as a string from the API.
             ]),
           )}
           title={financialInformation}
@@ -387,7 +387,7 @@ const ProjectDetail = (props: IProjectDetail) => {
                         {value.Monetaries.map((mon) => (
                           <Box key={`${mon.MonetaryTypeId}-monetary`}>
                             <Typography variant="h5">{columnNameFormatter(mon.Name)}</Typography>
-                            <Typography>{formatMoney(Number(mon.Value))}</Typography>
+                            <Typography>{formatMoney(mon.Value)}</Typography>
                           </Box>
                         ))}
                       </Box>
