@@ -14,7 +14,7 @@ import {
   produceSSO,
   produceUser,
 } from 'tests/testUtils/factories';
-import { DeepPartial, EntityTarget, FindOptionsWhere, ObjectLiteral } from 'typeorm';
+import { DeepPartial, EntityTarget, FindOptionsWhere, ObjectLiteral, QueryRunner } from 'typeorm';
 import chesServices from '@/services/ches/chesServices';
 import { NotificationTemplate } from '@/typeorm/Entities/NotificationTemplate';
 import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
@@ -145,11 +145,34 @@ describe('UNIT - Notification Services', () => {
 });
 describe('updateNotificationStatus', () => {
   it('should update the status of a notification', async () => {
+    const user = produceUser();
     const notifQueue = produceNotificationQueue();
     notifQueue.ChesMessageId = randomUUID();
-    jest
-      .spyOn(AppDataSource.getRepository(NotificationQueue), 'findOne')
-      .mockResolvedValueOnce(notifQueue);
+
+    // Mock the getRepository method for NotificationQueue
+    const _mockEntityManager = {
+      findOne: jest.fn().mockResolvedValueOnce(notifQueue), // Mock findOne to return the notification
+      save: jest.fn().mockResolvedValueOnce({
+        ...notifQueue,
+        Status: NotificationStatus.Completed,
+        UpdatedById: user.Id,
+      }),
+    };
+
+    const _mockStartTransaction = jest.fn(async () => {});
+    const _mockRollbackTransaction = jest.fn(async () => {});
+    const _mockCommitTransaction = jest.fn(async () => {});
+    const _mockRelease = jest.fn(async () => {});
+
+    // Mock createQueryRunner to return a QueryRunner with the mocked entity manager
+    jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
+      startTransaction: _mockStartTransaction,
+      rollbackTransaction: _mockRollbackTransaction,
+      commitTransaction: _mockCommitTransaction,
+      release: _mockRelease,
+      manager: _mockEntityManager,
+    } as unknown as QueryRunner);
+
     jest.spyOn(chesServices, 'getStatusByIdAsync').mockResolvedValueOnce({
       status: 'completed',
       tag: 'sampleTag',
@@ -157,8 +180,6 @@ describe('updateNotificationStatus', () => {
       updatedTS: Date.now(),
       createdTS: Date.now(),
     });
-
-    const user = produceUser();
     const result = await notificationServices.updateNotificationStatus(notifQueue.Id, user);
 
     expect(result.Status).toBe(NotificationStatus.Completed);
@@ -171,6 +192,24 @@ describe('updateNotificationStatus', () => {
       .mockResolvedValueOnce(null);
 
     const user = produceUser();
+    const _mockStartTransaction = jest.fn(async () => {});
+    const _mockRollbackTransaction = jest.fn(async () => {});
+    const _mockCommitTransaction = jest.fn(async () => {});
+    const _mockRelease = jest.fn(async () => {});
+
+    const _mockEntityManager = {
+      findOne: jest.fn().mockResolvedValueOnce(null), // Ensure findOne returns null
+      save: jest.fn(),
+    };
+
+    // Spy on createQueryRunner and return the mocked QueryRunner
+    jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
+      startTransaction: _mockStartTransaction,
+      rollbackTransaction: _mockRollbackTransaction,
+      commitTransaction: _mockCommitTransaction,
+      release: _mockRelease,
+      manager: _mockEntityManager,
+    } as unknown as QueryRunner);
 
     await expect(notificationServices.updateNotificationStatus(1, user)).rejects.toThrow(
       'Notification with id 1 not found.',

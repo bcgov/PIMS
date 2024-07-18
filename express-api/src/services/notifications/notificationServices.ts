@@ -402,7 +402,7 @@ const updateNotificationStatus = async (
       where: { Id: notificationId },
     });
 
-    if (!notification) {
+    if (!notification || Object.keys(notification).length === 0) {
       throw new Error(`Notification with id ${notificationId} not found.`);
     }
 
