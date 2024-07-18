@@ -43,7 +43,6 @@ const upload = multer({
 });
 const uploadHandler = async (req: Request, res: Response, next: NextFunction) => {
   const mainReqHandler = upload.single('spreadsheet');
-  // console.log(`MAIN REQ HANDLER FIRED.`);
   mainReqHandler(req, res, (err) => {
     if (err) {
       return res.status(400).send(err.message ?? 'File upload failed.');
