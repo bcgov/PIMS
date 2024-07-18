@@ -178,95 +178,95 @@ describe('updateNotificationStatus', () => {
   });
 });
 
-describe('getProjectNotificationsInQueue', () => {
-  xit('should get notifications and update statuses if needed', async () => {
-    const projectId = 1;
-    const pageNumber = 0;
-    const pageSize = 10;
-    const user = produceUser();
-    const notifications = [
-      produceNotificationQueue(),
-      produceNotificationQueue(),
-      produceNotificationQueue(),
-    ];
-    notifications[0].ChesMessageId = '00000000-0000-0000-0000-000000000000';
-    notifications[1].ChesMessageId = '00000000-0000-0000-0000-000000000001';
-    notifications[2].ChesMessageId = '00000000-0000-0000-0000-000000000002';
+// describe('getProjectNotificationsInQueue', () => {
+//   xit('should get notifications and update statuses if needed', async () => {
+//     const projectId = 1;
+//     const pageNumber = 0;
+//     const pageSize = 10;
+//     const user = produceUser();
+//     const notifications = [
+//       produceNotificationQueue(),
+//       produceNotificationQueue(),
+//       produceNotificationQueue(),
+//     ];
+//     notifications[0].ChesMessageId = '00000000-0000-0000-0000-000000000000';
+//     notifications[1].ChesMessageId = '00000000-0000-0000-0000-000000000001';
+//     notifications[2].ChesMessageId = '00000000-0000-0000-0000-000000000002';
 
-    jest
-      .spyOn(AppDataSource.getRepository(NotificationQueue), 'find')
-      .mockResolvedValueOnce(notifications);
-    jest.spyOn(notificationServices, 'updateNotificationStatus').mockImplementation(async (id) => {
-      const updatedNotification = {
-        ...notifications.find((notif) => notif.Id === id),
-        Status: NotificationStatus.Completed,
-      };
-      // Manually update the status in the notifications array to reflect the change
-      const index = notifications.findIndex((notif) => notif.Id === id);
-      notifications[index].Status = updatedNotification.Status;
-      return updatedNotification;
-    });
-    // jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
-    //   ...jest.requireActual('@/appDataSource').createQueryRunner,
-    //   release: () => {},
-    //   startTransaction: jest.fn(),
-    //   commitTransaction: jest.fn(),
-    //   rollbackTransaction: jest.fn(), // Add this line
-    //   manager: {
-    //     find: async <Entity extends ObjectLiteral>(
-    //       entityClass: EntityTarget<Entity>,
-    //       options: Record<string, unknown>,
-    //     ) => {
-    //       if (entityClass === ProjectStatusNotification) {
-    //         return _statusNotifFind(options);
-    //       }
-    //     },
-    //     findOne: async <Entity extends ObjectLiteral>(
-    //       entityClass: EntityTarget<Entity>,
-    //       options: Record<string, unknown>,
-    //     ) => {
-    //       if (entityClass === User) {
-    //         return _userFindOne();
-    //       } else if (entityClass === NotificationTemplate) {
-    //         return _notifTemplateFindOne(options);
-    //       } else {
-    //         return {};
-    //       }
-    //     },
-    //     save: async <Entity extends ObjectLiteral, T extends DeepPartial<Entity>>(
-    //       entityClass: EntityTarget<Entity>,
-    //       obj: T,
-    //     ) => {
-    //       return _notifQueueSave(obj);
-    //     },
-    //   },
-    // });
-    jest.spyOn(chesServices, 'getStatusByIdAsync').mockImplementation(async (messageId) => {
-      if (
-        messageId === '00000000-0000-0000-0000-000000000000' ||
-        messageId === '00000000-0000-0000-0000-000000000001' ||
-        messageId === '00000000-0000-0000-0000-000000000002'
-      ) {
-        return {
-          status: 'completed',
-          tag: 'some-tag',
-          txId: 'some-txId',
-          updatedTS: Date.now(),
-          createdTS: Date.now() - 1000,
-        };
-      } else {
-        throw new Error(`No status found for messageId ${messageId}`);
-      }
-    });
+//     jest
+//       .spyOn(AppDataSource.getRepository(NotificationQueue), 'find')
+//       .mockResolvedValueOnce(notifications);
+//     jest.spyOn(notificationServices, 'updateNotificationStatus').mockImplementation(async (id) => {
+//       const updatedNotification = {
+//         ...notifications.find((notif) => notif.Id === id),
+//         Status: NotificationStatus.Completed,
+//       };
+//       // Manually update the status in the notifications array to reflect the change
+//       const index = notifications.findIndex((notif) => notif.Id === id);
+//       notifications[index].Status = updatedNotification.Status;
+//       return updatedNotification;
+//     });
+//     // jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
+//     //   ...jest.requireActual('@/appDataSource').createQueryRunner,
+//     //   release: () => {},
+//     //   startTransaction: jest.fn(),
+//     //   commitTransaction: jest.fn(),
+//     //   rollbackTransaction: jest.fn(), // Add this line
+//     //   manager: {
+//     //     find: async <Entity extends ObjectLiteral>(
+//     //       entityClass: EntityTarget<Entity>,
+//     //       options: Record<string, unknown>,
+//     //     ) => {
+//     //       if (entityClass === ProjectStatusNotification) {
+//     //         return _statusNotifFind(options);
+//     //       }
+//     //     },
+//     //     findOne: async <Entity extends ObjectLiteral>(
+//     //       entityClass: EntityTarget<Entity>,
+//     //       options: Record<string, unknown>,
+//     //     ) => {
+//     //       if (entityClass === User) {
+//     //         return _userFindOne();
+//     //       } else if (entityClass === NotificationTemplate) {
+//     //         return _notifTemplateFindOne(options);
+//     //       } else {
+//     //         return {};
+//     //       }
+//     //     },
+//     //     save: async <Entity extends ObjectLiteral, T extends DeepPartial<Entity>>(
+//     //       entityClass: EntityTarget<Entity>,
+//     //       obj: T,
+//     //     ) => {
+//     //       return _notifQueueSave(obj);
+//     //     },
+//     //   },
+//     // });
+//     jest.spyOn(chesServices, 'getStatusByIdAsync').mockImplementation(async (messageId) => {
+//       if (
+//         messageId === '00000000-0000-0000-0000-000000000000' ||
+//         messageId === '00000000-0000-0000-0000-000000000001' ||
+//         messageId === '00000000-0000-0000-0000-000000000002'
+//       ) {
+//         return {
+//           status: 'completed',
+//           tag: 'some-tag',
+//           txId: 'some-txId',
+//           updatedTS: Date.now(),
+//           createdTS: Date.now() - 1000,
+//         };
+//       } else {
+//         throw new Error(`No status found for messageId ${messageId}`);
+//       }
+//     });
 
-    const result = await notificationServices.getProjectNotificationsInQueue(
-      { projectId, pageNumber, pageSize },
-      user,
-    );
+//     const result = await notificationServices.getProjectNotificationsInQueue(
+//       { projectId, pageNumber, pageSize },
+//       user,
+//     );
 
-    expect(result.items.length).toBe(3);
-    expect(result.items[0].Status).toBe(NotificationStatus.Completed);
-    expect(result.items[1].Status).toBe(NotificationStatus.Completed);
-    expect(result.items[2].Status).toBe(NotificationStatus.Completed);
-  });
-});
+//     expect(result.items.length).toBe(3);
+//     expect(result.items[0].Status).toBe(NotificationStatus.Completed);
+//     expect(result.items[1].Status).toBe(NotificationStatus.Completed);
+//     expect(result.items[2].Status).toBe(NotificationStatus.Completed);
+//   });
+// });
