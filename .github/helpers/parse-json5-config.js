@@ -60,7 +60,6 @@ fs.readFile(filePath, "utf8", (err, data) => {
 
     // Set each key-value pair as an environment variable
     for (const [key, value] of Object.entries(jsonData)) {
-      console.log("test key: ", key, " Value: ", value)
       // Serialize arrays and objects to JSON strings
       const envValue =
         typeof value === "object" ? JSON.stringify(value) : value;

@@ -27,6 +27,8 @@ const packageJsonPaths = LOCAL_TEST
 
 // Ignore packages from env.
 const ignorePackages = LOCAL_TEST ? TEST_IGNORE_PACKAGES : JSON.parse(process.env.ignorePackages);
+console.log(LOCAL_TEST)
+console.log(ignorePackages)
 
 // Save results to json.
 let results = {};
