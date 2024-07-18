@@ -15,6 +15,7 @@ import fs from 'fs';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { AppDataSource } from '@/appDataSource';
 import { ImportResult } from '@/typeorm/Entities/ImportResult';
+import { readFile } from 'xlsx';
 
 /**
  * @description Used to retrieve all properties.
@@ -188,6 +189,17 @@ export const importProperties = async (req: Request, res: Response) => {
   const ssoUser = req.user;
   const user = await userServices.getUser(ssoUser.preferred_username);
   const roles = ssoUser.client_roles;
+  try {
+    readFile(filePath, { WTF: true }); //With this read option disabled it will throw if unexpected data is present.
+  } catch (e) {
+    const rootPath = path.resolve(__dirname + '/../../../uploads');
+    const realPath = fs.realpathSync(path.resolve(filePath));
+    if (realPath.startsWith(rootPath)) {
+      fs.unlinkSync(realPath);
+    }
+    return res.status(400).send(e.message);
+  }
+
   const resultRow = await AppDataSource.getRepository(ImportResult).save({
     FileName: fileName,
     CompletionPercentage: 0,
