@@ -40,23 +40,18 @@ const useDataLoader = <AFArgs extends any[], AFResponse = unknown, AFError = unk
     setError(undefined);
     let response: AFResponse = undefined;
     try {
-      console.log('fetching data in refreshdata');
       response = await getData(...args);
-      console.log('fetching data finished in refreshdata')
       if (!isMounted()) {
-        console.log('!isMounted case of fetching data.');
         return;
       }
       setData(response);
     } catch (e) {
-      console.log('hit error case of refreshdata')
       if (!isMounted()) {
         return;
       }
       setError(e);
       errorHandler?.(e);
     } finally {
-      console.log('finally case of refreshdata');
       if (isMounted()) {
         setIsLoading(false);
       }
