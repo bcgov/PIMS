@@ -151,6 +151,7 @@ describe('updateNotificationStatus', () => {
 
     // Mock the getRepository method for NotificationQueue
     const _mockEntityManager = {
+      find: jest.fn().mockResolvedValue([]),
       findOne: jest.fn().mockResolvedValueOnce(notifQueue), // Mock findOne to return the notification
       save: jest.fn().mockResolvedValueOnce({
         ...notifQueue,
@@ -198,6 +199,7 @@ describe('updateNotificationStatus', () => {
     const _mockRelease = jest.fn(async () => {});
 
     const _mockEntityManager = {
+      find: jest.fn().mockResolvedValue([]),
       findOne: jest.fn().mockResolvedValueOnce(null), // Ensure findOne returns null
       save: jest.fn(),
     };
