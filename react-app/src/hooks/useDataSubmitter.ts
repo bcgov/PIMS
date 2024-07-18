@@ -14,7 +14,6 @@ const useDataSubmitter = <AFArgs extends any[], AFError = unknown>(
     return refreshData(...args)
       .then((response) => {
         if (!response?.ok) {
-          console.log(error);
           snackbar.setMessageState({
             open: true,
             text: `Submission failed with code ${response?.status}. Message: ${response?.parsedBody ?? 'No message.'}`,
