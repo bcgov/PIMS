@@ -16,8 +16,6 @@ import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { AppDataSource } from '@/appDataSource';
 import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import { readFile } from 'xlsx';
-import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
-import { bulkUploadBookTypeWhitelist } from '@/utilities/uploadWhitelist';
 
 /**
  * @description Used to retrieve all properties.
@@ -191,15 +189,14 @@ export const importProperties = async (req: Request, res: Response) => {
   const ssoUser = req.user;
   const user = await userServices.getUser(ssoUser.preferred_username);
   const roles = ssoUser.client_roles;
-  console.log(`RECEIVED FILE: ${req.file.path}`);
   try {
-    const sheet = readFile(filePath, { WTF: true });
-    if (!bulkUploadBookTypeWhitelist.includes(sheet.bookType)) {
-      throw new ErrorWithCode('Spreadsheet was not a supported format.', 400);
-    }
+    readFile(filePath, { WTF: true }); //With this read option disabled it will throw if unexpected data is present.
   } catch (e) {
-    console.log(`FS UNLINK SYNC HAPPENS.`);
-    fs.unlinkSync(filePath);
+    const rootPath = path.resolve(__dirname + '/../../../uploads');
+    const realPath = fs.realpathSync(path.resolve(filePath));
+    if (realPath.startsWith(rootPath)) {
+      fs.unlinkSync(realPath);
+    }
     return res.status(400).send(e.message);
   }
 
