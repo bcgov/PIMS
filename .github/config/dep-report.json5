@@ -6,7 +6,7 @@
   // Do not report on the following packages.
   ignorePackages: {
     // Path to package.json file.
-    "src/react-app": [], // Add names of packages such as ["typescript"].
+    "src/react-app": ["xlsx"], // Add names of packages such as ["typescript"].
     "src/express-api": [],
   },
 
