@@ -6,8 +6,8 @@
   // Do not report on the following packages.
   ignorePackages: {
     // Path to package.json file.
-    "src/react-app": ["xlsx"], // Add names of packages such as ["typescript"].
-    "src/express-api": [],
+    "src/react-app": [], // Add names of packages such as ["typescript"].
+    "src/express-api": ["xlsx"],
   },
 
   // The env variables below are used to update the create_tickets.py script
