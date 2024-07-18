@@ -49,6 +49,8 @@ const filePath = process.argv[2];
  *
  */
 fs.readFile(filePath, "utf8", (err, data) => {
+  // including just for testing
+  console.log(data)
   if (err) {
     console.error("Error reading the file:", err);
     return;
