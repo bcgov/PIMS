@@ -35,7 +35,6 @@ router.route('/search/page/filter').post(activeUserCheck, catchErrors(getPropert
 const upload = multer({
   dest: 'uploads/',
   fileFilter: (req, file, cb) => {
-    console.log(`MIMETYPE FOR ${file.originalname} WAS ${file.mimetype}`);
     if (!bulkUploadMimeTypeWhitelist.includes(file.mimetype)) {
       return cb(new Error('Unsupported MIME-type.'));
     }
@@ -44,10 +43,9 @@ const upload = multer({
 });
 const uploadHandler = async (req: Request, res: Response, next: NextFunction) => {
   const mainReqHandler = upload.single('spreadsheet');
-  // console.log(`MAIN REQ HANDLER FIRED.`);
   mainReqHandler(req, res, (err) => {
     if (err) {
-      res.status(400).send(err.message ?? 'File upload failed.');
+      return res.status(400).send(err.message ?? 'File upload failed.');
     }
     next();
   });
