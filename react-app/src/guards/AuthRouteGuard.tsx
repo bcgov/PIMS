@@ -1,6 +1,6 @@
 import { Roles } from '@/constants/roles';
 import { AuthContext } from '@/contexts/authContext';
-import { Box, CircularProgress, Paper, Typography } from '@mui/material';
+import { CircularProgress, Paper, Typography } from '@mui/material';
 import { PropsWithChildren, useContext, useEffect, useRef } from 'react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
