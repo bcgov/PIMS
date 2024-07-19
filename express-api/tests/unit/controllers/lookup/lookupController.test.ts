@@ -49,12 +49,9 @@ import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 import { Workflow } from '@/typeorm/Entities/Workflow';
 
 const {
-  lookupAgencies,
   lookupAll,
-  lookupProjectRisks,
   lookupProjectTierLevels,
   lookupPropertyClassifications,
-  lookupRoles,
 } = controllers;
 
 const _next = jest.fn();
@@ -133,30 +130,6 @@ describe('UNIT - Lookup Controller', () => {
     mockRequest = mockReq;
     mockResponse = mockRes;
     _next.mockClear();
-  });
-
-  describe('GET /lookup/agencies', () => {
-    it('should return the stub response of 501', async () => {
-      await lookupAgencies(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and a list of agencies', async () => {
-      await lookupAgencies(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
-  });
-
-  describe('GET /lookup/roles', () => {
-    it('should return the stub response of 501', async () => {
-      await lookupRoles(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and a list of roles', async () => {
-      await lookupRoles(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
   });
 
   describe('GET /lookup/property/classifications', () => {
@@ -320,18 +293,6 @@ describe('UNIT - Lookup Controller', () => {
       _findMonetaryTypes.mockImplementationOnce(() => [{ Name: [] }]);
       await lookupMonetaryTypes(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
-    });
-  });
-
-  describe('GET /lookup/project/risks', () => {
-    it('should return the stub response of 501', async () => {
-      await lookupProjectRisks(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and a list of project risks', async () => {
-      await lookupProjectRisks(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
     });
   });
 
