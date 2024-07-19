@@ -9,11 +9,7 @@ import { Request, Response } from 'express';
 const router = express.Router();
 
 const {
-  getProperties,
-  getPropertiesFilter,
   getPropertiesForMap,
-  getPropertiesPaged,
-  getPropertiesPagedFilter,
   importProperties,
   getPropertiesFuzzySearch,
   getPropertyUnion,
@@ -24,13 +20,7 @@ const {
 
 router.route('/search/fuzzy').get(activeUserCheck, catchErrors(getPropertiesFuzzySearch));
 
-router.route('/search').get(activeUserCheck, catchErrors(getProperties));
-router.route('/search/filter').post(activeUserCheck, catchErrors(getPropertiesFilter));
-
 router.route('/search/geo').get(activeUserCheck, catchErrors(getPropertiesForMap)); // Formerly wfs route
-
-router.route('/search/page').get(activeUserCheck, catchErrors(getPropertiesPaged));
-router.route('/search/page/filter').post(activeUserCheck, catchErrors(getPropertiesPagedFilter));
 
 const upload = multer({
   dest: 'uploads/',

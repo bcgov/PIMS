@@ -44,12 +44,8 @@ import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import xlsx, { WorkBook } from 'xlsx';
 
 const {
-  getProperties,
   getPropertiesFuzzySearch,
-  getPropertiesFilter,
   getPropertiesForMap,
-  getPropertiesPaged,
-  getPropertiesPagedFilter,
 } = controllers;
 
 const _propertiesFuzzySearch = jest
@@ -108,19 +104,6 @@ describe('UNIT - Properties', () => {
     mockResponse = mockRes;
   });
 
-  describe('GET /properties/search', () => {
-    it('should return the stub response of 501', async () => {
-      await getProperties(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return 200 with a list of properties', async () => {
-      await getProperties(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-      expect(mockResponse.jsonValue.length).toBeGreaterThanOrEqual(1);
-    });
-  });
-
   describe('GET /properties/search/fuzzy', () => {
     it('should return 200 with a list of properties', async () => {
       mockRequest.query.keyword = '123';
@@ -136,20 +119,6 @@ describe('UNIT - Properties', () => {
       expect(mockResponse.statusValue).toBe(200);
       expect(Array.isArray(mockResponse.sendValue.Parcels)).toBe(true);
       expect(Array.isArray(mockResponse.sendValue.Buildings)).toBe(true);
-    });
-  });
-
-  describe('POST /properties/search/filter', () => {
-    it('should return the stub response of 501', async () => {
-      await getPropertiesFilter(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return 200 with a list of properties', async () => {
-      mockRequest.body = {}; // Add filter parameters
-      await getPropertiesFilter(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-      expect(mockResponse.jsonValue.length).toBeGreaterThanOrEqual(1);
     });
   });
 
@@ -206,33 +175,6 @@ describe('UNIT - Properties', () => {
       await getPropertiesForMap(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.length).toBeGreaterThanOrEqual(1);
-    });
-  });
-
-  describe('GET /properties/search/page', () => {
-    it('should return the stub response of 501', async () => {
-      await getPropertiesPaged(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return 200 with a list of properties', async () => {
-      await getPropertiesPaged(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-      expect(mockResponse.jsonValue.length).toBeGreaterThanOrEqual(1);
-    });
-  });
-
-  describe('POST /properties/search/page/filter', () => {
-    it('should return the stub response of 501', async () => {
-      await getPropertiesPagedFilter(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return 200 with a list of properties', async () => {
-      mockRequest.body = {}; // Add filter parameters
-      await getPropertiesPagedFilter(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-      expect(mockResponse.jsonValue.length).toBeGreaterThanOrEqual(1);
     });
   });
 
