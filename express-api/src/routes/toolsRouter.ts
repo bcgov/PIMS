@@ -13,10 +13,6 @@ const {
   cancelChesMessages,
   searchGeocoderAddresses,
   searchGeocoderSiteId,
-  bulkDeleteProperties,
-  bulkImportProjects,
-  bulkImportProperties,
-  bulkUpdatePropertyFinancials,
 } = controllers;
 
 router.route(`/ches`).post(activeUserCheck, catchErrors(sendChesMessage));
@@ -30,15 +26,8 @@ router
   .route(`/geocoder/parcels/pids/:siteId`)
   .get(activeUserCheck, catchErrors(searchGeocoderSiteId));
 
-router.route(`/import/properties`).post(activeUserCheck, catchErrors(bulkImportProperties));
-router.route(`/import/properties`).delete(activeUserCheck, catchErrors(bulkDeleteProperties));
-
 //This is originally implemented as POST, but that doesn't really make sense since the documentation
 //implies that the resource must already exist for this one to work. So it's really more of a partial update.
-router
-  .route(`/import/properties/financials`)
-  .patch(activeUserCheck, catchErrors(bulkUpdatePropertyFinancials));
-
-router.route(`/import/projects`).post(activeUserCheck, catchErrors(bulkImportProjects));
+router.route(`/import/properties/financials`);
 
 export default router;
