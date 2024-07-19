@@ -1,7 +1,7 @@
 import { Roles } from '@/constants/roles';
 import { AuthContext } from '@/contexts/authContext';
-import { CircularProgress } from '@mui/material';
-import { PropsWithChildren, useContext, useEffect } from 'react';
+import { Box, CircularProgress, Paper, Typography } from '@mui/material';
+import { PropsWithChildren, useContext, useEffect, useRef } from 'react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,25 +22,62 @@ const AuthRouteGuard = (props: AuthGuardProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (authStateContext.pimsUser?.data && authStateContext.keycloak?.isAuthenticated) {
-      // Redirect from page if lacking roles
-      if (
-        permittedRoles &&
-        !authStateContext.keycloak.hasRoles(permittedRoles, { requireAllRoles: false })
-      ) {
-        navigate(redirectRoute ?? '/');
+    if (authStateContext.keycloak.isAuthenticated) {
+      if (timeoutId.current) {
+        clearTimeout(timeoutId.current);
+        timeoutId.current = null;
       }
-      // Redirect from page if user does not have Active status
-      if (!ignoreStatus && authStateContext.pimsUser?.data?.Status !== 'Active') {
-        navigate(redirectRoute ?? '/');
+
+      if (authStateContext.pimsUser?.data) {
+        // Redirect from page if lacking roles
+        if (
+          permittedRoles &&
+          !authStateContext.keycloak.hasRoles(permittedRoles, { requireAllRoles: false })
+        ) {
+          navigate(redirectRoute ?? '/');
+        }
+        // Redirect from page if user does not have Active status
+        if (!ignoreStatus && authStateContext.pimsUser?.data?.Status !== 'Active') {
+          navigate(redirectRoute ?? '/');
+        }
       }
+    } else {
+      timeoutId.current = setTimeout(
+        () => authStateContext.keycloak.login({ postLoginRedirectURL: window.location.pathname }),
+        5000,
+      );
     }
-  }, [authStateContext.pimsUser?.isLoading, authStateContext.keycloak.isLoggingIn]);
 
-  if (!authStateContext.keycloak.isAuthenticated || authStateContext.pimsUser.isLoading) {
-    return <CircularProgress sx={{ position: 'fixed', top: '50%', left: '50%' }} />;
+    return () => {
+      if (timeoutId.current) {
+        clearTimeout(timeoutId.current);
+      }
+    };
+  }, [
+    authStateContext.pimsUser?.isLoading,
+    authStateContext.keycloak.isLoggingIn,
+    authStateContext.keycloak.isAuthenticated,
+  ]);
+  const timeoutId = useRef(null);
+  if (!authStateContext.keycloak.isAuthenticated) {
+    return (
+      <Paper
+        sx={{
+          maxWidth: '30rem',
+          padding: 2,
+          textAlign: 'center',
+          marginX: 'auto',
+          marginY: '4rem',
+        }}
+      >
+        <Typography>
+          Attempting to load your keycloak credentials. If this message does not go away
+          momentarily, you will automatically be prompted to sign in again.
+        </Typography>
+        <CircularProgress sx={{ position: 'fixed', top: '50%', left: '50%' }} />
+      </Paper>
+    );
   }
-
   return <>{props.children}</>;
 };
 
