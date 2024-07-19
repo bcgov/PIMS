@@ -13,10 +13,8 @@ import { UUID } from 'crypto';
 import {
   getAdministrativeAreas,
   addAdministrativeArea,
-  getAdministrativeAreasFiltered,
   getAdministrativeAreaById,
   updateAdministrativeAreaById,
-  deleteAdministrativeAreaById,
 } from '@/controllers/administrativeAreas/administrativeAreasController';
 
 let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
@@ -92,34 +90,6 @@ describe('UNIT - Administrative Areas Admin', () => {
     });
   });
 
-  describe('Controller getAdministrativeAreasFiltered', () => {
-    beforeEach(() => {
-      mockRequest.body = {
-        page: 0,
-        quantity: 0,
-        boundaryType: mockAdministrativeArea.boundaryType,
-        name: mockAdministrativeArea.name,
-        abbreviation: mockAdministrativeArea.abbreviation,
-      };
-    });
-    // TODO: remove stub test when controller is complete
-    it('should return the stub response of 501', async () => {
-      await getAdministrativeAreasFiltered(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    // TODO: enable other tests when controller is complete
-    xit('should return status 200 and the administrative area ', async () => {
-      await getAdministrativeAreasFiltered(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
-
-    xit('should return status 400 when a bad request is received', async () => {
-      await getAdministrativeAreasFiltered(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
-    });
-  });
-
   describe('Controller getAdministrativeAreaById', () => {
     beforeEach(() => {
       mockRequest.params.id = `${mockAdministrativeArea.id}`;
@@ -148,28 +118,6 @@ describe('UNIT - Administrative Areas Admin', () => {
       mockRequest.params.id = '1';
       mockRequest.body = produceAdminArea({ Id: 2 });
       await updateAdministrativeAreaById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
-    });
-  });
-
-  describe('Controller deleteAdministrativeAreaById', () => {
-    beforeEach(() => {
-      mockRequest.params.id = `${mockAdministrativeArea.id}`;
-    });
-    // TODO: remove stub test when controller is complete
-    it('should return the stub response of 501', async () => {
-      await deleteAdministrativeAreaById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    // TODO: enable other tests when controller is complete
-    xit('should return status 204', async () => {
-      await deleteAdministrativeAreaById(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(204);
-    });
-
-    xit('should return status 400 when a bad request is received', async () => {
-      await deleteAdministrativeAreaById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
   });
