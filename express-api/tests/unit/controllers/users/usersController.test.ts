@@ -16,14 +16,11 @@ import { UUID } from 'crypto';
 
 const {
   addUser,
-  //addUserRoleByName,
   getUserById,
   getUserRolesByName,
   getAllRoles,
   getUsers,
-  //getUsersSameAgency,
   deleteUserById,
-  //deleteUserRoleByName,
   updateUserById,
   updateUserRolesByName,
   getUserInfo,
@@ -127,69 +124,6 @@ describe('UNIT - Testing controllers for users routes.', () => {
     //   expect(() => {getUserInfo(mockRequest, mockResponse)}).toThrow();
     // })
   });
-
-  // describe('getUserAccessRequestLatest', () => {
-  //   it('should return status 200 and an access request', async () => {
-  //     await getUserAccessRequestLatest(mockRequest, mockResponse);
-  //     expect(mockResponse.statusValue).toBe(200);
-  //     expect(mockResponse.sendValue.Id).toBeDefined();
-  //   });
-
-  //   it('should return status 204 if no requests', async () => {
-  //     _getAccessRequest.mockImplementationOnce(() => null);
-  //     await getUserAccessRequestLatest(mockRequest, mockResponse);
-  //     expect(mockResponse.statusValue).toBe(204);
-  //     expect(mockResponse.sendValue.Id).toBeUndefined();
-  //   });
-
-  //   it('should return status 400 if userService.getAccessRequest throws an error', async () => {
-  //     _getAccessRequest.mockImplementationOnce(() => {
-  //       throw new Error();
-  //     });
-  //     await getUserAccessRequestLatest(mockRequest, mockResponse);
-  //     expect(mockResponse.statusValue).toBe(400);
-  //   });
-  // });
-
-  // describe('getUserAccessRequestById', () => {
-  //   const request = produceRequest();
-
-  //   it('should return status 200 and an access request', async () => {
-  //     _getAccessRequestById.mockImplementationOnce(() => request);
-  //     mockRequest.params.requestId = String(request.Id);
-  //     await getUserAccessRequestById(mockRequest, mockResponse);
-  //     expect(mockResponse.statusValue).toBe(200);
-  //     expect(mockResponse.sendValue.Id).toBe(request.Id);
-  //   });
-
-  //   it('should return status 404 if no request found', async () => {
-  //     _getAccessRequestById.mockImplementationOnce(() => null);
-  //     mockRequest.params.requestId = '-1';
-  //     await getUserAccessRequestById(mockRequest, mockResponse);
-  //     expect(mockResponse.statusValue).toBe(404);
-  //   });
-  // });
-
-  // describe('updateUserAccessRequest', () => {
-  //   it('should return status 200 and an access request', async () => {
-  //     const request = produceRequest();
-  //     mockRequest.params.requestId = '1';
-  //     mockRequest.body = request;
-  //     await updateUserAccessRequest(mockRequest, mockResponse);
-  //     expect(mockResponse.statusValue).toBe(200);
-  //     expect(mockResponse.sendValue.Id).toBe(request.Id);
-  //   });
-
-  //   it('should return status 400 if malformed', async () => {
-  //     mockRequest.params.requestId = '1';
-  //     mockRequest.body = {};
-  //     _updateAccessRequest.mockImplementationOnce(() => {
-  //       throw Error();
-  //     });
-  //     await updateUserAccessRequest(mockRequest, mockResponse);
-  //     expect(mockResponse.statusValue).toBe(400);
-  //   });
-  // });
 
   describe('submitUserAccessRequest', () => {
     it('should return status 201 and an access request', async () => {
