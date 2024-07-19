@@ -6,9 +6,10 @@ import errorImage from '@/assets/images/error.svg';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import { useSSO } from '@bcgov/citz-imb-sso-react';
+//import { useSSO } from '@bcgov/citz-imb-sso-react';
 import usePimsApi from '@/hooks/usePimsApi';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from 'react-oidc-context';
 
 /**
  * Renders an error fallback component that displays an error message and provides options for handling the error.
@@ -22,7 +23,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
   // Call resetErrorBoundary() to reset the error boundary and retry the render.
   const [state, setState] = useState<string>('');
   const [text, setText] = useState<string>('');
-  const sso = useSSO();
+  const sso = useAuth();
   const api = usePimsApi();
   const navigate = useNavigate();
   const errorTracker = JSON.parse(sessionStorage.getItem('errorTracker'));

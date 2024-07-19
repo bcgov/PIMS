@@ -14,6 +14,7 @@ export default () => {
     build: {
       outDir: 'dist',
     },
+    envDir: '../',
     server: {
       host: true,
       port: frontendPort,

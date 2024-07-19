@@ -22,22 +22,32 @@ const AuthRouteGuard = (props: AuthGuardProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // if (!authStateContext.keycloak.isLoading && !authStateContext.keycloak.isAuthenticated) {
+    //   authStateContext.keycloak.login({ postLoginRedirectURL: window.location.pathname });
+    // }
     if (authStateContext.pimsUser?.data && authStateContext.keycloak?.isAuthenticated) {
       // Redirect from page if lacking roles
-      if (
-        permittedRoles &&
-        !authStateContext.keycloak.hasRoles(permittedRoles, { requireAllRoles: false })
-      ) {
-        navigate(redirectRoute ?? '/');
-      }
+
+      // if (
+      //   permittedRoles &&
+      //   !authStateContext.keycloak(permittedRoles, { requireAllRoles: false })
+      // ) {
+      //   navigate(redirectRoute ?? '/');
+      // }
       // Redirect from page if user does not have Active status
       if (!ignoreStatus && authStateContext.pimsUser?.data?.Status !== 'Active') {
         navigate(redirectRoute ?? '/');
       }
     }
-  }, [authStateContext.pimsUser?.isLoading, authStateContext.keycloak.isLoggingIn]);
+  }, [authStateContext.pimsUser?.isLoading, authStateContext.keycloak.isLoading]);
+
+  useEffect(() => {
+    console.log(authStateContext.keycloak);
+  }, [authStateContext.keycloak.isAuthenticated]);
 
   if (!authStateContext.keycloak.isAuthenticated || authStateContext.pimsUser.isLoading) {
+    console.log(`Keycloak is authenticated: ${authStateContext.keycloak.isAuthenticated}`);
+    console.log(`Pims user isLoading: ${authStateContext.pimsUser.isLoading}`);
     return <CircularProgress sx={{ position: 'fixed', top: '50%', left: '50%' }} />;
   }
 

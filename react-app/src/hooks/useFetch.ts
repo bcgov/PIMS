@@ -1,5 +1,6 @@
-import { useSSO } from '@bcgov/citz-imb-sso-react';
+//import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { useMemo } from 'react';
+import { useAuth } from 'react-oidc-context';
 
 export type FetchResponse = Response & { parsedBody?: Record<string, any> };
 export type FetchType = (url: string, params?: RequestInit) => Promise<Response>;
@@ -24,7 +25,7 @@ export interface IFetch {
  * @returns
  */
 const useFetch = (baseUrl?: string) => {
-  const keycloak = useSSO();
+  const keycloak = useAuth();
 
   return useMemo(() => {
     const absoluteFetch = async (url: string, params?: RequestInit): Promise<FetchResponse> => {
@@ -32,7 +33,7 @@ const useFetch = (baseUrl?: string) => {
 
       params = {
         headers: {
-          Authorization: keycloak.getAuthorizationHeaderValue(),
+          Authorization: keycloak.user?.access_token,
           'Content-Type': 'application/json',
         },
         ...params,
@@ -51,7 +52,7 @@ const useFetch = (baseUrl?: string) => {
       // If token has expired
       if (response.status === 401) {
         const currentLocation = window.location.pathname;
-        keycloak.login({ postLoginRedirectURL: currentLocation });
+        keycloak.signinRedirect({ redirect_uri: currentLocation });
       }
 
       const text = await response.text();

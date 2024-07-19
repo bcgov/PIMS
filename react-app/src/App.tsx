@@ -5,7 +5,7 @@ import '@/App.css';
 import { ThemeProvider } from '@emotion/react';
 import appTheme from './themes/appTheme';
 import Dev from './pages/DevZone';
-import { ConfigContextProvider } from './contexts/configContext';
+import { ConfigContext, ConfigContextProvider } from './contexts/configContext';
 import AuthContextProvider, { AuthContext } from './contexts/authContext';
 import AuthRouteGuard from './guards/AuthRouteGuard';
 import BaseLayout from './components/layout/BaseLayout';
@@ -31,6 +31,9 @@ import SnackBarContextProvider from './contexts/snackbarContext';
 import ParcelMap from '@/components/map/ParcelMap';
 import LookupContextProvider from '@/contexts/lookupContext';
 import BulkUpload from './pages/BulkUpload';
+import { AuthProvider, AuthProviderProps } from 'react-oidc-context';
+import { WebStorageStateStore } from 'oidc-client-ts';
+import { CircularProgress } from '@mui/material';
 
 const Router = () => {
   const navigate = useNavigate();
@@ -256,15 +259,38 @@ const App = () => {
   return (
     <ThemeProvider theme={appTheme}>
       <ConfigContextProvider>
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <AuthContextProvider>
-            <LookupContextProvider>
-              <SnackBarContextProvider>
-                <Router />
-              </SnackBarContextProvider>
-            </LookupContextProvider>
-          </AuthContextProvider>
-        </ErrorBoundary>
+        <ConfigContext.Consumer>
+          {(config) => {
+            if (!config) {
+              return <CircularProgress />;
+            }
+            const authconfig: AuthProviderProps = {
+              authority: config.KEYCLOAK_CONFIG.authority,
+              client_id: config.KEYCLOAK_CONFIG.client_id,
+              resource: config.KEYCLOAK_CONFIG.client_id,
+              redirect_uri: 'http://localhost:3000/api/auth/login',
+              silent_redirect_uri: 'http://localhost:3000/api/auth/token',
+              loadUserInfo: true,
+              userStore: new WebStorageStateStore({ store: window.localStorage }),
+              onSigninCallback: () =>
+                window.history.replaceState({}, document.title, window.location.origin),
+              automaticSilentRenew: true,
+            };
+            return (
+              <AuthProvider {...authconfig}>
+                <ErrorBoundary FallbackComponent={ErrorFallback}>
+                  <AuthContextProvider>
+                    <LookupContextProvider>
+                      <SnackBarContextProvider>
+                        <Router />
+                      </SnackBarContextProvider>
+                    </LookupContextProvider>
+                  </AuthContextProvider>
+                </ErrorBoundary>
+              </AuthProvider>
+            );
+          }}
+        </ConfigContext.Consumer>
       </ConfigContextProvider>
     </ThemeProvider>
   );

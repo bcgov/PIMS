@@ -13,7 +13,7 @@ import {
   MenuItem,
 } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { useSSO } from '@bcgov/citz-imb-sso-react';
+//import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { Roles } from '@/constants/roles';
 import { AuthContext } from '@/contexts/authContext';
 
@@ -62,15 +62,16 @@ const AppBrand = () => {
 
 const Header: React.FC = () => {
   const auth = useContext(AuthContext);
-  const { logout, isAuthenticated, login, user } = useSSO();
+  //const { logout, isAuthenticated, login, user } = useSSO();
   const theme = useTheme();
   const navigate = useNavigate();
 
   const handleLoginButton = () => {
-    if (isAuthenticated) {
-      logout();
+    if (auth.keycloak.isAuthenticated) {
+      auth.keycloak.signoutRedirect();
     } else {
-      login();
+      console.log(`Will try sign in redirect.`);
+      auth.keycloak.signinRedirect();
     }
   };
 
@@ -103,9 +104,9 @@ const Header: React.FC = () => {
         <AppBrand />
         <Box flexGrow={1}></Box>
         <Box textAlign={'center'} alignItems={'center'} gap={'32px'} display={'flex'}>
-          {isAuthenticated && auth?.pimsUser?.data?.Status === 'Active' && (
+          {auth.keycloak.isAuthenticated && auth?.pimsUser?.data?.Status === 'Active' && (
             <>
-              {user.client_roles?.includes(Roles.ADMIN) ? (
+              {auth.keycloak.user ? (
                 <>
                   <Typography
                     id="admin-button"
@@ -189,7 +190,7 @@ const Header: React.FC = () => {
             </>
           )}
           <Button onClick={() => handleLoginButton()} color="secondary" variant="contained">
-            {isAuthenticated ? 'Logout' : 'Login'}
+            {auth.keycloak.isAuthenticated ? 'Logout' : 'Login'}
           </Button>
         </Box>
       </Toolbar>
