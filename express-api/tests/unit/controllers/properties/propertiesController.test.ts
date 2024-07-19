@@ -43,10 +43,7 @@ import {
 import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import xlsx, { WorkBook } from 'xlsx';
 
-const {
-  getPropertiesFuzzySearch,
-  getPropertiesForMap,
-} = controllers;
+const { getPropertiesFuzzySearch, getPropertiesForMap } = controllers;
 
 const _propertiesFuzzySearch = jest
   .fn()

@@ -5,13 +5,7 @@ import express from 'express';
 
 const router = express.Router();
 
-const {
-  getParcel,
-  updateParcel,
-  deleteParcel,
-  getParcels,
-  addParcel,
-} = controllers;
+const { getParcel, updateParcel, deleteParcel, getParcels, addParcel } = controllers;
 
 // Endpoints for parcels data manipulation
 router

@@ -63,12 +63,6 @@ describe('UNIT - Administrative Areas Admin', () => {
       await getAdministrativeAreas(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
-    // it('should return status 200 and a list of administrative areas, lacks metadata', async () => {
-    //   mockRequest.setUser({ client_roles: [] });
-    //   await getAdministrativeAreas(mockRequest, mockResponse, _next);
-    //   expect(mockResponse.statusValue).toBe(200);
-    //   expect(mockResponse.sendValue.CreatedOn).toBeUndefined();
-    // });
     it('should return status 400 when parse fails', async () => {
       mockRequest.query = { name: ['a'] };
       await getAdministrativeAreas(mockRequest, mockResponse);
@@ -94,7 +88,6 @@ describe('UNIT - Administrative Areas Admin', () => {
     beforeEach(() => {
       mockRequest.params.id = `${mockAdministrativeArea.id}`;
     });
-    // TODO: remove stub test when controller is complete
     it('should return 200', async () => {
       mockRequest.params.id = '1';
       await getAdministrativeAreaById(mockRequest, mockResponse);
@@ -107,7 +100,6 @@ describe('UNIT - Administrative Areas Admin', () => {
       mockRequest.body = { ...mockAdministrativeArea, name: 'new name' };
       mockRequest.params.id = `${mockAdministrativeArea.id}`;
     });
-    // TODO: remove stub test when controller is complete
     it('should return 200', async () => {
       mockRequest.params.id = '1';
       mockRequest.body = produceAdminArea({ Id: 1 });

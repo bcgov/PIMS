@@ -48,11 +48,7 @@ import { Agency } from '@/typeorm/Entities/Agency';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 import { Workflow } from '@/typeorm/Entities/Workflow';
 
-const {
-  lookupAll,
-  lookupProjectTierLevels,
-  lookupPropertyClassifications,
-} = controllers;
+const { lookupAll, lookupProjectTierLevels, lookupPropertyClassifications } = controllers;
 
 const _next = jest.fn();
 const _findClassification = jest.fn().mockImplementation(() => [produceClassification({})]);

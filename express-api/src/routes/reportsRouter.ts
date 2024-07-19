@@ -4,9 +4,7 @@ import express from 'express';
 
 const router = express.Router();
 
-const {
-  submitErrorReport,
-} = controllers;
+const { submitErrorReport } = controllers;
 
 // For errors submitted by the frontend Error Boundary.
 router.route('/error').post(catchErrors(submitErrorReport));

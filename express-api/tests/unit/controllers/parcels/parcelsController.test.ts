@@ -197,5 +197,4 @@ describe('UNIT - Parcels', () => {
       expect(async () => await controllers.addParcel(mockRequest, mockResponse)).rejects.toThrow();
     });
   });
-
 });

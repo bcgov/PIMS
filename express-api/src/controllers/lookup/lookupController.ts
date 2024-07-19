@@ -28,7 +28,7 @@ import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 import { Workflow } from '@/typeorm/Entities/Workflow';
 
 // TODO: What controllers here could just be replaced by existing GET requests?
-// is this still todo 
+// is this still todo ^^
 
 /**
  * @description Get all property classification entries.
