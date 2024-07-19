@@ -1693,7 +1693,7 @@
 						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
 						"defaultCatalog": "pims",
 						"defaultSchema": "dbo",
-						"query": "SELECT TOP (1000) [Id]\r\n      ,\u002700000000-0000-0000-0000-000000000000\u0027 as [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Name]\r\n      ,[IsDisabled]\r\n      ,[SortOrder]\r\n      ,[Code]\r\n      ,[Description]\r\n      ,[ParentId]\r\n      ,[Email]\r\n      ,[SendEmail]\r\n      ,[AddressTo]\r\n      ,[CCEmail]\r\n  FROM [pims].[dbo].[Agencies]\r\n  \r\n  ORDER BY ParentId"
+						"query": "SELECT TOP (1000) [Id]\r\n      ,\u002700000000-0000-0000-0000-000000000000\u0027 as [CreatedById]\r\n      ,[CreatedOn]\r\n      ,\u002700000000-0000-0000-0000-000000000000\u0027 as [UpdatedById] \r\n      ,[UpdatedOn]\r\n      ,[Name]\r\n      ,[IsDisabled]\r\n      ,[SortOrder]\r\n      ,[Code]\r\n      ,[Description]\r\n      ,[ParentId]\r\n      ,[Email]\r\n      ,[SendEmail]\r\n      ,[AddressTo]\r\n      ,[CCEmail]\r\n  FROM [pims].[dbo].[Agencies]\r\n  \r\n  ORDER BY ParentId"
 					}
 				},
 				{
@@ -1725,46 +1725,6 @@
 						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
 						"defaultCatalog": "pims",
 						"query": "SELECT p.[Id],\r\n\tCASE \r\n\t  WHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t  ELSE p.[CreatedById]\r\n\tEND AS created_by_id,\r\n    p.[CreatedOn] AS created_on,\r\n    p.[UpdatedById] AS updated_by_id,\r\n    p.[UpdatedOn] AS updated_on,\r\n    p.[Name] AS [name],\r\n    p.[Description] AS [description],\r\n    p.[ClassificationId] AS classification_id,\r\n    p.BuildingConstructionTypeId AS building_construction_type_id,\r\n    p.[AgencyId] AS agency_id,\r\n    p.[IsSensitive] AS is_sensitive,\r\n    p.[IsVisibleToOtherAgencies] AS is_visible_to_other_agencies,\r\n\tp.BuildingFloorCount AS building_floor_count,\r\n\tp.BuildingPredominateUseId AS building_predominate_use_id,\r\n\tp.BuildingTenancy AS building_tenancy,\r\n\tp.RentableArea AS rentable_area,\r\n\tp.BuildingOccupantTypeId AS building_occupant_type_id,\r\n\tp.LeaseExpiry AS lease_expiry,\r\n\tp.OccupantName AS occupant_name,\r\n\tp.TransferLeaseOnSale AS transfer_lease_on_sale,\r\n\tp.BuildingTenancyUpdatedOn AS building_tenancy_updated_on,\r\n\tp.EncumbranceReason AS encumbrance_reason,\r\n\tp.LeasedLandMetadata AS leased_land_metadata,\r\n\tp.TotalArea AS total_area,\r\n\tCONVERT(VARCHAR(40), CAST(p.Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(p.Location.Lat AS DECIMAL(18, 14))) AS [location],\r\n\tCASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Daajing Giids\u0027 THEN 512\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Royston\u0027 THEN 513\r\n        ELSE aa.Id \r\n    END AS administrative_area_id,  \r\n\ta.Address1 AS address1, \r\n\ta.Postal AS postal,\r\n\t1 as property_type_id,\r\n\tp.ProjectNumbers AS project_numbers, \r\n    COALESCE(b.PID, s.PID) AS pid,\r\n    COALESCE(b.PIN, s.PIN) AS pin\r\nFROM \r\n    [pims].[dbo].Buildings p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n\tLEFT OUTER JOIN ParcelBuildings pb\r\n\tON p.Id \u003d pb.BuildingId\r\n\tLEFT OUTER JOIN Parcels b\r\n\tON pb.ParcelId \u003d b.Id\r\n\tLEFT OUTER JOIN spreadsheet_data s\r\n\tON s.BuildingId \u003d p.Id\r\nWHERE p.BuildingPredominateUseId \u003c\u003d 54 "
-					}
-				},
-				{
-					"type": "databaseTransferProducer",
-					"location": {
-						"type": "query",
-						"project": "General",
-						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
-						"defaultCatalog": "pims",
-						"query": "SELECT [ParcelId]\r\n      ,YEAR([Date]) AS [Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Firm]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[ParcelEvaluations]"
-					}
-				},
-				{
-					"type": "databaseTransferProducer",
-					"location": {
-						"type": "query",
-						"project": "General",
-						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
-						"defaultCatalog": "pims",
-						"query": "SELECT [ParcelId]\r\n      ,[FiscalYear]\r\n      ,[Key]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Value]\r\n      ,[Note]\r\n      ,[EffectiveDate]\r\n  FROM [dbo].[ParcelFiscals]"
-					}
-				},
-				{
-					"type": "databaseTransferProducer",
-					"location": {
-						"type": "query",
-						"project": "General",
-						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
-						"defaultCatalog": "pims",
-						"query": "\r\n  SELECT BuildingId,\r\n  FiscalYear,\r\n  [Key],\r\n  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById],\r\n  CreatedOn,\r\n  UpdatedById,\r\n  UpdatedOn,\r\n  [Value],\r\n  Note,\r\n  EffectiveDate\r\n  FROM BuildingFiscals \r\n  \r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)"
-					}
-				},
-				{
-					"type": "databaseTransferProducer",
-					"location": {
-						"type": "query",
-						"project": "General",
-						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
-						"defaultCatalog": "pims",
-						"query": "SELECT [BuildingId]\r\n      ,YEAR([Date]) AS [Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[BuildingEvaluations]\r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)"
 					}
 				},
 				{
@@ -1813,6 +1773,46 @@
 						"type": "entity",
 						"project": "General",
 						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/NotificationQueue"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
+						"defaultCatalog": "pims",
+						"query": "SELECT [ParcelId]\r\n      ,YEAR([Date]) AS [Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Firm]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[ParcelEvaluations]"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
+						"defaultCatalog": "pims",
+						"query": "SELECT [ParcelId]\r\n      ,[FiscalYear]\r\n      ,[Key]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Value]\r\n      ,[Note]\r\n      ,[EffectiveDate]\r\n  FROM [dbo].[ParcelFiscals]"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
+						"defaultCatalog": "pims",
+						"query": "\r\n  SELECT BuildingId,\r\n  FiscalYear,\r\n  [Key],\r\n  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById],\r\n  CreatedOn,\r\n  UpdatedById,\r\n  UpdatedOn,\r\n  [Value],\r\n  Note,\r\n  EffectiveDate\r\n  FROM BuildingFiscals \r\n  \r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
+						"defaultCatalog": "pims",
+						"query": "SELECT [BuildingId]\r\n      ,YEAR([Date]) AS [Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[BuildingEvaluations]\r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)"
 					}
 				},
 				{
@@ -2017,12 +2017,12 @@
 					"disableUsingBatches": true,
 					"ignoreDuplicateRows": true,
 					"transferAutoGeneratedColumns": true,
-					"disableReferentialIntegrity": true,
+					"disableReferentialIntegrity": false,
 					"useBulkLoad": false,
 					"truncateBeforeLoad": false,
 					"openTableOnFinish": true,
 					"mappings": {
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT TOP (1000) [Id]\r\n      ,\u002700000000-0000-0000-0000-000000000000\u0027 as [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Name]\r\n      ,[IsDisabled]\r\n      ,[SortOrder]\r\n      ,[Code]\r\n      ,[Description]\r\n      ,[ParentId]\r\n      ,[Email]\r\n      ,[SendEmail]\r\n      ,[AddressTo]\r\n      ,[CCEmail]\r\n  FROM [pims].[dbo].[Agencies]\r\n  \r\n  ORDER BY ParentId": {
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT TOP (1000) [Id]\r\n      ,\u002700000000-0000-0000-0000-000000000000\u0027 as [CreatedById]\r\n      ,[CreatedOn]\r\n      ,\u002700000000-0000-0000-0000-000000000000\u0027 as [UpdatedById] \r\n      ,[UpdatedOn]\r\n      ,[Name]\r\n      ,[IsDisabled]\r\n      ,[SortOrder]\r\n      ,[Code]\r\n      ,[Description]\r\n      ,[ParentId]\r\n      ,[Email]\r\n      ,[SendEmail]\r\n      ,[AddressTo]\r\n      ,[CCEmail]\r\n  FROM [pims].[dbo].[Agencies]\r\n  \r\n  ORDER BY ParentId": {
 							"targetName": "agency",
 							"mappingType": "existing",
 							"attributes": {
@@ -2052,7 +2052,6 @@
 								},
 								"Name": {
 									"targetName": "name",
-									"targetType": "varchar(150)",
 									"mappingType": "existing"
 								},
 								"isdisabled": {
@@ -2251,7 +2250,6 @@
 								},
 								"Name": {
 									"targetName": "name",
-									"targetType": "varchar(250)",
 									"mappingType": "existing"
 								},
 								"description": {
@@ -2496,216 +2494,6 @@
 								"pin": {
 									"targetName": "pin",
 									"targetType": "int4",
-									"mappingType": "existing"
-								}
-							}
-						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT [ParcelId]\r\n      ,YEAR([Date]) AS [Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Firm]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[ParcelEvaluations]": {
-							"targetName": "parcel_evaluation",
-							"mappingType": "existing",
-							"attributes": {
-								"parcelid": {
-									"targetName": "parcel_id",
-									"targetType": "int4",
-									"mappingType": "existing"
-								},
-								"Date": {
-									"targetName": "\"year\"",
-									"targetType": "int4",
-									"mappingType": "existing"
-								},
-								"Key": {
-									"targetName": "evaluation_key_id",
-									"targetType": "int4",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "created_by_id",
-									"targetType": "uuid",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "created_on",
-									"targetType": "timestamp",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "updated_by_id",
-									"targetType": "uuid",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "updated_on",
-									"targetType": "timestamp",
-									"mappingType": "existing"
-								},
-								"firm": {
-									"targetName": "firm",
-									"mappingType": "existing"
-								},
-								"value": {
-									"targetName": "value",
-									"mappingType": "existing"
-								},
-								"note": {
-									"targetName": "note",
-									"mappingType": "existing"
-								}
-							}
-						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT [ParcelId]\r\n      ,[FiscalYear]\r\n      ,[Key]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Value]\r\n      ,[Note]\r\n      ,[EffectiveDate]\r\n  FROM [dbo].[ParcelFiscals]": {
-							"targetName": "parcel_fiscal",
-							"mappingType": "existing",
-							"attributes": {
-								"parcelid": {
-									"targetName": "parcel_id",
-									"targetType": "int4",
-									"mappingType": "existing"
-								},
-								"fiscalyear": {
-									"targetName": "fiscal_year",
-									"targetType": "int4",
-									"mappingType": "existing"
-								},
-								"Key": {
-									"targetName": "fiscal_key_id",
-									"targetType": "int4",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "created_by_id",
-									"targetType": "uuid",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "created_on",
-									"targetType": "timestamp",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "updated_by_id",
-									"targetType": "uuid",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "updated_on",
-									"targetType": "timestamp",
-									"mappingType": "existing"
-								},
-								"value": {
-									"targetName": "value",
-									"mappingType": "existing"
-								},
-								"note": {
-									"targetName": "note",
-									"mappingType": "existing"
-								},
-								"effectivedate": {
-									"targetName": "effective_date",
-									"targetType": "timestamp",
-									"mappingType": "existing"
-								}
-							}
-						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/\r\n  SELECT BuildingId,\r\n  FiscalYear,\r\n  [Key],\r\n  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById],\r\n  CreatedOn,\r\n  UpdatedById,\r\n  UpdatedOn,\r\n  [Value],\r\n  Note,\r\n  EffectiveDate\r\n  FROM BuildingFiscals \r\n  \r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)": {
-							"targetName": "building_fiscal",
-							"mappingType": "existing",
-							"attributes": {
-								"buildingid": {
-									"targetName": "building_id",
-									"targetType": "int4",
-									"mappingType": "existing"
-								},
-								"fiscalyear": {
-									"targetName": "fiscal_year",
-									"targetType": "int4",
-									"mappingType": "existing"
-								},
-								"Key": {
-									"targetName": "fiscal_key_id",
-									"targetType": "int4",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "created_by_id",
-									"targetType": "uuid",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "created_on",
-									"targetType": "timestamp",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "updated_by_id",
-									"targetType": "uuid",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "updated_on",
-									"targetType": "timestamp",
-									"mappingType": "existing"
-								},
-								"value": {
-									"targetName": "value",
-									"mappingType": "existing"
-								},
-								"note": {
-									"targetName": "note",
-									"mappingType": "existing"
-								},
-								"effectivedate": {
-									"targetName": "effective_date",
-									"targetType": "timestamp",
-									"mappingType": "existing"
-								}
-							}
-						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT [BuildingId]\r\n      ,YEAR([Date]) AS [Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[BuildingEvaluations]\r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)": {
-							"targetName": "building_evaluation",
-							"mappingType": "existing",
-							"attributes": {
-								"buildingid": {
-									"targetName": "building_id",
-									"targetType": "int4",
-									"mappingType": "existing"
-								},
-								"Date": {
-									"targetName": "\"year\"",
-									"targetType": "int4",
-									"mappingType": "existing"
-								},
-								"Key": {
-									"targetName": "evaluation_key_id",
-									"targetType": "int4",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "created_by_id",
-									"targetType": "uuid",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "created_on",
-									"targetType": "timestamp",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "updated_by_id",
-									"targetType": "uuid",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "updated_on",
-									"targetType": "timestamp",
-									"mappingType": "existing"
-								},
-								"value": {
-									"targetName": "value",
-									"mappingType": "existing"
-								},
-								"note": {
-									"targetName": "note",
 									"mappingType": "existing"
 								}
 							}
@@ -3145,6 +2933,216 @@
 								}
 							}
 						},
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT [ParcelId]\r\n      ,YEAR([Date]) AS [Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Firm]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[ParcelEvaluations]": {
+							"targetName": "parcel_evaluation",
+							"mappingType": "existing",
+							"attributes": {
+								"parcelid": {
+									"targetName": "parcel_id",
+									"targetType": "int4",
+									"mappingType": "existing"
+								},
+								"Date": {
+									"targetName": "\"year\"",
+									"targetType": "int4",
+									"mappingType": "existing"
+								},
+								"Key": {
+									"targetName": "evaluation_key_id",
+									"targetType": "int4",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "created_by_id",
+									"targetType": "uuid",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "created_on",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "updated_by_id",
+									"targetType": "uuid",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "updated_on",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								},
+								"firm": {
+									"targetName": "firm",
+									"mappingType": "existing"
+								},
+								"value": {
+									"targetName": "value",
+									"mappingType": "existing"
+								},
+								"note": {
+									"targetName": "note",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT [ParcelId]\r\n      ,[FiscalYear]\r\n      ,[Key]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Value]\r\n      ,[Note]\r\n      ,[EffectiveDate]\r\n  FROM [dbo].[ParcelFiscals]": {
+							"targetName": "parcel_fiscal",
+							"mappingType": "existing",
+							"attributes": {
+								"parcelid": {
+									"targetName": "parcel_id",
+									"targetType": "int4",
+									"mappingType": "existing"
+								},
+								"fiscalyear": {
+									"targetName": "fiscal_year",
+									"targetType": "int4",
+									"mappingType": "existing"
+								},
+								"Key": {
+									"targetName": "fiscal_key_id",
+									"targetType": "int4",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "created_by_id",
+									"targetType": "uuid",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "created_on",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "updated_by_id",
+									"targetType": "uuid",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "updated_on",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								},
+								"value": {
+									"targetName": "value",
+									"mappingType": "existing"
+								},
+								"note": {
+									"targetName": "note",
+									"mappingType": "existing"
+								},
+								"effectivedate": {
+									"targetName": "effective_date",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/\r\n  SELECT BuildingId,\r\n  FiscalYear,\r\n  [Key],\r\n  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById],\r\n  CreatedOn,\r\n  UpdatedById,\r\n  UpdatedOn,\r\n  [Value],\r\n  Note,\r\n  EffectiveDate\r\n  FROM BuildingFiscals \r\n  \r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)": {
+							"targetName": "building_fiscal",
+							"mappingType": "existing",
+							"attributes": {
+								"buildingid": {
+									"targetName": "building_id",
+									"targetType": "int4",
+									"mappingType": "existing"
+								},
+								"fiscalyear": {
+									"targetName": "fiscal_year",
+									"targetType": "int4",
+									"mappingType": "existing"
+								},
+								"Key": {
+									"targetName": "fiscal_key_id",
+									"targetType": "int4",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "created_by_id",
+									"targetType": "uuid",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "created_on",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "updated_by_id",
+									"targetType": "uuid",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "updated_on",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								},
+								"value": {
+									"targetName": "value",
+									"mappingType": "existing"
+								},
+								"note": {
+									"targetName": "note",
+									"mappingType": "existing"
+								},
+								"effectivedate": {
+									"targetName": "effective_date",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT [BuildingId]\r\n      ,YEAR([Date]) AS [Date]\r\n      ,[Key]\r\n      ,\r\n\t  CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Value]\r\n      ,[Note]\r\n  FROM [pims].[dbo].[BuildingEvaluations]\r\nWHERE BuildingId IN (\r\n\tSELECT b.Id \r\n\tFROM Buildings b\r\n\tWHERE b.BuildingPredominateUseId \u003c\u003d 54\r\n)": {
+							"targetName": "building_evaluation",
+							"mappingType": "existing",
+							"attributes": {
+								"buildingid": {
+									"targetName": "building_id",
+									"targetType": "int4",
+									"mappingType": "existing"
+								},
+								"Date": {
+									"targetName": "\"year\"",
+									"targetType": "int4",
+									"mappingType": "existing"
+								},
+								"Key": {
+									"targetName": "evaluation_key_id",
+									"targetType": "int4",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "created_by_id",
+									"targetType": "uuid",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "created_on",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "updated_by_id",
+									"targetType": "uuid",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "updated_on",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								},
+								"value": {
+									"targetName": "value",
+									"mappingType": "existing"
+								},
+								"note": {
+									"targetName": "note",
+									"mappingType": "existing"
+								}
+							}
+						},
 						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/\r\nSELECT [ProjectId]\r\n      ,[TaskId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsCompleted]\r\n      ,[CompletedOn]\r\n  FROM [dbo].[ProjectTasks]": {
 							"targetName": "project_task",
 							"mappingType": "existing",
@@ -3220,7 +3218,7 @@
 									"mappingType": "existing"
 								},
 								"Name": {
-									"targetName": "\"name\"",
+									"targetName": "name",
 									"mappingType": "existing"
 								},
 								"From": {
@@ -3530,6 +3528,10 @@
 									"mappingType": "skip"
 								}
 							}
+						},
+						"postgres-jdbc-18dd2b052a7-539b625bbf9f91bf/-- Update existing projects that have depricated statuses with new statuses\nupdate project set status_id \u003d 23 where status_id in (1, 2, 3, 5, 6);\nupdate project set status_id \u003d 14 where status_id in (30, 10, 11, 12);\nupdate project set status_id \u003d 42 where status_id in (43);\nupdate project set status_id \u003d 8 where status_id in (13);\n\n-- Duplicate project_task entries from Approved for ERP to Approved for Exemption\n/* INSERT INTO project_task (project_id, task_id, is_completed, completed_on, created_by_id)\n  SELECT\n      project_id,\n      t_destination.id AS task_id,\n      is_completed,\n      pt.completed_on,\n      \u002700000000-0000-0000-0000-000000000000\u0027\n  FROM\n      project_task pt\n  JOIN task t_origin ON\n      pt.task_id \u003d t_origin.id\n      AND t_origin.status_id \u003d 14\n  JOIN task t_destination \n      ON t_origin.name \u003d t_destination.name \n      AND t_destination.status_id \u003d 15; */\n     \n-- Duplicate project_note entries from Approved for ERP to Approved for Exemption\n/* INSERT INTO project_note (project_id, note_type_id , note , created_by_id)\n  SELECT\n      project_id,\n      n_destination.id AS note_type_id ,\n      note,\n      \u002700000000-0000-0000-0000-000000000000\u0027\n  FROM\n      project_note  pn\n  JOIN note_type n_origin ON\n      pn.note_type_id \u003d n_origin.id\n      AND n_origin.status_id \u003d 14\n  JOIN note_type  n_destination \n      ON n_origin.name \u003d n_destination.name \n      AND n_destination.status_id \u003d 15; */\n     \n-- There are no monetary types associated with the Approved for ERP status\n     \n     \n\n\n\n": {
+							"targetName": "\"--_update_existing_projects_that_have_depricated_statuses_with_new_statuses\nupdate_project_set_status_id_\u003d_23_where_status_id_in_(1,_2,_3,_5,_6);\nupdate_project_set_status_id_\u003d_14_where_status_id_in_(30,_10,_11,_12);\nupdate_project_set_status_id_\u003d_42_where_status_id_in_(43);\nupdate_project_set_status_id_\u003d_8_where_status_id_in_(13);\n\n--_duplicate_project_task_entries_from_approved_for_erp_to_approved_for_exemption\n/*_insert_into_project_task_(project_id,_task_id,_is_completed,_completed_on,_created_by_id)\n__select\n______project_id,\n______t_destination.id_as_task_id,\n______is_completed,\n______pt.completed_on,\n______\u002700000000-0000-0000-0000-000000000000\u0027\n__from\n______project_task_pt\n__join_task_t_origin_on\n______pt.task_id_\u003d_t_origin.id\n______and_t_origin.status_id_\u003d_14\n__join_task_t_destination_\n______on_t_origin.name_\u003d_t_destination.name_\n______and_t_destination.status_id_\u003d_15;_*/\n_____\n--_duplicate_project_note_entries_from_approved_for_erp_to_approved_for_exemption\n/*_insert_into_project_note_(project_id,_note_type_id_,_note_,_created_by_id)\n__select\n______project_id,\n______n_destination.id_as_note_type_id_,\n______note,\n______\u002700000000-0000-0000-0000-000000000000\u0027\n__from\n______project_note__pn\n__join_note_type_n_origin_on\n______pn.note_type_id_\u003d_n_origin.id\n______and_n_origin.status_id_\u003d_14\n__join_note_type__n_destination_\n______on_n_origin.name_\u003d_n_destination.name_\n______and_n_destination.status_id_\u003d_15;_*/\n_____\n--_there_are_no_monetary_types_associated_with_the_approved_for_erp_status\n_____\n_____\n\n\n\n\"",
+							"mappingType": "skip"
 						}
 					}
 				},
