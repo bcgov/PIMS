@@ -40,7 +40,7 @@
 						"project": "General",
 						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
 						"defaultCatalog": "pims",
-						"query": "\r\nSELECT p.[Id],\r\n\t  CASE \r\n\t\tWHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE p.[CreatedById]\r\n\t  END AS [CreatedById],\r\n    p.[CreatedOn],\r\n    p.[UpdatedById],\r\n    p.[UpdatedOn],\r\n    p.[Name],\r\n    p.[Description],\r\n    p.[ClassificationId],\r\n    p.[AgencyId],\r\n    p.[IsSensitive],\r\n    p.[IsVisibleToOtherAgencies],\r\n    p.[PID],\r\n    p.[PIN],\r\n    p.[LandArea],\r\n    p.[LandLegalDescription],\r\n    p.[Zoning],\r\n    p.[ZoningPotential],\r\n    p.[NotOwned],\r\n\tCONVERT(VARCHAR(40), CAST(Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(Location.Lat AS DECIMAL(18, 14))) AS Location,\r\n    CASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511 \r\n        ELSE aa.Id \r\n    END AS AdministrativeAreaId,  \r\n\ta.AdministrativeArea,\r\n\ta.Address1, \r\n\ta.Postal,\r\n\tpp.ParcelId as ParentID,\r\n\t0 as PropertyTypeID\r\nFROM \r\n    [pims].[dbo].[Parcels] p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n    LEFT OUTER JOIN ParcelParcels pp\r\n    ON pp.SubdivisionId \u003d p.Id"
+						"query": "\r\nSELECT p.[Id],\r\n\t  CASE \r\n\t\tWHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE p.[CreatedById]\r\n\t  END AS [CreatedById],\r\n    p.[CreatedOn],\r\n    p.[UpdatedById],\r\n    p.[UpdatedOn],\r\n    p.[Name],\r\n    p.[Description],\r\n    p.[ClassificationId],\r\n    p.[AgencyId],\r\n    p.[IsSensitive],\r\n    p.[IsVisibleToOtherAgencies],\r\n    p.[PID],\r\n    p.[PIN],\r\n    p.[LandArea],\r\n    p.[LandLegalDescription],\r\n    p.[Zoning],\r\n    p.[ZoningPotential],\r\n    p.[NotOwned],\r\n\tCONVERT(VARCHAR(40), CAST(Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(Location.Lat AS DECIMAL(18, 14))) AS Location,\r\n    CASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Daajing Giids\u0027 THEN 512\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Royston\u0027 THEN 513\r\n        ELSE aa.Id \r\n    END AS AdministrativeAreaId,  \r\n\ta.AdministrativeArea,\r\n\ta.Address1, \r\n\ta.Postal,\r\n\tpp.ParcelId as ParentID,\r\n\t0 as PropertyTypeID\r\nFROM \r\n    [pims].[dbo].[Parcels] p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n    LEFT OUTER JOIN ParcelParcels pp\r\n    ON pp.SubdivisionId \u003d p.Id"
 					}
 				},
 				{
@@ -50,7 +50,55 @@
 						"project": "General",
 						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
 						"defaultCatalog": "pims",
-						"query": "SELECT p.[Id],\r\n\tCASE \r\n\t  WHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t  ELSE p.[CreatedById]\r\n\tEND AS created_by_id,\r\n    p.[CreatedOn] AS created_on,\r\n    p.[UpdatedById] AS updated_by_id,\r\n    p.[UpdatedOn] AS updated_on,\r\n    p.[Name] AS [name],\r\n    p.[Description] AS [description],\r\n    p.[ClassificationId] AS classification_id,\r\n    p.BuildingConstructionTypeId AS building_construction_type_id,\r\n    p.[AgencyId] AS agency_id,\r\n    p.[IsSensitive] AS is_sensitive,\r\n    p.[IsVisibleToOtherAgencies] AS is_visible_to_other_agencies,\r\n\tp.BuildingFloorCount AS building_floor_count,\r\n\tp.BuildingPredominateUseId AS building_predominate_use_id,\r\n\tp.BuildingTenancy AS building_tenancy,\r\n\tp.RentableArea AS rentable_area,\r\n\tp.BuildingOccupantTypeId AS building_occupant_type_id,\r\n\tp.LeaseExpiry AS lease_expiry,\r\n\tp.OccupantName AS occupant_name,\r\n\tp.TransferLeaseOnSale AS transfer_lease_on_sale,\r\n\tp.BuildingTenancyUpdatedOn AS building_tenancy_updated_on,\r\n\tp.EncumbranceReason AS encumbrance_reason,\r\n\tp.LeasedLandMetadata AS leased_land_metadata,\r\n\tp.TotalArea AS total_area,\r\n\tCONVERT(VARCHAR(40), CAST(p.Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(p.Location.Lat AS DECIMAL(18, 14))) AS [location],\r\n\tCASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511 \r\n        ELSE aa.Id \r\n    END AS administrative_area_id,  \r\n\ta.Address1 AS address1, \r\n\ta.Postal AS postal,\r\n\t1 as property_type_id,\r\n\tp.ProjectNumbers AS project_numbers, \r\n    COALESCE(b.PID, s.PID) AS pid,\r\n    COALESCE(b.PIN, s.PIN) AS pin\r\nFROM \r\n    [pims].[dbo].Buildings p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n\tLEFT OUTER JOIN ParcelBuildings pb\r\n\tON p.Id \u003d pb.BuildingId\r\n\tLEFT OUTER JOIN Parcels b\r\n\tON pb.ParcelId \u003d b.Id\r\n\tLEFT OUTER JOIN spreadsheet_data s\r\n\tON s.BuildingId \u003d p.Id\r\nWHERE p.BuildingPredominateUseId \u003c\u003d 54 "
+						"query": "SELECT p.[Id],\r\n\tCASE \r\n\t  WHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t  ELSE p.[CreatedById]\r\n\tEND AS created_by_id,\r\n    p.[CreatedOn] AS created_on,\r\n    p.[UpdatedById] AS updated_by_id,\r\n    p.[UpdatedOn] AS updated_on,\r\n    p.[Name] AS [name],\r\n    p.[Description] AS [description],\r\n    p.[ClassificationId] AS classification_id,\r\n    p.BuildingConstructionTypeId AS building_construction_type_id,\r\n    p.[AgencyId] AS agency_id,\r\n    p.[IsSensitive] AS is_sensitive,\r\n    p.[IsVisibleToOtherAgencies] AS is_visible_to_other_agencies,\r\n\tp.BuildingFloorCount AS building_floor_count,\r\n\tp.BuildingPredominateUseId AS building_predominate_use_id,\r\n\tp.BuildingTenancy AS building_tenancy,\r\n\tp.RentableArea AS rentable_area,\r\n\tp.BuildingOccupantTypeId AS building_occupant_type_id,\r\n\tp.LeaseExpiry AS lease_expiry,\r\n\tp.OccupantName AS occupant_name,\r\n\tp.TransferLeaseOnSale AS transfer_lease_on_sale,\r\n\tp.BuildingTenancyUpdatedOn AS building_tenancy_updated_on,\r\n\tp.EncumbranceReason AS encumbrance_reason,\r\n\tp.LeasedLandMetadata AS leased_land_metadata,\r\n\tp.TotalArea AS total_area,\r\n\tCONVERT(VARCHAR(40), CAST(p.Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(p.Location.Lat AS DECIMAL(18, 14))) AS [location],\r\n\tCASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Daajing Giids\u0027 THEN 512\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Royston\u0027 THEN 513\r\n        ELSE aa.Id \r\n    END AS administrative_area_id,  \r\n\ta.Address1 AS address1, \r\n\ta.Postal AS postal,\r\n\t1 as property_type_id,\r\n\tp.ProjectNumbers AS project_numbers, \r\n    COALESCE(b.PID, s.PID) AS pid,\r\n    COALESCE(b.PIN, s.PIN) AS pin\r\nFROM \r\n    [pims].[dbo].Buildings p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n\tLEFT OUTER JOIN ParcelBuildings pb\r\n\tON p.Id \u003d pb.BuildingId\r\n\tLEFT OUTER JOIN Parcels b\r\n\tON pb.ParcelId \u003d b.Id\r\n\tLEFT OUTER JOIN spreadsheet_data s\r\n\tON s.BuildingId \u003d p.Id\r\nWHERE p.BuildingPredominateUseId \u003c\u003d 54 "
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "entity",
+						"project": "General",
+						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/Projects"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "entity",
+						"project": "General",
+						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectStatusHistory"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "entity",
+						"project": "General",
+						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectNumbers"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "entity",
+						"project": "General",
+						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectProperties"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "entity",
+						"project": "General",
+						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectSnapshots"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "entity",
+						"project": "General",
+						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/NotificationQueue"
 					}
 				},
 				{
@@ -96,14 +144,6 @@
 				{
 					"type": "databaseTransferProducer",
 					"location": {
-						"type": "entity",
-						"project": "General",
-						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/Projects"
-					}
-				},
-				{
-					"type": "databaseTransferProducer",
-					"location": {
 						"type": "query",
 						"project": "General",
 						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
@@ -114,43 +154,11 @@
 				{
 					"type": "databaseTransferProducer",
 					"location": {
-						"type": "entity",
-						"project": "General",
-						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectStatusHistory"
-					}
-				},
-				{
-					"type": "databaseTransferProducer",
-					"location": {
-						"type": "entity",
-						"project": "General",
-						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectNumbers"
-					}
-				},
-				{
-					"type": "databaseTransferProducer",
-					"location": {
-						"type": "entity",
-						"project": "General",
-						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectProperties"
-					}
-				},
-				{
-					"type": "databaseTransferProducer",
-					"location": {
 						"type": "query",
 						"project": "General",
 						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
 						"defaultCatalog": "pims",
 						"query": "SELECT [Id]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsFinal]\r\n      ,[Name]\r\n      ,[From]\r\n      ,[To]\r\n      ,[ReportType]\r\n  FROM [dbo].[ProjectReports]"
-					}
-				},
-				{
-					"type": "databaseTransferProducer",
-					"location": {
-						"type": "entity",
-						"project": "General",
-						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectSnapshots"
 					}
 				},
 				{
@@ -171,14 +179,6 @@
 						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
 						"defaultCatalog": "pims",
 						"query": "SELECT [Id]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[ProjectId]\r\n      ,[NoteType]\r\n      ,[Note]\r\n  FROM [dbo].[ProjectNotes]"
-					}
-				},
-				{
-					"type": "databaseTransferProducer",
-					"location": {
-						"type": "entity",
-						"project": "General",
-						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/NotificationQueue"
 					}
 				},
 				{
@@ -233,9 +233,22 @@
 						"defaultSchema": "public",
 						"query": "SELECT setval(\u0027parcel_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM parcel));\r\nSELECT setval(\u0027building_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM building));\r\nSELECT setval(\u0027agency_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM agency));\r\nSELECT setval(\u0027project_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project));\r\nSELECT setval(\u0027project_note_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_note));\r\nSELECT setval(\u0027notification_queue_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM notification_queue));\r\nSELECT setval(\u0027project_property_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_property));\r\nSELECT setval(\u0027project_report_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_report));\r\nSELECT setval(\u0027project_status_history_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM  project_status_history));"
 					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "postgres-jdbc-18ceb57db81-643fa3bb56d54f2f",
+						"defaultCatalog": "postgres",
+						"query": "-- Update existing projects that have depricated statuses with new statuses\nupdate project set status_id \u003d 23 where status_id in (1, 2, 3, 5, 6);\nupdate project set status_id \u003d 14 where status_id in (30, 10, 11, 12);\nupdate project set status_id \u003d 42 where status_id in (43);\nupdate project set status_id \u003d 8 where status_id in (13);\n\n-- Duplicate project_task entries from Approved for ERP to Approved for Exemption\n/* INSERT INTO project_task (project_id, task_id, is_completed, completed_on, created_by_id)\n  SELECT\n      project_id,\n      t_destination.id AS task_id,\n      is_completed,\n      pt.completed_on,\n      \u002700000000-0000-0000-0000-000000000000\u0027\n  FROM\n      project_task pt\n  JOIN task t_origin ON\n      pt.task_id \u003d t_origin.id\n      AND t_origin.status_id \u003d 14\n  JOIN task t_destination \n      ON t_origin.name \u003d t_destination.name \n      AND t_destination.status_id \u003d 15; */\n     \n-- Duplicate project_note entries from Approved for ERP to Approved for Exemption\n/*INSERT INTO project_note (project_id, note_type_id , note , created_by_id)\n  SELECT\n      project_id,\n      n_destination.id AS note_type_id ,\n      note,\n      \u002700000000-0000-0000-0000-000000000000\u0027\n  FROM\n      project_note  pn\n  JOIN note_type n_origin ON\n      pn.note_type_id \u003d n_origin.id\n      AND n_origin.status_id \u003d 14\n  JOIN note_type  n_destination \n      ON n_origin.name \u003d n_destination.name \n      AND n_destination.status_id \u003d 15; */\n     \n-- There are no monetary types associated with the Approved for ERP status\n     \n     \n\n\n\n"
+					}
 				}
 			],
 			"consumers": [
+				{
+					"type": "databaseTransferConsumer"
+				},
 				{
 					"type": "databaseTransferConsumer"
 				},
@@ -335,6 +348,398 @@
 					"truncateBeforeLoad": false,
 					"openTableOnFinish": true,
 					"mappings": {
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/Projects": {
+							"targetName": "project",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "id",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "created_by_id",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "created_on",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "updated_by_id",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "updated_on",
+									"mappingType": "existing"
+								},
+								"rowversion": {
+									"targetName": "rowversion",
+									"mappingType": "skip"
+								},
+								"projectnumber": {
+									"targetName": "project_number",
+									"mappingType": "existing"
+								},
+								"Name": {
+									"targetName": "Name",
+									"mappingType": "existing"
+								},
+								"workflowid": {
+									"targetName": "workflow_id",
+									"mappingType": "existing"
+								},
+								"manager": {
+									"targetName": "manager",
+									"mappingType": "existing"
+								},
+								"reportedfiscalyear": {
+									"targetName": "reported_fiscal_year",
+									"mappingType": "existing"
+								},
+								"actualfiscalyear": {
+									"targetName": "actual_fiscal_year",
+									"mappingType": "existing"
+								},
+								"agencyid": {
+									"targetName": "agency_id",
+									"mappingType": "existing"
+								},
+								"statusid": {
+									"targetName": "status_id",
+									"mappingType": "existing"
+								},
+								"description": {
+									"targetName": "description",
+									"mappingType": "existing"
+								},
+								"tierlevelid": {
+									"targetName": "tier_level_id",
+									"mappingType": "existing"
+								},
+								"riskid": {
+									"targetName": "risk_id",
+									"mappingType": "existing"
+								},
+								"metadata": {
+									"targetName": "metadata",
+									"mappingType": "skip"
+								},
+								"submittedon": {
+									"targetName": "submitted_on",
+									"mappingType": "existing"
+								},
+								"approvedon": {
+									"targetName": "approved_on",
+									"mappingType": "existing"
+								},
+								"deniedon": {
+									"targetName": "denied_on",
+									"mappingType": "existing"
+								},
+								"cancelledon": {
+									"targetName": "cancelled_on",
+									"mappingType": "existing"
+								},
+								"completedon": {
+									"targetName": "completed_on",
+									"mappingType": "existing"
+								},
+								"netbook": {
+									"targetName": "net_book",
+									"mappingType": "existing"
+								},
+								"market": {
+									"targetName": "market",
+									"mappingType": "existing"
+								},
+								"assessed": {
+									"targetName": "assessed",
+									"mappingType": "existing"
+								},
+								"appraised": {
+									"targetName": "appraised",
+									"mappingType": "existing"
+								},
+								"projecttype": {
+									"targetName": "project_type",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectStatusHistory": {
+							"targetName": "project_status_history",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "id",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "created_by_id",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "created_on",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "updated_by_id",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "updated_on",
+									"mappingType": "existing"
+								},
+								"rowversion": {
+									"targetName": "rowversion",
+									"mappingType": "skip"
+								},
+								"projectid": {
+									"targetName": "project_id",
+									"mappingType": "existing"
+								},
+								"workflowid": {
+									"targetName": "workflow_id",
+									"mappingType": "existing"
+								},
+								"statusid": {
+									"targetName": "status_id",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectNumbers": {
+							"targetName": "project_number",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "id",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "created_by_id",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "created_on",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "updated_by_id",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "updated_on",
+									"mappingType": "existing"
+								},
+								"rowversion": {
+									"targetName": "rowversion",
+									"mappingType": "skip"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectProperties": {
+							"targetName": "project_property",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "id",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "created_by_id",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "created_on",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "updated_by_id",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "updated_on",
+									"mappingType": "existing"
+								},
+								"rowversion": {
+									"targetName": "rowversion",
+									"mappingType": "skip"
+								},
+								"projectid": {
+									"targetName": "project_id",
+									"mappingType": "existing"
+								},
+								"propertytype": {
+									"targetName": "property_type_id",
+									"mappingType": "existing"
+								},
+								"parcelid": {
+									"targetName": "parcel_id",
+									"mappingType": "existing"
+								},
+								"buildingid": {
+									"targetName": "building_id",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectSnapshots": {
+							"targetName": "project_snapshot",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "id",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "created_by_id",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "created_on",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "updated_by_id",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "updated_on",
+									"mappingType": "existing"
+								},
+								"rowversion": {
+									"targetName": "rowversion",
+									"mappingType": "skip"
+								},
+								"projectid": {
+									"targetName": "project_id",
+									"mappingType": "existing"
+								},
+								"netbook": {
+									"targetName": "net_book",
+									"mappingType": "existing"
+								},
+								"market": {
+									"targetName": "market",
+									"mappingType": "existing"
+								},
+								"assessed": {
+									"targetName": "assessed",
+									"mappingType": "existing"
+								},
+								"appraised": {
+									"targetName": "appraised",
+									"mappingType": "existing"
+								},
+								"snapshoton": {
+									"targetName": "snapshot_on",
+									"mappingType": "existing"
+								},
+								"metadata": {
+									"targetName": "metadata",
+									"mappingType": "skip"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/NotificationQueue": {
+							"targetName": "notification_queue",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "Id",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "created_by_id",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "created_on",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "updated_by_id",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "updated_on",
+									"mappingType": "existing"
+								},
+								"rowversion": {
+									"targetName": "rowversion",
+									"mappingType": "skip"
+								},
+								"Key": {
+									"targetName": "\"Key\"",
+									"mappingType": "existing"
+								},
+								"status": {
+									"targetName": "Status",
+									"mappingType": "existing"
+								},
+								"priority": {
+									"targetName": "Priority",
+									"mappingType": "existing"
+								},
+								"Encoding": {
+									"targetName": "\"Encoding\"",
+									"mappingType": "existing"
+								},
+								"sendon": {
+									"targetName": "send_on",
+									"mappingType": "existing"
+								},
+								"To": {
+									"targetName": "\"To\"",
+									"mappingType": "existing"
+								},
+								"subject": {
+									"targetName": "Subject",
+									"mappingType": "existing"
+								},
+								"bodytype": {
+									"targetName": "body_type",
+									"mappingType": "existing"
+								},
+								"body": {
+									"targetName": "Body",
+									"mappingType": "existing"
+								},
+								"bcc": {
+									"targetName": "Bcc",
+									"mappingType": "existing"
+								},
+								"cc": {
+									"targetName": "Cc",
+									"mappingType": "existing"
+								},
+								"tag": {
+									"targetName": "Tag",
+									"mappingType": "existing"
+								},
+								"projectid": {
+									"targetName": "project_id",
+									"mappingType": "existing"
+								},
+								"toagencyid": {
+									"targetName": "to_agency_id",
+									"mappingType": "existing"
+								},
+								"templateid": {
+									"targetName": "template_id",
+									"mappingType": "existing"
+								},
+								"chesmessageid": {
+									"targetName": "ches_message_id",
+									"mappingType": "existing"
+								},
+								"chestransactionid": {
+									"targetName": "ches_transaction_id",
+									"mappingType": "existing"
+								}
+							}
+						},
 						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT TOP (1000) [Id]\r\n      ,\u002700000000-0000-0000-0000-000000000000\u0027 as [CreatedById]\r\n      ,GETDATE() as [CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Name]\r\n      ,[IsDisabled]\r\n      ,[SortOrder]\r\n      ,[Code]\r\n      ,[Description]\r\n      ,[ParentId]\r\n      ,[Email]\r\n      ,[SendEmail]\r\n      ,[AddressTo]\r\n      ,[CCEmail]\r\n  FROM [pims].[dbo].[Agencies]\r\n  \r\n  ORDER BY ParentId": {
 							"targetName": "agency",
 							"mappingType": "existing",
@@ -507,7 +912,7 @@
 								}
 							}
 						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/\r\nSELECT p.[Id],\r\n\t  CASE \r\n\t\tWHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE p.[CreatedById]\r\n\t  END AS [CreatedById],\r\n    p.[CreatedOn],\r\n    p.[UpdatedById],\r\n    p.[UpdatedOn],\r\n    p.[Name],\r\n    p.[Description],\r\n    p.[ClassificationId],\r\n    p.[AgencyId],\r\n    p.[IsSensitive],\r\n    p.[IsVisibleToOtherAgencies],\r\n    p.[PID],\r\n    p.[PIN],\r\n    p.[LandArea],\r\n    p.[LandLegalDescription],\r\n    p.[Zoning],\r\n    p.[ZoningPotential],\r\n    p.[NotOwned],\r\n\tCONVERT(VARCHAR(40), CAST(Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(Location.Lat AS DECIMAL(18, 14))) AS Location,\r\n    CASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511 \r\n        ELSE aa.Id \r\n    END AS AdministrativeAreaId,  \r\n\ta.AdministrativeArea,\r\n\ta.Address1, \r\n\ta.Postal,\r\n\tpp.ParcelId as ParentID,\r\n\t0 as PropertyTypeID\r\nFROM \r\n    [pims].[dbo].[Parcels] p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n    LEFT OUTER JOIN ParcelParcels pp\r\n    ON pp.SubdivisionId \u003d p.Id": {
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/\r\nSELECT p.[Id],\r\n\t  CASE \r\n\t\tWHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE p.[CreatedById]\r\n\t  END AS [CreatedById],\r\n    p.[CreatedOn],\r\n    p.[UpdatedById],\r\n    p.[UpdatedOn],\r\n    p.[Name],\r\n    p.[Description],\r\n    p.[ClassificationId],\r\n    p.[AgencyId],\r\n    p.[IsSensitive],\r\n    p.[IsVisibleToOtherAgencies],\r\n    p.[PID],\r\n    p.[PIN],\r\n    p.[LandArea],\r\n    p.[LandLegalDescription],\r\n    p.[Zoning],\r\n    p.[ZoningPotential],\r\n    p.[NotOwned],\r\n\tCONVERT(VARCHAR(40), CAST(Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(Location.Lat AS DECIMAL(18, 14))) AS Location,\r\n    CASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Daajing Giids\u0027 THEN 512\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Royston\u0027 THEN 513\r\n        ELSE aa.Id \r\n    END AS AdministrativeAreaId,  \r\n\ta.AdministrativeArea,\r\n\ta.Address1, \r\n\ta.Postal,\r\n\tpp.ParcelId as ParentID,\r\n\t0 as PropertyTypeID\r\nFROM \r\n    [pims].[dbo].[Parcels] p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n    LEFT OUTER JOIN ParcelParcels pp\r\n    ON pp.SubdivisionId \u003d p.Id": {
 							"targetName": "parcel",
 							"mappingType": "existing",
 							"attributes": {
@@ -613,7 +1018,7 @@
 								}
 							}
 						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT p.[Id],\r\n\tCASE \r\n\t  WHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t  ELSE p.[CreatedById]\r\n\tEND AS created_by_id,\r\n    p.[CreatedOn] AS created_on,\r\n    p.[UpdatedById] AS updated_by_id,\r\n    p.[UpdatedOn] AS updated_on,\r\n    p.[Name] AS [name],\r\n    p.[Description] AS [description],\r\n    p.[ClassificationId] AS classification_id,\r\n    p.BuildingConstructionTypeId AS building_construction_type_id,\r\n    p.[AgencyId] AS agency_id,\r\n    p.[IsSensitive] AS is_sensitive,\r\n    p.[IsVisibleToOtherAgencies] AS is_visible_to_other_agencies,\r\n\tp.BuildingFloorCount AS building_floor_count,\r\n\tp.BuildingPredominateUseId AS building_predominate_use_id,\r\n\tp.BuildingTenancy AS building_tenancy,\r\n\tp.RentableArea AS rentable_area,\r\n\tp.BuildingOccupantTypeId AS building_occupant_type_id,\r\n\tp.LeaseExpiry AS lease_expiry,\r\n\tp.OccupantName AS occupant_name,\r\n\tp.TransferLeaseOnSale AS transfer_lease_on_sale,\r\n\tp.BuildingTenancyUpdatedOn AS building_tenancy_updated_on,\r\n\tp.EncumbranceReason AS encumbrance_reason,\r\n\tp.LeasedLandMetadata AS leased_land_metadata,\r\n\tp.TotalArea AS total_area,\r\n\tCONVERT(VARCHAR(40), CAST(p.Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(p.Location.Lat AS DECIMAL(18, 14))) AS [location],\r\n\tCASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511 \r\n        ELSE aa.Id \r\n    END AS administrative_area_id,  \r\n\ta.Address1 AS address1, \r\n\ta.Postal AS postal,\r\n\t1 as property_type_id,\r\n\tp.ProjectNumbers AS project_numbers, \r\n    COALESCE(b.PID, s.PID) AS pid,\r\n    COALESCE(b.PIN, s.PIN) AS pin\r\nFROM \r\n    [pims].[dbo].Buildings p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n\tLEFT OUTER JOIN ParcelBuildings pb\r\n\tON p.Id \u003d pb.BuildingId\r\n\tLEFT OUTER JOIN Parcels b\r\n\tON pb.ParcelId \u003d b.Id\r\n\tLEFT OUTER JOIN spreadsheet_data s\r\n\tON s.BuildingId \u003d p.Id\r\nWHERE p.BuildingPredominateUseId \u003c\u003d 54 ": {
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT p.[Id],\r\n\tCASE \r\n\t  WHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t  ELSE p.[CreatedById]\r\n\tEND AS created_by_id,\r\n    p.[CreatedOn] AS created_on,\r\n    p.[UpdatedById] AS updated_by_id,\r\n    p.[UpdatedOn] AS updated_on,\r\n    p.[Name] AS [name],\r\n    p.[Description] AS [description],\r\n    p.[ClassificationId] AS classification_id,\r\n    p.BuildingConstructionTypeId AS building_construction_type_id,\r\n    p.[AgencyId] AS agency_id,\r\n    p.[IsSensitive] AS is_sensitive,\r\n    p.[IsVisibleToOtherAgencies] AS is_visible_to_other_agencies,\r\n\tp.BuildingFloorCount AS building_floor_count,\r\n\tp.BuildingPredominateUseId AS building_predominate_use_id,\r\n\tp.BuildingTenancy AS building_tenancy,\r\n\tp.RentableArea AS rentable_area,\r\n\tp.BuildingOccupantTypeId AS building_occupant_type_id,\r\n\tp.LeaseExpiry AS lease_expiry,\r\n\tp.OccupantName AS occupant_name,\r\n\tp.TransferLeaseOnSale AS transfer_lease_on_sale,\r\n\tp.BuildingTenancyUpdatedOn AS building_tenancy_updated_on,\r\n\tp.EncumbranceReason AS encumbrance_reason,\r\n\tp.LeasedLandMetadata AS leased_land_metadata,\r\n\tp.TotalArea AS total_area,\r\n\tCONVERT(VARCHAR(40), CAST(p.Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(p.Location.Lat AS DECIMAL(18, 14))) AS [location],\r\n\tCASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Daajing Giids\u0027 THEN 512\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Royston\u0027 THEN 513\r\n        ELSE aa.Id \r\n    END AS administrative_area_id,  \r\n\ta.Address1 AS address1, \r\n\ta.Postal AS postal,\r\n\t1 as property_type_id,\r\n\tp.ProjectNumbers AS project_numbers, \r\n    COALESCE(b.PID, s.PID) AS pid,\r\n    COALESCE(b.PIN, s.PIN) AS pin\r\nFROM \r\n    [pims].[dbo].Buildings p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n\tLEFT OUTER JOIN ParcelBuildings pb\r\n\tON p.Id \u003d pb.BuildingId\r\n\tLEFT OUTER JOIN Parcels b\r\n\tON pb.ParcelId \u003d b.Id\r\n\tLEFT OUTER JOIN spreadsheet_data s\r\n\tON s.BuildingId \u003d p.Id\r\nWHERE p.BuildingPredominateUseId \u003c\u003d 54 ": {
 							"targetName": "building",
 							"mappingType": "existing",
 							"attributes": {
@@ -927,124 +1332,6 @@
 								}
 							}
 						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/Projects": {
-							"targetName": "project",
-							"mappingType": "existing",
-							"attributes": {
-								"id": {
-									"targetName": "id",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "created_by_id",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "created_on",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "updated_by_id",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "updated_on",
-									"mappingType": "existing"
-								},
-								"rowversion": {
-									"targetName": "rowversion",
-									"mappingType": "skip"
-								},
-								"projectnumber": {
-									"targetName": "project_number",
-									"mappingType": "existing"
-								},
-								"Name": {
-									"targetName": "Name",
-									"mappingType": "existing"
-								},
-								"workflowid": {
-									"targetName": "workflow_id",
-									"mappingType": "existing"
-								},
-								"manager": {
-									"targetName": "manager",
-									"mappingType": "existing"
-								},
-								"reportedfiscalyear": {
-									"targetName": "reported_fiscal_year",
-									"mappingType": "existing"
-								},
-								"actualfiscalyear": {
-									"targetName": "actual_fiscal_year",
-									"mappingType": "existing"
-								},
-								"agencyid": {
-									"targetName": "agency_id",
-									"mappingType": "existing"
-								},
-								"statusid": {
-									"targetName": "status_id",
-									"mappingType": "existing"
-								},
-								"description": {
-									"targetName": "description",
-									"mappingType": "existing"
-								},
-								"tierlevelid": {
-									"targetName": "tier_level_id",
-									"mappingType": "existing"
-								},
-								"riskid": {
-									"targetName": "risk_id",
-									"mappingType": "existing"
-								},
-								"metadata": {
-									"targetName": "metadata",
-									"mappingType": "skip"
-								},
-								"submittedon": {
-									"targetName": "submitted_on",
-									"mappingType": "existing"
-								},
-								"approvedon": {
-									"targetName": "approved_on",
-									"mappingType": "existing"
-								},
-								"deniedon": {
-									"targetName": "denied_on",
-									"mappingType": "existing"
-								},
-								"cancelledon": {
-									"targetName": "cancelled_on",
-									"mappingType": "existing"
-								},
-								"completedon": {
-									"targetName": "completed_on",
-									"mappingType": "existing"
-								},
-								"netbook": {
-									"targetName": "net_book",
-									"mappingType": "existing"
-								},
-								"market": {
-									"targetName": "market",
-									"mappingType": "existing"
-								},
-								"assessed": {
-									"targetName": "assessed",
-									"mappingType": "existing"
-								},
-								"appraised": {
-									"targetName": "appraised",
-									"mappingType": "existing"
-								},
-								"projecttype": {
-									"targetName": "project_type",
-									"mappingType": "existing"
-								}
-							}
-						},
 						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/\r\nSELECT [ProjectId]\r\n      ,[TaskId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsCompleted]\r\n      ,[CompletedOn]\r\n  FROM [dbo].[ProjectTasks]": {
 							"targetName": "project_task",
 							"mappingType": "existing",
@@ -1075,124 +1362,6 @@
 								},
 								"completedon": {
 									"targetName": "completed_on",
-									"mappingType": "existing"
-								}
-							}
-						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectStatusHistory": {
-							"targetName": "project_status_history",
-							"mappingType": "existing",
-							"attributes": {
-								"id": {
-									"targetName": "id",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "created_by_id",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "created_on",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "updated_by_id",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "updated_on",
-									"mappingType": "existing"
-								},
-								"rowversion": {
-									"targetName": "rowversion",
-									"mappingType": "skip"
-								},
-								"projectid": {
-									"targetName": "project_id",
-									"mappingType": "existing"
-								},
-								"workflowid": {
-									"targetName": "workflow_id",
-									"mappingType": "existing"
-								},
-								"statusid": {
-									"targetName": "status_id",
-									"mappingType": "existing"
-								}
-							}
-						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectNumbers": {
-							"targetName": "project_number",
-							"mappingType": "existing",
-							"attributes": {
-								"id": {
-									"targetName": "id",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "created_by_id",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "created_on",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "updated_by_id",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "updated_on",
-									"mappingType": "existing"
-								},
-								"rowversion": {
-									"targetName": "rowversion",
-									"mappingType": "skip"
-								}
-							}
-						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectProperties": {
-							"targetName": "project_property",
-							"mappingType": "existing",
-							"attributes": {
-								"id": {
-									"targetName": "id",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "created_by_id",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "created_on",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "updated_by_id",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "updated_on",
-									"mappingType": "existing"
-								},
-								"rowversion": {
-									"targetName": "rowversion",
-									"mappingType": "skip"
-								},
-								"projectid": {
-									"targetName": "project_id",
-									"mappingType": "existing"
-								},
-								"propertytype": {
-									"targetName": "property_type_id",
-									"mappingType": "existing"
-								},
-								"parcelid": {
-									"targetName": "parcel_id",
-									"mappingType": "existing"
-								},
-								"buildingid": {
-									"targetName": "building_id",
 									"mappingType": "existing"
 								}
 							}
@@ -1240,64 +1409,6 @@
 								"reporttype": {
 									"targetName": "report_type_id",
 									"mappingType": "existing"
-								}
-							}
-						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectSnapshots": {
-							"targetName": "project_snapshot",
-							"mappingType": "existing",
-							"attributes": {
-								"id": {
-									"targetName": "id",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "created_by_id",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "created_on",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "updated_by_id",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "updated_on",
-									"mappingType": "existing"
-								},
-								"rowversion": {
-									"targetName": "rowversion",
-									"mappingType": "skip"
-								},
-								"projectid": {
-									"targetName": "project_id",
-									"mappingType": "existing"
-								},
-								"netbook": {
-									"targetName": "net_book",
-									"mappingType": "existing"
-								},
-								"market": {
-									"targetName": "market",
-									"mappingType": "existing"
-								},
-								"assessed": {
-									"targetName": "assessed",
-									"mappingType": "existing"
-								},
-								"appraised": {
-									"targetName": "appraised",
-									"mappingType": "existing"
-								},
-								"snapshoton": {
-									"targetName": "snapshot_on",
-									"mappingType": "existing"
-								},
-								"metadata": {
-									"targetName": "metadata",
-									"mappingType": "skip"
 								}
 							}
 						},
@@ -1385,104 +1496,6 @@
 								},
 								"note": {
 									"targetName": "note",
-									"mappingType": "existing"
-								}
-							}
-						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/NotificationQueue": {
-							"targetName": "notification_queue",
-							"mappingType": "existing",
-							"attributes": {
-								"id": {
-									"targetName": "Id",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "created_by_id",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "created_on",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "updated_by_id",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "updated_on",
-									"mappingType": "existing"
-								},
-								"rowversion": {
-									"targetName": "rowversion",
-									"mappingType": "skip"
-								},
-								"Key": {
-									"targetName": "\"Key\"",
-									"mappingType": "existing"
-								},
-								"status": {
-									"targetName": "Status",
-									"mappingType": "existing"
-								},
-								"priority": {
-									"targetName": "Priority",
-									"mappingType": "existing"
-								},
-								"Encoding": {
-									"targetName": "\"Encoding\"",
-									"mappingType": "existing"
-								},
-								"sendon": {
-									"targetName": "send_on",
-									"mappingType": "existing"
-								},
-								"To": {
-									"targetName": "\"To\"",
-									"mappingType": "existing"
-								},
-								"subject": {
-									"targetName": "Subject",
-									"mappingType": "existing"
-								},
-								"bodytype": {
-									"targetName": "body_type",
-									"mappingType": "existing"
-								},
-								"body": {
-									"targetName": "Body",
-									"mappingType": "existing"
-								},
-								"bcc": {
-									"targetName": "Bcc",
-									"mappingType": "existing"
-								},
-								"cc": {
-									"targetName": "Cc",
-									"mappingType": "existing"
-								},
-								"tag": {
-									"targetName": "Tag",
-									"mappingType": "existing"
-								},
-								"projectid": {
-									"targetName": "project_id",
-									"mappingType": "existing"
-								},
-								"toagencyid": {
-									"targetName": "to_agency_id",
-									"mappingType": "existing"
-								},
-								"templateid": {
-									"targetName": "template_id",
-									"mappingType": "existing"
-								},
-								"chesmessageid": {
-									"targetName": "ches_message_id",
-									"mappingType": "existing"
-								},
-								"chestransactionid": {
-									"targetName": "ches_transaction_id",
 									"mappingType": "existing"
 								}
 							}
@@ -1648,10 +1661,13 @@
 							"mappingType": "skip",
 							"attributes": {
 								"setval": {
-									"targetName": "setval",
 									"mappingType": "skip"
 								}
 							}
+						},
+						"postgres-jdbc-18ceb57db81-643fa3bb56d54f2f/-- Update existing projects that have depricated statuses with new statuses\nupdate project set status_id \u003d 23 where status_id in (1, 2, 3, 5, 6);\nupdate project set status_id \u003d 14 where status_id in (30, 10, 11, 12);\nupdate project set status_id \u003d 42 where status_id in (43);\nupdate project set status_id \u003d 8 where status_id in (13);\n\n-- Duplicate project_task entries from Approved for ERP to Approved for Exemption\n/* INSERT INTO project_task (project_id, task_id, is_completed, completed_on, created_by_id)\n  SELECT\n      project_id,\n      t_destination.id AS task_id,\n      is_completed,\n      pt.completed_on,\n      \u002700000000-0000-0000-0000-000000000000\u0027\n  FROM\n      project_task pt\n  JOIN task t_origin ON\n      pt.task_id \u003d t_origin.id\n      AND t_origin.status_id \u003d 14\n  JOIN task t_destination \n      ON t_origin.name \u003d t_destination.name \n      AND t_destination.status_id \u003d 15; */\n     \n-- Duplicate project_note entries from Approved for ERP to Approved for Exemption\n/*INSERT INTO project_note (project_id, note_type_id , note , created_by_id)\n  SELECT\n      project_id,\n      n_destination.id AS note_type_id ,\n      note,\n      \u002700000000-0000-0000-0000-000000000000\u0027\n  FROM\n      project_note  pn\n  JOIN note_type n_origin ON\n      pn.note_type_id \u003d n_origin.id\n      AND n_origin.status_id \u003d 14\n  JOIN note_type  n_destination \n      ON n_origin.name \u003d n_destination.name \n      AND n_destination.status_id \u003d 15; */\n     \n-- There are no monetary types associated with the Approved for ERP status\n     \n     \n\n\n\n": {
+							"targetName": "-- Update existing projects that have depricated statuses with new statuses\nupdate project set status_id \u003d 23 where status_id in (1, 2, 3, 5, 6);\nupdate project set status_id \u003d 14 where status_id in (30, 10, 11, 12);\nupdate project set status_id \u003d 42 where status_id in (43);\nupdate project set status_id \u003d 8 where status_id in (13);\n\n-- Duplicate project_task entries from Approved for ERP to Approved for Exemption\nINSERT INTO project_task (project_id, task_id, is_completed, completed_on, created_by_id)\n  SELECT\n      project_id,\n      t_destination.id AS task_id,\n      is_completed,\n      pt.completed_on,\n      \u002700000000-0000-0000-0000-000000000000\u0027\n  FROM\n      project_task pt\n  JOIN task t_origin ON\n      pt.task_id \u003d t_origin.id\n      AND t_origin.status_id \u003d 14\n  JOIN task t_destination \n      ON t_origin.name \u003d t_destination.name \n      AND t_destination.status_id \u003d 15;\n     \n-- Duplicate project_note entries from Approved for ERP to Approved for Exemption\nINSERT INTO project_note (project_id, note_type_id , note , created_by_id)\n  SELECT\n      project_id,\n      n_destination.id AS note_type_id ,\n      note,\n      \u002700000000-0000-0000-0000-000000000000\u0027\n  FROM\n      project_note  pn\n  JOIN note_type n_origin ON\n      pn.note_type_id \u003d n_origin.id\n      AND n_origin.status_id \u003d 14\n  JOIN note_type  n_destination \n      ON n_origin.name \u003d n_destination.name \n      AND n_destination.status_id \u003d 15;\n     \n-- There are no monetary types associated with the Approved for ERP status\n     \n     \n\n\n\n",
+							"mappingType": "skip"
 						}
 					}
 				},
@@ -1677,7 +1693,7 @@
 						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
 						"defaultCatalog": "pims",
 						"defaultSchema": "dbo",
-						"query": "SELECT TOP (1000) [Id]\r\n      ,\u002700000000-0000-0000-0000-000000000000\u0027 as [CreatedById]\r\n      ,GETDATE() as [CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Name]\r\n      ,[IsDisabled]\r\n      ,[SortOrder]\r\n      ,[Code]\r\n      ,[Description]\r\n      ,[ParentId]\r\n      ,[Email]\r\n      ,[SendEmail]\r\n      ,[AddressTo]\r\n      ,[CCEmail]\r\n  FROM [pims].[dbo].[Agencies]\r\n  \r\n  ORDER BY ParentId"
+						"query": "SELECT TOP (1000) [Id]\r\n      ,\u002700000000-0000-0000-0000-000000000000\u0027 as [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Name]\r\n      ,[IsDisabled]\r\n      ,[SortOrder]\r\n      ,[Code]\r\n      ,[Description]\r\n      ,[ParentId]\r\n      ,[Email]\r\n      ,[SendEmail]\r\n      ,[AddressTo]\r\n      ,[CCEmail]\r\n  FROM [pims].[dbo].[Agencies]\r\n  \r\n  ORDER BY ParentId"
 					}
 				},
 				{
@@ -1698,7 +1714,7 @@
 						"project": "General",
 						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
 						"defaultCatalog": "pims",
-						"query": "\r\nSELECT p.[Id],\r\n\t  CASE \r\n\t\tWHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE p.[CreatedById]\r\n\t  END AS [CreatedById],\r\n    p.[CreatedOn],\r\n    p.[UpdatedById],\r\n    p.[UpdatedOn],\r\n    p.[Name],\r\n    p.[Description],\r\n    p.[ClassificationId],\r\n    p.[AgencyId],\r\n    p.[IsSensitive],\r\n    p.[IsVisibleToOtherAgencies],\r\n    p.[PID],\r\n    p.[PIN],\r\n    p.[LandArea],\r\n    p.[LandLegalDescription],\r\n    p.[Zoning],\r\n    p.[ZoningPotential],\r\n    p.[NotOwned],\r\n\tCONVERT(VARCHAR(40), CAST(Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(Location.Lat AS DECIMAL(18, 14))) AS Location,\r\n    CASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511 \r\n        ELSE aa.Id \r\n    END AS AdministrativeAreaId,  \r\n\ta.AdministrativeArea,\r\n\ta.Address1, \r\n\ta.Postal,\r\n\tpp.ParcelId as ParentID,\r\n\t0 as PropertyTypeID\r\nFROM \r\n    [pims].[dbo].[Parcels] p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n    LEFT OUTER JOIN ParcelParcels pp\r\n    ON pp.SubdivisionId \u003d p.Id"
+						"query": "\r\nSELECT p.[Id],\r\n\t  CASE \r\n\t\tWHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE p.[CreatedById]\r\n\t  END AS [CreatedById],\r\n    p.[CreatedOn],\r\n    p.[UpdatedById],\r\n    p.[UpdatedOn],\r\n    p.[Name],\r\n    p.[Description],\r\n    p.[ClassificationId],\r\n    p.[AgencyId],\r\n    p.[IsSensitive],\r\n    p.[IsVisibleToOtherAgencies],\r\n    p.[PID],\r\n    p.[PIN],\r\n    p.[LandArea],\r\n    p.[LandLegalDescription],\r\n    p.[Zoning],\r\n    p.[ZoningPotential],\r\n    p.[NotOwned],\r\n\tCONVERT(VARCHAR(40), CAST(Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(Location.Lat AS DECIMAL(18, 14))) AS Location,\r\n    CASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Daajing Giids\u0027 THEN 512\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Royston\u0027 THEN 513\r\n        ELSE aa.Id \r\n    END AS AdministrativeAreaId,  \r\n\ta.AdministrativeArea,\r\n\ta.Address1, \r\n\ta.Postal,\r\n\tpp.ParcelId as ParentID,\r\n\t0 as PropertyTypeID\r\nFROM \r\n    [pims].[dbo].[Parcels] p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n    LEFT OUTER JOIN ParcelParcels pp\r\n    ON pp.SubdivisionId \u003d p.Id"
 					}
 				},
 				{
@@ -1708,7 +1724,7 @@
 						"project": "General",
 						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
 						"defaultCatalog": "pims",
-						"query": "SELECT p.[Id],\r\n\tCASE \r\n\t  WHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t  ELSE p.[CreatedById]\r\n\tEND AS created_by_id,\r\n    p.[CreatedOn] AS created_on,\r\n    p.[UpdatedById] AS updated_by_id,\r\n    p.[UpdatedOn] AS updated_on,\r\n    p.[Name] AS [name],\r\n    p.[Description] AS [description],\r\n    p.[ClassificationId] AS classification_id,\r\n    p.BuildingConstructionTypeId AS building_construction_type_id,\r\n    p.[AgencyId] AS agency_id,\r\n    p.[IsSensitive] AS is_sensitive,\r\n    p.[IsVisibleToOtherAgencies] AS is_visible_to_other_agencies,\r\n\tp.BuildingFloorCount AS building_floor_count,\r\n\tp.BuildingPredominateUseId AS building_predominate_use_id,\r\n\tp.BuildingTenancy AS building_tenancy,\r\n\tp.RentableArea AS rentable_area,\r\n\tp.BuildingOccupantTypeId AS building_occupant_type_id,\r\n\tp.LeaseExpiry AS lease_expiry,\r\n\tp.OccupantName AS occupant_name,\r\n\tp.TransferLeaseOnSale AS transfer_lease_on_sale,\r\n\tp.BuildingTenancyUpdatedOn AS building_tenancy_updated_on,\r\n\tp.EncumbranceReason AS encumbrance_reason,\r\n\tp.LeasedLandMetadata AS leased_land_metadata,\r\n\tp.TotalArea AS total_area,\r\n\tCONVERT(VARCHAR(40), CAST(p.Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(p.Location.Lat AS DECIMAL(18, 14))) AS [location],\r\n\tCASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511 \r\n        ELSE aa.Id \r\n    END AS administrative_area_id,  \r\n\ta.Address1 AS address1, \r\n\ta.Postal AS postal,\r\n\t1 as property_type_id,\r\n\tp.ProjectNumbers AS project_numbers, \r\n    COALESCE(b.PID, s.PID) AS pid,\r\n    COALESCE(b.PIN, s.PIN) AS pin\r\nFROM \r\n    [pims].[dbo].Buildings p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n\tLEFT OUTER JOIN ParcelBuildings pb\r\n\tON p.Id \u003d pb.BuildingId\r\n\tLEFT OUTER JOIN Parcels b\r\n\tON pb.ParcelId \u003d b.Id\r\n\tLEFT OUTER JOIN spreadsheet_data s\r\n\tON s.BuildingId \u003d p.Id\r\nWHERE p.BuildingPredominateUseId \u003c\u003d 54 "
+						"query": "SELECT p.[Id],\r\n\tCASE \r\n\t  WHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t  ELSE p.[CreatedById]\r\n\tEND AS created_by_id,\r\n    p.[CreatedOn] AS created_on,\r\n    p.[UpdatedById] AS updated_by_id,\r\n    p.[UpdatedOn] AS updated_on,\r\n    p.[Name] AS [name],\r\n    p.[Description] AS [description],\r\n    p.[ClassificationId] AS classification_id,\r\n    p.BuildingConstructionTypeId AS building_construction_type_id,\r\n    p.[AgencyId] AS agency_id,\r\n    p.[IsSensitive] AS is_sensitive,\r\n    p.[IsVisibleToOtherAgencies] AS is_visible_to_other_agencies,\r\n\tp.BuildingFloorCount AS building_floor_count,\r\n\tp.BuildingPredominateUseId AS building_predominate_use_id,\r\n\tp.BuildingTenancy AS building_tenancy,\r\n\tp.RentableArea AS rentable_area,\r\n\tp.BuildingOccupantTypeId AS building_occupant_type_id,\r\n\tp.LeaseExpiry AS lease_expiry,\r\n\tp.OccupantName AS occupant_name,\r\n\tp.TransferLeaseOnSale AS transfer_lease_on_sale,\r\n\tp.BuildingTenancyUpdatedOn AS building_tenancy_updated_on,\r\n\tp.EncumbranceReason AS encumbrance_reason,\r\n\tp.LeasedLandMetadata AS leased_land_metadata,\r\n\tp.TotalArea AS total_area,\r\n\tCONVERT(VARCHAR(40), CAST(p.Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(p.Location.Lat AS DECIMAL(18, 14))) AS [location],\r\n\tCASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Daajing Giids\u0027 THEN 512\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Royston\u0027 THEN 513\r\n        ELSE aa.Id \r\n    END AS administrative_area_id,  \r\n\ta.Address1 AS address1, \r\n\ta.Postal AS postal,\r\n\t1 as property_type_id,\r\n\tp.ProjectNumbers AS project_numbers, \r\n    COALESCE(b.PID, s.PID) AS pid,\r\n    COALESCE(b.PIN, s.PIN) AS pin\r\nFROM \r\n    [pims].[dbo].Buildings p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n\tLEFT OUTER JOIN ParcelBuildings pb\r\n\tON p.Id \u003d pb.BuildingId\r\n\tLEFT OUTER JOIN Parcels b\r\n\tON pb.ParcelId \u003d b.Id\r\n\tLEFT OUTER JOIN spreadsheet_data s\r\n\tON s.BuildingId \u003d p.Id\r\nWHERE p.BuildingPredominateUseId \u003c\u003d 54 "
 					}
 				},
 				{
@@ -1762,16 +1778,6 @@
 				{
 					"type": "databaseTransferProducer",
 					"location": {
-						"type": "query",
-						"project": "General",
-						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
-						"defaultCatalog": "pims",
-						"query": "\r\nSELECT [ProjectId]\r\n      ,[TaskId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsCompleted]\r\n      ,[CompletedOn]\r\n  FROM [dbo].[ProjectTasks]"
-					}
-				},
-				{
-					"type": "databaseTransferProducer",
-					"location": {
 						"type": "entity",
 						"project": "General",
 						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectStatusHistory"
@@ -1796,11 +1802,9 @@
 				{
 					"type": "databaseTransferProducer",
 					"location": {
-						"type": "query",
+						"type": "entity",
 						"project": "General",
-						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
-						"defaultCatalog": "pims",
-						"query": "SELECT [Id]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsFinal]\r\n      ,[Name]\r\n      ,[From]\r\n      ,[To]\r\n      ,[ReportType]\r\n  FROM [dbo].[ProjectReports]"
+						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectSnapshots"
 					}
 				},
 				{
@@ -1808,7 +1812,27 @@
 					"location": {
 						"type": "entity",
 						"project": "General",
-						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectSnapshots"
+						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/NotificationQueue"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
+						"defaultCatalog": "pims",
+						"query": "\r\nSELECT [ProjectId]\r\n      ,[TaskId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsCompleted]\r\n      ,[CompletedOn]\r\n  FROM [dbo].[ProjectTasks]"
+					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
+						"defaultCatalog": "pims",
+						"query": "SELECT [Id]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsFinal]\r\n      ,[Name]\r\n      ,[From]\r\n      ,[To]\r\n      ,[ReportType]\r\n  FROM [dbo].[ProjectReports]"
 					}
 				},
 				{
@@ -1829,14 +1853,6 @@
 						"dataSource": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14",
 						"defaultCatalog": "pims",
 						"query": "SELECT [Id]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[ProjectId]\r\n      ,[NoteType]\r\n      ,[Note]\r\n  FROM [dbo].[ProjectNotes]"
-					}
-				},
-				{
-					"type": "databaseTransferProducer",
-					"location": {
-						"type": "entity",
-						"project": "General",
-						"entityId": "mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/NotificationQueue"
 					}
 				},
 				{
@@ -1891,9 +1907,23 @@
 						"defaultSchema": "public",
 						"query": "SELECT setval(\u0027parcel_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM parcel));\r\nSELECT setval(\u0027building_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM building));\r\nSELECT setval(\u0027agency_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM agency));\r\nSELECT setval(\u0027project_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project));\r\nSELECT setval(\u0027project_note_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_note));\r\nSELECT setval(\u0027notification_queue_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM notification_queue));\r\nSELECT setval(\u0027project_property_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_property));\r\nSELECT setval(\u0027project_report_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM project_report));\r\nSELECT setval(\u0027project_status_history_id_seq\u0027, (SELECT COALESCE(MAX(id), 1) FROM  project_status_history));"
 					}
+				},
+				{
+					"type": "databaseTransferProducer",
+					"location": {
+						"type": "query",
+						"project": "General",
+						"dataSource": "postgres-jdbc-18dd2b052a7-539b625bbf9f91bf",
+						"defaultCatalog": "pims-crunchy",
+						"defaultSchema": "public",
+						"query": "-- Update existing projects that have depricated statuses with new statuses\nupdate project set status_id \u003d 23 where status_id in (1, 2, 3, 5, 6);\nupdate project set status_id \u003d 14 where status_id in (30, 10, 11, 12);\nupdate project set status_id \u003d 42 where status_id in (43);\nupdate project set status_id \u003d 8 where status_id in (13);\n\n-- Duplicate project_task entries from Approved for ERP to Approved for Exemption\n/* INSERT INTO project_task (project_id, task_id, is_completed, completed_on, created_by_id)\n  SELECT\n      project_id,\n      t_destination.id AS task_id,\n      is_completed,\n      pt.completed_on,\n      \u002700000000-0000-0000-0000-000000000000\u0027\n  FROM\n      project_task pt\n  JOIN task t_origin ON\n      pt.task_id \u003d t_origin.id\n      AND t_origin.status_id \u003d 14\n  JOIN task t_destination \n      ON t_origin.name \u003d t_destination.name \n      AND t_destination.status_id \u003d 15; */\n     \n-- Duplicate project_note entries from Approved for ERP to Approved for Exemption\n/* INSERT INTO project_note (project_id, note_type_id , note , created_by_id)\n  SELECT\n      project_id,\n      n_destination.id AS note_type_id ,\n      note,\n      \u002700000000-0000-0000-0000-000000000000\u0027\n  FROM\n      project_note  pn\n  JOIN note_type n_origin ON\n      pn.note_type_id \u003d n_origin.id\n      AND n_origin.status_id \u003d 14\n  JOIN note_type  n_destination \n      ON n_origin.name \u003d n_destination.name \n      AND n_destination.status_id \u003d 15; */\n     \n-- There are no monetary types associated with the Approved for ERP status\n     \n     \n\n\n\n"
+					}
 				}
 			],
 			"consumers": [
+				{
+					"type": "databaseTransferConsumer"
+				},
 				{
 					"type": "databaseTransferConsumer"
 				},
@@ -1977,7 +2007,7 @@
 					"selectedRowsOnly": false
 				},
 				"DatabaseTransferConsumer": {
-					"entityId": "postgres-jdbc-18dd2b052a7-539b625bbf9f91bf/pims/public",
+					"entityId": "postgres-jdbc-18dd2b052a7-539b625bbf9f91bf/pims-crunchy/public",
 					"openNewConnections": true,
 					"useTransactions": true,
 					"commitAfterRows": 1000,
@@ -1986,23 +2016,24 @@
 					"skipBindValues": false,
 					"disableUsingBatches": true,
 					"ignoreDuplicateRows": true,
-					"onDuplicateKeyMethod": "pgReplaceIgnore",
 					"transferAutoGeneratedColumns": true,
 					"disableReferentialIntegrity": true,
 					"useBulkLoad": false,
 					"truncateBeforeLoad": false,
 					"openTableOnFinish": true,
 					"mappings": {
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT TOP (1000) [Id]\r\n      ,\u002700000000-0000-0000-0000-000000000000\u0027 as [CreatedById]\r\n      ,GETDATE() as [CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Name]\r\n      ,[IsDisabled]\r\n      ,[SortOrder]\r\n      ,[Code]\r\n      ,[Description]\r\n      ,[ParentId]\r\n      ,[Email]\r\n      ,[SendEmail]\r\n      ,[AddressTo]\r\n      ,[CCEmail]\r\n  FROM [pims].[dbo].[Agencies]\r\n  \r\n  ORDER BY ParentId": {
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT TOP (1000) [Id]\r\n      ,\u002700000000-0000-0000-0000-000000000000\u0027 as [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[Name]\r\n      ,[IsDisabled]\r\n      ,[SortOrder]\r\n      ,[Code]\r\n      ,[Description]\r\n      ,[ParentId]\r\n      ,[Email]\r\n      ,[SendEmail]\r\n      ,[AddressTo]\r\n      ,[CCEmail]\r\n  FROM [pims].[dbo].[Agencies]\r\n  \r\n  ORDER BY ParentId": {
 							"targetName": "agency",
 							"mappingType": "existing",
 							"attributes": {
 								"id": {
-									"targetName": "Id",
+									"targetName": "id",
+									"targetType": "serial4",
 									"mappingType": "existing"
 								},
 								"createdbyid": {
 									"targetName": "created_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"createdon": {
@@ -2011,42 +2042,50 @@
 								},
 								"updatedbyid": {
 									"targetName": "updated_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"updatedon": {
 									"targetName": "updated_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"Name": {
 									"targetName": "name",
+									"targetType": "varchar(150)",
 									"mappingType": "existing"
 								},
 								"isdisabled": {
 									"targetName": "is_disabled",
+									"targetType": "bool",
 									"mappingType": "existing"
 								},
 								"sortorder": {
 									"targetName": "sort_order",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"code": {
-									"targetName": "Code",
+									"targetName": "code",
 									"mappingType": "existing"
 								},
 								"description": {
-									"targetName": "Description",
+									"targetName": "description",
 									"mappingType": "existing"
 								},
 								"parentid": {
 									"targetName": "parent_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"email": {
 									"targetName": "email",
+									"targetType": "varchar(150)",
 									"mappingType": "existing"
 								},
 								"sendemail": {
 									"targetName": "send_email",
+									"targetType": "bool",
 									"mappingType": "existing"
 								},
 								"addressto": {
@@ -2065,26 +2104,32 @@
 							"attributes": {
 								"id": {
 									"targetName": "id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"createdbyid": {
 									"targetName": "created_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"status": {
 									"targetName": "status",
+									"targetType": "user_status_enum",
 									"mappingType": "existing"
 								},
 								"updatedbyid": {
 									"targetName": "updated_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"updatedon": {
 									"targetName": "updated_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"username": {
 									"targetName": "username",
+									"targetType": "varchar(100)",
 									"mappingType": "existing"
 								},
 								"displayname": {
@@ -2113,116 +2158,139 @@
 								},
 								"isdisabled": {
 									"targetName": "is_disabled",
+									"targetType": "bool",
 									"mappingType": "existing"
 								},
 								"emailverified": {
 									"targetName": "email_verified",
+									"targetType": "bool",
 									"mappingType": "existing"
 								},
 								"note": {
 									"targetName": "note",
+									"targetType": "varchar(1000)",
 									"mappingType": "existing"
 								},
 								"issystem": {
 									"targetName": "is_system",
+									"targetType": "bool",
 									"mappingType": "existing"
 								},
 								"lastlogin": {
 									"targetName": "last_login",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"approvedbyid": {
 									"targetName": "approved_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"approvedon": {
 									"targetName": "approved_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"keycloakuserid": {
-									"targetName": "keycloak_user_id",
+									"targetName": "agency_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"createdon": {
 									"targetName": "created_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"userid": {
-									"targetName": "userid",
+									"targetName": "user_id",
 									"mappingType": "skip"
 								},
 								"agencyid": {
 									"targetName": "agency_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"roles": {
-									"targetName": "roles",
-									"mappingType": "skip"
+									"targetName": "role_id",
+									"targetType": "uuid",
+									"mappingType": "existing"
 								},
 								"usertype": {
-									"targetName": "role_id",
-									"mappingType": "existing"
+									"targetName": "usertype",
+									"mappingType": "skip"
 								}
 							}
 						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/\r\nSELECT p.[Id],\r\n\t  CASE \r\n\t\tWHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE p.[CreatedById]\r\n\t  END AS [CreatedById],\r\n    p.[CreatedOn],\r\n    p.[UpdatedById],\r\n    p.[UpdatedOn],\r\n    p.[Name],\r\n    p.[Description],\r\n    p.[ClassificationId],\r\n    p.[AgencyId],\r\n    p.[IsSensitive],\r\n    p.[IsVisibleToOtherAgencies],\r\n    p.[PID],\r\n    p.[PIN],\r\n    p.[LandArea],\r\n    p.[LandLegalDescription],\r\n    p.[Zoning],\r\n    p.[ZoningPotential],\r\n    p.[NotOwned],\r\n\tCONVERT(VARCHAR(40), CAST(Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(Location.Lat AS DECIMAL(18, 14))) AS Location,\r\n    CASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511 \r\n        ELSE aa.Id \r\n    END AS AdministrativeAreaId,  \r\n\ta.AdministrativeArea,\r\n\ta.Address1, \r\n\ta.Postal,\r\n\tpp.ParcelId as ParentID,\r\n\t0 as PropertyTypeID\r\nFROM \r\n    [pims].[dbo].[Parcels] p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n    LEFT OUTER JOIN ParcelParcels pp\r\n    ON pp.SubdivisionId \u003d p.Id": {
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/\r\nSELECT p.[Id],\r\n\t  CASE \r\n\t\tWHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE p.[CreatedById]\r\n\t  END AS [CreatedById],\r\n    p.[CreatedOn],\r\n    p.[UpdatedById],\r\n    p.[UpdatedOn],\r\n    p.[Name],\r\n    p.[Description],\r\n    p.[ClassificationId],\r\n    p.[AgencyId],\r\n    p.[IsSensitive],\r\n    p.[IsVisibleToOtherAgencies],\r\n    p.[PID],\r\n    p.[PIN],\r\n    p.[LandArea],\r\n    p.[LandLegalDescription],\r\n    p.[Zoning],\r\n    p.[ZoningPotential],\r\n    p.[NotOwned],\r\n\tCONVERT(VARCHAR(40), CAST(Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(Location.Lat AS DECIMAL(18, 14))) AS Location,\r\n    CASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Daajing Giids\u0027 THEN 512\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Royston\u0027 THEN 513\r\n        ELSE aa.Id \r\n    END AS AdministrativeAreaId,  \r\n\ta.AdministrativeArea,\r\n\ta.Address1, \r\n\ta.Postal,\r\n\tpp.ParcelId as ParentID,\r\n\t0 as PropertyTypeID\r\nFROM \r\n    [pims].[dbo].[Parcels] p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n    LEFT OUTER JOIN ParcelParcels pp\r\n    ON pp.SubdivisionId \u003d p.Id": {
 							"targetName": "parcel",
 							"mappingType": "existing",
 							"attributes": {
 								"id": {
-									"targetName": "Id",
+									"targetName": "id",
 									"mappingType": "existing"
 								},
 								"createdbyid": {
 									"targetName": "created_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"createdon": {
 									"targetName": "created_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"updatedbyid": {
 									"targetName": "updated_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"updatedon": {
 									"targetName": "updated_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"Name": {
 									"targetName": "name",
+									"targetType": "varchar(250)",
 									"mappingType": "existing"
 								},
 								"description": {
-									"targetName": "Description",
+									"targetName": "description",
 									"mappingType": "existing"
 								},
 								"classificationid": {
 									"targetName": "classification_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"agencyid": {
 									"targetName": "agency_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"issensitive": {
 									"targetName": "is_sensitive",
+									"targetType": "bool",
 									"mappingType": "existing"
 								},
 								"isvisibletootheragencies": {
 									"targetName": "is_visible_to_other_agencies",
+									"targetType": "bool",
 									"mappingType": "existing"
 								},
 								"pid": {
-									"targetName": "PID",
+									"targetName": "pid",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"pin": {
-									"targetName": "PIN",
+									"targetName": "pin",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"landarea": {
 									"targetName": "land_area",
+									"targetType": "float4",
 									"mappingType": "existing"
 								},
 								"landlegaldescription": {
@@ -2230,7 +2298,7 @@
 									"mappingType": "existing"
 								},
 								"zoning": {
-									"targetName": "Zoning",
+									"targetName": "zoning",
 									"mappingType": "existing"
 								},
 								"zoningpotential": {
@@ -2243,10 +2311,12 @@
 								},
 								"Location": {
 									"targetName": "\"location\"",
+									"targetType": "point",
 									"mappingType": "existing"
 								},
 								"administrativeareaid": {
 									"targetName": "administrative_area_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"administrativearea": {
@@ -2254,49 +2324,55 @@
 									"mappingType": "skip"
 								},
 								"address1": {
-									"targetName": "Address1",
+									"targetName": "address1",
 									"mappingType": "existing"
 								},
 								"postal": {
-									"targetName": "Postal",
+									"targetName": "postal",
 									"mappingType": "existing"
 								},
 								"parentid": {
 									"targetName": "parent_parcel_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"propertytypeid": {
 									"targetName": "property_type_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								}
 							}
 						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT p.[Id],\r\n\tCASE \r\n\t  WHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t  ELSE p.[CreatedById]\r\n\tEND AS created_by_id,\r\n    p.[CreatedOn] AS created_on,\r\n    p.[UpdatedById] AS updated_by_id,\r\n    p.[UpdatedOn] AS updated_on,\r\n    p.[Name] AS [name],\r\n    p.[Description] AS [description],\r\n    p.[ClassificationId] AS classification_id,\r\n    p.BuildingConstructionTypeId AS building_construction_type_id,\r\n    p.[AgencyId] AS agency_id,\r\n    p.[IsSensitive] AS is_sensitive,\r\n    p.[IsVisibleToOtherAgencies] AS is_visible_to_other_agencies,\r\n\tp.BuildingFloorCount AS building_floor_count,\r\n\tp.BuildingPredominateUseId AS building_predominate_use_id,\r\n\tp.BuildingTenancy AS building_tenancy,\r\n\tp.RentableArea AS rentable_area,\r\n\tp.BuildingOccupantTypeId AS building_occupant_type_id,\r\n\tp.LeaseExpiry AS lease_expiry,\r\n\tp.OccupantName AS occupant_name,\r\n\tp.TransferLeaseOnSale AS transfer_lease_on_sale,\r\n\tp.BuildingTenancyUpdatedOn AS building_tenancy_updated_on,\r\n\tp.EncumbranceReason AS encumbrance_reason,\r\n\tp.LeasedLandMetadata AS leased_land_metadata,\r\n\tp.TotalArea AS total_area,\r\n\tCONVERT(VARCHAR(40), CAST(p.Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(p.Location.Lat AS DECIMAL(18, 14))) AS [location],\r\n\tCASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511 \r\n        ELSE aa.Id \r\n    END AS administrative_area_id,  \r\n\ta.Address1 AS address1, \r\n\ta.Postal AS postal,\r\n\t1 as property_type_id,\r\n\tp.ProjectNumbers AS project_numbers, \r\n    COALESCE(b.PID, s.PID) AS pid,\r\n    COALESCE(b.PIN, s.PIN) AS pin\r\nFROM \r\n    [pims].[dbo].Buildings p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n\tLEFT OUTER JOIN ParcelBuildings pb\r\n\tON p.Id \u003d pb.BuildingId\r\n\tLEFT OUTER JOIN Parcels b\r\n\tON pb.ParcelId \u003d b.Id\r\n\tLEFT OUTER JOIN spreadsheet_data s\r\n\tON s.BuildingId \u003d p.Id\r\nWHERE p.BuildingPredominateUseId \u003c\u003d 54 ": {
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT p.[Id],\r\n\tCASE \r\n\t  WHEN p.[CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t  ELSE p.[CreatedById]\r\n\tEND AS created_by_id,\r\n    p.[CreatedOn] AS created_on,\r\n    p.[UpdatedById] AS updated_by_id,\r\n    p.[UpdatedOn] AS updated_on,\r\n    p.[Name] AS [name],\r\n    p.[Description] AS [description],\r\n    p.[ClassificationId] AS classification_id,\r\n    p.BuildingConstructionTypeId AS building_construction_type_id,\r\n    p.[AgencyId] AS agency_id,\r\n    p.[IsSensitive] AS is_sensitive,\r\n    p.[IsVisibleToOtherAgencies] AS is_visible_to_other_agencies,\r\n\tp.BuildingFloorCount AS building_floor_count,\r\n\tp.BuildingPredominateUseId AS building_predominate_use_id,\r\n\tp.BuildingTenancy AS building_tenancy,\r\n\tp.RentableArea AS rentable_area,\r\n\tp.BuildingOccupantTypeId AS building_occupant_type_id,\r\n\tp.LeaseExpiry AS lease_expiry,\r\n\tp.OccupantName AS occupant_name,\r\n\tp.TransferLeaseOnSale AS transfer_lease_on_sale,\r\n\tp.BuildingTenancyUpdatedOn AS building_tenancy_updated_on,\r\n\tp.EncumbranceReason AS encumbrance_reason,\r\n\tp.LeasedLandMetadata AS leased_land_metadata,\r\n\tp.TotalArea AS total_area,\r\n\tCONVERT(VARCHAR(40), CAST(p.Location.Long AS DECIMAL(18, 14))) + \u0027, \u0027 + CONVERT(VARCHAR(40), CAST(p.Location.Lat AS DECIMAL(18, 14))) AS [location],\r\n\tCASE \r\n        WHEN a.AdministrativeArea \u003d \u0027The Corporation of the City of Nelson\u0027 THEN 188\r\n        WHEN a.AdministrativeArea \u003d \u0027Township of Langley\u0027 THEN 150\r\n        WHEN a.AdministrativeArea \u003d \u0027District of North Vancouver\u0027 THEN 196\r\n        WHEN a.AdministrativeArea \u003d \u0027Coombs\u0027 THEN 483\r\n        WHEN a.AdministrativeArea \u003d \u0027Brookmere\u0027 THEN 481\r\n        WHEN a.AdministrativeArea \u003d \u0027Thornhill\u0027 THEN 501\r\n        WHEN a.AdministrativeArea \u003d \u0027Two Mile\u0027 THEN 502\r\n        WHEN a.AdministrativeArea \u003d \u0027Crofton\u0027 THEN 484\r\n        WHEN a.AdministrativeArea \u003d \u0027East Sooke\u0027 THEN 485\r\n        WHEN a.AdministrativeArea \u003d \u0027Mudge Island\u0027 THEN 492\r\n        WHEN a.AdministrativeArea \u003d \u0027Coal Harbour\u0027 THEN 482\r\n        WHEN a.AdministrativeArea \u003d \u0027Miworth\u0027 THEN 490\r\n        WHEN a.AdministrativeArea \u003d \u0027Lake Errock\u0027 THEN 489\r\n        WHEN a.AdministrativeArea \u003d \u0027Black Creek\u0027 THEN 479\r\n        WHEN a.AdministrativeArea \u003d \u0027Whaletown\u0027 THEN 504\r\n        WHEN a.AdministrativeArea \u003d \u0027Quathiaski Cove\u0027 THEN 494\r\n        WHEN a.AdministrativeArea \u003d \u0027Big Bay in Stuart Island\u0027 THEN 478\r\n        WHEN a.AdministrativeArea \u003d \u0027Surge Narrows in Read Island\u0027 THEN 500\r\n        WHEN a.AdministrativeArea \u003d \u0027Rock Bay in Sayward\u0027 THEN 497\r\n        WHEN a.AdministrativeArea \u003d \u0027Granite Bay in Quadra Island\u0027 THEN 487\r\n        WHEN a.AdministrativeArea \u003d \u0027Moberly Lake\u0027 THEN 491\r\n        WHEN a.AdministrativeArea \u003d \u0027Quatsino\u0027 THEN 495\r\n        WHEN a.AdministrativeArea \u003d \u0027Bouchie Lake\u0027 THEN 480\r\n        WHEN a.AdministrativeArea \u003d \u0027West Lake\u0027 THEN 503\r\n        WHEN a.AdministrativeArea \u003d \u0027Salmon Valley\u0027 THEN 498\t\t\r\n        WHEN a.AdministrativeArea \u003d \u0027Red Rock\u0027 THEN 496\r\n        WHEN a.AdministrativeArea \u003d \u0027Stoner\u0027 THEN 499\r\n        WHEN a.AdministrativeArea \u003d \u0027Pineview FFG\u0027 THEN 493\r\n        WHEN a.AdministrativeArea \u003d \u0027Wonowon\u0027 THEN 506\r\n        WHEN a.AdministrativeArea \u003d \u0027Halfway River\u0027 THEN 488\r\n        WHEN a.AdministrativeArea \u003d \u0027Giscome\u0027 THEN 486\r\n        WHEN a.AdministrativeArea \u003d \u0027Willow River\u0027 THEN 505\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lower Nicola\u0027 THEN 314\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Belcarra\u0027 THEN 425\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Tsawwassen\u0027 THEN 315\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Anmore\u0027 THEN 432\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Lake Cowichan\u0027 THEN 442\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027North Cowichan\u0027 THEN 450\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Port Edward\u0027 THEN 347\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Spallumcheen\u0027 THEN 318\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Jumbo Glacier Mountain Resort Municipality\u0027 THEN 438\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Kent\u0027 THEN 439\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Highlands\u0027 THEN 348\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Slocan\u0027 THEN 380\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Warfield\u0027 THEN 448\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Bowser\u0027 THEN 507 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gingolx\u0027 THEN 508 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Gitwinksihlkw\u0027 THEN 509 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Laxgalts ap\u0027 THEN 510 \r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Read Island\u0027 THEN 511\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Daajing Giids\u0027 THEN 512\r\n\t\tWHEN a.AdministrativeArea \u003d \u0027Royston\u0027 THEN 513\r\n        ELSE aa.Id \r\n    END AS administrative_area_id,  \r\n\ta.Address1 AS address1, \r\n\ta.Postal AS postal,\r\n\t1 as property_type_id,\r\n\tp.ProjectNumbers AS project_numbers, \r\n    COALESCE(b.PID, s.PID) AS pid,\r\n    COALESCE(b.PIN, s.PIN) AS pin\r\nFROM \r\n    [pims].[dbo].Buildings p\r\n\tINNER JOIN Addresses a\r\n\tON p.AddressId \u003d a.Id\r\n\tLEFT OUTER JOIN AdministrativeAreas aa\r\n\tON aa.Name \u003d a.AdministrativeArea\r\n\tLEFT OUTER JOIN ParcelBuildings pb\r\n\tON p.Id \u003d pb.BuildingId\r\n\tLEFT OUTER JOIN Parcels b\r\n\tON pb.ParcelId \u003d b.Id\r\n\tLEFT OUTER JOIN spreadsheet_data s\r\n\tON s.BuildingId \u003d p.Id\r\nWHERE p.BuildingPredominateUseId \u003c\u003d 54 ": {
 							"targetName": "building",
 							"mappingType": "existing",
 							"attributes": {
 								"id": {
-									"targetName": "Id",
+									"targetName": "id",
 									"mappingType": "existing"
 								},
 								"created_by_id": {
 									"targetName": "created_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"created_on": {
 									"targetName": "created_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"updated_by_id": {
 									"targetName": "updated_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"updated_on": {
 									"targetName": "updated_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"name": {
-									"targetName": "name",
+									"targetName": "\"name\"",
 									"mappingType": "existing"
 								},
 								"description": {
@@ -2305,30 +2381,37 @@
 								},
 								"classification_id": {
 									"targetName": "classification_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"building_construction_type_id": {
 									"targetName": "building_construction_type_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"agency_id": {
 									"targetName": "agency_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"is_sensitive": {
 									"targetName": "is_sensitive",
+									"targetType": "bool",
 									"mappingType": "existing"
 								},
 								"is_visible_to_other_agencies": {
 									"targetName": "is_visible_to_other_agencies",
+									"targetType": "bool",
 									"mappingType": "existing"
 								},
 								"building_floor_count": {
 									"targetName": "building_floor_count",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"building_predominate_use_id": {
 									"targetName": "building_predominate_use_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"building_tenancy": {
@@ -2337,14 +2420,17 @@
 								},
 								"rentable_area": {
 									"targetName": "rentable_area",
+									"targetType": "float4",
 									"mappingType": "existing"
 								},
 								"building_occupant_type_id": {
 									"targetName": "building_occupant_type_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"lease_expiry": {
 									"targetName": "lease_expiry",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"occupant_name": {
@@ -2357,6 +2443,7 @@
 								},
 								"building_tenancy_updated_on": {
 									"targetName": "building_tenancy_updated_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"encumbrance_reason": {
@@ -2369,18 +2456,22 @@
 								},
 								"total_area": {
 									"targetName": "total_area",
+									"targetType": "float4",
 									"mappingType": "existing"
 								},
 								"location": {
-									"targetName": "location",
+									"targetName": "\"location\"",
+									"targetType": "point",
 									"mappingType": "existing"
 								},
 								"administrative_area_id": {
 									"targetName": "administrative_area_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"address1": {
 									"targetName": "address1",
+									"targetType": "varchar(150)",
 									"mappingType": "existing"
 								},
 								"postal": {
@@ -2389,18 +2480,22 @@
 								},
 								"property_type_id": {
 									"targetName": "property_type_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"project_numbers": {
 									"targetName": "project_numbers",
+									"targetType": "varchar(2000)",
 									"mappingType": "existing"
 								},
 								"pid": {
 									"targetName": "pid",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"pin": {
 									"targetName": "pin",
+									"targetType": "int4",
 									"mappingType": "existing"
 								}
 							}
@@ -2411,42 +2506,49 @@
 							"attributes": {
 								"parcelid": {
 									"targetName": "parcel_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"Date": {
-									"targetName": "year",
+									"targetName": "\"year\"",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"Key": {
 									"targetName": "evaluation_key_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"createdbyid": {
 									"targetName": "created_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"createdon": {
 									"targetName": "created_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"updatedbyid": {
 									"targetName": "updated_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"updatedon": {
 									"targetName": "updated_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"firm": {
-									"targetName": "Firm",
+									"targetName": "firm",
 									"mappingType": "existing"
 								},
 								"value": {
-									"targetName": "Value",
+									"targetName": "value",
 									"mappingType": "existing"
 								},
 								"note": {
-									"targetName": "Note",
+									"targetName": "note",
 									"mappingType": "existing"
 								}
 							}
@@ -2457,42 +2559,50 @@
 							"attributes": {
 								"parcelid": {
 									"targetName": "parcel_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"fiscalyear": {
 									"targetName": "fiscal_year",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"Key": {
 									"targetName": "fiscal_key_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"createdbyid": {
 									"targetName": "created_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"createdon": {
 									"targetName": "created_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"updatedbyid": {
 									"targetName": "updated_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"updatedon": {
 									"targetName": "updated_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"value": {
-									"targetName": "Value",
+									"targetName": "value",
 									"mappingType": "existing"
 								},
 								"note": {
-									"targetName": "Note",
+									"targetName": "note",
 									"mappingType": "existing"
 								},
 								"effectivedate": {
 									"targetName": "effective_date",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								}
 							}
@@ -2503,42 +2613,50 @@
 							"attributes": {
 								"buildingid": {
 									"targetName": "building_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"fiscalyear": {
 									"targetName": "fiscal_year",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"Key": {
 									"targetName": "fiscal_key_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"createdbyid": {
 									"targetName": "created_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"createdon": {
 									"targetName": "created_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"updatedbyid": {
 									"targetName": "updated_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"updatedon": {
 									"targetName": "updated_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"value": {
-									"targetName": "Value",
+									"targetName": "value",
 									"mappingType": "existing"
 								},
 								"note": {
-									"targetName": "Note",
+									"targetName": "note",
 									"mappingType": "existing"
 								},
 								"effectivedate": {
 									"targetName": "effective_date",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								}
 							}
@@ -2549,38 +2667,45 @@
 							"attributes": {
 								"buildingid": {
 									"targetName": "building_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"Date": {
 									"targetName": "\"year\"",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"Key": {
 									"targetName": "evaluation_key_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"createdbyid": {
 									"targetName": "created_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"createdon": {
 									"targetName": "created_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"updatedbyid": {
 									"targetName": "updated_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"updatedon": {
 									"targetName": "updated_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"value": {
-									"targetName": "Value",
+									"targetName": "value",
 									"mappingType": "existing"
 								},
 								"note": {
-									"targetName": "Note",
+									"targetName": "note",
 									"mappingType": "existing"
 								}
 							}
@@ -2590,11 +2715,13 @@
 							"mappingType": "existing",
 							"attributes": {
 								"id": {
-									"targetName": "Id",
+									"targetName": "id",
+									"targetType": "serial4",
 									"mappingType": "existing"
 								},
 								"createdbyid": {
 									"targetName": "created_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"createdon": {
@@ -2603,6 +2730,7 @@
 								},
 								"updatedbyid": {
 									"targetName": "updated_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"updatedon": {
@@ -2611,6 +2739,7 @@
 								},
 								"rowversion": {
 									"targetName": "rowversion",
+									"targetType": "bytea",
 									"mappingType": "skip"
 								},
 								"projectnumber": {
@@ -2623,42 +2752,50 @@
 								},
 								"workflowid": {
 									"targetName": "workflow_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"manager": {
-									"targetName": "Manager",
+									"targetName": "manager",
 									"mappingType": "existing"
 								},
 								"reportedfiscalyear": {
 									"targetName": "reported_fiscal_year",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"actualfiscalyear": {
 									"targetName": "actual_fiscal_year",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"agencyid": {
 									"targetName": "agency_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"statusid": {
 									"targetName": "status_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"description": {
-									"targetName": "Description",
+									"targetName": "description",
+									"targetType": "text",
 									"mappingType": "existing"
 								},
 								"tierlevelid": {
 									"targetName": "tier_level_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"riskid": {
 									"targetName": "risk_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"metadata": {
-									"targetName": "Metadata",
+									"targetName": "metadata",
 									"mappingType": "skip"
 								},
 								"submittedon": {
@@ -2686,53 +2823,20 @@
 									"mappingType": "existing"
 								},
 								"market": {
-									"targetName": "Market",
+									"targetName": "market",
 									"mappingType": "existing"
 								},
 								"assessed": {
-									"targetName": "Assessed",
+									"targetName": "assessed",
 									"mappingType": "existing"
 								},
 								"appraised": {
-									"targetName": "Appraised",
+									"targetName": "appraised",
 									"mappingType": "existing"
 								},
 								"projecttype": {
 									"targetName": "project_type",
-									"mappingType": "existing"
-								}
-							}
-						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/\r\nSELECT [ProjectId]\r\n      ,[TaskId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsCompleted]\r\n      ,[CompletedOn]\r\n  FROM [dbo].[ProjectTasks]": {
-							"targetName": "project_task",
-							"mappingType": "existing",
-							"attributes": {
-								"projectid": {
-									"targetName": "project_id",
-									"mappingType": "existing"
-								},
-								"taskid": {
-									"targetName": "task_id",
-									"mappingType": "existing"
-								},
-								"CreatedById\r\n      ,[CreatedOn": {
-									"targetName": "created_by_id",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "updated_by_id",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "updated_on",
-									"mappingType": "existing"
-								},
-								"iscompleted": {
-									"targetName": "is_completed",
-									"mappingType": "existing"
-								},
-								"completedon": {
-									"targetName": "completed_on",
+									"targetType": "int4",
 									"mappingType": "existing"
 								}
 							}
@@ -2742,11 +2846,13 @@
 							"mappingType": "existing",
 							"attributes": {
 								"id": {
-									"targetName": "Id",
+									"targetName": "id",
+									"targetType": "serial4",
 									"mappingType": "existing"
 								},
 								"createdbyid": {
 									"targetName": "created_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"createdon": {
@@ -2755,6 +2861,7 @@
 								},
 								"updatedbyid": {
 									"targetName": "updated_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"updatedon": {
@@ -2767,41 +2874,44 @@
 								},
 								"projectid": {
 									"targetName": "project_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"workflowid": {
 									"targetName": "workflow_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"statusid": {
 									"targetName": "status_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								}
 							}
 						},
 						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/pims/dbo/ProjectNumbers": {
 							"targetName": "project_number",
-							"mappingType": "existing",
+							"mappingType": "skip",
 							"attributes": {
 								"id": {
-									"targetName": "Id",
-									"mappingType": "existing"
+									"targetName": "id",
+									"mappingType": "skip"
 								},
 								"createdbyid": {
-									"targetName": "created_by_id",
-									"mappingType": "existing"
+									"targetName": "createdbyid",
+									"mappingType": "skip"
 								},
 								"createdon": {
-									"targetName": "created_on",
-									"mappingType": "existing"
+									"targetName": "createdon",
+									"mappingType": "skip"
 								},
 								"updatedbyid": {
-									"targetName": "updated_by_id",
-									"mappingType": "existing"
+									"targetName": "updatedbyid",
+									"mappingType": "skip"
 								},
 								"updatedon": {
-									"targetName": "updated_on",
-									"mappingType": "existing"
+									"targetName": "updatedon",
+									"mappingType": "skip"
 								},
 								"rowversion": {
 									"targetName": "rowversion",
@@ -2814,11 +2924,13 @@
 							"mappingType": "existing",
 							"attributes": {
 								"id": {
-									"targetName": "Id",
+									"targetName": "id",
+									"targetType": "serial4",
 									"mappingType": "existing"
 								},
 								"createdbyid": {
 									"targetName": "created_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"createdon": {
@@ -2827,10 +2939,12 @@
 								},
 								"updatedbyid": {
 									"targetName": "updated_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"updatedon": {
 									"targetName": "updated_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"rowversion": {
@@ -2839,64 +2953,22 @@
 								},
 								"projectid": {
 									"targetName": "project_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"propertytype": {
 									"targetName": "property_type_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"parcelid": {
 									"targetName": "parcel_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"buildingid": {
 									"targetName": "building_id",
-									"mappingType": "existing"
-								}
-							}
-						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT [Id]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsFinal]\r\n      ,[Name]\r\n      ,[From]\r\n      ,[To]\r\n      ,[ReportType]\r\n  FROM [dbo].[ProjectReports]": {
-							"targetName": "project_report",
-							"mappingType": "existing",
-							"attributes": {
-								"id": {
-									"targetName": "Id",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "created_by_id",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "created_on",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "updated_by_id",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "updated_on",
-									"mappingType": "existing"
-								},
-								"isfinal": {
-									"targetName": "is_final",
-									"mappingType": "existing"
-								},
-								"Name": {
-									"targetName": "name",
-									"mappingType": "existing"
-								},
-								"From": {
-									"targetName": "\"From\"",
-									"mappingType": "existing"
-								},
-								"To": {
-									"targetName": "\"To\"",
-									"mappingType": "existing"
-								},
-								"reporttype": {
-									"targetName": "report_type_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								}
 							}
@@ -2906,19 +2978,23 @@
 							"mappingType": "existing",
 							"attributes": {
 								"id": {
-									"targetName": "Id",
+									"targetName": "id",
+									"targetType": "serial4",
 									"mappingType": "existing"
 								},
 								"createdbyid": {
 									"targetName": "created_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"createdon": {
 									"targetName": "created_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"updatedbyid": {
 									"targetName": "updated_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"updatedon": {
@@ -2931,6 +3007,7 @@
 								},
 								"projectid": {
 									"targetName": "project_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"netbook": {
@@ -2938,15 +3015,15 @@
 									"mappingType": "existing"
 								},
 								"market": {
-									"targetName": "Market",
+									"targetName": "market",
 									"mappingType": "existing"
 								},
 								"assessed": {
-									"targetName": "Assessed",
+									"targetName": "assessed",
 									"mappingType": "existing"
 								},
 								"appraised": {
-									"targetName": "Appraised",
+									"targetName": "appraised",
 									"mappingType": "existing"
 								},
 								"snapshoton": {
@@ -2954,96 +3031,8 @@
 									"mappingType": "existing"
 								},
 								"metadata": {
-									"targetName": "Metadata",
+									"targetName": "metadata",
 									"mappingType": "skip"
-								}
-							}
-						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/\r\nSELECT [ProjectId]\r\n      ,[AgencyId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[OfferAmount]\r\n      ,[NotificationId]\r\n      ,[Response]\r\n      ,[ReceivedOn]\r\n      ,[Note]\r\n  FROM [dbo].[ProjectAgencyResponses]": {
-							"targetName": "project_agency_response",
-							"mappingType": "existing",
-							"attributes": {
-								"projectid": {
-									"targetName": "project_id",
-									"mappingType": "existing"
-								},
-								"agencyid": {
-									"targetName": "agency_id",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "created_by_id",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "created_on",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "updated_by_id",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "updated_on",
-									"mappingType": "existing"
-								},
-								"offeramount": {
-									"targetName": "offer_amount",
-									"mappingType": "existing"
-								},
-								"notificationid": {
-									"targetName": "notification_id",
-									"mappingType": "existing"
-								},
-								"response": {
-									"targetName": "response",
-									"mappingType": "existing"
-								},
-								"receivedon": {
-									"targetName": "received_on",
-									"mappingType": "existing"
-								},
-								"note": {
-									"targetName": "Note",
-									"mappingType": "existing"
-								}
-							}
-						},
-						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT [Id]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[ProjectId]\r\n      ,[NoteType]\r\n      ,[Note]\r\n  FROM [dbo].[ProjectNotes]": {
-							"targetName": "project_note",
-							"mappingType": "existing",
-							"attributes": {
-								"id": {
-									"targetName": "Id",
-									"mappingType": "existing"
-								},
-								"createdbyid": {
-									"targetName": "created_by_id",
-									"mappingType": "existing"
-								},
-								"createdon": {
-									"targetName": "created_on",
-									"mappingType": "existing"
-								},
-								"updatedbyid": {
-									"targetName": "updated_by_id",
-									"mappingType": "existing"
-								},
-								"updatedon": {
-									"targetName": "updated_on",
-									"mappingType": "existing"
-								},
-								"projectid": {
-									"targetName": "project_id",
-									"mappingType": "existing"
-								},
-								"notetype": {
-									"targetName": "note_type_id",
-									"mappingType": "existing"
-								},
-								"note": {
-									"targetName": "Note",
-									"mappingType": "existing"
 								}
 							}
 						},
@@ -3052,11 +3041,13 @@
 							"mappingType": "existing",
 							"attributes": {
 								"id": {
-									"targetName": "Id",
+									"targetName": "id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"createdbyid": {
 									"targetName": "created_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"createdon": {
@@ -3065,6 +3056,7 @@
 								},
 								"updatedbyid": {
 									"targetName": "updated_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"updatedon": {
@@ -3077,14 +3069,16 @@
 								},
 								"Key": {
 									"targetName": "\"Key\"",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"status": {
-									"targetName": "Status",
+									"targetName": "status",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"priority": {
-									"targetName": "Priority",
+									"targetName": "priority",
 									"mappingType": "existing"
 								},
 								"Encoding": {
@@ -3100,7 +3094,7 @@
 									"mappingType": "existing"
 								},
 								"subject": {
-									"targetName": "Subject",
+									"targetName": "subject",
 									"mappingType": "existing"
 								},
 								"bodytype": {
@@ -3108,39 +3102,244 @@
 									"mappingType": "existing"
 								},
 								"body": {
-									"targetName": "Body",
+									"targetName": "body",
+									"targetType": "text",
 									"mappingType": "existing"
 								},
 								"bcc": {
-									"targetName": "Bcc",
+									"targetName": "bcc",
 									"mappingType": "existing"
 								},
 								"cc": {
-									"targetName": "Cc",
+									"targetName": "cc",
 									"mappingType": "existing"
 								},
 								"tag": {
-									"targetName": "Tag",
+									"targetName": "tag",
 									"mappingType": "existing"
 								},
 								"projectid": {
 									"targetName": "project_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"toagencyid": {
 									"targetName": "to_agency_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"templateid": {
 									"targetName": "template_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"chesmessageid": {
 									"targetName": "ches_message_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"chestransactionid": {
 									"targetName": "ches_transaction_id",
+									"targetType": "uuid",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/\r\nSELECT [ProjectId]\r\n      ,[TaskId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsCompleted]\r\n      ,[CompletedOn]\r\n  FROM [dbo].[ProjectTasks]": {
+							"targetName": "project_task",
+							"mappingType": "existing",
+							"attributes": {
+								"projectid": {
+									"targetName": "project_id",
+									"targetType": "int4",
+									"mappingType": "existing"
+								},
+								"taskid": {
+									"targetName": "task_id",
+									"targetType": "int4",
+									"mappingType": "existing"
+								},
+								"CreatedById\r\n      ,[CreatedOn": {
+									"targetName": "created_by_id",
+									"targetType": "uuid",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "updated_by_id",
+									"targetType": "uuid",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "updated_on",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								},
+								"iscompleted": {
+									"targetName": "is_completed",
+									"targetType": "bool",
+									"mappingType": "existing"
+								},
+								"completedon": {
+									"targetName": "completed_on",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT [Id]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[IsFinal]\r\n      ,[Name]\r\n      ,[From]\r\n      ,[To]\r\n      ,[ReportType]\r\n  FROM [dbo].[ProjectReports]": {
+							"targetName": "project_report",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "id",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "created_by_id",
+									"targetType": "uuid",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "created_on",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "updated_by_id",
+									"targetType": "uuid",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "updated_on",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								},
+								"isfinal": {
+									"targetName": "is_final",
+									"targetType": "bool",
+									"mappingType": "existing"
+								},
+								"Name": {
+									"targetName": "\"name\"",
+									"mappingType": "existing"
+								},
+								"From": {
+									"targetName": "\"From\"",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								},
+								"To": {
+									"targetName": "\"To\"",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								},
+								"reporttype": {
+									"targetName": "report_type_id",
+									"targetType": "int4",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/\r\nSELECT [ProjectId]\r\n      ,[AgencyId]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[OfferAmount]\r\n      ,[NotificationId]\r\n      ,[Response]\r\n      ,[ReceivedOn]\r\n      ,[Note]\r\n  FROM [dbo].[ProjectAgencyResponses]": {
+							"targetName": "project_agency_response",
+							"mappingType": "existing",
+							"attributes": {
+								"projectid": {
+									"targetName": "project_id",
+									"targetType": "int4",
+									"mappingType": "existing"
+								},
+								"agencyid": {
+									"targetName": "agency_id",
+									"targetType": "int4",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "created_by_id",
+									"targetType": "uuid",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "created_on",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "updated_by_id",
+									"targetType": "uuid",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "updated_on",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								},
+								"offeramount": {
+									"targetName": "offer_amount",
+									"mappingType": "existing"
+								},
+								"notificationid": {
+									"targetName": "notification_id",
+									"targetType": "int4",
+									"mappingType": "existing"
+								},
+								"response": {
+									"targetName": "response",
+									"targetType": "int4",
+									"mappingType": "existing"
+								},
+								"receivedon": {
+									"targetName": "received_on",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								},
+								"note": {
+									"targetName": "note",
+									"mappingType": "existing"
+								}
+							}
+						},
+						"mssql_jtds_legacy-18dce354301-1e68702299e0ca14/SELECT [Id]\r\n      ,CASE \r\n\t\tWHEN [CreatedById] IS NULL THEN \u002700000000-0000-0000-0000-000000000000\u0027\r\n\t\tELSE [CreatedById]\r\n\t  END AS [CreatedById]\r\n      ,[CreatedOn]\r\n      ,[UpdatedById]\r\n      ,[UpdatedOn]\r\n      ,[ProjectId]\r\n      ,[NoteType]\r\n      ,[Note]\r\n  FROM [dbo].[ProjectNotes]": {
+							"targetName": "project_note",
+							"mappingType": "existing",
+							"attributes": {
+								"id": {
+									"targetName": "id",
+									"mappingType": "existing"
+								},
+								"createdbyid": {
+									"targetName": "created_by_id",
+									"targetType": "uuid",
+									"mappingType": "existing"
+								},
+								"createdon": {
+									"targetName": "created_on",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								},
+								"updatedbyid": {
+									"targetName": "updated_by_id",
+									"targetType": "uuid",
+									"mappingType": "existing"
+								},
+								"updatedon": {
+									"targetName": "updated_on",
+									"targetType": "timestamp",
+									"mappingType": "existing"
+								},
+								"projectid": {
+									"targetName": "project_id",
+									"targetType": "int4",
+									"mappingType": "existing"
+								},
+								"notetype": {
+									"targetName": "note_type_id",
+									"targetType": "int4",
+									"mappingType": "existing"
+								},
+								"note": {
+									"targetName": "note",
+									"targetType": "text",
 									"mappingType": "existing"
 								}
 							}
@@ -3159,14 +3358,17 @@
 								},
 								"note_type_id": {
 									"targetName": "note_type_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"note": {
 									"targetName": "note",
+									"targetType": "text",
 									"mappingType": "existing"
 								},
 								"created_by_id": {
 									"targetName": "created_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"created_on": {
@@ -3175,10 +3377,12 @@
 								},
 								"updated_on": {
 									"targetName": "updated_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"updated_by_id": {
 									"targetName": "updated_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								}
 							}
@@ -3193,10 +3397,12 @@
 								},
 								"metadata_key": {
 									"targetName": "metadata_key",
+									"targetType": "varchar(4000)",
 									"mappingType": "skip"
 								},
 								"timestamp_type_id": {
 									"targetName": "timestamp_type_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"date": {
@@ -3205,6 +3411,7 @@
 								},
 								"created_by_id": {
 									"targetName": "created_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"created_on": {
@@ -3213,10 +3420,12 @@
 								},
 								"updated_on": {
 									"targetName": "updated_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"updated_by_id": {
 									"targetName": "updated_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								}
 							}
@@ -3235,14 +3444,17 @@
 								},
 								"monetary_type_id": {
 									"targetName": "monetary_type_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"value": {
 									"targetName": "value",
+									"targetType": "money",
 									"mappingType": "existing"
 								},
 								"created_by_id": {
 									"targetName": "created_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"created_on": {
@@ -3251,10 +3463,12 @@
 								},
 								"updated_on": {
 									"targetName": "updated_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"updated_by_id": {
 									"targetName": "updated_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								}
 							}
@@ -3273,18 +3487,22 @@
 								},
 								"is_completed": {
 									"targetName": "is_completed",
+									"targetType": "bool",
 									"mappingType": "existing"
 								},
 								"task_id": {
 									"targetName": "task_id",
+									"targetType": "int4",
 									"mappingType": "existing"
 								},
 								"completed_on": {
 									"targetName": "completed_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"created_by_id": {
 									"targetName": "created_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								},
 								"created_on": {
@@ -3293,10 +3511,12 @@
 								},
 								"updated_on": {
 									"targetName": "updated_on",
+									"targetType": "timestamp",
 									"mappingType": "existing"
 								},
 								"updated_by_id": {
 									"targetName": "updated_by_id",
+									"targetType": "uuid",
 									"mappingType": "existing"
 								}
 							}

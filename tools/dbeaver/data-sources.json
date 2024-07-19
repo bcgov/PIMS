@@ -33,7 +33,6 @@
 				"configurationType": "MANUAL",
 				"home": "postgresql_client",
 				"type": "dev",
-				"provider-properties": {},
 				"auth-model": "native"
 			},
 			"custom-properties": {
@@ -74,8 +73,8 @@
 			"configuration": {
 				"host": "127.0.0.1",
 				"port": "22224",
-				"database": "pims",
-				"url": "jdbc:postgresql://127.0.0.1:22224/pims",
+				"database": "pims-crunchy",
+				"url": "jdbc:postgresql://127.0.0.1:22224/pims-crunchy",
 				"configurationType": "MANUAL",
 				"home": "postgresql_client",
 				"type": "dev",
@@ -88,7 +87,8 @@
 					"read-keys-with-columns": "false",
 					"@dbeaver-use-prepared-statements-db@": "false",
 					"postgresql.dd.plain.string": "false",
-					"postgresql.dd.tag.string": "false"
+					"postgresql.dd.tag.string": "false",
+					"@dbeaver-chosen-role@": "postgres"
 				},
 				"auth-model": "native"
 			},
