@@ -87,8 +87,7 @@
 					"read-keys-with-columns": "false",
 					"@dbeaver-use-prepared-statements-db@": "false",
 					"postgresql.dd.plain.string": "false",
-					"postgresql.dd.tag.string": "false",
-					"@dbeaver-chosen-role@": "postgres"
+					"postgresql.dd.tag.string": "false"
 				},
 				"auth-model": "native"
 			},
