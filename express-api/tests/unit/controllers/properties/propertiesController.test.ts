@@ -41,6 +41,7 @@ import {
   importProperties,
 } from '@/controllers/properties/propertiesController';
 import { ImportResult } from '@/typeorm/Entities/ImportResult';
+import xlsx, { WorkBook } from 'xlsx';
 
 const {
   getProperties,
@@ -70,6 +71,14 @@ const _getPropertiesForMap = jest.fn().mockImplementation(async () => [
 const _getPropertyUnion = jest.fn().mockImplementation(async () => [producePropertyUnion()]);
 
 const _getImportResults = jest.fn().mockImplementation(async () => [produceImportResult()]);
+
+jest.spyOn(xlsx, 'readFile').mockImplementation(() => {
+  const wb: WorkBook = {
+    Sheets: {},
+    SheetNames: [],
+  };
+  return wb;
+});
 
 jest
   .spyOn(AppDataSource.getRepository(ImportResult), 'save')
