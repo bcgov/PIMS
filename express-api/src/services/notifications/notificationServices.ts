@@ -445,6 +445,11 @@ const getProjectNotificationsInQueue = async (
 
   const updatedNotifications: NotificationQueue[] = [];
 
+  const pageModel: PageModel<NotificationQueue> = {
+    items: notifications,
+    pageNumber: pageNumber ?? 0,
+    pageSize: pageSize ?? 0,
+  };
   for (const notification of notifications) {
     // run the updates for notifications that are in Pending or Accepted status as the other statuses are final
     if (
@@ -457,11 +462,7 @@ const getProjectNotificationsInQueue = async (
       updatedNotifications.push(notification);
     }
   }
-  return {
-    items: updatedNotifications,
-    pageNumber: pageNumber,
-    pageSize: pageSize,
-  };
+  return pageModel;
 };
 
 const notificationServices = {

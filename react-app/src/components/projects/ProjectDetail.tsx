@@ -411,7 +411,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           values={undefined}
           id={notifications}
           onEdit={() => setOpenNotificationDialog(true)}
-          disableEdit={isAuditor}
+          disableEdit={isAuditor || !data?.parsedBody?.Notifications?.length}
           editButtonText="View Updated Notifications"
         >
           {!data?.parsedBody.Notifications?.length ? ( //TODO: Logic will depend on precense of agency responses

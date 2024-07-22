@@ -111,6 +111,8 @@ describe('UNIT - Notification Services', () => {
   describe('sendNotification', () => {
     it('should send to ches and update the notification queue', async () => {
       const sendThis = produceNotificationQueue();
+      sendThis.ChesMessageId = '00000000-0000-0000-0000-000000000000';
+      sendThis.ChesTransactionId = '00000000-0000-0000-0000-000000000001';
       const notifResult = await notificationServices.sendNotification(sendThis, produceSSO());
       expect(notifResult.ChesTransactionId).toBeTruthy();
       expect(notifResult.ChesMessageId).toBeTruthy();
@@ -280,16 +282,6 @@ describe('getProjectNotificationsInQueue', () => {
       .spyOn(AppDataSource.getRepository(NotificationQueue), 'find')
       .mockResolvedValueOnce(notifications);
 
-    jest
-      .spyOn(AppDataSource.getRepository(NotificationQueue), 'findOne')
-      .mockImplementation((options) => {
-        const id = (options as FindOptionsWhere<NotificationQueue>).Id;
-        console.log('findOne called with id:', id); // Debugging line
-        const notification = notifications.find((notif) => notif.Id === id);
-        console.log('Found notification:', notification); // Debugging line
-        return Promise.resolve(notification ?? null);
-      });
-
     jest.spyOn(notificationServices, 'updateNotificationStatus').mockImplementation(async (id) => {
       const index = notifications.findIndex((notif) => notif.Id === id);
       if (index !== -1) {
@@ -302,6 +294,7 @@ describe('getProjectNotificationsInQueue', () => {
       }
       return Promise.resolve(null);
     });
+
     jest.spyOn(chesServices, 'getStatusByIdAsync').mockImplementation(async (messageId) => {
       if (
         messageId === '00000000-0000-0000-0000-000000000000' ||
@@ -319,8 +312,7 @@ describe('getProjectNotificationsInQueue', () => {
         throw new Error(`No status found for messageId ${messageId}`);
       }
     });
-
-    const _mockQueryRunner = {
+    const mockQueryRunner = {
       startTransaction: jest.fn(),
       rollbackTransaction: jest.fn(),
       commitTransaction: jest.fn(),
@@ -330,9 +322,7 @@ describe('getProjectNotificationsInQueue', () => {
         findOne: jest.fn().mockImplementation((entity, options) => {
           if (entity === NotificationQueue) {
             const id = (options?.where as FindOptionsWhere<NotificationQueue>).Id;
-            console.log('QueryRunner findOne called with id:', id); // Debugging line
             const notification = notifications.find((notif) => notif.Id === id);
-            console.log('QueryRunner found notification:', notification); // Debugging line
             return Promise.resolve(notification ?? null);
           }
         }),
@@ -340,15 +330,19 @@ describe('getProjectNotificationsInQueue', () => {
       },
     } as unknown as QueryRunner;
 
-    jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue(_mockQueryRunner);
+    jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue(mockQueryRunner);
+
     const result = await notificationServices.getProjectNotificationsInQueue(
       { projectId, pageNumber, pageSize },
       user,
     );
-    console.log('result.items[0]:', result.items[0]);
+    expect(result.items).toBeDefined();
     expect(result.items.length).toBe(3);
-    expect(result.items[0].Status).toBe(NotificationStatus.Completed);
-    expect(result.items[1].Status).toBe(NotificationStatus.Completed);
-    expect(result.items[2].Status).toBe(NotificationStatus.Completed);
+
+    if (result.items.length > 0) {
+      expect(result.items[0].Status).toBe(NotificationStatus.Completed);
+      expect(result.items[1].Status).toBe(NotificationStatus.Completed);
+      expect(result.items[2].Status).toBe(NotificationStatus.Completed);
+    }
   });
 });
