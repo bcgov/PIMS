@@ -470,6 +470,7 @@ const notificationServices = {
   sendNotification,
   updateNotificationStatus,
   getProjectNotificationsInQueue,
+  convertChesStatusToNotificationStatus,
 };
 
 export default notificationServices;

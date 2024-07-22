@@ -3,6 +3,9 @@ import userServices from '@/services/users/usersServices';
 import { stubResponse } from '@/utilities/stubResponse';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Request, Response } from 'express';
+import { DisposalNotificationFilterSchema } from './notificationsSchema';
+import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
+import projectServices from '@/services/projects/projectsServices';
 
 /**
  * @description Get the notifications for the specified project filter based on query parameters.
@@ -115,22 +118,31 @@ export const getNotificationInQueueById = async (req: Request, res: Response) =>
  */
 export const getNotificationsByProjectId = async (req: Request, res: Response) => {
   try {
-    const { projectId } = req.query;
+    const filter = DisposalNotificationFilterSchema.safeParse(req.query);
+    if (!filter.success) {
+      return res.status(400).send({ message: 'Could not parse filter.' });
+    }
+    const filterResult = filter.data;
+    const kcUser = req.user as unknown as SSOUser;
     const user = await userServices.getUser((req.user as SSOUser).preferred_username);
 
-    if (!projectId) {
-      return res.status(400).send({ message: 'Project ID is required.' });
+    if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
+      // get array of user's agencies
+      const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+
+      const project = await projectServices.getProjectById(filterResult.projectId);
+      if (!usersAgencies.includes(project.AgencyId)) {
+        return res.status(403).send({ message: 'User is not authorized to access this endpoint.' });
+      }
     }
 
     // Fetch notifications in the queue for this project
-    const notificationFilter = {
-      projectId: Number(projectId), // Ensure projectId is a number
-      pageNumber: Number(req.query.pageNumber) || 0, // Default to page 0 if not provided
-      pageSize: Number(req.query.pageSize) || 0, // Default to 10 if not provided
-    };
-
     const notificationsResult = await notificationServices.getProjectNotificationsInQueue(
-      notificationFilter,
+      {
+        projectId: filterResult.projectId,
+        pageNumber: filterResult.page ?? 0,
+        pageSize: filterResult.quantity ?? 0,
+      },
       user,
     );
 

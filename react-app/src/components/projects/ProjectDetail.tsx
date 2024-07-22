@@ -69,6 +69,7 @@ const ProjectDetail = (props: IProjectDetail) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { keycloak } = useContext(AuthContext);
+  const lookup = useContext(LookupContext);
   const api = usePimsApi();
   const { data: lookupData, getLookupValueById } = useContext(LookupContext);
   const { data, refreshData, isLoading } = useDataLoader(() =>
@@ -421,10 +422,8 @@ const ProjectDetail = (props: IProjectDetail) => {
             <ProjectNotificationsTable
               rows={
                 data?.parsedBody.Notifications
-                  ? data?.parsedBody.Notifications.sort(
-                      (a, b) => new Date(a.SendOn).getTime() - new Date(b.SendOn).getTime(),
-                    ).map((resp) => ({
-                      agency: ungroupedAgencies?.find((agc) => agc.Id === resp.ToAgencyId)?.Name,
+                  ? data?.parsedBody.Notifications.map((resp) => ({
+                      agency: lookup.getLookupValueById('Agencies', resp.ToAgencyId)?.Name,
                       id: resp.ChesMessageId,
                       projectNumber: data?.parsedBody.ProjectNumber,
                       status: getStatusString(resp.Status),

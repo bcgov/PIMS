@@ -109,6 +109,7 @@ const ProjectNotificationsTable = (props: ProjectNotificationsTableProps) => {
         pageSizeOptions={[10]}
         initialState={{
           pagination: { paginationModel: { pageSize: 10 } },
+          sorting: { sortModel: [{ field: 'sendOn', sort: 'asc' }] },
         }}
         onPaginationModelChange={handlePaginationChange}
       />
