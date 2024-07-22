@@ -1,5 +1,5 @@
 import usePimsApi from '@/hooks/usePimsApi';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import { Project, ProjectGet, ProjectMonetary, ProjectTimestamp } from '@/hooks/api/useProjectsApi';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -23,6 +23,7 @@ import { columnNameFormatter } from '@/utilities/formatters';
 import DateFormField from '../form/DateFormField';
 import dayjs from 'dayjs';
 import { LookupContext } from '@/contexts/lookupContext';
+import { MonetaryType } from '@/constants/monetaryTypes';
 
 interface IProjectGeneralInfoDialog {
   initialValues: Project;
@@ -135,7 +136,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   const getMonetaryOrEmptyString = (monetaries: ProjectMonetary[], typeId: number) => {
     const found = monetaries?.find((m) => m.MonetaryTypeId == typeId);
     if (found) {
-      return Number(String(found.Value).replace(/[$,]/g, ''));
+      return found.Value;
     } else {
       return '';
     }
@@ -292,30 +293,19 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
       ProgramCost: 0,
     },
   });
-  const salesCostType = useMemo(
-    () => lookupData?.MonetaryTypes?.find((a) => a.Name === 'SalesCost'),
-    [lookupData],
-  );
-  const programCostType = useMemo(
-    () => lookupData?.MonetaryTypes?.find((a) => a.Name === 'ProgramCost'),
-    [lookupData],
-  );
+
   useEffect(() => {
     financialFormMethods.reset({
-      Assessed: +(initialValues?.Assessed ?? 0).toString().replace(/[$,]/g, ''),
-      NetBook: +(initialValues?.NetBook ?? 0).toString().replace(/[$,]/g, ''),
-      Market: +(initialValues?.Market ?? 0).toString().replace(/[$,]/g, ''),
-      Appraised: +(initialValues?.Appraised ?? 0).toString().replace(/[$,]/g, ''),
-      SalesCost: +(
-        initialValues?.Monetaries?.find((a) => a.MonetaryTypeId === salesCostType?.Id)?.Value ?? 0
-      )
-        .toString()
-        .replace(/[$,]/g, ''),
-      ProgramCost: +(
-        initialValues?.Monetaries?.find((a) => a.MonetaryTypeId === programCostType?.Id)?.Value ?? 0
-      )
-        .toString()
-        .replace(/[$,]/g, ''),
+      Assessed: initialValues?.Assessed ?? 0,
+      NetBook: initialValues?.NetBook ?? 0,
+      Market: initialValues?.Market ?? 0,
+      Appraised: initialValues?.Appraised ?? 0,
+      SalesCost:
+        initialValues?.Monetaries?.find((a) => a.MonetaryTypeId === MonetaryType.SALES_COST)
+          ?.Value ?? 0,
+      ProgramCost:
+        initialValues?.Monetaries?.find((a) => a.MonetaryTypeId === MonetaryType.PROGRAM_COST)
+          ?.Value ?? 0,
     });
   }, [initialValues, lookupData]);
   return (
@@ -336,11 +326,11 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
             Appraised: Appraised,
             Monetaries: [
               {
-                MonetaryTypeId: salesCostType.Id,
+                MonetaryTypeId: MonetaryType.SALES_COST,
                 Value: SalesCost,
               },
               {
-                MonetaryTypeId: programCostType.Id,
+                MonetaryTypeId: MonetaryType.PROGRAM_COST,
                 Value: ProgramCost,
               },
             ],
