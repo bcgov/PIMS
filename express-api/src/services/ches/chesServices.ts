@@ -153,14 +153,17 @@ const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentR
       email.delayTS += Number(cfg.ches.secondsToDelay);
     }
   }
-  email.to = cfg.ches.overrideTo
-    ? cfg.ches.overrideTo
-        .split(';')
-        .map((email) => email.trim())
-        .filter((email) => !!email)
-    : email.to?.filter((a) => !!a);
-  email.cc = cfg.ches.overrideTo ? [] : email.cc?.filter((a) => !!a);
-  email.bcc = cfg.ches.overrideTo ? [] : email.bcc?.filter((a) => !!a);
+  if (cfg.ches.overrideTo || !cfg.ches.emailAuthorized) {
+    email.to = cfg.ches.overrideTo
+      ? cfg.ches.overrideTo.split(';').map((email) => email.trim())
+      : [user.email];
+    email.cc = email.cc?.length ? [user.email] : [];
+    email.bcc = [];
+  }
+
+  email.to = email.to?.filter((a) => !!a);
+  email.cc = email.cc?.filter((a) => !!a);
+  email.bcc = email.bcc?.filter((a) => !!a);
 
   if (cfg.ches.emailEnabled) {
     return sendAsync('/email', 'POST', email);
