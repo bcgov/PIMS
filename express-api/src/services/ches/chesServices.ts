@@ -153,7 +153,7 @@ const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentR
       email.delayTS += Number(cfg.ches.secondsToDelay);
     }
   }
-  if (cfg.ches.overrideTo || !cfg.ches.emailAuthorized) {
+  if (cfg.ches.overrideTo || !cfg.ches.sendToLive) {
     email.to = cfg.ches.overrideTo
       ? cfg.ches.overrideTo.split(';').map((email) => email.trim())
       : [user.email];
