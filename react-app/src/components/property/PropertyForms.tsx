@@ -96,13 +96,6 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
   const updateLocation = (latlng: LatLng) => {
     formContext.setValue('Location', { x: latlng.lng, y: latlng.lat }); //Technically, longitude is x and latitude is y...
   };
-  //Necessary to make sure we set the map to the correct place when opening this form in the edit view.
-  // useEffect(() => {
-  //   if (defaultLocationValue != null) {
-  //     const latlng = new LatLng(defaultLocationValue.y, defaultLocationValue.x);
-  //     updateLocation(latlng);
-  //   }
-  // }, [defaultLocationValue]);
 
   const handleFeatureCollectionResponse = (response: FeatureCollection) => {
     if (response.features.length) {
