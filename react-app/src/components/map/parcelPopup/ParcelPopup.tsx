@@ -80,7 +80,7 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
   const getParcelData = useCallback(() => {
     //zoom check here since I don't think it makes sense to allow this at anything more zoomed out than this
     //can't really click on any parcel with much accurancy beyond that point
-    if (map.getZoom() > 10) {
+    if (map.getZoom() > 10 && clickPosition) {
       api.parcelLayer.getParcelByLatLng(clickPosition).then((response) => {
         if (response.features.length) {
           setParcelData(
