@@ -33,6 +33,14 @@ def create_parent_ticket( project_key, updates, epic_id ):
     update_list = updates[1]
 
     summary_str = str(folder) + " Dependency Updates " + str(today)
+    optional_summary = ""
+
+    if folder == "express-api": 
+        optional_summary = "\n\nPlease check formatting of dependency for xlsx " + \
+        "it should match the following:\n" + \
+        "https://cdn.sheetjs.com/xlsx-<versionnum>/xlsx-<versionnum>.tgz\n" + \
+        "See https://github.com/bcgov/PIMS/pull/2521#discussion_r1676221873 " + \
+        "for more information."
 
     # format the description of the parent ticket
     description = "Currently we have " + \
@@ -47,7 +55,7 @@ def create_parent_ticket( project_key, updates, epic_id ):
                 "key": project_key
             },
             "summary": summary_str ,
-            "description": description,
+            "description": description + optional_summary,
             "issuetype": {
                 "name": "Task"
             },

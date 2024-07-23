@@ -58,6 +58,7 @@ const AddProject = () => {
       addTasks.push({
         Id: ProjectTask.EXEMPTION_REQUESTED,
         Name: 'Apply for Enhanced Referral Process exemption',
+        IsOptional: true, //NOTE: If changing this at the data source, this will be out of sync.
       });
       addTasks.forEach((t, idx) => formMethods.setValue(`Tasks.${idx}.TaskId`, t.Id));
       setTasksForAddState(addTasks);
