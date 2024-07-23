@@ -186,6 +186,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
           <TextFormField
             fullWidth
             name={'PID'}
+            required={propertyType === 'Parcel'}
             label={'PID'}
             isPid
             onBlur={(event) => {
@@ -212,6 +213,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             numeric
             fullWidth
             name={'PIN'}
+            required={propertyType === 'Parcel'}
             label={'PIN'}
             onBlur={(event) => {
               // Only do this if there's a value here
