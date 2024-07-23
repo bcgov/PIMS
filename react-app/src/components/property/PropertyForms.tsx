@@ -182,11 +182,16 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             }}
           />
         </Grid>
+        <Grid item xs={12}>
+          <Typography textAlign={'center'}>
+            {propertyType === 'Parcel' &&
+              'Please note that either a PID or PIN is required for a Parcel entry'}
+          </Typography>
+        </Grid>
         <Grid item xs={6}>
           <TextFormField
             fullWidth
             name={'PID'}
-            required={propertyType === 'Parcel'}
             label={'PID'}
             isPid
             onBlur={(event) => {
@@ -213,7 +218,6 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             numeric
             fullWidth
             name={'PIN'}
-            required={propertyType === 'Parcel'}
             label={'PIN'}
             onBlur={(event) => {
               // Only do this if there's a value here
