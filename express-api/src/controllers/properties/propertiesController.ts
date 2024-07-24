@@ -206,24 +206,28 @@ export const importProperties = async (req: Request, res: Response) => {
     CreatedById: user.Id,
     CreatedOn: new Date(),
   });
-  const worker = new Worker(
-    path.resolve(__dirname, '../../services/properties/propertyWorker.ts'),
-    {
-      workerData: { filePath, resultRowId: resultRow.Id, user, roles },
-      execArgv: [
-        '--require',
-        'ts-node/register',
-        '--require',
-        'tsconfig-paths/register',
-        '--require',
-        'dotenv/config',
-      ],
-    },
-  );
+  const workerPath = `../../services/properties/propertyWorker.${process.env.NODE_ENV === 'production' ? 'js' : 'ts'}`;
+  const worker = new Worker(path.resolve(__dirname, workerPath), {
+    workerData: { filePath, resultRowId: resultRow.Id, user, roles },
+    execArgv: [
+      '--require',
+      'ts-node/register',
+      '--require',
+      'tsconfig-paths/register',
+      '--require',
+      'dotenv/config',
+    ],
+  });
   worker.on('message', (msg) => {
     console.log('Worker thread message --', msg);
   });
-  worker.on('error', (err) => console.log('Worker errored out with error: ' + err.message));
+  worker.on('error', (err) => {
+    console.log(`Worker errored out: ${err.message}`);
+    AppDataSource.getRepository(ImportResult).update(
+      { Id: resultRow.Id },
+      { CompletionPercentage: -1 },
+    );
+  });
   worker.on('exit', (code) => {
     console.log(`Worker hit exit code ${code}`);
 
