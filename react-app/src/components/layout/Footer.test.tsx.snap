@@ -18,7 +18,7 @@ exports[`Footer.tsx should match the existing snapshot 1`] = `
     >
       <a
         className="MuiTypography-root MuiTypography-h5 MuiLink-root MuiLink-underlineAlways css-1qas1pa-MuiTypography-root-MuiLink-root"
-        href="#"
+        href="https://www2.gov.bc.ca//gov/content/home/accessible-government"
         onBlur={[Function]}
         onFocus={[Function]}
       >
@@ -26,7 +26,7 @@ exports[`Footer.tsx should match the existing snapshot 1`] = `
       </a>
       <a
         className="MuiTypography-root MuiTypography-h5 MuiLink-root MuiLink-underlineAlways css-1qas1pa-MuiTypography-root-MuiLink-root"
-        href="#"
+        href="https://www2.gov.bc.ca//gov/content/home/privacy"
         onBlur={[Function]}
         onFocus={[Function]}
       >
@@ -34,7 +34,7 @@ exports[`Footer.tsx should match the existing snapshot 1`] = `
       </a>
       <a
         className="MuiTypography-root MuiTypography-h5 MuiLink-root MuiLink-underlineAlways css-1qas1pa-MuiTypography-root-MuiLink-root"
-        href="#"
+        href="https://www2.gov.bc.ca//gov/content/home/copyright"
         onBlur={[Function]}
         onFocus={[Function]}
       >
@@ -42,7 +42,7 @@ exports[`Footer.tsx should match the existing snapshot 1`] = `
       </a>
       <a
         className="MuiTypography-root MuiTypography-h5 MuiLink-root MuiLink-underlineAlways css-1qas1pa-MuiTypography-root-MuiLink-root"
-        href="#"
+        href="https://www2.gov.bc.ca//gov/content/home/disclaimer"
         onBlur={[Function]}
         onFocus={[Function]}
       >
