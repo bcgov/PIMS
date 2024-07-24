@@ -16,6 +16,7 @@ import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { AppDataSource } from '@/appDataSource';
 import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import { readFile } from 'xlsx';
+import logger from '@/utilities/winstonLogger';
 
 /**
  * @description Used to retrieve all properties.
@@ -219,17 +220,17 @@ export const importProperties = async (req: Request, res: Response) => {
     ],
   });
   worker.on('message', (msg) => {
-    console.log('Worker thread message --', msg);
+    logger.info('Worker thread message --', msg);
   });
   worker.on('error', (err) => {
-    console.log(`Worker errored out: ${err.message}`);
+    logger.error(`Worker errored out: ${err.message}`);
     AppDataSource.getRepository(ImportResult).update(
       { Id: resultRow.Id },
       { CompletionPercentage: -1 },
     );
   });
   worker.on('exit', (code) => {
-    console.log(`Worker hit exit code ${code}`);
+    logger.info(`Worker hit exit code ${code}`);
 
     fs.unlink(filePath, (err) => {
       if (err) console.error('Failed to cleanup file from file upload.');
