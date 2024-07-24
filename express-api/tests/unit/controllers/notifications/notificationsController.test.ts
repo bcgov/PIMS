@@ -140,12 +140,12 @@ describe('UNIT - Testing controllers for notifications routes.', () => {
 
     it('should return 200 and notifications if user is authorized', async () => {
       const mockRequest = {
-        params: { projectId: '123' },
+        query: { projectId: '123' },
         user: { agencies: [1] },
       } as unknown as Request;
 
       const mockProject = produceProject({
-        Id: 4724659117359104,
+        Id: 123,
         AgencyId: 1,
       });
 
@@ -161,7 +161,7 @@ describe('UNIT - Testing controllers for notifications routes.', () => {
       await controllers.getNotificationsByProjectId(mockRequest, mockResponse);
 
       expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(getProjectByIdSpy).toHaveBeenCalledWith('4724659117359104');
+      expect(getProjectByIdSpy).toHaveBeenCalledWith(123);
     });
   });
 
