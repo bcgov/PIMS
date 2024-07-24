@@ -217,10 +217,6 @@ const ProjectDetail = (props: IProjectDetail) => {
   };
 
   useEffect(() => {
-    refreshData();
-  }, [id]);
-
-  useEffect(() => {
     const fetchNotifications = async () => {
       if (id) {
         const notifications = await api.notifications.getNotificationsByProjectId(Number(id));
@@ -228,21 +224,8 @@ const ProjectDetail = (props: IProjectDetail) => {
       }
     };
     fetchNotifications();
+    refreshData();
   }, [id]);
-
-  const mappedNotifications = Array.isArray(notifications)
-    ? notifications.map((resp) => ({
-        agency: lookup.getLookupValueById('Agencies', resp.ToAgencyId)?.Name,
-        id: resp.ChesMessageId,
-        projectNumber: data?.parsedBody.ProjectNumber,
-        status: getStatusString(resp.Status),
-        sendOn: resp.SendOn,
-        to: resp.To,
-        subject: resp.Subject,
-      }))
-    : [];
-
-  console.log('Mapped notifications:', mappedNotifications);
 
   const projectInformation = 'Project Information';
   const disposalProperties = 'Disposal Properties';

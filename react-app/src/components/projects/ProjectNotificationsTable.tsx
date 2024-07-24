@@ -11,6 +11,11 @@ export interface INotificationModel {
   to: string;
   subject: string;
 }
+export interface INotificationResponse {
+  items: INotificationModel[];
+  pageNumber: number;
+  pageSize: number;
+}
 
 interface ProjectNotificationsTableProps {
   rows: INotificationModel[];
