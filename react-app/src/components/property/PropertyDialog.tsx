@@ -91,6 +91,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
         <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
           <GeneralInformationForm
             propertyType={'Parcel'}
+            defaultLocationValue={initialValues?.Location}
             adminAreas={
               lookupData?.AdministrativeAreas?.map((admin) => ({
                 label: admin.Name,
@@ -195,6 +196,7 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
         <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
           <GeneralInformationForm
             propertyType={'Building'}
+            defaultLocationValue={initialValues?.Location}
             adminAreas={
               lookupData?.AdministrativeAreas.map((admin) => ({
                 label: admin.Name,
