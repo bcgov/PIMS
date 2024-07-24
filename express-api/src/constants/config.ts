@@ -23,6 +23,10 @@ const config = {
     notificationTemplate: 15,
     notificationTemplateRPD: 17,
   },
+  notificationTemplate: {
+    title: 'PIMS',
+    uri: process.env.FRONTEND_URL,
+  },
 };
 
 const getConfig = () => {
