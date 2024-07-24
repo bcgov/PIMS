@@ -2,7 +2,7 @@ import { AuthContext } from '@/contexts/authContext';
 import { LookupAll } from '@/hooks/api/useLookupApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useCallback, useContext, useMemo } from 'react';
 
 type LookupContextValue = {
   data: LookupAll | undefined;
@@ -41,13 +41,16 @@ export const LookupContextProvider: React.FC<React.PropsWithChildren> = (props) 
   }, [data]);
 
   // Retrieves record from lookupTables based on table name and record Id.
-  const getLookupValueById = (tableName: keyof LookupAll, id: number) => {
-    if (lookupTables === undefined) {
-      return undefined;
-    } else {
-      return lookupTables[tableName][id];
-    }
-  };
+  const getLookupValueById = useCallback(
+    (tableName: keyof LookupAll, id: number) => {
+      if (lookupTables === undefined) {
+        return undefined;
+      } else {
+        return lookupTables[tableName][id];
+      }
+    },
+    [data],
+  );
 
   const contextValue = { data, getLookupValueById };
   return <LookupContext.Provider value={contextValue}>{props.children}</LookupContext.Provider>;
