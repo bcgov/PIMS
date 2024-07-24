@@ -8,7 +8,7 @@ import React, {
   useState,
 } from 'react';
 import { MapContainer, Polygon, useMapEvents } from 'react-leaflet';
-import { LatLngBoundsExpression, Map, Point } from 'leaflet';
+import { LatLngBoundsExpression, LatLngExpression, Map, Point } from 'leaflet';
 import MapLayers from '@/components/map/MapLayers';
 import { ParcelPopup } from '@/components/map/parcelPopup/ParcelPopup';
 import { InventoryLayer } from '@/components/map/InventoryLayer';
@@ -32,6 +32,8 @@ type ParcelMapProps = {
   scrollOnClick?: boolean;
   zoomOnScroll?: boolean;
   hideControls?: boolean;
+  defaultZoom?: number;
+  defaultLocation?: LatLngExpression;
 } & PropsWithChildren;
 
 export const SelectedMarkerContext = createContext(null);
@@ -100,6 +102,8 @@ const ParcelMap = (props: ParcelMapProps) => {
     scrollOnClick,
     zoomOnScroll = true,
     hideControls = false,
+    defaultLocation,
+    defaultZoom,
   } = props;
 
   // To access map outside of MapContainer
@@ -228,6 +232,8 @@ const ParcelMap = (props: ParcelMapProps) => {
         style={{ height: '100%', width: '100%' }}
         ref={localMapRef}
         bounds={defaultBounds as LatLngBoundsExpression}
+        zoom={defaultZoom}
+        center={defaultLocation}
         dragging={movable}
         zoomControl={zoomable}
         scrollWheelZoom={zoomOnScroll}

@@ -1,5 +1,5 @@
 import { CommonFiltering } from '@/interfaces/ICommonFiltering';
-import { IFetch } from '../useFetch';
+import { FetchResponse, IFetch } from '../useFetch';
 import { Agency } from './useAgencyApi';
 import { KeycloakRole, Role } from './useRolesApi';
 
@@ -37,9 +37,9 @@ const useUsersApi = (absoluteFetch: IFetch) => {
     const a = await absoluteFetch.get(`/users/self`);
     return a.parsedBody as User;
   };
-  const submitAccessRequest = async (request: AccessRequest): Promise<User> => {
-    const { parsedBody } = await absoluteFetch.post(`/users/access/requests`, request);
-    return parsedBody as User;
+  const submitAccessRequest = async (request: AccessRequest): Promise<FetchResponse> => {
+    const response = await absoluteFetch.post(`/users/access/requests`, request);
+    return response;
   };
   const getAllUsers = async (sort: CommonFiltering, signal?: AbortSignal) => {
     const { parsedBody } = await absoluteFetch.get('/users', sort, { signal });
