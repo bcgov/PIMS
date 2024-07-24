@@ -14,7 +14,7 @@ import SelectFormField, { ISelectMenuItem } from '../form/SelectFormField';
 import { Room, Help } from '@mui/icons-material';
 import { LookupObject } from '@/hooks/api/useLookupApi';
 import DateFormField from '../form/DateFormField';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { IAddressModel } from '@/hooks/api/useToolsApi';
 import { LatLng, Map } from 'leaflet';
 import usePimsApi from '@/hooks/usePimsApi';
@@ -25,6 +25,8 @@ import { arrayUniqueBy } from '@/utilities/helperFunctions';
 import MetresSquared from '@/components/text/MetresSquared';
 import { FeatureCollection } from '@/hooks/api/useParcelLayerApi';
 import { Feature } from 'geojson';
+import { useMap, useMapEvents } from 'react-leaflet';
+import { GeoPoint } from '@/interfaces/IProperty';
 export type PropertyType = 'Building' | 'Parcel';
 
 interface IParcelInformationForm {
@@ -33,12 +35,13 @@ interface IParcelInformationForm {
 
 interface IGeneralInformationForm {
   propertyType: PropertyType;
+  defaultLocationValue: GeoPoint | null;
   adminAreas: ISelectMenuItem[];
 }
 
 export const GeneralInformationForm = (props: IGeneralInformationForm) => {
   const api = usePimsApi();
-  const { propertyType, adminAreas } = props;
+  const { propertyType, adminAreas, defaultLocationValue } = props;
   const [addressOptions, setAddressOptions] = useState<IAddressModel[]>([]);
   const [loadingOptions, setLoadingOptions] = useState(false);
 
@@ -89,36 +92,10 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
   const postalRegex = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ ]?\d[ABCEGHJ-NPRSTV-Z]\d$/i;
 
   const map = useRef<Map>();
-  const [position, setPosition] = useState<LatLng>(null);
-
+  const position = formContext.watch('Location');
   const updateLocation = (latlng: LatLng) => {
     formContext.setValue('Location', { x: latlng.lng, y: latlng.lat }); //Technically, longitude is x and latitude is y...
   };
-
-  //Necessary to make sure we set the map to the correct place when opening this form in the edit view.
-  useEffect(() => {
-    const vals = formContext?.getValues();
-    if (vals?.Location) {
-      map.current?.setView([vals.Location.y, vals.Location.x], 17);
-      onMove();
-    }
-  }, [formContext, map.current]);
-
-  const onMove = useCallback(() => {
-    if (map.current) {
-      setPosition(map.current.getCenter());
-      updateLocation(map.current.getCenter());
-    }
-  }, [map.current]);
-
-  useEffect(() => {
-    if (map) {
-      map.current?.on('move', onMove);
-      return () => {
-        map.current?.off('move', onMove);
-      };
-    }
-  }, [map.current, onMove]);
 
   const handleFeatureCollectionResponse = (response: FeatureCollection) => {
     if (response.features.length) {
@@ -126,6 +103,23 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
         .coordinates as [number, number];
       map.current?.setView([coordArr[1], coordArr[0]], 17);
     }
+  };
+
+  /**
+   * This is null return component will not render anything to the document,
+   * but the hooks will still fire. This appears to be the most consistent way to
+   * ensure these map events attach and fire.
+   * @param props Set onMoveHandler as the function to invoke whenever the map is dragged.
+   * @returns null
+   */
+  const MapMoveEvents = (props: { onMoveHandler: (latlng: LatLng) => void }) => {
+    const map = useMap();
+    useMapEvents({
+      move: () => {
+        props.onMoveHandler(map.getCenter());
+      },
+    });
+    return null;
   };
 
   return (
@@ -262,7 +256,14 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             zoomOnScroll={false}
             popupSize="small"
             hideControls
+            defaultLocation={
+              defaultLocationValue
+                ? new LatLng(defaultLocationValue.y, defaultLocationValue.x)
+                : undefined
+            }
+            defaultZoom={defaultLocationValue ? 17 : undefined}
           >
+            <MapMoveEvents onMoveHandler={updateLocation} />
             <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height={'100%'}>
               <Room
                 color="primary"
@@ -272,7 +273,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
           </ParcelMap>
           <Typography textAlign={'center'}>
             {position
-              ? `Latitude: ${position.lat.toFixed(4)}, Longitude: ${position.lng.toFixed(4)}`
+              ? `Latitude: ${position.y.toFixed(4)}, Longitude: ${position.x.toFixed(4)}`
               : 'Fill fields or drag map to set location.'}
           </Typography>
         </Grid>

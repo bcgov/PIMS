@@ -112,6 +112,7 @@ const AddProperty = () => {
           />
         </RadioGroup>
         <GeneralInformationForm
+          defaultLocationValue={undefined}
           propertyType={propertyType}
           adminAreas={
             lookupData?.AdministrativeAreas.map((area) => ({ label: area.Name, value: area.Id })) ??
