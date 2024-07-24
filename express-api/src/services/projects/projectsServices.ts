@@ -380,24 +380,36 @@ const handleProjectNotifications = async (
 ) => {
   const projectWithRelations = await queryRunner.manager.findOne(Project, {
     relations: {
-      Agency: true,
       ProjectProperties: {
         Building: {
           Evaluations: true,
           Fiscals: true,
+          Agency: true,
+          BuildingPredominateUse: true,
         },
         Parcel: {
           Evaluations: true,
           Fiscals: true,
+          Agency: true,
         },
       },
-      AgencyResponses: true,
-      Notes: true,
     },
     where: {
       Id: oldProject.Id,
     },
   });
+  const projectAgency = await queryRunner.manager.findOne(Agency, {
+    where: { Id: projectWithRelations.AgencyId },
+  });
+  const projectAgencyResponses = await queryRunner.manager.find(ProjectAgencyResponse, {
+    where: { ProjectId: projectWithRelations.Id },
+  });
+  const projectNotes = await queryRunner.manager.find(ProjectNote, {
+    where: { ProjectId: projectWithRelations.Id },
+  });
+  projectWithRelations.Agency = projectAgency;
+  projectWithRelations.AgencyResponses = projectAgencyResponses;
+  projectWithRelations.Notes = projectNotes;
   const notifs = await notificationServices.generateProjectNotifications(
     projectWithRelations,
     oldProject.StatusId,
