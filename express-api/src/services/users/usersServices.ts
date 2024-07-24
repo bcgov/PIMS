@@ -1,6 +1,6 @@
 import { User, UserStatus } from '@/typeorm/Entities/User';
 import { AppDataSource } from '@/appDataSource';
-import { SSOBCeIDUser, SSOIdirUser, SSOUser } from '@bcgov/citz-imb-sso-express';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { DeepPartial, FindOptionsOrderValue, In } from 'typeorm';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { randomUUID, UUID } from 'crypto';
@@ -24,35 +24,17 @@ export const getUser = async (username: string): Promise<User | null> => {
   return user;
 };
 
-// TODO: UPDATE THIS
 const normalizeKeycloakUser = (kcUser: SSOUser): NormalizedKeycloakUser => {
-  const provider = kcUser.identity_provider;
   const normalizeUuid = (keycloakUuid: string) =>
     keycloakUuid.toLowerCase().replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/g, '$1-$2-$3-$4-$5');
-  switch (provider) {
-    case 'idir':
-      kcUser as SSOIdirUser;
-      return {
-        first_name: kcUser.first_name,
-        last_name: kcUser.last_name,
-        username: kcUser.preferred_username,
-        email: kcUser.email,
-        display_name: kcUser.display_name,
-        guid: normalizeUuid(kcUser.guid),
-      };
-    case 'bceidbasic':
-      kcUser as SSOBCeIDUser;
-      return {
-        first_name: '',
-        last_name: '',
-        username: kcUser.preferred_username,
-        email: kcUser.email,
-        display_name: kcUser.display_name,
-        guid: normalizeUuid(kcUser.guid),
-      };
-    default:
-      throw new Error();
-  }
+  return {
+    first_name: kcUser.first_name,
+    last_name: kcUser.last_name,
+    username: kcUser.preferred_username,
+    email: kcUser.email,
+    display_name: kcUser.display_name,
+    guid: normalizeUuid(kcUser.guid),
+  };
 };
 
 const activateUser = async (ssoUser: SSOUser) => {
@@ -72,44 +54,6 @@ const activateUser = async (ssoUser: SSOUser) => {
     AppDataSource.getRepository(User).update({ Id: internalUser.Id }, internalUser);
   }
 };
-
-// const getAccessRequest = async (kcUser: KeycloakUser) => {
-//   const internalUser = await getUserFromKeycloak(kcUser);
-//   const accessRequest = AppDataSource.getRepository(AccessRequest)
-//     .createQueryBuilder('AccessRequests')
-//     .leftJoinAndSelect('AccessRequests.AgencyId', 'Agencies')
-//     .leftJoinAndSelect('AccessRequests.RoleId', 'Roles')
-//     .leftJoinAndSelect('AccessRequests.UserId', 'Users')
-//     .where('AccessRequests.UserId = :userId', { userId: internalUser.Id })
-//     .andWhere('AccessRequests.Status = :status', { status: 0 })
-//     .orderBy('AccessRequests.CreatedOn', 'DESC')
-//     .getOne();
-//   return accessRequest;
-// };
-
-// const getAccessRequestById = async (requestId: number, kcUser: KeycloakUser) => {
-//   const accessRequest = await AppDataSource.getRepository(AccessRequest)
-//     .createQueryBuilder('AccessRequests')
-//     .leftJoinAndSelect('AccessRequests.AgencyId', 'Agencies')
-//     .leftJoinAndSelect('AccessRequests.RoleId', 'Roles')
-//     .leftJoinAndSelect('AccessRequests.UserId', 'Users')
-//     .where('AccessRequests.Id = :requestId', { requestId: requestId })
-//     .getOne();
-//   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-//   const normalizedKc = await normalizeKeycloakUser(kcUser);
-//   return accessRequest;
-// };
-
-// const deleteAccessRequest = async (accessRequest: AccessRequest) => {
-//   const existing = await AppDataSource.getRepository(AccessRequest).findOne({
-//     where: { Id: accessRequest.Id },
-//   });
-//   if (!existing) {
-//     throw new ErrorWithCode('No access request found', 404);
-//   }
-//   const deletedRequest = AppDataSource.getRepository(AccessRequest).remove(accessRequest);
-//   return deletedRequest;
-// };
 
 const addKeycloakUserOnHold = async (
   ssoUser: SSOUser,
@@ -148,27 +92,9 @@ const addKeycloakUserOnHold = async (
   return result.generatedMaps[0];
 };
 
-// const updateAccessRequest = async (updateRequest: AccessRequest, kcUser: KeycloakUser) => {
-//   if (updateRequest == null || updateRequest.AgencyId == null || updateRequest.RoleId == null)
-//     throw new Error('Null argument.');
-
-//   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-//   const normalizedKc = await normalizeKeycloakUser(kcUser);
-
-//   const result = await AppDataSource.getRepository(AccessRequest).update(
-//     { Id: updateRequest.Id },
-//     updateRequest,
-//   );
-//   if (!result.affected) {
-//     throw new ErrorWithCode('Resource not found.', 404);
-//   }
-//   return result.generatedMaps[0];
-// };
-
 const getAgencies = async (username: string) => {
   const user = await getUser(username);
 
-  // TODO: we need to handle if no user is found from getUser instead of the app crashing
   if (!user) {
     return [];
   }
