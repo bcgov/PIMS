@@ -1,7 +1,7 @@
 import { dateFormatter } from '@/utilities/formatters';
 import { Box, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 export interface INotificationModel {
   id: number;
@@ -22,19 +22,6 @@ const ProjectNotificationsTable = (props: ProjectNotificationsTableProps) => {
     pageSize: 10,
     page: 0,
   });
-
-  useEffect(() => {
-    fetchData();
-  }, [paginationModel.page, paginationModel.pageSize]);
-
-  const fetchData = async () => {
-    // alert('test here' + (paginationModel.page + 1));
-    // const response = await axios.post('/api/project/notifications', {
-    //   pageNumber: paginationModel.page + 1,
-    //   pageSize: paginationModel.pageSize,
-    // });
-    // setRows(response.data.items);
-  };
 
   const handlePaginationChange = (newModel: any) => {
     setPaginationModel({
@@ -82,11 +69,6 @@ const ProjectNotificationsTable = (props: ProjectNotificationsTableProps) => {
   ) : (
     <>
       <Typography variant="h6">Total Notifications: {props.rows.length}</Typography>
-      <Typography variant="h5">
-        {props.noteText
-          ? props.noteText
-          : 'The notifications of "pending" status may not reflect the actual status, click on "View Updated Notifications" in order to get an updated status of all notifications.'}
-      </Typography>
       <Box marginBottom={2} />
       <DataGrid
         sx={{
@@ -107,6 +89,7 @@ const ProjectNotificationsTable = (props: ProjectNotificationsTableProps) => {
         rows={props.rows}
         pagination={true}
         pageSizeOptions={[10]}
+        paginationModel={paginationModel}
         initialState={{
           pagination: { paginationModel: { pageSize: 10 } },
           sorting: { sortModel: [{ field: 'sendOn', sort: 'asc' }] },

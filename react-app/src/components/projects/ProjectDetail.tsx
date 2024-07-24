@@ -171,6 +171,7 @@ const ProjectDetail = (props: IProjectDetail) => {
     return reduceMap;
   }, [data, lookupData]);
 
+  const [notifications, setNotifications] = useState([]);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openProjectInfoDialog, setOpenProjectInfoDialog] = useState(false);
   const [openDisposalPropDialog, setOpenDisposalPropDialog] = useState(false);
@@ -219,12 +220,37 @@ const ProjectDetail = (props: IProjectDetail) => {
     refreshData();
   }, [id]);
 
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      if (id) {
+        const notifications = await api.notifications.getNotificationsByProjectId(Number(id));
+        setNotifications(notifications.items);
+      }
+    };
+    fetchNotifications();
+    console.log('these are the notifications', notifications);
+  }, [id]);
+
+  const mappedNotifications = Array.isArray(notifications)
+    ? notifications.map((resp) => ({
+        agency: lookup.getLookupValueById('Agencies', resp.ToAgencyId)?.Name,
+        id: resp.ChesMessageId,
+        projectNumber: data?.parsedBody.ProjectNumber,
+        status: getStatusString(resp.Status),
+        sendOn: resp.SendOn,
+        to: resp.To,
+        subject: resp.Subject,
+      }))
+    : [];
+
+  console.log('Mapped notifications:', mappedNotifications);
+
   const projectInformation = 'Project Information';
   const disposalProperties = 'Disposal Properties';
   const financialInformation = 'Financial Information';
   const agencyInterest = 'Agency Interest';
   const documentationHistory = 'Documentation History';
-  const notifications = 'Notifications';
+  const notificationsHeader = 'Notifications';
 
   return (
     <CollapsibleSidebar
@@ -234,7 +260,7 @@ const ProjectDetail = (props: IProjectDetail) => {
         { title: financialInformation },
         { title: agencyInterest },
         { title: documentationHistory },
-        { title: notifications },
+        { title: notificationsHeader },
       ]}
     >
       <Box
@@ -407,9 +433,9 @@ const ProjectDetail = (props: IProjectDetail) => {
         </DataCard>
         <DataCard
           loading={isLoading}
-          title={notifications}
+          title={notificationsHeader}
           values={undefined}
-          id={notifications}
+          id={notificationsHeader}
           onEdit={() => setOpenNotificationDialog(true)}
           disableEdit={isAuditor || !data?.parsedBody?.Notifications?.length}
           editButtonText="View Updated Notifications"
@@ -421,8 +447,8 @@ const ProjectDetail = (props: IProjectDetail) => {
           ) : (
             <ProjectNotificationsTable
               rows={
-                data?.parsedBody.Notifications
-                  ? data?.parsedBody.Notifications.map((resp) => ({
+                notifications.length
+                  ? notifications.map((resp) => ({
                       agency: lookup.getLookupValueById('Agencies', resp.ToAgencyId)?.Name,
                       id: resp.Id,
                       projectNumber: data?.parsedBody.ProjectNumber,

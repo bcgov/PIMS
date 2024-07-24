@@ -501,10 +501,8 @@ interface INotificationDialog {
 }
 
 export const ProjectNotificationDialog = (props: INotificationDialog) => {
-  const api = usePimsApi();
-  const { initialValues, open, postSubmit, onCancel } = props;
+  const { initialValues, open, onCancel } = props;
   const [rows, setRows] = useState<INotificationModel[]>([]);
-  const [submitting, setSubmitting] = useState(false);
   useEffect(() => {
     if (initialValues) {
       setRows(
@@ -521,35 +519,17 @@ export const ProjectNotificationDialog = (props: INotificationDialog) => {
     }
   }, [initialValues]);
 
-  const fetchUpdatedNotifications = async (projectId: number) => {
-    setSubmitting(true);
-    try {
-      const notifications = await api.notifications.getNotificationsByProjectId(projectId);
-      setRows(notifications);
-    } catch (error) {
-      console.error('Error fetching updated notifications:', error);
-    } finally {
-      setSubmitting(false);
-    }
-  };
   return (
     <ConfirmDialog
       dialogProps={{ maxWidth: 'xl', fullWidth: true }}
       title={'Update Project Notifications'}
       open={open}
-      confirmButtonProps={{ loading: submitting }}
-      confirmButtonText="Update Notifications"
-      onConfirm={async () => {
-        await fetchUpdatedNotifications(initialValues.Id);
-        postSubmit();
-      }}
+      confirmButtonText={null}
+      onConfirm={null}
       onCancel={async () => onCancel()}
     >
       <Box paddingTop={'1rem'}>
-        <ProjectNotificationsTable
-          rows={rows}
-          noteText='The notifications of "pending" status may not reflect the actual status, click on the "Updated Notifications" below in order to update all notifications in a pending or active status.'
-        />
+        <ProjectNotificationsTable rows={rows} />
       </Box>
     </ConfirmDialog>
   );
