@@ -18,6 +18,7 @@ import chesServices, {
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
 import logger from '@/utilities/winstonLogger';
+import getConfig from '@/constants/config';
 
 export interface AccessRequestData {
   FirstName: string;
@@ -65,8 +66,9 @@ export interface PageModel<T> {
   pageSize: number;
 }
 
-const Title = 'PIMS';
-const Uri = '';
+const config = getConfig();
+const Title = config.notificationTemplate.title;
+const Uri = config.notificationTemplate.uri;
 
 const flattenProjectProperties = (project: Project) => {
   const flattenedProperties = project.ProjectProperties.map((projectProperty) => {
