@@ -12,16 +12,16 @@ const Footer = (): JSX.Element => {
         <Typography fontSize={'0.85rem'}>{footerCopyright}</Typography>
         <Box flexGrow={1} />
         <Box display={'flex'} gap={'32px'}>
-          <Link href="#" variant="h5">
+          <Link href="https://www2.gov.bc.ca//gov/content/home/accessible-government" variant="h5">
             Accessibility
           </Link>
-          <Link href="#" variant="h5">
+          <Link href="https://www2.gov.bc.ca//gov/content/home/privacy" variant="h5">
             Privacy
           </Link>
-          <Link href="#" variant="h5">
+          <Link href="https://www2.gov.bc.ca//gov/content/home/copyright" variant="h5">
             Copyright
           </Link>
-          <Link href="#" variant="h5">
+          <Link href="https://www2.gov.bc.ca//gov/content/home/disclaimer" variant="h5">
             Disclaimer
           </Link>
         </Box>
