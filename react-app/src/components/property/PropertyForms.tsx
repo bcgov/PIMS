@@ -176,6 +176,12 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             }}
           />
         </Grid>
+        <Grid item xs={12}>
+          <Typography variant={'caption'}>
+            {propertyType === 'Parcel' &&
+              'Please note that either a PID or PIN is required for a Parcel entry'}
+          </Typography>
+        </Grid>
         <Grid item xs={6}>
           <TextFormField
             fullWidth
