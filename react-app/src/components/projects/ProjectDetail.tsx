@@ -228,7 +228,6 @@ const ProjectDetail = (props: IProjectDetail) => {
       }
     };
     fetchNotifications();
-    console.log('these are the notifications', notifications);
   }, [id]);
 
   const mappedNotifications = Array.isArray(notifications)
