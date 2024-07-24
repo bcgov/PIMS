@@ -23,7 +23,7 @@ import { columnNameFormatter } from '@/utilities/formatters';
 import DateFormField from '../form/DateFormField';
 import dayjs from 'dayjs';
 import { LookupContext } from '@/contexts/lookupContext';
-import ProjectNotificationsTable from './ProjectNotificationsTable';
+import ProjectNotificationsTable, { INotificationModel } from './ProjectNotificationsTable';
 import { getStatusString } from '@/constants/chesNotificationStatus';
 import { MonetaryType } from '@/constants/monetaryTypes';
 
@@ -503,13 +503,13 @@ interface INotificationDialog {
 export const ProjectNotificationDialog = (props: INotificationDialog) => {
   const api = usePimsApi();
   const { initialValues, open, postSubmit, onCancel } = props;
-  const [rows, setRows] = useState([]);
+  const [rows, setRows] = useState<INotificationModel[]>([]);
   const [submitting, setSubmitting] = useState(false);
   useEffect(() => {
     if (initialValues) {
       setRows(
         initialValues.Notifications?.map((resp) => ({
-          id: resp.ChesMessageId,
+          id: resp.Id,
           agency: props.ungroupedAgencies?.find((agc) => agc.Id === resp.ToAgencyId)?.Name,
           to: resp.To,
           subject: resp.Subject,

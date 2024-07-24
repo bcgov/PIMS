@@ -4,7 +4,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 
 export interface INotificationModel {
-  id: string;
+  id: number;
   agency: string;
   status: string;
   sendOn: Date;

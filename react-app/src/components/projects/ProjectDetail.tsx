@@ -424,7 +424,7 @@ const ProjectDetail = (props: IProjectDetail) => {
                 data?.parsedBody.Notifications
                   ? data?.parsedBody.Notifications.map((resp) => ({
                       agency: lookup.getLookupValueById('Agencies', resp.ToAgencyId)?.Name,
-                      id: resp.ChesMessageId,
+                      id: resp.Id,
                       projectNumber: data?.parsedBody.ProjectNumber,
                       status: getStatusString(resp.Status),
                       sendOn: resp.SendOn,
