@@ -228,7 +228,7 @@ const ProjectDetail = (props: IProjectDetail) => {
     { title: 'Financial Information' },
     { title: 'Documentation History' },
   ];
-  isAdmin ? sideBarList.splice(3, 0, { title: 'Agency Interest' }) : null;
+  isAdmin || isAuditor ? sideBarList.splice(3, 0, { title: 'Agency Interest' }) : null;
 
   return (
     <CollapsibleSidebar items={sideBarList}>
@@ -291,7 +291,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           onEdit={() => setOpenFinancialInfoDialog(true)}
           disableEdit={isAuditor}
         />
-        {isAdmin && (
+        {(isAdmin || isAuditor) && (
           <DataCard
             loading={isLoading}
             title={agencyInterest}
