@@ -44,3 +44,6 @@ export const HARMFUL_DISCLOSURE_URL =
 export const AUTHORIZATION_URL = 'https://github.com/bcgov/PIMS/wiki/Architecture-Security';
 export const INVENTORY_POLICY_URL =
   'https://www2.gov.bc.ca/gov/content/governments/services-for-government/real-estate-space/asset-management-services/inventory-policy';
+
+// For replacement of old PIMS
+export const CHANGEOVER_BANNER_TEXT = `hello, this is a test of a thing that i need`;
