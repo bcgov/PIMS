@@ -32,7 +32,15 @@ const ResultsPaper = (props: {
   if (!results?.length) {
     return <></>;
   } else {
-    if (results.at(0).CompletionPercentage < 1.0) {
+    if (results.at(0).CompletionPercentage < 0) {
+      return (
+        <Paper sx={{ padding: '2rem' }}>
+          <Typography variant="h4">
+            The most recent upload was cancelled due to an unexpected error.
+          </Typography>
+        </Paper>
+      );
+    } else if (results.at(0).CompletionPercentage < 1.0) {
       return (
         <Paper sx={{ padding: '2rem' }}>
           <Typography variant="h4">Processing spreadsheet...</Typography>
@@ -267,7 +275,10 @@ const BulkUpload = () => {
               }
             })
           }
-          loading={(importResults?.at(0)?.CompletionPercentage ?? 1.0) < 1.0}
+          loading={
+            (importResults?.at(0)?.CompletionPercentage ?? 1.0) < 1.0 &&
+            (importResults?.at(0)?.CompletionPercentage ?? 1.0) >= 0
+          }
           disabled={file == undefined}
           sx={{ width: '20%' }}
           variant="contained"
