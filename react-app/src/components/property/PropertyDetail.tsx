@@ -347,8 +347,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           >
             <TitleOwnership
               pid={parcel?.parsedBody?.PID ? zeroPadPID(Number(parcel?.parsedBody?.PID)) : null}
-            />{' '}
-            <></>
+            />
           </DataCard>
         )}
       </Box>
