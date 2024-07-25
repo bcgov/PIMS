@@ -1,10 +1,12 @@
 import { Grid, InputAdornment, Typography } from '@mui/material';
 import React, { useContext } from 'react';
 import AutocompleteFormField from '../form/AutocompleteFormField';
+import { AuthContext } from '@/contexts/authContext';
 import TextFormField from '../form/TextFormField';
 import { ISelectMenuItem } from '../form/SelectFormField';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
 import { LookupContext } from '@/contexts/lookupContext';
+import { Roles } from '@/constants/roles';
 
 interface IProjectGeneralInfoForm {
   projectStatuses: ISelectMenuItem[];
@@ -12,11 +14,15 @@ interface IProjectGeneralInfoForm {
 
 export const ProjectGeneralInfoForm = (props: IProjectGeneralInfoForm) => {
   const { data: lookupData } = useContext(LookupContext);
+  const { keycloak } = useContext(AuthContext);
+  const canEdit = keycloak.hasRoles([Roles.ADMIN]);
+
   return (
     <Grid mt={'1rem'} spacing={2} container>
       <Grid item xs={6}>
         <AutocompleteFormField
           required
+          disabled={!canEdit}
           options={props.projectStatuses}
           name={'StatusId'}
           label={'Status'}
