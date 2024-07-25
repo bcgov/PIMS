@@ -81,7 +81,7 @@ export const formatMoney = (value?: number | ''): string => {
     currency: 'USD',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }); 
+  });
   return formatter.format(value || 0);
 };
 
