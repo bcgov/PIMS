@@ -255,7 +255,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
       info.LandArea = (data as Parcel)?.LandArea;
     }
     return info;
-  }, [parcel, building]);
+  }, [parcel, building, getLookupValueById]);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openInformationDialog, setOpenInformationDialog] = useState(false);
