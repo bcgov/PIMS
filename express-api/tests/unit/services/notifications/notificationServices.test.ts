@@ -246,7 +246,7 @@ describe('convertChesStatusToNotificationStatus', () => {
 describe('getProjectNotificationsInQueue', () => {
   it('should get notifications and update statuses if needed', async () => {
     const projectId = 1;
-    const pageNumber = 0;
+    const page = 0;
     const pageSize = 10;
     const user = produceUser();
     const notifications = [
@@ -260,7 +260,7 @@ describe('getProjectNotificationsInQueue', () => {
 
     _notifQueueFind.mockImplementationOnce(async () => notifications);
     const result = await notificationServices.getProjectNotificationsInQueue(
-      { projectId, pageNumber, pageSize },
+      { projectId, page, pageSize },
       user,
     );
     expect(result.items).toBeDefined();

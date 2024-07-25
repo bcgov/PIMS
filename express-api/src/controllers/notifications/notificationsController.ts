@@ -140,7 +140,7 @@ export const getNotificationsByProjectId = async (req: Request, res: Response) =
     const notificationsResult = await notificationServices.getProjectNotificationsInQueue(
       {
         projectId: filterResult.projectId,
-        pageNumber: filterResult.page ?? 0,
+        page: filterResult.page ?? 0,
         pageSize: filterResult.quantity ?? 0,
       },
       user,

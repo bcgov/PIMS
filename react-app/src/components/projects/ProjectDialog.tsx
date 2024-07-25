@@ -503,18 +503,19 @@ interface INotificationDialog {
 
 export const ProjectNotificationDialog = (props: INotificationDialog) => {
   const { initialValues, open, onCancel } = props;
+  const lookup = useContext(LookupContext);
   const [rows, setRows] = useState<INotificationModel[]>([]);
   useEffect(() => {
-    if (initialValues) {
+    if (initialValues && initialValues.Notifications) {
       setRows(
-        initialValues.Notifications?.map((resp) => ({
-          id: resp.Id,
-          agency: props.ungroupedAgencies?.find((agc) => agc.Id === resp.ToAgencyId)?.Name,
-          to: resp.To,
-          subject: resp.Subject,
-          status: getStatusString(resp.Status),
-          sendOn: resp.SendOn,
-          projectNumber: props.initialValues.ProjectNumber,
+        initialValues.Notifications.map((notif) => ({
+          id: notif.Id,
+          agency: lookup.getLookupValueById('Agencies', notif.ToAgencyId)?.Name,
+          to: notif.To,
+          subject: notif.Subject,
+          status: getStatusString(notif.Status),
+          sendOn: notif.SendOn,
+          projectNumber: initialValues.ProjectNumber,
         })),
       );
     }

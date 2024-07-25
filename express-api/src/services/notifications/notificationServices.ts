@@ -49,7 +49,7 @@ export enum AgencyResponseType {
 }
 export interface ProjectNotificationFilter {
   projectId: number;
-  pageNumber?: number;
+  page?: number;
   pageSize?: number;
 }
 export interface NotificationQueueModel {
@@ -62,7 +62,7 @@ export interface NotificationQueueModel {
 }
 export interface PageModel<T> {
   items: T[];
-  pageNumber: number;
+  page: number;
   pageSize: number;
 }
 
@@ -435,12 +435,12 @@ const getProjectNotificationsInQueue = async (
   filter: ProjectNotificationFilter,
   user: User,
 ): Promise<PageModel<NotificationQueue>> => {
-  const { projectId, pageNumber, pageSize } = filter;
+  const { projectId, page, pageSize } = filter;
   const notifications = await AppDataSource.getRepository(NotificationQueue).find({
     where: {
       ProjectId: projectId,
     },
-    skip: (pageNumber ?? 0) * (pageSize ?? 0),
+    skip: (page ?? 0) * (pageSize ?? 0),
     take: pageSize ?? 0,
     order: { SendOn: 'ASC' },
   });
@@ -461,7 +461,7 @@ const getProjectNotificationsInQueue = async (
 
   const pageModel: PageModel<NotificationQueue> = {
     items: await Promise.all(updatedNotifications),
-    pageNumber: pageNumber ?? 0,
+    page: page ?? 0,
     pageSize: pageSize ?? 0,
   };
 
