@@ -21,16 +21,25 @@ export const LayoutWrapper: React.FC<ILayoutWrapperProps> = ({
 
   return (
     <Layout {...rest}>
+      {/* Banner used for PIMS update event */}
       {bannerText ? (
         <div
           style={{
             zIndex: 100,
             backgroundColor: 'magenta',
-            padding: '1em 15%',
-            maxHeight: '90px',
+            padding: '1em 0',
           }}
         >
-          {bannerText}
+          {bannerText.split('\n').map((line, i) => (
+            <p
+              key={i}
+              style={{
+                margin: 0,
+              }}
+            >
+              {line}
+            </p>
+          ))}
         </div>
       ) : (
         <></>
