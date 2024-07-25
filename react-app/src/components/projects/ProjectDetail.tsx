@@ -80,6 +80,7 @@ const ProjectDetail = (props: IProjectDetail) => {
   }, [data]);
 
   const isAuditor = keycloak.hasRoles([Roles.AUDITOR]);
+  const isAdmin = keycloak.hasRoles([Roles.ADMIN]);
 
   const { submit: deleteProject, submitting: deletingProject } = useDataSubmitter(
     api.projects.deleteProjectById,
@@ -220,16 +221,17 @@ const ProjectDetail = (props: IProjectDetail) => {
   const agencyInterest = 'Agency Interest';
   const documentationHistory = 'Documentation History';
 
+  const sideBarList = [
+    { title: projectInformation },
+    { title: disposalProperties },
+    { title: financialInformation },
+    { title: documentationHistory },
+  ];
+  // only show Agency Interest for admin or auditor
+  isAdmin || isAuditor ? sideBarList.splice(3, 0, { title: agencyInterest }) : null;
+
   return (
-    <CollapsibleSidebar
-      items={[
-        { title: projectInformation },
-        { title: disposalProperties },
-        { title: financialInformation },
-        { title: agencyInterest },
-        { title: documentationHistory },
-      ]}
-    >
+    <CollapsibleSidebar items={sideBarList}>
       <Box
         display={'flex'}
         gap={'1rem'}
@@ -289,44 +291,46 @@ const ProjectDetail = (props: IProjectDetail) => {
           onEdit={() => setOpenFinancialInfoDialog(true)}
           disableEdit={isAuditor}
         />
-        <DataCard
-          loading={isLoading}
-          title={agencyInterest}
-          values={undefined}
-          id={agencyInterest}
-          onEdit={() => setOpenAgencyInterestDialog(true)}
-          disableEdit={isAuditor}
-        >
-          {!data?.parsedBody.AgencyResponses?.length ? ( //TODO: Logic will depend on precense of agency responses
-            <Box display={'flex'} justifyContent={'center'}>
-              <Typography>No agencies registered.</Typography>
-            </Box>
-          ) : (
-            <AgencySimpleTable
-              editMode={false}
-              sx={{
-                borderStyle: 'none',
-                '& .MuiDataGrid-columnHeaders': {
-                  borderBottom: 'none',
-                },
-                '& div div div div >.MuiDataGrid-cell': {
-                  borderBottom: 'none',
-                  borderTop: '1px solid rgba(224, 224, 224, 1)',
-                },
-              }}
-              rows={
-                data?.parsedBody.AgencyResponses && ungroupedAgencies
-                  ? (data?.parsedBody.AgencyResponses?.map((resp) => ({
-                      ...ungroupedAgencies?.find((agc) => agc.Id === resp.AgencyId),
-                      ReceivedOn: resp.ReceivedOn,
-                      Note: resp.Note,
-                      Response: enumReverseLookup(AgencyResponseType, resp.Response),
-                    })) as (Agency & { ReceivedOn: Date; Note: string })[])
-                  : []
-              }
-            />
-          )}
-        </DataCard>
+        {(isAdmin || isAuditor) && (
+          <DataCard
+            loading={isLoading}
+            title={agencyInterest}
+            values={undefined}
+            id={agencyInterest}
+            onEdit={() => setOpenAgencyInterestDialog(true)}
+            disableEdit={!isAdmin}
+          >
+            {!data?.parsedBody.AgencyResponses?.length ? ( //TODO: Logic will depend on precense of agency responses
+              <Box display={'flex'} justifyContent={'center'}>
+                <Typography>No agencies registered.</Typography>
+              </Box>
+            ) : (
+              <AgencySimpleTable
+                editMode={false}
+                sx={{
+                  borderStyle: 'none',
+                  '& .MuiDataGrid-columnHeaders': {
+                    borderBottom: 'none',
+                  },
+                  '& div div div div >.MuiDataGrid-cell': {
+                    borderBottom: 'none',
+                    borderTop: '1px solid rgba(224, 224, 224, 1)',
+                  },
+                }}
+                rows={
+                  data?.parsedBody.AgencyResponses && ungroupedAgencies
+                    ? (data?.parsedBody.AgencyResponses?.map((resp) => ({
+                        ...ungroupedAgencies?.find((agc) => agc.Id === resp.AgencyId),
+                        ReceivedOn: resp.ReceivedOn,
+                        Note: resp.Note,
+                        Response: enumReverseLookup(AgencyResponseType, resp.Response),
+                      })) as (Agency & { ReceivedOn: Date; Note: string })[])
+                    : []
+                }
+              />
+            )}
+          </DataCard>
+        )}
         <DataCard
           customFormatter={customFormatter}
           values={undefined}
