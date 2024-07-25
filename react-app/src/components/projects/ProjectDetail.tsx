@@ -240,7 +240,7 @@ const ProjectDetail = (props: IProjectDetail) => {
     { title: disposalProperties },
     { title: financialInformation },
     { title: documentationHistory },
-        { title: notificationsHeader },
+    { title: notificationsHeader },
   ];
   // only show Agency Interest for admin or auditor
   isAdmin || isAuditor ? sideBarList.splice(3, 0, { title: agencyInterest }) : null;
