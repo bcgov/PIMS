@@ -222,13 +222,13 @@ const ProjectDetail = (props: IProjectDetail) => {
   const documentationHistory = 'Documentation History';
 
   const sideBarList = [
-    { title: 'Project Information' },
-    { title: 'Disposal Properties' },
-    { title: 'Financial Information' },
-    { title: 'Documentation History' },
+    { title: projectInformation },
+    { title: disposalProperties },
+    { title: financialInformation },
+    { title: documentationHistory },
   ];
   // only show Agency Interest for admin or auditor
-  isAdmin || isAuditor ? sideBarList.splice(3, 0, { title: 'Agency Interest' }) : null;
+  isAdmin || isAuditor ? sideBarList.splice(3, 0, { title: agencyInterest }) : null;
 
   return (
     <CollapsibleSidebar items={sideBarList}>
