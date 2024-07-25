@@ -158,6 +158,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
                       },
                       userMessage: text,
                       timestamp: new Date().toLocaleString(),
+                      url: window.location.href,
                     })
                     .then((res) => {
                       if (res.status === 200) {

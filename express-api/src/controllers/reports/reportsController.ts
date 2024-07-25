@@ -26,6 +26,7 @@ export const submitErrorReport = async (req: Request, res: Response) => {
     Stack: errorParse.data.error?.stack,
     Comment: errorParse.data.userMessage,
     Timestamp: errorParse.data.timestamp ?? new Date().toLocaleString(),
+    Url: errorParse.data.url ?? 'unknown',
   });
   const config = getConfig();
   const email: IEmail = {
@@ -38,5 +39,8 @@ export const submitErrorReport = async (req: Request, res: Response) => {
   };
 
   const response = await chesServices.sendEmailAsync(email, req.user);
-  return res.status(200).send(response);
+  return res.status(200).send({
+    ...errorParse,
+    chesResponse: response,
+  });
 };

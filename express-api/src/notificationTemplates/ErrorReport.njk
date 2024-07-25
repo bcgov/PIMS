@@ -5,6 +5,7 @@
   <body>
     <p>PIMS Team,</p>
     <p>{{ User.first_name }} {{ User.last_name }} encountered an error at {{ Timestamp }} and submitted an error report.</p>
+    <p>They were on this page: {{ Url }}</p>
     {% if User.email %}
     <p>You can reach them at {{ User.email }}</p>
     {% endif %}

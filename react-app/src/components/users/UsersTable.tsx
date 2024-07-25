@@ -242,6 +242,7 @@ const UsersTable = (props: IUsersTable) => {
         } as SxProps
       }
     >
+      <p>{(undefined as User).AgencyId}</p>
       <Box sx={{ height: 'calc(100vh - 180px)' }}>
         <FilterSearchDataGrid
           name="users"
