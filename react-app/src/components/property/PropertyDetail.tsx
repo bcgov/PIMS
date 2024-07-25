@@ -268,7 +268,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
     { title: 'Assessed Value' },
   ];
 
-  if (buildingOrParcel === 'Parcel') sideBarItems.splice(1, 0, { title: 'LTSA Information' });
+  if (buildingOrParcel === 'Parcel') sideBarItems.splice(3, 0, { title: 'LTSA Information' });
 
   return (
     <CollapsibleSidebar items={sideBarItems}>
@@ -297,21 +297,6 @@ const PropertyDetail = (props: IPropertyDetail) => {
           onEdit={() => setOpenInformationDialog(true)}
           disableEdit={isAuditor}
         />
-        {buildingOrParcel === 'Parcel' && (
-          <DataCard
-            loading={propertyLoading}
-            id={'LTSA Information'}
-            values={undefined}
-            title={'LTSA Information'}
-            disableEdit={true}
-            onEdit={undefined}
-          >
-            <TitleOwnership
-              pid={parcel?.parsedBody?.PID ? zeroPadPID(Number(parcel?.parsedBody?.PID)) : null}
-            />{' '}
-            <></>
-          </DataCard>
-        )}
         <DataCard
           id={`${buildingOrParcel} Net Book Value`}
           values={undefined}
@@ -351,6 +336,21 @@ const PropertyDetail = (props: IPropertyDetail) => {
             />
           </Box>
         </ParcelMap>
+        {buildingOrParcel === 'Parcel' && (
+          <DataCard
+            loading={propertyLoading}
+            id={'LTSA Information'}
+            values={undefined}
+            title={'LTSA Information'}
+            disableEdit={true}
+            onEdit={undefined}
+          >
+            <TitleOwnership
+              pid={parcel?.parsedBody?.PID ? zeroPadPID(Number(parcel?.parsedBody?.PID)) : null}
+            />{' '}
+            <></>
+          </DataCard>
+        )}
       </Box>
       <>
         {buildingOrParcel === 'Parcel' ? (
