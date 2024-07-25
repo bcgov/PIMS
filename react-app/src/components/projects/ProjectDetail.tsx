@@ -215,7 +215,6 @@ const ProjectDetail = (props: IProjectDetail) => {
     refreshData();
   }, [id]);
 
-  // use splice or something to have agency interest onlu show up for admins
   const projectInformation = 'Project Information';
   const disposalProperties = 'Disposal Properties';
   const financialInformation = 'Financial Information';
@@ -228,6 +227,7 @@ const ProjectDetail = (props: IProjectDetail) => {
     { title: 'Financial Information' },
     { title: 'Documentation History' },
   ];
+  // only show Agency Interest for admin or auditor
   isAdmin || isAuditor ? sideBarList.splice(3, 0, { title: 'Agency Interest' }) : null;
 
   return (
