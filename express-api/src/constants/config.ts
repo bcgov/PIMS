@@ -22,6 +22,9 @@ const config = {
     notificationTemplate: 15,
     notificationTemplateRPD: 17,
   },
+  errorReport: {
+    toEmail: process.env.ERROR_REPORT_TO,
+  },
 };
 
 const getConfig = () => {

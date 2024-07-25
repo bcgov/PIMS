@@ -140,7 +140,7 @@ const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentR
   }
   if (cfg.ches.usersToBcc && typeof cfg.ches.usersToBcc === 'string') {
     email.bcc = [
-      ...email.bcc,
+      ...(email.bcc ?? []),
       ...(cfg.ches.usersToBcc?.split(';').map((email) => email.trim()) ?? []),
     ];
   }
@@ -159,8 +159,8 @@ const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentR
         .map((email) => email.trim())
         .filter((email) => !!email)
     : email.to?.filter((a) => !!a);
-  email.cc = cfg.ches.overrideTo ? [] : email.cc?.filter((a) => !!a);
-  email.bcc = cfg.ches.overrideTo ? [] : email.bcc?.filter((a) => !!a);
+  email.cc = cfg.ches.overrideTo ? [] : email.cc?.filter((a) => !!a) ?? [];
+  email.bcc = cfg.ches.overrideTo ? [] : email.bcc?.filter((a) => !!a) ?? [];
 
   if (cfg.ches.emailEnabled) {
     return sendAsync('/email', 'POST', email);
