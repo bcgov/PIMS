@@ -9,7 +9,7 @@ import {
   ProjectGeneralInfoForm,
 } from './ProjectForms';
 import DisposalProjectSearch from './DisposalPropertiesSearchTable';
-import { Box, Grid, InputAdornment, Typography } from '@mui/material';
+import { Box, Button, Grid, InputAdornment, Typography } from '@mui/material';
 import { ProjectTask } from '@/constants/projectTasks';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
 import AgencySearchTable from './AgencyResponseSearchTable';
@@ -26,6 +26,7 @@ import { LookupContext } from '@/contexts/lookupContext';
 import ProjectNotificationsTable, { INotificationModel } from './ProjectNotificationsTable';
 import { getStatusString } from '@/constants/chesNotificationStatus';
 import { MonetaryType } from '@/constants/monetaryTypes';
+import BaseDialog from '../dialog/BaseDialog';
 
 interface IProjectGeneralInfoDialog {
   initialValues: Project;
@@ -520,17 +521,19 @@ export const ProjectNotificationDialog = (props: INotificationDialog) => {
   }, [initialValues]);
 
   return (
-    <ConfirmDialog
+    <BaseDialog
       dialogProps={{ maxWidth: 'xl', fullWidth: true }}
       title={'Update Project Notifications'}
       open={open}
-      confirmButtonText={null}
-      onConfirm={null}
-      onCancel={async () => onCancel()}
+      actions={
+        <Button variant="contained" color="secondary" onClick={onCancel}>
+          Cancel
+        </Button>
+      }
     >
       <Box paddingTop={'1rem'}>
         <ProjectNotificationsTable rows={rows} />
       </Box>
-    </ConfirmDialog>
+    </BaseDialog>
   );
 };

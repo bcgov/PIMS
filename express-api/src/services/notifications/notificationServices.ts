@@ -445,25 +445,26 @@ const getProjectNotificationsInQueue = async (
     order: { SendOn: 'ASC' },
   });
 
-  const updatedNotifications: NotificationQueue[] = [];
-
-  const pageModel: PageModel<NotificationQueue> = {
-    items: notifications,
-    pageNumber: pageNumber ?? 0,
-    pageSize: pageSize ?? 0,
-  };
+  const updatedNotifications: Promise<NotificationQueue>[] = [];
   for (const notification of notifications) {
     // run the updates for notifications that are in Pending or Accepted status as the other statuses are final
     if (
       notification.Status === NotificationStatus.Pending ||
       notification.Status === NotificationStatus.Accepted
     ) {
-      const updatedNotification = await updateNotificationStatus(notification.Id, user);
+      const updatedNotification = updateNotificationStatus(notification.Id, user);
       updatedNotifications.push(updatedNotification);
     } else {
-      updatedNotifications.push(notification);
+      updatedNotifications.push(Promise.resolve(notification));
     }
   }
+
+  const pageModel: PageModel<NotificationQueue> = {
+    items: await Promise.all(updatedNotifications),
+    pageNumber: pageNumber ?? 0,
+    pageSize: pageSize ?? 0,
+  };
+
   return pageModel;
 };
 
