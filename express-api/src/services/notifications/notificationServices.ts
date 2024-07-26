@@ -392,34 +392,27 @@ const convertChesStatusToNotificationStatus = (chesStatus: string): Notification
 
 const updateNotificationStatus = async (notificationId: number, user: User) => {
   const query = AppDataSource.createQueryRunner();
-  try {
-    await query.startTransaction(); // Start transaction if queryRunner is provided
+  const notification = await query.manager.findOne(NotificationQueue, {
+    where: { Id: notificationId },
+  });
 
-    const notification = await query.manager.findOne(NotificationQueue, {
-      where: { Id: notificationId },
-    });
+  if (!notification || Object.keys(notification).length === 0) {
+    throw new Error(`Notification with id ${notificationId} not found.`);
+  }
 
-    if (!notification || Object.keys(notification).length === 0) {
-      throw new Error(`Notification with id ${notificationId} not found.`);
-    }
+  const statusResponse = await chesServices.getStatusByIdAsync(notification.ChesMessageId);
 
-    const statusResponse = await chesServices.getStatusByIdAsync(notification.ChesMessageId);
+  if (statusResponse) {
+    notification.Status = convertChesStatusToNotificationStatus(statusResponse.status);
+    notification.UpdatedOn = new Date();
+    notification.UpdatedById = user.Id;
+    const updatedNotification = await query.manager.save(NotificationQueue, notification);
 
-    if (statusResponse) {
-      notification.Status = convertChesStatusToNotificationStatus(statusResponse.status);
-      notification.UpdatedOn = new Date();
-      notification.UpdatedById = user.Id;
-      const updatedNotification = await query.manager.save(NotificationQueue, notification);
-
-      return updatedNotification;
-    } else {
-      throw new Error(`Failed to retrieve status for notification with id ${notificationId}.`);
-    }
-  } catch (error) {
-    await query.rollbackTransaction(); // Rollback transaction on error
-    throw error; // Rethrow the error for handling elsewhere if needed
-  } finally {
-    await query.release(); // Release queryRunner if it was created locally
+    query.release();
+    return updatedNotification;
+  } else {
+    query.release();
+    throw new Error(`Failed to retrieve status for notification with id ${notificationId}.`);
   }
 };
 
