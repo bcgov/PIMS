@@ -56,7 +56,9 @@ const Router = () => {
       <Route
         index
         element={
-          auth.keycloak.isAuthenticated && auth.pimsUser.data?.Status === 'Active' ? (
+          auth.keycloak.isAuthenticated &&
+          auth.pimsUser.data?.Status === 'Active' &&
+          auth.keycloak.user?.client_roles.length ? (
             showMap()
           ) : (
             <BaseLayout displayFooter>

@@ -7,6 +7,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import {
   accessPendingBlurb,
   accountInactiveBlurb,
+  awaitingRoleBlurb,
   signupTermsAndConditionsClaim,
 } from '@/constants/jsxSnippets';
 import usePimsApi from '@/hooks/usePimsApi';
@@ -128,11 +129,25 @@ export const AccessRequest = () => {
     });
   };
 
-  if (auth.pimsUser?.data?.Status && auth.pimsUser.data.Status === 'Active') {
+  if (
+    auth.pimsUser?.data?.Status &&
+    auth.pimsUser.data?.Status === 'Active' &&
+    auth.keycloak.user?.client_roles.length
+  ) {
     return <Navigate replace to={'/'} />;
   }
 
   const selectPageContent = () => {
+    if (auth.pimsUser.data?.Status === 'Active' && !auth.keycloak.user?.client_roles.length) {
+      return (
+        <>
+          <Typography mb={'2rem'} variant="h2">
+            Awaiting Role
+          </Typography>
+          <StatusPageTemplate blurb={awaitingRoleBlurb} />
+        </>
+      );
+    }
     switch (auth.pimsUser.data?.Status) {
       case 'OnHold':
         return (

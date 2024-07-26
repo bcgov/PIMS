@@ -36,11 +36,7 @@ export const Home = () => {
       height={'100%'}
       bgcolor={'#F8F8F8'} //In the ticket this was #D2D8D8, but I think it was meant to be #F8F8F8 based on the example.
     >
-      {!auth.keycloak.isAuthenticated || auth.pimsUser.data?.Status === 'Active' ? (
-        <Landing />
-      ) : (
-        <Navigate replace to={'/access-request'} />
-      )}
+      {!auth.keycloak.isAuthenticated ? <Landing /> : <Navigate replace to={'/access-request'} />}
     </Box>
   );
 };
