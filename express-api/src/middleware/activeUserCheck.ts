@@ -38,7 +38,9 @@ const activeUserCheck: unknown = async (
 
   // Check that user has a role
   if (
-    req.user?.hasRoles([Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER], { requireAllRoles: false })
+    !req.user?.hasRoles([Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER], {
+      requireAllRoles: false,
+    })
   ) {
     return res.status(403).send('Request forbidden. User has no assigned role.');
   }
