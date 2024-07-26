@@ -45,6 +45,7 @@ const ProjectNotificationsTable = (props: ProjectNotificationsTableProps) => {
       field: 'agency',
       headerName: 'Agency',
       flex: 1,
+      maxWidth: 350,
     },
     {
       field: 'subject',
@@ -54,12 +55,11 @@ const ProjectNotificationsTable = (props: ProjectNotificationsTableProps) => {
     {
       field: 'status',
       headerName: 'Status',
-      flex: 1,
     },
     {
       field: 'sendOn',
-      headerName: 'Date Sent / To Be Sent',
-      flex: 1,
+      headerName: 'Send Date',
+      width: 125,
       valueGetter: (value) => (value == null ? null : new Date(value)),
       renderCell: (params) => (params.value ? dateFormatter(params.value) : ''),
     },

@@ -253,7 +253,9 @@ const ProjectDetail = (props: IProjectDetail) => {
         mt={'2rem'}
         mb={'2rem'}
         flexDirection={'column'}
-        width={'46rem'}
+        maxWidth={'60rem'}
+        minWidth={'45rem'}
+        width={'80%'}
         marginX={'auto'}
       >
         <DetailViewNavigation
@@ -423,8 +425,8 @@ const ProjectDetail = (props: IProjectDetail) => {
           values={undefined}
           id={notificationsHeader}
           onEdit={() => setOpenNotificationDialog(true)}
-          disableEdit={isAuditor || !data?.parsedBody?.Notifications?.length}
-          editButtonText="View Updated Notifications"
+          disableEdit={!data?.parsedBody?.Notifications?.length}
+          editButtonText="Expand Notifications"
         >
           {!data?.parsedBody.Notifications?.length ? ( //TODO: Logic will depend on precense of agency responses
             <Box display={'flex'} justifyContent={'center'}>

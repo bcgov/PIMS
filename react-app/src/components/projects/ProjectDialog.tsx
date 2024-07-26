@@ -528,7 +528,7 @@ export const ProjectNotificationDialog = (props: INotificationDialog) => {
       open={open}
       actions={
         <Button variant="contained" color="secondary" onClick={onCancel}>
-          Cancel
+          Close
         </Button>
       }
     >
