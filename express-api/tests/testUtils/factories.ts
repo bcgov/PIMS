@@ -203,7 +203,7 @@ export const produceRole = (): RolesEntity => {
   };
 };
 
-export const produceSSO = (): SSOUser => {
+export const produceSSO = (props?: Partial<SSOUser>): SSOUser => {
   return {
     name: faker.string.alphanumeric(),
     preferred_username: faker.string.alphanumeric(),
@@ -217,6 +217,7 @@ export const produceSSO = (): SSOUser => {
     last_name: faker.person.lastName(),
     originalData: null,
     hasRoles: null,
+    ...props,
   };
 };
 

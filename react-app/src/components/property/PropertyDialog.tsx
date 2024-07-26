@@ -24,7 +24,7 @@ import { parseFloatOrNull, parseIntOrNull, pidFormatter } from '@/utilities/form
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LookupContext } from '@/contexts/lookupContext';
 import { Classification } from '@/hooks/api/useLookupApi';
-import AuthContextProvider, { AuthContext } from '@/contexts/authContext';
+import { AuthContext } from '@/contexts/authContext';
 import { Roles } from '@/constants/roles';
 import AutocompleteFormField from '../form/AutocompleteFormField';
 
@@ -89,7 +89,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
           const formValues: any = { ...infoFormMethods.getValues(), Id: initialValues.Id };
           formValues.PID = parseIntOrNull(formValues.PID.replace(/-/g, ''));
           formValues.PIN = parseIntOrNull(formValues.PIN);
-          formValues.Postal = formValues.Postal.replace(/ /g, '').toUpperCase();
+          formValues.Postal = formValues.Postal?.replace(/ /g, '').toUpperCase();
           formValues.LandArea = parseFloatOrNull(formValues.LandArea);
           submit(initialValues.Id, formValues).then(() => postSubmit());
         }

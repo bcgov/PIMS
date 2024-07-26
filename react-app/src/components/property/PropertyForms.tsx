@@ -248,6 +248,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             label={'Postal code'}
             rules={{
               validate: (val) =>
+                val === null ||
                 val.length === 0 ||
                 !!String(val).replace(/ /g, '').match(postalRegex) ||
                 'Should be a valid postal code or left blank.',
