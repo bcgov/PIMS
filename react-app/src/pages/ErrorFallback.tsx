@@ -9,6 +9,9 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import usePimsApi from '@/hooks/usePimsApi';
 import { useNavigate } from 'react-router-dom';
+import { LoadingButton } from '@mui/lab';
+import useDataSubmitter from '@/hooks/useDataSubmitter';
+import { FetchResponse } from '@/hooks/useFetch';
 
 /**
  * Renders an error fallback component that displays an error message and provides options for handling the error.
@@ -26,6 +29,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
   const api = usePimsApi();
   const navigate = useNavigate();
   const errorTracker = JSON.parse(sessionStorage.getItem('errorTracker'));
+  const { submit, submitting } = useDataSubmitter(api.reports.postErrorReport);
 
   // If errorTracker changes, we navigate to home if an error has occurred more than 0 times on this page.
   // The first time, it's okay to show this page.
@@ -146,20 +150,21 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
               >
                 Cancel
               </Button>
-              <Button
+              <LoadingButton
                 variant="contained"
+                loading={submitting}
                 onClick={() => {
-                  api.reports
-                    .postErrorReport({
-                      user: sso.user,
-                      error: {
-                        message: error.message,
-                        stack: error.stack,
-                      },
-                      userMessage: text,
-                      timestamp: new Date().toLocaleString(),
-                    })
-                    .then((res) => {
+                  submit({
+                    user: sso.user,
+                    error: {
+                      message: error.message,
+                      stack: error.stack,
+                    },
+                    userMessage: text,
+                    timestamp: new Date().toLocaleString(),
+                    url: window.location.href,
+                  })
+                    .then((res: FetchResponse) => {
                       if (res.status === 200) {
                         setState('success');
                         setText('');
@@ -176,7 +181,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
                 size="large"
               >
                 Send
-              </Button>
+              </LoadingButton>
             </Grid>
           </>
         );
