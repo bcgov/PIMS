@@ -3,6 +3,7 @@ import { MockReq, MockRes, getRequestHandlerMocks, produceUser } from 'tests/tes
 import activeUserCheck from '@/middleware/activeUserCheck';
 import { AppDataSource } from '@/appDataSource';
 import { User, UserStatus } from '@/typeorm/Entities/User';
+import { Roles } from '@/constants/roles';
 
 let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 const _findUserMock = jest
@@ -16,7 +17,7 @@ describe('UNIT - activeUserCheck middleware', () => {
     const { mockReq, mockRes } = getRequestHandlerMocks();
     mockRequest = mockReq;
     mockResponse = mockRes;
-    mockRequest.setUser({});
+    mockRequest.setUser({ client_roles: [Roles.ADMIN] });
   });
   const nextFunction = jest.fn();
 
@@ -46,5 +47,12 @@ describe('UNIT - activeUserCheck middleware', () => {
     expect(mockResponse.status).toHaveBeenCalledWith(403);
     expect(mockResponse.send).toHaveBeenCalledWith('Request forbidden. User lacks Active status.');
     expect(_findUserMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('should give return a 403 response if the Keycloak User does not have a role', async () => {
+    mockRequest.setUser({ client_roles: [] });
+    await activeUserCheck(mockRequest, mockResponse, nextFunction);
+    expect(mockResponse.status).toHaveBeenCalledWith(403);
+    expect(mockResponse.send).toHaveBeenCalledWith('Request forbidden. User has no assigned role.');
   });
 });
