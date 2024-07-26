@@ -34,6 +34,11 @@ const activeUserCheck: unknown = async (
   if (user.Status !== 'Active') {
     return res.status(403).send('Request forbidden. User lacks Active status.');
   }
+
+  // Check that user has a role
+  if (user.RoleId == null) {
+    return res.status(403).send('Request forbidden. User has no assigned role.');
+  }
   next();
 };
 
