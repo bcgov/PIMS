@@ -9,6 +9,7 @@ export interface ErrorReport {
     stack: string;
   };
   timestamp: string;
+  url: string;
 }
 
 const useReportsApi = (absoluteFetch: IFetch) => {

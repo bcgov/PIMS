@@ -140,7 +140,7 @@ const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentR
   }
   if (cfg.ches.usersToBcc && typeof cfg.ches.usersToBcc === 'string') {
     email.bcc = [
-      ...email.bcc,
+      ...(email.bcc ?? []),
       ...(cfg.ches.usersToBcc?.split(';').map((email) => email.trim()) ?? []),
     ];
   }
