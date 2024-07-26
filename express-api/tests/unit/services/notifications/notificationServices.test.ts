@@ -75,6 +75,7 @@ jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
   ...jest.requireActual('@/appDataSource').createQueryRunner,
   release: () => {},
   rollbackTransaction: () => {},
+  startTransaction: () => {},
   manager: {
     find: async <Entity extends ObjectLiteral>(
       entityClass: EntityTarget<Entity>,

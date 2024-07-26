@@ -12,7 +12,6 @@ import chesServices, {
   EmailBody,
   EmailEncoding,
   EmailPriority,
-  // IChesStatusResponse,
   IEmail,
 } from '../ches/chesServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
@@ -391,14 +390,10 @@ const convertChesStatusToNotificationStatus = (chesStatus: string): Notification
   }
 };
 
-const updateNotificationStatus = async (
-  notificationId: number,
-  user: User,
-  queryRunner?: QueryRunner,
-) => {
-  const query = queryRunner ?? AppDataSource.createQueryRunner();
+const updateNotificationStatus = async (notificationId: number, user: User) => {
+  const query = AppDataSource.createQueryRunner();
   try {
-    //await query.startTransaction(); // Start transaction if queryRunner is provided
+    await query.startTransaction(); // Start transaction if queryRunner is provided
 
     const notification = await query.manager.findOne(NotificationQueue, {
       where: { Id: notificationId },
@@ -422,12 +417,9 @@ const updateNotificationStatus = async (
     }
   } catch (error) {
     await query.rollbackTransaction(); // Rollback transaction on error
-
     throw error; // Rethrow the error for handling elsewhere if needed
   } finally {
-    if (!queryRunner) {
-      await query.release(); // Release queryRunner if it was created locally
-    }
+    await query.release(); // Release queryRunner if it was created locally
   }
 };
 
