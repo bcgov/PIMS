@@ -44,3 +44,9 @@ export const HARMFUL_DISCLOSURE_URL =
 export const AUTHORIZATION_URL = 'https://github.com/bcgov/PIMS/wiki/Architecture-Security';
 export const INVENTORY_POLICY_URL =
   'https://www2.gov.bc.ca/gov/content/governments/services-for-government/real-estate-space/asset-management-services/inventory-policy';
+
+// For replacement of old PIMS
+export const CHANGEOVER_BANNER_TEXT = `Property Inventory Management System (PIMS) will be upgraded August 06, 2024.
+After this date, the current version will no longer be available and all current users' login credentials and data will be transitioned to the newer version.
+There will be no change to how users connect to PIMS, as the existing URL will continue to work. Expected application outage will be limited to 4 hours or less.
+For support or questions, please contact Josh Nelson, Senior Program Manager, Strategic Real Estate Services at Josh.Nelson@gov.bc.ca.`;
