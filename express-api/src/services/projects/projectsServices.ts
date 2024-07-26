@@ -35,7 +35,7 @@ import { ProjectMonetary } from '@/typeorm/Entities/ProjectMonetary';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { SortOrders } from '@/constants/types';
 import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
-import { Roles } from '@/constants/roles';
+import { isAdmin } from '@/utilities/authorizationChecks';
 
 const projectRepo = AppDataSource.getRepository(Project);
 
@@ -594,7 +594,7 @@ const updateProject = async (
     //Agency change disallowed unless admin.
     project.AgencyId &&
     originalProject.AgencyId !== project.AgencyId &&
-    !user.hasRoles([Roles.ADMIN])
+    !isAdmin(user)
   ) {
     throw new ErrorWithCode('Project Agency may not be changed.', 403);
   }
