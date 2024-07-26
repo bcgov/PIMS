@@ -1,6 +1,7 @@
 import FilterBackdrop from 'components/maps/leaflet/FilterBackdrop';
 import { Claims } from 'constants/claims';
 import { Roles } from 'constants/roles';
+import { CHANGEOVER_BANNER_TEXT } from 'constants/strings';
 import { IENotSupportedPage, Login, Logout } from 'features/account';
 import { ReviewApproveStep } from 'features/projects/assess';
 import { SelectProjectPropertiesPage } from 'features/projects/common';
@@ -576,7 +577,12 @@ export const AppRouter: React.FC = () => {
         <Route
           path="/login"
           element={
-            <LayoutWrapper title={getTitle('Login')} component={Login} layout={PublicLayout} />
+            <LayoutWrapper
+              title={getTitle('Login')}
+              component={Login}
+              layout={PublicLayout}
+              bannerText={CHANGEOVER_BANNER_TEXT}
+            />
           }
         />
         <Route
