@@ -132,13 +132,13 @@ export const AccessRequest = () => {
   if (
     auth.pimsUser?.data?.Status &&
     auth.pimsUser.data?.Status === 'Active' &&
-    auth.keycloak.user?.client_roles.length
+    auth.keycloak.user?.client_roles?.length
   ) {
     return <Navigate replace to={'/'} />;
   }
 
   const selectPageContent = () => {
-    if (auth.pimsUser.data?.Status === 'Active' && !auth.keycloak.user?.client_roles.length) {
+    if (auth.pimsUser.data?.Status === 'Active' && !auth.keycloak.user?.client_roles?.length) {
       return (
         <>
           <Typography mb={'2rem'} variant="h2">
