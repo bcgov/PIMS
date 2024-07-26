@@ -1,4 +1,5 @@
 import { AppDataSource } from '@/appDataSource';
+import { Roles } from '@/constants/roles';
 import { User } from '@/typeorm/Entities/User';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { NextFunction, RequestHandler, Response } from 'express';
@@ -36,7 +37,9 @@ const activeUserCheck: unknown = async (
   }
 
   // Check that user has a role
-  if (user.RoleId == null) {
+  if (
+    req.user?.hasRoles([Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER], { requireAllRoles: false })
+  ) {
     return res.status(403).send('Request forbidden. User has no assigned role.');
   }
   next();
