@@ -507,7 +507,7 @@ const ProjectDetail = (props: IProjectDetail) => {
         />
         <ProjectNotificationDialog
           ungroupedAgencies={ungroupedAgencies as Agency[]}
-          initialValues={data?.parsedBody}
+          initialValues={notifications?.items ?? []}
           open={openNotificationDialog}
           postSubmit={() => {
             setOpenNotificationDialog(false);

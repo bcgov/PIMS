@@ -23,7 +23,10 @@ import { columnNameFormatter } from '@/utilities/formatters';
 import DateFormField from '../form/DateFormField';
 import dayjs from 'dayjs';
 import { LookupContext } from '@/contexts/lookupContext';
-import ProjectNotificationsTable, { INotificationModel } from './ProjectNotificationsTable';
+import ProjectNotificationsTable, {
+  INotification,
+  INotificationModel,
+} from './ProjectNotificationsTable';
 import { getStatusString } from '@/constants/chesNotificationStatus';
 import { MonetaryType } from '@/constants/monetaryTypes';
 import BaseDialog from '../dialog/BaseDialog';
@@ -494,7 +497,7 @@ export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog)
 };
 
 interface INotificationDialog {
-  initialValues: ProjectGet;
+  initialValues: INotification[];
   open: boolean;
   ungroupedAgencies: Partial<Agency>[];
   postSubmit: () => void;
@@ -506,16 +509,15 @@ export const ProjectNotificationDialog = (props: INotificationDialog) => {
   const lookup = useContext(LookupContext);
   const [rows, setRows] = useState<INotificationModel[]>([]);
   useEffect(() => {
-    if (initialValues && initialValues.Notifications) {
+    if (initialValues) {
       setRows(
-        initialValues.Notifications.map((notif) => ({
+        initialValues.map((notif) => ({
           id: notif.Id,
           agency: lookup.getLookupValueById('Agencies', notif.ToAgencyId)?.Name,
           to: notif.To,
           subject: notif.Subject,
           status: getStatusString(notif.Status),
           sendOn: notif.SendOn,
-          projectNumber: initialValues.ProjectNumber,
         })),
       );
     }
