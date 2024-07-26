@@ -184,16 +184,11 @@ const getStatusByIdAsync = async (messageId: string): Promise<IChesStatusRespons
   try {
     const response: IChesStatusResponse = await sendAsync(`/status/${messageId}`, 'GET');
     if (!response) {
-      throw new Error(
-        `>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Failed to fetch status for messageId ${messageId}`,
-      );
+      throw new Error(`Failed to fetch status for messageId ${messageId}`);
     }
     return await response;
   } catch (error) {
-    logger.error(
-      `>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Error fetching status for messageId ${messageId}:`,
-      error,
-    );
+    logger.error(`Error fetching status for messageId ${messageId}:`, error);
     return null;
   }
 };
