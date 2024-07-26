@@ -11,8 +11,18 @@ export interface INotificationModel {
   to: string;
   subject: string;
 }
+
+export interface INotification {
+  Id: number;
+  ToAgencyId: number;
+  Status: number;
+  SendOn: Date;
+  To: string;
+  Subject: string;
+}
+
 export interface INotificationResponse {
-  items: INotificationModel[];
+  items: INotification[];
   pageNumber: number;
   pageSize: number;
 }

@@ -445,7 +445,7 @@ const getProjectNotificationsInQueue = async (
   }
 
   const pageModel: PageModel<NotificationQueue> = {
-    items: await Promise.all(updatedNotifications),
+    items: await Promise.all(updatedNotifications), //May need to come back to this at some point as one email failing to update will make this entire promise reject.
     page: page ?? 0,
     pageSize: pageSize ?? 0,
   };

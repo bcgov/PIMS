@@ -75,6 +75,9 @@ const ProjectDetail = (props: IProjectDetail) => {
   const { data, refreshData, isLoading } = useDataLoader(() =>
     api.projects.getProjectById(Number(id)),
   );
+  const { data: notifications, refreshData: refreshNotifications } = useDataLoader(() =>
+    api.notifications.getNotificationsByProjectId(Number(id)),
+  );
 
   useEffect(() => {
     if (data && data.retStatus == 403) {
@@ -172,7 +175,6 @@ const ProjectDetail = (props: IProjectDetail) => {
     return reduceMap;
   }, [data, lookupData]);
 
-  const [notifications, setNotifications] = useState([]);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openProjectInfoDialog, setOpenProjectInfoDialog] = useState(false);
   const [openDisposalPropDialog, setOpenDisposalPropDialog] = useState(false);
@@ -218,14 +220,10 @@ const ProjectDetail = (props: IProjectDetail) => {
   };
 
   useEffect(() => {
-    const fetchNotifications = async () => {
-      if (id) {
-        const notifications = await api.notifications.getNotificationsByProjectId(Number(id));
-        setNotifications(notifications.items);
-      }
-    };
-    fetchNotifications();
-    refreshData();
+    if (id) {
+      refreshData();
+      refreshNotifications();
+    }
   }, [id]);
 
   const projectInformation = 'Project Information';
@@ -435,8 +433,8 @@ const ProjectDetail = (props: IProjectDetail) => {
           ) : (
             <ProjectNotificationsTable
               rows={
-                notifications.length
-                  ? notifications.map((resp) => ({
+                notifications?.items
+                  ? notifications.items.map((resp) => ({
                       agency: lookup.getLookupValueById('Agencies', resp.ToAgencyId)?.Name,
                       id: resp.Id,
                       projectNumber: data?.parsedBody.ProjectNumber,
