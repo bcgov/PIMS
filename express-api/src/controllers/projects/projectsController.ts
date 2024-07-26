@@ -57,6 +57,12 @@ export const updateDisposalProject = async (req: Request, res: Response) => {
    *   "bearerAuth" : []
    * }]
    */
+
+  // Only admins can edit projects
+  if (!isAdmin(req.user)) {
+    return res.status(403).send('Projects only editable by Administrator role.');
+  }
+
   const projectId = Number(req.params.projectId);
   if (isNaN(projectId)) {
     return res.status(400).send('Invalid Project ID');
