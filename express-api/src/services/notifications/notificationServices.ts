@@ -402,7 +402,7 @@ const updateNotificationStatus = async (notificationId: number, user: User) => {
 
   const statusResponse = await chesServices.getStatusByIdAsync(notification.ChesMessageId);
 
-  if (statusResponse) {
+  if (typeof statusResponse?.status === 'string') {
     notification.Status = convertChesStatusToNotificationStatus(statusResponse.status);
     notification.UpdatedOn = new Date();
     notification.UpdatedById = user.Id;
@@ -410,6 +410,10 @@ const updateNotificationStatus = async (notificationId: number, user: User) => {
 
     query.release();
     return updatedNotification;
+  } else if (typeof statusResponse?.status === 'number') {
+    //If we get number type then this wound up being some HTTP code.
+    query.release();
+    return notification;
   } else {
     query.release();
     throw new Error(`Failed to retrieve status for notification with id ${notificationId}.`);
