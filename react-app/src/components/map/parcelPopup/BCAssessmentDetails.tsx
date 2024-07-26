@@ -57,7 +57,7 @@ const BCAssessmentDetails = (props: BCAssessmentDetailsProps) => {
             leftSize={leftColumnSize}
           />
           <GridColumnPair
-            leftValue={'Juristiction'}
+            leftValue={'Jurisdiction'}
             rightValue={data.JURISDICTION}
             leftSize={leftColumnSize}
           />
