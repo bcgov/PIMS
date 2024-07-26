@@ -168,35 +168,36 @@ const updateKeycloakRole = async (roleName: string, newRoleName: string) => {
 };
 
 const syncKeycloakUser = async (username: string) => {
-  // Does user exist in Keycloak?
-  // Get their existing roles.
-  // Does user exist in PIMS
-  // If user exists in PIMS...
-  // Update the roles in PIMS to match their Keycloak roles
-  // If they don't exist in PIMS...
-  // Add user and assign their roles
   const users = await userServices.getUsers({ username: username });
   if (users?.length !== 1) {
-    throw new ErrorWithCode('User was missing during keycloak role sync.', 500);
+    throw new ErrorWithCode('User not found in database during Keycloak role sync.', 404);
   }
   const user = users[0];
+  // Get existing keycloak roles.
   const kroles = await KeycloakService.getKeycloakUserRoles(user.Username);
-
   if (kroles.length > 1) {
     logger.warn(
-      `User ${user.Username} was assigned multiple roles in keycloak. This is not fully supported internally. A single role will be assigned arbitrarily.`,
+      `User ${user.Username} was assigned multiple roles in Keycloak. This is not fully supported internally. A single role will be assigned arbitrarily.`,
     );
   }
-
   const krole = kroles?.[0];
-  if (!krole) {
-    logger.warn(`User ${user.Username} has no roles in keycloak.`);
-    await userServices.updateUser({ Id: user.Id, RoleId: null });
-    return userServices.getUserById(user.Id);
+  if (krole) {
+    // If keycloak role, update database role.
+    const internalRole = await rolesServices.getRoleByName(krole.name);
+    await userServices.updateUser({ Id: user.Id, RoleId: internalRole.Id });
+  } else if (user.RoleId != null) {
+    // If no keycloak role, but database role present, set keycloak role
+    logger.info(
+      `User ${user.Username} has no roles in Keycloak. Back-populating Keycloak from database.`,
+    );
+    // Role is also joined here. Use role name to update Keycloak.
+    await KeycloakService.updateKeycloakUserRoles(user.Username, [user.Role.Name]);
+  } else {
+    logger.warn(`User ${user.Username} has no roles in database or Keycloak.`);
   }
 
-  const internalRole = await rolesServices.getRoleByName(krole.name);
-  await userServices.updateUser({ Id: user.Id, RoleId: internalRole.Id });
+  // If no keycloak role and no database roll, do nothing.
+
   return userServices.getUserById(user.Id);
 };
 
@@ -265,7 +266,7 @@ const updateKeycloakUserRoles = async (username: string, roles: string[]) => {
   try {
     const existingRolesResponse = await getKeycloakUserRoles(username);
 
-    // User is found in Keycloak.
+    // User is found in Keycloak, so map roles to just the names.
     const existingRoles: string[] = existingRolesResponse.map((role) => role.name);
 
     // Find roles that are in Keycloak but are not in new user info.

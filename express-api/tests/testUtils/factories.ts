@@ -4,7 +4,7 @@ import { User, UserStatus } from '@/typeorm/Entities/User';
 import { faker } from '@faker-js/faker';
 import { UUID, randomUUID } from 'crypto';
 import { Request, Response } from 'express';
-import { Role as RolesEntity } from '@/typeorm/Entities/Role';
+import { Role, Role as RolesEntity } from '@/typeorm/Entities/Role';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Building } from '@/typeorm/Entities/Building';
@@ -184,7 +184,7 @@ export const produceAgency = (props?: Partial<Agency>): Agency => {
   return agency;
 };
 
-export const produceRole = (): RolesEntity => {
+export const produceRole = (props?: Partial<Role>): RolesEntity => {
   return {
     CreatedOn: faker.date.anytime(),
     UpdatedOn: faker.date.anytime(),
@@ -200,6 +200,7 @@ export const produceRole = (): RolesEntity => {
     KeycloakGroupId: faker.string.uuid() as UUID,
     IsPublic: false,
     Users: [],
+    ...props,
   };
 };
 

@@ -17,6 +17,8 @@ import { AppDataSource } from '@/appDataSource';
 import { Role } from '@/typeorm/Entities/Role';
 import { User } from '@/typeorm/Entities/User';
 import { DeepPartial } from 'typeorm';
+import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import logger from '@/utilities/winstonLogger';
 
 jest.mock('@bcgov/citz-imb-kc-css-api');
 
@@ -31,9 +33,10 @@ const mockUser: IKeycloakUser = {
 };
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _updateUser = jest.fn().mockImplementation((_user: DeepPartial<User>) => ({ raw: {} }));
+const _getUsers = jest.fn().mockImplementation(() => [produceUser()]);
 
 jest.mock('@/services/users/usersServices', () => ({
-  getUsers: () => [produceUser()],
+  getUsers: () => _getUsers(),
   getUserById: () => produceUser(),
   updateUser: (user: DeepPartial<User>) => _updateUser(user),
 }));
@@ -66,6 +69,8 @@ const userCreateQueryBuilder: any = {
 jest
   .spyOn(AppDataSource.getRepository(User), 'createQueryBuilder')
   .mockImplementation(() => userCreateQueryBuilder);
+
+const _loggerWarnSpy = jest.spyOn(logger, 'warn');
 
 describe('UNIT - KeycloakService', () => {
   beforeEach(() => {
@@ -194,16 +199,39 @@ describe('UNIT - KeycloakService', () => {
   });
 
   describe('syncKeycloakUser', () => {
-    // TODO: finish tests when function is implemented
     it('should add update user roles in PIMS', async () => {
       _getKeycloakUserRoles.mockImplementationOnce(async () => [{ name: 'Test' }]);
       await KeycloakService.syncKeycloakUser('test');
       expect(_updateUser.mock.calls[0][0].RoleId).toBeTruthy();
     });
-    it('should null role if no role is present', async () => {
+    it('should throw an error if the user is not found in the database', async () => {
+      _getUsers.mockImplementationOnce(() => []);
+      expect(async () => await KeycloakService.syncKeycloakUser('test')).rejects.toThrow(
+        new ErrorWithCode('User not found in database during Keycloak role sync.', 404),
+      );
+    });
+
+    it('should log a warning if a user has multiple Keycloak roles', async () => {
       _getKeycloakUserRoles.mockImplementationOnce(async () => []);
       await KeycloakService.syncKeycloakUser('test');
-      expect(_updateUser.mock.calls[0][0].RoleId).toBeNull();
+      expect(_loggerWarnSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should update the keycloak roles if user has no kcRole but has database role', async () => {
+      _getKeycloakUserRoles.mockImplementationOnce(async () => []);
+      _getUsers.mockImplementationOnce(async () => [
+        produceUser({
+          Username: 'test',
+          RoleId: '00000000-0000-0000-0000-000000000000',
+          Role: produceRole({ Name: 'Test Role' }),
+        }),
+      ]);
+      const _updateKeycloakUserRolesSpy = jest
+        .spyOn(KeycloakService, 'updateKeycloakUserRoles')
+        .mockImplementationOnce(async () => []);
+      await KeycloakService.syncKeycloakUser('test');
+      expect(_updateKeycloakUserRolesSpy).toHaveBeenCalledTimes(1);
+      expect(_updateKeycloakUserRolesSpy).toHaveBeenCalledWith('test', ['Test Role']);
     });
   });
 
