@@ -50,7 +50,7 @@ describe('UNIT - activeUserCheck middleware', () => {
   });
 
   it('should give return a 403 response if the Keycloak User does not have a role', async () => {
-    mockRequest.setUser({ client_roles: [] });
+    mockRequest.setUser({ client_roles: undefined, hasRoles: () => false });
     await activeUserCheck(mockRequest, mockResponse, nextFunction);
     expect(mockResponse.status).toHaveBeenCalledWith(403);
     expect(mockResponse.send).toHaveBeenCalledWith('Request forbidden. User has no assigned role.');
