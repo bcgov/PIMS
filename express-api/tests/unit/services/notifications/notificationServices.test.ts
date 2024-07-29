@@ -131,7 +131,7 @@ const _sendEmailAsync = jest.fn().mockImplementation(() => ({
 }));
 
 jest.spyOn(chesServices, 'sendEmailAsync').mockImplementation(() => _sendEmailAsync());
-jest.spyOn(chesServices, 'getStatusByIdAsync').mockResolvedValue({
+const _getStatusByIdAsync = jest.spyOn(chesServices, 'getStatusByIdAsync').mockResolvedValue({
   status: 'completed',
   tag: 'sampleTag',
   txId: randomUUID(),
@@ -199,6 +199,42 @@ describe('updateNotificationStatus', () => {
     expect(
       async () => await notificationServices.updateNotificationStatus(1, user),
     ).rejects.toThrow('Notification with id 1 not found.');
+  });
+
+  it('should not update the status if the CHES status is non-standard', async () => {
+    const notification = produceNotificationQueue();
+    _notifQueueFindOne.mockImplementationOnce(async () => notification);
+    _getStatusByIdAsync.mockResolvedValueOnce({
+      status: 'unknown',
+      tag: 'sampleTag',
+      txId: randomUUID(),
+      updatedTS: new Date(notification.UpdatedOn).getTime(),
+      createdTS: Date.now(),
+    });
+    const response = await notificationServices.updateNotificationStatus(
+      notification.Id,
+      produceUser(),
+    );
+    // Expect that notification was not updated.
+    expect(response.Status).toBe(notification.Status);
+    expect(response.UpdatedOn).toBe(notification.UpdatedOn);
+  });
+
+  it('should not update the notification if the CHES response is a number', async () => {
+    const notification = produceNotificationQueue();
+    _getStatusByIdAsync.mockResolvedValueOnce({
+      status: 234 as unknown as string,
+      tag: 'sampleTag',
+      txId: randomUUID(),
+      updatedTS: new Date(notification.UpdatedOn).getTime(),
+      createdTS: Date.now(),
+    });
+    const response = await notificationServices.updateNotificationStatus(
+      notification.Id,
+      produceUser(),
+    );
+    // Expect that notification was not updated.
+    expect(response.Status).toBe(notification.Status);
   });
 });
 describe('convertChesStatusToNotificationStatus', () => {
