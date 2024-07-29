@@ -35,16 +35,16 @@ export const NotificationResponseSchema = z.object({
 });
 
 export const DisposalNotificationFilterSchema = z.object({
-  page: z.number(),
-  quantity: z.number(),
-  sort: z.array(z.string()),
-  projectNumber: z.string(),
-  projectId: z.number(),
-  agencyId: z.number(),
-  tag: z.string(),
-  status: z.array(z.string()),
-  to: z.string(),
-  subject: z.string(),
+  page: z.number().optional(),
+  quantity: z.number().optional(),
+  sort: z.array(z.string()).optional(),
+  projectNumber: z.string().optional(),
+  projectId: z.coerce.number(),
+  agencyId: z.coerce.number().optional(),
+  tag: z.string().optional(),
+  status: z.array(z.string()).optional(),
+  to: z.string().optional(),
+  subject: z.string().optional(),
 });
 
 export type DisposalNotificationFilter = z.infer<typeof DisposalNotificationFilterSchema>;

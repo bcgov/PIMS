@@ -4,6 +4,7 @@ import urls from '@/constants/urls';
 import { ChesFilter } from '@/controllers/tools/toolsSchema';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { decodeJWT } from '@/utilities/decodeJWT';
+import logger from '@/utilities/winstonLogger';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 
 let _token: TokenResponse = null;
@@ -180,7 +181,16 @@ export interface IChesStatusResponse {
   createdTS: number;
 }
 const getStatusByIdAsync = async (messageId: string): Promise<IChesStatusResponse> => {
-  return sendAsync(`/status/${messageId}`, 'GET');
+  try {
+    const response: IChesStatusResponse = await sendAsync(`/status/${messageId}`, 'GET');
+    if (!response) {
+      throw new Error(`Failed to fetch status for messageId ${messageId}`);
+    }
+    return await response;
+  } catch (error) {
+    logger.error(`Error fetching status for messageId ${messageId}:`, error);
+    return null;
+  }
 };
 
 const getStatusesAsync = async (filter: ChesFilter) => {
