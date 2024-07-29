@@ -246,7 +246,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           deleteTitle={'Delete project'}
           onDeleteClick={() => setOpenDeleteDialog(true)}
           onBackClick={() => props.onClose()}
-          disableDelete={isAuditor}
+          disableDelete={!isAdmin}
         />
         <DataCard
           loading={isLoading}
