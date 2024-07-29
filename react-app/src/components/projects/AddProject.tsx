@@ -8,10 +8,7 @@ import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
 import { useNavigate } from 'react-router-dom';
 import usePimsApi from '@/hooks/usePimsApi';
 import { ProjectPropertyIds } from '@/hooks/api/useProjectsApi';
-import DisposalProjectSearch, {
-  BuildingWithType,
-  ParcelWithType,
-} from './DisposalPropertiesSearchTable';
+import DisposalProjectSearch, { PropertyWithType } from './DisposalPropertiesSearchTable';
 import React from 'react';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LoadingButton } from '@mui/lab';
@@ -266,7 +263,7 @@ const AddProject = () => {
               parcels: [],
               buildings: [],
             };
-            rows.forEach((row: ParcelWithType | BuildingWithType) => {
+            rows.forEach((row: PropertyWithType) => {
               if (row.Type === 'Parcel') {
                 projectProperties.parcels.push(row.Id);
               } else if (row.Type === 'Building') {
