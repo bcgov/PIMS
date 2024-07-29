@@ -452,6 +452,7 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
                     for old data that was a mix of text and numbers. Using numeric prop stops any 
                     edit of text values, even removal.
                  */
+                if (value == '') return true;
                 if (!/^(0|[1-9]\d*)?(\.\d+)?(?<=\d)$/.test(value)) {
                   return 'This value is a percentage and must be a number greater than or equal to 0.';
                 }
