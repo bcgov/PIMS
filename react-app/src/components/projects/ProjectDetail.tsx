@@ -261,7 +261,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           deleteTitle={'Delete project'}
           onDeleteClick={() => setOpenDeleteDialog(true)}
           onBackClick={() => props.onClose()}
-          disableDelete={isAuditor}
+          disableDelete={!isAdmin}
         />
         <DataCard
           loading={isLoading}
@@ -270,14 +270,14 @@ const ProjectDetail = (props: IProjectDetail) => {
           id={projectInformation}
           title={projectInformation}
           onEdit={() => setOpenProjectInfoDialog(true)}
-          disableEdit={isAuditor}
+          disableEdit={!isAdmin}
         />
         <DataCard
           values={undefined}
           id={disposalProperties}
           title={disposalProperties}
           onEdit={() => setOpenDisposalPropDialog(true)}
-          disableEdit={isAuditor}
+          disableEdit={!isAdmin}
         >
           {isLoading ? (
             <Skeleton variant="rectangular" height={'150px'} />
@@ -304,7 +304,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           title={financialInformation}
           id={financialInformation}
           onEdit={() => setOpenFinancialInfoDialog(true)}
-          disableEdit={isAuditor}
+          disableEdit={!isAdmin}
         />
         {(isAdmin || isAuditor) && (
           <DataCard
