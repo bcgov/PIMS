@@ -181,6 +181,7 @@ const ProjectDetail = (props: IProjectDetail) => {
     Name: data?.parsedBody.Name,
     AssignTier: getLookupValueById('ProjectTiers', data?.parsedBody.TierLevelId),
     Description: data?.parsedBody.Description,
+    Agency: getLookupValueById('Agencies', data?.parsedBody.AgencyId),
   };
 
   const FinancialInformationData = useMemo(() => {
@@ -206,6 +207,8 @@ const ProjectDetail = (props: IProjectDetail) => {
         return <Typography>{(val as ProjectStatus)?.Name}</Typography>;
       case 'AssignTier':
         return <Typography>{(val as TierLevel)?.Name}</Typography>;
+      case 'Agency':
+        return <Typography>{(val as Agency)?.Name}</Typography>;
       default:
         return <Typography>{val}</Typography>;
     }
