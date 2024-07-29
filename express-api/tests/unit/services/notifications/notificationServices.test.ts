@@ -233,15 +233,11 @@ describe('convertChesStatusToNotificationStatus', () => {
   });
 
   it('should return NotificationStatus.Failed for unknown status', () => {
-    expect(notificationServices.convertChesStatusToNotificationStatus('unknown')).toBe(
-      NotificationStatus.Failed,
-    );
+    expect(notificationServices.convertChesStatusToNotificationStatus('unknown')).toBe(null);
   });
 
   it('should return NotificationStatus.Failed for an empty string', () => {
-    expect(notificationServices.convertChesStatusToNotificationStatus('')).toBe(
-      NotificationStatus.Failed,
-    );
+    expect(notificationServices.convertChesStatusToNotificationStatus('')).toBe(null);
   });
 });
 describe('getProjectNotificationsInQueue', () => {

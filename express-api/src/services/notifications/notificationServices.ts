@@ -386,7 +386,7 @@ const convertChesStatusToNotificationStatus = (chesStatus: string): Notification
     case 'completed':
       return NotificationStatus.Completed;
     default:
-      return NotificationStatus.Failed;
+      return null;
   }
 };
 
@@ -403,7 +403,13 @@ const updateNotificationStatus = async (notificationId: number, user: User) => {
   const statusResponse = await chesServices.getStatusByIdAsync(notification.ChesMessageId);
 
   if (typeof statusResponse?.status === 'string') {
-    notification.Status = convertChesStatusToNotificationStatus(statusResponse.status);
+    const notificationStatus = convertChesStatusToNotificationStatus(statusResponse.status);
+    // If the CHES status is non-standard, don't update the notification.
+    if (notificationStatus === null) {
+      query.release();
+      return notification;
+    }
+    notification.Status = notificationStatus;
     notification.UpdatedOn = new Date();
     notification.UpdatedById = user.Id;
     const updatedNotification = await query.manager.save(NotificationQueue, notification);
