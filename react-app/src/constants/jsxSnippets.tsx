@@ -22,3 +22,11 @@ export const signupTermsAndConditionsClaim = (
     read the <a href="#">Privacy Policy</a>.
   </>
 );
+
+export const awaitingRoleBlurb = (
+  <>
+    This account is currently active but has not been assigned a role. If you believe this is an
+    error or require assistance, please feel free to reach out to us at{' '}
+    <a href="mailto: pimshelp@gov.bc.ca">pimshelp@gov.bc.ca</a>.
+  </>
+);

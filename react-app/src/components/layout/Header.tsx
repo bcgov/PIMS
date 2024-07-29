@@ -103,91 +103,93 @@ const Header: React.FC = () => {
         <AppBrand />
         <Box flexGrow={1}></Box>
         <Box textAlign={'center'} alignItems={'center'} gap={'32px'} display={'flex'}>
-          {isAuthenticated && auth?.pimsUser?.data?.Status === 'Active' && (
-            <>
-              {user.client_roles?.includes(Roles.ADMIN) ? (
-                <>
-                  <Typography
-                    id="admin-button"
-                    aria-controls={open ? 'admin-menu' : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={open ? 'true' : undefined}
-                    onClick={handleClick}
-                    sx={{
-                      color: '#000',
-                      fontWeight: 500,
-                      '&:hover': {
-                        cursor: 'pointer',
-                      },
-                    }}
-                    variant="h5"
-                  >
-                    Administration
+          {isAuthenticated &&
+            auth?.pimsUser?.data?.Status === 'Active' &&
+            auth.keycloak.user?.client_roles?.length && (
+              <>
+                {user.client_roles?.includes(Roles.ADMIN) ? (
+                  <>
+                    <Typography
+                      id="admin-button"
+                      aria-controls={open ? 'admin-menu' : undefined}
+                      aria-haspopup="true"
+                      aria-expanded={open ? 'true' : undefined}
+                      onClick={handleClick}
+                      sx={{
+                        color: '#000',
+                        fontWeight: 500,
+                        '&:hover': {
+                          cursor: 'pointer',
+                        },
+                      }}
+                      variant="h5"
+                    >
+                      Administration
+                    </Typography>
+                    <Menu
+                      id="admin-menu"
+                      anchorEl={anchorEl}
+                      open={open}
+                      onClose={handleClose}
+                      MenuListProps={{
+                        'aria-labelledby': 'admin-menu-button',
+                      }}
+                    >
+                      <MenuItem
+                        onClick={() => {
+                          navigate('/admin/agencies');
+                          setAnchorEl(undefined);
+                        }}
+                      >
+                        Agencies
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => {
+                          navigate('/admin/adminAreas');
+                          setAnchorEl(undefined);
+                        }}
+                      >
+                        Administrative Areas
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => {
+                          navigate('/admin/bulk');
+                          setAnchorEl(undefined);
+                        }}
+                      >
+                        Bulk Upload
+                      </MenuItem>
+                    </Menu>
+                  </>
+                ) : (
+                  <></>
+                )}
+                <RouterLink
+                  style={{ color: theme.palette.black.main, textDecoration: 'none' }}
+                  to="/properties"
+                >
+                  <Typography fontWeight={500} variant="h5">
+                    Active Inventory
                   </Typography>
-                  <Menu
-                    id="admin-menu"
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    MenuListProps={{
-                      'aria-labelledby': 'admin-menu-button',
-                    }}
-                  >
-                    <MenuItem
-                      onClick={() => {
-                        navigate('/admin/agencies');
-                        setAnchorEl(undefined);
-                      }}
-                    >
-                      Agencies
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => {
-                        navigate('/admin/adminAreas');
-                        setAnchorEl(undefined);
-                      }}
-                    >
-                      Administrative Areas
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => {
-                        navigate('/admin/bulk');
-                        setAnchorEl(undefined);
-                      }}
-                    >
-                      Bulk Upload
-                    </MenuItem>
-                  </Menu>
-                </>
-              ) : (
-                <></>
-              )}
-              <RouterLink
-                style={{ color: theme.palette.black.main, textDecoration: 'none' }}
-                to="/properties"
-              >
-                <Typography fontWeight={500} variant="h5">
-                  Active Inventory
-                </Typography>
-              </RouterLink>
-              <RouterLink
-                style={{ color: theme.palette.black.main, textDecoration: 'none' }}
-                to="/projects"
-              >
-                <Typography fontWeight={500} variant="h5">
-                  Disposal Projects
-                </Typography>
-              </RouterLink>
-              <RouterLink
-                style={{ color: theme.palette.black.main, textDecoration: 'none' }}
-                to="/users"
-              >
-                <Typography fontWeight={500} variant="h5">
-                  Users
-                </Typography>
-              </RouterLink>
-            </>
-          )}
+                </RouterLink>
+                <RouterLink
+                  style={{ color: theme.palette.black.main, textDecoration: 'none' }}
+                  to="/projects"
+                >
+                  <Typography fontWeight={500} variant="h5">
+                    Disposal Projects
+                  </Typography>
+                </RouterLink>
+                <RouterLink
+                  style={{ color: theme.palette.black.main, textDecoration: 'none' }}
+                  to="/users"
+                >
+                  <Typography fontWeight={500} variant="h5">
+                    Users
+                  </Typography>
+                </RouterLink>
+              </>
+            )}
           <Button onClick={() => handleLoginButton()} color="secondary" variant="contained">
             {isAuthenticated ? 'Logout' : 'Login'}
           </Button>
