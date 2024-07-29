@@ -910,7 +910,7 @@ export const produceProjectNotification = (props?: Partial<ProjectStatusNotifica
   return notif;
 };
 
-export const produceNotificationQueue = () => {
+export const produceNotificationQueue = (props?: Partial<NotificationQueue>) => {
   const queue: NotificationQueue = {
     Id: faker.number.int(),
     Key: randomUUID(),
@@ -939,6 +939,7 @@ export const produceNotificationQueue = () => {
     UpdatedById: randomUUID(),
     UpdatedBy: undefined,
     UpdatedOn: new Date(),
+    ...props,
   };
   return queue;
 };
