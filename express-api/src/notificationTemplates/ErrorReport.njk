@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <title>PIMS Error Report Submission</title>
+  </head>
+  <body>
+    <p>PIMS Team,</p>
+    <p>{{ User.first_name }} {{ User.last_name }} encountered an error at {{ Timestamp }} and submitted an error report.</p>
+    <p>They were on this page: {{ Url }}</p>
+    {% if User.email %}
+    <p>You can reach them at {{ User.email }}</p>
+    {% endif %}
+    {% if Comment %}
+    <p>They provided this comment:</p>
+    <p><em>{{ Comment }}</em></p>
+    {% endif %}
+    {% if Error %}
+    <p>This was the error message reported:</p>
+    <p><em>{{ Error }}</em></p>
+    {% else %}
+    <p>No error message was reported.</p>
+    {% endif %}
+    {% if Stack %}
+    <p>Stack trace:</p>
+    <p>{{ Stack }}</p>
+    {% endif %}
+  </body>
+</html>
