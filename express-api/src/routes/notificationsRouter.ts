@@ -5,7 +5,7 @@ import express from 'express';
 
 const router = express.Router();
 
-export const DISPOSAL_API_ROUTE = '/projects/disposal/';
+export const DISPOSAL_API_ROUTE = '/projects/disposal';
 export const NOTIFICATION_QUEUE_ROUTE = '/queue';
 export const NOTIFICATION_TEMPLATE_ROUTE = '/templates';
 
@@ -21,7 +21,7 @@ const {
   cancelNotificationInQueueById,
   getAllNotificationTemplates,
   addNotificationTemplate,
-  getNotificationsInQueue,
+  getNotificationsByProjectId,
   updateNotificationTemplate,
   sendNotificationsForTemplate,
 } = controllers;
@@ -29,6 +29,7 @@ const {
 router
   .route(`${DISPOSAL_API_ROUTE}/:id`)
   .get(activeUserCheck, catchErrors(getDisposalNotifications));
+
 router
   .route(`${DISPOSAL_API_ROUTE}`)
   .post(activeUserCheck, catchErrors(filterDisposalNotifications));
@@ -38,12 +39,11 @@ router
 router
   .route(`${DISPOSAL_API_ROUTE}/:id`)
   .delete(activeUserCheck, catchErrors(deleteNotificationTemplate));
-
 //I believe that the IDs used in these routes are actually the project ID, even though the structure here sort of implies
 //that it might be an individual "notification id".
 router
   .route(`${NOTIFICATION_QUEUE_ROUTE}`)
-  .get(activeUserCheck, catchErrors(getNotificationsInQueue));
+  .get(activeUserCheck, catchErrors(getNotificationsByProjectId));
 router
   .route(`${NOTIFICATION_QUEUE_ROUTE}/filter`)
   .post(activeUserCheck, catchErrors(filterNotificationsInQueue));

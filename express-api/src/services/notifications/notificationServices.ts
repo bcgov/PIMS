@@ -46,6 +46,24 @@ export enum AgencyResponseType {
   Subscribe = 1,
   Watch = 2,
 }
+export interface ProjectNotificationFilter {
+  projectId: number;
+  page?: number;
+  pageSize?: number;
+}
+export interface NotificationQueueModel {
+  id: number;
+  chesMessageId?: string;
+  status: string;
+  sendOn: Date;
+  to: string;
+  subject: string;
+}
+export interface PageModel<T> {
+  items: T[];
+  page: number;
+  pageSize: number;
+}
 
 const config = getConfig();
 const Title = config.notificationTemplate.title;
@@ -355,10 +373,103 @@ const sendNotification = async (
   return retNotif;
 };
 
+const convertChesStatusToNotificationStatus = (chesStatus: string): NotificationStatus => {
+  switch (chesStatus) {
+    case 'accepted':
+      return NotificationStatus.Accepted;
+    case 'pending':
+      return NotificationStatus.Pending;
+    case 'cancelled':
+      return NotificationStatus.Cancelled;
+    case 'failed':
+      return NotificationStatus.Failed;
+    case 'completed':
+      return NotificationStatus.Completed;
+    default:
+      return null;
+  }
+};
+
+const updateNotificationStatus = async (notificationId: number, user: User) => {
+  const query = AppDataSource.createQueryRunner();
+  const notification = await query.manager.findOne(NotificationQueue, {
+    where: { Id: notificationId },
+  });
+
+  if (!notification || Object.keys(notification).length === 0) {
+    throw new Error(`Notification with id ${notificationId} not found.`);
+  }
+
+  const statusResponse = await chesServices.getStatusByIdAsync(notification.ChesMessageId);
+
+  if (typeof statusResponse?.status === 'string') {
+    const notificationStatus = convertChesStatusToNotificationStatus(statusResponse.status);
+    // If the CHES status is non-standard, don't update the notification.
+    if (notificationStatus === null) {
+      query.release();
+      return notification;
+    }
+    notification.Status = notificationStatus;
+    notification.UpdatedOn = new Date();
+    notification.UpdatedById = user.Id;
+    const updatedNotification = await query.manager.save(NotificationQueue, notification);
+
+    query.release();
+    return updatedNotification;
+  } else if (typeof statusResponse?.status === 'number') {
+    //If we get number type then this wound up being some HTTP code.
+    query.release();
+    return notification;
+  } else {
+    query.release();
+    throw new Error(`Failed to retrieve status for notification with id ${notificationId}.`);
+  }
+};
+
+const getProjectNotificationsInQueue = async (
+  filter: ProjectNotificationFilter,
+  user: User,
+): Promise<PageModel<NotificationQueue>> => {
+  const { projectId, page, pageSize } = filter;
+  const notifications = await AppDataSource.getRepository(NotificationQueue).find({
+    where: {
+      ProjectId: projectId,
+    },
+    skip: (page ?? 0) * (pageSize ?? 0),
+    take: pageSize ?? 0,
+    order: { SendOn: 'ASC' },
+  });
+
+  const updatedNotifications: Promise<NotificationQueue>[] = [];
+  for (const notification of notifications) {
+    // run the updates for notifications that are in Pending or Accepted status as the other statuses are final
+    if (
+      notification.Status === NotificationStatus.Pending ||
+      notification.Status === NotificationStatus.Accepted
+    ) {
+      const updatedNotification = updateNotificationStatus(notification.Id, user);
+      updatedNotifications.push(updatedNotification);
+    } else {
+      updatedNotifications.push(Promise.resolve(notification));
+    }
+  }
+
+  const pageModel: PageModel<NotificationQueue> = {
+    items: await Promise.all(updatedNotifications), //May need to come back to this at some point as one email failing to update will make this entire promise reject.
+    page: page ?? 0,
+    pageSize: pageSize ?? 0,
+  };
+
+  return pageModel;
+};
+
 const notificationServices = {
   generateProjectNotifications,
   generateAccessRequestNotification,
   sendNotification,
+  updateNotificationStatus,
+  getProjectNotificationsInQueue,
+  convertChesStatusToNotificationStatus,
 };
 
 export default notificationServices;
