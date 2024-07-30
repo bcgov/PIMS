@@ -221,7 +221,7 @@ const ProjectDetail = (props: IProjectDetail) => {
 
   const showNotes = (note) => {
     // noteId 2 are SRES only notes
-    if (note.NoteTypeId == 2 && !isAdmin) {
+    if (note.NoteTypeId == NoteTypes.PRIVATE && !(isAdmin || isAuditor)) {
       return null;
     }
     return (
