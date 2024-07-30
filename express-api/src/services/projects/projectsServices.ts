@@ -35,6 +35,7 @@ import { ProjectMonetary } from '@/typeorm/Entities/ProjectMonetary';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { SortOrders } from '@/constants/types';
 import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
+import { isAdmin } from '@/utilities/authorizationChecks';
 
 const projectRepo = AppDataSource.getRepository(Project);
 
@@ -587,8 +588,14 @@ const updateProject = async (
   // Not allowed to change Project Number
   if (project.ProjectNumber && originalProject.ProjectNumber !== project.ProjectNumber) {
     throw new ErrorWithCode('Project Number may not be changed.', 403);
-  } // Not allowed to change the agency
-  if (project.AgencyId && originalProject.AgencyId !== project.AgencyId) {
+  }
+
+  if (
+    //Agency change disallowed unless admin.
+    project.AgencyId &&
+    originalProject.AgencyId !== project.AgencyId &&
+    !isAdmin(user)
+  ) {
     throw new ErrorWithCode('Project Agency may not be changed.', 403);
   }
 

@@ -4,6 +4,7 @@ import {
   produceParcel,
   produceParcelEvaluation,
   produceParcelFiscal,
+  produceSSO,
   produceUser,
 } from 'tests/testUtils/factories';
 import parcelService from '@/services/parcels/parcelServices';
@@ -14,6 +15,7 @@ import { ParcelEvaluation } from '@/typeorm/Entities/ParcelEvaluation';
 import { DeepPartial, UpdateResult } from 'typeorm';
 import userServices from '@/services/users/usersServices';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
+import { Roles } from '@/constants/roles';
 
 //jest.setTimeout(30000);
 
@@ -84,7 +86,7 @@ jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
   release: jest.fn(async () => {}),
   manager: _mockEntityManager,
 });
-
+const adminUser = produceSSO({ client_roles: [Roles.ADMIN] });
 describe('UNIT - Parcel Services', () => {
   describe('addParcel', () => {
     beforeEach(() => jest.clearAllMocks());
@@ -162,13 +164,15 @@ describe('UNIT - Parcel Services', () => {
     it('should update an existing parcel', async () => {
       _parcelFindOne.mockResolvedValueOnce({ ...produceParcel(), Id: 1 });
       const updateParcel = { ...produceParcel(), Id: 1 };
-      await parcelService.updateParcel(updateParcel);
+      await parcelService.updateParcel(updateParcel, adminUser);
       expect(_parcelSave).toHaveBeenCalledTimes(1);
     });
     it('should throw an error if the parcel is not found.', async () => {
       const updateParcel = produceParcel();
       _parcelFindOne.mockResolvedValueOnce(null);
-      expect(async () => await parcelService.updateParcel(updateParcel)).rejects.toThrow();
+      expect(
+        async () => await parcelService.updateParcel(updateParcel, adminUser),
+      ).rejects.toThrow();
     });
     it('should throw and error if parcel is unable to be updated', async () => {
       const updateParcel = produceParcel();
@@ -176,18 +180,20 @@ describe('UNIT - Parcel Services', () => {
       _parcelSave.mockImplementationOnce(() => {
         throw new ErrorWithCode('errorMessage');
       });
-      expect(async () => await parcelService.updateParcel(updateParcel)).rejects.toThrow();
+      expect(
+        async () => await parcelService.updateParcel(updateParcel, adminUser),
+      ).rejects.toThrow();
     });
     it('should throw an error if PID is not in schema', () => {
       const parcel = {};
-      expect(async () => await parcelService.updateParcel(parcel)).rejects.toThrow();
+      expect(async () => await parcelService.updateParcel(parcel, adminUser)).rejects.toThrow();
     });
 
     it('should update Fiscals and Evaluations when they exist in the building object', async () => {
       const updateParcel = produceParcel();
       _parcelFindOne.mockResolvedValueOnce(updateParcel);
 
-      await parcelService.updateParcel(updateParcel);
+      await parcelService.updateParcel(updateParcel, adminUser);
       expect(_parcelFiscalFindOne).toHaveBeenCalledTimes(1);
       expect(_parcelEvaluationFindOne).toHaveBeenCalledTimes(1);
     });
