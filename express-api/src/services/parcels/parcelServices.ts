@@ -92,7 +92,8 @@ const deleteParcelById = async (parcelId: number, username: string) => {
 
 /**
  * @description Retrieves parcels based on the provided filter.
- * @param filter - The filter object used to specify the criteria for retrieving parcels.
+ * @param {ParcelFilter} filter - The filter object used to specify the criteria for retrieving parcels.
+ * @param {boolean} includeRelations Boolean that controls whether joins on related tables are performed.
  * @returns {Parcel[]} An array of parcels that match the filter criteria.
  */
 const getParcels = async (filter: ParcelFilter, includeRelations: boolean = false) => {

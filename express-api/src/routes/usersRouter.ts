@@ -25,10 +25,7 @@ const {
 
 router.route(`/info`).get(catchErrors(getUserInfo));
 router.route(`/self`).get(catchErrors(getSelf));
-// router.route(`/access/requests`).get(getUserAccessRequestLatest);
 router.route(`/access/requests`).post(catchErrors(submitUserAccessRequest));
-// router.route(`/access/requests/:requestId`).get(getUserAccessRequestById);
-// router.route(`/access/requests/:requestId`).put(updateUserAccessRequest);
 router.route(`/agencies/:username`).get(activeUserCheck, catchErrors(getUserAgencies));
 
 router
@@ -48,7 +45,7 @@ router
 router
   .route(`/:id`)
   .get(activeUserCheck, catchErrors(getUserById))
-  .put(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(updateUserById)) // TODO: should put be a patch?
+  .put(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(updateUserById))
   .delete(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(deleteUserById));
 
 export default router;

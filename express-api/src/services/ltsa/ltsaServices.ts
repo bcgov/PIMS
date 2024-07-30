@@ -8,6 +8,14 @@ import { ILtsaOrder } from '@/services/ltsa/interfaces/ILtsaOrder';
 import getConfig from '@/constants/config';
 
 const ltsaConfig = getConfig().ltsa;
+
+/**
+ * Process an LTSA request by retrieving an access token, fetching title summary information,
+ * accessing the first title summary, extracting necessary details for making an order request,
+ * and finally creating an LTSA order.
+ * @param pid - The parcel identifier for which the LTSA request is being processed.
+ * @returns The created LTSA order based on the provided parcel identifier.
+ */
 export const processLTSARequest = async (pid: string) => {
   // make a request to get an access token from LTSA
   const ltsatoken = await getTokenAsync();
@@ -30,6 +38,11 @@ export const processLTSARequest = async (pid: string) => {
   return order;
 };
 
+/**
+ * Asynchronously retrieves LTSA tokens by sending a POST request to the LTSA authentication URL with integrator and user credentials.
+ * @returns A Promise that resolves to an object containing the access token and refresh token.
+ * @throws {ErrorWithCode} If unable to get the token from LTSA, an error with the corresponding status code is thrown.
+ */
 export const getTokenAsync: () => Promise<ILtsaTokens> = async () => {
   const cred = {
     integratorUsername: ltsaConfig.integratorUsername,
@@ -49,6 +62,12 @@ export const getTokenAsync: () => Promise<ILtsaTokens> = async () => {
   } else return await response.json();
 };
 
+/**
+ * Retrieves the title summary information for a specific parcel identifier (PID) using the provided access token.
+ * @param accessToken The access token for authentication.
+ * @param pid The parcel identifier (PID) for which the title summary information is requested.
+ * @returns A promise that resolves to an object containing an array of title summary models.
+ */
 export const getTitleSummary: (
   accessToken: string,
   pid: string,
@@ -72,6 +91,13 @@ export const getTitleSummary: (
   } else return await response.json();
 };
 
+/**
+ * Asynchronously creates an order in the LTSA system.
+ * @param {string} accessToken - The access token for authentication.
+ * @param {string} titleNumber - The title number for the order.
+ * @param {string} landTitleDistrictCode - The land title district code for the order.
+ * @returns {Promise<ILtsaOrder>} A promise that resolves to the created LTSA order.
+ */
 export const createOrderAsync: (
   accessToken: string,
   titleNumber: string,
