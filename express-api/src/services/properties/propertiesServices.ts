@@ -59,7 +59,16 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
           .orWhere(`parcel.address1 ILIKE '%${keyword}%'`);
       }),
     )
-    .andWhere(`classification.Name in ('Surplus Encumbered', 'Surplus Active')`);
+    .andWhere(`classification.Name in ('Surplus Encumbered', 'Surplus Active')`)
+    .andWhere((qb) => {
+      const subQuery = qb
+        .subQuery()
+        .select('pp.ParcelId')
+        .from('ProjectProperty', 'pp')
+        .where('pp.parcel_id = parcel.id')
+        .getQuery();
+      return `parcel.id NOT IN ${subQuery}`;
+    });
 
   // Add the optional agencyIds filter if provided
   if (agencyIds && agencyIds.length > 0) {
@@ -79,14 +88,23 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
     .leftJoinAndSelect('building.Classification', 'classification')
     .where(
       new Brackets((qb) => {
-        qb.where(`building.pid::text like :keyword`, { keyword: `%${keyword}%` })
-          .orWhere(`building.pin::text like :keyword`, { keyword: `%${keyword}%` })
-          .orWhere(`agency.name like :keyword`, { keyword: `%${keyword}%` })
-          .orWhere(`adminArea.name like :keyword`, { keyword: `%${keyword}%` })
-          .orWhere(`building.address1 like :keyword`, { keyword: `%${keyword}%` });
+        qb.where(`building.pid::text ILIKE :keyword`, { keyword: `%${keyword}%` })
+          .orWhere(`building.pin::text ILIKE :keyword`, { keyword: `%${keyword}%` })
+          .orWhere(`agency.name ILIKE :keyword`, { keyword: `%${keyword}%` })
+          .orWhere(`adminArea.name ILIKE :keyword`, { keyword: `%${keyword}%` })
+          .orWhere(`building.address1 ILIKE :keyword`, { keyword: `%${keyword}%` });
       }),
     )
-    .andWhere(`classification.Name in ('Surplus Encumbered', 'Surplus Active')`);
+    .andWhere(`classification.Name in ('Surplus Encumbered', 'Surplus Active')`)
+    .andWhere((qb) => {
+      const subQuery = qb
+        .subQuery()
+        .select('pp.BuildingId')
+        .from('ProjectProperty', 'pp')
+        .where('pp.building_id = building.id')
+        .getQuery();
+      return `building.id NOT IN ${subQuery}`;
+    });
 
   if (agencyIds && agencyIds.length > 0) {
     buildingsQuery.andWhere(`building.agency_id IN (:...agencyIds)`, { agencyIds });
