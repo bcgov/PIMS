@@ -49,6 +49,7 @@ import { columnNameFormatter, dateFormatter, formatMoney } from '@/utilities/for
 import { LookupContext } from '@/contexts/lookupContext';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { getStatusString } from '@/constants/chesNotificationStatus';
+import { NoteTypes } from '@/constants/noteTypes';
 
 interface IProjectDetail {
   onClose: () => void;
