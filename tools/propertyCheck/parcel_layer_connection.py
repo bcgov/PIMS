@@ -195,7 +195,6 @@ def check_rows_pid(rows):
                 problem_rows.append(temp_row)
                 continue
 
-    print()
     return problem_rows
 
 def clean_municip(rows):
