@@ -56,7 +56,7 @@ export const updateParcel = async (req: Request, res: Response) => {
   }
   const user = await userServices.getUser((req.user as SSOUser).preferred_username);
   const updateBody = { ...req.body, UpdatedById: user.Id };
-  const parcel = await parcelServices.updateParcel(updateBody);
+  const parcel = await parcelServices.updateParcel(updateBody, req.user);
   if (!parcel) {
     return res.status(404).send('Parcel matching this internal ID not found.');
   }

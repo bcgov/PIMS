@@ -447,7 +447,9 @@ export const lookupAll = async (req: Request, res: Response) => {
     PredominateUses,
     Classifications,
     Roles,
-    Agencies,
+    Agencies: (await Agencies).sort((a, b) =>
+      a.Name.toLowerCase().localeCompare(b.Name.toLowerCase(), undefined, { numeric: true }),
+    ),
     AdministrativeAreas,
     RegionalDistricts: (await RegionalDistricts).sort((a, b) =>
       a.Name.toLowerCase().localeCompare(b.Name.toLowerCase()),
