@@ -219,6 +219,19 @@ const ProjectDetail = (props: IProjectDetail) => {
     }
   };
 
+  const showNotes = (note) => {
+    // noteId 2 are SRES only notes
+    if (note.NoteTypeId == 2 && !isAdmin) {
+      return null;
+    }
+    return (
+      <Box key={`${note.NoteTypeId}-note`}>
+        <Typography variant="h5">{note.Name}</Typography>
+        <Typography>{note.Note}</Typography>
+      </Box>
+    );
+  };
+
   useEffect(() => {
     if (id) {
       refreshData();
@@ -391,12 +404,7 @@ const ProjectDetail = (props: IProjectDetail) => {
                             />
                           </FormGroup>
                         ))}
-                        {value.Notes.map((note) => (
-                          <Box key={`${note.NoteTypeId}-note`}>
-                            <Typography variant="h5">{note.Name}</Typography>
-                            <Typography>{note.Note}</Typography>
-                          </Box>
-                        ))}
+                        {value.Notes.map((note) => showNotes(note))}
                         {value.Timestamps.map((ts) => (
                           <Box key={`${ts.TimestampTypeId}-timestamp`}>
                             <Typography variant="h5">{columnNameFormatter(ts.Name)}</Typography>
