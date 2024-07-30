@@ -88,6 +88,7 @@ const addKeycloakUserOnHold = async (
     Position: position,
     Note: note,
     CreatedById: systemUser.Id,
+    LastLogin: new Date(),
   });
   return result.generatedMaps[0];
 };
