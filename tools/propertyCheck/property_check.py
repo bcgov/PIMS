@@ -147,6 +147,10 @@ def process_data_flags(arg_li):
         base_file_name = file_name[:-4]
         rows = read_csv(file_name)
         tot_rows = len(rows)
+
+        needed_headers = ["Point", "PID"]
+        check_headers(rows[0], needed_headers)
+
         rem_rows = parcel_layer_connection.check_rows_pid(rows)
         print_num_removed(tot_rows - len(rem_rows), "points mismatched.")
         write_csv_file(rem_rows, "point_mismatched" + base_file_name)
@@ -159,6 +163,10 @@ def process_data_flags(arg_li):
         base_file_name = file_name[:-4]
         rows = read_csv(file_name)
         tot_rows = len(rows)
+
+        needed_headers = ["Point", "PID"]
+        check_headers(rows[0], needed_headers)
+
         rem_rows = parcel_layer_connection.check_rows_point(rows)
         print_num_removed(tot_rows - len(rem_rows), "PIDs mismatched.")
         write_csv_file(rem_rows, "pid_mismatched" + base_file_name)
@@ -169,6 +177,10 @@ def process_data_flags(arg_li):
         file_name = get_file_name(arg_li, '-m')
         base_file_name = file_name[:-4]
         rows = read_csv(file_name)
+
+        needed_headers = ["Point", "PID", "City"]
+        check_headers(rows[0], needed_headers)
+
         rem_rows = parcel_layer_connection.clean_municip(rows)
         write_csv_file(rem_rows, "remaining_" + base_file_name)
 

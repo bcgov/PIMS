@@ -5,9 +5,8 @@
 This script allows users to perform numerous tasks on a property dataset given. See flags section for full information on all the operations this script can perform. 
 This script was created to help resolve some bad data stored within PIMS. [Firework Cluster Ticket](https://citz-imb.atlassian.net/browse/PIMS-1681) was the start of this work and it spiraled from there.
 
-## Instructions
 
-### Setup
+## Setup
 
 1. Python must be installed on your local system for this to work.
    - To check if Python is installed on your system try running the following on a command line:
@@ -52,12 +51,29 @@ Running the script followed by a '-p' flag will go through the given file and ch
 
 Required Column(s): "Point", "PID"
 
-Example: `python3 propertyCheck.py -m check_data_by_PID.csv`
+Example: `python3 propertyCheck.py -p check_point_by_PID.csv`
 
 ### -l
 
+Running the script followed by a '-l' flag will go through the given file and check the PID returned from openmaps.gov.bc.ca by sending in the stored point. Lines will be removed if the PID stored doesn't match the returned PID.
+
+Required Column(s): "Point", "PID"
+
+Example: `python3 propertyCheck.py -l check_PID_by_point.csv`
+
 ### -c
 
-### Notes
+Running the script followed by a '-c' flag will go through the given file and check the city (municipality) returned from openmaps.gov.bc.ca by sending in the stored PID. Lines will be removed if the city stored doesn't match the returned city.
 
-- Make sure to switch the integration information in your `.env` between extract and import commands.
+Required Column(s): "Point", "PID", "City"
+
+Example: `python3 propertyCheck.py -c check_city_by_pid.csv`
+
+
+## Notes
+
+Any output files will be written into the data folder. 
+
+Any files used in the command line to run the script need to be in the data folder at the time that you run the script. 
+
+Don't include the path with '/data/' in the filename when running the script.
