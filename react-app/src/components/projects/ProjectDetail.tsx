@@ -27,12 +27,14 @@ import DetailViewNavigation from '../display/DetailViewNavigation';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ProjectStatus } from '@/hooks/api/useLookupApi';
 import DisposalPropertiesTable from './DisposalPropertiesSimpleTable';
+import ProjectNotificationsTable from './ProjectNotificationsTable';
 import {
   ProjectAgencyResponseDialog,
   ProjectDocumentationDialog,
   ProjectFinancialDialog,
   ProjectGeneralInfoDialog,
   ProjectPropertiesDialog,
+  ProjectNotificationDialog,
 } from './ProjectDialog';
 import { AgencySimpleTable } from './AgencyResponseSearchTable';
 import CollapsibleSidebar from '../layout/CollapsibleSidebar';
@@ -46,6 +48,7 @@ import { ExpandMoreOutlined } from '@mui/icons-material';
 import { columnNameFormatter, dateFormatter, formatMoney } from '@/utilities/formatters';
 import { LookupContext } from '@/contexts/lookupContext';
 import { Agency } from '@/hooks/api/useAgencyApi';
+import { getStatusString } from '@/constants/chesNotificationStatus';
 
 interface IProjectDetail {
   onClose: () => void;
@@ -66,10 +69,14 @@ const ProjectDetail = (props: IProjectDetail) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { keycloak } = useContext(AuthContext);
+  const lookup = useContext(LookupContext);
   const api = usePimsApi();
   const { data: lookupData, getLookupValueById } = useContext(LookupContext);
   const { data, refreshData, isLoading } = useDataLoader(() =>
     api.projects.getProjectById(Number(id)),
+  );
+  const { data: notifications, refreshData: refreshNotifications } = useDataLoader(() =>
+    api.notifications.getNotificationsByProjectId(Number(id)),
   );
 
   useEffect(() => {
@@ -80,6 +87,7 @@ const ProjectDetail = (props: IProjectDetail) => {
   }, [data]);
 
   const isAuditor = keycloak.hasRoles([Roles.AUDITOR]);
+  const isAdmin = keycloak.hasRoles([Roles.ADMIN]);
 
   const { submit: deleteProject, submitting: deletingProject } = useDataSubmitter(
     api.projects.deleteProjectById,
@@ -173,6 +181,7 @@ const ProjectDetail = (props: IProjectDetail) => {
   const [openFinancialInfoDialog, setOpenFinancialInfoDialog] = useState(false);
   const [openDocumentationDialog, setOpenDocumentationDialog] = useState(false);
   const [openAgencyInterestDialog, setOpenAgencyInterestDialog] = useState(false);
+  const [openNotificationDialog, setOpenNotificationDialog] = useState(false);
 
   const ProjectInfoData = {
     Status: getLookupValueById('ProjectStatuses', data?.parsedBody.StatusId),
@@ -211,7 +220,10 @@ const ProjectDetail = (props: IProjectDetail) => {
   };
 
   useEffect(() => {
-    refreshData();
+    if (id) {
+      refreshData();
+      refreshNotifications();
+    }
   }, [id]);
 
   const projectInformation = 'Project Information';
@@ -219,24 +231,29 @@ const ProjectDetail = (props: IProjectDetail) => {
   const financialInformation = 'Financial Information';
   const agencyInterest = 'Agency Interest';
   const documentationHistory = 'Documentation History';
+  const notificationsHeader = 'Notifications';
+
+  const sideBarList = [
+    { title: projectInformation },
+    { title: disposalProperties },
+    { title: financialInformation },
+    { title: documentationHistory },
+    { title: notificationsHeader },
+  ];
+  // only show Agency Interest for admin or auditor
+  isAdmin || isAuditor ? sideBarList.splice(3, 0, { title: agencyInterest }) : null;
 
   return (
-    <CollapsibleSidebar
-      items={[
-        { title: projectInformation },
-        { title: disposalProperties },
-        { title: financialInformation },
-        { title: agencyInterest },
-        { title: documentationHistory },
-      ]}
-    >
+    <CollapsibleSidebar items={sideBarList}>
       <Box
         display={'flex'}
         gap={'1rem'}
         mt={'2rem'}
         mb={'2rem'}
         flexDirection={'column'}
-        width={'46rem'}
+        maxWidth={'60rem'}
+        minWidth={'45rem'}
+        width={'80%'}
         marginX={'auto'}
       >
         <DetailViewNavigation
@@ -244,7 +261,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           deleteTitle={'Delete project'}
           onDeleteClick={() => setOpenDeleteDialog(true)}
           onBackClick={() => props.onClose()}
-          disableDelete={isAuditor}
+          disableDelete={!isAdmin}
         />
         <DataCard
           loading={isLoading}
@@ -253,14 +270,14 @@ const ProjectDetail = (props: IProjectDetail) => {
           id={projectInformation}
           title={projectInformation}
           onEdit={() => setOpenProjectInfoDialog(true)}
-          disableEdit={isAuditor}
+          disableEdit={!isAdmin}
         />
         <DataCard
           values={undefined}
           id={disposalProperties}
           title={disposalProperties}
           onEdit={() => setOpenDisposalPropDialog(true)}
-          disableEdit={isAuditor}
+          disableEdit={!isAdmin}
         >
           {isLoading ? (
             <Skeleton variant="rectangular" height={'150px'} />
@@ -287,46 +304,48 @@ const ProjectDetail = (props: IProjectDetail) => {
           title={financialInformation}
           id={financialInformation}
           onEdit={() => setOpenFinancialInfoDialog(true)}
-          disableEdit={isAuditor}
+          disableEdit={!isAdmin}
         />
-        <DataCard
-          loading={isLoading}
-          title={agencyInterest}
-          values={undefined}
-          id={agencyInterest}
-          onEdit={() => setOpenAgencyInterestDialog(true)}
-          disableEdit={isAuditor}
-        >
-          {!data?.parsedBody.AgencyResponses?.length ? ( //TODO: Logic will depend on precense of agency responses
-            <Box display={'flex'} justifyContent={'center'}>
-              <Typography>No agencies registered.</Typography>
-            </Box>
-          ) : (
-            <AgencySimpleTable
-              editMode={false}
-              sx={{
-                borderStyle: 'none',
-                '& .MuiDataGrid-columnHeaders': {
-                  borderBottom: 'none',
-                },
-                '& div div div div >.MuiDataGrid-cell': {
-                  borderBottom: 'none',
-                  borderTop: '1px solid rgba(224, 224, 224, 1)',
-                },
-              }}
-              rows={
-                data?.parsedBody.AgencyResponses && ungroupedAgencies
-                  ? (data?.parsedBody.AgencyResponses?.map((resp) => ({
-                      ...ungroupedAgencies?.find((agc) => agc.Id === resp.AgencyId),
-                      ReceivedOn: resp.ReceivedOn,
-                      Note: resp.Note,
-                      Response: enumReverseLookup(AgencyResponseType, resp.Response),
-                    })) as (Agency & { ReceivedOn: Date; Note: string })[])
-                  : []
-              }
-            />
-          )}
-        </DataCard>
+        {(isAdmin || isAuditor) && (
+          <DataCard
+            loading={isLoading}
+            title={agencyInterest}
+            values={undefined}
+            id={agencyInterest}
+            onEdit={() => setOpenAgencyInterestDialog(true)}
+            disableEdit={!isAdmin}
+          >
+            {!data?.parsedBody.AgencyResponses?.length ? ( //TODO: Logic will depend on precense of agency responses
+              <Box display={'flex'} justifyContent={'center'}>
+                <Typography>No agencies registered.</Typography>
+              </Box>
+            ) : (
+              <AgencySimpleTable
+                editMode={false}
+                sx={{
+                  borderStyle: 'none',
+                  '& .MuiDataGrid-columnHeaders': {
+                    borderBottom: 'none',
+                  },
+                  '& div div div div >.MuiDataGrid-cell': {
+                    borderBottom: 'none',
+                    borderTop: '1px solid rgba(224, 224, 224, 1)',
+                  },
+                }}
+                rows={
+                  data?.parsedBody.AgencyResponses && ungroupedAgencies
+                    ? (data?.parsedBody.AgencyResponses?.map((resp) => ({
+                        ...ungroupedAgencies?.find((agc) => agc.Id === resp.AgencyId),
+                        ReceivedOn: resp.ReceivedOn,
+                        Note: resp.Note,
+                        Response: enumReverseLookup(AgencyResponseType, resp.Response),
+                      })) as (Agency & { ReceivedOn: Date; Note: string })[])
+                    : []
+                }
+              />
+            )}
+          </DataCard>
+        )}
         <DataCard
           customFormatter={customFormatter}
           values={undefined}
@@ -398,6 +417,37 @@ const ProjectDetail = (props: IProjectDetail) => {
             )}
           </Box>
         </DataCard>
+        <DataCard
+          loading={isLoading}
+          title={notificationsHeader}
+          values={undefined}
+          id={notificationsHeader}
+          onEdit={() => setOpenNotificationDialog(true)}
+          disableEdit={!data?.parsedBody?.Notifications?.length}
+          editButtonText="Expand Notifications"
+        >
+          {!data?.parsedBody.Notifications?.length ? ( //TODO: Logic will depend on precense of agency responses
+            <Box display={'flex'} justifyContent={'center'}>
+              <Typography>No notifications were sent for this project.</Typography>
+            </Box>
+          ) : (
+            <ProjectNotificationsTable
+              rows={
+                notifications?.items
+                  ? notifications.items.map((resp) => ({
+                      agency: lookup.getLookupValueById('Agencies', resp.ToAgencyId)?.Name,
+                      id: resp.Id,
+                      projectNumber: data?.parsedBody.ProjectNumber,
+                      status: getStatusString(resp.Status),
+                      sendOn: resp.SendOn,
+                      to: resp.To,
+                      subject: resp.Subject,
+                    }))
+                  : []
+              }
+            />
+          )}
+        </DataCard>
         <DeleteDialog
           open={openDeleteDialog}
           confirmButtonProps={{ loading: deletingProject }}
@@ -453,6 +503,18 @@ const ProjectDetail = (props: IProjectDetail) => {
           }}
           onCancel={() => {
             setOpenAgencyInterestDialog(false);
+          }}
+        />
+        <ProjectNotificationDialog
+          ungroupedAgencies={ungroupedAgencies as Agency[]}
+          initialValues={notifications?.items ?? []}
+          open={openNotificationDialog}
+          postSubmit={() => {
+            setOpenNotificationDialog(false);
+            refreshData();
+          }}
+          onCancel={() => {
+            setOpenNotificationDialog(false);
           }}
         />
       </Box>

@@ -103,7 +103,7 @@ export const submitUserAccessRequest = async (req: Request, res: Response) => {
     logger.error(`Failed to deliver access request notification: ${e.message}`);
   }
 
-  return res.status(200).send(result);
+  return res.status(201).send(result);
 };
 
 /**

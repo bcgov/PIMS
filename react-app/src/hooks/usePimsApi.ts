@@ -15,6 +15,7 @@ import useParcelLayerApi from './api/useParcelLayerApi';
 import useProjectsApi from './api/useProjectsApi';
 import useBCAssessmentApi from '@/hooks/api/useBCAssessmentApi';
 import useLtsaApi from './api/useLtsaApi';
+import useProjectNotificationsApi from './api/useProjectNotificationApi';
 
 /**
  * usePimsApi - This stores all the sub-hooks we need to make calls to our API and helps manage authentication state for them.
@@ -38,6 +39,7 @@ const usePimsApi = () => {
   const projects = useProjectsApi(fetch);
   const bcAssessment = useBCAssessmentApi();
   const ltsa = useLtsaApi(fetch);
+  const notifications = useProjectNotificationsApi(fetch);
 
   return {
     users,
@@ -54,6 +56,7 @@ const usePimsApi = () => {
     projects,
     bcAssessment,
     ltsa,
+    notifications,
   };
 };
 

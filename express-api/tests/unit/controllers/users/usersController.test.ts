@@ -130,7 +130,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
       mockRequest.user = produceSSO();
       mockRequest.body = { agencyId: 'bch' };
       await submitUserAccessRequest(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
+      expect(mockResponse.statusValue).toBe(201);
     });
 
     it('should throw an error if addKeycloakUserOnHold throws an error', async () => {

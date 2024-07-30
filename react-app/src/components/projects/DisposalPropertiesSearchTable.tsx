@@ -28,24 +28,21 @@ interface IDisposalProjectSearch {
   setRows: (a: any[]) => void;
 }
 
-export type ParcelWithType = Parcel & {
-  Type: string;
-};
-
-export type BuildingWithType = Building & {
-  Type: string;
+export type PropertyWithType = (Parcel | Building) & {
+  Type: 'Parcel' | 'Building';
+  EvaluationYears: number[];
 };
 
 const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
   const { rows, setRows } = props;
   const [autoCompleteVal, setAutoCompleteVal] = useState(null);
-  const [fuzzySearchOptions, setFuzzySearchOptions] = useState([]);
+  const [fuzzySearchOptions, setFuzzySearchOptions] = useState<Array<PropertyWithType>>([]);
   const [loadingOptions, setLoadingOptions] = useState(false);
   const api = usePimsApi();
   const theme = useTheme();
   const classification = useClassificationStyle();
 
-  const getPidPinLabel = (input: ParcelWithType | BuildingWithType | string) => {
+  const getPidPinLabel = (input: PropertyWithType | string) => {
     if (typeof input === 'string') {
       return '';
     }
@@ -59,7 +56,7 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
     }
   };
 
-  const getAddressLabel = (input: ParcelWithType | BuildingWithType) => {
+  const getAddressLabel = (input: PropertyWithType) => {
     const address = [];
     if (input.Address1) {
       address.push(input.Address1);
@@ -159,7 +156,7 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
           }
         }}
         getOptionLabel={() => ''} // No label, because field should clear on select.
-        renderOption={(props, option) => {
+        renderOption={(props, option: PropertyWithType) => {
           const classificationColour =
             option.ClassificationId != null
               ? classification[option.ClassificationId].textColor
@@ -170,7 +167,7 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
                 <Grid item xs={1} pt={1} mr={1}>
                   <ListItemAvatar>
                     <ClassificationIcon
-                      iconType={option.PropertyTypeId}
+                      iconType={option.Type.toLowerCase() as 'building' | 'parcel'}
                       textColor={theme.palette.text.primary}
                       badgeColor={classificationColour}
                       scale={1.2}
@@ -202,12 +199,12 @@ const DisposalProjectSearch = (props: IDisposalProjectSearch) => {
             setFuzzySearchOptions([
               ...response.Parcels?.map((a) => ({
                 ...a,
-                Type: 'Parcel',
+                Type: 'Parcel' as const,
                 EvaluationYears: a.Evaluations?.map((e) => e.Year),
               })),
               ...response.Buildings?.map((a) => ({
                 ...a,
-                Type: 'Building',
+                Type: 'Building' as const,
                 EvaluationYears: a.Evaluations?.map((e) => e.Year),
               })),
             ]);

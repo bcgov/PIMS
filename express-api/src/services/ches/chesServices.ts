@@ -4,6 +4,7 @@ import urls from '@/constants/urls';
 import { ChesFilter } from '@/controllers/tools/toolsSchema';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { decodeJWT } from '@/utilities/decodeJWT';
+import logger from '@/utilities/winstonLogger';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 
 let _token: TokenResponse = null;
@@ -140,7 +141,7 @@ const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentR
   }
   if (cfg.ches.usersToBcc && typeof cfg.ches.usersToBcc === 'string') {
     email.bcc = [
-      ...email.bcc,
+      ...(email.bcc ?? []),
       ...(cfg.ches.usersToBcc?.split(';').map((email) => email.trim()) ?? []),
     ];
   }
@@ -153,14 +154,17 @@ const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentR
       email.delayTS += Number(cfg.ches.secondsToDelay);
     }
   }
-  email.to = cfg.ches.overrideTo
-    ? cfg.ches.overrideTo
-        .split(';')
-        .map((email) => email.trim())
-        .filter((email) => !!email)
-    : email.to?.filter((a) => !!a);
-  email.cc = cfg.ches.overrideTo ? [] : email.cc?.filter((a) => !!a);
-  email.bcc = cfg.ches.overrideTo ? [] : email.bcc?.filter((a) => !!a);
+  if (cfg.ches.overrideTo || !cfg.ches.sendToLive) {
+    email.to = cfg.ches.overrideTo
+      ? cfg.ches.overrideTo.split(';').map((email) => email.trim())
+      : [user.email];
+    email.cc = email.cc?.length ? [user.email] : [];
+    email.bcc = [];
+  }
+
+  email.to = email.to?.filter((a) => !!a);
+  email.cc = email.cc?.filter((a) => !!a);
+  email.bcc = email.bcc?.filter((a) => !!a);
 
   if (cfg.ches.emailEnabled) {
     return sendAsync('/email', 'POST', email);
@@ -177,7 +181,16 @@ export interface IChesStatusResponse {
   createdTS: number;
 }
 const getStatusByIdAsync = async (messageId: string): Promise<IChesStatusResponse> => {
-  return sendAsync(`/status/${messageId}`, 'GET');
+  try {
+    const response: IChesStatusResponse = await sendAsync(`/status/${messageId}`, 'GET');
+    if (!response) {
+      throw new Error(`Failed to fetch status for messageId ${messageId}`);
+    }
+    return await response;
+  } catch (error) {
+    logger.error(`Error fetching status for messageId ${messageId}:`, error);
+    return null;
+  }
 };
 
 const getStatusesAsync = async (filter: ChesFilter) => {

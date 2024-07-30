@@ -597,9 +597,13 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
       'AdministrativeArea',
       'PropertyType',
     ];
-    quickfilterFields.forEach((field) =>
-      quickFilterOptions.push(constructFindOptionFromQuery(field, filter.quickFilter)),
-    );
+    quickfilterFields.forEach((field) => {
+      if (field === 'PID') {
+        return quickFilterOptions.push(constructFindOptionFromQueryPid(field, filter.quickFilter));
+      } else {
+        return quickFilterOptions.push(constructFindOptionFromQuery(field, filter.quickFilter));
+      }
+    });
     query.andWhere(
       new Brackets((qb) => {
         quickFilterOptions.forEach((option) => qb.orWhere(option));
