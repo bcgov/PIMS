@@ -179,7 +179,9 @@ export interface IChesStatusResponse {
   txId: string;
   updatedTS: number;
   createdTS: number;
+  msgId: string;
 }
+
 const getStatusByIdAsync = async (messageId: string): Promise<IChesStatusResponse> => {
   try {
     const response: IChesStatusResponse = await sendAsync(`/status/${messageId}`, 'GET');

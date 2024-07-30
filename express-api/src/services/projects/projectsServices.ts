@@ -752,12 +752,6 @@ const deleteProjectById = async (id: number, username: string) => {
       { ProjectId: id },
       { DeletedById: user.Id, DeletedOn: new Date() },
     );
-    // Remove Notifications from Project
-    /* FIXME: This should eventually be done with the notifications service.
-     * Otherwise, any notifications sent to CHES won't be cancelled. -Dylan
-     * This is true ^ I think it's best to comment out this delete call for now. -Graham
-     */
-    // await queryRunner.manager.delete(NotificationQueue, { ProjectId: id });
     // Delete the project
     const deleteResult = await queryRunner.manager.update(
       Project,
