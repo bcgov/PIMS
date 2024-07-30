@@ -9,7 +9,7 @@ import {
   ProjectGeneralInfoForm,
 } from './ProjectForms';
 import DisposalProjectSearch from './DisposalPropertiesSearchTable';
-import { Box, Grid, InputAdornment, Typography } from '@mui/material';
+import { Box, Button, Grid, InputAdornment, Typography } from '@mui/material';
 import { ProjectTask } from '@/constants/projectTasks';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
 import AgencySearchTable from './AgencyResponseSearchTable';
@@ -23,10 +23,16 @@ import { columnNameFormatter } from '@/utilities/formatters';
 import DateFormField from '../form/DateFormField';
 import dayjs from 'dayjs';
 import { LookupContext } from '@/contexts/lookupContext';
+import ProjectNotificationsTable, {
+  INotification,
+  INotificationModel,
+} from './ProjectNotificationsTable';
+import { getStatusString } from '@/constants/chesNotificationStatus';
 import { MonetaryType } from '@/constants/monetaryTypes';
 import AutocompleteFormField from '../form/AutocompleteFormField';
 import { AuthContext } from '@/contexts/authContext';
 import { Roles } from '@/constants/roles';
+import BaseDialog from '../dialog/BaseDialog';
 
 interface IProjectGeneralInfoDialog {
   initialValues: Project;
@@ -500,5 +506,50 @@ export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog)
         <AgencySearchTable agencies={agencies} options={options} rows={rows} setRows={setRows} />
       </Box>
     </ConfirmDialog>
+  );
+};
+
+interface INotificationDialog {
+  initialValues: INotification[];
+  open: boolean;
+  ungroupedAgencies: Partial<Agency>[];
+  postSubmit: () => void;
+  onCancel: () => void;
+}
+
+export const ProjectNotificationDialog = (props: INotificationDialog) => {
+  const { initialValues, open, onCancel } = props;
+  const lookup = useContext(LookupContext);
+  const [rows, setRows] = useState<INotificationModel[]>([]);
+  useEffect(() => {
+    if (initialValues) {
+      setRows(
+        initialValues.map((notif) => ({
+          id: notif.Id,
+          agency: lookup.getLookupValueById('Agencies', notif.ToAgencyId)?.Name,
+          to: notif.To,
+          subject: notif.Subject,
+          status: getStatusString(notif.Status),
+          sendOn: notif.SendOn,
+        })),
+      );
+    }
+  }, [initialValues]);
+
+  return (
+    <BaseDialog
+      dialogProps={{ maxWidth: 'xl', fullWidth: true }}
+      title={'Update Project Notifications'}
+      open={open}
+      actions={
+        <Button variant="contained" color="secondary" onClick={onCancel}>
+          Close
+        </Button>
+      }
+    >
+      <Box paddingTop={'1rem'}>
+        <ProjectNotificationsTable rows={rows} />
+      </Box>
+    </BaseDialog>
   );
 };

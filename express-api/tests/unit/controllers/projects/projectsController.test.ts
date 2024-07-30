@@ -144,7 +144,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
     });
 
     it('should return projects for a general user', async () => {
-      // Mock an admin user
+      // Mock an general user
       const { mockReq, mockRes } = getRequestHandlerMocks();
       mockRequest = mockReq;
       mockRequest.setUser({ client_roles: [Roles.GENERAL_USER] });
@@ -245,6 +245,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
 
   describe('PUT /projects/disposal/:projectId', () => {
     it('should return status 200 on successful update', async () => {
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
       mockRequest.params.projectId = '1';
       mockRequest.body = {
         project: produceProject({ Id: 1 }),
@@ -254,7 +255,19 @@ describe('UNIT - Testing controllers for users routes.', () => {
       expect(mockResponse.statusValue).toBe(200);
     });
 
+    it('should return status 403 when user is not an admin', async () => {
+      mockRequest.setUser({ client_roles: [Roles.GENERAL_USER] });
+      mockRequest.params.projectId = '1';
+      mockRequest.body = {
+        project: produceProject({ Id: 1 }),
+        propertyIds: [],
+      };
+      await controllers.updateDisposalProject(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(403);
+    });
+
     it('should return status 400 on mistmatched id', async () => {
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
       mockRequest.params.projectId = '1';
       mockRequest.body = {
         project: {
@@ -266,6 +279,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
       expect(mockResponse.statusValue).toBe(400);
     });
     it('should return status 400 on invalid id', async () => {
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
       mockRequest.params.projectId = 'abc';
       mockRequest.body = {
         project: {
@@ -277,6 +291,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
       expect(mockResponse.statusValue).toBe(400);
     });
     it('should return status 400 on missing fields', async () => {
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
       mockRequest.params.projectId = '1';
       mockRequest.body = {
         Id: 1,
