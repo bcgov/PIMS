@@ -261,7 +261,7 @@ const addProjectParcelRelations = async (
  * Adds building relations to a project.
  *
  * @param {DeepPartial<Project>} project - The project to add building relations to.
- * @param {number[]} buildingIds - An array of building IDs to add as relations. 
+ * @param {number[]} buildingIds - An array of building IDs to add as relations.
  * @param {QueryRunner} queryRunner - Query runner for database operations.
  * @returns {Promise<void>} - A promise that resolves when the building relations have been added.
  * @throws {ErrorWithCode} - If a building with the given ID does not exist or if the building already belongs to another project.
