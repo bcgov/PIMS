@@ -77,15 +77,6 @@ const ParcelMap = (props: ParcelMapProps) => {
     api.properties.propertiesGeoSearch(filter),
   );
 
-  const deletionBroadcastChannel = useMemo(() => new BroadcastChannel('property'), []);
-  useEffect(() =>
-    deletionBroadcastChannel.addEventListener('message', (event) => {
-      if (typeof event.data === 'string' && event.data === 'refresh') {
-        refreshData();
-      }
-    }),
-  );
-
   // Controls ClusterPopup contents
   const [popupState, setPopupState] = useState<PopupState>({
     open: false,
@@ -118,6 +109,17 @@ const ParcelMap = (props: ParcelMapProps) => {
 
   // To access map outside of MapContainer
   const localMapRef = mapRef ?? useRef<Map>();
+
+  const deletionBroadcastChannel = useMemo(() => new BroadcastChannel('property'), []);
+  useEffect(
+    () =>
+      deletionBroadcastChannel.addEventListener('message', (event) => {
+        if (typeof event.data === 'string' && event.data === 'refresh') {
+          refreshData();
+        }
+      }),
+    [],
+  );
 
   // Default for BC view
   const defaultBounds = [

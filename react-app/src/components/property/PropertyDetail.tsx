@@ -264,9 +264,11 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const [openAssessedValueDialog, setOpenAssessedValueDialog] = useState(false);
 
   const deletionAction = async () => {
-    deletionBroadcastChannel.postMessage('refresh');
-    await deleteProperty();
-    navigate('/properties');
+    const response = await deleteProperty();
+    if (response && response.ok) {
+      deletionBroadcastChannel.postMessage('refresh');
+      navigate('/properties');
+    }
   };
 
   const sideBarItems = [
