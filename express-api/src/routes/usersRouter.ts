@@ -17,7 +17,6 @@ const {
   getUserById,
   getUserRolesByName,
   getUsers,
-  getUsersSameAgency,
   updateUserById,
   getAllRoles,
   updateUserRolesByName,
@@ -25,18 +24,13 @@ const {
 
 router.route(`/info`).get(catchErrors(getUserInfo));
 router.route(`/self`).get(catchErrors(getSelf));
-// router.route(`/access/requests`).get(getUserAccessRequestLatest);
 router.route(`/access/requests`).post(catchErrors(submitUserAccessRequest));
-// router.route(`/access/requests/:requestId`).get(getUserAccessRequestById);
-// router.route(`/access/requests/:requestId`).put(updateUserAccessRequest);
 router.route(`/agencies/:username`).get(activeUserCheck, catchErrors(getUserAgencies));
 
 router
   .route(`/`)
   .get(activeUserCheck, catchErrors(getUsers))
   .post(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(addUser));
-
-router.route(`/my/agency`).post(activeUserCheck, catchErrors(getUsersSameAgency)); // TODO: Should this just be generic: get users from an agency?
 
 router.route(`/roles`).get(activeUserCheck, catchErrors(getAllRoles));
 

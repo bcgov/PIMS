@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { stubResponse } from '@/utilities/stubResponse';
 import parcelServices from '@/services/parcels/parcelServices';
 import { ParcelFilter, ParcelFilterSchema } from '@/services/parcels/parcelSchema';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
@@ -139,58 +138,4 @@ export const addParcel = async (req: Request, res: Response) => {
   parcel.Fiscals = parcel.Fiscals?.map((fiscal) => ({ ...fiscal, CreatedById: user.Id }));
   const response = await parcelServices.addParcel(parcel);
   return res.status(201).send(response);
-};
-
-/**
- * @description Check whether a PID is available.
- * @param {Request}     req Incoming Request. Query strings should contain parcelId or pid.
- * @param {Response}    res Outgoing Response
- * @returns {Response}      A 200 status with a response body of { available: boolean }.
- */
-export const checkPidAvailable = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['parcels']
-   * #swagger.description = 'Checks whether a PID is available.'
-   * #swagger.security = [{
-   * "bearerAuth": []
-   * }]
-   */
-  return stubResponse(res);
-};
-
-/**
- * @description Check whether a PID is available.
- * @param {Request}     req Incoming Request. Query strings should contain parcelId or pin.
- * @param {Response}    res Outgoing Response
- * @returns {Response}      A 200 status with a response body of { available: boolean }.
- */
-export const checkPinAvailable = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['parcels']
-   * #swagger.description = 'Checks whether a PIN is available.'
-   * #swagger.security = [{
-   * "bearerAuth": []
-   * }]
-   */
-  return stubResponse(res);
-};
-
-/**
- * @description Update the specified parcel financials values in the datasource if permitted.
- * @param {Request}     req Incoming Request. Request body should contain entire parcel.
- * @param {Response}    res Outgoing Response
- * @returns {Response}      A 200 status with a response body of the updated parcel.
- */
-export const updateParcelFinancial = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['parcels']
-   * #swagger.description = 'Updates a parcel's financial values.'
-   * #swagger.security = [{
-   * "bearerAuth": []
-   * }]
-   */
-
-  /* Note: It's not clear to me what this endpoint would accomplish that the updateParcel
-  endpoint would not. */
-  return stubResponse(res);
 };
