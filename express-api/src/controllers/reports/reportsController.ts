@@ -5,6 +5,12 @@ import chesServices, { EmailBody, IEmail } from '@/services/ches/chesServices';
 import nunjucks from 'nunjucks';
 import getConfig from '@/constants/config';
 
+/**
+ * Logs a user-submitted error and sends an email to the specified mailbox.
+ * @param   {Request}     req Incoming request
+ * @param   {Response}    res Outgoing response
+ * @returns                   Response (200) that includes the error information and the CHES response.
+ */
 export const submitErrorReport = async (req: Request, res: Response) => {
   /**
    * #swagger.tags = ['Reports']

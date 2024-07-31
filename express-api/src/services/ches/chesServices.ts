@@ -1,5 +1,4 @@
 import config from '@/constants/config';
-import credentials from '@/constants/credentials';
 import urls from '@/constants/urls';
 import { ChesFilter } from '@/controllers/tools/toolsSchema';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
@@ -17,6 +16,11 @@ interface KeycloakPayload {
   exp: number;
 }
 
+/**
+ * Reads and decodes the header and payload from the provided token response.
+ * @param token - The token response containing an access token.
+ * @returns An object with the decoded header and payload information.
+ */
 const readToken = (token: TokenResponse) => {
   const [header, payload] = token.access_token.split('.');
   const info = {
@@ -26,6 +30,12 @@ const readToken = (token: TokenResponse) => {
   return info;
 };
 
+/**
+ * Retrieves a token asynchronously using the provided username and password.
+ * @param username - The username for authentication.
+ * @param password - The password for authentication.
+ * @returns A Promise that resolves to a TokenResponse object containing an access token.
+ */
 const getTokenAsync = async (username: string, password: string): Promise<TokenResponse> => {
   const creds = btoa(`${username}:${password}`);
   const headers = {
@@ -53,12 +63,24 @@ const generateUrl = (endpoint: string) => {
   return `${urls.CHES.HOST}${endpoint}`;
 };
 
+/**
+ * Asynchronously refreshes the token if it is expired or not available.
+ */
 const refreshTokenAsync = async () => {
   if (!_token?.access_token || new Date(readToken(_token).payload.exp) <= new Date()) {
-    _token = await getTokenAsync(credentials.ches.user, credentials.ches.pass);
+    const cfg = config();
+    _token = await getTokenAsync(cfg.ches.username, cfg.ches.password);
   }
 };
 
+/**
+ * Sends a request to the specified endpoint with the provided method and data.
+ * Automatically refreshes the access token if needed.
+ * @param endpoint The endpoint to send the request to.
+ * @param method The HTTP method to use for the request (e.g., 'GET', 'POST').
+ * @param data The data to be sent with the request (default is null).
+ * @returns A promise that resolves to the response data from the endpoint.
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const sendAsync = async (endpoint: string, method: string, data: Record<string, any> = null) => {
   await refreshTokenAsync();
@@ -83,6 +105,7 @@ const sendAsync = async (endpoint: string, method: string, data: Record<string, 
   }
 };
 
+/* The following enums and interfaces are defined by the CHES service. */
 export enum EmailBody {
   Html = 'html',
   Text = 'text',
@@ -128,6 +151,15 @@ export interface IEmailSentResponse {
   txId: string;
 }
 
+/**
+ * Asynchronously sends an email using the provided email details and user information.
+ * If the email is null, an error with code 400 is thrown.
+ * Handles configurations for email sending, including setting 'from', 'bcc', 'cc', 'delayTS', 'to', based on the organization's settings.
+ * Returns the response of sending the email if email sending is enabled, otherwise returns null.
+ * @param email - The email details to be sent.
+ * @param user - The SSO user information.
+ * @returns A promise that resolves to the response of sending the email or null.
+ */
 const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentResponse | null> => {
   const cfg = config();
   if (email == null) {
@@ -180,6 +212,18 @@ export interface IChesStatusResponse {
   updatedTS: number;
   createdTS: number;
 }
+
+/**
+ * Asynchronously retrieves the status of a message by its ID from the CHES service.
+ * @param messageId - The unique identifier of the message to fetch the status for.
+ * @returns A Promise that resolves to an object containing the status details:
+ *          - status: The status of the message.
+ *          - tag: The tag associated with the message.
+ *          - txId: The transaction ID of the message.
+ *          - updatedTS: The timestamp when the status was last updated.
+ *          - createdTS: The timestamp when the message was created.
+ *          Returns null if an error occurs during the retrieval process.
+ */
 const getStatusByIdAsync = async (messageId: string): Promise<IChesStatusResponse> => {
   try {
     const response: IChesStatusResponse = await sendAsync(`/status/${messageId}`, 'GET');
@@ -193,6 +237,14 @@ const getStatusByIdAsync = async (messageId: string): Promise<IChesStatusRespons
   }
 };
 
+/**
+ * Retrieves statuses asynchronously based on the provided filter.
+ * Throws an error if the filter is null or if any required parameter is missing.
+ * Constructs URL parameters from the filter and sends a GET request to fetch statuses.
+ * @param filter - The filter object containing parameters for status retrieval.
+ * @returns A promise that resolves with the fetched statuses.
+ * @throws {ErrorWithCode} When the filter is null or missing required parameters.
+ */
 const getStatusesAsync = async (filter: ChesFilter) => {
   if (filter == null) throw new ErrorWithCode('Null filter.', 400);
   throwIfMissingParameter(filter);
@@ -200,6 +252,13 @@ const getStatusesAsync = async (filter: ChesFilter) => {
   return sendAsync(`/status?${params.toString()}`, 'GET');
 };
 
+/**
+ * Asynchronously cancels an email message by its ID.
+ * Retrieves the status of the message using the 'getStatusByIdAsync' function.
+ * If the status is 'accepted' or 'pending', sends a cancellation request using 'sendAsync' with a 'DELETE' method.
+ * Updates the status of the message to 'cancelled' if the cancellation is successful.
+ * Returns the updated response object containing the message status.
+ */
 const cancelEmailByIdAsync = async (messageId: string) => {
   const response = await getStatusByIdAsync(messageId);
   if (response.status === 'accepted' || response.status === 'pending') {
@@ -209,6 +268,14 @@ const cancelEmailByIdAsync = async (messageId: string) => {
   return response;
 };
 
+/**
+ * Asynchronously cancels emails based on the provided filter.
+ * Throws an error with code 400 if the filter is null.
+ * Throws an error if at least one parameter is missing in the filter.
+ * Converts the filter into URL parameters and sends a DELETE request to cancel emails.
+ * @param filter - The filter object containing criteria for canceling emails.
+ * @returns A promise that resolves with the result of canceling emails.
+ */
 const cancelEmailsAsync = async (filter: ChesFilter) => {
   if (filter == null) throw new ErrorWithCode('Null filter.', 400);
   throwIfMissingParameter(filter);

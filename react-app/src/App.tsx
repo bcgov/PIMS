@@ -32,6 +32,13 @@ import ParcelMap from '@/components/map/ParcelMap';
 import LookupContextProvider from '@/contexts/lookupContext';
 import BulkUpload from './pages/BulkUpload';
 
+/**
+ * Renders the main router component for the application.
+ * Manages navigation and authentication for different routes.
+ * Includes reusable map display functionality for authorized users.
+ *
+ * @returns JSX element representing the main router component
+ */
 const Router = () => {
   const navigate = useNavigate();
   const auth = useContext(AuthContext);

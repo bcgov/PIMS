@@ -13,6 +13,11 @@ import { AgencyJoinView } from '@/typeorm/Entities/views/AgencyJoinView';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
 
+/**
+ * Collects and constructs find options based on the provided AgencyFilter.
+ * @param filter - The filter object containing criteria for finding agencies.
+ * @returns An array of constructed find options based on the filter criteria.
+ */
 const collectFindOptions = (filter: AgencyFilter) => {
   const options = [];
   if (filter.name) options.push(constructFindOptionFromQuery('Name', filter.name));
@@ -29,6 +34,10 @@ const collectFindOptions = (filter: AgencyFilter) => {
   return options;
 };
 
+/**
+ * Converts entity names to column names.
+ * Needed because the sort key in query builder uses the column name, not the entity name.
+ */
 const sortKeyTranslator: Record<string, string> = {
   Name: 'name',
   Code: 'code',
@@ -41,8 +50,9 @@ const sortKeyTranslator: Record<string, string> = {
 };
 
 /**
- * @description Gets and returns a list of all agencies.
- * @returns { Agency[] } A list of all agencies in the database
+ * @description Gets and returns a list of agencies based on filter criteria.
+ * @param filter - The filter criteria to apply when retrieving agencies.
+ * @returns { Agency[] } A list of agencies in the database
  */
 export const getAgencies = async (filter: AgencyFilter) => {
   const options = collectFindOptions(filter);
@@ -88,8 +98,8 @@ export const getAgencies = async (filter: AgencyFilter) => {
 
 /**
  * @description Creates a new agency in the database.
- * @param Request information on agency to be created.
- * @returns Status and information on the added agency
+ * @param {Agency} agency Information on agency to be created.
+ * @returns {Agency} The added agency
  * @throws ErrorWithCode if agency already exists
  */
 export const addAgency = async (agency: Agency) => {
@@ -105,8 +115,8 @@ export const addAgency = async (agency: Agency) => {
 
 /**
  * @description Finds and returns an agency with a given id.
- * @param Request id.
- * @returns found agency.
+ * @param {number} agencyId Id of the agency to retrieve.
+ * @returns {Agency} The found agency or null.
  */
 export const getAgencyById = async (agencyId: number) => {
   const findAgency = await agencyRepo.findOne({
@@ -117,8 +127,8 @@ export const getAgencyById = async (agencyId: number) => {
 
 /**
  * @description Finds and updates an agency with the given id.
- * @param The id provided in the request.
- * @returns Status and information on updated agency.
+ * @param {Agency} agencyIn An agency object used to update existing agency.
+ * @returns {Agency} Status and information on updated agency.
  */
 export const updateAgencyById = async (agencyIn: Agency) => {
   const { data: agencies } = await getAgencies({});
@@ -149,8 +159,8 @@ export const updateAgencyById = async (agencyIn: Agency) => {
 
 /**
  * @description Finds and removes an agency with the given id.
- * @param the id provided in the request.
- * @returns Status with conformation on the removal.
+ * @param {number} agencyId ID of agency to delete.
+ * @returns {DeleteResult} The result of the delete action.
  */
 export const deleteAgencyById = async (agencyId: number) => {
   const findAgency = await getAgencyById(agencyId);
