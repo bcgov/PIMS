@@ -8,6 +8,8 @@ import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
 import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
 import logger from '@/utilities/winstonLogger';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import { isAdmin } from '@/utilities/authorizationChecks';
 
 const buildingRepo = AppDataSource.getRepository(Building);
 
@@ -59,10 +61,13 @@ export const getBuildingById = async (buildingId: number) => {
  * @param       buildingId  - Number representing building we want to update.
  * @returns     findBuilding - Building data matching Id passed in.
  */
-export const updateBuildingById = async (building: DeepPartial<Building>) => {
+export const updateBuildingById = async (building: DeepPartial<Building>, ssoUser: SSOUser) => {
   const existingBuilding = await getBuildingById(building.Id);
   if (!existingBuilding) {
     throw new ErrorWithCode('Building does not exists.', 404);
+  }
+  if (building.AgencyId && building.AgencyId !== existingBuilding.AgencyId && !isAdmin(ssoUser)) {
+    throw new ErrorWithCode('Changing agency is not permitted.', 403);
   }
   if (building.Fiscals && building.Fiscals.length) {
     building.Fiscals = await Promise.all(

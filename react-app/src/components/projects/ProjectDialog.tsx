@@ -29,6 +29,9 @@ import ProjectNotificationsTable, {
 } from './ProjectNotificationsTable';
 import { getStatusString } from '@/constants/chesNotificationStatus';
 import { MonetaryType } from '@/constants/monetaryTypes';
+import AutocompleteFormField from '../form/AutocompleteFormField';
+import { AuthContext } from '@/contexts/authContext';
+import { Roles } from '@/constants/roles';
 import BaseDialog from '../dialog/BaseDialog';
 
 interface IProjectGeneralInfoDialog {
@@ -42,11 +45,12 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   const { open, postSubmit, onCancel, initialValues } = props;
   const api = usePimsApi();
   const { data: lookupData } = useContext(LookupContext);
-
+  const { keycloak } = useContext(AuthContext);
   const { submit, submitting } = useDataSubmitter(api.projects.updateProject);
   const [approvedStatus, setApprovedStatus] = useState<number>(null);
   const projectFormMethods = useForm({
     defaultValues: {
+      AgencyId: undefined,
       StatusId: undefined,
       ProjectNumber: '',
       Name: '',
@@ -62,6 +66,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
 
   useEffect(() => {
     projectFormMethods.reset({
+      AgencyId: initialValues?.AgencyId,
       StatusId: initialValues?.StatusId,
       ProjectNumber: initialValues?.ProjectNumber,
       Name: initialValues?.Name,
@@ -163,7 +168,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   const status = projectFormMethods.watch('StatusId');
   const requireNotificationAcknowledge =
     approvedStatus == status && status !== initialValues?.StatusId;
-
+  const isAdmin = keycloak.hasRoles([Roles.ADMIN]);
   return (
     <ConfirmDialog
       title={'Update Project'}
@@ -192,6 +197,14 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
             label: st.Name,
           }))}
         />
+        {isAdmin && (
+          <AutocompleteFormField
+            sx={{ mt: '1rem' }}
+            name={'AgencyId'}
+            label={'Agency'}
+            options={lookupData?.Agencies.map((agc) => ({ value: agc.Id, label: agc.Name })) ?? []}
+          />
+        )}
         {initialValues && statusTypes.Tasks?.length > 0 && (
           <Box mt={'1rem'}>
             <Typography variant="h5">Confirm Tasks</Typography>
