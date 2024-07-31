@@ -211,6 +211,7 @@ export interface IChesStatusResponse {
   txId: string;
   updatedTS: number;
   createdTS: number;
+  msgId: string;
 }
 
 /**
