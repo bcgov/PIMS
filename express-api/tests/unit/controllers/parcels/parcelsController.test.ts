@@ -46,6 +46,7 @@ describe('UNIT - Parcels', () => {
     it('should return 200 with a correct response body', async () => {
       mockRequest.params.parcelId = '1';
       _hasAgencies.mockImplementationOnce(() => true);
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
       await controllers.getParcel(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
@@ -72,7 +73,7 @@ describe('UNIT - Parcels', () => {
     });
     it('should return with status 403 when user doenst have permission to view parcel', async () => {
       mockRequest.params.parcelId = '1';
-      mockRequest.setUser({ client_roles: [Roles.GENERAL_USER] });
+      mockRequest.setUser({ client_roles: [Roles.GENERAL_USER], hasRoles: () => false });
       _hasAgencies.mockImplementationOnce(() => false);
       await controllers.getParcel(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(403);

@@ -73,8 +73,7 @@ export const checkUserAgencyPermission = async (
   if (!agencyIds || agencyIds.length === 0 || !agencyIds.at(0)) {
     return false;
   }
-  const userRolePermission = kcUser?.hasRoles(permittedRoles, {requireAllRoles: false});
-  console.log("in checkuseragencypermission: ", userRolePermission)
+  const userRolePermission = kcUser?.hasRoles(permittedRoles, { requireAllRoles: false });
   // if the user is not an admin, nor has a permitted role scope results
   if (!isAdmin(kcUser) && !userRolePermission) {
     // check if current user belongs to any of the specified agencies
