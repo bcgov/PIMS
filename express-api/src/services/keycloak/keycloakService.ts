@@ -164,14 +164,13 @@ const updateKeycloakRole = async (roleName: string, newRoleName: string) => {
   return role;
 };
 
+/**
+ * @description Sync the given username string wtih keycloak
+ * @param   {string}   username String username to sync
+ * @returns A promise that resolves to the user object with associated Agency and Role.
+ * @throws  {ErrorWithCode} If the username was not found.
+ */
 const syncKeycloakUser = async (username: string) => {
-  // Does user exist in Keycloak?
-  // Get their existing roles.
-  // Does user exist in PIMS
-  // If user exists in PIMS...
-  // Update the roles in PIMS to match their Keycloak roles
-  // If they don't exist in PIMS...
-  // Add user and assign their roles
   const users = await userServices.getUsers({ username: username });
   if (users?.length !== 1) {
     throw new ErrorWithCode('User was missing during keycloak role sync.', 500);

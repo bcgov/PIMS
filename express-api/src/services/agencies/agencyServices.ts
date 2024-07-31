@@ -116,7 +116,7 @@ export const addAgency = async (agency: Agency) => {
 /**
  * @description Finds and returns an agency with a given id.
  * @param {number} agencyId Id of the agency to retrieve.
- * @returns {Agency} The found agency or null..
+ * @returns {Agency} The found agency or null.
  */
 export const getAgencyById = async (agencyId: number) => {
   const findAgency = await agencyRepo.findOne({
