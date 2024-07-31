@@ -375,7 +375,7 @@ describe('UNIT - Project Services', () => {
     });
 
     it('should throw an error if the parcel belongs to another project', async () => {
-      const existingProject = produceProject({ StatusId: ProjectStatus.IN_ERP });
+      const existingProject = produceProject({ StatusId: ProjectStatus.APPROVED_FOR_ERP });
       const project = produceProject({ Id: existingProject.Id + 1 });
       const keycloak = produceSSO();
       _projectPropertiesManagerFind.mockImplementationOnce(async () => {
@@ -402,7 +402,7 @@ describe('UNIT - Project Services', () => {
     });
 
     it('should throw an error if the building belongs to another project', async () => {
-      const existingProject = produceProject({ StatusId: ProjectStatus.IN_ERP });
+      const existingProject = produceProject({ StatusId: ProjectStatus.APPROVED_FOR_ERP });
       const project = produceProject({ Id: existingProject.Id + 1 });
       const keycloak = produceSSO();
       _projectPropertiesManagerFindOne.mockImplementationOnce(async () => null);

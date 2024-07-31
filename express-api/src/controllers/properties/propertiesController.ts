@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import { Request, Response } from 'express';
-import { stubResponse } from '@/utilities/stubResponse';
 import propertyServices from '@/services/properties/propertiesServices';
 import {
   ImportResultFilterSchema,
@@ -17,24 +16,6 @@ import { AppDataSource } from '@/appDataSource';
 import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import { readFile } from 'xlsx';
 import logger from '@/utilities/winstonLogger';
-
-/**
- * @description Used to retrieve all properties.
- * @param   {Request}     req Incoming request
- * @param   {Response}    res Outgoing response
- * @returns {Response}        A 200 status with a list of properties.
- */
-export const getProperties = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Properties']
-   * #swagger.description = 'Returns a list of all properties.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
-  return stubResponse(res);
-};
 
 /**
  * @description Search for a single keyword across multiple different fields in both parcels and buildings.
@@ -59,63 +40,6 @@ export const getPropertiesFuzzySearch = async (req: Request, res: Response) => {
   }
   const result = await propertyServices.propertiesFuzzySearch(keyword, take, userAgencies);
   return res.status(200).send(result);
-};
-
-/**
- * @description Used to retrieve all properties that match the incoming filter.
- * @param   {Request}     req Incoming request
- * @param   {Response}    res Outgoing response
- * @returns {Response}        A 200 status with a list of properties.
- */
-export const getPropertiesFilter = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Properties']
-   * #swagger.description = 'Returns a list of properties that match the incoming filter.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
-};
-
-/**
- * @description Used to a paged list of all properties.
- * @param   {Request}     req Incoming request
- * @param   {Response}    res Outgoing response
- * @returns {Response}        A 200 status with a paged list of properties.
- */
-export const getPropertiesPaged = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Properties']
-   * #swagger.description = 'Returns a paged list of all properties.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
-};
-
-/**
- * @description Used to a paged list of properties that match the incoming filter.
- * @param   {Request}     req Incoming request
- * @param   {Response}    res Outgoing response
- * @returns {Response}        A 200 status with a paged list of properties.
- */
-export const getPropertiesPagedFilter = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Properties']
-   * #swagger.description = 'Returns a paged list of properties that match the incoming filter.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
 };
 
 /**
@@ -184,6 +108,13 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
   return res.status(200).send(mapFeatures);
 };
 
+/**
+ * Receives request to upload file containing property information.
+ * Starts a Node worker to handle property import and updates the ImportResult table.
+ * @param   {Request}     req Incoming request
+ * @param   {Response}    res Outgoing response
+ * @returns {Response}        HTTP response indicating successful (200) or failed submission.
+ */
 export const importProperties = async (req: Request, res: Response) => {
   const filePath = req.file.path;
   const fileName = req.file.originalname;
@@ -239,6 +170,12 @@ export const importProperties = async (req: Request, res: Response) => {
   return res.status(200).send(resultRow);
 };
 
+/**
+ * Retrieves the results of a user's bulk import.
+ * @param   {Request}     req Incoming request
+ * @param   {Response}    res Outgoing response
+ * @returns                   Response with ImportFilterResult.
+ */
 export const getImportResults = async (req: Request, res: Response) => {
   const kcUser = req.user as SSOUser;
   const filter = ImportResultFilterSchema.safeParse(req.query);
@@ -249,6 +186,13 @@ export const getImportResults = async (req: Request, res: Response) => {
   return res.status(200).send(results);
 };
 
+/**
+ * Retrieves a combination of parcels and buildings.
+ * Useful for lists or queries that require searching both.
+ * @param   {Request}     req Incoming request
+ * @param   {Response}    res Outgoing response
+ * @returns                   Response with a list of properties.
+ */
 export const getPropertyUnion = async (req: Request, res: Response) => {
   const forExcelExport = req.query.excelExport === 'true';
   const filter = PropertyUnionFilterSchema.safeParse(req.query);

@@ -17,7 +17,5 @@ router
   .route('/')
   .get(activeUserCheck, catchErrors(getBuildings))
   .post(activeUserCheck, catchErrors(addBuilding));
-// router.route(`${BUILDINGS_ROUTE}/filter`).post(catchErrors(filterBuildingsRequestBody));
-// router.route(`${BUILDINGS_ROUTE}/:buildingId/financials`).put(catchErrors(updateBuildingFinancial));
 
 export default router;

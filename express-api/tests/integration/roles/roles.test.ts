@@ -2,12 +2,11 @@ import supertest from 'supertest';
 import { faker } from '@faker-js/faker';
 import app from '@/express';
 import { UUID } from 'crypto';
-import { IRole } from '@/controllers/roles/IRole';
 
 const request = supertest(app);
 
 const ROLES_PATH = '/v2/roles';
-const mockRole: IRole = {
+const mockRole = {
   createdOn: faker.date.anytime().toLocaleString(),
   updatedOn: faker.date.anytime().toLocaleString(),
   updatedById: faker.string.uuid() as UUID,

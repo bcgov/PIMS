@@ -1,6 +1,5 @@
 import { AppDataSource } from '@/appDataSource';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
-import { stubResponse } from '@/utilities/stubResponse';
 import { Request, Response } from 'express';
 import {
   BuildingConstructionPublicResponseSchema,
@@ -27,46 +26,6 @@ import { Role } from '@/typeorm/Entities/Role';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 import { Workflow } from '@/typeorm/Entities/Workflow';
-
-// TODO: What controllers here could just be replaced by existing GET requests?
-
-/**
- * @description Get all agency entries.
- * @param {Request}     req Incoming request
- * @param {Response}    res Outgoing response
- * @returns {Response}      A 200 status and a list of agencies.
- */
-export const lookupAgencies = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Lookup']
-   * #swagger.description = 'Get all agency entries.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
-};
-
-/**
- * @description Get all role entries.
- * @param {Request}     req Incoming request
- * @param {Response}    res Outgoing response
- * @returns {Response}      A 200 status and a list of roles.
- */
-export const lookupRoles = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Lookup']
-   * #swagger.description = 'Get all role entries.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
-};
 
 /**
  * @description Get all property classification entries.
@@ -229,6 +188,12 @@ export const lookupNoteTypes = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Retrieves all monetary types from the database. Optionally filter by status.
+ * @param req - Request object.
+ * @param res - Response object.
+ * @returns A response with monetary types and status code 200.
+ */
 export const lookupMonetaryTypes = async (req: Request, res: Response) => {
   const statusId = req.query.statusId ? parseInt(req.query.statusId.toString()) : undefined;
   const types = (
@@ -242,6 +207,12 @@ export const lookupMonetaryTypes = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Retrieves all timestamp types from the database. Optionally filter by status.
+ * @param req - Request object.
+ * @param res - Response object.
+ * @returns A response with timestamp types and status code 200.
+ */
 export const lookupTimestampTypes = async (req: Request, res: Response) => {
   const statusId = req.query.statusId ? parseInt(req.query.statusId.toString()) : undefined;
   const types = (
@@ -253,25 +224,6 @@ export const lookupTimestampTypes = async (req: Request, res: Response) => {
   } else {
     return res.status(400).send(parsed);
   }
-};
-
-/**
- * @description Get all project risk entries.
- * @param {Request}     req Incoming request
- * @param {Response}    res Outgoing response
- * @returns {Response}      A 200 status and a list of project risks.
- */
-export const lookupProjectRisks = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Lookup']
-   * #swagger.description = 'Get all project risk entries.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
 };
 
 /**

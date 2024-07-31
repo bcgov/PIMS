@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { stubResponse } from '../../utilities/stubResponse';
 import { Request, Response } from 'express';
 import chesServices from '@/services/ches/chesServices';
 import { ChesFilterSchema } from './toolsSchema';
@@ -144,72 +143,4 @@ export const searchGeocoderSiteId = async (req: Request, res: Response) => {
   const siteId = String(req.params.siteId);
   const result = await geocoderService.getPids(siteId);
   return res.status(200).send(result);
-};
-
-/**
- * @description Bulk upload property data, updates lookup data as a side effect.
- * @param {Request}     req Incoming request.
- * @param {Response}    res Outgoing response.
- * @returns {Response}      A 200 status with an array of the uploaded objects.
- */
-export const bulkImportProperties = async (req: Request, res: Response) => {
-  /**
-     * #swagger.tags = ['Tools']
-     * #swagger.description = 'Add an array of new properties to the datasource. Determines if the property is a parcel or a building and then adds or updates appropriately. This will also add new lookup items to the following; cities, agencies, building construction types, building predominate uses.'
-     * #swagger.security = [{
-        "bearerAuth" : []
-        }]
-     */
-  return stubResponse(res);
-};
-
-/**
- * @description Bulk upload property data, updates lookup data as a side effect.
- * @param {Request}     req Incoming request.
- * @param {Response}    res Outgoing response.
- * @returns {Response}      A 200 status with an array of the uploaded objects.
- */
-export const bulkDeleteProperties = async (req: Request, res: Response) => {
-  /**
-     * #swagger.tags = ['Tools']
-     * #swagger.description = 'Add an array of new properties to the datasource. Determines if the property is a parcel or a building and then adds or updates appropriately. This will also add new lookup items to the following; cities, agencies, building construction types, building predominate uses.'
-     * #swagger.security = [{
-        "bearerAuth" : []
-        }]
-     */
-  return stubResponse(res);
-};
-
-/**
- * @description Bulk upload property financial information only.
- * @param {Request}     req Incoming request.
- * @param {Response}    res Outgoing response.
- * @returns {Response}      A 200 status with an array of the uploaded objects.
- */
-export const bulkUpdatePropertyFinancials = async (req: Request, res: Response) => {
-  /**
-     * #swagger.tags = ['Tools']
-     * #swagger.description = 'Update property financial values in the datasource. If the property does not exist it will not be imported. The financial values provided will overwrite existing data in the datasource.'
-     * #swagger.security = [{
-        "bearerAuth" : []
-        }]
-     */
-  return stubResponse(res);
-};
-
-/**
- * @description Bulk upload projects, updates lookup values as a side effect.
- * @param {Request}     req Incoming request.
- * @param {Response}    res Outgoing response.
- * @returns {Response}      A 200 status with an array of the uploaded objects.
- */
-export const bulkImportProjects = async (req: Request, res: Response) => {
-  /**
-     * #swagger.tags = ['Tools']
-     * #swagger.description = 'Add an array of new properties to the datasource. Determines if the property is a parcel or a building and then adds or updates appropriately. This will also add new lookup items to the following; cities, agencies, building construction types, building predominate uses.'
-     * #swagger.security = [{
-        "bearerAuth" : []
-        }]
-     */
-  return stubResponse(res);
 };
