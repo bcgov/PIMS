@@ -4,6 +4,7 @@ import { ParcelFilter, ParcelFilterSchema } from '@/services/parcels/parcelSchem
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import userServices from '@/services/users/usersServices';
 import { Parcel } from '@/typeorm/Entities/Parcel';
+import { Roles } from '@/constants/roles';
 import { checkUserAgencyPermission, isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 
 /**
@@ -25,11 +26,13 @@ export const getParcel = async (req: Request, res: Response) => {
     return res.status(400).send('Parcel ID was invalid.');
   }
 
+  // admin and auditors are permitted to see any parcel
+  const permittedRoles = [Roles.ADMIN, Roles.AUDITOR]
   const kcUser = req.user as unknown as SSOUser;
   const parcel = await parcelServices.getParcelById(parcelId);
   if (!parcel) {
     return res.status(404).send('Parcel matching this internal ID not found.');
-  } else if (!(await checkUserAgencyPermission(kcUser, [parcel.AgencyId]))) {
+  } else if (!(await checkUserAgencyPermission(kcUser, [parcel.AgencyId], permittedRoles))) {
     return res.status(403).send('You are not authorized to view this parcel.');
   }
   return res.status(200).send(parcel);
