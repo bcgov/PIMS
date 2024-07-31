@@ -15,7 +15,7 @@ router.route(`/`).get(catchErrors(getRoles)).post(activeUserCheck, catchErrors(a
 router
   .route(`/:id`)
   .get(catchErrors(getRoleById))
-  .put(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(updateRoleById)) // TODO: should put be a patch?
+  .put(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(updateRoleById))
   .delete(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(deleteRoleById));
 
 export default router;

@@ -1,5 +1,7 @@
 const config = {
   ches: {
+    username: process.env.CHES_USERNAME,
+    password: process.env.CHES_PASSWORD,
     usersToBcc: process.env.CHES_ALWAYS_BCC, // Semi-colon separated list of emails to include in the BCC
     defaultFrom: process.env.CHES_DEFAULT_FROM, // Default to this for the from field if email does not supply it.
     overrideTo: process.env.CHES_OVERRIDE_TO, // Override the to field to this every time, useful for testing.
