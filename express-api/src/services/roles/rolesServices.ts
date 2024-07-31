@@ -5,7 +5,6 @@ import { Role } from '@/typeorm/Entities/Role';
 import { UUID } from 'crypto';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
-
 /**
  * Collects and constructs find options based on the provided RolesFilter.
  * @param filter - The filter object containing criteria for finding roles.
