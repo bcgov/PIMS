@@ -4,6 +4,7 @@ import React, {
   PropsWithChildren,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -74,6 +75,15 @@ const ParcelMap = (props: ParcelMapProps) => {
   // Get properties for map.
   const { data, refreshData, isLoading } = useDataLoader(() =>
     api.properties.propertiesGeoSearch(filter),
+  );
+
+  const deletionBroadcastChannel = useMemo(() => new BroadcastChannel('property'), []);
+  useEffect(() =>
+    deletionBroadcastChannel.addEventListener('message', (event) => {
+      if (typeof event.data === 'string' && event.data === 'refresh') {
+        refreshData();
+      }
+    }),
   );
 
   // Controls ClusterPopup contents
