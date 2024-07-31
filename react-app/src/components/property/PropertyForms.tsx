@@ -239,6 +239,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             name={'AdministrativeAreaId'}
             label={'Administrative area'}
             options={adminAreas ?? []}
+            noOptionsText={'No matches. Request an administrative area at pimshelp@gov.bc.ca'}
           />
         </Grid>
         <Grid item xs={6}>
