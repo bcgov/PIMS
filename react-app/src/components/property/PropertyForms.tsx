@@ -176,12 +176,13 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             }}
           />
         </Grid>
-        <Grid item xs={12}>
-          <Typography variant={'caption'}>
-            {propertyType === 'Parcel' &&
-              'Please note that either a PID or PIN is required for a Parcel entry'}
-          </Typography>
-        </Grid>
+        {propertyType === 'Parcel' && (
+          <Grid item xs={12}>
+            <Typography variant={'caption'}>
+              Please note that either a PID or PIN is required for a Parcel entry
+            </Typography>
+          </Grid>
+        )}
         <Grid item xs={6}>
           <TextFormField
             fullWidth
@@ -247,6 +248,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             label={'Postal code'}
             rules={{
               validate: (val) =>
+                val === null ||
                 val.length === 0 ||
                 !!String(val).replace(/ /g, '').match(postalRegex) ||
                 'Should be a valid postal code or left blank.',
@@ -450,6 +452,7 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
                     for old data that was a mix of text and numbers. Using numeric prop stops any 
                     edit of text values, even removal.
                  */
+                if (value == '') return true;
                 if (!/^(0|[1-9]\d*)?(\.\d+)?(?<=\d)$/.test(value)) {
                   return 'This value is a percentage and must be a number greater than or equal to 0.';
                 }

@@ -83,7 +83,7 @@ export const updateBuilding = async (req: Request, res: Response) => {
   }
   const user = await userServices.getUser((req.user as SSOUser).preferred_username);
   const updateBody = { ...req.body, UpdatedById: user.Id };
-  const building = await buildingService.updateBuildingById(updateBody);
+  const building = await buildingService.updateBuildingById(updateBody, req.user);
   return res.status(200).send(building);
 };
 
