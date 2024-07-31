@@ -26,8 +26,4 @@ router
   .route(`/geocoder/parcels/pids/:siteId`)
   .get(activeUserCheck, catchErrors(searchGeocoderSiteId));
 
-//This is originally implemented as POST, but that doesn't really make sense since the documentation
-//implies that the resource must already exist for this one to work. So it's really more of a partial update.
-router.route(`/import/properties/financials`);
-
 export default router;

@@ -22,21 +22,10 @@ router
   .get(activeUserCheck, catchErrors(getDisposalProject))
   .put(activeUserCheck, catchErrors(updateDisposalProject))
   .delete(activeUserCheck, catchErrors(deleteDisposalProject));
+
 router.route(`${PROJECT_DISPOSAL}`).post(activeUserCheck, catchErrors(addDisposalProject));
-
-//This originally had like 3 different routes that all seem to do the same thing so let's just consolidate that to one.
-router.route(`${PROJECT_DISPOSAL}/workflows`);
-
-router.route(`${PROJECT_REPORTS}/:reportId`);
-
-router.route(`${PROJECT_REPORTS}/snapshots/:reportId`);
-
-router.route(`${PROJECT_REPORTS}/refresh/:reportId`);
 
 //Omitting search endpoints.
 router.route('/').get(activeUserCheck, catchErrors(getProjects));
-router.route(`/projects/status/:statusCode/tasks`);
-router.route(`/projects/workflows/:workflowCode/status`);
-router.route(`/projects/workflows/:workflowCode/tasks`);
 
 export default router;

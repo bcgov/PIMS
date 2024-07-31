@@ -16,8 +16,6 @@ const {
   getImportResults,
 } = controllers;
 
-// TODO: Could these just be GET requests with query params? Then no need for /filter routes. Would cut controllers in half too.
-
 router.route('/search/fuzzy').get(activeUserCheck, catchErrors(getPropertiesFuzzySearch));
 
 router.route('/search/geo').get(activeUserCheck, catchErrors(getPropertiesForMap)); // Formerly wfs route
