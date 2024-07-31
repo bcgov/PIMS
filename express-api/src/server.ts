@@ -36,7 +36,7 @@ const startApp = (app: Application) => {
 };
 
 // Start the server here.
-// Set up in a why that the server could be restarted (reassigned) if needed.
+// Set up in a way that the server could be restarted (reassigned) if needed.
 let server: Server<typeof IncomingMessage, typeof ServerResponse>;
 (async () => {
   server = await startApp(app);

@@ -9,6 +9,7 @@ import { NextFunction, RequestHandler, Response } from 'express';
  * If the user lacks that status, isn't found,
  * or is missing a token, a rejected response is sent.
  * Successful checks result in the request passed on.
+ * Also checks that user has a role parsed from their token.
  */
 const activeUserCheck: unknown = async (
   req: Request & { user: SSOUser },
