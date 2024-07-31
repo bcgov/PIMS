@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import { Request, Response } from 'express';
-import { stubResponse } from '@/utilities/stubResponse';
 import propertyServices from '@/services/properties/propertiesServices';
 import {
   ImportResultFilterSchema,
@@ -17,24 +16,6 @@ import { AppDataSource } from '@/appDataSource';
 import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import { readFile } from 'xlsx';
 import logger from '@/utilities/winstonLogger';
-
-/**
- * @description Used to retrieve all properties.
- * @param   {Request}     req Incoming request
- * @param   {Response}    res Outgoing response
- * @returns {Response}        A 200 status with a list of properties.
- */
-export const getProperties = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Properties']
-   * #swagger.description = 'Returns a list of all properties.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
-  return stubResponse(res);
-};
 
 /**
  * @description Search for a single keyword across multiple different fields in both parcels and buildings.
@@ -59,63 +40,6 @@ export const getPropertiesFuzzySearch = async (req: Request, res: Response) => {
   }
   const result = await propertyServices.propertiesFuzzySearch(keyword, take, userAgencies);
   return res.status(200).send(result);
-};
-
-/**
- * @description Used to retrieve all properties that match the incoming filter.
- * @param   {Request}     req Incoming request
- * @param   {Response}    res Outgoing response
- * @returns {Response}        A 200 status with a list of properties.
- */
-export const getPropertiesFilter = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Properties']
-   * #swagger.description = 'Returns a list of properties that match the incoming filter.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
-};
-
-/**
- * @description Used to a paged list of all properties.
- * @param   {Request}     req Incoming request
- * @param   {Response}    res Outgoing response
- * @returns {Response}        A 200 status with a paged list of properties.
- */
-export const getPropertiesPaged = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Properties']
-   * #swagger.description = 'Returns a paged list of all properties.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
-};
-
-/**
- * @description Used to a paged list of properties that match the incoming filter.
- * @param   {Request}     req Incoming request
- * @param   {Response}    res Outgoing response
- * @returns {Response}        A 200 status with a paged list of properties.
- */
-export const getPropertiesPagedFilter = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Properties']
-   * #swagger.description = 'Returns a paged list of properties that match the incoming filter.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
 };
 
 /**

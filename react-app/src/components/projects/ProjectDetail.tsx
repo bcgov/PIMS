@@ -49,6 +49,7 @@ import { columnNameFormatter, dateFormatter, formatMoney } from '@/utilities/for
 import { LookupContext } from '@/contexts/lookupContext';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { getStatusString } from '@/constants/chesNotificationStatus';
+import { NoteTypes } from '@/constants/noteTypes';
 
 interface IProjectDetail {
   onClose: () => void;
@@ -189,6 +190,7 @@ const ProjectDetail = (props: IProjectDetail) => {
     Name: data?.parsedBody.Name,
     AssignTier: getLookupValueById('ProjectTiers', data?.parsedBody.TierLevelId),
     Description: data?.parsedBody.Description,
+    Agency: getLookupValueById('Agencies', data?.parsedBody.AgencyId),
   };
 
   const FinancialInformationData = useMemo(() => {
@@ -214,9 +216,24 @@ const ProjectDetail = (props: IProjectDetail) => {
         return <Typography>{(val as ProjectStatus)?.Name}</Typography>;
       case 'AssignTier':
         return <Typography>{(val as TierLevel)?.Name}</Typography>;
+      case 'Agency':
+        return <Typography>{(val as Agency)?.Name}</Typography>;
       default:
         return <Typography>{val}</Typography>;
     }
+  };
+
+  const showNotes = (note) => {
+    // noteId 2 are SRES only notes
+    if (note.NoteTypeId == NoteTypes.PRIVATE && !(isAdmin || isAuditor)) {
+      return null;
+    }
+    return (
+      <Box key={`${note.NoteTypeId}-note`}>
+        <Typography variant="h5">{note.Name}</Typography>
+        <Typography>{note.Note}</Typography>
+      </Box>
+    );
   };
 
   useEffect(() => {
@@ -391,12 +408,7 @@ const ProjectDetail = (props: IProjectDetail) => {
                             />
                           </FormGroup>
                         ))}
-                        {value.Notes.map((note) => (
-                          <Box key={`${note.NoteTypeId}-note`}>
-                            <Typography variant="h5">{note.Name}</Typography>
-                            <Typography>{note.Note}</Typography>
-                          </Box>
-                        ))}
+                        {value.Notes.map((note) => showNotes(note))}
                         {value.Timestamps.map((ts) => (
                           <Box key={`${ts.TimestampTypeId}-timestamp`}>
                             <Typography variant="h5">{columnNameFormatter(ts.Name)}</Typography>

@@ -8,6 +8,8 @@ import { ParcelFiscal } from '@/typeorm/Entities/ParcelFiscal';
 import userServices from '../users/usersServices';
 import logger from '@/utilities/winstonLogger';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
+import { isAdmin } from '@/utilities/authorizationChecks';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 
 const parcelRepo = AppDataSource.getRepository(Parcel);
 
@@ -153,13 +155,20 @@ const getParcels = async (filter: ParcelFilter, includeRelations: boolean = fals
  * @returns updated parcel information and status
  * @throws Error with code if parcel is not found or if an unexpected error is hit on update
  */
-const updateParcel = async (incomingParcel: DeepPartial<Parcel>) => {
+const updateParcel = async (incomingParcel: DeepPartial<Parcel>, ssoUser: SSOUser) => {
   if (incomingParcel.PID == null && incomingParcel.PIN == null) {
     throw new ErrorWithCode('Must include PID or PIN in parcel data.', 400);
   }
   const findParcel = await getParcelById(incomingParcel.Id);
   if (findParcel == null || findParcel.Id !== incomingParcel.Id) {
     throw new ErrorWithCode('Parcel not found', 404);
+  }
+  if (
+    incomingParcel.AgencyId &&
+    incomingParcel.AgencyId !== findParcel.AgencyId &&
+    !isAdmin(ssoUser)
+  ) {
+    throw new ErrorWithCode('Changing agency is not permitted.', 403);
   }
   if (incomingParcel.Fiscals && incomingParcel.Fiscals.length) {
     incomingParcel.Fiscals = await Promise.all(
