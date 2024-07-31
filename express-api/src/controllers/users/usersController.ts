@@ -2,7 +2,6 @@ import userServices from '@/services/users/usersServices';
 import { Request, Response } from 'express';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { decodeJWT } from '@/utilities/decodeJWT';
-import { stubResponse } from '@/utilities/stubResponse';
 import { UserFiltering, UserFilteringSchema } from '@/controllers/users/usersSchema';
 import { z } from 'zod';
 import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
@@ -68,32 +67,6 @@ export const getUserInfo = async (req: Request, res: Response) => {
 };
 
 /**
- * @description Get the most recent access request for this user.
- * @param {Request}     req Incoming request.
- * @param {Response}    res Outgoing response.
- * @returns {Response}      A 200 status with the most recent access request.
- */
-// export const getUserAccessRequestLatest = async (req: Request, res: Response) => {
-//   /**
-//    * #swagger.tags = ['Users']
-//    * #swagger.description = 'Get user's most recent access request.'
-//    * #swagger.security = [{
-//       "bearerAuth" : []
-//       }]
-//    */
-//   const user = req?.user as KeycloakUser;
-//   try {
-//     const result = await userServices.getAccessRequest(user);
-//     if (!result) {
-//       return res.status(204).send('No access request was found.');
-//     }
-//     return res.status(200).send(result);
-//   } catch (e) {
-//     return res.status(e?.code ?? 400).send(e?.message);
-//   }
-// };
-
-/**
  * @description Submits a user access request.
  * @param {Request}     req Incoming request.
  * @param {Response}    res Outgoing response.
@@ -132,56 +105,6 @@ export const submitUserAccessRequest = async (req: Request, res: Response) => {
 
   return res.status(201).send(result);
 };
-
-/**
- * @description Gets a user access request by ID.
- * @param {Request}     req Incoming request.
- * @param {Response}    res Outgoing response.
- * @returns {Response}      A 200 status with the user access request matching the Id.
- */
-// export const getUserAccessRequestById = async (req: Request, res: Response) => {
-//   /**
-//    * #swagger.tags = ['Users']
-//    * #swagger.description = 'Get a user access request by ID.'
-//    * #swagger.security = [{
-//       "bearerAuth" : []
-//       }]
-//    */
-//   const user = req?.user as KeycloakUser;
-//   const requestId = Number(req.params?.reqeustId);
-//   try {
-//     const result = await userServices.getAccessRequestById(requestId, user);
-//     if (!result) {
-//       return res.status(404);
-//     }
-//     return res.status(200).send(result);
-//   } catch (e) {
-//     return res.status(e?.code ?? 400).send(e?.message);
-//   }
-// };
-
-/**
- * @description Updates a user access request.
- * @param {Request}     req Incoming request.
- * @param {Response}    res Outgoing response.
- * @returns {Response}      A 200 status with the updated request.
- */
-// export const updateUserAccessRequest = async (req: Request, res: Response) => {
-//   /**
-//    * #swagger.tags = ['Users']
-//    * #swagger.description = 'Update a user access request.'
-//    * #swagger.security = [{
-//       "bearerAuth" : []
-//       }]
-//    */
-//   const user = req?.user as KeycloakUser;
-//   try {
-//     const result = await userServices.updateAccessRequest(req.body, user);
-//     return res.status(200).send(result);
-//   } catch (e) {
-//     return res.status(e?.code ?? 400).send(e?.message);
-//   }
-// };
 
 /**
  * @description Gets user agency information.
@@ -351,25 +274,6 @@ export const deleteUserById = async (req: Request, res: Response) => {
 };
 
 /**
- * @description Gets a paged list of users within the user's agency.
- * @param   {Request}     req Incoming request
- * @param   {Response}    res Outgoing response
- * @returns {Response}        A 200 status with a list of users.
- */
-export const getUsersSameAgency = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Users - Admin']
-   * #swagger.description = 'Gets a paged list of users within the user's agency.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
-};
-
-/**
  * @description Gets all roles of a user based on their name.
  * @param   {Request}     req Incoming request
  * @param   {Response}    res Outgoing response
@@ -420,44 +324,4 @@ export const updateUserRolesByName = async (req: Request, res: Response) => {
   }
   const updatedRoles = await userServices.updateKeycloakUserRoles(username, roles.data);
   return res.status(200).send(updatedRoles);
-};
-
-// Leaving these two below here for now but I think that we can just consolidate them into the above function instead.
-
-/**
- * @description Adds a role to a user based on their name.
- * @param   {Request}     req Incoming request
- * @param   {Response}    res Outgoing response
- * @returns {Response}        A 200 status with the user's updated information.
- */
-export const addUserRoleByName = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Users - Admin']
-   * #swagger.description = 'Adds a role to a user based on their name.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
-};
-
-/**
- * @description Deletes a role from a user based on their name.
- * @param   {Request}     req Incoming request
- * @param   {Response}    res Outgoing response
- * @returns {Response}        A 200 status with the user's updated information.
- */
-export const deleteUserRoleByName = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Users - Admin']
-   * #swagger.description = 'Deletes a role from a user based on their name.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
 };
