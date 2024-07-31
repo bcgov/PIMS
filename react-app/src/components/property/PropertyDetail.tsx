@@ -43,6 +43,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const parcelId = isNaN(Number(params.parcelId)) ? null : Number(params.parcelId);
   const buildingId = isNaN(Number(params.buildingId)) ? null : Number(params.buildingId);
   const api = usePimsApi();
+  const deletionBroadcastChannel = useMemo(() => new BroadcastChannel('property'), []);
   const {
     data: parcel,
     refreshData: refreshParcel,
@@ -262,6 +263,14 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const [openNetBookDialog, setOpenNetBookDialog] = useState(false);
   const [openAssessedValueDialog, setOpenAssessedValueDialog] = useState(false);
 
+  const deletionAction = async () => {
+    const response = await deleteProperty();
+    if (response && response.ok) {
+      deletionBroadcastChannel.postMessage('refresh');
+      navigate('/properties');
+    }
+  };
+
   const sideBarItems = [
     { title: `${buildingOrParcel} Information` },
     { title: `${buildingOrParcel} Net Book Value` },
@@ -407,7 +416,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
         title={'Delete property'}
         message={'Are you sure you want to delete this property?'}
         confirmButtonProps={{ loading: deletingProperty }}
-        onDelete={async () => deleteProperty().then(() => navigate('/properties'))}
+        onDelete={async () => deletionAction()}
         onClose={async () => setOpenDeleteDialog(false)}
       />
     </CollapsibleSidebar>
