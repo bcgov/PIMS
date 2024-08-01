@@ -4,6 +4,7 @@ import React, {
   PropsWithChildren,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -108,6 +109,17 @@ const ParcelMap = (props: ParcelMapProps) => {
 
   // To access map outside of MapContainer
   const localMapRef = mapRef ?? useRef<Map>();
+
+  const deletionBroadcastChannel = useMemo(() => new BroadcastChannel('property'), []);
+  useEffect(
+    () =>
+      deletionBroadcastChannel.addEventListener('message', (event) => {
+        if (typeof event.data === 'string' && event.data === 'refresh') {
+          refreshData();
+        }
+      }),
+    [],
+  );
 
   // Default for BC view
   const defaultBounds = [

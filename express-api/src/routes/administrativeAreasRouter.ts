@@ -21,6 +21,6 @@ router
 router
   .route(`/:id`)
   .get(activeUserCheck, catchErrors(getAdministrativeAreaById))
-  .put(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(updateAdministrativeAreaById)); // TODO: Should this be a patch?
+  .put(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(updateAdministrativeAreaById));
 
 export default router;

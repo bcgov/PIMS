@@ -188,6 +188,12 @@ export const lookupNoteTypes = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Retrieves all monetary types from the database. Optionally filter by status.
+ * @param req - Request object.
+ * @param res - Response object.
+ * @returns A response with monetary types and status code 200.
+ */
 export const lookupMonetaryTypes = async (req: Request, res: Response) => {
   const statusId = req.query.statusId ? parseInt(req.query.statusId.toString()) : undefined;
   const types = (
@@ -201,6 +207,12 @@ export const lookupMonetaryTypes = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Retrieves all timestamp types from the database. Optionally filter by status.
+ * @param req - Request object.
+ * @param res - Response object.
+ * @returns A response with timestamp types and status code 200.
+ */
 export const lookupTimestampTypes = async (req: Request, res: Response) => {
   const statusId = req.query.statusId ? parseInt(req.query.statusId.toString()) : undefined;
   const types = (
