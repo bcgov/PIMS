@@ -9,7 +9,6 @@ import { Project } from '@/typeorm/Entities/Project';
 import { Roles } from '@/constants/roles';
 import notificationServices from '@/services/notifications/notificationServices';
 
-
 /**
  * @description Get disposal project by either the numeric id or projectNumber.
  * @param {Request}     req Incoming request.
