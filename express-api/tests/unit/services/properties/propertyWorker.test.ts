@@ -44,7 +44,7 @@ const uploadResult: BulkUploadRowResult = {
 };
 const _propServicesSpy = jest
   .spyOn(propertyServices, 'importPropertiesAsJSON')
-  .mockImplementation(async () => [uploadResult]);
+  .mockImplementation(() => Promise.resolve([uploadResult]));
 
 describe('UNIT - propertyWorker.ts', () => {
   beforeEach(() => {
