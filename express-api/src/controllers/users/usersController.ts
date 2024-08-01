@@ -4,7 +4,7 @@ import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { decodeJWT } from '@/utilities/decodeJWT';
 import { UserFiltering, UserFilteringSchema } from '@/controllers/users/usersSchema';
 import { z } from 'zod';
-import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
+import { isAdmin } from '@/utilities/authorizationChecks';
 import notificationServices from '@/services/notifications/notificationServices';
 import getConfig from '@/constants/config';
 import logger from '@/utilities/winstonLogger';
