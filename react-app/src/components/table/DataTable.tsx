@@ -50,7 +50,6 @@ import { CommonFiltering } from '@/interfaces/ICommonFiltering';
 import { Roles } from '@/constants/roles';
 import { AuthContext } from '@/contexts/authContext';
 
-
 type RenderCellParams = GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
 
 const NoRowsOverlay = (): JSX.Element => {
@@ -549,9 +548,11 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           />
           <Tooltip title={props.addTooltip}>
             <span>
-              { !isAuditor && (<IconButton onClick={props.onAddButtonClick} disabled={!props.onAddButtonClick}>
-                <AddIcon />
-              </IconButton>)}
+              {!isAuditor && (
+                <IconButton onClick={props.onAddButtonClick} disabled={!props.onAddButtonClick}>
+                  <AddIcon />
+                </IconButton>
+              )}
             </span>
           </Tooltip>
           <Tooltip title="Export to Excel">
