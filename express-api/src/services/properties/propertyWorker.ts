@@ -15,7 +15,12 @@ import { User } from '@/typeorm/Entities/User';
  * @param roles The roles assigned to the user.
  * @returns A list of bulk upload row results after processing the file.
  */
-const processFile = async (filePath: string, resultRowId: number, user: User, roles: string[]) => {
+export const processFile = async (
+  filePath: string,
+  resultRowId: number,
+  user: User,
+  roles: string[],
+) => {
   await AppDataSource.initialize(); //Since this function is going to be called from a new process, requires a new database connection.
   let results: BulkUploadRowResult[] = [];
   try {
