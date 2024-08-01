@@ -165,7 +165,7 @@ const numberOrNull = (value: any) => {
  * @returns The agency if the user has permission, otherwise throws an error.
  * @throws Error if the agency code is not supported or if the user does not have permission to add properties for the agency.
  */
-const getAgencyOrThrowIfMismatched = (
+export const getAgencyOrThrowIfMismatched = (
   row: Record<string, any>,
   lookups: Lookups,
   roles: string[],
@@ -189,7 +189,7 @@ const getAgencyOrThrowIfMismatched = (
  * @param {PropertyClassification[]} classifications - The list of property classifications to search from.
  * @returns {number} The classification ID.
  */
-const getClassificationOrThrow = (
+export const getClassificationOrThrow = (
   row: Record<string, any>,
   classifications: PropertyClassification[],
 ) => {
@@ -213,7 +213,7 @@ const getClassificationOrThrow = (
  * @param adminAreas - The array of AdministrativeArea objects to search for a match.
  * @returns The ID of the administrative area if found, otherwise throws an error.
  */
-const getAdministrativeAreaOrThrow = (
+export const getAdministrativeAreaOrThrow = (
   row: Record<string, any>,
   adminAreas: AdministrativeArea[],
 ) => {
@@ -237,7 +237,7 @@ const getAdministrativeAreaOrThrow = (
  * @param predominateUses - The list of available building predominate uses.
  * @returns The ID of the predominate use if found, otherwise throws an error.
  */
-const getBuildingPredominateUseOrThrow = (
+export const getBuildingPredominateUseOrThrow = (
   row: Record<string, any>,
   predominateUses: BuildingPredominateUse[],
 ) => {
@@ -263,7 +263,7 @@ const getBuildingPredominateUseOrThrow = (
  * @returns The ID of the matched building construction type.
  * @throws Error if the construction type cannot be determined from the provided data.
  */
-const getBuildingConstructionTypeOrThrow = (
+export const getBuildingConstructionTypeOrThrow = (
   row: Record<string, any>,
   constructionTypes: BuildingConstructionType[],
 ) => {
@@ -453,7 +453,7 @@ const makeBuildingUpsertObject = async (
   };
 };
 
-type Lookups = {
+export type Lookups = {
   classifications: PropertyClassification[];
   constructionTypes: BuildingConstructionType[];
   predominateUses: BuildingPredominateUse[];

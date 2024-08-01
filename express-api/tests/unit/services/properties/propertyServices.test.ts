@@ -1,6 +1,10 @@
 import { AppDataSource } from '@/appDataSource';
 import { Roles } from '@/constants/roles';
-import propertyServices from '@/services/properties/propertiesServices';
+import propertyServices, {
+  getAgencyOrThrowIfMismatched,
+  getClassificationOrThrow,
+  Lookups,
+} from '@/services/properties/propertiesServices';
 import userServices from '@/services/users/usersServices';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 import { Agency } from '@/typeorm/Entities/Agency';
@@ -383,6 +387,90 @@ describe('UNIT - Property Services', () => {
         1,
       );
       expect(Array.isArray(result)).toBe(true);
+    });
+  });
+
+  describe('getClassificationOrThrow', () => {
+    it('should return a classification if found', () => {
+      const result = getClassificationOrThrow(
+        {
+          Status: 'Active',
+          Classification: 'Surplus',
+        },
+        [produceClassification({ Name: 'Surplus', Id: 1 })],
+      );
+      expect(result).toEqual(1);
+    });
+
+    it('should throw an error if that classification is not active or disposed', () => {
+      expect(() =>
+        getClassificationOrThrow(
+          {
+            Status: 'Disabled',
+            Classification: 'Surplus',
+          },
+          [produceClassification({ Name: 'Surplus', Id: 1 })],
+        ),
+      ).toThrow();
+    });
+
+    it('should throw an error if there is no classification with a matching name', () => {
+      expect(() =>
+        getClassificationOrThrow(
+          {
+            Status: 'Active',
+            Classification: 'Not Surplus',
+          },
+          [produceClassification({ Name: 'Surplus', Id: 1 })],
+        ),
+      ).toThrow();
+    });
+  });
+
+  describe('getAgencyOrThrowIfMismatched', () => {
+    it('should return an agency in if it exists', () => {
+      const agency = produceAgency({ Code: 'WLRS' });
+      const result = getAgencyOrThrowIfMismatched(
+        {
+          AgencyCode: 'WLRS',
+        },
+        {
+          agencies: [agency],
+        } as Lookups,
+        [Roles.ADMIN],
+      );
+      expect(result.Code).toBe(agency.Code);
+    });
+
+    it('should throw an error if agency is not found', () => {
+      const agency = produceAgency({ Code: 'WLRS' });
+      expect(() =>
+        getAgencyOrThrowIfMismatched(
+          {
+            AgencyCode: 'TEST',
+          },
+          {
+            agencies: [agency],
+          } as Lookups,
+          [Roles.ADMIN],
+        ),
+      ).toThrow();
+    });
+
+    it('should throw an error if the user does not have permissions', () => {
+      const agency = produceAgency({ Code: 'WLRS', Id: 1 });
+      expect(() =>
+        getAgencyOrThrowIfMismatched(
+          {
+            AgencyCode: 'WLRS',
+          },
+          {
+            agencies: [{ ...agency, Id: 999 }],
+            userAgencies: [],
+          } as Lookups,
+          [],
+        ),
+      ).toThrow();
     });
   });
 });
