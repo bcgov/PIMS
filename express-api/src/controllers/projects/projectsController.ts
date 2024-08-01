@@ -6,7 +6,6 @@ import userServices from '@/services/users/usersServices';
 import { isAdmin, isAuditor, checkUserAgencyPermission } from '@/utilities/authorizationChecks';
 import { DeepPartial } from 'typeorm';
 import { Project } from '@/typeorm/Entities/Project';
-import { Role } from '@/typeorm/Entities/Role';
 import { Roles } from '@/constants/roles';
 
 /**
@@ -24,7 +23,7 @@ export const getDisposalProject = async (req: Request, res: Response) => {
    * }]
    */
   // admins are permitted to view any project
-  const permittedRoles = [Roles.ADMIN]
+  const permittedRoles = [Roles.ADMIN];
   const user = req.user as SSOUser;
   const projectId = Number(req.params.projectId);
   if (isNaN(projectId)) {
@@ -160,7 +159,7 @@ export const getProjects = async (req: Request, res: Response) => {
   }
   const filterResult = filter.data;
   const kcUser = req.user as unknown as SSOUser;
-  if (!(isAdmin(kcUser))) {
+  if (!isAdmin(kcUser)) {
     // get array of user's agencies
     const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
     filterResult.agencyId = usersAgencies;

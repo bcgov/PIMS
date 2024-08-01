@@ -27,7 +27,7 @@ export const getParcel = async (req: Request, res: Response) => {
   }
 
   // admin and auditors are permitted to see any parcel
-  const permittedRoles = [Roles.ADMIN, Roles.AUDITOR]
+  const permittedRoles = [Roles.ADMIN, Roles.AUDITOR];
   const kcUser = req.user as unknown as SSOUser;
   const parcel = await parcelServices.getParcelById(parcelId);
   if (!parcel) {

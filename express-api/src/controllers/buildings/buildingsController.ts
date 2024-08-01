@@ -54,7 +54,7 @@ export const getBuilding = async (req: Request, res: Response) => {
   }
 
   // admin and auditors are permitted to see any building
-  const permittedRoles = [Roles.ADMIN, Roles.AUDITOR]
+  const permittedRoles = [Roles.ADMIN, Roles.AUDITOR];
   const kcUser = req.user as unknown as SSOUser;
   const building = await buildingService.getBuildingById(buildingId);
 
