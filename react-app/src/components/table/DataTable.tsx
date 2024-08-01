@@ -33,7 +33,6 @@ import {
   GridRenderCellParams,
   GridSortDirection,
   GridSortModel,
-  GridState,
   GridTreeNodeWithRender,
   gridFilteredSortedRowEntriesSelector,
   useGridApiRef,
@@ -401,11 +400,14 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   const saveSnapshot = useCallback(() => {
     if (sessionStorage) {
       if (tableApiRef?.current?.exportState) {
-        const currentState = tableApiRef.current.exportState();
+        const currentState: GridInitialStateCommunity & { quickSelectFilter?: string } =
+          tableApiRef.current.exportState();
+        currentState.quickSelectFilter = selectValue;
+        console.log(`Will save snapshot: ${selectValue}`);
         sessionStorage.setItem(props.name, JSON.stringify(currentState));
       }
     }
-  }, [tableApiRef]);
+  }, [tableApiRef, selectValue]);
 
   /**
    * @description Hook that runs after render. Looks to query strings to set filter. If none are found, then looks to state cookie.
@@ -456,67 +458,71 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           pageSize: Number(searchParams.get('pageSize')),
         });
       }
-    } else {
-      // Setting the table's state from sessionStorage cookies
-      const model: ITableModelCollection = {
-        pagination: { page: 0, pageSize: 10 },
-        sort: undefined,
-        filter: undefined,
-        quickFilter: undefined,
-      };
-      const stateFromLocalStorage = sessionStorage?.getItem(props.name);
-      if (stateFromLocalStorage) {
-        const state: GridState = JSON.parse(stateFromLocalStorage);
-        // Set sort
-        if (state.sorting) {
-          tableApiRef.current.setSortModel(state.sorting.sortModel);
-          model.sort = state.sorting.sortModel;
-        }
-        if (state.pagination) {
-          // Pagination and visibility are local only
-          tableApiRef.current.setPaginationModel(state.pagination.paginationModel);
-          model.pagination = state.pagination.paginationModel;
-        }
-        if (state.columns) {
-          tableApiRef.current.setColumnVisibilityModel(state.columns.columnVisibilityModel);
-          //Is this still used?
-        }
-        // Set filters
-        if (state.filter) {
-          tableApiRef.current.setFilterModel(state.filter.filterModel);
-          // Set Select filter
-          // Without MUI Pro, only one item can be in this model at a time
-          if (state.filter.filterModel.items.length > 0) {
-            model.filter = state.filter.filterModel;
-            setSelectValue(state.filter.filterModel.items.at(0).value);
-            // setQuery({
-            //   quickSelectFilter: state.filter.filterModel.items.at(0).value.toString(),
-            // });
-            //console.log(`in session reload function: ${JSON.stringify(state.filter.filterModel)}`);
-            setSearchParams((params) => {
-              params.set(
-                'quickSelectFilter',
-                state.filter.filterModel.items.at(0).value.toString(),
-              );
-              return params;
-            });
-          }
-          // Set keyword search bar
-          if (state.filter.filterModel.quickFilterValues) {
-            model.quickFilter = state.filter.filterModel.quickFilterValues;
-            const filterValue = state.filter.filterModel.quickFilterValues.join(' ');
-            setKeywordSearchContents(filterValue);
-            // setQuery({
-            //   keywordFilter: filterValue,
-            // });
-            setSearchParams((params) => {
-              params.set('keywordFilter', filterValue);
-              return params;
-            });
-          }
-        }
-      }
-    }
+    } //else {
+    //   // Setting the table's state from sessionStorage cookies
+    //   const model: ITableModelCollection = {
+    //     pagination: { page: 0, pageSize: 10 },
+    //     sort: undefined,
+    //     filter: undefined,
+    //     quickFilter: undefined,
+    //   };
+    //   const stateFromLocalStorage = sessionStorage?.getItem(props.name);
+    //   if (stateFromLocalStorage) {
+    //     const state: GridState & { quickSelectFilter?: string } = JSON.parse(stateFromLocalStorage);
+    //     console.log(state);
+    //     // Set sort
+    //     if (state.sorting) {
+    //       tableApiRef.current.setSortModel(state.sorting.sortModel);
+    //       model.sort = state.sorting.sortModel;
+    //     }
+    //     if (state.pagination) {
+    //       // Pagination and visibility are local only
+    //       tableApiRef.current.setPaginationModel(state.pagination.paginationModel);
+    //       model.pagination = state.pagination.paginationModel;
+    //     }
+    //     if (state.columns) {
+    //       tableApiRef.current.setColumnVisibilityModel(state.columns.columnVisibilityModel);
+    //       //Is this still used?
+    //     }
+    //     // Set filters
+    //     if (state.filter) {
+    //       tableApiRef.current.setFilterModel(state.filter.filterModel);
+    //       if (state.quickSelectFilter != undefined) {
+    //         setSelectValue(state.quickSelectFilter);
+    //       }
+    //       // Set Select filter
+    //       // Without MUI Pro, only one item can be in this model at a time
+    //       // if (state.filter.filterModel.items.length > 0) {
+    //       //   model.filter = state.filter.filterModel;
+    //       //   setSelectValue(state.filter.filterModel.items.at(0).value);
+    //       //   // setQuery({
+    //       //   //   quickSelectFilter: state.filter.filterModel.items.at(0).value.toString(),
+    //       //   // });
+    //       //   //console.log(`in session reload function: ${JSON.stringify(state.filter.filterModel)}`);
+    //       //   setSearchParams((params) => {
+    //       //     params.set(
+    //       //       'quickSelectFilter',
+    //       //       state.filter.filterModel.items.at(0).value.toString(),
+    //       //     );
+    //       //     return params;
+    //       //   });
+    //       // }
+    //       // Set keyword search bar
+    //       if (state.filter.filterModel.quickFilterValues) {
+    //         model.quickFilter = state.filter.filterModel.quickFilterValues;
+    //         const filterValue = state.filter.filterModel.quickFilterValues.join(' ');
+    //         setKeywordSearchContents(filterValue);
+    //         // setQuery({
+    //         //   keywordFilter: filterValue,
+    //         // });
+    //         setSearchParams((params) => {
+    //           params.set('keywordFilter', filterValue);
+    //           return params;
+    //         });
+    //       }
+    //     }
+    //   }
+    // }
 
     // handle refresh and navigating away/refreshing
     window.addEventListener('beforeunload', saveSnapshot);
@@ -564,10 +570,21 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
                   tableApiRef.current.setFilterModel({ items: [] });
                   setKeywordSearchContents('');
                   // Set select field back to default
+                  console.log(props.defaultFilter);
                   setSelectValue(props.defaultFilter);
                   // Clear query params
                   //clearQuery();
-                  setSearchParams({});
+                  //       value: searchParams.get('columnFilterValue'),
+                  // operator: searchParams.get('columnFilterMode'),
+                  // field: searchParams.get('columnFilterName'),
+                  setSearchParams((params) => {
+                    params.delete('keywordFilter');
+                    params.delete('quickSelectFilter');
+                    params.delete('columnFilterValue');
+                    params.delete('columnFilterMode');
+                    params.delete('columnFilterName');
+                    return params;
+                  });
                   // setTableModel({
                   //   pagination: { page: 0, pageSize: tableModel.pagination.pageSize },
                   // });
@@ -664,6 +681,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           <Select
             onChange={(e) => {
               setKeywordSearchContents('');
+              console.log(e.target.value);
               setSelectValue(e.target.value);
               // setQuery({ quickSelectFilter: e.target.value, keywordFilter: undefined }); // Clear keywordFilter too
               // setTableModel({ ...tableModel, filter: undefined }); // Clear existing column filters
@@ -712,7 +730,6 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             //   columnFilterValue: undefined,
             //   columnFilterMode: undefined,
             // });
-            console.log('deleting params in filterModelChange');
             setSearchParams((params) => {
               params.delete('columnFilterName');
               params.delete('columnFilterValue');

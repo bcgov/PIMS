@@ -307,11 +307,11 @@ const PropertyTable = (props: IPropertyTable) => {
           customExcelMap={excelDataMap}
           columns={columns}
           addTooltip="Create New Property"
-          initialState={{
-            sorting: {
-              sortModel: [{ sort: 'desc', field: 'UpdatedOn' }],
-            },
-          }}
+          // initialState={{
+          //   sorting: {
+          //     sortModel: [{ sort: 'desc', field: 'UpdatedOn' }],
+          //   },
+          // }}
         />
       </Box>
     </Box>

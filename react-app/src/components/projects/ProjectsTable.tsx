@@ -203,7 +203,7 @@ const ProjectsTable = () => {
         tableOperationMode="server"
         dataSource={handleDataChange}
         excelDataSource={api.projects.getProjectsForExcelExport}
-        onAddButtonClick={() => navigate('/projects/add')}
+        onAddButtonClick={() => navigate('/projects/add', { state: { from: location } })}
         onPresetFilterChange={selectPresetFilter}
         defaultFilter={'All Projects'}
         presetFilterSelectOptions={[
@@ -231,10 +231,10 @@ const ProjectsTable = () => {
         addTooltip={'Create New Disposal Project'}
         name={'projects'}
         columns={columns}
-        initialState={{
-          pagination: { paginationModel: { page: 0, pageSize: 100 } },
-          sorting: { sortModel: [{ field: 'UpdatedOn', sort: 'desc' }] },
-        }}
+        // initialState={{
+        //   pagination: { paginationModel: { page: 0, pageSize: 100 } },
+        //   sorting: { sortModel: [{ field: 'UpdatedOn', sort: 'desc' }] },
+        // }}
       />
     </Box>
   );

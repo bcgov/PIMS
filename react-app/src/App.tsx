@@ -1,4 +1,4 @@
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Home from '@/pages/Home';
 import React, { useContext } from 'react';
 import '@/App.css';
@@ -34,7 +34,17 @@ import BulkUpload from './pages/BulkUpload';
 
 const Router = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const auth = useContext(AuthContext);
+
+  const goToFromStateOrSetRoute = (setRoute: string) => {
+    const previousLocation = location.state?.from;
+    if (previousLocation) {
+      navigate(previousLocation.pathname + previousLocation.search);
+    } else {
+      navigate(setRoute);
+    }
+  };
 
   // Reusable piece to show map on many routes
   const showMap = () => (
@@ -103,7 +113,9 @@ const Router = () => {
           element={
             <BaseLayout>
               <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR]}>
-                <AdministrativeAreaDetail />
+                <AdministrativeAreaDetail
+                  onClose={() => goToFromStateOrSetRoute('/admin/adminAreas')}
+                />
               </AuthRouteGuard>
             </BaseLayout>
           }
@@ -133,7 +145,7 @@ const Router = () => {
           element={
             <BaseLayout>
               <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR]}>
-                <AgencyDetail onClose={() => navigate('/admin/agencies')} />
+                <AgencyDetail onClose={() => goToFromStateOrSetRoute('/admin/agencies')} />
               </AuthRouteGuard>
             </BaseLayout>
           }
@@ -184,7 +196,7 @@ const Router = () => {
         element={
           <BaseLayout>
             <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
-              <PropertyDetail onClose={() => navigate('/properties/')} />
+              <PropertyDetail onClose={() => goToFromStateOrSetRoute('/properties/')} />
             </AuthRouteGuard>
           </BaseLayout>
         }
@@ -194,7 +206,7 @@ const Router = () => {
         element={
           <BaseLayout>
             <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
-              <PropertyDetail onClose={() => navigate('/properties/')} />
+              <PropertyDetail onClose={() => goToFromStateOrSetRoute('/properties/')} />
             </AuthRouteGuard>
           </BaseLayout>
         }
@@ -204,7 +216,7 @@ const Router = () => {
         element={
           <BaseLayout>
             <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
-              <UserDetail onClose={() => navigate('/users')} />
+              <UserDetail onClose={() => goToFromStateOrSetRoute('/users')} />
             </AuthRouteGuard>
           </BaseLayout>
         }
@@ -234,7 +246,7 @@ const Router = () => {
         element={
           <BaseLayout>
             <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
-              <ProjectDetail onClose={() => navigate('/projects')} />
+              <ProjectDetail onClose={() => goToFromStateOrSetRoute('/projects')} />
             </AuthRouteGuard>
           </BaseLayout>
         }
