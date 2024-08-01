@@ -50,6 +50,7 @@ describe('UNIT - Buildings', () => {
       };
       mockRequest.params.buildingId = '1';
       _hasAgencies.mockImplementationOnce(() => true);
+      mockRequest.setUser({ hasRoles: () => true });
       _getBuildingById.mockImplementationOnce(() => buildingWithAgencyId1);
       await controllers.getBuilding(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
@@ -73,6 +74,7 @@ describe('UNIT - Buildings', () => {
         AgencyId: 1,
       };
       mockRequest.params.buildingId = '1';
+      mockRequest.setUser({ client_roles: [Roles.GENERAL_USER], hasRoles: () => false });
       _hasAgencies.mockImplementationOnce(() => false);
       _getBuildingById.mockImplementationOnce(() => buildingWithAgencyId1);
       await controllers.getBuilding(mockRequest, mockResponse);
