@@ -4,7 +4,6 @@ import {
   addAdministrativeArea,
   getAdministrativeAreaById,
   updateAdministrativeAreaById,
-  deleteAdministrativeAreaById,
 } from '@/controllers/administrativeAreas/administrativeAreasController';
 import activeUserCheck from '@/middleware/activeUserCheck';
 import catchErrors from '@/utilities/controllerErrorWrapper';
@@ -22,11 +21,6 @@ router
 router
   .route(`/:id`)
   .get(activeUserCheck, catchErrors(getAdministrativeAreaById))
-  .put(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(updateAdministrativeAreaById)) // TODO: Should this be a patch?
-  .delete(
-    protectedRoute([Roles.ADMIN]),
-    activeUserCheck,
-    catchErrors(deleteAdministrativeAreaById),
-  );
+  .put(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(updateAdministrativeAreaById));
 
 export default router;

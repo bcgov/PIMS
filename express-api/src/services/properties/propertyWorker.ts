@@ -5,6 +5,16 @@ import { AppDataSource } from '@/appDataSource';
 import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import { User } from '@/typeorm/Entities/User';
 
+/**
+ * Asynchronously processes a file for property import, initializing a new database connection for the worker thread.
+ * Reads the file content, imports properties as JSON, and saves the results to the database.
+ * Handles exceptions and ensures database connection cleanup after processing.
+ * @param filePath The path to the file to be processed.
+ * @param resultRowId The ID of the result row in the database.
+ * @param user The user initiating the import.
+ * @param roles The roles assigned to the user.
+ * @returns A list of bulk upload row results after processing the file.
+ */
 const processFile = async (filePath: string, resultRowId: number, user: User, roles: string[]) => {
   await AppDataSource.initialize(); //Since this function is going to be called from a new process, requires a new database connection.
   let results: BulkUploadRowResult[] = [];
