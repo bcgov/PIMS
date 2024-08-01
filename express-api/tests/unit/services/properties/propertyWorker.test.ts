@@ -1,11 +1,10 @@
 import { Roles } from '@/constants/roles';
 import propertyServices, { BulkUploadRowResult } from '@/services/properties/propertiesServices';
-import { processFile } from '@/services/properties/propertyWorker';
 import { produceUser } from 'tests/testUtils/factories';
 import xlsx from 'xlsx';
 
 // Mock worker items
-const _parentPortSpy = jest.fn().mockImplementation(() => {});
+//const _parentPortSpy = jest.fn().mockImplementation(() => {});
 const workerDataObj = {
   filePath: 'testPath',
   resultRowId: 1,
@@ -14,13 +13,12 @@ const workerDataObj = {
 };
 jest.mock('worker_threads', () => ({
   parentPort: {
-    postMessage: () => _parentPortSpy,
+    postMessage: () => {},
   },
   workerData: () => workerDataObj,
 }));
 // Spy on xlsx readFile
 const _readFileSpy = jest.spyOn(xlsx, 'readFile').mockImplementation(() => ({
-  ...new File([], 'test file'),
   Sheets: {
     sheet1: {},
   },
@@ -51,7 +49,7 @@ describe('UNIT - propertyWorker.ts', () => {
     jest.clearAllMocks();
   });
   it('should return a set of results indicating the upload process has started', async () => {
-    const result = await processFile('filePath', 0, produceUser(), [Roles.ADMIN]);
+    const result = await propertyServices.processFile('filePath', 0, produceUser(), [Roles.ADMIN]);
     expect(result.at(0).action).toBe('inserted');
     expect(_readFileSpy).toHaveBeenCalled();
   });
@@ -60,7 +58,7 @@ describe('UNIT - propertyWorker.ts', () => {
     _readFileSpy.mockImplementationOnce(() => {
       throw new Error();
     });
-    await processFile('filePath', 0, produceUser(), [Roles.ADMIN]);
+    await propertyServices.processFile('filePath', 0, produceUser(), [Roles.ADMIN]);
     expect(_readFileSpy).toHaveBeenCalled();
     expect(_propServicesSpy).not.toHaveBeenCalled();
   });
