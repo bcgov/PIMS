@@ -52,6 +52,7 @@ describe('UNIT - propertyWorker.ts', () => {
   });
   it('should return a set of results indicating the upload process has started', async () => {
     const result = await processFile('filePath', 0, produceUser(), [Roles.ADMIN]);
+    console.log(result)
     expect(result.at(0).action).toBe('inserted');
     expect(_readFileSpy).toHaveBeenCalled();
   });
