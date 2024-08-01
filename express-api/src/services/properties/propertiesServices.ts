@@ -94,12 +94,11 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
   }
   const parcels = await parcelsQuery.getMany();
 
+  const formattedKeyword = `%${keyword.replaceAll('-', '')}%`;
   const buildingsQuery = await AppDataSource.getRepository(Building)
     .createQueryBuilder('building')
     .leftJoinAndSelect('building.Agency', 'agency')
     .leftJoinAndSelect('building.AdministrativeArea', 'adminArea')
-    .leftJoinAndSelect('building.Evaluations', 'evaluations')
-    .leftJoinAndSelect('building.Fiscals', 'fiscals')
     .leftJoinAndSelect('building.Classification', 'classification')
     .where(
       new Brackets((qb) => {
@@ -137,9 +136,21 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
         .andWhere('pp.building_id IS NOT NULL')
         .getQuery();
 
-      return `building.id IN (${inclusionSubQuery}) OR building.id NOT IN (${exclusionSubQuery})
-            OR building.id NOT IN (SELECT building_id FROM project_property WHERE building_id IS NOT NULL )`;
-    });
+      return `building.id IN (${inclusionSubQuery}) OR building.id NOT IN (${exclusionSubQuery}) OR building.id NOT IN (SELECT building_id FROM project_property WHERE building_id IS NOT NULL )`;
+    })
+    .addSelect(
+      `CASE 
+        WHEN LPAD(building.pid::text, 9, '0') ILIKE :keyword THEN 1       
+        WHEN building.pin::text ILIKE :keyword THEN 1 
+        WHEN agency.name ILIKE :keyword THEN 1 
+        WHEN adminArea.name ILIKE :keyword THEN 1 
+        WHEN building.address1 ILIKE :keyword THEN 1 
+        ELSE 2 
+      END`,
+      'priority',
+    )
+    .orderBy('priority', 'ASC')
+    .setParameters({ keyword: formattedKeyword }); // Set parameters with proper binding
 
   if (agencyIds && agencyIds.length > 0) {
     buildingsQuery.andWhere(`building.agency_id IN (:...agencyIds)`, { agencyIds });
