@@ -29,19 +29,17 @@ import {
   constructFindOptionFromQueryPid,
 } from '@/utilities/helperFunctions';
 import userServices from '../users/usersServices';
-import {
-  Brackets,
-  FindManyOptions,
-  FindOptionsOrder,
-  FindOptionsOrderValue,
-  FindOptionsWhere,
-  ILike,
-  In,
-  QueryRunner,
-} from 'typeorm';
+import { Brackets, FindManyOptions, FindOptionsWhere, ILike, In, QueryRunner } from 'typeorm';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { PropertyType } from '@/constants/propertyType';
 
+/**
+ * Perform a fuzzy search for properties based on the provided keyword.
+ * @param keyword - The keyword to search for within property details.
+ * @param limit - (Optional) The maximum number of results to return.
+ * @param agencyIds - (Optional) An array of agency IDs to filter the search results.
+ * @returns An object containing the found parcels and buildings that match the search criteria.
+ */
 const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?: number[]) => {
   const parcelsQuery = await AppDataSource.getRepository(Parcel)
     .createQueryBuilder('parcel')
@@ -141,7 +139,13 @@ const getPropertiesForMap = async (filter?: MapFilter) => {
   return properties;
 };
 
-//const BATCH_SIZE = 100;
+/**
+ * Generates a building name based on the provided parameters.
+ * @param name - The name of the building.
+ * @param desc - The description of the building.
+ * @param localId - The local ID of the building.
+ * @returns The generated building name.
+ */
 const generateBuildingName = (name: string, desc: string = null, localId: string = null) => {
   return (
     (localId == null ? '' : localId) +
@@ -152,6 +156,15 @@ const numberOrNull = (value: any) => {
   if (value == '' || value == null) return null;
   return typeof value === 'number' ? value : Number(value.replace?.(/-/g, ''));
 };
+
+/**
+ * Retrieves the agency based on the provided row data and checks if the user has permission to add properties for that agency.
+ * @param row - The row data containing the agency code.
+ * @param lookups - Object containing various lookup data including agencies and user agencies.
+ * @param roles - Array of roles assigned to the user.
+ * @returns The agency if the user has permission, otherwise throws an error.
+ * @throws Error if the agency code is not supported or if the user does not have permission to add properties for the agency.
+ */
 const getAgencyOrThrowIfMismatched = (
   row: Record<string, any>,
   lookups: Lookups,
@@ -168,6 +181,14 @@ const getAgencyOrThrowIfMismatched = (
     throw new Error(`You do not have permission to add properties for agency ${agency.Name}`);
   }
 };
+
+/**
+ * Get the classification ID for a given row based on the provided classifications.
+ * Throws an error if the classification is not found or unsupported.
+ * @param {Record<string, any>} row - The row containing the classification information.
+ * @param {PropertyClassification[]} classifications - The list of property classifications to search from.
+ * @returns {number} The classification ID.
+ */
 const getClassificationOrThrow = (
   row: Record<string, any>,
   classifications: PropertyClassification[],
@@ -185,6 +206,13 @@ const getClassificationOrThrow = (
   }
   return classificationId;
 };
+
+/**
+ * Get the administrative area ID based on the provided row data and the list of administrative areas.
+ * @param row - The row data containing the AdministrativeArea field.
+ * @param adminAreas - The array of AdministrativeArea objects to search for a match.
+ * @returns The ID of the administrative area if found, otherwise throws an error.
+ */
 const getAdministrativeAreaOrThrow = (
   row: Record<string, any>,
   adminAreas: AdministrativeArea[],
@@ -202,6 +230,13 @@ const getAdministrativeAreaOrThrow = (
     return adminArea;
   }
 };
+
+/**
+ * Get the ID of the building predominate use based on the provided row data and predominate uses list.
+ * @param row - The row data containing the predominate use information.
+ * @param predominateUses - The list of available building predominate uses.
+ * @returns The ID of the predominate use if found, otherwise throws an error.
+ */
 const getBuildingPredominateUseOrThrow = (
   row: Record<string, any>,
   predominateUses: BuildingPredominateUse[],
@@ -220,6 +255,14 @@ const getBuildingPredominateUseOrThrow = (
     return predominateUse;
   }
 };
+
+/**
+ * Get the ID of the building construction type based on the provided row data and list of construction types.
+ * @param row - The row data containing the construction type information.
+ * @param constructionTypes - The list of available building construction types.
+ * @returns The ID of the matched building construction type.
+ * @throws Error if the construction type cannot be determined from the provided data.
+ */
 const getBuildingConstructionTypeOrThrow = (
   row: Record<string, any>,
   constructionTypes: BuildingConstructionType[],
@@ -238,22 +281,22 @@ const getBuildingConstructionTypeOrThrow = (
     return constructionType;
   }
 };
-// const isEvaluationInDataSourceMoreRecent = (
-//   row: Record<string, any>,
-//   evaluations: ParcelEvaluation[] | BuildingEvaluation[],
-// ) => {
-//   return evaluations.some((a) => a.Year > row.AssessedYear);
-// };
-// const isFiscalInDataSourceMoreRecent = (
-//   row: Record<string, any>,
-//   fiscals: ParcelFiscal[] | BuildingFiscal[],
-// ) => {
-//   return fiscals.some((a) => a.FiscalYear > row.FiscalYear);
-// };
+
 const compareWithoutCase = (str1: string, str2: string) => {
   if (str1.localeCompare(str2, 'en', { sensitivity: 'base' }) == 0) return true;
   else return false;
 };
+
+/**
+ * Creates an object for upserting a parcel entity with the provided data.
+ * @param row - The row data containing the parcel information.
+ * @param user - The user performing the upsert operation.
+ * @param roles - The roles of the user.
+ * @param lookups - The lookup data containing classifications and administrative areas.
+ * @param queryRunner - The query runner for database operations.
+ * @param existentParcel - The existing parcel entity to update, if any.
+ * @returns An object with the necessary data for upserting a parcel entity.
+ */
 const makeParcelUpsertObject = async (
   row: Record<string, any>,
   user: User,
@@ -325,6 +368,16 @@ const makeParcelUpsertObject = async (
   };
 };
 
+/**
+ * Creates an object for upserting a building entity with the provided data.
+ * @param row - The row data containing the building information.
+ * @param user - The user performing the upsert operation.
+ * @param roles - The roles of the user.
+ * @param lookups - The lookup data containing classifications and administrative areas.
+ * @param queryRunner - The query runner for database operations.
+ * @param existentBuilding - The existing building entity to update, if any.
+ * @returns An object with the necessary data for upserting a parcel building.
+ */
 const makeBuildingUpsertObject = async (
   row: Record<string, any>,
   user: User,
@@ -415,6 +468,15 @@ export type BulkUploadRowResult = {
   reason?: string;
 };
 
+/**
+ * Imports properties data from a worksheet as JSON format, processes each row to upsert parcels or buildings,
+ * and returns an array of BulkUploadRowResult indicating the actions taken for each row.
+ * @param worksheet The worksheet containing the properties data.
+ * @param user The user performing the import.
+ * @param roles The roles of the user.
+ * @param resultId The ID of the import result.
+ * @returns An array of BulkUploadRowResult indicating the actions taken for each row.
+ */
 const importPropertiesAsJSON = async (
   worksheet: WorkSheet,
   user: User,
@@ -516,6 +578,12 @@ const importPropertiesAsJSON = async (
   return results;
 };
 
+/**
+ * Retrieves import results based on the provided filter and user.
+ * @param filter - The filter to apply to the import results.
+ * @param ssoUser - The SSO user requesting the import results.
+ * @returns A promise that resolves to the import results matching the filter criteria.
+ */
 const getImportResults = async (filter: ImportResultFilter, ssoUser: SSOUser) => {
   const user = await userServices.getUser(ssoUser.preferred_username);
   return AppDataSource.getRepository(ImportResult).find({
@@ -528,14 +596,10 @@ const getImportResults = async (filter: ImportResultFilter, ssoUser: SSOUser) =>
   });
 };
 
-export const sortKeyMapping = (
-  sortKey: string,
-  sortDirection: FindOptionsOrderValue,
-): FindOptionsOrder<PropertyUnion> => {
-  return { [sortKey]: sortDirection };
-};
-
-// No joins, so database column names are used for sort
+/**
+ * Converts entity names to column names.
+ * Needed because the sort key in query builder uses the column name, not the entity name.
+ */
 const sortKeyTranslator: Record<string, string> = {
   Agency: 'agency_name',
   PID: 'pid',
@@ -548,6 +612,11 @@ const sortKeyTranslator: Record<string, string> = {
   PropertyType: 'property_type',
 };
 
+/**
+ * Collects and constructs find options based on the provided PropertyUnionFilter.
+ * @param filter - The filter containing criteria for constructing find options.
+ * @returns An array of constructed find options based on the provided filter.
+ */
 const collectFindOptions = (filter: PropertyUnionFilter) => {
   const options = [];
   if (filter.agency) options.push(constructFindOptionFromQuery('Agency', filter.agency));
@@ -565,6 +634,11 @@ const collectFindOptions = (filter: PropertyUnionFilter) => {
   return options;
 };
 
+/**
+ * Retrieves properties based on the provided filter criteria, including agency restrictions and quick filters.
+ * @param filter - The filter criteria to apply when retrieving properties.
+ * @returns An object containing the retrieved data and the total count of properties.
+ */
 const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
   const options = collectFindOptions(filter);
   const query = AppDataSource.getRepository(PropertyUnion)
@@ -628,6 +702,13 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
   return { data, totalCount };
 };
 
+/**
+ * Retrieves properties for export based on the provided filter.
+ * Filters the properties by type (LAND, BUILDING, SUBDIVISION) and fetches additional details for each property.
+ * Returns an array of Parcel and Building entities.
+ * @param filter - The filter criteria to apply when retrieving properties.
+ * @returns An array of Parcel and Building entities for export.
+ */
 const getPropertiesForExport = async (filter: PropertyUnionFilter) => {
   const result = await getPropertiesUnion(filter);
   const filteredProperties = result.data;

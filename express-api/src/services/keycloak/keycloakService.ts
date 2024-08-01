@@ -30,14 +30,11 @@ import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { User } from '@/typeorm/Entities/User';
 
 /**
- * @description Sync keycloak roles into PIMS roles.
+ * Synchronizes Keycloak roles with internal roles.
+ * Retrieves Keycloak roles, adds new roles to the internal system, updates existing roles, and deletes roles not present in Keycloak.
+ * @returns Returns the synchronized roles.
  */
 const syncKeycloakRoles = async () => {
-  // Gets roles from keycloak
-  // For each role
-  // If role is in PIMS, update it
-  // If not in PIMS, add it
-  // If PIMS has roles that aren't in Keycloak, remove them.
   const systemUser = await userServices.getUsers({ username: 'system' });
   if (systemUser?.length !== 1) {
     throw new ErrorWithCode('System user was missing.', 500);
@@ -167,14 +164,13 @@ const updateKeycloakRole = async (roleName: string, newRoleName: string) => {
   return role;
 };
 
+/**
+ * @description Sync the given username string wtih keycloak
+ * @param   {string}   username String username to sync
+ * @returns A promise that resolves to the user object with associated Agency and Role.
+ * @throws  {ErrorWithCode} If the username was not found.
+ */
 const syncKeycloakUser = async (username: string) => {
-  // Does user exist in Keycloak?
-  // Get their existing roles.
-  // Does user exist in PIMS
-  // If user exists in PIMS...
-  // Update the roles in PIMS to match their Keycloak roles
-  // If they don't exist in PIMS...
-  // Add user and assign their roles
   const users = await userServices.getUsers({ username: username });
   if (users?.length !== 1) {
     throw new ErrorWithCode('User was missing during keycloak role sync.', 500);

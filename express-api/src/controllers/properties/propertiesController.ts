@@ -115,6 +115,13 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
   return res.status(200).send(mapFeatures);
 };
 
+/**
+ * Receives request to upload file containing property information.
+ * Starts a Node worker to handle property import and updates the ImportResult table.
+ * @param   {Request}     req Incoming request
+ * @param   {Response}    res Outgoing response
+ * @returns {Response}        HTTP response indicating successful (200) or failed submission.
+ */
 export const importProperties = async (req: Request, res: Response) => {
   const filePath = req.file.path;
   const fileName = req.file.originalname;
@@ -170,6 +177,12 @@ export const importProperties = async (req: Request, res: Response) => {
   return res.status(200).send(resultRow);
 };
 
+/**
+ * Retrieves the results of a user's bulk import.
+ * @param   {Request}     req Incoming request
+ * @param   {Response}    res Outgoing response
+ * @returns                   Response with ImportFilterResult.
+ */
 export const getImportResults = async (req: Request, res: Response) => {
   const kcUser = req.user as SSOUser;
   const filter = ImportResultFilterSchema.safeParse(req.query);
@@ -180,6 +193,13 @@ export const getImportResults = async (req: Request, res: Response) => {
   return res.status(200).send(results);
 };
 
+/**
+ * Retrieves a combination of parcels and buildings.
+ * Useful for lists or queries that require searching both.
+ * @param   {Request}     req Incoming request
+ * @param   {Response}    res Outgoing response
+ * @returns                   Response with a list of properties.
+ */
 export const getPropertyUnion = async (req: Request, res: Response) => {
   const forExcelExport = req.query.excelExport === 'true';
   const filter = PropertyUnionFilterSchema.safeParse(req.query);

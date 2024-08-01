@@ -42,7 +42,7 @@ router
 router
   .route(`/:id`)
   .get(activeUserCheck, catchErrors(getUserById))
-  .put(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(updateUserById)) // TODO: should put be a patch?
+  .put(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(updateUserById))
   .delete(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(deleteUserById));
 
 export default router;

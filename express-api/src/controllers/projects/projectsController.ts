@@ -7,6 +7,8 @@ import { isAdmin, isAuditor, checkUserAgencyPermission } from '@/utilities/autho
 import { DeepPartial } from 'typeorm';
 import { Project } from '@/typeorm/Entities/Project';
 import { Roles } from '@/constants/roles';
+import notificationServices from '@/services/notifications/notificationServices';
+
 
 /**
  * @description Get disposal project by either the numeric id or projectNumber.
@@ -109,9 +111,18 @@ export const deleteDisposalProject = async (req: Request, res: Response) => {
   if (isNaN(projectId)) {
     return res.status(400).send('Invalid Project ID');
   }
+  // Only admins can delete projects
+  if (!isAdmin(req.user)) {
+    return res.status(403).send('Projects can only be deleted by Administrator role.');
+  }
 
-  const delProject = projectServices.deleteProjectById(projectId, req.user.preferred_username);
-  return res.status(200).send(delProject);
+  const delProject = await projectServices.deleteProjectById(
+    projectId,
+    req.user.preferred_username,
+  );
+  const notifications = await notificationServices.cancelAllProjectNotifications(projectId);
+
+  return res.status(200).send({ project: delProject, notifications });
 };
 
 /**
