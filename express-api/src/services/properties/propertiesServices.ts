@@ -60,14 +60,31 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
       }),
     )
     .andWhere(`classification.Name in ('Surplus Encumbered', 'Surplus Active')`)
-    .andWhere((qb) => {
-      const subQuery = qb
+    .orWhere((qb) => {
+      // Inclusion subquery: parcels associated with Cancelled projects
+      const inclusionSubQuery = qb
         .subQuery()
-        .select('pp.ParcelId')
+        .select('pp.parcel_id')
         .from('ProjectProperty', 'pp')
+        .innerJoin('pp.Project', 'p')
+        .innerJoin('p.Status', 'ps')
         .where('pp.parcel_id = parcel.id')
+        .andWhere('ps.name = :statusName', { statusName: 'Cancelled' })
+        .andWhere('pp.parcel_id IS NOT NULL')
         .getQuery();
-      return `parcel.id NOT IN ${subQuery}`;
+
+      // Exclusion subquery: parcels associated with non-Cancelled projects
+      const exclusionSubQuery = qb
+        .subQuery()
+        .select('pp.parcel_id')
+        .from('ProjectProperty', 'pp')
+        .innerJoin('pp.Project', 'p')
+        .innerJoin('p.Status', 'ps')
+        .where('ps.name <> :statusName', { statusName: 'Cancelled' })
+        .andWhere('pp.parcel_id IS NOT NULL')
+        .getQuery();
+
+      return `parcel.id IN (${inclusionSubQuery}) OR parcel.id NOT IN (${exclusionSubQuery})`;
     });
 
   // Add the optional agencyIds filter if provided
@@ -88,22 +105,42 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
     .leftJoinAndSelect('building.Classification', 'classification')
     .where(
       new Brackets((qb) => {
-        qb.where(`building.pid::text ILIKE :keyword`, { keyword: `%${keyword}%` })
+        const formattedKeyword = `%${keyword.replaceAll('-', '')}%`;
+        qb.where(`LPAD(building.pid::text, 9, '0') ILIKE :keyword`, {
+          keyword: formattedKeyword,
+        })
           .orWhere(`building.pin::text ILIKE :keyword`, { keyword: `%${keyword}%` })
           .orWhere(`agency.name ILIKE :keyword`, { keyword: `%${keyword}%` })
           .orWhere(`adminArea.name ILIKE :keyword`, { keyword: `%${keyword}%` })
           .orWhere(`building.address1 ILIKE :keyword`, { keyword: `%${keyword}%` });
       }),
     )
-    .andWhere(`classification.Name in ('Surplus Encumbered', 'Surplus Active')`)
+    .andWhere(`classification.Name IN ('Surplus Encumbered', 'Surplus Active')`)
     .andWhere((qb) => {
-      const subQuery = qb
+      // Inclusion subquery: buildings associated with Cancelled projects
+      const inclusionSubQuery = qb
         .subQuery()
-        .select('pp.BuildingId')
+        .select('pp.building_id')
         .from('ProjectProperty', 'pp')
-        .where('pp.building_id = building.id')
+        .innerJoin('pp.Project', 'p')
+        .innerJoin('p.Status', 'ps')
+        .where('ps.name = :statusName', { statusName: 'Cancelled' })
+        .andWhere('pp.building_id IS NOT NULL')
         .getQuery();
-      return `building.id NOT IN ${subQuery}`;
+
+      // Exclusion subquery: buildings associated with non-Cancelled projects
+      const exclusionSubQuery = qb
+        .subQuery()
+        .select('pp.building_id')
+        .from('ProjectProperty', 'pp')
+        .innerJoin('pp.Project', 'p')
+        .innerJoin('p.Status', 'ps')
+        .where('ps.name <> :statusName', { statusName: 'Cancelled' })
+        .andWhere('pp.building_id IS NOT NULL')
+        .getQuery();
+
+      return `building.id IN (${inclusionSubQuery}) OR building.id NOT IN (${exclusionSubQuery})
+            OR building.id NOT IN (SELECT building_id FROM project_property WHERE building_id IS NOT NULL )`;
     });
 
   if (agencyIds && agencyIds.length > 0) {
