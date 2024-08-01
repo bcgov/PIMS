@@ -19,6 +19,7 @@ import { Project } from '@/typeorm/Entities/Project';
 import { ProjectSchema } from '@/controllers/projects/projectsSchema';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { DeleteResult } from 'typeorm';
+import { faker } from '@faker-js/faker';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
 
@@ -58,6 +59,13 @@ jest.mock('@/services/users/usersServices', () => ({
   getUser: (guid: string) => _getUser(guid),
   getAgencies: jest.fn().mockResolvedValue([1, 2]),
   hasAgencies: jest.fn(() => _hasAgencies()),
+}));
+
+jest.mock('@/services/notifications/notificationServices', () => ({
+  cancelAllProjectNotifications: () => ({
+    succeeded: faker.number.int(),
+    failed: faker.number.int(),
+  }),
 }));
 
 jest
@@ -304,6 +312,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
   describe('DELETE /projects/disposal/:projectId', () => {
     it('should return status 200 on successful deletion', async () => {
       mockRequest.params.projectId = '1';
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
       await controllers.deleteDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });

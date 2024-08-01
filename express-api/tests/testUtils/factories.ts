@@ -272,6 +272,7 @@ export const produceEmailStatus = (props: Partial<IChesStatusResponse>): IChesSt
     txId: props.txId ?? faker.string.uuid(),
     updatedTS: new Date().getTime(),
     createdTS: new Date().getTime(),
+    msgId: props.msgId ?? faker.string.uuid(),
   };
   return email;
 };
