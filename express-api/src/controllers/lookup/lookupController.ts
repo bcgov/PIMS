@@ -26,6 +26,7 @@ import { Role } from '@/typeorm/Entities/Role';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 import { Workflow } from '@/typeorm/Entities/Workflow';
+import getConfig from '@/constants/config';
 
 /**
  * @description Get all property classification entries.
@@ -233,6 +234,7 @@ export const lookupTimestampTypes = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status and a list entries.
  */
 export const lookupAll = async (req: Request, res: Response) => {
+  const cfg = getConfig();
   const Risks = await AppDataSource.getRepository(ProjectRisk).find({
     select: {
       Id: true,
@@ -407,6 +409,9 @@ export const lookupAll = async (req: Request, res: Response) => {
       a.Name.toLowerCase().localeCompare(b.Name.toLowerCase()),
     ),
     Workflows,
+    Config: {
+      contactEmail: cfg.contact.toEmail,
+    },
   };
   return res.status(200).send(returnObj);
 };
