@@ -147,6 +147,7 @@ const ProjectsTable = () => {
         PublicNote: project.Notes?.find((note) => note.NoteTypeId === NoteTypes.PUBLIC)?.Note,
         PrivateNote: project.Notes?.find((note) => note.NoteTypeId === NoteTypes.PRIVATE)?.Note,
         AppraisedNote: project.Notes?.find((note) => note.NoteTypeId === NoteTypes.APPRAISAL)?.Note,
+        ReportingNote: project.Notes?.find((note) => note.NoteTypeId === NoteTypes.REPORTING)?.Note,
         AgencyResponseNote: project.Notes?.find(
           (note) => note.NoteTypeId === NoteTypes.AGENCY_INTEREST,
         )?.Note,
