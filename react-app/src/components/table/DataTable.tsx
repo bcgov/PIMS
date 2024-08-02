@@ -205,7 +205,6 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   const [dataSourceLoading, setDataSourceLoading] = useState<boolean>(false);
   const tableApiRef = useGridApiRef(); // Ref to MUI DataGrid
   const previousController = useRef<AbortController>();
-  useEffect(() => console.log(getSearchParamsKey('pageSize')), [searchParams]);
   interface ITableModelCollection {
     pagination?: GridPaginationModel;
     sort?: GridSortModel;
@@ -365,7 +364,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   /**
    * @description Hook that runs after render. Looks to query strings to set filter. If none are found, then looks to state cookie.
    */
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (Boolean(searchParams.size)) {
       if (getSearchParamsKey('keywordFilter')) {
         setKeywordSearchContents(getSearchParamsKey('keywordFilter'));
@@ -621,17 +620,17 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           setSearchParamsKey({ page: String(model.page), pageSize: String(model.pageSize) });
         }}
         apiRef={tableApiRef}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: getSearchParamsKey('pageSize')
-                ? Number(getSearchParamsKey('pageSize'))
-                : DEFAULT_PAGE,
-              page: getSearchParamsKey('page') ? Number(getSearchParamsKey('page')) : DEFAULT_PAGE,
-            },
-          },
-          ...props.initialState,
-        }}
+        // initialState={{
+        //   pagination: {
+        //     paginationModel: {
+        //       pageSize: getSearchParamsKey('pageSize')
+        //         ? Number(getSearchParamsKey('pageSize'))
+        //         : DEFAULT_PAGE,
+        //       page: getSearchParamsKey('page') ? Number(getSearchParamsKey('page')) : DEFAULT_PAGE,
+        //     },
+        //   },
+        //   ...props.initialState,
+        // }}
         pageSizeOptions={[10, 20, 30, 100]} // DataGrid max is 100
         disableRowSelectionOnClick
         sx={{
