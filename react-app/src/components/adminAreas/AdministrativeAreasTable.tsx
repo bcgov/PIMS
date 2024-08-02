@@ -4,16 +4,16 @@ import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../ta
 import usePimsApi from '@/hooks/usePimsApi';
 import { dateFormatter } from '@/utilities/formatters';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { AdministrativeArea } from '@/hooks/api/useAdministrativeAreaApi';
 import { Box } from '@mui/material';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 import { LookupContext } from '@/contexts/lookupContext';
+import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
 
 const AdministrativeAreasTable = () => {
   const api = usePimsApi();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { navigateAndSetFrom } = useHistoryAwareNavigate();
+
   const snackbar = useContext(SnackBarContext);
   const lookup = useContext(LookupContext);
   const [totalCount, setTotalCount] = useState(0);
@@ -112,10 +112,10 @@ const AdministrativeAreasTable = () => {
         dataSource={handleDataChange}
         tableOperationMode="server"
         name="adminAreas"
-        onRowClick={(params) => navigate(`${params.row.Id}`, { state: { from: location } })}
+        onRowClick={(params) => navigateAndSetFrom(`${params.row.Id}`)}
         onPresetFilterChange={selectPresetFilter}
         defaultFilter={'All'}
-        onAddButtonClick={() => navigate('add')}
+        onAddButtonClick={() => navigateAndSetFrom('add')}
         presetFilterSelectOptions={[
           <CustomMenuItem key={'All'} value={'All'}>
             All Areas

@@ -42,8 +42,12 @@ const AuthRouteGuard = (props: AuthGuardProps) => {
         }
       }
     } else {
+      console.log(`Will redirect here: ${window.location.pathname + window.location.search}`);
       timeoutId.current = setTimeout(
-        () => authStateContext.keycloak.login({ postLoginRedirectURL: window.location.pathname }),
+        () =>
+          authStateContext.keycloak.login({
+            postLoginRedirectURL: window.location.pathname + window.location.search,
+          }),
         5000,
       );
     }

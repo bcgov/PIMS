@@ -5,7 +5,6 @@ import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { GridColDef, GridColumnHeaderTitle, GridEventListener } from '@mui/x-data-grid';
 import { dateFormatter, pidFormatter, zeroPadPID } from '@/utilities/formatters';
 import { ClassificationInline } from './ClassificationIcon';
-import { useNavigate } from 'react-router-dom';
 import usePimsApi from '@/hooks/usePimsApi';
 import { Parcel, ParcelEvaluation, ParcelFiscal } from '@/hooks/api/useParcelsApi';
 import { Building, BuildingEvaluation, BuildingFiscal } from '@/hooks/api/useBuildingsApi';
@@ -13,6 +12,7 @@ import { propertyTypeMapper, PropertyTypes } from '@/constants/propertyTypes';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 import { CommonFiltering } from '@/interfaces/ICommonFiltering';
 import { LookupContext } from '@/contexts/lookupContext';
+import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
 
 interface IPropertyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
@@ -51,7 +51,7 @@ export const useClassificationStyle = () => {
 const PropertyTable = (props: IPropertyTable) => {
   const [totalCount, setTotalCount] = useState(0);
   const api = usePimsApi();
-  const navigate = useNavigate();
+  const { navigateAndSetFrom } = useHistoryAwareNavigate();
   const snackbar = useContext(SnackBarContext);
   const lookup = useContext(LookupContext);
 
@@ -287,7 +287,7 @@ const PropertyTable = (props: IPropertyTable) => {
           defaultFilter={'All Properties'}
           tableOperationMode="server"
           onRowClick={props.rowClickHandler}
-          onAddButtonClick={() => navigate('add')}
+          onAddButtonClick={() => navigateAndSetFrom('add')}
           presetFilterSelectOptions={[
             <CustomMenuItem key={'All Properties'} value={'All Properties'}>
               All Properties

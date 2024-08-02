@@ -1,4 +1,4 @@
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Home from '@/pages/Home';
 import React, { useContext } from 'react';
 import '@/App.css';
@@ -31,20 +31,11 @@ import SnackBarContextProvider from './contexts/snackbarContext';
 import ParcelMap from '@/components/map/ParcelMap';
 import LookupContextProvider from '@/contexts/lookupContext';
 import BulkUpload from './pages/BulkUpload';
+import useHistoryAwareNavigate from './hooks/useHistoryAwareNavigate';
 
 const Router = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
   const auth = useContext(AuthContext);
-
-  const goToFromStateOrSetRoute = (setRoute: string) => {
-    const previousLocation = location.state?.from;
-    if (previousLocation) {
-      navigate(previousLocation.pathname + previousLocation.search);
-    } else {
-      navigate(setRoute);
-    }
-  };
+  const { goToFromStateOrSetRoute } = useHistoryAwareNavigate();
 
   // Reusable piece to show map on many routes
   const showMap = () => (
