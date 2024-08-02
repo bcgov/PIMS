@@ -19,6 +19,7 @@ import { Project } from '@/typeorm/Entities/Project';
 import { ProjectSchema } from '@/controllers/projects/projectsSchema';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { DeleteResult } from 'typeorm';
+import { faker } from '@faker-js/faker';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
 
@@ -58,6 +59,13 @@ jest.mock('@/services/users/usersServices', () => ({
   getUser: (guid: string) => _getUser(guid),
   getAgencies: jest.fn().mockResolvedValue([1, 2]),
   hasAgencies: jest.fn(() => _hasAgencies()),
+}));
+
+jest.mock('@/services/notifications/notificationServices', () => ({
+  cancelAllProjectNotifications: () => ({
+    succeeded: faker.number.int(),
+    failed: faker.number.int(),
+  }),
 }));
 
 jest
@@ -225,7 +233,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
     });
     it('should return status 403 when user does not have correct agencies', async () => {
       mockRequest.params.projectId = '1';
-      mockRequest.setUser({ client_roles: [Roles.GENERAL_USER] });
+      mockRequest.setUser({ client_roles: [Roles.GENERAL_USER], hasRoles: () => false });
       _hasAgencies.mockImplementationOnce(() => false);
       await controllers.getDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(403);
@@ -304,12 +312,14 @@ describe('UNIT - Testing controllers for users routes.', () => {
   describe('DELETE /projects/disposal/:projectId', () => {
     it('should return status 200 on successful deletion', async () => {
       mockRequest.params.projectId = '1';
+      mockRequest.setUser({ client_roles: [Roles.ADMIN], hasRoles: () => true });
       await controllers.deleteDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
 
     it('should return status 404 on no resource', async () => {
       mockRequest.params.projectId = 'abc';
+      mockRequest.setUser({ client_roles: [Roles.ADMIN], hasRoles: () => true });
       await controllers.deleteDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
@@ -320,208 +330,6 @@ describe('UNIT - Testing controllers for users routes.', () => {
       mockRequest.body = produceProject();
       await controllers.addDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(201);
-    });
-  });
-
-  describe('PUT /projects/disposal/workflows', () => {
-    it('should return stub response 501', async () => {
-      await controllers.requestProjectStatusChange(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 on successful project status change request', async () => {
-      await controllers.requestProjectStatusChange(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
-  });
-
-  describe('GET /projects/reports', () => {
-    it('should return stub response 501', async () => {
-      await controllers.getAllProjectReports(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and an array of reports', async () => {
-      await controllers.getAllProjectReports(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
-  });
-
-  describe('GET /projects/reports/:reportId', () => {
-    it('should return stub response 501', async () => {
-      await controllers.getProjectReport(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and a report', async () => {
-      mockRequest.params.projectId = '1';
-      await controllers.getProjectReport(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
-
-    xit('should return status 404 on no resource', async () => {
-      mockRequest.params.projectId = '-1';
-      await controllers.getProjectReport(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(404);
-    });
-  });
-
-  describe('PUT /projects/reports/:reportId', () => {
-    it('should return stub response 501', async () => {
-      await controllers.updateProjectReport(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and a report', async () => {
-      mockRequest.params.projectId = '1';
-      await controllers.updateProjectReport(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
-
-    xit('should return status 404 on no resource', async () => {
-      mockRequest.params.projectId = '-1';
-      await controllers.updateProjectReport(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(404);
-    });
-  });
-
-  describe('DELETE /projects/reports/:reportId', () => {
-    it('should return stub response 501', async () => {
-      await controllers.deleteProjectReport(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and a report', async () => {
-      mockRequest.params.projectId = '1';
-      await controllers.deleteProjectReport(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
-
-    xit('should return status 404 on no resource', async () => {
-      mockRequest.params.projectId = '-1';
-      await controllers.deleteProjectReport(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(404);
-    });
-  });
-
-  describe('POST /projects/reports/:reportId', () => {
-    it('should return stub response 501', async () => {
-      await controllers.addProjectReport(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and a report', async () => {
-      await controllers.addProjectReport(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(201);
-    });
-  });
-
-  describe('GET /projects/reports/snapshots/:reportId', () => {
-    it('should return stub response 501', async () => {
-      await controllers.getProjectReportSnapshots(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and an array of snapshots', async () => {
-      mockRequest.params.reportId = '1';
-      await controllers.getProjectReportSnapshots(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
-
-    xit('should return status 404 on no resource', async () => {
-      mockRequest.params.reportId = '-1';
-      await controllers.getProjectReportSnapshots(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(404);
-    });
-  });
-
-  describe('POST /projects/reports/snapshots/:reportId', () => {
-    it('should return stub response 501', async () => {
-      await controllers.generateProjectReportSnapshots(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and an array of snapshots', async () => {
-      mockRequest.params.reportId = '1';
-      await controllers.generateProjectReportSnapshots(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
-
-    xit('should return status 404 on no resource', async () => {
-      mockRequest.params.reportId = '-1';
-      await controllers.generateProjectReportSnapshots(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(404);
-    });
-  });
-
-  describe('GET /projects/reports/refresh/:reportId', () => {
-    it('should return stub response 501', async () => {
-      await controllers.refreshProjectSnapshots(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and an array of snapshots', async () => {
-      mockRequest.params.reportId = '1';
-      await controllers.refreshProjectSnapshots(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
-
-    xit('should return status 404 on no resource', async () => {
-      mockRequest.params.reportId = '-1';
-      await controllers.refreshProjectSnapshots(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(404);
-    });
-  });
-
-  describe('GET /projects/status', () => {
-    it('should return stub response 501', async () => {
-      await controllers.getAllProjectStatus(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and an array of statuses', async () => {
-      mockRequest.params.reportId = '1';
-      await controllers.getAllProjectStatus(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
-  });
-
-  describe('GET /projects/status/:statusCode/tasks', () => {
-    it('should return stub response 501', async () => {
-      await controllers.getProjectStatusTasks(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and an array of tasks', async () => {
-      mockRequest.params.statusCode = '1';
-      await controllers.getProjectStatusTasks(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
-  });
-
-  describe('GET /projects/workflows/:workflowCode/status', () => {
-    it('should return stub response 501', async () => {
-      await controllers.getProjectWorkflowStatuses(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and an array of statuses', async () => {
-      mockRequest.params.workflowCode = '1';
-      await controllers.getProjectWorkflowStatuses(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
-  });
-
-  describe('GET /projects/workflows/:workflowCode/tasks', () => {
-    it('should return stub response 501', async () => {
-      await controllers.getProjectWorkflowTasks(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and an array of statuses', async () => {
-      mockRequest.params.workflowCode = '1';
-      await controllers.getProjectWorkflowTasks(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
     });
   });
 

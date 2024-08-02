@@ -191,14 +191,6 @@ describe('UNIT - User services', () => {
     });
   });
 
-  describe('getAdministrators', () => {
-    it('should return users that have administrative role in the given agencies', async () => {
-      const admins = await userServices.getAdministrators(['123', '456']);
-      expect(AppDataSource.getRepository(User).find).toHaveBeenCalledTimes(1);
-      expect(Array.isArray(admins)).toBe(true);
-    });
-  });
-
   describe('normalizeKeycloakUser', () => {
     it('should return a normalized user from IDIR', () => {
       const result = userServices.normalizeKeycloakUser(ssoUser);

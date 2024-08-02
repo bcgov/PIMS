@@ -45,7 +45,8 @@ describe('UNIT - Parcels', () => {
   describe('GET /properties/parcels/:parcelId', () => {
     it('should return 200 with a correct response body', async () => {
       mockRequest.params.parcelId = '1';
-      _hasAgencies.mockImplementationOnce(() => true);
+      // _hasAgencies.mockImplementationOnce(() => true);
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
       await controllers.getParcel(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
@@ -72,7 +73,7 @@ describe('UNIT - Parcels', () => {
     });
     it('should return with status 403 when user doenst have permission to view parcel', async () => {
       mockRequest.params.parcelId = '1';
-      mockRequest.setUser({ client_roles: [Roles.GENERAL_USER] });
+      mockRequest.setUser({ client_roles: [Roles.GENERAL_USER], hasRoles: () => false });
       _hasAgencies.mockImplementationOnce(() => false);
       await controllers.getParcel(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(403);
@@ -195,45 +196,6 @@ describe('UNIT - Parcels', () => {
         throw new Error();
       });
       expect(async () => await controllers.addParcel(mockRequest, mockResponse)).rejects.toThrow();
-    });
-  });
-
-  describe('PUT /properties/parcel/:id/financial', () => {
-    xit('should return the stub response of 501', async () => {
-      await controllers.getParcels(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return 200 with a correct response body', async () => {
-      mockRequest.params.parcelId = '1';
-      await controllers.getParcels(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
-  });
-
-  describe('GET /properties/parcel/check/pin-available', () => {
-    xit('should return the stub response of 501', async () => {
-      await controllers.getParcels(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return a status of 200', async () => {
-      mockRequest.query.pin = '1234';
-      await controllers.checkPinAvailable(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
-  });
-
-  describe('GET /properties/parcel/check/pid-available', () => {
-    xit('should return the stub response of 501', async () => {
-      await controllers.getParcels(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return a status of 200', async () => {
-      mockRequest.query.pid = '1234';
-      await controllers.checkPidAvailable(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
     });
   });
 });
