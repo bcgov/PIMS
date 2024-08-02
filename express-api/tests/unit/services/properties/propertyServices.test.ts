@@ -17,6 +17,8 @@ import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { ParcelEvaluation } from '@/typeorm/Entities/ParcelEvaluation';
 import { ParcelFiscal } from '@/typeorm/Entities/ParcelFiscal';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
+import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
 import { User } from '@/typeorm/Entities/User';
 import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
@@ -38,6 +40,8 @@ import {
   produceBuildingEvaluation,
   produceBuildingFiscal,
   produceSSO,
+  produceProjectStatus,
+  produceProjectProperty,
 } from 'tests/testUtils/factories';
 import { DeepPartial, EntityTarget, ObjectLiteral } from 'typeorm';
 import xlsx, { WorkSheet } from 'xlsx';
@@ -81,6 +85,46 @@ const _propertyUnionCreateQueryBuilder: any = {
   getMany: () => [producePropertyUnion()],
   getManyAndCount: () => [[producePropertyUnion()], 1],
 };
+
+const _projectStatusCreateQueryBuilder: any = {
+  select: () => _projectStatusCreateQueryBuilder,
+  leftJoinAndSelect: () => _projectStatusCreateQueryBuilder,
+  where: () => _projectStatusCreateQueryBuilder,
+  orWhere: () => _projectStatusCreateQueryBuilder,
+  andWhere: () => _projectStatusCreateQueryBuilder,
+  take: () => _projectStatusCreateQueryBuilder,
+  skip: () => _projectStatusCreateQueryBuilder,
+  orderBy: () => _projectStatusCreateQueryBuilder,
+  getMany: () => [produceProjectStatus()],
+};
+
+const _projectPropertyCreateQueryBuilder: any = {
+  select: () => _projectPropertyCreateQueryBuilder,
+  leftJoinAndSelect: () => _projectPropertyCreateQueryBuilder,
+  where: () => _projectPropertyCreateQueryBuilder,
+  orWhere: () => _projectPropertyCreateQueryBuilder,
+  andWhere: () => _projectPropertyCreateQueryBuilder,
+  take: () => _projectPropertyCreateQueryBuilder,
+  skip: () => _projectPropertyCreateQueryBuilder,
+  orderBy: () => _projectPropertyCreateQueryBuilder,
+  getMany: () => [produceProjectProperty()],
+};
+
+jest
+  .spyOn(AppDataSource.getRepository(ProjectProperty), 'createQueryBuilder')
+  .mockImplementation(() => _projectPropertyCreateQueryBuilder);
+
+jest
+  .spyOn(AppDataSource.getRepository(ProjectProperty), 'find')
+  .mockImplementation(async () => [produceProjectProperty()]);
+
+jest
+  .spyOn(AppDataSource.getRepository(ProjectStatus), 'createQueryBuilder')
+  .mockImplementation(() => _projectStatusCreateQueryBuilder);
+
+jest
+  .spyOn(AppDataSource.getRepository(ProjectStatus), 'find')
+  .mockImplementation(async () => [produceProjectStatus()]);
 
 jest
   .spyOn(AppDataSource.getRepository(Parcel), 'createQueryBuilder')
