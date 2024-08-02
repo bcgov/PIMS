@@ -32,6 +32,9 @@ import userServices from '../users/usersServices';
 import { Brackets, FindManyOptions, FindOptionsWhere, ILike, In, QueryRunner } from 'typeorm';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { PropertyType } from '@/constants/propertyType';
+import { ProjectStatus } from '@/constants/projectStatus';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
+import { ProjectStatus as ProjectStatusEntity } from '@/typeorm/Entities/ProjectStatus';
 import { parentPort } from 'worker_threads';
 
 /**
@@ -42,6 +45,33 @@ import { parentPort } from 'worker_threads';
  * @returns An object containing the found parcels and buildings that match the search criteria.
  */
 const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?: number[]) => {
+  const allStatusIds = (await AppDataSource.getRepository(ProjectStatusEntity).find()).map(
+    (i) => i.Id,
+  );
+  const allowedStatusIds = [
+    ProjectStatus.CANCELLED,
+    ProjectStatus.DENIED,
+    ProjectStatus.TRANSFERRED_WITHIN_GRE,
+  ];
+  const disallowedStatusIds = allStatusIds.filter((s) => !allowedStatusIds.includes(s));
+
+  // Find all properties that are attached to projects in states other than Cancelled, Transferred within GRE, or Denied
+  // Get project properties that are in projects currently in the disallowed statuses
+  const excludedIds = await AppDataSource.getRepository(ProjectProperty).find({
+    relations: {
+      Project: true,
+    },
+    where: {
+      Project: {
+        StatusId: In(disallowedStatusIds),
+      },
+    },
+  });
+
+  const excludedParcelIds = excludedIds.map((row) => row.ParcelId).filter((id) => id != null);
+
+  const excludedBuildingIds = excludedIds.map((row) => row.BuildingId).filter((id) => id != null);
+
   const parcelsQuery = await AppDataSource.getRepository(Parcel)
     .createQueryBuilder('parcel')
     .leftJoinAndSelect('parcel.Agency', 'agency')
@@ -49,6 +79,7 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
     .leftJoinAndSelect('parcel.Evaluations', 'evaluations')
     .leftJoinAndSelect('parcel.Fiscals', 'fiscals')
     .leftJoinAndSelect('parcel.Classification', 'classification')
+    // Match the search criteria
     .where(
       new Brackets((qb) => {
         qb.where(`LPAD(parcel.pid::text, 9, '0') ILIKE '%${keyword.replaceAll('-', '')}%'`)
@@ -58,7 +89,10 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
           .orWhere(`parcel.address1 ILIKE '%${keyword}%'`);
       }),
     )
-    .andWhere(`classification.Name in ('Surplus Encumbered', 'Surplus Active')`);
+    // Only include surplus properties
+    .andWhere(`classification.Name in ('Surplus Encumbered', 'Surplus Active')`)
+    // Exclude if already is a project property in a project that's in a disallowed status
+    .andWhere(`parcel.id NOT IN(:...excludedParcelIds)`, { excludedParcelIds });
 
   // Add the optional agencyIds filter if provided
   if (agencyIds && agencyIds.length > 0) {
@@ -76,16 +110,20 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
     .leftJoinAndSelect('building.Evaluations', 'evaluations')
     .leftJoinAndSelect('building.Fiscals', 'fiscals')
     .leftJoinAndSelect('building.Classification', 'classification')
+    // Match the search criteria
     .where(
       new Brackets((qb) => {
-        qb.where(`building.pid::text like :keyword`, { keyword: `%${keyword}%` })
-          .orWhere(`building.pin::text like :keyword`, { keyword: `%${keyword}%` })
-          .orWhere(`agency.name like :keyword`, { keyword: `%${keyword}%` })
-          .orWhere(`adminArea.name like :keyword`, { keyword: `%${keyword}%` })
-          .orWhere(`building.address1 like :keyword`, { keyword: `%${keyword}%` });
+        qb.where(`LPAD(building.pid::text, 9, '0') ILIKE '%${keyword.replaceAll('-', '')}%'`)
+          .orWhere(`building.pin::text ILIKE '%${keyword}%'`)
+          .orWhere(`agency.name ILIKE '%${keyword}%'`)
+          .orWhere(`adminArea.name ILIKE '%${keyword}%'`)
+          .orWhere(`building.address1 ILIKE '%${keyword}%'`);
       }),
     )
-    .andWhere(`classification.Name in ('Surplus Encumbered', 'Surplus Active')`);
+    // Only include surplus properties
+    .andWhere(`classification.Name in ('Surplus Encumbered', 'Surplus Active')`)
+    // Exclude if already is a project property in a project that's in a disallowed status
+    .andWhere(`building.id NOT IN(:...excludedBuildingIds)`, { excludedBuildingIds });
 
   if (agencyIds && agencyIds.length > 0) {
     buildingsQuery.andWhere(`building.agency_id IN (:...agencyIds)`, { agencyIds });
