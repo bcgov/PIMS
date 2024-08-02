@@ -19,11 +19,11 @@ This script was created to help resolve some bad data stored within PIMS. [Firew
 2. Place the file you would like to process in the 'data' folder.
 3. Run the script with the following structure. Use python3 if that is what worked in step 1: 
 
-    `python(3) <path_to_propertyCheck>propertyCheck.py <flag1> <file1>`
+    `python(3) <path_to_property_check.py>property_check.py.py <flag1> <file1>`
 
     If you would like to run with multiple flags and files include them in the same pattern proceeding the first flag and file. eg: 
 
-    `python3 propertyCheck.py -run data.csv -m other_data.csv`
+    `python3 property_check.py.py -run data.csv -m other_data.csv`
 
     This command will run process 'run' on the file data.csv and the process 'm' on the file other_data.csv. 
 
@@ -37,7 +37,7 @@ Running the script followed by a '-run' flag will start the proess laid out in p
 
 Required Column(s): "Address1", "City", "Point", "PID"
 
-Example: `python3 propertyCheck.py -run data_to_check.csv`
+Example: `python3 property_check.py.py -run data_to_check.csv`
 
 ### -m
 
@@ -45,7 +45,7 @@ Running the script followed by a '-m' flag will go through the given file and re
 
 Required Column(s): "Ministry"
 
-Example: `python3 propertyCheck.py -m data_with_many_ministries.csv`
+Example: `python3 property_check.py.py -m data_with_many_ministries.csv`
 
 ### -p
 
@@ -53,7 +53,7 @@ Running the script followed by a '-p' flag will go through the given file and ch
 
 Required Column(s): "Point", "PID"
 
-Example: `python3 propertyCheck.py -p check_point_by_PID.csv`
+Example: `python3 property_check.py.py -p check_point_by_PID.csv`
 
 ### -l
 
@@ -61,7 +61,7 @@ Running the script followed by a '-l' flag will go through the given file and ch
 
 Required Column(s): "Point", "PID"
 
-Example: `python3 propertyCheck.py -l check_PID_by_point.csv`
+Example: `python3 property_check.py.py -l check_PID_by_point.csv`
 
 ### -c
 
@@ -69,7 +69,7 @@ Running the script followed by a '-c' flag will go through the given file and ch
 
 Required Column(s): "Point", "PID", "City"
 
-Example: `python3 propertyCheck.py -c check_city_by_pid.csv`
+Example: `python3 property_check.py.py -c check_city_by_pid.csv`
 
 
 ## Notes
