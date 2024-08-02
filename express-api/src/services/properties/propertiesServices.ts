@@ -72,9 +72,6 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
 
   const excludedBuildingIds = excludedIds.map((row) => row.BuildingId).filter((id) => id != null);
 
-  console.log('excludedParcelIds', excludedParcelIds);
-  console.log('excludedBuildingIds', excludedBuildingIds);
-
   const parcelsQuery = await AppDataSource.getRepository(Parcel)
     .createQueryBuilder('parcel')
     .leftJoinAndSelect('parcel.Agency', 'agency')
