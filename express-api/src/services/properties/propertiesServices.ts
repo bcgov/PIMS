@@ -32,6 +32,9 @@ import userServices from '../users/usersServices';
 import { Brackets, FindManyOptions, FindOptionsWhere, ILike, In, QueryRunner } from 'typeorm';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { PropertyType } from '@/constants/propertyType';
+import { ProjectStatus } from '@/constants/projectStatus';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
+import { ProjectStatus as ProjectStatusEntity } from '@/typeorm/Entities/ProjectStatus';
 
 /**
  * Perform a fuzzy search for properties based on the provided keyword.
@@ -41,6 +44,36 @@ import { PropertyType } from '@/constants/propertyType';
  * @returns An object containing the found parcels and buildings that match the search criteria.
  */
 const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?: number[]) => {
+  const allStatusIds = (await AppDataSource.getRepository(ProjectStatusEntity).find()).map(
+    (i) => i.Id,
+  );
+  const allowedStatusIds = [
+    ProjectStatus.CANCELLED,
+    ProjectStatus.DENIED,
+    ProjectStatus.TRANSFERRED_WITHIN_GRE,
+  ];
+  const disallowedStatusIds = allStatusIds.filter((s) => !allowedStatusIds.includes(s));
+
+  // Find all properties that are attached to projects in states other than Cancelled, Transferred within GRE, or Denied
+  // Get project properties that are in projects currently in the disallowed statuses
+  const excludedIds = await AppDataSource.getRepository(ProjectProperty).find({
+    relations: {
+      Project: true,
+    },
+    where: {
+      Project: {
+        StatusId: In(disallowedStatusIds),
+      },
+    },
+  });
+
+  const excludedParcelIds = excludedIds.map((row) => row.ParcelId).filter((id) => id != null);
+
+  const excludedBuildingIds = excludedIds.map((row) => row.BuildingId).filter((id) => id != null);
+
+  console.log('excludedParcelIds', excludedParcelIds);
+  console.log('excludedBuildingIds', excludedBuildingIds);
+
   const parcelsQuery = await AppDataSource.getRepository(Parcel)
     .createQueryBuilder('parcel')
     .leftJoinAndSelect('parcel.Agency', 'agency')
@@ -48,6 +81,7 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
     .leftJoinAndSelect('parcel.Evaluations', 'evaluations')
     .leftJoinAndSelect('parcel.Fiscals', 'fiscals')
     .leftJoinAndSelect('parcel.Classification', 'classification')
+    // Match the search criteria
     .where(
       new Brackets((qb) => {
         qb.where(`LPAD(parcel.pid::text, 9, '0') ILIKE '%${keyword.replaceAll('-', '')}%'`)
@@ -57,33 +91,10 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
           .orWhere(`parcel.address1 ILIKE '%${keyword}%'`);
       }),
     )
+    // Only include surplus properties
     .andWhere(`classification.Name in ('Surplus Encumbered', 'Surplus Active')`)
-    .orWhere((qb) => {
-      // Inclusion subquery: parcels associated with Cancelled projects
-      const inclusionSubQuery = qb
-        .subQuery()
-        .select('pp.parcel_id')
-        .from('ProjectProperty', 'pp')
-        .innerJoin('pp.Project', 'p')
-        .innerJoin('p.Status', 'ps')
-        .where('pp.parcel_id = parcel.id')
-        .andWhere('ps.name = :statusName', { statusName: 'Cancelled' })
-        .andWhere('pp.parcel_id IS NOT NULL')
-        .getQuery();
-
-      // Exclusion subquery: parcels associated with non-Cancelled projects
-      const exclusionSubQuery = qb
-        .subQuery()
-        .select('pp.parcel_id')
-        .from('ProjectProperty', 'pp')
-        .innerJoin('pp.Project', 'p')
-        .innerJoin('p.Status', 'ps')
-        .where('ps.name <> :statusName', { statusName: 'Cancelled' })
-        .andWhere('pp.parcel_id IS NOT NULL')
-        .getQuery();
-
-      return `parcel.id IN (${inclusionSubQuery}) OR parcel.id NOT IN (${exclusionSubQuery})`;
-    });
+    // Exclude if already is a project property in a project that's in a disallowed status
+    .andWhere(`parcel.id NOT IN(:...excludedParcelIds)`, { excludedParcelIds });
 
   // Add the optional agencyIds filter if provided
   if (agencyIds && agencyIds.length > 0) {
@@ -94,63 +105,27 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
   }
   const parcels = await parcelsQuery.getMany();
 
-  const formattedKeyword = `%${keyword.replaceAll('-', '')}%`;
   const buildingsQuery = await AppDataSource.getRepository(Building)
     .createQueryBuilder('building')
     .leftJoinAndSelect('building.Agency', 'agency')
     .leftJoinAndSelect('building.AdministrativeArea', 'adminArea')
+    .leftJoinAndSelect('building.Evaluations', 'evaluations')
+    .leftJoinAndSelect('building.Fiscals', 'fiscals')
     .leftJoinAndSelect('building.Classification', 'classification')
+    // Match the search criteria
     .where(
       new Brackets((qb) => {
-        const formattedKeyword = `%${keyword.replaceAll('-', '')}%`;
-        qb.where(`LPAD(building.pid::text, 9, '0') ILIKE :keyword`, {
-          keyword: formattedKeyword,
-        })
-          .orWhere(`building.pin::text ILIKE :keyword`, { keyword: `%${keyword}%` })
-          .orWhere(`agency.name ILIKE :keyword`, { keyword: `%${keyword}%` })
-          .orWhere(`adminArea.name ILIKE :keyword`, { keyword: `%${keyword}%` })
-          .orWhere(`building.address1 ILIKE :keyword`, { keyword: `%${keyword}%` });
+        qb.where(`LPAD(building.pid::text, 9, '0') ILIKE '%${keyword.replaceAll('-', '')}%'`)
+          .orWhere(`building.pin::text ILIKE '%${keyword}%'`)
+          .orWhere(`agency.name ILIKE '%${keyword}%'`)
+          .orWhere(`adminArea.name ILIKE '%${keyword}%'`)
+          .orWhere(`building.address1 ILIKE '%${keyword}%'`);
       }),
     )
-    .andWhere(`classification.Name IN ('Surplus Encumbered', 'Surplus Active')`)
-    .andWhere((qb) => {
-      // Inclusion subquery: buildings associated with Cancelled projects
-      const inclusionSubQuery = qb
-        .subQuery()
-        .select('pp.building_id')
-        .from('ProjectProperty', 'pp')
-        .innerJoin('pp.Project', 'p')
-        .innerJoin('p.Status', 'ps')
-        .where('ps.name = :statusName', { statusName: 'Cancelled' })
-        .andWhere('pp.building_id IS NOT NULL')
-        .getQuery();
-
-      // Exclusion subquery: buildings associated with non-Cancelled projects
-      const exclusionSubQuery = qb
-        .subQuery()
-        .select('pp.building_id')
-        .from('ProjectProperty', 'pp')
-        .innerJoin('pp.Project', 'p')
-        .innerJoin('p.Status', 'ps')
-        .where('ps.name <> :statusName', { statusName: 'Cancelled' })
-        .andWhere('pp.building_id IS NOT NULL')
-        .getQuery();
-
-      return `building.id IN (${inclusionSubQuery}) OR building.id NOT IN (${exclusionSubQuery}) OR building.id NOT IN (SELECT building_id FROM project_property WHERE building_id IS NOT NULL )`;
-    })
-    .addSelect(
-      `CASE 
-        WHEN LPAD(building.pid::text, 9, '0') ILIKE :keyword THEN 1       
-        WHEN building.pin::text ILIKE :keyword THEN 1 
-        WHEN agency.name ILIKE :keyword THEN 1 
-        WHEN adminArea.name ILIKE :keyword THEN 1 
-        WHEN building.address1 ILIKE :keyword THEN 1 
-        ELSE 2 
-      END`,
-      'priority',
-    )
-    .orderBy('priority', 'ASC')
-    .setParameters({ keyword: formattedKeyword }); // Set parameters with proper binding
+    // Only include surplus properties
+    .andWhere(`classification.Name in ('Surplus Encumbered', 'Surplus Active')`)
+    // Exclude if already is a project property in a project that's in a disallowed status
+    .andWhere(`building.id NOT IN(:...excludedBuildingIds)`, { excludedBuildingIds });
 
   if (agencyIds && agencyIds.length > 0) {
     buildingsQuery.andWhere(`building.agency_id IN (:...agencyIds)`, { agencyIds });
