@@ -255,10 +255,12 @@ const ProjectDetail = (props: IProjectDetail) => {
     { title: disposalProperties },
     { title: financialInformation },
     { title: documentationHistory },
-    { title: notificationsHeader },
   ];
-  // only show Agency Interest for admin or auditor
-  isAdmin || isAuditor ? sideBarList.splice(3, 0, { title: agencyInterest }) : null;
+  // only show Agency Interest and notifications for admins
+  if (isAdmin) {
+    sideBarList.splice(3, 0, { title: agencyInterest });
+    sideBarList.push({ title: notificationsHeader });
+  }
 
   return (
     <CollapsibleSidebar items={sideBarList}>
@@ -323,7 +325,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           onEdit={() => setOpenFinancialInfoDialog(true)}
           disableEdit={!isAdmin}
         />
-        {(isAdmin || isAuditor) && (
+        {isAdmin && (
           <DataCard
             loading={isLoading}
             title={agencyInterest}
@@ -429,37 +431,39 @@ const ProjectDetail = (props: IProjectDetail) => {
             )}
           </Box>
         </DataCard>
-        <DataCard
-          loading={isLoading}
-          title={notificationsHeader}
-          values={undefined}
-          id={notificationsHeader}
-          onEdit={() => setOpenNotificationDialog(true)}
-          disableEdit={!data?.parsedBody?.Notifications?.length}
-          editButtonText="Expand Notifications"
-        >
-          {!data?.parsedBody.Notifications?.length ? ( //TODO: Logic will depend on precense of agency responses
-            <Box display={'flex'} justifyContent={'center'}>
-              <Typography>No notifications were sent for this project.</Typography>
-            </Box>
-          ) : (
-            <ProjectNotificationsTable
-              rows={
-                notifications?.items
-                  ? notifications.items.map((resp) => ({
-                      agency: lookup.getLookupValueById('Agencies', resp.ToAgencyId)?.Name,
-                      id: resp.Id,
-                      projectNumber: data?.parsedBody.ProjectNumber,
-                      status: getStatusString(resp.Status),
-                      sendOn: resp.SendOn,
-                      to: resp.To,
-                      subject: resp.Subject,
-                    }))
-                  : []
-              }
-            />
-          )}
-        </DataCard>
+        {isAdmin && (
+          <DataCard
+            loading={isLoading}
+            title={notificationsHeader}
+            values={undefined}
+            id={notificationsHeader}
+            onEdit={() => setOpenNotificationDialog(true)}
+            disableEdit={!data?.parsedBody?.Notifications?.length}
+            editButtonText="Expand Notifications"
+          >
+            {!data?.parsedBody.Notifications?.length ? ( //TODO: Logic will depend on precense of agency responses
+              <Box display={'flex'} justifyContent={'center'}>
+                <Typography>No notifications were sent for this project.</Typography>
+              </Box>
+            ) : (
+              <ProjectNotificationsTable
+                rows={
+                  notifications?.items
+                    ? notifications.items.map((resp) => ({
+                        agency: lookup.getLookupValueById('Agencies', resp.ToAgencyId)?.Name,
+                        id: resp.Id,
+                        projectNumber: data?.parsedBody.ProjectNumber,
+                        status: getStatusString(resp.Status),
+                        sendOn: resp.SendOn,
+                        to: resp.To,
+                        subject: resp.Subject,
+                      }))
+                    : []
+                }
+              />
+            )}
+          </DataCard>
+        )}
         <DeleteDialog
           open={openDeleteDialog}
           confirmButtonProps={{ loading: deletingProject }}

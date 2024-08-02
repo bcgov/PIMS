@@ -6,6 +6,7 @@ import userServices from '@/services/users/usersServices';
 import { isAdmin, isAuditor, checkUserAgencyPermission } from '@/utilities/authorizationChecks';
 import { DeepPartial } from 'typeorm';
 import { Project } from '@/typeorm/Entities/Project';
+import { Roles } from '@/constants/roles';
 import notificationServices from '@/services/notifications/notificationServices';
 
 /**
@@ -22,6 +23,8 @@ export const getDisposalProject = async (req: Request, res: Response) => {
    *   "bearerAuth" : []
    * }]
    */
+  // admins are permitted to view any project
+  const permittedRoles = [Roles.ADMIN];
   const user = req.user as SSOUser;
   const projectId = Number(req.params.projectId);
   if (isNaN(projectId)) {
@@ -32,7 +35,7 @@ export const getDisposalProject = async (req: Request, res: Response) => {
     return res.status(404).send('Project matching this internal ID not found.');
   }
 
-  if (!(await checkUserAgencyPermission(user, [project.AgencyId]))) {
+  if (!(await checkUserAgencyPermission(user, [project.AgencyId], permittedRoles))) {
     return res.status(403).send('You are not authorized to view this project.');
   }
 
@@ -98,6 +101,11 @@ export const deleteDisposalProject = async (req: Request, res: Response) => {
    *   "bearerAuth" : []
    * }]
    */
+  // Only admins can delete projects
+  if (!isAdmin(req.user)) {
+    return res.status(403).send('Projects can only be deleted by Administrator role.');
+  }
+
   const projectId = Number(req.params.projectId);
   if (isNaN(projectId)) {
     return res.status(400).send('Invalid Project ID');
@@ -123,6 +131,10 @@ export const deleteDisposalProject = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status with the new project.
  */
 export const addDisposalProject = async (req: Request, res: Response) => {
+  // Auditors can no add projects
+  if (isAuditor(req.user)) {
+    return res.status(403).send('Projects can not be added by user with Auditor role.');
+  }
   // Extract project data from request body
   // Extract projectData and propertyIds from the request body
   const {
@@ -157,7 +169,7 @@ export const getProjects = async (req: Request, res: Response) => {
   }
   const filterResult = filter.data;
   const kcUser = req.user as unknown as SSOUser;
-  if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
+  if (!isAdmin(kcUser)) {
     // get array of user's agencies
     const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
     filterResult.agencyId = usersAgencies;
