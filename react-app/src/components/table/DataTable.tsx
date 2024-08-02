@@ -372,16 +372,15 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         setKeywordSearchContents(getSearchParamsKey('keywordFilter'));
         updateSearchValue(getSearchParamsKey('keywordFilter'));
       }
-      // Set quick select filter
+
       if (getSearchParamsKey('quickSelectFilter')) {
         setSelectValue(getSearchParamsKey('quickSelectFilter'));
         props.onPresetFilterChange(getSearchParamsKey('quickSelectFilter'), tableApiRef);
-      }
-      // Set other column filter
-      if (
+      } else if (
         getSearchParamsKey('columnFilterName') &&
         getSearchParamsKey('columnFilterValue') &&
-        getSearchParamsKey('columnFilterMode')
+        getSearchParamsKey('columnFilterMode') &&
+        getSearchParamsKey('columnFilterValue') !== 'undefined'
       ) {
         const modelObj: GridFilterModel = {
           items: [],
@@ -416,7 +415,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         tableApiRef.current.setPaginationModel({ page: DEFAULT_PAGE, pageSize: DEFAULT_PAGESIZE });
       }
     }
-  }, [tableApiRef]);
+  }, [searchParams]);
 
   // Sets quickfilter value of DataGrid. newValue is a string input.
   const updateSearchValue = useMemo(() => {
@@ -565,6 +564,9 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
               setSearchParams((params) => {
                 params.set('quickSelectFilter', e.target.value);
                 params.delete('keywordFilter');
+                params.delete('columnFilterValue');
+                params.delete('columnFilterMode');
+                params.delete('columnFilterName');
                 return params;
               });
               props.onPresetFilterChange(`${e.target.value}`, tableApiRef);
