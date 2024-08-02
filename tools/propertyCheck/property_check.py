@@ -12,8 +12,6 @@ through the following flags.
 """
 import os
 import sys
-import csv
-import datetime
 import parcel_layer_connection
 import process_data
 import helpers
@@ -37,32 +35,12 @@ def print_num_removed(number, message):
     print("removed ", number, " rows that ", message)
     print()
 
-def read_csv(in_file):
-    """ 
-    Ensures that incoming file exists and has necessary columns.
-    reads and returns data.
-    """
-    rows = []
-
-    # open file and process data
-    with open("./data/" + in_file, 'r', encoding='utf-8') as csv_in:
-        csvreader = csv.reader(csv_in)
-        # the first row is field names
-        rows.append(next(csvreader))
-        # if all fields are present we can read the rest of the data
-        for row in csvreader:
-            rows.append(row)
-    # return column names and data
-    return rows
-
 def check_headers(headers, needed_list):
     """Ensures that every element in needed list is included in headers"""
     for i in needed_list:
         if i not in headers:
-            exit_message = """
-                  Please ensure all necessary columns are included in |
-                  in_properties.csv: 
-                  """ + needed_list
+            exit_message = "Please ensure all necessary columns: " \
+                + str(needed_list) + " are included in given file."
             exit_with_message(exit_message)
 
 def remove_elements(rows):
@@ -78,24 +56,12 @@ def remove_elements(rows):
     for count, row in enumerate(rows):
         if count == 0:
             new_li.append(row)
+            continue
         ministry = row[index_of_name]
         if ministry not in REMOVE_LIST:
             new_li.append(row)
 
     return new_li
-
-def write_csv_file(rows, file_name_start):
-    """
-    Takes in a header row and list of items to be written to csv out file
-    """
-    today = datetime.datetime.today().strftime('%d%m%Y')
-    filename = "./data/" + file_name_start + "_out_" + str(today) + ".csv"
-
-    with open(filename, 'w', encoding='utf-8') as csvout:
-        csvwriter = csv.writer(csvout)
-        csvwriter.writerows(rows)
-
-    return filename
 
 def get_file_name(arg_li, flag):
     """
@@ -114,7 +80,7 @@ def process_data_flags(arg_li):
         # Use this flag if you want to go through the process laid out in
         # process_data.py.
         file_name = get_file_name(arg_li, '-run')
-        rows = read_csv(file_name)
+        rows = helpers.read_csv(file_name)
         base_file_name = file_name[:-4]
 
         needed_headers = ["Address1", "City", "Point", "PID"]
@@ -122,8 +88,8 @@ def process_data_flags(arg_li):
 
         good_li, bad_li, log_str = process_data.process(rows)
         # write good file
-        write_csv_file(good_li, "good_" + base_file_name)
-        write_csv_file(bad_li, "bad_" + base_file_name)
+        helpers.write_csv_file(good_li, "good_" + base_file_name)
+        helpers.write_csv_file(bad_li, "bad_" + base_file_name)
         helpers.write_txt_file(log_str, "log_" + base_file_name)
 
     if '-m' in arg_li:
@@ -131,58 +97,57 @@ def process_data_flags(arg_li):
         # variable stored above named REMOVE_LIST
         file_name = get_file_name(arg_li, '-m')
         base_file_name = file_name[:-4]
-        rows = read_csv(file_name)
+        rows = helpers.read_csv(file_name)
 
         needed_headers = ["Ministry"]
         check_headers(rows[0], needed_headers)
 
         rem_rows = remove_elements(rows)
-        write_csv_file(rem_rows, "remaining_" + base_file_name)
-        
+        helpers.write_csv_file(rem_rows, "remaining_ministries" + base_file_name)
 
     if '-p' in arg_li:
         # Use the flag -p if you want to go through PIDS and check that the
         # point stored falls within the returned polygon
-        file_name = get_file_name(arg_li, '-m')
+        file_name = get_file_name(arg_li, '-p')
         base_file_name = file_name[:-4]
-        rows = read_csv(file_name)
+        rows = helpers.read_csv(file_name)
         tot_rows = len(rows)
 
         needed_headers = ["Point", "PID"]
         check_headers(rows[0], needed_headers)
 
         rem_rows = parcel_layer_connection.check_rows_pid(rows)
-        print_num_removed(tot_rows - len(rem_rows), "points mismatched.")
-        write_csv_file(rem_rows, "point_mismatched" + base_file_name)
+        print_num_removed(tot_rows - len(rem_rows), "points matched.")
+        helpers.write_csv_file(rem_rows, "point_mismatched_" + base_file_name)
 
 
     if '-l' in arg_li:
         # Use the flag -l if you want to send in a POINT to the parcel layer
         # and check that the returned PID matches the stored PID
-        file_name = get_file_name(arg_li, '-m')
+        file_name = get_file_name(arg_li, '-l')
         base_file_name = file_name[:-4]
-        rows = read_csv(file_name)
+        rows = helpers.read_csv(file_name)
         tot_rows = len(rows)
 
         needed_headers = ["Point", "PID"]
         check_headers(rows[0], needed_headers)
 
         rem_rows = parcel_layer_connection.check_rows_point(rows)
-        print_num_removed(tot_rows - len(rem_rows), "PIDs mismatched.")
-        write_csv_file(rem_rows, "pid_mismatched" + base_file_name)
+        print_num_removed(tot_rows - len(rem_rows), "PIDs matched.")
+        helpers.write_csv_file(rem_rows, "pid_mismatched_" + base_file_name)
 
     if '-c' in arg_li:
         # Iterate through the file and remove any entries that match the
         # expected ministry
-        file_name = get_file_name(arg_li, '-m')
+        file_name = get_file_name(arg_li, '-c')
         base_file_name = file_name[:-4]
-        rows = read_csv(file_name)
+        rows = helpers.read_csv(file_name)
 
         needed_headers = ["Point", "PID", "City"]
         check_headers(rows[0], needed_headers)
 
         rem_rows = parcel_layer_connection.clean_municip(rows)
-        write_csv_file(rem_rows, "remaining_" + base_file_name)
+        helpers.write_csv_file(rem_rows, "remaining_cities_" + base_file_name)
 
 def main():
     """

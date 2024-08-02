@@ -2,6 +2,7 @@
 This script is used to help process data to the format needed
 """
 import datetime
+import csv
 from shapely.geometry import Polygon, Point
 from shapely import centroid
 
@@ -26,12 +27,43 @@ def remove_leading_zeros(in_num_string):
             return res
     return in_num_string
 
+def read_csv(in_file):
+    """ 
+    Ensures that incoming file exists and has necessary columns.
+    reads and returns data.
+    """
+    rows = []
+
+    # open file and process data
+    with open("./data/" + in_file, 'r', encoding='utf-8-sig') as csv_in:
+        csvreader = csv.reader(csv_in)
+        # the first row is field names
+        rows.append(next(csvreader))
+        # if all fields are present we can read the rest of the data
+        for row in csvreader:
+            rows.append(row)
+    # return column names and data
+    return rows
+
 def write_txt_file(in_file, file_name_start):
     """ Write text file """
     today = datetime.datetime.today().strftime('%d%m%Y')
-    file_name = file_name_start + "_out_" + today + ".txt"
+    file_name = "./data/" + file_name_start + "_out_" + today + ".txt"
     with open(file_name, "w", encoding='utf-8') as file:
         file.write(in_file)
+
+def write_csv_file(rows, file_name_start):
+    """
+    Takes in a header row and list of items to be written to csv out file
+    """
+    today = datetime.datetime.today().strftime('%d%m%Y')
+    filename = "./data/" + file_name_start + "_out_" + str(today) + ".csv"
+
+    with open(filename, 'w', encoding='utf-8') as csvout:
+        csvwriter = csv.writer(csvout)
+        csvwriter.writerows(rows)
+
+    return filename
 
 def is_point_in_shapes(in_point, shapes):
     """

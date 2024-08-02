@@ -81,7 +81,7 @@ def process(data_in):
         # add header row to our new files
         if index == 0:
             final_li.append(row)
-            temp_row = row
+            temp_row = list(row)
             temp_row.append("Problem")
             manual_check_li.append(temp_row)
             continue

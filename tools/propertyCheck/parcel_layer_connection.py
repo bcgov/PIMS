@@ -9,6 +9,7 @@ import http.client
 import json
 from shapely.geometry import Polygon, Point
 import helpers
+from time import sleep
 
 # how much to buff the parcel boundary up 0.00025 is roughly 100 meters
 COORD_BUFFER = 0.00025
@@ -85,6 +86,9 @@ def check_rows_point(rows):
 
         # skip header row
         if count == 0:
+            temp_row = row
+            temp_row.append("Problem")
+            problem_rows.append(temp_row)
             continue
 
         temp_row = row
@@ -143,6 +147,9 @@ def check_rows_pid(rows):
     for count, row in enumerate(rows):
         # skip the header row
         if count == 0:
+            temp_row = row
+            temp_row.append("Problem")
+            problem_rows.append(temp_row)
             continue
 
         helpers.print_percentage(count, num_rows)
@@ -162,6 +169,8 @@ def check_rows_pid(rows):
 
         try:
             readable_data = request_data_by_pid(pid)
+            readable_data = json.loads(readable_data)
+
         except: # pylint: disable=bare-except
             temp_row.append("Issue with Parcel Layer information")
             problem_rows.append(temp_row)
@@ -214,6 +223,9 @@ def clean_municip(rows):
     for count, row in enumerate(rows):
         #skip header row
         if count == 0:
+            temp_row = row
+            temp_row.append("Problem")
+            bad_rows.append(temp_row)
             continue
 
         helpers.print_percentage(count, tot_rows)
@@ -230,6 +242,7 @@ def clean_municip(rows):
 
         try:
             data = request_data_by_pid(pid)
+            data = json.loads(data)
         except: # pylint: disable=bare-except
             temp_row.append("issue requesting data from parcel layer")
             bad_rows.append(temp_row)
