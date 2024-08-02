@@ -5,7 +5,7 @@ let backendUrl = BACKEND_URL ?? '';
 const apiPort = +(API_HTTP_PORT ?? 5000);
 const frontendPort = +(APP_HTTP_PORT ?? 3000);
 
-// Use production urls unless CONTAINERIZED.
+// Use URLs from ENV when CONTAINERIZED.
 if (!CONTAINERIZED) {
   frontendUrl = `http://localhost:${frontendPort}`;
   backendUrl = `http://localhost:${apiPort}`;

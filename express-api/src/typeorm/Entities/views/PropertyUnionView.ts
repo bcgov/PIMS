@@ -16,6 +16,7 @@ import { ViewColumn, ViewEntity } from 'typeorm';
 	updated_on,
 	land_area
 FROM parcel p
+WHERE deleted_on IS NULL
 UNION ALL
 SELECT 
 	'Building' AS property_type,
@@ -30,7 +31,8 @@ SELECT
 	is_sensitive,
 	updated_on,
 	NULL AS land_area
-FROM building b)
+FROM building b
+WHERE deleted_on IS NULL)
 SELECT 
 	property.*, 
 	agc."name" AS agency_name,

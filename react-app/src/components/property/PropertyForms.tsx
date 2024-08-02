@@ -14,7 +14,7 @@ import SelectFormField, { ISelectMenuItem } from '../form/SelectFormField';
 import { Room, Help } from '@mui/icons-material';
 import { LookupObject } from '@/hooks/api/useLookupApi';
 import DateFormField from '../form/DateFormField';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { IAddressModel } from '@/hooks/api/useToolsApi';
 import { LatLng, Map } from 'leaflet';
 import usePimsApi from '@/hooks/usePimsApi';
@@ -27,6 +27,7 @@ import { FeatureCollection } from '@/hooks/api/useParcelLayerApi';
 import { Feature } from 'geojson';
 import { useMap, useMapEvents } from 'react-leaflet';
 import { GeoPoint } from '@/interfaces/IProperty';
+import { LookupContext } from '@/contexts/lookupContext';
 export type PropertyType = 'Building' | 'Parcel';
 
 interface IParcelInformationForm {
@@ -41,6 +42,7 @@ interface IGeneralInformationForm {
 
 export const GeneralInformationForm = (props: IGeneralInformationForm) => {
   const api = usePimsApi();
+  const lookup = useContext(LookupContext);
   const { propertyType, adminAreas, defaultLocationValue } = props;
   const [addressOptions, setAddressOptions] = useState<IAddressModel[]>([]);
   const [loadingOptions, setLoadingOptions] = useState(false);
@@ -176,12 +178,13 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             }}
           />
         </Grid>
-        <Grid item xs={12}>
-          <Typography variant={'caption'}>
-            {propertyType === 'Parcel' &&
-              'Please note that either a PID or PIN is required for a Parcel entry'}
-          </Typography>
-        </Grid>
+        {propertyType === 'Parcel' && (
+          <Grid item xs={12}>
+            <Typography variant={'caption'}>
+              Please note that either a PID or PIN is required for a Parcel entry
+            </Typography>
+          </Grid>
+        )}
         <Grid item xs={6}>
           <TextFormField
             fullWidth
@@ -238,6 +241,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             name={'AdministrativeAreaId'}
             label={'Administrative area'}
             options={adminAreas ?? []}
+            noOptionsText={`No matches. Request an administrative area at ${lookup.data.Config.contactEmail.split('@').join(' @')}`} // TODO: Replace this with a dialog
           />
         </Grid>
         <Grid item xs={6}>
@@ -247,6 +251,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             label={'Postal code'}
             rules={{
               validate: (val) =>
+                val === null ||
                 val.length === 0 ||
                 !!String(val).replace(/ /g, '').match(postalRegex) ||
                 'Should be a valid postal code or left blank.',
@@ -450,6 +455,7 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
                     for old data that was a mix of text and numbers. Using numeric prop stops any 
                     edit of text values, even removal.
                  */
+                if (value == '') return true;
                 if (!/^(0|[1-9]\d*)?(\.\d+)?(?<=\d)$/.test(value)) {
                   return 'This value is a percentage and must be a number greater than or equal to 0.';
                 }
