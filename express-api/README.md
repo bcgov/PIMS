@@ -24,6 +24,7 @@ Recommended values used with this API that match with the current API and Docker
 |SSO_INTEGRATION_ID|1234|See Keycloak integration. Used for CSS API.|
 |SSO_ENVIRONMENT|dev|Target environment of Keycloak integration. Used for CSS API.|
 |GEOCODER_KEY|abc123|API key for BC Geocoder use.|
+|CONTACT_EMAIL|<email@gov.bc.ca>|Destination email for frontend error reporting and help.|
 |CHES_USERNAME|abc123|Username for CHES service.|
 |CHES_PASSWORD|def456|Password for CHES service.|
 |CHES_AUTH_URL|https://...|URL where authorization tokens for CHES are obtained.|
@@ -34,6 +35,7 @@ Recommended values used with this API that match with the current API and Docker
 |CHES_BCC_USER|true|If true, CHES_ALWAYS_BCC addresses are included in all emails. |
 |CHES_OVERRIDE_TO|<email@gov.bc.ca>|Email address that overrides any *To* field on CHES requests. Used for non-prod environments.|
 |CHES_SECONDS_TO_DELAY|1000|Number of seconds to delay before email is actually sent via CHES.|
+|CHES_SEND_TO_LIVE|true|If true, will send emails to live agencies/users. Otherwise, sends emails back to the requesting user. Good for test purposes.|
 |LTSA_AUTH_URL|https://...|URL where LTSA tokens are retrieved from.|
 |LTSA_HOST_URL|https://...|URL where LTSA API calls are made to.|
 |LTSA_INTEGRATOR_USERNAME|username|The username used to obtain tokens from LTSA_AUTH_URL.|

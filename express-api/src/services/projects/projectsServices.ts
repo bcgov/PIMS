@@ -15,10 +15,10 @@ import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import logger from '@/utilities/winstonLogger';
 import {
+  Brackets,
   DeepPartial,
   FindManyOptions,
-  FindOptionsOrder,
-  FindOptionsOrderValue,
+  FindOptionsWhere,
   In,
   InsertResult,
   QueryRunner,
@@ -33,6 +33,9 @@ import { constructFindOptionFromQuery } from '@/utilities/helperFunctions';
 import { ProjectTimestamp } from '@/typeorm/Entities/ProjectTimestamp';
 import { ProjectMonetary } from '@/typeorm/Entities/ProjectMonetary';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
+import { SortOrders } from '@/constants/types';
+import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
+import { isAdmin } from '@/utilities/authorizationChecks';
 
 const projectRepo = AppDataSource.getRepository(Project);
 
@@ -125,6 +128,7 @@ const getProjectById = async (id: number) => {
  *
  * @param project - The project object to be added.
  * @param propertyIds - The IDs of the properties (parcels and buildings) to be associated with the project.
+ * @param {SSOUser} ssoUser The user making the add request.
  * @returns The newly created project.
  * @throws ErrorWithCode - If the project name is missing, agency is not found, or there is an error creating the project.
  */
@@ -188,8 +192,9 @@ const addProject = async (
 /**
  * Adds parcel relations to a project.
  *
- * @param project - The project to add parcel relations to.
- * @param parcelIds - An array of parcel IDs to add as relations.
+ * @param {DeepPartial<Project>} project - The project to add parcel relations to.
+ * @param {number[]} parcelIds - An array of parcel IDs to add as relations.
+ * @param {QueryRunner} queryRunner - Query runner for database operations.
  * @throws {ErrorWithCode} - If the parcel with the given ID does not exist or already belongs to another project.
  * @returns {Promise<void>} - A promise that resolves when the parcel relations have been added.
  */
@@ -256,8 +261,9 @@ const addProjectParcelRelations = async (
 /**
  * Adds building relations to a project.
  *
- * @param {Project} project - The project to add building relations to.
+ * @param {DeepPartial<Project>} project - The project to add building relations to.
  * @param {number[]} buildingIds - An array of building IDs to add as relations.
+ * @param {QueryRunner} queryRunner - Query runner for database operations.
  * @returns {Promise<void>} - A promise that resolves when the building relations have been added.
  * @throws {ErrorWithCode} - If a building with the given ID does not exist or if the building already belongs to another project.
  */
@@ -350,6 +356,7 @@ const removeProjectParcelRelations = async (
  *
  * @param {Project} project - The project from which to remove the building relationships.
  * @param {number[]} buildingIds - An array of building IDs to be removed from the project.
+ * @param {QueryRunner} queryRunner - Query runner for database operations.
  * @returns {Promise<void>} - A promise that resolves when the building relationships have been removed.
  */
 const removeProjectBuildingRelations = async (
@@ -371,6 +378,13 @@ const removeProjectBuildingRelations = async (
   );
 };
 
+/**
+ * Handles project notifications by retrieving related entities and generating notifications for a project.
+ * @param oldProject - The previous state of the project.
+ * @param user - The user triggering the notifications.
+ * @param queryRunner - The query runner for database operations.
+ * @returns A promise that resolves when all notifications are sent.
+ */
 const handleProjectNotifications = async (
   oldProject: DeepPartial<Project>,
   user: SSOUser,
@@ -378,24 +392,36 @@ const handleProjectNotifications = async (
 ) => {
   const projectWithRelations = await queryRunner.manager.findOne(Project, {
     relations: {
-      Agency: true,
       ProjectProperties: {
         Building: {
           Evaluations: true,
           Fiscals: true,
+          Agency: true,
+          BuildingPredominateUse: true,
         },
         Parcel: {
           Evaluations: true,
           Fiscals: true,
+          Agency: true,
         },
       },
-      AgencyResponses: true,
-      Notes: true,
     },
     where: {
       Id: oldProject.Id,
     },
   });
+  const projectAgency = await queryRunner.manager.findOne(Agency, {
+    where: { Id: projectWithRelations.AgencyId },
+  });
+  const projectAgencyResponses = await queryRunner.manager.find(ProjectAgencyResponse, {
+    where: { ProjectId: projectWithRelations.Id },
+  });
+  const projectNotes = await queryRunner.manager.find(ProjectNote, {
+    where: { ProjectId: projectWithRelations.Id },
+  });
+  projectWithRelations.Agency = projectAgency;
+  projectWithRelations.AgencyResponses = projectAgencyResponses;
+  projectWithRelations.Notes = projectNotes;
   const notifs = await notificationServices.generateProjectNotifications(
     projectWithRelations,
     oldProject.StatusId,
@@ -406,6 +432,12 @@ const handleProjectNotifications = async (
   );
 };
 
+/**
+ * Handles project tasks by updating the database with the provided tasks for a specific project.
+ * @param project - The project object containing the tasks to be handled.
+ * @param queryRunner - The query runner for managing database queries.
+ * @returns Promise<void>
+ */
 const handleProjectTasks = async (project: DeepPartial<Project>, queryRunner: QueryRunner) => {
   if (project?.Tasks?.length) {
     for (const task of project.Tasks) {
@@ -427,6 +459,11 @@ const handleProjectTasks = async (project: DeepPartial<Project>, queryRunner: Qu
   }
 };
 
+/**
+ * Handles the project agency responses by updating the database with new responses and removing any outdated ones.
+ * @param newProject - The new project object containing agency responses to be handled.
+ * @param queryRunner - The query runner for managing database transactions.
+ */
 const handleProjectAgencyResponses = async (
   newProject: DeepPartial<Project>,
   queryRunner: QueryRunner,
@@ -461,6 +498,12 @@ const handleProjectAgencyResponses = async (
   }
 };
 
+/**
+ * Handles the project notes by saving them in the database if new notes are provided.
+ * @param {DeepPartial<Project>} newProject - The new project object containing notes to be handled.
+ * @param {QueryRunner} queryRunner - The query runner for managing database transactions.
+ * @returns {Promise<void[]>} A promise that resolves to an array of insert results for the saved notes.
+ */
 const handleProjectNotes = async (newProject: DeepPartial<Project>, queryRunner: QueryRunner) => {
   if (newProject?.Notes?.length) {
     const saveNotes = newProject.Notes.map(async (note): Promise<InsertResult | void> => {
@@ -486,6 +529,12 @@ const handleProjectNotes = async (newProject: DeepPartial<Project>, queryRunner:
   }
 };
 
+/**
+ * Handles the timestamps for a new project by upserting them into the database.
+ * @param {DeepPartial<Project>} newProject - The new project object with timestamps to be handled.
+ * @param {QueryRunner} queryRunner - The query runner for the database operations.
+ * @returns {Promise<void[]>} A promise that resolves once all timestamps are saved or updated.
+ */
 const handleProjectTimestamps = async (
   newProject: DeepPartial<Project>,
   queryRunner: QueryRunner,
@@ -516,6 +565,12 @@ const handleProjectTimestamps = async (
   }
 };
 
+/**
+ * Handles the monetary data for a new project by upserting the monetary values into the database.
+ * @param newProject - The new project object containing monetary data to be handled.
+ * @param queryRunner - The query runner for database operations.
+ * @returns A promise that resolves with the result of upserting the monetary values for the new project.
+ */
 const handleProjectMonetary = async (
   newProject: DeepPartial<Project>,
   queryRunner: QueryRunner,
@@ -551,6 +606,7 @@ const handleProjectMonetary = async (
  *
  * @param project - The project object containing the changes to be made.
  * @param propertyIds - The IDs of the properties to be associated with the project.
+ * @param user The SSO user making the request
  * @returns The result of the project update.
  * @throws {ErrorWithCode} If the project name is empty or null, if the project does not exist, if the project number or agency cannot be changed, or if there is an error updating the project.
  */
@@ -573,8 +629,14 @@ const updateProject = async (
   // Not allowed to change Project Number
   if (project.ProjectNumber && originalProject.ProjectNumber !== project.ProjectNumber) {
     throw new ErrorWithCode('Project Number may not be changed.', 403);
-  } // Not allowed to change the agency
-  if (project.AgencyId && originalProject.AgencyId !== project.AgencyId) {
+  }
+
+  if (
+    //Agency change disallowed unless admin.
+    project.AgencyId &&
+    originalProject.AgencyId !== project.AgencyId &&
+    !isAdmin(user)
+  ) {
     throw new ErrorWithCode('Project Agency may not be changed.', 403);
   }
 
@@ -672,6 +734,7 @@ const updateProject = async (
  * Deletes a project by its ID.
  *
  * @param {number} id - The ID of the project to delete.
+ * @param {string} username The usernameof the requesting user
  * @returns {Promise<DeleteResult>} - A promise that resolves to the delete result.
  * @throws {ErrorWithCode} - If the project does not exist, or if there is an error deleting the project.
  */
@@ -731,12 +794,6 @@ const deleteProjectById = async (id: number, username: string) => {
       { ProjectId: id },
       { DeletedById: user.Id, DeletedOn: new Date() },
     );
-    // Remove Notifications from Project
-    /* FIXME: This should eventually be done with the notifications service.
-     * Otherwise, any notifications sent to CHES won't be cancelled. -Dylan
-     * This is true ^ I think it's best to comment out this delete call for now. -Graham
-     */
-    // await queryRunner.manager.delete(NotificationQueue, { ProjectId: id });
     // Delete the project
     const deleteResult = await queryRunner.manager.update(
       Project,
@@ -755,77 +812,122 @@ const deleteProjectById = async (id: number, username: string) => {
   }
 };
 
-const sortKeyMapping = (
-  sortKey: string,
-  sortDirection: FindOptionsOrderValue,
-): FindOptionsOrder<Project> => {
-  switch (sortKey) {
-    case 'Status':
-      return { Status: { Name: sortDirection } };
-    case 'Agency':
-      return { Agency: { Name: sortDirection } };
-    case 'UpdatedBy':
-      return { UpdatedBy: { LastName: sortDirection } };
-    default:
-      return { [sortKey]: sortDirection };
-  }
-};
-
+/**
+ * Collects and constructs find options based on the provided project filter.
+ * @param filter - The project filter containing criteria for filtering projects.
+ * @returns An array of constructed find options based on the filter criteria.
+ */
 const collectFindOptions = (filter: ProjectFilter) => {
   const options = [];
   if (filter.name) options.push(constructFindOptionFromQuery('Name', filter.name));
-  if (filter.agency) options.push({ Agency: constructFindOptionFromQuery('Name', filter.agency) });
-  if (filter.status) options.push({ Status: constructFindOptionFromQuery('Name', filter.status) });
+  if (filter.agency) options.push(constructFindOptionFromQuery('Agency', filter.agency));
+  if (filter.status) options.push(constructFindOptionFromQuery('Status', filter.status));
   if (filter.projectNumber) {
     options.push(constructFindOptionFromQuery('ProjectNumber', filter.projectNumber));
   }
   if (filter.updatedOn) options.push(constructFindOptionFromQuery('UpdatedOn', filter.updatedOn));
+  if (filter.updatedBy) options.push(constructFindOptionFromQuery('UpdatedBy', filter.updatedBy));
+  if (filter.market) options.push(constructFindOptionFromQuery('Market', filter.market));
+  if (filter.netBook) options.push(constructFindOptionFromQuery('NetBook', filter.netBook));
   return options;
 };
 
-const getProjects = async (filter: ProjectFilter, includeRelations: boolean = false) => {
-  const queryOptions: FindManyOptions<Project> = {
-    relations: {
-      Agency: {
-        Parent: includeRelations,
-      },
-      Status: includeRelations,
-      UpdatedBy: includeRelations,
-    },
-    select: {
-      Agency: {
-        Name: true,
-        Parent: {
-          Name: true,
-        },
-      },
-      Status: {
-        Name: true,
-      },
-      UpdatedBy: { Id: true, FirstName: true, LastName: true },
-    },
-    where: collectFindOptions(filter),
-    take: filter.quantity,
-    skip: (filter.page ?? 0) * (filter.quantity ?? 0),
-    order: sortKeyMapping(filter.sortKey, filter.sortOrder as FindOptionsOrderValue),
-  };
-
-  const projects = await projectRepo.find(queryOptions);
-  return projects;
+/**
+ * Converts entity names to column names.
+ * Needed because the sort key in query builder uses the column name, not the entity name.
+ */
+const sortKeyTranslator: Record<string, string> = {
+  ProjectNumber: 'project_number',
+  Name: 'name',
+  Status: 'status_name',
+  Agency: 'agency_name',
+  NetBook: 'net_book',
+  Market: 'market',
+  UpdatedOn: 'updated_on',
+  UpdatedBy: 'user_full_name',
 };
 
-const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boolean = false) => {
+/**
+ * Retrieves projects based on the provided filter criteria.
+ * Applies filters, restrictions, and sorting to the query.
+ * Returns the filtered projects along with the total count.
+ *
+ * @param filter - The filter criteria to apply to the projects query.
+ * @returns An object containing the filtered projects and the total count.
+ */
+const getProjects = async (filter: ProjectFilter) => {
+  const options = collectFindOptions(filter);
+  const query = AppDataSource.getRepository(ProjectJoin)
+    .createQueryBuilder()
+    .where(
+      new Brackets((qb) => {
+        options.forEach((option) => qb.orWhere(option));
+      }),
+    );
+
+  // Restricts based on user's agencies
+  if (filter.agencyId?.length) {
+    query.andWhere('agency_id IN(:...list)', {
+      list: filter.agencyId,
+    });
+  }
+
+  // Add quickfilter part
+  if (filter.quickFilter) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const quickFilterOptions: FindOptionsWhere<any>[] = [];
+    const quickfilterFields = [
+      'ProjectNumber',
+      'Name',
+      'Status',
+      'Agency',
+      'NetBook',
+      'Market',
+      'UpdatedOn',
+      'UpdatedBy',
+    ];
+    quickfilterFields.forEach((field) =>
+      quickFilterOptions.push(constructFindOptionFromQuery(field, filter.quickFilter)),
+    );
+    query.andWhere(
+      new Brackets((qb) => {
+        quickFilterOptions.forEach((option) => qb.orWhere(option));
+      }),
+    );
+  }
+
+  if (filter.quantity) query.take(filter.quantity);
+  if (filter.page && filter.quantity) query.skip((filter.page ?? 0) * (filter.quantity ?? 0));
+  if (filter.sortKey && filter.sortOrder) {
+    if (sortKeyTranslator[filter.sortKey]) {
+      query.orderBy(
+        sortKeyTranslator[filter.sortKey],
+        filter.sortOrder.toUpperCase() as SortOrders,
+        'NULLS LAST',
+      );
+    } else {
+      logger.error('getProjects Service - Invalid Sort Key');
+    }
+  }
+  const [data, totalCount] = await query.getManyAndCount();
+  return { data, totalCount };
+};
+
+/**
+ * Retrieves projects for export based on the provided filter.
+ * Joins additional entities like tasks, notes, monetaries, timestamps, and notifications for each project.
+ * Separates queries intentionally for better performance.
+ * @param filter - The filter criteria to retrieve projects.
+ * @returns An array of projects with associated tasks, notes, monetaries, timestamps, and notifications.
+ */
+const getProjectsForExport = async (filter: ProjectFilter) => {
+  const result = await getProjects(filter);
+  const filteredProjects = result.data;
+  // Use IDs from selected projects to get those projects with joins
   const queryOptions: FindManyOptions<Project> = {
     relations: {
-      Agency: {
-        Parent: includeRelations,
-      },
-      TierLevel: includeRelations,
-      Risk: includeRelations,
-      Status: includeRelations,
-      Workflow: includeRelations,
-      CreatedBy: includeRelations,
-      UpdatedBy: includeRelations,
+      CreatedBy: true,
+      UpdatedBy: true,
       // Don't include these joins below. It can be very large.
       Tasks: false,
       Notes: false,
@@ -834,21 +936,6 @@ const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boo
       Notifications: false,
     },
     select: {
-      Agency: {
-        Name: true,
-        Parent: {
-          Name: true,
-        },
-      },
-      TierLevel: {
-        Name: true,
-      },
-      Risk: {
-        Name: true,
-      },
-      Status: {
-        Name: true,
-      },
       CreatedBy: {
         Id: true,
         FirstName: true,
@@ -859,20 +946,10 @@ const getProjectsForExport = async (filter: ProjectFilter, includeRelations: boo
         FirstName: true,
         LastName: true,
       },
-      Workflow: {
-        Name: true,
-      },
     },
     where: {
-      StatusId: filter.statusId,
-      AgencyId: filter.agencyId
-        ? In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId)
-        : undefined,
-      ProjectNumber: filter.projectNumber,
+      Id: In(filteredProjects.map((p) => p.Id)),
     },
-    take: filter.quantity,
-    skip: (filter.page ?? 0) * (filter.quantity ?? 0),
-    order: sortKeyMapping(filter.sortKey, filter.sortOrder as FindOptionsOrderValue),
   };
   const projects = await projectRepo.find(queryOptions);
 

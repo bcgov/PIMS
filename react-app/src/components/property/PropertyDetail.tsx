@@ -43,6 +43,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const parcelId = isNaN(Number(params.parcelId)) ? null : Number(params.parcelId);
   const buildingId = isNaN(Number(params.buildingId)) ? null : Number(params.buildingId);
   const api = usePimsApi();
+  const deletionBroadcastChannel = useMemo(() => new BroadcastChannel('property'), []);
   const {
     data: parcel,
     refreshData: refreshParcel,
@@ -76,7 +77,9 @@ const PropertyDetail = (props: IPropertyDetail) => {
 
   const propertyLoading = buildingsLoading || parcelsLoading;
   const { data: relatedBuildings, refreshData: refreshRelated } = useDataLoader(
-    () => parcel?.PID && api.buildings.getBuildings({ pid: parcel.PID, includeRelations: true }),
+    () =>
+      parcel?.parsedBody?.PID &&
+      api.buildings.getBuildings({ pid: parcel?.parsedBody?.PID, includeRelations: true }),
   );
 
   const isAuditor = keycloak.hasRoles([Roles.AUDITOR]);
@@ -100,20 +103,36 @@ const PropertyDetail = (props: IPropertyDetail) => {
     refreshRelated();
   }, [parcel]);
 
+  // If neither the parcel nor building call was successful, return home.
+  // Could be because doesn't exist or lack of permissions
+  useEffect(() => {
+    if (parcel || building) {
+      if (parcel?.status !== 200 && building?.status !== 200) {
+        navigate('/');
+      }
+    }
+  }, [parcel, building]);
+
   const classification = useClassificationStyle();
   const map = useRef<Map>();
   useEffect(() => {
-    if (building) {
-      map.current?.setView([building.Location.y, building.Location.x], 17);
-    } else if (parcel) {
-      map.current?.setView([parcel.Location.y, parcel.Location.x], 17);
+    if (building?.parsedBody?.Location || parcel?.parsedBody?.Location) {
+      if (building) {
+        map.current?.setView(
+          [building?.parsedBody?.Location.y, building?.parsedBody?.Location.x],
+          17,
+        );
+      } else if (parcel) {
+        map.current?.setView([parcel?.parsedBody?.Location.y, parcel?.parsedBody?.Location.x], 17);
+      }
     }
   }, [building, parcel, map]);
 
   const assessedValues = useMemo(() => {
     if (parcelId && parcel) {
       //We only want latest two years accroding to PO requirements.
-      const lastTwoYrs = parcel.Evaluations?.sort((a, b) => b.Year - a.Year).slice(0, 2);
+      const lastTwoYrs =
+        parcel?.parsedBody?.Evaluations?.sort((a, b) => b.Year - a.Year).slice(0, 2) ?? [];
       const evaluations = [];
       if (lastTwoYrs) {
         for (const parcelEval of lastTwoYrs) {
@@ -123,7 +142,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           relatedBuildings?.forEach((building, idx) => {
             //We need to find evaluations with the matching year of the parcel evaluations.
             //We can't just sort naively in the same way since we can't guarantee both lists have the same years.
-            const buildingEval = building.Evaluations?.find((e) => e.Year === parcelEval.Year);
+            const buildingEval = building?.Evaluations?.find((e) => e.Year === parcelEval.Year);
             if (buildingEval) {
               evaluation[`Building${idx + 1}`] = buildingEval.Value;
             }
@@ -133,7 +152,8 @@ const PropertyDetail = (props: IPropertyDetail) => {
       }
       return evaluations;
     } else if (buildingId && building) {
-      const lastTwoYrs = building.Evaluations?.sort((a, b) => b.Year - a.Year).slice(0, 2);
+      const lastTwoYrs =
+        building?.parsedBody?.Evaluations?.sort((a, b) => b.Year - a.Year).slice(0, 2) ?? [];
       return lastTwoYrs?.map((ev) => ({
         Year: ev.Year,
         Value: ev.Value,
@@ -145,13 +165,17 @@ const PropertyDetail = (props: IPropertyDetail) => {
 
   const netBookValues = useMemo(() => {
     if (parcelId && parcel) {
-      return parcel.Fiscals.map((v) => v)
-        .sort((a, b) => b.FiscalYear - a.FiscalYear)
-        .slice(0, 2);
+      return (
+        parcel?.parsedBody?.Fiscals?.map((v) => v)
+          .sort((a, b) => b.FiscalYear - a.FiscalYear)
+          .slice(0, 2) ?? []
+      );
     } else if (buildingId && building) {
-      return building.Fiscals.map((v) => v)
-        .sort((a, b) => b.FiscalYear - a.FiscalYear)
-        .slice(0, 2);
+      return (
+        building?.parsedBody?.Fiscals?.map((v) => v)
+          .sort((a, b) => b.FiscalYear - a.FiscalYear)
+          .slice(0, 2) ?? []
+      );
     } else {
       return [];
     }
@@ -187,6 +211,12 @@ const PropertyDetail = (props: IPropertyDetail) => {
         return (
           <Typography>{`${val}${/^(0|[1-9]\d*)?(\.\d+)?(?<=\d)$/.test(val) ? ' %' : ''}`}</Typography>
         );
+      case 'PostalCode':
+        if (val == null) return '';
+        // eslint-disable-next-line no-case-declarations
+        const match = val.match(/^(?<first>[\w\d]{3})(?<second>[\w\d]{3})$/i);
+        if (match == null) return '';
+        return <Typography>{`${match.groups.first} ${match.groups.second}`}</Typography>;
       default:
         return <Typography>{val}</Typography>;
     }
@@ -194,7 +224,8 @@ const PropertyDetail = (props: IPropertyDetail) => {
 
   const buildingOrParcel: PropertyType = building != null ? 'Building' : 'Parcel';
   const mainInformation = useMemo(() => {
-    const data: Parcel | Building = buildingOrParcel === 'Building' ? building : parcel;
+    const data: Parcel | Building =
+      buildingOrParcel === 'Building' ? building?.parsedBody : parcel?.parsedBody;
     const info: any = {
       Classification: getLookupValueById('Classifications', data?.ClassificationId),
       PID: data?.PID ? zeroPadPID(data.PID) : undefined,
@@ -225,12 +256,20 @@ const PropertyDetail = (props: IPropertyDetail) => {
       info.LandArea = (data as Parcel)?.LandArea;
     }
     return info;
-  }, [parcel, building]);
+  }, [parcel, building, getLookupValueById]);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openInformationDialog, setOpenInformationDialog] = useState(false);
   const [openNetBookDialog, setOpenNetBookDialog] = useState(false);
   const [openAssessedValueDialog, setOpenAssessedValueDialog] = useState(false);
+
+  const deletionAction = async () => {
+    const response = await deleteProperty();
+    if (response && response.ok) {
+      deletionBroadcastChannel.postMessage('refresh');
+      navigate('/properties');
+    }
+  };
 
   const sideBarItems = [
     { title: `${buildingOrParcel} Information` },
@@ -238,7 +277,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
     { title: 'Assessed Value' },
   ];
 
-  if (buildingOrParcel === 'Parcel') sideBarItems.splice(1, 0, { title: 'LTSA Information' });
+  if (buildingOrParcel === 'Parcel') sideBarItems.splice(3, 0, { title: 'LTSA Information' });
 
   return (
     <CollapsibleSidebar items={sideBarItems}>
@@ -267,18 +306,6 @@ const PropertyDetail = (props: IPropertyDetail) => {
           onEdit={() => setOpenInformationDialog(true)}
           disableEdit={isAuditor}
         />
-        {buildingOrParcel === 'Parcel' && (
-          <DataCard
-            loading={propertyLoading}
-            id={'LTSA Information'}
-            values={undefined}
-            title={'LTSA Information'}
-            disableEdit={true}
-            onEdit={undefined}
-          >
-            <TitleOwnership pid={parcel?.PID ? zeroPadPID(Number(parcel?.PID)) : null} /> <></>
-          </DataCard>
-        )}
         <DataCard
           id={`${buildingOrParcel} Net Book Value`}
           values={undefined}
@@ -318,13 +345,27 @@ const PropertyDetail = (props: IPropertyDetail) => {
             />
           </Box>
         </ParcelMap>
+        {buildingOrParcel === 'Parcel' && (
+          <DataCard
+            loading={propertyLoading}
+            id={'LTSA Information'}
+            values={undefined}
+            title={'LTSA Information'}
+            disableEdit={true}
+            onEdit={undefined}
+          >
+            <TitleOwnership
+              pid={parcel?.parsedBody?.PID ? zeroPadPID(Number(parcel?.parsedBody?.PID)) : null}
+            />
+          </DataCard>
+        )}
       </Box>
       <>
         {buildingOrParcel === 'Parcel' ? (
           <ParcelInformationEditDialog
             open={openInformationDialog}
             onCancel={() => setOpenInformationDialog(false)}
-            initialValues={parcel}
+            initialValues={parcel?.parsedBody}
             postSubmit={() => {
               refreshEither();
               setOpenInformationDialog(false);
@@ -332,7 +373,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           />
         ) : (
           <BuildingInformationEditDialog
-            initialValues={building}
+            initialValues={building?.parsedBody}
             open={openInformationDialog}
             onCancel={() => setOpenInformationDialog(false)}
             postSubmit={() => {
@@ -352,7 +393,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
               }))
         }
         propertyType={buildingOrParcel}
-        initialValues={buildingOrParcel === 'Building' ? building : parcel}
+        initialValues={buildingOrParcel === 'Building' ? building?.parsedBody : parcel?.parsedBody}
         open={openAssessedValueDialog}
         onCancel={() => setOpenAssessedValueDialog(false)}
         postSubmit={() => {
@@ -367,7 +408,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
         }}
         open={openNetBookDialog}
         onClose={() => setOpenNetBookDialog(false)}
-        initialValues={buildingOrParcel === 'Building' ? building : parcel}
+        initialValues={buildingOrParcel === 'Building' ? building?.parsedBody : parcel?.parsedBody}
         propertyType={buildingOrParcel}
       />
       <DeleteDialog
@@ -375,7 +416,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
         title={'Delete property'}
         message={'Are you sure you want to delete this property?'}
         confirmButtonProps={{ loading: deletingProperty }}
-        onDelete={async () => deleteProperty().then(() => navigate('/properties'))}
+        onDelete={async () => deletionAction()}
         onClose={async () => setOpenDeleteDialog(false)}
       />
     </CollapsibleSidebar>

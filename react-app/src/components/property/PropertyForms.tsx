@@ -14,7 +14,7 @@ import SelectFormField, { ISelectMenuItem } from '../form/SelectFormField';
 import { Room, Help } from '@mui/icons-material';
 import { LookupObject } from '@/hooks/api/useLookupApi';
 import DateFormField from '../form/DateFormField';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { IAddressModel } from '@/hooks/api/useToolsApi';
 import { LatLng, Map } from 'leaflet';
 import usePimsApi from '@/hooks/usePimsApi';
@@ -25,6 +25,9 @@ import { arrayUniqueBy } from '@/utilities/helperFunctions';
 import MetresSquared from '@/components/text/MetresSquared';
 import { FeatureCollection } from '@/hooks/api/useParcelLayerApi';
 import { Feature } from 'geojson';
+import { useMap, useMapEvents } from 'react-leaflet';
+import { GeoPoint } from '@/interfaces/IProperty';
+import { LookupContext } from '@/contexts/lookupContext';
 export type PropertyType = 'Building' | 'Parcel';
 
 interface IParcelInformationForm {
@@ -33,12 +36,14 @@ interface IParcelInformationForm {
 
 interface IGeneralInformationForm {
   propertyType: PropertyType;
+  defaultLocationValue: GeoPoint | null;
   adminAreas: ISelectMenuItem[];
 }
 
 export const GeneralInformationForm = (props: IGeneralInformationForm) => {
   const api = usePimsApi();
-  const { propertyType, adminAreas } = props;
+  const lookup = useContext(LookupContext);
+  const { propertyType, adminAreas, defaultLocationValue } = props;
   const [addressOptions, setAddressOptions] = useState<IAddressModel[]>([]);
   const [loadingOptions, setLoadingOptions] = useState(false);
 
@@ -85,37 +90,14 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
     }
   };
 
-  const map = useRef<Map>();
-  const [position, setPosition] = useState<LatLng>(null);
+  // check for a valid postal code
+  const postalRegex = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ ]?\d[ABCEGHJ-NPRSTV-Z]\d$/i;
 
+  const map = useRef<Map>();
+  const position = formContext.watch('Location');
   const updateLocation = (latlng: LatLng) => {
     formContext.setValue('Location', { x: latlng.lng, y: latlng.lat }); //Technically, longitude is x and latitude is y...
   };
-
-  //Necessary to make sure we set the map to the correct place when opening this form in the edit view.
-  useEffect(() => {
-    const vals = formContext?.getValues();
-    if (vals?.Location) {
-      map.current?.setView([vals.Location.y, vals.Location.x], 17);
-      onMove();
-    }
-  }, [formContext, map.current]);
-
-  const onMove = useCallback(() => {
-    if (map.current) {
-      setPosition(map.current.getCenter());
-      updateLocation(map.current.getCenter());
-    }
-  }, [map.current]);
-
-  useEffect(() => {
-    if (map) {
-      map.current?.on('move', onMove);
-      return () => {
-        map.current?.off('move', onMove);
-      };
-    }
-  }, [map.current, onMove]);
 
   const handleFeatureCollectionResponse = (response: FeatureCollection) => {
     if (response.features.length) {
@@ -123,6 +105,23 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
         .coordinates as [number, number];
       map.current?.setView([coordArr[1], coordArr[0]], 17);
     }
+  };
+
+  /**
+   * This is null return component will not render anything to the document,
+   * but the hooks will still fire. This appears to be the most consistent way to
+   * ensure these map events attach and fire.
+   * @param props Set onMoveHandler as the function to invoke whenever the map is dragged.
+   * @returns null
+   */
+  const MapMoveEvents = (props: { onMoveHandler: (latlng: LatLng) => void }) => {
+    const map = useMap();
+    useMapEvents({
+      move: () => {
+        props.onMoveHandler(map.getCenter());
+      },
+    });
+    return null;
   };
 
   return (
@@ -161,7 +160,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
                     if (value != null) {
                       if (typeof value !== 'string') {
                         map.current?.setView(new LatLng(value.latitude, value.longitude), 17);
-                        field.onChange(value.fullAddress);
+                        field.onChange(value.fullAddress.split(',')[0]);
                       } else {
                         field.onChange(value);
                       }
@@ -179,6 +178,13 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             }}
           />
         </Grid>
+        {propertyType === 'Parcel' && (
+          <Grid item xs={12}>
+            <Typography variant={'caption'}>
+              Please note that either a PID or PIN is required for a Parcel entry
+            </Typography>
+          </Grid>
+        )}
         <Grid item xs={6}>
           <TextFormField
             fullWidth
@@ -235,6 +241,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             name={'AdministrativeAreaId'}
             label={'Administrative area'}
             options={adminAreas ?? []}
+            noOptionsText={`No matches. Request an administrative area at ${lookup.data.Config.contactEmail.split('@').join(' @')}`} // TODO: Replace this with a dialog
           />
         </Grid>
         <Grid item xs={6}>
@@ -244,7 +251,10 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             label={'Postal code'}
             rules={{
               validate: (val) =>
-                val.length == 0 || val.length == 6 || 'Should be exactly 6 characters.',
+                val === null ||
+                val.length === 0 ||
+                !!String(val).replace(/ /g, '').match(postalRegex) ||
+                'Should be a valid postal code or left blank.',
             }}
           />
         </Grid>
@@ -257,7 +267,14 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             zoomOnScroll={false}
             popupSize="small"
             hideControls
+            defaultLocation={
+              defaultLocationValue
+                ? new LatLng(defaultLocationValue.y, defaultLocationValue.x)
+                : undefined
+            }
+            defaultZoom={defaultLocationValue ? 17 : undefined}
           >
+            <MapMoveEvents onMoveHandler={updateLocation} />
             <Box display={'flex'} alignItems={'center'} justifyContent={'center'} height={'100%'}>
               <Room
                 color="primary"
@@ -267,7 +284,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
           </ParcelMap>
           <Typography textAlign={'center'}>
             {position
-              ? `Latitude: ${position.lat.toFixed(4)}, Longitude: ${position.lng.toFixed(4)}`
+              ? `Latitude: ${position.y.toFixed(4)}, Longitude: ${position.x.toFixed(4)}`
               : 'Fill fields or drag map to set location.'}
           </Typography>
         </Grid>
@@ -306,7 +323,7 @@ export const ParcelInformationForm = (props: IParcelInformationForm) => {
             label={
               <Box display={'inline-flex'} alignItems={'center'}>
                 Sensitive information{' '}
-                <Tooltip title="Some blurb about sensitive information will go here I don't know what it should say.">
+                <Tooltip title="Could disclosure of this information threaten another person's safety, mental or physical health, or interfere with public safety?">
                   <Help sx={{ ml: '4px' }} fontSize="small" />
                 </Tooltip>
               </Box>
@@ -438,6 +455,7 @@ export const BuildingInformationForm = (props: IBuildingInformationForm) => {
                     for old data that was a mix of text and numbers. Using numeric prop stops any 
                     edit of text values, even removal.
                  */
+                if (value == '') return true;
                 if (!/^(0|[1-9]\d*)?(\.\d+)?(?<=\d)$/.test(value)) {
                   return 'This value is a percentage and must be a number greater than or equal to 0.';
                 }
@@ -481,7 +499,7 @@ export const NetBookValue = (props: INetBookValue) => {
     name: name,
   });
 
-  const handleFiscalYearChange = (inputValue: string) => {
+  const handleFiscalYearChange = (inputValue: string, otherYears: number[]) => {
     if (String(inputValue) == '' || inputValue == null) {
       return true;
     }
@@ -489,11 +507,11 @@ export const NetBookValue = (props: INetBookValue) => {
     if (isNaN(inputYear)) {
       return 'Invalid input.';
     }
-    // const yearValues: number[] = getValueByNestedKey(formValues, name).map(
-    //   (evaluation: ParcelFiscal | BuildingFiscal): number =>
-    //     parseInt(String(evaluation.FiscalYear)),
-    // );
+
     const currentYear = new Date().getFullYear();
+    if (otherYears.includes(Number(inputValue))) {
+      return `An entry already exists for this fiscal year.`;
+    }
     return (
       inputYear === currentYear ||
       inputYear === currentYear - 1 ||
@@ -514,24 +532,23 @@ export const NetBookValue = (props: INetBookValue) => {
                 rules={
                   netbook['isNew']
                     ? {
-                        validate: handleFiscalYearChange,
+                        validate: (value) =>
+                          handleFiscalYearChange(
+                            value,
+                            fields.filter((a) => !a['isNew']).map((a) => a['FiscalYear']),
+                          ),
                       }
                     : undefined
                 }
               />
             </Grid>
             <Grid item xs={4}>
-              <DateFormField
-                disabled={!netbook['isNew']}
-                name={`${name}.${idx}.EffectiveDate`}
-                label={'Effective date'}
-              />
+              <DateFormField name={`${name}.${idx}.EffectiveDate`} label={'Effective date'} />
             </Grid>
             <Grid item xs={4}>
               <TextFormField
                 name={`${name}.${idx}.Value`}
                 label={'Net Book Value'}
-                disabled={!netbook['isNew']}
                 numeric
                 InputProps={{
                   startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -569,7 +586,7 @@ interface IAssessedValue {
 
 export const AssessedValue = (props: IAssessedValue) => {
   const { title, name, maxRows } = props;
-  const handleAssessmentYearChange = (inputValue: string) => {
+  const handleAssessmentYearChange = (inputValue: string, otherYears: number[]) => {
     if (String(inputValue) == '' || inputValue == null) {
       return true;
     }
@@ -577,9 +594,9 @@ export const AssessedValue = (props: IAssessedValue) => {
     if (isNaN(inputYear)) {
       return 'Invalid input.';
     }
-    // const yearValues: number[] = getValueByNestedKey(formValues, name).map((evaluation): number =>
-    //   parseInt(evaluation.Year),
-    // );
+    if (otherYears.includes(Number(inputValue))) {
+      return `An entry already exists for this assessment year.`;
+    }
     const currentYear = new Date().getFullYear();
     return (
       inputYear === currentYear ||
@@ -618,7 +635,11 @@ export const AssessedValue = (props: IAssessedValue) => {
               rules={
                 evaluation['isNew']
                   ? {
-                      validate: handleAssessmentYearChange,
+                      validate: (value) =>
+                        handleAssessmentYearChange(
+                          value,
+                          fields.filter((a) => !a['isNew']).map((a) => a['Year']),
+                        ),
                     }
                   : undefined
               }
@@ -629,7 +650,6 @@ export const AssessedValue = (props: IAssessedValue) => {
               }}
               sx={{ minWidth: 'calc(33.3% - 1rem)' }}
               name={`${name}.${idx}.Value`}
-              disabled={!evaluation['isNew']}
               numeric
               label={'Value'}
             />

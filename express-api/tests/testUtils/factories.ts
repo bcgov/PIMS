@@ -51,6 +51,9 @@ import { PropertyType } from '@/typeorm/Entities/PropertyType';
 import { ProjectType } from '@/typeorm/Entities/ProjectType';
 import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { PropertyUnion } from '@/typeorm/Entities/views/PropertyUnionView';
+import { ImportResult } from '@/typeorm/Entities/ImportResult';
+import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
+import { Workflow } from '@/typeorm/Entities/Workflow';
 
 export class MockRes {
   statusValue: any;
@@ -200,7 +203,7 @@ export const produceRole = (): RolesEntity => {
   };
 };
 
-export const produceSSO = (): SSOUser => {
+export const produceSSO = (props?: Partial<SSOUser>): SSOUser => {
   return {
     name: faker.string.alphanumeric(),
     preferred_username: faker.string.alphanumeric(),
@@ -214,6 +217,7 @@ export const produceSSO = (): SSOUser => {
     last_name: faker.person.lastName(),
     originalData: null,
     hasRoles: null,
+    ...props,
   };
 };
 
@@ -268,6 +272,7 @@ export const produceEmailStatus = (props: Partial<IChesStatusResponse>): IChesSt
     txId: props.txId ?? faker.string.uuid(),
     updatedTS: new Date().getTime(),
     createdTS: new Date().getTime(),
+    msgId: props.msgId ?? faker.string.uuid(),
   };
   return email;
 };
@@ -338,8 +343,11 @@ export const produceBuilding = (): Building => {
   };
 };
 
-export const produceBuildingEvaluation = (buildingId: number): BuildingEvaluation[] => {
-  const evaluation: BuildingEvaluation = new BuildingEvaluation();
+export const produceBuildingEvaluation = (
+  buildingId: number,
+  props?: Partial<BuildingEvaluation>,
+): BuildingEvaluation[] => {
+  let evaluation: BuildingEvaluation = new BuildingEvaluation();
 
   evaluation.BuildingId = buildingId;
   evaluation.Year = faker.date.past().getFullYear();
@@ -348,21 +356,30 @@ export const produceBuildingEvaluation = (buildingId: number): BuildingEvaluatio
   evaluation.EvaluationKey = undefined;
   evaluation.Note = undefined;
 
+  evaluation = { ...evaluation, ...props };
   return [evaluation];
 };
 
-export const produceBuildingFiscal = (buildingId: number): BuildingFiscal[] => {
-  const fiscal: BuildingFiscal = new BuildingFiscal();
+export const produceBuildingFiscal = (
+  buildingId: number,
+  props?: Partial<BuildingFiscal>,
+): BuildingFiscal[] => {
+  let fiscal: BuildingFiscal = new BuildingFiscal();
   fiscal.BuildingId = buildingId;
   fiscal.FiscalYear = faker.date.past().getFullYear();
   fiscal.FiscalKeyId = 0;
   fiscal.Value = 20000;
 
+  fiscal = { ...fiscal, ...props };
+
   return [fiscal];
 };
 
-export const produceParcelEvaluation = (parcelId: number): ParcelEvaluation[] => {
-  const evaluation: ParcelEvaluation = new ParcelEvaluation();
+export const produceParcelEvaluation = (
+  parcelId: number,
+  props?: Partial<ParcelEvaluation>,
+): ParcelEvaluation[] => {
+  let evaluation: ParcelEvaluation = new ParcelEvaluation();
 
   evaluation.ParcelId = parcelId;
   evaluation.Year = faker.date.past().getFullYear();
@@ -371,16 +388,21 @@ export const produceParcelEvaluation = (parcelId: number): ParcelEvaluation[] =>
   evaluation.EvaluationKey = undefined;
   evaluation.Note = undefined;
 
+  evaluation = { ...evaluation, ...props };
+
   return [evaluation];
 };
 
-export const produceParcelFiscal = (parcelId: number): ParcelFiscal[] => {
-  const fiscal: ParcelFiscal = new ParcelFiscal();
+export const produceParcelFiscal = (
+  parcelId: number,
+  props?: Partial<ParcelFiscal>,
+): ParcelFiscal[] => {
+  let fiscal: ParcelFiscal = new ParcelFiscal();
   fiscal.ParcelId = parcelId;
   fiscal.FiscalYear = faker.date.past().getFullYear();
   fiscal.FiscalKeyId = 0;
   fiscal.Value = 1000000;
-
+  fiscal = { ...fiscal, ...props };
   return [fiscal];
 };
 
@@ -406,7 +428,7 @@ export const produceAdminArea = (props?: Partial<AdministrativeArea>): Administr
 };
 
 export const produceClassification = (
-  props: Partial<PropertyClassification>,
+  props?: Partial<PropertyClassification>,
 ): PropertyClassification => {
   const classification: PropertyClassification = {
     Id: faker.number.int(),
@@ -656,6 +678,24 @@ export const produceProject = (
   return project;
 };
 
+export const produceProjectJoin = (props?: Partial<ProjectJoin>) => {
+  const project: ProjectJoin = {
+    Id: faker.number.int(),
+    ProjectNumber: 'SPP-' + faker.number.int(),
+    Name: faker.company.name(),
+    StatusId: faker.number.int(),
+    AgencyId: faker.number.int(),
+    Agency: faker.company.name(),
+    Status: faker.commerce.department(),
+    Market: '$' + faker.number.int(),
+    NetBook: '$' + faker.number.int(),
+    UpdatedBy: faker.person.fullName(),
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return project;
+};
+
 export const produceRisk = (props?: Partial<ProjectRisk>): ProjectRisk => {
   const risk: ProjectRisk = {
     Id: faker.number.int(),
@@ -872,7 +912,7 @@ export const produceProjectNotification = (props?: Partial<ProjectStatusNotifica
   return notif;
 };
 
-export const produceNotificationQueue = () => {
+export const produceNotificationQueue = (props?: Partial<NotificationQueue>) => {
   const queue: NotificationQueue = {
     Id: faker.number.int(),
     Key: randomUUID(),
@@ -901,8 +941,28 @@ export const produceNotificationQueue = () => {
     UpdatedById: randomUUID(),
     UpdatedBy: undefined,
     UpdatedOn: new Date(),
+    ...props,
   };
   return queue;
+};
+
+export const produceWorkflow = (props?: Partial<Workflow>) => {
+  const workflow: Workflow = {
+    Id: faker.number.int(),
+    Name: faker.lorem.word(),
+    IsDisabled: false,
+    SortOrder: 0,
+    Description: faker.lorem.lines(),
+    Code: 'TEST',
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return workflow;
 };
 
 export const produceNotificationTemplate = (props?: Partial<NotificationTemplate>) => {
@@ -959,12 +1019,14 @@ export const produceAgencyResponse = (props?: Partial<ProjectAgencyResponse>) =>
   return response;
 };
 
-export const producePropertyUnion = (props: Partial<PropertyUnion>) => {
+export const producePropertyUnion = (props?: Partial<PropertyUnion>) => {
+  const propertyTypeId = faker.number.int({ min: 0, max: 1 });
   const union: PropertyUnion = {
     Id: faker.number.int(),
     PID: faker.number.int({ max: 999999999 }),
     PIN: faker.number.int({ max: 999999999 }),
-    PropertyType: ['Building', 'Parcel'][faker.number.int({ min: 0, max: 1 })],
+    PropertyType: ['Building', 'Parcel'][propertyTypeId],
+    PropertyTypeId: propertyTypeId,
     AgencyId: faker.number.int(),
     Agency: faker.company.name(),
     Address: faker.location.streetAddress(),
@@ -978,6 +1040,26 @@ export const producePropertyUnion = (props: Partial<PropertyUnion>) => {
     ...props,
   };
   return union;
+};
+
+export const produceImportResult = (props?: Partial<ImportResult>) => {
+  const importResult: ImportResult = {
+    Id: faker.number.int(),
+    FileName: faker.person.firstName() + '.csv',
+    CompletionPercentage: 0,
+    Results: [],
+    DeletedBy: undefined,
+    DeletedById: randomUUID(),
+    DeletedOn: null,
+    CreatedById: randomUUID(),
+    CreatedBy: undefined,
+    CreatedOn: new Date(),
+    UpdatedById: randomUUID(),
+    UpdatedBy: undefined,
+    UpdatedOn: new Date(),
+    ...props,
+  };
+  return importResult;
 };
 
 export const produceLtsaOrder = (): ILtsaOrder => ({

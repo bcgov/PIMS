@@ -112,6 +112,7 @@ const AddProperty = () => {
           />
         </RadioGroup>
         <GeneralInformationForm
+          defaultLocationValue={undefined}
           propertyType={propertyType}
           adminAreas={
             lookupData?.AdministrativeAreas.map((area) => ({ label: area.Name, value: area.Id })) ??
@@ -156,6 +157,7 @@ const AddProperty = () => {
                 LandArea: parseFloatOrNull(formValues.LandArea),
                 PID: parseIntOrNull(formValues.PID.replace(/-/g, '')),
                 PIN: parseIntOrNull(formValues.PIN),
+                Postal: formValues.Postal.replace(/ /g, '').toUpperCase(),
                 PropertyTypeId: 0,
                 AgencyId: userContext.pimsUser.data.AgencyId,
                 IsVisibleToOtherAgencies: false,
@@ -180,6 +182,7 @@ const AddProperty = () => {
                 ...formValues,
                 PID: parseIntOrNull(formValues.PID.replace(/-/g, '')),
                 PIN: parseIntOrNull(formValues.PIN),
+                Postal: formValues.Postal.replace(/ /g, '').toUpperCase(),
                 RentableArea: parseFloatOrNull(formValues.RentableArea),
                 TotalArea: parseFloatOrNull(formValues.TotalArea),
                 BuildingFloorCount: 0,

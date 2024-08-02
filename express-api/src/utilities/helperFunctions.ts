@@ -13,6 +13,8 @@ export const constructFindOptionFromQueryPid = <T>(
   column: keyof T,
   operatorValuePair: string,
 ): FindOptionsWhere<T> => {
+  if (operatorValuePair == null || operatorValuePair.match(/([^,]*),(.*)/) == null)
+    return { [column]: undefined } as FindOptionsWhere<T>;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, operator, value] = operatorValuePair.match(/([^,]*),(.*)/).map((a) => a.trim());
   const trimmedValue = value.replace(/[^\d]/g, ''); //remove all non digit characters;
@@ -39,6 +41,30 @@ export const constructFindOptionFromQueryPid = <T>(
   return { [column]: internalMatcher(trimmedValue) } as FindOptionsWhere<T>;
 };
 
+export const constructFindOptionFromQueryBoolean = <T>(
+  column: keyof T,
+  operatorValuePair: string, //format: "operator,value"
+): FindOptionsWhere<T> => {
+  if (operatorValuePair == null || operatorValuePair.match(/([^,]*),(.*)/) == null)
+    return { [column]: undefined } as FindOptionsWhere<T>;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, operator, value] = operatorValuePair.match(/([^,]*),(.*)/).map((a) => a.trim());
+  let internalMatcher;
+  // Empty string for when table searches for 'any'
+  if (value === '') return { [column]: undefined } as FindOptionsWhere<T>;
+  switch (operator) {
+    case 'is':
+      internalMatcher = (str: string) => Raw((alias) => `${alias} = ${str.toUpperCase()}`);
+      break;
+    case 'not':
+      internalMatcher = (str: string) => Raw((alias) => `${alias} != ${str.toUpperCase()}`);
+      break;
+    default:
+      return { [column]: undefined } as FindOptionsWhere<T>;
+  }
+  return { [column]: internalMatcher(value) } as FindOptionsWhere<T>;
+};
+
 /**
  * Accepts a column alias and produces a FindOptionsWhere style object.
  * This lets you plug in the return value to typeorm functions such as .find, findOne, etc.
@@ -50,6 +76,8 @@ export const constructFindOptionFromQuery = <T>(
   column: keyof T,
   operatorValuePair: string, //format: "operator,value"
 ): FindOptionsWhere<T> => {
+  if (operatorValuePair == null || operatorValuePair.match(/([^,]*),(.*)/) == null)
+    return { [column]: undefined } as FindOptionsWhere<T>;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, operator, value] = operatorValuePair.match(/([^,]*),(.*)/).map((a) => a.trim());
   let internalMatcher;
@@ -143,7 +171,7 @@ export const TimestampComparisonWrapper = (tsValue: string, operator: TimestampO
 //or "Project".project_number (correct table alias plus non-aliased column access)
 //Thankfully, it's not too difficult to manually format this.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const fixColumnAlias = (str: string) => {
+export const fixColumnAlias = (str: string) => {
   const [tableAlias, columnAlias] = str.split('.');
   const fixedColumn = columnAlias
     .split(/\.?(?=[A-Z])/)
@@ -157,7 +185,7 @@ const fixColumnAlias = (str: string) => {
  * @param date JS Date object
  * @returns string
  */
-const toPostgresTimestamp = (date: Date) => {
+export const toPostgresTimestamp = (date: Date) => {
   const pad = (num: number, size = 2) => {
     let s = String(num);
     while (s.length < size) s = '0' + s;

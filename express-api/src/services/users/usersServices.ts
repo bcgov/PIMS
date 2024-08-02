@@ -1,6 +1,6 @@
 import { User, UserStatus } from '@/typeorm/Entities/User';
 import { AppDataSource } from '@/appDataSource';
-import { SSOBCeIDUser, SSOIdirUser, SSOUser } from '@bcgov/citz-imb-sso-express';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { DeepPartial, FindOptionsOrderValue, In } from 'typeorm';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { randomUUID, UUID } from 'crypto';
@@ -24,37 +24,31 @@ export const getUser = async (username: string): Promise<User | null> => {
   return user;
 };
 
-// TODO: UPDATE THIS
+/**
+ * Normalizes a Keycloak user object to a custom format.
+ * @param kcUser - The Keycloak user object to be normalized.
+ * @returns An object with normalized user properties including first name, last name, username, email, display name, and GUID.
+ */
 const normalizeKeycloakUser = (kcUser: SSOUser): NormalizedKeycloakUser => {
-  const provider = kcUser.identity_provider;
   const normalizeUuid = (keycloakUuid: string) =>
     keycloakUuid.toLowerCase().replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/g, '$1-$2-$3-$4-$5');
-  switch (provider) {
-    case 'idir':
-      kcUser as SSOIdirUser;
-      return {
-        first_name: kcUser.first_name,
-        last_name: kcUser.last_name,
-        username: kcUser.preferred_username,
-        email: kcUser.email,
-        display_name: kcUser.display_name,
-        guid: normalizeUuid(kcUser.guid),
-      };
-    case 'bceidbasic':
-      kcUser as SSOBCeIDUser;
-      return {
-        first_name: '',
-        last_name: '',
-        username: kcUser.preferred_username,
-        email: kcUser.email,
-        display_name: kcUser.display_name,
-        guid: normalizeUuid(kcUser.guid),
-      };
-    default:
-      throw new Error();
-  }
+  return {
+    first_name: kcUser.first_name,
+    last_name: kcUser.last_name,
+    username: kcUser.preferred_username,
+    email: kcUser.email,
+    display_name: kcUser.display_name,
+    guid: normalizeUuid(kcUser.guid),
+  };
 };
 
+/**
+ * Activates a user in the system based on the provided SSO user information.
+ * If the user does not exist internally, creates a new user with the normalized SSO user data.
+ * If the user already exists, updates the last login timestamp and Keycloak user ID.
+ * @param ssoUser The SSO user information to activate in the system.
+ * @returns {Promise<void>} A promise that resolves once the user is activated or updated.
+ */
 const activateUser = async (ssoUser: SSOUser) => {
   const normalizedUser = normalizeKeycloakUser(ssoUser);
   const internalUser = await getUser(ssoUser.preferred_username);
@@ -73,54 +67,21 @@ const activateUser = async (ssoUser: SSOUser) => {
   }
 };
 
-// const getAccessRequest = async (kcUser: KeycloakUser) => {
-//   const internalUser = await getUserFromKeycloak(kcUser);
-//   const accessRequest = AppDataSource.getRepository(AccessRequest)
-//     .createQueryBuilder('AccessRequests')
-//     .leftJoinAndSelect('AccessRequests.AgencyId', 'Agencies')
-//     .leftJoinAndSelect('AccessRequests.RoleId', 'Roles')
-//     .leftJoinAndSelect('AccessRequests.UserId', 'Users')
-//     .where('AccessRequests.UserId = :userId', { userId: internalUser.Id })
-//     .andWhere('AccessRequests.Status = :status', { status: 0 })
-//     .orderBy('AccessRequests.CreatedOn', 'DESC')
-//     .getOne();
-//   return accessRequest;
-// };
-
-// const getAccessRequestById = async (requestId: number, kcUser: KeycloakUser) => {
-//   const accessRequest = await AppDataSource.getRepository(AccessRequest)
-//     .createQueryBuilder('AccessRequests')
-//     .leftJoinAndSelect('AccessRequests.AgencyId', 'Agencies')
-//     .leftJoinAndSelect('AccessRequests.RoleId', 'Roles')
-//     .leftJoinAndSelect('AccessRequests.UserId', 'Users')
-//     .where('AccessRequests.Id = :requestId', { requestId: requestId })
-//     .getOne();
-//   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-//   const normalizedKc = await normalizeKeycloakUser(kcUser);
-//   return accessRequest;
-// };
-
-// const deleteAccessRequest = async (accessRequest: AccessRequest) => {
-//   const existing = await AppDataSource.getRepository(AccessRequest).findOne({
-//     where: { Id: accessRequest.Id },
-//   });
-//   if (!existing) {
-//     throw new ErrorWithCode('No access request found', 404);
-//   }
-//   const deletedRequest = AppDataSource.getRepository(AccessRequest).remove(accessRequest);
-//   return deletedRequest;
-// };
-
+/**
+ * Adds a user from Keycloak to the system with 'OnHold' status.
+ * @param ssoUser The Keycloak user to be added
+ * @param agencyId The ID of the agency the user belongs to
+ * @param position The position of the user
+ * @param note Additional notes about the user
+ * @returns The generated map of the inserted user
+ */
 const addKeycloakUserOnHold = async (
   ssoUser: SSOUser,
   agencyId: number,
   position: string,
   note: string,
 ) => {
-  if (
-    agencyId == null
-    // roleId == null
-  ) {
+  if (agencyId == null) {
     throw new Error('Null argument.');
   }
   //Iterating through agencies and roles no longer necessary here?
@@ -144,31 +105,20 @@ const addKeycloakUserOnHold = async (
     Position: position,
     Note: note,
     CreatedById: systemUser.Id,
+    LastLogin: new Date(),
   });
   return result.generatedMaps[0];
 };
 
-// const updateAccessRequest = async (updateRequest: AccessRequest, kcUser: KeycloakUser) => {
-//   if (updateRequest == null || updateRequest.AgencyId == null || updateRequest.RoleId == null)
-//     throw new Error('Null argument.');
-
-//   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-//   const normalizedKc = await normalizeKeycloakUser(kcUser);
-
-//   const result = await AppDataSource.getRepository(AccessRequest).update(
-//     { Id: updateRequest.Id },
-//     updateRequest,
-//   );
-//   if (!result.affected) {
-//     throw new ErrorWithCode('Resource not found.', 404);
-//   }
-//   return result.generatedMaps[0];
-// };
-
+/**
+ * Retrieves the IDs of agencies related to the user identified by the given username.
+ * If the user does not exist, an empty array is returned.
+ * @param {string} username - The username of the user to retrieve agencies for.
+ * @returns {Promise<number[]>} An array containing the ID of the user's agency and the IDs of its children agencies.
+ */
 const getAgencies = async (username: string) => {
   const user = await getUser(username);
 
-  // TODO: we need to handle if no user is found from getUser instead of the app crashing
   if (!user) {
     return [];
   }
@@ -190,26 +140,24 @@ const getAgencies = async (username: string) => {
   return [agencyId, ...children.map((c) => c.Id)];
 };
 
+/**
+ * Check if a user has all specified agencies.
+ * @param {string} username - The username of the user to check.
+ * @param {number[]} agencies - An array of agency IDs to check against.
+ * @returns {Promise<boolean>} A boolean indicating whether the user has all specified agencies.
+ */
 const hasAgencies = async (username: string, agencies: number[]) => {
   const usersAgencies = await getAgencies(username);
   const result = agencies.every((id) => usersAgencies.includes(id));
   return result;
 };
 
-const getAdministrators = async (agencyIds: string[]) => {
-  const admins = await AppDataSource.getRepository(User).find({
-    relations: {
-      Role: true,
-      Agency: true,
-    },
-    where: {
-      Agency: In(agencyIds),
-      Role: { Name: 'System Admin' },
-    },
-  });
-  return admins;
-};
-
+/**
+ * Maps the sort key and direction to the corresponding object structure for TypeORM find options.
+ * @param sortKey - The key to sort by.
+ * @param sortDirection - The direction of sorting.
+ * @returns The mapped object structure for TypeORM find options based on the provided sort key and direction.
+ */
 const sortKeyMapping = (sortKey: string, sortDirection: FindOptionsOrderValue) => {
   switch (sortKey) {
     case 'Agency':
@@ -221,6 +169,11 @@ const sortKeyMapping = (sortKey: string, sortDirection: FindOptionsOrderValue) =
   }
 };
 
+/**
+ * Retrieves users based on the provided filtering criteria.
+ * @param filter - The filtering criteria to apply when fetching users.
+ * @returns A list of users matching the specified criteria.
+ */
 const getUsers = async (filter: UserFiltering) => {
   const users = await AppDataSource.getRepository(User).find({
     relations: {
@@ -249,6 +202,11 @@ const getUsers = async (filter: UserFiltering) => {
   return users;
 };
 
+/**
+ * Retrieves a user by their ID from the database.
+ * @param id - The ID of the user to retrieve.
+ * @returns A promise that resolves to the user object with associated Agency and Role.
+ */
 const getUserById = async (id: string) => {
   return AppDataSource.getRepository(User).findOne({
     relations: {
@@ -261,6 +219,12 @@ const getUserById = async (id: string) => {
   });
 };
 
+/**
+ * Adds a new user to the database.
+ * @param {User} user - The user object to be added.
+ * @returns {Promise<User>} The user object that was added.
+ * @throws {ErrorWithCode} Throws an error if the user already exists in the database.
+ */
 const addUser = async (user: User) => {
   const resource = await AppDataSource.getRepository(User).findOne({ where: { Id: user.Id } });
   if (resource) {
@@ -270,6 +234,12 @@ const addUser = async (user: User) => {
   return retUser;
 };
 
+/**
+ * Updates a user's information in the database and optionally updates the user's role in Keycloak.
+ * @param user - The partial user object containing the updated information.
+ * @returns {Promise<User>} The updated user object with the new display name.
+ * @throws {ErrorWithCode} If the user resource does not exist in the database.
+ */
 const updateUser = async (user: DeepPartial<User>) => {
   const roleName = user.Role?.Name;
   const resource = await AppDataSource.getRepository(User).findOne({ where: { Id: user.Id } });
@@ -286,6 +256,12 @@ const updateUser = async (user: DeepPartial<User>) => {
   return retUser.generatedMaps[0];
 };
 
+/**
+ * Deletes a user from the database.
+ * @param user - The user to be deleted.
+ * @returns {Promise<User>} The deleted user.
+ * @throws {ErrorWithCode} Error if the user does not exist.
+ */
 const deleteUser = async (user: User) => {
   const resource = await AppDataSource.getRepository(User).findOne({ where: { Id: user.Id } });
   if (!resource) {
@@ -295,16 +271,31 @@ const deleteUser = async (user: User) => {
   return retUser;
 };
 
+/**
+ * Asynchronously retrieves roles from Keycloak using the KeycloakService.
+ * @returns {Promise<string[]>} An array of role names.
+ */
 const getKeycloakRoles = async () => {
   const roles = await KeycloakService.getKeycloakRoles();
   return roles.map((a) => a.name);
 };
 
+/**
+ * Retrieves the roles of a user from Keycloak.
+ * @param {string} username - The username of the user to retrieve roles for.
+ * @returns {Promise<string[]>} An array of role names associated with the user.
+ */
 const getKeycloakUserRoles = async (username: string) => {
   const keycloakRoles = await KeycloakService.getKeycloakUserRoles(username);
   return keycloakRoles.map((a) => a.name);
 };
 
+/**
+ * Updates the roles of a user in Keycloak.
+ * @param {string} username - The username of the user whose roles are to be updated.
+ * @param {string[]} roleNames - An array of role names to assign to the user.
+ * @returns {Promise<string[]>} An array of role names assigned to the user after the update.
+ */
 const updateKeycloakUserRoles = async (username: string, roleNames: string[]) => {
   const keycloakRoles = await KeycloakService.updateKeycloakUserRoles(username, roleNames);
   await KeycloakService.syncKeycloakUser(username);
@@ -317,7 +308,6 @@ const userServices = {
   addKeycloakUserOnHold,
   hasAgencies,
   getAgencies,
-  getAdministrators,
   normalizeKeycloakUser,
   getUsers,
   addUser,

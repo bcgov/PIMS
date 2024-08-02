@@ -1,15 +1,8 @@
-import React, { MutableRefObject, useContext } from 'react';
+import React, { MutableRefObject, useContext, useState } from 'react';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, SxProps, Tooltip, lighten, useTheme } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
-import {
-  GridColDef,
-  GridColumnHeaderTitle,
-  GridEventListener,
-  gridFilteredSortedRowEntriesSelector,
-  GridRowId,
-  GridValidRowModel,
-} from '@mui/x-data-grid';
+import { GridColDef, GridColumnHeaderTitle, GridEventListener } from '@mui/x-data-grid';
 import { dateFormatter, pidFormatter, zeroPadPID } from '@/utilities/formatters';
 import { ClassificationInline } from './ClassificationIcon';
 import { useNavigate } from 'react-router-dom';
@@ -18,14 +11,11 @@ import { Parcel, ParcelEvaluation, ParcelFiscal } from '@/hooks/api/useParcelsAp
 import { Building, BuildingEvaluation, BuildingFiscal } from '@/hooks/api/useBuildingsApi';
 import { propertyTypeMapper, PropertyTypes } from '@/constants/propertyTypes';
 import { SnackBarContext } from '@/contexts/snackbarContext';
+import { CommonFiltering } from '@/interfaces/ICommonFiltering';
+import { LookupContext } from '@/contexts/lookupContext';
 
 interface IPropertyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
-  // data: Record<string, any>[];
-  // isLoading: boolean;
-  // refreshData: () => void;
-  // loadData: () => void;
-  // error: unknown;
 }
 
 export const useClassificationStyle = () => {
@@ -51,13 +41,19 @@ export const useClassificationStyle = () => {
       textColor: lighten(theme.palette.warning.main, 0.2),
       bgColor: theme.palette.warning.light,
     },
+    undefined: {
+      textColor: lighten(theme.palette.warning.main, 0.2),
+      bgColor: theme.palette.black.main,
+    },
   };
 };
 
 const PropertyTable = (props: IPropertyTable) => {
+  const [totalCount, setTotalCount] = useState(0);
   const api = usePimsApi();
   const navigate = useNavigate();
   const snackbar = useContext(SnackBarContext);
+  const lookup = useContext(LookupContext);
 
   const classification = useClassificationStyle();
   const theme = useTheme();
@@ -166,7 +162,7 @@ const PropertyTable = (props: IPropertyTable) => {
         ref.current.setFilterModel({ items: [] });
         break;
       case 'Building':
-      case 'Land':
+      case 'Parcel':
         ref.current.setFilterModel({
           items: [{ value, operator: 'contains', field: 'PropertyType' }],
         });
@@ -176,109 +172,97 @@ const PropertyTable = (props: IPropertyTable) => {
     }
   };
 
-  const getExcelData: (
-    ref: MutableRefObject<GridApiCommunity>,
-  ) => Promise<{ id: GridRowId; model: GridValidRowModel }[]> = async (
-    ref: MutableRefObject<GridApiCommunity>,
-  ) => {
-    if (ref?.current) {
-      try {
-        const buildingsWithExtras = await api.buildings.getBuildings({
-          includeRelations: true,
-          excelExport: true,
-        });
-        const parcelsWithExtras = await api.parcels.getParcels({
-          includeRelations: true,
-          excelExport: true,
-        });
+  const excelDataMap = (data: (Parcel | Building)[]) => {
+    return data.map((property) => {
+      return {
+        Type: propertyTypeMapper(property.PropertyTypeId),
+        Classification: lookup.getLookupValueById('Classifications', property.ClassificationId)
+          ?.Name,
+        Name: property.Name,
+        Description: property.Description,
+        Ministry: lookup.getLookupValueById('Agencies', property.AgencyId)?.ParentId
+          ? lookup.data.Agencies.find(
+              (a) => a.Id === lookup.getLookupValueById('Agencies', property.AgencyId)?.ParentId,
+            )?.Name
+          : lookup.getLookupValueById('Agencies', property.AgencyId)?.Name,
+        Agency: lookup.getLookupValueById('Agencies', property.AgencyId)?.Name,
+        Address: property.Address1,
+        'Administrative Area': lookup.getLookupValueById(
+          'AdministrativeAreas',
+          property.AdministrativeAreaId,
+        )?.Name,
+        Postal: property.Postal,
+        PID: property.PID,
+        PIN: property.PIN,
+        'Assessed Value': property.Evaluations?.length
+          ? property.Evaluations.sort(
+              (
+                a: ParcelEvaluation | BuildingEvaluation,
+                b: ParcelEvaluation | BuildingEvaluation,
+              ) => b.Year - a.Year,
+            ).at(0).Value
+          : '',
+        'Assessment Year': property.Evaluations?.length
+          ? property.Evaluations.sort(
+              (
+                a: ParcelEvaluation | BuildingEvaluation,
+                b: ParcelEvaluation | BuildingEvaluation,
+              ) => b.Year - a.Year,
+            ).at(0).Year
+          : '',
+        'Netbook Value': property.Fiscals?.length
+          ? property.Fiscals.sort(
+              (a: ParcelFiscal | BuildingFiscal, b: ParcelFiscal | BuildingFiscal) =>
+                b.FiscalYear - a.FiscalYear,
+            ).at(0).Value
+          : '',
+        'Netbook Year': property.Fiscals?.length
+          ? property.Fiscals.sort(
+              (a: ParcelFiscal | BuildingFiscal, b: ParcelFiscal | BuildingFiscal) =>
+                b.FiscalYear - a.FiscalYear,
+            ).at(0).FiscalYear
+          : '',
+        'Parcel Land Area':
+          property.PropertyTypeId === PropertyTypes.LAND ? (property as Parcel).LandArea : '',
+        'Building Total Area':
+          property.PropertyTypeId === PropertyTypes.BUILDING
+            ? (property as Building).TotalArea
+            : '',
+        'Building Predominate Use':
+          property.PropertyTypeId === PropertyTypes.BUILDING
+            ? lookup.getLookupValueById(
+                'PredominateUses',
+                (property as Building).BuildingPredominateUseId,
+              )?.Name
+            : '',
+        'Building Construction Type':
+          property.PropertyTypeId === PropertyTypes.BUILDING
+            ? lookup.getLookupValueById(
+                'ConstructionTypes',
+                (property as Building).BuildingConstructionTypeId,
+              )?.Name
+            : '',
+        'Building Tenancy':
+          property.PropertyTypeId === PropertyTypes.BUILDING
+            ? (property as Building).BuildingTenancy
+            : '',
+      };
+    });
+  };
 
-        if (!buildingsWithExtras || !parcelsWithExtras) {
-          throw new Error('Buildings or Parcels could not be reached. Refresh and try again.');
-        }
-        const properties = [
-          ...(buildingsWithExtras?.map((b) => ({ ...b, Type: 'Building' })) ?? []),
-          ...(parcelsWithExtras?.map((p) => ({ ...p, Type: 'Parcel' })) ?? []),
-        ];
-        ref.current.setRows(properties);
-        const rows = gridFilteredSortedRowEntriesSelector(ref);
-        return rows.map((row) => {
-          const { id, model } = row;
-          const propertyModel = model as Parcel | Building;
-          return {
-            id,
-            model: {
-              Type: propertyTypeMapper(propertyModel.PropertyTypeId),
-              Classification: propertyModel.Classification?.Name,
-              Name: propertyModel.Name,
-              Description: propertyModel.Description,
-              Ministry: propertyModel.Agency?.Parent?.Name,
-              Agency: propertyModel.Agency?.Name,
-              Address: propertyModel.Address1,
-              'Administrative Area': propertyModel.AdministrativeArea?.Name,
-              Postal: propertyModel.Postal,
-              PID: propertyModel.PID,
-              PIN: propertyModel.PIN,
-              'Assessed Value': propertyModel.Evaluations?.length
-                ? propertyModel.Evaluations.sort(
-                    (
-                      a: ParcelEvaluation | BuildingEvaluation,
-                      b: ParcelEvaluation | BuildingEvaluation,
-                    ) => b.Year - a.Year,
-                  ).at(0).Value
-                : '',
-              'Assessment Year': propertyModel.Evaluations?.length
-                ? propertyModel.Evaluations.sort(
-                    (
-                      a: ParcelEvaluation | BuildingEvaluation,
-                      b: ParcelEvaluation | BuildingEvaluation,
-                    ) => b.Year - a.Year,
-                  ).at(0).Year
-                : '',
-              'Netbook Value': propertyModel.Fiscals?.length
-                ? propertyModel.Fiscals.sort(
-                    (a: ParcelFiscal | BuildingFiscal, b: ParcelFiscal | BuildingFiscal) =>
-                      b.FiscalYear - a.FiscalYear,
-                  ).at(0).Value
-                : '',
-              'Netbook Year': propertyModel.Fiscals?.length
-                ? propertyModel.Fiscals.sort(
-                    (a: ParcelFiscal | BuildingFiscal, b: ParcelFiscal | BuildingFiscal) =>
-                      b.FiscalYear - a.FiscalYear,
-                  ).at(0).FiscalYear
-                : '',
-              'Parcel Land Area':
-                propertyModel.PropertyTypeId === PropertyTypes.LAND
-                  ? (propertyModel as Parcel).LandArea
-                  : '',
-              'Building Total Area':
-                propertyModel.PropertyTypeId === PropertyTypes.BUILDING
-                  ? (propertyModel as Building).TotalArea
-                  : '',
-              'Building Predominate Use':
-                propertyModel.PropertyTypeId === PropertyTypes.BUILDING
-                  ? (propertyModel as Building).BuildingPredominateUse?.Name
-                  : '',
-              'Building Construction Type':
-                propertyModel.PropertyTypeId === PropertyTypes.BUILDING
-                  ? (propertyModel as Building).BuildingConstructionType?.Name
-                  : '',
-              'Building Tenancy':
-                propertyModel.PropertyTypeId === PropertyTypes.BUILDING
-                  ? (propertyModel as Building).BuildingTenancy
-                  : '',
-            },
-          };
-        });
-      } catch (e) {
-        snackbar.setMessageState({
-          open: true,
-          style: snackbar.styles.warning,
-          text: e.message ?? 'Error exporting Excel file.',
-        });
-        return [];
-      }
+  const handleDataChange = async (filter: CommonFiltering, signal: AbortSignal): Promise<any[]> => {
+    try {
+      const { data, totalCount } = await api.properties.propertiesDataSource(filter, signal);
+      setTotalCount(totalCount);
+      return data;
+    } catch (error) {
+      snackbar.setMessageState({
+        open: true,
+        text: 'Error loading properties.',
+        style: snackbar.styles.warning,
+      });
+      return [];
     }
-    return [];
   };
 
   return (
@@ -296,9 +280,10 @@ const PropertyTable = (props: IPropertyTable) => {
       <Box height={'calc(100vh - 180px)'}>
         <FilterSearchDataGrid
           name="properties"
-          dataSource={api.properties.getPropertiesUnion}
+          dataSource={handleDataChange}
+          excelDataSource={api.properties.getPropertiesForExcelExport}
           onPresetFilterChange={selectPresetFilter}
-          getRowId={(row) => row.Id + row.PropertyType}
+          getRowId={(row) => `${row.Id}_${row.PropertyType}`}
           defaultFilter={'All Properties'}
           tableOperationMode="server"
           onRowClick={props.rowClickHandler}
@@ -311,13 +296,15 @@ const PropertyTable = (props: IPropertyTable) => {
             <CustomMenuItem key={'Building'} value={'Building'}>
               Building
             </CustomMenuItem>,
-            <CustomMenuItem key={'Land'} value={'Land'}>
-              Land
+            <CustomMenuItem key={'Parcel'} value={'Parcel'}>
+              Parcel
             </CustomMenuItem>,
           ]}
           tableHeader={'Properties Overview'}
+          rowCountProp={totalCount}
+          rowCount={totalCount}
           excelTitle={'Properties'}
-          customExcelData={getExcelData}
+          customExcelMap={excelDataMap}
           columns={columns}
           addTooltip="Create New Property"
           initialState={{

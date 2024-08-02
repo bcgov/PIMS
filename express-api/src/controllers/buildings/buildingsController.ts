@@ -5,6 +5,7 @@ import userServices from '@/services/users/usersServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Building } from '@/typeorm/Entities/Building';
 import { checkUserAgencyPermission, isAdmin, isAuditor } from '@/utilities/authorizationChecks';
+import { Roles } from '@/constants/roles';
 
 /**
  * @description Gets all buildings satisfying the filter parameters.
@@ -15,7 +16,6 @@ import { checkUserAgencyPermission, isAdmin, isAuditor } from '@/utilities/autho
 export const getBuildings = async (req: Request, res: Response) => {
   const filter = BuildingFilterSchema.safeParse(req.query);
   const includeRelations = req.query.includeRelations === 'true';
-  const forExcelExport = req.query.excelExport === 'true';
   const kcUser = req.user as unknown as SSOUser;
   if (!filter.success) {
     return res.status(400).send('Could not parse filter.');
@@ -27,12 +27,10 @@ export const getBuildings = async (req: Request, res: Response) => {
     filterResult.agencyId = usersAgencies;
   }
   // Get parcels associated with agencies of the requesting user
-  const buildings = forExcelExport
-    ? await buildingService.getBuildingsForExcelExport(
-        filterResult as BuildingFilter,
-        includeRelations,
-      )
-    : await buildingService.getBuildings(filterResult as BuildingFilter, includeRelations);
+  const buildings = await buildingService.getBuildings(
+    filterResult as BuildingFilter,
+    includeRelations,
+  );
   return res.status(200).send(buildings);
 };
 
@@ -55,12 +53,14 @@ export const getBuilding = async (req: Request, res: Response) => {
     return res.status(400).send('Building Id is invalid.');
   }
 
+  // admin and auditors are permitted to see any building
+  const permittedRoles = [Roles.ADMIN, Roles.AUDITOR];
   const kcUser = req.user as unknown as SSOUser;
   const building = await buildingService.getBuildingById(buildingId);
 
   if (!building) {
     return res.status(404).send('Building matching this ID was not found.');
-  } else if (!(await checkUserAgencyPermission(kcUser, [building.AgencyId]))) {
+  } else if (!(await checkUserAgencyPermission(kcUser, [building.AgencyId], permittedRoles))) {
     return res.status(403).send('You are not authorized to view this building.');
   }
   return res.status(200).send(building);
@@ -86,7 +86,7 @@ export const updateBuilding = async (req: Request, res: Response) => {
   }
   const user = await userServices.getUser((req.user as SSOUser).preferred_username);
   const updateBody = { ...req.body, UpdatedById: user.Id };
-  const building = await buildingService.updateBuildingById(updateBody);
+  const building = await buildingService.updateBuildingById(updateBody, req.user);
   return res.status(200).send(building);
 };
 

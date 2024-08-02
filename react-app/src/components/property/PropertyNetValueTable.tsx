@@ -1,4 +1,4 @@
-import { dateFormatter } from '@/utilities/formatters';
+import { dateFormatter, formatMoney } from '@/utilities/formatters';
 import { Box, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
@@ -23,6 +23,7 @@ const PropertyNetValueTable = (props: IPropertyNetValueTable) => {
       field: 'Value',
       headerName: 'Net Book Value',
       flex: 1,
+      valueFormatter: formatMoney,
     },
   ];
 

@@ -7,6 +7,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import {
   accessPendingBlurb,
   accountInactiveBlurb,
+  awaitingRoleBlurb,
   signupTermsAndConditionsClaim,
 } from '@/constants/jsxSnippets';
 import usePimsApi from '@/hooks/usePimsApi';
@@ -15,6 +16,8 @@ import { AuthContext } from '@/contexts/authContext';
 import { Navigate } from 'react-router-dom';
 import TextFormField from '@/components/form/TextFormField';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
+import { SnackBarContext } from '@/contexts/snackbarContext';
+import { LookupContext } from '@/contexts/lookupContext';
 
 interface StatusPageTemplateProps {
   blurb: JSX.Element;
@@ -41,10 +44,9 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
 
   const formMethods = useForm({
     defaultValues: {
-      UserName:
-        keycloak.user?.originalData.idir_username || keycloak.user?.originalData.bceid_username,
-      FirstName: keycloak.user?.originalData.given_name || keycloak.user?.originalData.display_name,
-      LastName: keycloak.user?.originalData.family_name,
+      UserName: keycloak.user?.username,
+      FirstName: keycloak.user?.first_name,
+      LastName: keycloak.user?.last_name,
       Email: keycloak.user?.email,
       Notes: '',
       Agency: '',
@@ -112,23 +114,42 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
 export const AccessRequest = () => {
   const api = usePimsApi();
   const auth = useContext(AuthContext);
+  const snackbar = useContext(SnackBarContext);
+  const lookup = useContext(LookupContext);
 
-  const onSubmit = async (data: AccessRequestType) => {
-    try {
-      await api.users.submitAccessRequest(data);
-      await auth.pimsUser.refreshData();
-    } catch (e) {
-      //Maybe we can display a little snackbar in these cases at some point.
-      // eslint-disable-next-line no-console
-      console.log(e?.message);
-    }
+  const onSubmit = (data: AccessRequestType) => {
+    api.users.submitAccessRequest(data).then((response) => {
+      if (response.status === 201) {
+        auth.pimsUser.refreshData();
+      } else {
+        snackbar.setMessageState({
+          text: `Could not create account. Contact ${lookup.data.Config.contactEmail} for assistance.`,
+          open: true,
+          style: snackbar.styles.warning,
+        });
+      }
+    });
   };
 
-  if (auth.pimsUser?.data?.Status && auth.pimsUser.data.Status === 'Active') {
+  if (
+    auth.pimsUser?.data?.Status &&
+    auth.pimsUser.data?.Status === 'Active' &&
+    auth.keycloak.user?.client_roles?.length
+  ) {
     return <Navigate replace to={'/'} />;
   }
 
   const selectPageContent = () => {
+    if (auth.pimsUser.data?.Status === 'Active' && !auth.keycloak.user?.client_roles?.length) {
+      return (
+        <>
+          <Typography mb={'2rem'} variant="h2">
+            Awaiting Role
+          </Typography>
+          <StatusPageTemplate blurb={awaitingRoleBlurb()} />
+        </>
+      );
+    }
     switch (auth.pimsUser.data?.Status) {
       case 'OnHold':
         return (
@@ -136,7 +157,7 @@ export const AccessRequest = () => {
             <Typography mb={'2rem'} variant="h2">
               Access Pending
             </Typography>
-            <StatusPageTemplate blurb={accessPendingBlurb} />
+            <StatusPageTemplate blurb={accessPendingBlurb()} />
           </>
         );
       case 'Disabled':
@@ -146,7 +167,7 @@ export const AccessRequest = () => {
             <Typography mb={'2rem'} variant="h2">
               Account Inactive
             </Typography>
-            <StatusPageTemplate blurb={accountInactiveBlurb} />
+            <StatusPageTemplate blurb={accountInactiveBlurb()} />
           </>
         );
       default:

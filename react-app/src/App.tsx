@@ -30,7 +30,15 @@ import ProjectDetail from '@/components/projects/ProjectDetail';
 import SnackBarContextProvider from './contexts/snackbarContext';
 import ParcelMap from '@/components/map/ParcelMap';
 import LookupContextProvider from '@/contexts/lookupContext';
+import BulkUpload from './pages/BulkUpload';
 
+/**
+ * Renders the main router component for the application.
+ * Manages navigation and authentication for different routes.
+ * Includes reusable map display functionality for authorized users.
+ *
+ * @returns JSX element representing the main router component
+ */
 const Router = () => {
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
@@ -55,7 +63,9 @@ const Router = () => {
       <Route
         index
         element={
-          auth.keycloak.isAuthenticated && auth.pimsUser.data?.Status === 'Active' ? (
+          auth.keycloak.isAuthenticated &&
+          auth.pimsUser.data?.Status === 'Active' &&
+          auth.keycloak.user?.client_roles?.length ? (
             showMap()
           ) : (
             <BaseLayout displayFooter>
@@ -75,6 +85,16 @@ const Router = () => {
         }
       />
       <Route path="/admin">
+        <Route
+          path="bulk"
+          element={
+            <BaseLayout>
+              <AuthRouteGuard permittedRoles={[Roles.ADMIN]}>
+                <BulkUpload />
+              </AuthRouteGuard>
+            </BaseLayout>
+          }
+        />
         <Route
           path="adminAreas"
           element={

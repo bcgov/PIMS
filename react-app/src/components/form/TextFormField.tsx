@@ -17,7 +17,7 @@ type TextFormFieldProps = {
 
 const TextFormField = (props: TextFormFieldProps) => {
   const { control, setValue } = useFormContext();
-  const { name, label, rules, numeric, isPid, defaultVal, ...restProps } = props;
+  const { name, label, rules, numeric, isPid, defaultVal, disabled, ...restProps } = props;
   return (
     <Controller
       control={control}
@@ -52,6 +52,7 @@ const TextFormField = (props: TextFormFieldProps) => {
             type={'text'}
             error={!!error && !!error.message}
             helperText={error?.message}
+            disabled={disabled}
             {...restProps}
           />
         );

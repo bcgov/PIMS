@@ -7,16 +7,18 @@ import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotif
 import { User } from '@/typeorm/Entities/User';
 import { UUID, randomUUID } from 'crypto';
 import nunjucks from 'nunjucks';
-import { IsNull, QueryRunner } from 'typeorm';
+import { In, IsNull, QueryRunner } from 'typeorm';
 import chesServices, {
   EmailBody,
   EmailEncoding,
   EmailPriority,
+  IChesStatusResponse,
   IEmail,
 } from '../ches/chesServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
 import logger from '@/utilities/winstonLogger';
+import getConfig from '@/constants/config';
 
 export interface AccessRequestData {
   FirstName: string;
@@ -45,10 +47,34 @@ export enum AgencyResponseType {
   Subscribe = 1,
   Watch = 2,
 }
+export interface ProjectNotificationFilter {
+  projectId: number;
+  page?: number;
+  pageSize?: number;
+}
+export interface NotificationQueueModel {
+  id: number;
+  chesMessageId?: string;
+  status: string;
+  sendOn: Date;
+  to: string;
+  subject: string;
+}
+export interface PageModel<T> {
+  items: T[];
+  page: number;
+  pageSize: number;
+}
 
-const Title = 'PIMS';
-const Uri = '';
+const config = getConfig();
+const Title = config.notificationTemplate.title;
+const Uri = config.notificationTemplate.uri;
 
+/**
+ * Flattens the project properties by mapping each project property to a flattened object.
+ * @param project - The project object whose properties need to be flattened.
+ * @returns The project object with flattened properties under the 'Properties' field.
+ */
 const flattenProjectProperties = (project: Project) => {
   const flattenedProperties = project.ProjectProperties.map((projectProperty) => {
     if (projectProperty.Building != null) {
@@ -69,6 +95,13 @@ const flattenProjectProperties = (project: Project) => {
   };
 };
 
+/**
+ * Generates a notification queue object for an access request.
+ * @param accessRequest - Data for the access request containing FirstName and LastName.
+ * @param templateId - The ID of the notification template to be used.
+ * @param to - Optional recipient email address. If not provided, uses the default address from the template.
+ * @returns A Promise that resolves to the created NotificationQueue object.
+ */
 const generateAccessRequestNotification = async (
   accessRequest: AccessRequestData,
   templateId: number,
@@ -103,6 +136,18 @@ const generateAccessRequestNotification = async (
   return AppDataSource.getRepository(NotificationQueue).save(queueObject);
 };
 
+/**
+ * Inserts a new notification into the queue based on the provided template, project status notification, project, and optional agency.
+ * If an override email is provided, it will be used instead of the agency's email.
+ * Renders the notification content using Nunjucks templates and saves the notification in the database.
+ * @param template The notification template to use for the notification.
+ * @param projStatusNotif The project status notification triggering this notification.
+ * @param project The project associated with the notification.
+ * @param agency The agency to receive the notification (optional).
+ * @param overrideTo An override email address to send the notification to (optional).
+ * @param queryRunner The TypeORM query runner to use for the database transaction (optional).
+ * @returns The inserted notification object.
+ */
 const insertProjectNotificationQueue = async (
   template: NotificationTemplate,
   projStatusNotif: ProjectStatusNotification,
@@ -144,6 +189,13 @@ const insertProjectNotificationQueue = async (
   return insertedNotif;
 };
 
+/**
+ * Generates project notifications based on the project's status change and notification templates.
+ * @param project - The project for which notifications are generated.
+ * @param previousStatusId - The previous status ID of the project.
+ * @param queryRunner - Optional query runner for database operations.
+ * @returns A promise that resolves with an array of inserted notification objects.
+ */
 const generateProjectNotifications = async (
   project: Project,
   previousStatusId: number,
@@ -305,6 +357,13 @@ const generateProjectNotifications = async (
   return await Promise.all(returnNotifications);
 };
 
+/**
+ * Sends a notification using the provided details.
+ * @param notification - The notification details to be sent.
+ * @param user - The user to whom the notification is sent.
+ * @param queryRunner - Optional query runner for database operations.
+ * @returns The updated notification queue entry after attempting to send the notification.
+ */
 const sendNotification = async (
   notification: NotificationQueue,
   user: SSOUser,
@@ -353,10 +412,152 @@ const sendNotification = async (
   return retNotif;
 };
 
+/**
+ * Converts a CHES status to a corresponding NotificationStatus.
+ * @param chesStatus - The CHES status to be converted.
+ * @returns The corresponding NotificationStatus enum value.
+ */
+const convertChesStatusToNotificationStatus = (chesStatus: string): NotificationStatus => {
+  switch (chesStatus) {
+    case 'accepted':
+      return NotificationStatus.Accepted;
+    case 'pending':
+      return NotificationStatus.Pending;
+    case 'cancelled':
+      return NotificationStatus.Cancelled;
+    case 'failed':
+      return NotificationStatus.Failed;
+    case 'completed':
+      return NotificationStatus.Completed;
+    default:
+      return null;
+  }
+};
+
+/**
+ * Updates the status of a notification based on the CHES status retrieved asynchronously.
+ * @param {number} notificationId - The ID of the notification to update.
+ * @param {User} user - The user initiating the status update.
+ * @returns {Promise<NotificationQueue>} The updated notification entity after status update.
+ * @throws {Error} If the notification with the provided ID is not found or if status retrieval fails.
+ */
+const updateNotificationStatus = async (notificationId: number, user: User) => {
+  const query = AppDataSource.createQueryRunner();
+  const notification = await query.manager.findOne(NotificationQueue, {
+    where: { Id: notificationId },
+  });
+
+  if (!notification || Object.keys(notification).length === 0) {
+    throw new Error(`Notification with id ${notificationId} not found.`);
+  }
+
+  const statusResponse = await chesServices.getStatusByIdAsync(notification.ChesMessageId);
+
+  if (typeof statusResponse?.status === 'string') {
+    const notificationStatus = convertChesStatusToNotificationStatus(statusResponse.status);
+    // If the CHES status is non-standard, don't update the notification.
+    if (notificationStatus === null) {
+      query.release();
+      return notification;
+    }
+    notification.Status = notificationStatus;
+    notification.UpdatedOn = new Date();
+    notification.UpdatedById = user.Id;
+    const updatedNotification = await query.manager.save(NotificationQueue, notification);
+
+    query.release();
+    return updatedNotification;
+  } else if (typeof statusResponse?.status === 'number') {
+    //If we get number type then this wound up being some HTTP code.
+    query.release();
+    return notification;
+  } else {
+    query.release();
+    throw new Error(`Failed to retrieve status for notification with id ${notificationId}.`);
+  }
+};
+
+/**
+ * Retrieves project notifications in the queue based on the provided filter.
+ * Updates notifications in Pending or Accepted status by calling 'updateNotificationStatus'.
+ * Returns a PageModel of NotificationQueue items with updated statuses.
+ * @param filter - The filter object containing projectId, page, and pageSize.
+ * @param user - The user initiating the notification updates.
+ * @returns A Promise of PageModel<NotificationQueue> with updated notifications.
+ */
+const getProjectNotificationsInQueue = async (
+  filter: ProjectNotificationFilter,
+  user: User,
+): Promise<PageModel<NotificationQueue>> => {
+  const { projectId, page, pageSize } = filter;
+  const notifications = await AppDataSource.getRepository(NotificationQueue).find({
+    where: {
+      ProjectId: projectId,
+    },
+    skip: (page ?? 0) * (pageSize ?? 0),
+    take: pageSize ?? 0,
+    order: { SendOn: 'ASC' },
+  });
+
+  const updatedNotifications: Promise<NotificationQueue>[] = [];
+  for (const notification of notifications) {
+    // run the updates for notifications that are in Pending or Accepted status as the other statuses are final
+    if (
+      notification.Status === NotificationStatus.Pending ||
+      notification.Status === NotificationStatus.Accepted
+    ) {
+      const updatedNotification = updateNotificationStatus(notification.Id, user);
+      updatedNotifications.push(updatedNotification);
+    } else {
+      updatedNotifications.push(Promise.resolve(notification));
+    }
+  }
+
+  const pageModel: PageModel<NotificationQueue> = {
+    items: await Promise.all(updatedNotifications), //May need to come back to this at some point as one email failing to update will make this entire promise reject.
+    page: page ?? 0,
+    pageSize: pageSize ?? 0,
+  };
+
+  return pageModel;
+};
+
+const cancelAllProjectNotifications = async (projectId: number) => {
+  const notifications = await AppDataSource.getRepository(NotificationQueue).find({
+    where: [
+      { ProjectId: projectId, Status: NotificationStatus.Accepted },
+      { ProjectId: projectId, Status: NotificationStatus.Pending },
+    ],
+  });
+  const chesCancelPromises = notifications.map((notification) => {
+    return chesServices.cancelEmailByIdAsync(notification.ChesMessageId);
+  });
+  const chesCancelResolved = await Promise.allSettled(chesCancelPromises);
+  const cancelledMessageIds = chesCancelResolved
+    .filter((a) => a.status === 'fulfilled' && a.value.status === 'cancelled')
+    .map((c) => (c as PromiseFulfilledResult<IChesStatusResponse>).value.msgId);
+  await AppDataSource.getRepository(NotificationQueue).update(
+    { ChesMessageId: In(cancelledMessageIds) },
+    { Status: convertChesStatusToNotificationStatus('cancelled') },
+  );
+  return {
+    succeeded: chesCancelResolved.filter(
+      (c) => c.status === 'fulfilled' && c.value.status === 'cancelled',
+    ).length,
+    failed: chesCancelResolved.filter(
+      (c) => c.status === 'rejected' || c.value?.status !== 'cancelled',
+    ).length,
+  };
+};
+
 const notificationServices = {
   generateProjectNotifications,
   generateAccessRequestNotification,
   sendNotification,
+  updateNotificationStatus,
+  getProjectNotificationsInQueue,
+  convertChesStatusToNotificationStatus,
+  cancelAllProjectNotifications,
 };
 
 export default notificationServices;

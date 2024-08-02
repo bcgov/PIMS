@@ -10,6 +10,8 @@ export const errorReportSchema = z.object({
     email: z.string().email(),
     preferred_username: z.string(),
     display_name: z.string(),
+    first_name: z.string(),
+    last_name: z.string(),
   }),
   userMessage: z.string(),
   error: z.object({
@@ -17,6 +19,7 @@ export const errorReportSchema = z.object({
     stack: z.string(),
   }),
   timestamp: z.string(),
+  url: z.string(),
 });
 
 /**

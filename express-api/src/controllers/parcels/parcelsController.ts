@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import { stubResponse } from '@/utilities/stubResponse';
 import parcelServices from '@/services/parcels/parcelServices';
 import { ParcelFilter, ParcelFilterSchema } from '@/services/parcels/parcelSchema';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import userServices from '@/services/users/usersServices';
 import { Parcel } from '@/typeorm/Entities/Parcel';
+import { Roles } from '@/constants/roles';
 import { checkUserAgencyPermission, isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 
 /**
@@ -26,11 +26,13 @@ export const getParcel = async (req: Request, res: Response) => {
     return res.status(400).send('Parcel ID was invalid.');
   }
 
+  // admin and auditors are permitted to see any parcel
+  const permittedRoles = [Roles.ADMIN, Roles.AUDITOR];
   const kcUser = req.user as unknown as SSOUser;
   const parcel = await parcelServices.getParcelById(parcelId);
   if (!parcel) {
     return res.status(404).send('Parcel matching this internal ID not found.');
-  } else if (!(await checkUserAgencyPermission(kcUser, [parcel.AgencyId]))) {
+  } else if (!(await checkUserAgencyPermission(kcUser, [parcel.AgencyId], permittedRoles))) {
     return res.status(403).send('You are not authorized to view this parcel.');
   }
   return res.status(200).send(parcel);
@@ -56,7 +58,7 @@ export const updateParcel = async (req: Request, res: Response) => {
   }
   const user = await userServices.getUser((req.user as SSOUser).preferred_username);
   const updateBody = { ...req.body, UpdatedById: user.Id };
-  const parcel = await parcelServices.updateParcel(updateBody);
+  const parcel = await parcelServices.updateParcel(updateBody, req.user);
   if (!parcel) {
     return res.status(404).send('Parcel matching this internal ID not found.');
   }
@@ -94,7 +96,6 @@ export const deleteParcel = async (req: Request, res: Response) => {
 export const getParcels = async (req: Request, res: Response) => {
   const filter = ParcelFilterSchema.safeParse(req.query);
   const includeRelations = req.query.includeRelations === 'true';
-  const forExcelExport = req.query.excelExport === 'true';
   const kcUser = req.user as unknown as SSOUser;
   if (!filter.success) {
     return res.status(400).send('Could not parse filter.');
@@ -106,9 +107,7 @@ export const getParcels = async (req: Request, res: Response) => {
     filterResult.agencyId = usersAgencies;
   }
   // Get parcels associated with agencies of the requesting user
-  const parcels = forExcelExport
-    ? await parcelServices.getParcelsForExcelExport(filterResult as ParcelFilter, includeRelations)
-    : await parcelServices.getParcels(filterResult as ParcelFilter, includeRelations);
+  const parcels = await parcelServices.getParcels(filterResult as ParcelFilter, includeRelations);
   return res.status(200).send(parcels);
 };
 
@@ -142,58 +141,4 @@ export const addParcel = async (req: Request, res: Response) => {
   parcel.Fiscals = parcel.Fiscals?.map((fiscal) => ({ ...fiscal, CreatedById: user.Id }));
   const response = await parcelServices.addParcel(parcel);
   return res.status(201).send(response);
-};
-
-/**
- * @description Check whether a PID is available.
- * @param {Request}     req Incoming Request. Query strings should contain parcelId or pid.
- * @param {Response}    res Outgoing Response
- * @returns {Response}      A 200 status with a response body of { available: boolean }.
- */
-export const checkPidAvailable = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['parcels']
-   * #swagger.description = 'Checks whether a PID is available.'
-   * #swagger.security = [{
-   * "bearerAuth": []
-   * }]
-   */
-  return stubResponse(res);
-};
-
-/**
- * @description Check whether a PID is available.
- * @param {Request}     req Incoming Request. Query strings should contain parcelId or pin.
- * @param {Response}    res Outgoing Response
- * @returns {Response}      A 200 status with a response body of { available: boolean }.
- */
-export const checkPinAvailable = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['parcels']
-   * #swagger.description = 'Checks whether a PIN is available.'
-   * #swagger.security = [{
-   * "bearerAuth": []
-   * }]
-   */
-  return stubResponse(res);
-};
-
-/**
- * @description Update the specified parcel financials values in the datasource if permitted.
- * @param {Request}     req Incoming Request. Request body should contain entire parcel.
- * @param {Response}    res Outgoing Response
- * @returns {Response}      A 200 status with a response body of the updated parcel.
- */
-export const updateParcelFinancial = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['parcels']
-   * #swagger.description = 'Updates a parcel's financial values.'
-   * #swagger.security = [{
-   * "bearerAuth": []
-   * }]
-   */
-
-  /* Note: It's not clear to me what this endpoint would accomplish that the updateParcel
-  endpoint would not. */
-  return stubResponse(res);
 };

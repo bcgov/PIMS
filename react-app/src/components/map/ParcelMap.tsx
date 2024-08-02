@@ -4,11 +4,12 @@ import React, {
   PropsWithChildren,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
 import { MapContainer, Polygon, useMapEvents } from 'react-leaflet';
-import { LatLngBoundsExpression, Map, Point } from 'leaflet';
+import { LatLngBoundsExpression, LatLngExpression, Map, Point } from 'leaflet';
 import MapLayers from '@/components/map/MapLayers';
 import { ParcelPopup } from '@/components/map/parcelPopup/ParcelPopup';
 import { InventoryLayer } from '@/components/map/InventoryLayer';
@@ -32,6 +33,8 @@ type ParcelMapProps = {
   scrollOnClick?: boolean;
   zoomOnScroll?: boolean;
   hideControls?: boolean;
+  defaultZoom?: number;
+  defaultLocation?: LatLngExpression;
 } & PropsWithChildren;
 
 export const SelectedMarkerContext = createContext(null);
@@ -57,7 +60,11 @@ export const SelectedMarkerContext = createContext(null);
  */
 const ParcelMap = (props: ParcelMapProps) => {
   const MapEvents = () => {
-    useMapEvents({});
+    useMapEvents({
+      resize: () => {
+        setPopupState({ ...popupState, open: false });
+      },
+    });
     return null;
   };
   const api = usePimsApi();
@@ -96,10 +103,23 @@ const ParcelMap = (props: ParcelMapProps) => {
     scrollOnClick,
     zoomOnScroll = true,
     hideControls = false,
+    defaultLocation,
+    defaultZoom,
   } = props;
 
   // To access map outside of MapContainer
   const localMapRef = mapRef ?? useRef<Map>();
+
+  const deletionBroadcastChannel = useMemo(() => new BroadcastChannel('property'), []);
+  useEffect(
+    () =>
+      deletionBroadcastChannel.addEventListener('message', (event) => {
+        if (typeof event.data === 'string' && event.data === 'refresh') {
+          refreshData();
+        }
+      }),
+    [],
+  );
 
   // Default for BC view
   const defaultBounds = [
@@ -224,6 +244,8 @@ const ParcelMap = (props: ParcelMapProps) => {
         style={{ height: '100%', width: '100%' }}
         ref={localMapRef}
         bounds={defaultBounds as LatLngBoundsExpression}
+        zoom={defaultZoom}
+        center={defaultLocation}
         dragging={movable}
         zoomControl={zoomable}
         scrollWheelZoom={zoomOnScroll}

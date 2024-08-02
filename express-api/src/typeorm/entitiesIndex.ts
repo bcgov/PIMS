@@ -46,8 +46,19 @@ import { ProjectTimestamp } from './Entities/ProjectTimestamp';
 import { MonetaryType } from './Entities/MonetaryType';
 import { TimestampType } from './Entities/TimestampType';
 import { PropertyUnion } from './Entities/views/PropertyUnionView';
+import { ImportResult } from './Entities/ImportResult';
+import { ProjectJoin } from './Entities/views/ProjectJoinView';
+import { AdministrativeAreaJoinView } from '@/typeorm/Entities/views/AdministrativeAreaJoinView';
+import { AgencyJoinView } from '@/typeorm/Entities/views/AgencyJoinView';
 
-const views = [BuildingRelations, MapProperties];
+const views = [
+  BuildingRelations,
+  MapProperties,
+  PropertyUnion,
+  ProjectJoin,
+  AdministrativeAreaJoinView,
+  AgencyJoinView,
+];
 
 export default [
   AdministrativeArea,
@@ -95,6 +106,6 @@ export default [
   Workflow,
   WorkflowProjectStatus,
   NoteType,
-  PropertyUnion,
+  ImportResult,
   ...views,
 ];

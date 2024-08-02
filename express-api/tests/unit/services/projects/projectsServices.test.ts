@@ -15,6 +15,7 @@ import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ProjectTimestamp } from '@/typeorm/Entities/ProjectTimestamp';
+import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { faker } from '@faker-js/faker';
 import {
@@ -24,6 +25,7 @@ import {
   produceNotificationQueue,
   produceParcel,
   produceProject,
+  produceProjectJoin,
   produceProjectMonetary,
   produceProjectProperty,
   produceProjectTask,
@@ -227,6 +229,20 @@ const _queryRunner = jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnVa
   manager: _mockEntityManager,
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const projectJoinQueryBuilder: any = {
+  orderBy: () => projectJoinQueryBuilder,
+  andWhere: () => projectJoinQueryBuilder,
+  where: () => projectJoinQueryBuilder,
+  take: () => projectJoinQueryBuilder,
+  skip: () => projectJoinQueryBuilder,
+  getMany: () => [produceProjectJoin()],
+  getManyAndCount: () => [[produceProjectJoin()], 1],
+};
+jest
+  .spyOn(AppDataSource.getRepository(ProjectJoin), 'createQueryBuilder')
+  .mockImplementation(() => projectJoinQueryBuilder);
+
 jest.mock('@/services/notifications/notificationServices', () => ({
   generateProjectNotifications: jest.fn(async () => [produceNotificationQueue()]),
   sendNotification: jest.fn(async () => produceNotificationQueue()),
@@ -359,7 +375,7 @@ describe('UNIT - Project Services', () => {
     });
 
     it('should throw an error if the parcel belongs to another project', async () => {
-      const existingProject = produceProject({ StatusId: ProjectStatus.IN_ERP });
+      const existingProject = produceProject({ StatusId: ProjectStatus.APPROVED_FOR_ERP });
       const project = produceProject({ Id: existingProject.Id + 1 });
       const keycloak = produceSSO();
       _projectPropertiesManagerFind.mockImplementationOnce(async () => {
@@ -386,7 +402,7 @@ describe('UNIT - Project Services', () => {
     });
 
     it('should throw an error if the building belongs to another project', async () => {
-      const existingProject = produceProject({ StatusId: ProjectStatus.IN_ERP });
+      const existingProject = produceProject({ StatusId: ProjectStatus.APPROVED_FOR_ERP });
       const project = produceProject({ Id: existingProject.Id + 1 });
       const keycloak = produceSSO();
       _projectPropertiesManagerFindOne.mockImplementationOnce(async () => null);
@@ -604,37 +620,27 @@ describe('UNIT - Project Services', () => {
       it('should return projects based on filter conditions', async () => {
         const filter = {
           statusId: 1,
-          agencyId: 3,
+          agencyId: [3],
           quantity: 10,
-          page: 0,
+          page: 1,
+          market: '$12',
+          netBook: '$12',
           agency: 'contains,aaa',
           status: 'contains,aaa',
           projectNumber: 'contains,aaa',
           name: 'contains,Project',
           updatedOn: 'before,' + new Date(),
+          updatedBy: 'Jane',
           sortOrder: 'asc',
           sortKey: 'Status',
+          quickFilter: 'hi',
         };
 
-        _projectFind.mockImplementationOnce(async () => {
-          const mockProjects: Project[] = [
-            produceProject({ Id: 1, Name: 'Project 1', StatusId: 1, AgencyId: 3 }),
-            produceProject({ Id: 2, Name: 'Project 2', StatusId: 4, AgencyId: 14 }),
-          ];
-          // Check if the project matches the filter conditions
-          return mockProjects.filter(
-            (project) =>
-              filter.statusId === project.StatusId && filter.agencyId === project.AgencyId,
-          );
-        });
-
         // Call the service function
-        const projects = await projectServices.getProjects(filter, true); // Pass the mocked projectRepo
-
-        // Assertions
-        expect(_projectFind).toHaveBeenCalled();
+        const projectsResponse = await projectServices.getProjects(filter); // Pass the mocked projectRepo
         // Returned project should be the one based on the agency and status id in the filter
-        expect(projects.length).toEqual(1);
+        expect(projectsResponse.totalCount).toEqual(1);
+        expect(projectsResponse.data.length).toEqual(1);
       });
     });
 
@@ -645,7 +651,7 @@ describe('UNIT - Project Services', () => {
       it('should return projects based on filter conditions', async () => {
         const filter = {
           statusId: 1,
-          agencyId: 3,
+          agencyId: [3],
           quantity: 10,
           page: 0,
         };
@@ -658,12 +664,12 @@ describe('UNIT - Project Services', () => {
           // Check if the project matches the filter conditions
           return mockProjects.filter(
             (project) =>
-              filter.statusId === project.StatusId && filter.agencyId === project.AgencyId,
+              filter.statusId === project.StatusId && filter.agencyId.includes(project.AgencyId),
           );
         });
 
         // Call the service function
-        const projects = await projectServices.getProjectsForExport(filter, true); // Pass the mocked projectRepo
+        const projects = await projectServices.getProjectsForExport(filter); // Pass the mocked projectRepo
 
         // Assertions
         expect(_projectFind).toHaveBeenCalled();

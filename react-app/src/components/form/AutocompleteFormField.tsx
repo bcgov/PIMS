@@ -1,12 +1,13 @@
 import React from 'react';
 import {
   Autocomplete,
-  SxProps,
   TextField,
   Paper,
   Box,
   autocompleteClasses,
   FilterOptionsState,
+  ListItemText,
+  AutocompleteProps,
 } from '@mui/material';
 import { ISelectMenuItem } from './SelectFormField';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -14,13 +15,10 @@ import { Controller, useFormContext } from 'react-hook-form';
 type AutocompleteFormProps = {
   name: string;
   label: string;
-  options: ISelectMenuItem[];
-  sx?: SxProps;
   required?: boolean;
   allowNestedIndent?: boolean;
   disableOptionsFunction?: (option: ISelectMenuItem) => boolean;
   disableClearable?: boolean;
-  disabled?: boolean;
   defaultValue?: ISelectMenuItem | null;
   customOptionsFilter?: (
     options: ISelectMenuItem[],
@@ -32,7 +30,10 @@ const CustomPaper = (props) => {
   return <Paper elevation={4} {...props} />;
 };
 
-const AutocompleteFormField = (props: AutocompleteFormProps) => {
+const AutocompleteFormField = (
+  props: AutocompleteFormProps &
+    Partial<AutocompleteProps<any, boolean, boolean, boolean, React.ElementType>>,
+) => {
   const { control, getValues, formState } = useFormContext();
   const {
     name,
@@ -73,10 +74,9 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
           getOptionLabel={(option: ISelectMenuItem) => option.label}
           getOptionDisabled={disableOptionsFunction}
           filterOptions={optionsFilter}
-          renderOption={(props, option, state, ownerState) => (
+          renderOption={(props, option) => (
             <Box
               sx={{
-                fontWeight: allowNestedIndent && !option.parentId ? 900 : 500,
                 [`&.${autocompleteClasses.option}`]: {
                   padding: 1,
                   paddingLeft: allowNestedIndent && option.parentId ? 2 : 1,
@@ -86,7 +86,18 @@ const AutocompleteFormField = (props: AutocompleteFormProps) => {
               {...props}
               key={option.label}
             >
-              {ownerState.getOptionLabel(option)}
+              <ListItemText
+                primary={option.label}
+                secondary={option.tooltip}
+                sx={{
+                  margin: 0,
+                }}
+                primaryTypographyProps={{
+                  sx: {
+                    fontWeight: allowNestedIndent && !option.parentId ? 900 : 500,
+                  },
+                }}
+              />
             </Box>
           )}
           renderInput={(params) => (

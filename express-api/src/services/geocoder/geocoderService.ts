@@ -34,6 +34,8 @@ export const getSiteAddresses = async (
   url.searchParams.append('addressString', address);
   url.searchParams.append('minScore', minScore);
   url.searchParams.append('maxResults', maxResults);
+  url.searchParams.append('locationDescriptor', 'accessPoint');
+  url.searchParams.append('setBack', '10');
 
   const response = await fetch(url.toString(), {
     headers: {
@@ -50,7 +52,6 @@ export const getSiteAddresses = async (
   const addressInformation: IAddressModel[] = featureCollection.features.map((feature) =>
     mapFeatureToAddress(feature),
   ); // mapFeatureToAddress(featureCollection.features[0]);
-
   return addressInformation;
 };
 

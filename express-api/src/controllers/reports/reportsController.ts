@@ -1,59 +1,16 @@
 import logger from '@/utilities/winstonLogger';
-import { stubResponse } from '../../utilities/stubResponse';
 import { Request, Response } from 'express';
 import { ErrorReport, errorReportSchema } from '@/controllers/reports/errorReportSchema';
+import chesServices, { EmailBody, IEmail } from '@/services/ches/chesServices';
+import nunjucks from 'nunjucks';
+import getConfig from '@/constants/config';
 
 /**
- * @description Get all reports as a CSV or Excel file.
- * @param {Request}     req Incoming request.
- * @param {Response}    res Outgoing response.
- * @returns {Response}      A 200 status with the requested reports.
+ * Logs a user-submitted error and sends an email to the specified mailbox.
+ * @param   {Request}     req Incoming request
+ * @param   {Response}    res Outgoing response
+ * @returns                   Response (200) that includes the error information and the CHES response.
  */
-export const getSpreadsheetProjectsReports = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Projects']
-   * #swagger.description = 'Exports projects as CSV or Excel file. Include 'Accept' header to request the appropriate expor - ["text/csv", "application/application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]'
-   * #swagger.security = [{
-   *   "bearerAuth" : []
-   * }]
-   */
-  return stubResponse(res);
-};
-
-/**
- * @description Get all reports as a CSV or Excel file.
- * @param {Request}     req Incoming request.
- * @param {Response}    res Outgoing response.
- * @returns {Response}      A 200 status with the requested reports.
- */
-export const getSpreadsheetPropertiesReports = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Projects']
-   * #swagger.description = 'Exports projects as CSV or Excel file. Include 'Accept' header to request the appropriate expor - ["text/csv", "application/application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]'
-   * #swagger.security = [{
-   *   "bearerAuth" : []
-   * }]
-   */
-  return stubResponse(res);
-};
-
-/**
- * @description Get all reports as a CSV or Excel file.
- * @param {Request}     req Incoming request.
- * @param {Response}    res Outgoing response.
- * @returns {Response}      A 200 status with the requested reports.
- */
-export const getSpreadsheetUsersReports = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Projects']
-   * #swagger.description = 'Exports projects as CSV or Excel file. Include 'Accept' header to request the appropriate expor - ["text/csv", "application/application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]'
-   * #swagger.security = [{
-   *   "bearerAuth" : []
-   * }]
-   */
-  return stubResponse(res);
-};
-
 export const submitErrorReport = async (req: Request, res: Response) => {
   /**
    * #swagger.tags = ['Reports']
@@ -68,6 +25,28 @@ export const submitErrorReport = async (req: Request, res: Response) => {
   if (!errorParse.success) {
     return res.status(400).send(errorParse);
   }
-  // TODO: Add email component after CHES is in. Response depends on that outcome.
-  return res.status(200).send(info);
+
+  const emailBody = nunjucks.render('ErrorReport.njk', {
+    User: req.user,
+    Error: errorParse.data.error?.message,
+    Stack: errorParse.data.error?.stack,
+    Comment: errorParse.data.userMessage,
+    Timestamp: errorParse.data.timestamp ?? new Date().toLocaleString(),
+    Url: errorParse.data.url ?? 'unknown',
+  });
+  const config = getConfig();
+  const email: IEmail = {
+    to: [config.contact.toEmail],
+    cc: [req.user.email],
+    from: 'pims.error@gov.bc.ca', // Made up for this purpose.
+    bodyType: EmailBody.Html,
+    subject: 'PIMS Error Report Submission',
+    body: emailBody,
+  };
+
+  const response = await chesServices.sendEmailAsync(email, req.user);
+  return res.status(200).send({
+    ...errorParse,
+    chesResponse: response,
+  });
 };

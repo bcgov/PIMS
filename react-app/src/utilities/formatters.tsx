@@ -72,6 +72,10 @@ export const projectStatusChipFormatter = (value: string) => {
 };
 
 export const formatMoney = (value?: number | ''): string => {
+  // if we dont have a number to format just display what we have
+  if (typeof value != 'number') {
+    return value;
+  }
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',

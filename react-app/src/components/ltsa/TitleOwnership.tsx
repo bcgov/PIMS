@@ -5,6 +5,7 @@ import useDataLoader from '@/hooks/useDataLoader';
 import LtsaOwnershipTable from './LtsaOwnershipTable';
 import LtsaChargeTable from './LtsaChargeTable';
 import { Box, Typography } from '@mui/material';
+import { dateFormatter } from '@/utilities/formatters';
 
 interface TitleOwnershipProps {
   pid: string;
@@ -35,9 +36,10 @@ const TitleOwnership = (props: TitleOwnershipProps) => {
       data?.order?.orderedProduct?.fieldedData.descriptionsOfLand[0]?.fullLegalDescription,
     TitleStatus: data?.order?.status,
     SalesHistory: data?.order?.orderedProduct?.fieldedData.tombstone?.marketValueAmount,
-    ApplicationReceived:
+    ApplicationReceived: dateFormatter(
       data?.order?.orderedProduct?.fieldedData.tombstone?.applicationReceivedDate,
-    EnteredOn: data?.order?.orderedProduct?.fieldedData.tombstone?.enteredDate,
+    ),
+    EnteredOn: dateFormatter(data?.order?.orderedProduct?.fieldedData.tombstone?.enteredDate),
   };
 
   return (

@@ -19,6 +19,7 @@ import {
   produceTask,
   produceTierLevel,
   produceTimestampType,
+  produceWorkflow,
 } from '../../../testUtils/factories';
 import { AppDataSource } from '@/appDataSource';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
@@ -45,15 +46,9 @@ import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { Role } from '@/typeorm/Entities/Role';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
+import { Workflow } from '@/typeorm/Entities/Workflow';
 
-const {
-  lookupAgencies,
-  lookupAll,
-  lookupProjectRisks,
-  lookupProjectTierLevels,
-  lookupPropertyClassifications,
-  lookupRoles,
-} = controllers;
+const { lookupAll, lookupProjectTierLevels, lookupPropertyClassifications } = controllers;
 
 const _next = jest.fn();
 const _findClassification = jest.fn().mockImplementation(() => [produceClassification({})]);
@@ -71,7 +66,11 @@ const _findProjectStatuses = jest.fn().mockImplementation(() => [produceProjectS
 const _findRoles = jest.fn().mockImplementation(() => [produceRole()]);
 const _findAgencies = jest.fn().mockImplementation(() => [produceAgency()]);
 const _findAdminAreas = jest.fn().mockImplementation(() => [produceAdminArea()]);
+const _findWorkflows = jest.fn().mockImplementation(() => [produceWorkflow()]);
 
+jest
+  .spyOn(AppDataSource.getRepository(Workflow), 'find')
+  .mockImplementation(async () => _findWorkflows());
 jest
   .spyOn(AppDataSource.getRepository(AdministrativeArea), 'find')
   .mockImplementation(async () => _findAdminAreas());
@@ -127,30 +126,6 @@ describe('UNIT - Lookup Controller', () => {
     mockRequest = mockReq;
     mockResponse = mockRes;
     _next.mockClear();
-  });
-
-  describe('GET /lookup/agencies', () => {
-    it('should return the stub response of 501', async () => {
-      await lookupAgencies(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and a list of agencies', async () => {
-      await lookupAgencies(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
-  });
-
-  describe('GET /lookup/roles', () => {
-    it('should return the stub response of 501', async () => {
-      await lookupRoles(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and a list of roles', async () => {
-      await lookupRoles(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
-    });
   });
 
   describe('GET /lookup/property/classifications', () => {
@@ -314,18 +289,6 @@ describe('UNIT - Lookup Controller', () => {
       _findMonetaryTypes.mockImplementationOnce(() => [{ Name: [] }]);
       await lookupMonetaryTypes(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
-    });
-  });
-
-  describe('GET /lookup/project/risks', () => {
-    it('should return the stub response of 501', async () => {
-      await lookupProjectRisks(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(501);
-    });
-
-    xit('should return status 200 and a list of project risks', async () => {
-      await lookupProjectRisks(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(200);
     });
   });
 

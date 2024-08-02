@@ -1,4 +1,4 @@
-import { ProjectRisk, TierLevel } from '@/hooks/api/useProjectsApi';
+import { ProjectRisk, TierLevel, Workflow } from '@/hooks/api/useProjectsApi';
 import { IFetch } from '../useFetch';
 import { BuildingConstructionType, BuildingPredominateUse } from '@/hooks/api/useBuildingsApi';
 import { PropertyClassification } from '@/interfaces/IProperty';
@@ -58,6 +58,10 @@ export interface LookupAll {
   Agencies: Partial<Agency>[];
   AdministrativeAreas: Partial<AdministrativeArea>[];
   RegionalDistricts: Partial<RegionalDistrict>[];
+  Workflows: Partial<Workflow>[];
+  Config: {
+    contactEmail: string;
+  };
 }
 
 const useLookupApi = (absoluteFetch: IFetch) => {

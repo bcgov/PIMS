@@ -9,13 +9,17 @@ export const AdministrativeAreaFilterSchema = z.object({
   name: z.string().optional(),
   provinceId: z.string().optional(),
   regionalDistrictId: z.number().int().optional(),
-  regionalDistrict: z.string().optional(),
+  regionalDistrictName: z.string().optional(),
   isDisabled: z.string().optional(),
+  updatedOn: z.string().optional(),
+  createdOn: z.string().optional(),
+  quickFilter: z.string().optional(),
 });
 
 export const AdministrativeAreaPublicResponseSchema = z.object({
   Id: z.number(),
   Name: z.string(),
+  RegionalDistrictName: z.string(),
   ProvinceId: z.string(),
   CreatedOn: z.date(),
 });

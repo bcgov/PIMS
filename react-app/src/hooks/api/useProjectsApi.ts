@@ -6,6 +6,7 @@ import { Parcel } from './useParcelsApi';
 import { Building } from './useBuildingsApi';
 import { DeepPartial } from 'react-hook-form';
 import { CommonFiltering } from '@/interfaces/ICommonFiltering';
+import { GetManyResponse } from '@/interfaces/GetManyResponse';
 
 export interface TierLevel extends BaseEntityInterface {
   Id: number;
@@ -91,7 +92,7 @@ export interface ProjectMonetary {
   CreatedById?: string;
   CreatedOn?: Date;
   Id?: number;
-  Value?: string | number;
+  Value?: number;
   MonetaryTypeId?: number;
   ProjectId?: number;
   UpdatedById?: string;
@@ -295,32 +296,44 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
     });
     return response;
   };
+
   const deleteProjectById = async (id: number) => {
     const response = await absoluteFetch.del(`/projects/disposal/${id}`);
     return response;
   };
+
   const getProjects = async (sort: CommonFiltering, signal?: AbortSignal) => {
+    try {
+      const response = await absoluteFetch.get(`/projects`, { ...sort }, { signal });
+      if (response.ok) {
+        return response.parsedBody as GetManyResponse<Project>;
+      }
+      return {
+        data: [],
+        totalCount: 0,
+      };
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        console.warn('Fetch aborted');
+      } else {
+        console.error('Error fetching projects:', error);
+      }
+      return {
+        data: [],
+        totalCount: 0,
+      };
+    }
+  };
+
+  const getProjectsForExcelExport = async (sort: CommonFiltering, signal?: AbortSignal) => {
     const { parsedBody } = await absoluteFetch.get(
       '/projects',
       {
-        includeRelations: true,
         ...sort,
+        excelExport: true,
       },
-      {
-        signal,
-      },
+      { signal },
     );
-    if (parsedBody.error) {
-      return [];
-    }
-    return parsedBody as Project[];
-  };
-
-  const getProjectsForExcelExport = async () => {
-    const { parsedBody } = await absoluteFetch.get('/projects', {
-      includeRelations: true,
-      excelExport: true,
-    });
     if (parsedBody.error) {
       return [];
     }

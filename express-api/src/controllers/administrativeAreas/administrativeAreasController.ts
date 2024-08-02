@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { stubResponse } from '@/utilities/stubResponse';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import {
   AdministrativeAreaFilterSchema,
@@ -28,8 +27,11 @@ export const getAdministrativeAreas = async (req: Request, res: Response) => {
   if (filter.success) {
     const adminAreas = await administrativeAreasServices.getAdministrativeAreas(filter.data);
     if (!ssoUser.hasRoles([Roles.ADMIN])) {
-      const trimmed = AdministrativeAreaPublicResponseSchema.array().parse(adminAreas);
-      return res.status(200).send(trimmed);
+      const trimmed = AdministrativeAreaPublicResponseSchema.array().parse(adminAreas.data);
+      return res.status(200).send({
+        ...adminAreas,
+        data: trimmed,
+      });
     }
     return res.status(200).send(adminAreas);
   } else {
@@ -55,23 +57,6 @@ export const addAdministrativeArea = async (req: Request, res: Response) => {
   const addBody = { ...req.body, CreatedById: user.Id };
   const response = await administrativeAreasServices.addAdministrativeArea(addBody);
   return res.status(201).send(response);
-};
-
-/**
- * @description Gets a list of administrative areas based on a filter.
- * @param   {Request}     req Incoming request
- * @param   {Response}    res Outgoing response
- * @returns {Response}        A 200 status with a list of administrative areas.
- */
-export const getAdministrativeAreasFiltered = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Administrative Areas - Admin']
-   * #swagger.description = 'Returns a paged list of administrative areas from the datasource based on a supplied filter.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-  return stubResponse(res);
 };
 
 /**
@@ -115,23 +100,4 @@ export const updateAdministrativeAreaById = async (req: Request, res: Response) 
   }
   const update = await administrativeAreasServices.updateAdministrativeArea(req.body);
   return res.status(200).send(update);
-};
-
-/**
- * @description Deletes a single administrative area that matches an ID.
- * @param   {Request}     req Incoming request
- * @param   {Response}    res Outgoing response
- * @returns {Response}        A 204 status indicating successful deletion.
- */
-export const deleteAdministrativeAreaById = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Administrative Areas - Admin']
-   * #swagger.description = 'Deletes an administrative area that matches the supplied ID.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
-  // TODO: Replace stub response with controller logic
-  return stubResponse(res);
 };
