@@ -17,7 +17,9 @@ export const constructFindOptionFromQueryPid = <T>(
     return { [column]: undefined } as FindOptionsWhere<T>;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, operator, value] = operatorValuePair.match(/([^,]*),(.*)/).map((a) => a.trim());
-  const trimmedValue = value.replace(/[^\d]/g, ''); //remove all non digit characters;
+  const trimmedValue = value.replace(/[-]/g, ''); //remove all hyphens;
+  // Only continue if the trimmed value is a number
+  if (isNaN(parseInt(trimmedValue))) return { [column]: undefined } as FindOptionsWhere<T>;
   let internalMatcher;
   switch (operator) {
     case 'equals':
