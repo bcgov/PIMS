@@ -7,6 +7,7 @@ import React, {
   useMemo,
   useRef,
   useState,
+  useContext,
 } from 'react';
 import Icon from '@mdi/react';
 import { mdiDotsHorizontal } from '@mdi/js';
@@ -46,6 +47,8 @@ import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { GridInitialStateCommunity } from '@mui/x-data-grid/models/gridStateCommunity';
 import CircularProgress from '@mui/material/CircularProgress';
 import { CommonFiltering } from '@/interfaces/ICommonFiltering';
+import { Roles } from '@/constants/roles';
+import { AuthContext } from '@/contexts/authContext';
 
 type RenderCellParams = GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
 
@@ -488,6 +491,9 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
       : `(${props.rowCountProp ?? 0} rows)`;
   }, [props.tableOperationMode, rowCount, props.rowCountProp]);
 
+  const { keycloak } = useContext(AuthContext);
+  const isAuditor = keycloak.hasRoles([Roles.AUDITOR]);
+
   return (
     <>
       <Box
@@ -542,9 +548,11 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           />
           <Tooltip title={props.addTooltip}>
             <span>
-              <IconButton onClick={props.onAddButtonClick} disabled={!props.onAddButtonClick}>
-                <AddIcon />
-              </IconButton>
+              {!isAuditor && (
+                <IconButton onClick={props.onAddButtonClick} disabled={!props.onAddButtonClick}>
+                  <AddIcon />
+                </IconButton>
+              )}
             </span>
           </Tooltip>
           <Tooltip title="Export to Excel">

@@ -14,7 +14,7 @@ import SelectFormField, { ISelectMenuItem } from '../form/SelectFormField';
 import { Room, Help } from '@mui/icons-material';
 import { LookupObject } from '@/hooks/api/useLookupApi';
 import DateFormField from '../form/DateFormField';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { IAddressModel } from '@/hooks/api/useToolsApi';
 import { LatLng, Map } from 'leaflet';
 import usePimsApi from '@/hooks/usePimsApi';
@@ -27,6 +27,7 @@ import { FeatureCollection } from '@/hooks/api/useParcelLayerApi';
 import { Feature } from 'geojson';
 import { useMap, useMapEvents } from 'react-leaflet';
 import { GeoPoint } from '@/interfaces/IProperty';
+import { LookupContext } from '@/contexts/lookupContext';
 export type PropertyType = 'Building' | 'Parcel';
 
 interface IParcelInformationForm {
@@ -41,6 +42,7 @@ interface IGeneralInformationForm {
 
 export const GeneralInformationForm = (props: IGeneralInformationForm) => {
   const api = usePimsApi();
+  const lookup = useContext(LookupContext);
   const { propertyType, adminAreas, defaultLocationValue } = props;
   const [addressOptions, setAddressOptions] = useState<IAddressModel[]>([]);
   const [loadingOptions, setLoadingOptions] = useState(false);
@@ -239,6 +241,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             name={'AdministrativeAreaId'}
             label={'Administrative area'}
             options={adminAreas ?? []}
+            noOptionsText={`No matches. Request an administrative area at ${lookup.data.Config.contactEmail.split('@').join(' @')}`} // TODO: Replace this with a dialog
           />
         </Grid>
         <Grid item xs={6}>
