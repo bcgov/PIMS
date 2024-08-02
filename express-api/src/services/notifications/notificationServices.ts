@@ -7,11 +7,12 @@ import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotif
 import { User } from '@/typeorm/Entities/User';
 import { UUID, randomUUID } from 'crypto';
 import nunjucks from 'nunjucks';
-import { IsNull, QueryRunner } from 'typeorm';
+import { In, IsNull, QueryRunner } from 'typeorm';
 import chesServices, {
   EmailBody,
   EmailEncoding,
   EmailPriority,
+  IChesStatusResponse,
   IEmail,
 } from '../ches/chesServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
@@ -521,6 +522,34 @@ const getProjectNotificationsInQueue = async (
   return pageModel;
 };
 
+const cancelAllProjectNotifications = async (projectId: number) => {
+  const notifications = await AppDataSource.getRepository(NotificationQueue).find({
+    where: [
+      { ProjectId: projectId, Status: NotificationStatus.Accepted },
+      { ProjectId: projectId, Status: NotificationStatus.Pending },
+    ],
+  });
+  const chesCancelPromises = notifications.map((notification) => {
+    return chesServices.cancelEmailByIdAsync(notification.ChesMessageId);
+  });
+  const chesCancelResolved = await Promise.allSettled(chesCancelPromises);
+  const cancelledMessageIds = chesCancelResolved
+    .filter((a) => a.status === 'fulfilled' && a.value.status === 'cancelled')
+    .map((c) => (c as PromiseFulfilledResult<IChesStatusResponse>).value.msgId);
+  await AppDataSource.getRepository(NotificationQueue).update(
+    { ChesMessageId: In(cancelledMessageIds) },
+    { Status: convertChesStatusToNotificationStatus('cancelled') },
+  );
+  return {
+    succeeded: chesCancelResolved.filter(
+      (c) => c.status === 'fulfilled' && c.value.status === 'cancelled',
+    ).length,
+    failed: chesCancelResolved.filter(
+      (c) => c.status === 'rejected' || c.value?.status !== 'cancelled',
+    ).length,
+  };
+};
+
 const notificationServices = {
   generateProjectNotifications,
   generateAccessRequestNotification,
@@ -528,6 +557,7 @@ const notificationServices = {
   updateNotificationStatus,
   getProjectNotificationsInQueue,
   convertChesStatusToNotificationStatus,
+  cancelAllProjectNotifications,
 };
 
 export default notificationServices;
