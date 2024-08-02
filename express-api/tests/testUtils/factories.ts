@@ -428,7 +428,7 @@ export const produceAdminArea = (props?: Partial<AdministrativeArea>): Administr
 };
 
 export const produceClassification = (
-  props: Partial<PropertyClassification>,
+  props?: Partial<PropertyClassification>,
 ): PropertyClassification => {
   const classification: PropertyClassification = {
     Id: faker.number.int(),

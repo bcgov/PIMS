@@ -1,6 +1,10 @@
 import { AppDataSource } from '@/appDataSource';
 import { Roles } from '@/constants/roles';
-import propertyServices from '@/services/properties/propertiesServices';
+import propertyServices, {
+  getAgencyOrThrowIfMismatched,
+  getClassificationOrThrow,
+  Lookups,
+} from '@/services/properties/propertiesServices';
 import userServices from '@/services/users/usersServices';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 import { Agency } from '@/typeorm/Entities/Agency';
@@ -102,11 +106,12 @@ jest
   .spyOn(AppDataSource.getRepository(PropertyUnion), 'createQueryBuilder')
   .mockImplementation(() => _propertyUnionCreateQueryBuilder);
 
-const _findParcel = jest.fn().mockImplementation(async () => produceParcel);
-const _findBuilding = jest.fn().mockImplementation(async () => produceParcel);
-
-jest.spyOn(AppDataSource.getRepository(Parcel), 'find').mockImplementation(() => _findParcel());
-jest.spyOn(AppDataSource.getRepository(Building), 'find').mockImplementation(() => _findBuilding());
+jest
+  .spyOn(AppDataSource.getRepository(Parcel), 'find')
+  .mockImplementation(async () => [produceParcel()]);
+jest
+  .spyOn(AppDataSource.getRepository(Building), 'find')
+  .mockImplementation(async () => [produceBuilding()]);
 jest
   .spyOn(AppDataSource.getRepository(Parcel), 'save')
   .mockImplementation(async () => produceParcel());
@@ -147,9 +152,9 @@ const _mockCommitTransaction = jest.fn(async () => {});
 const _mockEntityManager = {
   find: async <Entity extends ObjectLiteral>(entityClass: EntityTarget<Entity>) => {
     if (entityClass === Parcel) {
-      return _findParcel();
+      return produceParcel();
     } else if (entityClass === Building) {
-      return _findBuilding();
+      return produceBuilding();
     } else if (entityClass === ParcelEvaluation) {
       return produceParcelEvaluation(1, { Year: 2023 });
     } else if (entityClass === ParcelFiscal) {
@@ -243,6 +248,35 @@ describe('UNIT - Property Services', () => {
         sortOrder: 'DESC',
       });
       expect(loggerErrorSpy).toHaveBeenCalledWith('PropertyUnion Service - Invalid Sort Key');
+    });
+  });
+
+  describe('getPropertiesforExport', () => {
+    it('should get a list of properties based on the filter', async () => {
+      const result = await propertyServices.getPropertiesForExport({
+        pid: 'contains,123',
+        pin: 'contains,456',
+        administrativeArea: 'contains,aaa',
+        agency: 'startsWith,aaa',
+        propertyType: 'contains,Building',
+        sortKey: 'Agency',
+        sortOrder: 'DESC',
+        landArea: 'startsWith,1',
+        address: 'contains,742 Evergreen Terr.',
+        classification: 'contains,core',
+        agencyIds: [1],
+        quantity: 2,
+        page: 1,
+        updatedOn: 'after,' + new Date(),
+        quickFilter: 'contains,someWord',
+      });
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.at(0)).toHaveProperty('Id');
+      expect(result.at(0)).toHaveProperty('PIN');
+      expect(result.at(0)).toHaveProperty('PID');
+      expect(result.at(0)).toHaveProperty('Agency');
+      expect(result.at(0)).toHaveProperty('Classification');
+      expect(result.at(0)).toHaveProperty('AdministrativeArea');
     });
   });
 
@@ -353,6 +387,90 @@ describe('UNIT - Property Services', () => {
         1,
       );
       expect(Array.isArray(result)).toBe(true);
+    });
+  });
+
+  describe('getClassificationOrThrow', () => {
+    it('should return a classification if found', () => {
+      const result = getClassificationOrThrow(
+        {
+          Status: 'Active',
+          Classification: 'Surplus',
+        },
+        [produceClassification({ Name: 'Surplus', Id: 1 })],
+      );
+      expect(result).toEqual(1);
+    });
+
+    it('should throw an error if that classification is not active or disposed', () => {
+      expect(() =>
+        getClassificationOrThrow(
+          {
+            Status: 'Disabled',
+            Classification: 'Surplus',
+          },
+          [produceClassification({ Name: 'Surplus', Id: 1 })],
+        ),
+      ).toThrow();
+    });
+
+    it('should throw an error if there is no classification with a matching name', () => {
+      expect(() =>
+        getClassificationOrThrow(
+          {
+            Status: 'Active',
+            Classification: 'Not Surplus',
+          },
+          [produceClassification({ Name: 'Surplus', Id: 1 })],
+        ),
+      ).toThrow();
+    });
+  });
+
+  describe('getAgencyOrThrowIfMismatched', () => {
+    it('should return an agency in if it exists', () => {
+      const agency = produceAgency({ Code: 'WLRS' });
+      const result = getAgencyOrThrowIfMismatched(
+        {
+          AgencyCode: 'WLRS',
+        },
+        {
+          agencies: [agency],
+        } as Lookups,
+        [Roles.ADMIN],
+      );
+      expect(result.Code).toBe(agency.Code);
+    });
+
+    it('should throw an error if agency is not found', () => {
+      const agency = produceAgency({ Code: 'WLRS' });
+      expect(() =>
+        getAgencyOrThrowIfMismatched(
+          {
+            AgencyCode: 'TEST',
+          },
+          {
+            agencies: [agency],
+          } as Lookups,
+          [Roles.ADMIN],
+        ),
+      ).toThrow();
+    });
+
+    it('should throw an error if the user does not have permissions', () => {
+      const agency = produceAgency({ Code: 'WLRS', Id: 1 });
+      expect(() =>
+        getAgencyOrThrowIfMismatched(
+          {
+            AgencyCode: 'WLRS',
+          },
+          {
+            agencies: [{ ...agency, Id: 999 }],
+            userAgencies: [],
+          } as Lookups,
+          [],
+        ),
+      ).toThrow();
     });
   });
 });
