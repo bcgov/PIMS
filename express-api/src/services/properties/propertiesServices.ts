@@ -32,6 +32,7 @@ import userServices from '../users/usersServices';
 import { Brackets, FindManyOptions, FindOptionsWhere, ILike, In, QueryRunner } from 'typeorm';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { PropertyType } from '@/constants/propertyType';
+import { parentPort } from 'worker_threads';
 
 /**
  * Perform a fuzzy search for properties based on the provided keyword.
@@ -165,7 +166,7 @@ const numberOrNull = (value: any) => {
  * @returns The agency if the user has permission, otherwise throws an error.
  * @throws Error if the agency code is not supported or if the user does not have permission to add properties for the agency.
  */
-const getAgencyOrThrowIfMismatched = (
+export const getAgencyOrThrowIfMismatched = (
   row: Record<string, any>,
   lookups: Lookups,
   roles: string[],
@@ -189,7 +190,7 @@ const getAgencyOrThrowIfMismatched = (
  * @param {PropertyClassification[]} classifications - The list of property classifications to search from.
  * @returns {number} The classification ID.
  */
-const getClassificationOrThrow = (
+export const getClassificationOrThrow = (
   row: Record<string, any>,
   classifications: PropertyClassification[],
 ) => {
@@ -213,7 +214,7 @@ const getClassificationOrThrow = (
  * @param adminAreas - The array of AdministrativeArea objects to search for a match.
  * @returns The ID of the administrative area if found, otherwise throws an error.
  */
-const getAdministrativeAreaOrThrow = (
+export const getAdministrativeAreaOrThrow = (
   row: Record<string, any>,
   adminAreas: AdministrativeArea[],
 ) => {
@@ -237,7 +238,7 @@ const getAdministrativeAreaOrThrow = (
  * @param predominateUses - The list of available building predominate uses.
  * @returns The ID of the predominate use if found, otherwise throws an error.
  */
-const getBuildingPredominateUseOrThrow = (
+export const getBuildingPredominateUseOrThrow = (
   row: Record<string, any>,
   predominateUses: BuildingPredominateUse[],
 ) => {
@@ -263,7 +264,7 @@ const getBuildingPredominateUseOrThrow = (
  * @returns The ID of the matched building construction type.
  * @throws Error if the construction type cannot be determined from the provided data.
  */
-const getBuildingConstructionTypeOrThrow = (
+export const getBuildingConstructionTypeOrThrow = (
   row: Record<string, any>,
   constructionTypes: BuildingConstructionType[],
 ) => {
@@ -453,7 +454,7 @@ const makeBuildingUpsertObject = async (
   };
 };
 
-type Lookups = {
+export type Lookups = {
   classifications: PropertyClassification[];
   constructionTypes: BuildingConstructionType[];
   predominateUses: BuildingPredominateUse[];
@@ -752,6 +753,42 @@ const getPropertiesForExport = async (filter: PropertyUnionFilter) => {
   return properties;
 };
 
+/**
+ * Asynchronously processes a file for property import, initializing a new database connection for the worker thread.
+ * Reads the file content, imports properties as JSON, and saves the results to the database.
+ * Handles exceptions and ensures database connection cleanup after processing.
+ * @param filePath The path to the file to be processed.
+ * @param resultRowId The ID of the result row in the database.
+ * @param user The user initiating the import.
+ * @param roles The roles assigned to the user.
+ * @returns A list of bulk upload row results after processing the file.
+ */
+const processFile = async (filePath: string, resultRowId: number, user: User, roles: string[]) => {
+  await AppDataSource.initialize(); //Since this function is going to be called from a new process, requires a new database connection.
+  let results: BulkUploadRowResult[] = [];
+  try {
+    parentPort.postMessage('Database connection for worker thread has been initialized');
+    const file = xlsx.readFile(filePath); //It's better to do the read here rather than the parent process because any arguments passed to this function are copied rather than referenced.
+    const sheetName = file.SheetNames[0];
+    const worksheet = file.Sheets[sheetName];
+
+    results = await propertyServices.importPropertiesAsJSON(worksheet, user, roles, resultRowId);
+    return results; // Note that this return still works with finally as long as return is not called from finally block.
+  } catch (e) {
+    parentPort.postMessage('Aborting file upload: ' + e.message);
+    parentPort.postMessage('Aborting stack: ' + e.stack);
+  } finally {
+    await AppDataSource.getRepository(ImportResult).save({
+      Id: resultRowId,
+      CompletionPercentage: 1.0,
+      Results: results,
+      UpdatedById: user.Id,
+      UpdatedOn: new Date(),
+    });
+    await AppDataSource.destroy(); //Not sure whether this is necessary but seems like the safe thing to do.
+  }
+};
+
 const propertyServices = {
   propertiesFuzzySearch,
   getPropertiesForMap,
@@ -759,6 +796,7 @@ const propertyServices = {
   getPropertiesUnion,
   getImportResults,
   getPropertiesForExport,
+  processFile,
 };
 
 export default propertyServices;

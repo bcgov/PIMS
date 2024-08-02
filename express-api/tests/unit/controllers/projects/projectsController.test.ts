@@ -233,7 +233,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
     });
     it('should return status 403 when user does not have correct agencies', async () => {
       mockRequest.params.projectId = '1';
-      mockRequest.setUser({ client_roles: [Roles.GENERAL_USER] });
+      mockRequest.setUser({ client_roles: [Roles.GENERAL_USER], hasRoles: () => false });
       _hasAgencies.mockImplementationOnce(() => false);
       await controllers.getDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(403);
@@ -312,13 +312,14 @@ describe('UNIT - Testing controllers for users routes.', () => {
   describe('DELETE /projects/disposal/:projectId', () => {
     it('should return status 200 on successful deletion', async () => {
       mockRequest.params.projectId = '1';
-      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockRequest.setUser({ client_roles: [Roles.ADMIN], hasRoles: () => true });
       await controllers.deleteDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
 
     it('should return status 404 on no resource', async () => {
       mockRequest.params.projectId = 'abc';
+      mockRequest.setUser({ client_roles: [Roles.ADMIN], hasRoles: () => true });
       await controllers.deleteDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
