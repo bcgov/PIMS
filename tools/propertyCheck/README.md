@@ -25,13 +25,15 @@ This script was created to help resolve some bad data stored within PIMS. [Firew
 
     `python3 propertyCheck.py -run data.csv -m other_data.csv`
 
+    This command will run process 'run' on the file data.csv and the process 'm' on the file other_data.csv. 
+
 ## Flags
 
 The following flags can be used when running the script. Note that each of the flags must be followed with a file name of a file stored within the 'data' folder. 
 
-### -run TAYLOR PUT LINK TO PROCESS IMG HERE 
+### -run 
 
-Running the script followed by a '-run' flag will start the proess laid out in process_data.py. The scructure of this process can be viewed in 'file name here'
+Running the script followed by a '-run' flag will start the proess laid out in process_data.py. The scructure of this process can be viewed in [process_data.drawio.png](./process_data.drawio.png)
 
 Required Column(s): "Address1", "City", "Point", "PID"
 
