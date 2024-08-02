@@ -167,6 +167,13 @@ const PropertyTable = (props: IPropertyTable) => {
           items: [{ value, operator: 'contains', field: 'PropertyType' }],
         });
         break;
+      case 'Core':
+      case 'Surplus':
+      case 'Disposed':
+        ref.current.setFilterModel({
+          items: [{ value, operator: 'contains', field: 'Classification' }],
+        });
+        break;
       default:
         ref.current.setFilterModel({ items: [] });
     }
@@ -298,6 +305,16 @@ const PropertyTable = (props: IPropertyTable) => {
             </CustomMenuItem>,
             <CustomMenuItem key={'Parcel'} value={'Parcel'}>
               Parcel
+            </CustomMenuItem>,
+            <CustomListSubheader key={'Group'}>Classification Group</CustomListSubheader>,
+            <CustomMenuItem key={'Core'} value={'Core'}>
+              Core
+            </CustomMenuItem>,
+            <CustomMenuItem key={'Surplus'} value={'Surplus'}>
+              Surplus
+            </CustomMenuItem>,
+            <CustomMenuItem key={'Disposed'} value={'Disposed'}>
+              Disposed
             </CustomMenuItem>,
           ]}
           tableHeader={'Properties Overview'}
