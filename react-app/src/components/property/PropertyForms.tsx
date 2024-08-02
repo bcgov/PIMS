@@ -241,7 +241,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             name={'AdministrativeAreaId'}
             label={'Administrative area'}
             options={adminAreas ?? []}
-            noOptionsText={`No matches. Request an administrative area at ${lookup.data.Config.contactEmail.split('@').join(' @')}`} // TODO: Replace this with a dialog
+            noOptionsText={`No matches. Request an administrative area at ${(lookup.data?.Config?.contactEmail ?? 'RealPropertyDivision.Disposals@gov.bc.ca').split('@').join(' @')}`} // TODO: Replace this with a dialog
           />
         </Grid>
         <Grid item xs={6}>
