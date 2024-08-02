@@ -47,5 +47,4 @@ jest/latestTestRun.json
 package-lock.json
 
 # .csv and txt files created by script
-tools/propertyCheck/*.csv
-tools/propertyCheck/*.txt
+tools/propertyCheck/data/*
