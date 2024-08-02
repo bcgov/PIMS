@@ -7,10 +7,10 @@ import { ViewColumn, ViewEntity } from 'typeorm';
     SELECT c.id, c.pid, c.pin, c.location, c.property_type_id, c.address1, c.classification_id, c.agency_id, c.is_visible_to_other_agencies, c.administrative_area_id, c.name, aa.regional_district_id as regional_district_id
     FROM (
       SELECT id, pid, pin, location, property_type_id, address1, classification_id, agency_id, is_visible_to_other_agencies, administrative_area_id, name 
-      FROM parcel
+      FROM parcel WHERE deleted_on IS NULL
       UNION ALL
       SELECT id, pid, pin, location, property_type_id, address1, classification_id, agency_id, is_visible_to_other_agencies, administrative_area_id, name 
-      FROM building
+      FROM building WHERE deleted_on IS NULL
     ) c
     LEFT JOIN administrative_area aa ON c.administrative_area_id = aa.id;  
   `,

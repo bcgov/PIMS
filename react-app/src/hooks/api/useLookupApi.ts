@@ -59,6 +59,9 @@ export interface LookupAll {
   AdministrativeAreas: Partial<AdministrativeArea>[];
   RegionalDistricts: Partial<RegionalDistrict>[];
   Workflows: Partial<Workflow>[];
+  Config: {
+    contactEmail: string;
+  };
 }
 
 const useLookupApi = (absoluteFetch: IFetch) => {
