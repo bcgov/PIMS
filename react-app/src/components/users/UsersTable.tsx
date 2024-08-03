@@ -2,11 +2,10 @@ import React from 'react';
 import { FilterSearchDataGrid } from '@/components/table/DataTable';
 import { Box, SxProps, useTheme, ListSubheader, MenuItem } from '@mui/material';
 import { GridColDef, GridComparatorFn, GridEventListener } from '@mui/x-data-grid';
-import { MutableRefObject, PropsWithChildren, useEffect, useState } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { IUser } from '@/interfaces/IUser';
 import { dateFormatter, statusChipFormatter } from '@/utilities/formatters';
-import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { Role } from '@/hooks/api/useRolesApi';
 import { User } from '@/hooks/api/useUsersApi';
@@ -79,54 +78,82 @@ const UsersTable = (props: IUsersTable) => {
   }, [state, data]);
 
   // Sets the preset filter based on the select input
-  const selectPresetFilter = (value: string, ref: MutableRefObject<GridApiCommunity>) => {
-    // Clear the quick search contents
+  // const selectPresetFilter = (value: string, ref: MutableRefObject<GridApiCommunity>) => {
+  //   // Clear the quick search contents
 
-    switch (value) {
-      case 'All Users':
-        ref.current.setFilterModel({ items: [] });
-        break;
-      // All Status filters
-      case 'Active':
-      case 'OnHold':
-      case 'Disabled':
-      case 'Denied':
-        ref.current.setFilterModel({
-          items: [
-            {
-              value,
-              operator: 'contains',
-              field: 'Status',
-            },
-          ],
-        });
-        break;
-      // All Role filters
-      case 'User':
-      case 'Admin':
-      case 'Auditor':
-        ref.current.setFilterModel({
-          items: [
-            {
-              value,
-              operator: 'contains',
-              field: 'Role',
-            },
-          ],
-        });
-        break;
-      case 'No Role':
-        ref.current.setFilterModel({
-          items: [
-            {
-              value,
-              operator: 'contains',
-              field: 'Role',
-            },
-          ],
-        });
-        break;
-    }
+  //   switch (value) {
+  //     case 'All Users':
+  //       ref.current.setFilterModel({ items: [] });
+  //       break;
+  //     // All Status filters
+  //     case 'Active':
+  //     case 'OnHold':
+  //     case 'Disabled':
+  //     case 'Denied':
+  //       ref.current.setFilterModel({
+  //         items: [
+  //           {
+  //             value,
+  //             operator: 'contains',
+  //             field: 'Status',
+  //           },
+  //         ],
+  //       });
+  //       break;
+  //     // All Role filters
+  //     case 'User':
+  //     case 'Admin':
+  //     case 'Auditor':
+  //       ref.current.setFilterModel({
+  //         items: [
+  //           {
+  //             value,
+  //             operator: 'contains',
+  //             field: 'Role',
+  //           },
+  //         ],
+  //       });
+  //       break;
+  //     case 'No Role':
+  //       ref.current.setFilterModel({
+  //         items: [
+  //           {
+  //             value,
+  //             operator: 'contains',
+  //             field: 'Role',
+  //           },
+  //         ],
+  //       });
+  //       break;
+  //   }
+  // };
+
+  const presetFilterMapping = {
+    'All Users': { items: [] },
+    Active: {
+      items: [{ value: 'Active', operator: 'contains', field: 'Status' }],
+    },
+    OnHold: {
+      items: [{ value: 'OnHold', operator: 'contains', field: 'Status' }],
+    },
+    Disabled: {
+      items: [{ value: 'Disabled', operator: 'contains', field: 'Status' }],
+    },
+    Denied: {
+      items: [{ value: 'Denied', operator: 'contains', field: 'Status' }],
+    },
+    User: {
+      items: [{ value: 'User', operator: 'contains', field: 'Role' }],
+    },
+    Admin: {
+      items: [{ value: 'Admin', operator: 'contains', field: 'Role' }],
+    },
+    Auditor: {
+      items: [{ value: 'Auditor', operator: 'contains', field: 'Role' }],
+    },
+    'No Role': {
+      items: [{ value: 'No Role', operator: 'contains', field: 'Role' }],
+    },
   };
 
   // Defines the columns used in the table.
@@ -256,12 +283,7 @@ const UsersTable = (props: IUsersTable) => {
           columns={columns}
           rows={users}
           loading={isLoading}
-          // initialState={{
-          //   sorting: {
-          //     sortModel: [{ field: 'Status', sort: 'desc' }],
-          //   },
-          // }}
-          onPresetFilterChange={selectPresetFilter}
+          presetFilterMapping={presetFilterMapping}
           presetFilterSelectOptions={[
             <CustomMenuItem key={'All Users'} value={'All Users'}>
               All Users

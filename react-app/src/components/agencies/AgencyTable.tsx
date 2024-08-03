@@ -1,7 +1,6 @@
-import React, { MutableRefObject, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, Chip, SxProps } from '@mui/material';
-import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { dateFormatter } from '@/utilities/formatters';
 import { Agency } from '@/hooks/api/useAgencyApi';
@@ -104,21 +103,30 @@ const AgencyTable = (props: IAgencyTable) => {
     },
   ];
 
-  const selectPresetFilter = (value: string, ref: MutableRefObject<GridApiCommunity>) => {
-    switch (value) {
-      case 'Enabled':
-        ref.current.setFilterModel({
-          items: [{ value: 'false', operator: 'is', field: 'IsDisabled' }],
-        });
-        break;
-      case 'Disabled':
-        ref.current.setFilterModel({
-          items: [{ value: 'true', operator: 'is', field: 'IsDisabled' }],
-        });
-        break;
-      default:
-        ref.current.setFilterModel({ items: [] });
-    }
+  // const selectPresetFilter = (value: string, ref: MutableRefObject<GridApiCommunity>) => {
+  //   switch (value) {
+  //     case 'Enabled':
+  //       ref.current.setFilterModel({
+  //         items: [{ value: 'false', operator: 'is', field: 'IsDisabled' }],
+  //       });
+  //       break;
+  //     case 'Disabled':
+  //       ref.current.setFilterModel({
+  //         items: [{ value: 'true', operator: 'is', field: 'IsDisabled' }],
+  //       });
+  //       break;
+  //     default:
+  //       ref.current.setFilterModel({ items: [] });
+  //   }
+  // };
+
+  const presetFilterMapping = {
+    Enabled: {
+      items: [{ value: 'false', operator: 'is', field: 'IsDisabled' }],
+    },
+    Disabled: {
+      items: [{ value: 'true', operator: 'is', field: 'IsDisabled' }],
+    },
   };
 
   const excelDataMap = (data: Agency[]) => {
@@ -155,7 +163,7 @@ const AgencyTable = (props: IAgencyTable) => {
           name="agencies"
           tableOperationMode="server"
           dataSource={handleDataChange}
-          onPresetFilterChange={selectPresetFilter}
+          presetFilterMapping={presetFilterMapping}
           getRowId={(row: Agency) => row.Id}
           rowCount={totalCount}
           rowCountProp={totalCount}

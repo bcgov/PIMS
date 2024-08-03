@@ -1,9 +1,8 @@
 import usePimsApi from '@/hooks/usePimsApi';
 import { GridColDef } from '@mui/x-data-grid';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
-import React, { MutableRefObject, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { dateFormatter, projectStatusChipFormatter } from '@/utilities/formatters';
-import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Project } from '@/hooks/api/useProjectsApi';
 import { NoteTypes } from '@/constants/noteTypes';
@@ -80,20 +79,34 @@ const ProjectsTable = () => {
     },
   ];
 
-  const selectPresetFilter = (
-    value: string | Record<string, any>,
-    ref: MutableRefObject<GridApiCommunity>,
-  ) => {
-    switch (value) {
-      case 'All Projects':
-        ref.current.setFilterModel({ items: [] });
-        break;
-      case 'Approved for Exemption':
-      case 'Approved for ERP':
-      case 'Approved for SPL':
-      case 'Submitted':
-        ref.current.setFilterModel({ items: [{ value, operator: 'contains', field: 'Status' }] });
-    }
+  // const selectPresetFilter = (
+  //   value: string | Record<string, any>,
+  //   ref: MutableRefObject<GridApiCommunity>,
+  // ) => {
+  //   switch (value) {
+  //     case 'All Projects':
+  //       ref.current.setFilterModel({ items: [] });
+  //       break;
+  //     case 'Approved for Exemption':
+  //     case 'Approved for ERP':
+  //     case 'Approved for SPL':
+  //     case 'Submitted':
+  //       ref.current.setFilterModel({ items: [{ value, operator: 'contains', field: 'Status' }] });
+  //   }
+  // };
+
+  const presetFilterMapping = {
+    'All Projects': { items: [] },
+    'Approved for ERP': {
+      items: [{ value: 'Approved for ERP', operator: 'contains', field: 'Status' }],
+    },
+    'Approved for Exemption': {
+      items: [{ value: 'Approved for Exemption', operator: 'contains', field: 'Status' }],
+    },
+    Submitted: { items: [{ value: 'Submitted', operator: 'contains', field: 'Status' }] },
+    'Approved for SPL': {
+      items: [{ value: 'Approved for SPL', operator: 'contains', field: 'Status' }],
+    },
   };
 
   const excelDataMap = (data: Project[]) => {
@@ -207,7 +220,7 @@ const ProjectsTable = () => {
         dataSource={handleDataChange}
         excelDataSource={api.projects.getProjectsForExcelExport}
         onAddButtonClick={() => navigate('/projects/add', { state: { from: location } })}
-        onPresetFilterChange={selectPresetFilter}
+        presetFilterMapping={presetFilterMapping}
         defaultFilter={'All Projects'}
         presetFilterSelectOptions={[
           <CustomMenuItem key={'All Projects'} value={'All Projects'}>
@@ -239,10 +252,6 @@ const ProjectsTable = () => {
         addTooltip={'Create New Disposal Project'}
         name={'projects'}
         columns={columns}
-        // initialState={{
-        //   pagination: { paginationModel: { page: 0, pageSize: 100 } },
-        //   sorting: { sortModel: [{ field: 'UpdatedOn', sort: 'desc' }] },
-        // }}
       />
     </Box>
   );

@@ -1,12 +1,4 @@
-import React, {
-  MutableRefObject,
-  PropsWithChildren,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useContext,
-} from 'react';
+import React, { PropsWithChildren, useEffect, useMemo, useRef, useState, useContext } from 'react';
 import Icon from '@mdi/react';
 import { mdiDotsHorizontal } from '@mdi/js';
 import {
@@ -41,7 +33,6 @@ import KeywordSearch from './KeywordSearch';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import DownloadIcon from '@mui/icons-material/Download';
 import AddIcon from '@mui/icons-material/Add';
-import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { GridInitialStateCommunity } from '@mui/x-data-grid/models/gridStateCommunity';
 import CircularProgress from '@mui/material/CircularProgress';
 import { CommonFiltering } from '@/interfaces/ICommonFiltering';
@@ -180,7 +171,7 @@ type FilterSearchDataGridProps = {
   dataSource?: (filter: CommonFiltering, signal: AbortSignal) => Promise<any[]>;
   excelDataSource?: (filter: CommonFiltering, signal: AbortSignal) => Promise<any[]>;
   tableOperationMode: 'client' | 'server';
-  onPresetFilterChange: (value: string, ref: MutableRefObject<GridApiCommunity>) => void;
+  presetFilterMapping: Record<string, GridFilterModel>;
   onAddButtonClick?: React.MouseEventHandler<HTMLButtonElement>;
   rowCountProp?: number;
   defaultFilter: string;
@@ -196,16 +187,21 @@ type FilterSearchDataGridProps = {
 export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   const DEFAULT_PAGE = 0;
   const DEFAULT_PAGESIZE = 100;
-
+  const tableApiRef = useGridApiRef();
   const [searchParams, setSearchParams] = useSearchParams();
   const [dataSourceRows, setDataSourceRows] = useState([]);
   const [rowCount, setRowCount] = useState<number>(0);
   const [keywordSearchContents, setKeywordSearchContents] = useState<string>('');
-  const [gridFilterItems, setGridFilterItems] = useState([]);
   const [selectValue, setSelectValue] = useState<string>(props.defaultFilter);
   const [isExporting, setIsExporting] = useState<boolean>(false);
   const [dataSourceLoading, setDataSourceLoading] = useState<boolean>(false);
-  const tableApiRef = useGridApiRef(); // Ref to MUI DataGrid
+  const [filterModel, setFilterModel] = useState<GridFilterModel>({ items: [] });
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+    page: DEFAULT_PAGE,
+    pageSize: DEFAULT_PAGESIZE,
+  });
+  const [sortModel, setSortModel] = useState<GridSortModel>([]);
+
   const previousController = useRef<AbortController>();
   interface ITableModelCollection {
     pagination?: GridPaginationModel;
@@ -363,68 +359,102 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     }
   }, [searchParams]);
 
+  const compareFilterModels = (modelA: GridFilterModel, modelB: GridFilterModel): boolean => {
+    if (modelA && modelB) {
+      if (modelA.items.length && modelB.items.length) {
+        return (
+          modelA.items[0].field === modelB.items[0].field &&
+          modelA.items[0].value === modelB.items[0].value &&
+          modelA.items[0].operator === modelB.items[0].operator
+        );
+      }
+    }
+    return false;
+  };
+
   /**
    * @description Hook that runs after render. Looks to query strings to set filter. If none are found, then looks to state cookie.
    */
   useEffect(() => {
     if (Boolean(searchParams.size)) {
-      if (getSearchParamsKey('keywordFilter')) {
-        setKeywordSearchContents(getSearchParamsKey('keywordFilter'));
-        updateSearchValue(getSearchParamsKey('keywordFilter'));
-      }
+      const keywordFilter = getSearchParamsKey('keywordFilter');
+      const quickSelectFilter = getSearchParamsKey('quickSelectFilter');
+      const columnFilterValue = getSearchParamsKey('columnFilterValue');
+      const columnFilterMode = getSearchParamsKey('columnFilterMode');
+      const columnFilterName = getSearchParamsKey('columnFilterName');
 
-      if (getSearchParamsKey('quickSelectFilter')) {
-        setSelectValue(getSearchParamsKey('quickSelectFilter'));
-        props.onPresetFilterChange(getSearchParamsKey('quickSelectFilter'), tableApiRef);
-      } else if (
-        getSearchParamsKey('columnFilterName') &&
-        getSearchParamsKey('columnFilterValue') &&
-        getSearchParamsKey('columnFilterMode') &&
-        getSearchParamsKey('columnFilterValue') !== 'undefined'
-      ) {
-        const modelObj: GridFilterModel = {
-          items: [],
-          quickFilterValues: undefined,
-        };
-        modelObj.items = [
-          {
-            value: getSearchParamsKey('columnFilterValue'),
-            operator: getSearchParamsKey('columnFilterMode'),
-            field: getSearchParamsKey('columnFilterName'),
-          },
-        ];
-        tableApiRef.current.setFilterModel(modelObj);
+      const modelObj: GridFilterModel = {
+        items: [],
+        quickFilterValues: undefined,
+      };
+      if (columnFilterName && columnFilterMode) {
+        modelObj.items.push({
+          value:
+            columnFilterValue === 'undefined' || columnFilterValue === undefined
+              ? undefined
+              : columnFilterValue,
+          operator: columnFilterMode,
+          field: columnFilterName,
+        });
       }
+      if (keywordFilter) {
+        modelObj.quickFilterValues = [keywordFilter];
+      }
+      if (quickSelectFilter) {
+        const preset = props.presetFilterMapping[quickSelectFilter];
+        const isEquivalent = compareFilterModels(preset, modelObj);
+        if (isEquivalent) {
+          setSelectValue(quickSelectFilter);
+        } else {
+          const [defaultPreset] = Object.entries(props.presetFilterMapping).find(
+            ([, val]) => !val.items.length,
+          );
+          setSelectValue(defaultPreset);
+        }
+      }
+      setFilterModel(modelObj);
       // Set sorting options
       if (getSearchParamsKey('columnSortName') && getSearchParamsKey('columnSortValue')) {
-        tableApiRef.current.setSortModel([
+        setSortModel([
           {
             field: getSearchParamsKey('columnSortName'),
             sort: getSearchParamsKey('columnSortValue') as GridSortDirection,
           },
         ]);
+      } else {
+        setSortModel([]);
       }
       //Set pagination
       if (getSearchParamsKey('page') != undefined && getSearchParamsKey('pageSize') != undefined) {
-        tableApiRef.current.setPaginationModel({
+        setPaginationModel({
           page: Number(getSearchParamsKey('page')),
           pageSize: Number(getSearchParamsKey('pageSize')),
         });
       } else {
         //This should always get set to something even if there is no query param to load from, pagination may not work at all otherwise.
-        tableApiRef.current.setPaginationModel({ page: DEFAULT_PAGE, pageSize: DEFAULT_PAGESIZE });
+        setPaginationModel({ page: DEFAULT_PAGE, pageSize: DEFAULT_PAGESIZE });
       }
     }
   }, [searchParams]);
 
+  useEffect(() => {
+    if (getSearchParamsKey('keywordFilter')) {
+      setKeywordSearchContents(getSearchParamsKey('keywordFilter'));
+    } else {
+      setKeywordSearchContents('');
+    }
+  }, []);
+
   // Sets quickfilter value of DataGrid. newValue is a string input.
   const updateSearchValue = useMemo(() => {
     return debounce((newValue) => {
-      tableApiRef.current.setQuickFilterValues(newValue.split(' ').filter((word) => word !== ''));
-      const defaultpagesize = { page: 0, pageSize: DEFAULT_PAGESIZE };
-      tableApiRef.current.setPaginationModel(defaultpagesize);
-    }, 300);
-  }, [tableApiRef]);
+      setSearchParamsKey({
+        page: String(DEFAULT_PAGE),
+        pageSize: String(DEFAULT_PAGESIZE),
+        keywordFilter: newValue.split(' ').filter((word) => word !== ''),
+      });
+    }, 1000);
+  }, [setSearchParamsKey]);
 
   const tableHeaderRowCount = useMemo(() => {
     return props.tableOperationMode === 'client'
@@ -448,12 +478,12 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           <Typography variant="h4" alignSelf={'center'} marginRight={'1em'}>
             {`${props.tableHeader} ${tableHeaderRowCount}`}
           </Typography>
-          {keywordSearchContents || gridFilterItems.length > 0 ? (
+          {keywordSearchContents || filterModel.items.length > 0 ? (
             <Tooltip title="Clear Filter">
               <IconButton
                 onClick={() => {
                   // Set both DataGrid and Keyword search back to blanks
-                  tableApiRef.current.setFilterModel({ items: [] });
+                  setFilterModel({ items: [] });
                   setKeywordSearchContents('');
                   // Set select field back to default
                   setSelectValue(props.defaultFilter);
@@ -561,15 +591,24 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             onChange={(e) => {
               setKeywordSearchContents('');
               setSelectValue(e.target.value);
-              setSearchParams((params) => {
-                params.set('quickSelectFilter', e.target.value);
-                params.delete('keywordFilter');
-                params.delete('columnFilterValue');
-                params.delete('columnFilterMode');
-                params.delete('columnFilterName');
-                return params;
-              });
-              props.onPresetFilterChange(`${e.target.value}`, tableApiRef);
+              const item = props.presetFilterMapping[e.target.value]?.items?.[0];
+              if (item) {
+                setSearchParamsKey({
+                  columnFilterMode: item.operator,
+                  columnFilterName: item.field,
+                  columnFilterValue: item.value,
+                  quickSelectFilter: e.target.value,
+                });
+                deleteSearchParamsKey(['keywordFilter']);
+              } else {
+                deleteSearchParamsKey([
+                  'columnFilterMode',
+                  'columnFilterName',
+                  'columnFilterValue',
+                  'quickSelectFilter',
+                  'keywordFilter',
+                ]);
+              }
             }}
             sx={{ width: '10em', marginLeft: '0.5em' }}
             value={selectValue}
@@ -586,6 +625,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           }
         }}
         onFilterModelChange={(e) => {
+          console.log(e);
           // Can only filter by 1 at a time without DataGrid Pro
           const model: ITableModelCollection = {};
           if (e.items.length > 0) {
@@ -608,11 +648,10 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             model.quickFilter = undefined;
             deleteSearchParamsKey(['keywordFilter']);
           }
-          // Get the filter items from MUI, filter out blanks, set state
-          setGridFilterItems(e.items.filter((item) => item.value));
         }}
         onSortModelChange={(e) => {
           // Can only sort by 1 at a time without DataGrid Pro
+          console.log(e);
           if (e.length > 0) {
             const item = e.at(0);
             setSearchParamsKey({ columnSortName: item.field, columnSortValue: item.sort });
@@ -629,17 +668,6 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           setSearchParamsKey({ page: String(model.page), pageSize: String(model.pageSize) });
         }}
         apiRef={tableApiRef}
-        // initialState={{
-        //   pagination: {
-        //     paginationModel: {
-        //       pageSize: getSearchParamsKey('pageSize')
-        //         ? Number(getSearchParamsKey('pageSize'))
-        //         : DEFAULT_PAGE,
-        //       page: getSearchParamsKey('page') ? Number(getSearchParamsKey('page')) : DEFAULT_PAGE,
-        //     },
-        //   },
-        //   ...props.initialState,
-        // }}
         pageSizeOptions={[10, 20, 30, 100]} // DataGrid max is 100
         disableRowSelectionOnClick
         sx={{
@@ -657,6 +685,9 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
             outline: 'none',
           },
         }}
+        sortModel={sortModel}
+        paginationModel={paginationModel}
+        filterModel={filterModel}
         loading={dataSourceLoading}
         slots={{ noRowsOverlay: NoRowsOverlay }}
         {...props}

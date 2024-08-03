@@ -1,7 +1,6 @@
-import React, { MutableRefObject, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, SxProps, Tooltip, lighten, useTheme } from '@mui/material';
-import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { GridColDef, GridColumnHeaderTitle, GridEventListener } from '@mui/x-data-grid';
 import { dateFormatter, pidFormatter, zeroPadPID } from '@/utilities/formatters';
 import { ClassificationInline } from './ClassificationIcon';
@@ -156,27 +155,46 @@ const PropertyTable = (props: IPropertyTable) => {
     },
   ];
 
-  const selectPresetFilter = (value: string, ref: MutableRefObject<GridApiCommunity>) => {
-    switch (value) {
-      case 'All Properties':
-        ref.current.setFilterModel({ items: [] });
-        break;
-      case 'Building':
-      case 'Parcel':
-        ref.current.setFilterModel({
-          items: [{ value, operator: 'contains', field: 'PropertyType' }],
-        });
-        break;
-      case 'Core':
-      case 'Surplus':
-      case 'Disposed':
-        ref.current.setFilterModel({
-          items: [{ value, operator: 'contains', field: 'Classification' }],
-        });
-        break;
-      default:
-        ref.current.setFilterModel({ items: [] });
-    }
+  // const selectPresetFilter = (value: string, ref: MutableRefObject<GridApiCommunity>) => {
+  //   switch (value) {
+  //     case 'All Properties':
+  //       ref.current.setFilterModel({ items: [] });
+  //       break;
+  //     case 'Building':
+  //     case 'Parcel':
+  //       ref.current.setFilterModel({
+  //         items: [{ value, operator: 'contains', field: 'PropertyType' }],
+  //       });
+  //       break;
+  //     case 'Core':
+  //     case 'Surplus':
+  //     case 'Disposed':
+  //       ref.current.setFilterModel({
+  //         items: [{ value, operator: 'contains', field: 'Classification' }],
+  //       });
+  //       break;
+  //     default:
+  //       ref.current.setFilterModel({ items: [] });
+  //   }
+  // };
+
+  const presetFilterMapping = {
+    'All Properties': { items: [] },
+    Building: {
+      items: [{ value: 'Building', operator: 'contains', field: 'PropertyType' }],
+    },
+    Parcel: {
+      items: [{ value: 'Parcel', operator: 'contains', field: 'PropertyType' }],
+    },
+    Core: {
+      items: [{ value: 'Core', operator: 'contains', field: 'Classification' }],
+    },
+    Surplus: {
+      items: [{ value: 'Surplus', operator: 'contains', field: 'Classification' }],
+    },
+    Disposed: {
+      items: [{ value: 'Disposed', operator: 'contains', field: 'Classification' }],
+    },
   };
 
   const excelDataMap = (data: (Parcel | Building)[]) => {
@@ -289,7 +307,7 @@ const PropertyTable = (props: IPropertyTable) => {
           name="properties"
           dataSource={handleDataChange}
           excelDataSource={api.properties.getPropertiesForExcelExport}
-          onPresetFilterChange={selectPresetFilter}
+          presetFilterMapping={presetFilterMapping}
           getRowId={(row) => `${row.Id}_${row.PropertyType}`}
           defaultFilter={'All Properties'}
           tableOperationMode="server"
