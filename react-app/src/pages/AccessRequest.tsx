@@ -17,6 +17,7 @@ import { Navigate } from 'react-router-dom';
 import TextFormField from '@/components/form/TextFormField';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 import { SnackBarContext } from '@/contexts/snackbarContext';
+import { LookupContext } from '@/contexts/lookupContext';
 
 interface StatusPageTemplateProps {
   blurb: JSX.Element;
@@ -114,6 +115,7 @@ export const AccessRequest = () => {
   const api = usePimsApi();
   const auth = useContext(AuthContext);
   const snackbar = useContext(SnackBarContext);
+  const lookup = useContext(LookupContext);
 
   const onSubmit = (data: AccessRequestType) => {
     api.users.submitAccessRequest(data).then((response) => {
@@ -121,7 +123,7 @@ export const AccessRequest = () => {
         auth.pimsUser.refreshData();
       } else {
         snackbar.setMessageState({
-          text: 'Could not create account. Contact pimshelp@gov.bc.ca for assistance.',
+          text: `Could not create account. Contact ${lookup.data.Config.contactEmail} for assistance.`,
           open: true,
           style: snackbar.styles.warning,
         });
@@ -144,7 +146,7 @@ export const AccessRequest = () => {
           <Typography mb={'2rem'} variant="h2">
             Awaiting Role
           </Typography>
-          <StatusPageTemplate blurb={awaitingRoleBlurb} />
+          <StatusPageTemplate blurb={awaitingRoleBlurb()} />
         </>
       );
     }
@@ -155,7 +157,7 @@ export const AccessRequest = () => {
             <Typography mb={'2rem'} variant="h2">
               Access Pending
             </Typography>
-            <StatusPageTemplate blurb={accessPendingBlurb} />
+            <StatusPageTemplate blurb={accessPendingBlurb()} />
           </>
         );
       case 'Disabled':
@@ -165,7 +167,7 @@ export const AccessRequest = () => {
             <Typography mb={'2rem'} variant="h2">
               Account Inactive
             </Typography>
-            <StatusPageTemplate blurb={accountInactiveBlurb} />
+            <StatusPageTemplate blurb={accountInactiveBlurb()} />
           </>
         );
       default:

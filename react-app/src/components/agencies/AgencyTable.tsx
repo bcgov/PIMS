@@ -5,10 +5,10 @@ import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { dateFormatter } from '@/utilities/formatters';
 import { Agency } from '@/hooks/api/useAgencyApi';
-import { useNavigate } from 'react-router-dom';
 import usePimsApi from '@/hooks/usePimsApi';
 import { dateColumnType } from '../table/CustomColumns';
 import { SnackBarContext } from '@/contexts/snackbarContext';
+import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
 
 interface IAgencyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
@@ -16,7 +16,7 @@ interface IAgencyTable {
 
 const AgencyTable = (props: IAgencyTable) => {
   const { rowClickHandler } = props;
-  const navigate = useNavigate();
+  const { navigateAndSetFrom } = useHistoryAwareNavigate();
   const snackbar = useContext(SnackBarContext);
   const [totalCount, setTotalCount] = useState(0);
 
@@ -186,7 +186,7 @@ const AgencyTable = (props: IAgencyTable) => {
           customExcelMap={excelDataMap}
           columns={columns}
           addTooltip="Create New Agency"
-          onAddButtonClick={() => navigate('/admin/agencies/add')}
+          onAddButtonClick={() => navigateAndSetFrom('/admin/agencies/add')}
         />
       </Box>
     </Box>

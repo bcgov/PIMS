@@ -203,7 +203,7 @@ export const produceRole = (): RolesEntity => {
   };
 };
 
-export const produceSSO = (): SSOUser => {
+export const produceSSO = (props?: Partial<SSOUser>): SSOUser => {
   return {
     name: faker.string.alphanumeric(),
     preferred_username: faker.string.alphanumeric(),
@@ -217,6 +217,7 @@ export const produceSSO = (): SSOUser => {
     last_name: faker.person.lastName(),
     originalData: null,
     hasRoles: null,
+    ...props,
   };
 };
 
@@ -271,6 +272,7 @@ export const produceEmailStatus = (props: Partial<IChesStatusResponse>): IChesSt
     txId: props.txId ?? faker.string.uuid(),
     updatedTS: new Date().getTime(),
     createdTS: new Date().getTime(),
+    msgId: props.msgId ?? faker.string.uuid(),
   };
   return email;
 };
@@ -426,7 +428,7 @@ export const produceAdminArea = (props?: Partial<AdministrativeArea>): Administr
 };
 
 export const produceClassification = (
-  props: Partial<PropertyClassification>,
+  props?: Partial<PropertyClassification>,
 ): PropertyClassification => {
   const classification: PropertyClassification = {
     Id: faker.number.int(),
