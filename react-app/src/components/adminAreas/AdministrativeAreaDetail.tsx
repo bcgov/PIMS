@@ -2,7 +2,7 @@ import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
 import { Box, Checkbox, Grid, Typography } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import DataCard from '../display/DataCard';
 import { AdministrativeArea } from '@/hooks/api/useAdministrativeAreaApi';
@@ -15,7 +15,11 @@ import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LookupContext } from '@/contexts/lookupContext';
 import { dateFormatter } from '@/utilities/formatters';
 
-const AdministrativeAreaDetail = () => {
+interface IAdministrativeAreaDetail {
+  onClose: () => void;
+}
+
+const AdministrativeAreaDetail = (props: IAdministrativeAreaDetail) => {
   const { id } = useParams();
   const api = usePimsApi();
   const { data, refreshData, isLoading } = useDataLoader(() =>
@@ -23,7 +27,7 @@ const AdministrativeAreaDetail = () => {
   );
   const { data: lookupData, getLookupValueById } = useContext(LookupContext);
   const { submit, submitting } = useDataSubmitter(api.administrativeAreas.updateAdminArea);
-  const navigate = useNavigate();
+
   useEffect(() => {
     refreshData();
   }, [id]);
@@ -77,7 +81,7 @@ const AdministrativeAreaDetail = () => {
       <DetailViewNavigation
         navigateBackTitle="Back to Administrative Area Overview"
         deleteTitle="Delete Area"
-        onBackClick={() => navigate('/admin/adminAreas')}
+        onBackClick={() => props.onClose()}
         disableDelete={true}
       />
       <DataCard

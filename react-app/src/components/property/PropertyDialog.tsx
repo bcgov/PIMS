@@ -24,6 +24,9 @@ import { parseFloatOrNull, parseIntOrNull, pidFormatter } from '@/utilities/form
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LookupContext } from '@/contexts/lookupContext';
 import { Classification } from '@/hooks/api/useLookupApi';
+import { AuthContext } from '@/contexts/authContext';
+import { Roles } from '@/constants/roles';
+import AutocompleteFormField from '../form/AutocompleteFormField';
 
 interface IParcelInformationEditDialog {
   initialValues: Parcel;
@@ -37,6 +40,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
 
   const api = usePimsApi();
   const { data: lookupData } = useContext(LookupContext);
+  const { keycloak } = useContext(AuthContext);
 
   const { submit, submitting } = useDataSubmitter(api.parcels.updateParcelById);
 
@@ -52,6 +56,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
       ClassificationId: null,
       Description: '',
       Location: null,
+      AgencyId: null,
     },
   });
 
@@ -67,8 +72,12 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
       ClassificationId: initialValues?.ClassificationId,
       Description: initialValues?.Description,
       Location: initialValues?.Location,
+      AgencyId: initialValues?.AgencyId,
     });
   }, [initialValues]);
+
+  const isAdmin = keycloak.hasRoles([Roles.ADMIN]);
+
   return (
     <ConfirmDialog
       title={'Edit Parcel Information'}
@@ -80,7 +89,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
           const formValues: any = { ...infoFormMethods.getValues(), Id: initialValues.Id };
           formValues.PID = parseIntOrNull(formValues.PID.replace(/-/g, ''));
           formValues.PIN = parseIntOrNull(formValues.PIN);
-          formValues.Postal = formValues.Postal.replace(/ /g, '').toUpperCase();
+          formValues.Postal = formValues.Postal?.replace(/ /g, '').toUpperCase();
           formValues.LandArea = parseFloatOrNull(formValues.LandArea);
           submit(initialValues.Id, formValues).then(() => postSubmit());
         }
@@ -107,6 +116,15 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
               })) ?? []
             }
           />
+          {isAdmin && (
+            <AutocompleteFormField
+              name={'AgencyId'}
+              label={'Agency'}
+              options={
+                lookupData?.Agencies.map((agc) => ({ value: agc.Id, label: agc.Name })) ?? []
+              }
+            />
+          )}
         </Box>
       </FormProvider>
     </ConfirmDialog>
@@ -123,6 +141,7 @@ interface IBuildingInformationEditDialog {
 export const BuildingInformationEditDialog = (props: IBuildingInformationEditDialog) => {
   const api = usePimsApi();
   const { data: lookupData } = useContext(LookupContext);
+  const { keycloak } = useContext(AuthContext);
 
   const { submit, submitting } = useDataSubmitter(api.buildings.updateBuildingById);
 
@@ -146,6 +165,7 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
       BuildingTenancy: '',
       BuildingTenancyUpdatedOn: null,
       Location: null,
+      AgencyId: null,
     },
   });
 
@@ -169,8 +189,11 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
         ? dayjs(initialValues?.BuildingTenancyUpdatedOn)
         : null,
       Location: initialValues?.Location,
+      AgencyId: initialValues?.AgencyId,
     });
   }, [initialValues]);
+
+  const isAdmin = keycloak.hasRoles([Roles.ADMIN]);
 
   return (
     <ConfirmDialog
@@ -209,6 +232,15 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
             constructionOptions={lookupData?.ConstructionTypes as BuildingConstructionType[]}
             predominateUseOptions={lookupData?.PredominateUses as BuildingPredominateUse[]}
           />
+          {isAdmin && (
+            <AutocompleteFormField
+              name={'AgencyId'}
+              label={'Agency'}
+              options={
+                lookupData?.Agencies.map((agc) => ({ value: agc.Id, label: agc.Name })) ?? []
+              }
+            />
+          )}
         </Box>
       </FormProvider>
     </ConfirmDialog>

@@ -6,6 +6,9 @@ import { User } from '@/typeorm/Entities/User';
 
 const users = AppDataSource.getRepository(User);
 
+/**
+ * Defined by SSO package. See package GitHub repo for options.
+ */
 export const SSO_OPTIONS: SSOOptions = {
   afterUserLogin: async (user: SSOUser) => {
     if (user) {

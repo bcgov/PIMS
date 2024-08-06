@@ -29,10 +29,12 @@ export const LookupContextProvider: React.FC<React.PropsWithChildren> = (props) 
     const ret = {};
     if (data) {
       for (const k of Object.keys(data)) {
-        ret[k] = (data[k] as Record<string, any>[]).reduce(
-          (acc, curr) => ({ ...acc, [curr.Id]: curr }),
-          {},
-        );
+        if (Array.isArray(data[k])) {
+          ret[k] = (data[k] as Record<string, any>[]).reduce(
+            (acc, curr) => ({ ...acc, [curr.Id]: curr }),
+            {},
+          );
+        }
       }
       return ret;
     } else {

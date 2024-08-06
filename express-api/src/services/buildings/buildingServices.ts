@@ -8,6 +8,8 @@ import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
 import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
 import logger from '@/utilities/winstonLogger';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
+import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import { isAdmin } from '@/utilities/authorizationChecks';
 
 const buildingRepo = AppDataSource.getRepository(Building);
 
@@ -15,7 +17,7 @@ const buildingRepo = AppDataSource.getRepository(Building);
  * @description          Adds a new building to the datasource.
  * @param   building     Incoming building data to be added to the database.
  * @returns {Response}   New Building added.
- * @throws ErrorWithCode If the building already exists or is unable to be added.
+ * @throws {ErrorWithCode} If the building already exists or is unable to be added.
  */
 export const addBuilding = async (building: DeepPartial<Building>) => {
   const existingBuilding = building.Id ? await getBuildingById(building.Id) : null;
@@ -56,13 +58,17 @@ export const getBuildingById = async (buildingId: number) => {
 
 /**
  * @description Update a building with matching Id
- * @param       buildingId  - Number representing building we want to update.
- * @returns     findBuilding - Building data matching Id passed in.
+ * @param       {DeepPartial<Building>} building  A partial building with updated info.
+ * @returns     {Building} The updated building
+ * @throws      {ErrorWithCode} Throws and error with 404 status if building does not exist.
  */
-export const updateBuildingById = async (building: DeepPartial<Building>) => {
+export const updateBuildingById = async (building: DeepPartial<Building>, ssoUser: SSOUser) => {
   const existingBuilding = await getBuildingById(building.Id);
   if (!existingBuilding) {
     throw new ErrorWithCode('Building does not exists.', 404);
+  }
+  if (building.AgencyId && building.AgencyId !== existingBuilding.AgencyId && !isAdmin(ssoUser)) {
+    throw new ErrorWithCode('Changing agency is not permitted.', 403);
   }
   if (building.Fiscals && building.Fiscals.length) {
     building.Fiscals = await Promise.all(
@@ -109,16 +115,19 @@ export const updateBuildingById = async (building: DeepPartial<Building>) => {
       ...building.LeasedLandMetadata,
     };
   }
-  await buildingRepo.save(building);
-  //update function doesn't return data on the row changed. Have to get the changed row again
-  const newBuilding = await getBuildingById(building.Id);
-  return newBuilding;
+
+  const updatedBuilding = await buildingRepo.save(building);
+  return updatedBuilding;
 };
 
 /**
- * @description Delete a building with matching Id
- * @param       buildingId  - Number representing building we want to delete.
- * @returns     findBuilding - Building data matching Id passed in.
+ * Deletes a building by its ID after checking for its existence and linked projects.
+ * Throws an error if the building does not exist or is linked to projects.
+ * Updates the building, its evaluations, and fiscals with deletion information in a transaction.
+ * @param {number}  buildingId The ID of the building to delete.
+ * @param {string}  username The username of the user performing the deletion.
+ * @returns A promise that resolves to the removed building entity.
+ * @throws Error if the building does not exist, is linked to projects, or an error occurs during the deletion process.
  */
 export const deleteBuildingById = async (buildingId: number, username: string) => {
   const existingBuilding = await getBuildingById(buildingId);
@@ -172,7 +181,8 @@ export const deleteBuildingById = async (buildingId: number, username: string) =
 
 /**
  * @description Retrieves buildings based on the provided filter.
- * @param filter - The filter object used to specify the criteria for retrieving buildings.
+ * @param {BuildingFilter} filter - The filter object used to specify the criteria for retrieving buildings.
+ * @param {boolean} includeRelations Boolean that controls if related tables should be joined.
  * @returns {Building[]} An array of buildings that match the filter criteria.
  */
 export const getBuildings = async (filter: BuildingFilter, includeRelations: boolean = false) => {

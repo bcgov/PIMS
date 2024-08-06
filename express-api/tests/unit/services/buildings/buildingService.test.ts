@@ -4,6 +4,7 @@ import {
   produceBuilding,
   produceBuildingEvaluation,
   produceBuildingFiscal,
+  produceSSO,
   produceUser,
 } from 'tests/testUtils/factories';
 import * as buildingService from '@/services/buildings/buildingServices';
@@ -13,6 +14,7 @@ import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
 import { DeepPartial, UpdateResult } from 'typeorm';
 import userServices from '@/services/users/usersServices';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
+import { Roles } from '@/constants/roles';
 
 const buildingRepo = AppDataSource.getRepository(Building);
 jest.spyOn(userServices, 'getUser').mockImplementation(async () => produceUser());
@@ -64,7 +66,7 @@ jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
   manager: _mockEntityManager,
 });
 jest.spyOn(buildingRepo, 'find').mockImplementation(async () => [produceBuilding()]);
-
+const adminUser = produceSSO({ client_roles: [Roles.ADMIN] });
 describe('UNIT - Building Services', () => {
   describe('addBuilding', () => {
     beforeEach(() => jest.clearAllMocks());
@@ -125,20 +127,22 @@ describe('updateBuildingById', () => {
   beforeEach(() => jest.clearAllMocks());
   it('should update an existing building', async () => {
     const updateBuilding = produceBuilding();
-    await buildingService.updateBuildingById(updateBuilding);
+    await buildingService.updateBuildingById(updateBuilding, adminUser);
     expect(_buildingSave).toHaveBeenCalledTimes(1);
   });
   it('should throw an error if the building is not found.', async () => {
     const updateBuilding = produceBuilding();
     _buildingFindOne.mockResolvedValueOnce(null);
-    expect(async () => await buildingService.updateBuildingById(updateBuilding)).rejects.toThrow();
+    expect(
+      async () => await buildingService.updateBuildingById(updateBuilding, adminUser),
+    ).rejects.toThrow();
   });
 
   it('should update Fiscals and Evaluations when they exist in the building object', async () => {
     const updateBuilding = produceBuilding();
     _buildingFindOne.mockResolvedValueOnce(updateBuilding);
 
-    await buildingService.updateBuildingById(updateBuilding);
+    await buildingService.updateBuildingById(updateBuilding, adminUser);
     expect(_buildingFiscalFindOne).toHaveBeenCalledTimes(1);
     expect(_buildingEvaluationFindOne).toHaveBeenCalledTimes(1);
   });

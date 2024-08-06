@@ -48,13 +48,15 @@ const LtsaChargeTable = (props: IChargeRowProps) => {
       flex: 1,
     },
   ];
-  if (!rows) return <></>;
 
-  return !rows.length ? (
+  const noChargesReturn = (
     <Box display={'flex'} justifyContent={'center'}>
       <Typography>No charge information is available for this parcel.</Typography>
     </Box>
-  ) : (
+  );
+  if (!rows || !rows.length) return noChargesReturn;
+
+  return (
     <DataGrid
       sx={{
         borderStyle: 'none',
