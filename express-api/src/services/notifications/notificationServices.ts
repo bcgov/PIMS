@@ -7,7 +7,7 @@ import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotif
 import { User } from '@/typeorm/Entities/User';
 import { UUID, randomUUID } from 'crypto';
 import nunjucks from 'nunjucks';
-import { In, IsNull, QueryRunner } from 'typeorm';
+import { In, IsNull, MoreThan, QueryRunner } from 'typeorm';
 import chesServices, {
   EmailBody,
   EmailEncoding,
@@ -19,6 +19,7 @@ import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
 import logger from '@/utilities/winstonLogger';
 import getConfig from '@/constants/config';
+import { getDaysBetween } from '@/utilities/helperFunctions';
 
 export interface AccessRequestData {
   FirstName: string;
@@ -522,11 +523,11 @@ const getProjectNotificationsInQueue = async (
   return pageModel;
 };
 
-const cancelAllProjectNotifications = async (projectId: number) => {
+const cancelProjectNotifications = async (projectId: number, agencyId?: number) => {
   const notifications = await AppDataSource.getRepository(NotificationQueue).find({
     where: [
-      { ProjectId: projectId, Status: NotificationStatus.Accepted },
-      { ProjectId: projectId, Status: NotificationStatus.Pending },
+      { ProjectId: projectId, Status: NotificationStatus.Accepted, ToAgencyId: agencyId },
+      { ProjectId: projectId, Status: NotificationStatus.Pending, ToAgencyId: agencyId },
     ],
   });
   const chesCancelPromises = notifications.map((notification) => {
@@ -550,14 +551,87 @@ const cancelAllProjectNotifications = async (projectId: number) => {
   };
 };
 
+const generateProjectWatchNotifications = async (
+  project: Project,
+  responses: ProjectAgencyResponse[],
+  queryRunner?: QueryRunner,
+) => {
+  const query = queryRunner ?? AppDataSource.createQueryRunner();
+  const notificationsInserted: Array<NotificationQueue> = [];
+  try {
+    for (const response of responses) {
+      switch (response.Response) {
+        case AgencyResponseType.Unsubscribe:
+        case AgencyResponseType.Watch:
+          await cancelProjectNotifications(response.ProjectId, response.AgencyId);
+          break;
+        case AgencyResponseType.Subscribe: {
+          const daysSinceCreated = getDaysBetween(project.CreatedOn, new Date());
+          const statusNotifs = await AppDataSource.getRepository(ProjectStatusNotification).find({
+            relations: {
+              Template: true,
+            },
+            where: {
+              ToStatusId: project.StatusId, //Confirm this is correct.
+              Template: {
+                Audience: NotificationAudience.WatchingAgencies,
+              },
+              DelayDays: MoreThan(daysSinceCreated),
+            },
+          });
+          for (const statusNotif of statusNotifs) {
+            const notifExists = await AppDataSource.getRepository(NotificationQueue).exists({
+              where: [
+                {
+                  ProjectId: response.ProjectId,
+                  ToAgencyId: response.AgencyId,
+                  Status: NotificationStatus.Accepted,
+                },
+                {
+                  ProjectId: response.ProjectId,
+                  ToAgencyId: response.AgencyId,
+                  Status: NotificationStatus.Pending,
+                },
+              ],
+            });
+            if (!notifExists) {
+              const agency = await AppDataSource.getRepository(Agency).findOne({
+                where: { Id: response.AgencyId },
+              });
+              const inserted = await insertProjectNotificationQueue(
+                statusNotif.Template,
+                statusNotif,
+                project,
+                agency,
+              );
+              notificationsInserted.push(inserted);
+            }
+          }
+          break;
+        }
+      }
+    }
+  } catch (e) {
+    logger.error(
+      `Error: Some notification actions triggered by an agency response may have failed to cancel or update. Project ID: ${project.Id}, Error msg: ${e.message}`,
+    );
+  } finally {
+    if (queryRunner === undefined) {
+      query.release();
+    }
+  }
+  return notificationsInserted;
+};
+
 const notificationServices = {
   generateProjectNotifications,
   generateAccessRequestNotification,
+  generateProjectWatchNotifications,
   sendNotification,
   updateNotificationStatus,
   getProjectNotificationsInQueue,
   convertChesStatusToNotificationStatus,
-  cancelAllProjectNotifications,
+  cancelProjectNotifications,
 };
 
 export default notificationServices;

@@ -324,9 +324,9 @@ describe('getProjectNotificationsInQueue', () => {
     }
   });
 });
-describe('cancelAllProjectNotifications', () => {
+describe('cancelProjectNotifications', () => {
   it('should return a count of successful and failed cancellations', async () => {
-    const result = await notificationServices.cancelAllProjectNotifications(faker.number.int());
+    const result = await notificationServices.cancelProjectNotifications(faker.number.int());
     expect(isNaN(result.succeeded)).toBe(false);
     expect(isNaN(result.failed)).toBe(false);
   });
