@@ -272,6 +272,7 @@ export const produceEmailStatus = (props: Partial<IChesStatusResponse>): IChesSt
     txId: props.txId ?? faker.string.uuid(),
     updatedTS: new Date().getTime(),
     createdTS: new Date().getTime(),
+    msgId: props.msgId ?? faker.string.uuid(),
   };
   return email;
 };
@@ -427,7 +428,7 @@ export const produceAdminArea = (props?: Partial<AdministrativeArea>): Administr
 };
 
 export const produceClassification = (
-  props: Partial<PropertyClassification>,
+  props?: Partial<PropertyClassification>,
 ): PropertyClassification => {
   const classification: PropertyClassification = {
     Id: faker.number.int(),

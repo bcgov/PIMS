@@ -90,7 +90,8 @@ const ProjectsTable = () => {
         break;
       case 'Approved for Exemption':
       case 'Approved for ERP':
-      case 'In ERP':
+      case 'Approved for SPL':
+      case 'Submitted':
         ref.current.setFilterModel({ items: [{ value, operator: 'contains', field: 'Status' }] });
     }
   };
@@ -148,6 +149,7 @@ const ProjectsTable = () => {
         PublicNote: project.Notes?.find((note) => note.NoteTypeId === NoteTypes.PUBLIC)?.Note,
         PrivateNote: project.Notes?.find((note) => note.NoteTypeId === NoteTypes.PRIVATE)?.Note,
         AppraisedNote: project.Notes?.find((note) => note.NoteTypeId === NoteTypes.APPRAISAL)?.Note,
+        ReportingNote: project.Notes?.find((note) => note.NoteTypeId === NoteTypes.REPORTING)?.Note,
         AgencyResponseNote: project.Notes?.find(
           (note) => note.NoteTypeId === NoteTypes.AGENCY_INTEREST,
         )?.Note,
@@ -212,14 +214,17 @@ const ProjectsTable = () => {
             All Projects
           </CustomMenuItem>,
           <CustomListSubheader key={'Status'}>Status</CustomListSubheader>,
-          <CustomMenuItem key={'In ERP'} value={'In ERP'}>
-            In ERP
-          </CustomMenuItem>,
           <CustomMenuItem key={'Approved for ERP'} value={'Approved for ERP'}>
             Approved for ERP
           </CustomMenuItem>,
           <CustomMenuItem key={'Approved for Exemption'} value={'Approved for Exemption'}>
             Approved for Exemption
+          </CustomMenuItem>,
+          <CustomMenuItem key={'Submitted'} value={'Submitted'}>
+            Submitted
+          </CustomMenuItem>,
+          <CustomMenuItem key={'Approved for SPL'} value={'Approved for SPL'}>
+            Approved for SPL
           </CustomMenuItem>,
         ]}
         rowCountProp={totalCount}

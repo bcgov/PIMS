@@ -14,8 +14,8 @@ import {
   produceSSO,
   produceUser,
 } from 'tests/testUtils/factories';
-import { DeepPartial, EntityTarget, FindOptionsWhere, ObjectLiteral } from 'typeorm';
-import chesServices from '@/services/ches/chesServices';
+import { DeepPartial, EntityTarget, FindOptionsWhere, ObjectLiteral, UpdateResult } from 'typeorm';
+import chesServices, { IChesStatusResponse } from '@/services/ches/chesServices';
 import { NotificationTemplate } from '@/typeorm/Entities/NotificationTemplate';
 import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
 import { User } from '@/typeorm/Entities/User';
@@ -62,6 +62,9 @@ jest
 jest
   .spyOn(AppDataSource.getRepository(NotificationQueue), 'findOne')
   .mockImplementation(_notifQueueFindOne);
+jest
+  .spyOn(AppDataSource.getRepository(NotificationQueue), 'update')
+  .mockImplementation(async (): Promise<UpdateResult> => ({ raw: {}, generatedMaps: [] }));
 
 const _statusNotifFind = jest.fn().mockImplementation(async (options) => [
   produceProjectNotification({
@@ -130,13 +133,26 @@ const _sendEmailAsync = jest.fn().mockImplementation(() => ({
   txId: randomUUID(),
 }));
 
+const _cancelEmailByIdAsync = jest.fn().mockImplementation(
+  async (): Promise<IChesStatusResponse> => ({
+    status: 'completed',
+    tag: 'sampleTag',
+    txId: randomUUID(),
+    updatedTS: Date.now(),
+    createdTS: Date.now(),
+    msgId: randomUUID(),
+  }),
+);
+
 jest.spyOn(chesServices, 'sendEmailAsync').mockImplementation(() => _sendEmailAsync());
+jest.spyOn(chesServices, 'cancelEmailByIdAsync').mockImplementation(() => _cancelEmailByIdAsync());
 const _getStatusByIdAsync = jest.spyOn(chesServices, 'getStatusByIdAsync').mockResolvedValue({
   status: 'completed',
   tag: 'sampleTag',
   txId: randomUUID(),
   updatedTS: Date.now(),
   createdTS: Date.now(),
+  msgId: randomUUID(),
 });
 
 describe('UNIT - Notification Services', () => {
@@ -210,6 +226,7 @@ describe('updateNotificationStatus', () => {
       txId: randomUUID(),
       updatedTS: new Date(notification.UpdatedOn).getTime(),
       createdTS: Date.now(),
+      msgId: randomUUID(),
     });
     const response = await notificationServices.updateNotificationStatus(
       notification.Id,
@@ -228,6 +245,7 @@ describe('updateNotificationStatus', () => {
       txId: randomUUID(),
       updatedTS: new Date(notification.UpdatedOn).getTime(),
       createdTS: Date.now(),
+      msgId: randomUUID(),
     });
     const response = await notificationServices.updateNotificationStatus(
       notification.Id,
@@ -304,5 +322,12 @@ describe('getProjectNotificationsInQueue', () => {
       expect(result.items[1].Status).toBe(NotificationStatus.Completed);
       expect(result.items[2].Status).toBe(NotificationStatus.Completed);
     }
+  });
+});
+describe('cancelAllProjectNotifications', () => {
+  it('should return a count of successful and failed cancellations', async () => {
+    const result = await notificationServices.cancelAllProjectNotifications(faker.number.int());
+    expect(isNaN(result.succeeded)).toBe(false);
+    expect(isNaN(result.failed)).toBe(false);
   });
 });

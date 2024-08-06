@@ -6,7 +6,8 @@ import { ViewColumn, ViewEntity } from 'typeorm';
     SELECT b.id AS "building_id", b.pid, b.pin, p.id as "parcel_id"
     FROM building b
     LEFT OUTER JOIN parcel p
-    ON b.pid = p.pid OR b.pin = p.pin;
+    ON (b.pid = p.pid OR b.pin = p.pin) AND p.deleted_on IS NULL
+    WHERE b.deleted_on IS NULL;
   `,
 })
 export class BuildingRelations {

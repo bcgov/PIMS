@@ -67,16 +67,19 @@ export const isUserActive = async (kcUser: SSOUser): Promise<boolean> => {
 export const checkUserAgencyPermission = async (
   kcUser: SSOUser,
   agencyIds: number[],
+  permittedRoles: Roles[],
 ): Promise<boolean> => {
   // Check if undefined, has length of 0, or if the only element is undefined
   if (!agencyIds || agencyIds.length === 0 || !agencyIds.at(0)) {
     return false;
   }
-  if (!isAdmin(kcUser) && !isAuditor(kcUser)) {
+  const userRolePermission = kcUser?.hasRoles(permittedRoles, { requireAllRoles: false });
+  // if the user is not an admin, nor has a permitted role scope results
+  if (!isAdmin(kcUser) && !userRolePermission) {
     // check if current user belongs to any of the specified agencies
     const userAgencies = await userServices.hasAgencies(kcUser.preferred_username, agencyIds);
     return userAgencies;
   }
-  // Admins and auditors have permission by default
+  // Admins have permission by default
   return true;
 };
