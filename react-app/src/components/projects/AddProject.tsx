@@ -5,7 +5,6 @@ import TextFormField from '../form/TextFormField';
 import AutocompleteFormField from '../form/AutocompleteFormField';
 import { FormProvider, useForm } from 'react-hook-form';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
-import { useNavigate } from 'react-router-dom';
 import usePimsApi from '@/hooks/usePimsApi';
 import { ProjectPropertyIds } from '@/hooks/api/useProjectsApi';
 import DisposalProjectSearch, { PropertyWithType } from './DisposalPropertiesSearchTable';
@@ -16,9 +15,10 @@ import { LookupContext } from '@/contexts/lookupContext';
 import { ProjectTask } from '@/constants/projectTasks';
 import { MonetaryType } from '@/constants/monetaryTypes';
 import { NoteTypes } from '@/constants/noteTypes';
+import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
 
 const AddProject = () => {
-  const navigate = useNavigate();
+  const { goToFromStateOrSetRoute } = useHistoryAwareNavigate();
   const formMethods = useForm({
     defaultValues: {
       Name: '',
@@ -78,7 +78,7 @@ const AddProject = () => {
       <Box>
         <NavigateBackButton
           navigateBackTitle={'Back to Disposal Project Overview'}
-          onBackClick={() => navigate('/projects')}
+          onBackClick={() => goToFromStateOrSetRoute('/projects')}
         />
       </Box>
       <Typography variant={'h2'} mb={'2rem'}>
@@ -287,7 +287,7 @@ const AddProject = () => {
               },
               projectProperties,
             ).then((response) => {
-              if (response && response.ok) navigate('/projects');
+              if (response && response.ok) goToFromStateOrSetRoute('/projects');
             });
           }
         }}

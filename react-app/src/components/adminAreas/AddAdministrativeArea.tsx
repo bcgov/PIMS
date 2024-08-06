@@ -5,16 +5,16 @@ import TextFormField from '../form/TextFormField';
 import AutocompleteFormField from '../form/AutocompleteFormField';
 import usePimsApi from '@/hooks/usePimsApi';
 import { NavigateBackButton } from '../display/DetailViewNavigation';
-import { useNavigate } from 'react-router-dom';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LoadingButton } from '@mui/lab';
 import { LookupContext } from '@/contexts/lookupContext';
+import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
 
 const AddAdministrativeArea = () => {
   const api = usePimsApi();
   const { data: lookupData } = useContext(LookupContext);
   const { submit, submitting } = useDataSubmitter(api.administrativeAreas.addAdministrativeArea);
-  const navigate = useNavigate();
+  const { goToFromStateOrSetRoute } = useHistoryAwareNavigate();
   const formMethods = useForm({
     defaultValues: {
       Name: '',
@@ -34,7 +34,7 @@ const AddAdministrativeArea = () => {
       <Box>
         <NavigateBackButton
           navigateBackTitle={'Back to Administrative Area Overview'}
-          onBackClick={() => navigate('/admin/adminAreas')}
+          onBackClick={() => goToFromStateOrSetRoute('/admin/adminAreas')}
         />
       </Box>
       <FormProvider {...formMethods}>
@@ -68,7 +68,7 @@ const AddAdministrativeArea = () => {
                 IsDisabled: false,
                 ProvinceId: 'BC',
               }).then((resp) => {
-                if (resp && resp.ok) navigate('/admin/adminAreas');
+                if (resp && resp.ok) goToFromStateOrSetRoute('/admin/adminAreas');
               });
             } else {
               console.log('Error!');

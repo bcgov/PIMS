@@ -4,7 +4,7 @@ import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../ta
 import React, { MutableRefObject, useContext, useState } from 'react';
 import { dateFormatter, projectStatusChipFormatter } from '@/utilities/formatters';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Project } from '@/hooks/api/useProjectsApi';
 import { NoteTypes } from '@/constants/noteTypes';
 import { SnackBarContext } from '@/contexts/snackbarContext';
@@ -18,6 +18,7 @@ import { LookupContext } from '@/contexts/lookupContext';
 const ProjectsTable = () => {
   const [totalCount, setTotalCount] = useState(0);
   const navigate = useNavigate();
+  const location = useLocation();
   const api = usePimsApi();
   const snackbar = useContext(SnackBarContext);
   const lookup = useContext(LookupContext);
@@ -205,7 +206,7 @@ const ProjectsTable = () => {
         tableOperationMode="server"
         dataSource={handleDataChange}
         excelDataSource={api.projects.getProjectsForExcelExport}
-        onAddButtonClick={() => navigate('/projects/add')}
+        onAddButtonClick={() => navigate('/projects/add', { state: { from: location } })}
         onPresetFilterChange={selectPresetFilter}
         defaultFilter={'All Projects'}
         presetFilterSelectOptions={[
@@ -229,17 +230,19 @@ const ProjectsTable = () => {
         rowCountProp={totalCount}
         rowCount={totalCount}
         getRowId={(row) => row.Id}
-        onRowClick={(params) => navigate(`/projects/${params.row.Id}`)}
+        onRowClick={(params) =>
+          navigate(`/projects/${params.row.Id}`, { state: { from: location } })
+        }
         tableHeader={'Disposal Projects Overview'}
         excelTitle={'Projects'}
         customExcelMap={excelDataMap}
         addTooltip={'Create New Disposal Project'}
         name={'projects'}
         columns={columns}
-        initialState={{
-          pagination: { paginationModel: { page: 0, pageSize: 100 } },
-          sorting: { sortModel: [{ field: 'UpdatedOn', sort: 'desc' }] },
-        }}
+        // initialState={{
+        //   pagination: { paginationModel: { page: 0, pageSize: 100 } },
+        //   sorting: { sortModel: [{ field: 'UpdatedOn', sort: 'desc' }] },
+        // }}
       />
     </Box>
   );
