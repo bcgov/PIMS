@@ -20,6 +20,7 @@ import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse'
 import logger from '@/utilities/winstonLogger';
 import getConfig from '@/constants/config';
 import { getDaysBetween } from '@/utilities/helperFunctions';
+import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 
 export interface AccessRequestData {
   FirstName: string;
@@ -155,17 +156,22 @@ const insertProjectNotificationQueue = async (
   project: Project,
   agency?: Agency,
   overrideTo?: string,
+  overrideSend?: Date,
   queryRunner?: QueryRunner,
 ) => {
   const query = queryRunner ?? AppDataSource.createQueryRunner();
-  const sendDate = new Date();
-  sendDate.setDate(sendDate.getDate() + projStatusNotif.DelayDays);
+  let emailSendDate = overrideSend;
+  if (emailSendDate == undefined) {
+    const sendDelayFromToday = new Date();
+    sendDelayFromToday.setDate(sendDelayFromToday.getDate() + projStatusNotif.DelayDays);
+    emailSendDate = sendDelayFromToday;
+  }
   const queueObject = {
     Key: randomUUID(),
     Status: NotificationStatus.Pending,
     Priority: template.Priority,
     Encoding: template.Encoding,
-    SendOn: sendDate,
+    SendOn: emailSendDate,
     Subject: nunjucks.renderString(template.Subject, { Project: project }),
     BodyType: template.BodyType,
     Body: nunjucks.renderString(template.Body, {
@@ -229,6 +235,7 @@ const generateProjectNotifications = async (
           project,
           project.Agency,
           overrideTo,
+          undefined,
           queryRunner,
         ),
       );
@@ -239,6 +246,7 @@ const generateProjectNotifications = async (
           projStatusNotif,
           project,
           project.Agency,
+          undefined,
           undefined,
           queryRunner,
         ),
@@ -271,6 +279,7 @@ const generateProjectNotifications = async (
             projStatusNotif,
             project,
             agc,
+            undefined,
             undefined,
             queryRunner,
           ),
@@ -306,6 +315,7 @@ const generateProjectNotifications = async (
             project,
             agc,
             undefined,
+            undefined,
             queryRunner,
           ),
         ),
@@ -335,6 +345,7 @@ const generateProjectNotifications = async (
             project,
             agc,
             undefined,
+            undefined,
             queryRunner,
           ),
         ),
@@ -345,6 +356,7 @@ const generateProjectNotifications = async (
           template,
           projStatusNotif,
           project,
+          undefined,
           undefined,
           undefined,
           queryRunner,
@@ -589,7 +601,13 @@ const generateProjectWatchNotifications = async (
           });
 
           if (agency?.Email) {
-            const daysSinceCreated = getDaysBetween(project.CreatedOn, new Date());
+            const mostRecentStatusChange = await query.manager.findOne(ProjectStatusHistory, {
+              where: { ProjectId: project.Id },
+              order: { CreatedOn: 'DESC' },
+            });
+            const mostRecentStatusChangeDate =
+              mostRecentStatusChange?.CreatedOn ?? project.CreatedOn;
+            const daysSinceThisStatus = getDaysBetween(mostRecentStatusChangeDate, new Date());
             const statusNotifs = await query.manager.find(ProjectStatusNotification, {
               relations: {
                 Template: true,
@@ -599,7 +617,7 @@ const generateProjectWatchNotifications = async (
                 Template: {
                   Audience: NotificationAudience.WatchingAgencies,
                 },
-                DelayDays: MoreThan(daysSinceCreated),
+                DelayDays: MoreThan(daysSinceThisStatus),
               },
             });
             for (const statusNotif of statusNotifs) {
@@ -619,13 +637,17 @@ const generateProjectWatchNotifications = async (
                   },
                 ],
               });
+
               if (!notifExists) {
+                const sendOn = new Date(project.UpdatedOn.getTime());
+                sendOn.setDate(project.UpdatedOn.getDate() + statusNotif.DelayDays);
                 const inserted = await insertProjectNotificationQueue(
                   statusNotif.Template,
                   statusNotif,
                   project,
                   agency,
                   undefined,
+                  sendOn,
                   queryRunner,
                 );
                 notificationsInserted.push(inserted);
