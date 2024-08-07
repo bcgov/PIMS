@@ -16,6 +16,7 @@ import { AppDataSource } from '@/appDataSource';
 import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import { readFile } from 'xlsx';
 import logger from '@/utilities/winstonLogger';
+import { Roles } from '@/constants/roles';
 
 /**
  * @description Search for a single keyword across multiple different fields in both parcels and buildings.
@@ -81,10 +82,16 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
 
   // Controlling for agency search visibility
   const kcUser = req.user;
+  // admin and suditors can see any property
+  const permittedRoles = [Roles.ADMIN, Roles.AUDITOR];
   // Admins and auditors see all, otherwise...
   if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
     const requestedAgencies = filterResult.AgencyIds;
-    const userHasAgencies = await checkUserAgencyPermission(kcUser, requestedAgencies);
+    const userHasAgencies = await checkUserAgencyPermission(
+      kcUser,
+      requestedAgencies,
+      permittedRoles,
+    );
     // If not agencies were requested or if the user doesn't have those requested agencies
     if (!requestedAgencies || !userHasAgencies) {
       // Then only show that user's agencies instead.

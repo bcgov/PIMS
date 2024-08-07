@@ -4,7 +4,7 @@ import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { decodeJWT } from '@/utilities/decodeJWT';
 import { UserFiltering, UserFilteringSchema } from '@/controllers/users/usersSchema';
 import { z } from 'zod';
-import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
+import { isAdmin } from '@/utilities/authorizationChecks';
 import notificationServices from '@/services/notifications/notificationServices';
 import getConfig from '@/constants/config';
 import logger from '@/utilities/winstonLogger';
@@ -23,7 +23,7 @@ const filterUsersByAgencies = async (req: Request, res: Response, ssoUser: SSOUs
   const filterResult = filter.data;
 
   let users;
-  if (isAdmin(ssoUser) || isAuditor(ssoUser)) {
+  if (isAdmin(ssoUser)) {
     users = await userServices.getUsers(filterResult as UserFiltering);
   } else {
     // Get agencies associated with the requesting user
@@ -204,7 +204,7 @@ export const getUserById = async (req: Request, res: Response) => {
     const user = await userServices.getUserById(uuid.data);
 
     if (user) {
-      if (!isAdmin(ssoUser) && !isAuditor(ssoUser)) {
+      if (!isAdmin(ssoUser)) {
         // check if user has the correct agencies
         const usersAgencies = await userServices.hasAgencies(ssoUser.preferred_username, [
           user.AgencyId,

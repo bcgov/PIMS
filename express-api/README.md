@@ -24,7 +24,7 @@ Recommended values used with this API that match with the current API and Docker
 |SSO_INTEGRATION_ID|1234|See Keycloak integration. Used for CSS API.|
 |SSO_ENVIRONMENT|dev|Target environment of Keycloak integration. Used for CSS API.|
 |GEOCODER_KEY|abc123|API key for BC Geocoder use.|
-|ERROR_REPORT_TO|<email@gov.bc.ca>|Destination email for frontend error reporting.|
+|CONTACT_EMAIL|<email@gov.bc.ca>|Destination email for frontend error reporting and help.|
 |CHES_USERNAME|abc123|Username for CHES service.|
 |CHES_PASSWORD|def456|Password for CHES service.|
 |CHES_AUTH_URL|https://...|URL where authorization tokens for CHES are obtained.|

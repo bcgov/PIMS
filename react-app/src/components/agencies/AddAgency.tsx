@@ -8,14 +8,14 @@ import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
 import EmailChipFormField from '@/components/form/EmailChipFormField';
 import SingleSelectBoxFormField from '@/components/form/SingleSelectBoxFormField';
 import { NavigateBackButton } from '@/components/display/DetailViewNavigation';
-import { useNavigate } from 'react-router-dom';
 import { AgencyAdd } from '@/hooks/api/useAgencyApi';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LoadingButton } from '@mui/lab';
+import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
 
 const AddAgency = () => {
   const api = usePimsApi();
-  const navigate = useNavigate();
+  const { goToFromStateOrSetRoute } = useHistoryAwareNavigate();
   const { submit, submitting } = useDataSubmitter(api.agencies.addAgency);
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
 
@@ -45,7 +45,7 @@ const AddAgency = () => {
       <Box>
         <NavigateBackButton
           navigateBackTitle="Back to Agency Overview"
-          onBackClick={() => navigate('/admin/agencies')}
+          onBackClick={() => goToFromStateOrSetRoute('/admin/agencies')}
         />
       </Box>
       <FormProvider {...formMethods}>
@@ -118,7 +118,7 @@ const AddAgency = () => {
               SortOrder: 0,
             };
             submit(newAgency).then((res) => {
-              if (res && res.ok) navigate('/admin/agencies');
+              if (res && res.ok) goToFromStateOrSetRoute('/admin/agencies');
             });
           }
         }}
