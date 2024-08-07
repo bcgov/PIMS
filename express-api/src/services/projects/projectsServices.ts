@@ -26,7 +26,7 @@ import {
 import { ProjectFilter } from '@/services/projects/projectSchema';
 import { PropertyType } from '@/constants/propertyType';
 import { ProjectRisk } from '@/constants/projectRisk';
-import notificationServices from '../notifications/notificationServices';
+import notificationServices, { AgencyResponseType } from '../notifications/notificationServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import userServices from '../users/usersServices';
 import { constructFindOptionFromQuery } from '@/utilities/helperFunctions';
@@ -632,14 +632,21 @@ const getAgencyResponseChanges = async (
   const retResponses: Array<ProjectAgencyResponse> = [];
   for (const response of newProject.AgencyResponses as ProjectAgencyResponse[]) {
     const originalResponse = oldProject.AgencyResponses.find(
-      (r) => r.ProjectId === response.ProjectId && r.AgencyId === response.AgencyId,
+      (r) => r.AgencyId === response.AgencyId,
     );
     if (originalResponse == null || originalResponse.Response != response.Response) {
       retResponses.push(response);
     }
   }
-  // There is additional logic here for managing "removed" responses, but we don't expect agency responses to be ignored anymore.
-  // Instead, we guide users to just mark them as Unsubscribed, in which case the above logic should be sufficient.
+  for (const response of oldProject.AgencyResponses) {
+    const updatedResponse = newProject.AgencyResponses.find(
+      (r) => r.AgencyId === response.AgencyId,
+    );
+    if (updatedResponse == null) {
+      response.Response = AgencyResponseType.Unsubscribe;
+      retResponses.push(response);
+    }
+  }
   return retResponses;
 };
 
@@ -662,7 +669,10 @@ const updateProject = async (
   if (project.Name === null || project.Name === '') {
     throw new ErrorWithCode('Projects must have a name.', 400);
   }
+  //We get the AgencyResponses relation here so that we have a copy of the state of those responses before being updated.
+  //We need this to check which responses were updated and thus require new notifications later after the transaction commit.
   const originalProject = await projectRepo.findOne({
+    relations: { AgencyResponses: true },
     where: { Id: project.Id },
   });
   if (!originalProject) {

@@ -182,11 +182,11 @@ const insertProjectNotificationQueue = async (
     ProjectId: project.Id,
     ToAgencyId: agency?.Id,
   };
+  const insertedNotif = await query.manager.save(NotificationQueue, queueObject);
   if (queryRunner === undefined) {
     //If no arg passed we spawned a new query runner and we must release that!
     await query.release();
   }
-  const insertedNotif = await query.manager.save(NotificationQueue, queueObject);
   return insertedNotif;
 };
 
@@ -523,32 +523,50 @@ const getProjectNotificationsInQueue = async (
   return pageModel;
 };
 
-const cancelProjectNotifications = async (projectId: number, agencyId?: number) => {
-  const notifications = await AppDataSource.getRepository(NotificationQueue).find({
-    where: [
-      { ProjectId: projectId, Status: NotificationStatus.Accepted, ToAgencyId: agencyId },
-      { ProjectId: projectId, Status: NotificationStatus.Pending, ToAgencyId: agencyId },
-    ],
-  });
-  const chesCancelPromises = notifications.map((notification) => {
-    return chesServices.cancelEmailByIdAsync(notification.ChesMessageId);
-  });
-  const chesCancelResolved = await Promise.allSettled(chesCancelPromises);
-  const cancelledMessageIds = chesCancelResolved
-    .filter((a) => a.status === 'fulfilled' && a.value.status === 'cancelled')
-    .map((c) => (c as PromiseFulfilledResult<IChesStatusResponse>).value.msgId);
-  await AppDataSource.getRepository(NotificationQueue).update(
-    { ChesMessageId: In(cancelledMessageIds) },
-    { Status: convertChesStatusToNotificationStatus('cancelled') },
-  );
-  return {
-    succeeded: chesCancelResolved.filter(
-      (c) => c.status === 'fulfilled' && c.value.status === 'cancelled',
-    ).length,
-    failed: chesCancelResolved.filter(
-      (c) => c.status === 'rejected' || c.value?.status !== 'cancelled',
-    ).length,
-  };
+const cancelProjectNotifications = async (
+  projectId: number,
+  agencyId?: number,
+  queryRunner?: QueryRunner,
+) => {
+  const query = queryRunner ?? AppDataSource.createQueryRunner();
+  try {
+    const notifications = await query.manager.find(NotificationQueue, {
+      where: [
+        { ProjectId: projectId, Status: NotificationStatus.Accepted, ToAgencyId: agencyId },
+        { ProjectId: projectId, Status: NotificationStatus.Pending, ToAgencyId: agencyId },
+      ],
+    });
+    const chesCancelPromises = notifications.map((notification) => {
+      return chesServices.cancelEmailByIdAsync(notification.ChesMessageId);
+    });
+    const chesCancelResolved = await Promise.allSettled(chesCancelPromises);
+    const cancelledMessageIds = chesCancelResolved
+      .filter((a) => a.status === 'fulfilled' && a.value.status === 'cancelled')
+      .map((c) => (c as PromiseFulfilledResult<IChesStatusResponse>).value.msgId);
+    await query.manager.update(
+      NotificationQueue,
+      { ChesMessageId: In(cancelledMessageIds) },
+      { Status: convertChesStatusToNotificationStatus('cancelled') },
+    );
+    return {
+      succeeded: chesCancelResolved.filter(
+        (c) => c.status === 'fulfilled' && c.value.status === 'cancelled',
+      ).length,
+      failed: chesCancelResolved.filter(
+        (c) => c.status === 'rejected' || c.value?.status !== 'cancelled',
+      ).length,
+    };
+  } catch (e) {
+    logger.error(`Error: Something went wrong when trying to cancel project notifications.`);
+    return {
+      succeeded: 0,
+      failed: 0,
+    };
+  } finally {
+    if (queryRunner === undefined) {
+      query.release();
+    }
+  }
 };
 
 const generateProjectWatchNotifications = async (
@@ -566,45 +584,51 @@ const generateProjectWatchNotifications = async (
           await cancelProjectNotifications(response.ProjectId, response.AgencyId);
           break;
         case AgencyResponseType.Subscribe: {
-          const daysSinceCreated = getDaysBetween(project.CreatedOn, new Date());
-          const statusNotifs = await AppDataSource.getRepository(ProjectStatusNotification).find({
-            relations: {
-              Template: true,
-            },
-            where: {
-              ToStatusId: project.StatusId, //Confirm this is correct.
-              Template: {
-                Audience: NotificationAudience.WatchingAgencies,
-              },
-              DelayDays: MoreThan(daysSinceCreated),
-            },
+          const agency = await queryRunner.manager.findOne(Agency, {
+            where: { Id: response.AgencyId },
           });
-          for (const statusNotif of statusNotifs) {
-            const notifExists = await AppDataSource.getRepository(NotificationQueue).exists({
-              where: [
-                {
-                  ProjectId: response.ProjectId,
-                  ToAgencyId: response.AgencyId,
-                  Status: NotificationStatus.Accepted,
+          if (agency?.Email) {
+            const daysSinceCreated = getDaysBetween(project.CreatedOn, new Date());
+            const statusNotifs = await query.manager.find(ProjectStatusNotification, {
+              relations: {
+                Template: true,
+              },
+              where: {
+                ToStatusId: project.StatusId, //Confirm this is correct.
+                Template: {
+                  Audience: NotificationAudience.WatchingAgencies,
                 },
-                {
-                  ProjectId: response.ProjectId,
-                  ToAgencyId: response.AgencyId,
-                  Status: NotificationStatus.Pending,
-                },
-              ],
+                DelayDays: MoreThan(daysSinceCreated),
+              },
             });
-            if (!notifExists) {
-              const agency = await AppDataSource.getRepository(Agency).findOne({
-                where: { Id: response.AgencyId },
+            for (const statusNotif of statusNotifs) {
+              const notifExists = await query.manager.exists(NotificationQueue, {
+                where: [
+                  {
+                    ProjectId: project.Id,
+                    ToAgencyId: response.AgencyId,
+                    TemplateId: statusNotif.TemplateId,
+                    Status: NotificationStatus.Accepted,
+                  },
+                  {
+                    ProjectId: project.Id,
+                    ToAgencyId: response.AgencyId,
+                    TemplateId: statusNotif.TemplateId,
+                    Status: NotificationStatus.Pending,
+                  },
+                ],
               });
-              const inserted = await insertProjectNotificationQueue(
-                statusNotif.Template,
-                statusNotif,
-                project,
-                agency,
-              );
-              notificationsInserted.push(inserted);
+              if (!notifExists) {
+                const inserted = await insertProjectNotificationQueue(
+                  statusNotif.Template,
+                  statusNotif,
+                  project,
+                  agency,
+                  undefined,
+                  queryRunner,
+                );
+                notificationsInserted.push(inserted);
+              }
             }
           }
           break;
@@ -615,6 +639,7 @@ const generateProjectWatchNotifications = async (
     logger.error(
       `Error: Some notification actions triggered by an agency response may have failed to cancel or update. Project ID: ${project.Id}, Error msg: ${e.message}`,
     );
+    logger.error(e.stack);
   } finally {
     if (queryRunner === undefined) {
       query.release();
