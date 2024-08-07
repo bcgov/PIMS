@@ -86,7 +86,7 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
   const propertiesFuzzySearch = async (keyword: string) => {
     const { parsedBody } = await absoluteFetch.get('/properties/search/fuzzy', {
       keyword,
-      take: 2,
+      take: 5,
     });
     return parsedBody as PropertyFuzzySearch;
   };

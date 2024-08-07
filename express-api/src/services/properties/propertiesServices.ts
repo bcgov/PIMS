@@ -86,7 +86,8 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
           .orWhere(`parcel.pin::text ILIKE '%${keyword}%'`)
           .orWhere(`agency.name ILIKE '%${keyword}%'`)
           .orWhere(`adminArea.name ILIKE '%${keyword}%'`)
-          .orWhere(`parcel.address1 ILIKE '%${keyword}%'`);
+          .orWhere(`parcel.address1 ILIKE '%${keyword}%'`)
+          .orWhere(`parcel.name ILIKE '%${keyword}%'`);
       }),
     )
     // Only include surplus properties
@@ -117,7 +118,8 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
           .orWhere(`building.pin::text ILIKE '%${keyword}%'`)
           .orWhere(`agency.name ILIKE '%${keyword}%'`)
           .orWhere(`adminArea.name ILIKE '%${keyword}%'`)
-          .orWhere(`building.address1 ILIKE '%${keyword}%'`);
+          .orWhere(`building.address1 ILIKE '%${keyword}%'`)
+          .orWhere(`building.name ILIKE '%${keyword}%'`);
       }),
     )
     // Only include surplus properties
