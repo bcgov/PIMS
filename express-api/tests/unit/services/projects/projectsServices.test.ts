@@ -616,8 +616,9 @@ describe('UNIT - Project Services', () => {
     });
 
     it('should send notifications when agency responses changed', async () => {
-      _projectFindOne.mockImplementationOnce(async () => originalProject);
-      const projUpd = { ...projectUpdate, AgencyResponses: [produceAgencyResponse()] };
+      const oldProject = produceProject({});
+      const projUpd = { ...oldProject, AgencyResponses: [produceAgencyResponse()] };
+      _projectFindOne.mockImplementationOnce(async () => oldProject);
       await projectServices.updateProject(projUpd, { parcels: [], buildings: [] }, produceSSO());
       expect(_generateProjectWatchNotifications).toHaveBeenCalled();
     });

@@ -643,6 +643,7 @@ const getAgencyResponseChanges = async (
       (r) => r.AgencyId === response.AgencyId,
     );
     if (updatedResponse == null) {
+      console.log(oldProject);
       response.Response = AgencyResponseType.Unsubscribe;
       retResponses.push(response);
     }
