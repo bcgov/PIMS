@@ -137,6 +137,33 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
     Buildings: buildings,
   };
 };
+/**
+ * Finds associated projects based on the provided building ID or parcel ID.
+ *
+ * This function queries the `ProjectProperty` repository to find projects linked
+ * to either a building or a parcel. It returns an empty array if neither ID is provided.
+ *
+ * @param buildingId - Optional ID of the building to find associated projects for.
+ * @param parcelId - Optional ID of the parcel to find associated projects for.
+ * @returns A promise that resolves to an array of `ProjectProperty` objects.
+ *          If neither `buildingId` nor `parcelId` is provided, an empty array is returned.
+ */
+const findLinkedProjects = async (buildingId?: number, parcelId?: number) => {
+  const whereCondition = buildingId
+    ? { BuildingId: buildingId }
+    : parcelId
+      ? { ParcelId: parcelId }
+      : {}; // Return an empty condition if neither ID is provided
+
+  const associatedProjects =
+    buildingId || parcelId
+      ? await AppDataSource.getRepository(ProjectProperty).find({
+          where: whereCondition,
+        })
+      : []; // Return an empty array if no ID is provided
+
+  return associatedProjects;
+};
 
 /**
  * Retrieves properties based on the provided filter criteria to render map markers.
@@ -835,6 +862,7 @@ const propertyServices = {
   getImportResults,
   getPropertiesForExport,
   processFile,
+  findLinkedProjects,
 };
 
 export default propertyServices;
