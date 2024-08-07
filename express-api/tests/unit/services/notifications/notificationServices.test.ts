@@ -1,5 +1,6 @@
 import { AppDataSource } from '@/appDataSource';
 import notificationServices, {
+  AgencyResponseType,
   NotificationStatus,
 } from '@/services/notifications/notificationServices';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
@@ -7,6 +8,7 @@ import { faker } from '@faker-js/faker';
 import { randomUUID } from 'crypto';
 import {
   produceAgency,
+  produceAgencyResponse,
   produceNotificationQueue,
   produceNotificationTemplate,
   produceProject,
@@ -71,8 +73,11 @@ const _statusNotifFind = jest.fn().mockImplementation(async (options) => [
     FromStatusId: (options.where as FindOptionsWhere<ProjectStatusNotification>)
       .FromStatusId as number,
     ToStatusId: (options.where as FindOptionsWhere<ProjectStatusNotification>).ToStatusId as number,
+    Template: produceNotificationTemplate(),
   }),
 ]);
+
+const _agencyFindOne = jest.fn().mockImplementation(async () => produceAgency());
 
 jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
   ...jest.requireActual('@/appDataSource').createQueryRunner,
@@ -102,6 +107,8 @@ jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
         return _notifTemplateFindOne(options);
       } else if (entityClass === NotificationQueue) {
         return _notifQueueFindOne(options);
+      } else if (entityClass === Agency) {
+        return _agencyFindOne();
       } else {
         return {};
       }
@@ -111,6 +118,12 @@ jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
       obj: T,
     ) => {
       return _notifQueueSave(obj);
+    },
+    exists: () => {
+      return false;
+    },
+    update: () => {
+      return { raw: {}, generatedMaps: [] };
     },
   },
 });
@@ -329,5 +342,17 @@ describe('cancelProjectNotifications', () => {
     const result = await notificationServices.cancelProjectNotifications(faker.number.int());
     expect(isNaN(result.succeeded)).toBe(false);
     expect(isNaN(result.failed)).toBe(false);
+  });
+});
+describe('generateProjectWatchNotifications', () => {
+  it('should generate notifications for list of responses', async () => {
+    const project = produceProject({ Id: 1 });
+    const responses = [
+      produceAgencyResponse({ Response: AgencyResponseType.Subscribe }),
+      produceAgencyResponse({ Response: AgencyResponseType.Unsubscribe }),
+    ];
+    const result = await notificationServices.generateProjectWatchNotifications(project, responses);
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBe(1);
   });
 });

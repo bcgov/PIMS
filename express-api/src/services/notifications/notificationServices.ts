@@ -584,9 +584,10 @@ const generateProjectWatchNotifications = async (
           await cancelProjectNotifications(response.ProjectId, response.AgencyId);
           break;
         case AgencyResponseType.Subscribe: {
-          const agency = await queryRunner.manager.findOne(Agency, {
+          const agency = await query.manager.findOne(Agency, {
             where: { Id: response.AgencyId },
           });
+
           if (agency?.Email) {
             const daysSinceCreated = getDaysBetween(project.CreatedOn, new Date());
             const statusNotifs = await query.manager.find(ProjectStatusNotification, {

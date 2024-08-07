@@ -243,9 +243,11 @@ jest
   .spyOn(AppDataSource.getRepository(ProjectJoin), 'createQueryBuilder')
   .mockImplementation(() => projectJoinQueryBuilder);
 
+const _generateProjectWatchNotifications = jest.fn(async () => [produceNotificationQueue()]);
 jest.mock('@/services/notifications/notificationServices', () => ({
   generateProjectNotifications: jest.fn(async () => [produceNotificationQueue()]),
   sendNotification: jest.fn(async () => produceNotificationQueue()),
+  generateProjectWatchNotifications: async () => _generateProjectWatchNotifications(),
   NotificationStatus: { Accepted: 0, Pending: 1, Cancelled: 2, Failed: 3, Completed: 4 },
 }));
 
@@ -611,6 +613,13 @@ describe('UNIT - Project Services', () => {
             produceSSO(),
           ),
       ).rejects.toThrow(new ErrorWithCode('Error updating project: bad save', 500));
+    });
+
+    it('should send notifications when agency responses changed', async () => {
+      _projectFindOne.mockImplementationOnce(async () => originalProject);
+      const projUpd = { ...projectUpdate, AgencyResponses: [produceAgencyResponse()] };
+      await projectServices.updateProject(projUpd, { parcels: [], buildings: [] }, produceSSO());
+      expect(_generateProjectWatchNotifications).toHaveBeenCalled();
     });
 
     describe('getProjects', () => {
