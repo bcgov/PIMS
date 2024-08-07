@@ -51,7 +51,19 @@ jobs:
           git pull origin main
           git add "$FILE_PATH"
           git commit -m "Update frontend image tag to $NEW_TAG"
-          git push 
+          
+          # Retry push with rebase to handle conflicts from simultaneous frontend/backend updates
+          RETRY_COUNT=2
+          RETRY_DELAY=15
+          for ((i=0; i<=$RETRY_COUNT; i++)); do
+            git push && break || {
+              echo "Push failed. Retrying in $RETRY_DELAY seconds..."
+              sleep $RETRY_DELAY
+              git pull --rebase origin main
+              git add "$FILE_PATH"
+              git commit --amend --no-edit
+            }
+          done
 
   # Job to update the wiki with deployed image tag information
   Update_Wiki_Tags:
