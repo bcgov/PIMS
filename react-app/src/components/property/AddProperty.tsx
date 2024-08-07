@@ -15,7 +15,6 @@ import {
   PropertyType,
 } from './PropertyForms';
 import { NavigateBackButton } from '../display/DetailViewNavigation';
-import { useNavigate } from 'react-router-dom';
 import { ParcelAdd } from '@/hooks/api/useParcelsApi';
 import {
   BuildingAdd,
@@ -28,12 +27,13 @@ import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LoadingButton } from '@mui/lab';
 import { LookupContext } from '@/contexts/lookupContext';
 import { Classification } from '@/hooks/api/useLookupApi';
+import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
 
 const AddProperty = () => {
   //const years = [new Date().getFullYear(), new Date().getFullYear() - 1];
   const [propertyType, setPropertyType] = useState<PropertyType>('Parcel');
   const [showErrorText, setShowErrorTest] = useState(false);
-  const navigate = useNavigate();
+  const { goToFromStateOrSetRoute } = useHistoryAwareNavigate();
   const api = usePimsApi();
   const userContext = useContext(AuthContext);
   const { data: lookupData } = useContext(LookupContext);
@@ -84,7 +84,7 @@ const AddProperty = () => {
       <Box>
         <NavigateBackButton
           navigateBackTitle={'Back to Property Overview'}
-          onBackClick={() => navigate('/properties')}
+          onBackClick={() => goToFromStateOrSetRoute('/properties')}
         />
       </Box>
       <FormProvider {...formMethods}>
@@ -174,7 +174,7 @@ const AddProperty = () => {
               addParcel.Evaluations = addParcel.Evaluations.filter((a) => a.Value);
               addParcel.Fiscals = addParcel.Fiscals.filter((a) => a.Value);
               submitParcel(addParcel).then((ret) => {
-                if (ret && ret.ok) navigate('/properties');
+                if (ret && ret.ok) goToFromStateOrSetRoute('/properties');
               });
             } else {
               const formValues = formMethods.getValues();
@@ -203,7 +203,7 @@ const AddProperty = () => {
               addBuilding.Evaluations = addBuilding.Evaluations.filter((a) => a.Value);
               addBuilding.Fiscals = addBuilding.Fiscals.filter((a) => a.Value);
               submitBuilding(addBuilding).then((ret) => {
-                if (ret && ret.ok) navigate('/properties');
+                if (ret && ret.ok) goToFromStateOrSetRoute('/properties');
               });
             }
           } else {

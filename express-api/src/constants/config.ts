@@ -25,8 +25,8 @@ const config = {
     notificationTemplate: 15,
     notificationTemplateRPD: 17,
   },
-  errorReport: {
-    toEmail: process.env.ERROR_REPORT_TO,
+  contact: {
+    toEmail: process.env.CONTACT_EMAIL,
   },
   notificationTemplate: {
     title: 'PIMS',
