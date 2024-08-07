@@ -45,3 +45,6 @@ yarn-error.log*
 
 jest/latestTestRun.json
 package-lock.json
+
+# .csv and txt files created by script
+tools/propertyCheck/data/*
