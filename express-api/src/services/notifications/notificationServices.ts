@@ -581,6 +581,16 @@ const cancelProjectNotifications = async (
   }
 };
 
+/**
+ * Generates project notifications based off agency responses.
+ * Agencies that opt out of notifications will have any pending notifications cancelled here.
+ * Agencies that were not previously registered for notifications will have any delayed notifications,
+ * such as 30,60,90 ERP reminders, queued as if they had been registered for these from the start.
+ * @param project Up to date project entity.
+ * @param responses Agency responses to process based off response type.
+ * @param queryRunner Optional queryRunner, include if inside transaction.
+ * @returns {NotificationQueue[]} A list of notifications queued by this function call
+ */
 const generateProjectWatchNotifications = async (
   project: Project,
   responses: ProjectAgencyResponse[],
@@ -593,18 +603,23 @@ const generateProjectWatchNotifications = async (
       switch (response.Response) {
         case AgencyResponseType.Unsubscribe:
         case AgencyResponseType.Watch:
+          //The simple case. Calling this will cancel all pending notifications for this project/agency pair.
           await cancelProjectNotifications(response.ProjectId, response.AgencyId);
           break;
         case AgencyResponseType.Subscribe: {
           const agency = await query.manager.findOne(Agency, {
             where: { Id: response.AgencyId },
           });
-
+          //No use in queueing an email for an agency with no email address.
           if (agency?.Email) {
+            /*We get the most recent entry in the status history since the date value of this row would have been populated 
+            at the time this project was placed into its current status value. Note that this value is not necessarily the same as
+            Project.UpdatedOn, as projects can be updated without the status being changed. */
             const mostRecentStatusChange = await query.manager.findOne(ProjectStatusHistory, {
               where: { ProjectId: project.Id },
               order: { CreatedOn: 'DESC' },
             });
+
             const mostRecentStatusChangeDate =
               mostRecentStatusChange?.CreatedOn ?? project.CreatedOn;
             const daysSinceThisStatus = getDaysBetween(mostRecentStatusChangeDate, new Date());
@@ -613,7 +628,7 @@ const generateProjectWatchNotifications = async (
                 Template: true,
               },
               where: {
-                ToStatusId: project.StatusId, //Confirm this is correct.
+                ToStatusId: project.StatusId, //We will only send notifications relevant to the current status.
                 Template: {
                   Audience: NotificationAudience.WatchingAgencies,
                 },
@@ -621,6 +636,7 @@ const generateProjectWatchNotifications = async (
               },
             });
             for (const statusNotif of statusNotifs) {
+              //If there is already a pending notification for this agency with this template, skip.
               const notifExists = await query.manager.exists(NotificationQueue, {
                 where: [
                   {
@@ -639,8 +655,11 @@ const generateProjectWatchNotifications = async (
               });
 
               if (!notifExists) {
-                const sendOn = new Date(project.UpdatedOn.getTime());
-                sendOn.setDate(project.UpdatedOn.getDate() + statusNotif.DelayDays);
+                //If there is no notification like this already pending, we send one.
+                const sendOn = new Date(mostRecentStatusChangeDate.getTime());
+                sendOn.setDate(mostRecentStatusChangeDate.getDate() + statusNotif.DelayDays);
+                //We set the delay by the most recent status change date plus the number of delay days. This should make these new emails
+                //send around the same time as the emails that previously sent when this project changed into its current status.
                 const inserted = await insertProjectNotificationQueue(
                   statusNotif.Template,
                   statusNotif,
