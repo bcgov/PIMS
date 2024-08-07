@@ -202,10 +202,10 @@ const ProjectDetail = (props: IProjectDetail) => {
       EstimatedMarketValue: data?.parsedBody.Market,
       AppraisedValue: data?.parsedBody.Appraised,
       EstimatedSalesCost: data?.parsedBody.Monetaries?.find(
-        (a) => a.MonetaryTypeId === salesCostType.Id,
+        (a) => a.MonetaryTypeId === salesCostType?.Id,
       )?.Value,
       EstimatedProgramRecoveryFees: data?.parsedBody.Monetaries?.find(
-        (a) => a.MonetaryTypeId === programCostType.Id,
+        (a) => a.MonetaryTypeId === programCostType?.Id,
       )?.Value,
     };
   }, [data, lookupData]);
