@@ -137,7 +137,9 @@ const Header: React.FC = () => {
                     >
                       <MenuItem
                         onClick={() => {
-                          navigate('/admin/agencies');
+                          navigate(
+                            '/admin/agencies?page=0&pageSize=100&columnSortName=Name&columnSortValue=asc',
+                          );
                           setAnchorEl(undefined);
                         }}
                       >
@@ -145,7 +147,9 @@ const Header: React.FC = () => {
                       </MenuItem>
                       <MenuItem
                         onClick={() => {
-                          navigate('/admin/adminAreas');
+                          navigate(
+                            '/admin/adminAreas?columnSortName=Name&columnSortValue=asc&page=0&pageSize=100',
+                          );
                           setAnchorEl(undefined);
                         }}
                       >
@@ -166,7 +170,7 @@ const Header: React.FC = () => {
                 )}
                 <RouterLink
                   style={{ color: theme.palette.black.main, textDecoration: 'none' }}
-                  to="/properties"
+                  to="/properties?columnSortName=UpdatedOn&columnSortValue=desc&page=0&pageSize=100"
                 >
                   <Typography fontWeight={500} variant="h5">
                     Active Inventory
@@ -174,7 +178,7 @@ const Header: React.FC = () => {
                 </RouterLink>
                 <RouterLink
                   style={{ color: theme.palette.black.main, textDecoration: 'none' }}
-                  to="/projects"
+                  to="/projects?columnSortName=UpdatedOn&columnSortValue=desc&page=0&pageSize=100"
                 >
                   <Typography fontWeight={500} variant="h5">
                     Disposal Projects
@@ -182,7 +186,7 @@ const Header: React.FC = () => {
                 </RouterLink>
                 <RouterLink
                   style={{ color: theme.palette.black.main, textDecoration: 'none' }}
-                  to="/users"
+                  to="/users?page=0&pageSize=100&columnSortName=Status&columnSortValue=desc"
                 >
                   <Typography fontWeight={500} variant="h5">
                     Users

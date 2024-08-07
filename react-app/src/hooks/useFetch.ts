@@ -51,7 +51,7 @@ const useFetch = (baseUrl?: string) => {
       // If token has expired
       if (response.status === 401) {
         const currentLocation = window.location.pathname;
-        keycloak.login({ postLoginRedirectURL: currentLocation });
+        keycloak.login({ postLoginRedirectURL: currentLocation + window.location.search });
       }
 
       const text = await response.text();

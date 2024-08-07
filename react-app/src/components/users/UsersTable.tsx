@@ -256,11 +256,11 @@ const UsersTable = (props: IUsersTable) => {
           columns={columns}
           rows={users}
           loading={isLoading}
-          initialState={{
-            sorting: {
-              sortModel: [{ field: 'Status', sort: 'desc' }],
-            },
-          }}
+          // initialState={{
+          //   sorting: {
+          //     sortModel: [{ field: 'Status', sort: 'desc' }],
+          //   },
+          // }}
           onPresetFilterChange={selectPresetFilter}
           presetFilterSelectOptions={[
             <CustomMenuItem key={'All Users'} value={'All Users'}>

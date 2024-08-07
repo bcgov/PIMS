@@ -4,7 +4,7 @@ import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../ta
 import React, { MutableRefObject, useContext, useState } from 'react';
 import { dateFormatter, projectStatusChipFormatter } from '@/utilities/formatters';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Project } from '@/hooks/api/useProjectsApi';
 import { NoteTypes } from '@/constants/noteTypes';
 import { SnackBarContext } from '@/contexts/snackbarContext';
@@ -18,6 +18,7 @@ import { LookupContext } from '@/contexts/lookupContext';
 const ProjectsTable = () => {
   const [totalCount, setTotalCount] = useState(0);
   const navigate = useNavigate();
+  const location = useLocation();
   const api = usePimsApi();
   const snackbar = useContext(SnackBarContext);
   const lookup = useContext(LookupContext);
@@ -89,7 +90,8 @@ const ProjectsTable = () => {
         break;
       case 'Approved for Exemption':
       case 'Approved for ERP':
-      case 'In ERP':
+      case 'Approved for SPL':
+      case 'Submitted':
         ref.current.setFilterModel({ items: [{ value, operator: 'contains', field: 'Status' }] });
     }
   };
@@ -204,7 +206,7 @@ const ProjectsTable = () => {
         tableOperationMode="server"
         dataSource={handleDataChange}
         excelDataSource={api.projects.getProjectsForExcelExport}
-        onAddButtonClick={() => navigate('/projects/add')}
+        onAddButtonClick={() => navigate('/projects/add', { state: { from: location } })}
         onPresetFilterChange={selectPresetFilter}
         defaultFilter={'All Projects'}
         presetFilterSelectOptions={[
@@ -212,30 +214,35 @@ const ProjectsTable = () => {
             All Projects
           </CustomMenuItem>,
           <CustomListSubheader key={'Status'}>Status</CustomListSubheader>,
-          <CustomMenuItem key={'In ERP'} value={'In ERP'}>
-            In ERP
-          </CustomMenuItem>,
           <CustomMenuItem key={'Approved for ERP'} value={'Approved for ERP'}>
             Approved for ERP
           </CustomMenuItem>,
           <CustomMenuItem key={'Approved for Exemption'} value={'Approved for Exemption'}>
             Approved for Exemption
           </CustomMenuItem>,
+          <CustomMenuItem key={'Submitted'} value={'Submitted'}>
+            Submitted
+          </CustomMenuItem>,
+          <CustomMenuItem key={'Approved for SPL'} value={'Approved for SPL'}>
+            Approved for SPL
+          </CustomMenuItem>,
         ]}
         rowCountProp={totalCount}
         rowCount={totalCount}
         getRowId={(row) => row.Id}
-        onRowClick={(params) => navigate(`/projects/${params.row.Id}`)}
+        onRowClick={(params) =>
+          navigate(`/projects/${params.row.Id}`, { state: { from: location } })
+        }
         tableHeader={'Disposal Projects Overview'}
         excelTitle={'Projects'}
         customExcelMap={excelDataMap}
         addTooltip={'Create New Disposal Project'}
         name={'projects'}
         columns={columns}
-        initialState={{
-          pagination: { paginationModel: { page: 0, pageSize: 100 } },
-          sorting: { sortModel: [{ field: 'UpdatedOn', sort: 'desc' }] },
-        }}
+        // initialState={{
+        //   pagination: { paginationModel: { page: 0, pageSize: 100 } },
+        //   sorting: { sortModel: [{ field: 'UpdatedOn', sort: 'desc' }] },
+        // }}
       />
     </Box>
   );
