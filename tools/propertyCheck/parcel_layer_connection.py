@@ -9,7 +9,6 @@ import http.client
 import json
 from shapely.geometry import Polygon, Point
 import helpers
-from time import sleep
 
 # how much to buff the parcel boundary up 0.00025 is roughly 100 meters
 COORD_BUFFER = 0.00025

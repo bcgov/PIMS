@@ -12,6 +12,7 @@ through the following flags.
 """
 import os
 import sys
+import importlib.util
 import parcel_layer_connection
 import process_data
 import helpers
@@ -73,6 +74,20 @@ def get_file_name(arg_li, flag):
     file_name = arg_li[index_of_file]
     return file_name
 
+def check_packages(package_li):
+    """
+    Used to check if packages needed are installed correctly.
+    If package isnt installed exit with method.
+    """
+    need_to_install_li = []
+    for package_name in package_li:
+        spec = importlib.util.find_spec(package_name)
+        if spec is None:
+            need_to_install_li.append(package_name)
+
+    if len(need_to_install_li) > 0:
+        exit_with_message("Must have the following packages to run: " + str(need_to_install_li))
+
 def process_data_flags(arg_li):
     """ Process data based on flags that script was run with """
 
@@ -82,6 +97,9 @@ def process_data_flags(arg_li):
         file_name = get_file_name(arg_li, '-run')
         rows = helpers.read_csv(file_name)
         base_file_name = file_name[:-4]
+
+        needed_packages = ["shapely"]
+        check_packages(needed_packages)
 
         needed_headers = ["Address1", "City", "Point", "PID"]
         check_headers(rows[0], needed_headers)
@@ -113,6 +131,9 @@ def process_data_flags(arg_li):
         rows = helpers.read_csv(file_name)
         tot_rows = len(rows)
 
+        needed_packages = ["shapely"]
+        check_packages(needed_packages)
+
         needed_headers = ["Point", "PID"]
         check_headers(rows[0], needed_headers)
 
@@ -128,6 +149,9 @@ def process_data_flags(arg_li):
         base_file_name = file_name[:-4]
         rows = helpers.read_csv(file_name)
         tot_rows = len(rows)
+
+        needed_packages = ["shapely"]
+        check_packages(needed_packages)
 
         needed_headers = ["Point", "PID"]
         check_headers(rows[0], needed_headers)

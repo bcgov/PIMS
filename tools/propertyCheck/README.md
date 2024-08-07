@@ -16,7 +16,14 @@ This script was created to help resolve some bad data stored within PIMS. [Firew
      If you get a result similar to "Python x.x.x" you may procede.
 
      If you get a result similar to "python: command not found" please navigate to the [Python download site](https://www.python.org/downloads/) to download.
-2. Place the file you would like to process in the 'data' folder.
+
+2. shapely must be installed to run with flags: run, p, and l. To install please run
+
+    `pip install shapely` OR `pip3 install shapely`
+
+    If you are unsure if the package is correctly installed try running the script. If shapely is not installed you will get a message similar to "Must have the following packages to run: ['shapely']." 
+
+Place the file you would like to process in the 'data' folder.
 3. Run the script with the following structure. Use python3 if that is what worked in step 1: 
 
     `python(3) <path_to_property_check.py>property_check.py.py <flag1> <file1>`
