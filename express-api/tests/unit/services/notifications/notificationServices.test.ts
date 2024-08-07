@@ -13,6 +13,7 @@ import {
   produceNotificationTemplate,
   produceProject,
   produceProjectNotification,
+  produceProjectStatusHistory,
   produceSSO,
   produceUser,
 } from 'tests/testUtils/factories';
@@ -22,6 +23,7 @@ import { NotificationTemplate } from '@/typeorm/Entities/NotificationTemplate';
 import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
 import { User } from '@/typeorm/Entities/User';
 import { Agency } from '@/typeorm/Entities/Agency';
+import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 
 const _notifQueueSave = jest
   .fn()
@@ -109,6 +111,8 @@ jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
         return _notifQueueFindOne(options);
       } else if (entityClass === Agency) {
         return _agencyFindOne();
+      } else if (entityClass === ProjectStatusHistory) {
+        return produceProjectStatusHistory({});
       } else {
         return {};
       }
