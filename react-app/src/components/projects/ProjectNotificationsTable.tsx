@@ -73,60 +73,68 @@ const ProjectNotificationsTable = (props: ProjectNotificationsTableProps) => {
     (row) => row.TemplateId === NotificationType.NINTY_DAY_ERP_NOTIFICATION_OWNING_AGENCY,
   );
 
+  const allErnNotificatonsFound = [initalERN, thirtyDayERN, sixtyDayERN, nintyDayERN].every(
+    (notification) => notification != undefined,
+  );
+
   return !props.rows ? (
     <Box display={'flex'} justifyContent={'center'}>
       <Typography>No notifications were sent.</Typography>
     </Box>
   ) : (
     <>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Typography variant="h6">Enhanced Referral Notification Dates</Typography>
-        <Box
-          gap={1}
-          display={'inline-flex'}
-          mb={3}
-          mt={2}
-          sx={{
-            '& .MuiInputBase-root.Mui-disabled': {
-              '& > fieldset': {
-                borderColor: 'rgba(0,0,0)',
+      {allErnNotificatonsFound ? (
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Typography variant="h6">Enhanced Referral Notification Dates</Typography>
+          <Box
+            gap={1}
+            display={'inline-flex'}
+            mb={3}
+            mt={2}
+            sx={{
+              '& .MuiInputBase-root.Mui-disabled': {
+                '& > fieldset': {
+                  borderColor: 'rgba(0,0,0)',
+                },
               },
-            },
-            '& .MuiFormLabel-root.MuiInputLabel-root': {
-              color: 'rgba(0, 0, 0)',
-            },
-            '& .MuiInputBase-input.MuiOutlinedInput-input.Mui-disabled': {
-              color: 'rgba(0,0,0)',
-              WebkitTextFillColor: 'rgba(0,0,0)',
-            },
-          }}
-        >
-          <DateField
-            disabled={true}
-            value={initalERN ? dayjs(initalERN.SendOn) : undefined}
-            label={'Initial Send Date'}
-            format={'LL'}
-          />
-          <DateField
-            disabled={true}
-            value={thirtyDayERN ? dayjs(thirtyDayERN.SendOn) : undefined}
-            label={'30-day Send Date'}
-            format={'LL'}
-          />
-          <DateField
-            disabled={true}
-            value={sixtyDayERN ? dayjs(sixtyDayERN.SendOn) : undefined}
-            label={'60-day Send Date'}
-            format={'LL'}
-          />
-          <DateField
-            disabled={true}
-            value={nintyDayERN ? dayjs(nintyDayERN.SendOn) : undefined}
-            label={'90-day Send Date'}
-            format={'LL'}
-          />
-        </Box>
-      </LocalizationProvider>
+              '& .MuiFormLabel-root.MuiInputLabel-root': {
+                color: 'rgba(0, 0, 0)',
+              },
+              '& .MuiInputBase-input.MuiOutlinedInput-input.Mui-disabled': {
+                color: 'rgba(0,0,0)',
+                WebkitTextFillColor: 'rgba(0,0,0)',
+              },
+            }}
+          >
+            <DateField
+              disabled={true}
+              value={initalERN ? dayjs(initalERN.SendOn) : undefined}
+              label={'Initial Send Date'}
+              format={'LL'}
+            />
+            <DateField
+              disabled={true}
+              value={thirtyDayERN ? dayjs(thirtyDayERN.SendOn) : undefined}
+              label={'30-day Send Date'}
+              format={'LL'}
+            />
+            <DateField
+              disabled={true}
+              value={sixtyDayERN ? dayjs(sixtyDayERN.SendOn) : undefined}
+              label={'60-day Send Date'}
+              format={'LL'}
+            />
+            <DateField
+              disabled={true}
+              value={nintyDayERN ? dayjs(nintyDayERN.SendOn) : undefined}
+              label={'90-day Send Date'}
+              format={'LL'}
+            />
+          </Box>
+        </LocalizationProvider>
+      ) : (
+        <></>
+      )}
 
       <Typography variant="h6">Total Notifications: {props.rows.length}</Typography>
       <DataGrid
