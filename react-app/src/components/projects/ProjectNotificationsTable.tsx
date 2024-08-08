@@ -81,7 +81,26 @@ const ProjectNotificationsTable = (props: ProjectNotificationsTableProps) => {
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Typography variant="h6">Enhanced Referral Notification Dates</Typography>
-        <Box gap={1} display={'inline-flex'} mb={3} mt={2}>
+        <Box
+          gap={1}
+          display={'inline-flex'}
+          mb={3}
+          mt={2}
+          sx={{
+            '& .MuiInputBase-root.Mui-disabled': {
+              '& > fieldset': {
+                borderColor: 'rgba(0,0,0)',
+              },
+            },
+            '& .MuiFormLabel-root.MuiInputLabel-root': {
+              color: 'rgba(0, 0, 0)',
+            },
+            '& .MuiInputBase-input.MuiOutlinedInput-input.Mui-disabled': {
+              color: 'rgba(0,0,0)',
+              WebkitTextFillColor: 'rgba(0,0,0)',
+            },
+          }}
+        >
           <DateField
             disabled={true}
             value={initalERN ? dayjs(initalERN.SendOn) : undefined}
@@ -110,7 +129,6 @@ const ProjectNotificationsTable = (props: ProjectNotificationsTableProps) => {
       </LocalizationProvider>
 
       <Typography variant="h6">Total Notifications: {props.rows.length}</Typography>
-      <Box marginBottom={2} />
       <DataGrid
         sx={{
           borderStyle: 'none',
