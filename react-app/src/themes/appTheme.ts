@@ -9,6 +9,8 @@ declare module '@mui/material/styles/createPalette' {
     black: Palette['primary'];
     white: Palette['primary'];
     gray: Palette['primary'];
+    logoblue: Palette['primary'];
+    logogray: Palette['primary'];
   }
   interface PaletteOptions {
     gold: PaletteOptions['primary'];
@@ -16,6 +18,8 @@ declare module '@mui/material/styles/createPalette' {
     black: PaletteOptions['primary'];
     white: PaletteOptions['primary'];
     gray: PaletteOptions['primary'];
+    logoblue: PaletteOptions['primary'];
+    logogray: PaletteOptions['primary'];
   }
 }
 
@@ -55,6 +59,14 @@ const appTheme = createTheme({
     },
     gray: {
       main: '#D2D8D8',
+    },
+    logoblue: {
+      light: '#30D2E8',
+      main: '#23868E',
+    },
+    logogray: {
+      light: '#E6E6EA',
+      main: '#898888',
     },
     primary: {
       main: '#0E3468',

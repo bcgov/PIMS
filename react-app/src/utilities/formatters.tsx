@@ -48,14 +48,17 @@ export const statusChipFormatter = (value: ChipStatus) => {
 export const projectStatusChipFormatter = (value: string) => {
   const theme = useTheme();
   const colorMap = {
-    ['Draft']: 'info',
-    ['In ERP']: 'info',
     ['Approved for ERP']: 'success',
     ['Approved for Exemption']: 'success',
     ['Denied']: 'warning',
     ['Approved for SPL']: 'success',
     ['Disposed']: 'success',
     ['Cancelled']: 'warning',
+    ['Submitted']: 'logogray',
+    ['Submitted Exemption']: 'logogray',
+    ['Not in SPL']: 'logoblue',
+    ['On Hold']: 'info',
+    ['Transferred within the GRE']: 'logoblue',
   };
   return (
     <>
