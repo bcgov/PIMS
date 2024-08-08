@@ -16,7 +16,6 @@ import { ParcelFiscal } from '@/typeorm/Entities/ParcelFiscal';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
 import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
-import { ProjectNumber } from '@/typeorm/Entities/ProjectNumber';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectRisk } from '@/typeorm/Entities/ProjectRisk';
 import { ProjectReport } from '@/typeorm/Entities/ProjectReport';
@@ -79,7 +78,6 @@ export default [
   Project,
   ProjectAgencyResponse,
   ProjectNote,
-  ProjectNumber,
   ProjectProperty,
   ProjectRisk,
   ProjectReport,
