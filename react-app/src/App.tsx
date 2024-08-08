@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from '@/pages/Home';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import '@/App.css';
 import { ThemeProvider } from '@emotion/react';
 import appTheme from './themes/appTheme';
@@ -266,6 +266,7 @@ const Router = () => {
 };
 
 const App = () => {
+  /** START SNOWPLOW SETUP */
   newTracker('rt', 'spt.apps.gov.bc.ca', {
     appId: 'Snowplow_standalone_PIMS',
     cookieLifetime: 86400 * 548, // TODO: Why this?
@@ -283,7 +284,12 @@ const App = () => {
     heartbeatDelay: 30,
   });
 
-  trackPageView();
+  useEffect(() => {
+    // Idea is to track the page view each time the url changes
+    trackPageView();
+  }, [location.pathname]);
+
+  /** END SNOWPLOW SETUP */
 
   return (
     <ThemeProvider theme={appTheme}>
