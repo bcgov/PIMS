@@ -25,6 +25,7 @@
     "@mui/material": "5.16.0",
     "@mui/x-data-grid": "7.11.0",
     "@mui/x-date-pickers": "7.11.0",
+    "@snowplow/browser-tracker": "3.24.2",
     "@turf/turf": "7.0.0",
     "dayjs": "1.11.10",
     "node-xlsx": "0.24.0",

@@ -32,6 +32,7 @@ import ParcelMap from '@/components/map/ParcelMap';
 import LookupContextProvider from '@/contexts/lookupContext';
 import BulkUpload from './pages/BulkUpload';
 import useHistoryAwareNavigate from './hooks/useHistoryAwareNavigate';
+import { newTracker, enableActivityTracking, trackPageView } from '@snowplow/browser-tracker';
 
 /**
  * Renders the main router component for the application.
@@ -265,6 +266,25 @@ const Router = () => {
 };
 
 const App = () => {
+  newTracker('rt', 'spt.apps.gov.bc.ca', {
+    appId: 'Snowplow_standalone_PIMS',
+    cookieLifetime: 86400 * 548, // TODO: Why this?
+    platform: 'web',
+    cookieSecure: true,
+    eventMethod: 'post',
+    contexts: {
+      webPage: true,
+      browser: true,
+    },
+  });
+
+  enableActivityTracking({
+    minimumVisitLength: 30,
+    heartbeatDelay: 30,
+  });
+
+  trackPageView();
+
   return (
     <ThemeProvider theme={appTheme}>
       <ConfigContextProvider>
