@@ -550,6 +550,25 @@ const cancelAllProjectNotifications = async (projectId: number) => {
   };
 };
 
+const cancelNotificationById = async (id: number) => {
+  const notification = await AppDataSource.getRepository(NotificationQueue).findOne({
+    where: { Id: id },
+  });
+  const chesResult = await chesServices.cancelEmailByIdAsync(notification.ChesMessageId);
+  if (chesResult.status === 'cancelled') {
+    return AppDataSource.getRepository(NotificationQueue).save({
+      Id: notification.Id,
+      Status: NotificationStatus.Cancelled,
+    });
+  } else {
+    return notification;
+  }
+};
+
+const getNotificationById = async (id: number) => {
+  return AppDataSource.getRepository(NotificationQueue).findOne({ where: { Id: id } });
+};
+
 const notificationServices = {
   generateProjectNotifications,
   generateAccessRequestNotification,
@@ -558,6 +577,8 @@ const notificationServices = {
   getProjectNotificationsInQueue,
   convertChesStatusToNotificationStatus,
   cancelAllProjectNotifications,
+  getNotificationById,
+  cancelNotificationById,
 };
 
 export default notificationServices;

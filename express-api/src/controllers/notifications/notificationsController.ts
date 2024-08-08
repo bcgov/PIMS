@@ -1,4 +1,6 @@
-import notificationServices from '@/services/notifications/notificationServices';
+import notificationServices, {
+  NotificationStatus,
+} from '@/services/notifications/notificationServices';
 import userServices from '@/services/users/usersServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Request, Response } from 'express';
@@ -47,4 +49,45 @@ export const getNotificationsByProjectId = async (req: Request, res: Response) =
     // not sure if the error codes can be handled better here?
     return res.status(500).send({ message: 'Error fetching notifications' });
   }
+};
+
+export const resendNotificationById = async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const notification = await notificationServices.getNotificationById(id);
+  if (!notification) {
+    return res.status(404).send('Notification not found.');
+  }
+  const kcUser = req.user;
+  if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
+    // get array of user's agencies
+    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+    const project = await projectServices.getProjectById(notification.ProjectId);
+    if (!usersAgencies.includes(project.AgencyId)) {
+      return res.status(403).send({ message: 'User is not authorized to access this endpoint.' });
+    }
+  }
+  const resultantNotification = await notificationServices.sendNotification(notification, kcUser);
+  return res.status(200).send(resultantNotification);
+};
+
+export const cancelNotificationById = async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const notification = await notificationServices.getNotificationById(id);
+  if (!notification) {
+    return res.status(404).send('Notification not found.');
+  }
+  const kcUser = req.user;
+  if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
+    // get array of user's agencies
+    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+    const project = await projectServices.getProjectById(notification.ProjectId);
+    if (!usersAgencies.includes(project.AgencyId)) {
+      return res.status(403).send({ message: 'User is not authorized to access this endpoint.' });
+    }
+  }
+  const resultantNotification = await notificationServices.cancelNotificationById(notification.Id);
+  if (resultantNotification.Status !== NotificationStatus.Cancelled) {
+    return res.status(400).send(resultantNotification);
+  }
+  return res.status(200).send(resultantNotification);
 };
