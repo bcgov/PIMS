@@ -33,6 +33,7 @@ import LookupContextProvider from '@/contexts/lookupContext';
 import BulkUpload from './pages/BulkUpload';
 import useHistoryAwareNavigate from './hooks/useHistoryAwareNavigate';
 import { newTracker, enableActivityTracking, trackPageView } from '@snowplow/browser-tracker';
+import { enableErrorTracking, ErrorTrackingPlugin } from '@snowplow/browser-plugin-error-tracking';
 
 /**
  * Renders the main router component for the application.
@@ -269,6 +270,7 @@ const App = () => {
   /** START SNOWPLOW SETUP */
   newTracker('rt', 'spt.apps.gov.bc.ca', {
     appId: 'Snowplow_standalone_PIMS',
+    plugins: [ErrorTrackingPlugin()],
     cookieLifetime: 86400 * 548, // TODO: Why this?
     platform: 'web',
     cookieSecure: true,
@@ -283,6 +285,7 @@ const App = () => {
     minimumVisitLength: 30,
     heartbeatDelay: 30,
   });
+  enableErrorTracking();
 
   useEffect(() => {
     // Idea is to track the page view each time the url changes

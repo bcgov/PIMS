@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   ReactNode,
   SyntheticEvent,
@@ -13,6 +13,8 @@ import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { SnackbarContent, useTheme } from '@mui/material';
+import { trackSelfDescribingEvent } from '@snowplow/browser-tracker';
+import { trackError } from '@snowplow/browser-plugin-error-tracking';
 
 /**
  * @interface
@@ -85,6 +87,26 @@ const SnackBarContextProvider = (props: ISnackBarContext) => {
     }),
     [messageState],
   );
+
+  useEffect(() => {
+    // TODO: Decide which error version to use
+    // If it was a warning/error.
+    if (messageState.style === snackbarStyles.warning) {
+      // This was used in old PIMS
+      trackSelfDescribingEvent({
+        event: {
+          schema: 'iglu:ca.bc.gov.pims/error/jsonschema/1-0-0',
+          data: {
+            error_message: messageState.text,
+          },
+        },
+      });
+      // OR this is the native version
+      trackError({
+        message: messageState.text,
+      })
+    }
+  }, [messageState]);
 
   const { children } = props;
 
