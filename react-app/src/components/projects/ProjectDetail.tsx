@@ -512,6 +512,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           postSubmit={() => {
             setOpenAgencyInterestDialog(false);
             refreshData();
+            refreshNotifications();
           }}
           onCancel={() => {
             setOpenAgencyInterestDialog(false);

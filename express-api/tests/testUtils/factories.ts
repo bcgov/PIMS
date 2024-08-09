@@ -802,7 +802,7 @@ export const produceProjectProperty = (props?: Partial<ProjectProperty>): Projec
   return projectProperty;
 };
 
-export const productProjectStatusHistory = (props?: Partial<ProjectStatusHistory>) => {
+export const produceProjectStatusHistory = (props?: Partial<ProjectStatusHistory>) => {
   const history: ProjectStatusHistory = {
     Id: faker.number.int(),
     CreatedById: randomUUID(),
