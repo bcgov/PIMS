@@ -362,7 +362,6 @@ describe('generateProjectWatchNotifications', () => {
 });
 describe('cancelNotificationById', () => {
   it('should cancel a notificaion', async () => {
-    const result = await notificationServices.cancelNotificationById(1);
     _cancelEmailByIdAsync.mockImplementationOnce(() => ({
       status: 'cancelled',
       tag: 'sampleTag',
@@ -371,22 +370,23 @@ describe('cancelNotificationById', () => {
       createdTS: Date.now(),
       msgId: randomUUID(),
     }));
+    const result = await notificationServices.cancelNotificationById(1);
     expect(result.Status).toBe(NotificationStatus.Cancelled);
   });
   it('should return unmodified notification in the case of a non cancelled notification', async () => {
-    const result = await notificationServices.cancelNotificationById(1);
     _cancelEmailByIdAsync.mockImplementationOnce(() => ({
-      status: 'cancelled',
+      status: 'completed',
       tag: 'sampleTag',
       txId: randomUUID(),
       updatedTS: Date.now(),
       createdTS: Date.now(),
       msgId: randomUUID(),
     }));
-    const notif = produceNotificationQueue();
-    _notifQueueFind.mockImplementationOnce(() => notif);
-    expect(result.ChesMessageId).toBe(result.ChesMessageId);
-    expect(result.Status).toBe(result.Status);
+    const notif = produceNotificationQueue({ ChesMessageId: randomUUID() });
+    _notifQueueFindOne.mockImplementationOnce(() => notif);
+    const result = await notificationServices.cancelNotificationById(1);
+    expect(result.ChesMessageId).toBe(notif.ChesMessageId);
+    expect(result.Status).toBe(notif.Status);
   });
 });
 describe('getNotificationById', () => {
