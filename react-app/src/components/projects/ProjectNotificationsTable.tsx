@@ -12,8 +12,8 @@ import React, { useState } from 'react';
 interface ProjectNotificationsTableProps {
   rows: NotificationQueue[];
   noteText?: string;
-  onResendClick: (id: number) => void;
-  onCancelClick: (id: number) => void;
+  onResendClick?: (id: number) => void;
+  onCancelClick?: (id: number) => void;
 }
 
 const ProjectNotificationsTable = (props: ProjectNotificationsTableProps) => {

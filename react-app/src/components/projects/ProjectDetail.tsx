@@ -526,10 +526,12 @@ const ProjectDetail = (props: IProjectDetail) => {
           ungroupedAgencies={ungroupedAgencies as Agency[]}
           initialValues={notifications?.items ?? []}
           open={openNotificationDialog}
-          postSubmit={() => {
-            setOpenNotificationDialog(false);
-            refreshData();
-          }}
+          onRowCancelClick={(id: number) =>
+            cancelNotification(id).then(() => refreshNotifications())
+          }
+          onRowResendClick={(id: number) =>
+            resendNotification(id).then(() => refreshNotifications())
+          }
           onCancel={() => {
             setOpenNotificationDialog(false);
           }}
