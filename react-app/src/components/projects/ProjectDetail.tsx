@@ -202,10 +202,10 @@ const ProjectDetail = (props: IProjectDetail) => {
       EstimatedMarketValue: data?.parsedBody.Market,
       AppraisedValue: data?.parsedBody.Appraised,
       EstimatedSalesCost: data?.parsedBody.Monetaries?.find(
-        (a) => a.MonetaryTypeId === salesCostType.Id,
+        (a) => a.MonetaryTypeId === salesCostType?.Id,
       )?.Value,
       EstimatedProgramRecoveryFees: data?.parsedBody.Monetaries?.find(
-        (a) => a.MonetaryTypeId === programCostType.Id,
+        (a) => a.MonetaryTypeId === programCostType?.Id,
       )?.Value,
     };
   }, [data, lookupData]);
@@ -450,13 +450,9 @@ const ProjectDetail = (props: IProjectDetail) => {
                 rows={
                   notifications?.items
                     ? notifications.items.map((resp) => ({
-                        agency: lookup.getLookupValueById('Agencies', resp.ToAgencyId)?.Name,
-                        id: resp.Id,
-                        projectNumber: data?.parsedBody.ProjectNumber,
-                        status: getStatusString(resp.Status),
-                        sendOn: resp.SendOn,
-                        to: resp.To,
-                        subject: resp.Subject,
+                        AgencyName: lookup.getLookupValueById('Agencies', resp.ToAgencyId)?.Name,
+                        ChesStatusName: getStatusString(resp.Status),
+                        ...resp,
                       }))
                     : []
                 }
@@ -516,6 +512,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           postSubmit={() => {
             setOpenAgencyInterestDialog(false);
             refreshData();
+            refreshNotifications();
           }}
           onCancel={() => {
             setOpenAgencyInterestDialog(false);
