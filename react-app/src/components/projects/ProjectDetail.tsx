@@ -93,6 +93,8 @@ const ProjectDetail = (props: IProjectDetail) => {
   const { submit: deleteProject, submitting: deletingProject } = useDataSubmitter(
     api.projects.deleteProjectById,
   );
+  const { submit: resendNotification } = useDataSubmitter(api.notifications.resendNotification);
+  const { submit: cancelNotification } = useDataSubmitter(api.notifications.cancelNotification);
 
   const { ungroupedAgencies, agencyOptions } = useGroupedAgenciesApi();
   interface IStatusHistoryStruct {
@@ -456,6 +458,8 @@ const ProjectDetail = (props: IProjectDetail) => {
                       }))
                     : []
                 }
+                onResendClick={(id) => resendNotification(id).then(() => refreshNotifications())}
+                onCancelClick={(id) => cancelNotification(id).then(() => refreshNotifications())}
               />
             )}
           </DataCard>

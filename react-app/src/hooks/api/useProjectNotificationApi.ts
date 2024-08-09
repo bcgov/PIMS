@@ -38,8 +38,16 @@ const useProjectNotificationsApi = (absoluteFetch: IFetch) => {
     });
     return parsedBody as NotificationResponse;
   };
+  const resendNotification = async (notificationId: number) => {
+    return absoluteFetch.put(`/notifications/queue/${notificationId}`);
+  };
+  const cancelNotification = async (notificationId: number) => {
+    return absoluteFetch.del(`/notifications/queue/${notificationId}`);
+  };
   return {
     getNotificationsByProjectId,
+    resendNotification,
+    cancelNotification,
   };
 };
 

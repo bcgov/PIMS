@@ -1,7 +1,8 @@
+import { NotificationStatus } from '@/constants/chesNotificationStatus';
 import { NotificationType } from '@/constants/notificationTypes';
 import { NotificationQueue } from '@/hooks/api/useProjectNotificationApi';
 import { dateFormatter } from '@/utilities/formatters';
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { DateField, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -11,6 +12,8 @@ import React, { useState } from 'react';
 interface ProjectNotificationsTableProps {
   rows: NotificationQueue[];
   noteText?: string;
+  onResendClick: (id: number) => void;
+  onCancelClick: (id: number) => void;
 }
 
 const ProjectNotificationsTable = (props: ProjectNotificationsTableProps) => {
@@ -54,6 +57,53 @@ const ProjectNotificationsTable = (props: ProjectNotificationsTableProps) => {
       width: 125,
       valueGetter: (value) => (value == null ? null : new Date(value)),
       renderCell: (params) => (params.value ? dateFormatter(params.value) : ''),
+    },
+    {
+      field: 'Resend',
+      headerName: '',
+      sortable: false,
+      filterable: false,
+      renderCell: (params) => (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+          }}
+        >
+          <Button onClick={() => props.onResendClick(params.row.Id)} color="primary">
+            Resend
+          </Button>
+        </div>
+      ),
+    },
+    {
+      field: 'Cancel',
+      headerName: '',
+      sortable: false,
+      filterable: false,
+      renderCell: (params) => (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+          }}
+        >
+          <Button
+            disabled={
+              params.row.Status !== NotificationStatus.Pending &&
+              params.row.Status !== NotificationStatus.Accepted
+            }
+            onClick={() => props.onCancelClick(params.row.Id)}
+            color="primary"
+          >
+            Cancel
+          </Button>
+        </div>
+      ),
     },
   ];
 
