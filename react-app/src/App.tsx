@@ -34,6 +34,7 @@ import BulkUpload from './pages/BulkUpload';
 import useHistoryAwareNavigate from './hooks/useHistoryAwareNavigate';
 import { newTracker, enableActivityTracking, trackPageView } from '@snowplow/browser-tracker';
 import { enableErrorTracking, ErrorTrackingPlugin } from '@snowplow/browser-plugin-error-tracking';
+import { refreshLinkClickTracking } from '@snowplow/browser-plugin-link-click-tracking';
 
 /**
  * Renders the main router component for the application.
@@ -286,6 +287,7 @@ const App = () => {
     heartbeatDelay: 30,
   });
   enableErrorTracking();
+  refreshLinkClickTracking();
 
   useEffect(() => {
     // Idea is to track the page view each time the url changes
