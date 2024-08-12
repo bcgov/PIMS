@@ -511,7 +511,8 @@ interface INotificationDialog {
   initialValues: NotificationQueue[];
   open: boolean;
   ungroupedAgencies: Partial<Agency>[];
-  postSubmit: () => void;
+  onRowResendClick: (id: number) => void;
+  onRowCancelClick: (id: number) => void;
   onCancel: () => void;
 }
 
@@ -543,7 +544,11 @@ export const ProjectNotificationDialog = (props: INotificationDialog) => {
       }
     >
       <Box paddingTop={'1rem'}>
-        <ProjectNotificationsTable rows={rows} />
+        <ProjectNotificationsTable
+          onCancelClick={props.onRowCancelClick}
+          onResendClick={props.onRowResendClick}
+          rows={rows}
+        />
       </Box>
     </BaseDialog>
   );

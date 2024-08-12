@@ -1,7 +1,9 @@
+import { NotificationStatus } from '@/constants/chesNotificationStatus';
 import { NotificationType } from '@/constants/notificationTypes';
 import { NotificationQueue } from '@/hooks/api/useProjectNotificationApi';
 import { dateFormatter } from '@/utilities/formatters';
-import { Box, Typography } from '@mui/material';
+import { Refresh, Delete } from '@mui/icons-material';
+import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { DateField, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -11,6 +13,8 @@ import React, { useState } from 'react';
 interface ProjectNotificationsTableProps {
   rows: NotificationQueue[];
   noteText?: string;
+  onResendClick?: (id: number) => void;
+  onCancelClick?: (id: number) => void;
 }
 
 const ProjectNotificationsTable = (props: ProjectNotificationsTableProps) => {
@@ -54,6 +58,59 @@ const ProjectNotificationsTable = (props: ProjectNotificationsTableProps) => {
       width: 125,
       valueGetter: (value) => (value == null ? null : new Date(value)),
       renderCell: (params) => (params.value ? dateFormatter(params.value) : ''),
+    },
+    {
+      field: 'Resend',
+      headerName: '',
+      sortable: false,
+      filterable: false,
+      maxWidth: 20,
+      renderCell: (params) => (
+        <Tooltip placement="left" title="Resend Notification">
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+            }}
+          >
+            <IconButton onClick={() => props.onResendClick(params.row.Id)} color="primary">
+              <Refresh />
+            </IconButton>
+          </div>
+        </Tooltip>
+      ),
+    },
+    {
+      field: 'Cancel',
+      headerName: '',
+      sortable: false,
+      filterable: false,
+      maxWidth: 20,
+      renderCell: (params) => (
+        <Tooltip placement="right" title={'Cancel Notification'}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+            }}
+          >
+            <IconButton
+              disabled={
+                params.row.Status !== NotificationStatus.Pending &&
+                params.row.Status !== NotificationStatus.Accepted
+              }
+              onClick={() => props.onCancelClick(params.row.Id)}
+              color="primary"
+            >
+              <Delete />
+            </IconButton>
+          </div>
+        </Tooltip>
+      ),
     },
   ];
 
