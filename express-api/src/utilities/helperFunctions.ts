@@ -202,3 +202,7 @@ export const toPostgresTimestamp = (date: Date) => {
   const seconds = pad(date.getUTCSeconds());
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
+
+export const getDaysBetween = (earlierDate: Date, laterDate: Date): number => {
+  return Math.trunc((laterDate.getTime() - earlierDate.getTime()) / (1000 * 60 * 60 * 24));
+};

@@ -23,16 +23,14 @@ import { columnNameFormatter } from '@/utilities/formatters';
 import DateFormField from '../form/DateFormField';
 import dayjs from 'dayjs';
 import { LookupContext } from '@/contexts/lookupContext';
-import ProjectNotificationsTable, {
-  INotification,
-  INotificationModel,
-} from './ProjectNotificationsTable';
+import ProjectNotificationsTable from './ProjectNotificationsTable';
 import { getStatusString } from '@/constants/chesNotificationStatus';
 import { MonetaryType } from '@/constants/monetaryTypes';
 import AutocompleteFormField from '../form/AutocompleteFormField';
 import { AuthContext } from '@/contexts/authContext';
 import { Roles } from '@/constants/roles';
 import BaseDialog from '../dialog/BaseDialog';
+import { NotificationQueue } from '@/hooks/api/useProjectNotificationApi';
 
 interface IProjectGeneralInfoDialog {
   initialValues: Project;
@@ -510,7 +508,7 @@ export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog)
 };
 
 interface INotificationDialog {
-  initialValues: INotification[];
+  initialValues: NotificationQueue[];
   open: boolean;
   ungroupedAgencies: Partial<Agency>[];
   postSubmit: () => void;
@@ -520,17 +518,14 @@ interface INotificationDialog {
 export const ProjectNotificationDialog = (props: INotificationDialog) => {
   const { initialValues, open, onCancel } = props;
   const lookup = useContext(LookupContext);
-  const [rows, setRows] = useState<INotificationModel[]>([]);
+  const [rows, setRows] = useState<NotificationQueue[]>([]);
   useEffect(() => {
     if (initialValues) {
       setRows(
         initialValues.map((notif) => ({
-          id: notif.Id,
-          agency: lookup.getLookupValueById('Agencies', notif.ToAgencyId)?.Name,
-          to: notif.To,
-          subject: notif.Subject,
-          status: getStatusString(notif.Status),
-          sendOn: notif.SendOn,
+          AgencyName: lookup.getLookupValueById('Agencies', notif.ToAgencyId)?.Name,
+          ChesStatusName: getStatusString(notif.Status),
+          ...notif,
         })),
       );
     }

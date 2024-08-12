@@ -62,7 +62,7 @@ jest.mock('@/services/users/usersServices', () => ({
 }));
 
 jest.mock('@/services/notifications/notificationServices', () => ({
-  cancelAllProjectNotifications: () => ({
+  cancelProjectNotifications: () => ({
     succeeded: faker.number.int(),
     failed: faker.number.int(),
   }),
