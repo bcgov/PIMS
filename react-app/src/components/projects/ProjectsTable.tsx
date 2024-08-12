@@ -1,7 +1,7 @@
 import usePimsApi from '@/hooks/usePimsApi';
 import { GridColDef } from '@mui/x-data-grid';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
-import React, { MutableRefObject, useContext, useState } from 'react';
+import React, { MutableRefObject, useContext, useMemo, useState } from 'react';
 import { dateFormatter, projectStatusChipFormatter } from '@/utilities/formatters';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -27,6 +27,14 @@ const ProjectsTable = () => {
     return Number(projectNo.match(/[a-zA-Z]+-?(\d+)/)[1]);
   };
 
+  const agenciesForFilter = useMemo(() => {
+    if (lookup.data) {
+      return lookup.data.Agencies.map((a) => a.Name);
+    } else {
+      return [];
+    }
+  }, [lookup]);
+
   const columns: GridColDef[] = [
     {
       field: 'ProjectNumber',
@@ -51,6 +59,8 @@ const ProjectsTable = () => {
       field: 'Agency',
       headerName: 'Agency',
       flex: 1,
+      type: 'singleSelect',
+      valueOptions: agenciesForFilter,
     },
     {
       field: 'NetBook',
