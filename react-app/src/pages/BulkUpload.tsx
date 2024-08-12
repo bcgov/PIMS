@@ -271,7 +271,9 @@ const BulkUpload = () => {
             submit(file).then((resp) => {
               if (resp && resp.ok) {
                 setFile(null);
-                setFileProgress(resp.parsedBody?.CompletionPercentage ?? 0);
+                setFileProgress(
+                  (resp.parsedBody as Record<string, any>)?.CompletionPercentage ?? 0,
+                );
               }
             })
           }

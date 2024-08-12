@@ -360,3 +360,41 @@ describe('generateProjectWatchNotifications', () => {
     expect(result.length).toBe(1);
   });
 });
+describe('cancelNotificationById', () => {
+  it('should cancel a notificaion', async () => {
+    _cancelEmailByIdAsync.mockImplementationOnce(() => ({
+      status: 'cancelled',
+      tag: 'sampleTag',
+      txId: randomUUID(),
+      updatedTS: Date.now(),
+      createdTS: Date.now(),
+      msgId: randomUUID(),
+    }));
+    const result = await notificationServices.cancelNotificationById(1);
+    expect(result.Status).toBe(NotificationStatus.Cancelled);
+  });
+  it('should return unmodified notification in the case of a non cancelled notification', async () => {
+    _cancelEmailByIdAsync.mockImplementationOnce(() => ({
+      status: 'completed',
+      tag: 'sampleTag',
+      txId: randomUUID(),
+      updatedTS: Date.now(),
+      createdTS: Date.now(),
+      msgId: randomUUID(),
+    }));
+    const notif = produceNotificationQueue({ ChesMessageId: randomUUID() });
+    _notifQueueFindOne.mockImplementationOnce(() => notif);
+    const result = await notificationServices.cancelNotificationById(1);
+    expect(result.ChesMessageId).toBe(notif.ChesMessageId);
+    expect(result.Status).toBe(notif.Status);
+  });
+});
+describe('getNotificationById', () => {
+  it('should return a single notification', async () => {
+    const result = await notificationServices.getNotificationById(1);
+    expect(result).toBeDefined();
+    expect(result.Status).toBeDefined();
+    expect(result.TemplateId).toBeDefined();
+    expect(result.Id).toBeDefined();
+  });
+});

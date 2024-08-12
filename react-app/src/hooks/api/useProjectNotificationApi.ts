@@ -38,8 +38,20 @@ const useProjectNotificationsApi = (absoluteFetch: IFetch) => {
     });
     return parsedBody as NotificationResponse;
   };
+  const resendNotification = async (notificationId: number) => {
+    return absoluteFetch.put(`/notifications/queue/${notificationId}`);
+  };
+  const cancelNotification = async (notificationId: number) => {
+    const response = await absoluteFetch.del(`/notifications/queue/${notificationId}`);
+    if (!response.ok) {
+      response.parsedBody = 'Unable to cancel notification.';
+    }
+    return response;
+  };
   return {
     getNotificationsByProjectId,
+    resendNotification,
+    cancelNotification,
   };
 };
 
