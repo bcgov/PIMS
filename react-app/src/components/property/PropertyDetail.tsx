@@ -44,6 +44,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const buildingId = isNaN(Number(params.buildingId)) ? null : Number(params.buildingId);
   const api = usePimsApi();
   const deletionBroadcastChannel = useMemo(() => new BroadcastChannel('property'), []);
+  const [linkedProjects, setLinkedProjects] = useState<any[]>([]);
   const {
     data: parcel,
     refreshData: refreshParcel,
@@ -82,6 +83,21 @@ const PropertyDetail = (props: IPropertyDetail) => {
       api.buildings.getBuildings({ pid: parcel?.parsedBody?.PID, includeRelations: true }),
   );
 
+  useEffect(() => {
+    const fetchLinkedProjects = async () => {
+      if (parcelId) {
+        const projects = await api.properties.getLinkedProjectsToProperty({ parcelId: parcelId });
+        setLinkedProjects(projects);
+      } else if (buildingId) {
+        const projects = await api.properties.getLinkedProjectsToProperty({
+          buildingId: buildingId,
+        });
+        setLinkedProjects(projects);
+      }
+    };
+    fetchLinkedProjects();
+  }, [parcelId, buildingId]);
+  console.log('testing linkedProjects:', linkedProjects);
   const isAuditor = keycloak.hasRoles([Roles.AUDITOR]);
 
   const refreshEither = () => {
@@ -419,6 +435,19 @@ const PropertyDetail = (props: IPropertyDetail) => {
         onDelete={async () => deletionAction()}
         onClose={async () => setOpenDeleteDialog(false)}
       />
+      {linkedProjects.length > 0 && (
+        <>
+          {linkedProjects.map((project) => (
+            <DataCard
+              key={project.id}
+              title={project.name}
+              values={project}
+              onEdit={undefined}
+              disableEdit={true}
+            />
+          ))}
+        </>
+      )}
     </CollapsibleSidebar>
   );
 };

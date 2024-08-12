@@ -148,21 +148,30 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
  * @returns A promise that resolves to an array of `ProjectProperty` objects.
  *          If neither `buildingId` nor `parcelId` is provided, an empty array is returned.
  */
-const findLinkedProjects = async (buildingId?: number, parcelId?: number) => {
+const findLinkedProjectsForProperty = async (buildingId?: number, parcelId?: number) => {
   const whereCondition = buildingId
     ? { BuildingId: buildingId }
     : parcelId
       ? { ParcelId: parcelId }
       : {}; // Return an empty condition if neither ID is provided
 
+  const query = AppDataSource.getRepository(ProjectProperty)
+    .createQueryBuilder('pp')
+    .leftJoin('pp.Project', 'p') // Join the Project entity
+    .where(whereCondition) // Apply the condition
+    .select(['p.ProjectNumber', 'p.Id']) // Specify the fields to select
+    .addSelect(['pp.Id']); // Optionally select fields from the ProjectProperty entity if needed
+
   const associatedProjects =
     buildingId || parcelId
-      ? await AppDataSource.getRepository(ProjectProperty).find({
-          where: whereCondition,
-        })
+      ? await query.getMany() // Fetch the data
       : []; // Return an empty array if no ID is provided
 
-  return associatedProjects;
+  // Transform the result to the desired format
+  return associatedProjects.map((pp) => ({
+    ProjectNumber: pp.Project.ProjectNumber,
+    Id: pp.Project.Id,
+  }));
 };
 
 /**
@@ -862,7 +871,7 @@ const propertyServices = {
   getImportResults,
   getPropertiesForExport,
   processFile,
-  findLinkedProjects,
+  findLinkedProjectsForProperty,
 };
 
 export default propertyServices;
