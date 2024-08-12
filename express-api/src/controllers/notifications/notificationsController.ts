@@ -58,13 +58,8 @@ export const resendNotificationById = async (req: Request, res: Response) => {
     return res.status(404).send('Notification not found.');
   }
   const kcUser = req.user;
-  if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
-    // get array of user's agencies
-    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
-    const project = await projectServices.getProjectById(notification.ProjectId);
-    if (!usersAgencies.includes(project.AgencyId)) {
-      return res.status(403).send({ message: 'User is not authorized to access this endpoint.' });
-    }
+  if (!isAdmin(kcUser)) {
+    return res.status(403).send({ message: 'User is not authorized to access this endpoint.' });
   }
   const resultantNotification = await notificationServices.sendNotification(notification, kcUser);
   const user = await userServices.getUser(kcUser.preferred_username);
@@ -82,13 +77,8 @@ export const cancelNotificationById = async (req: Request, res: Response) => {
     return res.status(404).send('Notification not found.');
   }
   const kcUser = req.user;
-  if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
-    // get array of user's agencies
-    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
-    const project = await projectServices.getProjectById(notification.ProjectId);
-    if (!usersAgencies.includes(project.AgencyId)) {
-      return res.status(403).send({ message: 'User is not authorized to access this endpoint.' });
-    }
+  if (!isAdmin(kcUser)) {
+    return res.status(403).send({ message: 'User is not authorized to access this endpoint.' });
   }
   const resultantNotification = await notificationServices.cancelNotificationById(notification.Id);
   if (resultantNotification.Status !== NotificationStatus.Cancelled) {
