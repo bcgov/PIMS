@@ -230,23 +230,39 @@ const ParcelMap = (props: ParcelMapProps) => {
       // Track search in snowplow
       trackSelfDescribingEvent({
         event: {
-          // would rather have a schema for the map search specifically, as it differs from the other table searches
-          schema: 'iglu:ca.bc.gov.pims/search/jsonschema/1-0-0',
+          // TODO: request a schema for the map search specifically, as it differs from the other table searches
+          schema: 'iglu:ca.bc.gov.pims/map/jsonschema/1-0-0',
           data: {
-            view: 'map',
-            // TODO: Old schema had pid_pin as field. Should separate
             pid: filter.PID,
             pin: filter.PIN,
             address: filter.Address,
             property_name: filter.Name,
-            agency: filter.AgencyIds ? filter.AgencyIds.map(id => lookup.getLookupValueById('Agencies', id)?.Name) : [], // TODO: schema change to handle multiple agencies, name agencies
-            location: filter.AdministrativeAreaIds ? filter.AdministrativeAreaIds.map(id => lookup.getLookupValueById('AdministrativeAreas', id)?.Name) : [], // TODO: schema change to handle multiple admin areas, name administrative_areas
-            regional_districts: filter.RegionalDistrictIds ? filter.RegionalDistrictIds.map(id => lookup.getLookupValueById('RegionalDistricts', id)?.Name) : [], // TODO: add to schema
-            classification: filter.ClassificationIds ? filter.ClassificationIds.map(id => lookup.getLookupValueById('Classifications', id)?.Name) : [], // TODO: schema change to handle multiple, name classifications
-            property_types: filter.PropertyTypeIds ? filter.PropertyTypeIds.map(id => lookup.getLookupValueById('PropertyTypes', id)?.Name) : []// TODO: add to schema
-          }
-        }
-      })
+            agencies: filter.AgencyIds
+              ? filter.AgencyIds.map((id) => lookup.getLookupValueById('Agencies', id)?.Name)
+              : undefined,
+            administrative_areas: filter.AdministrativeAreaIds
+              ? filter.AdministrativeAreaIds.map(
+                  (id) => lookup.getLookupValueById('AdministrativeAreas', id)?.Name,
+                )
+              : undefined,
+            regional_districts: filter.RegionalDistrictIds
+              ? filter.RegionalDistrictIds.map(
+                  (id) => lookup.getLookupValueById('RegionalDistricts', id)?.Name,
+                )
+              : undefined,
+            classifications: filter.ClassificationIds
+              ? filter.ClassificationIds.map(
+                  (id) => lookup.getLookupValueById('Classifications', id)?.Name,
+                )
+              : undefined,
+            property_types: filter.PropertyTypeIds
+              ? filter.PropertyTypeIds.map(
+                  (id) => lookup.getLookupValueById('PropertyTypes', id)?.Name,
+                )
+              : undefined,
+          },
+        },
+      });
       refreshData();
     }
   }, [filter]);

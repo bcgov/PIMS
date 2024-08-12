@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { FetchResponse } from '@/hooks/useFetch';
+import { trackError } from '@snowplow/browser-plugin-error-tracking';
 
 /**
  * Renders an error fallback component that displays an error message and provides options for handling the error.
@@ -30,6 +31,11 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
   const navigate = useNavigate();
   const errorTracker = JSON.parse(sessionStorage.getItem('errorTracker'));
   const { submit, submitting } = useDataSubmitter(api.reports.postErrorReport);
+
+  trackError({
+    message: error.message,
+    error: error,
+  });
 
   // If errorTracker changes, we navigate to home if an error has occurred more than 0 times on this page.
   // The first time, it's okay to show this page.
