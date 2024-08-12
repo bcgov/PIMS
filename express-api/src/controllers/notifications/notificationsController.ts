@@ -67,7 +67,12 @@ export const resendNotificationById = async (req: Request, res: Response) => {
     }
   }
   const resultantNotification = await notificationServices.sendNotification(notification, kcUser);
-  return res.status(200).send(resultantNotification);
+  const user = await userServices.getUser(kcUser.preferred_username);
+  const updatedNotification = await notificationServices.updateNotificationStatus(
+    resultantNotification.Id,
+    user,
+  );
+  return res.status(200).send(updatedNotification);
 };
 
 export const cancelNotificationById = async (req: Request, res: Response) => {

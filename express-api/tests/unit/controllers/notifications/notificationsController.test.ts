@@ -30,6 +30,9 @@ const _getNotifById = jest
 const _cancelNotifById = jest
   .fn()
   .mockImplementation((id: number) => produceNotificationQueue({ Id: id, Status: 2 }));
+const _updateNotifStatus = jest
+  .fn()
+  .mockImplementation((id: number) => produceNotificationQueue({ Id: id }));
 
 jest.mock('@/services/users/usersServices', () => ({
   getAgencies: () => _getAgencies(),
@@ -47,6 +50,7 @@ jest.mock('@/services/notifications/notificationServices', () => ({
       ChesMessageId: randomUUID(),
       ChesTransactionId: randomUUID(),
     }),
+  updateNotificationStatus: (id: number) => _updateNotifStatus(id),
 }));
 
 jest.mock('@/services/projects/projectsServices', () => ({
