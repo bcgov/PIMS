@@ -334,7 +334,7 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
       },
       { signal },
     );
-    if (parsedBody.error) {
+    if ((parsedBody as Record<string, any>).error) {
       return [];
     }
     return parsedBody as Project[];
