@@ -241,9 +241,6 @@ const ProjectsTable = () => {
           <CustomMenuItem key={'Submitted'} value={'Submitted'}>
             Submitted
           </CustomMenuItem>,
-          /* <CustomMenuItem key={'Approved for SPL'} value={'Approved for SPL'}>
-            Approved for SPL
-          </CustomMenuItem>,*/
         ]}
         rowCountProp={totalCount}
         rowCount={totalCount}
