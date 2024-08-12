@@ -42,7 +42,11 @@ const useProjectNotificationsApi = (absoluteFetch: IFetch) => {
     return absoluteFetch.put(`/notifications/queue/${notificationId}`);
   };
   const cancelNotification = async (notificationId: number) => {
-    return absoluteFetch.del(`/notifications/queue/${notificationId}`);
+    const response = await absoluteFetch.del(`/notifications/queue/${notificationId}`);
+    if (!response.ok) {
+      response.parsedBody = 'Unable to cancel notification.';
+    }
+    return response;
   };
   return {
     getNotificationsByProjectId,
