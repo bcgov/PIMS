@@ -92,8 +92,6 @@ const ProjectsTable = () => {
       case 'Contract in Place':
       case 'On Market':
       case 'Pre-Marketing':
-        ref.current.setFilterModel({ items: [{ value, operator: 'contains', field: 'Status' }] });
-        break;
       case 'Approved for Exemption':
       case 'Approved for ERP':
       case 'Submitted':
