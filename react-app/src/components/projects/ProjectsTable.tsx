@@ -33,7 +33,15 @@ const ProjectsTable = () => {
     } else {
       return [];
     }
-  }, [lookup]);
+  }, [lookup.data]);
+
+  const statusForFilter = useMemo(() => {
+    if (lookup.data) {
+      return lookup.data.ProjectStatuses.map((a) => a.Name);
+    } else {
+      return [];
+    }
+  }, [lookup.data]);
 
   const columns: GridColDef[] = [
     {
@@ -53,6 +61,8 @@ const ProjectsTable = () => {
       headerName: 'Status',
       flex: 1,
       maxWidth: 250,
+      valueOptions: statusForFilter,
+      type: 'singleSelect',
       renderCell: (params) => projectStatusChipFormatter(params.value ?? 'N/A'),
     },
     {
@@ -102,7 +112,7 @@ const ProjectsTable = () => {
       case 'Approved for ERP':
       case 'Approved for SPL':
       case 'Submitted':
-        ref.current.setFilterModel({ items: [{ value, operator: 'contains', field: 'Status' }] });
+        ref.current.setFilterModel({ items: [{ value, operator: 'is', field: 'Status' }] });
     }
   };
 

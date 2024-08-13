@@ -88,6 +88,14 @@ const UsersTable = (props: IUsersTable) => {
     }
   }, [lookup]);
 
+  const rolesForSingleSelect = useMemo(() => {
+    if (lookup.data) {
+      return lookup.data.Roles.map((a) => a.Name);
+    } else {
+      return [];
+    }
+  }, [lookup.data]);
+
   // Sets the preset filter based on the select input
   const selectPresetFilter = (value: string, ref: MutableRefObject<GridApiCommunity>) => {
     // Clear the quick search contents
@@ -105,32 +113,22 @@ const UsersTable = (props: IUsersTable) => {
           items: [
             {
               value,
-              operator: 'contains',
+              operator: 'is',
               field: 'Status',
             },
           ],
         });
         break;
       // All Role filters
-      case 'User':
-      case 'Admin':
+      case 'General User':
+      case 'Administrator':
       case 'Auditor':
-        ref.current.setFilterModel({
-          items: [
-            {
-              value,
-              operator: 'contains',
-              field: 'Role',
-            },
-          ],
-        });
-        break;
       case 'No Role':
         ref.current.setFilterModel({
           items: [
             {
               value,
-              operator: 'contains',
+              operator: 'is',
               field: 'Role',
             },
           ],
@@ -158,6 +156,8 @@ const UsersTable = (props: IUsersTable) => {
     {
       field: 'Status',
       headerName: 'Status',
+      type: 'singleSelect',
+      valueOptions: ['Active', 'Denied', 'OnHold', 'Disabled'],
       renderCell: (params) => {
         if (!params.value) return <></>;
         return statusChipFormatter(params.value);
@@ -208,6 +208,8 @@ const UsersTable = (props: IUsersTable) => {
       minWidth: 150,
       flex: 1,
       valueGetter: (value?: Role) => value?.Name ?? `No Role`,
+      type: 'singleSelect',
+      valueOptions: [...rolesForSingleSelect, 'No Role'],
     },
     {
       field: 'CreatedOn',
@@ -292,10 +294,10 @@ const UsersTable = (props: IUsersTable) => {
               Denied
             </CustomMenuItem>,
             <CustomListSubheader key={'Role'}>Role</CustomListSubheader>,
-            <CustomMenuItem key={'User'} value={'User'}>
+            <CustomMenuItem key={'General User'} value={'General User'}>
               General User
             </CustomMenuItem>,
-            <CustomMenuItem key={'Admin'} value={'Admin'}>
+            <CustomMenuItem key={'Administrator'} value={'Administrator'}>
               Administrator
             </CustomMenuItem>,
             <CustomMenuItem key={'Auditor'} value={'Auditor'}>

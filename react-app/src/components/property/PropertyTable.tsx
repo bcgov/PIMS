@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useContext, useState } from 'react';
+import React, { MutableRefObject, useContext, useMemo, useState } from 'react';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, SxProps, Tooltip, lighten, useTheme } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
@@ -58,6 +58,30 @@ const PropertyTable = (props: IPropertyTable) => {
   const classification = useClassificationStyle();
   const theme = useTheme();
 
+  const agenciesForFilter = useMemo(() => {
+    if (lookup.data) {
+      return lookup.data.Agencies.map((a) => a.Name);
+    } else {
+      return [];
+    }
+  }, [lookup.data]);
+
+  const classificationForFilter = useMemo(() => {
+    if (lookup.data) {
+      return lookup.data.Classifications.map((a) => a.Name);
+    } else {
+      return [];
+    }
+  }, [lookup.data]);
+
+  const adminAreasForFilter = useMemo(() => {
+    if (lookup.data) {
+      return lookup.data.AdministrativeAreas.map((a) => a.Name);
+    } else {
+      return [];
+    }
+  }, [lookup.data]);
+
   const columns: GridColDef[] = [
     {
       field: 'PropertyType',
@@ -70,6 +94,8 @@ const PropertyTable = (props: IPropertyTable) => {
       headerName: 'Classification',
       flex: 1,
       minWidth: 200,
+      valueOptions: classificationForFilter,
+      type: 'singleSelect',
       renderHeader: (params) => {
         return (
           <Tooltip
@@ -129,6 +155,8 @@ const PropertyTable = (props: IPropertyTable) => {
       field: 'Agency',
       headerName: 'Agency',
       flex: 1,
+      type: 'singleSelect',
+      valueOptions: agenciesForFilter,
     },
     {
       field: 'Address',
@@ -139,6 +167,8 @@ const PropertyTable = (props: IPropertyTable) => {
       field: 'AdministrativeArea',
       headerName: 'Administrative Area',
       flex: 1,
+      type: 'singleSelect',
+      valueOptions: adminAreasForFilter,
     },
     {
       field: 'LandArea',
@@ -168,10 +198,30 @@ const PropertyTable = (props: IPropertyTable) => {
         });
         break;
       case 'Core':
+        ref.current.setFilterModel({
+          items: [
+            {
+              value: 'Core Operational,Core Strategic',
+              operator: 'isAnyOf',
+              field: 'Classification',
+            },
+          ],
+        });
+        break;
       case 'Surplus':
+        ref.current.setFilterModel({
+          items: [
+            {
+              value: 'Surplus Active,Surplus Encumbered',
+              operator: 'isAnyOf',
+              field: 'Classification',
+            },
+          ],
+        });
+        break;
       case 'Disposed':
         ref.current.setFilterModel({
-          items: [{ value, operator: 'contains', field: 'Classification' }],
+          items: [{ value, operator: 'is', field: 'Classification' }],
         });
         break;
       default:
