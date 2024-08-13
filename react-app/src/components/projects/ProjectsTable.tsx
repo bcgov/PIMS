@@ -88,9 +88,12 @@ const ProjectsTable = () => {
       case 'All Projects':
         ref.current.setFilterModel({ items: [] });
         break;
+      case 'Approved for SPL':
+      case 'Contract in Place':
+      case 'On Market':
+      case 'Pre-Marketing':
       case 'Approved for Exemption':
       case 'Approved for ERP':
-      case 'Approved for SPL':
       case 'Submitted':
         ref.current.setFilterModel({ items: [{ value, operator: 'contains', field: 'Status' }] });
     }
@@ -213,6 +216,19 @@ const ProjectsTable = () => {
           <CustomMenuItem key={'All Projects'} value={'All Projects'}>
             All Projects
           </CustomMenuItem>,
+          <CustomListSubheader key={'SPL Projects'}>SPL Projects</CustomListSubheader>,
+          <CustomMenuItem key={'Approved for SPL'} value={'Approved for SPL'}>
+            Approved for SPL
+          </CustomMenuItem>,
+          <CustomMenuItem key={'Contract in Place'} value={'Contract in Place'}>
+            Contract in Place
+          </CustomMenuItem>,
+          <CustomMenuItem key={'On Market'} value={'On Market'}>
+            On Market
+          </CustomMenuItem>,
+          <CustomMenuItem key={'Pre-Marketing'} value={'Pre-Marketing'}>
+            Pre-Marketing
+          </CustomMenuItem>,
           <CustomListSubheader key={'Status'}>Status</CustomListSubheader>,
           <CustomMenuItem key={'Approved for ERP'} value={'Approved for ERP'}>
             Approved for ERP
@@ -222,9 +238,6 @@ const ProjectsTable = () => {
           </CustomMenuItem>,
           <CustomMenuItem key={'Submitted'} value={'Submitted'}>
             Submitted
-          </CustomMenuItem>,
-          <CustomMenuItem key={'Approved for SPL'} value={'Approved for SPL'}>
-            Approved for SPL
           </CustomMenuItem>,
         ]}
         rowCountProp={totalCount}
