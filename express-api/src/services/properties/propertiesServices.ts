@@ -675,7 +675,7 @@ const collectFindOptions = (filter: PropertyUnionFilter) => {
       constructFindOptionFromQuerySingleSelect('AdministrativeArea', filter.administrativeArea),
     );
   if (filter.propertyType)
-    options.push(constructFindOptionFromQuery('PropertyType', filter.propertyType));
+    options.push(constructFindOptionFromQuerySingleSelect('PropertyType', filter.propertyType));
   return options;
 };
 

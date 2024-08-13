@@ -88,6 +88,8 @@ const PropertyTable = (props: IPropertyTable) => {
       headerName: 'Type',
       flex: 1,
       maxWidth: 130,
+      type: 'singleSelect',
+      valueOptions: ['Parcel', 'Building'],
     },
     {
       field: 'Classification',
