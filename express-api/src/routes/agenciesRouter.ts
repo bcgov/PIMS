@@ -16,12 +16,12 @@ const router = express.Router();
 // Endpoints for Admin Agencies
 router
   .route(`/`)
-  .get(protectedRoute(), catchErrors(getAgencies))
+  .get(activeUserCheck, catchErrors(getAgencies))
   .post(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(addAgency));
 
 router
   .route(`/:id`)
-  .get(protectedRoute(), activeUserCheck, catchErrors(getAgencyById))
+  .get(activeUserCheck, catchErrors(getAgencyById))
   .patch(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(updateAgencyById))
   .delete(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(deleteAgencyById));
 

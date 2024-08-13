@@ -4,7 +4,7 @@ components:
       bearerAuth:            # arbitrary name for the security scheme
         type: http
         scheme: bearer
-        bearerFormat: JWT 
+        bearerFormat: JWT
   responses:
     400BadRequest:
       description: Bad request response.
