@@ -10,10 +10,11 @@ import middleware from '@/middleware';
 import constants from '@/constants';
 import { SSO_OPTIONS } from '@/middleware/keycloak/keycloakOptions';
 import swaggerUi from 'swagger-ui-express';
-import swaggerJSON from '@/swagger/swagger-output.json';
+import swaggerJSDoc from 'swagger-jsdoc';
 import errorHandler from '@/middleware/errorHandler';
 import { EndpointNotFound404 } from '@/constants/errors';
 import nunjucks from 'nunjucks';
+import OPENAPI_OPTIONS from '@/swagger/swaggerConfig';
 
 const app: Application = express();
 
@@ -50,7 +51,7 @@ app.use(cookieParser());
 app.use(compression());
 
 // Swagger service route
-app.use('/api-docs/', swaggerUi.serve, swaggerUi.setup(swaggerJSON));
+app.use('/api-docs/', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(OPENAPI_OPTIONS)));
 // Get Custom Middleware
 const { headerHandler, morganMiddleware } = middleware;
 

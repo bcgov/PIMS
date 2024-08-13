@@ -1,0 +1,22 @@
+# Components common to all routes. Can be referenced in other swagger.yaml files.
+components:
+  securitySchemes:
+      bearerAuth:            # arbitrary name for the security scheme
+        type: http
+        scheme: bearer
+        bearerFormat: JWT 
+  responses:
+    400BadRequest:
+      description: Bad request response.
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: 'Response could not be processed.'
+    429TooManyRequests:
+      description: Express rate limiter reached. Too many requests.
+      content: 
+        text/plain:
+          schema:
+            type: string
+            example: 'Too many requests, please try again later.'
