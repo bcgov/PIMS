@@ -201,7 +201,7 @@ const PropertyTable = (props: IPropertyTable) => {
         ref.current.setFilterModel({
           items: [
             {
-              value: 'Core Operational,Core Strategic',
+              value: ['Core Operational', 'Core Strategic'],
               operator: 'isAnyOf',
               field: 'Classification',
             },
@@ -212,7 +212,7 @@ const PropertyTable = (props: IPropertyTable) => {
         ref.current.setFilterModel({
           items: [
             {
-              value: 'Surplus Active,Surplus Encumbered',
+              value: ['Surplus Active', 'Surplus Encumbered'],
               operator: 'isAnyOf',
               field: 'Classification',
             },

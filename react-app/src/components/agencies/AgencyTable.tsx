@@ -40,7 +40,7 @@ const AgencyTable = (props: IAgencyTable) => {
 
   const agenciesForLookup = useMemo(() => {
     if (lookup.data) {
-      return lookup.data.Agencies.map((a) => a.Name);
+      return lookup.data.Agencies.filter((a) => a.ParentId == null).map((a) => a.Name);
     } else {
       return [];
     }
