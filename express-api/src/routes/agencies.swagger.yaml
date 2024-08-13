@@ -177,7 +177,7 @@ paths:
                 example: Agency not found.
     delete:
       security:
-        - bearerAuth: ['Admin']
+        - bearerAuth: []
       tags:
         - Agencies
       summary: Deletes a single agency that matches the Id.
