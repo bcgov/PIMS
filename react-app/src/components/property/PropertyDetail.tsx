@@ -30,6 +30,7 @@ import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { AuthContext } from '@/contexts/authContext';
 import { Roles } from '@/constants/roles';
 import { LookupContext } from '@/contexts/lookupContext';
+import AssociatedProjectsTable from './AssociatedProjectsTable';
 
 interface IPropertyDetail {
   onClose: () => void;
@@ -294,6 +295,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
   ];
 
   if (buildingOrParcel === 'Parcel') sideBarItems.splice(3, 0, { title: 'LTSA Information' });
+  if (linkedProjects.length > 0) sideBarItems.splice(4, 0, { title: 'Associated Projects' });
 
   return (
     <CollapsibleSidebar items={sideBarItems}>
@@ -375,6 +377,19 @@ const PropertyDetail = (props: IPropertyDetail) => {
             />
           </DataCard>
         )}
+        {linkedProjects.length > 0 && (
+          <>
+            <DataCard
+              id={'Associated Projects'}
+              title={'Associated Projects'}
+              values={undefined}
+              onEdit={undefined}
+              disableEdit={true}
+            >
+              <AssociatedProjectsTable linkedProjects={linkedProjects} />
+            </DataCard>
+          </>
+        )}
       </Box>
       <>
         {buildingOrParcel === 'Parcel' ? (
@@ -435,19 +450,6 @@ const PropertyDetail = (props: IPropertyDetail) => {
         onDelete={async () => deletionAction()}
         onClose={async () => setOpenDeleteDialog(false)}
       />
-      {linkedProjects.length > 0 && (
-        <>
-          {linkedProjects.map((project) => (
-            <DataCard
-              key={project.id}
-              title={project.name}
-              values={project}
-              onEdit={undefined}
-              disableEdit={true}
-            />
-          ))}
-        </>
-      )}
     </CollapsibleSidebar>
   );
 };

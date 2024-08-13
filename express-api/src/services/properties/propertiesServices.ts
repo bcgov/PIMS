@@ -159,20 +159,18 @@ const findLinkedProjectsForProperty = async (buildingId?: number, parcelId?: num
 
   const query = AppDataSource.getRepository(ProjectProperty)
     .createQueryBuilder('pp')
-    .leftJoin('pp.Project', 'p') // Join the Project entity
-    .where(whereCondition) // Apply the condition
-    .select(['p.ProjectNumber', 'p.Id']) // Specify the fields to select
-    .addSelect(['pp.Id']); // Optionally select fields from the ProjectProperty entity if needed
+    .leftJoinAndSelect('pp.Project', 'p')
+    .leftJoinAndSelect('p.Status', 'ps')
+    .where(whereCondition)
+    .select(['p.*', 'ps.Name AS StatusName']);
 
-  const associatedProjects =
-    buildingId || parcelId
-      ? await query.getMany() // Fetch the data
-      : []; // Return an empty array if no ID is provided
+  const associatedProjects = buildingId || parcelId ? await query.getRawMany() : []; // Return an empty array if no ID is provided
 
-  // Transform the result to the desired format
-  return associatedProjects.map((pp) => ({
-    ProjectNumber: pp.Project.ProjectNumber,
-    Id: pp.Project.Id,
+  return associatedProjects.map((result) => ({
+    ProjectNumber: result.project_number,
+    Id: result.id,
+    StatusName: result.statusname,
+    Description: result.description,
   }));
 };
 
