@@ -231,7 +231,7 @@ const getStatusByIdAsync = async (messageId: string): Promise<IChesStatusRespons
     if (!response) {
       throw new Error(`Failed to fetch status for messageId ${messageId}`);
     }
-    return await response;
+    return response;
   } catch (error) {
     logger.error(`Error fetching status for messageId ${messageId}:`, error);
     return null;

@@ -43,7 +43,7 @@ const useUsersApi = (absoluteFetch: IFetch) => {
   };
   const getAllUsers = async (sort: CommonFiltering, signal?: AbortSignal) => {
     const { parsedBody } = await absoluteFetch.get('/users', sort, { signal });
-    if (parsedBody.error) {
+    if ((parsedBody as Record<string, any>).error) {
       return [] as User[];
     }
     return parsedBody as User[];
