@@ -46,7 +46,8 @@ export const getNotificationsByProjectId = async (req: Request, res: Response) =
 
     return res.status(200).send(notificationsResult);
   } catch (error) {
-    // not sure if the error codes can be handled better here?
+    // not sure if the 401 and 500 error codes can be handled better here?
+    // if the ches credentials are incorrect, we don't seem to catch the 401 error in the notificationService
     return res.status(500).send({ message: 'Error fetching notifications' });
   }
 };

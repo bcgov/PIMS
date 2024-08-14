@@ -4,6 +4,8 @@ export enum NotificationStatus {
   Cancelled = 2,
   Failed = 3,
   Completed = 4,
+  NotFound = 5,
+  Invalid = 6,
 }
 
 export const getStatusString = (status: number): string => {
@@ -18,6 +20,10 @@ export const getStatusString = (status: number): string => {
       return 'Failed';
     case NotificationStatus.Completed:
       return 'Completed';
+    case NotificationStatus.NotFound:
+      return 'Not Found';
+    case NotificationStatus.Invalid:
+      return 'Invalid';
     default:
       return 'Unknown';
   }
