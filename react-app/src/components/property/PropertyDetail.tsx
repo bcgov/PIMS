@@ -86,19 +86,15 @@ const PropertyDetail = (props: IPropertyDetail) => {
 
   useEffect(() => {
     const fetchLinkedProjects = async () => {
-      if (parcelId) {
-        const projects = await api.properties.getLinkedProjectsToProperty({ parcelId: parcelId });
-        setLinkedProjects(projects);
-      } else if (buildingId) {
-        const projects = await api.properties.getLinkedProjectsToProperty({
-          buildingId: buildingId,
-        });
-        setLinkedProjects(projects);
-      }
+      const projects = await api.properties.getLinkedProjectsToProperty({
+        parcelId,
+        buildingId,
+      });
+      setLinkedProjects(projects);
     };
     fetchLinkedProjects();
   }, [parcelId, buildingId]);
-  console.log('testing linkedProjects:', linkedProjects);
+
   const isAuditor = keycloak.hasRoles([Roles.AUDITOR]);
 
   const refreshEither = () => {

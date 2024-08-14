@@ -54,7 +54,7 @@ const AssociatedProjectsTable: React.FC<AssociatedProjectsTableProps> = ({ linke
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} pageSizeOptions={[10]} disableRowSelectionOnClick />
+      <DataGrid rows={rows} columns={columns} autoHeight hideFooter />
     </div>
   );
 };
