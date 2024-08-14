@@ -5,6 +5,7 @@ import { AgencyFilter } from './agencySchema';
 import {
   constructFindOptionFromQuery,
   constructFindOptionFromQueryBoolean,
+  constructFindOptionFromQuerySingleSelect,
 } from '@/utilities/helperFunctions';
 import { Brackets, FindOptionsWhere } from 'typeorm';
 import logger from '@/utilities/winstonLogger';
@@ -25,7 +26,7 @@ const collectFindOptions = (filter: AgencyFilter) => {
   if (filter.isDisabled)
     options.push(constructFindOptionFromQueryBoolean('IsDisabled', filter.isDisabled));
   if (filter.parentName)
-    options.push(constructFindOptionFromQuery('ParentName', filter.parentName));
+    options.push(constructFindOptionFromQuerySingleSelect('ParentName', filter.parentName));
   if (filter.sendEmail)
     options.push(constructFindOptionFromQueryBoolean('SendEmail', filter.sendEmail));
   if (filter.email) options.push(constructFindOptionFromQuery('Email', filter.email));
