@@ -483,7 +483,7 @@ const makeBuildingUpsertObject = async (
     AdministrativeAreaId: adminAreaId,
     IsSensitive: false,
     IsVisibleToOtherAgencies: true,
-    PropertyTypeId: 0,
+    PropertyTypeId: 1,
     RentableArea: numberOrNull(row.RentableArea) ?? 0,
     BuildingTenancy: row.Tenancy,
     BuildingFloorCount: 0,
