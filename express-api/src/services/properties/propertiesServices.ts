@@ -234,17 +234,16 @@ export const getClassificationOrThrow = (
   row: Record<string, any>,
   classifications: PropertyClassification[],
 ) => {
-  let classificationId: number = null;
-  if (compareWithoutCase(String(row.Status), 'Active')) {
+  let classificationId: number;
+  if (row.Classification) {
     classificationId = classifications.find((a) =>
       compareWithoutCase(row.Classification, a.Name),
     )?.Id;
-    if (classificationId == null)
-      throw new Error(`Classification "${row.Classification}" is not supported.`);
   } else {
-    classificationId = classifications.find((a) => a.Name === 'Disposed')?.Id;
-    if (classificationId == null) throw new Error(`Unable to classify this parcel.`);
+    throw new Error(`Unable to classify this parcel.`);
   }
+  if (classificationId == null)
+    throw new Error(`Classification "${row.Classification}" is not supported.`);
   return classificationId;
 };
 
