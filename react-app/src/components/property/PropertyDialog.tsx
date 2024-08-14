@@ -24,9 +24,7 @@ import { parseFloatOrNull, parseIntOrNull, pidFormatter } from '@/utilities/form
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LookupContext } from '@/contexts/lookupContext';
 import { Classification } from '@/hooks/api/useLookupApi';
-import { AuthContext } from '@/contexts/authContext';
-import { Roles } from '@/constants/roles';
-import AutocompleteFormField from '../form/AutocompleteFormField';
+import useUserAgencies from '@/hooks/useUserAgencies';
 
 interface IParcelInformationEditDialog {
   initialValues: Parcel;
@@ -39,8 +37,8 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
   const { initialValues, postSubmit } = props;
 
   const api = usePimsApi();
+  const { menuItems: agencyOptions } = useUserAgencies();
   const { data: lookupData } = useContext(LookupContext);
-  const { keycloak } = useContext(AuthContext);
 
   const { submit, submitting } = useDataSubmitter(api.parcels.updateParcelById);
 
@@ -76,8 +74,6 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
     });
   }, [initialValues]);
 
-  const isAdmin = keycloak.hasRoles([Roles.ADMIN]);
-
   return (
     <ConfirmDialog
       title={'Edit Parcel Information'}
@@ -99,6 +95,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
       <FormProvider {...infoFormMethods}>
         <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
           <GeneralInformationForm
+            agencies={agencyOptions ?? []}
             propertyType={'Parcel'}
             defaultLocationValue={initialValues?.Location}
             adminAreas={
@@ -116,7 +113,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
               })) ?? []
             }
           />
-          {isAdmin && (
+          {/* {isAdmin && (
             <AutocompleteFormField
               name={'AgencyId'}
               label={'Agency'}
@@ -124,7 +121,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
                 lookupData?.Agencies.map((agc) => ({ value: agc.Id, label: agc.Name })) ?? []
               }
             />
-          )}
+          )} */}
         </Box>
       </FormProvider>
     </ConfirmDialog>
@@ -140,9 +137,8 @@ interface IBuildingInformationEditDialog {
 
 export const BuildingInformationEditDialog = (props: IBuildingInformationEditDialog) => {
   const api = usePimsApi();
+  const { menuItems: agencyOptions } = useUserAgencies();
   const { data: lookupData } = useContext(LookupContext);
-  const { keycloak } = useContext(AuthContext);
-
   const { submit, submitting } = useDataSubmitter(api.buildings.updateBuildingById);
 
   const { initialValues, open, onCancel, postSubmit } = props;
@@ -193,8 +189,6 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
     });
   }, [initialValues]);
 
-  const isAdmin = keycloak.hasRoles([Roles.ADMIN]);
-
   return (
     <ConfirmDialog
       title={'Edit Building Information'}
@@ -218,6 +212,7 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
       <FormProvider {...infoFormMethods}>
         <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
           <GeneralInformationForm
+            agencies={agencyOptions}
             propertyType={'Building'}
             defaultLocationValue={initialValues?.Location}
             adminAreas={
@@ -232,15 +227,6 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
             constructionOptions={lookupData?.ConstructionTypes as BuildingConstructionType[]}
             predominateUseOptions={lookupData?.PredominateUses as BuildingPredominateUse[]}
           />
-          {isAdmin && (
-            <AutocompleteFormField
-              name={'AgencyId'}
-              label={'Agency'}
-              options={
-                lookupData?.Agencies.map((agc) => ({ value: agc.Id, label: agc.Name })) ?? []
-              }
-            />
-          )}
         </Box>
       </FormProvider>
     </ConfirmDialog>

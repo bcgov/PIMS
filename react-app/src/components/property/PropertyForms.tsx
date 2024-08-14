@@ -38,6 +38,7 @@ interface IGeneralInformationForm {
   propertyType: PropertyType;
   defaultLocationValue: GeoPoint | null;
   adminAreas: ISelectMenuItem[];
+  agencies: ISelectMenuItem[];
 }
 
 export const GeneralInformationForm = (props: IGeneralInformationForm) => {
@@ -256,6 +257,14 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
                 !!String(val).replace(/ /g, '').match(postalRegex) ||
                 'Should be a valid postal code or left blank.',
             }}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <AutocompleteFormField
+            required
+            name={'AgencyId'}
+            label={'Agency'}
+            options={props.agencies ?? []}
           />
         </Grid>
         <Grid item xs={12}>
