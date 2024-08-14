@@ -21,7 +21,6 @@ import {
   BuildingConstructionType,
   BuildingPredominateUse,
 } from '@/hooks/api/useBuildingsApi';
-import { AuthContext } from '@/contexts/authContext';
 import { parseFloatOrNull, parseIntOrNull } from '@/utilities/formatters';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LoadingButton } from '@mui/lab';
@@ -36,7 +35,6 @@ const AddProperty = () => {
   const [showErrorText, setShowErrorText] = useState(false);
   const { goToFromStateOrSetRoute } = useHistoryAwareNavigate();
   const api = usePimsApi();
-  const userContext = useContext(AuthContext);
   const { data: lookupData } = useContext(LookupContext);
   const { submit: submitParcel, submitting: submittingParcel } = useDataSubmitter(
     api.parcels.addParcel,
@@ -163,7 +161,6 @@ const AddProperty = () => {
                 PIN: parseIntOrNull(formValues.PIN),
                 Postal: formValues.Postal.replace(/ /g, '').toUpperCase(),
                 PropertyTypeId: 0,
-                AgencyId: userContext.pimsUser.data.AgencyId,
                 IsVisibleToOtherAgencies: false,
                 Fiscals: formValues.Fiscals.map((a) => ({
                   ...a,
@@ -191,7 +188,6 @@ const AddProperty = () => {
                 TotalArea: parseFloatOrNull(formValues.TotalArea),
                 BuildingFloorCount: 0,
                 PropertyTypeId: 1,
-                AgencyId: userContext.pimsUser.data.AgencyId,
                 IsVisibleToOtherAgencies: false,
                 Fiscals: formValues.Fiscals.map((a) => ({
                   ...a,
