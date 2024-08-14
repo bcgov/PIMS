@@ -10,7 +10,7 @@ const useUserAgencies = () => {
   const userContext = useContext(AuthContext);
   const { data: lookupData } = useContext(LookupContext);
   const api = usePimsApi();
-  const isAdmin = !userContext.keycloak.hasRoles([Roles.ADMIN]);
+  const isAdmin = userContext.keycloak.hasRoles([Roles.ADMIN]);
   const { data: userAgencies, refreshData: refreshUserAgencies } = useDataLoader(() =>
     api.users.getUsersAgencyIds(userContext.keycloak.user.preferred_username),
   );
