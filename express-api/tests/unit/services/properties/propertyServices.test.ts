@@ -438,7 +438,6 @@ describe('UNIT - Property Services', () => {
     it('should return a classification if found', () => {
       const result = getClassificationOrThrow(
         {
-          Status: 'Active',
           Classification: 'Surplus',
         },
         [produceClassification({ Name: 'Surplus', Id: 1 })],
@@ -446,23 +445,10 @@ describe('UNIT - Property Services', () => {
       expect(result).toEqual(1);
     });
 
-    it('should throw an error if that classification is not active or disposed', () => {
-      expect(() =>
-        getClassificationOrThrow(
-          {
-            Status: 'Disabled',
-            Classification: 'Surplus',
-          },
-          [produceClassification({ Name: 'Surplus', Id: 1 })],
-        ),
-      ).toThrow();
-    });
-
     it('should throw an error if there is no classification with a matching name', () => {
       expect(() =>
         getClassificationOrThrow(
           {
-            Status: 'Active',
             Classification: 'Not Surplus',
           },
           [produceClassification({ Name: 'Surplus', Id: 1 })],
