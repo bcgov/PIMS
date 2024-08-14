@@ -1,22 +1,45 @@
 ### SCHEMAS ###
 components:
   schemas:
-    EvaluationPost: 
+    EvaluationCommon:
       type: object
       properties:
         EvaluationKeyId:
           type: integer
           example: 0
         Value:
-          type: integer
+          type: number
           example: 100
         Year:
           type: integer
           example: 2024
-        isNew:
-          type: boolean
-          value: true
-    FiscalPost:
+    EvaluationPost: 
+      allOf:
+        - $ref: '#/components/schemas/EvaluationCommon'
+        - type: object 
+          properties:
+            isNew:
+              type: boolean
+              value: true
+    Evaluation: 
+      allOf:
+        - $ref: '#/components/schemas/EvaluationCommon'
+        - $ref: '#/components/schemas/CommonEntityProperties'
+        - type: object 
+          properties:
+            Note:
+              type: string
+              example: 'Evaulation note'
+            isNew: null # needed specifically so it doesn't show up
+    BuildingEvaluation:
+      allOf:
+        - $ref: '#/components/schemas/Evaluation'
+        - type: object 
+          properties:
+            BuildingId:
+              type: integer
+              example: 1
+    FiscalCommon:
       type: object
       properties:
         EffectiveDate:
@@ -30,8 +53,34 @@ components:
           example: 2024
           description: Is a string due to historical 24/23 storage.
         Value:
-          type: integer
+          type: number
           example: 100
         isNew:
           type: boolean
           example: true
+    FiscalPost:
+      allOf:
+        - $ref: '#/components/schemas/FiscalCommon'
+        - type: object 
+          properties:
+            isNew:
+              type: boolean
+              value: true
+    Fiscal: 
+      allOf:
+        - $ref: '#/components/schemas/FiscalCommon'
+        - $ref: '#/components/schemas/CommonEntityProperties'
+        - type: object 
+          properties:
+            Note:
+              type: string
+              example: 'Fiscal note'
+            isNew: null # needed specifically so it doesn't show up
+    BuildingFiscal:
+      allOf:
+        - $ref: '#/components/schemas/Fiscal'
+        - type: object 
+          properties:
+            BuildingId:
+              type: integer
+              example: 1

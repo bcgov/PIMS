@@ -5,7 +5,7 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - buildings
+        - Buildings
       summary: Gets a list of buildings based on supplied filter.
       parameters:
         - in: query
@@ -86,7 +86,7 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - buildings
+        - Buildings
       summary: Submits a new Building.
       requestBody:
         content:
@@ -112,7 +112,7 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - buildings
+        - Buildings
       summary: Gets a single Building that matches the Id.
       parameters:
         - in: path 
@@ -129,7 +129,7 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - buildings
+        - Buildings
       summary: Updates a single Building that matches the Id.
       parameters:
         - in: path 
@@ -172,7 +172,7 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - buildings
+        - Buildings
       summary: Deletes a single Building that matches the Id.
       parameters:
         - in: path 
@@ -313,6 +313,14 @@ components:
               example: null
               description: >
                 Site ID from BC Geocoder. Not currently in use.
+            Evaluations:
+              type: array
+              items:
+                $ref: '#/components/schemas/BuildingEvaluation'
+            Fiscals:
+              type: array
+              items:
+                $ref: '#/components/schemas/BuildingFiscal'
     BuildingUpdate:
       allOf: 
         - $ref: '#/components/schemas/BuildingPost'
