@@ -1,0 +1,37 @@
+### SCHEMAS ###
+components:
+  schemas:
+    EvaluationPost: 
+      type: object
+      properties:
+        EvaluationKeyId:
+          type: integer
+          example: 0
+        Value:
+          type: integer
+          example: 100
+        Year:
+          type: integer
+          example: 2024
+        isNew:
+          type: boolean
+          value: true
+    FiscalPost:
+      type: object
+      properties:
+        EffectiveDate:
+          type: string
+          example: '2024-03-09T08:00:00.000Z'
+        FiscalKeyId:
+          type: integer
+          example: 0
+        FiscalYear:
+          type: string
+          example: 2024
+          description: Is a string due to historical 24/23 storage.
+        Value:
+          type: integer
+          example: 100
+        isNew:
+          type: boolean
+          example: true

@@ -107,6 +107,7 @@ paths:
         - in: path 
           name: id
           type: integer
+          required: true
       responses:
         '200':
           description: OK. Returns a single administrative area. 
@@ -124,6 +125,7 @@ paths:
         - in: path 
           name: id
           type: integer
+          required: true
       requestBody:
         content: 
           application/json:
@@ -152,12 +154,15 @@ components:
       description: Object submitted in body of POST request. 
       properties:
         Name:
+          required: true
           type: string
           example: Victoria
         RegionalDistrictId:
+          required: true
           type: integer
           example: 19
         ProvinceId:
+          required: true
           type: string
           example: BC
         IsDisabled:
@@ -166,6 +171,7 @@ components:
     AdministrativeArea:
       allOf: 
         - $ref: '#/components/schemas/AdministrativeAreaPost'
+        - $ref: '#/components/schemas/CommonEntityProperties'
         - type: object
           properties:
             Id: 
@@ -174,18 +180,6 @@ components:
             SortOrder:
               type: integer
               example: 0
-            CreatedOn:
-              type: date
-              example: '2023-01-18T01:58:40.246Z'
-            UpdatedOn:
-              type: date
-              example: '2023-01-18T01:58:40.246Z'
-            CreatedBy:
-              type: string
-              example: '00000000-0000-0000-0000-000000000000'
-            UpdatedBy:
-              type: string
-              example: '00000000-0000-0000-0000-000000000000'
     AdministrativeAreaJoinView:
       type: object
       description: Object returned from Administrative Area Join View.

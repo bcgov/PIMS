@@ -125,6 +125,7 @@ paths:
         - in: path 
           name: id
           type: integer
+          required: true
       responses:
         '200':
           description: OK. Returns a single agency. 
@@ -142,6 +143,7 @@ paths:
         - in: path 
           name: id
           type: integer
+          required: true
       requestBody:
         content: 
           application/json:
@@ -185,6 +187,7 @@ paths:
         - in: path 
           name: id
           type: integer
+          required: true
       responses:
         '204':
           description: Successful deletion
@@ -206,9 +209,11 @@ components:
       description: Object submitted in body of POST request. 
       properties:
         Name:
+          required: true
           type: string
           example: Real Property Division
         Code:
+          required: true
           type: string
           example: RPD
         Description:
@@ -235,23 +240,12 @@ components:
     Agency:
       allOf: 
         - $ref: '#/components/schemas/AgencyPost'
+        - $ref: '#/components/schemas/CommonEntityProperties'
         - type: object
           properties:
             Id: 
               type: integer
               example: 300
-            CreatedOn:
-              type: date
-              example: '2023-01-18T01:58:40.246Z'
-            UpdatedOn:
-              type: date
-              example: '2023-01-18T01:58:40.246Z'
-            CreatedBy:
-              type: string
-              example: '00000000-0000-0000-0000-000000000000'
-            UpdatedBy:
-              type: string
-              example: '00000000-0000-0000-0000-000000000000'
             AddressTo:
               type: string
               example: Good Morning
