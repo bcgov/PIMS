@@ -67,6 +67,32 @@ export const constructFindOptionFromQueryBoolean = <T>(
   return { [column]: internalMatcher(value) } as FindOptionsWhere<T>;
 };
 
+export const constructFindOptionFromQuerySingleSelect = <T>(
+  column: keyof T,
+  operatorValuePair: string,
+): FindOptionsWhere<T> => {
+  if (operatorValuePair == null || operatorValuePair.match(/([^,]*),(.*)/) == null) {
+    return { [column]: undefined } as FindOptionsWhere<T>;
+  }
+  const [, operator, value] = operatorValuePair.match(/([^,]*),(.*)/).map((a) => a.trim());
+  const listOfValues = value.split(',');
+  let internalMatcher;
+  switch (operator) {
+    case 'is':
+      internalMatcher = Equal;
+      break;
+    case 'not':
+      internalMatcher = (str: string) => Not(Equal(str));
+      break;
+    case 'isAnyOf':
+      internalMatcher = () => IsAnyOfWrapper(listOfValues);
+      break;
+    default:
+      return { [column]: undefined } as FindOptionsWhere<T>;
+  }
+  return { [column]: internalMatcher(value) } as FindOptionsWhere<T>;
+};
+
 /**
  * Accepts a column alias and produces a FindOptionsWhere style object.
  * This lets you plug in the return value to typeorm functions such as .find, findOne, etc.
@@ -165,6 +191,15 @@ export const TimestampComparisonWrapper = (tsValue: string, operator: TimestampO
     return Raw((alias) => `(${alias})::DATE != '${toPostgresTimestamp(new Date(tsValue))}'::DATE`);
   }
   return Raw((alias) => `${alias} ${operator} '${toPostgresTimestamp(new Date(tsValue))}'`);
+};
+
+/**
+ * Simple wrapper to produce an IN ARRAY style query when you want to match against any of several different specific options.
+ * @param elements An array of elements to match against.
+ * @returns FindOptionsWhere<T>
+ */
+export const IsAnyOfWrapper = (elements: string[]) => {
+  return Raw((alias) => `${alias} IN (${elements.map((a) => `'${a}'`).join(',')})`);
 };
 
 //The behavior of the Raw function seems bugged under certain query formats.
