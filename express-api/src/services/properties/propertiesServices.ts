@@ -169,7 +169,7 @@ const findLinkedProjectsForProperty = async (buildingId?: number, parcelId?: num
   return associatedProjects.map((result) => ({
     ProjectNumber: result.project_number,
     Id: result.id,
-    StatusName: result.statusname,
+    StatusName: result.status_name,
     Description: result.description,
   }));
 };
