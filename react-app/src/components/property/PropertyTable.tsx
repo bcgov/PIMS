@@ -196,7 +196,7 @@ const PropertyTable = (props: IPropertyTable) => {
       case 'Building':
       case 'Parcel':
         ref.current.setFilterModel({
-          items: [{ value, operator: 'contains', field: 'PropertyType' }],
+          items: [{ value, operator: 'is', field: 'PropertyType' }],
         });
         break;
       case 'Core':
