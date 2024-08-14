@@ -6,7 +6,7 @@ paths:
         - bearerAuth: []
       tags:
         - Lookup
-      summary: Gets a list regional districts with minimal properties.
+      summary: Gets a list of regional districts with minimal properties.
       responses:
         '200':
           description: OK
@@ -16,27 +16,185 @@ paths:
                 type: array
                 items: 
                   $ref: '#/components/schemas/RegionalDistrictPublic'
-  # /lookup/property/classifications:
-  #   get:
-  #     security:
-  #       - bearerAuth: []
-  #     tags:
-  #       - Lookup
-  #     summary: Gets a list property classifications with minimal properties.
-  #     responses:
-  #       '200':
-  #         description: OK
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: array
-  #               items: 
-  #                 $ref: '#/components/schemas/RegionalDistrict'
+  /lookup/property/classifications:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Lookup
+      summary: Gets a list of property classifications with minimal properties.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/PropertyClassificationPublic'
+  /lookup/property/predominateUses:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Lookup
+      summary: Gets a list of building predominate uses with minimal properties.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/PredominateUsePublic'
+  /lookup/property/constructionTypes:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Lookup
+      summary: Gets a list of building construction types with minimal properties.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/ConstructionTypePublic'
+  /lookup/project/tierLevels:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Lookup
+      summary: Gets a list of project tier levels with minimal properties.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/TierLevelPublic'
+  /lookup/project/status:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Lookup
+      summary: Gets a list of project statuses with minimal properties.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/ProjectStatusPublic'
+  /lookup/tasks:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Lookup
+      summary: Gets a list of project tasks with minimal properties.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/ProjectMetadataPublic'
+  /lookup/propertyTypes:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Lookup
+      summary: Gets a list of property types with minimal properties.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/PropertyTypePublic'
+  /lookup/noteTypes:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Lookup
+      summary: Gets a list of note types with minimal properties.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/ProjectMetadataPublic'
+  /lookup/timestampTypes:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Lookup
+      summary: Gets a list of timestamp types with minimal properties.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/ProjectMetadataPublic'
+  /lookup/monetaryTypes:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Lookup
+      summary: Gets a list of monetary types with minimal properties.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/ProjectMetadataPublic'
+  /lookup/all:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Lookup
+      summary: Gets an object containing all lookup values.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LookupAll'
               
 ### SCHEMAS ### 
 components:
   schemas:
-    RegionalDistrict:
+    RegionalDistrictPublic:
       type: object
       properties:
         Name: 
@@ -48,5 +206,234 @@ components:
         Abbreviation:
           type: string
           example: CRD
-    # PropertyClassificationPublic:
-
+    PropertyClassificationPublic:
+      type: object
+      properties:
+        Name:
+          type: string
+          example: Core Operational
+        Id: 
+          type: integer 
+          example: 1
+        SortOrder:
+          type: integer 
+          example: 0
+        IsVisible: 
+          type: boolean
+          example: true
+    PredominateUsePublic:
+      type: object
+      properties:
+        Name:
+          type: string
+          example: Clinic
+        Id: 
+          type: integer 
+          example: 1
+        SortOrder:
+          type: integer 
+          example: 0
+    ConstructionTypePublic:
+      type: object
+      properties:
+        Name:
+          type: string
+          example: Wood
+        Id: 
+          type: integer 
+          example: 1
+        SortOrder:
+          type: integer 
+          example: 0
+    TierLevelPublic:
+      type: object
+      properties:
+        Name:
+          type: string
+          example: Tier 1
+        Id: 
+          type: integer 
+          example: 1
+        SortOrder:
+          type: integer 
+          example: 0
+    ProjectStatusPublic:
+      type: object
+      properties:
+        Name:
+          type: string
+          example: Disposed
+        Id: 
+          type: integer 
+          example: 1
+        SortOrder:
+          type: integer 
+          example: 0
+        IsDisabled:
+          type: boolean
+          example: false
+    PropertyTypePublic:
+      type: object
+      properties:
+        Name:
+          type: string
+          example: Building
+        Id: 
+          type: integer 
+          example: 1
+        IsDisabled:
+          type: boolean
+          example: false
+        SortOrder:
+          type: integer 
+          example: 0
+    ProjectMetadataPublic:
+      type: object
+      properties:
+        Name:
+          type: string
+        Id: 
+          type: integer 
+          example: 1
+        Description: 
+          type: string 
+        IsOptional:
+          type: boolean
+          example: true
+        StatusId:
+          type: integer
+          example: 1
+    RiskPublic:
+      type: object
+      properties:
+        Name:
+          type: string
+          example: Green
+        Id: 
+          type: integer 
+          example: 1
+        Code: 
+          type: string
+          example: GREEN 
+        Description:
+          type: string
+    RolePublic:
+      type: object
+      properties:
+        Name:
+          type: string
+          example: General User
+        Id: 
+          type: string 
+          example: '00000000-0000-0000-0000-000000000000'
+        Description:
+          type: string
+    WorkflowPublic:
+      type: object
+      properties:
+        Name:
+          type: string
+          example: Surplus Property List
+        Id: 
+          type: integer 
+          example: 1
+    AdministrativeAreaPublic:
+      type: object
+      properties:
+        Name:
+          type: string
+          example: Victoria
+        Id: 
+          type: integer 
+          example: 1
+        RegionalDistrictId:
+          type: integer 
+          example: 1
+    AgencyPublic:
+      type: object
+      properties:
+        Name:
+          type: string
+          example: Real Property Division
+        Id: 
+          type: integer 
+          example: 1
+        Code:
+          type: string
+          example: RPD
+        ParentId: 
+          type: integer 
+          example: 2
+    LookupAll:
+      type: object
+      properties:
+        AdministrativeAreas:
+          type: array
+          items: 
+            $ref: '#/components/schemas/AdministrativeAreaPublic'
+        Agencies:
+          type: array
+          items: 
+            $ref: '#/components/schemas/AgencyPublic'
+        Classifications:
+          type: array
+          items: 
+            $ref: '#/components/schemas/PropertyClassificationPublic'
+        Config:
+          type: object
+          properties:
+            contactEmail:
+              type: string
+              example: email@gov.bc.ca
+        ConstructionTypes: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/ConstructionTypePublic'
+        MonetaryTypes:
+          type: array
+          items: 
+            $ref: '#/components/schemas/ProjectMetadataPublic'
+        NoteTypes: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/ProjectMetadataPublic'
+        PredominateUses: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/PredominateUsePublic'
+        ProjectStatuses: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/ProjectStatusPublic'
+        ProjectTiers: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/TierLevelPublic'
+        PropertyTypes: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/PropertyTypePublic'
+        RegionalDistricts:
+          type: array
+          items: 
+            $ref: '#/components/schemas/RegionalDistrictPublic'
+        Risks: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/RiskPublic'
+        Roles: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/RolePublic'
+        Tasks:
+          type: array
+          items: 
+            $ref: '#/components/schemas/ProjectMetadataPublic'
+        TimestampTypes:
+          type: array
+          items: 
+            $ref: '#/components/schemas/ProjectMetadataPublic'
+        Workflows: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/WorkflowPublic'
