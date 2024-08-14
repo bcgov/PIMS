@@ -196,6 +196,7 @@ const BulkUpload = () => {
                 {[
                   'PropertyType (Enter Land or Building)',
                   'PID',
+                  'Name',
                   'Classification',
                   'AgencyCode',
                   'AdministrativeArea',
