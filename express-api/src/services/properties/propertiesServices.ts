@@ -162,7 +162,7 @@ const findLinkedProjectsForProperty = async (buildingId?: number, parcelId?: num
     .leftJoinAndSelect('pp.Project', 'p')
     .leftJoinAndSelect('p.Status', 'ps')
     .where(whereCondition)
-    .select(['p.*', 'ps.Name AS StatusName']);
+    .select(['p.*', 'ps.Name AS status_name']);
 
   const associatedProjects = buildingId || parcelId ? await query.getRawMany() : []; // Return an empty array if no ID is provided
 
