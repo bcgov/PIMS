@@ -54,7 +54,25 @@ const AssociatedProjectsTable: React.FC<AssociatedProjectsTableProps> = ({ linke
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} autoHeight hideFooter />
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        autoHeight
+        hideFooter
+        sx={{
+          borderStyle: 'none',
+          '& .MuiDataGrid-columnHeaders': {
+            borderBottom: 'none',
+          },
+          '& div div div div >.MuiDataGrid-cell': {
+            borderBottom: 'none',
+            borderTop: '1px solid rgba(224, 224, 224, 1)',
+          },
+          '& .MuiDataGrid-row:hover': {
+            backgroundColor: 'transparent',
+          },
+        }}
+      />
     </div>
   );
 };
