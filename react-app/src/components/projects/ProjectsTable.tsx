@@ -1,7 +1,7 @@
 import usePimsApi from '@/hooks/usePimsApi';
 import { GridColDef } from '@mui/x-data-grid';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
-import React, { MutableRefObject, useContext, useState } from 'react';
+import React, { MutableRefObject, useContext, useMemo, useState } from 'react';
 import { dateFormatter, projectStatusChipFormatter } from '@/utilities/formatters';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -27,6 +27,22 @@ const ProjectsTable = () => {
     return Number(projectNo.match(/[a-zA-Z]+-?(\d+)/)[1]);
   };
 
+  const agenciesForFilter = useMemo(() => {
+    if (lookup.data) {
+      return lookup.data.Agencies.map((a) => a.Name);
+    } else {
+      return [];
+    }
+  }, [lookup.data]);
+
+  const statusForFilter = useMemo(() => {
+    if (lookup.data) {
+      return lookup.data.ProjectStatuses.map((a) => a.Name);
+    } else {
+      return [];
+    }
+  }, [lookup.data]);
+
   const columns: GridColDef[] = [
     {
       field: 'ProjectNumber',
@@ -45,12 +61,16 @@ const ProjectsTable = () => {
       headerName: 'Status',
       flex: 1,
       maxWidth: 250,
+      valueOptions: statusForFilter,
+      type: 'singleSelect',
       renderCell: (params) => projectStatusChipFormatter(params.value ?? 'N/A'),
     },
     {
       field: 'Agency',
       headerName: 'Agency',
       flex: 1,
+      type: 'singleSelect',
+      valueOptions: agenciesForFilter,
     },
     {
       field: 'NetBook',
@@ -95,7 +115,7 @@ const ProjectsTable = () => {
       case 'Approved for Exemption':
       case 'Approved for ERP':
       case 'Submitted':
-        ref.current.setFilterModel({ items: [{ value, operator: 'contains', field: 'Status' }] });
+        ref.current.setFilterModel({ items: [{ value, operator: 'is', field: 'Status' }] });
     }
   };
 

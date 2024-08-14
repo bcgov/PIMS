@@ -27,6 +27,7 @@ import { PropertyUnion } from '@/typeorm/Entities/views/PropertyUnionView';
 import {
   constructFindOptionFromQuery,
   constructFindOptionFromQueryPid,
+  constructFindOptionFromQuerySingleSelect,
 } from '@/utilities/helperFunctions';
 import userServices from '../users/usersServices';
 import { Brackets, FindManyOptions, FindOptionsWhere, ILike, In, QueryRunner } from 'typeorm';
@@ -694,18 +695,21 @@ const sortKeyTranslator: Record<string, string> = {
  */
 const collectFindOptions = (filter: PropertyUnionFilter) => {
   const options = [];
-  if (filter.agency) options.push(constructFindOptionFromQuery('Agency', filter.agency));
+  if (filter.agency)
+    options.push(constructFindOptionFromQuerySingleSelect('Agency', filter.agency));
   if (filter.pid) options.push(constructFindOptionFromQueryPid('PID', filter.pid));
   if (filter.pin) options.push(constructFindOptionFromQueryPid('PIN', filter.pin));
   if (filter.address) options.push(constructFindOptionFromQuery('Address', filter.address));
   if (filter.updatedOn) options.push(constructFindOptionFromQuery('UpdatedOn', filter.updatedOn));
   if (filter.classification)
-    options.push(constructFindOptionFromQuery('Classification', filter.classification));
+    options.push(constructFindOptionFromQuerySingleSelect('Classification', filter.classification));
   if (filter.landArea) options.push(constructFindOptionFromQuery('LandArea', filter.landArea));
   if (filter.administrativeArea)
-    options.push(constructFindOptionFromQuery('AdministrativeArea', filter.administrativeArea));
+    options.push(
+      constructFindOptionFromQuerySingleSelect('AdministrativeArea', filter.administrativeArea),
+    );
   if (filter.propertyType)
-    options.push(constructFindOptionFromQuery('PropertyType', filter.propertyType));
+    options.push(constructFindOptionFromQuerySingleSelect('PropertyType', filter.propertyType));
   return options;
 };
 
