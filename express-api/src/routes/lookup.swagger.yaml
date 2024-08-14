@@ -1,0 +1,52 @@
+### PATHS ###
+paths:
+  /lookup/regionalDistricts:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Lookup
+      summary: Gets a list regional districts with minimal properties.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/RegionalDistrictPublic'
+  # /lookup/property/classifications:
+  #   get:
+  #     security:
+  #       - bearerAuth: []
+  #     tags:
+  #       - Lookup
+  #     summary: Gets a list property classifications with minimal properties.
+  #     responses:
+  #       '200':
+  #         description: OK
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: array
+  #               items: 
+  #                 $ref: '#/components/schemas/RegionalDistrict'
+              
+### SCHEMAS ### 
+components:
+  schemas:
+    RegionalDistrict:
+      type: object
+      properties:
+        Name: 
+          type: string
+          example: Capital Regional District 
+        Id:
+          type: integer
+          example: 1 
+        Abbreviation:
+          type: string
+          example: CRD
+    # PropertyClassificationPublic:
+
