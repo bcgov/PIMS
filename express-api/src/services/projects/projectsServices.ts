@@ -682,8 +682,13 @@ const updateProject = async (
   if (project.ProjectNumber && originalProject.ProjectNumber !== project.ProjectNumber) {
     throw new ErrorWithCode('Project Number may not be changed.', 403);
   }
-  const validUserAgencies = await userServices.getAgencies(user.preferred_username);
-  if (!isAdmin(user) && !validUserAgencies.includes(project.AgencyId)) {
+
+  if (
+    //Agency change disallowed unless admin.
+    project.AgencyId &&
+    originalProject.AgencyId !== project.AgencyId &&
+    !isAdmin(user)
+  ) {
     throw new ErrorWithCode('Project Agency may not be changed.', 403);
   }
 
