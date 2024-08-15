@@ -5,7 +5,6 @@ import express from 'express';
 
 const router = express.Router();
 
-export const DISPOSAL_API_ROUTE = '/projects/disposal';
 export const NOTIFICATION_QUEUE_ROUTE = '/queue';
 export const NOTIFICATION_TEMPLATE_ROUTE = '/templates';
 
