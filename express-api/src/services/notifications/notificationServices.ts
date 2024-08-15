@@ -34,8 +34,6 @@ export enum NotificationStatus {
   Failed = 3,
   Completed = 4,
   NotFound = 5,
-  Invalid = 6,
-  Unauthorized = 7,
 }
 
 export enum NotificationAudience {
@@ -447,10 +445,6 @@ const convertChesStatusToNotificationStatus = (chesStatus: string): Notification
       return NotificationStatus.Completed;
     case '404':
       return NotificationStatus.NotFound;
-    case '422':
-      return NotificationStatus.Invalid;
-    case '401':
-      return NotificationStatus.Unauthorized;
     default:
       return null;
   }
