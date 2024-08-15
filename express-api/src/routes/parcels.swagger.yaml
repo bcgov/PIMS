@@ -70,38 +70,38 @@ paths:
               schema:
                 type: string 
                 example: Could not parse filter.
-  post:
-      security:
-        - bearerAuth: []
-      tags:
-        - Parcels
-      summary: Submits a new Parcel.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ParcelPost'
-      responses:
-        '201':
-          description: OK. Returns created Parcel.
+    post:
+        security:
+          - bearerAuth: []
+        tags:
+          - Parcels
+        summary: Submits a new Parcel.
+        requestBody:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Parcel'
-        '400':
-          description: Given if the provided PID is not the correct format.
-          content:
-            text/plain:
-              schema: 
-                type: string
-                example: 'PID must be a number and in the format #########'
-        '409':
-          description: Given if the parcel already exists in PIMS.
-          content:
-            text/plain:
-              schema: 
-                type: string
-                example: Parcel already exists.
+                $ref: '#/components/schemas/ParcelPost'
+        responses:
+          '201':
+            description: OK. Returns created Parcel.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Parcel'
+          '400':
+            description: Given if the provided PID is not the correct format.
+            content:
+              text/plain:
+                schema: 
+                  type: string
+                  example: 'PID must be a number and in the format #########'
+          '409':
+            description: Given if the parcel already exists in PIMS.
+            content:
+              text/plain:
+                schema: 
+                  type: string
+                  example: Parcel already exists.
 
 ### SCHEMAS ### 
 components:
