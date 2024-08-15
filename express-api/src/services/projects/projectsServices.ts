@@ -29,7 +29,10 @@ import { ProjectRisk } from '@/constants/projectRisk';
 import notificationServices, { AgencyResponseType } from '../notifications/notificationServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import userServices from '../users/usersServices';
-import { constructFindOptionFromQuery } from '@/utilities/helperFunctions';
+import {
+  constructFindOptionFromQuery,
+  constructFindOptionFromQuerySingleSelect,
+} from '@/utilities/helperFunctions';
 import { ProjectTimestamp } from '@/typeorm/Entities/ProjectTimestamp';
 import { ProjectMonetary } from '@/typeorm/Entities/ProjectMonetary';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
@@ -880,8 +883,10 @@ const deleteProjectById = async (id: number, username: string) => {
 const collectFindOptions = (filter: ProjectFilter) => {
   const options = [];
   if (filter.name) options.push(constructFindOptionFromQuery('Name', filter.name));
-  if (filter.agency) options.push(constructFindOptionFromQuery('Agency', filter.agency));
-  if (filter.status) options.push(constructFindOptionFromQuery('Status', filter.status));
+  if (filter.agency)
+    options.push(constructFindOptionFromQuerySingleSelect('Agency', filter.agency));
+  if (filter.status)
+    options.push(constructFindOptionFromQuerySingleSelect('Status', filter.status));
   if (filter.projectNumber) {
     options.push(constructFindOptionFromQuery('ProjectNumber', filter.projectNumber));
   }
