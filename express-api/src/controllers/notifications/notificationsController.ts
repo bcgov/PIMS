@@ -30,7 +30,9 @@ export const getNotificationsByProjectId = async (req: Request, res: Response) =
 
       const project = await projectServices.getProjectById(filterResult.projectId);
       if (!usersAgencies.includes(project.AgencyId)) {
-        return res.status(403).send({ message: 'User is not authorized to access this endpoint.' });
+        return res
+          .status(403)
+          .send({ message: 'User cannot access project outside their agencies.' });
       }
     }
 
@@ -58,9 +60,6 @@ export const resendNotificationById = async (req: Request, res: Response) => {
     return res.status(404).send('Notification not found.');
   }
   const kcUser = req.user;
-  if (!isAdmin(kcUser)) {
-    return res.status(403).send({ message: 'User is not authorized to access this endpoint.' });
-  }
   const resultantNotification = await notificationServices.sendNotification(notification, kcUser);
   const user = await userServices.getUser(kcUser.preferred_username);
   const updatedNotification = await notificationServices.updateNotificationStatus(
@@ -77,10 +76,11 @@ export const cancelNotificationById = async (req: Request, res: Response) => {
     return res.status(404).send('Notification not found.');
   }
   const kcUser = req.user;
-  if (!isAdmin(kcUser)) {
-    return res.status(403).send({ message: 'User is not authorized to access this endpoint.' });
-  }
-  const resultantNotification = await notificationServices.cancelNotificationById(notification.Id);
+  const user = await userServices.getUser(kcUser.preferred_username);
+  const resultantNotification = await notificationServices.cancelNotificationById(
+    notification.Id,
+    user,
+  );
   if (resultantNotification.Status !== NotificationStatus.Cancelled) {
     return res.status(400).send(resultantNotification);
   }

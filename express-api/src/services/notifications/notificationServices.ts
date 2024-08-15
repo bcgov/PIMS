@@ -690,7 +690,7 @@ const generateProjectWatchNotifications = async (
   return notificationsInserted;
 };
 
-const cancelNotificationById = async (id: number) => {
+const cancelNotificationById = async (id: number, user: User) => {
   const notification = await AppDataSource.getRepository(NotificationQueue).findOne({
     where: { Id: id },
   });
@@ -699,6 +699,7 @@ const cancelNotificationById = async (id: number) => {
     return AppDataSource.getRepository(NotificationQueue).save({
       Id: notification.Id,
       Status: NotificationStatus.Cancelled,
+      UpdatedById: user.Id,
     });
   } else {
     return notification;

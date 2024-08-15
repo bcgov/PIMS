@@ -1,0 +1,208 @@
+### PATHS ###
+paths:
+  /notifications/queue:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Notifications
+      summary: Gets a paginated list of notifications related to a single project.
+      parameters:
+        - in: query
+          name: projectId
+          schema: 
+            type: string
+            example: '33'
+        - in: query
+          name: page 
+          schema:  
+            type: integer 
+            example: 0
+        - in: query
+          name: quantity 
+          schema:  
+            type: integer 
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object 
+                properties:
+                  page: 
+                    type: number
+                    example: 0
+                  pageSize:
+                    type: number 
+                    example: 0
+                  items:
+                    type: array 
+                    items:
+                      $ref: '#/components/schemas/NotificationQueue'
+        '400': 
+          description: Filter parsing issue.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Could not parse filter.
+        '403':
+          description: Authorization issue.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User cannot access project outside their agencies.
+  /notifications/queue/{id}:
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Notifications
+      summary: Resends a notification based on its internal ID.
+      parameters:
+        - in: query
+          name: id
+          schema: 
+            type: integer 
+            description: The ID of the NotificationQueue record.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationQueue'
+        '404':
+          description: Not found
+          content:
+            text/plain:
+              type: string 
+              example: Notification not found.
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Notifications
+      summary: Cancels a notification based on its internal ID.
+      parameters:
+        - in: query
+          name: id
+          schema: 
+            type: integer 
+            description: The ID of the NotificationQueue record.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationQueue'
+        '404':
+          description: Not found
+          content:
+            text/plain:
+              type: string 
+              example: Notification not found.
+
+### SCHEMAS ###
+components:
+  schemas:
+    NotificationQueue:
+      type: object
+      properties:
+        Id:
+          type: integer
+          format: int32
+          description: "Primary key, auto-generated."
+        Key:
+          type: string
+          format: uuid
+          description: "Unique identifier for the notification queue entry."
+        Status:
+          type: integer
+          format: int32
+          description: "Status of the notification."
+        Priority:
+          type: string
+          maxLength: 50
+          description: "Priority of the notification."
+        Encoding:
+          type: string
+          maxLength: 50
+          description: "Encoding type used for the notification."
+        SendOn:
+          type: string
+          format: date-time
+          description: "Timestamp when the notification is scheduled to be sent."
+        To:
+          type: string
+          maxLength: 500
+          nullable: true
+          description: "Recipient email address."
+        Subject:
+          type: string
+          maxLength: 200
+          description: "Subject of the notification."
+        BodyType:
+          type: string
+          maxLength: 50
+          description: "Type of the body content (e.g., text, HTML)."
+        Body:
+          type: string
+          description: "The main content of the notification."
+        Bcc:
+          type: string
+          maxLength: 500
+          nullable: true
+          description: "Bcc email addresses."
+        Cc:
+          type: string
+          maxLength: 500
+          nullable: true
+          description: "Cc email addresses."
+        Tag:
+          type: string
+          maxLength: 50
+          nullable: true
+          description: "Tag for categorizing the notification."
+        ProjectId:
+          type: integer
+          format: int32
+          nullable: true
+          description: "Foreign key referencing the associated project."
+        Project:
+          $ref: '#/components/schemas/Project'
+        ToAgencyId:
+          type: integer
+          format: int32
+          nullable: true
+          description: "Foreign key referencing the associated agency."
+        TemplateId:
+          type: integer
+          format: int32
+          description: "Foreign key referencing the associated notification template."
+        Template:
+          $ref: '#/components/schemas/NotificationTemplate'
+        ChesMessageId:
+          type: string
+          format: uuid
+          nullable: true
+          description: "UUID for the CHES message."
+        ChesTransactionId:
+          type: string
+          format: uuid
+          nullable: true
+          description: "UUID for the CHES transaction."
+      required:
+        - Key
+        - Status
+        - Priority
+        - Encoding
+        - SendOn
+        - Subject
+        - BodyType
+        - Body
+        - TemplateId
