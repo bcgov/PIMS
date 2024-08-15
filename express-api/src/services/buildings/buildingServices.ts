@@ -10,6 +10,7 @@ import logger from '@/utilities/winstonLogger';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { isAdmin } from '@/utilities/authorizationChecks';
+import { isValidAgencyChange } from '@/utilities/helperFunctions';
 
 const buildingRepo = AppDataSource.getRepository(Building);
 
@@ -67,8 +68,8 @@ export const updateBuildingById = async (building: DeepPartial<Building>, ssoUse
   if (!existingBuilding) {
     throw new ErrorWithCode('Building does not exists.', 404);
   }
-  if (building.AgencyId && building.AgencyId !== existingBuilding.AgencyId && !isAdmin(ssoUser)) {
-    throw new ErrorWithCode('Changing agency is not permitted.', 403);
+  if (!isAdmin(ssoUser) && !isValidAgencyChange(existingBuilding.AgencyId, building.AgencyId)) {
+    throw new ErrorWithCode('This agency change is not permitted.', 403);
   }
   if (building.Fiscals && building.Fiscals.length) {
     building.Fiscals = await Promise.all(
