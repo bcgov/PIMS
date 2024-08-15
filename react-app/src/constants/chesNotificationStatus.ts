@@ -5,7 +5,6 @@ export enum NotificationStatus {
   Failed = 3,
   Completed = 4,
   NotFound = 5,
-  Invalid = 6,
 }
 
 export const getStatusString = (status: number): string => {
