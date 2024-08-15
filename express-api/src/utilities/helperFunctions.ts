@@ -1,5 +1,3 @@
-import { AppDataSource } from '@/appDataSource';
-import { Agency } from '@/typeorm/Entities/Agency';
 import { Equal, FindOptionsWhere, IsNull, Not, Raw } from 'typeorm';
 
 /**
@@ -207,48 +205,4 @@ export const toPostgresTimestamp = (date: Date) => {
 
 export const getDaysBetween = (earlierDate: Date, laterDate: Date): number => {
   return Math.trunc((laterDate.getTime() - earlierDate.getTime()) / (1000 * 60 * 60 * 24));
-};
-
-/**
- * Check if a change of agency is valid based on the initial and new agency IDs.
- *
- * @param initialAgencyId The ID of the initial agency.
- * @param newAgencyId The ID of the new agency.
- * @returns A boolean indicating whether the agency change is valid.
- */
-export const isValidAgencyChange = async (initialAgencyId: number, newAgencyId: number) => {
-  const originalAgency = await AppDataSource.getRepository(Agency).findOne({
-    where: { Id: initialAgencyId },
-    relations: {
-      Parent: true,
-    },
-  });
-  if (!originalAgency) return false;
-
-  // If agency is a child agency
-  if (originalAgency.ParentId) {
-    const siblingAgencyIds = (
-      await AppDataSource.getRepository(Agency).find({
-        where: {
-          ParentId: originalAgency.ParentId,
-        },
-      })
-    ).map((a) => a.Id);
-    // It may change to a sibling, the parent, or itself
-    if ([...siblingAgencyIds, originalAgency.ParentId, originalAgency.Id].includes(newAgencyId))
-      return true;
-    else return false;
-  } else {
-    // Agency is a parent agency
-    const childAgencyIds = (
-      await AppDataSource.getRepository(Agency).find({
-        where: {
-          ParentId: originalAgency.Id,
-        },
-      })
-    ).map((a) => a.Id);
-    // It may change to a child or itself
-    if ([...childAgencyIds, originalAgency.Id].includes(newAgencyId)) return true;
-    else return false;
-  }
 };

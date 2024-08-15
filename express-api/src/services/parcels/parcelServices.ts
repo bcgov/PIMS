@@ -10,7 +10,6 @@ import logger from '@/utilities/winstonLogger';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { isAdmin } from '@/utilities/authorizationChecks';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
-import { isValidAgencyChange } from '@/utilities/helperFunctions';
 
 const parcelRepo = AppDataSource.getRepository(Parcel);
 
@@ -164,7 +163,8 @@ const updateParcel = async (incomingParcel: DeepPartial<Parcel>, ssoUser: SSOUse
   if (findParcel == null || findParcel.Id !== incomingParcel.Id) {
     throw new ErrorWithCode('Parcel not found', 404);
   }
-  if (!isAdmin(ssoUser) && !isValidAgencyChange(findParcel.AgencyId, incomingParcel.AgencyId)) {
+  const validUserAgencies = await userServices.getAgencies(ssoUser.preferred_username);
+  if (!isAdmin(ssoUser) && !validUserAgencies.includes(incomingParcel.AgencyId)) {
     throw new ErrorWithCode('This agency change is not permitted.', 403);
   }
   if (incomingParcel.Fiscals && incomingParcel.Fiscals.length) {
