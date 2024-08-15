@@ -56,6 +56,7 @@ jest.spyOn(AppDataSource.getRepository(ProjectProperty), 'find').mockImplementat
 jest.spyOn(parcelRepo, 'find').mockImplementation(async () => [produceParcel(), produceParcel()]);
 
 jest.spyOn(userServices, 'getUser').mockImplementation(async () => produceUser());
+jest.spyOn(userServices, 'getAgencies').mockImplementation(async () => []);
 
 jest
   .spyOn(AppDataSource.getRepository(ParcelEvaluation), 'find')
