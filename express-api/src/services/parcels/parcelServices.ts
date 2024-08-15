@@ -24,7 +24,7 @@ const addParcel = async (parcel: DeepPartial<Parcel>) => {
 
   const stringPID = numberPID.toString();
   if (parcel.PID != null && (stringPID.length > 9 || isNaN(numberPID))) {
-    throw new ErrorWithCode('PID must be a number and in the format #########');
+    throw new ErrorWithCode('PID must be a number and in the format #########', 400);
   }
 
   const existingParcel = parcel.PID != null ? await getParcelByPid(numberPID) : undefined;

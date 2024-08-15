@@ -39,6 +39,14 @@ components:
             BuildingId:
               type: integer
               example: 1
+    ParcelEvaluation:
+      allOf:
+        - $ref: '#/components/schemas/Evaluation'
+        - type: object 
+          properties:
+            ParcelId:
+              type: integer
+              example: 1
     FiscalCommon:
       type: object
       properties:
@@ -82,5 +90,13 @@ components:
         - type: object 
           properties:
             BuildingId:
+              type: integer
+              example: 1
+    ParcelFiscal:
+      allOf:
+        - $ref: '#/components/schemas/Fiscal'
+        - type: object 
+          properties:
+            ParcelId:
               type: integer
               example: 1
