@@ -202,6 +202,9 @@ const BulkUpload = () => {
                   'AdministrativeArea',
                   'Latitude',
                   'Longitude',
+                  'BuildingTenancy (Buildings only)',
+                  'TotalArea (Buildings only)',
+                  'NetUsableArea (Buildings only)',
                   'PredominateUse (Buildings only)',
                   'ConstructionType (Buildings only)',
                 ].map((a, idx) => (
@@ -215,7 +218,6 @@ const BulkUpload = () => {
               <ListItemText primary={'Optional Headers may have blank values.'} />
               <List sx={{ listStyle: 'disc', pl: 4 }}>
                 {[
-                  'LandLegalDescription',
                   'Description',
                   'Address',
                   'PIN',
@@ -223,7 +225,6 @@ const BulkUpload = () => {
                   'AssessedYear',
                   'Netbook',
                   'FiscalYear',
-                  'RentableArea (for Buildings)',
                   'LandArea (for Land)',
                 ].map((a, idx) => (
                   <ListItem key={`req-header-${idx}`} sx={{ display: 'list-item', py: '2px' }}>
