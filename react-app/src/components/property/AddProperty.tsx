@@ -27,7 +27,7 @@ import { LoadingButton } from '@mui/lab';
 import { LookupContext } from '@/contexts/lookupContext';
 import { Classification } from '@/hooks/api/useLookupApi';
 import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
-import useUserAgencies from '@/hooks/useUserAgencies';
+import useUserAgencies from '@/hooks/api/useUserAgencies';
 
 const AddProperty = () => {
   //const years = [new Date().getFullYear(), new Date().getFullYear() - 1];

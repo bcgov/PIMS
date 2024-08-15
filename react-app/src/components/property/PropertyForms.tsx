@@ -261,6 +261,7 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
         </Grid>
         <Grid item xs={12}>
           <AutocompleteFormField
+            allowNestedIndent
             required
             name={'AgencyId'}
             label={'Agency'}

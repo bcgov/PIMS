@@ -24,7 +24,7 @@ import { parseFloatOrNull, parseIntOrNull, pidFormatter } from '@/utilities/form
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LookupContext } from '@/contexts/lookupContext';
 import { Classification } from '@/hooks/api/useLookupApi';
-import useUserAgencies from '@/hooks/useUserAgencies';
+import useUserAgencies from '@/hooks/api/useUserAgencies';
 
 interface IParcelInformationEditDialog {
   initialValues: Parcel;
@@ -113,15 +113,6 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
               })) ?? []
             }
           />
-          {/* {isAdmin && (
-            <AutocompleteFormField
-              name={'AgencyId'}
-              label={'Agency'}
-              options={
-                lookupData?.Agencies.map((agc) => ({ value: agc.Id, label: agc.Name })) ?? []
-              }
-            />
-          )} */}
         </Box>
       </FormProvider>
     </ConfirmDialog>
