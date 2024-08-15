@@ -119,7 +119,7 @@ export const deleteDisposalProject = async (req: Request, res: Response) => {
     projectId,
     req.user.preferred_username,
   );
-  const notifications = await notificationServices.cancelAllProjectNotifications(projectId);
+  const notifications = await notificationServices.cancelProjectNotifications(projectId);
 
   return res.status(200).send({ project: delProject, notifications });
 };

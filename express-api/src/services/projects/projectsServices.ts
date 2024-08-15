@@ -26,10 +26,13 @@ import {
 import { ProjectFilter } from '@/services/projects/projectSchema';
 import { PropertyType } from '@/constants/propertyType';
 import { ProjectRisk } from '@/constants/projectRisk';
-import notificationServices from '../notifications/notificationServices';
+import notificationServices, { AgencyResponseType } from '../notifications/notificationServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import userServices from '../users/usersServices';
-import { constructFindOptionFromQuery } from '@/utilities/helperFunctions';
+import {
+  constructFindOptionFromQuery,
+  constructFindOptionFromQuerySingleSelect,
+} from '@/utilities/helperFunctions';
 import { ProjectTimestamp } from '@/typeorm/Entities/ProjectTimestamp';
 import { ProjectMonetary } from '@/typeorm/Entities/ProjectMonetary';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
@@ -176,7 +179,13 @@ const addProject = async (
     await handleProjectMonetary(newProject, queryRunner);
     await handleProjectNotes(newProject, queryRunner);
     await handleProjectTimestamps(newProject, queryRunner);
-    await handleProjectNotifications(newProject, ssoUser, queryRunner);
+    await handleProjectNotifications(
+      newProject.Id,
+      null,
+      newProject.AgencyResponses ?? [],
+      ssoUser,
+      queryRunner,
+    );
     await queryRunner.commitTransaction();
     return newProject;
   } catch (e) {
@@ -386,7 +395,9 @@ const removeProjectBuildingRelations = async (
  * @returns A promise that resolves when all notifications are sent.
  */
 const handleProjectNotifications = async (
-  oldProject: DeepPartial<Project>,
+  projectId: number,
+  previousStatus: number,
+  responses: ProjectAgencyResponse[],
   user: SSOUser,
   queryRunner: QueryRunner,
 ) => {
@@ -407,7 +418,7 @@ const handleProjectNotifications = async (
       },
     },
     where: {
-      Id: oldProject.Id,
+      Id: projectId,
     },
   });
   const projectAgency = await queryRunner.manager.findOne(Agency, {
@@ -422,13 +433,29 @@ const handleProjectNotifications = async (
   projectWithRelations.Agency = projectAgency;
   projectWithRelations.AgencyResponses = projectAgencyResponses;
   projectWithRelations.Notes = projectNotes;
-  const notifs = await notificationServices.generateProjectNotifications(
-    projectWithRelations,
-    oldProject.StatusId,
-    queryRunner,
-  );
+
+  const notifsToSend: Array<NotificationQueue> = [];
+
+  if (previousStatus !== projectWithRelations.StatusId) {
+    const statusChangeNotifs = await notificationServices.generateProjectNotifications(
+      projectWithRelations,
+      previousStatus,
+      queryRunner,
+    );
+    notifsToSend.push(...statusChangeNotifs);
+  }
+
+  if (projectAgencyResponses.length) {
+    const agencyResponseNotifs = await notificationServices.generateProjectWatchNotifications(
+      projectWithRelations,
+      responses,
+      queryRunner,
+    );
+    notifsToSend.push(...agencyResponseNotifs);
+  }
+
   return Promise.all(
-    notifs.map((notif) => notificationServices.sendNotification(notif, user, queryRunner)),
+    notifsToSend.map((notif) => notificationServices.sendNotification(notif, user, queryRunner)),
   );
 };
 
@@ -601,6 +628,31 @@ const handleProjectMonetary = async (
   }
 };
 
+const getAgencyResponseChanges = async (
+  oldProject: Project,
+  newProject: DeepPartial<Project>,
+): Promise<Array<ProjectAgencyResponse>> => {
+  const retResponses: Array<ProjectAgencyResponse> = [];
+  for (const response of newProject.AgencyResponses as ProjectAgencyResponse[]) {
+    const originalResponse = oldProject.AgencyResponses.find(
+      (r) => r.AgencyId === response.AgencyId,
+    );
+    if (originalResponse == null || originalResponse.Response != response.Response) {
+      retResponses.push(response);
+    }
+  }
+  for (const response of oldProject.AgencyResponses) {
+    const updatedResponse = newProject.AgencyResponses.find(
+      (r) => r.AgencyId === response.AgencyId,
+    );
+    if (updatedResponse == null) {
+      response.Response = AgencyResponseType.Unsubscribe;
+      retResponses.push(response);
+    }
+  }
+  return retResponses;
+};
+
 /**
  * Updates a project with the given changes and property IDs.
  *
@@ -620,7 +672,10 @@ const updateProject = async (
   if (project.Name === null || project.Name === '') {
     throw new ErrorWithCode('Projects must have a name.', 400);
   }
+  //We get the AgencyResponses relation here so that we have a copy of the state of those responses before being updated.
+  //We need this to check which responses were updated and thus require new notifications later after the transaction commit.
   const originalProject = await projectRepo.findOne({
+    relations: { AgencyResponses: true },
     where: { Id: project.Id },
   });
   if (!originalProject) {
@@ -713,10 +768,18 @@ const updateProject = async (
     }
 
     queryRunner.commitTransaction();
-
-    if (project.StatusId !== undefined && originalProject.StatusId !== project.StatusId) {
-      await handleProjectNotifications(originalProject, user, queryRunner); //Do this after committing transaction so that we don't send emails to CHES unless the rest of the project metadata actually saved.
+    const changedResponses = [];
+    if (project.AgencyResponses) {
+      changedResponses.push(...(await getAgencyResponseChanges(originalProject, project)));
     }
+    await handleProjectNotifications(
+      project.Id,
+      originalProject.StatusId,
+      changedResponses,
+      user,
+      queryRunner,
+    ); //Do this after committing transaction so that we don't send emails to CHES unless the rest of the project metadata actually saved.
+
     // Get project to return
     const returnProject = await projectRepo.findOne({ where: { Id: originalProject.Id } });
     return returnProject;
@@ -820,8 +883,10 @@ const deleteProjectById = async (id: number, username: string) => {
 const collectFindOptions = (filter: ProjectFilter) => {
   const options = [];
   if (filter.name) options.push(constructFindOptionFromQuery('Name', filter.name));
-  if (filter.agency) options.push(constructFindOptionFromQuery('Agency', filter.agency));
-  if (filter.status) options.push(constructFindOptionFromQuery('Status', filter.status));
+  if (filter.agency)
+    options.push(constructFindOptionFromQuerySingleSelect('Agency', filter.agency));
+  if (filter.status)
+    options.push(constructFindOptionFromQuerySingleSelect('Status', filter.status));
   if (filter.projectNumber) {
     options.push(constructFindOptionFromQuery('ProjectNumber', filter.projectNumber));
   }

@@ -1,5 +1,6 @@
 import { AppDataSource } from '@/appDataSource';
 import notificationServices, {
+  AgencyResponseType,
   NotificationStatus,
 } from '@/services/notifications/notificationServices';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
@@ -7,10 +8,12 @@ import { faker } from '@faker-js/faker';
 import { randomUUID } from 'crypto';
 import {
   produceAgency,
+  produceAgencyResponse,
   produceNotificationQueue,
   produceNotificationTemplate,
   produceProject,
   produceProjectNotification,
+  produceProjectStatusHistory,
   produceSSO,
   produceUser,
 } from 'tests/testUtils/factories';
@@ -20,6 +23,7 @@ import { NotificationTemplate } from '@/typeorm/Entities/NotificationTemplate';
 import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
 import { User } from '@/typeorm/Entities/User';
 import { Agency } from '@/typeorm/Entities/Agency';
+import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 
 const _notifQueueSave = jest
   .fn()
@@ -71,8 +75,11 @@ const _statusNotifFind = jest.fn().mockImplementation(async (options) => [
     FromStatusId: (options.where as FindOptionsWhere<ProjectStatusNotification>)
       .FromStatusId as number,
     ToStatusId: (options.where as FindOptionsWhere<ProjectStatusNotification>).ToStatusId as number,
+    Template: produceNotificationTemplate(),
   }),
 ]);
+
+const _agencyFindOne = jest.fn().mockImplementation(async () => produceAgency());
 
 jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
   ...jest.requireActual('@/appDataSource').createQueryRunner,
@@ -102,6 +109,10 @@ jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
         return _notifTemplateFindOne(options);
       } else if (entityClass === NotificationQueue) {
         return _notifQueueFindOne(options);
+      } else if (entityClass === Agency) {
+        return _agencyFindOne();
+      } else if (entityClass === ProjectStatusHistory) {
+        return produceProjectStatusHistory({});
       } else {
         return {};
       }
@@ -111,6 +122,12 @@ jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
       obj: T,
     ) => {
       return _notifQueueSave(obj);
+    },
+    exists: () => {
+      return false;
+    },
+    update: () => {
+      return { raw: {}, generatedMaps: [] };
     },
   },
 });
@@ -324,10 +341,60 @@ describe('getProjectNotificationsInQueue', () => {
     }
   });
 });
-describe('cancelAllProjectNotifications', () => {
+describe('cancelProjectNotifications', () => {
   it('should return a count of successful and failed cancellations', async () => {
-    const result = await notificationServices.cancelAllProjectNotifications(faker.number.int());
+    const result = await notificationServices.cancelProjectNotifications(faker.number.int());
     expect(isNaN(result.succeeded)).toBe(false);
     expect(isNaN(result.failed)).toBe(false);
+  });
+});
+describe('generateProjectWatchNotifications', () => {
+  it('should generate notifications for list of responses', async () => {
+    const project = produceProject({ Id: 1 });
+    const responses = [
+      produceAgencyResponse({ Response: AgencyResponseType.Subscribe }),
+      produceAgencyResponse({ Response: AgencyResponseType.Unsubscribe }),
+    ];
+    const result = await notificationServices.generateProjectWatchNotifications(project, responses);
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBe(1);
+  });
+});
+describe('cancelNotificationById', () => {
+  it('should cancel a notificaion', async () => {
+    _cancelEmailByIdAsync.mockImplementationOnce(() => ({
+      status: 'cancelled',
+      tag: 'sampleTag',
+      txId: randomUUID(),
+      updatedTS: Date.now(),
+      createdTS: Date.now(),
+      msgId: randomUUID(),
+    }));
+    const result = await notificationServices.cancelNotificationById(1);
+    expect(result.Status).toBe(NotificationStatus.Cancelled);
+  });
+  it('should return unmodified notification in the case of a non cancelled notification', async () => {
+    _cancelEmailByIdAsync.mockImplementationOnce(() => ({
+      status: 'completed',
+      tag: 'sampleTag',
+      txId: randomUUID(),
+      updatedTS: Date.now(),
+      createdTS: Date.now(),
+      msgId: randomUUID(),
+    }));
+    const notif = produceNotificationQueue({ ChesMessageId: randomUUID() });
+    _notifQueueFindOne.mockImplementationOnce(() => notif);
+    const result = await notificationServices.cancelNotificationById(1);
+    expect(result.ChesMessageId).toBe(notif.ChesMessageId);
+    expect(result.Status).toBe(notif.Status);
+  });
+});
+describe('getNotificationById', () => {
+  it('should return a single notification', async () => {
+    const result = await notificationServices.getNotificationById(1);
+    expect(result).toBeDefined();
+    expect(result.Status).toBeDefined();
+    expect(result.TemplateId).toBeDefined();
+    expect(result.Id).toBeDefined();
   });
 });

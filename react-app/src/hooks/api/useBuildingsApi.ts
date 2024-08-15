@@ -103,7 +103,7 @@ const useBuildingsApi = (absoluteFetch: IFetch) => {
         Object.fromEntries(Object.entries(params).filter(([_, v]) => v != null))
       : undefined;
     const { parsedBody } = await absoluteFetch.get('/buildings', noNullParam);
-    if (parsedBody.error) {
+    if ((parsedBody as Record<string, any>).error) {
       return [];
     }
     return parsedBody as Building[];

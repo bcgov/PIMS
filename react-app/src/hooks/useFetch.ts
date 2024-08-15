@@ -1,7 +1,7 @@
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { useMemo } from 'react';
 
-export type FetchResponse = Response & { parsedBody?: Record<string, any> };
+export type FetchResponse = Response & { parsedBody?: Record<string, any> | string };
 export type FetchType = (url: string, params?: RequestInit) => Promise<Response>;
 export interface IFetch {
   get: (

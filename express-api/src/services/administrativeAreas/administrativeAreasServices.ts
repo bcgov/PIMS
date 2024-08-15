@@ -6,6 +6,7 @@ import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import {
   constructFindOptionFromQuery,
   constructFindOptionFromQueryBoolean,
+  constructFindOptionFromQuerySingleSelect,
 } from '@/utilities/helperFunctions';
 import { AdministrativeAreaJoinView } from '@/typeorm/Entities/views/AdministrativeAreaJoinView';
 import { SortOrders } from '@/constants/types';
@@ -32,7 +33,9 @@ const collectFindOptions = (filter: AdministrativeAreaFilter) => {
   const options = [];
   if (filter.name) options.push(constructFindOptionFromQuery('Name', filter.name));
   if (filter.regionalDistrictName)
-    options.push(constructFindOptionFromQuery('RegionalDistrictName', filter.regionalDistrictName));
+    options.push(
+      constructFindOptionFromQuerySingleSelect('RegionalDistrictName', filter.regionalDistrictName),
+    );
   if (filter.isDisabled)
     options.push(constructFindOptionFromQueryBoolean('IsDisabled', filter.isDisabled));
   if (filter.createdOn) options.push(constructFindOptionFromQuery('CreatedOn', filter.createdOn));
