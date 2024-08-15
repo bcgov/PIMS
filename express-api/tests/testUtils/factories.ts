@@ -648,16 +648,14 @@ export const produceProject = (
     Appraised: faker.number.int(),
     Market: faker.number.int(),
     ProjectType: 1,
-    WorkflowId: 1,
-    Workflow: null, // TODO: produceWorkflow
     AgencyId: 1,
     Agency: produceAgency(),
     TierLevelId: 1,
-    TierLevel: null, // TODO: produceTier
+    TierLevel: produceTierLevel(),
     StatusId: 1,
-    Status: null, // TODO: produceStatus
+    Status: produceProjectStatus(),
     RiskId: 1,
-    Risk: null, // TODO: produceRisk
+    Risk: produceRisk(),
     Tasks: [produceProjectTask()],
     ProjectProperties: projectProperties ?? [
       produceProjectProperty({

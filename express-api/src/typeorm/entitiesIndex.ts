@@ -16,15 +16,12 @@ import { ParcelFiscal } from '@/typeorm/Entities/ParcelFiscal';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
 import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
-import { ProjectNumber } from '@/typeorm/Entities/ProjectNumber';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectRisk } from '@/typeorm/Entities/ProjectRisk';
-import { ProjectReport } from '@/typeorm/Entities/ProjectReport';
 import { ProjectSnapshot } from '@/typeorm/Entities/ProjectSnapshot';
 import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
-import { ProjectStatusTransition } from '@/typeorm/Entities/ProjectStatusTransition';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ProjectType } from '@/typeorm/Entities/ProjectType';
 import { PropertyClassification } from '@/typeorm/Entities/PropertyClassification';
@@ -37,7 +34,6 @@ import { Task } from '@/typeorm/Entities/Task';
 import { TierLevel } from '@/typeorm/Entities/TierLevel';
 import { User } from '@/typeorm/Entities/User';
 import { Workflow } from '@/typeorm/Entities/Workflow';
-import { WorkflowProjectStatus } from '@/typeorm/Entities/WorkflowProjectStatus';
 import { BuildingRelations } from '@/typeorm/Entities/views/BuildingRelationsView';
 import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
 import { NoteType } from './Entities/NoteType';
@@ -79,15 +75,12 @@ export default [
   Project,
   ProjectAgencyResponse,
   ProjectNote,
-  ProjectNumber,
   ProjectProperty,
   ProjectRisk,
-  ProjectReport,
   ProjectSnapshot,
   ProjectStatus,
   ProjectStatusHistory,
   ProjectStatusNotification,
-  ProjectStatusTransition,
   ProjectTask,
   ProjectType,
   ProjectMonetary,
@@ -104,7 +97,6 @@ export default [
   TierLevel,
   User,
   Workflow,
-  WorkflowProjectStatus,
   NoteType,
   ImportResult,
   ...views,
