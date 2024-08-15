@@ -500,28 +500,19 @@ const updateNotificationStatus = async (notificationId: number, user: User) => {
         query.release();
         return updatedNotification;
       }
-      case 422: {
-        notification.Status = NotificationStatus.Invalid;
-        notification.UpdatedOn = new Date();
-        notification.UpdatedById = user.Id;
-        const updatedNotification = await query.manager.save(NotificationQueue, notification);
+
+      case 422:
         logger.error(
           `Notification with id ${notificationId} could not be processed, some of the data could be formatted incorrectly.`,
         );
-        query.release();
-        return updatedNotification;
-      }
-      case 401: {
-        notification.Status = NotificationStatus.Unauthorized;
-        notification.UpdatedOn = new Date();
-        notification.UpdatedById = user.Id;
-        const updatedNotification = await query.manager.save(NotificationQueue, notification);
+        break;
+
+      case 401:
         logger.error(
           `Cannot authorize the request to the CHES server, check your CHES credentials.`,
         );
-        query.release();
-        return updatedNotification;
-      }
+        break;
+
       case 500:
         logger.error(
           `Internal server error while retrieving status for notification with id ${notificationId}.`,

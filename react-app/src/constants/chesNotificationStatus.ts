@@ -22,8 +22,6 @@ export const getStatusString = (status: number): string => {
       return 'Completed';
     case NotificationStatus.NotFound:
       return 'Not Found';
-    case NotificationStatus.Invalid:
-      return 'Invalid';
     default:
       return 'Unknown';
   }
