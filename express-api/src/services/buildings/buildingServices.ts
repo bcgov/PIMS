@@ -67,8 +67,9 @@ export const updateBuildingById = async (building: DeepPartial<Building>, ssoUse
   if (!existingBuilding) {
     throw new ErrorWithCode('Building does not exists.', 404);
   }
-  if (building.AgencyId && building.AgencyId !== existingBuilding.AgencyId && !isAdmin(ssoUser)) {
-    throw new ErrorWithCode('Changing agency is not permitted.', 403);
+  const validUserAgencies = await userServices.getAgencies(ssoUser.preferred_username);
+  if (!isAdmin(ssoUser) && !validUserAgencies.includes(building.AgencyId)) {
+    throw new ErrorWithCode('This agency change is not permitted.', 403);
   }
   if (building.Fiscals && building.Fiscals.length) {
     building.Fiscals = await Promise.all(
