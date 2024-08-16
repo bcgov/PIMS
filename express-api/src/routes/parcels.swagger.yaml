@@ -102,6 +102,111 @@ paths:
                 schema: 
                   type: string
                   example: Parcel already exists.
+  /parcels/{id}:
+    get:  
+      security:
+        - bearerAuth: []
+      tags:
+        - Parcels
+      summary: Gets a single Parcel that matches the Id.
+      parameters:
+        - in: path 
+          name: id
+          type: integer
+      responses:
+        '200':
+          description: OK. Returns a single Parcel. 
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Parcel'
+        '400':
+          description: Parcel ID not a valid number.
+          content:
+            text/plain:
+              type: string
+              example: Parcel ID was invalid. 
+        '403': 
+          description: Sent when user does not have permission to view this parcel.
+          content:
+            text/plain:
+              type: string
+              example: You are not authorized to view this parcel. 
+        '404':
+          description: Sent when the parcel is not found.
+          content:
+            text/plain:
+              type: string
+              example: Parcel matching this internal ID not found. 
+    put: 
+      security:
+        - bearerAuth: []
+      tags:
+        - Parcels
+      summary: Updates a single Parcel that matches the Id.
+      parameters:
+        - in: path 
+          name: id
+          type: integer
+      responses:
+        '200': 
+          description: OK. Returns the updated Parcel.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Parcel'
+        '400':
+          description: Request included invalid or incomplete data.
+          content:
+            text/plain:
+              type: string
+              example: Parcel ID was invalid or mismatched with body.
+        '403':
+          description: Requested change not possible due to permissions or business logic.
+          content:
+            text/plain:
+              type: string
+              example: This agency change is not permitted.
+        '404':
+          description: Sent when the parcel is not found.
+          content:
+            text/plain:
+              type: string
+              example: Parcel matching this internal ID not found. 
+    delete: 
+      security:
+        - bearerAuth: []
+      tags:
+        - Parcels
+      summary: Deletes a single Parcel that matches the Id.
+      parameters:
+        - in: path 
+          name: id
+          type: integer
+      responses:
+        '200':
+          description: Successful deletion
+        '400':
+          description: The Id was not parsed succesfully.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Parcel ID was invalid.
+        '403':
+          description: Parcel belongs to a project. Cannot be deleted.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Parcel is involved in one or more projects with ID(s) ...
+        '404':
+          description: That Parcel did not exist.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Parcel does not exist.
 
 ### SCHEMAS ### 
 components:

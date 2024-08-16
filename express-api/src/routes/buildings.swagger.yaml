@@ -125,6 +125,24 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/Building'
+        '400':
+          description: Building ID not a valid number.
+          content:
+            text/plain:
+              type: string
+              example: Building ID was invalid. 
+        '403': 
+          description: Sent when user does not have permission to view this building.
+          content:
+            text/plain:
+              type: string
+              example: You are not authorized to view this building. 
+        '404':
+          description: Sent when the building is not found.
+          content:
+            text/plain:
+              type: string
+              example: Building matching this internal ID not found. 
     put:
       security:
         - bearerAuth: []
@@ -148,7 +166,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Building'
         '400':
-          description: Id in query parameters does not match the request body.
+          description: Request included invalid or incomplete data.
           content:
             text/plain:
               schema:
