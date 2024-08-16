@@ -377,8 +377,13 @@ const makeParcelUpsertObject = async (
   }
 
   const classificationId: number = getClassificationOrThrow(row, lookups.classifications);
-
   const adminAreaId: number = getAdministrativeAreaOrThrow(row, lookups.adminAreas);
+
+  const description = row.Description ?? (existentParcel ? existentParcel.Description : '');
+  const isSensitive = row.IsSensitive ?? (existentParcel ? existentParcel.IsSensitive : false);
+  const isVisibleToOtherAgencies =
+    row.IsVisibleToOtherAgencies ??
+    (existentParcel ? existentParcel.IsVisibleToOtherAgencies : true);
 
   return {
     Id: existentParcel?.Id,
@@ -397,10 +402,10 @@ const makeParcelUpsertObject = async (
     },
     Address1: row.Address ?? existentParcel.Address1,
     AdministrativeAreaId: adminAreaId,
-    IsSensitive: existentParcel.IsSensitive ?? false,
-    IsVisibleToOtherAgencies: existentParcel.IsVisibleToOtherAgencies ?? true,
+    IsSensitive: isSensitive,
+    IsVisibleToOtherAgencies: isVisibleToOtherAgencies,
     PropertyTypeId: 0,
-    Description: row.Description ?? existentParcel.Description,
+    Description: description,
     LandArea: numberOrNull(row.LandArea),
     Evaluations: currRowEvaluations,
     Fiscals: currRowFiscals,

@@ -225,11 +225,11 @@ const BulkUpload = () => {
                   'AssessedYear',
                   'Netbook',
                   'FiscalYear',
+                  'IsSensitive (if blank default to false',
+                  'isVisibleToOtherAgencies (if blank default to true)',
                   'LandArea (for Land)',
                   'BuildingTenancy (for Building)',
                   'RentableArea (for Building: if blank default to 0)',
-                  'IsSensitive (for Building: if blank default to false',
-                  'isVisibleToOtherAgencies (for Building: if blank default to true)',
                   'BuildingFloorCount (for Building: if blank default to 0)',
                   'TotalArea (for Building: if blank default to 0)'
                 ].map((a, idx) => (
