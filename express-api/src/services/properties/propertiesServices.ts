@@ -462,6 +462,17 @@ const makeBuildingUpsertObject = async (
   const predominateUseId = getBuildingPredominateUseOrThrow(row, lookups.predominateUses);
   const adminAreaId = getAdministrativeAreaOrThrow(row, lookups.adminAreas);
 
+  const description = row.Description ?? (existentBuilding ? existentBuilding.Description : '');
+  const rentableArea = row.RentableArea ?? (existentBuilding ? existentBuilding.RentableArea : 0);
+  const isSensitive = row.IsSensitive ?? (existentBuilding ? existentBuilding.IsSensitive : false);
+  const isVisibleToOtherAgencies =
+    row.IsVisibleToOtherAgencies ??
+    (existentBuilding ? existentBuilding.IsVisibleToOtherAgencies : true);
+  const buildingFloorCount =
+    row.BuildingFloorCount ?? (existentBuilding ? existentBuilding.BuildingFloorCount : 0);
+  const tenancy = row.BuildingTenancy ?? (existentBuilding ? existentBuilding.BuildingTenancy : '');
+  const totalArea = row.TotalArea ?? (existentBuilding ? existentBuilding.TotalArea : 0);
+
   return {
     Id: existentBuilding?.Id,
     PID: numberOrNull(row.PID),
@@ -480,15 +491,15 @@ const makeBuildingUpsertObject = async (
       y: row.Latitude,
     },
     AdministrativeAreaId: adminAreaId,
-    IsSensitive: existentBuilding?.IsSensitive,
-    Description: row.Description ?? existentBuilding.Description,
+    IsSensitive: isSensitive,
+    Description: description,
     Address1: row.Address ?? existentBuilding.Address1,
-    IsVisibleToOtherAgencies: existentBuilding?.IsVisibleToOtherAgencies,
+    IsVisibleToOtherAgencies: isVisibleToOtherAgencies,
     PropertyTypeId: 1,
-    RentableArea: numberOrNull(row.RentableArea) ?? existentBuilding.RentableArea,
-    BuildingTenancy: row.BuildingTenancy,
-    BuildingFloorCount: existentBuilding?.BuildingFloorCount,
-    TotalArea: row.TotalArea,
+    RentableArea: rentableArea,
+    BuildingTenancy: tenancy,
+    BuildingFloorCount: buildingFloorCount,
+    TotalArea: totalArea,
     NetUsableArea: row.NetUsableArea,
     Evaluations: currRowEvaluations,
     Fiscals: currRowFiscals,
