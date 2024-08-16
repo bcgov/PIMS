@@ -86,6 +86,7 @@ const _propertyUnionCreateQueryBuilder: any = {
   getManyAndCount: () => [[producePropertyUnion()], 1],
 };
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const _projectStatusCreateQueryBuilder: any = {
   select: () => _projectStatusCreateQueryBuilder,
   leftJoinAndSelect: () => _projectStatusCreateQueryBuilder,
@@ -98,6 +99,7 @@ const _projectStatusCreateQueryBuilder: any = {
   getMany: () => [produceProjectStatus()],
 };
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const _projectPropertyCreateQueryBuilder: any = {
   select: () => _projectPropertyCreateQueryBuilder,
   leftJoinAndSelect: () => _projectPropertyCreateQueryBuilder,
