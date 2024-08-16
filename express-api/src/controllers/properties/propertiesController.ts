@@ -44,6 +44,23 @@ export const getPropertiesFuzzySearch = async (req: Request, res: Response) => {
 };
 
 /**
+ * @description Search for a single keyword across multiple different fields in both parcels and buildings.
+ * @param   {Request}     req Incoming request
+ * @param   {Response}    res Outgoing response
+ * @returns {Response}        A 200 status with a list of properties.
+ */
+export const getLinkedProjects = async (req: Request, res: Response) => {
+  const buildingId = req.query.buildingId
+    ? parseInt(req.query.buildingId as string, 10)
+    : undefined;
+  const parcelId = req.query.parcelId ? parseInt(req.query.parcelId as string, 10) : undefined;
+
+  const linkedProjects = await propertyServices.findLinkedProjectsForProperty(buildingId, parcelId);
+
+  return res.status(200).send(linkedProjects);
+};
+
+/**
  * @description Used to retrieve all property geolocation information.
  * @param   {Request}     req Incoming request
  * @param   {Response}    res Outgoing response
