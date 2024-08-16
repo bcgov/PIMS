@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useMemo } from 'react';
 import { FilterSearchDataGrid } from '@/components/table/DataTable';
 import { Box, SxProps, useTheme, ListSubheader, MenuItem } from '@mui/material';
 import { GridColDef, GridComparatorFn, GridEventListener } from '@mui/x-data-grid';
@@ -10,6 +10,7 @@ import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { Role } from '@/hooks/api/useRolesApi';
 import { User } from '@/hooks/api/useUsersApi';
+import { LookupContext } from '@/contexts/lookupContext';
 
 const CustomMenuItem = (props: PropsWithChildren & { value: string }) => {
   const theme = useTheme();
@@ -66,6 +67,7 @@ const UsersTable = (props: IUsersTable) => {
   const { refreshData, data, error, isLoading, rowClickHandler } = props;
   const [users, setUsers] = useState([]);
   const { state } = useSSO();
+  const lookup = useContext(LookupContext);
 
   useEffect(() => {
     if (error) {
@@ -77,6 +79,22 @@ const UsersTable = (props: IUsersTable) => {
       refreshData();
     }
   }, [state, data]);
+
+  const agenciesForSingleSelect = useMemo(() => {
+    if (lookup.data) {
+      return lookup.data.Agencies.map((a) => a.Name);
+    } else {
+      return [];
+    }
+  }, [lookup]);
+
+  const rolesForSingleSelect = useMemo(() => {
+    if (lookup.data) {
+      return lookup.data.Roles.map((a) => a.Name);
+    } else {
+      return [];
+    }
+  }, [lookup.data]);
 
   // Sets the preset filter based on the select input
   const selectPresetFilter = (value: string, ref: MutableRefObject<GridApiCommunity>) => {
@@ -95,32 +113,22 @@ const UsersTable = (props: IUsersTable) => {
           items: [
             {
               value,
-              operator: 'contains',
+              operator: 'is',
               field: 'Status',
             },
           ],
         });
         break;
       // All Role filters
-      case 'User':
-      case 'Admin':
+      case 'General User':
+      case 'Administrator':
       case 'Auditor':
-        ref.current.setFilterModel({
-          items: [
-            {
-              value,
-              operator: 'contains',
-              field: 'Role',
-            },
-          ],
-        });
-        break;
       case 'No Role':
         ref.current.setFilterModel({
           items: [
             {
               value,
-              operator: 'contains',
+              operator: 'is',
               field: 'Role',
             },
           ],
@@ -148,6 +156,8 @@ const UsersTable = (props: IUsersTable) => {
     {
       field: 'Status',
       headerName: 'Status',
+      type: 'singleSelect',
+      valueOptions: ['Active', 'Denied', 'OnHold', 'Disabled'],
       renderCell: (params) => {
         if (!params.value) return <></>;
         return statusChipFormatter(params.value);
@@ -182,6 +192,8 @@ const UsersTable = (props: IUsersTable) => {
       headerName: 'Agency',
       minWidth: 125,
       flex: 1,
+      type: 'singleSelect',
+      valueOptions: agenciesForSingleSelect,
       valueGetter: (value?: Agency) => value?.Name ?? ``,
     },
     {
@@ -196,6 +208,8 @@ const UsersTable = (props: IUsersTable) => {
       minWidth: 150,
       flex: 1,
       valueGetter: (value?: Role) => value?.Name ?? `No Role`,
+      type: 'singleSelect',
+      valueOptions: [...rolesForSingleSelect, 'No Role'],
     },
     {
       field: 'CreatedOn',
@@ -280,10 +294,10 @@ const UsersTable = (props: IUsersTable) => {
               Denied
             </CustomMenuItem>,
             <CustomListSubheader key={'Role'}>Role</CustomListSubheader>,
-            <CustomMenuItem key={'User'} value={'User'}>
+            <CustomMenuItem key={'General User'} value={'General User'}>
               General User
             </CustomMenuItem>,
-            <CustomMenuItem key={'Admin'} value={'Admin'}>
+            <CustomMenuItem key={'Administrator'} value={'Administrator'}>
               Administrator
             </CustomMenuItem>,
             <CustomMenuItem key={'Auditor'} value={'Auditor'}>

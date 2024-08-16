@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AppDataSource } from '@/appDataSource';
 import { Roles } from '@/constants/roles';
 import propertyServices, {
@@ -46,7 +47,6 @@ import {
 import { DeepPartial, EntityTarget, ObjectLiteral } from 'typeorm';
 import xlsx, { WorkSheet } from 'xlsx';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const _parcelsCreateQueryBuilder: any = {
   select: () => _parcelsCreateQueryBuilder,
   leftJoinAndSelect: () => _parcelsCreateQueryBuilder,
@@ -59,7 +59,6 @@ const _parcelsCreateQueryBuilder: any = {
   getMany: () => [produceParcel()],
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const _buildingsCreateQueryBuilder: any = {
   select: () => _buildingsCreateQueryBuilder,
   leftJoinAndSelect: () => _buildingsCreateQueryBuilder,
@@ -72,7 +71,6 @@ const _buildingsCreateQueryBuilder: any = {
   getMany: () => [produceBuilding()],
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const _propertyUnionCreateQueryBuilder: any = {
   select: () => _propertyUnionCreateQueryBuilder,
   leftJoinAndSelect: () => _propertyUnionCreateQueryBuilder,
