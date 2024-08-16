@@ -16,9 +16,7 @@ describe('UNIT - SSO Options', () => {
   const user = produceSSO();
   const { afterUserLogin, afterUserLogout } = SSO_OPTIONS;
 
-  beforeEach(() => {
-    jest.clearAllMocks;
-  });
+  beforeEach(() => jest.clearAllMocks());
 
   const loggerSpy = jest.spyOn(logger, 'info');
   it('should log when a user logs in', async () => {
