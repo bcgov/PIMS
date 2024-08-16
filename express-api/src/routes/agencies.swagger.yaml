@@ -74,6 +74,12 @@ paths:
           schema:
             type: string
           description: Either DESC or ASC.
+        - in: query
+          name: excelExport
+          schema:
+            type: boolean
+            example: false
+          description: If true, returns in format for Excel export.
       responses:
         '200':
           description: OK
@@ -128,7 +134,7 @@ paths:
           required: true
       responses:
         '200':
-          description: OK. Returns a single agency. 
+          description: OK. 
           content:
             application/json:
               schema: 

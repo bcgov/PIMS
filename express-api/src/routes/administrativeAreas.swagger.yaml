@@ -56,6 +56,12 @@ paths:
           schema:
             type: string
           description: Either DESC or ASC.
+        - in: query
+          name: excelExport
+          schema:
+            type: boolean
+            example: false
+          description: If true, returns in format for Excel export.
       responses:
         '200':
           description: OK

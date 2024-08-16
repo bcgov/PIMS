@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import app from '@/express';
-import { PROJECT_DISPOSAL, PROJECT_REPORTS } from '@/routes/projectsRouter';
-import { Project, ProjectReport, ProjectSnapshot } from '@/controllers/projects/projectsSchema';
+import { PROJECT_DISPOSAL } from '@/routes/projectsRouter';
+import { Project } from '@/controllers/projects/projectsSchema';
 import { faker } from '@faker-js/faker';
 
 const request = supertest(app);
@@ -113,48 +113,6 @@ describe('INTEGRATION - Project Routes', () => {
     };
   };
 
-  const makeReportSnapshot = (): ProjectSnapshot => {
-    return {
-      createdOn: faker.date.past().toISOString(),
-      updatedOn: faker.date.past().toISOString(),
-      updatedByName: faker.person.firstName(),
-      updatedByEmail: faker.internet.email(),
-      rowVersion: faker.number.binary(),
-      id: faker.number.int(),
-      projectId: faker.number.int(),
-      project: makeProject(),
-      snapshotOn: faker.date.past().toISOString(),
-      netBook: faker.number.int(),
-      market: faker.number.int(),
-      assessed: faker.number.int(),
-      appraised: faker.number.int(),
-      salesCost: faker.number.int(),
-      netProceeds: faker.number.int(),
-      baselineIntegrity: faker.number.int(),
-      programCost: faker.number.int(),
-      gainLoss: faker.number.int(),
-      ocgFinancialStatement: faker.number.int(),
-      interestComponent: faker.number.int(),
-      saleWithLeaseInPlace: faker.datatype.boolean(),
-    };
-  };
-
-  const makeProjectReport = (): ProjectReport => {
-    return {
-      createdOn: faker.date.past().toISOString(),
-      updatedOn: faker.date.past().toISOString(),
-      updatedByName: faker.person.firstName(),
-      updatedByEmail: faker.internet.email(),
-      rowVersion: faker.number.binary(),
-      id: faker.number.int(),
-      isFinal: faker.datatype.boolean(),
-      name: faker.person.firstName(),
-      from: faker.date.past().toISOString(),
-      to: faker.date.future().toISOString(),
-      reportType: '?',
-      snapshots: [makeReportSnapshot()],
-    };
-  };
   // PROJECT_DISPOSAL Routes
   describe(`GET ${PROJECT_DISPOSAL}/:projectId`, () => {
     xit('should return status 200 with the project', async () => {
@@ -206,80 +164,6 @@ describe('INTEGRATION - Project Routes', () => {
   describe(`PUT ${PROJECT_DISPOSAL}/workflows`, () => {
     xit('should return status 200 when requesting project status change', async () => {
       const response = await request.put(`${API_ROUTE}${PROJECT_DISPOSAL}/workflows`);
-      expect(response.status).toBe(200);
-    });
-  });
-
-  // PROJECT_REPORTS Routes
-  describe(`GET ${PROJECT_REPORTS}`, () => {
-    xit('should return status 200 with all project reports', async () => {
-      const response = await request.get(`${API_ROUTE}${PROJECT_REPORTS}`);
-      expect(response.status).toBe(200);
-    });
-  });
-
-  describe(`GET ${PROJECT_REPORTS}/:reportId`, () => {
-    xit('should return status 200 with the specified project report', async () => {
-      const response = await request.get(`${API_ROUTE}${PROJECT_REPORTS}/1`);
-      expect(response.status).toBe(200);
-    });
-
-    xit('should return status 404 when the specified project report does not exist', async () => {
-      const response = await request.get(`${API_ROUTE}${PROJECT_REPORTS}/nonexistentId`);
-      expect(response.status).toBe(404);
-    });
-  });
-
-  describe(`PUT ${PROJECT_REPORTS}/:reportId`, () => {
-    xit('should return status 200 when updating the project report', async () => {
-      const reportBody = makeProjectReport();
-      const response = await request.put(`${API_ROUTE}${PROJECT_REPORTS}/1`).send(reportBody);
-      expect(response.status).toBe(200);
-    });
-
-    xit('should return status 404 when updating a nonexistent project report', async () => {
-      const response = await request.put(`${API_ROUTE}${PROJECT_REPORTS}/nonexistentId`);
-      expect(response.status).toBe(404);
-    });
-  });
-
-  describe(`DELETE ${PROJECT_REPORTS}/:reportId`, () => {
-    xit('should return status 200 when deleting the project report', async () => {
-      const response = await request.delete(`${API_ROUTE}${PROJECT_REPORTS}/1`);
-      expect(response.status).toBe(200);
-    });
-
-    xit('should return status 404 when deleting a nonexistent project report', async () => {
-      const response = await request.delete(`${API_ROUTE}${PROJECT_REPORTS}/nonexistentId`);
-      expect(response.status).toBe(404);
-    });
-  });
-
-  describe(`POST ${PROJECT_REPORTS}/:reportId`, () => {
-    xit('should return status 200 when adding a new project report', async () => {
-      const reportBody = makeProjectReport();
-      const response = await request.post(`${API_ROUTE}${PROJECT_REPORTS}/1`).send(reportBody);
-      expect(response.status).toBe(200);
-    });
-  });
-
-  describe(`GET ${PROJECT_REPORTS}/snapshots/:reportId`, () => {
-    xit('should return status 200 with project report snapshots', async () => {
-      const response = await request.get(`${API_ROUTE}${PROJECT_REPORTS}/snapshots/1`);
-      expect(response.status).toBe(200);
-    });
-  });
-
-  describe(`POST ${PROJECT_REPORTS}/snapshots/:reportId`, () => {
-    xit('should return status 200 when generating project report snapshots', async () => {
-      const response = await request.post(`${API_ROUTE}${PROJECT_REPORTS}/snapshots/1`);
-      expect(response.status).toBe(200);
-    });
-  });
-
-  describe(`GET ${PROJECT_REPORTS}/refresh/:reportId`, () => {
-    xit('should return status 200 when refreshing project snapshots', async () => {
-      const response = await request.get(`${API_ROUTE}${PROJECT_REPORTS}/refresh/1`);
       expect(response.status).toBe(200);
     });
   });

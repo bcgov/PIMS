@@ -16,13 +16,6 @@ import notificationServices from '@/services/notifications/notificationServices'
  * @returns {Response}      A 200 status with the requested project.
  */
 export const getDisposalProject = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Projects']
-   * #swagger.description = 'Get disposal project by either the numeric id or projectNumber.'
-   * #swagger.security = [{
-   *   "bearerAuth" : []
-   * }]
-   */
   // admins are permitted to view any project
   const permittedRoles = [Roles.ADMIN];
   const user = req.user as SSOUser;
@@ -53,14 +46,6 @@ export const getDisposalProject = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status with the updated project.
  */
 export const updateDisposalProject = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Projects']
-   * #swagger.description = 'Update the project for the specified id.'
-   * #swagger.security = [{
-   *   "bearerAuth" : []
-   * }]
-   */
-
   // Only admins can edit projects
   if (!isAdmin(req.user)) {
     return res.status(403).send('Projects only editable by Administrator role.');
@@ -94,13 +79,6 @@ export const updateDisposalProject = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status with the deleted project.
  */
 export const deleteDisposalProject = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Projects']
-   * #swagger.description = 'Delete the project for the specified id.'
-   * #swagger.security = [{
-   *   "bearerAuth" : []
-   * }]
-   */
   // Only admins can delete projects
   if (!isAdmin(req.user)) {
     return res.status(403).send('Projects can only be deleted by Administrator role.');
