@@ -225,7 +225,7 @@ const BulkUpload = () => {
                   'AssessedYear',
                   'Netbook',
                   'FiscalYear',
-                  'IsSensitive (if blank default to false',
+                  'IsSensitive (if blank default to false)',
                   'isVisibleToOtherAgencies (if blank default to true)',
                   'LandArea (for Land)',
                   'BuildingTenancy (for Building)',
