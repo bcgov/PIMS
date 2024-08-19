@@ -327,6 +327,16 @@ const compareWithoutCase = (str1: string, str2: string) => {
   else return false;
 };
 
+const setNewBool = (newValue: boolean, previousValue: boolean, defaultValue: boolean) => {
+  let returnValue = defaultValue;
+  if (newValue == true || newValue == false) {
+    returnValue = newValue;
+  } else if (previousValue == true || previousValue == false) {
+    returnValue = previousValue;
+  }
+  return returnValue;
+};
+
 /**
  * Creates an object for upserting a parcel entity with the provided data.
  * @param row - The row data containing the parcel information.
@@ -375,16 +385,16 @@ const makeParcelUpsertObject = async (
       CreatedOn: new Date(),
     });
   }
-
   const classificationId: number = getClassificationOrThrow(row, lookups.classifications);
   const adminAreaId: number = getAdministrativeAreaOrThrow(row, lookups.adminAreas);
-
   const pin = numberOrNull(row.PIN) ?? existentParcel?.PIN;
   const description = row.Description ?? (existentParcel ? existentParcel.Description : '');
-  const isSensitive = row.IsSensitive ?? (existentParcel ? existentParcel.IsSensitive : false);
-  const isVisibleToOtherAgencies =
-    row.IsVisibleToOtherAgencies ??
-    (existentParcel ? existentParcel.IsVisibleToOtherAgencies : true);
+  const isSensitive = setNewBool(row.IsSensitive, existentParcel.IsSensitive, false);
+  const isVisibleToOtherAgencies = setNewBool(
+    row.IsVisibleToOtherAgencies,
+    existentParcel.IsVisibleToOtherAgencies,
+    true,
+  );
   return {
     Id: existentParcel?.Id,
     AgencyId: getAgencyOrThrowIfMismatched(row, lookups, roles).Id,
@@ -469,10 +479,12 @@ const makeBuildingUpsertObject = async (
 
   const description = row.Description ?? (existentBuilding ? existentBuilding.Description : '');
   const rentableArea = row.RentableArea ?? (existentBuilding ? existentBuilding.RentableArea : 0);
-  const isSensitive = row.IsSensitive ?? (existentBuilding ? existentBuilding.IsSensitive : false);
-  const isVisibleToOtherAgencies =
-    row.IsVisibleToOtherAgencies ??
-    (existentBuilding ? existentBuilding.IsVisibleToOtherAgencies : true);
+  const isSensitive = setNewBool(row.IsSensitive, existentBuilding.IsSensitive, false);
+  const isVisibleToOtherAgencies = setNewBool(
+    row.IsVisibleToOtherAgencies,
+    existentBuilding.IsVisibleToOtherAgencies,
+    true,
+  );
   const buildingFloorCount =
     row.BuildingFloorCount ?? (existentBuilding ? existentBuilding.BuildingFloorCount : 0);
   const tenancy = row.BuildingTenancy ?? (existentBuilding ? existentBuilding.BuildingTenancy : '');
