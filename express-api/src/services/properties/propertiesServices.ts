@@ -379,17 +379,17 @@ const makeParcelUpsertObject = async (
   const classificationId: number = getClassificationOrThrow(row, lookups.classifications);
   const adminAreaId: number = getAdministrativeAreaOrThrow(row, lookups.adminAreas);
 
+  const pin = numberOrNull(row.PIN) ?? existentParcel?.PIN;
   const description = row.Description ?? (existentParcel ? existentParcel.Description : '');
   const isSensitive = row.IsSensitive ?? (existentParcel ? existentParcel.IsSensitive : false);
   const isVisibleToOtherAgencies =
     row.IsVisibleToOtherAgencies ??
     (existentParcel ? existentParcel.IsVisibleToOtherAgencies : true);
-
   return {
     Id: existentParcel?.Id,
     AgencyId: getAgencyOrThrowIfMismatched(row, lookups, roles).Id,
     PID: numberOrNull(row.PID),
-    PIN: numberOrNull(row.PIN) ?? existentParcel.PIN ?? null,
+    PIN: pin,
     ClassificationId: classificationId,
     Name: row.Name ?? existentParcel.Name ?? '',
     CreatedById: existentParcel ? existentParcel.CreatedById : user.Id,
@@ -481,7 +481,7 @@ const makeBuildingUpsertObject = async (
   return {
     Id: existentBuilding?.Id,
     PID: numberOrNull(row.PID),
-    PIN: numberOrNull(row.PIN) ?? existentBuilding?.PIN,
+    PIN: numberOrNull(row.PIN) ?? existentBuilding?.PIN ?? null,
     AgencyId: getAgencyOrThrowIfMismatched(row, lookups, roles).Id,
     ClassificationId: classificationId,
     BuildingConstructionTypeId: constructionTypeId,
