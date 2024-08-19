@@ -202,9 +202,6 @@ const BulkUpload = () => {
                   'AdministrativeArea',
                   'Latitude',
                   'Longitude',
-                  'BuildingTenancy (Buildings only)',
-                  'TotalArea (Buildings only)',
-                  'NetUsableArea (Buildings only)',
                   'PredominateUse (Buildings only)',
                   'ConstructionType (Buildings only)',
                 ].map((a, idx) => (
@@ -225,13 +222,14 @@ const BulkUpload = () => {
                   'AssessedYear',
                   'Netbook',
                   'FiscalYear',
-                  'IsSensitive (if blank default to false)',
-                  'isVisibleToOtherAgencies (if blank default to true)',
+                  'IsSensitive',
+                  'isVisibleToOtherAgencies',
                   'LandArea (for Land)',
                   'BuildingTenancy (for Building)',
-                  'RentableArea (for Building: if blank default to 0)',
-                  'BuildingFloorCount (for Building: if blank default to 0)',
-                  'TotalArea (for Building: if blank default to 0)',
+                  'NetUsableArea (for Building)',
+                  'RentableArea (for Building)',
+                  'BuildingFloorCount (for Building)',
+                  'TotalArea (for Building)',
                 ].map((a, idx) => (
                   <ListItem key={`req-header-${idx}`} sx={{ display: 'list-item', py: '2px' }}>
                     <ListItemText primary={a} />
