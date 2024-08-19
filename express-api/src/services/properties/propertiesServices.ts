@@ -365,7 +365,7 @@ const makeParcelUpsertObject = async (
       CreatedById: user.Id,
       CreatedOn: new Date(),
     });
-  } 
+  }
   if (row.Assessed && !currRowEvaluations.some((a) => a.Year == row.EvaluationYear)) {
     currRowEvaluations.push({
       Value: row.Assessed,
@@ -389,9 +389,9 @@ const makeParcelUpsertObject = async (
     Id: existentParcel?.Id,
     AgencyId: getAgencyOrThrowIfMismatched(row, lookups, roles).Id,
     PID: numberOrNull(row.PID),
-    PIN: numberOrNull(row.PIN) ?? (existentParcel.PIN ?? null),
+    PIN: numberOrNull(row.PIN) ?? existentParcel.PIN ?? null,
     ClassificationId: classificationId,
-    Name: row.Name ?? (existentParcel.Name ?? ''),
+    Name: row.Name ?? existentParcel.Name ?? '',
     CreatedById: existentParcel ? existentParcel.CreatedById : user.Id,
     UpdatedById: existentParcel ? user.Id : undefined,
     UpdatedOn: existentParcel ? new Date() : undefined,
