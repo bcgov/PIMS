@@ -49,7 +49,7 @@ export const DisposalNotificationFilterSchema = z.object({
 
 export type DisposalNotificationFilter = z.infer<typeof DisposalNotificationFilterSchema>;
 
-const NotificationQueueFilterSchema = z.object({
+export const NotificationQueueFilterSchema = z.object({
   page: z.number(),
   quantity: z.number(),
   sort: z.array(z.string()),
