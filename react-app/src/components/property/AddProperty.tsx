@@ -57,7 +57,6 @@ const AddProperty = () => {
       IsSensitive: false,
       ClassificationId: null,
       Description: '',
-      LandLegalDescription: '',
       Name: '',
       BuildingPredominateUseId: null,
       BuildingConstructionTypeId: null,
