@@ -74,14 +74,14 @@ const useParcelsApi = (absoluteFetch: IFetch) => {
         Object.fromEntries(Object.entries(params).filter(([_, v]) => v != null))
       : undefined;
     const { parsedBody } = await absoluteFetch.get('/parcels', noNullParam);
-    if (parsedBody.error) {
+    if ((parsedBody as Record<string, any>).error) {
       return [];
     }
     return parsedBody as Parcel[];
   };
   const getParcelsWithRelations = async () => {
     const { parsedBody } = await absoluteFetch.get('/parcels?includeRelations=true');
-    if (parsedBody.error) {
+    if ((parsedBody as Record<string, any>).error) {
       return [];
     }
     return parsedBody as Parcel[];

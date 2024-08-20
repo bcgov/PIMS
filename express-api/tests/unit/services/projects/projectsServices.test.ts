@@ -1,6 +1,7 @@
 import { AppDataSource } from '@/appDataSource';
 import { ProjectStatus } from '@/constants/projectStatus';
 import { ProjectType } from '@/constants/projectType';
+import { Roles } from '@/constants/roles';
 import projectServices from '@/services/projects/projectsServices';
 import userServices from '@/services/users/usersServices';
 import { Agency } from '@/typeorm/Entities/Agency';
@@ -108,6 +109,7 @@ const _getNextSequence = jest.spyOn(AppDataSource, 'query').mockImplementation(a
 ]);
 
 jest.spyOn(userServices, 'getUser').mockImplementation(async () => produceUser());
+jest.spyOn(userServices, 'getAgencies').mockImplementation(async () => [1]);
 
 const _mockStartTransaction = jest.fn(async () => {});
 const _mockRollbackTransaction = jest.fn(async () => {});
@@ -242,9 +244,11 @@ jest
   .spyOn(AppDataSource.getRepository(ProjectJoin), 'createQueryBuilder')
   .mockImplementation(() => projectJoinQueryBuilder);
 
+const _generateProjectWatchNotifications = jest.fn(async () => [produceNotificationQueue()]);
 jest.mock('@/services/notifications/notificationServices', () => ({
   generateProjectNotifications: jest.fn(async () => [produceNotificationQueue()]),
   sendNotification: jest.fn(async () => produceNotificationQueue()),
+  generateProjectWatchNotifications: async () => _generateProjectWatchNotifications(),
   NotificationStatus: { Accepted: 0, Pending: 1, Cancelled: 2, Failed: 3, Completed: 4 },
 }));
 
@@ -522,7 +526,7 @@ describe('UNIT - Project Services', () => {
           parcels: [1, 3],
           buildings: [4, 5],
         },
-        produceSSO(),
+        produceSSO({ client_roles: [Roles.ADMIN] }),
       );
       expect(result.StatusId).toBe(2);
       expect(result.Name).toBe('New Name');
@@ -606,9 +610,17 @@ describe('UNIT - Project Services', () => {
               parcels: [1, 3],
               buildings: [4, 5],
             },
-            produceSSO(),
+            produceSSO({ client_roles: [Roles.ADMIN] }),
           ),
       ).rejects.toThrow(new ErrorWithCode('Error updating project: bad save', 500));
+    });
+
+    it('should send notifications when agency responses changed', async () => {
+      const oldProject = produceProject({});
+      const projUpd = { ...oldProject, AgencyResponses: [produceAgencyResponse()] };
+      _projectFindOne.mockImplementationOnce(async () => oldProject);
+      await projectServices.updateProject(projUpd, { parcels: [], buildings: [] }, produceSSO());
+      expect(_generateProjectWatchNotifications).toHaveBeenCalled();
     });
 
     describe('getProjects', () => {

@@ -29,10 +29,7 @@ import { Task } from '@/typeorm/Entities/Task';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
-import {
-  NotificationAudience,
-  NotificationStatus,
-} from '@/services/notifications/notificationServices';
+import { NotificationAudience } from '@/services/notifications/notificationServices';
 import { NotificationTemplate } from '@/typeorm/Entities/NotificationTemplate';
 import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
 import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
@@ -799,7 +796,7 @@ export const produceProjectProperty = (props?: Partial<ProjectProperty>): Projec
   return projectProperty;
 };
 
-export const productProjectStatusHistory = (props?: Partial<ProjectStatusHistory>) => {
+export const produceProjectStatusHistory = (props?: Partial<ProjectStatusHistory>) => {
   const history: ProjectStatusHistory = {
     Id: faker.number.int(),
     CreatedById: randomUUID(),
@@ -911,13 +908,13 @@ export const produceNotificationQueue = (props?: Partial<NotificationQueue>) => 
   const queue: NotificationQueue = {
     Id: faker.number.int(),
     Key: randomUUID(),
-    Status: NotificationStatus.Pending,
-    Priority: EmailPriority.Normal,
-    Encoding: EmailEncoding.Utf8,
+    Status: 1,
+    Priority: 'normal',
+    Encoding: 'utf-8',
     SendOn: new Date(),
     To: faker.internet.email(),
     Subject: faker.lorem.word(),
-    BodyType: EmailBody.Html,
+    BodyType: 'html',
     Body: faker.lorem.sentences(),
     Bcc: '',
     Cc: '',

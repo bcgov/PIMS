@@ -93,6 +93,8 @@ const ProjectDetail = (props: IProjectDetail) => {
   const { submit: deleteProject, submitting: deletingProject } = useDataSubmitter(
     api.projects.deleteProjectById,
   );
+  const { submit: resendNotification } = useDataSubmitter(api.notifications.resendNotification);
+  const { submit: cancelNotification } = useDataSubmitter(api.notifications.cancelNotification);
 
   const { ungroupedAgencies, agencyOptions } = useGroupedAgenciesApi();
   interface IStatusHistoryStruct {
@@ -450,16 +452,14 @@ const ProjectDetail = (props: IProjectDetail) => {
                 rows={
                   notifications?.items
                     ? notifications.items.map((resp) => ({
-                        agency: lookup.getLookupValueById('Agencies', resp.ToAgencyId)?.Name,
-                        id: resp.Id,
-                        projectNumber: data?.parsedBody.ProjectNumber,
-                        status: getStatusString(resp.Status),
-                        sendOn: resp.SendOn,
-                        to: resp.To,
-                        subject: resp.Subject,
+                        AgencyName: lookup.getLookupValueById('Agencies', resp.ToAgencyId)?.Name,
+                        ChesStatusName: getStatusString(resp.Status),
+                        ...resp,
                       }))
                     : []
                 }
+                onResendClick={(id) => resendNotification(id).then(() => refreshNotifications())}
+                onCancelClick={(id) => cancelNotification(id).then(() => refreshNotifications())}
               />
             )}
           </DataCard>
@@ -516,6 +516,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           postSubmit={() => {
             setOpenAgencyInterestDialog(false);
             refreshData();
+            refreshNotifications();
           }}
           onCancel={() => {
             setOpenAgencyInterestDialog(false);
@@ -525,10 +526,12 @@ const ProjectDetail = (props: IProjectDetail) => {
           ungroupedAgencies={ungroupedAgencies as Agency[]}
           initialValues={notifications?.items ?? []}
           open={openNotificationDialog}
-          postSubmit={() => {
-            setOpenNotificationDialog(false);
-            refreshData();
-          }}
+          onRowCancelClick={(id: number) =>
+            cancelNotification(id).then(() => refreshNotifications())
+          }
+          onRowResendClick={(id: number) =>
+            resendNotification(id).then(() => refreshNotifications())
+          }
           onCancel={() => {
             setOpenNotificationDialog(false);
           }}

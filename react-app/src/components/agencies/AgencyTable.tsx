@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useContext, useState } from 'react';
+import React, { MutableRefObject, useContext, useMemo, useState } from 'react';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, Chip, SxProps } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
@@ -9,6 +9,7 @@ import usePimsApi from '@/hooks/usePimsApi';
 import { dateColumnType } from '../table/CustomColumns';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
+import { LookupContext } from '@/contexts/lookupContext';
 
 interface IAgencyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
@@ -18,6 +19,7 @@ const AgencyTable = (props: IAgencyTable) => {
   const { rowClickHandler } = props;
   const { navigateAndSetFrom } = useHistoryAwareNavigate();
   const snackbar = useContext(SnackBarContext);
+  const lookup = useContext(LookupContext);
   const [totalCount, setTotalCount] = useState(0);
 
   const handleDataChange = async (filter: any, signal: AbortSignal): Promise<any[]> => {
@@ -35,6 +37,14 @@ const AgencyTable = (props: IAgencyTable) => {
       return [];
     }
   };
+
+  const agenciesForLookup = useMemo(() => {
+    if (lookup.data) {
+      return lookup.data.Agencies.filter((a) => a.ParentId == null).map((a) => a.Name);
+    } else {
+      return [];
+    }
+  }, [lookup.data]);
 
   const columns: GridColDef[] = [
     {
@@ -60,6 +70,8 @@ const AgencyTable = (props: IAgencyTable) => {
       field: 'ParentName',
       headerName: 'Parent Agency',
       flex: 1,
+      type: 'singleSelect',
+      valueOptions: agenciesForLookup,
     },
     {
       field: 'SendEmail',
