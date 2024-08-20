@@ -1,6 +1,169 @@
+### PATHS ###
+paths: 
+  /properties:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Properties
+      summary: Gets a list of properties based on supplied filter.
+      description: >
+        Used primarily for displaying properties in a table.
+        Non-generic query values must be in this format: `{searchType},{searchValue}`
+      parameters:
+        - in: query
+          name: pid
+          schema: 
+            type: string
+            example: contains,123345566
+        - in: query
+          name: pin
+          schema:
+            type: string
+        - in: query
+          name: classification 
+          schema: 
+            type: string
+            example: is,Demolished 
+        - in: query
+          name: agency 
+          schema: 
+            type: string
+            example: is,Real Property Division
+        - in: query
+          name: propertyType 
+          schema: 
+            type: string
+            example: is,Parcel
+        - in: query
+          name: address 
+          schema: 
+            type: string
+            example: contains,742 Evergreen Terr
+        - in: query
+          name: administrativeArea 
+          schema: 
+            type: string
+            example: contains,Victoria
+        - in: query
+          name: landArea 
+          schema: 
+            type: string
+            example: contains,100
+        - in: query
+          name: updatedOn 
+          schema: 
+            type: string
+            example: before,Fri Aug 16 2024 17:00:00 GMT-0700 (Pacific Daylight Time)
+        - in: query
+          name: quickFilter
+          schema:
+            type: string
+          description: Applied as an OR WHERE search on relevant columns.
+        - in: query
+          name: quantity
+          schema:
+            type: string
+          description: Number of records to be returned. Equivalent to page size.
+        - in: query
+          name: page
+          schema:
+            type: string
+          description: Page number of requested results. Only necessary if quantity is specified.
+        - in: query
+          name: sortKey
+          schema:
+            type: string
+          description: The column name on which the records will be sorted.
+        - in: query
+          name: sortOrder
+          schema:
+            type: string
+          description: Either DESC or ASC.
+        - in: query
+          name: excelExport
+          schema:
+            type: boolean
+            example: false
+          description: If true, returns in format for Excel export.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalCount:
+                    type: integer
+                    example: 1
+                  data: 
+                    type: array
+                    items: 
+                      $ref: '#/components/schemas/PropertyJoinView'
+        '400': 
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Could not parse filter.
+  # /properties/search/fuzzy:
+  
 ### SCHEMAS ###
 components:
   schemas:
+    PropertyJoinView:
+      type: object
+      properties: 
+        Address:
+          type: string 
+          example: 742 Evergreen Terr 
+        AdministrativeArea:
+          type: string 
+          example: Victoria 
+        AdministrativeAreaId:
+          type: integer 
+          example: 300
+        Agency: 
+          type: string 
+          example: Real Property Division 
+        AgencyId:  
+          type: integer 
+          example: 110
+        Classification:
+          type: string 
+          example: Surplus Active 
+        ClassificationId:
+          type: integer 
+          example: 2
+        Id:  
+          type: integer 
+          example: 11111
+          description: Internal ID for parcel or building.
+        IsSensitive:
+          type: boolean
+          example: false
+        LandArea: 
+          type: integer
+          example: 99
+          description: Area in hectres.
+        PID: 
+          type: integer 
+          example: 111111111
+        PIN: 
+          type: integer
+          example: 123123
+        PropertyType: 
+          type: string
+          example: Parcel
+        PropertyTypeId:
+          type: integer 
+          example: 0
+        UpdatedOn: 
+          type: string 
+          format: date-time
+          example: '2024-08-21T05:01:43.735Z'
     EvaluationCommon:
       type: object
       properties:
