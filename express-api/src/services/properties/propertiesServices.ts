@@ -424,11 +424,11 @@ const makeParcelUpsertObject = async (
   const adminAreaId: number = getAdministrativeAreaOrThrow(row, lookups.adminAreas);
   const pin = numberOrNull(row.PIN) ?? existentParcel?.PIN;
   const description = row.Description ?? (existentParcel ? existentParcel.Description : '');
-  const isSensitive = setNewBool(row.IsSensitive, existentParcel.IsSensitive, false);
+  const isSensitive = setNewBool(row.IsSensitive, existentParcel?.IsSensitive, false);
   const isVisibleToOtherAgencies = setNewBool(
     row.IsVisibleToOtherAgencies,
     existentParcel.IsVisibleToOtherAgencies,
-    true,
+    false,
   );
   return {
     Id: existentParcel?.Id,
@@ -445,7 +445,7 @@ const makeParcelUpsertObject = async (
       x: row.Longitude,
       y: row.Latitude,
     },
-    Address1: row.Address ?? existentParcel.Address1,
+    Address1: row.Address ?? existentParcel.Address1 ?? null,
     AdministrativeAreaId: adminAreaId,
     IsSensitive: isSensitive,
     IsVisibleToOtherAgencies: isVisibleToOtherAgencies,
@@ -514,11 +514,11 @@ const makeBuildingUpsertObject = async (
 
   const description = row.Description ?? (existentBuilding ? existentBuilding.Description : '');
   const rentableArea = row.RentableArea ?? (existentBuilding ? existentBuilding.RentableArea : 0);
-  const isSensitive = setNewBool(row.IsSensitive, existentBuilding.IsSensitive, false);
+  const isSensitive = setNewBool(row.IsSensitive, existentBuilding?.IsSensitive, false);
   const isVisibleToOtherAgencies = setNewBool(
     row.IsVisibleToOtherAgencies,
     existentBuilding.IsVisibleToOtherAgencies,
-    true,
+    false,
   );
   const buildingFloorCount =
     row.BuildingFloorCount ?? (existentBuilding ? existentBuilding.BuildingFloorCount : 0);
@@ -545,7 +545,7 @@ const makeBuildingUpsertObject = async (
     AdministrativeAreaId: adminAreaId,
     IsSensitive: isSensitive,
     Description: description,
-    Address1: row.Address ?? existentBuilding.Address1,
+    Address1: row.Address ?? existentBuilding.Address1 ?? null,
     IsVisibleToOtherAgencies: isVisibleToOtherAgencies,
     PropertyTypeId: 1,
     RentableArea: rentableArea,

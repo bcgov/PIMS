@@ -223,7 +223,7 @@ const BulkUpload = () => {
                   'Netbook',
                   'FiscalYear',
                   'IsSensitive',
-                  'isVisibleToOtherAgencies',
+                  'IsVisibleToOtherAgencies',
                   'LandArea (for Land)',
                   'BuildingTenancy (for Building)',
                   'NetUsableArea (for Building)',
