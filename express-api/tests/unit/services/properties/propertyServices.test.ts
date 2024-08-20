@@ -5,6 +5,7 @@ import propertyServices, {
   getAgencyOrThrowIfMismatched,
   getClassificationOrThrow,
   Lookups,
+  setNewBool,
 } from '@/services/properties/propertiesServices';
 import userServices from '@/services/users/usersServices';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
@@ -501,6 +502,23 @@ describe('UNIT - Property Services', () => {
           [],
         ),
       ).toThrow();
+    });
+  });
+
+  describe('setNewBool', () => {
+    it('should return the first argument if it is set', () => {
+      const newValue: boolean = true;
+      const previousValue: boolean = undefined;
+      const defaultValue: boolean = undefined;
+      const returnedBool = setNewBool(newValue, previousValue, defaultValue);
+      expect(() => returnedBool === newValue);
+    });
+    it('should return the second argument if first is not set and second is', () => {
+      const newValue: boolean = undefined;
+      const previousValue: boolean = true;
+      const defaultValue: boolean = undefined;
+      const returnedBool = setNewBool(newValue, previousValue, defaultValue);
+      expect(() => returnedBool === previousValue);
     });
   });
 });

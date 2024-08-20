@@ -362,7 +362,7 @@ const compareWithoutCase = (str1: string, str2: string) => {
   else return false;
 };
 
-const setNewBool = (newValue: boolean, previousValue: boolean, defaultValue: boolean) => {
+export const setNewBool = (newValue: boolean, previousValue: boolean, defaultValue: boolean) => {
   let returnValue = defaultValue;
   if (newValue == true || newValue == false) {
     returnValue = newValue;
