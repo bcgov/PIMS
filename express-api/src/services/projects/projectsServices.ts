@@ -55,7 +55,7 @@ const getProjectById = async (id: number) => {
       Id: id,
     },
     relations: {
-      StatusHistory: true,
+      StatusHistory: false,
       Notifications: true,
     },
   });

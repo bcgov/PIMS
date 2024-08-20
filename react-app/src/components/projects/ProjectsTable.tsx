@@ -104,7 +104,6 @@ const ProjectsTable = () => {
         Description: project.Description,
         'Reported Fiscal Year': project.ReportedFiscalYear,
         'Actual Fiscal Year': project.ActualFiscalYear,
-        Workflow: lookup.getLookupValueById('Workflows', project.WorkflowId)?.Name,
         Status: lookup.getLookupValueById('ProjectStatuses', project.StatusId)?.Name,
         'Tier Level': lookup.getLookupValueById('ProjectTiers', project.TierLevelId)?.Name,
         Risk: lookup.getLookupValueById('Risks', project.RiskId)?.Name,

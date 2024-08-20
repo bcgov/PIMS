@@ -33,7 +33,6 @@ import { Role } from '@/typeorm/Entities/Role';
 import { Task } from '@/typeorm/Entities/Task';
 import { TierLevel } from '@/typeorm/Entities/TierLevel';
 import { User } from '@/typeorm/Entities/User';
-import { Workflow } from '@/typeorm/Entities/Workflow';
 import { BuildingRelations } from '@/typeorm/Entities/views/BuildingRelationsView';
 import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
 import { NoteType } from './Entities/NoteType';
@@ -96,7 +95,6 @@ export default [
   TimestampType,
   TierLevel,
   User,
-  Workflow,
   NoteType,
   ImportResult,
   ...views,

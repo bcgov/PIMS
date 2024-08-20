@@ -53,7 +53,6 @@ import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { PropertyUnion } from '@/typeorm/Entities/views/PropertyUnionView';
 import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
-import { Workflow } from '@/typeorm/Entities/Workflow';
 
 export class MockRes {
   statusValue: any;
@@ -809,8 +808,6 @@ export const productProjectStatusHistory = (props?: Partial<ProjectStatusHistory
     UpdatedOn: new Date(),
     UpdatedById: randomUUID(),
     UpdatedBy: null,
-    WorkflowId: faker.number.int(),
-    Workflow: null,
     StatusId: faker.number.int(),
     Status: null,
     ProjectId: faker.number.int(),
@@ -942,25 +939,6 @@ export const produceNotificationQueue = (props?: Partial<NotificationQueue>) => 
     ...props,
   };
   return queue;
-};
-
-export const produceWorkflow = (props?: Partial<Workflow>) => {
-  const workflow: Workflow = {
-    Id: faker.number.int(),
-    Name: faker.lorem.word(),
-    IsDisabled: false,
-    SortOrder: 0,
-    Description: faker.lorem.lines(),
-    Code: 'TEST',
-    CreatedById: randomUUID(),
-    CreatedBy: undefined,
-    CreatedOn: new Date(),
-    UpdatedById: randomUUID(),
-    UpdatedBy: undefined,
-    UpdatedOn: new Date(),
-    ...props,
-  };
-  return workflow;
 };
 
 export const produceNotificationTemplate = (props?: Partial<NotificationTemplate>) => {
