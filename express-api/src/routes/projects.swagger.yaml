@@ -191,6 +191,85 @@ paths:
               schema:
                 type: string 
                 example: Project matching this internal ID not found.
+    put: 
+      security:
+        - bearerAuth: []
+      tags:
+        - Projects
+      summary: Updates a single project that matches the Id.
+      parameters:
+        - in: path 
+          name: id
+          type: integer
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '200':
+          description: OK.  
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Project'
+        '400': 
+          description: Bad Request 
+          content:
+            text/plain:
+              schema:
+                type: string 
+                example: Invalid Project Id.
+        '403': 
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string 
+                example: Projects only editable by Administrator role.
+        '404': 
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string 
+                example: Project does not exist.
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Projects
+      summary: Deletes a single project that matches the Id.
+      parameters:
+        - in: path 
+          name: id
+          type: integer
+          required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                type: string 
+                example: Invalid Project Id.
+        '403': 
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string 
+                example: Projects can only be deleted by Administrator role.
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Agency not found.
 
 ### SCHEMAS ###
 components:
