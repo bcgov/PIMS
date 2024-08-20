@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useContext, useState } from 'react';
+import React, { MutableRefObject, useContext, useMemo, useState } from 'react';
 import { GridColDef } from '@mui/x-data-grid';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import usePimsApi from '@/hooks/usePimsApi';
@@ -37,6 +37,14 @@ const AdministrativeAreasTable = () => {
     }
   };
 
+  const regionalDistrictForFilter = useMemo(() => {
+    if (lookup.data) {
+      return lookup.data.RegionalDistricts.map((a) => a.Name);
+    } else {
+      return [];
+    }
+  }, [lookup.data]);
+
   const columns: GridColDef[] = [
     {
       field: 'Name',
@@ -47,6 +55,8 @@ const AdministrativeAreasTable = () => {
       field: 'RegionalDistrictName',
       headerName: 'Regional District',
       flex: 1,
+      type: 'singleSelect',
+      valueOptions: regionalDistrictForFilter,
     },
     {
       field: 'IsDisabled',

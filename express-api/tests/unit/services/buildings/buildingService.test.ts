@@ -16,8 +16,10 @@ import userServices from '@/services/users/usersServices';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { Roles } from '@/constants/roles';
 
-const buildingRepo = AppDataSource.getRepository(Building);
 jest.spyOn(userServices, 'getUser').mockImplementation(async () => produceUser());
+jest.spyOn(userServices, 'getAgencies').mockImplementation(async () => []);
+
+const buildingRepo = AppDataSource.getRepository(Building);
 const _buildingSave = jest
   .spyOn(buildingRepo, 'save')
   .mockImplementation(async (building: DeepPartial<Building> & Building) => building);

@@ -21,21 +21,20 @@ import {
   BuildingConstructionType,
   BuildingPredominateUse,
 } from '@/hooks/api/useBuildingsApi';
-import { AuthContext } from '@/contexts/authContext';
 import { parseFloatOrNull, parseIntOrNull } from '@/utilities/formatters';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LoadingButton } from '@mui/lab';
 import { LookupContext } from '@/contexts/lookupContext';
 import { Classification } from '@/hooks/api/useLookupApi';
 import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
+import useUserAgencies from '@/hooks/api/useUserAgencies';
 
 const AddProperty = () => {
   //const years = [new Date().getFullYear(), new Date().getFullYear() - 1];
   const [propertyType, setPropertyType] = useState<PropertyType>('Parcel');
-  const [showErrorText, setShowErrorTest] = useState(false);
+  const [showErrorText, setShowErrorText] = useState(false);
   const { goToFromStateOrSetRoute } = useHistoryAwareNavigate();
   const api = usePimsApi();
-  const userContext = useContext(AuthContext);
   const { data: lookupData } = useContext(LookupContext);
   const { submit: submitParcel, submitting: submittingParcel } = useDataSubmitter(
     api.parcels.addParcel,
@@ -43,6 +42,7 @@ const AddProperty = () => {
   const { submit: submitBuilding, submitting: submittingBuilding } = useDataSubmitter(
     api.buildings.addBuilding,
   );
+  const { menuItems: agencyOptions } = useUserAgencies();
 
   const formMethods = useForm({
     defaultValues: {
@@ -68,6 +68,7 @@ const AddProperty = () => {
       BuildingTenancyUpdatedOn: dayjs(),
       Fiscals: [],
       Evaluations: [],
+      AgencyId: null,
     },
   });
 
@@ -112,6 +113,7 @@ const AddProperty = () => {
           />
         </RadioGroup>
         <GeneralInformationForm
+          agencies={agencyOptions}
           defaultLocationValue={undefined}
           propertyType={propertyType}
           adminAreas={
@@ -149,7 +151,7 @@ const AddProperty = () => {
         onClick={async () => {
           const isValid = await formMethods.trigger();
           if (isValid && formMethods.getValues()['Location'] != null) {
-            setShowErrorTest(false);
+            setShowErrorText(false);
             if (propertyType === 'Parcel') {
               const formValues = formMethods.getValues();
               const addParcel: ParcelAdd = {
@@ -159,7 +161,6 @@ const AddProperty = () => {
                 PIN: parseIntOrNull(formValues.PIN),
                 Postal: formValues.Postal.replace(/ /g, '').toUpperCase(),
                 PropertyTypeId: 0,
-                AgencyId: userContext.pimsUser.data.AgencyId,
                 IsVisibleToOtherAgencies: false,
                 Fiscals: formValues.Fiscals.map((a) => ({
                   ...a,
@@ -187,7 +188,6 @@ const AddProperty = () => {
                 TotalArea: parseFloatOrNull(formValues.TotalArea),
                 BuildingFloorCount: 0,
                 PropertyTypeId: 1,
-                AgencyId: userContext.pimsUser.data.AgencyId,
                 IsVisibleToOtherAgencies: false,
                 Fiscals: formValues.Fiscals.map((a) => ({
                   ...a,
@@ -208,7 +208,7 @@ const AddProperty = () => {
             }
           } else {
             console.log('Error!');
-            setShowErrorTest(true);
+            setShowErrorText(true);
           }
         }}
         variant="contained"

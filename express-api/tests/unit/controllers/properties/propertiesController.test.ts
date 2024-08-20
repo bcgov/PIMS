@@ -39,6 +39,7 @@ import {
   getImportResults,
   getPropertyUnion,
   importProperties,
+  getLinkedProjects,
 } from '@/controllers/properties/propertiesController';
 import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import xlsx, { WorkBook } from 'xlsx';
@@ -65,6 +66,10 @@ const _getPropertyUnion = jest.fn().mockImplementation(async () => [producePrope
 
 const _getImportResults = jest.fn().mockImplementation(async () => [produceImportResult()]);
 
+const _findLinkedProjectsForProperty = jest.fn().mockImplementation(async () => {
+  return [{ id: 1, name: 'Linked Project 1', buildingId: 1 }];
+});
+
 jest.spyOn(xlsx, 'readFile').mockImplementation(() => {
   const wb: WorkBook = {
     Sheets: {},
@@ -82,6 +87,7 @@ jest.mock('@/services/properties/propertiesServices', () => ({
   getPropertiesForMap: () => _getPropertiesForMap(),
   getPropertiesUnion: () => _getPropertyUnion(),
   getImportResults: () => _getImportResults(),
+  findLinkedProjectsForProperty: () => _findLinkedProjectsForProperty(),
 }));
 
 const _getAgencies = jest.fn().mockImplementation(async () => [1, 2, 3]);
@@ -205,6 +211,15 @@ describe('UNIT - Properties', () => {
       mockRequest.user = produceSSO();
       await getImportResults(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
+    });
+  });
+
+  describe('GET /properties/search/linkedProjects', () => {
+    it('should return 200 with linked projects for a building ID', async () => {
+      mockRequest.query.buildingId = '1';
+      await getLinkedProjects(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(mockResponse.sendValue).toEqual([{ id: 1, name: 'Linked Project 1', buildingId: 1 }]);
     });
   });
 });
