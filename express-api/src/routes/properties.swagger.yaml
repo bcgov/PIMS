@@ -108,11 +108,267 @@ paths:
               schema:
                 type: string
                 example: Could not parse filter.
-  # /properties/search/fuzzy:
-  
+  /properties/search/fuzzy:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Properties
+      summary: Gets a list of surplus properties based on supplied keyword.
+      description: >
+        Used for searching for surplus properties in projects.
+      parameters:
+        - in: query
+          name: keyword
+          schema: 
+            type: string
+            example: health
+        - in: query 
+          name: take
+          schema:
+            type: string 
+            example: 4
+          description: The number of parcels and buildings (each) to be returned.
+      responses:
+        '200': 
+          description: OK 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Parcels: 
+                    type: array 
+                    items: 
+                      $ref: '#/components/schemas/Parcel'
+                  Buildings:
+                    type: array 
+                    items: 
+                      $ref: '#/components/schemas/Building'
+  /properties/search/geo:
+    get: 
+      security:
+        - bearerAuth: []
+      tags:
+        - Properties
+      summary: Gets a list of properties in geojson format.
+      description: >
+        Used for populating the map component.
+      parameters:
+        - in: query
+          name: PID
+          description: Should not include leading zeroes or hyphens.
+          schema: 
+            type: integer
+            example: 24545457
+        - in: query
+          name: PIN
+          schema: 
+            type: integer
+        - in: query
+          name: Address
+          schema: 
+            type: string
+        - in: query
+          name: Name
+          schema: 
+            type: string
+        - in: query
+          name: AgencyIds
+          description: Comma-separated list of IDs.
+          schema: 
+            type: string
+            example: 81,166
+        - in: query
+          name: AdministrativeAreaIds
+          description: Comma-separated list of IDs.
+          schema: 
+            type: string
+            example: 219,300
+        - in: query
+          name: ClassificationIds
+          description: Comma-separated list of IDs.
+          schema: 
+            type: string
+            example: 0,1
+        - in: query
+          name: PropertyTypeIds
+          description: Comma-separated list of IDs.
+          schema: 
+            type: string
+            example: 0,1
+        - in: query
+          name: RegionalDistrictIds
+          description: Comma-separated list of IDs.
+          schema: 
+            type: string
+            example: 19,25
+      responses:
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PropertyGeojson'
+  /properties/import:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Properties
+      summary: Submits a CSV file of properties to be imported.
+      description: >
+        Starts the Bulk Upload process.
+      requestBody:
+        content:
+          file/csv:
+            schema:
+              type: string 
+              format: binary
+      responses:
+        '200': 
+          description: OK 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportResult'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Could not parse file.
+  /properties/import/results:
+    get: 
+      security:
+        - bearerAuth: []
+      tags:
+        - Properties
+      summary: Retrieves a list of previous property import results.
+      parameters:
+        - in: query 
+          name: page
+          schema:
+            type: integer
+            example: 0
+        - in: query 
+          name: quantity 
+          schema:
+            type: integer 
+            example: 1
+        - in: query 
+          name: sortKey
+          schema:
+            type: string 
+            example: CreatedOn
+        - in: query
+          name: sortOrder 
+          schema:
+            type: string 
+            example: DESC
+      responses:
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ImportResult'
+        '400': 
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Could not parse filter.
+
 ### SCHEMAS ###
 components:
   schemas:
+    ImportResult:
+      allOf:
+        - $ref: '#/components/schemas/CommonEntityProperties'
+        - type: object
+          properties:
+            CompletionPercentage:
+              type: number
+              example: 100
+              description: Will be -1 if the import process encounters an error.
+            FileName:
+              type: string
+              example: file.csv
+            Id:  
+              type: integer
+              example: 10
+            Results:
+              type: array
+              items:
+                type: object 
+                properties:
+                  action:
+                    type: string 
+                    example: error 
+                  reason: 
+                    type: string
+                    example: Missing PID.
+    PropertyGeojson:
+      type: object 
+      properties: 
+        type:
+          type: string
+          example: Feature
+        geometry:
+          type: object 
+          properties:
+            type: 
+              type: string
+              example: Point
+            coordinates:
+              type: array
+              example: [-123.416, 48.491]
+        properties:
+          type: object 
+          properties:
+            Address1:
+              type: string 
+              example: 742 Evergreen Terr 
+            AdministrativeAreaId:
+              type: integer 
+              example: 300
+            AgencyId: 
+              type: integer
+              example: 81
+            ClassificationId:
+              type: integer
+              example: 0
+            Id:  
+              type: integer
+              example: 1792
+            Location:
+              type: object
+              properties: 
+                x: 
+                  type: number
+                  example: -123.416
+                y: 
+                  type: number 
+                  example: 48.491
+            Name: 
+              type: string
+              example: Building Number 5
+            PID:
+              type: integer 
+              example: 123456789
+            PIN: 
+              type: integer
+              example: null 
+            PropertyTypeId:
+              type: integer
+              example: 1
     PropertyJoinView:
       type: object
       properties: 
