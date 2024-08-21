@@ -427,7 +427,7 @@ const makeParcelUpsertObject = async (
   const isSensitive = setNewBool(row.IsSensitive, existentParcel?.IsSensitive, false);
   const isVisibleToOtherAgencies = setNewBool(
     row.IsVisibleToOtherAgencies,
-    existentParcel.IsVisibleToOtherAgencies,
+    existentParcel?.IsVisibleToOtherAgencies,
     false,
   );
   return {
@@ -445,7 +445,7 @@ const makeParcelUpsertObject = async (
       x: row.Longitude,
       y: row.Latitude,
     },
-    Address1: row.Address ?? existentParcel.Address1 ?? null,
+    Address1: row.Address ?? existentParcel?.Address1 ?? null,
     AdministrativeAreaId: adminAreaId,
     IsSensitive: isSensitive,
     IsVisibleToOtherAgencies: isVisibleToOtherAgencies,
@@ -517,7 +517,7 @@ const makeBuildingUpsertObject = async (
   const isSensitive = setNewBool(row.IsSensitive, existentBuilding?.IsSensitive, false);
   const isVisibleToOtherAgencies = setNewBool(
     row.IsVisibleToOtherAgencies,
-    existentBuilding.IsVisibleToOtherAgencies,
+    existentBuilding?.IsVisibleToOtherAgencies,
     false,
   );
   const buildingFloorCount =
@@ -545,7 +545,7 @@ const makeBuildingUpsertObject = async (
     AdministrativeAreaId: adminAreaId,
     IsSensitive: isSensitive,
     Description: description,
-    Address1: row.Address ?? existentBuilding.Address1 ?? null,
+    Address1: row.Address ?? existentBuilding?.Address1 ?? null,
     IsVisibleToOtherAgencies: isVisibleToOtherAgencies,
     PropertyTypeId: 1,
     RentableArea: rentableArea,
