@@ -436,7 +436,7 @@ const makeParcelUpsertObject = async (
     PID: numberOrNull(row.PID),
     PIN: pin,
     ClassificationId: classificationId,
-    Name: row.Name ?? existentParcel.Name ?? '',
+    Name: row.Name ?? existentParcel?.Name ?? '',
     CreatedById: existentParcel ? existentParcel.CreatedById : user.Id,
     UpdatedById: existentParcel ? user.Id : undefined,
     UpdatedOn: existentParcel ? new Date() : undefined,
@@ -451,7 +451,7 @@ const makeParcelUpsertObject = async (
     IsVisibleToOtherAgencies: isVisibleToOtherAgencies,
     PropertyTypeId: 0,
     Description: description,
-    LandArea: numberOrNull(row.LandArea),
+    LandArea: numberOrNull(row.LandArea) ?? existentParcel? existentParcel.LandArea : null,
     Evaluations: currRowEvaluations,
     Fiscals: currRowFiscals,
   };
@@ -513,7 +513,7 @@ const makeBuildingUpsertObject = async (
   const adminAreaId = getAdministrativeAreaOrThrow(row, lookups.adminAreas);
 
   const description = row.Description ?? (existentBuilding ? existentBuilding.Description : '');
-  const rentableArea = row.RentableArea ?? (existentBuilding ? existentBuilding.RentableArea : 0);
+  const rentableArea = row.NetUsableArea ?? (existentBuilding ? existentBuilding.RentableArea : 0);
   const isSensitive = setNewBool(row.IsSensitive, existentBuilding?.IsSensitive, false);
   const isVisibleToOtherAgencies = setNewBool(
     row.IsVisibleToOtherAgencies,
@@ -552,7 +552,6 @@ const makeBuildingUpsertObject = async (
     BuildingTenancy: tenancy,
     BuildingFloorCount: buildingFloorCount,
     TotalArea: totalArea,
-    NetUsableArea: row.NetUsableArea,
     Evaluations: currRowEvaluations,
     Fiscals: currRowFiscals,
   };

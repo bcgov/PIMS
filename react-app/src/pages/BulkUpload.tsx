@@ -227,7 +227,6 @@ const BulkUpload = () => {
                   'LandArea (for Land)',
                   'BuildingTenancy (for Building)',
                   'NetUsableArea (for Building)',
-                  'RentableArea (for Building)',
                   'BuildingFloorCount (for Building)',
                   'TotalArea (for Building)',
                 ].map((a, idx) => (
