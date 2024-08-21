@@ -213,7 +213,7 @@ const ProjectsTable = () => {
       const { data, totalCount } = await api.projects.getProjects(filter, signal);
       setTotalCount(totalCount);
       return data;
-    } catch (error) {
+    } catch {
       snackbar.setMessageState({
         open: true,
         text: 'Error loading projects.',

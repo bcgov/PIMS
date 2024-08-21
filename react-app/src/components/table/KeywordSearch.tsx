@@ -6,11 +6,11 @@ import CloseIcon from '@mui/icons-material/Close';
 /**
  * @interface
  * @description Props for the KeywordSearch field.
- * @prop {Function} onChange (Optional) Function to run when value of field changes.
+ * @prop {(value: string) => void} onChange (Optional) Function to run when value of field changes.
  * @prop {[string, Dispatch<SetStateAction<string>>]} optionalExternalState (Optional) An external state getter and setter for field value. Component also contains internal state if that suffices.
  */
 interface IKeywordSearchProps {
-  onChange?: Function;
+  onChange?: (value: string) => void;
   optionalExternalState?: [string, Dispatch<SetStateAction<string>>];
 }
 
