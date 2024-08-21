@@ -314,7 +314,7 @@ const PropertyTable = (props: IPropertyTable) => {
       const { data, totalCount } = await api.properties.propertiesDataSource(filter, signal);
       setTotalCount(totalCount);
       return data;
-    } catch (error) {
+    } catch {
       snackbar.setMessageState({
         open: true,
         text: 'Error loading properties.',

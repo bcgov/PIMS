@@ -195,7 +195,7 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
       }
       const { parsedBody } = await absoluteFetch.get('/properties/search/linkedProjects', params);
       return parsedBody as any[];
-    } catch (error) {
+    } catch {
       return [];
     }
   };

@@ -10,7 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
  * @prop {[string, Dispatch<SetStateAction<string>>]} optionalExternalState (Optional) An external state getter and setter for field value. Component also contains internal state if that suffices.
  */
 interface IKeywordSearchProps {
-  onChange?: Function;
+  onChange?: (value: string) => void;
   optionalExternalState?: [string, Dispatch<SetStateAction<string>>];
 }
 
