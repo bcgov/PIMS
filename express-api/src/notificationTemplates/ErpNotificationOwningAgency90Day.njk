@@ -19,7 +19,6 @@
                             Site Size: {{ property.LandArea }} ha<br>
                             Zoned: {{ property.Zoning }}<br>
                             PID: {{ property.PID }} <br>
-                            Legal: {{ property.LandLegalDescription }}<br>
                             Current Holder of the Property: {{ property.Agency?.Name }} <br>
                             {% if Project.Appraised != null and Project.Appraised.Value > 0 %}
                                 <span>Appraised Value: ${{ Project.Appraised.Value }}</span>
