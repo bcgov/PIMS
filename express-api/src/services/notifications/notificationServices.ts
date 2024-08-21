@@ -604,7 +604,7 @@ const cancelProjectNotifications = async (
     };
   } catch (e) {
     logger.error(
-      `Error: Something went wrong when trying to cancel project notifications., Error msg: ${e.message}`,
+      `Something went wrong when trying to cancel project notifications. Error: ${e.message}`,
     );
     return {
       succeeded: 0,

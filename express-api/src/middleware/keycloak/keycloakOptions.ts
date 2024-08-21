@@ -22,7 +22,7 @@ export const SSO_OPTIONS: SSOOptions = {
         await KeycloakService.syncKeycloakUser(user.preferred_username);
       } catch (e) {
         logger.warn(
-          `Could not sync roles for user ${user.preferred_username}.Error: ${(e as Error).message}`,
+          `Could not sync roles for user ${user.preferred_username}. Error: ${(e as Error).message}`,
         );
       }
     }
