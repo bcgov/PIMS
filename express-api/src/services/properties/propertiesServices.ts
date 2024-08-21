@@ -451,7 +451,7 @@ const makeParcelUpsertObject = async (
     IsVisibleToOtherAgencies: isVisibleToOtherAgencies,
     PropertyTypeId: 0,
     Description: description,
-    LandArea: numberOrNull(row.LandArea) ?? existentParcel? existentParcel.LandArea : null,
+    LandArea: numberOrNull(row.LandArea) ?? existentParcel ? existentParcel.LandArea : null,
     Evaluations: currRowEvaluations,
     Fiscals: currRowFiscals,
   };
