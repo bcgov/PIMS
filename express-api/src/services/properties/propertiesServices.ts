@@ -613,8 +613,6 @@ const importPropertiesAsJSON = async (
     userAgencies,
   };
   const results: Array<BulkUploadRowResult> = [];
-  // let queuedParcels = [];
-  // let queuedBuildings = [];
   const queryRunner = AppDataSource.createQueryRunner();
   try {
     for (let rowNum = 0; rowNum < sheetObj.length; rowNum++) {
@@ -632,7 +630,6 @@ const importPropertiesAsJSON = async (
             queryRunner,
             existentParcel,
           );
-          //queuedParcels.push(parcelToUpsert);
           await queryRunner.manager.save(Parcel, parcelToUpsert);
           results.push({ action: existentParcel ? 'updated' : 'inserted', rowNumber: rowNum });
         } catch (e) {
@@ -652,7 +649,6 @@ const importPropertiesAsJSON = async (
             queryRunner,
             existentBuilding,
           );
-          //queuedBuildings.push(buildingForUpsert);
           await queryRunner.manager.save(Building, buildingForUpsert);
           results.push({ action: existentBuilding ? 'updated' : 'inserted', rowNumber: rowNum });
         } catch (e) {
