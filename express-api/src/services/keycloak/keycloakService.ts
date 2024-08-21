@@ -109,7 +109,10 @@ const getKeycloakRoles = async () => {
     // Return the list of roles
     return keycloakRoles.data;
   } catch (e) {
-    throw new ErrorWithCode('Something went wrong getting Keycloak roles.');
+    throw new ErrorWithCode(
+      `Failed to update user's Keycloak roles. ${(e as IKeycloakErrorResponse).message}`,
+      500,
+    );
   }
 };
 
