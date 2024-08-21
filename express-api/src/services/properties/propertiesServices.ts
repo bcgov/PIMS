@@ -640,23 +640,33 @@ const importPropertiesAsJSON = async (
         }
       } else if (row.PropertyType === 'Building') {
         const generatedName = generateBuildingName(row.Name, row.Description, row.LocalId);
-        const existentBuilding = await queryRunner.manager.findOne(Building, {
+        const foundBuildings = await queryRunner.manager.findAndCount(Building, {
           where: { PID: numberOrNull(row.PID), Name: generatedName },
         });
-        try {
-          const buildingForUpsert = await makeBuildingUpsertObject(
-            row,
-            user,
-            roles,
-            lookups,
-            queryRunner,
-            existentBuilding,
-          );
-          //queuedBuildings.push(buildingForUpsert);
-          await queryRunner.manager.save(Building, buildingForUpsert);
-          results.push({ action: existentBuilding ? 'updated' : 'inserted', rowNumber: rowNum });
-        } catch (e) {
-          results.push({ action: 'error', reason: e.message, rowNumber: rowNum });
+        const count = foundBuildings[1];
+        if (count > 1) {
+          results.push({
+            action: 'error',
+            reason: 'Multiple buildings match PID, Name combo.',
+            rowNumber: rowNum,
+          });
+        } else {
+          const existentBuilding = foundBuildings[0][0];
+          try {
+            const buildingForUpsert = await makeBuildingUpsertObject(
+              row,
+              user,
+              roles,
+              lookups,
+              queryRunner,
+              existentBuilding,
+            );
+            //queuedBuildings.push(buildingForUpsert);
+            await queryRunner.manager.save(Building, buildingForUpsert);
+            results.push({ action: existentBuilding ? 'updated' : 'inserted', rowNumber: rowNum });
+          } catch (e) {
+            results.push({ action: 'error', reason: e.message, rowNumber: rowNum });
+          }
         }
       } else {
         results.push({
