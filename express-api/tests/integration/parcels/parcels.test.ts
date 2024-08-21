@@ -31,7 +31,6 @@ const mockParcel: Partial<Parcel> = {
   PID: faker.number.int(),
   PIN: faker.number.int(),
   LandArea: 0,
-  LandLegalDescription: faker.string.alpha(),
   Zoning: '',
   ZoningPotential: '',
   ParentParcelId: 1,
