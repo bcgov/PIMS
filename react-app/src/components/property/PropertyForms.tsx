@@ -349,14 +349,6 @@ export const ParcelInformationForm = (props: IParcelInformationForm) => {
         <Grid item xs={12}>
           <TextFormField multiline label={'Description'} name={'Description'} fullWidth />
         </Grid>
-        <Grid item xs={12}>
-          <TextFormField
-            multiline
-            label={'Legal description'}
-            name={'LandLegalDescription'}
-            fullWidth
-          />
-        </Grid>
       </Grid>
     </>
   );

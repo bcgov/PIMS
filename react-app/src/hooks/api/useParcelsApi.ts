@@ -39,7 +39,6 @@ export interface Parcel extends Property {
   Evaluations?: ParcelEvaluation[] | null;
   Fiscals?: ParcelFiscal[] | null;
   LandArea?: number;
-  LandLegalDescription?: string;
   Zoning?: string;
   ZoningPotential?: string;
   ParentParcelId?: number;
