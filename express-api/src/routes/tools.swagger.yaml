@@ -1,0 +1,20 @@
+### SCHEMAS ### 
+components:
+  schemas:
+    ChesSentEmailResponse:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            type: object
+            properties:
+              msgId: 
+                type: string
+                format: uuid
+              to: 
+                type: string
+                example: email@gov.bc.ca
+        txId:
+          type: string
+          format: uuid
