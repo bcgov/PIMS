@@ -436,7 +436,6 @@ const makeParcelUpsertObject = async (
     PID: numberOrNull(row.PID),
     PIN: pin,
     ClassificationId: classificationId,
-    Name: row.Name ?? existentParcel?.Name ?? '',
     CreatedById: existentParcel ? existentParcel.CreatedById : user.Id,
     UpdatedById: existentParcel ? user.Id : undefined,
     UpdatedOn: existentParcel ? new Date() : undefined,

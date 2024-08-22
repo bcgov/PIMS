@@ -196,12 +196,12 @@ const BulkUpload = () => {
                 {[
                   'PropertyType (Enter Land or Building)',
                   'PID',
-                  'Name',
                   'Classification',
                   'AgencyCode',
                   'AdministrativeArea',
                   'Latitude',
                   'Longitude',
+                  'Name (Buildings only)',
                   'PredominateUse (Buildings only)',
                   'ConstructionType (Buildings only)',
                 ].map((a, idx) => (
