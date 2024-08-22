@@ -51,9 +51,6 @@ export abstract class Property extends SoftDeleteEntity {
   @Column({ type: 'boolean' })
   IsSensitive: boolean;
 
-  @Column({ type: 'boolean' })
-  IsVisibleToOtherAgencies: boolean;
-
   @Column({
     type: 'point',
     transformer: {
