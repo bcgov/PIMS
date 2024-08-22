@@ -167,6 +167,7 @@ const addProject = async (
 
   // TODO: If drafts become possible, this can't always be SPP.
   project.ProjectNumber = `SPP-${nextval}`;
+  project.SubmittedOn = new Date();
   const queryRunner = AppDataSource.createQueryRunner();
   await queryRunner.startTransaction();
   try {
@@ -709,6 +710,20 @@ const updateProject = async (
     await handleProjectNotes({ ...project, CreatedById: project.UpdatedById }, queryRunner);
     await handleProjectMonetary({ ...project, CreatedById: project.UpdatedById }, queryRunner);
     await handleProjectTimestamps({ ...project, CreatedById: project.UpdatedById }, queryRunner);
+
+    // Handle timestamps
+    if (project.StatusId === ProjectStatus.CANCELLED) project.CancelledOn = new Date();
+    else if (project.StatusId === ProjectStatus.DENIED) project.DeniedOn = new Date();
+    else if (
+      [ProjectStatus.DISPOSED, ProjectStatus.TRANSFERRED_WITHIN_GRE].includes(project.StatusId)
+    )
+      project.CompletedOn = new Date();
+    else if (
+      [ProjectStatus.APPROVED_FOR_ERP, ProjectStatus.APPROVED_FOR_EXEMPTION].includes(
+        project.StatusId,
+      )
+    )
+      project.ApprovedOn = new Date();
 
     // Update Project
     await queryRunner.manager.save(Project, {
