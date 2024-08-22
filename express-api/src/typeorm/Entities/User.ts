@@ -41,7 +41,7 @@ export class User extends BaseEntity {
   LastName: string;
 
   @Column({ type: 'character varying', length: 100 })
-  @Index({ unique: true })
+  @Index()
   Email: string;
 
   @Column({ type: 'character varying', length: 100, nullable: true })
@@ -49,12 +49,6 @@ export class User extends BaseEntity {
 
   @Column('boolean', { default: false })
   IsDisabled: boolean;
-
-  @Column('boolean')
-  EmailVerified: boolean;
-
-  @Column('boolean')
-  IsSystem: boolean;
 
   @Column({ type: 'character varying', length: 1000, nullable: true })
   Note: string;
@@ -73,7 +67,6 @@ export class User extends BaseEntity {
   ApprovedOn: Date;
 
   @Column({ type: 'uuid', nullable: true })
-  @Index({ unique: true })
   KeycloakUserId: string;
 
   // Agency Relations
