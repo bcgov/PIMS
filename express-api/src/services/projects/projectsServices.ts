@@ -701,10 +701,6 @@ const updateProject = async (
   const queryRunner = AppDataSource.createQueryRunner();
   await queryRunner.startTransaction();
   try {
-    // Metadata field is not preserved if a metadata property is set. It is overwritten.
-    // Construct the proper metadata before continuing.
-    const newMetadata = { ...originalProject.Metadata, ...project.Metadata };
-
     await handleProjectTasks({ ...project, CreatedById: project.UpdatedById }, queryRunner);
     await handleProjectAgencyResponses(
       { ...project, CreatedById: project.UpdatedById },
@@ -717,7 +713,6 @@ const updateProject = async (
     // Update Project
     await queryRunner.manager.save(Project, {
       ...project,
-      Metadata: newMetadata,
       Tasks: undefined,
       AgencyResponses: undefined,
       Notes: undefined,
