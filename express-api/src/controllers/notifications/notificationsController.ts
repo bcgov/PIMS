@@ -7,6 +7,7 @@ import { Request, Response } from 'express';
 import { DisposalNotificationFilterSchema } from './notificationsSchema';
 import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 import projectServices from '@/services/projects/projectsServices';
+import logger from '@/utilities/winstonLogger';
 
 /**
  * @description Get all notifications for a specific project.
@@ -46,6 +47,7 @@ export const getNotificationsByProjectId = async (req: Request, res: Response) =
 
     return res.status(200).send(notificationsResult);
   } catch (error) {
+    logger.error('Error fetching notifications:', error);
     return res.status(500).send({ message: 'Error fetching notifications' });
   }
 };

@@ -224,7 +224,6 @@ export const produceParcel = (): Parcel => {
     CreatedOn: faker.date.anytime(),
     UpdatedOn: faker.date.anytime(),
     Name: faker.string.alphanumeric(),
-    LandLegalDescription: faker.string.alphanumeric(),
     PID: faker.number.int({ min: 111111111, max: 999999999 }),
     PIN: undefined,
     LandArea: undefined,
