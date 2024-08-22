@@ -37,6 +37,7 @@ import { ProjectStatus } from '@/constants/projectStatus';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectStatus as ProjectStatusEntity } from '@/typeorm/Entities/ProjectStatus';
 import { parentPort } from 'worker_threads';
+import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
 /**
  * Perform a fuzzy search for properties based on the provided keyword.
@@ -571,6 +572,30 @@ export type BulkUploadRowResult = {
   reason?: string;
 };
 
+const checkForHeaders = (sheetObj: Record<string, any>[]) => {
+  const requiredHeaders = [
+    'PropertyType',
+    'PID',
+    'Classification',
+    'AgencyCode',
+    'AdministrativeArea',
+    'Latitude',
+    'Longitude',
+  ];
+  for (let rowNum = 0; rowNum < sheetObj.length; rowNum++) {
+    const row = sheetObj[rowNum];
+    if (row.PropertyType == 'Building') {
+      requiredHeaders.push('Name', 'PredominateUse', 'ConstructionType');
+      break;
+    }
+  }
+  for (let rowNum = 0; rowNum < requiredHeaders.length; rowNum++) {
+    if (!Object.keys(sheetObj[0]).includes(requiredHeaders[rowNum])) {
+      throw new ErrorWithCode('Please ensure all required headers are present', 400);
+    }
+  }
+};
+
 /**
  * Imports properties data from a worksheet as JSON format, processes each row to upsert parcels or buildings,
  * and returns an array of BulkUploadRowResult indicating the actions taken for each row.
@@ -587,6 +612,9 @@ const importPropertiesAsJSON = async (
   resultId: number,
 ) => {
   const sheetObj: Record<string, any>[] = xlsx.utils.sheet_to_json(worksheet);
+
+  checkForHeaders(sheetObj);
+
   const classifications = await AppDataSource.getRepository(PropertyClassification).find({
     select: { Name: true, Id: true },
   });
