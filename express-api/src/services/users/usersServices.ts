@@ -98,8 +98,6 @@ const addKeycloakUserOnHold = async (
     KeycloakUserId: normalizedKc.guid,
     Username: normalizedKc.username,
     Status: UserStatus.OnHold,
-    IsSystem: false,
-    EmailVerified: false,
     IsDisabled: false,
     AgencyId: agencyId,
     Position: position,
