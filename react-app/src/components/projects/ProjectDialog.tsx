@@ -211,6 +211,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
                 key={`${task.Id}-${idx}`}
                 name={`Tasks.${idx}.IsCompleted`}
                 label={task.Name}
+                required={!lookupData?.Tasks.find((t) => task.TaskId === t.Id)?.IsOptional}
               />
             ))}
           </Box>
