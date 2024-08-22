@@ -572,7 +572,7 @@ export type BulkUploadRowResult = {
   reason?: string;
 };
 
-const checkForHeaders = (sheetObj: Record<string, any>[]) => {
+const checkForHeaders = (sheetObj: Record<string, any>[], columnArray: any) => {
   const requiredHeaders = [
     'PropertyType',
     'PID',
@@ -590,7 +590,7 @@ const checkForHeaders = (sheetObj: Record<string, any>[]) => {
     }
   }
   for (let rowNum = 0; rowNum < requiredHeaders.length; rowNum++) {
-    if (!Object.keys(sheetObj[0]).includes(requiredHeaders[rowNum])) {
+    if (!columnArray.includes(requiredHeaders[rowNum])) {
       throw new ErrorWithCode('Please ensure all required headers are present', 400);
     }
   }
@@ -611,9 +611,10 @@ const importPropertiesAsJSON = async (
   roles: string[],
   resultId: number,
 ) => {
+  const columnsArray = xlsx.utils.sheet_to_json(worksheet, { header: 1 })[0];
   const sheetObj: Record<string, any>[] = xlsx.utils.sheet_to_json(worksheet);
 
-  checkForHeaders(sheetObj);
+  checkForHeaders(sheetObj, columnsArray);
 
   const classifications = await AppDataSource.getRepository(PropertyClassification).find({
     select: { Name: true, Id: true },
@@ -913,11 +914,6 @@ const processFile = async (filePath: string, resultRowId: number, user: User, ro
     const worksheet = file.Sheets[sheetName];
 
     results = await propertyServices.importPropertiesAsJSON(worksheet, user, roles, resultRowId);
-    return results; // Note that this return still works with finally as long as return is not called from finally block.
-  } catch (e) {
-    parentPort.postMessage('Aborting file upload: ' + e.message);
-    parentPort.postMessage('Aborting stack: ' + e.stack);
-  } finally {
     await AppDataSource.getRepository(ImportResult).save({
       Id: resultRowId,
       CompletionPercentage: 1.0,
@@ -925,6 +921,18 @@ const processFile = async (filePath: string, resultRowId: number, user: User, ro
       UpdatedById: user.Id,
       UpdatedOn: new Date(),
     });
+    return results; // Note that this return still works with finally as long as return is not called from finally block.
+  } catch (e) {
+    parentPort.postMessage('Aborting file upload: ' + e.message);
+    parentPort.postMessage('Aborting stack: ' + e.stack);
+    await AppDataSource.getRepository(ImportResult).save({
+      Id: resultRowId,
+      CompletionPercentage: -1.0,
+      Results: results,
+      UpdatedById: user.Id,
+      UpdatedOn: new Date(),
+    });
+  } finally {
     await AppDataSource.destroy(); //Not sure whether this is necessary but seems like the safe thing to do.
   }
 };
