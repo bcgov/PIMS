@@ -22,8 +22,6 @@ describe('INTEGRATION - Project Routes', () => {
       actualFiscalYear: faker.number.int(),
       manager: faker.person.firstName(),
       sendNotifications: faker.datatype.boolean(),
-      workflowId: faker.number.int(),
-      workflowCode: faker.string.alpha(),
       statusId: faker.number.int(),
       statusCode: faker.string.alpha(),
       status: {},

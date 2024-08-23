@@ -120,7 +120,12 @@ export const addDisposalProject = async (req: Request, res: Response) => {
     projectPropertyIds,
   }: { project: DeepPartial<Project>; projectPropertyIds: ProjectPropertyIds } = req.body;
   const user = await userServices.getUser((req.user as SSOUser).preferred_username);
-  const addBody = { ...project, CreatedById: user.Id, AgencyId: user.AgencyId };
+  const addBody = {
+    ...project,
+    CreatedById: user.Id,
+    AgencyId: user.AgencyId,
+    UpdatedById: user.Id,
+  };
 
   // Call the addProject service function with the project data
   const newProject = await projectServices.addProject(

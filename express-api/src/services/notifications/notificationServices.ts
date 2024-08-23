@@ -33,6 +33,7 @@ export enum NotificationStatus {
   Cancelled = 2,
   Failed = 3,
   Completed = 4,
+  NotFound = 5,
 }
 
 export enum NotificationAudience {
@@ -442,6 +443,8 @@ const convertChesStatusToNotificationStatus = (chesStatus: string): Notification
       return NotificationStatus.Failed;
     case 'completed':
       return NotificationStatus.Completed;
+    case '404':
+      return NotificationStatus.NotFound;
     default:
       return null;
   }
@@ -465,7 +468,6 @@ const updateNotificationStatus = async (notificationId: number, user: User) => {
   }
 
   const statusResponse = await chesServices.getStatusByIdAsync(notification.ChesMessageId);
-
   if (typeof statusResponse?.status === 'string') {
     const notificationStatus = convertChesStatusToNotificationStatus(statusResponse.status);
     // If the CHES status is non-standard, don't update the notification.
@@ -481,7 +483,39 @@ const updateNotificationStatus = async (notificationId: number, user: User) => {
     query.release();
     return updatedNotification;
   } else if (typeof statusResponse?.status === 'number') {
-    //If we get number type then this wound up being some HTTP code.
+    // handle 404, 422 code here....
+    switch (statusResponse.status) {
+      case 404: {
+        notification.Status = NotificationStatus.NotFound;
+        notification.UpdatedOn = new Date();
+        notification.UpdatedById = user.Id;
+        const updatedNotification = await query.manager.save(NotificationQueue, notification);
+        logger.error(`Notification with id ${notificationId} not found on CHES.`);
+        query.release();
+        return updatedNotification;
+      }
+
+      case 422:
+        logger.error(
+          `Notification with id ${notificationId} could not be processed, some of the data could be formatted incorrectly.`,
+        );
+        break;
+
+      case 401:
+        logger.error(
+          `Cannot authorize the request to the CHES server, check your CHES credentials.`,
+        );
+        break;
+
+      case 500:
+        logger.error(
+          `Internal server error while retrieving status for notification with id ${notificationId}.`,
+        );
+        break;
+      default:
+        logger.error(`Received unexpected status code ${statusResponse.status}.`);
+        break;
+    }
     query.release();
     return notification;
   } else {
@@ -569,7 +603,9 @@ const cancelProjectNotifications = async (
       ).length,
     };
   } catch (e) {
-    logger.error(`Error: Something went wrong when trying to cancel project notifications.`);
+    logger.error(
+      `Something went wrong when trying to cancel project notifications. Error: ${e.message}`,
+    );
     return {
       succeeded: 0,
       failed: 0,

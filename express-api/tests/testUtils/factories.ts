@@ -50,7 +50,6 @@ import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { PropertyUnion } from '@/typeorm/Entities/views/PropertyUnionView';
 import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
-import { Workflow } from '@/typeorm/Entities/Workflow';
 
 export class MockRes {
   statusValue: any;
@@ -225,7 +224,6 @@ export const produceParcel = (): Parcel => {
     CreatedOn: faker.date.anytime(),
     UpdatedOn: faker.date.anytime(),
     Name: faker.string.alphanumeric(),
-    LandLegalDescription: faker.string.alphanumeric(),
     PID: faker.number.int({ min: 111111111, max: 999999999 }),
     PIN: undefined,
     LandArea: undefined,
@@ -645,16 +643,14 @@ export const produceProject = (
     Appraised: faker.number.int(),
     Market: faker.number.int(),
     ProjectType: 1,
-    WorkflowId: 1,
-    Workflow: null, // TODO: produceWorkflow
     AgencyId: 1,
     Agency: produceAgency(),
     TierLevelId: 1,
-    TierLevel: null, // TODO: produceTier
+    TierLevel: produceTierLevel(),
     StatusId: 1,
-    Status: null, // TODO: produceStatus
+    Status: produceProjectStatus(),
     RiskId: 1,
-    Risk: null, // TODO: produceRisk
+    Risk: produceRisk(),
     Tasks: [produceProjectTask()],
     ProjectProperties: projectProperties ?? [
       produceProjectProperty({
@@ -808,8 +804,6 @@ export const produceProjectStatusHistory = (props?: Partial<ProjectStatusHistory
     UpdatedOn: new Date(),
     UpdatedById: randomUUID(),
     UpdatedBy: null,
-    WorkflowId: faker.number.int(),
-    Workflow: null,
     StatusId: faker.number.int(),
     Status: null,
     ProjectId: faker.number.int(),
@@ -941,25 +935,6 @@ export const produceNotificationQueue = (props?: Partial<NotificationQueue>) => 
     ...props,
   };
   return queue;
-};
-
-export const produceWorkflow = (props?: Partial<Workflow>) => {
-  const workflow: Workflow = {
-    Id: faker.number.int(),
-    Name: faker.lorem.word(),
-    IsDisabled: false,
-    SortOrder: 0,
-    Description: faker.lorem.lines(),
-    Code: 'TEST',
-    CreatedById: randomUUID(),
-    CreatedBy: undefined,
-    CreatedOn: new Date(),
-    UpdatedById: randomUUID(),
-    UpdatedBy: undefined,
-    UpdatedOn: new Date(),
-    ...props,
-  };
-  return workflow;
 };
 
 export const produceNotificationTemplate = (props?: Partial<NotificationTemplate>) => {

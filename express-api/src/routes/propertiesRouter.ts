@@ -14,11 +14,14 @@ const {
   getPropertiesFuzzySearch,
   getPropertyUnion,
   getImportResults,
+  getLinkedProjects,
 } = controllers;
 
 router.route('/search/fuzzy').get(activeUserCheck, catchErrors(getPropertiesFuzzySearch));
 
 router.route('/search/geo').get(activeUserCheck, catchErrors(getPropertiesForMap)); // Formerly wfs route
+
+router.route('/search/linkedProjects').get(activeUserCheck, catchErrors(getLinkedProjects));
 
 const upload = multer({
   dest: 'uploads/',

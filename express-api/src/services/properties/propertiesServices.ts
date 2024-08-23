@@ -140,6 +140,40 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
     Buildings: buildings,
   };
 };
+/**
+ * Finds associated projects based on the provided building ID or parcel ID.
+ *
+ * This function queries the `ProjectProperty` repository to find projects linked
+ * to either a building or a parcel. It returns an empty array if neither ID is provided.
+ *
+ * @param buildingId - Optional ID of the building to find associated projects for.
+ * @param parcelId - Optional ID of the parcel to find associated projects for.
+ * @returns A promise that resolves to an array of `ProjectProperty` objects.
+ *          If neither `buildingId` nor `parcelId` is provided, an empty array is returned.
+ */
+const findLinkedProjectsForProperty = async (buildingId?: number, parcelId?: number) => {
+  const whereCondition = buildingId
+    ? { BuildingId: buildingId }
+    : parcelId
+      ? { ParcelId: parcelId }
+      : {}; // Return an empty condition if neither ID is provided
+
+  const query = AppDataSource.getRepository(ProjectProperty)
+    .createQueryBuilder('pp')
+    .leftJoinAndSelect('pp.Project', 'p')
+    .leftJoinAndSelect('p.Status', 'ps')
+    .where(whereCondition)
+    .select(['p.*', 'ps.Name AS status_name']);
+
+  const associatedProjects = buildingId || parcelId ? await query.getRawMany() : []; // Return an empty array if no ID is provided
+
+  return associatedProjects.map((result) => ({
+    ProjectNumber: result.project_number,
+    Id: result.id,
+    StatusName: result.status_name,
+    Description: result.description,
+  }));
+};
 
 /**
  * Retrieves properties based on the provided filter criteria to render map markers.
@@ -403,7 +437,6 @@ const makeParcelUpsertObject = async (
     IsVisibleToOtherAgencies: true,
     PropertyTypeId: 0,
     Description: row.Description,
-    LandLegalDescription: row.LandLegalDescription,
     LandArea: numberOrNull(row.LandArea),
     Evaluations: currRowEvaluations,
     Fiscals: currRowFiscals,
@@ -841,6 +874,7 @@ const propertyServices = {
   getImportResults,
   getPropertiesForExport,
   processFile,
+  findLinkedProjectsForProperty,
 };
 
 export default propertyServices;

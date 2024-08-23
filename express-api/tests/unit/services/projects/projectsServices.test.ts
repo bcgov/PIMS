@@ -1,7 +1,7 @@
 import { AppDataSource } from '@/appDataSource';
 import { ProjectStatus } from '@/constants/projectStatus';
 import { ProjectType } from '@/constants/projectType';
-import { ProjectWorkflow } from '@/constants/projectWorkflow';
+import { Roles } from '@/constants/roles';
 import projectServices from '@/services/projects/projectsServices';
 import userServices from '@/services/users/usersServices';
 import { Agency } from '@/typeorm/Entities/Agency';
@@ -109,6 +109,7 @@ const _getNextSequence = jest.spyOn(AppDataSource, 'query').mockImplementation(a
 ]);
 
 jest.spyOn(userServices, 'getUser').mockImplementation(async () => produceUser());
+jest.spyOn(userServices, 'getAgencies').mockImplementation(async () => [1]);
 
 const _mockStartTransaction = jest.fn(async () => {});
 const _mockRollbackTransaction = jest.fn(async () => {});
@@ -283,7 +284,6 @@ describe('UNIT - Project Services', () => {
       expect(_buildingManagerFindOne).toHaveBeenCalledTimes(1);
       // The created project has the expected values
       expect(result.Name).toEqual('Test Project');
-      expect(result.WorkflowId).toEqual(ProjectWorkflow.SUBMIT_DISPOSAL);
       expect(result.ProjectType).toEqual(ProjectType.DISPOSAL);
       expect(result.StatusId).toEqual(ProjectStatus.SUBMITTED);
       expect(result.ProjectNumber).toMatch(/^SPP-\d+$/);
@@ -526,7 +526,7 @@ describe('UNIT - Project Services', () => {
           parcels: [1, 3],
           buildings: [4, 5],
         },
-        produceSSO(),
+        produceSSO({ client_roles: [Roles.ADMIN] }),
       );
       expect(result.StatusId).toBe(2);
       expect(result.Name).toBe('New Name');
@@ -610,7 +610,7 @@ describe('UNIT - Project Services', () => {
               parcels: [1, 3],
               buildings: [4, 5],
             },
-            produceSSO(),
+            produceSSO({ client_roles: [Roles.ADMIN] }),
           ),
       ).rejects.toThrow(new ErrorWithCode('Error updating project: bad save', 500));
     });

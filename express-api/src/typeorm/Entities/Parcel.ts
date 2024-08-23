@@ -9,9 +9,6 @@ export class Parcel extends Property {
   @Column({ type: 'real', nullable: true })
   LandArea: number;
 
-  @Column({ type: 'character varying', length: 500, nullable: true })
-  LandLegalDescription: string;
-
   @Column({ type: 'character varying', length: 50, nullable: true })
   Zoning: string;
 
