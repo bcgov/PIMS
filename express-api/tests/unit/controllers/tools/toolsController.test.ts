@@ -4,9 +4,7 @@ import {
   MockReq,
   MockRes,
   getRequestHandlerMocks,
-  produceEmail,
   produceEmailStatus,
-  produceSSO,
   produceGeocoderAddress,
   producePidsResponse,
 } from '../../../testUtils/factories';
@@ -142,23 +140,6 @@ describe('UNIT - Tools', () => {
       mockRequest.query.status = 'pending';
       expect(
         async () => await controllers.cancelChesMessages(mockRequest, mockResponse),
-      ).rejects.toThrow();
-    });
-  });
-
-  describe('POST /tools/ches', () => {
-    it('should return status 201', async () => {
-      mockRequest.body = produceEmail({});
-      mockRequest.user = produceSSO();
-      await controllers.sendChesMessage(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(201);
-    });
-    it('should throw an error when sendEmailAsync throws an error', async () => {
-      _sendEmailAsync.mockImplementationOnce(() => {
-        throw new Error();
-      });
-      expect(
-        async () => await controllers.sendChesMessage(mockRequest, mockResponse),
       ).rejects.toThrow();
     });
   });
