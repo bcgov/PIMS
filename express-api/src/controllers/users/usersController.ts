@@ -7,31 +7,6 @@ import { isAdmin } from '@/utilities/authorizationChecks';
 import notificationServices from '@/services/notifications/notificationServices';
 import getConfig from '@/constants/config';
 import logger from '@/utilities/winstonLogger';
-/**
- * @description Function to filter users based on agencies
- * @param {Request}     req Incoming request.
- * @param {Response}    res Outgoing response.
- * @param {SSOUser}    ssoUser Incoming SSO user.
- * @returns {User[]}      An array of users.
- */
-const filterUsersByAgencies = async (req: Request, res: Response, ssoUser: SSOUser) => {
-  const filter = UserFilteringSchema.safeParse(req.query);
-  if (!filter.success) {
-    return res.status(400).send('Failed to parse filter query.');
-  }
-  const filterResult = filter.data;
-
-  let users;
-  if (isAdmin(ssoUser)) {
-    users = await userServices.getUsers(filterResult as UserFiltering);
-  } else {
-    // Get agencies associated with the requesting user
-    const usersAgencies = await userServices.getAgencies(ssoUser.preferred_username);
-    filterResult.agencyId = usersAgencies;
-    users = await userServices.getUsers(filterResult as UserFiltering);
-  }
-  return users;
-};
 
 /**
  * @description Submits a user access request.
@@ -107,7 +82,21 @@ export const getSelf = async (req: Request, res: Response) => {
  */
 export const getUsers = async (req: Request, res: Response) => {
   const ssoUser = req.user as unknown as SSOUser;
-  const users = await filterUsersByAgencies(req, res, ssoUser);
+  const filter = UserFilteringSchema.safeParse(req.query);
+  if (!filter.success) {
+    return res.status(400).send('Failed to parse filter query.');
+  }
+  const filterResult = filter.data;
+
+  let users;
+  if (isAdmin(ssoUser)) {
+    users = await userServices.getUsers(filterResult as UserFiltering);
+  } else {
+    // Get agencies associated with the requesting user
+    const usersAgencies = await userServices.getAgencies(ssoUser.preferred_username);
+    filterResult.agencyId = usersAgencies;
+    users = await userServices.getUsers(filterResult as UserFiltering);
+  }
   return res.status(200).send(users);
 };
 
