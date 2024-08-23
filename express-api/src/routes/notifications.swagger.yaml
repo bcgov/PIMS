@@ -42,14 +42,14 @@ paths:
                     items:
                       $ref: '#/components/schemas/NotificationQueue'
         '400': 
-          description: Filter parsing issue.
+          description: Bad Request
           content:
             text/plain:
               schema:
                 type: string
                 example: Could not parse filter.
         '403':
-          description: Authorization issue.
+          description: Forbidden
           content:
             text/plain:
               schema:

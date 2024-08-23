@@ -76,7 +76,7 @@ paths:
                 items: 
                   $ref: '#/components/schemas/Building'
         '400':
-          description: Filter supplied did not pass parsing check.
+          description: Bad Request
           content:
             text/plain:
               schema:
@@ -95,13 +95,13 @@ paths:
               $ref: '#/components/schemas/BuildingPost'
       responses:
         '201':
-          description: OK. Returns created Building.
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Building'
         '409':
-          description: Given if the building already exists in PIMS.
+          description: Conflict
           content:
             text/plain:
               schema: 
@@ -120,25 +120,25 @@ paths:
           type: integer
       responses:
         '200':
-          description: OK. Returns a single Building. 
+          description: OK
           content:
             application/json:
               schema: 
                 $ref: '#/components/schemas/Building'
         '400':
-          description: Building ID not a valid number.
+          description: Bad Request
           content:
             text/plain:
               type: string
               example: Building ID was invalid. 
         '403': 
-          description: Sent when user does not have permission to view this building.
+          description: Forbidden
           content:
             text/plain:
               type: string
               example: You are not authorized to view this building. 
         '404':
-          description: Sent when the building is not found.
+          description: Not Found
           content:
             text/plain:
               type: string
@@ -160,27 +160,27 @@ paths:
               $ref: '#/components/schemas/Building'
       responses:
         '200':
-          description: OK. Returns the updated Building.
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Building'
         '400':
-          description: Request included invalid or incomplete data.
+          description: Bad Request
           content:
             text/plain:
               schema:
                 type: string
                 example: The param ID does not match the request body.
         '403':
-          description: Request tried to change the agency, but user wasn't an admin.
+          description: Forbidden
           content:
             text/plain:
               schema:
                 type: string
                 example: Changing agency is not permitted.
         '404':
-          description: That Building did not exist.
+          description: Not Found
           content:
             text/plain:
               schema:
@@ -198,23 +198,23 @@ paths:
           type: integer
       responses:
         '200':
-          description: Successful deletion
+          description: OK
         '400':
-          description: The Id was not parsed succesfully.
+          description: Bad Request
           content:
             text/plain:
               schema:
                 type: string
                 example: Building ID was invalid.
         '403':
-          description: Building belongs to a project. Cannot be deleted.
+          description: Forbidden
           content:
             text/plain:
               schema:
                 type: string
                 example: Building is involved in one or more projects with ID(s) ...
         '404':
-          description: That Building did not exist.
+          description: Not Found
           content:
             text/plain:
               schema:

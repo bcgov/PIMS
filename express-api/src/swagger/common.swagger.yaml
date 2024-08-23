@@ -29,14 +29,14 @@ components:
           example: null
   responses:
     400BadRequest:
-      description: Bad request response.
+      description: Bad Request
       content:
         text/plain:
           schema:
             type: string
             example: 'Response could not be processed.'
     429TooManyRequests:
-      description: Express rate limiter reached. Too many requests.
+      description: Too Many Requests
       content: 
         text/plain:
           schema:

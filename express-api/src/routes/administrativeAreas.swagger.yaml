@@ -90,13 +90,13 @@ paths:
               $ref: '#/components/schemas/AdministrativeAreaPost'
       responses:
         '201':
-          description: OK. Returns created Administrative Area.
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AdministrativeArea'
         '409':
-          description: Given when an administrative area matching that name already exists.
+          description: Conflict
           content:
             text/plain:
               schema: 
@@ -116,7 +116,7 @@ paths:
           required: true
       responses:
         '200':
-          description: OK. Returns a single administrative area. 
+          description: OK
           content:
             application/json:
               schema: 
@@ -139,13 +139,13 @@ paths:
               $ref: '#/components/schemas/AdministrativeArea'
       responses:
         '200':
-          description: OK. Returns the updated administrative area.
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AdministrativeArea'
         '404':
-          description: That administrative area did not exist.
+          description: Not Found
           content:
             text/plain:
               schema:

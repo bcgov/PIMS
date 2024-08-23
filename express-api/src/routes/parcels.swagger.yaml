@@ -64,7 +64,7 @@ paths:
                 items: 
                   $ref: '#/components/schemas/Parcel'
         '400':
-          description: Could not parse filter. 
+          description: Bad Request 
           content:
             text/plain:
               schema:
@@ -83,20 +83,20 @@ paths:
                 $ref: '#/components/schemas/ParcelPost'
         responses:
           '201':
-            description: OK. Returns created Parcel.
+            description: OK
             content:
               application/json:
                 schema:
                   $ref: '#/components/schemas/Parcel'
           '400':
-            description: Given if the provided PID is not the correct format.
+            description: Bad Request
             content:
               text/plain:
                 schema: 
                   type: string
                   example: 'PID must be a number and in the format #########'
           '409':
-            description: Given if the parcel already exists in PIMS.
+            description: Conflict
             content:
               text/plain:
                 schema: 
@@ -115,25 +115,25 @@ paths:
           type: integer
       responses:
         '200':
-          description: OK. Returns a single Parcel. 
+          description: OK
           content:
             application/json:
               schema: 
                 $ref: '#/components/schemas/Parcel'
         '400':
-          description: Parcel ID not a valid number.
+          description: Bad Request
           content:
             text/plain:
               type: string
               example: Parcel ID was invalid. 
         '403': 
-          description: Sent when user does not have permission to view this parcel.
+          description: Forbidden
           content:
             text/plain:
               type: string
               example: You are not authorized to view this parcel. 
         '404':
-          description: Sent when the parcel is not found.
+          description: Not Found
           content:
             text/plain:
               type: string
@@ -150,25 +150,25 @@ paths:
           type: integer
       responses:
         '200': 
-          description: OK. Returns the updated Parcel.
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Parcel'
         '400':
-          description: Request included invalid or incomplete data.
+          description: Bad Request
           content:
             text/plain:
               type: string
               example: Parcel ID was invalid or mismatched with body.
         '403':
-          description: Requested change not possible due to permissions or business logic.
+          description: Forbidden
           content:
             text/plain:
               type: string
               example: This agency change is not permitted.
         '404':
-          description: Sent when the parcel is not found.
+          description: Not Found
           content:
             text/plain:
               type: string
@@ -185,23 +185,23 @@ paths:
           type: integer
       responses:
         '200':
-          description: Successful deletion
+          description: OK
         '400':
-          description: The Id was not parsed succesfully.
+          description: Bad Request
           content:
             text/plain:
               schema:
                 type: string
                 example: Parcel ID was invalid.
         '403':
-          description: Parcel belongs to a project. Cannot be deleted.
+          description: Forbidden
           content:
             text/plain:
               schema:
                 type: string
                 example: Parcel is involved in one or more projects with ID(s) ...
         '404':
-          description: That Parcel did not exist.
+          description: Not Found
           content:
             text/plain:
               schema:
