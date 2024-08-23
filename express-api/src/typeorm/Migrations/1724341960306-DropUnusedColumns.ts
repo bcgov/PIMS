@@ -24,6 +24,8 @@ export class DropUnusedColumns1724341960306 implements MigrationInterface {
     await queryRunner.query(`ALTER TABLE "parcel" DROP COLUMN "zoning_potential"`);
     await queryRunner.query(`ALTER TABLE "parcel" DROP COLUMN "is_visible_to_other_agencies"`);
     await queryRunner.query(`ALTER TABLE "project" DROP COLUMN "metadata"`);
+    await queryRunner.query(`ALTER TABLE "role" DROP COLUMN "keycloak_group_id"`);
+    await queryRunner.query(`ALTER TABLE "role" DROP COLUMN "is_public"`);
     await queryRunner.query(`CREATE INDEX "IDX_e12875dfb3b1d92d7d7c5377e2" ON "user" ("email") `);
     await queryRunner.query(`CREATE VIEW "map_properties" AS 
       SELECT c.id, c.pid, c.pin, c.location, c.property_type_id, c.address1, c.classification_id, c.agency_id, c.administrative_area_id, c.name, aa.regional_district_id as regional_district_id
@@ -55,6 +57,8 @@ export class DropUnusedColumns1724341960306 implements MigrationInterface {
     await queryRunner.query(`DROP VIEW "map_properties"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_e12875dfb3b1d92d7d7c5377e2"`);
     await queryRunner.query(`ALTER TABLE "project" ADD "metadata" jsonb`);
+    await queryRunner.query(`ALTER TABLE "role" ADD "is_public" boolean NOT NULL DEFAULT false`);
+    await queryRunner.query(`ALTER TABLE "role" ADD "keycloak_group_id" uuid`);
     await queryRunner.query(`ALTER TABLE "parcel" ADD "zoning_potential" character varying(50)`);
     await queryRunner.query(`ALTER TABLE "parcel" ADD "zoning" character varying(50)`);
     await queryRunner.query(`ALTER TABLE "parcel" ADD "site_id" character varying`);

@@ -191,8 +191,6 @@ export const produceRole = (): RolesEntity => {
     IsDisabled: false,
     Description: '',
     SortOrder: 0,
-    KeycloakGroupId: faker.string.uuid() as UUID,
-    IsPublic: false,
     Users: [],
   };
 };
