@@ -591,7 +591,7 @@ const checkForHeaders = (sheetObj: Record<string, any>[], columnArray: any) => {
   }
   for (let rowNum = 0; rowNum < requiredHeaders.length; rowNum++) {
     if (!columnArray.includes(requiredHeaders[rowNum])) {
-      throw new ErrorWithCode('Please ensure all required headers are present', 400);
+      throw new ErrorWithCode(`Missing required header: ${requiredHeaders[rowNum]}`, 400);
     }
   }
 };
@@ -931,6 +931,7 @@ const processFile = async (filePath: string, resultRowId: number, user: User, ro
       Results: results,
       UpdatedById: user.Id,
       UpdatedOn: new Date(),
+      Message: e.message,
     });
   } finally {
     await AppDataSource.destroy(); //Not sure whether this is necessary but seems like the safe thing to do.

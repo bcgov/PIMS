@@ -72,6 +72,7 @@ export interface ImportResult {
   CreatedOn: Date;
   UpdatedById?: string;
   UpdatedOn?: Date;
+  Message?: string;
 }
 
 export interface PropertiesUnionResponse {
@@ -195,7 +196,7 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
       }
       const { parsedBody } = await absoluteFetch.get('/properties/search/linkedProjects', params);
       return parsedBody as any[];
-    } catch (error) {
+    } catch {
       return [];
     }
   };

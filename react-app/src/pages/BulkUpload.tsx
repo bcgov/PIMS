@@ -36,8 +36,9 @@ const ResultsPaper = (props: {
       return (
         <Paper sx={{ padding: '2rem' }}>
           <Typography variant="h4">
-            The most recent upload was cancelled due to an unexpected error.
+            The most recent upload encountered the following error:
           </Typography>
+          <Typography>{results.at(0).Message ?? 'Unknown error.'}</Typography>
         </Paper>
       );
     } else if (results.at(0).CompletionPercentage < 1.0) {
