@@ -106,10 +106,6 @@ export const getSelf = async (req: Request, res: Response) => {
  * @returns {Response}        A 200 status with a list of users.
  */
 export const getUsers = async (req: Request, res: Response) => {
-  const filter = UserFilteringSchema.safeParse(req.query);
-  if (!filter.success) {
-    return res.status(400).send('Failed to parse filter query.');
-  }
   const ssoUser = req.user as unknown as SSOUser;
   const users = await filterUsersByAgencies(req, res, ssoUser);
   return res.status(200).send(users);
