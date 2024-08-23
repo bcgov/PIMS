@@ -1,7 +1,6 @@
 import { AppDataSource } from '@/appDataSource';
 import { ProjectStatus } from '@/constants/projectStatus';
 import { ProjectType } from '@/constants/projectType';
-import { ProjectWorkflow } from '@/constants/projectWorkflow';
 import { Roles } from '@/constants/roles';
 import projectServices from '@/services/projects/projectsServices';
 import userServices from '@/services/users/usersServices';
@@ -285,7 +284,6 @@ describe('UNIT - Project Services', () => {
       expect(_buildingManagerFindOne).toHaveBeenCalledTimes(1);
       // The created project has the expected values
       expect(result.Name).toEqual('Test Project');
-      expect(result.WorkflowId).toEqual(ProjectWorkflow.SUBMIT_DISPOSAL);
       expect(result.ProjectType).toEqual(ProjectType.DISPOSAL);
       expect(result.StatusId).toEqual(ProjectStatus.SUBMITTED);
       expect(result.ProjectNumber).toMatch(/^SPP-\d+$/);

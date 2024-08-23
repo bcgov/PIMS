@@ -1,7 +1,6 @@
 import { AppDataSource } from '@/appDataSource';
 import { ProjectStatus } from '@/constants/projectStatus';
 import { ProjectType } from '@/constants/projectType';
-import { ProjectWorkflow } from '@/constants/projectWorkflow';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { Building } from '@/typeorm/Entities/Building';
 import { Parcel } from '@/typeorm/Entities/Parcel';
@@ -59,15 +58,8 @@ const getProjectById = async (id: number) => {
       Id: id,
     },
     relations: {
-      StatusHistory: true,
+      StatusHistory: false,
       Notifications: true,
-    },
-    select: {
-      Workflow: {
-        Name: true,
-        Code: true,
-        Description: true,
-      },
     },
   });
   if (!project) {
@@ -148,9 +140,6 @@ const addProject = async (
     throw new ErrorWithCode(`Agency with ID ${project.AgencyId} not found.`, 404);
   }
 
-  // Workflow ID during submission will always be the submit disposal
-  project.WorkflowId = ProjectWorkflow.SUBMIT_DISPOSAL;
-
   // Only project type at the moment is 1 (Disposal)
   project.ProjectType = ProjectType.DISPOSAL;
 
@@ -165,7 +154,7 @@ const addProject = async (
   // Get a project number from the sequence
   const [{ nextval }] = await AppDataSource.query("SELECT NEXTVAL('project_num_seq')");
 
-  // TODO: If drafts become possible, this can't always be SPP.
+  // If drafts become possible, this can't always be SPP.
   project.ProjectNumber = `SPP-${nextval}`;
   project.SubmittedOn = new Date();
   const queryRunner = AppDataSource.createQueryRunner();
@@ -696,9 +685,6 @@ const updateProject = async (
     throw new ErrorWithCode('Project Agency may not be changed.', 403);
   }
 
-  /* TODO: Need something that checks for valid changes between status, workflow, etc.
-   * Can address this when business logic is determined.
-   */
   const queryRunner = AppDataSource.createQueryRunner();
   await queryRunner.startTransaction();
   try {
@@ -772,7 +758,6 @@ const updateProject = async (
       await queryRunner.manager.save(ProjectStatusHistory, {
         CreatedById: project.UpdatedById,
         ProjectId: project.Id,
-        WorkflowId: originalProject.WorkflowId,
         StatusId: originalProject.StatusId,
       });
     }

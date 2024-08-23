@@ -8,7 +8,6 @@ import {
   OneToMany,
 } from 'typeorm';
 import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
-import { Workflow } from '@/typeorm/Entities/Workflow';
 import { TierLevel } from '@/typeorm/Entities/TierLevel';
 import { ProjectRisk } from '@/typeorm/Entities/ProjectRisk';
 import { Agency } from './Agency';
@@ -129,15 +128,6 @@ export class Project extends SoftDeleteEntity {
 
   @Column('int')
   ProjectType: number;
-
-  // Workflow Relation
-  @Column({ name: 'workflow_id', type: 'int' })
-  WorkflowId: number;
-
-  @ManyToOne(() => Workflow, (Workflow) => Workflow.Id)
-  @JoinColumn({ name: 'workflow_id' })
-  @Index()
-  Workflow: Workflow;
 
   // Agency Relation
   @Column({ name: 'agency_id', type: 'int' })
