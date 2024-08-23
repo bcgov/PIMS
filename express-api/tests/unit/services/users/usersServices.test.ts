@@ -159,11 +159,6 @@ describe('UNIT - User services', () => {
   describe('addUser', () => {
     it('should insert and return the added user', async () => {
       const user = produceUser();
-      // Mocked once for the initial get and again for the return.
-      jest
-        .spyOn(AppDataSource.getRepository(User), 'findOne')
-        .mockImplementationOnce(async () => produceUser({ ...user }))
-        .mockImplementationOnce(async () => produceUser({ ...user }));
       _usersFindOne.mockResolvedValueOnce(null);
       const retUser = await userServices.addUser(user);
       expect(_usersSave).toHaveBeenCalledTimes(1);
@@ -179,6 +174,11 @@ describe('UNIT - User services', () => {
   describe('updateUser', () => {
     it('should update and return the added user', async () => {
       const user = produceUser();
+      // Mocked once for the initial get and again for the return.
+      jest
+        .spyOn(AppDataSource.getRepository(User), 'findOne')
+        .mockImplementationOnce(async () => produceUser({ ...user }))
+        .mockImplementationOnce(async () => produceUser({ ...user }));
       const retUser = await userServices.updateUser(user);
       expect(_usersUpdate).toHaveBeenCalledTimes(1);
       expect(user.Id).toBe(retUser.Id);
