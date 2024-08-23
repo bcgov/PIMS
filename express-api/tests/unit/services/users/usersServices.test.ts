@@ -104,60 +104,6 @@ describe('UNIT - User services', () => {
     });
   });
 
-  describe('activateUser', () => {
-    it('updates a user based off the kc username', async () => {
-      const found = produceUser();
-      found.Username = 'test';
-      _usersFindOneBy.mockResolvedValueOnce(found);
-      const user = await userServices.activateUser(ssoUser);
-      expect(_usersFindOneBy).toHaveBeenCalledTimes(1);
-      expect(_usersUpdate).toHaveBeenCalledTimes(1);
-    });
-    it('adds a new user based off the kc username', async () => {
-      _usersFindOneBy.mockResolvedValueOnce(null);
-      const user = await userServices.activateUser(ssoUser);
-      expect(_usersFindOneBy).toHaveBeenCalledTimes(1);
-      expect(_usersInsert).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  // describe('getAccessRequest', () => {
-  //   it('should get the latest accessRequest', async () => {
-  //     const request = await userServices.getAccessRequest(kcUser);
-  //     expect(AppDataSource.getRepository(AccessRequest).createQueryBuilder).toHaveBeenCalledTimes(
-  //       1,
-  //     );
-  //   });
-  // });
-
-  // describe('getAccessRequestById', () => {
-  //   xit('should get the accessRequest at the id specified', async () => {
-  //     const user = produceUser();
-  //     const req = produceRequest();
-  //     req.User = user;
-  //     req.UserId = user.Id;
-  //     _usersFindOneBy.mockResolvedValueOnce(user);
-  //     _requestQueryGetOne.mockImplementationOnce(() => req);
-  //     const request = await userServices.getAccessRequestById(req.Id, kcUser);
-  //   });
-  // });
-
-  // describe('deleteAccessRequest', () => {
-  //   it('should return a deleted access request', async () => {
-  //     const req = await userServices.deleteAccessRequest(produceRequest());
-  //     expect(_requestRemove).toHaveBeenCalledTimes(1);
-  //   });
-
-  //   it('should throw an error if the access request does not exist', () => {
-  //     jest
-  //       .spyOn(AppDataSource.getRepository(AccessRequest), 'findOne')
-  //       .mockImplementationOnce(() => undefined);
-  //     expect(
-  //       async () => await userServices.deleteAccessRequest(produceRequest()),
-  //     ).rejects.toThrow();
-  //   });
-  // });
-
   describe('addAccessRequest', () => {
     it('should add and return an access request', async () => {
       const agencyId = faker.number.int();
@@ -166,21 +112,6 @@ describe('UNIT - User services', () => {
       expect(_usersInsert).toHaveBeenCalledTimes(1);
     });
   });
-
-  // describe('updateAccessRequest', () => {
-  //   xit('should update and return the access request', async () => {
-  //     const req = produceRequest();
-  //     //_usersFindOneBy.mockResolvedValueOnce(req.UserId);
-  //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  //     req.RoleId = {} as any;
-  //     const request = await userServices.updateAccessRequest(req, kcUser);
-  //     expect(_requestUpdate).toHaveBeenCalledTimes(1);
-  //   });
-
-  //   it('should throw an error if the provided access request is null', () => {
-  //     expect(async () => await userServices.updateAccessRequest(null, kcUser)).rejects.toThrow();
-  //   });
-  // });
 
   describe('getAgencies', () => {
     it('should return an array of agency ids', async () => {
