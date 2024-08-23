@@ -1,13 +1,5 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Index,
-  ManyToOne,
-  JoinColumn,
-  PrimaryColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Index, ManyToOne, JoinColumn, Column } from 'typeorm';
 import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
-import { Workflow } from '@/typeorm/Entities/Workflow';
 import { Project } from '@/typeorm/Entities/Project';
 import { SoftDeleteEntity } from './abstractEntities/SoftDeleteEntity';
 
@@ -17,7 +9,7 @@ export class ProjectStatusHistory extends SoftDeleteEntity {
   Id: number;
 
   // Project Relation
-  @PrimaryColumn({ name: 'project_id', type: 'int' })
+  @Column({ name: 'project_id', type: 'int' })
   ProjectId: number;
 
   @ManyToOne(() => Project, (Project) => Project.Id)
@@ -25,17 +17,8 @@ export class ProjectStatusHistory extends SoftDeleteEntity {
   @Index()
   Project: Project;
 
-  // Workflow Relation
-  @PrimaryColumn({ name: 'workflow_id', type: 'int' })
-  WorkflowId: number;
-
-  @ManyToOne(() => Workflow, (Workflow) => Workflow.Id)
-  @JoinColumn({ name: 'workflow_id' })
-  @Index()
-  Workflow: Workflow;
-
   // Status Relation
-  @PrimaryColumn({ name: 'status_id', type: 'int' })
+  @Column({ name: 'status_id', type: 'int' })
   StatusId: number;
 
   @ManyToOne(() => ProjectStatus, (ProjectStatus) => ProjectStatus.Id)
