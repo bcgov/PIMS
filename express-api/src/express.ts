@@ -87,7 +87,6 @@ app.use(`/v2/administrativeAreas`, protectedRoute(), router.administrativeAreasR
 app.use(`/v2/agencies`, protectedRoute(), router.agenciesRouter);
 app.use('/v2/lookup', protectedRoute(), router.lookupRouter);
 app.use(`/v2/users`, protectedRoute(), router.usersRouter);
-app.use(`/v2/roles`, protectedRoute(), router.rolesRouter);
 app.use(`/v2/properties`, protectedRoute(), router.propertiesRouter);
 app.use(`/v2/parcels`, protectedRoute(), router.parcelsRouter);
 app.use(`/v2/buildings`, protectedRoute(), router.buildingsRouter);

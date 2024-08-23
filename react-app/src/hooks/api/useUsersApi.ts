@@ -1,10 +1,9 @@
 import { CommonFiltering } from '@/interfaces/ICommonFiltering';
 import { FetchResponse, IFetch } from '../useFetch';
 import { Agency } from './useAgencyApi';
-import { KeycloakRole, Role } from './useRolesApi';
+import { KeycloakRole, Role } from '@/constants/roles';
 
 export interface User {
-  //temp interface, should standardize somehow
   Id: string;
   Username: string;
   FirstName: string;
