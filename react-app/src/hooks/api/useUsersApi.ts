@@ -1,7 +1,7 @@
 import { CommonFiltering } from '@/interfaces/ICommonFiltering';
 import { FetchResponse, IFetch } from '../useFetch';
 import { Agency } from './useAgencyApi';
-import { KeycloakRole, Role } from '@/constants/roles';
+import { Role } from '@/constants/roles';
 
 export interface User {
   Id: string;
@@ -28,10 +28,6 @@ export interface AccessRequest {
 }
 
 const useUsersApi = (absoluteFetch: IFetch) => {
-  const getLatestAccessRequest = async () => {
-    const { parsedBody } = await absoluteFetch.get(`/users/access/requests`);
-    return parsedBody;
-  };
   const getSelf = async (): Promise<User> => {
     const a = await absoluteFetch.get(`/users/self`);
     return a.parsedBody as User;
@@ -55,27 +51,16 @@ const useUsersApi = (absoluteFetch: IFetch) => {
     const response = await absoluteFetch.put(`/users/${userId}`, user);
     return response;
   };
-  const updateUserRole = async (username: string, role: string) => {
-    const { parsedBody } = await absoluteFetch.put(`/users/roles/${username}`, [role]);
-    return parsedBody as KeycloakRole[];
-  };
-  const deleteUser = async (userId: string) => {
-    const { parsedBody } = await absoluteFetch.del(`/users/${userId}`, { Id: userId });
-    return parsedBody;
-  };
   const getUsersAgencyIds = async (username: string): Promise<number[]> => {
     const { parsedBody } = await absoluteFetch.get(`/users/agencies/${username}`);
     return parsedBody as number[];
   };
   return {
-    getLatestAccessRequest,
     getSelf,
     submitAccessRequest,
     getAllUsers,
     getUserById,
     updateUser,
-    deleteUser,
-    updateUserRole,
     getUsersAgencyIds,
   };
 };
