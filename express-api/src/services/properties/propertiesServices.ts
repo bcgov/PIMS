@@ -802,8 +802,6 @@ const getPropertiesForExport = async (filter: PropertyUnionFilter) => {
   // Use IDs from filtered properties to get those properites with joins
   const parcelQueryOptions: FindManyOptions<Parcel> = {
     relations: {
-      CreatedBy: true,
-      UpdatedBy: true,
       Evaluations: true,
       Fiscals: true,
     },
@@ -813,20 +811,22 @@ const getPropertiesForExport = async (filter: PropertyUnionFilter) => {
   };
   const buildingQueryOptions: FindManyOptions<Building> = {
     relations: {
-      CreatedBy: true,
-      UpdatedBy: true,
       Evaluations: true,
       Fiscals: true,
     },
     where: { Id: In(buildingIds) },
   };
+
   let properties: (Parcel | Building)[] = [];
-  properties = properties.concat(
-    await AppDataSource.getRepository(Parcel).find(parcelQueryOptions),
-  );
-  properties = properties.concat(
-    await AppDataSource.getRepository(Building).find(buildingQueryOptions),
-  );
+  const ongoingFinds = [];
+  ongoingFinds.push(AppDataSource.getRepository(Parcel).find(parcelQueryOptions));
+  ongoingFinds.push(AppDataSource.getRepository(Building).find(buildingQueryOptions));
+
+  const resolvedFinds = await Promise.all(ongoingFinds);
+  resolvedFinds.forEach((propertyList) => {
+    properties = properties.concat(...propertyList);
+  });
+
   return properties;
 };
 
