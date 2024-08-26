@@ -369,9 +369,23 @@ describe('UNIT - Property Services', () => {
   describe('importPropertiesAsJSON', () => {
     it('should insert or update properties into database', async () => {
       jest.spyOn(xlsx.utils, 'sheet_to_json').mockImplementationOnce(() => [
+        [
+          'PropertyType',
+          'PID',
+          'Name',
+          'Classification',
+          'AgencyCode',
+          'AdministrativeArea',
+          'Longitude',
+          'Latitude',
+          'Name',
+          'PredominateUse',
+          'ConstructionType'
+        ]
+      ])
+      jest.spyOn(xlsx.utils, 'sheet_to_json').mockImplementationOnce(() => [
         {
           PropertyType: 'Land',
-          Status: 'Active',
           Classification: 'Core Operational',
           AgencyCode: 'TEST',
           AdministrativeArea: 'TestArea',
@@ -387,7 +401,6 @@ describe('UNIT - Property Services', () => {
         },
         {
           PropertyType: 'Building',
-          Status: 'Active',
           Classification: 'Core Operational',
           AgencyCode: 'TEST',
           AdministrativeArea: 'TestArea',
@@ -415,6 +428,21 @@ describe('UNIT - Property Services', () => {
       expect(Array.isArray(result)).toBe(true);
     });
     it('should error out on all rows', async () => {
+      jest.spyOn(xlsx.utils, 'sheet_to_json').mockImplementationOnce(() => [
+        [
+          'PropertyType',
+          'PID',
+          'Name',
+          'Classification',
+          'AgencyCode',
+          'AdministrativeArea',
+          'Longitude',
+          'Latitude',
+          'Name',
+          'PredominateUse',
+          'ConstructionType'
+        ]
+      ])
       jest.spyOn(xlsx.utils, 'sheet_to_json').mockImplementationOnce(() => [
         {
           PropertyType: 'Land',
