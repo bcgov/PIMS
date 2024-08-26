@@ -48,6 +48,7 @@ import {
   produceSSO,
   produceProjectStatus,
   produceProjectProperty,
+  produceImportRow,
 } from 'tests/testUtils/factories';
 import { DeepPartial, EntityTarget, ObjectLiteral } from 'typeorm';
 import xlsx, { WorkSheet } from 'xlsx';
@@ -632,6 +633,36 @@ describe('UNIT - Property Services', () => {
       const defaultValue: boolean = undefined;
       const returnedBool = setNewBool(newValue, previousValue, defaultValue);
       expect(() => returnedBool === previousValue);
+    });
+  });
+
+  describe('makeBuildingUpsertObject', () => {
+    const importRow = produceImportRow();
+    const agency = produceAgency({ Code: importRow.AgencyCode });
+    const lookups: Lookups = {
+      classifications: [produceClassification({ Name: importRow.Classification })],
+      adminAreas: [produceAdminArea({ Name: importRow.AdministrativeArea })],
+      agencies: [agency],
+      predominateUses: [producePredominateUse({ Name: importRow.PredominateUse })],
+      userAgencies: [agency.Id],
+      constructionTypes: [produceConstructionType({ Name: importRow.ConstructionType })],
+    };
+    it('should return a new building object when that building does not exist', async () => {
+      const queryRunner = AppDataSource.createQueryRunner();
+      const result = await propertyServices.makeBuildingUpsertObject(
+        importRow,
+        produceUser({ AgencyId: agency.Id }),
+        [Roles.ADMIN],
+        lookups,
+        queryRunner,
+      );
+      // Some fields will be what we passed in
+      expect(result.PID).toBe(importRow.PID);
+      expect(result.Name).toBe(importRow.Name);
+      // Some will be defaults because we didn't import those
+      expect(result.IsSensitive).toBe(false);
+      expect(result.TotalArea).toBe(0);
+      expect(result.BuildingTenancy).toBe('');
     });
   });
 });
