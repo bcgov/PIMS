@@ -1044,6 +1044,7 @@ export const produceImportResult = (props?: Partial<ImportResult>) => {
     FileName: faker.person.firstName() + '.csv',
     CompletionPercentage: 0,
     Results: [],
+    Message: faker.string.sample(),
     DeletedBy: undefined,
     DeletedById: randomUUID(),
     DeletedOn: null,
