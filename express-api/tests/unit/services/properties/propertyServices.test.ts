@@ -637,7 +637,12 @@ describe('UNIT - Property Services', () => {
   });
 
   describe('makeBuildingUpsertObject', () => {
-    const importRow = produceImportRow();
+    const importRow = produceImportRow({
+      Netbook: 2,
+      FiscalYear: 2024,
+      Assessed: 3,
+      AssessedYear: 2023,
+    });
     const agency = produceAgency({ Code: importRow.AgencyCode });
     const lookups: Lookups = {
       classifications: [produceClassification({ Name: importRow.Classification })],

@@ -1159,7 +1159,7 @@ export const produceLtsaOrder = (): ILtsaOrder => ({
   },
 });
 
-export const produceImportRow = (props?: ImportRow) => {
+export const produceImportRow = (props?: Partial<ImportRow>) => {
   return {
     PropertyType: faker.number.binary() ? 'Building' : 'Land',
     PID: faker.number.int({ min: 1111111, max: 999999999 }),
