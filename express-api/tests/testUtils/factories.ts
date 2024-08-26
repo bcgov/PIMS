@@ -50,6 +50,7 @@ import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { PropertyUnion } from '@/typeorm/Entities/views/PropertyUnionView';
 import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
+import { ImportRow } from '@/services/properties/propertiesServices';
 
 export class MockRes {
   statusValue: any;
@@ -443,7 +444,7 @@ export const produceClassification = (
 };
 
 export const producePredominateUse = (
-  props: Partial<BuildingPredominateUse>,
+  props?: Partial<BuildingPredominateUse>,
 ): BuildingPredominateUse => {
   const predominateUse: BuildingPredominateUse = {
     Id: faker.number.int(),
@@ -461,7 +462,7 @@ export const producePredominateUse = (
   return predominateUse;
 };
 
-export const produceConstructionType = (props: Partial<BuildingPredominateUse>) => {
+export const produceConstructionType = (props?: Partial<BuildingPredominateUse>) => {
   const constructionType: BuildingPredominateUse = {
     Id: faker.number.int(),
     Name: faker.lorem.word(),
@@ -1157,3 +1158,20 @@ export const produceLtsaOrder = (): ILtsaOrder => ({
     },
   },
 });
+
+export const produceImportRow = (props?: ImportRow) => {
+  return {
+    PropertyType: faker.number.binary() ? 'Building' : 'Land',
+    PID: faker.number.int({ min: 1111111, max: 999999999 }),
+    Classification: 'Core Operational',
+    AgencyCode: 'RPD',
+    AdministrativeArea: 'Victoria',
+    Latitude: faker.number.float(),
+    Longitude: faker.number.float(),
+    // Required for Buildings
+    ConstructionType: 'Wood',
+    PredominateUse: 'School',
+    Name: 'Test Property',
+    ...props,
+  } as ImportRow;
+};

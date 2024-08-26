@@ -596,6 +596,38 @@ export const checkForHeaders = (sheetObj: Record<string, any>[], columnArray: an
   }
 };
 
+export interface ImportRow {
+  // Required
+  PropertyType: 'Land' | 'Building';
+  PID: number;
+  Classification: string;
+  AgencyCode: string;
+  AdministrativeArea: string;
+  Latitude: number;
+  Longitude: number;
+  // Required for Buildings
+  ConstructionType?: string;
+  PredominateUse?: string;
+  Name?: string;
+  // Optional
+  Description?: string;
+  Address?: string;
+  PIN?: number;
+  Assessed?: number;
+  Netbook?: number;
+  FiscalYear?: number;
+  AssessedYear?: number;
+  IsSensitive?: boolean;
+  IsVisibleToOtherAgencies?: boolean; // TODO: Removed in other PR.
+  LandArea?: number;
+  BuildingTenancy?: number;
+  NetUsableArea?: number;
+  BuildingFloorCount?: number;
+  TotalArea?: number;
+  // Not displayed in UI
+  LocalId?: string;
+}
+
 /**
  * Imports properties data from a worksheet as JSON format, processes each row to upsert parcels or buildings,
  * and returns an array of BulkUploadRowResult indicating the actions taken for each row.
@@ -612,7 +644,7 @@ const importPropertiesAsJSON = async (
   resultId: number,
 ) => {
   const columnsArray = xlsx.utils.sheet_to_json(worksheet, { header: 1 })[0];
-  const sheetObj: Record<string, any>[] = xlsx.utils.sheet_to_json(worksheet);
+  const sheetObj: ImportRow[] = xlsx.utils.sheet_to_json(worksheet);
 
   checkForHeaders(sheetObj, columnsArray);
 
@@ -947,6 +979,8 @@ const propertyServices = {
   getPropertiesForExport,
   processFile,
   findLinkedProjectsForProperty,
+  makeBuildingUpsertObject,
+  makeParcelUpsertObject,
 };
 
 export default propertyServices;
