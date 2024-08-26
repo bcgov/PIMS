@@ -12,7 +12,6 @@ const ProjectSchema = z.object({
   reportedFiscalYear: z.number(),
   actualFiscalYear: z.number(),
   activity: z.string(),
-  workflow: z.string(),
   status: z.string(),
   agency: z.string(),
   description: z.string(),
