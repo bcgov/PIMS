@@ -3,9 +3,13 @@ import { AppDataSource } from '@/appDataSource';
 import { Roles } from '@/constants/roles';
 import propertyServices, {
   getAgencyOrThrowIfMismatched,
+  getBuildingPredominateUseOrThrow,
+  getBuildingConstructionTypeOrThrow,
   getClassificationOrThrow,
   Lookups,
   setNewBool,
+  checkForHeaders,
+  getAdministrativeAreaOrThrow,
 } from '@/services/properties/propertiesServices';
 import userServices from '@/services/users/usersServices';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
@@ -490,6 +494,63 @@ describe('UNIT - Property Services', () => {
     });
   });
 
+  describe('getAdministrativeAreaOrThrow', () => {
+    it('should throw an error if the administrativeArea is not found', () => {
+      expect(() =>
+        getAdministrativeAreaOrThrow(
+          {
+            AdministrativeArea: 'Victoria',
+          },
+          [produceAdminArea({ Name: 'Vancouver', Id: 1 })],
+        ),
+      ).toThrow();
+    });
+  });
+
+  describe('getBuildingPredominateUseOrThrow', () => {
+    it('should return a buildingPredominateUse if found', () => {
+      const result = getBuildingPredominateUseOrThrow(
+        {
+          PredominateUse: 'Mixed',
+        },
+        [producePredominateUse({ Name: 'Mixed', Id: 1 })],
+      );
+      expect(result).toEqual(1);
+    });
+    it('should throw an error if there is no buildingPredominateUse with a matching name', () => {
+      expect(() =>
+        getBuildingPredominateUseOrThrow(
+          {
+            PredominateUse: 'Mixed',
+          },
+          [producePredominateUse({ Name: 'Not Mixed', Id: 1 })],
+        ),
+      ).toThrow();
+    });
+  });
+
+  describe('getBuildingConstructionTypeOrThrow', () => {
+    it('should return a buildingConstructionType if found', () => {
+      const result = getBuildingConstructionTypeOrThrow(
+        {
+          ConstructionType: 'Mixed',
+        },
+        [produceConstructionType({ Name: 'Mixed', Id: 1 })],
+      );
+      expect(result).toEqual(1);
+    });
+    it('should throw an error if there is no buildingConstructionType with a matching name', () => {
+      expect(() =>
+        getBuildingConstructionTypeOrThrow(
+          {
+            ConstructionType: 'Mixed',
+          },
+          [produceConstructionType({ Name: 'Not Mixed', Id: 1 })],
+        ),
+      ).toThrow();
+    });
+  });
+
   describe('getAgencyOrThrowIfMismatched', () => {
     it('should return an agency in if it exists', () => {
       const agency = produceAgency({ Code: 'WLRS' });
@@ -534,6 +595,26 @@ describe('UNIT - Property Services', () => {
           [],
         ),
       ).toThrow();
+    });
+  });
+
+  describe('checkForHeaders', () => {
+    it('should throw new error if a header is missing', () => {
+      const sheetObj = [
+        {
+          PropertyType: 'Building',
+        },
+      ];
+      const colArray = [
+        'PropertyType',
+        'PID',
+        'Classification',
+        'AgencyCode',
+        'AdministrativeArea',
+        'Latitude',
+        'Longitude',
+      ];
+      expect(() => checkForHeaders(sheetObj, colArray)).toThrow();
     });
   });
 

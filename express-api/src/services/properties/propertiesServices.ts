@@ -572,7 +572,7 @@ export type BulkUploadRowResult = {
   reason?: string;
 };
 
-const checkForHeaders = (sheetObj: Record<string, any>[], columnArray: any) => {
+export const checkForHeaders = (sheetObj: Record<string, any>[], columnArray: any) => {
   const requiredHeaders = [
     'PropertyType',
     'PID',
