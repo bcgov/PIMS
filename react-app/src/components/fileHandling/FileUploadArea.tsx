@@ -15,7 +15,7 @@ const FileUploadArea = (props: IFileUploadArea) => {
         backgroundColor: 'white',
         transition: 'all 0.25s',
         cursor: 'pointer',
-        '&:hover': { 'background-color': 'lightgrey' },
+        '&:hover': { backgroundColor: 'lightgrey' },
       }}
       borderRadius={'5px'}
       height={'15rem'}
