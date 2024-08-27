@@ -11,7 +11,7 @@ interface EnhancedReferralDatesProps {
   rows: NotificationQueue[];
 }
 
-const EnhancedReferralDates: React.FC<EnhancedReferralDatesProps> = ({ rows }) => {
+const EnhancedReferralDates: React.FC<EnhancedReferralDatesProps> = ({ rows = [] }) => {
   const initalERN = rows.find((row) => row.TemplateId === NotificationType.NEW_PROPERTIES_ON_ERP);
   const thirtyDayERN = rows.find(
     (row) => row.TemplateId === NotificationType.THIRTY_DAY_ERP_NOTIFICATION_OWNING_AGENCY,
