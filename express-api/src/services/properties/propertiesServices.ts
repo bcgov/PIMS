@@ -216,19 +216,6 @@ const getPropertiesForMap = async (filter?: MapFilter) => {
   return properties;
 };
 
-/**
- * Generates a building name based on the provided parameters.
- * @param name - The name of the building.
- * @param desc - The description of the building.
- * @param localId - The local ID of the building.
- * @returns The generated building name.
- */
-const generateBuildingName = (name: string, desc: string = null, localId: string = null) => {
-  return (
-    (localId == null ? '' : localId) +
-    (name != null ? name : desc?.substring(0, 150 < desc.length ? 150 : desc.length).trim())
-  );
-};
 const numberOrNull = (value: any) => {
   if (value == '' || value == null) return null;
   return typeof value === 'number' ? value : Number(value.replace?.(/-/g, ''));
@@ -533,7 +520,6 @@ const makeBuildingUpsertObject = async (
     ClassificationId: classificationId,
     BuildingConstructionTypeId: constructionTypeId,
     BuildingPredominateUseId: predominateUseId,
-    Name: generateBuildingName(row.Name, row.Description, row.LocalId), // this may not be right
     CreatedById: existentBuilding ? existentBuilding.CreatedById : user.Id,
     UpdatedById: existentBuilding ? user.Id : undefined,
     UpdatedOn: existentBuilding ? new Date() : undefined,
@@ -696,9 +682,8 @@ const importPropertiesAsJSON = async (
           results.push({ action: 'error', reason: e.message, rowNumber: rowNum });
         }
       } else if (row.PropertyType === 'Building') {
-        const generatedName = generateBuildingName(row.Name, row.Description, row.LocalId);
         const foundBuildings = await queryRunner.manager.findAndCount(Building, {
-          where: { PID: numberOrNull(row.PID), Name: generatedName },
+          where: { PID: numberOrNull(row.PID), Name: row.Name },
         });
         const count = foundBuildings[1];
         if (count > 1) {
