@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AppDataSource } from '@/appDataSource';
+import { PropertyType } from '@/constants/propertyType';
 import { Roles } from '@/constants/roles';
 import propertyServices, {
   getAgencyOrThrowIfMismatched,
@@ -36,10 +37,10 @@ import {
   produceAdminArea,
   produceUser,
   produceImportResult,
-  produceParcelEvaluation,
-  produceParcelFiscal,
-  produceBuildingEvaluation,
-  produceBuildingFiscal,
+  produceParcelEvaluations,
+  produceParcelFiscals,
+  produceBuildingEvaluations,
+  produceBuildingFiscals,
   produceSSO,
   produceProjectStatus,
   produceProjectProperty,
@@ -80,8 +81,17 @@ const _propertyUnionCreateQueryBuilder: any = {
   take: () => _propertyUnionCreateQueryBuilder,
   skip: () => _propertyUnionCreateQueryBuilder,
   orderBy: () => _propertyUnionCreateQueryBuilder,
-  getMany: () => [producePropertyUnion()],
-  getManyAndCount: () => [[producePropertyUnion()], 1],
+  getMany: () => [
+    producePropertyUnion({ Id: 1, PropertyTypeId: PropertyType.LAND }),
+    producePropertyUnion({ Id: 1, PropertyTypeId: PropertyType.BUILDING }),
+  ],
+  getManyAndCount: () => [
+    [
+      producePropertyUnion({ Id: 1, PropertyTypeId: PropertyType.LAND }),
+      producePropertyUnion({ Id: 1, PropertyTypeId: PropertyType.BUILDING }),
+    ],
+    1,
+  ],
 };
 
 const _projectStatusCreateQueryBuilder: any = {
@@ -148,12 +158,24 @@ jest
   .spyOn(AppDataSource.getRepository(PropertyUnion), 'createQueryBuilder')
   .mockImplementation(() => _propertyUnionCreateQueryBuilder);
 
-jest
+const parcelRepoSpy = jest
   .spyOn(AppDataSource.getRepository(Parcel), 'find')
   .mockImplementation(async () => [produceParcel()]);
-jest
+const buildingRepoSpy = jest
   .spyOn(AppDataSource.getRepository(Building), 'find')
   .mockImplementation(async () => [produceBuilding()]);
+jest
+  .spyOn(AppDataSource.getRepository(ParcelEvaluation), 'find')
+  .mockImplementation(async () => produceParcelEvaluations(1));
+jest
+  .spyOn(AppDataSource.getRepository(ParcelFiscal), 'find')
+  .mockImplementation(async () => produceParcelFiscals(1));
+jest
+  .spyOn(AppDataSource.getRepository(BuildingEvaluation), 'find')
+  .mockImplementation(async () => produceBuildingEvaluations(1));
+jest
+  .spyOn(AppDataSource.getRepository(BuildingFiscal), 'find')
+  .mockImplementation(async () => produceBuildingFiscals(1));
 jest
   .spyOn(AppDataSource.getRepository(Parcel), 'save')
   .mockImplementation(async () => produceParcel());
@@ -198,13 +220,13 @@ const _mockEntityManager = {
     } else if (entityClass === Building) {
       return produceBuilding();
     } else if (entityClass === ParcelEvaluation) {
-      return produceParcelEvaluation(1, { Year: 2023 });
+      return produceParcelEvaluations(1, { Year: 2023 });
     } else if (entityClass === ParcelFiscal) {
-      return produceParcelFiscal(1, { FiscalYear: 2023 });
+      return produceParcelFiscals(1, { FiscalYear: 2023 });
     } else if (entityClass === BuildingEvaluation) {
-      return produceBuildingEvaluation(1, { Year: 2023 });
+      return produceBuildingEvaluations(1, { Year: 2023 });
     } else if (entityClass === BuildingFiscal) {
-      return produceBuildingFiscal(1, { FiscalYear: 2023 });
+      return produceBuildingFiscals(1, { FiscalYear: 2023 });
     } else {
       return [];
     }
@@ -295,6 +317,8 @@ describe('UNIT - Property Services', () => {
 
   describe('getPropertiesforExport', () => {
     it('should get a list of properties based on the filter', async () => {
+      parcelRepoSpy.mockImplementationOnce(async () => [produceParcel({ Id: 1 })]);
+      buildingRepoSpy.mockImplementationOnce(async () => [produceBuilding({ Id: 1 })]);
       const result = await propertyServices.getPropertiesForExport({
         pid: 'contains,123',
         pin: 'contains,456',

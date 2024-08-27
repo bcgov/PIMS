@@ -127,8 +127,8 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
       },
       { signal },
     );
-    if ((parsedBody as Record<string, any>).error) {
-      return [];
+    if ((parsedBody as Record<string, any>)?.error) {
+      return;
     }
     return parsedBody as (Parcel | Building)[];
   };

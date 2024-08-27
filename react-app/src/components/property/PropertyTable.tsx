@@ -251,8 +251,9 @@ const PropertyTable = (props: IPropertyTable) => {
           property.AdministrativeAreaId,
         )?.Name,
         Postal: property.Postal,
-        PID: property.PID,
+        PID: pidFormatter(property.PID),
         PIN: property.PIN,
+        'Is Sensitive': property.IsSensitive,
         'Assessed Value': property.Evaluations?.length
           ? property.Evaluations.sort(
               (
