@@ -817,6 +817,7 @@ const getPropertiesForExport = async (filter: PropertyUnionFilter) => {
     where: { Id: In(buildingIds) },
   };
 
+  const startTime = new Date()
   let properties: (Parcel | Building)[] = [];
   const ongoingFinds = [];
   ongoingFinds.push(AppDataSource.getRepository(Parcel).find(parcelQueryOptions));
@@ -826,8 +827,51 @@ const getPropertiesForExport = async (filter: PropertyUnionFilter) => {
   resolvedFinds.forEach((propertyList) => {
     properties = properties.concat(...propertyList);
   });
-
+  const endTime = new Date()
+  console.log('time', Math.abs(endTime.getTime() - startTime.getTime()))
   return properties;
+
+  // Getting evals, fiscals, and filtering separately: 850-1050ms
+  // Getting as as part of joins, where clause: 1587-1672ms
+
+  // const ongoingFinds = [];
+  // ongoingFinds.push(AppDataSource.getRepository(Parcel).find(parcelQueryOptions));
+  // ongoingFinds.push(AppDataSource.getRepository(Building).find(buildingQueryOptions));
+  // ongoingFinds.push(AppDataSource.getRepository(ParcelEvaluation).find({order: {Year: 'DESC'}}));
+  // ongoingFinds.push(AppDataSource.getRepository(ParcelFiscal).find({order: {FiscalYear: 'DESC'}}));
+  // ongoingFinds.push(AppDataSource.getRepository(BuildingEvaluation).find({order: {Year: 'DESC'}}));
+  // ongoingFinds.push(AppDataSource.getRepository(BuildingFiscal).find({order: {FiscalYear: 'DESC'}}));
+
+
+  // const resolvedFinds = await Promise.all(ongoingFinds);
+  // const parcelEvaluations = resolvedFinds.at(2) as ParcelEvaluation[];
+  // const parcelFiscals = resolvedFinds.at(3) as ParcelFiscal[];
+  // const buildingEvaluations = resolvedFinds.at(4) as BuildingEvaluation[];
+  // const buildingFiscals = resolvedFinds.at(5) as BuildingFiscal[];
+  // const parcels: Parcel[] = (resolvedFinds.at(0) as Parcel[]).filter((p: Parcel) => parcelIds.includes(p.Id))
+  // .map((p: Parcel) => {
+  //   const evaluation = parcelEvaluations.find(pe => pe.ParcelId === p.Id);
+  //   const fiscal = parcelFiscals.find(pf => pf.ParcelId === p.Id);
+  //   return ({
+  //   ...p,
+  //   Evaluations: evaluation ? [evaluation] : undefined,
+  //   Fiscals: fiscal ? [fiscal] : undefined,
+  // })});
+  // const buildings: Building[] = (resolvedFinds.at(1) as Building[]).filter((b: Building) => buildingIds.includes(b.Id))
+  // .map((b: Building) => {
+  //   const evaluation = buildingEvaluations.find(be => be.BuildingId === b.Id);
+  //   const fiscal = buildingFiscals.find(bf => bf.BuildingId === b.Id);
+  //   return ({
+  //   ...b,
+  //   Evaluations: evaluation ? [evaluation] : undefined,
+  //   Fiscals: fiscal ? [fiscal] : undefined,
+  // })});;
+
+  // const endTime = new Date()
+  // console.log('time', Math.abs(endTime.getTime() - startTime.getTime()))
+
+
+  // return [...parcels, ...buildings];
 };
 
 /**
