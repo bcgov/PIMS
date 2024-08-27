@@ -2,8 +2,8 @@ import { AppDataSource } from '@/appDataSource';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import {
   produceParcel,
-  produceParcelEvaluation,
-  produceParcelFiscal,
+  produceParcelEvaluations,
+  produceParcelFiscals,
   produceSSO,
   produceUser,
 } from 'tests/testUtils/factories';
@@ -28,7 +28,7 @@ const _parcelSave = jest
 const _parcelFindOne = jest.spyOn(parcelRepo, 'findOne').mockImplementation(async () => {
   const parcel = produceParcel();
   const { Id } = parcel;
-  produceParcelFiscal(Id);
+  produceParcelFiscals(Id);
   return parcel;
 });
 
@@ -42,10 +42,10 @@ const _parcelFindOne = jest.spyOn(parcelRepo, 'findOne').mockImplementation(asyn
 
 const _parcelEvaluationFindOne = jest
   .spyOn(AppDataSource.getRepository(ParcelEvaluation), 'findOne')
-  .mockImplementation(async () => produceParcelEvaluation(1)[0]);
+  .mockImplementation(async () => produceParcelEvaluations(1)[0]);
 const _parcelFiscalFindOne = jest
   .spyOn(AppDataSource.getRepository(ParcelFiscal), 'findOne')
-  .mockImplementation(async () => produceParcelFiscal(1)[0]);
+  .mockImplementation(async () => produceParcelFiscals(1)[0]);
 
 // const _parcelFindOne = jest
 //   .spyOn(parcelRepo, 'findOne')
@@ -56,13 +56,14 @@ jest.spyOn(AppDataSource.getRepository(ProjectProperty), 'find').mockImplementat
 jest.spyOn(parcelRepo, 'find').mockImplementation(async () => [produceParcel(), produceParcel()]);
 
 jest.spyOn(userServices, 'getUser').mockImplementation(async () => produceUser());
+jest.spyOn(userServices, 'getAgencies').mockImplementation(async () => []);
 
 jest
   .spyOn(AppDataSource.getRepository(ParcelEvaluation), 'find')
-  .mockImplementation(async () => produceParcelEvaluation(1));
+  .mockImplementation(async () => produceParcelEvaluations(1));
 jest
   .spyOn(AppDataSource.getRepository(ParcelFiscal), 'find')
-  .mockImplementation(async () => produceParcelFiscal(1));
+  .mockImplementation(async () => produceParcelFiscals(1));
 
 const _mockStartTransaction = jest.fn(async () => {});
 const _mockRollbackTransaction = jest.fn(async () => {});

@@ -119,7 +119,7 @@ export const deleteDisposalProject = async (req: Request, res: Response) => {
     projectId,
     req.user.preferred_username,
   );
-  const notifications = await notificationServices.cancelAllProjectNotifications(projectId);
+  const notifications = await notificationServices.cancelProjectNotifications(projectId);
 
   return res.status(200).send({ project: delProject, notifications });
 };
@@ -142,7 +142,12 @@ export const addDisposalProject = async (req: Request, res: Response) => {
     projectPropertyIds,
   }: { project: DeepPartial<Project>; projectPropertyIds: ProjectPropertyIds } = req.body;
   const user = await userServices.getUser((req.user as SSOUser).preferred_username);
-  const addBody = { ...project, CreatedById: user.Id, AgencyId: user.AgencyId };
+  const addBody = {
+    ...project,
+    CreatedById: user.Id,
+    AgencyId: user.AgencyId,
+    UpdatedById: user.Id,
+  };
 
   // Call the addProject service function with the project data
   const newProject = await projectServices.addProject(

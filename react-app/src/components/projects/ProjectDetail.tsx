@@ -50,6 +50,8 @@ import { LookupContext } from '@/contexts/lookupContext';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { getStatusString } from '@/constants/chesNotificationStatus';
 import { NoteTypes } from '@/constants/noteTypes';
+import EnhancedReferralDates from './EnhancedReferralDates';
+import { NotificationType } from '@/constants/notificationTypes';
 
 interface IProjectDetail {
   onClose: () => void;
@@ -93,6 +95,28 @@ const ProjectDetail = (props: IProjectDetail) => {
   const { submit: deleteProject, submitting: deletingProject } = useDataSubmitter(
     api.projects.deleteProjectById,
   );
+  const { submit: resendNotification } = useDataSubmitter(api.notifications.resendNotification);
+  const { submit: cancelNotification } = useDataSubmitter(api.notifications.cancelNotification);
+
+  const hasERPNotifications = useMemo(() => {
+    // Check if notifications is an object and has an items array
+    if (!notifications || !Array.isArray(notifications.items)) {
+      return false;
+    }
+    const notificationItems = notifications.items;
+    if (notificationItems.length === 0) {
+      return false;
+    }
+
+    const types = [
+      NotificationType.THIRTY_DAY_ERP_NOTIFICATION_OWNING_AGENCY,
+      NotificationType.SIXTY_DAY_ERP_NOTIFICATION_OWNING_AGENCY,
+      NotificationType.NINTY_DAY_ERP_NOTIFICATION_OWNING_AGENCY,
+    ];
+
+    // Check if any of the notifications match the types
+    return notificationItems.some((n) => types.includes(n.TemplateId));
+  }, [notifications]);
 
   const { ungroupedAgencies, agencyOptions } = useGroupedAgenciesApi();
   interface IStatusHistoryStruct {
@@ -202,10 +226,10 @@ const ProjectDetail = (props: IProjectDetail) => {
       EstimatedMarketValue: data?.parsedBody.Market,
       AppraisedValue: data?.parsedBody.Appraised,
       EstimatedSalesCost: data?.parsedBody.Monetaries?.find(
-        (a) => a.MonetaryTypeId === salesCostType.Id,
+        (a) => a.MonetaryTypeId === salesCostType?.Id,
       )?.Value,
       EstimatedProgramRecoveryFees: data?.parsedBody.Monetaries?.find(
-        (a) => a.MonetaryTypeId === programCostType.Id,
+        (a) => a.MonetaryTypeId === programCostType?.Id,
       )?.Value,
     };
   }, [data, lookupData]);
@@ -249,6 +273,7 @@ const ProjectDetail = (props: IProjectDetail) => {
   const agencyInterest = 'Agency Interest';
   const documentationHistory = 'Documentation History';
   const notificationsHeader = 'Notifications';
+  const enhancedReferralDates = 'Enhanced Referral Dates';
 
   const sideBarList = [
     { title: projectInformation },
@@ -256,6 +281,10 @@ const ProjectDetail = (props: IProjectDetail) => {
     { title: financialInformation },
     { title: documentationHistory },
   ];
+  //
+  if (hasERPNotifications) {
+    sideBarList.splice(1, 0, { title: enhancedReferralDates });
+  }
   // only show Agency Interest and notifications for admins
   if (isAdmin) {
     sideBarList.splice(3, 0, { title: agencyInterest });
@@ -291,6 +320,18 @@ const ProjectDetail = (props: IProjectDetail) => {
           onEdit={() => setOpenProjectInfoDialog(true)}
           disableEdit={!isAdmin}
         />
+        {hasERPNotifications && (
+          <DataCard
+            values={undefined}
+            loading={isLoading}
+            title={enhancedReferralDates}
+            id={enhancedReferralDates}
+            onEdit={() => {}}
+            disableEdit={true}
+          >
+            <EnhancedReferralDates rows={notifications?.items} />
+          </DataCard>
+        )}
         <DataCard
           values={undefined}
           id={disposalProperties}
@@ -450,16 +491,14 @@ const ProjectDetail = (props: IProjectDetail) => {
                 rows={
                   notifications?.items
                     ? notifications.items.map((resp) => ({
-                        agency: lookup.getLookupValueById('Agencies', resp.ToAgencyId)?.Name,
-                        id: resp.Id,
-                        projectNumber: data?.parsedBody.ProjectNumber,
-                        status: getStatusString(resp.Status),
-                        sendOn: resp.SendOn,
-                        to: resp.To,
-                        subject: resp.Subject,
+                        AgencyName: lookup.getLookupValueById('Agencies', resp.ToAgencyId)?.Name,
+                        ChesStatusName: getStatusString(resp.Status),
+                        ...resp,
                       }))
                     : []
                 }
+                onResendClick={(id) => resendNotification(id).then(() => refreshNotifications())}
+                onCancelClick={(id) => cancelNotification(id).then(() => refreshNotifications())}
               />
             )}
           </DataCard>
@@ -516,6 +555,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           postSubmit={() => {
             setOpenAgencyInterestDialog(false);
             refreshData();
+            refreshNotifications();
           }}
           onCancel={() => {
             setOpenAgencyInterestDialog(false);
@@ -525,10 +565,12 @@ const ProjectDetail = (props: IProjectDetail) => {
           ungroupedAgencies={ungroupedAgencies as Agency[]}
           initialValues={notifications?.items ?? []}
           open={openNotificationDialog}
-          postSubmit={() => {
-            setOpenNotificationDialog(false);
-            refreshData();
-          }}
+          onRowCancelClick={(id: number) =>
+            cancelNotification(id).then(() => refreshNotifications())
+          }
+          onRowResendClick={(id: number) =>
+            resendNotification(id).then(() => refreshNotifications())
+          }
           onCancel={() => {
             setOpenNotificationDialog(false);
           }}

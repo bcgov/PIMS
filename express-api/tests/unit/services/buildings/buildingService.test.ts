@@ -2,8 +2,8 @@ import { AppDataSource } from '@/appDataSource';
 import { Building } from '@/typeorm/Entities/Building';
 import {
   produceBuilding,
-  produceBuildingEvaluation,
-  produceBuildingFiscal,
+  produceBuildingEvaluations,
+  produceBuildingFiscals,
   produceSSO,
   produceUser,
 } from 'tests/testUtils/factories';
@@ -16,19 +16,21 @@ import userServices from '@/services/users/usersServices';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { Roles } from '@/constants/roles';
 
-const buildingRepo = AppDataSource.getRepository(Building);
 jest.spyOn(userServices, 'getUser').mockImplementation(async () => produceUser());
+jest.spyOn(userServices, 'getAgencies').mockImplementation(async () => []);
+
+const buildingRepo = AppDataSource.getRepository(Building);
 const _buildingSave = jest
   .spyOn(buildingRepo, 'save')
   .mockImplementation(async (building: DeepPartial<Building> & Building) => building);
 
 const _buildingFiscalFindOne = jest
   .spyOn(AppDataSource.getRepository(BuildingFiscal), 'findOne')
-  .mockImplementation(async () => produceBuildingFiscal(1)[0]);
+  .mockImplementation(async () => produceBuildingFiscals(1)[0]);
 
 const _buildingEvaluationFindOne = jest
   .spyOn(AppDataSource.getRepository(BuildingEvaluation), 'findOne')
-  .mockImplementation(async () => produceBuildingEvaluation(1)[0]);
+  .mockImplementation(async () => produceBuildingEvaluations(1)[0]);
 
 const _buildingFindOne = jest
   .spyOn(buildingRepo, 'findOne')
@@ -36,11 +38,11 @@ const _buildingFindOne = jest
 
 jest
   .spyOn(AppDataSource.getRepository(BuildingFiscal), 'find')
-  .mockImplementation(async () => produceBuildingFiscal(1));
+  .mockImplementation(async () => produceBuildingFiscals(1));
 
 jest
   .spyOn(AppDataSource.getRepository(BuildingEvaluation), 'find')
-  .mockImplementation(async () => produceBuildingEvaluation(1));
+  .mockImplementation(async () => produceBuildingEvaluations(1));
 
 const _mockStartTransaction = jest.fn(async () => {});
 const _mockRollbackTransaction = jest.fn(async () => {});

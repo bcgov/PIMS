@@ -49,6 +49,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Roles } from '@/constants/roles';
 import { AuthContext } from '@/contexts/authContext';
 import { trackSelfDescribingEvent } from '@snowplow/browser-tracker';
+import { SnackBarContext } from '@/contexts/snackbarContext';
 
 type RenderCellParams = GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
 
@@ -208,6 +209,8 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   const [dataSourceLoading, setDataSourceLoading] = useState<boolean>(false);
   const tableApiRef = useGridApiRef(); // Ref to MUI DataGrid
   const previousController = useRef<AbortController>();
+  const snackbar = useContext(SnackBarContext);
+
   interface ITableModelCollection {
     pagination?: GridPaginationModel;
     sort?: GridSortModel;
@@ -555,23 +558,30 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
                   rows = props.excelDataSource
                     ? await props.excelDataSource(sortFilterObj, signal)
                     : await props.dataSource(sortFilterObj, signal);
-                  if (props.customExcelMap) rows = props.customExcelMap(rows);
                 } else {
                   // Client-side tables
                   rows = gridFilteredSortedRowEntriesSelector(tableApiRef).map((row) => row.model);
-                  if (props.customExcelMap) rows = props.customExcelMap(rows);
                 }
-                // Convert back to MUI table model
-                rows = rows.map((r, i) => ({
-                  model: r,
-                  id: i,
-                }));
-                downloadExcelFile({
-                  data: rows,
-                  tableName: props.excelTitle,
-                  filterName: selectValue,
-                  includeDate: true,
-                });
+                if (rows) {
+                  if (props.customExcelMap) rows = props.customExcelMap(rows);
+                  // Convert back to MUI table model
+                  rows = rows.map((r, i) => ({
+                    model: r,
+                    id: i,
+                  }));
+                  downloadExcelFile({
+                    data: rows,
+                    tableName: props.excelTitle,
+                    filterName: selectValue,
+                    includeDate: true,
+                  });
+                } else {
+                  snackbar.setMessageState({
+                    style: snackbar.styles.warning,
+                    text: 'Table failed to export.',
+                    open: true,
+                  });
+                }
                 setIsExporting(false);
               }}
             >

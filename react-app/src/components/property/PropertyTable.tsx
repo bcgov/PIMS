@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useContext, useState } from 'react';
+import React, { MutableRefObject, useContext, useMemo, useState } from 'react';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
 import { Box, SxProps, Tooltip, lighten, useTheme } from '@mui/material';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
@@ -58,18 +58,46 @@ const PropertyTable = (props: IPropertyTable) => {
   const classification = useClassificationStyle();
   const theme = useTheme();
 
+  const agenciesForFilter = useMemo(() => {
+    if (lookup.data) {
+      return lookup.data.Agencies.map((a) => a.Name);
+    } else {
+      return [];
+    }
+  }, [lookup.data]);
+
+  const classificationForFilter = useMemo(() => {
+    if (lookup.data) {
+      return lookup.data.Classifications.map((a) => a.Name);
+    } else {
+      return [];
+    }
+  }, [lookup.data]);
+
+  const adminAreasForFilter = useMemo(() => {
+    if (lookup.data) {
+      return lookup.data.AdministrativeAreas.map((a) => a.Name);
+    } else {
+      return [];
+    }
+  }, [lookup.data]);
+
   const columns: GridColDef[] = [
     {
       field: 'PropertyType',
       headerName: 'Type',
       flex: 1,
       maxWidth: 130,
+      type: 'singleSelect',
+      valueOptions: ['Parcel', 'Building'],
     },
     {
       field: 'Classification',
       headerName: 'Classification',
       flex: 1,
       minWidth: 200,
+      valueOptions: classificationForFilter,
+      type: 'singleSelect',
       renderHeader: (params) => {
         return (
           <Tooltip
@@ -129,6 +157,8 @@ const PropertyTable = (props: IPropertyTable) => {
       field: 'Agency',
       headerName: 'Agency',
       flex: 1,
+      type: 'singleSelect',
+      valueOptions: agenciesForFilter,
     },
     {
       field: 'Address',
@@ -139,6 +169,8 @@ const PropertyTable = (props: IPropertyTable) => {
       field: 'AdministrativeArea',
       headerName: 'Administrative Area',
       flex: 1,
+      type: 'singleSelect',
+      valueOptions: adminAreasForFilter,
     },
     {
       field: 'LandArea',
@@ -164,14 +196,34 @@ const PropertyTable = (props: IPropertyTable) => {
       case 'Building':
       case 'Parcel':
         ref.current.setFilterModel({
-          items: [{ value, operator: 'contains', field: 'PropertyType' }],
+          items: [{ value, operator: 'is', field: 'PropertyType' }],
         });
         break;
       case 'Core':
+        ref.current.setFilterModel({
+          items: [
+            {
+              value: ['Core Operational', 'Core Strategic'],
+              operator: 'isAnyOf',
+              field: 'Classification',
+            },
+          ],
+        });
+        break;
       case 'Surplus':
+        ref.current.setFilterModel({
+          items: [
+            {
+              value: ['Surplus Active', 'Surplus Encumbered'],
+              operator: 'isAnyOf',
+              field: 'Classification',
+            },
+          ],
+        });
+        break;
       case 'Disposed':
         ref.current.setFilterModel({
-          items: [{ value, operator: 'contains', field: 'Classification' }],
+          items: [{ value, operator: 'is', field: 'Classification' }],
         });
         break;
       default:
@@ -199,8 +251,9 @@ const PropertyTable = (props: IPropertyTable) => {
           property.AdministrativeAreaId,
         )?.Name,
         Postal: property.Postal,
-        PID: property.PID,
+        PID: pidFormatter(property.PID),
         PIN: property.PIN,
+        'Is Sensitive': property.IsSensitive,
         'Assessed Value': property.Evaluations?.length
           ? property.Evaluations.sort(
               (
@@ -262,7 +315,7 @@ const PropertyTable = (props: IPropertyTable) => {
       const { data, totalCount } = await api.properties.propertiesDataSource(filter, signal);
       setTotalCount(totalCount);
       return data;
-    } catch (error) {
+    } catch {
       snackbar.setMessageState({
         open: true,
         text: 'Error loading properties.',

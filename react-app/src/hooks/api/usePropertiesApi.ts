@@ -79,6 +79,11 @@ export interface PropertiesUnionResponse {
   totalCount: number;
 }
 
+export interface PropertyId {
+  buildingId?: number;
+  parcelId?: number;
+}
+
 const usePropertiesApi = (absoluteFetch: IFetch) => {
   const config = useContext(ConfigContext);
   const keycloak = useSSO();
@@ -86,7 +91,7 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
   const propertiesFuzzySearch = async (keyword: string) => {
     const { parsedBody } = await absoluteFetch.get('/properties/search/fuzzy', {
       keyword,
-      take: 2,
+      take: 5,
     });
     return parsedBody as PropertyFuzzySearch;
   };
@@ -122,8 +127,8 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
       },
       { signal },
     );
-    if (parsedBody.error) {
-      return [];
+    if ((parsedBody as Record<string, any>)?.error) {
+      return;
     }
     return parsedBody as (Parcel | Building)[];
   };
@@ -179,6 +184,22 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
     return parsedBody as ImportResult[];
   };
 
+  const getLinkedProjectsToProperty = async (propertyId: PropertyId) => {
+    try {
+      const params: Record<string, any> = {};
+      if (propertyId.buildingId !== undefined && propertyId.buildingId !== null) {
+        params.buildingId = propertyId.buildingId.toString();
+      }
+      if (propertyId.parcelId !== undefined && propertyId.parcelId !== null) {
+        params.parcelId = propertyId.parcelId.toString();
+      }
+      const { parsedBody } = await absoluteFetch.get('/properties/search/linkedProjects', params);
+      return parsedBody as any[];
+    } catch {
+      return [];
+    }
+  };
+
   return {
     propertiesFuzzySearch,
     propertiesGeoSearch,
@@ -187,6 +208,7 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
     getImportResults,
     propertiesDataSource,
     getPropertiesForExcelExport,
+    getLinkedProjectsToProperty,
   };
 };
 

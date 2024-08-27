@@ -1,35 +1,16 @@
+import { NotificationStatus } from '@/constants/chesNotificationStatus';
+import { NotificationQueue } from '@/hooks/api/useProjectNotificationApi';
 import { dateFormatter } from '@/utilities/formatters';
-import { Box, Typography } from '@mui/material';
+import { Refresh, Delete } from '@mui/icons-material';
+import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React, { useState } from 'react';
 
-export interface INotificationModel {
-  id: number;
-  agency: string;
-  status: string;
-  sendOn: Date;
-  to: string;
-  subject: string;
-}
-
-export interface INotification {
-  Id: number;
-  ToAgencyId: number;
-  Status: number;
-  SendOn: Date;
-  To: string;
-  Subject: string;
-}
-
-export interface INotificationResponse {
-  items: INotification[];
-  pageNumber: number;
-  pageSize: number;
-}
-
 interface ProjectNotificationsTableProps {
-  rows: INotificationModel[];
+  rows: NotificationQueue[];
   noteText?: string;
+  onResendClick?: (id: number) => void;
+  onCancelClick?: (id: number) => void;
 }
 
 const ProjectNotificationsTable = (props: ProjectNotificationsTableProps) => {
@@ -47,31 +28,85 @@ const ProjectNotificationsTable = (props: ProjectNotificationsTableProps) => {
 
   const columns: GridColDef[] = [
     {
-      field: 'to',
+      field: 'To',
       headerName: 'To',
       flex: 1,
+      maxWidth: 300,
     },
     {
-      field: 'agency',
+      field: 'AgencyName',
       headerName: 'Agency',
       flex: 1,
       maxWidth: 350,
     },
     {
-      field: 'subject',
+      field: 'Subject',
       headerName: 'Subject',
       flex: 1,
     },
     {
-      field: 'status',
+      field: 'ChesStatusName',
       headerName: 'Status',
     },
     {
-      field: 'sendOn',
+      field: 'SendOn',
       headerName: 'Send Date',
       width: 125,
       valueGetter: (value) => (value == null ? null : new Date(value)),
       renderCell: (params) => (params.value ? dateFormatter(params.value) : ''),
+    },
+    {
+      field: 'Resend',
+      headerName: '',
+      sortable: false,
+      filterable: false,
+      maxWidth: 20,
+      renderCell: (params) => (
+        <Tooltip placement="left" title="Resend Notification">
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+            }}
+          >
+            <IconButton onClick={() => props.onResendClick(params.row.Id)} color="primary">
+              <Refresh />
+            </IconButton>
+          </div>
+        </Tooltip>
+      ),
+    },
+    {
+      field: 'Cancel',
+      headerName: '',
+      sortable: false,
+      filterable: false,
+      maxWidth: 20,
+      renderCell: (params) => (
+        <Tooltip placement="right" title={'Cancel Notification'}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+            }}
+          >
+            <IconButton
+              disabled={
+                params.row.Status !== NotificationStatus.Pending &&
+                params.row.Status !== NotificationStatus.Accepted
+              }
+              onClick={() => props.onCancelClick(params.row.Id)}
+              color="primary"
+            >
+              <Delete />
+            </IconButton>
+          </div>
+        </Tooltip>
+      ),
     },
   ];
 
@@ -84,7 +119,6 @@ const ProjectNotificationsTable = (props: ProjectNotificationsTableProps) => {
   ) : (
     <>
       <Typography variant="h6">Total Notifications: {props.rows.length}</Typography>
-      <Box marginBottom={2} />
       <DataGrid
         sx={{
           borderStyle: 'none',
@@ -102,6 +136,7 @@ const ProjectNotificationsTable = (props: ProjectNotificationsTableProps) => {
         disableRowSelectionOnClick
         columns={columns}
         rows={props.rows}
+        getRowId={(row) => row.Id}
         pagination={true}
         pageSizeOptions={[10]}
         paginationModel={paginationModel}

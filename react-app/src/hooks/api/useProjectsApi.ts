@@ -27,14 +27,7 @@ export interface ProjectStatus extends BaseEntityInterface {
   IsTerminal: boolean;
   Route: string;
 }
-export interface Workflow extends BaseEntityInterface {
-  Id: number;
-  Name: string;
-  IsDisabled: boolean;
-  SortOrder: number;
-  Description?: string;
-  Code: string;
-}
+
 export interface ProjectRisk extends BaseEntityInterface {
   Id: number;
   Name: string;
@@ -64,8 +57,6 @@ export interface Project {
   ProjectType: number;
   AgencyId: number;
   Agency?: Agency;
-  WorkflowId: number;
-  Workflow?: Workflow;
   TierLevelId: number;
   TierLevel?: TierLevel;
   StatusId: number;
@@ -128,7 +119,6 @@ export interface ProjectStatusHistory {
   StatusId?: number;
   UpdatedById?: string;
   UpdatedOn?: Date;
-  WorkflowId?: number;
 }
 export interface ProjectNotification {
   Bcc?: string;
@@ -261,7 +251,6 @@ export type ProjectAdd = Omit<
   | 'UpdatedById'
   | 'ProjectNumber' // Determined in API
   | 'AgencyId' // Determined in API (from user's agency)
-  | 'WorkflowId' // Determined in API
   | 'StatusId' // Determined in API
   | 'ProjectType' // Determined in API (Disposal)
   | 'RiskId' // Determined in API
@@ -334,7 +323,7 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
       },
       { signal },
     );
-    if (parsedBody.error) {
+    if ((parsedBody as Record<string, any>).error) {
       return [];
     }
     return parsedBody as Project[];

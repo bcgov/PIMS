@@ -1,7 +1,7 @@
 import usePimsApi from '@/hooks/usePimsApi';
 import { GridColDef } from '@mui/x-data-grid';
 import { CustomListSubheader, CustomMenuItem, FilterSearchDataGrid } from '../table/DataTable';
-import React, { MutableRefObject, useContext, useState } from 'react';
+import React, { MutableRefObject, useContext, useMemo, useState } from 'react';
 import { dateFormatter, projectStatusChipFormatter } from '@/utilities/formatters';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -27,6 +27,22 @@ const ProjectsTable = () => {
     return Number(projectNo.match(/[a-zA-Z]+-?(\d+)/)[1]);
   };
 
+  const agenciesForFilter = useMemo(() => {
+    if (lookup.data) {
+      return lookup.data.Agencies.map((a) => a.Name);
+    } else {
+      return [];
+    }
+  }, [lookup.data]);
+
+  const statusForFilter = useMemo(() => {
+    if (lookup.data) {
+      return lookup.data.ProjectStatuses.map((a) => a.Name);
+    } else {
+      return [];
+    }
+  }, [lookup.data]);
+
   const columns: GridColDef[] = [
     {
       field: 'ProjectNumber',
@@ -45,12 +61,16 @@ const ProjectsTable = () => {
       headerName: 'Status',
       flex: 1,
       maxWidth: 250,
+      valueOptions: statusForFilter,
+      type: 'singleSelect',
       renderCell: (params) => projectStatusChipFormatter(params.value ?? 'N/A'),
     },
     {
       field: 'Agency',
       headerName: 'Agency',
       flex: 1,
+      type: 'singleSelect',
+      valueOptions: agenciesForFilter,
     },
     {
       field: 'NetBook',
@@ -88,11 +108,14 @@ const ProjectsTable = () => {
       case 'All Projects':
         ref.current.setFilterModel({ items: [] });
         break;
+      case 'Approved for SPL':
+      case 'Contract in Place':
+      case 'On Market':
+      case 'Pre-Marketing':
       case 'Approved for Exemption':
       case 'Approved for ERP':
-      case 'Approved for SPL':
       case 'Submitted':
-        ref.current.setFilterModel({ items: [{ value, operator: 'contains', field: 'Status' }] });
+        ref.current.setFilterModel({ items: [{ value, operator: 'is', field: 'Status' }] });
     }
   };
 
@@ -104,7 +127,6 @@ const ProjectsTable = () => {
         Description: project.Description,
         'Reported Fiscal Year': project.ReportedFiscalYear,
         'Actual Fiscal Year': project.ActualFiscalYear,
-        Workflow: lookup.getLookupValueById('Workflows', project.WorkflowId)?.Name,
         Status: lookup.getLookupValueById('ProjectStatuses', project.StatusId)?.Name,
         'Tier Level': lookup.getLookupValueById('ProjectTiers', project.TierLevelId)?.Name,
         Risk: lookup.getLookupValueById('Risks', project.RiskId)?.Name,
@@ -190,7 +212,7 @@ const ProjectsTable = () => {
       const { data, totalCount } = await api.projects.getProjects(filter, signal);
       setTotalCount(totalCount);
       return data;
-    } catch (error) {
+    } catch {
       snackbar.setMessageState({
         open: true,
         text: 'Error loading projects.',
@@ -213,6 +235,19 @@ const ProjectsTable = () => {
           <CustomMenuItem key={'All Projects'} value={'All Projects'}>
             All Projects
           </CustomMenuItem>,
+          <CustomListSubheader key={'SPL Projects'}>SPL Projects</CustomListSubheader>,
+          <CustomMenuItem key={'Approved for SPL'} value={'Approved for SPL'}>
+            Approved for SPL
+          </CustomMenuItem>,
+          <CustomMenuItem key={'Contract in Place'} value={'Contract in Place'}>
+            Contract in Place
+          </CustomMenuItem>,
+          <CustomMenuItem key={'On Market'} value={'On Market'}>
+            On Market
+          </CustomMenuItem>,
+          <CustomMenuItem key={'Pre-Marketing'} value={'Pre-Marketing'}>
+            Pre-Marketing
+          </CustomMenuItem>,
           <CustomListSubheader key={'Status'}>Status</CustomListSubheader>,
           <CustomMenuItem key={'Approved for ERP'} value={'Approved for ERP'}>
             Approved for ERP
@@ -222,9 +257,6 @@ const ProjectsTable = () => {
           </CustomMenuItem>,
           <CustomMenuItem key={'Submitted'} value={'Submitted'}>
             Submitted
-          </CustomMenuItem>,
-          <CustomMenuItem key={'Approved for SPL'} value={'Approved for SPL'}>
-            Approved for SPL
           </CustomMenuItem>,
         ]}
         rowCountProp={totalCount}

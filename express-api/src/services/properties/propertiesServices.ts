@@ -27,9 +27,10 @@ import { PropertyUnion } from '@/typeorm/Entities/views/PropertyUnionView';
 import {
   constructFindOptionFromQuery,
   constructFindOptionFromQueryPid,
+  constructFindOptionFromQuerySingleSelect,
 } from '@/utilities/helperFunctions';
 import userServices from '../users/usersServices';
-import { Brackets, FindManyOptions, FindOptionsWhere, ILike, In, QueryRunner } from 'typeorm';
+import { Brackets, FindOptionsWhere, ILike, In, QueryRunner } from 'typeorm';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { PropertyType } from '@/constants/propertyType';
 import { ProjectStatus } from '@/constants/projectStatus';
@@ -86,7 +87,8 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
           .orWhere(`parcel.pin::text ILIKE '%${keyword}%'`)
           .orWhere(`agency.name ILIKE '%${keyword}%'`)
           .orWhere(`adminArea.name ILIKE '%${keyword}%'`)
-          .orWhere(`parcel.address1 ILIKE '%${keyword}%'`);
+          .orWhere(`parcel.address1 ILIKE '%${keyword}%'`)
+          .orWhere(`parcel.name ILIKE '%${keyword}%'`);
       }),
     )
     // Only include surplus properties
@@ -117,7 +119,8 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
           .orWhere(`building.pin::text ILIKE '%${keyword}%'`)
           .orWhere(`agency.name ILIKE '%${keyword}%'`)
           .orWhere(`adminArea.name ILIKE '%${keyword}%'`)
-          .orWhere(`building.address1 ILIKE '%${keyword}%'`);
+          .orWhere(`building.address1 ILIKE '%${keyword}%'`)
+          .orWhere(`building.name ILIKE '%${keyword}%'`);
       }),
     )
     // Only include surplus properties
@@ -136,6 +139,40 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
     Parcels: parcels,
     Buildings: buildings,
   };
+};
+/**
+ * Finds associated projects based on the provided building ID or parcel ID.
+ *
+ * This function queries the `ProjectProperty` repository to find projects linked
+ * to either a building or a parcel. It returns an empty array if neither ID is provided.
+ *
+ * @param buildingId - Optional ID of the building to find associated projects for.
+ * @param parcelId - Optional ID of the parcel to find associated projects for.
+ * @returns A promise that resolves to an array of `ProjectProperty` objects.
+ *          If neither `buildingId` nor `parcelId` is provided, an empty array is returned.
+ */
+const findLinkedProjectsForProperty = async (buildingId?: number, parcelId?: number) => {
+  const whereCondition = buildingId
+    ? { BuildingId: buildingId }
+    : parcelId
+      ? { ParcelId: parcelId }
+      : {}; // Return an empty condition if neither ID is provided
+
+  const query = AppDataSource.getRepository(ProjectProperty)
+    .createQueryBuilder('pp')
+    .leftJoinAndSelect('pp.Project', 'p')
+    .leftJoinAndSelect('p.Status', 'ps')
+    .where(whereCondition)
+    .select(['p.*', 'ps.Name AS status_name']);
+
+  const associatedProjects = buildingId || parcelId ? await query.getRawMany() : []; // Return an empty array if no ID is provided
+
+  return associatedProjects.map((result) => ({
+    ProjectNumber: result.project_number,
+    Id: result.id,
+    StatusName: result.status_name,
+    Description: result.description,
+  }));
 };
 
 /**
@@ -400,7 +437,6 @@ const makeParcelUpsertObject = async (
     IsVisibleToOtherAgencies: true,
     PropertyTypeId: 0,
     Description: row.Description,
-    LandLegalDescription: row.LandLegalDescription,
     LandArea: numberOrNull(row.LandArea),
     Evaluations: currRowEvaluations,
     Fiscals: currRowFiscals,
@@ -658,18 +694,21 @@ const sortKeyTranslator: Record<string, string> = {
  */
 const collectFindOptions = (filter: PropertyUnionFilter) => {
   const options = [];
-  if (filter.agency) options.push(constructFindOptionFromQuery('Agency', filter.agency));
+  if (filter.agency)
+    options.push(constructFindOptionFromQuerySingleSelect('Agency', filter.agency));
   if (filter.pid) options.push(constructFindOptionFromQueryPid('PID', filter.pid));
   if (filter.pin) options.push(constructFindOptionFromQueryPid('PIN', filter.pin));
   if (filter.address) options.push(constructFindOptionFromQuery('Address', filter.address));
   if (filter.updatedOn) options.push(constructFindOptionFromQuery('UpdatedOn', filter.updatedOn));
   if (filter.classification)
-    options.push(constructFindOptionFromQuery('Classification', filter.classification));
+    options.push(constructFindOptionFromQuerySingleSelect('Classification', filter.classification));
   if (filter.landArea) options.push(constructFindOptionFromQuery('LandArea', filter.landArea));
   if (filter.administrativeArea)
-    options.push(constructFindOptionFromQuery('AdministrativeArea', filter.administrativeArea));
+    options.push(
+      constructFindOptionFromQuerySingleSelect('AdministrativeArea', filter.administrativeArea),
+    );
   if (filter.propertyType)
-    options.push(constructFindOptionFromQuery('PropertyType', filter.propertyType));
+    options.push(constructFindOptionFromQuerySingleSelect('PropertyType', filter.propertyType));
   return options;
 };
 
@@ -760,35 +799,62 @@ const getPropertiesForExport = async (filter: PropertyUnionFilter) => {
   const buildingIds = filteredProperties
     .filter((p) => p.PropertyTypeId === PropertyType.BUILDING)
     .map((b) => b.Id);
-  // Use IDs from filtered properties to get those properites with joins
-  const parcelQueryOptions: FindManyOptions<Parcel> = {
-    relations: {
-      CreatedBy: true,
-      UpdatedBy: true,
-      Evaluations: true,
-      Fiscals: true,
-    },
-    where: {
-      Id: In(parcelIds),
-    },
-  };
-  const buildingQueryOptions: FindManyOptions<Building> = {
-    relations: {
-      CreatedBy: true,
-      UpdatedBy: true,
-      Evaluations: true,
-      Fiscals: true,
-    },
-    where: { Id: In(buildingIds) },
-  };
-  let properties: (Parcel | Building)[] = [];
-  properties = properties.concat(
-    await AppDataSource.getRepository(Parcel).find(parcelQueryOptions),
+
+  /**
+   * For some reason, getting the data in multiple calls and filtering here is faster than letting TypeORM do it.
+   *
+   * Getting evals, fiscals, and filtering separately: 850-1050ms
+   * Getting as as part of joins, WHERE clause with TypeORM: 1587-1672ms
+   */
+
+  const ongoingFinds = [];
+  ongoingFinds.push(AppDataSource.getRepository(Parcel).find());
+  ongoingFinds.push(AppDataSource.getRepository(Building).find());
+  // Order these to guarantee the find operation later gets the most recent one.
+  ongoingFinds.push(
+    AppDataSource.getRepository(ParcelEvaluation).find({ order: { Year: 'DESC' } }),
   );
-  properties = properties.concat(
-    await AppDataSource.getRepository(Building).find(buildingQueryOptions),
+  ongoingFinds.push(
+    AppDataSource.getRepository(ParcelFiscal).find({ order: { FiscalYear: 'DESC' } }),
   );
-  return properties;
+  ongoingFinds.push(
+    AppDataSource.getRepository(BuildingEvaluation).find({ order: { Year: 'DESC' } }),
+  );
+  ongoingFinds.push(
+    AppDataSource.getRepository(BuildingFiscal).find({ order: { FiscalYear: 'DESC' } }),
+  );
+
+  // Wait for all database requests to resolve, then build the parcels and buildings lists
+  // Use IDs from filtered properties above to filter lists
+  const resolvedFinds = await Promise.all(ongoingFinds);
+  const parcelEvaluations = resolvedFinds.at(2) as ParcelEvaluation[];
+  const parcelFiscals = resolvedFinds.at(3) as ParcelFiscal[];
+  const buildingEvaluations = resolvedFinds.at(4) as BuildingEvaluation[];
+  const buildingFiscals = resolvedFinds.at(5) as BuildingFiscal[];
+  const parcels: Parcel[] = (resolvedFinds.at(0) as Parcel[])
+    .filter((p: Parcel) => parcelIds.includes(p.Id))
+    .map((p: Parcel) => {
+      const evaluation = parcelEvaluations.find((pe) => pe.ParcelId === p.Id);
+      const fiscal = parcelFiscals.find((pf) => pf.ParcelId === p.Id);
+      return {
+        ...p,
+        Evaluations: evaluation ? [evaluation] : undefined,
+        Fiscals: fiscal ? [fiscal] : undefined,
+      };
+    });
+  const buildings: Building[] = (resolvedFinds.at(1) as Building[])
+    .filter((b: Building) => buildingIds.includes(b.Id))
+    .map((b: Building) => {
+      const evaluation = buildingEvaluations.find((be) => be.BuildingId === b.Id);
+      const fiscal = buildingFiscals.find((bf) => bf.BuildingId === b.Id);
+      return {
+        ...b,
+        Evaluations: evaluation ? [evaluation] : undefined,
+        Fiscals: fiscal ? [fiscal] : undefined,
+      };
+    });
+
+  return [...parcels, ...buildings];
 };
 
 /**
@@ -835,6 +901,7 @@ const propertyServices = {
   getImportResults,
   getPropertiesForExport,
   processFile,
+  findLinkedProjectsForProperty,
 };
 
 export default propertyServices;

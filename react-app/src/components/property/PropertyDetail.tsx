@@ -30,6 +30,7 @@ import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { AuthContext } from '@/contexts/authContext';
 import { Roles } from '@/constants/roles';
 import { LookupContext } from '@/contexts/lookupContext';
+import AssociatedProjectsTable from './AssociatedProjectsTable';
 
 interface IPropertyDetail {
   onClose: () => void;
@@ -44,6 +45,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const buildingId = isNaN(Number(params.buildingId)) ? null : Number(params.buildingId);
   const api = usePimsApi();
   const deletionBroadcastChannel = useMemo(() => new BroadcastChannel('property'), []);
+  const [linkedProjects, setLinkedProjects] = useState<any[]>([]);
   const {
     data: parcel,
     refreshData: refreshParcel,
@@ -81,6 +83,17 @@ const PropertyDetail = (props: IPropertyDetail) => {
       parcel?.parsedBody?.PID &&
       api.buildings.getBuildings({ pid: parcel?.parsedBody?.PID, includeRelations: true }),
   );
+
+  useEffect(() => {
+    const fetchLinkedProjects = async () => {
+      const projects = await api.properties.getLinkedProjectsToProperty({
+        parcelId,
+        buildingId,
+      });
+      setLinkedProjects(projects);
+    };
+    fetchLinkedProjects();
+  }, [parcelId, buildingId]);
 
   const isAuditor = keycloak.hasRoles([Roles.AUDITOR]);
 
@@ -278,6 +291,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
   ];
 
   if (buildingOrParcel === 'Parcel') sideBarItems.splice(3, 0, { title: 'LTSA Information' });
+  if (linkedProjects.length > 0) sideBarItems.splice(4, 0, { title: 'Associated Projects' });
 
   return (
     <CollapsibleSidebar items={sideBarItems}>
@@ -358,6 +372,19 @@ const PropertyDetail = (props: IPropertyDetail) => {
               pid={parcel?.parsedBody?.PID ? zeroPadPID(Number(parcel?.parsedBody?.PID)) : null}
             />
           </DataCard>
+        )}
+        {linkedProjects.length > 0 && (
+          <>
+            <DataCard
+              id={'Associated Projects'}
+              title={'Associated Projects'}
+              values={undefined}
+              onEdit={undefined}
+              disableEdit={true}
+            >
+              <AssociatedProjectsTable linkedProjects={linkedProjects} />
+            </DataCard>
+          </>
         )}
       </Box>
       <>

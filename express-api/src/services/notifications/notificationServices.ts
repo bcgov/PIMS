@@ -7,7 +7,7 @@ import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotif
 import { User } from '@/typeorm/Entities/User';
 import { UUID, randomUUID } from 'crypto';
 import nunjucks from 'nunjucks';
-import { In, IsNull, QueryRunner } from 'typeorm';
+import { In, IsNull, MoreThan, QueryRunner } from 'typeorm';
 import chesServices, {
   EmailBody,
   EmailEncoding,
@@ -19,6 +19,8 @@ import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
 import logger from '@/utilities/winstonLogger';
 import getConfig from '@/constants/config';
+import { getDaysBetween } from '@/utilities/helperFunctions';
+import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 
 export interface AccessRequestData {
   FirstName: string;
@@ -31,6 +33,7 @@ export enum NotificationStatus {
   Cancelled = 2,
   Failed = 3,
   Completed = 4,
+  NotFound = 5,
 }
 
 export enum NotificationAudience {
@@ -154,17 +157,22 @@ const insertProjectNotificationQueue = async (
   project: Project,
   agency?: Agency,
   overrideTo?: string,
+  overrideSend?: Date,
   queryRunner?: QueryRunner,
 ) => {
   const query = queryRunner ?? AppDataSource.createQueryRunner();
-  const sendDate = new Date();
-  sendDate.setDate(sendDate.getDate() + projStatusNotif.DelayDays);
+  let emailSendDate = overrideSend;
+  if (emailSendDate == undefined) {
+    const sendDelayFromToday = new Date();
+    sendDelayFromToday.setDate(sendDelayFromToday.getDate() + projStatusNotif.DelayDays);
+    emailSendDate = sendDelayFromToday;
+  }
   const queueObject = {
     Key: randomUUID(),
     Status: NotificationStatus.Pending,
     Priority: template.Priority,
     Encoding: template.Encoding,
-    SendOn: sendDate,
+    SendOn: emailSendDate,
     Subject: nunjucks.renderString(template.Subject, { Project: project }),
     BodyType: template.BodyType,
     Body: nunjucks.renderString(template.Body, {
@@ -181,11 +189,11 @@ const insertProjectNotificationQueue = async (
     ProjectId: project.Id,
     ToAgencyId: agency?.Id,
   };
+  const insertedNotif = await query.manager.save(NotificationQueue, queueObject);
   if (queryRunner === undefined) {
     //If no arg passed we spawned a new query runner and we must release that!
     await query.release();
   }
-  const insertedNotif = await query.manager.save(NotificationQueue, queueObject);
   return insertedNotif;
 };
 
@@ -228,6 +236,7 @@ const generateProjectNotifications = async (
           project,
           project.Agency,
           overrideTo,
+          undefined,
           queryRunner,
         ),
       );
@@ -238,6 +247,7 @@ const generateProjectNotifications = async (
           projStatusNotif,
           project,
           project.Agency,
+          undefined,
           undefined,
           queryRunner,
         ),
@@ -270,6 +280,7 @@ const generateProjectNotifications = async (
             projStatusNotif,
             project,
             agc,
+            undefined,
             undefined,
             queryRunner,
           ),
@@ -305,6 +316,7 @@ const generateProjectNotifications = async (
             project,
             agc,
             undefined,
+            undefined,
             queryRunner,
           ),
         ),
@@ -334,6 +346,7 @@ const generateProjectNotifications = async (
             project,
             agc,
             undefined,
+            undefined,
             queryRunner,
           ),
         ),
@@ -344,6 +357,7 @@ const generateProjectNotifications = async (
           template,
           projStatusNotif,
           project,
+          undefined,
           undefined,
           undefined,
           queryRunner,
@@ -429,6 +443,8 @@ const convertChesStatusToNotificationStatus = (chesStatus: string): Notification
       return NotificationStatus.Failed;
     case 'completed':
       return NotificationStatus.Completed;
+    case '404':
+      return NotificationStatus.NotFound;
     default:
       return null;
   }
@@ -452,7 +468,6 @@ const updateNotificationStatus = async (notificationId: number, user: User) => {
   }
 
   const statusResponse = await chesServices.getStatusByIdAsync(notification.ChesMessageId);
-
   if (typeof statusResponse?.status === 'string') {
     const notificationStatus = convertChesStatusToNotificationStatus(statusResponse.status);
     // If the CHES status is non-standard, don't update the notification.
@@ -468,7 +483,39 @@ const updateNotificationStatus = async (notificationId: number, user: User) => {
     query.release();
     return updatedNotification;
   } else if (typeof statusResponse?.status === 'number') {
-    //If we get number type then this wound up being some HTTP code.
+    // handle 404, 422 code here....
+    switch (statusResponse.status) {
+      case 404: {
+        notification.Status = NotificationStatus.NotFound;
+        notification.UpdatedOn = new Date();
+        notification.UpdatedById = user.Id;
+        const updatedNotification = await query.manager.save(NotificationQueue, notification);
+        logger.error(`Notification with id ${notificationId} not found on CHES.`);
+        query.release();
+        return updatedNotification;
+      }
+
+      case 422:
+        logger.error(
+          `Notification with id ${notificationId} could not be processed, some of the data could be formatted incorrectly.`,
+        );
+        break;
+
+      case 401:
+        logger.error(
+          `Cannot authorize the request to the CHES server, check your CHES credentials.`,
+        );
+        break;
+
+      case 500:
+        logger.error(
+          `Internal server error while retrieving status for notification with id ${notificationId}.`,
+        );
+        break;
+      default:
+        logger.error(`Received unexpected status code ${statusResponse.status}.`);
+        break;
+    }
     query.release();
     return notification;
   } else {
@@ -522,42 +569,193 @@ const getProjectNotificationsInQueue = async (
   return pageModel;
 };
 
-const cancelAllProjectNotifications = async (projectId: number) => {
-  const notifications = await AppDataSource.getRepository(NotificationQueue).find({
-    where: [
-      { ProjectId: projectId, Status: NotificationStatus.Accepted },
-      { ProjectId: projectId, Status: NotificationStatus.Pending },
-    ],
+const cancelProjectNotifications = async (
+  projectId: number,
+  agencyId?: number,
+  queryRunner?: QueryRunner,
+) => {
+  const query = queryRunner ?? AppDataSource.createQueryRunner();
+  try {
+    const notifications = await query.manager.find(NotificationQueue, {
+      where: [
+        { ProjectId: projectId, Status: NotificationStatus.Accepted, ToAgencyId: agencyId },
+        { ProjectId: projectId, Status: NotificationStatus.Pending, ToAgencyId: agencyId },
+      ],
+    });
+    const chesCancelPromises = notifications.map((notification) => {
+      return chesServices.cancelEmailByIdAsync(notification.ChesMessageId);
+    });
+    const chesCancelResolved = await Promise.allSettled(chesCancelPromises);
+    const cancelledMessageIds = chesCancelResolved
+      .filter((a) => a.status === 'fulfilled' && a.value.status === 'cancelled')
+      .map((c) => (c as PromiseFulfilledResult<IChesStatusResponse>).value.msgId);
+    await query.manager.update(
+      NotificationQueue,
+      { ChesMessageId: In(cancelledMessageIds) },
+      { Status: convertChesStatusToNotificationStatus('cancelled') },
+    );
+    return {
+      succeeded: chesCancelResolved.filter(
+        (c) => c.status === 'fulfilled' && c.value.status === 'cancelled',
+      ).length,
+      failed: chesCancelResolved.filter(
+        (c) => c.status === 'rejected' || c.value?.status !== 'cancelled',
+      ).length,
+    };
+  } catch (e) {
+    logger.error(
+      `Something went wrong when trying to cancel project notifications. Error: ${e.message}`,
+    );
+    return {
+      succeeded: 0,
+      failed: 0,
+    };
+  } finally {
+    if (queryRunner === undefined) {
+      query.release();
+    }
+  }
+};
+
+/**
+ * Generates project notifications based off agency responses.
+ * Agencies that opt out of notifications will have any pending notifications cancelled here.
+ * Agencies that were not previously registered for notifications will have any delayed notifications,
+ * such as 30,60,90 ERP reminders, queued as if they had been registered for these from the start.
+ * @param project Up to date project entity.
+ * @param responses Agency responses to process based off response type.
+ * @param queryRunner Optional queryRunner, include if inside transaction.
+ * @returns {NotificationQueue[]} A list of notifications queued by this function call
+ */
+const generateProjectWatchNotifications = async (
+  project: Project,
+  responses: ProjectAgencyResponse[],
+  queryRunner?: QueryRunner,
+) => {
+  const query = queryRunner ?? AppDataSource.createQueryRunner();
+  const notificationsInserted: Array<NotificationQueue> = [];
+  try {
+    for (const response of responses) {
+      switch (response.Response) {
+        case AgencyResponseType.Unsubscribe:
+        case AgencyResponseType.Watch:
+          //The simple case. Calling this will cancel all pending notifications for this project/agency pair.
+          await cancelProjectNotifications(response.ProjectId, response.AgencyId);
+          break;
+        case AgencyResponseType.Subscribe: {
+          const agency = await query.manager.findOne(Agency, {
+            where: { Id: response.AgencyId },
+          });
+          //No use in queueing an email for an agency with no email address.
+          if (agency?.Email) {
+            /*We get the most recent entry in the status history since the date value of this row would have been populated 
+            at the time this project was placed into its current status value. Note that this value is not necessarily the same as
+            Project.UpdatedOn, as projects can be updated without the status being changed. */
+            const mostRecentStatusChange = await query.manager.findOne(ProjectStatusHistory, {
+              where: { ProjectId: project.Id },
+              order: { CreatedOn: 'DESC' },
+            });
+
+            const mostRecentStatusChangeDate =
+              mostRecentStatusChange?.CreatedOn ?? project.CreatedOn;
+            const daysSinceThisStatus = getDaysBetween(mostRecentStatusChangeDate, new Date());
+            const statusNotifs = await query.manager.find(ProjectStatusNotification, {
+              relations: {
+                Template: true,
+              },
+              where: {
+                ToStatusId: project.StatusId, //We will only send notifications relevant to the current status.
+                Template: {
+                  Audience: NotificationAudience.WatchingAgencies,
+                },
+                DelayDays: MoreThan(daysSinceThisStatus),
+              },
+            });
+            for (const statusNotif of statusNotifs) {
+              //If there is already a pending notification for this agency with this template, skip.
+              const notifExists = await query.manager.exists(NotificationQueue, {
+                where: [
+                  {
+                    ProjectId: project.Id,
+                    ToAgencyId: response.AgencyId,
+                    TemplateId: statusNotif.TemplateId,
+                    Status: NotificationStatus.Accepted,
+                  },
+                  {
+                    ProjectId: project.Id,
+                    ToAgencyId: response.AgencyId,
+                    TemplateId: statusNotif.TemplateId,
+                    Status: NotificationStatus.Pending,
+                  },
+                ],
+              });
+
+              if (!notifExists) {
+                //If there is no notification like this already pending, we send one.
+                const sendOn = new Date(mostRecentStatusChangeDate.getTime());
+                sendOn.setDate(mostRecentStatusChangeDate.getDate() + statusNotif.DelayDays);
+                //We set the delay by the most recent status change date plus the number of delay days. This should make these new emails
+                //send around the same time as the emails that previously sent when this project changed into its current status.
+                const inserted = await insertProjectNotificationQueue(
+                  statusNotif.Template,
+                  statusNotif,
+                  project,
+                  agency,
+                  undefined,
+                  sendOn,
+                  queryRunner,
+                );
+                notificationsInserted.push(inserted);
+              }
+            }
+          }
+          break;
+        }
+      }
+    }
+  } catch (e) {
+    logger.error(
+      `Error: Some notification actions triggered by an agency response may have failed to cancel or update. Project ID: ${project.Id}, Error msg: ${e.message}`,
+    );
+    logger.error(e.stack);
+  } finally {
+    if (queryRunner === undefined) {
+      query.release();
+    }
+  }
+  return notificationsInserted;
+};
+
+const cancelNotificationById = async (id: number) => {
+  const notification = await AppDataSource.getRepository(NotificationQueue).findOne({
+    where: { Id: id },
   });
-  const chesCancelPromises = notifications.map((notification) => {
-    return chesServices.cancelEmailByIdAsync(notification.ChesMessageId);
-  });
-  const chesCancelResolved = await Promise.allSettled(chesCancelPromises);
-  const cancelledMessageIds = chesCancelResolved
-    .filter((a) => a.status === 'fulfilled' && a.value.status === 'cancelled')
-    .map((c) => (c as PromiseFulfilledResult<IChesStatusResponse>).value.msgId);
-  await AppDataSource.getRepository(NotificationQueue).update(
-    { ChesMessageId: In(cancelledMessageIds) },
-    { Status: convertChesStatusToNotificationStatus('cancelled') },
-  );
-  return {
-    succeeded: chesCancelResolved.filter(
-      (c) => c.status === 'fulfilled' && c.value.status === 'cancelled',
-    ).length,
-    failed: chesCancelResolved.filter(
-      (c) => c.status === 'rejected' || c.value?.status !== 'cancelled',
-    ).length,
-  };
+  const chesResult = await chesServices.cancelEmailByIdAsync(notification.ChesMessageId);
+  if (chesResult.status === 'cancelled') {
+    return AppDataSource.getRepository(NotificationQueue).save({
+      Id: notification.Id,
+      Status: NotificationStatus.Cancelled,
+    });
+  } else {
+    return notification;
+  }
+};
+
+const getNotificationById = async (id: number) => {
+  return AppDataSource.getRepository(NotificationQueue).findOne({ where: { Id: id } });
 };
 
 const notificationServices = {
   generateProjectNotifications,
   generateAccessRequestNotification,
+  generateProjectWatchNotifications,
   sendNotification,
   updateNotificationStatus,
   getProjectNotificationsInQueue,
   convertChesStatusToNotificationStatus,
-  cancelAllProjectNotifications,
+  getNotificationById,
+  cancelNotificationById,
+  cancelProjectNotifications,
 };
 
 export default notificationServices;

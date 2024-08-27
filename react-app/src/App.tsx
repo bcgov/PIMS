@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from '@/pages/Home';
 import React, { useContext, useEffect } from 'react';
 import '@/App.css';
@@ -263,6 +263,7 @@ const Router = () => {
           </BaseLayout>
         }
       />
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 };

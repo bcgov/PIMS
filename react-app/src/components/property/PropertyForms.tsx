@@ -38,6 +38,7 @@ interface IGeneralInformationForm {
   propertyType: PropertyType;
   defaultLocationValue: GeoPoint | null;
   adminAreas: ISelectMenuItem[];
+  agencies: ISelectMenuItem[];
 }
 
 export const GeneralInformationForm = (props: IGeneralInformationForm) => {
@@ -259,6 +260,15 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
           />
         </Grid>
         <Grid item xs={12}>
+          <AutocompleteFormField
+            allowNestedIndent
+            required
+            name={'AgencyId'}
+            label={'Agency'}
+            options={props.agencies ?? []}
+          />
+        </Grid>
+        <Grid item xs={12}>
           <ParcelMap
             height={'500px'}
             mapRef={map}
@@ -338,14 +348,6 @@ export const ParcelInformationForm = (props: IParcelInformationForm) => {
         </Grid>
         <Grid item xs={12}>
           <TextFormField multiline label={'Description'} name={'Description'} fullWidth />
-        </Grid>
-        <Grid item xs={12}>
-          <TextFormField
-            multiline
-            label={'Legal description'}
-            name={'LandLegalDescription'}
-            fullWidth
-          />
         </Grid>
       </Grid>
     </>
@@ -518,6 +520,18 @@ export const NetBookValue = (props: INetBookValue) => {
       `You may only enter current net book values.`
     );
   };
+
+  const getUnusedYearOptions = (fields: Record<string, any>[]) => {
+    const unusedYears = [];
+    if (!fields.some((field) => field.FiscalYear == new Date().getFullYear())) {
+      unusedYears.push(new Date().getFullYear());
+    }
+    if (!fields.some((field) => field.FiscalYear == new Date().getFullYear() - 1)) {
+      unusedYears.push(new Date().getFullYear() - 1);
+    }
+    return unusedYears;
+  };
+
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'2rem'}>
       <Grid container spacing={2}>
@@ -525,9 +539,18 @@ export const NetBookValue = (props: INetBookValue) => {
         {fields?.map((netbook, idx) => (
           <React.Fragment key={`netbook-item-${netbook.id}`}>
             <Grid item xs={4}>
-              <TextFormField
+              <SelectFormField
+                required
                 name={`${name}.${idx}.FiscalYear`}
                 label={'Fiscal year'}
+                options={
+                  netbook['isNew']
+                    ? getUnusedYearOptions(fields).map((a) => ({
+                        value: a,
+                        label: a,
+                      }))
+                    : [{ value: netbook['FiscalYear'], label: netbook['FiscalYear'] }]
+                }
                 disabled={!netbook['isNew']}
                 rules={
                   netbook['isNew']
@@ -561,7 +584,7 @@ export const NetBookValue = (props: INetBookValue) => {
       <Button
         sx={{ maxWidth: '14rem', alignSelf: 'center' }}
         variant="outlined"
-        disabled={fields.length >= maxRows}
+        disabled={fields.length >= maxRows || !getUnusedYearOptions(fields).length}
         onClick={() =>
           prepend({
             FiscalYear: '',

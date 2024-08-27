@@ -29,10 +29,7 @@ import { Task } from '@/typeorm/Entities/Task';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
-import {
-  NotificationAudience,
-  NotificationStatus,
-} from '@/services/notifications/notificationServices';
+import { NotificationAudience } from '@/services/notifications/notificationServices';
 import { NotificationTemplate } from '@/typeorm/Entities/NotificationTemplate';
 import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
 import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
@@ -53,7 +50,6 @@ import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { PropertyUnion } from '@/typeorm/Entities/views/PropertyUnionView';
 import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
-import { Workflow } from '@/typeorm/Entities/Workflow';
 
 export class MockRes {
   statusValue: any;
@@ -221,14 +217,13 @@ export const produceSSO = (props?: Partial<SSOUser>): SSOUser => {
   };
 };
 
-export const produceParcel = (): Parcel => {
+export const produceParcel = (props?: Partial<Parcel>): Parcel => {
   const id = faker.number.int({ max: 10 });
   return {
     Id: faker.number.int({ max: 10 }),
     CreatedOn: faker.date.anytime(),
     UpdatedOn: faker.date.anytime(),
     Name: faker.string.alphanumeric(),
-    LandLegalDescription: faker.string.alphanumeric(),
     PID: faker.number.int({ min: 111111111, max: 999999999 }),
     PIN: undefined,
     LandArea: undefined,
@@ -257,11 +252,12 @@ export const produceParcel = (): Parcel => {
     CreatedBy: undefined,
     UpdatedById: undefined,
     UpdatedBy: undefined,
-    Fiscals: produceParcelFiscal(id),
-    Evaluations: produceParcelEvaluation(id),
+    Fiscals: produceParcelFiscals(id),
+    Evaluations: produceParcelEvaluations(id),
     DeletedById: null,
     DeletedOn: null,
     DeletedBy: undefined,
+    ...props,
   };
 };
 
@@ -289,7 +285,7 @@ export const produceEmail = (props: Partial<IEmail>): IEmail => {
   return email;
 };
 
-export const produceBuilding = (): Building => {
+export const produceBuilding = (props?: Partial<Building>): Building => {
   const agencyId = faker.number.int();
   const id = faker.number.int({ max: 10 });
   return {
@@ -333,17 +329,18 @@ export const produceBuilding = (): Building => {
     CreatedBy: undefined,
     UpdatedById: undefined,
     UpdatedBy: undefined,
-    Fiscals: produceBuildingFiscal(id),
-    Evaluations: produceBuildingEvaluation(id),
+    Fiscals: produceBuildingFiscals(id),
+    Evaluations: produceBuildingEvaluations(id),
     PID: undefined,
     PIN: undefined,
     DeletedById: null,
     DeletedOn: null,
     DeletedBy: undefined,
+    ...props,
   };
 };
 
-export const produceBuildingEvaluation = (
+export const produceBuildingEvaluations = (
   buildingId: number,
   props?: Partial<BuildingEvaluation>,
 ): BuildingEvaluation[] => {
@@ -360,7 +357,7 @@ export const produceBuildingEvaluation = (
   return [evaluation];
 };
 
-export const produceBuildingFiscal = (
+export const produceBuildingFiscals = (
   buildingId: number,
   props?: Partial<BuildingFiscal>,
 ): BuildingFiscal[] => {
@@ -375,7 +372,7 @@ export const produceBuildingFiscal = (
   return [fiscal];
 };
 
-export const produceParcelEvaluation = (
+export const produceParcelEvaluations = (
   parcelId: number,
   props?: Partial<ParcelEvaluation>,
 ): ParcelEvaluation[] => {
@@ -393,7 +390,7 @@ export const produceParcelEvaluation = (
   return [evaluation];
 };
 
-export const produceParcelFiscal = (
+export const produceParcelFiscals = (
   parcelId: number,
   props?: Partial<ParcelFiscal>,
 ): ParcelFiscal[] => {
@@ -648,16 +645,14 @@ export const produceProject = (
     Appraised: faker.number.int(),
     Market: faker.number.int(),
     ProjectType: 1,
-    WorkflowId: 1,
-    Workflow: null, // TODO: produceWorkflow
     AgencyId: 1,
     Agency: produceAgency(),
     TierLevelId: 1,
-    TierLevel: null, // TODO: produceTier
+    TierLevel: produceTierLevel(),
     StatusId: 1,
-    Status: null, // TODO: produceStatus
+    Status: produceProjectStatus(),
     RiskId: 1,
-    Risk: null, // TODO: produceRisk
+    Risk: produceRisk(),
     Tasks: [produceProjectTask()],
     ProjectProperties: projectProperties ?? [
       produceProjectProperty({
@@ -802,7 +797,7 @@ export const produceProjectProperty = (props?: Partial<ProjectProperty>): Projec
   return projectProperty;
 };
 
-export const productProjectStatusHistory = (props?: Partial<ProjectStatusHistory>) => {
+export const produceProjectStatusHistory = (props?: Partial<ProjectStatusHistory>) => {
   const history: ProjectStatusHistory = {
     Id: faker.number.int(),
     CreatedById: randomUUID(),
@@ -811,8 +806,6 @@ export const productProjectStatusHistory = (props?: Partial<ProjectStatusHistory
     UpdatedOn: new Date(),
     UpdatedById: randomUUID(),
     UpdatedBy: null,
-    WorkflowId: faker.number.int(),
-    Workflow: null,
     StatusId: faker.number.int(),
     Status: null,
     ProjectId: faker.number.int(),
@@ -916,13 +909,13 @@ export const produceNotificationQueue = (props?: Partial<NotificationQueue>) => 
   const queue: NotificationQueue = {
     Id: faker.number.int(),
     Key: randomUUID(),
-    Status: NotificationStatus.Pending,
-    Priority: EmailPriority.Normal,
-    Encoding: EmailEncoding.Utf8,
+    Status: 1,
+    Priority: 'normal',
+    Encoding: 'utf-8',
     SendOn: new Date(),
     To: faker.internet.email(),
     Subject: faker.lorem.word(),
-    BodyType: EmailBody.Html,
+    BodyType: 'html',
     Body: faker.lorem.sentences(),
     Bcc: '',
     Cc: '',
@@ -944,25 +937,6 @@ export const produceNotificationQueue = (props?: Partial<NotificationQueue>) => 
     ...props,
   };
   return queue;
-};
-
-export const produceWorkflow = (props?: Partial<Workflow>) => {
-  const workflow: Workflow = {
-    Id: faker.number.int(),
-    Name: faker.lorem.word(),
-    IsDisabled: false,
-    SortOrder: 0,
-    Description: faker.lorem.lines(),
-    Code: 'TEST',
-    CreatedById: randomUUID(),
-    CreatedBy: undefined,
-    CreatedOn: new Date(),
-    UpdatedById: randomUUID(),
-    UpdatedBy: undefined,
-    UpdatedOn: new Date(),
-    ...props,
-  };
-  return workflow;
 };
 
 export const produceNotificationTemplate = (props?: Partial<NotificationTemplate>) => {
