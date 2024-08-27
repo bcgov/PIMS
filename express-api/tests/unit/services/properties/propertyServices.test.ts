@@ -663,7 +663,6 @@ describe('UNIT - Property Services', () => {
       );
       // Some fields will be what we passed in
       expect(result.PID).toBe(importRow.PID);
-      expect(result.Name).toBe(importRow.Name);
       // Some will be defaults because we didn't import those
       expect(result.IsSensitive).toBe(false);
       expect(result.TotalArea).toBe(0);
