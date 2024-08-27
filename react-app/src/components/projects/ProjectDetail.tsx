@@ -99,11 +99,11 @@ const ProjectDetail = (props: IProjectDetail) => {
   const { submit: cancelNotification } = useDataSubmitter(api.notifications.cancelNotification);
 
   const hasERPNotifications = useMemo(() => {
-    const notificationItems = notifications.items;
     // Check if notifications is an object and has an items array
     if (!notifications || !Array.isArray(notifications.items)) {
       return false;
     }
+    const notificationItems = notifications.items;
     if (notificationItems.length === 0) {
       return false;
     }
