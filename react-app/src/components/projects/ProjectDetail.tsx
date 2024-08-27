@@ -329,17 +329,7 @@ const ProjectDetail = (props: IProjectDetail) => {
             onEdit={() => {}}
             disableEdit={true}
           >
-            <EnhancedReferralDates
-              rows={
-                notifications?.items
-                  ? notifications.items.map((resp) => ({
-                      AgencyName: lookup.getLookupValueById('Agencies', resp.ToAgencyId)?.Name,
-                      ChesStatusName: getStatusString(resp.Status),
-                      ...resp,
-                    }))
-                  : []
-              }
-            />{' '}
+            <EnhancedReferralDates rows={notifications?.items} />
           </DataCard>
         )}
         <DataCard
