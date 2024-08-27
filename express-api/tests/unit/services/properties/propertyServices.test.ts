@@ -81,8 +81,17 @@ const _propertyUnionCreateQueryBuilder: any = {
   take: () => _propertyUnionCreateQueryBuilder,
   skip: () => _propertyUnionCreateQueryBuilder,
   orderBy: () => _propertyUnionCreateQueryBuilder,
-  getMany: () => [producePropertyUnion({ Id: 1, PropertyTypeId: PropertyType.LAND }), producePropertyUnion({ Id: 1, PropertyTypeId: PropertyType.BUILDING })],
-  getManyAndCount: () => [[producePropertyUnion({ Id: 1, PropertyTypeId: PropertyType.LAND }), producePropertyUnion({ Id: 1, PropertyTypeId: PropertyType.BUILDING })], 1],
+  getMany: () => [
+    producePropertyUnion({ Id: 1, PropertyTypeId: PropertyType.LAND }),
+    producePropertyUnion({ Id: 1, PropertyTypeId: PropertyType.BUILDING }),
+  ],
+  getManyAndCount: () => [
+    [
+      producePropertyUnion({ Id: 1, PropertyTypeId: PropertyType.LAND }),
+      producePropertyUnion({ Id: 1, PropertyTypeId: PropertyType.BUILDING }),
+    ],
+    1,
+  ],
 };
 
 const _projectStatusCreateQueryBuilder: any = {
@@ -152,7 +161,7 @@ jest
 const parcelRepoSpy = jest
   .spyOn(AppDataSource.getRepository(Parcel), 'find')
   .mockImplementation(async () => [produceParcel()]);
-  const buildingRepoSpy = jest
+const buildingRepoSpy = jest
   .spyOn(AppDataSource.getRepository(Building), 'find')
   .mockImplementation(async () => [produceBuilding()]);
 jest
@@ -308,8 +317,8 @@ describe('UNIT - Property Services', () => {
 
   describe('getPropertiesforExport', () => {
     it('should get a list of properties based on the filter', async () => {
-      parcelRepoSpy.mockImplementationOnce(async () => [produceParcel({Id: 1})])
-      buildingRepoSpy.mockImplementationOnce(async () => [produceBuilding({Id: 1})])
+      parcelRepoSpy.mockImplementationOnce(async () => [produceParcel({ Id: 1 })]);
+      buildingRepoSpy.mockImplementationOnce(async () => [produceBuilding({ Id: 1 })]);
       const result = await propertyServices.getPropertiesForExport({
         pid: 'contains,123',
         pin: 'contains,456',
