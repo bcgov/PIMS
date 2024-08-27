@@ -520,6 +520,7 @@ const makeBuildingUpsertObject = async (
     ClassificationId: classificationId,
     BuildingConstructionTypeId: constructionTypeId,
     BuildingPredominateUseId: predominateUseId,
+    Name: existentBuilding ? existentBuilding.Name : row.Name, // Not allowing Name update, but allow insertion
     CreatedById: existentBuilding ? existentBuilding.CreatedById : user.Id,
     UpdatedById: existentBuilding ? user.Id : undefined,
     UpdatedOn: existentBuilding ? new Date() : undefined,
