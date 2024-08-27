@@ -30,7 +30,7 @@ import {
   constructFindOptionFromQuerySingleSelect,
 } from '@/utilities/helperFunctions';
 import userServices from '../users/usersServices';
-import { Brackets, FindManyOptions, FindOptionsWhere, ILike, In, QueryRunner } from 'typeorm';
+import { Brackets, FindOptionsWhere, ILike, In, QueryRunner } from 'typeorm';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { PropertyType } from '@/constants/propertyType';
 import { ProjectStatus } from '@/constants/projectStatus';
@@ -799,35 +799,62 @@ const getPropertiesForExport = async (filter: PropertyUnionFilter) => {
   const buildingIds = filteredProperties
     .filter((p) => p.PropertyTypeId === PropertyType.BUILDING)
     .map((b) => b.Id);
-  // Use IDs from filtered properties to get those properites with joins
-  const parcelQueryOptions: FindManyOptions<Parcel> = {
-    relations: {
-      CreatedBy: true,
-      UpdatedBy: true,
-      Evaluations: true,
-      Fiscals: true,
-    },
-    where: {
-      Id: In(parcelIds),
-    },
-  };
-  const buildingQueryOptions: FindManyOptions<Building> = {
-    relations: {
-      CreatedBy: true,
-      UpdatedBy: true,
-      Evaluations: true,
-      Fiscals: true,
-    },
-    where: { Id: In(buildingIds) },
-  };
-  let properties: (Parcel | Building)[] = [];
-  properties = properties.concat(
-    await AppDataSource.getRepository(Parcel).find(parcelQueryOptions),
+
+  /**
+   * For some reason, getting the data in multiple calls and filtering here is faster than letting TypeORM do it.
+   *
+   * Getting evals, fiscals, and filtering separately: 850-1050ms
+   * Getting as as part of joins, WHERE clause with TypeORM: 1587-1672ms
+   */
+
+  const ongoingFinds = [];
+  ongoingFinds.push(AppDataSource.getRepository(Parcel).find());
+  ongoingFinds.push(AppDataSource.getRepository(Building).find());
+  // Order these to guarantee the find operation later gets the most recent one.
+  ongoingFinds.push(
+    AppDataSource.getRepository(ParcelEvaluation).find({ order: { Year: 'DESC' } }),
   );
-  properties = properties.concat(
-    await AppDataSource.getRepository(Building).find(buildingQueryOptions),
+  ongoingFinds.push(
+    AppDataSource.getRepository(ParcelFiscal).find({ order: { FiscalYear: 'DESC' } }),
   );
-  return properties;
+  ongoingFinds.push(
+    AppDataSource.getRepository(BuildingEvaluation).find({ order: { Year: 'DESC' } }),
+  );
+  ongoingFinds.push(
+    AppDataSource.getRepository(BuildingFiscal).find({ order: { FiscalYear: 'DESC' } }),
+  );
+
+  // Wait for all database requests to resolve, then build the parcels and buildings lists
+  // Use IDs from filtered properties above to filter lists
+  const resolvedFinds = await Promise.all(ongoingFinds);
+  const parcelEvaluations = resolvedFinds.at(2) as ParcelEvaluation[];
+  const parcelFiscals = resolvedFinds.at(3) as ParcelFiscal[];
+  const buildingEvaluations = resolvedFinds.at(4) as BuildingEvaluation[];
+  const buildingFiscals = resolvedFinds.at(5) as BuildingFiscal[];
+  const parcels: Parcel[] = (resolvedFinds.at(0) as Parcel[])
+    .filter((p: Parcel) => parcelIds.includes(p.Id))
+    .map((p: Parcel) => {
+      const evaluation = parcelEvaluations.find((pe) => pe.ParcelId === p.Id);
+      const fiscal = parcelFiscals.find((pf) => pf.ParcelId === p.Id);
+      return {
+        ...p,
+        Evaluations: evaluation ? [evaluation] : undefined,
+        Fiscals: fiscal ? [fiscal] : undefined,
+      };
+    });
+  const buildings: Building[] = (resolvedFinds.at(1) as Building[])
+    .filter((b: Building) => buildingIds.includes(b.Id))
+    .map((b: Building) => {
+      const evaluation = buildingEvaluations.find((be) => be.BuildingId === b.Id);
+      const fiscal = buildingFiscals.find((bf) => bf.BuildingId === b.Id);
+      return {
+        ...b,
+        Evaluations: evaluation ? [evaluation] : undefined,
+        Fiscals: fiscal ? [fiscal] : undefined,
+      };
+    });
+
+  return [...parcels, ...buildings];
 };
 
 /**
