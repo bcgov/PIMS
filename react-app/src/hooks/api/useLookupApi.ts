@@ -2,9 +2,9 @@ import { ProjectRisk, TierLevel } from '@/hooks/api/useProjectsApi';
 import { IFetch } from '../useFetch';
 import { BuildingConstructionType, BuildingPredominateUse } from '@/hooks/api/useBuildingsApi';
 import { PropertyClassification } from '@/interfaces/IProperty';
-import { Role } from '@/hooks/api/useRolesApi';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { AdministrativeArea } from '@/hooks/api/useAdministrativeAreaApi';
+import { Role } from '@/constants/roles';
 
 export interface LookupObject {
   Name: string;
