@@ -39,5 +39,4 @@ export interface Property extends BaseEntityInterface {
   Location: GeoPoint;
   PID?: number;
   PIN?: number;
-  SiteID?: string;
 }
