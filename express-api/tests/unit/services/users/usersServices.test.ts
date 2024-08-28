@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { AppDataSource } from '@/appDataSource';
 import { IKeycloakRole } from '@/services/keycloak/IKeycloakRole';
 import userServices from '@/services/users/usersServices';

@@ -736,7 +736,6 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
 
   // Add quickfilter part
   if (filter.quickFilter) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const quickFilterOptions: FindOptionsWhere<any>[] = [];
     const quickfilterFields = [
       'Agency',

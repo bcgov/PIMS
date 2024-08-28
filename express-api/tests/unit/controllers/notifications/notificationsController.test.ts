@@ -20,10 +20,7 @@ const _getUser = jest
   .mockImplementation((guid: string) => ({ ...produceUser(), KeycloakUserId: guid }));
 const _getAgencies = jest.fn().mockImplementation(async () => [1, 2, 3]);
 const _getProjectNotificationsInQueue = jest.fn().mockImplementation(async () => [1, 2, 3]);
-const _getProjectById = jest.fn().mockImplementation(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async (_id: number) => ({ AgencyId: 1 }),
-);
+const _getProjectById = jest.fn().mockImplementation(async (_id: number) => ({ AgencyId: 1 }));
 const _getNotifById = jest
   .fn()
   .mockImplementation((id: number) => produceNotificationQueue({ Id: id }));
