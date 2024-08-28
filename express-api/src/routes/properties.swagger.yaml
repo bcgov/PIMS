@@ -1,0 +1,521 @@
+### PATHS ###
+paths: 
+  /properties:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Properties
+      summary: Gets a list of properties based on supplied filter.
+      description: >
+        Used primarily for displaying properties in a table.
+        Non-generic query values must be in this format: `{searchType},{searchValue}`
+      parameters:
+        - in: query
+          name: pid
+          schema: 
+            type: string
+            example: contains,123345566
+        - in: query
+          name: pin
+          schema:
+            type: string
+        - in: query
+          name: classification 
+          schema: 
+            type: string
+            example: is,Demolished 
+        - in: query
+          name: agency 
+          schema: 
+            type: string
+            example: is,Real Property Division
+        - in: query
+          name: propertyType 
+          schema: 
+            type: string
+            example: is,Parcel
+        - in: query
+          name: address 
+          schema: 
+            type: string
+            example: contains,742 Evergreen Terr
+        - in: query
+          name: administrativeArea 
+          schema: 
+            type: string
+            example: contains,Victoria
+        - in: query
+          name: landArea 
+          schema: 
+            type: string
+            example: contains,100
+        - in: query
+          name: updatedOn 
+          schema: 
+            type: string
+            example: before,Fri Aug 16 2024 17:00:00 GMT-0700 (Pacific Daylight Time)
+        - in: query
+          name: quickFilter
+          schema:
+            type: string
+          description: Applied as an OR WHERE search on relevant columns.
+        - in: query
+          name: quantity
+          schema:
+            type: string
+          description: Number of records to be returned. Equivalent to page size.
+        - in: query
+          name: page
+          schema:
+            type: string
+          description: Page number of requested results. Only necessary if quantity is specified.
+        - in: query
+          name: sortKey
+          schema:
+            type: string
+          description: The column name on which the records will be sorted.
+        - in: query
+          name: sortOrder
+          schema:
+            type: string
+          description: Either DESC or ASC.
+        - in: query
+          name: excelExport
+          schema:
+            type: boolean
+            example: false
+          description: If true, returns in format for Excel export.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalCount:
+                    type: integer
+                    example: 1
+                  data: 
+                    type: array
+                    items: 
+                      $ref: '#/components/schemas/PropertyJoinView'
+        '400': 
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Could not parse filter.
+  /properties/search/fuzzy:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Properties
+      summary: Gets a list of surplus properties based on supplied keyword.
+      description: >
+        Used for searching for surplus properties in projects.
+      parameters:
+        - in: query
+          name: keyword
+          schema: 
+            type: string
+            example: health
+        - in: query 
+          name: take
+          schema:
+            type: string 
+            example: 4
+          description: The number of parcels and buildings (each) to be returned.
+      responses:
+        '200': 
+          description: OK 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Parcels: 
+                    type: array 
+                    items: 
+                      $ref: '#/components/schemas/Parcel'
+                  Buildings:
+                    type: array 
+                    items: 
+                      $ref: '#/components/schemas/Building'
+  /properties/search/geo:
+    get: 
+      security:
+        - bearerAuth: []
+      tags:
+        - Properties
+      summary: Gets a list of properties in geojson format.
+      description: >
+        Used for populating the map component.
+      parameters:
+        - in: query
+          name: PID
+          description: Should not include leading zeroes or hyphens.
+          schema: 
+            type: integer
+            example: 24545457
+        - in: query
+          name: PIN
+          schema: 
+            type: integer
+        - in: query
+          name: Address
+          schema: 
+            type: string
+        - in: query
+          name: Name
+          schema: 
+            type: string
+        - in: query
+          name: AgencyIds
+          description: Comma-separated list of IDs.
+          schema: 
+            type: string
+            example: 81,166
+        - in: query
+          name: AdministrativeAreaIds
+          description: Comma-separated list of IDs.
+          schema: 
+            type: string
+            example: 219,300
+        - in: query
+          name: ClassificationIds
+          description: Comma-separated list of IDs.
+          schema: 
+            type: string
+            example: 0,1
+        - in: query
+          name: PropertyTypeIds
+          description: Comma-separated list of IDs.
+          schema: 
+            type: string
+            example: 0,1
+        - in: query
+          name: RegionalDistrictIds
+          description: Comma-separated list of IDs.
+          schema: 
+            type: string
+            example: 19,25
+      responses:
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PropertyGeojson'
+  /properties/import:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Properties
+      summary: Submits a CSV file of properties to be imported.
+      description: >
+        Starts the Bulk Upload process.
+      requestBody:
+        content:
+          file/csv:
+            schema:
+              type: string 
+              format: binary
+      responses:
+        '200': 
+          description: OK 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportResult'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Could not parse file.
+  /properties/import/results:
+    get: 
+      security:
+        - bearerAuth: []
+      tags:
+        - Properties
+      summary: Retrieves a list of previous property import results.
+      parameters:
+        - in: query 
+          name: page
+          schema:
+            type: integer
+            example: 0
+        - in: query 
+          name: quantity 
+          schema:
+            type: integer 
+            example: 1
+        - in: query 
+          name: sortKey
+          schema:
+            type: string 
+            example: CreatedOn
+        - in: query
+          name: sortOrder 
+          schema:
+            type: string 
+            example: DESC
+      responses:
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ImportResult'
+        '400': 
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Could not parse filter.
+
+### SCHEMAS ###
+components:
+  schemas:
+    ImportResult:
+      allOf:
+        - $ref: '#/components/schemas/CommonEntityProperties'
+        - type: object
+          properties:
+            CompletionPercentage:
+              type: number
+              example: 100
+              description: Will be -1 if the import process encounters an error.
+            FileName:
+              type: string
+              example: file.csv
+            Id:  
+              type: integer
+              example: 10
+            Results:
+              type: array
+              items:
+                type: object 
+                properties:
+                  action:
+                    type: string 
+                    example: error 
+                  reason: 
+                    type: string
+                    example: Missing PID.
+    PropertyGeojson:
+      type: object 
+      properties: 
+        type:
+          type: string
+          example: Feature
+        geometry:
+          type: object 
+          properties:
+            type: 
+              type: string
+              example: Point
+            coordinates:
+              type: array
+              example: [-123.416, 48.491]
+        properties:
+          type: object 
+          properties:
+            Address1:
+              type: string 
+              example: 742 Evergreen Terr 
+            AdministrativeAreaId:
+              type: integer 
+              example: 300
+            AgencyId: 
+              type: integer
+              example: 81
+            ClassificationId:
+              type: integer
+              example: 0
+            Id:  
+              type: integer
+              example: 1792
+            Location:
+              type: object
+              properties: 
+                x: 
+                  type: number
+                  example: -123.416
+                y: 
+                  type: number 
+                  example: 48.491
+            Name: 
+              type: string
+              example: Building Number 5
+            PID:
+              type: integer 
+              example: 123456789
+            PIN: 
+              type: integer
+              example: null 
+            PropertyTypeId:
+              type: integer
+              example: 1
+    PropertyJoinView:
+      type: object
+      properties: 
+        Address:
+          type: string 
+          example: 742 Evergreen Terr 
+        AdministrativeArea:
+          type: string 
+          example: Victoria 
+        AdministrativeAreaId:
+          type: integer 
+          example: 300
+        Agency: 
+          type: string 
+          example: Real Property Division 
+        AgencyId:  
+          type: integer 
+          example: 110
+        Classification:
+          type: string 
+          example: Surplus Active 
+        ClassificationId:
+          type: integer 
+          example: 2
+        Id:  
+          type: integer 
+          example: 11111
+          description: Internal ID for parcel or building.
+        IsSensitive:
+          type: boolean
+          example: false
+        LandArea: 
+          type: integer
+          example: 99
+          description: Area in hectres.
+        PID: 
+          type: integer 
+          example: 111111111
+        PIN: 
+          type: integer
+          example: 123123
+        PropertyType: 
+          type: string
+          example: Parcel
+        PropertyTypeId:
+          type: integer 
+          example: 0
+        UpdatedOn: 
+          type: string 
+          format: date-time
+          example: '2024-08-21T05:01:43.735Z'
+    EvaluationCommon:
+      type: object
+      properties:
+        EvaluationKeyId:
+          type: integer
+          example: 0
+        Value:
+          type: number
+          example: 100
+        Year:
+          type: integer
+          example: 2024
+    EvaluationPost: 
+      allOf:
+        - $ref: '#/components/schemas/EvaluationCommon'
+        - type: object 
+          properties:
+            isNew:
+              type: boolean
+              value: true
+    Evaluation: 
+      allOf:
+        - $ref: '#/components/schemas/EvaluationCommon'
+        - $ref: '#/components/schemas/CommonEntityProperties'
+        - type: object 
+          properties:
+            Note:
+              type: string
+              example: 'Evaulation note'
+            isNew: null # needed specifically so it doesn't show up
+    BuildingEvaluation:
+      allOf:
+        - $ref: '#/components/schemas/Evaluation'
+        - type: object 
+          properties:
+            BuildingId:
+              type: integer
+              example: 1
+    ParcelEvaluation:
+      allOf:
+        - $ref: '#/components/schemas/Evaluation'
+        - type: object 
+          properties:
+            ParcelId:
+              type: integer
+              example: 1
+    FiscalCommon:
+      type: object
+      properties:
+        EffectiveDate:
+          type: string
+          example: '2024-03-09T08:00:00.000Z'
+        FiscalKeyId:
+          type: integer
+          example: 0
+        FiscalYear:
+          type: string
+          example: 2024
+          description: Is a string due to historical 24/23 storage.
+        Value:
+          type: number
+          example: 100
+        isNew:
+          type: boolean
+          example: true
+    FiscalPost:
+      allOf:
+        - $ref: '#/components/schemas/FiscalCommon'
+        - type: object 
+          properties:
+            isNew:
+              type: boolean
+              value: true
+    Fiscal: 
+      allOf:
+        - $ref: '#/components/schemas/FiscalCommon'
+        - $ref: '#/components/schemas/CommonEntityProperties'
+        - type: object 
+          properties:
+            Note:
+              type: string
+              example: 'Fiscal note'
+            isNew: null # needed specifically so it doesn't show up
+    BuildingFiscal:
+      allOf:
+        - $ref: '#/components/schemas/Fiscal'
+        - type: object 
+          properties:
+            BuildingId:
+              type: integer
+              example: 1
+    ParcelFiscal:
+      allOf:
+        - $ref: '#/components/schemas/Fiscal'
+        - type: object 
+          properties:
+            ParcelId:
+              type: integer
+              example: 1

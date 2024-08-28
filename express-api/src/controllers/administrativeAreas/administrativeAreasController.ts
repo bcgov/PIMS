@@ -15,17 +15,11 @@ import userServices from '@/services/users/usersServices';
  * @returns {Response}        A 200 status with a list of administrative areas.
  */
 export const getAdministrativeAreas = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Administrative Areas - Admin']
-   * #swagger.description = 'Returns a paged list of administrative areas from the datasource.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
   const ssoUser = req.user;
   const filter = AdministrativeAreaFilterSchema.safeParse(req.query);
   if (filter.success) {
     const adminAreas = await administrativeAreasServices.getAdministrativeAreas(filter.data);
+    // TODO: Do we still need this condition? Few fields are trimmed since moving to view.
     if (!ssoUser.hasRoles([Roles.ADMIN])) {
       const trimmed = AdministrativeAreaPublicResponseSchema.array().parse(adminAreas.data);
       return res.status(200).send({
@@ -35,7 +29,7 @@ export const getAdministrativeAreas = async (req: Request, res: Response) => {
     }
     return res.status(200).send(adminAreas);
   } else {
-    return res.status(400).send('Could not parse filter.');
+    return res.status(400).send(filter.error);
   }
 };
 
@@ -46,13 +40,6 @@ export const getAdministrativeAreas = async (req: Request, res: Response) => {
  * @returns {Response}        A 201 status and response with the added administrative area.
  */
 export const addAdministrativeArea = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Administrative Areas - Admin']
-   * #swagger.description = 'Add a new administrative area to the datasource.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
   const user = await userServices.getUser((req.user as SSOUser).preferred_username);
   const addBody = { ...req.body, CreatedById: user.Id };
   const response = await administrativeAreasServices.addAdministrativeArea(addBody);
@@ -66,14 +53,6 @@ export const addAdministrativeArea = async (req: Request, res: Response) => {
  * @returns {Response}        A 200 status and the administrative area data.
  */
 export const getAdministrativeAreaById = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Administrative Areas - Admin']
-   * #swagger.description = 'Returns an administrative area that matches the supplied ID.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
   const id = Number(req.params.id);
   const adminArea = await administrativeAreasServices.getAdministrativeAreaById(id);
   return res.status(200).send(adminArea);
@@ -86,14 +65,6 @@ export const getAdministrativeAreaById = async (req: Request, res: Response) => 
  * @returns {Response}        A 200 status and the administrative area data.
  */
 export const updateAdministrativeAreaById = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Administrative Areas - Admin']
-   * #swagger.description = 'Updates an administrative area that matches the supplied ID.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
   const id = req.params.id;
   if (id != req.body.Id) {
     return res.status(400).send('Id mismatched or invalid.');

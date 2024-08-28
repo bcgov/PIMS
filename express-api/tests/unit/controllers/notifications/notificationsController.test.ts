@@ -122,21 +122,21 @@ describe('UNIT - Testing controllers for notifications routes.', () => {
   describe('resendNotifcationById', () => {
     it('should read a notification and try to send it through ches again, status 200', async () => {
       mockRequest.params.id = '1';
-      mockRequest.user = produceSSO({ client_roles: [Roles.ADMIN] });
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
       await controllers.resendNotificationById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.Id).toBe(1);
     });
     it('should 404 if notif not found', async () => {
       mockRequest.params.id = '1';
-      mockRequest.user = produceSSO({ client_roles: [Roles.ADMIN] });
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
       _getNotifById.mockImplementationOnce(() => null);
       await controllers.resendNotificationById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(404);
     });
     it('should 403 if user lacks permissions', async () => {
       mockRequest.params.id = '1';
-      mockRequest.user = produceSSO({ client_roles: [] });
+      mockRequest.setUser({ client_roles: [], hasRoles: () => false });
       await controllers.resendNotificationById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(403);
     });
@@ -144,7 +144,7 @@ describe('UNIT - Testing controllers for notifications routes.', () => {
   describe('cancelNotificationById', () => {
     it('should try to cancel a notification, status 200', async () => {
       mockRequest.params.id = '1';
-      mockRequest.user = produceSSO({ client_roles: [Roles.ADMIN] });
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
       await controllers.cancelNotificationById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.Id).toBe(1);
@@ -152,14 +152,14 @@ describe('UNIT - Testing controllers for notifications routes.', () => {
     });
     it('should 404 if no notif found', async () => {
       mockRequest.params.id = '1';
-      mockRequest.user = produceSSO({ client_roles: [Roles.ADMIN] });
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
       _getNotifById.mockImplementationOnce(() => null);
       await controllers.cancelNotificationById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(404);
     });
     it('should 400 if the notification came back with non-cancelled status', async () => {
       mockRequest.params.id = '1';
-      mockRequest.user = produceSSO({ client_roles: [Roles.ADMIN] });
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
       _cancelNotifById.mockImplementationOnce((id: number) =>
         produceNotificationQueue({ Id: id, Status: NotificationStatus.Completed }),
       );
@@ -170,7 +170,7 @@ describe('UNIT - Testing controllers for notifications routes.', () => {
     });
     it('should 403 if user lacks permissions', async () => {
       mockRequest.params.id = '1';
-      mockRequest.user = produceSSO({ client_roles: [] });
+      mockRequest.setUser({ client_roles: [], hasRoles: () => false });
       await controllers.cancelNotificationById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(403);
     });

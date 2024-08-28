@@ -19,4 +19,7 @@ export class ImportResult extends SoftDeleteEntity {
 
   @Column({ name: 'results', type: 'jsonb', nullable: true })
   Results: BulkUploadRowResult[];
+
+  @Column({ type: 'character varying', length: 250, name: 'message', nullable: true })
+  Message: string;
 }
