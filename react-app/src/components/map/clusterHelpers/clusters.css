@@ -11,29 +11,18 @@
   justify-content: center;
   align-items: center;
   z-index: -1;
-  background-color: rgb(120,120,120);
+  /* Default Style */
+  background-color: #787878;
   color: white;
-
-  /* Blue background */
-  /* background-color: #0e3468;
-  border: solid 1px white;
-  color: white; */
-
-
-  /* White background */
-  /* background-color: white;
-  border: solid 2px #0e3468;
-  color: black; */
-  
 }
 
 .street {
-  /* background-color: rgb(120, 120, 120); */
-  /* color: white; */
-  /* background-color: #0e3468; */
+  background-color: #787878;
+  color: white;
 }
 
 .satellite {
-  /* background-color: #FCBA19; */
-  color: black;
+  background-color: white;
+  border: solid 2px #0e3468;
+  color: #0e3468;
 }
