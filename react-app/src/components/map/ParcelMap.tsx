@@ -64,6 +64,9 @@ const ParcelMap = (props: ParcelMapProps) => {
       resize: () => {
         setPopupState({ ...popupState, open: false });
       },
+      baselayerchange: (e) => {
+        console.log('change', e)
+      }
     });
     return null;
   };

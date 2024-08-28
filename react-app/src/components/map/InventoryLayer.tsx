@@ -98,7 +98,8 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
     if (!icons[count]) {
       const displayCount = count < 1000 ? count : `${(count / 1000).toFixed(1)}K`;
       return (icons[count] = L.divIcon({
-        html: `<div class="cluster-marker" style="width: ${size}px; height: ${size}px; background-color: rgb(120,120,120); color: white;">
+        // Some cluster styling found in clusterHelpers/clusters.css
+        html: `<div class="cluster-marker street" style="width: ${size}px; height: ${size}px;">
         ${displayCount}
       </div>`,
         iconAnchor: [size, size], // This helps to centre the icon on the location. Otherwise anchored top-left.
