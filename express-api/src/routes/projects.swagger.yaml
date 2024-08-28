@@ -1,0 +1,620 @@
+### PATHS ###
+paths:
+  /projects:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Projects
+      summary: Gets a list of projects based on supplied filter.
+      description: >
+        Used primarily for displaying projects in a table.
+        Non-generic query values must be in this format: `{searchType},{searchValue}`
+      parameters:
+        - in: query
+          name: name
+          schema: 
+            type: string
+            example: contains,TEST
+        - in: query
+          name: projectNumber
+          schema:
+            type: string
+            example: contains,SPP
+        - in: query
+          name: status 
+          schema: 
+            type: string
+            example: is,Denied 
+        - in: query
+          name: agency 
+          schema: 
+            type: string
+            example: is,Real Property Division
+        - in: query
+          name: updatedOn 
+          schema: 
+            type: string
+            example: before,Fri Aug 16 2024 17:00:00 GMT-0700 (Pacific Daylight Time)
+        - in: query
+          name: updatedBy 
+          schema: 
+            type: string
+            example: contains,Parker
+        - in: query
+          name: market 
+          schema: 
+            type: string
+            example: contains,705
+        - in: query
+          name: netBook 
+          schema: 
+            type: string
+            example: contains,100
+        - in: query
+          name: quickFilter
+          schema:
+            type: string
+          description: Applied as an OR WHERE search on relevant columns.
+        - in: query
+          name: quantity
+          schema:
+            type: string
+          description: Number of records to be returned. Equivalent to page size.
+        - in: query
+          name: page
+          schema:
+            type: string
+          description: Page number of requested results. Only necessary if quantity is specified.
+        - in: query
+          name: sortKey
+          schema:
+            type: string
+          description: The column name on which the records will be sorted.
+        - in: query
+          name: sortOrder
+          schema:
+            type: string
+          description: Either DESC or ASC.
+        - in: query
+          name: excelExport
+          schema:
+            type: boolean
+            example: false
+          description: If true, returns in format for Excel export.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalCount:
+                    type: integer
+                    example: 1
+                  data: 
+                    type: array
+                    items: 
+                      $ref: '#/components/schemas/ProjectJoinView'
+        '400': 
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Could not parse filter.
+  /projects/disposal:
+    post: 
+      security:
+        - bearerAuth: []
+      tags:
+        - Projects
+      summary: Submits a new project.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectPost'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectPostResponse'
+        '400': 
+          description: Bad Request 
+          content:
+            text/plain:
+              schema:
+                type: string 
+                example: Projects must have a name.
+        '403': 
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string 
+                example: Projects can not be added by user with Auditor role.
+        '404':
+          description: Not Found 
+          content:
+            text/plain:
+              schema:
+                type: string 
+                example: Agency with ID 1 not found.
+        '500': 
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                type: string 
+                example: Error creating project.
+  /projects/disposal/{id}:
+    get: 
+      security:
+        - bearerAuth: []
+      tags:
+        - Projects
+      summary: Gets a single project that matches the Id.
+      parameters:
+        - in: path 
+          name: id
+          type: integer
+          required: true
+      responses:
+        '200':
+          description: OK.  
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Project'
+        '400': 
+          description: Bad Request 
+          content:
+            text/plain:
+              schema:
+                type: string 
+                example: Project ID was invalid.
+        '403': 
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string 
+                example: You are not authorized to view this project.
+        '404': 
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string 
+                example: Project matching this internal ID not found.
+    put: 
+      security:
+        - bearerAuth: []
+      tags:
+        - Projects
+      summary: Updates a single project that matches the Id.
+      parameters:
+        - in: path 
+          name: id
+          type: integer
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '200':
+          description: OK.  
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Project'
+        '400': 
+          description: Bad Request 
+          content:
+            text/plain:
+              schema:
+                type: string 
+                example: Invalid Project Id.
+        '403': 
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string 
+                example: Projects only editable by Administrator role.
+        '404': 
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string 
+                example: Project does not exist.
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Projects
+      summary: Deletes a single project that matches the Id.
+      parameters:
+        - in: path 
+          name: id
+          type: integer
+          required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                type: string 
+                example: Invalid Project Id.
+        '403': 
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string 
+                example: Projects can only be deleted by Administrator role.
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Agency not found.
+
+### SCHEMAS ###
+components:
+  schemas: 
+    ProjectJoinView:
+      type: object
+      properties:
+        Id:
+          type: integer
+          format: int32
+          description: "Unique identifier for the project."
+        ProjectNumber:
+          type: string
+          description: "Project number assigned to the project."
+          example: SPP-1234
+        Name:
+          type: string
+          description: "Name of the project."
+        StatusId:
+          type: integer
+          format: int32
+          description: "Identifier for the status of the project."
+        Status:
+          type: string
+          description: "Current status of the project."
+        AgencyId:
+          type: integer
+          format: int32
+          description: "Identifier for the agency associated with the project."
+        Agency:
+          type: string
+          description: "Name of the agency associated with the project."
+        Market:
+          type: string
+          description: "Market value of the project."
+          example: '$3.00'
+        NetBook:
+          type: string
+          description: "Net book value of the project."
+          example: '$3.00'
+        UpdatedBy:
+          type: string
+          description: "Name of the person who last updated the project."
+        UpdatedOn:
+          type: string
+          format: date-time
+          description: "Timestamp when the project was last updated."
+          example: '2024-08-13T04:26:18.889Z'
+    ProjectPost:
+      type: object
+      properties:
+        project:
+          type: object 
+          properties:
+            Name:
+              type: string
+              description: "Name of the project."
+            TierLevelId:
+              type: integer
+              format: int32
+              description: "Identifier for the tier level."
+            Description:
+              type: string
+              description: "Description of the project."
+            Assessed:
+              type: number
+              format: double
+              description: "Assessed value of the project."
+            NetBook:
+              type: number
+              format: double
+              description: "Net book value of the project."
+            Market:
+              type: number
+              format: double
+              description: "Market value of the project."
+            Appraised:
+              type: number
+              format: double
+              description: "Appraised value of the project."
+            ProgramCost:
+              type: number
+              format: double
+              description: "Program cost associated with the project."
+            SalesCost:
+              type: number
+              format: double
+              description: "Sales cost associated with the project."
+            ExemptionNote:
+              type: string
+              description: "Note for exemption reasons."
+            Approval:
+              type: boolean
+              description: "Indicates if the project is approved."
+            Tasks:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProjectTaskPost'
+            ReportedFiscalYear:
+              type: integer
+              format: int32
+              description: "The fiscal year the project was reported."
+            ActualFiscalYear:
+              type: integer
+              format: int32
+              description: "The actual fiscal year of the project."
+            Monetaries:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProjectMonetaryPost'
+            Notes:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProjectNotePost'
+        projectProperties: 
+          type: object
+          properties:
+            parcels:
+              type: array
+              items:
+                type: integer
+                format: int32
+                description: "List of parcel IDs associated with the project."
+            buildings:
+              type: array
+              items:
+                type: integer
+                format: int32
+                description: "List of building IDs associated with the project."
+    ProjectPostResponse:
+      allOf:
+        - $ref: '#/components/schemas/ProjectPost/properties/project'
+        - $ref: '#/components/schemas/CommonEntityProperties'
+        - type: object
+          properties:
+            Id:
+              type: integer
+              format: int32
+              description: "Unique identifier for the project."
+            AgencyId:
+              type: integer
+              format: int32
+              description: "Identifier for the agency associated with the project."
+            ProjectType:
+              type: integer
+              format: int32
+              description: "Type of the project."
+            StatusId:
+              type: integer
+              format: int32
+              description: "Identifier for the project status."
+            RiskId:
+              type: integer
+              format: int32
+              description: "Identifier for the risk associated with the project."
+            ProjectNumber:
+              type: string
+              description: "Project number."
+    Project:
+      allOf:
+        - $ref: '#/components/schemas/ProjectPostResponse'
+        - type: object 
+          properties:
+            Tasks:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProjectTask'
+            Monetaries:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProjectMonetary'
+            Notes:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProjectNote'
+            Timestamps:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProjectTimestamp'
+            AgencyResponses:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProjectAgencyResponse' 
+            Buildings: 
+              type: array
+              items:
+                $ref: '#/components/schemas/Building'
+            Parcels:
+              type: array
+              items:
+                $ref: '#/components/schemas/Parcel'
+            ProjectProperties: 
+              type: array
+              items:
+                $ref: '#/components/schemas/ProjectProperty'
+            Notifications:
+              type: array
+              items:
+                $ref: '#/components/schemas/NotificationQueue'
+            StatusHistory:
+              type: array
+              items:
+                $ref: '#/components/schemas/StatusHistory'
+    ProjectTask: 
+      allOf:
+        - $ref: '#/components/schemas/ProjectTaskPost'
+        - $ref: '#/components/schemas/CommonEntityProperties'
+        - type: object
+          properties:
+            ProjectId:
+              type: integer 
+              example: 1
+    ProjectTaskPost:
+      type: object
+      properties:
+        TaskId:
+          type: integer
+          format: int32
+          description: "Unique identifier for the task."
+        IsCompleted:
+          type: boolean
+          description: "Indicates if the task is completed."
+    ProjectMonetary: 
+      allOf:
+        - $ref: '#/components/schemas/ProjectMonetaryPost'
+        - $ref: '#/components/schemas/CommonEntityProperties'
+        - type: object
+          properties:
+            ProjectId:
+              type: integer 
+              example: 1
+    ProjectMonetaryPost:
+      type: object
+      properties:
+        MonetaryTypeId:
+          type: integer
+          format: int32
+          description: "Identifier for the type of monetary value."
+        Value:
+          type: number
+          format: double
+          description: "The monetary value."
+    ProjectNote: 
+      allOf:
+        - $ref: '#/components/schemas/ProjectNotePost'
+        - $ref: '#/components/schemas/CommonEntityProperties'
+        - type: object
+          properties:
+            ProjectId:
+              type: integer 
+              example: 1
+    ProjectNotePost:
+      type: object
+      properties:
+        NoteTypeId:
+          type: integer
+          format: int32
+          description: "Identifier for the type of note."
+        Note:
+          type: string
+          description: "The note content."
+    ProjectTimestamp: 
+      allOf:
+        - $ref: '#/components/schemas/ProjectTimestampPost'
+        - $ref: '#/components/schemas/CommonEntityProperties'
+        - type: object
+          properties:
+            ProjectId:
+              type: integer 
+              example: 1
+    ProjectTimestampPost:
+      type: object
+      properties:
+        TimestampTypeId:
+          type: integer
+          format: int32
+          description: "Identifier for the type of note."
+        Note:
+          type: string
+          description: "The note content."
+    ProjectAgencyResponse:
+      allOf:
+        - $ref: '#/components/schemas/CommonEntityProperties'
+        - type: object
+          properties:
+            AgencyId: 
+              type: integer 
+              example: 2
+            Note: 
+              type: string
+            NotificationId:
+              type: integer 
+              example: 233
+            OfferAmount:
+              type: integer 
+              example: 233
+            ProjectId: 
+              type: integer 
+              example: 1111
+            ReceivedOn:
+              type: string
+              example: '2024-08-16T07:00:00.000Z'
+            Response:
+              type: integer 
+              example: 0
+              description: Corresponds to a response option.
+    ProjectProperty: 
+      allOf:
+        - $ref: '#/components/schemas/CommonEntityProperties'
+        - type: object
+          properties:
+            Building: 
+              $ref: '#/components/schemas/Building'
+            BuildingId:
+              type: integer
+              example: 213
+            Id: 
+              type: integer
+              example: 0
+            Parcel: 
+              $ref: '#/components/schemas/Parcel'
+            ParcelId:
+              type: integer
+              example: 213
+            ProjectId:
+              type: integer
+              example: 123
+            PropertyTypeId:
+              type: integer
+              example: 0
+    StatusHistory:
+      allOf:
+        - $ref: '#/components/schemas/CommonEntityProperties'
+        - type: object
+          properties:
+            Id: 
+              type: integer
+              example: 123
+            ProjectId:
+              type: integer
+              example: 123
+            StatusId:
+              type: integer
+              example: 123
+            WorkflowId:
+              type: integer
+              example: 123
+

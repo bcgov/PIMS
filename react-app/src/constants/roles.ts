@@ -7,3 +7,12 @@ export enum Roles {
   GENERAL_USER = 'General User',
   AUDITOR = 'Auditor',
 }
+
+export interface KeycloakRole {
+  name: string;
+}
+
+export interface Role {
+  Id: string;
+  Name: string;
+}

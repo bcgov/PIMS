@@ -1,0 +1,349 @@
+### PATHS ###
+paths:
+  /buildings:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Buildings
+      summary: Gets a list of buildings based on supplied filter.
+      parameters:
+        - in: query
+          name: pid
+          schema: 
+            type: integer
+          description: Should not include leading 0s or hyphens.
+        - in: query
+          name: classificationId
+          schema:
+            type: integer
+        - in: query
+          name: agencyId 
+          description: Can also be an array of integers
+          schema: 
+            type: integer
+        - in: query
+          name: administrativeAreaId 
+          schema: 
+            type: integer
+        - in: query
+          name: propertyTypeId 
+          schema: 
+            type: integer
+        - in: query
+          name: buildingConstructionTypeId 
+          schema: 
+            type: integer
+        - in: query
+          name: buildingPredominateUseId
+          schema: 
+            type: integer
+        - in: query
+          name: buildingOccupantTypeId
+          schema: 
+            type: integer
+        - in: query
+          name: isSensitive
+          schema:
+            type: boolean
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Page number of requested results. Only necessary if quantity is specified.
+        - in: query
+          name: quantity
+          schema:
+            type: integer
+          description: The column name on which the records will be sorted.
+        - in: query
+          name: sort
+          schema:
+            type: string
+          description: Either DESC or ASC.
+        - in: query
+          name: includeRelations
+          schema:
+            type: boolean
+          description: Flag to join and select foreign key records.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Building'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Could not parse filter.
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Buildings
+      summary: Submits a new Building.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuildingPost'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Building'
+        '409':
+          description: Conflict
+          content:
+            text/plain:
+              schema: 
+                type: string
+                example: Building already exists.
+  /buildings/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Buildings
+      summary: Gets a single Building that matches the Id.
+      parameters:
+        - in: path 
+          name: id
+          type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Building'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              type: string
+              example: Building ID was invalid. 
+        '403': 
+          description: Forbidden
+          content:
+            text/plain:
+              type: string
+              example: You are not authorized to view this building. 
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              type: string
+              example: Building matching this internal ID not found. 
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Buildings
+      summary: Updates a single Building that matches the Id.
+      parameters:
+        - in: path 
+          name: id
+          type: integer
+      requestBody:
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Building'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Building'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: The param ID does not match the request body.
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Changing agency is not permitted.
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Building does not exist.
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Buildings
+      summary: Deletes a single Building that matches the Id.
+      parameters:
+        - in: path 
+          name: id
+          type: integer
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Building ID was invalid.
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Building is involved in one or more projects with ID(s) ...
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Building does not exist.
+              
+### SCHEMAS ### 
+components:
+  schemas:
+    BuildingPost:
+      type: object
+      description: Object submitted in body of POST request. 
+      properties:
+        Address1:
+          required: true
+          type: string
+          example: 742 Evergreen Terr.
+        AdministrativeAreaId:
+          required: true
+          type: integer
+          example: 2
+        AgencyId:
+          required: true
+          type: integer
+          example: 2
+        BuildingConstructionTypeId:
+          required: true
+          type: integer
+          example: 1
+        BuildingFloorCount:
+          type: integer
+          example: 2
+        BuildingPredominateUseId:
+          required: true
+          type: integer
+          example: 1
+        BuildingTenancy:
+          type: string 
+          example: '100'
+          description: > 
+            Historical records force this to be saved as a string.
+            Frontend controls prevent additional non-numerical values.
+        BuildingTenancyUpdatedOn: 
+          type: string
+          example: '2024-08-14T15:48:11.883Z'
+        ClassificationId:
+          required: true
+          type: integer
+          example: 0
+        Description: 
+          type: string
+        Evaluations:
+          type: array
+          items:
+            $ref: '#/components/schemas/EvaluationPost'
+        Fiscals:
+          type: array
+          items:
+            $ref: '#/components/schemas/FiscalPost'
+        IsSensitive:
+          type: boolean
+          example: false
+        IsVisibleToOtherAgencies:
+          type: boolean
+          example: false
+        Location:
+          required: true
+          type: object
+          properties:
+            x: 
+              type: integer
+              example: -123.3134
+            y:
+              type: integer
+              example: 48.2344
+        Name:
+          required: true
+          type: string
+          example: Building Name
+        PID: 
+          type: integer
+          example: 4242904
+        PIN:
+          type: integer
+          example: 123456
+        Postal:
+          type: string
+          example: V8X4S7
+        PropertyTypeId:
+          required: true
+          description: Will always be 1 for buildings.
+          type: integer
+          example: 1
+        RentableArea:
+          type: integer
+          example: 90
+          description: Measured in metres squared
+        TotalArea:
+          required: true
+          type: integer
+          example: 100
+          description: Measured in metres squared
+    Building:
+      allOf: 
+        - $ref: '#/components/schemas/BuildingPost'
+        - $ref: '#/components/schemas/CommonEntityProperties'
+        - type: object
+          properties:
+            Id: 
+              type: integer
+              example: 300
+            SiteId:
+              type: string
+              example: null
+              description: >
+                Site ID from BC Geocoder. Not currently in use.
+            Evaluations:
+              type: array
+              items:
+                $ref: '#/components/schemas/BuildingEvaluation'
+            Fiscals:
+              type: array
+              items:
+                $ref: '#/components/schemas/BuildingFiscal'
+    BuildingUpdate:
+      allOf: 
+        - $ref: '#/components/schemas/BuildingPost'
+        - type: object
+          properties:
+            Id: 
+              type: integer
+              example: 300

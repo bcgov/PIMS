@@ -10,13 +10,12 @@ import useDataLoader from '@/hooks/useDataLoader';
 import { User } from '@/hooks/api/useUsersApi';
 import { AuthContext } from '@/contexts/authContext';
 import { Agency } from '@/hooks/api/useAgencyApi';
-import { Role } from '@/hooks/api/useRolesApi';
 import TextFormField from '../form/TextFormField';
 import DetailViewNavigation from '../display/DetailViewNavigation';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 import { useParams } from 'react-router-dom';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
-import { Roles } from '@/constants/roles';
+import { Role, Roles } from '@/constants/roles';
 import { LookupContext } from '@/contexts/lookupContext';
 
 interface IUserDetail {
