@@ -3,7 +3,6 @@ import { useContext } from 'react';
 import useFetch from './useFetch';
 import useUsersApi from './api/useUsersApi';
 import useAgencyApi from './api/useAgencyApi';
-import useRolesApi from './api/useRolesApi';
 import useReportsApi from '@/hooks/api/useReportsApi';
 import useBuildingsApi from './api/useBuildingsApi';
 import useParcelsApi from './api/useParcelsApi';
@@ -27,7 +26,6 @@ const usePimsApi = () => {
 
   const users = useUsersApi(fetch);
   const agencies = useAgencyApi(fetch);
-  const roles = useRolesApi(fetch);
   const reports = useReportsApi(fetch);
   const buildings = useBuildingsApi(fetch);
   const parcels = useParcelsApi(fetch);
@@ -44,7 +42,6 @@ const usePimsApi = () => {
   return {
     users,
     agencies,
-    roles,
     reports,
     buildings,
     parcels,

@@ -15,7 +15,7 @@ const router = express.Router();
 // Endpoints for Admin Administrative Areas
 router
   .route(`/`)
-  .get(catchErrors(getAdministrativeAreas))
+  .get(activeUserCheck, catchErrors(getAdministrativeAreas))
   .post(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(addAdministrativeArea));
 
 router

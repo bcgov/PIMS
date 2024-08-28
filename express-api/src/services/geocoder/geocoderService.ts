@@ -51,7 +51,7 @@ export const getSiteAddresses = async (
   const featureCollection: IFeatureCollectionModel = responseData;
   const addressInformation: IAddressModel[] = featureCollection.features.map((feature) =>
     mapFeatureToAddress(feature),
-  ); // mapFeatureToAddress(featureCollection.features[0]);
+  );
   return addressInformation;
 };
 

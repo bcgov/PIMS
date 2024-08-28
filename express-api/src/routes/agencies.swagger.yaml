@@ -1,0 +1,298 @@
+### PATHS ###
+paths:
+  /agencies:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Agencies
+      summary: Gets a list of agencies based on supplied filter.
+      description: >
+        Used primarily for displaying agencies in a table.
+        Non-generic query values must be in this format: `{searchType},{searchValue}`
+      parameters:
+        - in: query
+          name: name
+          schema: 
+            type: string
+            example: contains,Real
+        - in: query
+          name: parentName
+          schema:
+            type: string
+            example: contains,Citizens
+        - in: query
+          name: isDisabled 
+          schema: 
+            type: string
+            example: is,false 
+        - in: query
+          name: email 
+          schema: 
+            type: string
+        - in: query
+          name: sendEmail 
+          schema: 
+            type: string
+            example: is,true
+        - in: query
+          name: code 
+          schema: 
+            type: string
+            example: contains,RPD
+        - in: query
+          name: createdOn
+          schema: 
+            type: string
+            example: 'before,Wed Aug 13 2024 17:00:00 GMT-0700 (Pacific Daylight Time)'
+        - in: query
+          name: updatedOn
+          schema: 
+            type: string
+        - in: query
+          name: quickFilter
+          schema:
+            type: string
+          description: Applied as an OR WHERE search on relevant columns.
+        - in: query
+          name: quantity
+          schema:
+            type: string
+          description: Number of records to be returned. Equivalent to page size.
+        - in: query
+          name: page
+          schema:
+            type: string
+          description: Page number of requested results. Only necessary if quantity is specified.
+        - in: query
+          name: sortKey
+          schema:
+            type: string
+          description: The column name on which the records will be sorted.
+        - in: query
+          name: sortOrder
+          schema:
+            type: string
+          description: Either DESC or ASC.
+        - in: query
+          name: excelExport
+          schema:
+            type: boolean
+            example: false
+          description: If true, returns in format for Excel export.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalCount:
+                    type: integer
+                    example: 1
+                  data: 
+                    type: array
+                    items: 
+                      $ref: '#/components/schemas/AgencyJoinView'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Agencies
+      summary: Submits a new agency.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgencyPost'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agency'
+        '409':
+          description: Conflict
+          content:
+            text/plain:
+              schema: 
+                type: string
+                example: Agency with that name or code already exists.
+  /agencies/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Agencies
+      summary: Gets a single agency that matches the Id.
+      parameters:
+        - in: path 
+          name: id
+          type: integer
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Agency'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Agencies
+      summary: Updates a single agency that matches the Id.
+      parameters:
+        - in: path 
+          name: id
+          type: integer
+          required: true
+      requestBody:
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Agency'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agency'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: The param ID does not match the request body.
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: An agency cannot be its own parent.
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Agency not found.
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Agencies
+      summary: Deletes a single agency that matches the Id.
+      parameters:
+        - in: path 
+          name: id
+          type: integer
+          required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Agency not found.
+              
+### SCHEMAS ### 
+components:
+  schemas:
+    AgencyPost:
+      type: object
+      description: Object submitted in body of POST request. 
+      properties:
+        Name:
+          required: true
+          type: string
+          example: Real Property Division
+        Code:
+          required: true
+          type: string
+          example: RPD
+        Description:
+          type: string
+          example: Description goes here.
+        IsDisabled:
+          type: boolean
+          example: false
+        ParentId:
+          type: integer
+          example: 2
+        SortOrder:
+          type: integer
+          example: 0
+        SendEmail: 
+          type: boolean 
+          example: false 
+        Email: 
+          type: string
+          example: email@gov.bc.ca
+        CCEmail:
+          type: string
+          example: email@gov.bc.ca
+    Agency:
+      allOf: 
+        - $ref: '#/components/schemas/AgencyPost'
+        - $ref: '#/components/schemas/CommonEntityProperties'
+        - type: object
+          properties:
+            Id: 
+              type: integer
+              example: 300
+            AddressTo:
+              type: string
+              example: Good Morning
+    AgencyJoinView:
+      type: object
+      description: Object returned from Agency Join View.
+      properties: 
+        Id:
+          type: integer
+          example: 110
+        Name:
+          type: string
+          example: Real Property Division
+        IsDisabled:
+          type: boolean
+          example: false
+        SortOrder:
+          type: integer
+          example: 0
+        ParentId:
+          type: integer
+          example: 2
+        ParentName:
+          type: string
+          example: "Citizens' Services"
+        Code: 
+          type: string
+          example: RPD
+        Description: 
+          type: string
+          example: Agency that manages PIMS.
+        Email: 
+          type: string
+          example: email@gov.bc.ca
+        SendEmail:
+          type: boolean
+          example: false
+        CreatedOn:
+          type: date
+          example: '2023-01-18T01:58:40.246Z'
+        UpdatedOn:
+          type: date
+          example: '2023-01-18T01:58:40.246Z'
+        

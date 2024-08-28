@@ -14,13 +14,6 @@ import { checkUserAgencyPermission, isAdmin, isAuditor } from '@/utilities/autho
  * @returns {Response}      A 200 status with a response body containing parcel data.
  */
 export const getParcel = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['parcels']
-   * #swagger.description = 'Get the parcel from the data source if the user is permitted.'
-   * #swagger.security = [{
-   * "bearerAuth": []
-   * }]
-   */
   const parcelId = Number(req.params.parcelId);
   if (isNaN(parcelId)) {
     return res.status(400).send('Parcel ID was invalid.');
@@ -45,13 +38,6 @@ export const getParcel = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status with a response body containing parcel data.
  */
 export const updateParcel = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['parcels']
-   * #swagger.description = 'Updates the parcel from the data source if the user is permitted.'
-   * #swagger.security = [{
-   * "bearerAuth": []
-   * }]
-   */
   const parcelId = Number(req.params.parcelId);
   if (isNaN(parcelId) || parcelId !== req.body.Id) {
     return res.status(400).send('Parcel ID was invalid or mismatched with body.');
@@ -72,13 +58,6 @@ export const updateParcel = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status with a response body containing parcel data.
  */
 export const deleteParcel = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['parcels']
-   * #swagger.description = 'Deletes the parcel from the data source if the user is permitted.'
-   * #swagger.security = [{
-   * "bearerAuth": []
-   * }]
-   */
   const parcelId = Number(req.params.parcelId);
   if (isNaN(parcelId)) {
     return res.status(400).send('Parcel ID was invalid.');
@@ -125,13 +104,6 @@ export const getParcels = async (req: Request, res: Response) => {
  * Note: the original implementation returns 200, but as a resource is created 201 is better.
  */
 export const addParcel = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['parcels']
-   * #swagger.description = 'Creates a new parcel in the datasource.'
-   * #swagger.security = [{
-   * "bearerAuth": []
-   * }]
-   */
   const user = await userServices.getUser((req.user as SSOUser).preferred_username);
   const parcel: Parcel = { ...req.body, CreatedById: user.Id };
   parcel.Evaluations = parcel.Evaluations?.map((evaluation) => ({

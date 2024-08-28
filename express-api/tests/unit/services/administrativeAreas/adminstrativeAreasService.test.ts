@@ -51,7 +51,6 @@ describe('UNIT - admin area services', () => {
         page: 1,
         quickFilter: 'wow',
         createdOn: faker.date.recent().toUTCString(),
-        updatedOn: faker.date.recent().toUTCString(),
       });
       expect(Array.isArray(areas.data)).toBe(true);
       expect(areas.totalCount).toBe(1);

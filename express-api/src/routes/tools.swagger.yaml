@@ -1,0 +1,123 @@
+### PATHS ###
+paths:
+  /tools/geocoder/parcels/pids/{siteID}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Tools
+      summary: Returns an object with the siteID and a pids property.
+      description: >
+        The `pids` property seems to only be a single PID string.
+        This response comes from the BC Geocoder Service.
+        Capable of any error code from BC Geocoder.
+      parameters:
+        - in: path
+          name: siteID
+          schema:
+            type: string
+            format: uuid 
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  siteID: 
+                    type: string
+                    format: uuid
+                  pids:
+                    type: string
+                    example: 014128446
+                    description: Has leading zeroes. Seemingly only one PID despite pluralization.
+  /tools/geocoder/addresses:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Tools
+      summary: Returns a list of matching addresses from BC Geocoder.
+      description: >
+        This response comes from the BC Geocoder Service.
+        Capable of any error code from BC Geocoder.
+      parameters:
+        - in: path
+          name: address
+          schema:
+            type: string
+            example: 742 Evergreen Terr
+        - in: path
+          name: minScore
+          schema:
+            type: integer
+            example: 30
+        - in: path
+          name: maxResults
+          schema:
+            type: integer
+            example: 5
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GeocoderAddress'
+        '400':
+          content:
+            text/plain:
+              schema: 
+                type: string
+                example: Failed to fetch data
+### SCHEMAS ### 
+components:
+  schemas:
+    GeocoderAddress:
+      type: object
+      properties: 
+        siteId:
+          type: string
+          format: uuid
+          example: d2430ab0-d79c-4201-a386-226749028653
+        fullAddress:
+          type: string
+          example: 1010 Bristol Rd, Saanich, BC
+        address1:
+          type: string
+          example: 1010 Bristol Rd
+        administrativeArea:
+          type: string
+          example: Saanich
+        provinceCode:
+          type: string
+          example: BC
+        longitude:
+          type: number
+          format: double
+          example: -123.3637344
+        latitude:
+          type: number
+          format: double
+          example: 48.461893
+        score:
+          type: integer
+          example: 89
+    ChesSentEmailResponse:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            type: object
+            properties:
+              msgId: 
+                type: string
+                format: uuid
+              to: 
+                type: string
+                example: email@gov.bc.ca
+        txId:
+          type: string
+          format: uuid
