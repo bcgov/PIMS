@@ -72,6 +72,7 @@ export interface ImportResult {
   CreatedOn: Date;
   UpdatedById?: string;
   UpdatedOn?: Date;
+  Message?: string;
 }
 
 export interface PropertiesUnionResponse {
@@ -127,8 +128,8 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
       },
       { signal },
     );
-    if ((parsedBody as Record<string, any>).error) {
-      return [];
+    if ((parsedBody as Record<string, any>)?.error) {
+      return;
     }
     return parsedBody as (Parcel | Building)[];
   };
