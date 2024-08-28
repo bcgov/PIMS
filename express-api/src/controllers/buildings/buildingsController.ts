@@ -41,13 +41,6 @@ export const getBuildings = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status with a response body containing building data.
  */
 export const getBuilding = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['building']
-   * #swagger.description = 'Get the building from the data source if the user is permitted.'
-   * #swagger.security = [{
-   * "bearerAuth": []
-   * }]
-   */
   const buildingId = Number(req.params.buildingId);
   if (isNaN(buildingId)) {
     return res.status(400).send('Building Id is invalid.');
@@ -73,13 +66,6 @@ export const getBuilding = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status with a response body containing building data.
  */
 export const updateBuilding = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['building']
-   * #swagger.description = 'Updates the building from the data source if the user is permitted.'
-   * #swagger.security = [{
-   * "bearerAuth": []
-   * }]
-   */
   const buildingId = Number(req.params.buildingId);
   if (isNaN(buildingId) || buildingId !== req.body.Id) {
     return res.status(400).send('Building ID was invalid or mismatched with body.');
@@ -97,13 +83,6 @@ export const updateBuilding = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status with a response body containing building data.
  */
 export const deleteBuilding = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['building']
-   * #swagger.description = 'Deletes the building from the data source if the user is permitted.'
-   * #swagger.security = [{
-   * "bearerAuth": []
-   * }]
-   */
   const buildingId = Number(req.params.buildingId);
   if (isNaN(buildingId)) {
     return res.status(400).send('Building ID was invalid.');
@@ -123,13 +102,6 @@ export const deleteBuilding = async (req: Request, res: Response) => {
  * Note: the original implementation returns 200, but as a resource is created 201 is better.
  */
 export const addBuilding = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['building']
-   * #swagger.description = 'Creates a new building in the datasource.'
-   * #swagger.security = [{
-   * "bearerAuth": []
-   * }]
-   */
   const user = await userServices.getUser((req.user as SSOUser).preferred_username);
   const createBody: Building = { ...req.body, CreatedById: user.Id };
   createBody.Evaluations = createBody.Evaluations?.map((evaluation) => ({

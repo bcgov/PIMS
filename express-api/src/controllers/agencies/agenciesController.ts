@@ -14,13 +14,6 @@ import { Agency } from '@/typeorm/Entities/Agency';
  * @returns {Response}        A 200 status with a list of agencies.
  */
 export const getAgencies = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Agencies - Admin']
-   * #swagger.description = 'Gets a paged list of agencies.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
   const ssoUser = req.user;
   const filter = AgencyFilterSchema.safeParse(req.query);
   if (filter.success) {
@@ -45,14 +38,6 @@ export const getAgencies = async (req: Request, res: Response) => {
  * @returns {Response}        A 201 status and the data of the agency added.
  */
 export const addAgency = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Agencies - Admin']
-   * #swagger.description = 'Adds a new agency to the datasource.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
   const user = await userServices.getUser((req.user as SSOUser).preferred_username);
   const agency = await agencyService.addAgency({ ...req.body, CreatedById: user.Id });
 
@@ -66,14 +51,6 @@ export const addAgency = async (req: Request, res: Response) => {
  * @returns {Response}        A 200 status and the agency data.
  */
 export const getAgencyById = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Agencies - Admin']
-   * #swagger.description = 'Returns an agency that matches the supplied ID.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
-
   const agency = await agencyService.getAgencyById(parseInt(req.params.id));
   if (!agency) {
     return res.status(404).send('Agency does not exist.');
@@ -88,13 +65,6 @@ export const getAgencyById = async (req: Request, res: Response) => {
  * @returns {Response}        A 200 status and the agency data.
  */
 export const updateAgencyById = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Agencies - Admin']
-   * #swagger.description = 'Updates an agency that matches the supplied ID.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
   const idParse = z.string().safeParse(req.params.id);
   if (!idParse.success) {
     return res.status(400).send(idParse);
@@ -119,13 +89,6 @@ export const updateAgencyById = async (req: Request, res: Response) => {
  * @returns {Response}        A 204 status indicating successful deletion.
  */
 export const deleteAgencyById = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Agencies - Admin']
-   * #swagger.description = 'Deletes an agency that matches the supplied ID.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
   const idParse = z.string().safeParse(req.params.id);
   if (!idParse.success) {
     return res.status(400).send(idParse);

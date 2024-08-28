@@ -13,7 +13,6 @@
     "test": "cross-env DOTENV_CONFIG_PATH=../.env jest",
     "test:unit": "npm run test -- --testPathPattern=/tests/unit",
     "test:integration": "npm run test -- --testPathPattern=/tests/integration",
-    "swagger": "node ./src/swagger/swagger.mjs",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
     "migration": "sh ./src/typeorm/utilities/helperScripts/migrationScript.sh"
   },
@@ -58,6 +57,7 @@
     "@types/node-cron": "3.0.11",
     "@types/nunjucks": "3.2.6",
     "@types/supertest": "6.0.2",
+    "@types/swagger-jsdoc": "6.0.4",
     "@types/swagger-ui-express": "4.1.6",
     "@typescript-eslint/eslint-plugin": "8.1.0",
     "@typescript-eslint/parser": "8.1.0",
@@ -70,6 +70,7 @@
     "prettier": "3.3.0",
     "supertest": "7.0.0",
     "swagger-autogen": "2.23.7",
+    "swagger-jsdoc": "6.2.8",
     "ts-jest": "29.2.0",
     "tsc-alias": "1.8.8",
     "typescript": "5.5.2"

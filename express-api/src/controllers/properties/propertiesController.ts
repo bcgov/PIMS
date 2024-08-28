@@ -25,13 +25,6 @@ import { Roles } from '@/constants/roles';
  * @returns {Response}        A 200 status with a list of properties.
  */
 export const getPropertiesFuzzySearch = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Properties']
-   * #swagger.description = 'Returns a list of fuzzy searched properties.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
   const keyword = String(req.query.keyword);
   const take = req.query.take ? Number(req.query.take) : undefined;
   const kcUser = req.user;
@@ -67,13 +60,6 @@ export const getLinkedProjects = async (req: Request, res: Response) => {
  * @returns {Response}        A 200 status with a list of property geolocation information.
  */
 export const getPropertiesForMap = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Properties']
-   * #swagger.description = 'Returns a list of all property geolocation information.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
   // parse for filter
   const filter = MapFilterSchema.safeParse(req.query);
   if (filter.success == false) {

@@ -7,42 +7,18 @@ import express from 'express';
 
 const router = express.Router();
 
-const {
-  getUserInfo,
-  getSelf,
-  submitUserAccessRequest,
-  getUserAgencies,
-  addUser,
-  deleteUserById,
-  getUserById,
-  getUserRolesByName,
-  getUsers,
-  updateUserById,
-  getAllRoles,
-  updateUserRolesByName,
-} = controllers;
+const { getSelf, submitUserAccessRequest, getUserAgencies, getUserById, getUsers, updateUserById } =
+  controllers;
 
-router.route(`/info`).get(catchErrors(getUserInfo));
 router.route(`/self`).get(catchErrors(getSelf));
 router.route(`/access/requests`).post(catchErrors(submitUserAccessRequest));
 router.route(`/agencies/:username`).get(activeUserCheck, catchErrors(getUserAgencies));
 
-router
-  .route(`/`)
-  .get(activeUserCheck, catchErrors(getUsers))
-  .post(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(addUser));
-
-router.route(`/roles`).get(activeUserCheck, catchErrors(getAllRoles));
-
-router
-  .route(`/roles/:username`)
-  .get(activeUserCheck, catchErrors(getUserRolesByName))
-  .put(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(updateUserRolesByName));
+router.route(`/`).get(activeUserCheck, catchErrors(getUsers));
 
 router
   .route(`/:id`)
   .get(activeUserCheck, catchErrors(getUserById))
-  .put(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(updateUserById))
-  .delete(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(deleteUserById));
+  .put(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(updateUserById));
 
 export default router;

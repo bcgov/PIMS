@@ -911,7 +911,7 @@ const getProjects = async (filter: ProjectFilter) => {
     .createQueryBuilder()
     .where(
       new Brackets((qb) => {
-        options.forEach((option) => qb.orWhere(option));
+        options.forEach((option) => qb.andWhere(option));
       }),
     );
 
