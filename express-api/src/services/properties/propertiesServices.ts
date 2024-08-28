@@ -595,14 +595,11 @@ export interface ImportRow {
   FiscalYear?: number;
   AssessedYear?: number;
   IsSensitive?: boolean;
-  IsVisibleToOtherAgencies?: boolean; // TODO: Removed in other PR.
   LandArea?: number;
   BuildingTenancy?: number;
   NetUsableArea?: number;
   BuildingFloorCount?: number;
   TotalArea?: number;
-  // Not displayed in UI
-  LocalId?: string;
 }
 
 /**
