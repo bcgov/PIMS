@@ -37,6 +37,7 @@ import { ProjectStatus } from '@/constants/projectStatus';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectStatus as ProjectStatusEntity } from '@/typeorm/Entities/ProjectStatus';
 import { parentPort } from 'worker_threads';
+import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
 /**
  * Perform a fuzzy search for properties based on the provided keyword.
@@ -215,19 +216,6 @@ const getPropertiesForMap = async (filter?: MapFilter) => {
   return properties;
 };
 
-/**
- * Generates a building name based on the provided parameters.
- * @param name - The name of the building.
- * @param desc - The description of the building.
- * @param localId - The local ID of the building.
- * @returns The generated building name.
- */
-const generateBuildingName = (name: string, desc: string = null, localId: string = null) => {
-  return (
-    (localId == null ? '' : localId) +
-    (name != null ? name : desc?.substring(0, 150 < desc.length ? 150 : desc.length).trim())
-  );
-};
 const numberOrNull = (value: any) => {
   if (value == '' || value == null) return null;
   return typeof value === 'number' ? value : Number(value.replace?.(/-/g, ''));
@@ -269,17 +257,16 @@ export const getClassificationOrThrow = (
   row: Record<string, any>,
   classifications: PropertyClassification[],
 ) => {
-  let classificationId: number = null;
-  if (compareWithoutCase(String(row.Status), 'Active')) {
+  let classificationId: number;
+  if (row.Classification) {
     classificationId = classifications.find((a) =>
       compareWithoutCase(row.Classification, a.Name),
     )?.Id;
-    if (classificationId == null)
-      throw new Error(`Classification "${row.Classification}" is not supported.`);
   } else {
-    classificationId = classifications.find((a) => a.Name === 'Disposed')?.Id;
-    if (classificationId == null) throw new Error(`Unable to classify this parcel.`);
+    throw new Error(`Unable to classify this parcel.`);
   }
+  if (classificationId == null)
+    throw new Error(`Classification "${row.Classification}" is not supported.`);
   return classificationId;
 };
 
@@ -363,6 +350,16 @@ const compareWithoutCase = (str1: string, str2: string) => {
   else return false;
 };
 
+export const setNewBool = (newValue: boolean, previousValue: boolean, defaultValue: boolean) => {
+  let returnValue = defaultValue;
+  if (newValue == true || newValue == false) {
+    returnValue = newValue;
+  } else if (previousValue == true || previousValue == false) {
+    returnValue = previousValue;
+  }
+  return returnValue;
+};
+
 /**
  * Creates an object for upserting a parcel entity with the provided data.
  * @param row - The row data containing the parcel information.
@@ -411,33 +408,37 @@ const makeParcelUpsertObject = async (
       CreatedOn: new Date(),
     });
   }
-
   const classificationId: number = getClassificationOrThrow(row, lookups.classifications);
-
   const adminAreaId: number = getAdministrativeAreaOrThrow(row, lookups.adminAreas);
-
+  const pin = numberOrNull(row.PIN) ?? existentParcel?.PIN;
+  const description = row.Description ?? (existentParcel ? existentParcel.Description : '');
+  const isSensitive = setNewBool(row.IsSensitive, existentParcel?.IsSensitive, false);
+  const isVisibleToOtherAgencies = setNewBool(
+    row.IsVisibleToOtherAgencies,
+    existentParcel?.IsVisibleToOtherAgencies,
+    false,
+  );
   return {
     Id: existentParcel?.Id,
     AgencyId: getAgencyOrThrowIfMismatched(row, lookups, roles).Id,
     PID: numberOrNull(row.PID),
-    PIN: numberOrNull(row.PIN),
+    PIN: pin,
     ClassificationId: classificationId,
-    Name: row.Name,
-    CreatedById: existentParcel ? undefined : user.Id,
+    CreatedById: existentParcel ? existentParcel.CreatedById : user.Id,
     UpdatedById: existentParcel ? user.Id : undefined,
     UpdatedOn: existentParcel ? new Date() : undefined,
-    CreatedOn: existentParcel ? undefined : new Date(),
+    CreatedOn: existentParcel ? existentParcel.CreatedOn : new Date(),
     Location: {
       x: row.Longitude,
       y: row.Latitude,
     },
-    Address1: row.Address,
+    Address1: row.Address ?? existentParcel?.Address1 ?? null,
     AdministrativeAreaId: adminAreaId,
-    IsSensitive: false,
-    IsVisibleToOtherAgencies: true,
+    IsSensitive: isSensitive,
+    IsVisibleToOtherAgencies: isVisibleToOtherAgencies,
     PropertyTypeId: 0,
-    Description: row.Description,
-    LandArea: numberOrNull(row.LandArea),
+    Description: description,
+    LandArea: numberOrNull(row.LandArea) ?? existentParcel ? existentParcel.LandArea : null,
     Evaluations: currRowEvaluations,
     Fiscals: currRowFiscals,
   };
@@ -498,31 +499,46 @@ const makeBuildingUpsertObject = async (
   const predominateUseId = getBuildingPredominateUseOrThrow(row, lookups.predominateUses);
   const adminAreaId = getAdministrativeAreaOrThrow(row, lookups.adminAreas);
 
+  const description = row.Description ?? (existentBuilding ? existentBuilding.Description : '');
+  const rentableArea = row.NetUsableArea ?? (existentBuilding ? existentBuilding.RentableArea : 0);
+  const isSensitive = setNewBool(row.IsSensitive, existentBuilding?.IsSensitive, false);
+  const isVisibleToOtherAgencies = setNewBool(
+    row.IsVisibleToOtherAgencies,
+    existentBuilding?.IsVisibleToOtherAgencies,
+    false,
+  );
+  const buildingFloorCount =
+    row.BuildingFloorCount ?? (existentBuilding ? existentBuilding.BuildingFloorCount : 0);
+  const tenancy = row.BuildingTenancy ?? (existentBuilding ? existentBuilding.BuildingTenancy : '');
+  const totalArea = row.TotalArea ?? (existentBuilding ? existentBuilding.TotalArea : 0);
+
   return {
     Id: existentBuilding?.Id,
     PID: numberOrNull(row.PID),
-    PIN: numberOrNull(row.PIN),
+    PIN: numberOrNull(row.PIN) ?? existentBuilding?.PIN ?? null,
     AgencyId: getAgencyOrThrowIfMismatched(row, lookups, roles).Id,
     ClassificationId: classificationId,
     BuildingConstructionTypeId: constructionTypeId,
     BuildingPredominateUseId: predominateUseId,
-    Name: generateBuildingName(row.Name, row.Description, row.LocalId),
-    CreatedById: existentBuilding ? undefined : user.Id,
+    Name: existentBuilding ? existentBuilding.Name : row.Name, // Not allowing Name update, but allow insertion
+    CreatedById: existentBuilding ? existentBuilding.CreatedById : user.Id,
     UpdatedById: existentBuilding ? user.Id : undefined,
     UpdatedOn: existentBuilding ? new Date() : undefined,
-    CreatedOn: existentBuilding ? undefined : new Date(),
+    CreatedOn: existentBuilding ? existentBuilding.CreatedOn : new Date(),
     Location: {
       x: row.Longitude,
       y: row.Latitude,
     },
     AdministrativeAreaId: adminAreaId,
-    IsSensitive: false,
-    IsVisibleToOtherAgencies: true,
-    PropertyTypeId: 0,
-    RentableArea: numberOrNull(row.RentableArea) ?? 0,
-    BuildingTenancy: row.Tenancy,
-    BuildingFloorCount: 0,
-    TotalArea: 0,
+    IsSensitive: isSensitive,
+    Description: description,
+    Address1: row.Address ?? existentBuilding?.Address1 ?? null,
+    IsVisibleToOtherAgencies: isVisibleToOtherAgencies,
+    PropertyTypeId: 1,
+    RentableArea: rentableArea,
+    BuildingTenancy: tenancy,
+    BuildingFloorCount: buildingFloorCount,
+    TotalArea: totalArea,
     Evaluations: currRowEvaluations,
     Fiscals: currRowFiscals,
   };
@@ -543,6 +559,62 @@ export type BulkUploadRowResult = {
   reason?: string;
 };
 
+export const checkForHeaders = (sheetObj: Record<string, any>[], columnArray: any) => {
+  const requiredHeaders = [
+    'PropertyType',
+    'PID',
+    'Classification',
+    'AgencyCode',
+    'AdministrativeArea',
+    'Latitude',
+    'Longitude',
+  ];
+  for (let rowNum = 0; rowNum < sheetObj.length; rowNum++) {
+    const row = sheetObj[rowNum];
+    if (row.PropertyType == 'Building') {
+      requiredHeaders.push('Name', 'PredominateUse', 'ConstructionType');
+      break;
+    }
+  }
+  for (let rowNum = 0; rowNum < requiredHeaders.length; rowNum++) {
+    if (!columnArray.includes(requiredHeaders[rowNum])) {
+      throw new ErrorWithCode(`Missing required header: ${requiredHeaders[rowNum]}`, 400);
+    }
+  }
+};
+
+export interface ImportRow {
+  // Required
+  PropertyType: 'Land' | 'Building';
+  PID: number;
+  Classification: string;
+  AgencyCode: string;
+  AdministrativeArea: string;
+  Latitude: number;
+  Longitude: number;
+  // Required for Buildings
+  ConstructionType?: string;
+  PredominateUse?: string;
+  Name?: string;
+  // Optional
+  Description?: string;
+  Address?: string;
+  PIN?: number;
+  Assessed?: number;
+  Netbook?: number;
+  FiscalYear?: number;
+  AssessedYear?: number;
+  IsSensitive?: boolean;
+  IsVisibleToOtherAgencies?: boolean; // TODO: Removed in other PR.
+  LandArea?: number;
+  BuildingTenancy?: number;
+  NetUsableArea?: number;
+  BuildingFloorCount?: number;
+  TotalArea?: number;
+  // Not displayed in UI
+  LocalId?: string;
+}
+
 /**
  * Imports properties data from a worksheet as JSON format, processes each row to upsert parcels or buildings,
  * and returns an array of BulkUploadRowResult indicating the actions taken for each row.
@@ -558,7 +630,11 @@ const importPropertiesAsJSON = async (
   roles: string[],
   resultId: number,
 ) => {
-  const sheetObj: Record<string, any>[] = xlsx.utils.sheet_to_json(worksheet);
+  const columnsArray = xlsx.utils.sheet_to_json(worksheet, { header: 1 })[0];
+  const sheetObj: ImportRow[] = xlsx.utils.sheet_to_json(worksheet);
+
+  checkForHeaders(sheetObj, columnsArray);
+
   const classifications = await AppDataSource.getRepository(PropertyClassification).find({
     select: { Name: true, Id: true },
   });
@@ -584,8 +660,6 @@ const importPropertiesAsJSON = async (
     userAgencies,
   };
   const results: Array<BulkUploadRowResult> = [];
-  // let queuedParcels = [];
-  // let queuedBuildings = [];
   const queryRunner = AppDataSource.createQueryRunner();
   try {
     for (let rowNum = 0; rowNum < sheetObj.length; rowNum++) {
@@ -603,31 +677,39 @@ const importPropertiesAsJSON = async (
             queryRunner,
             existentParcel,
           );
-          //queuedParcels.push(parcelToUpsert);
           await queryRunner.manager.save(Parcel, parcelToUpsert);
           results.push({ action: existentParcel ? 'updated' : 'inserted', rowNumber: rowNum });
         } catch (e) {
           results.push({ action: 'error', reason: e.message, rowNumber: rowNum });
         }
       } else if (row.PropertyType === 'Building') {
-        const generatedName = generateBuildingName(row.Name, row.Description, row.LocalId);
-        const existentBuilding = await queryRunner.manager.findOne(Building, {
-          where: { PID: numberOrNull(row.PID), Name: generatedName },
+        const foundBuildings = await queryRunner.manager.findAndCount(Building, {
+          where: { PID: numberOrNull(row.PID), Name: row.Name },
         });
-        try {
-          const buildingForUpsert = await makeBuildingUpsertObject(
-            row,
-            user,
-            roles,
-            lookups,
-            queryRunner,
-            existentBuilding,
-          );
-          //queuedBuildings.push(buildingForUpsert);
-          await queryRunner.manager.save(Building, buildingForUpsert);
-          results.push({ action: existentBuilding ? 'updated' : 'inserted', rowNumber: rowNum });
-        } catch (e) {
-          results.push({ action: 'error', reason: e.message, rowNumber: rowNum });
+        const count = foundBuildings[1];
+        if (count > 1) {
+          results.push({
+            action: 'error',
+            reason: 'Multiple buildings match PID, Name combo.',
+            rowNumber: rowNum,
+          });
+        } else {
+          const existentBuilding = foundBuildings[0][0];
+          try {
+            const buildingForUpsert = await makeBuildingUpsertObject(
+              row,
+              user,
+              roles,
+              lookups,
+              queryRunner,
+              existentBuilding,
+            );
+            //queuedBuildings.push(buildingForUpsert);
+            await queryRunner.manager.save(Building, buildingForUpsert);
+            results.push({ action: existentBuilding ? 'updated' : 'inserted', rowNumber: rowNum });
+          } catch (e) {
+            results.push({ action: 'error', reason: e.message, rowNumber: rowNum });
+          }
         }
       } else {
         results.push({
@@ -723,7 +805,7 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
     .createQueryBuilder()
     .where(
       new Brackets((qb) => {
-        options.forEach((option) => qb.orWhere(option));
+        options.forEach((option) => qb.andWhere(option));
       }),
     );
 
@@ -876,11 +958,6 @@ const processFile = async (filePath: string, resultRowId: number, user: User, ro
     const worksheet = file.Sheets[sheetName];
 
     results = await propertyServices.importPropertiesAsJSON(worksheet, user, roles, resultRowId);
-    return results; // Note that this return still works with finally as long as return is not called from finally block.
-  } catch (e) {
-    parentPort.postMessage('Aborting file upload: ' + e.message);
-    parentPort.postMessage('Aborting stack: ' + e.stack);
-  } finally {
     await AppDataSource.getRepository(ImportResult).save({
       Id: resultRowId,
       CompletionPercentage: 1.0,
@@ -888,6 +965,19 @@ const processFile = async (filePath: string, resultRowId: number, user: User, ro
       UpdatedById: user.Id,
       UpdatedOn: new Date(),
     });
+    return results; // Note that this return still works with finally as long as return is not called from finally block.
+  } catch (e) {
+    parentPort.postMessage('Aborting file upload: ' + e.message);
+    parentPort.postMessage('Aborting stack: ' + e.stack);
+    await AppDataSource.getRepository(ImportResult).save({
+      Id: resultRowId,
+      CompletionPercentage: -1.0,
+      Results: results,
+      UpdatedById: user.Id,
+      UpdatedOn: new Date(),
+      Message: e.message,
+    });
+  } finally {
     await AppDataSource.destroy(); //Not sure whether this is necessary but seems like the safe thing to do.
   }
 };
@@ -901,6 +991,8 @@ const propertyServices = {
   getPropertiesForExport,
   processFile,
   findLinkedProjectsForProperty,
+  makeBuildingUpsertObject,
+  makeParcelUpsertObject,
 };
 
 export default propertyServices;

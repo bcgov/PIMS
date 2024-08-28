@@ -35,8 +35,8 @@ export const NotificationResponseSchema = z.object({
 });
 
 export const DisposalNotificationFilterSchema = z.object({
-  page: z.number().optional(),
-  quantity: z.number().optional(),
+  page: z.coerce.number().optional(),
+  quantity: z.coerce.number().optional(),
   sort: z.array(z.string()).optional(),
   projectNumber: z.string().optional(),
   projectId: z.coerce.number(),

@@ -11,7 +11,6 @@ import reportsRouter from '@/routes/reportsRouter';
 import toolsRouter from '@/routes/toolsRouter';
 import agenciesRouter from '@/routes/agenciesRouter';
 import administrativeAreasRouter from '@/routes/administrativeAreasRouter';
-import rolesRouter from '@/routes/rolesRouter';
 
 const router = {
   administrativeAreasRouter,
@@ -27,7 +26,6 @@ const router = {
   reportsRouter,
   toolsRouter,
   agenciesRouter,
-  rolesRouter,
 };
 
 export default router;

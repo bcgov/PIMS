@@ -10,10 +10,11 @@ import middleware from '@/middleware';
 import constants from '@/constants';
 import { SSO_OPTIONS } from '@/middleware/keycloak/keycloakOptions';
 import swaggerUi from 'swagger-ui-express';
-import swaggerJSON from '@/swagger/swagger-output.json';
+import swaggerJSDoc from 'swagger-jsdoc';
 import errorHandler from '@/middleware/errorHandler';
 import { EndpointNotFound404 } from '@/constants/errors';
 import nunjucks from 'nunjucks';
+import OPENAPI_OPTIONS from '@/swagger/swaggerConfig';
 
 const app: Application = express();
 
@@ -50,7 +51,7 @@ app.use(cookieParser());
 app.use(compression());
 
 // Swagger service route
-app.use('/api-docs/', swaggerUi.serve, swaggerUi.setup(swaggerJSON));
+app.use('/api-docs/', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(OPENAPI_OPTIONS)));
 // Get Custom Middleware
 const { headerHandler, morganMiddleware } = middleware;
 
@@ -86,7 +87,6 @@ app.use(`/v2/administrativeAreas`, protectedRoute(), router.administrativeAreasR
 app.use(`/v2/agencies`, protectedRoute(), router.agenciesRouter);
 app.use('/v2/lookup', protectedRoute(), router.lookupRouter);
 app.use(`/v2/users`, protectedRoute(), router.usersRouter);
-app.use(`/v2/roles`, protectedRoute(), router.rolesRouter);
 app.use(`/v2/properties`, protectedRoute(), router.propertiesRouter);
 app.use(`/v2/parcels`, protectedRoute(), router.parcelsRouter);
 app.use(`/v2/buildings`, protectedRoute(), router.buildingsRouter);

@@ -16,9 +16,6 @@ COPY . .
 # Install packages. Needed for build process.
 RUN npm i
 
-# Generate swagger-output
-RUN npm run swagger
-
 # Compile to JavaScript build 
 RUN npm run build
 

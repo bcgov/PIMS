@@ -5,11 +5,11 @@
  * @extends Error
  *
  * @param {string} message - The error message.
- * @param {number} code - The error code. Defaults to 400.
+ * @param {number} code - The error code. Defaults to 500.
  *
  * @example
  * const err = new ErrorWithCode('test');
- * console.log(err.code); // 400
+ * console.log(err.code); // 500
  *
  * @example
  * const err = new ErrorWithCode('test', 401);
@@ -19,7 +19,7 @@
 export class ErrorWithCode extends Error {
   public code: number;
 
-  constructor(message: string, code: number = 400) {
+  constructor(message: string, code: number = 500) {
     super(message);
     this.code = code;
   }

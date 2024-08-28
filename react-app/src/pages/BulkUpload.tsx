@@ -36,8 +36,9 @@ const ResultsPaper = (props: {
       return (
         <Paper sx={{ padding: '2rem' }}>
           <Typography variant="h4">
-            The most recent upload was cancelled due to an unexpected error.
+            The most recent upload encountered the following error:
           </Typography>
+          <Typography>{results.at(0).Message ?? 'Unknown error.'}</Typography>
         </Paper>
       );
     } else if (results.at(0).CompletionPercentage < 1.0) {
@@ -201,6 +202,7 @@ const BulkUpload = () => {
                   'AdministrativeArea',
                   'Latitude',
                   'Longitude',
+                  'Name (Buildings only)',
                   'PredominateUse (Buildings only)',
                   'ConstructionType (Buildings only)',
                 ].map((a, idx) => (
@@ -214,7 +216,6 @@ const BulkUpload = () => {
               <ListItemText primary={'Optional Headers may have blank values.'} />
               <List sx={{ listStyle: 'disc', pl: 4 }}>
                 {[
-                  'LandLegalDescription',
                   'Description',
                   'Address',
                   'PIN',
@@ -222,8 +223,13 @@ const BulkUpload = () => {
                   'AssessedYear',
                   'Netbook',
                   'FiscalYear',
-                  'RentableArea (for Buildings)',
+                  'IsSensitive',
+                  'IsVisibleToOtherAgencies',
                   'LandArea (for Land)',
+                  'BuildingTenancy (for Building)',
+                  'NetUsableArea (for Building)',
+                  'BuildingFloorCount (for Building)',
+                  'TotalArea (for Building)',
                 ].map((a, idx) => (
                   <ListItem key={`req-header-${idx}`} sx={{ display: 'list-item', py: '2px' }}>
                     <ListItemText primary={a} />

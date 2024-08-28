@@ -1,0 +1,217 @@
+### PATHS ###
+paths:
+  /administrativeAreas:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Administrative Areas
+      summary: Gets a list of administrative areas based on supplied filter.
+      description: >
+        Used primarily for displaying administrative areas in a table.
+        Non-generic query values must be in this format: `{searchType},{searchValue}`
+      parameters:
+        - in: query
+          name: name
+          schema: 
+            type: string
+            example: contains,Victoria
+        - in: query
+          name: regionalDistrictName
+          schema:
+            type: string
+            example: contains,Capital Regional District
+        - in: query
+          name: isDisabled 
+          schema: 
+            type: string
+            example: is,false 
+        - in: query
+          name: createdOn
+          schema: 
+            type: string
+            example: 'before,Wed Jul 31 2024 17:00:00 GMT-0700 (Pacific Daylight Time)'
+        - in: query
+          name: quickFilter
+          schema:
+            type: string
+          description: Applied as an OR WHERE search on relevant columns.
+        - in: query
+          name: quantity
+          schema:
+            type: string
+          description: Number of records to be returned. Equivalent to page size.
+        - in: query
+          name: page
+          schema:
+            type: string
+          description: Page number of requested results. Only necessary if quantity is specified.
+        - in: query
+          name: sortKey
+          schema:
+            type: string
+          description: The column name on which the records will be sorted.
+        - in: query
+          name: sortOrder
+          schema:
+            type: string
+          description: Either DESC or ASC.
+        - in: query
+          name: excelExport
+          schema:
+            type: boolean
+            example: false
+          description: If true, returns in format for Excel export.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalCount:
+                    type: integer
+                    example: 1
+                  data: 
+                    type: array
+                    items: 
+                      $ref: '#/components/schemas/AdministrativeAreaJoinView'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Administrative Areas
+      summary: Submits a new administrative area.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdministrativeAreaPost'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdministrativeArea'
+        '409':
+          description: Conflict
+          content:
+            text/plain:
+              schema: 
+                type: string
+                example: Administrative area already exists.
+  /administrativeAreas/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Administrative Areas
+      summary: Gets a single administrative area that matches the Id.
+      parameters:
+        - in: path 
+          name: id
+          type: integer
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/AdministrativeArea'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Administrative Areas
+      summary: Updates a single administrative area that matches the Id.
+      parameters:
+        - in: path 
+          name: id
+          type: integer
+          required: true
+      requestBody:
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdministrativeArea'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdministrativeArea'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Administrative area does not exist.
+        
+### SCHEMAS ### 
+components:
+  schemas:
+    AdministrativeAreaPost:
+      type: object
+      description: Object submitted in body of POST request. 
+      properties:
+        Name:
+          required: true
+          type: string
+          example: Victoria
+        RegionalDistrictId:
+          required: true
+          type: integer
+          example: 19
+        ProvinceId:
+          required: true
+          type: string
+          example: BC
+        IsDisabled:
+          type: boolean
+          example: false
+    AdministrativeArea:
+      allOf: 
+        - $ref: '#/components/schemas/AdministrativeAreaPost'
+        - $ref: '#/components/schemas/CommonEntityProperties'
+        - type: object
+          properties:
+            Id: 
+              type: integer
+              example: 300
+            SortOrder:
+              type: integer
+              example: 0
+    AdministrativeAreaJoinView:
+      type: object
+      description: Object returned from Administrative Area Join View.
+      properties: 
+        Id:
+          type: integer
+          example: 300
+        Name:
+          type: string
+          example: Victoria
+        IsDisabled:
+          type: boolean
+          example: false
+        SortOrder:
+          type: integer
+          example: 0
+        RegionalDistrictId:
+          type: integer
+          example: 19
+        RegionalDistrictName:
+          type: string
+          example: Capital Regional District
+        ProvinceId: 
+          type: string
+          example: BC
+        CreatedOn:
+          type: date
+          example: '2023-01-18T01:58:40.246Z'
+        
