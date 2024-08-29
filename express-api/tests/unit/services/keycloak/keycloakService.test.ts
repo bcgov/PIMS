@@ -29,6 +29,7 @@ const mockUser: IKeycloakUser = {
     display_name: [faker.person.fullName()],
   },
 };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _updateUser = jest.fn().mockImplementation((_user: DeepPartial<User>) => ({ raw: {} }));
 
 jest.mock('@/services/users/usersServices', () => ({

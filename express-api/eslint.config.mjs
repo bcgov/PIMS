@@ -1,15 +1,16 @@
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import typescriptParser from '@typescript-eslint/parser';
 import prettierPlugin from 'eslint-plugin-prettier';
+import tseslint from 'typescript-eslint';
+import eslint from '@eslint/js';
 
-export default [
+export default tseslint.config(
+  eslint.configs.recommended,
+  ...tseslint.configs.recommended,
   {
     // Specify the parser for TypeScript
     languageOptions: {
-      parser: typescriptParser,
+      parser: tseslint.parser,
     },
     plugins: {
-      '@typescript-eslint': typescriptEslint,
       prettier: prettierPlugin,
     },
     // Define your ESLint rules
@@ -18,19 +19,18 @@ export default [
       'no-extra-boolean-cast': 'off',
       'no-unsafe-optional-chaining': 'off',
       'no-prototype-builtins': 'off',
-      'no-console': 'error',
+      'no-console': 'error', // Use logger instead
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-inferrable-types': 'off',
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
-      '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-duplicate-enum-values': 'error',
     },
-    // Override settings for specific file types
-    files: ['src/**/*.ts', 'src/**/*.js'],
+    // Include these files in linting
+    files: ['**/*.ts', '**/*.js'],
   },
   {
-    // Ignore specific files and directories
+    // Ignore specific files and directories. node_modules ignored by default
     ignores: ['package-lock.json', 'dist/', 'coverage/'],
   },
-];
+);
