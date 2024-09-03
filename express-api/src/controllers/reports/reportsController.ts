@@ -12,13 +12,6 @@ import getConfig from '@/constants/config';
  * @returns                   Response (200) that includes the error information and the CHES response.
  */
 export const submitErrorReport = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Reports']
-   * #swagger.description = 'Accepts an error report from the frontend and sends an email to administrators.'
-   * #swagger.security = [{
-   *   "bearerAuth" : []
-   * }]
-   */
   const info: ErrorReport = req.body;
   logger.info(info);
   const errorParse = errorReportSchema.safeParse(info);

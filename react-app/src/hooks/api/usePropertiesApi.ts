@@ -72,6 +72,7 @@ export interface ImportResult {
   CreatedOn: Date;
   UpdatedById?: string;
   UpdatedOn?: Date;
+  Message?: string;
 }
 
 export interface PropertiesUnionResponse {

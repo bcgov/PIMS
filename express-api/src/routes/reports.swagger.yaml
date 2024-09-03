@@ -1,0 +1,73 @@
+### PATHS ###
+paths:
+  /reports/error:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Reports
+      summary: Submits an error report.
+      description: >
+        Used for the ErrorFallback page.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorReport'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/ErrorReport'
+                - type: object
+                  properties:
+                    chesResponse:
+                      $ref: '#/components/schemas/ChesSentEmailResponse'
+
+
+### SCHEMAS ### 
+components:
+  schemas:
+    ErrorReport:
+      type: object
+      properties:
+        user:
+          type: object
+          properties:
+            client_roles: 
+              type: array
+              example: ['General User']
+            email:
+              type: string
+              example: email@gov.bc.ca
+            preferred_username:
+              type: string
+              example: username@idir
+            display_name:
+              type: string
+              example: 'Doe, John CITZ:EX'
+            first_name:
+              type: string
+              example: John
+            last_name:
+              type: string 
+              example: Doe 
+        userMessage:
+          type: string
+          example: I found an error!
+        error: 
+          type: object
+          properties:
+            message:
+              type: string 
+              example: Error at line 42.
+            stack:
+              type: string 
+        timestamp:
+          type: string 
+          format: date-time
+        url:
+          type: string
+          example: pims.gov.bc.ca/parcels/123

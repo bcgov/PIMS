@@ -173,6 +173,8 @@ const _getStatusByIdAsync = jest.spyOn(chesServices, 'getStatusByIdAsync').mockR
   msgId: randomUUID(),
 });
 
+const testUser = produceUser();
+
 describe('UNIT - Notification Services', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -492,7 +494,7 @@ describe('cancelNotificationById', () => {
       createdTS: Date.now(),
       msgId: randomUUID(),
     }));
-    const result = await notificationServices.cancelNotificationById(1);
+    const result = await notificationServices.cancelNotificationById(1, testUser);
     expect(result.Status).toBe(NotificationStatus.Cancelled);
   });
   it('should return unmodified notification in the case of a non cancelled notification', async () => {
@@ -506,7 +508,7 @@ describe('cancelNotificationById', () => {
     }));
     const notif = produceNotificationQueue({ ChesMessageId: randomUUID() });
     _notifQueueFindOne.mockImplementationOnce(() => notif);
-    const result = await notificationServices.cancelNotificationById(1);
+    const result = await notificationServices.cancelNotificationById(1, testUser);
     expect(result.ChesMessageId).toBe(notif.ChesMessageId);
     expect(result.Status).toBe(notif.Status);
   });

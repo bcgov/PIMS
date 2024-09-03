@@ -1,0 +1,44 @@
+# Components common to all routes. Can be referenced in other swagger.yaml files.
+components:
+  securitySchemes:
+      bearerAuth:            # arbitrary name for the security scheme
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
+  schemas:
+    CommonEntityProperties:
+      type: object
+      properties:
+        CreatedOn:
+          type: date
+          example: '2023-01-18T01:58:40.246Z'
+        UpdatedOn:
+          type: date
+          example: '2023-01-18T01:58:40.246Z'
+        DeletedOn:
+          type: date
+          example: null
+        CreatedBy:
+          type: string
+          example: '00000000-0000-0000-0000-000000000000'
+        UpdatedBy:
+          type: string
+          example: '00000000-0000-0000-0000-000000000000'
+        DeletedBy:
+          type: string
+          example: null
+  responses:
+    400BadRequest:
+      description: Bad Request
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: 'Response could not be processed.'
+    429TooManyRequests:
+      description: Too Many Requests
+      content: 
+        text/plain:
+          schema:
+            type: string
+            example: 'Too many requests, please try again later.'

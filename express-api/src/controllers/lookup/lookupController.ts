@@ -34,13 +34,6 @@ import getConfig from '@/constants/config';
  * @returns {Response}      A 200 status and a list of property classifications.
  */
 export const lookupPropertyClassifications = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Lookup']
-   * #swagger.description = 'Get all property classification entries.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
   const classifications = await AppDataSource.getRepository(PropertyClassification).find();
   const filtered = classifications.filter((c) => !c.IsDisabled);
   const parsed = ClassificationPublicResponseSchema.array().safeParse(filtered);
@@ -52,13 +45,6 @@ export const lookupPropertyClassifications = async (req: Request, res: Response)
 };
 
 export const lookupBuildingPredominateUse = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Lookup']
-   * #swagger.description = 'Get all predomanite uses entries.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
   const uses = await AppDataSource.getRepository(BuildingPredominateUse).find();
   const filtered = uses.filter((u) => !u.IsDisabled);
   const parsed = PredominateUsePublicResponseSchema.array().safeParse(filtered);
@@ -70,13 +56,6 @@ export const lookupBuildingPredominateUse = async (req: Request, res: Response) 
 };
 
 export const lookupBuildingConstructionType = async (req: Request, res: Response) => {
-  /**
-   * #swagger.tags = ['Lookup']
-   * #swagger.description = 'Get all building construction type entries.'
-   * #swagger.security = [{
-            "bearerAuth": []
-      }]
-   */
   const uses = await AppDataSource.getRepository(BuildingConstructionType).find();
   const filtered = uses.filter((u) => !u.IsDisabled);
   const parsed = BuildingConstructionPublicResponseSchema.array().safeParse(filtered);
