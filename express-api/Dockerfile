@@ -42,6 +42,8 @@ RUN apt-get update && apt-get install -y curl
 COPY --from=base /express-api/dist .
 # Copy seed SQL files. Typescript compiler ignores these.
 COPY --from=base /express-api/src/typeorm/Migrations/Seeds ./src/typeorm/Migrations/Seeds
+# Copy files needed for Swagger documentation
+COPY --from=base /express-api/src/**/*.swagger.yaml ./src/swagger/
 
 RUN chmod g+rwx /express-api
 
