@@ -7,6 +7,7 @@ import { Request, Response } from 'express';
 import { DisposalNotificationFilterSchema } from './notificationsSchema';
 import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 import projectServices from '@/services/projects/projectsServices';
+import { Roles } from '@/constants/roles';
 import logger from '@/utilities/winstonLogger';
 
 /**
@@ -31,7 +32,9 @@ export const getNotificationsByProjectId = async (req: Request, res: Response) =
 
       const project = await projectServices.getProjectById(filterResult.projectId);
       if (!usersAgencies.includes(project.AgencyId)) {
-        return res.status(403).send({ message: 'User is not authorized to access this endpoint.' });
+        return res
+          .status(403)
+          .send({ message: 'User cannot access project outside their agencies.' });
       }
     }
 
@@ -53,14 +56,13 @@ export const getNotificationsByProjectId = async (req: Request, res: Response) =
 };
 
 export const resendNotificationById = async (req: Request, res: Response) => {
+  const kcUser = req.user;
+  if (!kcUser.hasRoles([Roles.ADMIN]))
+    return res.status(403).send('User lacks permissions to resend notification.');
   const id = Number(req.params.id);
   const notification = await notificationServices.getNotificationById(id);
   if (!notification) {
     return res.status(404).send('Notification not found.');
-  }
-  const kcUser = req.user;
-  if (!isAdmin(kcUser)) {
-    return res.status(403).send({ message: 'User is not authorized to access this endpoint.' });
   }
   const resultantNotification = await notificationServices.sendNotification(notification, kcUser);
   const user = await userServices.getUser(kcUser.preferred_username);
@@ -72,16 +74,19 @@ export const resendNotificationById = async (req: Request, res: Response) => {
 };
 
 export const cancelNotificationById = async (req: Request, res: Response) => {
+  const kcUser = req.user;
+  if (!kcUser.hasRoles([Roles.ADMIN]))
+    return res.status(403).send('User lacks permissions to cancel notification.');
   const id = Number(req.params.id);
   const notification = await notificationServices.getNotificationById(id);
   if (!notification) {
     return res.status(404).send('Notification not found.');
   }
-  const kcUser = req.user;
-  if (!isAdmin(kcUser)) {
-    return res.status(403).send({ message: 'User is not authorized to access this endpoint.' });
-  }
-  const resultantNotification = await notificationServices.cancelNotificationById(notification.Id);
+  const user = await userServices.getUser(kcUser.preferred_username);
+  const resultantNotification = await notificationServices.cancelNotificationById(
+    notification.Id,
+    user,
+  );
   if (resultantNotification.Status !== NotificationStatus.Cancelled) {
     return res.status(400).send(resultantNotification);
   }

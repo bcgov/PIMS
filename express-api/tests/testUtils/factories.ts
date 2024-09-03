@@ -50,6 +50,7 @@ import { ProjectStatus } from '@/typeorm/Entities/ProjectStatus';
 import { PropertyUnion } from '@/typeorm/Entities/views/PropertyUnionView';
 import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
+import { ImportRow } from '@/services/properties/propertiesServices';
 
 export class MockRes {
   statusValue: any;
@@ -217,7 +218,7 @@ export const produceSSO = (props?: Partial<SSOUser>): SSOUser => {
   };
 };
 
-export const produceParcel = (): Parcel => {
+export const produceParcel = (props?: Partial<Parcel>): Parcel => {
   const id = faker.number.int({ max: 10 });
   return {
     Id: faker.number.int({ max: 10 }),
@@ -252,11 +253,12 @@ export const produceParcel = (): Parcel => {
     CreatedBy: undefined,
     UpdatedById: undefined,
     UpdatedBy: undefined,
-    Fiscals: produceParcelFiscal(id),
-    Evaluations: produceParcelEvaluation(id),
+    Fiscals: produceParcelFiscals(id),
+    Evaluations: produceParcelEvaluations(id),
     DeletedById: null,
     DeletedOn: null,
     DeletedBy: undefined,
+    ...props,
   };
 };
 
@@ -284,7 +286,7 @@ export const produceEmail = (props: Partial<IEmail>): IEmail => {
   return email;
 };
 
-export const produceBuilding = (): Building => {
+export const produceBuilding = (props?: Partial<Building>): Building => {
   const agencyId = faker.number.int();
   const id = faker.number.int({ max: 10 });
   return {
@@ -328,17 +330,18 @@ export const produceBuilding = (): Building => {
     CreatedBy: undefined,
     UpdatedById: undefined,
     UpdatedBy: undefined,
-    Fiscals: produceBuildingFiscal(id),
-    Evaluations: produceBuildingEvaluation(id),
+    Fiscals: produceBuildingFiscals(id),
+    Evaluations: produceBuildingEvaluations(id),
     PID: undefined,
     PIN: undefined,
     DeletedById: null,
     DeletedOn: null,
     DeletedBy: undefined,
+    ...props,
   };
 };
 
-export const produceBuildingEvaluation = (
+export const produceBuildingEvaluations = (
   buildingId: number,
   props?: Partial<BuildingEvaluation>,
 ): BuildingEvaluation[] => {
@@ -355,7 +358,7 @@ export const produceBuildingEvaluation = (
   return [evaluation];
 };
 
-export const produceBuildingFiscal = (
+export const produceBuildingFiscals = (
   buildingId: number,
   props?: Partial<BuildingFiscal>,
 ): BuildingFiscal[] => {
@@ -370,7 +373,7 @@ export const produceBuildingFiscal = (
   return [fiscal];
 };
 
-export const produceParcelEvaluation = (
+export const produceParcelEvaluations = (
   parcelId: number,
   props?: Partial<ParcelEvaluation>,
 ): ParcelEvaluation[] => {
@@ -388,7 +391,7 @@ export const produceParcelEvaluation = (
   return [evaluation];
 };
 
-export const produceParcelFiscal = (
+export const produceParcelFiscals = (
   parcelId: number,
   props?: Partial<ParcelFiscal>,
 ): ParcelFiscal[] => {
@@ -443,7 +446,7 @@ export const produceClassification = (
 };
 
 export const producePredominateUse = (
-  props: Partial<BuildingPredominateUse>,
+  props?: Partial<BuildingPredominateUse>,
 ): BuildingPredominateUse => {
   const predominateUse: BuildingPredominateUse = {
     Id: faker.number.int(),
@@ -461,7 +464,7 @@ export const producePredominateUse = (
   return predominateUse;
 };
 
-export const produceConstructionType = (props: Partial<BuildingPredominateUse>) => {
+export const produceConstructionType = (props?: Partial<BuildingPredominateUse>) => {
   const constructionType: BuildingPredominateUse = {
     Id: faker.number.int(),
     Name: faker.lorem.word(),
@@ -1020,6 +1023,7 @@ export const produceImportResult = (props?: Partial<ImportResult>) => {
     FileName: faker.person.firstName() + '.csv',
     CompletionPercentage: 0,
     Results: [],
+    Message: faker.string.sample(),
     DeletedBy: undefined,
     DeletedById: randomUUID(),
     DeletedOn: null,
@@ -1156,3 +1160,20 @@ export const produceLtsaOrder = (): ILtsaOrder => ({
     },
   },
 });
+
+export const produceImportRow = (props?: Partial<ImportRow>) => {
+  return {
+    PropertyType: faker.number.binary() ? 'Building' : 'Land',
+    PID: faker.number.int({ min: 1111111, max: 999999999 }),
+    Classification: 'Core Operational',
+    AgencyCode: 'RPD',
+    AdministrativeArea: 'Victoria',
+    Latitude: faker.number.float(),
+    Longitude: faker.number.float(),
+    // Required for Buildings
+    ConstructionType: 'Wood',
+    PredominateUse: 'School',
+    Name: 'Test Property',
+    ...props,
+  } as ImportRow;
+};

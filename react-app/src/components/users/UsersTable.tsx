@@ -8,9 +8,9 @@ import { IUser } from '@/interfaces/IUser';
 import { dateFormatter, statusChipFormatter } from '@/utilities/formatters';
 import { GridApiCommunity } from '@mui/x-data-grid/internals';
 import { Agency } from '@/hooks/api/useAgencyApi';
-import { Role } from '@/hooks/api/useRolesApi';
 import { User } from '@/hooks/api/useUsersApi';
 import { LookupContext } from '@/contexts/lookupContext';
+import { Role } from '@/constants/roles';
 
 const CustomMenuItem = (props: PropsWithChildren & { value: string }) => {
   const theme = useTheme();

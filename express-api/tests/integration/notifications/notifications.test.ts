@@ -1,12 +1,10 @@
 import supertest from 'supertest';
 import app from '@/express';
 import {
-  DISPOSAL_API_ROUTE,
   NOTIFICATION_QUEUE_ROUTE,
   NOTIFICATION_TEMPLATE_ROUTE,
 } from '@/routes/notificationsRouter';
 import {
-  DisposalNotificationFilter,
   Notification,
   NotificationQueueFilter,
   NotificationTemplate,
@@ -79,68 +77,6 @@ const makeTemplate = (): NotificationTemplate => {
 };
 
 describe('INTEGRATION - Notifications', () => {
-  describe('GET /projects/disposal/:id/notifications', () => {
-    xit('should return status 200 with notifications', async () => {
-      const response = await request.get(`/notifications/${DISPOSAL_API_ROUTE}/1/notifications`);
-      expect(response.status).toBe(200);
-      expect(response.body).toBeDefined();
-    });
-
-    xit('should return status 404 for non-existent project ID', async () => {
-      const response = await request.get(`/notifications/${DISPOSAL_API_ROUTE}/999/notifications`);
-      expect(response.status).toBe(404);
-    });
-
-    xit('should return status 400 for invalid project ID', async () => {
-      const response = await request.get(
-        `/notifications/${DISPOSAL_API_ROUTE}/invalid_id/notifications`,
-      );
-      expect(response.status).toBe(400);
-    });
-  });
-
-  describe('POST /projects/disposal/notifications', () => {
-    xit('should return status 200 for successful request', async () => {
-      const filter: DisposalNotificationFilter = {
-        page: 0,
-        projectId: 0,
-      };
-      const response = await request
-        .post(`/notifications/${DISPOSAL_API_ROUTE}/notifications`)
-        .send(filter);
-      expect(response.status).toBe(200);
-    });
-
-    xit('should return status 400 for malformed request', async () => {
-      const filter = { bad: 0 };
-      const response = await request
-        .post(`/notifications/${DISPOSAL_API_ROUTE}/notifications`)
-        .send(filter);
-      expect(response.status).toBe(400);
-    });
-  });
-
-  describe('PUT /projects/disposal/:id/notifications', () => {
-    xit('should return status 200 for successful request', async () => {
-      const response = await request.delete(`/notifications/${DISPOSAL_API_ROUTE}/1/notifications`);
-      expect(response.status).toBe(200);
-    });
-
-    xit('should return status 404 for non-existent project ID', async () => {
-      const response = await request.delete(
-        `/notifications/${DISPOSAL_API_ROUTE}/999/notifications`,
-      );
-      expect(response.status).toBe(404);
-    });
-
-    xit('should return status 400 for invalid project ID', async () => {
-      const response = await request.delete(
-        `/notifications/${DISPOSAL_API_ROUTE}/invalid_id/notifications`,
-      );
-      expect(response.status).toBe(400);
-    });
-  });
-
   describe('GET /notifications/queue', () => {
     xit('should return status 200 for successful request', async () => {
       const response = await request.get(NOTIFICATION_QUEUE_ROUTE);

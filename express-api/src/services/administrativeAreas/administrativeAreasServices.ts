@@ -39,7 +39,6 @@ const collectFindOptions = (filter: AdministrativeAreaFilter) => {
   if (filter.isDisabled)
     options.push(constructFindOptionFromQueryBoolean('IsDisabled', filter.isDisabled));
   if (filter.createdOn) options.push(constructFindOptionFromQuery('CreatedOn', filter.createdOn));
-  if (filter.updatedOn) options.push(constructFindOptionFromQuery('UpdatedOn', filter.updatedOn));
   return options;
 };
 
@@ -54,7 +53,7 @@ const getAdministrativeAreas = async (filter: AdministrativeAreaFilter) => {
     .createQueryBuilder()
     .where(
       new Brackets((qb) => {
-        options.forEach((option) => qb.orWhere(option));
+        options.forEach((option) => qb.andWhere(option));
       }),
     );
 
@@ -101,7 +100,7 @@ const addAdministrativeArea = async (adminArea: AdministrativeArea) => {
     where: [{ Id: adminArea.Id }, { Name: adminArea.Name }],
   });
   if (existing) {
-    throw new ErrorWithCode('Administrative area already exists.');
+    throw new ErrorWithCode('Administrative area already exists.', 409);
   }
   return AppDataSource.getRepository(AdministrativeArea).save(adminArea);
 };

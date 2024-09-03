@@ -6,7 +6,6 @@ import express from 'express';
 const router = express.Router();
 
 export const PROJECT_DISPOSAL = '/disposal';
-export const PROJECT_REPORTS = '/reports';
 
 const {
   getDisposalProject,

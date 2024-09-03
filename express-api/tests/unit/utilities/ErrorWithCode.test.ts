@@ -1,8 +1,8 @@
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 describe('UNIT - ErrorWithCode', () => {
-  it('should have a default 400 error code', () => {
+  it('should have a default 500 error code', () => {
     const err = new ErrorWithCode('test');
-    expect(err.code).toEqual(400);
+    expect(err.code).toEqual(500);
   });
 
   it('should use the error code provided', () => {

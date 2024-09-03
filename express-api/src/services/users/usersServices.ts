@@ -43,37 +43,12 @@ const normalizeKeycloakUser = (kcUser: SSOUser): NormalizedKeycloakUser => {
 };
 
 /**
- * Activates a user in the system based on the provided SSO user information.
- * If the user does not exist internally, creates a new user with the normalized SSO user data.
- * If the user already exists, updates the last login timestamp and Keycloak user ID.
- * @param ssoUser The SSO user information to activate in the system.
- * @returns {Promise<void>} A promise that resolves once the user is activated or updated.
- */
-const activateUser = async (ssoUser: SSOUser) => {
-  const normalizedUser = normalizeKeycloakUser(ssoUser);
-  const internalUser = await getUser(ssoUser.preferred_username);
-  if (!internalUser) {
-    const { first_name, last_name, username, guid } = normalizedUser;
-    AppDataSource.getRepository(User).insert({
-      Username: username,
-      FirstName: first_name,
-      LastName: last_name,
-      KeycloakUserId: guid,
-    });
-  } else {
-    internalUser.LastLogin = new Date();
-    internalUser.KeycloakUserId = normalizedUser.guid;
-    AppDataSource.getRepository(User).update({ Id: internalUser.Id }, internalUser);
-  }
-};
-
-/**
  * Adds a user from Keycloak to the system with 'OnHold' status.
  * @param ssoUser The Keycloak user to be added
  * @param agencyId The ID of the agency the user belongs to
  * @param position The position of the user
  * @param note Additional notes about the user
- * @returns The generated map of the inserted user
+ * @returns The inserted user
  */
 const addKeycloakUserOnHold = async (
   ssoUser: SSOUser,
@@ -89,8 +64,9 @@ const addKeycloakUserOnHold = async (
   const systemUser = await AppDataSource.getRepository(User).findOne({
     where: { Username: 'system' },
   });
-  const result = await AppDataSource.getRepository(User).insert({
-    Id: randomUUID(),
+  const id = randomUUID();
+  await AppDataSource.getRepository(User).insert({
+    Id: id,
     FirstName: normalizedKc.first_name,
     LastName: normalizedKc.last_name,
     Email: normalizedKc.email,
@@ -107,7 +83,8 @@ const addKeycloakUserOnHold = async (
     CreatedById: systemUser.Id,
     LastLogin: new Date(),
   });
-  return result.generatedMaps[0];
+  const newUser = await AppDataSource.getRepository(User).findOne({ where: { Id: id } });
+  return newUser;
 };
 
 /**
@@ -190,6 +167,9 @@ const getUsers = async (filter: UserFiltering) => {
       AgencyId: filter.agencyId
         ? In(typeof filter.agencyId === 'number' ? [filter.agencyId] : filter.agencyId)
         : undefined,
+      Agency: {
+        Name: filter.agency,
+      },
       Role: {
         Name: filter.role,
       },
@@ -246,14 +226,15 @@ const updateUser = async (user: DeepPartial<User>) => {
   if (!resource) {
     throw new ErrorWithCode('Resource does not exist.', 404);
   }
-  const retUser = await AppDataSource.getRepository(User).update(user.Id, {
+  await AppDataSource.getRepository(User).update(user.Id, {
     ...user,
     DisplayName: `${user.LastName}, ${user.FirstName}`,
   });
   if (roleName) {
     await KeycloakService.updateKeycloakUserRoles(resource.Username, [roleName]);
   }
-  return retUser.generatedMaps[0];
+  const retUser = await AppDataSource.getRepository(User).findOne({ where: { Id: user.Id } });
+  return retUser;
 };
 
 /**
@@ -304,7 +285,6 @@ const updateKeycloakUserRoles = async (username: string, roleNames: string[]) =>
 
 const userServices = {
   getUser,
-  activateUser,
   addKeycloakUserOnHold,
   hasAgencies,
   getAgencies,

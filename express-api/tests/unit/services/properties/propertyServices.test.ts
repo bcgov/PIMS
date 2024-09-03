@@ -1,10 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AppDataSource } from '@/appDataSource';
+import { PropertyType } from '@/constants/propertyType';
 import { Roles } from '@/constants/roles';
 import propertyServices, {
   getAgencyOrThrowIfMismatched,
+  getBuildingPredominateUseOrThrow,
+  getBuildingConstructionTypeOrThrow,
   getClassificationOrThrow,
   Lookups,
+  setNewBool,
+  checkForHeaders,
+  getAdministrativeAreaOrThrow,
 } from '@/services/properties/propertiesServices';
 import userServices from '@/services/users/usersServices';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
@@ -36,13 +42,14 @@ import {
   produceAdminArea,
   produceUser,
   produceImportResult,
-  produceParcelEvaluation,
-  produceParcelFiscal,
-  produceBuildingEvaluation,
-  produceBuildingFiscal,
+  produceParcelEvaluations,
+  produceParcelFiscals,
+  produceBuildingEvaluations,
+  produceBuildingFiscals,
   produceSSO,
   produceProjectStatus,
   produceProjectProperty,
+  produceImportRow,
 } from 'tests/testUtils/factories';
 import { DeepPartial, EntityTarget, ObjectLiteral } from 'typeorm';
 import xlsx, { WorkSheet } from 'xlsx';
@@ -80,10 +87,20 @@ const _propertyUnionCreateQueryBuilder: any = {
   take: () => _propertyUnionCreateQueryBuilder,
   skip: () => _propertyUnionCreateQueryBuilder,
   orderBy: () => _propertyUnionCreateQueryBuilder,
-  getMany: () => [producePropertyUnion()],
-  getManyAndCount: () => [[producePropertyUnion()], 1],
+  getMany: () => [
+    producePropertyUnion({ Id: 1, PropertyTypeId: PropertyType.LAND }),
+    producePropertyUnion({ Id: 1, PropertyTypeId: PropertyType.BUILDING }),
+  ],
+  getManyAndCount: () => [
+    [
+      producePropertyUnion({ Id: 1, PropertyTypeId: PropertyType.LAND }),
+      producePropertyUnion({ Id: 1, PropertyTypeId: PropertyType.BUILDING }),
+    ],
+    1,
+  ],
 };
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const _projectStatusCreateQueryBuilder: any = {
   select: () => _projectStatusCreateQueryBuilder,
   leftJoinAndSelect: () => _projectStatusCreateQueryBuilder,
@@ -96,6 +113,7 @@ const _projectStatusCreateQueryBuilder: any = {
   getMany: () => [produceProjectStatus()],
 };
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const _projectPropertyCreateQueryBuilder: any = {
   select: () => _projectPropertyCreateQueryBuilder,
   leftJoinAndSelect: () => _projectPropertyCreateQueryBuilder,
@@ -148,12 +166,24 @@ jest
   .spyOn(AppDataSource.getRepository(PropertyUnion), 'createQueryBuilder')
   .mockImplementation(() => _propertyUnionCreateQueryBuilder);
 
-jest
+const parcelRepoSpy = jest
   .spyOn(AppDataSource.getRepository(Parcel), 'find')
   .mockImplementation(async () => [produceParcel()]);
-jest
+const buildingRepoSpy = jest
   .spyOn(AppDataSource.getRepository(Building), 'find')
   .mockImplementation(async () => [produceBuilding()]);
+jest
+  .spyOn(AppDataSource.getRepository(ParcelEvaluation), 'find')
+  .mockImplementation(async () => produceParcelEvaluations(1));
+jest
+  .spyOn(AppDataSource.getRepository(ParcelFiscal), 'find')
+  .mockImplementation(async () => produceParcelFiscals(1));
+jest
+  .spyOn(AppDataSource.getRepository(BuildingEvaluation), 'find')
+  .mockImplementation(async () => produceBuildingEvaluations(1));
+jest
+  .spyOn(AppDataSource.getRepository(BuildingFiscal), 'find')
+  .mockImplementation(async () => produceBuildingFiscals(1));
 jest
   .spyOn(AppDataSource.getRepository(Parcel), 'save')
   .mockImplementation(async () => produceParcel());
@@ -198,13 +228,13 @@ const _mockEntityManager = {
     } else if (entityClass === Building) {
       return produceBuilding();
     } else if (entityClass === ParcelEvaluation) {
-      return produceParcelEvaluation(1, { Year: 2023 });
+      return produceParcelEvaluations(1, { Year: 2023 });
     } else if (entityClass === ParcelFiscal) {
-      return produceParcelFiscal(1, { FiscalYear: 2023 });
+      return produceParcelFiscals(1, { FiscalYear: 2023 });
     } else if (entityClass === BuildingEvaluation) {
-      return produceBuildingEvaluation(1, { Year: 2023 });
+      return produceBuildingEvaluations(1, { Year: 2023 });
     } else if (entityClass === BuildingFiscal) {
-      return produceBuildingFiscal(1, { FiscalYear: 2023 });
+      return produceBuildingFiscals(1, { FiscalYear: 2023 });
     } else {
       return [];
     }
@@ -295,6 +325,8 @@ describe('UNIT - Property Services', () => {
 
   describe('getPropertiesforExport', () => {
     it('should get a list of properties based on the filter', async () => {
+      parcelRepoSpy.mockImplementationOnce(async () => [produceParcel({ Id: 1 })]);
+      buildingRepoSpy.mockImplementationOnce(async () => [produceBuilding({ Id: 1 })]);
       const result = await propertyServices.getPropertiesForExport({
         pid: 'contains,123',
         pin: 'contains,456',
@@ -365,10 +397,26 @@ describe('UNIT - Property Services', () => {
 
   describe('importPropertiesAsJSON', () => {
     it('should insert or update properties into database', async () => {
+      jest
+        .spyOn(xlsx.utils, 'sheet_to_json')
+        .mockImplementationOnce(() => [
+          [
+            'PropertyType',
+            'PID',
+            'Name',
+            'Classification',
+            'AgencyCode',
+            'AdministrativeArea',
+            'Longitude',
+            'Latitude',
+            'Name',
+            'PredominateUse',
+            'ConstructionType',
+          ],
+        ]);
       jest.spyOn(xlsx.utils, 'sheet_to_json').mockImplementationOnce(() => [
         {
           PropertyType: 'Land',
-          Status: 'Active',
           Classification: 'Core Operational',
           AgencyCode: 'TEST',
           AdministrativeArea: 'TestArea',
@@ -384,7 +432,6 @@ describe('UNIT - Property Services', () => {
         },
         {
           PropertyType: 'Building',
-          Status: 'Active',
           Classification: 'Core Operational',
           AgencyCode: 'TEST',
           AdministrativeArea: 'TestArea',
@@ -412,6 +459,23 @@ describe('UNIT - Property Services', () => {
       expect(Array.isArray(result)).toBe(true);
     });
     it('should error out on all rows', async () => {
+      jest
+        .spyOn(xlsx.utils, 'sheet_to_json')
+        .mockImplementationOnce(() => [
+          [
+            'PropertyType',
+            'PID',
+            'Name',
+            'Classification',
+            'AgencyCode',
+            'AdministrativeArea',
+            'Longitude',
+            'Latitude',
+            'Name',
+            'PredominateUse',
+            'ConstructionType',
+          ],
+        ]);
       jest.spyOn(xlsx.utils, 'sheet_to_json').mockImplementationOnce(() => [
         {
           PropertyType: 'Land',
@@ -436,7 +500,6 @@ describe('UNIT - Property Services', () => {
     it('should return a classification if found', () => {
       const result = getClassificationOrThrow(
         {
-          Status: 'Active',
           Classification: 'Surplus',
         },
         [produceClassification({ Name: 'Surplus', Id: 1 })],
@@ -444,26 +507,70 @@ describe('UNIT - Property Services', () => {
       expect(result).toEqual(1);
     });
 
-    it('should throw an error if that classification is not active or disposed', () => {
+    it('should throw an error if there is no classification with a matching name', () => {
       expect(() =>
         getClassificationOrThrow(
           {
-            Status: 'Disabled',
-            Classification: 'Surplus',
+            Classification: 'Not Surplus',
           },
           [produceClassification({ Name: 'Surplus', Id: 1 })],
         ),
       ).toThrow();
     });
+  });
 
-    it('should throw an error if there is no classification with a matching name', () => {
+  describe('getAdministrativeAreaOrThrow', () => {
+    it('should throw an error if the administrativeArea is not found', () => {
       expect(() =>
-        getClassificationOrThrow(
+        getAdministrativeAreaOrThrow(
           {
-            Status: 'Active',
-            Classification: 'Not Surplus',
+            AdministrativeArea: 'Victoria',
           },
-          [produceClassification({ Name: 'Surplus', Id: 1 })],
+          [produceAdminArea({ Name: 'Vancouver', Id: 1 })],
+        ),
+      ).toThrow();
+    });
+  });
+
+  describe('getBuildingPredominateUseOrThrow', () => {
+    it('should return a buildingPredominateUse if found', () => {
+      const result = getBuildingPredominateUseOrThrow(
+        {
+          PredominateUse: 'Mixed',
+        },
+        [producePredominateUse({ Name: 'Mixed', Id: 1 })],
+      );
+      expect(result).toEqual(1);
+    });
+    it('should throw an error if there is no buildingPredominateUse with a matching name', () => {
+      expect(() =>
+        getBuildingPredominateUseOrThrow(
+          {
+            PredominateUse: 'Mixed',
+          },
+          [producePredominateUse({ Name: 'Not Mixed', Id: 1 })],
+        ),
+      ).toThrow();
+    });
+  });
+
+  describe('getBuildingConstructionTypeOrThrow', () => {
+    it('should return a buildingConstructionType if found', () => {
+      const result = getBuildingConstructionTypeOrThrow(
+        {
+          ConstructionType: 'Mixed',
+        },
+        [produceConstructionType({ Name: 'Mixed', Id: 1 })],
+      );
+      expect(result).toEqual(1);
+    });
+    it('should throw an error if there is no buildingConstructionType with a matching name', () => {
+      expect(() =>
+        getBuildingConstructionTypeOrThrow(
+          {
+            ConstructionType: 'Mixed',
+          },
+          [produceConstructionType({ Name: 'Not Mixed', Id: 1 })],
         ),
       ).toThrow();
     });
@@ -513,6 +620,77 @@ describe('UNIT - Property Services', () => {
           [],
         ),
       ).toThrow();
+    });
+  });
+
+  describe('checkForHeaders', () => {
+    it('should throw new error if a header is missing', () => {
+      const sheetObj = [
+        {
+          PropertyType: 'Building',
+        },
+      ];
+      const colArray = [
+        'PropertyType',
+        'PID',
+        'Classification',
+        'AgencyCode',
+        'AdministrativeArea',
+        'Latitude',
+        'Longitude',
+      ];
+      expect(() => checkForHeaders(sheetObj, colArray)).toThrow();
+    });
+  });
+
+  describe('setNewBool', () => {
+    it('should return the first argument if it is set', () => {
+      const newValue: boolean = true;
+      const previousValue: boolean = undefined;
+      const defaultValue: boolean = undefined;
+      const returnedBool = setNewBool(newValue, previousValue, defaultValue);
+      expect(() => returnedBool === newValue);
+    });
+    it('should return the second argument if first is not set and second is', () => {
+      const newValue: boolean = undefined;
+      const previousValue: boolean = true;
+      const defaultValue: boolean = undefined;
+      const returnedBool = setNewBool(newValue, previousValue, defaultValue);
+      expect(() => returnedBool === previousValue);
+    });
+  });
+
+  describe('makeBuildingUpsertObject', () => {
+    const importRow = produceImportRow({
+      Netbook: 2,
+      FiscalYear: 2024,
+      Assessed: 3,
+      AssessedYear: 2023,
+    });
+    const agency = produceAgency({ Code: importRow.AgencyCode });
+    const lookups: Lookups = {
+      classifications: [produceClassification({ Name: importRow.Classification })],
+      adminAreas: [produceAdminArea({ Name: importRow.AdministrativeArea })],
+      agencies: [agency],
+      predominateUses: [producePredominateUse({ Name: importRow.PredominateUse })],
+      userAgencies: [agency.Id],
+      constructionTypes: [produceConstructionType({ Name: importRow.ConstructionType })],
+    };
+    it('should return a new building object when that building does not exist', async () => {
+      const queryRunner = AppDataSource.createQueryRunner();
+      const result = await propertyServices.makeBuildingUpsertObject(
+        importRow,
+        produceUser({ AgencyId: agency.Id }),
+        [Roles.ADMIN],
+        lookups,
+        queryRunner,
+      );
+      // Some fields will be what we passed in
+      expect(result.PID).toBe(importRow.PID);
+      // Some will be defaults because we didn't import those
+      expect(result.IsSensitive).toBe(false);
+      expect(result.TotalArea).toBe(0);
+      expect(result.BuildingTenancy).toBe('');
     });
   });
 });

@@ -1,11 +1,12 @@
+import { Roles } from '@/constants/roles';
 import controllers from '@/controllers';
 import activeUserCheck from '@/middleware/activeUserCheck';
 import catchErrors from '@/utilities/controllerErrorWrapper';
+import { protectedRoute } from '@bcgov/citz-imb-sso-express';
 import express from 'express';
 
 const router = express.Router();
 
-export const DISPOSAL_API_ROUTE = '/projects/disposal';
 export const NOTIFICATION_QUEUE_ROUTE = '/queue';
 export const NOTIFICATION_TEMPLATE_ROUTE = '/templates';
 
@@ -19,10 +20,7 @@ router
 
 router
   .route(`${NOTIFICATION_QUEUE_ROUTE}/:id`)
-  .put(activeUserCheck, catchErrors(resendNotificationById));
-
-router
-  .route(`${NOTIFICATION_QUEUE_ROUTE}/:id`)
-  .delete(activeUserCheck, catchErrors(cancelNotificationById));
+  .put(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(resendNotificationById))
+  .delete(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(cancelNotificationById));
 
 export default router;
