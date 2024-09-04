@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 //Simple component testing area.
 import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
