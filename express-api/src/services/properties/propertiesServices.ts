@@ -413,11 +413,7 @@ const makeParcelUpsertObject = async (
   const pin = numberOrNull(row.PIN) ?? existentParcel?.PIN;
   const description = row.Description ?? (existentParcel ? existentParcel.Description : '');
   const isSensitive = setNewBool(row.IsSensitive, existentParcel?.IsSensitive, false);
-  const isVisibleToOtherAgencies = setNewBool(
-    row.IsVisibleToOtherAgencies,
-    existentParcel?.IsVisibleToOtherAgencies,
-    false,
-  );
+
   return {
     Id: existentParcel?.Id,
     AgencyId: getAgencyOrThrowIfMismatched(row, lookups, roles).Id,
@@ -435,7 +431,6 @@ const makeParcelUpsertObject = async (
     Address1: row.Address ?? existentParcel?.Address1 ?? null,
     AdministrativeAreaId: adminAreaId,
     IsSensitive: isSensitive,
-    IsVisibleToOtherAgencies: isVisibleToOtherAgencies,
     PropertyTypeId: 0,
     Description: description,
     LandArea: numberOrNull(row.LandArea) ?? existentParcel ? existentParcel.LandArea : null,
@@ -502,11 +497,7 @@ const makeBuildingUpsertObject = async (
   const description = row.Description ?? (existentBuilding ? existentBuilding.Description : '');
   const rentableArea = row.NetUsableArea ?? (existentBuilding ? existentBuilding.RentableArea : 0);
   const isSensitive = setNewBool(row.IsSensitive, existentBuilding?.IsSensitive, false);
-  const isVisibleToOtherAgencies = setNewBool(
-    row.IsVisibleToOtherAgencies,
-    existentBuilding?.IsVisibleToOtherAgencies,
-    false,
-  );
+
   const buildingFloorCount =
     row.BuildingFloorCount ?? (existentBuilding ? existentBuilding.BuildingFloorCount : 0);
   const tenancy = row.BuildingTenancy ?? (existentBuilding ? existentBuilding.BuildingTenancy : '');
@@ -533,7 +524,6 @@ const makeBuildingUpsertObject = async (
     IsSensitive: isSensitive,
     Description: description,
     Address1: row.Address ?? existentBuilding?.Address1 ?? null,
-    IsVisibleToOtherAgencies: isVisibleToOtherAgencies,
     PropertyTypeId: 1,
     RentableArea: rentableArea,
     BuildingTenancy: tenancy,
@@ -605,14 +595,11 @@ export interface ImportRow {
   FiscalYear?: number;
   AssessedYear?: number;
   IsSensitive?: boolean;
-  IsVisibleToOtherAgencies?: boolean; // TODO: Removed in other PR.
   LandArea?: number;
   BuildingTenancy?: number;
   NetUsableArea?: number;
   BuildingFloorCount?: number;
   TotalArea?: number;
-  // Not displayed in UI
-  LocalId?: string;
 }
 
 /**
