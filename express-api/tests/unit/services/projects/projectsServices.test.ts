@@ -220,8 +220,7 @@ const _mockEntityManager = {
   },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _queryRunner = jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
+jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
   ...jest.requireActual('@/appDataSource').createQueryRunner,
   startTransaction: _mockStartTransaction,
   rollbackTransaction: _mockRollbackTransaction,
