@@ -201,13 +201,7 @@ export const AccessRequest = () => {
         {selectPageContent()}
       </Paper>
 
-      <Typography
-        lineHeight={1.8}
-        marginX={'6em'}
-        fontSize={'0.8rem'}
-        mt={'1rem'}
-        textAlign={'center'}
-      >
+      <Typography lineHeight={1.8} fontSize={'0.8rem'} mt={'1rem'} textAlign={'center'}>
         {signupTermsAndConditionsClaim}
       </Typography>
     </Box>

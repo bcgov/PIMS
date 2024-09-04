@@ -51,9 +51,6 @@ export abstract class Property extends SoftDeleteEntity {
   @Column({ type: 'boolean' })
   IsSensitive: boolean;
 
-  @Column({ type: 'boolean' })
-  IsVisibleToOtherAgencies: boolean;
-
   @Column({
     type: 'point',
     transformer: {
@@ -90,8 +87,4 @@ export abstract class Property extends SoftDeleteEntity {
 
   @Column({ type: 'int', nullable: true })
   PIN: number;
-
-  // Including this for quick geocoder lookup.
-  @Column({ type: 'character varying', nullable: true })
-  SiteId: string;
 }

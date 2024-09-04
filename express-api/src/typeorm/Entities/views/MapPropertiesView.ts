@@ -4,12 +4,12 @@ import { ViewColumn, ViewEntity } from 'typeorm';
 @ViewEntity({
   materialized: false,
   expression: `
-    SELECT c.id, c.pid, c.pin, c.location, c.property_type_id, c.address1, c.classification_id, c.agency_id, c.is_visible_to_other_agencies, c.administrative_area_id, c.name, aa.regional_district_id as regional_district_id
+    SELECT c.id, c.pid, c.pin, c.location, c.property_type_id, c.address1, c.classification_id, c.agency_id, c.administrative_area_id, c.name, aa.regional_district_id as regional_district_id
     FROM (
-      SELECT id, pid, pin, location, property_type_id, address1, classification_id, agency_id, is_visible_to_other_agencies, administrative_area_id, name 
+      SELECT id, pid, pin, location, property_type_id, address1, classification_id, agency_id, administrative_area_id, name 
       FROM parcel WHERE deleted_on IS NULL
       UNION ALL
-      SELECT id, pid, pin, location, property_type_id, address1, classification_id, agency_id, is_visible_to_other_agencies, administrative_area_id, name 
+      SELECT id, pid, pin, location, property_type_id, address1, classification_id, agency_id, administrative_area_id, name 
       FROM building WHERE deleted_on IS NULL
     ) c
     LEFT JOIN administrative_area aa ON c.administrative_area_id = aa.id;  
@@ -39,9 +39,6 @@ export class MapProperties {
 
   @ViewColumn({ name: 'agency_id' })
   AgencyId: number;
-
-  @ViewColumn({ name: 'is_visible_to_other_agencies' })
-  IsVisibleToOtherAgencies: boolean;
 
   @ViewColumn({ name: 'administrative_area_id' })
   AdministrativeAreaId: number;

@@ -15,6 +15,7 @@ export const constructFindOptionFromQueryPid = <T>(
 ): FindOptionsWhere<T> => {
   if (operatorValuePair == null || operatorValuePair.match(/([^,]*),(.*)/) == null)
     return { [column]: undefined } as FindOptionsWhere<T>;
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, operator, value] = operatorValuePair.match(/([^,]*),(.*)/).map((a) => a.trim());
   const trimmedValue = value.replace(/[-]/g, ''); //remove all hyphens;
@@ -49,6 +50,7 @@ export const constructFindOptionFromQueryBoolean = <T>(
 ): FindOptionsWhere<T> => {
   if (operatorValuePair == null || operatorValuePair.match(/([^,]*),(.*)/) == null)
     return { [column]: undefined } as FindOptionsWhere<T>;
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, operator, value] = operatorValuePair.match(/([^,]*),(.*)/).map((a) => a.trim());
   let internalMatcher;
@@ -106,6 +108,7 @@ export const constructFindOptionFromQuery = <T>(
 ): FindOptionsWhere<T> => {
   if (operatorValuePair == null || operatorValuePair.match(/([^,]*),(.*)/) == null)
     return { [column]: undefined } as FindOptionsWhere<T>;
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, operator, value] = operatorValuePair.match(/([^,]*),(.*)/).map((a) => a.trim());
   let internalMatcher;
@@ -207,7 +210,7 @@ export const IsAnyOfWrapper = (elements: string[]) => {
 //ie. It will pass Project.ProjectNumber instead of "Project_project_number" (correct column alias constructed by TypeORM)
 //or "Project".project_number (correct table alias plus non-aliased column access)
 //Thankfully, it's not too difficult to manually format this.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 export const fixColumnAlias = (str: string) => {
   const [tableAlias, columnAlias] = str.split('.');
   const fixedColumn = columnAlias
