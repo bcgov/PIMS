@@ -1,0 +1,342 @@
+### PATHS ###
+paths:
+  /ltsa/land/title:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - LTSA
+      summary: Gets a order object from the Land Title and Survey Authority.
+      parameters:
+        - in: query
+          name: pid
+          schema: 
+            type: string
+            example: '123456789'
+          description: Should not include leading 0s or hyphens.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object 
+                properties:
+                  order:
+                    type: object
+                    properties:
+                      billingInfo:
+                        type: object
+                        properties:
+                          billingModel:
+                            type: string
+                            example: PROV
+                          feeExempted:
+                            type: boolean 
+                            example: true 
+                          productCode:
+                            type: string 
+                            example: Search
+                          productFee:
+                            type: number 
+                            example: 0
+                          productFeeTax:
+                            type: number 
+                            example: 0
+                          productName:
+                            type: string 
+                            example: Searches
+                          serviceCharge:
+                            type: number 
+                            example: 0
+                          serviceChargeTax:
+                            type: number 
+                            example: 0
+                          subtotalFee:
+                            type: number 
+                            example: 0
+                          totalFee:
+                            type: number 
+                            example: 0
+                          totalTax:
+                            type: number 
+                            example: 0
+                      fileReference:
+                        type: string
+                      orderId:
+                        type: string
+                        example: '142beeab-ca69-495c-91ac-021e6b64812c'
+                      orderedProduct:
+                        type: object
+                        properties:
+                          fieldedData:
+                            type: object 
+                            properties:
+                              titleStatus:
+                                type: string
+                                example: "REGISTERED"
+                              titleIdentifier:
+                                type: object
+                                properties:
+                                  titleNumber:
+                                    type: string
+                                    example: "AA000000"
+                                  landTitleDistrict:
+                                    type: string
+                                    example: "VICTORIA"
+                              tombstone:
+                                type: object
+                                properties:
+                                  applicationReceivedDate:
+                                    type: string
+                                    format: date-time
+                                    example: "2024-01-01T00:00:00Z"
+                                  enteredDate:
+                                    type: string
+                                    format: date-time
+                                    example: "2024-01-01T00:00:00Z"
+                                  titleRemarks:
+                                    type: string
+                                  marketValueAmount:
+                                    type: string
+                                    example: "100"
+                                  fromTitles:
+                                    type: array
+                                    items:
+                                      type: object
+                                      properties:
+                                        titleNumber:
+                                          type: string
+                                          example: "AAA000"
+                                        landTitleDistrict:
+                                          type: string
+                                          example: "VICTORIA"
+                                  natureOfTransfers:
+                                    type: array
+                                    items:
+                                      type: object
+                                      properties:
+                                        transferReason:
+                                          type: string
+                                          example: "FEE SIMPLE"
+                              ownershipGroups:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    jointTenancyIndication:
+                                      type: boolean
+                                      example: false
+                                    interestFractionNumerator:
+                                      type: string
+                                      example: "1"
+                                    interestFractionDenominator:
+                                      type: string
+                                      example: "1"
+                                    ownershipRemarks:
+                                      type: string
+                                      example: ""
+                                    titleOwners:
+                                      type: array
+                                      items:
+                                        type: object
+                                        properties:
+                                          lastNameOrCorpName1:
+                                            type: string
+                                            example: "COMPANY LTD."
+                                          givenName:
+                                            type: string
+                                            example: ""
+                                          incorporationNumber:
+                                            type: string
+                                            example: "111111"
+                                          occupationDescription:
+                                            type: string
+                                            example: ""
+                                          address:
+                                            type: object
+                                            properties:
+                                              addressLine1:
+                                                type: string
+                                                example: "742 EVERGREEN TERR"
+                                              addressLine2:
+                                                type: string
+                                                example: ""
+                                              city:
+                                                type: string
+                                                example: "VICTORIA"
+                                              province:
+                                                type: string
+                                                example: "BC"
+                                              provinceName:
+                                                type: string
+                                                example: "BRITISH COLUMBIA"
+                                              country:
+                                                type: string
+                                                example: "CANADA"
+                                              postalCode:
+                                                type: string
+                                                example: "V8X 4S7"
+                              taxAuthorities:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    authorityName:
+                                      type: string
+                                      example: "Victoria, City of"
+                              descriptionsOfLand:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    parcelIdentifier:
+                                      type: string
+                                      example: "123-456-789"
+                                    fullLegalDescription:
+                                      type: string
+                                      example: ""
+                                    parcelStatus:
+                                      type: string
+                                      example: "A"
+                              legalNotationsOnTitle:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    legalNotationNumber:
+                                      type: string
+                                      example: "AA0000000"
+                                    status:
+                                      type: string
+                                      example: "ACTIVE"
+                                    legalNotation:
+                                      type: object
+                                      properties:
+                                        originalLegalNotationNumber:
+                                          type: string
+                                          example: "AA00000000"
+                                        legalNotationText:
+                                          type: string
+                                          example: ""
+                              duplicateCertificatesOfTitle:
+                                type: array
+                                items:
+                                  type: string
+                              titleTransfersOrDispositions:
+                                type: array
+                                items:
+                                  type: string
+                              chargesOnTitle:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    chargeNumber:
+                                      type: string
+                                      example: "A0000"
+                                    status:
+                                      type: string
+                                      example: "REGISTERED"
+                                    enteredDate:
+                                      type: string
+                                      format: date-time
+                                      example: "2000-01-01T00:00:00Z"
+                                    interAlia:
+                                      type: string
+                                      example: "Yes"
+                                    chargeRemarks:
+                                      type: string
+                                      example: ""
+                                    charge:
+                                      type: object
+                                      properties:
+                                        chargeNumber:
+                                          type: string
+                                          example: "A0000"
+                                        transactionType:
+                                          type: string
+                                          example: "UNDERSURFACE RIGHTS"
+                                        applicationReceivedDate:
+                                          type: string
+                                          format: date-time
+                                          example: "1970-01-01T00:00:00Z"
+                                        chargeOwnershipGroups:
+                                          type: array
+                                          items:
+                                            type: object
+                                            properties:
+                                              jointTenancyIndication:
+                                                type: boolean
+                                                example: false
+                                              interestFractionNumerator:
+                                                type: string
+                                                example: "1"
+                                              interestFractionDenominator:
+                                                type: string
+                                                example: "1"
+                                              ownershipRemarks:
+                                                type: string
+                                                example: ""
+                                              chargeOwners:
+                                                type: array
+                                                items:
+                                                  type: object
+                                                  properties:
+                                                    lastNameOrCorpName1:
+                                                      type: string
+                                                      example: ""
+                                                    incorporationNumber:
+                                                      type: string
+                                                      example: ""
+                                        certificatesOfCharge:
+                                          type: array
+                                          items:
+                                            type: object
+                                        correctionsAltos1:
+                                          type: array
+                                          items:
+                                            type: object
+                                            properties:
+                                              number:
+                                                type: string
+                                                example: "A0000"
+                                              referenceDescription:
+                                                type: string
+                                                example: ""
+                                              enteredDate:
+                                                type: string
+                                                format: date-time
+                                                example: "1980-01-01T00:00:00Z"
+                                              correctionDate:
+                                                type: string
+                                                format: date-time
+                                                example: "1980-01-01T00:00:00Z"
+                                              correctionText:
+                                                type: string
+                                                example: ""
+                                        corrections:
+                                          type: array
+                                          items:
+                                            type: object
+                                    chargeRelease:
+                                      type: object
+                                      properties: {}
+                      productOrderParameters:
+                        type: object
+                        properties:
+                          includeCancelledInfo:
+                            type: boolean
+                            example: false 
+                          landTitleDistrictCode:
+                            type: string 
+                            example: NW 
+                          titleNumber:
+                            type: string 
+                            example: BX247931
+                      productType:
+                        type: string
+                        example: title
+                      status:
+                        type: string
+                        example: Processing

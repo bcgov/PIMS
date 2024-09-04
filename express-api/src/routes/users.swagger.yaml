@@ -1,0 +1,388 @@
+### PATHS ###
+paths:
+  /users:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: Returns a list of users in PIMS.
+      description: >
+        The string parameters are looking for exact matches.
+        Partial matches will not work.
+      parameters:
+        - in: query 
+          name: page
+          schema: 
+            type: integer
+            example: 0
+        - in: query 
+          name: quantity
+          schema:
+            type: integer
+            example: 100
+        - in: query 
+          name: sortOrder
+          schema: 
+            type: string
+            example: ASC 
+        - in: query 
+          name: sortKey 
+          schema: 
+            type: string
+            example: FirstName 
+        - in: query
+          name: id 
+          schema:
+            type: string
+            format: uuid 
+        - in: query
+          name: username
+          schema:
+            type: string
+            example: d2430ab0d79c4201a386226749028653@idir 
+        - in: query
+          name: displayName
+          schema:
+            type: string
+            example: Doe, John
+        - in: query
+          name: lastName
+          schema:
+            type: string
+            example: Doe
+        - in: query
+          name: firstName
+          schema:
+            type: string
+            example: John
+        - in: query
+          name: email
+          schema:
+            type: string
+            example: email@gov.bc.ca
+        - in: query
+          name: agencyId
+          schema:
+            type: integer
+            example: 100
+        - in: query
+          name: agency
+          schema:
+            type: string
+            example: Real Property 
+        - in: query
+          name: role
+          schema:
+            type: string
+            example: General User 
+        - in: query
+          name: position
+          schema:
+            type: string
+            example: Superstar
+        - in: query
+          name: guid
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: status
+          schema:
+            type: string
+            example: Active
+      responses:
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: Bad Request 
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Failed to parse filter query.
+  /users/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: Returns a single user with the provided ID.
+      parameters:
+        - in: path 
+          name: id
+          schema: 
+            type: string
+            format: uuid
+      responses:
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400': 
+          description: Bad Request 
+          content: 
+            text/plain:
+              schema:
+                type: string
+                example: Could not parse UUID.
+        '403': 
+          description: Forbidden 
+          content: 
+            text/plain:
+              schema:
+                type: string
+                example: User does not have permission to view this user.
+        '404': 
+          description: Not Found
+          content: 
+            text/plain:
+              schema:
+                type: string
+                example: User not found.
+    put: 
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: Updates a single user with the provided ID.
+      parameters:
+        - in: path 
+          name: id
+          schema: 
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPut'
+      responses:
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400': 
+          description: Bad Request 
+          content: 
+            text/plain:
+              schema:
+                type: string
+                example: Could not parse UUID.
+        '404': 
+          description: Not Found
+          content: 
+            text/plain:
+              schema:
+                type: string
+                example: User not found.
+  /users/self:
+    get: 
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: Returns a single user matching the requesting user.
+      responses:
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '204':
+          description: No Content
+  /users/access/request:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: Adds a user with OnHold status.
+      description: >
+        Most user info comes from the user's token.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                AgencyId: 
+                  type: integer
+                  example: 2
+                Position:
+                  type: string
+                  example: Superstar
+                Note: 
+                  type: string
+                  example: Please give me access.
+      responses:
+        '201': 
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /users/agencies/{username}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: Returns an array of agencies that the user has permissions in.
+      description: >
+        This can include the user's agency and it's children if the user
+        belongs to a parent agency.
+      parameters:
+        - in: path
+          name: username 
+          schema:
+            type: string
+            example: 59fa487c44c546468f73716ab6fd265f@idir
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: integer
+
+### SCHEMAS ### 
+components:
+  schemas:
+    UserPut:
+      type: object 
+      properties:
+        Id: 
+          type: string
+          format: uuid
+        FirstName:
+          type: string
+          example: John
+        LastName:
+          type: string
+          example: Doe
+        Email:
+          type: string
+          format: email
+          example: john.doe@gov.bc.ca
+        Position:
+          type: string
+          example: Architect
+        AgencyId:
+          type: integer
+          example: 2
+        Status:
+          type: string
+          example: Disabled
+        Role:
+          type: object
+          properties:
+            Id: 
+              type: string
+              format: uuid
+            Description:
+              type: string
+            Name:
+              type: string 
+              example: General User
+    User:
+      allOf: 
+        - $ref: '#/components/schemas/CommonEntityProperties'
+        - type: object 
+          properties:
+            Id:
+              type: string
+              format: uuid
+              example: 59fa487c-44c5-4646-8f73-716ab6fd265f
+            Username:
+              type: string
+              example: 59fa487c44c546468f73716ab6fd265f@idir
+            DisplayName:
+              type: string
+              example: Doe, John
+            FirstName:
+              type: string
+              example: John
+            MiddleName:
+              type: string
+              nullable: true
+              example: null
+            LastName:
+              type: string
+              example: Doe
+            Email:
+              type: string
+              format: email
+              example: john.doe@gov.bc.ca
+            Position:
+              type: string
+              example: Architect
+            IsDisabled:
+              type: boolean
+              example: false
+            Note:
+              type: string
+              nullable: true
+              example: A real troublemaker. 
+            LastLogin:
+              type: string
+              format: date-time
+            ApprovedById:
+              type: string
+              format: uuid
+              nullable: true
+              example: null
+            ApprovedOn:
+              type: string
+              format: date-time
+              nullable: true
+              example: null
+            KeycloakUserId:
+              type: string
+              format: uuid
+              example: 59fa487c-44c5-4646-8f73-716ab6fd265f
+            AgencyId:
+              type: integer
+              example: 2
+            Agency:
+              $ref: '#/components/schemas/Agency'
+            RoleId:
+              type: string
+              format: uuid
+            Role:
+              $ref: '#/components/schemas/Role'
+            Status:
+              type: string
+              example: Active
+    Role: 
+      allOf: 
+        - $ref: '#/components/schemas/CommonEntityProperties'
+        - type: object 
+          properties:
+            Id:
+              type: string
+              format: uuid
+            Description:
+              type: string 
+              example: This role does x, y, and z. 
+            IsDisabled:
+              type: boolean
+              example: false 
+            Name: 
+              type: string
+              example: General User 
+            SortOrder:
+              type: integer
+              example: 0

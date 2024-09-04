@@ -19,14 +19,8 @@ export class Role extends BaseEntity {
   @Column('int', { default: 0 })
   SortOrder: number;
 
-  @Column('uuid', { nullable: true })
-  KeycloakGroupId: string;
-
   @Column('text', { nullable: true })
   Description: string;
-
-  @Column('boolean')
-  IsPublic: boolean;
 
   @OneToMany(() => User, (user) => user.Role)
   Users: Relation<User>[];

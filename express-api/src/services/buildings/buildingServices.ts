@@ -20,6 +20,7 @@ const buildingRepo = AppDataSource.getRepository(Building);
  * @throws {ErrorWithCode} If the building already exists or is unable to be added.
  */
 export const addBuilding = async (building: DeepPartial<Building>) => {
+  // TODO: Why would an incoming building have an id? Is there a better way to check for existing buildings?
   const existingBuilding = building.Id ? await getBuildingById(building.Id) : null;
   if (existingBuilding) {
     throw new ErrorWithCode('Building already exists.', 409);
@@ -109,13 +110,6 @@ export const updateBuildingById = async (building: DeepPartial<Building>, ssoUse
       }),
     );
   }
-  // Rebuild metadata to avoid overwriting the whole field.
-  if (existingBuilding.LeasedLandMetadata) {
-    building.LeasedLandMetadata = {
-      ...existingBuilding.LeasedLandMetadata,
-      ...building.LeasedLandMetadata,
-    };
-  }
 
   const updatedBuilding = await buildingRepo.save(building);
   return updatedBuilding;
@@ -174,7 +168,7 @@ export const deleteBuildingById = async (buildingId: number, username: string) =
     await queryRunner.rollbackTransaction();
     logger.warn(e.message);
     if (e instanceof ErrorWithCode) throw e;
-    throw new ErrorWithCode(`Error updating project: ${e.message}`, 500);
+    throw new ErrorWithCode(`Error updating building: ${e.message}`, 500);
   } finally {
     await queryRunner.release();
   }

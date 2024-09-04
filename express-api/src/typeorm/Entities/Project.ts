@@ -99,11 +99,6 @@ export class Project extends SoftDeleteEntity {
   @Column('text', { nullable: true })
   Description: string;
 
-  @Column('jsonb', {
-    nullable: true,
-  })
-  Metadata: ProjectMetadata;
-
   @Column('timestamp', { nullable: true })
   SubmittedOn: Date;
 

@@ -156,6 +156,7 @@ const addProject = async (
 
   // If drafts become possible, this can't always be SPP.
   project.ProjectNumber = `SPP-${nextval}`;
+  project.SubmittedOn = new Date();
   const queryRunner = AppDataSource.createQueryRunner();
   await queryRunner.startTransaction();
   try {
@@ -687,10 +688,6 @@ const updateProject = async (
   const queryRunner = AppDataSource.createQueryRunner();
   await queryRunner.startTransaction();
   try {
-    // Metadata field is not preserved if a metadata property is set. It is overwritten.
-    // Construct the proper metadata before continuing.
-    const newMetadata = { ...originalProject.Metadata, ...project.Metadata };
-
     await handleProjectTasks({ ...project, CreatedById: project.UpdatedById }, queryRunner);
     await handleProjectAgencyResponses(
       { ...project, CreatedById: project.UpdatedById },
@@ -700,10 +697,23 @@ const updateProject = async (
     await handleProjectMonetary({ ...project, CreatedById: project.UpdatedById }, queryRunner);
     await handleProjectTimestamps({ ...project, CreatedById: project.UpdatedById }, queryRunner);
 
+    // Handle timestamps
+    if (project.StatusId === ProjectStatus.CANCELLED) project.CancelledOn = new Date();
+    else if (project.StatusId === ProjectStatus.DENIED) project.DeniedOn = new Date();
+    else if (
+      [ProjectStatus.DISPOSED, ProjectStatus.TRANSFERRED_WITHIN_GRE].includes(project.StatusId)
+    )
+      project.CompletedOn = new Date();
+    else if (
+      [ProjectStatus.APPROVED_FOR_ERP, ProjectStatus.APPROVED_FOR_EXEMPTION].includes(
+        project.StatusId,
+      )
+    )
+      project.ApprovedOn = new Date();
+
     // Update Project
     await queryRunner.manager.save(Project, {
       ...project,
-      Metadata: newMetadata,
       Tasks: undefined,
       AgencyResponses: undefined,
       Notes: undefined,
@@ -911,7 +921,7 @@ const getProjects = async (filter: ProjectFilter) => {
     .createQueryBuilder()
     .where(
       new Brackets((qb) => {
-        options.forEach((option) => qb.orWhere(option));
+        options.forEach((option) => qb.andWhere(option));
       }),
     );
 

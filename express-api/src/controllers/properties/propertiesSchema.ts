@@ -39,7 +39,6 @@ export type MapFilter = z.infer<typeof MapFilterSchema>;
 export const PropertyUnionFilterSchema = z.object({
   pid: z.string().optional(),
   pin: z.string().optional(),
-  status: z.string().optional(),
   classification: z.string().optional(),
   agency: z.string().optional(),
   agencyIds: z.array(z.number().int().nonnegative()).optional(),
