@@ -84,7 +84,6 @@ const ProjectDetail = (props: IProjectDetail) => {
 
   useEffect(() => {
     if (data && data.retStatus !== 200) {
-      // TODO: display message with permission error
       navigate('/');
     }
   }, [data]);
