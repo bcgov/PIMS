@@ -66,6 +66,9 @@ const ParcelMap = (props: ParcelMapProps) => {
       resize: () => {
         setPopupState({ ...popupState, open: false });
       },
+      baselayerchange: (e) => {
+        setTileLayerName(e.name);
+      },
     });
     return null;
   };
@@ -74,6 +77,7 @@ const ParcelMap = (props: ParcelMapProps) => {
   const lookup = useContext(LookupContext);
   const [filter, setFilter] = useState<MapFilter>({}); // Applies when request for properties is made
   const [properties, setProperties] = useState<PropertyGeo[]>([]);
+  const [tileLayerName, setTileLayerName] = useState<string>('Street Map');
 
   // Get properties for map.
   const { data, refreshData, isLoading } = useDataLoader(() =>
@@ -302,6 +306,7 @@ const ParcelMap = (props: ParcelMapProps) => {
             properties={properties}
             popupState={popupState}
             setPopupState={setPopupState}
+            tileLayerName={tileLayerName}
           />
         ) : (
           <></>

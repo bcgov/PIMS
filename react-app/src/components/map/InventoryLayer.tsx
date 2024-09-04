@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import { Marker, useMap, useMapEvents } from 'react-leaflet';
 import useSupercluster from 'use-supercluster';
@@ -12,6 +12,7 @@ export interface InventoryLayerProps {
   properties: PropertyGeo[];
   popupState: PopupState;
   setPopupState: React.Dispatch<React.SetStateAction<PopupState>>;
+  tileLayerName: string;
 }
 
 // Properties added to PropertyGeo types after clustering
@@ -31,7 +32,7 @@ export interface ClusterGeo {
  * @returns {JSX.Element} The rendered InventoryLayer component.
  */
 export const InventoryLayer = (props: InventoryLayerProps) => {
-  const { isLoading, properties, popupState, setPopupState } = props;
+  const { isLoading, properties, popupState, setPopupState, tileLayerName } = props;
   const map = useMap();
   const [clusterBounds, setClusterBounds] = useState<BBox>(); // Affects clustering
   const [clusterZoom, setClusterZoom] = useState<number>(14); // Affects clustering
@@ -90,6 +91,18 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
     disableRefresh: isLoading, // So we don't refresh while loading
   });
 
+  // Determine appropriate class for map clusters
+  const getClusterClass = useMemo(() => {
+    switch (tileLayerName) {
+      case 'Street Map':
+        return 'street';
+      case 'Satellite':
+        return 'satellite';
+      default:
+        return '';
+    }
+  }, [tileLayerName]);
+
   // Create icons for clusters
   const icons = {};
   const makeClusterIcon = (count: number) => {
@@ -98,7 +111,8 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
     if (!icons[count]) {
       const displayCount = count < 1000 ? count : `${(count / 1000).toFixed(1)}K`;
       return (icons[count] = L.divIcon({
-        html: `<div class="cluster-marker" style="width: ${size}px; height: ${size}px; background-color: rgb(120,120,120); color: white;">
+        // Some cluster styling found in clusterHelpers/clusters.css
+        html: `<div class="cluster-marker ${getClusterClass}" style="width: ${size}px; height: ${size}px;">
         ${displayCount}
       </div>`,
         iconAnchor: [size, size], // This helps to centre the icon on the location. Otherwise anchored top-left.
