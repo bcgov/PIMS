@@ -27,12 +27,9 @@ const mockParcel: Partial<Parcel> = {
   ClassificationId: 0,
   AgencyId: 0,
   IsSensitive: false,
-  IsVisibleToOtherAgencies: false,
   PID: faker.number.int(),
   PIN: faker.number.int(),
   LandArea: 0,
-  Zoning: '',
-  ZoningPotential: '',
   ParentParcelId: 1,
 };
 
