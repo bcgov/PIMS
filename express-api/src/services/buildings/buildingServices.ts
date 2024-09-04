@@ -110,13 +110,6 @@ export const updateBuildingById = async (building: DeepPartial<Building>, ssoUse
       }),
     );
   }
-  // Rebuild metadata to avoid overwriting the whole field.
-  if (existingBuilding.LeasedLandMetadata) {
-    building.LeasedLandMetadata = {
-      ...existingBuilding.LeasedLandMetadata,
-      ...building.LeasedLandMetadata,
-    };
-  }
 
   const updatedBuilding = await buildingRepo.save(building);
   return updatedBuilding;
