@@ -9,12 +9,6 @@ export class Parcel extends Property {
   @Column({ type: 'real', nullable: true })
   LandArea: number;
 
-  @Column({ type: 'character varying', length: 50, nullable: true })
-  Zoning: string;
-
-  @Column({ type: 'character varying', length: 50, nullable: true })
-  ZoningPotential: string;
-
   @Column({ name: 'parent_parcel_id', type: 'int', nullable: true })
   ParentParcelId: number;
 

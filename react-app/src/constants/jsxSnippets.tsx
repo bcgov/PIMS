@@ -35,10 +35,23 @@ export const accountInactiveBlurb = () => {
 
 export const signupTermsAndConditionsClaim = (
   <>
-    By signing up, you agree to the{' '}
-    <a href="https://www2.gov.bc.ca/gov/content/home/disclaimer">Terms and Conditions</a> and
-    confirm that you have read the{' '}
-    <a href="https://www2.gov.bc.ca/gov/content/home/privacy">Privacy Policy</a>.
+    By signing up, you confirm that you have read the{' '}
+    <a
+      href="https://www2.gov.bc.ca/gov/content/home/disclaimer"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Disclaimer
+    </a>{' '}
+    and{' '}
+    <a
+      href="https://www2.gov.bc.ca/gov/content/home/privacy"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Privacy Policy
+    </a>
+    .
   </>
 );
 

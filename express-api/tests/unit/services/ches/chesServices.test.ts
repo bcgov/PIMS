@@ -1,4 +1,3 @@
-/* eslint-disable no-var */
 import chesServices, { IEmail } from '@/services/ches/chesServices';
 import { randomUUID } from 'crypto';
 import { produceEmail, produceSSO } from 'tests/testUtils/factories';

@@ -60,19 +60,7 @@ export class Building extends Property {
   BuildingOccupantType: BuildingOccupantType;
 
   @Column({ type: 'timestamp', nullable: true })
-  LeaseExpiry: Date;
-
-  @Column({ type: 'character varying', length: 100, nullable: true })
-  OccupantName: string;
-
-  @Column({ type: 'timestamp', nullable: true })
   BuildingTenancyUpdatedOn: Date;
-
-  @Column({ type: 'character varying', length: 500, nullable: true })
-  EncumbranceReason: string;
-
-  @Column({ type: 'jsonb', nullable: true })
-  LeasedLandMetadata: LeasedLandMetadata;
 
   @Column({ type: 'real' })
   TotalArea: number;
