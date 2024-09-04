@@ -6,6 +6,9 @@ import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Building } from '@/typeorm/Entities/Building';
 import { checkUserAgencyPermission, isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 import { Roles } from '@/constants/roles';
+import { AppDataSource } from '@/appDataSource';
+import { ProjectStatus } from '@/constants/projectStatus';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 
 /**
  * @description Gets all buildings satisfying the filter parameters.
@@ -53,7 +56,29 @@ export const getBuilding = async (req: Request, res: Response) => {
 
   if (!building) {
     return res.status(404).send('Building matching this ID was not found.');
-  } else if (!(await checkUserAgencyPermission(kcUser, [building.AgencyId], permittedRoles))) {
+  }
+
+  // Get related projects
+  const projects = (
+    await AppDataSource.getRepository(ProjectProperty).find({
+      where: {
+        BuildingId: building.Id,
+      },
+      relations: {
+        Project: true,
+      },
+    })
+  ).map((pp) => pp.Project);
+  // Are any related projects in ERP? If so, they should be visible to outside agencies.
+  const exposedProjectStatuses = [ProjectStatus.APPROVED_FOR_ERP];
+  const isVisibleToOtherAgencies = projects.some((project) =>
+    exposedProjectStatuses.includes(project.StatusId),
+  );
+
+  if (
+    !(await checkUserAgencyPermission(kcUser, [building.AgencyId], permittedRoles)) &&
+    !isVisibleToOtherAgencies
+  ) {
     return res.status(403).send('You are not authorized to view this building.');
   }
   return res.status(200).send(building);
