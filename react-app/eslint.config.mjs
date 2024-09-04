@@ -1,12 +1,15 @@
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import typescriptParser from '@typescript-eslint/parser';
+import tsEslint from 'typescript-eslint';
 import prettierPlugin from 'eslint-plugin-prettier';
-import reactPlugin from 'eslint-plugin-react';
+import eslint from '@eslint/js';
+import reactPlugin from 'react-plugin';
 
-export default [
+export default tseslint.config(
+  eslint.configs.recommended,
+  ...tsEslint.configs.recommended,
   {
+    // Specify the parser for TypeScript
     languageOptions: {
-      parser: typescriptParser,
+      parser: tsEslint.parser,
     },
     /*  globals: {
     module: 'readonly',
@@ -24,7 +27,7 @@ export default [
     'eslint-config-prettier',
   ],*/
     plugins: {
-      '@typescript-eslint': typescriptEslint,
+      'typescript-eslint': tsEslint,
       prettier: prettierPlugin,
       react: reactPlugin,
     },
@@ -67,4 +70,4 @@ export default [
     // Ignore specific files and directories
     ignores: ['node_modules/', 'package-lock.json', 'dist/', '/coverage'],
   },
-];
+);
