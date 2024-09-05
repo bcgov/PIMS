@@ -38,12 +38,7 @@ const TextFormField = (props: TextFormFieldProps) => {
               if (onBlur) onBlur(event);
             }}
             onChange={(event) => {
-              if (
-                isPid &&
-                (event.target.value === '' ||
-                  /^[0-9]{1,3}(-?[0-9]{0,3}){0,1}(-?[0-9]*)$/.test(event.target.value) ||
-                  /^[0-9]{1,9}$/.test(event.target.value))
-              ) {
+              if (isPid && (event.target.value === '' || /^[0-9-]*$/.test(event.target.value))) {
                 onChange(event);
                 return;
               } else if (
