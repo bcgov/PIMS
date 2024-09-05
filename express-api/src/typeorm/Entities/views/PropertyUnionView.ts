@@ -4,35 +4,75 @@ import { ViewColumn, ViewEntity } from 'typeorm';
   materialized: false,
   expression: `WITH property AS (SELECT 
 	'Parcel' AS property_type,
-  property_type_id,
-	id,
-	classification_id,
-	pid,
-	pin,
-	agency_id,
-	address1,
-	administrative_area_id,
-	is_sensitive,
-	updated_on,
-	land_area
+  p.property_type_id,
+	p.id,
+	p.classification_id,
+	p.pid,
+	p.pin,
+	p.agency_id,
+	p.address1,
+	p.administrative_area_id,
+	p.is_sensitive,
+	p.updated_on,
+	p.land_area,
+  proj.status_id AS project_status_id
 FROM parcel p
-WHERE deleted_on IS NULL
+LEFT JOIN (
+    SELECT
+        pp.parcel_id,
+        pp.id,
+        pp.project_id
+    FROM
+        project_property pp
+    INNER JOIN (
+        SELECT
+            parcel_id,
+            MAX(updated_on) AS max_updated_on
+        FROM
+            project_property
+        GROUP BY
+            parcel_id
+    ) pp_max ON pp.parcel_id = pp_max.parcel_id
+              AND pp.updated_on = pp_max.max_updated_on
+) pp_recent ON p.id = pp_recent.parcel_id
+LEFT JOIN project proj ON proj.id = pp_recent.project_id
+WHERE p.deleted_on IS NULL
 UNION ALL
 SELECT 
 	'Building' AS property_type,
-  property_type_id,
-	id,
-	classification_id,
-	pid,
-	pin,
-	agency_id,
-	address1,
-	administrative_area_id,
-	is_sensitive,
-	updated_on,
-	NULL AS land_area
+  b.property_type_id,
+	b.id,
+	b.classification_id,
+	b.pid,
+	b.pin,
+	b.agency_id,
+	b.address1,
+	b.administrative_area_id,
+	b.is_sensitive,
+	b.updated_on,
+	NULL AS land_area,
+  proj.status_id AS project_status_id
 FROM building b
-WHERE deleted_on IS NULL)
+LEFT JOIN (
+    SELECT
+        pp.building_id,
+        pp.id,
+        pp.project_id
+    FROM
+        project_property pp
+    INNER JOIN (
+        SELECT
+            building_id,
+            MAX(updated_on) AS max_updated_on
+        FROM
+            project_property
+        GROUP BY
+            building_id
+    ) pp_max ON pp.building_id = pp_max.building_id
+              AND pp.updated_on = pp_max.max_updated_on
+) pp_recent ON b.id = pp_recent.building_id
+LEFT JOIN project proj ON proj.id = pp_recent.project_id
+WHERE b.deleted_on IS NULL)
 SELECT 
 	property.*, 
 	agc."name" AS agency_name,
@@ -88,4 +128,7 @@ export class PropertyUnion {
 
   @ViewColumn({ name: 'land_area' })
   LandArea: number;
+
+  @ViewColumn({ name: 'project_status_id' })
+  ProjectStatusId: number;
 }

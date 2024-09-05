@@ -796,11 +796,20 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
       }),
     );
 
-  // Restricts based on user's agencies
+  // Only non-admins have this set in the controller
   if (filter.agencyIds?.length) {
-    query.andWhere('agency_id IN(:...list)', {
-      list: filter.agencyIds,
-    });
+    query.andWhere(
+      new Brackets((qb) => {
+        // Restricts based on user's agencies
+        qb.orWhere('agency_id IN(:...list)', {
+          list: filter.agencyIds,
+        });
+        // But also allow for ERP projects to be visible
+        qb.orWhere('project_status_id IN(:...exposedProjectStatuses)', {
+          exposedProjectStatuses: [ProjectStatus.APPROVED_FOR_ERP],
+        });
+      }),
+    );
   }
 
   // Add quickfilter part
