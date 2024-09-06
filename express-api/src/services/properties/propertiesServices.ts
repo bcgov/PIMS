@@ -197,6 +197,7 @@ const getPropertiesForMap = async (filter?: MapFilter) => {
     AdministrativeAreaId: true,
     AgencyId: true,
     Address1: true,
+    ProjectStatusId: true,
   };
 
   const filterBase: FindOptionsWhere<MapProperties> = {
