@@ -37,18 +37,17 @@ const PropertyRow = (props: PropertyRowProps) => {
       onClick={() => window.open(`/properties/${propertyType}/${id}`)}
       sx={{
         cursor: 'pointer',
-        backgroundColor: projectStatusId === ProjectStatus.APPROVED_FOR_ERP ? theme.palette.gold.light : theme.palette.white.main,
+        backgroundColor:
+          projectStatusId === ProjectStatus.APPROVED_FOR_ERP
+            ? theme.palette.gold.light
+            : theme.palette.white.main,
         borderBottom: `solid 1px ${theme.palette.gray.main}`,
         '& :hover': {
           backgroundColor: theme.palette.gray.main,
         },
       }}
     >
-      <Grid
-        container
-        width={'100%'}
-        padding={'1em'}
-      >
+      <Grid container width={'100%'} padding={'1em'}>
         <Grid item xs={3} display={'flex'} alignItems={'center'} justifyContent={'center'}>
           <ClassificationIcon
             iconType={propertyType}
@@ -67,14 +66,15 @@ const PropertyRow = (props: PropertyRowProps) => {
               {c}
             </Typography>
           ))}
-          {projectStatusId === ProjectStatus.APPROVED_FOR_ERP ? <Typography fontSize={'0.8em'} fontWeight={'bold'}>In ERP Project</Typography> : <></>}
+          {projectStatusId === ProjectStatus.APPROVED_FOR_ERP ? (
+            <Typography fontSize={'0.8em'} fontWeight={'bold'}>
+              In ERP Project
+            </Typography>
+          ) : (
+            <></>
+          )}
         </Grid>
-        <Grid item xs={12}>
-        
-        </Grid>
-        
       </Grid>
-
     </Box>
   );
 };
