@@ -23,7 +23,7 @@
     "@mui/icons-material": "5.16.0",
     "@mui/lab": "5.0.0-alpha.170",
     "@mui/material": "5.16.0",
-    "@mui/x-data-grid": "7.12.0",
+    "@mui/x-data-grid": "7.13.0",
     "@mui/x-date-pickers": "7.12.0",
     "@snowplow/browser-plugin-error-tracking": "3.24.2",
     "@snowplow/browser-plugin-link-click-tracking": "3.24.2",
