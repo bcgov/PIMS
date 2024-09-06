@@ -77,11 +77,13 @@ SELECT
 	property.*, 
 	agc."name" AS agency_name,
 	aa."name" AS administrative_area_name,
-	pc."name" AS property_classification_name
+	pc."name" AS property_classification_name,
+  ps."name" AS project_status_name
 FROM property 
 	LEFT JOIN agency agc ON property.agency_id = agc.id
 	LEFT JOIN administrative_area aa ON property.administrative_area_id = aa.id
-	LEFT JOIN property_classification pc ON property.classification_id = pc.id;`,
+	LEFT JOIN property_classification pc ON property.classification_id = pc.id
+  LEFT JOIN project_status ps ON property.project_status_id = ps.id;`,
 })
 export class PropertyUnion {
   @ViewColumn({ name: 'id' })
@@ -131,4 +133,7 @@ export class PropertyUnion {
 
   @ViewColumn({ name: 'project_status_id' })
   ProjectStatusId: number;
+
+  @ViewColumn({ name: 'project_status_name' })
+  ProjectStatus: string;
 }

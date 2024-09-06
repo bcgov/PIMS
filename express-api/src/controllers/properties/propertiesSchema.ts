@@ -48,6 +48,7 @@ export const PropertyUnionFilterSchema = z.object({
   administrativeArea: z.string().optional(),
   landArea: z.string().optional(),
   updatedOn: z.string().optional(),
+  projectStatus: z.string().optional(),
   quickFilter: z.string().optional(),
   sortKey: z.string().optional(),
   sortOrder: z.string().optional(),

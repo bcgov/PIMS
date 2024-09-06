@@ -822,6 +822,8 @@ const collectFindOptions = (filter: PropertyUnionFilter) => {
     );
   if (filter.propertyType)
     options.push(constructFindOptionFromQuerySingleSelect('PropertyType', filter.propertyType));
+  if (filter.projectStatus)
+    options.push(constructFindOptionFromQuerySingleSelect('ProjectStatus', filter.projectStatus));
   return options;
 };
 

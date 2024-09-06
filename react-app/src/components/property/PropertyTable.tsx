@@ -84,6 +84,14 @@ const PropertyTable = (props: IPropertyTable) => {
     }
   }, [lookup.data]);
 
+  const projectStatusesForFilter = useMemo(() => {
+    if (lookup.data) {
+      return lookup.data.ProjectStatuses.map((a) => a.Name);
+    } else {
+      return [];
+    }
+  }, [lookup.data]);
+
   const columns: GridColDef[] = [
     {
       field: 'PropertyType',
@@ -145,11 +153,12 @@ const PropertyTable = (props: IPropertyTable) => {
       },
     },
     {
-      field: 'ProjectStatusId',
-      headerName: 'ERP',
-      type: 'boolean',
-      maxWidth: 120,
-      valueGetter: (value) => value === ProjectStatus.APPROVED_FOR_ERP,
+      field: 'ProjectStatus',
+      headerName: 'Project Status',
+      type: 'singleSelect',
+      flex: 1,
+      maxWidth: 200,
+      valueOptions: projectStatusesForFilter,
     },
     {
       field: 'PID',
@@ -235,9 +244,9 @@ const PropertyTable = (props: IPropertyTable) => {
           items: [{ value, operator: 'is', field: 'Classification' }],
         });
         break;
-      case 'ERP':
+      case 'Approved for ERP':
         ref.current.setFilterModel({
-          items: [{ value: 'true', operator: 'is', field: 'ProjectStatusId' }],
+          items: [{ value: value, operator: 'is', field: 'ProjectStatus' }],
         });
         break;
       default:
@@ -384,8 +393,8 @@ const PropertyTable = (props: IPropertyTable) => {
               Disposed
             </CustomMenuItem>,
             <CustomListSubheader key={'Other'}>Other</CustomListSubheader>,
-            <CustomMenuItem key={'ERP'} value={'ERP'}>
-              In ERP
+            <CustomMenuItem key={'ERP'} value={'Approved for ERP'}>
+              In ERP Project
             </CustomMenuItem>,
           ]}
           tableHeader={'Properties Overview'}
@@ -401,7 +410,7 @@ const PropertyTable = (props: IPropertyTable) => {
           initialState={{
             columns: {
               columnVisibilityModel: {
-                ProjectStatusId: false,
+                ProjectStatus: false,
               },
             },
           }}
