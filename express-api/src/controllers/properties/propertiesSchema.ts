@@ -32,6 +32,7 @@ export const MapFilterSchema = z.object({
   PropertyTypeIds: arrayFromString(numberSchema),
   Name: z.string().optional(),
   RegionalDistrictIds: arrayFromString(numberSchema),
+  UserAgencies: z.array(z.number().int()).optional(),
 });
 
 export type MapFilter = z.infer<typeof MapFilterSchema>;
