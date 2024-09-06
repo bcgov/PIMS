@@ -3,10 +3,11 @@
 exports[`Footer.tsx should match the existing snapshot 1`] = `
 <footer>
   <div
-    className="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-szcixw-MuiToolbar-root"
+    className="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-xwp9po-MuiToolbar-root"
   >
     <p
-      className="MuiTypography-root MuiTypography-body1 css-3blj21-MuiTypography-root"
+      className="MuiTypography-root MuiTypography-body1 css-1lsxh3m-MuiTypography-root"
+      style={{}}
     >
       © 2024 Government of British Columbia.
     </p>
@@ -17,34 +18,38 @@ exports[`Footer.tsx should match the existing snapshot 1`] = `
       className="MuiBox-root css-13t3iqc"
     >
       <a
-        className="MuiTypography-root MuiTypography-h5 MuiLink-root MuiLink-underlineAlways css-1qas1pa-MuiTypography-root-MuiLink-root"
+        className="MuiTypography-root MuiTypography-h5 MuiLink-root MuiLink-underlineAlways css-gjyslq-MuiTypography-root-MuiLink-root"
         href="https://www2.gov.bc.ca//gov/content/home/accessible-government"
         onBlur={[Function]}
         onFocus={[Function]}
+        style={{}}
       >
         Accessibility
       </a>
       <a
-        className="MuiTypography-root MuiTypography-h5 MuiLink-root MuiLink-underlineAlways css-1qas1pa-MuiTypography-root-MuiLink-root"
+        className="MuiTypography-root MuiTypography-h5 MuiLink-root MuiLink-underlineAlways css-gjyslq-MuiTypography-root-MuiLink-root"
         href="https://www2.gov.bc.ca//gov/content/home/privacy"
         onBlur={[Function]}
         onFocus={[Function]}
+        style={{}}
       >
         Privacy
       </a>
       <a
-        className="MuiTypography-root MuiTypography-h5 MuiLink-root MuiLink-underlineAlways css-1qas1pa-MuiTypography-root-MuiLink-root"
+        className="MuiTypography-root MuiTypography-h5 MuiLink-root MuiLink-underlineAlways css-gjyslq-MuiTypography-root-MuiLink-root"
         href="https://www2.gov.bc.ca//gov/content/home/copyright"
         onBlur={[Function]}
         onFocus={[Function]}
+        style={{}}
       >
         Copyright
       </a>
       <a
-        className="MuiTypography-root MuiTypography-h5 MuiLink-root MuiLink-underlineAlways css-1qas1pa-MuiTypography-root-MuiLink-root"
+        className="MuiTypography-root MuiTypography-h5 MuiLink-root MuiLink-underlineAlways css-gjyslq-MuiTypography-root-MuiLink-root"
         href="https://www2.gov.bc.ca//gov/content/home/disclaimer"
         onBlur={[Function]}
         onFocus={[Function]}
+        style={{}}
       >
         Disclaimer
       </a>
