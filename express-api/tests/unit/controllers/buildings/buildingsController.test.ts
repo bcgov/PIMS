@@ -5,10 +5,13 @@ import {
   MockRes,
   getRequestHandlerMocks,
   produceBuilding,
+  produceProjectProperty,
   produceUser,
 } from '../../../testUtils/factories';
 import { DeleteResult } from 'typeorm';
 import { Roles } from '@/constants/roles';
+import { AppDataSource } from '@/appDataSource';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 
 const _getBuildingById = jest.fn().mockImplementation(() => produceBuilding());
 const _getBuildings = jest.fn().mockImplementation(() => [produceBuilding()]);
@@ -32,6 +35,9 @@ jest.mock('@/services/users/usersServices', () => ({
   getAgencies: jest.fn().mockResolvedValue([1, 2]),
   hasAgencies: jest.fn(() => _hasAgencies()),
 }));
+jest
+  .spyOn(AppDataSource.getRepository(ProjectProperty), 'find')
+  .mockImplementation(async () => [produceProjectProperty(undefined, true)]);
 
 describe('UNIT - Buildings', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
