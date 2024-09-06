@@ -13,6 +13,8 @@ import { SnackBarContext } from '@/contexts/snackbarContext';
 import { CommonFiltering } from '@/interfaces/ICommonFiltering';
 import { LookupContext } from '@/contexts/lookupContext';
 import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
+import { ProjectStatus } from '@/constants/projectStatuses';
+import './propertyRowStyle.css';
 
 interface IPropertyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
@@ -143,6 +145,13 @@ const PropertyTable = (props: IPropertyTable) => {
       },
     },
     {
+      field: 'ProjectStatusId',
+      headerName: 'ERP',
+      type: 'boolean',
+      maxWidth: 120,
+      valueGetter: (value) => value === ProjectStatus.APPROVED_FOR_ERP,
+    },
+    {
       field: 'PID',
       headerName: 'PID',
       flex: 1,
@@ -224,6 +233,11 @@ const PropertyTable = (props: IPropertyTable) => {
       case 'Disposed':
         ref.current.setFilterModel({
           items: [{ value, operator: 'is', field: 'Classification' }],
+        });
+        break;
+      case 'ERP':
+        ref.current.setFilterModel({
+          items: [{ value: 'true', operator: 'is', field: 'ProjectStatusId' }],
         });
         break;
       default:
@@ -369,19 +383,26 @@ const PropertyTable = (props: IPropertyTable) => {
             <CustomMenuItem key={'Disposed'} value={'Disposed'}>
               Disposed
             </CustomMenuItem>,
+            <CustomListSubheader key={'Other'}>Other</CustomListSubheader>,
+            <CustomMenuItem key={'ERP'} value={'ERP'}>
+              In ERP
+            </CustomMenuItem>,
           ]}
           tableHeader={'Properties Overview'}
           rowCountProp={totalCount}
           rowCount={totalCount}
+          getRowClassName={(params) => params.row.ProjectStatusId === ProjectStatus.APPROVED_FOR_ERP ? 'erp-property-row' : ''}
           excelTitle={'Properties'}
           customExcelMap={excelDataMap}
           columns={columns}
           addTooltip="Create New Property"
-          // initialState={{
-          //   sorting: {
-          //     sortModel: [{ sort: 'desc', field: 'UpdatedOn' }],
-          //   },
-          // }}
+          initialState={{
+            columns: {
+              columnVisibilityModel: {
+                ProjectStatusId: false,
+              },
+            },
+          }}
         />
       </Box>
     </Box>
