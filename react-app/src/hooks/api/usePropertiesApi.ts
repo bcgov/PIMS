@@ -28,6 +28,7 @@ export interface PropertyGeo {
     PID?: number;
     PIN?: number;
     Address1: string;
+    ProjectStatusId?: number;
   };
   geometry: {
     type: 'Point';

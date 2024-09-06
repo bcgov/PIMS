@@ -1,5 +1,6 @@
 import { ClassificationIcon } from '@/components/property/ClassificationIcon';
 import { useClassificationStyle } from '@/components/property/PropertyTable';
+import { ProjectStatus } from '@/constants/projectStatuses';
 import { PropertyTypes } from '@/constants/propertyTypes';
 import { Box, Grid, Typography, useTheme } from '@mui/material';
 import React from 'react';
@@ -10,6 +11,7 @@ interface PropertyRowProps {
   classificationId?: number;
   title: string;
   content: string[];
+  projectStatusId?: number;
 }
 
 /**
@@ -19,7 +21,7 @@ interface PropertyRowProps {
  * @returns {JSX.Element} The ParcelRow component.
  */
 const PropertyRow = (props: PropertyRowProps) => {
-  const { id, propertyTypeId, title, content, classificationId } = props;
+  const { id, propertyTypeId, title, content, classificationId, projectStatusId } = props;
   const theme = useTheme();
   const propertyType = propertyTypeId === PropertyTypes.BUILDING ? 'building' : 'parcel';
 
@@ -35,7 +37,8 @@ const PropertyRow = (props: PropertyRowProps) => {
       onClick={() => window.open(`/properties/${propertyType}/${id}`)}
       sx={{
         cursor: 'pointer',
-        backgroundColor: theme.palette.white.main,
+        backgroundColor: projectStatusId === ProjectStatus.APPROVED_FOR_ERP ? theme.palette.gold.light : theme.palette.white.main,
+        borderBottom: `solid 1px ${theme.palette.gray.main}`,
         '& :hover': {
           backgroundColor: theme.palette.gray.main,
         },
@@ -45,12 +48,11 @@ const PropertyRow = (props: PropertyRowProps) => {
         container
         width={'100%'}
         padding={'1em'}
-        borderBottom={`solid 1px ${theme.palette.gray.main}`}
       >
         <Grid item xs={3} display={'flex'} alignItems={'center'} justifyContent={'center'}>
           <ClassificationIcon
             iconType={propertyType}
-            textColor={theme.palette.text.primary}
+            textColor={theme.palette.white.main}
             badgeColor={classificationColour}
             scale={1.2}
             badgeScale={1}
@@ -65,8 +67,14 @@ const PropertyRow = (props: PropertyRowProps) => {
               {c}
             </Typography>
           ))}
+          {projectStatusId === ProjectStatus.APPROVED_FOR_ERP ? <Typography fontSize={'0.8em'} fontWeight={'bold'}>In ERP Project</Typography> : <></>}
         </Grid>
+        <Grid item xs={12}>
+        
+        </Grid>
+        
       </Grid>
+
     </Box>
   );
 };
