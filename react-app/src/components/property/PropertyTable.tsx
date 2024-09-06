@@ -391,7 +391,9 @@ const PropertyTable = (props: IPropertyTable) => {
           tableHeader={'Properties Overview'}
           rowCountProp={totalCount}
           rowCount={totalCount}
-          getRowClassName={(params) => params.row.ProjectStatusId === ProjectStatus.APPROVED_FOR_ERP ? 'erp-property-row' : ''}
+          getRowClassName={(params) =>
+            params.row.ProjectStatusId === ProjectStatus.APPROVED_FOR_ERP ? 'erp-property-row' : ''
+          }
           excelTitle={'Properties'}
           customExcelMap={excelDataMap}
           columns={columns}
