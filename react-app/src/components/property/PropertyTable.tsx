@@ -13,6 +13,8 @@ import { SnackBarContext } from '@/contexts/snackbarContext';
 import { CommonFiltering } from '@/interfaces/ICommonFiltering';
 import { LookupContext } from '@/contexts/lookupContext';
 import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
+import { exposedProjectStatuses } from '@/constants/projectStatuses';
+import './propertyRowStyle.css';
 
 interface IPropertyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
@@ -82,6 +84,14 @@ const PropertyTable = (props: IPropertyTable) => {
     }
   }, [lookup.data]);
 
+  const projectStatusesForFilter = useMemo(() => {
+    if (lookup.data) {
+      return lookup.data.ProjectStatuses.map((a) => a.Name);
+    } else {
+      return [];
+    }
+  }, [lookup.data]);
+
   const columns: GridColDef[] = [
     {
       field: 'PropertyType',
@@ -141,6 +151,14 @@ const PropertyTable = (props: IPropertyTable) => {
           />
         );
       },
+    },
+    {
+      field: 'ProjectStatus',
+      headerName: 'Project Status',
+      type: 'singleSelect',
+      flex: 1,
+      maxWidth: 200,
+      valueOptions: projectStatusesForFilter,
     },
     {
       field: 'PID',
@@ -224,6 +242,11 @@ const PropertyTable = (props: IPropertyTable) => {
       case 'Disposed':
         ref.current.setFilterModel({
           items: [{ value, operator: 'is', field: 'Classification' }],
+        });
+        break;
+      case 'Approved for ERP':
+        ref.current.setFilterModel({
+          items: [{ value: value, operator: 'is', field: 'ProjectStatus' }],
         });
         break;
       default:
@@ -369,19 +392,28 @@ const PropertyTable = (props: IPropertyTable) => {
             <CustomMenuItem key={'Disposed'} value={'Disposed'}>
               Disposed
             </CustomMenuItem>,
+            <CustomListSubheader key={'Other'}>Other</CustomListSubheader>,
+            <CustomMenuItem key={'ERP'} value={'Approved for ERP'}>
+              In ERP Project
+            </CustomMenuItem>,
           ]}
           tableHeader={'Properties Overview'}
           rowCountProp={totalCount}
           rowCount={totalCount}
+          getRowClassName={(params) =>
+            exposedProjectStatuses.includes(params.row.ProjectStatusId) ? 'erp-property-row' : ''
+          }
           excelTitle={'Properties'}
           customExcelMap={excelDataMap}
           columns={columns}
           addTooltip="Create New Property"
-          // initialState={{
-          //   sorting: {
-          //     sortModel: [{ sort: 'desc', field: 'UpdatedOn' }],
-          //   },
-          // }}
+          initialState={{
+            columns: {
+              columnVisibilityModel: {
+                ProjectStatus: false,
+              },
+            },
+          }}
         />
       </Box>
     </Box>

@@ -140,6 +140,14 @@ describe('updateBuildingById', () => {
     ).rejects.toThrow();
   });
 
+  it('should throw an error if the building does not belong to the user and user is not admin', async () => {
+    const generalUser = produceSSO({ client_roles: [Roles.GENERAL_USER] });
+    const updateBuilding = produceBuilding();
+    expect(
+      async () => await buildingService.updateBuildingById(updateBuilding, generalUser),
+    ).rejects.toThrow();
+  });
+
   it('should update Fiscals and Evaluations when they exist in the building object', async () => {
     const updateBuilding = produceBuilding();
     _buildingFindOne.mockResolvedValueOnce(updateBuilding);

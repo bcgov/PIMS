@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import propertyServices from '@/services/properties/propertiesServices';
 import {
   ImportResultFilterSchema,
+  MapFilter,
   MapFilterSchema,
   PropertyUnionFilterSchema,
 } from '@/controllers/properties/propertiesSchema';
@@ -68,7 +69,7 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
 
   // Converts comma-separated lists to arrays, see schema
   // Must remove empty arrays for TypeORM to work
-  const filterResult = {
+  const filterResult: MapFilter = {
     ...filter.data,
     AgencyIds: filter.data.AgencyIds.length ? filter.data.AgencyIds : undefined,
     ClassificationIds: filter.data.ClassificationIds.length
@@ -81,11 +82,12 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
     RegionalDistrictIds: filter.data.RegionalDistrictIds.length
       ? filter.data.RegionalDistrictIds
       : undefined,
+    // UserAgencies included to separate requested filter on agencies vs user's restriction on agencies
+    UserAgencies: undefined,
   };
 
   // Controlling for agency search visibility
   const kcUser = req.user;
-  // admin and suditors can see any property
   const permittedRoles = [Roles.ADMIN, Roles.AUDITOR];
   // Admins and auditors see all, otherwise...
   if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
@@ -99,7 +101,7 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
     if (!requestedAgencies || !userHasAgencies) {
       // Then only show that user's agencies instead.
       const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
-      filterResult.AgencyIds = usersAgencies;
+      filterResult.UserAgencies = usersAgencies;
     }
   }
 

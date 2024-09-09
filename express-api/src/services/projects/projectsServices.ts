@@ -1,5 +1,5 @@
 import { AppDataSource } from '@/appDataSource';
-import { ProjectStatus } from '@/constants/projectStatus';
+import { exposedProjectStatuses, ProjectStatus } from '@/constants/projectStatus';
 import { ProjectType } from '@/constants/projectType';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { Building } from '@/typeorm/Entities/Building';
@@ -925,11 +925,20 @@ const getProjects = async (filter: ProjectFilter) => {
       }),
     );
 
-  // Restricts based on user's agencies
+  // Only non-admins have this set in the controller
   if (filter.agencyId?.length) {
-    query.andWhere('agency_id IN(:...list)', {
-      list: filter.agencyId,
-    });
+    query.andWhere(
+      new Brackets((qb) => {
+        // Restricts based on user's agencies
+        qb.orWhere('agency_id IN(:...list)', {
+          list: filter.agencyId,
+        });
+        // But also allow for ERP projects to be visible
+        qb.orWhere('status_id IN(:...exposedProjectStatuses)', {
+          exposedProjectStatuses: exposedProjectStatuses,
+        });
+      }),
+    );
   }
 
   // Add quickfilter part
