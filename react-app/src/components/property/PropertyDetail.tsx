@@ -31,6 +31,7 @@ import { AuthContext } from '@/contexts/authContext';
 import { Roles } from '@/constants/roles';
 import { LookupContext } from '@/contexts/lookupContext';
 import AssociatedProjectsTable from './AssociatedProjectsTable';
+import useUserAgencies from '@/hooks/api/useUserAgencies';
 
 interface IPropertyDetail {
   onClose: () => void;
@@ -96,6 +97,13 @@ const PropertyDetail = (props: IPropertyDetail) => {
   }, [parcelId, buildingId]);
 
   const isAuditor = keycloak.hasRoles([Roles.AUDITOR]);
+  const { userAgencies } = useUserAgencies();
+  const userAgencyIds = userAgencies.map((a) => a.Id);
+
+  const canEdit =
+    keycloak.hasRoles([Roles.ADMIN]) ||
+    userAgencyIds.includes(parcel?.parsedBody?.AgencyId) ||
+    userAgencyIds.includes(building?.parsedBody?.AgencyId);
 
   const refreshEither = () => {
     if (parcelId) {
@@ -318,14 +326,14 @@ const PropertyDetail = (props: IPropertyDetail) => {
           values={mainInformation}
           title={`${buildingOrParcel} Information`}
           onEdit={() => setOpenInformationDialog(true)}
-          disableEdit={isAuditor}
+          disableEdit={!canEdit}
         />
         <DataCard
           id={`${buildingOrParcel} Net Book Value`}
           values={undefined}
           title={`${buildingOrParcel} Net Book Value`}
           onEdit={() => setOpenNetBookDialog(true)}
-          disableEdit={isAuditor}
+          disableEdit={!canEdit}
         >
           <PropertyNetValueTable rows={netBookValues} />
         </DataCard>
@@ -335,7 +343,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           values={undefined}
           title={'Assessed Value'}
           onEdit={() => setOpenAssessedValueDialog(true)}
-          disableEdit={isAuditor}
+          disableEdit={!canEdit}
         >
           <PropertyAssessedValueTable
             rows={assessedValues}
