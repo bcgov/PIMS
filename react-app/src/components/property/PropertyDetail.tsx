@@ -96,7 +96,6 @@ const PropertyDetail = (props: IPropertyDetail) => {
     fetchLinkedProjects();
   }, [parcelId, buildingId]);
 
-  const isAuditor = keycloak.hasRoles([Roles.AUDITOR]);
   const { userAgencies } = useUserAgencies();
   const userAgencyIds = userAgencies.map((a) => a.Id);
 
@@ -314,7 +313,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
       >
         <DetailViewNavigation
           navigateBackTitle={'Back to Property Overview'}
-          disableDelete={isAuditor}
+          disableDelete={!canEdit}
           deleteTitle={`Delete ${buildingOrParcel}`}
           onDeleteClick={() => setOpenDeleteDialog(true)}
           onBackClick={() => props.onClose()}
