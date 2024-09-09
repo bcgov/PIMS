@@ -1,0 +1,7 @@
+/** 
+ * Used because MUI Data Grid doesn't allow individual styling through props.
+ * Styles the row in the property table. 
+ */
+.erp-property-row {
+  background-color: #fae6b94d;
+}

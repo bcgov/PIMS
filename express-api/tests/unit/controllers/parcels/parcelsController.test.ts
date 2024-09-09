@@ -5,11 +5,14 @@ import {
   MockRes,
   getRequestHandlerMocks,
   produceParcel,
+  produceProjectProperty,
   produceUser,
 } from '../../../testUtils/factories';
 import { DeleteResult } from 'typeorm';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { Roles } from '@/constants/roles';
+import { AppDataSource } from '@/appDataSource';
+import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 
 const _getParcelById = jest.fn().mockImplementation(() => produceParcel());
 const _updateParcel = jest.fn().mockImplementation(() => produceParcel());
@@ -31,6 +34,9 @@ jest.mock('@/services/users/usersServices', () => ({
   getAgencies: jest.fn().mockResolvedValue([1, 2]),
   hasAgencies: jest.fn(() => _hasAgencies()),
 }));
+jest
+  .spyOn(AppDataSource.getRepository(ProjectProperty), 'find')
+  .mockImplementation(async () => [produceProjectProperty(undefined, true)]);
 describe('UNIT - Parcels', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 

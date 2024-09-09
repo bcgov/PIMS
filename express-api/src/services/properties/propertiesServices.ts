@@ -33,7 +33,7 @@ import userServices from '../users/usersServices';
 import { Brackets, FindOptionsWhere, ILike, In, QueryRunner } from 'typeorm';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { PropertyType } from '@/constants/propertyType';
-import { ProjectStatus } from '@/constants/projectStatus';
+import { exposedProjectStatuses, ProjectStatus } from '@/constants/projectStatus';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectStatus as ProjectStatusEntity } from '@/typeorm/Entities/ProjectStatus';
 import { parentPort } from 'worker_threads';
@@ -182,35 +182,79 @@ const findLinkedProjectsForProperty = async (buildingId?: number, parcelId?: num
  * @returns A promise that resolves to an array of properties matching the filter criteria.
  */
 const getPropertiesForMap = async (filter?: MapFilter) => {
-  const properties = await AppDataSource.getRepository(MapProperties).find({
-    // Select only the properties needed to render map markers and sidebar
-    select: {
-      Id: true,
-      Location: {
-        x: true,
-        y: true,
-      },
-      PropertyTypeId: true,
-      ClassificationId: true,
-      Name: true,
-      PID: true,
-      PIN: true,
-      AdministrativeAreaId: true,
-      AgencyId: true,
-      Address1: true,
+  // Select only the properties needed to render map markers and sidebar
+  const selectObject = {
+    Id: true,
+    Location: {
+      x: true,
+      y: true,
     },
+    PropertyTypeId: true,
+    ClassificationId: true,
+    Name: true,
+    PID: true,
+    PIN: true,
+    AdministrativeAreaId: true,
+    AgencyId: true,
+    Address1: true,
+    ProjectStatusId: true,
+  };
+
+  const filterBase: FindOptionsWhere<MapProperties> = {
+    ClassificationId: filter.ClassificationIds ? In(filter.ClassificationIds) : undefined,
+    AdministrativeAreaId: filter.AdministrativeAreaIds
+      ? In(filter.AdministrativeAreaIds)
+      : undefined,
+    PID: filter.PID,
+    PIN: filter.PIN,
+    Address1: filter.Address ? ILike(`%${filter.Address}%`) : undefined,
+    Name: filter.Name ? ILike(`%${filter.Name}%`) : undefined,
+    PropertyTypeId: filter.PropertyTypeIds ? In(filter.PropertyTypeIds) : undefined,
+    RegionalDistrictId: filter.RegionalDistrictIds ? In(filter.RegionalDistrictIds) : undefined,
+  };
+
+  /**
+   * If the user's agencies were defined, then they didn't have permissions to see all the agencies.
+   * This path allows a user to filter by agencies they belong to.
+   * If no agency filter is requested, it filters by the user's agencies, but also
+   * includes properties with a project status that would expose them to users
+   * outside of the owning agency.
+   */
+  if (filter.UserAgencies) {
+    // Did they request to filter on agencies? Only use the crossover of their agencies and the filter
+    const agencies = filter.AgencyIds
+      ? filter.AgencyIds.filter((a) => filter.UserAgencies.includes(a))
+      : filter.UserAgencies;
+
+    const properties = await AppDataSource.getRepository(MapProperties).find({
+      select: selectObject,
+      where: filter.AgencyIds
+        ? {
+            ...filterBase,
+            AgencyId: In(agencies),
+          }
+        : [
+            {
+              ...filterBase,
+              AgencyId: In(agencies),
+            },
+            {
+              ...filterBase,
+              ProjectStatusId: In(exposedProjectStatuses),
+            },
+          ],
+    });
+    return properties;
+  }
+  /**
+   * This path is for users that pass the admin/auditor role check.
+   * Search will function unchanged from the request.
+   */
+  const properties = await AppDataSource.getRepository(MapProperties).find({
+    select: selectObject,
     where: {
-      ClassificationId: filter.ClassificationIds ? In(filter.ClassificationIds) : undefined,
+      ...filterBase,
       AgencyId: filter.AgencyIds ? In(filter.AgencyIds) : undefined,
-      AdministrativeAreaId: filter.AdministrativeAreaIds
-        ? In(filter.AdministrativeAreaIds)
-        : undefined,
-      PID: filter.PID,
-      PIN: filter.PIN,
-      Address1: filter.Address ? ILike(`%${filter.Address}%`) : undefined,
-      Name: filter.Name ? ILike(`%${filter.Name}%`) : undefined,
-      PropertyTypeId: filter.PropertyTypeIds ? In(filter.PropertyTypeIds) : undefined,
-      RegionalDistrictId: filter.RegionalDistrictIds ? In(filter.RegionalDistrictIds) : undefined,
     },
   });
   return properties;
@@ -799,6 +843,8 @@ const collectFindOptions = (filter: PropertyUnionFilter) => {
     );
   if (filter.propertyType)
     options.push(constructFindOptionFromQuerySingleSelect('PropertyType', filter.propertyType));
+  if (filter.projectStatus)
+    options.push(constructFindOptionFromQuerySingleSelect('ProjectStatus', filter.projectStatus));
   return options;
 };
 
@@ -817,11 +863,20 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
       }),
     );
 
-  // Restricts based on user's agencies
+  // Only non-admins have this set in the controller
   if (filter.agencyIds?.length) {
-    query.andWhere('agency_id IN(:...list)', {
-      list: filter.agencyIds,
-    });
+    query.andWhere(
+      new Brackets((qb) => {
+        // Restricts based on user's agencies
+        qb.orWhere('agency_id IN(:...list)', {
+          list: filter.agencyIds,
+        });
+        // But also allow for ERP projects to be visible
+        qb.orWhere('project_status_id IN(:...exposedProjectStatuses)', {
+          exposedProjectStatuses: exposedProjectStatuses,
+        });
+      }),
+    );
   }
 
   // Add quickfilter part
