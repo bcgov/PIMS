@@ -1,5 +1,5 @@
 import { AppDataSource } from '@/appDataSource';
-import { ProjectStatus } from '@/constants/projectStatus';
+import { exposedProjectStatuses, ProjectStatus } from '@/constants/projectStatus';
 import { ProjectType } from '@/constants/projectType';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { Building } from '@/typeorm/Entities/Building';
@@ -935,7 +935,7 @@ const getProjects = async (filter: ProjectFilter) => {
         });
         // But also allow for ERP projects to be visible
         qb.orWhere('status_id IN(:...exposedProjectStatuses)', {
-          exposedProjectStatuses: [ProjectStatus.APPROVED_FOR_ERP],
+          exposedProjectStatuses: exposedProjectStatuses,
         });
       }),
     );

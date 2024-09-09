@@ -31,3 +31,10 @@ export enum ProjectStatus {
   // CONTRACT_IN_PLACE_UNCONDITIONAL = 43, // Disabled
   CLOSE_OUT = 44,
 }
+
+/**
+ * Used in parallel with checks in API.
+ * Projects and properties in ERP are shown to agencies outside of their owning agency.
+ * Properties in active projects with these status will be highlighted.
+ */
+export const exposedProjectStatuses = [ProjectStatus.APPROVED_FOR_ERP];

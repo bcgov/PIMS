@@ -7,7 +7,7 @@ import { Building } from '@/typeorm/Entities/Building';
 import { checkUserAgencyPermission, isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 import { Roles } from '@/constants/roles';
 import { AppDataSource } from '@/appDataSource';
-import { ProjectStatus } from '@/constants/projectStatus';
+import { exposedProjectStatuses } from '@/constants/projectStatus';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 
 /**
@@ -70,7 +70,6 @@ export const getBuilding = async (req: Request, res: Response) => {
     })
   ).map((pp) => pp.Project);
   // Are any related projects in ERP? If so, they should be visible to outside agencies.
-  const exposedProjectStatuses = [ProjectStatus.APPROVED_FOR_ERP];
   const isVisibleToOtherAgencies = projects.some((project) =>
     exposedProjectStatuses.includes(project.StatusId),
   );

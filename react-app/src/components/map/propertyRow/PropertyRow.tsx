@@ -1,6 +1,6 @@
 import { ClassificationIcon } from '@/components/property/ClassificationIcon';
 import { useClassificationStyle } from '@/components/property/PropertyTable';
-import { ProjectStatus } from '@/constants/projectStatuses';
+import { exposedProjectStatuses } from '@/constants/projectStatuses';
 import { PropertyTypes } from '@/constants/propertyTypes';
 import { Box, Grid, Typography, useTheme } from '@mui/material';
 import React from 'react';
@@ -37,10 +37,9 @@ const PropertyRow = (props: PropertyRowProps) => {
       onClick={() => window.open(`/properties/${propertyType}/${id}`)}
       sx={{
         cursor: 'pointer',
-        backgroundColor:
-          projectStatusId === ProjectStatus.APPROVED_FOR_ERP
-            ? theme.palette.gold.light
-            : theme.palette.white.main,
+        backgroundColor: exposedProjectStatuses.includes(projectStatusId)
+          ? theme.palette.gold.light
+          : theme.palette.white.main,
         borderBottom: `solid 1px ${theme.palette.gray.main}`,
         '& :hover': {
           backgroundColor: theme.palette.gray.main,
@@ -66,7 +65,7 @@ const PropertyRow = (props: PropertyRowProps) => {
               {c}
             </Typography>
           ))}
-          {projectStatusId === ProjectStatus.APPROVED_FOR_ERP ? (
+          {exposedProjectStatuses.includes(projectStatusId) ? (
             <Typography fontSize={'0.8em'} fontWeight={'bold'}>
               In ERP Project
             </Typography>

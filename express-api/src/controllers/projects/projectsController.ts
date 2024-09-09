@@ -8,7 +8,7 @@ import { DeepPartial } from 'typeorm';
 import { Project } from '@/typeorm/Entities/Project';
 import { Roles } from '@/constants/roles';
 import notificationServices from '@/services/notifications/notificationServices';
-import { ProjectStatus } from '@/constants/projectStatus';
+import { exposedProjectStatuses } from '@/constants/projectStatus';
 
 /**
  * @description Get disposal project by either the numeric id or projectNumber.
@@ -30,7 +30,6 @@ export const getDisposalProject = async (req: Request, res: Response) => {
   }
 
   // Is the project in ERP? If so, it should be visible to outside agencies.
-  const exposedProjectStatuses = [ProjectStatus.APPROVED_FOR_ERP];
   const isVisibleToOtherAgencies = exposedProjectStatuses.includes(project.StatusId);
 
   if (

@@ -33,7 +33,7 @@ import userServices from '../users/usersServices';
 import { Brackets, FindOptionsWhere, ILike, In, QueryRunner } from 'typeorm';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { PropertyType } from '@/constants/propertyType';
-import { ProjectStatus } from '@/constants/projectStatus';
+import { exposedProjectStatuses, ProjectStatus } from '@/constants/projectStatus';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectStatus as ProjectStatusEntity } from '@/typeorm/Entities/ProjectStatus';
 import { parentPort } from 'worker_threads';
@@ -240,7 +240,7 @@ const getPropertiesForMap = async (filter?: MapFilter) => {
             },
             {
               ...filterBase,
-              ProjectStatusId: In([ProjectStatus.APPROVED_FOR_ERP]),
+              ProjectStatusId: In(exposedProjectStatuses),
             },
           ],
     });
@@ -852,7 +852,7 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
         });
         // But also allow for ERP projects to be visible
         qb.orWhere('project_status_id IN(:...exposedProjectStatuses)', {
-          exposedProjectStatuses: [ProjectStatus.APPROVED_FOR_ERP],
+          exposedProjectStatuses: exposedProjectStatuses,
         });
       }),
     );

@@ -31,3 +31,9 @@ export enum ProjectStatus {
   // CONTRACT_IN_PLACE_UNCONDITIONAL = 43, // Disabled
   CLOSE_OUT = 44,
 }
+
+/**
+ * Projects and properties in ERP are shown to agencies outside of their owning agency.
+ * Adding new statuses to this list will reveal them to outside agencies.
+ */
+export const exposedProjectStatuses = [ProjectStatus.APPROVED_FOR_ERP];

@@ -8,7 +8,7 @@ import { Roles } from '@/constants/roles';
 import { checkUserAgencyPermission, isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 import { AppDataSource } from '@/appDataSource';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
-import { ProjectStatus } from '@/constants/projectStatus';
+import { exposedProjectStatuses } from '@/constants/projectStatus';
 
 /**
  * @description Gets information about a particular parcel by the Id provided in the URL parameter.
@@ -43,7 +43,6 @@ export const getParcel = async (req: Request, res: Response) => {
     })
   ).map((pp) => pp.Project);
   // Are any related projects in ERP? If so, they should be visible to outside agencies.
-  const exposedProjectStatuses = [ProjectStatus.APPROVED_FOR_ERP];
   const isVisibleToOtherAgencies = projects.some((project) =>
     exposedProjectStatuses.includes(project.StatusId),
   );

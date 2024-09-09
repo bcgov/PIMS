@@ -13,7 +13,7 @@ import { SnackBarContext } from '@/contexts/snackbarContext';
 import { CommonFiltering } from '@/interfaces/ICommonFiltering';
 import { LookupContext } from '@/contexts/lookupContext';
 import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
-import { ProjectStatus } from '@/constants/projectStatuses';
+import { exposedProjectStatuses } from '@/constants/projectStatuses';
 import './propertyRowStyle.css';
 
 interface IPropertyTable {
@@ -401,7 +401,7 @@ const PropertyTable = (props: IPropertyTable) => {
           rowCountProp={totalCount}
           rowCount={totalCount}
           getRowClassName={(params) =>
-            params.row.ProjectStatusId === ProjectStatus.APPROVED_FOR_ERP ? 'erp-property-row' : ''
+            exposedProjectStatuses.includes(params.row.ProjectStatusId) ? 'erp-property-row' : ''
           }
           excelTitle={'Properties'}
           customExcelMap={excelDataMap}
