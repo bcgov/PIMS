@@ -100,6 +100,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
         TimestampTypes,
       });
     }
+    projectFormMethods.clearErrors();
   }, [projectFormMethods.watch('StatusId'), lookupData]); //When status id changes, fetch a new set of tasks possible for this status...
 
   useEffect(() => {
