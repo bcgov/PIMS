@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request, Response } from 'express';
 import controllers from '@/controllers';
 import {
@@ -10,7 +9,6 @@ import {
 } from '../../../testUtils/factories';
 import { faker } from '@faker-js/faker';
 import { SSOIdirUser, SSOUser } from '@bcgov/citz-imb-sso-express';
-import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { Roles } from '@/constants/roles';
 import { UUID } from 'crypto';
 
@@ -26,7 +24,7 @@ const _addKeycloakUserOnHold = jest
     Position: position,
     Note: note,
   }));
-const _updateAccessRequest = jest.fn().mockImplementation((req) => req);
+jest.fn().mockImplementation((req) => req);
 const _getAgencies = jest.fn().mockImplementation(() => ['1', '2', '3']);
 const _getAdministrators = jest.fn();
 const _getUser = jest
