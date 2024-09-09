@@ -187,6 +187,14 @@ describe('UNIT - Properties', () => {
       expect(mockResponse.statusValue).toBe(200);
       expect(Array.isArray(mockResponse.sendValue)).toBe(true);
     });
+
+    it('should return status 400 if the filter fails', async () => {
+      mockRequest.query = {
+        page: 'bad query',
+      };
+      await getPropertyUnion(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
   });
 
   describe('POST /properties/import', () => {

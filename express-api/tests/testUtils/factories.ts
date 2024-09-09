@@ -605,6 +605,7 @@ export const produceTimestampType = (): TimestampType => {
 export const produceProject = (
   props?: Partial<Project>,
   projectProperties?: ProjectProperty[],
+  produceRelations?: boolean,
 ): Project => {
   const projectId = faker.number.int();
   const project: Project = {
@@ -632,24 +633,24 @@ export const produceProject = (
     CompletedOn: null,
     ProjectType: 1,
     AgencyId: 1,
-    Agency: produceAgency(),
+    Agency: produceRelations ? produceAgency() : null,
     TierLevelId: 1,
-    TierLevel: produceTierLevel(),
+    TierLevel: produceRelations ? produceTierLevel() : null,
     StatusId: 1,
-    Status: produceProjectStatus(),
+    Status: produceRelations ? produceProjectStatus() : null,
     RiskId: 1,
-    Risk: produceRisk(),
-    Tasks: [produceProjectTask()],
+    Risk: produceRelations ? produceRisk() : null,
+    Tasks: produceRelations ? [produceProjectTask()] : [],
     ProjectProperties: projectProperties ?? [
       produceProjectProperty({
         ProjectId: projectId,
       }),
     ],
-    Timestamps: [produceProjectTimestamp()],
-    Monetaries: [produceProjectMonetary()],
+    Timestamps: produceRelations ? [produceProjectTimestamp()] : [],
+    Monetaries: produceRelations ? [produceProjectMonetary()] : [],
     Notifications: [],
     StatusHistory: [],
-    Notes: [produceNote()],
+    Notes: produceRelations ? [produceNote()] : [],
     AgencyResponses: [],
     DeletedBy: undefined,
     DeletedById: null,
@@ -758,7 +759,10 @@ export const produceNote = (props?: Partial<ProjectNote>): ProjectNote => {
   return note;
 };
 
-export const produceProjectProperty = (props?: Partial<ProjectProperty>): ProjectProperty => {
+export const produceProjectProperty = (
+  props?: Partial<ProjectProperty>,
+  produceRelations?: boolean,
+): ProjectProperty => {
   const projectProperty: ProjectProperty = {
     Id: faker.number.int(),
     CreatedById: randomUUID(),
@@ -768,13 +772,13 @@ export const produceProjectProperty = (props?: Partial<ProjectProperty>): Projec
     UpdatedBy: undefined,
     UpdatedOn: new Date(),
     ProjectId: faker.number.int(),
-    Project: null,
+    Project: produceRelations ? produceProject() : null,
     PropertyTypeId: faker.number.int({ min: 0, max: 2 }),
-    PropertyType: null,
+    PropertyType: produceRelations ? producePropertyType() : null,
     ParcelId: faker.number.int(),
-    Parcel: produceParcel(),
+    Parcel: produceRelations ? produceParcel() : null,
     BuildingId: faker.number.int(),
-    Building: produceBuilding(),
+    Building: produceRelations ? produceBuilding() : null,
     DeletedById: null,
     DeletedOn: null,
     DeletedBy: undefined,
@@ -997,6 +1001,8 @@ export const producePropertyUnion = (props?: Partial<PropertyUnion>) => {
     AdministrativeAreaId: faker.number.int(),
     AdministrativeArea: faker.location.city(),
     LandArea: faker.number.float({ max: 99999 }),
+    ProjectStatusId: faker.number.int(),
+    ProjectStatus: faker.company.buzzNoun(),
     ...props,
   };
   return union;

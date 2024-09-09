@@ -124,6 +124,14 @@ const _projectPropertyCreateQueryBuilder: any = {
   skip: () => _projectPropertyCreateQueryBuilder,
   orderBy: () => _projectPropertyCreateQueryBuilder,
   getMany: () => [produceProjectProperty()],
+  getRawMany: () => [
+    {
+      project_number: 1,
+      id: 1,
+      status_name: 'test',
+      description: 'test',
+    },
+  ],
 };
 
 jest
@@ -302,6 +310,7 @@ describe('UNIT - Property Services', () => {
         page: 1,
         updatedOn: 'after,' + new Date(),
         quickFilter: 'contains,someWord',
+        projectStatus: 'is,Cancelled',
       });
       expect(Array.isArray(result.data)).toBe(true);
       expect(result.data.at(0)).toHaveProperty('PropertyType');
@@ -373,6 +382,19 @@ describe('UNIT - Property Services', () => {
         PropertyTypeIds: [1],
         ClassificationIds: [5, 6],
         AdministrativeAreaIds: [12, 34],
+      });
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.at(0)).toHaveProperty('Id');
+      expect(result.at(0)).toHaveProperty('Location');
+      expect(result.at(0)).toHaveProperty('PropertyTypeId');
+      expect(result.at(0)).toHaveProperty('ClassificationId');
+    });
+
+    it('should return a list of map property objects, following the UserAgencies filter path', async () => {
+      const result = await propertyServices.getPropertiesForMap({
+        Name: 'some name',
+        UserAgencies: [1],
+        AgencyIds: [1],
       });
       expect(Array.isArray(result)).toBe(true);
       expect(result.at(0)).toHaveProperty('Id');
@@ -691,6 +713,14 @@ describe('UNIT - Property Services', () => {
       expect(result.IsSensitive).toBe(false);
       expect(result.TotalArea).toBe(0);
       expect(result.BuildingTenancy).toBe('');
+    });
+  });
+
+  describe('findLinkedProjectsForProperty', () => {
+    it('should return the mapped list of linked projects', async () => {
+      const result = await propertyServices.findLinkedProjectsForProperty(1);
+      expect(Array.isArray(result)).toBe(true);
+      expect((result as unknown as any[])[0].StatusName).toBe('test');
     });
   });
 });
