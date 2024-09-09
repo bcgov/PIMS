@@ -17,7 +17,7 @@ type TextFormFieldProps = {
 
 const TextFormField = (props: TextFormFieldProps) => {
   const { control, setValue } = useFormContext();
-  const { name, label, rules, numeric, isPid, defaultVal, disabled, ...restProps } = props;
+  const { name, label, rules, numeric, isPid, defaultVal, disabled, onBlur, ...restProps } = props;
   return (
     <Controller
       control={control}
@@ -30,10 +30,15 @@ const TextFormField = (props: TextFormFieldProps) => {
               if (numeric && parseFloat(event.currentTarget.value)) {
                 setValue(name, parseFloat(event.currentTarget.value));
               }
+              if (isPid) {
+                setValue(name, event.target.value.replace(/-/g, ''));
+                event.target.value = pidFormatter(parseInt(event.target.value.replace(/-/g, '')));
+                onChange(event);
+              }
+              if (onBlur) onBlur(event);
             }}
             onChange={(event) => {
-              if (isPid) {
-                event.target.value = pidFormatter(parseInt(event.target.value.replace(/-/g, '')));
+              if (isPid && (event.target.value === '' || /^[0-9-]*$/.test(event.target.value))) {
                 onChange(event);
                 return;
               } else if (
@@ -41,7 +46,7 @@ const TextFormField = (props: TextFormFieldProps) => {
                 (event.target.value === '' || /^[0-9]*\.?[0-9]{0,2}$/.test(event.target.value))
               ) {
                 onChange(event);
-              } else if (numeric === undefined) {
+              } else if (numeric === undefined && isPid === undefined) {
                 onChange(event);
                 return;
               }
