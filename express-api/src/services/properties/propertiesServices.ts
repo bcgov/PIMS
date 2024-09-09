@@ -390,29 +390,41 @@ const makeParcelUpsertObject = async (
     currRowEvaluations.push(...evaluations);
     currRowFiscals.push(...fiscals);
   }
-  if (row.Netbook && !currRowFiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
-    currRowFiscals.push({
+  // if there is a netbook and fiscal year we can add or update fiscal
+  if (row.Netbook && row.FiscalYear) {
+    const addOrUpdateFiscals: Partial<ParcelFiscal> = {
       Value: row.Netbook,
       FiscalKeyId: 0,
       FiscalYear: row.FiscalYear,
-      CreatedById: user.Id,
-      CreatedOn: new Date(),
-    });
+    };
+    if (!currRowFiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
+      addOrUpdateFiscals.CreatedById = user.Id;
+    } else {
+      addOrUpdateFiscals.UpdatedById = user.Id;
+    }
+    currRowFiscals.push(addOrUpdateFiscals);
   }
-  if (row.Assessed && !currRowEvaluations.some((a) => a.Year == row.EvaluationYear)) {
-    currRowEvaluations.push({
+  // if there is a netbook and fiscal year we can add or update evaluation
+  if (row.Assessed && row.AssessedYear) {
+    const addOrUpdateAssessed: Partial<ParcelEvaluation> = {
       Value: row.Assessed,
       EvaluationKeyId: 0,
       Year: row.AssessedYear,
-      CreatedById: user.Id,
-      CreatedOn: new Date(),
-    });
+    };
+    if (!currRowEvaluations.some((a) => a.Year == row.AssessedYear)) {
+      addOrUpdateAssessed.CreatedById = user.Id;
+    } else {
+      addOrUpdateAssessed.UpdatedById = user.Id;
+    }
+    currRowEvaluations.push(addOrUpdateAssessed);
   }
+
   const classificationId: number = getClassificationOrThrow(row, lookups.classifications);
   const adminAreaId: number = getAdministrativeAreaOrThrow(row, lookups.adminAreas);
   const pin = numberOrNull(row.PIN) ?? existentParcel?.PIN;
-  const description = row.Description ?? (existentParcel ? existentParcel.Description : '');
+  const description = row.Description ?? existentParcel?.Description;
   const isSensitive = setNewBool(row.IsSensitive, existentParcel?.IsSensitive, false);
+  const landArea = numberOrNull(row.LandArea) ?? existentParcel?.LandArea;
 
   return {
     Id: existentParcel?.Id,
@@ -433,7 +445,7 @@ const makeParcelUpsertObject = async (
     IsSensitive: isSensitive,
     PropertyTypeId: 0,
     Description: description,
-    LandArea: numberOrNull(row.LandArea) ?? existentParcel ? existentParcel.LandArea : null,
+    LandArea: landArea,
     Evaluations: currRowEvaluations,
     Fiscals: currRowFiscals,
   };
@@ -469,24 +481,33 @@ const makeBuildingUpsertObject = async (
     currRowEvaluations.push(...evaluations);
     currRowFiscals.push(...fiscals);
   }
-
-  if (row.Netbook && !currRowFiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
-    currRowFiscals.push({
+  // if there is a netbook and fiscal year we can add or update fiscal
+  if (row.Netbook && row.FiscalYear) {
+    const addOrUpdateFiscals: Partial<BuildingFiscal> = {
       Value: row.Netbook,
       FiscalKeyId: 0,
       FiscalYear: row.FiscalYear,
-      CreatedById: user.Id,
-      CreatedOn: new Date(),
-    });
+    };
+    if (!currRowFiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
+      addOrUpdateFiscals.CreatedById = user.Id;
+    } else {
+      addOrUpdateFiscals.UpdatedById = user.Id;
+    }
+    currRowFiscals.push(addOrUpdateFiscals);
   }
-  if (row.Assessed && !currRowEvaluations.some((a) => a.Year == row.EvaluationYear)) {
-    currRowEvaluations.push({
+  // if there is a netbook and fiscal year we can add or update evaluation
+  if (row.Assessed && row.AssessedYear) {
+    const addOrUpdateAssessed: Partial<BuildingEvaluation> = {
       Value: row.Assessed,
       EvaluationKeyId: 0,
       Year: row.AssessedYear,
-      CreatedById: user.Id,
-      CreatedOn: new Date(),
-    });
+    };
+    if (!currRowEvaluations.some((a) => a.Year == row.AssessedYear)) {
+      addOrUpdateAssessed.CreatedById = user.Id;
+    } else {
+      addOrUpdateAssessed.UpdatedById = user.Id;
+    }
+    currRowEvaluations.push(addOrUpdateAssessed);
   }
 
   const classificationId = getClassificationOrThrow(row, lookups.classifications);
@@ -805,7 +826,6 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
 
   // Add quickfilter part
   if (filter.quickFilter) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const quickFilterOptions: FindOptionsWhere<any>[] = [];
     const quickfilterFields = [
       'Agency',
