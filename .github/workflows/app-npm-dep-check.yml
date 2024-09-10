@@ -68,7 +68,7 @@ jobs:
 
       # Upload the output as an artifact.
       - name: Upload output
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: outdatedDeps
           path: outdatedDeps.json
@@ -92,7 +92,7 @@ jobs:
 
       # Download the output artifact from parse-package-versions.
       - name: Download output
-        uses: actions/download-artifact@v4.1.7
+        uses: actions/download-artifact@v4
         with:
           name: outdatedDeps
           path: .
@@ -105,7 +105,7 @@ jobs:
 
       # Upload the output as an artifact.
       - name: Upload output
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: outputText
           path: outputText.json
@@ -129,7 +129,7 @@ jobs:
 
       # Download the output artifact.
       - name: Download output
-        uses: actions/download-artifact@v4.1.7
+        uses: actions/download-artifact@v4
         with:
           name: outputText
           path: .
@@ -151,7 +151,7 @@ jobs:
     steps:
       # Download the output artifact from parse-package-versions.
       - name: Download output
-        uses: actions/download-artifact@v4.1.7
+        uses: actions/download-artifact@v4
         with:
           name: outdatedDeps
           path: .
