@@ -19,7 +19,8 @@ const TEST_IGNORE_PACKAGES = {
  * - From root, run "node .github/helpers/npm-deps/parse-npm-deps.cjs > outdatedDeps.json"
  * - Check the outdatedDeps.json file, then delete it.
  */
-console.log(process.env)
+console.log("local test? : ", LOCAL_TEST)
+console.log("test: ", process.env)
 // Get package.json paths from env.
 const packageJsonPaths = LOCAL_TEST
   ? TEST_PACKAGEJSON_PATHS
