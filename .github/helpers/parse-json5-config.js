@@ -65,7 +65,7 @@ fs.readFile(filePath, "utf8", (err, data) => {
         typeof value === "object" ? JSON.stringify(value) : value;
 
       // Output each key-value pair for GitHub Actions
-      console.log(`::set-output name=${key}::${envValue}`);
+      console.log(`echo "{name}={${key}}" >> $GITHUB_OUTPUT`);
     }
   } catch (parseError) {
     console.error("Error parsing JSON5:", parseError);
