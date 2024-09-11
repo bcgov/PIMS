@@ -43,6 +43,16 @@ jobs:
         - name: Run Script
           id: parse_config
           run: node .github/helpers/parse-json5-config .github/config/dep-report.json5
+          
+  # for testing 
+  check-outputs:
+    runs-on: ubuntu-latest
+    needs: parse-json5-config
+    steps:
+      - env:
+          PACKAGEJSONPATH: ${{needs.parse-json5-config.outputs.packageJsonPaths}}
+          IGNOREPACKAGES: ${{needs.parse-json5-config.outputs.ignorePackages}}
+        run: echo "$PACKAGEJSONPATH $IGNOREPACKAGES"
 
   # Check package versions for updates.
   parse-package-versions:
