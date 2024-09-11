@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import geocoderService from '@/services/geocoder/geocoderService';
 
 const mockJson = {
@@ -109,7 +108,7 @@ describe('UNIT - Geoserver services', () => {
     const stringPids = JSON.stringify(pidData);
 
     it('should get a list of PIDs connected to the site address.', async () => {
-      const fetchMock = jest
+      jest
         .spyOn(global, 'fetch')
         .mockImplementationOnce(() => Promise.resolve(new Response(stringPids)));
       const pids = await geocoderService.getPids('eccd759a-8476-46b0-af5d-e1c071f8e78e');
@@ -118,7 +117,7 @@ describe('UNIT - Geoserver services', () => {
     });
 
     it('should thow an error if geocoder service is down.', async () => {
-      const fetchMock = jest
+      jest
         .spyOn(global, 'fetch')
         .mockImplementationOnce(() => Promise.resolve(new Response('', { status: 500 })));
       expect(async () => {

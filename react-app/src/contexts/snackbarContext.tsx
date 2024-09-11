@@ -51,7 +51,6 @@ const initialState: MessageState = {
  */
 const initialContext = {
   messageState: initialState,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   setMessageState: (() => {}) as Dispatch<SetStateAction<MessageState>>,
   styles: {
     success: {},

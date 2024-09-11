@@ -174,6 +174,7 @@ const ClusterPopup = (props: ClusterPopupProps) => {
                 ?.Name ?? 'No Administrative Area',
               getLookupValueById('Agencies', property.properties.AgencyId)?.Name ?? 'No Agency',
             ]}
+            projectStatusId={property.properties.ProjectStatusId}
           />
         ))}
       </Box>

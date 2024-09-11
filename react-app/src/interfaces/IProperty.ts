@@ -36,9 +36,7 @@ export interface Property extends BaseEntityInterface {
   Postal?: string;
   ProjectNumbers?: string;
   IsSensitive: boolean;
-  IsVisibleToOtherAgencies: boolean;
   Location: GeoPoint;
   PID?: number;
   PIN?: number;
-  SiteID?: string;
 }

@@ -93,7 +93,17 @@ const LAYER_CONFIGS = {
 const MapLayers = () => (
   <LayersControl position="topleft">
     <LayersControl.BaseLayer checked name="Street Map">
-      <TileLayer url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      <TileLayer
+        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors'
+      />
+    </LayersControl.BaseLayer>
+
+    <LayersControl.BaseLayer name="Satellite">
+      <TileLayer
+        url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+        attribution="Tiles &copy; Esri &mdash; Source: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community"
+      />
     </LayersControl.BaseLayer>
 
     {LAYER_CONFIGS.administrativeBoundaries.map(({ name, url, layers }) => (

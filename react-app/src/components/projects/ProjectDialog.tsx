@@ -100,7 +100,8 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
         TimestampTypes,
       });
     }
-  }, [projectFormMethods.watch('StatusId')]); //When status id changes, fetch a new set of tasks possible for this status...
+    projectFormMethods.clearErrors();
+  }, [projectFormMethods.watch('StatusId'), lookupData]); //When status id changes, fetch a new set of tasks possible for this status...
 
   useEffect(() => {
     //Subsequently, we need to default the values of the form either to the already present value in the Project data blob, or just set it to false.
@@ -167,6 +168,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   const requireNotificationAcknowledge =
     approvedStatus == status && status !== initialValues?.StatusId;
   const isAdmin = keycloak.hasRoles([Roles.ADMIN]);
+  console.log('project form values', projectFormMethods.getValues());
   return (
     <ConfirmDialog
       title={'Update Project'}
@@ -176,6 +178,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
       }}
       onConfirm={async () => {
         const isValid = await projectFormMethods.trigger();
+        console.log('lookupData and isValid', lookupData, isValid);
         if (lookupData && isValid) {
           const values = projectFormMethods.getValues();
           submit(+initialValues.Id, {
@@ -183,7 +186,9 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
             Id: initialValues.Id,
             ProjectProperties: initialValues.ProjectProperties,
             Timestamps: values.Timestamps.filter((a) => dayjs(a.Date).isValid()),
-          }).then(() => postSubmit());
+          })
+            .then(() => postSubmit())
+            .catch((reason) => console.log(reason));
         }
       }}
       onCancel={async () => onCancel()}
@@ -211,6 +216,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
                 key={`${task.Id}-${idx}`}
                 name={`Tasks.${idx}.IsCompleted`}
                 label={task.Name}
+                required={!lookupData?.Tasks.find((t) => task.Id === t.Id)?.IsOptional}
               />
             ))}
           </Box>
@@ -268,6 +274,9 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
                     key={`${ts.Id}-${idx}`}
                     name={`Timestamps.${idx}.Date`}
                     label={columnNameFormatter(ts.Name)}
+                    required={
+                      !lookupData?.TimestampTypes?.find((tt) => ts.Id === tt.Id)?.IsOptional
+                    }
                   />
                 </Grid>
               ))}
