@@ -1,6 +1,6 @@
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { DateField, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Box, Typography, useTheme } from '@mui/material';
 
@@ -23,15 +23,26 @@ const DateFormField = (props: DateFieldFormProps) => {
       render={({ field: { onChange, value }, fieldState: { error } }) => {
         return (
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateField
+            <DatePicker
               disabled={disabled}
-              fullWidth
               onChange={onChange}
               value={value}
               label={label}
               format={'LL'}
-              required={required}
-              slotProps={{ textField: { error: !!error && !!error.message } }}
+              sx={{
+                width: '100%',
+              }}
+              slotProps={{
+                textField: {
+                  error: !!error && !!error.message,
+                  InputProps: {
+                    style: { fontSize: '14px' }, // Font size for input text
+                  },
+                  InputLabelProps: {
+                    style: { fontSize: '14px' }, // Font size for label
+                  },
+                },
+              }}
             />
             {!!error && !!error.message ? (
               <Box>
