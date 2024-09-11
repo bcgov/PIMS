@@ -30,7 +30,7 @@ const DateFormField = (props: DateFieldFormProps) => {
               label={label}
               format={'LL'}
               sx={{
-                width: '100%'
+                width: '100%',
               }}
               slotProps={{
                 textField: {
