@@ -29,6 +29,9 @@ const DateFormField = (props: DateFieldFormProps) => {
               value={value}
               label={label}
               format={'LL'}
+              sx={{
+                width: '100%'
+              }}
               slotProps={{
                 textField: {
                   error: !!error && !!error.message,
@@ -36,7 +39,7 @@ const DateFormField = (props: DateFieldFormProps) => {
                     style: { fontSize: '14px' }, // Font size for input text
                   },
                   InputLabelProps: {
-                    style: { fontSize: '12px' }, // Font size for label
+                    style: { fontSize: '14px' }, // Font size for label
                   },
                 },
               }}
