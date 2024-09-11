@@ -105,7 +105,7 @@ export const zeroPadPID = (pid: number | string): string => {
 
 export const pidFormatter = (pid: number | string): string => {
   if (pid == null) return '';
-  return zeroPadPID(pid).match(/\d{3}/g).join('-');
+  return zeroPadPID(pid).match(/\d{3}/g).join('-').slice(0, 11);
 };
 
 export const formatNumber = (num: number) => num.toLocaleString();

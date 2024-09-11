@@ -160,7 +160,6 @@ const AddProperty = () => {
                 PIN: parseIntOrNull(formValues.PIN),
                 Postal: formValues.Postal.replace(/ /g, '').toUpperCase(),
                 PropertyTypeId: 0,
-                IsVisibleToOtherAgencies: false,
                 Fiscals: formValues.Fiscals.map((a) => ({
                   ...a,
                   Value: Number(a?.Value),
@@ -187,7 +186,6 @@ const AddProperty = () => {
                 TotalArea: parseFloatOrNull(formValues.TotalArea),
                 BuildingFloorCount: 0,
                 PropertyTypeId: 1,
-                IsVisibleToOtherAgencies: false,
                 Fiscals: formValues.Fiscals.map((a) => ({
                   ...a,
                   Value: Number(a?.Value),

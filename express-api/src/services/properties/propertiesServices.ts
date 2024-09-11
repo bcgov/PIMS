@@ -33,7 +33,7 @@ import userServices from '../users/usersServices';
 import { Brackets, FindOptionsWhere, ILike, In, QueryRunner } from 'typeorm';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { PropertyType } from '@/constants/propertyType';
-import { ProjectStatus } from '@/constants/projectStatus';
+import { exposedProjectStatuses, ProjectStatus } from '@/constants/projectStatus';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectStatus as ProjectStatusEntity } from '@/typeorm/Entities/ProjectStatus';
 import { parentPort } from 'worker_threads';
@@ -182,35 +182,79 @@ const findLinkedProjectsForProperty = async (buildingId?: number, parcelId?: num
  * @returns A promise that resolves to an array of properties matching the filter criteria.
  */
 const getPropertiesForMap = async (filter?: MapFilter) => {
-  const properties = await AppDataSource.getRepository(MapProperties).find({
-    // Select only the properties needed to render map markers and sidebar
-    select: {
-      Id: true,
-      Location: {
-        x: true,
-        y: true,
-      },
-      PropertyTypeId: true,
-      ClassificationId: true,
-      Name: true,
-      PID: true,
-      PIN: true,
-      AdministrativeAreaId: true,
-      AgencyId: true,
-      Address1: true,
+  // Select only the properties needed to render map markers and sidebar
+  const selectObject = {
+    Id: true,
+    Location: {
+      x: true,
+      y: true,
     },
+    PropertyTypeId: true,
+    ClassificationId: true,
+    Name: true,
+    PID: true,
+    PIN: true,
+    AdministrativeAreaId: true,
+    AgencyId: true,
+    Address1: true,
+    ProjectStatusId: true,
+  };
+
+  const filterBase: FindOptionsWhere<MapProperties> = {
+    ClassificationId: filter.ClassificationIds ? In(filter.ClassificationIds) : undefined,
+    AdministrativeAreaId: filter.AdministrativeAreaIds
+      ? In(filter.AdministrativeAreaIds)
+      : undefined,
+    PID: filter.PID,
+    PIN: filter.PIN,
+    Address1: filter.Address ? ILike(`%${filter.Address}%`) : undefined,
+    Name: filter.Name ? ILike(`%${filter.Name}%`) : undefined,
+    PropertyTypeId: filter.PropertyTypeIds ? In(filter.PropertyTypeIds) : undefined,
+    RegionalDistrictId: filter.RegionalDistrictIds ? In(filter.RegionalDistrictIds) : undefined,
+  };
+
+  /**
+   * If the user's agencies were defined, then they didn't have permissions to see all the agencies.
+   * This path allows a user to filter by agencies they belong to.
+   * If no agency filter is requested, it filters by the user's agencies, but also
+   * includes properties with a project status that would expose them to users
+   * outside of the owning agency.
+   */
+  if (filter.UserAgencies) {
+    // Did they request to filter on agencies? Only use the crossover of their agencies and the filter
+    const agencies = filter.AgencyIds
+      ? filter.AgencyIds.filter((a) => filter.UserAgencies.includes(a))
+      : filter.UserAgencies;
+
+    const properties = await AppDataSource.getRepository(MapProperties).find({
+      select: selectObject,
+      where: filter.AgencyIds
+        ? {
+            ...filterBase,
+            AgencyId: In(agencies),
+          }
+        : [
+            {
+              ...filterBase,
+              AgencyId: In(agencies),
+            },
+            {
+              ...filterBase,
+              ProjectStatusId: In(exposedProjectStatuses),
+            },
+          ],
+    });
+    return properties;
+  }
+  /**
+   * This path is for users that pass the admin/auditor role check.
+   * Search will function unchanged from the request.
+   */
+  const properties = await AppDataSource.getRepository(MapProperties).find({
+    select: selectObject,
     where: {
-      ClassificationId: filter.ClassificationIds ? In(filter.ClassificationIds) : undefined,
+      ...filterBase,
       AgencyId: filter.AgencyIds ? In(filter.AgencyIds) : undefined,
-      AdministrativeAreaId: filter.AdministrativeAreaIds
-        ? In(filter.AdministrativeAreaIds)
-        : undefined,
-      PID: filter.PID,
-      PIN: filter.PIN,
-      Address1: filter.Address ? ILike(`%${filter.Address}%`) : undefined,
-      Name: filter.Name ? ILike(`%${filter.Name}%`) : undefined,
-      PropertyTypeId: filter.PropertyTypeIds ? In(filter.PropertyTypeIds) : undefined,
-      RegionalDistrictId: filter.RegionalDistrictIds ? In(filter.RegionalDistrictIds) : undefined,
     },
   });
   return properties;
@@ -390,34 +434,42 @@ const makeParcelUpsertObject = async (
     currRowEvaluations.push(...evaluations);
     currRowFiscals.push(...fiscals);
   }
-  if (row.Netbook && !currRowFiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
-    currRowFiscals.push({
+  // if there is a netbook and fiscal year we can add or update fiscal
+  if (row.Netbook && row.FiscalYear) {
+    const addOrUpdateFiscals: Partial<ParcelFiscal> = {
       Value: row.Netbook,
       FiscalKeyId: 0,
       FiscalYear: row.FiscalYear,
-      CreatedById: user.Id,
-      CreatedOn: new Date(),
-    });
+    };
+    if (!currRowFiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
+      addOrUpdateFiscals.CreatedById = user.Id;
+    } else {
+      addOrUpdateFiscals.UpdatedById = user.Id;
+    }
+    currRowFiscals.push(addOrUpdateFiscals);
   }
-  if (row.Assessed && !currRowEvaluations.some((a) => a.Year == row.EvaluationYear)) {
-    currRowEvaluations.push({
+  // if there is a netbook and fiscal year we can add or update evaluation
+  if (row.Assessed && row.AssessedYear) {
+    const addOrUpdateAssessed: Partial<ParcelEvaluation> = {
       Value: row.Assessed,
       EvaluationKeyId: 0,
       Year: row.AssessedYear,
-      CreatedById: user.Id,
-      CreatedOn: new Date(),
-    });
+    };
+    if (!currRowEvaluations.some((a) => a.Year == row.AssessedYear)) {
+      addOrUpdateAssessed.CreatedById = user.Id;
+    } else {
+      addOrUpdateAssessed.UpdatedById = user.Id;
+    }
+    currRowEvaluations.push(addOrUpdateAssessed);
   }
+
   const classificationId: number = getClassificationOrThrow(row, lookups.classifications);
   const adminAreaId: number = getAdministrativeAreaOrThrow(row, lookups.adminAreas);
   const pin = numberOrNull(row.PIN) ?? existentParcel?.PIN;
-  const description = row.Description ?? (existentParcel ? existentParcel.Description : '');
+  const description = row.Description ?? existentParcel?.Description;
   const isSensitive = setNewBool(row.IsSensitive, existentParcel?.IsSensitive, false);
-  const isVisibleToOtherAgencies = setNewBool(
-    row.IsVisibleToOtherAgencies,
-    existentParcel?.IsVisibleToOtherAgencies,
-    false,
-  );
+  const landArea = numberOrNull(row.LandArea) ?? existentParcel?.LandArea;
+
   return {
     Id: existentParcel?.Id,
     AgencyId: getAgencyOrThrowIfMismatched(row, lookups, roles).Id,
@@ -435,10 +487,9 @@ const makeParcelUpsertObject = async (
     Address1: row.Address ?? existentParcel?.Address1 ?? null,
     AdministrativeAreaId: adminAreaId,
     IsSensitive: isSensitive,
-    IsVisibleToOtherAgencies: isVisibleToOtherAgencies,
     PropertyTypeId: 0,
     Description: description,
-    LandArea: numberOrNull(row.LandArea) ?? existentParcel ? existentParcel.LandArea : null,
+    LandArea: landArea,
     Evaluations: currRowEvaluations,
     Fiscals: currRowFiscals,
   };
@@ -474,24 +525,33 @@ const makeBuildingUpsertObject = async (
     currRowEvaluations.push(...evaluations);
     currRowFiscals.push(...fiscals);
   }
-
-  if (row.Netbook && !currRowFiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
-    currRowFiscals.push({
+  // if there is a netbook and fiscal year we can add or update fiscal
+  if (row.Netbook && row.FiscalYear) {
+    const addOrUpdateFiscals: Partial<BuildingFiscal> = {
       Value: row.Netbook,
       FiscalKeyId: 0,
       FiscalYear: row.FiscalYear,
-      CreatedById: user.Id,
-      CreatedOn: new Date(),
-    });
+    };
+    if (!currRowFiscals.some((a) => a.FiscalYear == row.FiscalYear)) {
+      addOrUpdateFiscals.CreatedById = user.Id;
+    } else {
+      addOrUpdateFiscals.UpdatedById = user.Id;
+    }
+    currRowFiscals.push(addOrUpdateFiscals);
   }
-  if (row.Assessed && !currRowEvaluations.some((a) => a.Year == row.EvaluationYear)) {
-    currRowEvaluations.push({
+  // if there is a netbook and fiscal year we can add or update evaluation
+  if (row.Assessed && row.AssessedYear) {
+    const addOrUpdateAssessed: Partial<BuildingEvaluation> = {
       Value: row.Assessed,
       EvaluationKeyId: 0,
       Year: row.AssessedYear,
-      CreatedById: user.Id,
-      CreatedOn: new Date(),
-    });
+    };
+    if (!currRowEvaluations.some((a) => a.Year == row.AssessedYear)) {
+      addOrUpdateAssessed.CreatedById = user.Id;
+    } else {
+      addOrUpdateAssessed.UpdatedById = user.Id;
+    }
+    currRowEvaluations.push(addOrUpdateAssessed);
   }
 
   const classificationId = getClassificationOrThrow(row, lookups.classifications);
@@ -502,11 +562,7 @@ const makeBuildingUpsertObject = async (
   const description = row.Description ?? (existentBuilding ? existentBuilding.Description : '');
   const rentableArea = row.NetUsableArea ?? (existentBuilding ? existentBuilding.RentableArea : 0);
   const isSensitive = setNewBool(row.IsSensitive, existentBuilding?.IsSensitive, false);
-  const isVisibleToOtherAgencies = setNewBool(
-    row.IsVisibleToOtherAgencies,
-    existentBuilding?.IsVisibleToOtherAgencies,
-    false,
-  );
+
   const buildingFloorCount =
     row.BuildingFloorCount ?? (existentBuilding ? existentBuilding.BuildingFloorCount : 0);
   const tenancy = row.BuildingTenancy ?? (existentBuilding ? existentBuilding.BuildingTenancy : '');
@@ -533,7 +589,6 @@ const makeBuildingUpsertObject = async (
     IsSensitive: isSensitive,
     Description: description,
     Address1: row.Address ?? existentBuilding?.Address1 ?? null,
-    IsVisibleToOtherAgencies: isVisibleToOtherAgencies,
     PropertyTypeId: 1,
     RentableArea: rentableArea,
     BuildingTenancy: tenancy,
@@ -605,14 +660,11 @@ export interface ImportRow {
   FiscalYear?: number;
   AssessedYear?: number;
   IsSensitive?: boolean;
-  IsVisibleToOtherAgencies?: boolean; // TODO: Removed in other PR.
   LandArea?: number;
   BuildingTenancy?: number;
   NetUsableArea?: number;
   BuildingFloorCount?: number;
   TotalArea?: number;
-  // Not displayed in UI
-  LocalId?: string;
 }
 
 /**
@@ -791,6 +843,8 @@ const collectFindOptions = (filter: PropertyUnionFilter) => {
     );
   if (filter.propertyType)
     options.push(constructFindOptionFromQuerySingleSelect('PropertyType', filter.propertyType));
+  if (filter.projectStatus)
+    options.push(constructFindOptionFromQuerySingleSelect('ProjectStatus', filter.projectStatus));
   return options;
 };
 
@@ -809,16 +863,24 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
       }),
     );
 
-  // Restricts based on user's agencies
+  // Only non-admins have this set in the controller
   if (filter.agencyIds?.length) {
-    query.andWhere('agency_id IN(:...list)', {
-      list: filter.agencyIds,
-    });
+    query.andWhere(
+      new Brackets((qb) => {
+        // Restricts based on user's agencies
+        qb.orWhere('agency_id IN(:...list)', {
+          list: filter.agencyIds,
+        });
+        // But also allow for ERP projects to be visible
+        qb.orWhere('project_status_id IN(:...exposedProjectStatuses)', {
+          exposedProjectStatuses: exposedProjectStatuses,
+        });
+      }),
+    );
   }
 
   // Add quickfilter part
   if (filter.quickFilter) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const quickFilterOptions: FindOptionsWhere<any>[] = [];
     const quickfilterFields = [
       'Agency',

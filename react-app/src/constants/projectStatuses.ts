@@ -33,7 +33,8 @@ export enum ProjectStatus {
 }
 
 /**
+ * Used in parallel with checks in API.
  * Projects and properties in ERP are shown to agencies outside of their owning agency.
- * Adding new statuses to this list will reveal them to outside agencies.
+ * Properties in active projects with these status will be highlighted.
  */
 export const exposedProjectStatuses = [ProjectStatus.APPROVED_FOR_ERP];

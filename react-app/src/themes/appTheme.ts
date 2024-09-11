@@ -42,6 +42,7 @@ const appTheme = createTheme({
   palette: {
     gold: {
       main: '#FCBA19',
+      light: '#FAE6B94D',
     },
     blue: {
       main: '#0e3468',

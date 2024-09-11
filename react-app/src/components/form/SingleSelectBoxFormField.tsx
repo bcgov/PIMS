@@ -18,7 +18,7 @@ const SingleSelectBoxFormField = (props: SingleSelectBoxFormFieldProps) => {
       name={name}
       control={control}
       rules={{ validate: (value) => !required || value || 'Required field.' }}
-      render={({ field: { onChange, value }, fieldState: { error } }) => (
+      render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
         <>
           <Box
             sx={{
@@ -29,6 +29,7 @@ const SingleSelectBoxFormField = (props: SingleSelectBoxFormFieldProps) => {
             <Checkbox
               id={`single-checkbox-${name}`}
               onChange={(_, data) => onChange(data)}
+              onBlur={onBlur}
               checked={!!value}
               required={required}
             />

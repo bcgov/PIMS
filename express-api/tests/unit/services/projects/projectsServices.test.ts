@@ -220,8 +220,7 @@ const _mockEntityManager = {
   },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _queryRunner = jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
+jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
   ...jest.requireActual('@/appDataSource').createQueryRunner,
   startTransaction: _mockStartTransaction,
   rollbackTransaction: _mockRollbackTransaction,
@@ -531,7 +530,6 @@ describe('UNIT - Project Services', () => {
       expect(result.StatusId).toBe(2);
       expect(result.Name).toBe('New Name');
       expect(_projectPropertiesManagerFind).toHaveBeenCalledTimes(5);
-      //expect(_projectStatusHistoryInsert).toHaveBeenCalledTimes(1);
       expect(_projectManagerSave).toHaveBeenCalledTimes(1);
     });
 
