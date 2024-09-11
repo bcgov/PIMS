@@ -1,5 +1,6 @@
 
 const fs = require("fs");
+const os = require("os");
 const json5 = require("json5");
 
 /**
@@ -64,8 +65,10 @@ fs.readFile(filePath, "utf8", (err, data) => {
       const envValue =
         typeof value === "object" ? JSON.stringify(value) : value;
 
+      const output = process.env['GITHUB_OUTPUT']
+
       // Output each key-value pair for GitHub Actions
-      console.log(`::set-output name=${key}::${envValue}`);
+      fs.appendFileSync(output, `${key}=${envValue}${os.EOL}`);
     }
   } catch (parseError) {
     console.error("Error parsing JSON5:", parseError);
