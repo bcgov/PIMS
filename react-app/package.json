@@ -25,7 +25,6 @@
     "@mui/material": "6.0.2",
     "@mui/x-data-grid": "7.16.0",
     "@mui/x-date-pickers": "7.16.0",
-    "@snowplow/browser-plugin-error-tracking": "3.24.2",
     "@snowplow/browser-plugin-link-click-tracking": "3.24.2",
     "@snowplow/browser-tracker": "3.24.2",
     "@turf/turf": "7.1.0",

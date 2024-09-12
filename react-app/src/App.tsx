@@ -272,8 +272,7 @@ const App = () => {
   /** START SNOWPLOW SETUP */
   newTracker('rt', 'spt.apps.gov.bc.ca', {
     appId: 'Snowplow_standalone_PIMS',
-    plugins: [ErrorTrackingPlugin()],
-    cookieLifetime: 86400 * 548, // TODO: Why this?
+    cookieLifetime: 60 * 60 * 24, // Time in seconds. 
     platform: 'web',
     cookieSecure: true,
     eventMethod: 'post',
@@ -287,7 +286,7 @@ const App = () => {
     minimumVisitLength: 30,
     heartbeatDelay: 30,
   });
-  enableErrorTracking();
+
   refreshLinkClickTracking();
 
   useEffect(() => {
