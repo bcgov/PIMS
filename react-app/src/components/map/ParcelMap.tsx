@@ -1,13 +1,5 @@
 import { Box, CircularProgress } from '@mui/material';
-import React, {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { PropsWithChildren, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { MapContainer, Polygon, useMapEvents } from 'react-leaflet';
 import { LatLngBoundsExpression, LatLngExpression, Map, Point } from 'leaflet';
 import MapLayers from '@/components/map/MapLayers';

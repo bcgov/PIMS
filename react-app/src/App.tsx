@@ -33,7 +33,6 @@ import LookupContextProvider from '@/contexts/lookupContext';
 import BulkUpload from './pages/BulkUpload';
 import useHistoryAwareNavigate from './hooks/useHistoryAwareNavigate';
 import { newTracker, enableActivityTracking, trackPageView } from '@snowplow/browser-tracker';
-import { enableErrorTracking, ErrorTrackingPlugin } from '@snowplow/browser-plugin-error-tracking';
 import { refreshLinkClickTracking } from '@snowplow/browser-plugin-link-click-tracking';
 
 /**
@@ -272,7 +271,7 @@ const App = () => {
   /** START SNOWPLOW SETUP */
   newTracker('rt', 'spt.apps.gov.bc.ca', {
     appId: 'Snowplow_standalone_PIMS',
-    cookieLifetime: 60 * 60 * 24, // Time in seconds. 
+    cookieLifetime: 60 * 60 * 24, // Time in seconds.
     platform: 'web',
     cookieSecure: true,
     eventMethod: 'post',
