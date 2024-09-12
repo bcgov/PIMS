@@ -48,3 +48,6 @@ package-lock.json
 
 # .csv and txt files created by script
 tools/propertyCheck/data/*
+
+# Postgres Dump Files
+database/postgres/**/*.dump
