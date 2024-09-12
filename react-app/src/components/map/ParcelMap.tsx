@@ -39,8 +39,6 @@ type ParcelMapProps = {
   defaultLocation?: LatLngExpression;
 } & PropsWithChildren;
 
-export const SelectedMarkerContext = createContext(null);
-
 /**
  * ParcelMap component renders a map with various layers and functionalities.
  *
@@ -234,7 +232,6 @@ const ParcelMap = (props: ParcelMapProps) => {
       // Track search in snowplow
       trackSelfDescribingEvent({
         event: {
-          // TODO: request a schema for the map search specifically, as it differs from the other table searches
           schema: 'iglu:ca.bc.gov.pims/map/jsonschema/1-0-0',
           data: {
             pid: filter.PID,
@@ -264,6 +261,11 @@ const ParcelMap = (props: ParcelMapProps) => {
                   (id) => lookup.getLookupValueById('PropertyTypes', id)?.Name,
                 )
               : undefined,
+            project_statuses: filter.ProjectStatusIds
+              ? filter.ProjectStatusIds.map(
+                  (id) => lookup.getLookupValueById('ProjectStatuses', id)?.Name,
+                )
+              : undefined,
           },
         },
       });
@@ -271,7 +273,6 @@ const ParcelMap = (props: ParcelMapProps) => {
     }
   }, [filter]);
 
-  // TODO: Remove selected marker context
   return (
     <Box height={height} display={'flex'}>
       {loadProperties ? <LoadingCover show={isLoading} /> : <></>}

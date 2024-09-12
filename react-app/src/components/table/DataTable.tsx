@@ -369,7 +369,6 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     // Send search params to snowplow
     trackSelfDescribingEvent({
       event: {
-        // TODO: request a schema for the table search
         schema: 'iglu:ca.bc.gov.pims/table/jsonschema/1-0-0',
         data: {
           name: props.name,
