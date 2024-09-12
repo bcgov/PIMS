@@ -269,7 +269,11 @@ const Router = () => {
 
 const App = () => {
   /** START SNOWPLOW SETUP */
-  newTracker('rt', 'spt.apps.gov.bc.ca', {
+  // Snowplow Mini for temporary testing, Snowplow Tracker for long-term records
+  const connectorEndpoint = window.location.href.includes('localhost')
+    ? 'spm.apps.gov.bc.ca'
+    : 'spt.apps.gov.bc.ca';
+  newTracker('rt', connectorEndpoint, {
     appId: 'Snowplow_standalone_PIMS',
     cookieLifetime: 60 * 60 * 24, // Time in seconds.
     platform: 'web',
