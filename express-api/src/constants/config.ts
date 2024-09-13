@@ -34,7 +34,7 @@ const config = {
   },
   keycloak: {
     client_id: process.env.SSO_CLIENT_ID,
-  }
+  },
 };
 
 const getConfig = () => {
