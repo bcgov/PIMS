@@ -133,7 +133,7 @@ export const importProperties = async (req: Request, res: Response) => {
   const fileName = req.file.originalname;
   const ssoUser = req.user;
   const user = await userServices.getUser(ssoUser.preferred_username);
-  const roles = ssoUser.client_roles;
+  const role = user.Role?.Name;
   try {
     readFile(filePath, { WTF: true }); //With this read option disabled it will throw if unexpected data is present.
   } catch (e) {
@@ -153,7 +153,7 @@ export const importProperties = async (req: Request, res: Response) => {
   });
   const workerPath = `../../services/properties/propertyWorker.${process.env.NODE_ENV === 'production' ? 'js' : 'ts'}`;
   const worker = new Worker(path.resolve(__dirname, workerPath), {
-    workerData: { filePath, resultRowId: resultRow.Id, user, roles },
+    workerData: { filePath, resultRowId: resultRow.Id, user, roles: role },
     execArgv: [
       '--require',
       'ts-node/register',
