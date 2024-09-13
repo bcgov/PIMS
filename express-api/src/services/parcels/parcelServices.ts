@@ -10,6 +10,7 @@ import logger from '@/utilities/winstonLogger';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { Roles } from '@/constants/roles';
 import { PimsRequestUser } from '@/middleware/activeUserCheck';
+import { User } from '@/typeorm/Entities/User';
 
 const parcelRepo = AppDataSource.getRepository(Parcel);
 
@@ -42,7 +43,7 @@ const addParcel = async (parcel: DeepPartial<Parcel>) => {
  * @returns object with data on number of rows affected.
  * @throws ErrorWithCode if no parcels have the ID sent in
  */
-const deleteParcelById = async (parcelId: number, username: string) => {
+const deleteParcelById = async (parcelId: number, user: User) => {
   const existingParcel = await getParcelById(parcelId);
   if (!existingParcel) {
     throw new ErrorWithCode('Parcel PID was not found.', 404);
@@ -56,7 +57,6 @@ const deleteParcelById = async (parcelId: number, username: string) => {
       403,
     );
   }
-  const user = await userServices.getUser(username);
   const queryRunner = await AppDataSource.createQueryRunner();
   await queryRunner.startTransaction();
   try {

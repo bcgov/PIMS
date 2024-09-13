@@ -110,10 +110,7 @@ export const deleteBuilding = async (req: Request, res: Response) => {
   if (isNaN(buildingId)) {
     return res.status(400).send('Building ID was invalid.');
   }
-  const delResult = await buildingService.deleteBuildingById(
-    buildingId,
-    req.user.preferred_username,
-  );
+  const delResult = await buildingService.deleteBuildingById(buildingId, req.pimsUser);
   return res.status(200).send(delResult);
 };
 

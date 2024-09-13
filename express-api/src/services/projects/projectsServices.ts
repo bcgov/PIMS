@@ -26,7 +26,6 @@ import { ProjectFilter } from '@/services/projects/projectSchema';
 import { PropertyType } from '@/constants/propertyType';
 import { ProjectRisk } from '@/constants/projectRisk';
 import notificationServices, { AgencyResponseType } from '../notifications/notificationServices';
-import userServices from '../users/usersServices';
 import {
   constructFindOptionFromQuery,
   constructFindOptionFromQuerySingleSelect,
@@ -38,6 +37,7 @@ import { SortOrders } from '@/constants/types';
 import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
 import { Roles } from '@/constants/roles';
 import { PimsRequestUser } from '@/middleware/activeUserCheck';
+import { User } from '@/typeorm/Entities/User';
 
 const projectRepo = AppDataSource.getRepository(Project);
 
@@ -796,11 +796,10 @@ const updateProject = async (
  * @returns {Promise<DeleteResult>} - A promise that resolves to the delete result.
  * @throws {ErrorWithCode} - If the project does not exist, or if there is an error deleting the project.
  */
-const deleteProjectById = async (id: number, username: string) => {
+const deleteProjectById = async (id: number, user: User) => {
   if (!(await projectRepo.exists({ where: { Id: id } }))) {
     throw new ErrorWithCode('Project does not exist.', 404);
   }
-  const user = await userServices.getUser(username);
   const queryRunner = await AppDataSource.createQueryRunner();
   await queryRunner.startTransaction();
   try {

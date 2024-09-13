@@ -101,10 +101,7 @@ export const deleteDisposalProject = async (req: Request, res: Response) => {
     return res.status(403).send('Projects can only be deleted by Administrator role.');
   }
 
-  const delProject = await projectServices.deleteProjectById(
-    projectId,
-    req.user.preferred_username,
-  );
+  const delProject = await projectServices.deleteProjectById(projectId, req.pimsUser);
   const notifications = await notificationServices.cancelProjectNotifications(projectId);
 
   return res.status(200).send({ project: delProject, notifications });

@@ -10,6 +10,7 @@ import logger from '@/utilities/winstonLogger';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { Roles } from '@/constants/roles';
 import { PimsRequestUser } from '@/middleware/activeUserCheck';
+import { User } from '@/typeorm/Entities/User';
 
 const buildingRepo = AppDataSource.getRepository(Building);
 
@@ -128,7 +129,7 @@ export const updateBuildingById = async (
  * @returns A promise that resolves to the removed building entity.
  * @throws Error if the building does not exist, is linked to projects, or an error occurs during the deletion process.
  */
-export const deleteBuildingById = async (buildingId: number, username: string) => {
+export const deleteBuildingById = async (buildingId: number, user: User) => {
   const existingBuilding = await getBuildingById(buildingId);
   if (!existingBuilding) {
     throw new ErrorWithCode('Building does not exists.', 404);
@@ -142,7 +143,6 @@ export const deleteBuildingById = async (buildingId: number, username: string) =
       403,
     );
   }
-  const user = await userServices.getUser(username);
   const queryRunner = await AppDataSource.createQueryRunner();
   await queryRunner.startTransaction();
   try {
