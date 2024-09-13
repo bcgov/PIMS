@@ -5,11 +5,8 @@ import express from 'express';
 
 const router = express.Router();
 
-const { searchGeocoderAddresses, searchGeocoderSiteId } = controllers;
+const { searchGeocoderAddresses } = controllers;
 
 router.route(`/geocoder/addresses`).get(activeUserCheck, catchErrors(searchGeocoderAddresses));
-router
-  .route(`/geocoder/parcels/pids/:siteId`)
-  .get(activeUserCheck, catchErrors(searchGeocoderSiteId));
 
 export default router;
