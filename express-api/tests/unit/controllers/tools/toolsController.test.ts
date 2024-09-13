@@ -5,7 +5,6 @@ import {
   MockRes,
   getRequestHandlerMocks,
   produceEmailStatus,
-  produceGeocoderAddress,
 } from '../../../testUtils/factories';
 import { randomUUID } from 'crypto';
 
