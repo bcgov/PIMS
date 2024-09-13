@@ -5,8 +5,6 @@ import {
   MockRes,
   getRequestHandlerMocks,
   produceEmailStatus,
-  produceGeocoderAddress,
-  producePidsResponse,
 } from '../../../testUtils/factories';
 import { randomUUID } from 'crypto';
 
@@ -34,14 +32,6 @@ jest.mock('@/services/ches/chesServices.ts', () => ({
   cancelEmailByIdAsync: () => _cancelEmailByIdAsync(),
   cancelEmailsAsync: () => _cancelEmailsAsync(),
   sendEmailAsync: () => _sendEmailAsync(),
-}));
-
-const _getSiteAddresses = jest.fn().mockImplementation(() => [produceGeocoderAddress()]);
-const _getPids = jest.fn().mockImplementation(() => producePidsResponse());
-
-jest.mock('@/services/geocoder/geocoderService', () => ({
-  getSiteAddresses: () => _getSiteAddresses(),
-  getPids: () => _getPids(),
 }));
 
 describe('UNIT - Tools', () => {
