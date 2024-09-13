@@ -90,15 +90,3 @@ export const searchGeocoderAddresses = async (req: Request, res: Response) => {
   const geoReturn = await geocoderService.getSiteAddresses(address, minScore, maxResults);
   return res.status(200).send(geoReturn);
 };
-
-/**
- * @description Search Geocoder for the pid of a certain siteId.
- * @param {Request}     req Incoming request.
- * @param {Response}    res Outgoing response.
- * @returns {Response}      A 200 status with a siteId object.
- */
-export const searchGeocoderSiteId = async (req: Request, res: Response) => {
-  const siteId = String(req.params.siteId);
-  const result = await geocoderService.getPids(siteId);
-  return res.status(200).send(result);
-};

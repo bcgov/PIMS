@@ -1,36 +1,5 @@
 ### PATHS ###
 paths:
-  /tools/geocoder/parcels/pids/{siteID}:
-    get:
-      security:
-        - bearerAuth: []
-      tags:
-        - Tools
-      summary: Returns an object with the siteID and a pids property.
-      description: >
-        The `pids` property seems to only be a single PID string.
-        This response comes from the BC Geocoder Service.
-        Capable of any error code from BC Geocoder.
-      parameters:
-        - in: path
-          name: siteID
-          schema:
-            type: string
-            format: uuid 
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  siteID: 
-                    type: string
-                    format: uuid
-                  pids:
-                    type: string
-                    example: 014128446
-                    description: Has leading zeroes. Seemingly only one PID despite pluralization.
   /tools/geocoder/addresses:
     get:
       security:
