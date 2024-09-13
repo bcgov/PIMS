@@ -26,7 +26,6 @@ import { ProjectFilter } from '@/services/projects/projectSchema';
 import { PropertyType } from '@/constants/propertyType';
 import { ProjectRisk } from '@/constants/projectRisk';
 import notificationServices, { AgencyResponseType } from '../notifications/notificationServices';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import userServices from '../users/usersServices';
 import {
   constructFindOptionFromQuery,
@@ -38,6 +37,7 @@ import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { SortOrders } from '@/constants/types';
 import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
 import { Roles } from '@/constants/roles';
+import { PimsRequestUser } from '@/middleware/activeUserCheck';
 
 const projectRepo = AppDataSource.getRepository(Project);
 
@@ -123,14 +123,14 @@ const getProjectById = async (id: number) => {
  *
  * @param project - The project object to be added.
  * @param propertyIds - The IDs of the properties (parcels and buildings) to be associated with the project.
- * @param {SSOUser} ssoUser The user making the add request.
+ * @param {PimsRequestUser} user The user making the add request.
  * @returns The newly created project.
  * @throws ErrorWithCode - If the project name is missing, agency is not found, or there is an error creating the project.
  */
 const addProject = async (
   project: DeepPartial<Project>,
   propertyIds: ProjectPropertyIds,
-  ssoUser: SSOUser,
+  user: PimsRequestUser,
 ) => {
   // Does the project have a name?
   if (!project.Name) throw new ErrorWithCode('Projects must have a name.', 400);
@@ -173,7 +173,7 @@ const addProject = async (
       newProject.Id,
       null,
       newProject.AgencyResponses ?? [],
-      ssoUser,
+      user,
       queryRunner,
     );
     await queryRunner.commitTransaction();
@@ -388,7 +388,7 @@ const handleProjectNotifications = async (
   projectId: number,
   previousStatus: number,
   responses: ProjectAgencyResponse[],
-  user: SSOUser,
+  user: PimsRequestUser,
   queryRunner: QueryRunner,
 ) => {
   const projectWithRelations = await queryRunner.manager.findOne(Project, {
@@ -655,7 +655,7 @@ const getAgencyResponseChanges = async (
 const updateProject = async (
   project: DeepPartial<Project>,
   propertyIds: ProjectPropertyIds,
-  user: SSOUser,
+  user: PimsRequestUser,
 ) => {
   // Project must still have a name
   // undefined is allowed because it is not always updated
@@ -680,7 +680,7 @@ const updateProject = async (
     //Agency change disallowed unless admin.
     project.AgencyId &&
     originalProject.AgencyId !== project.AgencyId &&
-    !(await userServices.hasOneOfRoles(user.preferred_username, [Roles.ADMIN]))
+    !user.hasOneOfRoles([Roles.ADMIN])
   ) {
     throw new ErrorWithCode('Project Agency may not be changed.', 403);
   }

@@ -8,8 +8,8 @@ import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
 import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
 import logger from '@/utilities/winstonLogger';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Roles } from '@/constants/roles';
+import { PimsRequestUser } from '@/middleware/activeUserCheck';
 
 const buildingRepo = AppDataSource.getRepository(Building);
 
@@ -63,13 +63,16 @@ export const getBuildingById = async (buildingId: number) => {
  * @returns     {Building} The updated building
  * @throws      {ErrorWithCode} Throws and error with 404 status if building does not exist.
  */
-export const updateBuildingById = async (building: DeepPartial<Building>, ssoUser: SSOUser) => {
+export const updateBuildingById = async (
+  building: DeepPartial<Building>,
+  user: PimsRequestUser,
+) => {
   const existingBuilding = await getBuildingById(building.Id);
   if (!existingBuilding) {
     throw new ErrorWithCode('Building does not exists.', 404);
   }
-  const validUserAgencies = await userServices.getAgencies(ssoUser.preferred_username);
-  const isAdmin = await userServices.hasOneOfRoles(ssoUser.preferred_username, [Roles.ADMIN]);
+  const validUserAgencies = await userServices.getAgencies(user.Username);
+  const isAdmin = user.hasOneOfRoles([Roles.ADMIN]);
   if (!isAdmin && !validUserAgencies.includes(building.AgencyId)) {
     throw new ErrorWithCode('This agency change is not permitted.', 403);
   }

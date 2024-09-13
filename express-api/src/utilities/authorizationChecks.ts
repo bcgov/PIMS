@@ -1,6 +1,7 @@
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Roles } from '@/constants/roles';
 import userServices, { getUser } from '@/services/users/usersServices';
+import { PimsRequestUser } from '@/middleware/activeUserCheck';
 
 /**
  * Function to check if user can edit.
@@ -8,12 +9,9 @@ import userServices, { getUser } from '@/services/users/usersServices';
  * @param user - The user object containing information about the user.
  * @returns A boolean value indicating whether the user can edit or not.
  */
-export const canUserEdit = async (user: SSOUser): Promise<boolean> => {
+export const canUserEdit = async (user: PimsRequestUser): Promise<boolean> => {
   // as they are not an auditor the user can edit
-  return await userServices.hasOneOfRoles(user.preferred_username, [
-    Roles.GENERAL_USER,
-    Roles.ADMIN,
-  ]);
+  return user.hasOneOfRoles([Roles.GENERAL_USER, Roles.ADMIN]);
 };
 
 /**
@@ -46,7 +44,7 @@ export const isUserActive = async (kcUser: SSOUser): Promise<boolean> => {
  * @returns A Promise that resolves to a boolean indicating whether the user has read permission.
  */
 export const checkUserAgencyPermission = async (
-  kcUser: SSOUser,
+  user: PimsRequestUser,
   agencyIds: number[],
   permittedRoles: Roles[],
 ): Promise<boolean> => {
@@ -55,11 +53,9 @@ export const checkUserAgencyPermission = async (
     return false;
   }
   // if the user is not an admin, nor has a permitted role scope results
-  if (
-    !(await userServices.hasOneOfRoles(kcUser.preferred_username, [Roles.ADMIN, ...permittedRoles]))
-  ) {
+  if (!user.hasOneOfRoles([Roles.ADMIN, ...permittedRoles])) {
     // check if current user belongs to any of the specified agencies
-    const userAgencies = await userServices.hasAgencies(kcUser.preferred_username, agencyIds);
+    const userAgencies = await userServices.hasAgencies(user.Username, agencyIds);
     return userAgencies;
   }
   // Admins have permission by default

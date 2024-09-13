@@ -15,12 +15,12 @@ import chesServices, {
   IChesStatusResponse,
   IEmail,
 } from '../ches/chesServices';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
 import logger from '@/utilities/winstonLogger';
 import getConfig from '@/constants/config';
 import { getDaysBetween } from '@/utilities/helperFunctions';
 import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
+import { PimsRequestUser } from '@/middleware/activeUserCheck';
 
 export interface AccessRequestData {
   FirstName: string;
@@ -380,7 +380,7 @@ const generateProjectNotifications = async (
  */
 const sendNotification = async (
   notification: NotificationQueue,
-  user: SSOUser,
+  user: PimsRequestUser,
   queryRunner?: QueryRunner,
 ) => {
   const query = queryRunner ?? AppDataSource.createQueryRunner();

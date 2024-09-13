@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import * as buildingService from '@/services/buildings/buildingServices';
 import { BuildingFilter, BuildingFilterSchema } from '@/services/buildings/buildingSchema';
 import userServices from '@/services/users/usersServices';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Building } from '@/typeorm/Entities/Building';
 import { checkUserAgencyPermission } from '@/utilities/authorizationChecks';
 import { Roles } from '@/constants/roles';
@@ -19,16 +18,14 @@ import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 export const getBuildings = async (req: Request, res: Response) => {
   const filter = BuildingFilterSchema.safeParse(req.query);
   const includeRelations = req.query.includeRelations === 'true';
-  const kcUser = req.user as unknown as SSOUser;
+  const user = req.pimsUser;
   if (!filter.success) {
     return res.status(400).send('Could not parse filter.');
   }
   const filterResult = filter.data;
-  if (
-    !(await userServices.hasOneOfRoles(kcUser.preferred_username, [Roles.ADMIN, Roles.AUDITOR]))
-  ) {
+  if (!user.hasOneOfRoles([Roles.ADMIN, Roles.AUDITOR])) {
     // get array of user's agencies
-    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+    const usersAgencies = await userServices.getAgencies(user.Username);
     filterResult.agencyId = usersAgencies;
   }
   // Get parcels associated with agencies of the requesting user
@@ -53,7 +50,7 @@ export const getBuilding = async (req: Request, res: Response) => {
 
   // admin and auditors are permitted to see any building
   const permittedRoles = [Roles.ADMIN, Roles.AUDITOR];
-  const kcUser = req.user as unknown as SSOUser;
+  const user = req.pimsUser;
   const building = await buildingService.getBuildingById(buildingId);
 
   if (!building) {
@@ -77,7 +74,7 @@ export const getBuilding = async (req: Request, res: Response) => {
   );
 
   if (
-    !(await checkUserAgencyPermission(kcUser, [building.AgencyId], permittedRoles)) &&
+    !(await checkUserAgencyPermission(user, [building.AgencyId], permittedRoles)) &&
     !isVisibleToOtherAgencies
   ) {
     return res.status(403).send('You are not authorized to view this building.');
@@ -96,9 +93,9 @@ export const updateBuilding = async (req: Request, res: Response) => {
   if (isNaN(buildingId) || buildingId !== req.body.Id) {
     return res.status(400).send('Building ID was invalid or mismatched with body.');
   }
-  const user = await userServices.getUser((req.user as SSOUser).preferred_username);
+  const user = req.pimsUser;
   const updateBody = { ...req.body, UpdatedById: user.Id };
-  const building = await buildingService.updateBuildingById(updateBody, req.user);
+  const building = await buildingService.updateBuildingById(updateBody, req.pimsUser);
   return res.status(200).send(building);
 };
 
@@ -128,7 +125,7 @@ export const deleteBuilding = async (req: Request, res: Response) => {
  * Note: the original implementation returns 200, but as a resource is created 201 is better.
  */
 export const addBuilding = async (req: Request, res: Response) => {
-  const user = await userServices.getUser((req.user as SSOUser).preferred_username);
+  const user = req.pimsUser;
   const createBody: Building = { ...req.body, CreatedById: user.Id };
   createBody.Evaluations = createBody.Evaluations?.map((evaluation) => ({
     ...evaluation,

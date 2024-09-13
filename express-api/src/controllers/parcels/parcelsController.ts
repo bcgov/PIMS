@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import parcelServices from '@/services/parcels/parcelServices';
 import { ParcelFilter, ParcelFilterSchema } from '@/services/parcels/parcelSchema';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import userServices from '@/services/users/usersServices';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Roles } from '@/constants/roles';
@@ -24,7 +23,7 @@ export const getParcel = async (req: Request, res: Response) => {
 
   // admin and auditors are permitted to see any parcel
   const permittedRoles = [Roles.ADMIN, Roles.AUDITOR];
-  const kcUser = req.user as unknown as SSOUser;
+  const user = req.pimsUser;
   const parcel = await parcelServices.getParcelById(parcelId);
 
   if (!parcel) {
@@ -48,7 +47,7 @@ export const getParcel = async (req: Request, res: Response) => {
   );
 
   if (
-    !(await checkUserAgencyPermission(kcUser, [parcel.AgencyId], permittedRoles)) &&
+    !(await checkUserAgencyPermission(user, [parcel.AgencyId], permittedRoles)) &&
     !isVisibleToOtherAgencies
   ) {
     return res.status(403).send('You are not authorized to view this parcel.');
@@ -67,9 +66,9 @@ export const updateParcel = async (req: Request, res: Response) => {
   if (isNaN(parcelId) || parcelId !== req.body.Id) {
     return res.status(400).send('Parcel ID was invalid or mismatched with body.');
   }
-  const user = await userServices.getUser((req.user as SSOUser).preferred_username);
+  const user = req.pimsUser;
   const updateBody = { ...req.body, UpdatedById: user.Id };
-  const parcel = await parcelServices.updateParcel(updateBody, req.user);
+  const parcel = await parcelServices.updateParcel(updateBody, req.pimsUser);
   if (!parcel) {
     return res.status(404).send('Parcel matching this internal ID not found.');
   }
@@ -100,17 +99,14 @@ export const deleteParcel = async (req: Request, res: Response) => {
 export const getParcels = async (req: Request, res: Response) => {
   const filter = ParcelFilterSchema.safeParse(req.query);
   const includeRelations = req.query.includeRelations === 'true';
-  const kcUser = req.user as unknown as SSOUser;
   if (!filter.success) {
     return res.status(400).send('Could not parse filter.');
   }
   const filterResult = filter.data;
-
-  if (
-    !(await userServices.hasOneOfRoles(kcUser.preferred_username, [Roles.ADMIN, Roles.AUDITOR]))
-  ) {
+  const user = req.pimsUser;
+  if (!user.hasOneOfRoles([Roles.ADMIN, Roles.AUDITOR])) {
     // get array of user's agencies
-    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+    const usersAgencies = await userServices.getAgencies(user.Username);
     filterResult.agencyId = usersAgencies;
   }
   // Get parcels associated with agencies of the requesting user
@@ -132,7 +128,7 @@ export const getParcels = async (req: Request, res: Response) => {
  * Note: the original implementation returns 200, but as a resource is created 201 is better.
  */
 export const addParcel = async (req: Request, res: Response) => {
-  const user = await userServices.getUser((req.user as SSOUser).preferred_username);
+  const user = req.pimsUser;
   const parcel: Parcel = { ...req.body, CreatedById: user.Id };
   parcel.Evaluations = parcel.Evaluations?.map((evaluation) => ({
     ...evaluation,
