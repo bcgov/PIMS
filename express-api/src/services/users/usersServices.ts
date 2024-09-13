@@ -7,6 +7,7 @@ import { randomUUID, UUID } from 'crypto';
 import KeycloakService from '@/services/keycloak/keycloakService';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { UserFiltering } from '@/controllers/users/usersSchema';
+import { Roles } from '@/constants/roles';
 
 interface NormalizedKeycloakUser {
   first_name: string;
@@ -124,6 +125,28 @@ const getAgencies = async (username: string) => {
 const hasAgencies = async (username: string, agencies: number[]) => {
   const usersAgencies = await getAgencies(username);
   const result = agencies.every((id) => usersAgencies.includes(id));
+  return result;
+};
+
+const hasOneOfRoles = async (username: string, roles: Roles[]) => {
+  // No username or roles, then no permission.
+  if (!username || !roles.length) {
+    return false;
+  }
+  // Create where objects
+  const orWhereClauses = roles.map((r) => ({
+    Username: username,
+    Role: {
+      Name: r,
+    },
+  }));
+  // Does the user exist with one of these roles?
+  const result = await AppDataSource.getRepository(User).exists({
+    relations: {
+      Role: true,
+    },
+    where: orWhereClauses,
+  });
   return result;
 };
 
@@ -285,6 +308,7 @@ const userServices = {
   getUser,
   addKeycloakUserOnHold,
   hasAgencies,
+  hasOneOfRoles,
   getAgencies,
   normalizeKeycloakUser,
   getUsers,

@@ -7,7 +7,7 @@ import {
   MapFilterSchema,
   PropertyUnionFilterSchema,
 } from '@/controllers/properties/propertiesSchema';
-import { checkUserAgencyPermission, isAdmin, isAuditor } from '@/utilities/authorizationChecks';
+import { checkUserAgencyPermission } from '@/utilities/authorizationChecks';
 import userServices from '@/services/users/usersServices';
 import { Worker } from 'worker_threads';
 import path from 'path';
@@ -30,7 +30,8 @@ export const getPropertiesFuzzySearch = async (req: Request, res: Response) => {
   const take = req.query.take ? Number(req.query.take) : undefined;
   const kcUser = req.user;
   let userAgencies;
-  if (!isAdmin(kcUser)) {
+  const isAdmin = await userServices.hasOneOfRoles(kcUser.preferred_username, [Roles.ADMIN]);
+  if (!isAdmin) {
     userAgencies = await userServices.getAgencies(kcUser.preferred_username);
   }
   const result = await propertyServices.propertiesFuzzySearch(keyword, take, userAgencies);
@@ -90,7 +91,7 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
   const kcUser = req.user;
   const permittedRoles = [Roles.ADMIN, Roles.AUDITOR];
   // Admins and auditors see all, otherwise...
-  if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
+  if (!userServices.hasOneOfRoles(kcUser.preferred_username, permittedRoles)) {
     const requestedAgencies = filterResult.AgencyIds;
     const userHasAgencies = await checkUserAgencyPermission(
       kcUser,
@@ -214,7 +215,9 @@ export const getPropertyUnion = async (req: Request, res: Response) => {
   // Prevent getting back unrelated agencies for general users
   const kcUser = req.user as unknown as SSOUser;
   const filterResult = filter.data;
-  if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
+  if (
+    !(await userServices.hasOneOfRoles(kcUser.preferred_username, [Roles.ADMIN, Roles.AUDITOR]))
+  ) {
     // get array of user's agencies
     const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
     filterResult.agencyIds = usersAgencies;

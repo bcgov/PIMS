@@ -5,7 +5,6 @@ import userServices from '@/services/users/usersServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Request, Response } from 'express';
 import { DisposalNotificationFilterSchema } from './notificationsSchema';
-import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 import projectServices from '@/services/projects/projectsServices';
 import { Roles } from '@/constants/roles';
 import logger from '@/utilities/winstonLogger';
@@ -26,7 +25,9 @@ export const getNotificationsByProjectId = async (req: Request, res: Response) =
     const kcUser = req.user as unknown as SSOUser;
     const user = await userServices.getUser((req.user as SSOUser).preferred_username);
 
-    if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
+    if (
+      !(await userServices.hasOneOfRoles(kcUser.preferred_username, [Roles.ADMIN, Roles.AUDITOR]))
+    ) {
       // get array of user's agencies
       const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
 
@@ -57,7 +58,7 @@ export const getNotificationsByProjectId = async (req: Request, res: Response) =
 
 export const resendNotificationById = async (req: Request, res: Response) => {
   const kcUser = req.user;
-  if (!kcUser.hasRoles([Roles.ADMIN]))
+  if (!userServices.hasOneOfRoles(kcUser.preferred_username, [Roles.ADMIN]))
     return res.status(403).send('User lacks permissions to resend notification.');
   const id = Number(req.params.id);
   const notification = await notificationServices.getNotificationById(id);
@@ -75,7 +76,7 @@ export const resendNotificationById = async (req: Request, res: Response) => {
 
 export const cancelNotificationById = async (req: Request, res: Response) => {
   const kcUser = req.user;
-  if (!kcUser.hasRoles([Roles.ADMIN]))
+  if (!userServices.hasOneOfRoles(kcUser.preferred_username, [Roles.ADMIN]))
     return res.status(403).send('User lacks permissions to cancel notification.');
   const id = Number(req.params.id);
   const notification = await notificationServices.getNotificationById(id);

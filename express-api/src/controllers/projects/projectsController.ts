@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import projectServices, { ProjectPropertyIds } from '@/services/projects/projectsServices';
 import userServices from '@/services/users/usersServices';
-import { isAdmin, isAuditor, checkUserAgencyPermission } from '@/utilities/authorizationChecks';
+import { checkUserAgencyPermission } from '@/utilities/authorizationChecks';
 import { DeepPartial } from 'typeorm';
 import { Project } from '@/typeorm/Entities/Project';
 import { Roles } from '@/constants/roles';
@@ -54,7 +54,8 @@ export const getDisposalProject = async (req: Request, res: Response) => {
  */
 export const updateDisposalProject = async (req: Request, res: Response) => {
   // Only admins can edit projects
-  if (!isAdmin(req.user)) {
+  const isAdmin = await userServices.hasOneOfRoles(req.user?.preferred_username, [Roles.ADMIN]);
+  if (!isAdmin) {
     return res.status(403).send('Projects only editable by Administrator role.');
   }
 
@@ -86,17 +87,13 @@ export const updateDisposalProject = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status with the deleted project.
  */
 export const deleteDisposalProject = async (req: Request, res: Response) => {
-  // Only admins can delete projects
-  if (!isAdmin(req.user)) {
-    return res.status(403).send('Projects can only be deleted by Administrator role.');
-  }
-
   const projectId = Number(req.params.projectId);
   if (isNaN(projectId)) {
     return res.status(400).send('Invalid Project ID');
   }
   // Only admins can delete projects
-  if (!isAdmin(req.user)) {
+  const isAdmin = await userServices.hasOneOfRoles(req.user?.preferred_username, [Roles.ADMIN]);
+  if (!isAdmin) {
     return res.status(403).send('Projects can only be deleted by Administrator role.');
   }
 
@@ -117,7 +114,7 @@ export const deleteDisposalProject = async (req: Request, res: Response) => {
  */
 export const addDisposalProject = async (req: Request, res: Response) => {
   // Auditors can no add projects
-  if (isAuditor(req.user)) {
+  if (await userServices.hasOneOfRoles(req.user?.preferred_username, [Roles.AUDITOR])) {
     return res.status(403).send('Projects can not be added by user with Auditor role.');
   }
   // Extract project data from request body
@@ -159,7 +156,8 @@ export const getProjects = async (req: Request, res: Response) => {
   }
   const filterResult = filter.data;
   const kcUser = req.user as unknown as SSOUser;
-  if (!isAdmin(kcUser)) {
+  const isAdmin = await userServices.hasOneOfRoles(kcUser.preferred_username, [Roles.ADMIN]);
+  if (!isAdmin) {
     // get array of user's agencies
     const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
     filterResult.agencyId = usersAgencies;

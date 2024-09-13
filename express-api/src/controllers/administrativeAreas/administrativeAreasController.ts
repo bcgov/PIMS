@@ -19,8 +19,7 @@ export const getAdministrativeAreas = async (req: Request, res: Response) => {
   const filter = AdministrativeAreaFilterSchema.safeParse(req.query);
   if (filter.success) {
     const adminAreas = await administrativeAreasServices.getAdministrativeAreas(filter.data);
-    // TODO: Do we still need this condition? Few fields are trimmed since moving to view.
-    if (!ssoUser.hasRoles([Roles.ADMIN])) {
+    if (!userServices.hasOneOfRoles(ssoUser.preferred_username, [Roles.ADMIN])) {
       const trimmed = AdministrativeAreaPublicResponseSchema.array().parse(adminAreas.data);
       return res.status(200).send({
         ...adminAreas,

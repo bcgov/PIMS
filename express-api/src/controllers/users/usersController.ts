@@ -3,10 +3,10 @@ import { Request, Response } from 'express';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { UserFiltering, UserFilteringSchema } from '@/controllers/users/usersSchema';
 import { z } from 'zod';
-import { isAdmin } from '@/utilities/authorizationChecks';
 import notificationServices from '@/services/notifications/notificationServices';
 import getConfig from '@/constants/config';
 import logger from '@/utilities/winstonLogger';
+import { Roles } from '@/constants/roles';
 
 /**
  * @description Submits a user access request.
@@ -89,7 +89,8 @@ export const getUsers = async (req: Request, res: Response) => {
   const filterResult = filter.data;
 
   let users;
-  if (isAdmin(ssoUser)) {
+  const isAdmin = await userServices.hasOneOfRoles(ssoUser.preferred_username, [Roles.ADMIN]);
+  if (isAdmin) {
     users = await userServices.getUsers(filterResult as UserFiltering);
   } else {
     // Get agencies associated with the requesting user
@@ -112,9 +113,9 @@ export const getUserById = async (req: Request, res: Response) => {
   const ssoUser = req.user as unknown as SSOUser;
   if (uuid.success) {
     const user = await userServices.getUserById(uuid.data);
-
     if (user) {
-      if (!isAdmin(ssoUser)) {
+      const isAdmin = await userServices.hasOneOfRoles(ssoUser.preferred_username, [Roles.ADMIN]);
+      if (!isAdmin) {
         // check if user has the correct agencies
         const usersAgencies = await userServices.hasAgencies(ssoUser.preferred_username, [
           user.AgencyId,

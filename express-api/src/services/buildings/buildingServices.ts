@@ -9,7 +9,7 @@ import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
 import logger from '@/utilities/winstonLogger';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
-import { isAdmin } from '@/utilities/authorizationChecks';
+import { Roles } from '@/constants/roles';
 
 const buildingRepo = AppDataSource.getRepository(Building);
 
@@ -69,7 +69,8 @@ export const updateBuildingById = async (building: DeepPartial<Building>, ssoUse
     throw new ErrorWithCode('Building does not exists.', 404);
   }
   const validUserAgencies = await userServices.getAgencies(ssoUser.preferred_username);
-  if (!isAdmin(ssoUser) && !validUserAgencies.includes(building.AgencyId)) {
+  const isAdmin = await userServices.hasOneOfRoles(ssoUser.preferred_username, [Roles.ADMIN]);
+  if (!isAdmin && !validUserAgencies.includes(building.AgencyId)) {
     throw new ErrorWithCode('This agency change is not permitted.', 403);
   }
   if (building.Fiscals && building.Fiscals.length) {

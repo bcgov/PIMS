@@ -1,26 +1,6 @@
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Roles } from '@/constants/roles';
 import userServices, { getUser } from '@/services/users/usersServices';
-/**
- * @description Function to check if user is an admin
- * @param {SSOUser}     user Incoming Keycloak user.
- * @returns {boolean}      A boolean for whether admin or not.
- */
-export const isAdmin = (user: SSOUser): boolean => {
-  // Check if the user has the ADMIN role
-  return user.client_roles?.includes(Roles.ADMIN);
-};
-
-/**
- * Function to check if user is an auditor (view only role).
- *
- * @param {SSOUser} user - The user object containing information about the user.
- * @returns True if the user has the AUDITOR role, false otherwise.
- */
-export const isAuditor = (user: SSOUser): boolean => {
-  // Check if the user has the AUDITOR role
-  return user.client_roles?.includes(Roles.AUDITOR);
-};
 
 /**
  * Function to check if user can edit.
@@ -28,11 +8,12 @@ export const isAuditor = (user: SSOUser): boolean => {
  * @param user - The user object containing information about the user.
  * @returns A boolean value indicating whether the user can edit or not.
  */
-export const canUserEdit = (user: SSOUser): boolean => {
+export const canUserEdit = async (user: SSOUser): Promise<boolean> => {
   // as they are not an auditor the user can edit
-  return (
-    user.client_roles?.includes(Roles.GENERAL_USER) || user.client_roles?.includes(Roles.ADMIN)
-  );
+  return await userServices.hasOneOfRoles(user.preferred_username, [
+    Roles.GENERAL_USER,
+    Roles.ADMIN,
+  ]);
 };
 
 /**
@@ -73,9 +54,10 @@ export const checkUserAgencyPermission = async (
   if (!agencyIds || agencyIds.length === 0 || !agencyIds.at(0)) {
     return false;
   }
-  const userRolePermission = kcUser?.hasRoles(permittedRoles, { requireAllRoles: false });
   // if the user is not an admin, nor has a permitted role scope results
-  if (!isAdmin(kcUser) && !userRolePermission) {
+  if (
+    !(await userServices.hasOneOfRoles(kcUser.preferred_username, [Roles.ADMIN, ...permittedRoles]))
+  ) {
     // check if current user belongs to any of the specified agencies
     const userAgencies = await userServices.hasAgencies(kcUser.preferred_username, agencyIds);
     return userAgencies;

@@ -4,7 +4,7 @@ import { BuildingFilter, BuildingFilterSchema } from '@/services/buildings/build
 import userServices from '@/services/users/usersServices';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Building } from '@/typeorm/Entities/Building';
-import { checkUserAgencyPermission, isAdmin, isAuditor } from '@/utilities/authorizationChecks';
+import { checkUserAgencyPermission } from '@/utilities/authorizationChecks';
 import { Roles } from '@/constants/roles';
 import { AppDataSource } from '@/appDataSource';
 import { exposedProjectStatuses } from '@/constants/projectStatus';
@@ -24,7 +24,9 @@ export const getBuildings = async (req: Request, res: Response) => {
     return res.status(400).send('Could not parse filter.');
   }
   const filterResult = filter.data;
-  if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
+  if (
+    !(await userServices.hasOneOfRoles(kcUser.preferred_username, [Roles.ADMIN, Roles.AUDITOR]))
+  ) {
     // get array of user's agencies
     const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
     filterResult.agencyId = usersAgencies;
