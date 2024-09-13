@@ -37,13 +37,6 @@ jest.mock('@/services/ches/chesServices.ts', () => ({
 }));
 
 const _getSiteAddresses = jest.fn().mockImplementation(() => [produceGeocoderAddress()]);
-const _getPids = jest.fn().mockImplementation(() => producePidsResponse());
-
-jest.mock('@/services/geocoder/geocoderService', () => ({
-  getSiteAddresses: () => _getSiteAddresses(),
-  getPids: () => _getPids(),
-}));
-
 describe('UNIT - Tools', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
