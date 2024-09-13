@@ -32,6 +32,9 @@ const config = {
     title: 'PIMS',
     uri: process.env.FRONTEND_URL,
   },
+  keycloak: {
+    client_id: process.env.SSO_CLIENT_ID,
+  }
 };
 
 const getConfig = () => {
