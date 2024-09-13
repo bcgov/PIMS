@@ -6,7 +6,6 @@ import {
   getRequestHandlerMocks,
   produceEmailStatus,
   produceGeocoderAddress,
-  producePidsResponse,
 } from '../../../testUtils/factories';
 import { randomUUID } from 'crypto';
 
@@ -36,7 +35,6 @@ jest.mock('@/services/ches/chesServices.ts', () => ({
   sendEmailAsync: () => _sendEmailAsync(),
 }));
 
-const _getSiteAddresses = jest.fn().mockImplementation(() => [produceGeocoderAddress()]);
 describe('UNIT - Tools', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
 
