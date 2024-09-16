@@ -56,3 +56,8 @@ services:
     networks:
       - pims
 
+####################### Networks Definition #######################
+networks:
+  pims:
+    name: pims-net
+    driver: bridge
