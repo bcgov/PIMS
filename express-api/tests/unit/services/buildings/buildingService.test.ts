@@ -4,7 +4,7 @@ import {
   produceBuilding,
   produceBuildingEvaluations,
   produceBuildingFiscals,
-  produceSSO,
+  producePimsRequestUser,
   produceUser,
 } from 'tests/testUtils/factories';
 import * as buildingService from '@/services/buildings/buildingServices';
@@ -68,7 +68,7 @@ jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
   manager: _mockEntityManager,
 });
 jest.spyOn(buildingRepo, 'find').mockImplementation(async () => [produceBuilding()]);
-const adminUser = produceSSO({ client_roles: [Roles.ADMIN] });
+const adminUser = producePimsRequestUser({ RoleId: Roles.ADMIN, hasOneOfRoles: () => true });
 describe('UNIT - Building Services', () => {
   describe('addBuilding', () => {
     beforeEach(() => jest.clearAllMocks());
@@ -91,14 +91,16 @@ describe('deleteBuildingById', () => {
   it('should delete a building and return a 204 status code', async () => {
     const buildingToDelete = produceBuilding();
     _buildingFindOne.mockResolvedValueOnce(buildingToDelete);
-    await buildingService.deleteBuildingById(buildingToDelete.Id, '');
+    await buildingService.deleteBuildingById(buildingToDelete.Id, adminUser);
     expect(_mockBuildinglUpdate).toHaveBeenCalledTimes(3);
   });
   it('should throw a 404 error when the building does not exist', async () => {
     const buildingToDelete = produceBuilding();
     _buildingFindOne.mockResolvedValueOnce(null);
     // Act & Assert
-    await expect(buildingService.deleteBuildingById(buildingToDelete.Id, '')).rejects.toThrow();
+    await expect(
+      buildingService.deleteBuildingById(buildingToDelete.Id, adminUser),
+    ).rejects.toThrow();
   });
 });
 describe('getBuildingById', () => {
@@ -141,7 +143,10 @@ describe('updateBuildingById', () => {
   });
 
   it('should throw an error if the building does not belong to the user and user is not admin', async () => {
-    const generalUser = produceSSO({ client_roles: [Roles.GENERAL_USER] });
+    const generalUser = producePimsRequestUser({
+      RoleId: Roles.GENERAL_USER,
+      hasOneOfRoles: () => false,
+    });
     const updateBuilding = produceBuilding();
     expect(
       async () => await buildingService.updateBuildingById(updateBuilding, generalUser),

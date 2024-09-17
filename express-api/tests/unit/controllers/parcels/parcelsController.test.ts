@@ -164,7 +164,6 @@ describe('UNIT - Parcels', () => {
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
       mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       mockResponse = mockRes;
-      _getParcels.mockImplementationOnce(() => [produceParcel()]);
       await controllers.getParcels(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(Array.isArray(mockResponse.sendValue)).toBeTruthy();
@@ -188,6 +187,7 @@ describe('UNIT - Parcels', () => {
     });
     it('should throw an error when getParcels service throws an error', async () => {
       mockRequest.query.pid = '1';
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       _getParcels.mockImplementationOnce(() => {
         throw new Error();
       });
