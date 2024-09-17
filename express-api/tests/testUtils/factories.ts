@@ -483,7 +483,7 @@ export const produceConstructionType = (props?: Partial<BuildingPredominateUse>)
   return constructionType;
 };
 
-export const produceRegionalDistrict = (props: Partial<RegionalDistrict>) => {
+export const produceRegionalDistrict = (props?: Partial<RegionalDistrict>) => {
   const regionalDistrict: RegionalDistrict = {
     Id: faker.number.int(),
     Abbreviation: faker.string.alpha(5),

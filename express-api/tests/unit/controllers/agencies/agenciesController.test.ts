@@ -54,10 +54,12 @@ describe('UNIT - Agencies Admin', () => {
       expect(mockResponse.statusValue).toBe(200);
     });
 
-    it('should return status 200 and a list of agencies with no filter', async () => {
-      _getKeycloakUserRoles.mockImplementationOnce(() => []);
+    it('should return status 200 and a list of agencies with trimmed properties if not an Admin', async () => {
+      mockRequest.setPimsUser({ hasOneOfRoles: () => false });
       await controllers.getAgencies(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
+      expect(mockResponse.sendValue.data[0].Name).toBeDefined();
+      expect(mockResponse.sendValue.data[0].CreatedBy).not.toBeDefined();
     });
 
     it('should return status 200 and a list of agencies when given a filter', async () => {
@@ -127,6 +129,13 @@ describe('UNIT - Agencies Admin', () => {
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.Id).toBe(agency.Id);
     });
+    it('should return status 400 upon a failed filter', async () => {
+      mockRequest.params.id = {} as unknown as string;
+      const agency = produceAgency();
+      mockRequest.body = agency;
+      await controllers.updateAgencyById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
     it('should return status 400 and specify that there was a mismatch', async () => {
       const agency = produceAgency();
       mockRequest.params.id = 'asdf';
@@ -164,6 +173,11 @@ describe('UNIT - Agencies Admin', () => {
       expect(mockResponse.statusValue).toBe(204);
       // expect(mockResponse.sendValue.Id).toBe(agency.Id);
       expect(mockResponse.sendValue).toBeUndefined();
+    });
+    it('should return status 400 upon a failed filter', async () => {
+      mockRequest.params.id = {} as unknown as string;
+      await controllers.deleteAgencyById(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
     });
     it('should throw an error when deleteAgencyById service throws an error', async () => {
       _deleteAgencyById.mockImplementationOnce(() => {
