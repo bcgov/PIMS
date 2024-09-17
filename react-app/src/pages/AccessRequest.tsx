@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import pendingImage from '@/assets/images/pending.svg';
 import { Box, Button, Grid, Paper, Typography } from '@mui/material';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
@@ -60,6 +60,18 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
       Position: '',
     },
   });
+
+  useEffect(() => {
+    formMethods.reset({
+      Provider: provider,
+      FirstName: keycloak.user?.first_name || '',
+      LastName: keycloak.user?.last_name || '',
+      Email: keycloak.user?.email || '',
+      Notes: '',
+      Agency: '',
+      Position: '',
+    });
+  }, [provider, keycloak.user, formMethods]);
 
   return (
     <>
