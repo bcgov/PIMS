@@ -6,17 +6,24 @@ import { NextFunction, RequestHandler, Response } from 'express';
 
 export interface UserCheckOptions {
   requiredRoles?: Roles[];
-  onlyAuthenticated?: boolean;
 }
 
 /**
- * Middleware that checks for a user with Active status.
- * If the user lacks that status, isn't found,
- * or is missing a token, a rejected response is sent.
- * Successful checks result in the request passed on.
- * Also checks that user has a role parsed from their token.
+ * Middleware function to check user authentication and authorization.
+ * Must be preceeded by protectedRoute (from SSO packages) at some point.
+ *
+ * @param options.requiredRoles - A list of Roles needed to pass this check.
+ * @returns Express RequestHandler function to perform user authentication checks.
+ * @example app.use(`routeName`, protectedRoute(), userAuthCheck({ requiredRoles: [Roles.ADMIN] }), router.myRouter);
  */
 const userAuthCheck = (options?: UserCheckOptions): RequestHandler => {
+  /**
+   * Middleware function to check user authentication and authorization.
+   *
+   * @param req - Express request object with user and pimsUser properties.
+   * @param res - Express response object.
+   * @param next - Express next function.
+   */
   const check = async (
     req: Request & { user?: SSOUser; pimsUser?: PimsRequestUser },
     res: Response,
@@ -36,6 +43,8 @@ const userAuthCheck = (options?: UserCheckOptions): RequestHandler => {
     if (!user) {
       return res.status(404).send('Requesting user not found.');
     }
+
+    // Returns a boolean indicating if user has a required role
     const hasOneOfRoles = (roles: Roles[]): boolean => {
       // No roles, then no permission.
       if (!roles || !roles.length) {
