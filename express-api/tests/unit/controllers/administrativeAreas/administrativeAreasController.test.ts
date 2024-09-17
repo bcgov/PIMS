@@ -60,6 +60,7 @@ describe('UNIT - Administrative Areas Admin', () => {
   describe('Controller getAdministrativeAreas', () => {
     // TODO: enable other tests when controller is complete
     it('should return status 200 and a list of administrative areas', async () => {
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       await getAdministrativeAreas(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });

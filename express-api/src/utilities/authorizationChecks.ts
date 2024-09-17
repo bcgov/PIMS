@@ -9,7 +9,7 @@ import { PimsRequestUser } from '@/middleware/userAuthCheck';
  * @param user - The user object containing information about the user.
  * @returns A boolean value indicating whether the user can edit or not.
  */
-export const canUserEdit = async (user: PimsRequestUser): Promise<boolean> => {
+export const canUserEdit = (user: PimsRequestUser): boolean => {
   // as they are not an auditor the user can edit
   return user.hasOneOfRoles([Roles.GENERAL_USER, Roles.ADMIN]);
 };

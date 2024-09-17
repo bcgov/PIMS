@@ -44,6 +44,7 @@ describe('UNIT - Agencies Admin', () => {
     const { mockReq, mockRes } = getRequestHandlerMocks();
     mockRequest = mockReq;
     mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+    mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
     mockResponse = mockRes;
   });
 

@@ -51,8 +51,8 @@ describe('UNIT - Parcels', () => {
   describe('GET /properties/parcels/:parcelId', () => {
     it('should return 200 with a correct response body', async () => {
       mockRequest.params.parcelId = '1';
-      // _hasAgencies.mockImplementationOnce(() => true);
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       await controllers.getParcel(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
@@ -80,6 +80,7 @@ describe('UNIT - Parcels', () => {
     it('should return with status 403 when user doenst have permission to view parcel', async () => {
       mockRequest.params.parcelId = '1';
       mockRequest.setUser({ client_roles: [Roles.GENERAL_USER], hasRoles: () => false });
+      mockRequest.setPimsUser({ RoleId: Roles.GENERAL_USER, hasOneOfRoles: () => false });
       _hasAgencies.mockImplementationOnce(() => false);
       await controllers.getParcel(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(403);
@@ -161,13 +162,16 @@ describe('UNIT - Parcels', () => {
       const { mockReq, mockRes } = getRequestHandlerMocks();
       mockRequest = mockReq;
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       mockResponse = mockRes;
+      _getParcels.mockImplementationOnce(() => [produceParcel()]);
       await controllers.getParcels(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(Array.isArray(mockResponse.sendValue)).toBeTruthy();
     });
     it('should return 200 with a correct response body', async () => {
       mockRequest.query.pid = '1';
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       await controllers.getParcels(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(Array.isArray(mockResponse.sendValue)).toBeTruthy();
