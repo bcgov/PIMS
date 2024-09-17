@@ -83,7 +83,7 @@ app.use(`/v2/health`, router.healthRouter);
 
 // Protected Routes
 app.use(`/v2/ltsa`, protectedRoute(), router.ltsaRouter);
-app.use(`/v2/administrativeAreas`, protectedRoute(), router.administrativeAreasRouter);
+app.use(`/v2/administrativeAreas`, router.administrativeAreasRouter);
 app.use(`/v2/agencies`, protectedRoute(), router.agenciesRouter);
 app.use('/v2/lookup', protectedRoute(), router.lookupRouter);
 app.use(`/v2/users`, protectedRoute(), router.usersRouter);
