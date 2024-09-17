@@ -111,7 +111,7 @@ describe('UNIT - Properties', () => {
     it('should return 200 with a list of properties', async () => {
       mockRequest.query.keyword = '123';
       mockRequest.query.take = '3';
-      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN, hasOneOfRoles: () => false });
       await getPropertiesFuzzySearch(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(Array.isArray(mockResponse.sendValue.Parcels)).toBe(true);
@@ -153,6 +153,7 @@ describe('UNIT - Properties', () => {
         ClassificationIds: '1,2',
         PropertyTypeIds: '1,2',
         AdministrativeAreaIds: '1,2',
+        RegionalDistrictIds: '1,2',
       };
       await getPropertiesForMap(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
@@ -189,7 +190,7 @@ describe('UNIT - Properties', () => {
 
   describe('GET /properties/', () => {
     it('should return status 200', async () => {
-      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN, hasOneOfRoles: () => false });
       await getPropertyUnion(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(Array.isArray(mockResponse.sendValue)).toBe(true);
@@ -238,6 +239,16 @@ describe('UNIT - Properties', () => {
       await getLinkedProjects(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue).toEqual([{ id: 1, name: 'Linked Project 1', buildingId: 1 }]);
+    });
+
+    it('should return 200 with linked projects for a parcel ID', async () => {
+      _findLinkedProjectsForProperty.mockImplementationOnce(async () => {
+        return [{ id: 1, name: 'Linked Project 1', parcelId: 1 }];
+      });
+      mockRequest.query.parcelId = '1';
+      await getLinkedProjects(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(mockResponse.sendValue).toEqual([{ id: 1, name: 'Linked Project 1', parcelId: 1 }]);
     });
   });
 });
