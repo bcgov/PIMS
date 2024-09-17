@@ -9,7 +9,7 @@ import userServices from '../users/usersServices';
 import logger from '@/utilities/winstonLogger';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { Roles } from '@/constants/roles';
-import { PimsRequestUser } from '@/middleware/activeUserCheck';
+import { PimsRequestUser } from '@/middleware/userAuthCheck';
 import { User } from '@/typeorm/Entities/User';
 
 const parcelRepo = AppDataSource.getRepository(Parcel);

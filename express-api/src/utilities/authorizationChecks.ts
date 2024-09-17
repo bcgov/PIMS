@@ -1,7 +1,7 @@
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Roles } from '@/constants/roles';
 import userServices, { getUser } from '@/services/users/usersServices';
-import { PimsRequestUser } from '@/middleware/activeUserCheck';
+import { PimsRequestUser } from '@/middleware/userAuthCheck';
 
 /**
  * Function to check if user can edit.

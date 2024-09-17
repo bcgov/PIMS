@@ -36,7 +36,7 @@ import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { SortOrders } from '@/constants/types';
 import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
 import { Roles } from '@/constants/roles';
-import { PimsRequestUser } from '@/middleware/activeUserCheck';
+import { PimsRequestUser } from '@/middleware/userAuthCheck';
 import { User } from '@/typeorm/Entities/User';
 
 const projectRepo = AppDataSource.getRepository(Project);

@@ -1,7 +1,7 @@
 import config from '@/constants/config';
 import urls from '@/constants/urls';
 import { ChesFilter } from '@/controllers/tools/toolsSchema';
-import { PimsRequestUser } from '@/middleware/activeUserCheck';
+import { PimsRequestUser } from '@/middleware/userAuthCheck';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { decodeJWT } from '@/utilities/decodeJWT';
 import logger from '@/utilities/winstonLogger';

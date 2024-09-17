@@ -37,7 +37,7 @@ import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectStatus as ProjectStatusEntity } from '@/typeorm/Entities/ProjectStatus';
 import { parentPort } from 'worker_threads';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
-import { PimsRequestUser } from '@/middleware/activeUserCheck';
+import { PimsRequestUser } from '@/middleware/userAuthCheck';
 
 /**
  * Perform a fuzzy search for properties based on the provided keyword.

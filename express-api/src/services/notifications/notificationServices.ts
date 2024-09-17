@@ -20,7 +20,7 @@ import logger from '@/utilities/winstonLogger';
 import getConfig from '@/constants/config';
 import { getDaysBetween } from '@/utilities/helperFunctions';
 import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
-import { PimsRequestUser } from '@/middleware/activeUserCheck';
+import { PimsRequestUser } from '@/middleware/userAuthCheck';
 
 export interface AccessRequestData {
   FirstName: string;
