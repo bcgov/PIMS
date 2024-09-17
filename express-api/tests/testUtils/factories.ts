@@ -83,7 +83,7 @@ export class MockReq {
   headers = {};
   files: any[] = [];
 
-  public setUser = (userData: object) => {
+  public setUser = (userData?: object) => {
     const defaultUserObject = {
       guid: 'W7802F34D2390EFA9E7JK15923770279',
       identity_provider: 'idir',
@@ -96,12 +96,9 @@ export class MockReq {
       email: 'john.doe@gov.bc.ca',
       client_roles: [] as string[],
       hasRoles: () => true,
-      //originalData:
-    };
-    this.user = {
-      ...defaultUserObject,
       ...userData,
     };
+    this.user = defaultUserObject;
   };
 }
 
