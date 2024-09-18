@@ -1,12 +1,10 @@
 import { Request, Response } from 'express';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import {
   AdministrativeAreaFilterSchema,
   AdministrativeAreaPublicResponseSchema,
 } from '@/services/administrativeAreas/administrativeAreaSchema';
 import administrativeAreasServices from '@/services/administrativeAreas/administrativeAreasServices';
 import { Roles } from '@/constants/roles';
-import userServices from '@/services/users/usersServices';
 
 /**
  * @description Gets a list of administrative areas.
@@ -15,13 +13,12 @@ import userServices from '@/services/users/usersServices';
  * @returns {Response}        A 200 status with a list of administrative areas.
  */
 export const getAdministrativeAreas = async (req: Request, res: Response) => {
-  const ssoUser = req.user;
+  const user = req.pimsUser;
   const filter = AdministrativeAreaFilterSchema.safeParse(req.query);
   if (filter.success) {
     const adminAreas = await administrativeAreasServices.getAdministrativeAreas(filter.data);
-    // TODO: Do we still need this condition? Few fields are trimmed since moving to view.
-    if (!ssoUser.hasRoles([Roles.ADMIN])) {
-      const trimmed = AdministrativeAreaPublicResponseSchema.array().parse(adminAreas.data);
+    if (!user.hasOneOfRoles([Roles.ADMIN])) {
+      const trimmed = AdministrativeAreaPublicResponseSchema.array().parse(adminAreas);
       return res.status(200).send({
         ...adminAreas,
         data: trimmed,
@@ -40,7 +37,7 @@ export const getAdministrativeAreas = async (req: Request, res: Response) => {
  * @returns {Response}        A 201 status and response with the added administrative area.
  */
 export const addAdministrativeArea = async (req: Request, res: Response) => {
-  const user = await userServices.getUser((req.user as SSOUser).preferred_username);
+  const user = req.pimsUser;
   const addBody = { ...req.body, CreatedById: user.Id };
   const response = await administrativeAreasServices.addAdministrativeArea(addBody);
   return res.status(201).send(response);

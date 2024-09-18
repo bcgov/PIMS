@@ -5,9 +5,9 @@ import {
   MockRes,
   getRequestHandlerMocks,
   produceUser,
-  produceSSO,
   produceProject,
   produceNotificationQueue,
+  producePimsRequestUser,
 } from 'tests/testUtils/factories';
 import projectServices from '@/services/projects/projectsServices';
 import { randomUUID } from 'crypto';
@@ -85,8 +85,8 @@ describe('UNIT - Testing controllers for notifications routes.', () => {
     });
 
     it('should return 403 if user is not authorized', async () => {
-      const kcUser = produceSSO();
-      mockRequest.user = kcUser;
+      mockRequest.setUser();
+      mockRequest.setPimsUser({ RoleId: undefined, hasOneOfRoles: () => false });
       mockRequest.query = { projectId: '1' };
 
       await controllers.getNotificationsByProjectId(mockRequest, mockResponse);
@@ -98,6 +98,7 @@ describe('UNIT - Testing controllers for notifications routes.', () => {
       const mockRequest = {
         query: { projectId: '123' },
         user: { agencies: [1] },
+        pimsUser: producePimsRequestUser({ RoleId: Roles.ADMIN, hasOneOfRoles: () => false }),
       } as unknown as Request;
 
       const mockProject = produceProject({
@@ -124,6 +125,7 @@ describe('UNIT - Testing controllers for notifications routes.', () => {
     it('should read a notification and try to send it through ches again, status 200', async () => {
       mockRequest.params.id = '1';
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       await controllers.resendNotificationById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.Id).toBe(1);
@@ -131,6 +133,7 @@ describe('UNIT - Testing controllers for notifications routes.', () => {
     it('should 404 if notif not found', async () => {
       mockRequest.params.id = '1';
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       _getNotifById.mockImplementationOnce(() => null);
       await controllers.resendNotificationById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(404);
@@ -138,6 +141,7 @@ describe('UNIT - Testing controllers for notifications routes.', () => {
     it('should 403 if user lacks permissions', async () => {
       mockRequest.params.id = '1';
       mockRequest.setUser({ client_roles: [], hasRoles: () => false });
+      mockRequest.setPimsUser({ RoleId: undefined, hasOneOfRoles: () => false });
       await controllers.resendNotificationById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(403);
     });
@@ -146,6 +150,7 @@ describe('UNIT - Testing controllers for notifications routes.', () => {
     it('should try to cancel a notification, status 200', async () => {
       mockRequest.params.id = '1';
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       await controllers.cancelNotificationById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.Id).toBe(1);
@@ -154,6 +159,7 @@ describe('UNIT - Testing controllers for notifications routes.', () => {
     it('should 404 if no notif found', async () => {
       mockRequest.params.id = '1';
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       _getNotifById.mockImplementationOnce(() => null);
       await controllers.cancelNotificationById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(404);
@@ -161,6 +167,7 @@ describe('UNIT - Testing controllers for notifications routes.', () => {
     it('should 400 if the notification came back with non-cancelled status', async () => {
       mockRequest.params.id = '1';
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       _cancelNotifById.mockImplementationOnce((id: number) =>
         produceNotificationQueue({ Id: id, Status: NotificationStatus.Completed }),
       );
@@ -172,6 +179,7 @@ describe('UNIT - Testing controllers for notifications routes.', () => {
     it('should 403 if user lacks permissions', async () => {
       mockRequest.params.id = '1';
       mockRequest.setUser({ client_roles: [], hasRoles: () => false });
+      mockRequest.setPimsUser({ RoleId: Roles.GENERAL_USER, hasOneOfRoles: () => false });
       await controllers.cancelNotificationById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(403);
     });

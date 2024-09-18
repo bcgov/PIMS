@@ -2,10 +2,8 @@ import notificationServices, {
   NotificationStatus,
 } from '@/services/notifications/notificationServices';
 import userServices from '@/services/users/usersServices';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { Request, Response } from 'express';
 import { DisposalNotificationFilterSchema } from './notificationsSchema';
-import { isAdmin, isAuditor } from '@/utilities/authorizationChecks';
 import projectServices from '@/services/projects/projectsServices';
 import { Roles } from '@/constants/roles';
 import logger from '@/utilities/winstonLogger';
@@ -23,12 +21,11 @@ export const getNotificationsByProjectId = async (req: Request, res: Response) =
       return res.status(400).send({ message: 'Could not parse filter.' });
     }
     const filterResult = filter.data;
-    const kcUser = req.user as unknown as SSOUser;
-    const user = await userServices.getUser((req.user as SSOUser).preferred_username);
+    const user = req.pimsUser;
 
-    if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
+    if (!user.hasOneOfRoles([Roles.ADMIN, Roles.AUDITOR])) {
       // get array of user's agencies
-      const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+      const usersAgencies = await userServices.getAgencies(user.Username);
 
       const project = await projectServices.getProjectById(filterResult.projectId);
       if (!usersAgencies.includes(project.AgencyId)) {
@@ -56,16 +53,15 @@ export const getNotificationsByProjectId = async (req: Request, res: Response) =
 };
 
 export const resendNotificationById = async (req: Request, res: Response) => {
-  const kcUser = req.user;
-  if (!kcUser.hasRoles([Roles.ADMIN]))
+  const user = req.pimsUser;
+  if (!user.hasOneOfRoles([Roles.ADMIN]))
     return res.status(403).send('User lacks permissions to resend notification.');
   const id = Number(req.params.id);
   const notification = await notificationServices.getNotificationById(id);
   if (!notification) {
     return res.status(404).send('Notification not found.');
   }
-  const resultantNotification = await notificationServices.sendNotification(notification, kcUser);
-  const user = await userServices.getUser(kcUser.preferred_username);
+  const resultantNotification = await notificationServices.sendNotification(notification, user);
   const updatedNotification = await notificationServices.updateNotificationStatus(
     resultantNotification.Id,
     user,
@@ -74,15 +70,14 @@ export const resendNotificationById = async (req: Request, res: Response) => {
 };
 
 export const cancelNotificationById = async (req: Request, res: Response) => {
-  const kcUser = req.user;
-  if (!kcUser.hasRoles([Roles.ADMIN]))
+  const user = req.pimsUser;
+  if (!user.hasOneOfRoles([Roles.ADMIN]))
     return res.status(403).send('User lacks permissions to cancel notification.');
   const id = Number(req.params.id);
   const notification = await notificationServices.getNotificationById(id);
   if (!notification) {
     return res.status(404).send('Notification not found.');
   }
-  const user = await userServices.getUser(kcUser.preferred_username);
   const resultantNotification = await notificationServices.cancelNotificationById(
     notification.Id,
     user,

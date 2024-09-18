@@ -31,13 +31,13 @@ import {
 } from '@/utilities/helperFunctions';
 import userServices from '../users/usersServices';
 import { Brackets, FindOptionsWhere, ILike, In, QueryRunner } from 'typeorm';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { PropertyType } from '@/constants/propertyType';
 import { exposedProjectStatuses, ProjectStatus } from '@/constants/projectStatus';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectStatus as ProjectStatusEntity } from '@/typeorm/Entities/ProjectStatus';
 import { parentPort } from 'worker_threads';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import { PimsRequestUser } from '@/middleware/userAuthCheck';
 
 /**
  * Perform a fuzzy search for properties based on the provided keyword.
@@ -790,11 +790,10 @@ const importPropertiesAsJSON = async (
 /**
  * Retrieves import results based on the provided filter and user.
  * @param filter - The filter to apply to the import results.
- * @param ssoUser - The SSO user requesting the import results.
+ * @param user - The SSO user requesting the import results.
  * @returns A promise that resolves to the import results matching the filter criteria.
  */
-const getImportResults = async (filter: ImportResultFilter, ssoUser: SSOUser) => {
-  const user = await userServices.getUser(ssoUser.preferred_username);
+const getImportResults = async (filter: ImportResultFilter, user: PimsRequestUser) => {
   return AppDataSource.getRepository(ImportResult).find({
     where: {
       CreatedById: user.Id,

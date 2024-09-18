@@ -15,7 +15,7 @@ export const AdministrativeAreaFilterSchema = z.object({
 export const AdministrativeAreaPublicResponseSchema = z.object({
   Id: z.number(),
   Name: z.string(),
-  RegionalDistrictName: z.string(),
+  RegionalDistrictId: z.number(),
   ProvinceId: z.string(),
   CreatedOn: z.date(),
 });
