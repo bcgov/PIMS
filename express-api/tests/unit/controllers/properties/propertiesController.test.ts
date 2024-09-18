@@ -111,6 +111,7 @@ describe('UNIT - Properties', () => {
     it('should return 200 with a list of properties', async () => {
       mockRequest.query.keyword = '123';
       mockRequest.query.take = '3';
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN, hasOneOfRoles: () => false });
       await getPropertiesFuzzySearch(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(Array.isArray(mockResponse.sendValue.Parcels)).toBe(true);
@@ -118,6 +119,7 @@ describe('UNIT - Properties', () => {
     });
     it('should return 200 with a list of properties', async () => {
       mockRequest.query.keyword = '123';
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       await getPropertiesFuzzySearch(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(Array.isArray(mockResponse.sendValue.Parcels)).toBe(true);
@@ -136,6 +138,7 @@ describe('UNIT - Properties', () => {
 
     it('should return 200 with a list of properties', async () => {
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       await getPropertiesForMap(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.length).toBeGreaterThanOrEqual(1);
@@ -144,11 +147,13 @@ describe('UNIT - Properties', () => {
 
     it('should return 200 with a list of properties when filtered by the array fields', async () => {
       mockRequest.setUser({ client_roles: [Roles.AUDITOR] });
+      mockRequest.setPimsUser({ RoleId: Roles.AUDITOR });
       mockRequest.query = {
         AgencyIds: '12,13',
         ClassificationIds: '1,2',
         PropertyTypeIds: '1,2',
         AdministrativeAreaIds: '1,2',
+        RegionalDistrictIds: '1,2',
       };
       await getPropertiesForMap(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
@@ -158,6 +163,7 @@ describe('UNIT - Properties', () => {
 
     it('should return 400 if the query params do not pass the schema', async () => {
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       mockRequest.query = {
         AgencyIds: ['h'],
       };
@@ -175,6 +181,7 @@ describe('UNIT - Properties', () => {
       jest
         .spyOn(AppDataSource.getRepository(Agency), 'find')
         .mockImplementation(async () => [produceAgency()]);
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       await getPropertiesForMap(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.length).toBeGreaterThanOrEqual(1);
@@ -183,6 +190,7 @@ describe('UNIT - Properties', () => {
 
   describe('GET /properties/', () => {
     it('should return status 200', async () => {
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN, hasOneOfRoles: () => false });
       await getPropertyUnion(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(Array.isArray(mockResponse.sendValue)).toBe(true);
@@ -202,6 +210,7 @@ describe('UNIT - Properties', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       mockRequest.file = { path: '/a/b', filename: 'aaa' } as any;
       mockRequest.user = produceSSO();
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       await importProperties(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
@@ -211,12 +220,14 @@ describe('UNIT - Properties', () => {
     it('should return status 200', async () => {
       mockRequest.query = { quantity: '1' };
       mockRequest.user = produceSSO();
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       await getImportResults(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
     it('should return status 400', async () => {
       mockRequest.query = { quantity: [{}] };
       mockRequest.user = produceSSO();
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       await getImportResults(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
@@ -228,6 +239,16 @@ describe('UNIT - Properties', () => {
       await getLinkedProjects(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue).toEqual([{ id: 1, name: 'Linked Project 1', buildingId: 1 }]);
+    });
+
+    it('should return 200 with linked projects for a parcel ID', async () => {
+      _findLinkedProjectsForProperty.mockImplementationOnce(async () => {
+        return [{ id: 1, name: 'Linked Project 1', parcelId: 1 }];
+      });
+      mockRequest.query.parcelId = '1';
+      await getLinkedProjects(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(mockResponse.sendValue).toEqual([{ id: 1, name: 'Linked Project 1', parcelId: 1 }]);
     });
   });
 });

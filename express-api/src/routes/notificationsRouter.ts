@@ -1,8 +1,7 @@
 import { Roles } from '@/constants/roles';
 import controllers from '@/controllers';
-import activeUserCheck from '@/middleware/activeUserCheck';
+import userAuthCheck from '@/middleware/userAuthCheck';
 import catchErrors from '@/utilities/controllerErrorWrapper';
-import { protectedRoute } from '@bcgov/citz-imb-sso-express';
 import express from 'express';
 
 const router = express.Router();
@@ -16,11 +15,11 @@ const { getNotificationsByProjectId, resendNotificationById, cancelNotificationB
 //that it might be an individual "notification id".
 router
   .route(NOTIFICATION_QUEUE_ROUTE)
-  .get(activeUserCheck, catchErrors(getNotificationsByProjectId));
+  .get(userAuthCheck(), catchErrors(getNotificationsByProjectId));
 
 router
   .route(`${NOTIFICATION_QUEUE_ROUTE}/:id`)
-  .put(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(resendNotificationById))
-  .delete(protectedRoute([Roles.ADMIN]), activeUserCheck, catchErrors(cancelNotificationById));
+  .put(userAuthCheck({ requiredRoles: [Roles.ADMIN] }), catchErrors(resendNotificationById))
+  .delete(userAuthCheck({ requiredRoles: [Roles.ADMIN] }), catchErrors(cancelNotificationById));
 
 export default router;

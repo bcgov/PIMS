@@ -93,6 +93,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
       const { mockReq, mockRes } = getRequestHandlerMocks();
       mockRequest = mockReq;
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       mockResponse = mockRes;
       jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValueOnce({
         success: true,
@@ -124,6 +125,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
       mockRequest = mockReq;
       mockRequest.query.excelExport = 'true';
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       mockResponse = mockRes;
       jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValueOnce({
         success: true,
@@ -156,6 +158,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
       const { mockReq, mockRes } = getRequestHandlerMocks();
       mockRequest = mockReq;
       mockRequest.setUser({ client_roles: [Roles.GENERAL_USER] });
+      mockRequest.setPimsUser({ RoleId: Roles.GENERAL_USER });
       mockResponse = mockRes;
       jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValueOnce({
         success: true,
@@ -222,18 +225,21 @@ describe('UNIT - Testing controllers for users routes.', () => {
     it('should return status 200 and a project when user is admin', async () => {
       mockRequest.params.projectId = '1';
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       await controllers.getDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
     it('should return status 200 and a project when user is auditor', async () => {
       mockRequest.params.projectId = '1';
       mockRequest.setUser({ client_roles: [Roles.AUDITOR] });
+      mockRequest.setPimsUser({ RoleId: Roles.AUDITOR });
       await controllers.getDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
     it('should return status 403 when user does not have correct agencies', async () => {
       mockRequest.params.projectId = '1';
       mockRequest.setUser({ client_roles: [Roles.GENERAL_USER], hasRoles: () => false });
+      mockRequest.setPimsUser({ RoleId: Roles.GENERAL_USER, hasOneOfRoles: () => false });
       _hasAgencies.mockImplementationOnce(() => false);
       await controllers.getDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(403);
@@ -254,6 +260,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
   describe('PUT /projects/disposal/:projectId', () => {
     it('should return status 200 on successful update', async () => {
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       mockRequest.params.projectId = '1';
       mockRequest.body = {
         project: produceProject({ Id: 1 }),
@@ -265,6 +272,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
 
     it('should return status 403 when user is not an admin', async () => {
       mockRequest.setUser({ client_roles: [Roles.GENERAL_USER] });
+      mockRequest.setPimsUser({ RoleId: Roles.GENERAL_USER, hasOneOfRoles: () => false });
       mockRequest.params.projectId = '1';
       mockRequest.body = {
         project: produceProject({ Id: 1 }),
@@ -276,6 +284,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
 
     it('should return status 400 on mistmatched id', async () => {
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       mockRequest.params.projectId = '1';
       mockRequest.body = {
         project: {
@@ -288,6 +297,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
     });
     it('should return status 400 on invalid id', async () => {
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       mockRequest.params.projectId = 'abc';
       mockRequest.body = {
         project: {
@@ -300,6 +310,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
     });
     it('should return status 400 on missing fields', async () => {
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       mockRequest.params.projectId = '1';
       mockRequest.body = {
         Id: 1,
@@ -313,6 +324,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
     it('should return status 200 on successful deletion', async () => {
       mockRequest.params.projectId = '1';
       mockRequest.setUser({ client_roles: [Roles.ADMIN], hasRoles: () => true });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       await controllers.deleteDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
@@ -320,6 +332,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
     it('should return status 404 on no resource', async () => {
       mockRequest.params.projectId = 'abc';
       mockRequest.setUser({ client_roles: [Roles.ADMIN], hasRoles: () => true });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       await controllers.deleteDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
     });
@@ -328,6 +341,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
   describe('POST /projects/disposal', () => {
     it('should return status 201 on successful project addition', async () => {
       mockRequest.body = produceProject();
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN, hasOneOfRoles: () => false });
       await controllers.addDisposalProject(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(201);
     });

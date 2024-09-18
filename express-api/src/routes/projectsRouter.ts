@@ -1,5 +1,6 @@
+import { Roles } from '@/constants/roles';
 import controllers from '@/controllers';
-import activeUserCheck from '@/middleware/activeUserCheck';
+import userAuthCheck from '@/middleware/userAuthCheck';
 import catchErrors from '@/utilities/controllerErrorWrapper';
 import express from 'express';
 
@@ -18,13 +19,13 @@ const {
 //These originally had a separate route for numeric id and projectNumber, but I don't think express supports this pattern.
 router
   .route(`${PROJECT_DISPOSAL}/:projectId`)
-  .get(activeUserCheck, catchErrors(getDisposalProject))
-  .put(activeUserCheck, catchErrors(updateDisposalProject))
-  .delete(activeUserCheck, catchErrors(deleteDisposalProject));
+  .get(userAuthCheck(), catchErrors(getDisposalProject))
+  .put(userAuthCheck({ requiredRoles: [Roles.ADMIN] }), catchErrors(updateDisposalProject))
+  .delete(userAuthCheck({ requiredRoles: [Roles.ADMIN] }), catchErrors(deleteDisposalProject));
 
-router.route(`${PROJECT_DISPOSAL}`).post(activeUserCheck, catchErrors(addDisposalProject));
+router.route(`${PROJECT_DISPOSAL}`).post(userAuthCheck(), catchErrors(addDisposalProject));
 
 //Omitting search endpoints.
-router.route('/').get(activeUserCheck, catchErrors(getProjects));
+router.route('/').get(userAuthCheck(), catchErrors(getProjects));
 
 export default router;
