@@ -1,10 +1,10 @@
 import config from '@/constants/config';
 import urls from '@/constants/urls';
 import { ChesFilter } from '@/controllers/tools/toolsSchema';
+import { PimsRequestUser } from '@/middleware/userAuthCheck';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { decodeJWT } from '@/utilities/decodeJWT';
 import logger from '@/utilities/winstonLogger';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
 
 let _token: TokenResponse = null;
 
@@ -160,7 +160,10 @@ export interface IEmailSentResponse {
  * @param user - The SSO user information.
  * @returns A promise that resolves to the response of sending the email or null.
  */
-const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentResponse | null> => {
+const sendEmailAsync = async (
+  email: IEmail,
+  user: PimsRequestUser,
+): Promise<IEmailSentResponse | null> => {
   const cfg = config();
   if (email == null) {
     throw new ErrorWithCode('Null argument for email.', 400);
@@ -169,7 +172,7 @@ const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentR
   email.from = email.from ?? cfg.ches.defaultFrom;
 
   if (cfg.ches.bccCurrentUser) {
-    email.bcc = [user.email, ...(email.bcc ?? [])];
+    email.bcc = [user.Email, ...(email.bcc ?? [])];
   }
   if (cfg.ches.usersToBcc && typeof cfg.ches.usersToBcc === 'string') {
     email.bcc = [
@@ -189,8 +192,8 @@ const sendEmailAsync = async (email: IEmail, user: SSOUser): Promise<IEmailSentR
   if (cfg.ches.overrideTo || !cfg.ches.sendToLive) {
     email.to = cfg.ches.overrideTo
       ? cfg.ches.overrideTo.split(';').map((email) => email.trim())
-      : [user.email];
-    email.cc = email.cc?.length ? [user.email] : [];
+      : [user.Email];
+    email.cc = email.cc?.length ? [user.Email] : [];
     email.bcc = [];
   }
 

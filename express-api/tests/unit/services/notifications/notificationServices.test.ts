@@ -11,10 +11,10 @@ import {
   produceAgencyResponse,
   produceNotificationQueue,
   produceNotificationTemplate,
+  producePimsRequestUser,
   produceProject,
   produceProjectNotification,
   produceProjectStatusHistory,
-  produceSSO,
   produceUser,
 } from 'tests/testUtils/factories';
 import { DeepPartial, EntityTarget, FindOptionsWhere, ObjectLiteral, UpdateResult } from 'typeorm';
@@ -184,7 +184,10 @@ describe('UNIT - Notification Services', () => {
       const sendThis = produceNotificationQueue();
       sendThis.ChesMessageId = '00000000-0000-0000-0000-000000000000';
       sendThis.ChesTransactionId = '00000000-0000-0000-0000-000000000001';
-      const notifResult = await notificationServices.sendNotification(sendThis, produceSSO());
+      const notifResult = await notificationServices.sendNotification(
+        sendThis,
+        producePimsRequestUser(),
+      );
       expect(notifResult.ChesTransactionId).toBeTruthy();
       expect(notifResult.ChesMessageId).toBeTruthy();
     });
@@ -193,7 +196,10 @@ describe('UNIT - Notification Services', () => {
       _sendEmailAsync.mockImplementationOnce(() => {
         throw Error();
       });
-      const notifResult = await notificationServices.sendNotification(sendThis, produceSSO());
+      const notifResult = await notificationServices.sendNotification(
+        sendThis,
+        producePimsRequestUser(),
+      );
       expect(notifResult.Status).toBe(NotificationStatus.Failed);
     });
   });
