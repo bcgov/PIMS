@@ -43,7 +43,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   const { open, postSubmit, onCancel, initialValues } = props;
   const api = usePimsApi();
   const { data: lookupData } = useContext(LookupContext);
-  const { keycloak } = useContext(AuthContext);
+  const { pimsUser } = useContext(AuthContext);
   const { submit, submitting } = useDataSubmitter(api.projects.updateProject);
   const [approvedStatus, setApprovedStatus] = useState<number>(null);
   const projectFormMethods = useForm({
@@ -167,7 +167,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   const status = projectFormMethods.watch('StatusId');
   const requireNotificationAcknowledge =
     approvedStatus == status && status !== initialValues?.StatusId;
-  const isAdmin = keycloak.hasRoles([Roles.ADMIN]);
+  const isAdmin = pimsUser.hasOneOfRoles([Roles.ADMIN]);
   console.log('project form values', projectFormMethods.getValues());
   return (
     <ConfirmDialog
