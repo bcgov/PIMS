@@ -10,14 +10,8 @@ if (!CONTAINERIZED) {
   frontendUrl = `http://localhost:${frontendPort}`;
   backendUrl = `http://localhost:${apiPort}`;
 } else {
-  switch (undefined || '') {
-    case FRONTEND_URL:
-      throw new Error('Warning: No FRONTEND_URL set.');
-    case BACKEND_URL:
-      throw new Error('Warning: No BACKEND_URL set.');
-    default:
-      break;
-  }
+  if (!FRONTEND_URL || FRONTEND_URL === '') throw new Error('Warning: No FRONTEND_URL set.');
+  if (!BACKEND_URL || BACKEND_URL === '') throw new Error('Warning: No BACKEND_URL set.');
 }
 
 export default {
