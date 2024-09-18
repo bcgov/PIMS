@@ -38,7 +38,7 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
   const [tabValue, setTabValue] = useState<string>('0');
   const { size = 'large', scrollOnClick } = props;
 
-  const { keycloak } = useContext(AuthContext);
+  const { pimsUser } = useContext(AuthContext);
 
   const {
     data: ltsaData,
@@ -65,7 +65,7 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
   useEffect(() => {
     if (parcelData && clickPosition) {
       refreshLtsa();
-      if (keycloak.hasRoles([Roles.ADMIN])) {
+      if (pimsUser.hasOneOfRoles([Roles.ADMIN])) {
         refreshBCA();
       }
     }
@@ -148,7 +148,7 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
                   >
                     <Tab label="Parcel Layer" value="0" />
                     <Tab label="LTSA" value="1" />
-                    {keycloak.hasRoles([Roles.ADMIN]) ? <Tab label="BCA" value="2" /> : <></>}
+                    {pimsUser.hasOneOfRoles([Roles.ADMIN]) ? <Tab label="BCA" value="2" /> : <></>}
                   </TabList>
 
                   <TabPanel value="0" sx={tabPanelStyle}>

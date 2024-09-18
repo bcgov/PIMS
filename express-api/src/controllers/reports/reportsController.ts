@@ -37,7 +37,7 @@ export const submitErrorReport = async (req: Request, res: Response) => {
     body: emailBody,
   };
 
-  const response = await chesServices.sendEmailAsync(email, req.user);
+  const response = await chesServices.sendEmailAsync(email, req.pimsUser);
   return res.status(200).send({
     ...errorParse,
     chesResponse: response,

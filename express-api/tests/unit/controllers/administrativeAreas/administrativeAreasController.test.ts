@@ -34,10 +34,10 @@ const mockAdministrativeArea: IAdministrativeArea = {
   regionalDistrict: 'CPRD',
 };
 
-const _getAdminAreas = jest.fn().mockImplementation(() => [produceAdminArea({})]);
-const _getAdminAreaById = jest.fn().mockImplementation(() => produceAdminArea({}));
-const _updateAdminAreaById = jest.fn().mockImplementation(() => produceAdminArea({}));
-const _addAdminArea = jest.fn().mockImplementation(() => produceAdminArea({}));
+const _getAdminAreas = jest.fn().mockImplementation(() => [produceAdminArea()]);
+const _getAdminAreaById = jest.fn().mockImplementation(() => produceAdminArea());
+const _updateAdminAreaById = jest.fn().mockImplementation(() => produceAdminArea());
+const _addAdminArea = jest.fn().mockImplementation(() => produceAdminArea());
 
 jest.mock('@/services/administrativeAreas/administrativeAreasServices', () => ({
   getAdministrativeAreas: () => _getAdminAreas(),
@@ -58,10 +58,17 @@ describe('UNIT - Administrative Areas Admin', () => {
     mockResponse = mockRes;
   });
   describe('Controller getAdministrativeAreas', () => {
-    // TODO: enable other tests when controller is complete
     it('should return status 200 and a list of administrative areas', async () => {
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       await getAdministrativeAreas(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
+    });
+    it('should return status 200 and a list of admin areas with trimmed properties if not an Admin', async () => {
+      mockRequest.setPimsUser({ hasOneOfRoles: () => false });
+      await getAdministrativeAreas(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(mockResponse.sendValue.data[0].Name).toBeDefined();
+      expect(mockResponse.sendValue.data[0].CreatedBy).not.toBeDefined();
     });
     it('should return status 400 when parse fails', async () => {
       mockRequest.query = { name: ['a'] };

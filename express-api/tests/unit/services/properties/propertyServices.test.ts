@@ -46,10 +46,10 @@ import {
   produceParcelFiscals,
   produceBuildingEvaluations,
   produceBuildingFiscals,
-  produceSSO,
   produceProjectStatus,
   produceProjectProperty,
   produceImportRow,
+  producePimsRequestUser,
 } from 'tests/testUtils/factories';
 import { DeepPartial, EntityTarget, ObjectLiteral } from 'typeorm';
 import xlsx, { WorkSheet } from 'xlsx';
@@ -410,7 +410,7 @@ describe('UNIT - Property Services', () => {
         {
           quantity: 1,
         },
-        produceSSO(),
+        producePimsRequestUser(),
       );
       expect(Array.isArray(result)).toBe(true);
       expect(result.at(0)).toHaveProperty('CompletionPercentage');

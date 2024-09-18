@@ -51,6 +51,7 @@ import { PropertyUnion } from '@/typeorm/Entities/views/PropertyUnionView';
 import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
 import { ImportRow } from '@/services/properties/propertiesServices';
+import { PimsRequestUser } from '@/middleware/userAuthCheck';
 
 export class MockRes {
   statusValue: any;
@@ -82,8 +83,9 @@ export class MockReq {
   user = {};
   headers = {};
   files: any[] = [];
+  pimsUser = {};
 
-  public setUser = (userData: object) => {
+  public setUser = (userData?: object) => {
     const defaultUserObject = {
       guid: 'W7802F34D2390EFA9E7JK15923770279',
       identity_provider: 'idir',
@@ -96,10 +98,15 @@ export class MockReq {
       email: 'john.doe@gov.bc.ca',
       client_roles: [] as string[],
       hasRoles: () => true,
-      //originalData:
+      ...userData,
     };
-    this.user = {
-      ...defaultUserObject,
+    this.user = defaultUserObject;
+  };
+
+  public setPimsUser = (userData?: Partial<PimsRequestUser>) => {
+    const defaultObject = producePimsRequestUser();
+    this.pimsUser = {
+      ...defaultObject,
       ...userData,
     };
   };
@@ -210,6 +217,15 @@ export const produceSSO = (props?: Partial<SSOUser>): SSOUser => {
     last_name: faker.person.lastName(),
     originalData: null,
     hasRoles: null,
+    ...props,
+  };
+};
+
+export const producePimsRequestUser = (props?: Partial<PimsRequestUser>): PimsRequestUser => {
+  const user = produceUser();
+  return {
+    ...user,
+    hasOneOfRoles: () => true,
     ...props,
   };
 };
@@ -467,7 +483,7 @@ export const produceConstructionType = (props?: Partial<BuildingPredominateUse>)
   return constructionType;
 };
 
-export const produceRegionalDistrict = (props: Partial<RegionalDistrict>) => {
+export const produceRegionalDistrict = (props?: Partial<RegionalDistrict>) => {
   const regionalDistrict: RegionalDistrict = {
     Id: faker.number.int(),
     Abbreviation: faker.string.alpha(5),

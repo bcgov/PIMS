@@ -1,5 +1,4 @@
 import controllers from '@/controllers';
-import activeUserCheck from '@/middleware/activeUserCheck';
 import catchErrors from '@/utilities/controllerErrorWrapper';
 import express from 'express';
 
@@ -10,12 +9,9 @@ const { getBuilding, updateBuilding, deleteBuilding, getBuildings, addBuilding }
 // Endpoints for buildings data manipulation
 router
   .route(`/:buildingId`)
-  .get(activeUserCheck, catchErrors(getBuilding))
-  .put(activeUserCheck, catchErrors(updateBuilding))
-  .delete(activeUserCheck, catchErrors(deleteBuilding));
-router
-  .route('/')
-  .get(activeUserCheck, catchErrors(getBuildings))
-  .post(activeUserCheck, catchErrors(addBuilding));
+  .get(catchErrors(getBuilding))
+  .put(catchErrors(updateBuilding))
+  .delete(catchErrors(deleteBuilding));
+router.route('/').get(catchErrors(getBuildings)).post(catchErrors(addBuilding));
 
 export default router;
