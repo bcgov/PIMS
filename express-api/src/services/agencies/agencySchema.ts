@@ -41,10 +41,10 @@ export const AgencyPublicResponseSchema = z.object({
   Name: z.string(),
   SortOrder: z.number(),
   Code: z.string(),
-  Description: z.string().nullable(),
+  Description: z.string().optional(),
   IsDisabled: z.boolean(),
-  ParentId: z.number().int().nullable(),
-  ParentName: z.string(),
+  ParentId: z.number().int().optional(),
+  ParentName: z.string().optional(),
 });
 
 export type Agency = z.infer<typeof AgencyCreationSchema>;
