@@ -29,7 +29,7 @@ interface UserProfile extends User {
 
 const UserDetail = ({ onClose }: IUserDetail) => {
   const { id } = useParams();
-  const { keycloak, pimsUser } = useContext(AuthContext);
+  const { pimsUser } = useContext(AuthContext);
   const { data: lookupData, getLookupValueById } = useContext(LookupContext);
   const api = usePimsApi();
 
@@ -100,7 +100,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
     mode: 'onBlur',
   });
 
-  const canEdit = keycloak.hasRoles([Roles.ADMIN]);
+  const canEdit = pimsUser.hasOneOfRoles([Roles.ADMIN]);
 
   useEffect(() => {
     refreshData();
