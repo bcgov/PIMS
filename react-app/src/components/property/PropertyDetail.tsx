@@ -40,7 +40,7 @@ interface IPropertyDetail {
 const PropertyDetail = (props: IPropertyDetail) => {
   const navigate = useNavigate();
   const params = useParams();
-  const { keycloak } = useContext(AuthContext);
+  const { pimsUser } = useContext(AuthContext);
   const { getLookupValueById } = useContext(LookupContext);
   const parcelId = isNaN(Number(params.parcelId)) ? null : Number(params.parcelId);
   const buildingId = isNaN(Number(params.buildingId)) ? null : Number(params.buildingId);
@@ -100,7 +100,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
   const userAgencyIds = userAgencies.map((a) => a.Id);
 
   const canEdit =
-    keycloak.hasRoles([Roles.ADMIN]) ||
+    pimsUser.hasOneOfRoles([Roles.ADMIN]) ||
     userAgencyIds.includes(parcel?.parsedBody?.AgencyId) ||
     userAgencyIds.includes(building?.parsedBody?.AgencyId);
 

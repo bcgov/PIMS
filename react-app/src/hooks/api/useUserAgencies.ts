@@ -10,7 +10,7 @@ const useUserAgencies = () => {
   const userContext = useContext(AuthContext);
   const { ungroupedAgencies, agencyOptions } = useGroupedAgenciesApi();
   const api = usePimsApi();
-  const isAdmin = userContext.keycloak.hasRoles([Roles.ADMIN]);
+  const isAdmin = userContext.pimsUser?.hasOneOfRoles([Roles.ADMIN]);
   const { data: userAgencies, refreshData: refreshUserAgencies } = useDataLoader(() =>
     api.users.getUsersAgencyIds(userContext.keycloak.user.preferred_username),
   );

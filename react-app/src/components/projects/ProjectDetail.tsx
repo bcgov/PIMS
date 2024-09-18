@@ -71,7 +71,7 @@ interface ProjectInfo extends Project {
 const ProjectDetail = (props: IProjectDetail) => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { keycloak } = useContext(AuthContext);
+  const { pimsUser } = useContext(AuthContext);
   const lookup = useContext(LookupContext);
   const api = usePimsApi();
   const { data: lookupData, getLookupValueById } = useContext(LookupContext);
@@ -88,8 +88,8 @@ const ProjectDetail = (props: IProjectDetail) => {
     }
   }, [data]);
 
-  const isAuditor = keycloak.hasRoles([Roles.AUDITOR]);
-  const isAdmin = keycloak.hasRoles([Roles.ADMIN]);
+  const isAuditor = pimsUser.hasOneOfRoles([Roles.AUDITOR]);
+  const isAdmin = pimsUser.hasOneOfRoles([Roles.ADMIN]);
 
   const { submit: deleteProject, submitting: deletingProject } = useDataSubmitter(
     api.projects.deleteProjectById,
