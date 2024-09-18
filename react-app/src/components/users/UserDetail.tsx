@@ -17,6 +17,7 @@ import { useParams } from 'react-router-dom';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { Role, Roles } from '@/constants/roles';
 import { LookupContext } from '@/contexts/lookupContext';
+import { getProvider } from '@/utilities/helperFunctions';
 
 interface IUserDetail {
   onClose: () => void;
@@ -50,8 +51,13 @@ const UserDetail = ({ onClose }: IUserDetail) => {
     Role: lookupData?.Roles?.find((role) => role.Id === data?.RoleId),
   };
 
+  const provider = useMemo(
+    () => getProvider(data?.Username, lookupData?.Config.bcscIdentifier),
+    [data],
+  );
+
   const userProfileData = {
-    Provider: data?.Username.includes('idir') ? 'IDIR' : 'BCeID',
+    Provider: provider,
     Email: data?.Email,
     FirstName: data?.FirstName,
     LastName: data?.LastName,
@@ -102,7 +108,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
 
   useEffect(() => {
     profileFormMethods.reset({
-      Provider: data?.Username.includes('idir') ? 'IDIR' : 'BCeID',
+      Provider: provider,
       Email: userProfileData.Email,
       FirstName: userProfileData.FirstName,
       LastName: userProfileData.LastName,

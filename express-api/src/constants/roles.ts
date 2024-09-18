@@ -1,6 +1,6 @@
 /**
  * @enum
- * The values in this enum must exactly mirror the names of the Keycloak roles.
+ * The values in this enum must exactly mirror the IDs in the Role table.
  */
 export enum Roles {
   ADMIN = '00000000-0000-0000-0000-000000000000',
