@@ -46,7 +46,7 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
 
   const provider = useMemo(
     () => getProvider(keycloak.user?.preferred_username, lookup?.data?.Config.bcscIdentifier),
-    [keycloak.user],
+    [keycloak.user, lookup],
   );
 
   const formMethods = useForm({
