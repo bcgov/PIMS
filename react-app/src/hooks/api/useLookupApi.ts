@@ -60,6 +60,7 @@ export interface LookupAll {
   RegionalDistricts: Partial<RegionalDistrict>[];
   Config: {
     contactEmail: string;
+    bcscIdentifier?: string;
   };
 }
 
