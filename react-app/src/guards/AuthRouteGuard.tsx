@@ -30,10 +30,7 @@ const AuthRouteGuard = (props: AuthGuardProps) => {
 
       if (authStateContext.pimsUser?.data) {
         // Redirect from page if lacking roles
-        if (
-          permittedRoles &&
-          !authStateContext.keycloak.hasRoles(permittedRoles, { requireAllRoles: false })
-        ) {
+        if (permittedRoles && !authStateContext.pimsUser?.hasOneOfRoles(permittedRoles)) {
           navigate(redirectRoute ?? '/');
         }
         // Redirect from page if user does not have Active status

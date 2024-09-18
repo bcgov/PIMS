@@ -82,9 +82,8 @@ const FilterControl = (props: FilterControlProps) => {
             options={
               agencyOptions?.filter(
                 (option) =>
-                  user.keycloak.hasRoles([Roles.ADMIN, Roles.AUDITOR], {
-                    requireAllRoles: false,
-                  }) || usersAgenciesData?.includes(option.value),
+                  user.pimsUser?.hasOneOfRoles([Roles.ADMIN, Roles.AUDITOR]) ||
+                  usersAgenciesData?.includes(option.value),
               ) ?? []
             }
             allowNestedIndent

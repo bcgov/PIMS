@@ -66,7 +66,8 @@ export class User extends BaseEntity {
   @Column({ type: 'timestamp', nullable: true })
   ApprovedOn: Date;
 
-  @Column({ type: 'uuid', nullable: true })
+  // Using varchar instead of uuid because some providers use characters outside [0-9a-f]
+  @Column({ type: 'character varying', nullable: true, length: 36 })
   KeycloakUserId: string;
 
   // Agency Relations

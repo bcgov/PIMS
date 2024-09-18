@@ -8,8 +8,9 @@ import { BuildingEvaluation } from '@/typeorm/Entities/BuildingEvaluation';
 import { BuildingFiscal } from '@/typeorm/Entities/BuildingFiscal';
 import logger from '@/utilities/winstonLogger';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
-import { isAdmin } from '@/utilities/authorizationChecks';
+import { Roles } from '@/constants/roles';
+import { PimsRequestUser } from '@/middleware/userAuthCheck';
+import { User } from '@/typeorm/Entities/User';
 
 const buildingRepo = AppDataSource.getRepository(Building);
 
@@ -63,13 +64,17 @@ export const getBuildingById = async (buildingId: number) => {
  * @returns     {Building} The updated building
  * @throws      {ErrorWithCode} Throws and error with 404 status if building does not exist.
  */
-export const updateBuildingById = async (building: DeepPartial<Building>, ssoUser: SSOUser) => {
+export const updateBuildingById = async (
+  building: DeepPartial<Building>,
+  user: PimsRequestUser,
+) => {
   const existingBuilding = await getBuildingById(building.Id);
   if (!existingBuilding) {
     throw new ErrorWithCode('Building does not exists.', 404);
   }
-  const validUserAgencies = await userServices.getAgencies(ssoUser.preferred_username);
-  if (!isAdmin(ssoUser) && !validUserAgencies.includes(building.AgencyId)) {
+  const validUserAgencies = await userServices.getAgencies(user.Username);
+  const isAdmin = user.hasOneOfRoles([Roles.ADMIN]);
+  if (!isAdmin && !validUserAgencies.includes(building.AgencyId)) {
     throw new ErrorWithCode('This agency change is not permitted.', 403);
   }
   if (building.Fiscals && building.Fiscals.length) {
@@ -124,7 +129,7 @@ export const updateBuildingById = async (building: DeepPartial<Building>, ssoUse
  * @returns A promise that resolves to the removed building entity.
  * @throws Error if the building does not exist, is linked to projects, or an error occurs during the deletion process.
  */
-export const deleteBuildingById = async (buildingId: number, username: string) => {
+export const deleteBuildingById = async (buildingId: number, user: User) => {
   const existingBuilding = await getBuildingById(buildingId);
   if (!existingBuilding) {
     throw new ErrorWithCode('Building does not exists.', 404);
@@ -138,7 +143,6 @@ export const deleteBuildingById = async (buildingId: number, username: string) =
       403,
     );
   }
-  const user = await userServices.getUser(username);
   const queryRunner = await AppDataSource.createQueryRunner();
   await queryRunner.startTransaction();
   try {
