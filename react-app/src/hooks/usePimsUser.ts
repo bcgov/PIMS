@@ -8,6 +8,7 @@ export interface IPimsUser {
   data?: User;
   refreshData: () => Promise<User>;
   isLoading: boolean;
+  hasOneOfRoles: (requiredRoles: Roles[]) => boolean;
 }
 
 const usePimsUser = () => {
