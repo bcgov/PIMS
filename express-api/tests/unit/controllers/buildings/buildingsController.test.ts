@@ -57,6 +57,7 @@ describe('UNIT - Buildings', () => {
       mockRequest.params.buildingId = '1';
       _hasAgencies.mockImplementationOnce(() => true);
       mockRequest.setUser({ hasRoles: () => true });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       _getBuildingById.mockImplementationOnce(() => buildingWithAgencyId1);
       await controllers.getBuilding(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
@@ -78,6 +79,7 @@ describe('UNIT - Buildings', () => {
     it('should return 403 when user does not have correct agencies', async () => {
       mockRequest.params.buildingId = '1';
       mockRequest.setUser({ client_roles: [Roles.GENERAL_USER], hasRoles: () => false });
+      mockRequest.setPimsUser({ RoleId: Roles.GENERAL_USER, hasOneOfRoles: () => false });
       _hasAgencies.mockImplementationOnce(() => false);
       await controllers.getBuilding(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(403);
@@ -115,6 +117,7 @@ describe('UNIT - Buildings', () => {
 
   describe('GET /properties/buildings', () => {
     it('should return 200 and a list of buildings', async () => {
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       await controllers.getBuildings(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
     });
@@ -126,6 +129,7 @@ describe('UNIT - Buildings', () => {
     it('should return 200 with an admin user', async () => {
       // Mock an admin user
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       await controllers.getBuildings(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(Array.isArray(mockResponse.sendValue)).toBeTruthy();

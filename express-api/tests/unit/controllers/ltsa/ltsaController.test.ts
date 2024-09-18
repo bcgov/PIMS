@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import controllers from '@/controllers';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import ltsaService from '@/services/ltsa/ltsaServices';
-import { produceLtsaOrder } from 'tests/testUtils/factories';
+import { produceLtsaOrder, producePimsRequestUser } from 'tests/testUtils/factories';
 
 describe('UNIT - Testing controllers for /ltsa routes', () => {
   const mockRequest = {
@@ -18,6 +18,7 @@ describe('UNIT - Testing controllers for /ltsa routes', () => {
       email: 'john.doe@gov.bc.ca',
       client_roles: ['Admin'],
     },
+    pimsUser: producePimsRequestUser(),
   } as unknown as Request;
   const mockResponse = {
     send: jest.fn().mockReturnThis(),

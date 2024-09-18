@@ -153,6 +153,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
 
   describe('Controller getUsers', () => {
     it('should return status 200 and a list of users', async () => {
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       await getUsers(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(Array.isArray(mockResponse.sendValue)).toBe(true);
@@ -162,6 +163,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
       mockRequest.query = {
         position: 'Tester',
       };
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       await getUsers(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(Array.isArray(mockResponse.sendValue)).toBe(true);
@@ -186,6 +188,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
 
     it('should return status 200 and the user info', async () => {
       mockRequest.params.id = user.Id;
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       await getUserById(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.Id).toBe(user.Id);
