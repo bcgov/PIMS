@@ -11,6 +11,12 @@ export interface IPimsUser {
   hasOneOfRoles: (requiredRoles: Roles[]) => boolean;
 }
 
+/**
+ * A hook that retrieves the active user's info from the database.
+ * It uses the username provided by Keycloak to find the corresponding user.
+ * It includes a function `hasOneOfRoles` to allow for role-based permissions checks.
+ * @returns Object containing the user's database record and functions related to the loading of this data.
+ */
 const usePimsUser = () => {
   const keycloak = useSSO();
   const api = usePimsApi();
@@ -20,6 +26,11 @@ const usePimsUser = () => {
     loadOnce();
   }
 
+  /**
+   * Checks the user's roles and returns a boolean if they have the given required roles.
+   * @param {Roles[]} requiredRoles An array of required Roles.
+   * @returns True|False depending on user role and required roles.
+   */
   const hasOneOfRoles = (requiredRoles: Roles[]): boolean => {
     if (!data || !data.RoleId || !requiredRoles || !requiredRoles.length) return false;
     return requiredRoles.includes(data.RoleId as Roles);
