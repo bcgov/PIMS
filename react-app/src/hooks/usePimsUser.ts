@@ -2,6 +2,7 @@ import { useSSO } from '@bcgov/citz-imb-sso-react';
 import usePimsApi from './usePimsApi';
 import useDataLoader from './useDataLoader';
 import { User } from './api/useUsersApi';
+import { Roles } from '@/constants/roles';
 
 export interface IPimsUser {
   data?: User;
@@ -18,10 +19,16 @@ const usePimsUser = () => {
     loadOnce();
   }
 
+  const hasOneOfRoles = (requiredRoles: Roles[]): boolean => {
+    if (!data || !data.RoleId || !requiredRoles || !requiredRoles.length) return false;
+    return requiredRoles.includes(data.RoleId as Roles);
+  };
+
   return {
     data,
     refreshData,
     isLoading,
+    hasOneOfRoles,
   };
 };
 
