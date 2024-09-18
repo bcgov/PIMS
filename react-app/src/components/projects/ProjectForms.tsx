@@ -14,8 +14,8 @@ interface IProjectGeneralInfoForm {
 
 export const ProjectGeneralInfoForm = (props: IProjectGeneralInfoForm) => {
   const { data: lookupData } = useContext(LookupContext);
-  const { keycloak } = useContext(AuthContext);
-  const canEdit = keycloak.hasRoles([Roles.ADMIN]);
+  const { pimsUser } = useContext(AuthContext);
+  const canEdit = pimsUser.hasOneOfRoles([Roles.ADMIN]);
 
   return (
     <Grid mt={'1rem'} spacing={2} container>
