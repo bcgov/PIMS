@@ -1,6 +1,0 @@
-{
-  "Ltsa": {
-    "AuthUrl": "https://appsuat.ltsa.ca/iam/api/auth/login/integrator",
-    "HostUri": "https://tduat-x42b.ltsa.ca/titledirect/search/api/"
-  }
-}

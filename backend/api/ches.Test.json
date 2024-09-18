@@ -1,7 +1,0 @@
-{
-  "Ches": {
-    "AuthUrl": "https://test.loginproxy.gov.bc.ca/auth/realms/comsvcauth/protocol/openid-connect/token",
-    "HostUri": "https://ches-test.api.gov.bc.ca/api/v1",
-    "BccUser": true
-  }
-}

@@ -21,22 +21,11 @@ Dependencies:
 Documentation:
   - '**/*.md'
 
-#################
-# DotNet backend
-DotNet:
-  - backend/**/*
-
-Migrations:
-  - backend/dal/Migrations/**/*
 
 #################
 # React frontend
 React:
-  - frontend/**/*
-
-Styles:
-  - frontend/**/*.css
-  - frontend/**/*.scss
+  - react-app/**/*
 
 ################
 # Express API
@@ -49,16 +38,5 @@ TypeORM:
 #################
 # Testing
 Tests:
-  - frontend/**/*.test.*
-  - frontend/**/*.spec.*
-  - backend/**/*.Test.*
-
-Cypress:
-  - any: ['frontend/cypress/**/*', 'frontend/cypress.*']
-    all: ['!frontend/cypress/e2e/**/*', '!frontend/cypress/component/**/*']
-
-'Cypress E2E':
-  - frontend/cypress/e2e/**/*
-
-'Cypress Component':
-  - frontend/component/**/*
+  - express-api/tests/**/*
+  - react-app/tests/**/*
