@@ -2,7 +2,7 @@
 #                 Base                #
 #############################################
 # Use an official Node.js runtime as a base image
-FROM node:21.6-bullseye-slim as base
+FROM node:22.9-bullseye-slim as base
 
 # Set the working directory in the container
 WORKDIR /express-api
