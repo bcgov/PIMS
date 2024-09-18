@@ -11,6 +11,7 @@ import { Agency } from '@/hooks/api/useAgencyApi';
 import { User } from '@/hooks/api/useUsersApi';
 import { LookupContext } from '@/contexts/lookupContext';
 import { Role } from '@/constants/roles';
+import { getProvider } from '@/utilities/helperFunctions';
 
 const CustomMenuItem = (props: PropsWithChildren & { value: string }) => {
   const theme = useTheme();
@@ -175,17 +176,7 @@ const UsersTable = (props: IUsersTable) => {
       field: 'Username',
       headerName: 'Provider',
       width: 125,
-      valueGetter: (value) => {
-        const username: string = value;
-        if (username && !username.includes('@')) return undefined;
-        const provider = username.split('@').at(1);
-        switch (provider) {
-          case 'idir':
-            return 'IDIR';
-          default:
-            return 'BCeID';
-        }
-      },
+      valueGetter: (value) => getProvider(value, lookup?.data?.Config.bcscIdentifier),
     },
     {
       field: 'Agency',
