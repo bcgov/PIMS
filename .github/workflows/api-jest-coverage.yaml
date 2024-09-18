@@ -1,19 +1,18 @@
-name: APP (React 18) - Jest Test Coverage
+name: Express API - Jest Test Coverage
 
 on:
   pull_request:
     types: [opened, synchronize] # Triggered by opened or changed pull requests.
     branches: [main]
     paths:
-      - 'frontend/**' # Triggers on changes to files in the frontend/ directory.
-      - '!frontend/cypress/**' # Will not trigger on changes to the following.
-      - '!frontend/cypress.config.*'
-      - '!frontend/.*'
-      - '!frontend/Dockerfile*'
-      - '!frontend/nginx.conf'
-      - '!frontend/vite.config.*'
-      - '!frontend/tsconfig.json'
-      - '!frontend/README.md'
+      - '.github/workflows/api-jest-coverage.yaml'
+      - 'express-api/**' # Triggers on changes to files in the express-api/ directory.
+      - '!express-api/.eslintrc.cjs' # Will not trigger on changes to the following.
+      - '!express-api/.gitignore'
+      - '!express-api/prettierrc.cjs'
+      - '!express-api/Dockerfile*'
+      - '!express-api/tsconfig.json'
+      - '!express-api/README.md'
 
 jobs:
   codeclimate-jest-coverage:
@@ -21,6 +20,16 @@ jobs:
     env:
       GIT_BRANCH: ${{ github.event.pull_request.head.ref }}
       GIT_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+      FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+      BACKEND_URL: ${{ secrets.BACKEND_URL }}
+      SSO_CLIENT_ID: ${{ secrets.SSO_CLIENT_ID }}
+      SSO_CLIENT_SECRET: ${{ secrets.SSO_CLIENT_SECRET }}
+      LTSA_AUTH_URL: ${{ secrets.LTSA_AUTH_URL }}
+      LTSA_HOST_URL: ${{ secrets.LTSA_HOST_URL }}
+      LTSA_INTEGRATOR_USERNAME: ${{ secrets.LTSA_INTEGRATOR_USERNAME }}
+      LTSA_INTEGRATOR_PASSWORD: ${{ secrets.LTSA_INTEGRATOR_PASSWORD }}
+      LTSA_USERNAME: ${{ secrets.LTSA_USERNAME }}
+      LTSA_PASSWORD: ${{ secrets.LTSA_PASSWORD }}
       CC_TEST_REPORTER_ID: 37fdb6f058122c17fc2419b78b02b1d5582694f7cd84a2b735de8eec235e9c5b
 
     steps:
@@ -53,24 +62,24 @@ jobs:
 
       # Install dependencies.
       - name: Install Dependencies
-        working-directory: ./frontend
+        working-directory: ./express-api
         run: |
           npm i
 
       # Generate coverage report.
       - name: Run Coverage Report
-        working-directory: ./frontend
+        working-directory: ./express-api
         run: |
-          npm run coverage
+          npm test
 
       # Use lcov to format coverage for Code Climate
       # -t is for coverage type
       - name: Format Test Coverage
         run: |
-          ./cc-test-reporter format-coverage ${{ github.workspace }}/frontend/coverage/lcov.info -t lcov --output ${{ github.workspace }}/frontend/coverage/coverage.json
+          ./cc-test-reporter format-coverage ${{ github.workspace }}/express-api/coverage/lcov.info -t lcov --output ${{ github.workspace }}/express-api/coverage/coverage.json
 
       # Upload coverage to Code Climate.
       # -i is for input, -d for detached
       - name: Upload Coverage
         run: |
-          ./cc-test-reporter upload-coverage -d -i ${{ github.workspace }}/frontend/coverage/coverage.json
+          ./cc-test-reporter upload-coverage -d -i ${{ github.workspace }}/express-api/coverage/coverage.json
