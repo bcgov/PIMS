@@ -1,12 +1,7 @@
-import {
-  isAdmin,
-  isAuditor,
-  canUserEdit,
-  isUserDisabled,
-  isUserActive,
-} from '@/utilities/authorizationChecks';
+import { canUserEdit, isUserDisabled, isUserActive } from '@/utilities/authorizationChecks';
 import { getUser as getUserService } from '@/services/users/usersServices';
-import { produceSSO } from '@/../tests/testUtils/factories';
+import { producePimsRequestUser, produceSSO } from '@/../tests/testUtils/factories';
+import { Roles } from '@/constants/roles';
 
 // Mock the getUser function
 jest.mock('@/services/users/usersServices', () => ({
@@ -14,19 +9,11 @@ jest.mock('@/services/users/usersServices', () => ({
 }));
 
 describe('Authorization Checks', () => {
-  const mockUser = produceSSO();
-  mockUser.client_roles.push('Administrator');
+  const mockUser = producePimsRequestUser({ RoleId: Roles.ADMIN, hasOneOfRoles: () => true });
+  const mockKeycloakUser = produceSSO();
 
   beforeEach(() => {
     jest.clearAllMocks();
-  });
-
-  it('isAdmin should return true if user has ADMIN role', () => {
-    expect(isAdmin(mockUser)).toBe(true);
-  });
-
-  it('isAuditor should return false if user does not have AUDITOR role', () => {
-    expect(isAuditor(mockUser)).toBe(false);
   });
 
   it('canUserEdit should return true if user has GENERAL_USER or ADMIN role', () => {
@@ -40,7 +27,7 @@ describe('Authorization Checks', () => {
     // Mock the getUser function to return the mockDisabledUser
     (getUserService as jest.Mock).mockResolvedValue(mockDisabledUser);
 
-    const result = await isUserDisabled(mockUser);
+    const result = await isUserDisabled(mockKeycloakUser);
     expect(result).toBe(true);
   });
 
@@ -51,7 +38,7 @@ describe('Authorization Checks', () => {
     // Mock the getUser function to return the mockDisabledUser
     (getUserService as jest.Mock).mockResolvedValue(mockActiveUser);
 
-    const result = await isUserActive(mockUser);
+    const result = await isUserActive(mockKeycloakUser);
     expect(result).toBe(true);
   });
 });

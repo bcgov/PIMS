@@ -1,10 +1,11 @@
 import controllers from '@/controllers';
-import activeUserCheck from '@/middleware/activeUserCheck';
+import userAuthCheck from '@/middleware/userAuthCheck';
 import catchErrors from '@/utilities/controllerErrorWrapper';
 import { bulkUploadMimeTypeWhitelist } from '@/utilities/uploadWhitelist';
 import express, { NextFunction } from 'express';
 import multer from 'multer';
 import { Request, Response } from 'express';
+import { Roles } from '@/constants/roles';
 
 const router = express.Router();
 
@@ -17,11 +18,11 @@ const {
   getLinkedProjects,
 } = controllers;
 
-router.route('/search/fuzzy').get(activeUserCheck, catchErrors(getPropertiesFuzzySearch));
+router.route('/search/fuzzy').get(userAuthCheck(), catchErrors(getPropertiesFuzzySearch));
 
-router.route('/search/geo').get(activeUserCheck, catchErrors(getPropertiesForMap)); // Formerly wfs route
+router.route('/search/geo').get(userAuthCheck(), catchErrors(getPropertiesForMap)); // Formerly wfs route
 
-router.route('/search/linkedProjects').get(activeUserCheck, catchErrors(getLinkedProjects));
+router.route('/search/linkedProjects').get(userAuthCheck(), catchErrors(getLinkedProjects));
 
 const upload = multer({
   dest: 'uploads/',
@@ -41,8 +42,14 @@ const uploadHandler = async (req: Request, res: Response, next: NextFunction) =>
     next();
   });
 };
-router.route('/import').post(activeUserCheck, uploadHandler, catchErrors(importProperties));
-router.route('/import/results').get(activeUserCheck, catchErrors(getImportResults));
-router.route('/').get(activeUserCheck, catchErrors(getPropertyUnion));
+router
+  .route('/import')
+  .post(
+    userAuthCheck({ requiredRoles: [Roles.ADMIN] }),
+    uploadHandler,
+    catchErrors(importProperties),
+  );
+router.route('/import/results').get(userAuthCheck(), catchErrors(getImportResults));
+router.route('/').get(userAuthCheck(), catchErrors(getPropertyUnion));
 
 export default router;

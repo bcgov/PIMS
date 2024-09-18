@@ -7,12 +7,11 @@ import {
   MapFilterSchema,
   PropertyUnionFilterSchema,
 } from '@/controllers/properties/propertiesSchema';
-import { checkUserAgencyPermission, isAdmin, isAuditor } from '@/utilities/authorizationChecks';
+import { checkUserAgencyPermission } from '@/utilities/authorizationChecks';
 import userServices from '@/services/users/usersServices';
 import { Worker } from 'worker_threads';
 import path from 'path';
 import fs from 'fs';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { AppDataSource } from '@/appDataSource';
 import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import { readFile } from 'xlsx';
@@ -28,10 +27,11 @@ import { Roles } from '@/constants/roles';
 export const getPropertiesFuzzySearch = async (req: Request, res: Response) => {
   const keyword = String(req.query.keyword);
   const take = req.query.take ? Number(req.query.take) : undefined;
-  const kcUser = req.user;
+  const user = req.pimsUser;
   let userAgencies;
-  if (!isAdmin(kcUser)) {
-    userAgencies = await userServices.getAgencies(kcUser.preferred_username);
+  const isAdmin = user.hasOneOfRoles([Roles.ADMIN]);
+  if (!isAdmin) {
+    userAgencies = await userServices.getAgencies(user.Username);
   }
   const result = await propertyServices.propertiesFuzzySearch(keyword, take, userAgencies);
   return res.status(200).send(result);
@@ -87,20 +87,20 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
   };
 
   // Controlling for agency search visibility
-  const kcUser = req.user;
   const permittedRoles = [Roles.ADMIN, Roles.AUDITOR];
   // Admins and auditors see all, otherwise...
-  if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
+  const user = req.pimsUser;
+  if (!user.hasOneOfRoles(permittedRoles)) {
     const requestedAgencies = filterResult.AgencyIds;
     const userHasAgencies = await checkUserAgencyPermission(
-      kcUser,
+      user,
       requestedAgencies,
       permittedRoles,
     );
     // If not agencies were requested or if the user doesn't have those requested agencies
     if (!requestedAgencies || !userHasAgencies) {
       // Then only show that user's agencies instead.
-      const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+      const usersAgencies = await userServices.getAgencies(user.Username);
       filterResult.UserAgencies = usersAgencies;
     }
   }
@@ -130,9 +130,8 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
 export const importProperties = async (req: Request, res: Response) => {
   const filePath = req.file.path;
   const fileName = req.file.originalname;
-  const ssoUser = req.user;
-  const user = await userServices.getUser(ssoUser.preferred_username);
-  const roles = ssoUser.client_roles;
+  const user = req.pimsUser;
+  const role = user.Role?.Name;
   try {
     readFile(filePath, { WTF: true }); //With this read option disabled it will throw if unexpected data is present.
   } catch (e) {
@@ -152,7 +151,7 @@ export const importProperties = async (req: Request, res: Response) => {
   });
   const workerPath = `../../services/properties/propertyWorker.${process.env.NODE_ENV === 'production' ? 'js' : 'ts'}`;
   const worker = new Worker(path.resolve(__dirname, workerPath), {
-    workerData: { filePath, resultRowId: resultRow.Id, user, roles },
+    workerData: { filePath, resultRowId: resultRow.Id, user, roles: role },
     execArgv: [
       '--require',
       'ts-node/register',
@@ -189,12 +188,12 @@ export const importProperties = async (req: Request, res: Response) => {
  * @returns                   Response with ImportFilterResult.
  */
 export const getImportResults = async (req: Request, res: Response) => {
-  const kcUser = req.user as SSOUser;
+  const user = req.pimsUser;
   const filter = ImportResultFilterSchema.safeParse(req.query);
   if (filter.success == false) {
     return res.status(400).send(filter.error);
   }
-  const results = await propertyServices.getImportResults(filter.data, kcUser);
+  const results = await propertyServices.getImportResults(filter.data, user);
   return res.status(200).send(results);
 };
 
@@ -212,11 +211,11 @@ export const getPropertyUnion = async (req: Request, res: Response) => {
     return res.status(400).send(filter.error);
   }
   // Prevent getting back unrelated agencies for general users
-  const kcUser = req.user as unknown as SSOUser;
+  const user = req.pimsUser;
   const filterResult = filter.data;
-  if (!(isAdmin(kcUser) || isAuditor(kcUser))) {
+  if (!user.hasOneOfRoles([Roles.ADMIN, Roles.AUDITOR])) {
     // get array of user's agencies
-    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+    const usersAgencies = await userServices.getAgencies(user.Username);
     filterResult.agencyIds = usersAgencies;
   }
 
