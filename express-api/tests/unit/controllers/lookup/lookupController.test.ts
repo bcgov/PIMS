@@ -29,6 +29,8 @@ import {
   lookupBuildingPredominateUse,
   lookupMonetaryTypes,
   lookupNoteTypes,
+  lookupProjectStatuses,
+  lookupPropertyTypes,
   lookupRegionalDistricts,
   lookupTasks,
   lookupTimestampTypes,
@@ -48,21 +50,30 @@ import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
 
 const { lookupAll, lookupProjectTierLevels, lookupPropertyClassifications } = controllers;
 
+// Returning 2 entries for many of these to trigger the .sort calls. Otherwise it is skipped.
 const _next = jest.fn();
-const _findClassification = jest.fn().mockImplementation(() => [produceClassification({})]);
-const _findUses = jest.fn().mockImplementation(() => [producePredominateUse({})]);
-const _findConstruction = jest.fn().mockImplementation(() => [produceConstructionType({})]);
-const _findRegionalDistricts = jest.fn().mockImplementation(() => [produceRegionalDistrict({})]);
-const _findTierLevel = jest.fn().mockImplementation(() => [produceTierLevel()]);
-const _findTasks = jest.fn().mockImplementation(() => [produceTask()]);
-const _findNoteTypes = jest.fn().mockImplementation(() => [produceNoteType()]);
-const _findTimestampTypes = jest.fn().mockImplementation(() => [produceTimestampType()]);
-const _findMonetaryTypes = jest.fn().mockImplementation(() => [produceMonetaryType()]);
+const _findClassification = jest.fn().mockImplementation(() => [produceClassification()]);
+const _findUses = jest.fn().mockImplementation(() => [producePredominateUse()]);
+const _findConstruction = jest.fn().mockImplementation(() => [produceConstructionType()]);
+const _findRegionalDistricts = jest
+  .fn()
+  .mockImplementation(() => [produceRegionalDistrict(), produceRegionalDistrict()]);
+const _findTierLevel = jest.fn().mockImplementation(() => [produceTierLevel(), produceTierLevel()]);
+const _findTasks = jest.fn().mockImplementation(() => [produceTask(), produceTask()]);
+const _findNoteTypes = jest.fn().mockImplementation(() => [produceNoteType(), produceNoteType()]);
+const _findTimestampTypes = jest
+  .fn()
+  .mockImplementation(() => [produceTimestampType(), produceTimestampType()]);
+const _findMonetaryTypes = jest
+  .fn()
+  .mockImplementation(() => [produceMonetaryType(), produceMonetaryType()]);
 const _findProjectRisks = jest.fn().mockImplementation(() => [produceRisk()]);
 const _findPropertyTypes = jest.fn().mockImplementation(() => [producePropertyType()]);
-const _findProjectStatuses = jest.fn().mockImplementation(() => [produceProjectStatus]);
+const _findProjectStatuses = jest
+  .fn()
+  .mockImplementation(() => [produceProjectStatus(), produceProjectStatus()]);
 const _findRoles = jest.fn().mockImplementation(() => [produceRole()]);
-const _findAgencies = jest.fn().mockImplementation(() => [produceAgency()]);
+const _findAgencies = jest.fn().mockImplementation(() => [produceAgency(), produceAgency()]);
 const _findAdminAreas = jest.fn().mockImplementation(() => [produceAdminArea()]);
 
 jest
@@ -238,6 +249,18 @@ describe('UNIT - Lookup Controller', () => {
     });
   });
 
+  describe('GET /lookup/projectStatus', () => {
+    it('should return status 200 and a list of statuses', async () => {
+      await lookupProjectStatuses(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+    });
+    it('should return 400 on bad parse', async () => {
+      _findProjectStatuses.mockImplementationOnce(() => [{ Name: [] }]);
+      await lookupProjectStatuses(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+    });
+  });
+
   describe('GET /lookup/tasks', () => {
     it('should return status 200 and a list of tasks', async () => {
       await lookupTasks(mockRequest, mockResponse);
@@ -247,6 +270,13 @@ describe('UNIT - Lookup Controller', () => {
       _findTasks.mockImplementationOnce(() => [{ Name: [] }]);
       await lookupTasks(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
+    });
+  });
+
+  describe('GET /lookup/propertyTypes', () => {
+    it('should return status 200 and a list of property types', async () => {
+      await lookupPropertyTypes(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
     });
   });
 
@@ -293,9 +323,9 @@ describe('UNIT - Lookup Controller', () => {
       // Check that something was returned
       expect(mockResponse.sendValue.AdministrativeAreas).toHaveLength(1);
       expect(mockResponse.sendValue.Roles).toHaveLength(1);
-      expect(mockResponse.sendValue.Agencies).toHaveLength(1);
+      expect(mockResponse.sendValue.Agencies).toHaveLength(2);
       expect(mockResponse.sendValue.Classifications).toHaveLength(1);
-      expect(mockResponse.sendValue.Tasks).toHaveLength(1);
+      expect(mockResponse.sendValue.Tasks).toHaveLength(2);
     });
   });
 });

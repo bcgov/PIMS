@@ -1,9 +1,8 @@
 import { ProjectFilterSchema, ProjectFilter } from '@/services/projects/projectSchema';
 import { Request, Response } from 'express';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import projectServices, { ProjectPropertyIds } from '@/services/projects/projectsServices';
 import userServices from '@/services/users/usersServices';
-import { isAdmin, isAuditor, checkUserAgencyPermission } from '@/utilities/authorizationChecks';
+import { checkUserAgencyPermission } from '@/utilities/authorizationChecks';
 import { DeepPartial } from 'typeorm';
 import { Project } from '@/typeorm/Entities/Project';
 import { Roles } from '@/constants/roles';
@@ -19,7 +18,7 @@ import { exposedProjectStatuses } from '@/constants/projectStatus';
 export const getDisposalProject = async (req: Request, res: Response) => {
   // admins are permitted to view any project
   const permittedRoles = [Roles.ADMIN];
-  const user = req.user as SSOUser;
+  const user = req.pimsUser;
   const projectId = Number(req.params.projectId);
   if (isNaN(projectId)) {
     return res.status(400).send('Project ID was invalid.');
@@ -54,7 +53,9 @@ export const getDisposalProject = async (req: Request, res: Response) => {
  */
 export const updateDisposalProject = async (req: Request, res: Response) => {
   // Only admins can edit projects
-  if (!isAdmin(req.user)) {
+  const user = req.pimsUser;
+  const isAdmin = user.hasOneOfRoles([Roles.ADMIN]);
+  if (!isAdmin) {
     return res.status(403).send('Projects only editable by Administrator role.');
   }
 
@@ -73,9 +74,12 @@ export const updateDisposalProject = async (req: Request, res: Response) => {
     return res.status(400).send('The param ID does not match the request body.');
   }
   // need to coordinate how we want tasks to be translated
-  const user = await userServices.getUser(req.user.preferred_username);
   const updateBody = { ...req.body.project, UpdatedById: user.Id };
-  const project = await projectServices.updateProject(updateBody, req.body.propertyIds, req.user);
+  const project = await projectServices.updateProject(
+    updateBody,
+    req.body.propertyIds,
+    req.pimsUser,
+  );
   return res.status(200).send(project);
 };
 
@@ -86,24 +90,18 @@ export const updateDisposalProject = async (req: Request, res: Response) => {
  * @returns {Response}      A 200 status with the deleted project.
  */
 export const deleteDisposalProject = async (req: Request, res: Response) => {
-  // Only admins can delete projects
-  if (!isAdmin(req.user)) {
-    return res.status(403).send('Projects can only be deleted by Administrator role.');
-  }
-
   const projectId = Number(req.params.projectId);
   if (isNaN(projectId)) {
     return res.status(400).send('Invalid Project ID');
   }
   // Only admins can delete projects
-  if (!isAdmin(req.user)) {
+  const user = req.pimsUser;
+  const isAdmin = user.hasOneOfRoles([Roles.ADMIN]);
+  if (!isAdmin) {
     return res.status(403).send('Projects can only be deleted by Administrator role.');
   }
 
-  const delProject = await projectServices.deleteProjectById(
-    projectId,
-    req.user.preferred_username,
-  );
+  const delProject = await projectServices.deleteProjectById(projectId, req.pimsUser);
   const notifications = await notificationServices.cancelProjectNotifications(projectId);
 
   return res.status(200).send({ project: delProject, notifications });
@@ -117,7 +115,8 @@ export const deleteDisposalProject = async (req: Request, res: Response) => {
  */
 export const addDisposalProject = async (req: Request, res: Response) => {
   // Auditors can no add projects
-  if (isAuditor(req.user)) {
+  const user = req.pimsUser;
+  if (user.hasOneOfRoles([Roles.AUDITOR])) {
     return res.status(403).send('Projects can not be added by user with Auditor role.');
   }
   // Extract project data from request body
@@ -126,7 +125,6 @@ export const addDisposalProject = async (req: Request, res: Response) => {
     project,
     projectPropertyIds,
   }: { project: DeepPartial<Project>; projectPropertyIds: ProjectPropertyIds } = req.body;
-  const user = await userServices.getUser((req.user as SSOUser).preferred_username);
   const addBody = {
     ...project,
     CreatedById: user.Id,
@@ -135,11 +133,7 @@ export const addDisposalProject = async (req: Request, res: Response) => {
   };
 
   // Call the addProject service function with the project data
-  const newProject = await projectServices.addProject(
-    addBody,
-    projectPropertyIds,
-    req.user as SSOUser,
-  );
+  const newProject = await projectServices.addProject(addBody, projectPropertyIds, req.pimsUser);
 
   // Return the new project in the response
   return res.status(201).json(newProject);
@@ -158,10 +152,11 @@ export const getProjects = async (req: Request, res: Response) => {
     return res.status(400).send('Could not parse filter.');
   }
   const filterResult = filter.data;
-  const kcUser = req.user as unknown as SSOUser;
-  if (!isAdmin(kcUser)) {
+  const user = req.pimsUser;
+  const isAdmin = user.hasOneOfRoles([Roles.ADMIN]);
+  if (!isAdmin) {
     // get array of user's agencies
-    const usersAgencies = await userServices.getAgencies(kcUser.preferred_username);
+    const usersAgencies = await userServices.getAgencies(user.Username);
     filterResult.agencyId = usersAgencies;
   }
   // Get projects associated with agencies of the requesting user
