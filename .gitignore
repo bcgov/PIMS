@@ -1,16 +1,7 @@
-**/sh.exe.stackdump
-bash.exe.stackdump
 *.env
 .vs
-*.orig
-*.param
-.scannerwork/
-auth/keycloak/config/hsperfdata_jboss/
-auth/keycloak/config/*.log
 .DS_Store
-/backups
 **/node_modules
-database/mssql/data
 docker-compose.override.yml
 -docker-compose.override.yml
 
@@ -22,14 +13,9 @@ node_modules/
 
 # testing
 coverage/
-test-report.xml
-cypress/videos
-cypress/screenshots
-testUser.json
 
 # production
 build/
-public/videos
 
 # misc
 .DS_Store

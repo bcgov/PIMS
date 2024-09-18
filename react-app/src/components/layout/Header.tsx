@@ -62,7 +62,7 @@ const AppBrand = () => {
 
 const Header: React.FC = () => {
   const auth = useContext(AuthContext);
-  const { logout, isAuthenticated, login, user } = useSSO();
+  const { logout, isAuthenticated, login } = useSSO();
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -105,9 +105,9 @@ const Header: React.FC = () => {
         <Box textAlign={'center'} alignItems={'center'} gap={'32px'} display={'flex'}>
           {isAuthenticated &&
             auth?.pimsUser?.data?.Status === 'Active' &&
-            auth.keycloak.user?.client_roles?.length && (
+            auth?.pimsUser?.data?.RoleId && (
               <>
-                {user.client_roles?.includes(Roles.ADMIN) ? (
+                {auth.pimsUser.hasOneOfRoles([Roles.ADMIN]) ? (
                   <>
                     <Typography
                       id="admin-button"
