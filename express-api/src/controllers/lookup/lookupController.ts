@@ -380,6 +380,7 @@ export const lookupAll = async (req: Request, res: Response) => {
     ),
     Config: {
       contactEmail: cfg.contact.toEmail,
+      bcscIdentifier: cfg.keycloak.client_id,
     },
   };
   return res.status(200).send(returnObj);
