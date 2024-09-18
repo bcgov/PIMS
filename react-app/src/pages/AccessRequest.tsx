@@ -71,7 +71,7 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
       Agency: '',
       Position: '',
     });
-  }, [provider, keycloak.user, formMethods]);
+  }, [provider, keycloak.user]);
 
   return (
     <>
