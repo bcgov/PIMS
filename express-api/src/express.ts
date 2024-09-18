@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
-import { sso, protectedRoute } from '@bcgov/citz-imb-sso-express';
+import { protectedRoute, sso } from '@bcgov/citz-imb-sso-express';
 import router from '@/routes';
 import middleware from '@/middleware';
 import constants from '@/constants';
@@ -15,6 +15,8 @@ import errorHandler from '@/middleware/errorHandler';
 import { EndpointNotFound404 } from '@/constants/errors';
 import nunjucks from 'nunjucks';
 import OPENAPI_OPTIONS from '@/swagger/swaggerConfig';
+import userAuthCheck from '@/middleware/userAuthCheck';
+import { Roles } from '@/constants/roles';
 
 const app: Application = express();
 
@@ -82,18 +84,30 @@ app.use(`/v2`, headerHandler as RequestHandler);
 app.use(`/v2/health`, router.healthRouter);
 
 // Protected Routes
-app.use(`/v2/ltsa`, protectedRoute(), router.ltsaRouter);
-app.use(`/v2/administrativeAreas`, protectedRoute(), router.administrativeAreasRouter);
-app.use(`/v2/agencies`, protectedRoute(), router.agenciesRouter);
+// userRequestCheck applied here if same permissions throughout route
+// These routes must use protectedRoute before userAuthCheck
+app.use(`/v2/ltsa`, protectedRoute(), userAuthCheck(), router.ltsaRouter);
+app.use(
+  `/v2/administrativeAreas`,
+  protectedRoute(),
+  userAuthCheck({ requiredRoles: [Roles.ADMIN] }),
+  router.administrativeAreasRouter,
+);
+app.use(
+  `/v2/agencies`,
+  protectedRoute(),
+  userAuthCheck({ requiredRoles: [Roles.ADMIN] }),
+  router.agenciesRouter,
+);
 app.use('/v2/lookup', protectedRoute(), router.lookupRouter);
 app.use(`/v2/users`, protectedRoute(), router.usersRouter);
 app.use(`/v2/properties`, protectedRoute(), router.propertiesRouter);
-app.use(`/v2/parcels`, protectedRoute(), router.parcelsRouter);
-app.use(`/v2/buildings`, protectedRoute(), router.buildingsRouter);
+app.use(`/v2/parcels`, protectedRoute(), userAuthCheck(), router.parcelsRouter);
+app.use(`/v2/buildings`, protectedRoute(), userAuthCheck(), router.buildingsRouter);
 app.use(`/v2/notifications`, protectedRoute(), router.notificationsRouter);
 app.use(`/v2/projects`, protectedRoute(), router.projectsRouter);
-app.use(`/v2/reports`, protectedRoute(), router.reportsRouter);
-app.use(`/v2/tools`, protectedRoute(), router.toolsRouter);
+app.use(`/v2/reports`, protectedRoute(), userAuthCheck(), router.reportsRouter);
+app.use(`/v2/tools`, protectedRoute(), userAuthCheck(), router.toolsRouter);
 
 // If a non-existent route is called. Must go after other routes.
 app.use('*', (_req, _res, next) => next(EndpointNotFound404));

@@ -4,7 +4,7 @@ import {
   produceParcel,
   produceParcelEvaluations,
   produceParcelFiscals,
-  produceSSO,
+  producePimsRequestUser,
   produceUser,
 } from 'tests/testUtils/factories';
 import parcelService from '@/services/parcels/parcelServices';
@@ -16,8 +16,6 @@ import { DeepPartial, UpdateResult } from 'typeorm';
 import userServices from '@/services/users/usersServices';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { Roles } from '@/constants/roles';
-
-//jest.setTimeout(30000);
 
 const parcelRepo = AppDataSource.getRepository(Parcel);
 
@@ -87,7 +85,7 @@ jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
   release: jest.fn(async () => {}),
   manager: _mockEntityManager,
 });
-const adminUser = produceSSO({ client_roles: [Roles.ADMIN] });
+const adminUser = producePimsRequestUser({ RoleId: Roles.ADMIN, hasOneOfRoles: () => true });
 describe('UNIT - Parcel Services', () => {
   describe('addParcel', () => {
     beforeEach(() => jest.clearAllMocks());
@@ -130,14 +128,14 @@ describe('UNIT - Parcel Services', () => {
     it('should delete a parcel and return a 204 status code', async () => {
       const parcelToDelete = produceParcel();
       _parcelFindOne.mockResolvedValueOnce(parcelToDelete);
-      await parcelService.deleteParcelById(parcelToDelete.Id, '');
+      await parcelService.deleteParcelById(parcelToDelete.Id, adminUser);
       expect(_mockParcelUpdate).toHaveBeenCalledTimes(3);
     });
     it('should throw an error if the PID does not exist in the parcel table', () => {
       const parcelToDelete = produceParcel();
       _parcelFindOne.mockResolvedValueOnce(null);
       expect(
-        async () => await parcelService.deleteParcelById(parcelToDelete.Id, ''),
+        async () => await parcelService.deleteParcelById(parcelToDelete.Id, adminUser),
       ).rejects.toThrow();
     });
     it('should throw an error if the Parcel has a child Parcel relationship', async () => {
@@ -148,7 +146,7 @@ describe('UNIT - Parcel Services', () => {
         throw new ErrorWithCode(errorMessage);
       });
       expect(
-        async () => await parcelService.deleteParcelById(newParentParcel.Id, ''),
+        async () => await parcelService.deleteParcelById(newParentParcel.Id, adminUser),
       ).rejects.toThrow();
     });
   });
