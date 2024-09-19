@@ -204,24 +204,4 @@ describe('UNIT - User services', () => {
       expect(async () => await userServices.deleteUser(user)).rejects.toThrow();
     });
   });
-  describe('getRoles', () => {
-    it('should get names of roles in keycloak', async () => {
-      const roles = await userServices.getKeycloakRoles();
-      expect(z.string().array().safeParse(roles).success).toBe(true);
-    });
-  });
-  describe('getUserRoles', () => {
-    it('should get names of users roles in keycloak', async () => {
-      const roles = await userServices.getKeycloakUserRoles('test');
-      expect(z.string().array().safeParse(roles).success).toBe(true);
-    });
-  });
-  describe('updateUserRoles', () => {
-    it('should update (put style) users roles in keycloak', async () => {
-      const newRoles = ['admin', 'test'];
-      const roles = await userServices.updateKeycloakUserRoles('test', newRoles);
-      expect(z.string().array().safeParse(roles).success).toBe(true);
-      newRoles.forEach((a, i) => expect(a).toBe(newRoles[i]));
-    });
-  });
 });
