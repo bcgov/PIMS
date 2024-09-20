@@ -51,10 +51,10 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
 
   const formMethods = useForm({
     defaultValues: {
-      Provider: provider,
-      FirstName: keycloak.user?.first_name,
-      LastName: keycloak.user?.last_name,
-      Email: keycloak.user?.email,
+      Provider: provider ?? '',
+      FirstName: keycloak.user?.first_name || '',
+      LastName: keycloak.user?.last_name || '',
+      Email: keycloak.user?.email || '',
       Notes: '',
       Agency: '',
       Position: '',
@@ -63,7 +63,7 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
 
   useEffect(() => {
     formMethods.reset({
-      Provider: provider,
+      Provider: provider ?? '',
       FirstName: keycloak.user?.first_name || '',
       LastName: keycloak.user?.last_name || '',
       Email: keycloak.user?.email || '',
