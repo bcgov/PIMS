@@ -5,7 +5,6 @@ import '@/App.css';
 import { ThemeProvider } from '@emotion/react';
 import appTheme from './themes/appTheme';
 import Dev from './pages/DevZone';
-import { ConfigContextProvider } from './contexts/configContext';
 import AuthContextProvider, { AuthContext } from './contexts/authContext';
 import AuthRouteGuard from './guards/AuthRouteGuard';
 import BaseLayout from './components/layout/BaseLayout';
@@ -268,17 +267,15 @@ const Router = () => {
 const App = () => {
   return (
     <ThemeProvider theme={appTheme}>
-      <ConfigContextProvider>
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <AuthContextProvider>
-            <LookupContextProvider>
-              <SnackBarContextProvider>
-                <Router />
-              </SnackBarContextProvider>
-            </LookupContextProvider>
-          </AuthContextProvider>
-        </ErrorBoundary>
-      </ConfigContextProvider>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <AuthContextProvider>
+          <LookupContextProvider>
+            <SnackBarContextProvider>
+              <Router />
+            </SnackBarContextProvider>
+          </LookupContextProvider>
+        </AuthContextProvider>
+      </ErrorBoundary>
     </ThemeProvider>
   );
 };

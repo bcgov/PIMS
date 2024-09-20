@@ -5,8 +5,7 @@ import { Parcel } from './useParcelsApi';
 import { PropertyTypes } from '@/constants/propertyTypes';
 import { ClassificationType } from '@/constants/classificationTypes';
 import { CommonFiltering } from '@/interfaces/ICommonFiltering';
-import { useContext } from 'react';
-import { ConfigContext } from '@/contexts/configContext';
+import { getConfig } from '@/constants/config';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { GetManyResponse } from '@/interfaces/GetManyResponse';
 
@@ -87,7 +86,8 @@ export interface PropertyId {
 }
 
 const usePropertiesApi = (absoluteFetch: IFetch) => {
-  const config = useContext(ConfigContext);
+  // const config = useContext(ConfigContext);
+  const config = getConfig();
   const keycloak = useSSO();
 
   const propertiesFuzzySearch = async (keyword: string) => {
