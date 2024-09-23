@@ -55,6 +55,7 @@ If you need to start an instance of PIMS on your local machine, see the [Develop
 |`.codeclimate.yml`| Configuration file for Code Climate checks.|
 |`.env-template`| The template file for locally created `.env` files.|
 |`.gitignore`|File that defines exclusions for git tracking.|
+|`.gitattributes`|Defines end of line requirements for files.|
 |`CODE_OF_CONDUCT.md`| A set of standards and guidelines for contributors to PIMS.|
 |`COMPLIANCE.yaml`|Recording of PIA and STRA dates.|
 |`LICENSE`|The Apache 2.0 license documentation.|
