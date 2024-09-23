@@ -41,7 +41,7 @@ const DateFormField = (props: DateFieldFormProps) => {
                   InputLabelProps: {
                     style: { fontSize: '14px' }, // Font size for label
                   },
-                  required: required ? true : undefined,
+                  required,
                 },
               }}
             />
