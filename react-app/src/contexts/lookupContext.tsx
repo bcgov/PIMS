@@ -20,7 +20,7 @@ export const LookupContextProvider: React.FC<React.PropsWithChildren> = (props) 
   const api = usePimsApi();
   const { data, loadOnce } = useDataLoader(api.lookup.getAll);
   const { keycloak } = useContext(AuthContext);
-  if (keycloak.isAuthenticated) {
+  if (!data && keycloak.isAuthenticated) {
     loadOnce();
   }
 

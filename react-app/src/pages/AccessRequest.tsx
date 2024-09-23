@@ -45,7 +45,7 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
   const lookup = useContext(LookupContext);
 
   const provider = useMemo(
-    () => getProvider(keycloak.user?.preferred_username, lookup?.data?.Config.bcscIdentifier),
+    () => getProvider(keycloak.user?.preferred_username, lookup?.data?.Config?.bcscIdentifier),
     [keycloak.user, lookup],
   );
 
