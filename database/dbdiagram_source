@@ -1,0 +1,1074 @@
+
+Enum "user_status_enum" {
+  "Active"
+  "OnHold"
+  "Denied"
+  "Disabled"
+}
+
+Table "administrative_area" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(150)" [not null]
+  "is_disabled" boolean [not null, default: false]
+  "sort_order" integer [not null, default: 0]
+  "regional_district_id" integer [not null]
+  "province_id" "character varying(2)" [not null]
+
+  Indexes {
+    (name, regional_district_id) [unique, name: "Unique_Name_RegionalDistrict"]
+    regional_district_id [type: btree, name: "IDX_0dcd54696b271aa4e57157b1a0"]
+    name [type: btree, name: "IDX_1168b78afbfc66f5585bc08d56"]
+    updated_by_id [type: btree, name: "IDX_cd4bb1adb34c60427aa6fb9b01"]
+    created_by_id [type: btree, name: "IDX_e22790c1fec0c30bad7b592629"]
+    province_id [type: btree, name: "IDX_fc1ddb0698607440db3c8d0f19"]
+    (is_disabled, name, sort_order) [type: btree, name: "IDX_fc733694343c53375cd9457b88"]
+  }
+}
+
+Table "regional_district" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "abbreviation" "character varying(5)" [not null]
+  "name" "character varying(250)" [not null]
+
+  Indexes {
+    created_by_id [type: btree, name: "IDX_3ddba73353dfbcdebaaa1b3ca4"]
+    name [type: btree, unique, name: "IDX_5ba4000f35f2c39629551c5719"]
+    id [type: btree, unique, name: "IDX_8f559368015c2e497eb1035865"]
+    updated_by_id [type: btree, name: "IDX_e3abaefeffbfbccf02c2e002b9"]
+  }
+}
+
+Table "agency" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(150)" [not null]
+  "is_disabled" boolean [not null, default: false]
+  "sort_order" integer [not null, default: 0]
+  "code" "character varying(6)" [not null]
+  "description" "character varying(500)"
+  "parent_id" integer
+  "email" "character varying(150)"
+  "send_email" boolean [not null]
+  "address_to" "character varying(100)"
+  "cc_email" "character varying(250)"
+
+  Indexes {
+    parent_id [type: btree, name: "IDX_23b82556fb4ce8b297ecc6fbd2"]
+    created_by_id [type: btree, name: "IDX_569f283ad3e3554d05546f4e8f"]
+    (parent_id, is_disabled, id, name, sort_order) [type: btree, name: "IDX_648ccf166d25060756fd37857a"]
+    updated_by_id [type: btree, name: "IDX_f8c26e85de62592cc814f595f6"]
+  }
+}
+
+Table "building" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(250)"
+  "description" "character varying(2000)"
+  "classification_id" integer [not null]
+  "agency_id" integer
+  "administrative_area_id" integer [not null]
+  "is_sensitive" boolean [not null]
+  "location" point [not null]
+  "project_numbers" "character varying(2000)"
+  "property_type_id" integer [not null]
+  "address1" "character varying(150)"
+  "address2" "character varying(150)"
+  "postal" "character varying(6)"
+  "building_construction_type_id" integer [not null]
+  "building_floor_count" integer [not null]
+  "building_predominate_use_id" integer [not null]
+  "building_tenancy" "character varying(450)" [not null]
+  "rentable_area" real [not null]
+  "building_occupant_type_id" integer
+  "building_tenancy_updated_on" timestamp
+  "total_area" real [not null]
+  "pid" integer
+  "pin" integer
+  "deleted_by_id" uuid
+  "deleted_on" timestamp
+
+  Indexes {
+    building_predominate_use_id [type: btree, name: "IDX_0f93ed5c4cf5415d931de93fdb"]
+    address1 [type: btree, name: "IDX_1c465b81adf20f297e365bd105"]
+    created_by_id [type: btree, name: "IDX_1ed11d5495c59844182bbce1de"]
+    administrative_area_id [type: btree, name: "IDX_580af6f55ba5b523c0acd94ba3"]
+    updated_by_id [type: btree, name: "IDX_5d6e2f281051cbfab6c1a44daf"]
+    agency_id [type: btree, name: "IDX_7bc4efff4a87f914556610a086"]
+    property_type_id [type: btree, name: "IDX_960fc6dc10158fd7207304bdd7"]
+    building_construction_type_id [type: btree, name: "IDX_9711428159396ff2b8a217a6ce"]
+    deleted_by_id [type: btree, name: "IDX_a345c1c202d8f2991eaf99cb95"]
+    (pid, pin) [type: btree, name: "IDX_cac35fff060f2e78760a4f77af"]
+    classification_id [type: btree, name: "IDX_f0ca4ff451c07ff2d3ee5df21e"]
+    building_occupant_type_id [type: btree, name: "IDX_f2f20f5727c0278f70ab5e07b4"]
+  }
+}
+
+Table "building_construction_type" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(150)" [not null]
+  "is_disabled" boolean [not null, default: false]
+  "sort_order" integer [not null, default: 0]
+
+  Indexes {
+    name [type: btree, unique, name: "IDX_1a95e64c71dce769afe1d98093"]
+    updated_by_id [type: btree, name: "IDX_53e376cb167a686b211ad33db2"]
+    (is_disabled, name, sort_order) [type: btree, name: "IDX_c7b46664f7177866ddcc55dd0a"]
+    created_by_id [type: btree, name: "IDX_c8152b400e5f86a3818e337767"]
+  }
+}
+
+Table "building_evaluation" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "evaluation_key_id" integer [not null]
+  "value" money [not null]
+  "note" "character varying(500)"
+  "building_id" integer [not null]
+  "year" integer [not null]
+  "deleted_by_id" uuid
+  "deleted_on" timestamp
+
+  Indexes {
+    (evaluation_key_id, building_id, year) [pk, name: "PK_090eb947e3bbea372f062ef177a"]
+    (building_id, evaluation_key_id, year) [type: btree, unique, name: "IDX_090eb947e3bbea372f062ef177"]
+    deleted_by_id [type: btree, name: "IDX_5fe7c6f34e75338fcb76e035aa"]
+    created_by_id [type: btree, name: "IDX_91143bf7f711746e64e8f3f2ff"]
+    updated_by_id [type: btree, name: "IDX_dc464a691f3891e5733d762fcc"]
+  }
+}
+
+Table "building_fiscal" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "fiscal_year" integer [not null]
+  "fiscal_key_id" integer [not null]
+  "value" money [not null]
+  "note" text
+  "effective_date" timestamp
+  "building_id" integer [not null]
+  "deleted_by_id" uuid
+  "deleted_on" timestamp
+
+  Indexes {
+    (fiscal_year, fiscal_key_id, building_id) [pk, name: "PK_6e83e6240639957159d530bd079"]
+    created_by_id [type: btree, name: "IDX_19d19a0a4bee7f4d9a6c52e67c"]
+    deleted_by_id [type: btree, name: "IDX_1f60805d1d7f61632a8fe96c06"]
+    (building_id, fiscal_key_id, fiscal_year) [type: btree, unique, name: "IDX_6e83e6240639957159d530bd07"]
+    updated_by_id [type: btree, name: "IDX_82b26695f0c669b4395fb17c83"]
+    building_id [type: btree, name: "IDX_f3a609a2fdf78b63f7bcd1e711"]
+    (fiscal_year, fiscal_key_id, value) [type: btree, name: "IDX_fe0580341ac6d08e41b950853f"]
+  }
+}
+
+Table "building_occupant_type" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(150)" [not null]
+  "is_disabled" boolean [not null, default: false]
+  "sort_order" integer [not null, default: 0]
+
+  Indexes {
+    name [type: btree, unique, name: "IDX_2ab5e2f818cbb677af0d31d4b2"]
+    (is_disabled, name, sort_order) [type: btree, name: "IDX_452a90da034d3278581a826fe8"]
+    updated_by_id [type: btree, name: "IDX_e2ac1690914f894013061cea7e"]
+    created_by_id [type: btree, name: "IDX_e6552d8d9810ab2393992116b9"]
+  }
+}
+
+Table "building_predominate_use" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(150)" [not null]
+  "is_disabled" boolean [not null, default: false]
+  "sort_order" integer [not null, default: 0]
+
+  Indexes {
+    created_by_id [type: btree, name: "IDX_27a9fe2e77b85db188ed99ea2e"]
+    (is_disabled, name, sort_order) [type: btree, name: "IDX_366080f87ea828610afb0e1187"]
+    name [type: btree, unique, name: "IDX_827d9672449abec225b6c6644f"]
+    updated_by_id [type: btree, name: "IDX_e8aa6bde9c039eca145986c3f2"]
+  }
+}
+
+Table "parcel" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(250)"
+  "description" "character varying(2000)"
+  "classification_id" integer [not null]
+  "agency_id" integer
+  "administrative_area_id" integer [not null]
+  "is_sensitive" boolean [not null]
+  "location" point [not null]
+  "project_numbers" "character varying(2000)"
+  "property_type_id" integer [not null]
+  "address1" "character varying(150)"
+  "address2" "character varying(150)"
+  "postal" "character varying(6)"
+  "pid" integer
+  "pin" integer
+  "land_area" real
+  "parent_parcel_id" integer
+  "deleted_by_id" uuid
+  "deleted_on" timestamp
+
+  Indexes {
+    classification_id [type: btree, name: "IDX_09adfe146690f677557f46a320"]
+    created_by_id [type: btree, name: "IDX_410f42e0f94fd968e01b261680"]
+    deleted_by_id [type: btree, name: "IDX_61efb0f98894cd15a04e39c3a5"]
+    property_type_id [type: btree, name: "IDX_8c6ae535000a51b32c74d9c42e"]
+    (pid, pin) [type: btree, unique, name: "IDX_b2b62506b1c247926530b027c8"]
+    agency_id [type: btree, name: "IDX_b3fa5fc2bbed7146cd89db29d0"]
+    address1 [type: btree, name: "IDX_b7f3f56f64d5cf60fec914aee4"]
+    administrative_area_id [type: btree, name: "IDX_cc0a228043caa2215db665e59d"]
+    updated_by_id [type: btree, name: "IDX_e01a2b76a025a47471d5d83acb"]
+  }
+}
+
+Table "evaluation_key" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(150)" [not null]
+  "description" text
+
+  Indexes {
+    updated_by_id [type: btree, name: "IDX_2010c82bdbcbbe2e79629c82cd"]
+    name [type: btree, unique, name: "IDX_3e2953243eb87aade9f3f2fa72"]
+    created_by_id [type: btree, name: "IDX_bfae971e5c8d56462fb32005e6"]
+  }
+}
+
+Table "fiscal_key" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(150)" [not null]
+  "description" text
+
+  Indexes {
+    updated_by_id [type: btree, name: "IDX_3b8980826ae9c52c2e0ac6ee19"]
+    created_by_id [type: btree, name: "IDX_9f8d89fd929d582d4061992be3"]
+    name [type: btree, unique, name: "IDX_a36b714f8cb03620e6e190f095"]
+  }
+}
+
+Table "import_result" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "deleted_by_id" uuid
+  "deleted_on" timestamp
+  "id" integer [pk, not null]
+  "file_name" "character varying(150)" [not null]
+  "completion_percentage" doubleprecision [not null]
+  "results" jsonb
+  "message" "character varying(250)"
+
+  Indexes {
+    deleted_by_id [type: btree, name: "IDX_1bd78dfd045e29e7a72294348b"]
+    updated_by_id [type: btree, name: "IDX_592428fdbb9d21f416df51d76e"]
+    created_by_id [type: btree, name: "IDX_cefeb78739fcfdfa3004358bf6"]
+  }
+}
+
+Table "project" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "project_number" "character varying(25)" [not null]
+  "name" "character varying(100)" [not null]
+  "manager" "character varying(150)"
+  "reported_fiscal_year" integer [not null]
+  "actual_fiscal_year" integer [not null]
+  "description" text
+  "submitted_on" timestamp
+  "approved_on" timestamp
+  "denied_on" timestamp
+  "cancelled_on" timestamp
+  "completed_on" timestamp
+  "net_book" money
+  "market" money
+  "assessed" money
+  "appraised" money
+  "project_type" integer [not null]
+  "agency_id" integer [not null]
+  "tier_level_id" integer [not null]
+  "status_id" integer [not null]
+  "risk_id" integer [not null]
+  "deleted_by_id" uuid
+  "deleted_on" timestamp
+
+  Indexes {
+    updated_by_id [type: btree, name: "IDX_1f3c2190a7a8185fb02bf1132c"]
+    agency_id [type: btree, name: "IDX_277e6a689fa67986b5a362afc5"]
+    project_number [type: btree, unique, name: "IDX_2efb7c8ec20aa59f7fbc733192"]
+    (status_id, tier_level_id, agency_id) [type: btree, name: "IDX_5d29806a012b84ac1d014c563d"]
+    status_id [type: btree, name: "IDX_625ed5469429a6b32e34ba9f82"]
+    deleted_by_id [type: btree, name: "IDX_630c1b0538706556482df8f78f"]
+    (assessed, net_book, market, reported_fiscal_year, actual_fiscal_year) [type: btree, name: "IDX_639b27f0bbee7ca7a0e7cd5448"]
+    tier_level_id [type: btree, name: "IDX_88df15c457daadc1d407c6d085"]
+    risk_id [type: btree, name: "IDX_88e7e918524b163ee8126dc352"]
+    created_by_id [type: btree, name: "IDX_e155d8f98ec858daa457d6ff29"]
+  }
+}
+
+Table "project_property" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "project_id" integer [not null]
+  "property_type_id" integer [not null]
+  "parcel_id" integer
+  "building_id" integer
+  "deleted_by_id" uuid
+  "deleted_on" timestamp
+
+  Indexes {
+    deleted_by_id [type: btree, name: "IDX_442b7a17c416ffba799aee942c"]
+    updated_by_id [type: btree, name: "IDX_73b7a8d25a602d1240570b3893"]
+    created_by_id [type: btree, name: "IDX_eb26a7d2ad7439e177705d720c"]
+    (project_id, property_type_id, parcel_id, building_id) [type: btree, unique, name: "IDX_ef992ea03a65f72e0b69644b35"]
+  }
+}
+
+Table "migrations" {
+  "id" integer [pk, not null]
+  "timestamp" bigint [not null]
+  "name" "character varying" [not null]
+}
+
+Table "monetary_type" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(150)" [not null]
+  "is_disabled" boolean [not null, default: false]
+  "sort_order" integer [not null, default: 0]
+  "description" text
+  "is_optional" boolean [not null]
+  "status_id" integer
+
+  Indexes {
+    updated_by_id [type: btree, name: "IDX_8055410ea4e6bc86d4ade304ca"]
+    created_by_id [type: btree, name: "IDX_efc68f2f9cd8b4e622385fb341"]
+  }
+}
+
+Table "note_type" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(150)" [not null]
+  "is_disabled" boolean [not null, default: false]
+  "sort_order" integer [not null, default: 0]
+  "description" text
+  "is_optional" boolean [not null]
+  "status_id" integer
+
+  Indexes {
+    created_by_id [type: btree, name: "IDX_19cd619aa65bfa46266b8f32d0"]
+    updated_by_id [type: btree, name: "IDX_c9cbd7b88773663747deab7f11"]
+  }
+}
+
+Table "notification_queue" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "key" uuid [not null]
+  "status" integer [not null]
+  "priority" "character varying(50)" [not null]
+  "encoding" "character varying(50)" [not null]
+  "send_on" timestamp [not null]
+  "to" "character varying(500)"
+  "subject" "character varying(200)" [not null]
+  "body_type" "character varying(50)" [not null]
+  "body" text [not null]
+  "bcc" "character varying(500)"
+  "cc" "character varying(500)"
+  "tag" "character varying(50)"
+  "project_id" integer
+  "to_agency_id" integer
+  "template_id" integer [not null]
+  "ches_message_id" uuid
+  "ches_transaction_id" uuid
+
+  Indexes {
+    key [type: btree, unique, name: "IDX_10f0a65d6bccc37357ac2c9f15"]
+    created_by_id [type: btree, name: "IDX_20e086e18f1fa5f73a2389322c"]
+    updated_by_id [type: btree, name: "IDX_40e432a3ee5a65fb0bb556da61"]
+    template_id [type: btree, name: "IDX_67a9fe6a893b69d0a42313823d"]
+    to_agency_id [type: btree, name: "IDX_c9230eab8c7df3197b3c96dcac"]
+    (status, send_on, subject) [type: btree, name: "IDX_d77fa485095da88b7154eed30f"]
+    (project_id, template_id, to_agency_id) [type: btree, name: "IDX_e96934a5a81124580dd628602f"]
+  }
+}
+
+Table "notification_template" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(100)" [not null]
+  "description" text
+  "to" "character varying(500)"
+  "cc" "character varying(500)"
+  "bcc" "character varying(500)"
+  "audience" "character varying(50)" [not null]
+  "encoding" "character varying(50)" [not null]
+  "body_type" "character varying(50)" [not null]
+  "priority" "character varying(50)" [not null]
+  "subject" "character varying(200)" [not null]
+  "body" text
+  "is_disabled" boolean [not null, default: false]
+  "tag" "character varying(50)"
+
+  Indexes {
+    name [type: btree, unique, name: "IDX_038d55f27e3be901c180231021"]
+    created_by_id [type: btree, name: "IDX_4dc5b45b62047720a59096c4bd"]
+    (is_disabled, tag) [type: btree, name: "IDX_57f0e8e414beb3cf529299baac"]
+    updated_by_id [type: btree, name: "IDX_a7ec48ed53543856eb2d46567f"]
+  }
+}
+
+Table "parcel_evaluation" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "evaluation_key_id" integer [not null]
+  "value" money [not null]
+  "note" "character varying(500)"
+  "parcel_id" integer [not null]
+  "firm" "character varying(150)"
+  "year" integer [not null]
+  "deleted_by_id" uuid
+  "deleted_on" timestamp
+
+  Indexes {
+    (evaluation_key_id, parcel_id, year) [pk, name: "PK_b9971cfcbe9942c6143859f5b23"]
+    updated_by_id [type: btree, name: "IDX_234593ee50cbf9abfa94ee0795"]
+    created_by_id [type: btree, name: "IDX_2ee7cde2dcf20d4f86a082e406"]
+    (parcel_id, evaluation_key_id, year) [type: btree, unique, name: "IDX_b9971cfcbe9942c6143859f5b2"]
+    deleted_by_id [type: btree, name: "IDX_c58500ccbc4fa5c2377b471bcb"]
+  }
+}
+
+Table "parcel_fiscal" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "fiscal_year" integer [not null]
+  "fiscal_key_id" integer [not null]
+  "value" money [not null]
+  "note" text
+  "effective_date" timestamp
+  "parcel_id" integer [not null]
+  "deleted_by_id" uuid
+  "deleted_on" timestamp
+
+  Indexes {
+    (fiscal_year, fiscal_key_id, parcel_id) [pk, name: "PK_ade0e22c63621acca45c8c01e97"]
+    parcel_id [type: btree, name: "IDX_5d4590cd556478419404746c62"]
+    deleted_by_id [type: btree, name: "IDX_61401b1577072b6c7b83789637"]
+    created_by_id [type: btree, name: "IDX_70d0118cd9e64ecdf1732c3f25"]
+    (parcel_id, fiscal_key_id, fiscal_year) [type: btree, unique, name: "IDX_ade0e22c63621acca45c8c01e9"]
+    updated_by_id [type: btree, name: "IDX_b653c60d544435aebf29876566"]
+    (fiscal_year, fiscal_key_id, value) [type: btree, name: "IDX_e2d34dd811e4cd9cfed3609ea4"]
+  }
+}
+
+Table "project_agency_response" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "project_id" integer [not null]
+  "agency_id" integer [not null]
+  "offer_amount" money [not null]
+  "notification_id" integer
+  "response" integer [not null]
+  "received_on" timestamp
+  "note" "character varying(2000)"
+  "deleted_by_id" uuid
+  "deleted_on" timestamp
+
+  Indexes {
+    (project_id, agency_id) [pk, name: "PK_a38ff3de87341ea4c3621718316"]
+    notification_id [type: btree, name: "IDX_67989daa98d90fafc2087a4871"]
+    created_by_id [type: btree, name: "IDX_966d432a7c743390d209311ce8"]
+    updated_by_id [type: btree, name: "IDX_cbadee06d37b5bce69bde3bb04"]
+    deleted_by_id [type: btree, name: "IDX_d412dc9a4eb5047cde9f40da2b"]
+  }
+}
+
+Table "project_status" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(150)" [not null]
+  "is_disabled" boolean [not null, default: false]
+  "sort_order" integer [not null, default: 0]
+  "code" "character varying(10)" [not null]
+  "group_name" "character varying(150)"
+  "description" text
+  "is_milestone" boolean [not null]
+  "is_terminal" boolean [not null]
+  "route" "character varying(150)" [not null]
+
+  Indexes {
+    created_by_id [type: btree, name: "IDX_1a4963e770586a37bc71cd6812"]
+    updated_by_id [type: btree, name: "IDX_a6787dc5773a2c00508bd7447a"]
+    (is_disabled, name, code, sort_order) [type: btree, name: "IDX_a8a6fd9f58d45d3dbafdd15df7"]
+    code [type: btree, unique, name: "IDX_bcea60c9fa0a2fb2be295f486a"]
+  }
+}
+
+Table "user" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" uuid [pk, not null, default: `public.uuid_generate_v4()`]
+  "username" "character varying(100)" [not null]
+  "display_name" "character varying(100)" [not null]
+  "first_name" "character varying(100)" [not null]
+  "middle_name" "character varying(100)"
+  "last_name" "character varying(100)" [not null]
+  "email" "character varying(100)" [not null]
+  "position" "character varying(100)"
+  "is_disabled" boolean [not null, default: false]
+  "note" "character varying(1000)"
+  "last_login" timestamp
+  "approved_by_id" uuid
+  "approved_on" timestamp
+  "keycloak_user_id" "character varying(36)"
+  "agency_id" integer
+  "role_id" uuid
+  "status" user_status_enum [not null]
+
+  Indexes {
+    username [type: btree, unique, name: "IDX_78a916df40e02a9deb1c4b75ed"]
+    updated_by_id [type: btree, name: "IDX_7a4f92de626d8dc4b05f06ad18"]
+    created_by_id [type: btree, name: "IDX_b489bba7c2e3d5afcd98a445ff"]
+    email [type: btree, name: "IDX_e12875dfb3b1d92d7d7c5377e2"]
+  }
+}
+
+Table "project_monetary" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "deleted_by_id" uuid
+  "deleted_on" timestamp
+  "project_id" integer [not null]
+  "monetary_type_id" integer [not null]
+  "value" money [not null]
+
+  Indexes {
+    (project_id, monetary_type_id) [pk, name: "PK_d249279221f79053fb210acfcd6"]
+    monetary_type_id [type: btree, name: "IDX_1b117750428b647ddeee7c4e9d"]
+    created_by_id [type: btree, name: "IDX_26febe43e239c3dab74733a1ba"]
+    updated_by_id [type: btree, name: "IDX_3deb4806da20a5808cce624c89"]
+    deleted_by_id [type: btree, name: "IDX_c50698267ecb0ac5fd0226807f"]
+    (project_id, monetary_type_id) [type: btree, name: "IDX_d249279221f79053fb210acfcd"]
+  }
+}
+
+Table "project_note" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "project_id" integer [not null]
+  "note_type_id" integer [not null]
+  "note" text [not null]
+  "deleted_by_id" uuid
+  "deleted_on" timestamp
+
+  Indexes {
+    (project_id, note_type_id) [type: btree, unique, name: "IDX_127297989432f659205b1bcf07"]
+    updated_by_id [type: btree, name: "IDX_5c97ebfe7fc9e35798f4c35d8d"]
+    deleted_by_id [type: btree, name: "IDX_87d5b2c320dc038878adbb076d"]
+    created_by_id [type: btree, name: "IDX_a17f12df1bc5e60eae251af496"]
+  }
+}
+
+Table "project_risk" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(150)" [not null]
+  "is_disabled" boolean [not null, default: false]
+  "sort_order" integer [not null, default: 0]
+  "code" "character varying(10)" [not null]
+  "description" text
+
+  Indexes {
+    created_by_id [type: btree, name: "IDX_0fef3b1927d70a2351896198f1"]
+    (is_disabled, code, name, sort_order) [type: btree, name: "IDX_138e9747c308d68098b566c694"]
+    updated_by_id [type: btree, name: "IDX_7c6ba99fa28bb16b97d1ba23ce"]
+    code [type: btree, unique, name: "IDX_b9311ff3ab23669eedd1a2555a"]
+  }
+}
+
+Table "project_snapshot" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [not null]
+  "project_id" integer [not null]
+  "net_book" money
+  "market" money
+  "assessed" money
+  "appraised" money
+  "snapshot_on" timestamp [not null]
+  "metadata" jsonb
+  "deleted_by_id" uuid
+  "deleted_on" timestamp
+
+  Indexes {
+    (id, project_id) [pk, name: "PK_11c05ea461c7e9692c5b574a8a3"]
+    project_id [type: btree, name: "IDX_14cd837fc8b02ea28804b11726"]
+    (project_id, snapshot_on) [type: btree, name: "IDX_2ce0294bdc697cf48bf8ffcf3b"]
+    deleted_by_id [type: btree, name: "IDX_55b09a1ddec71ad1563f6f3022"]
+    created_by_id [type: btree, name: "IDX_7c38c77099eb6d76d6f2c11256"]
+    updated_by_id [type: btree, name: "IDX_864fdfa6750198712f2a1408fd"]
+  }
+}
+
+Table "project_status_history" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "project_id" integer [not null]
+  "status_id" integer [not null]
+  "deleted_by_id" uuid
+  "deleted_on" timestamp
+
+  Indexes {
+    created_by_id [type: btree, name: "IDX_16a8fb80d030981173e9f504ae"]
+    project_id [type: btree, name: "IDX_19c81903135d9364ed8b7a7702"]
+    updated_by_id [type: btree, name: "IDX_1daea4319d2b27993ea9dc88f0"]
+    status_id [type: btree, name: "IDX_233b1e713d63e72c6c89c4b4de"]
+    deleted_by_id [type: btree, name: "IDX_929a243b8d5910df60770e49b7"]
+  }
+}
+
+Table "project_status_notification" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "template_id" integer [not null]
+  "from_status_id" integer
+  "to_status_id" integer [not null]
+  "priority" integer [not null]
+  "delay" integer [not null]
+  "delay_days" integer [not null]
+
+  Indexes {
+    to_status_id [type: btree, name: "IDX_0769683fbf02bf9fb98c738197"]
+    (from_status_id, to_status_id) [type: btree, name: "IDX_5032a293c8b1191a16535674d2"]
+    updated_by_id [type: btree, name: "IDX_5d8cf279a33236d7aa6c4f5fb1"]
+    template_id [type: btree, name: "IDX_69013a3480c643dca9fa4f1620"]
+    created_by_id [type: btree, name: "IDX_f32714f267de8c741bd8bf920d"]
+  }
+}
+
+Table "project_task" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "project_id" integer [not null]
+  "task_id" integer [not null]
+  "is_completed" boolean [not null]
+  "completed_on" timestamp
+  "deleted_by_id" uuid
+  "deleted_on" timestamp
+
+  Indexes {
+    (project_id, task_id) [pk, name: "PK_ee3383543ac39aba7c308896c36"]
+    task_id [type: btree, name: "IDX_0d1f118b6e098a4c1328087e15"]
+    created_by_id [type: btree, name: "IDX_89b7fe061e35b4030d50f5f17b"]
+    updated_by_id [type: btree, name: "IDX_8e76d803715aab45538108f4a3"]
+    (project_id, task_id, is_completed, completed_on) [type: btree, name: "IDX_b3506c61005b28d90cf07e7f7b"]
+    deleted_by_id [type: btree, name: "IDX_db57120403a2995d7a81b0ea47"]
+  }
+}
+
+Table "project_timestamp" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "deleted_by_id" uuid
+  "deleted_on" timestamp
+  "project_id" integer [not null]
+  "timestamp_type_id" integer [not null]
+  "date" timestamp [not null, default: `now()`]
+
+  Indexes {
+    (project_id, timestamp_type_id) [pk, name: "PK_1f0cef6f1e6e37c76af8a8fb403"]
+    (project_id, timestamp_type_id) [type: btree, name: "IDX_1f0cef6f1e6e37c76af8a8fb40"]
+    timestamp_type_id [type: btree, name: "IDX_2def9d21e2e8521257a099837d"]
+    created_by_id [type: btree, name: "IDX_6a09afddbf4e75214fbe9b6cba"]
+    deleted_by_id [type: btree, name: "IDX_a9f2371a58642410b9ebbf0bda"]
+    updated_by_id [type: btree, name: "IDX_e04a1a937c4d488f413121bc0a"]
+  }
+}
+
+Table "project_type" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(20)" [not null]
+  "description" text
+  "is_disabled" boolean [not null, default: false]
+  "sort_order" integer [not null, default: 0]
+
+  Indexes {
+    updated_by_id [type: btree, name: "IDX_3e8bbe420553301d54cfef015b"]
+    created_by_id [type: btree, name: "IDX_7207dbe80e3fc3d260218ffe83"]
+    (is_disabled, name, sort_order) [type: btree, name: "IDX_830992b7a8654c0a800c21b00f"]
+    name [type: btree, unique, name: "IDX_f6db5b55dec8b2b8a0644b1356"]
+  }
+}
+
+Table "property_classification" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(150)" [not null]
+  "is_disabled" boolean [not null, default: false]
+  "sort_order" integer [not null, default: 0]
+  "is_visible" boolean [not null]
+
+  Indexes {
+    created_by_id [type: btree, name: "IDX_5b4d66c3d218034835d800adfa"]
+    name [type: btree, unique, name: "IDX_6080d971d67614de3522306f92"]
+    (is_disabled, name) [type: btree, name: "IDX_90fc9924f1694d2c295e12930c"]
+    updated_by_id [type: btree, name: "IDX_deb531ed58a26114a6642aa2b6"]
+  }
+}
+
+Table "property_type" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(150)" [not null]
+  "is_disabled" boolean [not null, default: false]
+  "sort_order" integer [not null, default: 0]
+
+  Indexes {
+    (is_disabled, name, sort_order) [type: btree, name: "IDX_01d56109ac04623016986a6817"]
+    created_by_id [type: btree, name: "IDX_6d5f92c30de69aa1adb5791aad"]
+    name [type: btree, unique, name: "IDX_7eaccd6dd29d1f98656747edaa"]
+    updated_by_id [type: btree, name: "IDX_d10713cc1cae6c1b61d583e5b3"]
+  }
+}
+
+Table "province" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" "character varying(2)" [pk, not null]
+  "name" "character varying(100)" [not null]
+
+  Indexes {
+    name [type: btree, unique, name: "IDX_aa290c4049a8aa685a81483389"]
+    created_by_id [type: btree, name: "IDX_bf027ec58e46c9e7305ffe69c7"]
+    updated_by_id [type: btree, name: "IDX_f53030d58e4d56d86ba5d63ef2"]
+  }
+}
+
+Table "report_type" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(20)" [not null]
+  "description" text
+  "is_disabled" boolean [not null, default: false]
+  "sort_order" integer [not null, default: 0]
+
+  Indexes {
+    (is_disabled, name, sort_order) [type: btree, name: "IDX_14f5de982c6b5936636e891b34"]
+    created_by_id [type: btree, name: "IDX_27db897b6d4c78ab7293341de0"]
+    name [type: btree, unique, name: "IDX_9aeb09a7a15aeab95ef88e9749"]
+    updated_by_id [type: btree, name: "IDX_e265553eb6e8301b6a298c7819"]
+  }
+}
+
+Table "role" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" uuid [pk, not null]
+  "name" "character varying(100)" [not null]
+  "is_disabled" boolean [not null, default: false]
+  "sort_order" integer [not null, default: 0]
+  "description" text
+
+  Indexes {
+    updated_by_id [type: btree, name: "IDX_41385dfda73d56633540689874"]
+    (is_disabled, name) [type: btree, name: "IDX_81ede2167f3239ec87e479fb70"]
+    name [type: btree, unique, name: "IDX_ae4578dcaed5adff96595e6166"]
+    created_by_id [type: btree, name: "IDX_db92db78f9478b3e2fea19934b"]
+  }
+}
+
+Table "task" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(150)" [not null]
+  "is_disabled" boolean [not null, default: false]
+  "sort_order" integer [not null, default: 0]
+  "description" text
+  "is_optional" boolean [not null]
+  "status_id" integer [not null]
+
+  Indexes {
+    updated_by_id [type: btree, name: "IDX_6d7d7ec563d82168d4741e947d"]
+    created_by_id [type: btree, name: "IDX_8c02c2c774eff4192dd44533db"]
+    (is_disabled, is_optional, name, sort_order) [type: btree, name: "IDX_a1a5a88a8fb4465f95934e6963"]
+  }
+}
+
+Table "tier_level" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(150)" [not null]
+  "is_disabled" boolean [not null, default: false]
+  "sort_order" integer [not null, default: 0]
+  "description" text
+
+  Indexes {
+    updated_by_id [type: btree, name: "IDX_08ffdc9ae6ae6ca124ae9db94c"]
+    name [type: btree, unique, name: "IDX_48548d2c7f9f6854f5e85f98ce"]
+    created_by_id [type: btree, name: "IDX_5a547391ad4ddc81704f13e4b7"]
+    (is_disabled, name, sort_order) [type: btree, name: "IDX_f85ac9b25814234deabdb943ea"]
+  }
+}
+
+Table "timestamp_type" {
+  "created_by_id" uuid [not null]
+  "created_on" timestamp [not null, default: `now()`]
+  "updated_by_id" uuid
+  "updated_on" timestamp [default: `now()`]
+  "id" integer [pk, not null]
+  "name" "character varying(150)" [not null]
+  "is_disabled" boolean [not null, default: false]
+  "sort_order" integer [not null, default: 0]
+  "description" text
+  "is_optional" boolean [not null]
+  "status_id" integer
+
+  Indexes {
+    updated_by_id [type: btree, name: "IDX_5ff99bd5ebd96101df9985109c"]
+    created_by_id [type: btree, name: "IDX_7bc210d8f6a044f296001bd2f7"]
+  }
+}
+
+Table "typeorm_metadata" {
+  "type" "character varying" [not null]
+  "database" "character varying"
+  "schema" "character varying"
+  "table" "character varying"
+  "name" "character varying"
+  "value" text
+}
+
+Ref "FK_041db0fa9bb4e3daeead3fce0d0":"user"."id" < "user"."approved_by_id"
+
+Ref "FK_0769683fbf02bf9fb98c7381976":"project_status"."id" < "project_status_notification"."to_status_id"
+
+Ref "FK_0769683fbf02bf9fb98c7381977":"project_type"."id" < "project"."project_type"
+
+Ref "FK_09adfe146690f677557f46a320a":"property_classification"."id" < "parcel"."classification_id"
+
+Ref "FK_0bb884103bb59b61950f2e8c775":"project"."id" < "project_note"."project_id"
+
+Ref "FK_0d1f118b6e098a4c1328087e156":"task"."id" < "project_task"."task_id"
+
+Ref "FK_0dcd54696b271aa4e57157b1a05":"regional_district"."id" < "administrative_area"."regional_district_id"
+
+Ref "FK_0f93ed5c4cf5415d931de93fdba":"building_predominate_use"."id" < "building"."building_predominate_use_id"
+
+Ref "FK_14cd837fc8b02ea28804b11726e":"project"."id" < "project_snapshot"."project_id"
+
+Ref "FK_19c81903135d9364ed8b7a77025":"project"."id" < "project_status_history"."project_id"
+
+Ref "FK_1a10ab8832932376cb894029eb5":"project"."id" < "project_agency_response"."project_id"
+
+Ref "FK_1b117750428b647ddeee7c4e9d9":"monetary_type"."id" < "project_monetary"."monetary_type_id"
+
+Ref "FK_233b1e713d63e72c6c89c4b4de5":"project_status"."id" < "project_status_history"."status_id"
+
+Ref "FK_23b82556fb4ce8b297ecc6fbd2f":"agency"."id" < "agency"."parent_id"
+
+Ref "FK_2513fc05ae51fb2622da2afbfbe":"parcel"."id" < "parcel_evaluation"."parcel_id"
+
+Ref "FK_26ac76828733650fb31ab6219a4":"fiscal_key"."id" < "building_fiscal"."fiscal_key_id"
+
+Ref "FK_277e6a689fa67986b5a362afc50":"agency"."id" < "project"."agency_id"
+
+Ref "FK_2def9d21e2e8521257a099837d9":"timestamp_type"."id" < "project_timestamp"."timestamp_type_id"
+
+Ref "FK_3d91b19ac990796308b18b13448":"evaluation_key"."id" < "building_evaluation"."evaluation_key_id"
+
+Ref "FK_477c15f5a096a5bb355af60d4fc":"agency"."id" < "project_agency_response"."agency_id"
+
+Ref "FK_580af6f55ba5b523c0acd94ba3f":"administrative_area"."id" < "building"."administrative_area_id"
+
+Ref "FK_59df22206d4030745ec1e7b34f0":"project_status"."id" < "timestamp_type"."status_id"
+
+Ref "FK_5d4590cd556478419404746c62c":"parcel"."id" < "parcel_fiscal"."parcel_id"
+
+Ref "FK_625ed5469429a6b32e34ba9f827":"project_status"."id" < "project"."status_id"
+
+Ref "FK_63b900914608619d1fb8b590d53":"project_status"."id" < "note_type"."status_id"
+
+Ref "FK_67989daa98d90fafc2087a4871f":"notification_queue"."id" < "project_agency_response"."notification_id"
+
+Ref "FK_67a9fe6a893b69d0a42313823d5":"notification_template"."id" < "notification_queue"."template_id"
+
+Ref "FK_69013a3480c643dca9fa4f16208":"notification_template"."id" < "project_status_notification"."template_id"
+
+Ref "FK_70c41bad8c4b2510f958f6b9f47":"project"."id" < "project_task"."project_id"
+
+Ref "FK_71380cf2acd3dfe2c16b4eab549":"note_type"."id" < "project_note"."note_type_id"
+
+Ref "FK_76ec567663722804c15dfc90500":"project"."id" < "project_timestamp"."project_id"
+
+Ref "FK_7b7d7ba7b7dd4a2d81f946bf404":"project"."id" < "project_property"."project_id"
+
+Ref "FK_7bc4efff4a87f914556610a086b":"agency"."id" < "building"."agency_id"
+
+Ref "FK_88df15c457daadc1d407c6d085f":"tier_level"."id" < "project"."tier_level_id"
+
+Ref "FK_88e7e918524b163ee8126dc352e":"project_risk"."id" < "project"."risk_id"
+
+Ref "FK_8988a5dafec2270a5191a1208cd":"project"."id" < "notification_queue"."project_id"
+
+Ref "FK_8c6ae535000a51b32c74d9c42e4":"property_type"."id" < "parcel"."property_type_id"
+
+Ref "FK_960fc6dc10158fd7207304bdd72":"property_type"."id" < "building"."property_type_id"
+
+Ref "FK_9711428159396ff2b8a217a6ceb":"building_construction_type"."id" < "building"."building_construction_type_id"
+
+Ref "FK_9720341fe17e4c22decf0a0b87f":"parcel"."id" < "parcel"."parent_parcel_id"
+
+Ref "FK_accddef78fe2622ad866935f680":"evaluation_key"."id" < "parcel_evaluation"."evaluation_key_id"
+
+Ref "FK_b2229cb8dfee8d1c2fe6b78bd91":"parcel"."id" < "project_property"."parcel_id"
+
+Ref "FK_b3fa5fc2bbed7146cd89db29d0a":"agency"."id" < "parcel"."agency_id"
+
+Ref "FK_b8747cc6a41b6cef4639babf61d":"project_status"."id" < "task"."status_id"
+
+Ref "FK_c573cd000d64cc192f58ad876b7":"project_status"."id" < "project_status_notification"."from_status_id"
+
+Ref "FK_c9230eab8c7df3197b3c96dcac6":"agency"."id" < "notification_queue"."to_agency_id"
+
+Ref "FK_cc0a228043caa2215db665e59d6":"administrative_area"."id" < "parcel"."administrative_area_id"
+
+Ref "FK_d18ff54ded63e964ef42a66880e":"building"."id" < "project_property"."building_id"
+
+Ref "FK_d8515ff4753e4f2e99f69c59c87":"building"."id" < "building_evaluation"."building_id"
+
+Ref "FK_da38a07feb5a323fd8e5e3a232e":"agency"."id" < "user"."agency_id"
+
+Ref "FK_e23d09b23eda6954d6099f882a8":"project"."id" < "project_monetary"."project_id"
+
+Ref "FK_e91ca497fe9b59fd1e243a2fa14":"property_type"."id" < "project_property"."property_type_id"
+
+Ref "FK_f0ca4ff451c07ff2d3ee5df21e9":"property_classification"."id" < "building"."classification_id"
+
+Ref "FK_f2f20f5727c0278f70ab5e07b44":"building_occupant_type"."id" < "building"."building_occupant_type_id"
+
+Ref "FK_f3a609a2fdf78b63f7bcd1e711c":"building"."id" < "building_fiscal"."building_id"
+
+Ref "FK_fa074bf858029b45c196bfc893e":"project_status"."id" < "monetary_type"."status_id"
+
+Ref "FK_fb2e442d14add3cefbdf33c4561":"role"."id" < "user"."role_id"
+
+Ref "FK_fc1ddb0698607440db3c8d0f199":"province"."id" < "administrative_area"."province_id"
+
+Ref "FK_fdb1a5247fd67190ff654a7475b":"fiscal_key"."id" < "parcel_fiscal"."fiscal_key_id"
