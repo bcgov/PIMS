@@ -17,7 +17,7 @@ NC='\033[0m' # No Color
 # If the recommended name argument was missing, run commands with default name.
 function missing_name {
   echo "${RED}WARNING: Missing argument for migration name.${NC} Using default name 'migration'.";
-  if [ $1 -eq "create" ]
+  if [ $1 = "create" ]
   then
     npm run typeorm -- migration:$1 ./src/typeorm/migrations/migration
   else
