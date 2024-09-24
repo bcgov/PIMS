@@ -212,6 +212,9 @@ const addUser = async (user: User) => {
   if (resource) {
     throw new ErrorWithCode('Resource already exists.', 409);
   }
+  if (!validateEmail(user.Email)) {
+    throw new Error('Invalid email.');
+  }
   const retUser = await AppDataSource.getRepository(User).save(user);
   return retUser;
 };
@@ -226,6 +229,9 @@ const updateUser = async (user: DeepPartial<User>) => {
   const resource = await AppDataSource.getRepository(User).findOne({ where: { Id: user.Id } });
   if (!resource) {
     throw new ErrorWithCode('Resource does not exist.', 404);
+  }
+  if (user.Email && !validateEmail(user.Email)) {
+    throw new Error('Invalid email.');
   }
   await AppDataSource.getRepository(User).update(user.Id, {
     ...user,
