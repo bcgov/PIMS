@@ -18,6 +18,7 @@ import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { Role, Roles } from '@/constants/roles';
 import { LookupContext } from '@/contexts/lookupContext';
 import { getProvider } from '@/utilities/helperFunctions';
+import { z } from 'zod';
 
 interface IUserDetail {
   onClose: () => void;
@@ -179,7 +180,16 @@ const UserDetail = ({ onClose }: IUserDetail) => {
               <TextFormField fullWidth name={'Provider'} label={'Provider'} disabled />
             </Grid>
             <Grid item xs={6}>
-              <TextFormField required fullWidth name={'Email'} label={'Email'} />
+              <TextFormField
+                required
+                fullWidth
+                name={'Email'}
+                label={'Email'}
+                rules={{
+                  validate: (value: string) =>
+                    z.string().email().safeParse(value).success || 'Invalid email.',
+                }}
+              />
             </Grid>
             <Grid item xs={6}>
               <TextFormField required fullWidth name={'FirstName'} label={'First Name'} />

@@ -19,6 +19,7 @@ import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 import { LookupContext } from '@/contexts/lookupContext';
 import { getProvider } from '@/utilities/helperFunctions';
+import z from 'zod';
 
 interface StatusPageTemplateProps {
   blurb: JSX.Element;
@@ -49,12 +50,14 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
     [keycloak.user, lookup],
   );
 
+  const userIsIdir = provider === 'IDIR';
+
   const formMethods = useForm({
     defaultValues: {
       Provider: provider,
-      FirstName: keycloak.user?.first_name,
-      LastName: keycloak.user?.last_name,
-      Email: keycloak.user?.email,
+      FirstName: keycloak.user?.first_name || '',
+      LastName: keycloak.user?.last_name || '',
+      Email: userIsIdir ? keycloak.user?.email : '',
       Notes: '',
       Agency: '',
       Position: '',
@@ -66,7 +69,7 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
       Provider: provider,
       FirstName: keycloak.user?.first_name || '',
       LastName: keycloak.user?.last_name || '',
-      Email: keycloak.user?.email || '',
+      Email: userIsIdir ? keycloak.user?.email : '',
       Notes: '',
       Agency: '',
       Position: '',
@@ -81,13 +84,23 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
             <TextFormField fullWidth name={'Provider'} label={'Provider'} disabled />
           </Grid>
           <Grid item xs={6}>
-            <TextFormField fullWidth name={'Email'} label={'Email'} disabled />
+            <TextFormField
+              fullWidth
+              name={'Email'}
+              label={'Email'}
+              disabled={userIsIdir}
+              required
+              rules={{
+                validate: (value: string) =>
+                  z.string().email().safeParse(value).success || 'Invalid email.',
+              }}
+            />
           </Grid>
           <Grid item xs={6}>
-            <TextFormField fullWidth name={'FirstName'} label={'First name'} disabled />
+            <TextFormField fullWidth name={'FirstName'} label={'First name'} disabled required />
           </Grid>
           <Grid item xs={6}>
-            <TextFormField name={'LastName'} fullWidth label={'Last name'} disabled />
+            <TextFormField name={'LastName'} fullWidth label={'Last name'} disabled required />
           </Grid>
           <Grid item xs={12}>
             <AutocompleteFormField
