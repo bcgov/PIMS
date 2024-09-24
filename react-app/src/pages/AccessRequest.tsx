@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo } from 'react';
 import pendingImage from '@/assets/images/pending.svg';
-import { Box, Button, Grid, Paper, Typography } from '@mui/material';
+import { Box, Button, Grid, Paper, Tooltip, Typography, useTheme } from '@mui/material';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -19,6 +19,7 @@ import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 import { LookupContext } from '@/contexts/lookupContext';
 import { getProvider, validateEmail } from '@/utilities/helperFunctions';
+import InfoIcon from '@mui/icons-material/Info';
 
 interface StatusPageTemplateProps {
   blurb: JSX.Element;
@@ -43,6 +44,7 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
   const keycloak = useSSO();
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
   const lookup = useContext(LookupContext);
+  const theme = useTheme();
 
   const provider = useMemo(
     () => getProvider(keycloak.user?.preferred_username, lookup?.data?.Config.bcscIdentifier),
@@ -91,6 +93,15 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
               required
               rules={{
                 validate: (value: string) => validateEmail(value) || 'Invalid email.',
+              }}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <Tooltip title="Avoid entering personal emails">
+                      <InfoIcon fontSize="small" sx={{ color: theme.palette.grey[500] }} />
+                    </Tooltip>
+                  ),
+                },
               }}
             />
           </Grid>
