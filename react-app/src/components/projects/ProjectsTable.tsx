@@ -108,6 +108,17 @@ const ProjectsTable = () => {
       case 'All Projects':
         ref.current.setFilterModel({ items: [] });
         break;
+      case 'SPL Projects':
+        ref.current.setFilterModel({
+          items: [
+            {
+              value: ['Approved for SPL', 'Contract in Place', 'On Market', 'Pre-Marketing'],
+              field: 'Status',
+              operator: 'isAnyOf',
+            },
+          ],
+        });
+        break;
       case 'Approved for SPL':
       case 'Contract in Place':
       case 'On Market':
@@ -235,7 +246,9 @@ const ProjectsTable = () => {
           <CustomMenuItem key={'All Projects'} value={'All Projects'}>
             All Projects
           </CustomMenuItem>,
-          <CustomListSubheader key={'SPL Projects'}>SPL Projects</CustomListSubheader>,
+          <CustomMenuItem key={'SPL Projects'} value={'SPL Projects'} sx={{ fontWeight: 'bold' }}>
+            SPL Projects
+          </CustomMenuItem>,
           <CustomMenuItem key={'Approved for SPL'} value={'Approved for SPL'}>
             Approved for SPL
           </CustomMenuItem>,
