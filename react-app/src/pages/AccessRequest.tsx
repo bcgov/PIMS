@@ -18,8 +18,7 @@ import TextFormField from '@/components/form/TextFormField';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 import { LookupContext } from '@/contexts/lookupContext';
-import { getProvider } from '@/utilities/helperFunctions';
-import z from 'zod';
+import { getProvider, validateEmail } from '@/utilities/helperFunctions';
 
 interface StatusPageTemplateProps {
   blurb: JSX.Element;
@@ -91,8 +90,7 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
               disabled={userIsIdir}
               required
               rules={{
-                validate: (value: string) =>
-                  z.string().email().safeParse(value).success || 'Invalid email.',
+                validate: (value: string) => validateEmail(value) || 'Invalid email.',
               }}
             />
           </Grid>

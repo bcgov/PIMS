@@ -17,8 +17,7 @@ import { useParams } from 'react-router-dom';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { Role, Roles } from '@/constants/roles';
 import { LookupContext } from '@/contexts/lookupContext';
-import { getProvider } from '@/utilities/helperFunctions';
-import { z } from 'zod';
+import { getProvider, validateEmail } from '@/utilities/helperFunctions';
 
 interface IUserDetail {
   onClose: () => void;
@@ -186,8 +185,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
                 name={'Email'}
                 label={'Email'}
                 rules={{
-                  validate: (value: string) =>
-                    z.string().email().safeParse(value).success || 'Invalid email.',
+                  validate: (value: string) => validateEmail(value) || 'Invalid email.',
                 }}
               />
             </Grid>
