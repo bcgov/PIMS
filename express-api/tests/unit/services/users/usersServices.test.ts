@@ -108,7 +108,13 @@ describe('UNIT - User services', () => {
     it('should add and return an access request', async () => {
       const agencyId = faker.number.int();
       //const roleId = faker.string.uuid();
-      const req = await userServices.addKeycloakUserOnHold(ssoUser, agencyId, '', '');
+      const req = await userServices.addKeycloakUserOnHold(
+        ssoUser,
+        agencyId,
+        '',
+        '',
+        'email@email.com',
+      );
       expect(_usersInsert).toHaveBeenCalledTimes(1);
     });
   });
