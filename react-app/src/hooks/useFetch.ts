@@ -24,7 +24,7 @@ export interface IFetch {
  * @returns
  */
 const useFetch = (baseUrl?: string) => {
-  const keycloak = useSSO();
+  const sso = useSSO();
 
   return useMemo(() => {
     const absoluteFetch = async (url: string, params?: RequestInit): Promise<FetchResponse> => {
@@ -32,7 +32,7 @@ const useFetch = (baseUrl?: string) => {
 
       params = {
         headers: {
-          Authorization: keycloak.getAuthorizationHeaderValue(),
+          Authorization: sso.getAuthorizationHeaderValue(),
           'Content-Type': 'application/json',
         },
         ...params,
@@ -49,10 +49,11 @@ const useFetch = (baseUrl?: string) => {
       }
 
       // If token has expired
-      if (response.status === 401) {
-        const currentLocation = window.location.pathname;
-        keycloak.login({ postLoginRedirectURL: currentLocation + window.location.search });
-      }
+      // TODO: Uncomment when bug is solved
+      // if (response.status === 401) {
+      //   const currentLocation = window.location.pathname;
+      //   sso.login({ postLoginRedirectURL: currentLocation + window.location.search });
+      // }
 
       const text = await response.text();
       if (text.length) {
@@ -105,7 +106,7 @@ const useFetch = (baseUrl?: string) => {
       post,
       del,
     };
-  }, [baseUrl, keycloak]);
+  }, [baseUrl, sso]);
 };
 
 export default useFetch;

@@ -1,5 +1,6 @@
 import { Roles } from '@/constants/roles';
-import { AuthContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/authContext';
+import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { CircularProgress, Paper, Typography } from '@mui/material';
 import { PropsWithChildren, useContext, useEffect, useRef } from 'react';
 import React from 'react';
@@ -18,11 +19,12 @@ export interface AuthGuardProps extends PropsWithChildren {
  */
 const AuthRouteGuard = (props: AuthGuardProps) => {
   const { permittedRoles, redirectRoute, ignoreStatus } = props;
-  const authStateContext = useContext(AuthContext);
+  const authStateContext = useContext(UserContext);
+  const sso = useSSO();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (authStateContext.keycloak.isAuthenticated) {
+    if (sso.isAuthenticated) {
       if (timeoutId.current) {
         clearTimeout(timeoutId.current);
         timeoutId.current = null;
@@ -41,7 +43,7 @@ const AuthRouteGuard = (props: AuthGuardProps) => {
     } else {
       timeoutId.current = setTimeout(
         () =>
-          authStateContext.keycloak.login({
+          sso.login({
             postLoginRedirectURL: window.location.pathname + window.location.search,
           }),
         5000,
@@ -53,13 +55,9 @@ const AuthRouteGuard = (props: AuthGuardProps) => {
         clearTimeout(timeoutId.current);
       }
     };
-  }, [
-    authStateContext.pimsUser?.isLoading,
-    authStateContext.keycloak.isLoggingIn,
-    authStateContext.keycloak.isAuthenticated,
-  ]);
+  }, [authStateContext.pimsUser?.isLoading, sso.isLoggingIn, sso.isAuthenticated]);
   const timeoutId = useRef(null);
-  if (!authStateContext.keycloak.isAuthenticated) {
+  if (!sso.isAuthenticated) {
     return (
       <Paper
         sx={{

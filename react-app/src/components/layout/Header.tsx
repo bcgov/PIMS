@@ -15,7 +15,7 @@ import {
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { Roles } from '@/constants/roles';
-import { AuthContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/authContext';
 
 const AppBrand = () => {
   const theme = useTheme();
@@ -61,7 +61,7 @@ const AppBrand = () => {
 };
 
 const Header: React.FC = () => {
-  const auth = useContext(AuthContext);
+  const auth = useContext(UserContext);
   const { logout, isAuthenticated, login } = useSSO();
   const theme = useTheme();
   const navigate = useNavigate();

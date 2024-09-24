@@ -43,7 +43,7 @@ import { enumReverseLookup } from '@/utilities/helperFunctions';
 import { AgencyResponseType } from '@/constants/agencyResponseTypes';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { Roles } from '@/constants/roles';
-import { AuthContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/authContext';
 import { ExpandMoreOutlined } from '@mui/icons-material';
 import { columnNameFormatter, dateFormatter, formatMoney } from '@/utilities/formatters';
 import { LookupContext } from '@/contexts/lookupContext';
@@ -71,7 +71,7 @@ interface ProjectInfo extends Project {
 const ProjectDetail = (props: IProjectDetail) => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { pimsUser } = useContext(AuthContext);
+  const { pimsUser } = useContext(UserContext);
   const lookup = useContext(LookupContext);
   const api = usePimsApi();
   const { data: lookupData, getLookupValueById } = useContext(LookupContext);

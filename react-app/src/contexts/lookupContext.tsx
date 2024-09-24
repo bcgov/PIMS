@@ -1,8 +1,8 @@
-import { AuthContext } from '@/contexts/authContext';
 import { LookupAll } from '@/hooks/api/useLookupApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
-import React, { createContext, useCallback, useContext, useMemo } from 'react';
+import { useSSO } from '@bcgov/citz-imb-sso-react';
+import React, { createContext, useCallback, useMemo } from 'react';
 
 type LookupContextValue = {
   data: LookupAll | undefined;
@@ -19,8 +19,8 @@ export const LookupContext = createContext<LookupContextValue>(undefined);
 export const LookupContextProvider: React.FC<React.PropsWithChildren> = (props) => {
   const api = usePimsApi();
   const { data, loadOnce } = useDataLoader(api.lookup.getAll);
-  const { keycloak } = useContext(AuthContext);
-  if (!data && keycloak.isAuthenticated) {
+  const sso = useSSO();
+  if (!data && sso.isAuthenticated) {
     loadOnce();
   }
 

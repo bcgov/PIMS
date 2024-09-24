@@ -88,7 +88,7 @@ export interface PropertyId {
 const usePropertiesApi = (absoluteFetch: IFetch) => {
   // const config = useContext(ConfigContext);
   const config = getConfig();
-  const keycloak = useSSO();
+  const sso = useSSO();
 
   const propertiesFuzzySearch = async (keyword: string) => {
     const { parsedBody } = await absoluteFetch.get('/properties/search/fuzzy', {
@@ -167,7 +167,7 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
     const result = await fetch(config.API_HOST + '/properties/import', {
       method: 'POST',
       body: form, //Using standard fetch here instead of the wrapper so that we can handle this form-data body without converting to JSON.
-      headers: { Authorization: keycloak.getAuthorizationHeaderValue() },
+      headers: { Authorization: sso.getAuthorizationHeaderValue() },
       signal: AbortSignal.timeout(5000),
     });
     const text = await result.text();
