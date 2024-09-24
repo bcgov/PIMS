@@ -6,6 +6,7 @@ import { Agency } from '@/typeorm/Entities/Agency';
 import { randomUUID, UUID } from 'crypto';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { UserFiltering } from '@/controllers/users/usersSchema';
+import { validateEmail } from '@/utilities/helperFunctions';
 
 interface NormalizedKeycloakUser {
   first_name: string;
@@ -54,9 +55,13 @@ const addKeycloakUserOnHold = async (
   agencyId: number,
   position: string,
   note: string,
+  email: string,
 ) => {
   if (agencyId == null) {
     throw new Error('Null argument.');
+  }
+  if (!validateEmail(email)) {
+    throw new Error('Invalid email.');
   }
   //Iterating through agencies and roles no longer necessary here?
   const normalizedKc = normalizeKeycloakUser(ssoUser);
