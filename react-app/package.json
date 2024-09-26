@@ -37,8 +37,8 @@
     "react-router-dom": "6.26.0",
     "supercluster": "8.0.1",
     "use-supercluster": "1.2.0",
-    "zod": "3.23.8"
-    "typescript-eslint": "8.7.0",
+    "zod": "3.23.8",
+    "typescript-eslint": "8.7.0"
   },
   "devDependencies": {
     "@babel/preset-env": "7.25.2",
