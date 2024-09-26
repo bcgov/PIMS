@@ -48,6 +48,7 @@ const normalizeKeycloakUser = (kcUser: SSOUser): NormalizedKeycloakUser => {
  * @param agencyId The ID of the agency the user belongs to
  * @param position The position of the user
  * @param note Additional notes about the user
+ * @param the users email
  * @returns The inserted user
  */
 const addKeycloakUserOnHold = async (
@@ -73,7 +74,7 @@ const addKeycloakUserOnHold = async (
     Id: id,
     FirstName: normalizedKc.first_name,
     LastName: normalizedKc.last_name,
-    Email: normalizedKc.email,
+    Email: email,
     DisplayName: normalizedKc.display_name,
     KeycloakUserId: normalizedKc.guid,
     Username: normalizedKc.username,
