@@ -27,7 +27,7 @@ import ProjectNotificationsTable from './ProjectNotificationsTable';
 import { getStatusString } from '@/constants/chesNotificationStatus';
 import { MonetaryType } from '@/constants/monetaryTypes';
 import AutocompleteFormField from '../form/AutocompleteFormField';
-import { UserContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/userContext';
 import { Roles } from '@/constants/roles';
 import BaseDialog from '../dialog/BaseDialog';
 import { NotificationQueue } from '@/hooks/api/useProjectNotificationApi';

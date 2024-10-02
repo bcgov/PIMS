@@ -5,7 +5,7 @@ import '@/App.css';
 import { ThemeProvider } from '@emotion/react';
 import appTheme from './themes/appTheme';
 import Dev from './pages/DevZone';
-import UserContextProvider, { UserContext } from './contexts/authContext';
+import UserContextProvider, { UserContext } from './contexts/userContext';
 import AuthRouteGuard from './guards/AuthRouteGuard';
 import BaseLayout from './components/layout/BaseLayout';
 import { AccessRequest } from './pages/AccessRequest';

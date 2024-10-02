@@ -1,5 +1,5 @@
 import { Roles } from '@/constants/roles';
-import { UserContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/userContext';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { CircularProgress, Paper, Typography } from '@mui/material';
 import { PropsWithChildren, useContext, useEffect, useRef } from 'react';

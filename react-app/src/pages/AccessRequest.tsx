@@ -12,7 +12,7 @@ import {
 } from '@/constants/jsxSnippets';
 import usePimsApi from '@/hooks/usePimsApi';
 import { AccessRequest as AccessRequestType } from '@/hooks/api/useUsersApi';
-import { UserContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/userContext';
 import { Navigate } from 'react-router-dom';
 import TextFormField from '@/components/form/TextFormField';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';

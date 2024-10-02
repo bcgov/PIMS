@@ -15,7 +15,7 @@ import {
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { Roles } from '@/constants/roles';
-import { UserContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/userContext';
 
 const AppBrand = () => {
   const theme = useTheme();

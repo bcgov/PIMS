@@ -48,7 +48,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { CommonFiltering } from '@/interfaces/ICommonFiltering';
 import { useSearchParams } from 'react-router-dom';
 import { Roles } from '@/constants/roles';
-import { UserContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/userContext';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 
 type RenderCellParams = GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;

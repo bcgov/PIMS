@@ -1,7 +1,7 @@
 import { Grid, InputAdornment, Typography } from '@mui/material';
 import React, { useContext } from 'react';
 import AutocompleteFormField from '../form/AutocompleteFormField';
-import { UserContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/userContext';
 import TextFormField from '../form/TextFormField';
 import { ISelectMenuItem } from '../form/SelectFormField';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';

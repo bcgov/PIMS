@@ -10,7 +10,7 @@ import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArro
 import './parcelPopup.css';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import useDataLoader from '@/hooks/useDataLoader';
-import { UserContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/userContext';
 import { Roles } from '@/constants/roles';
 import BCAssessmentDetails from '@/components/map/parcelPopup/BCAssessmentDetails';
 import LtsaDetails from '@/components/map/parcelPopup/LtsaDetails';

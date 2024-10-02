@@ -43,7 +43,7 @@ import { enumReverseLookup } from '@/utilities/helperFunctions';
 import { AgencyResponseType } from '@/constants/agencyResponseTypes';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { Roles } from '@/constants/roles';
-import { UserContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/userContext';
 import { ExpandMoreOutlined } from '@mui/icons-material';
 import { columnNameFormatter, dateFormatter, formatMoney } from '@/utilities/formatters';
 import { LookupContext } from '@/contexts/lookupContext';

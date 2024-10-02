@@ -2,7 +2,7 @@ import { ISelectMenuItem } from '@/components/form/SelectFormField';
 import { Roles } from '@/constants/roles';
 import { useContext, useEffect, useMemo } from 'react';
 import useDataLoader from '../useDataLoader';
-import { UserContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/userContext';
 import usePimsApi from '../usePimsApi';
 import useGroupedAgenciesApi from './useGroupedAgenciesApi';
 import { useSSO } from '@bcgov/citz-imb-sso-react';

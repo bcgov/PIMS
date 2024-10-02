@@ -27,7 +27,7 @@ import { Map } from 'leaflet';
 import { Room } from '@mui/icons-material';
 import TitleOwnership from '../ltsa/TitleOwnership';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
-import { UserContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/userContext';
 import { Roles } from '@/constants/roles';
 import { LookupContext } from '@/contexts/lookupContext';
 import AssociatedProjectsTable from './AssociatedProjectsTable';
