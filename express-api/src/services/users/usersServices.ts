@@ -44,11 +44,11 @@ const normalizeKeycloakUser = (kcUser: SSOUser): NormalizedKeycloakUser => {
 
 /**
  * Adds a user from Keycloak to the system with 'OnHold' status.
- * @param ssoUser The Keycloak user to be added
- * @param agencyId The ID of the agency the user belongs to
- * @param position The position of the user
- * @param note Additional notes about the user
- * @param the users email
+ * @param {SSOUser} ssoUser The Keycloak user to be added
+ * @param {number} agencyId The ID of the agency the user belongs to
+ * @param {string} position The position of the user
+ * @param {string} note Additional notes about the user
+ * @param {string} email the users email
  * @returns The inserted user
  */
 const addKeycloakUserOnHold = async (
