@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo } from 'react';
 import pendingImage from '@/assets/images/pending.svg';
-import { Box, Button, Grid, Paper, Typography } from '@mui/material';
+import { Box, Button, Grid, Paper, Tooltip, Typography, useTheme } from '@mui/material';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -18,7 +18,8 @@ import TextFormField from '@/components/form/TextFormField';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 import { LookupContext } from '@/contexts/lookupContext';
-import { getProvider } from '@/utilities/helperFunctions';
+import { getProvider, validateEmail } from '@/utilities/helperFunctions';
+import InfoIcon from '@mui/icons-material/Info';
 
 interface StatusPageTemplateProps {
   blurb: JSX.Element;
@@ -43,18 +44,21 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
   const sso = useSSO();
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
   const lookup = useContext(LookupContext);
+  const theme = useTheme();
 
   const provider = useMemo(
     () => getProvider(sso.user?.preferred_username, lookup?.data?.Config?.bcscIdentifier),
     [sso.user, lookup],
   );
 
+  const userIsIdir = provider === 'IDIR';
+
   const formMethods = useForm({
     defaultValues: {
       Provider: provider ?? '',
-      FirstName: sso.user?.first_name || '',
-      LastName: sso.user?.last_name || '',
-      Email: sso.user?.email || '',
+      FirstName: keycloak.user?.first_name || '',
+      LastName: keycloak.user?.last_name || '',
+      Email: userIsIdir ? keycloak.user?.email : '',
       Notes: '',
       Agency: '',
       Position: '',
@@ -64,9 +68,9 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
   useEffect(() => {
     formMethods.reset({
       Provider: provider ?? '',
-      FirstName: sso.user?.first_name || '',
-      LastName: sso.user?.last_name || '',
-      Email: sso.user?.email || '',
+      FirstName: keycloak.user?.first_name || '',
+      LastName: keycloak.user?.last_name || '',
+      Email: userIsIdir ? keycloak.user?.email : '',
       Notes: '',
       Agency: '',
       Position: '',
@@ -81,13 +85,31 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
             <TextFormField fullWidth name={'Provider'} label={'Provider'} disabled />
           </Grid>
           <Grid item xs={6}>
-            <TextFormField fullWidth name={'Email'} label={'Email'} disabled />
+            <TextFormField
+              fullWidth
+              name={'Email'}
+              label={'Email'}
+              disabled={userIsIdir}
+              required
+              rules={{
+                validate: (value: string) => validateEmail(value) || 'Invalid email.',
+              }}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <Tooltip title="Avoid entering personal emails">
+                      <InfoIcon fontSize="small" sx={{ color: theme.palette.grey[500] }} />
+                    </Tooltip>
+                  ),
+                },
+              }}
+            />
           </Grid>
           <Grid item xs={6}>
-            <TextFormField fullWidth name={'FirstName'} label={'First name'} disabled />
+            <TextFormField fullWidth name={'FirstName'} label={'First name'} disabled required />
           </Grid>
           <Grid item xs={6}>
-            <TextFormField name={'LastName'} fullWidth label={'Last name'} disabled />
+            <TextFormField name={'LastName'} fullWidth label={'Last name'} disabled required />
           </Grid>
           <Grid item xs={12}>
             <AutocompleteFormField

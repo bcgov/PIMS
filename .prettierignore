@@ -1,7 +1,0 @@
-package-lock.json
-**/vendor
-*.html
-*.md
-*.yaml
-node_modules
-build

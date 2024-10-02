@@ -20,6 +20,7 @@ export const submitUserAccessRequest = async (req: Request, res: Response) => {
     Number(req.body.AgencyId),
     req.body.Position,
     req.body.Note,
+    req.body.Email,
   );
   const config = getConfig();
   const user = await userServices.getUser(req.user.preferred_username);
