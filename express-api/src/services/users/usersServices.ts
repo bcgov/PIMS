@@ -6,6 +6,7 @@ import { Agency } from '@/typeorm/Entities/Agency';
 import { randomUUID, UUID } from 'crypto';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { UserFiltering } from '@/controllers/users/usersSchema';
+import { validateEmail } from '@/utilities/helperFunctions';
 
 interface NormalizedKeycloakUser {
   first_name: string;
@@ -43,10 +44,11 @@ const normalizeKeycloakUser = (kcUser: SSOUser): NormalizedKeycloakUser => {
 
 /**
  * Adds a user from Keycloak to the system with 'OnHold' status.
- * @param ssoUser The Keycloak user to be added
- * @param agencyId The ID of the agency the user belongs to
- * @param position The position of the user
- * @param note Additional notes about the user
+ * @param {SSOUser} ssoUser The Keycloak user to be added
+ * @param {number} agencyId The ID of the agency the user belongs to
+ * @param {string} position The position of the user
+ * @param {string} note Additional notes about the user
+ * @param {string} email the users email
  * @returns The inserted user
  */
 const addKeycloakUserOnHold = async (
@@ -54,9 +56,13 @@ const addKeycloakUserOnHold = async (
   agencyId: number,
   position: string,
   note: string,
+  email: string,
 ) => {
   if (agencyId == null) {
     throw new Error('Null argument.');
+  }
+  if (!validateEmail(email)) {
+    throw new Error('Invalid email.');
   }
   //Iterating through agencies and roles no longer necessary here?
   const normalizedKc = normalizeKeycloakUser(ssoUser);
@@ -68,7 +74,7 @@ const addKeycloakUserOnHold = async (
     Id: id,
     FirstName: normalizedKc.first_name,
     LastName: normalizedKc.last_name,
-    Email: normalizedKc.email,
+    Email: email,
     DisplayName: normalizedKc.display_name,
     KeycloakUserId: normalizedKc.guid,
     Username: normalizedKc.username,
@@ -207,6 +213,9 @@ const addUser = async (user: User) => {
   if (resource) {
     throw new ErrorWithCode('Resource already exists.', 409);
   }
+  if (!validateEmail(user.Email)) {
+    throw new Error('Invalid email.');
+  }
   const retUser = await AppDataSource.getRepository(User).save(user);
   return retUser;
 };
@@ -221,6 +230,9 @@ const updateUser = async (user: DeepPartial<User>) => {
   const resource = await AppDataSource.getRepository(User).findOne({ where: { Id: user.Id } });
   if (!resource) {
     throw new ErrorWithCode('Resource does not exist.', 404);
+  }
+  if (user.Email && !validateEmail(user.Email)) {
+    throw new Error('Invalid email.');
   }
   await AppDataSource.getRepository(User).update(user.Id, {
     ...user,

@@ -10,7 +10,7 @@
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json,css,scss}\"",
     "check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,css,scss}\"",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "snapshots": "jest --updateSnapshot"
   },
   "dependencies": {
@@ -22,7 +22,7 @@
     "@mdi/react": "1.6.1",
     "@mui/icons-material": "6.1.0",
     "@mui/lab": "5.0.0-alpha.170",
-    "@mui/material": "6.1.0",
+    "@mui/material": "6.1.2",
     "@mui/x-data-grid": "7.18.0",
     "@mui/x-date-pickers": "7.18.0",
     "@turf/turf": "7.1.0",
@@ -37,7 +37,8 @@
     "react-router-dom": "6.26.0",
     "supercluster": "8.0.1",
     "typescript-eslint": "8.7.0",
-    "use-supercluster": "1.2.0"
+    "use-supercluster": "1.2.0",
+    "zod": "3.23.8"
   },
   "devDependencies": {
     "@babel/preset-env": "7.25.2",
