@@ -22,6 +22,7 @@ import { SnackBarContext } from '@/contexts/snackbarContext';
 import MapSidebar from '@/components/map/sidebar/MapSidebar';
 import ClusterPopup, { PopupState } from '@/components/map/clusterPopup/ClusterPopup';
 import { ParcelLayerFeature } from '@/hooks/api/useParcelLayerApi';
+import PolygonQuery from '@/components/map/polygonQuery/PolygonQuery';
 
 type ParcelMapProps = {
   height: string;
@@ -261,6 +262,7 @@ const ParcelMap = (props: ParcelMapProps) => {
         <MapLayers />
         <ParcelPopup size={popupSize} scrollOnClick={scrollOnClick} />
         <MapEvents />
+        <PolygonQuery />
         {loadProperties ? (
           <InventoryLayer
             isLoading={isLoading}
