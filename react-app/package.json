@@ -22,7 +22,7 @@
     "@mdi/react": "1.6.1",
     "@mui/icons-material": "6.1.0",
     "@mui/lab": "5.0.0-alpha.170",
-    "@mui/material": "6.1.0",
+    "@mui/material": "6.1.2",
     "@mui/x-data-grid": "7.18.0",
     "@mui/x-date-pickers": "7.18.0",
     "@turf/turf": "7.1.0",
