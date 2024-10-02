@@ -74,7 +74,7 @@ jest
   .spyOn(AppDataSource.getRepository(Agency), 'findOneOrFail')
   .mockImplementation(async () => produceAgency());
 
-jest
+const _agenciesFind = jest
   .spyOn(AppDataSource.getRepository(Agency), 'find')
   .mockImplementation(async () => [produceAgency()]);
 
@@ -104,10 +104,24 @@ describe('UNIT - User services', () => {
     });
   });
 
-  describe('addAccessRequest', () => {
+  describe('getUserById', () => {
+    it('should return a user assuming one is found', async () => {
+      const user = produceUser();
+      _usersFindOne.mockImplementationOnce(async () => user);
+      const result = await userServices.getUserById('123');
+      expect(result).toEqual(user);
+    });
+
+    it('should return null when no user is found', async () => {
+      _usersFindOne.mockImplementationOnce(async () => null);
+      const result = await userServices.getUserById('123');
+      expect(result).toEqual(null);
+    });
+  });
+
+  describe('addKeycloakUserOnHold', () => {
     it('should add and return an access request', async () => {
       const agencyId = faker.number.int();
-      //const roleId = faker.string.uuid();
       const req = await userServices.addKeycloakUserOnHold(
         ssoUser,
         agencyId,
@@ -117,14 +131,49 @@ describe('UNIT - User services', () => {
       );
       expect(_usersInsert).toHaveBeenCalledTimes(1);
     });
+
+    it('should throw an error if the agency is null', () => {
+      expect(
+        async () =>
+          await userServices.addKeycloakUserOnHold(ssoUser, null, '', '', 'email@email.com'),
+      ).rejects.toThrow('Null argument.');
+    });
+
+    it('should throw an error if the email is invalid', () => {
+      const agencyId = faker.number.int();
+      expect(
+        async () =>
+          await userServices.addKeycloakUserOnHold(ssoUser, agencyId, '', '', 'email.com'),
+      ).rejects.toThrow('Invalid email.');
+    });
   });
 
   describe('getAgencies', () => {
     it('should return an array of agency ids', async () => {
       const agencies = await userServices.getAgencies('test');
-      expect(AppDataSource.getRepository(User).findOneOrFail).toHaveBeenCalledTimes(1);
       expect(AppDataSource.getRepository(Agency).find).toHaveBeenCalledTimes(1);
       expect(Array.isArray(agencies)).toBe(true);
+    });
+
+    it('should return an empty array if the user is not found', async () => {
+      _usersFindOneBy.mockImplementationOnce(async () => null);
+      const agencies = await userServices.getAgencies('test');
+      expect(Array.isArray(agencies)).toBe(true);
+      expect(agencies).toHaveLength(0);
+    });
+  });
+
+  describe('hasAgencies', () => {
+    it('should return true if the user has the corresponding agencies', async () => {
+      _agenciesFind.mockImplementationOnce(async () => [produceAgency({ Id: 1 })]);
+      const result = await userServices.hasAgencies('test', [1]);
+      expect(result).toEqual(true);
+    });
+
+    it('should return false if the user does not have the corresponding agencies', async () => {
+      _agenciesFind.mockImplementationOnce(async () => [produceAgency({ Id: 2 })]);
+      const result = await userServices.hasAgencies('test', [1]);
+      expect(result).toEqual(false);
     });
   });
 
@@ -174,7 +223,15 @@ describe('UNIT - User services', () => {
     it('should throw an error if the user already exists', async () => {
       const user = produceUser();
       _usersFindOne.mockResolvedValueOnce(user);
-      expect(async () => await userServices.addUser(user)).rejects.toThrow();
+      expect(async () => await userServices.addUser(user)).rejects.toThrow(
+        'Resource already exists.',
+      );
+    });
+
+    it('should throw an error if the email is invalid', async () => {
+      const user = produceUser({ Email: 'blah' });
+      _usersFindOne.mockResolvedValueOnce(null);
+      expect(async () => await userServices.addUser(user)).rejects.toThrow('Invalid email.');
     });
   });
   describe('updateUser', () => {
@@ -193,7 +250,14 @@ describe('UNIT - User services', () => {
     it('should throw an error if the user does not exist', () => {
       const user = produceUser();
       _usersFindOne.mockResolvedValueOnce(undefined);
-      expect(async () => await userServices.updateUser(user)).rejects.toThrow();
+      expect(async () => await userServices.updateUser(user)).rejects.toThrow(
+        'Resource does not exist.',
+      );
+    });
+
+    it('should throw an error if the email is invalid does not exist', () => {
+      const user = produceUser({ Email: 'blah' });
+      expect(async () => await userServices.updateUser(user)).rejects.toThrow('Invalid email.');
     });
   });
   describe('deleteUser', () => {
