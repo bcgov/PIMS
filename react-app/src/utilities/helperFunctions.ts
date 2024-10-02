@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 /**
  * Pass an array of some arbitrary type and a function that retrieves the key determining uniqueness.
  * Returns an new array with any duplicate values omitted.
@@ -71,3 +73,6 @@ export const getProvider = (username: string, bcscIdentifier?: string) => {
       return '';
   }
 };
+
+export const validateEmail = (email: string): boolean =>
+  z.string().email().safeParse(email).success;

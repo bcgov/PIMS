@@ -5,6 +5,7 @@ import {
   ILikeWrapper,
   TimestampComparisonWrapper,
   toPostgresTimestamp,
+  validateEmail,
 } from '@/utilities/helperFunctions';
 import { EqualOperator, FindOperator } from 'typeorm';
 
@@ -178,6 +179,18 @@ describe('UNIT - helperFunctions', () => {
     it('should return the default response from constructFindOptionQuery if the operator does not match', () => {
       const result = constructFindOptionFromQueryPid('test', 'wow,3');
       expect(result.test).toBeUndefined();
+    });
+  });
+
+  describe('validateEmail', () => {
+    it('should return true when a valid email is given', () => {
+      const result = validateEmail('test@gmail.com');
+      expect(result).toEqual(true);
+    });
+
+    it('should return false when a invalid email is given', () => {
+      const result = validateEmail('test@gmaom');
+      expect(result).toEqual(false);
     });
   });
 });
