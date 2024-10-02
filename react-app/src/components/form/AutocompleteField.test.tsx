@@ -15,6 +15,11 @@ jest.mock('react-hook-form', () => ({
   }),
 }));
 
+jest.mock('@mui/utils', () => ({
+  ...jest.requireActual('@mui/utils'),
+  getReactNodeRef: () => null,
+}));
+
 describe('', () => {
   it('should render', () => {
     render(
