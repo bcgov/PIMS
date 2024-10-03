@@ -42,11 +42,13 @@ const PolygonQuery = (props: PolygonQueryProps) => {
         onDrawStop={() => {
           // When drawing is completed or cancelled
           // Allow other map interactions
+          console.log('draw stop');
+        }}
+        onDeleted={() => {
           setPolygons({
             type: 'MultiPolygon',
             coordinates: [],
           });
-          console.log('draw stop');
         }}
       />
     </FeatureGroup>
