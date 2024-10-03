@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@bcgov/bc-sans": "2.1.0",
-    "@bcgov/citz-imb-sso-react": "1.1.0-beta",
+    "@bcgov/citz-imb-sso-react": "1.0.0-alpha7",
     "@emotion/react": "11.13.0",
     "@emotion/styled": "11.13.0",
     "@mdi/js": "7.4.47",

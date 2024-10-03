@@ -49,11 +49,10 @@ const useFetch = (baseUrl?: string) => {
       }
 
       // If token has expired
-      // TODO: Uncomment when bug is solved
-      // if (response.status === 401) {
-      //   const currentLocation = window.location.pathname;
-      //   sso.login({ postLoginRedirectURL: currentLocation + window.location.search });
-      // }
+      if (response.status === 401) {
+        const currentLocation = window.location.pathname;
+        sso.login({ postLoginRedirectURL: currentLocation + window.location.search });
+      }
 
       const text = await response.text();
       if (text.length) {

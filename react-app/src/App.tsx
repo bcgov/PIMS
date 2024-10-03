@@ -66,8 +66,8 @@ const Router = () => {
         index
         element={
           sso.isAuthenticated &&
-          auth.pimsUser.data?.Status === 'Active' &&
-          auth.pimsUser.data?.RoleId ? (
+          auth.pimsUser?.data?.Status === 'Active' &&
+          auth.pimsUser?.data?.RoleId ? (
             showMap()
           ) : (
             <BaseLayout displayFooter>

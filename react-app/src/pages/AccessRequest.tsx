@@ -161,7 +161,7 @@ export const AccessRequest = () => {
   const onSubmit = (data: AccessRequestType) => {
     api.users.submitAccessRequest(data).then((response) => {
       if (response.status === 201) {
-        auth.pimsUser.refreshData();
+        auth.pimsUser?.refreshData();
       } else {
         snackbar.setMessageState({
           text: `Could not create account. Contact ${lookup.data.Config.contactEmail} for assistance.`,
@@ -181,7 +181,7 @@ export const AccessRequest = () => {
   }
 
   const selectPageContent = () => {
-    if (auth.pimsUser.data?.Status === 'Active' && !auth.pimsUser.data?.RoleId) {
+    if (auth.pimsUser?.data?.Status === 'Active' && !auth.pimsUser?.data?.RoleId) {
       return (
         <>
           <Typography mb={'2rem'} variant="h2">
@@ -191,7 +191,7 @@ export const AccessRequest = () => {
         </>
       );
     }
-    switch (auth.pimsUser.data?.Status) {
+    switch (auth.pimsUser?.data?.Status) {
       case 'OnHold':
         return (
           <>

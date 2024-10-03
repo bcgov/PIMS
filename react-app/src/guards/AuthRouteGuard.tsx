@@ -24,7 +24,7 @@ const AuthRouteGuard = (props: AuthGuardProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (sso.isAuthenticated) {
+    if (sso.isAuthenticated && sso.state.accessToken) {
       if (timeoutId.current) {
         clearTimeout(timeoutId.current);
         timeoutId.current = null;
