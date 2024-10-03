@@ -1,4 +1,5 @@
 import { Equal, FindOptionsWhere, IsNull, Not, Raw } from 'typeorm';
+import { z } from 'zod';
 
 /**
  * Special case for PID/PIN matching, as general text comparison is not sufficient.
@@ -244,3 +245,6 @@ export const toPostgresTimestamp = (date: Date) => {
 export const getDaysBetween = (earlierDate: Date, laterDate: Date): number => {
   return Math.trunc((laterDate.getTime() - earlierDate.getTime()) / (1000 * 60 * 60 * 24));
 };
+
+export const validateEmail = (email: string): boolean =>
+  z.string().email().safeParse(email).success;

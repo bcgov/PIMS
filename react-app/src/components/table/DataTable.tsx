@@ -18,6 +18,7 @@ import {
   MenuItem,
   Select,
   SxProps,
+  Theme,
   Tooltip,
   Typography,
   debounce,
@@ -143,7 +144,9 @@ export const CustomDataGrid = (props: DataGridProps) => {
   );
 };
 
-export const CustomMenuItem = (props: PropsWithChildren & { value: string }) => {
+export const CustomMenuItem = (
+  props: PropsWithChildren & { value: string; sx?: SxProps<Theme> },
+) => {
   const theme = useTheme();
   return (
     <MenuItem
