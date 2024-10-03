@@ -23,6 +23,7 @@ import MapSidebar from '@/components/map/sidebar/MapSidebar';
 import ClusterPopup, { PopupState } from '@/components/map/clusterPopup/ClusterPopup';
 import { ParcelLayerFeature } from '@/hooks/api/useParcelLayerApi';
 import PolygonQuery from '@/components/map/polygonQuery/PolygonQuery';
+import { MultiPolygon, Position } from 'geojson';
 
 type ParcelMapProps = {
   height: string;
@@ -76,6 +77,15 @@ const ParcelMap = (props: ParcelMapProps) => {
   const [filter, setFilter] = useState<MapFilter>({}); // Applies when request for properties is made
   const [properties, setProperties] = useState<PropertyGeo[]>([]);
   const [tileLayerName, setTileLayerName] = useState<string>('Street Map');
+  const [polygonQueryShape, setPolygonQueryShape] = useState<MultiPolygon>({
+    type: 'MultiPolygon',
+    coordinates: [] as Position[][][],
+  });
+
+  // When drawn multipolygon changes, query the new area
+  useEffect(() => {
+    console.log(polygonQueryShape);
+  }, [polygonQueryShape]);
 
   // Get properties for map.
   const { data, refreshData, isLoading } = useDataLoader(() =>
@@ -233,7 +243,6 @@ const ParcelMap = (props: ParcelMapProps) => {
     }
   }, [filter]);
 
-  // TODO: Remove selected marker context
   return (
     <Box height={height} display={'flex'}>
       {loadProperties ? <LoadingCover show={isLoading} /> : <></>}
@@ -262,7 +271,7 @@ const ParcelMap = (props: ParcelMapProps) => {
         <MapLayers />
         <ParcelPopup size={popupSize} scrollOnClick={scrollOnClick} />
         <MapEvents />
-        <PolygonQuery />
+        <PolygonQuery polygons={polygonQueryShape} setPolygons={setPolygonQueryShape} />
         {loadProperties ? (
           <InventoryLayer
             isLoading={isLoading}
