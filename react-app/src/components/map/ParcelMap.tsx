@@ -81,6 +81,7 @@ const ParcelMap = (props: ParcelMapProps) => {
     type: 'MultiPolygon',
     coordinates: [] as Position[][][],
   });
+  const [mapEventsDisabled, setMapEventsDisabled] = useState<boolean>(false);
 
   // When drawn multipolygon changes, query the new area
   useEffect(() => {
@@ -101,6 +102,15 @@ const ParcelMap = (props: ParcelMapProps) => {
     pageIndex: 0,
     total: 0,
   });
+
+  const controlledSetPopupState = (stateUpdates: Partial<PopupState>) => {
+    // Only block if trying to open. Allow users to close popup at all times.
+    if (stateUpdates.open && mapEventsDisabled) return;
+    setPopupState({
+      ...popupState,
+      ...stateUpdates,
+    });
+  };
 
   // Store polygon overlay data for parcel layer
   const [polygon, setPolygon] = useState([]);
@@ -269,15 +279,23 @@ const ParcelMap = (props: ParcelMapProps) => {
         preferCanvas
       >
         <MapLayers />
-        <ParcelPopup size={popupSize} scrollOnClick={scrollOnClick} />
+        <ParcelPopup
+          size={popupSize}
+          scrollOnClick={scrollOnClick}
+          mapEventsDisabled={mapEventsDisabled}
+        />
         <MapEvents />
-        <PolygonQuery polygons={polygonQueryShape} setPolygons={setPolygonQueryShape} />
+        <PolygonQuery
+          polygons={polygonQueryShape}
+          setPolygons={setPolygonQueryShape}
+          setMapEventsDisabled={setMapEventsDisabled}
+        />
         {loadProperties ? (
           <InventoryLayer
             isLoading={isLoading}
             properties={properties}
             popupState={popupState}
-            setPopupState={setPopupState}
+            setPopupState={controlledSetPopupState}
             tileLayerName={tileLayerName}
           />
         ) : (

@@ -6,10 +6,11 @@ import { EditControl } from 'react-leaflet-draw';
 interface PolygonQueryProps {
   polygons: MultiPolygon;
   setPolygons: Dispatch<SetStateAction<MultiPolygon>>;
+  setMapEventsDisabled: Dispatch<SetStateAction<boolean>>;
 }
 
 const PolygonQuery = (props: PolygonQueryProps) => {
-  const { polygons, setPolygons } = props;
+  const { polygons, setPolygons, setMapEventsDisabled } = props;
 
   return (
     <FeatureGroup>
@@ -38,18 +39,29 @@ const PolygonQuery = (props: PolygonQueryProps) => {
           // When draw tool is initially clicked
           // Prevent other map interactions
           console.log('draw start');
+          setMapEventsDisabled(true);
         }}
         onDrawStop={() => {
           // When drawing is completed or cancelled
           // Allow other map interactions
           console.log('draw stop');
+          setMapEventsDisabled(false);
         }}
+        onEdited={() => {
+          // Find the shape that was just edited by matching points
+          // Splice the new shape in that position.
+        }}
+        onEditStart={() => setMapEventsDisabled(true)}
+        onEditStop={() => setMapEventsDisabled(false)}
         onDeleted={() => {
           setPolygons({
             type: 'MultiPolygon',
             coordinates: [],
           });
+          setMapEventsDisabled(false);
         }}
+        onDeleteStart={() => setMapEventsDisabled(true)}
+        onDeleteStop={() => setMapEventsDisabled(false)}
       />
     </FeatureGroup>
   );

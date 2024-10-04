@@ -11,7 +11,7 @@ export interface InventoryLayerProps {
   isLoading: boolean;
   properties: PropertyGeo[];
   popupState: PopupState;
-  setPopupState: React.Dispatch<React.SetStateAction<PopupState>>;
+  setPopupState: (stateUpdates: Partial<PopupState>) => void;
   tileLayerName: string;
 }
 
