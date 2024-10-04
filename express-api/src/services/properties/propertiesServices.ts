@@ -30,7 +30,7 @@ import {
   constructFindOptionFromQuerySingleSelect,
 } from '@/utilities/helperFunctions';
 import userServices from '../users/usersServices';
-import { Brackets, FindOptionsWhere, ILike, In, QueryRunner, Raw } from 'typeorm';
+import { Brackets, FindOptionsWhere, ILike, In, QueryRunner } from 'typeorm';
 import { PropertyType } from '@/constants/propertyType';
 import { exposedProjectStatuses, ProjectStatus } from '@/constants/projectStatus';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
@@ -212,7 +212,6 @@ const getPropertiesForMap = async (filter?: MapFilter) => {
     Name: filter.Name ? ILike(`%${filter.Name}%`) : undefined,
     PropertyTypeId: filter.PropertyTypeIds ? In(filter.PropertyTypeIds) : undefined,
     RegionalDistrictId: filter.RegionalDistrictIds ? In(filter.RegionalDistrictIds) : undefined,
-    Location: filter.Polygon ? Raw(``) : undefined,
   };
 
   /**
@@ -247,10 +246,9 @@ const getPropertiesForMap = async (filter?: MapFilter) => {
           ],
     });
 
-    if (filter.Polygon)
-      return properties.filter((property) =>
-        isPointInMultiPolygon(property.Location, filter.Polygon as { x: number; y: number }[][]),
-      );
+    if (filter.Polygon) {
+      return filterPropertiesByPolygon(filter.Polygon, properties);
+    }
     return properties;
   }
   /**
@@ -264,7 +262,20 @@ const getPropertiesForMap = async (filter?: MapFilter) => {
       AgencyId: filter.AgencyIds ? In(filter.AgencyIds) : undefined,
     },
   });
+  if (filter.Polygon) {
+    return filterPropertiesByPolygon(filter.Polygon, properties);
+  }
   return properties;
+};
+
+const filterPropertiesByPolygon = (polygon: string, properties: MapProperties[]) => {
+  const polygonArray = JSON.parse(polygon);
+  const formattedPolygons = (polygonArray as number[][][]).map((polygon) =>
+    polygon.map((point) => ({ x: point.at(1), y: point.at(0) })),
+  );
+  return properties.filter((property) =>
+    isPointInMultiPolygon(property.Location, formattedPolygons as { x: number; y: number }[][]),
+  );
 };
 
 const numberOrNull = (value: any) => {

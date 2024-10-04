@@ -1,4 +1,3 @@
-import { MultiPolygon } from 'geojson';
 import React, { Dispatch, SetStateAction } from 'react';
 import { FeatureGroup, Popup } from 'react-leaflet';
 import { EditControl } from 'react-leaflet-draw';
@@ -8,8 +7,10 @@ interface PolygonQueryProps {
   setMapEventsDisabled: Dispatch<SetStateAction<boolean>>;
 }
 
-export interface LeafletMultiPolygon extends MultiPolygon {
+export interface LeafletMultiPolygon {
   leafletIds: number[];
+  coordinates: { lat: number; lng: number }[][];
+  type: 'MultiPolygon';
 }
 
 const PolygonQuery = (props: PolygonQueryProps) => {
@@ -57,7 +58,9 @@ const PolygonQuery = (props: PolygonQueryProps) => {
               // Find the index of the original polygon
               const originalIndex = original.leafletIds.findIndex((id) => id === layer._leaflet_id);
               // Use original index to replace with new coordinates
-              replacementCoordinates[originalIndex] = layer._latlngs;
+              replacementCoordinates[originalIndex] = (
+                layer._latlngs as [[{ lat: number; lng: number }]]
+              )[0];
             });
             return {
               ...original,

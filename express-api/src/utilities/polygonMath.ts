@@ -1,3 +1,5 @@
+// FIXME: isPointInPolygon fails in some cases due to floating point math...
+
 /**
  * Checks if a point is inside a polygon using the Ray-Casting algorithm.
  * @param point The point to check.
@@ -20,7 +22,10 @@ export const isPointInPolygon = (
 
     const intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
 
-    if (intersect) isInside = !isInside;
+    if (intersect) {
+      isInside = !isInside;
+      return isInside;
+    }
   }
 
   return isInside;

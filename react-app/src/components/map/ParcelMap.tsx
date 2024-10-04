@@ -23,7 +23,6 @@ import MapSidebar from '@/components/map/sidebar/MapSidebar';
 import ClusterPopup, { PopupState } from '@/components/map/clusterPopup/ClusterPopup';
 import { ParcelLayerFeature } from '@/hooks/api/useParcelLayerApi';
 import PolygonQuery, { LeafletMultiPolygon } from '@/components/map/polygonQuery/PolygonQuery';
-import { Position } from 'geojson';
 
 type ParcelMapProps = {
   height: string;
@@ -79,7 +78,7 @@ const ParcelMap = (props: ParcelMapProps) => {
   const [tileLayerName, setTileLayerName] = useState<string>('Street Map');
   const [polygonQueryShape, setPolygonQueryShape] = useState<LeafletMultiPolygon>({
     type: 'MultiPolygon',
-    coordinates: [] as Position[][][],
+    coordinates: [],
     leafletIds: [],
   });
   const [mapEventsDisabled, setMapEventsDisabled] = useState<boolean>(false);
@@ -87,7 +86,14 @@ const ParcelMap = (props: ParcelMapProps) => {
   // When drawn multipolygon changes, query the new area
   useEffect(() => {
     console.log(polygonQueryShape);
-  }, [polygonQueryShape]);
+    const polygonCoordinates = polygonQueryShape.coordinates.map((polygon) =>
+      polygon.map((point) => [point.lat, point.lng]),
+    );
+    setFilter({
+      ...filter,
+      Polygon: polygonCoordinates.length ? JSON.stringify(polygonCoordinates) : undefined,
+    });
+  }, [polygonQueryShape, setFilter]);
 
   // Get properties for map.
   const { data, refreshData, isLoading } = useDataLoader(() =>

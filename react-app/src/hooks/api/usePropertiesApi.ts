@@ -46,6 +46,7 @@ export interface MapFilter {
   PropertyTypeIds?: number[];
   RegionalDistrictIds?: number[];
   Name?: string;
+  Polygon?: string;
 }
 
 export interface PropertyUnion {
