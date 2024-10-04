@@ -104,7 +104,7 @@ const ParcelMap = (props: ParcelMapProps) => {
   });
 
   const controlledSetPopupState = (stateUpdates: Partial<PopupState>) => {
-    // Only block if trying to open. Allow users to close popup at all times.
+    // Only block if trying to open. Allow users to close popup/change page at all times.
     if (stateUpdates.open && mapEventsDisabled) return;
     setPopupState({
       ...popupState,
@@ -315,7 +315,7 @@ const ParcelMap = (props: ParcelMapProps) => {
             sidebarOpen={sidebarOpen}
             setSidebarOpen={setSidebarOpen}
           />
-          <ClusterPopup popupState={popupState} setPopupState={setPopupState} />
+          <ClusterPopup popupState={popupState} setPopupState={controlledSetPopupState} />
         </>
       ) : (
         <></>

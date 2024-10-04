@@ -127,6 +127,8 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
       if (!supercluster || !cluster) {
         return;
       }
+      cancelOpenPopup();
+
       const expansionZoom = Math.min(
         supercluster.getClusterExpansionZoom(cluster.properties.cluster_id),
         maxZoom,
@@ -163,7 +165,6 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
           Infinity,
         );
         setPopupState({
-          ...popupState,
           properties: newClusterProperties,
           open: true,
           position: point,
@@ -175,7 +176,6 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
       } else {
         // Cluster marker of 1
         setPopupState({
-          ...popupState,
           properties: [cluster],
           open: true,
           position: point,
@@ -196,7 +196,6 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
     moveend: updateClusters,
     zoomstart: () =>
       setPopupState({
-        ...popupState,
         properties: [],
         open: false,
         position: new Point(0, 0),
@@ -204,7 +203,6 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
       }),
     movestart: () =>
       setPopupState({
-        ...popupState,
         properties: [],
         open: false,
         position: new Point(0, 0),
