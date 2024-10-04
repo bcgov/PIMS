@@ -30,7 +30,7 @@ import {
   constructFindOptionFromQuerySingleSelect,
 } from '@/utilities/helperFunctions';
 import userServices from '../users/usersServices';
-import { Brackets, FindOptionsWhere, ILike, In, QueryRunner } from 'typeorm';
+import { Brackets, FindOptionsWhere, ILike, In, QueryRunner, Raw } from 'typeorm';
 import { PropertyType } from '@/constants/propertyType';
 import { exposedProjectStatuses, ProjectStatus } from '@/constants/projectStatus';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
@@ -38,6 +38,7 @@ import { ProjectStatus as ProjectStatusEntity } from '@/typeorm/Entities/Project
 import { parentPort } from 'worker_threads';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { PimsRequestUser } from '@/middleware/userAuthCheck';
+import { isPointInMultiPolygon } from '@/utilities/polygonMath';
 
 /**
  * Perform a fuzzy search for properties based on the provided keyword.
@@ -211,6 +212,7 @@ const getPropertiesForMap = async (filter?: MapFilter) => {
     Name: filter.Name ? ILike(`%${filter.Name}%`) : undefined,
     PropertyTypeId: filter.PropertyTypeIds ? In(filter.PropertyTypeIds) : undefined,
     RegionalDistrictId: filter.RegionalDistrictIds ? In(filter.RegionalDistrictIds) : undefined,
+    Location: filter.Polygon ? Raw(``) : undefined,
   };
 
   /**
@@ -244,6 +246,11 @@ const getPropertiesForMap = async (filter?: MapFilter) => {
             },
           ],
     });
+
+    if (filter.Polygon)
+      return properties.filter((property) =>
+        isPointInMultiPolygon(property.Location, filter.Polygon as { x: number; y: number }[][]),
+      );
     return properties;
   }
   /**
