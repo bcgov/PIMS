@@ -4,13 +4,12 @@ import { FeatureGroup, Popup } from 'react-leaflet';
 import { EditControl } from 'react-leaflet-draw';
 
 interface PolygonQueryProps {
-  polygons: MultiPolygon;
   setPolygons: Dispatch<SetStateAction<MultiPolygon>>;
   setMapEventsDisabled: Dispatch<SetStateAction<boolean>>;
 }
 
 const PolygonQuery = (props: PolygonQueryProps) => {
-  const { polygons, setPolygons, setMapEventsDisabled } = props;
+  const { setPolygons, setMapEventsDisabled } = props;
 
   return (
     <FeatureGroup>
@@ -28,8 +27,6 @@ const PolygonQuery = (props: PolygonQueryProps) => {
         onCreated={(e) => {
           // When a shape is finished being drawn
           // Set values for map to use in query
-          console.log('created', e.layer._parts);
-          console.log('old polygon', polygons.coordinates);
           setPolygons((original) => ({
             type: 'MultiPolygon',
             coordinates: original.coordinates.concat(e.layer._parts),
@@ -38,13 +35,11 @@ const PolygonQuery = (props: PolygonQueryProps) => {
         onDrawStart={() => {
           // When draw tool is initially clicked
           // Prevent other map interactions
-          console.log('draw start');
           setMapEventsDisabled(true);
         }}
         onDrawStop={() => {
           // When drawing is completed or cancelled
           // Allow other map interactions
-          console.log('draw stop');
           setMapEventsDisabled(false);
         }}
         onEdited={() => {

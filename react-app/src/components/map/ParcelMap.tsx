@@ -286,7 +286,6 @@ const ParcelMap = (props: ParcelMapProps) => {
         />
         <MapEvents />
         <PolygonQuery
-          polygons={polygonQueryShape}
           setPolygons={setPolygonQueryShape}
           setMapEventsDisabled={setMapEventsDisabled}
         />
