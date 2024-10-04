@@ -22,8 +22,8 @@ import { SnackBarContext } from '@/contexts/snackbarContext';
 import MapSidebar from '@/components/map/sidebar/MapSidebar';
 import ClusterPopup, { PopupState } from '@/components/map/clusterPopup/ClusterPopup';
 import { ParcelLayerFeature } from '@/hooks/api/useParcelLayerApi';
-import PolygonQuery from '@/components/map/polygonQuery/PolygonQuery';
-import { MultiPolygon, Position } from 'geojson';
+import PolygonQuery, { LeafletMultiPolygon } from '@/components/map/polygonQuery/PolygonQuery';
+import { Position } from 'geojson';
 
 type ParcelMapProps = {
   height: string;
@@ -77,9 +77,10 @@ const ParcelMap = (props: ParcelMapProps) => {
   const [filter, setFilter] = useState<MapFilter>({}); // Applies when request for properties is made
   const [properties, setProperties] = useState<PropertyGeo[]>([]);
   const [tileLayerName, setTileLayerName] = useState<string>('Street Map');
-  const [polygonQueryShape, setPolygonQueryShape] = useState<MultiPolygon>({
+  const [polygonQueryShape, setPolygonQueryShape] = useState<LeafletMultiPolygon>({
     type: 'MultiPolygon',
     coordinates: [] as Position[][][],
+    leafletIds: [],
   });
   const [mapEventsDisabled, setMapEventsDisabled] = useState<boolean>(false);
 
