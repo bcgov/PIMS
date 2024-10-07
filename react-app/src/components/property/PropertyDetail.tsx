@@ -27,7 +27,7 @@ import { Map } from 'leaflet';
 import { Room } from '@mui/icons-material';
 import TitleOwnership from '../ltsa/TitleOwnership';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
-import { AuthContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/userContext';
 import { Roles } from '@/constants/roles';
 import { LookupContext } from '@/contexts/lookupContext';
 import AssociatedProjectsTable from './AssociatedProjectsTable';
@@ -40,7 +40,7 @@ interface IPropertyDetail {
 const PropertyDetail = (props: IPropertyDetail) => {
   const navigate = useNavigate();
   const params = useParams();
-  const { pimsUser } = useContext(AuthContext);
+  const { pimsUser } = useContext(UserContext);
   const { getLookupValueById } = useContext(LookupContext);
   const parcelId = isNaN(Number(params.parcelId)) ? null : Number(params.parcelId);
   const buildingId = isNaN(Number(params.buildingId)) ? null : Number(params.buildingId);

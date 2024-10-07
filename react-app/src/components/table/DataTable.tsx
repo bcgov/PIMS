@@ -48,8 +48,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { CommonFiltering } from '@/interfaces/ICommonFiltering';
 import { useSearchParams } from 'react-router-dom';
 import { Roles } from '@/constants/roles';
-import { AuthContext } from '@/contexts/authContext';
 import { trackSelfDescribingEvent } from '@snowplow/browser-tracker';
+import { UserContext } from '@/contexts/userContext';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 
 type RenderCellParams = GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
@@ -458,7 +458,7 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
       : `(${props.rowCountProp ?? 0} rows)`;
   }, [props.tableOperationMode, rowCount, props.rowCountProp]);
 
-  const { pimsUser } = useContext(AuthContext);
+  const { pimsUser } = useContext(UserContext);
   const isAuditor = pimsUser.hasOneOfRoles([Roles.AUDITOR]);
 
   return (

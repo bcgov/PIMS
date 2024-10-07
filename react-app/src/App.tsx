@@ -5,8 +5,7 @@ import '@/App.css';
 import { ThemeProvider } from '@emotion/react';
 import appTheme from './themes/appTheme';
 import Dev from './pages/DevZone';
-import { ConfigContextProvider } from './contexts/configContext';
-import AuthContextProvider, { AuthContext } from './contexts/authContext';
+import UserContextProvider, { UserContext } from './contexts/userContext';
 import AuthRouteGuard from './guards/AuthRouteGuard';
 import BaseLayout from './components/layout/BaseLayout';
 import { AccessRequest } from './pages/AccessRequest';
@@ -34,6 +33,7 @@ import BulkUpload from './pages/BulkUpload';
 import useHistoryAwareNavigate from './hooks/useHistoryAwareNavigate';
 import { newTracker, enableActivityTracking, trackPageView } from '@snowplow/browser-tracker';
 import { refreshLinkClickTracking } from '@snowplow/browser-plugin-link-click-tracking';
+import { useSSO } from '@bcgov/citz-imb-sso-react';
 
 /**
  * Renders the main router component for the application.
@@ -43,7 +43,8 @@ import { refreshLinkClickTracking } from '@snowplow/browser-plugin-link-click-tr
  * @returns JSX element representing the main router component
  */
 const Router = () => {
-  const auth = useContext(AuthContext);
+  const sso = useSSO();
+  const auth = useContext(UserContext);
   const { goToFromStateOrSetRoute } = useHistoryAwareNavigate();
 
   // Reusable piece to show map on many routes
@@ -66,9 +67,9 @@ const Router = () => {
       <Route
         index
         element={
-          auth.keycloak.isAuthenticated &&
-          auth.pimsUser.data?.Status === 'Active' &&
-          auth.pimsUser.data?.RoleId ? (
+          sso.isAuthenticated &&
+          auth.pimsUser?.data?.Status === 'Active' &&
+          auth.pimsUser?.data?.RoleId ? (
             showMap()
           ) : (
             <BaseLayout displayFooter>
@@ -301,17 +302,15 @@ const App = () => {
 
   return (
     <ThemeProvider theme={appTheme}>
-      <ConfigContextProvider>
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <AuthContextProvider>
-            <LookupContextProvider>
-              <SnackBarContextProvider>
-                <Router />
-              </SnackBarContextProvider>
-            </LookupContextProvider>
-          </AuthContextProvider>
-        </ErrorBoundary>
-      </ConfigContextProvider>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <UserContextProvider>
+          <LookupContextProvider>
+            <SnackBarContextProvider>
+              <Router />
+            </SnackBarContextProvider>
+          </LookupContextProvider>
+        </UserContextProvider>
+      </ErrorBoundary>
     </ThemeProvider>
   );
 };

@@ -1,7 +1,7 @@
 import { Grid, InputAdornment, Typography } from '@mui/material';
 import React, { useContext } from 'react';
 import AutocompleteFormField from '../form/AutocompleteFormField';
-import { AuthContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/userContext';
 import TextFormField from '../form/TextFormField';
 import { ISelectMenuItem } from '../form/SelectFormField';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
@@ -14,7 +14,7 @@ interface IProjectGeneralInfoForm {
 
 export const ProjectGeneralInfoForm = (props: IProjectGeneralInfoForm) => {
   const { data: lookupData } = useContext(LookupContext);
-  const { pimsUser } = useContext(AuthContext);
+  const { pimsUser } = useContext(UserContext);
   const canEdit = pimsUser.hasOneOfRoles([Roles.ADMIN]);
 
   return (

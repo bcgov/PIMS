@@ -2,22 +2,24 @@ import { ISelectMenuItem } from '@/components/form/SelectFormField';
 import { Roles } from '@/constants/roles';
 import { useContext, useEffect, useMemo } from 'react';
 import useDataLoader from '../useDataLoader';
-import { AuthContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/userContext';
 import usePimsApi from '../usePimsApi';
 import useGroupedAgenciesApi from './useGroupedAgenciesApi';
+import { useSSO } from '@bcgov/citz-imb-sso-react';
 
 const useUserAgencies = () => {
-  const userContext = useContext(AuthContext);
+  const { pimsUser } = useContext(UserContext);
+  const sso = useSSO();
   const { ungroupedAgencies, agencyOptions } = useGroupedAgenciesApi();
   const api = usePimsApi();
-  const isAdmin = userContext.pimsUser?.hasOneOfRoles([Roles.ADMIN]);
+  const isAdmin = pimsUser?.hasOneOfRoles([Roles.ADMIN]);
   const { data: userAgencies, refreshData: refreshUserAgencies } = useDataLoader(() =>
-    api.users.getUsersAgencyIds(userContext.keycloak.user.preferred_username),
+    api.users.getUsersAgencyIds(sso.user.preferred_username),
   );
 
   useEffect(() => {
     refreshUserAgencies();
-  }, [userContext.keycloak]);
+  }, [sso]);
 
   const userAgencyObjects = useMemo(() => {
     if (ungroupedAgencies && userAgencies) {
